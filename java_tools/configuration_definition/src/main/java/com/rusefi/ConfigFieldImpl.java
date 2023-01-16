@@ -414,6 +414,14 @@ public class ConfigFieldImpl implements ConfigField {
         return Integer.parseInt(tokens[5].trim());
     }
 
+    @Override
+    public String getCategory() {
+        String[] tokens = getTokens();
+        if (tokens.length < 7)
+            return null;
+        return tokens[6].trim();
+    }
+
     // see testUnquote
     public static String unquote(String token) {
         return VariableRegistry.unquote(token);

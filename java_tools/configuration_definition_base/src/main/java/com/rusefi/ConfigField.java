@@ -126,6 +126,11 @@ public interface ConfigField {
         }
 
         @Override
+        public String getCategory() {
+            return null;
+        }
+
+        @Override
         public int getDigits() {
             return 0;
         }
@@ -200,6 +205,8 @@ public interface ConfigField {
     double getMax();
 
     int getDigits();
+
+    public String getCategory();
 
     String getIterateOriginalName();
 

@@ -164,8 +164,8 @@ public class OutputsTest {
     public void sensorStruct() {
         String test = "struct total\n" +
                 "    struct pid_status_s\n" +
-                "    \tfloat iTerm;;\"v\", 1, 0, -10000, 10000, 4\n" +
-                "    \tfloat dTerm;;\"v\", 1, 0, -10000, 10000, 4\n" +
+                "    \tfloat iTerm;;\"v\", 1, 0, -10000, 10000, 4, Alternator\n" +
+                "    \tfloat dTerm;;\"v\", 1, 0, -10000, 10000, 4, Alternator\n" +
                 "    end_struct\n" +
                 "\tpid_status_s alternatorStatus\n" +
                 "\tpid_status_s idleStatus\n" +
@@ -182,7 +182,8 @@ public class OutputsTest {
                         "entry = idleStatus_dTerm, \"idleStatus_dTerm\", float,  \"%.3f\"\n",
                 dataLogConsumer.getContent());
 
-        assertEquals("alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
+        assertEquals("\tgaugeCategory = Alternator\n" +
+                        "alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "alternatorStatus_dTermGauge = alternatorStatus_dTerm,\"alternatorStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "idleStatus_iTermGauge = idleStatus_iTerm,\"idleStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "idleStatus_dTermGauge = idleStatus_dTerm,\"idleStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n",

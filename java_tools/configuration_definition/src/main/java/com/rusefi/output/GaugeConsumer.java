@@ -6,13 +6,15 @@ import com.rusefi.ReaderState;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.rusefi.output.DataLogConsumer.getHumanGaugeName;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class GaugeConsumer implements ConfigurationConsumer {
     private final String fileName;
-    private final StringBuilder charArrayWriter = new StringBuilder();
+    private final LinkedHashMap<String, StringBuilder> byCategory = new LinkedHashMap<>();
 
     public GaugeConsumer(String fileName) {
         this.fileName = fileName;
@@ -25,14 +27,13 @@ public class GaugeConsumer implements ConfigurationConsumer {
                     (state, configField, prefix) -> handle(configField, prefix));
             iterator.loop();
             String content = iterator.getContent();
-            charArrayWriter.append(content);
         }
 
-        if (fileName != null) {
-            FileWriter fw = new FileWriter(fileName);
-            fw.write(charArrayWriter.toString());
-            fw.close();
-        }
+//        if (fileName != null) {
+//            FileWriter fw = new FileWriter(fileName);
+//            fw.write(charArrayWriter.toString());
+//            fw.close();
+//        }
     }
 
     private String handle(ConfigField configField, String prefix) {
@@ -47,18 +48,33 @@ public class GaugeConsumer implements ConfigurationConsumer {
         double min = configField.getMin();
         double max = configField.getMax();
         int digits = configField.getDigits();
+        String category = configField.getCategory();
+        if (category == null)
+            return "";
+
+        StringBuilder sb = byCategory.computeIfAbsent(category, s -> new StringBuilder());
 
         String fullName = prefix + configField.getName();
-        return fullName + "Gauge = " + fullName + "," + comment +
+        String gaugeEntry = fullName + "Gauge = " + fullName + "," + comment +
                 ", " + quote(configField.getUnits()) +
                 ", " + min + "," + max +
                 ", " + min + "," + max +
                 ", " + min + "," + max +
                 ", " + digits + "," + digits +
                 "\n";
+        sb.append(gaugeEntry);
+
+        return "";
     }
 
     public String getContent() {
-        return charArrayWriter.toString();
+        StringBuilder sb = new StringBuilder();
+
+        for (Map.Entry<String, StringBuilder> e : byCategory.entrySet()) {
+            sb.append("\t").append("gaugeCategory = ").append(e.getKey()).append("\n");
+            sb.append(e.getValue());
+        }
+
+        return sb.toString();
     }
 }
