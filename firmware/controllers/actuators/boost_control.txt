@@ -5,6 +5,7 @@ bit m_shouldResetPid
 bit isBelowClosedLoopThreshold;
 bit isNotClosedLoop;
 bit isZeroRpm
+bit hasInitBoost
 
 float luaTargetAdd
 float luaTargetMult
