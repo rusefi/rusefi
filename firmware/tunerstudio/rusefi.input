@@ -1184,6 +1184,7 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 
 
 [GaugeConfigurations]
+@@LIVE_DATA_GAUGES_FROM_FILE@@
 
 gaugeCategory = Trigger
 	triggerErrorsCounterGauge = totalTriggerErrorCounter, "Trigger error count", "count",	0,	15000,	0,	0,	6000,  6000,	0,	0
