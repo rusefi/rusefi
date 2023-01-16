@@ -206,7 +206,7 @@ public interface ConfigField {
 
     int getDigits();
 
-    public String getCategory();
+    String getCategory();
 
     String getIterateOriginalName();
 
