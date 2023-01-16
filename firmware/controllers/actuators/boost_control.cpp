@@ -172,10 +172,8 @@ void BoostController::update() {
 	}
 }
 
-static bool hasInitBoost = false;
-
 void updateBoostControl() {
-	if (hasInitBoost) {
+	if (engine->boostController.hasInitBoost) {
 		engine->boostController.update();
 	}
 }
@@ -254,8 +252,8 @@ void initBoostCtrl() {
 
 #if !EFI_UNIT_TEST
 	startBoostPin();
-	hasInitBoost = true;
 #endif
+	engine->boostController.hasInitBoost = true;
 }
 
 #endif
