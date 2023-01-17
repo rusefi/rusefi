@@ -5,6 +5,7 @@ import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.core.Tuple;
+import com.rusefi.output.variables.VariableRecord;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +38,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
     private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
     private static final String SET_METHOD_FOOTER = "}\n";
-    private final List<Tuple<String>> variables = new ArrayList<>();
+    private final List<VariableRecord> variables = new ArrayList<>();
     private final String outputFileName;
     private final String mdOutputFileName;
 
@@ -93,7 +94,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (javaName.startsWith(CONFIG_ENGINE_CONFIGURATION))
             javaName = "engineConfiguration->" + javaName.substring(CONFIG_ENGINE_CONFIGURATION.length());
 
-        variables.add(new Tuple<>(userName, javaName + cf.getName(), cf.getType()));
+        variables.add(new VariableRecord(userName, javaName + cf.getName(), cf.getType(), null));
 
         mdContent.append("### " + userName + "\n");
         mdContent.append(cf.getComment() + "\n\n");
@@ -127,7 +128,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     public String getCompleteGetterBody() {
         StringBuilder switchBody = new StringBuilder();
 
-        StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, variables, null);
+        StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, variables);
 
         String fullSwitch = wrapSwitchStatement(switchBody);
 
@@ -142,20 +143,20 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         StringBuilder setterBody = new StringBuilder();
         HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(variables);
 
-        for (Tuple<String> pair : variables) {
+        for (VariableRecord pair : variables) {
 
-            String cast = TypesHelper.isFloat(pair.third) ? "" : "(int)";
+            String cast = TypesHelper.isFloat(pair.type) ? "" : "(int)";
 
 
-            int hash = HashUtil.hash(pair.first);
-            String str = getAssignment(cast, pair.second);
+            int hash = HashUtil.hash(pair.getUserName());
+            String str = getAssignment(cast, pair.getFullName());
             if (hashConflicts.get(hash).get() == 1) {
                 switchBody.append("\t\tcase " + hash + ":\n");
                 switchBody.append(str);
 
             } else {
 
-                setterBody.append(getCompareName(pair.first));
+                setterBody.append(getCompareName(pair.getUserName()));
                 setterBody.append(str);
             }
         }

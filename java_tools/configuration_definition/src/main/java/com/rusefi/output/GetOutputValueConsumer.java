@@ -4,6 +4,7 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.core.Pair;
+import com.rusefi.output.variables.VariableRecord;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetOutputValueConsumer implements ConfigurationConsumer {
-    private final List<Pair<String, String>> getterPairs = new ArrayList<>();
+    private final List<VariableRecord> getterPairs = new ArrayList<>();
     private final String fileName;
 
     public String currentSectionPrefix = "engine->outputChannels";
@@ -56,7 +57,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         String userName = prefix + cf.getName();
         String javaName = currentSectionPrefix + "." + prefix;
 
-        getterPairs.add(new Pair<>(userName, javaName + cf.getName()));
+        getterPairs.add(new VariableRecord(userName, javaName + cf.getName(),  null, conditional));
 
 
         return "";
@@ -70,7 +71,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     public String getContent() {
         StringBuilder switchBody = new StringBuilder();
 
-        StringBuilder getterBody = getGetters(switchBody, getterPairs, conditional);
+        StringBuilder getterBody = getGetters(switchBody, getterPairs);
 
         String fullSwitch = wrapSwitchStatement(switchBody);
 
@@ -90,24 +91,25 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     @NotNull
-    static StringBuilder getGetters(StringBuilder switchBody, List<? extends Pair<String, String>> getterPairs, String conditional) {
+    static StringBuilder getGetters(StringBuilder switchBody, List<VariableRecord> getterPairs) {
         HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(getterPairs);
 
         StringBuilder getterBody = new StringBuilder();
-        for (Pair<String, String> pair : getterPairs) {
-            String returnLine = "\t\treturn " + pair.second + ";\n";
+        for (VariableRecord pair : getterPairs) {
+            String returnLine = "\t\treturn " + pair.getFullName() + ";\n";
+            String conditional = pair.getConditional();
 
             String before = conditional == null ? "" : "#if " + conditional + "\n";
             String after = conditional == null ? "" : "#endif\n";
 
-            int hash = HashUtil.hash(pair.first);
+            int hash = HashUtil.hash(pair.getUserName());
             if (hashConflicts.get(hash).get() == 1) {
                 switchBody.append(before);
                 switchBody.append("\t\tcase " + hash + ":\n");
                 switchBody.append("\t" + returnLine);
                 switchBody.append(after);
             } else {
-                getterBody.append(getCompareName(pair.first));
+                getterBody.append(getCompareName(pair.getUserName()));
                 getterBody.append(returnLine);
             }
         }
@@ -115,10 +117,10 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     @NotNull
-    static HashMap<Integer, AtomicInteger> getHashConflicts(List<? extends Pair<String, String>> getterPairs1) {
+    static HashMap<Integer, AtomicInteger> getHashConflicts(List<VariableRecord> getterPairs) {
         HashMap<Integer, AtomicInteger> hashConflicts = new HashMap<>();
-        for (Pair<String, String> pair : getterPairs1) {
-            hashConflicts.computeIfAbsent(HashUtil.hash(pair.first), integer -> new AtomicInteger(0)).incrementAndGet();
+        for (VariableRecord pair : getterPairs) {
+            hashConflicts.computeIfAbsent(HashUtil.hash(pair.getUserName()), integer -> new AtomicInteger(0)).incrementAndGet();
         }
         return hashConflicts;
     }
