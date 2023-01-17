@@ -49,6 +49,10 @@ public:
 		m_pwm2.setFrequency(frequency);
 	}
 
+	const char *msg() {
+	    return dcMotor.msg;
+	}
+
 	void stop() {
 		// todo: replace 'isStarted' with 'stop'
 	}
@@ -174,5 +178,9 @@ void showDcMotorInfo(int i) {
 	DcHardware *dc = &dcHardware[i];
 
 	efiPrintf(" motor: dir=%d DC=%f", dc->dcMotor.isOpenDirection(), dc->dcMotor.get());
+	const char *disableMsg = dc->msg();
+	if (disableMsg != nullptr) {
+		efiPrintf("disabled [%s]", disableMsg);
+	}
 }
 

@@ -555,7 +555,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
 		// Otherwise disable the motor.
-		m_motor->disable();
+		m_motor->disable("setOutput");
 	}
 }
 
@@ -645,7 +645,7 @@ void EtbController::update() {
 	if (!isOk) {
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
-		m_motor->disable();
+		m_motor->disable("etb status");
 		return;
 	}
 
@@ -746,7 +746,7 @@ struct EtbImpl final : public TBase {
 		float secondaryMin = Sensor::getRaw(functionToTpsSensorSecondary(myFunction));
 
 		// Finally disable and reset state
-		motor->disable();
+		motor->disable("autotune");
 
 		// Check that the calibrate actually moved the throttle
 		if (absF(primaryMax - primaryMin) < 0.5f) {
