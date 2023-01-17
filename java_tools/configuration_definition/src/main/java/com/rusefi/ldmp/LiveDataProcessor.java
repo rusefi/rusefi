@@ -105,7 +105,7 @@ public class LiveDataProcessor {
                 // TODO: use outputNames
 
                 int startingPosition = javaSensorsConsumer.sensorTsPosition;
-                log.info("Starting " + name + " at " + startingPosition);
+                log.info("Starting " + name + " at " + startingPosition + " with [" + conditional + "]");
 
                 baseAddressCHeader.append("#define " + name.toUpperCase() + "_BASE_ADDRESS " + startingPosition + "\n");
 
