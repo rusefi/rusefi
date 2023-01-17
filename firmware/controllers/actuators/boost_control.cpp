@@ -75,9 +75,9 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 	UNUSED(target);
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+	auto driverIntent = Sensor::get(SensorType::DriverThrottleIntent);
 
-	isTpsInvalid = !tps.Valid;
+	isTpsInvalid = !driverIntent.Valid;
 
 	if (isTpsInvalid) {
 		return unexpected;
@@ -85,7 +85,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 	efiAssert(OBD_PCM_Processor_Fault, m_openLoopMap != nullptr, "boost open loop", unexpected);
 
-	openLoopPart = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, tps.Value);
+	openLoopPart = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, driverIntent.Value);
 
 	return openLoopPart;
 }
