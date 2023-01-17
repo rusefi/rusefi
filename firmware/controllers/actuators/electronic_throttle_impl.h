@@ -94,6 +94,14 @@ private:
 	// todo: rename to m_targetErrorAccumulator
 	ErrorAccumulator m_errorAccumulator;
 
+    /**
+     * @return true if OK, false if should be disabled
+     */
+    bool checkStatus();
+    bool isEtbMode() {
+        return m_function == ETB_Throttle1 || m_function == ETB_Throttle2;
+    }
+
 	ExpAverage m_dutyRocAverage;
 	ExpAverage m_dutyAverage;
 
