@@ -958,6 +958,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration();
 		break;
+	case TEST_DC_WASTEGATE_DISCOVERY:
+		setTestDcWastegateConfiguration();
+		break;
 	case SACHS:
 		setSachs();
 		break;
