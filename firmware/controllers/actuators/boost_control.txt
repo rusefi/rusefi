@@ -6,9 +6,12 @@ bit isBelowClosedLoopThreshold;
 bit isNotClosedLoop;
 bit isZeroRpm
 bit hasInitBoost
+bit rpmTooLow
+bit tpsTooLow
+bit mapTooLow
 
 int16_t autoscale luaTargetAdd;"Boost: Lua Target Add";"v", 0.5,0, -100,100, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
-int16_t autoscale boostOutput;"Boost: Output";"v", 0.5,0, -100,100, 1, @@GAUGE_CATEGORY_BOOST_CONTROL@@
+int16_t autoscale boostOutput;"Boost: Output";"percent", 0.01,0, -100,100, 2, @@GAUGE_CATEGORY_BOOST_CONTROL@@
 float luaTargetMult
 
 float openLoopPart;

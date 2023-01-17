@@ -284,9 +284,6 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	bit dfcoActive
 	bit tpsAccelActive
 
-	uint8_t autoscale boostControllerOutput;@@GAUGE_NAME_BOOST_OUTPUT@@;"%", 0.5, 0, 0, 100, 1
-	uint8_t autoscale boostControllerOpenLoopPart;@@GAUGE_NAME_BOOST_OPEN_LOOP@@;"%", 0.5, 0, 0, 100, 1
-
 	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1
 
 	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 655, 2
