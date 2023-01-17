@@ -515,38 +515,70 @@ float getOutputValueByName(const char *name) {
 			return engine->ignitionState.luaTimingAdd;
 		case -1626770351:
 			return engine->ignitionState.luaTimingMult;
+#if EFI_BOOST_CONTROL
 		case -575666209:
 			return engine->boostController.isTpsInvalid;
+#endif
+#if EFI_BOOST_CONTROL
 		case 1846215200:
 			return engine->boostController.m_shouldResetPid;
+#endif
+#if EFI_BOOST_CONTROL
 		case 1826317915:
 			return engine->boostController.isBelowClosedLoopThreshold;
+#endif
+#if EFI_BOOST_CONTROL
 		case -1642402810:
 			return engine->boostController.isNotClosedLoop;
+#endif
+#if EFI_BOOST_CONTROL
 		case 2111912944:
 			return engine->boostController.isZeroRpm;
+#endif
+#if EFI_BOOST_CONTROL
 		case -2011570052:
 			return engine->boostController.hasInitBoost;
+#endif
+#if EFI_BOOST_CONTROL
 		case 193830616:
 			return engine->boostController.rpmTooLow;
+#endif
+#if EFI_BOOST_CONTROL
 		case -1033638560:
 			return engine->boostController.tpsTooLow;
+#endif
+#if EFI_BOOST_CONTROL
 		case -734877977:
 			return engine->boostController.mapTooLow;
+#endif
+#if EFI_BOOST_CONTROL
 		case 119157463:
 			return engine->boostController.luaTargetAdd;
+#endif
+#if EFI_BOOST_CONTROL
 		case 1239062717:
 			return engine->boostController.boostOutput;
+#endif
+#if EFI_BOOST_CONTROL
 		case -362320880:
 			return engine->boostController.luaTargetMult;
+#endif
+#if EFI_BOOST_CONTROL
 		case -1481117304:
 			return engine->boostController.openLoopPart;
+#endif
+#if EFI_BOOST_CONTROL
 		case 1944984220:
 			return engine->boostController.luaOpenLoopAdd;
+#endif
+#if EFI_BOOST_CONTROL
 		case -707712709:
 			return engine->boostController.boostControllerClosedLoopPart;
+#endif
+#if EFI_BOOST_CONTROL
 		case -1712045196:
 			return engine->boostController.boostControlTarget;
+#endif
 		case 1649801578:
 			return engine->engineState.lua.fuelAdd;
 		case -1390672637:
