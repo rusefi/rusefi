@@ -260,7 +260,8 @@ expected<percent_t> EtbController::getSetpoint() {
 		case ETB_IdleValve:
 			return getSetpointIdleValve();
 		case ETB_Wastegate:
-			return getSetpointWastegate();
+		    firmwareError(OBD_PCM_Processor_Fault, "Wastegate should not run closed loop controller");
+		    return unexpected;
 		default:
 			return unexpected;
 	}
@@ -275,7 +276,7 @@ expected<percent_t> EtbController::getSetpointIdleValve() const {
 	return clampF(0, m_idlePosition, 100);
 }
 
-expected<percent_t> EtbController::getSetpointWastegate() const {
+percent_t EtbController::getWastegateOutput() const {
 	return clampF(0, m_wastegatePosition, 100);
 }
 
@@ -638,6 +639,12 @@ void EtbController::update() {
 		m_motor->set(directPwmValue);
 		etbErrorCode = (int8_t)TpsState::Manual;
 		return;
+	}
+
+	if (getFunction() == ETB_Wastegate) {
+	    // boost controller runs it's own PID we just take the result
+	    m_motor->set(getWastegateOutput());
+	    return;
 	}
 
     bool isOk = checkStatus();
