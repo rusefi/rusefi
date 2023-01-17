@@ -58,6 +58,9 @@ void setTestCrankEngineConfiguration() {
 }
 
 void setTestDcWastegateConfiguration() {
+    engineConfiguration->isBoostControlEnabled = 1;
+	engineConfiguration->etbFunctions[0] = ETB_Wastegate;
+	setTable(config->boostTableOpenLoop, 50);
 }
 
 void setTestVVTEngineConfiguration() {
