@@ -170,7 +170,6 @@ void setDcMotorDuty(size_t index, float duty) {
 	dcHardware[index].dcMotor.set(duty);
 }
 
-
 void showDcMotorInfo(int i) {
 	DcHardware *dc = &dcHardware[i];
 

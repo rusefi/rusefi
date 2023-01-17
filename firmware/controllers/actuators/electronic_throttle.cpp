@@ -172,7 +172,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	m_positionSensor = functionToPositionSensor(function);
 
 	// If we are a throttle, require redundant TPS sensor
-	if (function == ETB_Throttle1 || function == ETB_Throttle2) {
+	if (isEtbMode()) {
 		// We don't need to init throttles, so nothing to do here.
 		if (!hasPedal) {
 			etbErrorCode = (int8_t)TpsState::PpsError;
@@ -558,13 +558,15 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	}
 }
 
-void EtbController::update() {
-#if !EFI_UNIT_TEST
-	// If we didn't get initialized, fail fast
-	if (!m_motor) {
-		return;
-	}
-#endif // EFI_UNIT_TEST
+bool EtbController::checkStatus() {
+    if (!isEtbMode()) {
+        // no validation for h-bridge or idle mode
+        return true;
+    }
+    // ETB-specific code belo. The whole mix-up between DC and ETB is shameful :(
+
+	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
+	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #1
@@ -572,12 +574,6 @@ void EtbController::update() {
 		m_pid.postState(engine->outputChannels.etbStatus);
 	}
 #endif /* EFI_TUNER_STUDIO */
-
-	if (!cisnan(directPwmValue)) {
-		m_motor->set(directPwmValue);
-		etbErrorCode = (int8_t)TpsState::Manual;
-		return;
-	}
 
 	// Only allow autotune with stopped engine, and on the first throttle
 	// Update local state about autotune
@@ -626,16 +622,31 @@ void EtbController::update() {
 
 	etbErrorCode = (int8_t)localReason;
 
-	if (localReason != TpsState::None) {
+    return localReason == TpsState::None;
+}
+
+void EtbController::update() {
+#if !EFI_UNIT_TEST
+	// If we didn't get initialized, fail fast
+	if (!m_motor) {
+		return;
+	}
+#endif // EFI_UNIT_TEST
+
+	if (!cisnan(directPwmValue)) {
+		m_motor->set(directPwmValue);
+		etbErrorCode = (int8_t)TpsState::Manual;
+		return;
+	}
+
+    bool isOk = checkStatus();
+
+	if (!isOk) {
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable();
 		return;
 	}
-
-
-	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
-	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	auto output = ClosedLoopController::update();
 
