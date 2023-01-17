@@ -61,6 +61,16 @@ void setTestDcWastegateConfiguration() {
     engineConfiguration->isBoostControlEnabled = 1;
 	engineConfiguration->etbFunctions[0] = ETB_Wastegate;
 	setTable(config->boostTableOpenLoop, 50);
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_1; // PA1
+
+	// PWM pin
+	engineConfiguration->etbIo[0].controlPin = Gpio::C0;
+	// DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::C1;
+	// Disable pin
+	engineConfiguration->etbIo[0].disablePin = Gpio::C2;
+	// we only have pwm/dir, no dira/dirb
+	engineConfiguration->etb_use_two_wires = false;
 }
 
 void setTestVVTEngineConfiguration() {
