@@ -325,10 +325,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.dfcoActive;
 		case 1506646480:
 			return engine->outputChannels.tpsAccelActive;
-		case 190940033:
-			return engine->outputChannels.boostControllerOutput;
-		case -1563675693:
-			return engine->outputChannels.boostControllerOpenLoopPart;
 		case -940825965:
 			return engine->outputChannels.fallbackMap;
 		case -1162308767:
@@ -531,6 +527,12 @@ float getOutputValueByName(const char *name) {
 			return engine->boostController.isZeroRpm;
 		case -2011570052:
 			return engine->boostController.hasInitBoost;
+		case 193830616:
+			return engine->boostController.rpmTooLow;
+		case -1033638560:
+			return engine->boostController.tpsTooLow;
+		case -734877977:
+			return engine->boostController.mapTooLow;
 		case 119157463:
 			return engine->boostController.luaTargetAdd;
 		case 1239062717:
