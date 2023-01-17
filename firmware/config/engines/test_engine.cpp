@@ -57,6 +57,9 @@ void setTestCrankEngineConfiguration() {
 	engineConfiguration->skippedWheelOnCam = false;
 }
 
+void setTestDcWastegateConfiguration() {
+}
+
 void setTestVVTEngineConfiguration() {
 	setCrankOperationMode();
 
