@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 15 04:02:37 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Jan 17 01:56:08 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1090,41 +1090,35 @@ struct output_channels_s {
 	offset 360 bit 31 */
 	bool unusedBit_207_31 : 1 {};
 	/**
-	 * @@GAUGE_NAME_BOOST_OUTPUT@@
-	%
-	 * offset 364
-	 */
-	scaled_channel<uint8_t, 2, 1> boostControllerOutput = (uint8_t)0;
-	/**
-	 * @@GAUGE_NAME_BOOST_OPEN_LOOP@@
-	%
-	 * offset 365
-	 */
-	scaled_channel<uint8_t, 2, 1> boostControllerOpenLoopPart = (uint8_t)0;
-	/**
 	kPa
-	 * offset 366
+	 * offset 364
 	 */
 	scaled_channel<uint16_t, 10, 1> fallbackMap = (uint16_t)0;
 	/**
 	 * Instant MAP
 	kPa
-	 * offset 368
+	 * offset 366
 	 */
 	scaled_channel<uint16_t, 30, 1> instantMAPValue = (uint16_t)0;
 	/**
 	us
-	 * offset 370
+	 * offset 368
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
-	 * offset 372
+	 * offset 370
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
-	 * offset 374
+	 * offset 372
 	 */
 	uint16_t canWriteNotOk = (uint16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 374
+	 */
+	uint8_t alignmentFill_at_374[2];
 	/**
 	 * offset 376
 	 */
@@ -1313,28 +1307,28 @@ struct output_channels_s {
 	bool injectorState12 : 1 {};
 	/**
 	offset 584 bit 24 */
-	bool unusedBit_293_24 : 1 {};
+	bool unusedBit_292_24 : 1 {};
 	/**
 	offset 584 bit 25 */
-	bool unusedBit_293_25 : 1 {};
+	bool unusedBit_292_25 : 1 {};
 	/**
 	offset 584 bit 26 */
-	bool unusedBit_293_26 : 1 {};
+	bool unusedBit_292_26 : 1 {};
 	/**
 	offset 584 bit 27 */
-	bool unusedBit_293_27 : 1 {};
+	bool unusedBit_292_27 : 1 {};
 	/**
 	offset 584 bit 28 */
-	bool unusedBit_293_28 : 1 {};
+	bool unusedBit_292_28 : 1 {};
 	/**
 	offset 584 bit 29 */
-	bool unusedBit_293_29 : 1 {};
+	bool unusedBit_292_29 : 1 {};
 	/**
 	offset 584 bit 30 */
-	bool unusedBit_293_30 : 1 {};
+	bool unusedBit_292_30 : 1 {};
 	/**
 	offset 584 bit 31 */
-	bool unusedBit_293_31 : 1 {};
+	bool unusedBit_292_31 : 1 {};
 	/**
 	 * offset 588
 	 */
@@ -1377,4 +1371,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 748);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 15 04:02:37 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Jan 17 01:56:08 UTC 2023

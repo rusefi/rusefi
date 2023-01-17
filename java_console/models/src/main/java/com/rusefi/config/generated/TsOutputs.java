@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 16 21:30:42 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Jan 17 01:56:08 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -601,13 +601,12 @@ public class TsOutputs {
 	public static final Field AUXLINEAR2 = Field.create("AUXLINEAR2", 358, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field DFCOACTIVE = Field.create("DFCOACTIVE", 360, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field TPSACCELACTIVE = Field.create("TPSACCELACTIVE", 360, FieldType.BIT, 1).setBaseOffset(0);
-	public static final Field BOOSTCONTROLLEROUTPUT = Field.create("BOOSTCONTROLLEROUTPUT", 364, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field BOOSTCONTROLLEROPENLOOPPART = Field.create("BOOSTCONTROLLEROPENLOOPPART", 365, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field FALLBACKMAP = Field.create("FALLBACKMAP", 366, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field INSTANTMAPVALUE = Field.create("INSTANTMAPVALUE", 368, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(0);
-	public static final Field MAXLOCKEDDURATION = Field.create("MAXLOCKEDDURATION", 370, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field CANWRITEOK = Field.create("CANWRITEOK", 372, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field CANWRITENOTOK = Field.create("CANWRITENOTOK", 374, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field FALLBACKMAP = Field.create("FALLBACKMAP", 364, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field INSTANTMAPVALUE = Field.create("INSTANTMAPVALUE", 366, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(0);
+	public static final Field MAXLOCKEDDURATION = Field.create("MAXLOCKEDDURATION", 368, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field CANWRITEOK = Field.create("CANWRITEOK", 370, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field CANWRITENOTOK = Field.create("CANWRITENOTOK", 372, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_374 = Field.create("ALIGNMENTFILL_AT_374", 374, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGERPRIMARYFALL = Field.create("TRIGGERPRIMARYFALL", 376, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGERPRIMARYRISE = Field.create("TRIGGERPRIMARYRISE", 380, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGERSECONDARYFALL = Field.create("TRIGGERSECONDARYFALL", 384, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -1064,13 +1063,12 @@ public class TsOutputs {
 	AUXLINEAR2,
 	DFCOACTIVE,
 	TPSACCELACTIVE,
-	BOOSTCONTROLLEROUTPUT,
-	BOOSTCONTROLLEROPENLOOPPART,
 	FALLBACKMAP,
 	INSTANTMAPVALUE,
 	MAXLOCKEDDURATION,
 	CANWRITEOK,
 	CANWRITENOTOK,
+	ALIGNMENTFILL_AT_374,
 	TRIGGERPRIMARYFALL,
 	TRIGGERPRIMARYRISE,
 	TRIGGERSECONDARYFALL,
