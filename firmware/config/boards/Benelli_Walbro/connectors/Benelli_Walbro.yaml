@@ -252,6 +252,8 @@ pins:
     color: green
 
 info:
+# check build is triggered after PR
+# open issue:  current gen_upload_pinouts.sh "Missing yaml id field in info section of" in all yaml files
   title: Benelli_Walbro
   name: Benelli_Walbro
   board_url: https://rusefi.com/s/Benelli_Walbro
