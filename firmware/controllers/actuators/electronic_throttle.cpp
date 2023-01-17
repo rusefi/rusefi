@@ -546,10 +546,11 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 		return;
 	}
 
-	// If ETB is allowed, output is valid, and we aren't paused, output to motor.
-	if (getLimpManager()->allowElectronicThrottle()
+	// If not ETB, or ETB is allowed, output is valid, and we aren't paused, output to motor.
+	if (!isEtbMode() ||
+	   (getLimpManager()->allowElectronicThrottle()
 		&& outputValue
-		&& !engineConfiguration->pauseEtbControl) {
+		&& !engineConfiguration->pauseEtbControl)) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
@@ -806,14 +807,15 @@ static DcThread dcThread CCM_OPTIONAL;
 
 static void showEtbInfo() {
 #if EFI_PROD_CODE
-	efiPrintf("etbAutoTune=%d",
-			engine->etbAutoTune);
+	efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
 
 	efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
-	efiPrintf("etbControlPin=%s duty=%.2f freq=%d",
-			hwPortname(engineConfiguration->etbIo[0].controlPin),
+	efiPrintf("ETB1 duty=%.2f freq=%d",
 			engine->outputChannels.etb1DutyCycle,
+			engineConfiguration->etbFreq);
+
+	efiPrintf("ETB freq=%d",
 			engineConfiguration->etbFreq);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
