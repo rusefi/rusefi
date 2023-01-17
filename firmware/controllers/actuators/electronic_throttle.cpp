@@ -986,21 +986,6 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 	}
 }
 
-#if EFI_PROD_CODE && 0
-static void setTempOutput(float value) {
-	autoTune.output = value;
-}
-
-/**
- * set_etbat_step X
- */
-static void setAutoStep(float value) {
-	autoTune.reset();
-	autoTune.SetOutputStep(value);
-}
-
-#endif /* EFI_PROD_CODE */
-
 static const float defaultBiasBins[] = {
 	0, 1, 2, 4, 7, 98, 99, 100
 };
