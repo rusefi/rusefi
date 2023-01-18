@@ -22,7 +22,7 @@ TEST(DcMotor, Disable2) {
 
 	TwoPinDcMotor dut(dpin);
 
-	dut.disable();
+	dut.disable(nullptr);
 }
 
 TEST(DcMotor, Enable) {
