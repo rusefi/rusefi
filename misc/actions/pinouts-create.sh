@@ -33,9 +33,9 @@ for c in $CONNECTORS; do
 # todo fail once all pages are compliant    exit 1
   fi
   if [ -f $DIR/index.html ]; then
-    bash misc/pinout-gen/append.sh "$(yqdir/yq -o=json e $c)" $DIR/index.html
+    bash misc/pinout-gen/append.sh "$(yqdir/yq -j e $c)" $DIR/index.html
   else
-    bash misc/pinout-gen/gen.sh "$(yqdir/yq -o=json e $c)" $DIR/index.html
+    bash misc/pinout-gen/gen.sh "$(yqdir/yq -j e $c)" $DIR/index.html
   fi
   if [ $? -ne 0 ]; then
     echo "${I_AM} something is broken"
