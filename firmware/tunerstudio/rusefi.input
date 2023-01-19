@@ -1330,6 +1330,11 @@ gaugeCategory = VVT
 	vvtTargets2Gauge = vvtTargets2, @@GAUGE_NAME_VVT_TARGET_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
 	vvtTargets3Gauge = vvtTargets3, @@GAUGE_NAME_VVT_TARGET_B2I@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
 	vvtTargets4Gauge = vvtTargets4, @@GAUGE_NAME_VVT_TARGET_B2E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
+	vvtOutput1Gauge = vvtStatus1_output, "vvt: output 1", "", 00, 100, -60, -60, 60, 60, 0, 0
+	vvtOutput2Gauge = vvtStatus2_output, "vvt: output 2", "", 00, 100, -60, -60, 60, 60, 0, 0
+	vvtOutput3Gauge = vvtStatus3_output, "vvt: output 3", "", 00, 100, -60, -60, 60, 60, 0, 0
+	vvtOutput4Gauge = vvtStatus4_output, "vvt: output 4", "", 00, 100, -60, -60, 60, 60, 0, 0
+
 
 gaugeCategory = Ignition
 	sparkCutReasonGauge = sparkCutReason,"Spark Cut Code", "code", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
