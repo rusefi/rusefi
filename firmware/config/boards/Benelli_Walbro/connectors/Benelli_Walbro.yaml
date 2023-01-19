@@ -252,8 +252,9 @@ pins:
     color: green
 
 info:
-  title: Benelli_Walbro
-  name: Benelli_Walbro
+# todo:  trigger build after PR
+  title: Benelli_Walbro 
+  name: 'Benelli_Walbro  !! NOTE: status is: DRAFT - there a unknown and potential wrong pin assignments, these are flagged with "??" !!'
   board_url: https://rusefi.com/s/Benelli_Walbro
   image:
     file: Benelli_Walbro.jpg
