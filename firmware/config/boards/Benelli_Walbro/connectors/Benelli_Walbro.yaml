@@ -202,7 +202,7 @@ pins:
 
   - pin: E1
     # not used (OBD2?)
-    function: 'not required by rusEFI?? (Walbro:
+    function: 'not required by rusEFI?? (Walbro: OBD2)'
 
   - pin: E2
     # not used
