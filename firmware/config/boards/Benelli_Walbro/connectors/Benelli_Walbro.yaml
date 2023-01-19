@@ -192,7 +192,7 @@ pins:
 
   - pin: D7
     # not used (enable ECU programming?)
-    function: not used
+    function: 'not required by rusEFI?? (Walbro: enable ECU programming)'
 
   - pin: D8
     function: Power Ground
@@ -202,7 +202,7 @@ pins:
 
   - pin: E1
     # not used (OBD2?)
-    function: not used
+    function: 'not required by rusEFI?? (Walbro:
 
   - pin: E2
     # not used
@@ -210,7 +210,7 @@ pins:
 
   - pin: E3
     # not used (enable ECU programming?)
-    function: not used
+    function: 'not required by rusEFI?? (Walbro: enable ECU programming)'
 
   - pin: E4
     # not used
@@ -248,15 +248,15 @@ pins:
 
   - pin: F2
     # not used (OBD2?)
-    function: not used
+    function: 'not required by rusEFI?? (Walbro: OBD2)'
 
   - pin: F3
     # not used (OBD2?)
-    function: not used
+    function: 'not required by rusEFI?? (Walbro: OBD2)'
 
   - pin: F4
     # not used (OBD2?)
-    function: not used
+    function: 'not required by rusEFI?? (Walbro: OBD2)'
 
   - pin: F5
     # not used
