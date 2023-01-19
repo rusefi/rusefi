@@ -185,9 +185,9 @@ pins:
     function: not used
 
   - pin: D6
-    class: outputs
+    #class: outputs
     function: 'unknown purpose ??'
-    type: ign
+    #type: ign
     color: brown/violet
 
   - pin: D7
