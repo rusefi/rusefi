@@ -32,6 +32,7 @@ for BOARD in \
    "hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
    "hellen/hellen121vag hellen121vag" \
    "hellen/hellen121nissan hellen121nissan" \
+   "hellen/hellen-honda-k hellen-honda-k" \
    "hellen/hellen154hyundai hellen154hyundai" \
    "hellen/hellen88bmw hellen88bmw" \
    "hellen/hellen72 hellen72" \
