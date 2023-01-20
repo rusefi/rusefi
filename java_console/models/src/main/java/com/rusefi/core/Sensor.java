@@ -303,7 +303,7 @@ public enum Sensor implements BinaryLogEntry {
     }
 
     @Override
-    public String getName() {
+    public String getCategory() {
         // TODO
         return "";
     }
