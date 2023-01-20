@@ -123,11 +123,17 @@ pins:
   #   type: vr
   #   color: gray
 
-  - pin: C3C4
-    function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! is + and - side assignment required??'
+  - pin: C3
+    function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! ToDo: correct  + and - side assignment required!!'
     class: event_inputs
     type: vr
-    color: white/black
+    color: white or black
+
+  - pin: C4
+    function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! ToDo: correct  + and - side assignment required!!'
+    class: event_inputs
+    type: vr
+    color: white or black
 
   - pin: C5
     function: 'Intake Air Temp (IAT) sensor'
@@ -139,7 +145,7 @@ pins:
     function: Engine Temp Sensor Input
     class: analog_inputs
     type: at
-    color: bi/violet
+    color: white/violet
 
   - pin: C7
     # not used
@@ -173,7 +179,7 @@ pins:
     function: Neutral Gear Sensor
     class: analog_inputs
     type: ??
-    color: bi/violet
+    color: orange/black
 
   - pin: D5
     # not used
@@ -216,10 +222,6 @@ pins:
     function: not used
 
   - pin: E6
-    # not used
-    function: not used
-
-  - pin: E5E6
     # not used
     function: not used
 
@@ -277,7 +279,7 @@ pins:
 info:
 # todo:  trigger build after PR
   title: Benelli_Walbro 
-  name: 'Benelli_Walbro  !! NOTE: status is DRAFT !! - there a unknown and potential wrong pin assignments, these are flagged with "??" !!'
+  name: 'Benelli_Walbro  !! NOTE: status is DRAFT !! - there a unknown and potential wrong pin assignments, these are flagged with "??" and "ToDo:"!!'
   board_url: https://rusefi.com/s/Benelli_Walbro
   image:
     file: Benelli_Walbro.jpg
