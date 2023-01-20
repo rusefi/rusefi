@@ -303,12 +303,6 @@ public enum Sensor implements BinaryLogEntry {
     }
 
     @Override
-    public String getCategory() {
-        // TODO
-        return "";
-    }
-
-    @Override
     public String getUnit() {
         return units;
     }
@@ -333,6 +327,7 @@ public enum Sensor implements BinaryLogEntry {
         }
     }
 
+    // TODO: this should be a string
     public SensorCategory getCategory() {
         return category;
     }

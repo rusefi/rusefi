@@ -130,7 +130,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
         for (BinaryLogEntry sensor : entries) {
             String name = sensor.getName();
             String unit = sensor.getUnit();
-            String category = sensor.getCategory();
+            String category = sensor.getCategory().getName();
 
             // 0000h
             stream.write(sensor.getByteSize());
