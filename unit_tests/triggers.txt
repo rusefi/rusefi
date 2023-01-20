@@ -5151,10 +5151,12 @@ crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=720
-gapsCount=1
+gapsCount=2
 isSynchronizationNeeded=1
-gapFrom.0=1.500000
-gapTo.0=2.500000
+gapFrom.0=1.600000
+gapTo.0=2.400000
+gapFrom.1=0.750000
+gapTo.1=1.250000
 # end of meta section
 event 0 0 1 0.00 2.000000
 event 1 0 0 0.00 nan
