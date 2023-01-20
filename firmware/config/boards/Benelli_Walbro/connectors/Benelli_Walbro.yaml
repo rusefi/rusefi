@@ -124,13 +124,13 @@ pins:
   #   color: gray
 
   - pin: C3
-    function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! is + and - side assignment required??'
+    function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! ToDo: correct  + and - side assignment required!!'
     class: event_inputs
     type: vr
     color: white or black
 
   - pin: C4
-    function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! is + and - side assignment required??'
+    function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! ToDo: correct  + and - side assignment required!!'
     class: event_inputs
     type: vr
     color: white or black
