@@ -142,6 +142,7 @@ public class OutputsTest {
         ReaderStateImpl state = new ReaderStateImpl();
 
         GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null);
+        outputValueConsumer.conditional = "EFI_BOOST_CONTROL";
         state.readBufferedReader(test, (outputValueConsumer));
         assertEquals(
                 "#include \"pch.h\"\n" +
@@ -149,12 +150,18 @@ public class OutputsTest {
                         "float getOutputValueByName(const char *name) {\n" +
                         "\tint hash = djb2lowerCase(name);\n" +
                         "\tswitch(hash) {\n" +
+                        "#if EFI_BOOST_CONTROL\n" +
                         "\t\tcase -1571463185:\n" +
                         "\t\t\treturn engine->outputChannels.issue_294_31;\n" +
+                        "#endif\n" +
+                        "#if EFI_BOOST_CONTROL\n" +
                         "\t\tcase -298185774:\n" +
                         "\t\t\treturn engine->outputChannels.enableFan1WithAc;\n" +
+                        "#endif\n" +
+                        "#if EFI_BOOST_CONTROL\n" +
                         "\t\tcase -709106787:\n" +
                         "\t\t\treturn engine->outputChannels.hwChannel;\n" +
+                        "#endif\n" +
                         "\t}\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
                         "}\n", outputValueConsumer.getContent());
@@ -164,14 +171,15 @@ public class OutputsTest {
     public void sensorStruct() {
         String test = "struct total\n" +
                 "    struct pid_status_s\n" +
-                "    \tfloat iTerm;;\"v\", 1, 0, -10000, 10000, 4\n" +
-                "    \tfloat dTerm;;\"v\", 1, 0, -10000, 10000, 4\n" +
+                "    \tfloat iTerm;;\"v\", 1, 0, -10000, 10000, 4, @@GAUGE_CATEGORY@@\n" +
+                "    \tfloat dTerm;;\"v\", 1, 0, -10000, 10000, 4, @@GAUGE_CATEGORY@@\n" +
                 "    end_struct\n" +
                 "\tpid_status_s alternatorStatus\n" +
                 "\tpid_status_s idleStatus\n" +
                 "end_struct\n";
 
         ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().register("GAUGE_CATEGORY", "Alternator");
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         GaugeConsumer gaugeConsumer = new GaugeConsumer(null);
         state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
@@ -182,7 +190,8 @@ public class OutputsTest {
                         "entry = idleStatus_dTerm, \"idleStatus_dTerm\", float,  \"%.3f\"\n",
                 dataLogConsumer.getContent());
 
-        assertEquals("alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
+        assertEquals("\tgaugeCategory = Alternator\n" +
+                        "alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "alternatorStatus_dTermGauge = alternatorStatus_dTerm,\"alternatorStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "idleStatus_iTermGauge = idleStatus_iTerm,\"idleStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "idleStatus_dTermGauge = idleStatus_dTerm,\"idleStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n",

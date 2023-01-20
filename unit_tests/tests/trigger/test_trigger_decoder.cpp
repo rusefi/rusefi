@@ -247,7 +247,7 @@ TEST(misc, testRpmCalculator) {
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
-	assertEqualsM("dwell", 4.5, engine->engineState.dwellAngle);
+	assertEqualsM("dwell", 4.5, engine->ignitionState.dwellAngle);
 	assertEqualsM("fuel #2", 4.5450, engine->engineState.injectionDuration);
 	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
@@ -296,7 +296,7 @@ TEST(misc, testRpmCalculator) {
 	eth.fireRise(5);
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 4.3";
 
-	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
+	assertEqualsM("dwell", 4.5, eth.engine.ignitionState.dwellAngle);
 	assertEqualsM("fuel #3", 4.5450, eth.engine.engineState.injectionDuration);
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
@@ -532,8 +532,8 @@ static void setTestBug299(EngineTestHelper *eth) {
 	ASSERT_EQ( 0,  eth->executeActions()) << "exec#3";
 
 
-	ASSERT_EQ( 1,  engine->engineState.running.intakeTemperatureCoefficient) << "iatC";
-	ASSERT_EQ( 1,  engine->engineState.running.coolantTemperatureCoefficient) << "cltC";
+	ASSERT_EQ( 1,  engine->fuelComputer.running.intakeTemperatureCoefficient) << "iatC";
+	ASSERT_EQ( 1,  engine->fuelComputer.running.coolantTemperatureCoefficient) << "cltC";
 	ASSERT_EQ( 0,  engine->module<InjectorModel>()->getDeadtime()) << "lag";
 
 	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "setTestBug299: RPM";

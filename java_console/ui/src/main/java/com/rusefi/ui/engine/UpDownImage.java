@@ -11,12 +11,7 @@ import com.rusefi.waves.TimeAxisTranslator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This is a renderer of an individual {@link EngineReport} - this makes a simple Logical Analyzer
@@ -31,6 +26,7 @@ import java.util.Date;
 public class UpDownImage extends JPanel {
     private static final int TIMESCALE_MULT = (int) (20 * EngineReport.ENGINE_SNIFFER_TICKS_PER_MS); // 20ms
     private static final int LINE_SIZE = 20;
+    private static final int GAP_POSITIONS = 5;
     public static final Color TIME_SCALE_COLOR = Color.red;
     public static final Color ENGINE_CYCLE_COLOR = new Color(0, 153, 0);
     private static final BasicStroke TIME_SCALE_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
@@ -159,8 +155,10 @@ public class UpDownImage extends JPanel {
 
         d.height = (int)(0.95 * d.height);
 
+        AtomicInteger gapIndex = new AtomicInteger();
+
         for (EngineReport.UpDown upDown : engineReport.getList())
-            paintUpDown(d, upDown, g);
+            paintUpDown(d, upDown, g, gapIndex);
 
         g2.setColor(Color.black);
 
@@ -243,7 +241,7 @@ public class UpDownImage extends JPanel {
         g2.setStroke(oldStroke);
     }
 
-    private void paintUpDown(Dimension d, EngineReport.UpDown upDown, Graphics g) {
+    private void paintUpDown(Dimension d, EngineReport.UpDown upDown, Graphics g, AtomicInteger gapIndex) {
         int x1 = translator.timeToScreen(upDown.upTime, d.width);
         int x2 = translator.timeToScreen(upDown.downTime, d.width);
 
@@ -264,10 +262,14 @@ public class UpDownImage extends JPanel {
         }
 
         // '-1' actually means 'not first wheel' it's coming from
-        if (!Double.isNaN(upDown.prevGap))
-            g.drawString(String.format("gap %.2f", upDown.prevGap), x1, d.height / 2);
-        if (!Double.isNaN(upDown.gap))
-            g.drawString(String.format("gap %.2f", upDown.gap), x2, d.height / 2);
+        if (!Double.isNaN(upDown.prevGap)) {
+            gapIndex.set(gapIndex.incrementAndGet() % GAP_POSITIONS);
+            g.drawString(String.format("gap %.2f", upDown.prevGap), x1, d.height / 2 + gapIndex.get() * g.getFont().getSize());
+        }
+        if (!Double.isNaN(upDown.gap)) {
+            gapIndex.set(gapIndex.incrementAndGet() % GAP_POSITIONS);
+            g.drawString(String.format("gap %.2f", upDown.gap), x2, d.height / 2 + gapIndex.get() * g.getFont().getSize());
+        }
 
         if (!this.renderText) {
             return;

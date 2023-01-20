@@ -13,11 +13,24 @@
 # todo: what is sequence of events in terms of 'live_data_e' code generation?
 #
 Usages:
+#  output_channels always goes first at least because it has protocol version at well-known offset
   - name: output_channels
     java: TsOutputs.java
     folder: console/binary
     prepend: integration/rusefi_config.txt
     constexpr: "engine->outputChannels"
+
+  - name: fuel_computer
+    java: FuelComputer.java
+    folder: controllers/algo/fuel
+    prepend: integration/rusefi_config.txt
+    constexpr: "engine->fuelComputer"
+
+  - name: ignition_state
+    java: IgnitionState.java
+    folder: controllers/algo
+    prepend: integration/rusefi_config.txt
+    constexpr: "engine->ignitionState"
 
   - name: knock_controller
     java: KnockController.java
@@ -32,12 +45,6 @@ Usages:
   - name: injector_model
     java: InjectorModel.java
     folder: controllers/algo/fuel
-
-  - name: fuel_computer
-    java: FuelComputer.java
-    folder: controllers/algo/fuel
-    prepend: integration/rusefi_config.txt
-    constexpr: "engine->fuelComputer"
 
   - name: launch_control_state
     java: LaunchControl.java
@@ -54,6 +61,8 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config.txt
     output_name: boost
+    constexpr: "engine->boostController"
+    conditional_compilation: "EFI_BOOST_CONTROL"
 
   - name: ac_control
     java: AcControl.java
@@ -116,10 +125,6 @@ Usages:
     java: IdleState.java
     folder: controllers/actuators
     output_name: idle
-
-  - name: ignition_state
-    java: IgnitionState.java
-    folder: controllers/algo
 
   - name: electronic_throttle
     java: ElectronicThrottle.java

@@ -125,7 +125,7 @@ typedef enum __attribute__ ((__packed__)) {
 	 */
 	FRANKENSO_MAZDA_MIATA_2003 = 47,
 
-	UNUSED_48 = 48,
+	TEST_DC_WASTEGATE_DISCOVERY = 48,
 
 	FRANKENSO_QA_ENGINE = 49,
 

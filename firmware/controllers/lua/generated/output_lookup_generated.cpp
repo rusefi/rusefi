@@ -129,8 +129,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.tpsAccelFuel;
 		case -802608648:
 			return engine->outputChannels.ignitionAdvance;
-		case -378144421:
-			return engine->outputChannels.sparkDwellValue;
 		case 1029096098:
 			return engine->outputChannels.coilDutyCycle;
 		case -606474478:
@@ -327,10 +325,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.dfcoActive;
 		case 1506646480:
 			return engine->outputChannels.tpsAccelActive;
-		case 190940033:
-			return engine->outputChannels.boostControllerOutput;
-		case -1563675693:
-			return engine->outputChannels.boostControllerOpenLoopPart;
 		case -940825965:
 			return engine->outputChannels.fallbackMap;
 		case -1162308767:
@@ -475,6 +469,20 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.mafMeasured2;
 		case 967311941:
 			return engine->outputChannels.schedulingUsedCount;
+		case -1779658835:
+			return engine->fuelComputer.totalFuelCorrection;
+		case -1288205717:
+			return engine->fuelComputer.running.postCrankingFuelCorrection;
+		case 197173469:
+			return engine->fuelComputer.running.intakeTemperatureCoefficient;
+		case 1822238385:
+			return engine->fuelComputer.running.coolantTemperatureCoefficient;
+		case 526786951:
+			return engine->fuelComputer.running.timeSinceCrankingInSecs;
+		case -42886021:
+			return engine->fuelComputer.running.baseFuel;
+		case -794283008:
+			return engine->fuelComputer.running.fuel;
 		case 995190836:
 			return engine->fuelComputer.afrTableYAxis;
 		case -734904659:
@@ -489,6 +497,88 @@ float getOutputValueByName(const char *name) {
 			return engine->fuelComputer.sdAirMassInOneCylinder;
 		case 816610019:
 			return engine->fuelComputer.sdIsTChargeAirModel;
+		case -1777838088:
+			return engine->ignitionState.baseDwell;
+		case -903101570:
+			return engine->ignitionState.sparkDwell;
+		case -1573373756:
+			return engine->ignitionState.dwellAngle;
+		case 256951528:
+			return engine->ignitionState.cltTimingCorrection;
+		case -1886479485:
+			return engine->ignitionState.timingIatCorrection;
+		case -319326974:
+			return engine->ignitionState.timingPidCorrection;
+		case -80612537:
+			return engine->ignitionState.dwellVoltageCorrection;
+		case -309610760:
+			return engine->ignitionState.luaTimingAdd;
+		case -1626770351:
+			return engine->ignitionState.luaTimingMult;
+#if EFI_BOOST_CONTROL
+		case -575666209:
+			return engine->boostController.isTpsInvalid;
+#endif
+#if EFI_BOOST_CONTROL
+		case 1846215200:
+			return engine->boostController.m_shouldResetPid;
+#endif
+#if EFI_BOOST_CONTROL
+		case 1826317915:
+			return engine->boostController.isBelowClosedLoopThreshold;
+#endif
+#if EFI_BOOST_CONTROL
+		case -1642402810:
+			return engine->boostController.isNotClosedLoop;
+#endif
+#if EFI_BOOST_CONTROL
+		case 2111912944:
+			return engine->boostController.isZeroRpm;
+#endif
+#if EFI_BOOST_CONTROL
+		case -2011570052:
+			return engine->boostController.hasInitBoost;
+#endif
+#if EFI_BOOST_CONTROL
+		case 193830616:
+			return engine->boostController.rpmTooLow;
+#endif
+#if EFI_BOOST_CONTROL
+		case -1033638560:
+			return engine->boostController.tpsTooLow;
+#endif
+#if EFI_BOOST_CONTROL
+		case -734877977:
+			return engine->boostController.mapTooLow;
+#endif
+#if EFI_BOOST_CONTROL
+		case 119157463:
+			return engine->boostController.luaTargetAdd;
+#endif
+#if EFI_BOOST_CONTROL
+		case 1239062717:
+			return engine->boostController.boostOutput;
+#endif
+#if EFI_BOOST_CONTROL
+		case -362320880:
+			return engine->boostController.luaTargetMult;
+#endif
+#if EFI_BOOST_CONTROL
+		case -1481117304:
+			return engine->boostController.openLoopPart;
+#endif
+#if EFI_BOOST_CONTROL
+		case 1944984220:
+			return engine->boostController.luaOpenLoopAdd;
+#endif
+#if EFI_BOOST_CONTROL
+		case -707712709:
+			return engine->boostController.boostControllerClosedLoopPart;
+#endif
+#if EFI_BOOST_CONTROL
+		case -1712045196:
+			return engine->boostController.boostControlTarget;
+#endif
 		case 1649801578:
 			return engine->engineState.lua.fuelAdd;
 		case -1390672637:
@@ -535,28 +625,6 @@ float getOutputValueByName(const char *name) {
 			return engine->engineState.crankingFuel.durationCoefficient;
 		case -180401224:
 			return engine->engineState.crankingFuel.fuel;
-		case -1288205717:
-			return engine->engineState.running.postCrankingFuelCorrection;
-		case 197173469:
-			return engine->engineState.running.intakeTemperatureCoefficient;
-		case 1822238385:
-			return engine->engineState.running.coolantTemperatureCoefficient;
-		case 526786951:
-			return engine->engineState.running.timeSinceCrankingInSecs;
-		case -42886021:
-			return engine->engineState.running.baseFuel;
-		case -794283008:
-			return engine->engineState.running.fuel;
-		case -903101570:
-			return engine->engineState.sparkDwell;
-		case -1573373756:
-			return engine->engineState.dwellAngle;
-		case 256951528:
-			return engine->engineState.cltTimingCorrection;
-		case -1886479485:
-			return engine->engineState.timingIatCorrection;
-		case -319326974:
-			return engine->engineState.timingPidCorrection;
 		case -295556270:
 			return engine->engineState.hellenBoardId;
 		case -797965330:
@@ -599,6 +667,8 @@ float getOutputValueByName(const char *name) {
 			return engine->triggerCentral.currentEngineDecodedPhase;
 		case -280624712:
 			return engine->triggerCentral.triggerToothAngleError;
+		case 989545496:
+			return engine->triggerCentral.triggerIgnoredToothCount;
 	}
 	return EFI_ERROR_CODE;
 }

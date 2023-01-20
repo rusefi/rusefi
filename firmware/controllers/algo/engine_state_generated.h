@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Jan 02 22:53:02 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Jan 15 04:27:57 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -163,42 +163,6 @@ struct cranking_fuel_s {
 };
 static_assert(sizeof(cranking_fuel_s) == 20);
 
-// start of running_fuel_s
-struct running_fuel_s {
-	/**
-	 * offset 0
-	 */
-	float postCrankingFuelCorrection = (float)0;
-	/**
-	 * @@GAUGE_NAME_FUEL_IAT_CORR@@
-	 * offset 4
-	 */
-	float intakeTemperatureCoefficient = (float)0;
-	/**
-	 * @@GAUGE_NAME_FUEL_CLT_CORR@@
-	 * offset 8
-	 */
-	float coolantTemperatureCoefficient = (float)0;
-	/**
-	 * offset 12
-	 */
-	float timeSinceCrankingInSecs = (float)0;
-	/**
-	 * offset 16
-	 */
-	floatms_t baseFuel = (floatms_t)0;
-	/**
-	 * Fuel: actual
-	 * Actual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.
-	 * Without injector lag.
-	 * @see baseFuel
-	 * @see actualLastInjection
-	 * offset 20
-	 */
-	floatms_t fuel = (floatms_t)0;
-};
-static_assert(sizeof(running_fuel_s) == 24);
-
 // start of engine_state_s
 struct engine_state_s {
 	/**
@@ -247,198 +211,171 @@ struct engine_state_s {
 	 */
 	cranking_fuel_s crankingFuel;
 	/**
-	 * offset 76
-	 */
-	running_fuel_s running;
-	/**
-	 * ignition dwell duration in ms
-	 * See also dwellAngle
-	 * offset 100
-	 */
-	floatms_t sparkDwell = (floatms_t)0;
-	/**
-	 * ignition dwell duration
-	 * as crankshaft angle
-	 * NAN if engine is stopped
-	 * See also sparkDwell
-	 * offset 104
-	 */
-	angle_t dwellAngle = (angle_t)0;
-	/**
-	deg
-	 * offset 108
-	 */
-	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
-	/**
-	deg
-	 * offset 110
-	 */
-	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
-	/**
-	deg
-	 * offset 112
-	 */
-	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
-	/**
 	 * Detected Board ID
 	id
-	 * offset 114
+	 * offset 76
 	 */
 	int16_t hellenBoardId = (int16_t)0;
 	/**
+	 * need 4 byte alignment
+	units
+	 * offset 78
+	 */
+	uint8_t alignmentFill_at_78[2];
+	/**
 	 * @@INDICATOR_NAME_CLUTCH_UP@@
-	offset 116 bit 0 */
+	offset 80 bit 0 */
 	bool clutchUpState : 1 {};
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_DOWN@@
-	offset 116 bit 1 */
+	offset 80 bit 1 */
 	bool clutchDownState : 1 {};
 	/**
 	 * @@INDICATOR_NAME_BRAKE_DOWN@@
-	offset 116 bit 2 */
+	offset 80 bit 2 */
 	bool brakePedalState : 1 {};
 	/**
-	offset 116 bit 3 */
+	offset 80 bit 3 */
 	bool startStopState : 1 {};
 	/**
-	offset 116 bit 4 */
-	bool unusedBit_22_4 : 1 {};
+	offset 80 bit 4 */
+	bool unusedBit_17_4 : 1 {};
 	/**
-	offset 116 bit 5 */
-	bool unusedBit_22_5 : 1 {};
+	offset 80 bit 5 */
+	bool unusedBit_17_5 : 1 {};
 	/**
-	offset 116 bit 6 */
-	bool unusedBit_22_6 : 1 {};
+	offset 80 bit 6 */
+	bool unusedBit_17_6 : 1 {};
 	/**
-	offset 116 bit 7 */
-	bool unusedBit_22_7 : 1 {};
+	offset 80 bit 7 */
+	bool unusedBit_17_7 : 1 {};
 	/**
-	offset 116 bit 8 */
-	bool unusedBit_22_8 : 1 {};
+	offset 80 bit 8 */
+	bool unusedBit_17_8 : 1 {};
 	/**
-	offset 116 bit 9 */
-	bool unusedBit_22_9 : 1 {};
+	offset 80 bit 9 */
+	bool unusedBit_17_9 : 1 {};
 	/**
-	offset 116 bit 10 */
-	bool unusedBit_22_10 : 1 {};
+	offset 80 bit 10 */
+	bool unusedBit_17_10 : 1 {};
 	/**
-	offset 116 bit 11 */
-	bool unusedBit_22_11 : 1 {};
+	offset 80 bit 11 */
+	bool unusedBit_17_11 : 1 {};
 	/**
-	offset 116 bit 12 */
-	bool unusedBit_22_12 : 1 {};
+	offset 80 bit 12 */
+	bool unusedBit_17_12 : 1 {};
 	/**
-	offset 116 bit 13 */
-	bool unusedBit_22_13 : 1 {};
+	offset 80 bit 13 */
+	bool unusedBit_17_13 : 1 {};
 	/**
-	offset 116 bit 14 */
-	bool unusedBit_22_14 : 1 {};
+	offset 80 bit 14 */
+	bool unusedBit_17_14 : 1 {};
 	/**
-	offset 116 bit 15 */
-	bool unusedBit_22_15 : 1 {};
+	offset 80 bit 15 */
+	bool unusedBit_17_15 : 1 {};
 	/**
-	offset 116 bit 16 */
-	bool unusedBit_22_16 : 1 {};
+	offset 80 bit 16 */
+	bool unusedBit_17_16 : 1 {};
 	/**
-	offset 116 bit 17 */
-	bool unusedBit_22_17 : 1 {};
+	offset 80 bit 17 */
+	bool unusedBit_17_17 : 1 {};
 	/**
-	offset 116 bit 18 */
-	bool unusedBit_22_18 : 1 {};
+	offset 80 bit 18 */
+	bool unusedBit_17_18 : 1 {};
 	/**
-	offset 116 bit 19 */
-	bool unusedBit_22_19 : 1 {};
+	offset 80 bit 19 */
+	bool unusedBit_17_19 : 1 {};
 	/**
-	offset 116 bit 20 */
-	bool unusedBit_22_20 : 1 {};
+	offset 80 bit 20 */
+	bool unusedBit_17_20 : 1 {};
 	/**
-	offset 116 bit 21 */
-	bool unusedBit_22_21 : 1 {};
+	offset 80 bit 21 */
+	bool unusedBit_17_21 : 1 {};
 	/**
-	offset 116 bit 22 */
-	bool unusedBit_22_22 : 1 {};
+	offset 80 bit 22 */
+	bool unusedBit_17_22 : 1 {};
 	/**
-	offset 116 bit 23 */
-	bool unusedBit_22_23 : 1 {};
+	offset 80 bit 23 */
+	bool unusedBit_17_23 : 1 {};
 	/**
-	offset 116 bit 24 */
-	bool unusedBit_22_24 : 1 {};
+	offset 80 bit 24 */
+	bool unusedBit_17_24 : 1 {};
 	/**
-	offset 116 bit 25 */
-	bool unusedBit_22_25 : 1 {};
+	offset 80 bit 25 */
+	bool unusedBit_17_25 : 1 {};
 	/**
-	offset 116 bit 26 */
-	bool unusedBit_22_26 : 1 {};
+	offset 80 bit 26 */
+	bool unusedBit_17_26 : 1 {};
 	/**
-	offset 116 bit 27 */
-	bool unusedBit_22_27 : 1 {};
+	offset 80 bit 27 */
+	bool unusedBit_17_27 : 1 {};
 	/**
-	offset 116 bit 28 */
-	bool unusedBit_22_28 : 1 {};
+	offset 80 bit 28 */
+	bool unusedBit_17_28 : 1 {};
 	/**
-	offset 116 bit 29 */
-	bool unusedBit_22_29 : 1 {};
+	offset 80 bit 29 */
+	bool unusedBit_17_29 : 1 {};
 	/**
-	offset 116 bit 30 */
-	bool unusedBit_22_30 : 1 {};
+	offset 80 bit 30 */
+	bool unusedBit_17_30 : 1 {};
 	/**
-	offset 116 bit 31 */
-	bool unusedBit_22_31 : 1 {};
+	offset 80 bit 31 */
+	bool unusedBit_17_31 : 1 {};
 	/**
-	 * offset 120
+	 * offset 84
 	 */
 	uint32_t startStopStateToggleCounter = (uint32_t)0;
 	/**
-	 * offset 124
+	 * offset 88
 	 */
 	float egtValue1 = (float)0;
 	/**
-	 * offset 128
+	 * offset 92
 	 */
 	float egtValue2 = (float)0;
 	/**
 	 * User-defined RPM hard limit
 	rpm
-	 * offset 132
+	 * offset 96
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 134
+	 * offset 98
 	 */
-	uint8_t alignmentFill_at_134[2];
+	uint8_t alignmentFill_at_98[2];
 	/**
-	 * offset 136
+	 * offset 100
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
-	 * offset 140
+	 * offset 104
 	 */
 	uint32_t sparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 144
+	 * offset 108
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 148
+	 * offset 112
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	%
-	 * offset 152
+	 * offset 116
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 154
+	 * offset 118
 	 */
-	uint8_t alignmentFill_at_154[2];
+	uint8_t alignmentFill_at_118[2];
 };
-static_assert(sizeof(engine_state_s) == 156);
+static_assert(sizeof(engine_state_s) == 120);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Jan 02 22:53:02 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Jan 15 04:27:57 UTC 2023

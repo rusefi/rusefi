@@ -63,6 +63,10 @@ public class TriggerImage {
                 return "GM 24x";
             case TT_GM_24x_2:
                 return "GM 24x 2";
+            case TT_DODGE_NEON_1995:
+                return "Dodge Neon 1995";
+            case TT_DODGE_NEON_1995_ONLY_CRANK:
+                return "Dodge Neon 1995 crank only";
             case TT_SKODA_FAVORIT:
                 return "Skoda Favorit";
             case TT_GM_7X:

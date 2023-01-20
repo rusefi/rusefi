@@ -43,21 +43,24 @@ end
 
 
 VWTP_OUT = 0x200
+cuType = 0x01
+-- todo: VWTP_IN should be 0x200 + cuType maybe?
 VWTP_IN = 0x201
 VWTP_TESTER = 0x300
 
-local ecuId = 0
+local cuId = 0
 
 function onCanHello(bus, id, dlc, data)
 	-- here we handle 201 packets
 	print('Got Hello Response ' ..arrayToString(data))
-	ecuId = data[6] * 256 + data[5]
+	cuId = data[6] * 256 + data[5]
+	print('From ECU ' ..cuId)
 
-	print('From ECU ' ..ecuId)
-	txCan(1, ecuId, 0, { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF })
+    out = { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF }
+	txCan(1, cuId, 0, out)
 end
 
-local sendCounter = 2
+local sendCounter = 0
 local packetCounter = 1
 local payLoadIndex = 0
 
@@ -67,6 +70,15 @@ local groupsSize = 3
 
 local groupIndex = 1
 
+function nextReq()
+    local result = 0x10 + sendCounter
+    sendCounter = sendCounter + 1
+	if sendCounter == 16 then
+		sendCounter = 0
+	end
+    return result
+end
+
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
 
@@ -74,31 +86,27 @@ function onCanTester(bus, id, dlc, data)
 
 	if data[1] == 0xA3 then
 		-- 		print ("Keep-alive")
-		txCan(1, ecuId, 0, { 0xA1, 0x0F, 0x8A, 0xFF, 0x4A, 0xFF })
+		txCan(1, cuId, 0, { 0xA1, 0x0F, 0x8A, 0xFF, 0x4A, 0xFF })
 
 		groupIndex = groupIndex + 1
 		if groupIndex > groupsSize then
 			groupIndex = 1
 		end
 		groupId = groups[groupIndex]
-		print (groupIndex .." " ..groupId)
+		print ("KA " .. groupIndex .." " ..groupId)
 
 
-		reqFirst = 0x10 + sendCounter
-		print("Requesting next group " ..groupId .." with counter " ..sendCounter)
-		txCan(1, ecuId, 0, { reqFirst, 0x00, 0x02, 0x21, groupId })
+		reqFirst = nextReq()
+		print("Requesting next group " ..groupId .." with counter " ..reqFirst)
+		txCan(1, cuId, 0, { reqFirst, 0x00, 0x02, 0x21, groupId })
 
-		sendCounter = sendCounter + 1
-		if sendCounter == 16 then
-			sendCounter = 0
-		end
 		return
 	end
 
 
 	if data[1] == 0xA1 then
-		print ("Happy 300 packet")
-		txCan(1, ecuId, 0, { 0x10, 0x00, 0x02, 0x10, 0x89 })
+		print ("Happy 300 packet, follow-up...")
+		txCan(1, cuId, 0, { nextReq(), 0x00, 0x02, 0x10, 0x89 })
 		return
 	end
 
@@ -111,9 +119,9 @@ function onCanTester(bus, id, dlc, data)
 	if data[1] == 0x10 and dlc == 5 then
 		ackPacket = 0xB0 + packetCounter
 		print ("Sending ACK B1 " ..ackPacket)
-		txCan(1, ecuId, 0, { ackPacket })
+		txCan(1, cuId, 0, { ackPacket })
 		-- request first group from array
-		txCan(1, ecuId, 0, { 0x11, 0x00, 0x02, 0x21, groups[1] })
+		txCan(1, cuId, 0, { nextReq(), 0x00, 0x02, 0x21, groups[1] })
 		return
 	end
 
@@ -175,30 +183,23 @@ function onCanTester(bus, id, dlc, data)
 		end
 
 		if top4 == 1 then
+            -- todo: should we ACK top4 == 2?
 			ackPacket = 0xB0 + packetCounter
 			print ("Sending payload ACK " ..ackPacket)
-			txCan(1, ecuId, 0, { ackPacket })
+			txCan(1, cuId, 0, { ackPacket })
 			payLoadIndex = 0
 		end
 
 		return
 	end
 
-	-- 	if currentState == STATE_GOT_SECOND_RESPONSE then
-	-- end
-
 	print('Got unexpected ' ..arrayToString(data))
-
-
-
 end
 
 canRxAdd(VWTP_IN, onCanHello)
 canRxAdd(VWTP_TESTER, onCanTester)
 
-
-txCan(1, VWTP_OUT, 0, { 0x01, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
-
+txCan(1, VWTP_OUT, 0, { cuType, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
 
 function onTick()
 end

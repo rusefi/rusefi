@@ -111,11 +111,6 @@ public interface ConfigField {
         }
 
         @Override
-        public String[] getTokens() {
-            return new String[0];
-        }
-
-        @Override
         public String getUnits() {
             return null;
         }
@@ -128,6 +123,11 @@ public interface ConfigField {
         @Override
         public double getMax() {
             return 0;
+        }
+
+        @Override
+        public String getCategory() {
+            return null;
         }
 
         @Override
@@ -198,8 +198,6 @@ public interface ConfigField {
 
     Pair<Integer, Integer> autoscaleSpecPair();
 
-    String[] getTokens();
-
     String getUnits();
 
     double getMin();
@@ -207,6 +205,8 @@ public interface ConfigField {
     double getMax();
 
     int getDigits();
+
+    String getCategory();
 
     String getIterateOriginalName();
 

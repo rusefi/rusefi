@@ -340,7 +340,7 @@ public class ConfigFieldImpl implements ConfigField {
             return null;
         }
         if (tsInfo == null)
-            throw new IllegalArgumentException("tsInfo expected with autoscale");
+            throw new IllegalArgumentException("tsInfo expected with autoscale: " + this);
         String[] tokens = getTokens();
         if (tokens.length < 2)
             throw new IllegalArgumentException("Second comma-separated token expected in [" + tsInfo + "] for " + name);
@@ -376,8 +376,7 @@ public class ConfigFieldImpl implements ConfigField {
         return new Pair<>(mul, div);
     }
 
-    @Override
-    public String[] getTokens() {
+    private String[] getTokens() {
         if (tsInfo == null)
             return new String[0];
         return tsInfo.split(",");
@@ -413,6 +412,14 @@ public class ConfigFieldImpl implements ConfigField {
         if (tokens.length < 6)
             return 0;
         return Integer.parseInt(tokens[5].trim());
+    }
+
+    @Override
+    public String getCategory() {
+        String[] tokens = getTokens();
+        if (tokens.length < 7)
+            return null;
+        return tokens[6].trim();
     }
 
     // see testUnquote

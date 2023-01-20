@@ -711,12 +711,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
-	case TEST_ENGINE:
-		setTestCamEngineConfiguration();
-		break;
-	case TEST_CRANK_ENGINE:
-		setTestCrankEngineConfiguration();
-		break;
 #if EFI_UNIT_TEST
 	case TEST_ISSUE_366_BOTH:
 		setTestEngineIssue366both();
@@ -872,6 +866,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
 		break;
+	case TEST_ENGINE:
+		setTestCamEngineConfiguration();
+		break;
+	case TEST_CRANK_ENGINE:
+		setTestCrankEngineConfiguration();
+		break;
 	case FRANKENSO_QA_ENGINE:
 		setFrankensoBoardTestConfiguration();
 		break;
@@ -957,6 +957,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration();
+		break;
+	case TEST_DC_WASTEGATE_DISCOVERY:
+		setTestDcWastegateConfiguration();
 		break;
 	case SACHS:
 		setSachs();

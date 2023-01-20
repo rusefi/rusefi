@@ -1184,6 +1184,7 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 
 
 [GaugeConfigurations]
+@@LIVE_DATA_GAUGES_FROM_FILE@@
 
 gaugeCategory = Trigger
 	triggerErrorsCounterGauge = totalTriggerErrorCounter, "Trigger error count", "count",	0,	15000,	0,	0,	6000,  6000,	0,	0
@@ -1329,11 +1330,16 @@ gaugeCategory = VVT
 	vvtTargets2Gauge = vvtTargets2, @@GAUGE_NAME_VVT_TARGET_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
 	vvtTargets3Gauge = vvtTargets3, @@GAUGE_NAME_VVT_TARGET_B2I@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
 	vvtTargets4Gauge = vvtTargets4, @@GAUGE_NAME_VVT_TARGET_B2E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
+	vvtOutput1Gauge = vvtStatus1_output, "vvt: output 1", "", 00, 100, -60, -60, 60, 60, 0, 0
+	vvtOutput2Gauge = vvtStatus2_output, "vvt: output 2", "", 00, 100, -60, -60, 60, 60, 0, 0
+	vvtOutput3Gauge = vvtStatus3_output, "vvt: output 3", "", 00, 100, -60, -60, 60, 60, 0, 0
+	vvtOutput4Gauge = vvtStatus4_output, "vvt: output 4", "", 00, 100, -60, -60, 60, 60, 0, 0
+
 
 gaugeCategory = Ignition
 	sparkCutReasonGauge = sparkCutReason,"Spark Cut Code", "code", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 	ignadvGauge = ignitionAdvance,		"Ignition timing",	"degrees",	-100,	100,	-999,	-999,	999,	999,	1, 1
-	dwellGauge		= sparkDwellValue,			"Dwell",		"mSec",		0,	10,	0.5,	1.0,	6.0,	8.0,	1, 1
+	dwellGauge		= sparkDwell,			"Dwell",		"mSec",		0,	10,	0.5,	1.0,	6.0,	8.0,	1, 1
 	coilDutyCycleGauge = coilDutyCycle,		@@GAUGE_NAME_DWELL_DUTY@@,		"%",		0,	110,	0,	0,		90,	100,	1, 1
 	ignitionLoadGauge = ignitionLoad, @@GAUGE_NAME_IGNITION_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
 
@@ -2220,6 +2226,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Do not print messages in case of sync error",  silentTriggerError
 		field = "Focus on inputs in engine sniffer",	engineSnifferFocusOnInputs
 		field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@}
+		field = "Trigger Edge Filter",                  doNotFilterTriggerEdgeNoise
 
 	dialog = triggerInputs,					"Trigger Inputs"
 		field = "#Cam is primary if you have cam sensor as part of trigger shape"
@@ -4293,6 +4300,10 @@ dialog = tcuControls, "Transmission Settings"
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 		field = "Warning Message",							warning_message
 		field = "Ford redundant TPS mode",				useFordRedundantTps
+		field = "Secondary TPS maximum",				tpsSecondaryMaximum, {useFordRedundantTps}
+		field = "Ford redundant PPS mode",				useFordRedundantPps
+		field = "Secondary PPS maximum",				ppsSecondaryMaximum, {useFordRedundantPps}
+
 		field = "consumeObdSensors",						consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",						artificialTestMisfire
 		field = "Always use instant RPM",				alwaysInstantRpm

@@ -60,7 +60,7 @@ static bool shouldCorrect() {
 	}
 
 	// Startup delay - allow O2 sensor to warm up, etc
-	if (cfg.startupDelay > engine->engineState.running.timeSinceCrankingInSecs) {
+	if (cfg.startupDelay > engine->fuelComputer.running.timeSinceCrankingInSecs) {
 		return false;
 	}
 

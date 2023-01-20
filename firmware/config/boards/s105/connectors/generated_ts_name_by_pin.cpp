@@ -6,17 +6,19 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::B0: return "13 - Ignition switch in (15)";
+		case Gpio::B10: return "15 - Crank Sensor+";
 		case Gpio::B11: return "na 79 - CAM in";
 		case Gpio::B14: return "46 - Absorber";
 		case Gpio::B3: return "59 - Speed in";
 		case Gpio::B8: return "na 8 - TACH";
-		case Gpio::B9: return "10 - ECO Out";
+		case Gpio::B9: return "10 - ECO/CLT Out";
 		case Gpio::C10: return "76 - DIN5";
 		case Gpio::C11: return "na 72 - DPH2";
 		case Gpio::C12: return "72 - DIN1";
 		case Gpio::C13: return "na 75 - DCNS";
-		case Gpio::C6: return "29 - EGR";
-		case Gpio::C7: return "28 - AFR Heater 2";
+		case Gpio::C6: return "29 - Idle valve open";
+		case Gpio::C7: return "28 - Idle valve close";
 		case Gpio::D0: return "na 25 - INJ_7";
 		case Gpio::D10: return "7 - INJ_3";
 		case Gpio::D11: return "47 - INJ_4";
@@ -25,17 +27,17 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D14: return "na 1 - IGN_4";
 		case Gpio::D15: return "na 4 - IGN_3";
 		case Gpio::D2: return "70 - Fuel Pump Relay";
-		case Gpio::D4: return "77 - DIN5";
+		case Gpio::D4: return "77 - Starter request";
 		case Gpio::D6: return "na 58 - Fan Relay 1";
 		case Gpio::D8: return "27 - INJ_1";
 		case Gpio::D9: return "6 - INJ_2";
 		case Gpio::E0: return "9 - Unk Out 1";
 		case Gpio::E10: return "na 69 - AC Relay";
-		case Gpio::E12: return "50 - AUX Starter Relay";
+		case Gpio::E12: return "50 - Starter Disable Relay";
 		case Gpio::E14: return "31 - CEL";
-		case Gpio::E5: return "48 - AFR Heater 1";
-		case Gpio::E6: return "na 49 - INJ_6";
-		case Gpio::E9: return "na 20 - Unk Out 2";
+		case Gpio::E5: return "48 - AFR 1 Heater";
+		case Gpio::E6: return "na 49 - INJ_6 / AFR 2 Heater";
+		case Gpio::E9: return "na 20 - Fan relay 2 / Unk Out 2";
 		default: return nullptr;
 	}
 	return nullptr;

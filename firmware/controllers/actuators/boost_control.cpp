@@ -58,8 +58,8 @@ expected<float> BoostController::getSetpoint() {
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
-	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
-	isTpsInvalid = !tps.Valid;
+	auto driverIntent = Sensor::get(SensorType::DriverThrottleIntent);
+	isTpsInvalid = !driverIntent.Valid;
 
 	if (isTpsInvalid) {
 		return unexpected;
@@ -67,7 +67,7 @@ expected<float> BoostController::getSetpoint() {
 
 	efiAssert(OBD_PCM_Processor_Fault, m_closedLoopTargetMap != nullptr, "boost closed loop target", unexpected);
 
-    return m_closedLoopTargetMap->getValue(rpm, tps.Value) * luaTargetMult + luaTargetAdd;
+    return m_closedLoopTargetMap->getValue(rpm, driverIntent.Value) * luaTargetMult + luaTargetAdd;
 }
 
 expected<percent_t> BoostController::getOpenLoop(float target) {
@@ -75,9 +75,9 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 	UNUSED(target);
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+	auto driverIntent = Sensor::get(SensorType::DriverThrottleIntent);
 
-	isTpsInvalid = !tps.Valid;
+	isTpsInvalid = !driverIntent.Valid;
 
 	if (isTpsInvalid) {
 		return unexpected;
@@ -85,12 +85,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 	efiAssert(OBD_PCM_Processor_Fault, m_openLoopMap != nullptr, "boost open loop", unexpected);
 
-	openLoopPart = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, tps.Value);
-
-#if EFI_TUNER_STUDIO
-	// todo: why do we still copy this data point?
-	engine->outputChannels.boostControllerOpenLoopPart = openLoopPart;
-#endif
+	openLoopPart = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, driverIntent.Value);
 
 	return openLoopPart;
 }
@@ -136,33 +131,31 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 }
 
 void BoostController::setOutput(expected<float> output) {
-	percent_t percent = output.value_or(engineConfiguration->boostControlSafeDutyCycle);
+	boostOutput = output.value_or(engineConfiguration->boostControlSafeDutyCycle);
 
 	if (!engineConfiguration->isBoostControlEnabled) {
 		// If not enabled, force 0% output
-		percent = 0;
+		boostOutput = 0;
 	}
 
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.boostControllerOutput = percent;
-#endif /* EFI_TUNER_STUDIO */
-
-	float duty = PERCENT_TO_DUTY(percent);
+	float duty = PERCENT_TO_DUTY(boostOutput);
 
 	if (m_pwm) {
 		m_pwm->setSimplePwmDutyCycle(duty);
 	}
 
-	setEtbWastegatePosition(percent);
+	// inject wastegate position into DC controllers, pretty weird workflow to be honest
+	// todo: should it be DC controller pulling?
+	setEtbWastegatePosition(boostOutput);
 }
 
 void BoostController::update() {
 	m_pid.iTermMin = -50;
 	m_pid.iTermMax = 50;
 
-	bool rpmTooLow = Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->boostControlMinRpm;
-	bool tpsTooLow = Sensor::getOrZero(SensorType::Tps1) < engineConfiguration->boostControlMinTps;
-	bool mapTooLow = Sensor::getOrZero(SensorType::Map) < engineConfiguration->boostControlMinMap;
+	rpmTooLow = Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->boostControlMinRpm;
+	tpsTooLow = Sensor::getOrZero(SensorType::Tps1) < engineConfiguration->boostControlMinTps;
+	mapTooLow = Sensor::getOrZero(SensorType::Map) < engineConfiguration->boostControlMinMap;
 
 	if (rpmTooLow || tpsTooLow || mapTooLow) {
 		// Passing unexpected will use the safe duty cycle configured by the user
@@ -172,10 +165,8 @@ void BoostController::update() {
 	}
 }
 
-static bool hasInitBoost = false;
-
 void updateBoostControl() {
-	if (hasInitBoost) {
+	if (engine->boostController.hasInitBoost) {
 		engine->boostController.update();
 	}
 }
@@ -254,8 +245,8 @@ void initBoostCtrl() {
 
 #if !EFI_UNIT_TEST
 	startBoostPin();
-	hasInitBoost = true;
 #endif
+	engine->boostController.hasInitBoost = true;
 }
 
 #endif

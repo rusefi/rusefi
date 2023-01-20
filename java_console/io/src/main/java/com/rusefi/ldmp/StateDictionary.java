@@ -44,6 +44,7 @@ public enum StateDictionary {
         register(live_data_e.LDS_wideband_state, WidebandController.VALUES, "AemXSeriesLambda");
         register(live_data_e.LDS_trigger_state_primary, TriggerStatePrimary.VALUES, "trigger_decoder");
         register(live_data_e.LDS_fuel_computer, FuelComputer.VALUES, "fuel_computer");
+        register(live_data_e.LDS_antilag_system_state, AntilagSystem.VALUES, "antilag_system");
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());

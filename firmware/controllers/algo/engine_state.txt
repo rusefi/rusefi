@@ -61,29 +61,7 @@ end_struct
 cranking_fuel_s crankingFuel
 
 
-
-struct running_fuel_s
-float postCrankingFuelCorrection
-	float intakeTemperatureCoefficient;@@GAUGE_NAME_FUEL_IAT_CORR@@
-	float coolantTemperatureCoefficient;@@GAUGE_NAME_FUEL_CLT_CORR@@
-	float timeSinceCrankingInSecs
-
-	floatms_t baseFuel;
-	floatms_t fuel;Fuel: actual\nActual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.\nWithout injector lag.\n@see baseFuel\n@see actualLastInjection
-! end of running_fuel_s structure definition
-end_struct
-
-! actually define a member of 'running_fuel_s' type
-running_fuel_s running
-
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
-
-	! spark-related
-	floatms_t sparkDwell;ignition dwell duration in ms\nSee also dwellAngle
-	angle_t dwellAngle;ignition dwell duration\nas crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
-	int16_t autoscale cltTimingCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
-	int16_t autoscale timingIatCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
-	int16_t autoscale timingPidCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 
     int16_t hellenBoardId;Detected Board ID;"id", 1, 0, 0, 3000, 0
 

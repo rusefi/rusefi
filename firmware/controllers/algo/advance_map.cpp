@@ -109,9 +109,9 @@ static angle_t getAdvanceCorrections(float engineLoad) {
 	auto iat = Sensor::get(SensorType::Iat);
 
 	if (!iat) {
-		engine->engineState.timingIatCorrection = 0;
+		engine->ignitionState.timingIatCorrection = 0;
 	} else {
-		engine->engineState.timingIatCorrection = interpolate3d(
+		engine->ignitionState.timingIatCorrection = interpolate3d(
 			config->ignitionIatCorrTable,
 			config->ignitionIatCorrLoadBins, engineLoad,
 			config->ignitionIatCorrTempBins, iat.Value
@@ -121,16 +121,16 @@ static angle_t getAdvanceCorrections(float engineLoad) {
 #if EFI_SHAFT_POSITION_INPUT && EFI_IDLE_CONTROL
 	float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
 
-	engine->engineState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(instantRpm);
+	engine->ignitionState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(instantRpm);
 #endif // EFI_SHAFT_POSITION_INPUT && EFI_IDLE_CONTROL
 
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 
-	return engine->engineState.timingIatCorrection
-		+ engine->engineState.cltTimingCorrection
-		+ engine->engineState.timingPidCorrection;
+	return engine->ignitionState.timingIatCorrection
+		+ engine->ignitionState.cltTimingCorrection
+		+ engine->ignitionState.timingPidCorrection;
 }
 
 /**

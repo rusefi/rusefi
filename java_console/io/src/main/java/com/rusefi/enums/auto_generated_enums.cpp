@@ -1,6 +1,6 @@
 #include "global.h"
 #include "live_data_ids.h"
-// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Sat Dec 17 01:28:44 UTC 2022
+// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Sun Jan 15 13:37:00 UTC 2023
 // see also gen_config_and_enums.bat
 
 

@@ -70,9 +70,6 @@ public class ConfigDefinition {
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
         PinoutLogic pinoutLogic = null;
-        String tsOutputsDestination = null;
-
-
 
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
@@ -87,9 +84,6 @@ public class ConfigDefinition {
                     break;
                 case KEY_TS_DESTINATION:
                     tsInputFileFolder = args[i + 1];
-                    break;
-                case "-ts_outputs_section":
-                    tsOutputsDestination = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
                     state.addCHeaderDestination(args[i + 1]);
@@ -212,14 +206,6 @@ public class ConfigDefinition {
             // writer.writeTunerstudio(parseState, tsInputFileFolder + "/rusefi.input", tsInputFileFolder + "/" + state.tsFileOutputName);
         }
 
-        if (tsOutputsDestination != null) {
-            /**
-             * we have one JVM instance produce output section based on model fragments, and then
-             * we have '-readfile OUTPUTS_SECTION' in one of .sh files in order to template rusefi.input
-             * Same with '-readfile DATALOG_SECTION'
-             */
-            state.addDestination(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini"));
-        }
         if (tsInputFileFolder != null) {
             state.addDestination(new TSProjectConsumer(tsInputFileFolder, state));
 

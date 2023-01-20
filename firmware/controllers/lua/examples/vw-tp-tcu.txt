@@ -1,0 +1,220 @@
+-- J2819 TP2.0 vehicle diagnostics protocol
+-- very limited implementation
+-- this controls onCanRx rate as well!
+setTickRate(300)
+
+timeout = 3000
+
+--cuType = 0x01  -- ECU
+cuType = 0x02 -- TCU
+
+
+if cuType == 0x01 then
+
+    cltSensor = Sensor.new("clt")
+    cltSensor : setTimeout(timeout)
+
+    iatSensor = Sensor.new("iat")
+    iatSensor : setTimeout(timeout)
+
+    rpmSensor = Sensor.new("rpm")
+    rpmSensor : setTimeout(timeout)
+
+    mapSensor = Sensor.new("map")
+    mapSensor : setTimeout(timeout)
+end
+
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
+
+VWTP_OUT = 0x200
+
+VWTP_IN = 0x200 + cuType
+VWTP_TESTER = 0x300
+
+local cuId = 0
+
+function onCanHello(bus, id, dlc, data)
+	-- here we handle 201 packets
+	print('Got Hello Response ' ..arrayToString(data))
+	cuId = data[6] * 256 + data[5]
+
+	print('From ECU ' ..cuId)
+    out = { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF }
+	print("Saying hello " .. arrayToString(out))
+	txCan(1, cuId, 0, out)
+end
+
+local sendCounter = 0
+local packetCounter = 1
+local payLoadIndex = 0
+
+local groups = { 2, 4, 31 }
+-- todo: smarter array size calculation?
+local groupsSize = 3
+
+local groupIndex = 1
+
+withErrorCodes = 0
+
+function nextReq()
+    local result = 0x10 + sendCounter
+    sendCounter = sendCounter + 1
+	if sendCounter == 16 then
+		sendCounter = 0
+	end
+    return result
+end
+
+function requestErrorCodes()
+    		reqFirst = nextReq()
+            out = { reqFirst, 0x00, 0x04, 0x18, 0x02, 0xFF, 0x00 }
+            txCan(1, cuId, 0, out)
+            print("Requesting error codes " .. arrayToString(out))
+end
+
+function requestEraseCodes()
+    out = { nextReq(), 00, 0x03, 0x14, 0xFF, 0x00 }
+print("Request Code Erase")
+        txCan(1, cuId, 0, out)
+end
+
+function onCanTester(bus, id, dlc, data)
+	-- here we handle 300 packets
+
+	print('Got from tester ' ..arrayToString(data))
+
+
+	if data[1] == 0xA3 then
+		print ("A3 Keep-alive")
+		txCan(1, cuId, 0, { 0xA1, 0x0F, 0x8A, 0xFF, 0x4A, 0xFF })
+
+		groupIndex = groupIndex + 1
+		if groupIndex > groupsSize then
+			groupIndex = 1
+		end
+		groupId = groups[groupIndex]
+		print ("KA codes " .. withErrorCodes)
+
+        if withErrorCodes > 0 then
+            requestEraseCodes()
+        end
+
+		-- reqFirst = nextReq
+		--print("Requesting next group " ..groupId .." with counter " ..sendCounter)
+		--txCan(1, cuId, 0, { reqFirst, 0x00, 0x02, 0x21, groupId })
+
+
+
+
+
+		return
+	end
+
+
+	if data[1] == 0xA1 then
+		print ("Happy 300 packet " .. arrayToString(data))
+		txCan(1, cuId, 0, { nextReq(), 0x00, 0x02, 0x10, 0x89 })
+		return
+	end
+
+	if data[1] == 0xA8 then
+		print ("They said Bye-Bye")
+		return
+	end
+
+
+	if data[1] == 0x10 and dlc == 5 then
+		ackPacket = 0xB0 + packetCounter
+		print ("Sending ACK Bx " ..ackPacket)
+		txCan(1, cuId, 0, { ackPacket })
+
+
+        if data[3] == 2 and data[4] == 0x50 then
+        	print('Got Hello2 Response ' ..arrayToString(data))
+
+            requestErrorCodes()
+        end
+	end
+
+
+	top4 = math.floor(data[1] / 16)
+
+	if top4 == 0xB then
+		print("Got 0xBx ACK")
+		return
+	end
+
+	if top4 == 2 or top4 == 1 then
+		print ("Looks like payload index " ..payLoadIndex ..": " ..arrayToString(data))
+
+		if payLoadIndex == 0 and data[4] == 0x58 then
+		    len = data[3]
+		    print("Looks like CODES_REQ response of length " .. len)
+
+		    if len ~= 2 then
+		        print("HAVE CODES " .. len)
+		        withErrorCodes = 1
+
+		    end
+
+		end
+
+		payLoadIndex = payLoadIndex + 1
+
+		packetCounter = packetCounter + 1
+		if packetCounter > 15 then
+			packetCounter = 0
+		end
+
+		ackPacket = 0xB0 + packetCounter
+		print ("Sending payload ACK " ..ackPacket)
+    	txCan(1, cuId, 0, { ackPacket })
+
+		if top4 == 1 then
+			payLoadIndex = 0
+
+            if data[2] == 0 and data[3] == 2 and data[4] == 0x58 then
+                print("NO CODES")
+            end
+
+		end
+
+		return
+	end
+
+	print('Got unexpected ' ..arrayToString(data))
+end
+
+canRxAdd(VWTP_IN, onCanHello)
+canRxAdd(VWTP_TESTER, onCanTester)
+
+txCan(1, VWTP_OUT, 0, { cuType, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
+
+function onTick()
+end
+

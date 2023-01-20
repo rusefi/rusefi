@@ -172,7 +172,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	m_positionSensor = functionToPositionSensor(function);
 
 	// If we are a throttle, require redundant TPS sensor
-	if (function == ETB_Throttle1 || function == ETB_Throttle2) {
+	if (isEtbMode()) {
 		// We don't need to init throttles, so nothing to do here.
 		if (!hasPedal) {
 			etbErrorCode = (int8_t)TpsState::PpsError;
@@ -260,7 +260,8 @@ expected<percent_t> EtbController::getSetpoint() {
 		case ETB_IdleValve:
 			return getSetpointIdleValve();
 		case ETB_Wastegate:
-			return getSetpointWastegate();
+		    firmwareError(OBD_PCM_Processor_Fault, "Wastegate should not run closed loop controller");
+		    return unexpected;
 		default:
 			return unexpected;
 	}
@@ -269,13 +270,13 @@ expected<percent_t> EtbController::getSetpoint() {
 expected<percent_t> EtbController::getSetpointIdleValve() const {
 	// VW ETB idle mode uses an ETB only for idle (a mini-ETB sets the lower stop, and a normal cable
 	// can pull the throttle up off the stop.), so we directly control the throttle with the idle position.
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 	engine->outputChannels.etbTarget = m_idlePosition;
 #endif // EFI_TUNER_STUDIO
 	return clampF(0, m_idlePosition, 100);
 }
 
-expected<percent_t> EtbController::getSetpointWastegate() const {
+percent_t EtbController::getWastegateOutput() const {
 	return clampF(0, m_wastegatePosition, 100);
 }
 
@@ -546,25 +547,28 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 		return;
 	}
 
-	// If ETB is allowed, output is valid, and we aren't paused, output to motor.
-	if (getLimpManager()->allowElectronicThrottle()
+	// If not ETB, or ETB is allowed, output is valid, and we aren't paused, output to motor.
+	if (!isEtbMode() ||
+	   (getLimpManager()->allowElectronicThrottle()
 		&& outputValue
-		&& !engineConfiguration->pauseEtbControl) {
+		&& !engineConfiguration->pauseEtbControl)) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
 		// Otherwise disable the motor.
-		m_motor->disable();
+		m_motor->disable("setOutput");
 	}
 }
 
-void EtbController::update() {
-#if !EFI_UNIT_TEST
-	// If we didn't get initialized, fail fast
-	if (!m_motor) {
-		return;
-	}
-#endif // EFI_UNIT_TEST
+bool EtbController::checkStatus() {
+    if (!isEtbMode()) {
+        // no validation for h-bridge or idle mode
+        return true;
+    }
+    // ETB-specific code belo. The whole mix-up between DC and ETB is shameful :(
+
+	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
+	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #1
@@ -572,12 +576,6 @@ void EtbController::update() {
 		m_pid.postState(engine->outputChannels.etbStatus);
 	}
 #endif /* EFI_TUNER_STUDIO */
-
-	if (!cisnan(directPwmValue)) {
-		m_motor->set(directPwmValue);
-		etbErrorCode = (int8_t)TpsState::Manual;
-		return;
-	}
 
 	// Only allow autotune with stopped engine, and on the first throttle
 	// Update local state about autotune
@@ -626,31 +624,73 @@ void EtbController::update() {
 
 	etbErrorCode = (int8_t)localReason;
 
-	if (localReason != TpsState::None) {
-		// If engine is stopped and so configured, skip the ETB update entirely
-		// This is quieter and pulls less power than leaving it on all the time
-		m_motor->disable();
+    return localReason == TpsState::None;
+}
+
+void EtbController::update() {
+#if !EFI_UNIT_TEST
+	// If we didn't get initialized, fail fast
+	if (!m_motor) {
+		return;
+	}
+#endif // EFI_UNIT_TEST
+
+	if (!cisnan(directPwmValue)) {
+		m_motor->set(directPwmValue);
+		etbErrorCode = (int8_t)TpsState::Manual;
 		return;
 	}
 
+	if (getFunction() == ETB_Wastegate) {
+	    // boost controller runs it's own PID we just take the result
+	    m_motor->set(getWastegateOutput());
+	    return;
+	}
 
-	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
-	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
+    bool isOk = checkStatus();
 
-	ClosedLoopController::update();
+	if (!isOk) {
+		// If engine is stopped and so configured, skip the ETB update entirely
+		// This is quieter and pulls less power than leaving it on all the time
+		m_motor->disable("etb status");
+		return;
+	}
+
+	auto output = ClosedLoopController::update();
+
+	if (!output) {
+		return;
+	}
+
+	checkOutput(output.Value);
 }
 
-expected<percent_t> EtbController::getOutput() {
-	// total open + closed loop parts
-	expected<percent_t> output = ClosedLoopController::getOutput();
-	if (!output) {
-		return output;
-	}
-    etbDutyAverage = m_dutyAverage.average(absF(output.Value));
+void EtbController::checkOutput(percent_t output) {
+	etbDutyAverage = m_dutyAverage.average(absF(output));
 
-    etbDutyRateOfChange = m_dutyRocAverage.average(absF(output.Value - prevOutput));
-	prevOutput = output.Value;
-	return output;
+	etbDutyRateOfChange = m_dutyRocAverage.average(absF(output - prevOutput));
+	prevOutput = output;
+
+	float integrator = absF(m_pid.getIntegration());
+	auto integratorLimit = engineConfiguration->etbJamIntegratorLimit;
+
+	if (integratorLimit != 0) {
+		auto nowNt = getTimeNowNt();
+
+		if (integrator > integratorLimit) {
+			if (m_jamDetectTimer.hasElapsedSec(engineConfiguration->etbJamTimeout)) {
+				// ETB is jammed!
+				jamDetected = true;
+
+				// TODO: do something about it!
+			}
+		} else {
+			m_jamDetectTimer.reset(getTimeNowNt());
+			jamDetected = false;
+		}
+
+		jamTimer = m_jamDetectTimer.getElapsedSeconds(nowNt);
+	}
 }
 
 void EtbController::autoCalibrateTps() {
@@ -713,7 +753,7 @@ struct EtbImpl final : public TBase {
 		float secondaryMin = Sensor::getRaw(functionToTpsSensorSecondary(myFunction));
 
 		// Finally disable and reset state
-		motor->disable();
+		motor->disable("autotune");
 
 		// Check that the calibrate actually moved the throttle
 		if (absF(primaryMax - primaryMin) < 0.5f) {
@@ -757,8 +797,8 @@ static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 #if !EFI_UNIT_TEST
 
-struct EtbThread final : public PeriodicController<512> {
-	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
+struct DcThread final : public PeriodicController<512> {
+	DcThread() : PeriodicController("DC", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
@@ -768,20 +808,21 @@ struct EtbThread final : public PeriodicController<512> {
 	}
 };
 
-static EtbThread etbThread CCM_OPTIONAL;
+static DcThread dcThread CCM_OPTIONAL;
 
 #endif // EFI_UNIT_TEST
 
 static void showEtbInfo() {
 #if EFI_PROD_CODE
-	efiPrintf("etbAutoTune=%d",
-			engine->etbAutoTune);
+	efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
 
 	efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
-	efiPrintf("etbControlPin=%s duty=%.2f freq=%d",
-			hwPortname(engineConfiguration->etbIo[0].controlPin),
+	efiPrintf("ETB1 duty=%.2f freq=%d",
 			engine->outputChannels.etb1DutyCycle,
+			engineConfiguration->etbFreq);
+
+	efiPrintf("ETB freq=%d",
 			engineConfiguration->etbFreq);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
@@ -965,21 +1006,6 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 	}
 }
 
-#if EFI_PROD_CODE && 0
-static void setTempOutput(float value) {
-	autoTune.output = value;
-}
-
-/**
- * set_etbat_step X
- */
-static void setAutoStep(float value) {
-	autoTune.reset();
-	autoTune.SetOutputStep(value);
-}
-
-#endif /* EFI_PROD_CODE */
-
 static const float defaultBiasBins[] = {
 	0, 1, 2, 4, 7, 98, 99, 100
 };
@@ -1010,6 +1036,7 @@ void doInitElectronicThrottle() {
 	printf("doInitElectronicThrottle %s\n", boolToString(hasPedal));
 #endif // EFI_UNIT_TEST
 
+	// these status flags are consumed by TS see rusefi.input TODO should those be outputs/live data not configuration?!
 	engineConfiguration->etb1configured = engineConfiguration->etb2configured = false;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
@@ -1042,9 +1069,6 @@ void doInitElectronicThrottle() {
 		if (hasPedal) {
 			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
 		}
-
-		// Don't start the thread if no throttles are in use.
-		return;
 	}
 
 #if 0 && ! EFI_UNIT_TEST
@@ -1063,7 +1087,7 @@ void doInitElectronicThrottle() {
 #if !EFI_UNIT_TEST
 	static bool started = false;
 	if (started == false) {
-		etbThread.start();
+		dcThread.start();
 		started = true;
 	}
 #endif

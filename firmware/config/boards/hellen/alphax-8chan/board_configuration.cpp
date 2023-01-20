@@ -62,7 +62,7 @@ static void setupEtb() {
 	// Disable pin
 	engineConfiguration->etbIo[1].disablePin = Gpio::Unassigned;
 	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
+	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 }

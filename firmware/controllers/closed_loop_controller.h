@@ -9,12 +9,15 @@
 template <typename TInput, typename TOutput>
 class ClosedLoopController {
 public:
-	void update() {
+	expected<TOutput> update() {
 		expected<TOutput> outputValue = getOutput();
 		setOutput(outputValue);
+
+		return outputValue;
 	}
 
-	virtual expected<TOutput> getOutput() {
+private:
+	expected<TOutput> getOutput() {
 		expected<TInput> setpoint = getSetpoint();
 		// If we don't know the setpoint, return failure.
 		if (!setpoint) {
@@ -41,7 +44,6 @@ public:
 
 		return openLoopResult.Value + closedLoopResult.Value;
 	}
-private:
 
 	// Get the setpoint: where should the controller put the plant?
 	virtual expected<TInput> getSetpoint() = 0;

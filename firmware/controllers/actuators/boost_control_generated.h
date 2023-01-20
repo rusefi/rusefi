@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Mon Dec 19 16:58:02 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Tue Jan 17 04:03:03 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -22,98 +22,112 @@ struct boost_control_s {
 	bool isZeroRpm : 1 {};
 	/**
 	offset 0 bit 5 */
-	bool unusedBit_5_5 : 1 {};
+	bool hasInitBoost : 1 {};
 	/**
 	offset 0 bit 6 */
-	bool unusedBit_5_6 : 1 {};
+	bool rpmTooLow : 1 {};
 	/**
 	offset 0 bit 7 */
-	bool unusedBit_5_7 : 1 {};
+	bool tpsTooLow : 1 {};
 	/**
 	offset 0 bit 8 */
-	bool unusedBit_5_8 : 1 {};
+	bool mapTooLow : 1 {};
 	/**
 	offset 0 bit 9 */
-	bool unusedBit_5_9 : 1 {};
+	bool unusedBit_9_9 : 1 {};
 	/**
 	offset 0 bit 10 */
-	bool unusedBit_5_10 : 1 {};
+	bool unusedBit_9_10 : 1 {};
 	/**
 	offset 0 bit 11 */
-	bool unusedBit_5_11 : 1 {};
+	bool unusedBit_9_11 : 1 {};
 	/**
 	offset 0 bit 12 */
-	bool unusedBit_5_12 : 1 {};
+	bool unusedBit_9_12 : 1 {};
 	/**
 	offset 0 bit 13 */
-	bool unusedBit_5_13 : 1 {};
+	bool unusedBit_9_13 : 1 {};
 	/**
 	offset 0 bit 14 */
-	bool unusedBit_5_14 : 1 {};
+	bool unusedBit_9_14 : 1 {};
 	/**
 	offset 0 bit 15 */
-	bool unusedBit_5_15 : 1 {};
+	bool unusedBit_9_15 : 1 {};
 	/**
 	offset 0 bit 16 */
-	bool unusedBit_5_16 : 1 {};
+	bool unusedBit_9_16 : 1 {};
 	/**
 	offset 0 bit 17 */
-	bool unusedBit_5_17 : 1 {};
+	bool unusedBit_9_17 : 1 {};
 	/**
 	offset 0 bit 18 */
-	bool unusedBit_5_18 : 1 {};
+	bool unusedBit_9_18 : 1 {};
 	/**
 	offset 0 bit 19 */
-	bool unusedBit_5_19 : 1 {};
+	bool unusedBit_9_19 : 1 {};
 	/**
 	offset 0 bit 20 */
-	bool unusedBit_5_20 : 1 {};
+	bool unusedBit_9_20 : 1 {};
 	/**
 	offset 0 bit 21 */
-	bool unusedBit_5_21 : 1 {};
+	bool unusedBit_9_21 : 1 {};
 	/**
 	offset 0 bit 22 */
-	bool unusedBit_5_22 : 1 {};
+	bool unusedBit_9_22 : 1 {};
 	/**
 	offset 0 bit 23 */
-	bool unusedBit_5_23 : 1 {};
+	bool unusedBit_9_23 : 1 {};
 	/**
 	offset 0 bit 24 */
-	bool unusedBit_5_24 : 1 {};
+	bool unusedBit_9_24 : 1 {};
 	/**
 	offset 0 bit 25 */
-	bool unusedBit_5_25 : 1 {};
+	bool unusedBit_9_25 : 1 {};
 	/**
 	offset 0 bit 26 */
-	bool unusedBit_5_26 : 1 {};
+	bool unusedBit_9_26 : 1 {};
 	/**
 	offset 0 bit 27 */
-	bool unusedBit_5_27 : 1 {};
+	bool unusedBit_9_27 : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool unusedBit_5_28 : 1 {};
+	bool unusedBit_9_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_5_29 : 1 {};
+	bool unusedBit_9_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_5_30 : 1 {};
+	bool unusedBit_9_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_5_31 : 1 {};
+	bool unusedBit_9_31 : 1 {};
 	/**
+	 * "Boost: Lua Target Add"
+	v
 	 * offset 4
 	 */
-	float luaTargetAdd = (float)0;
+	scaled_channel<int16_t, 2, 1> luaTargetAdd = (int16_t)0;
 	/**
+	 * "Boost: Output"
+	percent
+	 * offset 6
+	 */
+	scaled_channel<int16_t, 100, 1> boostOutput = (int16_t)0;
+	/**
+	 * "Boost: Lua Target Mult"
+	v
 	 * offset 8
 	 */
 	float luaTargetMult = (float)0;
 	/**
+	 * "Boost: Open Loop"
+	v
 	 * offset 12
 	 */
 	float openLoopPart = (float)0;
 	/**
+	 * "Boost: Lua Open Loop Add"
+	v
 	 * offset 16
 	 */
 	float luaOpenLoopAdd = (float)0;
@@ -139,4 +153,4 @@ struct boost_control_s {
 static_assert(sizeof(boost_control_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Mon Dec 19 16:58:02 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Tue Jan 17 04:03:03 UTC 2023

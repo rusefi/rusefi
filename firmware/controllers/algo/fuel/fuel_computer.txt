@@ -1,8 +1,24 @@
 struct_no_prefix fuel_computer_s
 
-	uint16_t autoscale afrTableYAxis;;"%",{1/100}, 0, 0, 0, 0
-	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
-	uint16_t autoscale targetAFR;@@GAUGE_NAME_TARGET_AFR@@;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
+float totalFuelCorrection;;"mult", 1,0, 0,3, 2,@@GAUGE_CATEGORY_FUEL_MATH@@
+struct running_fuel_s
+float postCrankingFuelCorrection
+	float intakeTemperatureCoefficient;@@GAUGE_NAME_FUEL_IAT_CORR@@
+	float coolantTemperatureCoefficient;@@GAUGE_NAME_FUEL_CLT_CORR@@
+	float timeSinceCrankingInSecs;;"secs", 1,0, 0,600000, 0, @@GAUGE_CATEGORY_FUEL_MATH@@
+
+
+	floatms_t baseFuel;
+	floatms_t fuel;Fuel: actual\nActual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.\nWithout injector lag.\n@see baseFuel\n@see actualLastInjection
+! end of running_fuel_s structure definition
+end_struct
+
+! actually define a member of 'running_fuel_s' type
+running_fuel_s running
+
+	uint16_t autoscale afrTableYAxis;;"%",{1/100},0, 0, 0, 0
+	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@},0, 0.5,1.5, 2,@@GAUGE_CATEGORY_FUEL_MATH@@
+	uint16_t autoscale targetAFR;@@GAUGE_NAME_TARGET_AFR@@;"ratio", {1/@@PACK_MULT_AFR@@},0, 10,20, 2,@@GAUGE_CATEGORY_FUEL_MATH@@
 
 	uint16_t autoscale stoichiometricRatio;fuel: stoich ratio;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 
