@@ -498,6 +498,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
     case TT_VVT_TOYOTA_4_1:
 		initializeSkippedToothTrigger(this, 4, 1, triggerOperationMode, SyncEdge::RiseOnly);
+		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.60, 2.40);
+		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.75, 1.25);
 		break;
 
     case TT_VVT_MITSUBISHI_6G75:
