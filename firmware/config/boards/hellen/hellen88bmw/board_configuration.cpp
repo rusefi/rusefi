@@ -1,10 +1,8 @@
 /**
- * @file boards/hellen/hellen121nissan/board_configuration.cpp
+ * @file board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen121nissan board
- *
- * See https://rusefi.com/s/hellen121nissan
+ * See https://rusefi.com/s/XXX
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
