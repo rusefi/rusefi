@@ -12,6 +12,6 @@ public class FirmwareVersion {
 
     @NotNull
     public String encode() {
-        return "snap_" + (crc32 & 0xFFFF);
+        return Long.toString(crc32);
     }
 }
