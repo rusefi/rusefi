@@ -4,56 +4,57 @@
 pins:
   - pin: A1
     function: Power Ground
+    class: gnd   
     type: gnd
     color: black
 
   - pin: A2
-    class: outputs   
-    color: brown/red 
     function: Fuel pump relay output / main 12V ignition on ??
+    class: outputs   
     type: [gp_low, gp_pp]
+    color: brown/red 
 
   - pin: A3
+    function: 'Injection Relay "Output (low)" ?? color yellow needs to be confirmed!'
     class: outputs
-    function: Injection Relay "Output (low)" ??
     type: ls
-    # note: color yellow needs to be confirmed!
+    # note: ?? color yellow needs to be confirmed!
     color: red/yellow
 
 # gp_pp	General purpose Push-Pull	General purpose push-pull (low and high side) output,
 # 600mA	Bipolar IDLE stepper (IACV)
   - pin: A4
-    class: outputs
     function: IACV (IDLE stepper coil A + or - ??)
+    class: outputs
     type: gp_pp
     color: yellow
 
   - pin: A5
-    class: outputs
     function: IACV (IDLE stepper coil A + or - ??)
+    class: outputs
     type: gp_pp
-    ts_name: IACV
+    #ts_name: IACV
     color: orange/white
 
   - pin: A6
-    class: outputs
     function: IACV (IDLE stepper coil B + or - ??)
+    class: outputs
     type: gp_pp
-    ts_name: IACV
+    #ts_name: IACV
     color: brown/rosa
 
   - pin: A7
-    class: outputs
     function: IACV (IDLE stepper coil B + or - ??)
+    class: outputs
     type: gp_pp
-    ts_name: IACV
+    #ts_name: IACV
     color: rosa/white
 
   - pin: A8
-    class: outputs
-    color: yellow/black
     function: Ignition Coil 1
+    class: outputs
     type: ign
+    color: yellow/black
 
   - pin: B1
     function: Injector 1
@@ -65,43 +66,48 @@ pins:
 
   # - pin: On-board MAP
   #   class: analog_inputs
-  #   function: note: add MAP Sensor Input required?
+  #   function: note: add MAP Sensor Input required??
   #   color: orange
 
   - pin: B2
-    class: analog_inputs
-    color: violet/black
     # note: duplicate usage of B2 for IAT and switch map!
-    function: Intake Air Temp (IAT) sensor
+    function: 'Intake Air Temp (IAT) sensor !! Note: WS manual: duplicate usage of B2 for IAT and switch map button??!''
+    class: analog_inputs
     type: at
+    color: violet/black
 
   - pin: B3
-    class: analog_inputs
     function: Throttle position sensor (TPS) Sensor Input
+    class: analog_inputs
+    type: TPS
     color: violet/black
 
   - pin: B4
-    class: analog_inputs
     function: Engine Temp Sensor Input
+    class: analog_inputs
+    type: at
     color: black
 
   - pin: B5
-    class: analog_inputs
     function: Throttle position sensor (TPS) Sensor Input
-    color: azure
+    class: analog_inputs
+    type: TPS
+    color: blue
 
   - pin: B6
     # not used
+    function: not used
 
   - pin: B7
-    class: analog_inputs
     function: Throttle position sensor (TPS) Sensor Input
+    class: analog_inputs
+    type: TPS
     color: yellow/blue
 
   - pin: B8
+    function: Ignition Coil 2
     class: outputs
     color: yellow/black
-    function: Ignition Coil 2
     type: ign
 
   - pin: C1
@@ -111,8 +117,8 @@ pins:
     color: gray
 
   - pin: C2
+    function: 'Unsure, could potentially be oil pressure ??'
     class: analog_inputs
-    function: Unsure, could potentially be oil pressure ??
     type: av
     color: gray/red
 
@@ -123,95 +129,109 @@ pins:
   #   color: gray
 
   - pin: C3C4
+    function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! is + and - side assignment required??'
     class: event_inputs
-    function: Crank Sensor - Phonic Wheel (VR) NOTE!! is + and - side assignment required??
     type: vr
     color: white/black
 
   - pin: C5
-    class: analog_inputs
-    color: green
     function: Intake Air Temp (IAT) sensor
+    class: analog_inputs
     type: at
+    color: green
 
   - pin: C6
-    class: analog_inputs
     function: Engine Temp Sensor Input
+    class: analog_inputs
+    type: at
     color: bi/violet
 
   - pin: C7
     # not used
+    function: not used
 
   - pin: C8
     function: Power Ground
+    class: gnd
     type: gnd
     color: black
 
   - pin: D1
-    class: outputs
-    color: blue/black
     function: Ignition Coil 3
+    class: outputs
     type: ign
+    color: blue/black
 
   - pin: D2
     class: outputs
-    function: fuel pump relay??
+    function: 'fuel pump relay??'
     type: gp_low
     color: blue/green
 
   - pin: D3
+    function: 'Injection Relay "Output (low)" ??'
     class: outputs
-    function: Injection Relay "Output (low)" ??
     type: ls
     color: violet/brown
 
   - pin: D4
-    class: analog_inputs
     function: Neutral Gear Sensor
+    class: analog_inputs
+    type: ??
     color: bi/violet
 
   - pin: D5
     # not used
-
+    function: not used
 
   - pin: D6
-    class: outputs
-    function: ??
-    type: ign
+    #class: outputs
+    function: 'unknown purpose ??'
+    #type: ign
     color: brown/violet
 
   - pin: D7
     # not used (enable ECU programming?)
+    function: 'not required by rusEFI?? (Walbro: enable ECU programming)'
 
   - pin: D8
     function: Power Ground
+    class: gnd
     type: gnd
     color: black
 
   - pin: E1
     # not used (OBD2?)
+    function: 'not required by rusEFI?? (Walbro: OBD2)'
 
   - pin: E2
     # not used
+    function: not used
 
   - pin: E3
     # not used (enable ECU programming?)
+    function: 'not required by rusEFI?? (Walbro: enable ECU programming)'
 
   - pin: E4
     # not used
+    function: not used
 
   - pin: E5
     # not used
+    function: not used
 
   - pin: E6
     # not used
+    function: not used
 
   - pin: E5E6
     # not used
+    function: not used
 
   - pin: E7
-    class: outputs
     function: engine check alarm light??
+    class: outputs
+    type: ??
     color: yellow/green
 
   - pin: E8
@@ -222,38 +242,47 @@ pins:
 
   - pin: F1
     function: Power Ground
+    class: gnd
     type: gnd
     color: black
 
   - pin: F2
     # not used (OBD2?)
+    function: 'not required by rusEFI?? (Walbro: OBD2)'
 
   - pin: F3
     # not used (OBD2?)
+    function: 'not required by rusEFI?? (Walbro: OBD2)'
 
   - pin: F4
     # not used (OBD2?)
+    function: 'not required by rusEFI?? (Walbro: OBD2)'
 
   - pin: F5
     # not used
+    function: not used
 
   - pin: F6
-    class: analog_inputs
     function: side stand Sensor Input
+    class: analog_inputs
     color: white
 
   - pin: F7
+    function: '+12V engine ECU power source, run/start ??'
     class: analog_inputs
-    function: +12V engine ECU power source, run/start ??
+    type: ??
     color: red/black
 
   - pin: F8
-    function: Solenoid (starter relay) ??
+    function: 'Solenoid (starter relay) ??'
+    class: analog_inputs
+    type: ??
     color: green
 
 info:
-  title: Benelli_Walbro
-  name: Benelli_Walbro
+# todo:  trigger build after PR
+  title: Benelli_Walbro 
+  name: 'Benelli_Walbro  !! NOTE: status is: DRAFTstatus is: DRAFT - there a unknown and potential wrong pin assignments, these are flagged with "??" !!'
   board_url: https://rusefi.com/s/Benelli_Walbro
   image:
     file: Benelli_Walbro.jpg
