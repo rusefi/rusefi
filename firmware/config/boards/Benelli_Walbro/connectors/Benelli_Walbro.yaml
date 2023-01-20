@@ -145,7 +145,7 @@ pins:
     function: Engine Temp Sensor Input
     class: analog_inputs
     type: at
-    color: bi/violet
+    color: white/violet
 
   - pin: C7
     # not used
@@ -179,7 +179,7 @@ pins:
     function: Neutral Gear Sensor
     class: analog_inputs
     type: ??
-    color: bi/violet
+    color: orange/black
 
   - pin: D5
     # not used
