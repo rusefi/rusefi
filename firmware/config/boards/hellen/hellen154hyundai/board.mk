@@ -4,7 +4,7 @@
 BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen154hyundai/board_configuration.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen154hyundai
 
-# Set this if you want a default engine type other than normal hellen121nissan
+# Set this if you want a default engine type other than normal
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
   VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_154_HYUNDAI_COUPE_BK2
 endif
