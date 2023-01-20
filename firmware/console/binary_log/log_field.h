@@ -25,7 +25,7 @@ public:
 	// Non-scaled channel, works for plain arithmetic types (int, float, uint8_t, etc)
 	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
 	constexpr LogField(TValue& toRead,
-			   const char* name, const char* units, int8_t digits)
+			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(1)
 		, m_addr(&toRead)
 		, m_type(resolveType<TValue>())
@@ -33,6 +33,7 @@ public:
 		, m_size(sizeForType(resolveType<TValue>()))
 		, m_name(name)
 		, m_units(units)
+		, m_category(category)
 	{
 	}
 
