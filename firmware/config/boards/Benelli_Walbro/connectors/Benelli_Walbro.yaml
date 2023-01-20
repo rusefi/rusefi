@@ -225,10 +225,6 @@ pins:
     # not used
     function: not used
 
-  - pin: E5E6
-    # not used
-    function: not used
-
   - pin: E7
     function: engine check alarm light??
     class: outputs
@@ -283,7 +279,7 @@ pins:
 info:
 # todo:  trigger build after PR
   title: Benelli_Walbro 
-  name: 'Benelli_Walbro  !! NOTE: status is DRAFT !! - there a unknown and potential wrong pin assignments, these are flagged with "??" !!'
+  name: 'Benelli_Walbro  !! NOTE: status is DRAFT !! - there a unknown and potential wrong pin assignments, these are flagged with "??" and "ToDo:"!!'
   board_url: https://rusefi.com/s/Benelli_Walbro
   image:
     file: Benelli_Walbro.jpg
