@@ -6,6 +6,8 @@ import java.io.IOException;
 public interface BinaryLogEntry {
     String getName();
 
+    String getCategory();
+
     String getUnit();
 
     int getByteSize();

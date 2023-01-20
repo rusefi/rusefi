@@ -106,25 +106,31 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
             fieldsDataSize += entry.getByteSize();
         }
 
-        // 0006h Format version = 01
+        // 0006h Format version = 02
         stream.write(0);
-        stream.write(1);
+        stream.write(2);
+
         // 0008h Timestamp
         stream.writeInt((int) (System.currentTimeMillis() / 1000));
-        // 000ch
-        int offsetToText = Fields.MLQ_HEADER_SIZE + Fields.MLQ_FIELD_HEADER_SIZE * entries.size();
-        stream.writeShort(offsetToText);
-        stream.writeShort(0); // reserved?
-        // 0010h = offset_to_data
-        stream.writeShort(offsetToText + headerText.length());
-        // 0012h
+
+        int headerSize = Fields.MLQ_HEADER_SIZE + Fields.MLQ_FIELD_HEADER_SIZE * entries.size();
+        // 000ch Info data start - immediately after header
+        stream.writeInt(headerSize);
+
+        // 0010h Data begin index - begins immediately after the header text
+        int headerWithTextSize = headerSize + headerText.length());
+        stream.writeInt(headerSize);
+
+        // 0014h Record length
         stream.writeShort(fieldsDataSize);
-        // 0014h number of fields
+
+        // 0016h Number of fields
         stream.writeShort(entries.size());
 
         for (BinaryLogEntry sensor : entries) {
             String name = sensor.getName();
             String unit = sensor.getUnit();
+            String category = sensor.getCategory();
 
             // 0000h
             stream.write(sensor.getByteSize());
@@ -138,8 +144,11 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
             stream.writeInt(0);
             // 0036h precision
             stream.write(2);
+            // 0037h category string
+            writeLine(stream, category, 34);
         }
-        if (stream.size() != offsetToText)
+
+        if (stream.size() != headerWithTextSize)
             throw new IllegalStateException("We are doing something wrong :( stream.size=" + stream.size());
         writeLine(stream, headerText, headerText.length());
     }

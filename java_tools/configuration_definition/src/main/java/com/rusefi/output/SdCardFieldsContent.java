@@ -46,6 +46,8 @@ public class SdCardFieldsContent {
                 quote(configField.getUnits()) +
                 ", " +
                 configField.getDigits() +
+                ", " +
+                configField.getCategory() +
 
                 "},\n";
     }

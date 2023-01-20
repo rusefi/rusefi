@@ -42,7 +42,10 @@ void LogField::writeHeader(Writer& outBuffer) const {
 	// Offset 54, size 1 = digits to display (signed int)
 	buffer[54] = m_digits;
 
-	// Total size = 55
+	// Offset 55, (optional) category string
+	strncpy(&buffer[55], m_category, 34);
+
+	// Total size = 89
 	outBuffer.write(buffer, MLQ_FIELD_HEADER_SIZE);
 }
 

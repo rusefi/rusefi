@@ -297,8 +297,15 @@ public enum Sensor implements BinaryLogEntry {
         }
     }
 
+    @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getName() {
+        // TODO
+        return "";
     }
 
     @Override

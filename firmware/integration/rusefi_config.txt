@@ -2041,8 +2041,8 @@ end_struct
 ! dual-bank devices can go with 300 for better TS reconnect experience
 #define TS_BLOCK_READ_TIMEOUT 3000
 
-#define MLQ_HEADER_SIZE 22
-#define MLQ_FIELD_HEADER_SIZE 55
+#define MLQ_HEADER_SIZE 24
+#define MLQ_FIELD_HEADER_SIZE 89
 
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
