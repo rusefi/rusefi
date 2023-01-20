@@ -118,7 +118,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
         stream.writeInt(headerSize);
 
         // 0010h Data begin index - begins immediately after the header text
-        int headerWithTextSize = headerSize + headerText.length());
+        int headerWithTextSize = headerSize + headerText.length();
         stream.writeInt(headerSize);
 
         // 0014h Record length
