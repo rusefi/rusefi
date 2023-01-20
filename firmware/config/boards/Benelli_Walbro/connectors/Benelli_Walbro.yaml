@@ -64,14 +64,9 @@ pins:
     # "VE" appears to be original italian term "verde" for english "green"
     color: gray/green
 
-  # - pin: On-board MAP
-  #   class: analog_inputs
-  #   function: note: add MAP Sensor Input required??
-  #   color: orange
-
   - pin: B2
     # note: duplicate usage of B2 for IAT and switch map!
-    function: 'Intake Air Temp (IAT) sensor !! Note: WS manual: duplicate usage of B2 for IAT and switch map button??!''
+    function: 'Intake Air Temp (IAT) sensor !! Note: WS manual: duplicate usage of B2 for IAT and switch map button??!'
     class: analog_inputs
     type: at
     color: violet/black
