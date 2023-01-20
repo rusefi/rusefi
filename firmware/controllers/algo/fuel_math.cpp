@@ -164,12 +164,8 @@ AirmassModelBase* getAirmassModel(engine_load_mode_e mode) {
 		case LM_MOCK: return engine->mockAirmassModel;
 #endif
 		default:
-			// this is a bad work-around for https://github.com/rusefi/rusefi/issues/1690 issue
-			warning(CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", engineConfiguration->fuelAlgorithm);
-			return &sdAirmass;
-/* todo: this should be the implementation
+			firmwareError(CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", engineConfiguration->fuelAlgorithm);
 			return nullptr;
-*/
 	}
 }
 
