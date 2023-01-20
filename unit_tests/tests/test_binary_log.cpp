@@ -15,17 +15,17 @@ public:
 
 TEST(BinaryLogField, FieldHeader) {
 	scaled_channel<int8_t, 10> channel;
-	LogField field(channel, "name", "units", 2);
+	LogField field(channel, "name", "units", 2, "category");
 
-	char buffer[55];
+	char buffer[89];
 	StrictMock<MockWriter> bufWriter;
-	EXPECT_CALL(bufWriter, write(_, 55))
+	EXPECT_CALL(bufWriter, write(_, 89))
 		.WillOnce([&] (const char* buf, size_t count) {
 			memcpy(buffer, buf, count);
 			return 0;
 		});
 
-	// Should write 55 bytes
+	// Should write 89 bytes
 	field.writeHeader(bufWriter);
 
 	// Expect correctly written header
@@ -42,7 +42,8 @@ TEST(BinaryLogField, FieldHeader) {
 		// Transform - we always use 0
 		0, 0, 0, 0,
 		// Digits - 2, as configured
-		2
+		2,
+		'c', 'a', 't', 'e', 'g', 'o', 'r', 'y', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	));
 }
 
