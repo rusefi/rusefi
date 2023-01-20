@@ -123,11 +123,17 @@ pins:
   #   type: vr
   #   color: gray
 
-  - pin: C3C4
+  - pin: C3
     function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! is + and - side assignment required??'
     class: event_inputs
     type: vr
-    color: white/black
+    color: white or black
+
+  - pin: C4
+    function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! is + and - side assignment required??'
+    class: event_inputs
+    type: vr
+    color: white or black
 
   - pin: C5
     function: 'Intake Air Temp (IAT) sensor'
