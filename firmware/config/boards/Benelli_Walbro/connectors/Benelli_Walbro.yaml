@@ -9,7 +9,7 @@ pins:
     color: black
 
   - pin: A2
-    function: Fuel pump relay output / main 12V ignition on ??
+    function: 'Fuel pump relay output / main 12V ignition on ??'
     class: outputs   
     type: [gp_low, gp_pp]
     color: brown/red 
@@ -24,27 +24,27 @@ pins:
 # gp_pp	General purpose Push-Pull	General purpose push-pull (low and high side) output,
 # 600mA	Bipolar IDLE stepper (IACV)
   - pin: A4
-    function: IACV (IDLE stepper coil A + or - ??)
+    function: 'IACV (IDLE stepper coil A + or - ??)'
     class: outputs
     type: gp_pp
     color: yellow
 
   - pin: A5
-    function: IACV (IDLE stepper coil A + or - ??)
+    function: 'IACV (IDLE stepper coil A + or - ??)'
     class: outputs
     type: gp_pp
     #ts_name: IACV
     color: orange/white
 
   - pin: A6
-    function: IACV (IDLE stepper coil B + or - ??)
+    function: 'IACV (IDLE stepper coil B + or - ??)'
     class: outputs
     type: gp_pp
     #ts_name: IACV
     color: brown/rosa
 
   - pin: A7
-    function: IACV (IDLE stepper coil B + or - ??)
+    function: 'IACV (IDLE stepper coil B + or - ??)'
     class: outputs
     type: gp_pp
     #ts_name: IACV
@@ -64,20 +64,15 @@ pins:
     # "VE" appears to be original italian term "verde" for english "green"
     color: gray/green
 
-  # - pin: On-board MAP
-  #   class: analog_inputs
-  #   function: note: add MAP Sensor Input required??
-  #   color: orange
-
   - pin: B2
     # note: duplicate usage of B2 for IAT and switch map!
-    function: 'Intake Air Temp (IAT) sensor !! Note: WS manual: duplicate usage of B2 for IAT and switch map button??!''
+    function: 'Intake Air Temp (IAT) sensor !! Note: WS manual: duplicate usage of B2 for IAT and switch map button??!'
     class: analog_inputs
     type: at
     color: violet/black
 
   - pin: B3
-    function: Throttle position sensor (TPS) Sensor Input
+    function: 'Throttle position sensor (TPS) Sensor Input'
     class: analog_inputs
     type: TPS
     color: violet/black
@@ -89,7 +84,7 @@ pins:
     color: black
 
   - pin: B5
-    function: Throttle position sensor (TPS) Sensor Input
+    function: 'Throttle position sensor (TPS) Sensor Input'
     class: analog_inputs
     type: TPS
     color: blue
@@ -99,7 +94,7 @@ pins:
     function: not used
 
   - pin: B7
-    function: Throttle position sensor (TPS) Sensor Input
+    function: 'Throttle position sensor (TPS) Sensor Input'
     class: analog_inputs
     type: TPS
     color: yellow/blue
@@ -135,7 +130,7 @@ pins:
     color: white/black
 
   - pin: C5
-    function: Intake Air Temp (IAT) sensor
+    function: 'Intake Air Temp (IAT) sensor'
     class: analog_inputs
     type: at
     color: green
