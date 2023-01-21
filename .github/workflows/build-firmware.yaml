@@ -374,12 +374,12 @@ jobs:
 
     # Build rusEFI console
     - name: Build console
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts == 'true' }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       run: bash misc/jenkins/build_java_console.sh
 
     # Build the simulator
     - name: Build simulator
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts == 'true' }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
@@ -389,24 +389,24 @@ jobs:
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
 
     - name: Package Bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts == 'true' }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} ${{matrix.ini-file}} ${{ inputs.lts }}
 
     - name: Upload .ini files
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts == 'true' }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       working-directory: ./firmware/tunerstudio/generated
       run: |
         ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload build elf
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && inputs.lts == 'true' }}
+      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload build bin
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && inputs.lts == 'true' }}
+      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.bin
@@ -427,14 +427,14 @@ jobs:
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts == 'true' }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle*.zip
 
     - name: Upload autoupdate bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts == 'true' }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
@@ -497,7 +497,7 @@ jobs:
       run: OS="Windows_NT" bash misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
 
     - name: Package Bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts == 'true' }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh default default ${{ inputs.lts }}
 
     - name: Attach console junit results
@@ -508,13 +508,13 @@ jobs:
         path: ./java_console/build/*.txt
 
     - name: Upload 'all' .ini files
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts == 'true' }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       working-directory: ./firmware/tunerstudio/generated
       run: |
         ../upload_ini.sh rusefi.ini ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload primary bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts == 'true' }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle.zip
