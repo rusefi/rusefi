@@ -71,11 +71,10 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	// trigger inputs
-	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	// Direct hall-only cam input
-	// exhaust input same on both revisions
-	engineConfiguration->camInputs[1] = H144_IN_D_AUX4;
+	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
+	engineConfiguration->camInputs[0] = H144_IN_D_1;
+	engineConfiguration->camInputs[1] = H144_IN_CAM;
+
 
 //    //ETB1
 //    // PWM pin
