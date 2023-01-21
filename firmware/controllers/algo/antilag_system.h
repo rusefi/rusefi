@@ -25,4 +25,7 @@ public:
 	bool isInsideALSTimerCondition();
     /* enabled and all conditions above */
 	bool isAntilagConditionMet(int rpm);
+
+private:
+	Timer ALStimer;
 };
