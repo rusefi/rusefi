@@ -117,16 +117,16 @@ typedef enum __attribute__ ((__packed__)) {
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
 	 */
-	LM_SPEED_DENSITY = 3,
+	LM_SPEED_DENSITY = 0,
 
 	/**
 	 * MAF with a known kg/hour function
 	 */
-	LM_REAL_MAF = 4,
+	LM_REAL_MAF = 1,
 
-	LM_ALPHA_N = 5,
+	LM_ALPHA_N = 2,
 
-	LM_LUA = 6,
+	LM_LUA = 3,
 
 	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
 	LM_MOCK = 100,
