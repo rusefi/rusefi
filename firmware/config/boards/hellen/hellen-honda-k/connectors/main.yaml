@@ -257,6 +257,68 @@ info:
   image:
     file: hellen-k.jpg
   pins:
-    - pin: U12
-      x: 1119
-      y: 424
+    - pin: A2
+      x: 85
+      y: 85
+    - pin: A3
+      x: 122
+      y: 85
+    - pin: A4
+      x: 169
+      y: 85
+    - pin: A5
+      x: 200
+      y: 85
+    - pin: A6
+      x: 237
+      y: 85
+    - pin: A7
+      x: 272
+      y: 85
+    - pin: A8
+      x: 340
+      y: 85
+    - pin: A9
+      x: 376
+      y: 85
+
+    - pin: A10
+      x: 50
+      y: 145
+    - pin: A11
+      x: 81
+      y: 145
+    - pin: A12
+      x: 115
+      y: 145
+    - pin: A13
+      x: 142
+      y: 145
+    - pin: A14
+      x: 173
+      y: 145
+    - pin: A15
+      x: 203
+      y: 145
+    - pin: A16
+      x: 230
+      y: 145
+    - pin: A17
+      x: 265
+      y: 145
+    - pin: A18
+      x: 294
+      y: 145
+    - pin: A19
+      x: 322
+      y: 145
+    - pin: A20
+      x: 351
+      y: 145
+    - pin: A21
+      x: 382
+      y: 145
+
+    - pin: A22
+      x: 50
+      y: 200
