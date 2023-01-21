@@ -249,13 +249,13 @@
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
 #define engine_configuration_s_size 4012
-#define engine_load_mode_e_auto_enum 5="LM_ALPHA_N",6="LM_LUA",100="LM_MOCK",4="LM_REAL_MAF",3="LM_SPEED_DENSITY"
-#define engine_load_mode_e_enum "INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
-#define engine_load_mode_e_LM_ALPHA_N 5
-#define engine_load_mode_e_LM_LUA 6
+#define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
+#define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
+#define engine_load_mode_e_LM_ALPHA_N 2
+#define engine_load_mode_e_LM_LUA 3
 #define engine_load_mode_e_LM_MOCK 100
-#define engine_load_mode_e_LM_REAL_MAF 4
-#define engine_load_mode_e_LM_SPEED_DENSITY 3
+#define engine_load_mode_e_LM_REAL_MAF 1
+#define engine_load_mode_e_LM_SPEED_DENSITY 0
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_HONDA "Honda"
@@ -385,7 +385,7 @@
 #define etb_function_e_ETB_Throttle2 2
 #define etb_function_e_ETB_Wastegate 4
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FLASH_DATA_VERSION 10017
+#define FLASH_DATA_VERSION 10018
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
@@ -994,7 +994,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3613959795
+#define SIGNATURE_HASH 3941202902
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1270,7 +1270,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.01.21.subaru_eg33_f7.3613959795"
+#define TS_SIGNATURE "rusEFI master.2023.01.21.subaru_eg33_f7.3941202902"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
