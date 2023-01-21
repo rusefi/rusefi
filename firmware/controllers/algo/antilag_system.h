@@ -22,6 +22,7 @@ public:
 	bool isALSMaxCLTCondition() const;
 	bool isALSMaxThrottleIntentCondition() const;
 	bool isInsideALSSwitchCondition();
+	bool isInsideALSTimerCondition();
     /* enabled and all conditions above */
 	bool isAntilagConditionMet(int rpm);
 };
