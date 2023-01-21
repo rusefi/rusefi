@@ -20,10 +20,10 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = Gpio::C13;
-	engineConfiguration->ignitionPins[1] = Gpio::E5;
-	engineConfiguration->ignitionPins[2] = Gpio::E4;
-	engineConfiguration->ignitionPins[3] = Gpio::E3;
+	engineConfiguration->ignitionPins[0] = H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = H144_IGN_3;
+	engineConfiguration->ignitionPins[3] = H144_IGN_4;
 	
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
@@ -48,12 +48,9 @@ static void setupDefaultSensorInputs() {
 
     engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 
-	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
+	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->useETBforIdleControl = true;
 
-	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
-
-	setPPSInputs(EFI_ADC_3, EFI_ADC_14);
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
@@ -63,8 +60,6 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
-
-static bool isFirstInvocation = true;
 
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
@@ -81,57 +76,16 @@ void setBoardConfigOverrides() {
 	// exhaust input same on both revisions
 	engineConfiguration->camInputs[1] = H144_IN_D_AUX4;
 
-	if (engine->engineState.hellenBoardId == -1) {
-	    engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	    engineConfiguration->camInputs[0] = H144_IN_CAM;
+//    //ETB1
+//    // PWM pin
+//    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
+//    // DIR pin
+//	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
+//   	// Disable pin
+//   	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO12;
+//   	// Unused
+// 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
-		// control pins are inverted since overall ECU pinout seems to be inverted
-		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
-		engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
-		engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
-		engineConfiguration->etb_use_two_wires = true;
-
-		// first revision of did not have Hellen Board ID
-		// https://github.com/rusefi/hellen154hyundai/issues/55
-		engineConfiguration->etbIo[1].directionPin1 = Gpio::Unassigned;
-		engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
-		engineConfiguration->etbIo[1].controlPin = Gpio::Unassigned;
-
-		if (isFirstInvocation) {
-			isFirstInvocation = false;
-			efiSetPadMode("ETB FIX0", H144_OUT_PWM4, PAL_MODE_INPUT_ANALOG);
-			efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
-			efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
-		}
-	} else if (engine->engineState.hellenBoardId == BOARD_ID_154hyundai_c) {
-		engineConfiguration->triggerInputPins[0] = H144_IN_SENS2;
-		engineConfiguration->camInputs[0] = H144_IN_SENS3;
-
-
-		// todo You would not believe how you invert TLE9201 #4579
-		engineConfiguration->stepperDcInvertedPins = true;
-
-	    //ETB1
-	    // PWM pin
-	    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
-	    // DIR pin
-		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
-	   	// Disable pin
-	   	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO12;
-	   	// Unused
-	 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
-
-		// wastegate DC motor
-	    //ETB2
-	    // PWM pin
-	    engineConfiguration->etbIo[1].controlPin = H144_OUT_PWM4;
-	    // DIR pin
-		engineConfiguration->etbIo[1].directionPin1 = H144_OUT_PWM5;
-	   	// Disable pin
-	   	engineConfiguration->etbIo[1].disablePin = H144_OUT_IO13;
-	   	// Unused
-	 	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
-    }
 }
 
 /**
@@ -149,7 +103,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->enableSoftwareKnock = true;
-	engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
 
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
@@ -181,13 +134,13 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->specs.displacement = 1.998;
-	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
-	strcpy(engineConfiguration->engineCode, "Theta II");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_HONDA);
+	strcpy(engineConfiguration->engineCode, "K");
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
-    setTPS1Calibration(98, 926, 891, 69);
+    setTPS1Calibration(98, 926, 1000, 0);
 }
