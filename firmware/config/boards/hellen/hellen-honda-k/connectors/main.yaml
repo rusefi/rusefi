@@ -85,12 +85,14 @@ pins:
 # H144_IN_D_1
     id: E12
     class: event_inputs
+# intake
     ts_name: A25 VTT CAM
     function: VTT Cam Position Sensor
   - pin: A26
     # IN_CAM
     id: A6
     class: event_inputs
+# exhaust
     ts_name: A26 Cam Sync
     function: Cam Sensor
 

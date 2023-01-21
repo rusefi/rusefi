@@ -684,4 +684,6 @@ enum class SelectedGear : uint8_t {
 	Low = 11,
 };
 
+#define SC_Exhaust_First 1
+
 #endif // __cplusplus
