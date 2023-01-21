@@ -879,8 +879,8 @@
 #define MAP_sensor_config_s_size 140
 #define MAP_WINDOW_SIZE 8
 #define MAX_CYLINDER_COUNT 12
-#define MLQ_FIELD_HEADER_SIZE 55
-#define MLQ_HEADER_SIZE 22
+#define MLQ_FIELD_HEADER_SIZE 89
+#define MLQ_HEADER_SIZE 24
 #define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
 #define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
@@ -994,7 +994,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 4047697701
+#define SIGNATURE_HASH 3613959795
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1270,7 +1270,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.01.21.subaru_eg33_f7.4047697701"
+#define TS_SIGNATURE "rusEFI master.2023.01.21.subaru_eg33_f7.3613959795"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

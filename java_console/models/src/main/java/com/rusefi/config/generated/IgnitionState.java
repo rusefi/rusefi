@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Sat Jan 21 01:24:42 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Sat Jan 21 02:07:10 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -272,8 +272,8 @@ public class IgnitionState {
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_WINDOW_SIZE = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
-	public static final int MLQ_FIELD_HEADER_SIZE = 55;
-	public static final int MLQ_HEADER_SIZE = 22;
+	public static final int MLQ_FIELD_HEADER_SIZE = 89;
+	public static final int MLQ_HEADER_SIZE = 24;
 	public static final String MOCK_PPS_POSITION_COMMAND = "mock_pps_position";
 	public static final String MOCK_PPS_VOLTAGE_COMMAND = "mock_pps_voltage";
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
