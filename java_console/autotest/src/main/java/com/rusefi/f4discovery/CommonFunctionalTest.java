@@ -111,7 +111,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(2000);
 
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
-        ecu.sendCommand("set algorithm 5");
+        ecu.sendCommand("set algorithm 2");
         // Set tps to 25% - make alpha-n happy
         ecu.sendCommand("set_sensor_mock 10 25");
         ecu.sendCommand("set rpm_hard_limit 2500");
@@ -273,7 +273,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.sendCommand("set_sensor_mock 27 12");
 
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
-        ecu.sendCommand("set algorithm 5");
+        ecu.sendCommand("set algorithm 2");
         // Set tps to 25% - make alpha-n happy
         ecu.sendCommand("set_sensor_mock 10 25");
 
@@ -321,7 +321,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
         // switching to Speed Density
         ecu.sendCommand("set_sensor_mock 4 69.12"); // MAP
-        sendComplexCommand("set algorithm 3");
+        sendComplexCommand("set algorithm 0");
         ecu.changeRpm(2600);
         ecu.changeRpm(2000);
         chart = nextChart();
@@ -435,7 +435,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(chart, EngineChart.SPARK_2);
 
         // switching to Speed Density
-        sendComplexCommand("set algorithm 3");
+        sendComplexCommand("set algorithm 0");
         ecu.changeRpm(2400);
         ecu.changeRpm(2000);
         chart = nextChart();

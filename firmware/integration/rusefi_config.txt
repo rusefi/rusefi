@@ -93,7 +93,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10017
+#define FLASH_DATA_VERSION 10018
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -106,8 +106,6 @@
 struct_no_prefix persistent_config_s 
 
 struct_no_prefix engine_configuration_s
-
-#define LE_COMMAND_LENGTH 200
 
 ! see 'blockingFactor' in rusefi.ini
 #define BLOCKING_FACTOR 750
@@ -518,7 +516,7 @@ end_struct
     specs_s specs
 	float cylinderBore;Cylinder diameter in mm.;"mm", 1, 0, 0, 20000, 2
 
-#define engine_load_mode_e_enum "INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
+#define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 
 
 custom engine_load_mode_e 1 bits, U08, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
@@ -908,7 +906,6 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
 	custom error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
-	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
 
 	bit clutchUpPinInverted
 	bit clutchDownPinInverted
@@ -2041,8 +2038,8 @@ end_struct
 ! dual-bank devices can go with 300 for better TS reconnect experience
 #define TS_BLOCK_READ_TIMEOUT 3000
 
-#define MLQ_HEADER_SIZE 22
-#define MLQ_FIELD_HEADER_SIZE 55
+#define MLQ_HEADER_SIZE 24
+#define MLQ_FIELD_HEADER_SIZE 89
 
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"

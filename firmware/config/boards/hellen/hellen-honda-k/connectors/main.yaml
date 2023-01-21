@@ -15,23 +15,26 @@ pins:
     function: Power GND
     type: gnd
   - pin: A7
-    ts_name: A7 - CRANK
+    # IN_CRANK AIN24 A24
+    id: [B1]
+    class: [event_inputs]
+    ts_name: A7 Crankshaft Sensor
     function: Crankshaft Sensor
   - pin: A8
-    ts_name: --- - INTAKE
+    ts_name: A8 - INTAKE
     function: Intake Position
   - pin: A9
-    ts_name: --- - KNOCK
+    ts_name: A9 - KNOCK
     function: Knock Sensor
   - pin: A10
-    function: ANALOG GND
+    function: Analog GND
     type: gnda
   - pin: A11
-    function: ANALOG GND
+    function: Analog GND
     type: gnda
   - pin: A12
-    ts_name: --- - IDLE AIR
-    function: Idle Air
+    ts_name: A12 Idle Air Control
+    function: Idle Air Control Valve
   - pin: A13
     ts_name: --- - EGR
     function: EGR
@@ -44,152 +47,233 @@ pins:
   - pin: A16
     function: Analog GND
     type: gnda
-  - pin: A17
-    ts_name: --- - NC
-    function: NC
+    color: black
+
   - pin: A18
-    ts_name: --- - VSS
-    function: VSS
+    # H144_IN_VSS
+    id: F11
+    class: event_inputs
+    ts_name: A18 - VSS
+    function: Vehicle Speed Sensor
+
   - pin: A19
-    ts_name: --- - MAP
+    # IN_MAP1 AIN9
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: A19 - MAP
     function: MAP Sensor
+
   - pin: A20
-    ts_name: --- - 5V Sensor PWR
     function: 5V Sensor Power
+    color: orange
+
   - pin: A21
-    ts_name: --- - 5V Sensor PWR
     function: 5V Sensor Power
-  - pin: A22
-    ts_name: --- - NC
-    function: NC
+    color: orange
+
   - pin: A23
     function: Analog GND
     type: gnda
+    color: black
+
   - pin: A24
     function: Analog GND
     type: gnda
+    color: black
+
   - pin: A25
-    ts_name: --- - VTT CAM HALL
-    function: VTT CAM HALL
+    ts_name: A25 VTT CAM
+    function: VTT Cam Position Sensor
   - pin: A26
-    ts_name: --- - CAM SYNC HALL
-    function: CAM SYNC HALL
+    # IN_CAM
+    id: [A6]
+    class: [event_inputs]
+    ts_name: A26 Cam Sync
+    function: Cam Sensor
+
   - pin: A27
-    ts_name: --- - IGN4
+    # H144_IGN_4
+    id: E3
+    class: outputs
+    ts_name: A27 - IGN4
     function: Ignition 4
   - pin: A28
-    ts_name: --- - IGN3
+    # H144_IGN_3
+    id: E4
+    class: outputs
+    ts_name: A28 - IGN3
     function: Ignition 3
+
   - pin: A29
-    ts_name: --- - IGN2
+    # H144_IGN_2
+    id: E5
+    class: outputs
+    ts_name: A29 - IGN2
     function: Ignition 2
+
   - pin: A30
-    ts_name: --- - IGN1
+    # H144_IGN_1
+    id: C13
+    class: outputs
+    ts_name: A30 - IGN1
     function: Ignition 1
-  - pin: A31
-    ts_name: --- - NC
-    function: NC
 
   - pin: B1
-    ts_name: --- - VTC HS
-    function: VTC Hish Side
+    function: VTC +12 supply
+
   - pin: B2
-    ts_name: --- - INJ4
+    # H144_LS_4
+    id: D10
+    class: outputs
+    type: inj
+    ts_name: B2 - Injector 4
     function: Injector 4
   - pin: B3
-    ts_name: --- - INJ3
+    # H144_LS_3
+    id: D11
+    class: outputs
+    type: inj
+    ts_name: B3 - Injector 3
     function: Injector 3
+
   - pin: B4
-    ts_name: --- - INJ2
+    # H144_LS_2
+    id: G8
+    class: outputs
+    type: inj
+    ts_name: B4 - Injector 2
     function: Injector 2
+
   - pin: B5
-    ts_name: --- - INJ1
+    # H144_LS_1
+    id: G7
+    class: outputs
+    ts_name: B5 - Injector 1
     function: Injector 1
   - pin: B6
-    ts_name: --- - RADIATOR RELAY
-    function: Radiator Relay
+    # H144_OUT_IO12
+    id: A8
+    class: outputs
+    type: ls
+    ts_name: B6 Radiator Relay
+    function: Radiator Relay Output
+
   - pin: B7
     ts_name: --- - LOCKOUT SOLENOID
     function: Lockout Solenoid
   - pin: B8
-    ts_name: --- - CLT
+    # H144_IN_CLT AIN11 PC2
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: B8 - CLT
     function: CLT
+
   - pin: B9
-    ts_name: --- - VTEC PRESSURE SW
+    ts_name: B9 - VTEC PRESSURE SW
     function: VTEC Pressure Switch
   - pin: B10
-    ts_name: --- - CHARGING LIGHT
+    ts_name: B10 - CHARGING LIGHT
     function: Charging Light
-  - pin: B11
-    ts_name: --- - NC
-    function: NC
-  - pin: B12
-    ts_name: --- - NC
-    function: NC
+
   - pin: B13
-    ts_name: --- - ALTERNATOR FIELD
+    ts_name: B13 - ALTERNATOR FIELD
     function: Alternator Field
-  - pin: B14
-    ts_name: --- - A/T TCU
-    function: A/T TCU
+
   - pin: B15
-    ts_name: --- - VTC HS
+    ts_name: B15 - VTC HS
     function: VTC High Side
-  - pin: B16
-    ts_name: --- - A/T TCU
-    function: A/T TCU
+
   - pin: B17
-    ts_name: --- - IAT
+    # H144_IN_IAT AIN14 PC3
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: B17 - IAT
     function: IAT
   - pin: B18
     ts_name: --- - ALTERNATOR CONTROL
     function: Alternator Control
-  - pin: B19
-    ts_name: --- - NC
-    function: NC
-  - pin: B20
-    ts_name: --- - NC
-    function: NC
+
   - pin: B21
     ts_name: --- - EVAP
     function: EVAP
   - pin: B22
     ts_name: --- - INTAKE RUNNER
     function: Intake Runner
-  - pin: B24
-    ts_name: --- - NC
-    function: NC
+
+  - pin: C1
+    function: LSU Heater Negative
+
+  - pin: C2
+    function: LSU Rtrim
+
+  - pin: C3
+    function: LSU Ip
+
+  - pin: C4
+    function: LSU Vm
+
+  - pin: C5
+    function: LSU Un
+
+  - pin: C6
+    function: +12V from main relay
+    type: 12v
+    color: red
+
+  - pin: C7
+    function: CAN High
+
+  - pin: C8
+    function: CAN Low
+
+  - pin: C16
+    function: 5V Sensor Power
+    color: orange
+
+  - pin: C18
+    function: Aux GND
+    type: gnda
+    color: black
 
   - pin: E1
-    ts_name: --- - FUEL RELAY
+    # H144_OUT_IO13
+    id: G6
+    class: outputs
+    ts_name: E1 Fuel Relay
     function: Fuel Relay
   - pin: E3
     function: Power GND
     type: gnd
+    color: black
+
   - pin: E4
     function: Analog GND
     type: gnda
+    color: black
+
   - pin: E5
-    ts_name: --- - 5V SENSOR POWER
     function: 5V Sensor Power
+
   - pin: E7
-    ts_name: --- - MAIN RELAY CONTROL
+    # H144_OUT_IO3
+    id: G14
+    class: outputs
+    ts_name: E7 Main Relay Control
     function: Main Relay Control
-#  - pin: E9
-#    ts_name: --- - MAIN RELAY CONTROL
-#    function: Main Relay Control
+
+  - pin: E9
+    # VIGN PA5
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: E9 Ignition Key Voltage
+    function: +12V engine ECU power source, run/start
+    color: red
+
   - pin: E10
-    ts_name: --- - NC
-    function: NC
-  - pin: E11
-    ts_name: --- - NC
-    function: NC
-  - pin: E12
-    ts_name: --- - NC
-    function: NC
-  - pin: E13
-    ts_name: --- - NC
-    function: NC
+    ts_name: E10 Alternative Fuel Relay Output
+    function: Fuel Relay Output
+
+
   - pin: E14
     ts_name: --- - TANK PRESSURE
     function: Tank Pressure
@@ -199,9 +283,7 @@ pins:
   - pin: E16
     ts_name: --- - STEERING PRESSURE SW
     function: Steering Pressure Switch
-  - pin: E19
-    ts_name: --- - NC
-    function: NC
+
   - pin: E20
     ts_name: --- - EVAP
     function: EVAP
@@ -214,40 +296,23 @@ pins:
   - pin: E23
     ts_name: --- - K-LINE
     function: K-Line
-  - pin: E24
-    ts_name: --- - NC
-    function: NC
+
   - pin: E26
-    ts_name: --- - TACHOMETER
+    # LOW12 IO10
+    id: I0
+    class: outputs
+    ts_name: E26 - TACHOMETER
     function: Tachometer
   - pin: E27
     ts_name: --- - K-LINE
     function: K-Line
-  - pin: E28
-    ts_name: --- - NC
-    function: NC
-  - pin: E29
-    ts_name: --- - NC
-    function: NC
-  - pin: E30
-    ts_name: --- - NC
-    function: NC
-  - pin: E31
-    ts_name: --- - CHECK ENGINE
-    function: Check Engine
 
-  - pin: E9
-    # VIGN PA5
-    id: EFI_ADC_5
-    class: analog_inputs
-    ts_name: E9 - Ignition Key Voltage
-    function: +12V engine ECU power source, run/start
-    color: red
   - pin: E31
+    #H144_OUT_IO7
+    id: G3
     class: outputs
-    function: MIL Check Engine
-    ts_name: --- Check Engine
-
+    ts_name: E31 Check Engine
+    function: Check Engine
 
 info:
   id: Honda-K
@@ -257,6 +322,230 @@ info:
   image:
     file: hellen-k.jpg
   pins:
-    - pin: U12
-      x: 1119
-      y: 424
+    - pin: A2
+      x: 85
+      y: 85
+    - pin: A3
+      x: 122
+      y: 85
+    - pin: A4
+      x: 169
+      y: 85
+    - pin: A5
+      x: 200
+      y: 85
+    - pin: A6
+      x: 237
+      y: 85
+    - pin: A7
+      x: 272
+      y: 85
+    - pin: A8
+      x: 340
+      y: 85
+    - pin: A9
+      x: 376
+      y: 85
+
+    - pin: A10
+      x: 50
+      y: 145
+    - pin: A11
+      x: 81
+      y: 145
+    - pin: A12
+      x: 115
+      y: 145
+    - pin: A13
+      x: 142
+      y: 145
+    - pin: A14
+      x: 173
+      y: 145
+    - pin: A15
+      x: 203
+      y: 145
+    - pin: A16
+      x: 230
+      y: 145
+    - pin: A17
+      x: 265
+      y: 145
+    - pin: A18
+      x: 294
+      y: 145
+    - pin: A19
+      x: 322
+      y: 145
+    - pin: A20
+      x: 351
+      y: 145
+    - pin: A21
+      x: 382
+      y: 145
+
+    - pin: A22
+      x: 50
+      y: 200
+    - pin: A23
+      x: 82
+      y: 200
+    - pin: A24
+      x: 113
+      y: 200
+    - pin: A25
+      x: 174
+      y: 200
+    - pin: A26
+      x: 203
+      y: 200
+    - pin: A27
+      x: 264
+      y: 200
+    - pin: A28
+      x: 293
+      y: 200
+    - pin: A29
+      x: 321
+      y: 200
+    - pin: A30
+      x: 353
+      y: 200
+
+    - pin: B1
+      x: 446
+      y: 85
+    - pin: B2
+      x: 480
+      y: 85
+    - pin: B3
+      x: 514
+      y: 85
+    - pin: B4
+      x: 553
+      y: 85
+    - pin: B5
+      x: 590
+      y: 85
+    - pin: B6
+      x: 653
+      y: 85
+    - pin: B7
+      x: 685
+      y: 85
+
+
+    - pin: B8
+      x: 446
+      y: 145
+    - pin: B9
+      x: 479
+      y: 145
+
+    - pin: B15
+      x: 657
+      y: 145
+
+    - pin: B17
+      x: 450
+      y: 200
+    - pin: B18
+      x: 479
+      y: 200
+    - pin: B19
+      x: 509
+      y: 200
+
+
+    - pin: B20
+      x: 567
+      y: 200
+    - pin: B21
+      x: 593
+      y: 200
+    - pin: B22
+      x: 625
+      y: 200
+    - pin: B23
+      x: 657
+      y: 200
+
+    - pin: C1
+      x: 765
+      y: 85
+    - pin: C2
+      x: 796
+      y: 85
+    - pin: C3
+      x: 853
+      y: 85
+    - pin: C4
+      x: 883
+      y: 85
+    - pin: C5
+      x: 913
+      y: 85
+    - pin: C6
+      x: 944
+      y: 85
+    - pin: C7
+      x: 977
+      y: 85
+
+    - pin: С8
+      x: 764
+      y: 145
+    - pin: С9
+      x: 799
+      y: 145
+    - pin: С10
+      x: 826
+      y: 145
+    - pin: С11
+      x: 856
+      y: 145
+    - pin: С12
+      x: 885
+      y: 145
+    - pin: С13
+      x: 917
+      y: 145
+    - pin: С14
+      x: 943
+      y: 145
+    - pin: С15
+      x: 978
+      y: 145
+
+    - pin: С16
+      x: 764
+      y: 200
+    - pin: С18
+      x: 827
+      y: 200
+
+
+    - pin: E1
+      x: 1265
+      y: 85
+    - pin: E3
+      x: 1338
+      y: 85
+    - pin: E4
+      x: 1374
+      y: 85
+    - pin: E5
+      x: 1413
+      y: 85
+    - pin: E6
+      x: 1450
+      y: 85
+    - pin: E7
+      x: 1487
+      y: 85
+    - pin: E8
+      x: 1552
+      y: 85
+    - pin: E9
+      x: 1591
+      y: 85

@@ -115,8 +115,6 @@ using vin_number_t = char[VIN_NUMBER_SIZE];
 
 using gppwm_note_t = char[GPPWM_NOTE_SIZE];
 
-using le_formula_t = char[LE_COMMAND_LENGTH];
-
 using brain_pin_e = Gpio;
 
 using egt_cs_array_t = brain_pin_e[EGT_CHANNEL_COUNT];

@@ -24,12 +24,12 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = Gpio::C13;
-	engineConfiguration->ignitionPins[1] = Gpio::E5;
-	engineConfiguration->ignitionPins[2] = Gpio::E4;
-	engineConfiguration->ignitionPins[3] = Gpio::E3;
-	engineConfiguration->ignitionPins[4] = Gpio::E2;
-	engineConfiguration->ignitionPins[5] = Gpio::B8;
+	engineConfiguration->ignitionPins[0] = H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = H144_IGN_3;
+	engineConfiguration->ignitionPins[3] = H144_IGN_4;
+	engineConfiguration->ignitionPins[4] = H144_IGN_5;
+	engineConfiguration->ignitionPins[5] = H144_IGN_6;
 	
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }

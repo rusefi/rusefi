@@ -10,7 +10,7 @@ public:
 	// Scaled channels, memcpys data directly and describes format in header
 	template <typename TValue, int TMult, int TDiv>
 	constexpr LogField(const scaled_channel<TValue, TMult, TDiv>& toRead,
-			   const char* name, const char* units, int8_t digits)
+			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(float(TDiv) / TMult)
 		, m_addr(toRead.getFirstByteAddr())
 		, m_type(resolveType<TValue>())
@@ -18,13 +18,14 @@ public:
 		, m_size(sizeForType(resolveType<TValue>()))
 		, m_name(name)
 		, m_units(units)
+		, m_category(category)
 	{
 	}
 
 	// Non-scaled channel, works for plain arithmetic types (int, float, uint8_t, etc)
 	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
 	constexpr LogField(TValue& toRead,
-			   const char* name, const char* units, int8_t digits)
+			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(1)
 		, m_addr(&toRead)
 		, m_type(resolveType<TValue>())
@@ -32,6 +33,7 @@ public:
 		, m_size(sizeForType(resolveType<TValue>()))
 		, m_name(name)
 		, m_units(units)
+		, m_category(category)
 	{
 	}
 
@@ -83,6 +85,7 @@ private:
 
 	const char* const m_name;
 	const char* const m_units;
+	const char* const m_category;
 };
 
 template<>
