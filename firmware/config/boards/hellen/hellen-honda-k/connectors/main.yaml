@@ -15,23 +15,26 @@ pins:
     function: Power GND
     type: gnd
   - pin: A7
-    ts_name: A7 - CRANK
+    # IN_CRANK AIN24 A24
+    id: [B1]
+    class: [event_inputs]
+    ts_name: A7 Crankshaft Sensor
     function: Crankshaft Sensor
   - pin: A8
-    ts_name: --- - INTAKE
+    ts_name: A8 - INTAKE
     function: Intake Position
   - pin: A9
-    ts_name: --- - KNOCK
+    ts_name: A9 - KNOCK
     function: Knock Sensor
   - pin: A10
-    function: ANALOG GND
+    function: Analog GND
     type: gnda
   - pin: A11
-    function: ANALOG GND
+    function: Analog GND
     type: gnda
   - pin: A12
-    ts_name: A12 - IDLE AIR
-    function: Idle Air
+    ts_name: A12 Idle Air Control
+    function: Idle Air Control Valve
   - pin: A13
     ts_name: --- - EGR
     function: EGR
@@ -46,15 +49,20 @@ pins:
     type: gnda
     color: black
 
-  - pin: A17
-    ts_name: --- - NC
-    function: NC
   - pin: A18
-    ts_name: --- - VSS
-    function: VSS
+    # H144_IN_VSS
+    id: F11
+    class: event_inputs
+    ts_name: A18 - VSS
+    function: Vehicle Speed Sensor
+
   - pin: A19
-    ts_name: --- - MAP
+    # IN_MAP1 AIN9
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: A19 - MAP
     function: MAP Sensor
+
   - pin: A20
     function: 5V Sensor Power
     color: orange
@@ -77,8 +85,11 @@ pins:
     ts_name: A25 VTT CAM
     function: VTT Cam Position Sensor
   - pin: A26
+    # IN_CAM
+    id: [A6]
+    class: [event_inputs]
     ts_name: A26 Cam Sync
-    function: CAM SYNC HALL
+    function: Cam Sensor
 
   - pin: A27
     # H144_IGN_4
@@ -111,74 +122,124 @@ pins:
     function: VTC +12 supply
 
   - pin: B2
-    ts_name: --- - INJ4
+    # H144_LS_4
+    id: D10
+    class: outputs
+    type: inj
+    ts_name: B2 - Injector 4
     function: Injector 4
   - pin: B3
-    ts_name: --- - INJ3
+    # H144_LS_3
+    id: D11
+    class: outputs
+    type: inj
+    ts_name: B3 - Injector 3
     function: Injector 3
+
   - pin: B4
-    ts_name: --- - INJ2
+    # H144_LS_2
+    id: G8
+    class: outputs
+    type: inj
+    ts_name: B4 - Injector 2
     function: Injector 2
+
   - pin: B5
-    ts_name: --- - INJ1
+    # H144_LS_1
+    id: G7
+    class: outputs
+    ts_name: B5 - Injector 1
     function: Injector 1
   - pin: B6
-    ts_name: --- - RADIATOR RELAY
-    function: Radiator Relay
+    # H144_OUT_IO12
+    id: A8
+    class: outputs
+    type: ls
+    ts_name: B6 Radiator Relay
+    function: Radiator Relay Output
+
   - pin: B7
     ts_name: --- - LOCKOUT SOLENOID
     function: Lockout Solenoid
   - pin: B8
-    ts_name: --- - CLT
+    # H144_IN_CLT AIN11 PC2
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: B8 - CLT
     function: CLT
+
   - pin: B9
-    ts_name: --- - VTEC PRESSURE SW
+    ts_name: B9 - VTEC PRESSURE SW
     function: VTEC Pressure Switch
   - pin: B10
-    ts_name: --- - CHARGING LIGHT
+    ts_name: B10 - CHARGING LIGHT
     function: Charging Light
-  - pin: B11
-    ts_name: --- - NC
-    function: NC
-  - pin: B12
-    ts_name: --- - NC
-    function: NC
+
   - pin: B13
-    ts_name: --- - ALTERNATOR FIELD
+    ts_name: B13 - ALTERNATOR FIELD
     function: Alternator Field
-  - pin: B14
-    ts_name: --- - A/T TCU
-    function: A/T TCU
+
   - pin: B15
-    ts_name: --- - VTC HS
+    ts_name: B15 - VTC HS
     function: VTC High Side
-  - pin: B16
-    ts_name: --- - A/T TCU
-    function: A/T TCU
+
   - pin: B17
-    ts_name: --- - IAT
+    # H144_IN_IAT AIN14 PC3
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: B17 - IAT
     function: IAT
   - pin: B18
     ts_name: --- - ALTERNATOR CONTROL
     function: Alternator Control
-  - pin: B19
-    ts_name: --- - NC
-    function: NC
-  - pin: B20
-    ts_name: --- - NC
-    function: NC
+
   - pin: B21
     ts_name: --- - EVAP
     function: EVAP
   - pin: B22
     ts_name: --- - INTAKE RUNNER
     function: Intake Runner
-  - pin: B24
-    ts_name: --- - NC
-    function: NC
+
+  - pin: C1
+    function: LSU Heater Negative
+
+  - pin: C2
+    function: LSU Rtrim
+
+  - pin: C3
+    function: LSU Ip
+
+  - pin: C4
+    function: LSU Vm
+
+  - pin: C5
+    function: LSU Un
+
+  - pin: C6
+    function: +12V from main relay
+    type: 12v
+    color: red
+
+  - pin: C7
+    function: CAN High
+
+  - pin: C8
+    function: CAN Low
+
+  - pin: C16
+    function: 5V Sensor Power
+    color: orange
+
+  - pin: C18
+    function: Aux GND
+    type: gnda
+    color: black
 
   - pin: E1
-    ts_name: --- - FUEL RELAY
+    # H144_OUT_IO13
+    id: G6
+    class: outputs
+    ts_name: E1 Fuel Relay
     function: Fuel Relay
   - pin: E3
     function: Power GND
@@ -194,7 +255,10 @@ pins:
     function: 5V Sensor Power
 
   - pin: E7
-    ts_name: E7 - MAIN RELAY CONTROL
+    # H144_OUT_IO3
+    id: G14
+    class: outputs
+    ts_name: E7 Main Relay Control
     function: Main Relay Control
 
   - pin: E9
@@ -232,17 +296,21 @@ pins:
   - pin: E23
     ts_name: --- - K-LINE
     function: K-Line
-  - pin: E24
-    ts_name: --- - NC
-    function: NC
+
   - pin: E26
-    ts_name: --- - TACHOMETER
+    # LOW12 IO10
+    id: I0
+    class: outputs
+    ts_name: E26 - TACHOMETER
     function: Tachometer
   - pin: E27
     ts_name: --- - K-LINE
     function: K-Line
 
   - pin: E31
+    #H144_OUT_IO7
+    id: G3
+    class: outputs
     ts_name: E31 Check Engine
     function: Check Engine
 
@@ -413,6 +481,60 @@ info:
       y: 200
     - pin: B23
       x: 657
+      y: 200
+
+    - pin: C1
+      x: 765
+      y: 85
+    - pin: C2
+      x: 796
+      y: 85
+    - pin: C3
+      x: 853
+      y: 85
+    - pin: C4
+      x: 883
+      y: 85
+    - pin: C5
+      x: 913
+      y: 85
+    - pin: C6
+      x: 944
+      y: 85
+    - pin: C7
+      x: 977
+      y: 85
+
+    - pin: С8
+      x: 764
+      y: 145
+    - pin: С9
+      x: 799
+      y: 145
+    - pin: С10
+      x: 826
+      y: 145
+    - pin: С11
+      x: 856
+      y: 145
+    - pin: С12
+      x: 885
+      y: 145
+    - pin: С13
+      x: 917
+      y: 145
+    - pin: С14
+      x: 943
+      y: 145
+    - pin: С15
+      x: 978
+      y: 145
+
+    - pin: С16
+      x: 764
+      y: 200
+    - pin: С18
+      x: 827
       y: 200
 
 
