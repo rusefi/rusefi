@@ -190,8 +190,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+
+
 
     setTPS1Calibration(98, 926, 891, 69);
 }
