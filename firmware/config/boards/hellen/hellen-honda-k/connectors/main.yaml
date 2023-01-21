@@ -16,8 +16,8 @@ pins:
     type: gnd
   - pin: A7
     # IN_CRANK AIN24 A24
-    id: [B1]
-    class: [event_inputs]
+    id: B1
+    class: event_inputs
     ts_name: A7 Crankshaft Sensor
     function: Crankshaft Sensor
   - pin: A8
@@ -82,12 +82,15 @@ pins:
     color: black
 
   - pin: A25
+# H144_IN_D_1
+    id: E12
+    class: event_inputs
     ts_name: A25 VTT CAM
     function: VTT Cam Position Sensor
   - pin: A26
     # IN_CAM
-    id: [A6]
-    class: [event_inputs]
+    id: A6
+    class: event_inputs
     ts_name: A26 Cam Sync
     function: Cam Sensor
 
@@ -291,7 +294,10 @@ pins:
     ts_name: --- - EVAP
     function: EVAP
   - pin: E22
-    ts_name: --- - BRAKE
+    # H144_IN_RES2
+    id: F10
+    class: switch_inputs
+    ts_name: E22 Brake
     function: Brake
   - pin: E23
     ts_name: --- - K-LINE
@@ -301,7 +307,7 @@ pins:
     # LOW12 IO10
     id: I0
     class: outputs
-    ts_name: E26 - TACHOMETER
+    ts_name: E26 Tachometer
     function: Tachometer
   - pin: E27
     ts_name: --- - K-LINE
