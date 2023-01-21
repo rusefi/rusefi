@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jan 20 06:20:19 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jan 21 01:25:28 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -869,7 +869,6 @@ public class Fields {
 	public static final int launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH = 2;
 	public static final int launchActivationMode_e_CLUTCH_INPUT_LAUNCH = 1;
 	public static final int launchActivationMode_e_SWITCH_INPUT_LAUNCH = 0;
-	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int linear_sensor_s_size = 20;
 	public static final int load_override_e_AFR_AccPedal = 3;
 	public static final int load_override_e_AFR_CylFilling = 4;
@@ -1202,7 +1201,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.01.20.all.4244616242";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.01.21.all.2287742719";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1300;

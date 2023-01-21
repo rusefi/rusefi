@@ -852,7 +852,6 @@
 #define launchActivationMode_e_CLUTCH_INPUT_LAUNCH 1
 #define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)"
 #define launchActivationMode_e_SWITCH_INPUT_LAUNCH 0
-#define LE_COMMAND_LENGTH 200
 #define linear_sensor_s_size 20
 #define load_override_e_AFR_AccPedal 3
 #define load_override_e_AFR_CylFilling 4
@@ -995,7 +994,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2246143464
+#define SIGNATURE_HASH 4047697701
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1271,7 +1270,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.01.20.subaru_eg33_f7.2246143464"
+#define TS_SIGNATURE "rusEFI master.2023.01.21.subaru_eg33_f7.4047697701"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
