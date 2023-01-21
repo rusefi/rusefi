@@ -33,6 +33,7 @@ jobs:
             hellenNA6,
             hellen128,
             hellen121vag,
+            hellen-honda-k,
             hellen121nissan,
             cypress,
             frankenso_na6,
@@ -144,6 +145,10 @@ jobs:
           - build-target: hellen121nissan
             folder: hellen/hellen121nissan
             ini-file: rusefi_hellen121nissan.ini
+
+          - build-target: hellen-honda-k
+            folder: hellen/hellen-honda-k
+            ini-file: rusefi_hellen-honda-k.ini
 
           - build-target: hellen154hyundai
             folder: hellen/hellen154hyundai
