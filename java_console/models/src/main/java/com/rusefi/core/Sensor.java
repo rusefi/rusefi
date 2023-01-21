@@ -297,6 +297,7 @@ public enum Sensor implements BinaryLogEntry {
         }
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -326,6 +327,8 @@ public enum Sensor implements BinaryLogEntry {
         }
     }
 
+    // TODO: this should be a string
+    @Override
     public SensorCategory getCategory() {
         return category;
     }
