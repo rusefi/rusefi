@@ -54,9 +54,9 @@ void writeFileHeader(Writer& outBuffer) {
 	// File format: MLVLG\0
 	strncpy(buffer, "MLVLG", 6);
 
-	// Format version = 01
+	// Format version = 02
 	buffer[6] = 0;
-	buffer[7] = 1;
+	buffer[7] = 2;
 
 	// Timestamp
 	buffer[8] = 0;
@@ -67,23 +67,25 @@ void writeFileHeader(Writer& outBuffer) {
 	// Info data start
 	buffer[12] = 0;
 	buffer[13] = 0;
-
-	size_t headerSize = MLQ_HEADER_SIZE + efi::size(fields) * 55;
-
-	// Data begin index: begins immediately after the header
 	buffer[14] = 0;
 	buffer[15] = 0;
-	buffer[16] = (headerSize >> 8) & 0xFF;
-	buffer[17] = headerSize & 0xFF;
+
+	size_t headerSize = MLQ_HEADER_SIZE + efi::size(fields) * MLQ_FIELD_HEADER_SIZE;
+
+	// Data begin index: begins immediately after the header
+	buffer[16] = 0;
+	buffer[17] = 0;
+	buffer[18] = (headerSize >> 8) & 0xFF;
+	buffer[19] = headerSize & 0xFF;
 
 	// Record length - length of a single data record: sum size of all fields
-	buffer[18] = recordLength >> 8;
-	buffer[19] = recordLength & 0xFF;
+	buffer[20] = recordLength >> 8;
+	buffer[21] = recordLength & 0xFF;
 
 	// Number of logger fields
 	int fieldsCount = efi::size(fields);
-	buffer[20] = fieldsCount >> 8;
-	buffer[21] = fieldsCount;
+	buffer[22] = fieldsCount >> 8;
+	buffer[23] = fieldsCount;
 
 	outBuffer.write(buffer, MLQ_HEADER_SIZE);
 
