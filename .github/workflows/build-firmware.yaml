@@ -1,7 +1,14 @@
 name: Firmware at GHA
 
-on: [push, pull_request, workflow_dispatch]
-
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      lts:
+        description: 'LTS Build'
+        required: false
+        type: boolean
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
@@ -383,7 +390,7 @@ jobs:
 
     - name: Package Bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
-      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} ${{matrix.ini-file}}
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} ${{matrix.ini-file}} ${{ inputs.lts }}
 
     - name: Upload .ini files
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
@@ -491,7 +498,7 @@ jobs:
 
     - name: Package Bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh default
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh default default ${{ inputs.lts }}
 
     - name: Attach console junit results
       if: always()
