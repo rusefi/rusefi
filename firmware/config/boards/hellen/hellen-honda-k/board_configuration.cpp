@@ -9,6 +9,7 @@
 #include "pch.h"
 #include "defaults.h"
 #include "hellen_meta.h"
+#include "honda_k_dbc.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -98,6 +99,7 @@ void setBoardConfigOverrides() {
 void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
+	setHondaK();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
@@ -130,17 +132,6 @@ void setBoardDefaultConfiguration() {
 	setEtbPID(8.8944, 70.2307, 0.1855);
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
-
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-	engineConfiguration->specs.displacement = 1.998;
-	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_HONDA);
-	strcpy(engineConfiguration->engineCode, "K");
-	engineConfiguration->globalTriggerAngleOffset = 90;
-
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
     setTPS1Calibration(98, 926, 1000, 0);
 }
