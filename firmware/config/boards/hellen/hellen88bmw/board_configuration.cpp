@@ -126,8 +126,6 @@ void setBoardDefaultConfiguration() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
 	engineConfiguration->luaOutputPins[0] = Gpio::G5; // 104 ETB Relay
 

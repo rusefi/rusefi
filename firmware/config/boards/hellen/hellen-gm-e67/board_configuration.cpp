@@ -146,7 +146,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	engineConfiguration->clutchDownPin = H144_IN_D_2;

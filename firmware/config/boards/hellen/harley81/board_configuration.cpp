@@ -142,8 +142,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->specs.firingOrder = FO_1_2;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+
+
 
 	// random values to have valid config
 	engineConfiguration->tps1SecondaryMin = 1000;
