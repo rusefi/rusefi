@@ -32,6 +32,10 @@ void setHondaK() {
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 	engineConfiguration->fuelReferencePressure = 350; // TODO: what is real value?!
 
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_HONDA);
 	strcpy(engineConfiguration->engineCode, "K24");
 
@@ -96,10 +100,8 @@ void setProteusHondaElement2003() {
 	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_ANALOG_VOLT_6;
 	engineConfiguration->fanPin = Gpio::Unassigned;
 
-
 	engineConfiguration->mainRelayPin = PROTEUS_LS_9;
 	engineConfiguration->fuelPumpPin = PROTEUS_LS_11;
-//	engineConfiguration->fanPin = PROTEUS_LS_15;
 
 #endif // HW_PROTEUS
 }
