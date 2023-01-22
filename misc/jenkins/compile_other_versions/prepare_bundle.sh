@@ -12,7 +12,7 @@ export FOLDER="temp/snapshot_${TIMESTAMP}_${BUNDLE_NAME}_rusefi"
 
 export BUNDLE_FULL_NAME="rusefi_bundle_${BUNDLE_NAME}"
 
-bash misc/jenkins/build_working_folder.sh "$3"
+bash misc/jenkins/build_working_folder.sh "$3" "$4"
 
 pwd
 echo "exiting $SCRIPT_NAME"

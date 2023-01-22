@@ -116,7 +116,7 @@ ls -l $FULL_BUNDLE_FILE
 if [ -n "$RUSEFI_SSH_USER" ]; then
  echo "$SCRIPT_NAME: Uploading full bundle"
  retVal=0
- if [ -n "$1" ]; then
+ if [ "$2" = "true" ]; then
    tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/lts/$1; tar -xzf - -C build_server/lts/$1"
    retVal=$?
  else
