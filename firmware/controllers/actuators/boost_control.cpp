@@ -150,6 +150,10 @@ void BoostController::setOutput(expected<float> output) {
 }
 
 void BoostController::update() {
+	if (!hasInitBoost) {
+	    return;
+	}
+
 	m_pid.iTermMin = -50;
 	m_pid.iTermMax = 50;
 
@@ -162,12 +166,6 @@ void BoostController::update() {
 		setOutput(unexpected);
 	} else {
 		ClosedLoopController::update();
-	}
-}
-
-void updateBoostControl() {
-	if (engine->boostController.hasInitBoost) {
-		engine->boostController.update();
 	}
 }
 
