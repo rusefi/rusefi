@@ -155,7 +155,7 @@ void Engine::periodicSlowCallback() {
 	updateFans(module<AcController>().unmock().isAcEnabled());
 
 #if EFI_BOOST_CONTROL
-	updateBoostControl();
+	engine->boostController.update();
 #endif // EFI_BOOST_CONTROL
 
 #if (BOARD_TLE8888_COUNT > 0)

@@ -46,5 +46,3 @@ void startBoostPin();
 void initBoostCtrl();
 void setDefaultBoostParameters();
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration);
-
-void updateBoostControl();
