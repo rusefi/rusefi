@@ -672,12 +672,18 @@ uint8_t criticalErrorLedState;
 #define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
 #endif /* LED_ERROR_BRAIN_PIN_MODE */
 
+#if EFI_PROD_CODE
+static void initErrorLed(Gpio led) {
+	enginePins.errorLedPin.initPin("led: CRITICAL status", led, &(LED_ERROR_BRAIN_PIN_MODE));
+	criticalErrorLedPort = getHwPort("CRITICAL", led);
+	criticalErrorLedPin = getHwPin("CRITICAL", led);
+	criticalErrorLedState = (LED_ERROR_BRAIN_PIN_MODE == INVERTED_OUTPUT) ? 0 : 1;
+}
+#endif /* EFI_PROD_CODE */
+
 void initPrimaryPins() {
 #if EFI_PROD_CODE
-	enginePins.errorLedPin.initPin("led: CRITICAL status", LED_CRITICAL_ERROR_BRAIN_PIN, &(LED_ERROR_BRAIN_PIN_MODE));
-	criticalErrorLedPort = getHwPort("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
-	criticalErrorLedPin = getHwPin("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
-	criticalErrorLedState = (LED_ERROR_BRAIN_PIN_MODE == INVERTED_OUTPUT) ? 0 : 1;
+    initErrorLed(LED_CRITICAL_ERROR_BRAIN_PIN);
 
 	addConsoleAction("gpio_pins", EnginePins::debug);
 #endif /* EFI_PROD_CODE */
