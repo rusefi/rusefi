@@ -96,6 +96,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_MITSUBISHI_6G75:
 	case VVT_NISSAN_MR:
 		return TT_NISSAN_MR18_CAM_VVT;
+	case VVT_MITSUBISHI_4G63:
+		return TT_MITSU_ONLY_TOP_BOTH_FRONTS;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
 		return TT_ONE; // we have to return something for the sake of -Werror=return-type

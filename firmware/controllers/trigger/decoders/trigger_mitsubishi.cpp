@@ -85,9 +85,13 @@ void initializeMitsubishi4g93_both_both(TriggerWaveform *s) {
 void initializeMitsubishi4g93_only_first_wheel_both_fronts(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 
-	s->setTriggerSynchronizationGap(3.2);
+	s->setSecondTriggerSynchronizationGap2(0.5, 2.3);
+	s->setTriggerSynchronizationGap2(0.1, 0.5);
 
-    addMitsu93(s, false);
+	s->addEvent720(180, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(266, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(641, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
 void initialize36_2_1_1(TriggerWaveform *s) {
