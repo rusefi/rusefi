@@ -23,6 +23,15 @@ import org.junit.runner.Result;
 public class RealHardwareTestLauncher {
 
     public static void main(String[] args) {
+        boolean isOk = runHardwareTest();
+        if (!isOk)
+            System.exit(-1);
+    }
+
+    /**
+     * @return true if test is a SUCCESS, false if a FAILURE
+     */
+    public static boolean runHardwareTest() {
         JUnitCore junit = new JUnitCore();
         Result result = junit.run(
             CommonFunctionalTest.class,
@@ -44,12 +53,6 @@ public class RealHardwareTestLauncher {
 
             f.getException().printStackTrace();
         });
-    }
-
-    /**
-     * @return true if test is a SUCCESS, false if a FAILURE
-     */
-    public static boolean runHardwareTest() {
-        return false;
+        return result.getRunCount() > 0 && result.getFailureCount() == 0;
     }
 }
