@@ -42,6 +42,7 @@ Release template (copy/paste this for new release):
  - STM32Cube v2.12
  - detect and ignore doubled trigger edges #4656
  - Additional fuel and timing correction gauges in Tunerstudio #4955
+ - Default bundle no longer initializes UART TTL connectivity by default #4998
 
 ### Fixed
  - multi-line tooltips in TS #4927
