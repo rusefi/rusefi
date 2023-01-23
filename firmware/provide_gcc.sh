@@ -17,6 +17,8 @@ archive="${URL##*/}"
 if [ -d "${TMP_DIR}" ]; then
 	if [ "$(md5sum ${TMP_DIR}/*manifest.txt | cut -d ' ' -f 1)" = "$MANIFEST_SUM" ]; then
 		exit 0
+	else
+		rm -r "${TMP_DIR}"
 	fi
 fi
 
