@@ -14,6 +14,7 @@ jobs:
           - build-target: f407-discovery
             script: hardware_ci_f4_discovery
             runs-on: hw-ci-f4-discovery
+            test-suite: com.rusefi.HwCiF4Discovery
             folder: f407-discovery
             config-name: all
             ini-file: rusefi_f4-disco.ini
@@ -23,6 +24,7 @@ jobs:
           - build-target: proteus_f4
             script: hardware_ci_proteus
             runs-on: hw-ci-proteus
+            test-suite: com.rusefi.HwCiF4Proteus
             folder: proteus
             config-name: proteus_f4
             ini-file: rusefi_proteus_f4.ini
@@ -86,6 +88,10 @@ jobs:
     - name: Generate Java (Antlr)
       working-directory: ./java_tools
       run: ./gradlew :config_definition:generateGrammarSource
+
+    - name: Generate Autotest Jar
+      working-directory: ./java_tools
+      run: ./gradlew :autotest:shadowJar
 
     # This both compiles and runs HW CI tests
     - name: Run Hardware CI
