@@ -20,7 +20,6 @@ class UartDmaTsChannel;
 class UartTsChannel;
 class SerialTsChannel;
 
-#if HAS_UxART_PRIMARY
 #ifdef TS_PRIMARY_UxART_PORT
 
 // We want to instantiate the correct channel type depending on what type of serial port we're
@@ -36,7 +35,6 @@ class SerialTsChannel;
 		UartTsChannel,
 #endif // EFI_USE_UART_DMA
 		SerialTsChannel> primaryChannel(TS_PRIMARY_UxART_PORT);
-#endif // TS_PRIMARY_UxART_PORT
 
 	struct PrimaryChannelThread : public TunerstudioThread {
 		PrimaryChannelThread() : TunerstudioThread("Primary TS Channel") { }
@@ -56,9 +54,8 @@ class SerialTsChannel;
 	};
 
 	static PrimaryChannelThread primaryChannelThread;
-#endif // HAS_UxART_PRIMARY
+#endif // defined(TS_PRIMARY_UxART_PORT)
 
-#if defined(TS_SECONDARY_UxART_PORT)
 #ifdef TS_SECONDARY_UxART_PORT
 	std::conditional_t<
 		std::is_same_v<decltype(TS_SECONDARY_UxART_PORT), UARTDriver>,
@@ -68,8 +65,6 @@ class SerialTsChannel;
 		UartTsChannel,
 #endif // EFI_USE_UART_DMA
 		SerialTsChannel> secondaryChannel(TS_SECONDARY_UxART_PORT);
-#endif // defined(TS_SECONDARY_UxART_PORT)
-
 
 	struct SecondaryChannelThread : public TunerstudioThread {
 		SecondaryChannelThread() : TunerstudioThread("Secondary TS Channel") { }
@@ -90,7 +85,7 @@ class SerialTsChannel;
 #endif // defined(TS_SECONDARY_UxART_PORT)
 
 void startSerialChannels() {
-#if HAS_UxART_PRIMARY
+#if defined(TS_PRIMARY_UxART_PORT)
 	// todo: invert setting one day?
 	if (!engineConfiguration->disablePrimaryUart) {
 		primaryChannelThread.start();
@@ -106,7 +101,7 @@ SerialTsChannelBase* getBluetoothChannel() {
 #if defined(TS_SECONDARY_UxART_PORT)
 	// Prefer secondary channel for bluetooth
 	return &secondaryChannel;
-#elif HAS_UxART_PRIMARY
+#elif defined(TS_PRIMARY_UxART_PORT)
 	// Use primary channel for BT if no secondary exists
 	return &primaryChannel;
 #endif
