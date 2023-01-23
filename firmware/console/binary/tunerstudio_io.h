@@ -16,7 +16,7 @@
 	#define HAS_UxART_PRIMARY false
 #endif
 
-#if (!TS_NO_SECONDARY && defined(TS_SECONDARY_PORT))
+#if (!TS_NO_SECONDARY && defined(TS_SECONDARY_UxART_PORT))
 	#define HAS_UxART_SECONDARY true
 #else
 	#define HAS_UxART_SECONDARY false
