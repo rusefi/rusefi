@@ -6,9 +6,6 @@ BOARDINC = $(BOARDS_DIR)/hellen/hellen81
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
-# Disable serial ports on this board as UART3 causes a DMA conflict with the SD card
-DDEFS += -DTS_NO_PRIMARY
-
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"hellen81\"
 #DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
