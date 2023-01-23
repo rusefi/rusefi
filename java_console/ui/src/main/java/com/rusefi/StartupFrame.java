@@ -27,7 +27,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -310,7 +309,7 @@ public class StartupFrame {
             }
 
             private void runFunctionalHardwareTest() {
-                boolean isSuccess = RealHardwareTestLauncher.runHardwareTest();
+                boolean isSuccess = HwCiF4Discovery.runHardwareTest();
                 JOptionPane.showMessageDialog(null, "Function test passed: " + isSuccess + "\nSee log folder for details.");
             }
         };
