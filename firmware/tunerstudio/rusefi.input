@@ -2710,6 +2710,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = allPins1_1
 		field = "trigger stimulator output #1",			triggerSimulatorPins1
 		field = "trigger stimulator output #2",			triggerSimulatorPins2
+		field = "Critical Led",							criticalLedPin @@if_ts_show_critical_led
 		field = "Warning Led",							warningLedPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
@@ -3295,6 +3296,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
         panel = fanSetting, Center
 
 	dialog = statusLeds, "Status LEDs"
+		field = "Critical Led",							criticalLedPin @@if_ts_show_critical_led
 		field = "Running status LED",					runningLedPin
 		field = "TS communication status LED",			communicationLedPin
 		field = "Warning LED",							warningLedPin

@@ -1,0 +1,2 @@
+! see also FLEXIBLE_CRITICAL_LED
+#define ts_show_critical_led true
