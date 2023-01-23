@@ -46,9 +46,6 @@
 #ifndef TS_NO_PRIMARY
 #define TS_NO_PRIMARY 1
 #endif
-#ifndef TS_NO_SECONDARY
-#define TS_NO_SECONDARY 1
-#endif
 
 #define AUX_SERIAL_DEVICE (&SD6)
 

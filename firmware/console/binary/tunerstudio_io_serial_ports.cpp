@@ -58,7 +58,7 @@ class SerialTsChannel;
 	static PrimaryChannelThread primaryChannelThread;
 #endif // HAS_UxART_PRIMARY
 
-#if HAS_UxART_SECONDARY
+#if defined(TS_SECONDARY_UxART_PORT)
 #ifdef TS_SECONDARY_UxART_PORT
 	std::conditional_t<
 		std::is_same_v<decltype(TS_SECONDARY_UxART_PORT), UARTDriver>,
@@ -68,7 +68,7 @@ class SerialTsChannel;
 		UartTsChannel,
 #endif // EFI_USE_UART_DMA
 		SerialTsChannel> secondaryChannel(TS_SECONDARY_UxART_PORT);
-#endif // TS_SECONDARY_UxART_PORT
+#endif // defined(TS_SECONDARY_UxART_PORT)
 
 
 	struct SecondaryChannelThread : public TunerstudioThread {
@@ -87,7 +87,7 @@ class SerialTsChannel;
 	};
 
 	static SecondaryChannelThread secondaryChannelThread;
-#endif // HAS_UxART_SECONDARY
+#endif // defined(TS_SECONDARY_UxART_PORT)
 
 void startSerialChannels() {
 #if HAS_UxART_PRIMARY
@@ -97,13 +97,13 @@ void startSerialChannels() {
 	}
 #endif
 
-#if HAS_UxART_SECONDARY
+#if defined(TS_SECONDARY_UxART_PORT)
 	secondaryChannelThread.start();
 #endif
 }
 
 SerialTsChannelBase* getBluetoothChannel() {
-#if HAS_UxART_SECONDARY
+#if defined(TS_SECONDARY_UxART_PORT)
 	// Prefer secondary channel for bluetooth
 	return &secondaryChannel;
 #elif HAS_UxART_PRIMARY
