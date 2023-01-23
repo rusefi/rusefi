@@ -14,24 +14,21 @@ TMP_DIR="/tmp/rusefi-provide_gcc"
 
 archive="${URL##*/}"
 
-if [ -d "${TMP_DIR}" ]; then
-	if [ "$(md5sum ${TMP_DIR}/*manifest.txt | cut -d ' ' -f 1)" = "$MANIFEST_SUM" ]; then
-		exit 0
-	else
-		rm -rf "${TMP_DIR}"
-	fi
+SWD="$PWD"
+
+if [ ! -d "${TMP_DIR}" ] || ["$(md5sum ${TMP_DIR}/*manifest.txt | cut -d ' ' -f 1)" != "$MANIFEST_SUM" ]; then
+	rm -rf "${TMP_DIR}"
+	# Download and extract archive
+	echo Downloading and extracting ${archive}
+	mkdir -p "${TMP_DIR}"
+	cd "${TMP_DIR}"
+	curl -L -o "${archive}" "${URL}"
+	tar -xaf "${archive}"
+	rm "${archive}"
 fi
 
-# Download and extract archive
-echo Downloading and extracting ${archive}
-mkdir -p "${TMP_DIR}"
-cd "${TMP_DIR}"
-curl -L -o "${archive}" "${URL}"
-tar -xaf "${archive}"
-rm "${archive}"
-
 # Create colloquially named link
-archive_dir="$(echo *)"
-cd - >/dev/null
+archive_dir="$(ls "$TMP_DIR")"
+cd "$SWD"
 mv "${TMP_DIR}/${archive_dir}" "$(pwd)"
 ln -s "${archive_dir%/}" "${COLLOQUIAL}"
