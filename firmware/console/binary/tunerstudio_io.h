@@ -11,9 +11,9 @@
 #include "tunerstudio_impl.h"
 
 #if (!TS_NO_PRIMARY && defined(TS_PRIMARY_PORT))
-	#define HAS_PRIMARY true
+	#define HAS_UxART_PRIMARY true
 #else
-	#define HAS_PRIMARY false
+	#define HAS_UxART_PRIMARY false
 #endif
 
 #if (!TS_NO_SECONDARY && defined(TS_SECONDARY_PORT))

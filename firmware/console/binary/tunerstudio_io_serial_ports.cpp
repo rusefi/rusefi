@@ -20,7 +20,7 @@ class UartDmaTsChannel;
 class UartTsChannel;
 class SerialTsChannel;
 
-#if HAS_PRIMARY
+#if HAS_UxART_PRIMARY
 #ifdef TS_PRIMARY_PORT
 
 // We want to instantiate the correct channel type depending on what type of serial port we're
@@ -56,7 +56,7 @@ class SerialTsChannel;
 	};
 
 	static PrimaryChannelThread primaryChannelThread;
-#endif // HAS_PRIMARY
+#endif // HAS_UxART_PRIMARY
 
 #if HAS_SECONDARY
 #ifdef TS_SECONDARY_PORT
@@ -90,7 +90,7 @@ class SerialTsChannel;
 #endif // HAS_SECONDARY
 
 void startSerialChannels() {
-#if HAS_PRIMARY
+#if HAS_UxART_PRIMARY
 	// todo: invert setting one day?
 	if (!engineConfiguration->disablePrimaryUart) {
 		primaryChannelThread.start();
@@ -106,7 +106,7 @@ SerialTsChannelBase* getBluetoothChannel() {
 #if HAS_SECONDARY
 	// Prefer secondary channel for bluetooth
 	return &secondaryChannel;
-#elif HAS_PRIMARY
+#elif HAS_UxART_PRIMARY
 	// Use primary channel for BT if no secondary exists
 	return &primaryChannel;
 #endif
