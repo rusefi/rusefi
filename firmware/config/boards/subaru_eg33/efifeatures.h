@@ -21,8 +21,8 @@
 #define LED_RUNING_BRAIN_PIN_MODE		INVERTED_OUTPUT
 
 /* debug console */
-#undef TS_PRIMARY_PORT
-#define TS_PRIMARY_PORT		SD1
+#undef TS_PRIMARY_UxART_PORT
+#define TS_PRIMARY_UxART_PORT		SD1
 
 // no secondary channel
 #undef TS_SECONDARY_PORT
@@ -92,7 +92,7 @@
 #undef SERIAL_SPEED
 #define SERIAL_SPEED				115200
 
-#ifdef TS_PRIMARY_PORT
+#ifdef TS_PRIMARY_UxART_PORT
 	#undef EFI_CONSOLE_TX_PORT
 	#define EFI_CONSOLE_TX_PORT 		GPIOA
 	#undef EFI_CONSOLE_TX_PIN

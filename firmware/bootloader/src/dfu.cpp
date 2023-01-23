@@ -7,7 +7,7 @@
 #include "dfu.h"
 
 // Communication vars
-static UartTsChannel blTsChannel(TS_PRIMARY_PORT);
+static UartTsChannel blTsChannel(TS_PRIMARY_UxART_PORT);
 static uint8_t buffer[DFU_BUFFER_SIZE];
 // Use short timeout for the first data packet, and normal timeout for the rest
 static int sr5Timeout = DFU_SR5_TIMEOUT_FIRST;

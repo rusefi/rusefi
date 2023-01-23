@@ -10,7 +10,7 @@
 #include "global.h"
 #include "tunerstudio_impl.h"
 
-#if (!TS_NO_PRIMARY && defined(TS_PRIMARY_PORT))
+#if (!TS_NO_PRIMARY && defined(TS_PRIMARY_UxART_PORT))
 	#define HAS_UxART_PRIMARY true
 #else
 	#define HAS_UxART_PRIMARY false
