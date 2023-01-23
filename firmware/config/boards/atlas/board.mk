@@ -10,9 +10,6 @@ DDEFS += -DFIRMWARE_ID=\"atlas\"
 # DDEFS += -DSTM32_ADC_USE_ADC3=TRUE
 # DEFS += -DEFI_SOFTWARE_KNOCK=TRUE
 
-# disable hardware serial ports on H7
-# DDEFS += -DTS_NO_PRIMARY=1 -DTS_NO_SECONDARY=1
-
 # We are running on Atlas hardware!
 DDEFS += -DHW_ATLAS=1
 
