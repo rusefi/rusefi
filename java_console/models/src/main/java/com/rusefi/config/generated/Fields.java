@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jan 23 03:59:08 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jan 23 13:32:02 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -992,6 +992,7 @@ public class Fields {
 	public static final int sensor_chart_e_SC_RPM_ACCEL = 3;
 	public static final int sensor_chart_e_SC_TRIGGER = 1;
 	public static final int SENT_INPUT_COUNT = 1;
+	public static final int SIGNATURE_HASH = 214085586;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1201,7 +1202,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.01.23.all.2482446860";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.01.23.all.214085586";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1300;
@@ -1816,7 +1817,6 @@ public class Fields {
 	public static final Field GPPWMNOTE4 = Field.create("GPPWMNOTE4", 1340, 16, FieldType.STRING).setScale(1.0).setBaseOffset(0);
 	public static final Field TPS2SECONDARYMIN = Field.create("TPS2SECONDARYMIN", 1356, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1358, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field DISABLEPRIMARYUART = Field.create("DISABLEPRIMARYUART", 1360, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1360, FieldType.BIT, 1).setBaseOffset(0);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1360, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field BOARDUSETACHPULLUP = Field.create("BOARDUSETACHPULLUP", 1360, FieldType.BIT, 3).setBaseOffset(0);
@@ -3267,7 +3267,6 @@ public class Fields {
 	GPPWMNOTE4,
 	TPS2SECONDARYMIN,
 	TPS2SECONDARYMAX,
-	DISABLEPRIMARYUART,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
 	BOARDUSETACHPULLUP,

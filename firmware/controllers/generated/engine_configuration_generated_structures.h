@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jan 11 07:18:08 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jan 23 13:32:02 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2442,7 +2442,7 @@ struct engine_configuration_s {
 	uint16_t tps2SecondaryMax;
 	/**
 	offset 1360 bit 0 */
-	bool disablePrimaryUart : 1 {};
+	bool unusedBitDisablePrimaryUart : 1 {};
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1360 bit 1 */
@@ -5239,4 +5239,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22368);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jan 11 07:18:08 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jan 23 13:32:02 UTC 2023
