@@ -1,6 +1,6 @@
-// Mitsubishi 4B11 trigger pattern
-// Crank: 36-2-1
-// Cam: Single tooth (half moon)
+// Mitsubishi 4G63 trigger pattern
+// Crank: 2 teeth per rev (4 teeth per cycle)
+// Cam: 4G63 pattern (big tooth - small tooth)
 
 #include "pch.h"
 
