@@ -394,10 +394,6 @@
 #define EFI_USE_UART_DMA TRUE
 #endif
 
-#ifndef TS_PRIMARY_UxART_PORT
-#define TS_PRIMARY_UxART_PORT UARTD3
-#endif
-
 #define AUX_SERIAL_DEVICE (&SD6)
 
 #ifndef EFI_CONSOLE_TX_BRAIN_PIN

@@ -271,8 +271,6 @@
 #define TS_CAN_AF PAL_MODE_ALTERNATIVE_CAN
 #define TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME
 
-#undef TS_PRIMARY_UxART_PORT
-
 #define EFI_USB_SERIAL TRUE
 #define EFI_CONSOLE_USB_DEVICE SDU1
 // Cypress uses a fake USB device that's just a plain channel
