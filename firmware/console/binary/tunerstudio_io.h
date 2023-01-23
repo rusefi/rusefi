@@ -17,9 +17,9 @@
 #endif
 
 #if (!TS_NO_SECONDARY && defined(TS_SECONDARY_PORT))
-	#define HAS_SECONDARY true
+	#define HAS_UxART_SECONDARY true
 #else
-	#define HAS_SECONDARY false
+	#define HAS_UxART_SECONDARY false
 #endif
 
 #if EFI_USB_SERIAL
