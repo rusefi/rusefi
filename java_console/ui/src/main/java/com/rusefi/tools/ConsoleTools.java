@@ -240,7 +240,7 @@ public class ConsoleTools {
     private static void runFunctionalTest(String[] args) throws InterruptedException {
         // passing port argument if it was specified
         String[] toolArgs = args.length == 1 ? new String[0] : new String[]{args[1]};
-        RealHardwareTestLauncher.main(toolArgs);
+        HwCiF4Discovery.main(toolArgs);
     }
 
     private static void runHeadless(String[] args) {
