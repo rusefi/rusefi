@@ -259,7 +259,7 @@
  */
 #define EFI_USE_UART_DMA FALSE
 
-#define TS_PRIMARY_PORT UARTD2
+#define TS_PRIMARY_UxART_PORT UARTD2
 #undef TS_SECONDARY_PORT
 
 #define EFI_CONSOLE_TX_BRAIN_PIN Gpio::A10
@@ -351,6 +351,6 @@
 	if (__debugEnabled) { \
 		extern char __debugBuffer[80]; \
 		chsnprintf(__debugBuffer, sizeof(__debugBuffer), fmt, ##__VA_ARGS__); \
-		uart_lld_blocking_send(TS_PRIMARY_PORT, strlen(__debugBuffer), (void *)__debugBuffer); \
+		uart_lld_blocking_send(TS_PRIMARY_UxART_PORT, strlen(__debugBuffer), (void *)__debugBuffer); \
 	} \
 }

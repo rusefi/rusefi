@@ -21,7 +21,7 @@ class UartTsChannel;
 class SerialTsChannel;
 
 #if HAS_UxART_PRIMARY
-#ifdef TS_PRIMARY_PORT
+#ifdef TS_PRIMARY_UxART_PORT
 
 // We want to instantiate the correct channel type depending on what type of serial port we're
 // using.  ChibiOS supports two - UART and Serial.  We compare the type of the port we're given
@@ -29,14 +29,14 @@ class SerialTsChannel;
 // UART is further subdivided into two depending whether we support DMA or not.  We use the right
 // combination of std::conditional, std::is_same, and #if to get what we want.
 	std::conditional_t<
-		std::is_same_v<decltype(TS_PRIMARY_PORT), UARTDriver>,
+		std::is_same_v<decltype(TS_PRIMARY_UxART_PORT), UARTDriver>,
 #if EFI_USE_UART_DMA
 		UartDmaTsChannel,
 #else // EFI_USE_UART_DMA
 		UartTsChannel,
 #endif // EFI_USE_UART_DMA
-		SerialTsChannel> primaryChannel(TS_PRIMARY_PORT);
-#endif // TS_PRIMARY_PORT
+		SerialTsChannel> primaryChannel(TS_PRIMARY_UxART_PORT);
+#endif // TS_PRIMARY_UxART_PORT
 
 	struct PrimaryChannelThread : public TunerstudioThread {
 		PrimaryChannelThread() : TunerstudioThread("Primary TS Channel") { }

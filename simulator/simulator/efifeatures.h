@@ -8,7 +8,7 @@
 #pragma once
 
 // see SIM_SD1_PORT and SIM_SD2_PORT
-#define TS_PRIMARY_PORT SD1
+#define TS_PRIMARY_UxART_PORT SD1
 #define TS_SECONDARY_PORT SD2
 
 #define EFI_ENABLE_ASSERTS TRUE
