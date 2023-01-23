@@ -21,7 +21,6 @@
 #define LED_RUNING_BRAIN_PIN_MODE		INVERTED_OUTPUT
 
 /* debug console */
-#undef TS_PRIMARY_UxART_PORT
 #define TS_PRIMARY_UxART_PORT		SD1
 
 /* Knock detection */
