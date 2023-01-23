@@ -12,12 +12,14 @@ date "+%a %D %T.%2S"
 
 export BUNDLE_NAME="default"
 
-cd firmware/bootloader
-bash clean_bootloader.sh
-bash compile_bootloader_discovery407.sh
-[ -e bootloader_generated.hxx ] || { echo "FAILED TO COMPILE BOOTLOADER"; exit 1; }
-pwd
-cd ../..
+# As of 2023 default bundle comes without hard-coded UART connectivity - USB is king for modern stm32 rusEFI boards
+# also OpenBLT is probably the more reasonable approach for UxART bootloader
+#cd firmware/bootloader
+#bash clean_bootloader.sh
+#bash compile_bootloader_discovery407.sh
+#[ -e bootloader_generated.hxx ] || { echo "FAILED TO COMPILE BOOTLOADER"; exit 1; }
+#pwd
+#cd ../..
 # At root folder here
 
 cd firmware
