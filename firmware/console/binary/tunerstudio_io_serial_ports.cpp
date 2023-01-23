@@ -59,16 +59,16 @@ class SerialTsChannel;
 #endif // HAS_UxART_PRIMARY
 
 #if HAS_UxART_SECONDARY
-#ifdef TS_SECONDARY_PORT
+#ifdef TS_SECONDARY_UxART_PORT
 	std::conditional_t<
-		std::is_same_v<decltype(TS_SECONDARY_PORT), UARTDriver>,
+		std::is_same_v<decltype(TS_SECONDARY_UxART_PORT), UARTDriver>,
 #if EFI_USE_UART_DMA
 		UartDmaTsChannel,
 #else // EFI_USE_UART_DMA
 		UartTsChannel,
 #endif // EFI_USE_UART_DMA
-		SerialTsChannel> secondaryChannel(TS_SECONDARY_PORT);
-#endif // TS_SECONDARY_PORT
+		SerialTsChannel> secondaryChannel(TS_SECONDARY_UxART_PORT);
+#endif // TS_SECONDARY_UxART_PORT
 
 
 	struct SecondaryChannelThread : public TunerstudioThread {

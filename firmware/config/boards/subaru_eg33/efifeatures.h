@@ -25,7 +25,7 @@
 #define TS_PRIMARY_UxART_PORT		SD1
 
 // no secondary channel
-#undef TS_SECONDARY_PORT
+#undef TS_SECONDARY_UxART_PORT
 
 /* Knock detection */
 #undef EFI_HIP_9011
