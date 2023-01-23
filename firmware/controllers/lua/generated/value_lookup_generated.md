@@ -700,9 +700,6 @@ Delay after starting the engine before beginning closed loop correction.
 ### tps2SecondaryMax
 
 
-### disablePrimaryUart
-
-
 ### fuelClosedLoopCorrectionEnabled
 Enables lambda sensor closed loop feedback for fuelling.
 
