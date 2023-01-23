@@ -4291,7 +4291,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Tune read/write password",				tuneHidingKey, { yesUnderstandLocking == 1 }
 		field = verboseQuad,									verboseQuad
 		field = useEeprom,										useEeprom
-		field = "disablePrimaryUart",						disablePrimaryUart
 		field = "#System hacks"
 		field = "vvtBooleanForVerySpecialCases",		vvtBooleanForVerySpecialCases
 		field = tempBooleanForVerySpecialLogic,			tempBooleanForVerySpecialLogic

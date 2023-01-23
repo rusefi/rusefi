@@ -276,7 +276,6 @@ void setMreVwPassatB6() {
 	coolantControl->pin = MRE_LS_2;
 	// "7 - Lowside 1"
 	//engineConfiguration->hpfpValvePin = MRE_LS_1;
-	engineConfiguration->disablePrimaryUart = true;
 	engineConfiguration->hpfpValvePin = Gpio::B10; // AUX J13
 
 

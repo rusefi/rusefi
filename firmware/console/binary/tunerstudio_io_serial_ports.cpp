@@ -86,10 +86,7 @@ class SerialTsChannel;
 
 void startSerialChannels() {
 #if defined(TS_PRIMARY_UxART_PORT)
-	// todo: invert setting one day?
-	if (!engineConfiguration->disablePrimaryUart) {
-		primaryChannelThread.start();
-	}
+	primaryChannelThread.start();
 #endif
 
 #if defined(TS_SECONDARY_UxART_PORT)
