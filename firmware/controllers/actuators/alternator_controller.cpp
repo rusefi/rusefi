@@ -69,6 +69,9 @@ void AlternatorController::onFastCallback() {
 		alternatorControl.setSimplePwmDutyCycle(0);
 	} else {
 		currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt.Value, FAST_CALLBACK_PERIOD_MS / 1000.0f);
+    	// huh, why do we bump based on button not based on actual A/C relay state?
+		int acDutyBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acRelayAlternatorDutyAdder : 0;
+		currentAltDuty += acDutyBump;
 		if (engineConfiguration->isVerboseAlternator) {
 			efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
 					alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());

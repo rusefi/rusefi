@@ -68,6 +68,7 @@ Release template (copy/paste this for new release):
  - 3-cylinder Benelli trigger
  - ETB intermittent sensors protection #4832
  - ETB output average and rate of change gauges #4833
+ - Alternator Duty Cycle Adder for AC Fan #4973
 
 ### Fixed
  - Fuel Priming reset fix #4627

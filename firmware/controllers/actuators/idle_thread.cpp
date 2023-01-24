@@ -27,6 +27,7 @@ int IdleController::getTargetRpm(float clt) {
 	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
 
 	// Bump for AC
+	// huh, why do we bump based on button not based on actual A/C relay state?
 	targetRpmAcBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleRpmBump : 0;
 
 	return targetRpmByClt + targetRpmAcBump;

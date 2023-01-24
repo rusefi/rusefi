@@ -1550,7 +1550,7 @@ float alsMaxDuration;;"sec", 1, 0, 0.01, 100, 2
 	int8_t ALSMaxCLT;;"C", 1, 0, 0, 105, 0
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
 uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
-    uint8_t acFanAlternatorDutyAdder
+    uint8_t acRelayAlternatorDutyAdder
 	uint8_t[3] unusedAlignmentFill_at_33
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
