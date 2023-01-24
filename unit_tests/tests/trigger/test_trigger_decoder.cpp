@@ -52,21 +52,6 @@ TEST(trigger, testSkipped2_0) {
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 }
 
-static void testDodgeNeonDecoder() {
-	printf("*************************************************** testDodgeNeonDecoder95\r\n");
-
-	ASSERT_EQ( 8,  getTriggerZeroEventIndex(DODGE_NEON_1995)) << "DODGE_NEON_1995: trigger zero index";
-
-	EngineTestHelper eth(DODGE_NEON_1995);
-
-	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
-	ASSERT_EQ(8, shape->getTriggerWaveformSynchPointIndex());
-
-	TriggerDecoderBase state("test");
-
-	ASSERT_FALSE(state.getShaftSynchronized()) << "1 shaft_is_synchronized";
-}
-
 TEST(trigger, testSomethingWeird) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
@@ -353,8 +338,7 @@ TEST(trigger, testTriggerDecoder) {
 	}
 
 	printf("====================================================================================== testTriggerDecoder part 2\r\n");
-	testDodgeNeonDecoder();
-	testTriggerDecoder2("Dodge Neon 1995", DODGE_NEON_1995, 8, 0.4931, 0.2070);
+	testTriggerDecoder2("Dodge Neon 1995", DODGE_NEON_1995, 0, 0.4931, 0.2070);
 
 	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.0000, 0.5);
 
