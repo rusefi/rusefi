@@ -1540,6 +1540,9 @@ null
 ### alsEtbPosition
 
 
+### acFanAlternatorDutyAdder
+null
+
 ### ALSIdleAdd
 
 
