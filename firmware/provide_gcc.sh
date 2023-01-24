@@ -29,4 +29,4 @@ fi
 
 # Create colloquially named link
 cd "$SWD"
-ln -s "${TMP_DIR}" "${COLLOQUIAL}"
+ln -s "${TMP_DIR}"/* "${COLLOQUIAL}"
