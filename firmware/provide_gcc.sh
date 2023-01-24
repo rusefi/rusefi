@@ -19,7 +19,8 @@ archive="${URL##*/}"
 SWD="$PWD"
 
 # If the checksum file doesn't exist, or if its checksum doesn't match, then download and install the archive.
-if [ ! -f "${TMP_DIR}/bin/ld" ] || [ "$MANIFEST_SUM" != "$(md5sum ${TMP_DIR}/bin/ld | cut -d ' ' -f 1)" ]; then
+if [ ! -f "${TMP_DIR}/$(basename "$archive" .tar.xz)/bin/ld" ] ||\
+   [ "$MANIFEST_SUM" != "$(md5sum ${TMP_DIR}/$(basename "$archive" .tar.xz)/bin/ld | cut -d ' ' -f 1)" ]; then
 	rm -rf "${TMP_DIR}"
 	# Download and extract archive
 	echo Downloading and extracting ${archive}
