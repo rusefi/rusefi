@@ -16,7 +16,7 @@ archive="${URL##*/}"
 
 SWD="$PWD"
 
-if [ ! -f "${TMP_DIR}/*/*manifest.txt" ] || [ "$MANIFEST_SUM" != "$(md5sum ${TMP_DIR}/*/*manifest.txt | cut -d ' ' -f 1)" ]; then
+if [ ! -f "${TMP_DIR}"/*/*manifest.txt ] || [ "$MANIFEST_SUM" != "$(md5sum ${TMP_DIR}/*/*manifest.txt | cut -d ' ' -f 1)" ]; then
 	rm -rf "${TMP_DIR}"
 	# Download and extract archive
 	echo Downloading and extracting ${archive}
