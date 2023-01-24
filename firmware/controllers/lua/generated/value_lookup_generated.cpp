@@ -1031,6 +1031,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->alsMinTimeBetween;
 		case -731677323:
 			return engineConfiguration->alsEtbPosition;
+		case -1481835360:
+			return engineConfiguration->acFanAlternatorDutyAdder;
 		case -2021435668:
 			return engineConfiguration->ALSIdleAdd;
 		case 1232469673:
@@ -3617,6 +3619,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -731677323:
 	{
 		engineConfiguration->alsEtbPosition = (int)value;
+		return;
+	}
+		case -1481835360:
+	{
+		engineConfiguration->acFanAlternatorDutyAdder = (int)value;
 		return;
 	}
 		case -2021435668:
