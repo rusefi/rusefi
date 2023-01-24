@@ -6,7 +6,8 @@ set -e
 
 # URL to download original toolchain from
 URL="https://github.com/rusefi/build_support/raw/master/rusefi-arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi.tar.xz"
-MANIFEST_SUM="e4b25a623445c9f02303eba63b1d2806"
+# This is the md5sum of the /bin/ld executable within the archive, used for verifying we have the proper version.
+MANIFEST_SUM="8e50ee1adb41acfd56fc38d74d6bb18e"
 # colloquial directory name, to afford re-use of script
 COLLOQUIAL="gcc-arm-none-eabi"
 # temporary working directory
@@ -16,7 +17,7 @@ archive="${URL##*/}"
 
 SWD="$PWD"
 
-if [ ! -f "${TMP_DIR}"/*/*manifest.txt ] || [ "$MANIFEST_SUM" != "$(md5sum ${TMP_DIR}/*/*manifest.txt | cut -d ' ' -f 1)" ]; then
+if [ ! -f "${TMP_DIR}/bin/ld" ] || [ "$MANIFEST_SUM" != "$(md5sum ${TMP_DIR}/bin/ld | cut -d ' ' -f 1)" ]; then
 	rm -rf "${TMP_DIR}"
 	# Download and extract archive
 	echo Downloading and extracting ${archive}
