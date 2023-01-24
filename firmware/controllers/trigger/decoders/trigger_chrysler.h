@@ -12,7 +12,6 @@ class TriggerWaveform;
 #define CHRYSLER_NGC4_GAP 1
 #define CHRYSLER_NGC6_GAP 1.5
 
-void configureNeon1995TriggerWaveform(TriggerWaveform *s);
 void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s);
 
 void configureNeon2003TriggerWaveformCam(TriggerWaveform *s);
