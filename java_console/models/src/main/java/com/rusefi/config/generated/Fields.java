@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 24 15:06:54 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 24 15:36:20 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -992,7 +992,7 @@ public class Fields {
 	public static final int sensor_chart_e_SC_RPM_ACCEL = 3;
 	public static final int sensor_chart_e_SC_TRIGGER = 1;
 	public static final int SENT_INPUT_COUNT = 1;
-	public static final int SIGNATURE_HASH = 1217375877;
+	public static final int SIGNATURE_HASH = 1388771522;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1202,7 +1202,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.01.24.all.1217375877";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.01.24.all.1388771522";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1300;
@@ -2476,7 +2476,7 @@ public class Fields {
 	public static final Field ALSMAXCLT = Field.create("ALSMAXCLT", 3885, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSMINTIMEBETWEEN = Field.create("ALSMINTIMEBETWEEN", 3886, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBPOSITION = Field.create("ALSETBPOSITION", 3887, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ACFANALTERNATORDUTYADDER = Field.create("ACFANALTERNATORDUTYADDER", 3888, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ACRELAYALTERNATORDUTYADDER = Field.create("ACRELAYALTERNATORDUTYADDER", 3888, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDALIGNMENTFILL_AT_33 = Field.create("UNUSEDALIGNMENTFILL_AT_33", 3889, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSIDLEADD = Field.create("ALSIDLEADD", 3892, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBADD = Field.create("ALSETBADD", 3896, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -3917,7 +3917,7 @@ public class Fields {
 	ALSMAXCLT,
 	ALSMINTIMEBETWEEN,
 	ALSETBPOSITION,
-	ACFANALTERNATORDUTYADDER,
+	ACRELAYALTERNATORDUTYADDER,
 	UNUSEDALIGNMENTFILL_AT_33,
 	ALSIDLEADD,
 	ALSETBADD,
