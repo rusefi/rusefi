@@ -384,86 +384,41 @@ void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
-static void configureNeon1995TriggerWaveformCommon(bool withCam, TriggerWaveform *s) {
-	s->useOnlyPrimaryForSync = withCam;
-	
-	TriggerWheel crank = withCam ? TriggerWheel::T_SECONDARY : TriggerWheel::T_PRIMARY;
-
-	// voodoo magic - we always need 720 at the end
-	int base = withCam ? 720 - 560 : 360 - 135;
-
-	float m = withCam ? 1 : 2;
-
-	s->addEvent720(m * (base - 120), TriggerValue::RISE, crank);
-	s->addEvent720(m * (base - 116), TriggerValue::FALL, crank);
-	s->addEvent720(m * (base - 720 + 616), TriggerValue::RISE, crank);
-	s->addEvent720(m * (base - 100), TriggerValue::FALL, crank);
-	s->addEvent720(m * (base - 720 + 643), TriggerValue::RISE, crank);
-	s->addEvent720(m * (base - 720 + 648), TriggerValue::FALL, crank);
-	s->addEvent720(m * (base - 720 + 671), TriggerValue::RISE, crank);
-	s->addEvent720(m * (base - 44), TriggerValue::FALL, crank);
-
-	if (withCam) {
-		s->addEvent720(base + 0, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	}
-	s->addEvent720(m * (base + 20), TriggerValue::RISE, crank);
-	s->addEvent720(m * (base + 60), TriggerValue::FALL, crank);
-	s->addEvent720(m * (base + 75), TriggerValue::RISE, crank);
-	s->addEvent720(m * (base + 79), TriggerValue::FALL, crank);
-	s->addEvent720(m * (base + 101), TriggerValue::RISE, crank);
-	s->addEvent720(m * (base + 106), TriggerValue::FALL, crank);
-	s->addEvent720(m * (base + 130), TriggerValue::RISE, crank);
-	s->addEvent720(m * (base + 135), TriggerValue::FALL, crank);
-
-	if (withCam) {
-		s->addEvent720(base + 200, TriggerValue::RISE, TriggerWheel::T_PRIMARY); // width = 150
-
-		s->addEvent720(base + 236, TriggerValue::RISE, crank);
-		s->addEvent720(base + 239, TriggerValue::FALL, crank);
-		s->addEvent720(base + 250, TriggerValue::RISE, crank);
-		s->addEvent720(base + 255, TriggerValue::FALL, crank);
-		s->addEvent720(base + 277, TriggerValue::RISE, crank);
-		s->addEvent720(base + 282, TriggerValue::FALL, crank);
-		s->addEvent720(base + 305, TriggerValue::RISE, crank);
-		s->addEvent720(base + 310, TriggerValue::FALL, crank);
-
-	s->addEvent720(base + 374, TriggerValue::RISE, crank);
-
-//	if (withCam)
-		s->addEvent720(base + 395, TriggerValue::FALL, TriggerWheel::T_PRIMARY); // width =
-
-	s->addEvent720(base + 418, TriggerValue::FALL, crank);
-	s->addEvent720(base + 436, TriggerValue::RISE, crank);
-	s->addEvent720(base + 441, TriggerValue::FALL, crank);
-	s->addEvent720(base + 463, TriggerValue::RISE, crank);
-	s->addEvent720(base + 468, TriggerValue::FALL, crank);
-	s->addEvent720(base + 492, TriggerValue::RISE, crank);
-	s->addEvent720(base + 497, TriggerValue::FALL, crank);
-
-//	if (withCam)
-		s->addEvent720(base + 560, TriggerValue::RISE, TriggerWheel::T_PRIMARY); // width =
-
-	}
-}
-
 void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
-	s->setTriggerSynchronizationGap(3.79);
+
+	// Nominal gap 3.25
+	s->setTriggerSynchronizationGap3(0, 1.6, 4.5);
+
+	// Nominal gap 1.0
+	s->setTriggerSynchronizationGap3(1, 0.5, 1.5);
+	s->setTriggerSynchronizationGap3(2, 0.5, 1.5);
+
+	// Nominal gap 0.168
+	s->setTriggerSynchronizationGap3(3, 0.1, 0.3);
 
 	s->tdcPosition = 279;
 
-	configureNeon1995TriggerWaveformCommon(false, s);
-}
+	// voodoo magic - we always need 720 at the end
+	int base = 59;
 
+	s->addEvent360(base + 0, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 60, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 75, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 82, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 96, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 102, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 116, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 122, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-void configureNeon1995TriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
-
-	s->setTriggerSynchronizationGap(0.8227);
-
-	s->initialState[(int)TriggerWheel::T_PRIMARY] = TriggerValue::RISE;
-
-	configureNeon1995TriggerWaveformCommon(true, s);
+	s->addEvent360(base + 235, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 242, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 255, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 261, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 275, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 281, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 295, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(base + 301, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
 void initJeep18_2_2_2(TriggerWaveform *s) {

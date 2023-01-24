@@ -464,9 +464,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case TT_DODGE_NEON_1995:
-		configureNeon1995TriggerWaveform(this);
-		break;
-
 	case TT_DODGE_NEON_1995_ONLY_CRANK:
 		configureNeon1995TriggerWaveformOnlyCrank(this);
 		break;
