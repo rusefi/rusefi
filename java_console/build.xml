@@ -186,48 +186,6 @@
 
     </target>
 
-    <target name="hardware_ci_f4_discovery" depends="jar">
-        <mkdir dir="${hw_tests}"/>
-        <junit fork="no"
-               maxmemory="512m"
-               printsummary="yes"
-               showoutput="true"
-               haltonfailure="yes">
-
-            <jvmarg value="-ea"/>
-            <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
-            <formatter type="brief"/>
-            <classpath
-                    path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
-            <batchtest todir="${hw_tests}">
-                <fileset dir="autotest/src/main/java" includes="**/common/*.java"/>
-                <fileset dir="autotest/src/main/java" includes="**/f4discovery/*.java"/>
-            </batchtest>
-            <formatter type="plain" usefile="false" /> <!-- to screen -->
-        </junit>
-    </target>
-
-    <target name="hardware_ci_proteus" depends="jar">
-        <mkdir dir="${hw_tests}"/>
-        <junit fork="no"
-               maxmemory="512m"
-               printsummary="yes"
-               showoutput="true"
-               haltonfailure="yes">
-
-            <jvmarg value="-ea"/>
-            <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
-            <formatter type="brief"/>
-            <classpath
-                    path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
-            <batchtest todir="${hw_tests}">
-                <fileset dir="autotest/src/main/java" includes="**/common/*.java"/>
-                <fileset dir="autotest/src/main/java" includes="**/proteus/*.java"/>
-            </batchtest>
-            <formatter type="plain" usefile="false" /> <!-- to screen -->
-        </junit>
-    </target>
-
     <target name="before_IDEA_Build">
         <copy todir=".">
             <fileset dir="../firmware/tunerstudio" includes="rusefi.ini"/>

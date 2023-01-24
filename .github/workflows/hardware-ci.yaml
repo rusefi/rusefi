@@ -12,7 +12,6 @@ jobs:
 
         include:
           - build-target: f407-discovery
-            script: hardware_ci_f4_discovery
             runs-on: hw-ci-f4-discovery
             test-suite: com.rusefi.HwCiF4Discovery
             folder: f407-discovery
@@ -22,7 +21,6 @@ jobs:
             serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_2B003B000A51343033393930-if01
 
           - build-target: proteus_f4
-            script: hardware_ci_proteus
             runs-on: hw-ci-proteus
             test-suite: com.rusefi.HwCiF4Proteus
             folder: proteus
@@ -93,8 +91,6 @@ jobs:
       working-directory: ./java_tools
       run: ./gradlew :autotest:shadowJar
 
-    # This both compiles and runs HW CI tests
     - name: Run Hardware CI
-      working-directory: ./java_console
-      run: ant ${{matrix.script}}
+      run: java -cp java_console/autotest/build/libs/autotest-all.jar com.rusefi.HwCiF4Proteus ${{matrix.test-suite}}
 
