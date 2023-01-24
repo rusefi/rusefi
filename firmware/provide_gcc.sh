@@ -28,7 +28,5 @@ if [ ! -d "${TMP_DIR}" ] || ["$(md5sum ${TMP_DIR}/*manifest.txt | cut -d ' ' -f 
 fi
 
 # Create colloquially named link
-archive_dir="$(ls "$TMP_DIR")"
 cd "$SWD"
-mv "${TMP_DIR}/${archive_dir}" "$(pwd)"
-ln -s "${archive_dir%/}" "${COLLOQUIAL}"
+ln -s "${TMP_DIR}/*" "${COLLOQUIAL}"
