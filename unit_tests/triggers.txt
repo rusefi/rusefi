@@ -22,53 +22,55 @@ event 6 1 1 412.76 nan
 event 7 1 0 412.76 nan
 event 8 1 1 592.76 nan
 event 9 1 0 592.76 nan
-TRIGGERTYPE 2 36 TT_DODGE_NEON_1995 0.00
+TRIGGERTYPE 2 32 TT_DODGE_NEON_1995 279.00
 knownOperationMode=true
-crankBased=false
-hasSecondChannel=true
+crankBased=true
+hasSecondChannel=false
 isSecondWheelCam=false
-cycleDuration=720
-gapsCount=1
+cycleDuration=360
+gapsCount=4
 isSynchronizationNeeded=1
-gapFrom.0=0.617025
-gapTo.0=1.028375
+gapFrom.0=1.600000
+gapTo.0=4.500000
+gapFrom.1=0.500000
+gapTo.1=1.500000
+gapFrom.2=0.500000
+gapTo.2=1.500000
+gapFrom.3=0.100000
+gapTo.3=0.300000
 # end of meta section
-event 0 0 0 0.00 0.822785
-event 1 1 1 20.00 nan
-event 2 1 0 60.00 nan
-event 3 1 1 75.00 nan
-event 4 1 0 79.00 nan
-event 5 1 1 101.00 nan
-event 6 1 0 106.00 nan
-event 7 1 1 130.00 nan
-event 8 1 0 135.00 nan
-event 9 0 1 200.00 nan
-event 10 1 1 236.00 nan
-event 11 1 0 239.00 nan
-event 12 1 1 250.00 nan
-event 13 1 0 255.00 nan
-event 14 1 1 277.00 nan
-event 15 1 0 282.00 nan
-event 16 1 1 305.00 nan
-event 17 1 0 310.00 nan
-event 18 1 1 374.00 nan
-event 19 0 0 395.00 1.215385
-event 20 1 0 418.00 nan
-event 21 1 1 436.00 nan
-event 22 1 0 441.00 nan
-event 23 1 1 463.00 nan
-event 24 1 0 468.00 nan
-event 25 1 1 492.00 nan
-event 26 1 0 497.00 nan
-event 27 0 1 560.00 nan
-event 28 1 1 600.00 nan
-event 29 1 0 604.00 nan
-event 30 1 1 616.00 nan
-event 31 1 0 620.00 nan
-event 32 1 1 643.00 nan
-event 33 1 0 648.00 nan
-event 34 1 1 671.00 nan
-event 35 1 0 676.00 nan
+event 0 0 1 0.00 3.250000
+event 1 0 0 60.00 nan
+event 2 0 1 75.00 1.153846
+event 3 0 0 82.00 nan
+event 4 0 1 96.00 0.280000
+event 5 0 0 102.00 nan
+event 6 0 1 116.00 0.952381
+event 7 0 0 122.00 nan
+event 8 0 1 235.00 5.950000
+event 9 0 0 242.00 nan
+event 10 0 1 255.00 0.168067
+event 11 0 0 261.00 nan
+event 12 0 1 275.00 1.000000
+event 13 0 0 281.00 nan
+event 14 0 1 295.00 1.000000
+event 15 0 0 301.00 nan
+event 16 0 1 360.00 nan
+event 17 0 0 420.00 nan
+event 18 0 1 435.00 nan
+event 19 0 0 442.00 nan
+event 20 0 1 456.00 nan
+event 21 0 0 462.00 nan
+event 22 0 1 476.00 nan
+event 23 0 0 482.00 nan
+event 24 0 1 595.00 nan
+event 25 0 0 602.00 nan
+event 26 0 1 615.00 nan
+event 27 0 0 621.00 nan
+event 28 0 1 635.00 nan
+event 29 0 0 641.00 nan
+event 30 0 1 655.00 nan
+event 31 0 0 661.00 nan
 TRIGGERTYPE 3 12 TT_MAZDA_MIATA_NA 5.18
 knownOperationMode=true
 crankBased=false
@@ -2207,43 +2209,49 @@ crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=360
-gapsCount=1
+gapsCount=4
 isSynchronizationNeeded=1
-gapFrom.0=2.842500
-gapTo.0=4.737500
+gapFrom.0=1.600000
+gapTo.0=4.500000
+gapFrom.1=0.500000
+gapTo.1=1.500000
+gapFrom.2=0.500000
+gapTo.2=1.500000
+gapFrom.3=0.100000
+gapTo.3=0.300000
 # end of meta section
-event 0 0 1 0.00 3.793103
-event 1 0 0 4.00 nan
-event 2 0 1 16.00 0.145455
-event 3 0 0 20.00 nan
-event 4 0 1 43.00 1.687500
-event 5 0 0 48.00 nan
-event 6 0 1 71.00 1.037037
-event 7 0 0 76.00 nan
-event 8 0 1 140.00 2.464286
-event 9 0 0 180.00 nan
-event 10 0 1 195.00 0.797101
-event 11 0 0 199.00 nan
-event 12 0 1 221.00 0.472727
-event 13 0 0 226.00 nan
-event 14 0 1 250.00 1.115385
-event 15 0 0 255.00 nan
+event 0 0 1 0.00 3.250000
+event 1 0 0 60.00 nan
+event 2 0 1 75.00 1.153846
+event 3 0 0 82.00 nan
+event 4 0 1 96.00 0.280000
+event 5 0 0 102.00 nan
+event 6 0 1 116.00 0.952381
+event 7 0 0 122.00 nan
+event 8 0 1 235.00 5.950000
+event 9 0 0 242.00 nan
+event 10 0 1 255.00 0.168067
+event 11 0 0 261.00 nan
+event 12 0 1 275.00 1.000000
+event 13 0 0 281.00 nan
+event 14 0 1 295.00 1.000000
+event 15 0 0 301.00 nan
 event 16 0 1 360.00 nan
-event 17 0 0 364.00 nan
-event 18 0 1 376.00 nan
-event 19 0 0 380.00 nan
-event 20 0 1 403.00 nan
-event 21 0 0 408.00 nan
-event 22 0 1 431.00 nan
-event 23 0 0 436.00 nan
-event 24 0 1 500.00 nan
-event 25 0 0 540.00 nan
-event 26 0 1 555.00 nan
-event 27 0 0 559.00 nan
-event 28 0 1 581.00 nan
-event 29 0 0 586.00 nan
-event 30 0 1 610.00 nan
-event 31 0 0 615.00 nan
+event 17 0 0 420.00 nan
+event 18 0 1 435.00 nan
+event 19 0 0 442.00 nan
+event 20 0 1 456.00 nan
+event 21 0 0 462.00 nan
+event 22 0 1 476.00 nan
+event 23 0 0 482.00 nan
+event 24 0 1 595.00 nan
+event 25 0 0 602.00 nan
+event 26 0 1 615.00 nan
+event 27 0 0 621.00 nan
+event 28 0 1 635.00 nan
+event 29 0 0 641.00 nan
+event 30 0 1 655.00 nan
+event 31 0 0 661.00 nan
 TRIGGERTYPE 40 34 TT_JEEP_4_CYL 484.00
 knownOperationMode=true
 crankBased=false
@@ -2255,7 +2263,7 @@ isSynchronizationNeeded=0
 gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
-event 0 0 1 0.00 3.793103
+event 0 0 1 0.00 3.250000
 event 1 1 1 0.00 nan
 event 2 1 0 58.00 nan
 event 3 1 1 58.00 nan
