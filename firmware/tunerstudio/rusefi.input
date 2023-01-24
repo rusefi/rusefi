@@ -3483,7 +3483,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Control outpur mode",				alternatorControlPinMode, {isAlternatorControlEnabled == 1}
 		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1}
 		field = "Off Above TPS",						alternatorOffAboveTps, {isAlternatorControlEnabled == 1}
-		field = "A/C duty adder",                       acFanAlternatorDutyAdder, {isAlternatorControlEnabled == 1}
+		field = "A/C duty adder",                       acRelayAlternatorDutyAdder, {isAlternatorControlEnabled == 1}
 		field = "Detailed status in console",			isVerboseAlternator, {isAlternatorControlEnabled == 1}
 		field = "#PID control"
 		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1}
