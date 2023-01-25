@@ -19,7 +19,8 @@ public class RusefiTestBase {
 
     @After
     public void checkStackUsage() {
-        ecu.sendCommand("threadsinfo");
+        if (ecu != null)
+            ecu.sendCommand("threadsinfo");
     }
 
     protected EngineChart nextChart() {
