@@ -22,9 +22,10 @@ public class LogicdataStreamFile extends StreamFile {
     private static final int frequencyDiv = 10;
 
 	private static final char magic = 0x7f;
+	private static final char version = 0x13;
 	private static final String title = "Data save2";
 
-	private static final int BLOCK = 0x15;
+	private static final int BLOCK = 0x18;
 	private static final int CHANNEL_BLOCK = 0x16;
 	private static final int SUB = 0x54;
 
@@ -32,15 +33,23 @@ public class LogicdataStreamFile extends StreamFile {
 	private static final int FLAG_NOTEMPTY_LONG = 3;
 	private static final int FLAG_EMPTY = 5;
 
+	private static final long RECORD_FIRST = 1;
+	private static final long RECORD_NEXT = 2;
+
 	//looks these magic numbers are version-specific
 	private static final int LOGIC4 = 0x40FD;
 	private static final int LOGIC8 = 0x673B;
+	private static final int LOGIC1 = 0x07BD;
+	//private static final int LOGIC16 = 0x41F9;
+	private static final int LOGIC16 = 0x2E2A;
 
-	private static final int [] CHANNEL_FLAGS = { 0x13458b, 0x0000ff, 0x00a0f9, 0x00ffff, 0x00ff00, 0xff0000, 0xf020a0, };
+	private static final int [] CHANNEL_FLAGS = {
+			0x13458b, 0x0000ff, 0x00a0f9, 0x00ffff, 0x00ff00, 0xff0000, 0xf020a0, 0x000000,
+	};
 
 	private static final long SIGN_FLAG = 0x80000000L;
 
-    private static final int numChannels = 6;
+    private static final int numChannels = 1/*16*/;
     private static final int reservedDurationInSamples = 10;
     private static int realDurationInSamples = 0;
     private static int scaledDurationInSamples = 0;
@@ -48,7 +57,11 @@ public class LogicdataStreamFile extends StreamFile {
 	private final String fileName;
 	private final List<CompositeEvent> eventsBuffer = new ArrayList<>();
 
-	private static final String [] channelNames = { "Primary", "Secondary", "Trg", "Sync", "Coil", "Injector", "Channel 6", "Channel 7" };
+	private static final String [] channelNames = {
+			//"Primary", "Secondary", "Trg", "Sync", "Coil", "Injector", "Channel 6", "Channel 7",
+			"Channel 0", "Channel 1", "Channel 2", "Channel 3", "Channel 4", "Channel 5", "Channel 6", "Channel 7",
+			"Channel 8", "Channel 9", "Channel 10", "Channel 11", "Channel 12", "Channel 13", "Channel 14", "Channel 15"
+	};
 
 
 	public LogicdataStreamFile(String fileName) {
@@ -84,7 +97,7 @@ public class LogicdataStreamFile extends StreamFile {
     	// we need at least 2 records
     	if (events == null || events.size() < 2)
     		return;
-		long firstRecordTs = events.get(1).getTimestamp(); // huh why not index '0'?
+		long firstRecordTs = events.get(0).getTimestamp();
 		long lastRecordTs = events.get(events.size() - 1).getTimestamp();
 	    // we don't know the total duration, so we create a margin after the last record which equals to the duration of the first event
 		// TODO: why do we jump from timestamps to samples?
@@ -97,8 +110,8 @@ public class LogicdataStreamFile extends StreamFile {
     	// we need to split the combined events into separate channels
     	for (int ch = 0; ch < numChannels; ch++) {
 			List<Long> chDeltas = new ArrayList<>();
-			int chPrevState = -1;
-			long prevTs = 0;
+			int chPrevState = -1, chInitialState = -1;
+			long prevTs = -1, initialTs = 0;
         	for (CompositeEvent event : events) {
         		int chState = getChannelState(ch, event);
         		long ts = event.getTimestamp();
@@ -106,6 +119,13 @@ public class LogicdataStreamFile extends StreamFile {
         		if (chPrevState == -1) {
         			chPrevState = chState;
         		}
+				if (prevTs == -1) {
+					prevTs = ts;
+				}
+				if (chInitialState == -1) {
+					chInitialState = chState;
+					initialTs = ts;
+				}
 				if (chState != chPrevState) {
 					long delta = ts - prevTs;
 					if (delta > 0x7fff) {
@@ -122,8 +142,10 @@ public class LogicdataStreamFile extends StreamFile {
 				}
 			}
 
+			//chDeltas = chDeltas.subList(0, 31000);
+
         	// TODO: why do we pass a timestamp as a record index?
-			writeChannelData(ch, chDeltas, chPrevState, (int)prevTs, useLongDeltas);
+			writeChannelData(ch, chDeltas, chPrevState, (int)prevTs, chInitialState, (int)initialTs, useLongDeltas);
         }
 
         writeChannelDataFooter();
@@ -132,18 +154,20 @@ public class LogicdataStreamFile extends StreamFile {
 
     private int getChannelState(int ch, CompositeEvent event) {
 		switch (ch) {
-		case 0:
-			return event.isPrimaryTriggerAsInt();
-		case 1:
-            return event.isSecondaryTriggerAsInt();
-		case 2:
-            return event.isTrgAsInt();
-		case 3:
-			return event.isSyncAsInt();
-		case 4:
-			return event.isCoil();
-		case 5:
-            return event.isInjector();
+			case 0:
+				return event.isPrimaryTriggerAsInt();
+			case 1:
+				return event.isSecondaryTriggerAsInt();
+			case 2:
+				return event.isTrgAsInt();
+			case 3:
+				return event.isSyncAsInt();
+		}
+		if (ch >= 4 && ch < 4 + 6) {
+			return event.isCoil(ch - 4);
+		}
+		if (ch >= 10 && ch < 10 + 6) {
+            return event.isInjector(ch - 10);
 		}
 		return -1;
 	}
@@ -153,12 +177,10 @@ public class LogicdataStreamFile extends StreamFile {
     private void writeHeader() throws IOException {
         writeByte(magic);
 
-		// maybe wrong? We saw 0x13 instead of expected 0x0A in real file
-		stream.writeVarLength(title.length());
+		stream.writeVarLength(version);
 		stream.writeString(title);
         stream.flush();
 
-		// maybe wrong? We saw 0x18 in real file
 		stream.writeVarLength(BLOCK);
 		stream.writeVarLength(SUB);
 		stream.writeVarLength(frequency);
@@ -179,8 +201,10 @@ public class LogicdataStreamFile extends StreamFile {
 
 		stream.writeVarLength(BLOCK);
 
-		writeId(0, 0);
-		stream.writeVarLength(0);
+		//writeId(0, 0);
+		writeId(7, 7);
+		//stream.writeVarLength(0);
+		stream.writeVarLength(SUB);
 		stream.writeVarLength(0);
 	}
 
@@ -190,10 +214,10 @@ public class LogicdataStreamFile extends StreamFile {
 		stream.writeString(channelNames[ch]);
 		write(0, 2);
 		stream.writeDouble(1.0);
-		stream.writeVarLength(0);
+		//stream.writeVarLength(0);
+		stream.writeVarLength(SUB);
 		stream.writeDouble(0.0);
-		// or 2
-		stream.writeVarLength(1);
+		stream.writeVarLength(1);	// or 2
 		stream.writeDouble(0.0);	// or 1.0
 
 		// this part sounds like the 'next' pointer?
@@ -202,7 +226,7 @@ public class LogicdataStreamFile extends StreamFile {
 		} else {
 			writeId(1 + ch, 1);
 			for (int i = 0; i < 3; i++) {
-				stream.writeVarLength((CHANNEL_FLAGS[ch] >> (i * 8)) & 0xff);
+				stream.writeVarLength((CHANNEL_FLAGS[ch & 7] >> (i * 8)) & 0xff);
 			}
 		}
     }
@@ -229,7 +253,8 @@ public class LogicdataStreamFile extends StreamFile {
 
 		stream.writeVarLength(BLOCK);
 		write(0, 2);
-		stream.writeVarLength(realDurationInSamples);
+		//stream.writeVarLength(realDurationInSamples);
+		stream.writeVarLength(reservedDurationInSamples);
 		stream.writeVarLength(0);
 		stream.writeVarLength(SUB);
 		stream.writeVarLength(reservedDurationInSamples);
@@ -239,7 +264,8 @@ public class LogicdataStreamFile extends StreamFile {
 		write(0, 2);
 		stream.writeVarLength(1);
 		write(0, 3);
-		writeId(0, 0);
+		//writeId(0, 0);
+		writeId(7, 0);
 
 		stream.writeVarLength(BLOCK);
 		write(new int[]{ (int)realDurationInSamples, (int)realDurationInSamples, (int)realDurationInSamples });
@@ -271,10 +297,12 @@ public class LogicdataStreamFile extends StreamFile {
 		write(new int[]{ 1, 0, 1 });
 	}
 
-	private void writeChannelData(int ch, List<Long> chDeltas, int chLastState, int lastRecord, boolean useLongDeltas) throws IOException {
+	private void writeChannelData(int ch, List<Long> chDeltas, int chLastState, int lastRecord, int chInitialState, int initialRecord, boolean useLongDeltas) throws IOException {
     	int numEdges = chDeltas.size();
-    	if (numEdges == 0)
-    		lastRecord = 0;
+    	if (numEdges == 0) {
+			initialRecord = 0;
+			lastRecord = 0;
+		}
 		stream.writeVarLength(CHANNEL_BLOCK);
 		// channel#0 is somehow special...
     	if (ch == 0) {
@@ -295,23 +323,51 @@ public class LogicdataStreamFile extends StreamFile {
 		stream.writeVarLength(chLastState);
 
 		int chFlag = (numEdges == 0) ? FLAG_EMPTY : (useLongDeltas ? FLAG_NOTEMPTY_LONG : FLAG_NOTEMPTY);
+		int idx = 1;
 		stream.writeVarLength(chFlag);
 
 		if (ch == 0) {
 			stream.writeVarLength(0);
 			stream.writeVarLength(BLOCK);
-			write(0, 11);
+			//!!!!!!!!!!!!
+			//write(0, 11);
+			write(0, 5);
+			/*
+			stream.writeVarLength(idx);
+			stream.writeVarLength(0);
+			stream.writeVarLength(idx);
+			stream.writeVarLength(0);
+			stream.writeVarLength(idx);
+
+			writeWord(initialRecord);
+			 */
+
 			if (useLongDeltas) {
 				stream.writeVarLength(BLOCK);
 				write(0, 6);
 			}
-			stream.writeVarLength(BLOCK);
+			//stream.writeVarLength(BLOCK);
 		} else {
 			write(0, 10);
 			if (useLongDeltas) {
 				write(0, 5);
 			}
 		}
+
+		//---------
+		final int bytes[] = {
+				0x2B, 0x37, 0x7D, 0x1E, 0x3C, 0x1E, 0x4B, 0x17, 0xC3, 0xAA, 0x9C, 0xF9, 0xF3, 0x2C, 0xB7, 0xCD, 0xC9, 0xA9, 0xFB, 0x8A, 0x67, 0xD5, 0x45, 0x96, 0x25, 0x21, 0x0E, 0x05, 0xE5, 0x5A, 0x8B, 0x57, 0xC8, 0x06, 0x1A, 0x3C, 0xCA, 0xBB, 0x5C, 0x5C, 0xCF, 0x31, 0x2F, 0x5C, 0x27, 0x9B, 0x99, 0x56, 0x1E, 0x11, 0x66, 0x03, 0xF5, 0xC6, 0x16, 0x19, 0xAC, 0xAD, 0x20, 0x64, 0xD2, 0x43, 0xBD, 0x6D, 0xE8, 0x27, 0x9B, 0x2F, 0x3A, 0x70, 0x1A, 0x6F, 0xDC, 0xCC, 0xBD, 0xDC, 0x71, 0xC9, 0xCB, 0xEF, 0x19, 0x28, 0x5B, 0xA3, 0x88, 0x33, 0xF5, 0x15, 0x51, 0xED, 0xF8, 0x44, 0x3F, 0x68, 0xE7, 0xD0, 0x4C, 0xF2, 0x08, 0x82, 0xA4, 0x4F, 0xF7, 0x15, 0x26, 0x1B, 0x39, 0x51, 0x0D, 0x38, 0xAD, 0xF8, 0xA2, 0xAA, 0xB4, 0x9F, 0xD9, 0x97, 0x0F
+		};
+		stream.writeVarLength(bytes.length);
+		stream.writeVarLength(0);
+		stream.writeVarLength(bytes.length);
+		stream.writeVarLength(0);
+		stream.writeVarLength(bytes.length);
+		for (int v : bytes) {
+			writeByte(v);
+		}
+		writeByte(0);
+		stream.writeVarLength(BLOCK);
 
 		stream.writeVarLength(numEdges);
 		stream.writeVarLength(0);
@@ -323,12 +379,14 @@ public class LogicdataStreamFile extends StreamFile {
 
 		if (ch == 0) {
 			stream.writeVarLength(BLOCK);
+
 			write(0, 6);
 			if (!useLongDeltas) {
 				stream.writeVarLength(BLOCK);
 				write(0, 6);
 			}
 			stream.writeVarLength(BLOCK);
+
 		} else {
 			write(0, 4);
 			if (!useLongDeltas) {
@@ -341,16 +399,18 @@ public class LogicdataStreamFile extends StreamFile {
 			return;
 		}
 
-		stream.writeVarLength(1);
+		int numRecords = 2;
+		stream.writeVarLength(numRecords);
 		stream.writeVarLength(0);
-		stream.writeVarLength(1);
+		stream.writeVarLength(numRecords);
 		stream.writeVarLength(0);
-		stream.writeVarLength(1);
-		write(0, 16);
+		stream.writeVarLength(numRecords);
+		writeRecord(0, 0, -1, RECORD_FIRST);
+		writeRecord(initialRecord, 0, 0, RECORD_NEXT);
+		//write(0, 8);
 
-    	writeRaw(0xFF, 8);
-		writeRaw(chFlag, 1);
-	   	writeRaw(0x00, 7);
+		//writeRaw(chFlag, 1);
+	   	//writeRaw(0x00, 7);
     }
 
 	private void writeEdges(List<Long> chDeltas, boolean useLongDeltas) throws IOException {
@@ -372,6 +432,24 @@ public class LogicdataStreamFile extends StreamFile {
 		stream.writeByte(i);
 	}
 
+	private void writeWord(int d) throws IOException {
+		writeByte((byte)(d & 0xff));
+		writeByte((byte)((d >> 8) & 0xff));
+	}
+	private void writeQword(long l) throws IOException {
+		for (int i = 7; i >= 0; i--) {
+			writeByte((byte)(l & 0xFF));
+			l >>= 8;
+		}
+	}
+
+	private void writeRecord(long record, long idx, long prevIdx, long type) throws IOException {
+		writeQword(record);
+		writeQword(idx);
+		writeQword(prevIdx);
+		writeQword(type);
+	}
+
 	private void writeChannelDataFooter() throws IOException {
     	write(0, 3);
 		stream.writeVarLength(1);
@@ -391,7 +469,7 @@ public class LogicdataStreamFile extends StreamFile {
         	writeId(i, 1);
         }
 		stream.writeVarLength(1);
-		writeId(numChannels, 0x15);
+		writeId(numChannels, BLOCK);
         for (int i = 0; i < numChannels; i++) {
         	writeId(i, 1);
         }
@@ -447,8 +525,7 @@ public class LogicdataStreamFile extends StreamFile {
     }
 
     private void writeId(int i1, int i2) throws IOException {
-		long value = (numChannels == 4) ? LOGIC4 : LOGIC8;
-		stream.writeVarLength(value);
+		stream.writeVarLength(LOGIC16);
 		stream.writeVarLength(i1);
 		stream.writeVarLength(i2);
 	}
