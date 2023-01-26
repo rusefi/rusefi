@@ -26,8 +26,10 @@
 int IdleController::getTargetRpm(float clt) {
 	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
 
-	// Bump for AC
-	// huh, why do we bump based on button not based on actual A/C relay state?
+	// idle air Bump for AC
+	// Why do we bump based on button not based on actual A/C relay state?
+	// Because AC output has a delay to allow idle bump to happen first, so that the airflow increase gets a head start on the load increase
+	// alternator duty cycle has a similar logic
 	targetRpmAcBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleRpmBump : 0;
 
 	return targetRpmByClt + targetRpmAcBump;
