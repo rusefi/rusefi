@@ -21,6 +21,11 @@ static FunctionPointerSensor lambdaSensor(SensorType::Lambda1,
 	return afrWrapper.getLambda();
 });
 
+static FunctionPointerSensor lambdaSensor2(SensorType::Lambda2,
+[]() {
+	return afrWrapper.getLambda2();
+});
+
 #include "AemXSeriesLambda.h"
 
 #if EFI_CAN_SUPPORT
@@ -57,4 +62,5 @@ void initLambda() {
 #endif
 
 	lambdaSensor.Register();
+	lambdaSensor2.Register();
 }
