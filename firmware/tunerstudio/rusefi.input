@@ -3033,7 +3033,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = egoSettings_IO2,	"EGO Sensor 2 I/O"
 		field = "Input channel",						afr_hwChannel2
-		field = "Heater output",						o2heaterPin, {afr_hwChannel2 != 0}
 
 	dialog = egoSettings, "", yAxis
 		field = "Enable CAN Wideband",			enableAemXSeries, { canReadEnabled }
