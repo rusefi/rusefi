@@ -106,7 +106,7 @@ bool hasAfrSensor() {
 
 extern float InnovateLC2AFR;
 
-float getAfr() {
+float getAfr(SensorType type) {
 #if EFI_AUX_SERIAL
 	if (engineConfiguration->enableInnovateLC2)
 		return InnovateLC2AFR;
@@ -119,11 +119,11 @@ float getAfr() {
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 	afr_sensor_s * sensor = &engineConfiguration->afr;
 
-	if (!isAdcChannelValid(engineConfiguration->afr.hwChannel)) {
+	if (!isAdcChannelValid(type == SensorType::Lambda1 ? engineConfiguration->afr.hwChannel : engineConfiguration->afr.hwChannel2)) {
 		return 0;
 	}
 
-	float volts = getVoltageDivided("ego", sensor->hwChannel);
+	float volts = getVoltageDivided("ego", type == SensorType::Lambda1 ? sensor->hwChannel : sensor->hwChannel2);
 
 	if (engineConfiguration->afr_type == ES_NarrowBand) {
 		float afr = interpolate2d(volts, config->narrowToWideOxygenBins, config->narrowToWideOxygen);

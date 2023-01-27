@@ -609,6 +609,7 @@ float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
 	
 struct afr_sensor_s
 	adc_channel_e hwChannel;
+	adc_channel_e hwChannel2;
 	float v1;;"volts", 1, 0, 0, 10, 2
 	float value1;;"AFR", 1, 0, 0, 1000, 2
 	float v2;;"volts", 1, 0, 0, 10, 2

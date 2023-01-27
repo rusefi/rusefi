@@ -2679,6 +2679,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "MAF ADC input",						mafAdcChannel
 		field = "MAF 2 ADC input",						maf2AdcChannel
 		field = "AFR ADC input",						afr_hwChannel
+		field = "AFR 2 ADC input",						afr_hwChannel2
 		field = "Baro ADC input",						baroSensor_hwChannel
 		field = "MAP ADC input",						map_sensor_hwChannel
 		field = "Fuel Level input",					fuelLevelSensor
@@ -3026,14 +3027,19 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "high value",							afr_value2
 		field = "Correction",							egoValueShift
 
-	dialog = egoSettings_IO,	"EGO Sensor I/O"
+	dialog = egoSettings_IO1,	"EGO Sensor 1 I/O"
 		field = "Input channel",						afr_hwChannel
 		field = "Heater output",						o2heaterPin
+
+	dialog = egoSettings_IO2,	"EGO Sensor 2 I/O"
+		field = "Input channel",						afr_hwChannel2
+		field = "Heater output",						o2heaterPin, {afr_hwChannel2 != 0}
 
 	dialog = egoSettings, "", yAxis
 		field = "Enable CAN Wideband",			enableAemXSeries, { canReadEnabled }
 		field = "Enable Innovate LC-2 Serial",			enableInnovateLC2, { auxSerialRxPin && auxSerialTxPin }
-		panel = egoSettings_IO
+		panel = egoSettings_IO1
+		panel = egoSettings_IO2, {afr_hwChannel != @@ADC_CHANNEL_NONE@@ && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
 		panel = egoSettings_sensor, {afr_hwChannel != @@ADC_CHANNEL_NONE@@ && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
 
 ;			Engine->EGT inputs
