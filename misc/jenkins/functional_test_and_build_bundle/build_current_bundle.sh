@@ -78,7 +78,7 @@ echo "$SCRIPT_NAME: folder variable3=$FOLDER"
 pwd
 # DfuFlasher.java validates this prefix
 export BUNDLE_FULL_NAME="rusefi_bundle"
-bash misc/jenkins/build_working_folder.sh
+bash misc/jenkins/build_working_folder.sh "" "" "$1" "$2"
 [ $? -eq 0 ] || { echo "$SCRIPT_NAME: ERROR: invoking build_working_folder.sh"; exit 1; }
 
 echo "$SCRIPT_NAME: Going back to root folder"
