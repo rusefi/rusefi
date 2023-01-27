@@ -8,7 +8,11 @@ echo "RUSEFI_BUILD_FTP_USER=$RUSEFI_BUILD_FTP_USER"
 
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
 
-export FOLDER="temp/snapshot_${TIMESTAMP}_${BUNDLE_NAME}_rusefi"
+if [ "$4" = "true" ]; then
+  export FOLDER="temp/rusefi.${3}.${BUNDLE_NAME}"
+else
+  export FOLDER="temp/rusefi.snapshot.${BUNDLE_NAME}"
+fi
 
 export BUNDLE_FULL_NAME="rusefi_bundle_${BUNDLE_NAME}"
 
