@@ -66,7 +66,11 @@ bash misc/jenkins/build_simulator.sh || { echo "rusefi_simulator.exe build FAILE
 STM_ARCH="stm32f407"
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
 
-FOLDER="snapshot_${TIMESTAMP}_${STM_ARCH}_rusefi"
+if [ "$2" = "true" ]; then
+  FOLDER="rusefi.${1}.${STM_ARCH}"
+else
+  FOLDER="rusefi.snapshot.${STM_ARCH}"
+fi
 echo "$SCRIPT_NAME: folder variable1=$FOLDER"
 export FOLDER="temp/$FOLDER"
 echo "$SCRIPT_NAME: folder variable3=$FOLDER"
