@@ -327,14 +327,12 @@ public class LogicdataStreamFile extends StreamFile {
 		stream.writeVarLength(chLastState);
 
 		int chFlag = (numEdges == 0) ? FLAG_EMPTY : (useLongDeltas ? FLAG_NOTEMPTY_LONG : FLAG_NOTEMPTY);
-		int idx = 1;
 		stream.writeVarLength(chFlag);
 
 		if (ch == 0) {
 			stream.writeVarLength(0);
 			stream.writeVarLength(BLOCK);
 			write(0, 11);
-
 			if (useLongDeltas) {
 				stream.writeVarLength(BLOCK);
 				write(0, 6);
@@ -358,14 +356,12 @@ public class LogicdataStreamFile extends StreamFile {
 
 		if (ch == 0) {
 			stream.writeVarLength(BLOCK);
-
 			write(0, 6);
 			if (!useLongDeltas) {
 				stream.writeVarLength(BLOCK);
 				write(0, 6);
 			}
 			stream.writeVarLength(BLOCK);
-
 		} else {
 			write(0, 4);
 			if (!useLongDeltas) {
