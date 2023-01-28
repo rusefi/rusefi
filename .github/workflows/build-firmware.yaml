@@ -286,6 +286,9 @@ jobs:
             skip-rate: 95
 
     steps:
+    - name: Check branch name
+      if: ${{ contains(github.ref_name, '.') }}
+      run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
     - name: Execution throttle early exit
       # Don't skip any jobs if this workflow was run manually.
       if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' }}
@@ -444,6 +447,9 @@ jobs:
   build-primary-bundle:
     runs-on: ubuntu-latest
     steps:
+    - name: Check branch name
+      if: ${{ contains(github.ref_name, '.') }}
+      run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
     - uses: actions/checkout@v3
       with:
         submodules: recursive
