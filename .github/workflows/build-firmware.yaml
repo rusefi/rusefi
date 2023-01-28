@@ -303,6 +303,7 @@ jobs:
         git submodule update --init --depth=1 firmware/ChibiOS
         git submodule update --init --depth=1 firmware/ChibiOS-Contrib
         git submodule update --init --depth=1 firmware/libfirmware
+        git submodule update --init --depth=1 firmware/ext/lua
 
     - uses: actions/setup-java@v3
       if: ${{ env.skip != 'true' }}
@@ -463,6 +464,7 @@ jobs:
         git submodule update --init --depth=1 firmware/ChibiOS
         git submodule update --init --depth=1 firmware/ChibiOS-Contrib
         git submodule update --init --depth=1 firmware/libfirmware
+        git submodule update --init --depth=1 firmware/ext/lua
 
     - uses: actions/setup-java@v3
       with:
