@@ -6,25 +6,25 @@ import org.jetbrains.annotations.Nullable;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.FileSystemNotFoundException;
 import java.util.Date;
 
 public class BundleUtil {
-    private static final String BUNDLE_NAME_FILE = "../bundle_name.txt";
-
     /**
      * @return null in case of error
      */
     @Nullable
     public static String readBundleFullName() {
         try {
-            BufferedReader r = new BufferedReader(new FileReader(BUNDLE_NAME_FILE));
-            String fullName = r.readLine();
-            fullName = fullName.trim();
+            Path path = Paths.get("..");
+            String fullName = path.getFileName().toString();
             if (fullName.length() < 3)
                 return null; // just paranoia check
             return fullName;
-        } catch (IOException e) {
-            System.err.println(new Date() + ": BundleUtil: Error reading " + BUNDLE_NAME_FILE);
+        } catch (FileSystemNotFoundException e) {
+            System.err.println(new Date() + ": BundleUtil: Error reading bundle name");
             return null;
         }
     }

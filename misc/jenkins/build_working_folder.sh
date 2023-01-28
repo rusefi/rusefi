@@ -19,7 +19,6 @@ pwd
 # This working folder name starts with 'temp/'
 echo "$SCRIPT_NAME: Working folder: $FOLDER"
 mkdir $FOLDER
-echo $BUNDLE_FULL_NAME > $FOLDER/bundle_name.txt
 
 CONSOLE_FOLDER="$FOLDER/console"
 DRIVERS_FOLDER="$FOLDER/drivers"
