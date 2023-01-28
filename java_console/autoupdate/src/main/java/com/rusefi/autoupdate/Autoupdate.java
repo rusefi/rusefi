@@ -82,7 +82,7 @@ public class Autoupdate {
 
     private static void handleBundle(String bundleFullName, UpdateMode mode, String baseUrl) {
         try {
-            String boardName = bundleFullName.split(".")[2]
+            String boardName = bundleFullName.split(".")[2];
             String zipFileName = "rusefi_bundle_" + boardName + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
             System.out.println("Remote file " + zipFileName);
