@@ -297,6 +297,11 @@ jobs:
     - uses: actions/checkout@v3
       if: ${{ env.skip != 'true' }}
 
+    - name: Checkout Submodules
+      run: |
+        git checkout --init firmware/ChibiOS
+        git checkout --init firmware/ChibiOS-Contrib
+
     - uses: actions/setup-java@v3
       if: ${{ env.skip != 'true' }}
       with:
@@ -448,7 +453,14 @@ jobs:
     - name: Check branch name
       if: ${{ contains(github.ref_name, '.') }}
       run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
+
     - uses: actions/checkout@v3
+
+    - name: Checkout Submodules
+      run: |
+        git checkout --init firmware/ChibiOS
+        git checkout --init firmware/ChibiOS-Contrib
+
     - uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
