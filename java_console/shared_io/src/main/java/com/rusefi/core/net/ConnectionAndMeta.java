@@ -13,6 +13,7 @@ import java.util.Objects;
 public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
     public static final String BASE_URL_LATEST = "https://rusefi.com/build_server/autoupdate/";
+    public static final String BASE_URL_LTS = "https://rusefi.com/build_server/lts/%s/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
     public static final int CENTUM = 100;
