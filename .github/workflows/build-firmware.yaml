@@ -306,6 +306,7 @@ jobs:
         git submodule update --init --depth=1 firmware/ext/lua
         git submodule update --init --depth=1 firmware/ext/uzlib
         git submodule update --init --depth=1 firmware/controllers/lua/luaaa
+        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
 
     - uses: actions/setup-java@v3
       if: ${{ env.skip != 'true' }}
@@ -469,6 +470,7 @@ jobs:
         git submodule update --init --depth=1 firmware/ext/lua
         git submodule update --init --depth=1 firmware/ext/uzlib
         git submodule update --init --depth=1 firmware/controllers/lua/luaaa
+        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
 
     - uses: actions/setup-java@v3
       with:
