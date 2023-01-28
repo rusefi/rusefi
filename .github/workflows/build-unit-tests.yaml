@@ -12,9 +12,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        submodules: recursive
-        fetch-depth: 0
 
     - name: Discover cores
       if: ${{ matrix.os != 'macos-latest' }}
