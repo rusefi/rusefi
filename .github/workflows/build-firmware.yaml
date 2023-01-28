@@ -299,8 +299,8 @@ jobs:
 
     - name: Checkout Submodules
       run: |
-        git checkout --init firmware/ChibiOS
-        git checkout --init firmware/ChibiOS-Contrib
+        git submodule update --init --depth=1 firmware/ChibiOS
+        git submodule update --init --depth=1 firmware/ChibiOS-Contrib
 
     - uses: actions/setup-java@v3
       if: ${{ env.skip != 'true' }}
@@ -458,8 +458,8 @@ jobs:
 
     - name: Checkout Submodules
       run: |
-        git checkout --init firmware/ChibiOS
-        git checkout --init firmware/ChibiOS-Contrib
+        git submodule update --init --depth=1 firmware/ChibiOS
+        git submodule update --init --depth=1 firmware/ChibiOS-Contrib
 
     - uses: actions/setup-java@v3
       with:
