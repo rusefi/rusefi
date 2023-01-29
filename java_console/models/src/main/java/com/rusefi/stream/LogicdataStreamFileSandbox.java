@@ -16,11 +16,7 @@ public class LogicdataStreamFileSandbox {
         events.add(new CompositeEvent(20, true, false, true, false, false, false));
         events.add(new CompositeEvent(30, false, false, false, false, false, false));
 
-        /**
-         * works with 31000
-         * does not work with 63000
-         */
-        for (int i = 0; i < 31000; i++) {
+        for (int i = 0; i < 63000; i++) {
 
             timestamp = 100 + i * 1000;
 
