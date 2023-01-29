@@ -24,6 +24,14 @@ dependencies {
     testImplementation global_libs.mockito
 }
 
+compileJava.doLast {
+    jar.manifest {
+        attributes(
+                'Built-Date': new Date().toString()
+        )
+    }
+}
+
 // yes nasty sorry
 evaluationDependsOn(':core_ui')
 evaluationDependsOn(':core_io')
