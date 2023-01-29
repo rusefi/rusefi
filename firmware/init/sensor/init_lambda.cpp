@@ -7,7 +7,10 @@
 
 struct GetAfrWrapper {
 	float getLambda() {
-		return getAfr() / 14.7f;
+		return getAfr(SensorType::Lambda1) / 14.7f;
+	};
+	float getLambda2() {
+		return getAfr(SensorType::Lambda2) / 14.7f;
 	}
 };
 
@@ -16,6 +19,11 @@ static GetAfrWrapper afrWrapper;
 static FunctionPointerSensor lambdaSensor(SensorType::Lambda1,
 []() {
 	return afrWrapper.getLambda();
+});
+
+static FunctionPointerSensor lambdaSensor2(SensorType::Lambda2,
+[]() {
+	return afrWrapper.getLambda2();
 });
 
 #include "AemXSeriesLambda.h"
@@ -54,4 +62,5 @@ void initLambda() {
 #endif
 
 	lambdaSensor.Register();
+	lambdaSensor2.Register();
 }
