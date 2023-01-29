@@ -1,14 +1,14 @@
 pins:
 
-  - pin: 4D
+  - pin: 23D
     function: +5v sensors
 
-  - pin: 5D
+  - pin: 24D
     function: Analog Ground
     color: black
     type: gnd
 
-  - pin: 8D
+  - pin: 14D
     # H144_IN_AUX3 + 16 = 15 + 16
     id: EFI_ADC_31
     class: analog_inputs
@@ -16,7 +16,7 @@ pins:
     ts_name: 8D - AN4
     color: orange
 
-  - pin: 9D
+  - pin: 15D
     # H144_IN_AUX4
     id: EFI_ADC_7
     class: analog_inputs
@@ -24,7 +24,7 @@ pins:
     ts_name: 9D - AN5
     color: orange
 
-  - pin: 10D
+  - pin: 16D
     # H144_IN_AUX4 + 16 = 7 + 16
     id: EFI_ADC_23
     class: analog_inputs
@@ -32,27 +32,27 @@ pins:
     ts_name: 10D - AN6
     color: orange
 
-  - pin: 22D
+  - pin: 3D
     function: CAN2 bus high (CANH)
     type: can
     color: green
 
-  - pin: 23D
+  - pin: 4D
     function: CAN2 bus low (CANL)
     type: can
     color: green
 
-  - pin: 24D
+  - pin: 5D
     function: CAN1 bus high (CANH)
     type: can
     color: green
 
-  - pin: 25D
+  - pin: 6D
     function: CAN1 bus low (CANL)
     type: can
     color: green
 
-  - pin: 26D
+  - pin: 7D
     function: Power GND
     type: gnd
 
