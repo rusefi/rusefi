@@ -14,7 +14,6 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Checkout Submodules
-      if: ${{ env.skip != 'true' }}
       run: |
         git submodule update --init --depth=1 unit_tests/googletest
         git submodule update --init --depth=1 firmware/libfirmware
