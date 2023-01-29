@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.InvalidPathException;
 import java.util.Date;
 
 public class BundleUtil {
@@ -18,12 +18,12 @@ public class BundleUtil {
     @Nullable
     public static String readBundleFullName() {
         try {
-            Path path = Paths.get("..");
-            String fullName = path.getFileName().toString();
+            Path path = Paths.get("").toAbsolutePath();
+            String fullName = path.getParent().getFileName().toString();
             if (fullName.length() < 3)
                 return null; // just paranoia check
             return fullName;
-        } catch (FileSystemNotFoundException e) {
+        } catch (InvalidPathException e) {
             System.err.println(new Date() + ": BundleUtil: Error reading bundle name");
             return null;
         }
