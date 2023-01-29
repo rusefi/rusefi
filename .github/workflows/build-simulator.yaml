@@ -10,6 +10,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Checkout Submodules
+      run: |
+        git submodule update --init --depth=1 firmware/ChibiOS
+        git submodule update --init --depth=1 firmware/ChibiOS-Contrib
+
     - uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
