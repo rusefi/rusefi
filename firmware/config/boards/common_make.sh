@@ -70,5 +70,3 @@ ls -l build
 
 echo "$SCRIPT_NAME: deliver folder content:"
 ls -l deliver
-
-bash config/boards/clean_env_variables.sh
