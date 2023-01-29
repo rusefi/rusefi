@@ -15,6 +15,8 @@ jobs:
         git submodule update --init --depth=1 firmware/ChibiOS
         git submodule update --init --depth=1 firmware/ChibiOS-Contrib
         git submodule update --init --depth=1 firmware/libfirmware
+        git submodule update --init --depth=1 firmware/ext/lua
+        git submodule update --init --depth=1 firmware/controllers/lua/luaaa
 
     - uses: actions/setup-java@v3
       with:
