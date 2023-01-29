@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jan 29 01:02:07 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jan 29 10:16:41 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -992,7 +992,6 @@ public class Fields {
 	public static final int sensor_chart_e_SC_RPM_ACCEL = 3;
 	public static final int sensor_chart_e_SC_TRIGGER = 1;
 	public static final int SENT_INPUT_COUNT = 1;
-	public static final int SIGNATURE_HASH = 1388771522;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1202,7 +1201,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.01.29.all.1388771522";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.01.29.all.2319868418";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1300;
@@ -1410,7 +1409,8 @@ public class Fields {
 	public static final Field CAMINPUTS3 = Field.create("CAMINPUTS3", 504, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field CAMINPUTS4 = Field.create("CAMINPUTS4", 506, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field AFR_HWCHANNEL = Field.create("AFR_HWCHANNEL", 508, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field AFR_ALIGNMENTFILL_AT_1 = Field.create("AFR_ALIGNMENTFILL_AT_1", 509, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field AFR_HWCHANNEL2 = Field.create("AFR_HWCHANNEL2", 509, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field AFR_ALIGNMENTFILL_AT_2 = Field.create("AFR_ALIGNMENTFILL_AT_2", 510, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field AFR_V1 = Field.create("AFR_V1", 512, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field AFR_VALUE1 = Field.create("AFR_VALUE1", 516, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field AFR_V2 = Field.create("AFR_V2", 520, FieldType.FLOAT).setBaseOffset(0);
@@ -2870,7 +2870,8 @@ public class Fields {
 	CAMINPUTS3,
 	CAMINPUTS4,
 	AFR_HWCHANNEL,
-	AFR_ALIGNMENTFILL_AT_1,
+	AFR_HWCHANNEL2,
+	AFR_ALIGNMENTFILL_AT_2,
 	AFR_V1,
 	AFR_VALUE1,
 	AFR_V2,

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jan 24 15:35:35 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jan 29 10:15:49 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -499,11 +499,15 @@ struct afr_sensor_s {
 	 */
 	adc_channel_e hwChannel;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 1
 	 */
-	uint8_t alignmentFill_at_1[3];
+	adc_channel_e hwChannel2;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 2
+	 */
+	uint8_t alignmentFill_at_2[2];
 	/**
 	volts
 	 * offset 4
@@ -5243,4 +5247,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22368);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jan 24 15:35:35 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jan 29 10:15:49 UTC 2023
