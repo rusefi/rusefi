@@ -18,6 +18,7 @@ jobs:
       run: |
         git submodule update --init --depth=1 unit_tests/googletest
         git submodule update --init --depth=1 firmware/libfirmware
+        git submodule update --init --depth=1 firmware/ext/lua
 
     - name: Discover cores
       if: ${{ matrix.os != 'macos-latest' }}
