@@ -20,6 +20,7 @@ jobs:
         git submodule update --init --depth=1 firmware/libfirmware
         git submodule update --init --depth=1 firmware/ext/lua
         git submodule update --init --depth=1 firmware/controllers/lua/luaaa
+        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
 
     - name: Discover cores
       if: ${{ matrix.os != 'macos-latest' }}
