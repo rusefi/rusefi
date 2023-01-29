@@ -12,6 +12,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Checkout Submodules
+      run: |
+        git submodule update --init --depth=1 hardware/rusefi_lib
+
     - name: Install sshpass, kicad, and tk bindings
       run: |
         sudo gem install apt-spy2 && sudo time apt-spy2 fix --commit
