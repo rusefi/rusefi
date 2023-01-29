@@ -26,4 +26,3 @@ cd ..
 touch bootloader_storage.c
 
 pwd
-bash ../config/boards/clean_env_variables.sh
