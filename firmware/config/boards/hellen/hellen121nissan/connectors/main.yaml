@@ -110,8 +110,8 @@ pins:
   - pin: 33a
     function: Cam Sensor Right
 # IN_CAM_R IN_AUX4 AIN20 A20
-    id: [A7]
-    class: [event_inputs]
+    id: A7
+    class: event_inputs
     ts_name: 33 - Cam Right
     
   - pin: 34a
