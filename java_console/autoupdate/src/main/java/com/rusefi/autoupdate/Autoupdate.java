@@ -40,8 +40,8 @@ public class Autoupdate {
                 System.out.println("Snapshot requested");
                 if (bundleFullName != null) {
                     System.out.println("Handling " + bundleFullName);
-                    String branchName = bundleFullName.split(".")[1];
-                    if ( branchName == "snapshot" ) {
+                    String branchName = bundleFullName.split("\\.")[1];
+                    if ( branchName.equals("snapshot") ) {
                         handleBundle(bundleFullName, mode, ConnectionAndMeta.BASE_URL_LATEST);
                     } else {
                         handleBundle(bundleFullName, mode, String.format(ConnectionAndMeta.BASE_URL_LTS, branchName));
@@ -82,7 +82,7 @@ public class Autoupdate {
 
     private static void handleBundle(String bundleFullName, UpdateMode mode, String baseUrl) {
         try {
-            String boardName = bundleFullName.split(".")[2];
+            String boardName = bundleFullName.split("\\.")[2];
             String zipFileName = "rusefi_bundle_" + boardName + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
             System.out.println("Remote file " + zipFileName);
