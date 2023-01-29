@@ -296,8 +296,19 @@ jobs:
 
     - uses: actions/checkout@v3
       if: ${{ env.skip != 'true' }}
-      with:
-        submodules: recursive
+
+    - name: Checkout Submodules
+      if: ${{ env.skip != 'true' }}
+      run: |
+        git submodule update --init --depth=1 firmware/ChibiOS
+        git submodule update --init --depth=1 firmware/ChibiOS-Contrib
+        git submodule update --init --depth=1 firmware/libfirmware
+        git submodule update --init --depth=1 firmware/ext/lua
+        git submodule update --init --depth=1 firmware/ext/uzlib
+        git submodule update --init --depth=1 firmware/ext/openblt
+        git submodule update --init --depth=1 firmware/controllers/lua/luaaa
+        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
+        git submodule update --init --depth=1 java_console/luaformatter
 
     - uses: actions/setup-java@v3
       if: ${{ env.skip != 'true' }}
@@ -450,9 +461,21 @@ jobs:
     - name: Check branch name
       if: ${{ contains(github.ref_name, '.') }}
       run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
+
     - uses: actions/checkout@v3
-      with:
-        submodules: recursive
+
+    - name: Checkout Submodules
+      run: |
+        git submodule update --init --depth=1 firmware/ChibiOS
+        git submodule update --init --depth=1 firmware/ChibiOS-Contrib
+        git submodule update --init --depth=1 firmware/libfirmware
+        git submodule update --init --depth=1 firmware/ext/lua
+        git submodule update --init --depth=1 firmware/ext/uzlib
+        git submodule update --init --depth=1 firmware/ext/openblt
+        git submodule update --init --depth=1 firmware/controllers/lua/luaaa
+        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
+        git submodule update --init --depth=1 java_console/luaformatter
+
     - uses: actions/setup-java@v3
       with:
         distribution: 'zulu'

@@ -10,9 +10,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        submodules: recursive
-        fetch-depth: 0
+
+    - name: Checkout Submodules
+      run: |
+        git submodule update --init --depth=1 hardware/InteractiveHtmlBom
 
     - name: Install prerequisite software
       run: |

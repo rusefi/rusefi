@@ -12,8 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        submodules: recursive
-        fetch-depth: 0
+        fetch-depth: 2
+
+    - name: Checkout Submodules
+      run: |
+        git submodule update --init --depth=1 hardware/rusefi_lib
 
     - name: Install sshpass, kicad, and tk bindings
       run: |

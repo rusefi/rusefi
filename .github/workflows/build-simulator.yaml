@@ -9,8 +9,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        submodules: recursive
+
+    - name: Checkout Submodules
+      run: |
+        git submodule update --init --depth=1 firmware/ChibiOS
+        git submodule update --init --depth=1 firmware/ChibiOS-Contrib
+        git submodule update --init --depth=1 firmware/libfirmware
+        git submodule update --init --depth=1 firmware/ext/lua
+        git submodule update --init --depth=1 firmware/controllers/lua/luaaa
+        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
+
     - uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
