@@ -2,5 +2,11 @@ plugins {
     id 'java'
 }
 
+apply from: '../../android/dependencies.gradle'
+
 // TODO: rename folder to core_io
 // this CORE module cannot depend on model/ini!
+
+dependencies {
+    testImplementation global_libs.junit
+}

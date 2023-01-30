@@ -35,4 +35,13 @@ public class BundleUtil {
         bundle = bundle == null ? "unknown bundle" : bundle;
         return bundle;
     }
+
+    public static String getBundleTarget(String s) {
+        if (s == null)
+            return null;
+        int lastDot = s.lastIndexOf('.');
+        if (lastDot == -1)
+            throw new IllegalStateException("Dot expected somewhere in [" + s + "]");
+        return s.substring(lastDot + 1);
+    }
 }
