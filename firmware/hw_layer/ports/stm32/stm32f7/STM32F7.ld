@@ -26,7 +26,7 @@
  */
 
  /* TODO: 512k flash limit is a mitigation for https://github.com/rusefi/rusefi/issues/3566 and https://github.com/rusefi/rusefi/issues/3775 */
-flash_size = DEFINED(FLASH_SIZE) ? FLASH_SIZE : 768k;
+flash_size = DEFINED(FLASH_SIZE) ? FLASH_SIZE : 512k;
 
 /* OpenBLT <-> main FW shared area */
 _OpenBLT_Shared_Params_Size = DEFINED(BOOTLOADER) ? 16 : 0;
