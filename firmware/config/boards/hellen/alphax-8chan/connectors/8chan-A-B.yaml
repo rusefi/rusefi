@@ -85,6 +85,14 @@ pins:
     ts_name: 13A - Ignition 1
     color: yellow
 
+  - pin: 14A
+    # H144_IN_CRANK_ANALOG
+    id: EFI_ADC_9
+    class: analog_inputs
+    function: Aux Analog 1
+    ts_name: 14A - Analog 1
+    color: orange
+
   - pin: 15A
     # H144_IN_IAT AIN14 PC3
     id: EFI_ADC_13
@@ -139,6 +147,21 @@ pins:
     ts_name: 21A - VVT control 1
     color: blue
 
+  - pin: 22A
+    # IN_MAP1
+    id: EFI_ADC_10
+    class: analog_inputs
+    function: Aux Analog 22
+    ts_name: 22A - Analog 22
+    color: orange
+
+  - pin: 23A
+    function: Hall Input 1
+    # IN_CAM
+    id: A6
+    class: event_inputs
+    ts_name: 23A - Hall Input 1
+
   - pin: 24A
     function: Analog Ground
     color: black
@@ -159,15 +182,29 @@ pins:
     type: etb
     color: purple
 
+  - pin: 30A
+    function: Hall Input 2
+    # IN_DIG10
+    id: E14
+    class: event_inputs
+    ts_name: 30A - Hall Input 2
+
+  - pin: 31A
+    function: Hall Input 2
+    # IN_DIG11
+    id: E15
+    class: event_inputs
+    ts_name: 31A - Hall Input 3
+
   - pin: 32A
     function: +5v sensors
 
-  - pin: 33C
+  - pin: 33A
     # H144_IN_AUX3
     id: EFI_ADC_15
     class: analog_inputs
     function: Analog 3
-    ts_name: 33C - AN3
+    ts_name: 33A - AN3
     color: orange
 
 
@@ -182,6 +219,21 @@ pins:
     ts_name: Battery Sense
     type: 12v
 
+  - pin: 3B
+    function: WBO1 cal R green 5
+
+  - pin: 4B
+    function: WBO1 IP red 1
+
+  - pin: 5B
+    function: WBO1 VM yellow 2
+
+  - pin: 6B
+    function: WBO1 VS black 6
+
+  - pin: 7B
+    function: WBO1 heater white 3
+
   - pin: 8B
     # H144_OUT_IO10
     id: G12
@@ -190,6 +242,22 @@ pins:
     function: Main relay control
     type: ls
     color: purple
+
+  - pin: 9B
+    function: WBO2 cal R green 5
+
+  - pin: 10B
+    function: WBO2 IP red 1
+
+  - pin: 11B
+    function: WBO2 VM yellow 2
+
+  - pin: 12B
+    function: WBO2 VS black 6
+
+  - pin: 13B
+    function: WBO2 heater white 3
+
 
   - pin: 26B
     function: Power GND
