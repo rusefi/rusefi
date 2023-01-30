@@ -1,25 +1,21 @@
 pins:
-  - pin: 25C
-    function: Analog Ground
-    color: black
+  - pin: 1C
+    function: ETB negative
+    type: etb
+    color: purple
+
+  - pin: 6C
+    # H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: PPS2 Sensor Input
+    ts_name: 31C - PPS2
+    color: orange
+
+
+  - pin: 9C
+    function: Power GND
     type: gnd
-
-
-  - pin: 31C
-    # H144_IN_IAT + 16 = 14 + 16
-    id: EFI_ADC_30
-    class: analog_inputs
-    function: Temperature 3
-    ts_name: 6C - AT3
-    color: orange
-
-  - pin: 32C
-    # EFI_ADC_12 + 16 = 12 + 16
-    id: EFI_ADC_28
-    class: analog_inputs
-    function: Temperature 4
-    ts_name: 7C - AT4
-    color: orange
 
   - pin: 10C
     function: ETB positive
@@ -57,23 +53,27 @@ pins:
     type: gnd
 
 
-  - pin: 1C
-    function: ETB negative
-    type: etb
-    color: purple
+  - pin: 25C
+    function: Analog Ground
+    color: black
+    type: gnd
 
-  - pin: 6C
-    # H144_IN_AUX2
-    id: EFI_ADC_14
+
+  - pin: 31C
+    # H144_IN_IAT + 16 = 14 + 16
+    id: EFI_ADC_30
     class: analog_inputs
-    function: PPS2 Sensor Input
-    ts_name: 31C - PPS2
+    function: Temperature 3
+    ts_name: 6C - AT3
     color: orange
 
-
-  - pin: 9C
-    function: Power GND
-    type: gnd
+  - pin: 32C
+    # EFI_ADC_12 + 16 = 12 + 16
+    id: EFI_ADC_28
+    class: analog_inputs
+    function: Temperature 4
+    ts_name: 7C - AT4
+    color: orange
 
 info:
   title: AlphaX 8chan
