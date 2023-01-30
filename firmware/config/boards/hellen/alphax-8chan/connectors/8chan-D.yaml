@@ -1,11 +1,27 @@
 pins:
 
-  - pin: 23D
-    function: +5v sensors
+  - pin: 3D
+    function: CAN2 bus high (CANH)
+    type: can
+    color: green
 
-  - pin: 24D
-    function: Analog Ground
-    color: black
+  - pin: 4D
+    function: CAN2 bus low (CANL)
+    type: can
+    color: green
+
+  - pin: 5D
+    function: CAN1 bus high (CANH)
+    type: can
+    color: green
+
+  - pin: 6D
+    function: CAN1 bus low (CANL)
+    type: can
+    color: green
+
+  - pin: 7D
+    function: Power GND
     type: gnd
 
   - pin: 14D
@@ -32,28 +48,12 @@ pins:
     ts_name: 10D - AN6
     color: orange
 
-  - pin: 3D
-    function: CAN2 bus high (CANH)
-    type: can
-    color: green
+  - pin: 23D
+    function: +5v sensors
 
-  - pin: 4D
-    function: CAN2 bus low (CANL)
-    type: can
-    color: green
-
-  - pin: 5D
-    function: CAN1 bus high (CANH)
-    type: can
-    color: green
-
-  - pin: 6D
-    function: CAN1 bus low (CANL)
-    type: can
-    color: green
-
-  - pin: 7D
-    function: Power GND
+  - pin: 24D
+    function: Analog Ground
+    color: black
     type: gnd
 
 info:
