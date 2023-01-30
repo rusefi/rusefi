@@ -31,19 +31,22 @@ public class DfuHelper {
     }
 
     public static boolean sendDfuRebootCommand(JComponent parent, String signature, IoStream stream, StatusConsumer messages) {
-        RusEfiSignature s = SignatureHelper.parse(signature);
-        String bundleName = BundleUtil.readBundleFullName();
-        if (bundleName != null && s != null) {
+        RusEfiSignature controllerSignature = SignatureHelper.parse(signature);
+        String fileSystemBundleTarget = BundleUtil.getBundleTarget();
+        if (fileSystemBundleTarget != null && controllerSignature != null) {
+/*
+todo: fix https://github.com/rusefi/rusefi/issues/5016
             String signatureWithPrefix;
             if ("all".equals(s.getBundleTarget())) {
                 signatureWithPrefix = PREFIX;
             } else {
                 signatureWithPrefix = PREFIX + "_" + s.getBundleTarget();
             }
+*/
 
             // hack: QC firmware self-identifies as "normal" not QC firmware :(
-            if (!bundleName.equalsIgnoreCase(signatureWithPrefix) && !bundleName.contains("_QC_")) {
-                String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundleTarget(), bundleName);
+            if (!fileSystemBundleTarget.equalsIgnoreCase(controllerSignature.getBundleTarget()) && !fileSystemBundleTarget.contains("_QC_")) {
+                String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", controllerSignature.getBundleTarget(), fileSystemBundleTarget);
                 log.info(message);
 
                 SwingUtilities.invokeLater(() -> {

@@ -36,6 +36,10 @@ public class BundleUtil {
         return bundle;
     }
 
+    public static String getBundleTarget() {
+        return getBundleTarget(readBundleFullName());
+    }
+
     public static String getBundleTarget(String s) {
         if (s == null)
             return null;
