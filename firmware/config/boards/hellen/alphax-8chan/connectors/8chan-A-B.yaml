@@ -46,6 +46,19 @@ pins:
     color: black
     type: gnd
 
+  - pin: 8A
+    function: Crank VR
+    # USB1ID
+    id: A10
+    class: event_inputs
+    ts_name: 8A - Crank VR
+
+  - pin: 9A
+    function: Cam VR
+    # H144_IN_RES1
+    id: F9
+    class: event_inputs
+    ts_name: 9A - Cam VR
 
   - pin: 10A
     # H144_IGN_4
