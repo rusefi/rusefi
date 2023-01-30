@@ -12,6 +12,6 @@ public class SignatureHelperTest {
         RusEfiSignature s = SignatureHelper.parse("rusEFI master.2021.09.22.all.3378169541");
 
         assertEquals("master", s.getBranch());
-        assertEquals("all", s.getBundle());
+        assertEquals("all", s.getBundleTarget());
     }
 }

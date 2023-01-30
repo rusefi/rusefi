@@ -35,15 +35,15 @@ public class DfuHelper {
         String bundleName = BundleUtil.readBundleFullName();
         if (bundleName != null && s != null) {
             String signatureWithPrefix;
-            if ("all".equals(s.getBundle())) {
+            if ("all".equals(s.getBundleTarget())) {
                 signatureWithPrefix = PREFIX;
             } else {
-                signatureWithPrefix = PREFIX + "_" + s.getBundle();
+                signatureWithPrefix = PREFIX + "_" + s.getBundleTarget();
             }
 
             // hack: QC firmware self-identifies as "normal" not QC firmware :(
             if (!bundleName.equalsIgnoreCase(signatureWithPrefix) && !bundleName.contains("_QC_")) {
-                String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundle(), bundleName);
+                String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundleTarget(), bundleName);
                 log.info(message);
 
                 SwingUtilities.invokeLater(() -> {
