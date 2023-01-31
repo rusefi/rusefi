@@ -67,6 +67,12 @@ done
 
 #
 # TODO: it's time to kill the 'default' bundle concept and just live happily with explicit f407-discovery
+#
+# problem statement: it's desired that plain 'make' invocation compiles discovery binary
+# reality: while we have per-target signature*.h and rusefi*.ini we do not have matching per-target 'engine_configuration_generated_structures.h'
+# so for plain 'make' to produce f4 discovery we rely of file system engine_configuration_generated_structures.h being f4 discovery version
+#
+#
 # default config should be generated after normal custom boards so that it would be default
 # firmware/controllers/generated/rusefi_generated.h file which would be pushed into VCS
 ./gen_config_default.sh
