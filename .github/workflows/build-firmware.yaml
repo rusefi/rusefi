@@ -62,6 +62,7 @@ jobs:
             stm32f767_nucleo,
             stm32h743_nucleo,
             subaru_eg33_f7,
+            f407-discovery,
             f429-discovery,
             core8,
             48way,
@@ -260,6 +261,9 @@ jobs:
             folder: subaru_eg33
             ini-file: rusefi_subaru_eg33_f7.ini
             skip-rate: 50
+
+          - build-target: f407-discovery
+            folder: f407-discovery
 
           - build-target: f429-discovery
             folder: f429-discovery
