@@ -1,7 +1,7 @@
 # List of all the board related files.
-BOARDSRC = $(BOARD_DIR)/board_extra.c
+BOARDSRC = $(BOARD_DIR)/../board_extra.c
 
-BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
+BOARDCPPSRC = $(BOARD_DIR)/../board_configuration.cpp
 
 # Required include directories
 # Default to a release build - clear EXTRA_PARAMS from cmdline to build debug
