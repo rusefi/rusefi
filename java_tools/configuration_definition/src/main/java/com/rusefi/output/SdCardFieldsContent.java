@@ -1,5 +1,7 @@
 package com.rusefi.output;
 
+import com.rusefi.core.SensorCategory;
+
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 
@@ -39,6 +41,14 @@ public class SdCardFieldsContent {
     }
 
     private String getLine(ConfigField configField, String prefix, String name) {
+        String categoryStr = configField.getCategory();
+
+        if(categoryStr == null) {
+            categoryStr = "";
+        } else {
+            categoryStr = ", " + categoryStr;
+        }
+
         return "\t{" + home + "." + name +
                 ", "
                 + DataLogConsumer.getHumanGaugeName(prefix, configField) +
@@ -46,9 +56,7 @@ public class SdCardFieldsContent {
                 quote(configField.getUnits()) +
                 ", " +
                 configField.getDigits() +
-                ", " +
-                configField.getCategory() +
-
+                categoryStr +
                 "},\n";
     }
 
