@@ -33,7 +33,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - Electronic throttle supply voltage compensation, giving more consistent behavior as battery voltage changes #4838
- - VR trigger input oscilloscope for boards with "discrete VR" hardware (AlphaX ECUs, some Hellen) #4885
+ - VR trigger input oscilloscope for boards with "discrete VR" hardware (AlphaX ECUs, some Hellen) [#4885](https://github.com/rusefi/rusefi/issues/4885)
  - Jammed ETB detection #4873
  - RPM correction/multiplier for Accel Enrich #4760
  - Tooth logger writes to SD card #4897
