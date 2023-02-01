@@ -33,7 +33,7 @@ ALLINC += \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/config/engines \
-	$(PROJECT_DIR)/config/boards/ \
+	$(BOARDS_DIR) \
 	$(PROJECT_DIR)/hw_layer/algo \
     $(PROJECT_DIR)/init \
     $(PROJECT_DIR)/ext_algo \

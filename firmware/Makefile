@@ -164,8 +164,6 @@ MAKEFLAGS += ${NUMJOBS}
 # Project, sources and paths
 #
 
-BOARDS_DIR = $(PROJECT_DIR)/config/boards
-BOARD_DIR = $(BOARDS_DIR)/$(PROJECT_BOARD)
 
 include $(BOARD_DIR)/board.mk
 
