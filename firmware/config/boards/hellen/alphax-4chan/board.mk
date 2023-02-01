@@ -1,9 +1,7 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/alphax-4chan/board_configuration.cpp
-BOARDINC = $(BOARDS_DIR)/hellen/alphax-4chan
-
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
 # This board has trigger scope hardware!
