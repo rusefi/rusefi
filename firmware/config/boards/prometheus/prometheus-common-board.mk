@@ -3,6 +3,8 @@ BOARDSRC = $(BOARD_DIR)/../board_extra.c
 
 BOARDCPPSRC = $(BOARD_DIR)/../board_configuration.cpp
 
+BOARDINC += $(BOARD_DIR)/..
+
 # Required include directories
 # Default to a release build - clear EXTRA_PARAMS from cmdline to build debug
 ifeq ($(EXTRA_PARAMS),)
