@@ -1,5 +1,8 @@
 #!/bin/bash
 
+PROJECT_BOARD=$1
+PROJECT_CPU=$2
+
 # fail on error
 set -e
 
