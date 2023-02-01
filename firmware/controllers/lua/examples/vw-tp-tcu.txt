@@ -1,28 +1,13 @@
 -- J2819 TP2.0 vehicle diagnostics protocol
 -- very limited implementation
 -- this controls onCanRx rate as well!
-setTickRate(300)
+tickRate = 100
+
+setTickRate(tickRate)
 
 timeout = 3000
 
---cuType = 0x01  -- ECU
 cuType = 0x02 -- TCU
-
-
-if cuType == 0x01 then
-
-    cltSensor = Sensor.new("clt")
-    cltSensor : setTimeout(timeout)
-
-    iatSensor = Sensor.new("iat")
-    iatSensor : setTimeout(timeout)
-
-    rpmSensor = Sensor.new("rpm")
-    rpmSensor : setTimeout(timeout)
-
-    mapSensor = Sensor.new("map")
-    mapSensor : setTimeout(timeout)
-end
 
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
@@ -73,13 +58,11 @@ local sendCounter = 0
 local packetCounter = 1
 local payLoadIndex = 0
 
-local groups = { 2, 4, 31 }
--- todo: smarter array size calculation?
-local groupsSize = 3
-
 local groupIndex = 1
 
 withErrorCodes = 0
+
+byeByeStateCounter = 2
 
 function nextReq()
     local result = 0x10 + sendCounter
@@ -90,17 +73,25 @@ function nextReq()
     return result
 end
 
+function startTp()
+    sendCounter = 0
+    packetCounter = 1
+    payLoadIndex = 0
+    print("Starting TP with TCU")
+
+    txCan(1, VWTP_OUT, 0, { cuType, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
+end
+
 function requestErrorCodes()
-    		reqFirst = nextReq()
-            out = { reqFirst, 0x00, 0x04, 0x18, 0x02, 0xFF, 0x00 }
-            txCan(1, cuId, 0, out)
-            print("Requesting error codes " .. arrayToString(out))
+    out = { nextReq(), 0x00, 0x04, 0x18, 0x02, 0xFF, 0x00 }
+    txCan(1, cuId, 0, out)
+    print("Requesting error codes " .. arrayToString(out))
 end
 
 function requestEraseCodes()
     out = { nextReq(), 00, 0x03, 0x14, 0xFF, 0x00 }
-print("Request Code Erase")
-        txCan(1, cuId, 0, out)
+    txCan(1, cuId, 0, out)
+    print("Requesting to Erase Code(s)")
 end
 
 function onCanTester(bus, id, dlc, data)
@@ -108,29 +99,15 @@ function onCanTester(bus, id, dlc, data)
 
 	print('Got from tester ' ..arrayToString(data))
 
-
 	if data[1] == 0xA3 then
 		print ("A3 Keep-alive")
 		txCan(1, cuId, 0, { 0xA1, 0x0F, 0x8A, 0xFF, 0x4A, 0xFF })
 
-		groupIndex = groupIndex + 1
-		if groupIndex > groupsSize then
-			groupIndex = 1
-		end
-		groupId = groups[groupIndex]
-		print ("KA codes " .. withErrorCodes)
+		print ("Keep-alive withErrorCodes=" .. withErrorCodes)
 
         if withErrorCodes > 0 then
             requestEraseCodes()
         end
-
-		-- reqFirst = nextReq
-		--print("Requesting next group " ..groupId .." with counter " ..sendCounter)
-		--txCan(1, cuId, 0, { reqFirst, 0x00, 0x02, 0x21, groupId })
-
-
-
-
 
 		return
 	end
@@ -144,15 +121,14 @@ function onCanTester(bus, id, dlc, data)
 
 	if data[1] == 0xA8 then
 		print ("They said Bye-Bye")
+		byeByeStateCounter = 3 * tickRate
 		return
 	end
-
 
 	if data[1] == 0x10 and dlc == 5 then
 		ackPacket = 0xB0 + packetCounter
 		print ("Sending ACK Bx " ..ackPacket)
 		txCan(1, cuId, 0, { ackPacket })
-
 
         if data[3] == 2 and data[4] == 0x50 then
         	print('Got Hello2 Response ' ..arrayToString(data))
@@ -160,7 +136,6 @@ function onCanTester(bus, id, dlc, data)
             requestErrorCodes()
         end
 	end
-
 
 	top4 = math.floor(data[1] / 16)
 
@@ -179,7 +154,8 @@ function onCanTester(bus, id, dlc, data)
 		    if len ~= 2 then
 		        print("HAVE CODES " .. len)
 		        withErrorCodes = 1
-
+            else
+                withErrorCodes = 0
 		    end
 
 		end
@@ -213,8 +189,17 @@ end
 canRxAdd(VWTP_IN, onCanHello)
 canRxAdd(VWTP_TESTER, onCanTester)
 
-txCan(1, VWTP_OUT, 0, { cuType, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
+startTp()
 
 function onTick()
+
+    if byeByeStateCounter > 0 then
+        byeByeStateCounter = byeByeStateCounter - 1
+    end
+
+    if byeByeStateCounter == 1 then
+        startTp()
+    end
+
 end
 
