@@ -1,8 +1,6 @@
 # List of all the board related files.
-BOARDCPPSRC =  $(PROJECT_DIR)/config/boards/BB_V2/board_configuration.cpp \
-				$(PROJECT_DIR)/config/boards/proteus/adc_hack.cpp
-
-BOARDINC = $(PROJECT_DIR)/config/boards/BB_V2
+BOARDCPPSRC =  $(BOARD_DIR)/board_configuration.cpp \
+				$(BOARDS_DIR)/proteus/adc_hack.cpp
 
 # Override DEFAULT_ENGINE_TYPE
 DDEFS += -DSTM32F407xx

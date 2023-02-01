@@ -5,7 +5,7 @@ USE_FATFS = no
 USE_BOOTLOADER = no
 DEBUG_LEVEL_OPT= -O2
 
-CYPRESS_CONTRIB = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/OS
+CYPRESS_CONTRIB = $(BOARD_DIR)/OS
 
 GENERATED_ENUMS_DIR = $(BOARD_DIR)/config/controllers/algo
 
@@ -13,4 +13,4 @@ EXTRA_PARAMS += -DFIRMWARE_ID=\"cypress\" -DSHORT_BOARD_NAME=cypress
 # -nodefaultlibs -lc -lgcc -ltinyc
 
 # used by USE_SMART_BUILD
-CONFDIR = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)
+CONFDIR = $(BOARD_DIR)

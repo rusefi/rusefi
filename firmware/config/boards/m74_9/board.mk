@@ -1,7 +1,5 @@
 # List of all the board related files.
-BOARDCPPSRC = $(PROJECT_DIR)/config/boards/m74_9/board_configuration.cpp
-BOARDINC = $(PROJECT_DIR)/config/boards/m74_9
-
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::G14
 
 # This is an F429!

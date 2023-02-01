@@ -46,7 +46,7 @@ TOOL_PATH=$(TRGT)
 #|--------------------------------------------------------------------------------------|
 PROJECT_DIR=.
 OPENBLT_TRGT_DIR=$(PROJECT_DIR)/ext/openblt/Target
-OPENBLT_BOARD_DIR=$(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/openblt
+OPENBLT_BOARD_DIR=$(BOARD_DIR)/openblt
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	OPENBLT_PORT_DIR=$(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/openblt
 else ifeq ($(PROJECT_CPU),ARCH_STM32F7)
