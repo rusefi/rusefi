@@ -1,9 +1,7 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen64_miataNA6_94/board_configuration.cpp
-BOARDINC = $(BOARDS_DIR)/hellen/hellen64_miataNA6_94
-
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 # Set this if you want a default engine type other than normal hellen64_miataNA6_94
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
   VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_NA6

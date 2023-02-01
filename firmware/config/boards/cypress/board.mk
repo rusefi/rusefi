@@ -1,7 +1,5 @@
 # List of all the board related files.
 
-BOARD_DIR = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)
-
 # we have:
 # 	PDL_DEVICE_TYPE=PDL_TYPE3
 # 	PDL_MCU_INT_TYPE=PDL_FM4_INT_TYPE_B
@@ -12,7 +10,6 @@ BOARDSRC = $(BOARD_DIR)/board.c
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # Required include directories
-BOARDINC = $(BOARD_DIR)
 BOARDINC += $(BOARD_DIR)/config/controllers/algo
 
 BOARDINC += $(PDL_DIR)/driver $(PDL_DIR)/driver/gpio $(PDL_DIR)/driver/usb $(PDL_DIR)/driver/mfs $(PDL_DIR)/midware/usb/device

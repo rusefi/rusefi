@@ -164,7 +164,7 @@ MAKEFLAGS += ${NUMJOBS}
 # Project, sources and paths
 #
 
-
+BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
 
 # Include various ChibiOS mk files
@@ -378,10 +378,10 @@ ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 include $(RULESFILE)
 
 openblt:
-	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk
+	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk BOARD_DIR=$(BOARD_DIR) PROJECT_BOARD=$(PROJECT_BOARD) PROJECT_CPU=$(PROJECT_CPU)
 
 openblt_clean:
-	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk clean
+	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk clean BOARD_DIR=$(BOARD_DIR) PROJECT_BOARD=$(PROJECT_BOARD) PROJECT_CPU=$(PROJECT_CPU)
 
 # Enable precompiled header
 include rusefi_pch.mk

@@ -1,5 +1,3 @@
-BOARD_DIR = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)
-
 HALCONFDIR = $(BOARD_DIR)
 
 # List of all the board related files.
@@ -35,8 +33,6 @@ DDEFS += -DFIRMWARE_ID=\"s105\"
 DDEFS += -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
 
 # Required include directories
-BOARDINC = $(BOARD_DIR)
-
 # Shared variables
 # Add board's directory first in include dir list so files in board directory will be included instead of default
 ALLINC += $(BOARDINC)

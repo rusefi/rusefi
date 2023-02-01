@@ -1,13 +1,9 @@
-BOARD_DIR = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)
-
 HALCONFDIR = $(BOARD_DIR)
 
 # List of all the board related files.
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # Required include directories
-BOARDINC = $(BOARD_DIR)
-
 # STM32F429 has FSMC with SDRAM support
 DDEFS += -DFIRMWARE_ID=\"stm32f429\"
 IS_STM32F429 = yes

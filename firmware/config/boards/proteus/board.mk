@@ -1,8 +1,6 @@
 # List of all the board related files.
-BOARDCPPSRC =  $(PROJECT_DIR)/config/boards/proteus/board_configuration.cpp \
-				$(PROJECT_DIR)/config/boards/proteus/adc_hack.cpp
-
-BOARDINC = $(PROJECT_DIR)/config/boards/proteus
+BOARDCPPSRC =  $(BOARD_DIR)/board_configuration.cpp \
+				$(BOARD_DIR)/adc_hack.cpp
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   IS_STM32F429 = yes
