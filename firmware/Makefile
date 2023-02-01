@@ -164,9 +164,7 @@ MAKEFLAGS += ${NUMJOBS}
 # Project, sources and paths
 #
 
-BOARDS_DIR = $(PROJECT_DIR)/config/boards
-
-include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
+include $(BOARD_DIR)/board.mk
 
 # Include various ChibiOS mk files
 # Licensing files.
@@ -222,6 +220,7 @@ ifeq ($(USE_OPENBLT),yes)
 endif
 
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
+$(info BOARD_DIR:     $(BOARD_DIR))
 $(info PROJECT_CPU:   $(PROJECT_CPU))
 $(info CPU_HWLAYER:   $(CPU_HWLAYER))
 $(info CONFDIR:       $(CONFDIR))
