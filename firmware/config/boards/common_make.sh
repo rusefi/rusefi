@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#exporting for OpenBlt Makefile
-export PROJECT_BOARD=$1
-export PROJECT_CPU=$2
-
 # fail on error
 set -e
 
@@ -17,7 +13,7 @@ mkdir -p .dep
 make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
 [ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 if [ "$USE_OPENBLT" = "yes" ]; then
-  make openblt
+  make openblt PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
   [ -e build-openblt/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
 
