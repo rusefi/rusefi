@@ -164,6 +164,7 @@ MAKEFLAGS += ${NUMJOBS}
 # Project, sources and paths
 #
 
+BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
 
 # Include various ChibiOS mk files

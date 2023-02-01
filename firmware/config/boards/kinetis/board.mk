@@ -1,7 +1,5 @@
 # List of all the board related files.
 
-BOARD_DIR = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)
-
 BOARDSRC = $(BOARD_DIR)/board.c
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 

@@ -1,11 +1,9 @@
 # List of all the board related files.
-BOARDSRC = $(PROJECT_DIR)/config/boards/prometheus/board_extra.c
+BOARDSRC = $(BOARD_DIR)/board_extra.c
 
-BOARDCPPSRC = $(PROJECT_DIR)/config/boards/Prometheus/board_configuration.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # Required include directories
-BOARDINC = $(PROJECT_DIR)/config/boards/prometheus
-
 # Default to a release build - clear EXTRA_PARAMS from cmdline to build debug
 ifeq ($(EXTRA_PARAMS),)
 	EXTRA_PARAMS = -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE

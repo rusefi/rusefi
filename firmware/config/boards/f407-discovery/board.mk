@@ -1,5 +1,5 @@
 # List of all the board related files.
-BOARDCPPSRC = $(PROJECT_DIR)/config/boards/f407-discovery/board_extra.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_extra.cpp
 
 # MCU defines
 DDEFS += -DSTM32F407xx

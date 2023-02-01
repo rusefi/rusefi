@@ -1,16 +1,9 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/microrusefi/board_configuration.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
-# Target processor details
-ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-  BOARDINC  = $(BOARDS_DIR)/microrusefi
-  BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
-  BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
-else
-  BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
-endif
+BOARDINC  = $(BOARD_DIR)
 
 # see also openblt/board.mk STATUS_LED
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3

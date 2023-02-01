@@ -1,7 +1,5 @@
 # List of all the board related files.
-BOARDCPPSRC = $(PROJECT_DIR)/config/boards/nucleo_f429/board_configuration.cpp
-BOARDINC = $(PROJECT_DIR)/config/boards/nucleo_f429
-
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
 # Enable ethernet

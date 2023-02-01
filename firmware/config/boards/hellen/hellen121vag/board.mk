@@ -1,9 +1,7 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen121vag/board_configuration.cpp
-BOARDINC = $(BOARDS_DIR)/hellen/hellen121vag
-
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 # Set this if you want a default engine type other than normal hellen121vag
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
   VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_121_VAG_4_CYL

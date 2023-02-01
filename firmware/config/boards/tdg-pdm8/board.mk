@@ -1,5 +1,5 @@
 
-BOARDCPPSRC = $(PROJECT_DIR)/config/boards/tdg-pdm8/board_configuration.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 PROJECT_CPU = ARCH_STM32F4
 

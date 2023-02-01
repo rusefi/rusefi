@@ -7,8 +7,8 @@ USE_FATFS = no
 USE_BOOTLOADER = no
 DEBUG_LEVEL_OPT = -O2
 
-KINETIS_CONTRIB = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/OS
+KINETIS_CONTRIB = $(BOARD_DIR)/OS
 
 GENERATED_ENUMS_DIR = $(BOARD_DIR)/config/controllers/algo
 
-EXTRA_PARAMS += -DFIRMWARE_ID=\"kinetis\" -L$(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/libc -lgcc -ltinyc
+EXTRA_PARAMS += -DFIRMWARE_ID=\"kinetis\" -L$(BOARD_DIR)/libc -lgcc -ltinyc

@@ -1,9 +1,7 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen81/board_configuration.cpp
-BOARDINC = $(BOARDS_DIR)/hellen/hellen81
-
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
 # Add them all together
