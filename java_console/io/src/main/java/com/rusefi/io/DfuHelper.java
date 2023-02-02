@@ -34,16 +34,6 @@ public class DfuHelper {
         RusEfiSignature controllerSignature = SignatureHelper.parse(signature);
         String fileSystemBundleTarget = BundleUtil.getBundleTarget();
         if (fileSystemBundleTarget != null && controllerSignature != null) {
-/*
-todo: fix https://github.com/rusefi/rusefi/issues/5016
-            String signatureWithPrefix;
-            if ("all".equals(s.getBundleTarget())) {
-                signatureWithPrefix = PREFIX;
-            } else {
-                signatureWithPrefix = PREFIX + "_" + s.getBundleTarget();
-            }
-*/
-
             // hack: QC firmware self-identifies as "normal" not QC firmware :(
             if (!fileSystemBundleTarget.equalsIgnoreCase(controllerSignature.getBundleTarget()) && !fileSystemBundleTarget.contains("_QC_")) {
                 String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", controllerSignature.getBundleTarget(), fileSystemBundleTarget);
