@@ -10,6 +10,8 @@
 
 # rusEFI
 
+See [check.c](https://github.com/rusefi/rusefi/blob/master/firmware/check.c) for recommended version of GCC.
+
 Current binaries are always available on our [build server](http://rusefi.com/build_server/)
 
 [![paypal](https://img.shields.io/badge/%E2%99%A5%EF%B8%8Fdonate-orange)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YSSN35GWYS3A)
