@@ -55,7 +55,7 @@ pins:
     type: hs
     ts_name: Out 2
 
-  - pin: 10/20
+  - pin: 10
     id: PROTECTED_PIN_0
     class: outputs
     function: High Side Output
@@ -111,9 +111,28 @@ pins:
     type: av
     ts_name: Sense 2
 
-  - pin: 10/20
+  - pin: 20
     id: EFI_ADC_10
     class: analog_inputs
     function: Current Sense
     type: av
     ts_name: Sense 1
+
+info:
+  id: tdg-pdm8
+  title: tdg-pdm8
+  name: tdg-pdm8
+  image:
+    file: tdg-pdm8.jpg
+  pins:
+    - pin: 2
+      x: 232
+      y: 93
+
+    - pin: 10
+      x: 576
+      y: 93
+
+    - pin: 20
+      x: 576
+      y: 168
