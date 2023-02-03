@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jan 29 10:16:41 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Feb 03 01:27:29 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4400,7 +4400,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3889
 	 */
-	uint8_t unusedAlignmentFill_at_33[3];
+	uint8_t unusedA11lignmentFill_at_33[3];
 	/**
 	%
 	 * offset 3892
@@ -5247,4 +5247,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22368);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jan 29 10:16:41 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Feb 03 01:27:29 UTC 2023
