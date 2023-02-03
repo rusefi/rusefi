@@ -125,13 +125,33 @@ info:
   image:
     file: tdg-pdm8.jpg
   pins:
+    - pin: 1
+      x: 187
+      y: 93
+
     - pin: 2
       x: 232
+      y: 93
+
+    - pin: 9
+      x: 532
       y: 93
 
     - pin: 10
       x: 576
       y: 93
+
+    - pin: 11
+      x: 187
+      y: 168
+
+    - pin: 12
+      x: 232
+      y: 168
+
+    - pin: 19
+      x: 532
+      y: 168
 
     - pin: 20
       x: 576
