@@ -361,9 +361,7 @@ struct gppwm_channel
 	uint8_t offBelowDuty;Hysteresis: in on-off mode, turn the output off when the table value is below this duty.;"%", 1, 0, 0, 100, 0
 
 	gppwm_channel_e loadAxis;Selects the load axis to use for the table.;
-	uint8_t alignmentFill_map;;"unit", 1, 0, 0, 100, 0
-
-	uint8_t[GPPWM_LOAD_COUNT] loadBins;;"load", 1, 0, 0, 250, 0
+	int16_t[GPPWM_LOAD_COUNT] loadBins;;"load", 1, 0, -650, 650, 0
 	uint8_t[GPPWM_RPM_COUNT] autoscale rpmBins;;"RPM", 100, 0, 0, 25000, 0
 	uint8_t[GPPWM_RPM_COUNT x GPPWM_LOAD_COUNT] table;;"duty", 1, 0, 0, 100, 0
 end_struct
