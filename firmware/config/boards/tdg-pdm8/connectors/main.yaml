@@ -1,4 +1,7 @@
 pins:
+  - pin: 1
+    function: Ground
+
   - pin: 2
     id: EFI_ADC_4
     class: analog_inputs
@@ -61,6 +64,12 @@ pins:
     function: High Side Output
     type: hs
     ts_name: Out 1
+
+  - pin: 11
+    function: CAN Low
+
+  - pin: 12
+    function: CAN High
 
   - pin: 3/13
     id: EFI_ADC_9
