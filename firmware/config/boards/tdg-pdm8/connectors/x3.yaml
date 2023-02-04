@@ -1,0 +1,35 @@
+pins:
+  - pin: 1
+    function: 3v VDD
+
+  - pin: 2
+    function: SWD clock
+
+  - pin: 3
+    function: GND
+
+  - pin: 4
+    function: SWDIO
+
+info:
+  id: tdg-pdm8-x3
+  title: tdg-pdm8-x3
+  name: tdg-pdm8-x3
+  image:
+    file: tdg-pdm8-x3.jpg
+  pins:
+    - pin: 1
+      x: 43
+      y: 86
+
+    - pin: 2
+      x: 119
+      y: 75
+
+    - pin: 3
+      x: 195
+      y: 75
+
+    - pin: 4
+      x: 268
+      y: 75
