@@ -4344,7 +4344,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Off below duty", gppwm1_offBelowDuty, {gppwm1_pin != 0 && gppwm1_pwmFrequency == 0}
 		field = "Duty if error", gppwm1_dutyIfError, {gppwm1_pin != 0}
 		field = ""
-		field = "Load Axis", gppwm1_loadAxis, {gppwm1_pin != 0}
+		field = "X Axis", gppwm1_rpmAxis, {gppwm1_pin != 0}
+		field = "Y Axis", gppwm1_loadAxis, {gppwm1_pin != 0}
 		field = "Note", gpPwmNote1
 		field = ""
 		field = ""
@@ -4366,7 +4367,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Off below duty", gppwm2_offBelowDuty, {gppwm2_pin != 0 && gppwm2_pwmFrequency == 0}
 		field = "Duty if error", gppwm2_dutyIfError, {gppwm2_pin != 0}
 		field = ""
-		field = "Load Axis", gppwm2_loadAxis, {gppwm2_pin != 0}
+		field = "X Axis", gppwm2_rpmAxis, {gppwm2_pin != 0}
+		field = "Y Axis", gppwm2_loadAxis, {gppwm2_pin != 0}
 		field = "Note", gpPwmNote2
 		field = ""
 		field = ""
@@ -4388,7 +4390,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Off below duty", gppwm3_offBelowDuty, {gppwm3_pin != 0 && gppwm3_pwmFrequency == 0}
 		field = "Duty if error", gppwm3_dutyIfError, {gppwm3_pin != 0}
 		field = ""
-		field = "Load Axis", gppwm3_loadAxis, {gppwm3_pin != 0}
+		field = "X Axis", gppwm3_rpmAxis, {gppwm3_pin != 0}
+		field = "Y Axis", gppwm3_loadAxis, {gppwm3_pin != 0}
 		field = "Note", gpPwmNote3
 		field = ""
 		field = ""
@@ -4410,7 +4413,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Off below duty", gppwm4_offBelowDuty, {gppwm4_pin != 0 && gppwm4_pwmFrequency == 0}
 		field = "Duty if error", gppwm4_dutyIfError, {gppwm4_pin != 0}
 		field = ""
-		field = "Load Axis", gppwm4_loadAxis, {gppwm4_pin != 0}
+		field = "X Axis", gppwm4_rpmAxis, {gppwm4_pin != 0}
+		field = "Y Axis", gppwm4_loadAxis, {gppwm4_pin != 0}
 		field = "Note", gpPwmNote4
 		field = ""
 		field = ""
