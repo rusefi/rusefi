@@ -6,6 +6,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.MessagesPanel;
+import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
@@ -41,6 +42,11 @@ public class LuaScriptPanel {
 
         MessagesPanel mp = new MessagesPanel(null, config);
 
+        mp.getMessagesView().listener = message -> {
+            if (message.contains("BEEP"))
+                Toolkit.getDefaultToolkit().beep();
+        };
+
         writeButton.addActionListener(e -> {
             write();
             // resume messages on 'write new script to ECU'
@@ -57,7 +63,8 @@ public class LuaScriptPanel {
                     scriptText.setText(formatted);
                 } catch (Exception ignored) {
                     // todo: fix luaformatter no reason for exception
-                }            }
+                }
+            }
         });
 
         burnButton.addActionListener(e -> {

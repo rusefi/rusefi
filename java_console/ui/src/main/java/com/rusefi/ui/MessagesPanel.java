@@ -63,6 +63,10 @@ public class MessagesPanel {
         return messagesView.messages.getFont();
     }
 
+    public MessagesView getMessagesView() {
+        return messagesView;
+    }
+
     public void setFont(Font font, Node config) {
         messagesView.messages.setFont(font);
         config.setProperty(FONT_SIZE, font.getSize());

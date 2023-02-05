@@ -48,7 +48,7 @@ function onCanHello(bus, id, dlc, data)
 	print('Got Hello Response ' ..arrayToString(data))
 	cuId = data[6] * 256 + data[5]
 
-	print('From ECU ' ..cuId)
+	print('From *CU ' ..cuId)
     out = { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF }
 	print("Saying hello " .. arrayToString(out))
 	txCan(1, cuId, 0, out)
@@ -94,9 +94,15 @@ function requestEraseCodes()
     print("Requesting to Erase Code(s)")
 end
 
+function scheduleTpRestart()
+		byeByeStateCounter = 3 * tickRate
+end
+
+keepAliveCounter = 0
+
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
-
+    scheduleTpRestart()
 	print('Got from tester ' ..arrayToString(data))
 
 	if data[1] == 0xA3 then
@@ -107,6 +113,14 @@ function onCanTester(bus, id, dlc, data)
 
         if withErrorCodes > 0 then
             requestEraseCodes()
+        else
+            keepAliveCounter = keepAliveCounter + 1
+            if keepAliveCounter > 4 then
+                requestErrorCodes()
+
+                keepAliveCounter = 0
+            end
+
         end
 
 		return
@@ -121,7 +135,6 @@ function onCanTester(bus, id, dlc, data)
 
 	if data[1] == 0xA8 then
 		print ("They said Bye-Bye")
-		byeByeStateCounter = 3 * tickRate
 		return
 	end
 
@@ -198,6 +211,7 @@ function onTick()
     end
 
     if byeByeStateCounter == 1 then
+        scheduleTpRestart()
         startTp()
     end
 

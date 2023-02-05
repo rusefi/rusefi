@@ -25,6 +25,8 @@ public class MessagesView {
     protected final JTextPane messages = new JTextPane();
     public final JScrollPane messagesScroll = new JScrollPane(messages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
+    public Listener listener = Listener.VOID;
+
     public MessagesView(Node config) {
         this.config = config;
         messages.setEditable(false);
@@ -42,8 +44,10 @@ public class MessagesView {
             @Override
             public void onMessage(Class clazz, String message) {
                 final String date = DATE_FORMAT.format(new Date());
-                if (!isPaused)
+                if (!isPaused) {
                     append(date + ": " + clazz.getSimpleName() + ": " + message, clazz);
+                    listener.onMessage(message);
+                }
             }
         });
     }
@@ -124,5 +128,12 @@ does not work? maybe wrong UI colors since control is not editable?
 
     public boolean isPaused() {
         return isPaused;
+    }
+
+    public interface Listener {
+        Listener VOID = message -> {
+        };
+
+        void onMessage(String message);
     }
 }
