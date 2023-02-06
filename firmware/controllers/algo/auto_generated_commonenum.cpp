@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Jan 24 01:29:38 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Feb 06 13:14:54 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -390,6 +390,8 @@ case GPPWM_LuaGauge2:
   return "GPPWM_LuaGauge2";
 case GPPWM_Map:
   return "GPPWM_Map";
+case GPPWM_Rpm:
+  return "GPPWM_Rpm";
 case GPPWM_Tps:
   return "GPPWM_Tps";
 case GPPWM_VVT_1E:
