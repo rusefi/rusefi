@@ -9,42 +9,42 @@ pins:
     color: black
 
   - pin: A2
-    function: 'Fuel pump relay output / main 12V ignition on ??'
+    function: 'Fuel pump relay output / main 12V ignition on Socket "Under Lock" (Pin20), Engine STOP Switch (Pin1)'
     class: outputs   
     type: [gp_low, gp_pp]
     color: brown/red 
 
   - pin: A3
-    function: 'Injection Relay "Output (low)" ?? color yellow needs to be confirmed!'
+    function: 'Injection Relay (Pin87) and Security Relay (Pin30) Note: color yellow and "Output (low)" needs to be confirmed!'
     class: outputs
     type: ls
-    # note: ?? color yellow needs to be confirmed!
+    # todo: '?? color yellow and "Output (low)" needs to be confirmed!''
     color: red/yellow
 
 # gp_pp	General purpose Push-Pull	General purpose push-pull (low and high side) output,
 # 600mA	Bipolar IDLE stepper (IACV)
   - pin: A4
-    function: 'IACV (IDLE stepper coil A + or - ??)'
+    function: 'IACV (PinA) (IDLE stepper coil A) Note: polarity + or - ??) needs to be confirmed!'
     class: outputs
     type: gp_pp
     color: yellow
 
   - pin: A5
-    function: 'IACV (IDLE stepper coil A + or - ??)'
+    function: 'IACV (PinD) (IDLE stepper coil A) Note: polarity + or - ??) needs to be confirmed!'
     class: outputs
     type: gp_pp
     #ts_name: IACV
     color: orange/white
 
   - pin: A6
-    function: 'IACV (IDLE stepper coil B + or - ??)'
+    function: 'IACV (PinB) (IDLE stepper coil B) Note: polarity + or - ??) needs to be confirmed!'
     class: outputs
     type: gp_pp
     #ts_name: IACV
     color: brown/rosa
 
   - pin: A7
-    function: 'IACV (IDLE stepper coil B + or - ??)'
+    function: 'IACV (PinC) (IDLE stepper coil B) Note: polarity + or - ??) needs to be confirmed!'
     class: outputs
     type: gp_pp
     #ts_name: IACV
