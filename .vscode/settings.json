@@ -28,4 +28,7 @@
 		"hardware/": true,
 		"firmware/ChibiOS/demos": true,
 	},
+	"cSpell.words": [
+		"IACV"
+	],
 }
