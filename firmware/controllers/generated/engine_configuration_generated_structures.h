@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 06 13:15:51 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 06 23:07:19 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4374,33 +4374,39 @@ struct engine_configuration_s {
 	sec
 	 * offset 3944
 	 */
-	float alsMaxDuration;
+	int16_t ALSMaxDuration;
 	/**
 	C
-	 * offset 3948
+	 * offset 3946
 	 */
 	int8_t ALSMinCLT;
 	/**
 	C
-	 * offset 3949
+	 * offset 3947
 	 */
 	int8_t ALSMaxCLT;
 	/**
-	 * offset 3950
+	 * offset 3948
 	 */
 	uint8_t alsMinTimeBetween;
 	/**
-	 * offset 3951
+	 * offset 3949
 	 */
 	uint8_t alsEtbPosition;
 	/**
-	 * offset 3952
+	 * offset 3950
 	 */
 	uint8_t acRelayAlternatorDutyAdder;
 	/**
-	 * offset 3953
+	 * offset 3951
 	 */
 	uint8_t unusedA11lignmentFill_at_33[3];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 3954
+	 */
+	uint8_t alignmentFill_at_3954[2];
 	/**
 	%
 	 * offset 3956
@@ -5247,4 +5253,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 06 13:15:51 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 06 23:07:19 UTC 2023
