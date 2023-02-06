@@ -851,6 +851,15 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
+	table = IgnSkipTableALS, IgnSkipALS,  "Ignition Skip",   1
+      ;       constant, variable
+      xBins       = alsIgnSkiprpmBins,  RPMValue
+      yBins       = alsIgnSkipLoadBins,  TPSValue
+      zBins       = ALSIgnSkipTable
+	  gridHeight  = 4.0
+      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
+      upDownLabel = "(RICHER)", "(LEANER)"
+
 	table = baroCorrTbl,  baroCorrMap,  "Baro Correction",	1
 		;		constant, variable
 		xBins		= baroCorrRpmBins,  RPMValue
@@ -4242,6 +4251,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Switch Input",                     ALSActivatePin,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
 		field = "ALS Button inverted",				ALSActivateInverted,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
 		field = "ALS Button mode",                  ALSActivatePinMode,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
+		field = "ALS timeout",                      ALSMaxDuration,  {antiLagEnabled == 1}
 		field = "Max TPS",                          ALSMaxTPS,  {antiLagEnabled == 1}
 		field = "Min RPM",            	    		ALSMinRPM,  {antiLagEnabled == 1}
 		field = "Max RPM",                          ALSMaxRPM,  {antiLagEnabled == 1}
@@ -4249,9 +4259,9 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Max CLT",          	    		ALSMaxCLT,  {antiLagEnabled == 1}                 
 		field = "Idle Air Add",                     ALSIdleAdd, {useETBforIdleControl != 1 && antiLagEnabled == 1}
 		field = "ETB Air Add",                      ALSEtbAdd,  {useETBforIdleControl == 1 && antiLagEnabled == 1}
-		field = "Spark Skip Ratio",                 ALSSkipRatio,  {antiLagEnabled == 1}
 		panel = FuelAdderTableALS
 		panel = IgnRetardTableALS
+		panel = IgnSkipTableALS
 
 
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"

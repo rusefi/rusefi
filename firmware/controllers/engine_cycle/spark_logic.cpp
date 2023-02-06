@@ -500,11 +500,20 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 #endif // EFI_LAUNCH_CONTROL
 
 #if EFI_ANTILAG_SYSTEM && EFI_LAUNCH_CONTROL
+            if (engine->antilagController.isAntilagCondition) {
 			if (engine->ALSsoftSparkLimiter.shouldSkip()) {
 				continue;
 			}
-			auto ALSSkipRatio = engineConfiguration->ALSSkipRatio;
-            engine->ALSsoftSparkLimiter.setTargetSkipRatio(ALSSkipRatio);
+		}
+			float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
+		    engine->antilagController.timingALSSkip = interpolate3d(
+			config->ALSIgnSkipTable,
+			config->alsIgnSkipLoadBins, throttleIntent,
+			config->alsIgnSkiprpmBins, rpm
+		);
+
+			auto ALSSkipRatio = engine->antilagController.timingALSSkip;
+            engine->ALSsoftSparkLimiter.setTargetSkipRatio(ALSSkipRatio/100);
 #endif // EFI_ANTILAG_SYSTEM
 
 			scheduleSparkEvent(limitedSpark, event, rpm, edgeTimestamp, currentPhase, nextPhase);

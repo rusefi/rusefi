@@ -1546,7 +1546,7 @@ Gpio[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
 	int16_t ALSMinRPM;;"rpm", 1, 0, 0, 20000, 0
 	int16_t ALSMaxRPM;;"rpm", 1, 0, 0, 20000, 0
-float alsMaxDuration;;"sec", 1, 0, 0.01, 100, 2
+int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
 	int8_t ALSMinCLT;;"C", 1, 0, 0, 90, 0
 	int8_t ALSMaxCLT;;"C", 1, 0, 0, 105, 0
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
@@ -1555,7 +1555,7 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 	uint8_t[3] unusedA11lignmentFill_at_33
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
-	int ALSSkipRatio;;"", 1, 0, 0.1, 2, 1
+	float ALSSkipRatio;;"", 1, 0, 0, 1, 1
 	uint8_t ALSMaxDriverThrottleIntent;;"%", 1, 0, 0, 10, 0
 	pin_input_mode_e ALSActivatePinMode;
 
@@ -1775,13 +1775,17 @@ uint8_t[6 x 6] autoscale maxKnockRetardTable;;"deg", 0.25, 0, 0, 30, 2
 uint8_t[6] maxKnockRetardLoadBins;;"%", 1, 0, 0, 250, 0
 uint8_t[6] autoscale maxKnockRetardRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
-int16_t[4 x 4] autoscale ALSTimingRetardTable;;"deg", 0.1, 0, -720, 720, 1
+int16_t[4 x 4] autoscale ALSTimingRetardTable;;"deg", 0.1, 0, -60, 0, 1
 uint16_t[4] alsIgnRetardLoadBins;;"TPS", 1, 0, 0, 100, 0
 uint16_t[4] alsIgnRetardrpmBins;;"RPM",	   1, 0, 0, 25000, 0
 
-int16_t[4 x 4] autoscale ALSFuelAdjustment;;"percent", 0.1, 0, 0, 500, 1
+int16_t[4 x 4] autoscale ALSFuelAdjustment;;"percent", 0.1, 0, 0, 50, 1
 uint16_t[4] alsFuelAdjustmentLoadBins;;"TPS", 1, 0, 0, 100, 0
 uint16_t[4] alsFuelAdjustmentrpmBins;;"RPM",	1, 0, 0, 25000, 0
+
+int16_t[4 x 4] autoscale ALSIgnSkipTable;;"ratio", 10, 0, 0, 50, 1
+uint16_t[4] alsIgnSkipLoadBins;;"TPS", 1, 0, 0, 100, 0
+uint16_t[4] alsIgnSkiprpmBins;;"RPM",	   1, 0, 0, 25000, 0
 
 struct blend_table_s
 	int16_t[8 x 8] autoscale table;;"", 0.1, 0, -100, 100, 1
