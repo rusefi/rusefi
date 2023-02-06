@@ -54,10 +54,10 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 
 #if EFI_ANTILAG_SYSTEM
     if (engine->antilagController.isAntilagCondition) {
-	    auto tps = Sensor::get(SensorType::Tps1);
+	    float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
 		engine->antilagController.timingALSCorrection = interpolate3d(
 			config->ALSTimingRetardTable,
-			config->alsIgnRetardLoadBins, tps.Value,
+			config->alsIgnRetardLoadBins, throttleIntent,
 			config->alsIgnRetardrpmBins, rpm
 		);
 		advanceAngle += engine->antilagController.timingALSCorrection;
