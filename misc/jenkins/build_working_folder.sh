@@ -33,11 +33,6 @@ ls -l $FOLDER
 wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $DRIVERS_FOLDER
 [ -e $DRIVERS_FOLDER/silent_st_drivers2.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers2.exe"; exit 1; }
 
-if [ "$INI_FILE_OVERRIDE" = "no" ]; then
-    INI_FILE_OVERRIDE="rusefi.ini"
-    echo "$SCRIPT_NAME: N/a ini_file_override specified"
-fi
-
 if [ -z $INI_FILE_OVERRIDE ]; then
     INI_FILE_OVERRIDE="rusefi.ini"
     echo "$SCRIPT_NAME: No ini_file_override specified"
