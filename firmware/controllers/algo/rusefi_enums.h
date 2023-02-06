@@ -563,6 +563,7 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_GppwmOutput4 = 21,
 	GPPWM_LuaGauge1 = 22,
 	GPPWM_LuaGauge2 = 23,
+	GPPWM_Rpm = 24,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {

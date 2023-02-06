@@ -58,8 +58,10 @@ void updateGppwm() {
 	static_assert(efi::size(channels) <= 8);
 
 	for (size_t i = 0; i < efi::size(channels); i++) {
-		float result = channels[i].update();
+		auto result = channels[i].update();
 
-		engine->outputChannels.gppwmOutput[i] = result;
+		engine->outputChannels.gppwmOutput[i] = result.Result;
+		engine->outputChannels.gppwmXAxis[i] = result.X;
+		engine->outputChannels.gppwmYAxis[i] = result.X;
 	}
 }
