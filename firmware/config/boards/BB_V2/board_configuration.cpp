@@ -1,8 +1,9 @@
 /**
- * @file boards/BB_V2/board_configuration.cpp
+ * @file boards/BB V2/board_configuration.cpp
  *
- * @date 22.06.2022
- * @author TURBO_MARIAN, 2022
+ * @brief Configuration defaults for the core8 board
+ *
+ * @author Turbo Marian,  2022
  */
 
 #include "pch.h"

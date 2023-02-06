@@ -1,8 +1,8 @@
 /**
- * @file boards/BB_V2/board.h
+ * @file boards/subaru_eg33/board_io.c
  *
- * @date 22.06.2022
- * @author TURBO_MARIAN, 2022
+ * @date Feb 06, 2021
+ * @author Andrey Gusakov, 2021
  */
 
 #define BOARD_NAME "BB_V2"
@@ -36,9 +36,6 @@
 
 #undef HAL_VSS_USE_PAL
 #define HAL_VSS_USE_PAL TRUE
-
-#undef RE_SDC_MODE
-#define RE_SDC_MODE SDC_MODE_1BIT
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
 #define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::Unassigned
@@ -287,11 +284,11 @@
 							 DEFAULT_GPIO_SPEED( 5)	| \
 							 DEFAULT_GPIO_SPEED( 6)	| \
 							 DEFAULT_GPIO_SPEED( 7)	| \
-							 DEFAULT_GPIO_SPEED( 8)	| \
+							 PIN_OSPEED_HIGH( 8)	| \
 							 DEFAULT_GPIO_SPEED( 9)	| \
 							 DEFAULT_GPIO_SPEED(10)	| \
 							 DEFAULT_GPIO_SPEED(11)	| \
-							 DEFAULT_GPIO_SPEED(12)	| \
+							 PIN_OSPEED_HIGH(12)	| \
 							 DEFAULT_GPIO_SPEED(13)	| \
 							 DEFAULT_GPIO_SPEED(14)	| \
 							 DEFAULT_GPIO_SPEED(15))
@@ -303,11 +300,11 @@
 							 PIN_PUPDR_PULLDOWN( 5)	| \
 							 PIN_PUPDR_PULLDOWN( 6)	| \
 							 PIN_PUPDR_PULLDOWN( 7)	| \
-							 PIN_PUPDR_FLOATING( 8)	| \
+							 PIN_PUPDR_PULLDOWN( 8)	| \
 							 PIN_PUPDR_PULLDOWN( 9)	| \
 							 PIN_PUPDR_PULLDOWN(10)	| \
 							 PIN_PUPDR_PULLDOWN(11)	| \
-							 PIN_PUPDR_FLOATING(12)	| \
+							 PIN_PUPDR_PULLDOWN(12)	| \
 							 PIN_PUPDR_PULLDOWN(13)	| \
 							 PIN_PUPDR_PULLDOWN(14)	| \
 							 PIN_PUPDR_PULLDOWN(15))
@@ -392,9 +389,9 @@
 							 DEFAULT_GPIO_SPEED(13)	| \
 							 DEFAULT_GPIO_SPEED(14)	| \
 							 DEFAULT_GPIO_SPEED(15))
-#define VAL_GPIOD_PUPDR		(PIN_PUPDR_PULLDOWN( 0)	| \
+#define VAL_GPIOD_PUPDR		(PIN_PUPDR_FLOATING( 0)	| \
 							 PIN_PUPDR_PULLDOWN( 1)	| \
-							 PIN_PUPDR_FLOATING( 2)	| \
+							 PIN_PUPDR_PULLDOWN( 2)	| \
 							 PIN_PUPDR_PULLDOWN( 3)	| \
 							 PIN_PUPDR_PULLDOWN( 4)	| \
 							 PIN_PUPDR_PULLDOWN( 5)	| \

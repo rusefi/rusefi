@@ -1,8 +1,6 @@
 # List of all the board related files.
-BOARDCPPSRC =  $(PROJECT_DIR)/config/boards/BB_V3/board_configuration.cpp \
-				$(PROJECT_DIR)/config/boards/proteus/adc_hack.cpp
-
-BOARDINC = $(PROJECT_DIR)/config/boards/BB_V3
+BOARDCPPSRC =  $(BOARD_DIR)/board_configuration.cpp \
+				$(BOARDS_DIR)/proteus/adc_hack.cpp
 
 # Override DEFAULT_ENGINE_TYPE
 DDEFS += -DSTM32F407xx
@@ -11,8 +9,6 @@ DDEFS += -DFIRMWARE_ID=\"BB_V3\"
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::Unassigned
 DDEFS += -DHAL_TRIGGER_USE_PAL=TRUE
 DDEFS += -DHAL_VSS_USE_PAL=TRUE
-# This board has 512K STM32F407
-DDEFS += -DMIN_FLASH_SIZE=512
 
 DDEFS += -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE
