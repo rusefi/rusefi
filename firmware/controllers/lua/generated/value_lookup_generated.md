@@ -1525,7 +1525,7 @@ null
 ### ALSMaxRPM
 
 
-### alsMaxDuration
+### ALSMaxDuration
 
 
 ### ALSMinCLT
