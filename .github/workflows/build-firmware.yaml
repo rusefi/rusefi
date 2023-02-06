@@ -240,19 +240,16 @@ jobs:
 
           - build-target: stm32f429_nucleo
             folder: config/boards/nucleo_f429
-            ini-file: no
-            skip-config: yes
+            ini-file: rusefi_stm32f429_nucleo.ini
 
           - build-target: stm32f767_nucleo
             folder: config/boards/nucleo_f767
-            ini-file: no
-            skip-config: yes
+            ini-file: rusefi_stm32f767_nucleo.ini
             skip-rate: 95
 
           - build-target: stm32h743_nucleo
             folder: config/boards/nucleo_h743
-            ini-file: no
-            skip-config: yes
+            ini-file: rusefi_stm32h743_nucleo.ini
             skip-rate: 95
 
           - build-target: subaru_eg33_f7
@@ -338,7 +335,7 @@ jobs:
       run: ./gen_enum_to_string.sh
 
     - name: Generate Configs for build-target
-      if: ${{ matrix.skip-config != 'yes' && env.skip != 'true' }}
+      if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       # todo: we have code duplication with gen_config.sh here :(
       run: |
