@@ -37,6 +37,9 @@
 #undef HAL_VSS_USE_PAL
 #define HAL_VSS_USE_PAL TRUE
 
+#undef RE_SDC_MODE
+#define RE_SDC_MODE SDC_MODE_1BIT
+
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
 #define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::Unassigned
 #endif

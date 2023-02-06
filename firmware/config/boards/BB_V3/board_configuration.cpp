@@ -1,8 +1,6 @@
 /**
  * @file boards/BB V3/board_configuration.cpp
  *
- * @brief Configuration defaults for the core8 board
- *
  * @author Turbo Marian,  2022
  */
 
