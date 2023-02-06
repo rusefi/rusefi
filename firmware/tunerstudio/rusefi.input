@@ -4242,6 +4242,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Switch Input",                     ALSActivatePin,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
 		field = "ALS Button inverted",				ALSActivateInverted,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
 		field = "ALS Button mode",                  ALSActivatePinMode,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
+		field = "ALS timeout",                      ALSMaxDuration,  {antiLagEnabled == 1}
 		field = "Max TPS",                          ALSMaxTPS,  {antiLagEnabled == 1}
 		field = "Min RPM",            	    		ALSMinRPM,  {antiLagEnabled == 1}
 		field = "Max RPM",                          ALSMaxRPM,  {antiLagEnabled == 1}
