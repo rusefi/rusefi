@@ -25,38 +25,38 @@ config/boards/subaru_eg33/config/gen_subaru_config.sh
 #
 #
 for BOARD in \
-   "hellen/alphax-2chan alphax-2chan" \
-   "hellen/alphax-4chan alphax-4chan" \
-   "hellen/alphax-8chan alphax-8chan" \
-   "hellen/harley81 harley81" \
-   "hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
-   "hellen/hellen121vag hellen121vag" \
-   "hellen/hellen121nissan hellen121nissan" \
-   "hellen/hellen-honda-k hellen-honda-k" \
-   "hellen/hellen154hyundai hellen154hyundai" \
-   "hellen/hellen88bmw hellen88bmw" \
-   "hellen/hellen72 hellen72" \
-   "hellen/hellen81 hellen81" \
-   "hellen/hellen-nb1 hellen-nb1" \
-   "hellen/hellen-gm-e67 hellen-gm-e67" \
-   "hellen/hellen64_miataNA6_94 hellenNA6" \
-   "hellen/hellenNA8_96 hellenNA8_96" \
-   "microrusefi mre_f7" \
-   "microrusefi mre_f4" \
-   "core8 core8" \
-   "48way 48way" \
-   "m74_9 m74_9" \
-   "s105 s105" \
-   "frankenso frankenso_na6" \
-   "prometheus prometheus_469" \
-   "prometheus prometheus_405" \
-   "proteus proteus_f7" \
-   "proteus proteus_f4" \
-   "proteus proteus_h7" \
-   "f407-discovery f407-discovery" \
-   "f429-discovery f429-discovery" \
-   "atlas atlas"\
-   "tdg-pdm8 tdg-pdm8"\
+   "config/boards/hellen/alphax-2chan alphax-2chan" \
+   "config/boards/hellen/alphax-4chan alphax-4chan" \
+   "config/boards/hellen/alphax-8chan alphax-8chan" \
+   "config/boards/hellen/harley81 harley81" \
+   "config/boards/hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
+   "config/boards/hellen/hellen121vag hellen121vag" \
+   "config/boards/hellen/hellen121nissan hellen121nissan" \
+   "config/boards/hellen/hellen-honda-k hellen-honda-k" \
+   "config/boards/hellen/hellen154hyundai hellen154hyundai" \
+   "config/boards/hellen/hellen88bmw hellen88bmw" \
+   "config/boards/hellen/hellen72 hellen72" \
+   "config/boards/hellen/hellen81 hellen81" \
+   "config/boards/hellen/hellen-nb1 hellen-nb1" \
+   "config/boards/hellen/hellen-gm-e67 hellen-gm-e67" \
+   "config/boards/hellen/hellen64_miataNA6_94 hellenNA6" \
+   "config/boards/hellen/hellenNA8_96 hellenNA8_96" \
+   "config/boards/microrusefi mre_f7" \
+   "config/boards/microrusefi mre_f4" \
+   "config/boards/core8 core8" \
+   "config/boards/48way 48way" \
+   "config/boards/m74_9 m74_9" \
+   "config/boards/s105 s105" \
+   "config/boards/frankenso frankenso_na6" \
+   "config/boards/prometheus prometheus_469" \
+   "config/boards/prometheus prometheus_405" \
+   "config/boards/proteus proteus_f7" \
+   "config/boards/proteus proteus_f4" \
+   "config/boards/proteus proteus_h7" \
+   "config/boards/f407-discovery f407-discovery" \
+   "config/boards/f429-discovery f429-discovery" \
+   "config/boards/atlas atlas"\
+   "config/boards/tdg-pdm8 tdg-pdm8"\
    ; do
  BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)

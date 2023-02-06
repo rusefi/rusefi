@@ -19,7 +19,6 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
 public class PinoutLogic {
     private static final Logging log = getLogging(PinoutLogic.class);
 
-    public static final String CONFIG_BOARDS = "config/boards/";
     private static final String CONNECTORS = "/connectors";
     private static final String NONE = "NONE";
     private static final String QUOTED_NONE = quote(NONE);
@@ -196,19 +195,9 @@ public class PinoutLogic {
         PinState thisPin = new PinState(id, pinTsName, pinClass);
         globalList.add(thisPin);
     }
-/*
-    public static void main(String[] args) throws IOException {
-        String boardName = "hellen-gm-e67";
-        PinoutLogic logic = create(boardName,"../../firmware/config/boards/hellen/");
-        logic.readFiles();
-        log.info(logic.toString());
 
-        registerPins(boardName, logic.globalList, new VariableRegistry(), new ReaderState());
-    }
-*/
-
-    public static PinoutLogic create(String boardName, String rootFolder) {
-        String dirPath = rootFolder + boardName + PinoutLogic.CONNECTORS;
+    public static PinoutLogic create(String boardName) {
+        String dirPath = boardName + PinoutLogic.CONNECTORS;
         File dirName = new File(dirPath);
         FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
         File[] boardYamlFiles = dirName.listFiles(filter);
@@ -224,7 +213,7 @@ public class PinoutLogic {
         readFiles();
         registerPins(boardName, globalList, registry, state, parseState);
 
-        try (FileWriter getTsNameByIdFile = new FileWriter(PinoutLogic.CONFIG_BOARDS + boardName + PinoutLogic.CONNECTORS + File.separator + "generated_ts_name_by_pin.cpp")) {
+        try (FileWriter getTsNameByIdFile = new FileWriter(boardName + PinoutLogic.CONNECTORS + File.separator + "generated_ts_name_by_pin.cpp")) {
             getTsNameByIdFile.append(header);
 
             getTsNameByIdFile.append("#include \"pch.h\"\n\n");
@@ -256,8 +245,7 @@ public class PinoutLogic {
     public List<String> getInputFiles() {
         List<String> result = new ArrayList<>();
         for (File yamlFile : boardYamlFiles) {
-            result.add(PinoutLogic.CONFIG_BOARDS + boardName + PinoutLogic.CONNECTORS +
-                    File.separator + yamlFile.getName());
+            result.add(boardName + PinoutLogic.CONNECTORS + File.separator + yamlFile.getName());
         }
         return result;
     }
