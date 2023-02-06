@@ -22,5 +22,5 @@ COMMON_GEN_CONFIG="
  -signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
  -ts_output_name generated/${INI} \
  -prepend ${BOARD_DIR}/prepend.txt \
- -board ${BOARDNAME} \
+ -board ${BOARD_DIR} \
  -definition integration/rusefi_config.txt"
