@@ -18,18 +18,26 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+
+    - name: Check last date
+      run: if [ "$(git log -1 --pretty=%B)" = "Update date" ]; then echo "skip=true" >> $GITHUB_ENV; fi
 
     - name: Install Tools
+      if: ${{ env.skip != 'true' }}
       working-directory: ./.github/workflows/
       run: |
         sudo ./add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install subversion
 
     - name: Update version header in git
+      if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       run: bash update_version.sh
 
     - name: Write Date File
+      if: ${{ env.skip != 'true' }}
       run: |
         echo -e -n "#pragma once\n#define VCS_DATE $(date "+%Y%m%d")\n" > ./firmware/controllers/date_stamp.h
         git config --local user.email "action@github.com"
@@ -37,6 +45,7 @@ jobs:
         git commit -m "Update date" -a 2>&1 | grep -E '(nothing to commit|changed)'
 
     - name: Push changed date file
+      if: ${{ env.skip != 'true' }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
