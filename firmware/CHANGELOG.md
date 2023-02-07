@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Fixed
+ - Antilag switch pin mode was ignored #5036
+
 ## February 2023 Release - "Day 346"
 
 ### Breaking Changes
