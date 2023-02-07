@@ -20,12 +20,9 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install Tools
+      working-directory: ./.github/workflows/
       run: |
-        sudo cp /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu-latest-mirrors.list
-        sudo sed 's#http://azure.archive.ubuntu.com/ubuntu/#http://ubuntu.osuosl.org/ubuntu/#' -i /etc/apt/sources.list.d/ubuntu-latest-mirrors.list
-        cat /etc/apt/sources.list | sudo tee -a /etc/apt/sources.list.d/ubuntu-latest-mirrors.list > /dev/null
-        sudo sed 's#http://azure.archive.ubuntu.com/ubuntu/#http://mirrors.ocf.berkeley.edu/ubuntu/#' -i /etc/apt/sources.list.d/ubuntu-latest-mirrors.list
-        sudo apt-get -o Acquire::Retries=3 update
+        sudo ./add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install subversion
 
     - name: Update version header in git
