@@ -1022,7 +1022,7 @@ float getConfigValueByName(const char *name) {
 		case 1523829850:
 			return engineConfiguration->ALSMaxRPM;
 		case 1830002033:
-			return engineConfiguration->alsMaxDuration;
+			return engineConfiguration->ALSMaxDuration;
 		case 1532941388:
 			return engineConfiguration->ALSMinCLT;
 		case 1523813390:
@@ -3598,7 +3598,7 @@ void setConfigValueByName(const char *name, float value) {
 	}
 		case 1830002033:
 	{
-		engineConfiguration->alsMaxDuration = value;
+		engineConfiguration->ALSMaxDuration = (int)value;
 		return;
 	}
 		case 1532941388:

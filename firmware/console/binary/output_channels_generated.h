@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Jan 17 01:56:08 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Feb 06 13:14:56 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1209,166 +1209,174 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
 	/**
-	V
 	 * offset 558
+	 */
+	scaled_channel<int16_t, 1, 1> gppwmXAxis[4];
+	/**
+	 * offset 566
+	 */
+	scaled_channel<int16_t, 10, 1> gppwmYAxis[4];
+	/**
+	V
+	 * offset 574
 	 */
 	scaled_channel<int16_t, 1000, 1> rawBattery = (int16_t)0;
 	/**
 	%
-	 * offset 560
+	 * offset 576
 	 */
 	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT];
 	/**
 	deg
-	 * offset 564
+	 * offset 580
 	 */
 	scaled_channel<int16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT];
 	/**
 	%
-	 * offset 572
+	 * offset 588
 	 */
 	scaled_channel<uint8_t, 2, 1> veBlendBias[VE_BLEND_COUNT];
 	/**
 	%
-	 * offset 576
+	 * offset 592
 	 */
 	scaled_channel<int16_t, 100, 1> veBlendOutput[VE_BLEND_COUNT];
 	/**
-	offset 584 bit 0 */
+	offset 600 bit 0 */
 	bool coilState1 : 1 {};
 	/**
-	offset 584 bit 1 */
+	offset 600 bit 1 */
 	bool coilState2 : 1 {};
 	/**
-	offset 584 bit 2 */
+	offset 600 bit 2 */
 	bool coilState3 : 1 {};
 	/**
-	offset 584 bit 3 */
+	offset 600 bit 3 */
 	bool coilState4 : 1 {};
 	/**
-	offset 584 bit 4 */
+	offset 600 bit 4 */
 	bool coilState5 : 1 {};
 	/**
-	offset 584 bit 5 */
+	offset 600 bit 5 */
 	bool coilState6 : 1 {};
 	/**
-	offset 584 bit 6 */
+	offset 600 bit 6 */
 	bool coilState7 : 1 {};
 	/**
-	offset 584 bit 7 */
+	offset 600 bit 7 */
 	bool coilState8 : 1 {};
 	/**
-	offset 584 bit 8 */
+	offset 600 bit 8 */
 	bool coilState9 : 1 {};
 	/**
-	offset 584 bit 9 */
+	offset 600 bit 9 */
 	bool coilState10 : 1 {};
 	/**
-	offset 584 bit 10 */
+	offset 600 bit 10 */
 	bool coilState11 : 1 {};
 	/**
-	offset 584 bit 11 */
+	offset 600 bit 11 */
 	bool coilState12 : 1 {};
 	/**
-	offset 584 bit 12 */
+	offset 600 bit 12 */
 	bool injectorState1 : 1 {};
 	/**
-	offset 584 bit 13 */
+	offset 600 bit 13 */
 	bool injectorState2 : 1 {};
 	/**
-	offset 584 bit 14 */
+	offset 600 bit 14 */
 	bool injectorState3 : 1 {};
 	/**
-	offset 584 bit 15 */
+	offset 600 bit 15 */
 	bool injectorState4 : 1 {};
 	/**
-	offset 584 bit 16 */
+	offset 600 bit 16 */
 	bool injectorState5 : 1 {};
 	/**
-	offset 584 bit 17 */
+	offset 600 bit 17 */
 	bool injectorState6 : 1 {};
 	/**
-	offset 584 bit 18 */
+	offset 600 bit 18 */
 	bool injectorState7 : 1 {};
 	/**
-	offset 584 bit 19 */
+	offset 600 bit 19 */
 	bool injectorState8 : 1 {};
 	/**
-	offset 584 bit 20 */
+	offset 600 bit 20 */
 	bool injectorState9 : 1 {};
 	/**
-	offset 584 bit 21 */
+	offset 600 bit 21 */
 	bool injectorState10 : 1 {};
 	/**
-	offset 584 bit 22 */
+	offset 600 bit 22 */
 	bool injectorState11 : 1 {};
 	/**
-	offset 584 bit 23 */
+	offset 600 bit 23 */
 	bool injectorState12 : 1 {};
 	/**
-	offset 584 bit 24 */
-	bool unusedBit_292_24 : 1 {};
+	offset 600 bit 24 */
+	bool unusedBit_294_24 : 1 {};
 	/**
-	offset 584 bit 25 */
-	bool unusedBit_292_25 : 1 {};
+	offset 600 bit 25 */
+	bool unusedBit_294_25 : 1 {};
 	/**
-	offset 584 bit 26 */
-	bool unusedBit_292_26 : 1 {};
+	offset 600 bit 26 */
+	bool unusedBit_294_26 : 1 {};
 	/**
-	offset 584 bit 27 */
-	bool unusedBit_292_27 : 1 {};
+	offset 600 bit 27 */
+	bool unusedBit_294_27 : 1 {};
 	/**
-	offset 584 bit 28 */
-	bool unusedBit_292_28 : 1 {};
+	offset 600 bit 28 */
+	bool unusedBit_294_28 : 1 {};
 	/**
-	offset 584 bit 29 */
-	bool unusedBit_292_29 : 1 {};
+	offset 600 bit 29 */
+	bool unusedBit_294_29 : 1 {};
 	/**
-	offset 584 bit 30 */
-	bool unusedBit_292_30 : 1 {};
+	offset 600 bit 30 */
+	bool unusedBit_294_30 : 1 {};
 	/**
-	offset 584 bit 31 */
-	bool unusedBit_292_31 : 1 {};
+	offset 600 bit 31 */
+	bool unusedBit_294_31 : 1 {};
 	/**
-	 * offset 588
+	 * offset 604
 	 */
 	uint32_t outputRequestPeriod = (uint32_t)0;
 	/**
-	 * offset 592
+	 * offset 608
 	 */
 	float mapFast = (float)0;
 	/**
 	value
-	 * offset 596
+	 * offset 612
 	 */
 	float luaGauges[LUA_GAUGE_COUNT];
 	/**
 	V
-	 * offset 604
+	 * offset 620
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawMaf2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_AIR_FLOW_MEASURED_2@@
 	kg/h
-	 * offset 606
+	 * offset 622
 	 */
 	scaled_channel<uint16_t, 10, 1> mafMeasured2 = (uint16_t)0;
 	/**
-	 * offset 608
+	 * offset 624
 	 */
 	uint16_t schedulingUsedCount = (uint16_t)0;
 	/**
-	 * offset 610
+	 * offset 626
 	 */
 	uint8_t unusedAtTheEnd[136];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 746
+	 * offset 762
 	 */
-	uint8_t alignmentFill_at_746[2];
+	uint8_t alignmentFill_at_762[2];
 };
-static_assert(sizeof(output_channels_s) == 748);
+static_assert(sizeof(output_channels_s) == 764);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Jan 17 01:56:08 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Feb 06 13:14:56 UTC 2023

@@ -9,11 +9,17 @@ class OutputPin;
 struct IPwm;
 class ValueProvider3D;
 
+struct GppwmResult {
+	percent_t Result;
+	float X;
+	float Y;
+};
+
 class GppwmChannel {
 public:
 	void init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config);
-	float update();
-	percent_t getOutput() const;
+	GppwmResult update();
+	GppwmResult getOutput() const;
 
 	// Returns actual output duty, with hysteresis applied
 	float setOutput(float result);

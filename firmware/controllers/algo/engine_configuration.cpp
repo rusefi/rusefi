@@ -333,6 +333,10 @@ void setDefaultGppwmParameters() {
 		auto& cfg = engineConfiguration->gppwm[i];
 		chsnprintf(engineConfiguration->gpPwmNote[i], sizeof(engineConfiguration->gpPwmNote[0]), "GPPWM%d", i);
 
+		// Set default axes
+		cfg.loadAxis = GPPWM_Zero;
+		cfg.rpmAxis = GPPWM_Rpm;
+
 		cfg.pin = Gpio::Unassigned;
 		cfg.dutyIfError = 0;
 		cfg.onAboveDuty = 60;
