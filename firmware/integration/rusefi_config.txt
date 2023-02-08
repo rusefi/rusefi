@@ -959,7 +959,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     custom launchActivationMode_e  1 bits, S08, @OFFSET@, [0:1], @@launchActivationMode_e_enum@@
     launchActivationMode_e launchActivationMode;
 
-    #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
+    #define antiLagActivationMode_e_enum "Switch Input", "Always Active"
     custom antiLagActivationMode_e  1 bits, S08, @OFFSET@, [0:0], @@antiLagActivationMode_e_enum@@
     antiLagActivationMode_e antiLagActivationMode;
 
