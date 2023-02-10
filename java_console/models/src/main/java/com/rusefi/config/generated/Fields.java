@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Feb 10 05:04:03 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Feb 10 12:46:17 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -267,6 +267,7 @@ public class Fields {
 	public static final int engine_type_e_CAMARO_4 = 35;
 	public static final int engine_type_e_CITROEN_TU3JP = 65;
 	public static final int engine_type_e_DEFAULT_FRANKENSO = 0;
+	public static final int engine_type_e_DISCOVERY_PDM = 38;
 	public static final int engine_type_e_DODGE_NEON_1995 = 2;
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
 	public static final int engine_type_e_DODGE_RAM = 64;
@@ -363,7 +364,6 @@ public class Fields {
 	public static final int engine_type_e_TEST_ROTARY = 19;
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
-	public static final int engine_type_e_UNUSED_38 = 38;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
