@@ -289,5 +289,6 @@ pins:
 
 info:
   title: Core8
+  directory: core8
   name: Core8
   board_url: https://rusefi.com/s/core8

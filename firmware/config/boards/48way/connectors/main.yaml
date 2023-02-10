@@ -107,3 +107,6 @@ pins:
     - id: B14
       class: outputs
       ts_name: Ignition 4 Output (B14)
+
+info:
+  directory: 48way

@@ -321,6 +321,7 @@ pins:
 
 info:
   title: Hellen Miata NB1
+  directory: hellen/hellenNA8_96
   image:
     file: main.jpg
   pins:

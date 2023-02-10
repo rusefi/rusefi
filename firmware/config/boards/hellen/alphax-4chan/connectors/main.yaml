@@ -406,6 +406,7 @@ info:
   title: AlphaX 4chan
   name: AlphaX 4chan
   board_url: https://rusefi.com/s/4chan
+  directory: hellen/alphax-4chan
   image:
     file: alphax-4chan.jpg
   pins:

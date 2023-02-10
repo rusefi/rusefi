@@ -268,3 +268,6 @@ pins:
     function: Crank VR+/hall
     ts_name: 45 - VR/Hall Crank
     type: vr hall
+
+info:
+  directory: skeleton

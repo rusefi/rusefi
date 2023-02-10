@@ -670,10 +670,11 @@ pins:
     type: ign
 
 info:
-  id: Hellen-128
+  cid: Hellen-128
   title: Hellen 128 Mercedes
   name: Hellen 128 Mercedes
   board_url: https://rusefi.com/s/hellen128merc
+  directory: hellen/hellen128
   image:
     file: main.jpg
   pins:

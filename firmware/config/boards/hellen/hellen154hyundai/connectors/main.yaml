@@ -411,6 +411,7 @@ pins:
 
 info:
   board_url: https://github.com/rusefi/rusefi/wiki/Hellen-154-Hyundai
+  directory: hellen/hellen154hyundai
   title: Hellen 154 Hyundai
   image:
     file: main.jpg
