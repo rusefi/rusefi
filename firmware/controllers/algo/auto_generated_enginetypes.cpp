@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Jan 17 09:29:39 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Feb 10 12:45:29 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -157,6 +157,8 @@ case CITROEN_TU3JP:
   return "CITROEN_TU3JP";
 case DEFAULT_FRANKENSO:
   return "DEFAULT_FRANKENSO";
+case DISCOVERY_PDM:
+  return "DISCOVERY_PDM";
 case DODGE_NEON_1995:
   return "DODGE_NEON_1995";
 case DODGE_NEON_2003_CRANK:
@@ -349,8 +351,6 @@ case TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case UNUSED_38:
-  return "UNUSED_38";
 case VW_ABA:
   return "VW_ABA";
   }
