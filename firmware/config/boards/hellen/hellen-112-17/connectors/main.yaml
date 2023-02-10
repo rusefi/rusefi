@@ -163,8 +163,9 @@ pins:
 
 
 info:
-  id: H-112
+  cid: H-112
   title: H-112
+  directory: hellen/hellen-112-17
   name: H-112
   image:
     file: main.jpg

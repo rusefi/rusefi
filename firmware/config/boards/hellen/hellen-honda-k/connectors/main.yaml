@@ -323,10 +323,11 @@ pins:
     function: Check Engine
 
 info:
-  id: Honda-K
+  cid: Honda-K
   title: Hellen Honda K
   name: Hellen Honda K
   board_url: https://rusefi.com/s/honda-k
+  directory: hellen/hellen-honda-k
   image:
     file: hellen-k.jpg
   pins:

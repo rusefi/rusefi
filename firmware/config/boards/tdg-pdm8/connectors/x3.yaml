@@ -12,7 +12,7 @@ pins:
     function: SWDIO
 
 info:
-  id: tdg-pdm8-x3
+  cid: tdg-pdm8-x3
   title: tdg-pdm8-x3
   name: tdg-pdm8-x3
   image:

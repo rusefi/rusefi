@@ -67,6 +67,7 @@ pins:
 
 info:
   title: Hellen 154 VAG GDI
+  directory: hellen/hellen154_9.7
   image:
     file: main.jpg
   pins:

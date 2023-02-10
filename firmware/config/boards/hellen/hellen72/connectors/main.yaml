@@ -604,6 +604,7 @@ pins:
 
 info:
   title: Hellen Miata NB2
+  directory: hellen/hellen72
   image:
     file: main.jpg
   pins:

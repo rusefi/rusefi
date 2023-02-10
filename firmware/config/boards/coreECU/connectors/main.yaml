@@ -324,8 +324,5 @@ pins:
     type: hall
     ts_name: Digital Input 4
 
-
-
-    
- 
-
+info:
+  directory: coreECU

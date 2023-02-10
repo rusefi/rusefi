@@ -128,8 +128,9 @@ pins:
     ts_name: Sense 1
 
 info:
-  id: tdg-pdm8
+  cid: tdg-pdm8
   title: tdg-pdm8
+  directory: tdg-pdm8
   name: tdg-pdm8
   image:
     file: tdg-pdm8.jpg
