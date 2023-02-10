@@ -58,6 +58,7 @@ pins:
 
 info:
   title: AlphaX 8chan
+  directory: hellen/alphax-8chan
   name: AlphaX 8chan
   image:
     file: 8chan-D.jpg

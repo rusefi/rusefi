@@ -84,3 +84,6 @@ pins:
     function: Tacho out
     ts_name: C16 - Tacho out
     type: gp_low
+
+info:
+  directory: subaru_eg33

@@ -284,9 +284,6 @@ pins:
     type: hall
     ts_name: Digital input 2
 
-
-
-
-    
- 
+info:
+  directory: BB_V2
 

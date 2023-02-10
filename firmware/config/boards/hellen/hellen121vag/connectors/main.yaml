@@ -414,6 +414,7 @@ info:
   title: Hellen 121 VAG
   name: Hellen 121 VAG
   board_url: https://github.com/rusefi/rusefi/wiki/Hellen121VAG
+  directory: hellen/hellen121vag
   image:
     file: 121pin.jpg
   pins:

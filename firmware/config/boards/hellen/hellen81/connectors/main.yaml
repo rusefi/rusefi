@@ -513,6 +513,7 @@ pins:
 
 info:
   title: Hellen 81
+  directory: hellen/hellen81
   image:
     file: main.jpg
   pins:
