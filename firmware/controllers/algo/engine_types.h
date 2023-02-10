@@ -104,7 +104,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	MRE_SUBARU_EJ18 = 37,
 
-	UNUSED_38 = 38,
+	DISCOVERY_PDM = 38,
 
 	PROTEUS_VW_B6 = 39,
 
