@@ -1210,6 +1210,13 @@ gaugeCategory = Alternator PID
 	alternatorStatus_errorGauge = alternatorStatus_error,"Alternator PID error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	alternatorStatus_resetCounterGauge = alternatorStatus_resetCounter,"Alternator PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
 
+gaugeCategory = Boost PID
+	boostStatus_iTermGauge = boostStatus_iTerm,"Boost PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	boostStatus_dTermGauge = boostStatus_dTerm,"Boost PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	boostStatus_outputGauge = boostStatus_output,"Boost PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	boostStatus_errorGauge = boostStatus_error,"Boost PID error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	boostStatus_resetCounterGauge = boostStatus_resetCounter,"Boost PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+
 gaugeCategory = Idle
 	idlePosSensGauge  = idlePositionSensor,		@@GAUGE_NAME_IDLE_POSITION@@,		"%",		0,	100,		0,		0,	100,	100,	1,	1
 	idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",	0,	100,	0,	0,	100,  100,	1,	1
