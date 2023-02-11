@@ -15,8 +15,8 @@
 #include "defaults.h"
 
 void setSubaru2003Wrx() {
-	setFrankenso_01_LCD(engineConfiguration);
-	setFrankenso0_1_joystick(engineConfiguration);
+	setFrankenso_01_LCD();
+	setFrankenso0_1_joystick();
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 5;

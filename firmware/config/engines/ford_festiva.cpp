@@ -68,8 +68,8 @@ void setFordEscortGt() {
 
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
-	setFrankenso_01_LCD(engineConfiguration);
-	setFrankenso0_1_joystick(engineConfiguration);
+	setFrankenso_01_LCD();
+	setFrankenso0_1_joystick();
 
 	setDensoTODO(config);
 
@@ -192,7 +192,7 @@ void setFordEscortGt() {
 
 	engineConfiguration->tunerStudioSerialSpeed = 19200;
 
-	commonFrankensoAnalogInputs(engineConfiguration);
+	commonFrankensoAnalogInputs();
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 

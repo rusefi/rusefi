@@ -109,8 +109,8 @@ void setDodgeNeon1995EngineConfiguration() {
 
 void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003_CAM;
-	setFrankenso_01_LCD(engineConfiguration);
-	setFrankenso0_1_joystick(engineConfiguration);
+	setFrankenso_01_LCD();
+	setFrankenso0_1_joystick();
 
 	// set global_trigger_offset_angle 38
 	engineConfiguration->globalTriggerAngleOffset = 38;
@@ -157,7 +157,7 @@ void setDodgeNeonNGCEngineConfiguration() {
 	 */
 	engineConfiguration->afr.hwChannel = EFI_ADC_4;
 
-	commonFrankensoAnalogInputs(engineConfiguration);
+	commonFrankensoAnalogInputs();
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 
 	/**

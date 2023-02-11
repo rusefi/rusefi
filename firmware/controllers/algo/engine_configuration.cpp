@@ -1034,14 +1034,14 @@ void setCrankOperationMode() {
 	engineConfiguration->skippedWheelOnCam = false;
 }
 
-void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
+void commonFrankensoAnalogInputs() {
 	/**
 	 * VBatt
 	 */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 }
 
-void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
+void setFrankenso0_1_joystick() {
 	
 	engineConfiguration->joystickCenterPin = Gpio::C8;
 	engineConfiguration->joystickAPin = Gpio::D10;
