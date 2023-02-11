@@ -82,7 +82,7 @@ void configureHondaK_12_1(TriggerWaveform *s) {
 	// nominal gap 0.33
 	s->setSecondTriggerSynchronizationGap2(0.2f, 0.5f);
 	// nominal gap 2.0
-	s->setTriggerSynchronizationGap2(1.6f, 2.4f);
+	s->setTriggerSynchronizationGap2(1.1f, 2.4f);
 
 	int count = 12;
 	float tooth = 360 / count; // hint: tooth = 30
