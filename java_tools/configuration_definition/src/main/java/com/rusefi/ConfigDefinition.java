@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.newparse.ParseState;
 import com.rusefi.output.*;
+import com.rusefi.pinout.PinoutLogic;
 import com.rusefi.trigger.TriggerWheelTSLogic;
 import com.rusefi.util.SystemOut;
 
