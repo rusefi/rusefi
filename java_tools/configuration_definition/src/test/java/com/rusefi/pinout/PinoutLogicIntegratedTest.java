@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class PinoutLogicIntegratedTest {
     @Test
     public void testWholeThing() throws IOException {
-        runPinputTest("pins:\n" +
+        runPinoutTest("pins:\n" +
                 "  - pin: 1\n" +
                 "    id: [E11, E11]\n" +
                 "    class: [event_inputs, switch_inputs]\n" +
@@ -24,7 +24,7 @@ public class PinoutLogicIntegratedTest {
 
     }
 
-    private static void runPinputTest(String inputYaml, String expected) throws IOException {
+    private static void runPinoutTest(String inputYaml, String expected) throws IOException {
         StringWriter testWriter = new StringWriter();
 
         Reader input = new StringReader(inputYaml);
@@ -59,12 +59,10 @@ public class PinoutLogicIntegratedTest {
         VariableRegistry registry = new VariableRegistry();
         EnumsReader enumsReader = new EnumsReader();
 
-        enumsReader.read(new StringReader("#define output_pin_e_enum \"NONE\", \"INVALID\", \"PA0\", \"PA1\", \"PA2\"\n" +
-                "custom output_pin_e 2 bits, U16, @OFFSET@, [0:7], @@output_pin_e_enum@@\n"));
-
-        enumsReader.read(new StringReader("#define Gpio_enum \"NONE\", \"INVALID\", \"PA0\", \"PA1\", \"PA2\", \"PA3\"\n" +
-                "\n" +
-                "custom Gpio 2 bits, U16, @OFFSET@, [0:7], @@Gpio_enum@@"));
+        enumsReader.read(new StringReader("#define switch_input_pin_e_enum \"NONE\", \"INVALID\", \"E11\"\n" +
+                "#define Gpio_enum \"NONE\", \"INVALID\", \"E11\"\n" +
+                "custom Gpio 2 bits, U16, @OFFSET@, [0:7], @@Gpio_enum@@\n" +
+                "custom switch_input_pin_e 2 bits, U16, @OFFSET@, [0:7], @@switch_input_pin_e_enum@@\n"));
 
         ParseState definitionState = new ParseState();
 
