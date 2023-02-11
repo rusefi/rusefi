@@ -242,7 +242,6 @@ TEST(etb, idlePlumbing) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	EngineTestHelper eth(TEST_ENGINE);
-	engineConfiguration->useETBforIdleControl = true;
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 
@@ -257,9 +256,6 @@ TEST(etb, idlePlumbing) {
 
 TEST(etb, testSetpointOnlyPedal) {
 	EngineTestHelper eth(TEST_ENGINE);
-
-	// Don't use ETB for idle, we aren't testing that yet - just pedal table for now
-	engineConfiguration->useETBforIdleControl = false;
 
 	EtbController etb;
 
@@ -300,13 +296,6 @@ TEST(etb, testSetpointOnlyPedal) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 105, true);
 	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
 
-	// Check that ETB idle does NOT work - it's disabled
-	etb.setIdlePosition(50);
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
-	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 20, true);
-	EXPECT_EQ(20, etb.getSetpoint().value_or(-1));
-
 	// Test invalid pedal position - should give 0 position
 	Sensor::resetMockValue(SensorType::AcceleratorPedal);
 	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
@@ -326,10 +315,6 @@ TEST(etb, testSetpointOnlyPedal) {
 
 TEST(etb, setpointSecondThrottleTrim) {
 	EngineTestHelper eth(TEST_ENGINE);
-
-	// Don't use ETB for idle, we aren't testing that yet - just pedal table for now
-	engineConfiguration->useETBforIdleControl = false;
-
 
 	// Mock pedal map that's just passthru pedal -> target
 	StrictMock<MockVp3d> pedalMap;
@@ -359,7 +344,6 @@ TEST(etb, setpointIdle) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Use ETB for idle, but don't give it any range (yet)
-	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->etbIdleThrottleRange = 0;
 
 	// Must have TPS & PPS initialized for ETB setup

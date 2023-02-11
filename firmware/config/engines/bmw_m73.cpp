@@ -279,7 +279,5 @@ void setEngineBMW_M73_Proteus() {
 
 	// tps and pps
 	setProteusHitachiEtbDefaults();
-
-	engineConfiguration->useETBforIdleControl = true;
 }
 #endif // HW_PROTEUS
