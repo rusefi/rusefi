@@ -1321,7 +1321,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.02.10.f407-discovery.289103731"
+#define TS_SIGNATURE "rusEFI master.2023.02.11.f407-discovery.289103731"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
