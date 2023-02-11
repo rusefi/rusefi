@@ -176,6 +176,7 @@ public class ConfigDefinition {
         new TriggerWheelTSLogic().execute(triggersInputFolder, state.getVariableRegistry());
 
         if (pinoutLogic != null) {
+            pinoutLogic.readFiles();
             pinoutLogic.registerBoardSpecificPinNames(state.getVariableRegistry(), state, parseState);
         }
 
