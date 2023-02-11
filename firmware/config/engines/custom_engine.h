@@ -12,6 +12,7 @@ void setFrankensoConfiguration();
 void setFrankenso_01_LCD();
 void disableLCD();
 void runSchedulingPrecisionTestIfNeeded(void);
+void setDiscoveryPdm();
 void setFrankensoBoardTestConfiguration();
 void setEtbTestConfiguration();
 void setTle8888TestConfiguration();

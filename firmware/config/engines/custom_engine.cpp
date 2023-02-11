@@ -79,6 +79,9 @@ void disableLCD() {
 	engineConfiguration->HD44780_db7 = Gpio::Unassigned;
 }
 
+void setDiscoveryPdm() {
+}
+
 // todo: should this be part of more default configurations?
 void setFrankensoConfiguration() {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
