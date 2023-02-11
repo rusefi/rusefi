@@ -78,7 +78,7 @@ void setCitroenBerlingoTU3JPConfiguration() {
 	engineConfiguration->fuelPumpPin = Gpio::B9;
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	setFrankenso_01_LCD(engineConfiguration);
+	setFrankenso_01_LCD();
 
 
 //	engineConfiguration->o2heaterPin = Gpio::C13;

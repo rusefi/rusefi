@@ -42,8 +42,8 @@ void setDefaultSdCardParameters();
 void onBurnRequest();
 void incrementGlobalConfigurationVersion();
 
-void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
-void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
+void commonFrankensoAnalogInputs();
+void setFrankenso0_1_joystick();
 
 void emptyCallbackWithConfiguration(engine_configuration_s * engine);
 
