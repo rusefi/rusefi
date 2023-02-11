@@ -195,6 +195,10 @@ public class PinoutLogic {
     }
 
     public void registerBoardSpecificPinNames(VariableRegistry registry, DefinitionsState parseState, EnumsReader enumsReader) throws IOException {
+        if (boardInputs.getBoardYamlKeys().isEmpty()) {
+            // we have a board without yaml so no reason to generate board-specific .cpp file
+            return;
+        }
         readFiles();
         registerPins(boardInputs.getName(), globalList, registry, parseState, enumsReader);
 
