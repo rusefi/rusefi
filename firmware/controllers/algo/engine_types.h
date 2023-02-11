@@ -125,6 +125,7 @@ typedef enum __attribute__ ((__packed__)) {
 	 */
 	FRANKENSO_MAZDA_MIATA_2003 = 47,
 
+    // todo: add wastegate case into HW CI
 	TEST_DC_WASTEGATE_DISCOVERY = 48,
 
 	FRANKENSO_QA_ENGINE = 49,
@@ -213,7 +214,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	HELLEN_154_HYUNDAI_COUPE_BK2 = 95,
 
-    ET_UNUSED96 = 96,
+    WASTEGATE_4CHAN_TEST = 96,
     ET_UNUSED97 = 97,
     ET_UNUSED98 = 98,
 	ET_UNUSED_17 = 17,
