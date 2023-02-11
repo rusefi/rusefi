@@ -1,6 +1,7 @@
-package com.rusefi;
+package com.rusefi.pinout;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.*;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.newparse.DefinitionsState;
 import com.rusefi.newparse.parsing.Definition;

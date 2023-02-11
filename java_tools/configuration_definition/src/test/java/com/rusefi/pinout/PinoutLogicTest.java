@@ -1,7 +1,7 @@
-package com.rusefi.test;
+package com.rusefi.pinout;
 
 import com.rusefi.EnumsReader;
-import com.rusefi.PinoutLogic;
+import com.rusefi.pinout.PinoutLogic;
 import com.rusefi.enum_reader.Value;
 import org.junit.Test;
 
