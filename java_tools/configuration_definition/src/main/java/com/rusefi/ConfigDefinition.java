@@ -145,10 +145,8 @@ public class ConfigDefinition {
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
                     pinoutLogic = PinoutLogic.create(boardName);
-                    if (pinoutLogic != null) {
-                        for (String inputFile : pinoutLogic.getInputFiles())
-                            state.addInputFile(inputFile);
-                    }
+                    for (String inputFile : pinoutLogic.getInputFiles())
+                        state.addInputFile(inputFile);
                     break;
             }
         }
