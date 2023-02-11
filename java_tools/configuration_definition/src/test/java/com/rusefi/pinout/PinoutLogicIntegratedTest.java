@@ -14,15 +14,20 @@ import static org.junit.Assert.assertEquals;
 public class PinoutLogicIntegratedTest {
     @Test
     public void testWholeThing() throws IOException {
-        StringWriter testWriter = new StringWriter();
-
-        Reader input = new StringReader("pins:\n" +
+        runPinputTest("pins:\n" +
                 "  - pin: 1\n" +
                 "    id: [E11, E11]\n" +
                 "    class: [event_inputs, switch_inputs]\n" +
                 "    function: Digital trigger/switch input for instance Hall type CAM\n" +
                 "    ts_name: Digital 2\n" +
-                "    type: din");
+                "    type: din", "");
+
+    }
+
+    private static void runPinputTest(String inputYaml, String expected) throws IOException {
+        StringWriter testWriter = new StringWriter();
+
+        Reader input = new StringReader(inputYaml);
 
         BoardInputs testBoard = new BoardInputs() {
             @Override
@@ -67,7 +72,6 @@ public class PinoutLogicIntegratedTest {
 
         //logic.registerBoardSpecificPinNames(registry, definitionState, enumsReader);
 
-        //        assertEquals("", testWriter.getBuffer().toString());
-
+        //        assertEquals(expected, testWriter.getBuffer().toString());
     }
 }
