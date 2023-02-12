@@ -129,10 +129,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->luaOutputPins[0] = Gpio::G5; // 104 ETB Relay
 
-	engineConfiguration->throttlePedalUpVoltage = 0.75;
-	engineConfiguration->throttlePedalWOTVoltage = 4.45;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.43;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.20;
+	setPPSCalibration(0.75, 4.45, 0.43, 2.20);
 
 	// this calibration reminds me of VAG just flipped?
 	engineConfiguration->tpsMin = 100;

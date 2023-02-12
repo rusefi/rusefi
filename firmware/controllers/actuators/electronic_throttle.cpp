@@ -1142,17 +1142,11 @@ void setEtbLuaAdjustment(percent_t pos) {
 }
 
 void set18919_AM810_pedal_position_sensor() {
-	engineConfiguration->throttlePedalUpVoltage = 0.1;
-	engineConfiguration->throttlePedalWOTVoltage = 4.5;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.1;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.2;
+    setPPSCalibration(0.1, 4.5, 0.1, 2.2);
 }
 
 void setToyota89281_33010_pedal_position_sensor() {
-	engineConfiguration->throttlePedalUpVoltage = 0;
-	engineConfiguration->throttlePedalWOTVoltage = 4.1;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.9;
+	setPPSCalibration(0, 4.1, 0.73, 4.9);
 }
 
 void setHitachiEtbCalibration() {

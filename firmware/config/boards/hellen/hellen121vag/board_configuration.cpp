@@ -61,10 +61,7 @@ static void setupDefaultSensorInputs() {
     // 35 In PPS2
     setPPSInputs(H144_IN_PPS, H144_IN_AUX2);
 
-	engineConfiguration->throttlePedalUpVoltage = 0.4;
-	engineConfiguration->throttlePedalWOTVoltage = 2;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.7;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.1;
+	setPPSCalibration(0.4, 2, 0.7, 4.1);
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;

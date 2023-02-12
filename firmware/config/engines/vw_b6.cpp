@@ -58,10 +58,7 @@ static void commonPassatB6() {
 	strcpy(engineConfiguration->engineCode, "BPY");
 	strcpy(engineConfiguration->vehicleName, "test");
 
-	engineConfiguration->throttlePedalUpVoltage = 0.36;
-	engineConfiguration->throttlePedalWOTVoltage = 2.13;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.30;
+	setPPSCalibration(0.36, 2.13, 0.73, 4.30);
 
 	engineConfiguration->invertCamVVTSignal = true;
 

@@ -191,10 +191,7 @@ void setBoardDefaultConfiguration() {
 	 * https://rusefi.com/online/view.php?msq=630
 	 */
 	setPPSInputs(H144_IN_PPS, EFI_ADC_14);
-	engineConfiguration->throttlePedalUpVoltage = 1.49;
-	engineConfiguration->throttlePedalWOTVoltage = 4.72;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 1.34;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.24;
+	setPPSCalibration(1.49, 4.72, 1.34, 4.24);
 
 	engineConfiguration->vrThreshold[0].pin = Gpio::D14;
 	hellenWbo();

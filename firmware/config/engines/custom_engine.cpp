@@ -267,7 +267,6 @@ void setEtbTestConfiguration() {
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setBoschVNH2SP30Curve();
-//	setDefaultEtbParameters();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2; // PA2
