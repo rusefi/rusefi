@@ -4049,14 +4049,10 @@ dialog = tcuControls, "Transmission Settings"
 		panel = etbPidDialog, { etbFunctions1 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions1 == @@etb_function_e_ETB_Throttle2@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle2@@ }
 		panel = etbAutotune,  { etbFunctions1 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions1 == @@etb_function_e_ETB_Throttle2@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle2@@ }
 
-		; Neutral position handling not yet implemented!
-		;field = "Neutral Position",						etbNeutralPosition
-
 	dialog = etbDialog, "Electronic Throttle Body", border
 		topicHelp = "etbHelp"
 		panel = etbDialogLeft, West
 		panel = etbDialogRight, East
-
 
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1",  cmd_test_spk1
