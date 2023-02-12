@@ -1,6 +1,8 @@
 package com.rusefi.pinout;
 
 import com.rusefi.EnumsReader;
+import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.VariableRegistry;
 import com.rusefi.newparse.ParseState;
 import org.junit.Test;
@@ -56,19 +58,19 @@ public class PinoutLogicIntegratedTest {
             }
         };
 
-        VariableRegistry registry = new VariableRegistry();
-        EnumsReader enumsReader = new EnumsReader();
+        ReaderStateImpl state = new ReaderStateImpl();
 
-        enumsReader.read(new StringReader("#define switch_input_pin_e_enum \"NONE\", \"INVALID\", \"E11\"\n" +
-                "#define Gpio_enum \"NONE\", \"INVALID\", \"E11\"\n" +
-                "custom Gpio 2 bits, U16, @OFFSET@, [0:7], @@Gpio_enum@@\n" +
-                "custom switch_input_pin_e 2 bits, U16, @OFFSET@, [0:7], @@switch_input_pin_e_enum@@\n"));
+        state.getEnumsReader().read(new StringReader("enum class Gpio : uint16_t {\n" +
+                                                        "Unassigned = 0,\n" +
+                                                        "Invalid = 1,\n" +
+                                                        "E11 = 2,\n" +
+                                                        "};"));
 
-        ParseState definitionState = new ParseState();
+        ParseState definitionState = new ParseState(state.getEnumsReader());
 
         PinoutLogic logic = new PinoutLogic(testBoard);
 
-        //logic.registerBoardSpecificPinNames(registry, definitionState, enumsReader);
+        logic.registerBoardSpecificPinNames(state.getVariableRegistry(), definitionState, state.getEnumsReader());
 
         //        assertEquals(expected, testWriter.getBuffer().toString());
     }
