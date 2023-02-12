@@ -18,6 +18,8 @@ static EtbController * initEtbIntegratedTest() {
 	initTps();
 	doInitElectronicThrottle();
 
+	engine->etbControllers[0]->setIdlePosition(0);
+
 	return (EtbController*)engine->etbControllers[0];
 }
 

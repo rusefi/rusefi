@@ -127,7 +127,6 @@ static void commonPassatB6() {
 	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
 	engineConfiguration->fanPin = Gpio::Unassigned;
 
-	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 }

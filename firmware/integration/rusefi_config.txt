@@ -782,7 +782,7 @@ bit is_enabled_spi_2
 	bit is_enabled_spi_4
 	bit pauseEtbControl;Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 	bit alignEngineSnifferAtTDC
-	bit useETBforIdleControl;This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
+	bit unused764b29;
 	bit idleIncrementalPidCic
 	bit enableAemXSeries;AEM X-Series or rusEFI Wideband
 ! 'enableAemXSeries' is the 32nd bit here, you would need another bit region if more bits are desired
