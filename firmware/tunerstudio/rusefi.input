@@ -4045,9 +4045,9 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Debug mode",							debugMode
 
 	dialog = etbDialogRight
-		panel = etbIdleDialog
+		panel = etbIdleDialog,{ etbFunctions1 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions1 == @@etb_function_e_ETB_Throttle2@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle2@@ }
 		panel = etbPidDialog, { etbFunctions1 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions1 == @@etb_function_e_ETB_Throttle2@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle2@@ }
-		panel = etbAutotune
+		panel = etbAutotune,  { etbFunctions1 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions1 == @@etb_function_e_ETB_Throttle2@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle1@@ || etbFunctions2 == @@etb_function_e_ETB_Throttle2@@ }
 
 		; Neutral position handling not yet implemented!
 		;field = "Neutral Position",						etbNeutralPosition
