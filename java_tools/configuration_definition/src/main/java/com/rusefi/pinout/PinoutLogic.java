@@ -154,9 +154,12 @@ public class PinoutLogic {
             Object pinId = pin.get("id");
             Object pinClass = pin.get("class");
             Object pinName = pin.get("pin");
-            String pinTsName = (String) pin.get("ts_name");
+            Object pinTsName = pin.get("ts_name");
             if (pinId == null || pinClass == null || pinTsName == null) {
                 continue;
+            }
+            if (pinName != null) {
+                pinTsName = pinTsName.toString().replace("___", pinName.toString());
             }
             if (pinId instanceof ArrayList) {
                 ArrayList<String> pinIds = (ArrayList<String>) pinId;
@@ -167,14 +170,14 @@ public class PinoutLogic {
                     throw new IllegalStateException(pinName + ": id array length should match class array length: " + pinId + " vs " + pinClassArray);
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = pinIds.get(i);
-                    addPinToList(id, pinTsName, pinClassArray.get(i));
+                    addPinToList(id, (String) pinTsName, pinClassArray.get(i));
                 }
             } else if (pinId instanceof String) {
                 String pinIdString = (String) pinId;
                 if (pinIdString.length() == 0) {
                     throw new IllegalStateException("Unexpected empty ID field");
                 }
-                addPinToList(pinIdString, pinTsName, (String) pinClass);
+                addPinToList(pinIdString, (String) pinTsName, (String) pinClass);
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
