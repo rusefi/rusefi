@@ -95,6 +95,10 @@ public enum Sensor implements BinaryLogEntry {
     etb1DutyCycle(GAUGE_NAME_ETB_DUTY, SensorCategory.OTHERS, FieldType.INT16, TsOutputs.ETB1DUTYCYCLE, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 //    etb1Error(GAUGE_NAME_ETB_ERROR, SensorCategory.OTHERS, FieldType.INT16, 96, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 
+    boostDcPidOutput("Boost PID output", SensorCategory.FUEL, FieldType.INT16, TsOutputs.BOOSTSTATUS_OUTPUT, 1.0 / 100, 0, 20, ""),
+    boostDcPidPTerm("Boost PID pTerm", SensorCategory.FUEL, FieldType.FLOAT, TsOutputs.BOOSTSTATUS_PTERM, 1.0 / 100, 0, 20, ""),
+    boostDcPidITerm("Boost PID iTerm", SensorCategory.FUEL, FieldType.INT16, TsOutputs.BOOSTSTATUS_ITERM, 1.0 / 100, 0, 20, ""),
+
     // Fuel system
     afrTarget(GAUGE_NAME_TARGET_AFR, SensorCategory.FUEL, FieldType.INT16, FuelComputer.TARGETAFR, 1.0 / 1000, 0, 20, ""),
     sdAirMassInOneCylinder("sdAirMassInOneCylinder", SensorCategory.FUEL, FieldType.FLOAT, FuelComputer.SDAIRMASSINONECYLINDER, 1.0, 0, 15, "g"),
