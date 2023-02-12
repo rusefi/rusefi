@@ -306,11 +306,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	etbCurrentTarget = m_pedalMap->getValue(rpm, sanitizedPedal);
 
-	percent_t etbIdlePosition = clampF(
-									0,
-									engineConfiguration->useETBforIdleControl ? m_idlePosition : 0,
-									100
-								);
+	percent_t etbIdlePosition = clampF(0, m_idlePosition, 100);
 	percent_t etbIdleAddition = PERCENT_DIV * engineConfiguration->etbIdleThrottleRange * etbIdlePosition;
 
 	// Interpolate so that the idle adder just "compresses" the throttle's range upward.
@@ -1122,11 +1118,6 @@ void initElectronicThrottle() {
 }
 
 void setEtbIdlePosition(percent_t pos) {
-	if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
-		firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "ETB idle does not work with unhappy accelerator pedal.");
-		return;
-	}
-
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
 			etb->setIdlePosition(pos);
