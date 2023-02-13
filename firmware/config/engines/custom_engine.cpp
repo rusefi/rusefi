@@ -571,6 +571,24 @@ static void mreBoardOldTest() {
 }
 
 #if HW_PROTEUS
+void proteusDcWastegateTest() {
+	engineConfiguration->isBoostControlEnabled = true;
+	engineConfiguration->etbFunctions[0] = ETB_Wastegate;
+	engineConfiguration->etbFunctions[1] = ETB_None;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+
+	strncpy(config->luaScript, R"(
+
+mapSensor = Sensor.new("map")
+mapSensor : setTimeout(3000)
+
+function onTick()
+	mapSensor : set(40)
+end
+
+    )", efi::size(config->luaScript));
+}
+
 /**
  * PROTEUS_QC_TEST_BOARD
  * set engine_type 42
