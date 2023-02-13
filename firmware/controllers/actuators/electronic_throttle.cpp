@@ -8,8 +8,6 @@
  * Limited user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
  *
  *
- * https://raw.githubusercontent.com/wiki/rusefi/rusefi_documentation/oem_docs/VAG/Bosch_0280750009_pinout.jpg
- *
  *  ETB is controlled according to pedal position input (pedal position sensor is a potentiometer)
  *    pedal 0% means pedal not pressed / idle
  *    pedal 100% means pedal all the way down
@@ -99,7 +97,6 @@ void setHitachiEtbBiasBins() {
 	copyArray(config->etbBiasBins, hardCodedetbHitachiBiasBins);
 	copyArray(config->etbBiasValues, hardCodedetbHitachiBiasValues);
 }
-
 
 static SensorType functionToPositionSensor(etb_function_e func) {
 	switch(func) {
