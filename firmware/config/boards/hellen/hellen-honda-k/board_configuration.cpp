@@ -63,6 +63,7 @@ static void setupDefaultSensorInputs() {
 
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
+	setHellenMegaEnPin();
 	setupVbatt();
 
 	setHellenSdCardSpi2();
