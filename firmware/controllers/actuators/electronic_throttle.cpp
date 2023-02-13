@@ -1142,6 +1142,7 @@ void setEtbLuaAdjustment(percent_t pos) {
 }
 
 void set18919_AM810_pedal_position_sensor() {
+    // todo use setPPSCalibration(0.1, 4.3, 0.1, 1.96); once we have https://github.com/rusefi/rusefi/issues/5056
     setPPSCalibration(0.1, 4.5, 0.1, 2.2);
 }
 
