@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 13 21:38:43 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 13 22:24:59 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -98,10 +98,13 @@ public class Fields {
 	public static final int brain_pin_diag_e_PIN_SHORT_TO_GND = 0x02;
 	public static final int CAM_INPUTS_COUNT = 4;
 	public static final int CAMS_PER_BANK = 2;
-	public static final int can_baudrate_e_B100KBPS = 0;
-	public static final int can_baudrate_e_B1MBPS = 3;
-	public static final int can_baudrate_e_B250KBPS = 1;
-	public static final int can_baudrate_e_B500KBPS = 2;
+	public static final int can_baudrate_e_B100KBPS = 2;
+	public static final int can_baudrate_e_B125KBPS = 3;
+	public static final int can_baudrate_e_B1MBPS = 6;
+	public static final int can_baudrate_e_B250KBPS = 4;
+	public static final int can_baudrate_e_B500KBPS = 5;
+	public static final int can_baudrate_e_B50KBPS = 0;
+	public static final int can_baudrate_e_B83KBPS = 1;
 	public static final int CAN_DEFAULT_BASE = 0x200;
 	public static final int CAN_ECU_HW_META = 0xAB1234;
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
@@ -374,7 +377,7 @@ public class Fields {
 	public static final int etb_function_e_ETB_Throttle2 = 2;
 	public static final int etb_function_e_ETB_Wastegate = 4;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10019;
+	public static final int FLASH_DATA_VERSION = 10020;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -1203,7 +1206,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.02.13.f407-discovery.2570958493";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.02.13.f407-discovery.3187115958";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1316;
@@ -1981,7 +1984,7 @@ public class Fields {
 	public static final Field AUXSERIALSPEED = Field.create("AUXSERIALSPEED", 1608, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field THROTTLEPEDALSECONDARYUPVOLTAGE = Field.create("THROTTLEPEDALSECONDARYUPVOLTAGE", 1612, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 1616, FieldType.FLOAT).setBaseOffset(0);
-	public static final String[] can_baudrate_e = {"100kbps", "250kbps", "500kbps", "1Mbps"};
+	public static final String[] can_baudrate_e = {"50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"};
 	public static final Field CANBAUDRATE = Field.create("CANBAUDRATE", 1620, FieldType.INT8, can_baudrate_e).setScale(1.0).setBaseOffset(0);
 	public static final String[] ve_override_e = {"None", "MAP", "TPS"};
 	public static final Field VEOVERRIDEMODE = Field.create("VEOVERRIDEMODE", 1621, FieldType.INT8, ve_override_e).setScale(1.0).setBaseOffset(0);

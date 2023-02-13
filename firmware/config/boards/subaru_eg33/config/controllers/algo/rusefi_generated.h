@@ -95,12 +95,15 @@
 #define brain_pin_diag_e_PIN_SHORT_TO_GND 0x02
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
-#define can_baudrate_e_auto_enum 0="B100KBPS",3="B1MBPS",1="B250KBPS",2="B500KBPS"
-#define can_baudrate_e_B100KBPS 0
-#define can_baudrate_e_B1MBPS 3
-#define can_baudrate_e_B250KBPS 1
-#define can_baudrate_e_B500KBPS 2
-#define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
+#define can_baudrate_e_auto_enum 0="B50KBPS",2="B100KBPS",3="B125KBPS",6="B1MBPS",4="B250KBPS",5="B500KBPS",1="B83KBPS"
+#define can_baudrate_e_B100KBPS 2
+#define can_baudrate_e_B125KBPS 3
+#define can_baudrate_e_B1MBPS 6
+#define can_baudrate_e_B250KBPS 4
+#define can_baudrate_e_B500KBPS 5
+#define can_baudrate_e_B50KBPS 0
+#define can_baudrate_e_B83KBPS 1
+#define can_baudrate_e_enum "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
 #define CAN_ECU_HW_META 0xAB1234
 #define CAN_ECU_SERIAL_RX_ID 0x100
@@ -385,7 +388,7 @@
 #define etb_function_e_ETB_Throttle2 2
 #define etb_function_e_ETB_Wastegate 4
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FLASH_DATA_VERSION 10019
+#define FLASH_DATA_VERSION 10020
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
@@ -996,7 +999,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2192571030
+#define SIGNATURE_HASH 2791689149
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1273,7 +1276,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.02.13.subaru_eg33_f7.2192571030"
+#define TS_SIGNATURE "rusEFI master.2023.02.13.subaru_eg33_f7.2791689149"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

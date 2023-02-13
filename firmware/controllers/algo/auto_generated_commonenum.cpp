@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Feb 06 13:14:54 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Feb 13 22:24:11 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -228,12 +228,18 @@ const char *getCan_baudrate_e(can_baudrate_e value){
 switch(value) {
 case B100KBPS:
   return "B100KBPS";
+case B125KBPS:
+  return "B125KBPS";
 case B1MBPS:
   return "B1MBPS";
 case B250KBPS:
   return "B250KBPS";
 case B500KBPS:
   return "B500KBPS";
+case B50KBPS:
+  return "B50KBPS";
+case B83KBPS:
+  return "B83KBPS";
   }
  return NULL;
 }
