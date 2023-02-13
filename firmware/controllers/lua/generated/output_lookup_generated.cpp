@@ -669,6 +669,10 @@ float getOutputValueByName(const char *name) {
 			return engine->triggerCentral.triggerToothAngleError;
 		case 989545496:
 			return engine->triggerCentral.triggerIgnoredToothCount;
+		case 1242329357:
+			return engine->dc_motors.dcOutput0;
+		case 1691876092:
+			return engine->dc_motors.isEnabled0;
 	}
 	return EFI_ERROR_CODE;
 }
