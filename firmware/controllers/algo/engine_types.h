@@ -214,7 +214,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	HELLEN_154_HYUNDAI_COUPE_BK2 = 95,
 
-    WASTEGATE_4CHAN_TEST = 96,
+    WASTEGATE_PROTEUS_TEST = 96,
     ET_UNUSED97 = 97,
     ET_UNUSED98 = 98,
 	ET_UNUSED_17 = 17,
