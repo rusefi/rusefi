@@ -136,3 +136,9 @@ Usages:
     java: WidebandController.java
     folder: controllers/sensors/
     output_name: [ "wb1", "wb2" ]
+
+  - name: dc_motors
+    java: DcMotors.java
+    folder: controllers/actuators
+    prepend: integration/rusefi_config.txt
+    constexpr: "engine->dc_motors"

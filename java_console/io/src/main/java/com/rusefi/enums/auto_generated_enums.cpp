@@ -1,6 +1,6 @@
 #include "global.h"
 #include "live_data_ids.h"
-// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Sun Jan 15 13:37:00 UTC 2023
+// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Mon Feb 13 23:03:26 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -13,6 +13,8 @@ case LDS_antilag_system_state:
   return "LDS_antilag_system_state";
 case LDS_boost_control:
   return "LDS_boost_control";
+case LDS_dc_motors:
+  return "LDS_dc_motors";
 case LDS_electronic_throttle:
   return "LDS_electronic_throttle";
 case LDS_engine_state:
