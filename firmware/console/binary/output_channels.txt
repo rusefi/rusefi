@@ -2,7 +2,7 @@
 
 !
 ! this https://en.wikipedia.org/wiki/God_object is DEPRECATED
-! the dream is to move many or most of the state out into smaller structures/classes
+! the dream is to move many or most of the state out into smaller structures/classes like electronic_throttle.txt
 ! See also LiveData.yaml
 !
 
