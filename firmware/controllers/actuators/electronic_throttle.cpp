@@ -1034,6 +1034,7 @@ void doInitElectronicThrottle() {
 	engineConfiguration->etb1configured = engineConfiguration->etb2configured = false;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
+	// like DC motor wastegate code flow should probably NOT go through electronic_throttle.cpp right?
 	// todo: rename etbFunctions to something-without-etb for same reason?
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		auto func = engineConfiguration->etbFunctions[i];
