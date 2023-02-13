@@ -31,12 +31,14 @@ static bool isCanEnabled = false;
 // Clock rate of 42mhz for f4, 54mhz for f7, 80mhz for h7
 #ifdef STM32F4XX
 // These have an 85.7% sample point
+#define CAN_BTR_50 (CAN_BTR_SJW(0) | CAN_BTR_BRP(59) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #define CAN_BTR_100 (CAN_BTR_SJW(0) | CAN_BTR_BRP(29) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #define CAN_BTR_250 (CAN_BTR_SJW(0) | CAN_BTR_BRP(11) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #define CAN_BTR_1k0 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #elif defined(STM32F7XX)
 // These have an 88.9% sample point
+#define CAN_BTR_50 (CAN_BTR_SJW(0) | CAN_BTR_BRP(60) | CAN_BTR_TS1(15) | CAN_BTR_TS2(2))
 #define CAN_BTR_100 (CAN_BTR_SJW(0) | CAN_BTR_BRP(30) | CAN_BTR_TS1(15) | CAN_BTR_TS2(2))
 #define CAN_BTR_250 (CAN_BTR_SJW(0) | CAN_BTR_BRP(11) | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
@@ -45,6 +47,10 @@ static bool isCanEnabled = false;
 // These have an 87.5% sample point
 // FDCAN driver has different bit timing registers (yes, different format)
 // for the arbitration and data phases
+
+#define CAN_NBTP_50 0x00630C01
+#define CAN_DBTP_50 0x00630C13
+
 #define CAN_NBTP_100 0x00310C01
 #define CAN_DBTP_100 0x00310C13
 
@@ -70,6 +76,11 @@ static bool isCanEnabled = false;
  * CAN_TI0R_STID "Standard Identifier or Extended Identifier"? not mentioned as well
  */
 #if defined(STM32F4XX) || defined(STM32F7XX)
+static const CANConfig canConfig50 = {
+	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.btr = CAN_BTR_50
+};
+
 static const CANConfig canConfig100 = {
 	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 	.btr = CAN_BTR_100
@@ -89,6 +100,14 @@ static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 #elif defined(STM32H7XX)
+static const CANConfig canConfig50 = {
+	.NBTP = CAN_NBTP_50,
+	.DBTP = CAN_DBTP_50,
+	.CCCR = 0,
+	.TEST = 0,
+	.RXGFC = 0,
+};
+
 static const CANConfig canConfig100 = {
 	.NBTP = CAN_NBTP_100,
 	.DBTP = CAN_DBTP_100,
@@ -125,6 +144,7 @@ static const CANConfig canConfig1000 = {
 #else // not EFI_PROD_CODE
 // Nothing to actually set for the simulator's CAN config.
 // It's impossible to set CAN bitrate from userspace, so we can't set it.
+static const CANConfig canConfig50;
 static const CANConfig canConfig100;
 static const CANConfig canConfig250;
 static const CANConfig canConfig500;
@@ -260,6 +280,9 @@ void startCanPins() {
 
 static const CANConfig * findConfig(can_baudrate_e rate) {
 	switch (rate) {
+	case B50KBPS:
+		return &canConfig50;
+		break;
 	case B100KBPS:
 		return &canConfig100;
 		break;

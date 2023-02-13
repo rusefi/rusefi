@@ -1192,8 +1192,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float throttlePedalSecondaryUpVoltage;;"voltage", 1, 0, -6, 6, 2
 	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"voltage", 1, 0, -6, 6, 2
 
-	#define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
-	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@
+	#define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps", "50kbps"
+	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:2], @@can_baudrate_e_enum@@
 	can_baudrate_e canBaudRate; set can_baudrate
 
 	#define ve_override_e_enum "None", "MAP", "TPS"
