@@ -100,6 +100,11 @@ const tps_accel_state_s* getLiveData(size_t) {
 }
 
 template<>
+const dc_motors_s* getLiveData(size_t) {
+	return &engine->dc_motors;
+}
+
+template<>
 const trigger_central_s* getLiveData(size_t) {
 #if EFI_SHAFT_POSITION_INPUT
 	return &engine->triggerCentral;
