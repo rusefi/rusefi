@@ -1226,11 +1226,11 @@ gaugeCategory = Idle
 	idleStatus_resetCounterGauge = idleStatus_resetCounter,"Idle PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
 
 gaugeCategory = Etb PID
-	etbStatus_iTermGauge = etbStatus_iTerm,"ETB 1 PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	etbStatus_dTermGauge = etbStatus_dTerm,"ETB 1 PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	etbStatus_outputGauge = etbStatus_output,"ETB 1 PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	etbStatus_errorGauge = etbStatus_error,"ETB 1 PID error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	etbStatus_resetCounterGauge = etbStatus_resetCounter,"ETB 1 PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+	etbStatus_iTermGauge = etbStatus_iTerm,"ETB 1 PID iTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
+	etbStatus_dTermGauge = etbStatus_dTerm,"ETB 1 PID dTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
+	etbStatus_outputGauge = etbStatus_output,"ETB 1 PID output", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
+	etbStatus_errorGauge = etbStatus_error,"ETB 1 PID error", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
+	etbStatus_resetCounterGauge = etbStatus_resetCounter,"ETB 1 PID resetCounter", "", 0,100.0, 0,100.0, 0,100.0, 0,0
 
 gaugeCategory = CAN
 	canReadCounterGauge = canReadCounter,"canReadCounter", "", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
