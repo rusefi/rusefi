@@ -325,4 +325,6 @@ static constexpr LogField fields[] = {
 	{engine->triggerCentral.currentEngineDecodedPhase, "Engine Phase", "deg", 0},
 	{engine->triggerCentral.triggerToothAngleError, "triggerToothAngleError", "deg", 2},
 	{engine->triggerCentral.triggerIgnoredToothCount, "triggerIgnoredToothCount", "", 0},
+	{engine->dc_motors.dcOutput0, "DC: output0", "per", 2, "ETB more"},
+	{engine->dc_motors.isEnabled0_int, "DC: en0", "per", 2, "ETB more"},
 };

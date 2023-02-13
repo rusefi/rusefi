@@ -24,6 +24,7 @@ LDS_wall_fuel_state,
 LDS_idle_state,
 LDS_electronic_throttle,
 LDS_wideband_state,
+LDS_dc_motors,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define FUEL_COMPUTER_BASE_ADDRESS 764
@@ -47,3 +48,4 @@ LDS_wideband_state,
 #define IDLE_STATE_BASE_ADDRESS 1216
 #define ELECTRONIC_THROTTLE_BASE_ADDRESS 1256
 #define WIDEBAND_STATE_BASE_ADDRESS 1304
+#define DC_MOTORS_BASE_ADDRESS 1316
