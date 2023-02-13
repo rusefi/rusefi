@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Mon Feb 13 17:54:48 EST 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Mon Feb 13 23:03:26 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -404,8 +404,8 @@ public class DcMotors {
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field DCOUTPUT0 = Field.create("DCOUTPUT0", 0, FieldType.FLOAT).setBaseOffset(812);
-	public static final Field ISENABLED0 = Field.create("ISENABLED0", 4, FieldType.BIT, 0).setBaseOffset(812);
+	public static final Field DCOUTPUT0 = Field.create("DCOUTPUT0", 0, FieldType.FLOAT).setBaseOffset(1316);
+	public static final Field ISENABLED0 = Field.create("ISENABLED0", 4, FieldType.BIT, 0).setBaseOffset(1316);
 	public static final Field[] VALUES = {
 	DCOUTPUT0,
 	ISENABLED0,
