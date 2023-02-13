@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - Antilag switch pin mode was ignored #5036
+ - 50/83.3/125kbit CAN #5072
 
 ## February 2023 Release - "Day 346"
 
