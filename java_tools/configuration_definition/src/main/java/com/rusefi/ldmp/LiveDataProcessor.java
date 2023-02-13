@@ -136,13 +136,13 @@ public class LiveDataProcessor {
                     outputValueConsumer.conditional = conditional;
                     state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
 
-                    state.addDestination(new ConfigurationConsumer() {
-                        @Override
-                        public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-                            gaugeConsumer.handleEndStruct(readerState, structure);
-                        }
-                    });
                 }
+                state.addDestination(new ConfigurationConsumer() {
+                    @Override
+                    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+                        gaugeConsumer.handleEndStruct(readerState, structure);
+                    }
+                });
 
                 state.doJob();
 
