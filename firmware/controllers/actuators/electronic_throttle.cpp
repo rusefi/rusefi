@@ -447,19 +447,15 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		float kd = 0.08f * ku * m_tu;
 
 		// Every 5 cycles (of the throttle), cycle to the next value
-		if (m_autotuneCounter == 5) {
+		if (m_autotuneCounter >= 5) {
 			m_autotuneCounter = 0;
-			m_autotuneCurrentParam++;
-
-			if (m_autotuneCurrentParam >= 3) {
-				m_autotuneCurrentParam = 0;
-			}
+			m_autotuneCurrentParam = (m_autotuneCurrentParam + 1) % 3; // three ETB calibs: P-I-D
 		}
 
 		m_autotuneCounter++;
 
 		// Multiplex 3 signals on to the {mode, value} format
-		engine->outputChannels.calibrationMode = (uint8_t)static_cast<TsCalMode>(m_autotuneCurrentParam + 3);
+		engine->outputChannels.calibrationMode = (uint8_t)static_cast<TsCalMode>((uint8_t)TsCalMode::EtbKp + m_autotuneCurrentParam);
 
 		switch (m_autotuneCurrentParam) {
 		case 0:
