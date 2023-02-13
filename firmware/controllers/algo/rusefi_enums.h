@@ -567,11 +567,13 @@ typedef enum __attribute__ ((__packed__)) {
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	B100KBPS = 0, // 100kbps
-	B250KBPS = 1, // 250kbps
-	B500KBPS = 2, // 500kbps
-	B1MBPS = 3, // 1Mbps
-	B50KBPS = 4, // 50kbps
+	B50KBPS = 0, // 50kbps
+	B83KBPS = 1, // 83.33kbps
+	B100KBPS = 2, // 100kbps
+	B125KBPS = 3, // 125kbps
+	B250KBPS = 4, // 250kbps
+	B500KBPS = 5, // 500kbps
+	B1MBPS = 6, // 1Mbps
 } can_baudrate_e;
 
 typedef enum __attribute__ ((__packed__)) {
