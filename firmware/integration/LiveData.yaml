@@ -129,6 +129,7 @@ Usages:
   - name: electronic_throttle
     java: ElectronicThrottle.java
     folder: controllers/actuators
+    prepend: integration/rusefi_config.txt
     output_name: [ "etb1", "etb2" ]
 
   - name: wideband_state
