@@ -667,6 +667,7 @@ DcHardware *getdcHardware();
 
     DcHardware *dc = getdcHardware();
     engine->dc_motors.dcOutput0 = dc->dcMotor.get();
+    engine->dc_motors.isEnabled0_int = dc->msg() == nullptr;
 
 #if EFI_SHAFT_POSITION_INPUT
 
