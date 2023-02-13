@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 12 04:07:00 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 12 21:51:36 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -993,7 +993,6 @@ public class Fields {
 	public static final int sensor_chart_e_SC_RPM_ACCEL = 3;
 	public static final int sensor_chart_e_SC_TRIGGER = 1;
 	public static final int SENT_INPUT_COUNT = 1;
-	public static final int SIGNATURE_HASH = 1627373505;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1203,7 +1202,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.02.12.f407-discovery.1627373505";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.02.12.f407-discovery.3416015609";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1316;
@@ -1581,7 +1580,6 @@ public class Fields {
 	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 764, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 764, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 764, FieldType.BIT, 28).setBaseOffset(0);
-	public static final Field USEETBFORIDLECONTROL = Field.create("USEETBFORIDLECONTROL", 764, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field IDLEINCREMENTALPIDCIC = Field.create("IDLEINCREMENTALPIDCIC", 764, FieldType.BIT, 30).setBaseOffset(0);
 	public static final Field ENABLEAEMXSERIES = Field.create("ENABLEAEMXSERIES", 764, FieldType.BIT, 31).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 768, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
@@ -3038,7 +3036,6 @@ public class Fields {
 	IS_ENABLED_SPI_4,
 	PAUSEETBCONTROL,
 	ALIGNENGINESNIFFERATTDC,
-	USEETBFORIDLECONTROL,
 	IDLEINCREMENTALPIDCIC,
 	ENABLEAEMXSERIES,
 	LOGICANALYZERPINS1,

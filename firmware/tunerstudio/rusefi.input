@@ -280,7 +280,6 @@ enable2ndByteCanID = false
 	maintainConstantValue = throttlePedalWOTVoltage, { (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue  : throttlePedalWOTVoltage }
 	maintainConstantValue = throttlePedalSecondaryWOTVoltage, { (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue2 : throttlePedalSecondaryWOTVoltage }
 
-	requiresPowerCycle = useETBforIdleControl
 	requiresPowerCycle = warningLedPin
 	requiresPowerCycle = runningLedPin
 	requiresPowerCycle = binarySerialTxPin
@@ -3141,8 +3140,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "!ECU reboot needed to apply these settings"
 		field = "Use Stepper",				useStepperIdle
 		field = "Double Solenoid Mode",		isDoubleSolenoidIdle
-		field = "Use electronic throttle for idle",			useETBforIdleControl, { useETBforIdleControl == 1 || throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ }
-		field = "Electronic throttle idle range",			etbIdleThrottleRange, { useETBforIdleControl == 1 }
+		field = "Electronic throttle idle range",			etbIdleThrottleRange
 		panel = idleHwType
 
 	dialog = idlePidSettings, "Closed Loop Idle"
@@ -4011,7 +4009,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "iTermMax",								etb_iTermMax
 
 	dialog = etbIdleDialog, "ETB Idle"
-		field = "use ETB for idle",						useETBforIdleControl
 		field = "ETB idle maximum angle",				etbIdleThrottleRange
 
 	dialog = etbDialogLeft
@@ -4250,9 +4247,9 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Min RPM",            	    		ALSMinRPM,  {antiLagEnabled == 1}
 		field = "Max RPM",                          ALSMaxRPM,  {antiLagEnabled == 1}
 		field = "Min CLT",                          ALSMinCLT,  {antiLagEnabled == 1}
-		field = "Max CLT",          	    		ALSMaxCLT,  {antiLagEnabled == 1}                 
-		field = "Idle Air Add",                     ALSIdleAdd, {useETBforIdleControl != 1 && antiLagEnabled == 1}
-		field = "ETB Air Add",                      ALSEtbAdd,  {useETBforIdleControl == 1 && antiLagEnabled == 1}
+		field = "Max CLT",          	    		ALSMaxCLT,  {antiLagEnabled == 1}
+		field = "Idle Air Add",                     ALSIdleAdd, {antiLagEnabled == 1}
+		field = "ETB Air Add",                      ALSEtbAdd,  {antiLagEnabled == 1}
 		field = "Spark Skip Ratio",                 ALSSkipRatio,  {antiLagEnabled == 1}
 		panel = FuelAdderTableALS
 		panel = IgnRetardTableALS
