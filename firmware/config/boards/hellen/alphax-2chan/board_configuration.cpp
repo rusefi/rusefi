@@ -101,7 +101,10 @@ void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
 
-	setHellenSdCardSpi2();
+	// rev.D uses SPI1 pins for CAN2, but rev.E and later uses SPI1 for SD-card
+	if (engine->engineState.hellenBoardId != BOARD_ID_2chan_d) {
+		setHellenSdCardSpi1();
+	}
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
