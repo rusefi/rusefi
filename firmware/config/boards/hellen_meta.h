@@ -8,6 +8,7 @@
 #pragma once
 
 #define BOARD_ID_154hyundai_c 10
+#define BOARD_ID_2chan_d 107
 
 void hellenWbo();
 
