@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Tue Jan 10 21:34:44 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Mon Feb 13 05:58:22 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -7,6 +7,7 @@
 struct electronic_throttle_s {
 	/**
 	 * "ETB: idlePosition"
+	per
 	 * offset 0
 	 */
 	float idlePosition = (float)0;
@@ -17,6 +18,7 @@ struct electronic_throttle_s {
 	float trim = (float)0;
 	/**
 	 * "ETB: luaAdjustment"
+	per
 	 * offset 8
 	 */
 	float luaAdjustment = (float)0;
@@ -135,20 +137,26 @@ struct electronic_throttle_s {
 	offset 28 bit 31 */
 	bool unusedBit_9_31 : 1 {};
 	/**
+	 * "ETB duty rate of change"
+	per
 	 * offset 32
 	 */
 	float etbDutyRateOfChange = (float)0;
 	/**
+	 * "ETB average duty"
+	per
 	 * offset 36
 	 */
 	float etbDutyAverage = (float)0;
 	/**
 	 * "ETB TPS error counter"
+	count
 	 * offset 40
 	 */
 	uint16_t etbTpsErrorCounter = (uint16_t)0;
 	/**
 	 * "ETB pedal error counter"
+	count
 	 * offset 42
 	 */
 	uint16_t etbPpsErrorCounter = (uint16_t)0;
@@ -172,4 +180,4 @@ struct electronic_throttle_s {
 static_assert(sizeof(electronic_throttle_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Tue Jan 10 21:34:44 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Mon Feb 13 05:58:22 UTC 2023
