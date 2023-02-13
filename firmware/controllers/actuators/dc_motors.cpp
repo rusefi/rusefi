@@ -10,54 +10,8 @@
 #include "periodic_task.h"
 
 #include "dc_motors.h"
-#include "dc_motor.h"
 
-// Simple wrapper to use an OutputPin as "PWM" that can only do 0 or 1
-struct PwmWrapper : public IPwm {
-	OutputPin& m_pin;
-
-	PwmWrapper(OutputPin& pin) : m_pin(pin) { }
-
-	void setSimplePwmDutyCycle(float dutyCycle) override {
-		m_pin.setValue(dutyCycle > 0.5f);
-	}
-};
-
-class DcHardware {
-private:
-	OutputPin m_pinEnable;
-	OutputPin m_pinDir1;
-	OutputPin m_pinDir2;
-	OutputPin m_disablePin;
-
-	PwmWrapper wrappedEnable{m_pinEnable};
-	PwmWrapper wrappedDir1{m_pinDir1};
-	PwmWrapper wrappedDir2{m_pinDir2};
-
-	SimplePwm m_pwm1;
-	SimplePwm m_pwm2;
-
-	bool isStarted = false;
-
-public:
-	DcHardware() : dcMotor(m_disablePin) {}
-
-	TwoPinDcMotor dcMotor;
-	
-	void setFrequency(int frequency) {
-		m_pwm1.setFrequency(frequency);
-		m_pwm2.setFrequency(frequency);
-	}
-
-	const char *msg() {
-	    return dcMotor.msg;
-	}
-
-	void stop() {
-		// todo: replace 'isStarted' with 'stop'
-	}
-
-	void start(bool useTwoWires, 
+	void DcHardware::start(bool useTwoWires,
 			brain_pin_e pinEnable,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2,
@@ -127,9 +81,12 @@ public:
 			dcMotor.configure(m_pwm1, wrappedDir1, wrappedDir2, isInverted);
 		}
 	}
-};
 
 static DcHardware dcHardware[ETB_COUNT + DC_PER_STEPPER];
+
+DcHardware *getdcHardware() {
+    return &dcHardware[0];
+}
 
 DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
 	auto& hw = dcHardware[index];
