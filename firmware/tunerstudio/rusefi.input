@@ -1961,10 +1961,10 @@ cmd_tle8888_init			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\
 cmd_write_config			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0A"
 cmd_etb_autotune				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0C"
 cmd_enable_self_stim			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0D"
-cmb_etb_auto_calibrate		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0E"
+cmd_etb_auto_calibrate		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0E"
 cmd_disable_self_stim		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0F"
 cmd_etb_autotune_stop		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x10"
-cmb_etb_auto_calibrate_2	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x11"
+cmd_etb_auto_calibrate_2	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x11"
 cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x12"
 cmd_enable_ext_stim			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x13"
 cmd_nDBANK						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x14"@@if_ts_show_f7_presets
@@ -2531,7 +2531,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Secondary sensor",				tps1_2AdcChannel, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@ && tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@ && tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
-		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate, {etb1configured == 1 && tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate ETB 1", cmd_etb_auto_calibrate, {etb1configured == 1 && tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsNum2, "Throttle Body #2"
 		field = "Primary sensor",				tps2_1AdcChannel
@@ -2540,7 +2540,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Secondary sensor",				tps2_2AdcChannel, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@ && tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@ && tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
-		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2, {etb2configured == 1 && tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate ETB 2", cmd_etb_auto_calibrate_2, {etb2configured == 1 && tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsLimits, "TPS Limits"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
@@ -4028,8 +4028,8 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
-		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate, {etb1configured == 1 && tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
-		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2, {etb2configured == 1 && tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate ETB 1", cmd_etb_auto_calibrate, {etb1configured == 1 && tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate ETB 2", cmd_etb_auto_calibrate_2, {etb2configured == 1 && tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Second step"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune,       { etb1configured == 1 || etb2configured == 1 }
 		commandButton = "Stop ETB PID Autotune",  cmd_etb_autotune_stop,  { etb1configured == 1 || etb2configured == 1 }
