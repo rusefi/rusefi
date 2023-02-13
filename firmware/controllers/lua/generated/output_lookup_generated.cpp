@@ -671,6 +671,8 @@ float getOutputValueByName(const char *name) {
 			return engine->triggerCentral.triggerIgnoredToothCount;
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;
+		case -1236599226:
+			return engine->dc_motors.isEnabled0_int;
 		case 1691876092:
 			return engine->dc_motors.isEnabled0;
 	}
