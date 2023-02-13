@@ -55,6 +55,7 @@
 #include "dynoview.h"
 #include "frequency_sensor.h"
 #include "digital_input_exti.h"
+#include "dc_motors.h"
 
 extern bool main_loop_started;
 
@@ -661,6 +662,11 @@ void updateTunerStudioState() {
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 	static_assert(offsetof (TunerStudioOutputChannels, tsConfigVersion) == TS_FILE_VERSION_OFFSET);
+
+DcHardware *getdcHardware();
+
+    DcHardware *dc = getdcHardware();
+    engine->dc_motors.dcOutput0 = dc->dcMotor.get();
 
 #if EFI_SHAFT_POSITION_INPUT
 
