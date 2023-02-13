@@ -217,7 +217,7 @@ static void setHellenSdCardSpi1() {
 	engineConfiguration->spi1mosiPin = H_SPI1_MOSI;
 	engineConfiguration->spi1misoPin = H_SPI1_MISO;
 	engineConfiguration->spi1sckPin = H_SPI1_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI1_CS;
+	engineConfiguration->sdCardCsPin = H_SPI1_CS1;
 	engineConfiguration->is_enabled_spi_1 = true;
 }
 
