@@ -317,8 +317,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->pauseEtbControl;
 		case 1836072195:
 			return engineConfiguration->alignEngineSnifferAtTDC;
-		case -1854539309:
-			return engineConfiguration->useETBforIdleControl;
 		case 1064399425:
 			return engineConfiguration->idleIncrementalPidCic;
 		case 259909218:
@@ -1834,11 +1832,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 1836072195:
 	{
 		engineConfiguration->alignEngineSnifferAtTDC = (int)value;
-		return;
-	}
-		case -1854539309:
-	{
-		engineConfiguration->useETBforIdleControl = (int)value;
 		return;
 	}
 		case 1064399425:

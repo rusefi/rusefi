@@ -469,9 +469,6 @@ Disable the electronic throttle motor and DC idle motor for testing.\nThis mode 
 ### alignEngineSnifferAtTDC
 
 
-### useETBforIdleControl
-This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
-
 ### idleIncrementalPidCic
 
 

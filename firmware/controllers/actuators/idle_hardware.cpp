@@ -34,12 +34,16 @@ void applyIACposition(percent_t position) {
 	 */
 	float duty = PERCENT_TO_DUTY(position);
 
-	if (engineConfiguration->useETBforIdleControl) {
 #if EFI_ELECTRONIC_THROTTLE_BODY
-		setEtbIdlePosition(position);
+	setEtbIdlePosition(position);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
+
+#if EFI_UNIT_TEST
+	if (false) {
+#endif // EFI_UNIT_TEST
+
 #if ! EFI_UNIT_TEST
-	} else if (engineConfiguration->useStepperIdle) {
+	if (engineConfiguration->useStepperIdle) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
 #endif /* EFI_UNIT_TEST */
 	} else {
@@ -76,7 +80,6 @@ bool isIdleHardwareRestartNeeded() {
 			isConfigurationChanged(idle.stepperStepPin) ||
 			isConfigurationChanged(idle.solenoidFrequency) ||
 			isConfigurationChanged(useStepperIdle) ||
-			isConfigurationChanged(useETBforIdleControl) ||
 			isConfigurationChanged(idle.solenoidPin) ||
 			isConfigurationChanged(secondSolenoidPin) ||
 			isConfigurationChanged(useRawOutputToDriveIdleStepper) ||
@@ -138,9 +141,7 @@ void initIdleHardware() {
 		}
 
 		iacMotor.initialize(hw, engineConfiguration->idleStepperTotalSteps);
-	} else if (engineConfiguration->useETBforIdleControl || !isBrainPinValid(engineConfiguration->idle.solenoidPin)) {
-		// here we do nothing for ETB idle and for no idle
-	} else {
+	} else if (isBrainPinValid(engineConfiguration->idle.solenoidPin)) {
 		// we are here for single or double solenoid idle
 
 		/**
