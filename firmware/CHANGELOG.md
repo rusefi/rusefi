@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+- Rearrange & simplify trigger configuration UI #5077
+
 ### Breaking Changes
  - rusefi_default_bundle.zip was replaced by rusefi_bundle_f407-discovery.zip #5078
 
