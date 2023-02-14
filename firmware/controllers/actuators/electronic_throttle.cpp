@@ -161,7 +161,7 @@ static percent_t directPwmValue = NAN;
 bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool hasPedal) {
 	if (function == ETB_None) {
 		// if not configured, don't init.
-		etbErrorCode = (int8_t)TpsState::NotConfigured;
+		etbErrorCode = (int8_t)TpsState::None;
 		return false;
 	}
 
@@ -172,7 +172,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	if (isEtbMode()) {
 		// We don't need to init throttles, so nothing to do here.
 		if (!hasPedal) {
-			etbErrorCode = (int8_t)TpsState::PpsError;
+			etbErrorCode = (int8_t)TpsState::None;
 			return false;
 		}
 
