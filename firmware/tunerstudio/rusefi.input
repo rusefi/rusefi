@@ -1572,7 +1572,7 @@ menuDialog = main
 		subMenu = engineChars,				"Base engine"
 		subMenu = limitsAndFallback,		"Limits and fallbacks"
 		subMenu = triggerConfiguration,		"Trigger"
-		subMenu = triggerConfiguration_IO, "Advanced Trigger"
+		subMenu = trigger_advanced, "Advanced Trigger"
 		subMenu = triggerConfiguration_gap, "Trigger Gap Override"
 		subMenu = std_separator
 		subMenu = energySystems,			"Battery and alternator"
@@ -2163,19 +2163,54 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Compression Ratio",					compressionRatio
 		field = "Forced Induction?",					isForcedInduction
 
-;			Engine->Trigger configuration
-	dialog = triggerConfiguration_settings,	"Trigger Pattern"
+	dialog = trigger_primary, "Primary Trigger"
 		topicHelp = "triggerHelp"
+		; see also in firmware '[doesTriggerImplyOperationMode]' tag
+		field = "What kind of engine",						twoStroke
+		field = ""
 		field = "Trigger type",							trigger_type
 		field = "Total tooth count",					trigger_customTotalToothCount, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}
 		field = "Missing/skipped tooth count",					trigger_customSkippedToothCount, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}
-
-		; see also in firmware '[doesTriggerImplyOperationMode]' tag
-		field = "What kind of engine",						twoStroke
 		field = "Skipped wheel location",					skippedWheelOnCam, 1, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
+		field = ""
 		field = "!Reminder that 4-stroke cycle is 720 degrees"
 		field = "!For well-known trigger types use '0' trigger angle offset"
 		field = "Trigger Angle Advance",					globalTriggerAngleOffset
+
+		field = ""
+		field = ""
+
+		field = "#Cam is primary if you have cam sensor as part of trigger shape"
+		; cam if
+		; two-stroke, or
+		; not crank trigger and ((vague trigger and cam choice) or not vague trigger)
+		field = "Cam Sensor (Primary channel)",		triggerInputPins1, 1, {twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )  }
+		field = "Crank Sensor (Primary channel)",		triggerInputPins1, 1, { !(twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )) }
+		field = "Invert Primary",						invertPrimaryTriggerSignal
+		field = "Secondary channel",					triggerInputPins2, { triggerInputPins2 != 0 || (triggerInputPins1 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
+		field = "Invert Secondary",						invertSecondaryTriggerSignal, {triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
+
+	dialog = trigger_cams, "Cam Inputs"
+		field = "!https://rusefi.com/s/vvt"
+		; todo: code generator to hard-code all triggers not requiring VVT?
+		; todo: https://github.com/rusefi/rusefi/issues/2077
+
+		field = "Cam mode (intake)",				vvtMode1, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
+		field = "Cam mode (exhaust)",				vvtMode2, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
+		field = ""
+		field = "Cam sensor bank 1 intake",			camInputs1, { camInputs1 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ ) }
+		field = "Cam sensor bank 1 exhaust",		camInputs2, { camInputs2 != 0 || (vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 ) }
+		field = "Cam sensor bank 2 intake",			camInputs3, { camInputs3 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 ) }
+		field = "Cam sensor bank 2 exhaust",		camInputs4, { camInputs4 != 0 || (vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs2 != 0 ) }
+		field = "Invert cam inputs",					invertCamVVTSignal, { camInputs1 != 0 }
+		field = ""
+		field = "#Set offset so VVT indicates 0 degrees in default position"
+		field = "VVT offset bank 1 intake",				vvtOffsets1, { camInputs1 != 0 }
+		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
+		field = "VVT offset bank 2 intake",				vvtOffsets3, { camInputs3 != 0 }
+		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
+		field = ""
+		field = "Cam for engine sync resolution",		engineSyncCam, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ || vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
 
 	dialog = triggerConfiguration_gap, "Trigger Gap Override"
 		field = "!This is a pretty advanced feature for when you are debugging trigger synchronization"
@@ -2195,54 +2230,21 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Gap #5 from",								triggerGapOverrideFrom5, { overrideTriggerGaps == 1 }
 		field = "Gap #5 to",								triggerGapOverrideTo5, { overrideTriggerGaps == 1 }
 
-	dialog = triggerConfiguration_IO,	"Advanced Trigger"
-		field = "!https://rusefi.com/s/vvt"
-; todo: code generator to hard-code all triggers not requiring VVT?
-; todo: https://github.com/rusefi/rusefi/issues/2077
-
-		field = "Cam mode (intake cams)",				vvtMode1, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
-		field = "MAP readout angle",					mapCamDetectionAnglePosition, 1, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
-		field = "Cam mode (exhaust cams)",				vvtMode2, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
-		field = "Cam for engine sync resolution",		engineSyncCam, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ || vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
-		field = "#Set offset so VVT indicates 0 degrees in default position"
-		field = "VVT offset bank 1 intake",				vvtOffsets1, { camInputs1 != 0 }
-		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
-		field = "VVT offset bank 2 intake",				vvtOffsets3, { camInputs3 != 0 }
-		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
+	dialog = trigger_advanced,	"Advanced Trigger"
 		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
+		field = "MAP readout angle",					mapCamDetectionAnglePosition, 1, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
 		field = "Print verbose VVT sync details to console",verboseVVTDecoding
 		field = "Print verbose trigger sync to console",	verboseTriggerSynchDetails
 		field = "Display logic signals",				displayLogicLevelsInEngineSniffer
 		field = "Do not print messages in case of sync error",  silentTriggerError
 		field = "Focus on inputs in engine sniffer",	engineSnifferFocusOnInputs
 		field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@}
-		field = "Trigger Edge Filter",                  doNotFilterTriggerEdgeNoise
-
-	dialog = triggerInputs,					"Trigger Inputs"
-		field = "#Cam is primary if you have cam sensor as part of trigger shape"
-		; cam if
-		; two-stroke, or
-		; not crank trigger and ((vague trigger and cam choice) or not vague trigger)
-		field = "Cam Sensor (Primary channel)",		triggerInputPins1, 1, {twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )  }
-		field = "Crank Sensor (Primary channel)",		triggerInputPins1, 1, { !(twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )) }
-
-		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel",					triggerInputPins2, { triggerInputPins2 != 0 || (triggerInputPins1 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
-		field = "Invert Secondary",						invertSecondaryTriggerSignal, {triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
-		field = "#VVT or Cam for 60/2 goes below"
-		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
-		field = "Cam sensor bank 1 intake",			camInputs1, { camInputs1 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ ) }
-		field = "Cam sensor bank 1 exhaust",		camInputs2, { camInputs2 != 0 || (vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 ) }
-		field = "Cam sensor bank 2 intake",			camInputs3, { camInputs3 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 ) }
-		field = "Cam sensor bank 2 exhaust",		camInputs4, { camInputs4 != 0 || (vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs2 != 0 ) }
-		field = "Invert cam inputs",					invertCamVVTSignal, { camInputs1 != 0 }
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
-
-	dialog = triggerConfiguration
-		panel = triggerConfiguration_settings, {1}, { consumeObdSensors == 0 }
-		panel = triggerInputs, {1}, { consumeObdSensors == 0 }
+	dialog = triggerConfiguration, "", xAxis
+		panel = trigger_primary, {1}, { consumeObdSensors == 0 }
+		panel = trigger_cams, {1}, { consumeObdSensors == 0 }
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
