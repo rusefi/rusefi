@@ -2165,12 +2165,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = trigger_primary, "Primary Trigger"
 		topicHelp = "triggerHelp"
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
-		field = "What kind of engine",						twoStroke
+		field = "Engine type",	twoStroke
 		field = ""
 		field = "Trigger type",							trigger_type
 		field = "Total tooth count",					trigger_customTotalToothCount, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}
 		field = "Missing/skipped tooth count",					trigger_customSkippedToothCount, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}
-		field = "Skipped wheel location",					skippedWheelOnCam, 1, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
+		field = "Primary trigger location",					skippedWheelOnCam, 1, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
 		field = ""
 		field = "!Reminder that 4-stroke cycle is 720 degrees"
 		field = "!For well-known trigger types use '0' trigger angle offset"
