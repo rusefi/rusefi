@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Breaking Changes
+ - rusefi_default_bundle.zip was replaced by rusefi_bundle_f407-discovery.zip #5078
+
 ### Fixed
  - Antilag switch pin mode was ignored #5036
  - 50/83.3/125kbit CAN #5072
