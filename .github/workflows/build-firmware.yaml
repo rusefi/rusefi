@@ -98,7 +98,7 @@ jobs:
           - build-target: s105
             folder: config/boards/s105
             ini-file: rusefi_s105.ini
-            skip-rate: 0
+            skip-rate: 90
 
           - build-target: m74_9
             folder: config/boards/m74_9
