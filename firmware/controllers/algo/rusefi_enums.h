@@ -166,6 +166,11 @@ typedef enum __attribute__ ((__packed__)) {
 
 } idle_mode_e;
 
+enum class SentEtbType : uint8_t {
+	GM_TYPE_1 = 0,
+	FORD_TYPE_1 = 1,
+};
+
 typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * GND for logical OFF, VCC for logical ON
