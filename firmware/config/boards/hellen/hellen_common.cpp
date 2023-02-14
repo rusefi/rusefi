@@ -34,7 +34,7 @@ void setHellen176LedPins() {
 }
 
 void setHellenMegaEnPin() {
-    static initialized = false;
+    static bool initialized = false;
     if (!initialized) {
         initialized = true;
 	    megaEn.initPin("mm-EN", H144_GP8); // OUT_PWR_EN
