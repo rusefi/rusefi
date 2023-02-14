@@ -583,7 +583,9 @@ mapSensor = Sensor.new("map")
 mapSensor : setTimeout(3000)
 
 function onTick()
-	mapSensor : set(40)
+	local tps = getSensor("TPS1")
+	tps = (tps == nil and 0 or tps)
+	mapSensor : set(tps)
 end
 
     )", efi::size(config->luaScript));

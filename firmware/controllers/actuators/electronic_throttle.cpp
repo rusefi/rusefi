@@ -633,7 +633,7 @@ void EtbController::update() {
 	if (getFunction() == ETB_Wastegate) {
 	    // boost controller runs it's own PID we just take the result
 	    m_motor->enable();
-	    m_motor->set(getWastegateOutput());
+	    m_motor->set(getWastegateOutput() / PERCENT_MULT);
 	    return;
 	}
 
