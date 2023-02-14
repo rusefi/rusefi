@@ -46,6 +46,7 @@ jobs:
             frankenso_na6,
             kinetis,
             mre_f4,
+            mre_f4_no_openblt,
             mre_f4_debug,
             mre_f4_recovery,
             mre_f4_hardware_QC_special_build,
@@ -178,6 +179,10 @@ jobs:
             skip-rate: 0
 
           - build-target: mre_f4
+            folder: config/boards/microrusefi
+            ini-file: rusefi_mre_f4.ini
+
+          - build-target: mre_f4_no_openblt
             folder: config/boards/microrusefi
             ini-file: rusefi_mre_f4.ini
 
