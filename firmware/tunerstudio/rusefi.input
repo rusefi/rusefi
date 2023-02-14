@@ -1597,6 +1597,7 @@ menuDialog = main
 		subMenu = limitsAndFallback,		"Limits and fallbacks"
 		subMenu = triggerConfiguration,		"Trigger"
 		subMenu = trigger_advanced, "Advanced Trigger"
+		subMenu = triggerConfiguration_gap, "Trigger Gap Override"
 		subMenu = std_separator
 		subMenu = energySystems,			"Battery and alternator"
 		subMenu = std_separator
@@ -2196,12 +2197,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = trigger_primary, "Primary Trigger"
 		topicHelp = "triggerHelp"
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
-		field = "Engine type",	twoStroke
+		field = "What kind of engine",						twoStroke
 		field = ""
 		field = "Trigger type",							trigger_type
 		field = "Total tooth count",					trigger_customTotalToothCount, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}
 		field = "Missing/skipped tooth count",					trigger_customSkippedToothCount, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}
-		field = "Primary trigger location",					skippedWheelOnCam, 1, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
+		field = "Skipped wheel location",					skippedWheelOnCam, 1, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
 		field = ""
 		field = "!Reminder that 4-stroke cycle is 720 degrees"
 		field = "!For well-known trigger types use '0' trigger angle offset"
@@ -2217,8 +2218,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Cam Sensor (Primary channel)",		triggerInputPins1, 1, {twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )  }
 		field = "Crank Sensor (Primary channel)",		triggerInputPins1, 1, { !(twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )) }
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel",					triggerInputPins2, { triggerInputPins2 != 0 || (triggerInputPins1 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }, { triggerInputPins2 == 0 ||  (triggerInputPins1 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
-		field = "!!! PLEASE UNSELECT !!!"				triggerInputPins2, 1,                                                                                               { triggerInputPins2 != 0 && !(triggerInputPins1 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
+		field = "Secondary channel",					triggerInputPins2, { triggerInputPins2 != 0 || (triggerInputPins1 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
 		field = "Invert Secondary",						invertSecondaryTriggerSignal, {triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
 
 	dialog = trigger_cams, "Cam Inputs"
@@ -2244,31 +2244,30 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Cam for engine sync resolution",		engineSyncCam, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ || vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
 
 	dialog = triggerConfiguration_gap, "Trigger Gap Override"
-		field = "!This is an advanced feature for debugging trigger synchronization"
-		field = "Override trigger gaps",	overrideTriggerGaps
-		field = "Count",	gapTrackingLengthOverride, { overrideTriggerGaps == 1 }
-		field = "Gap #1 from",		triggerGapOverrideFrom1,	{ overrideTriggerGaps == 1 }
-		field = "Gap #1 to",		triggerGapOverrideTo1,		{ overrideTriggerGaps == 1 }
-		field = "Gap #2 from",		triggerGapOverrideFrom2,	{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 2 }
-		field = "Gap #2 to",		triggerGapOverrideTo2,		{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 2 }
-		field = "Gap #3 from",		triggerGapOverrideFrom3,	{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 3 }
-		field = "Gap #3 to",		triggerGapOverrideTo3,		{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 3 }
-		field = "Gap #4 from",		triggerGapOverrideFrom4,	{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 4 }
-		field = "Gap #4 to",		triggerGapOverrideTo4,		{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 4 }
-		field = "Gap #5 from",		triggerGapOverrideFrom5,	{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 5 }
-		field = "Gap #5 to",		triggerGapOverrideTo5,		{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 5 }
+		field = "!This is a pretty advanced feature for when you are debugging trigger synchronization"
+		field = "Override well known trigger gaps",	overrideTriggerGaps
+		field = gapTrackingLengthOverride,				gapTrackingLengthOverride, { overrideTriggerGaps == 1 }
+		field = "First gap from",						triggerGapOverrideFrom1, { overrideTriggerGaps == 1 }
+		field = "First gap to",							triggerGapOverrideTo1  , { overrideTriggerGaps == 1 }
 
-	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
-		field = "Comparator Center Point Voltage", triggerCompCenterVolt
-		field = "Comparator hysteresis voltage (Min)", triggerCompHystMin
-		field = "Comparator hysteresis voltage (Max)", triggerCompHystMax
-		field = "VR-sensor saturation RPM", triggerCompSensorSatRpm
+		field = "Second gap from",						triggerGapOverrideFrom2, { overrideTriggerGaps == 1 }
+		field = "Second gap to",						triggerGapOverrideTo2, { overrideTriggerGaps == 1 }
 
-	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
-		field = "Comparator Center Point Voltage", triggerCompCenterVolt
-		field = "Comparator hysteresis voltage (Min)", triggerCompHystMin
-		field = "Comparator hysteresis voltage (Max)", triggerCompHystMax
-		field = "VR-sensor saturation RPM", triggerCompSensorSatRpm
+		field = "#Cam is primary if you have cam sensor as part of trigger shape"
+		; cam if
+		; two-stroke, or
+		; not crank trigger and ((vague trigger and cam choice) or not vague trigger)
+		field = "Cam Sensor (Primary channel)",		triggerInputPins1, 1, {twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )  }
+		field = "Crank Sensor (Primary channel)",		triggerInputPins1, 1, { !(twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )) }
+		field = "Invert Primary",						invertPrimaryTriggerSignal
+		field = "Secondary channel",					triggerInputPins2, { triggerInputPins2 != 0 || (triggerInputPins1 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }, { triggerInputPins2 == 0 ||  (triggerInputPins1 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
+		field = "!!! PLEASE UNSELECT !!!"				triggerInputPins2, 1,                                                                                               { triggerInputPins2 != 0 && !(triggerInputPins1 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
+		field = "Invert Secondary",						invertSecondaryTriggerSignal, {triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
+
+		field = "Gap #4 from",								triggerGapOverrideFrom4, { overrideTriggerGaps == 1 }
+		field = "Gap #4 to",								triggerGapOverrideTo4, { overrideTriggerGaps == 1 }
+		field = "Gap #5 from",								triggerGapOverrideFrom5, { overrideTriggerGaps == 1 }
+		field = "Gap #5 to",								triggerGapOverrideTo5, { overrideTriggerGaps == 1 }
 
 	dialog = trigger_advanced,	"Advanced Trigger"
 		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
