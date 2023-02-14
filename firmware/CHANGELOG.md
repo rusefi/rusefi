@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - Rearrange & simplify trigger configuration UI #5077
+
 ### Fixed
  - Antilag switch pin mode was ignored #5036
  - 50/83.3/125kbit CAN #5072
