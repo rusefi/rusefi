@@ -34,8 +34,12 @@ void setHellen176LedPins() {
 }
 
 void setHellenMegaEnPin() {
-	megaEn.initPin("mm-EN", H144_GP8); // OUT_PWR_EN
-	megaEn.setValue(1);
+    static initialized = false;
+    if (!initialized) {
+        initialized = true;
+	    megaEn.initPin("mm-EN", H144_GP8); // OUT_PWR_EN
+	    megaEn.setValue(1);
+	}
 }
 
 // this should be called before setHellenXXXLedPins()
