@@ -2264,6 +2264,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Comparator hysteresis voltage (Max)", triggerCompHystMax
 		field = "VR-sensor saturation RPM", triggerCompSensorSatRpm
 
+	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
+		field = "Comparator Center Point Voltage", triggerCompCenterVolt
+		field = "Comparator hysteresis voltage (Min)", triggerCompHystMin
+		field = "Comparator hysteresis voltage (Max)", triggerCompHystMax
+		field = "VR-sensor saturation RPM", triggerCompSensorSatRpm
+
 	dialog = trigger_advanced,	"Advanced Trigger"
 		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
