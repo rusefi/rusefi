@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Feb 14 18:21:39 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Feb 15 13:44:53 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -114,15 +114,6 @@ case TransmissionControllerMode::None:
   return "None";
 case TransmissionControllerMode::SimpleTransmissionController:
   return "SimpleTransmissionController";
-  }
- return NULL;
-}
-const char *getTriggerWheel(TriggerWheel value){
-switch(value) {
-case TriggerWheel::T_PRIMARY:
-  return "T_PRIMARY";
-case TriggerWheel::T_SECONDARY:
-  return "T_SECONDARY";
   }
  return NULL;
 }
