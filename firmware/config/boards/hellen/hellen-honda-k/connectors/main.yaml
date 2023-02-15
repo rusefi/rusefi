@@ -34,9 +34,14 @@ pins:
   - pin: A11
     function: Analog GND
     type: gnda
+
   - pin: A12
+    # H144_LS_6
+    id: F12
+    class: outputs
     ts_name: A12 Idle Air Control
     function: Idle Air Control Valve
+
   - pin: A13
     ts_name: --- - EGR
     function: EGR
@@ -299,6 +304,15 @@ pins:
   - pin: E16
     ts_name: --- - STEERING PRESSURE SW
     function: Steering Pressure Switch
+
+  - pin: E18
+# H144_LS_5
+    id: D9
+    class: outputs
+    ts_name: ___ - AC Relay
+    function: A/C Relay
+    type: ls
+
 
   - pin: E20
     ts_name: --- - EVAP

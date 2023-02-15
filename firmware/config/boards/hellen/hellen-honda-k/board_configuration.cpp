@@ -110,12 +110,14 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
 	engineConfiguration->fuelPumpPin = H144_OUT_IO9;
-//	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
-//	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->idle.solenoidPin = H144_LS_6;
+	engineConfiguration->fanPin = H144_OUT_IO12;
 	engineConfiguration->mainRelayPin = H144_OUT_IO3;
 	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO7;
 
 	engineConfiguration->brakePedalPin = H144_IN_CAM;
+	engineConfiguration->acRelayPin = H144_LS_5;
+//    engineConfiguration->tachOutputPin = ;
 //	engineConfiguration->acSwitch = H144_IN_RES1;
 
 	// "required" hardware is done - set some reasonable defaults
