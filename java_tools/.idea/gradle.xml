@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/bin2header" />
             <option value="$PROJECT_DIR$/configuration_definition" />
+            <option value="$PROJECT_DIR$/configuration_definition_base" />
             <option value="$PROJECT_DIR$/enum_to_string" />
             <option value="$PROJECT_DIR$/gcc_map_reader" />
             <option value="$PROJECT_DIR$/logicdata2c" />

@@ -92,5 +92,5 @@ jobs:
       run: ./gradlew :autotest:shadowJar
 
     - name: Run Hardware CI
-      run: java -cp java_console/autotest/build/libs/autotest-all.jar com.rusefi.HwCiF4Proteus ${{matrix.test-suite}}
+      run: java -cp java_console/autotest/build/libs/autotest-all.jar ${{matrix.test-suite}}
 
