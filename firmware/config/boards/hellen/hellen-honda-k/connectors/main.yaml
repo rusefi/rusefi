@@ -43,9 +43,16 @@ pins:
   - pin: A14
     ts_name: --- - O2
     function: Secondary O2
+
+
   - pin: A15
+    # H144_IN_TPS
+    id: EFI_ADC_4
+    class: analog_inputs
     ts_name: --- - TPS
     function: TPS
+
+
   - pin: A16
     function: Analog GND
     type: gnda
@@ -299,12 +306,14 @@ pins:
   - pin: E21
     ts_name: --- - EVAP
     function: EVAP
+
   - pin: E22
-#    #
-#    id: F10
-#    class: switch_inputs
+    # H144_IN_CAM
+    id: A6
+    class: switch_inputs
     ts_name: E22 Brake
     function: Brake
+
   - pin: E23
     ts_name: --- - K-LINE
     function: K-Line
@@ -315,6 +324,7 @@ pins:
     class: outputs
     ts_name: E26 Tachometer
     function: Tachometer
+
   - pin: E27
     ts_name: --- - K-LINE
     function: K-Line
