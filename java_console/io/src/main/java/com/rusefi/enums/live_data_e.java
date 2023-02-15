@@ -28,4 +28,5 @@ public enum live_data_e {
 	LDS_electronic_throttle,
 	LDS_wideband_state,
 	LDS_dc_motors,
+	LDS_sent_state,
 }
