@@ -157,6 +157,11 @@ const ignition_state_s* getLiveData(size_t) {
 	return &engine->ignitionState;
 }
 
+template<>
+const sent_state_s* getLiveData(size_t) {
+	return &engine->sent_state;
+}
+
 static const FragmentEntry fragments[] = {
 // This header is generated - do not edit by hand!
 #include "live_data_fragments.h"
