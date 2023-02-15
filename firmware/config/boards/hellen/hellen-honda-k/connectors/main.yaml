@@ -15,8 +15,8 @@ pins:
     function: Power GND
     type: gnd
   - pin: A7
-    # IN_CRANK AIN24 A24
-    id: B1
+    # H144_IN_RES1
+    id: F9
     class: event_inputs
     ts_name: A7 Crankshaft Sensor
     function: Crankshaft Sensor
@@ -82,15 +82,17 @@ pins:
     color: black
 
   - pin: A25
-# H144_IN_D_1
-    id: E12
+# H144_IN_RES3
+    id: F8
     class: event_inputs
 # intake
     ts_name: A25 VTT CAM
     function: VTT Cam Position Sensor
+
+
   - pin: A26
-    # IN_CAM
-    id: A6
+    # H144_IN_RES2
+    id: F10
     class: event_inputs
 # exhaust
     ts_name: A26 Cam Sync
