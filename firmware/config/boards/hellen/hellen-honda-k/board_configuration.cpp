@@ -71,9 +71,10 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	engineConfiguration->camInputs[0] = H144_IN_D_1;
-	engineConfiguration->camInputs[1] = H144_IN_CAM;
+	engineConfiguration->triggerInputPins[0] = H144_IN_RES1;
+	engineConfiguration->camInputs[0] = H144_IN_RES3;
+	// ex or in?
+	engineConfiguration->camInputs[1] = H144_IN_RES2;
 
 
 //    //ETB1
