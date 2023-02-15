@@ -142,3 +142,8 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config.txt
     constexpr: "engine->dc_motors"
+
+  - name: sent_state
+    java: SentState.java
+    folder: controllers/sensors/
+    prepend: integration/rusefi_config.txt
