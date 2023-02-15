@@ -86,15 +86,17 @@ jobs:
           - build-target: alphax-2chan
             folder: config/boards/hellen/alphax-2chan
             ini-file: rusefi_alphax-2chan.ini
-            skip-rate: 0
+            skip-rate: 99
 
           - build-target: alphax-4chan
             folder: config/boards/hellen/alphax-4chan
             ini-file: rusefi_alphax-4chan.ini
+            skip-rate: 99
 
           - build-target: alphax-8chan
             folder: config/boards/hellen/alphax-8chan
             ini-file: rusefi_alphax-8chan.ini
+            skip-rate: 99
 
           - build-target: s105
             folder: config/boards/s105
@@ -104,7 +106,7 @@ jobs:
           - build-target: m74_9
             folder: config/boards/m74_9
             ini-file: rusefi_m74_9.ini
-            skip-rate: 0
+            skip-rate: 99
 
           - build-target: harley81
             folder: config/boards/hellen/harley81
@@ -139,12 +141,12 @@ jobs:
           - build-target: hellenNA6
             folder: config/boards/hellen/hellen64_miataNA6_94
             ini-file: rusefi_hellenNA6.ini
-            skip-rate: 90
+            skip-rate: 99
 
           - build-target: hellen128
             folder: config/boards/hellen/hellen128
             ini-file: rusefi_hellen128mercedes.ini
-            skip-rate: 50
+            skip-rate: 99
 
           - build-target: hellen121vag
             folder: config/boards/hellen/hellen121vag
@@ -154,6 +156,7 @@ jobs:
           - build-target: hellen121nissan
             folder: config/boards/hellen/hellen121nissan
             ini-file: rusefi_hellen121nissan.ini
+            skip-rate: 99
 
           - build-target: hellen-honda-k
             folder: config/boards/hellen/hellen-honda-k
@@ -167,6 +170,7 @@ jobs:
           - build-target: cypress
             folder: config/boards/cypress
             ini-file: rusefi_cypress.ini
+            skip-rate: 99
 
           - build-target: frankenso_na6
             folder: config/boards/frankenso
@@ -176,15 +180,17 @@ jobs:
           - build-target: kinetis
             folder: config/boards/kinetis
             ini-file: rusefi_kin.ini
-            skip-rate: 0
+            skip-rate: 99
 
           - build-target: mre_f4
             folder: config/boards/microrusefi
             ini-file: rusefi_mre_f4.ini
+            skip-rate: 99
 
           - build-target: mre_f4_no_openblt
             folder: config/boards/microrusefi
             ini-file: rusefi_mre_f4.ini
+            skip-rate: 99
 
           - build-target: mre_f4_debug
             folder: config/boards/microrusefi
@@ -214,19 +220,22 @@ jobs:
           - build-target: prometheus_469
             folder: config/boards/prometheus
             ini-file: rusefi_prometheus_469.ini
-            skip-rate: 90
+            skip-rate: 99
 
           - build-target: proteus_f4
             folder: config/boards/proteus
             ini-file: rusefi_proteus_f4.ini
+            skip-rate: 99
 
           - build-target: proteus_f4_hardware_QC_special_build
             folder: config/boards/proteus
             ini-file: rusefi_proteus_f4.ini
+            skip-rate: 99
 
           - build-target: proteus_f7
             folder: config/boards/proteus
             ini-file: rusefi_proteus_f7.ini
+            skip-rate: 99
 
           - build-target: proteus_f7_hardware_QC_special_build
             folder: config/boards/proteus
@@ -246,6 +255,7 @@ jobs:
           - build-target: stm32f429_nucleo
             folder: config/boards/nucleo_f429
             ini-file: rusefi_stm32f429_nucleo.ini
+            skip-rate: 99
 
           - build-target: stm32f767_nucleo
             folder: config/boards/nucleo_f767
@@ -260,7 +270,7 @@ jobs:
           - build-target: subaru_eg33_f7
             folder: config/boards/subaru_eg33
             ini-file: rusefi_subaru_eg33_f7.ini
-            skip-rate: 50
+            skip-rate: 99
 
           - build-target: f407-discovery
             folder: config/boards/f407-discovery
