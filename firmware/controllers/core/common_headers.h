@@ -30,7 +30,6 @@
 #include <stdio.h>
 
 #include "auto_generated_enums.h"
-#include "trigger_structure.h"
 #include "auto_generated_commonenum.h"
 #include "auto_generated_enginetypes.h"
 #include "efilib.h"

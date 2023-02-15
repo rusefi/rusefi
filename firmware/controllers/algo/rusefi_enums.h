@@ -39,6 +39,13 @@ typedef enum __attribute__ ((__packed__))
 	PIN_INVALID = 0x80
 } brain_pin_diag_e;
 
+// see also PWM_PHASE_MAX_WAVE_PER_PWM
+// todo: better names?
+enum class TriggerWheel : uint8_t {
+	T_PRIMARY = 0,
+	T_SECONDARY = 1,
+};
+
 typedef enum  __attribute__ ((__packed__)) {
 	/**
 	 * This mode is useful for troubleshooting and research - events are logged but no effects on phase synchronization
