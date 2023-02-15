@@ -14,12 +14,14 @@ pins:
   - pin: A5
     function: Power GND
     type: gnd
+
   - pin: A7
     # H144_IN_RES1
     id: F9
     class: event_inputs
     ts_name: A7 Crankshaft Sensor
     function: Crankshaft Sensor
+
   - pin: A8
     ts_name: A8 - INTAKE
     function: Intake Position
@@ -298,9 +300,9 @@ pins:
     ts_name: --- - EVAP
     function: EVAP
   - pin: E22
-    # H144_IN_RES2
-    id: F10
-    class: switch_inputs
+#    #
+#    id: F10
+#    class: switch_inputs
     ts_name: E22 Brake
     function: Brake
   - pin: E23
