@@ -14,6 +14,13 @@
 #include "engine_configuration_generated_structures.h"
 #include <rusefi/isnan.h>
 
+// see also PWM_PHASE_MAX_WAVE_PER_PWM
+// todo: better names?
+enum class TriggerWheel : uint8_t {
+	T_PRIMARY = 0,
+	T_SECONDARY = 1,
+};
+
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
 #define TRIGGER_GAP_DEVIATION 0.25f
