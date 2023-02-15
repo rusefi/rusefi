@@ -106,8 +106,7 @@ void setBoardConfigOverrides() {
 		setHellenSdCardSpi1();
 	}
 
-	engineConfiguration->clt.config.bias_resistor = 4700;
-	engineConfiguration->iat.config.bias_resistor = 4700;
+    setDefaultHellenAtPullUps();
 
 	setHellenCan();
 }
