@@ -1156,6 +1156,8 @@
 #define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69 || trigger_type == 73
 #define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
 #define TRIGGERS_FILE_NAME "triggers.txt"
+#define TriggerWheel_T_PRIMARY 0
+#define TriggerWheel_T_SECONDARY 1
 #define TRIM_SIZE 4
 #define TS_BLOCK_READ_TIMEOUT 300
 #define TS_BURN_COMMAND 'B'
