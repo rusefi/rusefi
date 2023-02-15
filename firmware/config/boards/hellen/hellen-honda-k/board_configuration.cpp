@@ -104,6 +104,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
 
+	engineConfiguration->globalTriggerAngleOffset = 663;
+
 	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->canTxPin = H176_CAN_TX;
