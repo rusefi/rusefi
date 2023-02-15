@@ -1,0 +1,4 @@
+struct sent_state_s
+	uint16_t value1
+	float errorRate;"ETB: SENT error rate";"ratio", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
+end_struct
