@@ -129,8 +129,6 @@ void setBoardDefaultConfiguration() {
 
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	setEtbPID(8.8944, 70.2307, 0.1855);
-
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
     setTPS1Calibration(98, 926, 1000, 0);
