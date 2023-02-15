@@ -84,8 +84,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
 	engineConfiguration->etb_use_two_wires = true;
 
-	engineConfiguration->clt.config.bias_resistor = 4700;
-	engineConfiguration->iat.config.bias_resistor = 4700;
+    setDefaultHellenAtPullUps();
 }
 
 /**

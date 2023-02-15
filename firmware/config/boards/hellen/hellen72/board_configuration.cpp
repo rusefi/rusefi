@@ -82,8 +82,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2; // ETB_EN
 	engineConfiguration->etb_use_two_wires = true;
 
-	engineConfiguration->clt.config.bias_resistor = 4700;
-	engineConfiguration->iat.config.bias_resistor = 4700;
+    setDefaultHellenAtPullUps();
 
 	setHellenCan();
 }
