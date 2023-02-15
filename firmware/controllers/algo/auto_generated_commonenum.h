@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Sep 11 07:52:24 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Feb 15 14:10:22 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -16,6 +16,9 @@ const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
 const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 #if __cplusplus
 const char *getSelectedGear(SelectedGear value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getSentEtbType(SentEtbType value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getTransmissionControllerMode(TransmissionControllerMode value);

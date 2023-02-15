@@ -14,12 +14,14 @@ pins:
   - pin: A5
     function: Power GND
     type: gnd
+
   - pin: A7
-    # IN_CRANK AIN24 A24
-    id: B1
+    # H144_IN_RES1
+    id: F9
     class: event_inputs
     ts_name: A7 Crankshaft Sensor
     function: Crankshaft Sensor
+
   - pin: A8
     ts_name: A8 - INTAKE
     function: Intake Position
@@ -32,18 +34,30 @@ pins:
   - pin: A11
     function: Analog GND
     type: gnda
+
   - pin: A12
+    # H144_LS_6
+    id: F12
+    class: outputs
     ts_name: A12 Idle Air Control
     function: Idle Air Control Valve
+
   - pin: A13
     ts_name: --- - EGR
     function: EGR
   - pin: A14
     ts_name: --- - O2
     function: Secondary O2
+
+
   - pin: A15
+    # H144_IN_TPS
+    id: EFI_ADC_4
+    class: analog_inputs
     ts_name: --- - TPS
     function: TPS
+
+
   - pin: A16
     function: Analog GND
     type: gnda
@@ -82,15 +96,17 @@ pins:
     color: black
 
   - pin: A25
-# H144_IN_D_1
-    id: E12
+# H144_IN_RES3
+    id: F8
     class: event_inputs
 # intake
     ts_name: A25 VTT CAM
     function: VTT Cam Position Sensor
+
+
   - pin: A26
-    # IN_CAM
-    id: A6
+    # H144_IN_RES2
+    id: F10
     class: event_inputs
 # exhaust
     ts_name: A26 Cam Sync
@@ -289,18 +305,29 @@ pins:
     ts_name: --- - STEERING PRESSURE SW
     function: Steering Pressure Switch
 
+  - pin: E18
+# H144_LS_5
+    id: D9
+    class: outputs
+    ts_name: ___ - AC Relay
+    function: A/C Relay
+    type: ls
+
+
   - pin: E20
     ts_name: --- - EVAP
     function: EVAP
   - pin: E21
     ts_name: --- - EVAP
     function: EVAP
+
   - pin: E22
-    # H144_IN_RES2
-    id: F10
+    # H144_IN_CAM
+    id: A6
     class: switch_inputs
     ts_name: E22 Brake
     function: Brake
+
   - pin: E23
     ts_name: --- - K-LINE
     function: K-Line
@@ -311,6 +338,7 @@ pins:
     class: outputs
     ts_name: E26 Tachometer
     function: Tachometer
+
   - pin: E27
     ts_name: --- - K-LINE
     function: K-Line

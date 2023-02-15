@@ -44,9 +44,6 @@ static void setupVbatt() {
 }
 
 static void setupDefaultSensorInputs() {
-	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
-	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
-
     engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
@@ -71,9 +68,10 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	engineConfiguration->camInputs[0] = H144_IN_D_1;
-	engineConfiguration->camInputs[1] = H144_IN_CAM;
+	engineConfiguration->triggerInputPins[0] = H144_IN_RES1;
+	engineConfiguration->camInputs[0] = H144_IN_RES3;
+	// ex or in?
+	engineConfiguration->camInputs[1] = H144_IN_RES2;
 
 
 //    //ETB1
@@ -103,20 +101,23 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
 
+	engineConfiguration->globalTriggerAngleOffset = 663;
+
 	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
-	engineConfiguration->fuelPumpPin = H144_OUT_IO9;
-//	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
-//	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = Gpio::G14;	// pin: 111a, OUT_IO3
-	engineConfiguration->malfunctionIndicatorPin = H144_OUT_PWM8;
+	engineConfiguration->fuelPumpPin = H144_OUT_IO13;
+	engineConfiguration->idle.solenoidPin = H144_LS_6;
+	engineConfiguration->fanPin = H144_OUT_IO12;
+	engineConfiguration->mainRelayPin = H144_OUT_IO3;
+	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO7;
 
-	engineConfiguration->brakePedalPin = H144_IN_RES3;
-	engineConfiguration->clutchUpPin = H144_IN_RES2;
-	engineConfiguration->acSwitch = H144_IN_RES1;
+	engineConfiguration->brakePedalPin = H144_IN_CAM;
+	engineConfiguration->acRelayPin = H144_LS_5;
+//    engineConfiguration->tachOutputPin = ;
+//	engineConfiguration->acSwitch = H144_IN_RES1;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -129,9 +130,10 @@ void setBoardDefaultConfiguration() {
 
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	setEtbPID(8.8944, 70.2307, 0.1855);
-
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
-    setTPS1Calibration(98, 926, 1000, 0);
+	setCommonNTCSensor(&engineConfiguration->clt, HELLEN_DEFAULT_AT_PULLUP);
+	setCommonNTCSensor(&engineConfiguration->iat, HELLEN_DEFAULT_AT_PULLUP);
+
+    setTPS1Calibration(90, 830, 1000, 0);
 }

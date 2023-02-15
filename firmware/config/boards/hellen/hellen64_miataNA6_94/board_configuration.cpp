@@ -74,8 +74,7 @@ void setBoardConfigOverrides() {
 
 	setHellenSdCardSpi2();
 
-	engineConfiguration->clt.config.bias_resistor = 4700;
-	engineConfiguration->iat.config.bias_resistor = 4700;
+    setDefaultHellenAtPullUps();
 
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
