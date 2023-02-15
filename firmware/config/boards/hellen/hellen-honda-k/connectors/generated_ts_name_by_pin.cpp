@@ -11,11 +11,13 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::C13: return "A30 - IGN1";
 		case Gpio::D10: return "B2 - Injector 4";
 		case Gpio::D11: return "B3 - Injector 3";
+		case Gpio::D9: return "E18 - AC Relay";
 		case Gpio::E3: return "A27 - IGN4";
 		case Gpio::E4: return "A28 - IGN3";
 		case Gpio::E5: return "A29 - IGN2";
 		case Gpio::F10: return "A26 Cam Sync";
 		case Gpio::F11: return "A18 - VSS";
+		case Gpio::F12: return "A12 Idle Air Control";
 		case Gpio::F8: return "A25 VTT CAM";
 		case Gpio::F9: return "A7 Crankshaft Sensor";
 		case Gpio::G14: return "E7 Main Relay Control";
