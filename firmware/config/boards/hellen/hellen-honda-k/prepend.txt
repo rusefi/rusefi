@@ -27,4 +27,5 @@
 #define show_Frankenso_presets false
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
-#define show_Hellen_hyundai_154 true
+#define show_Hellen_hyundai_154 false
+
