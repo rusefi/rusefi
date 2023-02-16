@@ -7,7 +7,7 @@
 # file_to_upload=$5
 
 if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
- echo "No Secrets"
+ echo "upload_file.sh says No Secrets, exiting"
  exit 0
 fi
 
