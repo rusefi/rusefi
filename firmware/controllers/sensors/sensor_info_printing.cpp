@@ -35,7 +35,12 @@ void CanSensorBase::showInfo(const char* sensorName) const {
 #endif // EFI_CAN_SUPPORT
 
 void RedundantSensor::showInfo(const char* sensorName) const {
-	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
+	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\": primary only: %s",
+		sensorName,
+		getSensorName(m_first),
+		getSensorName(m_second),
+		boolToString(m_ignoreSecond)
+	);
 }
 
 void FrequencySensor::showInfo(const char* sensorName) const {
