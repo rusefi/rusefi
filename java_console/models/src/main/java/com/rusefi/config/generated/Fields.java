@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 16 12:20:49 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 16 13:04:51 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -999,7 +999,7 @@ public class Fields {
 	public static final int SENT_INPUT_COUNT = 1;
 	public static final int SentEtbType_FORD_TYPE_1 = 1;
 	public static final int SentEtbType_GM_TYPE_1 = 0;
-	public static final int SIGNATURE_HASH = 1523017054;
+	public static final int SIGNATURE_HASH = 351074491;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1209,7 +1209,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.02.16.f407-discovery.1523017054";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.02.16.f407-discovery.351074491";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1336;

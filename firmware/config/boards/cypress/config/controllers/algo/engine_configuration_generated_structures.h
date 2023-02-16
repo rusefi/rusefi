@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Feb 14 18:21:43 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Feb 16 13:04:07 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4436,13 +4436,13 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e ALSActivatePinMode;
 	/**
-	 * For Ford TPS, use 53%. For Toyota ETCS-i, use 65%
+	 * For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%
 	%
 	 * offset 3970
 	 */
 	scaled_channel<uint8_t, 2, 1> tpsSecondaryMaximum;
 	/**
-	 * For Toyota ETCS-i, use xxx%
+	 * For Toyota ETCS-i, use ~69%
 	%
 	 * offset 3971
 	 */
@@ -5258,4 +5258,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Feb 14 18:21:43 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Feb 16 13:04:07 UTC 2023

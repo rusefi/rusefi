@@ -1553,8 +1553,8 @@ null
 
 
 ### tpsSecondaryMaximum
-For Ford TPS, use 53%. For Toyota ETCS-i, use 65%
+For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%
 
 ### ppsSecondaryMaximum
-For Toyota ETCS-i, use xxx%
+For Toyota ETCS-i, use ~69%
 
