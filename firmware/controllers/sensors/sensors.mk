@@ -11,7 +11,6 @@ CONTROLLERS_SENSORS_SRC_CPP = 	$(PROJECT_DIR)/controllers/sensors/thermistors.cp
 	$(PROJECT_DIR)/controllers/sensors/sensor_checker.cpp \
 	$(PROJECT_DIR)/controllers/sensors/functional_sensor.cpp \
 	$(PROJECT_DIR)/controllers/sensors/redundant_sensor.cpp \
-	$(PROJECT_DIR)/controllers/sensors/redundant_ford_tps.cpp \
 	$(PROJECT_DIR)/controllers/sensors/AemXSeriesLambda.cpp \
 	$(PROJECT_DIR)/controllers/sensors/frequency_sensor.cpp \
 	$(PROJECT_DIR)/controllers/sensors/software_knock.cpp \

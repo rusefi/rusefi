@@ -2,7 +2,6 @@
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
-#include "redundant_ford_tps.h"
 #include "fallback_sensor.h"
 #include "frequency_sensor.h"
 #include "Lps25Sensor.h"
@@ -41,10 +40,6 @@ void RedundantSensor::showInfo(const char* sensorName) const {
 
 void FrequencySensor::showInfo(const char* sensorName) const {
 	efiPrintf("FrequencySensor \"%s\" counter %d", sensorName, eventCounter);
-}
-
-void RedundantFordTps::showInfo(const char* sensorName) const {
-	efiPrintf("Sensor \"%s\" is Ford-type redundant TPS combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
 }
 
 void FallbackSensor::showInfo(const char* sensorName) const {

@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "redundant_sensor.h"
-#include "redundant_ford_tps.h"
 
 class SensorRedundant : public ::testing::Test
 {

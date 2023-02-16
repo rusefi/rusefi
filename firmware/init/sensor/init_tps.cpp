@@ -3,7 +3,6 @@
 #include "adc_subscription.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
-#include "redundant_ford_tps.h"
 #include "proxy_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
