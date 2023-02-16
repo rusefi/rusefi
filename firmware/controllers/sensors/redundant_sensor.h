@@ -10,7 +10,7 @@ public:
 		SensorType secondSensor
 	);
 
-	void configure(float maxDifference, bool ignoreSecondSensor, float secondaryMaximum);
+	void configure(float maxDifference, bool ignoreSecondSensor, bool averageSensors = true, float secondMaximum = 100);
 
 	SensorResult get() const override;
 
@@ -31,6 +31,9 @@ private:
 
 	// Should we ignore the second sensor? (disable redundancy)
 	bool m_ignoreSecond = false;
+
+	// Should the result average both sensors, or track the first?
+	bool m_averageSensors = true;
 
 	// How much to scale the second sensor to proportion to the first? (partial redundancy)
 	float m_secondMaximum = 100;

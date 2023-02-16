@@ -12,6 +12,8 @@
 #define MAX_TPS_PPS_DISCREPANCY 5.0f
 #endif
 
+#define TPS_ADC_UNITS_PER_VOLT 200
+
 struct TpsConfig {
 	adc_channel_e channel;
 	float closed;
@@ -35,7 +37,7 @@ public:
 			return false;
 		}
 
-		AdcSubscription::SubscribeSensor(m_sens, cfg.channel, 200);
+		AdcSubscription::SubscribeSensor(m_sens, cfg.channel, TPS_ADC_UNITS_PER_VOLT);
 
 		return m_sens.Register();
 	}
@@ -77,7 +79,7 @@ private:
 
 		m_func.configure(
 			cfg.closed, 0,
-			cfg.open, 100, 
+			cfg.open, 100,
 			cfg.min, cfg.max
 		);
 
@@ -100,7 +102,7 @@ public:
 	{
 	}
 
-	void init(const TpsConfig& primary, const TpsConfig& secondary, float secondaryMaximum) {
+	void init(const TpsConfig& primary, const TpsConfig& secondary, bool averageSensors, float secondaryMaximum) {
 		bool hasFirst = m_pri.init(primary);
 		if (!hasFirst) {
 			// no input if we have no first channel
@@ -127,7 +129,7 @@ public:
 			secondaryMaximum = 20;
 		}
 
-		m_redund.configure(MAX_TPS_PPS_DISCREPANCY, !hasSecond, secondaryMaximum);
+		m_redund.configure(MAX_TPS_PPS_DISCREPANCY, !hasSecond, averageSensors, secondaryMaximum);
 #if EFI_UNIT_TEST
         printf("init m_redund.Register() %s\n", getSensorType(m_redund.type()));
 #endif // EFI_UNIT_TEST
@@ -175,24 +177,26 @@ void initTps() {
 
 	if (!engineConfiguration->consumeObdSensors) {
 		// Throttle sensors
+		bool averageThrottleSensors = !engineConfiguration->tpsSecondaryMonitors;
 		float throttleSecondaryMaximum = engineConfiguration->tpsSecondaryMaximum;
 		tps1.init(
 			{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, min, max },
 			{ engineConfiguration->tps1_2AdcChannel, (float)engineConfiguration->tps1SecondaryMin, (float)engineConfiguration->tps1SecondaryMax, min, max },
-			throttleSecondaryMaximum
+			averageThrottleSensors, throttleSecondaryMaximum
 		);
 		tps2.init(
 			{ engineConfiguration->tps2_1AdcChannel, (float)engineConfiguration->tps2Min, (float)engineConfiguration->tps2Max, min, max },
 			{ engineConfiguration->tps2_2AdcChannel, (float)engineConfiguration->tps2SecondaryMin, (float)engineConfiguration->tps2SecondaryMax, min, max },
-			throttleSecondaryMaximum
+			averageThrottleSensors, throttleSecondaryMaximum
 		);
 
 		// Pedal sensors
+		bool averagePedalSensors = !engineConfiguration->ppsSecondaryMonitors;
 		float pedalSecondaryMaximum = engineConfiguration->ppsSecondaryMaximum;
 		pedal.init(
 			{ engineConfiguration->throttlePedalPositionAdcChannel, engineConfiguration->throttlePedalUpVoltage, engineConfiguration->throttlePedalWOTVoltage, min, max },
 			{ engineConfiguration->throttlePedalPositionSecondAdcChannel, engineConfiguration->throttlePedalSecondaryUpVoltage, engineConfiguration->throttlePedalSecondaryWOTVoltage, min, max },
-			pedalSecondaryMaximum
+			averagePedalSensors, pedalSecondaryMaximum
 		);
 
 		// Other TPS-like sensors

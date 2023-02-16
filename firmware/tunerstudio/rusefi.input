@@ -4280,6 +4280,12 @@ dialog = tcuControls, "Transmission Settings"
 		field = "etbDutyThreshold",                         etbDutyThreshold
 		field = "etbDutyShutdownThreshold",                 etbDutyShutdownThreshold
 
+	dialog = parkingLotRedundantSensors, "Sensor Redundancy"
+		field = "Secondary TPS Monitors",					tpsSecondaryMonitors
+		field = "Secondary PPS Monitors",					ppsSecondaryMonitors
+		field = "Partial Secondary TPS Maximum",			tpsSecondaryMaximum
+		field = "Partial Secondary PPS Maximum",			ppsSecondaryMaximum
+
 	dialog = parkingLot, "Experimental/Broken"
 		field = "I understand ECU Locking",				yesUnderstandLocking
 		field = "Tune read/write password",				tuneHidingKey, { yesUnderstandLocking == 1 }
@@ -4292,10 +4298,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 		field = "Warning Message",							warning_message
-		field = "Ford redundant TPS mode",				useFordRedundantTps
-		field = "Secondary TPS maximum",				tpsSecondaryMaximum, {useFordRedundantTps}
-		field = "Ford redundant PPS mode",				useFordRedundantPps
-		field = "Secondary PPS maximum",				ppsSecondaryMaximum, {useFordRedundantPps}
+		panel = parkingLotRedundantSensors
 
 		field = "consumeObdSensors",						consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",						artificialTestMisfire

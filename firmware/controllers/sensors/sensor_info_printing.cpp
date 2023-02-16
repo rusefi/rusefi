@@ -35,12 +35,12 @@ void CanSensorBase::showInfo(const char* sensorName) const {
 #endif // EFI_CAN_SUPPORT
 
 void RedundantSensor::showInfo(const char* sensorName) const {
-	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\": primary only: %s partial secondary: %s (max: %f)",
+	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\": primary only: %s averaging: %s secondary max: %f",
 		sensorName,
 		getSensorName(m_first),
 		getSensorName(m_second),
 		boolToString(m_ignoreSecond),
-		boolToString(m_secondMaximum < 100),
+		boolToString(m_averageSensors),
 		m_secondMaximum
 	);
 }
