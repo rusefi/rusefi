@@ -34,6 +34,14 @@ protected:
 	}
 };
 
+TEST_F(SensorRedundant, CheckIsRedundant)
+{
+	// Expect isRedundant
+	{
+		EXPECT_TRUE(dut.isRedundant());
+	}
+}
+
 TEST_F(SensorRedundant, SetOnlyOneSensor)
 {
 	// Don't set any sensors - expect invalid
@@ -70,8 +78,6 @@ TEST_F(SensorRedundant, SetTwoSensors)
 		auto result = dut.get();
 		EXPECT_TRUE(result.Valid);
 		EXPECT_FLOAT_EQ(result.Value, 25.0f);
-
-		EXPECT_TRUE(dut.isRedundant());
 	}
 }
 
@@ -161,6 +167,13 @@ protected:
 	}
 };
 
+TEST_F(SensorRedundantIgnoreSecond, CheckIsRedundant)
+{
+	// Expect not isRedundant
+	{
+		EXPECT_FALSE(dut.isRedundant());
+	}
+}
 TEST_F(SensorRedundantIgnoreSecond, OnlyFirst)
 {
 	// Don't set any sensors - expect invalid
@@ -177,8 +190,6 @@ TEST_F(SensorRedundantIgnoreSecond, OnlyFirst)
 		auto result = dut.get();
 		EXPECT_TRUE(result.Valid);
 		EXPECT_FLOAT_EQ(result.Value, 44.0f);
-
-		EXPECT_FALSE(dut.isRedundant());
 	}
 }
 
