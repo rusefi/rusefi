@@ -11,7 +11,7 @@ if [ ! "$fileName" ]; then
 fi
 
 if [ ! "$2" ] || [ ! "$3" ] || [ ! "$4" ]; then
- echo "No Secrets"
+ echo "upload_ini.sh says No Secrets, exiting"
  exit 0
 fi
 
