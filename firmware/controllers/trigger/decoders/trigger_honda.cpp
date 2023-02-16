@@ -79,10 +79,6 @@ static void kseriesTooth(TriggerWaveform* s, float end) {
 void configureHondaK_12_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
-	0.654
-	1.524
-
-
 	// nominal gap 0.33
 	s->setSecondTriggerSynchronizationGap2(0.2f, 0.7f);
 	// nominal gap 2.0
