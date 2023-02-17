@@ -630,11 +630,11 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    configureBenelli(this);
         break;
 
-	case TT_MITSU_BOTH_BOTH:
-	    initializeMitsubishi4g93_both_both(this);
+	case TT_MITSU_4G63_CAM:
+	    initializeMitsubishi4g63Cam(this);
 		break;
-	case TT_MITSU_ONLY_TOP_BOTH_FRONTS:
-	    initializeMitsubishi4g93_only_first_wheel_both_fronts(this);
+	case TT_MITSU_4G9x_CAM:
+	    initializeMitsubishi4g9xCam(this);
         break;
 	case TT_1_16:
 		configureOnePlus16(this);

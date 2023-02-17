@@ -511,8 +511,8 @@ typedef enum {
 
 	TT_SUBARU_EZ30 = 12,
 	TT_VVT_MAZDA_SKYACTIV = 13,
-	TT_MITSU_ONLY_TOP_BOTH_FRONTS = 29,
-	TT_MITSU_BOTH_BOTH = 34,
+	TT_MITSU_4G9x_CAM = 29,
+	TT_MITSU_4G63_CAM = 34,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
