@@ -9,6 +9,8 @@ endif
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
+DDEFS += -DEFI_KLINE=TRUE
+
 DDEFS += -DADC_MUX_PIN=Gpio::F2
 
 # Add them all together
