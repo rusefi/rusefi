@@ -53,8 +53,8 @@ pins:
     color: purple
 
   - pin: 10D
-    # H144_OUT_IO11
-    id: G2
+    # H144_OUT_IO1
+    id: D3
     class: outputs
     function: Low Side Output 7 (low)
     type: ls
@@ -62,8 +62,8 @@ pins:
     color: purple
 
   - pin: 11D
-    # H144_OUT_IO11
-    id: G2
+    # H144_OUT_IO2
+    id: A9
     class: outputs
     function: Low Side Output 8 (low)
     type: ls
@@ -71,8 +71,8 @@ pins:
     color: purple
 
   - pin: 12D
-    # H144_OUT_IO11
-    id: G2
+    # H144_OUT_IO9
+    id: G13
     class: outputs
     function: NOS Output (low)
     type: ls
@@ -80,8 +80,8 @@ pins:
     color: purple
 
   - pin: 13D
-    # H144_OUT_IO11
-    id: G2
+    # H144_OUT_PWM3
+    id: C7
     class: outputs
     function: Boost Output (low)
     type: ls
