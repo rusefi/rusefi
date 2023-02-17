@@ -80,7 +80,7 @@ void configureHondaK_12_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	// nominal gap 0.33
-	s->setSecondTriggerSynchronizationGap2(0.2f, 0.5f);
+	s->setSecondTriggerSynchronizationGap2(0.2f, 0.7f);
 	// nominal gap 2.0
 	s->setTriggerSynchronizationGap2(1.1f, 2.4f);
 
