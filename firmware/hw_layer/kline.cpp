@@ -2,6 +2,7 @@
 #include "kline.h"
 
 
+#ifdef EFI_KLINE
 static SerialDriver* const klDriver = KLINE_SERIAL_DEVICE;
 static THD_WORKING_AREA(klThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -17,6 +18,7 @@ void kLineThread(void*)
         }
     }
 }
+#endif
 
 void initKLine() {
 
