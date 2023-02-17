@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Feb 13 21:28:32 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Feb 17 04:23:43 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -438,10 +438,10 @@ case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MITSUBISHI:
   return "TT_MITSUBISHI";
-case TT_MITSU_BOTH_BOTH:
-  return "TT_MITSU_BOTH_BOTH";
-case TT_MITSU_ONLY_TOP_BOTH_FRONTS:
-  return "TT_MITSU_ONLY_TOP_BOTH_FRONTS";
+case TT_MITSU_4G63_CAM:
+  return "TT_MITSU_4G63_CAM";
+case TT_MITSU_4G9x_CAM:
+  return "TT_MITSU_4G9x_CAM";
 case TT_NISSAN_MR18_CAM_VVT:
   return "TT_NISSAN_MR18_CAM_VVT";
 case TT_NISSAN_MR18_CRANK:
