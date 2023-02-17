@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "kline.h"
 
-
+#if EFI_PROD_CODE
 static THD_WORKING_AREA(klThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 void kLineThread(void*)
@@ -14,6 +14,7 @@ void kLineThread(void*)
         chThdSleepMilliseconds(50);
     }
 }
+#endif
 
 void initKLine() {
 
