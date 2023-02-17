@@ -26,6 +26,7 @@
 #include "serial_hw.h"
 #include "idle_thread.h"
 #include "odometer.h"
+#include "kline.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
@@ -341,6 +342,9 @@ void applyNewHardwareSettings() {
 #if EFI_AUX_SERIAL
 	startAuxSerialPins();
 #endif /* EFI_AUX_SERIAL */
+
+    initKLine();
+
 
 #if EFI_HIP_9011
 	startHip9001_pins();
