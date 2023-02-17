@@ -74,24 +74,31 @@ void initializeMitsubishi4g18(TriggerWaveform *s) {
     addMitsu93(s, true);
 }
 
-void initializeMitsubishi4g93_both_both(TriggerWaveform *s) {
+void initializeMitsubishi4g9xCam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 
-	s->setTriggerSynchronizationGap(3.2);
+	// nominal gap 0.5
+	s->setSecondTriggerSynchronizationGap2(0.2, 0.8);
 
-    addMitsu93(s, true);
+	// nominal gap 3.0
+	s->setTriggerSynchronizationGap2(2.0f, 5.0f);
+
+	// 131 deg before #1 TDC
+	s->addEvent720(270, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+
+	// 49 deg after #1 TDC
+	s->addEvent720(450, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	// 131 deg before #4 TDC
+	s->addEvent720(630, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+
+	// 41 deg before #4 TDC
+	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
-void initializeMitsubishi4g93_only_first_wheel_both_fronts(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
-
-	s->setSecondTriggerSynchronizationGap2(0.5, 2.3);
-	s->setTriggerSynchronizationGap2(0.1, 0.5);
-
-	s->addEvent720(180, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent720(266, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent720(641, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+void initializeMitsubishi4g63Cam(TriggerWaveform *s) {
+	// TODO: is this actually the same as 4G9x or not?
+	initializeMitsubishi4g9xCam(s);
 }
 
 void initialize36_2_1_1(TriggerWaveform *s) {
