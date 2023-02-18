@@ -221,25 +221,25 @@ pins:
     ts_name: --- - INTAKE RUNNER
     function: Intake Runner
 
-  - pin: C1
-    function: LSU Heater Negative
-
   - pin: C2
-    function: LSU Rtrim
-
-  - pin: C3
-    function: LSU Ip
-
-  - pin: C4
-    function: LSU Vm
-
-  - pin: C5
-    function: LSU Un
-
-  - pin: C6
-    function: +12V from main relay
+    function: GREY LSU4.9 +12V from main relay
     type: 12v
     color: red
+
+  - pin: C3
+    function: BLACK LSU4.9 Un
+
+  - pin: C4
+    function: GREEN LSU4.9 Rtrim
+
+  - pin: C5
+    function: RED LSU4.9 Ip
+
+  - pin: C6
+    function: YELLOW LSU4.9 Vm
+
+  - pin: C7
+    function: WHITE LSU4.9 Heater Negative
 
   - pin: C7
     function: CAN High
