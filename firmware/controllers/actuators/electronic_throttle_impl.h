@@ -111,7 +111,6 @@ private:
 	const ValueProvider3D* m_pedalMap = nullptr;
 
 	float m_idlePosition = 0;
-	float m_wastegatePosition = 0;
 
 	// This is set if automatic PID cal shoudl be run
 	bool m_isAutotune = false;
