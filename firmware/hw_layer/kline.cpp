@@ -23,6 +23,11 @@ void kLineThread(void*)
 void initKLine() {
 
 #ifdef EFI_KLINE
+#if EFI_PROD_CODE
+	efiSetPadMode("K-Line UART RX", KLINE_SERIAL_DEVICE_RX, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+	efiSetPadMode("K-Line UART TX", KLINE_SERIAL_DEVICE_TX, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+#endif /* EFI_PROD_CODE */
+
 	static const SerialConfig cfg = {
 		#if EFI_PROD_CODE
 			.speed = KLINE_BAUD_RATE,
