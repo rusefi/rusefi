@@ -112,7 +112,7 @@ private:
 
 	float m_idlePosition = 0;
 
-	// This is set if automatic PID cal shoudl be run
+	// This is set if automatic PID cal should be run
 	bool m_isAutotune = false;
 
 	// Autotune helpers
