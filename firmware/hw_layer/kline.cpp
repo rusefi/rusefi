@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "kline.h"
+#include "hellen_meta.h"
 
 #ifdef EFI_KLINE
 static SerialDriver* const klDriver = KLINE_SERIAL_DEVICE;
