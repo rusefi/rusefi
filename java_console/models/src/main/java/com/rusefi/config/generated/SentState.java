@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//sent_state.txt Wed Feb 15 00:55:51 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//sent_state.txt Sat Feb 18 03:20:18 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -404,9 +404,9 @@ public class SentState {
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field VALUE1 = Field.create("VALUE1", 0, FieldType.INT16).setScale(1.0).setBaseOffset(1328);
-	public static final Field ALIGNMENTFILL_AT_2 = Field.create("ALIGNMENTFILL_AT_2", 2, FieldType.INT8).setScale(1.0).setBaseOffset(1328);
-	public static final Field ERRORRATE = Field.create("ERRORRATE", 4, FieldType.FLOAT).setBaseOffset(1328);
+	public static final Field VALUE1 = Field.create("VALUE1", 0, FieldType.INT16).setScale(1.0).setBaseOffset(1332);
+	public static final Field ALIGNMENTFILL_AT_2 = Field.create("ALIGNMENTFILL_AT_2", 2, FieldType.INT8).setScale(1.0).setBaseOffset(1332);
+	public static final Field ERRORRATE = Field.create("ERRORRATE", 4, FieldType.FLOAT).setBaseOffset(1332);
 	public static final Field[] VALUES = {
 	VALUE1,
 	ALIGNMENTFILL_AT_2,

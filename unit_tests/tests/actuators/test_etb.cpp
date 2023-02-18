@@ -475,8 +475,6 @@ TEST(etb, setpointWastegateController) {
 	EtbController etb;
 
 	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
-/*
- * we need some unit test but this unit test seems pretty wrong
 
 	etb.setWastegatePosition(0);
 	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
@@ -490,7 +488,6 @@ TEST(etb, setpointWastegateController) {
 	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
 	etb.setWastegatePosition(110);
 	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
-	 */
 }
 
 TEST(etb, setpointLuaAdder) {

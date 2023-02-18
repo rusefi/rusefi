@@ -47,7 +47,7 @@ public:
 
 	expected<percent_t> getSetpoint() override;
 	expected<percent_t> getSetpointEtb();
-	percent_t getWastegateOutput() const;
+	expected<percent_t> getSetpointWastegate() const;
 	expected<percent_t> getSetpointIdleValve() const;
 
 	expected<percent_t> getOpenLoop(percent_t target) override;
@@ -111,9 +111,8 @@ private:
 	const ValueProvider3D* m_pedalMap = nullptr;
 
 	float m_idlePosition = 0;
-	float m_wastegatePosition = 0;
 
-	// This is set if automatic PID cal shoudl be run
+	// This is set if automatic PID cal should be run
 	bool m_isAutotune = false;
 
 	// Autotune helpers
