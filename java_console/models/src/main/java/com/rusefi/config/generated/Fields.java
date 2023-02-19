@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 19 03:20:19 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 19 03:53:45 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -181,6 +181,11 @@ public class Fields {
 	public static final int cranking_parameters_s_size = 8;
 	public static final String CRITICAL_PREFIX = "CRITICAL";
 	public static final int cyl_trim_s_size = 16;
+	public static final int dc_function_e_DC_IdleValve = 3;
+	public static final int dc_function_e_DC_None = 0;
+	public static final int dc_function_e_DC_Throttle1 = 1;
+	public static final int dc_function_e_DC_Throttle2 = 2;
+	public static final int dc_function_e_DC_Wastegate = 4;
 	public static final int dc_io_size = 8;
 	public static final int DC_PER_STEPPER = 2;
 	public static final int debug_mode_e_DBG_0 = 0;
@@ -371,11 +376,6 @@ public class Fields {
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
-	public static final int etb_function_e_ETB_IdleValve = 3;
-	public static final int etb_function_e_ETB_None = 0;
-	public static final int etb_function_e_ETB_Throttle1 = 1;
-	public static final int etb_function_e_ETB_Throttle2 = 2;
-	public static final int etb_function_e_ETB_Wastegate = 4;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
 	public static final int FLASH_DATA_VERSION = 10020;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
@@ -999,6 +999,7 @@ public class Fields {
 	public static final int SENT_INPUT_COUNT = 1;
 	public static final int SentEtbType_FORD_TYPE_1 = 1;
 	public static final int SentEtbType_GM_TYPE_1 = 0;
+	public static final int SIGNATURE_HASH = 1794765617;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1208,10 +1209,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.02.19.f407-discovery.2567080787";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.02.19.f407-discovery.1794765617";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1340;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;

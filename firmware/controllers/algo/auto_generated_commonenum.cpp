@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Feb 17 04:23:42 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Feb 19 03:52:58 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -292,6 +292,21 @@ case W202:
   }
  return NULL;
 }
+const char *getDc_function_e(dc_function_e value){
+switch(value) {
+case DC_IdleValve:
+  return "DC_IdleValve";
+case DC_None:
+  return "DC_None";
+case DC_Throttle1:
+  return "DC_Throttle1";
+case DC_Throttle2:
+  return "DC_Throttle2";
+case DC_Wastegate:
+  return "DC_Wastegate";
+  }
+ return NULL;
+}
 const char *getDisplay_mode_e(display_mode_e value){
 switch(value) {
 case DM_HD44780:
@@ -334,21 +349,6 @@ case LM_REAL_MAF:
   return "LM_REAL_MAF";
 case LM_SPEED_DENSITY:
   return "LM_SPEED_DENSITY";
-  }
- return NULL;
-}
-const char *getdc_function_e(dc_function_e value){
-switch(value) {
-case DC_IdleValve:
-  return "DC_IdleValve";
-case DC_None:
-  return "DC_None";
-case DC_Throttle1:
-  return "DC_Throttle1";
-case DC_Throttle2:
-  return "DC_Throttle2";
-case DC_Wastegate:
-  return "DC_Wastegate";
   }
  return NULL;
 }

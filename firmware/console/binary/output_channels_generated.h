@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Feb 06 13:14:56 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Feb 19 03:53:00 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1178,205 +1178,209 @@ struct output_channels_s {
 	/**
 	 * offset 468
 	 */
+	pid_status_s wastegateDcStatus;
+	/**
+	 * offset 484
+	 */
 	pid_status_s vvtStatus[CAM_INPUTS_COUNT];
 	/**
 	 * aux speed 1
 	s
-	 * offset 532
+	 * offset 548
 	 */
 	uint16_t auxSpeed1 = (uint16_t)0;
 	/**
 	 * aux speed 2
 	s
-	 * offset 534
+	 * offset 550
 	 */
 	uint16_t auxSpeed2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ISS@@
 	RPM
-	 * offset 536
+	 * offset 552
 	 */
 	uint16_t ISSValue = (uint16_t)0;
 	/**
 	V
-	 * offset 538
+	 * offset 554
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAnalogInput[LUA_DIGITAL_INPUT_COUNT];
 	/**
 	 * GPPWM Output
 	%
-	 * offset 554
+	 * offset 570
 	 */
 	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
 	/**
-	 * offset 558
+	 * offset 574
 	 */
 	scaled_channel<int16_t, 1, 1> gppwmXAxis[4];
 	/**
-	 * offset 566
+	 * offset 582
 	 */
 	scaled_channel<int16_t, 10, 1> gppwmYAxis[4];
 	/**
 	V
-	 * offset 574
+	 * offset 590
 	 */
 	scaled_channel<int16_t, 1000, 1> rawBattery = (int16_t)0;
 	/**
 	%
-	 * offset 576
+	 * offset 592
 	 */
 	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT];
 	/**
 	deg
-	 * offset 580
+	 * offset 596
 	 */
 	scaled_channel<int16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT];
 	/**
 	%
-	 * offset 588
+	 * offset 604
 	 */
 	scaled_channel<uint8_t, 2, 1> veBlendBias[VE_BLEND_COUNT];
 	/**
 	%
-	 * offset 592
+	 * offset 608
 	 */
 	scaled_channel<int16_t, 100, 1> veBlendOutput[VE_BLEND_COUNT];
 	/**
-	offset 600 bit 0 */
+	offset 616 bit 0 */
 	bool coilState1 : 1 {};
 	/**
-	offset 600 bit 1 */
+	offset 616 bit 1 */
 	bool coilState2 : 1 {};
 	/**
-	offset 600 bit 2 */
+	offset 616 bit 2 */
 	bool coilState3 : 1 {};
 	/**
-	offset 600 bit 3 */
+	offset 616 bit 3 */
 	bool coilState4 : 1 {};
 	/**
-	offset 600 bit 4 */
+	offset 616 bit 4 */
 	bool coilState5 : 1 {};
 	/**
-	offset 600 bit 5 */
+	offset 616 bit 5 */
 	bool coilState6 : 1 {};
 	/**
-	offset 600 bit 6 */
+	offset 616 bit 6 */
 	bool coilState7 : 1 {};
 	/**
-	offset 600 bit 7 */
+	offset 616 bit 7 */
 	bool coilState8 : 1 {};
 	/**
-	offset 600 bit 8 */
+	offset 616 bit 8 */
 	bool coilState9 : 1 {};
 	/**
-	offset 600 bit 9 */
+	offset 616 bit 9 */
 	bool coilState10 : 1 {};
 	/**
-	offset 600 bit 10 */
+	offset 616 bit 10 */
 	bool coilState11 : 1 {};
 	/**
-	offset 600 bit 11 */
+	offset 616 bit 11 */
 	bool coilState12 : 1 {};
 	/**
-	offset 600 bit 12 */
+	offset 616 bit 12 */
 	bool injectorState1 : 1 {};
 	/**
-	offset 600 bit 13 */
+	offset 616 bit 13 */
 	bool injectorState2 : 1 {};
 	/**
-	offset 600 bit 14 */
+	offset 616 bit 14 */
 	bool injectorState3 : 1 {};
 	/**
-	offset 600 bit 15 */
+	offset 616 bit 15 */
 	bool injectorState4 : 1 {};
 	/**
-	offset 600 bit 16 */
+	offset 616 bit 16 */
 	bool injectorState5 : 1 {};
 	/**
-	offset 600 bit 17 */
+	offset 616 bit 17 */
 	bool injectorState6 : 1 {};
 	/**
-	offset 600 bit 18 */
+	offset 616 bit 18 */
 	bool injectorState7 : 1 {};
 	/**
-	offset 600 bit 19 */
+	offset 616 bit 19 */
 	bool injectorState8 : 1 {};
 	/**
-	offset 600 bit 20 */
+	offset 616 bit 20 */
 	bool injectorState9 : 1 {};
 	/**
-	offset 600 bit 21 */
+	offset 616 bit 21 */
 	bool injectorState10 : 1 {};
 	/**
-	offset 600 bit 22 */
+	offset 616 bit 22 */
 	bool injectorState11 : 1 {};
 	/**
-	offset 600 bit 23 */
+	offset 616 bit 23 */
 	bool injectorState12 : 1 {};
 	/**
-	offset 600 bit 24 */
-	bool unusedBit_294_24 : 1 {};
+	offset 616 bit 24 */
+	bool unusedBit_295_24 : 1 {};
 	/**
-	offset 600 bit 25 */
-	bool unusedBit_294_25 : 1 {};
+	offset 616 bit 25 */
+	bool unusedBit_295_25 : 1 {};
 	/**
-	offset 600 bit 26 */
-	bool unusedBit_294_26 : 1 {};
+	offset 616 bit 26 */
+	bool unusedBit_295_26 : 1 {};
 	/**
-	offset 600 bit 27 */
-	bool unusedBit_294_27 : 1 {};
+	offset 616 bit 27 */
+	bool unusedBit_295_27 : 1 {};
 	/**
-	offset 600 bit 28 */
-	bool unusedBit_294_28 : 1 {};
+	offset 616 bit 28 */
+	bool unusedBit_295_28 : 1 {};
 	/**
-	offset 600 bit 29 */
-	bool unusedBit_294_29 : 1 {};
+	offset 616 bit 29 */
+	bool unusedBit_295_29 : 1 {};
 	/**
-	offset 600 bit 30 */
-	bool unusedBit_294_30 : 1 {};
+	offset 616 bit 30 */
+	bool unusedBit_295_30 : 1 {};
 	/**
-	offset 600 bit 31 */
-	bool unusedBit_294_31 : 1 {};
+	offset 616 bit 31 */
+	bool unusedBit_295_31 : 1 {};
 	/**
-	 * offset 604
+	 * offset 620
 	 */
 	uint32_t outputRequestPeriod = (uint32_t)0;
 	/**
-	 * offset 608
+	 * offset 624
 	 */
 	float mapFast = (float)0;
 	/**
 	value
-	 * offset 612
+	 * offset 628
 	 */
 	float luaGauges[LUA_GAUGE_COUNT];
 	/**
 	V
-	 * offset 620
+	 * offset 636
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawMaf2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_AIR_FLOW_MEASURED_2@@
 	kg/h
-	 * offset 622
+	 * offset 638
 	 */
 	scaled_channel<uint16_t, 10, 1> mafMeasured2 = (uint16_t)0;
 	/**
-	 * offset 624
+	 * offset 640
 	 */
 	uint16_t schedulingUsedCount = (uint16_t)0;
 	/**
-	 * offset 626
+	 * offset 642
 	 */
 	uint8_t unusedAtTheEnd[136];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 762
+	 * offset 778
 	 */
-	uint8_t alignmentFill_at_762[2];
+	uint8_t alignmentFill_at_778[2];
 };
-static_assert(sizeof(output_channels_s) == 764);
+static_assert(sizeof(output_channels_s) == 780);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Feb 06 13:14:56 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Feb 19 03:53:00 UTC 2023

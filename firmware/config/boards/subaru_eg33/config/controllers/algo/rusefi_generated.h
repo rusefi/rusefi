@@ -182,6 +182,12 @@
 #define cranking_parameters_s_size 8
 #define CRITICAL_PREFIX "CRITICAL"
 #define cyl_trim_s_size 16
+#define dc_function_e_auto_enum 0="DC_None",3="DC_IdleValve",1="DC_Throttle1",2="DC_Throttle2",4="DC_Wastegate"
+#define dc_function_e_DC_IdleValve 3
+#define dc_function_e_DC_None 0
+#define dc_function_e_DC_Throttle1 1
+#define dc_function_e_DC_Throttle2 2
+#define dc_function_e_DC_Wastegate 4
 #define dc_io_size 8
 #define DC_PER_STEPPER 2
 #define debug_mode_e_auto_enum 0="DBG_0",10="DBG_10",11="DBG_11",16="DBG_16",2="DBG_2",20="DBG_20",24="DBG_24",26="DBG_26",29="DBG_29",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",7="DBG_7",8="DBG_8",9="DBG_9",21="DBG_ANALOG_INPUTS",32="DBG_ANALOG_INPUTS2",19="DBG_BENCH_TEST",25="DBG_CJ125",40="DBG_COMPOSITE_LOG",33="DBG_DWELL_METRIC",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",22="DBG_INSTANT_RPM",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",27="DBG_MAP",28="DBG_METRICS",13="DBG_SD_CARD",6="DBG_SOFT_SPARK_CUT",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",1="DBG_TPS_ACCEL",5="DBG_TRIGGER_COUNTERS",12="DBG_UNUSED12",41="DBG_UNUSED41",42="DBG_UNUSED_42",23="UNUSED23"
@@ -381,12 +387,6 @@
 #define ERROR_BUFFER_SIZE 120
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
-#define dc_function_e_auto_enum 0="DC_None",3="DC_IdleValve",1="DC_Throttle1",2="DC_Throttle2",4="DC_Wastegate"
-#define dc_function_e_DC_IdleValve 3
-#define dc_function_e_DC_None 0
-#define dc_function_e_DC_Throttle1 1
-#define dc_function_e_DC_Throttle2 2
-#define dc_function_e_DC_Wastegate 4
 #define ETB_HW_MAX_FREQUENCY 3000
 #define FLASH_DATA_VERSION 10020
 #define FUEL_LEVEL_TABLE_COUNT 8
@@ -1003,7 +1003,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2190526296
+#define SIGNATURE_HASH 1902886714
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1280,12 +1280,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.02.19.subaru_eg33_f7.2190526296"
+#define TS_SIGNATURE "rusEFI master.2023.02.19.subaru_eg33_f7.1902886714"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1340
+#define TS_TOTAL_OUTPUT_SIZE 1356
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5
