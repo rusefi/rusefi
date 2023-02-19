@@ -7,6 +7,8 @@
 static SerialDriver* const klDriver = KLINE_SERIAL_DEVICE;
 static THD_WORKING_AREA(klThreadStack, UTILITY_THREAD_STACK_SIZE);
 
+static int totalBytes = 0;
+
 void kLineThread(void*)
 {
     while(1)
@@ -16,6 +18,7 @@ void kLineThread(void*)
         // to begin with just write byte to console
         if (ch != 0) {
             efiPrintf("kline: %c", ch);
+            totalBytes++;
         }
     }
 }
@@ -41,5 +44,8 @@ void initKLine() {
 	sdStart(klDriver, &cfg);
 
     chThdCreateStatic(klThreadStack, sizeof(klThreadStack), NORMALPRIO + 1, kLineThread, nullptr);
+    addConsoleAction("kline", [](){
+        efiPrintf("kline totalBytes %d", totalBytes);
+    });
 #endif
 }
