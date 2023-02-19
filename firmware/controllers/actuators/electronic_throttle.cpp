@@ -1006,7 +1006,7 @@ void unregisterEtbPins() {
 	// todo: we probably need an implementation here?!
 }
 
-static pid_s* getEtbPidForFunction(dc_function_e function) {
+static pid_s* getPidForDcFunction(dc_function_e function) {
 	switch (function) {
 		case DC_Wastegate: return &engineConfiguration->etbWastegatePid;
 		default: return &engineConfiguration->etb;
@@ -1039,7 +1039,7 @@ void doInitElectronicThrottle() {
 			continue;
 		}
 
-		auto pid = getEtbPidForFunction(func);
+		auto pid = getPidForDcFunction(func);
 
 		bool dcConfigured = controller->init(func, motor, pid, &pedal2tpsMap, hasPedal);
 		bool etbConfigured = dcConfigured && controller->isEtbMode();
