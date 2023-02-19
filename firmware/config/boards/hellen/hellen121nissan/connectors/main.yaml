@@ -158,7 +158,7 @@ pins:
     ts_name: 50 - TPS 1
     function: TPS 1 sensor input
 
-  - pin: 51a_broken2
+  - pin: 51a_broken1
     # H144_IN_O2S
     id: EFI_ADC_0
     class: analog_inputs
@@ -240,10 +240,10 @@ pins:
   - pin: 75a
     function: LSU 4.2 IA1
 
-  - pin: 77a
+  - pin: 77a_broken1
     function: LSU 4.2 UN2
 
-  - pin: 77a
+  - pin: 77a_broken2
     function: LSU 4.2 IA2
 
 
