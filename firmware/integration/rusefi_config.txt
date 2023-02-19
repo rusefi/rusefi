@@ -985,8 +985,8 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 
 	output_pin_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid;
 
-	custom etb_function_e 1 bits, U08, @OFFSET@, [0:2], "None", "Throttle 1", "Throttle 2", "Idle Valve", "Wastegate"
-	etb_function_e[ETB_COUNT iterate] etbFunctions
+	custom dc_function_e 1 bits, U08, @OFFSET@, [0:2], "None", "Throttle 1", "Throttle 2", "Idle Valve", "Wastegate"
+	dc_function_e[ETB_COUNT iterate] etbFunctions
 
 	spi_device_e drv8860spiDevice;
 	Gpio       drv8860_cs;
