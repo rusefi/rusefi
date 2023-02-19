@@ -337,18 +337,18 @@ case LM_SPEED_DENSITY:
   }
  return NULL;
 }
-const char *getEtb_function_e(etb_function_e value){
+const char *getdc_function_e(dc_function_e value){
 switch(value) {
-case ETB_IdleValve:
-  return "ETB_IdleValve";
-case ETB_None:
-  return "ETB_None";
-case ETB_Throttle1:
-  return "ETB_Throttle1";
-case ETB_Throttle2:
-  return "ETB_Throttle2";
-case ETB_Wastegate:
-  return "ETB_Wastegate";
+case DC_IdleValve:
+  return "DC_IdleValve";
+case DC_None:
+  return "DC_None";
+case DC_Throttle1:
+  return "DC_Throttle1";
+case DC_Throttle2:
+  return "DC_Throttle2";
+case DC_Wastegate:
+  return "DC_Wastegate";
   }
  return NULL;
 }

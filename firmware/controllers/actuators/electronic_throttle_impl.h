@@ -27,7 +27,7 @@
 
 class EtbController : public IEtbController, public electronic_throttle_s {
 public:
-	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) override;
+	bool init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) override;
 	void setIdlePosition(percent_t pos) override;
 	void setWastegatePosition(percent_t pos) override;
 	void reset() override;
@@ -82,11 +82,11 @@ protected:
 	bool hadTpsError = false;
 	bool hadPpsError = false;
 
-	etb_function_e getFunction() const { return m_function; }
+	dc_function_e getFunction() const { return m_function; }
 	DcMotor* getMotor() { return m_motor; }
 
 private:
-	etb_function_e m_function = ETB_None;
+	dc_function_e m_function = DC_None;
 	SensorType m_positionSensor = SensorType::Invalid;
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
@@ -99,7 +99,7 @@ private:
      */
     bool checkStatus();
     bool isEtbMode() {
-        return m_function == ETB_Throttle1 || m_function == ETB_Throttle2;
+        return m_function == DC_Throttle1 || m_function == DC_Throttle2;
     }
 
 	ExpAverage m_dutyRocAverage;

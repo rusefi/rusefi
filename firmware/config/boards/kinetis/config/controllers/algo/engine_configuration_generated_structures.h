@@ -2374,7 +2374,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1200
 	 */
-	etb_function_e etbFunctions[ETB_COUNT];
+	dc_function_e etbFunctions[ETB_COUNT];
 	/**
 	 * offset 1202
 	 */
