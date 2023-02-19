@@ -60,6 +60,9 @@ TEST(etb, initializationMissingThrottle) {
 TEST(etb, initializationSingleThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
+	EXPECT_CALL(mocks[0], isEtbMode())
+	      .WillOnce(Return(TRUE));
+
 	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->etbFunctions[0] = DC_Throttle1;
 		engineConfiguration->etbFunctions[1] = DC_None;
@@ -85,6 +88,9 @@ TEST(etb, initializationSingleThrottle) {
 TEST(etb, initializationSingleThrottleInSecondSlot) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
+	EXPECT_CALL(mocks[1], isEtbMode())
+	      .WillOnce(Return(TRUE));
+
 	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->etbFunctions[0] = DC_None;
 		engineConfiguration->etbFunctions[1] = DC_Throttle1;
@@ -109,6 +115,11 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 
 TEST(etb, initializationDualThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
+
+	EXPECT_CALL(mocks[0], isEtbMode())
+	      .WillOnce(Return(TRUE));
+	EXPECT_CALL(mocks[1], isEtbMode())
+	      .WillOnce(Return(TRUE));
 
 	EngineTestHelper eth(TEST_ENGINE);
 
@@ -138,6 +149,9 @@ TEST(etb, initializationDualThrottle) {
 TEST(etb, initializationWastegate) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
+	EXPECT_CALL(mocks[0], isEtbMode())
+	      .WillOnce(Return(false));
+
 	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->etbFunctions[0] = DC_Wastegate;
 		engineConfiguration->etbFunctions[1] = DC_None;
@@ -155,7 +169,7 @@ TEST(etb, initializationWastegate) {
 
 	doInitElectronicThrottle();
 
-	ASSERT_TRUE(engineConfiguration->etb1configured); // huh?!
+	ASSERT_FALSE(engineConfiguration->etb1configured);
 }
 
 TEST(etb, initializationNoFunction) {
