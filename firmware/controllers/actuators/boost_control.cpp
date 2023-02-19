@@ -226,7 +226,7 @@ void initBoostCtrl() {
 	bool hasAnyEtbWastegate = false;
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->etbFunctions); i++) {
-		hasAnyEtbWastegate |= engineConfiguration->etbFunctions[i] == ETB_Wastegate;
+		hasAnyEtbWastegate |= engineConfiguration->etbFunctions[i] == DC_Wastegate;
 	}
 
 	// If we have neither a boost PWM pin nor ETB wastegate, nothing more to do

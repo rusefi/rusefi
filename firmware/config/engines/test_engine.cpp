@@ -59,7 +59,7 @@ void setTestCrankEngineConfiguration() {
 
 void setTestDcWastegateConfiguration() {
     engineConfiguration->isBoostControlEnabled = 1;
-	engineConfiguration->etbFunctions[0] = ETB_Wastegate;
+	engineConfiguration->etbFunctions[0] = DC_Wastegate;
 	setTable(config->boostTableOpenLoop, 50);
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_1; // PA1
 

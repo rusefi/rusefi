@@ -169,7 +169,7 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->etbFunctions[1] = ETB_Wastegate;
+	engineConfiguration->etbFunctions[1] = DC_Wastegate;
 
 	// Some sensible defaults for other options
 	setCrankOperationMode();

@@ -602,14 +602,12 @@ typedef enum __attribute__ ((__packed__)) {
 } load_override_e;
 
 typedef enum __attribute__ ((__packed__)) {
-// todo: rename to HB_None?
-	ETB_None = 0,
-	ETB_Throttle1 = 1,
-	ETB_Throttle2 = 2,
-	ETB_IdleValve = 3,
-	ETB_Wastegate = 4,
-// todo: rename to dc_function_e? rename to hbrg_function_e?
-} etb_function_e;
+	DC_None = 0,
+	DC_Throttle1 = 1,
+	DC_Throttle2 = 2,
+	DC_IdleValve = 3,
+	DC_Wastegate = 4,
+} dc_function_e;
 
 typedef enum __attribute__ ((__packed__)) {
 	STEPPER_FULL = 0,
