@@ -310,7 +310,7 @@ pins:
     ts_name: 4H - Neutral
     function: Neutral Switch
 
-  - pin: 4I
+  - pin: 4I_rev_D
   # H176_IN_RES3 
     id: F8
     class: switch_inputs
