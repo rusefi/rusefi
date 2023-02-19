@@ -154,6 +154,8 @@ TEST(etb, initializationWastegate) {
 	EXPECT_CALL(mocks[1], init(DC_None, _, _, _, false)).Times(0);
 
 	doInitElectronicThrottle();
+
+	ASSERT_TRUE(engineConfiguration->etb1configured); // huh?!
 }
 
 TEST(etb, initializationNoFunction) {
