@@ -571,11 +571,22 @@ static void mreBoardOldTest() {
 }
 
 #if HW_PROTEUS
+/*
+ * set engine_type 96
+ */
+
 void proteusDcWastegateTest() {
 	engineConfiguration->isBoostControlEnabled = true;
 	engineConfiguration->etbFunctions[0] = ETB_Wastegate;
 	engineConfiguration->etbFunctions[1] = ETB_None;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_10;
+	setTPS1Calibration(98, 926, 891, 69);
+
+	engineConfiguration->wastegatePositionSensor = EFI_ADC_6;
+	engineConfiguration->wastegatePositionMin = 700;
+	engineConfiguration->wastegatePositionMax = 4000;
 
 	strncpy(config->luaScript, R"(
 
