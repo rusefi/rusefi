@@ -562,6 +562,8 @@ bool EtbController::checkStatus() {
 	// Only debug throttle #1
 	if (m_function == ETB_Throttle1) {
 		m_pid.postState(engine->outputChannels.etbStatus);
+	} else if (m_function == ETB_Wastegate) {
+		m_pid.postState(engine->outputChannels.wastegateDcStatus);
 	}
 #endif /* EFI_TUNER_STUDIO */
 
