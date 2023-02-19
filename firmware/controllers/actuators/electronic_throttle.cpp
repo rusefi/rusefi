@@ -1041,7 +1041,8 @@ void doInitElectronicThrottle() {
 
 		auto pid = getEtbPidForFunction(func);
 
-		bool etbConfigured = controller->init(func, motor, pid, &pedal2tpsMap, hasPedal);
+		bool dcConfigured = controller->init(func, motor, pid, &pedal2tpsMap, hasPedal);
+		bool etbConfigured = dcConfigured && controller->isEtbMode();
 		if (i == 0) {
 		    engineConfiguration->etb1configured = etbConfigured;
 		} else if (i == 1) {
