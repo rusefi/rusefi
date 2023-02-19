@@ -30,7 +30,7 @@ pins:
     function: Check Engine Light
     type: ls
 
-  - pin: 1G
+  - pin: 1G_rev_c
     id: I8
     class: outputs
     ts_name: 1G - Ignition 1 & 4 (rev C)
@@ -203,7 +203,7 @@ pins:
     ts_name: 3G - CAM
     function: Camshaft Sensor
     
-  - pin: 3I
+  - pin: 3I_rev_C
     id: I0
     class: outputs
     ts_name: Tachometer (rev C)
