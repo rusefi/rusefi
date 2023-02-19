@@ -1730,7 +1730,7 @@ menuDialog = main
 		subMenu = boostOpenLoopDialog,	"Boost control open loop", { isBoostControlEnabled }
 		subMenu = boostPidDialog,		"Boost control PID", { isBoostControlEnabled && boostType == 1 }
 		subMenu = boostTargetDialog,	"Boost control target", { isBoostControlEnabled && boostType == 1 }
-		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { etbFunctions1 == @@dc_function_e_ETB_Wastegate@@ || etbFunctions2 == @@dc_function_e_ETB_Wastegate@@ }
+		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { etbFunctions1 == @@dc_function_e_DC_Wastegate@@ || etbFunctions2 == @@dc_function_e_DC_Wastegate@@ }
 
 		subMenu = std_separator
 		subMenu = gppwm1, "General Purpose PWM 1"
@@ -3070,8 +3070,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
 		field = "Two-wire mode",						etb_use_two_wires
-		panel = etbHbridgeHardwareNo1, { etbFunctions1 != @@dc_function_e_ETB_None@@ }
-		panel = etbHbridgeHardwareNo2, { etbFunctions2 != @@dc_function_e_ETB_None@@ }
+		panel = etbHbridgeHardwareNo1, { etbFunctions1 != @@dc_function_e_DC_None@@ }
+		panel = etbHbridgeHardwareNo2, { etbFunctions2 != @@dc_function_e_DC_None@@ }
 
 	dialog = stepperHbridgeHardwareNo1, "H-Bridge Hardware No1"
 		field = "No1 Direction #1",						stepperDcIo1_directionPin1
@@ -3086,8 +3086,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = stepperHbridgeHardware, "Stepper H-Bridge Hardware"
 		topicHelp = "stepperHbridgeHardwareHelp"
 		field = "Inverted driver pins",					stepperDcInvertedPins
-		panel = stepperHbridgeHardwareNo1, { etbFunctions1 != @@dc_function_e_ETB_None@@ }
-		panel = stepperHbridgeHardwareNo2, { etbFunctions2 != @@dc_function_e_ETB_None@@ }
+		panel = stepperHbridgeHardwareNo1, { etbFunctions1 != @@dc_function_e_DC_None@@ }
+		panel = stepperHbridgeHardwareNo2, { etbFunctions2 != @@dc_function_e_DC_None@@ }
 
 	dialog = idleStepperHw, "Stepper Controller Hardware"
 		topicHelp = "idleStepperHwHelp"
@@ -4023,7 +4023,7 @@ dialog = tcuControls, "Transmission Settings"
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
 		; another todo: split panel into two panels so that we can enable/disable h-bridge #1 separately from h-bridge #2
-		panel = etbHbridgeHardware, { etbFunctions1 != @@dc_function_e_ETB_None@@ || etbFunctions2 != @@dc_function_e_ETB_None@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) } @@if_ts_show_etb_pins
+		panel = etbHbridgeHardware, { etbFunctions1 != @@dc_function_e_DC_None@@ || etbFunctions2 != @@dc_function_e_DC_None@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) } @@if_ts_show_etb_pins
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
@@ -4037,9 +4037,9 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Debug mode",							debugMode
 
 	dialog = etbDialogRight
-		panel = etbIdleDialog,{ etbFunctions1 == @@dc_function_e_ETB_Throttle1@@ || etbFunctions1 == @@dc_function_e_ETB_Throttle2@@ || etbFunctions2 == @@dc_function_e_ETB_Throttle1@@ || etbFunctions2 == @@dc_function_e_ETB_Throttle2@@ }
-		panel = etbPidDialog, { etbFunctions1 == @@dc_function_e_ETB_Throttle1@@ || etbFunctions1 == @@dc_function_e_ETB_Throttle2@@ || etbFunctions2 == @@dc_function_e_ETB_Throttle1@@ || etbFunctions2 == @@dc_function_e_ETB_Throttle2@@ }
-		panel = etbAutotune,  { etbFunctions1 == @@dc_function_e_ETB_Throttle1@@ || etbFunctions1 == @@dc_function_e_ETB_Throttle2@@ || etbFunctions2 == @@dc_function_e_ETB_Throttle1@@ || etbFunctions2 == @@dc_function_e_ETB_Throttle2@@ }
+		panel = etbIdleDialog,{ etbFunctions1 == @@dc_function_e_DC_Throttle1@@ || etbFunctions1 == @@dc_function_e_DC_Throttle2@@ || etbFunctions2 == @@dc_function_e_DC_Throttle1@@ || etbFunctions2 == @@dc_function_e_DC_Throttle2@@ }
+		panel = etbPidDialog, { etbFunctions1 == @@dc_function_e_DC_Throttle1@@ || etbFunctions1 == @@dc_function_e_DC_Throttle2@@ || etbFunctions2 == @@dc_function_e_DC_Throttle1@@ || etbFunctions2 == @@dc_function_e_DC_Throttle2@@ }
+		panel = etbAutotune,  { etbFunctions1 == @@dc_function_e_DC_Throttle1@@ || etbFunctions1 == @@dc_function_e_DC_Throttle2@@ || etbFunctions2 == @@dc_function_e_DC_Throttle1@@ || etbFunctions2 == @@dc_function_e_DC_Throttle2@@ }
 
 	dialog = etbDialog, "Electronic Throttle Body", border
 		topicHelp = "etbHelp"
