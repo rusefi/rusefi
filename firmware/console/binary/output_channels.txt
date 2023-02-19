@@ -311,6 +311,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	pid_status_s idleStatus
 	pid_status_s etbStatus
 	pid_status_s boostStatus
+	pid_status_s wastegateDcStatus
 
 	pid_status_s[CAM_INPUTS_COUNT iterate] vvtStatus
 
