@@ -241,20 +241,29 @@ pins:
   - pin: C7
     function: WHITE LSU4.9 Heater Negative
 
-  - pin: C7
-    function: CAN High
+  - pin: C11
+    function: Aux Low 3
 
-  - pin: C8
+  - pin: C12
+    function: Aux Low 2
+
+  - pin: C13
+    function: Aux Low 1
+
+  - pin: C14
     function: CAN Low
 
-  - pin: C16
-    function: 5V Sensor Power
-    color: orange
+  - pin: C15
+    function: CAN High
 
-  - pin: C18
+  - pin: C20
     function: Aux GND
     type: gnda
     color: black
+
+  - pin: C22
+    function: 5V Sensor Power
+    color: orange
 
   - pin: E1
     # H144_OUT_IO13
