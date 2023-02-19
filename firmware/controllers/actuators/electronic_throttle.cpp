@@ -549,15 +549,6 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 }
 
 bool EtbController::checkStatus() {
-    if (!isEtbMode()) {
-        // no validation for h-bridge or idle mode
-        return true;
-    }
-    // ETB-specific code belo. The whole mix-up between DC and ETB is shameful :(
-
-	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
-	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
-
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #1
 	if (m_function == DC_Throttle1) {
@@ -566,6 +557,15 @@ bool EtbController::checkStatus() {
 		m_pid.postState(engine->outputChannels.wastegateDcStatus);
 	}
 #endif /* EFI_TUNER_STUDIO */
+
+	if (!isEtbMode()) {
+        // no validation for h-bridge or idle mode
+        return true;
+    }
+    // ETB-specific code belo. The whole mix-up between DC and ETB is shameful :(
+
+	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
+	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	// Only allow autotune with stopped engine, and on the first throttle
 	// Update local state about autotune
