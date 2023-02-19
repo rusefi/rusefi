@@ -1234,9 +1234,9 @@ gaugeCategory = Etb PID
 
 	wgStatus_iTermGauge = wastegateDcStatus_iTerm,"WG PID iTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	wgStatus_dTermGauge = wastegateDcStatus_dTerm,"WG PID dTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
-	wgStatus_outputGauge = wastegateDcStatus_output,"WG 1 PID output", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
+	wgStatus_outputGauge = wastegateDcStatus_output,"WG PID output", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	wgStatus_errorGauge = wastegateDcStatus_error,"WG PID error", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
-	wgStatus_resetCounterGauge = wastegateDcStatus_resetCounter,"WG 1 PID resetCounter", "", 0,100.0, 0,100.0, 0,100.0, 0,0
+	wgStatus_resetCounterGauge = wastegateDcStatus_resetCounter,"WG PID resetCounter", "", 0,100.0, 0,100.0, 0,100.0, 0,0
 
 gaugeCategory = CAN
 	canReadCounterGauge = canReadCounter,"canReadCounter", "", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
