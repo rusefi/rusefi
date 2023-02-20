@@ -111,6 +111,11 @@ void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
 	esr = data->Esr;
 
 	faultCode = static_cast<uint8_t>(data->Status);
+
+	if (data->Status != wbo::Fault::None) {
+		auto code = m_sensorIndex == 0 ? Wideband_1_Fault : Wideband_2_Fault;
+		warning(code, "Wideband #%d fault: %s", (m_sensorIndex + 1), wbo::describeFault(data->Status));
+	}
 }
 
 #endif
