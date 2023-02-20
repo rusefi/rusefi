@@ -148,8 +148,8 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
             writeLine(stream, category, 34);
         }
 
-        if (stream.size() != headerWithTextSize)
-            throw new IllegalStateException("We are doing something wrong :( stream.size=" + stream.size());
+        if (stream.size() != headerSize)
+            throw new IllegalStateException("We are doing something wrong :( stream.size=" + stream.size() + " vs " + headerSize);
         writeLine(stream, headerText, headerText.length());
     }
 
