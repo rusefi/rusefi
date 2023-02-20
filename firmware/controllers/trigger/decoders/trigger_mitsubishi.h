@@ -9,7 +9,7 @@
 
 class TriggerWaveform;
 
-void initializeMitsubishi4g18(TriggerWaveform *s);
+void initializeMitsubishi4G93(TriggerWaveform *s);
 void initializeMitsubishi4g63Cam(TriggerWaveform *s);
 void initializeMitsubishi4gMess(TriggerWaveform *s);
 

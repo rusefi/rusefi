@@ -329,7 +329,7 @@ typedef enum {
 	TT_MERCEDES_2_SEGMENT = 10,
 
 	// todo: this really looks to be same as Miata_NA shall we remove?
-	TT_MITSUBISHI = 11,
+	TT_MITSUBISHI_4G93 = 11,
 
 	// cam-based
 	TT_DODGE_NEON_2003_CAM = 14,

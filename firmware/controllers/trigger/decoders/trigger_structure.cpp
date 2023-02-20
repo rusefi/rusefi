@@ -645,8 +645,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureChryslerNGC_36_2_2(this);
 		break;
 
-	case TT_MITSUBISHI:
-		initializeMitsubishi4g18(this);
+	case TT_MITSUBISHI_4G93:
+		initializeMitsubishi4G93(this);
 		break;
 
 	case TT_DODGE_RAM:
