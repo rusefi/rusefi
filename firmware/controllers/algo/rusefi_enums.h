@@ -168,8 +168,9 @@ typedef enum __attribute__ ((__packed__)) {
 } idle_mode_e;
 
 enum class SentEtbType : uint8_t {
-	GM_TYPE_1 = 0,
-	FORD_TYPE_1 = 1,
+	NONE = 0,
+	GM_TYPE_1 = 1,
+	FORD_TYPE_1 = 2,
 };
 
 typedef enum __attribute__ ((__packed__)) {
