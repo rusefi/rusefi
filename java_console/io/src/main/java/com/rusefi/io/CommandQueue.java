@@ -26,7 +26,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class CommandQueue {
     private static final Logging log = getLogging(CommandQueue.class);
     public static final String CONFIRMATION_PREFIX = "confirmation_";
-    public static final int DEFAULT_TIMEOUT = 500;
+    public static int DEFAULT_TIMEOUT = 500;
     private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
     public static final int SLOW_CONFIRMATION_TIMEOUT = 5000;
     public static final Class<CommandQueue> COMMAND_QUEUE_CLASS = CommandQueue.class;

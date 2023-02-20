@@ -5,6 +5,7 @@ import com.rusefi.f4discovery.CommonFunctionalTest;
 import com.rusefi.f4discovery.HighRevTest;
 import com.rusefi.f4discovery.PwmHardwareTest;
 import com.rusefi.f4discovery.VssHardwareLoopTest;
+import com.rusefi.io.CommandQueue;
 
 /**
  * dead?
@@ -22,6 +23,10 @@ import com.rusefi.f4discovery.VssHardwareLoopTest;
 public class HwCiF4Discovery {
 
     public static void main(String[] args) {
+        /**
+         * trying a random hack https://github.com/rusefi/rusefi/issues/4772
+         */
+        CommandQueue.DEFAULT_TIMEOUT = 4950;
         boolean isOk = runHardwareTest();
         if (!isOk)
             System.exit(-1);
