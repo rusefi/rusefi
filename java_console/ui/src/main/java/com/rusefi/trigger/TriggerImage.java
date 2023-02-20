@@ -51,8 +51,6 @@ public class TriggerImage {
                 return "Bosch Quick Start";
             case TT_MAZDA_MIATA_NA:
                 return "Miata NA";
-            case TT_MAZDA_MIATA_NB1:
-                return "Miata NB";
             case TT_SUBARU_SVX:
                 return "Subaru SVX";
             case TT_HONDA_K_CRANK_12_1:
