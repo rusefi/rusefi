@@ -15,7 +15,7 @@
 
 void setMitsubishiConfiguration() {
 
-	engineConfiguration->trigger.type = TT_MITSUBISHI; // same trigger as 4G63?
+	engineConfiguration->trigger.type = TT_MITSUBISHI_4G93; // same trigger as 4G63?
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 1.800;
