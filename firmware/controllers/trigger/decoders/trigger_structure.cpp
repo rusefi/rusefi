@@ -424,7 +424,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeMazdaMiataNaShape(this);
 		break;
 
-	case TT_MAZDA_MIATA_NB1:
+	case TT_MITSUBISHI_MESS:
+	    initializeMitsubishi4gMess(this);
+        break;
+
 	case TT_MAZDA_MIATA_VVT_TEST:
 		initializeMazdaMiataVVtTestShape(this);
 		break;
