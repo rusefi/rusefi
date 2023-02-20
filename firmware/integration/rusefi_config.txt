@@ -297,7 +297,7 @@ end_struct
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
 custom ego_sensor_e 1 bits, S08, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 
-#define SentEtbType_enum "None", ""GM type 1", "Ford type 1"
+#define SentEtbType_enum "None", "GM type 1", "Ford type 1"
 custom SentEtbType 1 bits, S08, @OFFSET@, [0:1], @@SentEtbType_enum@@
 
 struct cranking_parameters_s
