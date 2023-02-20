@@ -23,14 +23,11 @@ TEST(real4g93, cranking) {
 	engineConfiguration->skippedWheelOnCam = false;
 	eth.setTriggerType(TT_TOOTHED_WHEEL);
 
-	int eventCount = 0;
 	bool gotRpm = false;
 	bool gotSync = false;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		eventCount++;
-		engine->rpmCalculator.onSlowCallback();
 
 		// Expect that all teeth are in the correct spot
 
@@ -39,14 +36,14 @@ TEST(real4g93, cranking) {
 			gotRpm = true;
 
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(eventCount, 6);
+			EXPECT_EQ(reader.lineIndex(), 6);
 			EXPECT_NEAR(rpm, 132.77f, 0.1);
 		}
 
 		if (!gotSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 			gotSync = true;
 
-			EXPECT_EQ(eventCount, 17);
+			EXPECT_EQ(reader.lineIndex(), 17);
 			EXPECT_NEAR(rpm, 204.01f, 0.1);
 		}
 	}
@@ -67,30 +64,26 @@ TEST(real4g93, crankingCamOnly) {
 
 	eth.setTriggerType(TT_MITSU_4G9x_CAM);
 
-	int eventCount = 0;
 	bool gotRpm = false;
 	bool gotSync = false;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		eventCount++;
-		engine->rpmCalculator.onSlowCallback();
 
 		// Expect that all teeth are in the correct spot
-
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (!gotRpm && rpm) {
 			gotRpm = true;
 
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(eventCount, 17);
+			EXPECT_EQ(reader.lineIndex(), 17);
 			EXPECT_NEAR(rpm, 194.61f, 0.1);
 		}
 
 		if (!gotSync && engine->triggerCentral.triggerState.getShaftSynchronized() && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 			gotSync = true;
 
-			EXPECT_EQ(eventCount, 17);
+			EXPECT_EQ(reader.lineIndex(), 17);
 		}
 	}
 
