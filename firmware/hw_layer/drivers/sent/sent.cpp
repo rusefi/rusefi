@@ -57,8 +57,7 @@
 /* convert CPU ticks to float Us */
 #define TicksToUs(ticks)		((float)(ticks) * 1000.0 * 1000.0 / CORE_CLOCK)
 
-void sent_channel::restart(void)
-{
+void sent_channel::restart(void) {
 	state = SENT_STATE_CALIB;
 	pulseCounter = 0;
 	currentStatePulseCounter = 0;
@@ -82,20 +81,17 @@ void sent_channel::restart(void)
 	#endif
 }
 
-uint32_t sent_channel::calcTickPerUnit(uint32_t clocks)
-{
+uint32_t sent_channel::calcTickPerUnit(uint32_t clocks) {
 	/* int division with rounding */
 	return (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
 			(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 }
 
-float sent_channel::getTickTime(void)
-{
+float sent_channel::getTickTime(void) {
 	return tickPerUnit;
 }
 
-int sent_channel::Decoder(uint16_t clocks)
-{
+int sent_channel::Decoder(uint16_t clocks) {
 	int ret = 0;
 	int interval;
 
@@ -275,8 +271,7 @@ int sent_channel::Decoder(uint16_t clocks)
 	return ret;
 }
 
-int sent_channel::GetMsg(uint32_t* rx)
-{
+int sent_channel::GetMsg(uint32_t* rx) {
 	if (rx) {
 		*rx = rxLast;
 	}
@@ -507,10 +502,7 @@ uint8_t sent_channel::crc6(uint32_t data)
 
 static sent_channel channels[SENT_CHANNELS_NUM];
 
-void sent_channel::Info(void)
-{
-	int i;
-
+void sent_channel::Info(void) {
 	uint8_t stat;
 	uint16_t sig0, sig1;
 
@@ -523,7 +515,7 @@ void sent_channel::Info(void)
 
 	if (scMsgFlags) {
 		efiPrintf("Slow channels:");
-		for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
+		for (int i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
 			if (scMsgFlags & BIT(i)) {
 				efiPrintf(" ID %d: %d", scMsg[i].id, scMsg[i].data);
 			}
@@ -551,8 +543,7 @@ static MAILBOX_DECL(sent_mb, sent_mb_buffer, SENT_MB_SIZE);
 
 static THD_WORKING_AREA(waSentDecoderThread, 256);
 
-void SENT_ISR_Handler(uint8_t ch, uint16_t clocks)
-{
+void SENT_ISR_Handler(uint8_t ch, uint16_t clocks) {
 	/* encode to fit msg_t */
 	msg_t msg = (ch << 16) | clocks;
 
@@ -562,12 +553,10 @@ void SENT_ISR_Handler(uint8_t ch, uint16_t clocks)
 	chSysUnlockFromISR();
 }
 
-static void SentDecoderThread(void*)
-{
-	msg_t msg;
-	while(true)
-	{
+static void SentDecoderThread(void*) {
+	while (true) {
 		msg_t ret;
+		msg_t msg;
 
 		ret = chMBFetchTimeout(&sent_mb, &msg, TIME_INFINITE);
 
@@ -579,6 +568,14 @@ static void SentDecoderThread(void*)
 				sent_channel &ch = channels[n];
 
 				if (ch.Decoder(tick) > 0) {
+
+    				uint16_t sig0, sig1;
+    				ch.GetSignals(NULL, &sig0, &sig1);
+    				engine->sent_state.value0 = sig0;
+    				engine->sent_state.value1 = sig1;
+    				engine->sent_state.errorRate = ch.getErrorRate();
+
+
 					/* Call high level decoder from here */
 				}
 			}
@@ -586,11 +583,8 @@ static void SentDecoderThread(void*)
 	}
 }
 
-static void printSentInfo()
-{
-	int i;
-
-	for (i = 0; i < SENT_CHANNELS_NUM; i++) {
+static void printSentInfo() {
+	for (int i = 0; i < SENT_CHANNELS_NUM; i++) {
 		sent_channel &ch = channels[i];
 
 		efiPrintf("---- SENT ch %d ----", i);
