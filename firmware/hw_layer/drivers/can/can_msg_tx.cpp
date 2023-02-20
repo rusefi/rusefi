@@ -22,7 +22,7 @@
 }
 #endif // EFI_CAN_SUPPORT
 
-CanTxMessage::CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, bool isExtended) {
+CanTxMessage::CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, size_t bus, bool isExtended) {
     this->category = category;
 #if HAL_USE_CAN || EFI_UNIT_TEST
 #ifndef STM32H7XX
@@ -42,6 +42,8 @@ CanTxMessage::CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, bool
 	}
 
 	setDlc(dlc);
+
+	setBus(0);
 
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
 #endif // HAL_USE_CAN || EFI_UNIT_TEST
@@ -90,6 +92,10 @@ CanTxMessage::~CanTxMessage() {
 #if HAL_USE_CAN || EFI_UNIT_TEST
 void CanTxMessage::setDlc(uint8_t dlc) {
 	m_frame.DLC = dlc;
+}
+
+void CanTxMessage::setBus(size_t bus) {
+	busIndex = bus;
 }
 
 void CanTxMessage::setShortValue(uint16_t value, size_t offset) {

@@ -1014,7 +1014,7 @@ end_struct
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 
-	bit unusedBitDisablePrimaryUart
+	bit widebandOnSecondBus,"2","1";Select which bus the wideband controller is attached to.
 	bit fuelClosedLoopCorrectionEnabled;Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;Print details into rusEFI console\nenable verbose_idle
 	bit boardUseTachPullUp,"12v","5v"
