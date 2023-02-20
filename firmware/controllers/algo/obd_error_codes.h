@@ -1612,7 +1612,8 @@ typedef enum {
 	//P2793 Gear Shift Direction Circ
 	//P2794 Gear Shift Direction Circ Low
 	//P2795 Gear Shift Direction Circ High
-	Wideband_Fault = 2900,
+	Wideband_1_Fault = 2900,
+	Wideband_2_Fault = 2901,
 	//P2A00 O2 Sensor Circ Range/Perf Bank1 Sensor 1
 	//P2A01 O2 Sensor Circ Range/Perf Bank1 Sensor 2
 	//P2A02 O2 Sensor Circ Range/Perf Bank1 Sensor 3
