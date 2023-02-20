@@ -573,7 +573,10 @@ static void SentDecoderThread(void*) {
     				ch.GetSignals(NULL, &sig0, &sig1);
     				engine->sent_state.value0 = sig0;
     				engine->sent_state.value1 = sig1;
-    				engine->sent_state.errorRate = ch.getErrorRate();
+
+    				#if SENT_STATISTIC_COUNTERS
+    				    engine->sent_state.errorRate = ch.statistic.getErrorRate();
+    				#endif // SENT_STATISTIC_COUNTERS
 
 
 					/* Call high level decoder from here */
