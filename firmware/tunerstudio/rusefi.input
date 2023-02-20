@@ -4109,6 +4109,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "!Disconnect all controllers you don't want to set!"
 		commandButton = "Set Index 0",	cmd_set_wideband_idx_0
 		commandButton = "Set Index 1",	cmd_set_wideband_idx_1
+		field = "Wideband CAN bus", widebandOnSecondBus
 		field = "Force O2 sensor heating", forceO2Heating
 
 	dialog = engineTypeDialog, "Popular vehicles"

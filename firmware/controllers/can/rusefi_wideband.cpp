@@ -25,7 +25,13 @@ bool waitAck() {
 	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(1000)) != 0;
 }
 
+static size_t getWidebandBus() {
+	return engineConfiguration->widebandOnSecondBus ? 1 : 0;
+}
+
 void updateWidebandFirmware() {
+	size_t bus = getWidebandBus();
+
 	// Clear any pending acks for this thread
 	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
 
@@ -43,7 +49,7 @@ void updateWidebandFirmware() {
 	for (int i = 0; i < 2; i++) {
 		{
 			// Send bootloader entry command
-			CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF0'0000, 0, true);
+			CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF0'0000, 0, bus, true);
 		}
 
 		if (!waitAck()) {
@@ -59,7 +65,7 @@ void updateWidebandFirmware() {
 
 	{
 		// Erase flash - opcode 1, magic value 0x5A5A
-		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF1'5A5A, 0, true);
+		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF1'5A5A, 0, bus, true);
 	}
 
 	if (!waitAck()) {
@@ -74,7 +80,7 @@ void updateWidebandFirmware() {
 	// Send flash data 8 bytes at a time
 	for (size_t i = 0; i < totalSize; i += 8) {
 		{
-			CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF2'0000 + i, 8, true);
+			CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF2'0000 + i, 8, bus, true);
 			memcpy(&m[0], build_wideband_image_bin + i, 8);
 		}
 
@@ -88,7 +94,7 @@ void updateWidebandFirmware() {
 
 	{
 		// Reboot to firmware!
-		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF3'0000, 0, true);
+		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF3'0000, 0, bus, true);
 	}
 
 	waitAck();
@@ -109,7 +115,7 @@ void setWidebandOffset(uint8_t index) {
 	efiPrintf("Setting all connected widebands to index %d...", index);
 
 	{
-		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF4'0000, 1, true);
+		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF4'0000, 1, getWidebandBus(), true);
 		m[0] = index;
 	}
 
@@ -121,7 +127,7 @@ void setWidebandOffset(uint8_t index) {
 }
 
 void sendWidebandInfo() {
-	CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF5'0000, 2, true);
+	CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF5'0000, 2, getWidebandBus(), true);
 
 	float vbatt = Sensor::getOrZero(SensorType::BatteryVoltage) * 10;
 
