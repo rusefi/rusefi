@@ -29,7 +29,7 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, bool isExtended = false);
+	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, size_t bus = 0, bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
@@ -63,6 +63,8 @@ public:
 	void setBit(size_t byteIdx, size_t bitIdx);
 
 	void setDlc(uint8_t dlc);
+
+	void setBus(size_t bus);
 
 #if HAL_USE_CAN || EFI_UNIT_TEST
 	const CANTxFrame *getFrame() const {
