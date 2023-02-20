@@ -23,7 +23,7 @@ import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class BinaryProtocolLogger {
     private static final int HIGH_RPM_DELAY = Integer.getInteger("high_speed_logger_time", 10);
-    public static final int COMPOSITE_OFF_RPM = Integer.getInteger("high_speed_logger_rpm", 300);
+    public static final int COMPOSITE_OFF_RPM = Integer.getInteger("high_speed_logger_rpm", 700);
 
     /**
      * Composite logging turns off after 10 seconds of RPM above 300
@@ -38,8 +38,11 @@ public class BinaryProtocolLogger {
     private final Thread hook = new Thread(() -> closeComposites(), "BinaryProtocol::hook");
 
     public BinaryProtocolLogger(LinkManager linkManager) {
-        rpmListener = value -> {
-            if (value <= COMPOSITE_OFF_RPM) {
+        rpmListener = currentRpm -> {
+            /**
+             * we only request and log composite logger at relatively low RPM
+             */
+            if (currentRpm <= COMPOSITE_OFF_RPM) {
                 needCompositeLogger = linkManager.getCompositeLogicEnabled();
                 lastLowRpmTime = System.currentTimeMillis();
             } else if (System.currentTimeMillis() - lastLowRpmTime > HIGH_RPM_DELAY * Timeouts.SECOND) {
