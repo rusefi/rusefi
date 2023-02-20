@@ -62,6 +62,6 @@ void updateGppwm() {
 
 		engine->outputChannels.gppwmOutput[i] = result.Result;
 		engine->outputChannels.gppwmXAxis[i] = result.X;
-		engine->outputChannels.gppwmYAxis[i] = result.X;
+		engine->outputChannels.gppwmYAxis[i] = result.Y;
 	}
 }
