@@ -517,6 +517,6 @@ alignmentFill_at_10("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, Field
 dcOutput0("DC: output0", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1336, 1.0, 0.0, 10.0, "per"),
 isEnabled0_int("DC: en0", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1340, 1.0, 0.0, 10.0, "per"),
 alignmentFill_at_5("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1341, 1.0, -20.0, 100.0, "units"),
-value1("value1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1348, 1.0, -1.0, -1.0, ""),
-alignmentFill_at_2("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1350, 1.0, -20.0, 100.0, "units"),
+value0("ETB: SENT value0", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1348, 1.0, 0.0, 3.0, "value"),
+value1("ETB: SENT value1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1350, 1.0, 0.0, 3.0, "value"),
 errorRate("ETB: SENT error rate", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1352, 1.0, 0.0, 3.0, "ratio"),
