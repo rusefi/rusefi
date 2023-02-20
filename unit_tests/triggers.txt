@@ -427,7 +427,7 @@ event 8 0 1 407.00 nan
 event 9 0 0 417.00 nan
 event 10 0 1 540.00 nan
 event 11 0 0 550.00 nan
-TRIGGERTYPE 11 12 TT_MITSUBISHI 0.00
+TRIGGERTYPE 11 12 TT_MITSUBISHI_4G93 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
