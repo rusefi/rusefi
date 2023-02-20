@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Feb 19 03:52:58 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Feb 20 16:55:30 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -103,6 +103,8 @@ case SentEtbType::FORD_TYPE_1:
   return "FORD_TYPE_1";
 case SentEtbType::GM_TYPE_1:
   return "GM_TYPE_1";
+case SentEtbType::NONE:
+  return "NONE";
   }
  return NULL;
 }
