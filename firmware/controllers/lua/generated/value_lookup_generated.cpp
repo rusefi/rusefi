@@ -469,6 +469,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tps2SecondaryMin;
 		case 18659676:
 			return engineConfiguration->tps2SecondaryMax;
+		case 1445062086:
+			return engineConfiguration->widebandOnSecondBus;
 		case 1611799720:
 			return engineConfiguration->fuelClosedLoopCorrectionEnabled;
 		case -546057276:
@@ -2212,6 +2214,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 18659676:
 	{
 		engineConfiguration->tps2SecondaryMax = (int)value;
+		return;
+	}
+		case 1445062086:
+	{
+		engineConfiguration->widebandOnSecondBus = (int)value;
 		return;
 	}
 		case 1611799720:

@@ -697,6 +697,9 @@ Delay after starting the engine before beginning closed loop correction.
 ### tps2SecondaryMax
 
 
+### widebandOnSecondBus
+Select which bus the wideband controller is attached to.
+
 ### fuelClosedLoopCorrectionEnabled
 Enables lambda sensor closed loop feedback for fuelling.
 
