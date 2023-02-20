@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 20 20:24:27 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 20 21:54:01 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1097,7 +1097,7 @@ public class Fields {
 	public static final int trigger_type_e_TT_MIATA_VVT = 33;
 	public static final int trigger_type_e_TT_MITSU_4G63_CAM = 34;
 	public static final int trigger_type_e_TT_MITSU_4G9x_CAM = 29;
-	public static final int trigger_type_e_TT_MITSUBISHI = 11;
+	public static final int trigger_type_e_TT_MITSUBISHI_4G93 = 11;
 	public static final int trigger_type_e_TT_MITSUBISHI_MESS = 4;
 	public static final int trigger_type_e_TT_NISSAN_MR18_CAM_VVT = 52;
 	public static final int trigger_type_e_TT_NISSAN_MR18_CRANK = 68;
