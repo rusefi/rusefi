@@ -89,7 +89,6 @@ public class ConsoleUI {
 
         uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
         uiContext.DetachedRepositoryINSTANCE.load();
-        tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges")).getContent());
 
         MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
         tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());

@@ -131,8 +131,6 @@ public class ProgramSelector {
             }
             if (currentHardware.isStLinkConnected())
                 mode.addItem(ST_LINK);
-            if (currentHardware.isPCANConnected())
-                mode.addItem(OPENBLT_CAN);
             // todo: detect PCAN mode.addItem(OPENBLT_CAN);
         }
         if (!currentHardware.getKnownPorts().isEmpty())
