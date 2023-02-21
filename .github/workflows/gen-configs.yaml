@@ -20,11 +20,11 @@ jobs:
         git submodule update --init --depth=1 firmware/controllers/lua/luaaa
         git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
 
-    - name: Install Tools
-      working-directory: ./.github/workflows/
-      run: |
-        sudo ./add-ubuntu-latest-apt-mirrors.sh
-        sudo apt-get install sshpass sshpass mtools
+    # - name: Install Tools
+    #   working-directory: ./.github/workflows/
+    #   run: |
+    #     sudo ./add-ubuntu-latest-apt-mirrors.sh
+    #     sudo apt-get install sshpass sshpass mtools
 
     - name: Generate Enum Strings
       working-directory: ./firmware/

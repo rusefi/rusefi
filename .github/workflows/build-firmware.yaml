@@ -23,251 +23,251 @@ jobs:
         # see also gen_config where we have a similar list for all boards!
         # see also build-primary-bundle where default/primary bundle is build separately
         #
-        build-target: [
-            alphax-2chan,
-            alphax-4chan,
-            alphax-8chan,
-            harley81,
-            hellen72,
-            hellen81,
-            hellen88bmw,
-            hellen88bmw_avr,
-            hellen-nb1,
-            hellen-gm-e67,
-            hellenNA8_96,
-            hellenNA6,
-            hellen128,
-            hellen121vag,
-            hellen-honda-k,
-            hellen121nissan,
-            frankenso_na6,
-            mre_f4,
-            mre_f4_no_openblt,
-            mre_f4_debug,
-            mre_f4_recovery,
-            mre_f4_hardware_QC_special_build,
-            mre_f7,
-            prometheus_405,
-            prometheus_469,
-            proteus_f4,
-            proteus_f4_hardware_QC_special_build,
-            proteus_f7,
-            proteus_f7_hardware_QC_special_build,
-            proteus_h7,
-            proteus_legacy,
-            stm32f429_nucleo,
-            stm32f767_nucleo,
-            stm32h743_nucleo,
-            subaru_eg33_f7,
-            f407-discovery,
-            f429-discovery,
-            core8,
-            48way,
-            atlas,
-            tdg-pdm8,
-        ]
+        # build-target: [
+        #     alphax-2chan,
+        #     alphax-4chan,
+        #     alphax-8chan,
+        #     harley81,
+        #     hellen72,
+        #     hellen81,
+        #     hellen88bmw,
+        #     hellen88bmw_avr,
+        #     hellen-nb1,
+        #     hellen-gm-e67,
+        #     hellenNA8_96,
+        #     hellenNA6,
+        #     hellen128,
+        #     hellen121vag,
+        #     hellen-honda-k,
+        #     hellen121nissan,
+        #     frankenso_na6,
+        #     mre_f4,
+        #     mre_f4_no_openblt,
+        #     mre_f4_debug,
+        #     mre_f4_recovery,
+        #     mre_f4_hardware_QC_special_build,
+        #     mre_f7,
+        #     prometheus_405,
+        #     prometheus_469,
+        #     proteus_f4,
+        #     proteus_f4_hardware_QC_special_build,
+        #     proteus_f7,
+        #     proteus_f7_hardware_QC_special_build,
+        #     proteus_h7,
+        #     proteus_legacy,
+        #     stm32f429_nucleo,
+        #     stm32f767_nucleo,
+        #     stm32h743_nucleo,
+        #     subaru_eg33_f7,
+        #     f407-discovery,
+        #     f429-discovery,
+        #     core8,
+        #     48way,
+        #     atlas,
+        #     tdg-pdm8,
+        # ]
 
         include:
           # Board configurations
-          - build-target: hellen72
-            folder: config/boards/hellen/hellen72
-            ini-file: fome_hellen72.ini
-            skip-rate: 90
+          # - build-target: hellen72
+          #   folder: config/boards/hellen/hellen72
+          #   ini-file: fome_hellen72.ini
+          #   skip-rate: 90
 
-          - build-target: hellen81
-            folder: config/boards/hellen/hellen81
-            ini-file: fome_hellen81.ini
-            skip-rate: 90
+          # - build-target: hellen81
+          #   folder: config/boards/hellen/hellen81
+          #   ini-file: fome_hellen81.ini
+          #   skip-rate: 90
 
-          - build-target: alphax-2chan
-            folder: config/boards/hellen/alphax-2chan
-            ini-file: fome_alphax-2chan.ini
-            skip-rate: 0
+          # - build-target: alphax-2chan
+          #   folder: config/boards/hellen/alphax-2chan
+          #   ini-file: fome_alphax-2chan.ini
+          #   skip-rate: 0
 
           - build-target: alphax-4chan
             folder: config/boards/hellen/alphax-4chan
             ini-file: fome_alphax-4chan.ini
 
-          - build-target: alphax-8chan
-            folder: config/boards/hellen/alphax-8chan
-            ini-file: fome_alphax-8chan.ini
+          # - build-target: alphax-8chan
+          #   folder: config/boards/hellen/alphax-8chan
+          #   ini-file: fome_alphax-8chan.ini
 
-          - build-target: harley81
-            folder: config/boards/hellen/harley81
-            ini-file: fome_harley81.ini
-            skip-rate: 90
+          # - build-target: harley81
+          #   folder: config/boards/hellen/harley81
+          #   ini-file: fome_harley81.ini
+          #   skip-rate: 90
 
-          - build-target: hellen88bmw
-            folder: config/boards/hellen/hellen88bmw
-            ini-file: fome_hellen88bmw.ini
-            skip-rate: 90
+          # - build-target: hellen88bmw
+          #   folder: config/boards/hellen/hellen88bmw
+          #   ini-file: fome_hellen88bmw.ini
+          #   skip-rate: 90
 
-          - build-target: hellen88bmw_avr
-            folder: config/boards/hellen/hellen88bmw
-            ini-file: fome_hellen88bmw.ini
-            skip-rate: 90
+          # - build-target: hellen88bmw_avr
+          #   folder: config/boards/hellen/hellen88bmw
+          #   ini-file: fome_hellen88bmw.ini
+          #   skip-rate: 90
 
           - build-target: hellen-nb1
             folder: config/boards/hellen/hellen-nb1
             ini-file: fome_hellen-nb1.ini
             skip-rate: 90
 
-          - build-target: hellen-gm-e67
-            folder: config/boards/hellen/hellen-gm-e67
-            ini-file: fome_hellen-gm-e67.ini
-            skip-rate: 90
+          # - build-target: hellen-gm-e67
+          #   folder: config/boards/hellen/hellen-gm-e67
+          #   ini-file: fome_hellen-gm-e67.ini
+          #   skip-rate: 90
 
-          - build-target: hellenNA8_96
-            folder: config/boards/hellen/hellenNA8_96
-            ini-file: fome_hellenNA8_96.ini
-            skip-rate: 90
+          # - build-target: hellenNA8_96
+          #   folder: config/boards/hellen/hellenNA8_96
+          #   ini-file: fome_hellenNA8_96.ini
+          #   skip-rate: 90
 
-          - build-target: hellenNA6
-            folder: config/boards/hellen/hellen64_miataNA6_94
-            ini-file: fome_hellenNA6.ini
-            skip-rate: 90
+          # - build-target: hellenNA6
+          #   folder: config/boards/hellen/hellen64_miataNA6_94
+          #   ini-file: fome_hellenNA6.ini
+          #   skip-rate: 90
 
-          - build-target: hellen128
-            folder: config/boards/hellen/hellen128
-            ini-file: fome_hellen128mercedes.ini
-            skip-rate: 50
+          # - build-target: hellen128
+          #   folder: config/boards/hellen/hellen128
+          #   ini-file: fome_hellen128mercedes.ini
+          #   skip-rate: 50
 
-          - build-target: hellen121vag
-            folder: config/boards/hellen/hellen121vag
-            ini-file: fome_hellen121vag.ini
-            skip-rate: 90
+          # - build-target: hellen121vag
+          #   folder: config/boards/hellen/hellen121vag
+          #   ini-file: fome_hellen121vag.ini
+          #   skip-rate: 90
 
-          - build-target: hellen121nissan
-            folder: config/boards/hellen/hellen121nissan
-            ini-file: fome_hellen121nissan.ini
+          # - build-target: hellen121nissan
+          #   folder: config/boards/hellen/hellen121nissan
+          #   ini-file: fome_hellen121nissan.ini
 
-          - build-target: hellen-honda-k
-            folder: config/boards/hellen/hellen-honda-k
-            ini-file: fome_hellen-honda-k.ini
+          # - build-target: hellen-honda-k
+          #   folder: config/boards/hellen/hellen-honda-k
+          #   ini-file: fome_hellen-honda-k.ini
 
-          - build-target: hellen154hyundai
-            folder: config/boards/hellen/hellen154hyundai
-            ini-file: fome_hellen154hyundai.ini
-            skip-rate: 90
+          # - build-target: hellen154hyundai
+          #   folder: config/boards/hellen/hellen154hyundai
+          #   ini-file: fome_hellen154hyundai.ini
+          #   skip-rate: 90
 
-          - build-target: frankenso_na6
-            folder: config/boards/frankenso
-            ini-file: fome_frankenso_na6.ini
-            skip-rate: 90
+          # - build-target: frankenso_na6
+          #   folder: config/boards/frankenso
+          #   ini-file: fome_frankenso_na6.ini
+          #   skip-rate: 90
 
           - build-target: mre_f4
             folder: config/boards/microrusefi
             ini-file: fome_mre_f4.ini
 
-          - build-target: mre_f4_no_openblt
-            folder: config/boards/microrusefi
-            ini-file: fome_mre_f4.ini
+          # - build-target: mre_f4_no_openblt
+          #   folder: config/boards/microrusefi
+          #   ini-file: fome_mre_f4.ini
 
-          - build-target: mre_f4_debug
-            folder: config/boards/microrusefi
-            ini-file: fome_mre_f4.ini
-            skip-rate: 95
+          # - build-target: mre_f4_debug
+          #   folder: config/boards/microrusefi
+          #   ini-file: fome_mre_f4.ini
+          #   skip-rate: 95
 
-          - build-target: mre_f4_recovery
-            folder: config/boards/microrusefi
-            ini-file: fome_mre_f4.ini
-            skip-rate: 95
+          # - build-target: mre_f4_recovery
+          #   folder: config/boards/microrusefi
+          #   ini-file: fome_mre_f4.ini
+          #   skip-rate: 95
 
-          - build-target: mre_f4_hardware_QC_special_build
-            folder: config/boards/microrusefi
-            ini-file: fome_mre_f4.ini
-            skip-rate: 90
+          # - build-target: mre_f4_hardware_QC_special_build
+          #   folder: config/boards/microrusefi
+          #   ini-file: fome_mre_f4.ini
+          #   skip-rate: 90
 
-          - build-target: mre_f7
-            folder: config/boards/microrusefi
-            ini-file: fome_mre_f7.ini
-            skip-rate: 90
+          # - build-target: mre_f7
+          #   folder: config/boards/microrusefi
+          #   ini-file: fome_mre_f7.ini
+          #   skip-rate: 90
 
-          - build-target: prometheus_405
-            folder: config/boards/prometheus
-            ini-file: fome_prometheus_405.ini
-            skip-rate: 90
+          # - build-target: prometheus_405
+          #   folder: config/boards/prometheus
+          #   ini-file: fome_prometheus_405.ini
+          #   skip-rate: 90
 
-          - build-target: prometheus_469
-            folder: config/boards/prometheus
-            ini-file: fome_prometheus_469.ini
-            skip-rate: 90
+          # - build-target: prometheus_469
+          #   folder: config/boards/prometheus
+          #   ini-file: fome_prometheus_469.ini
+          #   skip-rate: 90
 
           - build-target: proteus_f4
             folder: config/boards/proteus
             ini-file: fome_proteus_f4.ini
 
-          - build-target: proteus_f4_hardware_QC_special_build
-            folder: config/boards/proteus
-            ini-file: fome_proteus_f4.ini
+          # - build-target: proteus_f4_hardware_QC_special_build
+          #   folder: config/boards/proteus
+          #   ini-file: fome_proteus_f4.ini
 
           - build-target: proteus_f7
             folder: config/boards/proteus
             ini-file: fome_proteus_f7.ini
 
-          - build-target: proteus_f7_hardware_QC_special_build
-            folder: config/boards/proteus
-            ini-file: fome_proteus_f7.ini
-            skip-rate: 90
+          # - build-target: proteus_f7_hardware_QC_special_build
+          #   folder: config/boards/proteus
+          #   ini-file: fome_proteus_f7.ini
+          #   skip-rate: 90
 
-          - build-target: proteus_h7
-            folder: config/boards/proteus
-            ini-file: fome_proteus_h7.ini
-            skip-rate: 90
+          # - build-target: proteus_h7
+          #   folder: config/boards/proteus
+          #   ini-file: fome_proteus_h7.ini
+          #   skip-rate: 90
 
-          - build-target: proteus_legacy
-            folder: config/boards/proteus
-            ini-file: fome_proteus_f7.ini
-            skip-rate: 90
+          # - build-target: proteus_legacy
+          #   folder: config/boards/proteus
+          #   ini-file: fome_proteus_f7.ini
+          #   skip-rate: 90
 
           - build-target: stm32f429_nucleo
             folder: config/boards/nucleo_f429
             ini-file: fome_stm32f429_nucleo.ini
 
-          - build-target: stm32f767_nucleo
-            folder: config/boards/nucleo_f767
-            ini-file: fome_stm32f767_nucleo.ini
-            skip-rate: 95
+          # - build-target: stm32f767_nucleo
+          #   folder: config/boards/nucleo_f767
+          #   ini-file: fome_stm32f767_nucleo.ini
+          #   skip-rate: 95
 
-          - build-target: stm32h743_nucleo
-            folder: config/boards/nucleo_h743
-            ini-file: fome_stm32h743_nucleo.ini
-            skip-rate: 95
+          # - build-target: stm32h743_nucleo
+          #   folder: config/boards/nucleo_h743
+          #   ini-file: fome_stm32h743_nucleo.ini
+          #   skip-rate: 95
 
-          - build-target: subaru_eg33_f7
-            folder: config/boards/subaru_eg33
-            ini-file: fome_subaru_eg33_f7.ini
-            skip-rate: 50
+          # - build-target: subaru_eg33_f7
+          #   folder: config/boards/subaru_eg33
+          #   ini-file: fome_subaru_eg33_f7.ini
+          #   skip-rate: 50
 
           - build-target: f407-discovery
             folder: config/boards/f407-discovery
             ini-file: fome_f407-discovery.ini
             skip-rate: 0
 
-          - build-target: f429-discovery
-            folder: config/boards/f429-discovery
-            ini-file: fome_f429-discovery.ini
-            skip-rate: 95
+          # - build-target: f429-discovery
+          #   folder: config/boards/f429-discovery
+          #   ini-file: fome_f429-discovery.ini
+          #   skip-rate: 95
 
-          - build-target: core8
-            folder: config/boards/core8
-            ini-file: fome_core8.ini
-            skip-rate: 95
+          # - build-target: core8
+          #   folder: config/boards/core8
+          #   ini-file: fome_core8.ini
+          #   skip-rate: 95
 
-          - build-target: 48way
-            folder: config/boards/48way
-            ini-file: fome_48way.ini
-            skip-rate: 95
+          # - build-target: 48way
+          #   folder: config/boards/48way
+          #   ini-file: fome_48way.ini
+          #   skip-rate: 95
 
-          - build-target: atlas
-            folder: config/boards/atlas
-            ini-file: fome_atlas.ini
-            skip-rate: 95
+          # - build-target: atlas
+          #   folder: config/boards/atlas
+          #   ini-file: fome_atlas.ini
+          #   skip-rate: 95
 
-          - build-target: tdg-pdm8
-            folder: config/boards/tdg-pdm8
-            ini-file: fome_tdg-pdm8.ini
-            skip-rate: 95
+          # - build-target: tdg-pdm8
+          #   folder: config/boards/tdg-pdm8
+          #   ini-file: fome_tdg-pdm8.ini
+          #   skip-rate: 95
 
     steps:
     - name: Check branch name
@@ -294,20 +294,20 @@ jobs:
         git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
         git submodule update --init --depth=1 java_console/luaformatter
 
-    - uses: actions/setup-java@v3
-      if: ${{ env.skip != 'true' }}
-      with:
-        distribution: 'zulu'
-        java-version: '8'
+    # - uses: actions/setup-java@v3
+    #   if: ${{ env.skip != 'true' }}
+    #   with:
+    #     distribution: 'zulu'
+    #     java-version: '8'
 
-    - name: Install multilib, mingw, sshpass and mtools
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./.github/workflows/
-      run: |
-        sudo ./add-ubuntu-latest-apt-mirrors.sh
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
-        sudo apt-get install zip
-        sudo apt-get install dosfstools
+    # - name: Install multilib, mingw, sshpass and mtools
+    #   if: ${{ env.skip != 'true' }}
+    #   working-directory: ./.github/workflows/
+    #   run: |
+    #     sudo ./add-ubuntu-latest-apt-mirrors.sh
+    #     sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
+    #     sudo apt-get install zip
+    #     sudo apt-get install dosfstools
 
     - name: Generate Live Documentation
       if: ${{ env.skip != 'true' }}
@@ -336,13 +336,13 @@ jobs:
         fi
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
-    - name: Download & Install GCC
-      if: ${{ env.skip != 'true' }}
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      run: |
-        ./firmware/provide_gcc.sh
-        echo "::add-path::`pwd`/gcc-arm-none-eabi/bin"
+    # - name: Download & Install GCC
+    #   if: ${{ env.skip != 'true' }}
+    #   env:
+    #     ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    #   run: |
+    #     ./firmware/provide_gcc.sh
+    #     echo "::add-path::`pwd`/gcc-arm-none-eabi/bin"
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
