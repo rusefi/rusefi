@@ -87,15 +87,11 @@ public class ConsoleUI {
 
         engineSnifferPanel.setOutpinListener(uiContext.getLinkManager().getEngineState());
 
-        uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
-        uiContext.DetachedRepositoryINSTANCE.load();
-
         MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
         tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
 
         tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
-        if (tabbedPane.paneSettings.showEtbPane)
-            tabbedPane.addTab("ETB", new ETBPane(uiContext).getContent());
+
         tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
 
         LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
@@ -156,7 +152,6 @@ public class ConsoleUI {
         log.info("OS version: " + System.getProperty(FileLog.OS_VERSION));
 
         getConfig().load();
-        FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         VersionChecker.start();
         SwingUtilities.invokeAndWait(() -> awtCode(args));
