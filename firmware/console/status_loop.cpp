@@ -706,9 +706,6 @@ DcHardware *getdcHardware();
 #endif // HW_CHECK_MODE
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
-#if EFI_HIP_9011_DEBUG
-	tsOutputChannels->isKnockChipOk = (instance.invalidResponsesCount == 0);
-#endif /* EFI_HIP_9011 */
 
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 
@@ -779,13 +776,6 @@ DcHardware *getdcHardware();
 #endif // EFI_SHAFT_POSITION_INPUT
 
 		break;
-#if EFI_HIP_9011_DEBUG
-	case DBG_KNOCK:
-		// todo: maybe extract hipPostState(tsOutputChannels);
-		tsOutputChannels->debugIntField1 = instance.correctResponsesCount;
-		tsOutputChannels->debugIntField2 = instance.invalidResponsesCount;
-		break;
-#endif /* EFI_HIP_9011 */
 #if EFI_MAP_AVERAGING
 	case DBG_MAP:
 		postMapState(tsOutputChannels);

@@ -185,13 +185,6 @@
 #define EFI_MAX_31855 TRUE
 #endif
 
-#define EFI_MCP_3208 FALSE
-
-#ifndef EFI_HIP_9011
-// disabling for now - DMA conflict with SPI1
-#define EFI_HIP_9011 FALSE
-#endif
-
 #if !defined(EFI_MEMS)
  #define EFI_MEMS FALSE
 #endif

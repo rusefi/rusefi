@@ -32,7 +32,6 @@ bit isTriggerError;
 bit hasCriticalError;
 bit isWarnNow;
 bit isPedalError;
-bit isKnockChipOk;
 bit launchTriggered;
 bit isTps2Error;
 bit isIdleClosedLoop;

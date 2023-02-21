@@ -36,7 +36,6 @@
 
 #include "AdcConfiguration.h"
 #include "idle_hardware.h"
-#include "mcp3208.h"
 #include "histogram.h"
 #include "sent.h"
 #include "trigger_central.h"
@@ -249,10 +248,6 @@ void applyNewHardwareSettings() {
 	stopAuxSerialPins();
 #endif /* EFI_AUX_SERIAL */
 
-#if EFI_HIP_9011
-	stopHip9001_pins();
-#endif /* EFI_HIP_9011 */
-
 	stopHardware();
 
 	if (isConfigurationChanged(is_enabled_spi_1)) {
@@ -320,12 +315,6 @@ void applyNewHardwareSettings() {
 #endif /* EFI_AUX_SERIAL */
 
     initKLine();
-
-
-#if EFI_HIP_9011
-	startHip9001_pins();
-#endif /* EFI_HIP_9011 */
-
 
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	if (isIdleHardwareRestartNeeded()) {
@@ -519,9 +508,6 @@ void initHardware() {
 #if EFI_CAN_SUPPORT
 	initCan();
 #endif /* EFI_CAN_SUPPORT */
-
-//	init_adc_mcp3208(&adcState, &SPID2);
-//	requestAdcValue(&adcState, 0);
 
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	turnOnTriggerInputPins();

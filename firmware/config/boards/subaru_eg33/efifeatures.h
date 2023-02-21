@@ -23,10 +23,6 @@
 /* debug console */
 #define TS_PRIMARY_UxART_PORT		SD1
 
-/* Knock detection */
-#undef EFI_HIP_9011
-#define EFI_HIP_9011				TRUE
-
 #undef BOARD_TLE6240_COUNT
 #define BOARD_TLE6240_COUNT			1
 

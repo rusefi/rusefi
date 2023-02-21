@@ -90,8 +90,6 @@
 
 #define EFI_IDLE_PID_CIC TRUE
 #define EFI_MAIN_RELAY_CONTROL FALSE
-#define EFI_HIP_9011 TRUE
-#define EFI_CJ125 TRUE
 
 // Simulator supports real CAN, but not on Windows (yet?)
 #define EFI_CAN_SUPPORT !EFI_SIM_IS_WINDOWS
