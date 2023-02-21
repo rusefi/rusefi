@@ -42,9 +42,7 @@ jobs:
             hellen121vag,
             hellen-honda-k,
             hellen121nissan,
-            cypress,
             frankenso_na6,
-            kinetis,
             mre_f4,
             mre_f4_no_openblt,
             mre_f4_debug,
@@ -163,10 +161,6 @@ jobs:
             folder: config/boards/hellen/hellen154hyundai
             ini-file: rusefi_hellen154hyundai.ini
             skip-rate: 90
-
-          - build-target: cypress
-            folder: config/boards/cypress
-            ini-file: rusefi_cypress.ini
 
           - build-target: frankenso_na6
             folder: config/boards/frankenso
@@ -348,13 +342,7 @@ jobs:
       working-directory: ./firmware/
       # todo: we have code duplication with gen_config.sh here :(
       run: |
-        if [ "${{ matrix.build-target }}" = "kinetis" ]; then
-          config/boards/kinetis/config/gen_kinetis_config.sh
-          [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
-        elif [ "${{ matrix.build-target }}" = "cypress" ]; then
-          config/boards/cypress/config/gen_cypress_config.sh
-          [ $? -eq 0 ] || { echo "ERROR generating board cypress cypress"; exit 1; }
-        elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7" ]; then
+        if [ "${{ matrix.build-target }}" = "subaru_eg33_f7" ]; then
           bash config/boards/subaru_eg33/config/gen_subaru_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
         elif [ "${{ matrix.ini-file }}" = "" ]; then
