@@ -13,7 +13,6 @@ import com.rusefi.ui.*;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
-import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
@@ -117,14 +116,11 @@ public class ConsoleUI {
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
         tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
-        tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
 
         if (tabbedPane.paneSettings.showTriggerShapePane)
             tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
 
         MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
-
-        tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 
         uiContext.sensorLogger.init();
 

@@ -5,9 +5,6 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.tools.online.Online;
-import com.rusefi.tools.online.UploadResult;
-import com.rusefi.ui.AuthTokenPanel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,21 +53,8 @@ public class BinarySensorLogRestarter implements SensorLog {
     public synchronized void close() {
         if (logger != null) {
             logger.close();
-            String fileName = logger.getFileName();
-            scheduleUpload(fileName);
         }
         logger = null;
         seenRunning = 0;
-    }
-
-    private void scheduleUpload(String fileName) {
-        FileLog.MAIN.logLine("Will upload " + fileName);
-        UPLOAD_EXECUTOR.execute(new Runnable() {
-            @Override
-            public void run() {
-                UploadResult result = Online.upload(new File(fileName), AuthTokenPanel.getAuthToken());
-                System.out.println(result.toString());
-            }
-        });
     }
 }

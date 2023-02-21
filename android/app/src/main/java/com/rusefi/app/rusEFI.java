@@ -82,7 +82,6 @@ public class rusEFI extends Activity {
     private TextView mStatusView;
     private TextView mResultView; // global dump of all messages
     private TextView broadcastStatus;
-    private EditText authTokenUI;
     private TextView authStatusMessage;
     private TextView authStatusClickableUrl;
 
@@ -119,30 +118,6 @@ public class rusEFI extends Activity {
 
         mStatusView = findViewById(R.id.text_status);
         mResultView = findViewById(R.id.text_result);
-        authTokenUI = findViewById(R.id.authToken);
-        authTokenUI.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String text = authTokenUI.getText().toString();
-                if (AuthTokenUtil.isToken(text)) {
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(rusEFI.this);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(AuthTokenUtil.AUTH_TOKEN, text);
-                    editor.apply();
-                    authStatusMessage.setVisibility(View.GONE);
-                    authStatusClickableUrl.setVisibility(View.GONE);
-                }
-            }
-        });
 
         authStatusMessage = findViewById(R.id.authStatus1);
         authStatusClickableUrl = findViewById(R.id.authStatus2);
@@ -158,8 +133,7 @@ public class rusEFI extends Activity {
 
         //dfuUpload.downloadFileIfNotPresent(mResultView);
 
-        String authToken = readPersistedAuthToken();
-        authTokenUI.setText(authToken);
+        String authToken = "";
         int visibility = AuthTokenUtil.isToken(authToken) ? View.GONE : View.VISIBLE;
         authStatusMessage.setVisibility(visibility);
         authStatusClickableUrl.setVisibility(visibility);
@@ -167,11 +141,6 @@ public class rusEFI extends Activity {
 //        switchOrProgramDfu();
 
 //        SoundBroadcast.checkOrRequestPermission(this);
-    }
-
-    private String readPersistedAuthToken() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(rusEFI.this);
-        return preferences.getString(AuthTokenUtil.AUTH_TOKEN, "");
     }
 
     @Override

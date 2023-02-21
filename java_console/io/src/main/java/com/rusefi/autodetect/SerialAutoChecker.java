@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.serial.SerialIoStream;
@@ -36,13 +35,7 @@ public class SerialAutoChecker {
     public String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
         if (stream == null)
             return null;
-        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
-            if (Elm327Connector.checkConnection(serialPort, stream)) {
-                // todo: this method is supposed to return signature not serial port!
-                return serialPort;
-            }
-            return null;
-        }
+
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
             HelloCommand.send(stream);
@@ -82,11 +75,7 @@ public class SerialAutoChecker {
 
     @Nullable
     private IoStream getStreamByMode(PortDetector.DetectorMode mode) {
-        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
-            return SerialIoStream.openPort(serialPort);
-        } else {
-            return BufferedSerialIoStream.openPort(serialPort);
-        }
+        return BufferedSerialIoStream.openPort(serialPort);
     }
 
     public static class CallbackContext {

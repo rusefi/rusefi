@@ -5,7 +5,6 @@ import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.TestHelper;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.ui.StatusConsumer;
@@ -78,42 +77,6 @@ public class TcpCommunicationIntegrationTest {
         ConfigurationImage clientImage = clientStreamState.getControllerConfiguration();
         String clientValue = iniField.getValue(clientImage);
         assertEquals(Double.toString(value), clientValue);
-
-        clientManager.close();
-    }
-
-    @Test
-    public void testProxy() throws InterruptedException, IOException {
-        ConfigurationImage serverImage = TestHelper.prepareImage(239, TestHelper.createIniField(Fields.CYLINDERSCOUNT));
-        int controllerPort = 6102;
-
-        // create virtual controller
-        TestHelper.createVirtualController(controllerPort, serverImage, new BinaryProtocolServer.Context());
-        int proxyPort = 6103;
-
-
-        // connect proxy to virtual controller
-        IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort);
-        final AtomicInteger relayCommandCounter = new AtomicInteger();
-        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort, () -> relayCommandCounter.incrementAndGet(),
-                StatusConsumer.ANONYMOUS);
-
-        CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
-
-        // connect to proxy and read virtual controller through it
-        LinkManager clientManager = new LinkManager();
-        clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
-            @Override
-            public void onConnectionEstablished() {
-                connectionEstablishedCountDownLatch.countDown();
-            }
-
-            @Override
-            public void onConnectionFailed(String s) {
-                System.out.println("Failed");
-            }
-        });
-        assertLatch("Connection established", connectionEstablishedCountDownLatch);
 
         clientManager.close();
     }

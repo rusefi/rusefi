@@ -11,7 +11,6 @@ import com.rusefi.maintenance.DriverInstall;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.ProgramSelector;
-import com.rusefi.ui.PcanConnectorUI;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -138,7 +137,6 @@ public class StartupFrame {
             JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
             topButtons.add(createShowDeviceManagerButton());
             topButtons.add(DriverInstall.createButton());
-            topButtons.add(createPcanConnectorButton());
             realHardwarePanel.add(topButtons, "right, wrap");
         }
         realHardwarePanel.add(connectPanel, "right, wrap");
@@ -302,13 +300,6 @@ public class StartupFrame {
                 JOptionPane.showMessageDialog(null, "Function test passed: " + isSuccess + "\nSee log folder for details.");
             }
         };
-    }
-
-    private Component createPcanConnectorButton() {
-        JButton button = new JButton("PCAN");
-        button.setToolTipText("PCAN connector for TS");
-        button.addActionListener(e -> PcanConnectorUI.show());
-        return button;
     }
 
     private Component createShowDeviceManagerButton() {

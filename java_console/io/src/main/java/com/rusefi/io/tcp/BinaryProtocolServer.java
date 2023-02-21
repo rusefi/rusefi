@@ -16,7 +16,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.commands.WriteChunkCommand;
-import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,8 +55,6 @@ public class BinaryProtocolServer {
     }
 
     public AtomicInteger unknownCommands = new AtomicInteger();
-
-    public static final ServerSocketFunction SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
 
     private final static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
 

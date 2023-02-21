@@ -21,7 +21,6 @@ public class HttpUtil {
     private static final Logging log = getLogging(Logging.class);
 
     // todo: migrate proxy http json API server to TLS
-    public static final String RUSEFI_PROXY_JSON_PROTOCOL = "http://";
     public static final int PROXY_JSON_API_HTTP_PORT = getIntProperty("http.port", 8001);
 
     /**

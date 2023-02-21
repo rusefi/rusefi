@@ -16,8 +16,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import static com.rusefi.io.can.Elm327Connector.ELM327_DEFAULT_BAUDRATE;
-
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  */
@@ -29,7 +27,6 @@ public class PortDetector {
 
     public enum DetectorMode {
         DETECT_TS,
-        DETECT_ELM327,
     }
 
     /**
@@ -61,9 +58,6 @@ public class PortDetector {
             Thread thread = AUTO_DETECT_PORT.newThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (mode == DetectorMode.DETECT_ELM327) {
-                        BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
-                    }
                     new SerialAutoChecker(mode, serialPort, portFound).openAndCheckResponse(mode, result, callback);
                 }
 

@@ -12,10 +12,6 @@ import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.proxy.NetworkConnector;
-import com.rusefi.server.ControllerInfo;
-import com.rusefi.server.SessionDetails;
-import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +34,6 @@ public class TestHelper extends MockitoTestHelper {
     private static final Logging log = getLogging(TestHelper.class);
     public static final String TEST_SIGNATURE_1 = "rusEFI master.2020.07.06.frankenso_na6.2468827536";
     public static final String TEST_SIGNATURE_2 = "rusEFI master.2020.07.11.proteus_f4.1986715563";
-    public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", Fields.TS_SIGNATURE);
     public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
     public static final String TEST_TOKEN_3 = "33333333-3333-1234-1234-123456789012";
 
@@ -72,17 +67,6 @@ public class TestHelper extends MockitoTestHelper {
     }
 
     @NotNull
-    public static IoStream secureConnectToLocalhost(int controllerPort) {
-        IoStream targetEcuSocket;
-        try {
-            targetEcuSocket = new TcpIoStream("[local]", rusEFISSLContext.getSSLSocket(LOCALHOST, controllerPort));
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to connect to controller " + LOCALHOST + ":" + controllerPort);
-        }
-        return targetEcuSocket;
-    }
-
-    @NotNull
     public static IoStream connectToLocalhost(int controllerPort) {
         IoStream targetEcuSocket;
         try {
@@ -102,12 +86,6 @@ public class TestHelper extends MockitoTestHelper {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public static SessionDetails createTestSession(String authToken, String signature) {
-        ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
-
-        return new SessionDetails(NetworkConnector.Implementation.Unknown, ci, authToken, SessionDetails.createOneTimeCode(), rusEFIVersion.CONSOLE_VERSION);
     }
 
     public static void assertLatch(String message, CountDownLatch reconnectCounter) throws InterruptedException {

@@ -4,7 +4,6 @@ import com.rusefi.PaneSettings;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStatusLogic;
-import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;

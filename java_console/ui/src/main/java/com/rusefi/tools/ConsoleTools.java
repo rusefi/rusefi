@@ -21,14 +21,10 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.stream.PCanIoStream;
 import com.rusefi.io.stream.SocketCANIoStream;
-import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.maintenance.ExecHelper;
-import com.rusefi.proxy.client.LocalApplicationProxy;
-import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ui.light.LightweightGUI;
 import org.jetbrains.annotations.Nullable;
@@ -46,14 +42,13 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
 
 public class ConsoleTools {
-    public static final String SET_AUTH_TOKEN = "set_auth_token";
     public static final String RUS_EFI_NOT_DETECTED = "rusEFI not detected";
     private static final Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private static final Map<String, String> toolsHelp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private static final StatusConsumer statusListener = new StatusConsumer() {
-        final Logging log = getLogging(CANConnectorStartup.class);
+        final Logging log = getLogging(ConsoleTools.class);
         @Override
         public void append(String message) {
             log.info(message);
@@ -72,22 +67,6 @@ public class ConsoleTools {
         registerTool("get_image_tune_crc", ConsoleTools::calcBinaryImageTuneCrc, "Calculate tune CRC for given binary tune");
         registerTool("get_xml_tune_crc", ConsoleTools::calcXmlImageTuneCrc, "Calculate tune CRC for given XML tune");
 
-        registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
-        registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
-        registerTool("elm327_connector", strings -> Elm327ConnectorStartup.start(), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
-        registerTool("pcan_connector", strings -> {
-
-            PCanIoStream stream = PCanIoStream.createStream();
-            CANConnectorStartup.start(stream, statusListener);
-        }, "Connect your rusEFI ECU using PCAN CAN-bus adapter");
-        if (!FileLog.isWindows()) {
-            registerTool("socketcan_connector", strings -> CANConnectorStartup.start(SocketCANIoStream.create(), statusListener), "Connect your rusEFI ECU using SocketCAN CAN-bus adapter");
-        }
-        registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
-        registerTool("print_vehicle_token", args -> printVehicleToken(), "Prints vehicle access token.");
-        registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI Online authentication token.");
-        registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file to rusEFI Online using auth token from settings");
-
         registerTool("read_tune", args -> readTune(), "Read tune from controller");
         registerTool("write_tune", ConsoleTools::writeTune, "Write specified XML tune into controller");
         registerTool("get_performance_trace", args -> PerformanceTraceHelper.getPerformanceTune(), "DEV TOOL: Get performance trace from ECU");
@@ -96,8 +75,6 @@ public class ConsoleTools {
 
         registerTool("lightui", strings -> lightUI(), "Start lightweight GUI for tiny screens");
         registerTool("dfu", DfuTool::run, "Program specified file into ECU via DFU");
-
-        registerTool("local_proxy", ConsoleTools::localProxy, "Detect rusEFI ECU and proxy serial <> TCP");
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("send_command", new ConsoleTool() {
@@ -117,23 +94,6 @@ public class ConsoleTools {
              */
             System.exit(0);
         }, "Sends a command to switch rusEFI controller into DFU mode.");
-    }
-
-    private static void localProxy(String[] strings) throws IOException {
-        String autoDetectedPort = autoDetectPort();
-        if (autoDetectedPort == null) {
-            System.out.println(RUS_EFI_NOT_DETECTED);
-            return;
-        }
-        IoStream ecuStream = LinkManager.open(autoDetectedPort);
-
-        ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(ecuStream, 29001, new BinaryProtocolProxy.ClientApplicationActivityListener() {
-            @Override
-            public void onActivity() {
-
-            }
-        }, StatusConsumer.ANONYMOUS);
-
     }
 
     private static void version(String[] strings) {
@@ -175,13 +135,6 @@ public class ConsoleTools {
         LightweightGUI.start();
     }
 
-    private static void uploadTune(String[] args) {
-        String fileName = args[1];
-        String authToken = AuthTokenPanel.getAuthToken();
-        System.out.println("Trying to upload " + fileName + " using " + authToken);
-        Online.upload(new File(fileName), authToken);
-    }
-
     private static void registerTool(String command, ConsoleTool callback, String help) {
         TOOLS.put(command, callback);
         toolsHelp.put(command, help);
@@ -214,27 +167,6 @@ public class ConsoleTools {
 
     private static void runFiringOrderTool(String[] args) throws IOException {
         FiringOrderTSLogic.invoke(args[1]);
-    }
-
-    private static void setAuthToken(String[] args) {
-        String newToken = args[1];
-        System.out.println("Saving auth token " + newToken);
-        AuthTokenPanel.setAuthToken(newToken);
-    }
-
-    private static void printVehicleToken() {
-        int vehicleToken = VehicleToken.getOrCreate();
-        System.out.println("Vehicle token: " + vehicleToken);
-    }
-
-    private static void printAuthToken() {
-        String authToken = AuthTokenPanel.getAuthToken();
-        if (authToken.trim().isEmpty()) {
-            System.out.println("Auth token not defined. Please use " + SET_AUTH_TOKEN + " command");
-            System.out.println("\tPlease see https://github.com/rusefi/rusefi/wiki/Online");
-            return;
-        }
-        System.out.println("Auth token: " + authToken);
     }
 
     private static void runFunctionalTest(String[] args) throws InterruptedException {
@@ -358,12 +290,6 @@ public class ConsoleTools {
         String inputBinaryFileName = args[1];
         ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
         System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
-
-        Msq tune = MsqFactory.valueOf(image);
-        tune.writeXmlFile(Online.outputXmlFileName);
-        String authToken = AuthTokenPanel.getAuthToken();
-        System.out.println("Using " + authToken);
-        Online.upload(new File(Online.outputXmlFileName), authToken);
     }
 
     static void detect(String[] strings) throws IOException {
