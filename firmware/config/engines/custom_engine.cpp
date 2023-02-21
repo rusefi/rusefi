@@ -62,24 +62,6 @@ void runSchedulingPrecisionTestIfNeeded(void) {
 }
 #endif /* EFI_PROD_CODE */
 
-void setFrankenso_01_LCD() {
-	engineConfiguration->HD44780_rs = Gpio::E7;
-	engineConfiguration->HD44780_e = Gpio::E9;
-	engineConfiguration->HD44780_db4 = Gpio::E11;
-	engineConfiguration->HD44780_db5 = Gpio::E13;
-	engineConfiguration->HD44780_db6 = Gpio::E15;
-	engineConfiguration->HD44780_db7 = Gpio::B10;
-}
-
-void disableLCD() {
-	engineConfiguration->HD44780_rs = Gpio::Unassigned;
-	engineConfiguration->HD44780_e = Gpio::Unassigned;
-	engineConfiguration->HD44780_db4 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db5 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db6 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db7 = Gpio::Unassigned;
-}
-
 void setDiscoveryPdm() {
 }
 
@@ -87,10 +69,8 @@ void setDiscoveryPdm() {
 void setFrankensoConfiguration() {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
-	setFrankenso_01_LCD();
 	engineConfiguration->displayMode = DM_HD44780;
 	commonFrankensoAnalogInputs();
-	setFrankenso0_1_joystick();
 
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT

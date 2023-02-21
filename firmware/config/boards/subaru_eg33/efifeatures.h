@@ -66,9 +66,6 @@
 #undef EFI_MAX_31855
 #define EFI_MAX_31855				FALSE
 
-#undef EFI_HD44780_LCD
-#define EFI_HD44780_LCD				FALSE
-
 #undef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL			TRUE
 

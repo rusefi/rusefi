@@ -569,14 +569,8 @@ custom can_nbc_e 1 bits, U08, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
-
-
-custom display_mode_e 1 bits, U08, @OFFSET@, [0:1], "none", "hd44780", "hd44780 over pcf8574"
-display_mode_e displayMode;
-
+uint8_t unused440
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
-	int HD44780width;;"index", 1, 0, 0, 300, 0
-	int HD44780height;;"index", 1, 0, 0, 300, 0
 
 	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor. See also pedalPositionAdcChannel
 adc_channel_e vbattAdcChannel;This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB. 
@@ -675,16 +669,7 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 
 	pin_output_mode_e injectionPinMode;
 	pin_output_mode_e ignitionPinMode;
-	Gpio HD44780_rs;
-	Gpio HD44780_e;
 
-	Gpio HD44780_db4;
-	Gpio HD44780_db5;
-	Gpio HD44780_db6;
-	Gpio HD44780_db7;
-
-	Gpio gps_rx_pin;
-	Gpio gps_tx_pin;
 	output_pin_e fuelPumpPin;
 	pin_output_mode_e fuelPumpPinMode;
 
@@ -771,7 +756,7 @@ bit is_enabled_spi_2
 	
 	bit enabledStep1Limiter
 	bit useTpicAdvancedMode
-	bit useLcdScreen
+	bit unused760b12
 	bit verboseTLE8888
 	bit enableVerboseCanTx;CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
 	bit etb1configured
@@ -879,12 +864,6 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 
 	Gpio spi3sckPin;
 	Gpio cdmInputPin;Saab Combustion Detection Module knock signal input pin\nalso known as Saab Ion Sensing Module;
-	Gpio joystickCenterPin;
-	Gpio joystickAPin;
-
-	Gpio joystickBPin;
-	Gpio joystickCPin;
-	Gpio joystickDPin;
 	uart_device_e consoleUartDevice;
 
 

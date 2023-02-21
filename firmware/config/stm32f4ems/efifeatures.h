@@ -237,14 +237,6 @@
 #define EFI_AUX_SERIAL TRUE
 #endif
 
-#ifndef EFI_HD44780_LCD
-#define EFI_HD44780_LCD TRUE
-#endif
-
-#ifndef EFI_LCD
-#define EFI_LCD TRUE
-#endif
-
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL TRUE
 #endif
@@ -452,6 +444,3 @@
 #ifndef EFI_SENT_SUPPORT
 #define EFI_SENT_SUPPORT        FALSE
 #endif
-
-// killing joystick for now due to Unable to change broken settings #3227
-#define EFI_JOYSTICK FALSE

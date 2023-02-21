@@ -4,11 +4,6 @@
 #define ts_show_cj125 false
 
 
-
-
-#define ts_show_lcd false
-#define ts_show_joystick false
-
 ! https://rusefi.com/forum/viewtopic.php?p=43270#p43270
 #define ts_show_egt true
 

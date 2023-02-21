@@ -46,7 +46,6 @@
 #include "spark_logic.h"
 #include "idle_thread.h"
 #include "svnversion.h"
-#include "lcd_controller.h"
 #include "can_hw.h"
 #include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"
@@ -387,25 +386,6 @@ private:
 static CommunicationBlinkingTask communicationsBlinkingTask;
 
 #endif /* EFI_PROD_CODE */
-
-#if EFI_LCD
-class LcdController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	LcdController() : PeriodicController("LCD") { }
-private:
-	void PeriodicTask(efitick_t nowNt) override	{
-		UNUSED(nowNt);
-		setPeriod(NOT_TOO_OFTEN(10 /* ms */, 300));
-		if (engineConfiguration->useLcdScreen) {
-#if EFI_HD44780_LCD
-			updateHD44780lcd();
-#endif
-		}
-	}
-};
-
-static LcdController lcdInstance;
-#endif /* EFI_LCD */
 
 #if EFI_HIP_9011
 extern HIP9011 instance;
@@ -871,8 +851,4 @@ void startStatusThreads() {
 	initStatusLeds();
 	communicationsBlinkingTask.start();
 #endif /* EFI_PROD_CODE */
-
-#if EFI_LCD
-	lcdInstance.start();
-#endif /* EFI_LCD */
 }

@@ -641,8 +641,6 @@ static void setDefaultEngineConfiguration() {
 	// https://github.com/rusefi/rusefi/issues/4030
 	engineConfiguration->mapErrorDetectionTooHigh = 410;
 
-	engineConfiguration->useLcdScreen = true;
-
 	engineConfiguration->hip9011Gain = 1;
 
 	engineConfiguration->isEngineControlEnabled = true;
@@ -1058,15 +1056,6 @@ void commonFrankensoAnalogInputs() {
 	 * VBatt
 	 */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
-}
-
-void setFrankenso0_1_joystick() {
-	
-	engineConfiguration->joystickCenterPin = Gpio::C8;
-	engineConfiguration->joystickAPin = Gpio::D10;
-	engineConfiguration->joystickBPin = Gpio::Unassigned;
-	engineConfiguration->joystickCPin = Gpio::Unassigned;
-	engineConfiguration->joystickDPin = Gpio::D11;
 }
 
 // These symbols are weak so that a board_configuration.cpp file can override them

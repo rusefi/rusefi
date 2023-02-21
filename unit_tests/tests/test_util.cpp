@@ -17,7 +17,6 @@
 
 #include "nmea.h"
 #include "mmc_card.h"
-#include "lcd_menu_tree.h"
 #include "fl_stack.h"
 
 TEST(util, testitoa) {
@@ -432,67 +431,6 @@ TEST(misc, testMisc) {
 
 //	ASSERT_EQ(true, strEqual("spa3", getPinName(SPARKOUT_3_OUTPUT)));
 //	ASSERT_EQ(SPARKOUT_12_OUTPUT, getPinByName("spa12"));
-}
-
-TEST(misc, testMenuTree) {
-	MenuItem ROOT(NULL, NULL);
-
-	MenuTree tree(&ROOT);
-
-	MenuItem miTopLevel1(tree.root, "top level 1");
-	MenuItem miTopLevel2(tree.root, "top level 2");
-	MenuItem miTopLevel3(tree.root, LL_RPM);
-	MenuItem miTopLevel4(tree.root, "top level 4");
-	MenuItem miTopLevel5(tree.root, "top level 5");
-
-	MenuItem miSubMenu1_1(&miTopLevel1, "sub menu 1 1");
-	MenuItem miSubMenu1_2(&miTopLevel1, "sub menu 1 2");
-
-	MenuItem miSubMenu5_1(&miTopLevel5, "sub menu 5 1");
-	MenuItem miSubMenu5_2(&miTopLevel5, "sub menu 5 2");
-
-	ASSERT_EQ(0, miTopLevel1.index);
-	ASSERT_EQ(1, miTopLevel2.index);
-	ASSERT_EQ(4, miTopLevel5.index);
-
-	tree.init(&miTopLevel1, 3);
-
-	tree.nextItem();
-	ASSERT_TRUE(tree.topVisible == &miTopLevel1);
-	ASSERT_TRUE(tree.current == &miTopLevel2);
-
-	tree.back();
-	ASSERT_TRUE(tree.current == &miTopLevel2); // no 'back' since we are on the top level already
-
-	tree.nextItem();
-	ASSERT_TRUE(tree.topVisible == &miTopLevel1);
-	ASSERT_TRUE(tree.current == &miTopLevel3);
-
-	tree.nextItem();
-	ASSERT_TRUE(tree.topVisible == &miTopLevel2);
-	ASSERT_TRUE(tree.current == &miTopLevel4);
-
-	tree.enterSubMenu();
-	ASSERT_TRUE(tree.current == &miTopLevel4) << "still same"; // no children in this one
-
-	tree.nextItem();
-	ASSERT_TRUE(tree.topVisible == &miTopLevel3);
-	ASSERT_TRUE(tree.current == &miTopLevel5) << "tl5";
-
-	tree.nextItem();
-	ASSERT_TRUE(tree.topVisible == &miTopLevel1) << "tl1 t";
-	ASSERT_TRUE(tree.current == &miTopLevel1) << "tl1 c";
-
-	tree.nextItem();
-	tree.nextItem();
-	tree.nextItem();
-	tree.nextItem();
-
-	tree.enterSubMenu();
-	ASSERT_TRUE(tree.current == &miSubMenu5_1);
-
-	tree.back();
-	ASSERT_TRUE(tree.current == &miTopLevel1);
 }
 
 int getRusEfiVersion(void) {

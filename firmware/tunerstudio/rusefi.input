@@ -1855,8 +1855,6 @@ menuDialog = main
 		subMenu = engineTypeDialog,			"Popular vehicles"
 		subMenu = std_separator
 
-		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
-		subMenu = joystickPanel,			"Joystick" @@if_ts_show_joystick
 		subMenu = spiFunction,				"SPI"@@if_ts_show_spi
 		subMenu = monitoringSettings,		"rusEFI console"
 		subMenu = std_separator
@@ -2682,13 +2680,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Input channel",						fuelLevelSensor
 		panel = fuelLevelCurve
 
-	dialog = joystickPanel, "Joystick"
-		field = "joustick center button",				joystickCenterPin
-		field = "joustick button A",					joystickAPin
-		field = "joustick button B",					joystickBPin
-		field = "joustick button C",					joystickCPin
-		field = "joustick button D",					joystickDPin
-
 ;
 ; allXXX sections allows a quick overview of used I/O in order to address conflicts mostly, not really to
 ; configure the features.
@@ -2743,7 +2734,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Warning Led",							warningLedPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
-		panel = joystickPanel
 
 	dialog = allPins1_2
 		field = "Tachometer output",					tachOutputPin
@@ -2802,11 +2792,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Ignition Output 12",						ignitionPins12
 
 	dialog = allPins2_3
-		field = "LCD E pin",							HD44780_e
-		field = "LCD D4 pin",							HD44780_db4
-		field = "LCD D5 pin",							HD44780_db5
-		field = "LCD D6 pin",							HD44780_db6
-		field = "LCD D7 pin",							HD44780_db7
 		field = "Debug Trigger Sync",					debugTriggerSync
 		panel = allTriggerDebug
 		panel = allPinsMC33
@@ -3637,17 +3622,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = gpsReceiver, "GPS Receiver"
 		field = "gps RX",								gps_rx_pin
 		field = "gps TX",								gps_tx_pin
-
-	dialog = lcdScreen, "LCD screen"
-		field = "display Mode",							displayMode
-		field = "height",								HD44780height
-		field = "width",								HD44780width
-		field = "RS pin",								HD44780_rs
-		field = "E pin",								HD44780_e
-		field = "D4 pin",								HD44780_db4
-		field = "D5 pin",								HD44780_db5
-		field = "D6 pin",								HD44780_db6
-		field = "D7 pin",								HD44780_db7
 
 	dialog = tle8888, "TLE8888", yAxis
 		field = "TLE8888 Chip Select",					tle8888_cs @@if_ts_show_spi

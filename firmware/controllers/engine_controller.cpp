@@ -90,7 +90,6 @@
 
 #if EFI_PROD_CODE
 #include "pwm_tester.h"
-#include "lcd_controller.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
@@ -703,10 +702,6 @@ void initEngineController() {
 #if EFI_PROD_CODE
 	addConsoleAction("reset_accel", resetAccel);
 #endif /* EFI_PROD_CODE */
-
-#if EFI_HD44780_LCD
-	initLcdController();
-#endif /* EFI_HD44780_LCD */
 
 }
 

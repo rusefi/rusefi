@@ -296,6 +296,7 @@ INCDIR = \
   $(CONFDIR) \
   ext/FatFS \
   $(PROJECT_DIR)/hw_layer/mass_storage \
+  $(PROJECT_DIR)/hw_layer/serial_over_usb \
   $(HW_INC) \
   $(PROJECT_DIR)/development/hw_layer \
   development/test \

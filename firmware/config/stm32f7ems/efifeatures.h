@@ -32,12 +32,6 @@
 #undef EFI_MC33816
 #define EFI_MC33816 FALSE
 
-#undef EFI_HD44780_LCD
-#define EFI_HD44780_LCD FALSE
-
-#undef EFI_LCD
-#define EFI_LCD FALSE
-
 // todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7/STM32H7
 #undef EFI_USE_UART_DMA
 #define EFI_USE_UART_DMA FALSE

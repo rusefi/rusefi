@@ -6,9 +6,7 @@ HW_LAYER_DRIVERS_INC = \
 	$(DRIVERS_DIR)/can \
 	$(DRIVERS_DIR)/sent \
 	$(DRIVERS_DIR)/serial \
-	$(DRIVERS_DIR)/i2c \
-	$(DRIVERS_DIR)/lcd \
-	$(DRIVERS_DIR)/led
+	$(DRIVERS_DIR)/i2c
 
 HW_LAYER_DRIVERS_CORE = \
 
@@ -34,5 +32,4 @@ HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/gpio/l9779.cpp \
 	$(DRIVERS_DIR)/gpio/protected_gpio.cpp \
 	$(DRIVERS_DIR)/sent/sent_hw_icu.cpp \
-	$(DRIVERS_DIR)/lcd/HD44780.cpp \
 	$(DRIVERS_DIR)/led/WS2812.cpp
