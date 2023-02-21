@@ -299,7 +299,7 @@ custom SentEtbType 1 bits, S08, @OFFSET@, [0:1], @@SentEtbType_enum@@
 
 struct cranking_parameters_s
 float baseFuel;Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.;"mg", 1, 0, 0, 500, 1
-int16_t rpm;This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 3000, 0
+int16_t rpm;This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm.;"RPM", 1, 0, 0, 3000, 0
 end_struct
 
 #define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "INVALID", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua"
@@ -417,12 +417,12 @@ struct ThermistorConf @brief Thermistor curve parameters
 end_struct
 
 custom engine_type_e 4 bits, S32, @OFFSET@, [0:6], @@engine_type_e_auto_enum@@
-engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset engine_type X
+engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
 
 uint16_t sensorSnifferRpmThreshold;Disable sensor sniffer above this rpm;"RPM", 1, 0, 0, 10000, 0
 uint16_t launchRpm;A secondary Rev limit engaged by the driver to help launch the vehicle faster;"rpm", 1, 0, 0, 20000, 0
-uint16_t rpmHardLimit;set rpm_hard_limit X;"rpm", 1, 0, 0, 20000, 0
-uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM", 1, 0, 0, 30000, 0
+uint16_t rpmHardLimit;;"rpm", 1, 0, 0, 20000, 0
+uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm;"RPM", 1, 0, 0, 30000, 0
 
 	uint8_t autoscale multisparkMaxRpm;Disable multispark above this engine speed.;"rpm", 50, 0, 0, 3000, 0
 	uint8_t autoscale maxAcRpm;Above this RPM, disable AC. Set to 0 to disable check.;"rpm", 50, 0, 0, 10000, 0
@@ -472,8 +472,8 @@ bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensor
 
 
 !todo: extract these two fields into a structure
-int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0
-int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X;"ADC", 1, 0, 0, 1023, 0
+int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
+int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
 
 int16_t tpsErrorDetectionTooLow;TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.;"%", 1, 0, -10, 0, 0
 int16_t tpsErrorDetectionTooHigh;TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.;"%", 1, 0, 100, 110, 0
@@ -521,16 +521,16 @@ Gpio criticalLedPin;
 custom injection_mode_e 1 bits, U08, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
 injection_mode_e crankingInjectionMode;This is the injection strategy during engine start. See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 
-injection_mode_e injectionMode;This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups. If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
+injection_mode_e injectionMode;This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups. If your injectors are individually wired you will also need to enable "Two wire batch emulation".
 
 uint16_t boostControlMinRpm; Minimum RPM to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.;"", 1, 0, 0, 25000, 0
 uint8_t boostControlMinTps; Minimum TPS to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.;"", 1, 0, 0, 100, 0
 uint8_t boostControlMinMap; Minimum MAP to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.;"", 1, 0, 0, 250, 0
 
-angle_t crankingTimingAngle;Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X;"deg", 1, 0, -30, 30, 0
+angle_t crankingTimingAngle;Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance;"deg", 1, 0, -30, 30, 0
 
 custom ignition_mode_e 1 bits, U08, @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
-ignition_mode_e ignitionMode;Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines\nset ignition_mode X
+ignition_mode_e ignitionMode;Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines
 
 int8_t gapTrackingLengthOverride;How many consecutive gap rations have to match expected ranges for sync to happen;"count", 1, 0, 1, @@GAP_TRACKING_LENGTH@@, 0
  uint8_t maxIdleVss;Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).;"kph", 1, 0, 0, 100, 0
@@ -541,7 +541,7 @@ timing_mode_e timingMode;Dynamic uses the timing map to decide the ignition timi
 
 angle_t fixedModeTiming;This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM", 1, 0, 0, 3000, 0
 
-angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchnization point before TDC and negative in case of synchnization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X;"deg btdc", 1, 0, -720, 720, 0
+angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchnization point before TDC and negative in case of synchnization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.;"deg btdc", 1, 0, -720, 720, 0
 
 
 
@@ -554,16 +554,16 @@ float fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"
 float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
 
 custom can_nbc_e 1 bits, U08, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "AiM", "type 13", "type 14"
-can_nbc_e canNbcType;set can_mode X
+can_nbc_e canNbcType
 
 int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
 uint8_t unused440
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
 
-	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor. See also pedalPositionAdcChannel
+	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor
 adc_channel_e vbattAdcChannel;This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB. 
 adc_channel_e fuelLevelSensor;This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
-	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far\nset_analog_input_pin tps2 X
+	adc_channel_e tps2_1AdcChannel;Second throttle body, first sensor
 
 
 	float idle_derivativeFilterLoss;0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
@@ -574,7 +574,7 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 #define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Mitsubishi Mess 4", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi 4G93 11", "EZ30", "INVALID", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Benelli Tre", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "Mitsubishi 4G92/93/94 Cam 29", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "Mitsubishi 4G63 Cam 34", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "12 tooth crank", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "Mitsubishi 3A92", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "trg75"
 
 custom trigger_type_e 4 bits, U32, @OFFSET@, [0:6], @@trigger_type_e_enum@@
-	trigger_type_e type;https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
+	trigger_type_e type;https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers
 	int customTotalToothCount;;"number", 1, 0, 1, 300, 0
 	int customSkippedToothCount;;"number", 1, 0, 0, 300, 0
 end_struct
@@ -605,7 +605,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position first channel\nSee throttlePedalPositionSecondAdcChannel for second channel\nSee also tps1_1AdcChannel\nset_analog_input_pin pps X\nSee throttlePedalUpVoltage and throttlePedalWOTVoltage
+adc_channel_e throttlePedalPositionAdcChannel;Throttle pedal position first channel
 	Gpio tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 
@@ -946,7 +946,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 
 	output_pin_e[LUA_PWM_COUNT iterate] luaOutputPins
 
-    float[CAM_INPUTS_COUNT iterate] vvtOffsets;Angle between cam sensor and VVT zero position\nset vvt_offset X;"value", 1, 0, -720, 1000, 1
+    float[CAM_INPUTS_COUNT iterate] vvtOffsets;Angle between cam sensor and VVT zero position;"value", 1, 0, -720, 1000, 1
 
 struct vr_threshold_s
 	uint8_t[6] autoscale rpmBins;;"rpm", 50, 0, 0, 12000, 0
@@ -1048,7 +1048,7 @@ bit tempBooleanForVerySpecialLogic
 	Gpio[CAM_INPUTS_COUNT iterate] camInputsDebug;
 	int16_t acIdleRpmBump;Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 1000, 0
 
-	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
+	int16_t warningPeriod;;"seconds", 1, 0, 0, 60, 0
 
 	float knockDetectionWindowStart;;"angle", 1, 0, -1000, 1000, 2
 	float knockDetectionWindowEnd;;"angle", 1, 0, -1000, 1000, 2
@@ -1078,8 +1078,8 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	Gpio[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
 	int16_t airTaperRpmRange;RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
 	brain_input_pin_e turboSpeedSensorInputPin;
-int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
-int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC", 1, 0, 0, 1023, 0
+int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
+int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
 	output_pin_e starterControlPin;See also startStopButtonPin
 	pin_input_mode_e startStopButtonMode;
 	Gpio mc33816_flag0;
@@ -1115,9 +1115,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	int16_t iacByTpsTaper;Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent", 1, 0, 0, 500, 0
 
-	Gpio auxSerialTxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial\nset_aux_tx_pin X;
+	Gpio auxSerialTxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial;
 	Gpio warningLedPin;
-	Gpio auxSerialRxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial\nset_aux_rx_pin X;
+	Gpio auxSerialRxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial;
 	Gpio LIS302DLCsPin;
 
 
@@ -1137,7 +1137,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 1
 	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 2
 	float slowAdcAlpha;ExpAverage alpha coefficient;"coeff", 1, 0, 0, 200, 3
-	debug_mode_e debugMode;See http://rusefi.com/s/debugmode\n\nset debug_mode X
+	debug_mode_e debugMode;See http://rusefi.com/s/debugmode
 
 	uint32_t auxSerialSpeed;;"BPs", 1, 0, 0, 1000000, 0
 
@@ -1214,7 +1214,7 @@ custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	int alternatorPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
 
-	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
+	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode
 	uint8_t fan2ExtraIdle;Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale primingDelay;Delay to allow fuel pressure to build before firing the priming pulse.;"sec", 0.01, 0, 0, 1, 2
 ! todo: rename to luaAnalogInputs
@@ -1366,7 +1366,7 @@ tChargeMode_e tChargeMode;
 
 
  	custom can_vss_nbc_e 1 bits, U08, @OFFSET@, [0:0], "BMW_e46", "W202"
-	can_vss_nbc_e canVssNbcType;set can_vss X
+	can_vss_nbc_e canVssNbcType
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
