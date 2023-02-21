@@ -169,20 +169,6 @@ void setBoardDefaultConfiguration() {
 	/* TODO: add settings for SPI4 */
 
 	/* Knock sensor */
-	/* Interface settings */
-	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_4;
-	engineConfiguration->hip9011CsPin = Gpio::E11;	/* SPI4_NSS1 */
-	engineConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
-	engineConfiguration->hip9011IntHoldPin = Gpio::H8;
-	engineConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
-	engineConfiguration->hipOutputChannel = EFI_ADC_7; /* PA7 */
-	engineConfiguration->isHip9011Enabled = true;
-	/* this board has TPIC8101, that supports advanced mode */
-	engineConfiguration->useTpicAdvancedMode = true;
-	/* Chip settings */
-	engineConfiguration->hip9011PrescalerAndSDO = (0x6 << 1); //HIP_16MHZ_PRESCALER;
-	engineConfiguration->hip9011Gain = 1.0;
-	engineConfiguration->knockBandCustom = 0.0;
 	engineConfiguration->cylinderBore = 96.9;
 
 	/* Cylinder to knock bank mapping */

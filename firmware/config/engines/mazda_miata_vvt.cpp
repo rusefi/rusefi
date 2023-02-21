@@ -51,7 +51,6 @@
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
 #include "mazda_miata_base_maps.h"
-#include "hip9011_logic.h"
 
 
 #if HW_PROTEUS

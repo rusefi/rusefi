@@ -436,8 +436,6 @@ static void configureInputs() {
 
 	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
 
-	addChannel("HIP9011", engineConfiguration->hipOutputChannel, ADC_FAST);
-
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 
 	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);

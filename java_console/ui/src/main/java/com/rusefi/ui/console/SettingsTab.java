@@ -86,9 +86,6 @@ public class SettingsTab {
 //        panel.add(UiUtils.wrap(new BitConfigField(Fields.ISSDCARDENABLED, "SD card enabled").getContent()));
 //        panel.add(UiUtils.wrap(new BitConfigField(Fields.USELCDSCREEN, "Use LCD").getContent()));
 //
-//        panel.add(UiUtils.wrap(new EnumConfigField(Fields.HIP9011INTHOLDPIN, "int/hold pin").getContent()));
-//        panel.add(UiUtils.wrap(new EnumConfigField(Fields.HIP9011INTHOLDPINMODE, "int/hold pin mode").getContent()));
-//        panel.add(UiUtils.wrap(new ConfigField(Fields.HIP9011GAIN, "k gain").getContent()));
 //        panel.add(UiUtils.wrap(new ConfigField(Fields.KNOCKDETECTIONWINDOWSTART, "kw start").getContent()));
 //        panel.add(UiUtils.wrap(new ConfigField(Fields.KNOCKDETECTIONWINDOWEND, "kw end").getContent()));
 //

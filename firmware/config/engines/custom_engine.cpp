@@ -394,7 +394,6 @@ void setTle8888TestConfiguration() {
 	engineConfiguration->etbIo[0].disablePin = Gpio::F12;
 #endif /* STM32_HAS_GPIOF */
 	engineConfiguration->etb_use_two_wires = true;
-	engineConfiguration->isHip9011Enabled = false;
 
 	// ETB #2
 	// DIS PE5

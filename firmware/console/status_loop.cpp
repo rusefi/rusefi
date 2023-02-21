@@ -26,7 +26,6 @@
 
 #include "pch.h"
 #include "status_loop.h"
-#include "hip9011_logic.h"
 
 #if EFI_LOGIC_ANALYZER
 #include "logic_analyzer.h"
@@ -163,7 +162,6 @@ static void printEngineSnifferPinMappings() {
 		extern const char *vvtNames[];
 		printOutPin(vvtNames[i], engineConfiguration->camInputs[i]);
 	}
-	printOutPin(PROTOCOL_HIP_NAME, engineConfiguration->hip9011IntHoldPin);
 	printOutPin(PROTOCOL_TACH_NAME, engineConfiguration->tachOutputPin);
 #if EFI_LOGIC_ANALYZER
 	printOutPin(PROTOCOL_WA_CHANNEL_1, engineConfiguration->logicAnalyzerPins[0]);
@@ -381,11 +379,6 @@ private:
 static CommunicationBlinkingTask communicationsBlinkingTask;
 
 #endif /* EFI_PROD_CODE */
-
-#if EFI_HIP_9011
-extern HIP9011 instance;
-#endif /* EFI_HIP_9011 */
-
 
 #if EFI_TUNER_STUDIO
 

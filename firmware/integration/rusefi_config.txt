@@ -493,7 +493,6 @@ ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor 
 ThermistorConf iat;
 	
 	int launchTimingRetard;;"deg", 1, 0, -180, 180, 2
-	int hip9011PrescalerAndSDO;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
 	float knockBandCustom;We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override;"kHz", 1, 0, 0, 20, 2
 
 struct_no_prefix specs_s
@@ -588,7 +587,6 @@ trigger_config_s trigger;
     float airByRpmTaper;Extra air taper amount;"%", 1, 0, 0, 50, 1
 
 custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4" 
-	spi_device_e hip9011SpiDevice;
 	uint8_t failedMapFallback;Single value to be used in event of a failed MAP sensor \nThis value is only used for speed density fueling calculations.;"kPa", 1, 0, 0, 100, 0
 	uint8_t boostControlSafeDutyCycle;Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.;"%", 1, 0, 0, 100, 0
 	adc_channel_e mafAdcChannel
@@ -693,7 +691,6 @@ switch_input_pin_e clutchDownPin;Some cars have a switch to indicate that clutch
 
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
 	uint16_t mc33_t_min_boost;Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.;"us", 1, 0, 0, 10000, 0
-	pin_output_mode_e hip9011CsPinMode;
 	output_pin_e tachOutputPin;
 	pin_output_mode_e tachOutputPinMode;
 
@@ -736,13 +733,11 @@ bit is_enabled_spi_2
 	bit isSdCardEnabled;enable sd/disable sd
 	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit isEngineControlEnabled
-	bit isHip9011Enabled
 	bit isVerboseAlternator
 	bit verboseQuad
 	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed. 
 	
 	bit enabledStep1Limiter
-	bit useTpicAdvancedMode
 	bit unused760b12
 	bit verboseTLE8888
 	bit enableVerboseCanTx;CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
@@ -766,9 +761,6 @@ bit is_enabled_spi_2
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
-	Gpio hip9011CsPin;
-	Gpio hip9011IntHoldPin;
-pin_output_mode_e hip9011IntHoldPinMode;
 
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
@@ -1350,8 +1342,6 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 custom tChargeMode_e 1 bits, U08, @OFFSET@, [0:1], @@tChargeMode_e_enum@@
 tChargeMode_e tChargeMode;
 
-
-	float hip9011Gain;;"", 1, 0, 0, 100, 2
 	int16_t etb_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 	int16_t etb_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
 
@@ -2033,7 +2023,6 @@ end_struct
 #define PROTOCOL_VVT2_NAME "VVT2"
 #define PROTOCOL_VVT3_NAME "VVT3"
 #define PROTOCOL_VVT4_NAME "VVT4"
-#define PROTOCOL_HIP_NAME "HIP"
 #define PROTOCOL_TACH_NAME "tach"
 #define PROTOCOL_HPFP_NAME "hpfp"
 
@@ -2120,7 +2109,6 @@ end_struct
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 
 ! some board files override this value using prepend file
-#define ts_show_hip9011 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_2 true
 #define ts_show_main_relay true

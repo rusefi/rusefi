@@ -76,7 +76,6 @@
 
 #include "bmw_m73.h"
 #include "custom_engine.h"
-#include "hip9011_logic.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"

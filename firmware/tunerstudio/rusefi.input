@@ -1860,7 +1860,6 @@ menuDialog = main
 		subMenu = fancyHardwareDialog,		"Fancy Hardware"
 		subMenu = std_separator
 
-		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
 		subMenu = softwareKnock,			"Software knock" @@if_ts_show_software_knock
 		subMenu = maxKnockRetardTbl,		"Max knock retard" @@if_ts_show_software_knock
 		subMenu = std_separator
@@ -2783,7 +2782,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
-		field = "hip9011CsPin",							hip9011CsPin
 		field = "LIS302DLCsPin",						LIS302DLCsPin
 		field = "Saab CDM knock",						cdmInputPin
 		field = "DRV8860 CS",							drv8860_cs
@@ -3319,23 +3317,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = softwareKnock, "Software Knock", border
 		panel = softwareKnockLeft, West
 		panel = knockThresholdCurve, Center
-
-;			Engine->hip9011 Settings
-	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
-		field = "Enabled",								isHip9011Enabled
-		field = "!ECU reboot needed to apply these settings"
-		field = "IntHold pin (hip9011 input)",			hip9011IntHoldPin, {isHip9011Enabled == 1}
-		field = "IntHold pin (hip9011 input) mode",		hip9011IntHoldPinMode, {isHip9011Enabled == 1}
-		field = "ChipSelect pin",						hip9011CsPin, {isHip9011Enabled == 1}
-		field = "ChipSelect mode",						hip9011CsPinMode, {isHip9011Enabled == 1}
-		field = "hip Output/stm input",					hipOutputChannel, {isHip9011Enabled == 1}
-		field = "prescaler & SDO",						hip9011PrescalerAndSDO, {isHip9011Enabled == 1}
-		field = "knockDetectionWindowStart",			knockDetectionWindowStart, {isHip9011Enabled == 1}
-		field = "knockDetectionWindowEnd",				knockDetectionWindowEnd, {isHip9011Enabled == 1}
-		field = "cylinder bore (mm)",					cylinderBore, {isHip9011Enabled == 1}
-		field = "Band Freq override",					knockBandCustom, {isHip9011Enabled == 1}
-		field = "SPI device",							hip9011SpiDevice, {isHip9011Enabled == 1}
-		panel = knockThresholdCurve
 
 	dialog = spiFunction, "SPI settings"
 		field = "!ECU reboot needed to apply these settings"

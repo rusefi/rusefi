@@ -47,7 +47,6 @@ public class EnumNames {
 	"Temporary4",
 	"EngineSniffer",
 	"PrepareIgnitionSchedule",
-	"Hip9011IntHoldCallback",
 	"GlobalLock",
 	"GlobalUnlock",
 	"SoftwareKnockProcess",

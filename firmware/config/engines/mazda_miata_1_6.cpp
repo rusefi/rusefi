@@ -258,9 +258,6 @@ void setMiataNA6_MAP_Frankenso() {
 	setFrankensoConfiguration();
 	miataNAcommonEngineSettings();
 
-
-	engineConfiguration->isHip9011Enabled = false;
-
 	// Frankenso middle plug 2J, W32 top <> W47 bottom "#5 Green" jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 

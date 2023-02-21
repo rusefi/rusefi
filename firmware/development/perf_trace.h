@@ -63,7 +63,6 @@ enum class PE : uint8_t {
 	Temporary4,
 	EngineSniffer,
 	PrepareIgnitionSchedule,
-	Hip9011IntHoldCallback,
 	GlobalLock,
 	GlobalUnlock,
 	SoftwareKnockProcess,
