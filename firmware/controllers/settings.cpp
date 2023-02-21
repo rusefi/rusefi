@@ -135,13 +135,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
 			boolToString(engine->engineState.clutchDownState));
 
-	efiPrintf("digitalPotentiometerSpiDevice %d", engineConfiguration->digitalPotentiometerSpiDevice);
-
-	for (int i = 0; i < DIGIPOT_COUNT; i++) {
-		efiPrintf("digitalPotentiometer CS%d %s", i,
-				hwPortname(engineConfiguration->digitalPotentiometerChipSelect[i]));
-	}
-
 #if EFI_PROD_CODE
 	printSpiState(engineConfiguration);
 #endif // EFI_PROD_CODE

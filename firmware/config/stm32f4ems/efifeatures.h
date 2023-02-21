@@ -155,12 +155,6 @@
  */
 #define EFI_ENGINE_CONTROL TRUE
 
-/**
- * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
- * stock ECU
- */
-#define EFI_POTENTIOMETER FALSE
-
 #ifndef BOARD_TLE6240_COUNT
 #define BOARD_TLE6240_COUNT         0
 #endif

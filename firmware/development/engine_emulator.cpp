@@ -11,16 +11,11 @@
 #include "pch.h"
 #include "engine_emulator.h"
 
-#include "poten.h"
 #include "trigger_emulator_algo.h"
 
 void initEngineEmulator() {
 	if (hasFirmwareError())
 		return;
-
-#if EFI_POTENTIOMETER && HAL_USE_SPI
-	initPotentiometers();
-#endif /* EFI_POTENTIOMETER && HAL_USE_SPI*/
 
 #if EFI_EMULATE_POSITION_SENSORS
 	initTriggerEmulator();

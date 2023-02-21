@@ -170,9 +170,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
 
 	// not used
-	for (int i = 0; i < DIGIPOT_COUNT ; i++) {
-		engineConfiguration->digitalPotentiometerChipSelect[i] = Gpio::Unassigned;
-	}
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;

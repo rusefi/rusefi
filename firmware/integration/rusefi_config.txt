@@ -181,7 +181,6 @@ struct_no_prefix engine_configuration_s
 
 #define MAX_CYLINDER_COUNT 12
 #define EGT_CHANNEL_COUNT 8
-#define DIGIPOT_COUNT 4
 #define HW_MAX_ADC_INDEX 17
 #define TRIGGER_SIMULATOR_PIN_COUNT 2
 #define TRIGGER_INPUT_PIN_COUNT 2
@@ -680,14 +679,11 @@ switch_input_pin_e clutchDownPin;Some cars have a switch to indicate that clutch
 	pin_output_mode_e alternatorControlPinMode;
 	pin_input_mode_e clutchDownPinMode;
 
-	Gpio[DIGIPOT_COUNT iterate] digitalPotentiometerChipSelect;
 	pin_output_mode_e electronicThrottlePin1Mode;
 	Gpio wboHeaterPin;set_cj125_heater_pin XXX
 	Gpio cj125CsPin;set_cj125_cs_pin XXX
 	spi_device_e max31855spiDevice;
 	Gpio debugTriggerSync;
-	
-spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
 	Gpio mc33972_cs;
 	pin_output_mode_e mc33972_csPinMode;
 

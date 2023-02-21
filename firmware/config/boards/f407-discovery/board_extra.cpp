@@ -96,13 +96,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->triggerInputPins[0] = Gpio::C6;
 	engineConfiguration->triggerInputPins[1] = Gpio::A5;
 
-	// set this to SPI_DEVICE_3 to enable stimulation
-	//engineConfiguration->digitalPotentiometerSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->digitalPotentiometerChipSelect[0] = Gpio::D7;
-	engineConfiguration->digitalPotentiometerChipSelect[1] = Gpio::Unassigned;
-	engineConfiguration->digitalPotentiometerChipSelect[2] = Gpio::D5;
-	engineConfiguration->digitalPotentiometerChipSelect[3] = Gpio::Unassigned;
-
 	engineConfiguration->spi1mosiPin = Gpio::B5;
 	engineConfiguration->spi1misoPin = Gpio::B4;
 	engineConfiguration->spi1sckPin = Gpio::B3; // please note that this pin is also SWO/SWD - Single Wire debug Output

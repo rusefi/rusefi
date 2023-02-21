@@ -141,13 +141,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE6240_PIN_7;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	/* not used */
-	engineConfiguration->digitalPotentiometerChipSelect[0] = Gpio::Unassigned;
-	engineConfiguration->digitalPotentiometerChipSelect[1] = Gpio::Unassigned;
-	engineConfiguration->digitalPotentiometerChipSelect[2] = Gpio::Unassigned;
-	engineConfiguration->digitalPotentiometerChipSelect[3] = Gpio::Unassigned;
-	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;
-
 	/* SPIs */
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->is_enabled_spi_2 = false;
