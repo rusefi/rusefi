@@ -88,7 +88,6 @@
 #define EFI_ENGINE_CONTROL TRUE
 #define EFI_IDLE_CONTROL TRUE
 
-#define EFI_IDLE_PID_CIC TRUE
 #define EFI_MAIN_RELAY_CONTROL FALSE
 
 // Simulator supports real CAN, but not on Windows (yet?)

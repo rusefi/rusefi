@@ -71,17 +71,7 @@ public:
 
 	PidIndustrial industrialWithOverrideIdlePid;
 
-	#if EFI_IDLE_PID_CIC
-	// Use PID with CIC integrator
-		PidCic idleCicPid;
-	#endif //EFI_IDLE_PID_CIC
-
 	Pid * getIdlePid() {
-	#if EFI_IDLE_PID_CIC
-		if (engineConfiguration->useCicPidForIdle) {
-			return &idleCicPid;
-		}
-	#endif /* EFI_IDLE_PID_CIC */
 		return &industrialWithOverrideIdlePid;
 	}
 

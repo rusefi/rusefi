@@ -187,50 +187,6 @@ void Pid::updateITerm(float value) {
 	}
 }
 
-
-PidCic::PidCic() {
-	// call our derived reset()
-	reset();
-}
-
-PidCic::PidCic(pid_s *parameters) : Pid(parameters) {
-	// call our derived reset()
-	reset();
-}
-
-void PidCic::reset(void) {
-	Pid::reset();
-
-	totalItermCnt = 0;
-	for (int i = 0; i < PID_AVG_BUF_SIZE; i++)
-		iTermBuf[i] = 0;
-	iTermInvNum = 1.0f / (float)PID_AVG_BUF_SIZE;
-}
-
-float PidCic::getOutput(float target, float input, float dTime) {
-	return getUnclampedOutput(target, input, dTime);
-}
-
-void PidCic::updateITerm(float value) {
-	// use a variation of cascaded integrator-comb (CIC) filtering to get non-overflow iTerm
-	totalItermCnt++;
-	int localBufPos = (totalItermCnt >> PID_AVG_BUF_SIZE_SHIFT) % PID_AVG_BUF_SIZE;
-	int localPrevBufPos = ((totalItermCnt - 1) >> PID_AVG_BUF_SIZE_SHIFT) % PID_AVG_BUF_SIZE;
-	
-	// reset old buffer cell
-	if (localPrevBufPos != localBufPos)
-		iTermBuf[localBufPos] = 0;
-	// integrator stage
-	iTermBuf[localBufPos] += value;
-	
-	// return moving average of all sums, to smoothen the result
-	float iTermSum = 0;
-	for (int i = 0; i < PID_AVG_BUF_SIZE; i++) {
-		iTermSum += iTermBuf[i];
-	}
-	iTerm = iTermSum * iTermInvNum;
-}
-
 PidIndustrial::PidIndustrial() : Pid() {
 }
 

@@ -46,7 +46,7 @@ public:
 	 */
 	float getOutput(float target, float input);
 	virtual float getOutput(float target, float input, float dTime);
-	// doesn't limit the result (used in incremental CIC PID, see below)
+	// doesn't limit the result
 	float getUnclampedOutput(float target, float input, float dTime);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
 	virtual void reset();
@@ -70,36 +70,6 @@ public:
 protected:
 	pid_s *parameters = nullptr;
 	virtual void updateITerm(float value);
-};
-
-
-/**
- * A PID implementation with a modified cascaded integrator-comb (CIC) filtering.
- * Used for incremental auto-IAC control. See autoIdle() in idle_thread.cpp
- * See pid_cic.md.
- *
- * https://rusefi.com/forum/viewtopic.php?f=9&t=1315
- */
-class PidCic : public Pid {
-
-public:
-	PidCic();
-	explicit PidCic(pid_s *pid);
-
-	void reset(void) override;
-	using Pid::getOutput;
-	float getOutput(float target, float input, float dTime) override;
-	
-private:
-	// Circular running-average buffer for I-term, used by CIC-like filter
-	float iTermBuf[PID_AVG_BUF_SIZE];
-	// Needed by averaging (smoothing) of iTerm sums
-	float iTermInvNum;
-	// Total PID iterations (>240 days max. for 10ms update period)
-	int totalItermCnt;
-
-private:
-	void updateITerm(float value) override;
 };
 
 /**
