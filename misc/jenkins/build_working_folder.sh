@@ -73,11 +73,11 @@ cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 # just for now - DFU work in progress
 #cp firmware/deliver/rusefi_no_asserts.hex $FOLDER
 
-cp firmware/deliver/rusefi.bin $FOLDER
+cp firmware/deliver/fome.bin $FOLDER
 # probably not needed cp firmware/build/rusefi.elf $FOLDER
-cp firmware/deliver/rusefi.dfu $FOLDER
+cp firmware/deliver/fome.dfu $FOLDER
 # just for now - DFU work in progress
-cp firmware/deliver/rusefi.hex $FOLDER
+cp firmware/deliver/fome.hex $FOLDER
 
 # bootloader
 [ -e firmware/deliver/openblt.bin ] && { cp firmware/deliver/openblt.bin $FOLDER ; }
@@ -86,11 +86,11 @@ cp firmware/deliver/rusefi.hex $FOLDER
 [ -e firmware/deliver/rusefi_update.srec ] && { cp firmware/deliver/rusefi_update.srec $FOLDER ; }
 
 if [ -n "$BUNDLE_NAME" ]; then
-    mv $FOLDER/rusefi.dfu $FOLDER/rusefi_$BUNDLE_NAME.dfu
+    mv $FOLDER/rusefi.dfu $FOLDER/fome_$BUNDLE_NAME.dfu
 fi
 
 
-[ -e firmware/deliver/rusefi.bin ] || { echo "$SCRIPT_NAME: rusefi.bin not found"; exit 1; }
+[ -e firmware/deliver/fome.bin ] || { echo "$SCRIPT_NAME: fome.bin not found"; exit 1; }
 
 cd temp
 

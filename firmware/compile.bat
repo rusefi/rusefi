@@ -1,7 +1,7 @@
 @echo off
 
-rm -rf build\rusefi.hex
-rm -rf build\rusefi.bin
+rm -rf build\fome.hex
+rm -rf build\fome.bin
 
 
 git submodule update --init
@@ -21,8 +21,8 @@ rem the important piece (pass external args if needed)
 make %1 %2 %3
 
 rem cd build
-rem if not exist rusefi.hex echo "compilation failed"
-rem if not exist rusefi.hex exit -1
+rem if not exist fome.hex echo "compilation failed"
+rem if not exist fome.hex exit -1
 rem cd ..
 if errorlevel 1 echo make compilation failed
 if errorlevel 1 exit -1

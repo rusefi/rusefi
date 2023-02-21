@@ -20,7 +20,7 @@ SHORT_BOARDNAME=$2
 if [ -n "$3" ]; then
   INI="$3"
 else
-  INI="rusefi_${SHORT_BOARDNAME}.ini"
+  INI="fome_${SHORT_BOARDNAME}.ini"
 fi
 
 echo "BOARD_DIR=${BOARD_DIR} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
@@ -40,7 +40,7 @@ echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL]"
 source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
-# work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
+# work in progress: migrating to fome_${BUNDLE_NAME}.txt
 # in rare cases order of arguments is important - '-tool' should be specified before '-definition'
 java \
  $COMMON_GEN_CONFIG_PREFIX \

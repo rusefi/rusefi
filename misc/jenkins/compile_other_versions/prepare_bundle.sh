@@ -9,12 +9,12 @@ echo "RUSEFI_BUILD_FTP_USER=$RUSEFI_BUILD_FTP_USER"
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
 
 if [ "$4" = "true" ]; then
-  export FOLDER="temp/rusefi.${3}.${BUNDLE_NAME}"
+  export FOLDER="temp/fome.${3}.${BUNDLE_NAME}"
 else
-  export FOLDER="temp/rusefi.snapshot.${BUNDLE_NAME}"
+  export FOLDER="temp/fome.snapshot.${BUNDLE_NAME}"
 fi
 
-export BUNDLE_FULL_NAME="rusefi_bundle_${BUNDLE_NAME}"
+export BUNDLE_FULL_NAME="fome_bundle_${BUNDLE_NAME}"
 
 bash misc/jenkins/build_working_folder.sh "$3" "$4"
 

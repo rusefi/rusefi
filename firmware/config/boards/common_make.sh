@@ -14,7 +14,7 @@ cd ../../..
 mkdir -p .dep
 # todo: start using env variable for number of threads or for '-r'
 make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
-[ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
+[ -e build/fome.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 if [ "$USE_OPENBLT" = "yes" ]; then
   make openblt PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
   [ -e build-openblt/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
@@ -31,20 +31,20 @@ mkdir -p deliver
 rm -f deliver/*
 
 echo "$SCRIPT_NAME: invoking hex2dfu for incremental rusEFI image"
-$HEX2DFU -i build/rusefi.hex -C 0x1C -o build/rusefi.dfu
+$HEX2DFU -i build/fome.hex -C 0x1C -o build/fome.dfu
 
 if [ "$USE_OPENBLT" = "yes" ]; then
   # this image is suitable for update through bootloader only
   # do not deliver update images in any format that can confuse users
-  #cp build/rusefi.bin  deliver/rusefi_update.bin
-  #cp build/rusefi.dfu  deliver/rusefi_update.dfu
-  #cp build/rusefi.hex  deliver/rusefi_update.hex
+  #cp build/fome.bin  deliver/fome_update.bin
+  #cp build/fome.dfu  deliver/fome_update.dfu
+  #cp build/fome.hex  deliver/fome_update.hex
   # srec is the only format used by OpenBLT host tools
-  cp build/rusefi.srec deliver/rusefi_update.srec
+  cp build/fome.srec deliver/fome_update.srec
 else
   # standalone images (for use with no bootloader)
-  cp build/rusefi.bin  deliver/
-  cp build/rusefi.dfu  deliver/
+  cp build/fome.bin  deliver/
+  cp build/fome.dfu  deliver/
 fi
 
 # bootloader and composite image
@@ -58,9 +58,9 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   cp build-openblt/openblt_$PROJECT_BOARD.dfu  deliver/openblt.dfu
   #cp build-openblt/openblt_$PROJECT_BOARD.hex  deliver/openblt.hex
 
-  rm -f deliver/rusefi_openblt.dfu
+  rm -f deliver/fome_openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"
-  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu -b deliver/rusefi.bin
+  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/fome.hex -C 0x1C -o deliver/fome.dfu -b deliver/fome.bin
   #todo: how to create 'signed' hex and srec? Do we need?
 fi
 

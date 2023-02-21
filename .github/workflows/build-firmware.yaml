@@ -71,202 +71,202 @@ jobs:
           # Board configurations
           - build-target: hellen72
             folder: config/boards/hellen/hellen72
-            ini-file: rusefi_hellen72.ini
+            ini-file: fome_hellen72.ini
             skip-rate: 90
 
           - build-target: hellen81
             folder: config/boards/hellen/hellen81
-            ini-file: rusefi_hellen81.ini
+            ini-file: fome_hellen81.ini
             skip-rate: 90
 
           - build-target: alphax-2chan
             folder: config/boards/hellen/alphax-2chan
-            ini-file: rusefi_alphax-2chan.ini
+            ini-file: fome_alphax-2chan.ini
             skip-rate: 0
 
           - build-target: alphax-4chan
             folder: config/boards/hellen/alphax-4chan
-            ini-file: rusefi_alphax-4chan.ini
+            ini-file: fome_alphax-4chan.ini
 
           - build-target: alphax-8chan
             folder: config/boards/hellen/alphax-8chan
-            ini-file: rusefi_alphax-8chan.ini
+            ini-file: fome_alphax-8chan.ini
 
           - build-target: harley81
             folder: config/boards/hellen/harley81
-            ini-file: rusefi_harley81.ini
+            ini-file: fome_harley81.ini
             skip-rate: 90
 
           - build-target: hellen88bmw
             folder: config/boards/hellen/hellen88bmw
-            ini-file: rusefi_hellen88bmw.ini
+            ini-file: fome_hellen88bmw.ini
             skip-rate: 90
 
           - build-target: hellen88bmw_avr
             folder: config/boards/hellen/hellen88bmw
-            ini-file: rusefi_hellen88bmw.ini
+            ini-file: fome_hellen88bmw.ini
             skip-rate: 90
 
           - build-target: hellen-nb1
             folder: config/boards/hellen/hellen-nb1
-            ini-file: rusefi_hellen-nb1.ini
+            ini-file: fome_hellen-nb1.ini
             skip-rate: 90
 
           - build-target: hellen-gm-e67
             folder: config/boards/hellen/hellen-gm-e67
-            ini-file: rusefi_hellen-gm-e67.ini
+            ini-file: fome_hellen-gm-e67.ini
             skip-rate: 90
 
           - build-target: hellenNA8_96
             folder: config/boards/hellen/hellenNA8_96
-            ini-file: rusefi_hellenNA8_96.ini
+            ini-file: fome_hellenNA8_96.ini
             skip-rate: 90
 
           - build-target: hellenNA6
             folder: config/boards/hellen/hellen64_miataNA6_94
-            ini-file: rusefi_hellenNA6.ini
+            ini-file: fome_hellenNA6.ini
             skip-rate: 90
 
           - build-target: hellen128
             folder: config/boards/hellen/hellen128
-            ini-file: rusefi_hellen128mercedes.ini
+            ini-file: fome_hellen128mercedes.ini
             skip-rate: 50
 
           - build-target: hellen121vag
             folder: config/boards/hellen/hellen121vag
-            ini-file: rusefi_hellen121vag.ini
+            ini-file: fome_hellen121vag.ini
             skip-rate: 90
 
           - build-target: hellen121nissan
             folder: config/boards/hellen/hellen121nissan
-            ini-file: rusefi_hellen121nissan.ini
+            ini-file: fome_hellen121nissan.ini
 
           - build-target: hellen-honda-k
             folder: config/boards/hellen/hellen-honda-k
-            ini-file: rusefi_hellen-honda-k.ini
+            ini-file: fome_hellen-honda-k.ini
 
           - build-target: hellen154hyundai
             folder: config/boards/hellen/hellen154hyundai
-            ini-file: rusefi_hellen154hyundai.ini
+            ini-file: fome_hellen154hyundai.ini
             skip-rate: 90
 
           - build-target: frankenso_na6
             folder: config/boards/frankenso
-            ini-file: rusefi_frankenso_na6.ini
+            ini-file: fome_frankenso_na6.ini
             skip-rate: 90
 
           - build-target: mre_f4
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
+            ini-file: fome_mre_f4.ini
 
           - build-target: mre_f4_no_openblt
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
+            ini-file: fome_mre_f4.ini
 
           - build-target: mre_f4_debug
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
+            ini-file: fome_mre_f4.ini
             skip-rate: 95
 
           - build-target: mre_f4_recovery
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
+            ini-file: fome_mre_f4.ini
             skip-rate: 95
 
           - build-target: mre_f4_hardware_QC_special_build
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
+            ini-file: fome_mre_f4.ini
             skip-rate: 90
 
           - build-target: mre_f7
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f7.ini
+            ini-file: fome_mre_f7.ini
             skip-rate: 90
 
           - build-target: prometheus_405
             folder: config/boards/prometheus
-            ini-file: rusefi_prometheus_405.ini
+            ini-file: fome_prometheus_405.ini
             skip-rate: 90
 
           - build-target: prometheus_469
             folder: config/boards/prometheus
-            ini-file: rusefi_prometheus_469.ini
+            ini-file: fome_prometheus_469.ini
             skip-rate: 90
 
           - build-target: proteus_f4
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_f4.ini
+            ini-file: fome_proteus_f4.ini
 
           - build-target: proteus_f4_hardware_QC_special_build
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_f4.ini
+            ini-file: fome_proteus_f4.ini
 
           - build-target: proteus_f7
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_f7.ini
+            ini-file: fome_proteus_f7.ini
 
           - build-target: proteus_f7_hardware_QC_special_build
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_f7.ini
+            ini-file: fome_proteus_f7.ini
             skip-rate: 90
 
           - build-target: proteus_h7
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_h7.ini
+            ini-file: fome_proteus_h7.ini
             skip-rate: 90
 
           - build-target: proteus_legacy
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_f7.ini
+            ini-file: fome_proteus_f7.ini
             skip-rate: 90
 
           - build-target: stm32f429_nucleo
             folder: config/boards/nucleo_f429
-            ini-file: rusefi_stm32f429_nucleo.ini
+            ini-file: fome_stm32f429_nucleo.ini
 
           - build-target: stm32f767_nucleo
             folder: config/boards/nucleo_f767
-            ini-file: rusefi_stm32f767_nucleo.ini
+            ini-file: fome_stm32f767_nucleo.ini
             skip-rate: 95
 
           - build-target: stm32h743_nucleo
             folder: config/boards/nucleo_h743
-            ini-file: rusefi_stm32h743_nucleo.ini
+            ini-file: fome_stm32h743_nucleo.ini
             skip-rate: 95
 
           - build-target: subaru_eg33_f7
             folder: config/boards/subaru_eg33
-            ini-file: rusefi_subaru_eg33_f7.ini
+            ini-file: fome_subaru_eg33_f7.ini
             skip-rate: 50
 
           - build-target: f407-discovery
             folder: config/boards/f407-discovery
-            ini-file: rusefi_f407-discovery.ini
+            ini-file: fome_f407-discovery.ini
             skip-rate: 0
 
           - build-target: f429-discovery
             folder: config/boards/f429-discovery
-            ini-file: rusefi_f429-discovery.ini
+            ini-file: fome_f429-discovery.ini
             skip-rate: 95
 
           - build-target: core8
             folder: config/boards/core8
-            ini-file: rusefi_core8.ini
+            ini-file: fome_core8.ini
             skip-rate: 95
 
           - build-target: 48way
             folder: config/boards/48way
-            ini-file: rusefi_48way.ini
+            ini-file: fome_48way.ini
             skip-rate: 95
 
           - build-target: atlas
             folder: config/boards/atlas
-            ini-file: rusefi_atlas.ini
+            ini-file: fome_atlas.ini
             skip-rate: 95
 
           - build-target: tdg-pdm8
             folder: config/boards/tdg-pdm8
-            ini-file: rusefi_tdg-pdm8.ini
+            ini-file: fome_tdg-pdm8.ini
             skip-rate: 95
 
     steps:
@@ -390,40 +390,40 @@ jobs:
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
-        name: rusefi_${{matrix.build-target}}.elf
+        name: fome_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload build bin
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
-        name: rusefi_${{matrix.build-target}}.bin
+        name: fome_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload build hex
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
-        name: rusefi_${{matrix.build-target}}.hex
+        name: fome_${{matrix.build-target}}.hex
         path: ./firmware/deliver/rusefi*.hex
 
     - name: Upload build dfu
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
-        name: rusefi_${{matrix.build-target}}.dfu
+        name: fome_${{matrix.build-target}}.dfu
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
       if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
-        name: rusefi_bundle_${{matrix.build-target}}.zip
-        path: ./artifacts/rusefi_bundle*.zip
+        name: fome_bundle_${{matrix.build-target}}.zip
+        path: ./artifacts/fome_bundle*.zip
 
     - name: Upload autoupdate bundle
       if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
-        name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
-        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
+        name: fome_bundle_${{matrix.build-target}}_autoupdate.zip
+        path: ./artifacts/fome_bundle_${{matrix.build-target}}_autoupdate.zip

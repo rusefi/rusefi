@@ -16,7 +16,7 @@ endif
 include rusefi_rules.mk
 
 # Define project name here
-PROJECT = rusefi
+PROJECT = fome
 PROJECT_DIR = .
 
 # Configure precompiled header

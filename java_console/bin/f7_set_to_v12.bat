@@ -8,7 +8,7 @@ cd STM32_Programmer_CLI
 cd bin
 
 call stm32-full-erase.bat
-STM32_Programmer_CLI.exe -c port=usb1 -w ../../../rusefi.hex -v -s
+STM32_Programmer_CLI.exe -c port=usb1 -w ../../../fome.hex -v -s
 
 cd ../..
 sleep 2

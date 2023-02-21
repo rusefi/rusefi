@@ -15,14 +15,12 @@ mkdir deliver
 #make -j$(nproc) DEBUG_LEVEL_OPT='-O2' $@
 #EXTRA_PARAMS=""
 
-# mv build/rusefi.elf deliver/rusefi_no_asserts.elf
-#mv build/rusefi.bin deliver/rusefi_no_asserts.bin
 # this file is needed for DFU generation
-#mv build/rusefi.hex deliver/rusefi_no_asserts.hex
+#mv build/fome.hex deliver/fome_no_asserts.hex
 #echo "Release compilation results 1/2"
 #echo "TIMESTAMP $(date "+%D %T.%2N")"
 #ls -l build
-#[ -e deliver/rusefi_no_asserts.hex ] || { echo "FAILED to compile NO ASSERTS version"; exit 1; }
+#[ -e deliver/fome_no_asserts.hex ] || { echo "FAILED to compile NO ASSERTS version"; exit 1; }
 
 bash clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"
@@ -30,14 +28,14 @@ EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default\\\""
 make -j$(nproc) $@
 EXTRA_PARAMS=""
 
-mv build/rusefi.elf deliver/rusefi.elf
+mv build/fome.elf deliver/fome.elf
 # this file is needed for DFU generation
-mv build/rusefi.hex deliver/rusefi.hex
+mv build/fome.hex deliver/fome.hex
 # Keeping file in place since hw_test.bat would take it from current location
-cp build/rusefi.bin deliver/rusefi.bin
+cp build/fome.bin deliver/fome.bin
 echo Debug compilation results 2/2
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 ls -l build
-[ -e deliver/rusefi.hex ] || { echo "FAILED to compile DEFAULT with DEBUG"; exit 1; }
+[ -e deliver/fome.hex ] || { echo "FAILED to compile DEFAULT with DEBUG"; exit 1; }
 
 echo "clean_compile_two_versions: Looks good!"

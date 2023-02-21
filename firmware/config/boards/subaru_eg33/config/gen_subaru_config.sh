@@ -20,7 +20,7 @@ BOARD_DIR=config/boards/${BOARDNAME}
 
 
 
-  INI="rusefi_${SHORT_BOARDNAME}.ini"
+  INI="fome_${SHORT_BOARDNAME}.ini"
 
 
 

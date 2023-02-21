@@ -18,7 +18,7 @@ To start the bootloader updater:
 
 To update the firmware:
 - choose "Download to device" mode;
-- select the firmware file (rusefi.hex). Note! ***Use only recent firmware builds with bootloader support!***
+- select the firmware file (fome.hex). Note! ***Use only recent firmware builds with bootloader support!***
 - you may select "verify" option to check 
 - you may select "Jump to the user program" to automatically run the main firmware after the update.
 
@@ -39,7 +39,7 @@ Problem statement:
 How it works, in two words:
 - The bootloader requires a separate makefile because it's a separate binary executable with its own project settings and fileset.
 - Start firmware/bootloader/compile_bootloader.bat to compile the bootloader code. Use it only if bootloader modification is required.
-- The compiled bootloader code is stored in bootloader/bootloader_generated.hxx and it can be included into the main firmware (build/rusefi.hex) if the bootloader support is enabled.
+- The compiled bootloader code is stored in bootloader/bootloader_generated.hxx and it can be included into the main firmware (build/fome.hex) if the bootloader support is enabled.
 - The bootloader support is disabled by default (USE_BOOTLOADER=no). You can enable it by adding "USE_BOOTLOADER=yes" to Makefile or "SET USE_BOOTLOADER=yes" to your Windows compile batch-file.
 - When USE_BOOTLOADER=yes, a special version of linker script is used: STM32F407xG_CCM_bootloader.ld. It shifts 'flash' memory address to 32kb (0x08008000), and clears a space for bootloader at the very beginning of the flash memory. It also adds section ".bl" for the bootloader code.
 - The file bootloader_storage.c used to include the bootloader code into the firmware (using '.bl' section).

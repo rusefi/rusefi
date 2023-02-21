@@ -10,7 +10,7 @@
     rm -fR build
     make
 
-    if [ ! -f build/rusefi.hex ]; then
+    if [ ! -f build/fome.hex ]; then
         echo "Firmware compilation failed"
         exit -1
     fi
