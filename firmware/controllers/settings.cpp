@@ -649,7 +649,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->alternatorControl.offset = valueI;
 	} else
 #endif // EFI_ALTERNATOR_CONTROL
-	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
+	if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_ENGINESNIFFERRPMTHRESHOLD)) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
