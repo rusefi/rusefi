@@ -176,9 +176,6 @@ public class DfuFlasher {
         return detectDevice(wnd, WMIC_DFU_QUERY_COMMAND, "ConfigManagerErrorCode=0");
     }
 
-    public static boolean detectStLink(StatusConsumer wnd) {
-        return detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink");
-    }
     public static boolean detectPcan(StatusConsumer wnd) {
         return detectDevice(wnd, WMIC_PCAN_QUERY_COMMAND, "PCAN");
     }

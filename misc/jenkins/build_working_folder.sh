@@ -66,7 +66,6 @@ RUSEFI_CONSOLE_SETTINGS=""
 # users probably do not really care for this file
 # cp firmware/svnversion.h $FOLDER
 
-cp -r misc/install/openocd $CONSOLE_FOLDER
 cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 # 407 has additional version of firmware
 #cp firmware/deliver/rusefi_no_asserts.bin $FOLDER
@@ -133,7 +132,6 @@ echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
 rm -rf $CONSOLE_FOLDER/rusefi_autoupdate.exe
 rm -rf $CONSOLE_FOLDER/rusefi_console.exe
 rm -rf $CONSOLE_FOLDER/DfuSe
-rm -rf $CONSOLE_FOLDER/openocd
 rm -rf $DRIVERS_FOLDER
 
 # for autoupdate we do not want the unique folder name with timestamp

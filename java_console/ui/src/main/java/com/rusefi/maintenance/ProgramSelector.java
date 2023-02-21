@@ -27,7 +27,6 @@ public class ProgramSelector {
     private static final String MANUAL_DFU = "Manual DFU Update";
     private static final String DFU_SWITCH = "Switch to DFU Mode";
     private static final String DFU_ERASE = "Full Chip Erase";
-    private static final String ST_LINK = "ST-LINK Update";
     private static final String OPENBLT_CAN = "OpenBLT via CAN";
 
     public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().contains("win");
@@ -49,7 +48,7 @@ public class ProgramSelector {
         controls.add(mode);
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
-        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, ST_LINK, OPENBLT_CAN , DFU_ERASE, DFU_SWITCH).contains(persistedMode))
+        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, OPENBLT_CAN , DFU_ERASE, DFU_SWITCH).contains(persistedMode))
             mode.setSelectedItem(persistedMode);
 
         JButton updateFirmware = new JButton("Update Firmware",
@@ -70,10 +69,6 @@ public class ProgramSelector {
                         break;
                     case MANUAL_DFU:
                         DfuFlasher.runDfuProgramming();
-                        break;
-                    case ST_LINK:
-                        // todo: add ST-LINK no-assert mode? or not?
-                        FirmwareFlasher.doUpdateFirmware(FirmwareFlasher.IMAGE_FILE, updateFirmware);
                         break;
                     case DFU_SWITCH:
                         StatusWindow wnd = DfuFlasher.createStatusWindow();
@@ -129,9 +124,6 @@ public class ProgramSelector {
                 mode.addItem(MANUAL_DFU);
                 mode.addItem(DFU_ERASE);
             }
-            if (currentHardware.isStLinkConnected())
-                mode.addItem(ST_LINK);
-            // todo: detect PCAN mode.addItem(OPENBLT_CAN);
         }
         if (!currentHardware.getKnownPorts().isEmpty())
             mode.addItem(DFU_SWITCH);
