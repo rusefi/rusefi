@@ -366,11 +366,6 @@ void applyNewHardwareSettings() {
 void setBor(int borValue) {
 	efiPrintf("setting BOR to %d", borValue);
 	BOR_Set((BOR_Level_t)borValue);
-	showBor();
-}
-
-void showBor(void) {
-	efiPrintf("BOR=%d", (int)BOR_Get());
 }
 #endif /* EFI_PROD_CODE */
 

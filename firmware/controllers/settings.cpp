@@ -446,14 +446,6 @@ static void setMainRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->mainRelayPin, "main relay");
 }
 
-static void setCj125CsPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
-}
-
-static void setCj125HeaterPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->wboHeaterPin, "cj125 heater");
-}
-
 static void setTriggerSyncPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->debugTriggerSync, "trigger sync");
 }
@@ -662,10 +654,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->enableVerboseCanTx = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "cj125")) {
-		engineConfiguration->isCJ125Enabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "cj125verbose")) {
-		engineConfiguration->isCJ125Verbose = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
 		engineConfiguration->enabledStep1Limiter = isEnabled;
 #if EFI_PROD_CODE
@@ -784,13 +772,7 @@ static void getValue(const char *paramStr) {
 		}
 	}
 
-	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
-		efiPrintf("isCJ125Enabled=%d", engineConfiguration->isCJ125Enabled);
-#if EFI_PROD_CODE
-	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
-		showBor();
-#endif // EFI_PROD_CODE
-	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
+	if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		efiPrintf("tps_min=%d", engineConfiguration->tpsMin);
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		efiPrintf("tps_max=%d", engineConfiguration->tpsMax);
@@ -1062,8 +1044,6 @@ void initSettings(void) {
 	addConsoleActionS(CMD_IDLE_PIN, setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
-	addConsoleActionS("set_cj125_cs_pin", setCj125CsPin);
-	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
 	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
 	addConsoleActionS("bench_clearpin", benchClearPin);

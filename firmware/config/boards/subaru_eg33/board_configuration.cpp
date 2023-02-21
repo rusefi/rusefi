@@ -202,8 +202,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->maxAcRpm = 3000;
 	engineConfiguration->acIdleRpmBump = 200;
 
-	engineConfiguration->isCJ125Enabled = false;
-
 	/* CAN */
 	engineConfiguration->canTxPin = Gpio::D1;
 	engineConfiguration->canRxPin = Gpio::D0;

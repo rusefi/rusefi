@@ -196,10 +196,6 @@
 #define EFI_HIP_9011 FALSE
 #endif
 
-#ifndef EFI_CJ125
-#define EFI_CJ125 TRUE
-#endif
-
 #if !defined(EFI_MEMS)
  #define EFI_MEMS FALSE
 #endif

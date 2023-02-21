@@ -22,7 +22,6 @@
 // Less critical harware
 #define PRIO_SERVO (NORMALPRIO + 5)
 #define PRIO_STEPPER (NORMALPRIO + 5)
-#define PRIO_CJ125 (NORMALPRIO + 5)
 
 // Logging buffer flush is *slightly* above PRIO_CONSOLE so that we don't starve logging buffers during initialization and console commands
 #define PRIO_TEXT_LOG (NORMALPRIO + 4)

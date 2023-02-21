@@ -33,7 +33,6 @@
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
 #include "electronic_throttle.h"
-#include "cj125.h"
 #include "malfunction_central.h"
 #include "trigger_emulator_algo.h"
 #include "microsecond_timer.h"
@@ -484,12 +483,6 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
 	case TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
-		break;
-
-	case TS_UNUSED_CJ125_CALIB:
-#if EFI_CJ125 && HAL_USE_SPI
-		cjStartCalibration();
-#endif /* EFI_CJ125 */
 		break;
 
 	case TS_SET_ENGINE_TYPE:

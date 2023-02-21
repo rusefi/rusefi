@@ -84,8 +84,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
 	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
-	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::D1;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::D2;
