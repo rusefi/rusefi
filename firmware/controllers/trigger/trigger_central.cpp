@@ -398,7 +398,7 @@ uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
 /**
- * This function is called by all "hardaware" trigger inputs:
+ * This function is called by all "hardware" trigger inputs:
  *  - Hardware triggers
  *  - Trigger replay from CSV (unit tests)
  */
