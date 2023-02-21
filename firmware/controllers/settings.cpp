@@ -365,10 +365,6 @@ static void setEgtSpi(int spi) {
 	engineConfiguration->max31855spiDevice = (spi_device_e) spi;
 }
 
-static void setPotSpi(int spi) {
-	engineConfiguration->digitalPotentiometerSpiDevice = (spi_device_e) spi;
-}
-
 static brain_pin_e parseBrainPinWithErrorMessage(const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == Gpio::Invalid) {
@@ -1084,7 +1080,6 @@ void initSettings(void) {
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
 #endif // HAL_USE_ADC
 	addConsoleActionSS(CMD_LOGIC_PIN, setLogicInputPin);
-	addConsoleActionI("set_pot_spi", setPotSpi);
 #endif // EFI_PROD_CODE
 }
 
