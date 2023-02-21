@@ -105,7 +105,6 @@ public class ConsoleUI {
 //            tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
 //        }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-//        tabbedPane.add("Wizards", new Wizard().createPane());
 
         tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
 

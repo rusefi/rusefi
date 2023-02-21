@@ -2,15 +2,10 @@ package com.rusefi.core;
 
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
-import com.rusefi.config.generated.EngineState;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.config.generated.FuelComputer;
 import com.rusefi.config.generated.TsOutputs;
-import com.rusefi.sensor_logs.BinaryLogEntry;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Comparator;
@@ -23,7 +18,7 @@ import static com.rusefi.config.generated.Fields.*;
  * @author Andrey Belomutskiy
  * 2/11/13
  */
-public enum Sensor implements BinaryLogEntry {
+public enum Sensor {
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
      */
@@ -176,17 +171,14 @@ public enum Sensor implements BinaryLogEntry {
         }
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public String getUnit() {
         return units;
     }
 
-    @Override
     public int getByteSize() {
         switch (getType()) {
             case UINT8:
@@ -206,8 +198,6 @@ public enum Sensor implements BinaryLogEntry {
         }
     }
 
-    // TODO: this should be a string
-    @Override
     public SensorCategory getCategory() {
         return category;
     }
@@ -234,47 +224,6 @@ public enum Sensor implements BinaryLogEntry {
 
     public FieldType getType() {
         return type;
-    }
-
-    public double translateValue(double value) {
-        return value;
-    }
-
-    @Override
-    public void writeToLog(DataOutputStream dos, double value) throws IOException {
-        switch (type) {
-            case INT8:
-            case UINT8:
-                dos.write((int) value);
-                return;
-            case FLOAT:
-                dos.writeFloat((float) value);
-                return;
-            case UINT16:
-            case INT16:
-                dos.writeShort((int) value);
-                return;
-            case INT:
-                dos.writeInt((int) value);
-                return;
-            default:
-                throw new UnsupportedOperationException("Type " + type);
-        }
-    }
-
-    public String getLogValue(double value) {
-        if (scale == 1 && type != null) {
-            // only handle sensors without scale, i.e. not packed floats
-            switch (type) {
-                case UINT16: {
-                    int v = ((int) value) & 0xFFFF;
-                    return Integer.toString(v);
-                }
-            }
-
-        }
-
-        return Double.toString(value);
     }
 
     static {
