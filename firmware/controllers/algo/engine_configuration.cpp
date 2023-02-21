@@ -559,8 +559,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(5);
 	engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(0);
 
-	engineConfiguration->idlePositionMin = PACK_MULT_VOLTAGE * 0;
-	engineConfiguration->idlePositionMax = PACK_MULT_VOLTAGE * 5;
 	engineConfiguration->wastegatePositionMin = PACK_MULT_VOLTAGE * 0;
 	engineConfiguration->wastegatePositionMax = PACK_MULT_VOLTAGE * 5;
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open

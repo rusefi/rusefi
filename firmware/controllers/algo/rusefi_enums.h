@@ -596,8 +596,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DC_None = 0,
 	DC_Throttle1 = 1,
 	DC_Throttle2 = 2,
-	DC_IdleValve = 3,
-	DC_Wastegate = 4,
+	DC_Wastegate = 3,
 } dc_function_e;
 
 typedef enum __attribute__ ((__packed__)) {

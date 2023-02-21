@@ -47,7 +47,6 @@ void setVwAba() {
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
-	engineConfiguration->idlePositionSensor = EFI_ADC_3; // PA3
 	engineConfiguration->wastegatePositionSensor = EFI_ADC_4; // PA4
 
 	float mapRange = 110;

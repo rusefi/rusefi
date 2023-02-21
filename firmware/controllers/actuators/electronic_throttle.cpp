@@ -102,7 +102,6 @@ static SensorType functionToPositionSensor(dc_function_e func) {
 	switch(func) {
 		case DC_Throttle1: return SensorType::Tps1;
 		case DC_Throttle2: return SensorType::Tps2;
-		case DC_IdleValve: return SensorType::IdlePosition;
 		case DC_Wastegate: return SensorType::WastegatePosition;
 		default: return SensorType::Invalid;
 	}
@@ -254,22 +253,11 @@ expected<percent_t> EtbController::getSetpoint() {
 		case DC_Throttle1:
 		case DC_Throttle2:
 			return getSetpointEtb();
-		case DC_IdleValve:
-			return getSetpointIdleValve();
 		case DC_Wastegate:
 			return getSetpointWastegate();
 		default:
 			return unexpected;
 	}
-}
-
-expected<percent_t> EtbController::getSetpointIdleValve() const {
-	// VW ETB idle mode uses an ETB only for idle (a mini-ETB sets the lower stop, and a normal cable
-	// can pull the throttle up off the stop.), so we directly control the throttle with the idle position.
-#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
-	engine->outputChannels.etbTarget = m_idlePosition;
-#endif // EFI_TUNER_STUDIO
-	return clampF(0, m_idlePosition, 100);
 }
 
 expected<percent_t> EtbController::getSetpointWastegate() const {
@@ -390,8 +378,7 @@ percent_t EtbController2::getThrottleTrim(float rpm, percent_t targetPosition) c
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) {
 	// Don't apply open loop for wastegate/idle valve, only real ETB
-	if (m_function != DC_Wastegate
-		&& m_function != DC_IdleValve) {
+	if (m_function != DC_Wastegate) {
 		etbFeedForward = interpolate2d(target, config->etbBiasBins, config->etbBiasValues);
 	} else {
 	    etbFeedForward = 0;

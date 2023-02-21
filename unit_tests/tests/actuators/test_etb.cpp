@@ -468,25 +468,6 @@ TEST(etb, setpointNoPedalMap) {
 	EXPECT_EQ(etb.getSetpoint(), unexpected);
 }
 
-TEST(etb, setpointIdleValveController) {
-	EtbController etb;
-
-	etb.init(DC_IdleValve, nullptr, nullptr, nullptr, false);
-
-	etb.setIdlePosition(0);
-	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
-	etb.setIdlePosition(50);
-	EXPECT_FLOAT_EQ(50, etb.getSetpoint().value_or(-1));
-	etb.setIdlePosition(100);
-	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
-
-	// Out of range should be clamped
-	etb.setIdlePosition(-10);
-	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
-	etb.setIdlePosition(110);
-	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
-}
-
 TEST(etb, setpointWastegateController) {
 	EtbController etb;
 
@@ -562,7 +543,6 @@ TEST(etb, etbTpsSensor) {
 	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
 	Sensor::setMockValue(SensorType::Tps2, 75.0f, true);
 	Sensor::setMockValue(SensorType::WastegatePosition, 33.0f);
-	Sensor::setMockValue(SensorType::IdlePosition, 66.0f);
 
 	// Redundant accelerator pedal required for init
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
@@ -586,13 +566,6 @@ TEST(etb, etbTpsSensor) {
 		EtbController etb;
 		etb.init(DC_Wastegate, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 33.0f);
-	}
-
-	// Test idle valve control
-	{
-		EtbController etb;
-		etb.init(DC_IdleValve, nullptr, nullptr, nullptr, true);
-		EXPECT_EQ(etb.observePlant().Value, 66.0f);
 	}
 }
 

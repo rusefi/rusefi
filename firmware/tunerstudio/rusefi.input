@@ -1205,7 +1205,6 @@ gaugeCategory = Boost PID
 	boostStatus_resetCounterGauge = boostStatus_resetCounter,"Boost PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
 
 gaugeCategory = Idle
-	idlePosSensGauge  = idlePositionSensor,		@@GAUGE_NAME_IDLE_POSITION@@,		"%",		0,	100,		0,		0,	100,	100,	1,	1
 	idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",	0,	100,	0,	0,	100,  100,	1,	1
 	idleStatus_iTermGauge = idleStatus_iTerm,"Idle PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	idleStatus_dTermGauge = idleStatus_dTerm,"Idle PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1390,7 +1389,6 @@ gaugeCategory = Sensors - Raw
 	rawBatteryGauge		= rawBattery	, "Raw Battery",			"V", 0, 5, 0, 0, 5, 5, 3, 0
 	rawIatGauge			= rawIat		, "Raw IAT",			"V", 0, 5, 0, 0, 5, 5, 3, 0
 	rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "V", 0, 5, 0, 0, 5, 5, 3, 0
-	rawIdlePositionSensorGauge  = rawIdlePositionSensor, "Raw Idle Position",  "V", 0, 5, 0, 0, 5, 5, 3, 0
 	rawWastegatePositionGauge = rawWastegatePosition,"Raw Wastegate Position","V", 0, 5, 0, 0, 5, 5, 3, 0
 	rawLowFuelPressureGauge = rawLowFuelPressure,"Raw fuel pressure (low) voltage","V", 0, 5, 0, 0, 5, 5, 3, 0
 	rawHighFuelPressureGauge = rawHighFuelPressure,"Raw fuel pressure (high) voltage","V", 0, 5, 0, 0, 5, 5, 3, 0
@@ -2573,20 +2571,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Min (fully closed, most boost)",		wastegatePositionMin
 		field = "Max (fully open, least boost)",		wastegatePositionMax
 
-	dialog = idlePosConfig, "Idle position sensor"
-		field = "Input",							idlePositionSensor
-		field = "Min (valve closed, low idle)",			idlePositionMin
-		field = "Max (valve open, high idle)",			idlePositionMax
-
 	dialog = wastegateIdlePosLeft, ""
 		panel = wastegatePosConfig
-		panel = idlePosConfig
 
 	dialog = wastegateIdlePosGauges, ""
 		gauge = rawWastegatePositionGauge, West
 		gauge = wastegatePosGauge, East
-		gauge = rawIdlePositionSensorGauge
-		gauge = idlePosSensGauge
 
 	dialog = wastegateIdlePos, "", border
 		panel = wastegateIdlePosLeft, West

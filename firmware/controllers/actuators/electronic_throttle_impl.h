@@ -48,7 +48,6 @@ public:
 	expected<percent_t> getSetpoint() override;
 	expected<percent_t> getSetpointEtb();
 	expected<percent_t> getSetpointWastegate() const;
-	expected<percent_t> getSetpointIdleValve() const;
 
 	expected<percent_t> getOpenLoop(percent_t target) override;
 	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t observation) override;

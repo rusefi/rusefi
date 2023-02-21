@@ -59,7 +59,6 @@ enum class SensorType : unsigned char {
 	Lambda2,
 
 	WastegatePosition,
-	IdlePosition,
 
 	FuelEthanolPercent,
 

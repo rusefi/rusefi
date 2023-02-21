@@ -180,7 +180,6 @@ static ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 
 // These sensors are TPS-like, so handle them in here too
 static FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
-static FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
 void initTps() {
     efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != nullptr, "null engineConfiguration");
@@ -221,7 +220,6 @@ void initTps() {
 
 		// TPS-like stuff that isn't actually a TPS
 		wastegate.init({ engineConfiguration->wastegatePositionSensor, (float)engineConfiguration->wastegatePositionMin, (float)engineConfiguration->wastegatePositionMax, min, max });
-		idlePos.init({ engineConfiguration->idlePositionSensor, (float)engineConfiguration->idlePositionMin, (float)engineConfiguration->idlePositionMax, min, max });
 	}
 
 	// Route the pedal or TPS to driverIntent as appropriate
@@ -243,5 +241,4 @@ void deinitTps() {
 	pedal.deinit(isFordTps, &fordPps);
 
 	wastegate.deinit();
-	idlePos.deinit();
 }

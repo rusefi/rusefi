@@ -479,7 +479,6 @@ static void updateRawSensors() {
 	engine->outputChannels.rawMaf2 = Sensor::getRaw(SensorType::Maf2);
 	engine->outputChannels.rawMap = Sensor::getRaw(SensorType::MapSlow);
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
-	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 
 	engine->outputChannels.luaGauges[0] = Sensor::getOrZero(SensorType::LuaGauge1);
 	engine->outputChannels.luaGauges[1] = Sensor::getOrZero(SensorType::LuaGauge2);
@@ -505,8 +504,6 @@ static void updatePressures() {
 
 static void updateMiscSensors() {
 	engine->outputChannels.VBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
-	
-	engine->outputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
 
 	engine->outputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
 
