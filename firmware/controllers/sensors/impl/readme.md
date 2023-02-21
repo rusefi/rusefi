@@ -1,0 +1,1 @@
+Folder for boring details related to specific sensors

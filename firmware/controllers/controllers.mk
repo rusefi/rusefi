@@ -4,12 +4,9 @@ include $(PROJECT_DIR)/controllers/math/math.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
-#include $(PROJECT_DIR)/controllers/gauges/gauges.mk
 
 CONTROLLERS_DIR=$(PROJECT_DIR)/controllers
 
-CONTROLLERSSRC =
-	
 CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/electronic_throttle.cpp \
 	$(CONTROLLERS_DIR)/actuators/ac_control.cpp \
@@ -81,8 +78,6 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/trigger/decoders \
 	$(CONTROLLERS_DIR)/tcu \
 	$(CONTROLLERS_DIR)/trigger \
-    $(CONTROLLERS_DIR)/sensors \
-	$(CONTROLLERS_DIR)/sensors/converters \
 	$(CONTROLLERS_DIR)/can \
 	$(CONTROLLERS_DIR)/core \
 	$(CONTROLLERS_DIR)/gauges \
