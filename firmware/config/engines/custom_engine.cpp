@@ -69,7 +69,6 @@ void setDiscoveryPdm() {
 void setFrankensoConfiguration() {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
-	engineConfiguration->displayMode = DM_HD44780;
 	commonFrankensoAnalogInputs();
 
 	/**
@@ -145,8 +144,6 @@ void setFrankensoConfiguration() {
 	 * We want to initialize all outputs for test
 	 */
 	engineConfiguration->specs.cylindersCount = 12;
-
-	engineConfiguration->displayMode = DM_NONE;
 #else /* EFI_PWM_TESTER */
 	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[5] = Gpio::Unassigned;

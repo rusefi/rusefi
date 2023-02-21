@@ -170,13 +170,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
 
 	// not used
-	engineConfiguration->displayMode = DM_NONE;
-	engineConfiguration->HD44780_rs = Gpio::Unassigned;
-	engineConfiguration->HD44780_e = Gpio::Unassigned;
-	engineConfiguration->HD44780_db4 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db5 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db6 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db7 = Gpio::Unassigned;
 	for (int i = 0; i < DIGIPOT_COUNT ; i++) {
 		engineConfiguration->digitalPotentiometerChipSelect[i] = Gpio::Unassigned;
 	}

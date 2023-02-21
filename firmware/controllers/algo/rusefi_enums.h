@@ -136,14 +136,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 } engine_load_mode_e;
 
-typedef enum __attribute__ ((__packed__)) {
-	DM_NONE = 0,
-	DM_HD44780 = 1,
-	DM_HD44780_OVER_PCF8574 = 2,
-
-
-} display_mode_e;
-
 typedef enum  __attribute__ ((__packed__)) {
 	TL_AUTO = 0,
 	TL_SEMI_AUTO = 1,

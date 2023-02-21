@@ -142,13 +142,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 	/* not used */
-	engineConfiguration->displayMode = DM_NONE;
-	engineConfiguration->HD44780_rs = Gpio::Unassigned;
-	engineConfiguration->HD44780_e = Gpio::Unassigned;
-	engineConfiguration->HD44780_db4 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db5 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db6 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db7 = Gpio::Unassigned;
 	engineConfiguration->digitalPotentiometerChipSelect[0] = Gpio::Unassigned;
 	engineConfiguration->digitalPotentiometerChipSelect[1] = Gpio::Unassigned;
 	engineConfiguration->digitalPotentiometerChipSelect[2] = Gpio::Unassigned;

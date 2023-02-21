@@ -66,9 +66,6 @@ void setMitsubishiConfiguration() {
 	engineConfiguration->ignitionPins[2] = Gpio::E10; // // Frankenstein: high side #2
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
-	engineConfiguration->HD44780width = 20;
-	engineConfiguration->HD44780height = 4;
-
 	setEgoSensor(ES_Innovate_MTX_L);
 
 }

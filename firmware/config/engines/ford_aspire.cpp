@@ -80,9 +80,6 @@ void setFordAspireEngineConfiguration() {
 	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
 
-	engineConfiguration->HD44780width = 20;
-	engineConfiguration->HD44780height = 4;
-
 	// Frankenstein analog input #1: adc1
 	// Frankenstein analog input #2: adc3
 	// Frankenstein analog input #3: adc13
