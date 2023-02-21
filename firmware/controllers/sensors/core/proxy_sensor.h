@@ -23,6 +23,11 @@ public:
 
 	void showInfo(const char* sensorName) const override;
 
+	bool isRedundant() const override {
+    	const Sensor *proxied = getSensorOfType(m_proxiedSensor);
+	    return proxied ? proxied->isRedundant() : false;
+	}
+
 private:
 	SensorResult get() const override {
 		return Sensor::get(m_proxiedSensor);
