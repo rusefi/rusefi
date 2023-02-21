@@ -58,8 +58,6 @@ void initHardware();
 
 #endif /* EFI_PROD_CODE */
 
-void setBor(int borValue);
-
 class ButtonDebounce;
 
 #endif /* __cplusplus */

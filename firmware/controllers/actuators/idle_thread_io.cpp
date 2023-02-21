@@ -146,24 +146,6 @@ void setTargetIdleRpm(int value) {
 	showIdleInfo();
 }
 
-void setIdlePFactor(float value) {
-	engineConfiguration->idleRpmPid.pFactor = value;
-	applyPidSettings();
-	showIdleInfo();
-}
-
-void setIdleIFactor(float value) {
-	engineConfiguration->idleRpmPid.iFactor = value;
-	applyPidSettings();
-	showIdleInfo();
-}
-
-void setIdleDFactor(float value) {
-	engineConfiguration->idleRpmPid.dFactor = value;
-	applyPidSettings();
-	showIdleInfo();
-}
-
 /**
  * Idle test would activate the solenoid for three seconds
  */

@@ -114,7 +114,6 @@ void common079721_2351() {
 
 	engineConfiguration->fuelPumpPin = Gpio::Unassigned; // fuel pump is not controlled by ECU on this engine
 
-	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	// set injection_mode 2
 	engineConfiguration->injectionMode = IM_BATCH;

@@ -30,11 +30,6 @@
  * set debug_mode 17
  * for PID outputs
  *
- * set etb_p X
- * set etb_i X
- * set etb_d X
- * set etb_o X
- *
  * set_etb_duty X
  *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
@@ -783,31 +778,6 @@ static DcThread dcThread CCM_OPTIONAL;
 
 #endif // EFI_UNIT_TEST
 
-static void showEtbInfo() {
-#if EFI_PROD_CODE
-	efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
-
-	efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
-
-	efiPrintf("ETB1 duty=%.2f freq=%d",
-			engine->outputChannels.etb1DutyCycle,
-			engineConfiguration->etbFreq);
-
-	efiPrintf("ETB freq=%d",
-			engineConfiguration->etbFreq);
-
-	for (int i = 0; i < ETB_COUNT; i++) {
-		efiPrintf("ETB%d", i);
-		efiPrintf(" dir1=%s", hwPortname(engineConfiguration->etbIo[i].directionPin1));
-		efiPrintf(" dir2=%s", hwPortname(engineConfiguration->etbIo[i].directionPin2));
-		efiPrintf(" control=%s", hwPortname(engineConfiguration->etbIo[i].controlPin));
-		efiPrintf(" disable=%s", hwPortname(engineConfiguration->etbIo[i].disablePin));
-		showDcMotorInfo(i);
-	}
-
-#endif /* EFI_PROD_CODE */
-}
-
 void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		if (auto controller = engine->etbControllers[i]) {
@@ -857,42 +827,6 @@ static void etbReset() {
 	etbPidReset();
 }
 #endif /* EFI_PROD_CODE */
-
-/**
- * set etb_p X
- */
-void setEtbPFactor(float value) {
-	engineConfiguration->etb.pFactor = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
-/**
- * set etb_i X
- */
-void setEtbIFactor(float value) {
-	engineConfiguration->etb.iFactor = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
-/**
- * set etb_d X
- */
-void setEtbDFactor(float value) {
-	engineConfiguration->etb.dFactor = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
-/**
- * set etb_o X
- */
-void setEtbOffset(int value) {
-	engineConfiguration->etb.offset = value;
-	etbPidReset();
-	showEtbInfo();
-}
 
 void etbAutocal(size_t throttleIndex) {
 	if (throttleIndex >= ETB_COUNT) {
@@ -1076,7 +1010,6 @@ void initElectronicThrottle() {
 	}
 
 #if EFI_PROD_CODE
-	addConsoleAction("etbinfo", showEtbInfo);
 	addConsoleAction("etbreset", etbReset);
 	addConsoleActionI("etb_freq", setEtbFrequency);
 

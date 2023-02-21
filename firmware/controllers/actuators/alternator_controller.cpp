@@ -81,29 +81,11 @@ void AlternatorController::onFastCallback() {
 	}
 }
 
-void showAltInfo(void) {
-	efiPrintf("alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
-			hwPortname(engineConfiguration->alternatorControlPin),
-			engineConfiguration->alternatorControl.periodMs);
-	efiPrintf("p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
-			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
-	efiPrintf("vbatt=%.2f/duty=%.2f/target=%.2f", Sensor::getOrZero(SensorType::BatteryVoltage), currentAltDuty,
-			engineConfiguration->targetVBatt);
-}
-
-void setAltPFactor(float p) {
-	engineConfiguration->alternatorControl.pFactor = p;
-	efiPrintf("setAltPid: %.2f", p);
-	pidReset();
-	showAltInfo();
-}
-
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
 void initAlternatorCtrl() {
-	addConsoleAction("altinfo", showAltInfo);
 	if (!isBrainPinValid(engineConfiguration->alternatorControlPin))
 		return;
 

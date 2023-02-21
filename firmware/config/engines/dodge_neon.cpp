@@ -42,7 +42,6 @@ void setDodgeNeon1995EngineConfiguration() {
 
 	setWholeTimingTable_d(12);
 
-	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -89,7 +88,6 @@ void setDodgeNeon1995EngineConfiguration() {
 
 	engineConfiguration->mapErrorDetectionTooHigh = 120;
 
-	// set injection_pin_mode 0
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 	// Frankenstein: high side #1: PE8
@@ -99,7 +97,6 @@ void setDodgeNeon1995EngineConfiguration() {
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[2] = Gpio::E10; // // Frankenstein: high side #2
 
-	// set ignition_pin_mode 0
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};

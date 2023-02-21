@@ -34,14 +34,10 @@ public class RecentCommands {
     private static final String KEY = "recent_commands";
     private static final String DELIMETER = "|";
     private static final String STOPENGINE = "stopengine";
-    private static final String SHOWCONFIG = "showconfig";
     private static final String HELP = "help";
     private static final String SENSORINFO = "sensorinfo";
     private static final String IDLEINFO = "idleinfo";
-    private static final String ALTINFO = "altinfo";
-    private static final String TPSINFO = "tpsinfo";
     private static final String MAPINFO = "mapinfo";
-    private static final String ACCELINFO = "accelinfo";
     private static final String CANINFO = "caninfo";
     private static final String TSINFO = "tsinfo";
     private static final String SPEEDINFO = "speedinfo";
@@ -56,15 +52,11 @@ public class RecentCommands {
     static {
         COMMAND_ICONS.put(STOPENGINE, AutoupdateUtil.loadIcon("stop.jpg"));
         ImageIcon infoIcon = AutoupdateUtil.loadIcon("info.png");
-        COMMAND_ICONS.put(SHOWCONFIG, infoIcon);
         COMMAND_ICONS.put(HELP, AutoupdateUtil.loadIcon("help.jpg"));
         COMMAND_ICONS.put(SENSORINFO, infoIcon);
         COMMAND_ICONS.put(CMD_TRIGGERINFO, AutoupdateUtil.loadIcon("trigger.jpg"));
         COMMAND_ICONS.put(IDLEINFO, infoIcon);
-        COMMAND_ICONS.put(ALTINFO, AutoupdateUtil.loadIcon("alternator.jpg"));
-        COMMAND_ICONS.put(ACCELINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
-        COMMAND_ICONS.put(TPSINFO, infoIcon);
         COMMAND_ICONS.put(MAPINFO, infoIcon);
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
@@ -115,7 +107,6 @@ public class RecentCommands {
 
     private void addDefaults() {
         add(HELP);
-        add(SHOWCONFIG);
         add(STOPENGINE);
         add(SENSORINFO);
         add(CMD_TRIGGERINFO);
@@ -139,10 +130,7 @@ public class RecentCommands {
         add("sparkbench 5 400 2");
         add("fuelbench 5 400 2");
         add(IDLEINFO);
-        add(ALTINFO);
-        add(TPSINFO);
         add(MAPINFO);
-        add(ACCELINFO);
         add(FUELINFO);
         add(HIPINFO);
         add(SDINFO);

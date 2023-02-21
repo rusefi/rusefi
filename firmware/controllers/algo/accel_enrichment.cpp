@@ -199,26 +199,16 @@ TpsAccelEnrichment::TpsAccelEnrichment() {
 
 #if ! EFI_UNIT_TEST
 
-static void accelInfo() {
-//	efiPrintf("TPS accel length=%d", tpsInstance.cb.getSize());
-	efiPrintf("TPS accel th=%.2f/mult=%.2f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
-
-	efiPrintf("beta=%.2f/tau=%.2f", engineConfiguration->wwaeBeta, engineConfiguration->wwaeTau);
-}
-
 void setTpsAccelThr(float value) {
 	engineConfiguration->tpsAccelEnrichmentThreshold = value;
-	accelInfo();
 }
 
 void setTpsDecelThr(float value) {
 	engineConfiguration->tpsDecelEnleanmentThreshold = value;
-	accelInfo();
 }
 
 void setTpsDecelMult(float value) {
 	engineConfiguration->tpsDecelEnleanmentMultiplier = value;
-	accelInfo();
 }
 
 void setTpsAccelLen(int length) {
@@ -227,7 +217,6 @@ void setTpsAccelLen(int length) {
 		return;
 	}
 	engine->tpsAccelEnrichment.setLength(length);
-	accelInfo();
 }
 
 void updateAccelParameters() {
@@ -242,8 +231,6 @@ void initAccelEnrichment() {
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 
 #if ! EFI_UNIT_TEST
-
-	addConsoleAction("accelinfo", accelInfo);
 
 	updateAccelParameters();
 #endif /* ! EFI_UNIT_TEST */
