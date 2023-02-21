@@ -57,7 +57,7 @@ float InstantRpmCalculator::calculateInstantRpm(
 	efiAssert(OBD_PCM_Processor_Fault, !cisnan(currentAngle), "eventAngles", 0);
 
 	// Hunt for a tooth ~90 degrees ago to compare to the current time
-	angle_t previousAngle = currentAngle - 90;
+	angle_t previousAngle = currentAngle - engineConfiguration->instantRpmRange;
 	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
 	int prevIndex = triggerShape.findAngleIndex(triggerFormDetails, previousAngle);
 
