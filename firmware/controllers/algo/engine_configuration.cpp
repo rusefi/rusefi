@@ -1014,6 +1014,10 @@ void validateConfiguration() {
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
 		engineConfiguration->adcVcc = 3.0f;
 	}
+	if (engineConfiguration->instantRpmRange == 0) {
+        // todo: extract constant in instant_rpm_calculator.h?
+	    engineConfiguration->instantRpmRange = 90;
+	}
 	engine->preCalculate();
 }
 

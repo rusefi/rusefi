@@ -26,6 +26,9 @@ void setDefaultBaseEngine() {
 	engineConfiguration->specs.displacement = 2;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
+    // todo: extract constant in instant_rpm_calculator.h?
+    engineConfiguration->instantRpmRange = 90;
+
 	engineConfiguration->compressionRatio = 9;
 
 	engineConfiguration->turbochargerFilter = 0.01f;
