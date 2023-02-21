@@ -87,9 +87,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 
-//	engineConfiguration->gps_rx_pin = Gpio::B7;
-//	engineConfiguration->gps_tx_pin = Gpio::B6;
-
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::D1;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::D2;
 

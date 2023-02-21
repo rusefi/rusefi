@@ -20,9 +20,6 @@
 
 #pragma once
 
-#undef EFI_POTENTIOMETER
-#define EFI_POTENTIOMETER FALSE
-
 #undef EFI_MAX_31855
 #define EFI_MAX_31855 FALSE
 

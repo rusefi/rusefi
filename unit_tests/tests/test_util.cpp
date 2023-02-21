@@ -15,7 +15,6 @@
 #include "malfunction_central.h"
 #include "cli_registry.h"
 
-#include "nmea.h"
 #include "mmc_card.h"
 #include "fl_stack.h"
 
@@ -248,59 +247,6 @@ static void testEchoFFF(float first, float second, float third) {
 
 #define UNKNOWN_COMMAND "dfadasdasd"
 
-static loc_t GPSdata;
-
-static char nmeaMessage[1000];
-
-TEST(misc, testGpsParser) {
-	strcpy(nmeaMessage, "");
-	gps_location(&GPSdata, nmeaMessage);
-
-	// we need to pass a mutable string, not a constant because the parser would be modifying the string
-	strcpy(nmeaMessage, "$GPRMC,173843,A,3349.896,N,11808.521,W,000.0,360.0,230108,013.4,E*69");
-	gps_location(&GPSdata, nmeaMessage);
-	ASSERT_EQ( 4,  GPSdata.quality) << "1 valid";
-	assertEqualsM("1 latitude", 3349.896, GPSdata.latitude);
-	assertEqualsM("1 longitude", 11808.521, GPSdata.longitude);
-	ASSERT_EQ( 0,  GPSdata.speed) << "1 speed";
-// 	ASSERT_EQ( 0,  GPSdata.altitude) << "1 altitude";	// GPRMC not overwrite altitude
-	ASSERT_EQ( 360,  GPSdata.course) << "1 course";
-
-	strcpy(nmeaMessage, "$GPGGA,111609.14,5001.27,N,3613.06,E,3,08,0.0,10.2,M,0.0,M,0.0,0000*70");
-	gps_location(&GPSdata, nmeaMessage);
-	ASSERT_EQ( 3,  GPSdata.quality) << "2 valid";		// see field details
-	assertEqualsM("2 latitude", 50.0212, GPSdata.latitude);
-	assertEqualsM("2 longitude", 36.2177, GPSdata.longitude);
-	ASSERT_EQ( 0,  GPSdata.speed) << "2 speed";
-	assertEqualsM("2 altitude", 10.2, GPSdata.altitude);
-//	ASSERT_EQ( 0,  GPSdata.course) << "2 course";  // GPGGA not overwrite course
-
-	strcpy(nmeaMessage, "$GPRMC,111609.14,A,5001.27,N,3613.06,E,11.2,0.0,261206,0.0,E*50");
-	gps_location(&GPSdata, nmeaMessage);
-	ASSERT_EQ( 4,  GPSdata.quality) << "3 valid";
-	assertEqualsM("3 latitude", 5001.27, GPSdata.latitude);
-	assertEqualsM("3 longitude", 3613.06, GPSdata.longitude);
-	assertEqualsM("3 speed", 11.2, GPSdata.speed);
-//	ASSERT_EQ( 0,  GPSdata.altitude) << "3 altitude";  // GPRMC not overwrite altitude
-	ASSERT_EQ( 0,  GPSdata.course) << "3 course";
-	ASSERT_EQ( 2006,  GPSdata.time.year + 1900) << "3 GPS yy";
-	ASSERT_EQ( 12,  GPSdata.time.month) << "3 GPS mm";
-	ASSERT_EQ( 26,  GPSdata.time.day) << "3 GPS dd";
-	ASSERT_EQ( 11,  GPSdata.time.hour) << "3 GPS hh";
-	ASSERT_EQ( 16,  GPSdata.time.minute) << "3 GPS mm";
-	ASSERT_EQ( 9,  GPSdata.time.second) << "3 GPS ss";
-
-	// check again first one
-	// we need to pass a mutable string, not a constant because the parser would be modifying the string
-	strcpy(nmeaMessage, "$GPRMC,173843,A,3349.896,N,11808.521,W,000.0,360.0,230108,013.4,E*69");
-	gps_location(&GPSdata, nmeaMessage);
-	ASSERT_EQ( 4,  GPSdata.quality) << "4 valid";
-	assertEqualsM("4 latitude", 3349.896, GPSdata.latitude);
-	assertEqualsM("4 longitude", 11808.521, GPSdata.longitude);
-	ASSERT_EQ( 0,  GPSdata.speed) << "4 speed";
-	ASSERT_EQ( 360,  GPSdata.course) << "4 course";
-}
-
 // this buffer is needed because on Unix you would not be able to change static char constants
 static char buffer[300];
 
@@ -376,8 +322,6 @@ TEST(misc, testConsoleLogic) {
 	ASSERT_EQ(1.0, fFirst);
 	ASSERT_EQ(2.0, fSecond);
 	ASSERT_EQ(3.0, fThird);
-
-	//addConsoleActionSSS("GPS", testGpsParser);
 }
 
 TEST(misc, testFLStack) {

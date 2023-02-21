@@ -39,7 +39,6 @@
 #include "mcp3208.h"
 #include "hip9011.h"
 #include "histogram.h"
-#include "gps_uart.h"
 #include "sent.h"
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"
@@ -553,10 +552,6 @@ void initHardware() {
 #if EFI_BOSCH_YAW
 	initBoschYawRateSensor();
 #endif /* EFI_BOSCH_YAW */
-
-#if EFI_UART_GPS
-	initGps();
-#endif
 
 #if EFI_AUX_SERIAL
 	initAuxSerial();
