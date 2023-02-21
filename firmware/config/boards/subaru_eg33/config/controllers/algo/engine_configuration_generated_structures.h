@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Feb 21 00:07:48 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Feb 21 00:49:27 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4400,6 +4400,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t acRelayAlternatorDutyAdder;
 	/**
+	deg
 	 * offset 3951
 	 */
 	uint8_t instantRpmRange;
@@ -5263,4 +5264,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Feb 21 00:07:48 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Feb 21 00:49:27 UTC 2023
