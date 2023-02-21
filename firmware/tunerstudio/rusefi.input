@@ -4307,7 +4307,9 @@ dialog = tcuControls, "Transmission Settings"
 
 		field = "consumeObdSensors",						consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",						artificialTestMisfire
+		field = "Instant Rpm Range",                    instantRpmRange
 		field = "Always use instant RPM",				alwaysInstantRpm
+		field = "Never use instant RPM TODO",			neverInstantRpm
 		field = vinNumber,										vinNumber
 		field = turbochargerFilter,							turbochargerFilter
 		field = auxFrequencyFilter,							auxFrequencyFilter
