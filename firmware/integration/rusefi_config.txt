@@ -455,7 +455,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 
 struct injector_s
 	float flow;This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min", 1, 0, 0, 99999, 2
-    float[VBAT_INJECTOR_CURVE_SIZE] battLagCorrBins;set_flat_injector_lag LAG\nset_injector_lag VOLTAGE LAG;"volts", 1, 0, 0, 20, 2
+    float[VBAT_INJECTOR_CURVE_SIZE] battLagCorrBins;;"volts", 1, 0, 0, 20, 2
     float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;ms delay between injector open and close dead times;"ms", 1, 0, 0, 50, 2
 end_struct
 
@@ -619,7 +619,7 @@ custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3",
 	uint8_t boostControlSafeDutyCycle;Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.;"%", 1, 0, 0, 100, 0
 	adc_channel_e mafAdcChannel
 
-float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
+float globalFuelCorrection;;"coef", 1, 0, 0, 1000, 2
 
 	float adcVcc;;"volts", 1, 0, 0, 6, 3
 	float mapCamDetectionAnglePosition;;"Deg", 1, 0, 0, 360, 0
