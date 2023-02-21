@@ -27,5 +27,5 @@ jobs:
           echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
         fi
 
-    - name: Generate documentation
-      run: bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
+    # - name: Generate documentation
+    #   run: bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
