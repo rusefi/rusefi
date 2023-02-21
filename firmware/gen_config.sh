@@ -39,8 +39,6 @@ for BOARD in \
    "config/boards/microrusefi mre_f4" \
    "config/boards/core8 core8" \
    "config/boards/48way 48way" \
-   "config/boards/m74_9 m74_9" \
-   "config/boards/s105 s105" \
    "config/boards/frankenso frankenso_na6" \
    "config/boards/prometheus prometheus_469" \
    "config/boards/prometheus prometheus_405" \
