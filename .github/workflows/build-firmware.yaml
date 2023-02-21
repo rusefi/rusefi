@@ -366,10 +366,10 @@ jobs:
       run: bash misc/jenkins/build_java_console.sh
 
     # Build the simulator
-    - name: Build simulator
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
-      # 'OS="Windows_NT"' allows us to build Windows executable on unix
-      run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
+    # - name: Build simulator
+    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+    #   # 'OS="Windows_NT"' allows us to build Windows executable on unix
+    #   run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
     # Build the firmware!
     - name: Build Firmware
