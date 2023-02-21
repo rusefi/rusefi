@@ -9,10 +9,8 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.LinkManager;
-import com.rusefi.stream.LogicdataStreamFile;
 import com.rusefi.stream.StreamFile;
 import com.rusefi.stream.TSHighSpeedLog;
-import com.rusefi.stream.VcdStreamFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -58,8 +56,6 @@ public class BinaryProtocolLogger {
         if (!compositeLogs.isEmpty())
             return;
         compositeLogs.addAll(Arrays.asList(
-                new VcdStreamFile(getFileName("rusEFI_trigger_log_", ".vcd")),
-                new LogicdataStreamFile(getFileName("rusEFI_trigger_log_", ".logicdata")),
                 new TSHighSpeedLog(getFileName("rusEFI_trigger_log_"))
         ));
     }
