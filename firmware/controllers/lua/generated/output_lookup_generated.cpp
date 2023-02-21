@@ -41,8 +41,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.isWarnNow;
 		case -2035612655:
 			return engine->outputChannels.isPedalError;
-		case 1830366389:
-			return engine->outputChannels.isKnockChipOk;
 		case -52473827:
 			return engine->outputChannels.launchTriggered;
 		case -1529936844:
@@ -155,8 +153,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.engineMode;
 		case 799075048:
 			return engine->outputChannels.firmwareVersion;
-		case -677561380:
-			return engine->outputChannels.rawIdlePositionSensor;
 		case 2039421097:
 			return engine->outputChannels.rawWastegatePosition;
 		case 633018087:
@@ -229,8 +225,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.flexPercent;
 		case 53406649:
 			return engine->outputChannels.wastegatePositionSensor;
-		case 782384530:
-			return engine->outputChannels.idlePositionSensor;
 		case -148455898:
 			return engine->outputChannels.rawLowFuelPressure;
 		case 990714516:

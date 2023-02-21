@@ -5,10 +5,10 @@ Disable sensor sniffer above this rpm
 A secondary Rev limit engaged by the driver to help launch the vehicle faster
 
 ### rpmHardLimit
-set rpm_hard_limit X
+
 
 ### engineSnifferRpmThreshold
-Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X
+Engine sniffer would be disabled above this rpm
 
 ### multisparkMaxRpm
 Disable multispark above this engine speed.
@@ -58,15 +58,6 @@ Inhibit operation of this fan while the engine is not running.
 ### enableTrailingSparks
 Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 
-### isCJ125Verbose
-enable cj125verbose/disable cj125verbose
-
-### cj125isUaDivided
-Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
-
-### cj125isLsu49
-
-
 ### etb_use_two_wires
 TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 
@@ -75,12 +66,6 @@ Subaru/BMW style where default valve position is somewhere in the middle. First 
 
 ### useEeprom
 
-
-### cj125isUrDivided
-Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
-
-### useCicPidForIdle
-Switch between Industrial and Cic PID implementation
 
 ### useTLE8888_cranking_hack
 
@@ -125,10 +110,10 @@ Experimental setting that will cause a misfire\nDO NOT ENABLE.
 On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
 ### tpsMin
-Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X
+Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel
 
 ### tpsMax
-Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X
+Full throttle.\nSee also tps1_1AdcChannel
 
 ### tpsErrorDetectionTooLow
 TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.
@@ -140,7 +125,7 @@ TPS error detection: what throttle % is unrealistically high?\nAlso used for acc
 Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.
 
 ### cranking.rpm
-This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X
+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm.
 
 ### ignitionDwellForCrankingMs
 Dwell duration while cranking
@@ -202,9 +187,6 @@ Pull-up resistor value on your board
 ### launchTimingRetard
 
 
-### hip9011PrescalerAndSDO
-value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
-
 ### knockBandCustom
 We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override
 
@@ -230,7 +212,7 @@ Minimum TPS to enable boost control. Use this to avoid solenoid noise at idle, a
 Minimum MAP to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
 
 ### crankingTimingAngle
-Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X
+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance
 
 ### gapTrackingLengthOverride
 How many consecutive gap rations have to match expected ranges for sync to happen
@@ -245,7 +227,7 @@ Expected oil pressure after starting the engine. If oil pressure does not reach 
 This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.
 
 ### globalTriggerAngleOffset
-Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchnization point before TDC and negative in case of synchnization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X
+Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchnization point before TDC and negative in case of synchnization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.
 
 ### analogInputDividerCoefficient
 Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.
@@ -266,12 +248,6 @@ Number of revolutions per kilometer for the wheels your vehicle speed sensor is 
 CANbus thread period in ms
 
 ### byFirmwareVersion
-
-
-### HD44780width
-
-
-### HD44780height
 
 
 ### idle_derivativeFilterLoss
@@ -296,7 +272,7 @@ Single value to be used in event of a failed MAP sensor \nThis value is only use
 Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.
 
 ### globalFuelCorrection
-set global_fuel_correction X
+
 
 ### adcVcc
 
@@ -367,12 +343,6 @@ Voltage when the wastegate is closed.\nYou probably don't have one of these!
 ### wastegatePositionMax
 Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units
 
-### idlePositionMin
-Voltage when the idle valve is closed.\nYou probably don't have one of these!
-
-### idlePositionMax
-Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units
-
 ### tunerStudioSerialSpeed
 Secondary TTL channel baud rate
 
@@ -400,9 +370,6 @@ Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 ### isEngineControlEnabled
 
 
-### isHip9011Enabled
-
-
 ### isVerboseAlternator
 
 
@@ -415,12 +382,6 @@ This setting should only be used if you have a stepper motor idle valve and a st
 ### enabledStep1Limiter
 
 
-### useTpicAdvancedMode
-
-
-### useLcdScreen
-
-
 ### verboseTLE8888
 
 
@@ -429,9 +390,6 @@ CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_bro
 
 ### etb1configured
 
-
-### isCJ125Enabled
-enable cj125/disable cj125
 
 ### etb2configured
 
@@ -467,9 +425,6 @@ Allows disabling the ETB when the engine is stopped. You may not like the power 
 Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 
 ### alignEngineSnifferAtTDC
-
-
-### idleIncrementalPidCic
 
 
 ### enableAemXSeries
@@ -538,12 +493,6 @@ If enabled we use two H-bridges to drive stepper idle air valve
 ### enableLaunchRetard
 
 
-### unfinishedenableLaunchBoost
-
-
-### unfinishedlaunchDisableBySpeed
-
-
 ### enableCanVss
 Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 
@@ -554,7 +503,7 @@ Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 
 
 ### stftIgnoreErrorMagnitude
-If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 
 ### vvtBooleanForVerySpecialCases
 
@@ -899,7 +848,7 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 
 ### warningPeriod
-set warningPeriod X
+
 
 ### knockDetectionWindowStart
 
@@ -971,10 +920,10 @@ Output Max Duty Cycle
 RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
 
 ### tps2Min
-Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X
+Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel
 
 ### tps2Max
-Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X
+Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel
 
 ### tachPulsePerRev
 
@@ -1332,9 +1281,6 @@ Maximum allowed rate of increase allowed for the estimated charge temperature
 
 ### tChargeAirDecrLimit
 Maximum allowed rate of decrease allowed for the estimated charge temperature
-
-### hip9011Gain
-
 
 ### etb_iTermMin
 iTerm min value

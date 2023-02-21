@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sun Feb 19 03:53:01 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Tue Feb 21 11:00:44 PST 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -78,7 +78,6 @@ public class AntilagSystem {
 	public static final int CRANKING_CURVE_SIZE = 8;
 	public static final String CRITICAL_PREFIX = "CRITICAL";
 	public static final int DC_PER_STEPPER = 2;
-	public static final int DIGIPOT_COUNT = 4;
 	public static final int DWELL_CURVE_SIZE = 8;
 	public static final int EGT_CHANNEL_COUNT = 8;
 	public static final String ENGINE_MAKE_BMW = "BMW";
@@ -98,7 +97,7 @@ public class AntilagSystem {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10020;
+	public static final int FLASH_DATA_VERSION = 20000;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -277,7 +276,6 @@ public class AntilagSystem {
 	public static final int MLQ_HEADER_SIZE = 24;
 	public static final String MOCK_PPS_POSITION_COMMAND = "mock_pps_position";
 	public static final String MOCK_PPS_VOLTAGE_COMMAND = "mock_pps_voltage";
-	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_AFR_CFG = 10;
@@ -302,7 +300,6 @@ public class AntilagSystem {
 	public static final String PROTOCOL_ES_DOWN = "d";
 	public static final String PROTOCOL_ES_UP = "u";
 	public static final String PROTOCOL_HELLO_PREFIX = "***";
-	public static final String PROTOCOL_HIP_NAME = "HIP";
 	public static final String PROTOCOL_HPFP_NAME = "hpfp";
 	public static final String PROTOCOL_INJ1_SHORT_NAME = "i1";
 	public static final String PROTOCOL_MSG = "msg";

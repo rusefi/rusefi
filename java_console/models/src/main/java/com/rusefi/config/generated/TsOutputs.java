@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Feb 19 03:53:00 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 11:00:43 PST 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -78,7 +78,6 @@ public class TsOutputs {
 	public static final int CRANKING_CURVE_SIZE = 8;
 	public static final String CRITICAL_PREFIX = "CRITICAL";
 	public static final int DC_PER_STEPPER = 2;
-	public static final int DIGIPOT_COUNT = 4;
 	public static final int DWELL_CURVE_SIZE = 8;
 	public static final int EGT_CHANNEL_COUNT = 8;
 	public static final String ENGINE_MAKE_BMW = "BMW";
@@ -98,7 +97,7 @@ public class TsOutputs {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10020;
+	public static final int FLASH_DATA_VERSION = 20000;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -277,7 +276,6 @@ public class TsOutputs {
 	public static final int MLQ_HEADER_SIZE = 24;
 	public static final String MOCK_PPS_POSITION_COMMAND = "mock_pps_position";
 	public static final String MOCK_PPS_VOLTAGE_COMMAND = "mock_pps_voltage";
-	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_AFR_CFG = 10;
@@ -302,7 +300,6 @@ public class TsOutputs {
 	public static final String PROTOCOL_ES_DOWN = "d";
 	public static final String PROTOCOL_ES_UP = "u";
 	public static final String PROTOCOL_HELLO_PREFIX = "***";
-	public static final String PROTOCOL_HIP_NAME = "HIP";
 	public static final String PROTOCOL_HPFP_NAME = "hpfp";
 	public static final String PROTOCOL_INJ1_SHORT_NAME = "i1";
 	public static final String PROTOCOL_MSG = "msg";
@@ -423,10 +420,9 @@ public class TsOutputs {
 	public static final Field HASCRITICALERROR = Field.create("HASCRITICALERROR", 0, FieldType.BIT, 19).setBaseOffset(0);
 	public static final Field ISWARNNOW = Field.create("ISWARNNOW", 0, FieldType.BIT, 20).setBaseOffset(0);
 	public static final Field ISPEDALERROR = Field.create("ISPEDALERROR", 0, FieldType.BIT, 21).setBaseOffset(0);
-	public static final Field ISKNOCKCHIPOK = Field.create("ISKNOCKCHIPOK", 0, FieldType.BIT, 22).setBaseOffset(0);
-	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 23).setBaseOffset(0);
-	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 24).setBaseOffset(0);
-	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 0, FieldType.BIT, 25).setBaseOffset(0);
+	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 22).setBaseOffset(0);
+	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 23).setBaseOffset(0);
+	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 0, FieldType.BIT, 24).setBaseOffset(0);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -482,10 +478,10 @@ public class TsOutputs {
 	public static final Field SECONDS = Field.create("SECONDS", 104, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ENGINEMODE = Field.create("ENGINEMODE", 108, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field FIRMWAREVERSION = Field.create("FIRMWAREVERSION", 112, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field RAWIDLEPOSITIONSENSOR = Field.create("RAWIDLEPOSITIONSENSOR", 116, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field RAWWASTEGATEPOSITION = Field.create("RAWWASTEGATEPOSITION", 118, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field ACCELERATIONX = Field.create("ACCELERATIONX", 120, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ACCELERATIONY = Field.create("ACCELERATIONY", 122, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field RAWWASTEGATEPOSITION = Field.create("RAWWASTEGATEPOSITION", 116, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field ACCELERATIONX = Field.create("ACCELERATIONX", 118, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ACCELERATIONY = Field.create("ACCELERATIONY", 120, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_122 = Field.create("ALIGNMENTFILL_AT_122", 122, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TSCONFIGVERSION = Field.create("TSCONFIGVERSION", 124, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field CALIBRATIONVALUE = Field.create("CALIBRATIONVALUE", 128, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field CALIBRATIONMODE = Field.create("CALIBRATIONMODE", 132, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -547,45 +543,45 @@ public class TsOutputs {
 	public static final Field TCUDESIREDGEAR = Field.create("TCUDESIREDGEAR", 250, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field FLEXPERCENT = Field.create("FLEXPERCENT", 251, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field WASTEGATEPOSITIONSENSOR = Field.create("WASTEGATEPOSITIONSENSOR", 252, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field IDLEPOSITIONSENSOR = Field.create("IDLEPOSITIONSENSOR", 254, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field RAWLOWFUELPRESSURE = Field.create("RAWLOWFUELPRESSURE", 256, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field RAWHIGHFUELPRESSURE = Field.create("RAWHIGHFUELPRESSURE", 258, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field LOWFUELPRESSURE = Field.create("LOWFUELPRESSURE", 260, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(0);
-	public static final Field HIGHFUELPRESSURE = Field.create("HIGHFUELPRESSURE", 262, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field AFRVALUE = Field.create("AFRVALUE", 264, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field VSSACCELERATION = Field.create("VSSACCELERATION", 266, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
-	public static final Field LAMBDAVALUE2 = Field.create("LAMBDAVALUE2", 268, FieldType.INT16).setScale(1.0E-4).setBaseOffset(0);
-	public static final Field AFRVALUE2 = Field.create("AFRVALUE2", 270, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field VVTPOSITIONB1E = Field.create("VVTPOSITIONB1E", 272, FieldType.INT16).setScale(0.02).setBaseOffset(0);
-	public static final Field VVTPOSITIONB2I = Field.create("VVTPOSITIONB2I", 274, FieldType.INT16).setScale(0.02).setBaseOffset(0);
-	public static final Field VVTPOSITIONB2E = Field.create("VVTPOSITIONB2E", 276, FieldType.INT16).setScale(0.02).setBaseOffset(0);
-	public static final Field FUELPIDCORRECTION1 = Field.create("FUELPIDCORRECTION1", 278, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field FUELPIDCORRECTION2 = Field.create("FUELPIDCORRECTION2", 280, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field RAWTPS1SECONDARY = Field.create("RAWTPS1SECONDARY", 282, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field RAWTPS2PRIMARY = Field.create("RAWTPS2PRIMARY", 284, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field RAWTPS2SECONDARY = Field.create("RAWTPS2SECONDARY", 286, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field KNOCKCOUNT = Field.create("KNOCKCOUNT", 288, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ACCELERATIONZ = Field.create("ACCELERATIONZ", 290, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ACCELERATIONROLL = Field.create("ACCELERATIONROLL", 292, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ACCELERATIONYAW = Field.create("ACCELERATIONYAW", 294, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field VVTTARGETS1 = Field.create("VVTTARGETS1", 296, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field VVTTARGETS2 = Field.create("VVTTARGETS2", 297, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field VVTTARGETS3 = Field.create("VVTTARGETS3", 298, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field VVTTARGETS4 = Field.create("VVTTARGETS4", 299, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field TURBOSPEED = Field.create("TURBOSPEED", 300, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field TPS1SPLIT = Field.create("TPS1SPLIT", 302, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TPS2SPLIT = Field.create("TPS2SPLIT", 304, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TPS12SPLIT = Field.create("TPS12SPLIT", 306, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ACCPEDALSPLIT = Field.create("ACCPEDALSPLIT", 308, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field SPARKCUTREASON = Field.create("SPARKCUTREASON", 310, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FUELCUTREASON = Field.create("FUELCUTREASON", 311, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field MAFESTIMATE = Field.create("MAFESTIMATE", 312, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field INSTANTRPM = Field.create("INSTANTRPM", 314, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field SYSTEMEVENTREUSE = Field.create("SYSTEMEVENTREUSE", 316, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field RAWMAP = Field.create("RAWMAP", 318, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field RAWAFR = Field.create("RAWAFR", 320, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field TPSACCELFROM = Field.create("TPSACCELFROM", 322, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field TPSACCELTO = Field.create("TPSACCELTO", 323, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field RAWLOWFUELPRESSURE = Field.create("RAWLOWFUELPRESSURE", 254, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field RAWHIGHFUELPRESSURE = Field.create("RAWHIGHFUELPRESSURE", 256, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field LOWFUELPRESSURE = Field.create("LOWFUELPRESSURE", 258, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(0);
+	public static final Field HIGHFUELPRESSURE = Field.create("HIGHFUELPRESSURE", 260, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field AFRVALUE = Field.create("AFRVALUE", 262, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field VSSACCELERATION = Field.create("VSSACCELERATION", 264, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
+	public static final Field LAMBDAVALUE2 = Field.create("LAMBDAVALUE2", 266, FieldType.INT16).setScale(1.0E-4).setBaseOffset(0);
+	public static final Field AFRVALUE2 = Field.create("AFRVALUE2", 268, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field VVTPOSITIONB1E = Field.create("VVTPOSITIONB1E", 270, FieldType.INT16).setScale(0.02).setBaseOffset(0);
+	public static final Field VVTPOSITIONB2I = Field.create("VVTPOSITIONB2I", 272, FieldType.INT16).setScale(0.02).setBaseOffset(0);
+	public static final Field VVTPOSITIONB2E = Field.create("VVTPOSITIONB2E", 274, FieldType.INT16).setScale(0.02).setBaseOffset(0);
+	public static final Field FUELPIDCORRECTION1 = Field.create("FUELPIDCORRECTION1", 276, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field FUELPIDCORRECTION2 = Field.create("FUELPIDCORRECTION2", 278, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field RAWTPS1SECONDARY = Field.create("RAWTPS1SECONDARY", 280, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field RAWTPS2PRIMARY = Field.create("RAWTPS2PRIMARY", 282, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field RAWTPS2SECONDARY = Field.create("RAWTPS2SECONDARY", 284, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field KNOCKCOUNT = Field.create("KNOCKCOUNT", 286, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ACCELERATIONZ = Field.create("ACCELERATIONZ", 288, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ACCELERATIONROLL = Field.create("ACCELERATIONROLL", 290, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ACCELERATIONYAW = Field.create("ACCELERATIONYAW", 292, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field VVTTARGETS1 = Field.create("VVTTARGETS1", 294, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field VVTTARGETS2 = Field.create("VVTTARGETS2", 295, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field VVTTARGETS3 = Field.create("VVTTARGETS3", 296, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field VVTTARGETS4 = Field.create("VVTTARGETS4", 297, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TURBOSPEED = Field.create("TURBOSPEED", 298, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field TPS1SPLIT = Field.create("TPS1SPLIT", 300, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field TPS2SPLIT = Field.create("TPS2SPLIT", 302, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field TPS12SPLIT = Field.create("TPS12SPLIT", 304, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ACCPEDALSPLIT = Field.create("ACCPEDALSPLIT", 306, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field SPARKCUTREASON = Field.create("SPARKCUTREASON", 308, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field FUELCUTREASON = Field.create("FUELCUTREASON", 309, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MAFESTIMATE = Field.create("MAFESTIMATE", 310, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field INSTANTRPM = Field.create("INSTANTRPM", 312, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field SYSTEMEVENTREUSE = Field.create("SYSTEMEVENTREUSE", 314, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field RAWMAP = Field.create("RAWMAP", 316, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field RAWAFR = Field.create("RAWAFR", 318, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field TPSACCELFROM = Field.create("TPSACCELFROM", 320, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TPSACCELTO = Field.create("TPSACCELTO", 321, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_322 = Field.create("ALIGNMENTFILL_AT_322", 322, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CALIBRATIONVALUE2 = Field.create("CALIBRATIONVALUE2", 324, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ISMAINRELAYON = Field.create("ISMAINRELAYON", 328, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field ISUSBCONNECTED = Field.create("ISUSBCONNECTED", 328, FieldType.BIT, 1).setBaseOffset(0);
@@ -899,7 +895,6 @@ public class TsOutputs {
 	HASCRITICALERROR,
 	ISWARNNOW,
 	ISPEDALERROR,
-	ISKNOCKCHIPOK,
 	LAUNCHTRIGGERED,
 	ISTPS2ERROR,
 	ISIDLECLOSEDLOOP,
@@ -958,10 +953,10 @@ public class TsOutputs {
 	SECONDS,
 	ENGINEMODE,
 	FIRMWAREVERSION,
-	RAWIDLEPOSITIONSENSOR,
 	RAWWASTEGATEPOSITION,
 	ACCELERATIONX,
 	ACCELERATIONY,
+	ALIGNMENTFILL_AT_122,
 	TSCONFIGVERSION,
 	CALIBRATIONVALUE,
 	CALIBRATIONMODE,
@@ -1023,7 +1018,6 @@ public class TsOutputs {
 	TCUDESIREDGEAR,
 	FLEXPERCENT,
 	WASTEGATEPOSITIONSENSOR,
-	IDLEPOSITIONSENSOR,
 	RAWLOWFUELPRESSURE,
 	RAWHIGHFUELPRESSURE,
 	LOWFUELPRESSURE,
@@ -1062,6 +1056,7 @@ public class TsOutputs {
 	RAWAFR,
 	TPSACCELFROM,
 	TPSACCELTO,
+	ALIGNMENTFILL_AT_322,
 	CALIBRATIONVALUE2,
 	ISMAINRELAYON,
 	ISUSBCONNECTED,
