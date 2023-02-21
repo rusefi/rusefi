@@ -59,9 +59,4 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
 
-pwd
-cd config/boards/kinetis/config
-./kinetis_gen_enum_to_string.sh
-cd ../../../..
-
 bash config/boards/subaru_eg33/config/gen_enum_to_string.sh
