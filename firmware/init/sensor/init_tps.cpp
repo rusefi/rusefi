@@ -164,7 +164,7 @@ static FuncSensPair analogTps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
 // Used in case of analog and "normal", non-Ford ETB TPS
 static RedundantPair analogTps1(analogTps1p, analogTps1s, SensorType::AnalogTps1);
 static RedundantPair tps2(analogTps2p, analogTps2s, SensorType::Tps2);
-//
+// tps proxies into either SENT or analog
 static ProxySensor tps1(SensorType::Tps1);
 
 // Used only in case of weird Ford-style ETB TPS
@@ -203,7 +203,10 @@ void initTps() {
 			tpsSecondaryMaximum = 20;
 		}
 
+        // open question if whole initialization should be conditional or just choice where to proxy
         if (isDigitalTps1()) {
+            // todo: register SENT sent
+            // todo: tps1.setProxiedSensor(SensorType::SentTps1);
         } else {
 		    analogTps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
     			{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, min, max },
