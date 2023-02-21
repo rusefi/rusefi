@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 21 11:00:58 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 21 11:55:31 PST 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1550,96 +1550,96 @@ struct engine_configuration_s {
 	bool rusefiVerbose29b : 1 {};
 	/**
 	offset 716 bit 5 */
-	bool isEngineControlEnabled : 1 {};
-	/**
-	offset 716 bit 6 */
 	bool isVerboseAlternator : 1 {};
 	/**
-	offset 716 bit 7 */
+	offset 716 bit 6 */
 	bool verboseQuad : 1 {};
 	/**
 	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
-	offset 716 bit 8 */
+	offset 716 bit 7 */
 	bool useStepperIdle : 1 {};
 	/**
-	offset 716 bit 9 */
+	offset 716 bit 8 */
 	bool enabledStep1Limiter : 1 {};
 	/**
-	offset 716 bit 10 */
+	offset 716 bit 9 */
 	bool unused760b12 : 1 {};
 	/**
-	offset 716 bit 11 */
+	offset 716 bit 10 */
 	bool verboseTLE8888 : 1 {};
 	/**
 	 * CAN broadcast using custom rusEFI protocol
 	 * enable can_broadcast/disable can_broadcast
-	offset 716 bit 12 */
+	offset 716 bit 11 */
 	bool enableVerboseCanTx : 1 {};
 	/**
-	offset 716 bit 13 */
+	offset 716 bit 12 */
 	bool etb1configured : 1 {};
 	/**
-	offset 716 bit 14 */
+	offset 716 bit 13 */
 	bool etb2configured : 1 {};
 	/**
 	 * Useful for individual intakes
-	offset 716 bit 15 */
+	offset 716 bit 14 */
 	bool measureMapOnlyInOneCylinder : 1 {};
 	/**
-	offset 716 bit 16 */
+	offset 716 bit 15 */
 	bool stepperForceParkingEveryRestart : 1 {};
 	/**
 	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
-	offset 716 bit 17 */
+	offset 716 bit 16 */
 	bool isFasterEngineSpinUpEnabled : 1 {};
 	/**
 	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	offset 716 bit 18 */
+	offset 716 bit 17 */
 	bool coastingFuelCutEnabled : 1 {};
 	/**
 	 * Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
-	offset 716 bit 19 */
+	offset 716 bit 18 */
 	bool useIacTableForCoasting : 1 {};
 	/**
-	offset 716 bit 20 */
+	offset 716 bit 19 */
 	bool useNoiselessTriggerDecoder : 1 {};
 	/**
-	offset 716 bit 21 */
+	offset 716 bit 20 */
 	bool useIdleTimingPidControl : 1 {};
 	/**
 	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	offset 716 bit 22 */
+	offset 716 bit 21 */
 	bool disableEtbWhenEngineStopped : 1 {};
 	/**
-	offset 716 bit 23 */
+	offset 716 bit 22 */
 	bool is_enabled_spi_4 : 1 {};
 	/**
 	 * Disable the electronic throttle motor and DC idle motor for testing.
 	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	offset 716 bit 24 */
+	offset 716 bit 23 */
 	bool pauseEtbControl : 1 {};
 	/**
-	offset 716 bit 25 */
+	offset 716 bit 24 */
 	bool alignEngineSnifferAtTDC : 1 {};
 	/**
-	offset 716 bit 26 */
+	offset 716 bit 25 */
 	bool unused764b29 : 1 {};
 	/**
 	 * AEM X-Series or rusEFI Wideband
-	offset 716 bit 27 */
+	offset 716 bit 26 */
 	bool enableAemXSeries : 1 {};
 	/**
+	offset 716 bit 27 */
+	bool unusedBit_210_27 : 1 {};
+	/**
 	offset 716 bit 28 */
-	bool unusedBit_211_28 : 1 {};
+	bool unusedBit_210_28 : 1 {};
 	/**
 	offset 716 bit 29 */
-	bool unusedBit_211_29 : 1 {};
+	bool unusedBit_210_29 : 1 {};
 	/**
 	offset 716 bit 30 */
-	bool unusedBit_211_30 : 1 {};
+	bool unusedBit_210_30 : 1 {};
 	/**
 	offset 716 bit 31 */
-	bool unusedBit_211_31 : 1 {};
+	bool unusedBit_210_31 : 1 {};
 	/**
 	 * offset 720
 	 */
@@ -5035,4 +5035,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22296);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 21 11:00:58 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 21 11:55:31 PST 2023
