@@ -409,11 +409,11 @@ jobs:
       if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
-    - name: Upload .ini files
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
-      working-directory: ./firmware/tunerstudio/generated
-      run: |
-        ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+    # - name: Upload .ini files
+    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+    #   working-directory: ./firmware/tunerstudio/generated
+    #   run: |
+    #     ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload build elf
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
