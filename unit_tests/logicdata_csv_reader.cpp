@@ -95,8 +95,13 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		}
 
 		efitick_t nowNt = getTimeNowNt();
-		// todo: we invert VVT but we do not invert trigger input!!!
-		hwHandleShaftSignal(index, newTriggerState[index], nowNt);
+        bool state;
+		if (index == 0) {
+		    state = newTriggerState[index] ^ engineConfiguration->invertPrimaryTriggerSignal;
+		} else {
+		    state = newTriggerState[index] ^ engineConfiguration->invertSecondaryTriggerSignal;
+		}
+		hwHandleShaftSignal(index, state, nowNt);
 
 		currentState[index] = newTriggerState[index];
 	}
