@@ -62,7 +62,6 @@ TEST(real4g93, crankingOn11) {
 	reader.open("tests/trigger/resources/4g93-cranking.csv");
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
-	engineConfiguration->alwaysInstantRpm = true;
 
 	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 
@@ -81,8 +80,8 @@ TEST(real4g93, crankingOn11) {
 			EXPECT_NEAR(rpm, 168.43f, 0.1);
 		}
 
-		float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
-		printf("%d rpm=%f instant=%f\n", reader.lineIndex(), rpm, instantRpm);
+//		float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
+//		printf("%d rpm=%f instant=%f\n", reader.lineIndex(), rpm, instantRpm);
 	}
 }
 
