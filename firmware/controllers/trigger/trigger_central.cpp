@@ -243,11 +243,16 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 	}
 }
 
+// 'invertCamVVTSignal' is already accounted by the time this method is invoked
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	TriggerCentral *tc = getTriggerCentral();
 	if (tc->directSelfStimulation || !tc->hwTriggerInputEnabled) {
 		// sensor noise + self-stim = loss of trigger sync
 		return;
+	}
+
+	if (index == 0) {
+	    engine->outputChannels.vvtChannel1 = front == TriggerValue::RISE;
 	}
 
 	int bankIndex = index / CAMS_PER_BANK;
@@ -449,6 +454,11 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 		signal = isPrimary ?
 					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) :
 					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
+	}
+	if (isPrimary) {
+		engine->outputChannels.triggerChannel1 = signal == SHAFT_PRIMARY_RISING;
+	} else {
+		engine->outputChannels.triggerChannel2 = signal == SHAFT_SECONDARY_RISING;
 	}
 
 	// Don't accept trigger input in case of some problems
