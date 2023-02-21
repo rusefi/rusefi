@@ -10,16 +10,6 @@ ifeq ($(BUILDDIR),.)
 endif
 BINARY_OUTPUT = $(BUILDDIR)/$(PROJECT)
 
-ifeq ($(OS),Windows_NT)
-    # todo: something is not right here how can we avoid explicit suffix?
-    # should not gcc figure it out based on 'shared' option?
-    SHARED_OUTPUT = $(BUILDDIR)/_$(PROJECT)
-	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).dll
-else
-    SHARED_OUTPUT = $(BUILDDIR)/lib_$(PROJECT)
-	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).so
-endif
-
 # Automatic compiler options
 OPT = $(USE_OPT)
 COPT = $(USE_COPT)
@@ -149,10 +139,6 @@ else
 	@echo Linking $@
 	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
 endif
-
-$(SHARED_OUTPUT): $(OBJS)
-	@echo Linking shared library $@ output $(SHARED_OUTPUT_OPT)
-	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $(SHARED_OUTPUT_OPT) -shared
 
 clean: CLEAN_RULE_HOOK
 	@echo Cleaning
