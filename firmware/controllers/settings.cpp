@@ -676,16 +676,12 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion();
-	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
-		engineConfiguration->isHip9011Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
 		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
 		engineConfiguration->isVerboseAuxPid1 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
 		engineConfiguration->isVerboseAlternator = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
-		engineConfiguration->useTpicAdvancedMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altcontrol")) {
 		engineConfiguration->isAlternatorControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "sd")) {
@@ -790,8 +786,6 @@ static void getValue(const char *paramStr) {
 		efiPrintf("is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
 	} else if (strEqualCaseInsensitive(paramStr, "invertCamVVTSignal")) {
 		efiPrintf("invertCamVVTSignal=%s", boolToString(engineConfiguration->invertCamVVTSignal));
-	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
-		efiPrintf("isHip9011Enabled=%d", engineConfiguration->isHip9011Enabled);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
 		printDateTime();
 	} else {

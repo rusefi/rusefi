@@ -88,10 +88,6 @@
 #include "electronic_throttle.h"
 #endif
 
-#if EFI_HIP_9011
-#include "hip9011.h"
-#endif
-
 #include "hardware.h"
 
 #if EFI_PROD_CODE
@@ -606,9 +602,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->acIdleRpmBump = 200;
 
-	/* these two are used for HIP9011 only
-	 * Currently this is offset from fire event, not TDC */
-	/* TODO: convert to offset from TDC */
+	// Currently this is offset from fire event, not TDC
+	// TODO: convert to offset from TDC
 	engineConfiguration->knockDetectionWindowStart = 15.0 + 5.0;
 	engineConfiguration->knockDetectionWindowEnd = 15.0 + 45.0;
 
@@ -629,8 +624,6 @@ static void setDefaultEngineConfiguration() {
 	// todo: default limits should be hard-coded for each sensor type
 	// https://github.com/rusefi/rusefi/issues/4030
 	engineConfiguration->mapErrorDetectionTooHigh = 410;
-
-	engineConfiguration->hip9011Gain = 1;
 
 	engineConfiguration->isEngineControlEnabled = true;
 #endif // EFI_ENGINE_CONTROL

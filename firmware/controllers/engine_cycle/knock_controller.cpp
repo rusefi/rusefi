@@ -8,9 +8,6 @@
 #include "pch.h"
 #include "knock_logic.h"
 
-
-#include "hip9011.h"
-
 void KnockController::onConfigurationChange(engine_configuration_s const * previousConfig) {
 	KnockControllerBase::onConfigurationChange(previousConfig);
 
@@ -158,14 +155,10 @@ static void startKnockSampling(Engine* engine) {
 void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
 	cylinderNumberCopy = cylinderNumber;
 
-#if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
+#if EFI_SOFTWARE_KNOCK
 	scheduleByAngle(nullptr, nowNt,
 			/*angle*/engineConfiguration->knockDetectionWindowStart, { startKnockSampling, engine });
 #else
 	UNUSED(nowNt);
-#endif
-
-#if EFI_HIP_9011
-	hip9011_onFireEvent(cylinderNumber, nowNt);
 #endif
 }

@@ -309,7 +309,7 @@ static void setCommonMazdaNB() {
 
     // second harmonic (aka double) is usually quieter background noise
     // 13.8
-	engineConfiguration->knockBandCustom = 2 * HIP9011_BAND(engineConfiguration->cylinderBore);
+	engineConfiguration->knockBandCustom = 13.8;
 
 	// set tps_min 90
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
