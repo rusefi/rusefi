@@ -35,10 +35,14 @@ enum class SensorType : unsigned char {
 
 	// This is the "resolved" position, potentially composited out of the following two
 	Tps1, // 10
-	// This is the first sensor
+	// Combined analog redundant sensor
+	AnalogTps1,
+	// First analog sensor
 	Tps1Primary,
-	// This is the second sensor
+	// Second analog sensor
 	Tps1Secondary,
+	// alternative physical implementation - digital and CRC protected, natively redundant
+	SentTps1,
 
 	Tps2,
 	Tps2Primary,
@@ -52,7 +56,7 @@ enum class SensorType : unsigned char {
 	// This maps to the pedal if we have one, and Tps1 if not.
 	DriverThrottleIntent,
 
-	AuxTemp1, // 20
+	AuxTemp1, // 22
 	AuxTemp2,
 
 	Lambda1,
