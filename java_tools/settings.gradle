@@ -20,10 +20,6 @@ include ':config_definition_base'
 project(':config_definition_base').projectDir = new File('configuration_definition_base')
 include ':config_definition'
 project(':config_definition').projectDir = new File('configuration_definition')
-include ':ts_plugin_launcher'
-project(':ts_plugin_launcher').projectDir = new File('ts_plugin_launcher')
-include ':ts_plugin'
-project(':ts_plugin').projectDir = new File('ts_plugin')
 include ':autoupdate'
 project(':autoupdate').projectDir = new File('../java_console/autoupdate')
 include ':shared_ui'
