@@ -53,7 +53,6 @@ TESTS_SRC_CPP = \
 	tests/test_util.cpp \
 	tests/test_start_stop.cpp \
 	tests/test_hardware_reinit.cpp \
-	tests/test_ion.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \

@@ -47,7 +47,6 @@
 #include "svnversion.h"
 #include "can_hw.h"
 #include "periodic_thread_controller.h"
-#include "cdm_ion_sense.h"
 #include "binary_logging.h"
 #include "buffered_writer.h"
 #include "dynoview.h"
@@ -806,11 +805,6 @@ DcHardware *getdcHardware();
 #endif // EFI_SHAFT_POSITION_INPUT
 
 		}
-		break;
-	case DBG_ION:
-#if EFI_CDM_INTEGRATION
-		ionPostState(tsOutputChannels);
-#endif /* EFI_CDM_INTEGRATION */
 		break;
 	case DBG_TLE8888:
 #if (BOARD_TLE8888_COUNT > 0)

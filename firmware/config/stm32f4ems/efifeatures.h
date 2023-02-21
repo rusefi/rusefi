@@ -27,10 +27,6 @@
 
 #define EFI_DYNO_VIEW TRUE
 
-#ifndef EFI_CDM_INTEGRATION
-#define EFI_CDM_INTEGRATION FALSE
-#endif
-
 #ifndef EFI_TOOTH_LOGGER
 #define EFI_TOOTH_LOGGER TRUE
 #endif

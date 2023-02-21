@@ -806,13 +806,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		wrapAngle(expectNextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
 		expectedNextPhase = expectNextPhase;
 
-#if EFI_CDM_INTEGRATION
-		if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
-			int cdmKnockValue = getCurrentCdmValue(getTriggerCentral()->triggerState.getCrankSynchronizationCounter());
-			engine->knockLogic(cdmKnockValue);
-		}
-#endif /* EFI_CDM_INTEGRATION */
-
 		if (engine->rpmCalculator.getCachedRpm() > 0 && triggerIndexForListeners == 0) {
 			engine->tpsAccelEnrichment.onEngineCycleTps();
 		}

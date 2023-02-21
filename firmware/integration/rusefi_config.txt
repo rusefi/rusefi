@@ -842,7 +842,6 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	Gpio spi3misoPin;
 
 	Gpio spi3sckPin;
-	Gpio cdmInputPin;Saab Combustion Detection Module knock signal input pin\nalso known as Saab Ion Sensing Module;
 	uart_device_e consoleUartDevice;
 
 

@@ -39,7 +39,6 @@
 #include "mcp3208.h"
 #include "histogram.h"
 #include "sent.h"
-#include "cdm_ion_sense.h"
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "vvt.h"
@@ -543,10 +542,6 @@ void initHardware() {
 #if EFI_CAN_SUPPORT
 	initCanVssSupport();
 #endif // EFI_CAN_SUPPORT
-
-#if EFI_CDM_INTEGRATION
-	cdmIonInit();
-#endif // EFI_CDM_INTEGRATION
 
 #if EFI_SENT_SUPPORT
 	initSent();

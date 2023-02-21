@@ -2783,7 +2783,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "LIS302DLCsPin",						LIS302DLCsPin
-		field = "Saab CDM knock",						cdmInputPin
 		field = "DRV8860 CS",							drv8860_cs
 		field = "DRV8860 CS Mode",						drv8860_csPinMode
 		field = "DRV8860 MISO pin",						drv8860_miso
