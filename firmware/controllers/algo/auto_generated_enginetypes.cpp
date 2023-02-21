@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Feb 20 21:53:12 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Feb 21 20:12:14 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -442,6 +442,8 @@ case TT_MITSU_4G63_CAM:
   return "TT_MITSU_4G63_CAM";
 case TT_MITSU_4G9x_CAM:
   return "TT_MITSU_4G9x_CAM";
+case TT_MITSU_75:
+  return "TT_MITSU_75";
 case TT_NISSAN_MR18_CAM_VVT:
   return "TT_NISSAN_MR18_CAM_VVT";
 case TT_NISSAN_MR18_CRANK:
