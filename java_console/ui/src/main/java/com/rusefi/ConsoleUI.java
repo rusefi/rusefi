@@ -117,8 +117,6 @@ public class ConsoleUI {
 
         MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
 
-        uiContext.sensorLogger.init();
-
         int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
         if (selectedIndex < tabbedPane.tabbedPane.getTabCount())
             tabbedPane.tabbedPane.setSelectedIndex(selectedIndex);

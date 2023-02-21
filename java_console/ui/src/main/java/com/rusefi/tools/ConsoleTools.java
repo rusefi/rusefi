@@ -24,7 +24,6 @@ import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.StatusConsumer;
-import com.rusefi.ui.light.LightweightGUI;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
@@ -71,7 +70,6 @@ public class ConsoleTools {
 
         registerTool("version", ConsoleTools::version, "Only print version");
 
-        registerTool("lightui", strings -> lightUI(), "Start lightweight GUI for tiny screens");
         registerTool("dfu", DfuTool::run, "Program specified file into ECU via DFU");
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
@@ -127,10 +125,6 @@ public class ConsoleTools {
         System.out.printf("tune_CRC32_hex=0x%x\n", crc32);
         System.out.printf("tune_CRC16_hex=0x%x\n", crc16);
         System.out.println("tune_CRC16=" + crc16);
-    }
-
-    private static void lightUI() {
-        LightweightGUI.start();
     }
 
     private static void registerTool(String command, ConsoleTool callback, String help) {
