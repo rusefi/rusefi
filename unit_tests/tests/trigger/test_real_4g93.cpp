@@ -46,12 +46,44 @@ TEST(real4g93, cranking) {
 			EXPECT_EQ(reader.lineIndex(), 17);
 			EXPECT_NEAR(rpm, 204.01f, 0.1);
 		}
+//		float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
+// not looking too bad horrible		printf("rpm=%f instant=%f\n", rpm, instantRpm);
 	}
 
 	ASSERT_TRUE(gotRpm);
 	ASSERT_TRUE(gotSync);
 
 	ASSERT_EQ(0, eth.recentWarnings()->getCount());
+}
+
+TEST(real4g93, crankingOn11) {
+	CsvReader reader(2, /* vvtCount */ 0);
+
+	reader.open("tests/trigger/resources/4g93-cranking.csv");
+	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->alwaysInstantRpm = true;
+
+	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
+
+	eth.setTriggerType(TT_MITSUBISHI_4G93);
+
+	bool gotRpm = false;
+	while (reader.haveMore()) {
+		reader.processLine(&eth);
+
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
+		if (!gotRpm && rpm) {
+			gotRpm = true;
+
+			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
+			EXPECT_EQ(reader.lineIndex(), 7);
+			EXPECT_NEAR(rpm, 168.43f, 0.1);
+		}
+
+		float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
+		printf("%d rpm=%f instant=%f\n", reader.lineIndex(), rpm, instantRpm);
+	}
 }
 
 TEST(real4g93, crankingCamOnly) {
