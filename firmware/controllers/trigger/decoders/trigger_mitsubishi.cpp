@@ -75,9 +75,9 @@ void initializeMitsubishi4G93(TriggerWaveform *s) {
 }
 
 void initializeMitsubishi75(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 
-	s->setTriggerSynchronizationGap(1.6666);
+	s->setTriggerSynchronizationGap(3.2);
 
     addMitsu93(s, /*addSecondary*/true);
 }
