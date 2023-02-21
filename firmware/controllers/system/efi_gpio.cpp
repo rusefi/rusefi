@@ -391,6 +391,12 @@ void IgnitionOutputPin::setHigh() {
 	case 3:
 		engine->outputChannels.coilState4 = true;
 		break;
+	case 4:
+		engine->outputChannels.coilState5 = true;
+		break;
+	case 5:
+		engine->outputChannels.coilState6 = true;
+		break;
 	}
 }
 
@@ -409,6 +415,12 @@ void IgnitionOutputPin::setLow() {
 		break;
 	case 3:
 		engine->outputChannels.coilState4 = false;
+		break;
+	case 4:
+		engine->outputChannels.coilState5 = false;
+		break;
+	case 5:
+		engine->outputChannels.coilState6 = false;
 		break;
 	}
 }

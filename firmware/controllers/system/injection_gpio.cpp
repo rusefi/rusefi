@@ -105,6 +105,12 @@ void InjectorOutputPin::setHigh() {
 	case 3:
 		state->injectorState4 = true;
 		break;
+	case 4:
+		state->injectorState5 = true;
+		break;
+	case 5:
+		state->injectorState6 = true;
+		break;
 	}
 }
 
@@ -124,6 +130,12 @@ void InjectorOutputPin::setLow() {
 		break;
 	case 3:
 		state->injectorState4 = false;
+		break;
+	case 4:
+		state->injectorState5 = false;
+		break;
+	case 5:
+		state->injectorState6 = false;
 		break;
 	}
 }
