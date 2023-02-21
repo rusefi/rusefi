@@ -155,11 +155,6 @@ jobs:
             ini-file: rusefi_frankenso_na6.ini
             skip-rate: 90
 
-          - build-target: kinetis
-            folder: config/boards/kinetis
-            ini-file: rusefi_kin.ini
-            skip-rate: 0
-
           - build-target: mre_f4
             folder: config/boards/microrusefi
             ini-file: rusefi_mre_f4.ini
