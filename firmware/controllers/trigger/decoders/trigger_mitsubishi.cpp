@@ -197,3 +197,4 @@ void initializeVvt6G75(TriggerWaveform /* *s */) {
 	//	s->shapeWithoutTdc = true;
 	//	s->isSynchronizationNeeded = false;
 }
+
