@@ -4,11 +4,12 @@ on: [push,pull_request]
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    # runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest-selfhost
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    # strategy:
+    #   matrix:
+    #     os: [ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v3

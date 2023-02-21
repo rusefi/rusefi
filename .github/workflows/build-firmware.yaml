@@ -11,7 +11,7 @@ on:
         type: boolean
 jobs:
   build-firmware:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-selfhost
 
     strategy:
       # Let all builds finish even if one fails early

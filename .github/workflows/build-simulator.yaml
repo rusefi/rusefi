@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   # This is just to ensure the simulator compiles on Linux
   build-simulator:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-selfhost
 
     steps:
     - uses: actions/checkout@v3
