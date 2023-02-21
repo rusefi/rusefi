@@ -13,7 +13,6 @@
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "advance_map.h"
-#include "aux_valves.h"
 #include "closed_loop_fuel.h"
 #include "launch_control.h"
 #include "injector_model.h"
@@ -123,8 +122,6 @@ void EngineState::periodicFastCallback() {
 	}
 
 	engine->fuelComputer.running.timeSinceCrankingInSecs = crankingTimer.getElapsedSeconds(nowNt);
-
-	recalculateAuxValveTiming();
 
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	engine->ignitionState.sparkDwell = engine->ignitionState.getSparkDwell(rpm);

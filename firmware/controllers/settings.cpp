@@ -504,8 +504,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 			disableTriggerStimulator();
 		}
 #endif // EFI_EMULATE_POSITION_SENSORS
-	} else if (strEqualCaseInsensitive(param, "engine_control")) {
-		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
 		engineConfiguration->isMapAveragingEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_analyzer")) {

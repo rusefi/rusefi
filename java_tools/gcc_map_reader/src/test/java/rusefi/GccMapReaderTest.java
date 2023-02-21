@@ -25,17 +25,6 @@ public class GccMapReaderTest {
     }
 
     @Test
-    public void testMultiLine() {
-        List<GccMapReader.Record> r = GccMapReader.process(Arrays.asList(
-                GccMapReader.START_OF_DATA_TAG,
-                " .bss._ZL12turnOffEvent",
-                "0x1fff9db8       0x60 build_kinetis/obj/aux_valves.o"), BSS);
-        assertNotNull(r);
-        assertEquals(1, r.size());
-        assertEquals(0x60, r.get(0).getSize());
-    }
-
-    @Test
     public void testThreeLine() {
         List<GccMapReader.Record> r = GccMapReader.process(Arrays.asList(
                 GccMapReader.START_OF_DATA_TAG,

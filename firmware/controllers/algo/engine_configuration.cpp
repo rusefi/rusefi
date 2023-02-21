@@ -623,7 +623,6 @@ static void setDefaultEngineConfiguration() {
 	// https://github.com/rusefi/rusefi/issues/4030
 	engineConfiguration->mapErrorDetectionTooHigh = 410;
 
-	engineConfiguration->isEngineControlEnabled = true;
 #endif // EFI_ENGINE_CONTROL
     #include "default_script.lua"
 }

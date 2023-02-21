@@ -41,7 +41,6 @@
 #include "alternator_controller.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
-#include "aux_valves.h"
 #include "accelerometer.h"
 #include "vvt.h"
 #include "boost_control.h"
@@ -471,12 +470,6 @@ void commonInitEngineController() {
 #if EFI_UNIT_TEST
 	engine->rpmCalculator.Register();
 #endif /* EFI_UNIT_TEST */
-
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
-	if (engineConfiguration->isEngineControlEnabled) {
-		initAuxValves();
-	}
-#endif /* EFI_ENGINE_CONTROL */
 
 	initTachometer();
 }
