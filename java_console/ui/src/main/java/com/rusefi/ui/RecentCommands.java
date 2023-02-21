@@ -164,9 +164,6 @@ public class RecentCommands {
             public void run() {
                 content.removeAll();
 
-                if (uiContext.getLinkManager().isLogViewer())
-                    content.add(createButton(uiContext));
-
                 JButton reset = new JButton(AutoupdateUtil.loadIcon("undo.jpg"));
                 reset.setContentAreaFilled(false);
                 reset.setFocusPainted(false);

@@ -46,7 +46,6 @@ public class LinkManager implements Closeable {
         }
     };
 
-    public static final String LOG_VIEWER = "log viewer";
     private final CommandQueue commandQueue;
 
     private String lastTriedPort;
@@ -234,9 +233,7 @@ public class LinkManager implements Closeable {
         Objects.requireNonNull(port, "port");
         log.info("LinkManager: Starting " + port);
         lastTriedPort = port; // Save port before connection attempt
-        if (isLogViewerMode(port)) {
-            setConnector(LinkConnector.VOID);
-        } else if (PCAN.equals(port)) {
+        if (PCAN.equals(port)) {
             Callable<IoStream> streamFactory = PCanIoStream::createStream;
             setConnector(new StreamConnector(this, streamFactory));
         } else if (SOCKET_CAN.equals(port)) {
@@ -281,15 +278,6 @@ public class LinkManager implements Closeable {
         }
         isStarted = true;
         this.connector = connector;
-    }
-
-    public static boolean isLogViewerMode(String port) {
-        Objects.requireNonNull(port, "port");
-        return port.equals(LOG_VIEWER);
-    }
-
-    public boolean isLogViewer() {
-        return connector == LinkConnector.VOID;
     }
 
     public void send(String command, boolean fireEvent) throws InterruptedException {

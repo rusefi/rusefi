@@ -109,32 +109,27 @@ public class EngineSnifferPanel {
         upperPanel.add(pauseButton);
         upperPanel.add(new RpmLabel(uiContext,2).getContent());
 
-        if (!uiContext.getLinkManager().isLogViewer()) {
-            command = AnyCommand.createField(uiContext, config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true);
-            upperPanel.add(command.getContent());
-        }
+        command = AnyCommand.createField(uiContext, config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true);
+        upperPanel.add(command.getContent());
 
         upperPanel.add(zoomControl);
 
         scrollControl = ChartRepository.getInstance().createControls(chart -> displayChart(chart));
-        if (uiContext.getLinkManager().isLogViewer())
-            upperPanel.add(scrollControl.getContent());
+        upperPanel.add(scrollControl.getContent());
 
         upperPanel.add(new URLLabel(HELP_TEXT, HELP_URL));
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
 
-        if (!uiContext.getLinkManager().isLogViewer()) {
-            JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-            lowerButtons.add(new ConfigUiField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSEVVTDECODING, "Verbose VVT Sync").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.ENGINESNIFFERFOCUSONINPUTS, "Focus On Inputs").getContent());
-            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
-            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.INVERTPRIMARYTRIGGERSIGNAL, "Invert Primary Input").getContent());
-            bottomPanel.add(lowerButtons, BorderLayout.NORTH);
-        }
+        JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        lowerButtons.add(new ConfigUiField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
+        lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
+        lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSEVVTDECODING, "Verbose VVT Sync").getContent());
+        lowerButtons.add(new BitConfigField(uiContext, Fields.ENGINESNIFFERFOCUSONINPUTS, "Focus On Inputs").getContent());
+        lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
+        lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
+        lowerButtons.add(new BitConfigField(uiContext, Fields.INVERTPRIMARYTRIGGERSIGNAL, "Invert Primary Input").getContent());
+        bottomPanel.add(lowerButtons, BorderLayout.NORTH);
 
         bottomPanel.add(statusPanel.infoPanel, BorderLayout.SOUTH);
 

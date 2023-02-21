@@ -143,7 +143,6 @@ public enum Sensor implements BinaryLogEntry {
 //    flexPercent(GAUGE_NAME_FLEX, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 263, 1.0 / 2, 0, 100, "%"),
 
     wastegatePosition(GAUGE_NAME_WG_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.WASTEGATEPOSITIONSENSOR, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
-    idlePositionSensor(GAUGE_NAME_IDLE_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.IDLEPOSITIONSENSOR, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 
     lowFuelPressure(GAUGE_NAME_FUEL_PRESSURE_LOW, SensorCategory.OPERATIONS, FieldType.INT16, TsOutputs.RAWLOWFUELPRESSURE, 1.0 / PACK_MULT_PRESSURE, 10, 20, "afr"),
     highFuelPressure(GAUGE_NAME_FUEL_PRESSURE_HIGH, SensorCategory.OPERATIONS, FieldType.INT16, TsOutputs.HIGHFUELPRESSURE, 1.0 / PACK_MULT_HIGH_PRESSURE, 10, 20, "afr"),

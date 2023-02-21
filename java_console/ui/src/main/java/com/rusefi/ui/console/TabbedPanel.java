@@ -16,8 +16,6 @@ public class TabbedPanel {
     // todo: the logic around 'criticalError' could be implemented nicer
     private String criticalError;
 
-    public final SettingsTab settingsTab;
-    public final LogDownloader logsManager;
     public final PaneSettings paneSettings = new PaneSettings(getConfig().getRoot().getChild("panes"));
 
     public final JTabbedPane tabbedPane = new JTabbedPane() {
@@ -56,9 +54,6 @@ public class TabbedPanel {
             if (message.startsWith(Fields.CRITICAL_PREFIX))
                 criticalError = message;
         });
-
-        settingsTab = new SettingsTab(uiContext);
-        logsManager = new LogDownloader(uiContext);
     }
 
     public void addTab(String title, Component component) {

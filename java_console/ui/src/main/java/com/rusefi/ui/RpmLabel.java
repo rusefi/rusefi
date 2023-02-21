@@ -29,8 +29,7 @@ public class RpmLabel {
     }
 
     public RpmLabel(UIContext uiContext, int size, boolean withCaption) {
-        String initialLabel = uiContext.getLinkManager().isLogViewer() ? "LOG" : NO_CONNECTION;
-        rpmValue.setText(initialLabel);
+        rpmValue.setText(NO_CONNECTION);
         rpmValue.setForeground(Color.red);
 
         content.setBorder(BorderFactory.createLineBorder(Color.white));

@@ -173,17 +173,6 @@ public class StartupFrame {
             frame.pack();
         }));
 
-        final JButton buttonLogViewer = new JButton();
-        buttonLogViewer.setText("Start " + LinkManager.LOG_VIEWER);
-        buttonLogViewer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                disposeFrameAndProceed();
-                new ConsoleUI(LinkManager.LOG_VIEWER);
-            }
-        });
-
-        miscPanel.add(buttonLogViewer, "wrap");
         miscPanel.add(new HorizontalLine(), "wrap");
 
         miscPanel.add(SimulatorHelper.createSimulatorComponent(this));

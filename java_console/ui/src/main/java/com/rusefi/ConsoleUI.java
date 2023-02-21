@@ -85,43 +85,29 @@ public class ConsoleUI {
         linkManager.start(port, mainFrame.listener);
 
         engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
-        if (!LinkManager.isLogViewerMode(port))
-            engineSnifferPanel.setOutpinListener(uiContext.getLinkManager().getEngineState());
 
-        if (LinkManager.isLogViewerMode(port))
-            tabbedPane.addTab("Log Viewer", new LogViewer(uiContext, engineSnifferPanel));
+        engineSnifferPanel.setOutpinListener(uiContext.getLinkManager().getEngineState());
 
         uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
         uiContext.DetachedRepositoryINSTANCE.load();
-        if (!linkManager.isLogViewer())
-            tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges")).getContent());
+        tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges")).getContent());
 
-        if (!linkManager.isLogViewer()) {
-            MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
-            tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
-        }
-        if (!linkManager.isLogViewer()) {
-            tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
-            if (tabbedPane.paneSettings.showEtbPane)
-                tabbedPane.addTab("ETB", new ETBPane(uiContext).getContent());
-            tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
-        }
+        MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
+        tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
 
-        if (!linkManager.isLogViewer()) {
-            LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
-            tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
-        }
+        tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
+        if (tabbedPane.paneSettings.showEtbPane)
+            tabbedPane.addTab("ETB", new ETBPane(uiContext).getContent());
+        tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
+
+        LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
+        tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
 
         tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
 
-        if (!linkManager.isLogViewer()) {
-            SensorSnifferPane sensorSniffer = new SensorSnifferPane(uiContext, getConfig().getRoot().getChild("sensor_sniffer"));
-            tabbedPaneAdd("Sensor Sniffer", sensorSniffer.getPanel(), sensorSniffer.getTabSelectedListener());
-        }
+        SensorSnifferPane sensorSniffer = new SensorSnifferPane(uiContext, getConfig().getRoot().getChild("sensor_sniffer"));
+        tabbedPaneAdd("Sensor Sniffer", sensorSniffer.getPanel(), sensorSniffer.getTabSelectedListener());
 
-//        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
-
-//        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
 //        if (tabbedPane.paneSettings.showStimulatorPane && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
 //            // todo: rethink this UI? special command line key to enable it?
 //            EcuStimulator stimulator = EcuStimulator.getInstance();
@@ -130,21 +116,11 @@ public class ConsoleUI {
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
-        if (!linkManager.isLogViewer())
-            tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
-        if (!linkManager.isLogViewer()) {
-            tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
-            tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
-        }
+        tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
+        tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
 
-        if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
-            tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
-
-
-        if (!linkManager.isLogViewer()) {
-            if (tabbedPane.paneSettings.showTriggerShapePane)
-                tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
-        }
+        if (tabbedPane.paneSettings.showTriggerShapePane)
+            tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
 
         MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
 
@@ -152,11 +128,9 @@ public class ConsoleUI {
 
         uiContext.sensorLogger.init();
 
-        if (!LinkManager.isLogViewerMode(port)) {
-            int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
-            if (selectedIndex < tabbedPane.tabbedPane.getTabCount())
-                tabbedPane.tabbedPane.setSelectedIndex(selectedIndex);
-        }
+        int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
+        if (selectedIndex < tabbedPane.tabbedPane.getTabCount())
+            tabbedPane.tabbedPane.setSelectedIndex(selectedIndex);
 
         tabbedPane.tabbedPane.addChangeListener(new ChangeListener() {
             @Override
