@@ -72,17 +72,14 @@ jobs:
           # - build-target: hellen72
           #   folder: config/boards/hellen/hellen72
           #   ini-file: fome_hellen72.ini
-          #   skip-rate: 90
 
           # - build-target: hellen81
           #   folder: config/boards/hellen/hellen81
           #   ini-file: fome_hellen81.ini
-          #   skip-rate: 90
 
           # - build-target: alphax-2chan
           #   folder: config/boards/hellen/alphax-2chan
           #   ini-file: fome_alphax-2chan.ini
-          #   skip-rate: 0
 
           - build-target: alphax-4chan
             folder: config/boards/hellen/alphax-4chan
@@ -95,47 +92,38 @@ jobs:
           # - build-target: harley81
           #   folder: config/boards/hellen/harley81
           #   ini-file: fome_harley81.ini
-          #   skip-rate: 90
 
           # - build-target: hellen88bmw
           #   folder: config/boards/hellen/hellen88bmw
           #   ini-file: fome_hellen88bmw.ini
-          #   skip-rate: 90
 
           # - build-target: hellen88bmw_avr
           #   folder: config/boards/hellen/hellen88bmw
           #   ini-file: fome_hellen88bmw.ini
-          #   skip-rate: 90
 
           - build-target: hellen-nb1
             folder: config/boards/hellen/hellen-nb1
             ini-file: fome_hellen-nb1.ini
-            skip-rate: 90
 
           # - build-target: hellen-gm-e67
           #   folder: config/boards/hellen/hellen-gm-e67
           #   ini-file: fome_hellen-gm-e67.ini
-          #   skip-rate: 90
 
           # - build-target: hellenNA8_96
           #   folder: config/boards/hellen/hellenNA8_96
           #   ini-file: fome_hellenNA8_96.ini
-          #   skip-rate: 90
 
           # - build-target: hellenNA6
           #   folder: config/boards/hellen/hellen64_miataNA6_94
           #   ini-file: fome_hellenNA6.ini
-          #   skip-rate: 90
 
           # - build-target: hellen128
           #   folder: config/boards/hellen/hellen128
           #   ini-file: fome_hellen128mercedes.ini
-          #   skip-rate: 50
 
           # - build-target: hellen121vag
           #   folder: config/boards/hellen/hellen121vag
           #   ini-file: fome_hellen121vag.ini
-          #   skip-rate: 90
 
           # - build-target: hellen121nissan
           #   folder: config/boards/hellen/hellen121nissan
@@ -148,12 +136,10 @@ jobs:
           # - build-target: hellen154hyundai
           #   folder: config/boards/hellen/hellen154hyundai
           #   ini-file: fome_hellen154hyundai.ini
-          #   skip-rate: 90
 
           # - build-target: frankenso_na6
           #   folder: config/boards/frankenso
           #   ini-file: fome_frankenso_na6.ini
-          #   skip-rate: 90
 
           - build-target: mre_f4
             folder: config/boards/microrusefi
@@ -166,32 +152,26 @@ jobs:
           # - build-target: mre_f4_debug
           #   folder: config/boards/microrusefi
           #   ini-file: fome_mre_f4.ini
-          #   skip-rate: 95
 
           # - build-target: mre_f4_recovery
           #   folder: config/boards/microrusefi
           #   ini-file: fome_mre_f4.ini
-          #   skip-rate: 95
 
           # - build-target: mre_f4_hardware_QC_special_build
           #   folder: config/boards/microrusefi
           #   ini-file: fome_mre_f4.ini
-          #   skip-rate: 90
 
           # - build-target: mre_f7
           #   folder: config/boards/microrusefi
           #   ini-file: fome_mre_f7.ini
-          #   skip-rate: 90
 
           # - build-target: prometheus_405
           #   folder: config/boards/prometheus
           #   ini-file: fome_prometheus_405.ini
-          #   skip-rate: 90
 
           # - build-target: prometheus_469
           #   folder: config/boards/prometheus
           #   ini-file: fome_prometheus_469.ini
-          #   skip-rate: 90
 
           - build-target: proteus_f4
             folder: config/boards/proteus
@@ -208,17 +188,14 @@ jobs:
           # - build-target: proteus_f7_hardware_QC_special_build
           #   folder: config/boards/proteus
           #   ini-file: fome_proteus_f7.ini
-          #   skip-rate: 90
 
           # - build-target: proteus_h7
           #   folder: config/boards/proteus
           #   ini-file: fome_proteus_h7.ini
-          #   skip-rate: 90
 
           # - build-target: proteus_legacy
           #   folder: config/boards/proteus
           #   ini-file: fome_proteus_f7.ini
-          #   skip-rate: 90
 
           - build-target: stm32f429_nucleo
             folder: config/boards/nucleo_f429
@@ -227,62 +204,47 @@ jobs:
           # - build-target: stm32f767_nucleo
           #   folder: config/boards/nucleo_f767
           #   ini-file: fome_stm32f767_nucleo.ini
-          #   skip-rate: 95
 
           # - build-target: stm32h743_nucleo
           #   folder: config/boards/nucleo_h743
           #   ini-file: fome_stm32h743_nucleo.ini
-          #   skip-rate: 95
 
           # - build-target: subaru_eg33_f7
           #   folder: config/boards/subaru_eg33
           #   ini-file: fome_subaru_eg33_f7.ini
-          #   skip-rate: 50
 
           - build-target: f407-discovery
             folder: config/boards/f407-discovery
             ini-file: fome_f407-discovery.ini
-            skip-rate: 0
 
           # - build-target: f429-discovery
           #   folder: config/boards/f429-discovery
           #   ini-file: fome_f429-discovery.ini
-          #   skip-rate: 95
 
           # - build-target: core8
           #   folder: config/boards/core8
           #   ini-file: fome_core8.ini
-          #   skip-rate: 95
 
           # - build-target: 48way
           #   folder: config/boards/48way
           #   ini-file: fome_48way.ini
-          #   skip-rate: 95
 
           # - build-target: atlas
           #   folder: config/boards/atlas
           #   ini-file: fome_atlas.ini
-          #   skip-rate: 95
 
           # - build-target: tdg-pdm8
           #   folder: config/boards/tdg-pdm8
           #   ini-file: fome_tdg-pdm8.ini
-          #   skip-rate: 95
 
     steps:
     - name: Check branch name
       if: ${{ contains(github.ref_name, '.') }}
       run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
-    - name: Execution throttle early exit
-      # Don't skip any jobs if this workflow was run manually.
-      if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' }}
-      run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
     - uses: actions/checkout@v3
-      if: ${{ env.skip != 'true' }}
 
     - name: Checkout Submodules
-      if: ${{ env.skip != 'true' }}
       run: |
         git submodule update --init --depth=1 firmware/ChibiOS
         git submodule update --init --depth=1 firmware/ChibiOS-Contrib
@@ -295,13 +257,11 @@ jobs:
         git submodule update --init --depth=1 java_console/luaformatter
 
     # - uses: actions/setup-java@v3
-    #   if: ${{ env.skip != 'true' }}
     #   with:
     #     distribution: 'zulu'
     #     java-version: '8'
 
     # - name: Install multilib, mingw, sshpass and mtools
-    #   if: ${{ env.skip != 'true' }}
     #   working-directory: ./.github/workflows/
     #   run: |
     #     sudo ./add-ubuntu-latest-apt-mirrors.sh
@@ -310,18 +270,15 @@ jobs:
     #     sudo apt-get install dosfstools
 
     - name: Generate Live Documentation
-      if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       run: ./gen_live_documentation.sh
 
       # live_data_ids.h is generated above so order of operations is important here!
     - name: Generate Enum Strings
-      if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       run: ./gen_enum_to_string.sh
 
     - name: Generate Configs for build-target
-      if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       # todo: we have code duplication with gen_config.sh here :(
       run: |
@@ -337,7 +294,6 @@ jobs:
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     # - name: Download & Install GCC
-    #   if: ${{ env.skip != 'true' }}
     #   env:
     #     ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     #   run: |
@@ -346,11 +302,9 @@ jobs:
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
-      if: ${{ env.skip != 'true' }}
       run: arm-none-eabi-gcc -v
 
     - name: Configs Set SSH variables
-      if: ${{ env.skip != 'true' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
@@ -362,67 +316,66 @@ jobs:
 
     # Build rusEFI console
     - name: Build console
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
       run: bash misc/jenkins/build_java_console.sh
 
     # Build the simulator
     # - name: Build simulator
-    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
     #   # 'OS="Windows_NT"' allows us to build Windows executable on unix
     #   run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
     # Build the firmware!
     - name: Build Firmware
-      if: ${{ env.skip != 'true' }}
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
 
     - name: Package Bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master'  ) || inputs.lts }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
     # - name: Upload .ini files
-    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
     #   working-directory: ./firmware/tunerstudio/generated
     #   run: |
     #     ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     # - name: Upload build elf
-    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_${{matrix.build-target}}.elf
     #     path: ./firmware/build/rusefi.elf
 
     # - name: Upload build bin
-    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_${{matrix.build-target}}.bin
     #     path: ./firmware/deliver/rusefi*.bin
 
     # - name: Upload build hex
-    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_${{matrix.build-target}}.hex
     #     path: ./firmware/deliver/rusefi*.hex
 
     # - name: Upload build dfu
-    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_${{matrix.build-target}}.dfu
     #     path: ./firmware/deliver/rusefi*.dfu
 
     # - name: Upload bundle
-    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_bundle_${{matrix.build-target}}.zip
     #     path: ./artifacts/fome_bundle*.zip
 
     # - name: Upload autoupdate bundle
-    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_bundle_${{matrix.build-target}}_autoupdate.zip
