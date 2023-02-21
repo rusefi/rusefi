@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Feb 20 16:30:51 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 21 00:07:45 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2645,7 +2645,7 @@ struct engine_configuration_s {
 	bool twoWireBatchInjection : 1 {};
 	/**
 	offset 1372 bit 13 */
-	bool unused1372b13 : 1 {};
+	bool neverInstantRpm : 1 {};
 	/**
 	 * This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 	offset 1372 bit 14 */
@@ -4402,7 +4402,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 3951
 	 */
-	uint8_t unusedA11lignmentFill_at_33[2];
+	uint8_t instantRpmRange;
+	/**
+	 * offset 3952
+	 */
+	uint8_t unusedA11lignmentFill_at_33;
 	/**
 	 * offset 3953
 	 */
@@ -5259,4 +5263,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Feb 20 16:30:51 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 21 00:07:45 UTC 2023

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 20 21:54:01 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 21 00:08:43 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1000,6 +1000,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 255967698;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1209,7 +1210,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.02.20.f407-discovery.3624078790";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.02.21.f407-discovery.255967698";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;
@@ -1878,6 +1879,7 @@ public class Fields {
 	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1372, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1372, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1372, FieldType.BIT, 12).setBaseOffset(0);
+	public static final Field NEVERINSTANTRPM = Field.create("NEVERINSTANTRPM", 1372, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1372, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1372, FieldType.BIT, 15).setBaseOffset(0);
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1372, FieldType.BIT, 16).setBaseOffset(0);
@@ -2486,7 +2488,8 @@ public class Fields {
 	public static final Field ALSMINTIMEBETWEEN = Field.create("ALSMINTIMEBETWEEN", 3948, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBPOSITION = Field.create("ALSETBPOSITION", 3949, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ACRELAYALTERNATORDUTYADDER = Field.create("ACRELAYALTERNATORDUTYADDER", 3950, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDA11LIGNMENTFILL_AT_33 = Field.create("UNUSEDA11LIGNMENTFILL_AT_33", 3951, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field INSTANTRPMRANGE = Field.create("INSTANTRPMRANGE", 3951, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDA11LIGNMENTFILL_AT_33 = Field.create("UNUSEDA11LIGNMENTFILL_AT_33", 3952, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final String[] SentEtbType = {"None", "GM type 1", "Ford type 1"};
 	public static final Field SENTETBTYPE = Field.create("SENTETBTYPE", 3953, FieldType.INT8, SentEtbType).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3954 = Field.create("ALIGNMENTFILL_AT_3954", 3954, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3333,6 +3336,7 @@ public class Fields {
 	VERBOSETRIGGERSYNCHDETAILS,
 	ISMANUALSPINNINGMODE,
 	TWOWIREBATCHINJECTION,
+	NEVERINSTANTRPM,
 	TWOWIREBATCHIGNITION,
 	USEFIXEDBAROCORRFROMMAP,
 	USESEPARATEADVANCEFORCRANKING,
@@ -3931,6 +3935,7 @@ public class Fields {
 	ALSMINTIMEBETWEEN,
 	ALSETBPOSITION,
 	ACRELAYALTERNATORDUTYADDER,
+	INSTANTRPMRANGE,
 	UNUSEDA11LIGNMENTFILL_AT_33,
 	SENTETBTYPE,
 	ALIGNMENTFILL_AT_3954,
