@@ -146,8 +146,6 @@ struct_no_prefix engine_configuration_s
 
 #define IAC_PID_MULT_SIZE 8
 
-#define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
-
 #define TORQUE_CURVE_SIZE 6
 #define CLT_CURVE_SIZE 16
 #define CLT_LIMITER_CURVE_SIZE 4
@@ -269,7 +267,7 @@ struct pid_s
 	int16_t maxValue;Output Max Duty Cycle;"", 1, 0, -30000, 30000, 0
 end_struct
 
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "AEM"
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "INVALID", "PLX", "Custom", "AEM"
 custom ego_sensor_e 1 bits, S08, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 
 #define SentEtbType_enum "None", "GM type 1", "Ford type 1", "Custom"
@@ -900,7 +898,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableCanVss;Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
-	bit stftIgnoreErrorMagnitude;If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
+	bit stftIgnoreErrorMagnitude;If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 	bit vvtBooleanForVerySpecialCases
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
@@ -1653,8 +1651,6 @@ engine_configuration_s engineConfiguration;
 
 	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio", 1, 0, 0, 700, 2
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%", 1, 0, 0, 100, 2
-	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V", 1, 0, -10, 10, 3
-	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio", 1, 0, -40, 40, 2
 
 uint16_t[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM", 1, 0, 0, 25000, 0
 int16_t[CRANKING_ADVANCE_CURVE_SIZE] autoscale crankingAdvance;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg", 0.01, 0, -20, 90, 2

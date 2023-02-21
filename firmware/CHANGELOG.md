@@ -31,6 +31,9 @@ Release template (copy/paste this for new release):
 ### Breaking Changes
  - Trigger Edge settings renamed from "true"/"false" to "Falling"/"Rising"
 
+### Removed
+ - Narrow to Wideband approximation
+
 ## December 2023 "Day 677"
 
 ### Breaking Changes

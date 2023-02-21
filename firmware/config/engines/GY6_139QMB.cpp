@@ -17,6 +17,7 @@
 #include "advance_map.h"
 
 void setGy6139qmbDefaultEngineConfiguration() {
+//        engineConfiguration->map.sensor.type = MT_3V_SENSOR;
 	engineConfiguration->rpmHardLimit = 9000;
 	engineConfiguration->cranking.rpm = 1100;
 	setTargetRpmCurve(2000);
