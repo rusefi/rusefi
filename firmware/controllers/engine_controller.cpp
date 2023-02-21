@@ -642,8 +642,6 @@ void initEngineController() {
 	initMalfunctionIndicator();
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
-	initEgoAveraging();
-
 #if EFI_PROD_CODE
 	addConsoleAction("reset_accel", resetAccel);
 #endif /* EFI_PROD_CODE */

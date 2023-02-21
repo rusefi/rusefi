@@ -15,4 +15,3 @@
 float getAfr(SensorType type);
 bool hasAfrSensor();
 void setEgoSensor(ego_sensor_e type);
-void initEgoAveraging();
