@@ -77,10 +77,6 @@ void setBoardConfigOverrides() {
     setDefaultHellenAtPullUps();
 
 	setHellenCan();
-
-	if (engineConfiguration->trigger.type == TT_MAZDA_MIATA_NB1) {
-	    engineConfiguration->trigger.type = TT_MIATA_VVT;
-	}
 }
 
 /**
