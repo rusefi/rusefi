@@ -125,7 +125,6 @@ void InstantRpmCalculator::updateInstantRpm(
 	m_instantRpm = calculateInstantRpm(triggerShape, triggerFormDetails, index,
 					   nowNt);
 
-
 #if EFI_SENSOR_CHART
 	if (getEngineState()->sensorChartMode == SC_RPM_ACCEL || getEngineState()->sensorChartMode == SC_DETAILED_RPM) {
 		angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
