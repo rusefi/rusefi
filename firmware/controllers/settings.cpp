@@ -649,8 +649,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->alternatorControl.offset = valueI;
 	} else
 #endif // EFI_ALTERNATOR_CONTROL
-	if (strEqualCaseInsensitive(paramStr, "warning_period")) {
-		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_ENGINESNIFFERRPMTHRESHOLD)) {
