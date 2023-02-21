@@ -330,6 +330,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode);
 void applyNonPersistentConfiguration();
 void prepareOutputSignals();
 
+// todo: huh we also have validateConfig()?!
 void validateConfiguration();
 void scheduleReboot();
 bool isLockedFromUser();
