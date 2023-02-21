@@ -156,14 +156,16 @@ private:
 	RedundantSensor m_redund;
 };
 
-static FuncSensPair tps1p(TPS_TS_CONVERSION, SensorType::Tps1Primary);
-static FuncSensPair tps1s(TPS_TS_CONVERSION, SensorType::Tps1Secondary);
-static FuncSensPair tps2p(TPS_TS_CONVERSION, SensorType::Tps2Primary);
-static FuncSensPair tps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
+static FuncSensPair analogTps1p(TPS_TS_CONVERSION, SensorType::Tps1Primary);
+static FuncSensPair analogTps1s(TPS_TS_CONVERSION, SensorType::Tps1Secondary);
+static FuncSensPair analogTps2p(TPS_TS_CONVERSION, SensorType::Tps2Primary);
+static FuncSensPair analogTps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
 
-// Used in case of "normal", non-Ford ETB TPS
-static RedundantPair tps1(tps1p, tps1s, SensorType::Tps1);
-static RedundantPair tps2(tps2p, tps2s, SensorType::Tps2);
+// Used in case of analog and "normal", non-Ford ETB TPS
+static RedundantPair analogTps1(analogTps1p, analogTps1s, SensorType::AnalogTps1);
+static RedundantPair tps2(analogTps2p, analogTps2s, SensorType::Tps2);
+//
+static ProxySensor tps1(SensorType::Tps1);
 
 // Used only in case of weird Ford-style ETB TPS
 static RedundantFordTps fordTps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
@@ -182,6 +184,10 @@ static ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 static FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
 static FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
+bool isDigitalTps1() {
+    return isBrainPinValid(engineConfiguration->sentInputPins[0]) && engineConfiguration->sentEtbType != SentEtbType::NONE;
+}
+
 void initTps() {
     efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != nullptr, "null engineConfiguration");
 	percent_t min = engineConfiguration->tpsErrorDetectionTooLow;
@@ -197,10 +203,15 @@ void initTps() {
 			tpsSecondaryMaximum = 20;
 		}
 
-		tps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
-			{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, min, max },
-			{ engineConfiguration->tps1_2AdcChannel, (float)engineConfiguration->tps1SecondaryMin, (float)engineConfiguration->tps1SecondaryMax, min, max }
-		);
+        if (isDigitalTps1()) {
+        } else {
+		    analogTps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
+    			{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, min, max },
+	    		{ engineConfiguration->tps1_2AdcChannel, (float)engineConfiguration->tps1SecondaryMin, (float)engineConfiguration->tps1SecondaryMax, min, max }
+    		);
+    		tps1.setProxiedSensor(SensorType::AnalogTps1);
+		}
+		tps1.Register();
 
 		tps2.init(isFordTps, &fordTps2, tpsSecondaryMaximum,
 			{ engineConfiguration->tps2_1AdcChannel, (float)engineConfiguration->tps2Min, (float)engineConfiguration->tps2Max, min, max },
@@ -238,7 +249,7 @@ void deinitTps() {
 	bool isFordTps = activeConfiguration.useFordRedundantTps;
 	bool isFordPps = activeConfiguration.useFordRedundantPps;
 
-	tps1.deinit(isFordTps, &fordTps1);
+	analogTps1.deinit(isFordTps, &fordTps1);
 	tps2.deinit(isFordTps, &fordTps2);
 	pedal.deinit(isFordTps, &fordPps);
 

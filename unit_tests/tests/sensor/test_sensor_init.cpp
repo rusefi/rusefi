@@ -131,6 +131,7 @@ TEST(SensorInit, DriverIntentNoPedal) {
 
 	initTps();
 
+	ASSERT_TRUE(Sensor::hasSensor(SensorType::AnalogTps1));
 	ASSERT_TRUE(Sensor::hasSensor(SensorType::Tps1));
 	// Ensure a sensor got set
 	ASSERT_TRUE(Sensor::hasSensor(SensorType::DriverThrottleIntent));
