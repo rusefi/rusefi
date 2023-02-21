@@ -386,44 +386,44 @@ jobs:
     #   run: |
     #     ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
-    - name: Upload build elf
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: fome_${{matrix.build-target}}.elf
-        path: ./firmware/build/rusefi.elf
+    # - name: Upload build elf
+    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: fome_${{matrix.build-target}}.elf
+    #     path: ./firmware/build/rusefi.elf
 
-    - name: Upload build bin
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: fome_${{matrix.build-target}}.bin
-        path: ./firmware/deliver/rusefi*.bin
+    # - name: Upload build bin
+    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: fome_${{matrix.build-target}}.bin
+    #     path: ./firmware/deliver/rusefi*.bin
 
-    - name: Upload build hex
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: fome_${{matrix.build-target}}.hex
-        path: ./firmware/deliver/rusefi*.hex
+    # - name: Upload build hex
+    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: fome_${{matrix.build-target}}.hex
+    #     path: ./firmware/deliver/rusefi*.hex
 
-    - name: Upload build dfu
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: fome_${{matrix.build-target}}.dfu
-        path: ./firmware/deliver/rusefi*.dfu
+    # - name: Upload build dfu
+    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: fome_${{matrix.build-target}}.dfu
+    #     path: ./firmware/deliver/rusefi*.dfu
 
-    - name: Upload bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: fome_bundle_${{matrix.build-target}}.zip
-        path: ./artifacts/fome_bundle*.zip
+    # - name: Upload bundle
+    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: fome_bundle_${{matrix.build-target}}.zip
+    #     path: ./artifacts/fome_bundle*.zip
 
-    - name: Upload autoupdate bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: fome_bundle_${{matrix.build-target}}_autoupdate.zip
-        path: ./artifacts/fome_bundle_${{matrix.build-target}}_autoupdate.zip
+    # - name: Upload autoupdate bundle
+    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: fome_bundle_${{matrix.build-target}}_autoupdate.zip
+    #     path: ./artifacts/fome_bundle_${{matrix.build-target}}_autoupdate.zip
