@@ -298,7 +298,6 @@ INCDIR = \
   ext/FatFS \
   $(PROJECT_DIR)/hw_layer/mass_storage \
   $(PROJECT_DIR)/hw_layer/serial_over_usb \
-  $(PROJECT_DIR)/hw_layer/lcd \
   $(PROJECT_DIR)/hw_layer/mass_storage \
   $(HW_INC) \
   development/hw_layer \

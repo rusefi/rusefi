@@ -23,12 +23,6 @@
 #undef EFI_AUX_SERIAL
 #define EFI_AUX_SERIAL FALSE
 
-#undef EFI_HD44780_LCD
-#define EFI_HD44780_LCD FALSE
-
-#undef EFI_LCD
-#define EFI_LCD FALSE
-
 #undef EFI_USB_SERIAL
 #define EFI_USB_SERIAL FALSE
 

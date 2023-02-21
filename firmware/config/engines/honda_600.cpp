@@ -48,9 +48,7 @@ void setHonda600() {
 
   //setIndividualCoilsIgnition();
 
-	setFrankenso_01_LCD();
 	commonFrankensoAnalogInputs();
-	setFrankenso0_1_joystick();
 	setTable(config->injectionPhase, 320.0f);
 
 	/**

@@ -68,9 +68,6 @@ void setFordEscortGt() {
 
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
-	setFrankenso_01_LCD();
-	setFrankenso0_1_joystick();
-
 	setDensoTODO(config);
 
 	engineConfiguration->globalFuelCorrection = 0.75;

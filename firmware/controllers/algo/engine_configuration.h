@@ -43,7 +43,6 @@ void onBurnRequest();
 void incrementGlobalConfigurationVersion();
 
 void commonFrankensoAnalogInputs();
-void setFrankenso0_1_joystick();
 
 void emptyCallbackWithConfiguration(engine_configuration_s * engine);
 

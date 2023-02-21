@@ -40,8 +40,6 @@
 #include "hip9011.h"
 #include "histogram.h"
 #include "gps_uart.h"
-#include "HD44780.h"
-#include "joystick.h"
 #include "sent.h"
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"
@@ -253,10 +251,6 @@ void applyNewHardwareSettings() {
 	stopSent();
 #endif // EFI_SENT_SUPPORT
 
-#if (HAL_USE_PAL && EFI_JOYSTICK)
-	stopJoystickPins();
-#endif /* HAL_USE_PAL && EFI_JOYSTICK */
-
 #if EFI_CAN_SUPPORT
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
@@ -287,10 +281,6 @@ void applyNewHardwareSettings() {
 		stopSpi(SPI_DEVICE_4);
 	}
 
-#if EFI_HD44780_LCD
-	stopHD44780_pins();
-#endif /* #if EFI_HD44780_LCD */
-
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		// bug? duplication with stopPedalPins?
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
@@ -317,10 +307,6 @@ void applyNewHardwareSettings() {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 	startHardware();
-
-#if EFI_HD44780_LCD
-	startHD44780_pins();
-#endif /* #if EFI_HD44780_LCD */
 
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	/* TODO: properly restart gpio chips...
@@ -466,10 +452,6 @@ void stopHardware() {
  * This method is invoked both on ECU start and configuration change
  */
 void startHardware() {
-#if (HAL_USE_PAL && EFI_JOYSTICK)
-	startJoystickPins();
-#endif /* HAL_USE_PAL && EFI_JOYSTICK */
-
 #if EFI_SHAFT_POSITION_INPUT
 	validateTriggerInputs();
 
@@ -498,15 +480,6 @@ const I2CConfig i2cfg = {
 #endif
 
 void initHardware() {
-#if EFI_HD44780_LCD
-	lcd_HD44780_init();
-	if (hasFirmwareError())
-		return;
-
-	lcd_HD44780_print_string(VCS_VERSION);
-
-#endif /* EFI_HD44780_LCD */
-
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -596,10 +569,6 @@ void initHardware() {
 #if EFI_CDM_INTEGRATION
 	cdmIonInit();
 #endif // EFI_CDM_INTEGRATION
-
-#if (HAL_USE_PAL && EFI_JOYSTICK)
-	initJoystick();
-#endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
 #if EFI_SENT_SUPPORT
 	initSent();

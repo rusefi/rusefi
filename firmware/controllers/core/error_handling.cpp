@@ -12,10 +12,6 @@
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
 
-#if EFI_HD44780_LCD
-#include "HD44780.h"
-#endif /* EFI_HD44780_LCD */
-
 extern int warningEnabled;
 
 bool hasFirmwareErrorFlag = false;
@@ -97,10 +93,6 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	printf("chDbgPanic3 %s %s%d", msg, file, line);
 	exit(-1);
 #else // EFI_PROD_CODE
-
-#if EFI_HD44780_LCD
-	lcdShowPanicMessage((char *) msg);
-#endif /* EFI_HD44780_LCD */
 
 	firmwareError(OBD_PCM_Processor_Fault, "assert fail %s %s:%d", msg, file, line);
 
