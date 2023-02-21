@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Feb 19 03:53:00 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 04:56:32 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -735,6 +735,9 @@ public class TsOutputs {
 	public static final Field INJECTORSTATE10 = Field.create("INJECTORSTATE10", 616, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field INJECTORSTATE11 = Field.create("INJECTORSTATE11", 616, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field INJECTORSTATE12 = Field.create("INJECTORSTATE12", 616, FieldType.BIT, 23).setBaseOffset(0);
+	public static final Field TRIGGERCHANNEL1 = Field.create("TRIGGERCHANNEL1", 616, FieldType.BIT, 24).setBaseOffset(0);
+	public static final Field TRIGGERCHANNEL2 = Field.create("TRIGGERCHANNEL2", 616, FieldType.BIT, 25).setBaseOffset(0);
+	public static final Field VVTCHANNEL1 = Field.create("VVTCHANNEL1", 616, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field OUTPUTREQUESTPERIOD = Field.create("OUTPUTREQUESTPERIOD", 620, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field MAPFAST = Field.create("MAPFAST", 624, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field LUAGAUGES1 = Field.create("LUAGAUGES1", 628, FieldType.FLOAT).setBaseOffset(0);
@@ -1211,6 +1214,9 @@ public class TsOutputs {
 	INJECTORSTATE10,
 	INJECTORSTATE11,
 	INJECTORSTATE12,
+	TRIGGERCHANNEL1,
+	TRIGGERCHANNEL2,
+	VVTCHANNEL1,
 	OUTPUTREQUESTPERIOD,
 	MAPFAST,
 	LUAGAUGES1,
