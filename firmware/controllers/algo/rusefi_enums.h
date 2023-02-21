@@ -371,8 +371,6 @@ typedef enum __attribute__ ((__packed__)) {
 	 */
 	ES_14Point7_Free = 2,
 
-	ES_NarrowBand = 3,
-
 	ES_PLX = 4,
 
 	ES_Custom = 5,

@@ -85,6 +85,3 @@
 
 #define RPM_LOW_THRESHOLD 8				// RPM=8 is an empirical lower sensitivity threshold of MAX9926 for 60-2
 #define NO_RPM_EVENTS_TIMEOUT_SECS 5	// (RPM < 12)
-
-#define EFI_NARROW_EGO_AVERAGING TRUE
-

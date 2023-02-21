@@ -716,7 +716,6 @@ void initRealHardwareEngineController() {
 	initPwmTester();
 #endif /* EFI_PWM_TESTER */
 
-	initEgoAveraging();
 }
 
 /**

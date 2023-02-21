@@ -346,18 +346,6 @@ enable2ndByteCanID = false
 		yBins		= knockBaseNoise
 		gauge		= RPMGauge
 
-	curve = narrowToWideOxygenCurve, "Narrow to Wideband approximation"
-		columnLabel = "Voltage", "AFR"
-		xAxis		=  0, 6, 10
-		yAxis		=  0,  28, 10
-		xBins		= narrowToWideOxygenBins
-		yBins		= narrowToWideOxygen
-#if LAMBDA
-		gauge		= lambda1Gauge
-#else
-		gauge		= afr1Gauge
-#endif
-
 	curve = scriptCurve1, "Script Curve #1"
 		columnLabel = "X", "Y"
 		xAxis		=  0, 128, 10
@@ -1979,7 +1967,6 @@ menuDialog = main
 		# O2 sensor(s)
 		subMenu = egoSettings,				"EGO sensor"
 		subMenu = widebandConfig,			"rusEFI Wideband Controller", 0, { canReadEnabled && canWriteEnabled }
-		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
 		subMenu = std_separator
 
 		# Misc sensors
