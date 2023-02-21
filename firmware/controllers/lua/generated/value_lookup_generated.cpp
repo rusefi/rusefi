@@ -561,6 +561,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->isManualSpinningMode;
 		case -1248413509:
 			return engineConfiguration->twoWireBatchInjection;
+		case 240697653:
+			return engineConfiguration->neverInstantRpm;
 		case 454615641:
 			return engineConfiguration->twoWireBatchIgnition;
 		case 201676494:
@@ -1033,6 +1035,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->alsEtbPosition;
 		case -908268760:
 			return engineConfiguration->acRelayAlternatorDutyAdder;
+		case -748456478:
+			return engineConfiguration->instantRpmRange;
 		case -2021435668:
 			return engineConfiguration->ALSIdleAdd;
 		case 1232469673:
@@ -2446,6 +2450,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->twoWireBatchInjection = (int)value;
 		return;
 	}
+		case 240697653:
+	{
+		engineConfiguration->neverInstantRpm = (int)value;
+		return;
+	}
 		case 454615641:
 	{
 		engineConfiguration->twoWireBatchIgnition = (int)value;
@@ -3624,6 +3633,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -908268760:
 	{
 		engineConfiguration->acRelayAlternatorDutyAdder = (int)value;
+		return;
+	}
+		case -748456478:
+	{
+		engineConfiguration->instantRpmRange = (int)value;
 		return;
 	}
 		case -2021435668:
