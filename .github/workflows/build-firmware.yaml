@@ -303,8 +303,11 @@ jobs:
       if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' || contains(github.event.head_commit.message, 'only:') }}
       run: |
         # if the commit message contains `only:`, get the part after the semicolon and check if it matches the build target.
-        if echo ${{ github.event.head_commit.message }} | grep "only:"; then
-          if [ "$(echo ${{ github.event.head_commit.message }} | grep -Po '(?<=only:)[^\s]*')" = "${{ matrix.build-target }}" ]; then
+        read -d ' ' MSG << EOM || true
+        ${{ github.event.head_commit.message }}
+        EOM
+        if echo $MSG | grep "only:"; then
+          if [ "$(echo $MSG | grep -Po '(?<=only:)[^\s]*')" = "${{ matrix.build-target }}" ]; then
             exit 0
           else
             # if it doesn't match, skip this job.
