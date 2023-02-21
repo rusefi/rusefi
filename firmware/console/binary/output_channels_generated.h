@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Feb 19 03:53:00 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 04:56:32 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1319,28 +1319,28 @@ struct output_channels_s {
 	bool injectorState12 : 1 {};
 	/**
 	offset 616 bit 24 */
-	bool unusedBit_295_24 : 1 {};
+	bool triggerChannel1 : 1 {};
 	/**
 	offset 616 bit 25 */
-	bool unusedBit_295_25 : 1 {};
+	bool triggerChannel2 : 1 {};
 	/**
 	offset 616 bit 26 */
-	bool unusedBit_295_26 : 1 {};
+	bool vvtChannel1 : 1 {};
 	/**
 	offset 616 bit 27 */
-	bool unusedBit_295_27 : 1 {};
+	bool unusedBit_298_27 : 1 {};
 	/**
 	offset 616 bit 28 */
-	bool unusedBit_295_28 : 1 {};
+	bool unusedBit_298_28 : 1 {};
 	/**
 	offset 616 bit 29 */
-	bool unusedBit_295_29 : 1 {};
+	bool unusedBit_298_29 : 1 {};
 	/**
 	offset 616 bit 30 */
-	bool unusedBit_295_30 : 1 {};
+	bool unusedBit_298_30 : 1 {};
 	/**
 	offset 616 bit 31 */
-	bool unusedBit_295_31 : 1 {};
+	bool unusedBit_298_31 : 1 {};
 	/**
 	 * offset 620
 	 */
@@ -1383,4 +1383,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 780);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Feb 19 03:53:00 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 04:56:32 UTC 2023

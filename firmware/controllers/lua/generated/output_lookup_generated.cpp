@@ -471,6 +471,12 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.injectorState11;
 		case -43142201:
 			return engine->outputChannels.injectorState12;
+		case -448033693:
+			return engine->outputChannels.triggerChannel1;
+		case -448033692:
+			return engine->outputChannels.triggerChannel2;
+		case -1764857649:
+			return engine->outputChannels.vvtChannel1;
 		case 1894184322:
 			return engine->outputChannels.outputRequestPeriod;
 		case -1263258735:
