@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Feb 19 03:53:00 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 11:00:43 PST 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -103,34 +103,34 @@ struct output_channels_s {
 	bool isPedalError : 1 {};
 	/**
 	offset 0 bit 22 */
-	bool isKnockChipOk : 1 {};
-	/**
-	offset 0 bit 23 */
 	bool launchTriggered : 1 {};
 	/**
-	offset 0 bit 24 */
+	offset 0 bit 23 */
 	bool isTps2Error : 1 {};
 	/**
-	offset 0 bit 25 */
+	offset 0 bit 24 */
 	bool isIdleClosedLoop : 1 {};
 	/**
+	offset 0 bit 25 */
+	bool unusedBit_25_25 : 1 {};
+	/**
 	offset 0 bit 26 */
-	bool unusedBit_26_26 : 1 {};
+	bool unusedBit_25_26 : 1 {};
 	/**
 	offset 0 bit 27 */
-	bool unusedBit_26_27 : 1 {};
+	bool unusedBit_25_27 : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool unusedBit_26_28 : 1 {};
+	bool unusedBit_25_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_26_29 : 1 {};
+	bool unusedBit_25_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_26_30 : 1 {};
+	bool unusedBit_25_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_26_31 : 1 {};
+	bool unusedBit_25_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	RPM
@@ -454,24 +454,25 @@ struct output_channels_s {
 	V
 	 * offset 116
 	 */
-	scaled_channel<int16_t, 1000, 1> rawIdlePositionSensor = (int16_t)0;
-	/**
-	V
-	 * offset 118
-	 */
 	scaled_channel<int16_t, 1000, 1> rawWastegatePosition = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_X@@
 	G
-	 * offset 120
+	 * offset 118
 	 */
 	scaled_channel<int16_t, 100, 1> accelerationX = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_Y@@
 	G
-	 * offset 122
+	 * offset 120
 	 */
 	scaled_channel<int16_t, 100, 1> accelerationY = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 122
+	 */
+	uint8_t alignmentFill_at_122[2];
 	/**
 	 * offset 124
 	 */
@@ -653,196 +654,196 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 100, 1> wastegatePositionSensor = (int16_t)0;
 	/**
-	 * @@GAUGE_NAME_IDLE_POSITION@@
-	%
-	 * offset 254
-	 */
-	scaled_channel<int16_t, 100, 1> idlePositionSensor = (int16_t)0;
-	/**
 	V
-	 * offset 256
+	 * offset 254
 	 */
 	scaled_channel<int16_t, 1000, 1> rawLowFuelPressure = (int16_t)0;
 	/**
 	V
-	 * offset 258
+	 * offset 256
 	 */
 	scaled_channel<int16_t, 1000, 1> rawHighFuelPressure = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_PRESSURE_LOW@@
 	kpa
-	 * offset 260
+	 * offset 258
 	 */
 	scaled_channel<int16_t, 30, 1> lowFuelPressure = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@
 	bar
-	 * offset 262
+	 * offset 260
 	 */
 	scaled_channel<int16_t, 10, 1> highFuelPressure = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_AFR@@
 	AFR
-	 * offset 264
+	 * offset 262
 	 */
 	scaled_channel<uint16_t, 1000, 1> AFRValue = (uint16_t)0;
 	/**
 	 * Vss Accel
 	m/s2
-	 * offset 266
+	 * offset 264
 	 */
 	scaled_channel<uint16_t, 300, 1> VssAcceleration = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_LAMBDA2@@
-	 * offset 268
+	 * offset 266
 	 */
 	scaled_channel<uint16_t, 10000, 1> lambdaValue2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_AFR2@@
 	AFR
-	 * offset 270
+	 * offset 268
 	 */
 	scaled_channel<uint16_t, 1000, 1> AFRValue2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_VVT_B1E@@
 	deg
-	 * offset 272
+	 * offset 270
 	 */
 	scaled_channel<int16_t, 50, 1> vvtPositionB1E = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_VVT_B2I@@
 	deg
-	 * offset 274
+	 * offset 272
 	 */
 	scaled_channel<int16_t, 50, 1> vvtPositionB2I = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_VVT_B2E@@
 	deg
-	 * offset 276
+	 * offset 274
 	 */
 	scaled_channel<int16_t, 50, 1> vvtPositionB2E = (int16_t)0;
 	/**
 	%
-	 * offset 278
+	 * offset 276
 	 */
 	scaled_channel<int16_t, 100, 1> fuelPidCorrection[2];
 	/**
 	V
-	 * offset 282
+	 * offset 280
 	 */
 	scaled_channel<int16_t, 1000, 1> rawTps1Secondary = (int16_t)0;
 	/**
 	V
-	 * offset 284
+	 * offset 282
 	 */
 	scaled_channel<int16_t, 1000, 1> rawTps2Primary = (int16_t)0;
 	/**
 	V
-	 * offset 286
+	 * offset 284
 	 */
 	scaled_channel<int16_t, 1000, 1> rawTps2Secondary = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_KNOCK_COUNTER@@
-	 * offset 288
+	 * offset 286
 	 */
 	uint16_t knockCount = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_Z@@
 	G
-	 * offset 290
+	 * offset 288
 	 */
 	scaled_channel<int16_t, 100, 1> accelerationZ = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_ROLL@@
 	G
-	 * offset 292
+	 * offset 290
 	 */
 	scaled_channel<int16_t, 100, 1> accelerationRoll = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_YAW@@
 	G
-	 * offset 294
+	 * offset 292
 	 */
 	scaled_channel<int16_t, 100, 1> accelerationYaw = (int16_t)0;
 	/**
 	deg
-	 * offset 296
+	 * offset 294
 	 */
 	int8_t vvtTargets[4];
 	/**
 	 * @@GAUGE_NAME_TURBO_SPEED@@
 	hz
-	 * offset 300
+	 * offset 298
 	 */
 	uint16_t turboSpeed = (uint16_t)0;
 	/**
 	%
-	 * offset 302
+	 * offset 300
 	 */
 	scaled_channel<int16_t, 100, 1> tps1Split = (int16_t)0;
 	/**
 	%
-	 * offset 304
+	 * offset 302
 	 */
 	scaled_channel<int16_t, 100, 1> tps2Split = (int16_t)0;
 	/**
 	%
-	 * offset 306
+	 * offset 304
 	 */
 	scaled_channel<int16_t, 100, 1> tps12Split = (int16_t)0;
 	/**
 	%
-	 * offset 308
+	 * offset 306
 	 */
 	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
 	/**
 	 * Spark Cut Code
 	code
-	 * offset 310
+	 * offset 308
 	 */
 	int8_t sparkCutReason = (int8_t)0;
 	/**
 	 * Fuel Cut Code
 	code
-	 * offset 311
+	 * offset 309
 	 */
 	int8_t fuelCutReason = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_AIR_FLOW_ESTIMATE@@
 	kg/h
-	 * offset 312
+	 * offset 310
 	 */
 	scaled_channel<uint16_t, 10, 1> mafEstimate = (uint16_t)0;
 	/**
 	rpm
-	 * offset 314
+	 * offset 312
 	 */
 	uint16_t instantRpm = (uint16_t)0;
 	/**
 	counter
-	 * offset 316
+	 * offset 314
 	 */
 	uint16_t systemEventReuse = (uint16_t)0;
 	/**
 	V
-	 * offset 318
+	 * offset 316
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawMap = (uint16_t)0;
 	/**
 	V
-	 * offset 320
+	 * offset 318
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
 	/**
 	%
-	 * offset 322
+	 * offset 320
 	 */
 	uint8_t tpsAccelFrom = (uint8_t)0;
 	/**
 	%
-	 * offset 323
+	 * offset 321
 	 */
 	uint8_t tpsAccelTo = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 322
+	 */
+	uint8_t alignmentFill_at_322[2];
 	/**
 	 * offset 324
 	 */
@@ -1383,4 +1384,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 780);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Feb 19 03:53:00 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 11:00:43 PST 2023

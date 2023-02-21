@@ -43,22 +43,12 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->disableFan2WhenStopped;
 		case -1409016614:
 			return engineConfiguration->enableTrailingSparks;
-		case 119246268:
-			return engineConfiguration->isCJ125Verbose;
-		case 1627431605:
-			return engineConfiguration->cj125isUaDivided;
-		case -1780521945:
-			return engineConfiguration->cj125isLsu49;
 		case -1334689362:
 			return engineConfiguration->etb_use_two_wires;
 		case 1097520823:
 			return engineConfiguration->isDoubleSolenoidIdle;
 		case -1572546086:
 			return engineConfiguration->useEeprom;
-		case 291489190:
-			return engineConfiguration->cj125isUrDivided;
-		case -264572349:
-			return engineConfiguration->useCicPidForIdle;
 		case -1279270887:
 			return engineConfiguration->useTLE8888_cranking_hack;
 		case 1156367906:
@@ -139,8 +129,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->iat.config.bias_resistor;
 		case 1226423210:
 			return engineConfiguration->launchTimingRetard;
-		case -1310663509:
-			return engineConfiguration->hip9011PrescalerAndSDO;
 		case -1738843157:
 			return engineConfiguration->knockBandCustom;
 		case -962678774:
@@ -183,10 +171,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->canSleepPeriodMs;
 		case 171869155:
 			return engineConfiguration->byFirmwareVersion;
-		case -526236296:
-			return engineConfiguration->HD44780width;
-		case -777537519:
-			return engineConfiguration->HD44780height;
 		case -1269130308:
 			return engineConfiguration->idle_derivativeFilterLoss;
 		case 274318471:
@@ -249,10 +233,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->wastegatePositionMin;
 		case 2097342437:
 			return engineConfiguration->wastegatePositionMax;
-		case -1256791716:
-			return engineConfiguration->idlePositionMin;
-		case -1256791970:
-			return engineConfiguration->idlePositionMax;
 		case 1467553180:
 			return engineConfiguration->tunerStudioSerialSpeed;
 		case 355839382:
@@ -271,8 +251,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->rusefiVerbose29b;
 		case 630961411:
 			return engineConfiguration->isEngineControlEnabled;
-		case -2119647784:
-			return engineConfiguration->isHip9011Enabled;
 		case -956913549:
 			return engineConfiguration->isVerboseAlternator;
 		case -1055678778:
@@ -281,18 +259,12 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->useStepperIdle;
 		case -2068213709:
 			return engineConfiguration->enabledStep1Limiter;
-		case -1037977635:
-			return engineConfiguration->useTpicAdvancedMode;
-		case -538782875:
-			return engineConfiguration->useLcdScreen;
 		case -1251676000:
 			return engineConfiguration->verboseTLE8888;
 		case 1643181024:
 			return engineConfiguration->enableVerboseCanTx;
 		case -432676169:
 			return engineConfiguration->etb1configured;
-		case -28818575:
-			return engineConfiguration->isCJ125Enabled;
 		case 1804769272:
 			return engineConfiguration->etb2configured;
 		case -1236202550:
@@ -317,8 +289,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->pauseEtbControl;
 		case 1836072195:
 			return engineConfiguration->alignEngineSnifferAtTDC;
-		case 1064399425:
-			return engineConfiguration->idleIncrementalPidCic;
 		case 259909218:
 			return engineConfiguration->enableAemXSeries;
 		case 6238478:
@@ -363,10 +333,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->multisparkEnable;
 		case -1583589783:
 			return engineConfiguration->enableLaunchRetard;
-		case -246028069:
-			return engineConfiguration->unfinishedenableLaunchBoost;
-		case 963548365:
-			return engineConfiguration->unfinishedlaunchDisableBySpeed;
 		case 245947066:
 			return engineConfiguration->enableCanVss;
 		case 1382521617:
@@ -893,8 +859,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tChargeAirIncrLimit;
 		case 670644444:
 			return engineConfiguration->tChargeAirDecrLimit;
-		case 929810608:
-			return engineConfiguration->hip9011Gain;
 		case -1725192476:
 			return engineConfiguration->etb_iTermMin;
 		case -1725192730:
@@ -1155,21 +1119,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enableTrailingSparks = (int)value;
 		return;
 	}
-		case 119246268:
-	{
-		engineConfiguration->isCJ125Verbose = (int)value;
-		return;
-	}
-		case 1627431605:
-	{
-		engineConfiguration->cj125isUaDivided = (int)value;
-		return;
-	}
-		case -1780521945:
-	{
-		engineConfiguration->cj125isLsu49 = (int)value;
-		return;
-	}
 		case -1334689362:
 	{
 		engineConfiguration->etb_use_two_wires = (int)value;
@@ -1183,16 +1132,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -1572546086:
 	{
 		engineConfiguration->useEeprom = (int)value;
-		return;
-	}
-		case 291489190:
-	{
-		engineConfiguration->cj125isUrDivided = (int)value;
-		return;
-	}
-		case -264572349:
-	{
-		engineConfiguration->useCicPidForIdle = (int)value;
 		return;
 	}
 		case -1279270887:
@@ -1395,11 +1334,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchTimingRetard = (int)value;
 		return;
 	}
-		case -1310663509:
-	{
-		engineConfiguration->hip9011PrescalerAndSDO = (int)value;
-		return;
-	}
 		case -1738843157:
 	{
 		engineConfiguration->knockBandCustom = value;
@@ -1503,16 +1437,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 171869155:
 	{
 		engineConfiguration->byFirmwareVersion = (int)value;
-		return;
-	}
-		case -526236296:
-	{
-		engineConfiguration->HD44780width = (int)value;
-		return;
-	}
-		case -777537519:
-	{
-		engineConfiguration->HD44780height = (int)value;
 		return;
 	}
 		case -1269130308:
@@ -1670,16 +1594,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->wastegatePositionMax = (int)value;
 		return;
 	}
-		case -1256791716:
-	{
-		engineConfiguration->idlePositionMin = (int)value;
-		return;
-	}
-		case -1256791970:
-	{
-		engineConfiguration->idlePositionMax = (int)value;
-		return;
-	}
 		case 1467553180:
 	{
 		engineConfiguration->tunerStudioSerialSpeed = (int)value;
@@ -1725,11 +1639,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->isEngineControlEnabled = (int)value;
 		return;
 	}
-		case -2119647784:
-	{
-		engineConfiguration->isHip9011Enabled = (int)value;
-		return;
-	}
 		case -956913549:
 	{
 		engineConfiguration->isVerboseAlternator = (int)value;
@@ -1750,16 +1659,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enabledStep1Limiter = (int)value;
 		return;
 	}
-		case -1037977635:
-	{
-		engineConfiguration->useTpicAdvancedMode = (int)value;
-		return;
-	}
-		case -538782875:
-	{
-		engineConfiguration->useLcdScreen = (int)value;
-		return;
-	}
 		case -1251676000:
 	{
 		engineConfiguration->verboseTLE8888 = (int)value;
@@ -1773,11 +1672,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -432676169:
 	{
 		engineConfiguration->etb1configured = (int)value;
-		return;
-	}
-		case -28818575:
-	{
-		engineConfiguration->isCJ125Enabled = (int)value;
 		return;
 	}
 		case 1804769272:
@@ -1838,11 +1732,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 1836072195:
 	{
 		engineConfiguration->alignEngineSnifferAtTDC = (int)value;
-		return;
-	}
-		case 1064399425:
-	{
-		engineConfiguration->idleIncrementalPidCic = (int)value;
 		return;
 	}
 		case 259909218:
@@ -1953,16 +1842,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -1583589783:
 	{
 		engineConfiguration->enableLaunchRetard = (int)value;
-		return;
-	}
-		case -246028069:
-	{
-		engineConfiguration->unfinishedenableLaunchBoost = (int)value;
-		return;
-	}
-		case 963548365:
-	{
-		engineConfiguration->unfinishedlaunchDisableBySpeed = (int)value;
 		return;
 	}
 		case 245947066:
@@ -3278,11 +3157,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 670644444:
 	{
 		engineConfiguration->tChargeAirDecrLimit = value;
-		return;
-	}
-		case 929810608:
-	{
-		engineConfiguration->hip9011Gain = value;
 		return;
 	}
 		case -1725192476:
