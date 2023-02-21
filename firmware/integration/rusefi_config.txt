@@ -1070,7 +1070,7 @@ custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Ope
 	bit verboseTriggerSynchDetails;Verbose info in console below engineSnifferRpmThreshold\nenable trigger_details
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
 	bit twoWireBatchInjection;This is needed if your coils are individually wired and you wish to use batch injection.\nenable two_wire_batch_injection
-	bit unused1372b13
+	bit neverInstantRpm
 	bit twoWireBatchIgnition;This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking,"Table","Fixed (auto taper)";In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
@@ -1555,7 +1555,8 @@ int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
 uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
     uint8_t acRelayAlternatorDutyAdder
-	uint8_t[2] unusedA11lignmentFill_at_33
+	uint8_t instantRpmRange
+	uint8_t unusedA11lignmentFill_at_33
 	SentEtbType sentEtbType
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
