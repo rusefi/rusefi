@@ -627,9 +627,14 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    configureBenelli(this);
         break;
 
+	case TT_MITSU_75:
+	    initializeMitsubishi75(this);
+		break;
+
 	case TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);
 		break;
+
 	case TT_MITSU_4G9x_CAM:
 	    initializeMitsubishi4g9xCam(this);
         break;
