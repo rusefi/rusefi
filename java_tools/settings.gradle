@@ -1,5 +1,3 @@
-include ':proxy_server'
-project(':proxy_server').projectDir = new File('proxy_server')
 include ':core_io'
 project(':core_io').projectDir = new File('../java_console/shared_io')
 include ':core_ui'
