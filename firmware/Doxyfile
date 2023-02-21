@@ -989,7 +989,6 @@ EXCLUDE_SYMLINKS       = NO
 
 EXCLUDE_PATTERNS       = */ChibiOS/* \
                          */ChibiOS-Contrib/* \
-                         */config/boards/cypress/OS/* \
                          */ext/* \
                          */controllers/can/wideband_firmware* \
                          */controllers/lua/luaaa* \
