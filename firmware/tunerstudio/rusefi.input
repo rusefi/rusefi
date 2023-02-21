@@ -1832,7 +1832,6 @@ menuDialog = main
 		subMenu = egoSettings,				"EGO sensor"
 		subMenu = widebandConfig,			"rusEFI Wideband Controller", 0, { canReadEnabled && canWriteEnabled }
 		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
-		subMenu = cj125Function,			"CJ125 settings (wbo decoder)" @@if_ts_show_cj125
 		subMenu = std_separator
 
 		# Misc sensors
@@ -1990,7 +1989,6 @@ cmd_burn_without_flash		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_h
 cmd_set_wideband_idx_0		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_WIDEBAND_16_hex@@\x00\x00"
 cmd_set_wideband_idx_1		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_WIDEBAND_16_hex@@\x00\x01"
 
-cmd_cj125_calibrate			= "@@TS_IO_TEST_COMMAND_char@@\x00\x18\x00\x00"
 cmd_call_from_pit				= "@@TS_IO_TEST_COMMAND_char@@\x00\x20\x34\x56"
 cmd_stop_engine				= "@@TS_IO_TEST_COMMAND_char@@\x00\x79\x00\x00"
 
@@ -3371,22 +3369,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Band Freq override",					knockBandCustom, {isHip9011Enabled == 1}
 		field = "SPI device",							hip9011SpiDevice, {isHip9011Enabled == 1}
 		panel = knockThresholdCurve
-
-;			Engine->cj125 Settings
-	dialog = cj125Function, "CJ125 Settings (wbo decoder)"
-		field = "Enabled",								isCJ125Enabled
-		commandButton = "Calibrate",					cmd_cj125_calibrate
-		field = "Using 4.9 sensor?",					cj125isLsu49
-		field = "!ECU reboot needed to apply these settings"
-		field = "ChipSelect pin",						cj125CsPin, {isCJ125Enabled == 1}
-		field = "ChipSelect mode",						cj125CsPinMode, {isCJ125Enabled == 1}
-		field = "!See also 'Controller-SPI setting'"
-		field = "SPI device",							cj125SpiDevice
-		field = "Heater output",						wboHeaterPin, {isCJ125Enabled == 1}
-		field = "UA input",								cj125ua, {isCJ125Enabled == 1}
-		field = "UR input",								cj125ur, {isCJ125Enabled == 1}
-		field = "Is UA input divided?"					cj125isUaDivided, {isCJ125Enabled == 1}
-		field = "Is UR input divided?"					cj125isUrDivided, {isCJ125Enabled == 1}
 
 	dialog = spiFunction, "SPI settings"
 		field = "!ECU reboot needed to apply these settings"

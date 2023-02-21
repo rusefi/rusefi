@@ -70,10 +70,6 @@
 #include "flash_main.h"
 #endif
 
-#if EFI_CJ125
-#include "cj125.h"
-#endif /* EFI_CJ125 */
-
 #if EFI_MAP_AVERAGING
 #include "map_averaging.h"
 #endif
@@ -791,11 +787,6 @@ DcHardware *getdcHardware();
 		tsOutputChannels->debugIntField2 = instance.invalidResponsesCount;
 		break;
 #endif /* EFI_HIP_9011 */
-#if EFI_CJ125 && HAL_USE_SPI
-	case DBG_CJ125:
-		cjPostState(tsOutputChannels);
-		break;
-#endif /* EFI_CJ125 && HAL_USE_SPI */
 #if EFI_MAP_AVERAGING
 	case DBG_MAP:
 		postMapState(tsOutputChannels);

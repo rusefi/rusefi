@@ -94,8 +94,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
 	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
-	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 
 //	engineConfiguration->gps_rx_pin = Gpio::B7;
 //	engineConfiguration->gps_tx_pin = Gpio::B6;

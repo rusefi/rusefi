@@ -3,8 +3,6 @@
  *
  * EGO Exhaust Gas Oxygen, also known as AFR Air/Fuel Ratio :)
  *
- * todo: rename this class? refactor since there is also CJ125?
- *
  * rusEfi has three options for wideband:
  * 1) integration with external widebands using liner analog signal wire
  * 2) 8-point interpolation curve to emulate a wide-band with a narrow-band sensor.
@@ -14,10 +12,6 @@
 #include "pch.h"
 
 #include "cyclic_buffer.h"
-
-#if EFI_CJ125
-#include "cj125.h"
-#endif /* EFI_CJ125 */
 
 #ifdef EFI_NARROW_EGO_AVERAGING
 // Needed by narrow EGOs (see updateEgoAverage()).
@@ -96,11 +90,6 @@ bool hasAfrSensor() {
 		return true;
 	}
 
-#if EFI_CJ125 && HAL_USE_SPI
-	if (engineConfiguration->isCJ125Enabled) {
-		return cjHasAfrSensor();
-	}
-#endif /* EFI_CJ125 && HAL_USE_SPI */
 	return isAdcChannelValid(engineConfiguration->afr.hwChannel);
 }
 
@@ -112,11 +101,6 @@ float getAfr(SensorType type) {
 		return InnovateLC2AFR;
 #endif
 
-#if EFI_CJ125 && HAL_USE_SPI
-	if (engineConfiguration->isCJ125Enabled) {
-		return cjGetAfr();
-	}
-#endif /* EFI_CJ125 && HAL_USE_SPI */
 	afr_sensor_s * sensor = &engineConfiguration->afr;
 
 	if (!isAdcChannelValid(type == SensorType::Lambda1 ? engineConfiguration->afr.hwChannel : engineConfiguration->afr.hwChannel2)) {

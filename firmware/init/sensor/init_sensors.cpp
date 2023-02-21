@@ -46,15 +46,11 @@ static void initOldAnalogInputs() {
     }
 	initIfValid("AFR", engineConfiguration->afr.hwChannel);
 	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
-	initIfValid("CJ125 UR", engineConfiguration->cj125ur);
-	initIfValid("CJ125 UA", engineConfiguration->cj125ua);
 }
 
 static void deInitOldAnalogInputs() {
 	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
 	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
-	deInitIfValid("CJ125 UR", activeConfiguration.cj125ur);
-	deInitIfValid("CJ125 UA", activeConfiguration.cj125ua);
 }
 
 static void initAuxDigital() {

@@ -624,8 +624,6 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->alternatorPwmFrequency = 300;
 
-	engineConfiguration->cj125isUaDivided = true;
-
 	engineConfiguration->isAlternatorControlEnabled = false;
 
 	engineConfiguration->driveWheelRevPerKm = 1000;

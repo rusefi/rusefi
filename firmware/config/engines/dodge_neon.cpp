@@ -30,8 +30,6 @@ void setDodgeNeon1995EngineConfiguration() {
 	//	engineConfiguration->spi2mosiPin = Gpio::B15;
 	//	engineConfiguration->spi2misoPin = Gpio::B14;
 	//	engineConfiguration->spi2sckPin = Gpio::B13;
-	engineConfiguration->cj125CsPin = Gpio::B0; // rev 0.4
-	engineConfiguration->isCJ125Enabled = true;
 	engineConfiguration->is_enabled_spi_2 = true;
 
 

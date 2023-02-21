@@ -92,10 +92,6 @@
 #include "pwm_tester.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_CJ125
-#include "cj125.h"
-#endif /* EFI_CJ125 */
-
 #if !EFI_UNIT_TEST
 
 /**
@@ -665,13 +661,6 @@ void initEngineController() {
 		initWaveAnalyzer();
 	}
 #endif /* EFI_LOGIC_ANALYZER */
-
-#if EFI_CJ125
-	/**
-	 * this uses SimplePwm which depends on scheduler, has to be initialized after scheduler
-	 */
-	initCJ125();
-#endif /* EFI_CJ125 */
 
 	if (hasFirmwareError()) {
 		return;

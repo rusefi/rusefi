@@ -197,16 +197,6 @@ void setBoardDefaultConfiguration() {
     engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
     engineConfiguration->isHip9011Enabled = true;
 
-	engineConfiguration->cj125SpiDevice = SPI_DEVICE_3;
-	engineConfiguration->cj125ua = is469 ? EFI_ADC_9 : EFI_ADC_8;
-	engineConfiguration->cj125ur = EFI_ADC_12;
-	engineConfiguration->cj125CsPin = Gpio::A15;
-	engineConfiguration->cj125CsPinMode = OM_OPENDRAIN;
-	engineConfiguration->wboHeaterPin = Gpio::C13;
-	engineConfiguration->o2heaterPin = Gpio::C13;
-	//engineConfiguration->isCJ125Enabled = true;
-	engineConfiguration->isCJ125Enabled = false;
-
 	engineConfiguration->canTxPin = Gpio::B9;
 	engineConfiguration->canRxPin = Gpio::B8;
 	
