@@ -20,9 +20,6 @@ jobs:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
         #
-        # see also gen_config where we have a similar list for all boards!
-        # see also build-primary-bundle where default/primary bundle is build separately
-        #
         # build-target: [
         #     alphax-2chan,
         #     alphax-4chan,
@@ -31,7 +28,6 @@ jobs:
         #     hellen72,
         #     hellen81,
         #     hellen88bmw,
-        #     hellen88bmw_avr,
         #     hellen-nb1,
         #     hellen-gm-e67,
         #     hellenNA8_96,
@@ -45,14 +41,11 @@ jobs:
         #     mre_f4_no_openblt,
         #     mre_f4_debug,
         #     mre_f4_recovery,
-        #     mre_f4_hardware_QC_special_build,
         #     mre_f7,
         #     prometheus_405,
         #     prometheus_469,
         #     proteus_f4,
-        #     proteus_f4_hardware_QC_special_build,
         #     proteus_f7,
-        #     proteus_f7_hardware_QC_special_build,
         #     proteus_h7,
         #     proteus_legacy,
         #     stm32f429_nucleo,
@@ -94,10 +87,6 @@ jobs:
           #   ini-file: fome_harley81.ini
 
           # - build-target: hellen88bmw
-          #   folder: config/boards/hellen/hellen88bmw
-          #   ini-file: fome_hellen88bmw.ini
-
-          # - build-target: hellen88bmw_avr
           #   folder: config/boards/hellen/hellen88bmw
           #   ini-file: fome_hellen88bmw.ini
 
@@ -157,10 +146,6 @@ jobs:
           #   folder: config/boards/microrusefi
           #   ini-file: fome_mre_f4.ini
 
-          # - build-target: mre_f4_hardware_QC_special_build
-          #   folder: config/boards/microrusefi
-          #   ini-file: fome_mre_f4.ini
-
           # - build-target: mre_f7
           #   folder: config/boards/microrusefi
           #   ini-file: fome_mre_f7.ini
@@ -177,17 +162,9 @@ jobs:
             folder: config/boards/proteus
             ini-file: fome_proteus_f4.ini
 
-          # - build-target: proteus_f4_hardware_QC_special_build
-          #   folder: config/boards/proteus
-          #   ini-file: fome_proteus_f4.ini
-
           - build-target: proteus_f7
             folder: config/boards/proteus
             ini-file: fome_proteus_f7.ini
-
-          # - build-target: proteus_f7_hardware_QC_special_build
-          #   folder: config/boards/proteus
-          #   ini-file: fome_proteus_f7.ini
 
           # - build-target: proteus_h7
           #   folder: config/boards/proteus

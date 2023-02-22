@@ -4,10 +4,6 @@ rusEFI supports quite a wide array of hardware - we support stm32f4 and we suppo
 
 For best user experience we have more than a dozen of different _binaries_ which are all compiled from same _firmware_ files with different configuration. This folder is all about that process.
 
-
-See [misc/jenkins/compile_other_versions/run.bat](misc/jenkins/compile_other_versions/run.bat) which is executed by build server.
-
-
 See https://rusefi.com/build_server/
 
 By definition, BOARD_NAME is a folder in firmware\config\boards

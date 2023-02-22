@@ -121,14 +121,6 @@ void Engine::updateTriggerWaveform() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
-#if ANALOG_HW_CHECK_MODE
-static void assertCloseTo(const char* msg, float actual, float expected) {
-	if (actual < 0.95f * expected || actual > 1.05f * expected) {
-		firmwareError(OBD_PCM_Processor_Fault, "%s validation failed actual=%f vs expected=%f", msg, actual, expected);
-	}
-}
-#endif // ANALOG_HW_CHECK_MODE
-
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 
@@ -175,32 +167,6 @@ void Engine::periodicSlowCallback() {
 	void baroLps25Update();
 	baroLps25Update();
 #endif // EFI_PROD_CODE
-
-#if ANALOG_HW_CHECK_MODE
-	efiAssertVoid(OBD_PCM_Processor_Fault, isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
-	efitimesec_t secondsNow = getTimeNowS();
-
-#if ! HW_CHECK_ALWAYS_STIMULATE
-	fail("HW_CHECK_ALWAYS_STIMULATE required to have self-stimulation")
-#endif
-
-    int hwCheckRpm = 204;
-	if (secondsNow > 2 && secondsNow < 180) {
-		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, hwCheckRpm);
-	} else if (!hasFirmwareError() && secondsNow > 180) {
-		static bool isHappyTest = false;
-		if (!isHappyTest) {
-			setTriggerEmulatorRPM(5 * hwCheckRpm);
-			efiPrintf("TEST PASSED");
-			isHappyTest = true;
-		}
-	}
-
-	assertCloseTo("clt", Sensor::getRaw(SensorType::Clt), 1.351f);
-	assertCloseTo("iat", Sensor::getRaw(SensorType::Iat), 2.245f);
-	assertCloseTo("aut1", Sensor::getRaw(SensorType::AuxTemp1), 2.750f);
-	assertCloseTo("aut2", Sensor::getRaw(SensorType::AuxTemp2), 3.176f);
-#endif // ANALOG_HW_CHECK_MODE
 }
 
 /**

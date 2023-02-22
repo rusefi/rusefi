@@ -130,11 +130,6 @@ static void setupDefaultSensorInputs() {
 
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor1, 2700);
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor2, 2700);
-
-#if HW_CHECK_MODE
-	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_2;
-	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_3;
-#endif // HW_CHECK_MODE
 }
 
 void setBoardConfigOverrides() {
