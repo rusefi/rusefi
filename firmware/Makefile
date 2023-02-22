@@ -375,6 +375,7 @@ ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 ##############################################################################
 
 include $(RULESFILE)
+include gitversion.mk
 
 openblt:
 	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk BOARD_DIR=$(BOARD_DIR) PROJECT_BOARD=$(PROJECT_BOARD) PROJECT_CPU=$(PROJECT_CPU)
