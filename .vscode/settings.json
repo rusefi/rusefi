@@ -1,18 +1,4 @@
 {
-    "files.associations": {
-		"xstring": "cpp",
-		"ios": "cpp",
-		"xlocale": "cpp",
-		"xtr1common": "cpp",
-		"xiosbase": "cpp",
-		"deque": "cpp",
-		"forward_list": "cpp",
-		"list": "cpp",
-		"system_error": "cpp",
-		"vector": "cpp",
-		"xhash": "cpp",
-		"xtree": "cpp"
-	},
 	"editor.detectIndentation": false,
 	"editor.insertSpaces": false,
 	"files.exclude": {
