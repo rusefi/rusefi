@@ -2,7 +2,7 @@ Here we have some tiny dev utilities - average rusEFI user would not need to use
 
 
 ```
-cd android
+cd java_tools
 ./gradlew :config_definition:shadowJar
 ```
 
