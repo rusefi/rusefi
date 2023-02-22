@@ -80,3 +80,6 @@ endif
 ifeq ($(GENERATED_ENUMS_DIR),)
 GENERATED_ENUMS_DIR = $(PROJECT_DIR)/controllers/algo
 endif
+
+# Generate git version header
+include gitversion.mk
