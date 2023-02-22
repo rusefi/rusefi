@@ -3,7 +3,6 @@ plugins {
     id 'java-test-fixtures'
 }
 
-apply from: '../../android/dependencies.gradle'
 apply from: '../../java_tools/dependencies.gradle'
 
 configurations {
