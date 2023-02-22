@@ -3,6 +3,8 @@ name: Firmware at GHA
 on:
   push:
   pull_request:
+  schedule:
+    - cron: '0 0 * * *'
   workflow_dispatch:
     inputs:
       lts:
@@ -300,7 +302,7 @@ jobs:
     - name: Execution throttle early exit
       # Don't skip any jobs if this workflow was run manually,
       # or if the commit contains `only:`, signifying that only one bundle should be built.
-      if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' || contains(github.event.head_commit.message, 'only:') }}
+      if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' && github.event_name != 'cron' || contains(github.event.head_commit.message, 'only:') }}
       run: |
         # if the commit message contains `only:`, get the part after the semicolon and check if it matches the build target.
         read -d ' ' MSG << EOM || true
