@@ -17,10 +17,7 @@
 #include "launch_control.h"
 #include "injector_model.h"
 #include "tunerstudio.h"
-
-#if EFI_PROD_CODE
-#include "svnversion.h"
-#endif
+#include "gitversion.h"
 
 #if ! EFI_UNIT_TEST
 #include "status_loop.h"
@@ -210,10 +207,6 @@ void EngineState::updateTChargeK(int rpm, float tps) {
 	}
 #endif
 }
-
-#if EFI_SIMULATOR
-#define VCS_VERSION "123"
-#endif
 
 void TriggerConfiguration::update() {
 	VerboseTriggerSynchDetails = isVerboseTriggerSynchDetails();

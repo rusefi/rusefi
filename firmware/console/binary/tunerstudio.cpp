@@ -80,7 +80,7 @@
 
 #include <string.h>
 #include "bench_test.h"
-#include "svnversion.h"
+#include "gitversion.h"
 #include "status_loop.h"
 #include "mmc_card.h"
 
@@ -387,7 +387,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug(tsChannel, "got T (Test)");
-	tsChannel->write((const uint8_t*)VCS_VERSION, sizeof(VCS_VERSION));
+	tsChannel->write((const uint8_t*)GIT_HASH_SHORT, sizeof(GIT_HASH_SHORT));
 
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
@@ -627,7 +627,7 @@ extern CommandHandler console_line_callback;
 
 static void handleGetVersion(TsChannelBase* tsChannel) {
 	char versionBuffer[32];
-	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), GIT_HASH_SHORT);
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 

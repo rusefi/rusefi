@@ -63,9 +63,6 @@ cp firmware/tunerstudio/generated/$INI_FILE_OVERRIDE $FOLDER
 INI_FILE_OVERRIDE=""
 RUSEFI_CONSOLE_SETTINGS=""
 
-# users probably do not really care for this file
-# cp firmware/svnversion.h $FOLDER
-
 cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 # 407 has additional version of firmware
 #cp firmware/deliver/rusefi_no_asserts.bin $FOLDER

@@ -39,7 +39,7 @@
 #include "histogram.h"
 #include "sent.h"
 #include "trigger_central.h"
-#include "svnversion.h"
+#include "gitversion.h"
 #include "vvt.h"
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"

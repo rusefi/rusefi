@@ -26,7 +26,7 @@
 
 #include "eficonsole.h"
 #include "console_io.h"
-#include "svnversion.h"
+#include "gitversion.h"
 
 static void testCritical() {
 	chDbgCheck(0);
@@ -38,7 +38,8 @@ static void myerror() {
 
 static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2023. All rights reserved.");
-	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	efiPrintf(PROTOCOL_HELLO_PREFIX " built from " GIT_HASH);
+	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d", getRusEfiVersion());
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);

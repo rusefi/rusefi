@@ -659,7 +659,7 @@ static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
 
 /**
- * See also VCS_VERSION
+ * See also GIT_HASH
  */
 int getRusEfiVersion(void) {
 	if (UNUSED_RAM_SIZE[0] != 0)
