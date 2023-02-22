@@ -219,7 +219,7 @@ TEST(etb, initializationNoPrimarySensor) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	// Redundant, but no primary configured
-	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::Tps1, /*value*/0, /*mockRedundant*/true);
 
 	EXPECT_FALSE(dut.init(DC_Throttle1, nullptr, nullptr, nullptr, true));
 
