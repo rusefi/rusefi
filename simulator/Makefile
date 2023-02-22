@@ -284,3 +284,4 @@ include $(RULESPATH)/rules.mk
 
 # Enable precompiled header
 include $(PROJECT_DIR)/rusefi_pch.mk
+include $(PROJECT_DIR)/gitversion.mk

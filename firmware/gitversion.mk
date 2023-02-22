@@ -9,3 +9,7 @@ gitversion.h.gen : .FORCE
 
 gitversion.h : gitversion.h.gen
 	rsync --checksum $< $@
+
+# All objects could depend on git version
+$(TCPPOBJS) : gitversion.h
+$(ACPPOBJS) : gitversion.h

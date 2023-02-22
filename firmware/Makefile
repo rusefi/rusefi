@@ -383,7 +383,8 @@ openblt_clean:
 	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk clean BOARD_DIR=$(BOARD_DIR) PROJECT_BOARD=$(PROJECT_BOARD) PROJECT_CPU=$(PROJECT_CPU)
 
 # Enable precompiled header
-include rusefi_pch.mk
+include $(PROJECT_DIR)/rusefi_pch.mk
+include $(PROJECT_DIR)/gitversion.mk
 
 POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf
 	@java -jar ../java_tools/gcc_map_reader.jar $(BUILDDIR)/$(PROJECT).map | grep Total || echo Unable to run gcc_map_reader
