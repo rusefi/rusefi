@@ -835,9 +835,6 @@ Usually if we have no trigger events that means engine is stopped\nUnless we are
 ### twoWireBatchInjection
 This is needed if your coils are individually wired and you wish to use batch injection.\nenable two_wire_batch_injection
 
-### neverInstantRpm
-
-
 ### twoWireBatchIgnition
 This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 
@@ -1545,9 +1542,6 @@ null
 
 ### acRelayAlternatorDutyAdder
 null
-
-### instantRpmRange
-
 
 ### ALSIdleAdd
 
