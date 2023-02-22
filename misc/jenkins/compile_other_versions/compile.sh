@@ -19,7 +19,9 @@ echo "Entering $SCRIPT_NAME with folder $BOARD_DIR and bundle name $BUNDLE_NAME"
 COMPILE_SCRIPT="compile_$BUNDLE_NAME.sh"
 
 cd firmware
-bash clean.sh
+rm -rf .dep
+rm -rf build
+rm -rf pch/pch.h.gch.sh
 cd ..
 
 root_dir=$(pwd)
