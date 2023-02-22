@@ -4,8 +4,6 @@ plugins {
 
 defaultTasks 'jar'
 
-apply from: '../../android/dependencies.gradle'
-
 jar {
     destinationDirectory = file( '$rootDir/../..' )
     manifest {
