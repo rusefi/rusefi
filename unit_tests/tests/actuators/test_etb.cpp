@@ -210,7 +210,7 @@ TEST(etb, initializationNotRedundantPedal) {
 	EXPECT_FATAL_ERROR(dut.init(DC_Throttle1, nullptr, nullptr, nullptr, true));
 }
 
-TEST(etb, initializationNoPrimarySensor) {
+TEST(etb, initializationNoSensor) {
 	Sensor::resetAllMocks();
 
 	EtbController dut;
@@ -218,13 +218,10 @@ TEST(etb, initializationNoPrimarySensor) {
 	// Needs pedal for init
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
-	// Redundant, but no primary configured
-	Sensor::setMockValue(SensorType::Tps1, /*value*/0, /*mockRedundant*/true);
-
 	EXPECT_FALSE(dut.init(DC_Throttle1, nullptr, nullptr, nullptr, true));
 
-	// Now configure primary TPS
-	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	// Redundant
+	Sensor::setMockValue(SensorType::Tps1, /*value*/0, /*mockRedundant*/true);
 
 	// With primary TPS, should return true (ie, throttle was configured)
 	EXPECT_TRUE(dut.init(DC_Throttle1, nullptr, nullptr, nullptr, true));

@@ -108,6 +108,13 @@ static SensorType functionToPositionSensor(dc_function_e func) {
 	}
 }
 
+static SensorType functionToTpsSensor(dc_function_e func) {
+	switch(func) {
+		case DC_Throttle1:  return SensorType::Tps1;
+		default: return SensorType::Tps2;
+	}
+}
+
 static SensorType functionToTpsSensorPrimary(dc_function_e func) {
 	switch(func) {
 		case DC_Throttle1:  return SensorType::Tps1Primary;
@@ -177,7 +184,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 		}
 
 		// If no sensor is configured for this throttle, skip initialization.
-		if (!Sensor::hasSensor(functionToTpsSensorPrimary(function))) {
+		if (!Sensor::hasSensor(functionToTpsSensor(function))) {
 			etbErrorCode = (int8_t)TpsState::TpsError;
 			return false;
 		}
