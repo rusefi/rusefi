@@ -73,7 +73,7 @@ int EngineTestHelper::getWarningCounter() {
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
 	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
 {
-	memset(&persistentConfig, 0, sizeof(persistentConfig));
+	efi::clear(persistentConfig);
 
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
@@ -84,7 +84,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	unitTestWarningCodeState.clear();
 
-	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
+	efi::clear(activeConfiguration);
 
 	enginePins.reset();
 	enginePins.unregisterPins();
