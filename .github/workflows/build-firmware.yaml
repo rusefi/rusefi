@@ -254,12 +254,12 @@ jobs:
 
     # Build rusEFI console
     - name: Build console
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts || inputs.uploadBundle }}
       run: bash misc/jenkins/build_java_console.sh
 
     # Build the simulator
     - name: Build simulator
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts || inputs.uploadBundle }}
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
@@ -268,7 +268,7 @@ jobs:
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
 
     - name: Package Bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master'  ) || inputs.lts }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master'  ) || inputs.lts || inputs.uploadBundle }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
     # - name: Upload .ini files
@@ -306,8 +306,7 @@ jobs:
     #     path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
-      #if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
-      if: ${{ inputs.uploadBundle }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts || inputs.uploadBundle }}
       uses: actions/upload-artifact@v3
       with:
         name: fome_bundle_${{matrix.build-target}}.zip
