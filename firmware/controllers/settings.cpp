@@ -77,11 +77,6 @@ static void setCrankingIACExtra(float percent) {
 	efiPrintf("cranking_iac %.2f", percent);
 }
 
-static void setCrankingFuel(float timeMs) {
-	engineConfiguration->cranking.baseFuel = timeMs;
-	efiPrintf("cranking_fuel %.2f", timeMs);
-}
-
 static void setGlobalTriggerAngleOffset(float value) {
 	if (cisnan(value)) {
 		warning(CUSTOM_ERR_SGTP_ARGUMENT, "Invalid argument");
@@ -550,14 +545,6 @@ static void getValue(const char *paramStr) {
 	}
 }
 
-static void setScriptCurve1Value(float value) {
-	setLinearCurve(config->scriptCurve1, value, value, 1);
-}
-
-static void setScriptCurve2Value(float value) {
-	setLinearCurve(config->scriptCurve2, value, value, 1);
-}
-
 struct command_i_s {
 	const char *token;
 	VoidInt callback;
@@ -571,16 +558,12 @@ struct command_f_s {
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
-		{"cranking_fuel", setCrankingFuel},
 		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
 		{"tps_accel_threshold", setTpsAccelThr},
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
-		{"flat_injector_lag", setFlatInjectorLag},
 #endif // EFI_ENGINE_CONTROL
-		{"script_curve_1_value", setScriptCurve1Value},
-		{"script_curve_2_value", setScriptCurve2Value},
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 		{"etb", setThrottleDutyCycle},
