@@ -305,7 +305,7 @@ jobs:
     #     name: fome_${{matrix.build-target}}.dfu
     #     path: ./firmware/deliver/rusefi*.dfu
 
-    # - name: Upload bundle
+    - name: Upload bundle
       #if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
       if: ${{ inputs.uploadBundle }}
       uses: actions/upload-artifact@v3
