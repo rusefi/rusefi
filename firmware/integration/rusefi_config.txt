@@ -107,7 +107,6 @@ struct_no_prefix persistent_config_s
 
 struct_no_prefix engine_configuration_s
 
-! see 'blockingFactor' in rusefi.ini
 #define BLOCKING_FACTOR 750
 
 #define SENT_INPUT_COUNT 1
@@ -217,7 +216,6 @@ struct_no_prefix engine_configuration_s
 ! or packing numeric voltage inside an integer byte
 !
 ! one byte RPM with '50' multiplier limits us at 12750 RPM which is below what small engines do
-! in order for rusEFI to run on some F1 engines shall we move away from one byte RPM or bump multiplier to 100 or what?
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
 
@@ -996,7 +994,6 @@ bit launchActivateInverted
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skipped wheel located?
 
-	adc_channel_e hipOutputChannel;
 	switch_input_pin_e acSwitch;A/C button input;
 	adc_channel_e vRefAdcChannel;
 	uint8_t etbNeutralPosition;Expected neutral position;"%", 1, 0, 0, 100, 0
