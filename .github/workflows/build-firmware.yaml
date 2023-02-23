@@ -9,6 +9,10 @@ on:
         description: 'LTS Build'
         required: false
         type: boolean
+      uploadBundle:
+        description: 'Upload Bundle'
+        required: false
+        type: boolean
 jobs:
   build-firmware:
     runs-on: ubuntu-latest-selfhost
@@ -254,10 +258,10 @@ jobs:
       run: bash misc/jenkins/build_java_console.sh
 
     # Build the simulator
-    # - name: Build simulator
-    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
-    #   # 'OS="Windows_NT"' allows us to build Windows executable on unix
-    #   run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
+    - name: Build simulator
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
+      # 'OS="Windows_NT"' allows us to build Windows executable on unix
+      run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
     # Build the firmware!
     - name: Build Firmware
@@ -302,11 +306,12 @@ jobs:
     #     path: ./firmware/deliver/rusefi*.dfu
 
     # - name: Upload bundle
-    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: fome_bundle_${{matrix.build-target}}.zip
-    #     path: ./artifacts/fome_bundle*.zip
+      #if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
+      if: ${{ inputs.uploadBundle }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: fome_bundle_${{matrix.build-target}}.zip
+        path: ./artifacts/fome_bundle*.zip
 
     # - name: Upload autoupdate bundle
     #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
