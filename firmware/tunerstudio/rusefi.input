@@ -3460,9 +3460,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "ADC vRef voltage",						adcVcc
 		field = "Use fixed baro corr from MAP",		useFixedBaroCorrFromMap
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
-		field = "Smoothing factor",						slowAdcAlpha
-
-
 
 ;			Board->Connection
 	dialog = tsPort, "Calibration Secondary Serial"
