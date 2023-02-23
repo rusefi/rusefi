@@ -51,13 +51,7 @@ float SpeedDensityAirmass::getAirflow(float rpm, float map) {
 }
 
 float SpeedDensityAirmass::getMap(int rpm) const {
-	float fallbackMap;
-	if (engineConfiguration->enableMapEstimationTableFallback) {
-	// if the map estimation table is enabled, estimate map based on the TPS and RPM
-		fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
-	} else {
-		fallbackMap = engineConfiguration->failedMapFallback;
-	}
+	float fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.fallbackMap = fallbackMap;

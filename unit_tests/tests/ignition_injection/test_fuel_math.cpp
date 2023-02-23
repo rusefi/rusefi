@@ -138,7 +138,15 @@ TEST(AirmassModes, FallbackMap) {
 	StrictMock<MockVp3d> mapFallback;
 
 	// Failed map -> use 75
-	EXPECT_CALL(mapFallback, getValue(5678, 20)).WillOnce(Return(75));
+	{
+		InSequence is;
+
+		// Working map -> return 33 (should be unused)
+		EXPECT_CALL(mapFallback, getValue(1234, 20)).WillOnce(Return(33));
+
+		// Failed map -> use 75
+		EXPECT_CALL(mapFallback, getValue(5678, 20)).WillOnce(Return(75));
+	}
 
 	EngineTestHelper eth(TEST_ENGINE);
 
@@ -151,15 +159,8 @@ TEST(AirmassModes, FallbackMap) {
 	Sensor::setMockValue(SensorType::Map, 40);
 	EXPECT_FLOAT_EQ(dut.getMap(1234), 40);
 
-	// Failed MAP sensor, should use fixed value
-	Sensor::resetMockValue(SensorType::Map);
-	engineConfiguration->enableMapEstimationTableFallback = false;
-	engineConfiguration->failedMapFallback = 33;
-	EXPECT_FLOAT_EQ(dut.getMap(2345), 33);
-
 	// Failed MAP sensor, should use table
 	Sensor::resetMockValue(SensorType::Map);
-	engineConfiguration->enableMapEstimationTableFallback = true;
 	EXPECT_FLOAT_EQ(dut.getMap(5678), 75);
 }
 

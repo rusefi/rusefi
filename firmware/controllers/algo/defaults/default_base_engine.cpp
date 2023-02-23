@@ -58,8 +58,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->cutFuelOnHardLimit = true;
 	engineConfiguration->cutSparkOnHardLimit = true;
 
-	engineConfiguration->failedMapFallback = 60;
-	engineConfiguration->enableMapEstimationTableFallback = false;
+	setTable(config->mapEstimateTable, 60);
 
 //	engineConfiguration->totalGearsCount = 5;
 //	engineConfiguration->gearRatio[0] = 3.35f;
