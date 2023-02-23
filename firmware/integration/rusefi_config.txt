@@ -390,14 +390,14 @@ air_pressure_sensor_config_s sensor
 end_struct
 
 struct_no_prefix thermistor_conf_s @brief Thermistor known values
-float tempC_1;these values are in Celcius;"*C", 1, 0, -40, 200, 1
-float tempC_2;;"*C", 1, 0, -40, 200, 1
-float tempC_3;;"*C", 1, 0, -40, 200, 1
-float resistance_1;;"Ohm", 1, 0, 0, 200000, 1
-float resistance_2;;"Ohm", 1, 0, 0, 200000, 1
-float resistance_3;;"Ohm", 1, 0, 0, 200000, 1
+	int autoscale tempC_1;these values are in Celcius;"*C", 0.01, 0, -40, 200, 1
+	int autoscale tempC_2;;"*C", 0.01, 0, -40, 200, 1
+	int autoscale tempC_3;;"*C", 0.01, 0, -40, 200, 1
+	uint32_t autoscale resistance_1;;"Ohm", 0.01, 0, 0, 200000, 1
+	uint32_t autoscale resistance_2;;"Ohm", 0.01, 0, 0, 200000, 1
+	uint32_t autoscale resistance_3;;"Ohm", 0.01, 0, 0, 200000, 1
 
-	float bias_resistor;Pull-up resistor value on your board;"Ohm", 1, 0, 0, 200000, 1
+	uint32_t autoscale bias_resistor;Pull-up resistor value on your board;"Ohm", 0.1, 0, 0, 200000, 1
 end_struct
 
 struct linear_sensor_s @brief Linear sensor interpolation
