@@ -251,8 +251,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->rusefiVerbose29b;
 		case -956913549:
 			return engineConfiguration->isVerboseAlternator;
-		case -1055678778:
-			return engineConfiguration->verboseQuad;
 		case -920116109:
 			return engineConfiguration->useStepperIdle;
 		case -2068213709:
@@ -1319,7 +1317,7 @@ void setConfigValueByName(const char *name, float value) {
 	}
 		case -962678774:
 	{
-		engineConfiguration->specs.displacement = value;
+		engineConfiguration->specs.displacement = (int)value;
 		return;
 	}
 		case -601272985:
@@ -1394,12 +1392,12 @@ void setConfigValueByName(const char *name, float value) {
 	}
 		case -853358747:
 	{
-		engineConfiguration->fanOnTemperature = value;
+		engineConfiguration->fanOnTemperature = (int)value;
 		return;
 	}
 		case 4686563:
 	{
-		engineConfiguration->fanOffTemperature = value;
+		engineConfiguration->fanOffTemperature = (int)value;
 		return;
 	}
 		case 991724096:
@@ -1469,22 +1467,22 @@ void setConfigValueByName(const char *name, float value) {
 	}
 		case -241663117:
 	{
-		engineConfiguration->afr.v1 = value;
+		engineConfiguration->afr.v1 = (int)value;
 		return;
 	}
 		case 1273287930:
 	{
-		engineConfiguration->afr.value1 = value;
+		engineConfiguration->afr.value1 = (int)value;
 		return;
 	}
 		case -241663116:
 	{
-		engineConfiguration->afr.v2 = value;
+		engineConfiguration->afr.v2 = (int)value;
 		return;
 	}
 		case 1273287931:
 	{
-		engineConfiguration->afr.value2 = value;
+		engineConfiguration->afr.value2 = (int)value;
 		return;
 	}
 		case 1474689568:
@@ -1615,11 +1613,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -956913549:
 	{
 		engineConfiguration->isVerboseAlternator = (int)value;
-		return;
-	}
-		case -1055678778:
-	{
-		engineConfiguration->verboseQuad = (int)value;
 		return;
 	}
 		case -920116109:
