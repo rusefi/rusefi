@@ -411,7 +411,7 @@ jobs:
       run: arm-none-eabi-gcc -v
 
     - name: Configs Set SSH variables
-      if: ${{ env.full = 'true' }}
+      if: ${{ env.full == 'true' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
@@ -421,12 +421,12 @@ jobs:
 
     # Build rusEFI console
     - name: Build console
-      if: ${{ env.full = 'true' }}
+      if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/build_java_console.sh
 
     # Build the simulator
     - name: Build simulator
-      if: ${{ env.full = 'true' }}
+      if: ${{ env.full == 'true' }}
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
@@ -436,52 +436,52 @@ jobs:
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
 
     - name: Package Bundle
-      if: ${{ env.full = 'true' }}
+      if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
     - name: Upload .ini files
-      if: ${{ env.full = 'true' }}
+      if: ${{ env.full == 'true' }}
       working-directory: ./firmware/tunerstudio/generated
       run: |
         ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload build elf
-      if: ${{ env.partial = 'true' }}
+      if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload build bin
-      if: ${{ env.partial = 'true' }}
+      if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload build hex
-      if: ${{ env.partial = 'true' }}
+      if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.hex
         path: ./firmware/deliver/rusefi*.hex
 
     - name: Upload build dfu
-      if: ${{ env.partial = 'true' }}
+      if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.dfu
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
-      if: ${{ env.full = 'true' }}
+      if: ${{ env.full == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle*.zip
 
     - name: Upload autoupdate bundle
-      if: ${{ env.full = 'true' }}
+      if: ${{ env.full == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
