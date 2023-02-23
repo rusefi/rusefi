@@ -580,7 +580,7 @@ static void setDefaultEngineConfiguration() {
 	setEgoSensor(ES_14Point7_Free);
 
 	engineConfiguration->globalFuelCorrection = 1;
-	engineConfiguration->adcVcc = 3.0;
+	engineConfiguration->adcVcc = 3.3f;
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
@@ -995,7 +995,7 @@ void resetConfigurationExt(engine_type_e engineType) {
 
 void validateConfiguration() {
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
-		engineConfiguration->adcVcc = 3.0f;
+		engineConfiguration->adcVcc = 3.3f;
 	}
 	if (engineConfiguration->instantRpmRange == 0) {
         // todo: extract constant in instant_rpm_calculator.h?
