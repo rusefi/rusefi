@@ -275,8 +275,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->coastingFuelCutEnabled;
 		case -2101952506:
 			return engineConfiguration->useIacTableForCoasting;
-		case 957244017:
-			return engineConfiguration->useNoiselessTriggerDecoder;
 		case 11736566:
 			return engineConfiguration->useIdleTimingPidControl;
 		case -2096650725:
@@ -1677,11 +1675,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -2101952506:
 	{
 		engineConfiguration->useIacTableForCoasting = (int)value;
-		return;
-	}
-		case 957244017:
-	{
-		engineConfiguration->useNoiselessTriggerDecoder = (int)value;
 		return;
 	}
 		case 11736566:
