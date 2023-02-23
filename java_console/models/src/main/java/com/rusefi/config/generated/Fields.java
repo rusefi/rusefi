@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 22 19:04:08 PST 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 22 21:54:00 PST 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -992,6 +992,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 247907212;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1201,7 +1202,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.23.f407-discovery.4175785157";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.23.f407-discovery.247907212";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;
@@ -1322,22 +1323,22 @@ public class Fields {
 	public static final String[] adc_channel_e = {"Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"};
 	public static final Field MAP_SENSOR_HWCHANNEL = Field.create("MAP_SENSOR_HWCHANNEL", 285, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field MAP_SENSOR_ALIGNMENTFILL_AT_10 = Field.create("MAP_SENSOR_ALIGNMENTFILL_AT_10", 286, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field CLT_TEMPC_1 = Field.create("CLT_TEMPC_1", 288, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field CLT_TEMPC_2 = Field.create("CLT_TEMPC_2", 292, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field CLT_TEMPC_3 = Field.create("CLT_TEMPC_3", 296, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field CLT_RESISTANCE_1 = Field.create("CLT_RESISTANCE_1", 300, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field CLT_RESISTANCE_2 = Field.create("CLT_RESISTANCE_2", 304, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field CLT_RESISTANCE_3 = Field.create("CLT_RESISTANCE_3", 308, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field CLT_BIAS_RESISTOR = Field.create("CLT_BIAS_RESISTOR", 312, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field CLT_TEMPC_1 = Field.create("CLT_TEMPC_1", 288, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field CLT_TEMPC_2 = Field.create("CLT_TEMPC_2", 292, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field CLT_TEMPC_3 = Field.create("CLT_TEMPC_3", 296, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field CLT_RESISTANCE_1 = Field.create("CLT_RESISTANCE_1", 300, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field CLT_RESISTANCE_2 = Field.create("CLT_RESISTANCE_2", 304, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field CLT_RESISTANCE_3 = Field.create("CLT_RESISTANCE_3", 308, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field CLT_BIAS_RESISTOR = Field.create("CLT_BIAS_RESISTOR", 312, FieldType.INT).setScale(0.1).setBaseOffset(0);
 	public static final Field CLT_ADCCHANNEL = Field.create("CLT_ADCCHANNEL", 316, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field CLT_ALIGNMENTFILL_AT_29 = Field.create("CLT_ALIGNMENTFILL_AT_29", 317, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field IAT_TEMPC_1 = Field.create("IAT_TEMPC_1", 320, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IAT_TEMPC_2 = Field.create("IAT_TEMPC_2", 324, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IAT_TEMPC_3 = Field.create("IAT_TEMPC_3", 328, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IAT_RESISTANCE_1 = Field.create("IAT_RESISTANCE_1", 332, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IAT_RESISTANCE_2 = Field.create("IAT_RESISTANCE_2", 336, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IAT_RESISTANCE_3 = Field.create("IAT_RESISTANCE_3", 340, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IAT_BIAS_RESISTOR = Field.create("IAT_BIAS_RESISTOR", 344, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field IAT_TEMPC_1 = Field.create("IAT_TEMPC_1", 320, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field IAT_TEMPC_2 = Field.create("IAT_TEMPC_2", 324, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field IAT_TEMPC_3 = Field.create("IAT_TEMPC_3", 328, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field IAT_RESISTANCE_1 = Field.create("IAT_RESISTANCE_1", 332, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field IAT_RESISTANCE_2 = Field.create("IAT_RESISTANCE_2", 336, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field IAT_RESISTANCE_3 = Field.create("IAT_RESISTANCE_3", 340, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field IAT_BIAS_RESISTOR = Field.create("IAT_BIAS_RESISTOR", 344, FieldType.INT).setScale(0.1).setBaseOffset(0);
 	public static final Field IAT_ADCCHANNEL = Field.create("IAT_ADCCHANNEL", 348, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field IAT_ALIGNMENTFILL_AT_29 = Field.create("IAT_ALIGNMENTFILL_AT_29", 349, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHTIMINGRETARD = Field.create("LAUNCHTIMINGRETARD", 352, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -1973,22 +1974,22 @@ public class Fields {
 	public static final Field FUELREFERENCEPRESSURE = Field.create("FUELREFERENCEPRESSURE", 1648, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 1652, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONSEC = Field.create("POSTCRANKINGDURATIONSEC", 1656, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR1_TEMPC_1 = Field.create("AUXTEMPSENSOR1_TEMPC_1", 1660, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR1_TEMPC_2 = Field.create("AUXTEMPSENSOR1_TEMPC_2", 1664, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR1_TEMPC_3 = Field.create("AUXTEMPSENSOR1_TEMPC_3", 1668, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR1_RESISTANCE_1 = Field.create("AUXTEMPSENSOR1_RESISTANCE_1", 1672, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR1_RESISTANCE_2 = Field.create("AUXTEMPSENSOR1_RESISTANCE_2", 1676, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR1_RESISTANCE_3 = Field.create("AUXTEMPSENSOR1_RESISTANCE_3", 1680, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR1_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR1_BIAS_RESISTOR", 1684, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR1_TEMPC_1 = Field.create("AUXTEMPSENSOR1_TEMPC_1", 1660, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR1_TEMPC_2 = Field.create("AUXTEMPSENSOR1_TEMPC_2", 1664, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR1_TEMPC_3 = Field.create("AUXTEMPSENSOR1_TEMPC_3", 1668, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR1_RESISTANCE_1 = Field.create("AUXTEMPSENSOR1_RESISTANCE_1", 1672, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR1_RESISTANCE_2 = Field.create("AUXTEMPSENSOR1_RESISTANCE_2", 1676, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR1_RESISTANCE_3 = Field.create("AUXTEMPSENSOR1_RESISTANCE_3", 1680, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR1_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR1_BIAS_RESISTOR", 1684, FieldType.INT).setScale(0.1).setBaseOffset(0);
 	public static final Field AUXTEMPSENSOR1_ADCCHANNEL = Field.create("AUXTEMPSENSOR1_ADCCHANNEL", 1688, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXTEMPSENSOR1_ALIGNMENTFILL_AT_29 = Field.create("AUXTEMPSENSOR1_ALIGNMENTFILL_AT_29", 1689, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR2_TEMPC_1 = Field.create("AUXTEMPSENSOR2_TEMPC_1", 1692, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR2_TEMPC_2 = Field.create("AUXTEMPSENSOR2_TEMPC_2", 1696, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR2_TEMPC_3 = Field.create("AUXTEMPSENSOR2_TEMPC_3", 1700, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR2_RESISTANCE_1 = Field.create("AUXTEMPSENSOR2_RESISTANCE_1", 1704, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR2_RESISTANCE_2 = Field.create("AUXTEMPSENSOR2_RESISTANCE_2", 1708, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR2_RESISTANCE_3 = Field.create("AUXTEMPSENSOR2_RESISTANCE_3", 1712, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXTEMPSENSOR2_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR2_BIAS_RESISTOR", 1716, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR2_TEMPC_1 = Field.create("AUXTEMPSENSOR2_TEMPC_1", 1692, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR2_TEMPC_2 = Field.create("AUXTEMPSENSOR2_TEMPC_2", 1696, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR2_TEMPC_3 = Field.create("AUXTEMPSENSOR2_TEMPC_3", 1700, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR2_RESISTANCE_1 = Field.create("AUXTEMPSENSOR2_RESISTANCE_1", 1704, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR2_RESISTANCE_2 = Field.create("AUXTEMPSENSOR2_RESISTANCE_2", 1708, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR2_RESISTANCE_3 = Field.create("AUXTEMPSENSOR2_RESISTANCE_3", 1712, FieldType.INT).setScale(0.01).setBaseOffset(0);
+	public static final Field AUXTEMPSENSOR2_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR2_BIAS_RESISTOR", 1716, FieldType.INT).setScale(0.1).setBaseOffset(0);
 	public static final Field AUXTEMPSENSOR2_ADCCHANNEL = Field.create("AUXTEMPSENSOR2_ADCCHANNEL", 1720, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXTEMPSENSOR2_ALIGNMENTFILL_AT_29 = Field.create("AUXTEMPSENSOR2_ALIGNMENTFILL_AT_29", 1721, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field KNOCKSAMPLINGDURATION = Field.create("KNOCKSAMPLINGDURATION", 1724, FieldType.INT16).setScale(1.0).setBaseOffset(0);

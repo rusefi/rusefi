@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 22 18:25:13 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 22 21:54:00 PST 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -315,38 +315,38 @@ struct thermistor_conf_s {
 	*C
 	 * offset 0
 	 */
-	float tempC_1;
+	scaled_channel<int, 100, 1> tempC_1;
 	/**
 	*C
 	 * offset 4
 	 */
-	float tempC_2;
+	scaled_channel<int, 100, 1> tempC_2;
 	/**
 	*C
 	 * offset 8
 	 */
-	float tempC_3;
+	scaled_channel<int, 100, 1> tempC_3;
 	/**
 	Ohm
 	 * offset 12
 	 */
-	float resistance_1;
+	scaled_channel<uint32_t, 100, 1> resistance_1;
 	/**
 	Ohm
 	 * offset 16
 	 */
-	float resistance_2;
+	scaled_channel<uint32_t, 100, 1> resistance_2;
 	/**
 	Ohm
 	 * offset 20
 	 */
-	float resistance_3;
+	scaled_channel<uint32_t, 100, 1> resistance_3;
 	/**
 	 * Pull-up resistor value on your board
 	Ohm
 	 * offset 24
 	 */
-	float bias_resistor;
+	scaled_channel<uint32_t, 10, 1> bias_resistor;
 };
 static_assert(sizeof(thermistor_conf_s) == 28);
 
@@ -4668,4 +4668,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22120);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 22 18:25:13 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 22 21:54:00 PST 2023

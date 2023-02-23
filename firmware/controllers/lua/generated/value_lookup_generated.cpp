@@ -1243,72 +1243,72 @@ void setConfigValueByName(const char *name, float value) {
 	}
 		case -1832527325:
 	{
-		engineConfiguration->clt.config.tempC_1 = value;
+		engineConfiguration->clt.config.tempC_1 = (int)value;
 		return;
 	}
 		case -1832527324:
 	{
-		engineConfiguration->clt.config.tempC_2 = value;
+		engineConfiguration->clt.config.tempC_2 = (int)value;
 		return;
 	}
 		case -1832527323:
 	{
-		engineConfiguration->clt.config.tempC_3 = value;
+		engineConfiguration->clt.config.tempC_3 = (int)value;
 		return;
 	}
 		case -5328869:
 	{
-		engineConfiguration->clt.config.resistance_1 = value;
+		engineConfiguration->clt.config.resistance_1 = (int)value;
 		return;
 	}
 		case -5328868:
 	{
-		engineConfiguration->clt.config.resistance_2 = value;
+		engineConfiguration->clt.config.resistance_2 = (int)value;
 		return;
 	}
 		case -5328867:
 	{
-		engineConfiguration->clt.config.resistance_3 = value;
+		engineConfiguration->clt.config.resistance_3 = (int)value;
 		return;
 	}
 		case -653172717:
 	{
-		engineConfiguration->clt.config.bias_resistor = value;
+		engineConfiguration->clt.config.bias_resistor = (int)value;
 		return;
 	}
 		case -672272162:
 	{
-		engineConfiguration->iat.config.tempC_1 = value;
+		engineConfiguration->iat.config.tempC_1 = (int)value;
 		return;
 	}
 		case -672272161:
 	{
-		engineConfiguration->iat.config.tempC_2 = value;
+		engineConfiguration->iat.config.tempC_2 = (int)value;
 		return;
 	}
 		case -672272160:
 	{
-		engineConfiguration->iat.config.tempC_3 = value;
+		engineConfiguration->iat.config.tempC_3 = (int)value;
 		return;
 	}
 		case -1014418506:
 	{
-		engineConfiguration->iat.config.resistance_1 = value;
+		engineConfiguration->iat.config.resistance_1 = (int)value;
 		return;
 	}
 		case -1014418505:
 	{
-		engineConfiguration->iat.config.resistance_2 = value;
+		engineConfiguration->iat.config.resistance_2 = (int)value;
 		return;
 	}
 		case -1014418504:
 	{
-		engineConfiguration->iat.config.resistance_3 = value;
+		engineConfiguration->iat.config.resistance_3 = (int)value;
 		return;
 	}
 		case 406607630:
 	{
-		engineConfiguration->iat.config.bias_resistor = value;
+		engineConfiguration->iat.config.bias_resistor = (int)value;
 		return;
 	}
 		case 1226423210:
@@ -2853,72 +2853,72 @@ void setConfigValueByName(const char *name, float value) {
 	}
 		case -1104834801:
 	{
-		engineConfiguration->auxTempSensor1.config.tempC_1 = value;
+		engineConfiguration->auxTempSensor1.config.tempC_1 = (int)value;
 		return;
 	}
 		case -1104834800:
 	{
-		engineConfiguration->auxTempSensor1.config.tempC_2 = value;
+		engineConfiguration->auxTempSensor1.config.tempC_2 = (int)value;
 		return;
 	}
 		case -1104834799:
 	{
-		engineConfiguration->auxTempSensor1.config.tempC_3 = value;
+		engineConfiguration->auxTempSensor1.config.tempC_3 = (int)value;
 		return;
 	}
 		case 629168263:
 	{
-		engineConfiguration->auxTempSensor1.config.resistance_1 = value;
+		engineConfiguration->auxTempSensor1.config.resistance_1 = (int)value;
 		return;
 	}
 		case 629168264:
 	{
-		engineConfiguration->auxTempSensor1.config.resistance_2 = value;
+		engineConfiguration->auxTempSensor1.config.resistance_2 = (int)value;
 		return;
 	}
 		case 629168265:
 	{
-		engineConfiguration->auxTempSensor1.config.resistance_3 = value;
+		engineConfiguration->auxTempSensor1.config.resistance_3 = (int)value;
 		return;
 	}
 		case -1189603841:
 	{
-		engineConfiguration->auxTempSensor1.config.bias_resistor = value;
+		engineConfiguration->auxTempSensor1.config.bias_resistor = (int)value;
 		return;
 	}
 		case -900025104:
 	{
-		engineConfiguration->auxTempSensor2.config.tempC_1 = value;
+		engineConfiguration->auxTempSensor2.config.tempC_1 = (int)value;
 		return;
 	}
 		case -900025103:
 	{
-		engineConfiguration->auxTempSensor2.config.tempC_2 = value;
+		engineConfiguration->auxTempSensor2.config.tempC_2 = (int)value;
 		return;
 	}
 		case -900025102:
 	{
-		engineConfiguration->auxTempSensor2.config.tempC_3 = value;
+		engineConfiguration->auxTempSensor2.config.tempC_3 = (int)value;
 		return;
 	}
 		case 1988973320:
 	{
-		engineConfiguration->auxTempSensor2.config.resistance_1 = value;
+		engineConfiguration->auxTempSensor2.config.resistance_1 = (int)value;
 		return;
 	}
 		case 1988973321:
 	{
-		engineConfiguration->auxTempSensor2.config.resistance_2 = value;
+		engineConfiguration->auxTempSensor2.config.resistance_2 = (int)value;
 		return;
 	}
 		case 1988973322:
 	{
-		engineConfiguration->auxTempSensor2.config.resistance_3 = value;
+		engineConfiguration->auxTempSensor2.config.resistance_3 = (int)value;
 		return;
 	}
 		case 734290080:
 	{
-		engineConfiguration->auxTempSensor2.config.bias_resistor = value;
+		engineConfiguration->auxTempSensor2.config.bias_resistor = (int)value;
 		return;
 	}
 		case -430252676:
