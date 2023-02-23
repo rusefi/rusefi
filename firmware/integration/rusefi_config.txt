@@ -79,7 +79,6 @@
 ! bit bitName,"true value","false value";Tooltip text
 !
 !
-!
 ! units,scale,offset,min,max,digits
 
 !
