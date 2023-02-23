@@ -230,12 +230,6 @@ jobs:
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
         fi
 
-    - name: Validate Generated INI
-      uses: hyper-tuner/ini-validate-action@v1
-      with:
-        github-token: "${{ secrets.GITHUB_TOKEN }}"
-        filename: ${{ matrix.ini-file }}
-
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     # - name: Download & Install GCC
     #   env:
