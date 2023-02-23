@@ -17,8 +17,8 @@ static void test(int engineSyncCam, float camOffsetAdd) {
 	engineConfiguration->alwaysInstantRpm = true;
 
 	// Different sync cam may result in different TDC point, so we might need different cam offsets.
-	engineConfiguration->vvtOffsets[0] += camOffsetAdd;
-	engineConfiguration->vvtOffsets[2] += camOffsetAdd;
+	engineConfiguration->vvtOffsets[0] = engineConfiguration->vvtOffsets[0] + camOffsetAdd;
+	engineConfiguration->vvtOffsets[2] = engineConfiguration->vvtOffsets[2] + camOffsetAdd;
 	engineConfiguration->engineSyncCam = engineSyncCam;
 
 	bool hasSeenFirstVvt = false;

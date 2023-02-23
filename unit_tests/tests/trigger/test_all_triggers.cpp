@@ -58,7 +58,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	printf("Exporting %s\r\n", getTrigger_type_e(tt));
 
 	persistent_config_s pc;
-	memset(&pc, 0, sizeof(pc));
+	efi::clear(pc);
 	Engine e;
 	Engine* engine = &e;
 	EngineTestHelperBase base(engine, &pc.engineConfiguration, &pc);
