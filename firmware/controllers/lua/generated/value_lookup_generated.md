@@ -1219,9 +1219,6 @@ Time required to detect a stuck throttle.
 ### etbExpAverageLength
 By the way ETB PID runs at 500hz, length in 1/500 of second here.
 
-### etbDutyThreshold
-null
-
 ### coastingFuelCutRpmHigh
 This sets the RPM above which fuel cut is active.
 

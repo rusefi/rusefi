@@ -817,8 +817,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->etbJamTimeout;
 		case -86185846:
 			return engineConfiguration->etbExpAverageLength;
-		case -275312941:
-			return engineConfiguration->etbDutyThreshold;
 		case 1272017572:
 			return engineConfiguration->coastingFuelCutRpmHigh;
 		case 168701078:
@@ -3034,11 +3032,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -86185846:
 	{
 		engineConfiguration->etbExpAverageLength = (int)value;
-		return;
-	}
-		case -275312941:
-	{
-		engineConfiguration->etbDutyThreshold = value;
 		return;
 	}
 		case 1272017572:
