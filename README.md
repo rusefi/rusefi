@@ -12,7 +12,6 @@
 
 Online and offline (PDF) versions of the user manual available here: https://wiki.fome.tech/
 
-
 # Cloning the repository
 
 `git clone https://github.com/FOME-Tech/fome-fw.git`
