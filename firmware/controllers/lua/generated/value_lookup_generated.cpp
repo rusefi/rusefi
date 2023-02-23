@@ -673,14 +673,14 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tpsAccelEnrichmentThreshold;
 		case -2114430012:
 			return engineConfiguration->totalGearsCount;
+		case 1397079021:
+			return engineConfiguration->fan1ExtraIdle;
 		case -999870619:
 			return engineConfiguration->uartConsoleSerialSpeed;
 		case -965453331:
 			return engineConfiguration->tpsDecelEnleanmentThreshold;
 		case 1164012327:
 			return engineConfiguration->tpsDecelEnleanmentMultiplier;
-		case 70789688:
-			return engineConfiguration->slowAdcAlpha;
 		case 781749924:
 			return engineConfiguration->auxSerialSpeed;
 		case -1564912640:
@@ -729,8 +729,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tChargeMaxRpmMinTps;
 		case -608466667:
 			return engineConfiguration->tChargeMaxRpmMaxTps;
-		case 1397079021:
-			return engineConfiguration->fan1ExtraIdle;
 		case 799798215:
 			return engineConfiguration->alternatorPwmFrequency;
 		case 1464880398:
@@ -897,20 +895,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->triggerCompHystMax;
 		case -953183719:
 			return engineConfiguration->triggerCompSensorSatRpm;
-		case 2018252734:
-			return engineConfiguration->idleRpmPid2.pFactor;
-		case 1567911543:
-			return engineConfiguration->idleRpmPid2.iFactor;
-		case -594461006:
-			return engineConfiguration->idleRpmPid2.dFactor;
-		case 1844327734:
-			return engineConfiguration->idleRpmPid2.offset;
-		case 1558588306:
-			return engineConfiguration->idleRpmPid2.periodMs;
-		case -1013403216:
-			return engineConfiguration->idleRpmPid2.minValue;
-		case 1931108850:
-			return engineConfiguration->idleRpmPid2.maxValue;
 		case -371707639:
 			return engineConfiguration->mc33_i_boost;
 		case 379679459:
@@ -979,8 +963,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->etbMinimumPosition;
 		case -243078627:
 			return engineConfiguration->tuneHidingKey;
-		case -1743759953:
-			return engineConfiguration->etbDutyShutdownThreshold;
 		case 1532957848:
 			return engineConfiguration->ALSMinRPM;
 		case 1523829850:
@@ -2692,6 +2674,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->totalGearsCount = (int)value;
 		return;
 	}
+		case 1397079021:
+	{
+		engineConfiguration->fan1ExtraIdle = (int)value;
+		return;
+	}
 		case -999870619:
 	{
 		engineConfiguration->uartConsoleSerialSpeed = (int)value;
@@ -2705,11 +2692,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 1164012327:
 	{
 		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
-		return;
-	}
-		case 70789688:
-	{
-		engineConfiguration->slowAdcAlpha = value;
 		return;
 	}
 		case 781749924:
@@ -2830,11 +2812,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -608466667:
 	{
 		engineConfiguration->tChargeMaxRpmMaxTps = value;
-		return;
-	}
-		case 1397079021:
-	{
-		engineConfiguration->fan1ExtraIdle = (int)value;
 		return;
 	}
 		case 799798215:
@@ -3252,41 +3229,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->triggerCompSensorSatRpm = (int)value;
 		return;
 	}
-		case 2018252734:
-	{
-		engineConfiguration->idleRpmPid2.pFactor = value;
-		return;
-	}
-		case 1567911543:
-	{
-		engineConfiguration->idleRpmPid2.iFactor = value;
-		return;
-	}
-		case -594461006:
-	{
-		engineConfiguration->idleRpmPid2.dFactor = value;
-		return;
-	}
-		case 1844327734:
-	{
-		engineConfiguration->idleRpmPid2.offset = (int)value;
-		return;
-	}
-		case 1558588306:
-	{
-		engineConfiguration->idleRpmPid2.periodMs = (int)value;
-		return;
-	}
-		case -1013403216:
-	{
-		engineConfiguration->idleRpmPid2.minValue = (int)value;
-		return;
-	}
-		case 1931108850:
-	{
-		engineConfiguration->idleRpmPid2.maxValue = (int)value;
-		return;
-	}
 		case -371707639:
 	{
 		engineConfiguration->mc33_i_boost = (int)value;
@@ -3455,11 +3397,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -243078627:
 	{
 		engineConfiguration->tuneHidingKey = (int)value;
-		return;
-	}
-		case -1743759953:
-	{
-		engineConfiguration->etbDutyShutdownThreshold = value;
 		return;
 	}
 		case 1532957848:

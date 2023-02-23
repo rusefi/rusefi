@@ -1003,6 +1003,9 @@ Maximum change delta of TPS percentage over the 'length'. Actual TPS change has 
 ### totalGearsCount
 
 
+### fan1ExtraIdle
+Additional idle % when fan #1 is active
+
 ### uartConsoleSerialSpeed
 Band rate for primary TTL
 
@@ -1011,9 +1014,6 @@ For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 
 ### tpsDecelEnleanmentMultiplier
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
-
-### slowAdcAlpha
-ExpAverage alpha coefficient
 
 ### auxSerialSpeed
 
@@ -1086,9 +1086,6 @@ This is the IAC position during cranking, some engines start better if given mor
 
 ### tChargeMaxRpmMaxTps
 
-
-### fan1ExtraIdle
-Additional idle % when fan #1 is active
 
 ### alternatorPwmFrequency
 
@@ -1339,27 +1336,6 @@ Trigger comparator hysteresis voltage (Max)
 ### triggerCompSensorSatRpm
 VR-sensor saturation RPM
 
-### idleRpmPid2.pFactor
-
-
-### idleRpmPid2.iFactor
-
-
-### idleRpmPid2.dFactor
-
-
-### idleRpmPid2.offset
-Linear addition to PID logic
-
-### idleRpmPid2.periodMs
-PID dTime
-
-### idleRpmPid2.minValue
-Output Min Duty Cycle
-
-### idleRpmPid2.maxValue
-Output Max Duty Cycle
-
 ### mc33_i_boost
 Boost Current
 
@@ -1461,9 +1437,6 @@ We need to give engine time to build oil pressure without diverting it to VVT
 
 ### tuneHidingKey
 
-
-### etbDutyShutdownThreshold
-null
 
 ### ALSMinRPM
 
