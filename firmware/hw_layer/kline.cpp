@@ -17,15 +17,15 @@ void kLineThread(void*)
         chnReadTimeout(klDriver, &ch, 1, KLINE_READ_TIMEOUT);
         // to begin with just write byte to console
         if (ch != 0) {
-            efiPrintf("kline: %c", ch);
+            efiPrintf("kline: 0x%02x", ch);
             totalBytes++;
         }
     }
 }
 #endif
 
-void initKLine() {
-
+/* currently useless because all settings are hardcoded */
+void startKLine() {
 #ifdef EFI_KLINE
 #if EFI_PROD_CODE
 	efiSetPadMode("K-Line UART RX", KLINE_SERIAL_DEVICE_RX, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
@@ -47,5 +47,21 @@ void initKLine() {
     addConsoleAction("kline", [](){
         efiPrintf("kline totalBytes %d", totalBytes);
     });
+#endif
+}
+
+/* currently useless because all settings are hardcoded */
+void stopKLine() {
+#ifdef EFI_KLINE
+#if EFI_PROD_CODE
+	efiSetPadUnused(KLINE_SERIAL_DEVICE_RX);
+	efiSetPadUnused(KLINE_SERIAL_DEVICE_TX);
+#endif /* EFI_PROD_CODE */
+#endif
+}
+
+void initKLine() {
+#ifdef EFI_KLINE
+	startKLine();
 #endif
 }
