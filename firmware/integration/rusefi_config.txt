@@ -495,7 +495,7 @@ ThermistorConf iat;
 	float knockBandCustom;We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override;"kHz", 1, 0, 0, 20, 2
 
 struct_no_prefix specs_s
-float displacement;Engine volume/capacity, in litres\nsee also cylindersCount;"L", 1, 0, 0, 1000, 2
+uint16_t autoscale displacement;Engine volume/capacity, in litres\nsee also cylindersCount;"L", 0.001, 0, 0, 65, 3
 
 uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CYLINDER_COUNT@@, 0
 
@@ -549,8 +549,8 @@ angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the fir
 float analogInputDividerCoefficient;Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.;"coef", 1, 0, 0.01, 10, 2
 float vbattDividerCoeff;This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef", 1, 0, 0.01, 99, 2
 
-float fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
-float fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
+uint8_t fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
+uint8_t fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 
 float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
 
@@ -596,12 +596,12 @@ float globalFuelCorrection;;"coef", 1, 0, 0, 1000, 2
 struct afr_sensor_s
 	adc_channel_e hwChannel;
 	adc_channel_e hwChannel2;
-	float v1;;"volts", 1, 0, 0, 10, 2
-	float value1;;"AFR", 1, 0, 0, 1000, 2
-	float v2;;"volts", 1, 0, 0, 10, 2
-	float value2;;"AFR", 1, 0, 0, 1000, 2
-end_struct	
-	
+	uint16_t autoscale v1;;"volts", 0.001, 0, 0, 10, 3
+	uint16_t autoscale value1;;"AFR", 0.001, 0, 0, 50, 2
+	uint16_t autoscale v2;;"volts", 0.001, 0, 0, 10, 3
+	uint16_t autoscale value2;;"AFR", 0.001, 0, 0, 50, 2
+end_struct
+
 afr_sensor_s afr
 
 	Gpio tle6240_cs;
@@ -730,7 +730,6 @@ bit is_enabled_spi_2
 	bit isSdCardEnabled;enable sd/disable sd
 	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit isVerboseAlternator
-	bit verboseQuad
 	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed. 
 	
 	bit enabledStep1Limiter
@@ -958,7 +957,7 @@ custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Ope
 
 	output_pin_e[LUA_PWM_COUNT iterate] luaOutputPins
 
-    float[CAM_INPUTS_COUNT iterate] vvtOffsets;Angle between cam sensor and VVT zero position;"value", 1, 0, -720, 1000, 1
+    int16_t[CAM_INPUTS_COUNT iterate] autoscale vvtOffsets;Angle between cam sensor and VVT zero position;"value", 0.1, 0, -720, 1000, 1
 
 struct vr_threshold_s
 	uint8_t[6] autoscale rpmBins;;"rpm", 50, 0, 0, 12000, 0
