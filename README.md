@@ -4,23 +4,19 @@
 
 <b>GPL open-source DIY ECU</b>
 
-[![Release](https://img.shields.io/github/v/release/rusefi/rusefi?style=flat)](https://github.com/rusefi/rusefi/releases/latest)![Last Commit](https://img.shields.io/github/last-commit/rusefi/rusefi?style=flat)
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/rusefi/rusefi/latest?color=blueviolet&label=Commits%20Since%20Release)
+[![Release](https://img.shields.io/github/v/release/FOME-Tech/fome-fw?style=flat)](https://github.com/FOME-Tech/fome-fw/releases/latest)![Last Commit](https://img.shields.io/github/last-commit/FOME-Tech/fome-fw?style=flat)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/FOME-Tech/fome-fw/latest?color=blueviolet&label=Commits%20Since%20Release)
 </div>
 
 # rusEFI
 
-See [check.c](https://github.com/rusefi/rusefi/blob/master/firmware/check.c) for recommended version of GCC.
-
-Current binaries are always available on our [build server](http://rusefi.com/build_server/)
-
-[![paypal](https://img.shields.io/badge/%E2%99%A5%EF%B8%8Fdonate-orange)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YSSN35GWYS3A)
+See [check.c](https://github.com/FOME-Tech/fome-fw/blob/master/firmware/check.c) for recommended version of GCC.
 
 [shop.rusEFI.com](https://www.shop.rusefi.com/)
 
 # Cloning the repository
-`git clone https://github.com/rusefi/rusefi.git`
-Important note - we now use submodules:
+
+`git clone https://github.com/FOME-Tech/fome-fw.git`
 
 `git submodule update --init`
 
