@@ -17,54 +17,11 @@ jobs:
       # Let all builds finish even if one fails early
       fail-fast: false
       matrix:
-        # What boards should we build for? In the 'include' section below,
-        # set up what each of these boards needs to build.
-        #
-        # build-target: [
-        #     alphax-2chan,
-        #     alphax-4chan,
-        #     alphax-8chan,
-        #     harley81,
-        #     hellen72,
-        #     hellen81,
-        #     hellen88bmw,
-        #     hellen-nb1,
-        #     hellen-gm-e67,
-        #     hellenNA8_96,
-        #     hellenNA6,
-        #     hellen128,
-        #     hellen121vag,
-        #     hellen-honda-k,
-        #     hellen121nissan,
-        #     frankenso_na6,
-        #     mre_f4,
-        #     mre_f4_no_openblt,
-        #     mre_f4_debug,
-        #     mre_f4_recovery,
-        #     mre_f7,
-        #     prometheus_405,
-        #     prometheus_469,
-        #     proteus_f4,
-        #     proteus_f7,
-        #     proteus_h7,
-        #     proteus_legacy,
-        #     stm32f429_nucleo,
-        #     stm32f767_nucleo,
-        #     stm32h743_nucleo,
-        #     subaru_eg33_f7,
-        #     f407-discovery,
-        #     f429-discovery,
-        #     core8,
-        #     48way,
-        #     atlas,
-        #     tdg-pdm8,
-        # ]
-
         include:
           # Board configurations
-          # - build-target: hellen72
-          #   folder: config/boards/hellen/hellen72
-          #   ini-file: fome_hellen72.ini
+          - build-target: hellen72
+            folder: config/boards/hellen/hellen72
+            ini-file: fome_hellen72.ini
 
           # - build-target: hellen81
           #   folder: config/boards/hellen/hellen81
@@ -98,13 +55,13 @@ jobs:
           #   folder: config/boards/hellen/hellen-gm-e67
           #   ini-file: fome_hellen-gm-e67.ini
 
-          # - build-target: hellenNA8_96
-          #   folder: config/boards/hellen/hellenNA8_96
-          #   ini-file: fome_hellenNA8_96.ini
+          - build-target: hellenNA8_96
+            folder: config/boards/hellen/hellenNA8_96
+            ini-file: fome_hellenNA8_96.ini
 
-          # - build-target: hellenNA6
-          #   folder: config/boards/hellen/hellen64_miataNA6_94
-          #   ini-file: fome_hellenNA6.ini
+          - build-target: hellenNA6
+            folder: config/boards/hellen/hellen64_miataNA6_94
+            ini-file: fome_hellenNA6.ini
 
           # - build-target: hellen128
           #   folder: config/boards/hellen/hellen128
