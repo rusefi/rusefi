@@ -43,7 +43,7 @@ CanTxMessage::CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, size
 
 	setDlc(dlc);
 
-	setBus(0);
+	setBus(bus);
 
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
 #endif // HAL_USE_CAN || EFI_UNIT_TEST
