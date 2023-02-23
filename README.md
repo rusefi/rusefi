@@ -8,7 +8,10 @@
 
 # [FOME: Free Open Motorsports ECU](https://www.fome.tech/)
 
-See [check.c](https://github.com/FOME-Tech/fome-fw/blob/master/firmware/check.c) for recommended version of GCC.
+# User Documentation
+
+Online and offline (PDF) versions of the user manual available here: https://wiki.fome.tech/
+
 
 # Cloning the repository
 
@@ -26,17 +29,21 @@ See [check.c](https://github.com/FOME-Tech/fome-fw/blob/master/firmware/check.c)
 
 # External Links
 
- * [Forum](http://rusefi.com/forum)
+TODO
+
+ <!-- * [Forum](http://rusefi.com/forum)
  * [Documentation](https://github.com/rusefi/rusefi/wiki)
  * [Doxygen documentation](http://rusefi.com/docs/html)
  * [General source code Q&A](http://rusefi.com/forum/viewtopic.php?f=5&t=10)
  * [Facebook](https://www.facebook.com/rusEfiECU)
  * [YouTube](https://www.youtube.com/user/rusefi)
- * [Patreon](https://www.patreon.com/rusefi)
+ * [Patreon](https://www.patreon.com/rusefi) -->
 
 # Building the Code
-Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
+See [check.c](https://github.com/FOME-Tech/fome-fw/blob/master/firmware/check.c) for recommended version of GCC.
+
+Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 # Release Notes
 
