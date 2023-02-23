@@ -326,10 +326,7 @@ jobs:
         && [ "${{env.skip}}" != "true" ]\
         || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
           echo "full=true" >> $GITHUB_ENV
-        elif [ "${{github.event_name}}" != "push" ]\
-          || [ "${{github.ref}}" != "refs/heads/master" ]\
-          && [ "${{env.skip}}" != "true" ]\
-          && [ "${{toJSON(inputs.lts)}}" != "true" ]; then
+        elif [ "${{env.skip}}" != "true" ]; then
           echo "partial=true" >> $GITHUB_ENV
         fi
 
