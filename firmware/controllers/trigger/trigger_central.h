@@ -29,18 +29,6 @@ typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, ef
 
 #define HAVE_CAM_INPUT() (isBrainPinValid(engineConfiguration->camInputs[0]))
 
-class TriggerNoiseFilter {
-public:
-	void resetAccumSignalData();
-	bool noiseFilter(efitick_t nowNt,
-			TriggerDecoderBase* triggerState,
-			trigger_event_e signal);
-
-	efitick_t lastSignalTimes[HW_EVENT_TYPES];
-	efitick_t accumSignalPeriods[HW_EVENT_TYPES];
-	efitick_t accumSignalPrevPeriods[HW_EVENT_TYPES];
-};
-
 /**
  * Maybe merge TriggerCentral and TriggerState classes into one class?
  * Probably not: we have an instance of TriggerState which is used for trigger initialization,
@@ -145,8 +133,6 @@ public:
 	bool engineMovedRecently() const {
 		return engineMovedRecently(getTimeNowNt());
 	}
-
-	TriggerNoiseFilter noiseFilter;
 
 	int vvtEventRiseCounter[CAM_INPUTS_COUNT];
 	int vvtEventFallCounter[CAM_INPUTS_COUNT];

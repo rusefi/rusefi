@@ -2223,7 +2223,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Display logic signals",				displayLogicLevelsInEngineSniffer
 		field = "Do not print messages in case of sync error",  silentTriggerError
 		field = "Focus on inputs in engine sniffer",	engineSnifferFocusOnInputs
-		field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@}
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 		panel = triggerConfiguration_gap
 

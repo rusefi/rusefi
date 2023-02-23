@@ -49,13 +49,6 @@ TriggerCentral::TriggerCentral() :
 {
 	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetState();
-	noiseFilter.resetAccumSignalData();
-}
-
-void TriggerNoiseFilter::resetAccumSignalData() {
-	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
-	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
-	memset(accumSignalPrevPeriods, 0, sizeof(accumSignalPrevPeriods));
 }
 
 int TriggerCentral::getHwEventCounter(int index) const {
@@ -437,15 +430,9 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 
 #endif /* EFI_TOOTH_LOGGER */
 
-	// for effective noise filtering, we need both signal edges, 
-	// so we pass them to handleShaftSignal() and defer this test
-	if (!engineConfiguration->useNoiselessTriggerDecoder) {
-		if (!isUsefulSignal(signal, getTriggerCentral()->triggerShape)) {
-			/**
-			 * no need to process VR falls further
-			 */
-			return;
-		}
+	if (!isUsefulSignal(signal, getTriggerCentral()->triggerShape)) {
+		// This is a falling edge in rise-only mode (etc), drop it
+		return;
 	}
 
 	if (engineConfiguration->triggerInputDebugPins[signalIndex] != Gpio::Unassigned) {
@@ -501,69 +488,6 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEve
 		// let's add the opposite event right away
 		addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp ? FrontDirection::DOWN : FrontDirection::UP);
 	}
-}
-
-/**
- * This is used to filter noise spikes (interference) in trigger signal. See 
- * The basic idea is to use not just edges, but the average amount of time the signal stays in '0' or '1'.
- * So we update 'accumulated periods' to track where the signal is. 
- * And then compare between the current period and previous, with some tolerance (allowing for the wheel speed change).
- * @return true if the signal is passed through.
- */
-bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
-		TriggerDecoderBase * triggerState,
-		trigger_event_e signal) {
-	// todo: find a better place for these defs
-	static const trigger_event_e opposite[4] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING };
-	static const TriggerWheel triggerIdx[4] = { TriggerWheel::T_PRIMARY, TriggerWheel::T_PRIMARY, TriggerWheel::T_SECONDARY, TriggerWheel:: T_SECONDARY };
-	// we process all trigger channels independently
-	TriggerWheel ti = triggerIdx[signal];
-	// falling is opposite to rising, and vise versa
-	trigger_event_e os = opposite[signal];
-	
-	// todo: currently only primary channel is filtered, because there are some weird trigger types on other channels
-	if (ti != TriggerWheel::T_PRIMARY)
-		return true;
-	
-	// update period accumulator: for rising signal, we update '0' accumulator, and for falling - '1'
-	if (lastSignalTimes[signal] != -1)
-		accumSignalPeriods[signal] += nowNt - lastSignalTimes[signal];
-	// save current time for this trigger channel
-	lastSignalTimes[signal] = nowNt;
-	
-	// now we want to compare current accumulated period to the stored one 
-	efitick_t currentPeriod = accumSignalPeriods[signal];
-	// the trick is to compare between different
-	efitick_t allowedPeriod = accumSignalPrevPeriods[os];
-
-	// but first check if we're expecting a gap
-	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->getShaftSynchronized() &&
-			(triggerState->currentCycle.eventCount[(int)ti] + 1) == TRIGGER_WAVEFORM(getExpectedEventCount(ti));
-	
-	if (isGapExpected) {
-		// usually we need to extend the period for gaps, based on the trigger info
-		allowedPeriod *= TRIGGER_WAVEFORM(syncRatioAvg);
-	}
-	
-	// also we need some margin for rapidly changing trigger-wheel speed,
-	// that's why we expect the period to be no less than 2/3 of the previous period (this is just an empirical 'magic' coef.)
-	efitick_t minAllowedPeriod = 2 * allowedPeriod / 3;
-	// but no longer than 5/4 of the previous 'normal' period
-	efitick_t maxAllowedPeriod = 5 * allowedPeriod / 4;
-	
-	// above all, check if the signal comes not too early
-	if (currentPeriod >= minAllowedPeriod) {
-		// now we store this period as a reference for the next time,
-		// BUT we store only 'normal' periods, and ignore too long periods (i.e. gaps)
-		if (!isGapExpected && (maxAllowedPeriod == 0 || currentPeriod <= maxAllowedPeriod)) {
-			accumSignalPrevPeriods[signal] = currentPeriod;
-		}
-		// reset accumulator
-		accumSignalPeriods[signal] = 0;
-		return true;
-	}
-	// all premature or extra-long events are ignored - treated as interference
-	return false;
 }
 
 void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
@@ -676,16 +600,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// magic value to indicate a problem
 		hwEventCounters[0] = 155;
 		return;
-	}
-
-	// This code gathers some statistics on signals and compares accumulated periods to filter interference
-	if (engineConfiguration->useNoiselessTriggerDecoder) {
-		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal)) {
-			return;
-		}
-		if (!isUsefulSignal(signal, triggerShape)) {
-			return;
-		}
 	}
 
 	if (!isToothExpectedNow(timestamp)) {
@@ -947,7 +861,6 @@ void onConfigurationChangeTriggerCallback() {
 	if (changed) {
 	#if EFI_ENGINE_CONTROL
 		engine->updateTriggerWaveform();
-		getTriggerCentral()->noiseFilter.resetAccumSignalData();
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING

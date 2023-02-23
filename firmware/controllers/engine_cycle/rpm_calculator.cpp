@@ -223,8 +223,6 @@ void RpmCalculator::setStopped() {
 
 	if (cachedRpmValue != 0) {
 		assignRpmValue(0);
-		// needed by 'useNoiselessTriggerDecoder'
-		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 		efiPrintf("engine stopped");
 	}
 	state = STOPPED;
