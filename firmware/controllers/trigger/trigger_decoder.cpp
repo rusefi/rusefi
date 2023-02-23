@@ -248,7 +248,13 @@ void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
 // an indeterminite crank pattern
 // If we're self stimulating, assume we have full sync so that outputs work during self stim
 bool PrimaryTriggerDecoder::hasSynchronizedPhase() const {
-	return m_hasSynchronizedPhase || getTriggerCentral()->directSelfStimulation;
+#if EFI_PROD_CODE
+	if (getTriggerCentral()->directSelfStimulation) {
+		return true;
+	}
+#endif
+
+	return m_hasSynchronizedPhase;
 }
 
 void PrimaryTriggerDecoder::onTriggerError() {
