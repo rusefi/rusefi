@@ -283,7 +283,5 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->isSdCardEnabled = false;
 	engineConfiguration->manIdlePosition = 36; // set_idle_pwm 40
 
-	engineConfiguration->slowAdcAlpha = 0.33333;
-
 	// end of setDodgeNeonNGCEngineConfiguration
 }

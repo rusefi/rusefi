@@ -507,8 +507,6 @@ static void setDefaultEngineConfiguration() {
     engineConfiguration->launchSpeedThreshold = 30;
 	engineConfiguration->hardCutRpmRange = 500;
 
-	engineConfiguration->slowAdcAlpha = 0.33333;
-	engineConfiguration->engineSnifferRpmThreshold = 2500;
 	engineConfiguration->sensorSnifferRpmThreshold = 2500;
 
 	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
