@@ -12,7 +12,3 @@ build*
 # tools
 gcc-arm-none-eabi
 arm-gnu*
-
-# generated files
-gitversion.h
-gitversion.h.gen
