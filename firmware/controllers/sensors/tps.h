@@ -19,6 +19,11 @@ constexpr inline int convertVoltageTo10bitADC(float voltage) {
 	return (int) (voltage * TPS_TS_CONVERSION);
 }
 
+struct SentTps : public StoredValueSensor {
+	SentTps() : StoredValueSensor(SensorType::Tps1, MS2NT(200)) {
+	}
+};
+
 void grabTPSIsClosed();
 void grabTPSIsWideOpen();
 void grabPedalIsUp();
