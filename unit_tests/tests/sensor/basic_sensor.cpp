@@ -62,6 +62,20 @@ TEST_F(SensorBasic, SensorNotInitialized) {
 	EXPECT_FALSE(result.Valid);
 }
 
+TEST_F(SensorBasic, DoubleUnRegister) {
+	// Create a sensor, register it
+	MockSensor dut(SensorType::Tps1);
+	ASSERT_TRUE(dut.Register());
+	Sensor::setMockValue(SensorType::Tps1, 25);
+	ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);
+
+	dut.unregister();
+	ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);// huh? is that a bug?
+
+	dut.unregister();
+	ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);// huh? is that a bug?
+}
+
 TEST_F(SensorBasic, SensorInitialized) {
 	MockSensor dut(SensorType::Clt);
 	ASSERT_TRUE(dut.Register());
