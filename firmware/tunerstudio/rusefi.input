@@ -913,11 +913,6 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		gridOrient  = 250,	0, 340 ; Space 123 rotation of grid in degrees.
 		upDownLabel = "(RICHER)", "(LEANER)"
 
-	table = torqueTableTbl, torqueTableMap, "Engine Torque", 1
-		xBins		= torqueRpmBins, RPMValue
-		yBins		= torqueLoadBins, veTableYAxis
-		zBins		= torqueTable
-
 	table = veTableTbl,  veTableMap,  "VE Table",	1
 		;		constant, variable
 		xBins		= veRpmBins,  RPMValue
@@ -4213,7 +4208,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = useBiQuadOnAuxSpeedSensors,				useBiQuadOnAuxSpeedSensors
 		field = "TODO KS mode 4569",						kickStartCranking
 		panel = allTriggerDebug
-		panel = torqueTableTbl
 
 		help = helpGeneral, "rusEFI General Help"
 		webHelp = @@MAIN_HELP_URL@@
