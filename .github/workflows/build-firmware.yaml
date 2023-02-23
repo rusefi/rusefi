@@ -454,9 +454,7 @@ jobs:
     - name: Upload .ini files
       if: ${{ env.full == 'true' }}
       working-directory: ./firmware/tunerstudio/generated
-      run: |
-        if [  ]
-        ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+      run: ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload build elf
       if: ${{ env.partial == 'true' }}
