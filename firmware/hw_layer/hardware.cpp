@@ -261,6 +261,8 @@ void applyNewHardwareSettings() {
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
 
+	stopKLine();
+
 #if EFI_AUX_SERIAL
 	stopAuxSerialPins();
 #endif /* EFI_AUX_SERIAL */
@@ -343,7 +345,7 @@ void applyNewHardwareSettings() {
 	startAuxSerialPins();
 #endif /* EFI_AUX_SERIAL */
 
-    initKLine();
+    startKLine();
 
 
 #if EFI_HIP_9011
@@ -604,6 +606,8 @@ void initHardware() {
 #if EFI_SENT_SUPPORT
 	initSent();
 #endif
+
+	initKLine();
 
 	calcFastAdcIndexes();
 

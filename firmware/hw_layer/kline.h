@@ -12,3 +12,7 @@
 
 
 void initKLine();
+
+/* Stop/Start for config update */
+void startKLine();
+void stopKLine();
