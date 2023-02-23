@@ -1607,7 +1607,7 @@ menuDialog = main
 
 		subMenu = tChargeSettings,			"Charge temperature estimation", 0, {isInjectionEnabled == 1}
 		subMenu = baroCorrTbl,				"Barometric pressure correction", 0, {isInjectionEnabled == 1 && fuelAlgorithm == @@engine_load_mode_e_LM_SPEED_DENSITY@@}
-		subMenu = mapEstimateTableTbl,		"MAP estimate table", 0, { enableMapEstimationTableFallback }
+		subMenu = mapEstimateTableTbl,		"MAP estimate table"
 		subMenu = std_separator
 
 		# Fuel model
@@ -3557,14 +3557,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Soft limiter start",				etbRevLimitStart
 		field = "Soft limiter range",				etbRevLimitRange
 
-	dialog = fallbacks, "Fallbacks"
-		field = "Use MAP estimation table as fallback",	enableMapEstimationTableFallback
-		field = "Failed MAP sensor fallback",			failedMapFallback, { !enableMapEstimationTableFallback }
-
 	dialog = limitsAndFallbackLeft
 		panel = limitsSettings
 		panel = etbLimits
-		panel = fallbacks
 
     dialog = limitsAndFallbackCenter, "CLT-based RPM Limit"
         panel = cltRevLimitCurve
