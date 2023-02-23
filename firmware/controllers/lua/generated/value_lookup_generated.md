@@ -94,9 +94,6 @@ Shall we display real life signal or just the part consumed by trigger decoder.\
 ### useTLE8888_stepper
 
 
-### enableMapEstimationTableFallback
-If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
-
 ### usescriptTableForCanSniffingFiltering
 
 
@@ -264,9 +261,6 @@ just a temporary solution
 
 ### airByRpmTaper
 Extra air taper amount
-
-### failedMapFallback
-Single value to be used in event of a failed MAP sensor \nThis value is only used for speed density fueling calculations.
 
 ### boostControlSafeDutyCycle
 Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.

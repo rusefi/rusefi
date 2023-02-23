@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 23 12:31:50 PST 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 23 15:07:49 PST 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1201,7 +1201,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.23.f407-discovery.4222749881";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.23.f407-discovery.4262749009";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;
@@ -1297,11 +1297,10 @@ public class Fields {
 	public static final Field USERUNNINGMATHFORCRANKING = Field.create("USERUNNINGMATHFORCRANKING", 88, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field DISPLAYLOGICLEVELSINENGINESNIFFER = Field.create("DISPLAYLOGICLEVELSINENGINESNIFFER", 88, FieldType.BIT, 19).setBaseOffset(0);
 	public static final Field USETLE8888_STEPPER = Field.create("USETLE8888_STEPPER", 88, FieldType.BIT, 20).setBaseOffset(0);
-	public static final Field ENABLEMAPESTIMATIONTABLEFALLBACK = Field.create("ENABLEMAPESTIMATIONTABLEFALLBACK", 88, FieldType.BIT, 21).setBaseOffset(0);
-	public static final Field USESCRIPTTABLEFORCANSNIFFINGFILTERING = Field.create("USESCRIPTTABLEFORCANSNIFFINGFILTERING", 88, FieldType.BIT, 22).setBaseOffset(0);
-	public static final Field VERBOSECAN = Field.create("VERBOSECAN", 88, FieldType.BIT, 23).setBaseOffset(0);
-	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 88, FieldType.BIT, 24).setBaseOffset(0);
-	public static final Field USEFORDREDUNDANTPPS = Field.create("USEFORDREDUNDANTPPS", 88, FieldType.BIT, 25).setBaseOffset(0);
+	public static final Field USESCRIPTTABLEFORCANSNIFFINGFILTERING = Field.create("USESCRIPTTABLEFORCANSNIFFINGFILTERING", 88, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field VERBOSECAN = Field.create("VERBOSECAN", 88, FieldType.BIT, 22).setBaseOffset(0);
+	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 88, FieldType.BIT, 23).setBaseOffset(0);
+	public static final Field USEFORDREDUNDANTPPS = Field.create("USEFORDREDUNDANTPPS", 88, FieldType.BIT, 24).setBaseOffset(0);
 	public static final Field TPSMIN = Field.create("TPSMIN", 92, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSMAX = Field.create("TPSMAX", 94, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSERRORDETECTIONTOOLOW = Field.create("TPSERRORDETECTIONTOOLOW", 96, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1385,11 +1384,11 @@ public class Fields {
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = Field.create("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 412, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 416, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field AIRBYRPMTAPER = Field.create("AIRBYRPMTAPER", 420, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field FAILEDMAPFALLBACK = Field.create("FAILEDMAPFALLBACK", 424, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field BOOSTCONTROLSAFEDUTYCYCLE = Field.create("BOOSTCONTROLSAFEDUTYCYCLE", 425, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field THROTTLEPEDALPOSITIONADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONADCCHANNEL", 426, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field BOOSTCONTROLSAFEDUTYCYCLE = Field.create("BOOSTCONTROLSAFEDUTYCYCLE", 424, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field THROTTLEPEDALPOSITIONADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONADCCHANNEL", 425, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final String[] pin_output_mode_e = {"default", "default inverted", "open collector", "open collector inverted"};
-	public static final Field TLE6240_CSPINMODE = Field.create("TLE6240_CSPINMODE", 427, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TLE6240_CSPINMODE = Field.create("TLE6240_CSPINMODE", 426, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_427 = Field.create("ALIGNMENTFILL_AT_427", 427, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 428, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ADCVCC = Field.create("ADCVCC", 432, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MAPCAMDETECTIONANGLEPOSITION = Field.create("MAPCAMDETECTIONANGLEPOSITION", 436, FieldType.FLOAT).setBaseOffset(0);
@@ -2641,7 +2640,6 @@ public class Fields {
 	USERUNNINGMATHFORCRANKING,
 	DISPLAYLOGICLEVELSINENGINESNIFFER,
 	USETLE8888_STEPPER,
-	ENABLEMAPESTIMATIONTABLEFALLBACK,
 	USESCRIPTTABLEFORCANSNIFFINGFILTERING,
 	VERBOSECAN,
 	ARTIFICIALTESTMISFIRE,
@@ -2725,10 +2723,10 @@ public class Fields {
 	TRIGGER_CUSTOMTOTALTOOTHCOUNT,
 	TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT,
 	AIRBYRPMTAPER,
-	FAILEDMAPFALLBACK,
 	BOOSTCONTROLSAFEDUTYCYCLE,
 	THROTTLEPEDALPOSITIONADCCHANNEL,
 	TLE6240_CSPINMODE,
+	ALIGNMENTFILL_AT_427,
 	GLOBALFUELCORRECTION,
 	ADCVCC,
 	MAPCAMDETECTIONANGLEPOSITION,

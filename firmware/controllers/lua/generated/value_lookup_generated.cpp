@@ -67,8 +67,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->displayLogicLevelsInEngineSniffer;
 		case -647008743:
 			return engineConfiguration->useTLE8888_stepper;
-		case 1992465535:
-			return engineConfiguration->enableMapEstimationTableFallback;
 		case 671821024:
 			return engineConfiguration->usescriptTableForCanSniffingFiltering;
 		case -1073210355:
@@ -181,8 +179,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->trigger.customSkippedToothCount;
 		case 2070727975:
 			return engineConfiguration->airByRpmTaper;
-		case -1730107688:
-			return engineConfiguration->failedMapFallback;
 		case -1965075262:
 			return engineConfiguration->boostControlSafeDutyCycle;
 		case 1371979578:
@@ -1155,11 +1151,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useTLE8888_stepper = (int)value;
 		return;
 	}
-		case 1992465535:
-	{
-		engineConfiguration->enableMapEstimationTableFallback = (int)value;
-		return;
-	}
 		case 671821024:
 	{
 		engineConfiguration->usescriptTableForCanSniffingFiltering = (int)value;
@@ -1438,11 +1429,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 2070727975:
 	{
 		engineConfiguration->airByRpmTaper = value;
-		return;
-	}
-		case -1730107688:
-	{
-		engineConfiguration->failedMapFallback = (int)value;
 		return;
 	}
 		case -1965075262:

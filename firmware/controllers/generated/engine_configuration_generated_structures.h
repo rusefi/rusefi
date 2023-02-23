@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 23 12:31:50 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 23 15:07:49 PST 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -779,43 +779,42 @@ struct engine_configuration_s {
 	offset 88 bit 20 */
 	bool useTLE8888_stepper : 1 {};
 	/**
-	 * If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 	offset 88 bit 21 */
-	bool enableMapEstimationTableFallback : 1 {};
-	/**
-	offset 88 bit 22 */
 	bool usescriptTableForCanSniffingFiltering : 1 {};
 	/**
 	 * Print incoming and outgoing first bus CAN messages in rusEFI console
-	offset 88 bit 23 */
+	offset 88 bit 22 */
 	bool verboseCan : 1 {};
 	/**
 	 * Experimental setting that will cause a misfire
 	 * DO NOT ENABLE.
-	offset 88 bit 24 */
+	offset 88 bit 23 */
 	bool artificialTestMisfire : 1 {};
 	/**
 	 * On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
-	offset 88 bit 25 */
+	offset 88 bit 24 */
 	bool useFordRedundantPps : 1 {};
 	/**
+	offset 88 bit 25 */
+	bool unusedBit_40_25 : 1 {};
+	/**
 	offset 88 bit 26 */
-	bool unusedBit_41_26 : 1 {};
+	bool unusedBit_40_26 : 1 {};
 	/**
 	offset 88 bit 27 */
-	bool unusedBit_41_27 : 1 {};
+	bool unusedBit_40_27 : 1 {};
 	/**
 	offset 88 bit 28 */
-	bool unusedBit_41_28 : 1 {};
+	bool unusedBit_40_28 : 1 {};
 	/**
 	offset 88 bit 29 */
-	bool unusedBit_41_29 : 1 {};
+	bool unusedBit_40_29 : 1 {};
 	/**
 	offset 88 bit 30 */
-	bool unusedBit_41_30 : 1 {};
+	bool unusedBit_40_30 : 1 {};
 	/**
 	offset 88 bit 31 */
-	bool unusedBit_41_31 : 1 {};
+	bool unusedBit_40_31 : 1 {};
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
@@ -1083,27 +1082,26 @@ struct engine_configuration_s {
 	 */
 	float airByRpmTaper;
 	/**
-	 * Single value to be used in event of a failed MAP sensor 
-	 * This value is only used for speed density fueling calculations.
-	kPa
-	 * offset 424
-	 */
-	uint8_t failedMapFallback;
-	/**
 	 * Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.
 	%
-	 * offset 425
+	 * offset 424
 	 */
 	uint8_t boostControlSafeDutyCycle;
 	/**
 	 * Throttle pedal position first channel
-	 * offset 426
+	 * offset 425
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
 	/**
-	 * offset 427
+	 * offset 426
 	 */
 	pin_output_mode_e tle6240_csPinMode;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 427
+	 */
+	uint8_t alignmentFill_at_427[1];
 	/**
 	coef
 	 * offset 428
@@ -4676,4 +4674,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22064);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 23 12:31:50 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 23 15:07:49 PST 2023
