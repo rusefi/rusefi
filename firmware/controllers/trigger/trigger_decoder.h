@@ -200,12 +200,7 @@ public:
 
 	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
 
-	// Returns true if syncEnginePhase has been called,
-	// i.e. if we have enough VVT information to have full sync on
-	// an indeterminite crank pattern
-	bool hasSynchronizedPhase() const {
-		return m_hasSynchronizedPhase;
-	}
+	bool hasSynchronizedPhase() const;
 
 	void setNeedsDisambiguation(bool needsDisambiguation) {
 		m_needsDisambiguation = needsDisambiguation;

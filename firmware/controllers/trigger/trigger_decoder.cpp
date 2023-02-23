@@ -243,6 +243,14 @@ void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
 	crankSynchronizationCounter++;
 }
 
+// Returns true if syncEnginePhase has been called,
+// i.e. if we have enough VVT information to have full sync on
+// an indeterminite crank pattern
+// If we're self stimulating, assume we have full sync so that outputs work during self stim
+bool PrimaryTriggerDecoder::hasSynchronizedPhase() const {
+	return m_hasSynchronizedPhase || getTriggerCentral()->directSelfStimulation;
+}
+
 void PrimaryTriggerDecoder::onTriggerError() {
 	// On trigger error, we've lost full sync
 	resetHasFullSync();
