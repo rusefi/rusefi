@@ -406,9 +406,6 @@ This setting disables fuel injection while the engine is in overrun, this is use
 ### useIacTableForCoasting
 Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
 
-### useNoiselessTriggerDecoder
-
-
 ### useIdleTimingPidControl
 
 

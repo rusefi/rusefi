@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Feb 22 22:19:50 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Feb 23 11:37:53 PST 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1492,47 +1492,47 @@ struct engine_configuration_s {
 	bool useIacTableForCoasting : 1 {};
 	/**
 	offset 688 bit 19 */
-	bool useNoiselessTriggerDecoder : 1 {};
-	/**
-	offset 688 bit 20 */
 	bool useIdleTimingPidControl : 1 {};
 	/**
 	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	offset 688 bit 21 */
+	offset 688 bit 20 */
 	bool disableEtbWhenEngineStopped : 1 {};
 	/**
-	offset 688 bit 22 */
+	offset 688 bit 21 */
 	bool is_enabled_spi_4 : 1 {};
 	/**
 	 * Disable the electronic throttle motor and DC idle motor for testing.
 	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	offset 688 bit 23 */
+	offset 688 bit 22 */
 	bool pauseEtbControl : 1 {};
 	/**
-	offset 688 bit 24 */
+	offset 688 bit 23 */
 	bool alignEngineSnifferAtTDC : 1 {};
 	/**
-	offset 688 bit 25 */
+	offset 688 bit 24 */
 	bool unused764b29 : 1 {};
 	/**
 	 * AEM X-Series or rusEFI Wideband
-	offset 688 bit 26 */
+	offset 688 bit 25 */
 	bool enableAemXSeries : 1 {};
 	/**
+	offset 688 bit 26 */
+	bool unusedBit_191_26 : 1 {};
+	/**
 	offset 688 bit 27 */
-	bool unusedBit_192_27 : 1 {};
+	bool unusedBit_191_27 : 1 {};
 	/**
 	offset 688 bit 28 */
-	bool unusedBit_192_28 : 1 {};
+	bool unusedBit_191_28 : 1 {};
 	/**
 	offset 688 bit 29 */
-	bool unusedBit_192_29 : 1 {};
+	bool unusedBit_191_29 : 1 {};
 	/**
 	offset 688 bit 30 */
-	bool unusedBit_192_30 : 1 {};
+	bool unusedBit_191_30 : 1 {};
 	/**
 	offset 688 bit 31 */
-	bool unusedBit_192_31 : 1 {};
+	bool unusedBit_191_31 : 1 {};
 	/**
 	 * offset 692
 	 */
@@ -4664,4 +4664,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22116);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Feb 22 22:19:50 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Feb 23 11:37:53 PST 2023

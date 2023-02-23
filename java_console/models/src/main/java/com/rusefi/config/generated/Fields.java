@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 22 22:20:32 PST 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 23 11:38:30 PST 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1201,7 +1201,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.23.f407-discovery.3346528615";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.23.f407-discovery.3100766539";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;
@@ -1522,13 +1522,12 @@ public class Fields {
 	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 688, FieldType.BIT, 16).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTENABLED = Field.create("COASTINGFUELCUTENABLED", 688, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field USEIACTABLEFORCOASTING = Field.create("USEIACTABLEFORCOASTING", 688, FieldType.BIT, 18).setBaseOffset(0);
-	public static final Field USENOISELESSTRIGGERDECODER = Field.create("USENOISELESSTRIGGERDECODER", 688, FieldType.BIT, 19).setBaseOffset(0);
-	public static final Field USEIDLETIMINGPIDCONTROL = Field.create("USEIDLETIMINGPIDCONTROL", 688, FieldType.BIT, 20).setBaseOffset(0);
-	public static final Field DISABLEETBWHENENGINESTOPPED = Field.create("DISABLEETBWHENENGINESTOPPED", 688, FieldType.BIT, 21).setBaseOffset(0);
-	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 688, FieldType.BIT, 22).setBaseOffset(0);
-	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 688, FieldType.BIT, 23).setBaseOffset(0);
-	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 688, FieldType.BIT, 24).setBaseOffset(0);
-	public static final Field ENABLEAEMXSERIES = Field.create("ENABLEAEMXSERIES", 688, FieldType.BIT, 26).setBaseOffset(0);
+	public static final Field USEIDLETIMINGPIDCONTROL = Field.create("USEIDLETIMINGPIDCONTROL", 688, FieldType.BIT, 19).setBaseOffset(0);
+	public static final Field DISABLEETBWHENENGINESTOPPED = Field.create("DISABLEETBWHENENGINESTOPPED", 688, FieldType.BIT, 20).setBaseOffset(0);
+	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 688, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 688, FieldType.BIT, 22).setBaseOffset(0);
+	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 688, FieldType.BIT, 23).setBaseOffset(0);
+	public static final Field ENABLEAEMXSERIES = Field.create("ENABLEAEMXSERIES", 688, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 692, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 694, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 696, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
@@ -2856,7 +2855,6 @@ public class Fields {
 	ISFASTERENGINESPINUPENABLED,
 	COASTINGFUELCUTENABLED,
 	USEIACTABLEFORCOASTING,
-	USENOISELESSTRIGGERDECODER,
 	USEIDLETIMINGPIDCONTROL,
 	DISABLEETBWHENENGINESTOPPED,
 	IS_ENABLED_SPI_4,
