@@ -319,6 +319,22 @@ jobs:
         fi
         if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
+    - name: Set run condition variables
+      run: |
+        if [ "${{github.event_name}}" = "cron" ]; then
+          echo "full=true" >> $GITHUB_ENV
+          echo "upload=release" >> $GITHUB_ENV
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        elif [ "${{github.event_name}}" = "push" ]\
+        && [ "${{github.ref}}" = "refs/heads/master" ]\
+        && [ "${{env.skip}}" != "true" ]\
+        || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
+          echo "full=true" >> $GITHUB_ENV
+          echo "upload=server" >> $GITHUB_ENV
+        elif [ "${{env.skip}}" != "true" ]; then
+          echo "partial=true" >> $GITHUB_ENV
+        fi
+
     - uses: actions/checkout@v3
       if: ${{ env.skip != 'true' }}
 
@@ -397,24 +413,22 @@ jobs:
       run: arm-none-eabi-gcc -v
 
     - name: Configs Set SSH variables
-      if: ${{ env.skip != 'true' }}
+      if: ${{ env.full == 'true' && env.upload == 'server' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
-        if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ] || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
-          echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
-          echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
-          echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
-        fi
+        echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+        echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+        echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
 
     # Build rusEFI console
     - name: Build console
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+      if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/build_java_console.sh
 
     # Build the simulator
     - name: Build simulator
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+      if: ${{ env.full == 'true' }}
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
@@ -424,52 +438,79 @@ jobs:
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
 
     - name: Package Bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+      if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
+    - name: Fetch tags
+      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Check if tag exists
+      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ env.date }}" && echo "tagged=false" >> $GITHUB_ENV || echo "tagged=true" >> $GITHUB_ENV
+
+    - name: Create Release Tag
+      if: ${{ env.full == 'true' && env.upload == 'release' && env.tagged == 'false' }}
+      id: tag
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        custom_tag: ${{ env.date }}
+
+    - name: Create Release
+      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      uses: ncipollo/release-action@v1.12.0
+      with:
+        tag: ${{ env.date }}
+        name: "Nightly ${{ env.date }}"
+        artifacts: "artifacts/rusefi_bundle_*.zip"
+        replacesArtifacts: false
+        token: ${{ secrets.ACCESS_TOKEN }}
+        allowUpdates: true
+        prerelease: true
+
     - name: Upload .ini files
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+      if: ${{ env.full == 'true' }}
       working-directory: ./firmware/tunerstudio/generated
-      run: |
-        ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+      run: ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload build elf
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+      if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload build bin
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+      if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload build hex
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+      if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.hex
         path: ./firmware/deliver/rusefi*.hex
 
     - name: Upload build dfu
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' && !inputs.lts }}
+      if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.dfu
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+      if: ${{ env.full == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle*.zip
 
     - name: Upload autoupdate bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' ) || inputs.lts }}
+      if: ${{ env.full == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
