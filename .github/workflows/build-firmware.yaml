@@ -441,8 +441,18 @@ jobs:
       if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
-    - name: Create Release Tag
+    - name: Fetch tags
       if: ${{ env.full == 'true' && env.upload == 'release' }}
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Check if tag exists
+      id: tagged
+      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ env.date }}" && echo "::set-output name=tagged::0" || echo "::set-output name=tagged::1"
+
+
+    - name: Create Release Tag
+      if: ${{ env.full == 'true' && env.upload == 'release' && steps.tagged.outputs.tagged != 1 }}
       id: tag
       uses: mathieudutour/github-tag-action@v6.1
       with:
