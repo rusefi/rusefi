@@ -464,7 +464,7 @@ jobs:
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
-        artifacts: "rusefi_bundle_*.zip"
+        artifacts: "temp/rusefi_bundle_*.zip"
         replacesArtifacts: false
         token: ${{ secrets.ACCESS_TOKEN }}
         allowUpdates: true
