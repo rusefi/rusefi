@@ -321,7 +321,11 @@ jobs:
 
     - name: Set run condition variables
       run: |
-        if [ "${{github.event_name}}" = "push" ]\
+        if [ "${{github.event_name}}" = "cron" ]; then
+          echo "full=true" >> $GITHUB_ENV
+          echo "upload=release" >> $GITHUB_ENV
+          echo "date=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+        elif [ "${{github.event_name}}" = "push" ]\
         && [ "${{github.ref}}" = "refs/heads/master" ]\
         && [ "${{env.skip}}" != "true" ]\
         || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
@@ -329,10 +333,6 @@ jobs:
           echo "upload=server" >> $GITHUB_ENV
         elif [ "${{env.skip}}" != "true" ]; then
           echo "partial=true" >> $GITHUB_ENV
-        elif [ "${{github.event_name}}" = "cron" ]; then
-          echo "full=true" >> $GITHUB_ENV
-          echo "upload=release" >> $GITHUB_ENV
-          echo "date=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
         fi
 
     - uses: actions/checkout@v3
