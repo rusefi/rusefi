@@ -450,7 +450,7 @@ jobs:
       run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ env.date }}" && echo "tagged=false" >> $GITHUB_ENV || echo "tagged=true" >> $GITHUB_ENV
 
     - name: Create Release Tag
-      if: ${{ env.full == 'true' && env.upload == 'release' && env.tagged == "false" }}
+      if: ${{ env.full == 'true' && env.upload == 'release' && env.tagged == 'false' }}
       id: tag
       uses: mathieudutour/github-tag-action@v6.1
       with:
