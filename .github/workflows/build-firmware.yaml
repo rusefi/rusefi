@@ -444,10 +444,10 @@ jobs:
     - name: Create Release Tag
       if: ${{ env.full == 'true' && env.upload == 'release' }}
       id: tag
-      uses: laputansoft/github-tag-action@v4.6
+      uses: mathieudutour/github-tag-action@v6.1
       with:
         github_token: ${{ secrets.ACCESS_TOKEN }}
-        tag: ${{ env.date }}
+        custom_tag: ${{ env.date }}
 
     - name: Create Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
