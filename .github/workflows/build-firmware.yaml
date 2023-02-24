@@ -441,10 +441,18 @@ jobs:
       if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
+    - name: Create Release Tag
+      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      id: tag
+      uses: laputansoft/github-tag-action@v4.6
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        tag: ${{ env.date }}
+
     - name: Create Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
       uses: ncipollo/release-action@v1.12.0
       with:
+        tag: ${{ steps.tag.outputs.new_tag }}
         name: "Nightly ${{ env.date }}"
         artifacts: "rusefi_bundle_*.zip"
         replacesArtifacts: false
