@@ -459,6 +459,7 @@ jobs:
         replacesArtifacts: false
         token: ${{ secrets.ACCESS_TOKEN }}
         allowUpdates: true
+        prerelease: true
 
     - name: Upload .ini files
       if: ${{ env.full == 'true' }}
