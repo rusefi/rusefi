@@ -450,7 +450,6 @@ jobs:
       if: ${{ env.full == 'true' && env.upload == 'release' }}
       run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ env.date }}" && echo "::set-output name=tagged::0" || echo "::set-output name=tagged::1"
 
-
     - name: Create Release Tag
       if: ${{ env.full == 'true' && env.upload == 'release' && steps.tagged.outputs.tagged != 1 }}
       id: tag
@@ -463,7 +462,7 @@ jobs:
       if: ${{ env.full == 'true' && env.upload == 'release' }}
       uses: ncipollo/release-action@v1.12.0
       with:
-        tag: ${{ steps.tag.outputs.new_tag }}
+        tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
         artifacts: "rusefi_bundle_*.zip"
         replacesArtifacts: false
