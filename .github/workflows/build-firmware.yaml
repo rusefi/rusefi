@@ -324,7 +324,7 @@ jobs:
         if [ "${{github.event_name}}" = "cron" ]; then
           echo "full=true" >> $GITHUB_ENV
           echo "upload=release" >> $GITHUB_ENV
-          echo "date=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         elif [ "${{github.event_name}}" = "push" ]\
         && [ "${{github.ref}}" = "refs/heads/master" ]\
         && [ "${{env.skip}}" != "true" ]\
