@@ -2,7 +2,7 @@
 
 # run as root
 
-touch /etc/apt/sources.list.d/ubuntu-latest-mirrors.list
+> /etc/apt/sources.list.d/ubuntu-latest-mirrors.list
 for mirror in \
     'http://ubuntu.osuosl.org/ubuntu/' \
     'http://mirrors.ocf.berkeley.edu/ubuntu/' \
