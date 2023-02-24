@@ -445,6 +445,7 @@ jobs:
       if: ${{ env.full == 'true' && env.upload == 'release' }}
       id: tag
       uses: laputansoft/github-tag-action@v4.6
+      with:
         github_token: ${{ secrets.ACCESS_TOKEN }}
         tag: ${{ env.date }}
 
