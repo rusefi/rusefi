@@ -311,205 +311,114 @@ typedef enum {
 	TT_TOOTHED_WHEEL = 0,
 	TT_FORD_ASPIRE = 1,
 	TT_DODGE_NEON_1995 = 2,
-	/**
-	 * https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
-	 */
+	// https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
 	TT_MAZDA_MIATA_NA = 3,
 	TT_MITSUBISHI_MESS = 4,
 	TT_GM_7X = 5,
 	TT_DAIHATSU = 6,
 	TT_MAZDA_SOHC_4 = 7,
-	/**
-	 * "60/2"
-	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
-	 */
+	// "60/2"
+	// See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
 	TT_TOOTHED_WHEEL_60_2 = 8,
 	TT_TOOTHED_WHEEL_36_1 = 9,
-
 	TT_MERCEDES_2_SEGMENT = 10,
-
 	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI_4G93 = 11,
-
+	TT_SUBARU_EZ30 = 12,
+	TT_VVT_MAZDA_SKYACTIV = 13,
 	// cam-based
 	TT_DODGE_NEON_2003_CAM = 14,
-
 	TT_MAZDA_DOHC_1_4 = 15,
-
-	/**
-	 * "1+1" - one tooth on primary channel, one tooth on secondary channel
-	 * this trigger is used only by unit tests
-	 * see also TT_ONE a bit below
-	 */
+	//  * "1+1" - one tooth on primary channel, one tooth on secondary channel
+	//  * Note: this trigger is used only by unit tests
+	//  * see also TT_ONE a bit below
 	TT_ONE_PLUS_ONE = 16,
-	/**
-	 * VVT for 2JZ
-	 * three evenly spaces teeth
-	 */
+	//  * VVT for 2JZ, three evenly spaces teeth
 	TT_VVT_JZ = 17,
 	// just one channel with just one tooth
 	TT_ONE = 18,
-
 	TT_DODGE_RAM = 19,
-	/**
-	 * It looks like this is the VR shape if you have your wires flipped
-	 */
+	//  * It looks like this is the VR shape if you have your wires flipped
 	TT_60_2_VW = 20,
-
 	TT_BENELLI_TRE = 21,
-
 	TT_DODGE_STRATUS = 22,
-
-    /**
-     * Subaru but also Mazda RX-8
-     * We suspect that it's VR
-     */
+        // Subaru but also Mazda RX-8, we suspect that it's VR
 	TT_36_2_2_2 = 23,
-
-	/**
-	 * only the 4 tooth signal, without the 360 signal
-	 * 8,2,2,2 Nissan pattern
-	 */
+	//  * only the 4 tooth signal, without the 360 signal
+	//  * 8,2,2,2 Nissan pattern
 	TT_NISSAN_SR20VE = 24,
-
 	TT_2JZ_3_34 = 25,
-
 	TT_ROVER_K = 26,
-
+	// GM 24x with 5/10 degree gaps
+	TT_GM_24x = 27,
 	TT_HONDA_CBR_600 = 28,
-
+	TT_MITSU_4G9x_CAM = 29,
 	TT_CHRYSLER_NGC_36_2_2 = 30,
-
 	// skipped 3/1 with cam sensor for testing
 	TT_3_1_CAM = 31,
-
 	// crank-based in case your cam is broken
 	TT_DODGE_NEON_2003_CRANK = 32,
-
-	/**
-	 * this takes care of crank sensor, VVT sensor should be configured separately
-	 * for VVT simulated trigger signal we have https://github.com/rusefi/rusefi/issues/566 gap
-	 * See also TT_MAZDA_MIATA_VVT_TEST
-	 */
+	//  * this takes care of crank sensor, VVT sensor should be configured separately
+	//  * for VVT simulated trigger signal we have https://github.com/rusefi/rusefi/issues/566 gap
+	//  * See also TT_MAZDA_MIATA_VVT_TEST
 	TT_MIATA_VVT = 33,
-
-	/**
-	 * a version of NB1 with shifted CAM, useful for VVT testing & development
-	 */
+	TT_MITSU_4G63_CAM = 34,
+	// * a version of NB1 with shifted CAM, useful for VVT testing & development
 	TT_MAZDA_MIATA_VVT_TEST = 35,
-
 	TT_SUBARU_7_6 = 36,
-
 	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
 	TT_JEEP_18_2_2_2 = 37,
-
 	TT_12_TOOTH_CRANK = 38,
-
 	TT_DODGE_NEON_1995_ONLY_CRANK = 39,
-
 	// Jeep XJ 2500cc 4 cylinder. See also TT_JEEP_18_2_2_2 for 6 cylinders
 	TT_JEEP_4_CYL = 40,
-
 	// magneti marelli Fiat/Lancia IAW P8 from the 90', 2.0 16 v turbo engine - Lancia Coupe
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1440
 	TT_FIAT_IAW_P8 = 41,
-
 	TT_FORD_ST170 = 42,
-
-	/**
-	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
-	 */
+	// * cam sensor of Mazda Miata NB2 - the VVT signal shape
 	TT_VVT_MIATA_NB = 43,
-
 	TT_RENIX_44_2_2 = 44,
-
-	/**
-	 * Same as TT_RENIX_44_2_2 but repeated three times, not two.
-	 */
+	//* Same as TT_RENIX_44_2_2 but repeated three times, not two.
 	TT_RENIX_66_2_2_2 = 45,
-
-	/**
-	 * Honda K crank shape
-	 */
+	// * Honda K crank shape
 	TT_HONDA_K_CRANK_12_1 = 46,
-
 	TT_VVT_BOSCH_QUICK_START = 47,
-
 	TT_TOOTHED_WHEEL_36_2 = 48,
-
 	TT_SUBARU_SVX = 49,
-
 	TT_1_16 = 50,
-
 	// todo: remove this trigger once we have https://github.com/rusefi/rusefi/issues/2073
 	TT_SUBARU_7_WITHOUT_6 = 51,
-
 	TT_NISSAN_MR18_CAM_VVT = 52,
-
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1912
 	TT_TRI_TACH = 53,
-
 	TT_GM_60_2_2_2 = 54,
-
-	/**
-	 * https://rusefi.com/forum/viewtopic.php?f=5&t=1937
-	 * HALL sensor, and can be used on all Skoda's engines (from 1000MB to 130, Favorit, Felicia)
-	 */
+	// * https://rusefi.com/forum/viewtopic.php?f=5&t=1937
+	// * HALL sensor, and can be used on all Skoda's engines (from 1000MB to 130, Favorit, Felicia)
 	TT_SKODA_FAVORIT = 55,
-
 	TT_VVT_BARRA_3_PLUS_1 = 56,
-
 	TT_KAWA_KX450F = 57,
-
 	TT_NISSAN_VQ35 = 58,
-
 	TT_VVT_NISSAN_VQ35 = 59,
-
 	TT_NISSAN_VQ30 = 60,
-
 	TT_NISSAN_QR25 = 61,
-
 	TT_VVT_MITSUBISHI_3A92 = 62,
-
 	TT_SUBARU_SVX_CRANK_1 = 63,
-
 	TT_SUBARU_SVX_CAM_VVT = 64,
-
 	TT_FORD_TFI_PIP = 65,
-
 	TT_SUZUKI_G13B = 66,
-
-	/**
-	 * Honda K exhaust cam shaft
-	 */
+	// * Honda K exhaust cam shaft
 	TT_HONDA_K_CAM_4_1 = 67,
-
 	TT_NISSAN_MR18_CRANK = 68,
-
 	TT_TOOTHED_WHEEL_32_2 = 69,
-
 	// Mitsubishi 4B11 would be this with half moon camshaft
 	TT_36_2_1 = 70,
-
 	// Mitsubishi 3 cyl and 6 cyl
 	TT_36_2_1_1 = 71,
-
-
-    TT_VVT_MITSUBISHI_6G75 = 72,
-
+        TT_VVT_MITSUBISHI_6G75 = 72,
 	TT_VVT_TOYOTA_4_1 = 73,
-
-	// GM 24x with 5/10 degree gaps
-	TT_GM_24x = 27,
-
 	// GM 24x with 3/12 degree gaps
 	TT_GM_24x_2 = 74,
-
-	TT_SUBARU_EZ30 = 12,
-	TT_VVT_MAZDA_SKYACTIV = 13,
-	TT_MITSU_4G9x_CAM = 29,
-	TT_MITSU_4G63_CAM = 34,
-
 	TT_MITSU_75 = 75,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
