@@ -211,7 +211,7 @@ void startTriggerEmulatorPins() {
 #if EFI_PROD_CODE
 		if (isConfigurationChanged(triggerSimulatorPins[i])) {
 			triggerSignal.outputPins[i]->initPin("Trigger emulator", pin,
-					&engineConfiguration->triggerSimulatorPinModes[i]);
+					engineConfiguration->triggerSimulatorPinModes[i]);
 		}
 #endif // EFI_PROD_CODE
 	}
