@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Mon Feb 06 23:06:34 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sat Feb 25 03:30:19 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -111,13 +111,12 @@ struct antilag_system_state_s {
 	 */
 	scaled_channel<int16_t, 100, 1> timingALSCorrection = (int16_t)0;
 	/**
-	 * need 4 byte alignment
-	units
+	deg
 	 * offset 10
 	 */
-	uint8_t alignmentFill_at_10[2];
+	scaled_channel<int16_t, 100, 1> timingALSSkip = (int16_t)0;
 };
 static_assert(sizeof(antilag_system_state_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Mon Feb 06 23:06:34 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sat Feb 25 03:30:19 UTC 2023

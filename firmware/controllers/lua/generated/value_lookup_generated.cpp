@@ -3638,7 +3638,7 @@ void setConfigValueByName(const char *name, float value) {
 	}
 		case -1404414917:
 	{
-		engineConfiguration->ALSSkipRatio = (int)value;
+		engineConfiguration->ALSSkipRatio = value;
 		return;
 	}
 		case 612659807:

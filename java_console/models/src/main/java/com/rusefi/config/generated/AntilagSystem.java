@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sun Feb 19 03:53:01 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sat Feb 25 03:30:19 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -416,7 +416,7 @@ public class AntilagSystem {
 	public static final Field ALSTIMERCONDITION = Field.create("ALSTIMERCONDITION", 0, FieldType.BIT, 9).setBaseOffset(920);
 	public static final Field FUELALSCORRECTION = Field.create("FUELALSCORRECTION", 4, FieldType.FLOAT).setBaseOffset(920);
 	public static final Field TIMINGALSCORRECTION = Field.create("TIMINGALSCORRECTION", 8, FieldType.INT16).setScale(0.01).setBaseOffset(920);
-	public static final Field ALIGNMENTFILL_AT_10 = Field.create("ALIGNMENTFILL_AT_10", 10, FieldType.INT8).setScale(1.0).setBaseOffset(920);
+	public static final Field TIMINGALSSKIP = Field.create("TIMINGALSSKIP", 10, FieldType.INT16).setScale(0.01).setBaseOffset(920);
 	public static final Field[] VALUES = {
 	ISANTILAGCONDITION,
 	ALSMINRPMCONDITION,
@@ -430,6 +430,6 @@ public class AntilagSystem {
 	ALSTIMERCONDITION,
 	FUELALSCORRECTION,
 	TIMINGALSCORRECTION,
-	ALIGNMENTFILL_AT_10,
+	TIMINGALSSKIP,
 	};
 }

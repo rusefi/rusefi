@@ -410,7 +410,7 @@ pressureRatio("fuel: injector pressureRatio", SensorCategory.SENSOR_INPUTS, Fiel
 retardThresholdRpm("retardThresholdRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT, 912, 1.0, -1.0, -1.0, ""),
 fuelALSCorrection("fuelALSCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT, 924, 1.0, -1.0, -1.0, ""),
 timingALSCorrection("timingALSCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 928, 0.01, -20.0, 20.0, "deg"),
-alignmentFill_at_10("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 930, 1.0, -20.0, 100.0, "units"),
+timingALSSkip("timingALSSkip", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 930, 0.01, 0.0, 50.0, "deg"),
 luaTargetAdd("Boost: Lua Target Add", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 936, 0.5, -100.0, 100.0, "v"),
 boostOutput("Boost: Output", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 938, 0.01, -100.0, 100.0, "percent"),
 luaTargetMult("Boost: Lua Target Mult", SensorCategory.SENSOR_INPUTS, FieldType.INT, 940, 1.0, -100.0, 100.0, "v"),
