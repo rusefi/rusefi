@@ -195,8 +195,8 @@ void setDefaultIdleParameters() {
 	engineConfiguration->idleTimingPid.minValue = -10;
 	engineConfiguration->idleTimingPid.maxValue = 10;
 
-	// Idle region is target + 100 RPM
-	engineConfiguration->idlePidRpmUpperLimit = 100;
+	// Idle region is target + 300 RPM
+	engineConfiguration->idlePidRpmUpperLimit = 300;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
 }
