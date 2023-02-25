@@ -11,7 +11,11 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 
-static void setSerialConfigurationOverrides() {
+/**
+ * @brief   Board-specific configuration defaults.
+ * @todo    Add your board-specific code, if any.
+ */
+void setBoardDefaultConfiguration() {
 	engineConfiguration->binarySerialTxPin = Gpio::E1;
 	engineConfiguration->binarySerialRxPin = Gpio::E0;
 	/* actually Bluetooth/WiFi interface */
@@ -19,14 +23,6 @@ static void setSerialConfigurationOverrides() {
 	//engineConfiguration->consoleSerialRxPin = Gpio::C11;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
-}
-
-/**
- * @brief   Board-specific configuration defaults.
- * @todo    Add your board-specific code, if any.
- */
-void setBoardDefaultConfiguration() {
-	setSerialConfigurationOverrides();
 
 	/* Battery voltage */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_6;

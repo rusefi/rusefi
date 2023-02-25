@@ -83,10 +83,6 @@ void setPinConfigurationOverrides(void) {
 	engineConfiguration->can2TxPin = Gpio::Unassigned;
 }
 
-void setSerialConfigurationOverrides(void) {
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *
