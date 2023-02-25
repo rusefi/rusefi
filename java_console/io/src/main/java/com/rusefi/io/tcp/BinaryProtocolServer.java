@@ -174,10 +174,6 @@ public class BinaryProtocolServer {
                 handleWrite(linkManager, payload, byteRange, stream);
             } else if (command == Fields.TS_BURN_COMMAND) {
                 stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
-            } else if (command == Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
-                System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
-                // todo: relay command
-                stream.sendPacket(TS_OK.getBytes());
             } else if (command == Fields.TS_OUTPUT_COMMAND) {
                 BinaryProtocolState binaryProtocolState = linkManager.getBinaryProtocolState();
                 byte[] currentOutputs = binaryProtocolState.getCurrentOutputs();

@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
@@ -110,8 +109,6 @@ public class ConsoleUI {
 
         if (tabbedPane.paneSettings.showTriggerShapePane)
             tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
-
-        MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
 
         int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
         if (selectedIndex < tabbedPane.tabbedPane.getTabCount())

@@ -2039,8 +2039,6 @@ end_struct
 #define TS_EXECUTE 'E'
 #define TS_ONLINE_PROTOCOL 'z'
 ! 0x34
-#define TS_GET_OUTPUTS_SIZE '4'
-#define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 #define TS_GET_SCATTERED_GET_COMMAND '9'
 
 ! Performance tracing

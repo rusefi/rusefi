@@ -48,7 +48,6 @@ public class LinkManager implements Closeable {
 
     private LinkConnector connector = LinkConnector.VOID;
     private boolean isStarted;
-    private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
     private boolean needPullText = true;
     private boolean needPullLiveData = true;
@@ -135,15 +134,6 @@ public class LinkManager implements Closeable {
 
     public CommandQueue getCommandQueue() {
         return commandQueue;
-    }
-
-    public LinkManager setCompositeLogicEnabled(boolean compositeLogicEnabled) {
-        this.compositeLogicEnabled = compositeLogicEnabled;
-        return this;
-    }
-
-    public boolean getCompositeLogicEnabled() {
-        return compositeLogicEnabled;
     }
 
     public boolean getNeedPullData() {

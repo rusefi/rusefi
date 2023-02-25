@@ -21,7 +21,7 @@ public class ControllerConnectorState {
         if (linkManager != null)
             return linkManager;
 
-        LinkManager linkManager = new LinkManager().setCompositeLogicEnabled(false);
+        LinkManager linkManager = new LinkManager();
         linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String firmwareVersion1) {

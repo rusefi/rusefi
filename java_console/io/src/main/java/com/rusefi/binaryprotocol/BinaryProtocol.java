@@ -65,7 +65,6 @@ public class BinaryProtocol {
     // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();
 
-    BinaryProtocolLogger binaryProtocolLogger;
     public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
 
     public static String findCommand(byte command) {
@@ -112,7 +111,6 @@ public class BinaryProtocol {
         communicationLoggingListener = linkManager.messageListener::postMessage;
 
         incomingData = stream.getDataBuffer();
-        binaryProtocolLogger = new BinaryProtocolLogger(linkManager);
     }
 
     public static void sleep(long millis) {
@@ -183,7 +181,6 @@ public class BinaryProtocol {
             return "Failed to read calibration";
 
         startPullThread(listener);
-        binaryProtocolLogger.start();
         return null;
     }
 
@@ -227,7 +224,6 @@ public class BinaryProtocol {
                                     System.out.println("requestOutputChannels " + isGoodOutputChannels);
                                 if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
-                                binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
                                 if (linkManager.isNeedPullText()) {
                                     String text = requestPendingTextMessages();
                                     if (text != null) {
@@ -485,7 +481,6 @@ public class BinaryProtocol {
         if (isClosed)
             return;
         isClosed = true;
-        binaryProtocolLogger.close();
         stream.close();
     }
 

@@ -367,7 +367,6 @@ static bool isKnownCommand(char command) {
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_SCATTERED_GET_COMMAND
 			|| command == TS_SET_LOGGER_SWITCH
-			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
@@ -788,27 +787,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 
 		sendOkResponse(tsChannel, TS_CRC);
 
-		break;
-	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
-		{
-			EnableToothLoggerIfNotEnabled();
-
-			auto toothBuffer = GetToothLoggerBufferNonblocking();
-
-			if (toothBuffer) {
-				tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
-
-				ReturnToothLoggerBuffer(toothBuffer);
-			} else {
-				// TS asked for a tooth logger buffer, but we don't have one to give it.
-				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-			}
-		}
-
-		break;
-#else // EFI_TOOTH_LOGGER
-	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		break;
 #endif /* EFI_TOOTH_LOGGER */
 #if ENABLE_PERF_TRACE
