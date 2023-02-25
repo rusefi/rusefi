@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Feb 25 03:30:20 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Feb 25 16:29:30 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1859,7 +1859,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t vehicleWeight;
 	/**
-	 * How far above idle speed do we consider idling?
+	 * How far above idle speed do we consider idling, i.e. coasting detection threshold.
 	 * For example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
 	RPM
 	 * offset 814
@@ -5274,4 +5274,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Feb 25 03:30:20 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Feb 25 16:29:30 UTC 2023

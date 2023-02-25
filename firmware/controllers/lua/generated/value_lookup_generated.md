@@ -488,7 +488,7 @@ Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon
 
 
 ### idlePidRpmUpperLimit
-How far above idle speed do we consider idling?\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
+How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
 
 ### applyNonlinearBelowPulse
 Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
