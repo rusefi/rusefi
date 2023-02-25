@@ -61,8 +61,7 @@
 			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F405.svd",
 			"servertype": "openocd",
 			"configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
-			"rtos": "auto",
-			"runToMain": true
+			"rtos": "auto"
 		},
 		{
 			"name": "Debug F42x",
@@ -75,8 +74,7 @@
 			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F427.svd",
 			"servertype": "openocd",
 			"configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
-			"rtos": "auto",
-			"runToMain": true
+			"rtos": "auto"
 		},
 		{
 			"name": "Debug F7x6",
@@ -89,8 +87,7 @@
 			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F7x7.svd",
 			"servertype": "openocd",
 			"configFiles": ["interface/stlink.cfg", "target/stm32f7x.cfg"],
-			"rtos": "auto",
-			"runToMain": true
+			"rtos": "auto"
 		},
 		{
 			"name": "Debug H743",
@@ -103,8 +100,7 @@
 			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32H743x.svd",
 			"servertype": "openocd",
 			"configFiles": ["interface/stlink.cfg", "target/stm32h7x.cfg"],
-			"rtos": "auto",
-			"runToMain": true
+			"rtos": "auto"
 		}
 	]
 }
