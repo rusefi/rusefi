@@ -238,7 +238,7 @@ void deinitTps() {
 
 	tps1.deinit(isFordTps, &fordTps1);
 	tps2.deinit(isFordTps, &fordTps2);
-	pedal.deinit(isFordTps, &fordPps);
+	pedal.deinit(isFordPps, &fordPps);
 
 	wastegate.deinit();
 }
