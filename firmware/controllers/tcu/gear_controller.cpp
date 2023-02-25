@@ -55,10 +55,53 @@ void initGearController() {
 	case GearControllerMode::ButtonShift :
 		engine->gearController = getButtonShiftController();
 		break;
+	case GearControllerMode::Generic :
+		engine->gearController = getGenericGearController();
+		break;
 	default :
 		engine->gearController = NULL;
 		return;
 	}
 	engine->gearController->init();
+}
+
+uint8_t* GearControllerBase::getRangeStateArray(int i) {
+	switch (i) {
+	case 1 :
+		return config->tcu_rangePlus;
+		break;
+	case 2 :
+		return config->tcu_rangeMinus;
+		break;
+	case 3 :
+		return config->tcu_rangeP;
+		break;
+	case 4 :
+		return config->tcu_rangeR;
+		break;
+	case 5 :
+		return config->tcu_rangeN;
+		break;
+	case 6 :
+		return config->tcu_rangeD;
+		break;
+	case 7 :
+		return config->tcu_rangeM;
+		break;
+	case 8 :
+		return config->tcu_rangeM3;
+		break;
+	case 9 :
+		return config->tcu_rangeM2;
+		break;
+	case 10 :
+		return config->tcu_rangeM1;
+		break;
+	case 11 :
+		return config->tcu_rangeLow;
+		break;
+	default:
+		return NULL;
+	}
 }
 #endif // EFI_TCU

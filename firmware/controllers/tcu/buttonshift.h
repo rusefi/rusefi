@@ -15,8 +15,8 @@ class ButtonShiftController: public GearControllerBase {
 public:
 	ButtonShiftController();
 
-	void update() override;
-  void init() override;
+	void update();
+  void init();
 	GearControllerMode getMode() const {
 		return GearControllerMode::ButtonShift;
 	}

@@ -60,6 +60,7 @@
 #include "dynoview.h"
 #include "vr_pwm.h"
 #include "adc_subscription.h"
+#include "gc_generic.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
