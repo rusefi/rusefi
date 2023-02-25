@@ -1894,17 +1894,16 @@ menuDialog = main
 		groupChildMenu = scriptCurve5Settings,				"Script Curve #5"
 		groupChildMenu = scriptCurve6Settings,				"Script Curve #6"
 
-# users are confused by TCU dialogs. open question how to repackage as pre-alpha
-#		subMenu = std_separator
-#		subMenu = tcuControls,			"Transmission Settings"
-#		subMenu = gearControls,			"Gear Selection Settings"
-#		subMenu = inputSpeedSensor, "Input Speed Sensor"
-#		subMenu = tcuSolenoidTableTbl,		"Shift Solenoids"
-#		subMenu = tccCurves, "TCC Lock/Unlock Speed"
-#		subMenu = pcPerGearDialog, "Line Pressure Per Gear"
-#		subMenu = pcPerShiftDialog, "Line Pressure Per Shift"
-#		subMenu = 32Dialog, "3-2 Shift Solenoid Percent by Speed"
-#		subMenu = rangeMatrixDialog, "Range Selector Input Matrix"
+		subMenu = std_separator
+		subMenu = tcuControls,			"Transmission Settings (alpha)"
+		subMenu = gearControls,			"Gear Selection Settings (alpha)"
+		subMenu = inputSpeedSensor,		"Input Speed Sensor (alpha)"
+		subMenu = tcuSolenoidTableTbl,		"Shift Solenoids (alpha)"
+		subMenu = tccCurves,			"TCC Lock/Unlock Speed (alpha)"
+		subMenu = pcPerGearDialog,		"Line Pressure Per Gear (alpha)"
+		subMenu = pcPerShiftDialog,		"Line Pressure Per Shift (alpha)"
+		subMenu = 32Dialog,			"3-2 Shift Solenoid Percent by Speed (alpha)"
+		subMenu = rangeMatrixDialog,		"Range Selector Input Matrix (alpha)"
 
 	menu = "&Sensors"
 		# Base analog input settings
