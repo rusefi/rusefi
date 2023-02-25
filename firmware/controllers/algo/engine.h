@@ -48,6 +48,7 @@
 #include "fuel_schedule.h"
 #include "prime_injection.h"
 #include "throttle_model.h"
+#include "gc_generic.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!

@@ -30,7 +30,12 @@ gear_e TransmissionControllerBase::getCurrentGear() const {
 
 void TransmissionControllerBase::postState() {
 #if EFI_TUNER_STUDIO
-    engine->outputChannels.tcuCurrentGear = getCurrentGear();
+	auto iss = Sensor::get(SensorType::InputShaftSpeed);
+	auto rpm = Sensor::get(SensorType::Rpm);
+	if (iss.Valid && rpm.Valid) {
+		engine->outputChannels.tcRatio = rpm.Value / iss.Value;
+	}
+	engine->outputChannels.tcuCurrentGear = getCurrentGear();
 #endif
 }
 
