@@ -7,7 +7,7 @@ SimpleTransmissionController simpleTransmissionController;
 
 void SimpleTransmissionController::init() {
     for (size_t i = 0; i < efi::size(engineConfiguration->tcu_solenoid); i++) {
-        enginePins.tcuSolenoids[i].initPin("Transmission Solenoid", engineConfiguration->tcu_solenoid[i], &engineConfiguration->tcu_solenoid_mode[i]);
+        enginePins.tcuSolenoids[i].initPin("Transmission Solenoid", engineConfiguration->tcu_solenoid[i], engineConfiguration->tcu_solenoid_mode[i]);
     }
 }
 

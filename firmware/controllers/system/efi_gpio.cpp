@@ -22,9 +22,6 @@
 // todo: clean this mess, this should become 'static'/private
 EnginePins enginePins;
 
-pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
-pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
-
 static const char* const sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
 		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};
 
@@ -107,11 +104,11 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 void RegisteredOutputPin::init() {
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[m_pinOffset]));
 
-	pin_output_mode_e* newMode;
+	pin_output_mode_e newMode;
 	if (m_hasPinMode) {
-		newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
+		newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
 	} else {
-		newMode = &DEFAULT_OUTPUT;
+		newMode = OM_DEFAULT;
 	}
 
     if (isPinConfigurationChanged()) {
@@ -296,12 +293,12 @@ void EnginePins::startIgnitionPins() {
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		NamedOutputPin *trailingOutput = &enginePins.trailingCoils[i];
 		if (isPinOrModeChanged(trailingCoilPins[i], ignitionPinMode)) {
-			trailingOutput->initPin(trailingOutput->name, engineConfiguration->trailingCoilPins[i], &engineConfiguration->ignitionPinMode);
+			trailingOutput->initPin(trailingOutput->name, engineConfiguration->trailingCoilPins[i], engineConfiguration->ignitionPinMode);
 		}
 
 		NamedOutputPin *output = &enginePins.coils[i];
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
-			output->initPin(output->name, engineConfiguration->ignitionPins[i], &engineConfiguration->ignitionPinMode);
+			output->initPin(output->name, engineConfiguration->ignitionPins[i], engineConfiguration->ignitionPinMode);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -314,7 +311,7 @@ void EnginePins::startInjectionPins() {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		if (isPinOrModeChanged(injectionPins[i], injectionPinMode)) {
 			output->initPin(output->name, engineConfiguration->injectionPins[i],
-					&engineConfiguration->injectionPinMode);
+					engineConfiguration->injectionPinMode);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -453,10 +450,6 @@ void IgnitionOutputPin::reset() {
 	signalFallSparkId = 0;
 }
 
-OutputPin::OutputPin() {
-	modePtr = &DEFAULT_OUTPUT;
-}
-
 bool OutputPin::isInitialized() {
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 #if (BOARD_EXT_GPIOCHIPS > 0)
@@ -514,8 +507,6 @@ void OutputPin::setValue(int logicValue) {
 		return;
 	}
 
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
-	pin_output_mode_e mode = *modePtr;
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
 	int electricalValue = getElectricalValue(logicValue, mode);
 
@@ -541,11 +532,9 @@ bool OutputPin::getLogicValue() const {
 	return currentLogicValue == 1;
 }
 
-void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
-	pin_output_mode_e mode = *outputMode;
-	/* may be*/UNUSED(mode);
+void OutputPin::setDefaultPinState(pin_output_mode_e outputMode) {
 	assertOMode(mode);
-	this->modePtr = outputMode;
+	this->mode = outputMode;
 	setValue(false); // initial state
 }
 
@@ -575,10 +564,10 @@ void initOutputPins() {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
-	initPin(msg, brainPin, &DEFAULT_OUTPUT);
+	initPin(msg, brainPin, OM_DEFAULT);
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode, bool forceInitWithFatalError) {
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e outputMode, bool forceInitWithFatalError) {
 #if EFI_UNIT_TEST
 	unitTestTurnedOnCounter = 0;
 #endif
@@ -603,17 +592,17 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		return;
 	}
 
-	if (*outputMode > OM_OPENDRAIN_INVERTED) {
+	if (outputMode > OM_OPENDRAIN_INVERTED) {
 		firmwareError(ObdCode::CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e %d %s",
 				msg,
-				*outputMode,
+				outputMode,
 				hwPortname(brainPin)
 				);
 		return;
 	}
 
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
+	iomode_t mode = (outputMode == OM_DEFAULT || outputMode == OM_INVERTED) ?
 		PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 
 	#if (BOARD_EXT_GPIOCHIPS > 0)
@@ -654,16 +643,16 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		// we had enough drama with pin configuration in board.h and else that we shall self-check
 
 		// todo: handle OM_OPENDRAIN and OM_OPENDRAIN_INVERTED as well
-		if (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) {
+		if (outputMode == OM_DEFAULT || outputMode == OM_INVERTED) {
 			const int logicalValue = 
-				(*outputMode == OM_INVERTED) 
+				(outputMode == OM_INVERTED)
 				? !actualValue 
 				: actualValue;
 
 #ifndef DISABLE_PIN_STATE_VALIDATION
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
 			if (logicalValue) {
-				firmwareError(ObdCode::OBD_PCM_Processor_Fault, "HARDWARE VALIDATION FAILED %s: unexpected startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
+				firmwareError(ObdCode::OBD_PCM_Processor_Fault, "HARDWARE VALIDATION FAILED %s: unexpected startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(outputMode));
 				OutputPin::deInit();
 			}
 #endif
@@ -704,15 +693,15 @@ ioportmask_t criticalErrorLedPin;
 uint8_t criticalErrorLedState;
 
 #ifndef LED_ERROR_BRAIN_PIN_MODE
-#define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
+#define LED_ERROR_BRAIN_PIN_MODE OM_DEFAULT
 #endif /* LED_ERROR_BRAIN_PIN_MODE */
 
 #if EFI_PROD_CODE
 static void initErrorLed(Gpio led) {
-	enginePins.errorLedPin.initPin("led: CRITICAL status", led, &(LED_ERROR_BRAIN_PIN_MODE));
+	enginePins.errorLedPin.initPin("led: CRITICAL status", led, (LED_ERROR_BRAIN_PIN_MODE));
 	criticalErrorLedPort = getHwPort("CRITICAL", led);
 	criticalErrorLedPin = getHwPin("CRITICAL", led);
-	criticalErrorLedState = (LED_ERROR_BRAIN_PIN_MODE == INVERTED_OUTPUT) ? 0 : 1;
+	criticalErrorLedState = (LED_ERROR_BRAIN_PIN_MODE == OM_INVERTED) ? 0 : 1;
 }
 #endif /* EFI_PROD_CODE */
 

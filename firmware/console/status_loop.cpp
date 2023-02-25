@@ -85,17 +85,14 @@ extern WaveChart waveChart;
 
 #include "sensor_chart.h"
 
-extern pin_output_mode_e DEFAULT_OUTPUT;
-extern pin_output_mode_e INVERTED_OUTPUT;
-
 #ifndef LED_WARNING_BRAIN_PIN_MODE
-#define LED_WARNING_BRAIN_PIN_MODE	DEFAULT_OUTPUT
+#define LED_WARNING_BRAIN_PIN_MODE	OM_DEFAULT
 #endif
 #ifndef LED_RUNING_BRAIN_PIN_MODE
-#define LED_RUNING_BRAIN_PIN_MODE	DEFAULT_OUTPUT
+#define LED_RUNING_BRAIN_PIN_MODE	OM_DEFAULT
 #endif
 #ifndef LED_COMMUNICATION_BRAIN_PIN_MODE
-#define LED_COMMUNICATION_BRAIN_PIN_MODE	DEFAULT_OUTPUT
+#define LED_COMMUNICATION_BRAIN_PIN_MODE	OM_DEFAULT
 #endif
 
 int warningEnabled = true;
@@ -261,11 +258,11 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds() {
-	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin, &LED_COMMUNICATION_BRAIN_PIN_MODE, true);
+	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin, LED_COMMUNICATION_BRAIN_PIN_MODE, true);
 	// checkEnginePin is already initialized by the time we get here
 
-	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin, &LED_WARNING_BRAIN_PIN_MODE, true);
-	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin, &LED_RUNING_BRAIN_PIN_MODE, true);
+	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin, LED_WARNING_BRAIN_PIN_MODE, true);
+	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin, LED_RUNING_BRAIN_PIN_MODE, true);
 }
 
 #if EFI_PROD_CODE

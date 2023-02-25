@@ -335,25 +335,25 @@ void stopSmartCsPins() {
 void startSmartCsPins() {
 #if (BOARD_TLE8888_COUNT > 0)
 	tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
-				&engineConfiguration->tle8888_csPinMode);
+				engineConfiguration->tle8888_csPinMode);
 	tle8888Cs.setValue(true);
 #endif /* BOARD_TLE8888_COUNT */
 #if (BOARD_TLE6240_COUNT > 0)
     // todo: any way to reduce copy-paste? some convention between pin property name and pin mode property name?
 	tle6240Cs.initPin("tle6240 CS", engineConfiguration->tle6240_cs,
-				&engineConfiguration->tle6240_csPinMode);
+				engineConfiguration->tle6240_csPinMode);
 	tle6240Cs.setValue(true);
 #endif /* BOARD_TLE6240_COUNT */
 #if (BOARD_MC33972_COUNT > 0)
     // todo: any way to reduce copy-paste? some convention between pin property name and pin mode property name?
 	mc33972Cs.initPin("mc33972 CS", engineConfiguration->mc33972_cs,
-				&engineConfiguration->mc33972_csPinMode);
+				engineConfiguration->mc33972_csPinMode);
 	mc33972Cs.setValue(true);
 #endif /* BOARD_MC33972_COUNT */
 #if (BOARD_DRV8860_COUNT > 0)
     // todo: any way to reduce copy-paste? some convention between pin property name and pin mode property name?
 	drv8860Cs.initPin("drv8860 CS", engineConfiguration->drv8860_cs,
-				&engineConfiguration->drv8860_csPinMode);
+				engineConfiguration->drv8860_csPinMode);
 	drv8860Cs.setValue(true);
 #endif /* BOARD_DRV8860_COUNT */
 #if (BOARD_MC33810_COUNT > 0)
