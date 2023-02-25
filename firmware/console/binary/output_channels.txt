@@ -20,14 +20,12 @@ bit needBurn;
 
 bit sd_msd
 bit isFan2On
-bit unusedBitLAtwfs;
+bit acrActive;
 bit toothLogReady;
-bit unused3123
 bit isTpsError;
 bit isCltError;
 bit isMapError;
 bit isIatError;
-bit unused131313;
 bit isTriggerError;
 bit hasCriticalError;
 bit isWarnNow;

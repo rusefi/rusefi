@@ -51,9 +51,14 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 #endif
 
-    if (engine->engineState.lua.luaIgnCut) {
-        allowSpark.clear(ClearReason::Lua);
-    }
+	if (engine->engineState.lua.luaIgnCut) {
+		allowSpark.clear(ClearReason::Lua);
+	}
+
+	// Don't inject fuel during Harley compression release - it sprays fuel everywhere
+	if (engine->module<HarleyAcr>()->isActive()) {
+		allowFuel.clear(ClearReason::ACR);
+	}
 
 	{
 		// User-configured hard RPM limit, either constant or CLT-lookup

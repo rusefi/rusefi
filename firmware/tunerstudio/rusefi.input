@@ -240,7 +240,7 @@ enable2ndByteCanID = false
 	wboFaultCodeList = bits, U08, [0:3], "OK", "Unk", "Unk", "failed to heat", "overheat", "underheat", "no supply"
 
 ; ClearReason
-	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off", "Lua"
+	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off", "Lua", "ACR"
 
 ; TpsState
 	etbCutCodeList = bits, U08, [0:7], "None", "engine stopped", "TPS error", "PPS error", "TPS noise", "PID noise", "Lua", "Manual", "N/A", "Redundancy", "PPS noise"
@@ -4172,6 +4172,13 @@ dialog = tcuControls, "Transmission Settings"
 		field = "SENT input 1",								sentInputPins1
 		field = "SENT sentEtbType",							sentEtbType
 
+	dialog = harleyAcr, "Harley Automatic Compression Release"
+		field = "Pin",	acrPin
+		field = "#ACR is disabled after the specified number"
+		field = "#of revolutions, plus degrees of engine phase"
+		field = "Disable after revolutions",	acrRevolutions
+		field = "Disable after engine phase",	acrDisablePhase
+
 	dialog = parkingLot, "Experimental/Broken"
 		field = "I understand ECU Locking",				yesUnderstandLocking
 		field = "Tune read/write password",				tuneHidingKey, { yesUnderstandLocking == 1 }
@@ -4199,6 +4206,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = useBiQuadOnAuxSpeedSensors,				useBiQuadOnAuxSpeedSensors
 		field = "TODO KS mode 4569",						kickStartCranking
 		panel = allTriggerDebug
+		panel = harleyAcr
 
 		help = helpGeneral, "rusEFI General Help"
 		webHelp = @@MAIN_HELP_URL@@

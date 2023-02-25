@@ -39,6 +39,7 @@
 #include "boost_control.h"
 #include "ignition_controller.h"
 #include "alternator_controller.h"
+#include "harley_acr.h"
 #include "dfco.h"
 #include "fuel_computer.h"
 #include "gear_detector.h"
@@ -139,6 +140,7 @@ public:
 		AcController,
 		PrimeController,
 		DfcoController,
+		HarleyAcr,
 		Mockable<WallFuelController>,
 #if EFI_VEHICLE_SPEED
 		GearDetector,
