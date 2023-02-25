@@ -13,4 +13,5 @@ bit ALSTimerCondition
 
 float fuelALSCorrection
 int16_t autoscale timingALSCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+int16_t autoscale timingALSSkip;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 50, 2
 end_struct
