@@ -815,7 +815,7 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 	uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
-	int16_t idlePidRpmUpperLimit;How far above idle speed do we consider idling?\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.;"RPM", 1, 0, 0, 500, 0
+	int16_t idlePidRpmUpperLimit;How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.;"RPM", 1, 0, 0, 500, 0
 
 	uint16_t autoscale applyNonlinearBelowPulse;Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.;"ms", {1/1000}, 0, 0, 30, 3
 	Gpio lps25BaroSensorScl
