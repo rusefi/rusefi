@@ -59,6 +59,12 @@ bool AntilagSystemBase::isALSMaxThrottleIntentCondition() const {
 	return engineConfiguration->ALSMaxTPS > throttleIntent;
 }
 
+bool AntilagSystemBase::isInsideALSTimerCondition() {
+	auto ALStime = ALStimer.getElapsedSeconds();
+
+	return ALStime < engineConfiguration->ALSMaxDuration;
+}
+
 bool AntilagSystemBase::isAntilagConditionMet(int rpm) {
 
 
@@ -80,6 +86,10 @@ bool AntilagSystemBase::isAntilagConditionMet(int rpm) {
 void AntilagSystemBase::update() {
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
     isAntilagCondition = engineConfiguration->antiLagEnabled && isAntilagConditionMet(rpm);
+
+	if (!ALSMaxRPMCondition) {
+	    ALStimer.reset();
+	}
 
 #if EFI_ANTILAG_SYSTEM
 	fuelALSCorrection = getFuelALSCorrection(rpm);
