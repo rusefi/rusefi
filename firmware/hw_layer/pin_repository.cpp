@@ -48,15 +48,9 @@ int brainPin_to_index(brain_pin_e brainPin) {
 }
 
 /**
- * See also brain_pin_markUnused()
  * @return true if this pin was already used, false otherwise
  */
-
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
-#if ! EFI_BOOTLOADER
-	efiPrintf("pin_markUsed: %s on %s", msg, hwPortname(brainPin));
-#endif
-
 	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return true;
@@ -75,14 +69,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 	return false;
 }
 
-/**
- * See also brain_pin_markUsed()
- */
-
 void brain_pin_markUnused(brain_pin_e brainPin) {
-#if ! EFI_BOOTLOADER
-	efiPrintf("pin_markUnused: %s", hwPortname(brainPin));
-#endif
 	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return;
