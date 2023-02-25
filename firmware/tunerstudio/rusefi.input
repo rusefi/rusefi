@@ -851,6 +851,15 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
+	table = IgnSkipTableALS, IgnSkipALS,  "Ignition Skip",   1
+      ;       constant, variable
+      xBins       = alsIgnSkiprpmBins,  RPMValue
+      yBins       = alsIgnSkipLoadBins,  TPSValue
+      zBins       = ALSIgnSkipTable
+	  gridHeight  = 4.0
+      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
+      upDownLabel = "(RICHER)", "(LEANER)"
+
 	table = baroCorrTbl,  baroCorrMap,  "Baro Correction",	1
 		;		constant, variable
 		xBins		= baroCorrRpmBins,  RPMValue
