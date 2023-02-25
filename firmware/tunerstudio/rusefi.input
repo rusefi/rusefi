@@ -4257,9 +4257,9 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Max CLT",          	    		ALSMaxCLT,  {antiLagEnabled == 1}
 		field = "Idle Air Add",                     ALSIdleAdd, {antiLagEnabled == 1}
 		field = "ETB Air Add",                      ALSEtbAdd,  {antiLagEnabled == 1}
-		field = "Spark Skip Ratio",                 ALSSkipRatio,  {antiLagEnabled == 1}
 		panel = FuelAdderTableALS
 		panel = IgnRetardTableALS
+		panel = IgnSkipTableALS
 
 
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
