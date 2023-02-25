@@ -18,9 +18,8 @@ jobs:
         run: javac -version
 
       - name: Install Tools
-        working-directory: ./.github/workflows/
         run: |
-          sudo ./add-ubuntu-latest-apt-mirrors.sh
+          sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
           sudo apt-get install sshpass
 
       - name: Build TS plugin body
