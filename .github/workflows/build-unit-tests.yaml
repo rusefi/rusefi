@@ -27,9 +27,8 @@ jobs:
 
     - name: Install required software (ubuntu)
       if: ${{ matrix.os != 'macos-latest' }}
-      working-directory: ./.github/workflows/
       run: |
-        sudo ./add-ubuntu-latest-apt-mirrors.sh
+        sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install mtools zip dosfstools sshpass lcov valgrind
 
     - name: Install required software (macos)

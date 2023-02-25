@@ -359,12 +359,9 @@ jobs:
 
     - name: Install multilib, mingw, sshpass and mtools
       if: ${{ env.skip != 'true' }}
-      working-directory: ./.github/workflows/
       run: |
-        sudo ./add-ubuntu-latest-apt-mirrors.sh
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
-        sudo apt-get install zip
-        sudo apt-get install dosfstools
+        sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools zip dosfstools
 
     - name: Generate Live Documentation
       if: ${{ env.skip != 'true' }}

@@ -16,9 +16,8 @@ jobs:
         git submodule update --init --depth=1 hardware/InteractiveHtmlBom
 
     - name: Install prerequisite software
-      working-directory: ./.github/workflows/
       run: |
-        sudo ./add-ubuntu-latest-apt-mirrors.sh
+        sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install kicad sshpass
 
     - name: Set SSH variables

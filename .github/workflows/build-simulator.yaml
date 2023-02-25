@@ -29,9 +29,8 @@ jobs:
       run: gcc -v
 
     - name: Install multilib
-      working-directory: ./.github/workflows/
       run: |
-        sudo ./add-ubuntu-latest-apt-mirrors.sh
+        sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
 
     - name: Generate Configs, Enums & Live Documentation

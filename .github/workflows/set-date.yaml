@@ -26,9 +26,8 @@ jobs:
 
     - name: Install Tools
       if: ${{ env.skip != 'true' }}
-      working-directory: ./.github/workflows/
       run: |
-        sudo ./add-ubuntu-latest-apt-mirrors.sh
+        sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install subversion
 
     - name: Update version header in git

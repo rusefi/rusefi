@@ -19,9 +19,8 @@ jobs:
         git submodule update --init --depth=1 hardware/rusefi_lib
 
     - name: Install sshpass, kicad, and tk bindings
-      working-directory: ./.github/workflows/
       run: |
-        sudo ./add-ubuntu-latest-apt-mirrors.sh
+        sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo add-apt-repository --yes ppa:kicad/kicad-6.0-releases
         sudo apt-get install sshpass kicad python3-pip python3-tk scour librsvg2-bin
         pip install python-dateutil pygubu
