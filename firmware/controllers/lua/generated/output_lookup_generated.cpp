@@ -23,6 +23,8 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.sd_msd;
 		case -333212891:
 			return engine->outputChannels.isFan2On;
+		case -1548941801:
+			return engine->outputChannels.acrActive;
 		case -1662199734:
 			return engine->outputChannels.toothLogReady;
 		case 14587330:

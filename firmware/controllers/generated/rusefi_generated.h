@@ -1045,7 +1045,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 4262749009
+#define SIGNATURE_HASH 261847431
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1249,14 +1249,10 @@
 #define TS_EXECUTE_char E
 #define TS_FILE_VERSION 20210312
 #define TS_FILE_VERSION_OFFSET 124
-#define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
-#define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY_char 8
 #define TS_GET_CONFIG_ERROR 'e'
 #define TS_GET_CONFIG_ERROR_char e
 #define TS_GET_FIRMWARE_VERSION 'V'
 #define TS_GET_FIRMWARE_VERSION_char V
-#define TS_GET_OUTPUTS_SIZE '4'
-#define TS_GET_OUTPUTS_SIZE_char 4
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F_char F
 #define TS_GET_SCATTERED_GET_COMMAND '9'
@@ -1318,7 +1314,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.02.25.f407-discovery.4262749009"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.02.25.f407-discovery.261847431"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
