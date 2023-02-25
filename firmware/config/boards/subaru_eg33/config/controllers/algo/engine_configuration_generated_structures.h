@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Feb 23 15:06:28 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Feb 25 00:26:21 PST 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1017,11 +1017,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t fanOffTemperature;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 382
 	 */
-	uint8_t alignmentFill_at_382[2];
+	output_pin_e acrPin;
 	/**
 	 * Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.
 	revs/km
@@ -1097,11 +1095,9 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e tle6240_csPinMode;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 427
 	 */
-	uint8_t alignmentFill_at_427[1];
+	uint8_t acrRevolutions;
 	/**
 	coef
 	 * offset 428
@@ -3702,11 +3698,10 @@ struct engine_configuration_s {
 	 */
 	TransmissionControllerMode transmissionControllerMode;
 	/**
-	 * need 4 byte alignment
-	units
+	deg
 	 * offset 3486
 	 */
-	uint8_t alignmentFill_at_3486[2];
+	uint16_t acrDisablePhase;
 	/**
 	 * offset 3488
 	 */
@@ -4674,4 +4669,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22064);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Feb 23 15:06:28 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Feb 25 00:26:21 PST 2023

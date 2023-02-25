@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 11:00:43 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Feb 25 00:26:20 PST 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -67,70 +67,70 @@ struct output_channels_s {
 	bool isFan2On : 1 {};
 	/**
 	offset 0 bit 10 */
-	bool unusedBitLAtwfs : 1 {};
+	bool acrActive : 1 {};
 	/**
 	offset 0 bit 11 */
 	bool toothLogReady : 1 {};
 	/**
 	offset 0 bit 12 */
-	bool unused3123 : 1 {};
-	/**
-	offset 0 bit 13 */
 	bool isTpsError : 1 {};
 	/**
-	offset 0 bit 14 */
+	offset 0 bit 13 */
 	bool isCltError : 1 {};
 	/**
-	offset 0 bit 15 */
+	offset 0 bit 14 */
 	bool isMapError : 1 {};
 	/**
-	offset 0 bit 16 */
+	offset 0 bit 15 */
 	bool isIatError : 1 {};
 	/**
-	offset 0 bit 17 */
-	bool unused131313 : 1 {};
-	/**
-	offset 0 bit 18 */
+	offset 0 bit 16 */
 	bool isTriggerError : 1 {};
 	/**
-	offset 0 bit 19 */
+	offset 0 bit 17 */
 	bool hasCriticalError : 1 {};
 	/**
-	offset 0 bit 20 */
+	offset 0 bit 18 */
 	bool isWarnNow : 1 {};
 	/**
-	offset 0 bit 21 */
+	offset 0 bit 19 */
 	bool isPedalError : 1 {};
 	/**
-	offset 0 bit 22 */
+	offset 0 bit 20 */
 	bool launchTriggered : 1 {};
 	/**
-	offset 0 bit 23 */
+	offset 0 bit 21 */
 	bool isTps2Error : 1 {};
 	/**
-	offset 0 bit 24 */
+	offset 0 bit 22 */
 	bool isIdleClosedLoop : 1 {};
 	/**
+	offset 0 bit 23 */
+	bool unusedBit_23_23 : 1 {};
+	/**
+	offset 0 bit 24 */
+	bool unusedBit_23_24 : 1 {};
+	/**
 	offset 0 bit 25 */
-	bool unusedBit_25_25 : 1 {};
+	bool unusedBit_23_25 : 1 {};
 	/**
 	offset 0 bit 26 */
-	bool unusedBit_25_26 : 1 {};
+	bool unusedBit_23_26 : 1 {};
 	/**
 	offset 0 bit 27 */
-	bool unusedBit_25_27 : 1 {};
+	bool unusedBit_23_27 : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool unusedBit_25_28 : 1 {};
+	bool unusedBit_23_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_25_29 : 1 {};
+	bool unusedBit_23_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_25_30 : 1 {};
+	bool unusedBit_23_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_25_31 : 1 {};
+	bool unusedBit_23_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	RPM
@@ -1384,4 +1384,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 780);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 11:00:43 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Feb 25 00:26:20 PST 2023

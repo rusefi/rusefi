@@ -265,6 +265,9 @@ Extra air taper amount
 ### boostControlSafeDutyCycle
 Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.
 
+### acrRevolutions
+
+
 ### globalFuelCorrection
 
 
@@ -1395,6 +1398,9 @@ The fastest rate the target pressure can be reduced by. This is because HPFP hav
 
 ### vvtActivationDelayMs
 We need to give engine time to build oil pressure without diverting it to VVT
+
+### acrDisablePhase
+
 
 ### auxLinear1.v1
 
