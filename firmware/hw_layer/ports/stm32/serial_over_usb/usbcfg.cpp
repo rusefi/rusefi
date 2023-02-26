@@ -203,22 +203,21 @@ static const uint8_t vcom_string0[] = {
  * Vendor string.
  */
 static const uint8_t vcom_string1[] = {
-  USB_DESC_BYTE(22),                    /* bLength.                         */
+  USB_DESC_BYTE(8),                    /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
-  'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'L', 0,
-  'L', 0, 'C', 0
+  'F', 0, 'O', 0, 'M', 0, 'E', 0
 };
 
 /*
  * Device Description string.
  */
 static const uint8_t vcom_string2[] = {
-  USB_DESC_BYTE(58),                    /* bLength.                         */
+  USB_DESC_BYTE(54),                    /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
-  'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'E', 0,
-  'n', 0, 'g', 0, 'i', 0, 'n', 0, 'e', 0, ' ', 0, 'M', 0, 'a', 0,
-  'n', 0, 'a', 0, 'g', 0, 'e', 0, 'm', 0, 'e', 0, 'n', 0, 't', 0,
-  ' ', 0, 'E', 0, 'C', 0, 'U', 0
+  'F', 0, 'O', 0, 'M', 0, 'E', 0, ' ', 0, 'E', 0, 'n', 0, 'g', 0,
+  'i', 0, 'n', 0, 'e', 0, ' ', 0, 'M', 0, 'a', 0, 'n', 0, 'a', 0,
+  'g', 0, 'e', 0, 'm', 0, 'e', 0, 'n', 0, 't', 0, ' ', 0, 'E', 0,
+  'C', 0, 'U', 0
 };
 
 /*

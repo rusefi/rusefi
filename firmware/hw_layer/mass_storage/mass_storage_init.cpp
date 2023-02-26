@@ -53,7 +53,7 @@ static const scsi_inquiry_response_t iniDriveInquiry = {
     0x00,
     0x00,
     0x00,
-    "rusEFI",
+    "FOME",
     "INI Drive",
     {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
 };
@@ -67,7 +67,7 @@ static const scsi_inquiry_response_t sdCardInquiry = {
     0x00,
     0x00,
     0x00,
-    "rusEFI",
+    "FOME",
     "SD Card",
     {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
 };

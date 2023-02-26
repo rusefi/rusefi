@@ -78,7 +78,7 @@ static void sayHello() {
 
 	int flashSize = TM_ID_GetFlashSize();
 	if (flashSize < MIN_FLASH_SIZE) {
-		firmwareError(OBD_PCM_Processor_Fault, "rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
+		firmwareError(OBD_PCM_Processor_Fault, "Expected at least %dK of flash but found %dK", MIN_FLASH_SIZE, flashSize);
 	}
 
 	// todo: bug, at the moment we report 1MB on dual-bank F7
