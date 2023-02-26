@@ -93,7 +93,8 @@ void initPotentiometers() {
 		efiPrintf("digiPot spi disabled");
 		return;
 	}
-	turnOnSpi(engineConfiguration->digitalPotentiometerSpiDevice);
+	// todo: we have centralized SPI management see other usages of 'turnOnSpi'
+	//turnOnSpi(engineConfiguration->digitalPotentiometerSpiDevice);
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
 		brain_pin_e csPin = engineConfiguration->digitalPotentiometerChipSelect[i];
