@@ -23,20 +23,6 @@ void setMazdaMiata2003EngineConfiguration();
 void setMazdaMiata2003EngineConfigurationNaFuelRail();
 void setMazdaMiata2003EngineConfigurationBoardTest();
 
-void setMiataNB2_MRE_ETB();
-
-/**
- * OEM mechanical throttle body, with MAP
- * set engine_type 11
- */
-void setMiataNB2_MRE_MAP();
-
-/**
- * OEM mechanical throttle body using OEM MAF
- * set engine_type 15
- */
-void setMiataNB2_MRE_MAF();
-
 /**
  * https://github.com/rusefi/rusefi/wiki/Mazda-Miata-2001
  * set engine_type 1

@@ -607,45 +607,6 @@ static void setMiataNB2_MRE_common() {
 #endif /* BOARD_TLE8888_COUNT */
 }
 
-
-/**
- * Pretty much OEM 2003 Miata with ETB
- * set engine_type 13
- */
-void setMiataNB2_MRE_ETB() {
-	setMiataNB2_MRE_common();
-
-	engineConfiguration->throttlePedalUpVoltage = 1;
-	// WAT? that's an interesting value, how come it's above 5v?
-	engineConfiguration->throttlePedalWOTVoltage = 5.47;
-
-	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
-	engineConfiguration->etb.iFactor = 	0;
-	engineConfiguration->etb.dFactor = 0;
-	engineConfiguration->etb.offset = 0;
-}
-
-/**
- * Normal mechanical throttle body
- * set engine_type 11
- */
-void setMiataNB2_MRE_MAP() {
-	setMiataNB2_MRE_common();
-
-	// somehow MRE72 adapter 0.2 has TPS routed to pin 26?
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6; // PA6
-
-
-	// 1K pull-down to read current from this MAF
-	engineConfiguration->mafAdcChannel = EFI_ADC_13; // J30 AV5
-}
-
-void setMiataNB2_MRE_MAF() {
-	setMiataNB2_MRE_MAP();
-
-	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
-}
-
 /**
  * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
  */
