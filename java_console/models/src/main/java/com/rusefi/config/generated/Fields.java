@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 26 14:13:31 PST 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 26 14:40:00 PST 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -276,6 +276,9 @@ public class Fields {
 	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
 	public static final int engine_type_e_ET_UNUSED97 = 97;
 	public static final int engine_type_e_ET_UNUSED98 = 98;
+	public static final int engine_type_e_ET_UNUSED_11 = 11;
+	public static final int engine_type_e_ET_UNUSED_13 = 13;
+	public static final int engine_type_e_ET_UNUSED_15 = 15;
 	public static final int engine_type_e_ET_UNUSED_17 = 17;
 	public static final int engine_type_e_ET_UNUSED_4 = 4;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
@@ -330,9 +333,6 @@ public class Fields {
 	public static final int engine_type_e_MRE_MIATA_94_MAP = 20;
 	public static final int engine_type_e_MRE_MIATA_NA6_MAP = 66;
 	public static final int engine_type_e_MRE_MIATA_NA6_VAF = 12;
-	public static final int engine_type_e_MRE_MIATA_NB2_ETB = 13;
-	public static final int engine_type_e_MRE_MIATA_NB2_MAF = 15;
-	public static final int engine_type_e_MRE_MIATA_NB2_MAP = 11;
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_MRE_VW_B6 = 62;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
@@ -992,6 +992,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1297963494;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1199,7 +1200,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.26.f407-discovery.4294103764";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.26.f407-discovery.1297963494";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;
