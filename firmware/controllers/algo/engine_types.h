@@ -211,6 +211,7 @@ typedef enum __attribute__ ((__packed__)) {
     ET_UNUSED97 = 97,
     ET_UNUSED98 = 98,
 	ET_UNUSED_17 = 17,
+	ET_UNUSED_4 = 4,
 
 	/**
 	 * this configuration has as few pins configured as possible
