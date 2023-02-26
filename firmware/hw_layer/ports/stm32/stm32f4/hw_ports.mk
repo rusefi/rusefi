@@ -8,6 +8,7 @@ HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/mpu_util.cpp \
 
 MCU = cortex-m4
 LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/STM32F4.ld
+# kludge: while we the very generic ChibiOS board.c we use our custom board.h from current folder!
 ALLCSRC += $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.c
 CONFDIR = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/cfg
 
