@@ -74,7 +74,8 @@ void initAccelerometer() {
 		return;
 	}
 
-	turnOnSpi(engineConfiguration->accelerometerSpiDevice);
+	// todo: we have centralized SPI management see other usages of 'turnOnSpi'
+    //turnOnSpi(engineConfiguration->accelerometerSpiDevice);
 	spiStart(driver, &accelerometerCfg);
 	initSpiCs((SPIConfig *)driver->config, engineConfiguration->LIS302DLCsPin);
 
