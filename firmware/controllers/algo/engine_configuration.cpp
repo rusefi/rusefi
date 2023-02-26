@@ -749,9 +749,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // HW_MICRO_RUSEFI
 #if HW_PROTEUS
-    case WASTEGATE_PROTEUS_TEST:
-        proteusDcWastegateTest();
-        break;
+	case WASTEGATE_PROTEUS_TEST:
+		proteusDcWastegateTest();
+		break;
 	case PROTEUS_GM_LS_4:
 		setProteusGmLs4();
 		break;
@@ -822,17 +822,17 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setHellen121nissanVQ();
 		break;
 	case HELLEN_121_VAG_5_CYL:
-	    setHellen121Vag_5_cyl();
-        break;
+		setHellen121Vag_5_cyl();
+		break;
 	case HELLEN_121_VAG_V6_CYL:
-	    setHellen121Vag_v6_cyl();
-        break;
+		setHellen121Vag_v6_cyl();
+		break;
 	case HELLEN_121_VAG_VR6_CYL:
-	    setHellen121Vag_vr6_cyl();
-        break;
+		setHellen121Vag_vr6_cyl();
+		break;
 	case HELLEN_121_VAG_8_CYL:
-	    setHellen121Vag_8_cyl();
-        break;
+		setHellen121Vag_8_cyl();
+		break;
 	case HELLEN_121_VAG_4_CYL:
 	case HELLEN_55_BMW:
 	case HELLEN_88_BMW:

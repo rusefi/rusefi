@@ -232,20 +232,6 @@ void setMazdaMiataNbInjectorLag() {
 	copyArray(engineConfiguration->injector.battLagCorrBins, injectorLagBins);
 }
 
-void setMazdaNB2VVTSettings() {
-	copyArray(config->vvtTable1RpmBins, vvt18fsioRpmBins);
-	copyArray(config->vvtTable1LoadBins, vvt18fsioLoadBins);
-	copyTable(config->vvtTable1, SCRIPT_TABLE_vvt_target);
-
-	// VVT closed loop
-	engineConfiguration->auxPid[0].pFactor = 2;
-	engineConfiguration->auxPid[0].iFactor = 0.005;
-	engineConfiguration->auxPid[0].dFactor = 0.002;
-	engineConfiguration->auxPid[0].offset = 33;
-	engineConfiguration->auxPid[0].minValue = 20;
-	engineConfiguration->auxPid[0].maxValue = 90;
-}
-
 static void set4EC_AT() {
 	engineConfiguration->totalGearsCount = 4;
 	// http://www.new-cars.com/2003/mazda/mazda-miata-specs.html
@@ -259,64 +245,35 @@ static void set4EC_AT() {
  * stuff common between NA1 and NB2
  */
 static void setCommonMazdaNB() {
-	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
-	engineConfiguration->trigger.type = TT_MIATA_VVT;
-
-	// set vvt_mode 3
-	engineConfiguration->vvtMode[0] = VVT_MIATA_NB;
-	engineConfiguration->vvtOffsets[0] = 98; // 2003 red car value
-
-	engineConfiguration->ignitionDwellForCrankingMs = 4;
-	// set cranking_fuel 27.5
-	engineConfiguration->cranking.baseFuel = 27.5; // this value for return-less NB miata fuel system, higher pressure
-
-	engineConfiguration->cranking.rpm = 400;
-	engineConfiguration->idle.solenoidFrequency = 500;
-	engineConfiguration->rpmHardLimit = 7200;
-	engineConfiguration->enableFan1WithAc = true;
-
-	engineConfiguration->isAlternatorControlEnabled = true;
-	// enable altdebug
-	engineConfiguration->targetVBatt = 13.8;
-	engineConfiguration->alternatorControl.offset = 20;
-	engineConfiguration->alternatorControl.pFactor = 16;
-	engineConfiguration->alternatorControl.iFactor = 8;
-	engineConfiguration->alternatorControl.dFactor = 0.1;
-	engineConfiguration->alternatorControl.periodMs = 10;
-
-	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
-	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
-	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
-
-	copyArray(config->ignitionRpmBins, ignition18vvtRpmBins);
-	copyArray(config->ignitionLoadBins, ignition18vvtLoadBins);
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTable(config->ignitionTable, mapBased18vvtTimingTable);
-#endif
-	// set_whole_ve_map 80
-	setMazdaMiataNbInjectorLag();
-
-	engineConfiguration->idleMode = IM_AUTO;
-	engineConfiguration->tachPulsePerRev = 2;
-
+	// Base engine
 	engineConfiguration->specs.displacement = 1.839;
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+
+	engineConfiguration->rpmHardLimit = 7200;
+
 	engineConfiguration->cylinderBore = 83;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
+	engineConfiguration->vehicleWeight = 1070;
 
-	setCommonNTCSensor(&engineConfiguration->clt, 2700);
-	setCommonNTCSensor(&engineConfiguration->iat, 2700);
-	setMAFTransferFunction();
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-    // second harmonic (aka double) is usually quieter background noise
-    // 13.8
-	engineConfiguration->knockBandCustom = 13.8;
+	// Trigger
+	engineConfiguration->trigger.type = TT_MIATA_VVT;
+	engineConfiguration->vvtMode[0] = VVT_MIATA_NB;
+	engineConfiguration->vvtOffsets[0] = 98;
 
-	// set tps_min 90
-	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
-	// set tps_max 540
-	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
+	// Cranking
+	engineConfiguration->ignitionDwellForCrankingMs = 4;
+	engineConfiguration->cranking.baseFuel = 27.5; // this value for return-less NB miata fuel system, higher pressure
+	engineConfiguration->cranking.rpm = 400;
+	engineConfiguration->crankingIACposition = 60;
+	engineConfiguration->afterCrankingIACtaperDuration = 250;
 
-	// set idle_position 20
+	// Idle
+	engineConfiguration->idle.solenoidFrequency = 500;
+	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->manIdlePosition = 20;
 	engineConfiguration->iacByTpsTaper = 6;
 	engineConfiguration->acIdleExtraOffset = 15;
@@ -325,20 +282,6 @@ static void setCommonMazdaNB() {
 	engineConfiguration->idlePidRpmUpperLimit = 350;
 	engineConfiguration->idlePidRpmDeadZone = 100;
 
-	engineConfiguration->crankingIACposition = 36;
-	engineConfiguration->afterCrankingIACtaperDuration = 189;
-
-	engineConfiguration->wwaeTau = 0.1;
-	engineConfiguration->targetVBatt = 14.2;
-
-	engineConfiguration->vehicleWeight = 1070;
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-
-	//set idle_offset 30
 	engineConfiguration->idleRpmPid.pFactor = 0.0065;
 	engineConfiguration->idleRpmPid.iFactor = 0.3;
 	engineConfiguration->idle_derivativeFilterLoss = 0.08;
@@ -349,8 +292,53 @@ static void setCommonMazdaNB() {
 	engineConfiguration->idlerpmpid_iTermMin = -15;
 	engineConfiguration->idlerpmpid_iTermMax =  30;
 
-	// is this used?
-	engineConfiguration->idleRpmPid.periodMs = 10;
+	// Fan
+	engineConfiguration->enableFan1WithAc = true;
+
+	// Alternator
+	engineConfiguration->isAlternatorControlEnabled = true;
+	engineConfiguration->targetVBatt = 14.0f;
+	engineConfiguration->alternatorControl.offset = 20;
+	engineConfiguration->alternatorControl.pFactor = 16;
+	engineConfiguration->alternatorControl.iFactor = 8;
+	engineConfiguration->alternatorControl.dFactor = 0.1;
+	engineConfiguration->alternatorControl.periodMs = 10;
+
+	// Tach
+	engineConfiguration->tachPulsePerRev = 2;
+
+	// Tables
+	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
+	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
+	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
+
+	copyArray(config->ignitionRpmBins, ignition18vvtRpmBins);
+	copyArray(config->ignitionLoadBins, ignition18vvtLoadBins);
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
+	copyTable(config->ignitionTable, mapBased18vvtTimingTable);
+#endif
+
+	setMazdaMiataNbInjectorLag();
+
+	// Sensors
+
+	// TPS
+	// set tps_min 90
+	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
+	// set tps_max 540
+	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
+
+	// CLT/IAT
+	setCommonNTCSensor(&engineConfiguration->clt, 2700);
+	setCommonNTCSensor(&engineConfiguration->iat, 2700);
+
+	// MAF (todo: do we use this?)
+	setMAFTransferFunction();
+
+	// second harmonic (aka double) is usually quieter background noise
+	engineConfiguration->knockBandCustom = 13.8;
+
+	engineConfiguration->wwaeTau = 0.1;
 
 	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();
@@ -366,31 +354,28 @@ static void setMazdaMiataEngineNB1Defaults() {
 static void setMazdaMiataEngineNB2Defaults() {
 	strcpy(engineConfiguration->engineCode, "NB2");
 
-	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
-	setEgoSensor(ES_Innovate_MTX_L);
-
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
 	 * 01-05 (purple) - #195500-4060
-	 *
-	 * NB2 Miata has an absolute pressure fuel system - NB2 fuel rail regulator has no vacuum line.
-	 *
-	 * Theoretically we shall have injectorFlow(MAP) curve, practically VE gets artificially high as MAP increases and
-	 * accounts for flow change.
-	 *
-	 * Wall wetting AE could be an argument for honest injectorFlow(MAP)
 	 */
 	engineConfiguration->injector.flow = 265;
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
-	engineConfiguration->crankingIACposition = 60;
-	engineConfiguration->afterCrankingIACtaperDuration = 250;
-
 	setCommonMazdaNB();
 
-	setMazdaNB2VVTSettings();
-} // end of setMazdaMiataEngineNB2Defaults
+	copyArray(config->vvtTable1RpmBins, vvt18fsioRpmBins);
+	copyArray(config->vvtTable1LoadBins, vvt18fsioLoadBins);
+	copyTable(config->vvtTable1, SCRIPT_TABLE_vvt_target);
+
+	// VVT closed loop
+	engineConfiguration->auxPid[0].pFactor = 2;
+	engineConfiguration->auxPid[0].iFactor = 0.005;
+	engineConfiguration->auxPid[0].dFactor = 0.002;
+	engineConfiguration->auxPid[0].offset = 33;
+	engineConfiguration->auxPid[0].minValue = 20;
+	engineConfiguration->auxPid[0].maxValue = 90;
+}
 
 // MAZDA_MIATA_2003
 void setMazdaMiata2003EngineConfiguration() {
