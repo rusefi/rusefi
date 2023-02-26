@@ -1,3 +1,5 @@
+See https://github.com/rusefi/rusefi/wiki/Dev-Quality-Control
+
 TL, DR: just follow [tests](tests) folder as examples.
 
 1. Run 'make' to build desktop binary.
