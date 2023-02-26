@@ -98,9 +98,4 @@ void setToyota_2jz_vics() {
 	//	engineConfiguration->scriptSetting[5] = 175 + 45;
 
 	engineConfiguration->vvtPins[0] = Gpio::E3; // VVT solenoid control
-
-	// Mazda VVT settings have nothing to do wit Toyota 2JZ settings but those are a good starting point for settings
-	setMazdaNB2VVTSettings();
 }
-
-

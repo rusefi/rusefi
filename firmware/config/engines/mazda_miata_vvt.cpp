@@ -227,7 +227,7 @@ static void setMAFTransferFunction() {
 	}
 }
 
-void setMazdaMiataNbInjectorLag() {
+static void setMazdaMiataNbInjectorLag() {
 	copyArray(engineConfiguration->injector.battLagCorr, injectorLagCorrection);
 	copyArray(engineConfiguration->injector.battLagCorrBins, injectorLagBins);
 }

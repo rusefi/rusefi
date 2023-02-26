@@ -11,9 +11,6 @@
 
 #include "engine_configuration.h"
 
-void setMazdaMiataNbInjectorLag();
-void setMazdaNB2VVTSettings();
-
 /**
  * Primary rusEfi test mule https://rusefi.com/forum/viewtopic.php?f=3&t=1095
  * MAZDA_MIATA_2003
