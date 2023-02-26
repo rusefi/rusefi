@@ -444,7 +444,7 @@ jobs:
 
     - name: Check if tag exists
       if: ${{ env.full == 'true' && env.upload == 'release' }}
-      run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ env.date }}" && echo "tagged=false" >> $GITHUB_ENV || echo "tagged=true" >> $GITHUB_ENV
+      run: git show-ref --tags --verify --quiet -- "refs/tags/${{ env.date }}" && echo "tagged=true" >> $GITHUB_ENV || echo "tagged=false" >> $GITHUB_ENV
 
     - name: Create Release Tag
       if: ${{ env.full == 'true' && env.upload == 'release' && env.tagged == 'false' }}
