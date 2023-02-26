@@ -19,7 +19,6 @@ void setL9779TestConfiguration();
 void setEepromTestConfiguration();
 
 void mreBoardNewTest();
-void mreSecondaryCan();
 void mreBCM();
 
 /**

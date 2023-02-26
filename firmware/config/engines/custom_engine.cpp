@@ -663,48 +663,6 @@ void mreBCM() {
 
 }
 
-void mreSecondaryCan() {
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
-
-
-	engineConfiguration->auxAnalogInputs[0] = MRE_IN_TPS;
-	engineConfiguration->auxAnalogInputs[1] = MRE_IN_MAP;
-	engineConfiguration->auxAnalogInputs[2] = MRE_IN_CLT;
-	engineConfiguration->auxAnalogInputs[3] = MRE_IN_IAT;
-	// engineConfiguration->auxAnalogInputs[0] =
-
-
-	// EFI_ADC_14: "32 - AN volt 6"
-//	engineConfiguration->afr.hwChannel = EFI_ADC_14;
-
-
-	strncpy(config->luaScript, R"(
-txPayload = {}
-function onTick()
-  auxV = getAuxAnalog(0)
-  print('Hello analog ' .. auxV )
-  -- first byte: integer part, would be autoboxed to int
-  txPayload[1] = auxV
-  -- second byte: fractional part, would be autoboxed to int, overflow would be ignored
-  txPayload[2] = auxV * 256;
-  auxV = getAuxAnalog(1)
-  print('Hello analog ' .. auxV )
-  txPayload[3] = auxV
-  txPayload[4] = auxV * 256;
-  auxV = getAuxAnalog(2)
-  print('Hello analog ' .. auxV )
-  txPayload[5] = auxV
-  txPayload[6] = auxV * 256;
-  txCan(1, 0x600, 1, txPayload)
-end
-)", efi::size(config->luaScript));
-
-}
-
 /**
  * MRE_BOARD_NEW_TEST
  * set engine_type 31

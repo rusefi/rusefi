@@ -716,9 +716,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MRE_M111:
 		setM111EngineConfiguration();
 		break;
-	case MRE_SECONDARY_CAN:
-		mreSecondaryCan();
-		break;
 	case MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE();
 		break;
