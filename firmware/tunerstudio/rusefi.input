@@ -785,7 +785,7 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 [TableEditor]
 	;		table_id,	map3d_id,	"title",		page
 
-; move table into a panel? or find a way to add a link to https://rusefi.com//wiki/index.php?title=Manual:Software:TPSTPS
+; move table into a panel? or find a way to add a link to https://rusefi.com/s/tpstps https://github.com/rusefi/rusefi/issues/5130
 	table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel(ms)",	1
 	topicHelp = "tpstpsHelp"
 		xBins		= tpsTpsAccelFromRpmBins,  TPSValue
