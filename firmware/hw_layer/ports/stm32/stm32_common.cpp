@@ -481,6 +481,7 @@ static int getSpiAf(SPIDriver *driver) {
 		return EFI_SPI3_AF;
 	}
 #endif
+	firmwareError(OBD_PCM_Processor_Fault, "SPI AF not available");
 	return -1;
 }
 
@@ -540,6 +541,8 @@ void turnOnSpi(spi_device_e device) {
 				engineConfiguration->spi1SckMode,
 				engineConfiguration->spi1MosiMode,
 				engineConfiguration->spi1MisoMode);
+#else
+		firmwareError(OBD_PCM_Processor_Fault, "SPI1 not available in this binary");
 #endif /* STM32_SPI_USE_SPI1 */
 	}
 	if (device == SPI_DEVICE_2) {
@@ -551,6 +554,8 @@ void turnOnSpi(spi_device_e device) {
 				engineConfiguration->spi2SckMode,
 				engineConfiguration->spi2MosiMode,
 				engineConfiguration->spi2MisoMode);
+#else
+		firmwareError(OBD_PCM_Processor_Fault, "SPI2 not available in this binary");
 #endif /* STM32_SPI_USE_SPI2 */
 	}
 	if (device == SPI_DEVICE_3) {
@@ -562,6 +567,8 @@ void turnOnSpi(spi_device_e device) {
 				engineConfiguration->spi3SckMode,
 				engineConfiguration->spi3MosiMode,
 				engineConfiguration->spi3MisoMode);
+#else
+		firmwareError(OBD_PCM_Processor_Fault, "SPI3 not available in this binary");
 #endif /* STM32_SPI_USE_SPI3 */
 	}
 	if (device == SPI_DEVICE_4) {
@@ -569,6 +576,8 @@ void turnOnSpi(spi_device_e device) {
 //		scheduleMsg(&logging, "Turning on SPI4 pins");
 		/* there are no configuration fields for SPI4 in engineConfiguration, rely on board init code
 		 * it should set proper functions for SPI4 pins */
+#else
+		firmwareError(OBD_PCM_Processor_Fault, "SPI4 not available in this binary");
 #endif /* STM32_SPI_USE_SPI4 */
 	}
 }
