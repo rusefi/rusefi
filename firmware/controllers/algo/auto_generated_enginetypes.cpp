@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Feb 21 11:00:43 PST 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Feb 26 14:13:13 PST 2023
 // see also gen_config_and_enums.bat
 
 
@@ -175,6 +175,8 @@ case ET_UNUSED98:
   return "ET_UNUSED98";
 case ET_UNUSED_17:
   return "ET_UNUSED_17";
+case ET_UNUSED_4:
+  return "ET_UNUSED_4";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -283,8 +285,6 @@ case MRE_MIATA_NB2_MAF:
   return "MRE_MIATA_NB2_MAF";
 case MRE_MIATA_NB2_MAP:
   return "MRE_MIATA_NB2_MAP";
-case MRE_SECONDARY_CAN:
-  return "MRE_SECONDARY_CAN";
 case MRE_SUBARU_EJ18:
   return "MRE_SUBARU_EJ18";
 case MRE_VW_B6:
