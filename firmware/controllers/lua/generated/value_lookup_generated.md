@@ -493,9 +493,6 @@ Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 ### stftIgnoreErrorMagnitude
 If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 
-### vvtBooleanForVerySpecialCases
-
-
 ### enableSoftwareKnock
 
 
@@ -821,9 +818,6 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 
 ### ALSActivateInverted
-
-
-### tempBooleanForVerySpecialLogic
 
 
 ### engineChartSize

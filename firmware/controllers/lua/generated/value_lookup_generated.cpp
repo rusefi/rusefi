@@ -333,8 +333,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->showHumanReadableWarning;
 		case 1838375282:
 			return engineConfiguration->stftIgnoreErrorMagnitude;
-		case -376859614:
-			return engineConfiguration->vvtBooleanForVerySpecialCases;
 		case -1724873939:
 			return engineConfiguration->enableSoftwareKnock;
 		case 1540420600:
@@ -553,8 +551,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->sdTriggerLog;
 		case -1027820105:
 			return engineConfiguration->ALSActivateInverted;
-		case -153724425:
-			return engineConfiguration->tempBooleanForVerySpecialLogic;
 		case -1492464952:
 			return engineConfiguration->engineChartSize;
 		case -1056007485:
@@ -1820,11 +1816,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->stftIgnoreErrorMagnitude = (int)value;
 		return;
 	}
-		case -376859614:
-	{
-		engineConfiguration->vvtBooleanForVerySpecialCases = (int)value;
-		return;
-	}
 		case -1724873939:
 	{
 		engineConfiguration->enableSoftwareKnock = (int)value;
@@ -2368,11 +2359,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -1027820105:
 	{
 		engineConfiguration->ALSActivateInverted = (int)value;
-		return;
-	}
-		case -153724425:
-	{
-		engineConfiguration->tempBooleanForVerySpecialLogic = (int)value;
 		return;
 	}
 		case -1492464952:

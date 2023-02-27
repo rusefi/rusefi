@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Feb 25 00:26:21 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Feb 26 17:16:35 PST 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1830,80 +1830,80 @@ struct engine_configuration_s {
 	bool stftIgnoreErrorMagnitude : 1 {};
 	/**
 	offset 808 bit 9 */
-	bool vvtBooleanForVerySpecialCases : 1 {};
-	/**
-	offset 808 bit 10 */
 	bool enableSoftwareKnock : 1 {};
 	/**
 	 * Verbose info in console below engineSnifferRpmThreshold
 	 * enable vvt_details
-	offset 808 bit 11 */
+	offset 808 bit 10 */
 	bool verboseVVTDecoding : 1 {};
 	/**
 	 * get invertCamVVTSignal
-	offset 808 bit 12 */
+	offset 808 bit 11 */
 	bool invertCamVVTSignal : 1 {};
 	/**
 	 * This property is useful if using rusEFI as TCM or BCM only
 	 * enable consumeObdSensors
-	offset 808 bit 13 */
+	offset 808 bit 12 */
 	bool consumeObdSensors : 1 {};
 	/**
-	offset 808 bit 14 */
+	offset 808 bit 13 */
 	bool knockBankCyl1 : 1 {};
 	/**
-	offset 808 bit 15 */
+	offset 808 bit 14 */
 	bool knockBankCyl2 : 1 {};
 	/**
-	offset 808 bit 16 */
+	offset 808 bit 15 */
 	bool knockBankCyl3 : 1 {};
 	/**
-	offset 808 bit 17 */
+	offset 808 bit 16 */
 	bool knockBankCyl4 : 1 {};
 	/**
-	offset 808 bit 18 */
+	offset 808 bit 17 */
 	bool knockBankCyl5 : 1 {};
 	/**
-	offset 808 bit 19 */
+	offset 808 bit 18 */
 	bool knockBankCyl6 : 1 {};
 	/**
-	offset 808 bit 20 */
+	offset 808 bit 19 */
 	bool knockBankCyl7 : 1 {};
 	/**
-	offset 808 bit 21 */
+	offset 808 bit 20 */
 	bool knockBankCyl8 : 1 {};
 	/**
-	offset 808 bit 22 */
+	offset 808 bit 21 */
 	bool knockBankCyl9 : 1 {};
 	/**
-	offset 808 bit 23 */
+	offset 808 bit 22 */
 	bool knockBankCyl10 : 1 {};
 	/**
-	offset 808 bit 24 */
+	offset 808 bit 23 */
 	bool knockBankCyl11 : 1 {};
 	/**
-	offset 808 bit 25 */
+	offset 808 bit 24 */
 	bool knockBankCyl12 : 1 {};
 	/**
-	offset 808 bit 26 */
+	offset 808 bit 25 */
 	bool tcuEnabled : 1 {};
 	/**
-	offset 808 bit 27 */
+	offset 808 bit 26 */
 	bool canBroadcastUseChannelTwo : 1 {};
 	/**
 	 * If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
-	offset 808 bit 28 */
+	offset 808 bit 27 */
 	bool useRawOutputToDriveIdleStepper : 1 {};
 	/**
 	 * Print incoming and outgoing second bus CAN messages in rusEFI console
-	offset 808 bit 29 */
+	offset 808 bit 28 */
 	bool verboseCan2 : 1 {};
 	/**
+	offset 808 bit 29 */
+	bool unusedBit_283_29 : 1 {};
+	/**
 	offset 808 bit 30 */
-	bool unusedBit_284_30 : 1 {};
+	bool unusedBit_283_30 : 1 {};
 	/**
 	offset 808 bit 31 */
-	bool unusedBit_284_31 : 1 {};
+	bool unusedBit_283_31 : 1 {};
 	/**
 	 * offset 812
 	 */
@@ -2323,10 +2323,10 @@ struct engine_configuration_s {
 	bool ALSActivateInverted : 1 {};
 	/**
 	offset 1200 bit 30 */
-	bool unused_1484_bit_30 : 1 {};
+	bool unusedBit_388_30 : 1 {};
 	/**
 	offset 1200 bit 31 */
-	bool tempBooleanForVerySpecialLogic : 1 {};
+	bool unusedBit_388_31 : 1 {};
 	/**
 	count
 	 * offset 1204
@@ -4669,4 +4669,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22064);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Feb 25 00:26:21 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Feb 26 17:16:35 PST 2023
