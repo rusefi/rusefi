@@ -31,10 +31,10 @@ static void setPrometheusDefaults() {
 	engineConfiguration->specs.displacement = 1.645;
 	engineConfiguration->injector.flow = 200;
 	
-	engineConfiguration->cranking.baseFuel = 25;		// ???
+	engineConfiguration->cranking.baseFuel = 25;
 	engineConfiguration->cranking.rpm = 600;
 
-	engineConfiguration->rpmHardLimit = 8500; // yes, 3k. let's play it safe for now
+	engineConfiguration->rpmHardLimit = 8500;
 	
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
@@ -42,7 +42,6 @@ static void setPrometheusDefaults() {
 	engineConfiguration->stepperDirectionPinMode = OM_INVERTED;
 	engineConfiguration->useLinearCltSensor = true;
 
-	//engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = false;
@@ -103,8 +102,7 @@ void setPinConfigurationOverrides() {
  */
 void setBoardDefaultConfiguration() {
 	// give a chance to trigger SWD programmer... Wait for 2 secs (=2000 ms).
-	// TODO: remove it when the bootloader is ready
-	chThdSleepMilliseconds(2000);
+//	chThdSleepMilliseconds(2000);
 
 	engineConfiguration->binarySerialTxPin = Gpio::A0;
 	engineConfiguration->binarySerialRxPin = Gpio::A1;
@@ -171,31 +169,19 @@ void setBoardDefaultConfiguration() {
 
 	// not used
 	engineConfiguration->displayMode = DM_NONE;
-	engineConfiguration->HD44780_rs = Gpio::Unassigned;
-	engineConfiguration->HD44780_e = Gpio::Unassigned;
-	engineConfiguration->HD44780_db4 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db5 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db6 = Gpio::Unassigned;
-	engineConfiguration->HD44780_db7 = Gpio::Unassigned;
-	for (int i = 0; i < DIGIPOT_COUNT ; i++) {
-		engineConfiguration->digitalPotentiometerChipSelect[i] = Gpio::Unassigned;
-	}
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;
 
-	/////////////////////////////////////////////////////////
-	
-	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->is_enabled_spi_2 = false;
 	engineConfiguration->is_enabled_spi_3 = true;
 	
 	engineConfiguration->spi1mosiPin = Gpio::B5;
-	engineConfiguration->spi1MosiMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL
+	engineConfiguration->spi1MosiMode = PO_DEFAULT;
 	engineConfiguration->spi1misoPin = Gpio::B4;
-	engineConfiguration->spi1MisoMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL
+	engineConfiguration->spi1MisoMode = PO_DEFAULT;
 	engineConfiguration->spi1sckPin = Gpio::B3;
-	engineConfiguration->spi1SckMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL
+	engineConfiguration->spi1SckMode = PO_DEFAULT;
 
 	engineConfiguration->spi3mosiPin = Gpio::C12;
 	engineConfiguration->spi3MosiMode = PO_OPENDRAIN; // 4
@@ -225,10 +211,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canTxPin = Gpio::B9;
 	engineConfiguration->canRxPin = Gpio::B8;
 	
-	//!!!!!!!!!!!!!!!
-#if 1
 	setPrometheusDefaults();
-#endif
 
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
