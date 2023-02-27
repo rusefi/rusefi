@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "hellen_meta.h"
 
-
-static OutputPin megaEn;
-
 void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
@@ -35,10 +32,24 @@ void setHellen176LedPins() {
 
 void setHellenMegaEnPin() {
     static bool initialized = false;
+    static OutputPin megaEn;
     if (!initialized) {
         initialized = true;
 	    megaEn.initPin("mm-EN", H144_GP8); // OUT_PWR_EN
 	    megaEn.setValue(1);
+	}
+}
+
+/**
+ * dirty hack
+ */
+void configureHellenMegaAccCS2Pin() {
+    static bool initialized = false;
+    static OutputPin cs2pin;
+    if (!initialized) {
+        initialized = true;
+	    cs2pin.initPin("mm-CS2", H_SPI1_CS2);
+	    cs2pin.setValue(1);
 	}
 }
 
