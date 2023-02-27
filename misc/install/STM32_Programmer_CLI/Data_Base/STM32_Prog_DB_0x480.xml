@@ -63,7 +63,7 @@
 					<Organization>Single</Organization>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x24000000" name="SRAM" occurence="0x1" size="0x100000"/>
+							<Parameters address="0x24000000" name="SRAM" occurrence="0x1" size="0x100000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -82,15 +82,15 @@
 					<Parameters address="0x08000000" name="2 MBytes Dual Bank Embedded Flash" size="0x200000"/>
 					<Description/>
 					<Organization>Dual</Organization>
-					<Allignement>0x20</Allignement>
+					<Alignment>0x20</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x80" size="0x2000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x80" size="0x2000"/>
 						</Field>
 					</Bank>
 					<Bank name="Bank 2">
 						<Field>
-							<Parameters address="0x08100000" name="sector128" occurence="0x80" size="0x2000"/>
+							<Parameters address="0x08100000" name="sector128" occurrence="0x80" size="0x2000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -99,15 +99,15 @@
 					<Parameters address="0x08000000" name="1 MBytes Dual Bank Embedded Flash" size="0x200000"/>
 					<Description/>
 					<Organization>Dual</Organization>
-					<Allignement>0x20</Allignement>
+					<Alignment>0x20</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x80" size="0x2000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x80" size="0x2000"/>
 						</Field>
 					</Bank>
 					<Bank name="Bank 2">
 						<Field>
-							<Parameters address="0x08080000" name="sector64" occurence="0x80" size="0x2000"/>
+							<Parameters address="0x08080000" name="sector64" occurrence="0x80" size="0x2000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -124,10 +124,10 @@
 					<Parameters address="0x08FFF000" name=" 1 KBytes Data OTP" size="0x400"/>
 					<Description/>
 					<Organization>Single</Organization>
-					<Allignement>0x20</Allignement>
+					<Alignment>0x20</Alignment>
 					<Bank name="OTP">
 						<Field>
-							<Parameters address="0x08FFF000" name="OTP" occurence="0x1" size="0x400"/>
+							<Parameters address="0x08FFF000" name="OTP" occurrence="0x1" size="0x400"/>
 						</Field>
 					</Bank>
 				</Configuration>

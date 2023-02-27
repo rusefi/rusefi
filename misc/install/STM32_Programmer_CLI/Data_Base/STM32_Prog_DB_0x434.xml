@@ -88,7 +88,7 @@
 					<Organization>Single</Organization>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x20000000" name="SRAM" occurence="0x1" size="0x50000"/>
+							<Parameters address="0x20000000" name="SRAM" occurrence="0x1" size="0x50000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -107,27 +107,27 @@
 					<Parameters address="0x08000000" name=" 2048 Kbytes Embedded Flash" size="0x200000"/>
 					<Description/>
 					<Organization>Dual</Organization>
-					<Allignement>0x4</Allignement>
+					<Alignment>0x4</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x4" size="0x4000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x4" size="0x4000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08010000" name="sector4" occurence="0x1" size="0x10000"/>
+							<Parameters address="0x08010000" name="sector4" occurrence="0x1" size="0x10000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08020000" name="sector5" occurence="0x7" size="0x20000"/>
+							<Parameters address="0x08020000" name="sector5" occurrence="0x7" size="0x20000"/>
 						</Field>
 					</Bank>
 					<Bank name="Bank 2">
 						<Field>
-							<Parameters address="0x08100000" name="sector12" occurence="0x4" size="0x4000"/>
+							<Parameters address="0x08100000" name="sector12" occurrence="0x4" size="0x4000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08110000" name="sector16" occurence="0x1" size="0x10000"/>
+							<Parameters address="0x08110000" name="sector16" occurrence="0x1" size="0x10000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08120000" name="sector17" occurence="0x7" size="0x20000"/>
+							<Parameters address="0x08120000" name="sector17" occurrence="0x7" size="0x20000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -135,21 +135,21 @@
 					<Parameters address="0x08000000" name=" 1024 Kbytes Embedded Flash" size="0x100000"/>
 					<Description/>
 					<Organization>Dual</Organization>
-					<Allignement>0x4</Allignement>
+					<Alignment>0x4</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x4" size="0x4000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x4" size="0x4000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08010000" name="sector4" occurence="0x1" size="0x10000"/>
+							<Parameters address="0x08010000" name="sector4" occurrence="0x1" size="0x10000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08020000" name="sector5" occurence="0x3" size="0x20000"/>
+							<Parameters address="0x08020000" name="sector5" occurrence="0x3" size="0x20000"/>
 						</Field>
 					</Bank>
 					<Bank name="Bank 2">
 						<Field>
-							<Parameters address="0x08080000" name="sector8" occurence="0x4" size="0x20000"/>
+							<Parameters address="0x08080000" name="sector8" occurrence="0x4" size="0x20000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -157,16 +157,16 @@
 					<Parameters address="0x08000000" name=" 1024 Kbytes Embedded Flash" size="0x100000"/>
 					<Description/>
 					<Organization>Single</Organization>
-					<Allignement>0x4</Allignement>
+					<Alignment>0x4</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x4" size="0x4000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x4" size="0x4000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08010000" name="sector4" occurence="0x1" size="0x10000"/>
+							<Parameters address="0x08010000" name="sector4" occurrence="0x1" size="0x10000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08020000" name="sector5" occurence="0x7" size="0x20000"/>
+							<Parameters address="0x08020000" name="sector5" occurrence="0x7" size="0x20000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -183,10 +183,10 @@
 					<Parameters address="0x1FFF7800" name=" 512 Bytes Data OTP" size="0x210"/>
 					<Description/>
 					<Organization>Single</Organization>
-					<Allignement>0x4</Allignement>
+					<Alignment>0x4</Alignment>
 					<Bank name="OTP">
 						<Field>
-							<Parameters address="0x1FFF7800" name="OTP" occurence="0x1" size="0x210"/>
+							<Parameters address="0x1FFF7800" name="OTP" occurrence="0x1" size="0x210"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -203,15 +203,15 @@
 					<Parameters address="0x1FFEC008" name=" 20 Bytes Data MirrorOptionBytes" size="0x14"/>
 					<Description/>
 					<Organization>Dual</Organization>
-					<Allignement>0x4</Allignement>
+					<Alignment>0x4</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x1FFEC008" name="Bank1" occurence="0x1" size="0x4"/>
+							<Parameters address="0x1FFEC008" name="Bank1" occurrence="0x1" size="0x4"/>
 						</Field>
 					</Bank>
 					<Bank name="Bank 2">
 						<Field>
-							<Parameters address="0x1FFFC000" name="Bank2" occurence="0x1" size="0x10"/>
+							<Parameters address="0x1FFFC000" name="Bank2" occurrence="0x1" size="0x10"/>
 						</Field>
 					</Bank>
 				</Configuration>

@@ -29,8 +29,9 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
-- Rearrange & simplify trigger configuration UI #5077
-- Selectable CanBus channel for WBO inputs #5028
+ - Rearrange & simplify trigger configuration UI #5077
+ - Selectable CanBus channel for WBO inputs #5028
+ - STM32Cube v2.13 #5135
 
 ### Breaking Changes
  - rusefi_default_bundle.zip was replaced by rusefi_bundle_f407-discovery.zip #5078

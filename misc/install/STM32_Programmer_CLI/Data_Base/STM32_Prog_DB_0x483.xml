@@ -49,7 +49,7 @@
 					<Organization>Single</Organization>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x24000000" name="SRAM" occurence="0x1" size="0x20000"/>
+							<Parameters address="0x24000000" name="SRAM" occurrence="0x1" size="0x20000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -68,10 +68,10 @@
 					<Parameters address="0x08000000" name="1 MBytes Single Bank Embedded Flash" size="0x100000"/>
 					<Description/>
 					<Organization>Single</Organization>
-					<Allignement>0x20</Allignement>
+					<Alignment>0x20</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x8" size="0x20000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x8" size="0x20000"/>
 						</Field>
 					</Bank>
 				</Configuration>
