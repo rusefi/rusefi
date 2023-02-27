@@ -104,8 +104,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->globalTriggerAngleOffset = 93;
 
-	engineConfiguration->isSdCardEnabled = true;
-
 	// todo: should this be a global default not just Hellen121?
 	engineConfiguration->boostCutPressure = 200;
 

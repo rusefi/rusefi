@@ -105,8 +105,6 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->isSdCardEnabled = true;
-
 	engineConfiguration->fuelPumpPin = Gpio::G2;	// OUT_IO9
 	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = Gpio::I2;	// OUT_LOW3

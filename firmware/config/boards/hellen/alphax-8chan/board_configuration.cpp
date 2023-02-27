@@ -174,7 +174,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->vvtPins[1] = H144_OUT_PWM8;
 
     engineConfiguration->boardUseTempPullUp = true;
-    engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->mainRelayPin = H144_OUT_IO10;
 	engineConfiguration->fanPin = H144_OUT_IO11;

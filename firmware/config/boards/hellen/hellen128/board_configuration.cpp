@@ -157,8 +157,6 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->isSdCardEnabled = true;
-
 	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->fuelPumpPin = Gpio::D15;

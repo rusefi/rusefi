@@ -91,8 +91,6 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->isSdCardEnabled = true;
-
 	engineConfiguration->enableSoftwareKnock = true;
 
 	// these stm32 pins do not match hellen_meta, is that because hellenNA6 is not using latest MCU version?

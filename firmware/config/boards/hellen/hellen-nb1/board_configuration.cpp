@@ -90,8 +90,6 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->isSdCardEnabled = true;
-
 	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->boostControlPin = H144_LS_6;

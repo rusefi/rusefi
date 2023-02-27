@@ -99,7 +99,6 @@ void setBoardDefaultConfiguration() {
 	setIgnitionPins();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
-	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->enableSoftwareKnock = true;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE; // none because handled by Lua!

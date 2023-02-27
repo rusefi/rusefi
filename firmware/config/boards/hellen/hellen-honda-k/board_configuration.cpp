@@ -99,7 +99,6 @@ void setBoardDefaultConfiguration() {
 	setHondaK();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
-	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->globalTriggerAngleOffset = 663;
 

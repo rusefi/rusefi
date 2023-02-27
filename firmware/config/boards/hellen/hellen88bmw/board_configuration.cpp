@@ -97,7 +97,6 @@ void setBoardDefaultConfiguration() {
 	setIgnitionPins();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
-	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->enableSoftwareKnock = true;
 	engineConfiguration->canNbcType = CAN_BUS_NISSAN_VQ;

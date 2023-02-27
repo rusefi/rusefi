@@ -214,6 +214,7 @@ void detectHellenBoardType();
 #define H_SPI3_CS Gpio::A15
 
 static void setHellenSdCardSpi1() {
+    engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->spi1mosiPin = H_SPI1_MOSI;
 	engineConfiguration->spi1misoPin = H_SPI1_MISO;
@@ -223,6 +224,7 @@ static void setHellenSdCardSpi1() {
 }
 
 static void setHellenSdCardSpi2() {
+    engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
 	engineConfiguration->spi2misoPin = H_SPI2_MISO;
@@ -232,6 +234,7 @@ static void setHellenSdCardSpi2() {
 }
 
 static void setHellenSdCardSpi3() {
+    engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	engineConfiguration->spi3mosiPin = H_SPI3_MOSI;
 	engineConfiguration->spi3misoPin = H_SPI3_MISO;

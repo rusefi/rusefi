@@ -166,8 +166,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->vvtPins[1] = H144_OUT_PWM8;
 
     engineConfiguration->boardUseTempPullUp = true;
-    // todo: use board ID condition? below D no SD, D and up with SD?
-    engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->acSwitch = Gpio::Unassigned;
 	engineConfiguration->fuelPumpPin = H144_OUT_IO12;
