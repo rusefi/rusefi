@@ -12,8 +12,48 @@ on:
         required: false
         type: boolean
 jobs:
+  release:
+    steps:
+
+    - name: Set run condition variables
+      run: |
+        if [ "${{github.event_name}}" = "schedule" ]; then
+          echo "full=true" >> $GITHUB_ENV
+          echo "upload=release" >> $GITHUB_ENV
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        fi
+
+    - name: Fetch tags
+      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Check if tag exists
+      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      run: git show-ref --tags --verify --quiet -- "refs/tags/${{ env.date }}" && echo "tagged=true" >> $GITHUB_ENV || echo "tagged=false" >> $GITHUB_ENV
+
+    - name: Create Release Tag
+      if: ${{ env.full == 'true' && env.upload == 'release' && env.tagged == 'false' }}
+      id: tag
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        custom_tag: ${{ env.date }}
+
+    - name: Create Release
+      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      uses: ncipollo/release-action@v1.12.0
+      with:
+        tag: ${{ env.date }}
+        name: "Nightly ${{ env.date }}"
+        artifacts: "artifacts/rusefi_bundle_*.zip"
+        replacesArtifacts: false
+        token: ${{ secrets.ACCESS_TOKEN }}
+        allowUpdates: true
+        prerelease: true
+
   build-firmware:
     runs-on: ubuntu-latest
+    needs: release
 
     strategy:
       # Let all builds finish even if one fails early
@@ -437,22 +477,6 @@ jobs:
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
-
-    - name: Fetch tags
-      if: ${{ env.full == 'true' && env.upload == 'release' }}
-      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-
-    - name: Check if tag exists
-      if: ${{ env.full == 'true' && env.upload == 'release' }}
-      run: git show-ref --tags --verify --quiet -- "refs/tags/${{ env.date }}" && echo "tagged=true" >> $GITHUB_ENV || echo "tagged=false" >> $GITHUB_ENV
-
-    - name: Create Release Tag
-      if: ${{ env.full == 'true' && env.upload == 'release' && env.tagged == 'false' }}
-      id: tag
-      uses: mathieudutour/github-tag-action@v6.1
-      with:
-        github_token: ${{ secrets.ACCESS_TOKEN }}
-        custom_tag: ${{ env.date }}
 
     - name: Create Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
