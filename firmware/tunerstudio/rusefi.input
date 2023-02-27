@@ -4174,8 +4174,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Tune read/write password",				tuneHidingKey, { yesUnderstandLocking == 1 }
 		field = useEeprom,										useEeprom
 		field = "#System hacks"
-		field = "vvtBooleanForVerySpecialCases",		vvtBooleanForVerySpecialCases
-		field = tempBooleanForVerySpecialLogic,			tempBooleanForVerySpecialLogic
 		field = "Global fuel correction",				globalFuelCorrection
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning

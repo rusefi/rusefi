@@ -354,20 +354,6 @@ void Engine::efiWatchdog() {
 		return;
 	}
 
-	static efitimems_t mostRecentMs = 0;
-	efitimems_t msNow = getTimeNowMs();
-	if (engineConfiguration->tempBooleanForVerySpecialLogic && engine->configBurnTimer.hasElapsedSec(5)) {
-
-		if (mostRecentMs != 0) {
-			efitimems_t gapInMs = msNow - mostRecentMs;
-			if (gapInMs > 500) {
-				firmwareError(WATCH_DOG_SECONDS, "gap in time: now=%d mS, was %d mS, gap=%dmS",
-					msNow, mostRecentMs, gapInMs);
-			}
-		}
-	}
-	mostRecentMs = msNow;
-
 	if (!getTriggerCentral()->isSpinningJustForWatchdog) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
 			// todo: make this a firmwareError assuming functional tests would run

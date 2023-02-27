@@ -92,7 +92,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 20000
+#define FLASH_DATA_VERSION 20001
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -875,7 +875,6 @@ sensor_chart_e sensorChartMode;rusEFI console Sensor Sniffer mode;
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
 	bit stftIgnoreErrorMagnitude;If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
-	bit vvtBooleanForVerySpecialCases
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
@@ -1044,8 +1043,6 @@ bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle incre
 bit useBiQuadOnAuxSpeedSensors
 bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 bit ALSActivateInverted
-bit unused_1484_bit_30
-bit tempBooleanForVerySpecialLogic
 
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
 
