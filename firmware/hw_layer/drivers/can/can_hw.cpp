@@ -272,12 +272,6 @@ void postCanState() {
 }
 #endif /* EFI_TUNER_STUDIO */
 
-void enableFrankensoCan() {
-	engineConfiguration->canTxPin = Gpio::B6;
-	engineConfiguration->canRxPin = Gpio::B12;
-	engineConfiguration->canReadEnabled = false;
-}
-
 void stopCanPins() {
 	efiSetPadUnusedIfConfigurationChanged(canTxPin);
 	efiSetPadUnusedIfConfigurationChanged(canRxPin);
