@@ -189,13 +189,12 @@ void PrimaryTriggerDecoder::resetState() {
 	resetHasFullSync();
 }
 
-
 bool TriggerDecoderBase::isValidIndex(const TriggerWaveform& triggerShape) const {
 	return currentCycle.current_index < triggerShape.getSize();
 }
 
-static TriggerWheel eventIndex[4] = { TriggerWheel::T_PRIMARY, TriggerWheel::T_PRIMARY, TriggerWheel::T_SECONDARY, TriggerWheel:: T_SECONDARY };
-static TriggerValue eventType[4] = { TriggerValue::FALL, TriggerValue::RISE, TriggerValue::FALL, TriggerValue::RISE };
+static const TriggerWheel eventIndex[4] = { TriggerWheel::T_PRIMARY, TriggerWheel::T_PRIMARY, TriggerWheel::T_SECONDARY, TriggerWheel:: T_SECONDARY };
+static const bool eventType[4] = { false, true, false, true };
 
 #if EFI_UNIT_TEST
 #define PRINT_INC_INDEX 		if (printTriggerTrace) {\
@@ -344,7 +343,7 @@ void TriggerDecoderBase::onShaftSynchronization(
 #endif /* EFI_UNIT_TEST */
 }
 
-static bool shouldConsiderEdge(const TriggerWaveform& triggerShape, TriggerWheel triggerWheel, TriggerValue edge) {
+static bool shouldConsiderEdge(const TriggerWaveform& triggerShape, TriggerWheel triggerWheel, bool isRising) {
 	if (triggerWheel != TriggerWheel::T_PRIMARY && triggerShape.useOnlyPrimaryForSync) {
 		// Non-primary events ignored 
 		return false;
@@ -353,8 +352,8 @@ static bool shouldConsiderEdge(const TriggerWaveform& triggerShape, TriggerWheel
 	switch (triggerShape.syncEdge) {
 		case SyncEdge::Both: return true;
 		case SyncEdge::RiseOnly:
-		case SyncEdge::Rise: return edge == TriggerValue::RISE;
-		case SyncEdge::Fall: return edge == TriggerValue::FALL;
+		case SyncEdge::Rise: return isRising;
+		case SyncEdge::Fall: return !isRising;
 	}
 
 	// how did we get here?
@@ -396,7 +395,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	efiAssert(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_SECONDARY_RISING, "unexpected signal", unexpected);
 
 	TriggerWheel triggerWheel = eventIndex[signal];
-	TriggerValue type = eventType[signal];
+	bool isRising = eventType[signal];
 
 	// Check that we didn't get the same edge twice in a row - that should be impossible
 	if (!useOnlyRisingEdgeForTrigger && prevSignal == signal) {
@@ -420,7 +419,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	toothDurations[0] =
 			currentDurationLong > 10 * NT_PER_SECOND ? 10 * NT_PER_SECOND : currentDurationLong;
 
-	if (!shouldConsiderEdge(triggerShape, triggerWheel, type)) {
+	if (!shouldConsiderEdge(triggerShape, triggerWheel, isRising)) {
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("%s isLessImportant %s now=%d index=%d\r\n",
