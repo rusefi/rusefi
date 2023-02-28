@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Feb 26 14:39:36 PST 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Feb 28 21:47:09 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -169,10 +169,6 @@ case EEPROM_BENCH_ENGINE:
   return "EEPROM_BENCH_ENGINE";
 case ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
-case ET_UNUSED97:
-  return "ET_UNUSED97";
-case ET_UNUSED98:
-  return "ET_UNUSED98";
 case ET_UNUSED_11:
   return "ET_UNUSED_11";
 case ET_UNUSED_13:
@@ -181,8 +177,16 @@ case ET_UNUSED_15:
   return "ET_UNUSED_15";
 case ET_UNUSED_17:
   return "ET_UNUSED_17";
-case ET_UNUSED_4:
-  return "ET_UNUSED_4";
+case ET_UNUSED_33:
+  return "ET_UNUSED_33";
+case ET_UNUSED_92:
+  return "ET_UNUSED_92";
+case ET_UNUSED_93:
+  return "ET_UNUSED_93";
+case ET_UNUSED_97:
+  return "ET_UNUSED_97";
+case ET_UNUSED_98:
+  return "ET_UNUSED_98";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -205,8 +209,6 @@ case Force_4_bytes_size_engine_type:
   return "Force_4_bytes_size_engine_type";
 case GY6_139QMB:
   return "GY6_139QMB";
-case HELLEN72_ETB:
-  return "HELLEN72_ETB";
 case HELLEN_121_NISSAN_4_CYL:
   return "HELLEN_121_NISSAN_4_CYL";
 case HELLEN_121_NISSAN_6_CYL:
@@ -307,14 +309,12 @@ case PROTEUS_HONDA_OBD2A:
   return "PROTEUS_HONDA_OBD2A";
 case PROTEUS_LUA_DEMO:
   return "PROTEUS_LUA_DEMO";
+case PROTEUS_MIATA_NA6:
+  return "PROTEUS_MIATA_NA6";
 case PROTEUS_MIATA_NB2:
   return "PROTEUS_MIATA_NB2";
-case PROTEUS_N73:
-  return "PROTEUS_N73";
 case PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
-case PROTEUS_VAG_80_18T:
-  return "PROTEUS_VAG_80_18T";
 case PROTEUS_VW_B6:
   return "PROTEUS_VW_B6";
 case SACHS:
