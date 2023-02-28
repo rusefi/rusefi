@@ -479,7 +479,7 @@ jobs:
       if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
-    - name: Create Release
+    - name: Add Bundles to Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
       uses: ncipollo/release-action@v1.12.0
       with:
