@@ -229,6 +229,9 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 		return;
 	}
 
+	// Invert if so configured
+	isRising ^= engineConfiguration->invertCamVVTSignal;
+
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
 	if (isRising) {

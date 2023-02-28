@@ -479,8 +479,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "vvt_details")) {
 		engineConfiguration->verboseVVTDecoding = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "invertCamVVTSignal")) {
-		engineConfiguration->invertCamVVTSignal = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_IGNITION)) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 #if EFI_EMULATE_POSITION_SENSORS

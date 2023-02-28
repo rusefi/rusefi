@@ -42,8 +42,6 @@ static void cam_callback(void *arg, efitick_t stamp) {
 
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
-	rise ^= engineConfiguration->invertCamVVTSignal;
-
 	hwHandleVvtCamSignal(rise, stamp, index);
 }
 

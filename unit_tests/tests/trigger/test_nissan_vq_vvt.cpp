@@ -27,7 +27,7 @@ static void func(TriggerCallback *callback) {
 
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
-		hwHandleVvtCamSignal(value, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);
+		hwHandleVvtCamSignal(!value, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);
 	} else {
 		handleShaftSignal(0, value, nowNt);
 	}
