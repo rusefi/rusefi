@@ -152,66 +152,32 @@ static const uint8_t mapBased16IgnitionTable[16][16] = {
 #endif
 
 void miataNAcommonEngineSettings() {
-	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
+	// Base engine
+	engineConfiguration->specs.displacement = 1.6;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-	engineConfiguration->compressionRatio = 9.1;
-	engineConfiguration->cranking.rpm = 400;
-	engineConfiguration->cylinderBore = 78;
-	engineConfiguration->knockBandCustom = 6.8;
-	engineConfiguration->vehicleWeight = 950;
-//	engineConfiguration->totalGearsCount = 5;
 
 	engineConfiguration->rpmHardLimit = 7200;
-	engineConfiguration->enableFan1WithAc = true;
-	engineConfiguration->enableFan2WithAc = true;
 
-	engineConfiguration->tachPulsePerRev = 2;
+	engineConfiguration->cylinderBore = 78;
+	engineConfiguration->knockBandCustom = 6.8;
 
-	setCommonNTCSensor(&engineConfiguration->clt, 2700);
-	setCommonNTCSensor(&engineConfiguration->iat, 2700);
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
+	strcpy(engineConfiguration->engineCode, "NA6");
+	engineConfiguration->vehicleWeight = 950;
+	engineConfiguration->compressionRatio = 9.1;
 
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTable(config->ignitionTable, mapBased16IgnitionTable);
-#endif
-
-
-	engineConfiguration->manIdlePosition = 20;
-
-	miataNA_setCltIdleCorrBins();
-	miataNA_setCltIdleRpmBins();
-	miataNA_setIacCoastingBins();
-	setMafDecodingBins();
-	miataNA_setIgnitionTable();
-
-	engineConfiguration->idle.solenoidFrequency = 500;
+	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-	setMapVeTable();
+	// Trigger
+	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 
-	engineConfiguration->idleMode = IM_AUTO;
-	// below 20% this valve seems to be opening for fail-safe idle air
-	engineConfiguration->idleRpmPid.minValue = 20;
-	engineConfiguration->idleRpmPid.pFactor = 0.01;
-	engineConfiguration->idleRpmPid.iFactor = 0.00001;
-	engineConfiguration->idleRpmPid.dFactor = 0.0001;
-	engineConfiguration->idleRpmPid.periodMs = 100;
-
-	/**
-	 * http://miataturbo.wikidot.com/fuel-injectors
-	 * 90-93 (Blue) - #195500-1970
-	 */
-	engineConfiguration->injector.flow = 212;
-
-	// set cranking_timing_angle 10
+	// Cranking
+	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->crankingTimingAngle = 10;
-
-	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
-
-	// chartsize 200
-	engineConfiguration->engineChartSize = 200;
-
 	engineConfiguration->cranking.baseFuel = 27.5;
+
 	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
 	config->crankingFuelCoef[1] = 2.2;
@@ -220,7 +186,6 @@ void miataNAcommonEngineSettings() {
 	config->crankingFuelBins[2] = 5;
 	config->crankingFuelCoef[3] = 1.5;
 	config->crankingFuelBins[3] = 30;
-
 	config->crankingFuelCoef[4] = 1.0;
 	config->crankingFuelBins[4] = 35;
 	config->crankingFuelCoef[5] = 1.0;
@@ -230,19 +195,57 @@ void miataNAcommonEngineSettings() {
 	config->crankingFuelCoef[7] = 1.0;
 	config->crankingFuelBins[7] = 90;
 
-	engineConfiguration->specs.displacement = 1.6;
-	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
-	strcpy(engineConfiguration->engineCode, "NA6");
+	// Idle
+	engineConfiguration->idle.solenoidFrequency = 500;
 
+	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->manIdlePosition = 20;
+
+	// below 20% this valve seems to be opening for fail-safe idle air
+	engineConfiguration->idleRpmPid.minValue = 20;
+	engineConfiguration->idleRpmPid.pFactor = 0.01;
+	engineConfiguration->idleRpmPid.iFactor = 0.00001;
+	engineConfiguration->idleRpmPid.dFactor = 0.0001;
+	engineConfiguration->idleRpmPid.periodMs = 100;
+
+	// Fan
+	engineConfiguration->enableFan1WithAc = true;
+	engineConfiguration->enableFan2WithAc = true;
+
+	// Alternator
+
+	// Tach
+	engineConfiguration->tachPulsePerRev = 2;
+
+	// Tables
+	copyTable(config->ignitionTable, mapBased16IgnitionTable);
+	miataNA_setCltIdleCorrBins();
+	miataNA_setCltIdleRpmBins();
+	miataNA_setIacCoastingBins();
+	setMafDecodingBins();
+	miataNA_setIgnitionTable();
+	setMapVeTable();
+
+	/**
+	 * http://miataturbo.wikidot.com/fuel-injectors
+	 * 90-93 (Blue) - #195500-1970
+	 */
+	engineConfiguration->injector.flow = 212;
+
+	// Sensors
+	// TPS
 	// my car was originally a manual so proper TPS
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
-	engineConfiguration->injectionMode = IM_BATCH;
+	// CLT/IAT
+	setCommonNTCSensor(&engineConfiguration->clt, 2700);
+	setCommonNTCSensor(&engineConfiguration->iat, 2700);
+
+	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 }
 
 static void miataNAcommon() {
-
 	engineConfiguration->idle.solenoidPin = Gpio::B9; // this W61 <> W61 jumper, pin 3W
 
 	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
@@ -438,4 +441,13 @@ void setHellenNA94() {
 void setHellenNA6() {
 	miataNAcommonEngineSettings();
 	engineConfiguration->map.sensor.type = MT_MPX4250;
+}
+
+void setMiataNa6_Proteus() {
+	miataNAcommonEngineSettings();
+
+	// engineConfiguration->map.sensor.hwChannel = ???;
+	engineConfiguration->map.sensor.type = MT_MPX4250;
+
+	// TODO
 }

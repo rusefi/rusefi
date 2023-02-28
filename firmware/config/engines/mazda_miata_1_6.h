@@ -33,3 +33,5 @@ void miataNAcommonEngineSettings();
 void setHellenNA6();
 
 void setHellenNA94();
+
+void setMiataNa6_Proteus();

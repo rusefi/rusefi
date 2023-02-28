@@ -2015,6 +2015,7 @@ cmd_set_engine_type_PROTEUS_MIATA_NB2				= "@@TS_IO_TEST_COMMAND_char@@@@ts_comm
 cmd_set_engine_type_Proteus_Miata_TCU				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
 cmd_set_engine_type_PROTEUS_LUA_DEMO				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"
 cmd_set_engine_type_PROTEUS_HARLEY						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HARLEY_16_hex@@"
+cmd_set_engine_type_PROTEUS_MIATA_NA6				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_MIATA_NA6_16_hex@@"
 
 
 ; ETB_BENCH_ENGINE = 58
@@ -4016,6 +4017,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Proteus GM Gen4",			cmd_set_engine_type_PROTEUS_GM_LS_4@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Lua Demo",			cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
+		commandButton = "Proteus Miata NA6",		cmd_set_engine_type_PROTEUS_MIATA_NA6@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
 		commandButton = "Proteus Honda K",			cmd_set_engine_type_PROTEUS_HONDA_K@@if_show_Proteus_presets
 		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets

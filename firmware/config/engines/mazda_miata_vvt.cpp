@@ -668,7 +668,7 @@ void setMiataNB2_Proteus_TCU() {
 /**
  * https://github.com/rusefi/rusefi/wiki/HOWTO-Miata-NB2-on-Proteus
  */
-void setMiataNB2_ProteusEngineConfiguration() {
+void setMiataNB2_Proteus() {
     setMazdaMiataEngineNB2Defaults();
 
     engineConfiguration->triggerInputPins[0] = Gpio::C6;                     // pin 10/black23

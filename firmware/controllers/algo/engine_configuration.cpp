@@ -696,7 +696,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case HELLEN72_ETB:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -773,8 +772,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
 		setEngineProteusGearboxManInTheMiddle();
 		break;
+	case PROTEUS_MIATA_NA6:
+		setMiataNa6_Proteus();
+		break;
 	case PROTEUS_MIATA_NB2:
-		setMiataNB2_ProteusEngineConfiguration();
+		setMiataNB2_Proteus();
 		break;
 #ifdef HARDWARE_CI
 	case PROTEUS_ANALOG_PWM_TEST:

@@ -84,8 +84,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 	VW_ABA = 32,
 
-	HELLEN72_ETB = 33,
-
 	HELLEN_NA6 = 34,
 
 	CAMARO_4 = 35,
@@ -205,13 +203,14 @@ typedef enum __attribute__ ((__packed__)) {
 	HELLEN_154_HYUNDAI_COUPE_BK2 = 95,
 
     WASTEGATE_PROTEUS_TEST = 96,
-    ET_UNUSED97 = 97,
-    ET_UNUSED98 = 98,
+	PROTEUS_MIATA_NA6 = 4,
+    ET_UNUSED_97 = 97,
+    ET_UNUSED_98 = 98,
 	ET_UNUSED_17 = 17,
-	ET_UNUSED_4 = 4,
 	ET_UNUSED_11 = 11,
 	ET_UNUSED_13 = 13,
 	ET_UNUSED_15 = 15,
+	ET_UNUSED_33 = 33,
 
 	/**
 	 * this configuration has as few pins configured as possible
