@@ -60,10 +60,10 @@ TEST(trigger, testQuadCam) {
 	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(secondBank, firstCam));
 	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(secondBank, secondCam));
 
-	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), firstCam);
-	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), secondCam);
-	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), firstCamSecondBank);
-	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), secondCamSecondBank);
+	hwHandleVvtCamSignal(true, getTimeNowNt(), firstCam);
+	hwHandleVvtCamSignal(true, getTimeNowNt(), secondCam);
+	hwHandleVvtCamSignal(true, getTimeNowNt(), firstCamSecondBank);
+	hwHandleVvtCamSignal(true, getTimeNowNt(), secondCamSecondBank);
 
 	float basePos = -80.2f;
 
@@ -75,13 +75,13 @@ TEST(trigger, testQuadCam) {
 
 	// Now fire cam events again, but with time gaps between each
 	eth.moveTimeForwardMs(1);
-	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), firstCam);
+	hwHandleVvtCamSignal(true, getTimeNowNt(), firstCam);
 	eth.moveTimeForwardMs(1);
-	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), secondCam);
+	hwHandleVvtCamSignal(true, getTimeNowNt(), secondCam);
 	eth.moveTimeForwardMs(1);
-	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), firstCamSecondBank);
+	hwHandleVvtCamSignal(true, getTimeNowNt(), firstCamSecondBank);
 	eth.moveTimeForwardMs(1);
-	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), secondCamSecondBank);
+	hwHandleVvtCamSignal(true, getTimeNowNt(), secondCamSecondBank);
 
 	// All four cams should have different positions, each retarded by 1ms from the last
 	float oneMsDegrees = 1000 / engine->rpmCalculator.oneDegreeUs;

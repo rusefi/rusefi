@@ -42,11 +42,9 @@ static void cam_callback(void *arg, efitick_t stamp) {
 
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
-	if (rise ^ engineConfiguration->invertCamVVTSignal) {
-		hwHandleVvtCamSignal(TriggerValue::RISE, stamp, index);
-	} else {
-		hwHandleVvtCamSignal(TriggerValue::FALL, stamp, index);
-	}
+	rise ^= engineConfiguration->invertCamVVTSignal;
+
+	hwHandleVvtCamSignal(rise, stamp, index);
 }
 
 /*==========================================================================*/

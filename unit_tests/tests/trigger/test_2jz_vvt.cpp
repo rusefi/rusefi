@@ -27,8 +27,8 @@ TEST(sensors, test2jz) {
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
-	hwHandleVvtCamSignal(TriggerValue::FALL, getTimeNowNt(), 0);
-	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(false, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(true, getTimeNowNt(), 0);
 
 	// Expected angle is 12.5ms + 3ms of a 25ms revolution = 15.5/25 = 223.2 degrees from the sync point
 	// Minus 155 degree trigger offset = 68.2

@@ -165,9 +165,6 @@ angle_t TriggerWaveform::getAngle(int index) const {
 
 void TriggerWaveform::addEventClamped(angle_t angle, TriggerValue const stateParam, TriggerWheel const channelIndex, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight) {
-#if EFI_UNIT_TEST
-//		printf("addEventClamped %f %s\r\n", angle, getTrigger_value_e(stateParam));
-#endif /* EFI_UNIT_TEST */
 		addEvent(angle / getEngineCycle(operationMode), stateParam, channelIndex);
 	}
 }
@@ -266,9 +263,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 	}
 	if (wave.phaseCount > 0) {
 		if (angle <= previousAngle) {
-			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order %s %s: new=%.2f/%f and prev=%.2f/%f, size=%d",
-					getTriggerWheel(channelIndex),
-					getTrigger_value_e(state),
+			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f/%f and prev=%.2f/%f, size=%d",
 					angle, angle * getCycleDuration(),
 					previousAngle, previousAngle * getCycleDuration(),
 					wave.phaseCount);

@@ -206,7 +206,7 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	return vvtPosition;
 }
 
-static void logVvtFront(bool isImportantFront, TriggerValue front, efitick_t nowNt, int index) {
+static void logVvtFront(bool isImportantFront, bool isRising, efitick_t nowNt, int index) {
 	if (isImportantFront && isBrainPinValid(engineConfiguration->camInputsDebug[index])) {
 #if EFI_PROD_CODE
 		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
@@ -215,14 +215,14 @@ static void logVvtFront(bool isImportantFront, TriggerValue front, efitick_t now
 	}
 
 	// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
-	addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
+	addEngineSnifferVvtEvent(index, isRising ? FrontDirection::UP : FrontDirection::DOWN);
 
 #if EFI_TOOTH_LOGGER
-	LogTriggerTooth(front == TriggerValue::RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, nowNt);
+	LogTriggerTooth(isRising ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, nowNt);
 #endif /* EFI_TOOTH_LOGGER */
 }
 
-void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
+void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 	TriggerCentral *tc = getTriggerCentral();
 	if (tc->directSelfStimulation || !tc->hwTriggerInputEnabled) {
 		// sensor noise + self-stim = loss of trigger sync
@@ -231,7 +231,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
-	if (front == TriggerValue::RISE) {
+	if (isRising) {
 		tc->vvtEventRiseCounter[index]++;
 	} else {
 		tc->vvtEventFallCounter[index]++;
@@ -246,9 +246,9 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 
 	// Non real decoders only use the rising edge
 	bool vvtUseOnlyRise = !isVvtWithRealDecoder || vvtShape.useOnlyRisingEdges;
-	bool isImportantFront = !vvtUseOnlyRise || (front == TriggerValue::RISE);
+	bool isImportantFront = !vvtUseOnlyRise || isRising;
 
-	logVvtFront(isImportantFront, front, nowNt, index);
+	logVvtFront(isImportantFront, isRising, nowNt, index);
 
 	if (!isImportantFront) {
 		// This edge is unimportant, ignore it.
@@ -268,7 +268,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 			vvtShape,
 			nullptr,
 			tc->vvtTriggerConfiguration[camIndex],
-			front == TriggerValue::RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+			isRising ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		// yes we log data from all VVT channels into same fields for now
 		tc->triggerState.vvtSyncGapRatio = vvtDecoder.triggerSyncGapRatio;
 		tc->triggerState.vvtStateIndex = vvtDecoder.currentCycle.current_index;
@@ -387,7 +387,6 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	}
 
 	trigger_event_e signal;
-	// todo: add support for 3rd channel
 	if (isRising) {
 		signal = isPrimary ?
 					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) :
@@ -483,8 +482,8 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 				prevChangeAtCycle = revolutionCounter;
 
-				hwHandleVvtCamSignal(TriggerValue::RISE, timestamp, /*index*/0);
-				hwHandleVvtCamSignal(TriggerValue::FALL, timestamp, /*index*/0);
+				hwHandleVvtCamSignal(true,  timestamp, /*index*/0);
+				hwHandleVvtCamSignal(false, timestamp, /*index*/0);
 #if EFI_UNIT_TEST
 				// hack? feature? existing unit test relies on VVT phase available right away
 				// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
