@@ -267,10 +267,8 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->alternatorControl.dFactor = 0.1;
 	engineConfiguration->alternatorControl.periodMs = 10;
 
-//	enableFrankensoCan();
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
-//	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
 

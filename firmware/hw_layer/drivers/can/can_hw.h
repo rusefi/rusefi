@@ -17,7 +17,6 @@ void setCanVss(int type);
 
 void stopCanPins();
 void startCanPins();
-void enableFrankensoCan();
 bool getIsCanEnabled(void);
 
 #if EFI_TUNER_STUDIO
