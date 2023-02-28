@@ -510,10 +510,6 @@ void initHardware() {
 	initAccelerometer();
 #endif
 
-#if EFI_BOSCH_YAW
-	initBoschYawRateSensor();
-#endif /* EFI_BOSCH_YAW */
-
 #if EFI_AUX_SERIAL
 	initAuxSerial();
 #endif /* EFI_AUX_SERIAL */
