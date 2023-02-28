@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Feb 21 11:00:43 PST 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Feb 28 11:42:56 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -22,9 +22,6 @@ const char *getSentEtbType(SentEtbType value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getTransmissionControllerMode(TransmissionControllerMode value);
-#endif //__cplusplus
-#if __cplusplus
-const char *getTriggerWheel(TriggerWheel value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getTsCalMode(TsCalMode value);
