@@ -196,9 +196,9 @@ typedef enum __attribute__ ((__packed__)) {
 
 	PROTEUS_HONDA_OBD2A = 91,
 
-	PROTEUS_VAG_80_18T = 92,
+	ET_UNUSED_92 = 92,
 
-	PROTEUS_N73 = 93,
+	ET_UNUSED_93 = 93,
 
     HELLEN_NB1_36 = 94,
 
