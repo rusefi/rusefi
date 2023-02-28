@@ -7,8 +7,6 @@
 
 #pragma once
 
-void configureAccelerometerPins();
-
 void initAccelerometer();
 
 /**

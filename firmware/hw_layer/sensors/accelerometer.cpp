@@ -44,17 +44,6 @@ static const SPIConfig accelerometerCfg = {
 };
 #endif /* EFI_MEMS */
 
-void configureAccelerometerPins() {
-//	engineConfiguration->LIS302DLCsPin = Gpio::E3; // we have a conflict with VVT output on Miata
-// 	engineConfiguration->is_enabled_spi_1 = true; // we have a conflict with PA5 input pin
-
-	// stm32f4discovery defaults
-	engineConfiguration->spi1mosiPin = Gpio::A7;
-	engineConfiguration->spi1misoPin = Gpio::A6;
-	engineConfiguration->spi1sckPin = Gpio::A5;
-}
-
-
 #if EFI_MEMS
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);

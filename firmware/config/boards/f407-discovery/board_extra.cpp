@@ -32,14 +32,6 @@ void setBoardDefaultConfiguration() {
 	setDefaultFrankensoStepperIdleParameters();
 	setCanFrankensoDefaults();
 
-	// set optional subsystem configs
-#if EFI_MEMS
-	// this would override some values from above
-	configureAccelerometerPins();
-#endif /* EFI_MEMS */
-
-
-
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->clt.adcChannel = EFI_ADC_6;
 	engineConfiguration->iat.adcChannel = EFI_ADC_7;
