@@ -53,6 +53,13 @@ class TriggerConfiguration;
 
 #include "sync_edge.h"
 
+// see also PWM_PHASE_MAX_WAVE_PER_PWM
+// todo: better names?
+enum class TriggerWheel : uint8_t {
+	T_PRIMARY = 0,
+	T_SECONDARY = 1,
+};
+
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
  * @see TriggerState for trigger decoder state which works based on this trigger shape model
