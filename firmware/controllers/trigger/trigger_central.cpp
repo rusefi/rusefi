@@ -243,6 +243,10 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 	}
 }
 
+void hwHandleVvtCamSignal(bool isRising, efitick_t timestamp, int index) {
+	hwHandleVvtCamSignal(isRising ? TriggerValue::RISE : TriggerValue::FALL, timestamp, index);
+}
+
 // 'invertCamVVTSignal' is already accounted by the time this method is invoked
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	TriggerCentral *tc = getTriggerCentral();
