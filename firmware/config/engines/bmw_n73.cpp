@@ -10,10 +10,6 @@
 #include "bmw_n73.h"
 #include "lua_lib.h"
 
-void setEngineProteusBMW_N73_GDI() {
-
-}
-
 /**
  * set engine_type 9
  */

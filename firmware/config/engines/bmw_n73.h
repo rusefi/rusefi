@@ -7,7 +7,4 @@
 
 #pragma once
 
-void setEngineProteusBMW_N73_GDI();
-
 void setEngineProteusGearboxManInTheMiddle();
-
