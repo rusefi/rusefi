@@ -352,6 +352,7 @@ pins:
 
 info:
   title: S105
+  board_url: https://github.com/rusefi/S105
   directory: s105
   name: S105
   image:
