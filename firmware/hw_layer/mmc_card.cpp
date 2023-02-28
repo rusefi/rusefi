@@ -48,6 +48,7 @@ static int totalSyncCounter = 0;
 #define SD_STATE_CONNECTING "CONNECTING"
 #define SD_STATE_MSD "MSD"
 #define SD_STATE_NOT_CONNECTED "NOT_CONNECTED"
+#define SD_STATE_MMC_FAILED "MMC_CONNECT_FAILED"
 
 // todo: shall we migrate to enum with enum2string for consistency? maybe not until we start reading sdStatus?
 static const char *sdStatus = SD_STATE_INIT;
@@ -59,7 +60,7 @@ static const char *sdStatus = SD_STATE_INIT;
  * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
  * which will cause disaster (usually multiple-unlock of the same mutex in UNLOCK_SD_SPI)
  */
-spi_device_e mmcSpiDevice = SPI_NONE;
+static spi_device_e mmcSpiDevice = SPI_NONE;
 
 #define LOG_INDEX_FILENAME "index.txt"
 
@@ -357,7 +358,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	LOCK_SD_SPI;
 	sdStatus = SD_STATE_CONNECTING;
 	if (mmcConnect(&MMCD1) != HAL_SUCCESS) {
-		sdStatus = SD_STATE_NOT_CONNECTED;
+		sdStatus = SD_STATE_MMC_FAILED;
 		UNLOCK_SD_SPI;
 		return nullptr;
 	}
