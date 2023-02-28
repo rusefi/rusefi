@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 28 00:36:01 PST 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 28 02:08:25 PST 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -371,7 +371,7 @@ public class Fields {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 20001;
+	public static final int FLASH_DATA_VERSION = 20002;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -1199,7 +1199,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.28.f407-discovery.4007454151";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.02.28.f407-discovery.2282730388";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;
@@ -1293,12 +1293,11 @@ public class Fields {
 	public static final Field DONOTFILTERTRIGGEREDGENOISE = Field.create("DONOTFILTERTRIGGEREDGENOISE", 88, FieldType.BIT, 16).setBaseOffset(0);
 	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 88, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field USERUNNINGMATHFORCRANKING = Field.create("USERUNNINGMATHFORCRANKING", 88, FieldType.BIT, 18).setBaseOffset(0);
-	public static final Field DISPLAYLOGICLEVELSINENGINESNIFFER = Field.create("DISPLAYLOGICLEVELSINENGINESNIFFER", 88, FieldType.BIT, 19).setBaseOffset(0);
-	public static final Field USETLE8888_STEPPER = Field.create("USETLE8888_STEPPER", 88, FieldType.BIT, 20).setBaseOffset(0);
-	public static final Field USESCRIPTTABLEFORCANSNIFFINGFILTERING = Field.create("USESCRIPTTABLEFORCANSNIFFINGFILTERING", 88, FieldType.BIT, 21).setBaseOffset(0);
-	public static final Field VERBOSECAN = Field.create("VERBOSECAN", 88, FieldType.BIT, 22).setBaseOffset(0);
-	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 88, FieldType.BIT, 23).setBaseOffset(0);
-	public static final Field USEFORDREDUNDANTPPS = Field.create("USEFORDREDUNDANTPPS", 88, FieldType.BIT, 24).setBaseOffset(0);
+	public static final Field USETLE8888_STEPPER = Field.create("USETLE8888_STEPPER", 88, FieldType.BIT, 19).setBaseOffset(0);
+	public static final Field USESCRIPTTABLEFORCANSNIFFINGFILTERING = Field.create("USESCRIPTTABLEFORCANSNIFFINGFILTERING", 88, FieldType.BIT, 20).setBaseOffset(0);
+	public static final Field VERBOSECAN = Field.create("VERBOSECAN", 88, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 88, FieldType.BIT, 22).setBaseOffset(0);
+	public static final Field USEFORDREDUNDANTPPS = Field.create("USEFORDREDUNDANTPPS", 88, FieldType.BIT, 23).setBaseOffset(0);
 	public static final Field TPSMIN = Field.create("TPSMIN", 92, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSMAX = Field.create("TPSMAX", 94, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSERRORDETECTIONTOOLOW = Field.create("TPSERRORDETECTIONTOOLOW", 96, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1511,21 +1510,21 @@ public class Fields {
 	public static final Field ISVERBOSEALTERNATOR = Field.create("ISVERBOSEALTERNATOR", 644, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field USESTEPPERIDLE = Field.create("USESTEPPERIDLE", 644, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 644, FieldType.BIT, 7).setBaseOffset(0);
-	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 644, FieldType.BIT, 9).setBaseOffset(0);
-	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 644, FieldType.BIT, 10).setBaseOffset(0);
-	public static final Field ETB1CONFIGURED = Field.create("ETB1CONFIGURED", 644, FieldType.BIT, 11).setBaseOffset(0);
-	public static final Field ETB2CONFIGURED = Field.create("ETB2CONFIGURED", 644, FieldType.BIT, 12).setBaseOffset(0);
-	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 644, FieldType.BIT, 13).setBaseOffset(0);
-	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 644, FieldType.BIT, 14).setBaseOffset(0);
-	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 644, FieldType.BIT, 15).setBaseOffset(0);
-	public static final Field COASTINGFUELCUTENABLED = Field.create("COASTINGFUELCUTENABLED", 644, FieldType.BIT, 16).setBaseOffset(0);
-	public static final Field USEIACTABLEFORCOASTING = Field.create("USEIACTABLEFORCOASTING", 644, FieldType.BIT, 17).setBaseOffset(0);
-	public static final Field USEIDLETIMINGPIDCONTROL = Field.create("USEIDLETIMINGPIDCONTROL", 644, FieldType.BIT, 18).setBaseOffset(0);
-	public static final Field DISABLEETBWHENENGINESTOPPED = Field.create("DISABLEETBWHENENGINESTOPPED", 644, FieldType.BIT, 19).setBaseOffset(0);
-	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 644, FieldType.BIT, 20).setBaseOffset(0);
-	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 644, FieldType.BIT, 21).setBaseOffset(0);
-	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 644, FieldType.BIT, 22).setBaseOffset(0);
-	public static final Field ENABLEAEMXSERIES = Field.create("ENABLEAEMXSERIES", 644, FieldType.BIT, 24).setBaseOffset(0);
+	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 644, FieldType.BIT, 8).setBaseOffset(0);
+	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 644, FieldType.BIT, 9).setBaseOffset(0);
+	public static final Field ETB1CONFIGURED = Field.create("ETB1CONFIGURED", 644, FieldType.BIT, 10).setBaseOffset(0);
+	public static final Field ETB2CONFIGURED = Field.create("ETB2CONFIGURED", 644, FieldType.BIT, 11).setBaseOffset(0);
+	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 644, FieldType.BIT, 12).setBaseOffset(0);
+	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 644, FieldType.BIT, 13).setBaseOffset(0);
+	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 644, FieldType.BIT, 14).setBaseOffset(0);
+	public static final Field COASTINGFUELCUTENABLED = Field.create("COASTINGFUELCUTENABLED", 644, FieldType.BIT, 15).setBaseOffset(0);
+	public static final Field USEIACTABLEFORCOASTING = Field.create("USEIACTABLEFORCOASTING", 644, FieldType.BIT, 16).setBaseOffset(0);
+	public static final Field USEIDLETIMINGPIDCONTROL = Field.create("USEIDLETIMINGPIDCONTROL", 644, FieldType.BIT, 17).setBaseOffset(0);
+	public static final Field DISABLEETBWHENENGINESTOPPED = Field.create("DISABLEETBWHENENGINESTOPPED", 644, FieldType.BIT, 18).setBaseOffset(0);
+	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 644, FieldType.BIT, 19).setBaseOffset(0);
+	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 644, FieldType.BIT, 20).setBaseOffset(0);
+	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 644, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field ENABLEAEMXSERIES = Field.create("ENABLEAEMXSERIES", 644, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 648, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 650, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 652, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
@@ -2634,7 +2633,6 @@ public class Fields {
 	DONOTFILTERTRIGGEREDGENOISE,
 	ANTILAGENABLED,
 	USERUNNINGMATHFORCRANKING,
-	DISPLAYLOGICLEVELSINENGINESNIFFER,
 	USETLE8888_STEPPER,
 	USESCRIPTTABLEFORCANSNIFFINGFILTERING,
 	VERBOSECAN,

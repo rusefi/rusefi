@@ -88,9 +88,6 @@ This uses separate ignition timing and VE tables not only for idle conditions, a
 ### useRunningMathForCranking
 For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 
-### displayLogicLevelsInEngineSniffer
-Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.\n\nenable logic_level_trigger
-
 ### useTLE8888_stepper
 
 
