@@ -63,8 +63,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->antiLagEnabled;
 		case -54973711:
 			return engineConfiguration->useRunningMathForCranking;
-		case 1616873838:
-			return engineConfiguration->displayLogicLevelsInEngineSniffer;
 		case -647008743:
 			return engineConfiguration->useTLE8888_stepper;
 		case 671821024:
@@ -1139,11 +1137,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -54973711:
 	{
 		engineConfiguration->useRunningMathForCranking = (int)value;
-		return;
-	}
-		case 1616873838:
-	{
-		engineConfiguration->displayLogicLevelsInEngineSniffer = (int)value;
 		return;
 	}
 		case -647008743:

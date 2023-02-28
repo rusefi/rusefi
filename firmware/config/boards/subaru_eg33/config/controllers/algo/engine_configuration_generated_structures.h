@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Feb 26 17:16:35 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Feb 28 02:07:38 PST 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -769,52 +769,48 @@ struct engine_configuration_s {
 	offset 88 bit 18 */
 	bool useRunningMathForCranking : 1 {};
 	/**
-	 * Shall we display real life signal or just the part consumed by trigger decoder.
-	 * Applies to both trigger and cam/vvt input.
-	 * 
-	 * enable logic_level_trigger
 	offset 88 bit 19 */
-	bool displayLogicLevelsInEngineSniffer : 1 {};
-	/**
-	offset 88 bit 20 */
 	bool useTLE8888_stepper : 1 {};
 	/**
-	offset 88 bit 21 */
+	offset 88 bit 20 */
 	bool usescriptTableForCanSniffingFiltering : 1 {};
 	/**
 	 * Print incoming and outgoing first bus CAN messages in rusEFI console
-	offset 88 bit 22 */
+	offset 88 bit 21 */
 	bool verboseCan : 1 {};
 	/**
 	 * Experimental setting that will cause a misfire
 	 * DO NOT ENABLE.
-	offset 88 bit 23 */
+	offset 88 bit 22 */
 	bool artificialTestMisfire : 1 {};
 	/**
 	 * On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
-	offset 88 bit 24 */
+	offset 88 bit 23 */
 	bool useFordRedundantPps : 1 {};
 	/**
+	offset 88 bit 24 */
+	bool unusedBit_39_24 : 1 {};
+	/**
 	offset 88 bit 25 */
-	bool unusedBit_40_25 : 1 {};
+	bool unusedBit_39_25 : 1 {};
 	/**
 	offset 88 bit 26 */
-	bool unusedBit_40_26 : 1 {};
+	bool unusedBit_39_26 : 1 {};
 	/**
 	offset 88 bit 27 */
-	bool unusedBit_40_27 : 1 {};
+	bool unusedBit_39_27 : 1 {};
 	/**
 	offset 88 bit 28 */
-	bool unusedBit_40_28 : 1 {};
+	bool unusedBit_39_28 : 1 {};
 	/**
 	offset 88 bit 29 */
-	bool unusedBit_40_29 : 1 {};
+	bool unusedBit_39_29 : 1 {};
 	/**
 	offset 88 bit 30 */
-	bool unusedBit_40_30 : 1 {};
+	bool unusedBit_39_30 : 1 {};
 	/**
 	offset 88 bit 31 */
-	bool unusedBit_40_31 : 1 {};
+	bool unusedBit_39_31 : 1 {};
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
@@ -1459,86 +1455,86 @@ struct engine_configuration_s {
 	bool enabledStep1Limiter : 1 {};
 	/**
 	offset 644 bit 8 */
-	bool unused760b12 : 1 {};
-	/**
-	offset 644 bit 9 */
 	bool verboseTLE8888 : 1 {};
 	/**
 	 * CAN broadcast using custom rusEFI protocol
 	 * enable can_broadcast/disable can_broadcast
-	offset 644 bit 10 */
+	offset 644 bit 9 */
 	bool enableVerboseCanTx : 1 {};
 	/**
-	offset 644 bit 11 */
+	offset 644 bit 10 */
 	bool etb1configured : 1 {};
 	/**
-	offset 644 bit 12 */
+	offset 644 bit 11 */
 	bool etb2configured : 1 {};
 	/**
 	 * Useful for individual intakes
-	offset 644 bit 13 */
+	offset 644 bit 12 */
 	bool measureMapOnlyInOneCylinder : 1 {};
 	/**
-	offset 644 bit 14 */
+	offset 644 bit 13 */
 	bool stepperForceParkingEveryRestart : 1 {};
 	/**
 	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
-	offset 644 bit 15 */
+	offset 644 bit 14 */
 	bool isFasterEngineSpinUpEnabled : 1 {};
 	/**
 	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	offset 644 bit 16 */
+	offset 644 bit 15 */
 	bool coastingFuelCutEnabled : 1 {};
 	/**
 	 * Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
-	offset 644 bit 17 */
+	offset 644 bit 16 */
 	bool useIacTableForCoasting : 1 {};
 	/**
-	offset 644 bit 18 */
+	offset 644 bit 17 */
 	bool useIdleTimingPidControl : 1 {};
 	/**
 	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	offset 644 bit 19 */
+	offset 644 bit 18 */
 	bool disableEtbWhenEngineStopped : 1 {};
 	/**
-	offset 644 bit 20 */
+	offset 644 bit 19 */
 	bool is_enabled_spi_4 : 1 {};
 	/**
 	 * Disable the electronic throttle motor and DC idle motor for testing.
 	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	offset 644 bit 21 */
+	offset 644 bit 20 */
 	bool pauseEtbControl : 1 {};
 	/**
-	offset 644 bit 22 */
+	offset 644 bit 21 */
 	bool alignEngineSnifferAtTDC : 1 {};
 	/**
-	offset 644 bit 23 */
-	bool unused764b29 : 1 {};
-	/**
 	 * AEM X-Series or rusEFI Wideband
-	offset 644 bit 24 */
+	offset 644 bit 22 */
 	bool enableAemXSeries : 1 {};
 	/**
+	offset 644 bit 23 */
+	bool unusedBit_189_23 : 1 {};
+	/**
+	offset 644 bit 24 */
+	bool unusedBit_189_24 : 1 {};
+	/**
 	offset 644 bit 25 */
-	bool unusedBit_191_25 : 1 {};
+	bool unusedBit_189_25 : 1 {};
 	/**
 	offset 644 bit 26 */
-	bool unusedBit_191_26 : 1 {};
+	bool unusedBit_189_26 : 1 {};
 	/**
 	offset 644 bit 27 */
-	bool unusedBit_191_27 : 1 {};
+	bool unusedBit_189_27 : 1 {};
 	/**
 	offset 644 bit 28 */
-	bool unusedBit_191_28 : 1 {};
+	bool unusedBit_189_28 : 1 {};
 	/**
 	offset 644 bit 29 */
-	bool unusedBit_191_29 : 1 {};
+	bool unusedBit_189_29 : 1 {};
 	/**
 	offset 644 bit 30 */
-	bool unusedBit_191_30 : 1 {};
+	bool unusedBit_189_30 : 1 {};
 	/**
 	offset 644 bit 31 */
-	bool unusedBit_191_31 : 1 {};
+	bool unusedBit_189_31 : 1 {};
 	/**
 	 * offset 648
 	 */
@@ -2733,88 +2729,88 @@ struct engine_configuration_s {
 	bool injectorFlowAsMassFlow : 1 {};
 	/**
 	offset 1448 bit 4 */
-	bool unused1127 : 1 {};
+	bool unusedBit_467_4 : 1 {};
 	/**
 	offset 1448 bit 5 */
-	bool unused1128 : 1 {};
+	bool unusedBit_467_5 : 1 {};
 	/**
 	offset 1448 bit 6 */
-	bool unused1129 : 1 {};
+	bool unusedBit_467_6 : 1 {};
 	/**
 	offset 1448 bit 7 */
-	bool unused1130 : 1 {};
+	bool unusedBit_467_7 : 1 {};
 	/**
 	offset 1448 bit 8 */
-	bool unusedBit_471_8 : 1 {};
+	bool unusedBit_467_8 : 1 {};
 	/**
 	offset 1448 bit 9 */
-	bool unusedBit_471_9 : 1 {};
+	bool unusedBit_467_9 : 1 {};
 	/**
 	offset 1448 bit 10 */
-	bool unusedBit_471_10 : 1 {};
+	bool unusedBit_467_10 : 1 {};
 	/**
 	offset 1448 bit 11 */
-	bool unusedBit_471_11 : 1 {};
+	bool unusedBit_467_11 : 1 {};
 	/**
 	offset 1448 bit 12 */
-	bool unusedBit_471_12 : 1 {};
+	bool unusedBit_467_12 : 1 {};
 	/**
 	offset 1448 bit 13 */
-	bool unusedBit_471_13 : 1 {};
+	bool unusedBit_467_13 : 1 {};
 	/**
 	offset 1448 bit 14 */
-	bool unusedBit_471_14 : 1 {};
+	bool unusedBit_467_14 : 1 {};
 	/**
 	offset 1448 bit 15 */
-	bool unusedBit_471_15 : 1 {};
+	bool unusedBit_467_15 : 1 {};
 	/**
 	offset 1448 bit 16 */
-	bool unusedBit_471_16 : 1 {};
+	bool unusedBit_467_16 : 1 {};
 	/**
 	offset 1448 bit 17 */
-	bool unusedBit_471_17 : 1 {};
+	bool unusedBit_467_17 : 1 {};
 	/**
 	offset 1448 bit 18 */
-	bool unusedBit_471_18 : 1 {};
+	bool unusedBit_467_18 : 1 {};
 	/**
 	offset 1448 bit 19 */
-	bool unusedBit_471_19 : 1 {};
+	bool unusedBit_467_19 : 1 {};
 	/**
 	offset 1448 bit 20 */
-	bool unusedBit_471_20 : 1 {};
+	bool unusedBit_467_20 : 1 {};
 	/**
 	offset 1448 bit 21 */
-	bool unusedBit_471_21 : 1 {};
+	bool unusedBit_467_21 : 1 {};
 	/**
 	offset 1448 bit 22 */
-	bool unusedBit_471_22 : 1 {};
+	bool unusedBit_467_22 : 1 {};
 	/**
 	offset 1448 bit 23 */
-	bool unusedBit_471_23 : 1 {};
+	bool unusedBit_467_23 : 1 {};
 	/**
 	offset 1448 bit 24 */
-	bool unusedBit_471_24 : 1 {};
+	bool unusedBit_467_24 : 1 {};
 	/**
 	offset 1448 bit 25 */
-	bool unusedBit_471_25 : 1 {};
+	bool unusedBit_467_25 : 1 {};
 	/**
 	offset 1448 bit 26 */
-	bool unusedBit_471_26 : 1 {};
+	bool unusedBit_467_26 : 1 {};
 	/**
 	offset 1448 bit 27 */
-	bool unusedBit_471_27 : 1 {};
+	bool unusedBit_467_27 : 1 {};
 	/**
 	offset 1448 bit 28 */
-	bool unusedBit_471_28 : 1 {};
+	bool unusedBit_467_28 : 1 {};
 	/**
 	offset 1448 bit 29 */
-	bool unusedBit_471_29 : 1 {};
+	bool unusedBit_467_29 : 1 {};
 	/**
 	offset 1448 bit 30 */
-	bool unusedBit_471_30 : 1 {};
+	bool unusedBit_467_30 : 1 {};
 	/**
 	offset 1448 bit 31 */
-	bool unusedBit_471_31 : 1 {};
+	bool unusedBit_467_31 : 1 {};
 	/**
 	 * Time between bench test pulses
 	ms
@@ -4669,4 +4665,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22064);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Feb 26 17:16:35 PST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Feb 28 02:07:38 PST 2023
