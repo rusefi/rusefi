@@ -186,5 +186,5 @@ TEST(trigger, testNB2CamInput) {
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 
-	EXPECT_EQ(40, waveChart.getSize());
+	EXPECT_EQ(39, waveChart.getSize());
 }

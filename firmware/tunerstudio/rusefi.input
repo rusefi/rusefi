@@ -2213,7 +2213,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "MAP readout angle",					mapCamDetectionAnglePosition, 1, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
 		field = "Print verbose VVT sync details to console",verboseVVTDecoding
 		field = "Print verbose trigger sync to console",	verboseTriggerSynchDetails
-		field = "Display logic signals",				displayLogicLevelsInEngineSniffer
 		field = "Do not print messages in case of sync error",  silentTriggerError
 		field = "Focus on inputs in engine sniffer",	engineSnifferFocusOnInputs
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator

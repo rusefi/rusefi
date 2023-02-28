@@ -92,7 +92,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 20001
+#define FLASH_DATA_VERSION 20002
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -464,7 +464,6 @@ bit launchControlEnabled;
 bit doNotFilterTriggerEdgeNoise,"without filter","with filter";"Detect double trigger edges"
 bit antiLagEnabled;
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
-bit displayLogicLevelsInEngineSniffer;Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.\n\nenable logic_level_trigger
 bit useTLE8888_stepper
 bit usescriptTableForCanSniffingFiltering
 bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
@@ -735,7 +734,6 @@ bit is_enabled_spi_2
 	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed. 
 	
 	bit enabledStep1Limiter
-	bit unused760b12
 	bit verboseTLE8888
 	bit enableVerboseCanTx;CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
 	bit etb1configured
@@ -750,7 +748,6 @@ bit is_enabled_spi_2
 	bit is_enabled_spi_4
 	bit pauseEtbControl;Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 	bit alignEngineSnifferAtTDC
-	bit unused764b29;
 	bit enableAemXSeries;AEM X-Series or rusEFI Wideband
 ! 'enableAemXSeries' is the 32nd bit here, you would need another bit region if more bits are desired
 
@@ -1173,10 +1170,6 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit canOpenBLT; Allow OpenBLT on Primary CAN
 	bit can2OpenBLT; Allow OpenBLT on Secondary CAN
 	bit injectorFlowAsMassFlow,"mass flow","volumetric flow";Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
-	bit unused1127
-	bit unused1128
-	bit unused1129
-	bit unused1130
 	uint8_t autoscale benchTestOffTime;Time between bench test pulses;"ms", 5, 0, 0, 2000, 1
 	uint8_t benchTestCount;How many test bench pulses do you want;"count", 1, 0, 0, 250, 1
 	uint8_t autoscale benchTestOnTime;Length of each of the test pulses;"ms", 5, 0, 0, 2000, 1

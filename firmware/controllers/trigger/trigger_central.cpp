@@ -206,7 +206,7 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	return vvtPosition;
 }
 
-static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue front, efitick_t nowNt, int index) {
+static void logVvtFront(bool isImportantFront, TriggerValue front, efitick_t nowNt, int index) {
 	if (isImportantFront && isBrainPinValid(engineConfiguration->camInputsDebug[index])) {
 #if EFI_PROD_CODE
 		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
@@ -214,25 +214,12 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 		getExecutorInterface()->scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
-	if (!useOnlyRise || engineConfiguration->displayLogicLevelsInEngineSniffer) {
-		// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
-		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
+	// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
+	addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
 
 #if EFI_TOOTH_LOGGER
-		LogTriggerTooth(front == TriggerValue::RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, nowNt);
+	LogTriggerTooth(front == TriggerValue::RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, nowNt);
 #endif /* EFI_TOOTH_LOGGER */
-	} else {
-		if (isImportantFront) {
-			// On the important edge, log a rise+fall pair, and nothing on the real falling edge
-			addEngineSnifferVvtEvent(index, FrontDirection::UP);
-			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
-
-#if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
-#endif /* EFI_TOOTH_LOGGER */
-		}
-	}
 }
 
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
@@ -261,7 +248,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	bool vvtUseOnlyRise = !isVvtWithRealDecoder || vvtShape.useOnlyRisingEdges;
 	bool isImportantFront = !vvtUseOnlyRise || (front == TriggerValue::RISE);
 
-	logVvtFront(vvtUseOnlyRise, isImportantFront, front, nowNt, index);
+	logVvtFront(isImportantFront, front, nowNt, index);
 
 	if (!isImportantFront) {
 		// This edge is unimportant, ignore it.
@@ -421,13 +408,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && getTriggerCentral()->triggerShape.useOnlyRisingEdges;
-
-	if (!logLogicState) {
-		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
-		LogTriggerTooth(signal, timestamp);
-	}
-
+	LogTriggerTooth(signal, timestamp);
 #endif /* EFI_TOOTH_LOGGER */
 
 	if (!isUsefulSignal(signal, getTriggerCentral()->triggerShape)) {
@@ -441,19 +422,6 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 #endif /* EFI_PROD_CODE */
 		getExecutorInterface()->scheduleByTimestampNt("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
-
-#if EFI_TOOTH_LOGGER
-	if (logLogicState) {
-		// first log rising normally
-		LogTriggerTooth(signal, timestamp);
-		// in 'logLogicState' mode we log opposite front right after logical rising away
-		if (signal == SHAFT_PRIMARY_RISING) {
-			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp);
-		} else {
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, timestamp);
-		}
-	}
-#endif /* EFI_TOOTH_LOGGER */
 
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
 	if (triggerReentrant > maxTriggerReentrant)

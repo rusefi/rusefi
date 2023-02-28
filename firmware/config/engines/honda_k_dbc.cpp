@@ -42,8 +42,6 @@ void setHondaK() {
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 830;
 
-	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
-
 	gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
 	vtsControl->pwmFrequency = 0;
 	strcpy(engineConfiguration->gpPwmNote[0], "VTS");

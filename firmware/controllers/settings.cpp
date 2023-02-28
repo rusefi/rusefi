@@ -429,8 +429,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseIsoTp = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
 		engineConfiguration->artificialTestMisfire = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
-		engineConfiguration->displayLogicLevelsInEngineSniffer = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
 		engineConfiguration->enableVerboseCanTx = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
