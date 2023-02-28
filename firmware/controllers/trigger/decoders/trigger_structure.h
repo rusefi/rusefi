@@ -166,7 +166,7 @@ public:
 
 	// todo: add a runtime validation which would verify that this field was set properly
 	// todo: maybe even automate this flag calculation?
-	pin_state_t initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
+	TriggerValue initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
 

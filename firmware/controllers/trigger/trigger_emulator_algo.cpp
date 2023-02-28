@@ -22,8 +22,8 @@ int getPreviousIndex(const int currentIndex, const int size) {
 
 bool needEvent(const int currentIndex, const MultiChannelStateSequence & mcss, int channelIndex) {
 	int prevIndex = getPreviousIndex(currentIndex, mcss.phaseCount);
-	pin_state_t previousValue = mcss.getChannelState(channelIndex, /*phaseIndex*/prevIndex);
-	pin_state_t currentValue = mcss.getChannelState(channelIndex, /*phaseIndex*/currentIndex);
+	bool previousValue = mcss.getChannelState(channelIndex, /*phaseIndex*/prevIndex);
+	bool currentValue = mcss.getChannelState(channelIndex, /*phaseIndex*/currentIndex);
 
 	return previousValue != currentValue;
 }
@@ -46,7 +46,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequen
 #if EFI_SHAFT_POSITION_INPUT
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
-			bool isRise = TriggerValue::RISE == multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
+			bool isRise = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 
 			isRise ^= (i == 0 && engineConfiguration->invertPrimaryTriggerSignal);
 			isRise ^= (i == 1 && engineConfiguration->invertSecondaryTriggerSignal);

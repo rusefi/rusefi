@@ -100,21 +100,21 @@ static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	ASSERT_FLOAT_EQ(53.747 / 720, s->wave.getSwitchTime(0));
-	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
-	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
+	ASSERT_EQ(true,  s->wave.getChannelState(1, 0)) << "@0";
+	ASSERT_EQ(true,  s->wave.getChannelState(1, 0)) << "@0";
 
-	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 1)) << "@1";
-	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 1)) << "@1";
+	ASSERT_EQ(false, s->wave.getChannelState(0, 1)) << "@1";
+	ASSERT_EQ(false, s->wave.getChannelState(1, 1)) << "@1";
 
-	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 2)) << "@2";
-	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 2)) << "@2";
+	ASSERT_EQ(false, s->wave.getChannelState(0, 2)) << "@2";
+	ASSERT_EQ(true,  s->wave.getChannelState(1, 2)) << "@2";
 
-	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 3)) << "@3";
-	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 3)) << "@3";
+	ASSERT_EQ(false, s->wave.getChannelState(0, 3)) << "@3";
+	ASSERT_EQ(false, s->wave.getChannelState(1, 3)) << "@3";
 
-	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(0, 4)) << "@4";
-	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 5)) << "@5";
-	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 8)) << "@8";
+	ASSERT_EQ(true,  s->wave.getChannelState(0, 4)) << "@4";
+	ASSERT_EQ(true,  s->wave.getChannelState(1, 5)) << "@5";
+	ASSERT_EQ(false, s->wave.getChannelState(1, 8)) << "@8";
 	ASSERT_FLOAT_EQ(121.90 / 720, s->wave.getSwitchTime(1));
 	ASSERT_FLOAT_EQ(657.03 / 720, s->wave.getSwitchTime(8));
 

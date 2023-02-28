@@ -23,8 +23,8 @@ static void func(TriggerCallback *callback) {
 	int formIndex = callback->toothIndex % callback->form->getSize();
 	Engine *engine = callback->engine;
 
+	bool value = callback->form->wave.getChannelState(0, formIndex);
 
-	bool value = callback->form->wave.getChannelState(0, formIndex) == TriggerValue::RISE;
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
 		hwHandleVvtCamSignal(value, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);

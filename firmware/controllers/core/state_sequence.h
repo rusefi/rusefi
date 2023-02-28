@@ -40,8 +40,6 @@ typedef enum {
 #endif /* PWM_PHASE_MAX_COUNT */
 #define PWM_PHASE_MAX_WAVE_PER_PWM 2
 
-typedef TriggerValue pin_state_t;
-
 /**
  * This class represents multi-channel logical signals with shared time axis
  *
@@ -56,7 +54,7 @@ public:
 	 * that would give us a 70% duty cycle PWM
 	 */
 	virtual float getSwitchTime(int phaseIndex) const = 0;
-	virtual pin_state_t getChannelState(int channelIndex, int phaseIndex) const = 0;
+	virtual bool getChannelState(int channelIndex, int phaseIndex) const = 0;
 
 	// Make sure the switch times are in order and end at the very end.
 	void checkSwitchTimes(float scale) const;
@@ -78,12 +76,12 @@ public:
 		return switchTimes[phaseIndex];
 	}
 
-	pin_state_t getChannelState(int channelIndex, int phaseIndex) const override {
+	bool getChannelState(int channelIndex, int phaseIndex) const override {
 		if (channelIndex >= waveCount) {
 			// todo: would be nice to get this asserting working
 			//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
 		}
-		return ((waveForm[phaseIndex] >> channelIndex) & 1) ? TriggerValue::RISE : TriggerValue::FALL;
+		return (waveForm[phaseIndex] >> channelIndex) & 1;
 	}
 
 	void reset() {
@@ -94,13 +92,13 @@ public:
 		switchTimes[phaseIndex] = value;
 	}
 
-	void setChannelState(const int channelIndex, const int phaseIndex, pin_state_t state) {
+	void setChannelState(const int channelIndex, const int phaseIndex, bool state) {
 		if (channelIndex >= waveCount) {
 			// todo: would be nice to get this asserting working
 			//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
 		}
 		uint8_t & ref = waveForm[phaseIndex];
-		ref = (ref & ~(1U << channelIndex)) | ((state == TriggerValue::RISE ? 1 : 0) << channelIndex);
+		ref = (ref & ~(1U << channelIndex)) | ((state ? 1 : 0) << channelIndex);
 	}
 
 private:

@@ -323,8 +323,8 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 
 	state->seq.setSwitchTime(0, dutyCycle);
 	state->seq.setSwitchTime(1, 1);
-	state->seq.setChannelState(0, 0, TriggerValue::FALL);
-	state->seq.setChannelState(0, 1, TriggerValue::RISE);
+	state->seq.setChannelState(0, 0, false);
+	state->seq.setChannelState(0, 1, true);
 
 	state->outputPins[0] = output;
 
@@ -383,7 +383,7 @@ void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6664, state->multiChannelStateSequence->waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence->waveCount; channelIndex++) {
 		OutputPin *output = state->outputPins[channelIndex];
-		TriggerValue value = state->multiChannelStateSequence->getChannelState(channelIndex, stateIndex);
-		output->setValue(value == TriggerValue::RISE);
+		bool value = state->multiChannelStateSequence->getChannelState(channelIndex, stateIndex);
+		output->setValue(value);
 	}
 }

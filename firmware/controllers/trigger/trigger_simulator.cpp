@@ -52,14 +52,11 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 #if EFI_UNIT_TEST
 	int prevIndex = getPreviousIndex(stateIndex, shape.getSize());
 
-	pin_state_t primaryWheelState = multiChannelStateSequence.getChannelState(0, prevIndex);
-	pin_state_t newPrimaryWheelState = multiChannelStateSequence.getChannelState(0, stateIndex);
+	bool primaryWheelState = multiChannelStateSequence.getChannelState(0, prevIndex);
+	bool newPrimaryWheelState = multiChannelStateSequence.getChannelState(0, stateIndex);
 
-	pin_state_t secondaryWheelState = multiChannelStateSequence.getChannelState(1, prevIndex);
-	pin_state_t newSecondaryWheelState = multiChannelStateSequence.getChannelState(1, stateIndex);
-
-//	pin_state_t thirdWheelState = multiChannelStateSequence->getChannelState(2, prevIndex);
-//	pin_state_t new3rdWheelState = multiChannelStateSequence->getChannelState(2, stateIndex);
+	bool secondaryWheelState = multiChannelStateSequence.getChannelState(1, prevIndex);
+	bool newSecondaryWheelState = multiChannelStateSequence.getChannelState(1, stateIndex);
 
 	if (printTriggerDebug) {
 		printf("TriggerStimulator: simulatedEvent: %d>%d primary %d>%d secondary %d>%d\r\n", prevIndex, stateIndex, primaryWheelState, newPrimaryWheelState,
@@ -75,8 +72,8 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
-			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
-			trigger_event_e event = (currentValue == TriggerValue::RISE ? riseEvents : fallEvents)[i];
+			bool currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
+			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
 			if (isUsefulSignal(event, shape)) {
 				state.decodeTriggerEvent(
 					"sim",

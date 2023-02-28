@@ -230,7 +230,10 @@ void TriggerWaveform::addEventAngle(angle_t angle, TriggerValue const state, Tri
 	addEvent(angle / getCycleDuration(), state, channelIndex);
 }
 
-void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
+void TriggerWaveform::addEvent(angle_t angle, TriggerValue const stateTv, TriggerWheel const channelIndex) {
+	// TODO: #55
+	bool state = stateTv == TriggerValue::RISE;
+
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	if (channelIndex == TriggerWheel:: T_SECONDARY) {
@@ -246,14 +249,14 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 #if EFI_UNIT_TEST
 	assertIsInBounds(wave.phaseCount, triggerSignalIndeces, "trigger shape overflow");
 	triggerSignalIndeces[wave.phaseCount] = channelIndex;
-	triggerSignalStates[wave.phaseCount] = state;
+	triggerSignalStates[wave.phaseCount] = state ? TriggerValue::RISE : TriggerValue::FALL;
 #endif // EFI_UNIT_TEST
 
 
 	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
 	// todo: see calculateExpectedEventCounts
 	// related calculation should be done once trigger is initialized outside of trigger shape scope
-	if (!useOnlyRisingEdges || state == TriggerValue::RISE) {
+	if (!useOnlyRisingEdges || state) {
 		expectedEventCount[(int)channelIndex]++;
 	}
 
@@ -275,10 +278,10 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 	if (wave.phaseCount == 0) {
 		wave.phaseCount = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			wave.setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i]);
+			wave.setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i] == TriggerValue::RISE);
 		}
 
-		isRiseEvent[0] = TriggerValue::RISE == state;
+		isRiseEvent[0] = state;
 		wave.setSwitchTime(0, angle);
 		wave.setChannelState((int)channelIndex, /* channelIndex */ 0, /* value */ state);
 		return;
@@ -305,7 +308,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
 	}
 */
-	isRiseEvent[index] = TriggerValue::RISE == state;
+	isRiseEvent[index] = state;
 
 	if ((unsigned)index != wave.phaseCount) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
@@ -314,7 +317,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 	wave.phaseCount++;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		pin_state_t value = wave.getChannelState(/* channelIndex */i, index - 1);
+		bool value = wave.getChannelState(/* channelIndex */i, index - 1);
 		wave.setChannelState(i, index, value);
 	}
 	wave.setSwitchTime(index, angle);
