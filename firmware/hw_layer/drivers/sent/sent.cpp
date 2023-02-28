@@ -535,7 +535,7 @@ void sent_channel::Info(void) {
 /* Decoder thread settings.													*/
 /*==========================================================================*/
 
-/* 4 per channel should be enougth */
+/* 4 per channel should be enough */
 #define SENT_MB_SIZE		(4 * SENT_CHANNELS_NUM)
 
 static msg_t sent_mb_buffer[SENT_MB_SIZE];
