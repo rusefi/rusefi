@@ -24,6 +24,7 @@
 
 int findIndex(const float array[], int size, float value);
 int findIndex2(const float array[], unsigned size, float value);
+float interpolateClampedWithValidation(float x1, float y1, float x2, float y2, float x);
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
 

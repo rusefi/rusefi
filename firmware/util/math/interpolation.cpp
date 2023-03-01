@@ -98,23 +98,28 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 		return NAN;
 	}
 	float b = y1 - a * x1;
-	float result = a * x + b;
-#if	DEBUG_FUEL
-	printf("x1=%.2f y1=%.2f x2=%.2f y2=%.2f\r\n", x1, y1, x2, y2);
-	printf("a=%.2f b=%.2f result=%.2f\r\n", a, b, result);
-#endif
-	return result;
+	return a * x + b;
+}
+
+float interpolateClampedWithValidation(float x1, float y1, float x2, float y2, float x) {
+	if (x1 >= x2) {
+        firmwareError(OBD_PCM_Processor_Fault, "interpolateClamped %f has to be smaller than %f", x1, x2);
+	}
+	return interpolateClamped(x1, y1, x2, y2, x);
 }
 
 /**
+ * todo: use 'interpolateClampedWithValidation' wider?
  * @see interpolateMsg
  */
 float interpolateClamped(float x1, float y1, float x2, float y2, float x) {
+	// note how we assume order of x1 and x2 here! see also interpolateClampedWithValidation
 	if (x <= x1)
 		return y1;
 	if (x >= x2)
 		return y2;
 
+    // todo: do we care with code duplication with interpolateMsg above?
 	float a = INTERPOLATION_A(x1, y1, x2, y2);
 	float b = y1 - a * x1;
 	return a * x + b;
