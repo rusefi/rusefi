@@ -752,9 +752,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi();
 		break;
-	case MRE_MIATA_NA6_VAF:
-		setMiataNA6_VAF_MRE();
-		break;
 	case MRE_MIATA_94_MAP:
 		setMiata94_MAP_MRE();
 		break;
@@ -927,9 +924,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case FRANKENSO_MIATA_NA6_MAP:
 		setMiataNA6_MAP_Frankenso();
-		break;
-	case FRANKENSO_MIATA_NA6_VAF:
-		setMiataNA6_VAF_Frankenso();
 		break;
 	case ETB_BENCH_ENGINE:
 		setEtbTestConfiguration();

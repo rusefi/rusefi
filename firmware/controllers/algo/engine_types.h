@@ -148,8 +148,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 	FRANKENSO_MAZDA_MIATA_NA8 = 56,
 
-	FRANKENSO_MIATA_NA6_VAF = 57,
-
 	ETB_BENCH_ENGINE = 58,
 
 	TLE8888_BENCH_ENGINE = 59,

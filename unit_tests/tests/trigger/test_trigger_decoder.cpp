@@ -363,7 +363,6 @@ TEST(trigger, testTriggerDecoder) {
 
 	testTriggerDecoder2("testCitroen", CITROEN_TU3JP, 0, 0.4833, 0);
 
-	testTriggerDecoder2("miata 1990", MRE_MIATA_NA6_VAF, 4, 1 - 0.7015, 1 - 0.3890);
 	testTriggerDecoder2("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);

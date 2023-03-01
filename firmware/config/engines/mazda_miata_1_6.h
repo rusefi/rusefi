@@ -10,15 +10,10 @@
 #include "engine_configuration.h"
 
 /**
- * set engine_type 57
- */
-void setMiataNA6_VAF_Frankenso();
-/**
  * set engine_type 41
  */
 void setMiataNA6_MAP_Frankenso();
 
-void setMiataNA6_VAF_MRE();
 void setMiataNA6_MAP_MRE();
 
 /**
