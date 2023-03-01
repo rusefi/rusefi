@@ -170,12 +170,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-#if HW_PROTEUS & EFI_PROD_CODE
-	engineConfiguration->mainRelayPin = PROTEUS_LS_13;
-	engineConfiguration->fanPin = PROTEUS_LS_15;
-	engineConfiguration->fuelPumpPin = PROTEUS_LS_16;
-#endif // HW_PROTEUS
-
 	// If we're running as hardware CI, borrow a few extra pins for that
 #ifdef HARDWARE_CI
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::G3;

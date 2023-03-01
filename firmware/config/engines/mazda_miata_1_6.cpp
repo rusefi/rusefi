@@ -208,11 +208,18 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->idleRpmPid.dFactor = 0.0001;
 	engineConfiguration->idleRpmPid.periodMs = 100;
 
+	engineConfiguration->useIdleTimingPidControl = true;
+	engineConfiguration->idleTimingPid.pFactor = 0.1;
+	engineConfiguration->idleTimingPid.dFactor = 0.0001;
+	engineConfiguration->idleTimingPid.minValue = -15;
+	engineConfiguration->idleTimingPid.maxValue =  15;
+
 	// Fan
 	engineConfiguration->enableFan1WithAc = true;
 	engineConfiguration->enableFan2WithAc = true;
 
-	// Alternator
+	// AC
+	engineConfiguration->acDelay = 0.5;
 
 	// Tach
 	engineConfiguration->tachPulsePerRev = 2;
@@ -225,6 +232,7 @@ void miataNAcommonEngineSettings() {
 	setMafDecodingBins();
 	miataNA_setIgnitionTable();
 	setMapVeTable();
+	setTable(config->injectionPhase, 400);
 
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
@@ -239,8 +247,8 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
 	// CLT/IAT
-	setCommonNTCSensor(&engineConfiguration->clt, 2700);
-	setCommonNTCSensor(&engineConfiguration->iat, 2700);
+	engineConfiguration->clt.config = { -20, 40, 80, 16150, 1150, 330, 2700 };
+	engineConfiguration->iat.config = { -20, 40, 80, 16150, 1150, 330, 2700 };
 
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 }
@@ -443,11 +451,39 @@ void setHellenNA6() {
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 }
 
+#include "proteus_meta.h"
+
 void setMiataNa6_Proteus() {
 	miataNAcommonEngineSettings();
 
-	// engineConfiguration->map.sensor.hwChannel = ???;
-	engineConfiguration->map.sensor.type = MT_MPX4250;
+	// Triggers
+	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1;
+	engineConfiguration->triggerInputPins[1] = PROTEUS_VR_1;
 
-	// TODO
+	// Sensors
+	engineConfiguration->map.sensor.type = MT_MPXH6400;
+	engineConfiguration->map.sensor.hwChannel = engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_VOLT_1;
+
+	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_3;
+	engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_2;
+
+	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_ANALOG_VOLT_2;
+
+	engineConfiguration->afr.hwChannel = PROTEUS_IN_ANALOG_VOLT_8;
+
+	engineConfiguration->acSwitch = PROTEUS_DIGITAL_4;
+
+	// Outputs
+	engineConfiguration->fuelPumpPin = PROTEUS_LS_9;
+
+	engineConfiguration->idle.solenoidPin = PROTEUS_LS_7;
+
+	// TODO: which is fan 1 or 2?
+	engineConfiguration->fanPin = PROTEUS_LS_5;
+	// engineConfiguration->fan2Pin = PROTEUS_LS_5;
+	engineConfiguration->acRelayPin = PROTEUS_LS_10;
+
+	engineConfiguration->tachOutputPin = PROTEUS_LS_12;
+
+	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_11;
 }
