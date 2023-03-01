@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Mar 01 01:04:52 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Mar 01 04:11:20 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -275,10 +275,12 @@ public class Fields {
 	public static final int engine_type_e_DODGE_RAM = 64;
 	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
 	public static final int engine_type_e_ET_UNUSED_11 = 11;
+	public static final int engine_type_e_ET_UNUSED_12 = 12;
 	public static final int engine_type_e_ET_UNUSED_13 = 13;
 	public static final int engine_type_e_ET_UNUSED_15 = 15;
 	public static final int engine_type_e_ET_UNUSED_17 = 17;
 	public static final int engine_type_e_ET_UNUSED_33 = 33;
+	public static final int engine_type_e_ET_UNUSED_57 = 57;
 	public static final int engine_type_e_ET_UNUSED_92 = 92;
 	public static final int engine_type_e_ET_UNUSED_93 = 93;
 	public static final int engine_type_e_ET_UNUSED_97 = 97;
@@ -292,7 +294,6 @@ public class Fields {
 	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_2003 = 47;
 	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_NA8 = 56;
 	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
-	public static final int engine_type_e_FRANKENSO_MIATA_NA6_VAF = 57;
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HELLEN_121_NISSAN_4_CYL = 84;
@@ -333,7 +334,6 @@ public class Fields {
 	public static final int engine_type_e_MRE_M111 = 68;
 	public static final int engine_type_e_MRE_MIATA_94_MAP = 20;
 	public static final int engine_type_e_MRE_MIATA_NA6_MAP = 66;
-	public static final int engine_type_e_MRE_MIATA_NA6_VAF = 12;
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_MRE_VW_B6 = 62;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
@@ -992,6 +992,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1855088977;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1197,7 +1198,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.01.f407-discovery.2522649281";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.01.f407-discovery.1855088977";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;

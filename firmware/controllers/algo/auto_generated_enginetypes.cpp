@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Feb 28 21:47:09 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Mar 01 04:10:39 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -171,6 +171,8 @@ case ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
 case ET_UNUSED_11:
   return "ET_UNUSED_11";
+case ET_UNUSED_12:
+  return "ET_UNUSED_12";
 case ET_UNUSED_13:
   return "ET_UNUSED_13";
 case ET_UNUSED_15:
@@ -179,6 +181,8 @@ case ET_UNUSED_17:
   return "ET_UNUSED_17";
 case ET_UNUSED_33:
   return "ET_UNUSED_33";
+case ET_UNUSED_57:
+  return "ET_UNUSED_57";
 case ET_UNUSED_92:
   return "ET_UNUSED_92";
 case ET_UNUSED_93:
@@ -201,8 +205,6 @@ case FRANKENSO_MAZDA_MIATA_NA8:
   return "FRANKENSO_MAZDA_MIATA_NA8";
 case FRANKENSO_MIATA_NA6_MAP:
   return "FRANKENSO_MIATA_NA6_MAP";
-case FRANKENSO_MIATA_NA6_VAF:
-  return "FRANKENSO_MIATA_NA6_VAF";
 case FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
 case Force_4_bytes_size_engine_type:
@@ -285,8 +287,6 @@ case MRE_MIATA_94_MAP:
   return "MRE_MIATA_94_MAP";
 case MRE_MIATA_NA6_MAP:
   return "MRE_MIATA_NA6_MAP";
-case MRE_MIATA_NA6_VAF:
-  return "MRE_MIATA_NA6_VAF";
 case MRE_SUBARU_EJ18:
   return "MRE_SUBARU_EJ18";
 case MRE_VW_B6:
