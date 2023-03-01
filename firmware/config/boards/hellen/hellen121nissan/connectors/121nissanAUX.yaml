@@ -80,7 +80,6 @@ info:
     - pin: aux6
       x: 105
       y: 210
-
     - pin: aux7
       x: 250
       y: 180
