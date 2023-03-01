@@ -27,6 +27,7 @@
 
 #if EFI_ENGINE_CONTROL
 
+// TODO: wow move this into engineState at least for context not to leak from test to test!
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;
 
