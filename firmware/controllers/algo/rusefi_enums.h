@@ -171,6 +171,7 @@ enum class SentEtbType : uint8_t {
 	NONE = 0,
 	GM_TYPE_1 = 1,
 	FORD_TYPE_1 = 2,
+	CUSTOM = 3,
 };
 
 typedef enum __attribute__ ((__packed__)) {

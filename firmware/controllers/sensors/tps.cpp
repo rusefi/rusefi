@@ -54,7 +54,18 @@ void sentTpsDecode() {
     if (!isDigitalTps1()) {
         return;
     }
-    float value = getSentValue(0);
-    sentTps.setValidValue(value, getTimeNowNt());
+    // todo: move away from weird float API
+    float sentValue = getSentValue(0);
+    float tpsValue;
+    switch (engineConfiguration->sentEtbType) {
+        case SentEtbType::GM_TYPE_1:
+            tpsValue = interpolateClamped(0, 0xE48, 100, 0x1A0, sentValue);
+            break;
+        default:
+            tpsValue = interpolateClamped(0, engineConfiguration->customSentTpsMin, 100, engineConfiguration->customSentTpsMax, sentValue);
+            break;
+    }
+
+    sentTps.setValidValue(tpsValue, getTimeNowNt());
 #endif // EFI_SENT_SUPPORT
 }

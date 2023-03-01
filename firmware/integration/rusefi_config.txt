@@ -297,7 +297,7 @@ end_struct
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
 custom ego_sensor_e 1 bits, S08, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 
-#define SentEtbType_enum "None", "GM type 1", "Ford type 1"
+#define SentEtbType_enum "None", "GM type 1", "Ford type 1", "Custom"
 custom SentEtbType 1 bits, S08, @OFFSET@, [0:1], @@SentEtbType_enum@@
 
 struct cranking_parameters_s
@@ -1555,8 +1555,8 @@ int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
 uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
     uint8_t acRelayAlternatorDutyAdder
-	uint8_t[2] unusedA11lignmentFill_at_33
 	SentEtbType sentEtbType
+	uint16_t customSentTpsMin
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
 	float ALSSkipRatio;;"", 1, 0, 0, 1, 1
@@ -1566,7 +1566,9 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%;"%", 0.5, 0, 0, 100, 1
 	uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use ~69%;"%", 0.5, 0, 0, 100, 1
 pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
-uint8_t[48] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	uint16_t customSentTpsMax
+	uint16_t unusedPaddingHere
+uint8_t[44] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

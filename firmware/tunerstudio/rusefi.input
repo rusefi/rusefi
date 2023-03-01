@@ -4295,6 +4295,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "boardUseD5PullDown",						boardUseD5PullDown
 		field = "SENT input 1",								sentInputPins1
 		field = "SENT sentEtbType",							sentEtbType
+		field = customSentTpsMin,                           customSentTpsMin
+		field = customSentTpsMax,                           customSentTpsMax
 		field = "etbDutyThreshold",                         etbDutyThreshold
 		field = "etbDutyShutdownThreshold",                 etbDutyShutdownThreshold
 
