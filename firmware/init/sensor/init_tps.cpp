@@ -78,7 +78,7 @@ private:
 
 		m_func.configure(
 			cfg.closed, 0,
-			cfg.open, 100, 
+			cfg.open, POSITION_FULLY_OPEN,
 			cfg.min, cfg.max
 		);
 
