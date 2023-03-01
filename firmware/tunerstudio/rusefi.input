@@ -2540,6 +2540,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Highest temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 
+	dialog = tpsSent1, "SENT TPS"
+		field = "SENT input 1",								sentInputPins1
+		field = "SENT sentEtbType",							sentEtbType, {sentInputPins1 != 0}
+		field = customSentTpsMin,                           customSentTpsMin, {sentEtbType == @@SentEtbType_CUSTOM@@ }
+		field = customSentTpsMax,                           customSentTpsMax, {sentEtbType == @@SentEtbType_CUSTOM@@ }
+
 	dialog = tpsNum1, "Throttle Body #1"
 		field = "Primary sensor",				tps1_1AdcChannel
 		field = "Primary min",					tpsMin, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
@@ -2565,6 +2571,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = tpsSensorLeft
 		panel = tpsLimits
 		panel = tpsNum1
+		panel = tpsSent1@@if_ts_show_tps_sent
 		panel = tpsNum2
 
 	dialog = pedalSensorLeft, "Accelerator pedal"
@@ -4293,10 +4300,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "boardUseD3PullDown",						boardUseD3PullDown
 		field = "boardUseD4PullDown",						boardUseD4PullDown
 		field = "boardUseD5PullDown",						boardUseD5PullDown
-		field = "SENT input 1",								sentInputPins1
-		field = "SENT sentEtbType",							sentEtbType
-		field = customSentTpsMin,                           customSentTpsMin
-		field = customSentTpsMax,                           customSentTpsMax
 		field = "etbDutyThreshold",                         etbDutyThreshold
 		field = "etbDutyShutdownThreshold",                 etbDutyShutdownThreshold
 
