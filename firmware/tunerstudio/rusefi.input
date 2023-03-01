@@ -4012,12 +4012,13 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Subaru EJ18",		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
 
+		commandButton = "FOME PnP Miata NA6",		cmd_set_engine_type_PROTEUS_MIATA_NA6@@if_show_Proteus_presets
+
 		commandButton = "Proteus M73 v12",			cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus GDI VAG B6 test",  cmd_set_engine_type_PROTEUS_VW_B6@@if_show_Proteus_presets
 		commandButton = "Proteus GM Gen4",			cmd_set_engine_type_PROTEUS_GM_LS_4@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Lua Demo",			cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
-		commandButton = "Proteus Miata NA6",		cmd_set_engine_type_PROTEUS_MIATA_NA6@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
 		commandButton = "Proteus Honda K",			cmd_set_engine_type_PROTEUS_HONDA_K@@if_show_Proteus_presets
 		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets
