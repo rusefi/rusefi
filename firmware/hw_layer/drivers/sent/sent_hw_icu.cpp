@@ -47,8 +47,7 @@ static ICUConfig icucfg[SENT_INPUT_COUNT] =
 	}
 };
 
-void startSent()
-{
+void startSent() {
 	for (int i = 0; i < SENT_INPUT_COUNT; i++) {
 		brain_input_pin_e sentPin = engineConfiguration->sentInputPins[i];
 
@@ -63,7 +62,7 @@ void startSent()
 
 		if (getIcuParams(sentPin, &pinAF, &icu, &cfg->channel, &baseClock) != true) {
 			/* this pin has no ICU functionality, of ICU driver is not enabled for TIM on this pin */
-			/* throw error? */
+			firmwareError(OBD_PCM_Processor_Fault, "No ICU on selected SENT pin");
 			continue;
 		}
 
@@ -75,8 +74,7 @@ void startSent()
 	}
 }
 
-void stopSent()
-{
+void stopSent() {
 	for (int i = 0; i < SENT_INPUT_COUNT; i++) {
 		brain_input_pin_e sentPin = activeConfiguration.sentInputPins[i];
 

@@ -284,8 +284,7 @@ int sent_channel::GetMsg(uint32_t* rx) {
 	return 0;
 }
 
-int sent_channel::GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1)
-{
+int sent_channel::GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1) {
 	uint32_t rx;
 	int ret = GetMsg(&rx);
 
@@ -594,7 +593,8 @@ static void printSentInfo() {
 	for (int i = 0; i < SENT_CHANNELS_NUM; i++) {
 		sent_channel &ch = channels[i];
 
-		efiPrintf("---- SENT ch %d ----", i);
+        const char * pinName = getBoardSpecificPinName(engineConfiguration->sentInputPins[i]);
+		efiPrintf("---- SENT ch %d ---- on %s", i, pinName);
 		ch.Info();
 		efiPrintf("--------------------");
 	}
@@ -630,8 +630,7 @@ int getSentValues(size_t index, uint16_t *sig0, uint16_t *sig1) {
 }
 
 /* Should be called once */
-void initSent(void)
-{
+void initSent(void) {
 	/* init interval mailbox */
 	chMBObjectInit(&sent_mb, sent_mb_buffer, SENT_MB_SIZE);
 
