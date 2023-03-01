@@ -2,6 +2,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 #include "pch.h"
+#include "sent.h"
 
 void grabTPSIsClosed() {
 #if EFI_PROD_CODE
@@ -46,5 +47,14 @@ bool isPedalError() {
     return !Sensor::get(SensorType::AcceleratorPedal).Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 }
 
+extern SentTps sentTps;
+
 void sentTpsDecode() {
+#if EFI_SENT_SUPPORT
+    if (!isDigitalTps1()) {
+        return;
+    }
+    float value = getSentValue(0);
+    sentTps.setValidValue(value, getTimeNowNt());
+#endif // EFI_SENT_SUPPORT
 }

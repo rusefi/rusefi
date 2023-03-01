@@ -165,7 +165,7 @@ static FuncSensPair tps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
 static RedundantPair analogTps1(tps1p, tps1s, SensorType::Tps1);
 static RedundantPair tps2(tps2p, tps2s, SensorType::Tps2);
 
-static SentTps sentTps;
+SentTps sentTps;
 
 // Used only in case of weird Ford-style ETB TPS
 static RedundantFordTps fordTps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
