@@ -44,7 +44,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
 	HELLEN_NA8_96 = 10,
-	MRE_MIATA_NA6_VAF = 12,
 	MRE_MIATA_NA6_MAP = 66,
 
 	TEST_ROTARY = 19,
@@ -136,8 +135,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 	FRANKENSO_MAZDA_MIATA_NA8 = 56,
 
-	FRANKENSO_MIATA_NA6_VAF = 57,
-
 	ETB_BENCH_ENGINE = 58,
 
 	TLE8888_BENCH_ENGINE = 59,
@@ -208,9 +205,11 @@ typedef enum __attribute__ ((__packed__)) {
     ET_UNUSED_98 = 98,
 	ET_UNUSED_17 = 17,
 	ET_UNUSED_11 = 11,
+	ET_UNUSED_12 = 12,
 	ET_UNUSED_13 = 13,
 	ET_UNUSED_15 = 15,
 	ET_UNUSED_33 = 33,
+	ET_UNUSED_57 = 57,
 
 	/**
 	 * this configuration has as few pins configured as possible

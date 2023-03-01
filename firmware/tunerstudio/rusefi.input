@@ -1964,10 +1964,6 @@ cmd_openblt				= "@@TS_IO_TEST_COMMAND_char@@\x00\xbc\x00\x00"
 cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_VW_B6_16_hex@@"
 cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_BODY_CONTROL_16_hex@@"
 
-
-; MRE_MIATA_NA6 12
-cmd_set_engine_type_microRusEFI_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_NA6_VAF_16_hex@@"
-
 cmd_set_engine_type_microRusEFI_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_NA6_MAP_16_hex@@"
 
 cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_94_MAP_16_hex@@"
@@ -2001,8 +1997,6 @@ cmd_set_engine_type_hellen_couple_bk2					= "@@TS_IO_TEST_COMMAND_char@@@@ts_com
 
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MIATA_NA6_MAP_16_hex@@"
-; MIATA_NA6_VAF = 57
-cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MIATA_NA6_VAF_16_hex@@"
 ; MAZDA_MIATA_2003 = 47
 cmd_set_engine_type_Frankenso_Miata_NB2			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
@@ -3999,11 +3993,9 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = engineTypeDialog, "Popular vehicles"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"
 		field = "!Once you send the command, please reconnect to rusEFI controller in order to read fresh values"
-		commandButton = "Frankenso Miata NA6 Stage 0", cmd_set_engine_type_Frankenso_Miata_NA6_VAF@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",	cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
-		commandButton = "microRusEFI Miata NA6 VAF",	cmd_set_engine_type_microRusEFI_Miata_NA6_VAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NA6 MAP",	cmd_set_engine_type_microRusEFI_Miata_NA6_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata 94/95 MAP", cmd_set_engine_type_microRusEFI_Miata_94_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI GDI VAG B6 test", cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets
