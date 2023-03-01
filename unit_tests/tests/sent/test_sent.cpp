@@ -95,6 +95,8 @@ TEST(sent, testFordClosed) {
 	static sent_channel channel;
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/ford-sent-closed.csv");
 	ASSERT_TRUE(lineCount > 100);
+   	bool isError = channel.GetMsg(nullptr) != 0;
+   	ASSERT_FALSE(isError);
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
 		/* TODO: bad captured data or real problem? */
@@ -106,6 +108,8 @@ TEST(sent, testFuelPressure) {
 	static sent_channel channel;
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/SENT-fuel-pressure.csv");
 	ASSERT_TRUE(lineCount > 100);
+   	bool isError = channel.GetMsg(nullptr) != 0;
+   	ASSERT_FALSE(isError);
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
 		ASSERT_TRUE(statistic.RestartCnt == 0);
@@ -113,3 +117,8 @@ TEST(sent, testFuelPressure) {
 	#endif
 }
 
+TEST(sent, testNoMessages) {
+    static sent_channel channel;
+   	bool isError = channel.GetMsg(nullptr) != 0;
+   	ASSERT_FALSE(isError);
+}
