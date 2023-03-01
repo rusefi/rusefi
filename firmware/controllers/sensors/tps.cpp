@@ -52,7 +52,9 @@ extern SentTps sentTps;
 float decodeTpsSentValue(float sentValue) {
     switch (engineConfiguration->sentEtbType) {
         case SentEtbType::GM_TYPE_1:
-            return interpolateMsg("tps", /*x1*/0xE48,                                 /*y1*/0, /*x2*/0x1A0,                                  /*y2*/POSITION_FULLY_OPEN, /*x*/sentValue);
+            return interpolateMsg("tps", /*x1*/0xE48,                                 /*y1*/0, /*x2*/0x1A0,                                 /*y2*/POSITION_FULLY_OPEN, /*x*/sentValue);
+        case SentEtbType::FORD_TYPE_1:
+            return interpolateMsg("tps", /*x1*/  250,                                 /*y1*/0, /*x2*/ 3560,                                 /*y2*/POSITION_FULLY_OPEN, /*x*/sentValue);
         default:
             return interpolateMsg("tps", /*x1*/engineConfiguration->customSentTpsMin, /*y1*/0, /*x2*/engineConfiguration->customSentTpsMax, /*y2*/POSITION_FULLY_OPEN, /*x*/sentValue);
     }

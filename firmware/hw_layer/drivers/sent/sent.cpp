@@ -590,6 +590,7 @@ static void SentDecoderThread(void*) {
 }
 
 static void printSentInfo() {
+#if EFI_SENT_SUPPORT
 	for (int i = 0; i < SENT_CHANNELS_NUM; i++) {
 		sent_channel &ch = channels[i];
 
@@ -598,6 +599,7 @@ static void printSentInfo() {
 		ch.Info();
 		efiPrintf("--------------------");
 	}
+#endif // EFI_SENT_SUPPORT
 }
 
 /* Don't be confused: this actually returns throttle body position */
