@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - Rearrange & simplify trigger configuration UI #5077
  - Selectable CanBus channel for WBO inputs #5028
  - STM32Cube v2.13 #5135
+ - Native (modern, fancy, digital) SENT TPS input #5079
 
 ### Breaking Changes
  - rusefi_default_bundle.zip was replaced by rusefi_bundle_f407-discovery.zip #5078
