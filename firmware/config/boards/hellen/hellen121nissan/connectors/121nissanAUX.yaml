@@ -1,0 +1,39 @@
+pins:
+  - pin: aux2
+    class: outputs
+    # H144_OUT_PWM4
+    id: C8
+    ts_name: 2 Aux Low 3
+    function: Aux Low 3
+
+  - pin: aux3
+    class: outputs
+    # H144_OUT_PWM3
+    id: C7
+    ts_name: 3 Aux Low 2
+    function: Aux Low 2
+
+  - pin: aux8
+    class: outputs
+    # H144_OUT_PWM2
+    id: C6
+    ts_name: 8 Aux Low 1
+    function: Aux Low 1
+
+
+info:
+  name: Aux
+  image:
+    file: 121nissanAUX.jpg
+  pins:
+    - pin: aux1
+      x: 29
+      y: 52
+
+    - pin: aux2
+      x: 79
+      y: 72
+
+    - pin: aux3
+      x: 129
+      y: 52

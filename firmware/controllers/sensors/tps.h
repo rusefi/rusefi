@@ -29,6 +29,9 @@ void grabTPSIsWideOpen();
 void grabPedalIsUp();
 void grabPedalIsWideOpen();
 
+void sentTpsDecode();
+bool isDigitalTps1();
+
 bool isTps1Error();
 bool isTps2Error();
 bool isPedalError();
