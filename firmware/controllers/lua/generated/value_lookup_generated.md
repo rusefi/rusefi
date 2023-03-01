@@ -997,9 +997,6 @@ For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 ### tpsDecelEnleanmentMultiplier
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
 
-### slowAdcAlpha
-ExpAverage alpha coefficient
-
 ### auxSerialSpeed
 
 
