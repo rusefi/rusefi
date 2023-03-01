@@ -152,3 +152,16 @@ TEST(etb, sentTpsIntegrated) {
 	initTps();
 	doInitElectronicThrottle();
 }
+
+TEST(etb, sentTpsIntegratedDecode) {
+	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+
+	engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
+
+	ASSERT_NEAR(20.246, decodeTpsSentValue(3000), EPS2D);
+
+	engineConfiguration->sentEtbType = SentEtbType::CUSTOM;
+	engineConfiguration->customSentTpsMin = 5000;
+	engineConfiguration->customSentTpsMax = 1000;
+	ASSERT_NEAR(75, decodeTpsSentValue(2000), EPS2D);
+}

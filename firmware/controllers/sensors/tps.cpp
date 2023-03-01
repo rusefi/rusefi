@@ -49,6 +49,15 @@ bool isPedalError() {
 
 extern SentTps sentTps;
 
+float decodeTpsSentValue(float sentValue) {
+    switch (engineConfiguration->sentEtbType) {
+        case SentEtbType::GM_TYPE_1:
+            return interpolateMsg("tps", /*x1*/0xE48,                                 /*y1*/0, /*x2*/0x1A0,                                  /*y2*/POSITION_FULLY_OPEN, /*x*/sentValue);
+        default:
+            return interpolateMsg("tps", /*x1*/engineConfiguration->customSentTpsMin, /*y1*/0, /*x2*/engineConfiguration->customSentTpsMax, /*y2*/POSITION_FULLY_OPEN, /*x*/sentValue);
+    }
+}
+
 void sentTpsDecode() {
 #if EFI_SENT_SUPPORT
     if (!isDigitalTps1()) {
@@ -56,15 +65,7 @@ void sentTpsDecode() {
     }
     // todo: move away from weird float API
     float sentValue = getSentValue(0);
-    float tpsValue;
-    switch (engineConfiguration->sentEtbType) {
-        case SentEtbType::GM_TYPE_1:
-            tpsValue = interpolateClamped(/*x1*/0xE48,                                /*y1*/0, /*x2*/0x1A0,                                  /*y2*/POSITION_FULLY_OPEN, /*x*/sentValue);
-            break;
-        default:
-            tpsValue = interpolateClamped(/*x1*/engineConfiguration->customSentTpsMin, /*y1*/0, /*x2*/engineConfiguration->customSentTpsMax, /*y2*/POSITION_FULLY_OPEN, /*x*/sentValue);
-            break;
-    }
+    float tpsValue = decodeTpsSentValue(sentValue);
 
     sentTps.setValidValue(tpsValue, getTimeNowNt());
 #endif // EFI_SENT_SUPPORT
