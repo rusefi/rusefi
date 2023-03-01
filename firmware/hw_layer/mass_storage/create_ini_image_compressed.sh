@@ -24,10 +24,10 @@ rm -f $IMAGE $IMAGE.gz
 # copy *FS_SIZE*KB of zeroes
 dd if=/dev/zero of=$IMAGE bs=1024 count=$FS_SIZE
 
-# create a FAT filesystem inside, name it RUSEFI
+# create a FAT filesystem inside, name it "FOME EFI"
 mkfs.fat $IMAGE
 # labels can be no longer than 11 characters
-fatlabel $IMAGE RUSEFI
+fatlabel $IMAGE "FOME EFI"
 
 
 

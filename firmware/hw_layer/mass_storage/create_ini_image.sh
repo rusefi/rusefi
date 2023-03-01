@@ -25,10 +25,10 @@ rm -f $ZIP $IMAGE
 # copy *FS_SIZE*KB of zeroes
 dd if=/dev/zero of=$IMAGE bs=1024 count=$FS_SIZE
 
-# create a FAT filesystem inside, name it RUSEFI
+# create a FAT filesystem inside, name it "FOME EFI"
 mkfs.fat -v -r 64 $IMAGE
 # labels can be no longer than 11 characters
-fatlabel $IMAGE RUSEFI
+fatlabel $IMAGE "FOME EFI"
 
 # -j option dumps all files in the root of the zip (instead of inside directories)
 zip -j $ZIP $FULL_INI
