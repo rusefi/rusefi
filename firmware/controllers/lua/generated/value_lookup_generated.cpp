@@ -669,8 +669,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tpsDecelEnleanmentThreshold;
 		case 1164012327:
 			return engineConfiguration->tpsDecelEnleanmentMultiplier;
-		case 70789688:
-			return engineConfiguration->slowAdcAlpha;
 		case 781749924:
 			return engineConfiguration->auxSerialSpeed;
 		case -1564912640:
@@ -2652,11 +2650,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 1164012327:
 	{
 		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
-		return;
-	}
-		case 70789688:
-	{
-		engineConfiguration->slowAdcAlpha = value;
 		return;
 	}
 		case 781749924:
