@@ -1,5 +1,5 @@
 pins:
-  - pin: GND
+  - pin: aux1
     ts_name: 1 GND
     function: GND
 
@@ -17,44 +17,44 @@ pins:
     ts_name: 3 Aux Low 2
     function: Aux Low 2
 
-  - pin: DIN3
+  - pin: aux4
     ts_name: 4 DIN 3
     function: DIN3
 
-  - pin: AIN3
+  - pin: aux5
     ts_name: 5 AIN 3
     function: AIN3
 
-  - pin: +12_RAW
-    ts_name: 6 +12_RAW
-    function: +12V
+  - pin: aux6
+    ts_name: 6 12RAW
+    function: 12V
 
-  - pin: DIN2
+  - pin: aux7
     ts_name: 7 DIN 2
     function: DIN 2
 
-  - pin: aux1
+  - pin: aux8
     class: outputs
     # H144_OUT_PWM2
     id: C6
     ts_name: 8 Aux Low 1
     function: Aux Low 1
 
-  - pin: DIN1
+  - pin: aux9
     ts_name: 9 DIN 1
     function: DIN1
 
-  - pin: AIN2
+  - pin: aux10
     ts_name: 10 AIN 2
     function: AIN 2
 
-  - pin: AIN1
+  - pin: aux11
     ts_name: 11 AIN 1
     function: AIN 1
 
-  - pin: +5VP
-    ts_name: 12 +5VP
-    function: +5VP
+  - pin: aux12
+    ts_name: 12 5VP
+    function: 5VP
 
 
 info:
@@ -62,41 +62,41 @@ info:
   image:
     file: 121nissanAUX.jpg
   pins:
-    - pin: GND
+    - pin: aux1
       x: 250
       y: 210
-    - pin: aux3
+    - pin: aux2
       x: 220
       y: 210
-    - pin: aux2
+    - pin: aux3
       x: 190
       y: 210
-    - pin: DIN3
+    - pin: aux4
       x: 160
       y: 210
-    - pin: AIN3
+    - pin: aux5
       x: 130
       y: 210
-    - pin: +12_RAW
+    - pin: aux6
       x: 105
       y: 210
 
-    - pin: DIN2
+    - pin: aux7
       x: 250
       y: 180
-    - pin: aux1
+    - pin: aux8
       x: 220
       y: 180
-    - pin: DIN1
+    - pin: aux9
       x: 190
       y: 180
-    - pin: AIN2
+    - pin: aux10
       x: 160
       y: 180
-    - pin: AIN1
+    - pin: aux11
       x: 135
       y: 180
-    - pin: +5VP
+    - pin: aux12
       x: 100
       y: 180
 
