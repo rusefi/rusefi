@@ -64,6 +64,7 @@ private:
 
 	/* fast channel shift register*/
 	uint32_t rxReg;
+	bool hasValidFast = false;
 	/* fast channel last received valid message */
 	uint32_t rxLast;
 

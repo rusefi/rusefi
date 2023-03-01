@@ -230,6 +230,7 @@ int sent_channel::Decoder(uint16_t clocks) {
 					{
 						/* Full packet with correct CRC has been received */
 						rxLast = rxReg;
+						hasValidFast = true;
 						/* TODO: add timestamp? */
 						ret = 1;
 					}
@@ -276,8 +277,10 @@ int sent_channel::GetMsg(uint32_t* rx) {
 		*rx = rxLast;
 	}
 
-	/* TODO: add check if any packet was received */
-	/* TODO: add check for time since last message reseived */
+    if (!hasValidFast) {
+        return -1;
+    }
+	/* TODO: add check for time since last message received */
 	return 0;
 }
 

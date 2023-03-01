@@ -120,5 +120,5 @@ TEST(sent, testFuelPressure) {
 TEST(sent, testNoMessages) {
     static sent_channel channel;
    	bool isError = channel.GetMsg(nullptr) != 0;
-   	ASSERT_FALSE(isError);
+   	ASSERT_TRUE(isError);
 }
