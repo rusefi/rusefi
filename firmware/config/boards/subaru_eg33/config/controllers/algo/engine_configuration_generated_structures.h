@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Feb 25 16:29:32 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Mar 01 21:10:17 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4402,11 +4402,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 3951
 	 */
-	uint8_t unusedA11lignmentFill_at_33[2];
-	/**
-	 * offset 3953
-	 */
 	SentEtbType sentEtbType;
+	/**
+	 * offset 3952
+	 */
+	uint16_t customSentTpsMin;
 	/**
 	 * need 4 byte alignment
 	units
@@ -4453,10 +4453,18 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e luaDigitalInputPinModes[LUA_DIGITAL_INPUT_COUNT];
 	/**
-	units
 	 * offset 3980
 	 */
-	uint8_t mainUnusedEnd[48];
+	uint16_t customSentTpsMax;
+	/**
+	 * offset 3982
+	 */
+	uint16_t unusedPaddingHere;
+	/**
+	units
+	 * offset 3984
+	 */
+	uint8_t mainUnusedEnd[44];
 };
 static_assert(sizeof(engine_configuration_s) == 4028);
 
@@ -5274,4 +5282,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Feb 25 16:29:32 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Mar 01 21:10:17 UTC 2023

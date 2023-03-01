@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Feb 20 16:55:30 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Mar 01 21:10:11 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -99,6 +99,8 @@ case SelectedGear::Reverse:
 }
 const char *getSentEtbType(SentEtbType value){
 switch(value) {
+case SentEtbType::CUSTOM:
+  return "CUSTOM";
 case SentEtbType::FORD_TYPE_1:
   return "FORD_TYPE_1";
 case SentEtbType::GM_TYPE_1:

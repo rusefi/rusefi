@@ -1543,6 +1543,9 @@ null
 ### acRelayAlternatorDutyAdder
 null
 
+### customSentTpsMin
+null
+
 ### ALSIdleAdd
 
 
@@ -1560,4 +1563,7 @@ For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%
 
 ### ppsSecondaryMaximum
 For Toyota ETCS-i, use ~69%
+
+### customSentTpsMax
+null
 

@@ -1033,6 +1033,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->alsEtbPosition;
 		case -908268760:
 			return engineConfiguration->acRelayAlternatorDutyAdder;
+		case -282198091:
+			return engineConfiguration->customSentTpsMin;
 		case -2021435668:
 			return engineConfiguration->ALSIdleAdd;
 		case 1232469673:
@@ -1045,6 +1047,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tpsSecondaryMaximum;
 		case -727657058:
 			return engineConfiguration->ppsSecondaryMaximum;
+		case -282198345:
+			return engineConfiguration->customSentTpsMax;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3626,6 +3630,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->acRelayAlternatorDutyAdder = (int)value;
 		return;
 	}
+		case -282198091:
+	{
+		engineConfiguration->customSentTpsMin = (int)value;
+		return;
+	}
 		case -2021435668:
 	{
 		engineConfiguration->ALSIdleAdd = (int)value;
@@ -3654,6 +3663,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -727657058:
 	{
 		engineConfiguration->ppsSecondaryMaximum = (int)value;
+		return;
+	}
+		case -282198345:
+	{
+		engineConfiguration->customSentTpsMax = (int)value;
 		return;
 	}
 	}

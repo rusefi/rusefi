@@ -1047,14 +1047,15 @@
 #define sensor_chart_e_SC_RPM_ACCEL 3
 #define sensor_chart_e_SC_TRIGGER 1
 #define SENT_INPUT_COUNT 1
-#define SentEtbType_auto_enum 0="NONE",2="FORD_TYPE_1",1="GM_TYPE_1"
-#define SentEtbType_enum "None", "GM type 1", "Ford type 1"
+#define SentEtbType_auto_enum 0="NONE",3="CUSTOM",2="FORD_TYPE_1",1="GM_TYPE_1"
+#define SentEtbType_CUSTOM 3
+#define SentEtbType_enum "None", "GM type 1", "Ford type 1", "Custom"
 #define SentEtbType_FORD_TYPE_1 2
 #define SentEtbType_GM_TYPE_1 1
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 2257795832
+#define SIGNATURE_HASH 180988204
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1331,7 +1332,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.03.01.kin.2257795832"
+#define TS_SIGNATURE "rusEFI master.2023.03.01.kin.180988204"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
