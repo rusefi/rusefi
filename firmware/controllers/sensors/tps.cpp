@@ -59,10 +59,10 @@ void sentTpsDecode() {
     float tpsValue;
     switch (engineConfiguration->sentEtbType) {
         case SentEtbType::GM_TYPE_1:
-            tpsValue = interpolateClamped(0, 0xE48, 100, 0x1A0, sentValue);
+            tpsValue = interpolateClamped(/*x1*/0xE48,                                /*y1*/0, /*x2*/0x1A0,                                  /*y2*/100, /*x*/sentValue);
             break;
         default:
-            tpsValue = interpolateClamped(0, engineConfiguration->customSentTpsMin, 100, engineConfiguration->customSentTpsMax, sentValue);
+            tpsValue = interpolateClamped(/*x1*/engineConfiguration->customSentTpsMin, /*y1*/0, /*x2*/engineConfiguration->customSentTpsMax, /*y2*/100, /*x*/sentValue);
             break;
     }
 
