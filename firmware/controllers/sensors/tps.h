@@ -22,6 +22,10 @@ constexpr inline int convertVoltageTo10bitADC(float voltage) {
 struct SentTps : public StoredValueSensor {
 	SentTps() : StoredValueSensor(SensorType::Tps1, MS2NT(200)) {
 	}
+
+	bool isRedundant() const override {
+		return true;
+	}
 };
 
 void grabTPSIsClosed();

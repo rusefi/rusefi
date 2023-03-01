@@ -137,3 +137,18 @@ TEST(etb, intermittentPps) {
 	etb->update();
 	EXPECT_NE(0, etb->etbErrorCode);
 }
+
+TEST(etb, sentTpsIntegrated) {
+	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+
+	engineConfiguration->sentInputPins[0] = Gpio::B3;
+	engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
+
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_3;
+
+	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
+
+	initTps();
+	doInitElectronicThrottle();
+}
