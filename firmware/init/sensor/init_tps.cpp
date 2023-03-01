@@ -203,10 +203,15 @@ void initTps() {
 			tpsSecondaryMaximum = 20;
 		}
 
-		analogTps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
-			{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, min, max },
-			{ engineConfiguration->tps1_2AdcChannel, (float)engineConfiguration->tps1SecondaryMin, (float)engineConfiguration->tps1SecondaryMax, min, max }
-		);
+
+        if (isDigitalTps1()) {
+            sentTps.Register();
+        } else {
+		    analogTps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
+    			{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, min, max },
+	    		{ engineConfiguration->tps1_2AdcChannel, (float)engineConfiguration->tps1SecondaryMin, (float)engineConfiguration->tps1SecondaryMax, min, max }
+		    );
+		}
 
 		tps2.init(isFordTps, &fordTps2, tpsSecondaryMaximum,
 			{ engineConfiguration->tps2_1AdcChannel, (float)engineConfiguration->tps2Min, (float)engineConfiguration->tps2Max, min, max },

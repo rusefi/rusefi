@@ -45,3 +45,6 @@ bool isTps2Error() {
 bool isPedalError() {
     return !Sensor::get(SensorType::AcceleratorPedal).Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 }
+
+void sentTpsDecode() {
+}

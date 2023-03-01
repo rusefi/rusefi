@@ -580,6 +580,7 @@ static void SentDecoderThread(void*) {
 
 
 					/* Call high level decoder from here */
+					sentTpsDecode();
 				}
 			}
 		}
