@@ -9,6 +9,10 @@ on:
         description: 'LTS Build'
         required: false
         type: boolean
+      bundle:
+        description: 'Make full firmware bundle'
+        returned: false
+        type: boolean
 
 jobs:
   build-firmware:
@@ -239,27 +243,27 @@ jobs:
     #       echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
     #     fi
 
-    # Build rusEFI console
-    - name: Build console
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
-      run: bash misc/jenkins/build_java_console.sh
-
-    # Build the simulator
-    - name: Build simulator
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
-      # 'OS="Windows_NT"' allows us to build Windows executable on unix
-      run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
-
     # Build the firmware!
     - name: Build Firmware
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
 
+    # Build rusEFI console
+    - name: Build console
+      if: ${{ inputs.bundle || inputs.lts }}
+      run: bash misc/jenkins/build_java_console.sh
+
+    # Build the simulator
+    - name: Build Windows simulator
+      if: ${{ inputs.bundle || inputs.lts }}
+      # 'OS="Windows_NT"' allows us to build Windows executable on unix
+      run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
+
     - name: Package Bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master'  ) || inputs.lts }}
+      if: ${{ inputs.bundle || inputs.lts }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
     # - name: Upload .ini files
-    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
+    #   if: ${{ inputs.bundle || inputs.lts }}
     #   working-directory: ./firmware/tunerstudio/generated
     #   run: |
     #     ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
@@ -293,14 +297,14 @@ jobs:
     #     path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
+      if: ${{ inputs.bundle || inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
         name: fome_bundle_${{matrix.build-target}}.zip
-        path: ./artifacts/fome_bundle*.zip
+        path: ./artifacts/fome_bundle_${{matrix.build-target}}.zip
 
     # - name: Upload autoupdate bundle
-    #   if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
+    #   if: ${{ inputs.bundle || inputs.lts }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_bundle_${{matrix.build-target}}_autoupdate.zip
