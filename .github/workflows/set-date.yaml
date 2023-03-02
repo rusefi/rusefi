@@ -23,17 +23,12 @@ jobs:
     - name: Check last date
       run: if [ "$(git log -1 --pretty=%B)" = "Update date" ]; then echo "skip=true" >> $GITHUB_ENV; fi
 
-    - name: Install Tools
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./.github/workflows/
-      run: |
-        sudo ./add-ubuntu-latest-apt-mirrors.sh
-        sudo apt-get install subversion
-
-    - name: Update version header in git
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./firmware/
-      run: bash update_version.sh
+    # - name: Install Tools
+    #   if: ${{ env.skip != 'true' }}
+    #   working-directory: ./.github/workflows/
+    #   run: |
+    #     sudo ./add-ubuntu-latest-apt-mirrors.sh
+    #     sudo apt-get install subversion
 
     - name: Write Date File
       if: ${{ env.skip != 'true' }}
