@@ -262,6 +262,15 @@ jobs:
       if: ${{ inputs.bundle || inputs.lts }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
+    # - name: Upload HyperTuner .ini
+    #   uses: hyper-tuner/ini-upload-action@v1
+    #   with:
+    #     api-url: "${{ secrets.HYPER_TUNER_INI_UPLOAD_URL }}"
+    #     username: "${{ secrets.HYPER_TUNER_INI_UPLOAD_USERNAME }}"
+    #     password: "${{ secrets.HYPER_TUNER_INI_UPLOAD_PASSWORD }}"
+    #     path: ./firmware/tunerstudio/generated/${{matrix.ini-file}}
+    #     ecosystem: fome
+
     # - name: Upload .ini files
     #   if: ${{ inputs.bundle || inputs.lts }}
     #   working-directory: ./firmware/tunerstudio/generated
