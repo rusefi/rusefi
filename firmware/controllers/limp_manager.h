@@ -112,6 +112,8 @@ public:
 	LimpState allowInjection() const;
 	LimpState allowIgnition() const;
 
+	float getTimeSinceAnyCut() const;
+
 	bool allowTriggerInput() const;
 
 	// Other subsystems call these APIs to indicate a problem has occurred
@@ -140,6 +142,9 @@ private:
 
 	// Ignition switch state
 	bool m_ignitionOn = false;
+
+	// Tracks how long since a cut (ignition or fuel) was active for any reason
+	Timer m_lastCutTime;
 };
 
 LimpManager * getLimpManager();

@@ -181,6 +181,11 @@ todo AndreiKA this change breaks 22 unit tests?
 
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;
+
+	if (!m_transientAllowInjection || !m_transientAllowIgnition) {
+		// Tracks the last time any cut happened
+		m_lastCutTime.reset(nowNt);
+	}
 }
 
 void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
@@ -233,4 +238,8 @@ LimpState LimpManager::allowIgnition() const {
 		return {false, m_transientAllowIgnition.clearReason};
 	}
 	return {true, ClearReason::None};
+}
+
+float LimpManager::getTimeSinceAnyCut() const {
+	return m_lastCutTime.getElapsedSeconds();
 }
