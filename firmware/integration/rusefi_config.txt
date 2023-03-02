@@ -113,20 +113,10 @@ struct_no_prefix engine_configuration_s
 #define SENT_INPUT_COUNT 1
 
 #define LUA_PWM_COUNT 8
-#define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_DIGITAL_INPUT_COUNT 8
-#define LUA_GAUGE_COUNT 2
-
-! V engines or flat engines would have pairs of shafts with same trigger shape and target position
-#define BANKS_COUNT 2
-#define CAMS_PER_BANK 2
-
-#define GEARS_COUNT 8
 
 #define VSS_FILTER_MIN 3
 #define VSS_FILTER_MAX 200
-
-#define CAM_INPUTS_COUNT @@BANKS_COUNT@@*@@CAMS_PER_BANK@@
 
 ! https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
 #define GAP_TRACKING_LENGTH 18
@@ -228,25 +218,8 @@ struct_no_prefix engine_configuration_s
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
 
-! These are used currently only for output channels - but could be for config as well
-#define PACK_MULT_PRESSURE 30
-#define PACK_MULT_HIGH_PRESSURE 10
-#define PACK_MULT_PERCENT 100
-#define PACK_MULT_TEMPERATURE 100
-#define PACK_ADD_TEMPERATURE 40
-#define PACK_MULT_MS 300
 #define PACK_MULT_VSS 100
-#define PACK_MULT_AFR 1000
-#define PACK_MULT_LAMBDA 10000
-#define PACK_MULT_ANGLE 50
-#define PACK_MULT_VOLTAGE 1000
-#define PACK_MULT_MASS_FLOW 10
-#define TPS_2_BYTE_PACKING_MULT 100
-#define PACK_MULT_AFR_CFG 10
-#define PACK_MULT_LAMBDA_CFG 147
-#define PACK_MULT_FUEL_MASS 100
-#define PACK_PERCENT_BYTE_MULT 100.0
-#define PACK_MULT_FUEL_FLOW 200
+
 #define SCRIPT_TABLE_8 8
 
 #define SCRIPT_CURVE_8 8
@@ -1782,10 +1755,7 @@ struct blend_table_s
 	uint8_t[8] autoscale blendValues;;"%", 0.5, 0, 0, 100, 1
 end_struct
 
-#define IGN_BLEND_COUNT 4
 blend_table_s[IGN_BLEND_COUNT iterate] ignBlends
-
-#define VE_BLEND_COUNT 4
 blend_table_s[VE_BLEND_COUNT iterate] veBlends
 
 end_struct
