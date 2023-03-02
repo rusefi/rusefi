@@ -235,7 +235,6 @@ CSRC =  check.c \
   $(BOARDSRC) \
   $(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
   $(CHIBIOS)/os/various/evtimer.c \
-  $(DEV_SRC) \
   $(BOOTLOADERSRC) \
   ${HW_MASS_STORAGE_SRC_C} \
   $(HW_LAYER_EMS) \

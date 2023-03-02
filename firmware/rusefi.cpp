@@ -121,7 +121,6 @@
 #include "trigger_structure.h"
 #include "hardware.h"
 
-#include "rfi_perftest.h"
 #include "rusefi.h"
 #include "memstreams.h"
 
@@ -287,10 +286,6 @@ void runRusEfiWithConfig() {
 
 		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
 		rememberCurrentConfiguration();
-
-	#if EFI_PERF_METRICS
-		initTimePerfActions();
-	#endif
 
 		runSchedulingPrecisionTestIfNeeded();
 	}
