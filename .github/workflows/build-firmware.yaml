@@ -346,7 +346,7 @@ jobs:
       if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' && github.event_name != 'schedule' || contains(github.event.head_commit.message, 'only:') }}
       run: |
         # if the commit message contains `only:`, get the part after the semicolon and check if it matches the build target.
-        read -d ' ' MSG << EOM || true
+        read -d '' MSG << EOM || true
         ${{ github.event.head_commit.message }}
         EOM
         if echo $MSG | grep "only:"; then
