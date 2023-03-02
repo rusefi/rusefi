@@ -12,11 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 2
-
-    - name: Checkout Submodules
-      run: |
-        git submodule update --init --depth=1 hardware/rusefi_lib
+        submodules: true
 
     - name: Install sshpass, kicad, and tk bindings
       working-directory: ./.github/workflows/

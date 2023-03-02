@@ -178,18 +178,8 @@ jobs:
       run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
 
     - uses: actions/checkout@v3
-
-    - name: Checkout Submodules
-      run: |
-        git submodule update --init --depth=1 firmware/ChibiOS
-        git submodule update --init --depth=1 firmware/ChibiOS-Contrib
-        git submodule update --init --depth=1 firmware/libfirmware
-        git submodule update --init --depth=1 firmware/ext/lua
-        git submodule update --init --depth=1 firmware/ext/uzlib
-        git submodule update --init --depth=1 firmware/ext/openblt
-        git submodule update --init --depth=1 firmware/controllers/lua/luaaa
-        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
-        git submodule update --init --depth=1 java_console/luaformatter
+      with:
+        submodules: true
 
     # - uses: actions/setup-java@v3
     #   with:
