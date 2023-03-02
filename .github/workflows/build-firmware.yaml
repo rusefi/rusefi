@@ -9,10 +9,7 @@ on:
         description: 'LTS Build'
         required: false
         type: boolean
-      uploadBundle:
-        description: 'Upload Bundle'
-        required: false
-        type: boolean
+
 jobs:
   build-firmware:
     runs-on: ubuntu-latest-selfhost
@@ -242,24 +239,24 @@ jobs:
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
 
-    - name: Configs Set SSH variables
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      run: |
-        if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ] || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
-          echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
-          echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
-          echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
-        fi
+    # - name: Configs Set SSH variables
+    #   env:
+    #     ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    #   run: |
+    #     if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ] || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
+    #       echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+    #       echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+    #       echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
+    #     fi
 
     # Build rusEFI console
     - name: Build console
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts || inputs.uploadBundle }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
       run: bash misc/jenkins/build_java_console.sh
 
     # Build the simulator
     - name: Build simulator
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts || inputs.uploadBundle }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
@@ -268,7 +265,7 @@ jobs:
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
 
     - name: Package Bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master'  ) || inputs.lts || inputs.uploadBundle }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master'  ) || inputs.lts }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
     # - name: Upload .ini files
@@ -306,7 +303,7 @@ jobs:
     #     path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
-      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts || inputs.uploadBundle }}
+      if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || inputs.lts }}
       uses: actions/upload-artifact@v3
       with:
         name: fome_bundle_${{matrix.build-target}}.zip
