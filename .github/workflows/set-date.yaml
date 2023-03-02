@@ -15,7 +15,7 @@ on:
 jobs:
   update-date:
     runs-on: ubuntu-latest-selfhost
-    if: ${{ github.repository == 'rusefi/rusefi' }}
+    if: ${{ github.repository == 'FOME-Tech/fome-fw' }}
 
     steps:
     - uses: actions/checkout@v3
