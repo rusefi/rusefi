@@ -93,6 +93,13 @@ bool shouldUpdateCorrection(SensorType sensor) {
 		return false;
 	}
 
+	// Pause if some other cut was active recently
+	auto timeSinceFuelCut = engine->module<LimpManager>()->getTimeSinceAnyCut();
+	// TODO: should duration this be configurable?
+	if (timeSinceFuelCut < 2) {
+		return false;
+	}
+
 	return true;
 }
 

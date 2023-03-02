@@ -48,7 +48,7 @@ void LimpManager::updateRevLimit(int rpm) {
 	m_revLimitLow = m_revLimit - engineConfiguration->rpmHardLimitHyst;
 
 	m_timingRetard = interpolateClamped(m_revLimitLow, 0, m_revLimit, engineConfiguration->rpmSoftLimitTimingRetard, rpm);
-	
+
 	percent_t fuelAdded = interpolateClamped(m_revLimitLow, 0, m_revLimit, engineConfiguration->rpmSoftLimitFuelAdded, rpm);
 	m_fuelCorrection = 1.0f + fuelAdded / 100;
 }
@@ -182,6 +182,11 @@ todo AndreiKA this change breaks 22 unit tests?
 
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;
+
+	if (!m_transientAllowInjection || !m_transientAllowIgnition) {
+		// Tracks the last time any cut happened
+		m_lastCutTime.reset(nowNt);
+	}
 }
 
 void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
@@ -246,4 +251,8 @@ float LimpManager::getLimitingFuelCorrection() const {
 	if (!engineConfiguration->cutFuelOnHardLimit)
 		return 1.0f;	// no correction
 	return m_fuelCorrection;
+}
+
+float LimpManager::getTimeSinceAnyCut() const {
+	return m_lastCutTime.getElapsedSeconds();
 }
