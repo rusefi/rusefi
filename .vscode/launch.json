@@ -58,7 +58,7 @@
 			"executable": "${workspaceRoot}/firmware/build/fome.elf",
 			"device": "STM32F407V",
 			"v1": false,
-			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F405.svd",
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/STM32F405.svd",
 			"servertype": "openocd",
 			"configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
 			"rtos": "auto"
@@ -71,7 +71,7 @@
 			"executable": "${workspaceRoot}/firmware/build/fome.elf",
 			"device": "STM32F429Z",
 			"v1": false,
-			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F427.svd",
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/STM32F427.svd",
 			"servertype": "openocd",
 			"configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
 			"rtos": "auto"
@@ -84,7 +84,7 @@
 			"executable": "${workspaceRoot}/firmware/build/fome.elf",
 			"device": "STM32F767V",
 			"v1": false,
-			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F7x7.svd",
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/STM32F7x7.svd",
 			"servertype": "openocd",
 			"configFiles": ["interface/stlink.cfg", "target/stm32f7x.cfg"],
 			"rtos": "auto"
@@ -97,7 +97,7 @@
 			"executable": "${workspaceRoot}/firmware/build/fome.elf",
 			"device": "STM32H743V",
 			"v1": false,
-			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32H743x.svd",
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/STM32H743x.svd",
 			"servertype": "openocd",
 			"configFiles": ["interface/stlink.cfg", "target/stm32h7x.cfg"],
 			"rtos": "auto"
