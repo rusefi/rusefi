@@ -88,8 +88,6 @@ public class ConsoleUI {
 
         tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
 
-        tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
-
         LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
         tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
 
