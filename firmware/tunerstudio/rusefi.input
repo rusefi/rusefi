@@ -3588,7 +3588,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Enable flood clear",				isCylinderCleanupEnabled
 		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
 		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
-		field = "Use Flex Fuel cranking table",			flexCranking
+		field = "Use Flex Fuel cranking table",			flexCranking, { flexSensorPin != @@ADC_CHANNEL_NONE@@ }
 
 ;			Cranking->Cranking Settings
 	dialog = crankingDialog, "Cranking Settings"
