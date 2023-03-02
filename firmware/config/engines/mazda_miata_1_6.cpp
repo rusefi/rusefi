@@ -361,9 +361,11 @@ void setMiataNa6_Proteus() {
 
 	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_ANALOG_VOLT_2;
 
-	engineConfiguration->afr.hwChannel = PROTEUS_IN_ANALOG_VOLT_8;
-
 	engineConfiguration->acSwitch = PROTEUS_DIGITAL_4;
+
+	// Built in wideband controller on bus 2
+	engineConfiguration->enableAemXSeries = true;
+	engineConfiguration->widebandOnSecondBus = true;
 
 	// Outputs
 	engineConfiguration->fuelPumpPin = PROTEUS_LS_9;
