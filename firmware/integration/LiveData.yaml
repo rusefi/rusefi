@@ -17,19 +17,19 @@ Usages:
   - name: output_channels
     java: TsOutputs.java
     folder: console/binary
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->outputChannels"
 
   - name: fuel_computer
     java: FuelComputer.java
     folder: controllers/algo/fuel
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->fuelComputer"
 
   - name: ignition_state
     java: IgnitionState.java
     folder: controllers/algo
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->ignitionState"
 
   - name: knock_controller
@@ -53,13 +53,13 @@ Usages:
   - name: antilag_system_state
     java: AntilagSystem.java
     folder: controllers/algo
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     output_name: als
 
   - name: boost_control
     java: BoostControl.java
     folder: controllers/actuators
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     output_name: boost
     constexpr: "engine->boostController"
     conditional_compilation: "EFI_BOOST_CONTROL"
@@ -67,7 +67,7 @@ Usages:
   - name: ac_control
     java: AcControl.java
     folder: controllers/actuators
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     output_name: ac
 
   - name: fan_control
@@ -93,7 +93,7 @@ Usages:
   - name: engine_state
     java: EngineState.java
     folder: controllers/algo
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->engineState"
 
   - name: tps_accel_state
@@ -109,13 +109,13 @@ Usages:
   - name: trigger_state
     java: TriggerState.java
     folder: controllers/trigger
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     output_name: [ "trg", "vvt1i", "vvt1e", "vvt2i", "vvt2e" ]
 
   - name: trigger_state_primary
     java: TriggerStatePrimary.java
     folder: controllers/trigger
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
 
   - name: wall_fuel_state
     java: WallFuelState.java
@@ -129,7 +129,7 @@ Usages:
   - name: electronic_throttle
     java: ElectronicThrottle.java
     folder: controllers/actuators
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     output_name: [ "etb1", "etb2" ]
 
   - name: wideband_state
@@ -140,10 +140,10 @@ Usages:
   - name: dc_motors
     java: DcMotors.java
     folder: controllers/actuators
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->dc_motors"
 
   - name: sent_state
     java: SentState.java
     folder: controllers/sensors/
-    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
