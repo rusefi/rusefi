@@ -6,6 +6,13 @@ pins:
     ts_name: AuxHigh1
     function: AuxHigh1
 
+  - pin: auxpp1
+    # H144_OUT_IO11
+    id: G2
+    class: outputs
+    ts_name: AuxPP1
+    function: AuxPP1
+
   - pin: A2
     function: +12V from main relay
     type: 12v

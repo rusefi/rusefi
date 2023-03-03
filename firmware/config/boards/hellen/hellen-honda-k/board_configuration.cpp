@@ -116,7 +116,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->brakePedalPin = H144_IN_CAM;
 	engineConfiguration->acRelayPin = H144_LS_5;
-    engineConfiguration->tachOutputPin = H144_OUT_IO5;
+    engineConfiguration->tachOutputPin = H144_OUT_IO11;
     // A/C switch on k-line
 
 	// "required" hardware is done - set some reasonable defaults
