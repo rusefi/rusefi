@@ -113,8 +113,6 @@ protected:
 #endif // HAL_USE_UART
 
 #define CRC_VALUE_SIZE 4
-// todo: double-check this
-#define CRC_WRAPPING_SIZE (CRC_VALUE_SIZE + 3)
 
 // that's 1 second
 #define BINARY_IO_TIMEOUT TIME_MS2I(1000)
