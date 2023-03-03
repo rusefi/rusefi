@@ -406,18 +406,19 @@ void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
  * External logger is needed because at this point our logger is not yet initialized
  */
 void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, const TriggerConfiguration& triggerConfig) {
+    const trigger_config_s &triggerType = triggerConfig.TriggerType;
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
-	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig.TriggerType.type), (int)triggerConfig.TriggerType.type);
+	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerType.type), (int)triggerType.type);
 #endif
 
 	shapeDefinitionError = false;
 
-	switch (triggerConfig.TriggerType.type) {
+	switch (triggerType.type) {
 	case TT_TOOTHED_WHEEL:
-		initializeSkippedToothTrigger(this, triggerConfig.TriggerType.customTotalToothCount,
-				triggerConfig.TriggerType.customSkippedToothCount, triggerOperationMode, SyncEdge::RiseOnly);
+		initializeSkippedToothTrigger(this, triggerType.customTotalToothCount,
+				triggerType.customSkippedToothCount, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
@@ -724,7 +725,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	default:
 		setShapeDefinitionError(true);
-		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig.TriggerType.type);
+		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerType.type);
 	}
 
 	/**
