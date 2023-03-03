@@ -1,4 +1,10 @@
 pins:
+  - pin: auxhigh1
+    # H144_OUT_IO5
+    id: D2
+    class: outputs
+    ts_name: AuxHigh1
+    function: AuxHigh1
 
   - pin: A2
     function: +12V from main relay
