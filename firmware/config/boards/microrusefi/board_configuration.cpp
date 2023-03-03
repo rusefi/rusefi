@@ -31,7 +31,6 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	// todo: I wonder if these are not right in light of the network rename and the +12 VP issue?
 	engineConfiguration->ignitionPins[0] = Gpio::D4;
 	engineConfiguration->ignitionPins[1] = Gpio::D3;
 	engineConfiguration->ignitionPins[2] = Gpio::D2;
