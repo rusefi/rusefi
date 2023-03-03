@@ -434,19 +434,21 @@ typedef enum {
 	Force_4_bytes_size_trigger_type = 70000,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
 
+typedef enum {
+	TS_GRAB_TPS_CLOSED = 2,
+	TS_GRAB_TPS_WOT = 3,
+	TS_GRAB_PEDAL_UP = 6,
+	TS_GRAB_PEDAL_WOT = 7,
+	TS_RESET_TLE8888 = 8,
+	TS_WRITE_FLASH = 10,
+} ts_14_command;
 
 typedef enum {
 	TS_DEBUG_MODE = 0,
 	TS_COMMAND_1 = 1,
-	TS_GRAB_TPS_CLOSED = 2,
-	TS_GRAB_TPS_WOT = 3,
 	TS_COMMAND_4 = 4,
 	TS_COMMAND_5 = 5,
-	TS_GRAB_PEDAL_UP = 6,
-	TS_GRAB_PEDAL_WOT = 7,
-	TS_RESET_TLE8888 = 8,
 	TS_COMMAND_9 = 9,
-	TS_WRITE_FLASH = 10,
 	TS_COMMAND_11 = 11,
 	TS_COMMAND_12 = 12,
 	TS_COMMAND_13 = 13,

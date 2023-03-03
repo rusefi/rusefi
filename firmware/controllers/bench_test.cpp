@@ -339,6 +339,7 @@ static void handleBenchCategory(uint16_t index) {
 }
 
 static void handleCommandX14(uint16_t index) {
+// todo: define ts_14_command magic constants and use those in rusefi.input file!
 	switch (index) {
 	case TS_GRAB_TPS_CLOSED:
 		grabTPSIsClosed();
@@ -359,7 +360,7 @@ static void handleCommandX14(uint16_t index) {
 		tle8888_req_init();
 #endif
 		return;
-	case 0xA:
+	case TS_WRITE_FLASH:
 		// cmd_write_config
 #if EFI_INTERNAL_FLASH
 		writeToFlashNow();
