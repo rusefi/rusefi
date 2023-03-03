@@ -84,7 +84,7 @@ static void runChprintfTest() {
 }
 
 void rusEfiFunctionalTest(void) {
-	printToConsole("Running rusEfi simulator version:");
+	printToConsole("Running rusEFI simulator version:");
 	static char versionBuffer[20];
 	itoa10(versionBuffer, (int)getRusEfiVersion());
 	printToConsole(versionBuffer);
