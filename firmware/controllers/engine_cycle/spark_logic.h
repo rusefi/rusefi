@@ -13,5 +13,3 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event);
 int getNumberOfSparks(ignition_mode_e mode);
 percent_t getCoilDutyCycle(int rpm);
 void initializeIgnitionActions();
-
-int isIgnitionTimingError(void);

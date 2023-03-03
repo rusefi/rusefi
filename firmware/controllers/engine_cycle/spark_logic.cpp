@@ -30,13 +30,7 @@ extern bool verboseMode;
 	extern bool printFuelDebug;
 #endif // EFI_PRINTF_FUEL_DETAILS
 
-static cyclic_buffer<int> ignitionErrorDetection;
-
 static const char *prevSparkName = nullptr;
-
-int isIgnitionTimingError(void) {
-	return ignitionErrorDetection.sum(6) > 4;
-}
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING

@@ -220,12 +220,6 @@ static Logging logicAnalyzerLogger("logic analyzer", logicAnalyzerBuffer, sizeof
  * todo: is this mostly dead code?
  */
 void updateDevConsoleState(void) {
-	// todo: make SWO work
-//	char *msg = "hello\r\n";
-//	for(int i=0;i<strlen(msg);i++) {
-//		ITM_SendChar(msg[i]);
-//	}
-
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
@@ -342,7 +336,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			enginePins.communicationLedPin.setValue(1);
 
 	#if EFI_ENGINE_CONTROL
-			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError()) {
+			if (lowVBatt || isTriggerErrorNow()) {
 				// todo: at the moment warning codes do not affect warning LED?!
 				enginePins.warningLedPin.setValue(1);
 			}
