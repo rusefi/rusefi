@@ -161,15 +161,16 @@ void processLastKnockEvent() {
 
 	float sumSq = 0;
 
-	// todo: reduce magic constants. engineConfiguration->adcVcc?
-	constexpr float ratio = 3.3f / 4095.0f;
+	constexpr float vcc = 3.3f;
+
+	// Ratio in units of volts per ADC count
+	constexpr float ratio = vcc / 4095.0f;
 
 	size_t localCount = sampleCount;
 
 	// Prepare the steady state at vcc/2 so that there isn't a step
 	// when samples begin
-	// todo: reduce magic constants. engineConfiguration->adcVcc?
-	knockFilter.cookSteadyState(3.3f / 2);
+	knockFilter.cookSteadyState(vcc / 2);
 
 	// Compute the sum of squares
 	for (size_t i = 0; i < localCount; i++) {
