@@ -107,14 +107,14 @@ public class TestingUtils {
     public static EngineChart nextChart(CommandQueue commandQueue) {
         long start = System.currentTimeMillis();
         EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue));
-        FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
+        // FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
         return chart;
     }
 
     static String getNextWaveChart(CommandQueue commandQueue) {
         IoUtil.sendBlockingCommand(Fields.CMD_RESET_ENGINE_SNIFFER, commandQueue);
         String result = getEngineChart(commandQueue);
-        FileLog.MAIN.logLine("current chart: " + result);
+        // FileLog.MAIN.logLine("current chart: " + result);
         return result;
     }
 
@@ -129,7 +129,7 @@ public class TestingUtils {
 
         final AtomicReference<String> result = new AtomicReference<>();
 
-        FileLog.MAIN.logLine("waiting for next chart");
+        // FileLog.MAIN.logLine("waiting for next chart");
         commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
