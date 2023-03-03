@@ -139,13 +139,28 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 #endif /* EFI_PROD_CODE */
 }
 
+static bool hackVvtSim = false;
+
+static TriggerWaveform * getTriggerForEmulation() {
+#if EFI_SIMULATOR
+    if (hackVvtSim) {
+        static TriggerWaveform mShape;
+        trigger_config_s triggerType;
+        triggerType.type = TT_MITSUBISHI_4G93;
+        mShape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, triggerType);
+        return &mShape;
+    }
+#endif
+    return &engine->triggerCentral.triggerShape;
+}
+
 static void startSimulatedTriggerSignal() {
 	// No need to start more than once
 	if (hasInitTriggerEmulator) {
 		return;
 	}
 
-	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
+	TriggerWaveform *s = getTriggerForEmulation();
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 	triggerEmulatorSignal.weComplexInit("position sensor",
 			&engine->executor,
@@ -187,12 +202,22 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 }
 
+static void hackVvtSimulation() {
+    disableTriggerStimulator();
+    hackVvtSim = true;
+    enableTriggerStimulator();
+}
+
 void initTriggerEmulator() {
 	efiPrintf("Emulating %s", getEngine_type_e(engineConfiguration->engineType));
 
 	startTriggerEmulatorPins();
 
 	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
+#if 0
+    hackVvtSimulation();
+#endif
+	addConsoleAction("sim_mitsu", hackVvtSimulation);
 }
 
 #endif /* EFI_UNIT_TEST */
