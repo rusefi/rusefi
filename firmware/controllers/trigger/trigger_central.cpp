@@ -1009,7 +1009,7 @@ void onConfigurationChangeTriggerCallback() {
 }
 
 static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
-	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
+	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config.TriggerType);
 	shape.initializeSyncPoint(initState, config);
 }
 
@@ -1058,7 +1058,7 @@ void TriggerCentral::updateWaveform() {
 		vvtTriggerConfiguration[camIndex].update();
 	}
 
-	triggerShape.initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration);
+	triggerShape.initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration.TriggerType);
 
 	/**
 	 * this is only useful while troubleshooting a new trigger shape in the field

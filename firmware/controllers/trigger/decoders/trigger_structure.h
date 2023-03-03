@@ -60,7 +60,7 @@ class TriggerConfiguration;
 class TriggerWaveform {
 public:
 	TriggerWaveform();
-	void initializeTriggerWaveform(operation_mode_e triggerOperationMode, const TriggerConfiguration& triggerConfig);
+	void initializeTriggerWaveform(operation_mode_e triggerOperationMode, const trigger_config_s &triggerType);
 	void setShapeDefinitionError(bool value);
 
 	/**
