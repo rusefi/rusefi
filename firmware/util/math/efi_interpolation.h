@@ -55,7 +55,7 @@ void ensureArrayIsAscendingOrDefault(const char* msg, const TValue (&values)[TSi
  * See also ensureArrayIsAscending
  */
 template<typename kType>
-int findIndexMsgExt(const char *msg, const kType array[], int size, kType value) {
+int findIndexMsg(const char *msg, const kType array[], int size, kType value) {
 	float fvalue = (float)value;
 	if (cisnan(fvalue)) {
 		firmwareError(ERROR_NAN_FIND_INDEX, "NaN in findIndex%s", msg);
@@ -107,8 +107,6 @@ int findIndexMsgExt(const char *msg, const kType array[], int size, kType value)
 
 	return middle;
 }
-
-#define findIndexMsg(msg, array, size, value) findIndexMsgExt(msg, array, size, value)
 
 /**
  * Sets specified value for specified key in a correction curve
