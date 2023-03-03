@@ -111,30 +111,6 @@ static void resetTs() {
 	memset(&tsState, 0, sizeof(tsState));
 }
 
-static void printTsStats(void) {
-#if EFI_PROD_CODE
-#ifdef EFI_CONSOLE_RX_BRAIN_PIN
-	efiPrintf("Primary UART RX %s", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
-	efiPrintf("Primary UART TX %s", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
-#endif
-
-	if (false) {
-		// todo: is this code needed somewhere else?
-		efiPrintf("TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
-
-		efiPrintf("TS TX on %s @%d", hwPortname(engineConfiguration->binarySerialTxPin),
-				engineConfiguration->tunerStudioSerialSpeed);
-	}
-#endif /* EFI_PROD_CODE */
-
-	printErrorCounters();
-}
-
-static void setTsSpeed(int value) {
-	engineConfiguration->tunerStudioSerialSpeed = value;
-	printTsStats();
-}
-
 #endif // EFI_TUNER_STUDIO
 
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
@@ -415,7 +391,7 @@ void TunerStudio::handleQueryCommand(TsChannelBase* tsChannel, ts_response_forma
 	tsState.queryCommandCounter++;
 #if EFI_TUNER_STUDIO_VERBOSE
 	efiPrintf("got S/H (queryCommand) mode=%d", mode);
-	printTsStats();
+	printErrorCounters();
 #endif
 	const char *signature = getTsSignature();
 	tsChannel->sendResponse(mode, (const uint8_t *)signature, strlen(signature) + 1);
@@ -830,9 +806,8 @@ void startTunerStudioConnectivity(void) {
 
 	memset(&tsState, 0, sizeof(tsState));
 
-	addConsoleAction("tsinfo", printTsStats);
+	addConsoleAction("tsinfo", printErrorCounters);
 	addConsoleAction("reset_ts", resetTs);
-	addConsoleActionI("set_ts_speed", setTsSpeed);
 	
 #if EFI_BLUETOOTH_SETUP
 	// module initialization start (it waits for disconnect and then communicates to the module)
