@@ -217,9 +217,9 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
         chart = nextChart();
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
-        assertWaveNull(msg, chart, EngineChart.SPARK_2);
+        assertWaveNotNull(msg, chart, EngineChart.SPARK_2);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_3);
-        assertWaveNull(msg, chart, EngineChart.SPARK_4);
+        assertWaveNotNull(msg, chart, EngineChart.SPARK_4);
 
         // todo: why is width precision so low here? is that because of loaded Windows with 1ms precision?
         double widthRatio = 0.25;
