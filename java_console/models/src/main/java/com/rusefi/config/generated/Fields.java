@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Mar 03 04:49:42 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Mar 03 06:26:15 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -992,6 +992,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 2069127556;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1197,7 +1198,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.03.f407-discovery.3149739919";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.03.f407-discovery.2069127556";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;
@@ -1780,7 +1781,6 @@ public class Fields {
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1200, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1200, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field NEVERINSTANTRPM = Field.create("NEVERINSTANTRPM", 1200, FieldType.BIT, 13).setBaseOffset(0);
-	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1200, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1200, FieldType.BIT, 15).setBaseOffset(0);
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1200, FieldType.BIT, 16).setBaseOffset(0);
 	public static final Field USEADVANCECORRECTIONSFORCRANKING = Field.create("USEADVANCECORRECTIONSFORCRANKING", 1200, FieldType.BIT, 17).setBaseOffset(0);
@@ -3105,7 +3105,6 @@ public class Fields {
 	ISMANUALSPINNINGMODE,
 	TWOWIREBATCHINJECTION,
 	NEVERINSTANTRPM,
-	TWOWIREBATCHIGNITION,
 	USEFIXEDBAROCORRFROMMAP,
 	USESEPARATEADVANCEFORCRANKING,
 	USEADVANCECORRECTIONSFORCRANKING,

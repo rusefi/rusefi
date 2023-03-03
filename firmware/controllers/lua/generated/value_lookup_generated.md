@@ -769,9 +769,6 @@ This is needed if your coils are individually wired and you wish to use batch in
 ### neverInstantRpm
 
 
-### twoWireBatchIgnition
-This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
-
 ### useFixedBaroCorrFromMap
 
 

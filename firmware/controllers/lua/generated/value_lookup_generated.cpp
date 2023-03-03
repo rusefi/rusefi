@@ -517,8 +517,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->twoWireBatchInjection;
 		case 240697653:
 			return engineConfiguration->neverInstantRpm;
-		case 454615641:
-			return engineConfiguration->twoWireBatchIgnition;
 		case 201676494:
 			return engineConfiguration->useFixedBaroCorrFromMap;
 		case 685453869:
@@ -2270,11 +2268,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 240697653:
 	{
 		engineConfiguration->neverInstantRpm = (int)value;
-		return;
-	}
-		case 454615641:
-	{
-		engineConfiguration->twoWireBatchIgnition = (int)value;
 		return;
 	}
 		case 201676494:
