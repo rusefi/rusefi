@@ -22,6 +22,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F8: return "A25 VTT CAM";
 		case Gpio::F9: return "A7 Crankshaft Sensor";
 		case Gpio::G14: return "E7 Main Relay Control";
+		case Gpio::G2: return "AuxPP1";
 		case Gpio::G3: return "E31 Check Engine";
 		case Gpio::G6: return "E1 Fuel Relay";
 		case Gpio::G7: return "B5 - Injector 1";
