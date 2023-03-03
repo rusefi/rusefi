@@ -57,7 +57,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequen
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
-PwmConfig triggerSignal;
+PwmConfig triggerEmulatorSignal;
 
 static int atTriggerVersion = 0;
 
@@ -89,11 +89,11 @@ void setTriggerEmulatorRPM(int rpm) {
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
 	 */
 	if (rpm == 0) {
-		triggerSignal.setFrequency(NAN);
+		triggerEmulatorSignal.setFrequency(NAN);
 	} else {
 		float rpmM = getRpmMultiplier(getEngineRotationState()->getOperationMode());
 		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
-		triggerSignal.setFrequency(rPerSecond);
+		triggerEmulatorSignal.setFrequency(rPerSecond);
 	}
 	engine->resetEngineSnifferIfInTestMode();
 
@@ -146,7 +146,7 @@ static void startSimulatedTriggerSignal() {
 
 	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
-	triggerSignal.weComplexInit("position sensor",
+	triggerEmulatorSignal.weComplexInit("position sensor",
 			&engine->executor,
 			&s->wave,
 			updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
@@ -169,7 +169,7 @@ void enableExternalTriggerStimulator() {
 
 void disableTriggerStimulator() {
 	engine->triggerCentral.directSelfStimulation = false;
-	triggerSignal.stop();
+	triggerEmulatorSignal.stop();
 	hasInitTriggerEmulator = false;
     incrementGlobalConfigurationVersion();
 }
@@ -199,7 +199,7 @@ void initTriggerEmulator() {
 void startTriggerEmulatorPins() {
 	hasStimPins = false;
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
-		triggerSignal.outputPins[i] = &emulatorOutputs[i];
+		triggerEmulatorSignal.outputPins[i] = &emulatorOutputs[i];
 
 		brain_pin_e pin = engineConfiguration->triggerSimulatorPins[i];
 
@@ -210,7 +210,7 @@ void startTriggerEmulatorPins() {
 
 #if EFI_PROD_CODE
 		if (isConfigurationChanged(triggerSimulatorPins[i])) {
-			triggerSignal.outputPins[i]->initPin("Trigger emulator", pin,
+			triggerEmulatorSignal.outputPins[i]->initPin("Trigger emulator", pin,
 					&engineConfiguration->triggerSimulatorPinModes[i]);
 		}
 #endif // EFI_PROD_CODE
@@ -221,7 +221,7 @@ void stopTriggerEmulatorPins() {
 #if EFI_PROD_CODE
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
 		if (isConfigurationChanged(triggerSimulatorPins[i])) {
-			triggerSignal.outputPins[i]->deInit();
+			triggerEmulatorSignal.outputPins[i]->deInit();
 		}
 	}
 #endif // EFI_PROD_CODE
