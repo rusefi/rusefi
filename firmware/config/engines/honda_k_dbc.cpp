@@ -28,7 +28,9 @@ void setHondaK() {
 	engineConfiguration->cranking.baseFuel = 75;
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
+// todo; quote some source?
 	engineConfiguration->injector.flow = 270;
+	engineConfiguration->injector.flow = 310;
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 	engineConfiguration->fuelReferencePressure = 350; // TODO: what is real value?!
 
