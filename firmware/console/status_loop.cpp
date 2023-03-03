@@ -224,12 +224,6 @@ static Logging logicAnalyzerLogger("logic analyzer", logicAnalyzerBuffer, sizeof
  * todo: is this mostly dead code?
  */
 void updateDevConsoleState() {
-	// todo: make SWO work
-//	char *msg = "hello\r\n";
-//	for(int i=0;i<strlen(msg);i++) {
-//		ITM_SendChar(msg[i]);
-//	}
-
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
@@ -362,7 +356,7 @@ extern int totalLoggedBytes;
 //#endif // HW_CHECK_MODE
 
 	#if EFI_ENGINE_CONTROL
-			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError()) {
+			if (lowVBatt || isTriggerErrorNow()) {
 				// todo: at the moment warning codes do not affect warning LED?!
 				enginePins.warningLedPin.setValue(1);
 			}
@@ -511,7 +505,7 @@ static void updatePressures() {
 
 static void updateMiscSensors() {
 	engine->outputChannels.VBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
-	
+
 	engine->outputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
 
 	engine->outputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
