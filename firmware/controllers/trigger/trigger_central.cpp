@@ -798,9 +798,9 @@ static void resetRunningTriggerCounters() {
 }
 
 void onConfigurationChangeTriggerCallback() {
+	static_assert(std::extent<decltype(engine_configuration_s::camInputs)>::value == std::extent<decltype(engine_configuration_s::vvtOffsets)>::value);
+
 	bool changed = false;
-	// todo: how do we static_assert here?
-	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(engineConfiguration->camInputs) == efi::size(engineConfiguration->vvtOffsets), "sizes");
 
 	for (size_t camIndex = 0; camIndex < efi::size(engineConfiguration->camInputs); camIndex++) {
 		changed |= isConfigurationChanged(camInputs[camIndex]);
