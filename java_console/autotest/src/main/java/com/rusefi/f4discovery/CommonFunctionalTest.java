@@ -220,10 +220,6 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(msg, chart, EngineChart.SPARK_2);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_3);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_4);
-
-        // todo: why is width precision so low here? is that because of loaded Windows with 1ms precision?
-        double widthRatio = 0.25;
-        // WAT? this was just 0.009733333333333387?
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_1);
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_2);
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_3);
