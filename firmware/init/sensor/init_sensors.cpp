@@ -23,7 +23,7 @@ TODO: this code is similar to AdcSubscription::SubscribeSensor, what is the plan
 	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
 	if (pin == Gpio::Invalid) {
 	// todo: external muxes for internal ADC #3350
-	    return;
+		return;
 	}
 	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
 #endif

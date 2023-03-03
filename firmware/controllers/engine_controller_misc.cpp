@@ -68,7 +68,7 @@ void slowStartStopButtonCallback() {
    		return;
    	}
 
-	// todo: should this be simply FSIO?
+	// TODO: split starter (/disable relay) control in to its own controller
 	if (engine->rpmCalculator.isRunning()) {
 		// turn starter off once engine is running
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
