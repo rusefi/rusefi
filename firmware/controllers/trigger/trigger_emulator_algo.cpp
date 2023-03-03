@@ -57,6 +57,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequen
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
+// same is used for either self or external trigger simulation
 PwmConfig triggerEmulatorSignal;
 
 static int atTriggerVersion = 0;
@@ -154,6 +155,8 @@ static void startSimulatedTriggerSignal() {
 	hasInitTriggerEmulator = true;
 }
 
+// self-stimulation
+// see below for trigger output generator
 void enableTriggerStimulator() {
 	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = true;
@@ -161,6 +164,8 @@ void enableTriggerStimulator() {
     incrementGlobalConfigurationVersion();
 }
 
+// start generating trigger signal on physical outputs
+// similar but different from self-stimulation
 void enableExternalTriggerStimulator() {
 	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = false;
@@ -172,10 +177,6 @@ void disableTriggerStimulator() {
 	triggerEmulatorSignal.stop();
 	hasInitTriggerEmulator = false;
     incrementGlobalConfigurationVersion();
-}
-
-void initTriggerEmulatorLogic() {
-	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
 }
 
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {
@@ -191,7 +192,7 @@ void initTriggerEmulator() {
 
 	startTriggerEmulatorPins();
 
-	initTriggerEmulatorLogic();
+	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
 }
 
 #endif /* EFI_UNIT_TEST */

@@ -27,8 +27,6 @@ public:
 	void handleEmulatorCallback(const MultiChannelStateSequence& mcss, int stateIndex);
 };
 
-void initTriggerEmulatorLogic();
-
 int getPreviousIndex(const int currentIndex, const int size);
 bool needEvent(const int currentIndex, const MultiChannelStateSequence& mcss, int channelIndex);
 
