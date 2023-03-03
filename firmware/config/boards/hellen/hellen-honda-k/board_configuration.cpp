@@ -116,8 +116,8 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->brakePedalPin = H144_IN_CAM;
 	engineConfiguration->acRelayPin = H144_LS_5;
-//    engineConfiguration->tachOutputPin = ;
-//	engineConfiguration->acSwitch = H144_IN_RES1;
+    engineConfiguration->tachOutputPin = H144_OUT_IO5;
+    // A/C switch on k-line
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -135,5 +135,5 @@ void setBoardDefaultConfiguration() {
 	setCommonNTCSensor(&engineConfiguration->clt, HELLEN_DEFAULT_AT_PULLUP);
 	setCommonNTCSensor(&engineConfiguration->iat, HELLEN_DEFAULT_AT_PULLUP);
 
-    setTPS1Calibration(90, 830, 1000, 0);
+    setTPS1Calibration(100, 650);
 }
