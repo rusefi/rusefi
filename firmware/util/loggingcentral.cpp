@@ -138,8 +138,7 @@ public:
 			msg_t msg = filledBuffers.fetch(&line, TIME_INFINITE);
 
 			if (msg == MSG_RESET) {
-				// todo?
-				// what happens if MSG_RESET?
+				// FIXME what happens if MSG_RESET?
 			} else {
 				// Lock the buffer mutex - inhibit buffer swaps while writing
 				chibios_rt::MutexLocker lock(logBufferMutex);
