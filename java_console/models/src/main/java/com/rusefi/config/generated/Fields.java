@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Mar 03 02:31:40 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Mar 03 04:45:35 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1141,30 +1141,42 @@ public class Fields {
 	public static final int TriggerWheel_T_PRIMARY = 0;
 	public static final int TriggerWheel_T_SECONDARY = 1;
 	public static final int TRIM_SIZE = 4;
+	public static final int ts_14_command_TS_14_0 = 0;
+	public static final int ts_14_command_TS_14_1 = 1;
+	public static final int ts_14_command_TS_14_4 = 4;
+	public static final int ts_14_command_TS_14_5 = 5;
+	public static final int ts_14_command_TS_14_9 = 9;
+	public static final int ts_14_command_TS_GRAB_PEDAL_UP = 6;
+	public static final int ts_14_command_TS_GRAB_PEDAL_WOT = 7;
+	public static final int ts_14_command_TS_GRAB_TPS_CLOSED = 2;
+	public static final int ts_14_command_TS_GRAB_TPS_WOT = 3;
+	public static final int ts_14_command_TS_RESET_TLE8888 = 8;
+	public static final int ts_14_command_TS_WRITE_FLASH = 10;
 	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final int ts_command_e_TS_BENCH_CATEGORY = 22;
 	public static final int ts_command_e_TS_CLEAR_WARNINGS = 17;
 	public static final int ts_command_e_TS_COMMAND_1 = 1;
+	public static final int ts_command_e_TS_COMMAND_10 = 10;
 	public static final int ts_command_e_TS_COMMAND_11 = 11;
 	public static final int ts_command_e_TS_COMMAND_12 = 12;
 	public static final int ts_command_e_TS_COMMAND_13 = 13;
 	public static final int ts_command_e_TS_COMMAND_14 = 14;
 	public static final int ts_command_e_TS_COMMAND_15 = 15;
 	public static final int ts_command_e_TS_COMMAND_16 = 16;
+	public static final int ts_command_e_TS_COMMAND_2 = 2;
+	public static final int ts_command_e_TS_COMMAND_3 = 3;
 	public static final int ts_command_e_TS_COMMAND_4 = 4;
 	public static final int ts_command_e_TS_COMMAND_5 = 5;
+	public static final int ts_command_e_TS_COMMAND_6 = 6;
+	public static final int ts_command_e_TS_COMMAND_7 = 7;
+	public static final int ts_command_e_TS_COMMAND_8 = 8;
 	public static final int ts_command_e_TS_COMMAND_9 = 9;
 	public static final int ts_command_e_TS_DEBUG_MODE = 0;
-	public static final int ts_command_e_TS_GRAB_PEDAL_UP = 6;
-	public static final int ts_command_e_TS_GRAB_PEDAL_WOT = 7;
-	public static final int ts_command_e_TS_GRAB_TPS_CLOSED = 2;
-	public static final int ts_command_e_TS_GRAB_TPS_WOT = 3;
 	public static final int ts_command_e_TS_IGNITION_CATEGORY = 18;
 	public static final int ts_command_e_TS_INJECTOR_CATEGORY = 19;
 	public static final int ts_command_e_TS_LUA_OUTPUT_CATEGORY = 32;
-	public static final int ts_command_e_TS_RESET_TLE8888 = 8;
 	public static final int ts_command_e_TS_SET_DEFAULT_ENGINE = 31;
 	public static final int ts_command_e_TS_SET_ENGINE_TYPE = 30;
 	public static final int ts_command_e_TS_SOLENOID_CATEGORY = 25;
@@ -1175,7 +1187,6 @@ public class Fields {
 	public static final int ts_command_e_TS_UNUSED_29 = 29;
 	public static final int ts_command_e_TS_UNUSED_CJ125_CALIB = 24;
 	public static final int ts_command_e_TS_WIDEBAND = 21;
-	public static final int ts_command_e_TS_WRITE_FLASH = 10;
 	public static final int ts_command_e_TS_X14 = 20;
 	public static final char TS_COMMAND_F = 'F';
 	public static final int TS_COMPOSITE_DISABLE = 2;

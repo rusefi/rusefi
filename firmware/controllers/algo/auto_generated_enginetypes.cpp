@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Feb 21 20:12:14 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Mar 03 04:44:49 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -517,6 +517,33 @@ case TT_VVT_TOYOTA_4_1:
   }
  return NULL;
 }
+const char *getTs_14_command(ts_14_command value){
+switch(value) {
+case TS_14_0:
+  return "TS_14_0";
+case TS_14_1:
+  return "TS_14_1";
+case TS_14_4:
+  return "TS_14_4";
+case TS_14_5:
+  return "TS_14_5";
+case TS_14_9:
+  return "TS_14_9";
+case TS_GRAB_PEDAL_UP:
+  return "TS_GRAB_PEDAL_UP";
+case TS_GRAB_PEDAL_WOT:
+  return "TS_GRAB_PEDAL_WOT";
+case TS_GRAB_TPS_CLOSED:
+  return "TS_GRAB_TPS_CLOSED";
+case TS_GRAB_TPS_WOT:
+  return "TS_GRAB_TPS_WOT";
+case TS_RESET_TLE8888:
+  return "TS_RESET_TLE8888";
+case TS_WRITE_FLASH:
+  return "TS_WRITE_FLASH";
+  }
+ return NULL;
+}
 const char *getTs_command_e(ts_command_e value){
 switch(value) {
 case TS_BENCH_CATEGORY:
@@ -525,6 +552,8 @@ case TS_CLEAR_WARNINGS:
   return "TS_CLEAR_WARNINGS";
 case TS_COMMAND_1:
   return "TS_COMMAND_1";
+case TS_COMMAND_10:
+  return "TS_COMMAND_10";
 case TS_COMMAND_11:
   return "TS_COMMAND_11";
 case TS_COMMAND_12:
@@ -537,30 +566,30 @@ case TS_COMMAND_15:
   return "TS_COMMAND_15";
 case TS_COMMAND_16:
   return "TS_COMMAND_16";
+case TS_COMMAND_2:
+  return "TS_COMMAND_2";
+case TS_COMMAND_3:
+  return "TS_COMMAND_3";
 case TS_COMMAND_4:
   return "TS_COMMAND_4";
 case TS_COMMAND_5:
   return "TS_COMMAND_5";
+case TS_COMMAND_6:
+  return "TS_COMMAND_6";
+case TS_COMMAND_7:
+  return "TS_COMMAND_7";
+case TS_COMMAND_8:
+  return "TS_COMMAND_8";
 case TS_COMMAND_9:
   return "TS_COMMAND_9";
 case TS_DEBUG_MODE:
   return "TS_DEBUG_MODE";
-case TS_GRAB_PEDAL_UP:
-  return "TS_GRAB_PEDAL_UP";
-case TS_GRAB_PEDAL_WOT:
-  return "TS_GRAB_PEDAL_WOT";
-case TS_GRAB_TPS_CLOSED:
-  return "TS_GRAB_TPS_CLOSED";
-case TS_GRAB_TPS_WOT:
-  return "TS_GRAB_TPS_WOT";
 case TS_IGNITION_CATEGORY:
   return "TS_IGNITION_CATEGORY";
 case TS_INJECTOR_CATEGORY:
   return "TS_INJECTOR_CATEGORY";
 case TS_LUA_OUTPUT_CATEGORY:
   return "TS_LUA_OUTPUT_CATEGORY";
-case TS_RESET_TLE8888:
-  return "TS_RESET_TLE8888";
 case TS_SET_DEFAULT_ENGINE:
   return "TS_SET_DEFAULT_ENGINE";
 case TS_SET_ENGINE_TYPE:
@@ -581,8 +610,6 @@ case TS_UNUSED_CJ125_CALIB:
   return "TS_UNUSED_CJ125_CALIB";
 case TS_WIDEBAND:
   return "TS_WIDEBAND";
-case TS_WRITE_FLASH:
-  return "TS_WRITE_FLASH";
 case TS_X14:
   return "TS_X14";
   }
