@@ -4304,6 +4304,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "etbDutyShutdownThreshold",                 etbDutyShutdownThreshold
 
 	dialog = parkingLot, "Experimental/Broken"
+		field = kLineBaudRate,                          kLineBaudRate
 		field = "I understand ECU Locking",				yesUnderstandLocking
 		field = "Tune read/write password",				tuneHidingKey, { yesUnderstandLocking == 1 }
 		field = verboseQuad,									verboseQuad
