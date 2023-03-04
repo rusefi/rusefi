@@ -212,7 +212,9 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 
 	efiPrintf(TAG "script loaded successfully!");
 
+#if EFI_PROD_CODE
 	printLuaMemoryInfo();
+#endif // EFI_PROD_CODE
 
 	return true;
 }
