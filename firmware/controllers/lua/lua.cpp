@@ -29,6 +29,7 @@ public:
 
 	size_t m_memoryUsed = 0;
 	size_t m_size;
+	char* m_buffer;
 
 	void* alloc(size_t n) {
 		return chHeapAlloc(&m_heap, n);
@@ -41,15 +42,17 @@ public:
 public:
 	template<size_t TSize>
 	Heap(char (&buffer)[TSize])
-		: m_size(TSize)
 	{
-		chHeapObjectInit(&m_heap, buffer, TSize);
+		reinit(buffer, TSize);
 	}
 
-	void reinit(char *buffer, size_t m_size) {
+	void reinit(char *buffer, size_t size) {
 		efiAssertVoid(OBD_PCM_Processor_Fault, m_memoryUsed == 0, "Too late to reinit Lua heap");
-		chHeapObjectInit(&m_heap, buffer, m_size);
-		this->m_size = m_size;
+
+		m_size = size;
+		m_buffer = buffer;
+
+		reset();
 	}
 
 	void* realloc(void* ptr, size_t osize, size_t nsize) {
@@ -88,9 +91,22 @@ public:
 	size_t used() const {
 		return m_memoryUsed;
 	}
+
+	// Use only in case of emergency - obliterates all heap objects and starts over
+	void reset() {
+		chHeapObjectInit(&m_heap, m_buffer, m_size);
+		m_memoryUsed = 0;
+	}
 };
 
 static Heap userHeap(luaUserHeap);
+
+static void printLuaMemoryInfo() {
+	auto heapSize = userHeap.size();
+	auto memoryUsed = userHeap.used();
+	float pct = 100.0f * memoryUsed / heapSize;
+	efiPrintf("Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
+}
 
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 	if (engineConfiguration->debugMode == DBG_LUA) {
@@ -186,6 +202,8 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	}
 
 	efiPrintf(TAG "script loaded successfully!");
+
+	printLuaMemoryInfo();
 
 	return true;
 }
@@ -319,6 +337,15 @@ void LuaThread::ThreadTask() {
 	while (!chThdShouldTerminateX()) {
 		bool wasOk = runOneLua(myAlloc, config->luaScript);
 
+		auto usedAfterRun = userHeap.used();
+		if (usedAfterRun != 0) {
+			efiPrintf(TAG "MEMORY LEAK DETECTED: %d bytes used after teardown", usedAfterRun);
+
+			// Lua blew up in some terrible way that left memory allocated, reset the heap
+			// so that subsequent runs don't overflow the heap
+			userHeap.reset();
+		}
+
 		// Reset any lua adjustments the script made
 		engine->resetLua();
 
@@ -370,12 +397,7 @@ void startLua() {
 		needsReset = true;
 	});
 
-	addConsoleAction("luamemory", [](){
-		auto heapSize = userHeap.size();
-		auto memoryUsed = userHeap.used();
-		float pct = 100.0f * memoryUsed / heapSize;
-		efiPrintf("Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
-	});
+	addConsoleAction("luamemory", printLuaMemoryInfo);
 #endif
 }
 
