@@ -36,6 +36,7 @@ jobs:
       with:
         github_token: ${{ secrets.ACCESS_TOKEN }}
         custom_tag: ${{ env.date }}
+        tag_prefix: ''
 
     - name: Create Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
