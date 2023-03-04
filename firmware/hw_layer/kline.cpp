@@ -2,7 +2,6 @@
 #include "kline.h"
 #include "hellen_meta.h"
 
-
 #ifdef EFI_KLINE
 static SerialDriver* const klDriver = KLINE_SERIAL_DEVICE;
 static THD_WORKING_AREA(klThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -11,10 +10,8 @@ static int totalBytes = 0;
 static bool kLineOutPending = false;
 static int kLineOut;
 
-void kLineThread(void*)
-{
-    while(1)
-    {
+void kLineThread(void*) {
+    while (1) {
         uint8_t ch = 0;
         chnReadTimeout(klDriver, &ch, 1, KLINE_READ_TIMEOUT);
         // to begin with just write byte to console
@@ -29,9 +26,8 @@ void kLineThread(void*)
         }
     }
 }
-#endif
+#endif // EFI_KLINE
 
-/* currently useless because all settings are hardcoded */
 void startKLine() {
 #ifdef EFI_KLINE
 #if EFI_PROD_CODE
@@ -53,6 +49,24 @@ void startKLine() {
     cfg.speed = engineConfiguration->kLineBaudRate;
 
 	sdStart(klDriver, &cfg);
+#endif // EFI_KLINE
+}
+
+void stopKLine() {
+#ifdef EFI_KLINE
+#if EFI_PROD_CODE
+	efiSetPadUnused(KLINE_SERIAL_DEVICE_RX);
+	efiSetPadUnused(KLINE_SERIAL_DEVICE_TX);
+
+	sdStop(klDriver);
+
+#endif /* EFI_PROD_CODE */
+#endif // EFI_KLINE
+}
+
+void initKLine() {
+#ifdef EFI_KLINE
+	startKLine();
 
     chThdCreateStatic(klThreadStack, sizeof(klThreadStack), NORMALPRIO + 1, kLineThread, nullptr);
     addConsoleAction("kline", [](){
@@ -62,21 +76,6 @@ void startKLine() {
         kLineOutPending = true;
         kLineOut = value;
     });
-#endif
-}
 
-/* currently useless because all settings are hardcoded */
-void stopKLine() {
-#ifdef EFI_KLINE
-#if EFI_PROD_CODE
-	efiSetPadUnused(KLINE_SERIAL_DEVICE_RX);
-	efiSetPadUnused(KLINE_SERIAL_DEVICE_TX);
-#endif /* EFI_PROD_CODE */
-#endif
-}
-
-void initKLine() {
-#ifdef EFI_KLINE
-	startKLine();
-#endif
+#endif // EFI_KLINE
 }
