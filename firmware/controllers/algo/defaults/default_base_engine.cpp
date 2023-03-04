@@ -2,6 +2,7 @@
 
 #include "defaults.h"
 #include "vr_pwm.h"
+#include "kline.h"
 
 static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorOffAboveTps = 120;
@@ -70,6 +71,8 @@ void setDefaultBaseEngine() {
 
 	// Fuel pump
 	engineConfiguration->startUpFuelPumpDuration = 4;
+
+	engineConfiguration->kLineBaudRate = KLINE_BAUD_RATE;
 
 	engineConfiguration->benchTestOnTime = 4;
 	engineConfiguration->benchTestOffTime = 500;

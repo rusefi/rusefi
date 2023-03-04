@@ -41,12 +41,16 @@ void startKLine() {
 
 	static const SerialConfig cfg = {
 		#if EFI_PROD_CODE
-			.speed = KLINE_BAUD_RATE,
+			.speed = 0,
 			.cr1 = 0,
 			.cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN,
 			.cr3 = 0
 		#endif // EFI_PROD_CODE
 	};
+
+    if (engineConfiguration->kLineBaudRate < 100)
+        engineConfiguration->kLineBaudRate = KLINE_BAUD_RATE;
+    cfg.speed = engineConfiguration->kLineBaudRate;
 
 	sdStart(klDriver, &cfg);
 
