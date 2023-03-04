@@ -1049,6 +1049,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->ppsSecondaryMaximum;
 		case -282198345:
 			return engineConfiguration->customSentTpsMax;
+		case 1498075808:
+			return engineConfiguration->kLineBaudRate;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3668,6 +3670,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -282198345:
 	{
 		engineConfiguration->customSentTpsMax = (int)value;
+		return;
+	}
+		case 1498075808:
+	{
+		engineConfiguration->kLineBaudRate = (int)value;
 		return;
 	}
 	}

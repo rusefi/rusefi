@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Mar 01 21:11:05 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 04 01:42:17 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4459,7 +4459,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3982
 	 */
-	uint16_t unusedPaddingHere;
+	uint16_t kLineBaudRate;
 	/**
 	units
 	 * offset 3984
@@ -5282,4 +5282,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Mar 01 21:11:05 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 04 01:42:17 UTC 2023

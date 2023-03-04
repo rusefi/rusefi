@@ -1567,3 +1567,6 @@ For Toyota ETCS-i, use ~69%
 ### customSentTpsMax
 null
 
+### kLineBaudRate
+null
+
