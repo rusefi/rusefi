@@ -12,6 +12,7 @@ UTILSRC_CPP = \
 	$(UTIL_DIR)/math/error_accumulator.cpp \
 	$(UTIL_DIR)/math/efi_pid.cpp \
 	$(UTIL_DIR)/math/interpolation.cpp \
+	$(UTIL_DIR)/math/crc8hondak.cpp \
 	$(PROJECT_DIR)/util/datalogging.cpp \
 	$(PROJECT_DIR)/util/loggingcentral.cpp \
 	$(PROJECT_DIR)/util/cli_registry.cpp \
