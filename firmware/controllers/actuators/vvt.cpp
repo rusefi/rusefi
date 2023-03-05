@@ -90,11 +90,6 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	
 	float retVal = m_pid.getOutput(target, observation);
 
-	if (engineConfiguration->isVerboseAuxPid1) {
-		efiPrintf("aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", retVal, observation,
-				m_pid.getP(), m_pid.getI(), m_pid.getD(), m_pid.getIntegration());
-	}
-
 #if EFI_TUNER_STUDIO
 	m_pid.postState(engine->outputChannels.vvtStatus[index]);
 #endif /* EFI_TUNER_STUDIO */
