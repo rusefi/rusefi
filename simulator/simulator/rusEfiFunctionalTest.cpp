@@ -104,11 +104,11 @@ void rusEfiFunctionalTest(void) {
 	initFlash();
 	loadConfiguration();
 
-	enableTriggerStimulator();
-
 	commonInitEngineController();
 
 	commonEarlyInit();
+
+	enableTriggerStimulator();
 
 	initStatusLoop();
 
