@@ -12,7 +12,4 @@
 void updateDevConsoleState();
 void startStatusThreads();
 void initStatusLoop();
-
-struct Writer;
-
 void printOverallStatus();
