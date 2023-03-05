@@ -617,6 +617,11 @@ void commonEarlyInit() {
 	// Start this early - it will start LED blinking and such
 	startStatusThreads();
 
+#if EFI_SHAFT_POSITION_INPUT
+	// todo: figure out better startup logic
+	initTriggerCentral();
+#endif /* EFI_SHAFT_POSITION_INPUT */
+
 	/**
 	 * Initialize hardware drivers
 	 */

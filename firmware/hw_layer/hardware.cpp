@@ -429,11 +429,6 @@ void initHardwareNoConfig() {
 	initFlash();
 #endif
 
-#if EFI_SHAFT_POSITION_INPUT
-	// todo: figure out better startup logic
-	initTriggerCentral();
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 #if EFI_FILE_LOGGING
 	initEarlyMmcCard();
 #endif // EFI_FILE_LOGGING
@@ -540,7 +535,7 @@ void initHardware() {
 	initSpiModules(engineConfiguration);
 #endif /* HAL_USE_SPI */
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) && (BOARD_EXT_GPIOCHIPS > 0)
+#if (EFI_PROD_CODE && BOARD_EXT_GPIOCHIPS > 0) || EFI_SIMULATOR
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio();
 #endif
