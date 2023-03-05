@@ -560,7 +560,7 @@ void initHardware() {
 	initMax31855(engineConfiguration->max31855spiDevice, engineConfiguration->max31855_cs);
 #endif /* EFI_MAX_31855 */
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT && EFI_PROD_CODE
 	initCan();
 #endif /* EFI_CAN_SUPPORT */
 

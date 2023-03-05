@@ -251,13 +251,8 @@ void runRusEfiWithConfig() {
 		return;
 	}
 
-	// Start this early - it will start LED blinking and such
-	startStatusThreads();
+	commonEarlyInit();
 
-	/**
-	 * Initialize hardware drivers
-	 */
-	initHardware();
 
 #if EFI_FILE_LOGGING
 	initMmcCard();

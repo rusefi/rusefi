@@ -27,6 +27,7 @@
 #include "trigger_central.h"
 #include "script_impl.h"
 #include "idle_thread.h"
+#include "hardware.h"
 #include "advance_map.h"
 #include "main_trigger_callback.h"
 #include "flash_main.h"
@@ -41,6 +42,7 @@
 #include "alternator_controller.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
+#include "status_loop.h"
 #include "aux_valves.h"
 #include "accelerometer.h"
 #include "vvt.h"
@@ -607,6 +609,16 @@ bool validateConfig() {
 }
 
 #if !EFI_UNIT_TEST
+
+void commonEarlyInit() {
+	// Start this early - it will start LED blinking and such
+	startStatusThreads();
+
+	/**
+	 * Initialize hardware drivers
+	 */
+	initHardware();
+}
 
 void initEngineController() {
 	addConsoleAction("sensorinfo", printSensorInfo);

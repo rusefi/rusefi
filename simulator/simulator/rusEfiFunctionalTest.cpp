@@ -113,7 +113,7 @@ void rusEfiFunctionalTest(void) {
 	initTriggerCentral();
 	initTriggerEmulator();
 
-	startStatusThreads();
+	commonEarlyInit();
 
 	startLoggingProcessor();
 
