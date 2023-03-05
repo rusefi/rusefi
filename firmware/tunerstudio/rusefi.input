@@ -4305,6 +4305,7 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = parkingLot, "Experimental/Broken"
 		field = kLineBaudRate,                          kLineBaudRate
+		field = canGpioType,                            canGpioType
 		field = "I understand ECU Locking",				yesUnderstandLocking
 		field = "Tune read/write password",				tuneHidingKey, { yesUnderstandLocking == 1 }
 		field = verboseQuad,									verboseQuad

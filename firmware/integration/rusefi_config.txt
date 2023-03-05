@@ -300,6 +300,9 @@ custom ego_sensor_e 1 bits, S08, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 #define SentEtbType_enum "None", "GM type 1", "Ford type 1", "Custom"
 custom SentEtbType 1 bits, S08, @OFFSET@, [0:1], @@SentEtbType_enum@@
 
+#define CanGpioType_enum "None", "DRT protocol", "MS protocol"
+custom CanGpioType 1 bits, S08, @OFFSET@, [0:1], @@CanGpioType_enum@@
+
 struct cranking_parameters_s
 float baseFuel;Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.;"mg", 1, 0, 0, 500, 1
 int16_t rpm;This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 3000, 0
@@ -1568,7 +1571,9 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	uint16_t customSentTpsMax
 	uint16_t kLineBaudRate
-uint8_t[44] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	CanGpioType canGpioType
+	uint8_t[3] unusedSpacingHere
+uint8_t[40] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

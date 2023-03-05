@@ -174,6 +174,12 @@ enum class SentEtbType : uint8_t {
 	CUSTOM = 3,
 };
 
+enum class CanGpioType : uint8_t {
+	NONE = 0,
+	DRT = 1,
+	MS = 2,
+};
+
 typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * GND for logical OFF, VCC for logical ON
