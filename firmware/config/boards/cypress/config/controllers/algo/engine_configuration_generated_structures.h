@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Mar 04 01:41:34 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Mar 05 00:03:12 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4461,10 +4461,18 @@ struct engine_configuration_s {
 	 */
 	uint16_t kLineBaudRate;
 	/**
-	units
 	 * offset 3984
 	 */
-	uint8_t mainUnusedEnd[44];
+	CanGpioType canGpioType;
+	/**
+	 * offset 3985
+	 */
+	uint8_t unusedSpacingHere[3];
+	/**
+	units
+	 * offset 3988
+	 */
+	uint8_t mainUnusedEnd[40];
 };
 static_assert(sizeof(engine_configuration_s) == 4028);
 
@@ -5282,4 +5290,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Mar 04 01:41:34 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Mar 05 00:03:12 UTC 2023
