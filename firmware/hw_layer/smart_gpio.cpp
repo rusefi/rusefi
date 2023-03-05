@@ -349,10 +349,13 @@ void startSmartCsPins() {
 	drv8860Cs.setValue(true);
 #endif /* BOARD_DRV8860_COUNT */
 #if (BOARD_MC33810_COUNT > 0)
-	/* none of official boards has this IC */
+    // todo: no official boards have this IC yet
 #endif /* (BOARD_MC33810_COUNT > 0) */
 #if (BOARD_TLE9104_COUNT > 0)
-	// No official boards have this IC
+    // todo: no official boards have this IC yet
+#endif
+#if (BOARD_L9779_COUNT > 0)
+    // todo: no official boards have this IC yet
 #endif
 }
 
