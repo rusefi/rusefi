@@ -96,12 +96,8 @@ void rusEfiFunctionalTest(void) {
 
 	startLoggingProcessor();
 
-
-	initializeConsole();
-
-	initStatusLoop();
 	initDataStructures();
-
+	initializeConsole();
 
 	// todo: reduce code duplication with initEngineController
 
@@ -119,6 +115,7 @@ void rusEfiFunctionalTest(void) {
 
 	startLua();
 
+	initStatusLoop();
 
     /**
      * !!!! TESTS !
@@ -135,14 +132,6 @@ void rusEfiFunctionalTest(void) {
 	startSerialChannels();
 
 	engineConfiguration->enableVerboseCanTx = true;
-
-#if HAL_USE_CAN
-	// Set CAN device name
-	CAND1.deviceName = "can0";
-
-	initCan();
-#endif // HAL_USE_CAN
-
 
 	initPeriodicEvents();
 

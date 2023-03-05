@@ -560,7 +560,12 @@ void initHardware() {
 	initMax31855(engineConfiguration->max31855spiDevice, engineConfiguration->max31855_cs);
 #endif /* EFI_MAX_31855 */
 
-#if EFI_CAN_SUPPORT && EFI_PROD_CODE
+#if EFI_CAN_SUPPORT
+#if EFI_SIMULATOR
+	// Set CAN device name
+	CAND1.deviceName = "can0";
+#endif
+
 	initCan();
 #endif /* EFI_CAN_SUPPORT */
 
