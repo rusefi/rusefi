@@ -81,8 +81,10 @@ public class OutputsTest {
                 "bit issue_294_31,\"si_example\",\"nada_example\"\n" +
                 "uint8_t[2 iterate] autoscale knock;;\"\",1, 0, 0, 0, 0\n" +
                 "uint8_t[2 iterate] autoscale withName;\"MyNameIsEarl\";\"\",1, 0, 0, 0, 0\n" +
+                "uint8_t[2 iterate] withNameNoScale;\"HisNameIsEarl\"\n" +
+                "uint8_t yourMonwithNameNoScale;\"HisMon\"\n" +
                 "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
-                "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "float afr_type;PID dTime;\"ms\"\n" +
                 "uint16_t autoscale speedToRpmRatio;s2rpm;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
                 "uint8_t afr_typet;;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
@@ -102,6 +104,9 @@ public class OutputsTest {
                         "entry = knock2, \"knock 2\", int,    \"%d\"\n" +
                         "entry = withName1, \"MyNameIsEarl 1\", int,    \"%d\"\n" +
                         "entry = withName2, \"MyNameIsEarl 2\", int,    \"%d\"\n" +
+                        "entry = withNameNoScale1, \"HisNameIsEarl 1\", int,    \"%d\"\n" +
+                        "entry = withNameNoScale2, \"HisNameIsEarl 2\", int,    \"%d\"\n" +
+                        "entry = yourMonwithNameNoScale, \"HisMon\", int,    \"%d\"\n" +
                         "entry = baseFuel, \"hello\", float,  \"%.3f\"\n" +
                         "entry = afr_type, \"PID dTime\", float,  \"%.3f\"\n" +
                         "entry = speedToRpmRatio, \"s2rpm\", float,  \"%.3f\"\n" +
