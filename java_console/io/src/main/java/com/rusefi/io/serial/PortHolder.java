@@ -94,6 +94,7 @@ public class PortHolder {
                         "Error", JOptionPane.ERROR_MESSAGE);
                 IoUtils.exit("No connectivity, will close",-1);
             });
+            return;
         }
 
         bp.doSend(command, fireEvent);
