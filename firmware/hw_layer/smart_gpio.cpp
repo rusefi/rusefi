@@ -296,6 +296,7 @@ void initSmartGpio() {
 }
 
 void tle8888startup() {
+#if (BOARD_TLE8888_COUNT > 0)
 	static efitick_t tle8888CrankingResetTime = 0;
 
 	if (engineConfiguration->useTLE8888_cranking_hack && engine->rpmCalculator.isCranking()) {
@@ -307,6 +308,7 @@ void tle8888startup() {
 			tle8888CrankingResetTime = nowNt;
 		}
 	}
+#endif /* BOARD_TLE8888_COUNT */
 }
 
 void stopSmartCsPins() {
