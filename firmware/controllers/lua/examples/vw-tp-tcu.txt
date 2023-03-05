@@ -46,18 +46,18 @@ local cuId = 0
 function onCanHello(bus, id, dlc, data)
 	-- here we handle 201 packets
 	code = data[2]
-	print('Got 0x201 packet code ' .. toHexString(code) .. ': TP Response ' ..arrayToString(data))
+	print('Got 0x201 packet code ' ..toHexString(code) ..': TP Response ' ..arrayToString(data))
 
-    if code ~= 0xD0 then
-        print('BAD RESPONSE, trying longer sleep')
-        byeByeStateCounter = 13 * tickRate
-        return
-    end
+	if code ~= 0xD0 then
+		print('BAD RESPONSE, trying longer sleep')
+		byeByeStateCounter = 13 * tickRate
+		return
+	end
 
 	cuId = data[6] * 256 + data[5]
 
-    out = { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF }
-	print("Responding to 0x201 packet from " .. cuId .. ": Saying hello " .. arrayToString(out))
+	out = { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF }
+	print("Responding to 0x201 packet from " ..cuId ..": Saying hello " ..arrayToString(out))
 	txCan(1, cuId, 0, out)
 end
 
@@ -72,64 +72,64 @@ withErrorCodes = 0
 byeByeStateCounter = 2
 
 function nextReq()
-    local result = 0x10 + sendCounter
-    sendCounter = sendCounter + 1
+	local result = 0x10 + sendCounter
+	sendCounter = sendCounter + 1
 	if sendCounter == 16 then
 		sendCounter = 0
 	end
-    return result
+	return result
 end
 
 function startTp()
-    sendCounter = 0
-    packetCounter = 1
-    payLoadIndex = 0
-    print("Sending 0x200: Starting TP with TCU")
+	sendCounter = 0
+	packetCounter = 1
+	payLoadIndex = 0
+	print("Sending 0x200: Starting TP with TCU")
 
-    txCan(1, VWTP_OUT, 0, { cuType, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
+	txCan(1, VWTP_OUT, 0, { cuType, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
 end
 
 function requestErrorCodes()
-    out = { nextReq(), 0x00, 0x04, 0x18, 0x02, 0xFF, 0x00 }
-    txCan(1, cuId, 0, out)
-    print("Requesting error codes " .. arrayToString(out))
+	out = { nextReq(), 0x00, 0x04, 0x18, 0x02, 0xFF, 0x00 }
+	txCan(1, cuId, 0, out)
+	print("Requesting error codes " ..arrayToString(out))
 end
 
 function requestEraseCodes()
-    out = { nextReq(), 00, 0x03, 0x14, 0xFF, 0x00 }
-    txCan(1, cuId, 0, out)
-    print("******************* Requesting to Erase Code(s) *****************************")
+	out = { nextReq(), 00, 0x03, 0x14, 0xFF, 0x00 }
+	txCan(1, cuId, 0, out)
+	print("******************* Requesting to Erase Code(s) *****************************")
 end
 
 function scheduleTpRestart()
-		byeByeStateCounter = 3 * tickRate
+	byeByeStateCounter = 3 * tickRate
 end
 
 keepAliveCounter = 0
 
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
-    scheduleTpRestart()
+	scheduleTpRestart()
 
 	if data[1] == 0xA3 then
-		print ("0x300 A3 Keep-alive withErrorCodes=" .. withErrorCodes)
+		print ("0x300 A3 Keep-alive withErrorCodes=" ..withErrorCodes)
 		txCan(1, cuId, 0, { 0xA1, 0x0F, 0x8A, 0xFF, 0x4A, 0xFF })
 
-        if withErrorCodes > 0 then
-            requestEraseCodes()
-        else
-            keepAliveCounter = keepAliveCounter + 1
-            if keepAliveCounter > 4 then
-                requestErrorCodes()
+		if withErrorCodes > 0 then
+			requestEraseCodes()
+		else
+			keepAliveCounter = keepAliveCounter + 1
+			if keepAliveCounter > 4 then
+				requestErrorCodes()
 
-                keepAliveCounter = 0
-            end
-        end
+				keepAliveCounter = 0
+			end
+		end
 		return
 	end
 
 	if data[1] == 0xA1 then
-		print ("Happy 300 startup packet " .. arrayToString(data))
+		print ("Happy 300 startup packet " ..arrayToString(data))
 		txCan(1, cuId, 0, { nextReq(), 0x00, 0x02, 0x10, 0x89 })
 		return
 	end
@@ -146,11 +146,11 @@ function onCanTester(bus, id, dlc, data)
 		print ("Sending ACK Bx " ..ackPacket)
 		txCan(1, cuId, 0, { ackPacket })
 
-        if data[3] == 2 and data[4] == 0x50 then
-        	print('Got Hello2 Response ' ..arrayToString(data))
+		if data[3] == 2 and data[4] == 0x50 then
+			print('Got Hello2 Response ' ..arrayToString(data))
 
-            requestErrorCodes()
-        end
+			requestErrorCodes()
+		end
 	end
 
 	top4 = math.floor(data[1] / 16)
@@ -164,15 +164,15 @@ function onCanTester(bus, id, dlc, data)
 		print ("Looks like payload index " ..payLoadIndex ..": " ..arrayToString(data))
 
 		if payLoadIndex == 0 and data[4] == 0x58 then
-		    len = data[3]
-		    print("Looks like CODES_REQ response of length " .. len)
+			len = data[3]
+			print("Looks like CODES_REQ response of length " ..len)
 
-		    if len ~= 2 then
-		        print("HAVE CODES " .. len)
-		        withErrorCodes = 1
-            else
-                withErrorCodes = 0
-		    end
+			if len ~= 2 then
+				print("HAVE CODES " ..len)
+				withErrorCodes = 1
+			else
+				withErrorCodes = 0
+			end
 
 		end
 
@@ -185,14 +185,14 @@ function onCanTester(bus, id, dlc, data)
 
 		ackPacket = 0xB0 + packetCounter
 		print ("Sending payload ACK " ..ackPacket)
-    	txCan(1, cuId, 0, { ackPacket })
+		txCan(1, cuId, 0, { ackPacket })
 
 		if top4 == 1 then
 			payLoadIndex = 0
 
-            if data[2] == 0 and data[3] == 2 and data[4] == 0x58 then
-                print("NO CODES")
-            end
+			if data[2] == 0 and data[3] == 2 and data[4] == 0x58 then
+				print("NO CODES")
+			end
 
 		end
 
@@ -209,14 +209,14 @@ startTp()
 
 function onTick()
 
-    if byeByeStateCounter > 0 then
-        byeByeStateCounter = byeByeStateCounter - 1
-    end
+	if byeByeStateCounter > 0 then
+		byeByeStateCounter = byeByeStateCounter - 1
+	end
 
-    if byeByeStateCounter == 1 then
-        scheduleTpRestart()
-        startTp()
-    end
+	if byeByeStateCounter == 1 then
+		scheduleTpRestart()
+		startTp()
+	end
 
 end
 
