@@ -1,5 +1,3 @@
-canRxAdd(0x35d)
-
 OUT_1F9 = 0x1F9
 OUT_233 = 0x233
 OUT_23D = 0x23D
@@ -70,7 +68,7 @@ function onTick()
 end
 
 
-function onCanRx(bus, id, dlc, data)
+function onAcCanRx(bus, id, dlc, data)
 	--print('got CAN id=' ..id ..' dlc=' ..dlc)
 	--print('ac value is= '..data[1])
 	if data[1] == 193 then
@@ -84,3 +82,5 @@ function onCanRx(bus, id, dlc, data)
 	end
 
 end
+
+canRxAdd(1, 0x35d, onAcCanRx)
