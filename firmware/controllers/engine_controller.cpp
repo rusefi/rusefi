@@ -32,6 +32,7 @@
 #include "main_trigger_callback.h"
 #include "flash_main.h"
 #include "bench_test.h"
+#include "mmc_card.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
 #include "high_pressure_fuel_pump.h"
@@ -618,6 +619,10 @@ void commonEarlyInit() {
 	 * Initialize hardware drivers
 	 */
 	initHardware();
+
+#if EFI_FILE_LOGGING
+	initMmcCard();
+#endif /* EFI_FILE_LOGGING */
 }
 
 void initEngineController() {

@@ -21,7 +21,6 @@
 #include "bench_test.h"
 #include "tunerstudio.h"
 #include "map_averaging.h"
-#include "mmc_card.h"
 #include "memstreams.h"
 #include <chprintf.h>
 #include "rusefi_lua.h"
@@ -95,6 +94,9 @@ void rusEfiFunctionalTest(void) {
 
 	engine->setConfig();
 
+	startLoggingProcessor();
+
+
 	initializeConsole();
 
 	initStatusLoop();
@@ -115,9 +117,8 @@ void rusEfiFunctionalTest(void) {
 
 	commonEarlyInit();
 
-	startLoggingProcessor();
+	startLua();
 
-	initMmcCard();
 
     /**
      * !!!! TESTS !
@@ -127,8 +128,6 @@ void rusEfiFunctionalTest(void) {
     /**
      * end of TESTS !
      */
-
-	initPeriodicEvents();
 
 	setTriggerEmulatorRPM(DEFAULT_SIM_RPM);
 	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
@@ -144,7 +143,8 @@ void rusEfiFunctionalTest(void) {
 	initCan();
 #endif // HAL_USE_CAN
 
-	startLua();
+
+	initPeriodicEvents();
 
 	extern bool main_loop_started;
 	main_loop_started = true;
