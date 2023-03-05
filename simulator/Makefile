@@ -169,11 +169,10 @@ CSRC =  $(ALLCSRC) \
 # setting.
 CPPSRC = $(ALLCPPSRC) \
   $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
-  $(PROJECT_DIR)/development/sensor_chart.cpp \
   $(HW_LAYER_DRIVERS_CPP) \
   $(HW_LAYER_DRIVERS_CORE_CPP) \
   $(CONSOLE_SRC_CPP) \
-  $(DEV_SIMULATOR_SRC_CPP) \
+  $(DEV_SRC_CPP) \
   simulator/rusEfiFunctionalTest.cpp \
   simulator/can/hal_can_lld.cpp \
   simulator/framework.cpp \
@@ -192,6 +191,7 @@ INCDIR = . \
   $(CHIBIOS)/os/various/cpp_wrappers \
   $(PROJECT_DIR)/hw_layer/drivers/can \
   ${CHIBIOS}/os/various \
+  $(PROJECT_DIR)/development/hw_layer \
   $(CHIBIOS)/os/hal/lib/streams \
   $(RUSEFI_LIB_INC) \
   simulator/can \

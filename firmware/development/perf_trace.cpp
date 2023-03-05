@@ -45,8 +45,8 @@ static void stopTrace() {
 	s_nextIdx = 0;
 }
 
-static void perfEventImpl(PE event, EPhase phase)
-{
+static void perfEventImpl(PE event, EPhase phase) {
+#if EFI_PROD_CODE
 	// Bail if we aren't allowed to trace
 	if constexpr (!ENABLE_PERF_TRACE) {
 		return;
@@ -101,6 +101,7 @@ static void perfEventImpl(PE event, EPhase phase)
 	}
 
 	entry.Timestamp = timestamp;
+#endif // EFI_PROD_CODE
 }
 
 void perfEventBegin(PE event) {

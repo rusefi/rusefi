@@ -301,7 +301,7 @@ INCDIR = \
   $(PROJECT_DIR)/hw_layer/lcd \
   $(PROJECT_DIR)/hw_layer/mass_storage \
   $(HW_INC) \
-  development/hw_layer \
+  $(PROJECT_DIR)/development/hw_layer \
   development/test \
   $(CHIBIOS_CONTRIB)/os/various
 # contrib/os/various must go at the end because it also contains pid.h which conflicts with our pid.h
