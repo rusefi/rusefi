@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 05 00:03:58 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 05 07:02:54 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1004,6 +1004,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 281286402;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1225,7 +1226,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.05.f407-discovery.2387247755";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.05.f407-discovery.281286402";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1360;
@@ -1301,7 +1302,6 @@ public class Fields {
 	public static final Field INJECTOR_BATTLAGCORR = Field.create("INJECTOR_BATTLAGCORR", 88, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ISFORCEDINDUCTION = Field.create("ISFORCEDINDUCTION", 120, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field USEFORDREDUNDANTTPS = Field.create("USEFORDREDUNDANTTPS", 120, FieldType.BIT, 1).setBaseOffset(0);
-	public static final Field ISVERBOSEAUXPID1 = Field.create("ISVERBOSEAUXPID1", 120, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field OVERRIDETRIGGERGAPS = Field.create("OVERRIDETRIGGERGAPS", 120, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field ENABLEFAN1WITHAC = Field.create("ENABLEFAN1WITHAC", 120, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field ENABLEFAN2WITHAC = Field.create("ENABLEFAN2WITHAC", 120, FieldType.BIT, 5).setBaseOffset(0);
@@ -2778,7 +2778,6 @@ public class Fields {
 	INJECTOR_BATTLAGCORR,
 	ISFORCEDINDUCTION,
 	USEFORDREDUNDANTTPS,
-	ISVERBOSEAUXPID1,
 	OVERRIDETRIGGERGAPS,
 	ENABLEFAN1WITHAC,
 	ENABLEFAN2WITHAC,
