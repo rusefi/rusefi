@@ -703,8 +703,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isHip9011Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
 		engineConfiguration->isVerboseIAC = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
-		engineConfiguration->isVerboseAuxPid1 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
 		engineConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
