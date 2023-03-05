@@ -222,8 +222,13 @@
 #define EFI_CAN_SUPPORT TRUE
 #endif
 
-#ifndef EFI_CAN_SERIAL
+#if !defined(EFI_CAN_SERIAL) && EFI_CAN_SUPPORT
 #define EFI_CAN_SERIAL TRUE
+#endif
+
+#if !defined(EFI_CAN_GPIO) && EFI_CAN_SUPPORT
+// see CAN_PIN_0
+#define EFI_CAN_GPIO TRUE
 #endif
 
 #define EFI_WIDEBAND_FIRMWARE_UPDATE TRUE

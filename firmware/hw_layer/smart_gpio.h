@@ -13,6 +13,7 @@
 #include "drivers/gpio/mc33972.h"
 #include "drivers/gpio/tle8888.h"
 #include "drivers/gpio/drv8860.h"
+#include "drivers/gpio/can_gpio.h"
 // we seem OK without L9779 here do we need those includes at all?
 #endif /* EFI_PROD_CODE */
 
@@ -26,6 +27,7 @@ BOARD_TLE8888_COUNT + \
 BOARD_DRV8860_COUNT + \
 BOARD_MC33810_COUNT + \
 BOARD_L9779_COUNT + \
+BOARD_CAN_GPIO_COUNT + \
 0)
 #endif
 
