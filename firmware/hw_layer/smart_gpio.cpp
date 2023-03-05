@@ -7,7 +7,6 @@
 
 #include "pch.h"
 
-#if EFI_PROD_CODE
 #include "smart_gpio.h"
 #include "hardware.h"
 #include "mpu_util.h"
@@ -366,5 +365,3 @@ void startSmartCsPins() {
     // todo: no official boards have this IC yet
 #endif
 }
-
-#endif /* EFI_PROD_CODE */
