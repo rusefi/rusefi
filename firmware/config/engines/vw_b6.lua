@@ -99,12 +99,6 @@ function onAirBag(bus, id, dlc, data)
 	hadIgnitionEvent = true
 end
 
-function setTwoBytes(data, offset, value)
-	value = math.floor(value)
-	data[offset + 2] = value >> 8
-	data[offset + 1] = value & 0xff
-end
-
 function xorChecksum(data, targetIndex)
 	local index = 1
 	local result = 0
@@ -156,6 +150,29 @@ canRxAdd(TCU_1, onTcu1)
 canRxAdd(TCU_2, onTcu2)
 --canRxAdd(BRAKE_2)
 
+function sendMotor1()
+	engineTorque = fakeTorque * 0.9
+	innerTorqWithoutExt = fakeTorque
+	torqueLoss = 20
+	requestedTorque = fakeTorque
+
+	motor1Data[2] = engineTorque / 0.39
+	setTwoBytes(motor1Data, 2, rpm / 0.25)
+	motor1Data[5] = innerTorqWithoutExt / 0.4
+	motor1Data[6] = tps / 0.4
+	motor1Data[7] = torqueLoss / 0.39
+	motor1Data[8] = requestedTorque / 0.39
+
+-- print ('MOTOR_1 fakeTorque ' ..fakeTorque)
+-- print ('MOTOR_1 engineTorque ' ..engineTorque ..' RPM ' ..rpm)
+-- print ('MOTOR_1 innerTorqWithoutExt ' ..innerTorqWithoutExt ..' tps ' ..tps)
+
+-- print ('MOTOR_1 torqueLoss ' ..torqueLoss ..' requestedTorque ' ..requestedTorque)
+
+	txCan(TCU_BUS, MOTOR_1, 0, motor1Data)
+end
+
+
 function onMotor1(bus, id, dlc, data)
 
 	rpm = getSensor("RPM") or 0
@@ -168,20 +185,7 @@ function onMotor1(bus, id, dlc, data)
 	torqueLoss = 20
 	requestedTorque = fakeTorque
 
- motor1Data[2] = engineTorque / 0.39
- setTwoBytes(motor1Data, 2, rpm / 0.25)
- motor1Data[5] = innerTorqWithoutExt / 0.4
- motor1Data[6] = tps / 0.4
- motor1Data[7] = torqueLoss / 0.39
- motor1Data[8] = requestedTorque / 0.39
-
--- print ('MOTOR_1 fakeTorque ' ..fakeTorque)
--- print ('MOTOR_1 engineTorque ' ..engineTorque ..' RPM ' ..rpm)
--- print ('MOTOR_1 innerTorqWithoutExt ' ..innerTorqWithoutExt ..' tps ' ..tps)
-
--- print ('MOTOR_1 torqueLoss ' ..torqueLoss ..' requestedTorque ' ..requestedTorque)
-
- txCan(TCU_BUS, MOTOR_1, 0, motor1Data)
+    sendMotor1()
 end
 
 function sendMotor3()
@@ -264,7 +268,6 @@ canMotorInfoCounter = 0
 function onMotorInfo(bus, id, dlc, data)
  canMotorInfoTotalCounter = canMotorInfoTotalCounter + 1
   canMotorInfoCounter = (canMotorInfoCounter + 1) % 16
--- canMotorInfoCounter = getBitRange(data, 0, 4)
 
  baseByte = canMotorInfoTotalCounter < 6 and 0x80 or 0x90
  canMotorInfo[1]  = baseByte + (canMotorInfoCounter)
