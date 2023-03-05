@@ -368,9 +368,9 @@ void applyNewHardwareSettings() {
 #if EFI_LOGIC_ANALYZER
 	startLogicAnalyzerPins();
 #endif /* EFI_LOGIC_ANALYZER */
-#if EFI_AUX_PID
+#if EFI_VVT_PID
 	startVvtControlPins();
-#endif /* EFI_AUX_PID */
+#endif /* EFI_VVT_PID */
 
 #if EFI_SENT_SUPPORT
 	startSent();
@@ -459,9 +459,9 @@ void stopHardware() {
 	stopTriggerEmulatorPins();
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
-#if EFI_AUX_PID
+#if EFI_VVT_PID
 	stopVvtControlPins();
-#endif /* EFI_AUX_PID */
+#endif /* EFI_VVT_PID */
 }
 
 /**
