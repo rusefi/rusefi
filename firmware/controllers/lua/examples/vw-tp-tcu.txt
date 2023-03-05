@@ -48,6 +48,12 @@ function onCanHello(bus, id, dlc, data)
 	code = data[2]
 	print('Got 0x201 packet code ' .. toHexString(code) .. ': TP Response ' ..arrayToString(data))
 
+    if code ~= 0xD0 then
+        print('BAD RESPONSE, trying longer sleep')
+        byeByeStateCounter = 13 * tickRate
+        return
+    end
+
 	cuId = data[6] * 256 + data[5]
 
     out = { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF }
