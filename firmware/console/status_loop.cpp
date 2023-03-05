@@ -231,7 +231,7 @@ static Logging logicAnalyzerLogger("logic analyzer", logicAnalyzerBuffer, sizeof
  * This method is periodically invoked by the main loop
  * todo: is this mostly dead code?
  */
-void updateDevConsoleState(void) {
+void updateDevConsoleState() {
 	// todo: make SWO work
 //	char *msg = "hello\r\n";
 //	for(int i=0;i<strlen(msg);i++) {
@@ -866,11 +866,11 @@ DcHardware *getdcHardware();
 
 #endif /* EFI_TUNER_STUDIO */
 
-void initStatusLoop(void) {
+void initStatusLoop() {
 	addConsoleActionI("warn", setWarningEnabled);
 }
 
-void startStatusThreads(void) {
+void startStatusThreads() {
 	// todo: refactoring needed, this file should probably be split into pieces
 #if EFI_PROD_CODE
 	initStatusLeds();
