@@ -408,7 +408,7 @@
 #define GAUGE_CATEGORY_ETB "ETB more"
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
 #define GAUGE_CATEGORY_TIMING "Timing"
-#define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
+#define GAUGE_COIL_DWELL_TIME "Ignition: coil charge time"
 #define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -446,7 +446,7 @@
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 #define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
 #define GAUGE_NAME_DETECTED_GEAR "Detected Gear"
-#define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
+#define GAUGE_NAME_DWELL_DUTY "Ignition: coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
@@ -483,7 +483,7 @@
 #define GAUGE_NAME_IAC "Idle Air Valve"
 #define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_IDLE_POSITION "Idle position sensor"
-#define GAUGE_NAME_IGNITION_LOAD "ign: load"
+#define GAUGE_NAME_IGNITION_LOAD "Ignition: load"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_ISS "Input Shaft Speed"
 #define GAUGE_NAME_KNOCK_1 "knock 1"
@@ -1060,7 +1060,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 274508648
+#define SIGNATURE_HASH 2654507984
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1349,7 +1349,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.03.05.kin.274508648"
+#define TS_SIGNATURE "rusEFI master.2023.03.05.kin.2654507984"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
