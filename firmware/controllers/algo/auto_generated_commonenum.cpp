@@ -1,10 +1,21 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Mar 01 21:10:11 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Mar 05 00:03:08 UTC 2023
 // see also gen_config_and_enums.bat
 
 
 
+const char *getCanGpioType(CanGpioType value){
+switch(value) {
+case CanGpioType::DRT:
+  return "DRT";
+case CanGpioType::MS:
+  return "MS";
+case CanGpioType::NONE:
+  return "NONE";
+  }
+ return NULL;
+}
 const char *getGearControllerMode(GearControllerMode value){
 switch(value) {
 case GearControllerMode::ButtonShift:

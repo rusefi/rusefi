@@ -1,10 +1,13 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Feb 19 03:52:58 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Mar 05 00:03:08 UTC 2023
 // see also gen_config_and_enums.bat
 
 
 
 #include "rusefi_enums.h"
 #pragma once
+#if __cplusplus
+const char *getCanGpioType(CanGpioType value);
+#endif //__cplusplus
 #if __cplusplus
 const char *getGearControllerMode(GearControllerMode value);
 #endif //__cplusplus

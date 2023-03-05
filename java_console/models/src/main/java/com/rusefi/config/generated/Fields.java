@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 04 19:08:00 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 05 00:03:58 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -125,6 +125,9 @@ public class Fields {
 	public static final String CAN_RX_PREFIX = "CAN_rx";
 	public static final int can_vss_nbc_e_BMW_e46 = 0;
 	public static final int can_vss_nbc_e_W202 = 1;
+	public static final int CanGpioType_DRT = 1;
+	public static final int CanGpioType_MS = 2;
+	public static final int CanGpioType_NONE = 0;
 	public static final int CLT_CRANKING_CURVE_SIZE = 8;
 	public static final int CLT_CURVE_SIZE = 16;
 	public static final int CLT_LIMITER_CURVE_SIZE = 4;
@@ -1222,7 +1225,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.04.f407-discovery.3344633727";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.05.f407-discovery.2387247755";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1360;
@@ -2520,7 +2523,10 @@ public class Fields {
 	public static final Field LUADIGITALINPUTPINMODES8 = Field.create("LUADIGITALINPUTPINMODES8", 3979, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field CUSTOMSENTTPSMAX = Field.create("CUSTOMSENTTPSMAX", 3980, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field KLINEBAUDRATE = Field.create("KLINEBAUDRATE", 3982, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3984, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final String[] CanGpioType = {"None", "DRT protocol", "MS protocol"};
+	public static final Field CANGPIOTYPE = Field.create("CANGPIOTYPE", 3984, FieldType.INT8, CanGpioType).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDSPACINGHERE = Field.create("UNUSEDSPACINGHERE", 3985, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3988, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4028, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4060, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4092, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3969,6 +3975,8 @@ public class Fields {
 	LUADIGITALINPUTPINMODES8,
 	CUSTOMSENTTPSMAX,
 	KLINEBAUDRATE,
+	CANGPIOTYPE,
+	UNUSEDSPACINGHERE,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,
