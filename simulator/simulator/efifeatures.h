@@ -16,6 +16,11 @@
 
 #define EFI_TCU FALSE
 
+/**
+ * todo: we *plan* an (integration) test
+ */
+#define EFI_CAN_GPIO TRUE
+
 #define EFI_ANTILAG_SYSTEM TRUE
 
 #define ENABLE_PERF_TRACE FALSE

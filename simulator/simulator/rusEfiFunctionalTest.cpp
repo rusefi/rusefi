@@ -83,6 +83,9 @@ static void runChprintfTest() {
 
 }
 
+static void runCanGpioTest() {
+}
+
 void rusEfiFunctionalTest(void) {
 	printToConsole("Running rusEFI simulator version:");
 	static char versionBuffer[20];
@@ -116,7 +119,14 @@ void rusEfiFunctionalTest(void) {
 	void initMmcCard();
 	initMmcCard();
 
+    /**
+     * !!!! TESTS !
+     */
 	runChprintfTest();
+	runCanGpioTest();
+    /**
+     * end of TESTS !
+     */
 
 	initPeriodicEvents();
 

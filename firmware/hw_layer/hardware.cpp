@@ -540,7 +540,7 @@ void initHardware() {
 	initSpiModules(engineConfiguration);
 #endif /* HAL_USE_SPI */
 
-#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
+#if (EFI_PROD_CODE || EFI_SIMULATOR) && (BOARD_EXT_GPIOCHIPS > 0)
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio();
 #endif
