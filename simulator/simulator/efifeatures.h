@@ -16,6 +16,8 @@
 
 #define EFI_TCU FALSE
 
+#define EFI_ENGINE_EMULATOR TRUE
+
 /**
  * todo: we *plan* an (integration) test
  */

@@ -108,12 +108,7 @@ void rusEfiFunctionalTest(void) {
 
 	commonInitEngineController();
 
-	initTriggerCentral();
-	initTriggerEmulator();
-
 	commonEarlyInit();
-
-	startLua();
 
 	initStatusLoop();
 

@@ -41,6 +41,7 @@
 #include "speed_density.h"
 #include "local_version_holder.h"
 #include "alternator_controller.h"
+#include "engine_emulator.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
 #include "status_loop.h"
@@ -52,6 +53,7 @@
 #include "tachometer.h"
 #include "gppwm.h"
 #include "date_stamp.h"
+#include "rusefi_lua.h"
 #include "buttonshift.h"
 #include "start_stop.h"
 #include "dynoview.h"
@@ -623,6 +625,25 @@ void commonEarlyInit() {
 #if EFI_FILE_LOGGING
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
+
+#if EFI_ENGINE_EMULATOR
+	initEngineEmulator();
+#endif
+
+#if EFI_LUA
+	startLua();
+#endif // EFI_LUA
+
+#if EFI_CAN_SERIAL
+	// needs to be called after initCan() inside initHardware()
+	startCanConsole();
+#endif /* EFI_CAN_SERIAL */
+
+#if HW_CHECK_ALWAYS_STIMULATE
+	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
+	// to be executed at the place of assembly
+	enableTriggerStimulator();
+#endif // HW_CHECK_ALWAYS_STIMULATE
 }
 
 void initEngineController() {

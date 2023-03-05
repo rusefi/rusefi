@@ -253,25 +253,6 @@ void runRusEfiWithConfig() {
 
 	commonEarlyInit();
 
-#if EFI_ENGINE_EMULATOR
-	initEngineEmulator();
-#endif
-
-#if EFI_LUA
-	startLua();
-#endif // EFI_LUA
-
-#if EFI_CAN_SERIAL
-	// needs to be called after initCan() inside initHardware()
-	startCanConsole();
-#endif /* EFI_CAN_SERIAL */
-
-#if HW_CHECK_ALWAYS_STIMULATE
-	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
-	// to be executed at the place of assembly
-	enableTriggerStimulator();
-#endif // HW_CHECK_ALWAYS_STIMULATE
-
 
 	// Config could be completely bogus - don't start anything else!
 	if (validateConfig()) {
