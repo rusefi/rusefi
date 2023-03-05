@@ -106,6 +106,8 @@ void rusEfiFunctionalTest(void) {
 
 	commonInitEngineController();
 
+    initTriggerCentral();
+
 	commonEarlyInit();
 
 	enableTriggerStimulator();
