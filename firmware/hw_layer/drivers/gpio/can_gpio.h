@@ -1,3 +1,6 @@
+/**
+ * can_gpio.h
+ */
 #pragma once
 
 #include "efifeatures.h"
@@ -8,3 +11,5 @@
 #else
 #define BOARD_CAN_GPIO_COUNT 0
 #endif
+
+void initCanGpio();

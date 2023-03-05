@@ -220,8 +220,7 @@ int gpiochips_setPinNames(brain_pin_e base, const char **names)
  * calles when OS is ready, so gpiochip can start threads, use drivers and so on.
  */
 
-int gpiochips_init(void)
-{
+int gpiochips_init(void) {
 	int pins_added = 0;
 
 	for (int i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
@@ -372,8 +371,7 @@ int gpiochips_setPinNames(brain_pin_e pin, const char **names)
 	return 0;
 }
 
-int gpiochips_init(void)
-{
+int gpiochips_init(void) {
 	return 0;
 }
 

@@ -19,6 +19,7 @@
 #include "drivers/gpio/drv8860.h"
 #include "drivers/gpio/l9779.h"
 #include "drivers/gpio/tle9104.h"
+#include "drivers/gpio/can_gpio.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config
@@ -279,6 +280,10 @@ void initSmartGpio() {
 		efiAssertVoid(OBD_PCM_Processor_Fault, ret == (int)Gpio::DRV8860_PIN_1, "drv8860");
 	}
 #endif /* (BOARD_DRV8860_COUNT > 0) */
+
+#if EFI_CAN_GPIO
+    initCanGpio();
+#endif // EFI_CAN_GPIO
 
 #if (BOARD_MC33810_COUNT > 0)
 	/* none of official boards has this IC */
