@@ -68,8 +68,6 @@ function onTcu2(bus, id, dlc, data)
 --	print("onTcu2")
 end
 
-motor5FuelCounter = 0
-
 function setBitRange(data, totalBitIndex, bitWidth, value)
 	local byteIndex = totalBitIndex >> 3
 	local bitInByteIndex = totalBitIndex - byteIndex * 8
@@ -147,27 +145,16 @@ accGraData   = { 0x00, 0x00, 0x08, 0x00, 0x1A, 0x00, 0x02, 0x01 }
 setTickRate(100)
 
 everySecondTimer = Timer.new()
-canMotorInfoCounter = 0
-
-motorBreCounter = 0
---accGraCounter = 0
-counter16 = 0
-motor2counter = 0
 
 mafSensor = Sensor.new("maf")
 mafCalibrationIndex = findCurveIndex("mafcurve")
 
 canMotorInfoTotalCounter = 0
 
-function onAccGra(bus, id, dlc, data)
-  print("onAccGra")
-end
-
 canRxAdd(AIRBAG, onAirBag)
 canRxAdd(TCU_1, onTcu1)
 canRxAdd(TCU_2, onTcu2)
--- canRxAdd(BRAKE_2)
--- canRxAdd(1, ACC_GRA, onAccGra)
+--canRxAdd(BRAKE_2)
 
 function onMotor1(bus, id, dlc, data)
 
@@ -197,7 +184,7 @@ function onMotor1(bus, id, dlc, data)
  txCan(TCU_BUS, MOTOR_1, 0, motor1Data)
 end
 
-function onMotor3(bus, id, dlc, data)
+function sendMotor3()
 	iat = getSensor("IAT") or 0
 	tps = getSensor("TPS1") or 0
 
@@ -212,7 +199,7 @@ end
 
 
 motorBreCounter = 0
-function onMotorBre(bus, id, dlc, data)
+function sendMotorBre()
  motorBreCounter = (motorBreCounter + 1) % 16
 
     setBitRange(motorBreData, 8, 4, motorBreCounter)
@@ -222,7 +209,7 @@ function onMotorBre(bus, id, dlc, data)
 end
 
 motor2counter = 0
-function onMotor2(bus, id, dlc, data)
+function sendMotor2()
  motor2counter = (motor2counter + 1) % 16
 
     minTorque = fakeTorque / 2
@@ -242,18 +229,15 @@ end
 
 motor5FuelCounter = 0
 function onMotor5(bus, id, dlc, data)
- setBitRange(motor5Data, 5, 9, motor5FuelCounter)
- xorChecksum(motor5Data, 8)
- txCan(TCU_BUS, MOTOR_5, 0, motor5Data)
+	setBitRange(motor5Data, 5, 9, motor5FuelCounter)
+	xorChecksum(motor5Data, 8)
+	txCan(TCU_BUS, MOTOR_5, 0, motor5Data)
 end
 
-counter16 = 0
-function onMotor6(bus, id, dlc, data)
- counter16 = (counter16 + 1) % 16
+motor6counter = 0
+function sendMotor6()
+ motor6counter = (motor6counter + 1) % 16
 
- -- engineTorque = getBitRange(data, 8, 8) * 0.39
- -- actualTorque = getBitRange(data, 16, 8) * 0.39
- -- feedbackGearbox = getBitRange(data, 40, 8) * 0.39
  engineTorque = fakeTorque * 0.9
  actualTorque = fakeTorque
  feedbackGearbox = 255
@@ -261,20 +245,19 @@ function onMotor6(bus, id, dlc, data)
  motor6Data[2] = math.floor(engineTorque / 0.39)
  motor6Data[3] = math.floor(actualTorque / 0.39)
  motor6Data[6] = math.floor(feedbackGearbox / 0.39)
- setBitRange(motor6Data, 60, 4, counter16)
+ setBitRange(motor6Data, 60, 4, motor6counter)
 
  xorChecksum(motor6Data, 1)
  txCan(TCU_BUS, MOTOR_6, 0, motor6Data)
 end
 
 accGraCounter = 0
-function onAccGra(bus, id, dlc, data)
+function sendAccGra()
  accGraCounter = (accGraCounter + 1) % 16
  setBitRange(accGraData, 60, 4, accGraCounter)
     xorChecksum(accGraData, 1)
 
  txCan(TCU_BUS, id, 0, accGraData)
--- txCan(TCU_BUS, id, 0, data)
 end
 
 canMotorInfoCounter = 0
@@ -298,7 +281,7 @@ function onMotorInfo(bus, id, dlc, data)
     end
 end
 
-function onMotor7(bus, id, dlc, data)
+function sendMotor7()
  txCan(TCU_BUS, MOTOR_7, 0, motor7Data)
 end
 
@@ -435,8 +418,6 @@ function onTick()
 	-- 	print(freqValue .. " mafValue=" .. mafValue)
 	mafSensor : set(mafValue)
 
-	counter16 = (counter16 + 1) % 16
-
 	rpm = getSensor("RPM") or 0
 	vbat = getSensor("BatteryVoltage") or 0
 
@@ -445,14 +426,14 @@ function onTick()
  end
 
 onMotor1(0, 0, 0, nil)
-onMotor3(0, 0, 0, nil)
+ sendMotor3()
 
-onMotorBre(0, 0, 0, nil)
-onMotor2(0, 0, 0, nil)
-onMotor5(0, 0, 0, nil)
-onMotor6(0, 0, 0, nil)
-onMotor7(0, 0, 0, nil)
-onAccGra(0, 0, 0, nil)
+ sendMotor2()
+ sendMotor5()
+ sendMotor6()
+ sendMotor7()
+ sendMotorBre()
+ sendAccGra()
 
 	local timeToTurnOff = shallSleep : getElapsedSeconds() > 2
 	local connectedToUsb = vbat < 4
