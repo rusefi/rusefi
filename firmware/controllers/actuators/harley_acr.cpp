@@ -51,6 +51,7 @@ void HarleyAcr::onSlowCallback() {
 	bool acrState = getAcrState();
 	engine->outputChannels.acrActive = acrState;
 	enginePins.harleyAcr.setValue(acrState);
+	enginePins.harleyAcr2.setValue(acrState);
 	m_active = acrState;
 }
 
