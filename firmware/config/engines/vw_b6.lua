@@ -232,7 +232,7 @@ function sendMotor2()
 end
 
 motor5FuelCounter = 0
-function onMotor5(bus, id, dlc, data)
+function sendMotor5()
 	setBitRange(motor5Data, 5, 9, motor5FuelCounter)
 	xorChecksum(motor5Data, 8)
 	txCan(TCU_BUS, MOTOR_5, 0, motor5Data)
@@ -261,7 +261,7 @@ function sendAccGra()
  setBitRange(accGraData, 60, 4, accGraCounter)
     xorChecksum(accGraData, 1)
 
- txCan(TCU_BUS, id, 0, accGraData)
+ txCan(TCU_BUS, ACC_GRA, 0, accGraData)
 end
 
 canMotorInfoCounter = 0
@@ -428,7 +428,7 @@ function onTick()
    canMotorInfoTotalCounter = 0
  end
 
-onMotor1(0, 0, 0, nil)
+ onMotor1(0, 0, 0, nil)
  sendMotor3()
 
  sendMotor2()
