@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Sun Feb 19 03:53:01 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Mon Mar 06 04:15:17 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -12,8 +12,9 @@ public class HighPressureFuelPump {
 	public static final Field NOVALVE = Field.create("NOVALVE", 12, FieldType.BIT, 0).setBaseOffset(876);
 	public static final Field ANGLEABOVEMIN = Field.create("ANGLEABOVEMIN", 12, FieldType.BIT, 1).setBaseOffset(876);
 	public static final Field ISHPFPINACTIVE = Field.create("ISHPFPINACTIVE", 12, FieldType.BIT, 2).setBaseOffset(876);
-	public static final Field NEXTLOBE = Field.create("NEXTLOBE", 16, FieldType.FLOAT).setBaseOffset(876);
-	public static final Field DI_NEXTSTART = Field.create("DI_NEXTSTART", 20, FieldType.FLOAT).setBaseOffset(876);
+	public static final Field M_PRESSURETARGET_KPA = Field.create("M_PRESSURETARGET_KPA", 16, FieldType.FLOAT).setBaseOffset(876);
+	public static final Field NEXTLOBE = Field.create("NEXTLOBE", 20, FieldType.FLOAT).setBaseOffset(876);
+	public static final Field DI_NEXTSTART = Field.create("DI_NEXTSTART", 24, FieldType.FLOAT).setBaseOffset(876);
 	public static final Field[] VALUES = {
 	M_REQUESTED_PUMP,
 	FUEL_REQUESTED_PERCENT,
@@ -21,6 +22,7 @@ public class HighPressureFuelPump {
 	NOVALVE,
 	ANGLEABOVEMIN,
 	ISHPFPINACTIVE,
+	M_PRESSURETARGET_KPA,
 	NEXTLOBE,
 	DI_NEXTSTART,
 	};

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Tue Nov 01 21:35:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Mon Mar 06 04:15:17 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,16 +6,18 @@
 // start of high_pressure_fuel_pump_s
 struct high_pressure_fuel_pump_s {
 	/**
-	 * HPFP duration
+	 * GDI: HPFP duration
 	 * Computed requested pump duration in degrees (not including deadtime)
 	 * offset 0
 	 */
 	angle_t m_requested_pump = (angle_t)0;
 	/**
+	 * "GDI: requested_percent"
 	 * offset 4
 	 */
 	float fuel_requested_percent = (float)0;
 	/**
+	 * "GDI: percent_pi"
 	 * offset 8
 	 */
 	float fuel_requested_percent_pi = (float)0;
@@ -116,17 +118,23 @@ struct high_pressure_fuel_pump_s {
 	offset 12 bit 31 */
 	bool unusedBit_6_31 : 1 {};
 	/**
+	 * "GDI: target pressure"
 	 * offset 16
+	 */
+	float m_pressureTarget_kPa = (float)0;
+	/**
+	 * "GDI: nextLobe"
+	 * offset 20
 	 */
 	angle_t nextLobe = (angle_t)0;
 	/**
-	 * DI: next start
+	 * GDI: next start
 	v
-	 * offset 20
+	 * offset 24
 	 */
 	float di_nextStart = (float)0;
 };
-static_assert(sizeof(high_pressure_fuel_pump_s) == 24);
+static_assert(sizeof(high_pressure_fuel_pump_s) == 28);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Tue Nov 01 21:35:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Mon Mar 06 04:15:17 UTC 2023
