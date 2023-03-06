@@ -12,4 +12,5 @@
 void updateDevConsoleState();
 void startStatusThreads();
 void initStatusLoop();
+
 void printOverallStatus();
