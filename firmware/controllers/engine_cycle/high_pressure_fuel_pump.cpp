@@ -79,12 +79,25 @@ float HpfpQuantity::calcFuelPercent(int rpm) {
 			      engineConfiguration->hpfpCompensationRpmBins, rpm);
 }
 
+static float getLoad() {
+    switch(engineConfiguration->fuelAlgorithm) {
+    // TODO: allow other load axis, like we claim to
+    case LM_ALPHA_N:
+        return Sensor::getOrZero(SensorType::DriverThrottleIntent);
+    default:
+       return Sensor::getOrZero(SensorType::Map);
+    }
+}
+
 float HpfpQuantity::calcPI(int rpm, float calc_fuel_percent) {
-	m_pressureTarget_kPa = std::max<float>(
-		m_pressureTarget_kPa - (engineConfiguration->hpfpTargetDecay *
-					(FAST_CALLBACK_PERIOD_MS / 1000.)),
+	float load = getLoad();
+
+	float possibleValue = m_pressureTarget_kPa - (engineConfiguration->hpfpTargetDecay *
+			(FAST_CALLBACK_PERIOD_MS / 1000.));
+
+	m_pressureTarget_kPa = std::max<float>(possibleValue,
 		interpolate3d(engineConfiguration->hpfpTarget,
-			      engineConfiguration->hpfpTargetLoadBins, Sensor::getOrZero(SensorType::Map), // TODO: allow other load axis, like we claim to
+			      engineConfiguration->hpfpTargetLoadBins, load,
 			      engineConfiguration->hpfpTargetRpmBins, rpm));
 
 	auto fuelPressure = Sensor::get(SensorType::FuelPressureHigh);
@@ -122,6 +135,8 @@ angle_t HpfpQuantity::pumpAngleFuel(int rpm, HpfpController *model) {
 	model->fuel_requested_percent = calcFuelPercent(rpm);
 
 	model->fuel_requested_percent_pi = calcPI(rpm, model->fuel_requested_percent);
+	// todo: streamline this logging field see 'calcPI' comment
+	model->m_pressureTarget_kPa = m_pressureTarget_kPa;
 	// Apply PI control
 	float fuel_requested_percentTotal = model->fuel_requested_percent + model->fuel_requested_percent_pi;
 
