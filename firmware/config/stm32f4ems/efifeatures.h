@@ -268,7 +268,12 @@
 	#define EFI_USE_COMPRESSED_INI_MSD
 	#define ENABLE_PERF_TRACE TRUE
 
-	#define LUA_USER_HEAP 50000
+	#if EFI_ETHERNET
+		// F4 ethernet needs some extra space
+		#define LUA_USER_HEAP 40000
+	#else // EFI_ETHERNET
+		#define LUA_USER_HEAP 50000
+	#endif
 #else
 	// small memory F40x can't fit perf trace
 	#define ENABLE_PERF_TRACE FALSE
