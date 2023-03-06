@@ -86,6 +86,7 @@ public:
 	RegisteredOutputPin acRelay;
 	RegisteredOutputPin fuelPumpRelay;
 	RegisteredOutputPin harleyAcr;
+	RegisteredOutputPin harleyAcr2;
 	OutputPin o2heater;
 	OutputPin luaOutputPins[LUA_PWM_COUNT];
 

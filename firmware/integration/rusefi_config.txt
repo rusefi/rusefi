@@ -1441,6 +1441,8 @@ pwm_freq_t tcu_pc_solenoid_freq
 output_pin_e tcu_32_solenoid_pin
 pwm_freq_t tcu_32_solenoid_freq
 
+output_pin_e acrPin2;
+
 float etbMinimumPosition;;"%", 1, 0, 0.01, 100, 2
 
 uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0

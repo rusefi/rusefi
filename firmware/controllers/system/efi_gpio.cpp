@@ -142,6 +142,7 @@ EnginePins::EnginePins() :
 		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
 		harleyAcr("Harley ACR", CONFIG_OFFSET(acrPin)),
+		harleyAcr2("Harley ACR 2", CONFIG_OFFSET(acrPin2)),
 		boostPin("Boost", CONFIG_PIN_OFFSETS(boostControl)),
 		idleSolenoidPin("Idle Valve", CONFIG_OFFSET2(idle, solenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
 		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
