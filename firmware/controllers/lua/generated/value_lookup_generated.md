@@ -37,9 +37,6 @@ Does the vehicle have a turbo or supercharger?
 ### useFordRedundantTps
 On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
-### isVerboseAuxPid1
-
-
 ### overrideTriggerGaps
 
 
