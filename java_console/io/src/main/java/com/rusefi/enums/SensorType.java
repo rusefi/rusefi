@@ -60,5 +60,6 @@ public enum SensorType {
 	AuxLinear2,
 	AuxSpeed1,
 	AuxSpeed2,
+	CurrentGear,
 	PlaceholderLast,
 }
