@@ -150,6 +150,8 @@ canRxAdd(TCU_1, onTcu1)
 canRxAdd(TCU_2, onTcu2)
 --canRxAdd(BRAKE_2)
 
+rpm = 0
+
 function sendMotor1()
 	engineTorque = fakeTorque * 0.9
 	innerTorqWithoutExt = fakeTorque
@@ -175,7 +177,7 @@ end
 
 function onMotor1(bus, id, dlc, data)
 
-	rpm = getSensor("RPM") or 0
+	rpm = math.floor(getSensor("RPM") + 0.5)
 	tps = getSensor("TPS1") or 0
 
 	fakeTorque = interpolate(0, 6, 100, 60, tps)
