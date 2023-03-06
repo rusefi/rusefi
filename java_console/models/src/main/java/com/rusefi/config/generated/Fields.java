@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 04 08:34:38 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Mar 06 02:22:48 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -992,7 +992,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 2069127556;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1198,7 +1197,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.04.f407-discovery.2069127556";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.06.f407-discovery.3129917934";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1356;
@@ -2325,7 +2324,7 @@ public class Fields {
 	public static final Field TCU_PC_SOLENOID_FREQ = Field.create("TCU_PC_SOLENOID_FREQ", 3536, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_32_SOLENOID_PIN = Field.create("TCU_32_SOLENOID_PIN", 3538, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_32_SOLENOID_FREQ = Field.create("TCU_32_SOLENOID_FREQ", 3540, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_3542 = Field.create("ALIGNMENTFILL_AT_3542", 3542, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ACRPIN2 = Field.create("ACRPIN2", 3542, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBMINIMUMPOSITION = Field.create("ETBMINIMUMPOSITION", 3544, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TUNEHIDINGKEY = Field.create("TUNEHIDINGKEY", 3548, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field HIGHSPEEDOFFSETS = Field.create("HIGHSPEEDOFFSETS", 3550, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -3639,7 +3638,7 @@ public class Fields {
 	TCU_PC_SOLENOID_FREQ,
 	TCU_32_SOLENOID_PIN,
 	TCU_32_SOLENOID_FREQ,
-	ALIGNMENTFILL_AT_3542,
+	ACRPIN2,
 	ETBMINIMUMPOSITION,
 	TUNEHIDINGKEY,
 	HIGHSPEEDOFFSETS,

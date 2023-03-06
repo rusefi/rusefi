@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Mar 03 06:23:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Mar 06 02:21:59 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3744,11 +3744,9 @@ struct engine_configuration_s {
 	 */
 	pwm_freq_t tcu_32_solenoid_freq;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 3542
 	 */
-	uint8_t alignmentFill_at_3542[2];
+	output_pin_e acrPin2;
 	/**
 	%
 	 * offset 3544
@@ -4658,4 +4656,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22060);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Mar 03 06:23:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Mar 06 02:21:59 UTC 2023
