@@ -20,6 +20,8 @@ static void commonPassatB6() {
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
+    engineConfiguration->globalTriggerAngleOffset = 90;
+
     setTable(config->injectionPhase, -180.0f);
 
 	engineConfiguration->etbIdleThrottleRange = 10;
