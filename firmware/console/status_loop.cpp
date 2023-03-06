@@ -219,7 +219,7 @@ static Logging logicAnalyzerLogger("logic analyzer", logicAnalyzerBuffer, sizeof
  * This method is periodically invoked by the main loop
  * todo: is this mostly dead code?
  */
-void updateDevConsoleState(void) {
+void updateDevConsoleState() {
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
@@ -781,11 +781,11 @@ DcHardware *getdcHardware();
 
 #endif /* EFI_TUNER_STUDIO */
 
-void initStatusLoop(void) {
+void initStatusLoop() {
 	addConsoleActionI("warn", setWarningEnabled);
 }
 
-void startStatusThreads(void) {
+void startStatusThreads() {
 	// todo: refactoring needed, this file should probably be split into pieces
 #if EFI_PROD_CODE
 	initStatusLeds();

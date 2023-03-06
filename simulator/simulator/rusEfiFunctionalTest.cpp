@@ -21,6 +21,7 @@
 #include "bench_test.h"
 #include "tunerstudio.h"
 #include "map_averaging.h"
+#include "mmc_card.h"
 #include "memstreams.h"
 #include <chprintf.h>
 #include "rusefi_lua.h"
@@ -113,7 +114,6 @@ void rusEfiFunctionalTest(void) {
 
 	startLoggingProcessor();
 
-	void initMmcCard();
 	initMmcCard();
 
 	runChprintfTest();
