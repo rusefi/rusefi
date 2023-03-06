@@ -17,6 +17,8 @@ MOTOR_1 = 0x280
 MOTOR_BRE = 0x284
 -- 648
 MOTOR_2 = 0x288
+-- 800
+Kombi_1 = 0x320
 -- 896
 MOTOR_3 = 0x380
 -- 1152
@@ -311,6 +313,16 @@ local groupsSize = 1
 
 local groupIndex = 1
 
+vssSensor = Sensor.new("VehicleSpeed")
+vssSensor : setTimeout(timeout)
+
+function onKombi(bus, id, dlc, data)
+    speed = getBitRange(data, 46, 10) * 0.32
+    vssSensor : set(speed)
+end
+
+canRxAdd(Kombi_1, onKombi)
+
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
 
@@ -414,7 +426,7 @@ end
 
 canRxAdd(VWTP_IN, onCanHello)
 
-txCan(1, VWTP_OUT, 0, { 0x02, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
+--txCan(1, VWTP_OUT, 0, { 0x02, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
 
 function onTick()
 
