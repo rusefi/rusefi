@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Mar 06 02:22:48 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Mar 06 09:09:53 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -709,7 +709,7 @@ struct engine_configuration_s {
 	bool useFordRedundantTps : 1 {};
 	/**
 	offset 88 bit 2 */
-	bool isVerboseAuxPid1 : 1 {};
+	bool unused88b2 : 1 {};
 	/**
 	offset 88 bit 3 */
 	bool overrideTriggerGaps : 1 {};
@@ -4656,4 +4656,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22060);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Mar 06 02:22:48 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Mar 06 09:09:53 UTC 2023

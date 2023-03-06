@@ -29,8 +29,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->isForcedInduction;
 		case -1284354759:
 			return engineConfiguration->useFordRedundantTps;
-		case 563123475:
-			return engineConfiguration->isVerboseAuxPid1;
 		case 1362186948:
 			return engineConfiguration->overrideTriggerGaps;
 		case -298185774:
@@ -1048,11 +1046,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -1284354759:
 	{
 		engineConfiguration->useFordRedundantTps = (int)value;
-		return;
-	}
-		case 563123475:
-	{
-		engineConfiguration->isVerboseAuxPid1 = (int)value;
 		return;
 	}
 		case 1362186948:
