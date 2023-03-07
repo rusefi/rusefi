@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 #include "rusefi_enums.h"
-#include "expected.h"
+#include <rusefi/expected.h>
 
 enum class TriggerValue : uint8_t {
 	FALL = 0,

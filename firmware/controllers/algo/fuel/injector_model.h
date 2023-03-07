@@ -1,6 +1,6 @@
 #pragma once
 
-#include "expected.h"
+#include <rusefi/expected.h>
 #include "injector_model_generated.h"
 #include "engine_module.h"
 

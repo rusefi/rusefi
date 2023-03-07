@@ -8,7 +8,7 @@
 
 #include "pch.h"
 
-#include "expected.h"
+#include <rusefi/expected.h>
 #include "hardware.h"
 
 #ifdef STM32F4XX
