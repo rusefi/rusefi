@@ -48,7 +48,7 @@
 #pragma once
 
 #include "sensor_type.h"
-#include "expected.h"
+#include <rusefi/expected.h>
 
 #include <cstddef>
 

@@ -4,7 +4,7 @@
 #include "gppwm_channel.h"
 
 #include "table_helper.h"
-#include "expected.h"
+#include <rusefi/expected.h>
 
 expected<float> readGppwmChannel(gppwm_channel_e channel) {
 	switch (channel) {

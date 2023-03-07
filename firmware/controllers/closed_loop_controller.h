@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "expected.h"
+#include <rusefi/expected.h>
 
 template <typename TInput, typename TOutput>
 class ClosedLoopController {
