@@ -160,7 +160,7 @@ pins:
     id: [A1, A1, EFI_ADC_1]
     class: [event_inputs, switch_inputs, analog_inputs]
     color: dark green
-    function: IAT sensor
+    function: IAT sensor or SENT input!
     ts_name: 23 - AN temp 2
     type: at
 
