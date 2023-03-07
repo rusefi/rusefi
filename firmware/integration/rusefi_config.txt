@@ -1475,7 +1475,7 @@ tChargeMode_e tChargeMode;
 
         uint8_t hpfpCamLobes;;"lobes/cam", 1, 0, 0, 255, 0
         hpfp_cam_e hpfpCam;
-        uint8_t hpfpPeakPos;Crank angle ATDC of first lobe peak;"deg", 1, 0, 0, 255, 0
+        uint8_t unusedHere
         uint8_t hpfpMinAngle;If the requested activation time is below this angle, don't bother running the pump;"deg", 1, 0, 0, 255, 0
         uint16_t autoscale hpfpPumpVolume;Size of the pump chamber in cc.  Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.;"cc", 0.001, 0, 0, 65, 3
         uint8_t hpfpActivationAngle;How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own);"deg", 1, 0, 0, 255, 0
@@ -1573,7 +1573,8 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	uint16_t customSentTpsMax
 	uint16_t kLineBaudRate
 	CanGpioType canGpioType
-	uint8_t[3] unusedSpacingHere
+	uint8_t[1] unusedSpacingHere
+	int16_t hpfpPeakPos;Crank angle ATDC of first lobe peak;"deg", 1, 0, -719, 719, 0
 uint8_t[40] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
