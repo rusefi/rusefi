@@ -86,6 +86,7 @@ float HellenBoardIdSolver::solve(float Tc1, float Tc2, float x0, float y, float 
 	k2 = iC * (Tc1 + Td);
 	k3 = iC * (Tc1 - Tc2);
 
+	// the same method works for R (if C is known) or C (if R is known)
 	auto result = NewtonsMethodSolver::solve(x0, deltaX, 20);
 
 	// since we had https://github.com/rusefi/rusefi/issues/4084 let's add paranoia check
