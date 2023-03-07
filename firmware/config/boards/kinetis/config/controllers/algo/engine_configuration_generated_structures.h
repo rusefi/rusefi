@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Mar 07 15:41:55 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Mar 07 23:09:50 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3681,7 +3681,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2082
 	 */
-	brain_input_pin_e sentInputPins[SENT_INPUT_COUNT];
+	sent_input_pin_e sentInputPins[SENT_INPUT_COUNT];
 	/**
 	 * offset 2084
 	 */
@@ -5294,4 +5294,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Mar 07 15:41:55 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Mar 07 23:09:50 UTC 2023
