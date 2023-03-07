@@ -1001,6 +1001,7 @@
 #define sensor_chart_e_SC_RPM_ACCEL 3
 #define sensor_chart_e_SC_TRIGGER 1
 #define SENT_INPUT_COUNT 1
+#define sent_input_pin_e_fullenum 
 #define SentEtbType_auto_enum 0="NONE",3="CUSTOM",2="FORD_TYPE_1",1="GM_TYPE_1"
 #define SentEtbType_CUSTOM 3
 #define SentEtbType_enum "None", "GM type 1", "Ford type 1", "Custom"
