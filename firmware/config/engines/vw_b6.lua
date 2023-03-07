@@ -314,7 +314,7 @@ local groupsSize = 1
 local groupIndex = 1
 
 vssSensor = Sensor.new("VehicleSpeed")
-vssSensor : setTimeout(timeout)
+vssSensor : setTimeout(2000)
 
 function onKombi(bus, id, dlc, data)
     speed = getBitRange(data, 46, 10) * 0.32
