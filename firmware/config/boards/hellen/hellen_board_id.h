@@ -27,15 +27,15 @@ public:
 // We need to solve the following equation for R or C:
 //   X^Td - X^(Tc1+Td) + X^(Tc2-Tc1) - 1 = 0
 // where: X = exp(-1/(RC))
-class HellenBoardIdSolver
+class HellenBoardIdSolver : public NewtonsMethodSolver
 {
 public:
-	float fx(float x) {
+	float fx(float x) override {
 		return exp(k1 / x) - exp(k2 / x) + exp(k3 / x) - 1.0;
 	}
 
 	// first-order derivative
-	float dfx(float x) {
+	float dfx(float x) override {
 		return (-1.0f / (x * x)) * (k1 * exp(k1 / x) - k2 * exp(k2 / x) + k3 * exp(k3 / x));
 	}
 
