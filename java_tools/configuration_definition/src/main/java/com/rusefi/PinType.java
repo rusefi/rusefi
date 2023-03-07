@@ -6,6 +6,7 @@ public enum PinType {
     OUTPUTS("output_pin_e", "Gpio", "Unassigned"),
     ANALOG_INPUTS("adc_channel_e", "adc_channel_e", "EFI_ADC_NONE"),
     EVENT_INPUTS("brain_input_pin_e", "Gpio", "Unassigned"),
+    SENT_INPUTS("sent_input_pin_e", "Gpio", "Unassigned"),
     SWITCH_INPUTS("switch_input_pin_e", "Gpio", "Unassigned");
 
 
