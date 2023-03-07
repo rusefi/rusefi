@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Mar 07 00:39:44 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Mar 07 15:42:50 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1004,7 +1004,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1922122542;
+	public static final int SIGNATURE_HASH = 1037806144;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1226,7 +1226,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.07.f407-discovery.1922122542";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.07.f407-discovery.1037806144";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
@@ -1254,6 +1254,9 @@ public class Fields {
 	public static final int uart_device_e_UART_DEVICE_3 = 3;
 	public static final int uart_device_e_UART_DEVICE_4 = 4;
 	public static final int uart_device_e_UART_NONE = 0;
+	public static final int UiMode_FULL = 0;
+	public static final int UiMode_INSTALLATION = 1;
+	public static final int UiMode_TUNING = 2;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int VE_BLEND_COUNT = 4;
 	public static final int ve_override_e_VE_MAP = 1;
@@ -2525,7 +2528,8 @@ public class Fields {
 	public static final Field KLINEBAUDRATE = Field.create("KLINEBAUDRATE", 3982, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final String[] CanGpioType = {"None", "DRT protocol", "MS protocol"};
 	public static final Field CANGPIOTYPE = Field.create("CANGPIOTYPE", 3984, FieldType.INT8, CanGpioType).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDSPACINGHERE = Field.create("UNUSEDSPACINGHERE", 3985, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final String[] UiMode = {"Full", "Installation", "Tuning"};
+	public static final Field UIMODE = Field.create("UIMODE", 3985, FieldType.INT8, UiMode).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPPEAKPOS = Field.create("HPFPPEAKPOS", 3986, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3988, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4028, FieldType.FLOAT).setBaseOffset(0);
@@ -3976,7 +3980,7 @@ public class Fields {
 	CUSTOMSENTTPSMAX,
 	KLINEBAUDRATE,
 	CANGPIOTYPE,
-	UNUSEDSPACINGHERE,
+	UIMODE,
 	HPFPPEAKPOS,
 	MAINUNUSEDEND,
 	ETBBIASBINS,

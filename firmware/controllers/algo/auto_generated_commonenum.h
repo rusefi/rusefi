@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Mar 05 00:03:08 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Mar 07 15:41:51 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -31,6 +31,9 @@ const char *getTriggerWheel(TriggerWheel value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getTsCalMode(TsCalMode value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getUiMode(UiMode value);
 #endif //__cplusplus
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value);
 const char *getAntiLagActivationMode_e(antiLagActivationMode_e value);
