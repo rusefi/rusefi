@@ -7,7 +7,7 @@
 
 #include "scheduler.h"
 #include "utlist.h"
-#include "expected.h"
+#include <rusefi/expected.h>
 
 #pragma once
 
