@@ -48,10 +48,10 @@ public class PinoutLogic {
             return;
         }
         Map<String, ArrayList<String>> names = new HashMap<>();
-        names.put("outputs", new ArrayList<>());
-        names.put("analog_inputs", new ArrayList<>());
-        names.put("event_inputs", new ArrayList<>());
-        names.put("switch_inputs", new ArrayList<>());
+        names.put(PinType.OUTPUTS.name().toLowerCase(), new ArrayList<>());
+        names.put(PinType.ANALOG_INPUTS.name().toLowerCase(), new ArrayList<>());
+        names.put(PinType.EVENT_INPUTS.name().toLowerCase(), new ArrayList<>());
+        names.put(PinType.SWITCH_INPUTS.name().toLowerCase(), new ArrayList<>());
         for (PinState listPin : listPins) {
             String id = listPin.getId();
             String className = listPin.getPinClass();
