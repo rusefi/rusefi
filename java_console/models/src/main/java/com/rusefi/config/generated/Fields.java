@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Mar 06 04:16:05 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Mar 07 00:39:44 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1004,6 +1004,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1922122542;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1225,7 +1226,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.06.f407-discovery.2200109025";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.07.f407-discovery.1922122542";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
@@ -2406,7 +2407,7 @@ public class Fields {
 	public static final Field HPFPCAMLOBES = Field.create("HPFPCAMLOBES", 3195, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final String[] hpfp_cam_e = {"NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"};
 	public static final Field HPFPCAM = Field.create("HPFPCAM", 3196, FieldType.INT8, hpfp_cam_e).setScale(1.0).setBaseOffset(0);
-	public static final Field HPFPPEAKPOS = Field.create("HPFPPEAKPOS", 3197, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 3197, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPMINANGLE = Field.create("HPFPMINANGLE", 3198, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3199 = Field.create("ALIGNMENTFILL_AT_3199", 3199, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPPUMPVOLUME = Field.create("HPFPPUMPVOLUME", 3200, FieldType.INT16).setScale(0.001).setBaseOffset(0);
@@ -2525,6 +2526,7 @@ public class Fields {
 	public static final String[] CanGpioType = {"None", "DRT protocol", "MS protocol"};
 	public static final Field CANGPIOTYPE = Field.create("CANGPIOTYPE", 3984, FieldType.INT8, CanGpioType).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDSPACINGHERE = Field.create("UNUSEDSPACINGHERE", 3985, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field HPFPPEAKPOS = Field.create("HPFPPEAKPOS", 3986, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3988, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4028, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4060, FieldType.FLOAT).setBaseOffset(0);
@@ -3858,7 +3860,7 @@ public class Fields {
 	ETBJAMINTEGRATORLIMIT,
 	HPFPCAMLOBES,
 	HPFPCAM,
-	HPFPPEAKPOS,
+	UNUSEDHERE,
 	HPFPMINANGLE,
 	ALIGNMENTFILL_AT_3199,
 	HPFPPUMPVOLUME,
@@ -3975,6 +3977,7 @@ public class Fields {
 	KLINEBAUDRATE,
 	CANGPIOTYPE,
 	UNUSEDSPACINGHERE,
+	HPFPPEAKPOS,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

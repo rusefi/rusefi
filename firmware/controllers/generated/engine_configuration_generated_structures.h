@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 05 07:02:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Mar 07 00:39:44 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4075,11 +4075,9 @@ struct engine_configuration_s {
 	 */
 	hpfp_cam_e hpfpCam;
 	/**
-	 * Crank angle ATDC of first lobe peak
-	deg
 	 * offset 3197
 	 */
-	uint8_t hpfpPeakPos;
+	uint8_t unusedHere;
 	/**
 	 * If the requested activation time is below this angle, don't bother running the pump
 	deg
@@ -4467,7 +4465,13 @@ struct engine_configuration_s {
 	/**
 	 * offset 3985
 	 */
-	uint8_t unusedSpacingHere[3];
+	uint8_t unusedSpacingHere[1];
+	/**
+	 * Crank angle ATDC of first lobe peak
+	deg
+	 * offset 3986
+	 */
+	int16_t hpfpPeakPos;
 	/**
 	units
 	 * offset 3988
@@ -5290,4 +5294,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 05 07:02:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Mar 07 00:39:44 UTC 2023

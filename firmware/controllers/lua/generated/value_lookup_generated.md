@@ -1456,9 +1456,6 @@ Delay before engaging the AC compressor. Set to 0 to engage immediately with no 
 ### hpfpCamLobes
 
 
-### hpfpPeakPos
-Crank angle ATDC of first lobe peak
-
 ### hpfpMinAngle
 If the requested activation time is below this angle, don't bother running the pump
 
@@ -1566,4 +1563,7 @@ null
 
 ### kLineBaudRate
 null
+
+### hpfpPeakPos
+Crank angle ATDC of first lobe peak
 

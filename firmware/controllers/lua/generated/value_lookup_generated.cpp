@@ -975,8 +975,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->etbJamIntegratorLimit;
 		case -1256141959:
 			return engineConfiguration->hpfpCamLobes;
-		case 1145081382:
-			return engineConfiguration->hpfpPeakPos;
 		case 1494394654:
 			return engineConfiguration->hpfpMinAngle;
 		case 334494733:
@@ -1049,6 +1047,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->customSentTpsMax;
 		case 1498075808:
 			return engineConfiguration->kLineBaudRate;
+		case 1145081382:
+			return engineConfiguration->hpfpPeakPos;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3485,11 +3485,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->hpfpCamLobes = (int)value;
 		return;
 	}
-		case 1145081382:
-	{
-		engineConfiguration->hpfpPeakPos = (int)value;
-		return;
-	}
 		case 1494394654:
 	{
 		engineConfiguration->hpfpMinAngle = (int)value;
@@ -3668,6 +3663,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 1498075808:
 	{
 		engineConfiguration->kLineBaudRate = (int)value;
+		return;
+	}
+		case 1145081382:
+	{
+		engineConfiguration->hpfpPeakPos = (int)value;
 		return;
 	}
 	}
