@@ -180,6 +180,12 @@ enum class CanGpioType : uint8_t {
 	MS = 2,
 };
 
+enum class UiMode : uint8_t {
+	FULL = 0,
+	INSTALLATION = 1,
+	TUNING = 2,
+};
+
 typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * GND for logical OFF, VCC for logical ON

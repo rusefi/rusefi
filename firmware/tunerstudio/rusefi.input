@@ -4303,6 +4303,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "etbDutyShutdownThreshold",                 etbDutyShutdownThreshold
 
 	dialog = parkingLot, "Experimental/Broken"
+	    field = uiMode,                                 uiMode
 		field = kLineBaudRate,                          kLineBaudRate
 		field = canGpioType,                            canGpioType
 		field = "I understand ECU Locking",				yesUnderstandLocking
