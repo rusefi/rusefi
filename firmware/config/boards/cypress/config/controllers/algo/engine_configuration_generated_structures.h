@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Mar 07 00:38:53 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Mar 07 15:41:56 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4465,7 +4465,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3985
 	 */
-	uint8_t unusedSpacingHere[1];
+	UiMode uiMode;
 	/**
 	 * Crank angle ATDC of first lobe peak
 	deg
@@ -5294,4 +5294,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Mar 07 00:38:53 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Mar 07 15:41:56 UTC 2023

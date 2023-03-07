@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Mar 05 00:03:08 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Mar 07 15:41:51 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -171,6 +171,17 @@ case TsCalMode::Tps2SecondaryMax:
   return "Tps2SecondaryMax";
 case TsCalMode::Tps2SecondaryMin:
   return "Tps2SecondaryMin";
+  }
+ return NULL;
+}
+const char *getUiMode(UiMode value){
+switch(value) {
+case UiMode::FULL:
+  return "FULL";
+case UiMode::INSTALLATION:
+  return "INSTALLATION";
+case UiMode::TUNING:
+  return "TUNING";
   }
  return NULL;
 }

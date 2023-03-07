@@ -1060,7 +1060,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 450780552
+#define SIGNATURE_HASH 1435808998
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1349,7 +1349,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.03.07.cypress.450780552"
+#define TS_SIGNATURE "rusEFI master.2023.03.07.cypress.1435808998"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1380,6 +1380,11 @@
 #define uart_device_e_UART_DEVICE_3 3
 #define uart_device_e_UART_DEVICE_4 4
 #define uart_device_e_UART_NONE 0
+#define UiMode_auto_enum 0="FULL",1="INSTALLATION",2="TUNING"
+#define UiMode_enum "Full", "Installation", "Tuning"
+#define UiMode_FULL 0
+#define UiMode_INSTALLATION 1
+#define UiMode_TUNING 2
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define VE_BLEND_COUNT 4
 #define ve_override_e_auto_enum 0="VE_None",1="VE_MAP",2="VE_TPS"
