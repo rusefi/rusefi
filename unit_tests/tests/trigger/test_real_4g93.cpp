@@ -26,7 +26,14 @@ TEST(real4g93, cranking) {
 	bool gotRpm = false;
 	bool gotSync = false;
 
-	while (reader.haveMore()) {
+	
+	static const float gapRatios[2][4] = {
+		{ 0, NAN, INFINITY, 0.89f }, // no sync
+		{ 0.4f, 3.788f, 0.62f, 1.02f }
+	};
+	static const int gapRatioIndices[12] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3 };
+
+	for (int idx = 0; reader.haveMore(); idx++) {
 		reader.processLine(&eth);
 
 		// Expect that all teeth are in the correct spot
@@ -48,6 +55,16 @@ TEST(real4g93, cranking) {
 		}
 //		float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
 // not looking too bad horrible		printf("rpm=%f instant=%f\n", rpm, instantRpm);
+
+		float vvtSyncGapRatio = engine->triggerCentral.triggerState.vvtSyncGapRatio;
+		float gapRatio = gapRatios[idx < 12 ? 0 : 1][gapRatioIndices[idx % 12]];
+		if (isnan(gapRatio)) {
+			EXPECT_TRUE(isnan(vvtSyncGapRatio));
+		} else if (isinf(gapRatio)) {
+			EXPECT_TRUE(isinf(vvtSyncGapRatio));
+		}else {
+			EXPECT_NEAR(vvtSyncGapRatio, gapRatio, 0.1);
+		}
 	}
 
 	ASSERT_TRUE(gotRpm);
