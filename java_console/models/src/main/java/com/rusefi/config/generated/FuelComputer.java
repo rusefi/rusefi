@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sun Mar 05 16:51:01 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Wed Mar 08 00:51:38 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -219,8 +219,8 @@ public class FuelComputer {
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "timing";
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
-	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";
-	public static final String GAUGE_NAME_TRG_GAP = "Trigger Sync Latest Ratio";
+	public static final String GAUGE_NAME_TRG_ERR = "Sync: Trigger Error Counter";
+	public static final String GAUGE_NAME_TRG_GAP = "Sync: Trigger Latest Ratio";
 	public static final String GAUGE_NAME_TUNE_CRC16 = "Tune CRC16";
 	public static final String GAUGE_NAME_TURBO_SPEED = "Turbocharger Speed";
 	public static final String GAUGE_NAME_UPTIME = "Uptime";

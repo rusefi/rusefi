@@ -514,8 +514,8 @@
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
-#define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
-#define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
+#define GAUGE_NAME_TRG_ERR "Sync: Trigger Error Counter"
+#define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 #define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
 #define GAUGE_NAME_TURBO_SPEED "Turbocharger Speed"
 #define GAUGE_NAME_UPTIME "Uptime"
@@ -1012,7 +1012,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1207101155
+#define SIGNATURE_HASH 1253931858
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1302,7 +1302,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.03.07.subaru_eg33_f7.1207101155"
+#define TS_SIGNATURE "rusEFI master.2023.03.08.subaru_eg33_f7.1253931858"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

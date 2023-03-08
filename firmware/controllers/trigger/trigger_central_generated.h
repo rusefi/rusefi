@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Jan 10 21:34:44 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Mar 08 00:51:38 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -12,6 +12,7 @@ struct trigger_central_s {
 	 */
 	uint32_t hwEventCounters[HW_EVENT_TYPES];
 	/**
+	 * Sync: CAM front counter
 	 * offset 24
 	 */
 	uint32_t vvtCamCounter = (uint32_t)0;
@@ -38,7 +39,7 @@ struct trigger_central_s {
 	 */
 	uint8_t alignmentFill_at_38[2];
 	/**
-	 * Engine Phase
+	 * Sync: Engine Phase
 	deg
 	 * offset 40
 	 */
@@ -62,4 +63,4 @@ struct trigger_central_s {
 static_assert(sizeof(trigger_central_s) == 52);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Jan 10 21:34:44 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Mar 08 00:51:38 UTC 2023

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Mar 07 23:10:35 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Mar 08 00:52:39 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -501,8 +501,8 @@ public class Fields {
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "timing";
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
-	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";
-	public static final String GAUGE_NAME_TRG_GAP = "Trigger Sync Latest Ratio";
+	public static final String GAUGE_NAME_TRG_ERR = "Sync: Trigger Error Counter";
+	public static final String GAUGE_NAME_TRG_GAP = "Sync: Trigger Latest Ratio";
 	public static final String GAUGE_NAME_TUNE_CRC16 = "Tune CRC16";
 	public static final String GAUGE_NAME_TURBO_SPEED = "Turbocharger Speed";
 	public static final String GAUGE_NAME_UPTIME = "Uptime";
@@ -1004,7 +1004,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1549839080;
+	public static final int SIGNATURE_HASH = 1362048857;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1226,7 +1226,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.07.f407-discovery.1549839080";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.08.f407-discovery.1362048857";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
