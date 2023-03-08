@@ -41,6 +41,7 @@ Release template (copy/paste this for new release):
  - Antilag switch pin mode was ignored #5036
  - 50/83.3/125kbit CAN #5072
  - console creates new log file every 100 ms #5112
+ - CAN bus AFR value inverted #5160
 
 ## February 2023 Release - "Day 346"
 
