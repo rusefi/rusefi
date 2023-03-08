@@ -202,8 +202,11 @@ public class BinaryProtocol {
         }
         int actualVersion = FileUtil.littleEndianWrap(response, 1, requestSize).getInt();
         if (actualVersion != TS_FILE_VERSION) {
-            log.error("Got TS_CONFIG_VERSION " + actualVersion);
-            return "Incompatible firmware format=" + actualVersion + " while format " + TS_FILE_VERSION + " expected";
+			String errorMessage = 
+				"Incompatible firmware format=" + actualVersion + " while format " + TS_FILE_VERSION + " expected" + "\n"
+				+ "recommended fix: use a compatible console version  OR  flash new firmware";
+            log.error(errorMessage);
+            return errorMessage;
         }
         return null;
     }
