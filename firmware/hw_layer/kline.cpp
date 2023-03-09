@@ -12,11 +12,14 @@ static int kLineOut;
 
 void kLineThread(void*) {
     while (1) {
-        uint8_t ch = 0;
-        chnReadTimeout(klDriver, &ch, 1, KLINE_READ_TIMEOUT);
+        uint8_t bufferIn[16];
+        int count = chnReadTimeout(klDriver, bufferIn, sizeof(bufferIn), KLINE_READ_TIMEOUT);
         // to begin with just write byte to console
-        if (ch != 0) {
-            efiPrintf("kline: 0x%02x", ch);
+        if (count > 0) {
+            efiPrintf("kline: got count 0x%02x", count);
+            for (int i =0;i<count;i++) {
+                efiPrintf("kline: got 0x%02x", bufferIn[i]);
+            }
             totalBytes++;
         }
         if (kLineOutPending) {

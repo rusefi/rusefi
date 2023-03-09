@@ -14,8 +14,7 @@
 // The standard transmission rate
 #define KLINE_BAUD_RATE 10400
 
-#define KLINE_READ_TIMEOUT 50
-
+#define KLINE_READ_TIMEOUT TIME_MS2I(1)
 
 void initKLine();
 
