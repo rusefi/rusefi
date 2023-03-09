@@ -214,10 +214,22 @@ TEST(SensorInit, Clt) {
 TEST(SensorInit, Lambda) {
 	EngineTestHelper eth(TEST_ENGINE);
 
+	// No channel -> no sensor
 	initLambda();
+	EXPECT_EQ(nullptr, Sensor::getSensorOfType(SensorType::Lambda1));
+	EXPECT_EQ(nullptr, Sensor::getSensorOfType(SensorType::Lambda2));
 
-	auto s = Sensor::getSensorOfType(SensorType::Lambda1);
-	ASSERT_NE(nullptr, s);
+	// Channel -> sensor
+	engineConfiguration->afr.hwChannel = EFI_ADC_0;
+	initLambda();
+	EXPECT_NE(nullptr, Sensor::getSensorOfType(SensorType::Lambda1));
+	EXPECT_EQ(nullptr, Sensor::getSensorOfType(SensorType::Lambda2));
+
+	// Channel 2 -> sensor 2
+	engineConfiguration->afr.hwChannel2 = EFI_ADC_1;
+	initLambda();
+	EXPECT_NE(nullptr, Sensor::getSensorOfType(SensorType::Lambda1));
+	EXPECT_NE(nullptr, Sensor::getSensorOfType(SensorType::Lambda2));
 }
 
 TEST(SensorInit, Map) {

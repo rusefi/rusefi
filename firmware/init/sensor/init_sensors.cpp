@@ -41,12 +41,10 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 }
 
 static void initOldAnalogInputs() {
-	initIfValid("AFR", engineConfiguration->afr.hwChannel);
 	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
 }
 
 static void deInitOldAnalogInputs() {
-	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
 	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
 }
 
@@ -117,6 +115,7 @@ void stopSensors() {
 	deinitFluidPressure();
 	deinitVbatt();
 	deinitThermistors();
+	deinitLambda();
 	deInitFlexSensor();
 	deInitVehicleSpeedSensor();
 	deinitTurbochargerSpeedSensor();
