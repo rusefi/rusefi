@@ -17,7 +17,7 @@ public class SdCardFieldsGeneratorTest {
                 state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
                 state.getVariableRegistry().register("GAUGE_NAME_RPM", "\"hello\"");
                 state.getVariableRegistry().register("GAUGE_NAME_GEAR_RATIO", "ra");
-                state.getVariableRegistry().register("GAUGE_NAME_CPU_TEMP", "te");
+                state.getVariableRegistry().register("GAUGE_NAME_ECU_TEMPERATURE", "te");
 
             }
         };
