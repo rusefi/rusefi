@@ -4,7 +4,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM/s", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
 	{engine->outputChannels.vehicleSpeedKph, "Vehicle Speed", "kph", 1},
-	{engine->outputChannels.internalMcuTemperature, "CPU Temperature", "deg C", 0},
+	{engine->outputChannels.internalMcuTemperature, "ECU temperature", "deg C", 0},
 	{engine->outputChannels.coolant, "CLT", "deg C", 1},
 	{engine->outputChannels.intake, "IAT", "deg C", 1},
 	{engine->outputChannels.auxTemp1, "auxTemp1", "deg C", 1},
