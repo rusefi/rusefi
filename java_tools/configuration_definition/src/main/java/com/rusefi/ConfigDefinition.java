@@ -169,8 +169,6 @@ public class ConfigDefinition {
         FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.getInputFiles()));
         SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFileFolder, uniqueId);
 
-        ExtraUtil.handleFiringOrder(firingEnumFileName, state.getVariableRegistry(), parseState);
-
         new TriggerWheelTSLogic().execute(triggersInputFolder, state.getVariableRegistry());
 
         if (pinoutLogic != null) {
