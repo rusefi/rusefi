@@ -2161,7 +2161,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = ignitionSettings, "", xAxis
 		panel = ignitionBasic
-		panel = ignitionOutputs
+		panel = ignitionOutputs, { uiMode == @@UiMode_FULL@@ || uiMode == @@UiMode_INSTALLATION@@ }
 
 	dialog = baseEngineConfig, "Engine Configuration"
 ;		field = "Engine preset",						engineType
@@ -3220,8 +3220,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 ;			Engine->Fan Settings
 	dialog = fan1Settings, "Fan 1"
-		field = "Output",								fanPin
-		field = "Output mode",						fanPinMode
+		field = "Output",								fanPin, 1, { uiMode == @@UiMode_FULL@@ || uiMode == @@UiMode_INSTALLATION@@ }
+		field = "Output mode",						fanPinMode, { uiMode == @@UiMode_FULL@@ || uiMode == @@UiMode_INSTALLATION@@ }
 		field = "On temperature",					fanOnTemperature
 		field = "Off temperature",					fanOffTemperature
 		field = "Enable with AC",					enableFan1WithAc
