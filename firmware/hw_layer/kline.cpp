@@ -3,7 +3,7 @@
 #include "hellen_meta.h"
 
 #ifdef EFI_KLINE
-static SerialDriver* const klDriver = KLINE_SERIAL_DEVICE;
+static SerialDriver* const klDriver = &KLINE_SERIAL_DEVICE;
 static THD_WORKING_AREA(klThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static int totalBytes = 0;
