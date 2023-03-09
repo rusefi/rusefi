@@ -36,8 +36,6 @@ public class LiveDataProcessor {
 
     private final StringBuilder baseAddressCHeader = new StringBuilder();
 
-    private final StringBuilder totalSensors = new StringBuilder();
-
     private final StringBuilder fancyNewStuff = new StringBuilder();
 
     private final StringBuilder fancyNewMenu = new StringBuilder();
@@ -66,10 +64,6 @@ public class LiveDataProcessor {
             fw.write("#define TS_TOTAL_OUTPUT_SIZE " + sensorTsPosition);
         }
 
-        try (FileWriter fw = new FileWriter("console/binary/generated/sensors.java")) {
-            fw.write(liveDataProcessor.totalSensors.toString());
-        }
-
         try (FileWriter fw = new FileWriter("console/binary/generated/fancy_content.ini")) {
             fw.write(liveDataProcessor.fancyNewStuff.toString());
         }
@@ -89,8 +83,6 @@ public class LiveDataProcessor {
     }
 
     private int handleYaml(Map<String, Object> data) throws IOException {
-        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
-
         OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
 
         ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
@@ -104,7 +96,7 @@ public class LiveDataProcessor {
             public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional) throws IOException {
                 // TODO: use outputNames
 
-                int startingPosition = javaSensorsConsumer.sensorTsPosition;
+                int startingPosition = outputsSections.sensorTsPosition;
                 log.info("Starting " + name + " at " + startingPosition + " with [" + conditional + "]");
 
                 baseAddressCHeader.append("#define " + name.toUpperCase() + "_BASE_ADDRESS " + startingPosition + "\n");
@@ -113,7 +105,7 @@ public class LiveDataProcessor {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.setWithC_Defines(withCDefines);
 
-                state.addDestination(javaSensorsConsumer,
+                state.addDestination(
                         outputsSections,
                         dataLogConsumer
                 );
@@ -150,7 +142,7 @@ public class LiveDataProcessor {
 
                 fancyNewMenu.append(fragmentDialogConsumer.menuLine());
 
-                log.info("Done with " + name + " at " + javaSensorsConsumer.sensorTsPosition);
+                log.info("Done with " + name + " at " + outputsSections.sensorTsPosition);
             }
         };
 
@@ -219,9 +211,7 @@ public class LiveDataProcessor {
 
         outputValueConsumer.endFile();
 
-        totalSensors.append(javaSensorsConsumer.getContent());
-
-        return javaSensorsConsumer.sensorTsPosition;
+        return outputsSections.sensorTsPosition;
     }
 
     private void writeFiles() throws IOException {

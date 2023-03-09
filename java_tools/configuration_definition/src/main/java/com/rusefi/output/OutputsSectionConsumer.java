@@ -17,7 +17,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
 
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
-    private int sensorTsPosition;
+    public int sensorTsPosition;
 
     public OutputsSectionConsumer(String tsOutputsSectionFileName) {
         this.tsOutputsSectionFileName = tsOutputsSectionFileName;
