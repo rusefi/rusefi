@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Mar 06 09:09:03 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Mar 09 19:28:16 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1177,10 +1177,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t vssToothCount;
 	/**
-	 * AFR, WBO, EGO - whatever you like to call it
 	 * offset 499
 	 */
-	ego_sensor_e afr_type;
+	uint8_t unused499;
 	/**
 	 * offset 500
 	 */
@@ -4656,4 +4655,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22060);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Mar 06 09:09:03 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Mar 09 19:28:16 UTC 2023
