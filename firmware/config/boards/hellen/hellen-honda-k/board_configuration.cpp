@@ -114,6 +114,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->mainRelayPin = H144_OUT_IO3;
 	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO7;
 
+    engineConfiguration->enableKline = true;
+    engineConfiguration->kLineBaudRate = 9600;
+
 	engineConfiguration->brakePedalPin = H144_IN_CAM;
 	engineConfiguration->acRelayPin = H144_LS_5;
     engineConfiguration->tachOutputPin = H144_OUT_IO11;

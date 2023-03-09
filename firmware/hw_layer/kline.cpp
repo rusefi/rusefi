@@ -30,6 +30,9 @@ void kLineThread(void*) {
 
 void startKLine() {
 #ifdef EFI_KLINE
+    if (!engineConfiguration->enableKline) {
+        return;
+    }
 #if EFI_PROD_CODE
 	efiSetPadMode("K-Line UART RX", KLINE_SERIAL_DEVICE_RX, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 	efiSetPadMode("K-Line UART TX", KLINE_SERIAL_DEVICE_TX, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
@@ -55,16 +58,21 @@ void startKLine() {
 void stopKLine() {
 #ifdef EFI_KLINE
 #if EFI_PROD_CODE
-	efiSetPadUnused(KLINE_SERIAL_DEVICE_RX);
-	efiSetPadUnused(KLINE_SERIAL_DEVICE_TX);
+    if (activeConfiguration.enableKline) {
+	    efiSetPadUnused(KLINE_SERIAL_DEVICE_RX);
+	    efiSetPadUnused(KLINE_SERIAL_DEVICE_TX);
 
-	sdStop(klDriver);
+	    sdStop(klDriver);
+	}
 
 #endif /* EFI_PROD_CODE */
 #endif // EFI_KLINE
 }
 
 void initKLine() {
+    if (!engineConfiguration->enableKline) {
+        return;
+    }
 #ifdef EFI_KLINE
 	startKLine();
 
