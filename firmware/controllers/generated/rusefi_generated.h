@@ -418,7 +418,6 @@
 #define GAUGE_NAME_BOOST_OUTPUT "Boost Output"
 #define GAUGE_NAME_BOOST_TARGET "Boost Target"
 #define GAUGE_NAME_CLT "CLT"
-#define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_CURRENT_GEAR "Current Gear"
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
@@ -495,7 +494,6 @@
 #define GAUGE_NAME_MAF "MAF"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
-#define GAUGE_NAME_OIL_PRESSURE_UNITS "kPa"
 #define GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH "Fuel pressure raw (high)"
 #define GAUGE_NAME_RAW_FUEL_PRESSURE_LOW "Fuel pressure raw (low)"
 #define GAUGE_NAME_RPM "RPM"
@@ -1045,7 +1043,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 2027593183
+#define SIGNATURE_HASH 3913754845
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1312,7 +1310,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.03.08.f407-discovery.2027593183"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.03.09.f407-discovery.3913754845"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
