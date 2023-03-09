@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Mar 09 13:26:55 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Mar 09 22:07:19 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1225,7 +1225,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.09.f407-discovery.3877801672";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.09.f407-discovery.2475704177";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
@@ -1304,6 +1304,7 @@ public class Fields {
 	public static final Field INJECTOR_BATTLAGCORR = Field.create("INJECTOR_BATTLAGCORR", 88, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ISFORCEDINDUCTION = Field.create("ISFORCEDINDUCTION", 120, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field USEFORDREDUNDANTTPS = Field.create("USEFORDREDUNDANTTPS", 120, FieldType.BIT, 1).setBaseOffset(0);
+	public static final Field ENABLEKLINE = Field.create("ENABLEKLINE", 120, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field OVERRIDETRIGGERGAPS = Field.create("OVERRIDETRIGGERGAPS", 120, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field ENABLEFAN1WITHAC = Field.create("ENABLEFAN1WITHAC", 120, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field ENABLEFAN2WITHAC = Field.create("ENABLEFAN2WITHAC", 120, FieldType.BIT, 5).setBaseOffset(0);
@@ -2783,6 +2784,7 @@ public class Fields {
 	INJECTOR_BATTLAGCORR,
 	ISFORCEDINDUCTION,
 	USEFORDREDUNDANTTPS,
+	ENABLEKLINE,
 	OVERRIDETRIGGERGAPS,
 	ENABLEFAN1WITHAC,
 	ENABLEFAN2WITHAC,
