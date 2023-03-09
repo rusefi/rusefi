@@ -12,6 +12,4 @@
 #include "global.h"
 #include "engine_configuration.h"
 
-float getAfr(SensorType type);
-bool hasAfrSensor();
 void setEgoSensor(ego_sensor_e type);

@@ -2,29 +2,13 @@
 
 #include "init.h"
 #include "adc_subscription.h"
-#include "function_pointer_sensor.h"
+#include "linear_func.h"
 #include "live_data.h"
 
-struct GetAfrWrapper {
-	float getLambda() {
-		return getAfr(SensorType::Lambda1) / 14.7f;
-	};
-	float getLambda2() {
-		return getAfr(SensorType::Lambda2) / 14.7f;
-	}
-};
+static LinearFunc func;
 
-static GetAfrWrapper afrWrapper;
-
-static FunctionPointerSensor lambdaSensor(SensorType::Lambda1,
-[]() {
-	return afrWrapper.getLambda();
-});
-
-static FunctionPointerSensor lambdaSensor2(SensorType::Lambda2,
-[]() {
-	return afrWrapper.getLambda2();
-});
+static FunctionalSensor lambdaSensor(SensorType::Lambda1, MS2NT(50));
+static FunctionalSensor lambdaSensor2(SensorType::Lambda2, MS2NT(50));
 
 #include "AemXSeriesLambda.h"
 
@@ -45,6 +29,15 @@ const wideband_state_s* getLiveData(size_t idx) {
 	return nullptr;
 }
 
+static void initLambdaSensor(FunctionalSensor& sensor, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return;
+	}
+
+	AdcSubscription::SubscribeSensor(sensor, channel, 10);
+	sensor.Register();
+}
+
 void initLambda() {
 
 #if EFI_CAN_SUPPORT
@@ -61,6 +54,20 @@ void initLambda() {
 	}
 #endif
 
-	lambdaSensor.Register();
-	lambdaSensor2.Register();
+	auto& cfg = engineConfiguration->afr;
+	float minLambda = (cfg.value1 + engineConfiguration->egoValueShift) / 14.7f;
+	float maxLambda = (cfg.value2 + engineConfiguration->egoValueShift) / 14.7f;
+
+	func.configure(cfg.v1, minLambda, cfg.v2, maxLambda, 0, 5);
+
+	lambdaSensor.setFunction(func);
+	lambdaSensor2.setFunction(func);
+
+	initLambdaSensor(lambdaSensor, engineConfiguration->afr.hwChannel);
+	initLambdaSensor(lambdaSensor2, engineConfiguration->afr.hwChannel2);
+}
+
+void deinitLambda() {
+	AdcSubscription::UnsubscribeSensor(lambdaSensor, engineConfiguration->afr.hwChannel);
+	AdcSubscription::UnsubscribeSensor(lambdaSensor2, engineConfiguration->afr.hwChannel2);
 }

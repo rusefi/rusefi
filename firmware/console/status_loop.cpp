@@ -465,8 +465,7 @@ static void updateRawSensors() {
 		}
 	}
 
-	// TODO: transition AFR to new sensor model
-	engine->outputChannels.rawAfr = (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) ? 0 : getVoltageDivided("ego", engineConfiguration->afr.hwChannel);
+	engine->outputChannels.rawAfr = Sensor::getRaw(SensorType::Lambda1);
 }
 static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);

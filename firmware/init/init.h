@@ -40,6 +40,7 @@ void deinitVbatt();
 void deinitTps();
 void deinitThermistors();
 void deinitFluidPressure();
+void deinitLambda();
 void deInitFlexSensor();
 void deInitVehicleSpeedSensor();
 void deinitTurbochargerSpeedSensor();
