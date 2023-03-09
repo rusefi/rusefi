@@ -41,7 +41,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 
 	uint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	uint8_t vehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",1, 0, 0, 0, 1
-	int8_t internalMcuTemperature;@@GAUGE_NAME_CPU_TEMP@@;"deg C",1, 0, 0, 0, 0
+	int8_t internalMcuTemperature;@@GAUGE_NAME_ECU_TEMPERATURE@@;"deg C",1, 0, 0, 0, 0
 
 	int16_t autoscale coolant;@@GAUGE_NAME_CLT@@;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
 	int16_t autoscale intake;@@GAUGE_NAME_IAT@@;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1

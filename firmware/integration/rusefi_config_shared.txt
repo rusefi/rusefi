@@ -74,7 +74,6 @@
 #define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_MAF "MAF"
-#define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
@@ -104,7 +103,6 @@
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
 
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
-#define GAUGE_NAME_OIL_PRESSURE_UNITS "kPa"
 
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 
