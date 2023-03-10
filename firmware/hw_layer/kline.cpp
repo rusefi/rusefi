@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "kline.h"
 #include "hellen_meta.h"
+#include "crc8hondak.h"
 
 #ifdef EFI_KLINE
 static SerialDriver* const klDriver = &KLINE_SERIAL_DEVICE;
@@ -19,8 +20,14 @@ void kLineThread(void*) {
             efiPrintf("kline: got count 0x%02x", count);
             for (int i =0;i<count;i++) {
                 efiPrintf("kline: got 0x%02x", bufferIn[i]);
+                totalBytes++;
             }
-            totalBytes++;
+            if (count > 1) {
+                int crc = crc_hondak_calc(bufferIn, count - 1);
+                if (crc == bufferIn[count - 1]) {
+                    efiPrintf("happy CRC 0x%02x", crc);
+                }
+            }
         }
         if (kLineOutPending) {
             kLineOutPending = false;
