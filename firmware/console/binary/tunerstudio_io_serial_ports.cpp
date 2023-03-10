@@ -90,7 +90,10 @@ void startSerialChannels() {
 #endif
 
 #if defined(TS_SECONDARY_UxART_PORT)
-	secondaryChannelThread.start();
+    // do not start thread if not configured - give user a chance to use same peripheral for kline
+    if (isBrainPinValid(engineConfiguration->binarySerialTxPin)) {
+	    secondaryChannelThread.start();
+	}
 #endif
 }
 
