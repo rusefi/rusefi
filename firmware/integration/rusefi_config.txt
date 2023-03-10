@@ -1754,8 +1754,8 @@ end_struct
 blend_table_s[IGN_BLEND_COUNT iterate] ignBlends
 blend_table_s[VE_BLEND_COUNT iterate] veBlends
 
-uint16_t[12] autoscale throttleEstimateEffectiveAreaBins;;"%", 0.1, 0, 100, 1
-uint16_t[12] autoscale throttleEstimateEffectiveAreaValues;In units of kg/s normalized to choked flow conditions;"kg/s", 0.0001, 0, 6.5, 4
+uint16_t[12] autoscale throttleEstimateEffectiveAreaBins;;"%", 0.1, 0, 0, 100, 1
+uint16_t[12] autoscale throttleEstimateEffectiveAreaValues;In units of kg/s normalized to choked flow conditions;"kg/s", 0.0001, 0, 0, 6.5, 4
 
 end_struct
 
