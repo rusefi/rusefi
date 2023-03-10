@@ -3,6 +3,19 @@
 #include "hellen_meta.h"
 #include "crc8hondak.h"
 
+size_t readWhileGives(ByteSource source, uint8_t *buffer, int bufferSize) {
+        size_t totalBytes = 0;
+        while (totalBytes < bufferSize) {
+           int readThisTime = source(&buffer[totalBytes], bufferSize - totalBytes);
+           if (readThisTime == 0) {
+                // looks like idle gap
+                break;
+           }
+           totalBytes += readThisTime;
+        }
+    return totalBytes;
+}
+
 #ifdef EFI_KLINE
 static SerialDriver* const klDriver = &KLINE_SERIAL_DEVICE;
 static THD_WORKING_AREA(klThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -18,17 +31,13 @@ void kLineThread(void*) {
          */
 
         uint8_t bufferIn[16];
-        size_t totalBytes = 0;
         // a bit of a busy read open question if this would affect performance?
         // on 2003 Honda for instance the bus seems to be 70%-ish busy. 9600 baud is 1.04ms per byte, a bit below 1kHz
-        while (totalBytes < sizeof(bufferIn)) {
-           int readThisTime = chnReadTimeout(klDriver, &bufferIn[totalBytes], sizeof(bufferIn) - totalBytes, KLINE_READ_TIMEOUT);
-           if (readThisTime == 0) {
-                // looks like idle gap
-                break;
-           }
-           totalBytes += readThisTime;
-        }
+        ByteSource serialSource = [] (uint8_t * buffer, int maxSize) {
+            return chnReadTimeout(klDriver,buffer, maxSize, KLINE_READ_TIMEOUT);
+        };
+        int totalBytes = readWhileGives(serialSource, bufferIn, sizeof(serialSource));
+
         // to begin with just write byte to console
         if (totalBytes > 0) {
             efiPrintf("kline: got count 0x%02x", totalBytes);

@@ -21,3 +21,6 @@ void initKLine();
 /* Stop/Start for config update */
 void startKLine();
 void stopKLine();
+
+typedef size_t (*ByteSource)(uint8_t *, int);
+size_t readWhileGives(ByteSource source, uint8_t *buffer, int bufferSize);
