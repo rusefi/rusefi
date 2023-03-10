@@ -18,11 +18,11 @@ void kLineThread(void*) {
          */
 
         uint8_t bufferIn[16];
-        int totalBytes = 0;
+        size_t totalBytes = 0;
         // a bit of a busy read open question if this would affect performance?
         // on 2003 Honda for instance the bus seems to be 70%-ish busy. 9600 baud is 1.04ms per byte, a bit below 1kHz
         while (totalBytes < sizeof(bufferIn)) {
-           int readThisTime = chnReadTimeout(klDriver, bufferIn + totalBytes, sizeof(bufferIn) - totalBytes, KLINE_READ_TIMEOUT);
+           int readThisTime = chnReadTimeout(klDriver, &bufferIn[totalBytes], sizeof(bufferIn) - totalBytes, KLINE_READ_TIMEOUT);
            if (readThisTime == 0) {
                 // looks like idle gap
                 break;
@@ -32,7 +32,7 @@ void kLineThread(void*) {
         // to begin with just write byte to console
         if (totalBytes > 0) {
             efiPrintf("kline: got count 0x%02x", totalBytes);
-            for (int i =0;i<totalBytes;i++) {
+            for (size_t i =0;i<totalBytes;i++) {
                 efiPrintf("kline: got 0x%02x", bufferIn[i]);
                 totalBytes++;
             }
