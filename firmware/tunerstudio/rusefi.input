@@ -787,6 +787,13 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		xBins = veBlends4_blendBins, veBlends4_blendVal
 		yBins = veBlends4_blendValues
 
+	curve = throttleEffectiveArea, "Throttle Effective Area"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 2, 5
+		xBins = throttleEstimateEffectiveAreaBins, TPS
+		yBins = throttleEstimateEffectiveAreaValues
+
 [TableEditor]
 	;		table_id,	map3d_id,	"title",		page
 
@@ -1890,6 +1897,7 @@ menuDialog = main
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = antiLagDialog,                "Anti-Lag ALS"
 		subMenu = rotaryDialog,			"Rotary"
+		subMenu = throttleEffectiveArea
 
 		menu = "Help"
 			subMenu = helpGeneral,	"rusEFI Info"
