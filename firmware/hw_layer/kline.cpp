@@ -13,18 +13,32 @@ static int kLineOut;
 
 void kLineThread(void*) {
     while (1) {
+        /**
+         * under the hood there is SERIAL_BUFFERS_SIZE which we hope to help us
+         */
+
         uint8_t bufferIn[16];
-        int count = chnReadTimeout(klDriver, bufferIn, sizeof(bufferIn), KLINE_READ_TIMEOUT);
+        int totalBytes = 0;
+        // a bit of a busy read open question if this would affect performance?
+        // on 2003 Honda for instance the bus seems to be 70%-ish busy. 9600 baud is 1.04ms per byte, a bit below 1kHz
+        while (totalBytes < sizeof(bufferIn)) {
+           int readThisTime = chnReadTimeout(klDriver, bufferIn + totalBytes, sizeof(bufferIn) - totalBytes, KLINE_READ_TIMEOUT);
+           if (readThisTime == 0) {
+                // looks like idle gap
+                break;
+           }
+           totalBytes += readThisTime;
+        }
         // to begin with just write byte to console
-        if (count > 0) {
-            efiPrintf("kline: got count 0x%02x", count);
-            for (int i =0;i<count;i++) {
+        if (totalBytes > 0) {
+            efiPrintf("kline: got count 0x%02x", totalBytes);
+            for (int i =0;i<totalBytes;i++) {
                 efiPrintf("kline: got 0x%02x", bufferIn[i]);
                 totalBytes++;
             }
-            if (count > 1) {
-                int crc = crc_hondak_calc(bufferIn, count - 1);
-                if (crc == bufferIn[count - 1]) {
+            if (totalBytes > 1) {
+                int crc = crc_hondak_calc(bufferIn, totalBytes - 1);
+                if (crc == bufferIn[totalBytes - 1]) {
                     efiPrintf("happy CRC 0x%02x", crc);
                 }
             }
