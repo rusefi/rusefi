@@ -18,6 +18,11 @@ endif
 # See also ts_show_critical_led
 DDEFS += -DFLEXIBLE_CRITICAL_LED=1
 
+# User can configure LIN/K-line interface
+DDEFS += -DEFI_KLINE=TRUE
+DDEFS += -DKLINE_SERIAL_DEVICE_RX=Gpio::C11 -DKLINE_SERIAL_DEVICE_TX=Gpio::C10
+DDEFS += -DKLINE_SERIAL_DEVICE=SD3
+
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1
 DDEFS += $(DEFAULT_ENGINE_TYPE)
