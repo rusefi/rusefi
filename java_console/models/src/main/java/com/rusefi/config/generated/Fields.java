@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 11 03:46:26 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 11 13:43:54 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1225,7 +1225,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.11.f407-discovery.2237679941";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.11.f407-discovery.4122470250";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
@@ -2532,7 +2532,9 @@ public class Fields {
 	public static final String[] UiMode = {"Full", "Installation", "Tuning"};
 	public static final Field UIMODE = Field.create("UIMODE", 3985, FieldType.INT8, UiMode).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPPEAKPOS = Field.create("HPFPPEAKPOS", 3986, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3988, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field KLINEPERIODUS = Field.create("KLINEPERIODUS", 3988, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSED16 = Field.create("UNUSED16", 3990, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3992, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4028, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4060, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4092, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3984,6 +3986,8 @@ public class Fields {
 	CANGPIOTYPE,
 	UIMODE,
 	HPFPPEAKPOS,
+	KLINEPERIODUS,
+	UNUSED16,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

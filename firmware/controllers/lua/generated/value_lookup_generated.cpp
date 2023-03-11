@@ -1051,6 +1051,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->kLineBaudRate;
 		case 1145081382:
 			return engineConfiguration->hpfpPeakPos;
+		case 1915146851:
+			return engineConfiguration->kLinePeriodUs;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3675,6 +3677,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 1145081382:
 	{
 		engineConfiguration->hpfpPeakPos = (int)value;
+		return;
+	}
+		case 1915146851:
+	{
+		engineConfiguration->kLinePeriodUs = (int)value;
 		return;
 	}
 	}

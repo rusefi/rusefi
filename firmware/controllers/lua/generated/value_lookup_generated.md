@@ -1570,3 +1570,6 @@ null
 ### hpfpPeakPos
 Crank angle ATDC of first lobe peak
 
+### kLinePeriodUs
+
+

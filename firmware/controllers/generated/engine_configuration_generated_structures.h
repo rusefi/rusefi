@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Mar 09 22:07:19 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 11 13:43:54 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4473,10 +4473,19 @@ struct engine_configuration_s {
 	 */
 	int16_t hpfpPeakPos;
 	/**
-	units
+	us
 	 * offset 3988
 	 */
-	uint8_t mainUnusedEnd[40];
+	int16_t kLinePeriodUs;
+	/**
+	 * offset 3990
+	 */
+	int16_t unused16;
+	/**
+	units
+	 * offset 3992
+	 */
+	uint8_t mainUnusedEnd[36];
 };
 static_assert(sizeof(engine_configuration_s) == 4028);
 
@@ -5294,4 +5303,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Mar 09 22:07:19 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 11 13:43:54 UTC 2023
