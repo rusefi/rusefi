@@ -62,6 +62,8 @@ void initialize36_2_2_2(TriggerWaveform *s) {
 void initializeSubaruEZ30(TriggerWaveform *s) {
 	initialize_one_of_36_2_2_2(s, 18, 9, /*knownOperationModeHack*/false);
 
+    s->tdcPosition = 240;
+
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.25, 0.5);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.7, 1.5);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2, 4);
