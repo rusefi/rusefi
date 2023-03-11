@@ -169,7 +169,7 @@ pins:
     color: orange
 
   - pin: 23A
-    function: Hall Input 1
+    function: Hall Input 1 (configurable pull-up/pull-down)
     # IN_CAM
     id: A6
     class: event_inputs
@@ -206,7 +206,7 @@ pins:
     color: purple
 
   - pin: 30A
-    function: Hall Input 2
+    function: Hall Input 2 (5v pull-up)
     # IN_DIG10
     id: E14
     class: event_inputs
