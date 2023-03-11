@@ -36,18 +36,18 @@ void kLineThread(void*) {
         ByteSource serialSource = [] (uint8_t * buffer, int maxSize) {
             return chnReadTimeout(klDriver,buffer, maxSize, KLINE_READ_TIMEOUT);
         };
-        int totalBytes = readWhileGives(serialSource, bufferIn, sizeof(serialSource));
+        int len = readWhileGives(serialSource, bufferIn, sizeof(serialSource));
 
         // to begin with just write byte to console
-        if (totalBytes > 0) {
-            efiPrintf("kline: got count 0x%02x", totalBytes);
-            for (size_t i =0;i<totalBytes;i++) {
+        if (len > 0) {
+            efiPrintf("kline: got count 0x%02x", len);
+            for (size_t i =0;i<len;i++) {
                 efiPrintf("kline: got 0x%02x", bufferIn[i]);
                 totalBytes++;
             }
-            if (totalBytes > 1) {
-                int crc = crc_hondak_calc(bufferIn, totalBytes - 1);
-                if (crc == bufferIn[totalBytes - 1]) {
+            if (len > 1) {
+                int crc = crc_hondak_calc(bufferIn, len - 1);
+                if (crc == bufferIn[len - 1]) {
                     efiPrintf("happy CRC 0x%02x", crc);
                 }
             }
