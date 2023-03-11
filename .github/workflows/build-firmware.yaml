@@ -325,6 +325,7 @@ jobs:
     #     path: ./artifacts/fome_bundle_${{matrix.build-target}}_autoupdate.zip
 
   create-release:
+    needs: build-firmware
     if: ${{ inputs.release-name != '' }}
     runs-on: ubuntu-latest-selfhost
 
