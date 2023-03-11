@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 11 03:20:14 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 11 03:46:26 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -501,7 +501,7 @@ public class Fields {
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "timing";
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
-	public static final String GAUGE_NAME_TRG_ERR = "Sync: Trigger Error Counter";
+	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";
 	public static final String GAUGE_NAME_TRG_GAP = "Sync: Trigger Latest Ratio";
 	public static final String GAUGE_NAME_TUNE_CRC16 = "Tune CRC16";
 	public static final String GAUGE_NAME_TURBO_SPEED = "Turbocharger Speed";
@@ -1225,7 +1225,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.11.f407-discovery.2475704177";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.11.f407-discovery.2237679941";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;

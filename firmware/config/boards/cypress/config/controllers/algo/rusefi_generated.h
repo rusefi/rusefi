@@ -520,7 +520,7 @@
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
-#define GAUGE_NAME_TRG_ERR "Sync: Trigger Error Counter"
+#define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
 #define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 #define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
 #define GAUGE_NAME_TURBO_SPEED "Turbocharger Speed"
@@ -1061,7 +1061,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 4225704407
+#define SIGNATURE_HASH 3979302883
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1350,7 +1350,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.03.11.cypress.4225704407"
+#define TS_SIGNATURE "rusEFI master.2023.03.11.cypress.3979302883"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

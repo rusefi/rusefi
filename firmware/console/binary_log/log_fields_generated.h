@@ -63,7 +63,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.idleTargetPosition, "idleTargetPosition", "", 0},
 	{engine->outputChannels.detectedGear, "Detected Gear", "", 0},
 	{engine->outputChannels.maxTriggerReentrant, "maxTriggerReentrant", "", 0},
-	{engine->outputChannels.totalTriggerErrorCounter, "Sync: Trigger Error Counter", "counter", 0},
+	{engine->outputChannels.totalTriggerErrorCounter, "Trigger Error Counter", "counter", 0},
 	{engine->outputChannels.orderingErrorCounter, "orderingErrorCounter", "", 0},
 	{engine->outputChannels.warningCounter, "warning: counter", "count", 0},
 	{engine->outputChannels.lastErrorCode, "warning: last", "error", 0},
