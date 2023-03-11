@@ -1832,7 +1832,8 @@ end_struct
 
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_UPTIME "Uptime"
-#define GAUGE_NAME_TRG_ERR "Sync: Trigger Error Counter"
+! WARNING! THIS GAUGE NAME IS PART of REO integration API
+#define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
 #define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 
 #define GAUGE_CATEGORY_TIMING "Timing"
