@@ -24,13 +24,11 @@ static inline uint8_t crc_next(uint8_t crc, uint8_t data)
 	return crc;
 }
 
-static inline uint8_t crc_final(uint8_t crc)
-{
+static inline uint8_t crc_final(uint8_t crc) {
 	return ~crc;
 }
 
-uint8_t crc_hondak_calc(const uint8_t *data, size_t len)
-{
+uint8_t crc_hondak_calc(const uint8_t *data, size_t len) {
 	uint8_t crc = crc_init();
 
 	if (len) do {

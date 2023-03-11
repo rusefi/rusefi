@@ -6,7 +6,7 @@
 size_t readWhileGives(ByteSource source, uint8_t *buffer, int bufferSize) {
         size_t totalBytes = 0;
         while (totalBytes < bufferSize) {
-           int readThisTime = source(&buffer[totalBytes], bufferSize - totalBytes);
+           size_t readThisTime = source(&buffer[totalBytes], bufferSize - totalBytes);
            if (readThisTime == 0) {
                 // looks like idle gap
                 break;
@@ -36,7 +36,7 @@ void kLineThread(void*) {
         ByteSource serialSource = [] (uint8_t * buffer, int maxSize) {
             return chnReadTimeout(klDriver,buffer, maxSize, KLINE_READ_TIMEOUT);
         };
-        int len = readWhileGives(serialSource, bufferIn, sizeof(serialSource));
+        size_t len = readWhileGives(serialSource, bufferIn, sizeof(bufferIn));
 
         // to begin with just write byte to console
         if (len > 0) {
