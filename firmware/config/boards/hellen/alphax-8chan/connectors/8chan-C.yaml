@@ -137,12 +137,8 @@ pins:
     color: blue
 
   - pin: 30C
-    function: Hall Input 4
-    # H144_IN_MAP3
-    id: A2
-    class: event_inputs
-    ts_name: 30C - Hall Input 4
-
+    function: 12v raw in? out?
+    type: 12v
 
   - pin: 31C
     # H144_IN_IAT + 16 = 14 + 16
