@@ -13,11 +13,6 @@ on:
         description: 'Make full firmware bundle'
         required: false
         type: boolean
-      release-name:
-        description: 'Release Name'
-        required: false
-        type: string
-
 
 jobs:
   build-firmware:
@@ -323,16 +318,3 @@ jobs:
     #   with:
     #     name: fome_bundle_${{matrix.build-target}}_autoupdate.zip
     #     path: ./artifacts/fome_bundle_${{matrix.build-target}}_autoupdate.zip
-
-  create-release:
-    needs: build-firmware
-    if: ${{ inputs.release-name != '' }}
-    runs-on: ubuntu-latest-selfhost
-
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        path: release-artifacts
-
-    - name: list artifacts
-      run: ls -R release-artifacts
