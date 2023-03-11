@@ -4,6 +4,13 @@ pins:
     type: etb
     color: purple
 
+  - pin: 5C
+    function: Hall Input 4
+    # H144_IN_MAP3_DIGITAL
+    id: A2
+    class: event_inputs
+    ts_name: 5C - Hall Input 4
+
   - pin: 6C
     # H144_IN_AUX2
     id: EFI_ADC_14
