@@ -34,7 +34,7 @@ void kLineThread(void*) {
         // a bit of a busy read open question if this would affect performance?
         // on 2003 Honda for instance the bus seems to be 70%-ish busy. 9600 baud is 1.04ms per byte, a bit below 1kHz
         ByteSource serialSource = [] (uint8_t * buffer, int maxSize) {
-            return chnReadTimeout(klDriver,buffer, maxSize, KLINE_READ_TIMEOUT);
+            return chnReadTimeout(klDriver,buffer, maxSize, TIME_US2I(engineConfiguration->kLinePeriodUs));
         };
         size_t len = readWhileGives(serialSource, bufferIn, sizeof(bufferIn));
 
@@ -108,6 +108,11 @@ void initKLine() {
     }
 #ifdef EFI_KLINE
 	startKLine();
+
+    if (engineConfiguration->kLinePeriodUs == 0) {
+        engineConfiguration->kLinePeriodUs = 1000 /* us*/;
+    }
+
 
     chThdCreateStatic(klThreadStack, sizeof(klThreadStack), NORMALPRIO + 1, kLineThread, nullptr);
     addConsoleAction("kline", [](){

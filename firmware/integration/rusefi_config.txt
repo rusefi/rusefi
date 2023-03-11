@@ -1582,7 +1582,9 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	CanGpioType canGpioType
 	UiMode uiMode
 	int16_t hpfpPeakPos;Crank angle ATDC of first lobe peak;"deg", 1, 0, -719, 719, 0
-uint8_t[40] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	int16_t kLinePeriodUs;;"us", 1, 0, 0, 30000, 0
+	int16_t unused16
+uint8_t[36] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
