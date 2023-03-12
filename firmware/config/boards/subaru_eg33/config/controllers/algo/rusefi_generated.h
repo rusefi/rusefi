@@ -1302,7 +1302,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.03.11.subaru_eg33_f7.3995446113"
+#define TS_SIGNATURE "rusEFI master.2023.03.12.subaru_eg33_f7.3995446113"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
