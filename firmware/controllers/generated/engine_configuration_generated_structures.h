@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 11 13:43:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 12 15:40:45 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1764,7 +1764,7 @@ struct engine_configuration_s {
 	bool alignEngineSnifferAtTDC : 1 {};
 	/**
 	offset 764 bit 29 */
-	bool unused764b29 : 1 {};
+	bool verboseKLine : 1 {};
 	/**
 	offset 764 bit 30 */
 	bool idleIncrementalPidCic : 1 {};
@@ -2645,7 +2645,7 @@ struct engine_configuration_s {
 	bool twoWireBatchInjection : 1 {};
 	/**
 	offset 1372 bit 13 */
-	bool unused1372b13 : 1 {};
+	bool hondaK : 1 {};
 	/**
 	 * This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 	offset 1372 bit 14 */
@@ -5303,4 +5303,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 11 13:43:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 12 15:40:45 UTC 2023

@@ -317,6 +317,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->pauseEtbControl;
 		case 1836072195:
 			return engineConfiguration->alignEngineSnifferAtTDC;
+		case -485091122:
+			return engineConfiguration->verboseKLine;
 		case 1064399425:
 			return engineConfiguration->idleIncrementalPidCic;
 		case 259909218:
@@ -561,6 +563,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->isManualSpinningMode;
 		case -1248413509:
 			return engineConfiguration->twoWireBatchInjection;
+		case 42872346:
+			return engineConfiguration->hondaK;
 		case 454615641:
 			return engineConfiguration->twoWireBatchIgnition;
 		case 201676494:
@@ -1844,6 +1848,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->alignEngineSnifferAtTDC = (int)value;
 		return;
 	}
+		case -485091122:
+	{
+		engineConfiguration->verboseKLine = (int)value;
+		return;
+	}
 		case 1064399425:
 	{
 		engineConfiguration->idleIncrementalPidCic = (int)value;
@@ -2452,6 +2461,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -1248413509:
 	{
 		engineConfiguration->twoWireBatchInjection = (int)value;
+		return;
+	}
+		case 42872346:
+	{
+		engineConfiguration->hondaK = (int)value;
 		return;
 	}
 		case 454615641:

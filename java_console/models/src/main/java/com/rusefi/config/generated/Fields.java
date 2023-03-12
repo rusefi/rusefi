@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 12 03:46:33 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 12 15:40:45 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1225,7 +1225,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.12.f407-discovery.4122470250";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.12.f407-discovery.2324063495";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
@@ -1607,6 +1607,7 @@ public class Fields {
 	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 764, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 764, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 764, FieldType.BIT, 28).setBaseOffset(0);
+	public static final Field VERBOSEKLINE = Field.create("VERBOSEKLINE", 764, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field IDLEINCREMENTALPIDCIC = Field.create("IDLEINCREMENTALPIDCIC", 764, FieldType.BIT, 30).setBaseOffset(0);
 	public static final Field ENABLEAEMXSERIES = Field.create("ENABLEAEMXSERIES", 764, FieldType.BIT, 31).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 768, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
@@ -1897,6 +1898,7 @@ public class Fields {
 	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1372, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1372, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1372, FieldType.BIT, 12).setBaseOffset(0);
+	public static final Field HONDAK = Field.create("HONDAK", 1372, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1372, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1372, FieldType.BIT, 15).setBaseOffset(0);
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1372, FieldType.BIT, 16).setBaseOffset(0);
@@ -3079,6 +3081,7 @@ public class Fields {
 	IS_ENABLED_SPI_4,
 	PAUSEETBCONTROL,
 	ALIGNENGINESNIFFERATTDC,
+	VERBOSEKLINE,
 	IDLEINCREMENTALPIDCIC,
 	ENABLEAEMXSERIES,
 	LOGICANALYZERPINS1,
@@ -3365,6 +3368,7 @@ public class Fields {
 	VERBOSETRIGGERSYNCHDETAILS,
 	ISMANUALSPINNINGMODE,
 	TWOWIREBATCHINJECTION,
+	HONDAK,
 	TWOWIREBATCHIGNITION,
 	USEFIXEDBAROCORRFROMMAP,
 	USESEPARATEADVANCEFORCRANKING,
