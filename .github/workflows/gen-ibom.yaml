@@ -3,6 +3,7 @@ name: Generate Interactive BOMs
 on:
   schedule:
     - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   generate:
@@ -18,6 +19,7 @@ jobs:
     - name: Install prerequisite software
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
+        sudo add-apt-repository --yes ppa:kicad/kicad-7.0-releases
         sudo apt-get install kicad sshpass
 
     - name: Set SSH variables

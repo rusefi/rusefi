@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Should be executed from project root folder. Will try to upload to $RUSEFI_FTP_SERVER"
+echo "Should be executed from project root folder. Will try to upload to $RUSEFI_SSH_SERVER"
 pwd
 # ibom is part of Doxygen job simply in order to reduce workspace HDD usage on my tiny build server
 bash misc/jenkins/InteractiveHtmlBom/run.sh
