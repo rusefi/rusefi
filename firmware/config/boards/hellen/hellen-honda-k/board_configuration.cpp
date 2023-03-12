@@ -114,6 +114,13 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->mainRelayPin = H144_OUT_IO3;
 	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO7;
 
+	// how come this is not denso 183?!
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->map.sensor.lowValue = 11.4;
+	engineConfiguration->mapLowValueVoltage = 0.5;
+	engineConfiguration->map.sensor.highValue = 170.7;
+	engineConfiguration->mapHighValueVoltage = 4.8;
+
     engineConfiguration->enableKline = true;
     engineConfiguration->kLineBaudRate = 9600;
 	engineConfiguration->hondaK = true;
