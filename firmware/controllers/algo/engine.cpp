@@ -246,6 +246,11 @@ void Engine::updateSwitchInputs() {
 		bool currentState;
 		if (hasAcToggle()) {
 			currentState = getAcToggle();
+#ifdef EFI_KLINE
+		} else if (engineConfiguration->hondaK) {
+extern bool kAcRequestState;
+		    currentState = kAcRequestState;
+#endif // EFI_KLINE
 		} else {
 			currentState = engine->engineState.lua.acRequestState;
 		}

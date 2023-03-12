@@ -116,6 +116,8 @@ void setBoardDefaultConfiguration() {
 
     engineConfiguration->enableKline = true;
     engineConfiguration->kLineBaudRate = 9600;
+	engineConfiguration->hondaK = true;
+	engineConfiguration->verboseKLine = true;
 
 	engineConfiguration->brakePedalPin = H144_IN_CAM;
 	engineConfiguration->acRelayPin = H144_LS_5;

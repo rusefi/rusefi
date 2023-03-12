@@ -16,6 +16,20 @@ size_t readWhileGives(ByteSource source, uint8_t *buffer, int bufferSize) {
     return totalBytes;
 }
 
+#define HONDA_K_40_PACKET 0x40
+
+bool kAcRequestState;
+
+static void handleHonda(uint8_t *bufferIn) {
+    uint8_t acByte = bufferIn[2];
+    kAcRequestState = acByte & 0x80;
+    if (engineConfiguration->verboseKLine) {
+        if (engineConfiguration->verboseKLine) {
+            efiPrintf("honda 0x40 packet with 0x%02x state %d", acByte, kAcRequestState);
+        }
+    }
+}
+
 #ifdef EFI_KLINE
 static SerialDriver* const klDriver = &KLINE_SERIAL_DEVICE;
 static THD_WORKING_AREA(klThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -40,15 +54,24 @@ void kLineThread(void*) {
 
         // to begin with just write byte to console
         if (len > 0) {
-            efiPrintf("kline: got count 0x%02x", len);
+            if (engineConfiguration->verboseKLine) {
+                efiPrintf("kline: got count 0x%02x", len);
+            }
             for (size_t i =0;i<len;i++) {
-                efiPrintf("kline: got 0x%02x", bufferIn[i]);
+                if (engineConfiguration->verboseKLine) {
+                    efiPrintf("kline: got 0x%02x", bufferIn[i]);
+                }
                 totalBytes++;
             }
             if (len > 1) {
                 int crc = crc_hondak_calc(bufferIn, len - 1);
                 if (crc == bufferIn[len - 1]) {
-                    efiPrintf("happy CRC 0x%02x", crc);
+                    if (engineConfiguration->verboseKLine) {
+                        efiPrintf("happy CRC 0x%02x", crc);
+                    }
+                    if (bufferIn[0] == HONDA_K_40_PACKET) {
+                        handleHonda(bufferIn);
+                    }
                 }
             }
         }
@@ -110,7 +133,7 @@ void initKLine() {
 	startKLine();
 
     if (engineConfiguration->kLinePeriodUs == 0) {
-        engineConfiguration->kLinePeriodUs = 1000 /* us*/;
+        engineConfiguration->kLinePeriodUs = 2000 /* us*/;
     }
 
 
