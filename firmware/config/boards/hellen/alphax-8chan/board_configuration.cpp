@@ -106,7 +106,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 	engineConfiguration->baroSensor.type = MT_MPXH6400;
-	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
+//	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
