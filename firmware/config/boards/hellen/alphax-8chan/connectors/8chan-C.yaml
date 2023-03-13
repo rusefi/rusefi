@@ -4,8 +4,9 @@ pins:
     type: etb
     color: purple
 
+
   - pin: 5C
-    function: Hall Input 4
+    function: Hall Input 4 (5v pull-up, with hysteresis)
     # H144_IN_MAP3_DIGITAL
     id: A2
     class: event_inputs
@@ -30,12 +31,17 @@ pins:
     color: purple
 
 
+  - pin: 13C
+    function: 2-Step/Generic Digital Input (configurable pull-up/pull-down, no hysteresis)
+    # IN_2STEP
+    id: E0
+    class: event_inputs
+    ts_name: 13C - 2-Step Input
+
   - pin: 14C
     function: Power Ground
     color: black
     type: gnd
-
-
 
   - pin: 15C
     # H144_IN_TPS AIN17 PA4
@@ -52,7 +58,6 @@ pins:
     function: TPS2 Sensor Input
     ts_name: 24C - TPS2
     color: orange
-
 
   - pin: 17C
     function: Power Ground
@@ -95,6 +100,7 @@ pins:
     ts_name: 21C - Ignition 5
     color: yellow
   
+
   - pin: 25C
     function: Analog Ground
     color: black
