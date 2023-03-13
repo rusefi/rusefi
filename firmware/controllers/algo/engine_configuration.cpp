@@ -635,6 +635,8 @@ static void setDefaultEngineConfiguration() {
 	// https://github.com/rusefi/rusefi/issues/4030
 	engineConfiguration->mapErrorDetectionTooHigh = 410;
 
+	setLinearCurve(config->throttleEstimateEffectiveAreaBins, 0, 100);
+
 	engineConfiguration->hip9011Gain = 1;
 #endif // EFI_ENGINE_CONTROL
     #include "default_script.lua"
