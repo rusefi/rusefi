@@ -479,9 +479,7 @@ void commonInitEngineController() {
 #endif /* EFI_UNIT_TEST */
 
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
-	if (engineConfiguration->isEngineControlEnabled) {
-		initAuxValves();
-	}
+	initAuxValves();
 #endif /* EFI_ENGINE_CONTROL */
 
 	initTachometer();

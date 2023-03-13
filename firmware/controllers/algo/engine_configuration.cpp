@@ -636,8 +636,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->mapErrorDetectionTooHigh = 410;
 
 	engineConfiguration->hip9011Gain = 1;
-
-	engineConfiguration->isEngineControlEnabled = true;
 #endif // EFI_ENGINE_CONTROL
     #include "default_script.lua"
 }

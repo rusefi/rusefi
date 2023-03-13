@@ -626,14 +626,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseKLine")) {
 		engineConfiguration->verboseKLine = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
-		engineConfiguration->enabledStep1Limiter = isEnabled;
-#if EFI_PROD_CODE
-	} else if (strEqualCaseInsensitive(param, "auto_idle")) {
-#if EFI_IDLE_CONTROL
-		setIdleMode(isEnabled ? IM_MANUAL : IM_AUTO);
-#endif // EFI_IDLE_CONTROL
-#endif // EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		engineConfiguration->useStepperIdle = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
@@ -692,16 +684,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 			disableTriggerStimulator();
 		}
 #endif // EFI_EMULATE_POSITION_SENSORS
-	} else if (strEqualCaseInsensitive(param, "engine_control")) {
-		engineConfiguration->isEngineControlEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "map_avg")) {
-		engineConfiguration->isMapAveragingEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "logic_analyzer")) {
-		engineConfiguration->isWaveAnalyzerEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "manual_spinning")) {
-		engineConfiguration->isManualSpinningMode = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "cylinder_cleanup")) {
-		engineConfiguration->isCylinderCleanupEnabled = isEnabled;
 	} else {
 		efiPrintf("unexpected [%s]", param);
 		return; // well, MISRA would not like this 'return' here :(

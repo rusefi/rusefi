@@ -711,7 +711,7 @@ bit is_enabled_spi_2
 	bit is_enabled_spi_3
 	bit isSdCardEnabled;enable sd/disable sd
 	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
-	bit isEngineControlEnabled
+	bit unusedIsEngineControlEnabled
 	bit isHip9011Enabled
 	bit isVerboseAlternator
 	bit verboseQuad
