@@ -26,7 +26,7 @@ jobs:
         pip install python-dateutil pygubu
 
     - name: Get KiCad-Diff
-      run: git clone https://github.com/leoheck/KiCad-Diff.git
+      run: git clone -b exit-nicely https://github.com/chuckwagoncomputing/KiCad-Diff.git
 
     - name: Set SSH variables
       env:
