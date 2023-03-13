@@ -12,8 +12,7 @@ echo "Entering $SCRIPT_NAME with board $1 and CPU $2"
 cd ../../..
 
 mkdir -p .dep
-# todo: start using env variable for number of threads or for '-r'
-make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
+make -j6 -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
 [ -e build/fome.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 if [ "$USE_OPENBLT" = "yes" ]; then
   make openblt PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
