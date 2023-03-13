@@ -22,6 +22,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D2: return "17B - Digital In Flex";
 		case Gpio::D3: return "10D - LS 7";
 		case Gpio::D9: return "29C - Injector 5";
+		case Gpio::E0: return "13C - 2-Step Input";
 		case Gpio::E14: return "30A - Hall Input 2";
 		case Gpio::E15: return "31A - Hall Input 3";
 		case Gpio::E2: return "21C - Ignition 5";
