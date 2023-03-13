@@ -9,6 +9,10 @@ static float pressureRatioFlowCorrection(float pr) {
 		return 1.0;
 	}
 
+	if (pr > 0.95) {
+		return 0.449f;
+	}
+
 	// float x = pr;
 	// float x2 = x * x;
 	// float x3 = x2 * x;
@@ -66,11 +70,14 @@ private:
 };
 
 // Find the throttle position that gives the specified flow
-float ThrottleModelBase::inversePartThrottleFlow(float maxEngineFlow, float flow, float pressureRatio, float p_up, float iat) const {
-	// TODO: handle near-WOT flow gracefully
+float ThrottleModelBase::throttlePositionForFlow(float flow, float pressureRatio, float p_up, float iat) const {
+	// What does the bare throttle flow at wide open?
+	float wideOpenFlow = partThrottleFlow(100, pressureRatio, p_up, iat);
 
-	// If over 95% of the wide open flow, return wide open
-	if (flow > 0.95f * maxEngineFlow) {
+	// If the target flow is more than the throttle can flow, return 100% since the throttle
+	// can't open any further
+	// If we don't do this, trying to solve using the solver may diverge
+	if (flow > wideOpenFlow) {
 		return 100;
 	}
 
@@ -79,18 +86,19 @@ float ThrottleModelBase::inversePartThrottleFlow(float maxEngineFlow, float flow
 }
 
 float ThrottleModelBase::estimateThrottleFlow(float tip, float tps, float map, float iat) {
-	// What output flow do we get at 0.95 PR?
+	// How much flow would the engine pull at 0.95 PR?
+	// The throttle won't flow much more than this in any scenario, even if the throttle could move more flow.
 	constexpr float crossoverPr = 0.95f;
 	float p95Flow = maxEngineFlow(tip * crossoverPr);
 
-	// Maximum flow if the throttle was removed
-	float maximumPossibleFlow = maxEngineFlow(tip);
-
 	// What throttle position gives us that flow at 0.95 PR?
-	float throttleAngle95Pr = inversePartThrottleFlow(maximumPossibleFlow, p95Flow, crossoverPr, tip, iat);
+	float throttleAngle95Pr = throttlePositionForFlow(p95Flow, crossoverPr, tip, iat);
 
 	if (tps > throttleAngle95Pr) {
 		// "WOT" model
+
+		// Maximum flow if the throttle was removed
+		float maximumPossibleFlow = maxEngineFlow(tip);
 
 		// Linearly interpolate between the P95 point and wide open, where the engine flows its max
 		return interpolateClamped(throttleAngle95Pr, p95Flow, 100, maximumPossibleFlow, tps);
