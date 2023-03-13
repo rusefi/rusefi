@@ -53,6 +53,7 @@ TESTS_SRC_CPP = \
 	tests/test_start_stop.cpp \
 	tests/test_hardware_reinit.cpp \
 	tests/test_engine_math.cpp \
+	tests/test_throttle_model.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
 	tests/test_idle_controller.cpp \
