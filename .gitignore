@@ -23,6 +23,7 @@ err.txt
 log.txt
 *.rusefi_binary
 *.msq
+*.kicad_prl
 
 # Eclipse
 .metadata/
