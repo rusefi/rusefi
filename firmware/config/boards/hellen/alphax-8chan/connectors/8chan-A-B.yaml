@@ -47,7 +47,7 @@ pins:
     type: gnd
 
   - pin: 8A
-    function: Crank VR
+    function: Crank VR (configurable VR or HALL with pull-up)
     # USB1ID
     id: A10
     class: event_inputs
@@ -169,7 +169,7 @@ pins:
     color: orange
 
   - pin: 23A
-    function: Hall Input 1 (configurable pull-up/pull-down)
+    function: Hall Input 1 (configurable pull-up/pull-down, with hysteresis)
     # IN_CAM
     id: A6
     class: event_inputs
@@ -206,14 +206,14 @@ pins:
     color: purple
 
   - pin: 30A
-    function: Hall Input 2 (5v pull-up)
+    function: Hall Input 2 (5v pull-up, with hysteresis)
     # IN_DIG10
     id: E14
     class: event_inputs
     ts_name: 30A - Hall Input 2
 
   - pin: 31A
-    function: Hall Input 3
+    function: Hall Input 3 (5v pull-up, with hysteresis)
     # IN_DIG11
     id: E15
     class: event_inputs
@@ -285,7 +285,7 @@ pins:
     # H144_IN_SENS1
     id: F3
     class: switch_inputs
-    function: Digital Input 2
+    function: Digital Input 2 (configurable pull-up/pull-down, no hysteresis)
     type: hall
     ts_name: 14B - Digital In 2
     color: green
@@ -294,7 +294,7 @@ pins:
     # H144_IN_SENS2
     id: F4
     class: switch_inputs
-    function: Digital Input 3
+    function: Digital Input 3 (configurable pull-up/pull-down, no hysteresis)
     type: hall
     ts_name: 15B - Digital In 3
     color: green
@@ -303,7 +303,7 @@ pins:
     # H144_IN_SENS3
     id: F5
     class: switch_inputs
-    function: Digital Input 4
+    function: Digital Input 4 (configurable pull-up/pull-down, no hysteresis)
     type: hall
     ts_name: 16B - Digital In 4
     color: green
@@ -312,7 +312,7 @@ pins:
     # H144_GP2
     id: D2
     class: switch_inputs
-    function: Digital Input Flex
+    function: Digital Input Flex (5v pull-up, with hysteresis)
     type: hall
     ts_name: 17B - Digital In Flex
     color: green
