@@ -7,7 +7,7 @@ info:
   cid: Honda-OBD2A
   title: Hellen OBD2A
   name: Hellen OBD2A
-  directory: hellen/hellen-honda-ond2a
+  directory: hellen/hellen-honda-obd2a
   image:
     file: honda-obd2.jpg
   pins:
