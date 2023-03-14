@@ -130,6 +130,7 @@ void stopPedalPins() {
 	brain_pin_markUnused(activeConfiguration.throttlePedalUpPin);
 	brain_pin_markUnused(activeConfiguration.brakePedalPin);
 	brain_pin_markUnused(activeConfiguration.launchActivatePin);
+	brain_pin_markUnused(activeConfiguration.ALSActivatePin);
 }
 
 #if ! EFI_UNIT_TEST
