@@ -93,8 +93,12 @@ float ThrottleModelBase::estimateThrottleFlow(float tip, float tps, float map, f
 
 	// What throttle position gives us that flow at 0.95 PR?
 	float throttleAngle95Pr = throttlePositionForFlow(p95Flow, crossoverPr, tip, iat);
+	throttleModelCrossoverAngle = throttleAngle95Pr;
 
-	if (tps > throttleAngle95Pr) {
+	bool useWotModel = tps > throttleAngle95Pr;
+	throttleUseWotModel = useWotModel;
+
+	if (useWotModel) {
 		// "WOT" model
 
 		// Maximum flow if the throttle was removed
@@ -126,6 +130,10 @@ expected<float> ThrottleModelBase::estimateThrottleFlow(float map, float tps) {
 	}
 
 	return estimateThrottleFlow(tip.Value, tps, map, iat.Value);
+}
+
+void ThrottleModelBase::onSlowCallback() {
+	throttleEstimatedFlow = estimateThrottleFlow(Sensor::getOrZero(SensorType::Map), Sensor::getOrZero(SensorType::Tps1)).value_or(0);
 }
 
 float ThrottleModel::effectiveArea(float tps) const {
