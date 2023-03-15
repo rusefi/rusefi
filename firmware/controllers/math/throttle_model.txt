@@ -1,0 +1,3 @@
+struct_no_prefix throttle_model_s
+	
+end_struct

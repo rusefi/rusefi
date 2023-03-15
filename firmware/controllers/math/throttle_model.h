@@ -1,6 +1,8 @@
 #pragma once
 
-struct ThrottleModelBase {
+#include "throttle_model_generated.h"
+
+struct ThrottleModelBase : public throttle_model_s {
 public:
 	float estimateThrottleFlow(float tip, float tps, float map, float iat);
 	expected<float> estimateThrottleFlow(float map, float tps);
