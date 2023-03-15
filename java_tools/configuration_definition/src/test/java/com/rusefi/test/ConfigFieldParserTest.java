@@ -363,8 +363,7 @@ public class ConfigFieldParserTest {
                         "\tpublic static final Field ALIGNMENTFILL_AT_9 = Field.create(\"ALIGNMENTFILL_AT_9\", 9, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n" +
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 12, FieldType.BIT, 0).setBaseOffset(0);\n",
                 javaFieldsConsumer.getContent());
-        assertEquals("// start of pid_s\n" +
-                "struct pid_s {\n" +
+        assertEquals("struct pid_s {\n" +
                 "\t/**\n" +
                 "\t * offset 0\n" +
                 "\t */\n" +
@@ -507,8 +506,7 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(test, consumer, javaFieldsConsumer);
         assertEquals("\tpublic static final Field FIELD1 = Field.create(\"FIELD1\", 0, FieldType.INT).setScale(0.01).setBaseOffset(0);\n",
                 javaFieldsConsumer.getContent());
-        assertEquals("// start of pid_s\n" +
-                "struct pid_s {\n" +
+        assertEquals("struct pid_s {\n" +
                 "\t/**\n" +
                 "\tratio\n" +
                 "\t * offset 0\n" +
@@ -533,8 +531,7 @@ public class ConfigFieldParserTest {
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
         ReaderStateImpl state = new ReaderStateImpl();
         state.readBufferedReader(test, consumer);
-        assertEquals("// start of struct_s\n" +
-                        "struct struct_s {\n" +
+        assertEquals("struct struct_s {\n" +
                         "\t/**\n" +
                         "\t * offset 0\n" +
                         "\t */\n" +
@@ -542,7 +539,6 @@ public class ConfigFieldParserTest {
                         "};\n" +
                         "static_assert(sizeof(struct_s) == 4);\n" +
                         "\n" +
-                        "// start of pid_s\n" +
                         "struct pid_s {\n" +
                         "\t/**\n" +
                         "\t * offset 0\n" +
@@ -575,8 +571,7 @@ public class ConfigFieldParserTest {
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
         ReaderStateImpl state = new ReaderStateImpl();
         state.readBufferedReader(test, consumer);
-        assertEquals("// start of pid_s\n" +
-                        "struct pid_s {\n" +
+        assertEquals("struct pid_s {\n" +
                         "\t/**\n" +
                         "\t * offset 0\n" +
                         "\t */\n" +

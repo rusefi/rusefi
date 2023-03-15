@@ -12,8 +12,6 @@ public interface ReaderState {
 
     void doJob() throws IOException;
 
-    String getHeader();
-
     void setDefinitionInputFile(String definitionInputFile);
 
     void addCHeaderDestination(String cHeader);
@@ -29,8 +27,6 @@ public interface ReaderState {
     Map<String, ? extends ConfigStructure> getStructures();
 
     Map<String, String> getTsCustomLine();
-
-    void setHeaderMessage(String headerMessage);
 
     String getTsFileOutputName();
 

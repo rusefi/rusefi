@@ -66,8 +66,7 @@ public class TSProjectConsumerTest {
                 javaFieldsConsumer.getContent());
 
 
-        assertEquals("// start of pid_s\n" +
-                "struct pid_s {\n" +
+        assertEquals("struct pid_s {\n" +
                 "\t/**\n" +
                 "\t * PID dTime\n" +
                 "\tms\n" +

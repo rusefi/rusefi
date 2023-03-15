@@ -32,7 +32,6 @@ echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 java \
  $COMMON_GEN_CONFIG_PREFIX \
- -tool ${BOARD_DIR}/config/gen_subaru_config.sh \
  $COMMON_GEN_CONFIG \
  -c_defines ${BOARD_DIR}/config/controllers/algo/rusefi_generated.h \
  -c_destination ${BOARD_DIR}/config/controllers/algo/engine_configuration_generated_structures.h \

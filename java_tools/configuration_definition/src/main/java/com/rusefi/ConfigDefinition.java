@@ -75,10 +75,6 @@ public class ConfigDefinition {
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
             switch (key) {
-                case "-tool":
-                    // lame: order of command line arguments is important
-                    ToolUtil.TOOL = args[i + 1];
-                    break;
                 case KEY_DEFINITION:
                     // lame: order of command line arguments is important, these arguments should be AFTER '-tool' argument
                     state.setDefinitionInputFile(args[i + 1]);
@@ -219,7 +215,7 @@ public class ConfigDefinition {
         state.doJob();
 
         if (destCDefinesFileName != null) {
-            ExtraUtil.writeDefinesToFile(state.getVariableRegistry(), destCDefinesFileName, state.getDefinitionInputFile());
+            ExtraUtil.writeDefinesToFile(state.getVariableRegistry(), destCDefinesFileName);
         }
     }
 }

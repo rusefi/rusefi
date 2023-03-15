@@ -81,8 +81,6 @@ public class EnumToString {
         File f = new File(inputPath + File.separator + headerInputFileName);
         SystemOut.println("Reading enums from " + headerInputFileName);
 
-        commonFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + f.getName() + " ");
-
         includesSection.append("#include \"" + f.getName() + "\"\n");
         enumsReader.read(new FileReader(f));
     }
