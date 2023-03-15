@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Jan 16 20:22:12 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of running_fuel_s
 struct running_fuel_s {
 	/**
 	 * offset 0
@@ -40,7 +36,6 @@ struct running_fuel_s {
 };
 static_assert(sizeof(running_fuel_s) == 24);
 
-// start of fuel_computer_s
 struct fuel_computer_s {
 	/**
 	mult
@@ -182,5 +177,3 @@ struct fuel_computer_s {
 };
 static_assert(sizeof(fuel_computer_s) == 48);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Jan 16 20:22:12 UTC 2023

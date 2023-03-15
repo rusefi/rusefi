@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Nov 01 20:59:53 UTC 2022
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of idle_state_s
 struct idle_state_s {
 	/**
 	 * offset 0
@@ -166,5 +162,3 @@ struct idle_state_s {
 };
 static_assert(sizeof(idle_state_s) == 40);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Nov 01 20:59:53 UTC 2022

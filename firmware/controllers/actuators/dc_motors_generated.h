@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Mon Feb 13 23:29:03 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of dc_motors_s
 struct dc_motors_s {
 	/**
 	 * "DC: output0"
@@ -122,5 +118,3 @@ struct dc_motors_s {
 };
 static_assert(sizeof(dc_motors_s) == 12);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Mon Feb 13 23:29:03 UTC 2023

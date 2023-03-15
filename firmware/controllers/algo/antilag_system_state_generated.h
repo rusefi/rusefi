@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Mon Feb 06 23:06:34 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of antilag_system_state_s
 struct antilag_system_state_s {
 	/**
 	offset 0 bit 0 */
@@ -119,5 +115,3 @@ struct antilag_system_state_s {
 };
 static_assert(sizeof(antilag_system_state_s) == 12);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Mon Feb 06 23:06:34 UTC 2023

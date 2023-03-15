@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Fri Oct 07 17:58:29 UTC 2022
+// by enum2string.jar tool on Wed Mar 15 18:54:23 UTC 2023
 // see also gen_config_and_enums.bat
 
 

@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Mar 09 18:39:43 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of pid_status_s
 struct pid_status_s {
 	/**
 	 * offset 0
@@ -32,7 +28,6 @@ struct pid_status_s {
 };
 static_assert(sizeof(pid_status_s) == 16);
 
-// start of output_channels_s
 struct output_channels_s {
 	/**
 	offset 0 bit 0 */
@@ -1383,5 +1378,3 @@ struct output_channels_s {
 };
 static_assert(sizeof(output_channels_s) == 780);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Mar 09 18:39:43 UTC 2023

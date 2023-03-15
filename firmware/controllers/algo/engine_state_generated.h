@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Jan 15 04:27:57 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of LuaAdjustments
 struct LuaAdjustments {
 	/**
 	 * offset 0
@@ -112,7 +108,6 @@ struct LuaAdjustments {
 };
 static_assert(sizeof(LuaAdjustments) == 12);
 
-// start of speed_density_s
 struct speed_density_s {
 	/**
 	 * speed density
@@ -131,7 +126,6 @@ struct speed_density_s {
 };
 static_assert(sizeof(speed_density_s) == 12);
 
-// start of cranking_fuel_s
 struct cranking_fuel_s {
 	/**
 	 * Fuel: base duration
@@ -163,7 +157,6 @@ struct cranking_fuel_s {
 };
 static_assert(sizeof(cranking_fuel_s) == 20);
 
-// start of engine_state_s
 struct engine_state_s {
 	/**
 	 * offset 0
@@ -377,5 +370,3 @@ struct engine_state_s {
 };
 static_assert(sizeof(engine_state_s) == 120);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Jan 15 04:27:57 UTC 2023

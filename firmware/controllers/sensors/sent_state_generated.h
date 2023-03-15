@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//sent_state.txt Mon Feb 20 16:39:15 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of sent_state_s
 struct sent_state_s {
 	/**
 	 * "ETB: SENT value0"
@@ -26,5 +22,3 @@ struct sent_state_s {
 };
 static_assert(sizeof(sent_state_s) == 8);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//sent_state.txt Mon Feb 20 16:39:15 UTC 2023

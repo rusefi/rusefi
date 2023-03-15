@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Mar 10 18:49:53 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of stft_cell_cfg_s
 struct stft_cell_cfg_s {
 	/**
 	%
@@ -24,7 +20,6 @@ struct stft_cell_cfg_s {
 };
 static_assert(sizeof(stft_cell_cfg_s) == 4);
 
-// start of stft_s
 struct stft_s {
 	/**
 	 * Below this RPM, the idle region is active
@@ -81,7 +76,6 @@ struct stft_s {
 };
 static_assert(sizeof(stft_s) == 24);
 
-// start of pid_s
 struct pid_s {
 	/**
 	 * offset 0
@@ -119,7 +113,6 @@ struct pid_s {
 };
 static_assert(sizeof(pid_s) == 20);
 
-// start of cranking_parameters_s
 struct cranking_parameters_s {
 	/**
 	 * Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.
@@ -144,7 +137,6 @@ struct cranking_parameters_s {
 };
 static_assert(sizeof(cranking_parameters_s) == 8);
 
-// start of spi_pins
 struct spi_pins {
 	/**
 	 * offset 0
@@ -167,7 +159,6 @@ struct spi_pins {
 };
 static_assert(sizeof(spi_pins) == 8);
 
-// start of gppwm_channel
 struct gppwm_channel {
 	/**
 	 * Select a pin to use for PWM or on-off output.
@@ -240,7 +231,6 @@ struct gppwm_channel {
 };
 static_assert(sizeof(gppwm_channel) == 108);
 
-// start of air_pressure_sensor_config_s
 struct air_pressure_sensor_config_s {
 	/**
 	 * kPa value at low volts
@@ -275,7 +265,6 @@ static_assert(sizeof(air_pressure_sensor_config_s) == 12);
  * @brief MAP averaging configuration
 
 */
-// start of MAP_sensor_config_s
 struct MAP_sensor_config_s {
 	/**
 	 * offset 0
@@ -308,7 +297,6 @@ static_assert(sizeof(MAP_sensor_config_s) == 140);
  * @brief Thermistor known values
 
 */
-// start of thermistor_conf_s
 struct thermistor_conf_s {
 	/**
 	 * these values are in Celcius
@@ -354,7 +342,6 @@ static_assert(sizeof(thermistor_conf_s) == 28);
  * @brief Linear sensor interpolation
 
 */
-// start of linear_sensor_s
 struct linear_sensor_s {
 	/**
 	 * offset 0
@@ -393,7 +380,6 @@ static_assert(sizeof(linear_sensor_s) == 20);
  * @brief Thermistor curve parameters
 
 */
-// start of ThermistorConf
 struct ThermistorConf {
 	/**
 	 * offset 0
@@ -412,7 +398,6 @@ struct ThermistorConf {
 };
 static_assert(sizeof(ThermistorConf) == 32);
 
-// start of injector_s
 struct injector_s {
 	/**
 	 * This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute
@@ -437,7 +422,6 @@ struct injector_s {
 };
 static_assert(sizeof(injector_s) == 36);
 
-// start of specs_s
 struct specs_s {
 	/**
 	 * Engine volume/capacity, in litres
@@ -474,7 +458,6 @@ static_assert(sizeof(specs_s) == 12);
  * @brief Trigger wheel(s) configuration
 
 */
-// start of trigger_config_s
 struct trigger_config_s {
 	/**
 	 * https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers
@@ -494,7 +477,6 @@ struct trigger_config_s {
 };
 static_assert(sizeof(trigger_config_s) == 12);
 
-// start of afr_sensor_s
 struct afr_sensor_s {
 	/**
 	 * offset 0
@@ -533,7 +515,6 @@ struct afr_sensor_s {
 };
 static_assert(sizeof(afr_sensor_s) == 12);
 
-// start of idle_hardware_s
 struct idle_hardware_s {
 	/**
 	Hz
@@ -565,7 +546,6 @@ struct idle_hardware_s {
 };
 static_assert(sizeof(idle_hardware_s) == 12);
 
-// start of dc_io
 struct dc_io {
 	/**
 	 * offset 0
@@ -587,7 +567,6 @@ struct dc_io {
 };
 static_assert(sizeof(dc_io) == 8);
 
-// start of vr_threshold_s
 struct vr_threshold_s {
 	/**
 	rpm
@@ -612,7 +591,6 @@ struct vr_threshold_s {
 };
 static_assert(sizeof(vr_threshold_s) == 16);
 
-// start of engine_configuration_s
 struct engine_configuration_s {
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
@@ -3867,7 +3845,6 @@ struct engine_configuration_s {
 };
 static_assert(sizeof(engine_configuration_s) == 3768);
 
-// start of cyl_trim_s
 struct cyl_trim_s {
 	/**
 	 * offset 0
@@ -3876,7 +3853,6 @@ struct cyl_trim_s {
 };
 static_assert(sizeof(cyl_trim_s) == 16);
 
-// start of blend_table_s
 struct blend_table_s {
 	/**
 	 * offset 0
@@ -3920,7 +3896,6 @@ struct blend_table_s {
 };
 static_assert(sizeof(blend_table_s) == 188);
 
-// start of persistent_config_s
 struct persistent_config_s {
 	/**
 	 * offset 0
@@ -4665,5 +4640,3 @@ struct persistent_config_s {
 };
 static_assert(sizeof(persistent_config_s) == 22108);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Mar 10 18:49:53 UTC 2023
