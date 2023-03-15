@@ -143,6 +143,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
+	setHellenMMbaro();
 
 	setHellenSdCardSpi2();
 

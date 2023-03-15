@@ -62,6 +62,7 @@ void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setHellenMegaEnPin();
 	setupVbatt();
+	setHellenMMbaro();
 
 	setHellenSdCardSpi1();
 	configureHellenMegaAccCS2Pin();
