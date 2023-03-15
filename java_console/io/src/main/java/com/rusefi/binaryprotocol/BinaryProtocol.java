@@ -19,6 +19,7 @@ import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -422,7 +423,7 @@ public class BinaryProtocol {
     }
 
     public int getCrcFromController(int configSize) {
-        byte[] packet = createCrcCommand(configSize);
+        byte[] packet = createRequestCrcPayload(configSize);
         byte[] response = executeCommand(Fields.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
 
         if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
@@ -440,7 +441,7 @@ public class BinaryProtocol {
         }
     }
 
-    public static byte[] createCrcCommand(int size) {
+    private static byte[] createRequestCrcPayload(int size) {
         byte[] packet = new byte[4];
         ByteRange.packOffsetAndSize(0, size, packet);
         return packet;
@@ -459,16 +460,7 @@ public class BinaryProtocol {
         if (isClosed)
             return null;
 
-        byte[] fullRequest;
-
-        if (packet != null) {
-            fullRequest = new byte[packet.length + 1];
-            System.arraycopy(packet, 0, fullRequest, 1, packet.length);
-        } else {
-            fullRequest = new byte[1];
-        }
-
-        fullRequest[0] = (byte)opcode;
+        byte[] fullRequest = getFullRequest((byte) opcode, packet);
 
         try {
             linkManager.assertCommunicationThread();
@@ -482,6 +474,21 @@ public class BinaryProtocol {
             close();
             return null;
         }
+    }
+
+    @NotNull
+    public static byte[] getFullRequest(byte opcode, byte[] packet) {
+        byte[] fullRequest;
+
+        if (packet != null) {
+            fullRequest = new byte[packet.length + 1];
+            System.arraycopy(packet, 0, fullRequest, 1, packet.length);
+        } else {
+            fullRequest = new byte[1];
+        }
+
+        fullRequest[0] = opcode;
+        return fullRequest;
     }
 
     public void close() {
