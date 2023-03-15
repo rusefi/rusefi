@@ -20,13 +20,6 @@ public class EnumToString {
     /**
      * same header for .cpp and .h
      */
-    private final static StringBuilder commonFilesHeader = new StringBuilder("// by enum2string.jar tool " +
-            "on " + new Date() + "\n" +
-            "// see also gen_config_and_enums.bat\n" +
-            "\n" +
-            "\n" +
-            "\n");
-
     private final static StringBuilder headerFileContent = new StringBuilder();
 
     public final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
@@ -50,7 +43,6 @@ public class EnumToString {
 
         state.outputData(enumsReader);
 
-        state.cppFileContent.insert(0, commonFilesHeader.toString());
 
         state.cppFileContent.insert(0, state.includesSection);
         headerFileContent.insert(0, state.includesSection);
@@ -58,7 +50,6 @@ public class EnumToString {
         SystemOut.println("includesSection:\n" + state.includesSection + "end of includesSection\n");
 
         state.cppFileContent.insert(0, "#include \"global.h\"\n");
-        headerFileContent.insert(0, commonFilesHeader);
 
         new File(outputPath).mkdirs();
         state.writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_" +
