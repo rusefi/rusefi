@@ -47,6 +47,7 @@
 #include "sensor_checker.h"
 #include "fuel_schedule.h"
 #include "prime_injection.h"
+#include "throttle_model.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -130,6 +131,7 @@ public:
 #if EFI_HPFP && EFI_ENGINE_CONTROL
 		HpfpController,
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
+		ThrottleModel,
 #if EFI_ALTERNATOR_CONTROL
 		AlternatorController,
 #endif /* EFI_ALTERNATOR_CONTROL */
