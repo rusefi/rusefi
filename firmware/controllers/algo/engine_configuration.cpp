@@ -626,7 +626,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->isAlternatorControlEnabled = false;
 
-	engineConfiguration->driveWheelRevPerKm = 500;
+	engineConfiguration->driveWheelRevPerKm = 1000;
+	engineConfiguration->finalGearRatio = 1;
 	engineConfiguration->vssGearRatio = 3.73;
 	engineConfiguration->vssToothCount = 21;
 
