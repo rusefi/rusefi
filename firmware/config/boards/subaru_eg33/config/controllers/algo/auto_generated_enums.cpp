@@ -1,10 +1,5 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Sat Apr 30 02:29:49 UTC 2022
-// see also gen_config_and_enums.bat
-
-
-
 const char *getGpio(Gpio value){
 switch(value) {
 case Gpio::A0:

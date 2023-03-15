@@ -1,10 +1,5 @@
 #include "global.h"
 #include "live_data_ids.h"
-// by enum2string.jar tool on Wed Mar 15 19:07:58 UTC 2023
-// see also gen_config_and_enums.bat
-
-
-
 const char *getLive_data_e(live_data_e value){
 switch(value) {
 case LDS_ac_control:
