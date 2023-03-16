@@ -61,7 +61,7 @@ void UartDmaTsChannel::start(uint32_t baud) {
 		.timeout_cb		= tsRxIRQIdleHandler,
 		.speed			= baud,
 		.cr1			= 0,
-		.cr2			= 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN,
+		.cr2			= USART_CR2_STOP1_BITS | USART_CR2_LINEN,
 		.cr3			= 0,
 		.rxhalf_cb		= tsRxIRQHalfHandler
 	};
