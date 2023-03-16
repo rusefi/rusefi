@@ -332,7 +332,7 @@ void readFromFlash() {
 
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
-	memset(persistentState.persistentConfiguration.warning_message , 0, ERROR_BUFFER_SIZE);
+	memset(persistentState.persistentConfiguration.warning_message , 0, sizeof(persistentState.persistentConfiguration.warning_message));
 	validateConfiguration();
 }
 
