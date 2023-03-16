@@ -891,6 +891,9 @@ static void setTpsErrorDetectionTooHigh(int v) {
 
 const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 #if EFI_ENGINE_CONTROL
+        {"driveWheelRevPerKm", [](int value) {
+            engineConfiguration->driveWheelRevPerKm = value;
+        }},
 		{"cranking_rpm", setCrankingRpm},
 		{"cranking_injection_mode", setCrankingInjectionMode},
 		{"injection_mode", setInjectionMode},
