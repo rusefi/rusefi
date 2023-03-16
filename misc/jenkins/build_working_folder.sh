@@ -64,11 +64,6 @@ INI_FILE_OVERRIDE=""
 RUSEFI_CONSOLE_SETTINGS=""
 
 cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
-# 407 has additional version of firmware
-#cp firmware/deliver/rusefi_no_asserts.bin $FOLDER
-#cp firmware/deliver/rusefi_no_asserts.dfu $FOLDER
-# just for now - DFU work in progress
-#cp firmware/deliver/rusefi_no_asserts.hex $FOLDER
 
 cp firmware/deliver/fome.bin $FOLDER
 # probably not needed cp firmware/build/rusefi.elf $FOLDER
@@ -83,7 +78,7 @@ cp firmware/deliver/fome.hex $FOLDER
 [ -e firmware/deliver/rusefi_update.srec ] && { cp firmware/deliver/rusefi_update.srec $FOLDER ; }
 
 if [ -n "$BUNDLE_NAME" ]; then
-    mv $FOLDER/rusefi.dfu $FOLDER/fome_$BUNDLE_NAME.dfu
+    mv $FOLDER/fome.dfu $FOLDER/fome_$BUNDLE_NAME.dfu
 fi
 
 
