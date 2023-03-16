@@ -29,6 +29,9 @@ public class Value implements Comparable<Value> {
     }
 
     public int getIntValue() {
+        if (value.toLowerCase().startsWith("0x"))
+            return Integer.parseInt(value.substring(2), 16);
+
         return Integer.parseInt(value);
     }
 
