@@ -253,7 +253,7 @@ CPPWARN = -Wall -Wextra -Wundef
 
 # List all user C define here, like -D_DEBUG=1
 UDEFS = -DSIMULATOR
-DDEFS += -DFIRMWARE_ID=\"simulator\" -DSHORT_BOARD_NAME=f407-discovery
+DDEFS += -DFIRMWARE_ID=\"simulator\"
 
 
 # Define ASM defines here
