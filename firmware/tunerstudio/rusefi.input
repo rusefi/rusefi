@@ -4139,6 +4139,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",	cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
+		commandButton = "microRusEFI M111",             cmd_set_engine_type_MRE_M111@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NA6 VAF",	cmd_set_engine_type_microRusEFI_Miata_NA6_VAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NA6 MAP",	cmd_set_engine_type_microRusEFI_Miata_NA6_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata 94/95 MAP", cmd_set_engine_type_microRusEFI_Miata_94_MAP@@if_show_microRusEFI_presets
