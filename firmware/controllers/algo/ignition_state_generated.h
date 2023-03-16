@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Mon Jan 16 20:22:12 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of ignition_state_s
 struct ignition_state_s {
 	/**
 	ms
@@ -63,5 +59,3 @@ struct ignition_state_s {
 };
 static_assert(sizeof(ignition_state_s) == 32);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Mon Jan 16 20:22:12 UTC 2023

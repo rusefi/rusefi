@@ -1,10 +1,5 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Mar 01 04:10:39 UTC 2023
-// see also gen_config_and_enums.bat
-
-
-
 const char *getBench_mode_e(bench_mode_e value){
 switch(value) {
 case BENCH_AC_COMPRESSOR_RELAY:

@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/launch_control_state.txt Sun Apr 17 20:27:25 UTC 2022
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of launch_control_state_s
 struct launch_control_state_s {
 	/**
 	 * offset 0
@@ -108,5 +104,3 @@ struct launch_control_state_s {
 };
 static_assert(sizeof(launch_control_state_s) == 8);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/launch_control_state.txt Sun Apr 17 20:27:25 UTC 2022

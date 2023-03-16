@@ -187,7 +187,6 @@ public class StructLayout extends Layout {
             ps.println("*/");
         }
 
-        ps.println("// start of " + this.typeName);
         ps.println("struct " + this.typeName + " {");
 
         this.children.forEach(c -> c.writeCLayout(ps));

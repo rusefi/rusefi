@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Wed Aug 24 22:14:46 UTC 2022
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of trigger_state_primary_s
 struct trigger_state_primary_s {
 	/**
 	offset 0 bit 0 */
@@ -104,5 +100,3 @@ struct trigger_state_primary_s {
 };
 static_assert(sizeof(trigger_state_primary_s) == 4);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Wed Aug 24 22:14:46 UTC 2022

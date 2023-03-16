@@ -15,7 +15,6 @@ public class CStructWriter {
 
     public void writeCStructs(ParseState parser, PrintStream ps) {
         ps.println(
-                "// begin\n" +
                 "#pragma once\n" +
                 "#include \"rusefi_types.h\""
         );
@@ -24,8 +23,6 @@ public class CStructWriter {
             StructLayout sl = new StructLayout(0, "root", s);
             sl.writeCLayoutRoot(ps);
         }
-
-        ps.println("// end");
 
         ps.close();
     }

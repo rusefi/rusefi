@@ -41,10 +41,8 @@ source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 # work in progress: migrating to fome_${BUNDLE_NAME}.txt
-# in rare cases order of arguments is important - '-tool' should be specified before '-definition'
 java \
  $COMMON_GEN_CONFIG_PREFIX \
- 	-tool gen_config.sh \
  $COMMON_GEN_CONFIG \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
   -c_defines        controllers/generated/rusefi_generated.h \

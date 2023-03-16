@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Thu Sep 01 15:02:30 UTC 2022
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of injector_model_s
 struct injector_model_s {
 	/**
 	 * injectorLag(VBatt)
@@ -26,5 +22,3 @@ struct injector_model_s {
 };
 static_assert(sizeof(injector_model_s) == 12);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Thu Sep 01 15:02:30 UTC 2022

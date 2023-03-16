@@ -30,9 +30,6 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
         this.withC_Defines = withC_Defines;
         SystemOut.println("Writing C header to " + destCHeader);
         cHeader = new LazyFile(destCHeader);
-        cHeader.write("// this section " + state.getHeader() + EOL);
-        cHeader.write("// by " + getClass() + EOL);
-        cHeader.write("// begin" + EOL);
         cHeader.write("#pragma once" + EOL);
         cHeader.write("#include \"rusefi_types.h\"" + EOL);
     }
@@ -42,8 +39,6 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
         if (withC_Defines)
             cHeader.write(variableRegistry.getDefinesSection());
         cHeader.write(getContent().toString());
-        cHeader.write("// end" + EOL);
-        cHeader.write("// this section " + state.getHeader() + EOL);
         cHeader.close();
     }
 }

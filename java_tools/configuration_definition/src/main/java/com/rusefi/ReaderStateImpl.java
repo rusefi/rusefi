@@ -37,7 +37,6 @@ public class ReaderStateImpl implements ReaderState {
     private final Map<String, Integer> tsCustomSize = new HashMap<>();
     private final Map<String, String> tsCustomLine = new HashMap<>();
     private final Map<String, ConfigStructureImpl> structures = new HashMap<>();
-    private String headerMessage;
     // well, technically those should be a builder for state, not this state class itself
     private String tsFileOutputName = "rusefi.ini";
     private String definitionInputFile = null;
@@ -340,16 +339,8 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     @Override
-    public String getHeader() {
-        if (headerMessage == null)
-            throw new NullPointerException("No header message yet");
-        return headerMessage;
-    }
-
-    @Override
     public void setDefinitionInputFile(String definitionInputFile) {
         this.definitionInputFile = definitionInputFile;
-        headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
         inputFiles.add(definitionInputFile);
     }
 
@@ -399,11 +390,6 @@ public class ReaderStateImpl implements ReaderState {
     @Override
     public Map<String, String> getTsCustomLine() {
         return tsCustomLine;
-    }
-
-    @Override
-    public void setHeaderMessage(String headerMessage) {
-        this.headerMessage = headerMessage;
     }
 
     @Override

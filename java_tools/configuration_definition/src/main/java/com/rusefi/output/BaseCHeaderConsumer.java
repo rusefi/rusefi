@@ -67,7 +67,6 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
             content.append("/**" + EOL + packComment(structure.getComment(), "") + EOL + "*/" + EOL);
         }
 
-        content.append("// start of " + structure.getName() + EOL);
         content.append("struct " + structure.getName() + " {" + EOL);
 
         FieldIteratorWithOffset iterator = new FieldIteratorWithOffset(structure.getcFields());

@@ -1,8 +1,3 @@
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Nov 10 20:00:37 EST 2021
-// see also gen_config_and_enums.bat
-
-
-
 #include "engine_types.h"
 #pragma once
 const char *getBench_mode_e(bench_mode_e value);

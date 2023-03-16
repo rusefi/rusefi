@@ -1,8 +1,5 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Mar 09 18:39:43 UTC 2023
-
-// by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class TsOutputs {

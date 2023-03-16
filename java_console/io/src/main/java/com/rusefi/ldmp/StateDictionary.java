@@ -47,6 +47,7 @@ public enum StateDictionary {
         register(live_data_e.LDS_antilag_system_state, AntilagSystem.VALUES, "antilag_system");
         register(live_data_e.LDS_dc_motors, DcMotors.VALUES, "dc_motors");
         register(live_data_e.LDS_sent_state, SentState.VALUES, "sent");
+		register(live_data_e.LDS_throttle_model, ThrottleModel.VALUES, "throttle_model");
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());

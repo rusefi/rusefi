@@ -99,12 +99,10 @@ float ThrottleModelBase::estimateThrottleFlow(float tip, float tps, float map, f
 	throttleUseWotModel = useWotModel;
 
 	if (useWotModel) {
-		// "WOT" model
-
 		// Maximum flow if the throttle was removed
 		float maximumPossibleFlow = maxEngineFlow(tip);
 
-		// Linearly interpolate between the P95 point and wide open, where the engine flows its max
+		// Linearly interpolate between the P95 point (throttle flow limited) and wide open (engine flow limited)
 		return interpolateClamped(throttleAngle95Pr, p95Flow, 100, maximumPossibleFlow, tps);
 	} else {
 		float pressureRatio = map / tip;

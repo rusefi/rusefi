@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//wideband_state.txt Wed Oct 12 01:02:23 UTC 2022
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of wideband_state_s
 struct wideband_state_s {
 	/**
 	 * offset 0
@@ -48,5 +44,3 @@ struct wideband_state_s {
 };
 static_assert(sizeof(wideband_state_s) == 12);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//wideband_state.txt Wed Oct 12 01:02:23 UTC 2022

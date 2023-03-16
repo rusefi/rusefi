@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Tue Nov 01 20:59:53 UTC 2022
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of knock_controller_s
 struct knock_controller_s {
 	/**
 	 * Knock Degrees retarded
@@ -26,5 +22,3 @@ struct knock_controller_s {
 };
 static_assert(sizeof(knock_controller_s) == 16);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Tue Nov 01 20:59:53 UTC 2022

@@ -1,10 +1,6 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Jan 10 21:34:44 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
 #define HW_EVENT_TYPES 6
-// start of trigger_central_s
 struct trigger_central_s {
 	/**
 	 * Hardware events since boot
@@ -61,5 +57,3 @@ struct trigger_central_s {
 };
 static_assert(sizeof(trigger_central_s) == 52);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Jan 10 21:34:44 UTC 2023

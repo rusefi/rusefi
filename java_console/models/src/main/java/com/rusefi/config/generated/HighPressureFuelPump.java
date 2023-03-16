@@ -1,8 +1,5 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Wed Mar 15 03:50:09 UTC 2023
-
-// by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class HighPressureFuelPump {

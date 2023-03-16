@@ -1,8 +1,3 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Feb 28 11:42:56 UTC 2023
-// see also gen_config_and_enums.bat
-
-
-
 #include "rusefi_enums.h"
 #pragma once
 #if __cplusplus

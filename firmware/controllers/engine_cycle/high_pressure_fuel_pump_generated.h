@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Tue Nov 01 21:35:07 UTC 2022
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of high_pressure_fuel_pump_s
 struct high_pressure_fuel_pump_s {
 	/**
 	 * HPFP duration
@@ -128,5 +124,3 @@ struct high_pressure_fuel_pump_s {
 };
 static_assert(sizeof(high_pressure_fuel_pump_s) == 24);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Tue Nov 01 21:35:07 UTC 2022

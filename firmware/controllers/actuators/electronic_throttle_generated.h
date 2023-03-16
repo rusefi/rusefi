@@ -1,9 +1,5 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sat Feb 18 03:20:18 UTC 2023
-// by class com.rusefi.output.CHeaderConsumer
-// begin
 #pragma once
 #include "rusefi_types.h"
-// start of electronic_throttle_s
 struct electronic_throttle_s {
 	/**
 	 * "ETB: idlePosition"
@@ -185,5 +181,3 @@ struct electronic_throttle_s {
 };
 static_assert(sizeof(electronic_throttle_s) == 52);
 
-// end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sat Feb 18 03:20:18 UTC 2023
