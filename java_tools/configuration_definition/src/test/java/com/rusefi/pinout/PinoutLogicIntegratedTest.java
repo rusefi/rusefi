@@ -100,7 +100,7 @@ public class PinoutLogicIntegratedTest {
 
         state.getEnumsReader().read(new StringReader("enum class Gpio : uint16_t {\n" +
                                                         "Unassigned = 0,\n" +
-                                                        "Invalid = 1,\n" +
+                                                        "Invalid = 0x01,\n" +
                                                         "E11 = 2,\n" +
                                                         "};"));
 
