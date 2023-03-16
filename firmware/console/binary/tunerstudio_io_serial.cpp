@@ -6,7 +6,9 @@
 
 #if defined(TS_PRIMARY_UxART_PORT) || defined(TS_SECONDARY_UxART_PORT)
 #if HAL_USE_SERIAL
-void SerialTsChannel::start(uint32_t baud) {
+// we also have UartDmaTsChannel inheriting from UartTsChannel?!
+/*
+// this implementation is not used since only UartDmaTsChannel instances are used void SerialTsChannel::start(uint32_t baud) {
 	SerialConfig cfg = {
 		#if EFI_PROD_CODE
 			.speed = baud,
@@ -18,6 +20,7 @@ void SerialTsChannel::start(uint32_t baud) {
 
 	sdStart(m_driver, &cfg);
 }
+*/
 
 void SerialTsChannel::stop() {
 	sdStop(m_driver);
@@ -64,6 +67,8 @@ void UartTsChannel::write(const uint8_t* buffer, size_t size, bool) {
 	bytesOut += transferred;
 }
 
+/*
+// this implementation is not used since only UartDmaTsChannel instances are used
 size_t UartTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 	// nasty in/out parameter approach:
 	// in entry: number of data frames to receive
@@ -72,5 +77,6 @@ size_t UartTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 	bytesIn += size;
 	return size;
 }
+*/
 #endif // HAL_USE_UART
 #endif // defined(TS_PRIMARY_UxART_PORT) || defined(TS_SECONDARY_UxART_PORT)
