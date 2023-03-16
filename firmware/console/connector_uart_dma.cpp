@@ -75,7 +75,9 @@ void UartDmaTsChannel::start(uint32_t baud) {
 
 size_t UartDmaTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 	// Instead of reading from the device, read from our custom RX queue
-	return iqReadTimeout(&fifoRxQueue, buffer, size, timeout);
+	size_t transferred = iqReadTimeout(&fifoRxQueue, buffer, size, timeout);
+	bytesIn += transferred;
+    return transferred;
 }
 
 #endif // HAL_USE_UART && EFI_USE_UART_DMA
