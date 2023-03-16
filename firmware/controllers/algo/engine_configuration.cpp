@@ -626,7 +626,7 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->isAlternatorControlEnabled = false;
 
-	engineConfiguration->driveWheelRevPerKm = 500;
+	engineConfiguration->driveWheelRevPerKm = 1000;
 	engineConfiguration->finalGearRatio = 1;
 	engineConfiguration->vssGearRatio = 3.73;
 	engineConfiguration->vssToothCount = 21;
@@ -732,7 +732,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMreVwPassatB6();
 		break;
 	case MRE_M111:
-		setM111EngineConfiguration();
+		setMreM111EngineConfiguration();
 		break;
 	case MRE_SECONDARY_CAN:
 		mreSecondaryCan();

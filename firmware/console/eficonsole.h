@@ -9,5 +9,8 @@
 #pragma once
 
 void initializeConsole();
+
 void startUsbConsole();
+void printUsbConnectorStats();
+
 void startEthernetConsole();

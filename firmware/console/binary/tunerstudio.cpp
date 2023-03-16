@@ -118,14 +118,11 @@ static void printTsStats(void) {
 	efiPrintf("Primary UART TX %s", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
 #endif
 
-	if (false) {
-		// todo: is this code needed somewhere else?
-		efiPrintf("TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
-
-		efiPrintf("TS TX on %s @%d", hwPortname(engineConfiguration->binarySerialTxPin),
-				engineConfiguration->tunerStudioSerialSpeed);
-	}
 #endif /* EFI_PROD_CODE */
+
+#if EFI_USB_SERIAL
+    printUsbConnectorStats();
+#endif // EFI_USB_SERIAL
 
 	printErrorCounters();
 }

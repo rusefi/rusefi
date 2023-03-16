@@ -12,4 +12,4 @@
 /**
  * set engine_type 68
  */
-void setM111EngineConfiguration();
+void setMreM111EngineConfiguration();

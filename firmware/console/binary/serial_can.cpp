@@ -324,31 +324,30 @@ can_msg_t CanStreamerState::streamFlushTx(can_sysinterval_t timeout) {
 }
 
 can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can_sysinterval_t timeout) {
-	int i = 0;
-	size_t numBytes = *np;
+	size_t availableBufferSpace = *np;
 
 	// first, fill the data from the stored buffer (saved from the previous CAN frame)
-	i = getDataFromFifo(rxbuf, numBytes);
+	int receivedSoFar = getDataFromFifo(rxbuf, availableBufferSpace);
 
 	// if even more data is needed, then we receive more CAN frames
-	while (numBytes > 0) {
+	while (availableBufferSpace > 0) {
 		CANRxFrame rxmsg;
 		if (streamer->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) == CAN_MSG_OK) {
-			int numReceived = receiveFrame(&rxmsg, rxbuf + i, numBytes, timeout);
+			int numReceived = receiveFrame(&rxmsg, rxbuf + receivedSoFar, availableBufferSpace, timeout);
 
 			if (numReceived < 1)
 				break;
-			numBytes -= numReceived;
-			i += numReceived;
+			availableBufferSpace -= numReceived;
+			receivedSoFar += numReceived;
 		} else {
 			break;
 		}
 	}
-	*np -= numBytes;
+	*np -= availableBufferSpace;
 
 #ifdef SERIAL_CAN_DEBUG
-	efiPrintf("* ret: %d %d (%d)", i, *np, numBytes);
-	for (int j = 0; j < i; j++) {
+	efiPrintf("* ret: %d %d (%d)", i, *np, availableBufferSpace);
+	for (int j = 0; j < receivedSoFar; j++) {
 		efiPrintf("* [%d]: %02x", j, rxbuf[j]);
 	}
 #endif /* SERIAL_CAN_DEBUG */
@@ -405,6 +404,9 @@ msg_t canStreamFlushTx(sysinterval_t timeout) {
 	return state.streamFlushTx(timeout);
 }
 
+	// np uses in/out parameter approach. Yes ChibiOS does same but still evil!
+	// in entry: number of data frames to receive
+	// on exit the number of frames actually received
 msg_t canStreamReceiveTimeout(size_t *np, uint8_t *rxbuf, sysinterval_t timeout) {
 	return state.streamReceiveTimeout(np, rxbuf, timeout);
 }

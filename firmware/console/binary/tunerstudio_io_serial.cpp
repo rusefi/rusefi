@@ -24,11 +24,14 @@ void SerialTsChannel::stop() {
 }
 
 void SerialTsChannel::write(const uint8_t* buffer, size_t size, bool /*isEndOfPacket*/) {
-	chnWriteTimeout(m_driver, buffer, size, BINARY_IO_TIMEOUT);
+	size_t transferred = chnWriteTimeout(m_driver, buffer, size, BINARY_IO_TIMEOUT);
+	bytesOut += transferred;
 }
 
 size_t SerialTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
-	return chnReadTimeout(m_driver, buffer, size, timeout);
+	size_t transferred = chnReadTimeout(m_driver, buffer, size, timeout);
+	bytesIn += transferred;
+    return transferred;
 }
 
 #endif // HAL_USE_SERIAL
@@ -44,7 +47,7 @@ void UartTsChannel::start(uint32_t baud) {
 		.timeout_cb		= NULL,
 		.speed 			= baud,
 		.cr1 			= 0,
-		.cr2 			= 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN,
+		.cr2 			= USART_CR2_STOP1_BITS | USART_CR2_LINEN,
 		.cr3 			= 0,
 		.rxhalf_cb		= NULL
 	};
@@ -57,11 +60,16 @@ void UartTsChannel::stop() {
 }
 
 void UartTsChannel::write(const uint8_t* buffer, size_t size, bool) {
-	uartSendTimeout(m_driver, &size, buffer, BINARY_IO_TIMEOUT);
+	size_t transferred = uartSendTimeout(m_driver, &size, buffer, BINARY_IO_TIMEOUT);
+	bytesOut += transferred;
 }
 
 size_t UartTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
+	// nasty in/out parameter approach:
+	// in entry: number of data frames to receive
+	// on exit the number of frames actually received
 	uartReceiveTimeout(m_driver, &size, buffer, timeout);
+	bytesIn += size;
 	return size;
 }
 #endif // HAL_USE_UART

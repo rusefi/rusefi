@@ -36,6 +36,9 @@ public:
 	// Base functions that use the above virtual implementation
 	size_t read(uint8_t* buffer, size_t size);
 
+	int bytesIn = 0;
+	int bytesOut = 0;
+
 #ifdef EFI_CAN_SERIAL
 	virtual	// CAN device needs this function to be virtual for small-packet optimization
 #endif
