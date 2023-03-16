@@ -24,11 +24,14 @@ public:
 	}
 
 	void write(const uint8_t* buffer, size_t size, bool /*isEndOfPacket*/) override {
-		chnWriteTimeout(m_channel, buffer, size, BINARY_IO_TIMEOUT);
+		size_t transferred = chnWriteTimeout(m_channel, buffer, size, BINARY_IO_TIMEOUT);
+		bytesOut += transferred;
 	}
 
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override {
-		return chnReadTimeout(m_channel, buffer, size, timeout);
+	    size_t transferred = chnReadTimeout(m_channel, buffer, size, timeout);
+		bytesIn += transferred;
+		return transferred;
 	}
 
 private:
@@ -52,6 +55,9 @@ static UsbThread usbConsole;
 
 void startUsbConsole() {
 	usbConsole.start();
+}
+
+void printUsbConnectorStats() {
 }
 
 #endif // EFI_USB_SERIAL

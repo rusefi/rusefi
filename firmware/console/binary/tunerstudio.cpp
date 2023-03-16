@@ -120,6 +120,10 @@ static void printTsStats(void) {
 
 #endif /* EFI_PROD_CODE */
 
+#if EFI_USB_SERIAL
+    printUsbConnectorStats();
+#endif // EFI_USB_SERIAL
+
 	printErrorCounters();
 }
 
