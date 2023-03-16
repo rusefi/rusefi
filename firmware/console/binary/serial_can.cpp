@@ -324,29 +324,29 @@ can_msg_t CanStreamerState::streamFlushTx(can_sysinterval_t timeout) {
 }
 
 can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can_sysinterval_t timeout) {
-	size_t numBytes = *np;
+	size_t availableBufferSpace = *np;
 
 	// first, fill the data from the stored buffer (saved from the previous CAN frame)
-	int receivedSoFar = getDataFromFifo(rxbuf, numBytes);
+	int receivedSoFar = getDataFromFifo(rxbuf, availableBufferSpace);
 
 	// if even more data is needed, then we receive more CAN frames
-	while (numBytes > 0) {
+	while (availableBufferSpace > 0) {
 		CANRxFrame rxmsg;
 		if (streamer->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) == CAN_MSG_OK) {
-			int numReceived = receiveFrame(&rxmsg, rxbuf + receivedSoFar, numBytes, timeout);
+			int numReceived = receiveFrame(&rxmsg, rxbuf + receivedSoFar, availableBufferSpace, timeout);
 
 			if (numReceived < 1)
 				break;
-			numBytes -= numReceived;
+			availableBufferSpace -= numReceived;
 			receivedSoFar += numReceived;
 		} else {
 			break;
 		}
 	}
-	*np -= numBytes;
+	*np -= availableBufferSpace;
 
 #ifdef SERIAL_CAN_DEBUG
-	efiPrintf("* ret: %d %d (%d)", i, *np, numBytes);
+	efiPrintf("* ret: %d %d (%d)", i, *np, availableBufferSpace);
 	for (int j = 0; j < receivedSoFar; j++) {
 		efiPrintf("* [%d]: %02x", j, rxbuf[j]);
 	}
