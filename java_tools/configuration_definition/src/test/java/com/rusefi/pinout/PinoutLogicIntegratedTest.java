@@ -4,6 +4,7 @@ import com.rusefi.EnumsReader;
 import com.rusefi.ReaderState;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.VariableRegistry;
+import com.rusefi.enum_reader.Value;
 import com.rusefi.newparse.ParseState;
 import org.junit.Test;
 
@@ -101,7 +102,7 @@ public class PinoutLogicIntegratedTest {
         state.getEnumsReader().read(new StringReader("enum class Gpio : uint16_t {\n" +
                                                         "Unassigned = 0,\n" +
                                                         "Invalid = 0x01,\n" +
-                                                        "E11 = 2,\n" +
+                                                        "E11 = 0x0B,\n" +
                                                         "};"));
 
         ParseState definitionState = new ParseState(state.getEnumsReader());
@@ -112,4 +113,14 @@ public class PinoutLogicIntegratedTest {
 
         assertEquals(expected, testWriter.getBuffer().toString());
     }
+
+    @Test
+    public void parseInt() {
+        assertEquals(1, Value.parseInt("1"));
+        assertEquals(10, Value.parseInt("0x0a"));
+        assertEquals(10, Value.parseInt("0xa"));
+        assertEquals(10, Value.parseInt("0Xa"));
+        assertEquals(11, Value.parseInt("0x0B"));
+    }
+
 }

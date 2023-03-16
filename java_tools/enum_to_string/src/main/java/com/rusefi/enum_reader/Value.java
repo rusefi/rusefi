@@ -29,9 +29,14 @@ public class Value implements Comparable<Value> {
     }
 
     public int getIntValue() {
-        if (value.toLowerCase().startsWith("0x"))
-            return Integer.parseInt(value.substring(2), 16);
-        return Integer.parseInt(value);
+        return parseInt(value);
+    }
+
+    public static int parseInt(String value) {
+        String trimmed = value.trim();
+        if (trimmed.toLowerCase().startsWith("0x"))
+            return Integer.parseInt(trimmed.substring(2), 16);
+        return Integer.parseInt(trimmed);
     }
 
     @Override
@@ -51,9 +56,13 @@ public class Value implements Comparable<Value> {
         try {
             return getIntValue();
         } catch (NumberFormatException e) {
-            String resolvedValue = registry.get(value);
-            Objects.requireNonNull(resolvedValue, value);
-            return Integer.parseInt(resolvedValue);
+            return handleNotInteger(registry);
         }
+    }
+
+    private int handleNotInteger(VariableRegistry registry) {
+        String resolvedValue = registry.get(value);
+        Objects.requireNonNull(resolvedValue, value);
+        return Integer.parseInt(resolvedValue);
     }
 }
