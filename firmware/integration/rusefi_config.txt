@@ -1638,7 +1638,7 @@ int16_t[CRANKING_ADVANCE_CURVE_SIZE] autoscale crankingAdvance;Optional timing a
 uint8_t[CLT_CURVE_SIZE] autoscale iacCoastingRpmBins;RPM-based idle position for coasting;"RPM", 100, 0, 0, 25000, 0
 uint8_t[CLT_CURVE_SIZE] autoscale iacCoasting;    RPM-based idle position for coasting;"%", 0.5, 0, 0, 100, 1
 
-error_message_t warning_message;
+warning_message_t warning_message;
 
 float[AFTERSTART_HOLD_CURVE_SIZE] afterstartCoolantBins;;"C", 1, 0, -100, 250, 0
 float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds", 1, 0, 0, 100, 1
