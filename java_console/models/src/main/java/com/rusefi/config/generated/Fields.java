@@ -1192,7 +1192,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.16.f407-discovery.2685895717";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.16.f407-discovery.2886271777";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1368;
@@ -2586,7 +2586,7 @@ public class Fields {
 	public static final Field VEBLENDS4_BLENDVALUES = Field.create("VEBLENDS4_BLENDVALUES", 22050, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field VEBLENDS4_ALIGNMENTFILL_AT_186 = Field.create("VEBLENDS4_ALIGNMENTFILL_AT_186", 22058, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field THROTTLEESTIMATEEFFECTIVEAREABINS = Field.create("THROTTLEESTIMATEEFFECTIVEAREABINS", 22060, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field THROTTLEESTIMATEEFFECTIVEAREAVALUES = Field.create("THROTTLEESTIMATEEFFECTIVEAREAVALUES", 22084, FieldType.INT16).setScale(1.0E-4).setBaseOffset(0);
+	public static final Field THROTTLEESTIMATEEFFECTIVEAREAVALUES = Field.create("THROTTLEESTIMATEEFFECTIVEAREAVALUES", 22084, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,

@@ -4632,11 +4632,11 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaBins[12];
 	/**
-	 * In units of kg/s normalized to choked flow conditions
-	kg/s
+	 * In units of g/s normalized to choked flow conditions
+	g/s
 	 * offset 22084
 	 */
-	scaled_channel<uint16_t, 10000, 1> throttleEstimateEffectiveAreaValues[12];
+	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaValues[12];
 };
 static_assert(sizeof(persistent_config_s) == 22108);
 
