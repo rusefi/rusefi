@@ -911,8 +911,6 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 #define CAN_RX_PREFIX "CAN_rx"
 
 #define CRITICAL_PREFIX "CRITICAL"
-! same length used for critical and soft error messages
-#define ERROR_BUFFER_SIZE 120
 #define WARNING_BUFFER_SIZE 120
 #define CRITICAL_BUFFER_SIZE 120
 

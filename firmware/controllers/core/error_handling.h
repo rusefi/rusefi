@@ -24,7 +24,7 @@ extern "C"
  */
 bool warning(obd_code_e code, const char *fmt, ...);
 
-using critical_msg_t = char[ERROR_BUFFER_SIZE];
+using critical_msg_t = char[CRITICAL_BUFFER_SIZE];
 
 /**
  * Something really bad had happened - firmware cannot function, we cannot run the engine
