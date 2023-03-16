@@ -491,7 +491,7 @@ public:
 	bool failed = false;
 
 	SdLogBufferWriter()
-		: m_stream("rusefi_simulator_log.mlg", std::ios::binary | std::ios::trunc)
+		: m_stream("fome_simulator_log.mlg", std::ios::binary | std::ios::trunc)
 	{
 		fs_ready = true;
 	}

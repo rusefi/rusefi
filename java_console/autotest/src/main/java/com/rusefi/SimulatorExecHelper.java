@@ -14,7 +14,7 @@ public class SimulatorExecHelper {
     private final static NamedThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorExecHelper", true);
 
     // see also SimulatorHelper
-    private static final String SIMULATOR_BINARY = "../simulator/build/rusefi_simulator.exe";
+    private static final String SIMULATOR_BINARY = "../simulator/build/fome_simulator.exe";
     static Process simulatorProcess;
 
     /**

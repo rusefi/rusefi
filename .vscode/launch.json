@@ -28,7 +28,7 @@
 			"name": "Debug simulator (gdb)",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/simulator/build/rusefi_simulator",
+			"program": "${workspaceFolder}/simulator/build/fome_simulator",
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/simulator/",
 			"environment": [],

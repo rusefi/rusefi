@@ -29,5 +29,5 @@ gitversion.h.gen
 # Eclipse
 .metadata/
 
-# rusEFI simulator makes logs, ignore those
-rusefi_simulator_log.mlg
+# FOME simulator makes logs, ignore those
+fome_simulator_log.mlg

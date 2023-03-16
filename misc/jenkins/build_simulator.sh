@@ -11,4 +11,4 @@ rm -rf .dep
 bash compile.sh
 ls build
 cd ..
-[ -e simulator/build/rusefi_simulator.exe ] || [ -e simulator/build/rusefi_simulator ] || { echo "SIMULATOR COMPILATION FAILED"; exit 1; }
+[ -e simulator/build/fome_simulator.exe ] || [ -e simulator/build/fome_simulator ] || { echo "SIMULATOR COMPILATION FAILED"; exit 1; }
