@@ -19,7 +19,7 @@ float luaAdjustment;"ETB: luaAdjustment";"per", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB
 	bit etbRevLimitActive
 	bit jamDetected
 
-	float etbDutyRateOfChange;"ETB duty rate of change";"per", 1,0, -0,20, 2,@@GAUGE_CATEGORY_ETB@@
+	float etbDutyRateOfChange;"ETB duty rate of change";"per", 1,0, 0,25, 2,@@GAUGE_CATEGORY_ETB@@
 	float etbDutyAverage;"ETB average duty";"per", 1,0, -20,50, 2,@@GAUGE_CATEGORY_ETB@@
 	uint16_t etbTpsErrorCounter;"ETB TPS error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
 	uint16_t etbPpsErrorCounter;"ETB pedal error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
