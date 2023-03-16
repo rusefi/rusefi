@@ -3,5 +3,5 @@ struct_no_prefix throttle_model_s
 
 	int16_t autoscale throttleModelCrossoverAngle;;"%", 0.01, 0, 0, 100, 1
 
-	float throttleEstimatedFlow;;"kg/s", 1, 0, 0, 5, 4
+	float throttleEstimatedFlow;;"g/s", 1, 0, 0, 5, 2
 end_struct
