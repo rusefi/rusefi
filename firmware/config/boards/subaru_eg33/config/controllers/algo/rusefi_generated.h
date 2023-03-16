@@ -1012,7 +1012,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 629249727
+#define SIGNATURE_HASH 1411391019
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1174,11 +1174,11 @@
 #define ts_14_command_TS_14_4 4
 #define ts_14_command_TS_14_5 5
 #define ts_14_command_TS_14_9 9
+#define ts_14_command_TS_ETB_RESET 0x0B
 #define ts_14_command_TS_GRAB_PEDAL_UP 6
 #define ts_14_command_TS_GRAB_PEDAL_WOT 7
 #define ts_14_command_TS_GRAB_TPS_CLOSED 2
 #define ts_14_command_TS_GRAB_TPS_WOT 3
-#define ts_14_command_TS_RESET 0x0B
 #define ts_14_command_TS_RESET_TLE8888 8
 #define ts_14_command_TS_WRITE_FLASH 0x0A
 #define TS_BLOCK_READ_TIMEOUT 300
@@ -1303,7 +1303,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.03.16.subaru_eg33_f7.629249727"
+#define TS_SIGNATURE "rusEFI master.2023.03.16.subaru_eg33_f7.1411391019"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

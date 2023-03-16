@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Mar 16 03:57:54 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Mar 16 04:04:25 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1004,7 +1004,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1041488564;
+	public static final int SIGNATURE_HASH = 1337086496;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1150,11 +1150,11 @@ public class Fields {
 	public static final int ts_14_command_TS_14_4 = 4;
 	public static final int ts_14_command_TS_14_5 = 5;
 	public static final int ts_14_command_TS_14_9 = 9;
+	public static final int ts_14_command_TS_ETB_RESET = 0x0B;
 	public static final int ts_14_command_TS_GRAB_PEDAL_UP = 6;
 	public static final int ts_14_command_TS_GRAB_PEDAL_WOT = 7;
 	public static final int ts_14_command_TS_GRAB_TPS_CLOSED = 2;
 	public static final int ts_14_command_TS_GRAB_TPS_WOT = 3;
-	public static final int ts_14_command_TS_RESET = 0x0B;
 	public static final int ts_14_command_TS_RESET_TLE8888 = 8;
 	public static final int ts_14_command_TS_WRITE_FLASH = 0x0A;
 	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
@@ -1227,7 +1227,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.03.16.f407-discovery.1041488564";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.03.16.f407-discovery.1337086496";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
