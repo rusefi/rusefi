@@ -109,7 +109,7 @@ struct throttle_model_s {
 	 */
 	uint8_t alignmentFill_at_6[2];
 	/**
-	kg/s
+	g/s
 	 * offset 8
 	 */
 	float throttleEstimatedFlow = (float)0;
