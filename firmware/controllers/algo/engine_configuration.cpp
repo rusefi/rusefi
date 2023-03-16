@@ -732,7 +732,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMreVwPassatB6();
 		break;
 	case MRE_M111:
-		setM111EngineConfiguration();
+		setMreM111EngineConfiguration();
 		break;
 	case MRE_SECONDARY_CAN:
 		mreSecondaryCan();

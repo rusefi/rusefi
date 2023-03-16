@@ -8,6 +8,6 @@
 
 #include "m111.h"
 
-void setM111EngineConfiguration() {
+void setMreM111EngineConfiguration() {
 
 }
