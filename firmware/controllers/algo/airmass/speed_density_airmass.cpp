@@ -26,9 +26,6 @@ AirmassResult SpeedDensityAirmass::getAirmass(float rpm, float map) {
 		warning(CUSTOM_ERR_6685, "NaN airMass");
 		return {};
 	}
-#if EFI_PRINTF_FUEL_DETAILS
-	printf("getSpeedDensityAirmass map=%.2f\n", map);
-#endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	return {
 		airMass,

@@ -27,10 +27,6 @@
 #include "scheduler.h"
 #include "main_trigger_callback.h"
 
-#if EFI_PRINTF_FUEL_DETAILS
-bool printSchedulerDebug = true;
-#endif // EFI_PRINTF_FUEL_DETAILS
-
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
 struct CallbackContext
@@ -48,17 +44,6 @@ void SleepExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* schedul
 }
 
 static void timerCallback(CallbackContext* ctx) {
-#if EFI_PRINTF_FUEL_DETAILS
-	if (printSchedulerDebug) {
-		if (ctx->scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
-			printf("executing cb=turnInjectionPinLow p=%d sch=%d now=%d\r\n", (int)ctx->scheduling->action.getArgument(), (int)scheduling,
-				(int)getTimeNowUs());
-		} else {
-//		printf("exec cb=%d p=%d\r\n", (int)scheduling->callback, (int)scheduling->param);
-		}
-	}
-#endif // EFI_PRINTF_FUEL_DETAILS
-
 	// Grab the action but clear it in the event so we can reschedule from the action's execution
 	action_s action = ctx->scheduling->action;
 	ctx->scheduling->action = {};

@@ -26,10 +26,6 @@
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
-#if EFI_PRINTF_FUEL_DETAILS || FUEL_MATH_EXTREME_LOGGING
-	extern bool printFuelDebug;
-#endif // EFI_PRINTF_FUEL_DETAILS
-
 static const char *prevSparkName = nullptr;
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -137,13 +133,6 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	assertAngleRange(dwellStartAngle, "findAngle dwellStartAngle", CUSTOM_ERR_6550);
 	wrapAngle2(dwellStartAngle, "findAngle#7", CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
 	event->dwellAngle = dwellStartAngle;
-
-#if FUEL_MATH_EXTREME_LOGGING
-	if (printFuelDebug) {
-		printf("addIgnitionEvent %s angle=%.1f\n", output->name, dwellStartAngle);
-	}
-	//	efiPrintf("addIgnitionEvent %s ind=%d", output->name, event->dwellPosition->eventIndex);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
 }
 
 static void chargeTrailingSpark(IgnitionOutputPin* pin) {
