@@ -378,7 +378,7 @@ static void handleCommandX14(uint16_t index) {
 		return;
 #endif // EFI_EMULATE_POSITION_SENSORS
 #if EFI_ELECTRONIC_THROTTLE_BODY
-    case TS_RESET_TPS_ERROR:
+    case TS_ETB_RESET:
         etbPidReset();
 		return;
 	case 0xE:
