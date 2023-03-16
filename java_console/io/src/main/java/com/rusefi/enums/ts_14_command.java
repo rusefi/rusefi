@@ -16,4 +16,5 @@ public enum ts_14_command {
 	TS_RESET_TLE8888,
 	TS_14_9,
 	TS_WRITE_FLASH,
+	TS_RESET,
 }
