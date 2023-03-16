@@ -1968,7 +1968,8 @@ cmd_calibrate_tps_2_wot		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_
 cmd_calibrate_pedal_up		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x06"
 cmd_calibrate_pedal_down	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x07"
 cmd_tle8888_init			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x08"
-cmd_write_config			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0A"
+cmd_write_config			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@@@ts_14_command_TS_WRITE_FLASH@@"
+cmd_etb_reset         		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@@@ts_14_command_TS_RESET@@"
 cmd_etb_autotune				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0C"
 cmd_enable_self_stim			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0D"
 cmd_etb_auto_calibrate		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x0E"
@@ -4056,6 +4057,7 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = etbDialogRight
 		panel = etbIdleDialog,{ etbFunctions1 == @@dc_function_e_DC_Throttle1@@ || etbFunctions1 == @@dc_function_e_DC_Throttle2@@ || etbFunctions2 == @@dc_function_e_DC_Throttle1@@ || etbFunctions2 == @@dc_function_e_DC_Throttle2@@ }
+		commandButton = "Reset ETB", cmd_etb_reset
 		panel = etbPidDialog, { etbFunctions1 == @@dc_function_e_DC_Throttle1@@ || etbFunctions1 == @@dc_function_e_DC_Throttle2@@ || etbFunctions2 == @@dc_function_e_DC_Throttle1@@ || etbFunctions2 == @@dc_function_e_DC_Throttle2@@ }
 		panel = etbAutotune,  { etbFunctions1 == @@dc_function_e_DC_Throttle1@@ || etbFunctions1 == @@dc_function_e_DC_Throttle2@@ || etbFunctions2 == @@dc_function_e_DC_Throttle1@@ || etbFunctions2 == @@dc_function_e_DC_Throttle2@@ }
 
