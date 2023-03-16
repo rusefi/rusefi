@@ -2,6 +2,8 @@
 
 #include "throttle_model.h"
 
+#include "fuel_math.h"
+
 static const float pressureRatioCorrectionBins[] =   { 0.53125, 0.546875, 0.5625, 0.578125, 0.59375, 0.609375, 0.625, 0.640625, 0.65625, 0.671875, 0.6875, 0.703125, 0.71875, 0.734375, 0.750, 0.765625, 0.78125, 0.796875, 0.8125, 0.828125, 0.84375, 0.859375, 0.875, 0.890625, 0.90625, 0.921875, 0.9375, 0.953125 };
 static const float pressureRatioCorrectionValues[] = {       1,   0.9993, 0.998,  0.995,    0.991,   0.986,    0.979, 0.972,    0.963,   0.953,    0.942,  0.930,    0.916,   0.901,    0.884, 0.866,    0.845,   0.824,    0.800,  0.774,    0.745,   0.714,    0.679, 0.642,    0.600,   0.553,    0.449,  0.449    };
 static float pressureRatioFlowCorrection(float pr) {
@@ -141,6 +143,5 @@ float ThrottleModel::effectiveArea(float tps) const {
 }
 
 float ThrottleModel::maxEngineFlow(float map) const {
-	// TODO: implement this for real by consulting VE table, etc
-	return 0.5f;
+	return getMaxAirflowAtMap(map);
 }

@@ -10,6 +10,8 @@ public:
 	{}
 
 	AirmassResult getAirmass(int rpm) override;
+	AirmassResult getAirmass(float rpm, float map);
+	float getAirflow(float rpm, float map);
 
 	float getMap(int rpm) const;
 
