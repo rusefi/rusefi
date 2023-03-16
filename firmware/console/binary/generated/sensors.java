@@ -501,7 +501,7 @@ etbFeedForward("etbFeedForward", SensorCategory.SENSOR_INPUTS, FieldType.INT, 12
 etbIntegralError("etbIntegralError", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1300, 1.0, -10000.0, 10000.0, ""),
 etbCurrentTarget("etbCurrentTarget", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1304, 1.0, -10000.0, 10000.0, "%"),
 etbCurrentAdjustedTarget("etbCurrentAdjustedTarget", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1308, 1.0, -10000.0, 10000.0, "%"),
-etbDutyRateOfChange("ETB duty rate of change", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1316, 1.0, -0.0, 20.0, "per"),
+etbDutyRateOfChange("ETB duty rate of change", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1316, 1.0, 0.0, 25.0, "per"),
 etbDutyAverage("ETB average duty", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1320, 1.0, -20.0, 50.0, "per"),
 etbTpsErrorCounter("ETB TPS error counter", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1324, 1.0, 0.0, 3.0, "count"),
 etbPpsErrorCounter("ETB pedal error counter", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1326, 1.0, 0.0, 3.0, "count"),
