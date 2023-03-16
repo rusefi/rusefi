@@ -33,6 +33,7 @@
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
 #include "electronic_throttle.h"
+#include "electronic_throttle_impl.h"
 #include "cj125.h"
 #include "malfunction_central.h"
 #include "trigger_emulator_algo.h"
@@ -379,7 +380,9 @@ static void handleCommandX14(uint16_t index) {
 #endif // EFI_EMULATE_POSITION_SENSORS
 #if EFI_ELECTRONIC_THROTTLE_BODY
     case TS_ETB_RESET:
+#if EFI_PROD_CODE
         etbPidReset();
+#endif
 		return;
 	case 0xE:
 		etbAutocal(0);
