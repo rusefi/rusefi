@@ -404,6 +404,9 @@ msg_t canStreamFlushTx(sysinterval_t timeout) {
 	return state.streamFlushTx(timeout);
 }
 
+	// np uses in/out parameter approach. Yes ChibiOS does same but still evil!
+	// in entry: number of data frames to receive
+	// on exit the number of frames actually received
 msg_t canStreamReceiveTimeout(size_t *np, uint8_t *rxbuf, sysinterval_t timeout) {
 	return state.streamReceiveTimeout(np, rxbuf, timeout);
 }
