@@ -128,9 +128,9 @@ jobs:
             folder: config/boards/proteus
             ini-file: fome_proteus_f7.ini
 
-          # - build-target: proteus_h7
-          #   folder: config/boards/proteus
-          #   ini-file: fome_proteus_h7.ini
+          - build-target: proteus_h7
+            folder: config/boards/proteus
+            ini-file: fome_proteus_h7.ini
 
           # - build-target: proteus_legacy
           #   folder: config/boards/proteus
