@@ -162,7 +162,7 @@ public class ConsoleTools {
     }
 
     private static void printCrc(ConfigurationImage image) {
-        for (int i = 0; i < Fields.ERROR_BUFFER_SIZE; i++)
+        for (int i = 0; i < Fields.WARNING_BUFFER_SIZE; i++)
             image.getContent()[Fields.WARNING_MESSAGE.getOffset() + i] = 0;
         int crc32 = getCrc32(image.getContent());
         int crc16 = crc32 & 0xFFFF;
