@@ -18,6 +18,11 @@
 #include "pin_repository.h"
 #endif
 
+#ifndef USART_CR2_STOP1_BITS
+// todo: acticulate why exactly does prometheus_469 as for this hack
+#define USART_CR2_STOP1_BITS 0
+#endif
+
 #define SCRATCH_BUFFER_PREFIX_SIZE 3
 
 class TsChannelBase {

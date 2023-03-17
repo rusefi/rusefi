@@ -38,11 +38,6 @@ size_t SerialTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 
 #if HAL_USE_UART
 
-#ifndef USART_CR2_STOP1_BITS
-// todo: acticulate why exactly does prometheus_469 as for this hack
-#define USART_CR2_STOP1_BITS 0
-#endif
-
 void UartTsChannel::start(uint32_t baud) {
 	m_config = { 
 		.txend1_cb 		= NULL,
