@@ -14,5 +14,5 @@ cd java_console
 ant clean clean_out_folder jar
 cd ..
 
-[ -e java_console_binary/rusefi_console.jar ] || { echo "CONSOLE COMPILATION FAILED"; exit 1; }
+[ -e java_console_binary/fome_console.jar ] || { echo "CONSOLE COMPILATION FAILED"; exit 1; }
 echo "java console looks good"

@@ -7,5 +7,5 @@ then
       exit 1
 fi
 echo Found ${dfu_file}
-java -jar console/rusefi_console.jar reboot_dfu
-java -jar console/rusefi_console.jar dfu ${dfu_file}
+java -jar console/fome_console.jar reboot_dfu
+java -jar console/fome_console.jar dfu ${dfu_file}

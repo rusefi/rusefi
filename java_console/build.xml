@@ -1,7 +1,7 @@
 <project default="build">
     <property name="jar_file_folder" value="../java_console_binary"/>
     <property name="hw_tests" value="build_hw"/>
-    <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
+    <property name="jar_file" value="${jar_file_folder}/fome_console.jar"/>
 
     <resources id="libs">
         <string>lib/mockito-all-1.10.19.jar</string>

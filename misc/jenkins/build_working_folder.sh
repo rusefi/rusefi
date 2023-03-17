@@ -47,7 +47,7 @@ else
 fi
 
 cp java_console_binary/rusefi_autoupdate.jar $CONSOLE_FOLDER
-cp java_console_binary/rusefi_console.jar $CONSOLE_FOLDER
+cp java_console_binary/fome_console.jar $CONSOLE_FOLDER
 cp simulator/build/fome_simulator.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_*.exe     $CONSOLE_FOLDER
 cp java_console/*.dll                     $CONSOLE_FOLDER

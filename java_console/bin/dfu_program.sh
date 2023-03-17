@@ -1,1 +1,1 @@
-java -jar console/rusefi_console.jar dfu $1
+java -jar console/fome_console.jar dfu $1

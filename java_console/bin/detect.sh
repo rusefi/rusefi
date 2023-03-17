@@ -1,1 +1,1 @@
-java -jar console/rusefi_console.jar detect
+java -jar console/fome_console.jar detect

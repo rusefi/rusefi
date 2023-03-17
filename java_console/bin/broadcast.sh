@@ -6,7 +6,7 @@
 while true
 do
  echo Starting network_connector
- java -jar console/rusefi_console.jar network_connector
+ java -jar console/fome_console.jar network_connector
  exit_status=$?
  echo Exit code: ${exit_status}
  # in java code that's UPDATE_SBC_EXIT_CODE magic number
