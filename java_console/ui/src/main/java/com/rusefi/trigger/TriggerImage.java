@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class TriggerImage {
     private static final String OUTPUT_FOLDER = "triggers";
-    private static final String TOP_MESSAGE = StartupFrame.LINK_TEXT;
+    private static final String TOP_MESSAGE = "rusEFI (c) 2012-2023";
 
     private static final int WHEEL_BORDER = 20;
     private static final int WHEEL_DIAMETER = 500;
