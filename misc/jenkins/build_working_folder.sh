@@ -46,7 +46,7 @@ else
   cp $RUSEFI_CONSOLE_SETTINGS $CONSOLE_FOLDER
 fi
 
-cp java_console_binary/rusefi_autoupdate.jar $CONSOLE_FOLDER
+cp java_console_binary/fome_autoupdate.jar $CONSOLE_FOLDER
 cp java_console_binary/fome_console.jar $CONSOLE_FOLDER
 cp simulator/build/fome_simulator.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_*.exe     $CONSOLE_FOLDER
@@ -121,8 +121,8 @@ mkdir -p artifacts
 mv temp/$FULL_BUNDLE_FILE artifacts
 
 echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
-rm -rf $CONSOLE_FOLDER/rusefi_autoupdate.exe
-rm -rf $CONSOLE_FOLDER/rusefi_console.exe
+rm -rf $CONSOLE_FOLDER/fome_autoupdate.exe
+rm -rf $CONSOLE_FOLDER/fome_console.exe
 rm -rf $CONSOLE_FOLDER/DfuSe
 rm -rf $DRIVERS_FOLDER
 
