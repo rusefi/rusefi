@@ -19,14 +19,6 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 		return;
 	}
 
-	// validate gears
-	for (size_t i = 0; i < gearCount; i++) {
-		if (engineConfiguration->gearRatio[i] <= 0) {
-			firmwareError(OBD_PCM_Processor_Fault, "Invalid gear ratio for #%d", i + 1);
-			return;
-		}
-	}
-
 	for (int i = 0; i < gearCount - 1; i++) {
 		// Threshold i is the threshold between gears i and i+1
 		float gearI        = engineConfiguration->gearRatio[i];
