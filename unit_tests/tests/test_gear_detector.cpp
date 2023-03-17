@@ -135,6 +135,34 @@ TEST(GearDetector, DetermineGear5Speed) {
 	EXPECT_EQ(0, dut.determineGearFromRatio(0.1));
 }
 
+TEST(GearDetector, MiataNb6Speed) {
+	EngineTestHelper eth(TEST_ENGINE);
+	GearDetector dut;
+
+	engineConfiguration->totalGearsCount = 6;
+	engineConfiguration->gearRatio[0] = 3.76;
+	engineConfiguration->gearRatio[1] = 2.27;
+	engineConfiguration->gearRatio[2] = 1.65;
+	engineConfiguration->gearRatio[3] = 1.26;
+	engineConfiguration->gearRatio[4] = 1.00;
+	engineConfiguration->gearRatio[5] = 0.84;
+	engineConfiguration->gearRatio[6] = 0.84;
+	engineConfiguration->gearRatio[7] = 0.84;
+
+	dut.onConfigurationChange(nullptr);
+
+	EXPECT_EQ(0, dut.determineGearFromRatio(5.85));
+	EXPECT_EQ(1, dut.determineGearFromRatio(5.51));
+
+	// Check exactly on gears
+	EXPECT_EQ(1, dut.determineGearFromRatio(3.76));
+	EXPECT_EQ(2, dut.determineGearFromRatio(2.27));
+	EXPECT_EQ(3, dut.determineGearFromRatio(1.65));
+	EXPECT_EQ(4, dut.determineGearFromRatio(1.26));
+	EXPECT_EQ(5, dut.determineGearFromRatio(1.00));
+	EXPECT_EQ(6, dut.determineGearFromRatio(0.84));
+}
+
 TEST(GearDetector, DetermineGear8Speed) {
 	EngineTestHelper eth(TEST_ENGINE);
 	GearDetector dut;
