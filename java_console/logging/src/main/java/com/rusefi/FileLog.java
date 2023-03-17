@@ -20,7 +20,6 @@ public enum FileLog {
     MAIN,
     SIMULATOR_CONSOLE;
 
-    public static final String LOG_INFO_TEXT = "Writing logs to '" + Logger.DIR + "'";
     public static final String OS_VERSION = "os.version";
     public static final String DATE_PATTERN = "yyyy-MM-dd_HH_mm_ss_SSS";
     private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";

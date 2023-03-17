@@ -70,7 +70,7 @@ public class ConsoleUI {
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
         setFrameIcon(ConsoleUI.staticFrame);
-        log.info("Console " + CONSOLE_VERSION);
+        log.info("FOME EFI Console " + CONSOLE_VERSION);
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);

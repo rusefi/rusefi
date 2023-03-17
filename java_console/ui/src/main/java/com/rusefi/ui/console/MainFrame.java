@@ -119,8 +119,8 @@ public class MainFrame {
     private void setTitle() {
         String disconnected = ConnectionStatusLogic.INSTANCE.isConnected() ? "" : "DISCONNECTED ";
         BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
-        String signature = bp == null ? "not loaded" : bp.signature;
-        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature);
+        String signature = bp == null ? "not loaded" : "Signature: " + bp.signature;
+        frame.getFrame().setTitle(disconnected + "FOME EFI Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature);
     }
 
     private void windowClosedHandler() {

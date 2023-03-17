@@ -64,8 +64,6 @@ public class WarningPanel {
             }
         });
         panel.add(reset);
-        // todo: only display label if logs are being recorded
-        panel.add(new JLabel(FileLog.LOG_INFO_TEXT));
         panel.add(new LogSizeControl(config).getContent());
     }
 

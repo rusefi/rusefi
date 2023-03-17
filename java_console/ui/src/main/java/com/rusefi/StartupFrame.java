@@ -46,8 +46,6 @@ public class StartupFrame {
 
     public static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2023";
-    private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
 
     private final JFrame frame;
@@ -74,7 +72,7 @@ public class StartupFrame {
 
     public StartupFrame() {
 //        AudioPlayback.start();
-        String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
+        String title = "FOME console version " + Launcher.CONSOLE_VERSION;
         frame = new JFrame(appendBundleName(title));
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
@@ -190,7 +188,8 @@ public class StartupFrame {
         JLabel logo = createLogoLabel();
         if (logo != null)
             rightPanel.add(logo);
-        rightPanel.add(new URLLabel(LINK_TEXT, URI));
+        rightPanel.add(new JLabel("rusEFI (c) 2012-2023"));
+        rightPanel.add(new JLabel("FOME (c) 2023-2023"));
         rightPanel.add(new JLabel("Version " + Launcher.CONSOLE_VERSION));
 
         JPanel content = new JPanel(new BorderLayout());
@@ -231,7 +230,6 @@ public class StartupFrame {
             return null;
         JLabel logo = new JLabel(logoIcon);
         logo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-        URLLabel.addUrlAction(logo, URLLabel.createUri(URI));
         logo.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return logo;
     }
