@@ -49,7 +49,7 @@ fi
 cp java_console_binary/fome_autoupdate.jar $CONSOLE_FOLDER
 cp java_console_binary/fome_console.jar $CONSOLE_FOLDER
 cp simulator/build/fome_simulator.exe     $CONSOLE_FOLDER
-cp misc/console_launcher/rusefi_*.exe     $CONSOLE_FOLDER
+cp misc/console_launcher/fome_*.exe     $CONSOLE_FOLDER
 cp java_console/*.dll                     $CONSOLE_FOLDER
 cp java_console/rusefi.xml                $CONSOLE_FOLDER
 cp -r java_console/bin                    $FOLDER
