@@ -132,11 +132,11 @@
 			}
 		},
 		{
-			"label": "Build Firmware (nissan 121)",
+			"label": "Build Firmware (Hellen NB1)",
 			"type": "shell",
-			"command": "make -j16 PROJECT_BOARD=hellen/hellen121nissan",
+			"command": "make -j16 PROJECT_BOARD=hellen/hellen-nb1",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=hellen/hellen121nissan'"
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=hellen/hellen-nb1'"
 			},
 			"options": {
 				"cwd": "${workspaceRoot}/firmware"
