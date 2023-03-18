@@ -104,6 +104,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
             int hash = HashUtil.hash(pair.getUserName());
             if (hashConflicts.get(hash).get() == 1) {
+                switchBody.append("// " + pair.getUserName() + "\n");
                 switchBody.append(before);
                 switchBody.append("\t\tcase " + hash + ":\n");
                 switchBody.append("\t" + returnLine);
