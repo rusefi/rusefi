@@ -69,12 +69,7 @@ public class rusEFI extends Activity {
     private final static Logging log = Logging.getLogging(rusEFI.class);
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
-//    private static final byte REQUEST_TYPE_CLASS = 32;
-//    private static final byte RECIPIENT_INTERFACE = 0x01;
-//
-//    protected static final int DFU_DETACH_TIMEOUT = 1000;
-
-    private static final String VERSION = "rusEFI app v0.20220524\n";
+    private static final String VERSION = "rusEFI app v0.20230316\n";
 
     private static final int LOCAL_PORT = 29001;
 
@@ -150,7 +145,7 @@ public class rusEFI extends Activity {
         Linkify.addLinks(authStatusClickableUrl, Linkify.WEB_URLS);
 
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-        registerReceiver(mUsbReceiver, filter);
+        registerReceiver(usbCallback, filter);
 
         visibleLogAppend(VERSION);
 
@@ -177,12 +172,13 @@ public class rusEFI extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mUsbReceiver);
+        unregisterReceiver(usbCallback);
     }
 
-    private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver usbCallback = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            visibleLogAppend("usbCallback " + action + "\n");
             if (ACTION_USB_PERMISSION.equals(action)) {
                 synchronized (this) {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
@@ -259,6 +255,7 @@ public class rusEFI extends Activity {
     }
 
     public void onConnectButton(View view) {
+        visibleLogAppend("onConnectButton\n");
         connectDashboard();
     }
 
