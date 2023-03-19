@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Thu Mar 16 20:21:25 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sun Mar 19 07:19:44 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -419,6 +419,7 @@ public class FuelComputer {
 	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 36, FieldType.FLOAT).setBaseOffset(780);
 	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 40, FieldType.FLOAT).setBaseOffset(780);
 	public static final Field SDISTCHARGEAIRMODEL = Field.create("SDISTCHARGEAIRMODEL", 44, FieldType.BIT, 0).setBaseOffset(780);
+	public static final Field INJECTORHWISSUE = Field.create("INJECTORHWISSUE", 44, FieldType.BIT, 1).setBaseOffset(780);
 	public static final Field[] VALUES = {
 	TOTALFUELCORRECTION,
 	RUNNING_POSTCRANKINGFUELCORRECTION,
@@ -434,5 +435,6 @@ public class FuelComputer {
 	SDTCHARGE_COFF,
 	SDAIRMASSINONECYLINDER,
 	SDISTCHARGEAIRMODEL,
+	INJECTORHWISSUE,
 	};
 }

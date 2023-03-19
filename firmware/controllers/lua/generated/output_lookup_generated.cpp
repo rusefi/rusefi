@@ -772,6 +772,9 @@ float getOutputValueByName(const char *name) {
 // sdIsTChargeAirModel
 		case 816610019:
 			return engine->fuelComputer.sdIsTChargeAirModel;
+// injectorHwIssue
+		case -1237512821:
+			return engine->fuelComputer.injectorHwIssue;
 // baseDwell
 		case -1777838088:
 			return engine->ignitionState.baseDwell;
