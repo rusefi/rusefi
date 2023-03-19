@@ -304,8 +304,7 @@ int gpiochips_readPad(brain_pin_e pin)
  * else return brain_pin_diag_e from gpiochip driver;
  */
 
-brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin)
-{
+brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin) {
 	gpiochip *chip = gpiochip_find(pin);
 
 	if (!chip)

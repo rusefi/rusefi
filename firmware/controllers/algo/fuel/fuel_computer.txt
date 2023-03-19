@@ -26,6 +26,7 @@ running_fuel_s running
 float sdTcharge_coff
 float sdAirMassInOneCylinder;SD cylinder mass\nSpeed-density logic: calculated air mass in one cylinder, in grams
 bit sdIsTChargeAirModel
+bit injectorHwIssue
 
 
 end_struct
