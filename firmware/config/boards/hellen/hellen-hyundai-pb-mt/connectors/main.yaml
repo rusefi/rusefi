@@ -1,81 +1,368 @@
 pins:
+  - pin: A1
+    class: outputs
+    function: Injector 3 Positive
+  - pin: A2
+    class: outputs
+    function: Injector 4 Positive
+  - pin: A3
+    class: outputs
+    function: Injector 2 Negative
 
+  - pin: A5
+    function: WBO Heater
+
+  - pin: A15
+    class: outputs
+    function: Exhaust VVT
+    type: ls
+
+  - pin: A16
+    class: outputs
+    function: Injector 2 Positive
+  - pin: A17
+    class: outputs
+    function: Injector 1 Positive
+  - pin: A18
+    class: outputs
+    function: Injector 3 Negative
+
+  - pin: A20
+    function: Downstream O2 Heater
+
+
+  - pin: A23
+    class: analog_inputs
+    function: CLT Coolant Temperature Signal
+  - pin: A24
+    function: CLT Coolant Ground
+    type: gnd
+    color: brown
+
+  - pin: A27
+    ts_name: A27 Fuel Pump Control
+    function: LP Fuel Pump Control
+    class: outputs
+    type: ls
+
+  - pin: A29
+    class: outputs
+    function: A/C Relay Output
+    type: ls
+
+  - pin: A31
+    class: outputs
+    function: Coil 3
+  - pin: A32
+    class: outputs
+    function: Coil 1
+  - pin: A33
+    class: outputs
+    function: Injector 1 Negative
 
   - pin: A34
     class: outputs
-    function: Fuel Pressure Valve Pos
+    function: HPFP High Fuel Pressure Valve Positive
 
   - pin: A35
     class: outputs
     ts_name: ETB_OUT-
     function: -ETB_OUT
 
+  - pin: A37
+    function: Knock Signal
+  - pin: A38
+    function: Knock Ground
+    type: gnd
+
+
+  - pin: A40
+    function: Stop Lamp Switch 12v
+
+  - pin: A45
+    class: outputs
+    function: Intake VVT
+    type: ls
+  - pin: A46
+    class: outputs
+    function: Coil 4
+  - pin: A47
+    class: outputs
+    function: Coil 2
+  - pin: A48
+    class: outputs
+    function: Injector 4 Negative
+
   - pin: A49
     class: outputs
-    function: Fuel Pressure Valve Neg
+    function: HPFP High Fuel Pressure Valve Negative
 
   - pin: A51
     class: outputs
     ts_name: ETB_OUT+
     function: +ETB_OUT
 
+  - pin: A53
+    function: Brake Test Switch 12v
 
 
+  - pin: A55
+    function: Clutch Input
 
 
+  - pin: A57
+    function: Alternator COM
+  - pin: A58
+    class: outputs
+    function: Tach Output
+  - pin: A59
+    class: outputs
+    function: Cooling Fan PWM Output
 
+  - pin: K1
+    function: Power GND
+    type: gnd
+  - pin: K2
+    function: Power GND
+    type: gnd
+  - pin: K3
+    function: Power GND
+    type: gnd
+
+  - pin: K4
+    function: +12V from main relay 20A
+    type: 12v
+    color: red
+  - pin: K5
+    function: Constant Battery Power
+    type: 12v
+  - pin: K6
+    function: Constant Battery Power
+    type: 12v
+  - pin: K7
+    function: +12V from main relay
+    type: 12v
+    color: red
+
+  - pin: K8
+    function: Downstream O2 Ground
+
+
+  - pin: K9
+    function: Pedal Signal No1
+    class: analog_inputs
 
 
   - pin: K10
-    function: Pedal Supply +5 No2
+    function: Pedal Sensor No2 Ground
+    type: gnd
 
+  - pin: K13
+    function: BVS Brake Vacuum Sensor Ground
+    type: gnd
+
+  - pin: K14
+    class: analog_inputs
+    ts_name: --- - TPS1
+    function: analog input TPS1
+    type: av
+
+  - pin: K17
+    function: Fuel Tank Level Sender
+
+  - pin: K18
+    function: Pedal Supply +5v No2
+  - pin: K19
+    function: BVS Booster Vacuum Supply +5v
+  - pin: K20
+    function: Pedal Supply +5v No2
+
+  - pin: K22
+    function: Wiper Switch Input Active High
+
+  - pin: K24
+    function: Alternator PWM Control
+
+
+  - pin: K29
+    # VIGN PA5
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: Ignition Key Voltage
+    function: +12V engine ECU power source, run/start
+
+  - pin: K30
+    function: Downstream O2 Signal
+
+
+
+  - pin: K31
+    function: Pedal Signal No2
+    class: analog_inputs
+
+  - pin: K32
+    function: Pedal Sensor No1 Ground
+    type: gnd
+    color: brown
+
+  - pin: K33
+    function: ATS Ambient Temperature Sensor Ground
+    type: gnd
+    color: brown
 
   - pin: K35
     function: TPS Ground
+    type: gnd
+    color: brown
 
   - pin: K36
-    function: TPS2 Signal
+    class: analog_inputs
+    ts_name: --- - TPS2
+    function: analog input TPS2
+    type: av
+
+  - pin: K37
+    function: ATS Ambient Temperature Sensor Signal
 
   - pin: K39
-    function: TPS Supply +5
+    function: TPS Supply +5v
 
   - pin: K40
-    function: Pedal Supply +5 No1
+    function: Pedal Supply +5v No1
+  - pin: K41
+    function: Map/Fuel Sensor Supply +5v
 
   - pin: K42
-    function: Cam Sensors Supply +5
+    function: Cam Sensors Supply +5v
+
+  - pin: K43
+    function: A/C switch input
+
+  - pin: K44
+    function: A/C Pressure Switch (?)
+  - pin: K45
+    function: A/C Pressure Input
+    class: analog_inputs
+    type: av
+  - pin: K46
+    function: VSS Vehicle Speed Signal
+
+  - pin: K52
+    function: WBO Virtual Gnd
+  - pin: K53
+    function: WBO Pumping Current
+
+  - pin: K55
+    function: Boost Pressure Ground
+    type: gnd
+    color: brown
+
+  - pin: K57
+    class: analog_inputs
+    function: Boost Pressure Signal
+
+  - pin: K58
+    class: analog_inputs
+    function: High Fuel Pressure Signal
 
   - pin: K60
     function: Start Request
 
+  - pin: K61
+    function: LIN bus
+
+  - pin: K62
+    function: CAN bus No2 low
+    type: can
+  - pin: K63
+    function: CAN bus low
+    type: can
+
+  - pin: K64
+    function: Exhaust Cam Ground
+    type: gnd
+    color: brown
+
+  - pin: K65
+    function: Exhaust Cam Signal
+
   - pin: K67
-    function: Crank Ground
+    function: Crank Ground VR Negative
+
+  - pin: K72
+    function: Purge Valve Solenoid Low
+    class: outputs
+    type: ls
+
+  - pin: K74
+    function: WBO Nerst
+  - pin: K75
+    function: WBO Trim
+
+  - pin: K76
+    function: High Pressure Fuel Sensor Ground
+    type: gnd
+    color: brown
 
   - pin: K77
     function: A/C Pressure Ground
+    type: gnd
+    color: brown
 
   - pin: K78
     function: Map Ground
 
+  - pin: K79
+    class: analog_inputs
+    function: Intake Air Signal
   - pin: K80
+    class: analog_inputs
     function: Map Signal
 
+
+  - pin: K83
+    function: Immo Data
+
+  - pin: K84
+    function: CAN bus No2 high
+    type: can
   - pin: K85
     function: CAN bus high
     type: can
 
   - pin: K86
     function: Intake Cam Ground
+    type: gnd
+    color: brown
 
   - pin: K87
     function: Intake Cam Signal
 
   - pin: K89
-    function: Crank Signal
+    function: Crank Signal VR Positive
 
+  - pin: K90
+    ts_name: K90 Fuel Pump Control
+    function: LP Fuel Pump Control
+    class: outputs
+    type: ls
+
+  - pin: K92
+    ts_name: Wastegate Valve Solenoid
+    function: Wastegate Valve Solenoid
+    class: outputs
+    type: ls
+
+  - pin: K93
+    class: outputs
+    ts_name: Main Relay
+    function: Main Relay Control
+    type: ls
 
   - pin: K94
     function: Starter Relay
+    class: outputs
+    type: ls
 
 
 info:
@@ -135,7 +422,7 @@ info:
     - pin: K16
       x: 2940
       y: 660
-    - pin: K17c
+    - pin: K17
       x: 3011
       y: 660
     - pin: K18

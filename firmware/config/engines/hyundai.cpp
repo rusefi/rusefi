@@ -9,6 +9,9 @@
 
 #include "hyundai.h"
 
+void setHyundaiPb() {
+}
+
 static void commonGenesisCoupe() {
 	strncpy(config->luaScript, R"(
 
