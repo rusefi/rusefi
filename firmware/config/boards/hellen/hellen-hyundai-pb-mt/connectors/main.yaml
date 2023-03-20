@@ -45,6 +45,9 @@ pins:
   - pin: K42
     function: Cam Sensors Supply +5
 
+  - pin: K60
+    function: Start Request
+
   - pin: K67
     function: Crank Ground
 
