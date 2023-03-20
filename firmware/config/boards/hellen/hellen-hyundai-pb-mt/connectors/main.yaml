@@ -1,7 +1,7 @@
 pins:
 
 
-  - pin: A35
+  - pin: A34
     class: outputs
     function: Fuel Pressure Valve Pos
 
