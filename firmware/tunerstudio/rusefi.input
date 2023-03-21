@@ -1538,6 +1538,8 @@ gaugeCategory = GPPWM Outputs
 	indicator =		{ sd_logging_internal },		"No SD logging",		"SD logging",  white,  black,  green,  black
 	indicator =							{ sd_msd },			"No SD USB",				"SD USB",  white,  black,  green,  black
 	indicator =			{ etbRevLimitActive },	"No ETB RPM Limit",	"ETB RPM Limit",  white,  black, yellow,  black
+	indicator = { injectorFault }, "Inj HW OK", "Inj HW Fault", white, black, yellow, black	@@if_ts_show_inj_fault
+	indicator = { ignitionFault }, "Ign HW OK", "Ign HW Fault", white, black, yellow, black	@@if_ts_show_ign_fault
 
 	indicator = { wbo0_hasFault }, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
 

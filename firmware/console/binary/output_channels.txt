@@ -33,6 +33,8 @@ bit isPedalError;
 bit launchTriggered;
 bit isTps2Error;
 bit isIdleClosedLoop;
+bit injectorFault;
+bit ignitionFault;
 
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0

@@ -1916,6 +1916,8 @@ end_struct
 #define ts_show_sd_pins true
 #define ts_show_injectionPinMode true
 #define ts_show_ignitionPinMode true
+#define ts_show_inj_fault false
+#define ts_show_ign_fault false
 
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
