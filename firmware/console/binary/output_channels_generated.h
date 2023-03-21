@@ -101,31 +101,31 @@ struct output_channels_s {
 	bool isIdleClosedLoop : 1 {};
 	/**
 	offset 0 bit 23 */
-	bool unusedBit_23_23 : 1 {};
+	bool injectorFault : 1 {};
 	/**
 	offset 0 bit 24 */
-	bool unusedBit_23_24 : 1 {};
+	bool ignitionFault : 1 {};
 	/**
 	offset 0 bit 25 */
-	bool unusedBit_23_25 : 1 {};
+	bool unusedBit_25_25 : 1 {};
 	/**
 	offset 0 bit 26 */
-	bool unusedBit_23_26 : 1 {};
+	bool unusedBit_25_26 : 1 {};
 	/**
 	offset 0 bit 27 */
-	bool unusedBit_23_27 : 1 {};
+	bool unusedBit_25_27 : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool unusedBit_23_28 : 1 {};
+	bool unusedBit_25_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_23_29 : 1 {};
+	bool unusedBit_25_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_23_30 : 1 {};
+	bool unusedBit_25_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_23_31 : 1 {};
+	bool unusedBit_25_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	RPM

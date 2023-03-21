@@ -1037,7 +1037,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 2886271777
+#define SIGNATURE_HASH 3874117439
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1289,7 +1289,9 @@
 #define ts_show_etb_pins true
 #define ts_show_full_pinout true
 #define ts_show_hardware_simulator true
+#define ts_show_ign_fault false
 #define ts_show_ignitionPinMode true
+#define ts_show_inj_fault false
 #define ts_show_injectionPinMode true
 #define ts_show_joystick true
 #define ts_show_lcd true
@@ -1304,7 +1306,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.03.17.f407-discovery.2886271777"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.03.21.f407-discovery.3874117439"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

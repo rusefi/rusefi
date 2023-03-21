@@ -49,6 +49,10 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.isTps2Error;
 		case 1473688883:
 			return engine->outputChannels.isIdleClosedLoop;
+		case 1608791711:
+			return engine->outputChannels.injectorFault;
+		case -1158382750:
+			return engine->outputChannels.ignitionFault;
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
 		case -968092482:
