@@ -475,7 +475,7 @@ triggerIgnoredToothCount("triggerIgnoredToothCount", SensorCategory.SENSOR_INPUT
 alignmentFill_at_49("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1201, 1.0, -20.0, 100.0, "units"),
 crankSynchronizationCounter("Crank sync counter\nUsually matches crank revolutions", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1204, 1.0, -1.0, -1.0, ""),
 vvtSyncGapRatio("vvtSyncGapRatio", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1208, 1.0, -10000.0, 10000.0, ""),
-vvttoothDurations0("vvttoothDurations0", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1212, 1.0, -10000.0, 10000.0, ""),
+vvtToothDurations0("vvtToothDurations0", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1212, 1.0, 0.0, 100000.0, "us"),
 vvtCurrentPosition("vvtCurrentPosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1216, 1.0, -10000.0, 10000.0, ""),
 triggerSyncGapRatio("Sync: Trigger Latest Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1220, 1.0, -10000.0, 10000.0, ""),
 triggerStateIndex("triggerStateIndex", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1224, 1.0, -1.0, -1.0, ""),

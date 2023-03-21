@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Mar 04 19:07:02 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Tue Mar 21 13:46:06 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -16,9 +16,10 @@ struct trigger_state_s {
 	 */
 	float vvtSyncGapRatio = (float)0;
 	/**
+	us
 	 * offset 8
 	 */
-	float vvttoothDurations0 = (float)0;
+	uint32_t vvtToothDurations0 = (uint32_t)0;
 	/**
 	 * offset 12
 	 */
@@ -48,4 +49,4 @@ struct trigger_state_s {
 static_assert(sizeof(trigger_state_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Mar 04 19:07:02 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Tue Mar 21 13:46:06 UTC 2023
