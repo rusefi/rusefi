@@ -47,6 +47,10 @@
  */
 #include "trigger_simulator.h"
 
+#ifndef NOISE_RATIO_THRESHOLD
+#define NOISE_RATIO_THRESHOLD 3000
+#endif
+
 TriggerDecoderBase::TriggerDecoderBase(const char* name)
 	: name(name)
 {
@@ -90,9 +94,9 @@ void TriggerDecoderBase::resetState() {
 	isFirstEvent = true;
 }
 
-void TriggerDecoderBase::setTriggerErrorState() {
+void TriggerDecoderBase::setTriggerErrorState(int errorIncrement) {
 	m_timeSinceDecodeError.reset();
-	totalTriggerErrorCounter++;
+	totalTriggerErrorCounter += errorIncrement;
 }
 
 void TriggerDecoderBase::resetCurrentCycleState() {
@@ -446,6 +450,10 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 		if (triggerShape.isSynchronizationNeeded) {
 			triggerSyncGapRatio = (float)toothDurations[0] / toothDurations[1];
+
+			if (wasSynchronized && triggerSyncGapRatio > NOISE_RATIO_THRESHOLD) {
+			    setTriggerErrorState(100);
+			}
 
 			isSynchronizationPoint = isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
 			if (isSynchronizationPoint) {

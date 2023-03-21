@@ -124,8 +124,6 @@ public:
 
 	Timer previousEventTimer;
 
-	void setTriggerErrorState();
-
 	/**
 	 * current duration at index zero and previous durations are following
 	 */
@@ -172,6 +170,7 @@ protected:
 	virtual void onTooManyTeeth(int, int) { }
 
 private:
+	void setTriggerErrorState(int errorIncrement = 1);
 	void resetCurrentCycleState();
 	bool isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const;
 
