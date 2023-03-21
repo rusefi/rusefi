@@ -311,7 +311,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 			front == TriggerValue::RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		// yes we log data from all VVT channels into same fields for now
 		tc->triggerState.vvtSyncGapRatio = vvtDecoder.triggerSyncGapRatio;
-		tc->triggerState.vvttoothDurations0 = vvtDecoder.toothDurations[0];
+		tc->triggerState.vvtToothDurations0 = (uint32_t)NT2US(vvtDecoder.toothDurations[0]);
 		tc->triggerState.vvtStateIndex = vvtDecoder.currentCycle.current_index;
 	}
 
