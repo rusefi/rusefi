@@ -177,10 +177,12 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 }
 
 static void printLuaMemory() {
+#if LUA_USER_HEAP > 1
 	auto heapSize = userHeap.size();
 	auto memoryUsed = userHeap.used();
 	float pct = 100.0f * memoryUsed / heapSize;
 	efiPrintf("Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
+#endif // LUA_USER_HEAP
 }
 
 static bool loadScript(LuaHandle& ls, const char* scriptStr) {
