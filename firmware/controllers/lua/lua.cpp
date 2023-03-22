@@ -176,6 +176,13 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 	return ls;
 }
 
+static void printLuaMemory() {
+	auto heapSize = userHeap.size();
+	auto memoryUsed = userHeap.used();
+	float pct = 100.0f * memoryUsed / heapSize;
+	efiPrintf("Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
+}
+
 static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	efiPrintf(TAG "loading script length: %d...", efiStrlen(scriptStr));
 
@@ -186,6 +193,7 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	}
 
 	efiPrintf(TAG "script loaded successfully!");
+	printLuaMemory();
 
 	return true;
 }
@@ -346,7 +354,7 @@ void startLua() {
 		char *buffer = (char *)0x20020000;
 		userHeap.reinit(buffer, 60000);
 	}
-#endif
+#endif // STM32F4
 
 #if LUA_USER_HEAP > 1
 #if EFI_CAN_SUPPORT
@@ -370,13 +378,8 @@ void startLua() {
 		needsReset = true;
 	});
 
-	addConsoleAction("luamemory", [](){
-		auto heapSize = userHeap.size();
-		auto memoryUsed = userHeap.used();
-		float pct = 100.0f * memoryUsed / heapSize;
-		efiPrintf("Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
-	});
-#endif
+	addConsoleAction("luamemory", printLuaMemory);
+#endif // LUA_USER_HEAP
 }
 
 #else // not EFI_UNIT_TEST
