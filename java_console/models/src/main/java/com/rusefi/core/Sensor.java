@@ -27,7 +27,7 @@ public enum Sensor {
     RPMValue(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.RPMVALUE, 1, 0, 8000, "RPM"),
 //    rpmAcceleration("dRPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, "RPM/s"),
 //    speedToRpmRatio("Gearbox Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, "value"),
-    vehicleSpeedKph("Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.VEHICLESPEEDKPH, 1.0, 0.0, 0.0, "kph"),
+    vehicleSpeedKph("Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.UINT8, TsOutputs.VEHICLESPEEDKPH, 1.0, 0.0, 0.0, "kph"),
 
     // Temperatures
     INT_TEMP(GAUGE_NAME_ECU_TEMPERATURE, SensorCategory.OPERATIONS, FieldType.INT8, TsOutputs.INTERNALMCUTEMPERATURE, 1, 0, 5, "C"),
