@@ -396,7 +396,7 @@ static void setMazdaMiataEngineNB2Defaults() {
 	engineConfiguration->gearRatio[2] = 1.646;
 	engineConfiguration->gearRatio[3] = 1.257;
 	engineConfiguration->gearRatio[4] = 1.000;
-	engineConfiguration->gearRatio[4] = 0.843;
+	engineConfiguration->gearRatio[5] = 0.843;
 
 	// These may need to change based on your real car
 	engineConfiguration->driveWheelRevPerKm = 538;
