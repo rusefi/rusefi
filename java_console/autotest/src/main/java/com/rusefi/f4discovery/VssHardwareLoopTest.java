@@ -36,7 +36,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
 
         // Hook up 1khz idle on formerly-trigger-stim pin
         ecu.sendCommand(CMD_IDLE_PIN + " PD2");
-        ecu.sendCommand("set idle_solenoid_freq 1000");
+        ecu.sendCommand("set idle_solenoid_freq 100");
 
         EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
 
