@@ -373,6 +373,7 @@ void setMiataNa6_Proteus() {
 	// Triggers
 	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1;
 	engineConfiguration->triggerInputPins[1] = PROTEUS_VR_1;
+	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_DIGITAL_3;
 
 	// Sensors
 	engineConfiguration->map.sensor.type = MT_MPXH6400;
