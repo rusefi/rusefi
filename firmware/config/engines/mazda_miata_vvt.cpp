@@ -232,17 +232,8 @@ static void setMazdaMiataNbInjectorLag() {
 	copyArray(engineConfiguration->injector.battLagCorrBins, injectorLagBins);
 }
 
-static void set4EC_AT() {
-	engineConfiguration->totalGearsCount = 4;
-	// http://www.new-cars.com/2003/mazda/mazda-miata-specs.html
-	engineConfiguration->gearRatio[0] = 2.45;
-	engineConfiguration->gearRatio[1] = 1.45;
-	engineConfiguration->gearRatio[2] = 1.0;
-	engineConfiguration->gearRatio[3] = 0.73;
-}
-
 /**
- * stuff common between NA1 and NB2
+ * stuff common between NB1 and NB2
  */
 static void setCommonMazdaNB() {
 	// Base engine
@@ -343,12 +334,34 @@ static void setCommonMazdaNB() {
 	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();
 	miataNA_setIacCoastingBins();
-	set4EC_AT();
+
+	// All factory miata setups end up with 1.12 speed sensor turns
+	// per wheel turn, by matching the speedo sensor gear to the
+	// diff ratio
+
+	// - 6 teeth on transmission output shaft
+	// - 23 teeth on speedometer sensor
+	// - 3.909 rear axle ratio
+	// 3.909 * 6 / 21 ~= 1.12
+	engineConfiguration->vssGearRatio = 3.909 * 6 / 21;
+	engineConfiguration->vssToothCount = 4;
 }
 
 static void setMazdaMiataEngineNB1Defaults() {
 	setCommonMazdaNB();
 	strcpy(engineConfiguration->engineCode, "NB1");
+
+	// Vehicle speed/gears
+	engineConfiguration->totalGearsCount = 5;
+	engineConfiguration->gearRatio[0] = 3.136;
+	engineConfiguration->gearRatio[1] = 1.888;
+	engineConfiguration->gearRatio[2] = 1.330;
+	engineConfiguration->gearRatio[3] = 1.000;
+	engineConfiguration->gearRatio[4] = 0.814;
+
+	// These may need to change based on your real car
+	engineConfiguration->driveWheelRevPerKm = 551;
+	engineConfiguration->finalGearRatio = 4.3;
 }
 
 static void setMazdaMiataEngineNB2Defaults() {
@@ -375,6 +388,19 @@ static void setMazdaMiataEngineNB2Defaults() {
 	engineConfiguration->auxPid[0].offset = 33;
 	engineConfiguration->auxPid[0].minValue = 20;
 	engineConfiguration->auxPid[0].maxValue = 90;
+
+	// Vehicle speed/gears
+	engineConfiguration->totalGearsCount = 6;
+	engineConfiguration->gearRatio[0] = 3.760;
+	engineConfiguration->gearRatio[1] = 2.269;
+	engineConfiguration->gearRatio[2] = 1.646;
+	engineConfiguration->gearRatio[3] = 1.257;
+	engineConfiguration->gearRatio[4] = 1.000;
+	engineConfiguration->gearRatio[4] = 0.843;
+
+	// These may need to change based on your real car
+	engineConfiguration->driveWheelRevPerKm = 538;
+	engineConfiguration->finalGearRatio = 3.909;
 }
 
 // MAZDA_MIATA_2003
