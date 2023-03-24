@@ -211,7 +211,8 @@
 #define STM32_PWM_USE_TIM2                  FALSE
 
 #ifndef STM32_PWM_USE_TIM3
-#define STM32_PWM_USE_TIM3                  FALSE
+// Hellen often uses TIM3 for ETB
+#define STM32_PWM_USE_TIM3                  TRUE
 #endif
 
 #define STM32_PWM_USE_TIM4                  TRUE
