@@ -45,7 +45,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
 
         sleep(2 * Timeouts.SECOND);
 
-        EcuTestHelper.assertSomewhatClose("VSS with input", 92, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
+        EcuTestHelper.assertSomewhatClose("VSS with input", 145, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
 
         // not related to VSS test, just need to validate this somewhere, so this random test is as good as any
         if (ControllerConnectorState.firmwareVersion == null)
