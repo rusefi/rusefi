@@ -358,7 +358,7 @@
 #define STM32_PWM_USE_TIM2                  FALSE
 
 #ifndef STM32_PWM_USE_TIM3
-#define STM32_PWM_USE_TIM3                  FALSE
+#define STM32_PWM_USE_TIM3                  TRUE
 #endif
 
 #ifndef STM32_PWM_USE_TIM4
