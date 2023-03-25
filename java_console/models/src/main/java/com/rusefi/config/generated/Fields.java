@@ -371,6 +371,9 @@ public class Fields {
 	public static final int FLASH_DATA_VERSION = 20003;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
+	public static final int fuel_pressure_sensor_mode_e_FPM_Absolute = 0;
+	public static final int fuel_pressure_sensor_mode_e_FPM_Differential = 2;
+	public static final int fuel_pressure_sensor_mode_e_FPM_Gauge = 1;
 	public static final int FUEL_RPM_COUNT = 16;
 	public static final int GAP_TRACKING_LENGTH = 18;
 	public static final String GAUGE_CATEGORY_BOOST_CONTROL = "Boost Control";
@@ -1192,7 +1195,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.24.f407-discovery.3874117439";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.03.25.f407-discovery.3790027438";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1368;
@@ -2323,7 +2326,8 @@ public class Fields {
 	public static final Field HIGHSPEEDOFFSETS = Field.create("HIGHSPEEDOFFSETS", 3550, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final String[] SentEtbType = {"None", "GM type 1", "Ford type 1"};
 	public static final Field SENTETBTYPE = Field.create("SENTETBTYPE", 3614, FieldType.INT8, SentEtbType).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_3615 = Field.create("ALIGNMENTFILL_AT_3615", 3615, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final String[] fuel_pressure_sensor_mode_e = {"Absolute", "Gauge", "Differential", "INVALID"};
+	public static final Field FUELPRESSURESENSORMODE = Field.create("FUELPRESSURESENSORMODE", 3615, FieldType.INT8, fuel_pressure_sensor_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LUADIGITALINPUTPINS1 = Field.create("LUADIGITALINPUTPINS1", 3616, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field LUADIGITALINPUTPINS2 = Field.create("LUADIGITALINPUTPINS2", 3618, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field LUADIGITALINPUTPINS3 = Field.create("LUADIGITALINPUTPINS3", 3620, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -3637,7 +3641,7 @@ public class Fields {
 	TUNEHIDINGKEY,
 	HIGHSPEEDOFFSETS,
 	SENTETBTYPE,
-	ALIGNMENTFILL_AT_3615,
+	FUELPRESSURESENSORMODE,
 	LUADIGITALINPUTPINS1,
 	LUADIGITALINPUTPINS2,
 	LUADIGITALINPUTPINS3,

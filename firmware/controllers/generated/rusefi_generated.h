@@ -384,6 +384,11 @@
 #define FLASH_DATA_VERSION 20003
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
+#define fuel_pressure_sensor_mode_e_auto_enum 0="FPM_Absolute",2="FPM_Differential",1="FPM_Gauge"
+#define fuel_pressure_sensor_mode_e_enum "Absolute", "Gauge", "Differential", "INVALID"
+#define fuel_pressure_sensor_mode_e_FPM_Absolute 0
+#define fuel_pressure_sensor_mode_e_FPM_Differential 2
+#define fuel_pressure_sensor_mode_e_FPM_Gauge 1
 #define FUEL_RPM_COUNT 16
 #define GAP_TRACKING_LENGTH 18
 #define GAUGE_CATEGORY_BOOST_CONTROL "Boost Control"
@@ -1037,7 +1042,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 3874117439
+#define SIGNATURE_HASH 3790027438
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1306,7 +1311,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.03.24.f407-discovery.3874117439"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.03.25.f407-discovery.3790027438"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

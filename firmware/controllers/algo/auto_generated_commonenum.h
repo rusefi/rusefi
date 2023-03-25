@@ -31,6 +31,7 @@ const char *getCan_vss_nbc_e(can_vss_nbc_e value);
 const char *getDc_function_e(dc_function_e value);
 const char *getEgo_sensor_e(ego_sensor_e value);
 const char *getEngine_load_mode_e(engine_load_mode_e value);
+const char *getFuel_pressure_sensor_mode_e(fuel_pressure_sensor_mode_e value);
 const char *getGear_e(gear_e value);
 const char *getGppwm_channel_e(gppwm_channel_e value);
 const char *getGppwm_compare_mode_e(gppwm_compare_mode_e value);
