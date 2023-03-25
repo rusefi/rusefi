@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 25 01:13:22 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 25 15:23:31 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -273,6 +273,7 @@ public class Fields {
 	public static final String ENGINE_MAKE_VAG = "VAG";
 	public static final int ENGINE_NOISE_CURVE_SIZE = 16;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
+	public static final int engine_type_e_ALPHAX_8CHAN_SBC = 97;
 	public static final int engine_type_e_BMW_M73_M = 24;
 	public static final int engine_type_e_BMW_M73_MRE = 50;
 	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 51;
@@ -284,9 +285,6 @@ public class Fields {
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
 	public static final int engine_type_e_DODGE_RAM = 64;
 	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
-	public static final int engine_type_e_ET_UNUSED97 = 97;
-	public static final int engine_type_e_ET_UNUSED98 = 98;
-	public static final int engine_type_e_ET_UNUSED_17 = 17;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
 	public static final int engine_type_e_Force_4_bytes_size_engine_type = 70000;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
@@ -354,9 +352,11 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_HONDA_K = 90;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
+	public static final int engine_type_e_PROTEUS_M111 = 17;
 	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
 	public static final int engine_type_e_PROTEUS_N73 = 93;
 	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
+	public static final int engine_type_e_PROTEUS_SBC = 98;
 	public static final int engine_type_e_PROTEUS_VAG_80_18T = 92;
 	public static final int engine_type_e_PROTEUS_VW_B6 = 39;
 	public static final int engine_type_e_SACHS = 29;

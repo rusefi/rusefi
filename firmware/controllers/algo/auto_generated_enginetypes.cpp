@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Mar 16 04:03:23 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Mar 25 15:22:43 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -145,6 +145,8 @@ case UNUSED23:
 }
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
+case ALPHAX_8CHAN_SBC:
+  return "ALPHAX_8CHAN_SBC";
 case BMW_M73_M:
   return "BMW_M73_M";
 case BMW_M73_MRE:
@@ -169,12 +171,6 @@ case EEPROM_BENCH_ENGINE:
   return "EEPROM_BENCH_ENGINE";
 case ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
-case ET_UNUSED97:
-  return "ET_UNUSED97";
-case ET_UNUSED98:
-  return "ET_UNUSED98";
-case ET_UNUSED_17:
-  return "ET_UNUSED_17";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -307,12 +303,16 @@ case PROTEUS_HONDA_OBD2A:
   return "PROTEUS_HONDA_OBD2A";
 case PROTEUS_LUA_DEMO:
   return "PROTEUS_LUA_DEMO";
+case PROTEUS_M111:
+  return "PROTEUS_M111";
 case PROTEUS_MIATA_NB2:
   return "PROTEUS_MIATA_NB2";
 case PROTEUS_N73:
   return "PROTEUS_N73";
 case PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
+case PROTEUS_SBC:
+  return "PROTEUS_SBC";
 case PROTEUS_VAG_80_18T:
   return "PROTEUS_VAG_80_18T";
 case PROTEUS_VW_B6:
