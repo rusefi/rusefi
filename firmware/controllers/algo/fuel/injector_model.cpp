@@ -50,20 +50,49 @@ InjectorNonlinearMode InjectorModel::getNonlinearMode() const {
 	return engineConfiguration->injectorNonlinearMode;
 }
 
-expected<float> InjectorModel::getAbsoluteRailPressure() const {
+expected<float> InjectorModel::getFuelDifferentialPressure() const {
+	auto map = Sensor::get(SensorType::Map);
+	float baro = Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
+
 	switch (engineConfiguration->injectorCompensationMode) {
 		case ICM_FixedRailPressure:
 			// Add barometric pressure, as "fixed" really means "fixed pressure above atmosphere"
-			return engineConfiguration->fuelReferencePressure + Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
-		case ICM_SensedRailPressure:
+			return
+				  engineConfiguration->fuelReferencePressure
+				+ baro
+				- map.value_or(101.325);
+		case ICM_SensedRailPressure: {
 			if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
 				firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Fuel pressure compensation is set to use a pressure sensor, but none is configured.");
 				return unexpected;
 			}
 
+			auto fps = Sensor::get(SensorType::FuelPressureInjector);
+
 			// TODO: what happens when the sensor fails?
-			return Sensor::get(SensorType::FuelPressureInjector);
-		default: return unexpected;
+			if (!fps) {
+				return unexpected;
+			}
+
+			switch (engineConfiguration->fuelPressureSensorMode) {
+				case FPM_Differential:
+					// This sensor directly measures delta-P, no math needed!
+					return fps.Value;
+				case FPM_Gauge:
+					if (!map) {
+						return unexpected;
+					}
+
+					return fps.Value + baro - map.Value;
+				case FPM_Absolute:
+				default:
+					if (!map) {
+						return unexpected;
+					}
+
+					return fps.Value - map.Value;
+			}
+		} default: return unexpected;
 	}
 }
 
@@ -82,21 +111,14 @@ float InjectorModel::getInjectorFlowRatio() {
 		return 1.0f;
 	}
 
-	expected<float> absRailPressure = getAbsoluteRailPressure();
+	expected<float> diffPressure = getFuelDifferentialPressure();
 
 	// If sensor failed, best we can do is disable correction
-	if (!absRailPressure) {
+	if (!diffPressure) {
 		return 1.0f;
 	}
 
-	auto map = Sensor::get(SensorType::Map);
-
-	// Map has failed, assume nominal pressure
-	if (!map) {
-		return 1.0f;
-	}
-
-	pressureDelta = absRailPressure.Value - map.Value;
+	pressureDelta = diffPressure.Value;
 
 	// Somehow pressure delta is less than 0, assume failed sensor and return default flow
 	if (pressureDelta <= 0) {

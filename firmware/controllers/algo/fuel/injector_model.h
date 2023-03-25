@@ -18,7 +18,7 @@ public:
 	float getFuelMassForDuration(floatms_t duration) const override;
 
 	virtual float getInjectorFlowRatio() = 0;
-	virtual expected<float> getAbsoluteRailPressure() const = 0;
+	virtual expected<float> getFuelDifferentialPressure() const = 0;
 
 	virtual float getBaseFlowRate() const = 0;
 
@@ -50,7 +50,7 @@ public:
 	floatms_t getDeadtime() const override;
 	float getBaseFlowRate() const override;
 	float getInjectorFlowRatio() override;
-	expected<float> getAbsoluteRailPressure() const override;
+	expected<float> getFuelDifferentialPressure() const override;
 
 	InjectorNonlinearMode getNonlinearMode() const override;
 
