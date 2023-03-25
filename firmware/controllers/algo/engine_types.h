@@ -215,9 +215,9 @@ typedef enum __attribute__ ((__packed__)) {
 	HELLEN_154_HYUNDAI_COUPE_BK2 = 95,
 
     WASTEGATE_PROTEUS_TEST = 96,
-    ET_UNUSED97 = 97,
-    ET_UNUSED98 = 98,
-	ET_UNUSED_17 = 17,
+    ALPHAX_8CHAN_SBC = 97,
+    PROTEUS_SBC = 98,
+	PROTEUS_M111 = 17,
 
 	/**
 	 * this configuration has as few pins configured as possible
