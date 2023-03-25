@@ -611,6 +611,12 @@ typedef enum __attribute__ ((__packed__)) {
 } injector_compensation_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	FPM_Absolute = 0,
+	FPM_Gauge = 1,
+	FPM_Differential = 2,
+} fuel_pressure_sensor_mode_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	INJ_None = 0,
 	INJ_PolynomialAdder = 1,
 	INJ_FordModel = 2,
