@@ -325,6 +325,17 @@ case LM_SPEED_DENSITY:
   }
  return NULL;
 }
+const char *getFuel_pressure_sensor_mode_e(fuel_pressure_sensor_mode_e value){
+switch(value) {
+case FPM_Absolute:
+  return "FPM_Absolute";
+case FPM_Differential:
+  return "FPM_Differential";
+case FPM_Gauge:
+  return "FPM_Gauge";
+  }
+ return NULL;
+}
 const char *getGear_e(gear_e value){
 switch(value) {
 case GEAR_1:

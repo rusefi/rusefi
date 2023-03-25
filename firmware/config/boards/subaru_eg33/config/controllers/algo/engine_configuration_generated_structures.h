@@ -3742,11 +3742,9 @@ struct engine_configuration_s {
 	 */
 	SentEtbType sentEtbType;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 3615
 	 */
-	uint8_t alignmentFill_at_3615[1];
+	fuel_pressure_sensor_mode_e fuelPressureSensorMode;
 	/**
 	 * offset 3616
 	 */
