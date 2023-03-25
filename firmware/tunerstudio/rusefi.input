@@ -2957,6 +2957,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "low pressure",							lowPressureFuel_value1, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "high voltage",							lowPressureFuel_v2, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "high pressure",						lowPressureFuel_value2, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "sensor type",							fuelPressureSensorMode, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 
 		field = "Fuel high pressure ADC input",			highPressureFuel_hwChannel
 		field = "low voltage",							highPressureFuel_v1, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
