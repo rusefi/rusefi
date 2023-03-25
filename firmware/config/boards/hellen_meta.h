@@ -7,8 +7,11 @@
 
 #pragma once
 
+// see https://github.com/andreika-git/hellen-one/blob/master/board_id/board_ids.csv
 #define BOARD_ID_154hyundai_c 10
 #define BOARD_ID_2chan_d 107
+#define BOARD_ID_2chan_e 112
+#define BOARD_ID_2chan_f 115
 
 void hellenWbo();
 
