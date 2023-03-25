@@ -14,6 +14,7 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/dodge_neon.cpp \
 	$(PROJECT_DIR)/config/engines/ford_1995_inline_6.cpp \
 	$(PROJECT_DIR)/config/engines/gm_ls_4.cpp \
+	$(PROJECT_DIR)/config/engines/gm_sbc.cpp \
 	$(PROJECT_DIR)/config/engines/nissan_primera.cpp \
 	$(PROJECT_DIR)/config/engines/nissan_vq.cpp \
 	$(PROJECT_DIR)/config/engines/harley.cpp \
