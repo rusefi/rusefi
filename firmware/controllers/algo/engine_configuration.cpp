@@ -774,6 +774,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
     case WASTEGATE_PROTEUS_TEST:
         proteusDcWastegateTest();
         break;
+    case PROTEUS_NISSAN_VQ35:
+        setProteusNissanVQ();
+		break;
 	case PROTEUS_GM_LS_4:
 		setProteusGmLs4();
 		break;

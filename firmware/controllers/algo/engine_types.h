@@ -224,9 +224,12 @@ typedef enum __attribute__ ((__packed__)) {
 	 */
 	MINIMAL_PINS = 99,
 
+    // use this in case of emergency without github actions? :)
 	TEST_100 = 100,
 	TEST_101 = 101,
 	TEST_102 = 102,
+
+	PROTEUS_NISSAN_VQ35 = 103,
 
     // java code generator handles this value in a special way
     // also looks like 2 enums are either 1 byte or 4 bytes

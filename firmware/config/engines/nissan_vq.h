@@ -12,3 +12,5 @@
 void setHellen121nissanVQ();
 void setHellen121nissanQR();
 void setHellen121nissanAltimaN16();
+
+void setProteusNissanVQ();

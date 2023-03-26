@@ -2058,7 +2058,10 @@ cmd_set_engine_type_PROTEUS_HONDA_OBD2A				= "@@TS_IO_TEST_COMMAND_char@@@@ts_co
 cmd_set_engine_type_PROTEUS_MIATA_NB2				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
 cmd_set_engine_type_Proteus_Miata_TCU				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
 cmd_set_engine_type_PROTEUS_LUA_DEMO				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"
-cmd_set_engine_type_PROTEUS_HARLEY						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HARLEY_16_hex@@"
+cmd_set_engine_type_PROTEUS_HARLEY					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HARLEY_16_hex@@"
+cmd_set_engine_type_PROTEUS_NISSAN_VQ35				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_NISSAN_VQ35_16_hex@@"
+cmd_set_engine_type_PROTEUS_SBC	        			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_SBC_16_hex@@"
+cmd_set_engine_type_PROTEUS_M111    				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_M111_16_hex@@"
 
 
 ; ETB_BENCH_ENGINE = 58
@@ -4150,9 +4153,12 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "microRusEFI Subaru EJ18",		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
+		commandButton = "Proteus Nissan VQ",		cmd_set_engine_type_PROTEUS_NISSAN_VQ35@@if_show_Proteus_presets
+		commandButton = "Proteus M111",		        cmd_set_engine_type_PROTEUS_M111@@if_show_Proteus_presets
 		commandButton = "Proteus M73 v12",			cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus GDI VAG B6 test",  cmd_set_engine_type_PROTEUS_VW_B6@@if_show_Proteus_presets
 		commandButton = "Proteus GM Gen4",			cmd_set_engine_type_PROTEUS_GM_LS_4@@if_show_Proteus_presets
+		commandButton = "Proteus SBC",		        cmd_set_engine_type_PROTEUS_SBC@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Lua Demo",			cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
