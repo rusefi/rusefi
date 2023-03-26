@@ -33,7 +33,7 @@ todo: move Connectors wiki page content into git
 * [BTS21400](DDPAK_breakout) ignition coil IGBT driver (used on Dodge Neon 2003 test mule)
 * [TLE6240 module](low_side_tle6240) integrated low side switch (fabricated, not tested)
 * [TLE6244 module](Breakout_TLE6244) integrated low side switch (never actually fabricated)
-* [TLE8810ED module](TLE8110ED_breakout_board) integrated low side switch
+* [TLE8810ED module](https://github.com/rusefi/hw_modular/tree/master/TLE8110ED_breakout_board) integrated low side switch
 * [MC33816](Common_Rail_MC33816) common rail driver - rusEFI has working GDI*
 * [LM1949]([Low-Z_LM1949](https://github.com/rusefi/hw_legacy/tree/master/Low-Z_LM1949)) low impedance injector driver (never actually fabricated)
 
