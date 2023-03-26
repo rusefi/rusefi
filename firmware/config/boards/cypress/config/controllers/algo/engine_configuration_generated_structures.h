@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Mar 16 20:06:09 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Mar 26 11:24:42 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2710,7 +2710,7 @@ struct engine_configuration_s {
 	bool ALSActivateInverted : 1 {};
 	/**
 	offset 1372 bit 30 */
-	bool unused_1484_bit_30 : 1 {};
+	bool stepper_dc_use_two_wires : 1 {};
 	/**
 	offset 1372 bit 31 */
 	bool tempBooleanForVerySpecialLogic : 1 {};
@@ -5303,4 +5303,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Mar 16 20:06:09 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Mar 26 11:24:42 UTC 2023

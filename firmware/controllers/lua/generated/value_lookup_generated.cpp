@@ -895,6 +895,9 @@ float getConfigValueByName(const char *name) {
 // ALSActivateInverted
 		case -1027820105:
 			return engineConfiguration->ALSActivateInverted;
+// stepper_dc_use_two_wires
+		case 2136379132:
+			return engineConfiguration->stepper_dc_use_two_wires;
 // tempBooleanForVerySpecialLogic
 		case -153724425:
 			return engineConfiguration->tempBooleanForVerySpecialLogic;
@@ -3074,6 +3077,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -1027820105:
 	{
 		engineConfiguration->ALSActivateInverted = (int)value;
+		return;
+	}
+		case 2136379132:
+	{
+		engineConfiguration->stepper_dc_use_two_wires = (int)value;
 		return;
 	}
 		case -153724425:
