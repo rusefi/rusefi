@@ -116,9 +116,9 @@ void initIdleHardware() {
 			hw = &iacHbridgeHw;
 		} else if (engineConfiguration->useHbridgesToDriveIdleStepper) {
 			auto motorA = initDcMotor(engineConfiguration->stepperDcIo[0],
-				ETB_COUNT + 0, /*useTwoWires*/ true);
+				ETB_COUNT + 0, stepper_dc_use_two_wires);
 			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1],
-				ETB_COUNT + 1, /*useTwoWires*/ true);
+				ETB_COUNT + 1, stepper_dc_use_two_wires);
 
 			iacHbridgeHw.initialize(
 				motorA,
