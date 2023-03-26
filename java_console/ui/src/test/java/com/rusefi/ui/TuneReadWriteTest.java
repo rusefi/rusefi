@@ -5,11 +5,9 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.MsqFactory;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Files;
@@ -20,7 +18,6 @@ import static org.junit.Assert.*;
 /**
  * from IDEA this unit test needs to be executed with "empty" working directory
  */
-@Ignore // todo: https://github.com/rusefi/rusefi/issues/4669
 public class TuneReadWriteTest {
     private static final String PATH = "src/test/resources/frankenso/";
     private static final String TEST_INI = PATH + "mainController.ini";
