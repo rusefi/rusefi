@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Mar 25 15:22:43 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Mar 26 16:47:50 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -309,6 +309,8 @@ case PROTEUS_MIATA_NB2:
   return "PROTEUS_MIATA_NB2";
 case PROTEUS_N73:
   return "PROTEUS_N73";
+case PROTEUS_NISSAN_VQ35:
+  return "PROTEUS_NISSAN_VQ35";
 case PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
 case PROTEUS_SBC:
