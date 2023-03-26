@@ -808,6 +808,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case PROTEUS_MIATA_NB2:
 		setMiataNB2_ProteusEngineConfiguration();
 		break;
+	case PROTEUS_SBC:
+	    setProteusSbc();
+        break;
 #ifdef HARDWARE_CI
 	case PROTEUS_ANALOG_PWM_TEST:
 		setProteusAnalogPwmTest();
@@ -872,6 +875,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_NA94:
 		setHellenNA94();
 		break;
+	case ALPHAX_8CHAN_SBC:
+	    set8chanSbc();
+        break;
 #endif // HW_HELLEN
 #if HW_FRANKENSO
 	case DEFAULT_FRANKENSO:

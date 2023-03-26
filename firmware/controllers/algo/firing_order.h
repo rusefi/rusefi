@@ -48,7 +48,7 @@ typedef enum __attribute__ ((__packed__)) {
 	// 1-3-5-7-2-4-6 7-cylinder single row radial engine
 
 	// 8 cylinder
-	FO_1_8_4_3_6_5_7_2 = 5,
+	FO_1_8_4_3_6_5_7_2 = 5, // SBC, Dodge
 	FO_1_8_7_2_6_5_4_3 = 11,
 	FO_1_5_4_2_6_3_7_8 = 12, // Ford Mustang
 	FO_1_2_7_8_4_5_6_3 = 19,
