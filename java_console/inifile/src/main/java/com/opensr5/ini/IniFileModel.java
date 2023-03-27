@@ -1,6 +1,7 @@
 package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
+import com.devexperts.util.IndexedSet;
 import com.opensr5.ini.field.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +36,10 @@ public class IniFileModel {
     public Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
     private String currentSection;
+    private String currentYBins;
+    private String currentXBins;
+    private final Map<String, String> xBinsByZBins = new HashMap<>();
+    private final Map<String, String> yBinsByZBins = new HashMap<>();
 
     public static void main(String[] args) {
         log.info("Dialogs: " + IniFileModel.getInstance().dialogs);
@@ -162,12 +167,49 @@ public class IniFileModel {
 
             if ("dialog".equals(first)) {
                 handleDialog(list);
-            } else if ("field".equals(first)) {
-                handleField(list);
+            } else if ("table".equals(first)) {
+                handleTable(list);
+            } else if ("xBins".equals(first)) {
+                handleXBins(list);
+            } else if ("yBins".equals(first)) {
+                handleYBins(list);
+            } else if ("zBins".equals(first)) {
+                handleZBins(list);
             }
         } catch (RuntimeException e) {
             throw new IllegalStateException("While [" + rawText + "]", e);
         }
+    }
+
+    private void handleZBins(LinkedList<String> list) {
+        list.removeFirst();
+        String zBins = list.removeFirst();
+        if (currentXBins == null || currentYBins == null)
+            throw new IllegalStateException("X or Y missing for " + zBins);
+        xBinsByZBins.put(zBins, currentXBins);
+        yBinsByZBins.put(zBins, currentYBins);
+    }
+
+    public String getXBin(String tableName) {
+        return xBinsByZBins.get(tableName);
+    }
+
+    public String getYBin(String tableName) {
+        return yBinsByZBins.get(tableName);
+    }
+
+    private void handleYBins(LinkedList<String> list) {
+        list.removeFirst();
+        currentYBins = list.removeFirst();
+    }
+
+    private void handleXBins(LinkedList<String> list) {
+        list.removeFirst();
+        currentXBins = list.removeFirst();
+    }
+
+    private void handleTable(LinkedList<String> list) {
+        list.removeFirst();
     }
 
     private void handleFieldDefinition(LinkedList<String> list) {

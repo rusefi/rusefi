@@ -30,6 +30,13 @@ public class TuneReadWriteTest {
     }
 
     @Test
+    public void testIniReader() {
+        IniFileModel model = IniFileModel.getInstance();
+        assertEquals("fuelRpmBins", model.getXBin("fuelTable"));
+        assertEquals("fuelLoadBins", model.getYBin("fuelTable"));
+    }
+
+    @Test
     public void testCompareBinaryToTSTune() throws Exception {
         Msq tsTune = Msq.readTune(PATH + "CurrentTune.msq");
         System.out.println(tsTune);
