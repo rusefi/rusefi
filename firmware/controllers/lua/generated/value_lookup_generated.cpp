@@ -127,6 +127,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->knockBandCustom;
 		case -1227821282:
 			return engineConfiguration->displacement;
+		case 2122875976:
+			return engineConfiguration->triggerSimulatorRpm;
 		case -1578655365:
 			return engineConfiguration->cylindersCount;
 		case 1425664391:
@@ -211,8 +213,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->vssGearRatio;
 		case -1958312328:
 			return engineConfiguration->vssToothCount;
-		case -47286421:
-			return engineConfiguration->triggerSimulatorFrequency;
 		case -524949197:
 			return engineConfiguration->idle_antiwindupFreq;
 		case 1129109559:
@@ -1293,6 +1293,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->displacement = (int)value;
 		return;
 	}
+		case 2122875976:
+	{
+		engineConfiguration->triggerSimulatorRpm = (int)value;
+		return;
+	}
 		case -1578655365:
 	{
 		engineConfiguration->cylindersCount = (int)value;
@@ -1501,11 +1506,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -1958312328:
 	{
 		engineConfiguration->vssToothCount = (int)value;
-		return;
-	}
-		case -47286421:
-	{
-		engineConfiguration->triggerSimulatorFrequency = (int)value;
 		return;
 	}
 		case -524949197:
