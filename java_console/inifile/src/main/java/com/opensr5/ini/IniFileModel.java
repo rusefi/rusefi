@@ -38,8 +38,8 @@ public class IniFileModel {
     private String currentSection;
     private String currentYBins;
     private String currentXBins;
-    private final Map<String, String> xBinsByZBins = new HashMap<>();
-    private final Map<String, String> yBinsByZBins = new HashMap<>();
+    private final Map<String, String> xBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, String> yBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public static void main(String[] args) {
         log.info("Dialogs: " + IniFileModel.getInstance().dialogs);
@@ -192,6 +192,10 @@ public class IniFileModel {
 
     public String getXBin(String tableName) {
         return xBinsByZBins.get(tableName);
+    }
+
+    public Set<String> getTables() {
+        return xBinsByZBins.keySet();
     }
 
     public String getYBin(String tableName) {

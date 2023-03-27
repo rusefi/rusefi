@@ -32,7 +32,9 @@ public class TuneReadWriteTest {
     @Test
     public void testIniReader() {
         IniFileModel model = IniFileModel.getInstance();
-        assertEquals("fuelRpmBins", model.getXBin("fuelTable"));
+        assertTrue(model.getTables().contains("fueltable"));
+        assertEquals(21, model.getTables().size());
+        assertEquals("fuelRpmBins", model.getXBin("FUELTable"));
         assertEquals("fuelLoadBins", model.getYBin("fuelTable"));
     }
 
