@@ -271,11 +271,20 @@ TEST(FuelMath, IdleVeTable) {
 	idler.isIdling = true;
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
 
+	// Below half threshold, fully use idle VE table
+	Sensor::setMockValue(SensorType::Tps1, 0);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
+	Sensor::setMockValue(SensorType::Tps1, 2);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
+	Sensor::setMockValue(SensorType::Tps1, 5);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
+
 	// As TPS approaches idle threshold, phase-out the idle VE table
-	Sensor::setMockValue(SensorType::Tps1, 2.5f);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.425f);
-	Sensor::setMockValue(SensorType::Tps1, 5.0f);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.45f);
-	Sensor::setMockValue(SensorType::Tps1, 7.5f);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.475f);
+
+	Sensor::setMockValue(SensorType::Tps1, 6);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.42f);
+	Sensor::setMockValue(SensorType::Tps1, 8);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.46f);
+	Sensor::setMockValue(SensorType::Tps1, 10);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.5f);
 }
