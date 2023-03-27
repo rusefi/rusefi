@@ -22,7 +22,7 @@ void setStepperHw() {
 	engineConfiguration->stepperDcIo[1].controlPin = H144_UART1_TX; // DC2_PWM
 	engineConfiguration->stepperDcIo[1].directionPin1 = H_SPI3_CS; // DC2_DIR
 	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
-	engineConfiguration->stepperDcIo[1].disablePin = H144_GP5; // ETB_DIS
+// open question if we need custom logic to handle shared disable pin?	engineConfiguration->stepperDcIo[1].disablePin = H144_GP5; // ETB_DIS
 #endif // HW_HELLEN
 }
 
