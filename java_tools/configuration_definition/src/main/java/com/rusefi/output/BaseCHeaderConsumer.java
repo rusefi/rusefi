@@ -12,8 +12,8 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         ConfigField configField = iterator.cf;
         if (configField.isBit()) {
             // unused bits are needed for proper struct memsize
-            String comment = "\t/**" + EOL + packComment(configField.getComment(), "\t") + "\toffset " + iterator.currentOffset + " bit " + iterator.bitState.get() + " */" + EOL;
-            return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
+            String comment = packComment(configField.getComment(), "\t// ") + "\t// offset " + iterator.currentOffset + " bit " + iterator.bitState.get() + EOL;
+            return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL + EOL;
         }
 
         String cEntry = getComment(configField.getComment(), iterator.currentOffset, configField.getUnits());
@@ -32,21 +32,19 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
                 // we need this cast in case of enums
                 cEntry += " = (" + configField.getType() + ")0";
             }
-            cEntry += ";" + EOL;
+            cEntry += ";" + EOL + EOL;
         } else {
-            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.getArraySizeVariableName() + "];" + EOL;
+            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.getArraySizeVariableName() + "];" + EOL + EOL;
         }
         return cEntry;
     }
 
     private static String getComment(String comment, int currentOffset, String units) {
-        String start = "\t/**";
-        String packedComment = packComment(comment, "\t");
-        String unitsComment = units.isEmpty() ? "" : "\t" + units + EOL;
-        return start + EOL +
-                packedComment +
-                unitsComment +
-                "\t * offset " + currentOffset + EOL + "\t */" + EOL;
+        String packedComment = packComment(comment, "\t// ");
+        String unitsComment = units.isEmpty() ? "" : "\t// " + units + EOL;
+        return packedComment +
+               unitsComment +
+               "\t// offset " + currentOffset + EOL;
     }
 
     public static String packComment(String comment, String linePrefix) {
@@ -56,7 +54,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
             return "";
         String result = "";
         for (String line : comment.split("\\\\n")) {
-            result += linePrefix + " * " + line + EOL;
+            result += linePrefix + line + EOL;
         }
         return result;
     }
@@ -64,7 +62,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
         if (structure.getComment() != null) {
-            content.append("/**" + EOL + packComment(structure.getComment(), "") + EOL + "*/" + EOL);
+            content.append(packComment(structure.getComment(), "// ") + EOL);
         }
 
         content.append("struct " + structure.getName() + " {" + EOL);
