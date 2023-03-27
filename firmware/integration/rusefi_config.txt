@@ -439,8 +439,8 @@ bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensor
 
 
 !todo: extract these two fields into a structure
-int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
-int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
+int16_t tpsMin;Closed throttle, 1 volt = 200 units;"ADC", 1, 0, 0, 1023, 0
+int16_t tpsMax;Full throttle, 1 volt = 200 units;"ADC", 1, 0, 0, 1023, 0
 
 int16_t tpsErrorDetectionTooLow;TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.;"%", 1, 0, -10, 0, 0
 int16_t tpsErrorDetectionTooHigh;TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.;"%", 1, 0, 100, 110, 0
@@ -460,7 +460,7 @@ ThermistorConf iat;
 	float knockBandCustom;We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override;"kHz", 1, 0, 0, 20, 2
 
 struct_no_prefix specs_s
-uint16_t autoscale displacement;Engine volume/capacity, in litres\nsee also cylindersCount;"L", 0.001, 0, 0, 65, 3
+uint16_t autoscale displacement;Engine displacement in litres;"L", 0.001, 0, 0, 65, 3
 
 uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CYLINDER_COUNT@@, 0
 
@@ -618,7 +618,7 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	output_pin_e o2heaterPin;On-off O2 sensor heater control. 'ON' if engine is running, 'OFF' if stopped or cranking.
 
 ! todo: rename to triggerSimulatorRpm
-	int triggerSimulatorFrequency;Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm;"Rpm", 1, 0, 0, 30000, 0
+	int triggerSimulatorFrequency;Same RPM is used for two ways of producing simulated RPM.;"Rpm", 1, 0, 0, 30000, 0
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPins;
 	output_pin_e[MAX_CYLINDER_COUNT iterate] ignitionPins;
@@ -629,7 +629,7 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	output_pin_e fuelPumpPin;
 	pin_output_mode_e fuelPumpPinMode;
 
-	adc_channel_e throttlePedalPositionSecondAdcChannel;Electronic throttle pedal position input\nSecond channel\nSee also tps1_1AdcChannel\nSee throttlePedalSecondaryUpVoltage and throttlePedalSecondaryWOTVoltage
+	adc_channel_e throttlePedalPositionSecondAdcChannel;Throttle pedal, secondary channel.
 
 	output_pin_e malfunctionIndicatorPin;Check engine light, also malfunction indicator light. Always blinks once on boot.
 	pin_output_mode_e malfunctionIndicatorPinMode;
@@ -686,7 +686,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	float compressionRatio;Just for reference really, not taken into account by any logic at this point;"CR", 1, 0, 0, 300, 1
 
-	Gpio[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\nSee also directSelfStimulation which is different.
+	Gpio[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.
 
 	uint16_t autoscale fordInjectorSmallPulseSlope;;"g/s", 0.001, 0, 0, 65, 3
 
@@ -768,7 +768,7 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 3", "type 4"
 	imu_type_e imuType
 
-	switch_input_pin_e startStopButtonPin;See also starterControlPin
+	switch_input_pin_e startStopButtonPin
 	
 	int mapMinBufferLength;This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.;"count", 1, 0, 1, 24, 0
 	int16_t idlePidDeactivationTpsThreshold;Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.;"%", 1, 0, 0, 50, 0
@@ -914,7 +914,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 
 ! todo: convert this into a bit setting no need for 4 bytes and we do not expect a third option any day soon
 custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Open Loop"
-	idle_mode_e idleMode;See also idleRpmPid;
+	idle_mode_e idleMode
 
 	Gpio       drv8860_miso;
 
@@ -1047,8 +1047,8 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	Gpio[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
 	int16_t airTaperRpmRange;RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
 	brain_input_pin_e turboSpeedSensorInputPin;
-int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
-int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
+int16_t tps2Min;;"ADC", 1, 0, 0, 1023, 0
+int16_t tps2Max;;"ADC", 1, 0, 0, 1023, 0
 	output_pin_e starterControlPin;See also startStopButtonPin
 	pin_input_mode_e startStopButtonMode;
 	uint8_t tachPulsePerRev;;"Pulse", 1, 0, 1, 255, 0
@@ -1063,8 +1063,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	Gpio communicationLedPin;blue LED on many rusEFI boards.\nBlue Communication LED which is expected to blink at 50% duty cycle during normal board operation.\nIf USB communication cable is connected Blue LED starts to blink faster.
 	Gpio runningLedPin;Green LED on many rusEFI boards.\nOff if engine is stopped, blinks if engine is cranking, solid if engine is running.
-	Gpio binarySerialTxPin;See also EFI_CONSOLE_RX_BRAIN_PIN
-	Gpio binarySerialRxPin;
+	Gpio binarySerialTxPin
+	Gpio binarySerialRxPin
 	
 	Gpio[AUX_DIGITAL_VALVE_COUNT iterate] auxValves
 	switch_input_pin_e tcuUpshiftButtonPin
