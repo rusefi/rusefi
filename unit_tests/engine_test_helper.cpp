@@ -355,7 +355,7 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	Engine *engine = &eth->engine;
 
 	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
-	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->cylindersCount = 4;
 	// a bit of flexibility - the mode may be changed by some tests
 	engineConfiguration->injectionMode = injectionMode;
 	// set cranking mode (it's used by getCurrentInjectionMode())

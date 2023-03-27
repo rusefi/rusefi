@@ -19,10 +19,10 @@ void setGmLs4() {
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 	engineConfiguration->injector.flow = 440;
 
-	engineConfiguration->specs.cylindersCount = 8;
+	engineConfiguration->cylindersCount = 8;
 	setLeftRightBanksNeedBetterName();
-	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
-	engineConfiguration->specs.displacement = 6.2;
+	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
+	engineConfiguration->displacement = 6.2;
 
 	engineConfiguration->etbIdleThrottleRange = 15;
 

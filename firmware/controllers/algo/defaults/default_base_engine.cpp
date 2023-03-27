@@ -16,7 +16,7 @@ static void setDefaultAlternatorParameters() {
 
 /* Cylinder to bank mapping */
 void setLeftRightBanksNeedBetterName() {
-    for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+    for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 	    engineConfiguration->cylinderBankSelect[i] = i % 2;
     }
 }
@@ -37,9 +37,9 @@ static void setDefaultHPFP() {
 
 void setDefaultBaseEngine() {
 	// Base Engine Settings
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.displacement = 2;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->displacement = 2;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->compressionRatio = 9;
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;

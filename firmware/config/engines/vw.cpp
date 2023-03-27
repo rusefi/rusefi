@@ -32,8 +32,8 @@ void setVwAba() {
 
 
 	//Base engine setting
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.displacement = 2.0;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->displacement = 2.0;
 	engineConfiguration->injector.flow = 320; // 30lb/h
 	// set algorithm 3
 	setAlgorithm(LM_SPEED_DENSITY);
@@ -62,27 +62,27 @@ void setVwAba() {
 }
 
 void setHellen121Vag_5_cyl() {
-	engineConfiguration->specs.cylindersCount = 5;
-	engineConfiguration->specs.displacement = 2.5;
-	engineConfiguration->specs.firingOrder = FO_1_2_4_5_3;
+	engineConfiguration->cylindersCount = 5;
+	engineConfiguration->displacement = 2.5;
+	engineConfiguration->firingOrder = FO_1_2_4_5_3;
 }
 
 void setHellen121Vag_vr6_cyl() {
-	engineConfiguration->specs.cylindersCount = 6;
-	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
+	engineConfiguration->cylindersCount = 6;
+	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 }
 
 void setHellen121Vag_v6_cyl() {
-	engineConfiguration->specs.cylindersCount = 6;
-	engineConfiguration->specs.displacement = 2.7;
+	engineConfiguration->cylindersCount = 6;
+	engineConfiguration->displacement = 2.7;
 
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = Gpio::A7; // 87a
 
-	engineConfiguration->specs.firingOrder = FO_1_4_3_6_2_5;
+	engineConfiguration->firingOrder = FO_1_4_3_6_2_5;
 }
 
 void setHellen121Vag_8_cyl() {
-	engineConfiguration->specs.cylindersCount = 8;
-	engineConfiguration->specs.displacement = 4.2;
-	engineConfiguration->specs.firingOrder = FO_1_5_4_8_6_3_7_2;
+	engineConfiguration->cylindersCount = 8;
+	engineConfiguration->displacement = 4.2;
+	engineConfiguration->firingOrder = FO_1_5_4_8_6_3_7_2;
 }

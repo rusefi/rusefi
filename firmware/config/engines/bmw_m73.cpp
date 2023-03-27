@@ -90,11 +90,11 @@ void m73engine() {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
-	engineConfiguration->specs.cylindersCount = 12;
-	engineConfiguration->specs.displacement = 5.4;
+	engineConfiguration->cylindersCount = 12;
+	engineConfiguration->displacement = 5.4;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
 	strcpy(engineConfiguration->engineCode, "M73");
-	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
+	engineConfiguration->firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
 

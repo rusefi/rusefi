@@ -12,9 +12,9 @@
 #endif // HW_PROTEUS
 
 void setHondaK() {
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.displacement = 2.4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->displacement = 2.4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->engineSyncCam = SC_Exhaust_First;
 	engineConfiguration->trigger.type = TT_HONDA_K_CRANK_12_1;
 	int magic = 12; // note that offset and VVT are related

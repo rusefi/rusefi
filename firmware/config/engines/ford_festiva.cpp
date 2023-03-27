@@ -74,7 +74,7 @@ void setFordEscortGt() {
 	setDensoTODO(config);
 
 	engineConfiguration->globalFuelCorrection = 0.75;
-	engineConfiguration->specs.displacement = 1.839;
+	engineConfiguration->displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY);
 
 	static const uint16_t veRpmBins[] = 

@@ -109,8 +109,8 @@ void common079721_2351() {
 
 	engineConfiguration->engineChartSize = 300;
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->fuelPumpPin = Gpio::Unassigned; // fuel pump is not controlled by ECU on this engine
 
@@ -142,7 +142,7 @@ void common079721_2351() {
  */
 void setFrankensteinMiata1996() {
 	commonMiataNa();
-	engineConfiguration->specs.displacement = 1.839;
+	engineConfiguration->displacement = 1.839;
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTable(config->ignitionTable, miataNA8_maf_advance_table);

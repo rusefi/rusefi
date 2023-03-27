@@ -19,11 +19,11 @@ void setCamaro4() {
 
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	engineConfiguration->specs.displacement = 5.7;
-	engineConfiguration->specs.cylindersCount = 8;
+	engineConfiguration->displacement = 5.7;
+	engineConfiguration->cylindersCount = 8;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 
-	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
+	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->triggerInputPins[0] = Gpio::A5;
 	engineConfiguration->triggerInputPins[1] = Gpio::C6;
 

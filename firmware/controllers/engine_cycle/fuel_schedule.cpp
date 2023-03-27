@@ -153,7 +153,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 		injectorIndex = getCylinderId(i) - 1;
 	} else if (mode == IM_BATCH) {
 		// Loop over the first half of the firing order twice
-		injectorIndex = i % (engineConfiguration->specs.cylindersCount / 2);
+		injectorIndex = i % (engineConfiguration->cylindersCount / 2);
 	} else {
 		firmwareError(CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
 		injectorIndex = 0;
@@ -168,7 +168,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 		// Compute the position of this cylinder's twin in the firing order
 		// Each injector gets fired as a primary (the same as sequential), but also
 		// fires the injector 360 degrees later in the firing order.
-		int secondOrder = (i + (engineConfiguration->specs.cylindersCount / 2)) % engineConfiguration->specs.cylindersCount;
+		int secondOrder = (i + (engineConfiguration->cylindersCount / 2)) % engineConfiguration->cylindersCount;
 		int secondIndex = getCylinderId(secondOrder) - 1;
 		secondOutput = &enginePins.injectors[secondIndex];
 	} else {
@@ -193,7 +193,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 }
 
 void FuelSchedule::addFuelEvents() {
-	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
+	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
 		bool result = addFuelEventsForCylinder(cylinderIndex);
 
 		if (!result) {
@@ -212,7 +212,7 @@ void FuelSchedule::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, 
 		return;
 	}
 
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		elements[i].onTriggerTooth(rpm, nowNt, currentPhase, nextPhase);
 	}
 }

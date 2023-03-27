@@ -72,9 +72,9 @@ void setEngineBMW_M73_microRusEfi() {
 	strcpy(engineConfiguration->vehicleName, "microRusEFIx2");
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
-	engineConfiguration->specs.cylindersCount = 6;
-	engineConfiguration->specs.displacement = 5.4 / 2;
-	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
+	engineConfiguration->cylindersCount = 6;
+	engineConfiguration->displacement = 5.4 / 2;
+	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 

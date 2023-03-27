@@ -49,7 +49,7 @@ static void commonNA8() {
 	engineConfiguration->ignitionDwellForCrankingMs = 4;
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
-	engineConfiguration->specs.displacement = 1.839;
+	engineConfiguration->displacement = 1.839;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->engineCode, "NA8");
 

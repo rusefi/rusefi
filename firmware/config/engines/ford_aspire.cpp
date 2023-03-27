@@ -59,12 +59,12 @@ void setFordAspireEngineConfiguration() {
 
 //	engineConfiguration->ignitionPinMode = OM_INVERTED;
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.displacement = 1.3;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->displacement = 1.3;
 	// Denso 195500-2110
 	engineConfiguration->injector.flow = 119.8;
 
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->globalTriggerAngleOffset = 175;
 
 	setDefaultAspireMaps();

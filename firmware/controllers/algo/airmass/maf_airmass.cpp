@@ -56,7 +56,7 @@ AirmassResult MafAirmass::getAirmassImpl(float massAirFlow, int rpm) const {
 
 	// Now we have to divide among cylinders - on a 4 stroke, half of the cylinders happen every revolution
 	// This math is floating point to work properly on engines with odd cylinder count
-	float halfCylCount = engineConfiguration->specs.cylindersCount / 2.0f;
+	float halfCylCount = engineConfiguration->cylindersCount / 2.0f;
 
 	mass_t cylinderAirmass = airPerRevolution / halfCylCount;
 

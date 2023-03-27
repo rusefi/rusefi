@@ -36,10 +36,10 @@ void setHonda600() {
 	// set global_trigger_offset_angle 540
 	engineConfiguration->globalTriggerAngleOffset = 540;
 
-    engineConfiguration->specs.cylindersCount = 4;
+    engineConfiguration->cylindersCount = 4;
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-  engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+  engineConfiguration->firingOrder = FO_1_3_4_2;
   engineConfiguration->cranking.rpm = 800;
 //	engineConfiguration->ignitionMode = IM_WASTED_SPARK; //IM_INDIVIDUAL_COILS;
 

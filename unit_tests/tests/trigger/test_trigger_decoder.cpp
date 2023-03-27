@@ -960,7 +960,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	engine->tdcMarkEnabled = false;
 
 	engineConfiguration->isInjectionEnabled = false;
-	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
 	setConstantDwell(45);
