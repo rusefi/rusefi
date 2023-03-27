@@ -84,7 +84,7 @@ static float getRpmMultiplier(operation_mode_e mode) {
 }
 
 void setTriggerEmulatorRPM(int rpm) {
-	engineConfiguration->triggerSimulatorFrequency = rpm;
+	engineConfiguration->triggerSimulatorRpm = rpm;
 	/**
 	 * All we need to do here is to change the periodMs
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
@@ -161,7 +161,7 @@ static void startSimulatedTriggerSignal() {
 	}
 
 	TriggerWaveform *s = getTriggerForEmulation();
-	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
+	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
 	triggerEmulatorSignal.weComplexInit("position sensor",
 			&engine->executor,
 			&s->wave,
@@ -197,11 +197,11 @@ void disableTriggerStimulator() {
 }
 
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {
-	if (engineConfiguration->triggerSimulatorFrequency ==
-			previousConfiguration->triggerSimulatorFrequency) {
+	if (engineConfiguration->triggerSimulatorRpm ==
+			previousConfiguration->triggerSimulatorRpm) {
 		return;
 	}
-	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
+	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
 }
 
 static void hackVvtSimulation() {

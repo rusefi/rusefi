@@ -473,6 +473,8 @@ ThermistorConf iat;
 
 uint16_t autoscale displacement;Engine displacement in litres;"L", 0.001, 0, 0, 65, 3
 
+uint16_t triggerSimulatorRpm;;"RPM", 1, 0, 0, 30000, 0
+
 uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CYLINDER_COUNT@@, 0
 
 ! see firing_order.h
@@ -625,9 +627,6 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
 	Gpio l9779_cs;
 
-
-! todo: rename to triggerSimulatorRpm
-	int triggerSimulatorFrequency;Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm;"Rpm", 1, 0, 0, 30000, 0
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPins;
 	output_pin_e[MAX_CYLINDER_COUNT iterate] ignitionPins;

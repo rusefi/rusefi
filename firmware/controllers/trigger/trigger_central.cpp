@@ -924,7 +924,7 @@ void triggerInfo(void) {
 	efiPrintf("primary trigger simulator: %s %s freq=%d",
 			hwPortname(engineConfiguration->triggerSimulatorPins[0]),
 			getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[0]),
-			engineConfiguration->triggerSimulatorFrequency);
+			engineConfiguration->triggerSimulatorRpm);
 
 	if (ts->needSecondTriggerInput) {
 		efiPrintf("secondary trigger input: %s", hwPortname(engineConfiguration->triggerInputPins[1]));

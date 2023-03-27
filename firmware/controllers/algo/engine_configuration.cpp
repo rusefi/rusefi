@@ -616,10 +616,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->knockDetectionWindowStart = 15.0 + 5.0;
 	engineConfiguration->knockDetectionWindowEnd = 15.0 + 45.0;
 
-	/**
-	 * this is RPM. 10000 rpm is only 166Hz, 800 rpm is 13Hz
-	 */
-	engineConfiguration->triggerSimulatorFrequency = 1200;
+	engineConfiguration->triggerSimulatorRpm = 1200;
 
 	engineConfiguration->alternatorPwmFrequency = 300;
 
