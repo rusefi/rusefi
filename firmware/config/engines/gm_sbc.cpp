@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "gm_sbc.h"
+#include "defaults.h"
 
 #if HW_HELLEN
 #include "hellen_meta.h"
 #endif // HW_HELLEN
-
 
 void setStepperHw() {
 	engineConfiguration->useStepperIdle = true;
@@ -13,6 +13,7 @@ void setStepperHw() {
 	engineConfiguration->stepperDcInvertedPins = false; // or true?
 
 #if HW_HELLEN
+    setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
 	// using 8chan pinout for DC1: A26 (OUT_DC1+) and A27 (OUT_DC1-)
 	engineConfiguration->stepperDcIo[0].controlPin = H144_GP4; // DC1_PWM
 	engineConfiguration->stepperDcIo[0].directionPin1 = H144_GP3; // DC1_DIR
