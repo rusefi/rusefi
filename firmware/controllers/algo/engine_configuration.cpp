@@ -771,6 +771,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // HW_MICRO_RUSEFI
 #if HW_PROTEUS
+    case PROTEUS_M111:
+        setProteusM111EngineConfiguration();
+        break;
     case WASTEGATE_PROTEUS_TEST:
         proteusDcWastegateTest();
         break;

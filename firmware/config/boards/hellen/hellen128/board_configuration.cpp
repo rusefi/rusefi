@@ -15,6 +15,7 @@
 #include "hellen_meta.h"
 #include "i2c_bb.h"
 #include "defaults.h"
+#include "m111.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
@@ -171,16 +172,7 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-	engineConfiguration->specs.displacement = 2.295f;
-
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
-
-	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MERCEDES);
-	strcpy(engineConfiguration->engineCode, "");
+    setM111EngineConfiguration();
 
 	/**
 	 * Jimmy best tune
