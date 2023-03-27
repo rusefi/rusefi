@@ -26,14 +26,19 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 	auto tps = Sensor::get(SensorType::Tps1);
 	// get VE from the separate table for Idle if idling
 	if (engine->module<IdleController>()->isIdlingOrTaper() &&
-	    tps && engineConfiguration->useSeparateVeForIdle) {
+		tps && engineConfiguration->useSeparateVeForIdle) {
 		percent_t idleVe = interpolate3d(
 			config->idleVeTable,
 			config->idleVeLoadBins, load,
 			config->idleVeRpmBins, rpm
 		);
+
 		// interpolate between idle table and normal (running) table using TPS threshold
-		ve = interpolateClamped(0.0f, idleVe, engineConfiguration->idlePidDeactivationTpsThreshold, ve, tps.Value);
+		// 0 TPS -> idle table
+		// 1/2 threshold -> idle table
+		// idle threshold -> normal table
+		float idleThreshold = engineConfiguration->idlePidDeactivationTpsThreshold;
+		ve = interpolateClamped(idleThreshold / 2, idleVe, idleThreshold, ve, tps.Value);
 	}
 #endif // EFI_IDLE_CONTROL
 
