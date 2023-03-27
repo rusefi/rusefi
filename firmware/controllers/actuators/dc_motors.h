@@ -11,7 +11,7 @@
 
 #include <cstddef>
 
-DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires);
+DcMotor* initDcMotor(const char *disPinMsg, const dc_io& io, size_t index, bool useTwoWires);
 DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index);
 
 // Manual control of motors for use by console commands
@@ -54,6 +54,7 @@ public:
     			brain_pin_e pinEnable,
     			brain_pin_e pinDir1,
     			brain_pin_e pinDir2,
+    			const char *disPinMsg,
     			brain_pin_e pinDisable,
     			bool isInverted,
     			ExecutorInterface* executor,

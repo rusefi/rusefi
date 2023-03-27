@@ -1039,7 +1039,8 @@ void doInitElectronicThrottle() {
 			// do not touch HW pins if function not selected, this way Lua can use DC motor hardware pins directly
 			continue;
 		}
-		auto motor = initDcMotor(engineConfiguration->etbIo[i], i, engineConfiguration->etb_use_two_wires);
+		auto motor = initDcMotor("ETB disable",
+				engineConfiguration->etbIo[i], i, engineConfiguration->etb_use_two_wires);
 
 		auto controller = engine->etbControllers[i];
 		if (!controller) {

@@ -15,6 +15,7 @@
 			brain_pin_e pinEnable,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2,
+			const char *disPinMsg,
 			brain_pin_e pinDisable,
 			bool isInverted,
 			ExecutorInterface* executor,
@@ -88,7 +89,7 @@ DcHardware *getdcHardware() {
     return &dcHardware[0];
 }
 
-DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
+DcMotor* initDcMotor(const char *disPinMsg,const dc_io& io, size_t index, bool useTwoWires) {
 	auto& hw = dcHardware[index];
 
 	hw.start(
@@ -96,6 +97,7 @@ DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
 		io.controlPin,
 		io.directionPin1,
 		io.directionPin2,
+		disPinMsg,
 		io.disablePin,
 		// todo You would not believe how you invert TLE9201 #4579
 		engineConfiguration->stepperDcInvertedPins,
@@ -114,6 +116,7 @@ DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index) {
 		Gpio::Unassigned, /* pinEnable */
 		coil_p,
 		coil_m,
+		nullptr,
 		Gpio::Unassigned, /* pinDisable */
 		engineConfiguration->stepperDcInvertedPins,
 		&engine->executor,
