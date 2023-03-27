@@ -507,11 +507,10 @@ public class ConfigFieldParserTest {
         assertEquals("\tpublic static final Field FIELD1 = Field.create(\"FIELD1\", 0, FieldType.INT).setScale(0.01).setBaseOffset(0);\n",
                 javaFieldsConsumer.getContent());
         assertEquals("struct pid_s {\n" +
-                "\t/**\n" +
-                "\tratio\n" +
-                "\t * offset 0\n" +
-                "\t */\n" +
+                "\t// ratio\n" +
+                "\t// offset 0\n" +
                 "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE];\n" +
+                "\n" +
                 "};\n" +
                 "static_assert(sizeof(pid_s) == 4);\n" +
                 "\n", consumer.getContent());
@@ -532,28 +531,24 @@ public class ConfigFieldParserTest {
         ReaderStateImpl state = new ReaderStateImpl();
         state.readBufferedReader(test, consumer);
         assertEquals("struct struct_s {\n" +
-                        "\t/**\n" +
-                        "\t * offset 0\n" +
-                        "\t */\n" +
+                        "\t// offset 0\n" +
                         "\tint int2 = (int)0;\n" +
+                        "\n" +
                         "};\n" +
                         "static_assert(sizeof(struct_s) == 4);\n" +
                         "\n" +
                         "struct pid_s {\n" +
-                        "\t/**\n" +
-                        "\t * offset 0\n" +
-                        "\t */\n" +
+                        "\t// offset 0\n" +
                         "\tint8_t byte1 = (int8_t)0;\n" +
-                        "\t/**\n" +
+                        "\n" +
                         "\t * need 4 byte alignment\n" +
                         "\tunits\n" +
-                        "\t * offset 1\n" +
-                        "\t */\n" +
+                        "\t// offset 1\n" +
                         "\tuint8_t alignmentFill_at_1[3];\n" +
-                        "\t/**\n" +
-                        "\t * offset 4\n" +
-                        "\t */\n" +
+                        "\n" +
+                        "\t// offset 4\n" +
                         "\tstruct_s struct;\n" +
+                        "\n" +
                         "};\n" +
                         "static_assert(sizeof(pid_s) == 8);\n" +
                         "\n",
