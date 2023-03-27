@@ -4064,7 +4064,7 @@ dialog = tcuControls, "Transmission Settings"
 
 ;			Board->ECU stimulator
 	dialog = ecuStimulator, "ECU stimulator"
-		field = "Trigger Simulator",						triggerSimulatorFrequency
+		field = "Trigger Simulator",						triggerSimulatorRpm
 		commandButton = "Enable internal trigger simulation", cmd_enable_self_stim
 		commandButton = "Enable external trigger simulation", cmd_enable_ext_stim @@if_ts_show_hardware_simulator
 		commandButton = "Disable trigger simulation", cmd_disable_self_stim

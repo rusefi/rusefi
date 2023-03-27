@@ -64,7 +64,7 @@ public:
 	cyclic_buffer<int> triggerErrorDetection;
 
 	/**
-	 * See also triggerSimulatorFrequency
+	 * See also triggerSimulatorRpm
 	 */
 	bool directSelfStimulation = false;
 

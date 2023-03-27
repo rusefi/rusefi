@@ -92,7 +92,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 20003
+#define FLASH_DATA_VERSION 20004
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -461,6 +461,8 @@ ThermistorConf iat;
 
 uint16_t autoscale displacement;Engine displacement in litres;"L", 0.001, 0, 0, 65, 3
 
+uint16_t triggerSimulatorRpm;;"RPM", 1, 0, 0, 30000, 0
+
 uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CYLINDER_COUNT@@, 0
 
 ! see firing_order.h
@@ -614,9 +616,6 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	Gpio l9779_cs;
 
 	output_pin_e o2heaterPin;On-off O2 sensor heater control. 'ON' if engine is running, 'OFF' if stopped or cranking.
-
-! todo: rename to triggerSimulatorRpm
-	int triggerSimulatorFrequency;Same RPM is used for two ways of producing simulated RPM.;"Rpm", 1, 0, 0, 30000, 0
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPins;
 	output_pin_e[MAX_CYLINDER_COUNT iterate] ignitionPins;

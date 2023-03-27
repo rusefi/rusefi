@@ -171,7 +171,7 @@ void setFrankensoConfiguration() {
 void setFrankensoBoardTestConfiguration() {
 	setFrankensoConfiguration();
 
-	engineConfiguration->triggerSimulatorFrequency = 300;
+	engineConfiguration->triggerSimulatorRpm = 300;
 	engineConfiguration->cranking.rpm = 100;
 
 	engineConfiguration->cylindersCount = 12;
@@ -251,7 +251,7 @@ void setEtbTestConfiguration() {
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1
 
 	// turning off other PWMs to simplify debugging
-	engineConfiguration->triggerSimulatorFrequency = 0;
+	engineConfiguration->triggerSimulatorRpm = 0;
 	engineConfiguration->stepperEnablePin = Gpio::Unassigned;
 	engineConfiguration->idle.stepperStepPin = Gpio::Unassigned;
 	engineConfiguration->idle.stepperDirectionPin = Gpio::Unassigned;
@@ -439,7 +439,7 @@ static void mreBoardOldTest() {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->debugMode = DBG_TLE8888;
 
-	engineConfiguration->triggerSimulatorFrequency = 202;
+	engineConfiguration->triggerSimulatorRpm = 202;
 	// set cranking_rpm 500
 	engineConfiguration->cranking.rpm = 100;
 	// set cranking_dwell 200
@@ -586,7 +586,7 @@ end
 void proteusBoardTest() {
 	engineConfiguration->cylindersCount = 12;
 	engineConfiguration->firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
-	engineConfiguration->triggerSimulatorFrequency = 600;
+	engineConfiguration->triggerSimulatorRpm = 600;
     engineConfiguration->injector.flow = 4.6; // longer blink
 
 	engineConfiguration->cranking.rpm = 100;
