@@ -65,7 +65,7 @@ static void setAlgorithmInt(int value) {
 }
 
 static void setFiringOrder(int value) {
-	engineConfiguration->specs.firingOrder = (firing_order_e) value;
+	engineConfiguration->firingOrder = (firing_order_e) value;
 }
 
 static void setRpmHardLimit(int value) {
@@ -500,7 +500,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isCylinderCleanupEnabled = isEnabled;
 	} else {
 		efiPrintf("unexpected [%s]", param);
-		return; // well, MISRA would not like this 'return' here :(
+		return;
 	}
 	efiPrintf("[%s] %s", param, isEnabled ? "enabled" : "disabled");
 }

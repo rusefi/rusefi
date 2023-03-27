@@ -66,7 +66,7 @@ public:
 	 */
 	int sparkId = 0;
 	/**
-	 * [0, specs.cylindersCount)
+	 * [0, cylindersCount)
 	 */
 	int cylinderIndex = 0;
 	int8_t cylinderNumber = 0;

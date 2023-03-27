@@ -164,7 +164,7 @@ static void printEngineSnifferPinMappings() {
 	printOutPin(PROTOCOL_WA_CHANNEL_2, engineConfiguration->logicAnalyzerPins[1]);
 #endif /* EFI_LOGIC_ANALYZER */
 
-	int cylCount = minI(engineConfiguration->specs.cylindersCount, MAX_CYLINDER_COUNT);
+	int cylCount = minI(engineConfiguration->cylindersCount, MAX_CYLINDER_COUNT);
 	for (int i = 0; i < cylCount; i++) {
 		printOutPin(enginePins.coils[i].getShortName(), engineConfiguration->ignitionPins[i]);
 		printOutPin(enginePins.trailingCoils[i].getShortName(), engineConfiguration->trailingCoilPins[i]);

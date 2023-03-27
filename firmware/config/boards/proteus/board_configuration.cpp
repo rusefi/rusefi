@@ -161,8 +161,8 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->specs.cylindersCount = 8;
-	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
+	engineConfiguration->cylindersCount = 8;
+	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
 
 	engineConfiguration->enableSoftwareKnock = true;
 

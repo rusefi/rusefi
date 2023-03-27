@@ -175,8 +175,8 @@ void refreshMapAveragingPreCalc() {
 		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[engineConfiguration->mapAveragingSchedulingAtIndex];
 		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
-		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-			angle_t cylinderOffset = getEngineCycle(getEngineRotationState()->getOperationMode()) * i / engineConfiguration->specs.cylindersCount;
+		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+			angle_t cylinderOffset = getEngineCycle(getEngineRotationState()->getOperationMode()) * i / engineConfiguration->cylindersCount;
 			efiAssertVoid(CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can
 			// move the loop into start-up calculation and not have this loop as part of periodic calculation
@@ -187,7 +187,7 @@ void refreshMapAveragingPreCalc() {
 		}
 		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
 	} else {
-		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 			engine->engineState.mapAveragingStart[i] = NAN;
 		}
 		engine->engineState.mapAveragingDuration = NAN;
@@ -217,7 +217,7 @@ void mapAveragingTriggerCallback(
 	}
 
 	// todo: this could be pre-calculated
-	int samplingCount = engineConfiguration->measureMapOnlyInOneCylinder ? 1 : engineConfiguration->specs.cylindersCount;
+	int samplingCount = engineConfiguration->measureMapOnlyInOneCylinder ? 1 : engineConfiguration->cylindersCount;
 
 	for (int i = 0; i < samplingCount; i++) {
 		angle_t samplingStart = engine->engineState.mapAveragingStart[i];

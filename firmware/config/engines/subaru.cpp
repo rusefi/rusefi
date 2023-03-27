@@ -40,11 +40,11 @@ void setSubaruEJ18_MRE() {
 
 //	engineConfiguration->isDoubleSolenoidIdle = true;
 
-	engineConfiguration->specs.displacement = 1.8;
+	engineConfiguration->displacement = 1.8;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_SUBARU);
 	strcpy(engineConfiguration->engineCode, "EJ18");
 
-	engineConfiguration->specs.firingOrder = FO_1_3_2_4;
+	engineConfiguration->firingOrder = FO_1_3_2_4;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
@@ -67,9 +67,9 @@ void setSubaruEG33Defaults() {
 
 	engineConfiguration->trigger.type = TT_SUBARU_SVX;
 
-	engineConfiguration->specs.cylindersCount = 6;
+	engineConfiguration->cylindersCount = 6;
 	setLeftRightBanksNeedBetterName();
-	engineConfiguration->specs.firingOrder = FO_1_6_3_2_5_4;
+	engineConfiguration->firingOrder = FO_1_6_3_2_5_4;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -80,7 +80,7 @@ void setSubaruEG33Defaults() {
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 
-	engineConfiguration->specs.displacement = 3.30;
+	engineConfiguration->displacement = 3.30;
 	engineConfiguration->injector.flow = 250;
 
 	engineConfiguration->cranking.baseFuel = 5;		// ???

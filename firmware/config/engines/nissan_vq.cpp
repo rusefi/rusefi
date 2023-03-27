@@ -15,9 +15,9 @@
 void setHellen121nissanQR() {
 	engineConfiguration->trigger.type = TT_NISSAN_QR25;
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-	engineConfiguration->specs.displacement = 2;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
+	engineConfiguration->displacement = 2;
 	strcpy(engineConfiguration->engineCode, "QR");
 
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = Gpio::Unassigned;
@@ -38,9 +38,9 @@ void setHellen121nissanVQ() {
 
 	setNissanMAF0031(config);
 
-	engineConfiguration->specs.cylindersCount = 6;
-	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6;
-	engineConfiguration->specs.displacement = 4;
+	engineConfiguration->cylindersCount = 6;
+	engineConfiguration->firingOrder = FO_1_2_3_4_5_6;
+	engineConfiguration->displacement = 4;
 	strcpy(engineConfiguration->engineCode, "VQ");
 
 	engineConfiguration->vvtMode[0] = VVT_NISSAN_VQ;
@@ -72,7 +72,7 @@ void setHellen121nissanAltimaN16() {
 	// https://en.wikipedia.org/wiki/Nissan_QG_engine
 	// https://en.wikipedia.org/wiki/N-VCT
 	setHellen121nissanQR();
-	engineConfiguration->specs.displacement = 1.8;
+	engineConfiguration->displacement = 1.8;
 	strcpy(engineConfiguration->engineCode, "N16");
 
 }

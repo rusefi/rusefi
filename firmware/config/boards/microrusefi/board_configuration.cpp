@@ -195,8 +195,8 @@ void setBoardDefaultConfiguration() {
 	// Don't enable expansion header SPI by default
 	engineConfiguration->is_enabled_spi_3 = false;
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

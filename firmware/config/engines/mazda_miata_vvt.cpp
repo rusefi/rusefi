@@ -237,9 +237,9 @@ static void setMazdaMiataNbInjectorLag() {
  */
 static void setCommonMazdaNB() {
 	// Base engine
-	engineConfiguration->specs.displacement = 1.839;
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->displacement = 1.839;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->rpmHardLimit = 7200;
 

@@ -188,7 +188,7 @@ static float getBaseFuelMass(int rpm) {
 	engine->engineState.fuelingLoad = airmass.EngineLoadPercent;
 	engine->engineState.ignitionLoad = engine->fuelComputer.getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
 	
-	auto gramPerCycle = airmass.CylinderAirmass * engineConfiguration->specs.cylindersCount;
+	auto gramPerCycle = airmass.CylinderAirmass * engineConfiguration->cylindersCount;
 	auto gramPerMs = rpm == 0 ? 0 : gramPerCycle / getEngineCycleDuration(rpm);
 
 	// convert g/s -> kg/h
@@ -243,7 +243,7 @@ int getNumberOfInjections(injection_mode_e mode) {
 	switch (mode) {
 	case IM_SIMULTANEOUS:
 	case IM_SINGLE_POINT:
-		return engineConfiguration->specs.cylindersCount;
+		return engineConfiguration->cylindersCount;
 	case IM_BATCH:
 		return 2;
 	case IM_SEQUENTIAL:
@@ -259,7 +259,7 @@ float getInjectionModeDurationMultiplier() {
 
 	switch (mode) {
 	case IM_SIMULTANEOUS: {
-		auto cylCount = engineConfiguration->specs.cylindersCount;
+		auto cylCount = engineConfiguration->cylindersCount;
 
 		if (cylCount == 0) {
 			// we can end up here during configuration reset
@@ -430,8 +430,8 @@ float getCrankingFuel(float baseFuel) {
  * Should we bother caching 'getStandardAirCharge' result or can we afford to run the math every time we calculate fuel?
  */
 float getStandardAirCharge() {
-	float totalDisplacement = engineConfiguration->specs.displacement;
-	float cylDisplacement = totalDisplacement / engineConfiguration->specs.cylindersCount;
+	float totalDisplacement = engineConfiguration->displacement;
+	float cylDisplacement = totalDisplacement / engineConfiguration->cylindersCount;
 
 	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L
 	// 101.325kpa, 20C

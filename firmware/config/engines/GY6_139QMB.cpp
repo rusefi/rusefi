@@ -23,13 +23,13 @@ void setGy6139qmbDefaultEngineConfiguration() {
 	setTargetRpmCurve(2000);
 	engineConfiguration->analogInputDividerCoefficient = 1;
 	engineConfiguration->globalTriggerAngleOffset = 45;
-	engineConfiguration->specs.displacement = 0.072; // 72cc
-	engineConfiguration->specs.cylindersCount = 1;
+	engineConfiguration->displacement = 0.072; // 72cc
+	engineConfiguration->cylindersCount = 1;
 	setCrankOperationMode();
 	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
 	engineConfiguration->skippedWheelOnCam = false;
 
-	engineConfiguration->specs.firingOrder = FO_1;
+	engineConfiguration->firingOrder = FO_1;
 
 	/**
 	 * We treat the trigger as 8-1 toothed wheel

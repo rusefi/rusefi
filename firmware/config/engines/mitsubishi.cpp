@@ -17,12 +17,12 @@ void setMitsubishiConfiguration() {
 
 	engineConfiguration->trigger.type = TT_MITSUBISHI_4G93; // same trigger as 4G63?
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.displacement = 1.800;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->displacement = 1.800;
 
 	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 
 	// set global_trigger_offset_angle 671
 	engineConfiguration->globalTriggerAngleOffset = 671;

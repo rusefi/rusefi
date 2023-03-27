@@ -56,8 +56,8 @@ TEST(ignition, trailingSpark) {
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-	engineConfiguration->specs.cylindersCount = 1;
-	engineConfiguration->specs.firingOrder = FO_1;
+	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->firingOrder = FO_1;
 	engineConfiguration->isInjectionEnabled = false;
 	engineConfiguration->isIgnitionEnabled = true;
 

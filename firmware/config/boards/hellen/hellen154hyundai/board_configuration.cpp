@@ -179,9 +179,9 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-	engineConfiguration->specs.displacement = 1.998;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
+	engineConfiguration->displacement = 1.998;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Theta II");
 	engineConfiguration->globalTriggerAngleOffset = 90;

@@ -26,9 +26,9 @@
 static void common2jz() {
 	setFrankensoConfiguration(); // default pinout
 
-	engineConfiguration->specs.displacement = 3.0;
-	engineConfiguration->specs.cylindersCount = 6;
-	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
+	engineConfiguration->displacement = 3.0;
+	engineConfiguration->cylindersCount = 6;
+	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 

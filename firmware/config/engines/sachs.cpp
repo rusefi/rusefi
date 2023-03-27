@@ -14,11 +14,11 @@
 
 void setSachs() {
 
-	engineConfiguration->specs.displacement = 0.1; // 100cc
-	engineConfiguration->specs.cylindersCount = 1;
+	engineConfiguration->displacement = 0.1; // 100cc
+	engineConfiguration->cylindersCount = 1;
 
 	setTwoStrokeOperationMode();
-	engineConfiguration->specs.firingOrder = FO_1;
+	engineConfiguration->firingOrder = FO_1;
 	engineConfiguration->engineChartSize = 400;
 
 	setEgoSensor(ES_Innovate_MTX_L);
