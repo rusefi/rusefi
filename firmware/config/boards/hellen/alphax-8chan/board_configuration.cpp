@@ -91,7 +91,7 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
+	engineConfiguration->triggerInputPins[0] = H144_USB1ID;
 	engineConfiguration->triggerInputPins[1] = H144_IN_CAM;
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
