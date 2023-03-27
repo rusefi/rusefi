@@ -31,6 +31,9 @@ void setSbc() {
 	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
 	engineConfiguration->specs.displacement = 5.2;
 
+	engineConfiguration->etbFunctions[0] = DC_None;
+	engineConfiguration->etbFunctions[1] = DC_None;
+
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 	strcpy(engineConfiguration->engineCode, "SBC");
 
