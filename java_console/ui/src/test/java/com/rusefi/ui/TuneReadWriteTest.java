@@ -5,11 +5,13 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.MsqFactory;
+import com.rusefi.tools.tune.CurveData;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -20,6 +22,7 @@ import static org.junit.Assert.*;
  */
 public class TuneReadWriteTest {
     private static final String PATH = "src/test/resources/frankenso/";
+    private static final String TUNE_NAME = PATH + "CurrentTune.msq";
     private static final String TEST_INI = PATH + "mainController.ini";
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.rusefi_binary";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
@@ -30,17 +33,24 @@ public class TuneReadWriteTest {
     }
 
     @Test
-    public void testIniReader() {
+    public void testIniReader() throws IOException {
         IniFileModel model = IniFileModel.getInstance();
         assertTrue(model.getTables().contains("fueltable"));
         assertEquals(21, model.getTables().size());
         assertEquals("fuelRpmBins", model.getXBin("FUELTable"));
         assertEquals("fuelLoadBins", model.getYBin("fuelTable"));
+
+        String xBins = model.getXBin("ignitionIatCorrTable");
+
+        CurveData curveData = CurveData.valueOf(TUNE_NAME, xBins, model);
+        assertEquals("static const float hardCodedignitionIatCorrRpmBins[16] = " +
+                "{880.0, 1260.0, 1640.0, 2020.0, 2400.0, 2780.0, 3000.0, 3380.0, 3760.0, 4140.0, 4520.0, 5000.0, 5700.0, 6500.0, 7200.0, 8000.0};\n" +
+                "\n", curveData.getCsourceCode());
     }
 
     @Test
     public void testCompareBinaryToTSTune() throws Exception {
-        Msq tsTune = Msq.readTune(PATH + "CurrentTune.msq");
+        Msq tsTune = Msq.readTune(TUNE_NAME);
         System.out.println(tsTune);
         assertNotNull("signature", tsTune.getVersionInfo().getSignature());
 

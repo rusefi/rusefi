@@ -2,6 +2,7 @@ package com.rusefi.tools.tune;
 
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,9 +10,11 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class CurveData {
+    private final String curveName;
     private final float[] rawData;
 
-    public CurveData(float[] rawData) {
+    public CurveData(String curveName, float[] rawData) {
+        this.curveName = curveName;
         this.rawData = rawData;
 
         int countOfEqualElementsAtTheEnd = 0;
@@ -24,20 +27,23 @@ public class CurveData {
         System.out.println(countOfEqualElementsAtTheEnd + " equal elements at the end of the curve");
     }
 
-    static CurveData processCurve(String msqFileName, String loadSectionName, IniFileModel model, BufferedWriter w) throws IOException {
-        ArrayIniField field = (ArrayIniField) model.allIniFields.get(loadSectionName);
-        int curveSize = field.getRows();
-        BufferedReader r = TS2C.readAndScroll(msqFileName, loadSectionName + "\"");
-        float[] curve = new float[curveSize];
-        readAxle(curve, r);
+    static CurveData processCurve(String msqFileName, String curveName, IniFileModel model, BufferedWriter w) throws IOException {
+        CurveData curveData = valueOf(msqFileName, curveName, model);
 
-        CurveData curveData = new CurveData(curve);
+        w.write(curveData.getCsourceCode());
 
-
-        w.write("static const float hardCoded" + loadSectionName + "[" + curveSize + "] = ");
-        w.write(toString(curve));
-        w.write(";\r\n\r\n");
         return curveData;
+    }
+
+    @NotNull
+    public static CurveData valueOf(String msqFileName, String curveName, IniFileModel model) throws IOException {
+        ArrayIniField field = (ArrayIniField) model.allIniFields.get(curveName);
+        int curveSize = field.getRows();
+        BufferedReader r = TS2C.readAndScroll(msqFileName, curveName + "\"");
+        float[] curveValues = new float[curveSize];
+        readAxle(curveValues, r);
+
+        return new CurveData(curveName, curveValues);
     }
 
     private static String toString(float[] a) {
@@ -67,6 +73,13 @@ public class CurveData {
         }
 
         System.out.println("Got bins " + Arrays.toString(curve));
+    }
+
+    @NotNull
+    public String getCsourceCode() {
+        return "static const float hardCoded" + curveName + "[" + rawData.length + "] = " +
+                    toString(rawData) +
+                    ";\n\n";
     }
 
     public float[] getRawData() {

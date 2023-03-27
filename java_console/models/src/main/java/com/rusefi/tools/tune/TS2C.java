@@ -2,6 +2,7 @@ package com.rusefi.tools.tune;
 
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Arrays;
@@ -46,8 +47,8 @@ public class TS2C {
 
         IniFileModel model = IniFileModel.getInstance();
 
-        String methodName = tableName.equalsIgnoreCase("none") ? loadSectionName : tableName;
-        methodName = methodName.toUpperCase().substring(0, 1) + methodName.substring(1);
+        String entityName = tableName.equalsIgnoreCase("none") ? loadSectionName : tableName;
+        String methodName = getMethodName(entityName);
 
         BufferedWriter w = new BufferedWriter(new FileWriter("generated_" + methodName + ".cpp"));
 
@@ -94,6 +95,11 @@ public class TS2C {
         w.write("}\n");
 
         w.close();
+    }
+
+    @NotNull
+    private static String getMethodName(String methodName) {
+        return methodName.toUpperCase().charAt(0) + methodName.substring(1);
     }
 
     private void writeTable(BufferedWriter w, ValueSource valueSource) throws IOException {
