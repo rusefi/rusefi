@@ -101,10 +101,10 @@ Experimental setting that will cause a misfire\nDO NOT ENABLE.
 On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
 ### tpsMin
-Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel
+Closed throttle, 1 volt = 200 units
 
 ### tpsMax
-Full throttle.\nSee also tps1_1AdcChannel
+Full throttle, 1 volt = 200 units
 
 ### tpsErrorDetectionTooLow
 TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.
@@ -181,10 +181,10 @@ Pull-up resistor value on your board
 ### knockBandCustom
 We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override
 
-### specs.displacement
-Engine volume/capacity, in litres\nsee also cylindersCount
+### displacement
+Engine displacement in litres
 
-### specs.cylindersCount
+### cylindersCount
 Number of cylinder the engine has.
 
 ### cylinderBore
@@ -311,7 +311,7 @@ Number of turns of your vehicle speed sensor per turn of the wheels. For example
 Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.
 
 ### triggerSimulatorFrequency
-Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm
+Same RPM is used for two ways of producing simulated RPM.
 
 ### idle_antiwindupFreq
 0.1 is a good default value
@@ -893,10 +893,10 @@ Output Max Duty Cycle
 RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
 
 ### tps2Min
-Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel
+
 
 ### tps2Max
-Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel
+
 
 ### tachPulsePerRev
 

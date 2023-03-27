@@ -422,38 +422,6 @@ struct injector_s {
 };
 static_assert(sizeof(injector_s) == 36);
 
-struct specs_s {
-	/**
-	 * Engine volume/capacity, in litres
-	 * see also cylindersCount
-	L
-	 * offset 0
-	 */
-	scaled_channel<uint16_t, 1000, 1> displacement;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 2
-	 */
-	uint8_t alignmentFill_at_2[2];
-	/**
-	 * Number of cylinder the engine has.
-	 * offset 4
-	 */
-	uint32_t cylindersCount;
-	/**
-	 * offset 8
-	 */
-	firing_order_e firingOrder;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 9
-	 */
-	uint8_t alignmentFill_at_9[3];
-};
-static_assert(sizeof(specs_s) == 12);
-
 /**
  * @brief Trigger wheel(s) configuration
 
@@ -790,15 +758,13 @@ struct engine_configuration_s {
 	offset 88 bit 31 */
 	bool unusedBit_39_31 : 1 {};
 	/**
-	 * Closed throttle, 1 volt = 200 units.
-	 * See also tps1_1AdcChannel
+	 * Closed throttle, 1 volt = 200 units
 	ADC
 	 * offset 92
 	 */
 	int16_t tpsMin;
 	/**
-	 * Full throttle.
-	 * See also tps1_1AdcChannel
+	 * Full throttle, 1 volt = 200 units
 	ADC
 	 * offset 94
 	 */
@@ -866,9 +832,32 @@ struct engine_configuration_s {
 	 */
 	float knockBandCustom;
 	/**
+	 * Engine displacement in litres
+	L
 	 * offset 328
 	 */
-	specs_s specs;
+	scaled_channel<uint16_t, 1000, 1> displacement;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 330
+	 */
+	uint8_t alignmentFill_at_330[2];
+	/**
+	 * Number of cylinder the engine has.
+	 * offset 332
+	 */
+	uint32_t cylindersCount;
+	/**
+	 * offset 336
+	 */
+	firing_order_e firingOrder;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 337
+	 */
+	uint8_t alignmentFill_at_337[3];
 	/**
 	 * Cylinder diameter in mm.
 	mm
@@ -1168,10 +1157,7 @@ struct engine_configuration_s {
 	 */
 	output_pin_e o2heaterPin;
 	/**
-	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
-	 * See also directSelfStimulation (no wires, bypassing input hardware)
-	 * rpm X
-	 * TODO: rename to triggerSimulatorRpm
+	 * Same RPM is used for two ways of producing simulated RPM.
 	Rpm
 	 * offset 504
 	 */
@@ -1201,10 +1187,7 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e fuelPumpPinMode;
 	/**
-	 * Electronic throttle pedal position input
-	 * Second channel
-	 * See also tps1_1AdcChannel
-	 * See throttlePedalSecondaryUpVoltage and throttlePedalSecondaryWOTVoltage
+	 * Throttle pedal, secondary channel.
 	 * offset 561
 	 */
 	adc_channel_e throttlePedalPositionSecondAdcChannel;
@@ -1390,7 +1373,6 @@ struct engine_configuration_s {
 	float compressionRatio;
 	/**
 	 * Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.
-	 * See also directSelfStimulation which is different.
 	 * offset 636
 	 */
 	Gpio triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
@@ -1487,31 +1469,31 @@ struct engine_configuration_s {
 	bool enableAemXSeries : 1 {};
 	/**
 	offset 644 bit 23 */
-	bool unusedBit_189_23 : 1 {};
+	bool unusedBit_193_23 : 1 {};
 	/**
 	offset 644 bit 24 */
-	bool unusedBit_189_24 : 1 {};
+	bool unusedBit_193_24 : 1 {};
 	/**
 	offset 644 bit 25 */
-	bool unusedBit_189_25 : 1 {};
+	bool unusedBit_193_25 : 1 {};
 	/**
 	offset 644 bit 26 */
-	bool unusedBit_189_26 : 1 {};
+	bool unusedBit_193_26 : 1 {};
 	/**
 	offset 644 bit 27 */
-	bool unusedBit_189_27 : 1 {};
+	bool unusedBit_193_27 : 1 {};
 	/**
 	offset 644 bit 28 */
-	bool unusedBit_189_28 : 1 {};
+	bool unusedBit_193_28 : 1 {};
 	/**
 	offset 644 bit 29 */
-	bool unusedBit_189_29 : 1 {};
+	bool unusedBit_193_29 : 1 {};
 	/**
 	offset 644 bit 30 */
-	bool unusedBit_189_30 : 1 {};
+	bool unusedBit_193_30 : 1 {};
 	/**
 	offset 644 bit 31 */
-	bool unusedBit_189_31 : 1 {};
+	bool unusedBit_193_31 : 1 {};
 	/**
 	 * offset 648
 	 */
@@ -1655,7 +1637,6 @@ struct engine_configuration_s {
 	 */
 	imu_type_e imuType;
 	/**
-	 * See also starterControlPin
 	 * offset 730
 	 */
 	switch_input_pin_e startStopButtonPin;
@@ -1870,13 +1851,13 @@ struct engine_configuration_s {
 	bool verboseCan2 : 1 {};
 	/**
 	offset 808 bit 29 */
-	bool unusedBit_283_29 : 1 {};
+	bool unusedBit_287_29 : 1 {};
 	/**
 	offset 808 bit 30 */
-	bool unusedBit_283_30 : 1 {};
+	bool unusedBit_287_30 : 1 {};
 	/**
 	offset 808 bit 31 */
-	bool unusedBit_283_31 : 1 {};
+	bool unusedBit_287_31 : 1 {};
 	/**
 	 * offset 812
 	 */
@@ -2009,7 +1990,6 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e drv8860_csPinMode;
 	/**
-	 * See also idleRpmPid
 	 * offset 1049
 	 */
 	idle_mode_e idleMode;
@@ -2295,10 +2275,10 @@ struct engine_configuration_s {
 	bool ALSActivateInverted : 1 {};
 	/**
 	offset 1200 bit 30 */
-	bool unusedBit_388_30 : 1 {};
+	bool unusedBit_392_30 : 1 {};
 	/**
 	offset 1200 bit 31 */
-	bool unusedBit_388_31 : 1 {};
+	bool unusedBit_392_31 : 1 {};
 	/**
 	count
 	 * offset 1204
@@ -2389,15 +2369,11 @@ struct engine_configuration_s {
 	 */
 	brain_input_pin_e turboSpeedSensorInputPin;
 	/**
-	 * Closed throttle#2. todo: extract these two fields into a structure
-	 * See also tps2_1AdcChannel
 	ADC
 	 * offset 1304
 	 */
 	int16_t tps2Min;
 	/**
-	 * Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!
-	 * See also tps1_1AdcChannel
 	ADC
 	 * offset 1306
 	 */
@@ -2465,7 +2441,6 @@ struct engine_configuration_s {
 	 */
 	Gpio runningLedPin;
 	/**
-	 * See also EFI_CONSOLE_RX_BRAIN_PIN
 	 * offset 1352
 	 */
 	Gpio binarySerialTxPin;
@@ -2699,88 +2674,88 @@ struct engine_configuration_s {
 	bool injectorFlowAsMassFlow : 1 {};
 	/**
 	offset 1444 bit 4 */
-	bool unusedBit_466_4 : 1 {};
+	bool unusedBit_470_4 : 1 {};
 	/**
 	offset 1444 bit 5 */
-	bool unusedBit_466_5 : 1 {};
+	bool unusedBit_470_5 : 1 {};
 	/**
 	offset 1444 bit 6 */
-	bool unusedBit_466_6 : 1 {};
+	bool unusedBit_470_6 : 1 {};
 	/**
 	offset 1444 bit 7 */
-	bool unusedBit_466_7 : 1 {};
+	bool unusedBit_470_7 : 1 {};
 	/**
 	offset 1444 bit 8 */
-	bool unusedBit_466_8 : 1 {};
+	bool unusedBit_470_8 : 1 {};
 	/**
 	offset 1444 bit 9 */
-	bool unusedBit_466_9 : 1 {};
+	bool unusedBit_470_9 : 1 {};
 	/**
 	offset 1444 bit 10 */
-	bool unusedBit_466_10 : 1 {};
+	bool unusedBit_470_10 : 1 {};
 	/**
 	offset 1444 bit 11 */
-	bool unusedBit_466_11 : 1 {};
+	bool unusedBit_470_11 : 1 {};
 	/**
 	offset 1444 bit 12 */
-	bool unusedBit_466_12 : 1 {};
+	bool unusedBit_470_12 : 1 {};
 	/**
 	offset 1444 bit 13 */
-	bool unusedBit_466_13 : 1 {};
+	bool unusedBit_470_13 : 1 {};
 	/**
 	offset 1444 bit 14 */
-	bool unusedBit_466_14 : 1 {};
+	bool unusedBit_470_14 : 1 {};
 	/**
 	offset 1444 bit 15 */
-	bool unusedBit_466_15 : 1 {};
+	bool unusedBit_470_15 : 1 {};
 	/**
 	offset 1444 bit 16 */
-	bool unusedBit_466_16 : 1 {};
+	bool unusedBit_470_16 : 1 {};
 	/**
 	offset 1444 bit 17 */
-	bool unusedBit_466_17 : 1 {};
+	bool unusedBit_470_17 : 1 {};
 	/**
 	offset 1444 bit 18 */
-	bool unusedBit_466_18 : 1 {};
+	bool unusedBit_470_18 : 1 {};
 	/**
 	offset 1444 bit 19 */
-	bool unusedBit_466_19 : 1 {};
+	bool unusedBit_470_19 : 1 {};
 	/**
 	offset 1444 bit 20 */
-	bool unusedBit_466_20 : 1 {};
+	bool unusedBit_470_20 : 1 {};
 	/**
 	offset 1444 bit 21 */
-	bool unusedBit_466_21 : 1 {};
+	bool unusedBit_470_21 : 1 {};
 	/**
 	offset 1444 bit 22 */
-	bool unusedBit_466_22 : 1 {};
+	bool unusedBit_470_22 : 1 {};
 	/**
 	offset 1444 bit 23 */
-	bool unusedBit_466_23 : 1 {};
+	bool unusedBit_470_23 : 1 {};
 	/**
 	offset 1444 bit 24 */
-	bool unusedBit_466_24 : 1 {};
+	bool unusedBit_470_24 : 1 {};
 	/**
 	offset 1444 bit 25 */
-	bool unusedBit_466_25 : 1 {};
+	bool unusedBit_470_25 : 1 {};
 	/**
 	offset 1444 bit 26 */
-	bool unusedBit_466_26 : 1 {};
+	bool unusedBit_470_26 : 1 {};
 	/**
 	offset 1444 bit 27 */
-	bool unusedBit_466_27 : 1 {};
+	bool unusedBit_470_27 : 1 {};
 	/**
 	offset 1444 bit 28 */
-	bool unusedBit_466_28 : 1 {};
+	bool unusedBit_470_28 : 1 {};
 	/**
 	offset 1444 bit 29 */
-	bool unusedBit_466_29 : 1 {};
+	bool unusedBit_470_29 : 1 {};
 	/**
 	offset 1444 bit 30 */
-	bool unusedBit_466_30 : 1 {};
+	bool unusedBit_470_30 : 1 {};
 	/**
 	offset 1444 bit 31 */
-	bool unusedBit_466_31 : 1 {};
+	bool unusedBit_470_31 : 1 {};
 	/**
 	 * Time between bench test pulses
 	ms
