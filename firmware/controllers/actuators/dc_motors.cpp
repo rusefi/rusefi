@@ -30,7 +30,7 @@
 		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 
 		// Configure the disable pin first - ensure things are in a safe state
-		m_disablePin.initPin("ETB Disable", pinDisable);
+		m_disablePin.initPin(disPinMsg, pinDisable);
 		m_disablePin.setValue(0);
 
 		// Clamp to >100hz
