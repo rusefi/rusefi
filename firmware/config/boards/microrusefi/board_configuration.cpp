@@ -128,8 +128,8 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->iat.adcChannel = MRE_IN_IAT;
 
-	setCommonNTCSensor(&engineConfiguration->auxTempSensor1, 2700);
-	setCommonNTCSensor(&engineConfiguration->auxTempSensor2, 2700);
+	setCommonNTCSensor(&engineConfiguration->auxTempSensor1, MRE_DEFAULT_AT_PULLUP);
+	setCommonNTCSensor(&engineConfiguration->auxTempSensor2, MRE_DEFAULT_AT_PULLUP);
 
 #if HW_CHECK_MODE
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_2;

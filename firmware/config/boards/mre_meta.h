@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define MRE_DEFAULT_AT_PULLUP 2700
+
 #define MRE_INJ_1 Gpio::TLE8888_PIN_1
 #define MRE_INJ_2 Gpio::TLE8888_PIN_2
 #define MRE_INJ_3 Gpio::TLE8888_PIN_3

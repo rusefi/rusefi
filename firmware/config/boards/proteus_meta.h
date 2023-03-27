@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define PROTEUS_DEFAULT_AT_PULLUP 2700
+
 #define PROTEUS_LS_1 Gpio::D7
 // pin 15/black35
 #define PROTEUS_LS_2 Gpio::G9

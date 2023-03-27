@@ -139,8 +139,8 @@ void setBoardConfigOverrides() {
 	setLedPins();
 	setupVbatt();
 
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	engineConfiguration->iat.config.bias_resistor = 2700;
+	engineConfiguration->clt.config.bias_resistor = PROTEUS_DEFAULT_AT_PULLUP;
+	engineConfiguration->iat.config.bias_resistor = PROTEUS_DEFAULT_AT_PULLUP;
 
 	engineConfiguration->canTxPin = Gpio::D1;
 	engineConfiguration->canRxPin = Gpio::D0;
