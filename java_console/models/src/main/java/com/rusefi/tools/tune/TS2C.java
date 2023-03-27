@@ -161,6 +161,17 @@ public class TS2C {
         return sb.toString();
     }
 
+    @NotNull
+    public static String getCopyMethodBody(String tableReference, IniFileModel model, String tableName) {
+        String xRpmBinsName = model.getXBin(tableName);
+        String yLoadBinsName = model.getYBin(tableName);
+
+        String x = "\tcopyArray(" + tableReference + "LoadBins, hardCoded" + xRpmBinsName + ");\n" +
+                "\tcopyArray(" + tableReference + "RpmBins, hardCoded" + yLoadBinsName + ");\n" +
+                "\tcopyTable(" + tableReference + "Table, hardCoded" + tableName + ");\n";
+        return x;
+    }
+
     interface ValueSource {
         float getValue(int loadIndex, int rpmIndex);
     }
