@@ -13,6 +13,8 @@ void setStepperHw() {
 	engineConfiguration->stepperDcInvertedPins = false; // or true?
 
 #if HW_HELLEN
+    engineConfiguration->stepperDcInvertedPins = true; // todo: fix test harness not today
+
     setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
 	// using 8chan pinout for DC1: A26 (OUT_DC1+) and A27 (OUT_DC1-)
 	engineConfiguration->stepperDcIo[0].controlPin = H144_GP4; // DC1_PWM

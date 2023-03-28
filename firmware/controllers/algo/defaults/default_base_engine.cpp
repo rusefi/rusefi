@@ -62,6 +62,7 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->idleStepperReactionTime = 3;
 	engineConfiguration->idleStepperTotalSteps = 200;
+	engineConfiguration->stepperForceParkingEveryRestart = true;
 
 	// Advanced Trigger
 
