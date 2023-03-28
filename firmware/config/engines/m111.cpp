@@ -7,6 +7,7 @@
 
 
 #include "m111.h"
+#include "thermistors.h"
 
 #if HW_PROTEUS
 #include "proteus_meta.h"
@@ -24,7 +25,17 @@ void setM111EngineConfiguration() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MERCEDES);
 	strcpy(engineConfiguration->engineCode, "M111");
 
+    engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->globalTriggerAngleOffset = 109; // please use a timing light?
+
+    setAtSensor(&engineConfiguration->iat, /*temp low*/0, 7400, /*temp mid*/22, 2180, /*temp high*/ 100, 180);
+
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	// GM TMAP is recommended
+	engineConfiguration->map.sensor.lowValue = 20;
+   	engineConfiguration->mapLowValueVoltage = 0.3;
+  	engineConfiguration->map.sensor.highValue = 250;
+   	engineConfiguration->mapHighValueVoltage = 4.65;
 }
 
 void setMreM111EngineConfiguration() {
@@ -34,6 +45,7 @@ void setMreM111EngineConfiguration() {
 void setProteusM111EngineConfiguration() {
     setM111EngineConfiguration();
 #if HW_PROTEUS
-    //engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
+    engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
+    engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
 #endif // HW_PROTEUS
 }
