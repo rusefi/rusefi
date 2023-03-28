@@ -60,6 +60,9 @@ void setDefaultBaseEngine() {
 	// Default this to on - if you want to diagnose, turn it off.
 	engineConfiguration->silentTriggerError = true;
 
+	engineConfiguration->idleStepperReactionTime = 3;
+	engineConfiguration->idleStepperTotalSteps = 200;
+
 	// Advanced Trigger
 
 	// Battery and alternator
