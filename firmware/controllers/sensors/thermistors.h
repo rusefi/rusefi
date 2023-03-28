@@ -15,6 +15,11 @@
 #define convertKelvinToCelcius(tempK) ((tempK) - KELV)
 #define convertCelsiusToKelvin(tempC) ((tempC) + KELV)
 
+void setAtSensor(ThermistorConf *thermistorConf,
+    float tempLow, float rLow,
+    float tempMid, float rMid,
+    float tempHigh, float rHigh);
+
 void setCommonNTCSensor(ThermistorConf *thermistorConf, float pullup);
 void setDodgeSensor(ThermistorConf *thermistorConf, float pullup);
 void set10K_4050K(ThermistorConf *thermistorConf, float pullup);
