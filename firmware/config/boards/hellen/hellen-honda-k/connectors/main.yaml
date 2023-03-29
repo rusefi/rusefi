@@ -56,18 +56,16 @@ pins:
     function: Idle Air Control Valve
 
   - pin: A13
-    ts_name: --- - EGR
-    function: EGR
+    function: EGR nc
   - pin: A14
-    ts_name: --- - O2
-    function: Secondary O2
+    function: Secondary O2 nc
 
 
   - pin: A15
     # H144_IN_TPS
     id: EFI_ADC_4
     class: analog_inputs
-    ts_name: --- - TPS
+    ts_name: ___ TPS
     function: TPS
 
 
@@ -193,7 +191,10 @@ pins:
     function: Radiator Relay Output
 
   - pin: B7
-    ts_name: --- - LOCKOUT SOLENOID
+    # H144_LS_8
+    id: F14
+    class: outputs
+    ts_name: ___ Lockout Solenoid
     function: Lockout Solenoid
   - pin: B8
     # H144_IN_CLT AIN11 PC2
@@ -217,7 +218,7 @@ pins:
 # H144_OUT_IO6
     id: G11
     class: outputs
-    ts_name: B15 - VTS HS
+    ts_name: ___ VTS HS
   # not to be confused with VTC aka VVT
     function: VTS High Side
 
@@ -225,24 +226,34 @@ pins:
     # H144_IN_IAT AIN14 PC3
     id: EFI_ADC_13
     class: analog_inputs
-    ts_name: B17 - IAT
+    ts_name: ___ IAT
     function: IAT
   - pin: B18
-    ts_name: --- - ALTERNATOR CONTROL
+    # H144_OUT_IO9
+    id: G13
+    class: outputs
+    ts_name: ___ Alternator Control
     function: Alternator Control
 
   - pin: B21
-    ts_name: --- - EVAP
+    # H144_OUT_PWM5
+    id: C9
+    class: outputs
+    ts_name: ___ - EVAP
     function: EVAP
+
   - pin: B22
-    ts_name: --- - INTAKE RUNNER
+    # H144_LS_7
+    id: F13
+    class: outputs
+    ts_name: ___ Intake Runner
     function: Intake Runner
 
   - pin: B23
 # H144_OUT_PWM4
     id: C8
     class: outputs
-    ts_name: --- VTC VVT
+    ts_name: ___ VTC VVT
     function: VTC VVT
 
 
@@ -266,13 +277,40 @@ pins:
   - pin: C7
     function: WHITE LSU4.9 Heater Negative
 
+  - pin: C8
+    # EFI_ADC_15
+    id:
+    class: analog_inputs
+    function: Aux Analog 3
+  - pin: C9
+    # H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: Aux Analog 2
+  - pin: C10
+    # EFI_ADC_8
+    id: EFI_ADC_8
+    class: analog_inputs
+    function: Aux Analog 1
+
+
   - pin: C11
+    # H144_OUT_PWM7
+    id: D15
+    class: outputs
+    ts_name: ___ Aux Low 3
     function: Aux Low 3
 
   - pin: C12
+    # H144_OUT_PWM6
+    id: D14
+    class: outputs
     function: Aux Low 2
 
   - pin: C13
+    # H144_OUT_PWM2
+    id: C6
+    class: outputs
     function: Aux Low 1
 
   - pin: C14
@@ -330,13 +368,13 @@ pins:
 
 
   - pin: E14
-    ts_name: --- - TANK PRESSURE
+    ts_name: ___ - TANK PRESSURE
     function: Tank Pressure
   - pin: E15
-    ts_name: --- - LOAD SENSOR
+    ts_name: ___ - LOAD SENSOR
     function: Load Sensor
   - pin: E16
-    ts_name: --- - STEERING PRESSURE SW
+    ts_name: ___ - STEERING PRESSURE SW
     function: Steering Pressure Switch
 
   - pin: E18
@@ -349,11 +387,9 @@ pins:
 
 
   - pin: E20
-    ts_name: --- - EVAP
-    function: EVAP
+    function: EVAP nc
   - pin: E21
-    ts_name: --- - EVAP
-    function: EVAP
+    function: EVAP nc
 
   - pin: E22
     # H144_IN_CAM
@@ -595,10 +631,25 @@ info:
     - pin: C16
       x: 764
       y: 200
+    - pin: C17
+      x: 797
+      y: 200
     - pin: C18
       x: 827
       y: 200
 
+    - pin: C19
+      x: 856
+      y: 200
+    - pin: C20
+      x: 884
+      y: 200
+    - pin: C21
+      x: 944
+      y: 200
+    - pin: C22
+      x: 979
+      y: 200
 
     - pin: E1
       x: 1265
