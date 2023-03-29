@@ -214,8 +214,9 @@ pins:
     function: Alternator Field
 
   - pin: B15
-    ts_name: B15 - VTC HS
-    function: VTC High Side
+    ts_name: B15 - VTS HS
+  # not to be confused with VTC aka VVT
+    function: VTS High Side
 
   - pin: B17
     # H144_IN_IAT AIN14 PC3
@@ -233,6 +234,14 @@ pins:
   - pin: B22
     ts_name: --- - INTAKE RUNNER
     function: Intake Runner
+
+  - pin: B23
+# H144_OUT_PWM4
+    id: C8
+    class: outputs
+    ts_name: --- VTC VVT
+    function: VTC VVT
+
 
   - pin: C2
     function: GREY LSU4.9 +12V from main relay

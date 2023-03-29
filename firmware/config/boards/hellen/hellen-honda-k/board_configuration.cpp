@@ -109,6 +109,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
+    engineConfiguration->vvtPins[0] = H144_OUT_PWM4;
+
 	engineConfiguration->fuelPumpPin = H144_OUT_IO13;
 	engineConfiguration->idle.solenoidPin = H144_LS_6;
 	engineConfiguration->fanPin = H144_OUT_IO12;

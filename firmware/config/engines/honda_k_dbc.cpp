@@ -19,9 +19,9 @@ void setHondaK() {
 	engineConfiguration->trigger.type = TT_HONDA_K_CRANK_12_1;
 	engineConfiguration->globalTriggerAngleOffset = 675;
 
-	// also known as 'CAM sync' just single tooth? and we do not even use it!?
+	// VVT is here just single tooth? and we do not even use it!?
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
-	// VVT is here
+	// also known as 'CAM sync'? i am pretty confused at this point
 	engineConfiguration->vvtMode[1] = VVT_HONDA_K_EXHAUST;
 	engineConfiguration->vvtOffsets[0] = -41;
 	engineConfiguration->vvtOffsets[1] = 171;
