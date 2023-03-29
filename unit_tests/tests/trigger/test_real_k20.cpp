@@ -25,7 +25,7 @@ TEST(realk20, cranking) {
 
 		float vvtE = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/1);
 		if (vvtE != 0) {
-			EXPECT_TRUE(vvtE > -10 && vvtE < 10);
+			EXPECT_TRUE(vvtE > -10 && vvtE < 10) << vvtE;
 		}
 
 	}

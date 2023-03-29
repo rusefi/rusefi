@@ -17,14 +17,15 @@ void setHondaK() {
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->engineSyncCam = SC_Exhaust_First;
 	engineConfiguration->trigger.type = TT_HONDA_K_CRANK_12_1;
-	engineConfiguration->globalTriggerAngleOffset = 663;
+	int magic = 12; // note that offset and VVT are related
+	engineConfiguration->globalTriggerAngleOffset = 675 - magic;
 
 	// VVT is here just single tooth? and we do not even use it!?
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
 	// also known as 'CAM sync'? i am pretty confused at this point
 	engineConfiguration->vvtMode[1] = VVT_HONDA_K_EXHAUST;
 	engineConfiguration->vvtOffsets[0] = -41;
-	engineConfiguration->vvtOffsets[1] = 171;
+	engineConfiguration->vvtOffsets[1] = 171 + magic;
 
 	// set cranking_fuel 15
 	engineConfiguration->cranking.baseFuel = 75;
