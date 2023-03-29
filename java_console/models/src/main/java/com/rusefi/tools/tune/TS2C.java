@@ -60,9 +60,9 @@ public class TS2C {
         }
 
         if (!tableName.equalsIgnoreCase("none")) {
-            StringBuilder sb = getTableCSourceCode2(msqFileName, tableName, model, loadBins, rpmBins);
+            String sb = getTableCSourceCode2(msqFileName, tableName, model, rpmBins, loadBins);
 
-            w.write(sb.toString());
+            w.write(sb);
 
         }
 
@@ -81,22 +81,30 @@ public class TS2C {
         w.close();
     }
 
-    @NotNull
-    public static StringBuilder getTableCSourceCode2(String msqFileName, String tableName, IniFileModel model, CurveData loadBins, CurveData rpmBins) throws IOException {
-        float[][] table = readTable(msqFileName, tableName, model);
+    public static String getTableCSourceCode2(String msqFileName, String tableName, IniFileModel model) throws IOException {
+        String xRpmBinsName = model.getXBin(tableName);
+        String yLoadBinsName = model.getYBin(tableName);
 
-        return getTableCSourceCode(tableName, loadBins, rpmBins, table);
+        CurveData xRpmCurve = CurveData.valueOf(msqFileName, xRpmBinsName, model);
+        CurveData yLoadCurve = CurveData.valueOf(msqFileName, yLoadBinsName, model);
+        return getTableCSourceCode2(msqFileName, tableName, model, xRpmCurve, yLoadCurve);
     }
 
     @NotNull
-    private static StringBuilder getTableCSourceCode(String tableName, CurveData loadBins, CurveData rpmBins, float[][] table) {
+    public static String getTableCSourceCode2(String msqFileName, String tableName, IniFileModel model, CurveData xRpmCurve, CurveData yLoadBins) throws IOException {
+        float[][] table = readTable(msqFileName, tableName, model);
+
+        return getTableCSourceCode(tableName, yLoadBins, xRpmCurve, table);
+    }
+
+    private static String getTableCSourceCode(String tableName, CurveData loadBins, CurveData rpmBins, float[][] table) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("static const float hardCoded" + tableName + "[" + table.length + "][" + table[0].length + "] = {\n");
 
         writeTable(loadBins, rpmBins, sb, (loadIndex, rpmIndex) -> table[loadIndex][rpmIndex]);
         sb.append("};\n\n");
-        return sb;
+        return sb.toString();
     }
 
     @NotNull
