@@ -8,6 +8,7 @@
 
 #include "m111.h"
 #include "thermistors.h"
+#include "defaults.h"
 
 #if HW_PROTEUS
 #include "proteus_meta.h"
