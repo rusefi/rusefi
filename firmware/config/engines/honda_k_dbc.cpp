@@ -17,7 +17,7 @@ void setHondaK() {
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->engineSyncCam = SC_Exhaust_First;
 	engineConfiguration->trigger.type = TT_HONDA_K_CRANK_12_1;
-	engineConfiguration->globalTriggerAngleOffset = 675;
+	engineConfiguration->globalTriggerAngleOffset = 663;
 
 	// VVT is here just single tooth? and we do not even use it!?
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
