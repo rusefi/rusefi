@@ -104,7 +104,8 @@ Usages:
     java: TriggerCentral.java
     folder: controllers/trigger
     withCDefines: true
-    prepend: integration/rusefi_config.txt
+# something special about 'error: "ts_show_vbatt" redefined'' why is trigger.h special?
+#    prepend: integration/rusefi_config.txt
     constexpr: "engine->triggerCentral"
 
   - name: trigger_state
