@@ -1757,8 +1757,8 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = vvtPidDialog,				"VVT outputs and PID", { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
-		subMenu = vvtTable1Tbl,				"VVT intake target", { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
-		subMenu = vvtTable2Tbl,				"VVT exhaust target", { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
+		subMenu = vvtTable1Tbl,				"VVT intake target",  { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ && vvtPins1 != 0 }
+		subMenu = vvtTable2Tbl,				"VVT exhaust target", { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && vvtPins2 != 0 }
 
 		subMenu = std_separator
 		subMenu = auxInputsDialog,			"Lua Analog Inputs"
