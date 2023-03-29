@@ -9,9 +9,11 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::A6: return "E22 Brake";
 		case Gpio::A8: return "B6 Radiator Relay";
 		case Gpio::C13: return "A30 - IGN1";
-		case Gpio::C8: return "--- VTC VVT";
+		case Gpio::C8: return "B23 VTC VVT";
+		case Gpio::C9: return "B21 - EVAP";
 		case Gpio::D10: return "B2 - Injector 4";
 		case Gpio::D11: return "B3 - Injector 3";
+		case Gpio::D15: return "C11 Aux Low 3";
 		case Gpio::D2: return "AuxHigh1";
 		case Gpio::D9: return "E18 - AC Relay";
 		case Gpio::E3: return "A27 - IGN4";
@@ -20,9 +22,12 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F10: return "A26 Cam Sync";
 		case Gpio::F11: return "A18 - VSS";
 		case Gpio::F12: return "A12 Idle Air Control";
+		case Gpio::F13: return "B22 Intake Runner";
+		case Gpio::F14: return "B7 Lockout Solenoid";
 		case Gpio::F8: return "A25 VTT CAM";
 		case Gpio::F9: return "A7 Crankshaft Sensor";
-		case Gpio::G11: return "B15 - VTS HS";
+		case Gpio::G11: return "B15 VTS HS";
+		case Gpio::G13: return "B18 Alternator Control";
 		case Gpio::G14: return "E7 Main Relay Control";
 		case Gpio::G2: return "AuxPP1";
 		case Gpio::G3: return "E31 Check Engine";
