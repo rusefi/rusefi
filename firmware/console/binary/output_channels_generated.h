@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 04:56:32 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Mar 29 00:34:22 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1138,11 +1138,19 @@ struct output_channels_s {
 	/**
 	 * offset 392
 	 */
-	uint32_t triggerVvtFall = (uint32_t)0;
+	uint16_t triggerVvtFall = (uint16_t)0;
+	/**
+	 * offset 394
+	 */
+	uint16_t triggerVvtRise = (uint16_t)0;
 	/**
 	 * offset 396
 	 */
-	uint32_t triggerVvtRise = (uint32_t)0;
+	uint16_t triggerVvt2Fall = (uint16_t)0;
+	/**
+	 * offset 398
+	 */
+	uint16_t triggerVvt2Rise = (uint16_t)0;
 	/**
 	 * offset 400
 	 */
@@ -1328,19 +1336,19 @@ struct output_channels_s {
 	bool vvtChannel1 : 1 {};
 	/**
 	offset 616 bit 27 */
-	bool unusedBit_298_27 : 1 {};
+	bool unusedBit_300_27 : 1 {};
 	/**
 	offset 616 bit 28 */
-	bool unusedBit_298_28 : 1 {};
+	bool unusedBit_300_28 : 1 {};
 	/**
 	offset 616 bit 29 */
-	bool unusedBit_298_29 : 1 {};
+	bool unusedBit_300_29 : 1 {};
 	/**
 	offset 616 bit 30 */
-	bool unusedBit_298_30 : 1 {};
+	bool unusedBit_300_30 : 1 {};
 	/**
 	offset 616 bit 31 */
-	bool unusedBit_298_31 : 1 {};
+	bool unusedBit_300_31 : 1 {};
 	/**
 	 * offset 620
 	 */
@@ -1383,4 +1391,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 780);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Feb 21 04:56:32 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Mar 29 00:34:22 UTC 2023

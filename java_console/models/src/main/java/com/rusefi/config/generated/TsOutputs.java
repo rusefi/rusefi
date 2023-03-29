@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Mar 16 20:21:25 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Mar 29 00:34:22 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -106,6 +106,7 @@ public class TsOutputs {
 	public static final String GAUGE_CATEGORY_BOOST_CONTROL = "Boost Control";
 	public static final String GAUGE_CATEGORY_ETB = "ETB more";
 	public static final String GAUGE_CATEGORY_FUEL_MATH = "Fuel: math";
+	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
 	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
@@ -612,8 +613,10 @@ public class TsOutputs {
 	public static final Field TRIGGERPRIMARYRISE = Field.create("TRIGGERPRIMARYRISE", 380, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGERSECONDARYFALL = Field.create("TRIGGERSECONDARYFALL", 384, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGERSECONDARYRISE = Field.create("TRIGGERSECONDARYRISE", 388, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field TRIGGERVVTFALL = Field.create("TRIGGERVVTFALL", 392, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field TRIGGERVVTRISE = Field.create("TRIGGERVVTRISE", 396, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field TRIGGERVVTFALL = Field.create("TRIGGERVVTFALL", 392, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field TRIGGERVVTRISE = Field.create("TRIGGERVVTRISE", 394, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field TRIGGERVVT2FALL = Field.create("TRIGGERVVT2FALL", 396, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field TRIGGERVVT2RISE = Field.create("TRIGGERVVT2RISE", 398, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field STARTERSTATE = Field.create("STARTERSTATE", 400, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field STARTERRELAYDISABLE = Field.create("STARTERRELAYDISABLE", 401, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MULTISPARKCOUNTER = Field.create("MULTISPARKCOUNTER", 402, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -1093,6 +1096,8 @@ public class TsOutputs {
 	TRIGGERSECONDARYRISE,
 	TRIGGERVVTFALL,
 	TRIGGERVVTRISE,
+	TRIGGERVVT2FALL,
+	TRIGGERVVT2RISE,
 	STARTERSTATE,
 	STARTERRELAYDISABLE,
 	MULTISPARKCOUNTER,
