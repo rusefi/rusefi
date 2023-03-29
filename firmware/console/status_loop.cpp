@@ -787,6 +787,8 @@ DcHardware *getdcHardware();
 
 	tsOutputChannels->triggerVvtRise = engine->triggerCentral.vvtEventRiseCounter[0];
 	tsOutputChannels->triggerVvtFall = engine->triggerCentral.vvtEventFallCounter[0];
+	tsOutputChannels->triggerVvt2Fall = engine->triggerCentral.vvtEventRiseCounter[1];
+	tsOutputChannels->triggerVvt2Rise = engine->triggerCentral.vvtEventFallCounter[1];
 #endif // EFI_SHAFT_POSITION_INPUT
 
 #if HAL_USE_PAL && EFI_PROD_CODE
