@@ -111,6 +111,9 @@ void setBoardDefaultConfiguration() {
 
     engineConfiguration->vvtPins[0] = H144_OUT_PWM4;
 
+    gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
+    // vtsControl->pin = H144_OUT_IO6;
+
 	engineConfiguration->fuelPumpPin = H144_OUT_IO13;
 	engineConfiguration->idle.solenoidPin = H144_LS_6;
 	engineConfiguration->fanPin = H144_OUT_IO12;

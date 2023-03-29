@@ -214,6 +214,9 @@ pins:
     function: Alternator Field
 
   - pin: B15
+# H144_OUT_IO6
+    id: G11
+    class: outputs
     ts_name: B15 - VTS HS
   # not to be confused with VTC aka VVT
     function: VTS High Side
