@@ -196,9 +196,8 @@ void setProteusVwPassatB6() {
 	engineConfiguration->vvtPins[0] = PROTEUS_LS_9;
 	engineConfiguration->hpfpValvePin = PROTEUS_LS_15;
 
-
 	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
-	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_9, PROTEUS_IN_PPS2);
+	setPPSInputs(PROTEUS_IN_PPS, PROTEUS_IN_PPS2);
 
     #include "vw_b6.lua"
 
