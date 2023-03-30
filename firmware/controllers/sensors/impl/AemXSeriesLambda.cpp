@@ -16,7 +16,9 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 		MS2NT(21)	// sensor transmits at 100hz, allow a frame to be missed
 	)
 	, m_sensorIndex(sensorIndex)
-{}
+{
+    faultCode = 1;// silent, initial state is "no one has spoken to us so far"
+}
 
 bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 	if (frame.DLC != 8) {
