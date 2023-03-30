@@ -24,6 +24,9 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F12: return "A12 Idle Air Control";
 		case Gpio::F13: return "B22 Intake Runner";
 		case Gpio::F14: return "B7 Lockout Solenoid";
+		case Gpio::F3: return "C21 Aux Digital 1";
+		case Gpio::F4: return "C19 Aux Digital 2";
+		case Gpio::F5: return "C18 Aux Digital 3";
 		case Gpio::F8: return "A25 VTT CAM";
 		case Gpio::F9: return "A7 Crankshaft Sensor";
 		case Gpio::G11: return "B15 VTS HS";
