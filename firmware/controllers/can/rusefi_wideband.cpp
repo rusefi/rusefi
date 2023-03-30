@@ -1,5 +1,8 @@
 #include "pch.h"
 
+// do we use some sort of a custom bootloader protocol in rusEFI WBO?
+// todo: should we move to any widely used protocol like OpenBLT or else?
+
 #if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
 
 #include "ch.h"
