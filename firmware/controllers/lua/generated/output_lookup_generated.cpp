@@ -193,6 +193,9 @@ float getOutputValueByName(const char *name) {
 // ignitionAdvance
 		case -802608648:
 			return engine->outputChannels.ignitionAdvance;
+// globalFrequencyInputCounter
+		case -83594920:
+			return engine->outputChannels.globalFrequencyInputCounter;
 // coilDutyCycle
 		case 1029096098:
 			return engine->outputChannels.coilDutyCycle;

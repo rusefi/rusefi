@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Mar 30 14:02:47 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Mar 30 14:47:04 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -471,7 +471,7 @@ public class TsOutputs {
 	public static final Field CANREADCOUNTER = Field.create("CANREADCOUNTER", 72, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFUEL = Field.create("TPSACCELFUEL", 74, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
 	public static final Field IGNITIONADVANCE = Field.create("IGNITIONADVANCE", 76, FieldType.INT16).setScale(0.02).setBaseOffset(0);
-	public static final Field UNUSEDDWELLWASHERE = Field.create("UNUSEDDWELLWASHERE", 78, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field GLOBALFREQUENCYINPUTCOUNTER = Field.create("GLOBALFREQUENCYINPUTCOUNTER", 78, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field COILDUTYCYCLE = Field.create("COILDUTYCYCLE", 80, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field IDLEAIRVALVEPOSITION = Field.create("IDLEAIRVALVEPOSITION", 82, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field ETBTARGET = Field.create("ETBTARGET", 84, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -952,7 +952,7 @@ public class TsOutputs {
 	CANREADCOUNTER,
 	TPSACCELFUEL,
 	IGNITIONADVANCE,
-	UNUSEDDWELLWASHERE,
+	GLOBALFREQUENCYINPUTCOUNTER,
 	COILDUTYCYCLE,
 	IDLEAIRVALVEPOSITION,
 	ETBTARGET,
