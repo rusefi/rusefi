@@ -11,8 +11,8 @@ static VehicleSpeedConverter vehicleSpeedConverter;
 void initVehicleSpeedSensor() {
 	int parameter = engineConfiguration->vssFilterReciprocal;
 
-	if (parameter < 3 || parameter > 200) {
-		parameter = 3;
+	if (parameter < VSS_FILTER_MIN || parameter > VSS_FILTER_MAX) {
+		parameter = VSS_FILTER_MIN;
 	}
 
 	float filterParameter = 1.0f / parameter;

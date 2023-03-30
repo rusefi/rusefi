@@ -28,6 +28,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->compressionRatio = 9;
+	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
 
 	engineConfiguration->turbochargerFilter = 0.01f;
 
