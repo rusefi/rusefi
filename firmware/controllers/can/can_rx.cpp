@@ -13,6 +13,9 @@
 #include "rusefi_lua.h"
 #include "can_bench_test.h"
 
+// todo: consume from fresh wideband_can.h https://github.com/rusefi/rusefi/issues/5208
+#define WB_ACK 0x727573
+
 typedef float SCRIPT_TABLE_8x8_f32t_linear[SCRIPT_TABLE_8 * SCRIPT_TABLE_8];
 
 bool acceptCanRx(int /*sid*/) {
@@ -225,7 +228,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 	// Bootloader acks with address 0x727573 aka ascii "rus"
-	if (CAN_EID(frame) == 0x727573) {
+	if (CAN_EID(frame) == WB_ACK) {
 		handleWidebandBootloaderAck();
 	}
 #endif

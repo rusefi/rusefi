@@ -2,9 +2,12 @@
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "AemXSeriesLambda.h"
+#include "wideband_firmware/for_rusefi/wideband_can.h"
 
 static constexpr uint32_t aem_base    = 0x180;
-static constexpr uint32_t rusefi_base = 0x190;
+// todo: consume WB_DATA_BASE_ADDR from fresh wideband_can.h https://github.com/rusefi/rusefi/issues/5208
+#define WB_DATA_BASE_ADDR 0x190
+static constexpr uint32_t rusefi_base = WB_DATA_BASE_ADDR;
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
@@ -74,8 +77,6 @@ void AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 
 	setValidValue(lambdaFloat, nowNt);
 }
-
-#include "wideband_firmware/for_rusefi/wideband_can.h"
 
 void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt) {
 	auto data = reinterpret_cast<const wbo::StandardData*>(&frame.data8[0]);
