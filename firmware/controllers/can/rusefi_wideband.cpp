@@ -8,6 +8,7 @@
 #include "ch.h"
 #include "can_msg_tx.h"
 #include "rusefi_wideband.h"
+#include "wideband_firmware/for_rusefi/wideband_can.h"
 
 // This file contains an array called build_wideband_noboot_bin
 // This array contains the firmware image for the wideband contoller
@@ -118,7 +119,7 @@ void setWidebandOffset(uint8_t index) {
 	efiPrintf("Setting all connected widebands to index %d...", index);
 
 	{
-		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF4'0000, 1, getWidebandBus(), true);
+		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 1, getWidebandBus(), true);
 		m[0] = index;
 	}
 
@@ -129,8 +130,9 @@ void setWidebandOffset(uint8_t index) {
 	waitingBootloaderThread = nullptr;
 }
 
+// huh? this code here should not be hidden under 'EFI_WIDEBAND_FIRMWARE_UPDATE' condition?!
 void sendWidebandInfo() {
-	CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF5'0000, 2, getWidebandBus(), true);
+	CanTxMessage m(CanCategory::WBO_SERVICE, WB_MGS_ECU_STATUS, 2, getWidebandBus(), true);
 
 	float vbatt = Sensor::getOrZero(SensorType::BatteryVoltage) * 10;
 
