@@ -358,6 +358,17 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
+	// this could be just an 'if' but let's have it expandable for future use :)
+	switch(engineConfiguration->vvtMode[camIndex]) {
+	case VVT_HONDA_K_INTAKE:
+		// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
+		vvtPosition = wrapVvt(vvtPosition, 180);
+		break;
+	default:
+		// else, do nothing
+		break;
+	}
+
 	// Only do engine sync using one cam, other cams just provide VVT position.
 	if (index == engineConfiguration->engineSyncCam) {
 		angle_t crankOffset = adjustCrankPhase(camIndex);
@@ -365,17 +376,6 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		// shall adjust vvt position as well
 		vvtPosition -= crankOffset;
 		vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
-
-		// this could be just an 'if' but let's have it expandable for future use :)
-		switch(engineConfiguration->vvtMode[camIndex]) {
-		case VVT_HONDA_K_INTAKE:
-			// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
-			vvtPosition = wrapVvt(vvtPosition, 180);
-			break;
-		default:
-			// else, do nothing
-			break;
-		}
 
 		if (absF(angleFromPrimarySyncPoint) < 7) {
 			/**

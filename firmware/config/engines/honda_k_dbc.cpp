@@ -24,7 +24,7 @@ void setHondaK() {
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
 	// also known as 'CAM sync'? i am pretty confused at this point
 	engineConfiguration->vvtMode[1] = VVT_HONDA_K_EXHAUST;
-	engineConfiguration->vvtOffsets[0] = -41;
+	engineConfiguration->vvtOffsets[0] = -21;
 	engineConfiguration->vvtOffsets[1] = 171 + magic;
 
 	// set cranking_fuel 15
