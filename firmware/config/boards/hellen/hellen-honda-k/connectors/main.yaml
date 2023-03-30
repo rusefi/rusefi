@@ -319,10 +319,31 @@ pins:
   - pin: C15
     function: CAN High
 
+  - pin: C18
+    # H144_IN_SENS3
+    id: [F5, F5]
+    class: [event_inputs, switch_inputs]
+    function: Aux Digital 3
+    ts_name: ___ Aux Digital 3
+
+  - pin: C19
+    # H144_IN_SENS2
+    id: [F4, F4]
+    class: [event_inputs, switch_inputs]
+    function: Aux Digital 2
+    ts_name: ___ Aux Digital 2
+
   - pin: C20
     function: Aux GND
     type: gnda
     color: black
+
+  - pin: C21
+    # H144_IN_SENS1
+    id: [F3, F3]
+    class: [event_inputs, switch_inputs]
+    function: Aux Digital 1
+    ts_name: ___ Aux Digital 1
 
   - pin: C22
     function: 5V Sensor Power
@@ -405,7 +426,7 @@ pins:
     function: SEFMJ K-Line
 
   - pin: E26
-    # LOW12 IO10
+    # PP2 IO10
     id: I0
     class: outputs
     ts_name: E26 Tachometer
