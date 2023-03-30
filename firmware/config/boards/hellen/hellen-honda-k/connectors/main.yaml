@@ -427,7 +427,7 @@ pins:
 
   - pin: E26
     # PP2 IO10
-    id: I0
+    id: G12
     class: outputs
     ts_name: E26 Tachometer
     function: Tachometer
