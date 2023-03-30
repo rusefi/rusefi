@@ -26,8 +26,10 @@ void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter, f
 
 	m_filter.configureLowpass(1, filterParameter);
 
+#if ! EFI_UNIT_TEST
     // a global counter is so much better than nothing right? at least some way to validate VSS input
     engine->outputChannels.globalFrequencyInputCounter++;
+#endif
 
 	setFunction(converter);
 
