@@ -26,7 +26,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.crankingFuelMs, "crankingFuelMs", "ms", 2},
 	{engine->outputChannels.baseFuel, "fuel: base mass", "mg", 3},
 	{engine->outputChannels.fuelRunning, "fuel: running", "mg", 3},
-	{engine->outputChannels.actualLastInjection, "fuel: Last injection", "ms", 3},
+	{engine->outputChannels.actualLastInjection, "fuel: Last Inj Pulsewidth", "ms", 3},
 	{engine->outputChannels.injectorDutyCycle, "fuel: injector duty cycle", "%", 0},
 	{engine->outputChannels.veValue, "fuel: VE", "ratio", 1},
 	{engine->outputChannels.injectionOffset, "injectionOffset", "deg", 0},

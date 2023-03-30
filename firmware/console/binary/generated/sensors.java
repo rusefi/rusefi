@@ -24,7 +24,7 @@ chargeAirMass("air mass", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 44, 0.0
 crankingFuelMs("crankingFuelMs\nairmass in mg, 0-65 grams", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 46, 0.01, 0.0, 0.0, "ms"),
 baseFuel("fuel: base mass"\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 48, 0.01, 0.0, 0.0, "mg"),
 fuelRunning("fuel: running"\nTotal fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 50, 0.01, 0.0, 0.0, "mg"),
-actualLastInjection("fuel: Last injection"\nActual last injection time - including all compensation and injection mode, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 52, 0.0033333333333333335, 0.0, 0.0, "ms"),
+actualLastInjection("fuel: Last Inj Pulsewidth"\nActual last injection time - including all compensation and injection mode, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 52, 0.0033333333333333335, 0.0, 0.0, "ms"),
 injectorDutyCycle("fuel: injector duty cycle", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 54, 0.5, 0.0, 0.0, "%"),
 veValue("fuel: VE", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 55, 0.5, 0.0, 0.0, "ratio"),
 injectionOffset("injectionOffset", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 56, 1.0, 0.0, 0.0, "deg"),
