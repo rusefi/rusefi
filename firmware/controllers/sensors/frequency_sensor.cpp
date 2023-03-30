@@ -26,6 +26,9 @@ void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter, f
 
 	m_filter.configureLowpass(1, filterParameter);
 
+    // a global counter is so much better than nothing right? at least some way to validate VSS input
+    engine->outputChannels.globalFrequencyInputCounter++;
+
 	setFunction(converter);
 
 	m_pin = pin;
