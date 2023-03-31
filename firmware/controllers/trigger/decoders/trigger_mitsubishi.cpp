@@ -74,6 +74,11 @@ void initializeMitsubishi4G93(TriggerWaveform *s) {
     addMitsu93(s, /*addSecondary*/true);
 }
 
+void initializeMitsubishi4gSymmetricalCrank(TriggerWaveform *s) {
+		initializeSkippedToothTrigger(s, 2,
+				0, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
+}
+
 void initializeMitsubishi75(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 
