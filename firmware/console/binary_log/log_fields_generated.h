@@ -152,7 +152,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.sparkCutReason, "Spark Cut Code", "code", 0},
 	{engine->outputChannels.fuelCutReason, "Fuel Cut Code", "code", 0},
 	{engine->outputChannels.mafEstimate, "MAF estimate", "kg/h", 0},
-	{engine->outputChannels.instantRpm, "instantRpm", "rpm", 0},
+	{engine->outputChannels.instantRpm, "sync: instant RPM", "rpm", 0},
 	{engine->outputChannels.systemEventReuse, "systemEventReuse", "counter", 0},
 	{engine->outputChannels.rawMap, "rawMap", "V", 3},
 	{engine->outputChannels.rawAfr, "rawAfr", "V", 3},
