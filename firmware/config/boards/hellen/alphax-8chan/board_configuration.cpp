@@ -196,6 +196,8 @@ void setBoardDefaultConfiguration() {
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
 	engineConfiguration->vrThreshold[1].pin = H144_OUT_PWM4;
+
+	hellenWbo();
 }
 
 void boardPrepareForStop() {
