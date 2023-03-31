@@ -18,15 +18,11 @@ TEST(real4g93, cranking) {
 
 	engineConfiguration->vvtMode[0] = VVT_MITSUBISHI_4G63;
 
-	engineConfiguration->trigger.customTotalToothCount = 2;
-	engineConfiguration->trigger.customSkippedToothCount = 0;
-	engineConfiguration->skippedWheelOnCam = false;
-	eth.setTriggerType(TT_TOOTHED_WHEEL);
+	eth.setTriggerType(TT_MITSU_4G63_CRANK);
 
 	bool gotRpm = false;
 	bool gotSync = false;
 
-	
 	static const float gapRatios[2][4] = {
 		{ 0, NAN, INFINITY, 0.89f }, // no sync
 		{ 0.4f, 3.788f, 0.62f, 1.02f }
