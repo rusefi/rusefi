@@ -5284,3 +5284,72 @@ event 8 0 0 445.00 0.477778
 event 9 1 0 479.00 nan
 event 10 1 1 593.00 nan
 event 11 1 0 659.00 nan
+TRIGGERTYPE 76 12 TT_MITSU_4G63_CRANK 0.00
+knownOperationMode=true
+crankBased=false
+hasSecondChannel=true
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=1
+isSynchronizationNeeded=1
+gapFrom.0=2.400000
+gapTo.0=4.000000
+# end of meta section
+event 0 0 1 0.00 3.197675
+event 1 1 1 53.00 nan
+event 2 1 0 119.00 nan
+event 3 0 0 179.00 0.650915
+event 4 1 1 233.00 nan
+event 5 1 0 299.00 nan
+event 6 0 1 359.00 1.005581
+event 7 1 1 413.00 nan
+event 8 0 0 445.00 0.477778
+event 9 1 0 479.00 nan
+event 10 1 1 593.00 nan
+event 11 1 0 659.00 nan
+TRIGGERTYPE 77 12 TT_UNUSED_77 0.00
+knownOperationMode=true
+crankBased=false
+hasSecondChannel=true
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=1
+isSynchronizationNeeded=1
+gapFrom.0=2.400000
+gapTo.0=4.000000
+# end of meta section
+event 0 0 1 0.00 3.197675
+event 1 1 1 53.00 nan
+event 2 1 0 119.00 nan
+event 3 0 0 179.00 0.650915
+event 4 1 1 233.00 nan
+event 5 1 0 299.00 nan
+event 6 0 1 359.00 1.005581
+event 7 1 1 413.00 nan
+event 8 0 0 445.00 0.477778
+event 9 1 0 479.00 nan
+event 10 1 1 593.00 nan
+event 11 1 0 659.00 nan
+TRIGGERTYPE 78 12 TT_UNUSED_78 0.00
+knownOperationMode=true
+crankBased=false
+hasSecondChannel=true
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=1
+isSynchronizationNeeded=1
+gapFrom.0=2.400000
+gapTo.0=4.000000
+# end of meta section
+event 0 0 1 0.00 3.197675
+event 1 1 1 53.00 nan
+event 2 1 0 119.00 nan
+event 3 0 0 179.00 0.650915
+event 4 1 1 233.00 nan
+event 5 1 0 299.00 nan
+event 6 0 1 359.00 1.005581
+event 7 1 1 413.00 nan
+event 8 0 0 445.00 0.477778
+event 9 1 0 479.00 nan
+event 10 1 1 593.00 nan
+event 11 1 0 659.00 nan
