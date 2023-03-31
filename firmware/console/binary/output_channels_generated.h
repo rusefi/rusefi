@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 31 02:45:21 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 31 14:05:10 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -365,7 +365,7 @@ struct output_channels_s {
 	/**
 	 * offset 78
 	 */
-	uint16_t globalFrequencyInputCounter = (uint16_t)0;
+	uint16_t unusedDwellWasHere = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_DWELL_DUTY@@
 	%
@@ -1392,4 +1392,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 780);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 31 02:45:21 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 31 14:05:10 UTC 2023
