@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Mar 26 16:47:50 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Mar 31 02:54:05 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -442,6 +442,8 @@ case TT_MITSUBISHI_MESS:
   return "TT_MITSUBISHI_MESS";
 case TT_MITSU_4G63_CAM:
   return "TT_MITSU_4G63_CAM";
+case TT_MITSU_4G63_CRANK:
+  return "TT_MITSU_4G63_CRANK";
 case TT_MITSU_4G9x_CAM:
   return "TT_MITSU_4G9x_CAM";
 case TT_MITSU_75:
@@ -498,6 +500,10 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
+case TT_UNUSED_77:
+  return "TT_UNUSED_77";
+case TT_UNUSED_78:
+  return "TT_UNUSED_78";
 case TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case TT_VVT_BOSCH_QUICK_START:
