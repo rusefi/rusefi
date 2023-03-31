@@ -423,6 +423,9 @@ typedef enum {
 	// GM 24x with 3/12 degree gaps
 	TT_GM_24x_2 = 74,
 	TT_MITSU_75 = 75,
+	TT_MITSU_4G63_CRANK = 76,
+	TT_UNUSED_77 = 77,
+	TT_UNUSED_78 = 78,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
@@ -430,7 +433,7 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 76, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 79, // this is used if we want to iterate over all trigger types
 
     // java code generator handles this value in a special way
     // also looks like 2 enums are either 1 byte or 4 bytes

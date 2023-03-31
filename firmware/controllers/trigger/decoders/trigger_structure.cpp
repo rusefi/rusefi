@@ -627,6 +627,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    configureBenelli(this);
         break;
 
+	case TT_MITSU_4G63_CRANK:
+	case TT_UNUSED_77:
+	case TT_UNUSED_78:
 	case TT_MITSU_75:
 	    initializeMitsubishi75(this);
 		break;
