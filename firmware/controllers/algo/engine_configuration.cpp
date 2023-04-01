@@ -942,8 +942,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setFrankensoMazdaMiataNA8Configuration();
 		break;
 	case MITSU_4G93:
-		setMitsubishiConfiguration();
-		break;
 	case FORD_INLINE_6_1995:
 		setFordInline6();
 		break;

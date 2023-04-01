@@ -78,7 +78,7 @@ TEST(real4g93, crankingOn11) {
 
 	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 
-	eth.setTriggerType(TT_MITSUBISHI_4G93);
+	eth.setTriggerType(TT_MAZDA_MIATA_NA);
 
 	bool gotRpm = false;
 	while (reader.haveMore()) {
