@@ -307,12 +307,6 @@ custom pin_output_mode_e 1 bits, U08, @OFFSET@, [0:1], @@pin_output_mode_e_enum@
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
 custom pin_input_mode_e 1 bits, U08,	@OFFSET@,	[0:1], @@pin_input_mode_e_enum@@
 
-struct spi_pins
-	Gpio mosiPin;
-	Gpio misoPin;
-	Gpio sckPin;
-end_struct
-
 #define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2", "RPM", "Gear (detected)"
 custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:4], @@gppwm_channel_e_enum@@
 
@@ -793,7 +787,6 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	script_setting_t[SCRIPT_SETTING_COUNT iterate] scriptSetting;
 
-! todo: migrate to spi_pins & combine with spi pin modes
 	Gpio spi1mosiPin;
 	Gpio spi1misoPin;
 	Gpio spi1sckPin;
