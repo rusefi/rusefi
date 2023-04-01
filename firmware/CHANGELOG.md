@@ -39,6 +39,7 @@ Release template (copy/paste this for new release):
  - Lua memory leak detection and prevention
  - Support gauge fuel pressure sensors
  - Better idle VE table transition
+ - Detected gear available as gppwm channel
 
 ## April 2023 Release - "Day 419"
 
