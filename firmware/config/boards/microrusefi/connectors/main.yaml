@@ -223,6 +223,7 @@ pins:
     id: [C5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     color: pink
+    function: Throttle Pedal Position Sensor 2 (PPS2)
     ts_name: 30 - AN volt 7
     type: av
 

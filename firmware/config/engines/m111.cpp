@@ -14,6 +14,8 @@
 #include "proteus_meta.h"
 #endif // HW_PROTEUS
 
+#include "mre_meta.h"
+
 void setM111EngineConfiguration() {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -41,6 +43,8 @@ void setM111EngineConfiguration() {
 
 void setMreM111EngineConfiguration() {
     setM111EngineConfiguration();
+
+    setPPSInputs(MRE_IN_PPS, MRE_IN_PPS2);
 }
 
 void setProteusM111EngineConfiguration() {
