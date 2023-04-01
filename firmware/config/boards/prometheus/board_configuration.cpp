@@ -165,11 +165,9 @@ void setBoardDefaultConfiguration() {
 	
 	// debug pad
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::D8;
-	engineConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
 
 	// not used
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;
 
 	engineConfiguration->is_enabled_spi_2 = false;

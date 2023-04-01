@@ -98,9 +98,6 @@ static void commonMiataNa() {
 
 	engineConfiguration->cranking.baseFuel = 24;
 
-	engineConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
-	engineConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
-
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 }

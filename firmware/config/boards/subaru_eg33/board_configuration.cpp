@@ -216,8 +216,6 @@ void setBoardDefaultConfiguration() {
 	/* not used pins with testpads */
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::H2;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::H3;
-	engineConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
-	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 
 	if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)
 		setAlgorithm(LM_SPEED_DENSITY);
