@@ -430,7 +430,6 @@ bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that
 bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
 
-!todo: extract these two fields into a structure
 int16_t tpsMin;Closed throttle, 1 volt = 200 units;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle, 1 volt = 200 units;"ADC", 1, 0, 0, 1023, 0
 
@@ -442,7 +441,7 @@ cranking_parameters_s cranking
 	uint16_t etbRevLimitStart;Once engine speed passes this value, start reducing ETB angle.;"rpm", 1, 0, 0, 15000, 0
 	uint16_t etbRevLimitRange;This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.;"rpm", 1, 0, 0, 2000, 0
 
-MAP_sensor_config_s map;@see isMapAveragingEnabled
+MAP_sensor_config_s map
 
 
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
@@ -569,7 +568,7 @@ afr_sensor_s afr
 switch_input_pin_e throttlePedalUpPin;Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
 
 
-air_pressure_sensor_config_s baroSensor;@see hasBaroSensor	
+air_pressure_sensor_config_s baroSensor
 
 struct idle_hardware_s
 	int solenoidFrequency;;"Hz", 1, 0, 0, 3000, 0
@@ -1037,7 +1036,7 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	brain_input_pin_e turboSpeedSensorInputPin;
 int16_t tps2Min;;"ADC", 1, 0, 0, 1023, 0
 int16_t tps2Max;;"ADC", 1, 0, 0, 1023, 0
-	output_pin_e starterControlPin;See also startStopButtonPin
+	output_pin_e starterControlPin
 	pin_input_mode_e startStopButtonMode;
 	uint8_t tachPulsePerRev;;"Pulse", 1, 0, 1, 255, 0
 
@@ -1046,7 +1045,7 @@ int16_t tps2Max;;"ADC", 1, 0, 0, 1023, 0
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa", 1, 0, -100, 800, 2
 	uint16_t autoscale multisparkSparkDuration;How long to wait for the spark to fire before recharging the coil for another spark.;"ms", 0.001, 0, 0, 3, 2
 	uint16_t autoscale multisparkDwell;This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.;"ms", 0.001, 0, 0, 3, 2
-	pid_s idleRpmPid;See cltIdleRpmBins
+	pid_s idleRpmPid
 	float wwaeBeta;0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction", 1, 0, 0, 1, 2
 	
 	Gpio communicationLedPin;blue LED on many rusEFI boards.\nBlue Communication LED which is expected to blink at 50% duty cycle during normal board operation.\nIf USB communication cable is connected Blue LED starts to blink faster.
@@ -1290,7 +1289,7 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 	int16_t etb_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 	int16_t etb_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
 
-	pid_s idleTimingPid;See useIdleTimingPidControl
+	pid_s idleTimingPid
 
 	int16_t etbRocExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
 
