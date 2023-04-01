@@ -125,15 +125,6 @@ static void setDebugMode(int value) {
 	engineConfiguration->debugMode = (debug_mode_e) value;
 }
 
-static void setFanSetting(float onTempC, float offTempC) {
-	if (onTempC <= offTempC) {
-		efiPrintf("ON temp [%.2f] should be above OFF temp [%.2f]", onTempC, offTempC);
-		return;
-	}
-	engineConfiguration->fanOnTemperature = onTempC;
-	engineConfiguration->fanOffTemperature = offTempC;
-}
-
 static void setWholeTimingMap(float value) {
 	setTable(config->ignitionTable, value);
 }
@@ -159,10 +150,6 @@ static void setWholeVeCmd(float value) {
 }
 
 #if EFI_PROD_CODE
-
-static void setEgtSpi(int spi) {
-	engineConfiguration->max31855spiDevice = (spi_device_e) spi;
-}
 
 static brain_pin_e parseBrainPinWithErrorMessage(const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
@@ -310,19 +297,6 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	}
 	efiPrintf("setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->triggerInputPins[index] = pin;
-	incrementGlobalConfigurationVersion();
-}
-
-static void setEgtCSPin(const char *indexStr, const char *pinName) {
-	int index = atoi(indexStr);
-	if (index < 0 || index >= EGT_CHANNEL_COUNT)
-		return;
-	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == Gpio::Invalid) {
-		return;
-	}
-	efiPrintf("setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
-	engineConfiguration->max31855_cs[index] = pin;
 	incrementGlobalConfigurationVersion();
 }
 
@@ -670,8 +644,6 @@ void initSettings(void) {
 	addConsoleActionS(CMD_ENABLE, enable);
 	addConsoleActionS(CMD_DISABLE, disable);
 
-	addConsoleActionFF("set_fan", setFanSetting);
-
 	addConsoleActionSS("set", setValue);
 	addConsoleActionS("get", getValue);
 
@@ -682,8 +654,6 @@ void initSettings(void) {
 	addConsoleActionSS(CMD_TRIGGER_PIN, setTriggerInputPin);
 	addConsoleActionSS(CMD_TRIGGER_SIMULATOR_PIN, setTriggerSimulatorPin);
 
-	addConsoleActionSS("set_egt_cs_pin", (VoidCharPtrCharPtr) setEgtCSPin);
-	addConsoleActionI("set_egt_spi", setEgtSpi);
 	addConsoleActionI(CMD_ECU_UNLOCK, unlockEcu);
 
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
