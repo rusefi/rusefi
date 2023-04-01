@@ -437,22 +437,6 @@ static void setStarterRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
 }
 
-static void setCanRxPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->canRxPin, "CAN RX");
-}
-
-static void setCanTxPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->canTxPin, "CAN TX");
-}
-
-static void setAuxRxpin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->auxSerialRxPin, "AUX RX");
-}
-
-static void setAuxTxpin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->auxSerialTxPin, "AUX TX");
-}
-
 static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->alternatorControlPin, "alternator");
 }
@@ -985,11 +969,6 @@ void initSettings(void) {
 	addConsoleActionS("bench_setpin", benchSetPin);
 	addConsoleActionS("readpin", readPin);
 	addConsoleAction("adc_report", printFullAdcReport);
-	addConsoleActionS("set_can_rx_pin", setCanRxPin);
-	addConsoleActionS("set_can_tx_pin", setCanTxPin);
-
-	addConsoleActionS("set_aux_tx_pin", setAuxTxpin);
-	addConsoleActionS("set_aux_rx_pin", setAuxRxpin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
