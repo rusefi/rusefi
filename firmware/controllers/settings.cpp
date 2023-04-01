@@ -313,18 +313,6 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	incrementGlobalConfigurationVersion();
 }
 
-static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) {
-	int index = atoi(indexStr);
-	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT) {
-		return;
-	}
-	int mode = atoi(modeCode);
-	if (absI(mode) == ATOI_ERROR_CODE) {
-		return;
-	}
-	engineConfiguration->triggerSimulatorPinModes[index] = (pin_output_mode_e) mode;
-}
-
 static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index >= EGT_CHANNEL_COUNT)
@@ -698,7 +686,6 @@ void initSettings(void) {
 	addConsoleActionI("set_egt_spi", setEgtSpi);
 	addConsoleActionI(CMD_ECU_UNLOCK, unlockEcu);
 
-	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
 	addConsoleActionS("set_acrelay_pin", setACRelayPin);
 	addConsoleActionS(CMD_ALTERNATOR_PIN, setAlternatorPin);
