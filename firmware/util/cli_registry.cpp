@@ -29,7 +29,7 @@
 // todo: support \t as well
 #define SPACE_CHAR ' '
 
-#define CONSOLE_MAX_ACTIONS 100
+#define CONSOLE_MAX_ACTIONS 150
 
 static int consoleActionCount = 0;
 static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS] CCM_OPTIONAL;
