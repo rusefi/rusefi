@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Mar 31 02:54:05 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Apr 01 19:22:12 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -436,18 +436,12 @@ case TT_MERCEDES_2_SEGMENT:
   return "TT_MERCEDES_2_SEGMENT";
 case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
-case TT_MITSUBISHI_4G93:
-  return "TT_MITSUBISHI_4G93";
-case TT_MITSUBISHI_MESS:
-  return "TT_MITSUBISHI_MESS";
 case TT_MITSU_4G63_CAM:
   return "TT_MITSU_4G63_CAM";
 case TT_MITSU_4G63_CRANK:
   return "TT_MITSU_4G63_CRANK";
 case TT_MITSU_4G9x_CAM:
   return "TT_MITSU_4G9x_CAM";
-case TT_MITSU_75:
-  return "TT_MITSU_75";
 case TT_NISSAN_MR18_CAM_VVT:
   return "TT_NISSAN_MR18_CAM_VVT";
 case TT_NISSAN_MR18_CRANK:
@@ -500,6 +494,12 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
+case TT_UNUSED_11:
+  return "TT_UNUSED_11";
+case TT_UNUSED_4:
+  return "TT_UNUSED_4";
+case TT_UNUSED_75:
+  return "TT_UNUSED_75";
 case TT_UNUSED_77:
   return "TT_UNUSED_77";
 case TT_UNUSED_78:
