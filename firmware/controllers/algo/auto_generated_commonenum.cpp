@@ -367,6 +367,8 @@ case GPPWM_AuxTemp2:
   return "GPPWM_AuxTemp2";
 case GPPWM_Clt:
   return "GPPWM_Clt";
+case GPPWM_DetectedGear:
+  return "GPPWM_DetectedGear";
 case GPPWM_EthanolPercent:
   return "GPPWM_EthanolPercent";
 case GPPWM_FuelLoad:
