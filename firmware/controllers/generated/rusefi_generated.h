@@ -1043,14 +1043,13 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 4239776158
+#define SIGNATURE_HASH 3970745476
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
 #define spi_device_e_SPI_DEVICE_3 3
 #define spi_device_e_SPI_DEVICE_4 4
 #define spi_device_e_SPI_NONE 0
-#define spi_pins_size 8
 #define spi_speed_e__150KHz 3
 #define spi_speed_e__1_25MHz 2
 #define spi_speed_e__2_5MHz 1
@@ -1311,7 +1310,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.04.01.f407-discovery.4239776158"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.04.01.f407-discovery.3970745476"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1351,7 +1350,6 @@
 #define ve_override_e_VE_TPS 2
 #define VEHICLE_INFO_SIZE 32
 #define VIN_NUMBER_SIZE 17
-#define VM_VVT_INACTIVE 0
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define VR_THRESHOLD_COUNT 2
 #define vr_threshold_s_size 16

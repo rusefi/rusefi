@@ -115,24 +115,6 @@ struct cranking_parameters_s {
 };
 static_assert(sizeof(cranking_parameters_s) == 8);
 
-struct spi_pins {
-	// offset 0
-	Gpio mosiPin;
-
-	// offset 2
-	Gpio misoPin;
-
-	// offset 4
-	Gpio sckPin;
-
-	// need 4 byte alignment
-	// units
-	// offset 6
-	uint8_t alignmentFill_at_6[2];
-
-};
-static_assert(sizeof(spi_pins) == 8);
-
 struct gppwm_channel {
 	// Select a pin to use for PWM or on-off output.
 	// offset 0
@@ -681,7 +663,6 @@ struct engine_configuration_s {
 	// offset 114
 	uint16_t etbRevLimitRange;
 
-	// @see isMapAveragingEnabled
 	// offset 116
 	MAP_sensor_config_s map;
 
@@ -915,7 +896,6 @@ struct engine_configuration_s {
 	// offset 462
 	switch_input_pin_e throttlePedalUpPin;
 
-	// @see hasBaroSensor
 	// offset 464
 	air_pressure_sensor_config_s baroSensor;
 
@@ -2017,7 +1997,6 @@ struct engine_configuration_s {
 	// offset 1302
 	int16_t tps2Max;
 
-	// See also startStopButtonPin
 	// offset 1304
 	output_pin_e starterControlPin;
 
@@ -2048,7 +2027,6 @@ struct engine_configuration_s {
 	// offset 1318
 	scaled_channel<uint16_t, 1000, 1> multisparkDwell;
 
-	// See cltIdleRpmBins
 	// offset 1320
 	pid_s idleRpmPid;
 
@@ -2757,7 +2735,6 @@ struct engine_configuration_s {
 	// offset 2262
 	int16_t etb_iTermMax;
 
-	// See useIdleTimingPidControl
 	// offset 2264
 	pid_s idleTimingPid;
 
