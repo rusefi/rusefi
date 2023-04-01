@@ -51,7 +51,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-char *validateSecureLine(char *line);
 void resetConsoleActions(void);
 void helpCommand(void);
 void initConsoleLogic();
