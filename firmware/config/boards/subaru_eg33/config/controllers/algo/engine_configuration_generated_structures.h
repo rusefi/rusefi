@@ -1109,7 +1109,7 @@ struct engine_configuration_s {
 	// offset 628
 	float compressionRatio;
 
-	// Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.
+	// Generate a synthetic trigger signal for an external ECU
 	// offset 632
 	Gpio triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
 
@@ -1118,7 +1118,7 @@ struct engine_configuration_s {
 	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseSlope;
 
 	// offset 638
-	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
+	uint8_t unused638[2];
 
 	// offset 640 bit 0
 	bool is_enabled_spi_1 : 1 {};
