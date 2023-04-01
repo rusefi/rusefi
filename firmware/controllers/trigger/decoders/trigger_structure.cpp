@@ -424,10 +424,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeMazdaMiataNaShape(this);
 		break;
 
-	case TT_MITSUBISHI_MESS:
-	    initializeMitsubishi4gMess(this);
-        break;
-
 	case TT_MAZDA_MIATA_VVT_TEST:
 		initializeMazdaMiataVVtTestShape(this);
 		break;
@@ -630,12 +626,11 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	case TT_MITSU_4G63_CRANK:
 	    initializeMitsubishi4gSymmetricalCrank(this);
         break;
+	case TT_UNUSED_4:
+	case TT_UNUSED_11:
+	case TT_UNUSED_75:
 	case TT_UNUSED_77:
 	case TT_UNUSED_78:
-	case TT_MITSU_75:
-	    initializeMitsubishi75(this);
-		break;
-
 	case TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);
 		break;
@@ -653,10 +648,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case TT_CHRYSLER_NGC_36_2_2:
 		configureChryslerNGC_36_2_2(this);
-		break;
-
-	case TT_MITSUBISHI_4G93:
-		initializeMitsubishi4G93(this);
 		break;
 
 	case TT_DODGE_RAM:

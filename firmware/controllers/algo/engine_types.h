@@ -316,7 +316,7 @@ typedef enum {
 	TT_DODGE_NEON_1995 = 2,
 	// https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
 	TT_MAZDA_MIATA_NA = 3,
-	TT_MITSUBISHI_MESS = 4,
+	TT_UNUSED_4 = 4,
 	TT_GM_7X = 5,
 	TT_DAIHATSU = 6,
 	TT_MAZDA_SOHC_4 = 7,
@@ -325,8 +325,7 @@ typedef enum {
 	TT_TOOTHED_WHEEL_60_2 = 8,
 	TT_TOOTHED_WHEEL_36_1 = 9,
 	TT_MERCEDES_2_SEGMENT = 10,
-	// todo: this really looks to be same as Miata_NA shall we remove?
-	TT_MITSUBISHI_4G93 = 11,
+	TT_UNUSED_11 = 11,
 	TT_SUBARU_EZ30 = 12,
 	TT_VVT_MAZDA_SKYACTIV = 13,
 	// cam-based
@@ -417,12 +416,12 @@ typedef enum {
 	// Mitsubishi 4B11 would be this with half moon camshaft
 	TT_36_2_1 = 70,
 	// Mitsubishi 3 cyl and 6 cyl
-	TT_36_2_1_1 = 71,
-        TT_VVT_MITSUBISHI_6G75 = 72,
+    TT_36_2_1_1 = 71,
+    TT_VVT_MITSUBISHI_6G75 = 72,
 	TT_VVT_TOYOTA_4_1 = 73,
 	// GM 24x with 3/12 degree gaps
 	TT_GM_24x_2 = 74,
-	TT_MITSU_75 = 75,
+	TT_UNUSED_75 = 75,
 	TT_MITSU_4G63_CRANK = 76,
 	TT_UNUSED_77 = 77,
 	TT_UNUSED_78 = 78,
