@@ -31,60 +31,9 @@ void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
-static void addMitsu93(TriggerWaveform *s, bool addSecondary) {
-	float narrowW = 66;
-
-	float offset = addSecondary ? 0 : 120;
-
-	s->addEvent720(offset + 60, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	if (addSecondary)
-		s->addEvent720(offset + 180 - narrowW, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(offset + 146, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	if (addSecondary)
-			s->addEvent720(offset + 180, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-
-	if (addSecondary)
-			s->addEvent720(offset + 360 - narrowW, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	if (addSecondary)
-			s->addEvent720(offset + 360, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-
-	s->addEvent720(offset + 421, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	if (addSecondary)
-			s->addEvent720(offset + 540 - narrowW, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	if (addSecondary)
-			s->addEvent720(offset + 540, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-
-	s->addEvent720(offset + 600, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	if (addSecondary)
-			s->addEvent720(offset + 720 - narrowW, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	if (addSecondary)
-			s->addEvent720(offset + 720.0, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-
-	s->useOnlyPrimaryForSync = addSecondary;
-}
-
-/**
- * TT_MITSUBISHI_4G93 = 11
- */
-void initializeMitsubishi4G93(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
-
-	s->setTriggerSynchronizationGap(1.6666);
-
-    addMitsu93(s, /*addSecondary*/true);
-}
-
 void initializeMitsubishi4gSymmetricalCrank(TriggerWaveform *s) {
 		initializeSkippedToothTrigger(s, /* reality */2 * /* symmetrical*/0.5,
 				0, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
-}
-
-void initializeMitsubishi75(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
-
-	s->setTriggerSynchronizationGap(3.2);
-
-    addMitsu93(s, /*addSecondary*/true);
 }
 
 void initializeMitsubishi4g9xCam(TriggerWaveform *s) {
@@ -112,14 +61,6 @@ void initializeMitsubishi4g9xCam(TriggerWaveform *s) {
 void initializeMitsubishi4g63Cam(TriggerWaveform *s) {
 	// TODO: is this actually the same as 4G9x or not?
 	initializeMitsubishi4g9xCam(s);
-}
-
-void initializeMitsubishi4gMess(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
-
-	s->setTriggerSynchronizationGap(3.2);
-
-    addMitsu93(s, /*addSecondary*/false);
 }
 
 void initialize36_2_1_1(TriggerWaveform *s) {
