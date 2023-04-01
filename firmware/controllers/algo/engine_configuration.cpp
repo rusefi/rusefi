@@ -64,7 +64,6 @@
 #include "mazda_626.h"
 #include "m111.h"
 #include "mercedes.h"
-#include "mitsubishi.h"
 
 #include "gm_ls_4.h"
 #include "gm_sbc.h"
