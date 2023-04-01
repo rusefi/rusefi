@@ -996,7 +996,6 @@ public class Fields {
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
 	public static final int spi_device_e_SPI_DEVICE_4 = 4;
 	public static final int spi_device_e_SPI_NONE = 0;
-	public static final int spi_pins_size = 8;
 	public static final int spi_speed_e__150KHz = 3;
 	public static final int spi_speed_e__1_25MHz = 2;
 	public static final int spi_speed_e__2_5MHz = 1;
@@ -1195,7 +1194,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.04.01.f407-discovery.4239776158";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.04.01.f407-discovery.3970745476";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1368;
@@ -1230,7 +1229,6 @@ public class Fields {
 	public static final int ve_override_e_VE_TPS = 2;
 	public static final int VEHICLE_INFO_SIZE = 32;
 	public static final int VIN_NUMBER_SIZE = 17;
-	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int vr_threshold_s_size = 16;
 	public static final int vvt_mode_e_VVT_2JZ = 2;
