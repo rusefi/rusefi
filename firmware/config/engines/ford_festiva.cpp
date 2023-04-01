@@ -143,9 +143,6 @@ void setFordEscortGt() {
 	setSingleCoilDwell();
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
-	engineConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
-	engineConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
-
 	// individual coils
 	// W6  PC9
 	// W8  PC7

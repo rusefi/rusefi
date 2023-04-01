@@ -748,17 +748,15 @@ void triggerInfo(void) {
 #if EFI_PROD_CODE
 
 	efiPrintf("primary trigger input: %s", hwPortname(engineConfiguration->triggerInputPins[0]));
-	efiPrintf("primary trigger simulator: %s %s freq=%d",
-			hwPortname(engineConfiguration->triggerSimulatorPins[0]),
-			getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[0]),
+	efiPrintf("primary trigger simulator: %s freq=%d",
+			hwPortname(engineConfiguration->triggerSimulatorPins[0])),
 			engineConfiguration->triggerSimulatorRpm);
 
 	if (ts->needSecondTriggerInput) {
 		efiPrintf("secondary trigger input: %s", hwPortname(engineConfiguration->triggerInputPins[1]));
 #if EFI_EMULATE_POSITION_SENSORS
-		efiPrintf("secondary trigger simulator: %s %s phase=%d",
-				hwPortname(engineConfiguration->triggerSimulatorPins[1]),
-				getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
+		efiPrintf("secondary trigger simulator: %s phase=%d",
+				hwPortname(engineConfiguration->triggerSimulatorPins[1]), triggerSignal.safe.phaseIndex);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
 

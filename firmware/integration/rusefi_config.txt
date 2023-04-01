@@ -674,11 +674,11 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	float compressionRatio;Just for reference really, not taken into account by any logic at this point;"CR", 1, 0, 0, 300, 1
 
-	Gpio[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.
+	Gpio[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Generate a synthetic trigger signal for an external ECU
 
 	uint16_t autoscale fordInjectorSmallPulseSlope;;"g/s", 0.001, 0, 0, 65, 3
 
-	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
+	uint8_t[2] unused638
 
 bit is_enabled_spi_1
 bit is_enabled_spi_2
