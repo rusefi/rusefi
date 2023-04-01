@@ -34,9 +34,6 @@
 static int consoleActionCount = 0;
 static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS] CCM_OPTIONAL;
 
-#define SECURE_LINE_PREFIX "sec!"
-#define SECURE_LINE_PREFIX_LENGTH 4
-
 void resetConsoleActions(void) {
 	consoleActionCount = 0;
 }
@@ -470,40 +467,6 @@ void initConsoleLogic() {
 	addConsoleActionI("echo", echo);
 }
 
-/**
- * @return NULL if input line validation failed, reference to line payload if validation succeeded.
- * @see sendOutConfirmation() for command confirmation processing.
- */
-char *validateSecureLine(char *line) {
-	if (line == NULL)
-		return NULL;
-	if (strncmp(SECURE_LINE_PREFIX, line, SECURE_LINE_PREFIX_LENGTH) == 0) {
-		// COM protocol looses bytes, this is a super-naive error detection
-
-//		print("Got secure mode request header [%s]\r\n", line);
-		line += SECURE_LINE_PREFIX_LENGTH;
-//		print("Got secure mode request command [%s]\r\n", line);
-
-		char *divider = line;
-		while (*divider != '!') {
-			if (*divider == '\0') {
-				efiPrintf("Divider not found [%s]", line);
-				return NULL;
-			}
-			divider++;
-		}
-		*divider++ = 0; // replacing divider symbol with zero
-		int expectedLength = atoi(line);
-		line = divider;
-		int actualLength = strlen(line);
-		if (expectedLength != actualLength) {
-			efiPrintf("Error detected: expected %d but got %d in [%s]", expectedLength, actualLength, line);
-			return NULL;
-		}
-	}
-	return line;
-}
-
 static char handleBuffer[MAX_CMD_LINE_LENGTH + 1];
 
 static int handleConsoleLineInternal(const char *commandLine, int lineLength) {
@@ -542,7 +505,6 @@ static int handleConsoleLineInternal(const char *commandLine, int lineLength) {
  * @brief This function takes care of one command line once we have it
  */
 void handleConsoleLine(char *line) {
-	line = validateSecureLine(line);
 	if (line == NULL)
 		return; // error detected
 

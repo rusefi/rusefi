@@ -270,8 +270,6 @@ TEST(misc, testConsoleLogic) {
 	strcpy(buffer, "\"echo\"");
 	ASSERT_TRUE(strEqual("echo", unquote(buffer))) << "unquote quoted";
 
-	char *ptr = validateSecureLine(UNKNOWN_COMMAND);
-	ASSERT_EQ(0, strcmp(UNKNOWN_COMMAND, ptr));
 	ASSERT_EQ(10, tokenLength(UNKNOWN_COMMAND));
 
 	// handling invalid token should work
