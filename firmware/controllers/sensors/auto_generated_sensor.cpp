@@ -42,6 +42,8 @@ case SensorType::BatteryVoltage:
   return "BatteryVoltage";
 case SensorType::Clt:
   return "Clt";
+case SensorType::DetectedGear:
+  return "DetectedGear";
 case SensorType::DriverThrottleIntent:
   return "DriverThrottleIntent";
 case SensorType::EGT1:
