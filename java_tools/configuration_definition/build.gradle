@@ -39,3 +39,10 @@ shadowJar {
         exclude(dependency('com.ibm.icu:icu4j:.*'))
     }
 }
+
+test {
+	testLogging {
+		events "failed"
+		exceptionFormat "full"
+	}
+}
