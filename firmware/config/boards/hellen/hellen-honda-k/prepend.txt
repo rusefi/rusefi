@@ -2,6 +2,7 @@
 
 #define ts_show_hip9011 false
 #define ts_show_cj125 false
+#define ts_show_can_terminator true
 
 
 

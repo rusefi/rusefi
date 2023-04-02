@@ -1232,7 +1232,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit canOpenBLT; Allow OpenBLT on Primary CAN
 	bit can2OpenBLT; Allow OpenBLT on Secondary CAN
 	bit injectorFlowAsMassFlow,"mass flow","volumetric flow";Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
-	bit unused1127
+	bit boardUseCanTerminator
 	bit unused1128
 	bit unused1129
 	bit unused1130
