@@ -65,7 +65,7 @@ public class SentState {
 	public static final String GAUGE_NAME_FUEL_FLOW = "fuel: Flow rate";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
-	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last injection";
+	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last inj pulse width";
 	public static final String GAUGE_NAME_FUEL_LEVEL = "fuel level";
 	public static final String GAUGE_NAME_FUEL_LOAD = "fuel: load";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
