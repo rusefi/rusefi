@@ -12,7 +12,7 @@ float GetGearRatioFor(float revPerKm, float axle, float kph, float rpm) {
 	GearDetector dut;
 	dut.onSlowCallback();
 
-	return dut.getGearboxRatio();
+	return dut.get().value_or(0);
 }
 
 TEST(GearDetector, ComputeGearRatio) {
