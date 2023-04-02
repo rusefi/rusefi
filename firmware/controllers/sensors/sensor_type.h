@@ -89,6 +89,8 @@ enum class SensorType : unsigned char {
 	MapSlow2,
 	MapFast2,
 
+	DetectedGear,
+
 	// analog voltage inputs for Lua
 	AuxAnalog1,
 	AuxAnalog2,

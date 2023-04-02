@@ -861,7 +861,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 #if EFI_VEHICLE_SPEED
 	lua_register(l, "getCurrentGear", [](lua_State* l) {
-		lua_pushinteger(l, engine->module<GearDetector>()->getCurrentGear());
+		lua_pushinteger(l, Sensor::getOrZero(SensorType::DetectedGear));
 		return 1;
 	});
 

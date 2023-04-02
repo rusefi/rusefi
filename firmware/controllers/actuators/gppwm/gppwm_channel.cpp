@@ -67,7 +67,7 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 	case GPPWM_GppwmOutput4:
 		return (float)engine->outputChannels.gppwmOutput[3];
 	case GPPWM_DetectedGear:
-		return engine->module<GearDetector>()->getCurrentGear();
+		return Sensor::get(SensorType::DetectedGear);
 	}
 
 	return unexpected;
