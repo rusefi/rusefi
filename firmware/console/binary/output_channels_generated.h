@@ -1044,148 +1044,154 @@ struct output_channels_s {
 	// offset 590
 	scaled_channel<int16_t, 1000, 1> rawBattery = (int16_t)0;
 
-	// %
 	// offset 592
+	scaled_channel<int16_t, 10, 1> ignBlendParameter[IGN_BLEND_COUNT];
+
+	// %
+	// offset 600
 	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT];
 
 	// deg
-	// offset 596
+	// offset 604
 	scaled_channel<int16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT];
 
+	// offset 612
+	scaled_channel<int16_t, 10, 1> veBlendParameter[VE_BLEND_COUNT];
+
 	// %
-	// offset 604
+	// offset 620
 	scaled_channel<uint8_t, 2, 1> veBlendBias[VE_BLEND_COUNT];
 
 	// %
-	// offset 608
+	// offset 624
 	scaled_channel<int16_t, 100, 1> veBlendOutput[VE_BLEND_COUNT];
 
-	// offset 616 bit 0
+	// offset 632 bit 0
 	bool coilState1 : 1 {};
 
-	// offset 616 bit 1
+	// offset 632 bit 1
 	bool coilState2 : 1 {};
 
-	// offset 616 bit 2
+	// offset 632 bit 2
 	bool coilState3 : 1 {};
 
-	// offset 616 bit 3
+	// offset 632 bit 3
 	bool coilState4 : 1 {};
 
-	// offset 616 bit 4
+	// offset 632 bit 4
 	bool coilState5 : 1 {};
 
-	// offset 616 bit 5
+	// offset 632 bit 5
 	bool coilState6 : 1 {};
 
-	// offset 616 bit 6
+	// offset 632 bit 6
 	bool coilState7 : 1 {};
 
-	// offset 616 bit 7
+	// offset 632 bit 7
 	bool coilState8 : 1 {};
 
-	// offset 616 bit 8
+	// offset 632 bit 8
 	bool coilState9 : 1 {};
 
-	// offset 616 bit 9
+	// offset 632 bit 9
 	bool coilState10 : 1 {};
 
-	// offset 616 bit 10
+	// offset 632 bit 10
 	bool coilState11 : 1 {};
 
-	// offset 616 bit 11
+	// offset 632 bit 11
 	bool coilState12 : 1 {};
 
-	// offset 616 bit 12
+	// offset 632 bit 12
 	bool injectorState1 : 1 {};
 
-	// offset 616 bit 13
+	// offset 632 bit 13
 	bool injectorState2 : 1 {};
 
-	// offset 616 bit 14
+	// offset 632 bit 14
 	bool injectorState3 : 1 {};
 
-	// offset 616 bit 15
+	// offset 632 bit 15
 	bool injectorState4 : 1 {};
 
-	// offset 616 bit 16
+	// offset 632 bit 16
 	bool injectorState5 : 1 {};
 
-	// offset 616 bit 17
+	// offset 632 bit 17
 	bool injectorState6 : 1 {};
 
-	// offset 616 bit 18
+	// offset 632 bit 18
 	bool injectorState7 : 1 {};
 
-	// offset 616 bit 19
+	// offset 632 bit 19
 	bool injectorState8 : 1 {};
 
-	// offset 616 bit 20
+	// offset 632 bit 20
 	bool injectorState9 : 1 {};
 
-	// offset 616 bit 21
+	// offset 632 bit 21
 	bool injectorState10 : 1 {};
 
-	// offset 616 bit 22
+	// offset 632 bit 22
 	bool injectorState11 : 1 {};
 
-	// offset 616 bit 23
+	// offset 632 bit 23
 	bool injectorState12 : 1 {};
 
-	// offset 616 bit 24
-	bool unusedBit_295_24 : 1 {};
+	// offset 632 bit 24
+	bool unusedBit_297_24 : 1 {};
 
-	// offset 616 bit 25
-	bool unusedBit_295_25 : 1 {};
+	// offset 632 bit 25
+	bool unusedBit_297_25 : 1 {};
 
-	// offset 616 bit 26
-	bool unusedBit_295_26 : 1 {};
+	// offset 632 bit 26
+	bool unusedBit_297_26 : 1 {};
 
-	// offset 616 bit 27
-	bool unusedBit_295_27 : 1 {};
+	// offset 632 bit 27
+	bool unusedBit_297_27 : 1 {};
 
-	// offset 616 bit 28
-	bool unusedBit_295_28 : 1 {};
+	// offset 632 bit 28
+	bool unusedBit_297_28 : 1 {};
 
-	// offset 616 bit 29
-	bool unusedBit_295_29 : 1 {};
+	// offset 632 bit 29
+	bool unusedBit_297_29 : 1 {};
 
-	// offset 616 bit 30
-	bool unusedBit_295_30 : 1 {};
+	// offset 632 bit 30
+	bool unusedBit_297_30 : 1 {};
 
-	// offset 616 bit 31
-	bool unusedBit_295_31 : 1 {};
+	// offset 632 bit 31
+	bool unusedBit_297_31 : 1 {};
 
-	// offset 620
+	// offset 636
 	uint32_t outputRequestPeriod = (uint32_t)0;
 
-	// offset 624
+	// offset 640
 	float mapFast = (float)0;
 
 	// value
-	// offset 628
+	// offset 644
 	float luaGauges[LUA_GAUGE_COUNT];
 
 	// V
-	// offset 636
+	// offset 652
 	scaled_channel<uint16_t, 1000, 1> rawMaf2 = (uint16_t)0;
 
 	// @@GAUGE_NAME_AIR_FLOW_MEASURED_2@@
 	// kg/h
-	// offset 638
+	// offset 654
 	scaled_channel<uint16_t, 10, 1> mafMeasured2 = (uint16_t)0;
 
-	// offset 640
+	// offset 656
 	uint16_t schedulingUsedCount = (uint16_t)0;
 
-	// offset 642
+	// offset 658
 	uint8_t unusedAtTheEnd[136];
 
 	// need 4 byte alignment
 	// units
-	// offset 778
-	uint8_t alignmentFill_at_778[2];
+	// offset 794
+	uint8_t alignmentFill_at_794[2];
 
 };
-static_assert(sizeof(output_channels_s) == 780);
+static_assert(sizeof(output_channels_s) == 796);
 
