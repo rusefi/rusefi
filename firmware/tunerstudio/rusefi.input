@@ -1508,7 +1508,7 @@ gaugeCategory = GPPWM Outputs
 #endif
 	gauge6 = VBattGauge
 	gauge7 = dwellGauge
-	gauge8 = ignadvGauge
+	gauge8 = correctedIgnAdvGauge
 
 	;			=							expression,				off-label,				on-label, off-bg, off-fg,  on-bg,  on-fg
 	; Line 1
