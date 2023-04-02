@@ -7,6 +7,11 @@ static constexpr float geometricMean(float x, float y) {
 GearDetector::GearDetector()
 	: StoredValueSensor(SensorType::DetectedGear, MS2NT(100))
 {
+	Register();
+}
+
+GearDetector::~GearDetector() {
+	unregister();
 }
 
 void GearDetector::onConfigurationChange(engine_configuration_s const * /*previousConfig*/) {
