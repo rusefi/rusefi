@@ -1108,6 +1108,9 @@ Allow OpenBLT on Secondary CAN
 ### injectorFlowAsMassFlow
 Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
 
+### boardUseCanTerminator
+
+
 ### benchTestOffTime
 Time between bench test pulses
 

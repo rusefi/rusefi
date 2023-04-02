@@ -1114,6 +1114,9 @@ float getConfigValueByName(const char *name) {
 // injectorFlowAsMassFlow
 		case 444648859:
 			return engineConfiguration->injectorFlowAsMassFlow;
+// boardUseCanTerminator
+		case -312962799:
+			return engineConfiguration->boardUseCanTerminator;
 // benchTestOffTime
 		case -1655178001:
 			return engineConfiguration->benchTestOffTime;
@@ -3442,6 +3445,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 444648859:
 	{
 		engineConfiguration->injectorFlowAsMassFlow = (int)value;
+		return;
+	}
+		case -312962799:
+	{
+		engineConfiguration->boardUseCanTerminator = (int)value;
 		return;
 	}
 		case -1655178001:

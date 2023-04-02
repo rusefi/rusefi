@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 26 11:25:39 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 02 13:45:10 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3149,7 +3149,7 @@ struct engine_configuration_s {
 	bool injectorFlowAsMassFlow : 1 {};
 	/**
 	offset 1628 bit 4 */
-	bool unused1127 : 1 {};
+	bool boardUseCanTerminator : 1 {};
 	/**
 	offset 1628 bit 5 */
 	bool unused1128 : 1 {};
@@ -5303,4 +5303,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 26 11:25:39 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 02 13:45:10 UTC 2023
