@@ -3,6 +3,7 @@
 class GearDetector : public EngineModule, public StoredValueSensor {
 public:
 	GearDetector();
+	~GearDetector();
 
 	void onSlowCallback() override;
 	void onConfigurationChange(engine_configuration_s const * /*previousConfig*/) override;
