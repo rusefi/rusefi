@@ -46,6 +46,7 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 	for (size_t i = 0; i < efi::size(config->veBlends); i++) {
 		auto result = calculateBlend(config->veBlends[i], rpm, load);
 
+		engine->outputChannels.veBlendParameter[i] = result.BlendParameter;
 		engine->outputChannels.veBlendBias[i] = result.Bias;
 		engine->outputChannels.veBlendOutput[i] = result.Value;
 
