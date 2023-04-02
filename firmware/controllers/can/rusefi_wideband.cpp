@@ -53,7 +53,7 @@ void updateWidebandFirmware() {
 	for (int i = 0; i < 2; i++) {
 		{
 			// Send bootloader entry command
-			CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF0'0000, 0, bus, true);
+			CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_ENTER, 0, bus, true);
 		}
 
 		if (!waitAck()) {
