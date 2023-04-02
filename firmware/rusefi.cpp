@@ -49,7 +49,7 @@
  *
  *
  * @section sec_timers Timers
- * At the moment rusEfi is build using 5 times:
+ * At the moment rusEfi is build using 5 timers:
  * <BR>1) 1MHz microsecond_timer.cpp
  * <BR>2) 10KHz fast ADC callback pwmpcb_fast adc_inputs.cpp
  * <BR>3) slow ADC callback pwmpcb_slow adc_inputs.cpp
