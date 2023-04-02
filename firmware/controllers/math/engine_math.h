@@ -70,6 +70,9 @@ angle_t getPerCylinderFiringOrderOffset(uint8_t cylinderIndex, uint8_t cylinderN
 
 // Table blending helpers
 struct BlendResult {
+	// Input blend parameter (lookup to bias table)
+	float BlendParameter;
+
 	// Bias in percent (0-100%)
 	float Bias;
 

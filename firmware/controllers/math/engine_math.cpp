@@ -456,7 +456,7 @@ BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {
 	auto value = readGppwmChannel(cfg.blendParameter);
 
 	if (!value) {
-		return { 0, 0 };
+		return { 0, 0, 0 };
 	}
 
 	float tableValue = interpolate3d(
@@ -467,7 +467,7 @@ BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {
 
 	float blendFactor = interpolate2d(value.Value, cfg.blendBins, cfg.blendValues);
 
-	return { blendFactor, 0.01f * blendFactor * tableValue };
+	return { value.Value, blendFactor, 0.01f * blendFactor * tableValue };
 }
 
 #endif /* EFI_ENGINE_CONTROL */
