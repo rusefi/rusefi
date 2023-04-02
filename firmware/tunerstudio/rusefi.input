@@ -193,17 +193,6 @@ enable2ndByteCanID = false
 
 	egoCorrectionForVeAnalyze = { 100 + fuelPidCorrection1 }
 
-	; These "synthetic" channels provide the Y-axis (load) value for gen purp PWM table's Y axes
-	ignBlends1_blendVal = {(ignBlends1_blendParameter == 0) ? 0 : (ignBlends1_blendParameter == 1) ? TPSValue : (ignBlends1_blendParameter == 2) ? MAPValue : (ignBlends1_blendParameter == 3) ? coolant : (ignBlends1_blendParameter == 4) ? intake : (ignBlends1_blendParameter == 5) ? fuelingLoad : (ignBlends1_blendParameter == 6) ? ignitionLoad : (ignBlends1_blendParameter == 7) ? auxTemp1 : (ignBlends1_blendParameter == 8) ? auxTemp2 : (ignBlends1_blendParameter == 9) ? throttlePedalPosition : (ignBlends1_blendParameter == 10) ? VBatt : (ignBlends1_blendParameter == 11) ? vvtPositionB1I : (ignBlends1_blendParameter == 12) ? vvtPositionB1E : (ignBlends1_blendParameter == 13) ? vvtPositionB2I : (ignBlends1_blendParameter == 14) ? vvtPositionB2E : (ignBlends1_blendParameter == 15) ? flexPercent : (ignBlends1_blendParameter == 16) ? auxLinear1 : (ignBlends1_blendParameter == 17) ? auxLinear2 : 0}
-	ignBlends2_blendVal = {(ignBlends2_blendParameter == 0) ? 0 : (ignBlends2_blendParameter == 1) ? TPSValue : (ignBlends2_blendParameter == 2) ? MAPValue : (ignBlends2_blendParameter == 3) ? coolant : (ignBlends2_blendParameter == 4) ? intake : (ignBlends2_blendParameter == 5) ? fuelingLoad : (ignBlends2_blendParameter == 6) ? ignitionLoad : (ignBlends2_blendParameter == 7) ? auxTemp1 : (ignBlends2_blendParameter == 8) ? auxTemp2 : (ignBlends2_blendParameter == 9) ? throttlePedalPosition : (ignBlends2_blendParameter == 10) ? VBatt : (ignBlends2_blendParameter == 11) ? vvtPositionB1I : (ignBlends2_blendParameter == 12) ? vvtPositionB1E : (ignBlends2_blendParameter == 13) ? vvtPositionB2I : (ignBlends2_blendParameter == 14) ? vvtPositionB2E : (ignBlends2_blendParameter == 15) ? flexPercent : (ignBlends2_blendParameter == 16) ? auxLinear1 : (ignBlends2_blendParameter == 17) ? auxLinear2 : 0}
-	ignBlends3_blendVal = {(ignBlends3_blendParameter == 0) ? 0 : (ignBlends3_blendParameter == 1) ? TPSValue : (ignBlends3_blendParameter == 2) ? MAPValue : (ignBlends3_blendParameter == 3) ? coolant : (ignBlends3_blendParameter == 4) ? intake : (ignBlends3_blendParameter == 5) ? fuelingLoad : (ignBlends3_blendParameter == 6) ? ignitionLoad : (ignBlends3_blendParameter == 7) ? auxTemp1 : (ignBlends3_blendParameter == 8) ? auxTemp2 : (ignBlends3_blendParameter == 9) ? throttlePedalPosition : (ignBlends3_blendParameter == 10) ? VBatt : (ignBlends3_blendParameter == 11) ? vvtPositionB1I : (ignBlends3_blendParameter == 12) ? vvtPositionB1E : (ignBlends3_blendParameter == 13) ? vvtPositionB2I : (ignBlends3_blendParameter == 14) ? vvtPositionB2E : (ignBlends3_blendParameter == 15) ? flexPercent : (ignBlends3_blendParameter == 16) ? auxLinear1 : (ignBlends3_blendParameter == 17) ? auxLinear2 : 0}
-	ignBlends4_blendVal = {(ignBlends4_blendParameter == 0) ? 0 : (ignBlends4_blendParameter == 1) ? TPSValue : (ignBlends4_blendParameter == 2) ? MAPValue : (ignBlends4_blendParameter == 3) ? coolant : (ignBlends4_blendParameter == 4) ? intake : (ignBlends4_blendParameter == 5) ? fuelingLoad : (ignBlends4_blendParameter == 6) ? ignitionLoad : (ignBlends4_blendParameter == 7) ? auxTemp1 : (ignBlends4_blendParameter == 8) ? auxTemp2 : (ignBlends4_blendParameter == 9) ? throttlePedalPosition : (ignBlends4_blendParameter == 10) ? VBatt : (ignBlends4_blendParameter == 11) ? vvtPositionB1I : (ignBlends4_blendParameter == 12) ? vvtPositionB1E : (ignBlends4_blendParameter == 13) ? vvtPositionB2I : (ignBlends4_blendParameter == 14) ? vvtPositionB2E : (ignBlends4_blendParameter == 15) ? flexPercent : (ignBlends4_blendParameter == 16) ? auxLinear1 : (ignBlends4_blendParameter == 17) ? auxLinear2 : 0}
-
-	veBlends1_blendVal = {(veBlends1_blendParameter == 0) ? 0 : (veBlends1_blendParameter == 1) ? TPSValue : (veBlends1_blendParameter == 2) ? MAPValue : (veBlends1_blendParameter == 3) ? coolant : (veBlends1_blendParameter == 4) ? intake : (veBlends1_blendParameter == 5) ? fuelingLoad : (veBlends1_blendParameter == 6) ? ignitionLoad : (veBlends1_blendParameter == 7) ? auxTemp1 : (veBlends1_blendParameter == 8) ? auxTemp2 : (veBlends1_blendParameter == 9) ? throttlePedalPosition : (veBlends1_blendParameter == 10) ? VBatt : (veBlends1_blendParameter == 11) ? vvtPositionB1I : (veBlends1_blendParameter == 12) ? vvtPositionB1E : (veBlends1_blendParameter == 13) ? vvtPositionB2I : (veBlends1_blendParameter == 14) ? vvtPositionB2E : (veBlends1_blendParameter == 15) ? flexPercent : (veBlends1_blendParameter == 16) ? auxLinear1 : (veBlends1_blendParameter == 17) ? auxLinear2 : 0}
-	veBlends2_blendVal = {(veBlends2_blendParameter == 0) ? 0 : (veBlends2_blendParameter == 1) ? TPSValue : (veBlends2_blendParameter == 2) ? MAPValue : (veBlends2_blendParameter == 3) ? coolant : (veBlends2_blendParameter == 4) ? intake : (veBlends2_blendParameter == 5) ? fuelingLoad : (veBlends2_blendParameter == 6) ? ignitionLoad : (veBlends2_blendParameter == 7) ? auxTemp1 : (veBlends2_blendParameter == 8) ? auxTemp2 : (veBlends2_blendParameter == 9) ? throttlePedalPosition : (veBlends2_blendParameter == 10) ? VBatt : (veBlends2_blendParameter == 11) ? vvtPositionB1I : (veBlends2_blendParameter == 12) ? vvtPositionB1E : (veBlends2_blendParameter == 13) ? vvtPositionB2I : (veBlends2_blendParameter == 14) ? vvtPositionB2E : (veBlends2_blendParameter == 15) ? flexPercent : (veBlends2_blendParameter == 16) ? auxLinear1 : (veBlends2_blendParameter == 17) ? auxLinear2 : 0}
-	veBlends3_blendVal = {(veBlends3_blendParameter == 0) ? 0 : (veBlends3_blendParameter == 1) ? TPSValue : (veBlends3_blendParameter == 2) ? MAPValue : (veBlends3_blendParameter == 3) ? coolant : (veBlends3_blendParameter == 4) ? intake : (veBlends3_blendParameter == 5) ? fuelingLoad : (veBlends3_blendParameter == 6) ? ignitionLoad : (veBlends3_blendParameter == 7) ? auxTemp1 : (veBlends3_blendParameter == 8) ? auxTemp2 : (veBlends3_blendParameter == 9) ? throttlePedalPosition : (veBlends3_blendParameter == 10) ? VBatt : (veBlends3_blendParameter == 11) ? vvtPositionB1I : (veBlends3_blendParameter == 12) ? vvtPositionB1E : (veBlends3_blendParameter == 13) ? vvtPositionB2I : (veBlends3_blendParameter == 14) ? vvtPositionB2E : (veBlends3_blendParameter == 15) ? flexPercent : (veBlends3_blendParameter == 16) ? auxLinear1 : (veBlends3_blendParameter == 17) ? auxLinear2 : 0}
-	veBlends4_blendVal = {(veBlends4_blendParameter == 0) ? 0 : (veBlends4_blendParameter == 1) ? TPSValue : (veBlends4_blendParameter == 2) ? MAPValue : (veBlends4_blendParameter == 3) ? coolant : (veBlends4_blendParameter == 4) ? intake : (veBlends4_blendParameter == 5) ? fuelingLoad : (veBlends4_blendParameter == 6) ? ignitionLoad : (veBlends4_blendParameter == 7) ? auxTemp1 : (veBlends4_blendParameter == 8) ? auxTemp2 : (veBlends4_blendParameter == 9) ? throttlePedalPosition : (veBlends4_blendParameter == 10) ? VBatt : (veBlends4_blendParameter == 11) ? vvtPositionB1I : (veBlends4_blendParameter == 12) ? vvtPositionB1E : (veBlends4_blendParameter == 13) ? vvtPositionB2I : (veBlends4_blendParameter == 14) ? vvtPositionB2E : (veBlends4_blendParameter == 15) ? flexPercent : (veBlends4_blendParameter == 16) ? auxLinear1 : (veBlends4_blendParameter == 17) ? auxLinear2 : 0}
-
 	wbo0_hasFault = { enableAemXSeries && (faultCode >= 3) }
 
 [PcVariables]
@@ -717,56 +706,56 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
-		xBins = ignBlends1_blendBins, ignBlends1_blendVal
+		xBins = ignBlends1_blendBins, ignBlendParameter1
 		yBins = ignBlends1_blendValues
 
 	curve = ignAdder2Bias, "Ignition adder 2 bias"
 		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
-		xBins = ignBlends2_blendBins, ignBlends2_blendVal
+		xBins = ignBlends2_blendBins, ignBlendParameter2
 		yBins = ignBlends2_blendValues
 
 	curve = ignAdder3Bias, "Ignition adder 3 bias"
 		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
-		xBins = ignBlends3_blendBins, ignBlends3_blendVal
+		xBins = ignBlends3_blendBins, ignBlendParameter3
 		yBins = ignBlends3_blendValues
 
 	curve = ignAdder4Bias, "Ignition adder 4 bias"
 		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
-		xBins = ignBlends4_blendBins, ignBlends4_blendVal
+		xBins = ignBlends4_blendBins, ignBlendParameter4
 		yBins = ignBlends4_blendValues
 
 	curve = veBlend1Bias, "VE blend 1 bias"
 		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
-		xBins = veBlends1_blendBins, veBlends1_blendVal
+		xBins = veBlends1_blendBins, veBlendParameter1
 		yBins = veBlends1_blendValues
 
 	curve = veBlend2Bias, "VE blend 2 bias"
 		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
-		xBins = veBlends2_blendBins, veBlends2_blendVal
+		xBins = veBlends2_blendBins, veBlendParameter2
 		yBins = veBlends2_blendValues
 
 	curve = veBlend3Bias, "VE blend 3 bias"
 		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
-		xBins = veBlends3_blendBins, veBlends3_blendVal
+		xBins = veBlends3_blendBins, veBlendParameter3
 		yBins = veBlends3_blendValues
 
 	curve = veBlend4Bias, "VE blend 4 bias"
 		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
-		xBins = veBlends4_blendBins, veBlends4_blendVal
+		xBins = veBlends4_blendBins, veBlendParameter4
 		yBins = veBlends4_blendValues
 
 	curve = throttleEffectiveArea, "Throttle effective area"

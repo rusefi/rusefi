@@ -68,6 +68,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	for (size_t i = 0; i < efi::size(config->ignBlends); i++) {
 		auto result = calculateBlend(config->ignBlends[i], rpm, engineLoad);
 
+		engine->outputChannels.ignBlendParameter[i] = result.BlendParameter;
 		engine->outputChannels.ignBlendBias[i] = result.Bias;
 		engine->outputChannels.ignBlendOutput[i] = result.Value;
 
