@@ -9,10 +9,10 @@ float GetGearRatioFor(float revPerKm, float axle, float kph, float rpm) {
 	Sensor::setMockValue(SensorType::VehicleSpeed, kph);
 	Sensor::setMockValue(SensorType::Rpm, rpm);
 
-	GearDetector dut;
-	dut.onSlowCallback();
+	engine->periodicSlowCallback();
 
-	return Sensor::getOrZero(SensorType::DetectedGear);
+	auto& dut = engine->module<GearDetector>().unmock();
+	return dut.getGearboxRatio();
 }
 
 TEST(GearDetector, ComputeGearRatio) {
@@ -42,7 +42,7 @@ TEST(GearDetector, GetRpmInGear) {
 	engineConfiguration->gearRatio[3] = 1.00f;
 	engineConfiguration->gearRatio[4] = 0.72f;
 
-	GearDetector dut;
+	auto& dut = engine->module<GearDetector>().unmock();
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 29.45f / 0.6214f);
 	EXPECT_NEAR(5500, dut.getRpmInGear(1), 1);
@@ -69,7 +69,7 @@ TEST(GearDetector, GetRpmInGear) {
 
 TEST(GearDetector, DetermineGearSingleSpeed) {
 	EngineTestHelper eth(TEST_ENGINE);
-	GearDetector dut;
+	auto& dut = engine->module<GearDetector>().unmock();
 
 	engineConfiguration->totalGearsCount = 1;
 	engineConfiguration->gearRatio[0] = 2;
@@ -93,7 +93,7 @@ TEST(GearDetector, DetermineGearSingleSpeed) {
 
 TEST(GearDetector, DetermineGear5Speed) {
 	EngineTestHelper eth(TEST_ENGINE);
-	GearDetector dut;
+	auto& dut = engine->module<GearDetector>().unmock();
 
 	engineConfiguration->totalGearsCount = 5;
 	engineConfiguration->gearRatio[0] = 3.35;
@@ -137,7 +137,7 @@ TEST(GearDetector, DetermineGear5Speed) {
 
 TEST(GearDetector, MiataNb6Speed) {
 	EngineTestHelper eth(TEST_ENGINE);
-	GearDetector dut;
+	auto& dut = engine->module<GearDetector>().unmock();
 
 	engineConfiguration->totalGearsCount = 6;
 	engineConfiguration->gearRatio[0] = 3.76;
@@ -165,7 +165,7 @@ TEST(GearDetector, MiataNb6Speed) {
 
 TEST(GearDetector, DetermineGear8Speed) {
 	EngineTestHelper eth(TEST_ENGINE);
-	GearDetector dut;
+	auto& dut = engine->module<GearDetector>().unmock();
 
 	// ZF 8HP 70
 	engineConfiguration->totalGearsCount = 8;
@@ -204,7 +204,7 @@ TEST(GearDetector, DetermineGear8Speed) {
 
 TEST(GearDetector, ParameterValidation) {
 	EngineTestHelper eth(TEST_ENGINE);
-	GearDetector dut;
+	auto& dut = engine->module<GearDetector>().unmock();
 
 	// Defaults should work
 	EXPECT_NO_FATAL_ERROR(dut.onConfigurationChange(nullptr));
