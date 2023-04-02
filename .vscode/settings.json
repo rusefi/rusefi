@@ -15,4 +15,7 @@
 	"cSpell.words": [
 		"IACV"
 	],
+	"files.associations": {
+		"*.input": "ini"
+	},
 }
