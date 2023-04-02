@@ -40,6 +40,7 @@
 
 // 26 - AN volt 2
 #define MRE_IN_ANALOG_VOLT_2 EFI_ADC_6
+#define MRE_IN_TPS2 MRE_IN_ANALOG_VOLT_2
 
 // 31 - AN volt 3
 #define MRE_IN_ANALOG_VOLT_3 EFI_ADC_7

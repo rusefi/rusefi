@@ -45,6 +45,7 @@ void setMreM111EngineConfiguration() {
     setM111EngineConfiguration();
 
     setPPSInputs(MRE_IN_PPS, MRE_IN_PPS2);
+    setTPS1Inputs(MRE_IN_TPS, MRE_IN_TPS2);
 }
 
 void setProteusM111EngineConfiguration() {

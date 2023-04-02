@@ -183,6 +183,7 @@ pins:
     id: [A6, EFI_ADC_6]
     class: [switch_inputs, analog_inputs]
     color: light blue
+    function: TPS2
     ts_name: 26 - AN volt 2
     type: av
 
