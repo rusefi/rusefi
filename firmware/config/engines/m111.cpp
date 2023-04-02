@@ -39,6 +39,11 @@ void setM111EngineConfiguration() {
    	engineConfiguration->mapLowValueVoltage = 0.3;
   	engineConfiguration->map.sensor.highValue = 250;
    	engineConfiguration->mapHighValueVoltage = 4.65;
+
+	engineConfiguration->etb.pFactor = 5.12;
+	engineConfiguration->etb.iFactor = 47;
+	engineConfiguration->etb.dFactor = 0.088;
+	engineConfiguration->etb.offset = 0;
 }
 
 void setMreM111EngineConfiguration() {
@@ -46,6 +51,10 @@ void setMreM111EngineConfiguration() {
 
     setPPSInputs(MRE_IN_PPS, MRE_IN_PPS2);
     setTPS1Inputs(MRE_IN_TPS, MRE_IN_TPS2);
+    // note how these numbers are very flipped hyundai154 defaults?
+    setTPS1Calibration(891, 69, 98, 926);
+    // honda cable position sensor
+    setPPSCalibration(0.38, 4.77, 4.64, 2.47);
 }
 
 void setProteusM111EngineConfiguration() {

@@ -189,6 +189,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 
 
-
+    // note how these numbers are very flipped m111 defaults?
     setTPS1Calibration(98, 926, 891, 69);
 }
