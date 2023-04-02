@@ -68,7 +68,7 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 		return (float)engine->outputChannels.gppwmOutput[3];
 	case GPPWM_DetectedGear:
 #if EFI_VEHICLE_SPEED
-		return engine->module<GearDetector>()->getCurrentGear();
+		return Sensor::get(SensorType::DetectedGear);
 #else
     	return 0;
 #endif // EFI_VEHICLE_SPEED
