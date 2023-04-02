@@ -70,6 +70,9 @@ angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber);
 
 // Table blending helpers
 struct BlendResult {
+	// Input blend parameter (lookup to bias table)
+	float BlendParameter;
+
 	// Bias in percent (0-100%)
 	float Bias;
 
