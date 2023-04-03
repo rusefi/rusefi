@@ -10,7 +10,7 @@
 
 #if EFI_WS2812
 
-#include "ws2812.h"
+#include "WS2812.h"
 #include "ws2812_conf.h"
 
 
