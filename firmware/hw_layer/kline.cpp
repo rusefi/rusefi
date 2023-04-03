@@ -66,8 +66,6 @@ void kLineThread(void*) {
                 totalBytes++;
             }
             if (len > 1) {
-                efiPrintf("hack 0x%02x 0x%02x", bufferIn[0], bufferIn[4]);
-                efiPrintf("ha   0x%02x 0x%02x", crc_hondak_calc(bufferIn, 4), bufferIn[2] & 0x80);
                 int crc = crc_hondak_calc(bufferIn, len - 1);
                 if (crc == bufferIn[len - 1]) {
                     if (engineConfiguration->verboseKLine) {
