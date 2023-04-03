@@ -161,7 +161,7 @@ void initKLine() {
         doSend = true;
         efiPrintf("kline send %d", doSend);
     });
-    addConsoleAction("klineyes", [](){
+    addConsoleAction("klineno", [](){
         doSend = false;
         efiPrintf("kline send %d", doSend);
     });
