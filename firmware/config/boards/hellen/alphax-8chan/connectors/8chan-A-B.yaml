@@ -310,8 +310,8 @@ pins:
 
   - pin: 17B
     # H144_GP2
-    id: D2
-    class: switch_inputs
+    id: [D2, D2]
+    class: [event_inputs, switch_inputs]
     function: Digital Input Flex (5v pull-up, with hysteresis)
     type: hall
     ts_name: 17B - Digital In Flex
