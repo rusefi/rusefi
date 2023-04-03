@@ -56,7 +56,7 @@
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
 #if EFI_WS2812
-#include "ws2812.h"
+#include "WS2812.h"
 #endif /* EFI_WS2812 */
 
 #if EFI_MAP_AVERAGING
