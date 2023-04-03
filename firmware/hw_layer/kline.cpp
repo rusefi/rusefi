@@ -64,7 +64,7 @@ void kLineThread(void*) {
                 totalBytes++;
             }
             if (len > 1) {
-                efiPrintf("hack 0x%02x 0x%02x", bufferIn[0], bufferIn[5]);
+                efiPrintf("hack 0x%02x 0x%02x", bufferIn[0], bufferIn[4]);
                 efiPrintf("ha   0x%02x 0x%02x", crc_hondak_calc(bufferIn, 4), bufferIn[2] & 0x80);
                 int crc = crc_hondak_calc(bufferIn, len - 1);
                 if (crc == bufferIn[len - 1]) {
@@ -74,7 +74,7 @@ void kLineThread(void*) {
                     if (bufferIn[0] == HONDA_K_40_PACKET) {
                         handleHonda(bufferIn);
                     }
-                } else if (bufferIn[0] == HONDA_K_40_PACKET && bufferIn[5] == crc_hondak_calc(bufferIn, 4)) {
+                } else if (bufferIn[0] == HONDA_K_40_PACKET && bufferIn[4] == crc_hondak_calc(bufferIn, 4)) {
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("hack for now, happy CRC 0x%02x", crc);
                     }
