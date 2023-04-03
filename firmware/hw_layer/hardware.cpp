@@ -55,6 +55,9 @@
 #if EFI_MC33816
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
+#if EFI_WS2812
+#include "WS2812.h"
+#endif /* EFI_WS2812 */
 
 #if EFI_MAP_AVERAGING
 #include "map_averaging.h"
@@ -574,6 +577,10 @@ void initHardware() {
 #if EFI_HIP_9011
 	initHip9011();
 #endif /* EFI_HIP_9011 */
+
+#if EFI_WS2812
+	initWS2812();
+#endif /* EFI_LED_WS2812 */
 
 #if EFI_MEMS
 	initAccelerometer();
