@@ -20,6 +20,8 @@ size_t readWhileGives(ByteSource source, uint8_t *buffer, int bufferSize) {
 
 bool kAcRequestState;
 
+static bool doSend = false;
+
 static void handleHonda(uint8_t *bufferIn) {
     uint8_t acByte = bufferIn[2];
     kAcRequestState = acByte & 0x80;
@@ -79,6 +81,13 @@ void kLineThread(void*) {
                         efiPrintf("hack for now, happy CRC 0x%02x", crc);
                     }
                     handleHonda(bufferIn);
+                }
+
+
+                if (doSend) {
+                	const char out[] = {0x2, 0x0, 0x0, 0x50, 0x0, 0x0, 149};
+                    efiPrintf("kline doSend");
+                    chnWrite(klDriver, (const uint8_t *)out, 7);
                 }
             }
         }
@@ -147,6 +156,14 @@ void initKLine() {
     chThdCreateStatic(klThreadStack, sizeof(klThreadStack), NORMALPRIO + 1, kLineThread, nullptr);
     addConsoleAction("kline", [](){
         efiPrintf("kline totalBytes %d", totalBytes);
+    });
+    addConsoleAction("klineyes", [](){
+        doSend = true;
+        efiPrintf("kline send %d", doSend);
+    });
+    addConsoleAction("klineyes", [](){
+        doSend = false;
+        efiPrintf("kline send %d", doSend);
     });
     addConsoleActionI("klinesend", [](int value){
         kLineOutPending = true;
