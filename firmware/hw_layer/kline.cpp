@@ -39,9 +39,10 @@ static bool kLineOutPending = false;
 static int kLineOut;
 
 void kLineThread(void*) {
+    // due to single wire we read everything we've transmitted
+    bool ignoreRecentTransmit = false;
     while (1) {
-        // due to single wire we read everything we've transmitted
-        bool ignoreRecentTransmit = false;
+
         /**
          * under the hood there is SERIAL_BUFFERS_SIZE which we hope to help us
          */

@@ -673,6 +673,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->enableVerboseCanTx = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verboseKLine")) {
+		engine->verboseKLine = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {
 		engineConfiguration->isCJ125Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125verbose")) {
