@@ -42,6 +42,8 @@ static int kLineOut;
 
 void kLineThread(void*) {
     while (1) {
+        // due to single wire we read everything we've transmitted
+        bool ignoreRecentTransmit = false;
         /**
          * under the hood there is SERIAL_BUFFERS_SIZE which we hope to help us
          */
@@ -82,10 +84,13 @@ void kLineThread(void*) {
                 }
 
 
-                if (doSend) {
+                if (doSend && !ignoreRecentTransmit) {
                 	const char out[] = {0x2, 0x0, 0x0, 0x50, 0x0, 0x0, 149};
                     efiPrintf("kline doSend");
                     chnWrite(klDriver, (const uint8_t *)out, 7);
+                    ignoreRecentTransmit = true;
+                } else {
+                    ignoreRecentTransmit = false;
                 }
             }
         }
