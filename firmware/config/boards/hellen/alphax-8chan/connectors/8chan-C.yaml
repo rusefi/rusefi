@@ -162,6 +162,14 @@ pins:
     ts_name: 7C - AT4
     color: orange
 
+  - pin: 33C
+    ts_name: ___ KNOCK2
+    function: knock2 sensor signal
+
+  - pin: 34C
+    ts_name: ___ KNOCK1
+    function: knock1 sensor signal
+
 info:
   title: AlphaX 8chan
   name: AlphaX 8chan
