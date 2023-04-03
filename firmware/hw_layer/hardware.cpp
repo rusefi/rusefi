@@ -38,6 +38,7 @@
 #include "idle_hardware.h"
 #include "mcp3208.h"
 #include "hip9011.h"
+#include "ws2812.h"
 #include "histogram.h"
 #include "gps_uart.h"
 #include "HD44780.h"
@@ -574,6 +575,10 @@ void initHardware() {
 #if EFI_HIP_9011
 	initHip9011();
 #endif /* EFI_HIP_9011 */
+
+#if EFI_WS2812
+	initWS2812();
+#endif /* EFI_LED_WS2812 */
 
 #if EFI_MEMS
 	initAccelerometer();
