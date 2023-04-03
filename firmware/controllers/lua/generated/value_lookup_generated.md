@@ -1111,6 +1111,9 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 ### boardUseCanTerminator
 
 
+### kLineDoHondaSend
+
+
 ### benchTestOffTime
 Time between bench test pulses
 

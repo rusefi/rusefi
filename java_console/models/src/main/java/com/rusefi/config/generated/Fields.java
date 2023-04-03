@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 03 02:17:31 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 03 20:35:46 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1006,7 +1006,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1799833963;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1232,7 +1231,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.04.03.f407-discovery.1799833963";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.04.03.f407-discovery.4294653732";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
@@ -2037,6 +2036,7 @@ public class Fields {
 	public static final Field CAN2OPENBLT = Field.create("CAN2OPENBLT", 1628, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field INJECTORFLOWASMASSFLOW = Field.create("INJECTORFLOWASMASSFLOW", 1628, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field BOARDUSECANTERMINATOR = Field.create("BOARDUSECANTERMINATOR", 1628, FieldType.BIT, 4).setBaseOffset(0);
+	public static final Field KLINEDOHONDASEND = Field.create("KLINEDOHONDASEND", 1628, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field BENCHTESTOFFTIME = Field.create("BENCHTESTOFFTIME", 1632, FieldType.INT8).setScale(5.0).setBaseOffset(0);
 	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 1633, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1634, FieldType.INT8).setScale(5.0).setBaseOffset(0);
@@ -3505,6 +3505,7 @@ public class Fields {
 	CAN2OPENBLT,
 	INJECTORFLOWASMASSFLOW,
 	BOARDUSECANTERMINATOR,
+	KLINEDOHONDASEND,
 	BENCHTESTOFFTIME,
 	BENCHTESTCOUNT,
 	BENCHTESTONTIME,

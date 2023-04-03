@@ -1117,6 +1117,9 @@ float getConfigValueByName(const char *name) {
 // boardUseCanTerminator
 		case -312962799:
 			return engineConfiguration->boardUseCanTerminator;
+// kLineDoHondaSend
+		case 304164959:
+			return engineConfiguration->kLineDoHondaSend;
 // benchTestOffTime
 		case -1655178001:
 			return engineConfiguration->benchTestOffTime;
@@ -3450,6 +3453,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -312962799:
 	{
 		engineConfiguration->boardUseCanTerminator = (int)value;
+		return;
+	}
+		case 304164959:
+	{
+		engineConfiguration->kLineDoHondaSend = (int)value;
 		return;
 	}
 		case -1655178001:
