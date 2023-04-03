@@ -54,6 +54,10 @@ void kLineThread(void*) {
         };
         size_t len = readWhileGives(serialSource, bufferIn, sizeof(bufferIn));
 
+                    if (engineConfiguration->verboseKLine) {
+                        efiPrintf("ignoreRecentTransmit %d", ignoreRecentTransmit);
+                    }
+
         // to begin with just write byte to console
         if (len > 0) {
             if (engineConfiguration->verboseKLine) {
