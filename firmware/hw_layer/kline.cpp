@@ -133,7 +133,7 @@ void initKLine() {
 	startKLine();
 
     if (engineConfiguration->kLinePeriodUs == 0) {
-        engineConfiguration->kLinePeriodUs = 2000 /* us*/;
+        engineConfiguration->kLinePeriodUs = 300 /* us*/;
     }
 
 
