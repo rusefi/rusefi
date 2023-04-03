@@ -38,7 +38,6 @@
 #include "idle_hardware.h"
 #include "mcp3208.h"
 #include "hip9011.h"
-#include "ws2812.h"
 #include "histogram.h"
 #include "gps_uart.h"
 #include "HD44780.h"
@@ -56,6 +55,9 @@
 #if EFI_MC33816
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
+#if EFI_WS2812
+#include "ws2812.h"
+#endif /* EFI_WS2812 */
 
 #if EFI_MAP_AVERAGING
 #include "map_averaging.h"

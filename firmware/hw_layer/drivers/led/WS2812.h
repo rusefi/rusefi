@@ -7,11 +7,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 typedef struct {
   uint8_t red;    
   uint8_t green;
@@ -27,8 +22,4 @@ void setWS2812All(WS2812_RGB_t rgb_col);
 void setWS2812Brightness(uint8_t num);
 
 void calcBuf();
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
