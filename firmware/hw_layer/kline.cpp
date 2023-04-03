@@ -72,6 +72,11 @@ void kLineThread(void*) {
                     if (bufferIn[0] == HONDA_K_40_PACKET) {
                         handleHonda(bufferIn);
                     }
+                } else if (bufferIn[0] == HONDA_K_40_PACKET && bufferIn[5] == crc_hondak_calc(bufferIn, 4)) {
+                    if (engineConfiguration->verboseKLine) {
+                        efiPrintf("hack for now, happy CRC 0x%02x", crc);
+                    }
+                    handleHonda(bufferIn);
                 }
             }
         }
