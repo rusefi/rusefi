@@ -20,8 +20,6 @@ size_t readWhileGives(ByteSource source, uint8_t *buffer, int bufferSize) {
 
 bool kAcRequestState;
 
-static bool doSend = false;
-
 static void handleHonda(uint8_t *bufferIn) {
     uint8_t acByte = bufferIn[2];
     kAcRequestState = acByte & 0x80;
@@ -84,9 +82,11 @@ void kLineThread(void*) {
                 }
 
 
-                if (doSend && !ignoreRecentTransmit) {
+                if (engineConfiguration->kLineDoHondaSend && !ignoreRecentTransmit) {
                 	const char out[] = {0x2, 0x0, 0x0, 0x50, 0x0, 0x0, 149};
-                    efiPrintf("kline doSend");
+                    if (engineConfiguration->verboseKLine) {
+                        efiPrintf("kline doSend");
+                    }
                     chnWrite(klDriver, (const uint8_t *)out, 7);
                     ignoreRecentTransmit = true;
                 } else {
@@ -161,12 +161,12 @@ void initKLine() {
         efiPrintf("kline totalBytes %d", totalBytes);
     });
     addConsoleAction("klineyes", [](){
-        doSend = true;
-        efiPrintf("kline send %d", doSend);
+        engineConfiguration->kLineDoHondaSend = true;
+        efiPrintf("kline send %d", engineConfiguration->kLineDoHondaSend);
     });
     addConsoleAction("klineno", [](){
-        doSend = false;
-        efiPrintf("kline send %d", doSend);
+        engineConfiguration->kLineDoHondaSend = false;
+        efiPrintf("kline send %d", engineConfiguration->kLineDoHondaSend);
     });
     addConsoleActionI("klinesend", [](int value){
         kLineOutPending = true;
