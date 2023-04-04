@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -71,19 +72,25 @@ public class RandomToolHondaKPacketAnalyzer {
         System.out.println("Handling " + fileName);
         List<String> list = Files.lines(new File(fileName).toPath()).collect(Collectors.toList());
 
+        Map<Integer, AtomicInteger> perHeaderCounter = new TreeMap<>();
 
+        int total = 0;
         for (int i = 1; i < list.size(); i++) {
             String s = list.get(i).trim();
             if (s.isEmpty())
                 continue;
+            total++;
 
-            String x = getPayoad(s);
+            String payload = getPayoad(s);
 
-            int header = decode(x);
+            int header = decode(payload);
 
-            System.out.println("Looking at " + x + " " + header);
+            System.out.println("Looking at " + payload + " " + header);
 
             if (headerToLength.containsKey(header)) {
+
+                AtomicInteger counter = perHeaderCounter.computeIfAbsent(header, integer -> new AtomicInteger());
+                counter.incrementAndGet();
 
                 int length = headerToLength.get(header);
                 System.out.println("Header " + header + " has len " + length);
@@ -93,10 +100,11 @@ public class RandomToolHondaKPacketAnalyzer {
             }
 
 
-            throw new UnsupportedOperationException("Unexpected starts " + x + " " + header + " " + list.subList(i, i + 5));
+            throw new UnsupportedOperationException("Unexpected starts [" + payload + "] header=" + header + " " + list.subList(i, i + 5));
 
 
         }
+        System.out.println("Distribution in " + fileName + ": total=" + total + ": " + perHeaderCounter);
     }
 
     private static String getPayoad(String s) {
