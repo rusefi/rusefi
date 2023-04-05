@@ -228,7 +228,6 @@ INCDIR = $(ALLINC) \
 	.. \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
-	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(CONFIG)/engines \
 	$(CONFIG) \
 	$(CONFDIR) \
@@ -243,11 +242,8 @@ INCDIR = $(ALLINC) \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/hw_layer/adc \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
-	$(PROJECT_DIR)/hw_layer/serial_over_usb \
 	$(PROJECT_DIR)/hw_layer/algo \
-	$(PROJECT_DIR)/hw_layer/lcd \
 	$(PROJECT_DIR)/hw_layer/sensors \
-	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/ports \
 	$(PROJECT_DIR)/console/binary/generated \
 	$(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER) \
