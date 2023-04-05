@@ -59,13 +59,18 @@ public class RandomToolHondaKPacketAnalyzer {
 
             Set<String> payloads = packets.get(header);
 
-            System.out.println(comments.get(header) + ": Header " + header + ": packet of length " + (headerToLength.get(header) - 1) + ". Total " + payloads.size() + " payload variations");
+            System.out.println(comments.get(header) + ": Header " + dualSid(header, "/") + ": packet of length " + (headerToLength.get(header) - 1) + ". Total " + payloads.size() + " payload variations");
             System.out.println(payloads);
             System.out.println();
 
         }
 
 
+    }
+
+    public static String dualSid(int sid, String separator) {
+        char c = (char) sid;
+        return String.format("%d%s0x%x%s%s", sid, separator, sid, separator, "" + c);
     }
 
     private static void handle(String fileName) throws IOException {
@@ -104,7 +109,27 @@ public class RandomToolHondaKPacketAnalyzer {
 
 
         }
-        System.out.println("Distribution in " + fileName + ": total=" + total + ": " + perHeaderCounter);
+        System.out.println("Distribution in " + fileName + ": total=" + total + ": " + xx(perHeaderCounter));
+    }
+
+    private static String xx(Map<Integer, AtomicInteger> perHeaderCounter) {
+        Iterator<Map.Entry<Integer, AtomicInteger>> i = perHeaderCounter.entrySet().iterator();
+        if (!i.hasNext())
+            return "{}";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append('{');
+        for (; ; ) {
+            Map.Entry<Integer, AtomicInteger> e = i.next();
+            Integer key = e.getKey();
+            AtomicInteger value = e.getValue();
+            sb.append(dualSid(key, "/"));
+            sb.append('=');
+            sb.append(value);
+            if (!i.hasNext())
+                return sb.append('}').toString();
+            sb.append(',').append(' ');
+        }
     }
 
     private static String getPayoad(String s) {

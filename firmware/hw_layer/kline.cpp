@@ -41,6 +41,7 @@ static int kLineOut;
 void kLineThread(void*) {
     // due to single wire we read everything we've transmitted
     bool ignoreRecentTransmit = false;
+    int sendCounter = 0;
     while (1) {
 
         /**
@@ -88,11 +89,17 @@ void kLineThread(void*) {
 
 
                 if (engineConfiguration->kLineDoHondaSend && !ignoreRecentTransmit) {
-                	const char out[] = {0x2, 0x0, 0x0, 0x50, 0x0, 0x0, 149};
+                    sendCounter++;
+#define PACKET_SIZE 7
+                	const char out2[] = {0x2, 0x0, 0x0, 0x50, 0x0, 0x0, 149};
+                	static_assert(sizeof(out2) == PACKET_SIZE);
+                	const char outB[] = {0x42, 0x0, 0x0, 0x50, 0x0, 0x0, 164};
+                	static_assert(sizeof(outB) == PACKET_SIZE);
+                	const char *out = (sendCounter % 3 == 0) ? outB : out2;
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("kline doSend");
                     }
-                    chnWrite(klDriver, (const uint8_t *)out, 7);
+                    chnWrite(klDriver, (const uint8_t *)out, PACKET_SIZE);
                     ignoreRecentTransmit = true;
                 } else {
                     ignoreRecentTransmit = false;
