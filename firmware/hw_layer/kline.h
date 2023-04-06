@@ -21,4 +21,4 @@ void startKLine();
 void stopKLine();
 
 typedef size_t (*ByteSource)(uint8_t *, int);
-size_t readWhileGives(ByteSource source, uint8_t *buffer, int bufferSize);
+size_t readWhileGives(ByteSource source, uint8_t *buffer, size_t bufferSize);
