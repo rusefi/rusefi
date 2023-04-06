@@ -3,7 +3,7 @@
 #include "hellen_meta.h"
 #include "crc8hondak.h"
 
-size_t readWhileGives(ByteSource source, uint8_t *buffer, int bufferSize) {
+size_t readWhileGives(ByteSource source, uint8_t *buffer, size_t bufferSize) {
         size_t totalBytes = 0;
         while (totalBytes < bufferSize) {
            size_t readThisTime = source(&buffer[totalBytes], bufferSize - totalBytes);
@@ -15,6 +15,8 @@ size_t readWhileGives(ByteSource source, uint8_t *buffer, int bufferSize) {
         }
     return totalBytes;
 }
+
+#ifdef EFI_KLINE
 
 #define HONDA_K_40_PACKET 0x40
 
@@ -30,7 +32,6 @@ static void handleHonda(uint8_t *bufferIn) {
     }
 }
 
-#ifdef EFI_KLINE
 static SerialDriver* const klDriver = &KLINE_SERIAL_DEVICE;
 static THD_WORKING_AREA(klThreadStack, UTILITY_THREAD_STACK_SIZE);
 
