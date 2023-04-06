@@ -398,6 +398,7 @@ public:
 };
 
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
+	(void)name;
 	if (!isAdcChannelValid(setting)) {
 		return;
 	}
