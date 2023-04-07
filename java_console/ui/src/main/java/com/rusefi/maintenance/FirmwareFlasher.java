@@ -79,6 +79,7 @@ public class FirmwareFlasher {
             wnd.append("Flashing looks good!");
             sa.stop();
             wnd.setStatus(DONE);
+            wnd.setSuccessState();
         } else {
             wnd.setErrorState();
             wnd.append("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
