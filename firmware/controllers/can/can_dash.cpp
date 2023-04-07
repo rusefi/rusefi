@@ -1239,7 +1239,7 @@ static void populateFrame(Aim5f4& msg) {
 	msg.Boost = boostBar;
 	msg.Vbat = Sensor::getOrZero(SensorType::BatteryVoltage);
 	msg.FuelUse = 0;
-	msg.Gear = 0;
+	msg.Gear = Sensor::getOrZero(SensorType::CurrentGear);
 }
 
 struct Aim5f5 {
