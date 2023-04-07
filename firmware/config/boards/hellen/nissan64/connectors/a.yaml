@@ -1,0 +1,16 @@
+pins:
+  - pin: A4
+    function: Power GND
+    type: gnd
+
+info:
+  cid: nissan64
+  title: Nissan 64
+  name: Nissan 64
+  directory: hellen/nissan64
+  image:
+    file: x.jpg
+  pins:
+    - pin: A2
+      x: 85
+      y: 85
