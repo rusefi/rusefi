@@ -28,6 +28,8 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## April 2023 Release - "Day 408"
+
 ### Added
  - Rearrange & simplify trigger configuration UI #5077
  - Selectable CanBus channel for WBO inputs #5028
@@ -44,6 +46,7 @@ Release template (copy/paste this for new release):
  - console creates new log file every 100 ms #5112
  - CAN bus AFR value inverted #5160
  - Subaru EZ30 tdcPosition is now 240
+ - ETB control improvements hellen boards #5196
 
 ## February 2023 Release - "Day 346"
 
