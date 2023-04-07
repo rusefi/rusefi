@@ -1228,7 +1228,7 @@ struct Aim5f4 {
 	scaled_channel<uint16_t, 10000> Boost;
 	scaled_channel<uint16_t, 3200> Vbat;
 	scaled_channel<uint16_t, 10> FuelUse;
-	scaled_channel<uint16_t, 10> Gear;
+	scaled_channel<int16_t, 1> Gear;
 };
 
 static void populateFrame(Aim5f4& msg) {
