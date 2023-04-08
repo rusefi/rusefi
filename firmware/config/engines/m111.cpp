@@ -31,7 +31,10 @@ void setM111EngineConfiguration() {
     engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->globalTriggerAngleOffset = 109; // please use a timing light?
 
+    // todo: i wonder if we have less custom curve for same sensor?
     setAtSensor(&engineConfiguration->iat, /*temp low*/0, 7400, /*temp mid*/22, 2180, /*temp high*/ 100, 180);
+    // todo: i wonder if these custom IAT and CLT curves are effectively same?
+    setAtSensor(&engineConfiguration->clt, /*temp low*/0, 5750, /*temp mid*/30, 1750, /*temp high*/ 50, 750);
 
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
 	// GM TMAP is recommended
