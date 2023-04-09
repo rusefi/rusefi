@@ -104,7 +104,9 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		// Offset by this cylinder's position in the cycle
 		+ getCylinderAngle(event->cylinderIndex, event->cylinderNumber)
 		// Pull any extra timing for knock retard
-		+ engine->module<KnockController>()->getKnockRetard();
+		+ engine->module<KnockController>()->getKnockRetard()
+		// Degrees of timing REMOVED from actual timing during soft RPM limit window 
+		+ getLimpManager()->getLimitingTimingRetard();
 
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 

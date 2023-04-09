@@ -137,6 +137,8 @@ float getRunningFuel(float baseFuel) {
 	correction *= engine->launchController.getFuelCoefficient();
 #endif
 
+	correction *= getLimpManager()->getLimitingFuelCorrection();
+
     engine->fuelComputer.totalFuelCorrection = correction;
 
 	float runningFuel = baseFuel * correction;
