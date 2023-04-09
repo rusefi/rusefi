@@ -1588,3 +1588,15 @@ Crank angle ATDC of first lobe peak
 ### kLinePeriodUs
 
 
+### rpmSoftLimitWindowSize
+Window that the correction will be added throughout (example, if rpm limit is 7000, and rpmSoftLimitWindowSize is 200, the corrections activate at 6800RPM, creating a 200rpm window)
+
+### rpmSoftLimitTimingRetard
+Degrees of timing REMOVED from actual timing during soft RPM limit window
+
+### rpmSoftLimitFuelAdded
+% of fuel ADDED during window
+
+### rpmHardLimitHyst
+Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached
+

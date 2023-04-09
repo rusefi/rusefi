@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 08 14:02:28 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 09 16:16:38 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1006,6 +1006,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1704322144;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1231,7 +1232,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.04.08.f407-discovery.4294653732";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.04.09.f407-discovery.1704322144";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
@@ -2547,8 +2548,11 @@ public class Fields {
 	public static final Field UIMODE = Field.create("UIMODE", 3985, FieldType.INT8, UiMode).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPPEAKPOS = Field.create("HPFPPEAKPOS", 3986, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field KLINEPERIODUS = Field.create("KLINEPERIODUS", 3988, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSED16 = Field.create("UNUSED16", 3990, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3992, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field RPMSOFTLIMITWINDOWSIZE = Field.create("RPMSOFTLIMITWINDOWSIZE", 3990, FieldType.INT8).setScale(10.0).setBaseOffset(0);
+	public static final Field RPMSOFTLIMITTIMINGRETARD = Field.create("RPMSOFTLIMITTIMINGRETARD", 3991, FieldType.INT8).setScale(0.2).setBaseOffset(0);
+	public static final Field RPMSOFTLIMITFUELADDED = Field.create("RPMSOFTLIMITFUELADDED", 3992, FieldType.INT8).setScale(0.2).setBaseOffset(0);
+	public static final Field RPMHARDLIMITHYST = Field.create("RPMHARDLIMITHYST", 3993, FieldType.INT8).setScale(10.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3994, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4028, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4060, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4092, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -4006,7 +4010,10 @@ public class Fields {
 	UIMODE,
 	HPFPPEAKPOS,
 	KLINEPERIODUS,
-	UNUSED16,
+	RPMSOFTLIMITWINDOWSIZE,
+	RPMSOFTLIMITTIMINGRETARD,
+	RPMSOFTLIMITFUELADDED,
+	RPMHARDLIMITHYST,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

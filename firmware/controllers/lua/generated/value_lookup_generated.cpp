@@ -1594,6 +1594,18 @@ float getConfigValueByName(const char *name) {
 // kLinePeriodUs
 		case 1915146851:
 			return engineConfiguration->kLinePeriodUs;
+// rpmSoftLimitWindowSize
+		case 1092207266:
+			return engineConfiguration->rpmSoftLimitWindowSize;
+// rpmSoftLimitTimingRetard
+		case -543684839:
+			return engineConfiguration->rpmSoftLimitTimingRetard;
+// rpmSoftLimitFuelAdded
+		case 1094944685:
+			return engineConfiguration->rpmSoftLimitFuelAdded;
+// rpmHardLimitHyst
+		case 1756514810:
+			return engineConfiguration->rpmHardLimitHyst;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -4248,6 +4260,26 @@ void setConfigValueByName(const char *name, float value) {
 		case 1915146851:
 	{
 		engineConfiguration->kLinePeriodUs = (int)value;
+		return;
+	}
+		case 1092207266:
+	{
+		engineConfiguration->rpmSoftLimitWindowSize = (int)value;
+		return;
+	}
+		case -543684839:
+	{
+		engineConfiguration->rpmSoftLimitTimingRetard = (int)value;
+		return;
+	}
+		case 1094944685:
+	{
+		engineConfiguration->rpmSoftLimitFuelAdded = (int)value;
+		return;
+	}
+		case 1756514810:
+	{
+		engineConfiguration->rpmHardLimitHyst = (int)value;
 		return;
 	}
 	}

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Apr 03 20:34:53 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Apr 09 16:15:54 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4478,14 +4478,34 @@ struct engine_configuration_s {
 	 */
 	int16_t kLinePeriodUs;
 	/**
+	 * Window that the correction will be added throughout (example, if rpm limit is 7000, and rpmSoftLimitWindowSize is 200, the corrections activate at 6800RPM, creating a 200rpm window)
+	RPM
 	 * offset 3990
 	 */
-	int16_t unused16;
+	scaled_channel<uint8_t, 1, 10> rpmSoftLimitWindowSize;
 	/**
-	units
+	 * Degrees of timing REMOVED from actual timing during soft RPM limit window
+	deg
+	 * offset 3991
+	 */
+	scaled_channel<uint8_t, 5, 1> rpmSoftLimitTimingRetard;
+	/**
+	 * % of fuel ADDED during window
+	%
 	 * offset 3992
 	 */
-	uint8_t mainUnusedEnd[36];
+	scaled_channel<uint8_t, 5, 1> rpmSoftLimitFuelAdded;
+	/**
+	 * Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached
+	RPM
+	 * offset 3993
+	 */
+	scaled_channel<uint8_t, 1, 10> rpmHardLimitHyst;
+	/**
+	units
+	 * offset 3994
+	 */
+	uint8_t mainUnusedEnd[34];
 };
 static_assert(sizeof(engine_configuration_s) == 4028);
 
@@ -5303,4 +5323,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22432);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Apr 03 20:34:53 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Apr 09 16:15:54 UTC 2023
