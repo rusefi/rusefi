@@ -67,7 +67,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			? interpolate2d(Sensor::getOrZero(SensorType::Clt), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
 			: (float)engineConfiguration->rpmHardLimit;
 
-		// Require 50 rpm drop before resuming
+		// Configurable hysteresis for how far to drop before resuming
 		float resumeRpm = revLimit - engineConfiguration->rpmHardLimitHyst;
 		if (m_revLimitHysteresis.test(rpm, revLimit, resumeRpm)) {
 			if (engineConfiguration->cutFuelOnHardLimit) {
