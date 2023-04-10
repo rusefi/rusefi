@@ -113,6 +113,9 @@ public:
 
 	bool allowTriggerInput() const;
 
+	angle_t getLimitingTimingRetard() const;
+	float getLimitingFuelCorrection() const;
+
 	// Other subsystems call these APIs to indicate a problem has occurred
 	void reportEtbProblem();
 	void fatalError();
@@ -139,6 +142,9 @@ private:
 
 	// Ignition switch state
 	bool m_ignitionOn = false;
+
+	angle_t m_timingRetard = 0;
+	float m_fuelCorrection = 1.0f;
 };
 
 LimpManager * getLimpManager();

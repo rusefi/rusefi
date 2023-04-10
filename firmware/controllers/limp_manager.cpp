@@ -60,8 +60,9 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			? interpolate2d(Sensor::getOrZero(SensorType::Clt), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
 			: (float)engineConfiguration->rpmHardLimit;
 
-		// Require 50 rpm drop before resuming
-		if (m_revLimitHysteresis.test(rpm, revLimit, revLimit - 50)) {
+		// Require configurable rpm drop before resuming
+		float revLimitLow = revLimit - engineConfiguration->rpmHardLimitHyst;
+		if (m_revLimitHysteresis.test(rpm, revLimit, revLimitLow)) {
 			if (engineConfiguration->cutFuelOnHardLimit) {
 				allowFuel.clear(ClearReason::HardLimit);
 			}
@@ -70,6 +71,10 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 				allowSpark.clear(ClearReason::HardLimit);
 			}
 		}
+
+		m_timingRetard = interpolateClamped(revLimitLow, 0, revLimit, engineConfiguration->rpmSoftLimitTimingRetard, rpm);
+		percent_t fuelAdded = interpolateClamped(revLimitLow, 0, revLimit, engineConfiguration->rpmSoftLimitFuelAdded, rpm);
+		m_fuelCorrection = 1.0f + fuelAdded / 100;
 	}
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -226,4 +231,16 @@ LimpState LimpManager::allowIgnition() const {
 		return {false, m_transientAllowIgnition.clearReason};
 	}
 	return {true, ClearReason::None};
+}
+
+angle_t LimpManager::getLimitingTimingRetard() const {
+	if (!engineConfiguration->cutSparkOnHardLimit)
+		return 0;
+	return m_timingRetard;
+}
+
+float LimpManager::getLimitingFuelCorrection() const {
+	if (!engineConfiguration->cutFuelOnHardLimit)
+		return 1.0f;	// no correction
+	return m_fuelCorrection;
 }
