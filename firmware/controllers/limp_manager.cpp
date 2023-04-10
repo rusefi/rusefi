@@ -68,7 +68,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			: (float)engineConfiguration->rpmHardLimit;
 
 		// Require 50 rpm drop before resuming
-		if (m_revLimitHysteresis.test(rpm, revLimit, revLimit - 50)) {
+		float resumeRpm = revLimit - engineConfiguration->rpmHardLimitHyst;
+		if (m_revLimitHysteresis.test(rpm, revLimit, resumeRpm)) {
 			if (engineConfiguration->cutFuelOnHardLimit) {
 				allowFuel.clear(ClearReason::HardLimit);
 			}

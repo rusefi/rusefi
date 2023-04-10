@@ -3543,7 +3543,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Cut fuel on RPM limit",				cutFuelOnHardLimit
 		field = "Cut spark on RPM limit",				cutSparkOnHardLimit
 		field = "Use CLT-based RPM limit curve",		useCltBasedRpmLimit, { cutFuelOnHardLimit || cutSparkOnHardLimit }
-		field = "RPM hard limit",							rpmHardLimit, { (cutFuelOnHardLimit || cutSparkOnHardLimit) &&  !useCltBasedRpmLimit }
+		field = "RPM hard limit",						rpmHardLimit, { (cutFuelOnHardLimit || cutSparkOnHardLimit) && !useCltBasedRpmLimit }
+		field = "Hard limit hysteresis",				rpmHardLimitHyst, { cutFuelOnHardLimit || cutSparkOnHardLimit }
 		field = "Boost cut pressure",					boostCutPressure
 		field = "Minimum oil pressure after start",		minOilPressureAfterStart
 
