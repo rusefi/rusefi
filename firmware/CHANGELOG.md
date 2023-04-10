@@ -47,6 +47,7 @@ Release template (copy/paste this for new release):
  - CAN bus AFR value inverted #5160
  - Subaru EZ30 tdcPosition is now 240
  - ETB control improvements hellen boards #5196
+ - Require either analog AFR or CAN AFR input not both #5226
 
 ## February 2023 Release - "Day 346"
 
