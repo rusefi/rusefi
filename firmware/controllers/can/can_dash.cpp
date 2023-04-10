@@ -1228,7 +1228,7 @@ struct Aim5f4 {
 	scaled_channel<uint16_t, 10000> Boost;
 	scaled_channel<uint16_t, 3200> Vbat;
 	scaled_channel<uint16_t, 10> FuelUse;
-	scaled_channel<uint16_t, 10> Gear;
+	scaled_channel<uint16_t, 1> Gear;
 };
 
 static void populateFrame(Aim5f4& msg) {
@@ -1239,7 +1239,7 @@ static void populateFrame(Aim5f4& msg) {
 	msg.Boost = boostBar;
 	msg.Vbat = Sensor::getOrZero(SensorType::BatteryVoltage);
 	msg.FuelUse = 0;
-	msg.Gear = 0;
+	msg.Gear = Sensor::getOrZero(SensorType::DetectedGear);
 }
 
 struct Aim5f5 {
