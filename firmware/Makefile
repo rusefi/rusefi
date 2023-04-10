@@ -291,12 +291,9 @@ INCDIR = \
   $(TESTINC) \
   $(BOOTLOADERINC) \
   $(CHIBIOS)/os/various \
-  $(CHIBIOS)/os/hal/lib/peripherals/sensors \
   $(RUSEFI_LIB_INC) \
   $(CONFDIR) \
   ext/FatFS \
-  $(PROJECT_DIR)/hw_layer/mass_storage \
-  $(PROJECT_DIR)/hw_layer/serial_over_usb \
   $(PROJECT_DIR)/hw_layer/mass_storage \
   $(HW_INC) \
   development/hw_layer \
