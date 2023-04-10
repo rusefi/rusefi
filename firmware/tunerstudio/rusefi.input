@@ -3051,8 +3051,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Correction",							egoValueShift
 
 	dialog = egoSettings_IO1,	"EGO Sensor 1 I/O"
-		field = "Input channel",						afr_hwChannel
-		field = "Heater output",						o2heaterPin
+		field = "Input channel",						afr_hwChannel,{afr_hwChannel != @@ADC_CHANNEL_NONE@@ || enableAemXSeries == 0 }
+		field = "Heater output",						o2heaterPin,  {  o2heaterPin != 0 || enableAemXSeries == 0 }
 
 	dialog = egoSettings_IO2,	"EGO Sensor 2 I/O"
 		field = "Input channel",						afr_hwChannel2
