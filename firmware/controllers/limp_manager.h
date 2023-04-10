@@ -143,7 +143,7 @@ private:
 	// Ignition switch state
 	bool m_ignitionOn = false;
 
-	angle_t timingRetard = 0;
+	angle_t m_timingRetard = 0;
 	float m_fuelCorrection = 1.0f;
 };
 
