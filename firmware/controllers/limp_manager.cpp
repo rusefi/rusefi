@@ -61,7 +61,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			: (float)engineConfiguration->rpmHardLimit;
 
 		// Require configurable rpm drop before resuming
-		if (m_revLimitHysteresis.test(rpm, revLimit, revLimit - rpmHardLimitHyst)) {
+		float revLimitLow = revLimit - engineConfiguration->rpmHardLimitHyst;
+		if (m_revLimitHysteresis.test(rpm, revLimit, revLimitLow)) {
 			if (engineConfiguration->cutFuelOnHardLimit) {
 				allowFuel.clear(ClearReason::HardLimit);
 			}
@@ -71,8 +72,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			}
 		}
 
-		m_timingRetard = interpolateClamped(revLimit - rpmHardLimitHyst, 0, revLimit, engineConfiguration->rpmSoftLimitTimingRetard, rpm);
-		percent_t fuelAdded = interpolateClamped(revLimit - rpmHardLimitHyst, 0, revLimit, engineConfiguration->rpmSoftLimitFuelAdded, rpm);
+		m_timingRetard = interpolateClamped(revLimitLow, 0, revLimit, engineConfiguration->rpmSoftLimitTimingRetard, rpm);
+		percent_t fuelAdded = interpolateClamped(revLimitLow, 0, revLimit, engineConfiguration->rpmSoftLimitFuelAdded, rpm);
 		m_fuelCorrection = 1.0f + fuelAdded / 100;
 	}
 
