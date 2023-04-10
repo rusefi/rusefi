@@ -977,6 +977,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tpsSecondaryMaximum;
 		case -727657058:
 			return engineConfiguration->ppsSecondaryMaximum;
+		case 1756514810:
+			return engineConfiguration->rpmHardLimitHyst;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3416,6 +3418,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -727657058:
 	{
 		engineConfiguration->ppsSecondaryMaximum = (int)value;
+		return;
+	}
+		case 1756514810:
+	{
+		engineConfiguration->rpmHardLimitHyst = (int)value;
 		return;
 	}
 	}

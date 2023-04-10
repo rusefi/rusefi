@@ -3159,9 +3159,14 @@ struct engine_configuration_s {
 	// offset 3660
 	pin_input_mode_e luaDigitalInputPinModes[LUA_DIGITAL_INPUT_COUNT];
 
-	// units
+	// If the hard limit is 7200rpm and hysteresis is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached
+	// RPM
 	// offset 3668
-	uint8_t mainUnusedEnd[96];
+	scaled_channel<uint8_t, 1, 10> rpmHardLimitHyst;
+
+	// units
+	// offset 3669
+	uint8_t mainUnusedEnd[95];
 
 };
 static_assert(sizeof(engine_configuration_s) == 3764);

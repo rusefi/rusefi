@@ -1459,3 +1459,6 @@ For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%
 ### ppsSecondaryMaximum
 For Toyota ETCS-i, use ~69%
 
+### rpmHardLimitHyst
+If the hard limit is 7200rpm and hysteresis is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached
+
