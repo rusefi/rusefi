@@ -14,10 +14,10 @@
 #define MRE_INJ_3 Gpio::TLE8888_PIN_3
 #define MRE_INJ_4 Gpio::TLE8888_PIN_4
 
-// OpenDrain: 4.5A
+// pin 7 - OpenDrain: 4.5A
 #define MRE_LS_1 Gpio::TLE8888_PIN_6
 
-// "3 - Lowside 2"
+// pin 3 - Lowside 2
 #define MRE_LS_2 Gpio::TLE8888_PIN_5
 
 // clt = "18 - AN temp 1"
@@ -61,6 +61,9 @@
 
 // 28 - AN volt 10
 #define MRE_IN_ANALOG_VOLT_10 EFI_ADC_4
+
+// 33
+#define MRE_GPOUT_3 TLE8888_PIN_23
 
 #if HW_MICRO_RUSEFI
 static Gpio MRE_OUTPUTS[] = {

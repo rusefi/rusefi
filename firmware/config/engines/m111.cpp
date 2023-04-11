@@ -14,7 +14,9 @@
 #include "proteus_meta.h"
 #endif // HW_PROTEUS
 
+#if HW_MICRO_RUSEFI
 #include "mre_meta.h"
+#endif // HW_MICRO_RUSEFI
 
 void setM111EngineConfiguration() {
 	engineConfiguration->specs.cylindersCount = 4;
@@ -47,13 +49,28 @@ void setM111EngineConfiguration() {
 	engineConfiguration->etb.iFactor = 47;
 	engineConfiguration->etb.dFactor = 0.088;
 	engineConfiguration->etb.offset = 0;
+
+	gppwm_channel *scBypass = &engineConfiguration->gppwm[0];
+    strcpy(engineConfiguration->gpPwmNote[0], "SC Bypass");
+#if HW_MICRO_RUSEFI
+    scBypass->pin = MRE_GPOUT_3;
+#endif // HW_MICRO_RUSEFI
+
+	gppwm_channel *scClutch = &engineConfiguration->gppwm[1];
+#if HW_MICRO_RUSEFI
+    scClutch->pin = MRE_LS_2;
+#endif // HW_MICRO_RUSEFI
+    strcpy(engineConfiguration->gpPwmNote[1], "SC Clutch");
+
 }
 
 void setMreM111EngineConfiguration() {
     setM111EngineConfiguration();
 
+#if HW_MICRO_RUSEFI
     setPPSInputs(MRE_IN_PPS, MRE_IN_PPS2);
     setTPS1Inputs(MRE_IN_TPS, MRE_IN_TPS2);
+#endif // HW_MICRO_RUSEFI
     // note how these numbers are very flipped hyundai154 defaults?
     setTPS1Calibration(891, 69, 98, 926);
     // honda cable position sensor
