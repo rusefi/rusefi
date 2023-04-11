@@ -39,7 +39,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.deltaTpsValue, "fuel: TPS change", "ratio", 0},
 	{engine->outputChannels.canReadCounter, "canReadCounter", "", 0},
 	{engine->outputChannels.tpsAccelFuel, "fuel: TPS acceleration add fuel ms", "ms", 3},
-	{engine->outputChannels.ignitionAdvance, "timing", "deg", 1},
+	{engine->outputChannels.ignitionAdvance, "Timing: base ignition", "deg", 1},
 	{engine->outputChannels.coilDutyCycle, "Ignition: coil duty cycle", "%", 0},
 	{engine->outputChannels.idleAirValvePosition, "Idle Air Valve", "%", 1},
 	{engine->outputChannels.etbTarget, "ETB Target", "%", 2},

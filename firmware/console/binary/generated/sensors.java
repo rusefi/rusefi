@@ -37,7 +37,7 @@ revolutionCounterSinceStart("revolutionCounterSinceStart", SensorCategory.SENSOR
 deltaTpsValue("fuel: TPS change", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 70, 0.01, 0.0, 0.0, "ratio"),
 canReadCounter("canReadCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 72, 1.0, 0.0, 0.0, ""),
 tpsAccelFuel("fuel: TPS acceleration add fuel ms", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 74, 0.0033333333333333335, 0.0, 0.0, "ms"),
-ignitionAdvance("timing", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 76, 0.02, 0.0, 0.0, "deg"),
+ignitionAdvance("Timing: base ignition", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 76, 0.02, 0.0, 0.0, "deg"),
 unusedDwellWasHere("unusedDwellWasHere", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 78, 1.0, -1.0, -1.0, ""),
 coilDutyCycle("Ignition: coil duty cycle", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 80, 0.01, 0.0, 0.0, "%"),
 idleAirValvePosition("Idle Air Valve", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 82, 0.01, 0.0, 0.0, "%"),
