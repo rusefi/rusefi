@@ -1,7 +1,7 @@
 #include "pch.h"
 
 // Decode what OBD code we should use for a particular [sensor, code] problem
-static obd_code_e getCode(SensorType type, UnexpectedCode code) {
+static ObdCode getCode(SensorType type, UnexpectedCode code) {
 	switch (type) {
 		case SensorType::Tps1:
 		case SensorType::Tps1Primary:
@@ -114,14 +114,14 @@ static void check(SensorType type) {
 		return;
 	}
 
-	obd_code_e code = getCode(type, result.Code);
+	ObdCode code = getCode(type, result.Code);
 
 	if (code != OBD_None) {
 		warning(code, "Sensor fault: %s %s", Sensor::getSensorName(type), describeUnexpected(result.Code));
 	}
 }
 
-static obd_code_e getCodeForInjector(int idx, brain_pin_diag_e diag) {
+static ObdCode getCodeForInjector(int idx, brain_pin_diag_e diag) {
 	if (idx < 0 || idx >= 12) {
 		return OBD_None;
 	}
@@ -129,10 +129,10 @@ static obd_code_e getCodeForInjector(int idx, brain_pin_diag_e diag) {
 	// TODO: do something more intelligent with `diag`?
 	UNUSED(diag);
 
-	return (obd_code_e)((int)OBD_Injector_Circuit_1 + idx);
+	return (ObdCode)((int)OBD_Injector_Circuit_1 + idx);
 }
 
-static obd_code_e getCodeForIgnition(int idx, brain_pin_diag_e diag) {
+static ObdCode getCodeForIgnition(int idx, brain_pin_diag_e diag) {
 	if (idx < 0 || idx >= 12) {
 		return OBD_None;
 	}
@@ -140,7 +140,7 @@ static obd_code_e getCodeForIgnition(int idx, brain_pin_diag_e diag) {
 	// TODO: do something more intelligent with `diag`?
 	UNUSED(diag);
 
-	return (obd_code_e)((int)OBD_Ignition_Circuit_1 + idx);
+	return (ObdCode)((int)OBD_Ignition_Circuit_1 + idx);
 }
 
 void SensorChecker::onSlowCallback() {

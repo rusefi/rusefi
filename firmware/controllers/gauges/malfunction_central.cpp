@@ -17,7 +17,7 @@ static error_codes_set_s error_codes_set;
 /**
  * @return -1 if code not found
  */
-static int find_position(obd_code_e e_code)							// Search if code is present 
+static int find_position(ObdCode e_code)							// Search if code is present 
 {
 	// cycle for searching element equal seaching code
 	for (int t = 0; t < error_codes_set.count; t++)
@@ -30,14 +30,14 @@ void clearWarnings(void) {
 	error_codes_set.count = 0;
 }
 
-void addError(obd_code_e errorCode) {
+void addError(ObdCode errorCode) {
 	if (error_codes_set.count < MAX_ERROR_CODES_COUNT && find_position(errorCode) == -1) {
 		error_codes_set.error_codes[error_codes_set.count] = errorCode;
 		error_codes_set.count++;
 	}
 }
 
-void removeError(obd_code_e errorCode) {
+void removeError(ObdCode errorCode) {
 	int pos = find_position(errorCode);
 	if (pos >= 0) {
 		// shift all right elements to one pos left
@@ -45,11 +45,11 @@ void removeError(obd_code_e errorCode) {
 			error_codes_set.error_codes[t] = error_codes_set.error_codes[t + 1];
 		}
 
-		error_codes_set.error_codes[--error_codes_set.count] = (obd_code_e)0;				// place 0
+		error_codes_set.error_codes[--error_codes_set.count] = (ObdCode)0;				// place 0
 	}
 }
 
-void setError(bool isError, obd_code_e errorCode) {
+void setError(bool isError, ObdCode errorCode) {
 	if (isError) {
 		addError(errorCode);
 	} else {

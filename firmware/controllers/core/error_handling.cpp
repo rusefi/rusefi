@@ -127,7 +127,7 @@ WarningCodeState unitTestWarningCodeState;
  *
  * @returns TRUE in case there were warnings recently
  */
-bool warning(obd_code_e code, const char *fmt, ...) {
+bool warning(ObdCode code, const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return true;
 
@@ -219,7 +219,7 @@ void onUnlockHook(void) {
 #include <stdexcept>
 #endif
 
-void firmwareError(obd_code_e code, const char *fmt, ...) {
+void firmwareError(ObdCode code, const char *fmt, ...) {
 #if EFI_PROD_CODE
 	if (hasFirmwareErrorFlag)
 		return;

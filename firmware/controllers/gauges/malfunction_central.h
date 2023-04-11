@@ -14,7 +14,7 @@
 
 struct error_codes_set_s {
 	int count = 0;
-	obd_code_e error_codes[MAX_ERROR_CODES_COUNT];
+	ObdCode error_codes[MAX_ERROR_CODES_COUNT];
 };
 
 /**
@@ -23,14 +23,14 @@ struct error_codes_set_s {
  * The error code stays in the data structure till it is removed by 'clearError'
  *
  */
-void addError(obd_code_e errorCode);
+void addError(ObdCode errorCode);
 /**
  * @brief Removed the error code from the set of current errors.
  *
  */
-void removeError(obd_code_e errorCode);
+void removeError(ObdCode errorCode);
 
-void setError(bool isError, obd_code_e errorCode);
+void setError(bool isError, ObdCode errorCode);
 
 void clearWarnings(void);
 /**

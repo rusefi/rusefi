@@ -91,7 +91,7 @@ static void sayHello() {
 	chThdSleepMilliseconds(5);
 }
 
-void validateStack(const char*msg, obd_code_e code, int desiredStackUnusedSize) {
+void validateStack(const char*msg, ObdCode code, int desiredStackUnusedSize) {
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 	int unusedStack = CountFreeStackSpace(chThdGetSelfX()->wabase);
 	if (unusedStack < desiredStackUnusedSize) {

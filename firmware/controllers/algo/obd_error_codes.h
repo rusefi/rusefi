@@ -2182,7 +2182,7 @@ typedef enum {
 // as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
 	// this is needed for proper enum size, this matters for malfunction_central
 	Internal_ForceMyEnumIntSize_cranking_obd_code = 2000000000,
-} obd_code_e;
+} ObdCode;
 
 #ifdef __cplusplus
 }

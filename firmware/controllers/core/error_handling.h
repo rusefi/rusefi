@@ -22,7 +22,7 @@ extern "C"
  *
  * see also firmwareError()
  */
-bool warning(obd_code_e code, const char *fmt, ...);
+bool warning(ObdCode code, const char *fmt, ...);
 
 using critical_msg_t = char[ERROR_BUFFER_SIZE];
 
@@ -33,7 +33,7 @@ using critical_msg_t = char[ERROR_BUFFER_SIZE];
  *
  * see also warning()
  */
-void firmwareError(obd_code_e code, const char *fmt, ...);
+void firmwareError(ObdCode code, const char *fmt, ...);
 
 extern bool hasFirmwareErrorFlag;
 
