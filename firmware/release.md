@@ -11,7 +11,7 @@
 _patch releases should contain no new features or config changes, only bug fixes that actually matter_
 
 1. Check out the previous release branch (created for the original release above)
-1. Cherry pick the bugfix you want from master (or make the fix by hand)
+1. Cherry pick the bugfix(es) you want from master (or make the fix by hand)
 1. Create a tag in the format `release_YYMM_nn` where `nn` is incremented from the previous tag on that branch. For example, if the last tag was `release_2304_02`, create a tag `release_2304_03` for the new patch.
 1. Push the branch & tag
 1. Create a new release with artifacts from the FW build
