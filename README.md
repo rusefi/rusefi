@@ -12,19 +12,13 @@
 
 Online and offline (PDF) versions of the user manual available here: https://wiki.fome.tech/
 
-# Cloning the repository
-
-`git clone https://github.com/FOME-Tech/fome-fw.git`
-
-`git submodule update --init`
-
 # What do we have here?
  * [Firmware](/firmware) Source code for open source engine control unit for stm32 chips
- * [rusEFI console](/java_console) ECU debugging/development software
- * [Simulator](/simulator) win32 or posix version of firmware allows to explore without any hardware 
- * [Unit Tests](/unit_tests) Unit tests of firmware pieces
+ * [FOME console](/java_console) ECU debugging/development software
+ * [Simulator](/simulator) Windows or Linux version of firmware allows exploration without any hardware 
+ * [Unit Tests](/unit_tests) Unit tests of firmware
  * [Misc tools](/java_tools) Misc development utilities
- * [misc/Jenkins](/misc/jenkins) Jenkins Continuous Integration scripts
+ * [misc/Jenkins](/misc/jenkins) Continuous integration scripts
 
 # External Links
 
@@ -38,9 +32,19 @@ TODO
  * [YouTube](https://www.youtube.com/user/rusefi)
  * [Patreon](https://www.patreon.com/rusefi) -->
 
-# Building the Code
+# Contributors
 
-See [check.c](https://github.com/FOME-Tech/fome-fw/blob/master/firmware/check.c) for recommended version of GCC.
+This project exists thanks to all the people who contribute their time, expertise, and testing. If you'd like to get involved, 
+
+## Cloning the repository
+
+`git clone https://github.com/FOME-Tech/fome-fw.git`
+
+`git submodule update --init`
+
+## Building
+
+See [check.c](https://github.com/FOME-Tech/fome-fw/blob/master/firmware/check.c) for the recommended version of GCC.
 
 Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
