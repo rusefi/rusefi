@@ -110,6 +110,8 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 
+    engine->ignitionState.perCylinderTiming[event->cylinderIndex] = sparkAngle;
+
 	auto ignitionMode = getCurrentIgnitionMode();
 
 	const int index = getIgnitionPinForIndex(event->cylinderIndex, ignitionMode);
