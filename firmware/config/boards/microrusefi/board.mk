@@ -28,11 +28,15 @@ DDEFS += -DFIRMWARE_ID=\"microRusEFI\"
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += $(VAR_DEF_ENGINE_TYPE)
 
-# This board can capture SENT
-DDEFS += -DEFI_SENT_SUPPORT=TRUE
+# F7 we are running out of flash?! only package goodies into F4
+ifeq ($(PROJECT_CPU),ARCH_STM32F4)
+    # This board can capture SENT
+    DDEFS += -DEFI_SENT_SUPPORT=TRUE
 
-# This board has LIN/K-line interface
-DDEFS += -DEFI_KLINE=TRUE
+    # This board has LIN/K-line interface
+    DDEFS += -DEFI_KLINE=TRUE
+endif
+
 DDEFS += -DKLINE_SERIAL_DEVICE_RX=Gpio::D9 -DKLINE_SERIAL_DEVICE_TX=Gpio::D8
 DDEFS += -DKLINE_SERIAL_DEVICE=SD3
 DDEFS += -DSTM32_SERIAL_USE_USART3=TRUE
