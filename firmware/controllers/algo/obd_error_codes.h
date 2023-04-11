@@ -1098,7 +1098,7 @@ typedef enum {
 	//P2134 Throttle/Pedal Pos Sensor/Switch F Circ Interm
 	OBD_TPS1_Correlation = 2135,
 	OBD_TPS2_Correlation = 2136,
-	OBD_PPS_Correlation = 2136,
+	OBD_PPS_Correlation = 2137,
 	//P2135 Throttle/Pedal Pos Sensor/Switch A / B Voltage Correlation
 	//P2136 Throttle/Pedal Pos Sensor/Switch A / C Voltage Correlation
 	//P2137 Throttle/Pedal Pos Sensor/Switch B / C Voltage Correlation
