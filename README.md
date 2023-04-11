@@ -34,7 +34,9 @@ TODO
 
 # Contributors
 
-This project exists thanks to all the people who contribute their time, expertise, and testing. If you'd like to get involved, 
+This project exists thanks to all the people who contribute their time, expertise, and testing.
+
+If you'd like to get involved, see [contributing](CONTRIBUTING.md).
 
 ## Cloning the repository
 
