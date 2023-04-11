@@ -53,12 +53,15 @@ extern WarningCodeState unitTestWarningCodeState;
 TEST(etb, intermittentTps) {
 	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
+	warningBuffer_t &recentWarnings = unitTestWarningCodeState.recentWarnings;
+	recentWarnings.clear();
 
 	// Tell the sensor checker that the ignition is on
 	engine->module<SensorChecker>()->onIgnitionStateChanged(true);
 	engine->module<SensorChecker>()->onSlowCallback();
-	timeNowUs += 10e6;
+	timeNowUs += MS2US(1000);
 	engine->module<SensorChecker>()->onSlowCallback();
+	EXPECT_EQ( 3,  recentWarnings.getCount()) << "intermittentTps";
 
 	ASSERT_TRUE(engine->module<SensorChecker>()->analogSensorsShouldWork());
 
@@ -92,7 +95,11 @@ TEST(etb, intermittentTps) {
 	etb->update();
 
 	EXPECT_NE(0, etb->etbErrorCode);
-	EXPECT_EQ( 3,  unitTestWarningCodeState.recentWarnings.getCount()) << "intermittentTps";
+
+	EXPECT_EQ( 3,  recentWarnings.getCount()) << "intermittentTps";
+	EXPECT_EQ(OBD_PPS_Correlation, recentWarnings.get(0).Code);
+	EXPECT_EQ(OBD_TPS1_Primary_Timeout, recentWarnings.get(1).Code);
+	EXPECT_EQ(OBD_PPS_Primary_Timeout, recentWarnings.get(2).Code);
 }
 
 TEST(etb, intermittentPps) {
