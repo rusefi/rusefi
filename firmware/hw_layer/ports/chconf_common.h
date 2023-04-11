@@ -25,7 +25,7 @@ extern "C"
 {
 #endif /* __cplusplus */
  #ifndef __ASSEMBLER__
- void firmwareError(obd_code_e code, const char *fmt, ...);
+ void firmwareError(ObdCode code, const char *fmt, ...);
  void irqEnterHook(void);
  void irqExitHook(void);
  void contextSwitchHook(void);
