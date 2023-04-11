@@ -52,7 +52,7 @@ void setM111EngineConfiguration() {
 
 	gppwm_channel *scBypass = &engineConfiguration->gppwm[0];
     strcpy(engineConfiguration->gpPwmNote[0], "SC Bypass");
-#if HW_MICRO_RUSEFI
+#if HW_MICRO_RUSEFI && EFI_PROD_CODE
     scBypass->pin = MRE_GPOUT_3;
 #endif // HW_MICRO_RUSEFI
 
