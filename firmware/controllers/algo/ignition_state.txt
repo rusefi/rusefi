@@ -14,6 +14,7 @@ struct_no_prefix ignition_state_s
 
     float luaTimingAdd;"Ignition: Lua add";"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
     float luaTimingMult;"Ignition: Lua mult";"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+    uint8_t[MAX_CYLINDER_COUNT iterate] perCylinderTiming;;"Timing Cyl", 1, 0, 0, 0, 0
 
 end_struct
 
