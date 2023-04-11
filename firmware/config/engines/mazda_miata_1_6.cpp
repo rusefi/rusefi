@@ -395,7 +395,7 @@ void setMiataNA6_MAP_MRE() {
 
 
 	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_PIN_23;
+	engineConfiguration->malfunctionIndicatorPin = MRE_GPOUT_3;
 
 #endif /* BOARD_TLE8888_COUNT */
 }

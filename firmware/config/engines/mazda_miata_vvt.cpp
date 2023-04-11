@@ -596,7 +596,7 @@ static void setMiataNB2_MRE_common() {
 	engineConfiguration->vvtPins[0] = Gpio::TLE8888_PIN_6; // VVT solenoid control
 
 	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_PIN_23;
+	engineConfiguration->malfunctionIndicatorPin = MRE_GPOUT_3;
 
 
 	// todo: alternator warn

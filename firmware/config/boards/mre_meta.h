@@ -63,7 +63,7 @@
 #define MRE_IN_ANALOG_VOLT_10 EFI_ADC_4
 
 // 33
-#define MRE_GPOUT_3 TLE8888_PIN_23
+#define MRE_GPOUT_3 Gpio::TLE8888_PIN_23
 
 #if HW_MICRO_RUSEFI
 static Gpio MRE_OUTPUTS[] = {

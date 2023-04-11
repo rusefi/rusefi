@@ -13,6 +13,7 @@
 #include "subaru.h"
 #include "custom_engine.h"
 #include "defaults.h"
+#include "mre_meta.h"
 
 void setSubaru2003Wrx() {
 	setFrankenso_01_LCD();
@@ -53,7 +54,7 @@ void setSubaruEJ18_MRE() {
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_PIN_23;
+	engineConfiguration->malfunctionIndicatorPin = MRE_GPOUT_3;
 #endif /* BOARD_TLE8888_COUNT */
 
 	// this car has high-side main relay WOW so we have to hard wire it to ignition switch

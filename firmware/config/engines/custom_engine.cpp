@@ -536,7 +536,7 @@ static void mreBoardOldTest() {
 
 	// LED #2
 	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->injectionPins[10 - 1] = Gpio::TLE8888_PIN_23;
+	engineConfiguration->injectionPins[10 - 1] = MRE_GPOUT_3;
 
 	// Gpio::TLE8888_PIN_1: LED #3 - INJ#2
 	engineConfiguration->injectionPins[9 - 1] = Gpio::TLE8888_PIN_1;
@@ -763,7 +763,7 @@ void mreBoardNewTest() {
 
 	// LED #2
 	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->ignitionPins[11 - 1] = Gpio::TLE8888_PIN_23;
+	engineConfiguration->ignitionPins[11 - 1] = MRE_GPOUT_3;
 
 	// LED #7
 	// Gpio::TLE8888_PIN_24: "43 - GP Out 4"
