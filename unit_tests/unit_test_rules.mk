@@ -205,7 +205,7 @@ endif
 ##############################################################################
 
 # Define project name here
-PROJECT = rusefi_test
+PROJECT = fome_test
 
 ifeq ("$(wildcard $(UNIT_TESTS_DIR)/googletest/LICENSE)","")
 $(info Invoking "git submodule update --init")

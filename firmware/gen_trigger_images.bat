@@ -4,15 +4,15 @@ rem and later manually published at https://rusefi.com/images/triggers/
 
 cd ../unit_tests
 make -j4
-if not exist build/rusefi_test.exe echo UNIT TEST COMPILATION FAILED
-if not exist build/rusefi_test.exe exit -1
+if not exist build/fome_test.exe echo UNIT TEST COMPILATION FAILED
+if not exist build/fome_test.exe exit -1
 
 rem This is me using Cygwin on all my Windows devices
-ls -l build/rusefi_test.exe
+ls -l build/fome_test.exe
  
 
 del triggers.txt
-build\rusefi_test.exe
+build\fome_test.exe
 pwd
 
 if not exist triggers.txt echo triggers.txt generation FAILED

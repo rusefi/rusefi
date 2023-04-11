@@ -8,7 +8,7 @@
 			"name": "Debug Unit Tests (gdb)",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/unit_tests/build/rusefi_test",
+			"program": "${workspaceFolder}/unit_tests/build/fome_test",
 			// uncomment args below to only debug a particular test
 			//"args": ["--gtest_filter=etb.testTargetTpsIsFloatBug945"],
 			"stopAtEntry": false,
@@ -46,7 +46,7 @@
 			"name": "Debug Unit Tests (lldb)",
 			"type": "lldb",
 			"request": "launch",
-			"program": "${workspaceFolder}/unit_tests/build/rusefi_test",
+			"program": "${workspaceFolder}/unit_tests/build/fome_test",
 			"args": [],
 			"cwd": "${workspaceFolder}/unit_tests/build/",
 		},

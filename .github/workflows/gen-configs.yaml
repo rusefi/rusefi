@@ -102,7 +102,7 @@ jobs:
 
     # - name: Run Tests
     #   working-directory: ./unit_tests/
-    #   run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
+    #   run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/fome_test
 
     #   # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     # - name: Commit fresh triggers.txt

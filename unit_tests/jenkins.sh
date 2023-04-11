@@ -21,7 +21,7 @@
     rm -fR .dep
     rm -fR build
     make
-    if [ ! -f build/rusefi_test ]; then
+    if [ ! -f build/fome_test ]; then
         echo "test compilation failed"
         exit -1
     fi
@@ -30,7 +30,7 @@
 set -e
 
     # invoke the tests - hopefully error code would be propagated?
-    build/rusefi_test
+    build/fome_test
 
 cd "${WORKSPACE}/java_console"
 echo "CD to ${PWD}"

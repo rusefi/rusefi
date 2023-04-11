@@ -1,8 +1,8 @@
 TL, DR: just follow [tests](tests) folder as examples.
 
 1. Run 'make' to build desktop binary.
-1. Execute rusefi_test binary on your PC/Mac, it's expected to say SUCCESS and not fail :) Googletest will also print results summary.
-1. To run only one test uncomment and modify [main.cpp](https://github.com/rusefi/rusefi/blob/master/unit_tests/main.cpp) line ``::testing::GTEST_FLAG(filter)``
+1. Execute fome_test binary on your PC/Mac, it's expected to say SUCCESS and not fail :) Googletest will also print results summary.
+1. To run only one test, run like this: `build/fome_test --gtest_filter=MyTestName`
 
 In this folder we have rusEFI unit tests using https://github.com/google/googletest
 
