@@ -1,26 +1,8 @@
 <!---
 
-How to use this file:
-- When making a change to the firmware that users should know about, add it to the
-	appropriate section (breaking/added/fixed) in the next release.
-- If it's something interesting or breaking, make a post about it on the forum! We want users
-	to find out about changes before they have to get help because their car won't start.
+This changelog is the previous history prior to the fork from rusEFI.
 
-Release template (copy/paste this for new release):
-
-## Month 202x Release - "Release Name"
-
-### Breaking Changes
- - 
-
-### Added
- -
-
-### Fixed
- - 
-
-### Removed
- - 
+For current changelog, see CHANGELOG.md in the same directory.
 
  -->
 
