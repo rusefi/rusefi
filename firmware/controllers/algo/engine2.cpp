@@ -37,7 +37,7 @@ void WarningCodeState::clear() {
 	recentWarnings.clear();
 }
 
-void WarningCodeState::addWarningCode(obd_code_e code) {
+void WarningCodeState::addWarningCode(ObdCode code) {
 	warningCounter++;
 	lastErrorCode = code;
 
@@ -69,7 +69,7 @@ bool WarningCodeState::isWarningNow() const {
 }
 
 // Check whether a particular warning is active
-bool WarningCodeState::isWarningNow(obd_code_e code) const {
+bool WarningCodeState::isWarningNow(ObdCode code) const {
 	warning_t* warn = recentWarnings.find(code);
 
 	// No warning found at all

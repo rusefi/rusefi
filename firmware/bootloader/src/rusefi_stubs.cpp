@@ -18,7 +18,7 @@ void efiPrintfInternal(const char* /*fmt*/, ...) {
 }
 }
 
-void firmwareError(obd_code_e /*code*/, const char* /*fmt*/, ...) {
+void firmwareError(ObdCode /*code*/, const char* /*fmt*/, ...) {
 }
 
 Logging::Logging(char const* /*name*/, char* /*buffer*/, int /*bufferSize*/) {

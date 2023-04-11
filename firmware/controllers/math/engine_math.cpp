@@ -30,7 +30,7 @@
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
-angle_t wrapAngleMethod(angle_t param, const char *msg, obd_code_e code) {
+angle_t wrapAngleMethod(angle_t param, const char *msg, ObdCode code) {
 	fixAngle(param, msg, code);
 	return param;
 }

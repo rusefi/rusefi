@@ -156,10 +156,10 @@ static void testMalfunctionCentralRemoveFirstElement() {
 	clearWarnings();
 	error_codes_set_s localCopy;
 
-	obd_code_e firstElement = OBD_TPS1_Correlation;
+	ObdCode firstElement = OBD_TPS1_Correlation;
 	addError(firstElement);
 
-	obd_code_e secondElement = OBD_TPS2_Correlation;
+	ObdCode secondElement = OBD_TPS2_Correlation;
 	addError(secondElement);
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(2, localCopy.count);
@@ -185,7 +185,7 @@ TEST(misc, testMalfunctionCentral) {
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(0, localCopy.count);
 
-	obd_code_e code = OBD_TPS1_Correlation;
+	ObdCode code = OBD_TPS1_Correlation;
 	// let's add one error and validate
 	addError(code);
 
@@ -194,7 +194,7 @@ TEST(misc, testMalfunctionCentral) {
 	ASSERT_EQ(code, localCopy.error_codes[0]);
 
 	// let's remove value which is not in the collection
-	removeError((obd_code_e) 22);
+	removeError((ObdCode) 22);
 	// element not present - nothing to removed
 	ASSERT_EQ(1, localCopy.count);
 	ASSERT_EQ(code, localCopy.error_codes[0]);
@@ -205,7 +205,7 @@ TEST(misc, testMalfunctionCentral) {
 	// todo:	ASSERT_EQ(2, localCopy.count);
 
 	for (int code = 0; code < 100; code++) {
-		addError((obd_code_e) code);
+		addError((ObdCode) code);
 	}
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(MAX_ERROR_CODES_COUNT, localCopy.count);
