@@ -28,4 +28,7 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Fixed
+ - Sensor checker wasn't checking sensors
+
 ### For older changelog entries prior to fork from rusEFI, see CHANGELOG.rusefi.md

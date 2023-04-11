@@ -48,6 +48,7 @@ TEST(etb, integrated) {
 }
 
 extern int timeNowUs;
+extern WarningCodeState unitTestWarningCodeState;
 
 TEST(etb, intermittentTps) {
 	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
@@ -91,6 +92,7 @@ TEST(etb, intermittentTps) {
 	etb->update();
 
 	EXPECT_NE(0, etb->etbErrorCode);
+	EXPECT_EQ(3, unitTestWarningCodeState.recentWarnings.getCount()) << "intermittentTps";
 }
 
 TEST(etb, intermittentPps) {
