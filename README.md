@@ -44,7 +44,7 @@ This project exists thanks to all the people who contribute their time, expertis
 
 ## Building
 
-See [check.c](https://github.com/FOME-Tech/fome-fw/blob/master/firmware/check.c) for the recommended version of GCC.
+See [check.c](firmware/check.c) for the recommended version of GCC.
 
 Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
