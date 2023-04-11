@@ -92,8 +92,7 @@ TEST(etb, intermittentTps) {
 	etb->update();
 
 	EXPECT_NE(0, etb->etbErrorCode);
-	// todo: warnings would have been nice!
-	EXPECT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "intermittentTps";
+	EXPECT_EQ( 3,  unitTestWarningCodeState.recentWarnings.getCount()) << "intermittentTps";
 }
 
 TEST(etb, intermittentPps) {
