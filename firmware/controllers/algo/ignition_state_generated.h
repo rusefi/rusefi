@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Sun Mar 05 16:51:01 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Tue Apr 11 14:44:26 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -67,8 +67,13 @@ struct ignition_state_s {
 	 * offset 28
 	 */
 	float luaTimingMult = (float)0;
+	/**
+	Timing Cyl
+	 * offset 32
+	 */
+	uint8_t perCylinderTiming[MAX_CYLINDER_COUNT];
 };
-static_assert(sizeof(ignition_state_s) == 32);
+static_assert(sizeof(ignition_state_s) == 44);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Sun Mar 05 16:51:01 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Tue Apr 11 14:44:26 UTC 2023

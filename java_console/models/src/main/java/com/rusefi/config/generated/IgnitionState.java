@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Thu Mar 30 21:42:27 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Tue Apr 11 14:44:26 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -418,6 +418,18 @@ public class IgnitionState {
 	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 20, FieldType.FLOAT).setBaseOffset(828);
 	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 24, FieldType.FLOAT).setBaseOffset(828);
 	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 28, FieldType.FLOAT).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING1 = Field.create("PERCYLINDERTIMING1", 32, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING2 = Field.create("PERCYLINDERTIMING2", 33, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING3 = Field.create("PERCYLINDERTIMING3", 34, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING4 = Field.create("PERCYLINDERTIMING4", 35, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING5 = Field.create("PERCYLINDERTIMING5", 36, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING6 = Field.create("PERCYLINDERTIMING6", 37, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING7 = Field.create("PERCYLINDERTIMING7", 38, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING8 = Field.create("PERCYLINDERTIMING8", 39, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING9 = Field.create("PERCYLINDERTIMING9", 40, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING10 = Field.create("PERCYLINDERTIMING10", 41, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING11 = Field.create("PERCYLINDERTIMING11", 42, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field PERCYLINDERTIMING12 = Field.create("PERCYLINDERTIMING12", 43, FieldType.INT8).setScale(1.0).setBaseOffset(828);
 	public static final Field[] VALUES = {
 	BASEDWELL,
 	SPARKDWELL,
@@ -429,5 +441,17 @@ public class IgnitionState {
 	DWELLVOLTAGECORRECTION,
 	LUATIMINGADD,
 	LUATIMINGMULT,
+	PERCYLINDERTIMING1,
+	PERCYLINDERTIMING2,
+	PERCYLINDERTIMING3,
+	PERCYLINDERTIMING4,
+	PERCYLINDERTIMING5,
+	PERCYLINDERTIMING6,
+	PERCYLINDERTIMING7,
+	PERCYLINDERTIMING8,
+	PERCYLINDERTIMING9,
+	PERCYLINDERTIMING10,
+	PERCYLINDERTIMING11,
+	PERCYLINDERTIMING12,
 	};
 }
