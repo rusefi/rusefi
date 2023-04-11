@@ -175,6 +175,7 @@ void SensorChecker::onSlowCallback() {
 // only bother checking these if we have GPIO chips actually capable of reporting an error
 #if BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
 	// Check injectors
+	bool withInjectorIssues = false;
 	for (size_t i = 0; i < efi::size(enginePins.injectors); i++) {
 		InjectorOutputPin& pin = enginePins.injectors[i];
 
@@ -185,6 +186,7 @@ void SensorChecker::onSlowCallback() {
 
 		auto diag = pin.getDiag();
 		if (diag != PIN_OK && diag != PIN_INVALID) {
+		    withInjectorIssues = true;
 			auto code = getCodeForInjector(i + 1, diag);
 
 			char description[32];
@@ -192,6 +194,7 @@ void SensorChecker::onSlowCallback() {
 			warning(code, "Injector %d fault: %s", i, description);
 		}
 	}
+	engine->fuelComputer.injectorHwIssue = withInjectorIssues;
 
 	// Check ignition
 	for (size_t i = 0; i < efi::size(enginePins.injectors); i++) {
