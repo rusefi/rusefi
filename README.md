@@ -44,7 +44,7 @@ This project exists thanks to all the people who contribute their time, expertis
 
 ## Building
 
-See [check.c](firmware/check.c) for the recommended version of GCC.
+See [firmware/check.c](firmware/check.c) for the recommended version of GCC.
 
 Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
