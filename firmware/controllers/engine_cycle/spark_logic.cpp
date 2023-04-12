@@ -98,19 +98,21 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// let's save planned duration so that we can later compare it with reality
 	event->sparkDwell = sparkDwell;
 
-	angle_t sparkAngle =
+	angle_t correctedSparkAngle =
 		// Negate because timing *before* TDC, and we schedule *after* TDC
 		- getEngineState()->timingAdvance[event->cylinderNumber]
-		// Offset by this cylinder's position in the cycle
-		+ getPerCylinderFiringOrderOffset(event->cylinderIndex, event->cylinderNumber)
 		// Pull any extra timing for knock retard
 		+ engine->module<KnockController>()->getKnockRetard()
 		// Degrees of timing REMOVED from actual timing during soft RPM limit window 
 		+ getLimpManager()->getLimitingTimingRetard();
 
-	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
+    engine->ignitionState.perCylinderTiming[event->cylinderIndex] = correctedSparkAngle;
 
-    engine->ignitionState.perCylinderTiming[event->cylinderIndex] = sparkAngle;
+    angle_t sparkAngle = correctedSparkAngle
+			// Offset by this cylinder's position in the cycle
+			+ getPerCylinderFiringOrderOffset(event->cylinderIndex, event->cylinderNumber);
+
+	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 
 	auto ignitionMode = getCurrentIgnitionMode();
 
