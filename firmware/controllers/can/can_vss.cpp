@@ -33,8 +33,8 @@ static expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
 /* source: http://z4evconversion.blogspot.com/2016/07/completely-forgot-but-it-does-live-on.html */
 float processBMW_e46(const CANRxFrame& frame) {
 	// average the rear wheels since those are the driven ones (more accurate gear detection!)
-	uint16_t left =  (((frame.data8[4] & 0x0f) << 8) | frame.data[5]);
-	uint16_t right = (((frame.data8[6] & 0x0f) << 8) | frame.data[7]);
+	uint16_t left =  (((frame.data8[4] & 0x0f) << 8) | frame.data8[5]);
+	uint16_t right = (((frame.data8[6] & 0x0f) << 8) | frame.data8[7]);
 
 	return (left + right) / (16 * 2);
 }
