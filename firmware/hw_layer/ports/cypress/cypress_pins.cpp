@@ -64,7 +64,7 @@ const char *portname(ioportid_t GPIOx) {
 }
 
 static int getPortIndex(ioportid_t port) {
-	efiAssert(CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
 	if (port == GPIOA)
 		return 0;
 	if (port == GPIOB)
@@ -87,7 +87,7 @@ static int getPortIndex(ioportid_t port) {
 		return 9;
 	if (port == GPIOK)
 		return 10;
-	firmwareError(CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
+	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 	return -1;
 }
 
@@ -106,7 +106,7 @@ int getBrainPinIndex(ioportid_t port, ioportmask_t pin) {
 
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	if (!isBrainPinValid(brainPin)) {
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid Gpio: %d", msg, brainPin);
+		firmwareError(ObdCode::CUSTOM_ERR_INVALID_PIN, "%s: Invalid Gpio: %d", msg, brainPin);
 		return GPIO_NULL;
 	}
 	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
@@ -123,7 +123,7 @@ ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
 	if (brain_pin_is_onchip(brainPin))
 		return getBrainPinIndex(brainPin);
 
-	firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip brain_pin_e: %d", msg, brainPin);
+	firmwareError(ObdCode::CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip brain_pin_e: %d", msg, brainPin);
 	return EFI_ERROR_CODE;
 }
 

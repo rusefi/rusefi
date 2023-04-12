@@ -42,7 +42,7 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, Exti
 		return;
 	}
 
-	efiAssertVoid(OBD_PCM_Processor_Fault, msg, "efiExtiEnablePin msg must not be null");
+	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, msg, "efiExtiEnablePin msg must not be null");
 
 	ioportid_t port = getHwPort(msg, brainPin);
 	if (port == NULL) {
@@ -61,7 +61,7 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, Exti
 
 	/* is this index already used? */
 	if (channel.Callback) {
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %s/index %d: exti index already used by %s",
+		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %s/index %d: exti index already used by %s",
 		msg,
 		hwPortname(brainPin),
 		index,
@@ -253,7 +253,7 @@ CH_FAST_IRQ_HANDLER(VectorE0) {
 
 // TODO: non-stm32 exti
 void efiExtiInit() {
-	firmwareError(OBD_PCM_Processor_Fault, "exti not supported");
+	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "exti not supported");
 }
 
 void efiExtiEnablePin(const char *, brain_pin_e, uint32_t, ExtiCallback, void *) { }

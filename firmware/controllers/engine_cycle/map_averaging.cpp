@@ -59,7 +59,7 @@ static void endAveraging(MapAverager* arg);
 static size_t currentMapAverager = 0;
 
 static void startAveraging(scheduling_s *endAveragingScheduling) {
-	efiAssertVoid(CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
 	// TODO: set currentMapAverager based on cylinder bank
 	auto& averager = getMapAvg(currentMapAverager);
@@ -114,7 +114,7 @@ void MapAverager::stop() {
 
 		setValidValue(minPressure, getTimeNowNt());
 	} else {
-		warning(CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
+		warning(ObdCode::CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
 	}
 }
 
@@ -126,13 +126,13 @@ void MapAverager::stop() {
  * as fast as possible
  */
 void mapAveragingAdcCallback(float instantVoltage) {
-	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
 	SensorResult mapResult = getMapAvg(currentMapAverager).submit(instantVoltage);
 
 	if (!mapResult) {
 		// hopefully this warning is not too much CPU consumption for fast ADC callback
-		warning(CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
+		warning(ObdCode::CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
 	}
 
 	float instantMap = mapResult.value_or(0);
@@ -170,19 +170,19 @@ void refreshMapAveragingPreCalc() {
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
-		efiAssertVoid(CUSTOM_ERR_MAP_START_ASSERT, !cisnan(start), "start");
+		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_START_ASSERT, !cisnan(start), "start");
 
 		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[engineConfiguration->mapAveragingSchedulingAtIndex];
-		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
+		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 			angle_t cylinderOffset = getEngineCycle(getEngineRotationState()->getOperationMode()) * i / engineConfiguration->cylindersCount;
-			efiAssertVoid(CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
+			efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can
 			// move the loop into start-up calculation and not have this loop as part of periodic calculation
 			// todo: change the logic as described above in order to reduce periodic CPU usage?
 			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
-			fixAngle(cylinderStart, "cylinderStart", CUSTOM_ERR_6562);
+			fixAngle(cylinderStart, "cylinderStart", ObdCode::CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
 		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
@@ -224,9 +224,9 @@ void mapAveragingTriggerCallback(
 
 		angle_t samplingDuration = engine->engineState.mapAveragingDuration;
 		// todo: this assertion could be moved out of trigger handler
-		assertAngleRange(samplingDuration, "samplingDuration", CUSTOM_ERR_6563);
+		assertAngleRange(samplingDuration, "samplingDuration", ObdCode::CUSTOM_ERR_6563);
 		if (samplingDuration <= 0) {
-			warning(CUSTOM_MAP_ANGLE_PARAM, "map sampling angle should be positive");
+			warning(ObdCode::CUSTOM_MAP_ANGLE_PARAM, "map sampling angle should be positive");
 			return;
 		}
 
@@ -234,12 +234,12 @@ void mapAveragingTriggerCallback(
 
 		if (cisnan(samplingEnd)) {
 			// todo: when would this happen?
-			warning(CUSTOM_ERR_6549, "no map angles");
+			warning(ObdCode::CUSTOM_ERR_6549, "no map angles");
 			return;
 		}
 
 		// todo: pre-calculate samplingEnd for each cylinder
-		fixAngle(samplingEnd, "samplingEnd", CUSTOM_ERR_6563);
+		fixAngle(samplingEnd, "samplingEnd", ObdCode::CUSTOM_ERR_6563);
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
 

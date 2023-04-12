@@ -72,5 +72,5 @@ TEST(real4b11, runningDoubledEdge) {
 
 	// Should get a warning for the doubled edge, but NOT one for a trigger error!
 	ASSERT_EQ(1, eth.recentWarnings()->getCount());
-	ASSERT_EQ(CUSTOM_PRIMARY_DOUBLED_EDGE, eth.recentWarnings()->get(0).Code);
+	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE, eth.recentWarnings()->get(0).Code);
 }

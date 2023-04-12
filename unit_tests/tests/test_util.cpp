@@ -139,15 +139,15 @@ static void testMalfunctionCentralRemoveNonExistent() {
 	clearWarnings();
 
 	// this should not crash
-	removeError(OBD_TPS1_Correlation);
+	removeError(ObdCode::OBD_TPS1_Correlation);
 }
 
 static void testMalfunctionCentralSameElementAgain() {
 	clearWarnings();
 	error_codes_set_s localCopy;
 
-	addError(OBD_TPS1_Correlation);
-	addError(OBD_TPS1_Correlation);
+	addError(ObdCode::OBD_TPS1_Correlation);
+	addError(ObdCode::OBD_TPS1_Correlation);
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(1, localCopy.count);
 }

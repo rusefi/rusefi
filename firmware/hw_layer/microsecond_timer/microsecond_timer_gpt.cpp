@@ -12,7 +12,7 @@ void portSetHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 	}
 
 	if (GPTDEVICE.state != GPT_READY) {
-		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d", GPTDEVICE.state);
+		firmwareError(ObdCode::CUSTOM_HW_TIMER, "HW timer state %d", GPTDEVICE.state);
 		return;
 	}
 
@@ -34,7 +34,7 @@ static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 
 void portInitMicrosecondTimer() {
 	gptStart(&GPTDEVICE, &gpt5cfg);
-	efiAssertVoid(CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
 }
 
 #endif // EFI_PROD_CODE

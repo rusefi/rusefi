@@ -26,7 +26,7 @@ expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
 		case LUA:
 		    return 0; // a bit of a hack
 		default:
-			firmwareError(OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
+			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
 			return unexpected;
 	}
 }

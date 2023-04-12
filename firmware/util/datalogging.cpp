@@ -45,7 +45,7 @@
 bool Logging::validateBuffer(uint32_t extraLen) {
 	if (remainingSize() < extraLen + 1) {
 #if EFI_PROD_CODE
-		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d", name, extraLen);
+		warning(ObdCode::CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d", name, extraLen);
 #endif /* EFI_PROD_CODE */
 		return true;
 	}
@@ -54,7 +54,7 @@ bool Logging::validateBuffer(uint32_t extraLen) {
 }
 
 void Logging::append(const char *text) {
-	efiAssertVoid(CUSTOM_APPEND_NULL, text != NULL, "append NULL");
+	efiAssertVoid(ObdCode::CUSTOM_APPEND_NULL, text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
 	bool isCapacityProblem = validateBuffer(extraLen);
 	if (isCapacityProblem) {
@@ -78,7 +78,7 @@ void Logging::appendFast(const char *text) {
 }
 
 void Logging::appendPrintf(const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
+	efiAssertVoid(ObdCode::CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
 
 	size_t available = remainingSize();
 

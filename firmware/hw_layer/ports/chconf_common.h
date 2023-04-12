@@ -16,16 +16,12 @@
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
-#if !defined(_FROM_ASM_)
-#include "obd_error_codes.h"
-#endif /* _FROM_ASM_ */
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
  #ifndef __ASSEMBLER__
- void firmwareError(ObdCode code, const char *fmt, ...);
+ // void firmwareError(ObdCode code, const char *fmt, ...);
  void irqEnterHook(void);
  void irqExitHook(void);
  void contextSwitchHook(void);

@@ -17,7 +17,7 @@ static float validateBaroMap(float mapKPa) {
 	// Highest interstate is the Eisenhower Tunnel at 11158 feet -> 66 kpa
 	// Lowest point is the Dead Sea, -1411 feet -> 106 kpa
 	if (cisnan(mapKPa) || mapKPa > 110 || mapKPa < 60) {
-		warning(OBD_Barometric_Press_Circ, "Invalid start-up baro pressure = %.2fkPa", mapKPa);
+		warning(ObdCode::OBD_Barometric_Press_Circ, "Invalid start-up baro pressure = %.2fkPa", mapKPa);
 		return NAN;
 	}
 	return mapKPa;

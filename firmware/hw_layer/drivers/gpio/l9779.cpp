@@ -733,7 +733,7 @@ int L9779::deinit()
 
 int l9779_add(brain_pin_e base, unsigned int index, const l9779_config *cfg) {
 
-	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "L9779CFG", 0)
+	efiAssert(ObdCode::OBD_PCM_Processor_Fault, cfg != NULL, "L9779CFG", 0)
 
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_L9779_COUNT))

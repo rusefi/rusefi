@@ -91,7 +91,7 @@ RTCDateTime convertRtcDateTimeFromEfi(efidatetime_t const * const dateTime) {
 
 static void put2(int offset, char *lcd_str, int value) {
 	static char buff[_MAX_FILLER];
-	efiAssertVoid(CUSTOM_ERR_6666, value >=0 && value <100, "value");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6666, value >=0 && value <100, "value");
 	itoa10(buff, value);
 	if (value < 10) {
 		lcd_str[offset] = '0';

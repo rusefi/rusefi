@@ -8,7 +8,7 @@
 #include "scheduler.h"
 
 void action_s::execute() {
-	efiAssertVoid(CUSTOM_ERR_ASSERT, callback != NULL, "callback==null1");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_ASSERT, callback != NULL, "callback==null1");
 	callback(param);
 }
 

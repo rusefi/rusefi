@@ -57,7 +57,7 @@ bool FLStack<T, MAXSIZE>::remove(T value) {
 template<typename T, int MAXSIZE>
 void FLStack<T, MAXSIZE>::push(T value) {
 	if (currentSize >= MAXSIZE) {
-		firmwareError(ERROR_FL_STACK_OVERFLOW, "FLstack overflow");
+		firmwareError(ObdCode::ERROR_FL_STACK_OVERFLOW, "FLstack overflow");
 		return;
 		//warning()
 	}
@@ -67,7 +67,7 @@ void FLStack<T, MAXSIZE>::push(T value) {
 template<typename T, int MAXSIZE>
 T FLStack<T, MAXSIZE>::pop() {
 	if (currentSize == 0) {
-		firmwareError(CUSTOM_FLSTACK, "FLStack is empty");
+		firmwareError(ObdCode::CUSTOM_FLSTACK, "FLStack is empty");
 	}
 	return values[--currentSize];
 }
@@ -77,7 +77,7 @@ T FLStack<T, MAXSIZE>::pop() {
  */
 template<typename T, int MAXSIZE>
 T FLStack<T, MAXSIZE>::get(int index) {
-	efiAssert(CUSTOM_ERR_ASSERT, index >= 0 && index < MAXSIZE, "FLget", values[0]);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, index >= 0 && index < MAXSIZE, "FLget", values[0]);
 	return values[index];
 }
 
@@ -105,7 +105,7 @@ ArrayList<Type, Dimention>::ArrayList(void) {
 
 template<class Type, int Dimention>
 void ArrayList<Type, Dimention>::removeAt(int index) {
-	efiAssertVoid(CUSTOM_ERR_ARRAY_REMOVE, index >= 0 && index < size, "invalid index");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_ARRAY_REMOVE, index >= 0 && index < size, "invalid index");
 	memcpy(&elements[index], &elements[size - 1], sizeof(Type));
 	memset(&elements[size - 1], 0, sizeof(Type));
 	size--;
@@ -118,6 +118,6 @@ void ArrayList<Type, Dimention>::reset(void) {
 
 template<class Type, int Dimention>
 Type * ArrayList<Type, Dimention>::add(void) {
-	efiAssert(CUSTOM_ERR_ASSERT, size < Dimention, "add() too many elements", (Type *)NULL);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, size < Dimention, "add() too many elements", (Type *)NULL);
 	return &elements[size++];
 }

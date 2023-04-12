@@ -65,7 +65,7 @@ expected<float> BoostController::getSetpoint() {
 		return unexpected;
 	}
 
-	efiAssert(OBD_PCM_Processor_Fault, m_closedLoopTargetMap != nullptr, "boost closed loop target", unexpected);
+	efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_closedLoopTargetMap != nullptr, "boost closed loop target", unexpected);
 
     return m_closedLoopTargetMap->getValue(rpm, driverIntent.Value) * luaTargetMult + luaTargetAdd;
 }
@@ -83,7 +83,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 		return unexpected;
 	}
 
-	efiAssert(OBD_PCM_Processor_Fault, m_openLoopMap != nullptr, "boost open loop", unexpected);
+	efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_openLoopMap != nullptr, "boost open loop", unexpected);
 
 	openLoopPart = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, driverIntent.Value);
 

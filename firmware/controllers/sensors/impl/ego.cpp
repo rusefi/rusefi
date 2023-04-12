@@ -163,7 +163,7 @@ static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 		sensor->value2 = 14;
 		break;
 	default:
-		firmwareError(CUSTOM_EGO_TYPE, "Unexpected EGO %d", type);
+		firmwareError(ObdCode::CUSTOM_EGO_TYPE, "Unexpected EGO %d", type);
 		break;
 	}
 }

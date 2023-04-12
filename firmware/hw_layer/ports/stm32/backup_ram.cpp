@@ -21,7 +21,7 @@ uint32_t backupRamLoad(backup_ram_e idx) {
 //	case DFU_JUMP_REQUESTED:
 //		return RTCD1.rtc->BKP4R;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Invalid backup ram idx %d", idx);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid backup ram idx %d", idx);
 		return 0;
 	}
 #else
@@ -49,7 +49,7 @@ void backupRamSave(backup_ram_e idx, uint32_t value) {
 		RTCD1.rtc->BKP4R = value;
 		break;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Invalid backup ram idx %d, value 0x08x", idx, value);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid backup ram idx %d, value 0x08x", idx, value);
 		break;
 	}
 #endif /* HAL_USE_RTC */

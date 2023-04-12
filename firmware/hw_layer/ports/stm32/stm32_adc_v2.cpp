@@ -105,7 +105,7 @@ float getMcuTemperature() {
 	if (degrees > 150.0f || degrees < -50.0f) {
 /*
  * we have a sporadic issue with this check todo https://github.com/rusefi/rusefi/issues/2552
-		firmwareError(OBD_PCM_Processor_Fault, "Invalid CPU temperature measured %f", degrees);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid CPU temperature measured %f", degrees);
  */
 	}
 

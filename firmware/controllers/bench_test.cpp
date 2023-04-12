@@ -83,7 +83,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float startDelayMs
 	int offTimeUs = MS2US(maxF(0.1, offTimeMs));
 
 	if (onTimeUs > TOO_FAR_INTO_FUTURE_US) {
-		firmwareError(CUSTOM_ERR_BENCH_PARAM, "onTime above limit %dus", TOO_FAR_INTO_FUTURE_US);
+		firmwareError(ObdCode::CUSTOM_ERR_BENCH_PARAM, "onTime above limit %dus", TOO_FAR_INTO_FUTURE_US);
 		return;
 	}
 
@@ -280,7 +280,7 @@ private:
 		UNUSED(nowNt);
 		setPeriod(50 /* ms */);
 
-		validateStack("Bench", STACK_USAGE_BENCH, 128);
+		validateStack("Bench", ObdCode::STACK_USAGE_BENCH, 128);
 
 		// naive inter-thread communication - waiting for a flag
 		if (isBenchTestPending) {
@@ -334,7 +334,7 @@ static void handleBenchCategory(uint16_t index) {
 		fan2Bench();
 		return;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench function %d", index);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected bench function %d", index);
 	}
 }
 
@@ -412,7 +412,7 @@ static void handleCommandX14(uint16_t index) {
 		sys_dual_bank();
 		rebootNow();
 #else
-		firmwareError(OBD_PCM_Processor_Fault, "Unexpected dbank command", index);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected dbank command", index);
 #endif
 		return;
 	case 0x15:
@@ -422,7 +422,7 @@ static void handleCommandX14(uint16_t index) {
 #endif // EFI_PROD_CODE
 		return;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);
 	}
 }
 
@@ -430,7 +430,7 @@ extern bool rebootForPresetPending;
 
 static void fatalErrorForPresetApply() {
 	rebootForPresetPending = true;
-	firmwareError(OBD_PCM_Processor_Fault,
+	firmwareError(ObdCode::OBD_PCM_Processor_Fault,
 		"\n\nTo complete preset apply:\n"
 		"   1. Close TunerStudio\n"
 		"   2. Power cycle ECU\n"
@@ -526,7 +526,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #endif
 
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench subsystem %d %d", subsystem, index);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected bench subsystem %d %d", subsystem, index);
 	}
 }
 

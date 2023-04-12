@@ -6,86 +6,86 @@ static ObdCode getCode(SensorType type, UnexpectedCode code) {
 		case SensorType::Tps1:
 		case SensorType::Tps1Primary:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_TPS1_Primary_Timeout;
-				case UnexpectedCode::Low:          return OBD_TPS1_Primary_Low;
-				case UnexpectedCode::High:         return OBD_TPS1_Primary_High;
-				case UnexpectedCode::Inconsistent: return OBD_TPS1_Correlation;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_TPS1_Primary_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_TPS1_Primary_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_TPS1_Primary_High;
+				case UnexpectedCode::Inconsistent: return ObdCode::OBD_TPS1_Correlation;
 				default: break;
 			} break;
 		case SensorType::Tps1Secondary:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_TPS1_Secondary_Timeout;
-				case UnexpectedCode::Low:          return OBD_TPS1_Secondary_Low;
-				case UnexpectedCode::High:         return OBD_TPS1_Secondary_High;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_TPS1_Secondary_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_TPS1_Secondary_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_TPS1_Secondary_High;
 				default: break;
 			} break;
 		case SensorType::Tps2:
 		case SensorType::Tps2Primary:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_TPS2_Primary_Timeout;
-				case UnexpectedCode::Low:          return OBD_TPS2_Primary_Low;
-				case UnexpectedCode::High:         return OBD_TPS2_Primary_High;
-				case UnexpectedCode::Inconsistent: return OBD_TPS2_Correlation;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_TPS2_Primary_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_TPS2_Primary_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_TPS2_Primary_High;
+				case UnexpectedCode::Inconsistent: return ObdCode::OBD_TPS2_Correlation;
 				default: break;
 			} break;
 		case SensorType::Tps2Secondary:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_TPS2_Secondary_Timeout;
-				case UnexpectedCode::Low:          return OBD_TPS2_Secondary_Low;
-				case UnexpectedCode::High:         return OBD_TPS2_Secondary_High;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_TPS2_Secondary_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_TPS2_Secondary_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_TPS2_Secondary_High;
 				default: break;
 			} break;
 
 		case SensorType::AcceleratorPedal:
 		case SensorType::AcceleratorPedalPrimary:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_PPS_Primary_Timeout;
-				case UnexpectedCode::Low:          return OBD_PPS_Primary_Low;
-				case UnexpectedCode::High:         return OBD_PPS_Primary_High;
-				case UnexpectedCode::Inconsistent: return OBD_PPS_Correlation;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_PPS_Primary_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_PPS_Primary_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_PPS_Primary_High;
+				case UnexpectedCode::Inconsistent: return ObdCode::OBD_PPS_Correlation;
 				default: break;
 			} break;
 		case SensorType::AcceleratorPedalSecondary:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_PPS_Secondary_Timeout;
-				case UnexpectedCode::Low:          return OBD_PPS_Secondary_Low;
-				case UnexpectedCode::High:         return OBD_PPS_Secondary_High;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_PPS_Secondary_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_PPS_Secondary_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_PPS_Secondary_High;
 				default: break;
 			} break;
 
 		case SensorType::Map:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_Map_Timeout;
-				case UnexpectedCode::Low:          return OBD_Map_Low;
-				case UnexpectedCode::High:         return OBD_Map_High;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_Map_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_Map_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_Map_High;
 				default: break;
 			} break;
 		case SensorType::Clt:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_Clt_Timeout;
-				case UnexpectedCode::Low:          return OBD_Clt_Low;
-				case UnexpectedCode::High:         return OBD_Clt_High;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_Clt_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_Clt_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_Clt_High;
 				default: break;
 			} break;
 		case SensorType::Iat:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_Iat_Timeout;
-				case UnexpectedCode::Low:          return OBD_Iat_Low;
-				case UnexpectedCode::High:         return OBD_Iat_High;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_Iat_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_Iat_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_Iat_High;
 				default: break;
 			} break;
 		case SensorType::FuelEthanolPercent:
 			switch (code) {
-				case UnexpectedCode::Timeout:      return OBD_FlexSensor_Timeout;
-				case UnexpectedCode::Low:          return OBD_FlexSensor_Low;
-				case UnexpectedCode::High:         return OBD_FlexSensor_High;
+				case UnexpectedCode::Timeout:      return ObdCode::OBD_FlexSensor_Timeout;
+				case UnexpectedCode::Low:          return ObdCode::OBD_FlexSensor_Low;
+				case UnexpectedCode::High:         return ObdCode::OBD_FlexSensor_High;
 				default: break;
 			} break;
 		default:
 			break;
 	}
 
-	return OBD_None;
+	return ObdCode::None;
 }
 
 inline const char* describeUnexpected(UnexpectedCode code) {
@@ -116,31 +116,31 @@ static void check(SensorType type) {
 
 	ObdCode code = getCode(type, result.Code);
 
-	if (code != OBD_None) {
+	if (code != ObdCode::None) {
 		warning(code, "Sensor fault: %s %s", Sensor::getSensorName(type), describeUnexpected(result.Code));
 	}
 }
 
 static ObdCode getCodeForInjector(int idx, brain_pin_diag_e diag) {
 	if (idx < 0 || idx >= 12) {
-		return OBD_None;
+		return ObdCode::None;
 	}
 
 	// TODO: do something more intelligent with `diag`?
 	UNUSED(diag);
 
-	return (ObdCode)((int)OBD_Injector_Circuit_1 + idx);
+	return (ObdCode)((int)ObdCode::OBD_Injector_Circuit_1 + idx);
 }
 
 static ObdCode getCodeForIgnition(int idx, brain_pin_diag_e diag) {
 	if (idx < 0 || idx >= 12) {
-		return OBD_None;
+		return ObdCode::None;
 	}
 
 	// TODO: do something more intelligent with `diag`?
 	UNUSED(diag);
 
-	return (ObdCode)((int)OBD_Ignition_Circuit_1 + idx);
+	return (ObdCode)((int)ObdCode::OBD_Ignition_Circuit_1 + idx);
 }
 
 void SensorChecker::onSlowCallback() {

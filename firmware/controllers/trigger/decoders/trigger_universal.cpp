@@ -18,8 +18,8 @@ angle_t getEngineCycle(operation_mode_e operationMode) {
 
 void addSkippedToothTriggerEvents(TriggerWheel wheel, TriggerWaveform *s, int totalTeethCount, int skippedCount,
 		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight) {
-	efiAssertVoid(CUSTOM_ERR_6586, totalTeethCount > 0, "total count");
-	efiAssertVoid(CUSTOM_ERR_6587, skippedCount >= 0, "skipped count");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6586, totalTeethCount > 0, "total count");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6587, skippedCount >= 0, "skipped count");
 
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = engineCycle / totalTeethCount * (i + (1 - toothWidth));
@@ -37,11 +37,11 @@ void addSkippedToothTriggerEvents(TriggerWheel wheel, TriggerWaveform *s, int to
 void initializeSkippedToothTrigger(TriggerWaveform *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode, SyncEdge syncEdge) {
 	if (totalTeethCount <= 0) {
-		firmwareError(CUSTOM_OBD_TRIGGER_WAVEFORM, "Invalid total tooth count for missing tooth decoder: %d", totalTeethCount);
+		firmwareError(ObdCode::CUSTOM_OBD_TRIGGER_WAVEFORM, "Invalid total tooth count for missing tooth decoder: %d", totalTeethCount);
 		s->setShapeDefinitionError(true);
 		return;
 	}
-	efiAssertVoid(CUSTOM_NULL_SHAPE, s != NULL, "TriggerWaveform is NULL");
+	efiAssertVoid(ObdCode::CUSTOM_NULL_SHAPE, s != NULL, "TriggerWaveform is NULL");
 
 	s->initialize(operationMode, syncEdge);
 

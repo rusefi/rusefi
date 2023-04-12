@@ -79,7 +79,7 @@ private:
             chThdSleepUntilWindowed(before, before + m_period);
         }
 
-		firmwareError(OBD_PCM_Processor_Fault, "Thread died: %s", this->m_name);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Thread died: %s", this->m_name);
 	}
 
 public:

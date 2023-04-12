@@ -76,7 +76,7 @@ static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue, size
 #define _1_MODE 1
 
 static void obdSendValue(int mode, int PID, int numBytes, float value, size_t busIndex) {
-	efiAssertVoid(CUSTOM_ERR_6662, numBytes <= 2, "invalid numBytes");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6662, numBytes <= 2, "invalid numBytes");
 	int iValue = (int)efiRound(value, 1.0f);
 	// clamp to uint8_t (0..255) or uint16_t (0..65535)
 	iValue = maxI(minI(iValue, (numBytes == 1) ? 255 : 65535), 0);
@@ -174,7 +174,7 @@ static void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex) {
 	}
 }
 
-static void handleDtcRequest(int numCodes, int *dtcCode) {
+static void handleDtcRequest(int numCodes, ObdCode* dtcCode) {
 	// TODO: this appears to be unfinished?
 	UNUSED(numCodes);
 	UNUSED(dtcCode);

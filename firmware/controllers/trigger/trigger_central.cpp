@@ -265,7 +265,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		tc->vvtEventFallCounter[index]++;
 	}
 	if (engineConfiguration->vvtMode[camIndex] == VVT_INACTIVE) {
-		warning(CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
+		warning(ObdCode::CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
 	}
 
 #if VR_HW_CHECK_MODE
@@ -385,7 +385,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 			 * wrong order due to belt flex or else
 			 * https://github.com/rusefi/rusefi/issues/3269
 			 */
-			warning(CUSTOM_VVT_SYNC_POSITION, "VVT sync position too close to trigger sync");
+			warning(ObdCode::CUSTOM_VVT_SYNC_POSITION, "VVT sync position too close to trigger sync");
 		}
 	} else {
 		// Not using this cam for engine sync, just wrap the value in to the reasonable range
@@ -687,7 +687,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 				//     #2 will be ignored
 				// We're not sure which edge was the "real" one, but they were close enough
 				// together that it doesn't really matter.
-				warning(CUSTOM_PRIMARY_DOUBLED_EDGE, "doubled trigger edge after %.2f deg at #%d", angleSinceLastTooth, triggerState.currentCycle.current_index);
+				warning(ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE, "doubled trigger edge after %.2f deg at #%d", angleSinceLastTooth, triggerState.currentCycle.current_index);
 
 				return false;
 			}
@@ -698,7 +698,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 			// TODO: configurable threshold
 			if (isRpmEnough && absError > 10 && absError < 180) {
 				// This tooth came at a very unexpected time, ignore it
-				warning(CUSTOM_PRIMARY_BAD_TOOTH_TIMING, "tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
+				warning(ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING, "tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
 
 				// TODO: this causes issues with some real engine logs, should it?
 				// return false;
@@ -718,7 +718,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
-		warning(CUSTOM_ERR_UNEXPECTED_SHAFT_EVENT, "Shaft event while trigger is mis-configured");
+		warning(ObdCode::CUSTOM_ERR_UNEXPECTED_SHAFT_EVENT, "Shaft event while trigger is mis-configured");
 		// magic value to indicate a problem
 		hwEventCounters[0] = 155;
 		return;
@@ -744,7 +744,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	m_lastEventTimer.reset(timestamp);
 
 	int eventIndex = (int) signal;
-	efiAssertVoid(CUSTOM_TRIGGER_EVENT_TYPE, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
+	efiAssertVoid(ObdCode::CUSTOM_TRIGGER_EVENT_TYPE, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
 	// Decode the trigger!
@@ -773,7 +773,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		auto currentPhaseFromSyncPoint = getTriggerCentral()->triggerFormDetails.eventAngles[triggerIndexForListeners];
 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
-		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
+		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", ObdCode::CUSTOM_ERR_6555);
 
 		// Record precise time and phase of the engine. This is used for VVT decode, and to check that the
 		// trigger pattern selected matches reality (ie, we check the next tooth is where we think it should be)
@@ -813,11 +813,11 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			// I don't love this.
 			nextToothIndex = (nextToothIndex + 1) % engineCycleEventCount;
 			nextPhase = getTriggerCentral()->triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
-			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
+			wrapAngle(nextPhase, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
 		} while (nextPhase == currentEngineDecodedPhase);
 
 		float expectNextPhase = nextPhase + tdcPosition();
-		wrapAngle(expectNextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
+		wrapAngle(expectNextPhase, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
 		expectedNextPhase = expectNextPhase;
 
 #if EFI_CDM_INTEGRATION
@@ -1023,7 +1023,7 @@ void TriggerCentral::validateCamVvtCounters() {
 		vvtCamCounter = 0;
 	} else if (camVvtValidationIndex == 0xFE && vvtCamCounter < 60) {
 		// magic logic: we expect at least 60 CAM/VVT events for each 256 trigger cycles, otherwise throw a code
-		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "No Camshaft Position Sensor signals");
+		warning(ObdCode::OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "No Camshaft Position Sensor signals");
 	}
 }
 /**
@@ -1035,20 +1035,20 @@ static void calculateTriggerSynchPoint(
 		TriggerDecoderBase& initState) {
 
 #if EFI_PROD_CODE
-	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
+	efiAssertVoid(ObdCode::CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
 
 	shape.initializeSyncPoint(initState, primaryTriggerConfiguration);
 
 	if (shape.getSize() >= PWM_PHASE_MAX_COUNT) {
 		// todo: by the time we are here we had already modified a lot of RAM out of bounds!
-		firmwareError(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", shape.getSize());
+		firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", shape.getSize());
 		shape.setShapeDefinitionError(true);
 		return;
 	}
 
 	if (shape.getSize() == 0) {
-		firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
+		firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
 	}
 }
 
@@ -1088,7 +1088,7 @@ void TriggerCentral::updateWaveform() {
 		int length = triggerShape.getLength();
 		engineCycleEventCount = length;
 
-		efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
+		efiAssertVoid(ObdCode::CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
 
 		triggerErrorDetection.clear();
 
@@ -1135,11 +1135,11 @@ bool TriggerCentral::isTriggerConfigChanged() {
 
 void validateTriggerInputs() {
 	if (!isBrainPinValid(engineConfiguration->triggerInputPins[0]) && isBrainPinValid(engineConfiguration->triggerInputPins[1])) {
-		firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "First trigger channel is missing");
 	}
 
 	if (!isBrainPinValid(engineConfiguration->camInputs[0]) && isBrainPinValid(engineConfiguration->camInputs[2])) {
-		firmwareError(OBD_PCM_Processor_Fault, "First bank cam input is required if second bank specified");
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "First bank cam input is required if second bank specified");
 	}
 }
 
