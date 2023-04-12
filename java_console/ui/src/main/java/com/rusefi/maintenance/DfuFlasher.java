@@ -50,7 +50,7 @@ public class DfuFlasher {
         if (isSignatureValidated.get()) {
             if (!ProgramSelector.IS_WIN) {
                 wnd.append("Switched to DFU mode!");
-                wnd.append("rusEFI console can only program on Windows");
+                wnd.append("FOME console can only program on Windows");
                 return;
             }
             submitAction(() -> {
@@ -81,7 +81,7 @@ public class DfuFlasher {
                 }
             });
             if (signature.get() == null) {
-                wnd.append("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
+                wnd.append("*** ERROR *** FOME has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
                 wnd.setErrorState();
                 return null;
@@ -99,11 +99,11 @@ public class DfuFlasher {
                 return null;
             }).getSerialPort();
             if (port == null) {
-                wnd.append("*** ERROR *** rusEFI serial port not detected");
+                wnd.append("*** ERROR *** FOME serial port not detected");
                 wnd.setErrorState();
                 return null;
             } else {
-                wnd.append("Detected rusEFI on " + port + "\n");
+                wnd.append("Detected FOME on " + port + "\n");
             }
         }
         return isSignatureValidated;
@@ -135,7 +135,7 @@ public class DfuFlasher {
     private static void executeDFU(StatusWindow wnd) {
         boolean driverIsHappy = detectSTM32BootloaderDriverState(wnd);
         if (!driverIsHappy) {
-            wnd.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
+            wnd.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of FOME console start screen?");
             wnd.setErrorState();
             return;
         }
@@ -159,7 +159,7 @@ public class DfuFlasher {
         } else if (stdout.toString().contains("Target device not found")) {
             wnd.append("ERROR: Device not connected or STM32 Bootloader driver not installed?");
             appendWindowsVersion(wnd);
-            wnd.append("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
+            wnd.append("ERROR: Please try installing drivers using 'Install Drivers' button on FOME splash screen");
             wnd.append("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
             appendDeviceReport(wnd);
             wnd.setErrorState();
@@ -213,7 +213,7 @@ public class DfuFlasher {
     }
 
     private static String getDfuWriteCommand() throws FileNotFoundException {
-        String prefix = "rusefi";
+        String prefix = "fome";
         String suffix = ".bin";
         String fileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, prefix, suffix);
         if (fileName == null)
@@ -246,7 +246,7 @@ public class DfuFlasher {
             BufferedReader stdout = new BufferedReader(new InputStreamReader(powerShellProcess.getInputStream()));
             while ((line = stdout.readLine()) != null) {
                 String lowerCase = line.toLowerCase();
-                if (!lowerCase.contains("stm32") && !lowerCase.contains("dfu") && !lowerCase.contains("rusefi"))
+                if (!lowerCase.contains("stm32") && !lowerCase.contains("dfu") && !lowerCase.contains("fome"))
                     continue;
                 report.add(line);
             }
