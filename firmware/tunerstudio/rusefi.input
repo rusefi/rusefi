@@ -1448,7 +1448,7 @@ gaugeCategory = Knock
 	knock11Gauge = knock11, "Knock Cyl 11", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
 	knock12Gauge = knock12, "Knock Cyl 12", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
 	knockLevelGauge = knockLevel,"Knock level", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
-	knockRetardGauge = knockRetard, "Knock retard", "deg", 0, 10, 0, 0, 10, 10, 1, 1
+	knockRetardGauge = m_knockRetard, "Knock retard", "deg", 0, 10, 0, 0, 10, 10, 1, 1
 	knockCountGauge = m_knockCount, "Knock count", "count", 0, 10000, 0, 0, 10000, 10000, 0, 0
 
 gaugeCategory = DynoView

@@ -607,8 +607,6 @@ static void updateIgnition(int rpm) {
 	engine->outputChannels.ignitionAdvance = timing > FOUR_STROKE_CYCLE_DURATION / 2 ? timing - FOUR_STROKE_CYCLE_DURATION : timing;
 
 	engine->outputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
-
-	engine->outputChannels.knockRetard = engine->module<KnockController>()->getKnockRetard();
 }
 
 static void updateFlags() {
