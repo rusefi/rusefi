@@ -110,7 +110,7 @@ const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
 
 	// Check that the actual length of the buffer matches the expected length of how much we thought we wrote
 	if (*actualOutputBufferSize != expectedOutputSize) {
-		firmwareError(ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d vs strlen %d", *actualOutputBufferSize, expectedOutputSize);
+		firmwareError(ObdCode::ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d vs strlen %d", *actualOutputBufferSize, expectedOutputSize);
 
 		return nullptr;
 	}

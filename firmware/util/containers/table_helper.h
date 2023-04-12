@@ -52,7 +52,7 @@ public:
 	}
 
 	void setAll(TValue value) {
-		efiAssertVoid(CUSTOM_ERR_6573, m_values, "map not initialized");
+		efiAssertVoid(ObdCode::CUSTOM_ERR_6573, m_values, "map not initialized");
 
 		for (size_t r = 0; r < TRowNum; r++) {
 			for (size_t c = 0; c < TColNum; c++) {

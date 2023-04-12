@@ -33,7 +33,7 @@ bool Pid::isSame(const pid_s *parameters) const {
 		// this 'null' could happen on first execution during initialization
 		return false;
 	}
-	efiAssert(OBD_PCM_Processor_Fault, parameters != NULL, "PID::isSame NULL", false);
+	efiAssert(ObdCode::OBD_PCM_Processor_Fault, parameters != NULL, "PID::isSame NULL", false);
 	return this->parameters->pFactor == parameters->pFactor
 			&& this->parameters->iFactor == parameters->iFactor
 			&& this->parameters->dFactor == parameters->dFactor
@@ -62,7 +62,7 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 	previousError = error;
 
 	if (dTime <=0) {
-		warning(CUSTOM_PID_DTERM, "PID: unexpected dTime");
+		warning(ObdCode::CUSTOM_PID_DTERM, "PID: unexpected dTime");
 		return pTerm + getOffset();
 	}
 

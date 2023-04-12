@@ -73,7 +73,7 @@ static void riseCallback(WaveReader *reader) {
 	efitick_t nowUs = getTimeNowUs();
 	reader->riseEventCounter++;
 	reader->lastActivityTimeUs = nowUs;
-	assertIsrContext(CUSTOM_ERR_6670);
+	assertIsrContext(ObdCode::CUSTOM_ERR_6670);
 	addEngineSnifferLogicAnalyzerEvent(reader->laIndex, FrontDirection::UP);
 
 	uint32_t width = nowUs - reader->periodEventTimeUs;
@@ -87,7 +87,7 @@ void WaveReader::onFallEvent() {
 	efitick_t nowUs = getTimeNowUs();
 	fallEventCounter++;
 	lastActivityTimeUs = nowUs;
-	assertIsrContext(CUSTOM_ERR_6670);
+	assertIsrContext(ObdCode::CUSTOM_ERR_6670);
 	addEngineSnifferLogicAnalyzerEvent(laIndex, FrontDirection::DOWN);
 
 	efitick_t width = nowUs - widthEventTimeUs;
@@ -129,7 +129,7 @@ void logicAnalyzerCallback(void* arg, efitick_t /*stamp*/) {
 static void initWave(size_t index) {
 	brain_pin_e brainPin = engineConfiguration->logicAnalyzerPins[index];
 
-	efiAssertVoid(CUSTOM_ERR_6655, index < efi::size(readers), "too many ICUs");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6655, index < efi::size(readers), "too many ICUs");
 	WaveReader *reader = &readers[index];
 
 	if (!isBrainPinValid(brainPin)) {
@@ -218,7 +218,7 @@ static void reportWave(Logging *logging, int index) {
 
 		logging->appendPrintf("advance%d%s", index, LOG_DELIMITER);
 		float angle = (offsetUs / oneDegreeUs) - tdcPosition();
-		fixAngle(angle, "waveAn", CUSTOM_ERR_6564);
+		fixAngle(angle, "waveAn", ObdCode::CUSTOM_ERR_6564);
 		logging->appendFloat(angle, 3);
 		logging->appendPrintf("%s", LOG_DELIMITER);
 	}

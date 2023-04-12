@@ -97,9 +97,9 @@ bool isPhaseInRange(float test, float current, float next);
 #define IS_NEGATIVE_ZERO(value) (__builtin_signbit(value) && value==0)
 #define fixNegativeZero(value) (IS_NEGATIVE_ZERO(value) ? 0 : value)
 
-#define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg)
+#define assertIsInBounds(length, array, msg) efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg)
 
-#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg, failedResult)
+#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(ObdCode::OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg, failedResult)
 
 template <typename T>
 bool isInRange(T min, T val, T max) {

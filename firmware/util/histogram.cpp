@@ -64,7 +64,7 @@ void initHistogramsModule(void) {
  * @brief This internal method is only public so that we can test it.
  */
 int histogramGetIndex(int64_t value) {
-	efiAssert(CUSTOM_ERR_ASSERT, initialized, "histo initialized", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, initialized, "histo initialized", 0);
 	if (value < 0)
 		return 0;
 	if (value < SBI_SIZE)
@@ -104,7 +104,7 @@ void hsAdd(histogram_s *h, int64_t value) {
 	int count = 1;
 	h->total_value += value;
 	h->total_count += count;
-	efiAssertVoid(CUSTOM_ERR_6670, index < BOUND_LENGTH, "histogram issue");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6670, index < BOUND_LENGTH, "histogram issue");
 
 	h->values[index] += count;
 }

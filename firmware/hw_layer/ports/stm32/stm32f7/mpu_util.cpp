@@ -39,14 +39,14 @@ static DeviceType determineDevice() {
 	} else {
 		if (fs == 1024) {
 			// Unsupported scenario! Not enough space for program plus two config copies
-			firmwareError(OBD_PCM_Processor_Fault, "1MB single bank MCU detected: please clear nDBANK option bit and reinstall FW.");
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "1MB single bank MCU detected: please clear nDBANK option bit and reinstall FW.");
 			return DeviceType::SingleBank1MB;
 		} else if (fs == 2048) {
 			return DeviceType::SingleBank2MB;
 		}
 	}
 
-	firmwareError(OBD_PCM_Processor_Fault, "Unrecognized flash memory layout db=%d, size=%d", db, fs);
+	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unrecognized flash memory layout db=%d, size=%d", db, fs);
 	return DeviceType::Unknown;
 }
 

@@ -124,7 +124,7 @@ void setWidebandOffset(uint8_t index) {
 	}
 
 	if (!waitAck()) {
-		firmwareError(OBD_PCM_Processor_Fault, "Wideband index set failed: no controller detected!");
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Wideband index set failed: no controller detected!");
 	}
 
 	waitingBootloaderThread = nullptr;

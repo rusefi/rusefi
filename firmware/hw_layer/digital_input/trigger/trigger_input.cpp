@@ -91,7 +91,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 		return 0;
 	}
 
-	firmwareError(CUSTOM_ERR_NOT_INPUT_PIN, "%s: Not input pin %s", msg, hwPortname(brainPin));
+	firmwareError(ObdCode::CUSTOM_ERR_NOT_INPUT_PIN, "%s: Not input pin %s", msg, hwPortname(brainPin));
 
 	return -1;
 }

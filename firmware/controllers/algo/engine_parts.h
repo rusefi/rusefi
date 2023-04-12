@@ -45,7 +45,7 @@ public:
 
 struct warning_t {
 	Timer LastTriggered;
-	ObdCode Code = OBD_None;
+	ObdCode Code = ObdCode::None;
 
 	warning_t() { }
 
@@ -75,7 +75,7 @@ public:
 	bool isWarningNow(ObdCode code) const;
 	void clear();
 	int warningCounter;
-	int lastErrorCode;
+	ObdCode lastErrorCode = ObdCode::None;
 
 	Timer timeSinceLastWarning;
 

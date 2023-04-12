@@ -65,7 +65,7 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	case EFI_ADC_15:
 		return Gpio::C17;
 	default:
-		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
+		firmwareError(ObdCode::CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
 		return Gpio::Invalid;
 	}
 }

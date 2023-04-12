@@ -156,7 +156,7 @@ void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
 	chibios_rt::CriticalSectionLocker csl;
 
 	msg_t msg = freeBuffers.postI(buffer);
-	efiAssertVoid(OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail");
+	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail");
 
 	// If the used list is empty, clear the ready flag
 	if (filledBuffers.getUsedCountI() == 0) {

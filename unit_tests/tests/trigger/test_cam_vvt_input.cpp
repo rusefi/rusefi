@@ -54,7 +54,7 @@ TEST(trigger, testNoStartUpWarnings) {
 		eth.fireFall(150);
 	}
 	EXPECT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
-	EXPECT_EQ(CUSTOM_PRIMARY_TOO_MANY_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code);
+	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code);
 }
 
 TEST(trigger, testNoisyInput) {
@@ -74,8 +74,8 @@ TEST(trigger, testNoisyInput) {
 	ASSERT_EQ(NOISY_RPM,  Sensor::getOrZero(SensorType::Rpm)) << "testNoisyInput RPM should be noisy";
 
 	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoisyInput";
-	ASSERT_EQ(CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code) << "@0";
-	ASSERT_EQ(OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, unitTestWarningCodeState.recentWarnings.get(1).Code) << "@0";
+	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code) << "@0";
+	ASSERT_EQ(ObdCode::OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, unitTestWarningCodeState.recentWarnings.get(1).Code) << "@0";
 }
 
 TEST(trigger, testCamInput) {
@@ -106,7 +106,7 @@ TEST(trigger, testCamInput) {
 
 	// asserting that lack of camshaft signal would be detecting
 	ASSERT_EQ(1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #2";
-	ASSERT_EQ(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, unitTestWarningCodeState.recentWarnings.get(0).Code) << "@0";
+	ASSERT_EQ(ObdCode::OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, unitTestWarningCodeState.recentWarnings.get(0).Code) << "@0";
 	unitTestWarningCodeState.recentWarnings.clear();
 
 	for (int i = 0; i < 600;i++) {

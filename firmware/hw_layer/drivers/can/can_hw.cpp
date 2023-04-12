@@ -292,7 +292,7 @@ void startCanPins() {
 			// todo: smarter online change of settings, kill isCanEnabled with fire
 			return;
 		}
-		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(engineConfiguration->canTxPin));
+		firmwareError(ObdCode::CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(engineConfiguration->canTxPin));
 		return;
 	}
 
@@ -301,7 +301,7 @@ void startCanPins() {
 			// todo: smarter online change of settings, kill isCanEnabled with fire
 			return;
 		}
-		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(engineConfiguration->canRxPin));
+		firmwareError(ObdCode::CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(engineConfiguration->canRxPin));
 		return;
 	}
 
@@ -355,7 +355,7 @@ void initCan() {
 
 	// Devices can't be the same!
 	if (device1 == device2) {
-		firmwareError(OBD_PCM_Processor_Fault, "CAN pins must be set to different devices");
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "CAN pins must be set to different devices");
 		return;
 	}
 

@@ -170,7 +170,7 @@ void updateDash(CanCycle cycle) {
 		canDashboardAim(cycle);
 		break;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
 		break;
 	}
 }

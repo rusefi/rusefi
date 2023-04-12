@@ -1235,7 +1235,7 @@ int Tle8888::deinit()
 
 int tle8888_add(brain_pin_e base, unsigned int index, const tle8888_config *cfg) {
 
-	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
+	efiAssert(ObdCode::OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
 
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_TLE8888_COUNT))

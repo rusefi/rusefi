@@ -10,7 +10,7 @@
 #include "trigger_structure.h"
 
 void MultiChannelStateSequence::checkSwitchTimes(const float scale) const {
-	efiAssertVoid(CUSTOM_ERR_WAVE_1, phaseCount > 0, "StateSequence cannot be empty");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_WAVE_1, phaseCount > 0, "StateSequence cannot be empty");
 	if (getSwitchTime(phaseCount - 1) != 1) {
 #if EFI_UNIT_TEST
 		for (int index = 0;index < phaseCount;index ++) {
@@ -18,7 +18,7 @@ void MultiChannelStateSequence::checkSwitchTimes(const float scale) const {
 		}
 #endif // EFI_UNIT_TEST
 
-		firmwareError(CUSTOM_ERR_WAVE_1, "[count=%d] last switch time has to be 1/%f not %.2f/%f",
+		firmwareError(ObdCode::CUSTOM_ERR_WAVE_1, "[count=%d] last switch time has to be 1/%f not %.2f/%f",
 				phaseCount,
 			      scale, getSwitchTime(phaseCount - 1),
 			      scale * getSwitchTime(phaseCount - 1));
@@ -26,7 +26,7 @@ void MultiChannelStateSequence::checkSwitchTimes(const float scale) const {
 	}
 	for (int i = 0; i < phaseCount - 1; i++) {
 		if (getSwitchTime(i) >= getSwitchTime(i + 1)) {
-			firmwareError(CUSTOM_ERR_WAVE_2, "invalid switchTimes @%d: %.2f/%.2f",
+			firmwareError(ObdCode::CUSTOM_ERR_WAVE_2, "invalid switchTimes @%d: %.2f/%.2f",
 				      i, getSwitchTime(i), getSwitchTime(i + 1));
 		}
 	}
