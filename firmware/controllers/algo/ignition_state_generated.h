@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Tue Apr 11 14:44:26 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Wed Apr 12 19:28:25 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -45,35 +45,47 @@ struct ignition_state_s {
 	 */
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
 	/**
-	 * need 4 byte alignment
-	units
+	 * @@GAUGE_NAME_TIMING_ADVANCE@@
+	deg
 	 * offset 18
 	 */
-	uint8_t alignmentFill_at_18[2];
+	scaled_channel<int16_t, 50, 1> baseIgnitionAdvance = (int16_t)0;
+	/**
+	 * @@GAUGE_NAME_ADJUSTED_TIMING@@
+	deg
+	 * offset 20
+	 */
+	scaled_channel<int16_t, 50, 1> correctedIgnitionAdvance = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 22
+	 */
+	uint8_t alignmentFill_at_22[2];
 	/**
 	 * "Ignition: dwell corr"
-	 * offset 20
+	 * offset 24
 	 */
 	float dwellVoltageCorrection = (float)0;
 	/**
 	 * "Ignition: Lua add"
 	deg
-	 * offset 24
+	 * offset 28
 	 */
 	float luaTimingAdd = (float)0;
 	/**
 	 * "Ignition: Lua mult"
 	deg
-	 * offset 28
+	 * offset 32
 	 */
 	float luaTimingMult = (float)0;
 	/**
 	Timing Cyl
-	 * offset 32
+	 * offset 36
 	 */
 	uint8_t perCylinderTiming[MAX_CYLINDER_COUNT];
 };
-static_assert(sizeof(ignition_state_s) == 44);
+static_assert(sizeof(ignition_state_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Tue Apr 11 14:44:26 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Wed Apr 12 19:28:25 UTC 2023

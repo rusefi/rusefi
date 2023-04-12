@@ -793,6 +793,12 @@ float getOutputValueByName(const char *name) {
 // timingPidCorrection
 		case -319326974:
 			return engine->ignitionState.timingPidCorrection;
+// baseIgnitionAdvance
+		case 493641747:
+			return engine->ignitionState.baseIgnitionAdvance;
+// correctedIgnitionAdvance
+		case 352421907:
+			return engine->ignitionState.correctedIgnitionAdvance;
 // dwellVoltageCorrection
 		case -80612537:
 			return engine->ignitionState.dwellVoltageCorrection;
