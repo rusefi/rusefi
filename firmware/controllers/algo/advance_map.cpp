@@ -195,6 +195,7 @@ angle_t getAdvance(int rpm, float engineLoad) {
 }
 
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ignitionLoad) {
+    // wow we have two separate per-cylinder trims?! #5237
 	return interpolate3d(
 		config->ignTrims[cylinderNumber].table,
 		config->ignTrimLoadBins, ignitionLoad,

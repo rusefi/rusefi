@@ -421,12 +421,13 @@ void prepareOutputSignals() {
 angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber) {
 	// base = position of this cylinder in the firing order.
 	// We get a cylinder every n-th of an engine cycle where N is the number of cylinders
-	auto base = engine->engineState.engineCycle * cylinderIndex / engineConfiguration->specs.cylindersCount;
+	auto firingOrderOffset = engine->engineState.engineCycle * cylinderIndex / engineConfiguration->specs.cylindersCount;
 
 	// Plus or minus any adjustment if this is an odd-fire engine
+	// wow we have two separate per-cylinder trims?! #5237
 	auto adjustment = engineConfiguration->timing_offset_cylinder[cylinderNumber];
 
-	auto result = base + adjustment;
+	auto result = firingOrderOffset + adjustment;
 
 	assertAngleRange(result, "getCylinderAngle", CUSTOM_ERR_6566);
 
