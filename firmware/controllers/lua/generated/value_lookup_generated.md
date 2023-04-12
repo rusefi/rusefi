@@ -1114,9 +1114,6 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 ### kLineDoHondaSend
 
 
-### benchTestOffTime
-Time between bench test pulses
-
 ### benchTestCount
 How many test bench pulses do you want
 
@@ -1599,4 +1596,7 @@ Degrees of timing REMOVED from actual timing during soft RPM limit window
 
 ### rpmHardLimitHyst
 Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached
+
+### benchTestOffTime
+Time between bench test pulses
 

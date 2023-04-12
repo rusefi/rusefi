@@ -1120,9 +1120,6 @@ float getConfigValueByName(const char *name) {
 // kLineDoHondaSend
 		case 304164959:
 			return engineConfiguration->kLineDoHondaSend;
-// benchTestOffTime
-		case -1655178001:
-			return engineConfiguration->benchTestOffTime;
 // benchTestCount
 		case -204721234:
 			return engineConfiguration->benchTestCount;
@@ -1606,6 +1603,9 @@ float getConfigValueByName(const char *name) {
 // rpmHardLimitHyst
 		case 1756514810:
 			return engineConfiguration->rpmHardLimitHyst;
+// benchTestOffTime
+		case -1655178001:
+			return engineConfiguration->benchTestOffTime;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3472,11 +3472,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->kLineDoHondaSend = (int)value;
 		return;
 	}
-		case -1655178001:
-	{
-		engineConfiguration->benchTestOffTime = (int)value;
-		return;
-	}
 		case -204721234:
 	{
 		engineConfiguration->benchTestCount = (int)value;
@@ -4280,6 +4275,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 1756514810:
 	{
 		engineConfiguration->rpmHardLimitHyst = (int)value;
+		return;
+	}
+		case -1655178001:
+	{
+		engineConfiguration->benchTestOffTime = (int)value;
 		return;
 	}
 	}
