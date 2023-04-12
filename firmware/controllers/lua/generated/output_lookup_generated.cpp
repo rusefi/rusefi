@@ -124,9 +124,6 @@ float getOutputValueByName(const char *name) {
 // lambdaValue
 		case -1119268893:
 			return engine->outputChannels.lambdaValue;
-// knockRetard
-		case -2096715875:
-			return engine->outputChannels.knockRetard;
 // idleCurrentPosition
 		case -736671365:
 			return engine->outputChannels.idleCurrentPosition;

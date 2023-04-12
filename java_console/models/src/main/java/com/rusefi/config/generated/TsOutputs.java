@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Apr 12 14:18:00 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Apr 12 14:27:21 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -448,8 +448,8 @@ public class TsOutputs {
 	public static final Field MAPVALUE = Field.create("MAPVALUE", 30, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(0);
 	public static final Field BAROPRESSURE = Field.create("BAROPRESSURE", 32, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(0);
 	public static final Field LAMBDAVALUE = Field.create("LAMBDAVALUE", 34, FieldType.INT16).setScale(1.0E-4).setBaseOffset(0);
-	public static final Field KNOCKRETARD = Field.create("KNOCKRETARD", 36, FieldType.INT8).setScale(0.1).setBaseOffset(0);
-	public static final Field IDLECURRENTPOSITION = Field.create("IDLECURRENTPOSITION", 37, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field IDLECURRENTPOSITION = Field.create("IDLECURRENTPOSITION", 36, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_37 = Field.create("ALIGNMENTFILL_AT_37", 37, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field VBATT = Field.create("VBATT", 38, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field OILPRESSURE = Field.create("OILPRESSURE", 40, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(0);
 	public static final Field VVTPOSITIONB1I = Field.create("VVTPOSITIONB1I", 42, FieldType.INT16).setScale(0.02).setBaseOffset(0);
@@ -929,8 +929,8 @@ public class TsOutputs {
 	MAPVALUE,
 	BAROPRESSURE,
 	LAMBDAVALUE,
-	KNOCKRETARD,
 	IDLECURRENTPOSITION,
+	ALIGNMENTFILL_AT_37,
 	VBATT,
 	OILPRESSURE,
 	VVTPOSITIONB1I,

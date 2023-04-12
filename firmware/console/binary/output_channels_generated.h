@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Apr 12 14:18:00 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Apr 12 14:27:21 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -228,16 +228,16 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 10000, 1> lambdaValue = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_KNOCK_RETARD@@
-	deg
+	%
 	 * offset 36
 	 */
-	scaled_channel<uint8_t, 10, 1> knockRetard = (uint8_t)0;
+	scaled_channel<uint8_t, 2, 1> idleCurrentPosition = (uint8_t)0;
 	/**
-	%
+	 * need 4 byte alignment
+	units
 	 * offset 37
 	 */
-	scaled_channel<uint8_t, 2, 1> idleCurrentPosition = (uint8_t)0;
+	uint8_t alignmentFill_at_37[1];
 	/**
 	 * @@GAUGE_NAME_VBAT@@
 	V
@@ -1393,4 +1393,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 780);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Apr 12 14:18:00 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Apr 12 14:27:21 UTC 2023

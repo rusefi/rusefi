@@ -17,7 +17,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.MAPValue, "MAP", "kPa", 1},
 	{engine->outputChannels.baroPressure, "baroPressure", "kPa", 1},
 	{engine->outputChannels.lambdaValue, "Lambda", "", 3},
-	{engine->outputChannels.knockRetard, "knock: retard", "deg", 1},
 	{engine->outputChannels.idleCurrentPosition, "idleCurrentPosition", "%", 1},
 	{engine->outputChannels.VBatt, "VBatt", "V", 2},
 	{engine->outputChannels.oilPressure, "Oil Pressure", "kPa", 0},
