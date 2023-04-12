@@ -164,7 +164,14 @@ void EngineState::periodicFastCallback() {
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 
 	float ignitionLoad = getIgnitionLoad();
-	float advance = getAdvance(rpm, ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
+	float baseAdvance = getAdvance(rpm, ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
+	float correctedIgnitionAdvance = baseAdvance
+			// Pull any extra timing for knock retard
+			+ engine->module<KnockController>()->getKnockRetard();
+	// these fields are scaled_channel so let's only use for observability, with a local variables holding value while it matters locally
+	engine->ignitionState.baseIgnitionAdvance = baseAdvance;
+	engine->ignitionState.correctedIgnitionAdvance = correctedIgnitionAdvance;
+
 
 	// compute per-bank fueling
 	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
@@ -181,7 +188,7 @@ void EngineState::periodicFastCallback() {
 		// Apply both per-bank and per-cylinder trims
 		engine->engineState.injectionMass[i] = injectionMass * bankTrim * cylinderTrim;
 
-		timingAdvance[i] = advance + getCombinedCylinderIgnitionTrim(i, rpm, ignitionLoad);
+		timingAdvance[i] = correctedIgnitionAdvance + getCombinedCylinderIgnitionTrim(i, rpm, ignitionLoad);
 	}
 
 	// TODO: calculate me from a table!
