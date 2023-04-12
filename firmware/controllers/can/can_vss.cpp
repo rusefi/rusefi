@@ -17,7 +17,7 @@
 static bool isInit = false;
 static uint16_t filterCanID = 0;
 
-expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
+static expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
 	switch (type) {
 		case BMW_e46:
 			return 0x01F0; /* BMW e46 ABS Message */
@@ -32,11 +32,11 @@ expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
 /* Module specitifc processing functions */
 /* source: http://z4evconversion.blogspot.com/2016/07/completely-forgot-but-it-does-live-on.html */
 float processBMW_e46(const CANRxFrame& frame) {
-	/* left front wheel speed is used here */
-	uint16_t tmp = ((frame.data8[1] & 0x0f) << 8 );
-	tmp |= frame.data8[0];
+	// average the rear wheels since those are the driven ones (more accurate gear detection!)
+	uint16_t left =  (((frame.data8[4] & 0x0f) << 8) | frame.data[5]);
+	uint16_t right = (((frame.data8[6] & 0x0f) << 8) | frame.data[7]);
 
-	return tmp / 16.0f;
+	return (left + right) / (16 * 2);
 }
 
 float processW202(const CANRxFrame& frame) {
@@ -47,7 +47,7 @@ float processW202(const CANRxFrame& frame) {
 
 /* End of specific processing functions */
 
-void canVssInfo(void) {
+static void canVssInfo() {
 	efiPrintf("vss using can option selected %x", engineConfiguration->canVssNbcType);
 	efiPrintf("vss filter for %x canID", filterCanID);
 	efiPrintf("Vss module is %d", isInit);
