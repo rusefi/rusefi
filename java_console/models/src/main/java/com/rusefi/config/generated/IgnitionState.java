@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Wed Apr 12 19:28:25 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Wed Apr 12 21:32:40 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -409,30 +409,30 @@ public class IgnitionState {
 	public static final int VSS_FILTER_MIN = 3;
 	public static final int WARNING_BUFFER_SIZE = 120;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field BASEDWELL = Field.create("BASEDWELL", 0, FieldType.FLOAT).setBaseOffset(828);
-	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 4, FieldType.FLOAT).setBaseOffset(828);
-	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 8, FieldType.FLOAT).setBaseOffset(828);
-	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 12, FieldType.INT16).setScale(0.01).setBaseOffset(828);
-	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 14, FieldType.INT16).setScale(0.01).setBaseOffset(828);
-	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 16, FieldType.INT16).setScale(0.01).setBaseOffset(828);
-	public static final Field BASEIGNITIONADVANCE = Field.create("BASEIGNITIONADVANCE", 18, FieldType.INT16).setScale(0.02).setBaseOffset(828);
-	public static final Field CORRECTEDIGNITIONADVANCE = Field.create("CORRECTEDIGNITIONADVANCE", 20, FieldType.INT16).setScale(0.02).setBaseOffset(828);
-	public static final Field ALIGNMENTFILL_AT_22 = Field.create("ALIGNMENTFILL_AT_22", 22, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 24, FieldType.FLOAT).setBaseOffset(828);
-	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 28, FieldType.FLOAT).setBaseOffset(828);
-	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 32, FieldType.FLOAT).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING1 = Field.create("PERCYLINDERTIMING1", 36, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING2 = Field.create("PERCYLINDERTIMING2", 37, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING3 = Field.create("PERCYLINDERTIMING3", 38, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING4 = Field.create("PERCYLINDERTIMING4", 39, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING5 = Field.create("PERCYLINDERTIMING5", 40, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING6 = Field.create("PERCYLINDERTIMING6", 41, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING7 = Field.create("PERCYLINDERTIMING7", 42, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING8 = Field.create("PERCYLINDERTIMING8", 43, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING9 = Field.create("PERCYLINDERTIMING9", 44, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING10 = Field.create("PERCYLINDERTIMING10", 45, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING11 = Field.create("PERCYLINDERTIMING11", 46, FieldType.INT8).setScale(1.0).setBaseOffset(828);
-	public static final Field PERCYLINDERTIMING12 = Field.create("PERCYLINDERTIMING12", 47, FieldType.INT8).setScale(1.0).setBaseOffset(828);
+	public static final Field BASEDWELL = Field.create("BASEDWELL", 0, FieldType.FLOAT).setBaseOffset(824);
+	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 4, FieldType.FLOAT).setBaseOffset(824);
+	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 8, FieldType.FLOAT).setBaseOffset(824);
+	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 12, FieldType.INT16).setScale(0.01).setBaseOffset(824);
+	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 14, FieldType.INT16).setScale(0.01).setBaseOffset(824);
+	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 16, FieldType.INT16).setScale(0.01).setBaseOffset(824);
+	public static final Field BASEIGNITIONADVANCE = Field.create("BASEIGNITIONADVANCE", 18, FieldType.INT16).setScale(0.02).setBaseOffset(824);
+	public static final Field CORRECTEDIGNITIONADVANCE = Field.create("CORRECTEDIGNITIONADVANCE", 20, FieldType.INT16).setScale(0.02).setBaseOffset(824);
+	public static final Field ALIGNMENTFILL_AT_22 = Field.create("ALIGNMENTFILL_AT_22", 22, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 24, FieldType.FLOAT).setBaseOffset(824);
+	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 28, FieldType.FLOAT).setBaseOffset(824);
+	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 32, FieldType.FLOAT).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING1 = Field.create("PERCYLINDERTIMING1", 36, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING2 = Field.create("PERCYLINDERTIMING2", 37, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING3 = Field.create("PERCYLINDERTIMING3", 38, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING4 = Field.create("PERCYLINDERTIMING4", 39, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING5 = Field.create("PERCYLINDERTIMING5", 40, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING6 = Field.create("PERCYLINDERTIMING6", 41, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING7 = Field.create("PERCYLINDERTIMING7", 42, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING8 = Field.create("PERCYLINDERTIMING8", 43, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING9 = Field.create("PERCYLINDERTIMING9", 44, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING10 = Field.create("PERCYLINDERTIMING10", 45, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING11 = Field.create("PERCYLINDERTIMING11", 46, FieldType.INT8).setScale(1.0).setBaseOffset(824);
+	public static final Field PERCYLINDERTIMING12 = Field.create("PERCYLINDERTIMING12", 47, FieldType.INT8).setScale(1.0).setBaseOffset(824);
 	public static final Field[] VALUES = {
 	BASEDWELL,
 	SPARKDWELL,
