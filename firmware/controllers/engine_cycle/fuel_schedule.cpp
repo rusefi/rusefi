@@ -65,8 +65,8 @@ static float getInjectionAngleCorrection(float fuelMs, float oneDegreeUs) {
 		// Center of injection is half-corrected for duration
 		return injectionDurationAngle * 0.5f;
 	} else {
-			// End of injection gets "full correction" so we advance opening by the full duration
-			return injectionDurationAngle;
+		// End of injection gets "full correction" so we advance opening by the full duration
+		return injectionDurationAngle;
 	}
 }
 
