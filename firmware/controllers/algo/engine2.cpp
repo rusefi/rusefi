@@ -167,7 +167,9 @@ void EngineState::periodicFastCallback() {
 	float baseAdvance = getAdvance(rpm, ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
 	float correctedIgnitionAdvance = baseAdvance
 			// Pull any extra timing for knock retard
-			+ engine->module<KnockController>()->getKnockRetard();
+			- engine->module<KnockController>()->getKnockRetard()
+			// Degrees of timing REMOVED from actual timing during soft RPM limit window
+			- getLimpManager()->getLimitingTimingRetard();
 	// these fields are scaled_channel so let's only use for observability, with a local variables holding value while it matters locally
 	engine->ignitionState.baseIgnitionAdvance = baseAdvance;
 	engine->ignitionState.correctedIgnitionAdvance = correctedIgnitionAdvance;
