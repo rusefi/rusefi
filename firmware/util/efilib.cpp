@@ -12,7 +12,6 @@
 #include <string.h>
 #include <math.h>
 #include "datalogging.h"
-#include "histogram.h"
 
 // also known as bool2string and boolean2string
 const char * boolToString(bool value) {
@@ -282,29 +281,6 @@ bool strEqual(const char *str1, const char *str2) {
 		if (str1[i] != str2[i])
 			return false;
 	return true;
-}
-
-/**
- * @brief This function knows how to print a histogram_s summary
- */
-void printHistogram(Logging *logging, histogram_s *histogram) {
-#if EFI_HISTOGRAMS && ! EFI_UNIT_TEST
-	int report[5];
-	int len = hsReport(histogram, report);
-
-	logging->reset();
-	logging.append(PROTOCOL_MSG LOG_DELIMITER);
-	logging.appendPrintf("histogram %s *", histogram->name);
-	for (int i = 0; i < len; i++)
-	logging.appendPrintf("%d ", report[i]);
-	logging.appendPrintf("*");
-	logging.append(LOG_DELIMITER);
-	scheduleLogging(logging);
-#else
-	UNUSED(logging);
-	UNUSED(histogram);
-	
-#endif /* EFI_HISTOGRAMS */
 }
 
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed) {

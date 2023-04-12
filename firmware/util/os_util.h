@@ -12,8 +12,6 @@
 
 #if !EFI_UNIT_TEST
 
-#include "histogram.h"
-
 /**
  * Unfortunately ChibiOS has two versions of methods for different
  * contexts.
@@ -24,7 +22,5 @@
 #define assertIsrContext(code) efiAssertVoid(code, isIsrContext(), "NOT_ISR")
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par);
-
-void printHistogram(Logging *logging, histogram_s *histogram);
 
 #endif /* EFI_UNIT_TEST */

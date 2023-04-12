@@ -10,7 +10,6 @@
 #include <string.h>
 
 #include "cyclic_buffer.h"
-#include "histogram.h"
 
 #include "malfunction_central.h"
 #include "cli_registry.h"
@@ -91,47 +90,6 @@ TEST(util, cyclicBuffer) {
 		ASSERT_EQ(1, sb.minValue(113));
 	}
 
-}
-
-TEST(util, histogram) {
-	initHistogramsModule();
-
-	ASSERT_EQ(80, histogramGetIndex(239));
-	ASSERT_EQ(223, histogramGetIndex(239239));
-	ASSERT_EQ(364, histogramGetIndex(239239239));
-
-	histogram_s h;
-
-	initHistogram(&h, "test");
-
-	int result[5];
-	ASSERT_EQ(0, hsReport(&h, result));
-
-	hsAdd(&h, 10);
-	ASSERT_EQ(1, hsReport(&h, result));
-	ASSERT_EQ(10, result[0]);
-
-	// let's add same value one more time
-	hsAdd(&h, 10);
-	ASSERT_EQ(2, hsReport(&h, result));
-	ASSERT_EQ(10, result[0]);
-	ASSERT_EQ(10, result[1]);
-
-	hsAdd(&h, 10);
-	hsAdd(&h, 10);
-	hsAdd(&h, 10);
-
-	hsAdd(&h, 1000);
-	hsAdd(&h, 100);
-
-	ASSERT_EQ(5, hsReport(&h, result));
-
-	ASSERT_EQ(5, result[0]);
-	ASSERT_EQ(10, result[1]);
-	ASSERT_EQ(10, result[2]);
-	ASSERT_EQ(100, result[3]);
-	// values are not expected to be exactly the same, it's the shape what matters
-	ASSERT_EQ(1011, result[4]);
 }
 
 static void testMalfunctionCentralRemoveNonExistent() {

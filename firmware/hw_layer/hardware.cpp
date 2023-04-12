@@ -35,7 +35,6 @@
 
 #include "AdcConfiguration.h"
 #include "idle_hardware.h"
-#include "histogram.h"
 #include "sent.h"
 #include "trigger_central.h"
 #include "gitversion.h"
@@ -352,13 +351,6 @@ void initHardwareNoConfig() {
 #if EFI_PROD_CODE
 	initPinRepository();
 #endif
-
-#if EFI_HISTOGRAMS
-	/**
-	 * histograms is a data structure for CPU monitor, it does not depend on configuration
-	 */
-	initHistogramsModule();
-#endif /* EFI_HISTOGRAMS */
 
 #if EFI_GPIO_HARDWARE
 	/**

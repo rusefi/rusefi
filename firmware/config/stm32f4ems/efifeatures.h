@@ -289,7 +289,6 @@
 #define EFI_ENGINE_SNIFFER TRUE
 #endif
 
-#define EFI_HISTOGRAMS FALSE
 #define EFI_SENSOR_CHART TRUE
 
 #if defined __GNUC__

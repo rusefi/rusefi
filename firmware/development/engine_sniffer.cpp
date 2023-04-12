@@ -234,10 +234,6 @@ void initWaveChart(WaveChart *chart) {
 	 */
 	chart->init();
 
-#if EFI_HISTOGRAMS
-	initHistogram(&engineSnifferHisto, "engine sniffer");
-#endif /* EFI_HISTOGRAMS */
-
 #if ! EFI_UNIT_TEST
 	printStatus();
 	addConsoleActionI("chartsize", setChartSize);

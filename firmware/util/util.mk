@@ -4,7 +4,6 @@ UTILSRC = \
 	$(UTIL_DIR)/tinymt32.c \
 
 UTILSRC_CPP = \
-	$(UTIL_DIR)/histogram.cpp \
 	$(UTIL_DIR)/efitime.cpp \
 	$(UTIL_DIR)/containers/listener_array.cpp \
 	$(UTIL_DIR)/containers/local_version_holder.cpp \
