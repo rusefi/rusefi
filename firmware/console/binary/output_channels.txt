@@ -224,7 +224,6 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	int16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	int16_t autoscale rawTps2Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
-	uint16_t knockCount;@@GAUGE_NAME_KNOCK_COUNTER@@;"",1, 0, 0, 0, 0
 
 	int16_t autoscale accelerationZ;@@GAUGE_NAME_ACCEL_Z@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	int16_t autoscale accelerationRoll;@@GAUGE_NAME_ACCEL_ROLL@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
