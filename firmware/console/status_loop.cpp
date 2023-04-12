@@ -602,10 +602,6 @@ static void updateFuelInfo() {
 }
 
 static void updateIgnition(int rpm) {
-	float timing = engine->engineState.timingAdvance[0];
-	// that's weird logic. also seems broken for two stroke?
-	engine->outputChannels.ignitionAdvance = timing > FOUR_STROKE_CYCLE_DURATION / 2 ? timing - FOUR_STROKE_CYCLE_DURATION : timing;
-
 	engine->outputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
 }
 
