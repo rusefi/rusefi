@@ -388,9 +388,6 @@ float getOutputValueByName(const char *name) {
 // rawTps2Secondary
 		case 70357120:
 			return engine->outputChannels.rawTps2Secondary;
-// knockCount
-		case 699938372:
-			return engine->outputChannels.knockCount;
 // accelerationZ
 		case 633018089:
 			return engine->outputChannels.accelerationZ;

@@ -135,7 +135,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.rawTps1Secondary, "rawTps1Secondary", "V", 3},
 	{engine->outputChannels.rawTps2Primary, "rawTps2Primary", "V", 3},
 	{engine->outputChannels.rawTps2Secondary, "rawTps2Secondary", "V", 3},
-	{engine->outputChannels.knockCount, "knock: count", "", 0},
 	{engine->outputChannels.accelerationZ, "Acceleration: Z", "G", 0},
 	{engine->outputChannels.accelerationRoll, "Acceleration: Roll", "G", 0},
 	{engine->outputChannels.accelerationYaw, "Acceleration: Yaw", "G", 0},
