@@ -66,7 +66,7 @@ void setSingleCoilDwell();
  * Cylinder number is used for per-cylinder adjustment, if you have
  * an odd-fire engine (v-twin, V10, some v6, etc)
  */
-angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber);
+angle_t getPerCylinderFiringOrderOffset(uint8_t cylinderIndex, uint8_t cylinderNumber);
 
 // Table blending helpers
 struct BlendResult {

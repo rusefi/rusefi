@@ -99,7 +99,7 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 	assertAngleRange(openingAngle, "openingAngle_r", CUSTOM_ERR_6554);
 
 	// Convert from cylinder-relative to cylinder-1-relative
-	openingAngle += getCylinderAngle(cylinderIndex, cylinderNumber);
+	openingAngle += getPerCylinderFiringOrderOffset(cylinderIndex, cylinderNumber);
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
 	assertAngleRange(openingAngle, "findAngle#a33", CUSTOM_ERR_6544);
