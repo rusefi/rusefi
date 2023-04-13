@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,7 @@ abstract class CommandControl {
 
     public CommandControl(UIContext uiContext, String labelText, String iconFileName, String buttonText, JComponent... components) {
         this.uiContext = uiContext;
-        ImageIcon icon = AutoupdateUtil.loadIcon(iconFileName);
+        ImageIcon icon = UiUtils.loadIcon(iconFileName);
         JPanel rightVerticalPanel = new JPanel(new VerticalFlowLayout());
         rightVerticalPanel.add(new JLabel(labelText));
         for (JComponent component : components)

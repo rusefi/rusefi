@@ -2,7 +2,6 @@ package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.AverageAnglesUtil;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
@@ -49,21 +48,21 @@ public class RecentCommands {
     private final static Map<String, Icon> COMMAND_ICONS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     static {
-        COMMAND_ICONS.put(STOPENGINE, AutoupdateUtil.loadIcon("stop.jpg"));
-        ImageIcon infoIcon = AutoupdateUtil.loadIcon("info.png");
-        COMMAND_ICONS.put(HELP, AutoupdateUtil.loadIcon("help.jpg"));
+        COMMAND_ICONS.put(STOPENGINE, UiUtils.loadIcon("stop.jpg"));
+        ImageIcon infoIcon = UiUtils.loadIcon("info.png");
+        COMMAND_ICONS.put(HELP, UiUtils.loadIcon("help.jpg"));
         COMMAND_ICONS.put(SENSORINFO, infoIcon);
-        COMMAND_ICONS.put(CMD_TRIGGERINFO, AutoupdateUtil.loadIcon("trigger.jpg"));
+        COMMAND_ICONS.put(CMD_TRIGGERINFO, UiUtils.loadIcon("trigger.jpg"));
         COMMAND_ICONS.put(IDLEINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
         COMMAND_ICONS.put(MAPINFO, infoIcon);
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
-        COMMAND_ICONS.put(SDINFO, AutoupdateUtil.loadIcon("sdinfo.jpg"));
+        COMMAND_ICONS.put(SDINFO, UiUtils.loadIcon("sdinfo.jpg"));
         COMMAND_ICONS.put(FSIOINFO, infoIcon);
         COMMAND_ICONS.put(PINS, infoIcon);
-        COMMAND_ICONS.put(Fields.CMD_WRITECONFIG, AutoupdateUtil.loadIcon("writeconfig.jpg"));
-        COMMAND_ICONS.put(SPEEDINFO, AutoupdateUtil.loadIcon("speedinfo.jpg"));
+        COMMAND_ICONS.put(Fields.CMD_WRITECONFIG, UiUtils.loadIcon("writeconfig.jpg"));
+        COMMAND_ICONS.put(SPEEDINFO, UiUtils.loadIcon("speedinfo.jpg"));
     }
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
@@ -149,7 +148,7 @@ public class RecentCommands {
             public void run() {
                 content.removeAll();
 
-                JButton reset = new JButton(AutoupdateUtil.loadIcon("undo.jpg"));
+                JButton reset = new JButton(UiUtils.loadIcon("undo.jpg"));
                 reset.setContentAreaFilled(false);
                 reset.setFocusPainted(false);
                 reset.setBorder(BorderFactory.createEmptyBorder());

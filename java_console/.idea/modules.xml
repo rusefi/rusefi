@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/autotest/autotest.iml" filepath="$PROJECT_DIR$/autotest/autotest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/autoupdate/autoupdate.iml" filepath="$PROJECT_DIR$/autoupdate/autoupdate.iml" />
       <module fileurl="file://$PROJECT_DIR$/../java_tools/configuration_definition/configuration_definition.iml" filepath="$PROJECT_DIR$/../java_tools/configuration_definition/configuration_definition.iml" />
       <module fileurl="file://$PROJECT_DIR$/core_ui/core_ui.iml" filepath="$PROJECT_DIR$/core_ui/core_ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/../java_tools/enum_to_string/enum_to_string.iml" filepath="$PROJECT_DIR$/../java_tools/enum_to_string/enum_to_string.iml" />

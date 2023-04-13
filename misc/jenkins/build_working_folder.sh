@@ -5,7 +5,6 @@
 #
 
 FULL_BUNDLE_FILE="${BUNDLE_FULL_NAME}.zip"
-UPDATE_BUNDLE_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
 
 echo "${BUNDLE_FULL_NAME}: Packaging temp/$FULL_BUNDLE_FILE file"
 
@@ -46,7 +45,6 @@ else
   cp $RUSEFI_CONSOLE_SETTINGS $CONSOLE_FOLDER
 fi
 
-cp java_console_binary/fome_autoupdate.jar $CONSOLE_FOLDER
 cp java_console_binary/fome_console.jar $CONSOLE_FOLDER
 cp simulator/build/fome_simulator.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/fome_*.exe     $CONSOLE_FOLDER
@@ -121,34 +119,9 @@ mkdir -p artifacts
 mv temp/$FULL_BUNDLE_FILE artifacts
 
 echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
-rm -rf $CONSOLE_FOLDER/fome_autoupdate.exe
 rm -rf $CONSOLE_FOLDER/fome_console.exe
 rm -rf $CONSOLE_FOLDER/DfuSe
 rm -rf $DRIVERS_FOLDER
-
-# for autoupdate we do not want the unique folder name with timestamp
-cd $FOLDER
-zip -r ../$UPDATE_BUNDLE_FILE *
-cd ..
-ls -l $UPDATE_BUNDLE_FILE
-if [ -n "$RUSEFI_SSH_USER" ]; then
- retVal=0
- if [ "$2" = "true" ]; then
-   tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/lts/$1/autoupdate; tar -xzf - -C build_server/lts/$1/autoupdate"
-   retVal=$?
- else
-   tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/autoupdate; tar -xzf - -C build_server/autoupdate"
-   retVal=$?
- fi
- if [ $retVal -ne 0 ]; then
-  echo "autoupdate upload failed"
-  exit 1
- fi
-else
-  echo "Upload not configured"
-fi
-cd ..
-mv temp/$UPDATE_BUNDLE_FILE artifacts
 
 echo "$SCRIPT_NAME: We are back in root directory"
 

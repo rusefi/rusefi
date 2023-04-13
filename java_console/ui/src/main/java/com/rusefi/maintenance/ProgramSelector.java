@@ -3,7 +3,6 @@ package com.rusefi.maintenance;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -52,7 +51,7 @@ public class ProgramSelector {
             mode.setSelectedItem(persistedMode);
 
         JButton updateFirmware = new JButton("Update Firmware",
-                AutoupdateUtil.loadIcon("upload48.png"));
+                UiUtils.loadIcon("upload48.png"));
         controls.add(updateFirmware);
 
         updateFirmware.addActionListener(new ActionListener() {

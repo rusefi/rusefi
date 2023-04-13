@@ -1,7 +1,7 @@
 package com.rusefi.ui.util;
 
-import com.rusefi.core.ui.AutoupdateUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,6 +18,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.URLStreamHandlerFactory;
+
 import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
 import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
 import static com.rusefi.ui.util.LocalizedMessages.RESUME;
@@ -28,6 +33,10 @@ import static com.rusefi.ui.util.LocalizedMessages.RESUME;
  */
 public class UiUtils {
     private static final String SAVE_IMAGE = "save image";
+
+    // todo: figure out a better way to work with absolute path
+    private static final String APPICON = "/appicon.png";
+
 
     public static void saveImageWithPrompt(String fileName, Component parentForDialog, Component content) {
         JFileChooser fc = getFileChooser(new FileNameExtensionFilter("PNG files", "png"));
@@ -57,7 +66,7 @@ public class UiUtils {
     }
 
     private static BufferedImage getScreenShot(Component component) {
-        AutoupdateUtil.assertAwtThread();
+        assertAwtThread();
         // http://stackoverflow.com/questions/5853879/swing-obtain-image-of-jframe/5853992
         BufferedImage image = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
         // call the Component's paint method, using
@@ -93,7 +102,40 @@ public class UiUtils {
      * todo: one 'trueXXX' method should be enough, which one?
      */
     public static void trueLayout(Component component) {
-        AutoupdateUtil.trueLayout(component);
+        assertAwtThread();
+        if (component == null)
+            return;
+        component.invalidate();
+        component.validate();
+        component.repaint();
+    }
+
+    private static void assertAwtThread() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            Exception e = new IllegalStateException("Not on AWT thread but " + Thread.currentThread().getName());
+
+            StringBuilder trace = new StringBuilder(e + "\n");
+            for(StackTraceElement element : e.getStackTrace())
+                trace.append(element.toString()).append("\n");
+            SwingUtilities.invokeLater(() -> {
+                Window w = getSelectedWindow(Window.getWindows());
+                JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
+            });
+        }
+    }
+
+    private static Window getSelectedWindow(Window[] windows) {
+        for (Window window : windows) {
+            if (window.isActive()) {
+                return window;
+            } else {
+                Window[] ownedWindows = window.getOwnedWindows();
+                if (ownedWindows != null) {
+                    return getSelectedWindow(ownedWindows);
+                }
+            }
+        }
+        return null;
     }
 
     public static java.util.List<Component> getAllComponents(final Container c) {
@@ -121,7 +163,10 @@ public class UiUtils {
     }
 
     public static JComponent wrap(JComponent component) {
-        return AutoupdateUtil.wrap(component);
+        assertAwtThread();
+        JPanel result = new JPanel();
+        result.add(component);
+        return result;
     }
 
     public static JButton createSaveImageButton() {
@@ -190,5 +235,60 @@ public class UiUtils {
             }
         });
         return copy;
+    }
+
+    private static class DynamicForResourcesURLClassLoader extends URLClassLoader {
+        public DynamicForResourcesURLClassLoader( URL[] urls, ClassLoader parent ) { super( urls, parent ); }
+        public DynamicForResourcesURLClassLoader( URL[] urls ) { super( urls ); }
+        public DynamicForResourcesURLClassLoader( URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory ) { super( urls, parent, factory ); }
+
+        @Override
+        public void addURL( URL url ) {
+            super.addURL( url );
+        }
+
+        /**
+         * Let's here emulate Class.getResource() logic
+         * @param name resource name
+         * @return resource url
+         */
+        @Nullable
+        @Override
+        public URL getResource( String name ) {
+            if ( name.startsWith( "/" ) )
+                name = name.substring( 1 );
+            return super.getResource( name );
+        }
+    }
+
+    private static final DynamicForResourcesURLClassLoader dynamicResourcesLoader = new DynamicForResourcesURLClassLoader( new URL[ 0 ], UiUtils.class.getClassLoader() );
+
+    @NotNull
+    public static URLClassLoader getClassLoaderByJar(String jar) throws MalformedURLException {
+        final URL jarURL = new File( jar ).toURI().toURL();
+        dynamicResourcesLoader.addURL( jarURL );
+        return new URLClassLoader(
+                new URL[]{ new File( jar ).toURI().toURL() },
+                dynamicResourcesLoader
+        );
+    }
+
+    public static void setAppIcon(JFrame frame) {
+        ImageIcon icon = loadIcon(APPICON);
+        if (icon != null)
+            frame.setIconImage(icon.getImage());
+    }
+
+    public static ImageIcon loadIcon( String strPath ) {
+        URL imgURL = dynamicResourcesLoader.getResource( strPath );
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        } else {
+            imgURL = dynamicResourcesLoader.getResource("/com/rusefi/" + strPath);
+            if (imgURL != null) {
+                return new ImageIcon(imgURL);
+            }
+            return null;
+        }
     }
 }

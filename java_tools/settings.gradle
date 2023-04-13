@@ -16,8 +16,6 @@ include ':config_definition_base'
 project(':config_definition_base').projectDir = new File('configuration_definition_base')
 include ':config_definition'
 project(':config_definition').projectDir = new File('configuration_definition')
-include ':autoupdate'
-project(':autoupdate').projectDir = new File('../java_console/autoupdate')
 include ':shared_ui'
 project(':shared_ui').projectDir = new File('../java_console/shared_ui')
 include ':ecu_io'

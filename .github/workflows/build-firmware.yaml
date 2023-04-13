@@ -311,10 +311,3 @@ jobs:
       with:
         name: fome_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/fome_bundle_${{matrix.build-target}}.zip
-
-    # - name: Upload autoupdate bundle
-    #   if: ${{ inputs.bundle || inputs.lts }}
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: fome_bundle_${{matrix.build-target}}_autoupdate.zip
-    #     path: ./artifacts/fome_bundle_${{matrix.build-target}}_autoupdate.zip

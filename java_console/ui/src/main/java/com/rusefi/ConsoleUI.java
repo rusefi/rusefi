@@ -14,8 +14,7 @@ import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
-import com.rusefi.core.ui.AutoupdateUtil;
-
+import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -126,7 +125,7 @@ public class ConsoleUI {
             }
         });
 
-        AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
+        UiUtils.setAppIcon(mainFrame.getFrame().getFrame());
         log.info("showFrame");
         mainFrame.getFrame().showFrame(tabbedPane.tabbedPane);
     }

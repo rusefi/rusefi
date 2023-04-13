@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.core.io.BundleUtil;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.DriverInstall;
@@ -84,7 +83,7 @@ public class StartupFrame {
                 }
             }
         });
-        AutoupdateUtil.setAppIcon(frame);
+        UiUtils.setAppIcon(frame);
     }
 
     @NotNull
@@ -248,7 +247,7 @@ public class StartupFrame {
         } else {
             logoName = LOGO;
         }
-        return AutoupdateUtil.loadIcon(logoName);
+        return UiUtils.loadIcon(logoName);
     }
 
     private void connectButtonAction(JComboBox<String> comboSpeeds) {
@@ -296,7 +295,7 @@ public class StartupFrame {
     }
 
     private Component createShowDeviceManagerButton() {
-        JButton showDeviceManager = new JButton(AutoupdateUtil.loadIcon("DeviceManager.png"));
+        JButton showDeviceManager = new JButton(UiUtils.loadIcon("DeviceManager.png"));
         showDeviceManager.setMargin(new Insets(0, 0, 0, 0));
         showDeviceManager.setToolTipText("Show Device Manager");
         showDeviceManager.addActionListener(event -> {
