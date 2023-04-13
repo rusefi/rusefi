@@ -44,7 +44,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	output->signalFallSparkId = event->sparkId;
 
 	if (!output->currentLogicValue && !event->wasSparkLimited) {
-		warning(CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
+		warning(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
 		output->outOfOrder = true;
 	}
 	output->setLow();
@@ -70,7 +70,7 @@ static int getIgnitionPinForIndex(int cylinderIndex, ignition_mode_e ignitionMod
 		return cylinderIndex % 2;
 
 	default:
-		firmwareError(CUSTOM_OBD_IGNITION_MODE, "Invalid ignition mode getIgnitionPinForIndex(): %d", engineConfiguration->ignitionMode);
+		firmwareError(ObdCode::CUSTOM_OBD_IGNITION_MODE, "Invalid ignition mode getIgnitionPinForIndex(): %d", engineConfiguration->ignitionMode);
 		return 0;
 	}
 }
@@ -89,7 +89,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		// Pull any extra timing for knock retard
 		+ engine->module<KnockController>()->getKnockRetard();
 
-	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
+	efiAssertVoid(ObdCode::CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 
 	auto ignitionMode = getCurrentIgnitionMode();
 
@@ -111,17 +111,17 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	event->outputs[0] = output;
 	event->outputs[1] = secondOutput;
 
-	wrapAngle2(sparkAngle, "findAngle#2", CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
+	wrapAngle2(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
 	event->sparkAngle = sparkAngle;
 	// Stash which cylinder we're scheduling so that knock sensing knows which
 	// cylinder just fired
 	event->cylinderNumber = coilIndex;
 
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
-	efiAssertVoid(CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
 
-	assertAngleRange(dwellStartAngle, "findAngle dwellStartAngle", CUSTOM_ERR_6550);
-	wrapAngle2(dwellStartAngle, "findAngle#7", CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
+	assertAngleRange(dwellStartAngle, "findAngle dwellStartAngle", ObdCode::CUSTOM_ERR_6550);
+	wrapAngle2(dwellStartAngle, "findAngle#7", ObdCode::CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
 	event->dwellAngle = dwellStartAngle;
 }
 
@@ -238,7 +238,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	if (Sensor::getOrZero(SensorType::Rpm) > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->getName();
 		if (prevSparkName == outputName && getCurrentIgnitionMode() != IM_ONE_COIL) {
-			warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
+			warning(ObdCode::CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
 		}
 		prevSparkName = outputName;
 	}
@@ -293,11 +293,11 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	angle_t sparkAngle = event->sparkAngle;
 	const floatms_t dwellMs = engine->ignitionState.sparkDwell;
 	if (cisnan(dwellMs) || dwellMs <= 0) {
-		warning(CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
+		warning(ObdCode::CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
 		return;
 	}
 	if (cisnan(sparkAngle)) {
-		warning(CUSTOM_ADVANCE_SPARK, "NaN advance");
+		warning(ObdCode::CUSTOM_ADVANCE_SPARK, "NaN advance");
 		return;
 	}
 
@@ -341,8 +341,8 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	 * Spark event is often happening during a later trigger event timeframe
 	 */
 
-	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(sparkAngle), "findAngle#4");
-	assertAngleRange(sparkAngle, "findAngle#a5", CUSTOM_ERR_6549);
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6591, !cisnan(sparkAngle), "findAngle#4");
+	assertAngleRange(sparkAngle, "findAngle#a5", ObdCode::CUSTOM_ERR_6549);
 
 	bool scheduled = engine->module<TriggerScheduler>()->scheduleOrQueue(
 		&event->sparkEvent, edgeTimestamp, sparkAngle,
@@ -384,7 +384,7 @@ void initializeIgnitionActions() {
 		list->isReady = false;
 		return;
 	}
-	efiAssertVoid(CUSTOM_ERR_6592, engineConfiguration->cylindersCount > 0, "cylindersCount");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6592, engineConfiguration->cylindersCount > 0, "cylindersCount");
 
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
@@ -411,10 +411,10 @@ static void prepareIgnitionSchedule() {
 	}
 
 	if (engine->ignitionState.dwellAngle == 0) {
-		warning(CUSTOM_ZERO_DWELL, "dwell is zero?");
+		warning(ObdCode::CUSTOM_ZERO_DWELL, "dwell is zero?");
 	}
 	if (engine->ignitionState.dwellAngle > maxAllowedDwellAngle) {
-		warning(CUSTOM_DWELL_TOO_LONG, "dwell angle too long: %.2f", engine->ignitionState.dwellAngle);
+		warning(ObdCode::CUSTOM_DWELL_TOO_LONG, "dwell angle too long: %.2f", engine->ignitionState.dwellAngle);
 	}
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
@@ -460,7 +460,7 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 				// artificial misfire on cylinder #1 for testing purposes
 				// enable artificialMisfire
 				// set_fsio_setting 6 20
-				warning(CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->engineState.sparkCounter);
+				warning(ObdCode::CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->engineState.sparkCounter);
 				continue;
 			}
 #if EFI_LAUNCH_CONTROL
@@ -497,7 +497,7 @@ int getNumberOfSparks(ignition_mode_e mode) {
 	case IM_WASTED_SPARK:
 		return 2;
 	default:
-		firmwareError(CUSTOM_ERR_IGNITION_MODE, "Unexpected ignition_mode_e %d", mode);
+		firmwareError(ObdCode::CUSTOM_ERR_IGNITION_MODE, "Unexpected ignition_mode_e %d", mode);
 		return 1;
 	}
 }

@@ -20,7 +20,7 @@
 	int counter = 0;                                                        \
 	LL_FOREACH2(head, current, field) {                                     \
 		if (++counter > QUEUE_LENGTH_LIMIT) {                               \
-			firmwareError(CUSTOM_ERR_LOOPED_QUEUE, "Looped queue?");        \
+			firmwareError(ObdCode::CUSTOM_ERR_LOOPED_QUEUE, "Looped queue?");        \
 			return false;                                                   \
 		}                                                                   \
 		if (current == element) {                                           \
@@ -29,7 +29,7 @@
 			 * was not scheduled by angle but was scheduled by time. In case of scheduling          \
 			 * by time with slow RPM the whole next fast revolution might be within the wait period \
 			 */                                                                                     \
-			warning(CUSTOM_RE_ADDING_INTO_EXECUTION_QUEUE, "re-adding element into event_queue");   \
+			warning(ObdCode::CUSTOM_RE_ADDING_INTO_EXECUTION_QUEUE, "re-adding element into event_queue");   \
 			return true;                                                    \
 		} \
 	} \

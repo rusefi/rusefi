@@ -96,7 +96,7 @@ static int getDacValue(uint8_t voltage) {
 }
 
 void startTriggerInputPins(void) {
-	//efiAssertVoid(CUSTOM_ERR_, !isCompEnabled, "isCompEnabled");
+	//efiAssertVoid(ObdCode::CUSTOM_ERR_, !isCompEnabled, "isCompEnabled");
 	if (isCompEnabled) {
 		efiPrintf("startTIPins(): already enabled!");
 		return;

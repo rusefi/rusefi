@@ -178,7 +178,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 
 		if (!Sensor::isRedundant(m_positionSensor)) {
 			firmwareError(
-				OBD_TPS_Configuration,
+				ObdCode::OBD_TPS_Configuration,
 				"Use of electronic throttle requires %s to be redundant.",
 				Sensor::getSensorName(m_positionSensor)
 			);
@@ -189,7 +189,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 
 		if (!Sensor::isRedundant(SensorType::AcceleratorPedal)) {
 			firmwareError(
-				OBD_TPS_Configuration,
+				ObdCode::OBD_TPS_Configuration,
 				"Use of electronic throttle requires accelerator pedal to be redundant."
 			);
 			etbErrorCode = (int8_t)TpsState::Redundancy;
@@ -723,7 +723,7 @@ struct EtbImpl final : public TBase {
 
 		// Check that the calibrate actually moved the throttle
 		if (absF(primaryMax - primaryMin) < 0.5f) {
-			firmwareError(OBD_TPS_Configuration, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", primaryMin, primaryMax);
+			firmwareError(ObdCode::OBD_TPS_Configuration, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", primaryMin, primaryMax);
 			TBase::m_isAutocal = false;
 			return;
 		}
@@ -974,7 +974,7 @@ void doInitElectronicThrottle() {
 	if (!engineConfiguration->etb1configured && !engineConfiguration->etb2configured) {
 		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
 		if (hasPedal) {
-			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
 		}
 	}
 
@@ -984,7 +984,7 @@ void doInitElectronicThrottle() {
 		/**
 		 * Unexpected electronic throttle start-up position is worth a critical error
 		 */
-		firmwareError(OBD_Throttle_Actuator_Control_Range_Performance_Bank_1, "startup ETB position %.2f not %d",
+		firmwareError(ObdCode::OBD_Throttle_Actuator_Control_Range_Performance_Bank_1, "startup ETB position %.2f not %d",
 				startupThrottlePosition,
 				engineConfiguration->etbNeutralPosition);
 		startupPositionError = true;

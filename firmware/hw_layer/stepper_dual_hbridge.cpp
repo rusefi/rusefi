@@ -41,7 +41,7 @@ void DualHBridgeStepper::initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, 
     m_motorPhaseA = motorPhaseA;
     m_motorPhaseB = motorPhaseB;
 
-    efiAssertVoid(CUSTOM_ERR_ASSERT, engineConfiguration->stepperNumMicroSteps <= maxNumSteps, "stepperNumMicroSteps");
+    efiAssertVoid(ObdCode::CUSTOM_ERR_ASSERT, engineConfiguration->stepperNumMicroSteps <= maxNumSteps, "stepperNumMicroSteps");
 }
 
 bool DualHBridgeStepper::step(bool positive) {

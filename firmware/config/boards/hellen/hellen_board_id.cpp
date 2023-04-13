@@ -90,7 +90,7 @@ float HellenBoardIdSolver::solve(float Tc1, float Tc2, float x0, float y, float 
 	auto result = NewtonsMethodSolver::solve(x0, deltaX, 20);
 
 	if (!result) {
-		firmwareError(OBD_PCM_Processor_Fault, "hellen boardID is broken");
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "hellen boardID is broken");
 		return 0;
 	}
 

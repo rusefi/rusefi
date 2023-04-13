@@ -80,14 +80,14 @@ float GppwmChannel::setOutput(float result) {
 	}
 
 	if (m_usePwm) {
-		efiAssert(OBD_PCM_Processor_Fault, m_usePwm, "m_usePwm null", 0);
+		efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_usePwm, "m_usePwm null", 0);
 		m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
 
 		return result;
 	} else {
-		efiAssert(OBD_PCM_Processor_Fault, m_output, "m_output null", 0);
+		efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_output, "m_output null", 0);
 		if (m_config->offBelowDuty > m_config->onAboveDuty) {
-			firmwareError(CUSTOM_ERR_6122, "You can't have off below %d greater than on above %d",
+			firmwareError(ObdCode::CUSTOM_ERR_6122, "You can't have off below %d greater than on above %d",
 					m_config->offBelowDuty,
 					m_config->onAboveDuty);
 		}

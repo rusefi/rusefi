@@ -37,7 +37,7 @@ struct Status {
 
 static void populateFrame(Status& msg) {
 	msg.warningCounter = engine->engineState.warnings.warningCounter;
-	msg.lastErrorCode = engine->engineState.warnings.lastErrorCode;
+	msg.lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
 
 	msg.revLimit = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->rpmHardLimit;
 	msg.mainRelay = enginePins.mainRelay.getLogicValue();

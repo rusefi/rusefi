@@ -15,7 +15,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(float rpm, float map) {
 	 */
 	float tChargeK = engine->engineState.sd.tChargeK;
 	if (cisnan(tChargeK)) {
-		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
+		warning(ObdCode::CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
 		return {};
 	}
 
@@ -23,7 +23,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(float rpm, float map) {
 
 	float airMass = getAirmassImpl(ve, map, tChargeK);
 	if (cisnan(airMass)) {
-		warning(CUSTOM_ERR_6685, "NaN airMass");
+		warning(ObdCode::CUSTOM_ERR_6685, "NaN airMass");
 		return {};
 	}
 

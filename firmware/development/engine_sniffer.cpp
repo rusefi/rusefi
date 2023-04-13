@@ -175,13 +175,13 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		return;
 	}
 #endif
-	efiAssertVoid(CUSTOM_ERR_6651, name!=NULL, "WC: NULL name");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6651, name!=NULL, "WC: NULL name");
 
 #if EFI_PROD_CODE
-	efiAssertVoid(CUSTOM_ERR_6652, getCurrentRemainingStack() > 32, "lowstck#2c");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6652, getCurrentRemainingStack() > 32, "lowstck#2c");
 #endif /* EFI_PROD_CODE */
 
-	efiAssertVoid(CUSTOM_ERR_6653, isInitialized, "chart not initialized");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6653, isInitialized, "chart not initialized");
 #if DEBUG_WAVE
 	efiPrintf("current", chart->counter);
 #endif /* DEBUG_WAVE */

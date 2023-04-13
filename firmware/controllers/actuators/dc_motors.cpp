@@ -36,7 +36,7 @@
 		int clampedFrequency = maxI(100, frequency);
 
 		if (clampedFrequency > ETB_HW_MAX_FREQUENCY) {
-			firmwareError(OBD_PCM_Processor_Fault, "Electronic throttle frequency too high, maximum %d hz", ETB_HW_MAX_FREQUENCY);
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Electronic throttle frequency too high, maximum %d hz", ETB_HW_MAX_FREQUENCY);
 			return;
 		}
 

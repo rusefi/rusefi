@@ -15,7 +15,7 @@
 
 // mode >= 0  is always true since that's an unsigned
 #define assertOMode(mode) { \
-	efiAssertVoid(CUSTOM_INVALID_MODE_SETTING, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
+	efiAssertVoid(ObdCode::CUSTOM_INVALID_MODE_SETTING, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
  }
 
 #define efiSetPadModeIfConfigurationChanged(msg, pin, mode)                      \

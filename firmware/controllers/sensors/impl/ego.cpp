@@ -40,7 +40,7 @@ void setEgoSensor(ego_sensor_e type) {
 		sensor->value2 = 20;
 		break;
 	default:
-		firmwareError(CUSTOM_EGO_TYPE, "Unexpected EGO %d", type);
+		firmwareError(ObdCode::CUSTOM_EGO_TYPE, "Unexpected EGO %d", type);
 		break;
 	}
 }

@@ -204,7 +204,7 @@ static void createLogFile() {
 	FRESULT err = f_open(&FDLogFile, logName, FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
 	if (err != FR_OK && err != FR_EXIST) {
 		sdStatus = SD_STATE_OPEN_FAILED;
-		warning(CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
+		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
 		printError("FS mount failed", err);	// else - show error
 		return;
 	}
@@ -212,7 +212,7 @@ static void createLogFile() {
 	err = f_lseek(&FDLogFile, f_size(&FDLogFile)); // Move to end of the file to append data
 	if (err) {
 		sdStatus = SD_STATE_SEEK_FAILED;
-		warning(CUSTOM_ERR_SD_SEEK_FAILED, "SD: seek failed");
+		warning(ObdCode::CUSTOM_ERR_SD_SEEK_FAILED, "SD: seek failed");
 		printError("Seek error", err);
 		return;
 	}

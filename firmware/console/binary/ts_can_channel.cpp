@@ -40,12 +40,12 @@ public:
 
 void CanTsChannel::start() {
 	if (!getIsCanEnabled()) {
-		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN not enabled");
+		warning(ObdCode::CUSTOM_ERR_CAN_CONFIGURATION, "CAN not enabled");
 		return;
 	}
 
 	if (!engineConfiguration->canReadEnabled || !engineConfiguration->canWriteEnabled) {
-		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN read or write not enabled");
+		warning(ObdCode::CUSTOM_ERR_CAN_CONFIGURATION, "CAN read or write not enabled");
 	}
 }
 

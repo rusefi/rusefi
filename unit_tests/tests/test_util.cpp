@@ -96,15 +96,15 @@ static void testMalfunctionCentralRemoveNonExistent() {
 	clearWarnings();
 
 	// this should not crash
-	removeError(OBD_TPS1_Correlation);
+	removeError(ObdCode::OBD_TPS1_Correlation);
 }
 
 static void testMalfunctionCentralSameElementAgain() {
 	clearWarnings();
 	error_codes_set_s localCopy;
 
-	addError(OBD_TPS1_Correlation);
-	addError(OBD_TPS1_Correlation);
+	addError(ObdCode::OBD_TPS1_Correlation);
+	addError(ObdCode::OBD_TPS1_Correlation);
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(1, localCopy.count);
 }
@@ -113,10 +113,10 @@ static void testMalfunctionCentralRemoveFirstElement() {
 	clearWarnings();
 	error_codes_set_s localCopy;
 
-	ObdCode firstElement = OBD_TPS1_Correlation;
+	ObdCode firstElement = ObdCode::OBD_TPS1_Correlation;
 	addError(firstElement);
 
-	ObdCode secondElement = OBD_TPS2_Correlation;
+	ObdCode secondElement = ObdCode::OBD_TPS2_Correlation;
 	addError(secondElement);
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(2, localCopy.count);
@@ -142,7 +142,7 @@ TEST(misc, testMalfunctionCentral) {
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(0, localCopy.count);
 
-	ObdCode code = OBD_TPS1_Correlation;
+	ObdCode code = ObdCode::OBD_TPS1_Correlation;
 	// let's add one error and validate
 	addError(code);
 
@@ -156,7 +156,7 @@ TEST(misc, testMalfunctionCentral) {
 	ASSERT_EQ(1, localCopy.count);
 	ASSERT_EQ(code, localCopy.error_codes[0]);
 
-	code = OBD_TPS2_Correlation;
+	code = ObdCode::OBD_TPS2_Correlation;
 	addError(code);
 	getErrorCodes(&localCopy);
 	// todo:	ASSERT_EQ(2, localCopy.count);

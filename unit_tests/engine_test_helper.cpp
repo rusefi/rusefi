@@ -36,7 +36,7 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 	minCrankingRpm = 0;
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
-		firmwareError(OBD_PCM_Processor_Fault,
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault,
 			      "Engine configuration not cleaned up by previous test");
 	}
 	engine = eng;

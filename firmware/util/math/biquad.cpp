@@ -30,7 +30,7 @@ static float getNorm(float K, float Q) {
 }
 
 void Biquad::configureBandpass(float samplingFrequency, float centerFrequency, float Q) {
-	efiAssertVoid(OBD_PCM_Processor_Fault, samplingFrequency >= 2.5f * centerFrequency, "Invalid biquad parameters");
+	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, samplingFrequency >= 2.5f * centerFrequency, "Invalid biquad parameters");
 
 	float K = getK(samplingFrequency, centerFrequency);
 	float norm = getNorm(K, Q);
@@ -43,7 +43,7 @@ void Biquad::configureBandpass(float samplingFrequency, float centerFrequency, f
 }
 
 void Biquad::configureLowpass(float samplingFrequency, float cutoffFrequency, float Q) {
-	efiAssertVoid(OBD_PCM_Processor_Fault, samplingFrequency >= 2.5f * cutoffFrequency, "Invalid biquad parameters");
+	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, samplingFrequency >= 2.5f * cutoffFrequency, "Invalid biquad parameters");
 
 	float K = getK(samplingFrequency, cutoffFrequency);
 	float norm = getNorm(K, Q);

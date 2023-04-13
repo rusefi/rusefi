@@ -76,7 +76,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 #if EFI_UNIT_TEST
 	assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
-	efiAssert(CUSTOM_ERR_ASSERT, action.getCallback() != NULL, "NULL callback", false);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, action.getCallback() != NULL, "NULL callback", false);
 
 // please note that simulator does not use this code at all - simulator uses signal_executor_sleep
 
@@ -148,11 +148,11 @@ void EventQueue::remove(scheduling_s* scheduling) {
 
 		// Walked off the end, this is an error since this *should* have been scheduled
 		if (!current) {
-			firmwareError(OBD_PCM_Processor_Fault, "EventQueue::remove didn't find element");
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "EventQueue::remove didn't find element");
 			return;
 		}
 
-		efiAssertVoid(OBD_PCM_Processor_Fault, current == scheduling, "current not equal to scheduling");
+		efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, current == scheduling, "current not equal to scheduling");
 
 		// Link around the removed item
 		prev->nextScheduling_s = current->nextScheduling_s;
@@ -286,7 +286,7 @@ int EventQueue::size(void) const {
 void EventQueue::assertListIsSorted() const {
 	scheduling_s *current = head;
 	while (current != NULL && current->nextScheduling_s != NULL) {
-		efiAssertVoid(CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
+		efiAssertVoid(ObdCode::CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
 		current = current->nextScheduling_s;
 	}
 }

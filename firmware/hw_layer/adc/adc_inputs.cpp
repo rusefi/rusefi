@@ -164,7 +164,7 @@ static void fast_adc_callback(GPTDriver*) {
 	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
 		fastAdc.errorsCount++;
-		// todo: when? why? firmwareError(OBD_PCM_Processor_Fault, "ADC fast not ready?");
+		// todo: when? why? firmwareError(ObdCode::OBD_PCM_Processor_Fault, "ADC fast not ready?");
 		chSysUnlockFromISR()
 		;
 		return;
@@ -186,7 +186,7 @@ float getMCUInternalTemperature() {
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {
-		warning(CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
+		warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
 		return -1;
 	}
 
@@ -260,7 +260,7 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	if ((channelCount + 1) >= ADC_MAX_CHANNELS_COUNT) {
-		firmwareError(OBD_PCM_Processor_Fault, "Too many ADC channels configured");
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Too many ADC channels configured");
 		return;
 	}
 

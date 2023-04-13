@@ -376,7 +376,7 @@ void tdcMarkCallback(
 		if (isValidRpm(rpm)) {
 			angle_t tdcPosition = tdcPosition();
 			// we need a positive angle offset here
-			fixAngle(tdcPosition, "tdcPosition", CUSTOM_ERR_6553);
+			fixAngle(tdcPosition, "tdcPosition", ObdCode::CUSTOM_ERR_6553);
 			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition, onTdcCallback);
 		}
 	}

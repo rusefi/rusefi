@@ -85,7 +85,7 @@ floatms_t IgnitionState::getSparkDwell(int rpm) {
 	if (engine->rpmCalculator.isCranking()) {
 		dwellMs = engineConfiguration->ignitionDwellForCrankingMs;
 	} else {
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
+		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
 		baseDwell = interpolate2d(rpm, config->sparkDwellRpmBins, config->sparkDwellValues);
 		dwellVoltageCorrection = interpolate2d(
@@ -104,7 +104,7 @@ floatms_t IgnitionState::getSparkDwell(int rpm) {
 
 	if (cisnan(dwellMs) || dwellMs <= 0) {
 		// this could happen during engine configuration reset
-		warning(CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %.2f at rpm=%d", dwellMs, rpm);
+		warning(ObdCode::CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %.2f at rpm=%d", dwellMs, rpm);
 		return 0;
 	}
 	return dwellMs;
@@ -227,7 +227,7 @@ static size_t getFiringOrderLength() {
 		return 16;
 
 	default:
-		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->firingOrder);
+		firmwareError(ObdCode::CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->firingOrder);
 	}
 	return 1;
 }
@@ -319,7 +319,7 @@ static const uint8_t* getFiringOrderTable()
 		return order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10;
 
 	default:
-		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->firingOrder);
+		firmwareError(ObdCode::CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->firingOrder);
 	}
 
 	return NULL;
@@ -333,18 +333,18 @@ size_t getCylinderId(size_t index) {
 	const size_t firingOrderLength = getFiringOrderLength();
 
 	if (firingOrderLength < 1 || firingOrderLength > MAX_CYLINDER_COUNT) {
-		firmwareError(CUSTOM_FIRING_LENGTH, "fol %d", firingOrderLength);
+		firmwareError(ObdCode::CUSTOM_FIRING_LENGTH, "fol %d", firingOrderLength);
 		return 1;
 	}
 	if (engineConfiguration->cylindersCount != firingOrderLength) {
 		// May 2020 this somehow still happens with functional tests, maybe race condition?
-		firmwareError(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong cyl count for firing order, expected %d cylinders", firingOrderLength);
+		firmwareError(ObdCode::CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong cyl count for firing order, expected %d cylinders", firingOrderLength);
 		return 1;
 	}
 
 	if (index >= firingOrderLength) {
 		// May 2020 this somehow still happens with functional tests, maybe race condition?
-		warning(CUSTOM_ERR_6686, "firing order index %d", index);
+		warning(ObdCode::CUSTOM_ERR_6686, "firing order index %d", index);
 		return 1;
 	}
 
@@ -428,7 +428,7 @@ angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber) {
 
 	auto result = base + adjustment;
 
-	assertAngleRange(result, "getCylinderAngle", CUSTOM_ERR_6566);
+	assertAngleRange(result, "getCylinderAngle", ObdCode::CUSTOM_ERR_6566);
 
 	return result;
 }

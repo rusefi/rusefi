@@ -123,7 +123,7 @@ bool TriggerWaveform::needsDisambiguation() const {
 		case TWO_STROKE:
 			return false;
 		default:
-			firmwareError(OBD_PCM_Processor_Fault, "bad operationMode() in needsDisambiguation");
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "bad operationMode() in needsDisambiguation");
 			return true;
 	}
 }
@@ -153,7 +153,7 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	 * See also trigger_central.cpp
 	 * See also getEngineCycleEventCount()
 	 */
-	efiAssert(CUSTOM_ERR_ASSERT, wave.phaseCount != 0, "shapeSize=0", NAN);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, wave.phaseCount != 0, "shapeSize=0", NAN);
 	int crankCycle = index / wave.phaseCount;
 	int remainder = index % wave.phaseCount;
 
@@ -189,7 +189,7 @@ void TriggerWaveform::calculateExpectedEventCounts() {
 	if (!useOnlyRisingEdges) {
 		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
 			if (getExpectedEventCount((TriggerWheel)i) % 2 != 0) {
-				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even number of events index=%d count=%d", i, getExpectedEventCount((TriggerWheel)i));
+				firmwareError(ObdCode::ERROR_TRIGGER_DRAMA, "Trigger: should be even number of events index=%d count=%d", i, getExpectedEventCount((TriggerWheel)i));
 			}
 		}
 	}
@@ -197,13 +197,13 @@ void TriggerWaveform::calculateExpectedEventCounts() {
 	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdges ? getExpectedEventCount(TriggerWheel::T_PRIMARY) == 1 : getExpectedEventCount(TriggerWheel::T_PRIMARY) == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
-		firmwareError(ERROR_TRIGGER_DRAMA, "shapeWithoutTdc isSynchronizationNeeded isSingleToothOnPrimaryChannel constraint violation");
+		firmwareError(ObdCode::ERROR_TRIGGER_DRAMA, "shapeWithoutTdc isSynchronizationNeeded isSingleToothOnPrimaryChannel constraint violation");
 	}
 	if (isSingleToothOnPrimaryChannel) {
 		useOnlyPrimaryForSync = true;
 	} else {
 		if (getExpectedEventCount(TriggerWheel::T_SECONDARY) == 0 && useOnlyPrimaryForSync) {
-			firmwareError(ERROR_TRIGGER_DRAMA, "why would you set useOnlyPrimaryForSync with only one trigger wheel?");
+			firmwareError(ObdCode::ERROR_TRIGGER_DRAMA, "why would you set useOnlyPrimaryForSync with only one trigger wheel?");
 		}
 	}
 
@@ -222,7 +222,7 @@ void TriggerWaveform::addEvent720(angle_t angle, TriggerValue const state, Trigg
 }
 
 void TriggerWaveform::addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
-	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
+	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
 	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
 
@@ -234,7 +234,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const stateTv, Trigge
 	// TODO: #55
 	bool state = stateTv == TriggerValue::RISE;
 
-	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
+	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	if (channelIndex == TriggerWheel:: T_SECONDARY) {
 		needSecondTriggerInput = true;
@@ -261,12 +261,12 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const stateTv, Trigge
 	}
 
 	if (angle <= 0 || angle > 1) {
-		firmwareError(CUSTOM_ERR_6599, "angle should be positive not above 1: index=%d angle %f", channelIndex, angle);
+		firmwareError(ObdCode::CUSTOM_ERR_6599, "angle should be positive not above 1: index=%d angle %f", channelIndex, angle);
 		return;
 	}
 	if (wave.phaseCount > 0) {
 		if (angle <= previousAngle) {
-			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f/%f and prev=%.2f/%f, size=%d",
+			warning(ObdCode::CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f/%f and prev=%.2f/%f, size=%d",
 					angle, angle * getCycleDuration(),
 					previousAngle, previousAngle * getCycleDuration(),
 					wave.phaseCount);
@@ -288,7 +288,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const stateTv, Trigge
 	}
 
 	if (wave.findAngleMatch(angle)) {
-		warning(CUSTOM_ERR_SAME_ANGLE, "same angle: not supported");
+		warning(ObdCode::CUSTOM_ERR_SAME_ANGLE, "same angle: not supported");
 		setShapeDefinitionError(true);
 		return;
 	}
@@ -311,7 +311,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const stateTv, Trigge
 	isRiseEvent[index] = state;
 
 	if ((unsigned)index != wave.phaseCount) {
-		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
+		firmwareError(ObdCode::ERROR_TRIGGER_DRAMA, "are we ever here?");
 	}
 
 	wave.phaseCount++;
@@ -334,7 +334,7 @@ void TriggerWaveform::setTriggerSynchronizationGap2(float syncRatioFrom, float s
 
 void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
-	efiAssertVoid(OBD_PCM_Processor_Fault, gapIndex >= 0 && gapIndex < GAP_TRACKING_LENGTH, "gapIndex out of range");
+	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, gapIndex >= 0 && gapIndex < GAP_TRACKING_LENGTH, "gapIndex out of range");
 	syncronizationRatioFrom[gapIndex] = syncRatioFrom;
 	syncronizationRatioTo[gapIndex] = syncRatioTo;
 	if (gapIndex == 0) {
@@ -354,7 +354,7 @@ void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRati
 uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t targetAngle) const {
 	size_t engineCycleEventCount = getLength();
 
-	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount != 0 && engineCycleEventCount <= 0xFFFF,
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, engineCycleEventCount != 0 && engineCycleEventCount <= 0xFFFF,
 		  "engineCycleEventCount", 0);
 
 	uint32_t left = 0;
@@ -406,7 +406,7 @@ void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
 void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, const TriggerConfiguration& triggerConfig) {
 
 #if EFI_PROD_CODE
-	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
 	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig.TriggerType.type), (int)triggerConfig.TriggerType.type);
 #endif
 
@@ -717,7 +717,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	default:
 		setShapeDefinitionError(true);
-		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig.TriggerType.type);
+		warning(ObdCode::CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig.TriggerType.type);
 	}
 
 	/**

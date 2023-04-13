@@ -147,7 +147,7 @@ void HpfpController::onFastCallback() {
 		m_deadtime = 0;
 	} else {
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
-		efiAssertVoid(OBD_PCM_Processor_Fault, engine->triggerCentral.triggerShape.getSize() > engineConfiguration->hpfpCamLobes * 6, "Too few trigger tooth for this number of HPFP lobes");
+		efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, engine->triggerCentral.triggerShape.getSize() > engineConfiguration->hpfpCamLobes * 6, "Too few trigger tooth for this number of HPFP lobes");
 #endif // EFI_PROD_CODE
 		// Convert deadtime from ms to degrees based on current RPM
 		float deadtime_ms = interpolate2d(

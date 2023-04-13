@@ -71,7 +71,7 @@ static AdcSubscriptionEntry* findEntry() {
 
 	// Ensure that a free entry was found
 	if (!entry) {
-		firmwareError(CUSTOM_INVALID_ADC, "too many ADC subscriptions subscribing %s", name);
+		firmwareError(ObdCode::CUSTOM_INVALID_ADC, "too many ADC subscriptions subscribing %s", name);
 		return;
 	}
 

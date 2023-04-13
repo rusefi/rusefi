@@ -211,7 +211,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 #ifdef SERIAL_CAN_DEBUG
 			PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
-			//warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
+			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
 			return 0;
 		}
 		receiveFrame(&rxmsg, nullptr, 0, timeout);
@@ -225,7 +225,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 #ifdef SERIAL_CAN_DEBUG
 			efiPrintf("*** ERROR: CAN Flow Control mode not supported");
 #endif /* SERIAL_CAN_DEBUG */
-			//warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control mode not supported");
+			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control mode not supported");
 			return 0;
 		}
 		int blockSize = rxmsg.data8[1];
@@ -235,7 +235,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 #ifdef SERIAL_CAN_DEBUG
 			efiPrintf("*** ERROR: CAN Flow Control fields not supported");
 #endif /* SERIAL_CAN_DEBUG */
-			//warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control fields not supported");
+			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control fields not supported");
 		}
 		break;
 	}
@@ -316,7 +316,7 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 can_msg_t CanStreamerState::streamFlushTx(can_sysinterval_t timeout) {
 	int numSent = sendDataTimeout((const uint8_t *)txFifoBuf.getElements(), txFifoBuf.getCount(), timeout);
 	if (numSent != txFifoBuf.getCount()) {
-		//warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
+		//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
 	}
 	txFifoBuf.clear();
 	
@@ -368,7 +368,7 @@ void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
 		PRINT("*** INFO: CanTsListener decodeFrame %d" PRINT_EOL, isoTpPacketCounter++);
 	}
 	if (!rxFifo.put(msg)) {
-		warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
+		warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
 	}
 }
 

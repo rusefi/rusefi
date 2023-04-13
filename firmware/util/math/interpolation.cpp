@@ -73,11 +73,11 @@ static void testBinary() {
  */
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x) {
 	if (cisnan(x1) || cisnan(x2) || cisnan(y1) || cisnan(y2)) {
-		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why param", msg);
+		warning(ObdCode::CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why param", msg);
 		return NAN;
 	}
 	if (cisnan(x)) {
-		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why X", msg);
+		warning(ObdCode::CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why X", msg);
 		return NAN;
 	}
 	// todo: double comparison using EPS
@@ -85,16 +85,16 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 		/**
 		 * we could end up here for example while resetting bins while changing engine type
 		 */
-		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: Same x1 and x2 in interpolate: %.2f/%.2f", msg, x1, x2);
+		warning(ObdCode::CUSTOM_INTEPOLATE_ERROR, "interpolate%s: Same x1 and x2 in interpolate: %.2f/%.2f", msg, x1, x2);
 		return NAN;
 	}
 
 	// a*x1 + b = y1
 	// a*x2 + b = y2
-//	efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, x1 != x2, "no way we can interpolate");
+//	efiAssertVoid(ObdCode::CUSTOM_ERR_ASSERT_VOID, x1 != x2, "no way we can interpolate");
 	float a = INTERPOLATION_A(x1, y1, x2, y2);
 	if (cisnan(a)) {
-		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why a", msg);
+		warning(ObdCode::CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why a", msg);
 		return NAN;
 	}
 	float b = y1 - a * x1;
@@ -124,15 +124,15 @@ float interpolateClamped(float x1, float y1, float x2, float y2, float x) {
  * Another implementation, which one is faster?
  */
 int findIndex2(const float array[], unsigned size, float value) {
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(value), "NaN in findIndex2", 0);
-	efiAssert(CUSTOM_ERR_ASSERT, size > 1, "size in findIndex", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(value), "NaN in findIndex2", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, size > 1, "size in findIndex", 0);
 //	if (size <= 1)
 //		return size && *array <= value ? 0 : -1;
 
 	signed i = 0;
 	//unsigned b = 1 << int(log(float(size) - 1) / 0.69314718055994530942);
 	unsigned b = size >> 1; // in our case size is always a power of 2
-	efiAssert(CUSTOM_ERR_ASSERT, b + b == size, "Size not power of 2", -1);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, b + b == size, "Size not power of 2", -1);
 	for (; b; b >>= 1) {
 		unsigned j = i | b;
 		/**
@@ -140,7 +140,7 @@ int findIndex2(const float array[], unsigned size, float value) {
 		 * "if (j < size && array[j] <= value)"
 		 * but in our case size is always power of 2 thus size is always more then j
 		 */
-		// efiAssert(CUSTOM_ERR_ASSERT, j < size, "size", 0);
+		// efiAssert(ObdCode::CUSTOM_ERR_ASSERT, j < size, "size", 0);
 		if (array[j] <= value)
 			i = j;
 	}

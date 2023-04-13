@@ -25,14 +25,14 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 	}
 
 	if (gearCount > GEARS_COUNT) {
-		firmwareError(OBD_PCM_Processor_Fault, "too many gears");
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "too many gears");
 		return;
 	}
 
 	// validate gears
 	for (size_t i = 0; i < gearCount; i++) {
 		if (engineConfiguration->gearRatio[i] <= 0) {
-			firmwareError(OBD_PCM_Processor_Fault, "Invalid gear ratio for #%d", i + 1);
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid gear ratio for #%d", i + 1);
 			return;
 		}
 	}
@@ -43,7 +43,7 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 		float gearIplusOne = engineConfiguration->gearRatio[i + 1];
 
 		if (gearI <= gearIplusOne) {
-			firmwareError(OBD_PCM_Processor_Fault, "Invalid gear ordering near gear #%d", i + 1);
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid gear ordering near gear #%d", i + 1);
 		}
 
 		m_gearThresholds[i] = geometricMean(gearI, gearIplusOne);

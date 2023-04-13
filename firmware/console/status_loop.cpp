@@ -688,9 +688,9 @@ DcHardware *getdcHardware();
 #endif
 
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
-	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
+	tsOutputChannels->lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
 	for (int i = 0; i < 8;i++) {
-		tsOutputChannels->recentErrorCode[i] = engine->engineState.warnings.recentWarnings.get(i).Code;
+		tsOutputChannels->recentErrorCode[i] = static_cast<uint16_t>(engine->engineState.warnings.recentWarnings.get(i).Code);
 	}
 
 	tsOutputChannels->starterState = enginePins.starterControl.getLogicValue();

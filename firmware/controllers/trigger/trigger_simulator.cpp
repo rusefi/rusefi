@@ -42,7 +42,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 		const TriggerWaveform& shape,
 		int i
 		) {
-	efiAssertVoid(CUSTOM_ERR_6593, shape.getSize() > 0, "size not zero");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6593, shape.getSize() > 0, "size not zero");
 	int stateIndex = i % shape.getSize();
 
 	int time = getSimulatedEventTime(shape, i);
@@ -105,7 +105,7 @@ void TriggerStimulatorHelper::assertSyncPosition(
 
 	int revolutionCounter = state.getCrankSynchronizationCounter();
 	if (revolutionCounter != TEST_REVOLUTIONS) {
-		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s revolutionCounter=%d",
+		warning(ObdCode::CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s revolutionCounter=%d",
 				getTrigger_type_e(triggerConfiguration.TriggerType.type),
 				revolutionCounter);
 		shape.setShapeDefinitionError(true);
@@ -138,9 +138,9 @@ expected<uint32_t> TriggerStimulatorHelper::findTriggerSyncPoint(
 	shape.setShapeDefinitionError(true);
 
     if (engineConfiguration->overrideTriggerGaps) {
-	    firmwareError(CUSTOM_ERR_CUSTOM_GAPS_BAD, "Your custom trigger gaps are not good.");
+	    firmwareError(ObdCode::CUSTOM_ERR_CUSTOM_GAPS_BAD, "Your custom trigger gaps are not good.");
 	} else {
-	    firmwareError(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
+	    firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
 	}
 	return unexpected;
 }

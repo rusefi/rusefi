@@ -50,7 +50,7 @@ static bool hwStarted = false;
  * This function should be invoked under kernel lock which would disable interrupts.
  */
 void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
-	efiAssertVoid(OBD_PCM_Processor_Fault, hwStarted, "HW.started");
+	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, hwStarted, "HW.started");
 
 	// How many ticks in the future is this event?
 	auto timeDeltaNt = setTimeNt - nowNt;
@@ -63,7 +63,7 @@ void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 	 */
 	if (timeDeltaNt <= 0) {
 		timerFreezeCounter++;
-		warning(CUSTOM_OBD_LOCAL_FREEZE, "local freeze cnt=%d", timerFreezeCounter);
+		warning(ObdCode::CUSTOM_OBD_LOCAL_FREEZE, "local freeze cnt=%d", timerFreezeCounter);
 	}
 
 	// We need the timer to fire after we return - 1 doesn't work as it may actually schedule in the past
@@ -73,7 +73,7 @@ void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 
 	if (timeDeltaNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareSchedulerTimer() too far: %d", timeDeltaNt);
+		firmwareError(ObdCode::CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareSchedulerTimer() too far: %d", timeDeltaNt);
 		return;
 	}
 
@@ -108,13 +108,13 @@ class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 	void PeriodicTask() override {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
-			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, "watchdog: no events since %d", lastSetTimerTimeNt);
+			firmwareError(ObdCode::CUSTOM_ERR_SCHEDULING_ERROR, "watchdog: no events since %d", lastSetTimerTimeNt);
 			return;
 		}
 
 		msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
 		// 2 seconds of inactivity would not look right
-		efiAssertVoid(CUSTOM_TIMER_WATCHDOG, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
+		efiAssertVoid(ObdCode::CUSTOM_TIMER_WATCHDOG, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
 	}
 
 	int getPeriodMs() override {
@@ -143,7 +143,7 @@ static void timerValidationCallback(void*) {
 	efitimems_t actualTimeSinceScheduling = (getTimeNowMs() - testSchedulingStart);
 	
 	if (absI(actualTimeSinceScheduling - TEST_CALLBACK_DELAY) > TEST_CALLBACK_DELAY * TIMER_PRECISION_THRESHOLD) {
-		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_WRONG_TIME, "hwTimer broken precision: %ld ms", actualTimeSinceScheduling);
+		firmwareError(ObdCode::CUSTOM_ERR_TIMER_TEST_CALLBACK_WRONG_TIME, "hwTimer broken precision: %ld ms", actualTimeSinceScheduling);
 	}
 }
 
@@ -162,7 +162,7 @@ static void validateHardwareTimer() {
 
 	chThdSleepMilliseconds(TEST_CALLBACK_DELAY + 2);
 	if (!testSchedulingHappened) {
-		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_NOT_HAPPENED, "hwTimer not alive");
+		firmwareError(ObdCode::CUSTOM_ERR_TIMER_TEST_CALLBACK_NOT_HAPPENED, "hwTimer not alive");
 	}
 }
 

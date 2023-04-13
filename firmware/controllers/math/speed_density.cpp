@@ -66,7 +66,7 @@ float IFuelComputer::getTChargeCoefficient(int rpm, float tps) {
 			engineConfiguration->tchargeValues
 		);
 	} else {
-		firmwareError(OBD_PCM_Processor_Fault, "Unexpected tChargeMode: %d", engineConfiguration->tChargeMode);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected tChargeMode: %d", engineConfiguration->tChargeMode);
 		return 0;
 	}
 }
@@ -98,7 +98,7 @@ temperature_t IFuelComputer::getTCharge(int rpm, float tps) {
 	sdTcharge_coff = getTChargeCoefficient(rpm, tps);
 
 	if (cisnan(sdTcharge_coff)) {
-		warning(CUSTOM_ERR_T2_CHARGE, "t2-getTCharge NaN");
+		warning(ObdCode::CUSTOM_ERR_T2_CHARGE, "t2-getTCharge NaN");
 		return coolantTemp;
 	}
 
@@ -109,7 +109,7 @@ temperature_t IFuelComputer::getTCharge(int rpm, float tps) {
 
 	if (cisnan(Tcharge)) {
 		// we can probably end up here while resetting engine state - interpolation would fail
-		warning(CUSTOM_ERR_TCHARGE_NOT_READY, "getTCharge NaN");
+		warning(ObdCode::CUSTOM_ERR_TCHARGE_NOT_READY, "getTCharge NaN");
 		return coolantTemp;
 	}
 

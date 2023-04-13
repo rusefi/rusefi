@@ -39,11 +39,11 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	}
 
 	if (cisnan(engineLoad)) {
-		warning(CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
+		warning(ObdCode::CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
 		return NAN;
 	}
 
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
 
 	// compute base ignition angle from main table
 	float advanceAngle = interpolate3d(
@@ -163,13 +163,13 @@ angle_t getAdvance(int rpm, float engineLoad) {
 	bool isCranking = engine->rpmCalculator.isCranking();
 	if (isCranking) {
 		angle = getCrankingAdvance(rpm, engineLoad);
-		assertAngleRange(angle, "crAngle", CUSTOM_ERR_ANGLE_CR);
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
+		assertAngleRange(angle, "crAngle", ObdCode::CUSTOM_ERR_ANGLE_CR);
+		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad);
 
 		if (cisnan(angle)) {
-			warning(CUSTOM_ERR_6610, "NaN angle from table");
+			warning(ObdCode::CUSTOM_ERR_6610, "NaN angle from table");
 			return 0;
 		}
 	}
@@ -186,8 +186,8 @@ angle_t getAdvance(int rpm, float engineLoad) {
 		}
 	}
 
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
-	fixAngle(angle, "getAdvance", CUSTOM_ERR_ADCANCE_CALC_ANGLE);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
+	fixAngle(angle, "getAdvance", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
 	return angle;
 #else
 	return 0;

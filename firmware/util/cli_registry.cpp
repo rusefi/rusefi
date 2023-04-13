@@ -43,16 +43,16 @@ static void doAddAction(const char *token, action_type_e type, Void callback, vo
 	for (uint32_t i = 0; i < efiStrlen(token);i++) {
 		char ch = token[i];
 		if (isupper(ch)) {
-			firmwareError(CUSTOM_ERR_COMMAND_LOWER_CASE_EXPECTED, "lowerCase expected [%s]", token);
+			firmwareError(ObdCode::CUSTOM_ERR_COMMAND_LOWER_CASE_EXPECTED, "lowerCase expected [%s]", token);
 		}
 	}
 	for (int i = 0; i < consoleActionCount; i++) {
 		if (strcmp(token, consoleActions[i].token) == 0 /* zero result means strings are equal */) {
-			firmwareError(CUSTOM_SAME_TWICE, "Same action twice [%s]", token);
+			firmwareError(ObdCode::CUSTOM_SAME_TWICE, "Same action twice [%s]", token);
 		}
 	}
 
-	efiAssertVoid(CUSTOM_CONSOLE_TOO_MANY, consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
+	efiAssertVoid(ObdCode::CUSTOM_CONSOLE_TOO_MANY, consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
 	TokenCallback *current = &consoleActions[consoleActionCount++];
 	current->token = token;
 	current->parameterType = type;

@@ -94,7 +94,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	exit(-1);
 #else // EFI_PROD_CODE
 
-	firmwareError(OBD_PCM_Processor_Fault, "assert fail %s %s:%d", msg, file, line);
+	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "assert fail %s %s:%d", msg, file, line);
 
 	// If on the main thread, longjmp back to the init process so we can keep USB alive
 	if (chThdGetSelfX()->threadId == 0) {
@@ -123,7 +123,7 @@ WarningCodeState unitTestWarningCodeState;
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 /**
- * OBD_PCM_Processor_Fault is the general error code for now
+ * ObdCode::OBD_PCM_Processor_Fault is the general error code for now
  *
  * @returns TRUE in case there were warnings recently
  */

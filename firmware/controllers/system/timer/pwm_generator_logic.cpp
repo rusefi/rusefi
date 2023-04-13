@@ -53,13 +53,13 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		return;
 	}
 	if (cisnan(dutyCycle)) {
-		warning(CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", name, dutyCycle);
+		warning(ObdCode::CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", name, dutyCycle);
 		return;
 	} else if (dutyCycle < 0) {
-		warning(CUSTOM_DUTY_TOO_LOW, "%s dutyCycle too low %.2f", name, dutyCycle);
+		warning(ObdCode::CUSTOM_DUTY_TOO_LOW, "%s dutyCycle too low %.2f", name, dutyCycle);
 		dutyCycle = 0;
 	} else if (dutyCycle > 1) {
-		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty too high %.2f", name, dutyCycle);
+		warning(ObdCode::CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty too high %.2f", name, dutyCycle);
 		dutyCycle = 1;
 	}
 
@@ -93,7 +93,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
  * returns absolute timestamp of state change
  */
 static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
-	efiAssert(CUSTOM_ERR_ASSERT, state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
 	// we handle PM_ZERO and PM_FULL separately
 	float switchTime = state->mode == PM_NORMAL ? state->multiChannelStateSequence->getSwitchTime(state->safe.phaseIndex) : 1;
@@ -134,7 +134,7 @@ void PwmConfig::stop() {
 void PwmConfig::handleCycleStart() {
 	if (safe.phaseIndex != 0) {
 		// https://github.com/rusefi/rusefi/issues/1030
-		firmwareError(CUSTOM_PWM_CYCLE_START, "handleCycleStart %d", safe.phaseIndex);
+		firmwareError(ObdCode::CUSTOM_PWM_CYCLE_START, "handleCycleStart %d", safe.phaseIndex);
 		return;
 	}
 
@@ -151,8 +151,8 @@ void PwmConfig::handleCycleStart() {
 
 		uint32_t iterationLimit = minI(iterationLimitInt32, iterationLimitFloat);
 
-		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
-		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
+		efiAssertVoid(ObdCode::CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
+		efiAssertVoid(ObdCode::CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
 		if (forceCycleStart || safe.periodNt != periodNt || safe.iteration == iterationLimit) {
 			/**
 			 * period length has changed - we need to reset internal state
@@ -250,7 +250,7 @@ static void timerCallback(PwmConfig *state) {
 	ScopePerf perf(PE::PwmGeneratorCallback);
 
 	state->dbgNestingLevel++;
-	efiAssertVoid(CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 
 	efitick_t switchTimeNt = state->togglePwmState();
 	if (switchTimeNt == 0) {
@@ -258,7 +258,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 	if (state->executor == nullptr) {
-		firmwareError(CUSTOM_NULL_EXECUTOR, "exec on %s", state->name);
+		firmwareError(ObdCode::CUSTOM_NULL_EXECUTOR, "exec on %s", state->name);
 		return;
 	}
 
@@ -288,16 +288,16 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 	this->executor = executor;
 	isStopRequested = false;
 
-	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
 	if (seq->phaseCount == 0) {
-		firmwareError(CUSTOM_ERR_PWM_1, "signal length cannot be zero");
+		firmwareError(ObdCode::CUSTOM_ERR_PWM_1, "signal length cannot be zero");
 		return;
 	}
 	if (seq->phaseCount > PWM_PHASE_MAX_COUNT) {
-		firmwareError(CUSTOM_ERR_PWM_2, "too many phases in PWM");
+		firmwareError(ObdCode::CUSTOM_ERR_PWM_2, "too many phases in PWM");
 		return;
 	}
-	efiAssertVoid(CUSTOM_ERR_6583, seq->waveCount > 0, "waveCount should be positive");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6583, seq->waveCount > 0, "waveCount should be positive");
 
 	this->pwmCycleCallback = pwmCycleCallback;
 	this->stateChangeCallback = stateChangeCallback;
@@ -314,10 +314,10 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 
 void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
 		OutputPin *output, float frequency, float dutyCycle) {
-	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
-	efiAssertVoid(CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 	if (frequency < 1) {
-		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
+		warning(ObdCode::CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
 		return;
 	}
 
@@ -379,8 +379,8 @@ void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	}
 #endif // EFI_PROD_CODE
 
-	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_ERR_6664, state->multiChannelStateSequence->waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6664, state->multiChannelStateSequence->waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence->waveCount; channelIndex++) {
 		OutputPin *output = state->outputPins[channelIndex];
 		bool value = state->multiChannelStateSequence->getChannelState(channelIndex, stateIndex);

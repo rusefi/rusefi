@@ -47,7 +47,7 @@ public:
 	}
 
 	void reinit(char *buffer, size_t size) {
-		efiAssertVoid(OBD_PCM_Processor_Fault, m_memoryUsed == 0, "Too late to reinit Lua heap");
+		efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, m_memoryUsed == 0, "Too late to reinit Lua heap");
 
 		m_size = size;
 		m_buffer = buffer;
@@ -161,13 +161,13 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 	LuaHandle ls = lua_newstate(alloc, NULL);
 
 	if (!ls) {
-		firmwareError(OBD_PCM_Processor_Fault, "Failed to start Lua interpreter");
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Failed to start Lua interpreter");
 
 		return nullptr;
 	}
 
 	lua_atpanic(ls, [](lua_State* l) {
-		firmwareError(OBD_PCM_Processor_Fault, "Lua panic: %s", lua_tostring(l, -1));
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Lua panic: %s", lua_tostring(l, -1));
 
 		// hang the lua thread
 		while (true) ;

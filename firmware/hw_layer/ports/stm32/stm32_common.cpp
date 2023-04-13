@@ -92,7 +92,7 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	default:
 /* todo: what is upper range ADC is used while lower range ADC is not used? how do we still mark pin used?
 external muxes for internal ADC #3350
-		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
+		firmwareError(ObdCode::CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
 */
 		return Gpio::Invalid;
 	}
@@ -135,7 +135,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	case Gpio::Unassigned:
 		return EFI_ADC_NONE;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "getAdcChannel %d", pin);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "getAdcChannel %d", pin);
 		return EFI_ADC_ERROR;
 	}
 }
@@ -181,14 +181,14 @@ public:
 
 		// These timers are only 16 bit - don't risk overflow
 		if (m_period > 0xFFF0) {
-			firmwareError(CUSTOM_OBD_LOW_FREQUENCY, "PWM Frequency too low %f hz on pin \"%s\"", frequency, msg);
+			firmwareError(ObdCode::CUSTOM_OBD_LOW_FREQUENCY, "PWM Frequency too low %f hz on pin \"%s\"", frequency, msg);
 			return;
 		}
 
 		// If we have too few usable bits, we run out of resolution, so don't allow that either.
 		// 200 counts = 0.5% resolution
 		if (m_period < 200) {
-			firmwareError(CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high %d hz on pin \"%s\"", frequency, msg);
+			firmwareError(ObdCode::CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high %d hz on pin \"%s\"", frequency, msg);
 			return;
 		}
 
@@ -215,7 +215,7 @@ public:
 
 	void setDuty(float duty) override {
 		if (!m_driver) {
-			firmwareError(OBD_PCM_Processor_Fault, "Attempted to set duty on null hard PWM device");
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Attempted to set duty on null hard PWM device");
 			return;
 		}
 
@@ -309,7 +309,7 @@ stm32_hardware_pwm* getNextPwmDevice() {
 		}
 	}
 
-	firmwareError(OBD_PCM_Processor_Fault, "Run out of hardware PWM devices!");
+	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Run out of hardware PWM devices!");
 	return nullptr;
 }
 
@@ -697,7 +697,7 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
    if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))
       return &CAND2;
 #endif
-   firmwareError(OBD_PCM_Processor_Fault, "invalid CAN pins tx %s and rx %s", hwPortname(pinTx), hwPortname(pinRx));
+   firmwareError(ObdCode::OBD_PCM_Processor_Fault, "invalid CAN pins tx %s and rx %s", hwPortname(pinTx), hwPortname(pinRx));
    return nullptr;
 }
 

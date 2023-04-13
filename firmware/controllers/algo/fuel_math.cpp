@@ -65,7 +65,7 @@ float getCrankingFuel3(
 
 	bool alreadyWarned = false;
 	if (e0Mult <= 0.1f) {
-		warning(CUSTOM_ERR_ZERO_E0_MULT, "zero e0 multiplier");
+		warning(ObdCode::CUSTOM_ERR_ZERO_E0_MULT, "zero e0 multiplier");
 		alreadyWarned = true;
 	}
 
@@ -73,7 +73,7 @@ float getCrankingFuel3(
 		auto e85Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
 
 		if (e85Mult <= 0.1f) {
-			warning(CUSTOM_ERR_ZERO_E85_MULT, "zero e85 multiplier");
+			warning(ObdCode::CUSTOM_ERR_ZERO_E85_MULT, "zero e85 multiplier");
 			alreadyWarned = true;
 		}
 
@@ -105,7 +105,7 @@ float getCrankingFuel3(
 
 	// don't re-warn for zero fuel when we already warned for a more specific problem
 	if (!alreadyWarned && crankingFuel <= 0) {
-		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
+		warning(ObdCode::CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
 	}
 	return crankingFuel;
 }
@@ -123,9 +123,9 @@ float getRunningFuel(float baseFuel) {
 
 	float baroCorrection = engine->engineState.baroCorrection;
 
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
     float correction = baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
 
@@ -141,7 +141,7 @@ float getRunningFuel(float baseFuel) {
 
 	float runningFuel = baseFuel * correction;
 
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
 
 	engine->fuelComputer.running.fuel = runningFuel * 1000;
 
@@ -164,7 +164,7 @@ AirmassModelBase* getAirmassModel(engine_load_mode_e mode) {
 		case LM_MOCK: return engine->mockAirmassModel;
 #endif
 		default:
-			firmwareError(CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", engineConfiguration->fuelAlgorithm);
+			firmwareError(ObdCode::CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", engineConfiguration->fuelAlgorithm);
 			return nullptr;
 	}
 }
@@ -179,7 +179,7 @@ static float getBaseFuelMass(int rpm) {
 
 	// airmass modes - get airmass first, then convert to fuel
 	auto model = getAirmassModel(engineConfiguration->fuelAlgorithm);
-	efiAssert(CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
 
 	auto airmass = model->getAirmass(rpm);
 
@@ -226,12 +226,12 @@ angle_t getInjectionOffset(float rpm, float load) {
 	if (cisnan(value)) {
 		// we could be here while resetting configuration for example
 		// huh? what? when do we have RPM while resetting configuration? is that CI edge case? shall we fix CI?
-		warning(CUSTOM_ERR_6569, "phase map not ready");
+		warning(ObdCode::CUSTOM_ERR_6569, "phase map not ready");
 		return 0;
 	}
 
 	angle_t result = value;
-	fixAngle(result, "inj offset#2", CUSTOM_ERR_6553);
+	fixAngle(result, "inj offset#2", ObdCode::CUSTOM_ERR_6553);
 	return result;
 }
 
@@ -249,7 +249,7 @@ int getNumberOfInjections(injection_mode_e mode) {
 	case IM_SEQUENTIAL:
 		return 1;
 	default:
-		firmwareError(CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
+		firmwareError(ObdCode::CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
 		return 1;
 	}
 }
@@ -274,7 +274,7 @@ float getInjectionModeDurationMultiplier() {
 	case IM_BATCH:
 		return 0.5f;
 	default:
-		firmwareError(CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
+		firmwareError(ObdCode::CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
 		return 0;
 	}
 }
@@ -310,7 +310,7 @@ float getInjectionMass(int rpm) {
 
 	bool isCranking = engine->rpmCalculator.isCranking();
 	float cycleFuelMass = getCycleFuelMass(isCranking, baseFuelMass);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cycleFuelMass), "NaN cycleFuelMass", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(cycleFuelMass), "NaN cycleFuelMass", 0);
 
 	if (engine->module<DfcoController>()->cutFuel()) {
 		// If decel fuel cut, zero out fuel
@@ -324,7 +324,7 @@ float getInjectionMass(int rpm) {
 	engine->module<InjectorModel>()->prepare();
 
 	floatms_t tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment();
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	engine->engineState.tpsAccelEnrich = tpsAccelEnrich;
 
 	// For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass
@@ -389,7 +389,7 @@ float getBaroCorrection() {
 		);
 
 		if (cisnan(correction) || correction < 0.01) {
-			warning(OBD_Barometric_Press_Circ_Range_Perf, "Invalid baro correction %f", correction);
+			warning(ObdCode::OBD_Barometric_Press_Circ_Range_Perf, "Invalid baro correction %f", correction);
 			return 1;
 		}
 

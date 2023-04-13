@@ -35,7 +35,7 @@ void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
 		float cur = values[i];
 		float next = values[i + 1];
 		if (next <= cur) {
-			firmwareError(CUSTOM_ERR_AXIS_ORDER, "Invalid table axis (must be ascending!): %s %f %f at %d", msg, cur, next, i);
+			firmwareError(ObdCode::CUSTOM_ERR_AXIS_ORDER, "Invalid table axis (must be ascending!): %s %f %f at %d", msg, cur, next, i);
 		}
 	}
 }
@@ -58,7 +58,7 @@ template<typename kType>
 int findIndexMsg(const char *msg, const kType array[], int size, kType value) {
 	float fvalue = (float)value;
 	if (cisnan(fvalue)) {
-		firmwareError(ERROR_NAN_FIND_INDEX, "NaN in findIndex%s", msg);
+		firmwareError(ObdCode::ERROR_NAN_FIND_INDEX, "NaN in findIndex%s", msg);
 		return 0;
 	}
 
@@ -74,7 +74,7 @@ int findIndexMsg(const char *msg, const kType array[], int size, kType value) {
 #if 0
 		// that's an assertion to make sure we do not loop here
 		size--;
-		efiAssert(CUSTOM_ERR_ASSERT, size > 0, "Unexpected state in binary search", 0);
+		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, size > 0, "Unexpected state in binary search", 0);
 #endif
 
 		// todo: compare current implementation with
@@ -89,9 +89,9 @@ int findIndexMsg(const char *msg, const kType array[], int size, kType value) {
 
 		if (middle != 0 && array[middle - 1] > array[middle]) {
 #if EFI_UNIT_TEST
-			firmwareError(CUSTOM_ERR_6610, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);
+			firmwareError(ObdCode::CUSTOM_ERR_6610, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);
 #else
-			warning(CUSTOM_ERR_OUT_OF_ORDER, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);
+			warning(ObdCode::CUSTOM_ERR_OUT_OF_ORDER, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);
 
 #endif /* EFI_UNIT_TEST */
 		}

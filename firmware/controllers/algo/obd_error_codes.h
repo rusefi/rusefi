@@ -10,15 +10,10 @@
 
 #pragma once
 
-// this header should not depend on anything - actually chconf.h usually depends on this header
+#include <cstdint>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-typedef enum {
-	OBD_None = 0,
+enum class ObdCode : uint16_t {
+	None = 0,
 //P0001 Fuel Volume Regulator Control Circuit/Open
 //P0002 Fuel Volume Regulator Control Circuit Range/Performance
 //P0003 Fuel Volume Regulator Control Circuit Low
@@ -2069,7 +2064,7 @@ typedef enum {
 	CUSTOM_VVT_SYNC_POSITION = 6675,
 	CUSTOM_STACK_ADC = 6676,
 	CUSTOM_IH_STACK = 6677,
-	CUSTOM_EC_NULL = 6678,
+	CUSTOM_ERR_6678 = 6678,
 	CUSTOM_ERR6679 = 6679,
 
 	CUSTOM_ERR_ANGLE_CR = 6680,
@@ -2120,7 +2115,7 @@ typedef enum {
 	CUSTOM_NO_ETB_FOR_IDLE = 6723,
 	CUSTOM_ERR_TLE8888_RESPONSE = 6724,
 	CUSTOM_ERR_CJ125_DIAG = 6725,
-	NO_LONGER_USED_CUSTOM_ERR_VVT_OUT_OF_RANGE = 6726,
+	CUSTOM_6726 = 6726,
 	CUSTOM_VVT_MODE_NOT_SELECTED = 6727,
 	CUSTOM_ERR_6728 = 6728,
 	CUSTOM_ARTIFICIAL_MISFIRE = 6729,
@@ -2139,7 +2134,7 @@ typedef enum {
 
 	CUSTOM_8901 = 8901,
 
-    CUSTOM_ERR_CUSTOM_GAPS_BAD = 8999,
+	CUSTOM_ERR_CUSTOM_GAPS_BAD = 8999,
 	CUSTOM_ERR_TRIGGER_SYNC = 9000,
 	CUSTOM_OBD_TRIGGER_WAVEFORM = 9001,
 
@@ -2174,17 +2169,4 @@ typedef enum {
 	 * Commanded fuel exceeds your fuel injector flow
 	 */
 	CUSTOM_TOO_LONG_FUEL_INJECTION = 9013,
-
-
-
-
-// Back in the day we wanted enums to be 32 bit integers.
-// as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
-	// this is needed for proper enum size, this matters for malfunction_central
-	Internal_ForceMyEnumIntSize_cranking_obd_code = 2000000000,
-} ObdCode;
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
+};
