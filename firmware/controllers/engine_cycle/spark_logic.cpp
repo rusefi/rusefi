@@ -60,11 +60,10 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	output->setLow();
 }
 
-// todo: make this a class method?
-#define assertPinAssigned(output) { \
-		if (!output->isInitialized()) { \
-			warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "Pin Not Assigned check configuration #%s", (output)->getName()); \
-		} \
+static void assertPinAssigned(IgnitionOutputPin* output) {
+	if (!output->isInitialized()) {
+		warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "Pin Not Assigned check configuration #%s", output->getName()); \
+	}
 }
 
 /**
