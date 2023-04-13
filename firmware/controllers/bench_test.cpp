@@ -118,19 +118,19 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float startDelayMs
 
 static volatile bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
-static float onTime;
-static float offTime;
+static float onTimeMs;
+static float offTimeMs;
 static float startDelayMs;
 static int count;
 static brain_pin_e brainPin;
 static OutputPin* pinX;
 
-static void pinbench(float startdelay, float ontime, float offtime, int iterations,
+static void pinbench(float startdelay, float p_ontimeMs, float p_offtimeMs, int iterations,
 	OutputPin* pinParam, brain_pin_e brainPinParam)
 {
 	startDelayMs = startdelay;
-	onTime = ontime;
-	offTime = offtime;
+	onTimeMs = p_ontimeMs;
+	offTimeMs = p_offtimeMs;
 	count = iterations;
 	pinX = pinParam;
 	brainPin = brainPinParam;
@@ -140,12 +140,12 @@ static void pinbench(float startdelay, float ontime, float offtime, int iteratio
 
 /*==========================================================================*/
 
-static void doRunFuelInjBench(size_t humanIndex, float delay, float onTime, float offTime, int count) {
+static void doRunFuelInjBench(size_t humanIndex, float delay, float onTimeMs, float offTimeMs, int count) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(delay, onTime, offTime, count,
+	pinbench(delay, onTimeMs, offTimeMs, count,
 		&enginePins.injectors[humanIndex - 1], engineConfiguration->injectionPins[humanIndex - 1]);
 }
 
@@ -167,12 +167,12 @@ static void doRunSolenoidBench(size_t humanIndex, float delay, float onTime, flo
 		&enginePins.tcuSolenoids[humanIndex - 1], engineConfiguration->tcu_solenoid[humanIndex - 1]);
 }
 
-static void doRunBenchTestLuaOutput(size_t humanIndex, float delay, float onTime, float offTime, int count) {
+static void doRunBenchTestLuaOutput(size_t humanIndex, float delay, float onTimeMs, float offTimeMs, int count) {
 	if (humanIndex < 1 || humanIndex > LUA_PWM_COUNT) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(delay, onTime, offTime, count,
+	pinbench(delay, onTimeMs, offTimeMs, count,
 		&enginePins.luaOutputPins[humanIndex - 1], engineConfiguration->luaOutputPins[humanIndex - 1]);
 }
 
@@ -180,50 +180,50 @@ static void doRunBenchTestLuaOutput(size_t humanIndex, float delay, float onTime
  * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 3 times
  * fuelInjBenchExt 100 2 5 1000 3
  */
-static void fuelInjBenchExt(float delay, float humanIndex, float onTime, float offTime, float count) {
-	doRunFuelInjBench((int)humanIndex, delay, onTime, offTime, (int)count);
+static void fuelInjBenchExt(float delay, float humanIndex, float onTimeMs, float offTimeMs, float count) {
+	doRunFuelInjBench((int)humanIndex, delay, onTimeMs, offTimeMs, (int)count);
 }
 
 /**
  * fuelbench 5 1000 2
  */
-static void fuelInjBench(float onTime, float offTime, float count) {
-	fuelInjBenchExt(0.0, 1, onTime, offTime, count);
+static void fuelInjBench(float onTimeMs, float offTimeMs, float count) {
+	fuelInjBenchExt(0.0, 1, onTimeMs, offTimeMs, count);
 }
 
 /**
  * sparkbench2 0 1 5 1000 2
  */
-static void sparkBenchExt(float delay, float humanIndex, float onTime, float offTime, float count) {
-	doRunSparkBench((int)humanIndex, delay, onTime, offTime, (int)count);
+static void sparkBenchExt(float delay, float humanIndex, float onTime, float offTimeMs, float count) {
+	doRunSparkBench((int)humanIndex, delay, onTime, offTimeMs, (int)count);
 }
 
 /**
  * sparkbench 5 400 2
  * 5 ms ON, 400 ms OFF, two times
  */
-static void sparkBench(float onTime, float offTime, float count) {
-	sparkBenchExt(0.0, 1, onTime, offTime, count);
+static void sparkBench(float onTime, float offTimeMs, float count) {
+	sparkBenchExt(0.0, 1, onTime, offTimeMs, count);
 }
 
 /**
  * delay 100, solenoid #2, 1000ms ON, 1000ms OFF, repeat 3 times
  * tcusolbench 100 2 1000 1000 3
  */
-static void tcuSolenoidBench(float delay, float humanIndex, float onTime, float offTime, float count) {
-	doRunSolenoidBench((int)humanIndex, delay, onTime, offTime, (int)count);
+static void tcuSolenoidBench(float delay, float humanIndex, float onTime, float offTimeMs, float count) {
+	doRunSolenoidBench((int)humanIndex, delay, onTime, offTimeMs, (int)count);
 }
 
 /**
  * delay 100, channel #1, 5ms ON, 1000ms OFF, repeat 3 times
  * fsiobench2 100 1 5 1000 3
  */
-static void luaOutBench2(float delay, float humanIndex, float onTime, float offTime, float count) {
-	doRunBenchTestLuaOutput((int)humanIndex, delay, onTime, offTime, (int)count);
+static void luaOutBench2(float delay, float humanIndex, float onTime, float offTimeMs, float count) {
+	doRunBenchTestLuaOutput((int)humanIndex, delay, onTime, offTimeMs, (int)count);
 }
 
-static void fanBenchExt(float onTime) {
-	pinbench(0.0, onTime, 100.0, 1.0,
+static void fanBenchExt(float onTimeMs) {
+	pinbench(0.0, onTimeMs, 100.0, 1.0,
 		&enginePins.fanRelay, engineConfiguration->fanPin);
 }
 
@@ -286,7 +286,7 @@ private:
 		// naive inter-thread communication - waiting for a flag
 		if (isBenchTestPending) {
 			isBenchTestPending = false;
-			runBench(brainPin, pinX, startDelayMs, onTime, offTime, count);
+			runBench(brainPin, pinX, startDelayMs, onTimeMs, offTimeMs, count);
 		}
 
 		if (widebandUpdatePending) {
