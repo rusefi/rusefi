@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Apr 12 21:32:40 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 13 02:33:40 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -471,34 +471,34 @@ public class TsOutputs {
 	public static final Field DELTATPSVALUE = Field.create("DELTATPSVALUE", 70, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field CANREADCOUNTER = Field.create("CANREADCOUNTER", 72, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFUEL = Field.create("TPSACCELFUEL", 74, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
-	public static final Field COILDUTYCYCLE = Field.create("COILDUTYCYCLE", 76, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field IDLEAIRVALVEPOSITION = Field.create("IDLEAIRVALVEPOSITION", 78, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ETBTARGET = Field.create("ETBTARGET", 80, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ETB1DUTYCYCLE = Field.create("ETB1DUTYCYCLE", 82, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field FUELTANKLEVEL = Field.create("FUELTANKLEVEL", 84, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TOTALFUELCONSUMPTION = Field.create("TOTALFUELCONSUMPTION", 86, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field FUELFLOWRATE = Field.create("FUELFLOWRATE", 88, FieldType.INT16).setScale(0.005).setBaseOffset(0);
-	public static final Field TPS2VALUE = Field.create("TPS2VALUE", 90, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TUNECRC16 = Field.create("TUNECRC16", 92, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_94 = Field.create("ALIGNMENTFILL_AT_94", 94, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field KNOCKLEVEL = Field.create("KNOCKLEVEL", 96, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field SECONDS = Field.create("SECONDS", 100, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field ENGINEMODE = Field.create("ENGINEMODE", 104, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field FIRMWAREVERSION = Field.create("FIRMWAREVERSION", 108, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field RAWIDLEPOSITIONSENSOR = Field.create("RAWIDLEPOSITIONSENSOR", 112, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field RAWWASTEGATEPOSITION = Field.create("RAWWASTEGATEPOSITION", 114, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field ACCELERATIONX = Field.create("ACCELERATIONX", 116, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ACCELERATIONY = Field.create("ACCELERATIONY", 118, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TSCONFIGVERSION = Field.create("TSCONFIGVERSION", 120, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field CALIBRATIONVALUE = Field.create("CALIBRATIONVALUE", 124, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field CALIBRATIONMODE = Field.create("CALIBRATIONMODE", 128, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field IDLETARGETPOSITION = Field.create("IDLETARGETPOSITION", 129, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field DETECTEDGEAR = Field.create("DETECTEDGEAR", 130, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field MAXTRIGGERREENTRANT = Field.create("MAXTRIGGERREENTRANT", 131, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field TOTALTRIGGERERRORCOUNTER = Field.create("TOTALTRIGGERERRORCOUNTER", 132, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field ORDERINGERRORCOUNTER = Field.create("ORDERINGERRORCOUNTER", 136, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field WARNINGCOUNTER = Field.create("WARNINGCOUNTER", 140, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field LASTERRORCODE = Field.create("LASTERRORCODE", 142, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field WARNINGCOUNTER = Field.create("WARNINGCOUNTER", 76, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field LASTERRORCODE = Field.create("LASTERRORCODE", 78, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field COILDUTYCYCLE = Field.create("COILDUTYCYCLE", 80, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field IDLEAIRVALVEPOSITION = Field.create("IDLEAIRVALVEPOSITION", 82, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ETBTARGET = Field.create("ETBTARGET", 84, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ETB1DUTYCYCLE = Field.create("ETB1DUTYCYCLE", 86, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field FUELTANKLEVEL = Field.create("FUELTANKLEVEL", 88, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field TOTALFUELCONSUMPTION = Field.create("TOTALFUELCONSUMPTION", 90, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field FUELFLOWRATE = Field.create("FUELFLOWRATE", 92, FieldType.INT16).setScale(0.005).setBaseOffset(0);
+	public static final Field TPS2VALUE = Field.create("TPS2VALUE", 94, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field TUNECRC16 = Field.create("TUNECRC16", 96, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_98 = Field.create("ALIGNMENTFILL_AT_98", 98, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field KNOCKLEVEL = Field.create("KNOCKLEVEL", 100, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field SECONDS = Field.create("SECONDS", 104, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field ENGINEMODE = Field.create("ENGINEMODE", 108, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field FIRMWAREVERSION = Field.create("FIRMWAREVERSION", 112, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field RAWIDLEPOSITIONSENSOR = Field.create("RAWIDLEPOSITIONSENSOR", 116, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field RAWWASTEGATEPOSITION = Field.create("RAWWASTEGATEPOSITION", 118, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field ACCELERATIONX = Field.create("ACCELERATIONX", 120, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ACCELERATIONY = Field.create("ACCELERATIONY", 122, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field TSCONFIGVERSION = Field.create("TSCONFIGVERSION", 124, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field CALIBRATIONVALUE = Field.create("CALIBRATIONVALUE", 128, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field CALIBRATIONMODE = Field.create("CALIBRATIONMODE", 132, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field IDLETARGETPOSITION = Field.create("IDLETARGETPOSITION", 133, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field DETECTEDGEAR = Field.create("DETECTEDGEAR", 134, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MAXTRIGGERREENTRANT = Field.create("MAXTRIGGERREENTRANT", 135, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TOTALTRIGGERERRORCOUNTER = Field.create("TOTALTRIGGERERRORCOUNTER", 136, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field ORDERINGERRORCOUNTER = Field.create("ORDERINGERRORCOUNTER", 140, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field RECENTERRORCODE1 = Field.create("RECENTERRORCODE1", 144, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RECENTERRORCODE2 = Field.create("RECENTERRORCODE2", 146, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RECENTERRORCODE3 = Field.create("RECENTERRORCODE3", 148, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -950,6 +950,8 @@ public class TsOutputs {
 	DELTATPSVALUE,
 	CANREADCOUNTER,
 	TPSACCELFUEL,
+	WARNINGCOUNTER,
+	LASTERRORCODE,
 	COILDUTYCYCLE,
 	IDLEAIRVALVEPOSITION,
 	ETBTARGET,
@@ -959,7 +961,7 @@ public class TsOutputs {
 	FUELFLOWRATE,
 	TPS2VALUE,
 	TUNECRC16,
-	ALIGNMENTFILL_AT_94,
+	ALIGNMENTFILL_AT_98,
 	KNOCKLEVEL,
 	SECONDS,
 	ENGINEMODE,
@@ -976,8 +978,6 @@ public class TsOutputs {
 	MAXTRIGGERREENTRANT,
 	TOTALTRIGGERERRORCOUNTER,
 	ORDERINGERRORCOUNTER,
-	WARNINGCOUNTER,
-	LASTERRORCODE,
 	RECENTERRORCODE1,
 	RECENTERRORCODE2,
 	RECENTERRORCODE3,

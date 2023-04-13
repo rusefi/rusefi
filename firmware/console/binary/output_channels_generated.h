@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Apr 12 21:32:40 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 13 02:33:40 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -357,158 +357,158 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 300, 1> tpsAccelFuel = (int16_t)0;
 	/**
-	 * @@GAUGE_NAME_DWELL_DUTY@@
-	%
-	 * offset 76
-	 */
-	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
-	/**
-	 * @@GAUGE_NAME_IAC@@
-	%
-	 * offset 78
-	 */
-	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
-	/**
-	 * ETB Target
-	%
-	 * offset 80
-	 */
-	scaled_channel<int16_t, 100, 1> etbTarget = (int16_t)0;
-	/**
-	 * @@GAUGE_NAME_ETB_DUTY@@
-	%
-	 * offset 82
-	 */
-	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
-	/**
-	 * Fuel level
-	%
-	 * offset 84
-	 */
-	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
-	/**
-	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
-	grams
-	 * offset 86
-	 */
-	uint16_t totalFuelConsumption = (uint16_t)0;
-	/**
-	 * @@GAUGE_NAME_FUEL_FLOW@@
-	gram/s
-	 * offset 88
-	 */
-	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
-	/**
-	 * @@GAUGE_NAME_TPS2@@
-	%
-	 * offset 90
-	 */
-	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
-	/**
-	 * @@GAUGE_NAME_TUNE_CRC16@@
-	crc16
-	 * offset 92
-	 */
-	uint16_t tuneCrc16 = (uint16_t)0;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 94
-	 */
-	uint8_t alignmentFill_at_94[2];
-	/**
-	 * @@GAUGE_NAME_KNOCK_LEVEL@@
-	Volts
-	 * offset 96
-	 */
-	float knockLevel = (float)0;
-	/**
-	 * @@GAUGE_NAME_UPTIME@@
-	sec
-	 * offset 100
-	 */
-	uint32_t seconds = (uint32_t)0;
-	/**
-	 * Engine Mode
-	em
-	 * offset 104
-	 */
-	uint32_t engineMode = (uint32_t)0;
-	/**
-	 * @@GAUGE_NAME_VERSION@@
-	version_f
-	 * offset 108
-	 */
-	uint32_t firmwareVersion = (uint32_t)0;
-	/**
-	V
-	 * offset 112
-	 */
-	scaled_channel<int16_t, 1000, 1> rawIdlePositionSensor = (int16_t)0;
-	/**
-	V
-	 * offset 114
-	 */
-	scaled_channel<int16_t, 1000, 1> rawWastegatePosition = (int16_t)0;
-	/**
-	 * @@GAUGE_NAME_ACCEL_X@@
-	G
-	 * offset 116
-	 */
-	scaled_channel<int16_t, 100, 1> accelerationX = (int16_t)0;
-	/**
-	 * @@GAUGE_NAME_ACCEL_Y@@
-	G
-	 * offset 118
-	 */
-	scaled_channel<int16_t, 100, 1> accelerationY = (int16_t)0;
-	/**
-	 * offset 120
-	 */
-	uint32_t tsConfigVersion = (uint32_t)0;
-	/**
-	 * offset 124
-	 */
-	float calibrationValue = (float)0;
-	/**
-	 * offset 128
-	 */
-	uint8_t calibrationMode = (uint8_t)0;
-	/**
-	 * offset 129
-	 */
-	uint8_t idleTargetPosition = (uint8_t)0;
-	/**
-	 * @@GAUGE_NAME_DETECTED_GEAR@@
-	 * offset 130
-	 */
-	uint8_t detectedGear = (uint8_t)0;
-	/**
-	 * offset 131
-	 */
-	uint8_t maxTriggerReentrant = (uint8_t)0;
-	/**
-	 * @@GAUGE_NAME_TRG_ERR@@
-	counter
-	 * offset 132
-	 */
-	uint32_t totalTriggerErrorCounter = (uint32_t)0;
-	/**
-	 * offset 136
-	 */
-	uint32_t orderingErrorCounter = (uint32_t)0;
-	/**
 	 * @@GAUGE_NAME_WARNING_COUNTER@@
 	count
-	 * offset 140
+	 * offset 76
 	 */
 	uint16_t warningCounter = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_WARNING_LAST@@
 	error
-	 * offset 142
+	 * offset 78
 	 */
 	uint16_t lastErrorCode = (uint16_t)0;
+	/**
+	 * @@GAUGE_NAME_DWELL_DUTY@@
+	%
+	 * offset 80
+	 */
+	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
+	/**
+	 * @@GAUGE_NAME_IAC@@
+	%
+	 * offset 82
+	 */
+	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
+	/**
+	 * ETB Target
+	%
+	 * offset 84
+	 */
+	scaled_channel<int16_t, 100, 1> etbTarget = (int16_t)0;
+	/**
+	 * @@GAUGE_NAME_ETB_DUTY@@
+	%
+	 * offset 86
+	 */
+	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
+	/**
+	 * Fuel level
+	%
+	 * offset 88
+	 */
+	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
+	/**
+	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
+	grams
+	 * offset 90
+	 */
+	uint16_t totalFuelConsumption = (uint16_t)0;
+	/**
+	 * @@GAUGE_NAME_FUEL_FLOW@@
+	gram/s
+	 * offset 92
+	 */
+	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
+	/**
+	 * @@GAUGE_NAME_TPS2@@
+	%
+	 * offset 94
+	 */
+	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
+	/**
+	 * @@GAUGE_NAME_TUNE_CRC16@@
+	crc16
+	 * offset 96
+	 */
+	uint16_t tuneCrc16 = (uint16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 98
+	 */
+	uint8_t alignmentFill_at_98[2];
+	/**
+	 * @@GAUGE_NAME_KNOCK_LEVEL@@
+	Volts
+	 * offset 100
+	 */
+	float knockLevel = (float)0;
+	/**
+	 * @@GAUGE_NAME_UPTIME@@
+	sec
+	 * offset 104
+	 */
+	uint32_t seconds = (uint32_t)0;
+	/**
+	 * Engine Mode
+	em
+	 * offset 108
+	 */
+	uint32_t engineMode = (uint32_t)0;
+	/**
+	 * @@GAUGE_NAME_VERSION@@
+	version_f
+	 * offset 112
+	 */
+	uint32_t firmwareVersion = (uint32_t)0;
+	/**
+	V
+	 * offset 116
+	 */
+	scaled_channel<int16_t, 1000, 1> rawIdlePositionSensor = (int16_t)0;
+	/**
+	V
+	 * offset 118
+	 */
+	scaled_channel<int16_t, 1000, 1> rawWastegatePosition = (int16_t)0;
+	/**
+	 * @@GAUGE_NAME_ACCEL_X@@
+	G
+	 * offset 120
+	 */
+	scaled_channel<int16_t, 100, 1> accelerationX = (int16_t)0;
+	/**
+	 * @@GAUGE_NAME_ACCEL_Y@@
+	G
+	 * offset 122
+	 */
+	scaled_channel<int16_t, 100, 1> accelerationY = (int16_t)0;
+	/**
+	 * offset 124
+	 */
+	uint32_t tsConfigVersion = (uint32_t)0;
+	/**
+	 * offset 128
+	 */
+	float calibrationValue = (float)0;
+	/**
+	 * offset 132
+	 */
+	uint8_t calibrationMode = (uint8_t)0;
+	/**
+	 * offset 133
+	 */
+	uint8_t idleTargetPosition = (uint8_t)0;
+	/**
+	 * @@GAUGE_NAME_DETECTED_GEAR@@
+	 * offset 134
+	 */
+	uint8_t detectedGear = (uint8_t)0;
+	/**
+	 * offset 135
+	 */
+	uint8_t maxTriggerReentrant = (uint8_t)0;
+	/**
+	 * @@GAUGE_NAME_TRG_ERR@@
+	counter
+	 * offset 136
+	 */
+	uint32_t totalTriggerErrorCounter = (uint32_t)0;
+	/**
+	 * offset 140
+	 */
+	uint32_t orderingErrorCounter = (uint32_t)0;
 	/**
 	error
 	 * offset 144
@@ -1383,4 +1383,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 776);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Apr 12 21:32:40 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 13 02:33:40 UTC 2023
