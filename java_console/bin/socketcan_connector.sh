@@ -1,1 +1,0 @@
-java -jar fome_console.jar pcan_connector
