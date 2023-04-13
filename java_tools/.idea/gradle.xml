@@ -24,7 +24,6 @@
             <option value="$PROJECT_DIR$/bin2header" />
             <option value="$PROJECT_DIR$/configuration_definition" />
             <option value="$PROJECT_DIR$/enum_to_string" />
-            <option value="$PROJECT_DIR$/logicdata2c" />
           </set>
         </option>
       </GradleProjectSettings>
