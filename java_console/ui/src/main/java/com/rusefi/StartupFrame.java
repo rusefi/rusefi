@@ -187,8 +187,8 @@ public class StartupFrame {
         JLabel logo = createLogoLabel();
         if (logo != null)
             rightPanel.add(logo);
-        rightPanel.add(new JLabel("rusEFI (c) 2012-2023"));
         rightPanel.add(new JLabel("FOME (c) 2023-2023"));
+        rightPanel.add(new JLabel("rusEFI (c) 2012-2023"));
         rightPanel.add(new JLabel("Version " + Launcher.CONSOLE_VERSION));
 
         JPanel content = new JPanel(new BorderLayout());
