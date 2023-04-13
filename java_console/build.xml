@@ -23,7 +23,6 @@
         <string>lib/jep.jar</string>
         <string>lib/log4j.jar</string>
         <string>lib/junit.jar</string>
-        <string>lib/SteelSeries-3.9.30.jar</string>
         <string>lib/annotations.jar</string>
         <string>lib/miglayout-4.0.jar</string>
         <string>lib/surfaceplotter-2.0.1.jar</string>
@@ -141,7 +140,6 @@
                 <attribute name="Built-Date" value="${TODAY}"/>
                 <attribute name="Signature-Vendor" value="rusEFI LLC"/>
             </manifest>
-            <zipfileset src="lib/SteelSeries-3.9.30.jar" includes="**/*.class"/>
             <zipfileset src="lib/trident-6.2.jar" includes="**/*.class"/>
             <zipfileset src="lib/swing-layout-1.0.jar" includes="**/*.class"/>
             <zipfileset src="lib/log4j.jar" includes="**/*.class"/>
