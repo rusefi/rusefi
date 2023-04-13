@@ -10,11 +10,4 @@ ext {
           commons_logging: "commons-logging:commons-logging:1.2",
           jcip           : 'net.jcip:jcip-annotations:1.0',
   ]
-
-  ts_plugin_libs = [
-          httpclient  : "org.apache.httpcomponents:httpclient:4.5.13",
-          httpcore    : "org.apache.httpcomponents:httpcore:4.4.13",
-          httpmime    : "org.apache.httpcomponents:httpmime:4.5.12",
-          launcher_api: fileTree( dir: "lib", include: "TunerStudioPluginAPI.jar" )
-  ]
 }
