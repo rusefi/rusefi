@@ -50,12 +50,6 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	output->setLow();
 }
 
-static void assertPinAssigned(IgnitionOutputPin* output) {
-	if (!output->isInitialized()) {
-		warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "Pin Not Assigned check configuration #%s", output->getName()); \
-	}
-}
-
 /**
  * @param cylinderIndex from 0 to cylinderCount, not cylinder number
  */
@@ -110,12 +104,9 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		int secondIndex = index + engineConfiguration->cylindersCount / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex));
 		secondOutput = &enginePins.coils[secondCoilIndex];
-		assertPinAssigned(secondOutput);
 	} else {
 		secondOutput = nullptr;
 	}
-
-	assertPinAssigned(output);
 
 	event->outputs[0] = output;
 	event->outputs[1] = secondOutput;

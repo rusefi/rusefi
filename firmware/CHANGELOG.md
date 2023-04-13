@@ -30,5 +30,6 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - Sensor checker wasn't checking sensors
+ - Removed vestigial warning about unset ignition pins #79
 
 ### For older changelog entries prior to fork from rusEFI, see CHANGELOG.rusefi.md
