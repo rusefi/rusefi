@@ -34,9 +34,9 @@ expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
 /* Module specitifc processing functions */
 /* source: http://z4evconversion.blogspot.com/2016/07/completely-forgot-but-it-does-live-on.html */
 float processBMW_e46(const CANRxFrame& frame) {
-	/* left front wheel speed is used here */
-	uint16_t tmp = ((frame.data8[1] & 0x0f) << 8 );
-	tmp |= frame.data8[0];
+	// average the rear wheels since those are the driven ones (more accurate gear detection!)
+	uint16_t left =  (((frame.data8[5] & 0x0f) << 8) | frame.data8[4]);
+	uint16_t right = (((frame.data8[7] & 0x0f) << 8) | frame.data8[6]);
 
 	return tmp / 16.0f;
 }
