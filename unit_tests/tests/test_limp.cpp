@@ -144,6 +144,7 @@ TEST(limp, revSoftLimit) {
 	eth.engine.periodicFastCallback();
 
 	EXPECT_FLOAT_EQ(0, getLimpManager()->getLimitingTimingRetard());
+	EXPECT_FLOAT_EQ((float)eth.engine.ignitionState.correctedIgnitionAdvance - (float)eth.engine.ignitionState.baseIgnitionAdvance, 0);
 	EXPECT_FLOAT_EQ(1, getLimpManager()->getLimitingFuelCorrection());
 	// this is normal injection mode, no limiting fuel corrections
 	ASSERT_NEAR(normalRunningFuel, getRunningFuel(baseFuel), EPS4D) << "base fuel";
@@ -153,6 +154,7 @@ TEST(limp, revSoftLimit) {
 	eth.engine.periodicFastCallback();
 
 	EXPECT_FLOAT_EQ(10, getLimpManager()->getLimitingTimingRetard());	// 10 deg
+	EXPECT_FLOAT_EQ((float)eth.engine.ignitionState.correctedIgnitionAdvance - (float)eth.engine.ignitionState.baseIgnitionAdvance, -10.0f);
 	EXPECT_FLOAT_EQ(1.2f, getLimpManager()->getLimitingFuelCorrection());	// 20%
 	ASSERT_NEAR(normalRunningFuel * 1.2f, getRunningFuel(baseFuel), EPS4D) << "base fuel";	// 20%
 
@@ -160,6 +162,7 @@ TEST(limp, revSoftLimit) {
 	Sensor::setMockValue(SensorType::Rpm, 2400);
 	eth.engine.periodicFastCallback();
 	EXPECT_FLOAT_EQ(5, getLimpManager()->getLimitingTimingRetard());	// 5 deg
+	EXPECT_FLOAT_EQ((float)eth.engine.ignitionState.correctedIgnitionAdvance - (float)eth.engine.ignitionState.baseIgnitionAdvance, -5.0f);
 	EXPECT_FLOAT_EQ(1.1f, getLimpManager()->getLimitingFuelCorrection());	// 10%
 	ASSERT_NEAR(normalRunningFuel * 1.1f, getRunningFuel(baseFuel), EPS4D) << "base fuel";	// 10%
 }

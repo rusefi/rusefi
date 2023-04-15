@@ -136,6 +136,8 @@ void EngineState::periodicFastCallback() {
 	engine->fuelComputer.running.coolantTemperatureCoefficient = getCltFuelCorrection();
 
 	engine->module<DfcoController>()->update();
+	// should be called before getInjectionMass() and getLimitingTimingRetard()
+	getLimpManager()->updateRevLimit(rpm);
 
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)

@@ -38,6 +38,21 @@ void LimpManager::onFastCallback() {
 	updateState(Sensor::getOrZero(SensorType::Rpm), getTimeNowNt());
 }
 
+void LimpManager::updateRevLimit(int rpm) {
+	// User-configured hard RPM limit, either constant or CLT-lookup
+	m_revLimit = engineConfiguration->useCltBasedRpmLimit
+		? interpolate2d(Sensor::getOrZero(SensorType::Clt), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
+		: (float)engineConfiguration->rpmHardLimit;
+
+	// Require configurable rpm drop before resuming
+	m_revLimitLow = m_revLimit - engineConfiguration->rpmHardLimitHyst;
+
+	m_timingRetard = interpolateClamped(m_revLimitLow, 0, m_revLimit, engineConfiguration->rpmSoftLimitTimingRetard, rpm);
+	
+	percent_t fuelAdded = interpolateClamped(m_revLimitLow, 0, m_revLimit, engineConfiguration->rpmSoftLimitFuelAdded, rpm);
+	m_fuelCorrection = 1.0f + fuelAdded / 100;
+}
+
 void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
@@ -53,28 +68,16 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
         allowSpark.clear(ClearReason::Lua);
     }
 
-	{
-		// User-configured hard RPM limit, either constant or CLT-lookup
-		// todo: migrate to engineState->desiredRpmLimit to get this variable logged
-		float revLimit = engineConfiguration->useCltBasedRpmLimit
-			? interpolate2d(Sensor::getOrZero(SensorType::Clt), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
-			: (float)engineConfiguration->rpmHardLimit;
 
-		// Require configurable rpm drop before resuming
-		float revLimitLow = revLimit - engineConfiguration->rpmHardLimitHyst;
-		if (m_revLimitHysteresis.test(rpm, revLimit, revLimitLow)) {
-			if (engineConfiguration->cutFuelOnHardLimit) {
-				allowFuel.clear(ClearReason::HardLimit);
-			}
-
-			if (engineConfiguration->cutSparkOnHardLimit) {
-				allowSpark.clear(ClearReason::HardLimit);
-			}
+	updateRevLimit(rpm);
+	if (m_revLimitHysteresis.test(rpm, m_revLimit, m_revLimitLow)) {
+		if (engineConfiguration->cutFuelOnHardLimit) {
+			allowFuel.clear(ClearReason::HardLimit);
 		}
 
-		m_timingRetard = interpolateClamped(revLimitLow, 0, revLimit, engineConfiguration->rpmSoftLimitTimingRetard, rpm);
-		percent_t fuelAdded = interpolateClamped(revLimitLow, 0, revLimit, engineConfiguration->rpmSoftLimitFuelAdded, rpm);
-		m_fuelCorrection = 1.0f + fuelAdded / 100;
+		if (engineConfiguration->cutSparkOnHardLimit) {
+			allowSpark.clear(ClearReason::HardLimit);
+		}
 	}
 
 #if EFI_SHAFT_POSITION_INPUT
