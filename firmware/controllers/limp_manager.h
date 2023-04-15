@@ -113,6 +113,7 @@ public:
 
 	bool allowTriggerInput() const;
 
+	void updateRevLimit(int rpm);
 	angle_t getLimitingTimingRetard() const;
 	float getLimitingFuelCorrection() const;
 
@@ -145,6 +146,10 @@ private:
 
 	angle_t m_timingRetard = 0;
 	float m_fuelCorrection = 1.0f;
+
+	// todo: migrate to engineState->desiredRpmLimit to get this variable logged
+	float m_revLimit;
+	float m_revLimitLow;
 };
 
 LimpManager * getLimpManager();
