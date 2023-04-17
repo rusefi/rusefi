@@ -99,6 +99,8 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
+	// todo: do we need this conditional on boardId or not really?
+	setHellenMegaEnPin();
 	setupVbatt();
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 	if (hellenBoardId == BOARD_ID_2chan_e || hellenBoardId == BOARD_ID_2chan_f) {

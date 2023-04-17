@@ -144,6 +144,8 @@ void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
 	setHellenMMbaro();
+	// todo: do we need this conditional on boardId or not really?
+	setHellenMegaEnPin();
 
 	setHellenSdCardSpi2();
 
