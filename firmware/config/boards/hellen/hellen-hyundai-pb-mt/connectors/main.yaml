@@ -175,7 +175,7 @@ pins:
   - pin: K19
     function: BVS Booster Vacuum Supply +5v
   - pin: K20
-    function: Pedal Supply +5v No2
+    function: APT/RPS Supply +5v
 
   - pin: K22
     function: Wiper Switch Input Active High
