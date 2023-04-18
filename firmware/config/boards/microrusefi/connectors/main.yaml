@@ -304,7 +304,7 @@ pins:
     id: [B1, B1, EFI_ADC_9]
     class: [outputs, switch_inputs, analog_inputs]
     color: grey
-    function: AN volt 9, for aux see R30
+    function: AN volt 9 without R30, low side output with R30
     ts_name: 40 - AN volt 9, Aux Reuse
     type: av
 
