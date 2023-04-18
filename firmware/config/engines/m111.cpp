@@ -70,6 +70,8 @@ void setMreM111EngineConfiguration() {
 #if HW_MICRO_RUSEFI
     setPPSInputs(MRE_IN_PPS, MRE_IN_PPS2);
     setTPS1Inputs(MRE_IN_TPS, MRE_IN_TPS2);
+
+    engineConfiguration->oilPressure.hwChannel = MRE_IN_ANALOG_VOLT_4;
 #endif // HW_MICRO_RUSEFI
     // note how these numbers are very flipped hyundai154 defaults?
     setTPS1Calibration(891, 69, 98, 926);

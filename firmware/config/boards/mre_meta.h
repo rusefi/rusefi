@@ -46,6 +46,9 @@
 #define MRE_IN_ANALOG_VOLT_3 EFI_ADC_7
 #define MRE_IN_PPS MRE_IN_ANALOG_VOLT_3
 
+// 19 - AN volt 4
+#define MRE_IN_ANALOG_VOLT_4 EFI_ADC_12
+
 // 32 - AN volt 6
 #define MRE_IN_ANALOG_VOLT_6 EFI_ADC_14
 
