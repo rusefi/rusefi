@@ -36,6 +36,7 @@ Release template (copy/paste this for new release):
  - STM32Cube v2.13 #5135
  - Native (modern, fancy, digital) SENT TPS input #5079
  - Allow k-line as a runtime option on default build
+ - microRusEFI: Indicator for injector hardware issues #5189
 
 ### Breaking Changes
  - rusefi_default_bundle.zip was replaced by rusefi_bundle_f407-discovery.zip #5078
