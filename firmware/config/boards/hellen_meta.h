@@ -123,6 +123,9 @@ void detectHellenBoardType();
 // VIGN PA5
 #define H144_IN_VBATT EFI_ADC_5
 
+// muxed
+#define H144_IN_TPS2 EFI_ADC_20
+
 // IN_MAP1 AIN9 PC0
 #define H144_IN_MAP1 EFI_ADC_10
 // AIN10 PC1

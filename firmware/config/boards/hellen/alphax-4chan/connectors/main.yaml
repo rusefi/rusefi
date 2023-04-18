@@ -242,6 +242,14 @@ pins:
     ts_name: D5 - PPS
     color: orange
 
+  - pin: D5g
+    # IN_TPS2
+    id: EFI_ADC_20
+    class: analog_inputs
+    function: PPS Sensor Input rev G
+    ts_name: D5 - PPS rev G
+    color: orange
+
   - pin: D6
     # H144_IGN_3
     id: E4
