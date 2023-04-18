@@ -72,6 +72,8 @@ void setMreM111EngineConfiguration() {
     setTPS1Inputs(MRE_IN_TPS, MRE_IN_TPS2);
 
     engineConfiguration->oilPressure.hwChannel = MRE_IN_ANALOG_VOLT_4;
+    // assumes R30 is populated
+    engineConfiguration->boostControlPin = MRE_AV9_REUSE;
 #endif // HW_MICRO_RUSEFI
     // note how these numbers are very flipped hyundai154 defaults?
     setTPS1Calibration(891, 69, 98, 926);
