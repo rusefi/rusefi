@@ -342,8 +342,6 @@ void applyNewHardwareSettings() {
 	startSmartCsPins();
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
-	enginePins.startPins();
-
 #if EFI_AUX_SERIAL
 	startAuxSerialPins();
 #endif /* EFI_AUX_SERIAL */
@@ -464,8 +462,14 @@ void stopHardware() {
 
 /**
  * This method is invoked both on ECU start and configuration change
+ * At the moment we have too many system which handle ECU start and configuration change separately
+ * TODO: move move hardware code here
  */
 void startHardware() {
+#if EFI_ENGINE_CONTROL
+	enginePins.startPins();
+#endif /* EFI_ENGINE_CONTROL */
+
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	startJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
@@ -545,10 +549,6 @@ void initHardware() {
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins();
-
-#if EFI_ENGINE_CONTROL
-	enginePins.startPins();
-#endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_MC33816
 	initMc33816();
