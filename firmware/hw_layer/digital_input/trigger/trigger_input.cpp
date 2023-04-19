@@ -158,7 +158,6 @@ void startTriggerInputPins() {
 }
 
 void onEcuStartTriggerImplementation() {
-	onEcuStartDoSomethingTriggerInputPins();
 }
 
 #endif /* (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE) */
