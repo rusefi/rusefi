@@ -16,8 +16,8 @@ void initSent();
 void SENT_ISR_Handler(uint8_t ch, uint16_t val_res);
 
 /* Stop/Start for config update */
-void startSent(void);
-void stopSent(void);
+void startSent();
+void stopSent();
 
 float getSentValue(size_t index);
 int getSentValues(size_t index, uint16_t *sig0, uint16_t *sig1);
