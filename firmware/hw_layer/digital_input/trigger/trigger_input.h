@@ -11,7 +11,11 @@
 #include "trigger_structure.h"
 #include "trigger_central.h"
 
-void turnOnTriggerInputPins();
+/**
+ * 'init' meaning invoked only on ECU start-up
+ */
+void initTriggerImplementation();
+
 void applyNewTriggerInputPins();
 void startTriggerInputPins();
 void stopTriggerInputPins();

@@ -157,7 +157,7 @@ void startTriggerInputPins() {
 	}
 }
 
-void turnOnTriggerInputPins() {
+void initTriggerImplementation() {
 	applyNewTriggerInputPins();
 }
 

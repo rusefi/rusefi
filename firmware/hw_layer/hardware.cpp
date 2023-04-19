@@ -569,7 +569,7 @@ void initHardware() {
 
 
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
-	turnOnTriggerInputPins();
+	initTriggerImplementation();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_HIP_9011
