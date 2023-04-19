@@ -188,9 +188,6 @@ void onEcuStartDoSomethingTriggerInputPins() {
 	}
 
 #if EFI_PROD_CODE
-	// first we will turn off all the changed pins
-	stopTriggerInputPins();
-
 	if (isBrainPinValid(engineConfiguration->triggerInputPins[0])) {
 		engine->rpmCalculator.Register();
 	} else {
