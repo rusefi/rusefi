@@ -569,8 +569,8 @@ void initHardware() {
 
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	onEcuStartTriggerImplementation();
-	onEcuStartDoSomethingTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
+	onEcuStartDoSomethingTriggerInputPins();
 
 #if EFI_HIP_9011
 	initHip9011();
