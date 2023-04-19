@@ -316,11 +316,6 @@ void applyNewHardwareSettings() {
 	/*******************************************
 	 * Start everything back with new settings *
 	 ******************************************/
-
-#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
-	startTriggerInputPins();
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 	startHardware();
 
 #if EFI_HD44780_LCD
@@ -466,6 +461,10 @@ void stopHardware() {
  * TODO: move move hardware code here
  */
 void startHardware() {
+#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
+	startTriggerInputPins();
+#endif /* EFI_SHAFT_POSITION_INPUT */
+
 #if EFI_ENGINE_CONTROL
 	enginePins.startPins();
 #endif /* EFI_ENGINE_CONTROL */
@@ -571,7 +570,6 @@ void initHardware() {
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	onEcuStartTriggerImplementation();
 	onEcuStartDoSomethingTriggerInputPins();
-   	startTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_HIP_9011
