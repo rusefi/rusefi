@@ -158,7 +158,7 @@ void startTriggerInputPins() {
 }
 
 void initTriggerImplementation() {
-	applyNewTriggerInputPins();
+	onEcuStartDoSomethingTriggerInputPins();
 }
 
 #endif /* (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE) */
@@ -182,7 +182,7 @@ void startTriggerDebugPins() {
 	}
 }
 
-void applyNewTriggerInputPins() {
+void onEcuStartDoSomethingTriggerInputPins() {
 	if (hasFirmwareError()) {
 		return;
 	}

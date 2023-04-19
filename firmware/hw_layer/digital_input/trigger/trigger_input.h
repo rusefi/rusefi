@@ -16,7 +16,7 @@
  */
 void initTriggerImplementation();
 
-void applyNewTriggerInputPins();
+void onEcuStartDoSomethingTriggerInputPins();
 void startTriggerInputPins();
 void stopTriggerInputPins();
 

@@ -91,7 +91,7 @@ void initTriggerImplementation() {
 	compInit();
 	compStart(EFI_COMP_PRIMARY_DEVICE, &comp_shaft_cfg);
 
-	applyNewTriggerInputPins();
+	onEcuStartDoSomethingTriggerInputPins();
 }
 
 static int getDacValue(uint8_t voltage) {
