@@ -157,7 +157,7 @@ void startTriggerInputPins() {
 	}
 }
 
-void initTriggerImplementation() {
+void onEcuStartTriggerImplementation() {
 	onEcuStartDoSomethingTriggerInputPins();
 }
 

@@ -87,7 +87,7 @@ static COMPConfig comp_shaft_cfg = {
 
 static bool isCompEnabled = false;
 
-void initTriggerImplementation() {
+void onEcuStartTriggerImplementation() {
 	compInit();
 	compStart(EFI_COMP_PRIMARY_DEVICE, &comp_shaft_cfg);
 
