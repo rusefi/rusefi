@@ -1,5 +1,5 @@
 
-[Doxygen](https://rusefi.com/docs/html/)
+[Doxygen](https://rusefi.com/docs/html/) <<< landing page has best implementation introduction.
 
 [Q&A on source code](https://rusefi.com/forum/viewtopic.php?f=5&t=10)
 
