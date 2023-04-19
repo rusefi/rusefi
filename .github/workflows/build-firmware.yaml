@@ -272,7 +272,7 @@ jobs:
           - build-target: proteus_f7_hardware_QC_special_build
             folder: config/boards/proteus
             ini-file: rusefi_proteus_f7.ini
-            skip-rate: 90
+            skip-rate: 0
 
           - build-target: proteus_h7
             folder: config/boards/proteus
