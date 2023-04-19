@@ -5,9 +5,8 @@ static constexpr float geometricMean(float x, float y) {
 }
 
 GearDetector::GearDetector()
-	: StoredValueSensor(SensorType::DetectedGear, MS2NT(100))
+	: Sensor(SensorType::DetectedGear)
 {
-	Register();
 }
 
 GearDetector::~GearDetector() {
@@ -48,14 +47,15 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 
 		m_gearThresholds[i] = geometricMean(gearI, gearIplusOne);
 	}
+
+	Register();
 }
 
 void GearDetector::onSlowCallback() {
 	float ratio = computeGearboxRatio();
 	m_gearboxRatio = ratio;
 
-	auto gear = determineGearFromRatio(ratio);
-	setValidValue(gear, getTimeNowNt());
+	m_currentGear = determineGearFromRatio(ratio);
 }
 
 size_t GearDetector::determineGearFromRatio(float ratio) const {
@@ -134,4 +134,14 @@ float GearDetector::getRpmInGear(size_t gear) const {
 
 float GearDetector::getGearboxRatio() const {
 	return m_gearboxRatio;
+}
+
+SensorResult GearDetector::get() const {
+	return m_currentGear;
+}
+
+void GearDetector::showInfo(const char* sensorName) const {
+	efiPrintf("Sensor \"%s\" is gear detector.", sensorName);
+	efiPrintf("    Gearbox ratio: %.3f", m_gearboxRatio);
+	efiPrintf("    Detected gear: %d", m_currentGear);
 }
