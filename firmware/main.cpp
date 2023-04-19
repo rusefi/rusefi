@@ -2,6 +2,8 @@
  * @file	main.cpp
  * @brief C++ main entry point
  *
+ * See rusefi.cpp for implementation details notes.
+ *
  * @date Nov 29, 2012
  * @author Andrey Belomutskiy, (c) 2012-2023
  *      http://rusefi.com/
