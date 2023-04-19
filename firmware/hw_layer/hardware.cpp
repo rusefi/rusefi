@@ -567,8 +567,6 @@ void initHardware() {
 	initCan();
 #endif /* EFI_CAN_SUPPORT */
 
-//	init_adc_mcp3208(&adcState, &SPID2);
-//	requestAdcValue(&adcState, 0);
 
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	turnOnTriggerInputPins();
