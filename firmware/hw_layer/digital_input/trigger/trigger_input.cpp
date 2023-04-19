@@ -193,9 +193,6 @@ void onEcuStartDoSomethingTriggerInputPins() {
 		// if we do not have primary input channel maybe it's BCM mode and we inject RPM value via Lua?
 		engine->rpmCalculator.unregister();
 	}
-
-	// then we will enable all the changed pins
-	startTriggerInputPins();
 #endif /* EFI_PROD_CODE */
 }
 
