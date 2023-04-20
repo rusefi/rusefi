@@ -51,16 +51,15 @@ canRxAdd(0x500)
 
 function onCanRx(bus, id, dlc, data)
   --print('got CAN id=' .. id .. ' dlc='  .. dlc)
-  id11 = id % 2048
 
-  if id11 == 0x500 then --Check can state of BCM
+  if id == 0x500 then --Check can state of BCM
     canState = data[1]
     if canState == 01 then
       packet502[1] = 0x01
     else
       packet502[1] = 0x00
     end
-    if id11 == 0x570 then
+    if id == 0x570 then
       curState = data[1]
       if curState == 06 then -- Cranking TODO: MUST ONLY DO THIS ON RPM TILL STARt
         packet542[2] =  0x82

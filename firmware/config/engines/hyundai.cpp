@@ -28,7 +28,6 @@ canRxAdd(0x4f0)
 packet4f1 = { 0xFA, 0x54, 0x00, 0x0, 0x00, 0x51, 0x00, 0x00 }
 
 function onCanRx(bus, id, dlc, data)
-	id11 = id % 2048
 	print('got CAN id=' .. id .. ' dlc='  .. dlc)
 	-- todo: add filtering logic if needed
 
