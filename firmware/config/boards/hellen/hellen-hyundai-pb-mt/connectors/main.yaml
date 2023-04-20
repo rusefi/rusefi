@@ -97,7 +97,7 @@ pins:
     class: outputs
     function: HPFP High Fuel Pressure Valve Negative
 
-  - pin: A51
+  - pin: A50
     class: outputs
     ts_name: ETB_OUT+
     function: +ETB_OUT
