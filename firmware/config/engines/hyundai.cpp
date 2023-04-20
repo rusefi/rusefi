@@ -8,6 +8,7 @@
 #include "pch.h"
 
 #include "hyundai.h"
+#include "proteus_meta.h"
 
 void setHyundaiPb() {
 	engineConfiguration->specs.cylindersCount = 4;
@@ -15,6 +16,12 @@ void setHyundaiPb() {
 	engineConfiguration->specs.displacement = 1.6;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Gamma");
+}
+
+void setProteusHyundaiPb() {
+	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
+	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_1;
+	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
 }
 
 static void commonGenesisCoupe() {

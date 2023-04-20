@@ -782,7 +782,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
         proteusDcWastegateTest();
         break;
     case PROTEUS_HYUNDAI_PB:
-        setHyundaiPb();
+        setProteusHyundaiPb();
 		break;
     case PROTEUS_NISSAN_VQ35:
         setProteusNissanVQ();
