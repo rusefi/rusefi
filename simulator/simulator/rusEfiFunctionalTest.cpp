@@ -108,7 +108,7 @@ void rusEfiFunctionalTest(void) {
 
     commonEarlyInit();
 
-	enableTriggerStimulator();
+	enableTriggerStimulator(false);
 
 	initStatusLoop();
 
