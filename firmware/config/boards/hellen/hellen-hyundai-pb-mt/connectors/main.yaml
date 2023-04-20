@@ -272,7 +272,7 @@ pins:
     function: LIN bus
 
   - pin: K62
-    function: CAN bus No2 low
+    function: CAN bus No2 low UNUSED?
     type: can
   - pin: K63
     function: CAN bus low
@@ -324,7 +324,7 @@ pins:
     function: Immo Data
 
   - pin: K84
-    function: CAN bus No2 high
+    function: CAN bus No2 high UNUSED?
     type: can
   - pin: K85
     function: CAN bus high
@@ -366,6 +366,7 @@ pins:
 
 
 info:
+  board_url: https://github.com/rusefi/rusefi/wiki/Hellen-Hyundai-PB
   directory: hellen/hellen-hyundai-pb-mt
   title: Hellen Hyundai PB MT
   image:
@@ -564,7 +565,7 @@ info:
     - pin: K61
       x: 3011
       y: 342
-    - pin: K62c
+    - pin: K62
       x: 3086
       y: 342
     - pin: K63
