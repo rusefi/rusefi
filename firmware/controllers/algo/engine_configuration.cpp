@@ -116,6 +116,7 @@
  *
  * todo: place this field next to 'engineConfiguration'?
  */
+static bool hasRememberedConfiguration = false;
 #if EFI_ACTIVE_CONFIGURATION_IN_FLASH
 #include "flash_int.h"
 engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
@@ -132,6 +133,7 @@ void rememberCurrentConfiguration() {
 #else
 	isActiveConfigurationVoid = false;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+    hasRememberedConfiguration = true;
 }
 
 static void wipeString(char *string, int size) {
@@ -164,6 +166,9 @@ __attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*
  * See preCalculate which is invoked BOTH on start and configuration change
  */
 void incrementGlobalConfigurationVersion() {
+    if (!hasRememberedConfiguration) {
+        firmwareError(OBD_PCM_Processor_Fault, "too early to invoke incrementGlobalConfigurationVersion");
+    }
 	engine->globalConfigurationVersion++;
 #if EFI_DEFAILED_LOGGING
 	efiPrintf("set globalConfigurationVersion=%d", globalConfigurationVersion);

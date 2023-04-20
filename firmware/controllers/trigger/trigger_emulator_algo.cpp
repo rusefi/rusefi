@@ -172,11 +172,13 @@ static void startSimulatedTriggerSignal() {
 
 // self-stimulation
 // see below for trigger output generator
-void enableTriggerStimulator() {
+void enableTriggerStimulator(bool incGlobalConfiguration) {
 	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = true;
     engine->rpmCalculator.Register();
-    incrementGlobalConfigurationVersion();
+    if (incGlobalConfiguration) {
+        incrementGlobalConfigurationVersion();
+    }
 }
 
 // start generating trigger signal on physical outputs

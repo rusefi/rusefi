@@ -17,7 +17,7 @@ void setTriggerEmulatorRPM(int value);
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration);
 
 // Start & stop trigger emulation
-void enableTriggerStimulator();
+void enableTriggerStimulator(bool incGlobalConfiguration = true);
 void enableExternalTriggerStimulator();
 void disableTriggerStimulator();
 
