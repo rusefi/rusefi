@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Apr 20 00:48:48 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Apr 20 01:00:20 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -351,6 +351,7 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_HARLEY = 6;
 	public static final int engine_type_e_PROTEUS_HONDA_K = 90;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
+	public static final int engine_type_e_PROTEUS_HYUNDAI_PB = 104;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
 	public static final int engine_type_e_PROTEUS_M111 = 17;
 	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
