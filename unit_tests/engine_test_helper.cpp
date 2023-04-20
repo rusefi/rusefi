@@ -340,7 +340,7 @@ void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, e
 void EngineTestHelper::applyTriggerWaveform() {
 	engine.updateTriggerWaveform();
 
-	incrementGlobalConfigurationVersion();
+	incrementGlobalConfigurationVersion("helper");
 }
 
 // todo: open question if this is worth a helper method or should be inlined?
