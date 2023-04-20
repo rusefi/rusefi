@@ -40,7 +40,7 @@ void setDefaultBasePins();
 void setDefaultSdCardParameters();
 
 void onBurnRequest();
-void incrementGlobalConfigurationVersion();
+void incrementGlobalConfigurationVersion(const char * msg = "undef");
 
 void commonFrankensoAnalogInputs();
 void setFrankenso0_1_joystick();

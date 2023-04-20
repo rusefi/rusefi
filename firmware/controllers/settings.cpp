@@ -1149,7 +1149,7 @@ void setEngineType(int value) {
 		writeToFlashNow();
 #endif // EFI_INTERNAL_FLASH
 	}
-	incrementGlobalConfigurationVersion();
+	incrementGlobalConfigurationVersion("engineType");
 #if ! EFI_UNIT_TEST
 	doPrintConfiguration();
 #endif // ! EFI_UNIT_TEST

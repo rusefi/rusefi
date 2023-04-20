@@ -177,7 +177,7 @@ void enableTriggerStimulator(bool incGlobalConfiguration) {
 	engine->triggerCentral.directSelfStimulation = true;
     engine->rpmCalculator.Register();
     if (incGlobalConfiguration) {
-        incrementGlobalConfigurationVersion();
+        incrementGlobalConfigurationVersion("trgSim");
     }
 }
 
@@ -186,14 +186,14 @@ void enableTriggerStimulator(bool incGlobalConfiguration) {
 void enableExternalTriggerStimulator() {
 	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = false;
-    incrementGlobalConfigurationVersion();
+    incrementGlobalConfigurationVersion("extTrg");
 }
 
 void disableTriggerStimulator() {
 	engine->triggerCentral.directSelfStimulation = false;
 	triggerEmulatorSignal.stop();
 	hasInitTriggerEmulator = false;
-    incrementGlobalConfigurationVersion();
+    incrementGlobalConfigurationVersion("disTrg");
 }
 
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {

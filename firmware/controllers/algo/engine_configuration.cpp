@@ -152,7 +152,7 @@ static void wipeStrings() {
 void onBurnRequest() {
 	wipeStrings();
 
-	incrementGlobalConfigurationVersion();
+	incrementGlobalConfigurationVersion("burn");
 }
 
 // Weak link a stub so that every board doesn't have to implement this function
@@ -165,9 +165,9 @@ __attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*
  * this method is NOT currently invoked on ECU start - actual user input has to happen!
  * See preCalculate which is invoked BOTH on start and configuration change
  */
-void incrementGlobalConfigurationVersion() {
+void incrementGlobalConfigurationVersion(const char * msg) {
     if (!hasRememberedConfiguration) {
-        firmwareError(OBD_PCM_Processor_Fault, "too early to invoke incrementGlobalConfigurationVersion");
+        firmwareError(OBD_PCM_Processor_Fault, "too early to invoke incrementGlobalConfigurationVersion %s", msg);
     }
 	engine->globalConfigurationVersion++;
 #if EFI_DEFAILED_LOGGING
