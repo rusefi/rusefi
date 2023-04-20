@@ -21,7 +21,7 @@ void setHyundaiPb() {
 void setProteusHyundaiPb() {
 	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_1;
-	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
+	engineConfiguration->camInputs[1] = PROTEUS_DIGITAL_2;
 }
 
 static void commonGenesisCoupe() {
