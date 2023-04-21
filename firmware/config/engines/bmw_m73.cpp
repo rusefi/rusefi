@@ -271,10 +271,8 @@ void setEngineBMW_M73_Proteus() {
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_4;
 
 
-	// Gpio::E0:  "Lowside 14"
-	engineConfiguration->starterControlPin = Gpio::E0;
-	// Gpio::E12: "Digital 3"
-	engineConfiguration->startStopButtonPin = Gpio::E12;
+	engineConfiguration->starterControlPin = PROTEUS_LS_14;
+	engineConfiguration->startStopButtonPin = PROTEUS_DIGITAL_3;
 	engineConfiguration->startStopButtonMode = PI_PULLUP;
 
 	// tps and pps

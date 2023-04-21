@@ -16,12 +16,24 @@ void setHyundaiPb() {
 	engineConfiguration->specs.displacement = 1.6;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Gamma");
+
+	engineConfiguration->globalTriggerAngleOffset = 90;
+
+    engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 }
 
 void setProteusHyundaiPb() {
 	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_1;
 	engineConfiguration->camInputs[1] = PROTEUS_DIGITAL_2;
+
+	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
+	setPPSInputs(PROTEUS_IN_PPS, PROTEUS_IN_PPS2);
+
+
+//	engineConfiguration->starterControlPin = PROTEUS_LS_14;
+	engineConfiguration->startStopButtonPin = PROTEUS_DIGITAL_3;
+	engineConfiguration->startStopButtonMode = PI_PULLUP;
 }
 
 static void commonGenesisCoupe() {
