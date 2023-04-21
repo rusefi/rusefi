@@ -7,6 +7,9 @@
 
 #pragma once
 
+// not directly related but often used together
+#include "defaults.h"
+
 #define PROTEUS_DEFAULT_AT_PULLUP 2700
 
 #define PROTEUS_LS_1 Gpio::D7
