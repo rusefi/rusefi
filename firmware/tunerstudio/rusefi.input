@@ -289,6 +289,9 @@ enable2ndByteCanID = false
 	requiresPowerCycle = auxSerialRxPin
 	requiresPowerCycle = auxSerialTxPin
 
+	requiresPowerCycle = startStopButtonPin
+	requiresPowerCycle = startStopButtonMode
+
 	requiresPowerCycle = enableAemXSeries
 
 	requiresPowerCycle = etb_use_two_wires
