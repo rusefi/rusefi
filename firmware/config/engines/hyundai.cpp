@@ -32,8 +32,8 @@ void setProteusHyundaiPb() {
 
 
 //	engineConfiguration->starterControlPin = PROTEUS_LS_14;
-	engineConfiguration->startStopButtonPin = PROTEUS_DIGITAL_3;
-	engineConfiguration->startStopButtonMode = PI_PULLUP;
+	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
+	engineConfiguration->startStopButtonMode = PI_DEFAULT;
 }
 
 static void commonGenesisCoupe() {
