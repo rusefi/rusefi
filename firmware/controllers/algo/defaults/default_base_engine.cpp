@@ -44,12 +44,12 @@ void setDefaultBaseEngine() {
 	engineConfiguration->failedMapFallback = 60;
 	engineConfiguration->enableMapEstimationTableFallback = false;
 
-	engineConfiguration->totalGearsCount = 5;
-	engineConfiguration->gearRatio[0] = 3.35f;
-	engineConfiguration->gearRatio[1] = 1.99f;
-	engineConfiguration->gearRatio[2] = 1.33f;
-	engineConfiguration->gearRatio[3] = 1.00f;
-	engineConfiguration->gearRatio[4] = 0.72f;
+//	engineConfiguration->totalGearsCount = 5;
+//	engineConfiguration->gearRatio[0] = 3.35f;
+//	engineConfiguration->gearRatio[1] = 1.99f;
+//	engineConfiguration->gearRatio[2] = 1.33f;
+//	engineConfiguration->gearRatio[3] = 1.00f;
+//	engineConfiguration->gearRatio[4] = 0.72f;
 
 	engineConfiguration->ALSMinRPM = 400;
 	engineConfiguration->ALSMaxRPM = 3200;
