@@ -3,8 +3,8 @@ setTickRate(300)
 
 timeout = 3000
 
---rpmSensor = Sensor.new("rpm")
---rpmSensor : setTimeout(timeout)
+rpmSensor = Sensor.new("rpm")
+rpmSensor : setTimeout(timeout)
 
 ppsSensor = Sensor.new("AcceleratorPedal")
 ppsSensor : setTimeout(timeout)
@@ -53,7 +53,7 @@ function onPOWERTRAIN_DATA(bus, id, dlc, data)
     ppsSensor : set(ppsValue)
 
     rpmValue = getTwoBytesMSB(data, 2, 1)
-    --rpmSensor : set(rpmValue)
+    rpmSensor : set(rpmValue)
 --     print('onPOWERTRAIN_DATA ' .. rpmValue .. ' pedal ' .. ppsValue)
 end
 
