@@ -23,7 +23,7 @@ expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
 			return 0x01F0; /* BMW e46 ABS Message */
 		case W202:
 			return 0x0200; /* W202 C180 ABS signal */
-		case LUA
+		case LUA:
 		    return 0; // a bit of a hack
 		default:
 			firmwareError(OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
