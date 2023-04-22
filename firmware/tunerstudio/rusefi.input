@@ -2057,19 +2057,19 @@ cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@@@ts
 ; MAZDA_MIATA_2003 = 47
 cmd_set_engine_type_Frankenso_Miata_NB2			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
-cmd_set_engine_type_Proteus_M73						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
-cmd_set_engine_type_PROTEUS_VW_B6					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
-cmd_set_engine_type_PROTEUS_GM_LS_4				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_GM_LS_4_16_hex@@"
-cmd_set_engine_type_PROTEUS_HONDA_K					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_K_16_hex@@"
-cmd_set_engine_type_PROTEUS_HONDA_OBD2A				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
-cmd_set_engine_type_PROTEUS_MIATA_NB2				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
-cmd_set_engine_type_Proteus_Miata_TCU				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
-cmd_set_engine_type_PROTEUS_LUA_DEMO				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"
-cmd_set_engine_type_PROTEUS_HARLEY					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HARLEY_16_hex@@"
-cmd_set_engine_type_PROTEUS_NISSAN_VQ35				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_NISSAN_VQ35_16_hex@@"
-cmd_set_engine_type_PROTEUS_HYUNDAI_PB				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HYUNDAI_PB_16_hex@@"
-cmd_set_engine_type_PROTEUS_SBC	        			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_SBC_16_hex@@"
-cmd_set_engine_type_PROTEUS_M111    				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_M111_16_hex@@"
+cmd_set_engine_type_Proteus_M73						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_VW_B6					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_VW_B6_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_GM_LS_4				    = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_GM_LS_4_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_HONDA_K					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_K_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_HONDA_OBD2A				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_MIATA_NB2				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_Proteus_Miata_TCU				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_LUA_DEMO				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_HARLEY					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HARLEY_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_NISSAN_VQ35				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_NISSAN_VQ35_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_HYUNDAI_PB				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HYUNDAI_PB_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_SBC	        			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_SBC_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_M111    				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_M111_16_hex@@"@@if_show_Proteus_presets
 
 cmd_set_engine_type_ALPHAX_8CHAN_SBC       			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_ALPHAX_8CHAN_SBC_16_hex@@"
 
