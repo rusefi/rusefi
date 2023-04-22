@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 13 02:33:40 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 12:33:22 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -743,6 +743,9 @@ public class TsOutputs {
 	public static final Field TRIGGERCHANNEL1 = Field.create("TRIGGERCHANNEL1", 612, FieldType.BIT, 24).setBaseOffset(0);
 	public static final Field TRIGGERCHANNEL2 = Field.create("TRIGGERCHANNEL2", 612, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field VVTCHANNEL1 = Field.create("VVTCHANNEL1", 612, FieldType.BIT, 26).setBaseOffset(0);
+	public static final Field VVTCHANNEL2 = Field.create("VVTCHANNEL2", 612, FieldType.BIT, 27).setBaseOffset(0);
+	public static final Field VVTCHANNEL3 = Field.create("VVTCHANNEL3", 612, FieldType.BIT, 28).setBaseOffset(0);
+	public static final Field VVTCHANNEL4 = Field.create("VVTCHANNEL4", 612, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field OUTPUTREQUESTPERIOD = Field.create("OUTPUTREQUESTPERIOD", 616, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field MAPFAST = Field.create("MAPFAST", 620, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field LUAGAUGES1 = Field.create("LUAGAUGES1", 624, FieldType.FLOAT).setBaseOffset(0);
@@ -1222,6 +1225,9 @@ public class TsOutputs {
 	TRIGGERCHANNEL1,
 	TRIGGERCHANNEL2,
 	VVTCHANNEL1,
+	VVTCHANNEL2,
+	VVTCHANNEL3,
+	VVTCHANNEL4,
 	OUTPUTREQUESTPERIOD,
 	MAPFAST,
 	LUAGAUGES1,

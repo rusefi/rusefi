@@ -712,6 +712,15 @@ float getOutputValueByName(const char *name) {
 // vvtChannel1
 		case -1764857649:
 			return engine->outputChannels.vvtChannel1;
+// vvtChannel2
+		case -1764857648:
+			return engine->outputChannels.vvtChannel2;
+// vvtChannel3
+		case -1764857647:
+			return engine->outputChannels.vvtChannel3;
+// vvtChannel4
+		case -1764857646:
+			return engine->outputChannels.vvtChannel4;
 // outputRequestPeriod
 		case 1894184322:
 			return engine->outputChannels.outputRequestPeriod;

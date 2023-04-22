@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 13 02:33:40 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 12:33:22 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1328,19 +1328,19 @@ struct output_channels_s {
 	bool vvtChannel1 : 1 {};
 	/**
 	offset 612 bit 27 */
-	bool unusedBit_298_27 : 1 {};
+	bool vvtChannel2 : 1 {};
 	/**
 	offset 612 bit 28 */
-	bool unusedBit_298_28 : 1 {};
+	bool vvtChannel3 : 1 {};
 	/**
 	offset 612 bit 29 */
-	bool unusedBit_298_29 : 1 {};
+	bool vvtChannel4 : 1 {};
 	/**
 	offset 612 bit 30 */
-	bool unusedBit_298_30 : 1 {};
+	bool unusedBit_301_30 : 1 {};
 	/**
 	offset 612 bit 31 */
-	bool unusedBit_298_31 : 1 {};
+	bool unusedBit_301_31 : 1 {};
 	/**
 	 * offset 616
 	 */
@@ -1383,4 +1383,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 776);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 13 02:33:40 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 12:33:22 UTC 2023
