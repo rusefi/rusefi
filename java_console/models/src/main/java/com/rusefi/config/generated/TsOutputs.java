@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 19:45:40 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 20:21:54 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -435,7 +435,7 @@ public class TsOutputs {
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field VEHICLESPEEDKPH = Field.create("VEHICLESPEEDKPH", 10, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDVEHICLESPEEDKPH = Field.create("UNUSEDVEHICLESPEEDKPH", 10, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field INTERNALMCUTEMPERATURE = Field.create("INTERNALMCUTEMPERATURE", 11, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field COOLANT = Field.create("COOLANT", 12, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field INTAKE = Field.create("INTAKE", 14, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -753,7 +753,7 @@ public class TsOutputs {
 	public static final Field RAWMAF2 = Field.create("RAWMAF2", 632, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field MAFMEASURED2 = Field.create("MAFMEASURED2", 634, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field SCHEDULINGUSEDCOUNT = Field.create("SCHEDULINGUSEDCOUNT", 636, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field TODOVSS = Field.create("TODOVSS", 638, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field VEHICLESPEEDKPH = Field.create("VEHICLESPEEDKPH", 638, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field UNUSEDATTHEEND1 = Field.create("UNUSEDATTHEEND1", 640, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDATTHEEND2 = Field.create("UNUSEDATTHEEND2", 641, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDATTHEEND3 = Field.create("UNUSEDATTHEEND3", 642, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -917,7 +917,7 @@ public class TsOutputs {
 	RPMVALUE,
 	RPMACCELERATION,
 	SPEEDTORPMRATIO,
-	VEHICLESPEEDKPH,
+	UNUSEDVEHICLESPEEDKPH,
 	INTERNALMCUTEMPERATURE,
 	COOLANT,
 	INTAKE,
@@ -1235,7 +1235,7 @@ public class TsOutputs {
 	RAWMAF2,
 	MAFMEASURED2,
 	SCHEDULINGUSEDCOUNT,
-	TODOVSS,
+	VEHICLESPEEDKPH,
 	UNUSEDATTHEEND1,
 	UNUSEDATTHEEND2,
 	UNUSEDATTHEEND3,
