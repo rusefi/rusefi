@@ -17,7 +17,13 @@ void setHyundaiPb() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Gamma");
 
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 60;
+	engineConfiguration->trigger.customSkippedToothCount = 1;
 	engineConfiguration->globalTriggerAngleOffset = 90;
+
+	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
 
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 }
