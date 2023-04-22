@@ -146,6 +146,7 @@ pins:
 
   - pin: K8
     function: Downstream O2 Ground
+    type: gnd
 
 
   - pin: K9
@@ -310,6 +311,7 @@ pins:
     color: brown
 
   - pin: K78
+    type: gnd
     function: Map Ground
 
   - pin: K79
