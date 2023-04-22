@@ -235,6 +235,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_TEMPERATURE 100
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_MS 300
+#define PACK_MULT_VSS 100
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_LAMBDA 10000
 #define PACK_MULT_ANGLE 50
