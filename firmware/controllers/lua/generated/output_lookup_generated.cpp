@@ -82,9 +82,6 @@ float getOutputValueByName(const char *name) {
 // speedToRpmRatio
 		case -685727673:
 			return engine->outputChannels.speedToRpmRatio;
-// vehicleSpeedKph
-		case -1925174695:
-			return engine->outputChannels.vehicleSpeedKph;
 // internalMcuTemperature
 		case -871891659:
 			return engine->outputChannels.internalMcuTemperature;
@@ -736,6 +733,9 @@ float getOutputValueByName(const char *name) {
 // schedulingUsedCount
 		case 967311941:
 			return engine->outputChannels.schedulingUsedCount;
+// vehicleSpeedKph
+		case -1925174695:
+			return engine->outputChannels.vehicleSpeedKph;
 // totalFuelCorrection
 		case -1779658835:
 			return engine->fuelComputer.totalFuelCorrection;
