@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 16:18:49 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 19:04:22 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -154,7 +154,7 @@ struct output_channels_s {
 	kph
 	 * offset 10
 	 */
-	uint8_t unusedVehicleSpeedKph = (uint8_t)0;
+	uint8_t vehicleSpeedKph = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_CPU_TEMP@@
 	deg C
@@ -1370,15 +1370,9 @@ struct output_channels_s {
 	 */
 	uint16_t schedulingUsedCount = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_VVS@@
-	kph
 	 * offset 638
 	 */
-	scaled_channel<uint16_t, 100, 1> vehicleSpeedKph = (uint16_t)0;
-	/**
-	 * offset 640
-	 */
-	uint8_t unusedAtTheEnd[134];
+	uint8_t unusedAtTheEnd[136];
 	/**
 	 * need 4 byte alignment
 	units
@@ -1389,4 +1383,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 776);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 16:18:49 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 19:04:22 UTC 2023
