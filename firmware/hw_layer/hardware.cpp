@@ -230,7 +230,7 @@ void stopSpi(spi_device_e device) {
 
 /**
  * this method is NOT currently invoked on ECU start
- * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
+ * todo: reduce code duplication by moving more logic into startHardware method
  */
 
 void applyNewHardwareSettings() {
