@@ -357,6 +357,9 @@ bit injectorState12
 bit triggerChannel1
 bit triggerChannel2
 bit vvtChannel1
+bit vvtChannel2
+bit vvtChannel3
+bit vvtChannel4
 
 uint32_t outputRequestPeriod
 float mapFast
