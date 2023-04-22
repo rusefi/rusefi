@@ -974,6 +974,7 @@
 #define PACK_MULT_PRESSURE 30
 #define PACK_MULT_TEMPERATURE 100
 #define PACK_MULT_VOLTAGE 1000
+#define PACK_MULT_VSS 100
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PEDAL_TO_TPS_SIZE 8
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
@@ -1066,7 +1067,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 1132042551
+#define SIGNATURE_HASH 3413319376
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1360,7 +1361,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.04.22.kin.1132042551"
+#define TS_SIGNATURE "rusEFI master.2023.04.22.kin.3413319376"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
