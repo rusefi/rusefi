@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 19:04:22 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 19:45:40 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1370,17 +1370,16 @@ struct output_channels_s {
 	 */
 	uint16_t schedulingUsedCount = (uint16_t)0;
 	/**
+	kph
 	 * offset 638
 	 */
-	uint8_t unusedAtTheEnd[136];
+	scaled_channel<uint16_t, 100, 1> todoVss = (uint16_t)0;
 	/**
-	 * need 4 byte alignment
-	units
-	 * offset 774
+	 * offset 640
 	 */
-	uint8_t alignmentFill_at_774[2];
+	uint8_t unusedAtTheEnd[136];
 };
 static_assert(sizeof(output_channels_s) == 776);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 19:04:22 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 19:45:40 UTC 2023

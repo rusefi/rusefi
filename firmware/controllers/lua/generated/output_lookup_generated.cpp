@@ -736,6 +736,9 @@ float getOutputValueByName(const char *name) {
 // schedulingUsedCount
 		case 967311941:
 			return engine->outputChannels.schedulingUsedCount;
+// todoVss
+		case -278906793:
+			return engine->outputChannels.todoVss;
 // totalFuelCorrection
 		case -1779658835:
 			return engine->fuelComputer.totalFuelCorrection;
