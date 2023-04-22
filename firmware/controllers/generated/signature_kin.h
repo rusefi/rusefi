@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 3315562133
-#define TS_SIGNATURE "rusEFI master.2023.04.22.kin.3315562133"
+#define SIGNATURE_HASH 115061294
+#define TS_SIGNATURE "rusEFI master.2023.04.22.kin.115061294"
