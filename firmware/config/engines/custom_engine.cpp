@@ -688,6 +688,8 @@ void mreBCM() {
 }
 
 void mreSecondaryCan() {
+	engineConfiguration->triggerInputPins[0] = Gpio::Unassigned;
+
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
