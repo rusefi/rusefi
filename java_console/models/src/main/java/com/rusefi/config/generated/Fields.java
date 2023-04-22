@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 22 21:27:36 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 22 21:45:38 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -932,7 +932,7 @@ public class Fields {
 	public static final int PACK_MULT_PRESSURE = 30;
 	public static final int PACK_MULT_TEMPERATURE = 100;
 	public static final int PACK_MULT_VOLTAGE = 1000;
-	public static final int PACK_MULT_VSS = 100;
+	public static final int PACK_MULT_VSS = 1;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final int persistent_config_s_size = 22436;
 	public static final int pid_s_size = 20;
@@ -1010,6 +1010,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1136021944;
 	public static final int specs_s_size = 12;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1235,7 +1236,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.04.22.f407-discovery.3421217466";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.04.22.f407-discovery.1136021944";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1376;

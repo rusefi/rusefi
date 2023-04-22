@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sat Apr 22 21:26:38 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sat Apr 22 21:44:51 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -295,7 +295,7 @@ public class AntilagSystem {
 	public static final int PACK_MULT_PRESSURE = 30;
 	public static final int PACK_MULT_TEMPERATURE = 100;
 	public static final int PACK_MULT_VOLTAGE = 1000;
-	public static final int PACK_MULT_VSS = 100;
+	public static final int PACK_MULT_VSS = 1;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
 	public static final String PROTOCOL_COIL1_SHORT_NAME = "c1";

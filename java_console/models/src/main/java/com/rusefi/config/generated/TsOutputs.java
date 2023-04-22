@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 21:26:38 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 22 21:44:51 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -295,7 +295,7 @@ public class TsOutputs {
 	public static final int PACK_MULT_PRESSURE = 30;
 	public static final int PACK_MULT_TEMPERATURE = 100;
 	public static final int PACK_MULT_VOLTAGE = 1000;
-	public static final int PACK_MULT_VSS = 100;
+	public static final int PACK_MULT_VSS = 1;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
 	public static final String PROTOCOL_COIL1_SHORT_NAME = "c1";
@@ -754,7 +754,7 @@ public class TsOutputs {
 	public static final Field RAWMAF2 = Field.create("RAWMAF2", 632, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field MAFMEASURED2 = Field.create("MAFMEASURED2", 634, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field SCHEDULINGUSEDCOUNT = Field.create("SCHEDULINGUSEDCOUNT", 636, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field VEHICLESPEEDKPH = Field.create("VEHICLESPEEDKPH", 638, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field VEHICLESPEEDKPH = Field.create("VEHICLESPEEDKPH", 638, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDATTHEEND1 = Field.create("UNUSEDATTHEEND1", 640, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDATTHEEND2 = Field.create("UNUSEDATTHEEND2", 641, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDATTHEEND3 = Field.create("UNUSEDATTHEEND3", 642, FieldType.INT8).setScale(1.0).setBaseOffset(0);
