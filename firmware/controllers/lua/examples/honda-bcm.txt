@@ -1,0 +1,70 @@
+-- this controls onCanRx rate as well!
+setTickRate(300)
+
+timeout = 3000
+
+rpmSensor = Sensor.new("rpm")
+rpmSensor : setTimeout(timeout)
+
+ppsSensor = Sensor.new("AcceleratorPedal")
+ppsSensor : setTimeout(timeout)
+
+speedSensor = Sensor.new("VehicleSpeed")
+speedSensor : setTimeout(timeout)
+
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
+function getTwoBytesMSB(data, offset, factor)
+	return (data[offset + 1] * 256 + data[offset + 2]) * factor
+end
+
+function getTwoBytesLSB(data, offset, factor)
+	return (data[offset + 2] * 256 + data[offset + 1]) * factor
+end
+
+function onPOWERTRAIN_DATA(bus, id, dlc, data)
+--    print('onPOWERTRAIN_DATA ' ..arrayToString(data))
+
+    ppsValue = data[1] * 100.0 / 255
+    ppsSensor : set(ppsValue)
+
+    rpmValue = getTwoBytesMSB(data, 2, 1)
+    rpmSensor : set(rpmValue)
+     print('onPOWERTRAIN_DATA ' .. rpmValue .. rpmValue)
+end
+
+function onPOWERTRAIN_DATA(bus, id, dlc, data)
+    speedKph = getTwoBytesLSB(data, 1, 0.01)
+    print('onPOWERTRAIN_DATA ' .. speedKph)
+    speedSensor : set(speedKph)
+
+    print('onPOWERTRAIN_DATA ratio' .. (speedKph / rpmValue))
+
+end
+
+canRxAdd(1, 0x17C, onPOWERTRAIN_DATA)
+canRxAdd(1, 0x309, onCAR_SPEED)
