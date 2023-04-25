@@ -53,6 +53,14 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_1;
+	engineConfiguration->mafAdcChannel = EFI_ADC_11;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->clt.adcChannel = EFI_ADC_3;
+	engineConfiguration->iat.adcChannel = EFI_ADC_14;
+	engineConfiguration->triggerInputPins[0] = Gpio::B10;
 }
 
 static void setupVbatt() {
