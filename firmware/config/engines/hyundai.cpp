@@ -26,6 +26,12 @@ void setHyundaiPb() {
 	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
 
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+
+   	engineConfiguration->highPressureFuel.v1 = 0.5; /* volts */;
+   	engineConfiguration->highPressureFuel.value1 = 0;
+   	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
+   	// page 98, Fuel System > Engine Control System > Rail Pressure Sensor (RPS) > Specifications
+   	engineConfiguration->highPressureFuel.value2 = 20'000;
 }
 
 void setProteusHyundaiPb() {
