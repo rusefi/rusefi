@@ -276,10 +276,6 @@
 // Cypress uses a fake USB device that's just a plain channel
 #define SerialUSBDriver BaseChannel
 
-#define EFI_CONSOLE_TX_PORT GPIOA
-#define EFI_CONSOLE_TX_PIN 10
-#define EFI_CONSOLE_RX_PORT GPIOA
-#define EFI_CONSOLE_RX_PIN 11
 #define EFI_CONSOLE_AF 3
 
 #define TS_SERIAL_AF 2
