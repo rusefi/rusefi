@@ -107,16 +107,6 @@ static void commonPassatB6() {
 	}
 */
 
-	engineConfiguration->hpfpCamLobes = 3;
-	engineConfiguration->hpfpPumpVolume = 0.290;
-	engineConfiguration->hpfpMinAngle = 10;
-	engineConfiguration->hpfpActivationAngle = 30;
-	engineConfiguration->hpfpTargetDecay = 2000;
-	engineConfiguration->hpfpPidP = 0.01;
-	engineConfiguration->hpfpPidI = 0.0003;
-
-	engineConfiguration->hpfpPeakPos = 10;
-
 	setTable(config->veTable, 55);
 	setBoschVAGETB();
 

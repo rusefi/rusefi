@@ -21,6 +21,17 @@ void setLeftRightBanksNeedBetterName() {
     }
 }
 
+static void setDefaultHPFP() {
+	engineConfiguration->hpfpCamLobes = 3;
+	engineConfiguration->hpfpPumpVolume = 0.290;
+	engineConfiguration->hpfpMinAngle = 10;
+	engineConfiguration->hpfpActivationAngle = 30;
+	engineConfiguration->hpfpTargetDecay = 2000;
+	engineConfiguration->hpfpPidP = 0.01;
+	engineConfiguration->hpfpPidI = 0.0003;
+	engineConfiguration->hpfpPeakPos = 10;
+}
+
 void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->specs.cylindersCount = 4;
@@ -29,6 +40,8 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->compressionRatio = 9;
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
+
+    setDefaultHPFP();
 
 	engineConfiguration->turbochargerFilter = 0.01f;
 
