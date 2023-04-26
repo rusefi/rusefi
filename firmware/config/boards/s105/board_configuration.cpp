@@ -32,12 +32,14 @@ void setBoardDefaultConfiguration() {
 	setIgnitionPins();
 
 	// No LEDs on this board
-	engineConfiguration->communicationLedPin = Gpio::Unassigned;
+//todo: revert to reality	engineConfiguration->communicationLedPin = Gpio::Unassigned;
+	engineConfiguration->communicationLedPin = Gpio::E14;
 	engineConfiguration->runningLedPin = Gpio::Unassigned;
 	engineConfiguration->warningLedPin = Gpio::Unassigned;
 
-	engineConfiguration->malfunctionIndicatorPin = Gpio::E14;
-	engineConfiguration->malfunctionIndicatorPinMode = OM_OPENDRAIN;
+    engineConfiguration->malfunctionIndicatorPin = Gpio::Unassigned;
+//todo: revert to reality	engineConfiguration->malfunctionIndicatorPin = Gpio::E14;
+//	engineConfiguration->malfunctionIndicatorPinMode = OM_OPENDRAIN;
 	engineConfiguration->tachOutputPin = Gpio::B8;	/* not populated by default */
 	engineConfiguration->tachOutputPinMode = OM_OPENDRAIN;
 	//engineConfiguration->idle.solenoidPin = ?
