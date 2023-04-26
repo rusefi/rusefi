@@ -21,7 +21,8 @@ static void setInjectorPins() {
 static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[0] = Gpio::D13;
 	engineConfiguration->ignitionPins[1] = Gpio::D12;
-	engineConfiguration->ignitionPins[2] = Gpio::D15;
+//todo: revert to reality	engineConfiguration->ignitionPins[2] = Gpio::D15;
+	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::D14;
 
 	engineConfiguration->ignitionPinMode = OM_OPENDRAIN;
@@ -33,13 +34,12 @@ void setBoardDefaultConfiguration() {
 
 	// No LEDs on this board
 //todo: revert to reality	engineConfiguration->communicationLedPin = Gpio::Unassigned;
-	engineConfiguration->communicationLedPin = Gpio::E14;
+	engineConfiguration->communicationLedPin = Gpio::D15;
 	engineConfiguration->runningLedPin = Gpio::Unassigned;
 	engineConfiguration->warningLedPin = Gpio::Unassigned;
 
-    engineConfiguration->malfunctionIndicatorPin = Gpio::Unassigned;
-//todo: revert to reality	engineConfiguration->malfunctionIndicatorPin = Gpio::E14;
-//	engineConfiguration->malfunctionIndicatorPinMode = OM_OPENDRAIN;
+    engineConfiguration->malfunctionIndicatorPin = Gpio::E14;
+	engineConfiguration->malfunctionIndicatorPinMode = OM_OPENDRAIN;
 	engineConfiguration->tachOutputPin = Gpio::B8;	/* not populated by default */
 	engineConfiguration->tachOutputPinMode = OM_OPENDRAIN;
 	//engineConfiguration->idle.solenoidPin = ?
