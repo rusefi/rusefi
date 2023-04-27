@@ -1,14 +1,14 @@
 pins:
   - pin: A8
-    function: R (secord) LSU Heater- (white)
+    function: R (second) LSU Heater- (white)
     color: white
 
   - pin: A7
-    function: R LSU Ip (red)
+    function: R (second) LSU Ip (red)
     color: red
 
   - pin: A6
-    function: R LSU Un (black)
+    function: R (second) LSU Un (black)
     color: black
 
   - pin: A5
@@ -24,11 +24,11 @@ pins:
     color: red
 
   - pin: A2
-    function: L LSU Un (black)
+    function: L (first) LSU Un (black)
     color: black
 
   - pin: A1
-    function: L LSU Heater- (white)
+    function: L (first) LSU Heater- (white)
     color: white
 
   - pin: B8
@@ -36,11 +36,11 @@ pins:
     class: outputs
 
   - pin: B7
-    function: R LSU Vm (yellow)
+    function: R (second) LSU Vm (yellow)
     color: yellow
 
   - pin: B6
-    function: R LSU Rtrim (green)
+    function: R (second) LSU Rtrim (green)
     color: green
 
   - pin: B5
@@ -50,11 +50,11 @@ pins:
     function: AUX analog out 2
 
   - pin: B3
-    function: L LSU Vm (yellow)
+    function: L (first) LSU Vm (yellow)
     color: yellow
 
   - pin: B2
-    function: L LSU Rtrim (green)
+    function: L (first) LSU Rtrim (green)
     color: green
 
   - pin: B1
