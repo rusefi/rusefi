@@ -68,8 +68,8 @@ void setMreM111EngineConfiguration() {
     setM111EngineConfiguration();
 
 #if HW_MICRO_RUSEFI
-	engineConfiguration->fuelPumpPin = H144_OUT_PWM2; // more or less MRE default
-	engineConfiguration->fanPin = H144_OUT_PWM4; // more or less MRE default
+	engineConfiguration->fuelPumpPin = MRE_GPOUT_1; // more or less MRE default
+	engineConfiguration->fanPin = MRE_GPOUT_2; // more or less MRE default
     setPPSInputs(MRE_IN_PPS, MRE_IN_PPS2);
     setTPS1Inputs(MRE_IN_TPS, MRE_IN_TPS2);
 
