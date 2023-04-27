@@ -1,0 +1,27 @@
+pins:
+  - pin: A1
+    function: GND
+    type: gnd
+  - pin: A6
+    function: 12v raw
+
+
+  - pin: A12
+    function: 5v
+
+info:
+  directory: hellen/hellen154hyundai
+  title: Hellen 154 Hyundai
+  image:
+    file: 154hyundaiAUX.jpg
+  pins:
+    - pin: A1
+      x: 77
+      y: 75
+    - pin: A6
+      x: 418
+      y: 75
+
+    - pin: A12
+      x: 418
+      y: 141
