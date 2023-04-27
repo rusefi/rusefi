@@ -178,17 +178,17 @@ void setBoardDefaultConfiguration() {
 	// todo: maybe even set EFI_MAIN_RELAY_CONTROL to FALSE for MRE configuration
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21
 	// Gpio::TLE8888_PIN_21: "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_21;
+	engineConfiguration->fuelPumpPin = MRE_GPOUT_1;
 
 //	engineConfiguration->isSdCardEnabled = true;
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// Gpio::E10: "3 - Lowside 2"
-	engineConfiguration->idle.solenoidPin = Gpio::TLE8888_PIN_5;
+	engineConfiguration->idle.solenoidPin = MRE_LS_2;
 
 
 	// Gpio::TLE8888_PIN_22: "34 - GP Out 2"
-	engineConfiguration->fanPin = Gpio::TLE8888_PIN_22;
+	engineConfiguration->fanPin = MRE_GPOUT_2;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
