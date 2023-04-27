@@ -165,8 +165,8 @@ pins:
 
   - pin: C4
     # H144_IN_VSS
-    id: F11
-    class: switch_inputs
+    id: [F11, F11]
+    class: [event_inputs, switch_inputs]
     function: 2Step Digital Input
     type: hall
     ts_name: C4 - 2Step/Digital
