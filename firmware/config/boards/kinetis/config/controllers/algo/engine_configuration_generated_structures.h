@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Apr 12 15:42:22 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Apr 27 13:45:46 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2606,6 +2606,7 @@ struct engine_configuration_s {
 	offset 1372 bit 3 */
 	bool complexWallModel : 1 {};
 	/**
+	 * RPM is measured based on last 720 degrees while instant RPM is measured based on the last 90 degrees of crank revolution
 	offset 1372 bit 4 */
 	bool alwaysInstantRpm : 1 {};
 	/**
@@ -5335,4 +5336,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22436);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Apr 12 15:42:22 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Apr 27 13:45:46 UTC 2023

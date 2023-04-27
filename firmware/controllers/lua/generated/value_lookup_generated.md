@@ -812,7 +812,7 @@ When enabled if TPS is held above 95% no fuel is injected while cranking to clea
 Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
 
 ### alwaysInstantRpm
-
+RPM is measured based on last 720 degrees while instant RPM is measured based on the last 90 degrees of crank revolution
 
 ### isMapAveragingEnabled
 
