@@ -1076,7 +1076,7 @@ custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Ope
 	bit isIgnitionEnabled
 	bit isCylinderCleanupEnabled;When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
 	bit complexWallModel,"Advanced (tables)","Basic (constants)";Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
-	bit alwaysInstantRpm
+	bit alwaysInstantRpm;RPM is measured based on last 720 degrees while instant RPM is measured based on the last 90 degrees of crank revolution
 	bit isMapAveragingEnabled
 	bit overrideCrankingIacSetting;If enabled, use separate temperature multiplier table for cranking idle position.\nIf disabled, use normal running multiplier table applied to the cranking base position.
 	bit useSeparateAdvanceForIdle;This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed.
