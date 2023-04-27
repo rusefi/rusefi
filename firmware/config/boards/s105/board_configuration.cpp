@@ -56,6 +56,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
+    engineConfiguration->verboseCan = true;
+
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_1;
 	engineConfiguration->mafAdcChannel = EFI_ADC_11;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
