@@ -54,6 +54,7 @@ BO_ 512 BASE0: 8 Vector__XXX
  SG_ FuelPumpAct : 34|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ CELAct : 35|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ EGOHeatAct : 36|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ CurrentGear : 40|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 513 BASE1: 8 Vector__XXX
  SG_ RPM : 0|16@1+ (1,0) [0|0] "RPM" Vector__XXX
@@ -64,9 +65,10 @@ BO_ 513 BASE1: 8 Vector__XXX
  SG_ FlexPct : 56|8@1+ (1,0) [0|100] "%" Vector__XXX
 
 BO_ 514 BASE2: 8 Vector__XXX
- SG_ PPS : 0|16@1- (0.01,0) [0|0] "%" Vector__XXX
- SG_ TPS1 : 16|16@1- (0.01,0) [0|0] "%" Vector__XXX
- SG_ TPS2 : 32|16@1- (0.01,0) [0|0] "%" Vector__XXX
+ SG_ PPS : 0|16@1- (0.01,0) [0|100] "%" Vector__XXX
+ SG_ TPS1 : 16|16@1- (0.01,0) [0|100] "%" Vector__XXX
+ SG_ TPS2 : 32|16@1- (0.01,0) [0|100] "%" Vector__XXX
+ SG_ Wastegate : 48|16@1- (0.01,0) [0|100] "%" Vector__XXX
 
 BO_ 515 BASE3: 8 Vector__XXX
  SG_ MAP : 0|16@1+ (0.03333333,0) [0|0] "kPa" Vector__XXX
@@ -121,6 +123,7 @@ CM_ SG_ 512 MainRelayAct "Main Relay Active";
 CM_ SG_ 512 FuelPumpAct "Fuel Pump Output Active";
 CM_ SG_ 512 CELAct "Check Engine Light Active";
 CM_ SG_ 512 EGOHeatAct "EGO Heater Commanded On";
+CM_ SG_ 512 CurrentGear "Current detected gear. 0 means neutral, 1 means first, etc.";
 CM_ SG_ 513 RPM "Current RPM";
 CM_ SG_ 513 IgnitionTiming "Current Ignition Timing. Positive is advance.";
 CM_ SG_ 513 InjDuty "Injection Duty
@@ -128,10 +131,12 @@ CM_ SG_ 513 InjDuty "Injection Duty
 CM_ SG_ 513 IgnDuty "Ignition Duty";
 CM_ SG_ 513 VehicleSpeed "Current Vehicle Speed";
 CM_ SG_ 513 FlexPct "Ethanol percent";
+CM_ BO_ 514 "Throttle positions";
 CM_ SG_ 514 PPS "Current Accelerator Pedal Position
 ";
 CM_ SG_ 514 TPS1 "Throttle Body 1 Position";
 CM_ SG_ 514 TPS2 "Throttle Body 2 Position";
+CM_ SG_ 514 Wastegate "Wastegate actuator position";
 CM_ SG_ 515 MAP "Current MAP Reading";
 CM_ SG_ 515 CoolantTemp "Current Coolant Temperature Reading";
 CM_ SG_ 515 IntakeTemp "Current Intake Air Temperature";
