@@ -32,7 +32,9 @@ struct Status {
 	uint8_t pad7 : 1;
 	uint8_t pad8 : 1;
 
-	uint8_t pad[3];
+	uint8_t gear;
+
+	uint8_t pad[2];
 };
 
 static void populateFrame(Status& msg) {
@@ -44,6 +46,8 @@ static void populateFrame(Status& msg) {
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
+
+	msg.gear = Sensor::getOrZero(SensorType::DetectedGear);
 }
 
 struct Speeds {
@@ -74,7 +78,7 @@ struct PedalAndTps {
 	scaled_percent pedal;
 	scaled_percent tps1;
 	scaled_percent tps2;
-	uint8_t pad[2];
+	scaled_percent wastegate;
 };
 
 static void populateFrame(PedalAndTps& msg)
@@ -82,6 +86,7 @@ static void populateFrame(PedalAndTps& msg)
 	msg.pedal = Sensor::get(SensorType::AcceleratorPedal).value_or(-1);
 	msg.tps1 = Sensor::get(SensorType::Tps1).value_or(-1);
 	msg.tps2 = Sensor::get(SensorType::Tps2).value_or(-1);
+	msg.wastegate = Sensor::get(SensorType::WastegatePosition).value_or(-1);
 }
 
 struct Sensors1 {
