@@ -4,19 +4,7 @@
  * Handles injection scheduling
  */
 
-#include "global.h"
-#include <rusefi/arrays.h>
-#include <rusefi/isnan.h>
-#include "fuel_schedule.h"
-#include "event_registry.h"
-#include "fuel_schedule.h"
-#include "trigger_decoder.h"
-#include "engine_math.h"
-
-// dependency injection
-#include "engine_state.h"
-#include "rpm_calculator_api.h"
-// end of injection
+#include "pch.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -137,6 +125,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 	}
 
 	injection_mode_e mode = getCurrentInjectionMode();
+	engine->outputChannels.currentInjectionMode = static_cast<uint8_t>(mode);
 
 	// We need two outputs if:
 	// - we are running batch fuel, and have "use two wire batch" enabled
