@@ -280,6 +280,8 @@ void runRusEfiWithConfig() {
 		 */
 		initEngineController();
 
+		engine->module<GearDetector>()->onConfigurationChange(nullptr);
+
 	#if EFI_ENGINE_EMULATOR
 		initEngineEmulator();
 	#endif

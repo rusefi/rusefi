@@ -3442,8 +3442,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "4th gear", gearRatio4, { totalGearsCount >= 4 }
 		field = "5th gear", gearRatio5, { totalGearsCount >= 5 }
 		field = "6th gear", gearRatio6, { totalGearsCount >= 6 }
-		field = "7th gear", gearRatio6, { totalGearsCount >= 7 }
-		field = "8th gear", gearRatio6, { totalGearsCount >= 8 }
+		field = "7th gear", gearRatio7, { totalGearsCount >= 7 }
+		field = "8th gear", gearRatio8, { totalGearsCount >= 8 }
 
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft
