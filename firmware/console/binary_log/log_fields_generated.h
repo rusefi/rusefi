@@ -40,6 +40,8 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.canReadCounter, "canReadCounter", "", 0},
 	{engine->outputChannels.tpsAccelFuel, "fuel: TPS acceleration add fuel ms", "ms", 3},
 	{engine->outputChannels.ignitionAdvance, "timing", "deg", 1},
+	{engine->outputChannels.currentIgnitionMode, "currentIgnitionMode", "", 0},
+	{engine->outputChannels.currentInjectionMode, "currentInjectionMode", "", 0},
 	{engine->outputChannels.coilDutyCycle, "dwell: coil duty cycle", "%", 0},
 	{engine->outputChannels.idleAirValvePosition, "Idle Air Valve", "%", 1},
 	{engine->outputChannels.etbTarget, "ETB Target", "%", 2},
