@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - Detected gear and wastegate position to CAN format
+
 ### Fixed
  - Sensor checker wasn't checking sensors
  - Removed vestigial warning about unset ignition pins #79
