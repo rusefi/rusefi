@@ -1039,6 +1039,9 @@ Maximum change delta of TPS percentage over the 'length'. Actual TPS change has 
 ### totalGearsCount
 
 
+### fan1ExtraIdle
+Additional idle % when fan #1 is active
+
 ### uartConsoleSerialSpeed
 Band rate for primary TTL
 
@@ -1047,9 +1050,6 @@ For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 
 ### tpsDecelEnleanmentMultiplier
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
-
-### slowAdcAlpha
-ExpAverage alpha coefficient
 
 ### auxSerialSpeed
 
@@ -1125,9 +1125,6 @@ This is the IAC position during cranking, some engines start better if given mor
 
 ### tChargeMaxRpmMaxTps
 
-
-### fan1ExtraIdle
-Additional idle % when fan #1 is active
 
 ### alternatorPwmFrequency
 

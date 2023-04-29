@@ -1045,6 +1045,9 @@ float getConfigValueByName(const char *name) {
 // totalGearsCount
 		case -2114430012:
 			return engineConfiguration->totalGearsCount;
+// fan1ExtraIdle
+		case 1397079021:
+			return engineConfiguration->fan1ExtraIdle;
 // uartConsoleSerialSpeed
 		case -999870619:
 			return engineConfiguration->uartConsoleSerialSpeed;
@@ -1054,9 +1057,6 @@ float getConfigValueByName(const char *name) {
 // tpsDecelEnleanmentMultiplier
 		case 1164012327:
 			return engineConfiguration->tpsDecelEnleanmentMultiplier;
-// slowAdcAlpha
-		case 70789688:
-			return engineConfiguration->slowAdcAlpha;
 // auxSerialSpeed
 		case 781749924:
 			return engineConfiguration->auxSerialSpeed;
@@ -1132,9 +1132,6 @@ float getConfigValueByName(const char *name) {
 // tChargeMaxRpmMaxTps
 		case -608466667:
 			return engineConfiguration->tChargeMaxRpmMaxTps;
-// fan1ExtraIdle
-		case 1397079021:
-			return engineConfiguration->fan1ExtraIdle;
 // alternatorPwmFrequency
 		case 799798215:
 			return engineConfiguration->alternatorPwmFrequency;
@@ -3323,6 +3320,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->totalGearsCount = (int)value;
 		return;
 	}
+		case 1397079021:
+	{
+		engineConfiguration->fan1ExtraIdle = (int)value;
+		return;
+	}
 		case -999870619:
 	{
 		engineConfiguration->uartConsoleSerialSpeed = (int)value;
@@ -3336,11 +3338,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 1164012327:
 	{
 		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
-		return;
-	}
-		case 70789688:
-	{
-		engineConfiguration->slowAdcAlpha = value;
 		return;
 	}
 		case 781749924:
@@ -3466,11 +3463,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -608466667:
 	{
 		engineConfiguration->tChargeMaxRpmMaxTps = value;
-		return;
-	}
-		case 1397079021:
-	{
-		engineConfiguration->fan1ExtraIdle = (int)value;
 		return;
 	}
 		case 799798215:
