@@ -243,7 +243,7 @@
  * SERIAL driver system settings.
  */
 #ifndef STM32_SERIAL_USE_USART1
-#define STM32_SERIAL_USE_USART1             TRUE
+#define STM32_SERIAL_USE_USART1             FALSE
 #endif
 
 #ifndef STM32_SERIAL_USE_USART2
