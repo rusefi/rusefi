@@ -461,7 +461,7 @@ bool OutputPin::getAndSet(int logicValue) {
 void OutputPin::setOnchipValue(int electricalValue) {
 	if (brainPin == Gpio::Unassigned || brainPin == Gpio::Invalid) {
 	    // todo: make 'setOnchipValue' or 'reportsetOnchipValueError' virtual and override for NamedOutputPin?
-		warning(CUSTOM_ERR_6586, "attempting to change unassigned pin");
+		warning(ObdCode::CUSTOM_ERR_6586, "attempting to change unassigned pin");
 		return;
 	}
 	palWritePad(port, pin, electricalValue);
@@ -491,9 +491,9 @@ void OutputPin::setValue(int logicValue) {
 		return;
 	}
 
-	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *modePtr;
-	efiAssertVoid(CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
 	int electricalValue = getElectricalValue(logicValue, mode);
 
 #if EFI_PROD_CODE
@@ -576,12 +576,12 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
 	// To avoid this error, call deInit() first
 	if (isBrainPinValid(this->brainPin) && this->brainPin != brainPin) {
-		firmwareError(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned, cannot reassign without unregister first", msg);
+		firmwareError(ObdCode::CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned, cannot reassign without unregister first", msg);
 		return;
 	}
 
 	if (*outputMode > OM_OPENDRAIN_INVERTED) {
-		firmwareError(CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e %d %s",
+		firmwareError(ObdCode::CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e %d %s",
 				msg,
 				*outputMode,
 				hwPortname(brainPin)
@@ -602,7 +602,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 
 		// Validate port
 		if (port == GPIO_NULL) {
-			firmwareError(OBD_PCM_Processor_Fault, "OutputPin::initPin got invalid port for pin idx %d", static_cast<int>(brainPin));
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "OutputPin::initPin got invalid port for pin idx %d", static_cast<int>(brainPin));
 			return;
 		}
 
@@ -640,7 +640,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 #ifndef DISABLE_PIN_STATE_VALIDATION
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
 			if (logicalValue) {
-				firmwareError(OBD_PCM_Processor_Fault, "HARDWARE VALIDATION FAILED %s: unexpected startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
+				firmwareError(ObdCode::OBD_PCM_Processor_Fault, "HARDWARE VALIDATION FAILED %s: unexpected startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
 				OutputPin::deInit();
 			}
 #endif

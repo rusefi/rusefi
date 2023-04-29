@@ -125,7 +125,7 @@ void Engine::updateTriggerWaveform() {
 #if ANALOG_HW_CHECK_MODE
 static void assertCloseTo(const char* msg, float actual, float expected) {
 	if (actual < 0.95f * expected || actual > 1.05f * expected) {
-		firmwareError(OBD_PCM_Processor_Fault, "%s validation failed actual=%f vs expected=%f", msg, actual, expected);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "%s validation failed actual=%f vs expected=%f", msg, actual, expected);
 	}
 }
 #endif // ANALOG_HW_CHECK_MODE
@@ -401,7 +401,7 @@ void Engine::efiWatchdog() {
 		if (mostRecentMs != 0) {
 			efitimems_t gapInMs = msNow - mostRecentMs;
 			if (gapInMs > 500) {
-				firmwareError(WATCH_DOG_SECONDS, "gap in time: now=%d mS, was %d mS, gap=%dmS",
+				firmwareError(ObdCode::WATCH_DOG_SECONDS, "gap in time: now=%d mS, was %d mS, gap=%dmS",
 					msNow, mostRecentMs, gapInMs);
 			}
 		}

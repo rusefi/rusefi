@@ -397,7 +397,7 @@ static int hip_init() {
 
 		ret = hip_testAdvMode();
 		if (ret) {
-			warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not support advanced mode");
+			warning(ObdCode::CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not support advanced mode");
 			instance.adv_mode = false;
 		}
 	}
@@ -440,7 +440,7 @@ static msg_t hipThread(void *arg) {
 		/* retry until success */
 		ret = hip_init();
 		if (ret) {
-			warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond: %d", ret);
+			warning(ObdCode::CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond: %d", ret);
 			chThdSleepMilliseconds(10 * 1000);
 		}
 	} while (ret);

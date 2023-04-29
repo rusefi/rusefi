@@ -103,7 +103,7 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 
 float interpolateClampedWithValidation(float x1, float y1, float x2, float y2, float x) {
 	if (x1 >= x2) {
-        firmwareError(OBD_PCM_Processor_Fault, "interpolateClamped %f has to be smaller than %f", x1, x2);
+        firmwareError(ObdCode::OBD_PCM_Processor_Fault, "interpolateClamped %f has to be smaller than %f", x1, x2);
 	}
 	return interpolateClamped(x1, y1, x2, y2, x);
 }

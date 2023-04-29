@@ -143,7 +143,7 @@ void HIP9011::setAngleWindowWidth(DEFINE_HIP_PARAMS) {
 		GET_CONFIG_VALUE(knockDetectionWindowStart);
 	if (new_angleWindowWidth < 0) {
 #if EFI_PROD_CODE
-		warning(CUSTOM_KNOCK_WINDOW, "invalid knock window");
+		warning(ObdCode::CUSTOM_KNOCK_WINDOW, "invalid knock window");
 #endif
 		new_angleWindowWidth = 0;
 	}

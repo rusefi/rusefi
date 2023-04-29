@@ -9,8 +9,7 @@
 
 #if EFI_PROD_CODE
 
-#include "ch.h"
-#include "hal.h"
+#include "pch.h"
 
 #include "sent.h"
 #include "sent_hw_icu.h"
@@ -62,7 +61,7 @@ void startSent() {
 
 		if (getIcuParams(sentPin, &pinAF, &icu, &cfg->channel, &baseClock) != true) {
 			/* this pin has no ICU functionality, of ICU driver is not enabled for TIM on this pin */
-			firmwareError(OBD_PCM_Processor_Fault, "No ICU on selected SENT pin");
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "No ICU on selected SENT pin");
 			continue;
 		}
 
