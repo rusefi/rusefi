@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Breaking Changes
+ - LCD & joystick support removed
+
 ## April 2023 Release - "Day 419"
 
 ### Added
