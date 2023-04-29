@@ -17,7 +17,7 @@
 #undef TS_SIGNATURE
 
 #ifndef SHORT_BOARD_NAME
-#define SHORT_BOARD_NAME all
+#error SHORT_BOARD_NAME must be defined!
 #endif /* SHORT_BOARD_NAME */
 
 #pragma message ("SHORT_BOARD_NAME: " QUOTE(SHORT_BOARD_NAME))
