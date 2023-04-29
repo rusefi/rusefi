@@ -1,16 +1,16 @@
 pins:
   - pin: 1a
     id: D14
-    function: Ignition coil 4
+    function: na Ignition coil 3
     class: outputs
-    ts_name: na 1 - IGN_4
+    ts_name: na 1 - IGN_3
     type: ls
 
   - pin: 2a
     id: D12
-    function: Ignition coil 2
+    function: Ignition coil 2,3
     class: outputs
-    ts_name: 2 - IGN_2
+    ts_name: 2 - IGN_2_3
     type: ls
 
   - pin: 3a
@@ -19,16 +19,16 @@ pins:
 
   - pin: 4a
     id: D15
-    function: Ignition coil 3
+    function: na Ignition coil 4
     class: outputs
-    ts_name: na 4 - IGN_3
+    ts_name: na 4 - IGN_4
     type: ls
 
   - pin: 5a
     id: D13
     function: Ignition coil 1
     class: outputs
-    ts_name: 5 - IGN_1
+    ts_name: 5 - IGN_1_4
     type: ls
 
 # 6-24 segment
@@ -48,7 +48,7 @@ pins:
 
   - pin: 8a
     id: B8
-    function: Tach Out
+    function: na Tach Out
     class: outputs
     ts_name: na 8 - TACH
     type: ls
@@ -106,15 +106,15 @@ pins:
   - pin: 21a
     id: EFI_ADC_6
     class: analog_inputs
-    function: AC Press (22K pull-down)
-    ts_name: 21 - AC Press
+    function: opt AC Press (22K pull-down)
+    ts_name: opt 21 - AC Press
 
 # 25-43 segment
   - pin: 25a
     id: D0
-    function: Injector 7
+    function: na Rear Diff lock out
     class: outputs
-    ts_name: na 25 - INJ_7
+    ts_name: na 25 - R Diff Lock
     type: ls
 
   - pin: 27a
@@ -140,14 +140,14 @@ pins:
 
   - pin: 30a
     id: E9
-    function: na Fan relay 2 / Unk Out 2
+    function: opt Fan relay 2 / Unk Out 2
     class: outputs
-    ts_name: na 20 - Fan relay 2 / Unk Out 2
+    ts_name: opt 20 - Fan relay 2 / Unk Out 2
     type: ls
 
   - pin: 31a
     id: E14
-    function: MIL Control
+    function: CEL Output
     class: outputs
     ts_name: 31 - CEL
     type: ls
@@ -224,9 +224,9 @@ pins:
 
   - pin: 49a
     id: E6
-    function: Injector 6 / AFR2 Heater
+    function: AFR2 Heater
     class: outputs
-    ts_name: na 49 - INJ_6 / AFR 2 Heater
+    ts_name: na 49 - AFR 2 Heater
     type: ls
 
   - pin: 50a
@@ -237,7 +237,7 @@ pins:
     type: ls
 
   - pin: 51a
-    function: GNDA
+    function: GND (ECU)
 
   - pin: 52a
     function: GNDA (Shield)
@@ -251,8 +251,8 @@ pins:
   - pin: 55a
     id: EFI_ADC_5
     class: analog_inputs
-    function: n.a. AFR 2 (470K pull-up to +5)
-    ts_name: n.a. 55 - AFR 2
+    function: opt AFR 2 (470K pull-up to +5)
+    ts_name: opt 55 - AFR 2
 
   - pin: 56a
     id: EFI_ADC_0
@@ -285,16 +285,16 @@ pins:
 
   - pin: 68a
     id: D6
-    function: na Fan Relay 1
+    function: opt Fan Relay 1
     class: outputs
-    ts_name: na 58 - Fan Relay 1
+    ts_name: opt 58 - Fan Relay 1
     type: ls
 
   - pin: 69a
     id: E10
-    function: na AC Relay
+    function: opt AC Relay
     class: outputs
-    ts_name: na 69 - AC Relay
+    ts_name: opt 69 - AC Relay
     type: ls
 
   - pin: 70a
@@ -309,42 +309,42 @@ pins:
 
   - pin: 72a
     id: [C12]
-    function: DIN1 (4.7K pull-up to 3.3V) (TBD)
+    function: Identification in (4.7K pull-up to 3.3V)
     class: [switch_inputs]
-    ts_name: 72 - DIN1
+    ts_name: 72 - Identification in
 
   - pin: 73a
     id: [C11]
-    function: DPH2 (not populated) (TBD)
+    function: opt Oil Pressure Warning Input
     class: [switch_inputs]
-    ts_name: na 72 - DPH2
+    ts_name: opt 72 - Oil Press Warning In
 
   - pin: 75a
     id: [C13]
-    function: DCNS (not populated) (TBD)
+    function: opt Air Condition Request Input
     class: [switch_inputs]
-    ts_name: na 75 - DCNS
+    ts_name: opt 75 - AC Request In
 
   - pin: 76a
     id: [C10]
-    function: DSTR (4.7K Pull-up) (TBD)
+    function: Diff Lock Request Input
     class: [switch_inputs]
-    ts_name: 76 - DIN5
+    ts_name: 76 - Diff Lock Req In
 
   - pin: 77a
     id: [D4]
-    function: Starter request (4.7K Pull-down)
+    function: opt Starter Request Input (4.7K Pull-down)
     class: [switch_inputs]
-    ts_name: 77 - Starter request
+    ts_name: opt 77 - Starter Req In
 
   - pin: 79a
     id: [B11]
-    function: Camshaft sensor (not populated)
+    function: na Camshaft sensor (not populated)
     class: [event_inputs]
     ts_name: na 79 - CAM in
 
   - pin: 80a
-    function: GND
+    function: GND (Outputs)
 
   - pin: 81a
     function: CAN bus low
