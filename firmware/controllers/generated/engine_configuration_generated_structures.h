@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 09:17:02 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 21:54:50 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5162,8 +5162,19 @@ struct persistent_config_s {
 	 * offset 21628
 	 */
 	blend_table_s veBlends[VE_BLEND_COUNT];
+	/**
+	%
+	 * offset 22380
+	 */
+	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaBins[12];
+	/**
+	 * In units of kg/s normalized to choked flow conditions
+	kg/s
+	 * offset 22404
+	 */
+	scaled_channel<uint16_t, 10000, 1> throttleEstimateEffectiveAreaValues[12];
 };
-static_assert(sizeof(persistent_config_s) == 22380);
+static_assert(sizeof(persistent_config_s) == 22428);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 09:17:02 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 21:54:50 UTC 2023
