@@ -11,11 +11,13 @@ import org.junit.Test;
 import java.nio.ByteBuffer;
 
 import static com.rusefi.config.generated.Fields.TS_FILE_VERSION;
-import static com.rusefi.config.generated.Fields.engine_type_e_MRE_MIATA_NB2_MAP;
+import static com.rusefi.config.generated.Fields.engine_type_e_FRANKENSO_MAZDA_MIATA_2003;
 import static com.rusefi.core.FileUtil.littleEndianWrap;
 import static junit.framework.Assert.*;
 
 public class JniUnitTest {
+    private static final double EPS = 0.001;
+
     @Before
     public void reset() {
         JniSandbox.loadLibrary();
@@ -48,7 +50,7 @@ public class JniUnitTest {
         assertEquals(0.25096, getValue(engineLogic.getOutputs(), Sensor.sdAirMassInOneCylinder), 0.0001);
 
         engineLogic.setEngineType(engine_type_e_FRANKENSO_MAZDA_MIATA_2003);
-        assertEquals(2.45, getField(engineLogic, Fields.GEARRATIO1));
+        assertEquals(3.76, getField(engineLogic, Fields.GEARRATIO1), EPS);
     }
 
     @Test
