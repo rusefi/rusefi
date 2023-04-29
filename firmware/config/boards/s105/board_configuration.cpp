@@ -31,8 +31,8 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	// No LEDs on this board so let's toggle. TODO test if toggle actually toggles considering C14 pin LSI
-	engineConfiguration->communicationLedPin = Gpio::C14;
+	// No LEDs on this board so let's toggle. PC14 of LSI did not work for blinking, any better alternatives?
+	engineConfiguration->communicationLedPin = Gpio::Unassigned;
 	engineConfiguration->runningLedPin = Gpio::Unassigned;
 	engineConfiguration->warningLedPin = Gpio::Unassigned;
 
