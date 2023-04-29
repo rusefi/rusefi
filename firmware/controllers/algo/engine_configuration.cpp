@@ -750,15 +750,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MRE_MIATA_NA6_MAP:
 		setMiataNA6_MAP_MRE();
 		break;
-	case MRE_MIATA_NB2_MAP:
-		setMiataNB2_MRE_MAP();
-		break;
-	case MRE_MIATA_NB2_MAF:
-		setMiataNB2_MRE_MAF();
-		break;
-	case MRE_MIATA_NB2_ETB:
-		setMiataNB2_MRE_ETB();
-		break;
 	case MRE_BODY_CONTROL:
 		mreBCM();
 		break;
@@ -809,7 +800,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case PROTEUS_VAG_80_18T:
 	case PROTEUS_N73:
 	case PROTEUS_MIATA_NB2:
-		setMiataNB2_ProteusEngineConfiguration();
+		setMiataNB2_Proteus();
 		break;
 	case PROTEUS_SBC:
 	    setProteusSbc();
