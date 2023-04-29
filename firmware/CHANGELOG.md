@@ -32,6 +32,12 @@ Release template (copy/paste this for new release):
  - LCD & joystick support removed
  - CJ125 support removed
 
+### Added
+ - Wastegate position to CAN format
+ - Pause closed loop fuel after cuts
+ - More trigger UI tweaks
+ - Lua memory leak detection and prevention
+
 ## April 2023 Release - "Day 419"
 
 ### Added
