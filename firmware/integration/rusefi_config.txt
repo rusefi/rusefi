@@ -173,8 +173,6 @@ struct_no_prefix engine_configuration_s
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
 
-#define MAX_CYLINDER_COUNT 12
-#define EGT_CHANNEL_COUNT 8
 #define DIGIPOT_COUNT 4
 #define HW_MAX_ADC_INDEX 17
 #define TRIGGER_SIMULATOR_PIN_COUNT 2
