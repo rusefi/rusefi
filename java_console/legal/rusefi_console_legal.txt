@@ -1,5 +1,0 @@
-
-TODO!
-
- * RomRaider Open-Source Tuning, Logging and Reflashing
- * Copyright (C) 2006-2012 RomRaider.com
