@@ -208,10 +208,10 @@ value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into t
 ### knockBandCustom
 We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override
 
-### specs.displacement
-Engine volume/capacity, in litres\nsee also cylindersCount
+### displacement
+Engine displacement in litres
 
-### specs.cylindersCount
+### cylindersCount
 Number of cylinder the engine has.
 
 ### cylinderBore

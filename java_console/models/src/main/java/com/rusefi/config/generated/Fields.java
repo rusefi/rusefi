@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 00:13:08 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 01:40:18 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1010,13 +1010,12 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int specs_s_size = 12;
+	public static final int SIGNATURE_HASH = 297028872;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
 	public static final int spi_device_e_SPI_DEVICE_4 = 4;
 	public static final int spi_device_e_SPI_NONE = 0;
-	public static final int spi_pins_size = 8;
 	public static final int spi_speed_e__150KHz = 3;
 	public static final int spi_speed_e__1_25MHz = 2;
 	public static final int spi_speed_e__2_5MHz = 1;
@@ -1235,7 +1234,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.04.29.f407-discovery.3877542376";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.04.29.f407-discovery.297028872";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1376;
@@ -1273,7 +1272,6 @@ public class Fields {
 	public static final int ve_override_e_VE_TPS = 2;
 	public static final int VEHICLE_INFO_SIZE = 32;
 	public static final int VIN_NUMBER_SIZE = 17;
-	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int vr_threshold_s_size = 16;
 	public static final int VSS_FILTER_MAX = 200;
@@ -1387,10 +1385,11 @@ public class Fields {
 	public static final Field LAUNCHTIMINGRETARD = Field.create("LAUNCHTIMINGRETARD", 352, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field HIP9011PRESCALERANDSDO = Field.create("HIP9011PRESCALERANDSDO", 356, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field KNOCKBANDCUSTOM = Field.create("KNOCKBANDCUSTOM", 360, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field DISPLACEMENT = Field.create("DISPLACEMENT", 364, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field DISPLACEMENT = Field.create("DISPLACEMENT", 364, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_366 = Field.create("ALIGNMENTFILL_AT_366", 366, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CYLINDERSCOUNT = Field.create("CYLINDERSCOUNT", 368, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field FIRINGORDER = Field.create("FIRINGORDER", 372, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_9 = Field.create("ALIGNMENTFILL_AT_9", 373, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_373 = Field.create("ALIGNMENTFILL_AT_373", 373, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 376, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] engine_load_mode_e = {"Speed Density", "MAF Air Charge", "Alpha-N", "Lua"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 380, FieldType.INT8, engine_load_mode_e).setScale(1.0).setBaseOffset(0);
@@ -2321,7 +2320,7 @@ public class Fields {
 	public static final Field GPPWM1_PWMFREQUENCY = Field.create("GPPWM1_PWMFREQUENCY", 2572, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_ONABOVEDUTY = Field.create("GPPWM1_ONABOVEDUTY", 2574, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_OFFBELOWDUTY = Field.create("GPPWM1_OFFBELOWDUTY", 2575, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final String[] gppwm_channel_e = {"Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2", "RPM"};
+	public static final String[] gppwm_channel_e = {"Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2", "RPM", "Gear (detected)"};
 	public static final Field GPPWM1_LOADAXIS = Field.create("GPPWM1_LOADAXIS", 2576, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_RPMAXIS = Field.create("GPPWM1_RPMAXIS", 2577, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_LOADBINS = Field.create("GPPWM1_LOADBINS", 2578, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -2879,9 +2878,10 @@ public class Fields {
 	HIP9011PRESCALERANDSDO,
 	KNOCKBANDCUSTOM,
 	DISPLACEMENT,
+	ALIGNMENTFILL_AT_366,
 	CYLINDERSCOUNT,
 	FIRINGORDER,
-	ALIGNMENTFILL_AT_9,
+	ALIGNMENTFILL_AT_373,
 	CYLINDERBORE,
 	FUELALGORITHM,
 	ALSMAXTPS,

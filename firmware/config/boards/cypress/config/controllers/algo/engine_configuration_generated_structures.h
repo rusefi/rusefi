@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Apr 29 00:12:12 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Apr 29 01:39:34 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -144,29 +144,6 @@ struct cranking_parameters_s {
 	uint8_t alignmentFill_at_6[2];
 };
 static_assert(sizeof(cranking_parameters_s) == 8);
-
-// start of spi_pins
-struct spi_pins {
-	/**
-	 * offset 0
-	 */
-	Gpio mosiPin;
-	/**
-	 * offset 2
-	 */
-	Gpio misoPin;
-	/**
-	 * offset 4
-	 */
-	Gpio sckPin;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 6
-	 */
-	uint8_t alignmentFill_at_6[2];
-};
-static_assert(sizeof(spi_pins) == 8);
 
 // start of gppwm_channel
 struct gppwm_channel {
@@ -437,33 +414,6 @@ struct injector_s {
 	float battLagCorr[VBAT_INJECTOR_CURVE_SIZE];
 };
 static_assert(sizeof(injector_s) == 68);
-
-// start of specs_s
-struct specs_s {
-	/**
-	 * Engine volume/capacity, in litres
-	 * see also cylindersCount
-	L
-	 * offset 0
-	 */
-	float displacement;
-	/**
-	 * Number of cylinder the engine has.
-	 * offset 4
-	 */
-	uint32_t cylindersCount;
-	/**
-	 * offset 8
-	 */
-	firing_order_e firingOrder;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 9
-	 */
-	uint8_t alignmentFill_at_9[3];
-};
-static_assert(sizeof(specs_s) == 12);
 
 /**
  * @brief Trigger wheel(s) configuration
@@ -902,9 +852,32 @@ struct engine_configuration_s {
 	 */
 	float knockBandCustom;
 	/**
+	 * Engine displacement in litres
+	L
 	 * offset 364
 	 */
-	specs_s specs;
+	scaled_channel<uint16_t, 1000, 1> displacement;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 366
+	 */
+	uint8_t alignmentFill_at_366[2];
+	/**
+	 * Number of cylinder the engine has.
+	 * offset 368
+	 */
+	uint32_t cylindersCount;
+	/**
+	 * offset 372
+	 */
+	firing_order_e firingOrder;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 373
+	 */
+	uint8_t alignmentFill_at_373[3];
 	/**
 	 * Cylinder diameter in mm.
 	mm
@@ -3159,76 +3132,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1628 bit 8 */
-	bool unusedBit_542_8 : 1 {};
+	bool unusedBit_546_8 : 1 {};
 	/**
 	offset 1628 bit 9 */
-	bool unusedBit_542_9 : 1 {};
+	bool unusedBit_546_9 : 1 {};
 	/**
 	offset 1628 bit 10 */
-	bool unusedBit_542_10 : 1 {};
+	bool unusedBit_546_10 : 1 {};
 	/**
 	offset 1628 bit 11 */
-	bool unusedBit_542_11 : 1 {};
+	bool unusedBit_546_11 : 1 {};
 	/**
 	offset 1628 bit 12 */
-	bool unusedBit_542_12 : 1 {};
+	bool unusedBit_546_12 : 1 {};
 	/**
 	offset 1628 bit 13 */
-	bool unusedBit_542_13 : 1 {};
+	bool unusedBit_546_13 : 1 {};
 	/**
 	offset 1628 bit 14 */
-	bool unusedBit_542_14 : 1 {};
+	bool unusedBit_546_14 : 1 {};
 	/**
 	offset 1628 bit 15 */
-	bool unusedBit_542_15 : 1 {};
+	bool unusedBit_546_15 : 1 {};
 	/**
 	offset 1628 bit 16 */
-	bool unusedBit_542_16 : 1 {};
+	bool unusedBit_546_16 : 1 {};
 	/**
 	offset 1628 bit 17 */
-	bool unusedBit_542_17 : 1 {};
+	bool unusedBit_546_17 : 1 {};
 	/**
 	offset 1628 bit 18 */
-	bool unusedBit_542_18 : 1 {};
+	bool unusedBit_546_18 : 1 {};
 	/**
 	offset 1628 bit 19 */
-	bool unusedBit_542_19 : 1 {};
+	bool unusedBit_546_19 : 1 {};
 	/**
 	offset 1628 bit 20 */
-	bool unusedBit_542_20 : 1 {};
+	bool unusedBit_546_20 : 1 {};
 	/**
 	offset 1628 bit 21 */
-	bool unusedBit_542_21 : 1 {};
+	bool unusedBit_546_21 : 1 {};
 	/**
 	offset 1628 bit 22 */
-	bool unusedBit_542_22 : 1 {};
+	bool unusedBit_546_22 : 1 {};
 	/**
 	offset 1628 bit 23 */
-	bool unusedBit_542_23 : 1 {};
+	bool unusedBit_546_23 : 1 {};
 	/**
 	offset 1628 bit 24 */
-	bool unusedBit_542_24 : 1 {};
+	bool unusedBit_546_24 : 1 {};
 	/**
 	offset 1628 bit 25 */
-	bool unusedBit_542_25 : 1 {};
+	bool unusedBit_546_25 : 1 {};
 	/**
 	offset 1628 bit 26 */
-	bool unusedBit_542_26 : 1 {};
+	bool unusedBit_546_26 : 1 {};
 	/**
 	offset 1628 bit 27 */
-	bool unusedBit_542_27 : 1 {};
+	bool unusedBit_546_27 : 1 {};
 	/**
 	offset 1628 bit 28 */
-	bool unusedBit_542_28 : 1 {};
+	bool unusedBit_546_28 : 1 {};
 	/**
 	offset 1628 bit 29 */
-	bool unusedBit_542_29 : 1 {};
+	bool unusedBit_546_29 : 1 {};
 	/**
 	offset 1628 bit 30 */
-	bool unusedBit_542_30 : 1 {};
+	bool unusedBit_546_30 : 1 {};
 	/**
 	offset 1628 bit 31 */
-	bool unusedBit_542_31 : 1 {};
+	bool unusedBit_546_31 : 1 {};
 	/**
 	 * How many test bench pulses do you want
 	count
@@ -5333,4 +5306,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22436);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Apr 29 00:12:12 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Apr 29 01:39:34 UTC 2023
