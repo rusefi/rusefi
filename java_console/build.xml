@@ -26,7 +26,6 @@
         <string>lib/SteelSeries-3.9.30.jar</string>
         <string>lib/annotations.jar</string>
         <string>lib/miglayout-4.0.jar</string>
-        <string>lib/surfaceplotter-2.0.1.jar</string>
         <string>../java_tools/configuration_definition/lib/antlr-4.9.3-complete.jar</string>
         <string>lib/javacan-core.jar</string>
     </resources>
@@ -167,7 +166,6 @@
             <zipfileset src="lib/dfu/dfu_java.jar" includes="**/*.class"/>
             <zipfileset src="lib/annotations.jar" includes="**/*.class"/>
             <zipfileset src="lib/miglayout-4.0.jar" includes="**/*.class"/>
-            <zipfileset src="lib/surfaceplotter-2.0.1.jar" includes="**/*.class **/*.properties"/>
             <zipfileset src="lib/batik/batik-svggen.jar" includes="**/*.class"/>
             <zipfileset src="lib/batik/batik-awt-util.jar" includes="**/*.class"/>
             <zipfileset src="lib/batik/batik-util.jar" includes="**/*.class"/>
