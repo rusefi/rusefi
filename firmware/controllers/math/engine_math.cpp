@@ -166,7 +166,7 @@ static const uint8_t order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10[] = {1, 14, 9,
 
 static size_t getFiringOrderLength() {
 
-	switch (engineConfiguration->specs.firingOrder) {
+	switch (engineConfiguration->firingOrder) {
 	case FO_1:
 		return 1;
 // 2 cylinder
@@ -227,14 +227,14 @@ static size_t getFiringOrderLength() {
 		return 16;
 
 	default:
-		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->specs.firingOrder);
+		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->firingOrder);
 	}
 	return 1;
 }
 
 static const uint8_t* getFiringOrderTable()
 {
-	switch (engineConfiguration->specs.firingOrder) {
+	switch (engineConfiguration->firingOrder) {
 	case FO_1:
 		return order_1;
 // 2 cylinder
@@ -319,7 +319,7 @@ static const uint8_t* getFiringOrderTable()
 		return order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10;
 
 	default:
-		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->specs.firingOrder);
+		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->firingOrder);
 	}
 
 	return NULL;
@@ -336,7 +336,7 @@ size_t getCylinderId(size_t index) {
 		firmwareError(CUSTOM_FIRING_LENGTH, "fol %d", firingOrderLength);
 		return 1;
 	}
-	if (engineConfiguration->specs.cylindersCount != firingOrderLength) {
+	if (engineConfiguration->cylindersCount != firingOrderLength) {
 		// May 2020 this somehow still happens with functional tests, maybe race condition?
 		firmwareError(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong cyl count for firing order, expected %d cylinders", firingOrderLength);
 		return 1;
@@ -384,7 +384,7 @@ ignition_mode_e getCurrentIgnitionMode() {
 #if EFI_SHAFT_POSITION_INPUT
 	// In spin-up cranking mode we don't have full phase sync info yet, so wasted spark mode is better
 	// However, only do this on even cylinder count engines: odd cyl count doesn't fire at all
-	if (ignitionMode == IM_INDIVIDUAL_COILS && (engineConfiguration->specs.cylindersCount % 2 == 0)) {
+	if (ignitionMode == IM_INDIVIDUAL_COILS && (engineConfiguration->cylindersCount % 2 == 0)) {
 		bool missingPhaseInfoForSequential = 
 			!engine->triggerCentral.triggerState.hasSynchronizedPhase();
 
@@ -421,7 +421,7 @@ void prepareOutputSignals() {
 angle_t getPerCylinderFiringOrderOffset(uint8_t cylinderIndex, uint8_t cylinderNumber) {
 	// base = position of this cylinder in the firing order.
 	// We get a cylinder every n-th of an engine cycle where N is the number of cylinders
-	auto firingOrderOffset = engine->engineState.engineCycle * cylinderIndex / engineConfiguration->specs.cylindersCount;
+	auto firingOrderOffset = engine->engineState.engineCycle * cylinderIndex / engineConfiguration->cylindersCount;
 
 	assertAngleRange(firingOrderOffset, "getPerCylinderFiringOrderOffset", CUSTOM_ERR_6566);
 

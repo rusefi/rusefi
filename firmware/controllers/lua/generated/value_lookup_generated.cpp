@@ -216,10 +216,10 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->knockBandCustom;
 // specs.displacement
 		case -962678774:
-			return engineConfiguration->specs.displacement;
+			return engineConfiguration->displacement;
 // specs.cylindersCount
 		case -601272985:
-			return engineConfiguration->specs.cylindersCount;
+			return engineConfiguration->cylindersCount;
 // cylinderBore
 		case 1425664391:
 			return engineConfiguration->cylinderBore;
@@ -1964,12 +1964,12 @@ void setConfigValueByName(const char *name, float value) {
 	}
 		case -962678774:
 	{
-		engineConfiguration->specs.displacement = value;
+		engineConfiguration->displacement = value;
 		return;
 	}
 		case -601272985:
 	{
-		engineConfiguration->specs.cylindersCount = (int)value;
+		engineConfiguration->cylindersCount = (int)value;
 		return;
 	}
 		case 1425664391:

@@ -141,7 +141,7 @@ static void pinbench(float startdelay, float p_ontimeMs, float p_offtimeMs, int 
 /*==========================================================================*/
 
 static void doRunFuelInjBench(size_t humanIndex, float delay, float onTimeMs, float offTimeMs, int count) {
-	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
+	if (humanIndex < 1 || humanIndex > engineConfiguration->cylindersCount) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
@@ -150,7 +150,7 @@ static void doRunFuelInjBench(size_t humanIndex, float delay, float onTimeMs, fl
 }
 
 static void doRunSparkBench(size_t humanIndex, float delay, float onTime, float offTime, int count) {
-	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
+	if (humanIndex < 1 || humanIndex > engineConfiguration->cylindersCount) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}

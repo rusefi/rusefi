@@ -300,7 +300,7 @@ static void setCommonMazdaNB() {
 	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->tachPulsePerRev = 2;
 
-	engineConfiguration->specs.displacement = 1.839;
+	engineConfiguration->displacement = 1.839;
 	engineConfiguration->cylinderBore = 83;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 
@@ -333,8 +333,8 @@ static void setCommonMazdaNB() {
 	engineConfiguration->targetVBatt = 14.2;
 
 	engineConfiguration->vehicleWeight = 1070;
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;

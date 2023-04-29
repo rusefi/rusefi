@@ -17,8 +17,8 @@ void setBoardDefaultConfiguration() {
 
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -26,7 +26,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->globalTriggerAngleOffset = 114;	// the end of 19th tooth?
 
-	engineConfiguration->specs.displacement = 1.645;
+	engineConfiguration->displacement = 1.645;
 	engineConfiguration->injector.flow = 200;
 	
 	engineConfiguration->cranking.baseFuel = 25;		// ???

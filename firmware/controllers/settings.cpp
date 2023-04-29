@@ -51,13 +51,13 @@ void printSpiState(const engine_configuration_s *engineConfiguration) {
 
 static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("injectionPins: mode %s", getPin_output_mode_e(engineConfiguration->injectionPinMode));
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		brain_pin_e brainPin = engineConfiguration->injectionPins[i];
 		efiPrintf("injection #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
 	efiPrintf("ignitionPins: mode %s", getPin_output_mode_e(engineConfiguration->ignitionPinMode));
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		brain_pin_e brainPin = engineConfiguration->ignitionPins[i];
 		efiPrintf("ignition #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
@@ -244,7 +244,7 @@ static void setAlgorithmInt(int value) {
 }
 
 static void setFiringOrder(int value) {
-	engineConfiguration->specs.firingOrder = (firing_order_e) value;
+	engineConfiguration->firingOrder = (firing_order_e) value;
 	doPrintConfiguration();
 }
 

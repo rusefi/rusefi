@@ -49,8 +49,8 @@ void setBoardDefaultConfiguration() {
 	//engineConfiguration->mainRelayPin = ?;
 	engineConfiguration->mainRelayPinMode = OM_OPENDRAIN;
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_2_4_3;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_2_4_3;
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

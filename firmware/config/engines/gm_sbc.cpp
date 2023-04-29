@@ -30,9 +30,9 @@ void setStepperHw() {
 }
 
 void setSbc() {
-	engineConfiguration->specs.cylindersCount = 8;
-	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
-	engineConfiguration->specs.displacement = 5.2;
+	engineConfiguration->cylindersCount = 8;
+	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
+	engineConfiguration->displacement = 5.2;
 
 	engineConfiguration->etbFunctions[0] = DC_None;
 	engineConfiguration->etbFunctions[1] = DC_None;

@@ -153,8 +153,8 @@ static const uint8_t mapBased16IgnitionTable[16][16] = {
 
 void miataNAcommonEngineSettings() {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->compressionRatio = 9.1;
 	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->cylinderBore = 78;
@@ -230,7 +230,7 @@ void miataNAcommonEngineSettings() {
 	config->crankingFuelCoef[7] = 1.0;
 	config->crankingFuelBins[7] = 90;
 
-	engineConfiguration->specs.displacement = 1.6;
+	engineConfiguration->displacement = 1.6;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->engineCode, "NA6");
 
@@ -409,7 +409,7 @@ void setMiata94_MAP_MRE() {
 #endif /* BOARD_TLE8888_COUNT */
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->specs.displacement = 1.8;
+	engineConfiguration->displacement = 1.8;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->engineCode, "94");
 
@@ -426,7 +426,7 @@ void setHellenNA94() {
 	 */
 	engineConfiguration->injector.flow = 254;
 
-	engineConfiguration->specs.displacement = 1.8;
+	engineConfiguration->displacement = 1.8;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 

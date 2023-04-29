@@ -164,7 +164,7 @@ void setFrankensoConfiguration() {
 	/**
 	 * We want to initialize all outputs for test
 	 */
-	engineConfiguration->specs.cylindersCount = 12;
+	engineConfiguration->cylindersCount = 12;
 
 	engineConfiguration->displayMode = DM_NONE;
 #else /* EFI_PWM_TESTER */
@@ -197,8 +197,8 @@ void setFrankensoBoardTestConfiguration() {
 	engineConfiguration->triggerSimulatorFrequency = 300;
 	engineConfiguration->cranking.rpm = 100;
 
-	engineConfiguration->specs.cylindersCount = 12;
-	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
+	engineConfiguration->cylindersCount = 12;
+	engineConfiguration->firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
 
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
@@ -374,8 +374,8 @@ void setL9779TestConfiguration() {
 // todo: remove this? this was used to play with "secret" red boards prior to MRE reality
 // set engine_type 59
 void setTle8888TestConfiguration() {
-	engineConfiguration->specs.cylindersCount = 8;
-	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
+	engineConfiguration->cylindersCount = 8;
+	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
@@ -506,8 +506,8 @@ static void mreBoardOldTest() {
 
 	// TPS tps1_1AdcChannel EFI_ADC_13
 
-	engineConfiguration->specs.cylindersCount = 10;
-	engineConfiguration->specs.firingOrder = FO_1_10_9_4_3_6_5_8_7_2;
+	engineConfiguration->cylindersCount = 10;
+	engineConfiguration->firingOrder = FO_1_10_9_4_3_6_5_8_7_2;
 
 	// red LED #1
 	engineConfiguration->ignitionPins[1 - 1] = Gpio::D4;
@@ -608,8 +608,8 @@ end
  * set engine_type 42
  */
 void proteusBoardTest() {
-	engineConfiguration->specs.cylindersCount = 12;
-	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
+	engineConfiguration->cylindersCount = 12;
+	engineConfiguration->firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
 	engineConfiguration->triggerSimulatorFrequency = 600;
     engineConfiguration->injector.flow = 4.6; // longer blink
 
@@ -738,8 +738,8 @@ end
 void mreBoardNewTest() {
 	mreBoardOldTest();
 
-	engineConfiguration->specs.cylindersCount = 12;
-	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
+	engineConfiguration->cylindersCount = 12;
+	engineConfiguration->firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
     engineConfiguration->injector.flow = 5; // longer blink
 
 
@@ -851,8 +851,8 @@ void setBoschHDEV_5_injectors() {
  * set engine_type 107
  */
 void setRotary() {
-	engineConfiguration->specs.cylindersCount = 2;
-	engineConfiguration->specs.firingOrder = FO_1_2;
+	engineConfiguration->cylindersCount = 2;
+	engineConfiguration->firingOrder = FO_1_2;
 
 	engineConfiguration->trigger.type = TT_36_2_2_2;
 	// todo: fix UI to make this possible via TS

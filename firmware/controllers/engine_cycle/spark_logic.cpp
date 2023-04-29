@@ -74,11 +74,11 @@ static int getIgnitionPinForIndex(int cylinderIndex, ignition_mode_e ignitionMod
 	case IM_ONE_COIL:
 		return 0;
 	case IM_WASTED_SPARK: {
-		if (engineConfiguration->specs.cylindersCount == 1) {
+		if (engineConfiguration->cylindersCount == 1) {
 			// we do not want to divide by zero
 			return 0;
 		}
-		return cylinderIndex % (engineConfiguration->specs.cylindersCount / 2);
+		return cylinderIndex % (engineConfiguration->cylindersCount / 2);
 	}
 	case IM_INDIVIDUAL_COILS:
 		return cylinderIndex;
@@ -122,7 +122,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	//  - We are running sequential mode, but we're cranking, so we should run in two wire wasted mode (not one wire wasted)
 	bool isTwoWireWasted = engineConfiguration->twoWireBatchIgnition || (engineConfiguration->ignitionMode == IM_INDIVIDUAL_COILS);
 	if (ignitionMode == IM_WASTED_SPARK && isTwoWireWasted) {
-		int secondIndex = index + engineConfiguration->specs.cylindersCount / 2;
+		int secondIndex = index + engineConfiguration->cylindersCount / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex));
 		secondOutput = &enginePins.coils[secondCoilIndex];
 		assertPinAssigned(secondOutput);
@@ -415,9 +415,9 @@ void initializeIgnitionActions() {
 		list->isReady = false;
 		return;
 	}
-	efiAssertVoid(CUSTOM_ERR_6592, engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
+	efiAssertVoid(CUSTOM_ERR_6592, engineConfiguration->cylindersCount > 0, "cylindersCount");
 
-	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
+	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
 		prepareCylinderIgnitionSchedule(dwellAngle, sparkDwell, &list->elements[cylinderIndex]);
 	}
@@ -438,7 +438,7 @@ static void prepareIgnitionSchedule() {
 	float maxAllowedDwellAngle = (int) (getEngineCycle(operationMode) / 2); // the cast is about making Coverity happy
 
 	if (getCurrentIgnitionMode() == IM_ONE_COIL) {
-		maxAllowedDwellAngle = getEngineCycle(operationMode) / engineConfiguration->specs.cylindersCount / 1.1;
+		maxAllowedDwellAngle = getEngineCycle(operationMode) / engineConfiguration->cylindersCount / 1.1;
 	}
 
 	if (engine->ignitionState.dwellAngle == 0) {
@@ -480,7 +480,7 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
 	if (engine->ignitionEvents.isReady) {
-		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 			IgnitionEvent *event = &engine->ignitionEvents.elements[i];
 
 			if (!isPhaseInRange(event->dwellAngle, currentPhase, nextPhase)) {
@@ -529,9 +529,9 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 int getNumberOfSparks(ignition_mode_e mode) {
 	switch (mode) {
 	case IM_ONE_COIL:
-		return engineConfiguration->specs.cylindersCount;
+		return engineConfiguration->cylindersCount;
 	case IM_TWO_COILS:
-		return engineConfiguration->specs.cylindersCount / 2;
+		return engineConfiguration->cylindersCount / 2;
 	case IM_INDIVIDUAL_COILS:
 		return 1;
 	case IM_WASTED_SPARK:

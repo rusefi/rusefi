@@ -184,8 +184,8 @@ void setBoardDefaultConfiguration() {
 	// The "required" hardware is done - set some reasonable input defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
 
 	// Ign is IM_ONE_COIL, IM_TWO_COILS, IM_INDIVIDUAL_COILS, IM_WASTED_SPARK
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
