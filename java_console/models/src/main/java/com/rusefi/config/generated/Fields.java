@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 01:40:18 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 02:29:51 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -295,7 +295,6 @@ public class Fields {
 	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_2003 = 47;
 	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_NA8 = 56;
 	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
-	public static final int engine_type_e_FRANKENSO_MIATA_NA6_VAF = 57;
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HELLEN72_ETB = 33;
@@ -337,7 +336,6 @@ public class Fields {
 	public static final int engine_type_e_MRE_M111 = 68;
 	public static final int engine_type_e_MRE_MIATA_94_MAP = 20;
 	public static final int engine_type_e_MRE_MIATA_NA6_MAP = 66;
-	public static final int engine_type_e_MRE_MIATA_NA6_VAF = 12;
 	public static final int engine_type_e_MRE_MIATA_NB2_ETB = 13;
 	public static final int engine_type_e_MRE_MIATA_NB2_MAF = 15;
 	public static final int engine_type_e_MRE_MIATA_NB2_MAP = 11;
@@ -378,6 +376,8 @@ public class Fields {
 	public static final int engine_type_e_TEST_ROTARY = 19;
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
+	public static final int engine_type_e_UNUSED_12 = 12;
+	public static final int engine_type_e_UNUSED_57 = 57;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_WASTEGATE_PROTEUS_TEST = 96;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
@@ -1010,7 +1010,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 297028872;
+	public static final int SIGNATURE_HASH = 947301129;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1234,7 +1234,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.04.29.f407-discovery.297028872";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.04.29.f407-discovery.947301129";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1376;
