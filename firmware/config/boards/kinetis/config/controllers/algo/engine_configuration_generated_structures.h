@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 29 21:53:47 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 29 22:39:08 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1576,7 +1576,7 @@ struct engine_configuration_s {
 	bool rusefiVerbose29b : 1 {};
 	/**
 	offset 732 bit 5 */
-	bool isEngineControlEnabled : 1 {};
+	bool unusedIsEngineControlEnabled : 1 {};
 	/**
 	offset 732 bit 6 */
 	bool isHip9011Enabled : 1 {};
@@ -5177,4 +5177,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22428);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 29 21:53:47 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 29 22:39:08 UTC 2023

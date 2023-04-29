@@ -385,9 +385,6 @@ float getConfigValueByName(const char *name) {
 // rusefiVerbose29b
 		case 2043354390:
 			return engineConfiguration->rusefiVerbose29b;
-// isEngineControlEnabled
-		case 630961411:
-			return engineConfiguration->isEngineControlEnabled;
 // isHip9011Enabled
 		case -2119647784:
 			return engineConfiguration->isHip9011Enabled;
@@ -2218,11 +2215,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 2043354390:
 	{
 		engineConfiguration->rusefiVerbose29b = (int)value;
-		return;
-	}
-		case 630961411:
-	{
-		engineConfiguration->isEngineControlEnabled = (int)value;
 		return;
 	}
 		case -2119647784:

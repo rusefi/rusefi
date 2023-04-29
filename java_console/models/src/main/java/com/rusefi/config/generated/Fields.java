@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 21:54:50 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 22:39:59 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1010,7 +1010,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 393423505;
+	public static final int SIGNATURE_HASH = 1703686493;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1234,7 +1234,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.04.29.f407-discovery.393423505";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.04.29.f407-discovery.1703686493";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1376;
@@ -1576,7 +1576,6 @@ public class Fields {
 	public static final Field IS_ENABLED_SPI_3 = Field.create("IS_ENABLED_SPI_3", 732, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field ISSDCARDENABLED = Field.create("ISSDCARDENABLED", 732, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field RUSEFIVERBOSE29B = Field.create("RUSEFIVERBOSE29B", 732, FieldType.BIT, 4).setBaseOffset(0);
-	public static final Field ISENGINECONTROLENABLED = Field.create("ISENGINECONTROLENABLED", 732, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field ISHIP9011ENABLED = Field.create("ISHIP9011ENABLED", 732, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field ISVERBOSEALTERNATOR = Field.create("ISVERBOSEALTERNATOR", 732, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field VERBOSEQUAD = Field.create("VERBOSEQUAD", 732, FieldType.BIT, 8).setBaseOffset(0);
@@ -3027,7 +3026,6 @@ public class Fields {
 	IS_ENABLED_SPI_3,
 	ISSDCARDENABLED,
 	RUSEFIVERBOSE29B,
-	ISENGINECONTROLENABLED,
 	ISHIP9011ENABLED,
 	ISVERBOSEALTERNATOR,
 	VERBOSEQUAD,
