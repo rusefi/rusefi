@@ -54,6 +54,7 @@ void setDefaultBaseEngine() {
 
 	// Limits and Fallbacks
 	engineConfiguration->rpmHardLimit = 7000;
+	engineConfiguration->rpmHardLimitHyst = 50;
 	engineConfiguration->cutFuelOnHardLimit = true;
 	engineConfiguration->cutSparkOnHardLimit = true;
 
