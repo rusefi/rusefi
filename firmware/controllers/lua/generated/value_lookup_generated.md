@@ -296,7 +296,7 @@ Single value to be used in event of a failed MAP sensor \nThis value is only use
 Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.
 
 ### globalFuelCorrection
-set global_fuel_correction X
+
 
 ### adcVcc
 

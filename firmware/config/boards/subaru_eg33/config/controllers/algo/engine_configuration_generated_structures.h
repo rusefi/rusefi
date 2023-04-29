@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Apr 27 13:45:49 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Apr 29 00:12:13 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -425,8 +425,6 @@ struct injector_s {
 	 */
 	float flow;
 	/**
-	 * set_flat_injector_lag LAG
-	 * set_injector_lag VOLTAGE LAG
 	volts
 	 * offset 4
 	 */
@@ -1168,7 +1166,6 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e mafAdcChannel;
 	/**
-	 * set global_fuel_correction X
 	coef
 	 * offset 488
 	 */
@@ -5336,4 +5333,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22436);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Apr 27 13:45:49 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Apr 29 00:12:13 UTC 2023
