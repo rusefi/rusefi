@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Apr 29 04:18:00 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Apr 29 19:54:38 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -269,12 +269,6 @@ case MRE_MIATA_94_MAP:
   return "MRE_MIATA_94_MAP";
 case MRE_MIATA_NA6_MAP:
   return "MRE_MIATA_NA6_MAP";
-case UNUSED_11:
-  return "MRE_MIATA_NB2_ETB";
-case UNUSED_12:
-  return "MRE_MIATA_NB2_MAF";
-case UNUSED_13:
-  return "MRE_MIATA_NB2_MAP";
 case MRE_SECONDARY_CAN:
   return "MRE_SECONDARY_CAN";
 case MRE_SUBARU_EJ18:
@@ -349,6 +343,14 @@ case TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
+case UNUSED_11:
+  return "UNUSED_11";
+case UNUSED_12:
+  return "UNUSED_12";
+case UNUSED_13:
+  return "UNUSED_13";
+case UNUSED_15:
+  return "UNUSED_15";
 case UNUSED_57:
   return "UNUSED_57";
 case VW_ABA:
