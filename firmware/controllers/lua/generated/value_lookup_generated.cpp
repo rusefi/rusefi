@@ -64,15 +64,6 @@ float getConfigValueByName(const char *name) {
 // enableTrailingSparks
 		case -1409016614:
 			return engineConfiguration->enableTrailingSparks;
-// isCJ125Verbose
-		case 119246268:
-			return engineConfiguration->isCJ125Verbose;
-// cj125isUaDivided
-		case 1627431605:
-			return engineConfiguration->cj125isUaDivided;
-// cj125isLsu49
-		case -1780521945:
-			return engineConfiguration->cj125isLsu49;
 // etb_use_two_wires
 		case -1334689362:
 			return engineConfiguration->etb_use_two_wires;
@@ -82,9 +73,6 @@ float getConfigValueByName(const char *name) {
 // useEeprom
 		case -1572546086:
 			return engineConfiguration->useEeprom;
-// cj125isUrDivided
-		case 291489190:
-			return engineConfiguration->cj125isUrDivided;
 // useCicPidForIdle
 		case -264572349:
 			return engineConfiguration->useCicPidForIdle;
@@ -427,9 +415,6 @@ float getConfigValueByName(const char *name) {
 // etb1configured
 		case -432676169:
 			return engineConfiguration->etb1configured;
-// isCJ125Enabled
-		case -28818575:
-			return engineConfiguration->isCJ125Enabled;
 // etb2configured
 		case 1804769272:
 			return engineConfiguration->etb2configured;
@@ -1703,21 +1688,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enableTrailingSparks = (int)value;
 		return;
 	}
-		case 119246268:
-	{
-		engineConfiguration->isCJ125Verbose = (int)value;
-		return;
-	}
-		case 1627431605:
-	{
-		engineConfiguration->cj125isUaDivided = (int)value;
-		return;
-	}
-		case -1780521945:
-	{
-		engineConfiguration->cj125isLsu49 = (int)value;
-		return;
-	}
 		case -1334689362:
 	{
 		engineConfiguration->etb_use_two_wires = (int)value;
@@ -1731,11 +1701,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -1572546086:
 	{
 		engineConfiguration->useEeprom = (int)value;
-		return;
-	}
-		case 291489190:
-	{
-		engineConfiguration->cj125isUrDivided = (int)value;
 		return;
 	}
 		case -264572349:
@@ -2306,11 +2271,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -432676169:
 	{
 		engineConfiguration->etb1configured = (int)value;
-		return;
-	}
-		case -28818575:
-	{
-		engineConfiguration->isCJ125Enabled = (int)value;
 		return;
 	}
 		case 1804769272:

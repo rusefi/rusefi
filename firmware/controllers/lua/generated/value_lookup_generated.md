@@ -58,15 +58,6 @@ Inhibit operation of this fan while the engine is not running.
 ### enableTrailingSparks
 Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 
-### isCJ125Verbose
-enable cj125verbose/disable cj125verbose
-
-### cj125isUaDivided
-Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
-
-### cj125isLsu49
-
-
 ### etb_use_two_wires
 TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 
@@ -75,9 +66,6 @@ Subaru/BMW style where default valve position is somewhere in the middle. First 
 
 ### useEeprom
 
-
-### cj125isUrDivided
-Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 
 ### useCicPidForIdle
 Switch between Industrial and Cic PID implementation
@@ -420,9 +408,6 @@ CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_bro
 
 ### etb1configured
 
-
-### isCJ125Enabled
-enable cj125/disable cj125
 
 ### etb2configured
 

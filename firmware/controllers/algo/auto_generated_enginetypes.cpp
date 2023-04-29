@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Apr 29 02:29:04 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Apr 29 04:18:00 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -56,6 +56,8 @@ case DBG_20:
   return "DBG_20";
 case DBG_24:
   return "DBG_24";
+case DBG_25:
+  return "DBG_25";
 case DBG_26:
   return "DBG_26";
 case DBG_29:
@@ -86,8 +88,6 @@ case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
 case DBG_BENCH_TEST:
   return "DBG_BENCH_TEST";
-case DBG_CJ125:
-  return "DBG_CJ125";
 case DBG_COMPOSITE_LOG:
   return "DBG_COMPOSITE_LOG";
 case DBG_DWELL_METRIC:
@@ -610,6 +610,8 @@ case TS_SOLENOID_CATEGORY:
   return "TS_SOLENOID_CATEGORY";
 case TS_UNUSED_23:
   return "TS_UNUSED_23";
+case TS_UNUSED_24:
+  return "TS_UNUSED_24";
 case TS_UNUSED_26:
   return "TS_UNUSED_26";
 case TS_UNUSED_27:
@@ -618,8 +620,6 @@ case TS_UNUSED_28:
   return "TS_UNUSED_28";
 case TS_UNUSED_29:
   return "TS_UNUSED_29";
-case TS_UNUSED_CJ125_CALIB:
-  return "TS_UNUSED_CJ125_CALIB";
 case TS_WIDEBAND:
   return "TS_WIDEBAND";
 case TS_X14:
