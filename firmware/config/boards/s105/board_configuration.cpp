@@ -31,6 +31,9 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
+    strcpy(engineConfiguration->engineMake, "UAZ");
+    strcpy(engineConfiguration->engineCode, "451");
+
 	// No LEDs on this board so let's toggle. PC14 of LSI did not work for blinking, any better alternatives?
 	engineConfiguration->communicationLedPin = Gpio::Unassigned;
 	engineConfiguration->runningLedPin = Gpio::Unassigned;
