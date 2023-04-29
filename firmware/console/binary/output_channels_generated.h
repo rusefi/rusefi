@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 23 00:31:50 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 29 21:01:06 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1205,7 +1205,7 @@ struct output_channels_s {
 	V
 	 * offset 550
 	 */
-	scaled_channel<int16_t, 1000, 1> rawAnalogInput[LUA_DIGITAL_INPUT_COUNT];
+	scaled_channel<int16_t, 1000, 1> rawAnalogInput[LUA_ANALOG_INPUT_COUNT];
 	/**
 	 * GPPWM Output
 	%
@@ -1383,4 +1383,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 776);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 23 00:31:50 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 29 21:01:06 UTC 2023

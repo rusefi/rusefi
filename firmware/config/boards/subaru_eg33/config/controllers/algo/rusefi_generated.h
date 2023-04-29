@@ -405,7 +405,7 @@
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_TIMING "Timing"
-#define GAUGE_COIL_DWELL_TIME "Ignition: coil charge time"
+#define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 #define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -444,7 +444,7 @@
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 #define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
 #define GAUGE_NAME_DETECTED_GEAR "Detected Gear"
-#define GAUGE_NAME_DWELL_DUTY "Ignition: coil duty cycle"
+#define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
@@ -461,7 +461,7 @@
 #define GAUGE_NAME_FUEL_FLOW "fuel: Flow rate"
 #define GAUGE_NAME_FUEL_IAT_CORR "fuel: IAT correction"
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
-#define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last Inj Pulsewidth"
+#define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last injection"
 #define GAUGE_NAME_FUEL_LEVEL "fuel level"
 #define GAUGE_NAME_FUEL_LOAD "fuel: load"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
@@ -481,7 +481,7 @@
 #define GAUGE_NAME_IAC "Idle Air Valve"
 #define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_IDLE_POSITION "Idle position sensor"
-#define GAUGE_NAME_IGNITION_LOAD "Ignition: load"
+#define GAUGE_NAME_IGNITION_LOAD "ign: load"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_ISS "Input Shaft Speed"
 #define GAUGE_NAME_KNOCK_1 "knock 1"
@@ -515,11 +515,11 @@
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_TIME "Time"
-#define GAUGE_NAME_TIMING_ADVANCE "Timing: base ignition"
+#define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
-#define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
+#define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
 #define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
 #define GAUGE_NAME_TURBO_SPEED "Turbocharger Speed"
 #define GAUGE_NAME_UPTIME "Uptime"
@@ -1017,7 +1017,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3293042239
+#define SIGNATURE_HASH 2063796098
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1309,7 +1309,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.04.29.subaru_eg33_f7.3293042239"
+#define TS_SIGNATURE "rusEFI master.2023.04.29.subaru_eg33_f7.2063796098"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

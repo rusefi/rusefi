@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 19:55:28 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 29 21:01:56 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -393,7 +393,7 @@ public class Fields {
 	public static final String GAUGE_CATEGORY_FUEL_MATH = "Fuel: math";
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
-	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
+	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
 	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
@@ -432,7 +432,7 @@ public class Fields {
 	public static final String GAUGE_NAME_DEBUG_I5 = "debug i5";
 	public static final String GAUGE_NAME_DESIRED_GEAR = "Desired Gear";
 	public static final String GAUGE_NAME_DETECTED_GEAR = "Detected Gear";
-	public static final String GAUGE_NAME_DWELL_DUTY = "Ignition: coil duty cycle";
+	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_CRC16 = "Engine CRC16";
 	public static final String GAUGE_NAME_ETB_DUTY = "ETB Duty";
@@ -449,7 +449,7 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_FLOW = "fuel: Flow rate";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
-	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last Inj Pulsewidth";
+	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last injection";
 	public static final String GAUGE_NAME_FUEL_LEVEL = "fuel level";
 	public static final String GAUGE_NAME_FUEL_LOAD = "fuel: load";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
@@ -469,7 +469,7 @@ public class Fields {
 	public static final String GAUGE_NAME_IAC = "Idle Air Valve";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle position sensor";
-	public static final String GAUGE_NAME_IGNITION_LOAD = "Ignition: load";
+	public static final String GAUGE_NAME_IGNITION_LOAD = "ign: load";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "fuel: injector lag";
 	public static final String GAUGE_NAME_ISS = "Input Shaft Speed";
 	public static final String GAUGE_NAME_KNOCK_1 = "knock 1";
@@ -503,11 +503,11 @@ public class Fields {
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
-	public static final String GAUGE_NAME_TIMING_ADVANCE = "Timing: base ignition";
+	public static final String GAUGE_NAME_TIMING_ADVANCE = "timing";
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
 	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";
-	public static final String GAUGE_NAME_TRG_GAP = "Sync: Trigger Latest Ratio";
+	public static final String GAUGE_NAME_TRG_GAP = "Trigger Sync Latest Ratio";
 	public static final String GAUGE_NAME_TUNE_CRC16 = "Tune CRC16";
 	public static final String GAUGE_NAME_TURBO_SPEED = "Turbocharger Speed";
 	public static final String GAUGE_NAME_UPTIME = "Uptime";
@@ -1010,6 +1010,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 336047088;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1233,7 +1234,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.04.29.f407-discovery.2873326157";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.04.29.f407-discovery.336047088";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1376;
