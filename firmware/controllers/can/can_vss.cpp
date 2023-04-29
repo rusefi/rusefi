@@ -38,7 +38,7 @@ float processBMW_e46(const CANRxFrame& frame) {
 	uint16_t left =  (((frame.data8[5] & 0x0f) << 8) | frame.data8[4]);
 	uint16_t right = (((frame.data8[7] & 0x0f) << 8) | frame.data8[6]);
 
-	return tmp / 16.0f;
+	return (left + right) / (16 * 2);
 }
 
 float processW202(const CANRxFrame& frame) {
