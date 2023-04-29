@@ -268,12 +268,6 @@ CANbus thread period in ms
 ### byFirmwareVersion
 
 
-### HD44780width
-
-
-### HD44780height
-
-
 ### idle_derivativeFilterLoss
 0.1 is a good default value
 
@@ -416,9 +410,6 @@ This setting should only be used if you have a stepper motor idle valve and a st
 
 
 ### useTpicAdvancedMode
-
-
-### useLcdScreen
 
 
 ### verboseTLE8888

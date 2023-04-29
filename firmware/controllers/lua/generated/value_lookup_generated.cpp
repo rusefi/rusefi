@@ -274,12 +274,6 @@ float getConfigValueByName(const char *name) {
 // byFirmwareVersion
 		case 171869155:
 			return engineConfiguration->byFirmwareVersion;
-// HD44780width
-		case -526236296:
-			return engineConfiguration->HD44780width;
-// HD44780height
-		case -777537519:
-			return engineConfiguration->HD44780height;
 // idle_derivativeFilterLoss
 		case -1269130308:
 			return engineConfiguration->idle_derivativeFilterLoss;
@@ -424,9 +418,6 @@ float getConfigValueByName(const char *name) {
 // useTpicAdvancedMode
 		case -1037977635:
 			return engineConfiguration->useTpicAdvancedMode;
-// useLcdScreen
-		case -538782875:
-			return engineConfiguration->useLcdScreen;
 // verboseTLE8888
 		case -1251676000:
 			return engineConfiguration->verboseTLE8888;
@@ -2062,16 +2053,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->byFirmwareVersion = (int)value;
 		return;
 	}
-		case -526236296:
-	{
-		engineConfiguration->HD44780width = (int)value;
-		return;
-	}
-		case -777537519:
-	{
-		engineConfiguration->HD44780height = (int)value;
-		return;
-	}
 		case -1269130308:
 	{
 		engineConfiguration->idle_derivativeFilterLoss = value;
@@ -2310,11 +2291,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -1037977635:
 	{
 		engineConfiguration->useTpicAdvancedMode = (int)value;
-		return;
-	}
-		case -538782875:
-	{
-		engineConfiguration->useLcdScreen = (int)value;
 		return;
 	}
 		case -1251676000:
