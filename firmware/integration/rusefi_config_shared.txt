@@ -39,6 +39,7 @@
 #define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
 
 #define GAUGE_CATEGORY_TIMING "Timing"
+#define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
 #define GAUGE_CATEGORY_BOOST_CONTROL "Boost Control"
 #define GAUGE_CATEGORY_ETB "ETB more"
