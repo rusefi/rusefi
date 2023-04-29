@@ -49,7 +49,7 @@ typedef enum __attribute__ ((__packed__)) {
 	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
 	HELLEN_NA8_96 = 10,
 	MRE_MIATA_NB2_MAP = 11,
-	MRE_MIATA_NA6_VAF = 12,
+	UNUSED_12 = 12,
 	MRE_MIATA_NB2_ETB = 13,
 	MRE_MIATA_NA6_MAP = 66,
 	MRE_MIATA_NB2_MAF = 15,
@@ -147,6 +147,8 @@ typedef enum __attribute__ ((__packed__)) {
 	MAZDA_MIATA_2003_BOARD_TEST = 55,
 
 	FRANKENSO_MAZDA_MIATA_NA8 = 56,
+
+	UNUSED_57 = 57,
 
 	ETB_BENCH_ENGINE = 58,
 
