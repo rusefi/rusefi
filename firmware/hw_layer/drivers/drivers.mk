@@ -6,7 +6,8 @@ HW_LAYER_DRIVERS_INC = \
 	$(DRIVERS_DIR)/can \
 	$(DRIVERS_DIR)/sent \
 	$(DRIVERS_DIR)/serial \
-	$(DRIVERS_DIR)/i2c
+	$(DRIVERS_DIR)/i2c \
+	$(DRIVERS_DIR)/led
 
 HW_LAYER_DRIVERS_CORE = \
 
