@@ -6,6 +6,8 @@
 #include "hellen_meta.h"
 #endif // HW_HELLEN
 
+#include "proteus_meta.h"
+
 void setStepperHw() {
 	engineConfiguration->useStepperIdle = true;
 	engineConfiguration->useHbridgesToDriveIdleStepper = true;
@@ -43,6 +45,9 @@ void setSbc() {
  	setStepperHw();
 
 	// 8 cylinders one coil HEI trigger
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 8;
+	engineConfiguration->trigger.customSkippedToothCount = 0;
 }
 
 void set8chanSbc() {
