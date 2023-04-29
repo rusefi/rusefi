@@ -151,7 +151,7 @@ private:
 
 	// todo: migrate to engineState->desiredRpmLimit to get this variable logged
 	float m_revLimit;
-	float m_revLimitLow;
+	float resumeRpm;
 
 	// Tracks how long since a cut (ignition or fuel) was active for any reason
 	Timer m_lastCutTime;
