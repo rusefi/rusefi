@@ -56,6 +56,7 @@ for BOARD in \
    "config/boards/f407-discovery f407-discovery" \
    "config/boards/f429-discovery f429-discovery" \
    "config/boards/nucleo_f429 stm32f429_nucleo" \
+   "config/boards/nucleo_f767 stm32f767_nucleo" \
    "config/boards/nucleo_h743 stm32h743_nucleo" \
    "config/boards/atlas atlas"\
    "config/boards/tdg-pdm8 tdg-pdm8"\
