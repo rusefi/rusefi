@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Apr 20 00:59:20 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Apr 29 02:29:04 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -185,8 +185,6 @@ case FRANKENSO_MAZDA_MIATA_NA8:
   return "FRANKENSO_MAZDA_MIATA_NA8";
 case FRANKENSO_MIATA_NA6_MAP:
   return "FRANKENSO_MIATA_NA6_MAP";
-case FRANKENSO_MIATA_NA6_VAF:
-  return "FRANKENSO_MIATA_NA6_VAF";
 case FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
 case Force_4_bytes_size_engine_type:
@@ -271,8 +269,6 @@ case MRE_MIATA_94_MAP:
   return "MRE_MIATA_94_MAP";
 case MRE_MIATA_NA6_MAP:
   return "MRE_MIATA_NA6_MAP";
-case MRE_MIATA_NA6_VAF:
-  return "MRE_MIATA_NA6_VAF";
 case MRE_MIATA_NB2_ETB:
   return "MRE_MIATA_NB2_ETB";
 case MRE_MIATA_NB2_MAF:
@@ -353,6 +349,10 @@ case TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
+case UNUSED_12:
+  return "UNUSED_12";
+case UNUSED_57:
+  return "UNUSED_57";
 case VW_ABA:
   return "VW_ABA";
 case WASTEGATE_PROTEUS_TEST:
