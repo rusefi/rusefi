@@ -808,7 +808,6 @@ struct command_f_s {
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
-		{"global_fuel_correction", setGlobalFuelCorrection},
 		{"cranking_fuel", setCrankingFuel},
 		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
@@ -1047,7 +1046,6 @@ void initSettings(void) {
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
 #endif // HAL_USE_ADC
 	addConsoleActionSS(CMD_LOGIC_PIN, setLogicInputPin);
-	addConsoleActionI("set_pot_spi", setPotSpi);
 #endif // EFI_PROD_CODE
 }
 
