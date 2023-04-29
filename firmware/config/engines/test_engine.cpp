@@ -19,11 +19,6 @@ void setTestCamEngineConfiguration() {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 	setCamOperationMode();
 
-//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-//	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
-//	triggerConfig->customTotalToothCount = 60;
-//	triggerConfig->customSkippedToothCount = 0;
-
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
@@ -45,7 +40,6 @@ void setTestCamEngineConfiguration() {
 	engineConfiguration->ignitionPins[4] = Gpio::Unassigned; // #5
 	engineConfiguration->ignitionPins[5] = Gpio::Unassigned; // #6
 }
-
 
 void setTestCrankEngineConfiguration() {
 	setTestCamEngineConfiguration();

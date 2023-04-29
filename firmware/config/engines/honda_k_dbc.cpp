@@ -54,27 +54,16 @@ void setHondaK() {
 	strcpy(engineConfiguration->gpPwmNote[0], "VTS");
 }
 
-
 /**
  * K24A4 engine
  * PROTEUS_HONDA_K
  */
 void setProteusHondaElement2003() {
     setHondaK();
-//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-//	engineConfiguration->trigger.customTotalToothCount = 12;
-//	engineConfiguration->trigger.customSkippedToothCount = 0;
-
-
-//	engineConfiguration->trigger.type = TT_HONDA_K_CAM_4_1; // cam as primary, ignoring crank
-//	engineConfiguration->globalTriggerAngleOffset = 570;
-
-
 
 	strcpy(engineConfiguration->vehicleName, "test");
 
 	gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
-
 
 #if HW_PROTEUS & EFI_PROD_CODE
 //	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_2; // crank
