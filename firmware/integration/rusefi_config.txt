@@ -218,8 +218,6 @@ struct_no_prefix engine_configuration_s
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
 
-#define PACK_MULT_VSS 100
-
 #define SCRIPT_TABLE_8 8
 
 #define SCRIPT_CURVE_8 8
