@@ -21,8 +21,7 @@ static void setInjectorPins() {
 static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[0] = Gpio::D13;
 	engineConfiguration->ignitionPins[1] = Gpio::D12;
-//todo: revert to reality	engineConfiguration->ignitionPins[2] = Gpio::D15;
-	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::D15;
 	engineConfiguration->ignitionPins[3] = Gpio::D14;
 
 	engineConfiguration->ignitionPinMode = OM_OPENDRAIN;
@@ -32,9 +31,8 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	// No LEDs on this board
-//todo: revert to reality	engineConfiguration->communicationLedPin = Gpio::Unassigned;
-	engineConfiguration->communicationLedPin = Gpio::D15;
+	// No LEDs on this board so let's toggle. TODO test if toggle actually toggles considering C14 pin LSI
+	engineConfiguration->communicationLedPin = Gpio::C14;
 	engineConfiguration->runningLedPin = Gpio::Unassigned;
 	engineConfiguration->warningLedPin = Gpio::Unassigned;
 

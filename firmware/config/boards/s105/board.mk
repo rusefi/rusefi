@@ -32,6 +32,7 @@ USE_FATFS = no
 # TS serial
 DDEFS += -DSTM32_SERIAL_USE_USART1=TRUE
 DDEFS += -DTS_PRIMARY_UxART_PORT=SD1
+# WARNING: those are USB pins on discovery or rusEFI brain board so make sure to power those NOT via USB
 DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=Gpio::A9 -DEFI_CONSOLE_RX_BRAIN_PIN=Gpio::A10
 
 DDEFS += -DFIRMWARE_ID=\"s105\"
