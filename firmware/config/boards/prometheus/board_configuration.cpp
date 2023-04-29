@@ -168,7 +168,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
 
 	// not used
-	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;

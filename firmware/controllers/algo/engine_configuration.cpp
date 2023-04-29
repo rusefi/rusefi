@@ -584,9 +584,6 @@ static void setDefaultEngineConfiguration() {
 	// todo: start using this for custom MAP
 	engineConfiguration->mapHighValueVoltage = 5;
 
-	engineConfiguration->HD44780width = 20;
-	engineConfiguration->HD44780height = 4;
-
 	engineConfiguration->cylinderBore = 87.5;
 
 	setBoschHDEV_5_injectors();
