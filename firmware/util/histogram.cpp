@@ -88,7 +88,7 @@ int histogramGetIndex(int64_t value) {
  */
 void initHistogram(histogram_s *h, const char *name) {
 	if (efiStrlen(name) > sizeof(h->name) - 1) {
-		firmwareError(ERROR_HISTO_NAME, "Histogram name [%s] too long", name);
+		firmwareError(ObdCode::ERROR_HISTO_NAME, "Histogram name [%s] too long", name);
 	}
 	strcpy(h->name, name);
 	h->total_value = 0;

@@ -167,7 +167,7 @@ __attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*
  */
 void incrementGlobalConfigurationVersion(const char * msg) {
     if (!hasRememberedConfiguration) {
-        firmwareError(OBD_PCM_Processor_Fault, "too early to invoke incrementGlobalConfigurationVersion %s", msg);
+        firmwareError(ObdCode::OBD_PCM_Processor_Fault, "too early to invoke incrementGlobalConfigurationVersion %s", msg);
     }
 	engine->globalConfigurationVersion++;
 #if EFI_DEFAILED_LOGGING

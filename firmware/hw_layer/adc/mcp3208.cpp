@@ -69,7 +69,7 @@ MCP3208_CS_PIN,
 		};
 
 static void createRequest(McpAdcState *state, int channel) {
-	efiAssertVoid(CUSTOM_ERR_6680, channel < 8, "Invalid ADC channel");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6680, channel < 8, "Invalid ADC channel");
 
 	state->requestedChannel = channel;
 

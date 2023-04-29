@@ -34,7 +34,7 @@
 uint32_t hwSetTimerDuration;
 
 void globalTimerCallback() {
-	efiAssertVoid(CUSTOM_ERR_6624, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2y");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6624, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2y");
 
 	___engine.executor.onTimerCallback();
 }
@@ -71,7 +71,7 @@ void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* s
 
 	if (deltaTimeNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d %s", deltaTimeNt, msg);
+		firmwareError(ObdCode::CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d %s", deltaTimeNt, msg);
 		return;
 	}
 #endif
@@ -136,7 +136,7 @@ void SingleTimerExecutor::executeAllPendingActions() {
 
 		// if we're stuck in a loop executing lots of events, panic!
 		if (executeCounter++ == 500) {
-			firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Maximum scheduling run length exceeded - CPU load too high");
+			firmwareError(ObdCode::CUSTOM_ERR_LOCK_ISSUE, "Maximum scheduling run length exceeded - CPU load too high");
 		}
 
 	} while (didExecute);
@@ -144,7 +144,7 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	maxExecuteCounter = maxI(maxExecuteCounter, executeCounter);
 
 	if (!isLocked()) {
-		firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
+		firmwareError(ObdCode::CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
 		return;
 	}
 	reentrantFlag = false;
@@ -166,7 +166,7 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 		return; // no pending events in the queue
 	}
 
-	efiAssertVoid(CUSTOM_ERR_6625, nextEventTimeNt.Value > nowNt, "setTimer constraint");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6625, nextEventTimeNt.Value > nowNt, "setTimer constraint");
 
 	setHardwareSchedulerTimer(nowNt, nextEventTimeNt.Value);
 }

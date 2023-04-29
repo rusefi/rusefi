@@ -42,7 +42,7 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 
 static void initOldAnalogInputs() {
     if (isAdcChannelValid(engineConfiguration->afr.hwChannel) && engineConfiguration->enableAemXSeries) {
-        firmwareError(OBD_PCM_Processor_Fault, "Please pick either analog AFR or CAN AFR input not both.");
+        firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Please pick either analog AFR or CAN AFR input not both.");
     }
 	initIfValid("AFR", engineConfiguration->afr.hwChannel);
 	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);

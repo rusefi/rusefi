@@ -39,7 +39,7 @@ void auxPlainPinTurnOn(AuxActor *current) {
 
 	angle_t duration = engine->engineState.auxValveEnd - engine->engineState.auxValveStart;
 
-	fixAngle(duration, "duration", CUSTOM_ERR_6557);
+	fixAngle(duration, "duration", ObdCode::CUSTOM_ERR_6557);
 
 	engine->module<TriggerScheduler>()->schedule(&current->close,
 			current->extra + engine->engineState.auxValveEnd,
@@ -53,7 +53,7 @@ void initAuxValves() {
 	}
 
 	if (!Sensor::hasSensor(SensorType::DriverThrottleIntent)) {
-		firmwareError(CUSTOM_OBD_91, "No TPS for Aux Valves");
+		firmwareError(ObdCode::CUSTOM_OBD_91, "No TPS for Aux Valves");
 		return;
 	}
 
@@ -93,7 +93,7 @@ void recalculateAuxValveTiming() {
 
 	if (engine->engineState.auxValveStart >= engine->engineState.auxValveEnd) {
 		// this is a fatal error to make this really visible
-		firmwareError(CUSTOM_AUX_OUT_OF_ORDER, "out of order at %.2f %.2f %.2f", tps,
+		firmwareError(ObdCode::CUSTOM_AUX_OUT_OF_ORDER, "out of order at %.2f %.2f %.2f", tps,
 				engine->engineState.auxValveStart,
 				engine->engineState.auxValveEnd);
 	}

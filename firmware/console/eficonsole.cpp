@@ -33,7 +33,7 @@ static void testCritical() {
 }
 
 static void myerror() {
-	firmwareError(CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
+	firmwareError(ObdCode::CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
 }
 
 static void sayHello() {
@@ -77,7 +77,7 @@ static void sayHello() {
 
 	int flashSize = TM_ID_GetFlashSize();
 	if (flashSize < MIN_FLASH_SIZE) {
-		firmwareError(OBD_PCM_Processor_Fault, "rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
 	}
 
 	// todo: bug, at the moment we report 1MB on dual-bank F7
@@ -183,7 +183,7 @@ static void cmd_threads() {
 		efiPrintf("%s\t%08x\t%lu\t%d", tp->name, tp->wabase, tp->time, freeBytes);
 
 		if (freeBytes < 100) {
-			firmwareError(OBD_PCM_Processor_Fault, "Ran out of stack on thread %s, %d bytes remain", tp->name, freeBytes);
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Ran out of stack on thread %s, %d bytes remain", tp->name, freeBytes);
 		}
 
 		tp = chRegNextThread(tp);
