@@ -56,12 +56,9 @@
 #include "digital_input_exti.h"
 #include "dc_motors.h"
 
-extern bool main_loop_started;
-
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
 #include "rtc_helper.h"
-#include "HD44780.h"
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "max31855.h"
