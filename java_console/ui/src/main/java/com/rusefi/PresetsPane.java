@@ -19,11 +19,9 @@ public class PresetsPane {
 
     public PresetsPane(UIContext uiContext) {
         this.uiContext = uiContext;
-        content.add(new SetEngineTypeCommandControl(uiContext,"Frankenso Miata NA6 Stage 0", "/engines/miata_na.png", engine_type_e.FRANKENSO_MIATA_NA6_VAF).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso Miata NA6 Stage 1", "/engines/miata_na.png", engine_type_e.FRANKENSO_MIATA_NA6_MAP).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso Miata NB2", "/engines/miata_nb.png", engine_type_e.FRANKENSO_MAZDA_MIATA_2003).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NA6 MAP", "engines/miata_na.png", engine_type_e.MRE_MIATA_NA6_MAP).getContent());
-        content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NA6 VAF", "engines/miata_na.png", engine_type_e.MRE_MIATA_NA6_VAF).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata 94 MAP", "engines/miata_na.png", engine_type_e.MRE_MIATA_94_MAP).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NB2 MAP", "engines/miata_nb.png", engine_type_e.MRE_MIATA_NB2_MAP).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NB2 MAF", "engines/miata_nb.png", engine_type_e.MRE_MIATA_NB2_MAF).getContent());
