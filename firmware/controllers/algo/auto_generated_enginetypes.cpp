@@ -269,11 +269,11 @@ case MRE_MIATA_94_MAP:
   return "MRE_MIATA_94_MAP";
 case MRE_MIATA_NA6_MAP:
   return "MRE_MIATA_NA6_MAP";
-case MRE_MIATA_NB2_ETB:
+case UNUSED_11:
   return "MRE_MIATA_NB2_ETB";
-case MRE_MIATA_NB2_MAF:
+case UNUSED_12:
   return "MRE_MIATA_NB2_MAF";
-case MRE_MIATA_NB2_MAP:
+case UNUSED_13:
   return "MRE_MIATA_NB2_MAP";
 case MRE_SECONDARY_CAN:
   return "MRE_SECONDARY_CAN";
@@ -349,8 +349,6 @@ case TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case UNUSED_12:
-  return "UNUSED_12";
 case UNUSED_57:
   return "UNUSED_57";
 case VW_ABA:

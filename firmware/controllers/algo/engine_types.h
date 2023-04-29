@@ -48,11 +48,11 @@ typedef enum __attribute__ ((__packed__)) {
 
 	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
 	HELLEN_NA8_96 = 10,
-	MRE_MIATA_NB2_MAP = 11,
+	UNUSED_11 = 11,
 	UNUSED_12 = 12,
-	MRE_MIATA_NB2_ETB = 13,
+	UNUSED_13 = 13,
 	MRE_MIATA_NA6_MAP = 66,
-	MRE_MIATA_NB2_MAF = 15,
+	UNUSED_15 = 15,
 
 	TEST_ROTARY = 19,
 	// Frankenso board
