@@ -47,7 +47,7 @@ static void populateFrame(Status& msg) {
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
 
-	msg.gear = Sensor::getOrZero(SensorType::DetectedGear);
+	msg.gear = 0;// not yet Sensor::getOrZero(SensorType::DetectedGear);
 }
 
 struct Speeds {
