@@ -301,7 +301,6 @@ public class CommonFunctionalTest extends RusefiTestBase {
     public void test1995DodgeNeon() {
         ecu.setEngineType(engine_type_e.DODGE_NEON_1995);
         EngineChart chart;
-        sendComplexCommand("set_whole_fuel_map 3");
         sendComplexCommand("set_individual_coils_ignition");
         /**
          * note that command order matters - RPM change resets wave chart
@@ -391,7 +390,6 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull("cranking@600", chart, EngineChart.SPARK_1);
 
         ecu.changeRpm(2000);
-        ecu.sendCommand("set_whole_fuel_map 1.57");
 
         ecu.changeRpm(2600);
         ecu.changeRpm(2000);
