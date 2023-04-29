@@ -55,6 +55,8 @@ for BOARD in \
    "config/boards/proteus proteus_h7" \
    "config/boards/f407-discovery f407-discovery" \
    "config/boards/f429-discovery f429-discovery" \
+   "config/boards/stm32f429_nucleo stm32f429_nucleo" \
+   "config/boards/stm32h743_nucleo stm32h743_nucleo" \
    "config/boards/atlas atlas"\
    "config/boards/tdg-pdm8 tdg-pdm8"\
    ; do
