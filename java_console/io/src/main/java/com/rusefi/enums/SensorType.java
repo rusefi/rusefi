@@ -46,6 +46,7 @@ public enum SensorType {
 	Map2,
 	MapSlow2,
 	MapFast2,
+	DetectedGear,
 	AuxAnalog1,
 	AuxAnalog2,
 	AuxAnalog3,

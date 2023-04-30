@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Mon Mar 06 04:48:55 UTC 2023
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Sun Apr 30 14:55:15 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -49,6 +49,8 @@ case SensorType::Clt:
   return "Clt";
 case SensorType::CurrentGear:
   return "CurrentGear";
+case SensorType::DetectedGear:
+  return "DetectedGear";
 case SensorType::DriverThrottleIntent:
   return "DriverThrottleIntent";
 case SensorType::EGT1:
