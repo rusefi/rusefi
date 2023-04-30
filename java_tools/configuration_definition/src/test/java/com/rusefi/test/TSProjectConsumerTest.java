@@ -94,4 +94,31 @@ public class TSProjectConsumerTest {
                 "static_assert(sizeof(pid_s) == 24);\n" +
                 "\n", consumer.getContent());
     }
+
+    @Test
+    public void cppCornerCaseEmptyStruct() {
+        String test = "struct pid_s\n" +
+                "end_struct\n" +
+                "";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+
+
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
+
+        state.readBufferedReader(test, javaFieldsConsumer, consumer, tsProjectConsumer);
+
+        assertEquals("; total TS size = 0\n", tsProjectConsumer.getContent());
+
+        assertEquals("", javaFieldsConsumer.getContent());
+
+
+        assertEquals("// start of pid_s\n" +
+                "struct pid_s {\n" +
+                "};\n" +
+                "static_assert(sizeof(pid_s) == 0);\n" +
+                "\n", consumer.getContent());
+    }
 }
