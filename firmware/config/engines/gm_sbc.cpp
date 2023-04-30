@@ -59,6 +59,7 @@ void setSbc() {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
+	engineConfiguration->skippedWheelOnCam = true;
 }
 
 void set8chanSbc() {
