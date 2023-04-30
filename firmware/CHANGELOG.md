@@ -38,6 +38,7 @@ Release template (copy/paste this for new release):
  - More trigger UI tweaks
  - Lua memory leak detection and prevention
  - Support gauge fuel pressure sensors
+ - Better idle VE table transition
 
 ## April 2023 Release - "Day 419"
 
