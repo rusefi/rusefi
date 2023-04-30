@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 30 04:51:58 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 30 05:29:09 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -799,6 +799,7 @@ public class Fields {
 	public static final int gppwm_channel_e_GPPWM_AuxTemp1 = 7;
 	public static final int gppwm_channel_e_GPPWM_AuxTemp2 = 8;
 	public static final int gppwm_channel_e_GPPWM_Clt = 3;
+	public static final int gppwm_channel_e_GPPWM_DetectedGear = 25;
 	public static final int gppwm_channel_e_GPPWM_EthanolPercent = 15;
 	public static final int gppwm_channel_e_GPPWM_FuelLoad = 5;
 	public static final int gppwm_channel_e_GPPWM_GppwmOutput1 = 18;
