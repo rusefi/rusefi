@@ -128,6 +128,9 @@ expected<float> ThrottleModelBase::estimateThrottleFlow(float map, float tps) {
 	return estimateThrottleFlow(tip.Value, tps, map, iat.Value);
 }
 
+void ThrottleModelBase::onSlowCallback() {
+}
+
 float ThrottleModel::effectiveArea(float tps) const {
 	return interpolate2d(tps, config->throttleEstimateEffectiveAreaBins, config->throttleEstimateEffectiveAreaValues);
 }

@@ -2,8 +2,10 @@
 
 #include "throttle_model_generated.h"
 
-struct ThrottleModelBase : public throttle_model_s {
+struct ThrottleModelBase : public throttle_model_s, public EngineModule {
 public:
+	void onSlowCallback() override;
+
 	float estimateThrottleFlow(float tip, float tps, float map, float iat);
 	expected<float> estimateThrottleFlow(float map, float tps);
 
