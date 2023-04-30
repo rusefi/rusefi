@@ -80,7 +80,10 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         }
 
         content.append("};" + EOL);
-        content.append("static_assert(sizeof(" + structure.getName() + ") == " + iterator.currentOffset + ");\n");
+        int realSize = iterator.currentOffset;
+        // https://stackoverflow.com/questions/621616/c-what-is-the-size-of-an-object-of-an-empty-class
+        int cppSize = Math.max(1, realSize);
+        content.append("static_assert(sizeof(" + structure.getName() + ") == " + cppSize + ");\n");
         content.append(EOL);
     }
 

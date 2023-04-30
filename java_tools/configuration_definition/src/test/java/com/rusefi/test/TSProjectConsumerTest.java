@@ -118,7 +118,7 @@ public class TSProjectConsumerTest {
         assertEquals("// start of pid_s\n" +
                 "struct pid_s {\n" +
                 "};\n" +
-                "static_assert(sizeof(pid_s) == 0);\n" +
+                "static_assert(sizeof(pid_s) == 1);\n" +
                 "\n", consumer.getContent());
     }
 }
