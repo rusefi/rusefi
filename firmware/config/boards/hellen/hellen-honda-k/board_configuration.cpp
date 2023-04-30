@@ -62,7 +62,6 @@ void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setHellenMegaEnPin();
 	setupVbatt();
-	setHellenMMbaro();
 
 	setHellenSdCardSpi1();
 	configureHellenMegaAccCS2Pin();
@@ -99,6 +98,9 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setHondaK();
+
+    // not override since sometimes we have isues?
+	setHellenMMbaro();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 

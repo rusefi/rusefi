@@ -143,7 +143,6 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
-	setHellenMMbaro();
 	// todo: do we need this conditional on boardId or not really?
 	setHellenMegaEnPin();
 
@@ -168,6 +167,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->vvtPins[0] = H144_OUT_PWM7;
 	engineConfiguration->vvtPins[1] = H144_OUT_PWM8;
 
+	setHellenMMbaro();
     engineConfiguration->boardUseTempPullUp = true;
 
 	engineConfiguration->acSwitch = Gpio::Unassigned;
