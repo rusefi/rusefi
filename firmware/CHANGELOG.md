@@ -33,7 +33,7 @@ Release template (copy/paste this for new release):
  - CJ125 support removed
 
 ### Added
- - Wastegate position to CAN format
+ - Detected gear and wastegate position to CAN format
  - Pause closed loop fuel after cuts
  - More trigger UI tweaks
  - Lua memory leak detection and prevention
