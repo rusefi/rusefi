@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Apr 22 16:06:37 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Apr 30 04:02:03 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -377,6 +377,17 @@ case LM_REAL_MAF:
   return "LM_REAL_MAF";
 case LM_SPEED_DENSITY:
   return "LM_SPEED_DENSITY";
+  }
+ return NULL;
+}
+const char *getFuel_pressure_sensor_mode_e(fuel_pressure_sensor_mode_e value){
+switch(value) {
+case FPM_Absolute:
+  return "FPM_Absolute";
+case FPM_Differential:
+  return "FPM_Differential";
+case FPM_Gauge:
+  return "FPM_Gauge";
   }
  return NULL;
 }

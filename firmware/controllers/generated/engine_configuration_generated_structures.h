@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 30 03:32:25 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 30 04:02:55 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4191,63 +4191,67 @@ struct engine_configuration_s {
 	/**
 	 * offset 3868
 	 */
+	fuel_pressure_sensor_mode_e fuelPressureSensorMode;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 3869
+	 */
+	uint8_t alignmentFill_at_3869[1];
+	/**
+	 * offset 3870
+	 */
 	Gpio luaDigitalInputPins[LUA_DIGITAL_INPUT_COUNT];
 	/**
 	RPM
-	 * offset 3884
+	 * offset 3886
 	 */
 	scaled_channel<uint8_t, 1, 50> tpsTspCorrValuesBins[TPS_TPS_ACCEL_CLT_CORR_TABLE];
 	/**
 	rpm
-	 * offset 3888
+	 * offset 3890
 	 */
 	int16_t ALSMinRPM;
 	/**
 	rpm
-	 * offset 3890
+	 * offset 3892
 	 */
 	int16_t ALSMaxRPM;
 	/**
 	sec
-	 * offset 3892
+	 * offset 3894
 	 */
 	int16_t ALSMaxDuration;
 	/**
 	C
-	 * offset 3894
+	 * offset 3896
 	 */
 	int8_t ALSMinCLT;
 	/**
 	C
-	 * offset 3895
+	 * offset 3897
 	 */
 	int8_t ALSMaxCLT;
 	/**
-	 * offset 3896
+	 * offset 3898
 	 */
 	uint8_t alsMinTimeBetween;
 	/**
-	 * offset 3897
+	 * offset 3899
 	 */
 	uint8_t alsEtbPosition;
 	/**
-	 * offset 3898
+	 * offset 3900
 	 */
 	uint8_t acRelayAlternatorDutyAdder;
 	/**
-	 * offset 3899
+	 * offset 3901
 	 */
 	SentEtbType sentEtbType;
 	/**
-	 * offset 3900
-	 */
-	uint16_t customSentTpsMin;
-	/**
-	 * need 4 byte alignment
-	units
 	 * offset 3902
 	 */
-	uint8_t alignmentFill_at_3902[2];
+	uint16_t customSentTpsMin;
 	/**
 	%
 	 * offset 3904
@@ -5177,4 +5181,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22428);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 30 03:32:25 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 30 04:02:55 UTC 2023

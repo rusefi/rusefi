@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 30 03:32:25 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 30 04:02:55 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -386,6 +386,9 @@ public class Fields {
 	public static final int FLASH_DATA_VERSION = 10021;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
+	public static final int fuel_pressure_sensor_mode_e_FPM_Absolute = 0;
+	public static final int fuel_pressure_sensor_mode_e_FPM_Differential = 2;
+	public static final int fuel_pressure_sensor_mode_e_FPM_Gauge = 1;
 	public static final int FUEL_RPM_COUNT = 16;
 	public static final int GAP_TRACKING_LENGTH = 18;
 	public static final String GAUGE_CATEGORY_BOOST_CONTROL = "Boost Control";
@@ -1010,7 +1013,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 522654467;
+	public static final int SIGNATURE_HASH = 2031105479;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1234,7 +1237,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.04.30.f407-discovery.522654467";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.04.30.f407-discovery.2031105479";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
@@ -2472,27 +2475,29 @@ public class Fields {
 	public static final Field ALIGNMENTFILL_AT_3799 = Field.create("ALIGNMENTFILL_AT_3799", 3799, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HIGHSPEEDOFFSETS = Field.create("HIGHSPEEDOFFSETS", 3800, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBDUTYSHUTDOWNTHRESHOLD = Field.create("ETBDUTYSHUTDOWNTHRESHOLD", 3864, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field LUADIGITALINPUTPINS1 = Field.create("LUADIGITALINPUTPINS1", 3868, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field LUADIGITALINPUTPINS2 = Field.create("LUADIGITALINPUTPINS2", 3870, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field LUADIGITALINPUTPINS3 = Field.create("LUADIGITALINPUTPINS3", 3872, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field LUADIGITALINPUTPINS4 = Field.create("LUADIGITALINPUTPINS4", 3874, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field LUADIGITALINPUTPINS5 = Field.create("LUADIGITALINPUTPINS5", 3876, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field LUADIGITALINPUTPINS6 = Field.create("LUADIGITALINPUTPINS6", 3878, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field LUADIGITALINPUTPINS7 = Field.create("LUADIGITALINPUTPINS7", 3880, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field LUADIGITALINPUTPINS8 = Field.create("LUADIGITALINPUTPINS8", 3882, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field TPSTSPCORRVALUESBINS = Field.create("TPSTSPCORRVALUESBINS", 3884, FieldType.INT8).setScale(50.0).setBaseOffset(0);
-	public static final Field ALSMINRPM = Field.create("ALSMINRPM", 3888, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ALSMAXRPM = Field.create("ALSMAXRPM", 3890, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ALSMAXDURATION = Field.create("ALSMAXDURATION", 3892, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ALSMINCLT = Field.create("ALSMINCLT", 3894, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALSMAXCLT = Field.create("ALSMAXCLT", 3895, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALSMINTIMEBETWEEN = Field.create("ALSMINTIMEBETWEEN", 3896, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALSETBPOSITION = Field.create("ALSETBPOSITION", 3897, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ACRELAYALTERNATORDUTYADDER = Field.create("ACRELAYALTERNATORDUTYADDER", 3898, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final String[] fuel_pressure_sensor_mode_e = {"Absolute", "Gauge", "Differential", "INVALID"};
+	public static final Field FUELPRESSURESENSORMODE = Field.create("FUELPRESSURESENSORMODE", 3868, FieldType.INT8, fuel_pressure_sensor_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_3869 = Field.create("ALIGNMENTFILL_AT_3869", 3869, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS1 = Field.create("LUADIGITALINPUTPINS1", 3870, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS2 = Field.create("LUADIGITALINPUTPINS2", 3872, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS3 = Field.create("LUADIGITALINPUTPINS3", 3874, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS4 = Field.create("LUADIGITALINPUTPINS4", 3876, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS5 = Field.create("LUADIGITALINPUTPINS5", 3878, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS6 = Field.create("LUADIGITALINPUTPINS6", 3880, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS7 = Field.create("LUADIGITALINPUTPINS7", 3882, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS8 = Field.create("LUADIGITALINPUTPINS8", 3884, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field TPSTSPCORRVALUESBINS = Field.create("TPSTSPCORRVALUESBINS", 3886, FieldType.INT8).setScale(50.0).setBaseOffset(0);
+	public static final Field ALSMINRPM = Field.create("ALSMINRPM", 3890, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMAXRPM = Field.create("ALSMAXRPM", 3892, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMAXDURATION = Field.create("ALSMAXDURATION", 3894, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMINCLT = Field.create("ALSMINCLT", 3896, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMAXCLT = Field.create("ALSMAXCLT", 3897, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMINTIMEBETWEEN = Field.create("ALSMINTIMEBETWEEN", 3898, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSETBPOSITION = Field.create("ALSETBPOSITION", 3899, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ACRELAYALTERNATORDUTYADDER = Field.create("ACRELAYALTERNATORDUTYADDER", 3900, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final String[] SentEtbType = {"None", "GM type 1", "Ford type 1", "Custom"};
-	public static final Field SENTETBTYPE = Field.create("SENTETBTYPE", 3899, FieldType.INT8, SentEtbType).setScale(1.0).setBaseOffset(0);
-	public static final Field CUSTOMSENTTPSMIN = Field.create("CUSTOMSENTTPSMIN", 3900, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_3902 = Field.create("ALIGNMENTFILL_AT_3902", 3902, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field SENTETBTYPE = Field.create("SENTETBTYPE", 3901, FieldType.INT8, SentEtbType).setScale(1.0).setBaseOffset(0);
+	public static final Field CUSTOMSENTTPSMIN = Field.create("CUSTOMSENTTPSMIN", 3902, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSIDLEADD = Field.create("ALSIDLEADD", 3904, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBADD = Field.create("ALSETBADD", 3908, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSSKIPRATIO = Field.create("ALSSKIPRATIO", 3912, FieldType.FLOAT).setBaseOffset(0);
@@ -3907,6 +3912,8 @@ public class Fields {
 	ALIGNMENTFILL_AT_3799,
 	HIGHSPEEDOFFSETS,
 	ETBDUTYSHUTDOWNTHRESHOLD,
+	FUELPRESSURESENSORMODE,
+	ALIGNMENTFILL_AT_3869,
 	LUADIGITALINPUTPINS1,
 	LUADIGITALINPUTPINS2,
 	LUADIGITALINPUTPINS3,
@@ -3926,7 +3933,6 @@ public class Fields {
 	ACRELAYALTERNATORDUTYADDER,
 	SENTETBTYPE,
 	CUSTOMSENTTPSMIN,
-	ALIGNMENTFILL_AT_3902,
 	ALSIDLEADD,
 	ALSETBADD,
 	ALSSKIPRATIO,
