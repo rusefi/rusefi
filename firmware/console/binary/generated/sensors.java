@@ -415,7 +415,7 @@ m_knockCount("Knock Count", SensorCategory.SENSOR_INPUTS, FieldType.INT, 880, 1.
 m_maximumRetard("m_maximumRetard", SensorCategory.SENSOR_INPUTS, FieldType.INT, 884, 1.0, -1.0, -1.0, ""),
 throttleModelCrossoverAngle("throttleModelCrossoverAngle", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 892, 0.01, 0.0, 100.0, "%"),
 alignmentFill_at_6("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 894, 1.0, -20.0, 100.0, "units"),
-throttleEstimatedFlow("throttleEstimatedFlow", SensorCategory.SENSOR_INPUTS, FieldType.INT, 896, 1.0, 0.0, 5.0, "kg/s"),
+throttleEstimatedFlow("throttleEstimatedFlow", SensorCategory.SENSOR_INPUTS, FieldType.INT, 896, 1.0, 0.0, 5.0, "g/s"),
 m_requested_pump("GDI: HPFP duration\nComputed requested pump duration in degrees (not including deadtime)", SensorCategory.SENSOR_INPUTS, FieldType.INT, 900, 1.0, -1.0, -1.0, ""),
 fuel_requested_percent("GDI: requested_percent", SensorCategory.SENSOR_INPUTS, FieldType.INT, 904, 1.0, -1.0, -1.0, ""),
 fuel_requested_percent_pi("GDI: percent_pi", SensorCategory.SENSOR_INPUTS, FieldType.INT, 908, 1.0, -1.0, -1.0, ""),

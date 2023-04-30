@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/math/throttle_model.txt Sun Apr 30 02:49:28 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/math/throttle_model.txt Sun Apr 30 03:31:28 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -113,7 +113,7 @@ struct throttle_model_s {
 	 */
 	uint8_t alignmentFill_at_6[2];
 	/**
-	kg/s
+	g/s
 	 * offset 8
 	 */
 	float throttleEstimatedFlow = (float)0;
@@ -121,4 +121,4 @@ struct throttle_model_s {
 static_assert(sizeof(throttle_model_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/math/throttle_model.txt Sun Apr 30 02:49:28 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/math/throttle_model.txt Sun Apr 30 03:31:28 UTC 2023

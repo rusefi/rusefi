@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 29 22:39:08 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Apr 30 03:31:29 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5168,13 +5168,13 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaBins[12];
 	/**
-	 * In units of kg/s normalized to choked flow conditions
-	kg/s
+	 * In units of g/s normalized to choked flow conditions
+	g/s
 	 * offset 22404
 	 */
-	scaled_channel<uint16_t, 10000, 1> throttleEstimateEffectiveAreaValues[12];
+	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaValues[12];
 };
 static_assert(sizeof(persistent_config_s) == 22428);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 29 22:39:08 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Apr 30 03:31:29 UTC 2023
