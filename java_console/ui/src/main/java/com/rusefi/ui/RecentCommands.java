@@ -46,7 +46,6 @@ public class RecentCommands {
     private static final String TSINFO = "tsinfo";
     private static final String SPEEDINFO = "speedinfo";
     private static final String FUELINFO = "fuelinfo";
-    private static final String HIPINFO = "hipinfo";
     private static final String SDINFO = "sdinfo";
     private static final String FSIOINFO = "fsioinfo";
     private static final String PINS = "pins";
@@ -68,7 +67,6 @@ public class RecentCommands {
         COMMAND_ICONS.put(MAPINFO, infoIcon);
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
-        COMMAND_ICONS.put(HIPINFO, AutoupdateUtil.loadIcon("knock.jpg"));
         COMMAND_ICONS.put(SDINFO, AutoupdateUtil.loadIcon("sdinfo.jpg"));
         COMMAND_ICONS.put(FSIOINFO, infoIcon);
         COMMAND_ICONS.put(PINS, infoIcon);
@@ -144,7 +142,6 @@ public class RecentCommands {
         add(MAPINFO);
         add(ACCELINFO);
         add(FUELINFO);
-        add(HIPINFO);
         add(SDINFO);
         add(FSIOINFO);
         add(PINS);
