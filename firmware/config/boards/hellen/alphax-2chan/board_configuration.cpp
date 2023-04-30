@@ -103,10 +103,6 @@ void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
 	setupVbatt();
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
-	if (hellenBoardId == BOARD_ID_2chan_e || hellenBoardId == BOARD_ID_2chan_f) {
-	    // todo: flip that condition to check for "if not old board"
-	    setHellenMMbaro();
-	}
 
 	// rev.D uses SPI1 pins for CAN2, but rev.E and later uses SPI1 for SD-card
 	if (hellenBoardId != BOARD_ID_2chan_d) {
@@ -128,6 +124,11 @@ void setBoardConfigOverrides() {
 void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
+
+	if (hellenBoardId == BOARD_ID_2chan_e || hellenBoardId == BOARD_ID_2chan_f) {
+	    // todo: flip that condition to check for "if not old board"
+	    setHellenMMbaro();
+	}
 
     engineConfiguration->boardUseTempPullUp = true;
 
