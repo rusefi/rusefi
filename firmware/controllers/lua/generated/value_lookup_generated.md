@@ -199,6 +199,9 @@ We calculate knock band based of cylinderBore\n Use this to override - kHz knock
 ### displacement
 Engine displacement in litres
 
+### triggerSimulatorRpm
+
+
 ### cylindersCount
 Number of cylinder the engine has.
 
@@ -324,9 +327,6 @@ Number of turns of your vehicle speed sensor per turn of the wheels. For example
 
 ### vssToothCount
 Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.
-
-### triggerSimulatorFrequency
-Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm
 
 ### idle_antiwindupFreq
 0.1 is a good default value

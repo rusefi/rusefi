@@ -205,6 +205,9 @@ float getConfigValueByName(const char *name) {
 // displacement
 		case -1227821282:
 			return engineConfiguration->displacement;
+// triggerSimulatorRpm
+		case 2122875976:
+			return engineConfiguration->triggerSimulatorRpm;
 // cylindersCount
 		case -1578655365:
 			return engineConfiguration->cylindersCount;
@@ -331,9 +334,6 @@ float getConfigValueByName(const char *name) {
 // vssToothCount
 		case -1958312328:
 			return engineConfiguration->vssToothCount;
-// triggerSimulatorFrequency
-		case -47286421:
-			return engineConfiguration->triggerSimulatorFrequency;
 // idle_antiwindupFreq
 		case -524949197:
 			return engineConfiguration->idle_antiwindupFreq;
@@ -1917,6 +1917,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->displacement = (int)value;
 		return;
 	}
+		case 2122875976:
+	{
+		engineConfiguration->triggerSimulatorRpm = (int)value;
+		return;
+	}
 		case -1578655365:
 	{
 		engineConfiguration->cylindersCount = (int)value;
@@ -2125,11 +2130,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -1958312328:
 	{
 		engineConfiguration->vssToothCount = (int)value;
-		return;
-	}
-		case -47286421:
-	{
-		engineConfiguration->triggerSimulatorFrequency = (int)value;
 		return;
 	}
 		case -524949197:
