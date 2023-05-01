@@ -125,6 +125,7 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
+    int16_t hellenBoardId = engine->engineState.hellenBoardId;
 	if (hellenBoardId == BOARD_ID_2chan_e || hellenBoardId == BOARD_ID_2chan_f) {
 	    // todo: flip that condition to check for "if not old board"
 	    setHellenMMbaro();
