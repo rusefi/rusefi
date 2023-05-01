@@ -1441,6 +1441,9 @@ Delay before engaging the AC compressor. Set to 0 to engage immediately with no 
 ### hpfpCamLobes
 
 
+### auxiliarySetting1
+null
+
 ### hpfpMinAngle
 If the requested activation time is below this angle, don't bother running the pump
 

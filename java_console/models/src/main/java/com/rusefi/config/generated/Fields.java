@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 30 23:35:51 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 01 18:29:34 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1014,6 +1014,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1284091892;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1237,7 +1238,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.01.f407-discovery.3246530247";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.01.f407-discovery.1284091892";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1404;
@@ -2396,7 +2397,7 @@ public class Fields {
 	public static final Field HPFPCAMLOBES = Field.create("HPFPCAMLOBES", 3139, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final String[] hpfp_cam_e = {"NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"};
 	public static final Field HPFPCAM = Field.create("HPFPCAM", 3140, FieldType.INT8, hpfp_cam_e).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 3141, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field AUXILIARYSETTING1 = Field.create("AUXILIARYSETTING1", 3141, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPMINANGLE = Field.create("HPFPMINANGLE", 3142, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3143 = Field.create("ALIGNMENTFILL_AT_3143", 3143, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPPUMPVOLUME = Field.create("HPFPPUMPVOLUME", 3144, FieldType.INT16).setScale(0.001).setBaseOffset(0);
@@ -3832,7 +3833,7 @@ public class Fields {
 	ETBJAMINTEGRATORLIMIT,
 	HPFPCAMLOBES,
 	HPFPCAM,
-	UNUSEDHERE,
+	AUXILIARYSETTING1,
 	HPFPMINANGLE,
 	ALIGNMENTFILL_AT_3143,
 	HPFPPUMPVOLUME,
