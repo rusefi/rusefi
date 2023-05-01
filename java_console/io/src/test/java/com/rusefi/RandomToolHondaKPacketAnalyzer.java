@@ -14,20 +14,22 @@ public class RandomToolHondaKPacketAnalyzer {
     private static final Map<Integer, Integer> headerToLength = new TreeMap<>();
     private static final Map<Integer, String> comments = new HashMap<>();
     private static final Map<Integer, Set<String>> packets = new TreeMap<>();
+    private static boolean individualMode = false;
+    private static int fileCounter;
 
 
     public static void main(String[] args) throws IOException {
-        register((char) 1, 4, "1: sometimes leading means BCM?");
-        register('A' /* 65 */, 4, "A: sometimes leading means BCM?");
+        register((char) 1, 4, "request 1");
+        register('A' /* 65 */, 4, "request 65");
         // Quit?
         register('Q', 4, "BCM QUIT");
 
-        register((char) 0, 5, "0: sometimes leading means BCM?");
-        register('@' /* 64 */, 5, "BCM with A/C");
+        register((char) 0, 5, "status 0");
+        register('@' /* 64 */, 5, "status 64");
 
-        register((char) 2, 7, "unknown");
-        register('B' /* 66 */, 7, "rare?");
-        register((char) 130, 7, "rare?");
+        register((char) 2, 7, "response 2");
+        register('B' /* 66 */, 7, "response 66");
+        register((char) 130, 7, "response 130 rare");
 
 
         String folder = "C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si";
@@ -39,20 +41,28 @@ public class RandomToolHondaKPacketAnalyzer {
 //                                            name.contains("4-idling.csv")
 //                    name.contains("5-stop-and-restart.csv")
 //                name.contains("6-high-rpm.csv")
-              name.contains("7-ac-on-off.csv")
+                    //name.contains("7-ac-on-off.csv")
                     //name.contains("9-re") && name.endsWith(".csv")
+//                    name.contains("less-cold") && name.endsWith(".csv")
+//                    name.contains("12-w") && name.endsWith(".csv")
+            name.contains("23-re") && name.endsWith(".csv")
+//                    name.contains("-ac-") && name.endsWith(".csv")
 
 //            !name.startsWith("__") && name.endsWith(".csv")
                     ;
         })) {
-//            clearState();
+            fileCounter++;
+            if (individualMode)
+                clearState();
             handle(folder + File.separator + file);
-//            printPacketPayloads();
+            if (individualMode)
+                printPacketPayloads();
         }
 
-
-
-        printPacketPayloads();
+        if (!individualMode) {
+            System.out.println("Total " + fileCounter + " files");
+            printPacketPayloads();
+        }
 
     }
 
