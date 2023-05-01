@@ -31,7 +31,7 @@ static void handleHonda(uint8_t *bufferIn) {
 	uint8_t statusByte1 = bufferIn[1];
 	// no cabin blower 0x06, with blower 0x86
 	uint8_t statusByte2 = bufferIn[2];
-    kAcRequestState = statusByte1 & 0x80;
+    kAcRequestState = statusByte2 & 0x80;
     if (engineConfiguration->verboseKLine) {
         efiPrintf("honda status packet with 0x%02x 0x%02x state %d", statusByte1, statusByte2, kAcRequestState);
     }
