@@ -18,6 +18,8 @@ size_t readWhileGives(ByteSource source, uint8_t *buffer, size_t bufferSize) {
 
 #ifdef EFI_KLINE
 
+uint8_t kvalues[8];
+
 #define HONDA_K_40_PACKET 0x40
 
 bool kAcRequestState;
@@ -91,16 +93,18 @@ void kLineThread(void*) {
 
                 if (engineConfiguration->kLineDoHondaSend && !ignoreRecentTransmit) {
                     sendCounter++;
-#define PACKET_SIZE 7
-                	const char out2[] = {0x2, 0x0, 0x0, 0x50, 0x0, 0x0, 149};
-                	static_assert(sizeof(out2) == PACKET_SIZE);
-                	const char outB[] = {0x42, 0x0, 0x0, 0x50, 0x0, 0x0, 164};
-                	static_assert(sizeof(outB) == PACKET_SIZE);
-                	const char *out = (sendCounter % 3 == 0) ? outB : out2;
+#define OUT_SIZE 6
+                	const uint8_t out2[] = {0x2, 0x0, 0x0, 0x50, 0x0, 0x0};
+               	    static_assert(sizeof(out2) == OUT_SIZE);
+                	const uint8_t outB[] = {0x42, 0x0, 0x0, 0x50, 0x0, 0x0};
+                	static_assert(sizeof(outB) == OUT_SIZE);
+                	const uint8_t *out = (sendCounter % 3 == 0) ? outB : out2;
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("kline doSend");
                     }
-                    chnWrite(klDriver, (const uint8_t *)out, PACKET_SIZE);
+                    chnWrite(klDriver, (const uint8_t *)out, OUT_SIZE);
+                    uint8_t crc = crc_hondak_calc(out, OUT_SIZE);
+                    chnWrite(klDriver, (const uint8_t *)&crc, 1);
                     ignoreRecentTransmit = true;
                 } else {
                     ignoreRecentTransmit = false;
@@ -168,6 +172,9 @@ void initKLine() {
         engineConfiguration->kLinePeriodUs = 300 /* us*/;
     }
 
+    memset(kvalues, 0, sizeof(kvalues));
+    kvalues[0] = 0x2;
+    kvalues[3] = 0x50;
 
     chThdCreateStatic(klThreadStack, sizeof(klThreadStack), NORMALPRIO + 1, kLineThread, nullptr);
     addConsoleAction("kline", [](){
