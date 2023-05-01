@@ -38,8 +38,6 @@ static SerialDriver* const klDriver = &KLINE_SERIAL_DEVICE;
 static THD_WORKING_AREA(klThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static int totalBytes = 0;
-static bool kLineOutPending = false;
-static int kLineOut;
 
 void kLineThread(void*) {
     // due to single wire we read everything we've transmitted
@@ -120,11 +118,6 @@ void kLineThread(void*) {
                 }
             }
         }
-        if (kLineOutPending) {
-            kLineOutPending = false;
-            efiPrintf("kline OUT: 0x%02x", kLineOut);
-            chnWrite(klDriver, (const uint8_t *)kLineOut, 1);
-        }
     }
 }
 #endif // EFI_KLINE
@@ -196,10 +189,6 @@ void initKLine() {
     addConsoleAction("klineno", [](){
         engineConfiguration->kLineDoHondaSend = false;
         efiPrintf("kline send %d", engineConfiguration->kLineDoHondaSend);
-    });
-    addConsoleActionI("klinesend", [](int value){
-        kLineOutPending = true;
-        kLineOut = value;
     });
 
 #endif // EFI_KLINE
