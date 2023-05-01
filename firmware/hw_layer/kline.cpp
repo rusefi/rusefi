@@ -109,6 +109,12 @@ void kLineThread(void*) {
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("kline doSend");
                     }
+                    int positiveCltWithHighishValueInCaseOfSensorIssue = maxI(1, Sensor::get(SensorType::Clt).value_or(140));
+    // 125 about horizontal
+    // 162 points at red mark, looks like gauge has hysteresis?
+    // value 200 way above red mark
+                    kvalues[3] = positiveCltWithHighishValueInCaseOfSensorIssue;
+
                     chnWrite(klDriver, (const uint8_t *)kvalues, OUT_SIZE);
                     uint8_t crc = crc_hondak_calc(kvalues, OUT_SIZE);
                     chnWrite(klDriver, (const uint8_t *)&crc, 1);
@@ -176,7 +182,6 @@ void initKLine() {
 
     memset(kvalues, 0, sizeof(kvalues));
     kvalues[0] = 0x2;
-    kvalues[3] = 0x50;
 
     chThdCreateStatic(klThreadStack, sizeof(klThreadStack), NORMALPRIO + 1, kLineThread, nullptr);
     addConsoleAction("kline", [](){
