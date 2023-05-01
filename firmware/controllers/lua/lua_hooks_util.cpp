@@ -65,17 +65,6 @@ void configureRusefiLuaUtilHooks(lua_State* l) {
 			return 1;
 	});
 
-#ifdef EFI_KLINE
-extern uint8_t kvalues[8];
-	lua_register(l, "temp_k",
-			[](lua_State* l) {
-			    auto index = luaL_checkinteger(l, 1);
-			    auto value = luaL_checkinteger(l, 2);
-			    kvalues[index] = value;
-			return 0;
-	});
-#endif // EFI_KLINE
-
 	lua_register(l, "findSetting",
 			[](lua_State* l) {
 			auto name = luaL_checklstring(l, 1, nullptr);

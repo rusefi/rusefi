@@ -18,7 +18,7 @@ size_t readWhileGives(ByteSource source, uint8_t *buffer, size_t bufferSize) {
 
 #ifdef EFI_KLINE
 
-uint8_t kvalues[8];
+static uint8_t kvalues[8];
 
 #define HONDA_K_BCM_STATUS_NIBBLE 0x0
 #define HONDA_K_BCM_REQ_NIBBLE 0x1
@@ -189,6 +189,9 @@ void initKLine() {
     addConsoleAction("klineno", [](){
         engineConfiguration->kLineDoHondaSend = false;
         efiPrintf("kline send %d", engineConfiguration->kLineDoHondaSend);
+    });
+    addConsoleActionII("temp_k", [](int index, int value) {
+        kvalues[index] = value;
     });
 
 #endif // EFI_KLINE
