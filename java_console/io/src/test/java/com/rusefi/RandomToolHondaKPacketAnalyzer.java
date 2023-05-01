@@ -45,7 +45,7 @@ public class RandomToolHondaKPacketAnalyzer {
                     //name.contains("9-re") && name.endsWith(".csv")
 //                    name.contains("less-cold") && name.endsWith(".csv")
 //                    name.contains("12-w") && name.endsWith(".csv")
-            name.contains("23-re") && name.endsWith(".csv")
+            name.contains("25-") && name.endsWith(".csv")
 //                    name.contains("-ac-") && name.endsWith(".csv")
 
 //            !name.startsWith("__") && name.endsWith(".csv")
@@ -113,6 +113,11 @@ public class RandomToolHondaKPacketAnalyzer {
 //            System.out.println("Looking at " + payload + " " + header);
 
             if (previousHeader != null) {
+                if (header == 130) {
+                    System.out.println("rare thing 130 " + s);
+                    System.out.println("with " + list.get(i + 1).trim());
+                    System.out.println("with " + list.get(i + 2).trim());
+                }
                 if (previousHeader == 0 && header == 65)
                     System.out.println("??? interesting 65/2/" + s);
                 if (previousHeader == 65 && header == 2)

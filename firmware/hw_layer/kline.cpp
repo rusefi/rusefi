@@ -29,6 +29,7 @@ static void handleHonda(uint8_t *bufferIn) {
 
     // no headlights 0x40, with headlights 0x60
 	uint8_t statusByte1 = bufferIn[1];
+	// no cabin blower 0x06, with blower 0x86
 	uint8_t statusByte2 = bufferIn[2];
     kAcRequestState = statusByte1 & 0x80;
     if (engineConfiguration->verboseKLine) {
@@ -108,6 +109,16 @@ void kLineThread(void*) {
 //                	static_assert(sizeof(outB) == OUT_SIZE);
                 	//const uint8_t *out = (sendCounter % 3 == 0) ? outB : out2;
 //                	const uint8_t *out = out2;
+
+                    if (sendCounter % 30 == 0) {
+                        // no idea what this, maybe "i am running"?
+                        kvalues[0] = 0x82;
+                        kvalues[2] = 0x10;
+                    } else {
+                        kvalues[0] = 0x2;
+                        kvalues[2] = 0;
+                    }
+
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("kline doSend");
                     }
@@ -184,6 +195,7 @@ void initKLine() {
     if (engineConfiguration->kLinePeriodUs == 0) {
         engineConfiguration->kLinePeriodUs = 300 /* us*/;
     }
+    engineConfiguration->kLineDoHondaSend = true;
 
     memset(kvalues, 0, sizeof(kvalues));
     kvalues[0] = 0x2;
