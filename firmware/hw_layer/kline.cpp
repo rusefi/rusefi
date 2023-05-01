@@ -20,17 +20,17 @@ size_t readWhileGives(ByteSource source, uint8_t *buffer, size_t bufferSize) {
 
 uint8_t kvalues[8];
 
-#define HONDA_K_40_PACKET 0x40
+#define HONDA_K_BCM_STATUS_NIBBLE 0x0
+#define HONDA_K_BCM_REQ_NIBBLE 0x1
 
 bool kAcRequestState;
 
 static void handleHonda(uint8_t *bufferIn) {
-    uint8_t acByte = bufferIn[2];
-    kAcRequestState = acByte & 0x80;
+	uint8_t statusByte1 = bufferIn[1];
+	uint8_t statusByte2 = bufferIn[2];
+    kAcRequestState = statusByte1 & 0x80;
     if (engineConfiguration->verboseKLine) {
-        if (engineConfiguration->verboseKLine) {
-            efiPrintf("honda 0x40 packet with 0x%02x state %d", acByte, kAcRequestState);
-        }
+        efiPrintf("honda status packet with 0x%02x 0x%02x state %d", statusByte1, statusByte2, kAcRequestState);
     }
 }
 
@@ -76,14 +76,22 @@ void kLineThread(void*) {
             }
             if (len > 1) {
                 int crc = crc_hondak_calc(bufferIn, len - 1);
+                uint8_t low = bufferIn[0] & 0xF;
                 if (crc == bufferIn[len - 1]) {
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("happy CRC 0x%02x", crc);
                     }
-                    if (bufferIn[0] == HONDA_K_40_PACKET) {
+                    if (low == HONDA_K_BCM_STATUS_NIBBLE) {
                         handleHonda(bufferIn);
                     }
-                } else if (bufferIn[0] == HONDA_K_40_PACKET && bufferIn[4] == crc_hondak_calc(bufferIn, 4)) {
+
+                    if (low == HONDA_K_BCM_REQ_NIBBLE) {
+                        if (engineConfiguration->verboseKLine) {
+                            efiPrintf("BCM request 0x%02x", bufferIn[0]);
+                        }
+                    }
+
+                } else if (low == HONDA_K_BCM_STATUS_NIBBLE && bufferIn[4] == crc_hondak_calc(bufferIn, 4)) {
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("hack for now, happy CRC 0x%02x", crc);
                     }
@@ -94,16 +102,17 @@ void kLineThread(void*) {
                 if (engineConfiguration->kLineDoHondaSend && !ignoreRecentTransmit) {
                     sendCounter++;
 #define OUT_SIZE 6
-                	const uint8_t out2[] = {0x2, 0x0, 0x0, 0x50, 0x0, 0x0};
-               	    static_assert(sizeof(out2) == OUT_SIZE);
-                	const uint8_t outB[] = {0x42, 0x0, 0x0, 0x50, 0x0, 0x0};
-                	static_assert(sizeof(outB) == OUT_SIZE);
-                	const uint8_t *out = (sendCounter % 3 == 0) ? outB : out2;
+//                	const uint8_t out2[] = {0x2, 0x0, 0x0, 0x50, 0x0, 0x0};
+               	    //static_assert(sizeof(out2) == OUT_SIZE);
+//                	const uint8_t outB[] = {0x42, 0x0, 0x0, 0x50, 0x0, 0x0};
+//                	static_assert(sizeof(outB) == OUT_SIZE);
+                	//const uint8_t *out = (sendCounter % 3 == 0) ? outB : out2;
+//                	const uint8_t *out = out2;
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("kline doSend");
                     }
-                    chnWrite(klDriver, (const uint8_t *)out, OUT_SIZE);
-                    uint8_t crc = crc_hondak_calc(out, OUT_SIZE);
+                    chnWrite(klDriver, (const uint8_t *)kvalues, OUT_SIZE);
+                    uint8_t crc = crc_hondak_calc(kvalues, OUT_SIZE);
                     chnWrite(klDriver, (const uint8_t *)&crc, 1);
                     ignoreRecentTransmit = true;
                 } else {
