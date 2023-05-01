@@ -111,7 +111,10 @@ void kLineThread(void*) {
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("kline doSend");
                     }
-                    int positiveCltWithHighishValueInCaseOfSensorIssue = maxI(1, Sensor::get(SensorType::Clt).value_or(140));
+                    int positiveCltWithHighishValueInCaseOfSensorIssue = maxI(1,
+                        /* temporary while we are playing with calibration */
+                        engineConfiguration->auxiliarySetting1 + Sensor::get(SensorType::Clt).value_or(140)
+                    );
     // 125 about horizontal
     // 162 points at red mark, looks like gauge has hysteresis?
     // value 200 way above red mark

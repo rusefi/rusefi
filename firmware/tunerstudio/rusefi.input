@@ -4279,6 +4279,7 @@ dialog = tcuControls, "Transmission Settings"
 	    field = uiMode,                                 uiMode
 		field = kLineBaudRate,                          kLineBaudRate
 		field = verboseKLine,                           verboseKLine
+		field = auxiliarySetting1,                      auxiliarySetting1
 		field = kLineDoHondaSend,                       kLineDoHondaSend
 		field = hondaK,                         hondaK
 		field = kLinePeriodUs,                          kLinePeriodUs
