@@ -1,12 +1,10 @@
 package com.rusefi;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -38,34 +36,41 @@ public class RandomToolHondaKPacketAnalyzer {
                     //                    name.contains("1-key-on-car-off.csv")
 //                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\2-key-removed-30-seconds.csv");
 //                        name.contains("3-door-open-wakes-bus-up.csv")
-                    //                        name.contains("4-idling.csv")
-//                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\5-stop-and-restart.csv");
-//                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\6-high-rpm.csv");
-//                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\7-ac-on-off.csv");
-                    name.contains("9-re") && name.endsWith(".csv")
+//                                            name.contains("4-idling.csv")
+//                    name.contains("5-stop-and-restart.csv")
+//                name.contains("6-high-rpm.csv")
+              name.contains("7-ac-on-off.csv")
+                    //name.contains("9-re") && name.endsWith(".csv")
 
-//                return !name.startsWith("__") && name.endsWith(".csv");
+//            !name.startsWith("__") && name.endsWith(".csv")
                     ;
         })) {
+//            clearState();
             handle(folder + File.separator + file);
+//            printPacketPayloads();
         }
 
 
-        System.out.println();
-        System.out.println();
-        System.out.println();
 
+        printPacketPayloads();
+
+    }
+
+    private static void clearState() {
+        packets.clear();
+        pairs.clear();
+    }
+
+    private static void printPacketPayloads() {
+        System.out.println();
+        System.out.println();
+        System.out.println();
         for (int header : packets.keySet()) {
-
             Set<String> payloads = packets.get(header);
-
             System.out.println(comments.get(header) + ": Header " + dualSid(header, "/") + ": packet of length " + (headerToLength.get(header) - 1) + ". Total " + payloads.size() + " payload variations");
             System.out.println(payloads);
             System.out.println();
-
         }
-
-
     }
 
     public static String dualSid(int sid, String separator) {
@@ -95,9 +100,15 @@ public class RandomToolHondaKPacketAnalyzer {
 
             int header = decode(payload);
 
-            System.out.println("Looking at " + payload + " " + header);
+//            System.out.println("Looking at " + payload + " " + header);
 
             if (previousHeader != null) {
+                if (previousHeader == 0 && header == 65)
+                    System.out.println("??? interesting 65/2/" + s);
+                if (previousHeader == 65 && header == 2)
+                    System.out.println("*** interesting 65/2/" + s);
+                if (previousHeader == 66 && header == 1)
+                    System.out.println("    interesting 66/1/" + s);
                 pairs.computeIfAbsent(previousHeader + " followed by " + header, s1 -> new AtomicInteger()).incrementAndGet();
                 pairs.computeIfAbsent(header + " after " + previousHeader, s1 -> new AtomicInteger()).incrementAndGet();
             }
@@ -108,7 +119,7 @@ public class RandomToolHondaKPacketAnalyzer {
                 counter.incrementAndGet();
 
                 int length = headerToLength.get(header);
-                System.out.println("Header " + header + " has len " + length);
+//                System.out.println("Header " + header + " has len " + length);
                 i = consume(header, list, i, length);
 
 
@@ -117,19 +128,13 @@ public class RandomToolHondaKPacketAnalyzer {
                 continue;
 
             }
-
-
             throw new UnsupportedOperationException("Unexpected starts [" + payload + "] header=" + header + " " + list.subList(i, i + 5));
-
-
         }
         System.out.println("Distribution in " + fileName + ": total=" + total + ": " + xx(perHeaderCounter));
-
 
         for (Map.Entry<String, AtomicInteger> e : pairs.entrySet()) {
             System.out.println(e);
         }
-
     }
 
     private static String xx(Map<Integer, AtomicInteger> perHeaderCounter) {
@@ -178,8 +183,7 @@ public class RandomToolHondaKPacketAnalyzer {
         Set<String> set = packets.computeIfAbsent(header, integer -> new TreeSet<>());
         set.add(packet.toString());
 
-
-        System.out.println("Consumed " + count + " at " + start + " " + packet);
+//        System.out.println("Consumed " + count + " at " + start + " " + packet);
         return start + count - 1;
     }
 
