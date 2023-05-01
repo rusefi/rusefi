@@ -26,6 +26,8 @@ static uint8_t kvalues[8];
 bool kAcRequestState;
 
 static void handleHonda(uint8_t *bufferIn) {
+
+    // no headlights 0x40, with headlights 0x60
 	uint8_t statusByte1 = bufferIn[1];
 	uint8_t statusByte2 = bufferIn[2];
     kAcRequestState = statusByte1 & 0x80;
@@ -58,7 +60,7 @@ void kLineThread(void*) {
         size_t len = readWhileGives(serialSource, bufferIn, sizeof(bufferIn));
 
                     if (engineConfiguration->verboseKLine) {
-                        efiPrintf("ignoreRecentTransmit %d", ignoreRecentTransmit);
+//                        efiPrintf("ignoreRecentTransmit %d", ignoreRecentTransmit);
                     }
 
         // to begin with just write byte to console
