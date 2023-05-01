@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -18,34 +19,33 @@ public class RandomToolHondaKPacketAnalyzer {
 
 
     public static void main(String[] args) throws IOException {
-        register((char) 1, 4, "sometimes leading means BCM?");
-        register('A', 4, "sometimes leading means BCM?");
+        register((char) 1, 4, "1: sometimes leading means BCM?");
+        register('A' /* 65 */, 4, "A: sometimes leading means BCM?");
         // Quit?
         register('Q', 4, "BCM QUIT");
 
-        register((char) 0, 5, "sometimes leading means BCM?");
-        register('@', 5, "BCM with A/C");
+        register((char) 0, 5, "0: sometimes leading means BCM?");
+        register('@' /* 64 */, 5, "BCM with A/C");
 
         register((char) 2, 7, "unknown");
-        register('B', 7, "rare?");
+        register('B' /* 66 */, 7, "rare?");
         register((char) 130, 7, "rare?");
 
 
         String folder = "C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si";
-        for (String file : new File(folder).list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-//                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si" +
-//                        "\\1-key-on-car-off.csv");
+        for (String file : new File(folder).list((dir, name) -> {
+            return
+                    //                    name.contains("1-key-on-car-off.csv")
 //                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\2-key-removed-30-seconds.csv");
-//                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\3-door-open-wakes-bus-up.csv");
-//                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\4-idling.csv");
+//                        name.contains("3-door-open-wakes-bus-up.csv")
+                    //                        name.contains("4-idling.csv")
 //                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\5-stop-and-restart.csv");
 //                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\6-high-rpm.csv");
 //                handle("C:\\stuff\\rusefi_documentation\\OEM-Docs\\Honda\\E24-SEFMJ-white-civic-si\\7-ac-on-off.csv");
+                    name.contains("9-re") && name.endsWith(".csv")
 
-                return !name.startsWith("__") && name.endsWith(".csv");
-            }
+//                return !name.startsWith("__") && name.endsWith(".csv");
+                    ;
         })) {
             handle(folder + File.separator + file);
         }
@@ -73,11 +73,16 @@ public class RandomToolHondaKPacketAnalyzer {
         return String.format("%d%s0x%x%s%s", sid, separator, sid, separator, "" + c);
     }
 
+    private static final Map<String, AtomicInteger> pairs = new TreeMap<>();
+
     private static void handle(String fileName) throws IOException {
         System.out.println("Handling " + fileName);
         List<String> list = Files.lines(new File(fileName).toPath()).collect(Collectors.toList());
 
         Map<Integer, AtomicInteger> perHeaderCounter = new TreeMap<>();
+
+        Integer previousHeader = null;
+
 
         int total = 0;
         for (int i = 1; i < list.size(); i++) {
@@ -92,6 +97,11 @@ public class RandomToolHondaKPacketAnalyzer {
 
             System.out.println("Looking at " + payload + " " + header);
 
+            if (previousHeader != null) {
+                pairs.computeIfAbsent(previousHeader + " followed by " + header, s1 -> new AtomicInteger()).incrementAndGet();
+                pairs.computeIfAbsent(header + " after " + previousHeader, s1 -> new AtomicInteger()).incrementAndGet();
+            }
+
             if (headerToLength.containsKey(header)) {
 
                 AtomicInteger counter = perHeaderCounter.computeIfAbsent(header, integer -> new AtomicInteger());
@@ -100,6 +110,10 @@ public class RandomToolHondaKPacketAnalyzer {
                 int length = headerToLength.get(header);
                 System.out.println("Header " + header + " has len " + length);
                 i = consume(header, list, i, length);
+
+
+                previousHeader = header;
+
                 continue;
 
             }
@@ -110,6 +124,12 @@ public class RandomToolHondaKPacketAnalyzer {
 
         }
         System.out.println("Distribution in " + fileName + ": total=" + total + ": " + xx(perHeaderCounter));
+
+
+        for (Map.Entry<String, AtomicInteger> e : pairs.entrySet()) {
+            System.out.println(e);
+        }
+
     }
 
     private static String xx(Map<Integer, AtomicInteger> perHeaderCounter) {
@@ -143,7 +163,12 @@ public class RandomToolHondaKPacketAnalyzer {
         headerToLength.put(header, len);
     }
 
+    /**
+     * @return next packet start index
+     */
     private static int consume(int header, List<String> list, int start, int count) {
+        if (list.size() < start + count)
+            return list.size() - 1;
         StringBuilder packet = new StringBuilder();
         for (int i = start; i < start + count - 1; i++) {
             int payload = decode(getPayoad(list.get(i)));
