@@ -532,7 +532,7 @@ enable2ndByteCanID = false
 		yBins		= crankingTpsCoef
 		gauge		= TPSGauge
 
-	curve = crankingDurationCurve, "Cranking Duration Multiplier"
+	curve = crankingDurationCurve, "Cranking Cycle Multiplier"
 		columnLabel = "Engine Cycle", "Multiplier"
 		xAxis		=  0, 50, 11
 		yAxis		=  0,  5, 6
