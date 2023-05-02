@@ -21,6 +21,4 @@ public:
 
 private:
 	const ValueProvider3D* const m_veTable;
-
-	float getVeLoadAxis(float passedLoad) const;
 };
