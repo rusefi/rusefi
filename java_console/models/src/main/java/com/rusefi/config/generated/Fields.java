@@ -1194,7 +1194,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.05.02.f407-discovery.3483407254";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.05.02.f407-discovery.3435371745";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1384;
@@ -1416,7 +1416,8 @@ public class Fields {
 	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 495, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field VSSGEARRATIO = Field.create("VSSGEARRATIO", 496, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field VSSTOOTHCOUNT = Field.create("VSSTOOTHCOUNT", 498, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSED499 = Field.create("UNUSED499", 499, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final String[] ve_override_e = {"None", "MAP", "TPS"};
+	public static final Field IDLEVEOVERRIDEMODE = Field.create("IDLEVEOVERRIDEMODE", 499, FieldType.INT8, ve_override_e).setScale(1.0).setBaseOffset(0);
 	public static final Field L9779_CS = Field.create("L9779_CS", 500, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field O2HEATERPIN = Field.create("O2HEATERPIN", 502, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONPINS1 = Field.create("INJECTIONPINS1", 504, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
@@ -1878,7 +1879,6 @@ public class Fields {
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 1428, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] can_baudrate_e = {"50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"};
 	public static final Field CANBAUDRATE = Field.create("CANBAUDRATE", 1432, FieldType.INT8, can_baudrate_e).setScale(1.0).setBaseOffset(0);
-	public static final String[] ve_override_e = {"None", "MAP", "TPS"};
 	public static final Field VEOVERRIDEMODE = Field.create("VEOVERRIDEMODE", 1433, FieldType.INT8, ve_override_e).setScale(1.0).setBaseOffset(0);
 	public static final Field CAN2BAUDRATE = Field.create("CAN2BAUDRATE", 1434, FieldType.INT8, can_baudrate_e).setScale(1.0).setBaseOffset(0);
 	public static final String[] load_override_e = {"None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"};
@@ -2746,7 +2746,7 @@ public class Fields {
 	VSSFILTERRECIPROCAL,
 	VSSGEARRATIO,
 	VSSTOOTHCOUNT,
-	UNUSED499,
+	IDLEVEOVERRIDEMODE,
 	L9779_CS,
 	O2HEATERPIN,
 	INJECTIONPINS1,

@@ -935,8 +935,10 @@ struct engine_configuration_s {
 	// offset 498
 	uint8_t vssToothCount;
 
+	// Override the Y axis (load) value used for only the Idle VE table.
+	// Advanced users only: If you aren't sure you need this, you probably don't need this.
 	// offset 499
-	uint8_t unused499;
+	ve_override_e idleVeOverrideMode;
 
 	// offset 500
 	Gpio l9779_cs;
