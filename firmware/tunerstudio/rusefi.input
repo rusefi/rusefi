@@ -3123,6 +3123,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = idleExtra, "Extra Idle Features"
 		field = "Use idle ignition table",	useSeparateAdvanceForIdle
 		field = "Use idle VE table",		useSeparateVeForIdle
+		field = "Override Idle VE table load axis", idleVeOverrideMode, { useSeparateVeForIdle == 1 }
 		field = "Use idle tables for cranking taper",		useSeparateIdleTablesForCrankingTaper
 		field = "Use coasting idle table",	useIacTableForCoasting
 		field = "Detailed status in console",			isVerboseIAC

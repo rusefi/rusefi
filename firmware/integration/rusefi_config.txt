@@ -602,7 +602,10 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
 	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
 
-	uint8_t unused499
+	#define ve_override_e_enum "None", "MAP", "TPS"
+	custom ve_override_e 1 bits, U08, @OFFSET@, [0:1], @@ve_override_e_enum@@
+
+	ve_override_e idleVeOverrideMode;Override the Y axis (load) value used for only the Idle VE table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 	Gpio l9779_cs;
 
@@ -1104,8 +1107,6 @@ int16_t tps2Max;;"ADC", 1, 0, 0, 1023, 0
 	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:2], @@can_baudrate_e_enum@@
 	can_baudrate_e canBaudRate; set can_baudrate
 
-	#define ve_override_e_enum "None", "MAP", "TPS"
-	custom ve_override_e 1 bits, U08, @OFFSET@, [0:1], @@ve_override_e_enum@@
 	ve_override_e veOverrideMode;Override the Y axis (load) value used for the VE table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 	can_baudrate_e can2BaudRate;
