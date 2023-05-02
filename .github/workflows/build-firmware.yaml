@@ -179,7 +179,7 @@ jobs:
 
     - name: Set run condition variables
       run: |
-        if [ "${{github.repository}}" = "fome-tech/fome-fw" ]\
+        if [ "${{github.repository}}" = "FOME-Tech/fome-fw" ]\
         && [ "${{github.event_name}}" = "push" ]\
         && [ "${{github.ref}}" = "refs/heads/master" ]\
         || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
