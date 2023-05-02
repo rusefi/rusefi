@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon May 01 18:28:50 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 02 22:23:29 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1230,11 +1230,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t vssToothCount;
 	/**
-	 * need 4 byte alignment
-	units
+	 * Override the Y axis (load) value used for only the Idle VE table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 563
 	 */
-	uint8_t alignmentFill_at_563[1];
+	ve_override_e idleVeOverrideMode;
 	/**
 	 * offset 564
 	 */
@@ -5171,4 +5171,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22424);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon May 01 18:28:50 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 02 22:23:29 UTC 2023

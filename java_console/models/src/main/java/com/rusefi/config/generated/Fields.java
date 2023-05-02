@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 02 22:14:33 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 02 22:24:30 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1237,7 +1237,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.02.f407-discovery.4179190842";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.02.f407-discovery.3235978753";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1404;
@@ -1479,7 +1479,8 @@ public class Fields {
 	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 559, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field VSSGEARRATIO = Field.create("VSSGEARRATIO", 560, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field VSSTOOTHCOUNT = Field.create("VSSTOOTHCOUNT", 562, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_563 = Field.create("ALIGNMENTFILL_AT_563", 563, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final String[] ve_override_e = {"None", "MAP", "TPS"};
+	public static final Field IDLEVEOVERRIDEMODE = Field.create("IDLEVEOVERRIDEMODE", 563, FieldType.INT8, ve_override_e).setScale(1.0).setBaseOffset(0);
 	public static final Field L9779_CS = Field.create("L9779_CS", 564, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONPINS1 = Field.create("INJECTIONPINS1", 566, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONPINS2 = Field.create("INJECTIONPINS2", 568, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
@@ -1998,7 +1999,6 @@ public class Fields {
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 1560, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] can_baudrate_e = {"50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"};
 	public static final Field CANBAUDRATE = Field.create("CANBAUDRATE", 1564, FieldType.INT8, can_baudrate_e).setScale(1.0).setBaseOffset(0);
-	public static final String[] ve_override_e = {"None", "MAP", "TPS"};
 	public static final Field VEOVERRIDEMODE = Field.create("VEOVERRIDEMODE", 1565, FieldType.INT8, ve_override_e).setScale(1.0).setBaseOffset(0);
 	public static final Field CAN2BAUDRATE = Field.create("CAN2BAUDRATE", 1566, FieldType.INT8, can_baudrate_e).setScale(1.0).setBaseOffset(0);
 	public static final String[] load_override_e = {"None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"};
@@ -2932,7 +2932,7 @@ public class Fields {
 	VSSFILTERRECIPROCAL,
 	VSSGEARRATIO,
 	VSSTOOTHCOUNT,
-	ALIGNMENTFILL_AT_563,
+	IDLEVEOVERRIDEMODE,
 	L9779_CS,
 	INJECTIONPINS1,
 	INJECTIONPINS2,
