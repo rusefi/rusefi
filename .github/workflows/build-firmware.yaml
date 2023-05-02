@@ -314,7 +314,7 @@ jobs:
     #     path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
-      if: if: ${{ env.full == 'true' && env.upload == 'true' }}
+      if: ${{ env.full == 'true' && env.upload == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: fome_bundle_${{matrix.build-target}}.zip
