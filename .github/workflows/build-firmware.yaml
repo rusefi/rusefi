@@ -267,7 +267,7 @@ jobs:
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
     - name: Package Bundle
-      run: ${{ env.full == 'true' }}
+      if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
     # - name: Upload HyperTuner .ini
