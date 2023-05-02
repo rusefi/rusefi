@@ -177,6 +177,19 @@ jobs:
       if: ${{ contains(github.ref_name, '.') }}
       run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
 
+    - name: Set run condition variables
+      run: |
+        if [ "${{github.repository}}" = "fome-tech/fome-fw" ]\
+        && [ "${{github.event_name}}" = "push" ]\
+        && [ "${{github.ref}}" = "refs/heads/master" ]\
+        || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
+          echo "full=true" >> $GITHUB_ENV
+          echo "upload=true" >> $GITHUB_ENV
+        elif [ "${{github.event_name}}" = "push" ]\
+        && [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "full=true" >> $GITHUB_ENV
+        fi
+
     - uses: actions/checkout@v3
       with:
         submodules: true
@@ -230,14 +243,13 @@ jobs:
       run: arm-none-eabi-gcc -v
 
     # - name: Configs Set SSH variables
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
     #   env:
     #     ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     #   run: |
-    #     if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ] || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
-    #       echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
-    #       echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
-    #       echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
-    #     fi
+    #     echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+    #     echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+    #     echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
 
     # Build the firmware!
     - name: Build Firmware
@@ -245,20 +257,21 @@ jobs:
 
     # Build rusEFI console
     - name: Build console
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
+      if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/build_java_console.sh
 
     # Build the simulator
-    - name: Build Windows simulator
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
+    - name: Build simulator
+      if: ${{ env.full == 'true' }}
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
     - name: Package Bundle
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
+      run: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
     # - name: Upload HyperTuner .ini
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
     #   uses: hyper-tuner/ini-upload-action@v1
     #   with:
     #     api-url: "${{ secrets.HYPER_TUNER_INI_UPLOAD_URL }}"
@@ -268,41 +281,40 @@ jobs:
     #     ecosystem: fome
 
     # - name: Upload .ini files
-    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
     #   working-directory: ./firmware/tunerstudio/generated
-    #   run: |
-    #     ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+    #   run: ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     # - name: Upload build elf
-    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_${{matrix.build-target}}.elf
     #     path: ./firmware/build/rusefi.elf
 
     # - name: Upload build bin
-    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_${{matrix.build-target}}.bin
     #     path: ./firmware/deliver/rusefi*.bin
 
     # - name: Upload build hex
-    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_${{matrix.build-target}}.hex
     #     path: ./firmware/deliver/rusefi*.hex
 
     # - name: Upload build dfu
-    #   if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
     #   uses: actions/upload-artifact@v3
     #   with:
     #     name: fome_${{matrix.build-target}}.dfu
     #     path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && !inputs.lts }}
+      if: if: ${{ env.full == 'true' && env.upload == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: fome_bundle_${{matrix.build-target}}.zip
