@@ -3810,6 +3810,12 @@ struct persistent_config_s {
 	// offset 22080
 	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaValues[12];
 
+	// offset 22104
+	blend_table_s boostOpenLoopBlends[BOOST_BLEND_COUNT];
+
+	// offset 22480
+	blend_table_s boostClosedLoopBlends[BOOST_BLEND_COUNT];
+
 };
-static_assert(sizeof(persistent_config_s) == 22104);
+static_assert(sizeof(persistent_config_s) == 22856);
 

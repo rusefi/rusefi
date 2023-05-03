@@ -1069,132 +1069,159 @@ struct output_channels_s {
 	// offset 624
 	scaled_channel<int16_t, 100, 1> veBlendOutput[VE_BLEND_COUNT];
 
-	// offset 632 bit 0
-	bool coilState1 : 1 {};
+	// offset 632
+	scaled_channel<int16_t, 10, 1> boostOpenLoopBlendParameter[BOOST_BLEND_COUNT];
 
-	// offset 632 bit 1
-	bool coilState2 : 1 {};
-
-	// offset 632 bit 2
-	bool coilState3 : 1 {};
-
-	// offset 632 bit 3
-	bool coilState4 : 1 {};
-
-	// offset 632 bit 4
-	bool coilState5 : 1 {};
-
-	// offset 632 bit 5
-	bool coilState6 : 1 {};
-
-	// offset 632 bit 6
-	bool coilState7 : 1 {};
-
-	// offset 632 bit 7
-	bool coilState8 : 1 {};
-
-	// offset 632 bit 8
-	bool coilState9 : 1 {};
-
-	// offset 632 bit 9
-	bool coilState10 : 1 {};
-
-	// offset 632 bit 10
-	bool coilState11 : 1 {};
-
-	// offset 632 bit 11
-	bool coilState12 : 1 {};
-
-	// offset 632 bit 12
-	bool injectorState1 : 1 {};
-
-	// offset 632 bit 13
-	bool injectorState2 : 1 {};
-
-	// offset 632 bit 14
-	bool injectorState3 : 1 {};
-
-	// offset 632 bit 15
-	bool injectorState4 : 1 {};
-
-	// offset 632 bit 16
-	bool injectorState5 : 1 {};
-
-	// offset 632 bit 17
-	bool injectorState6 : 1 {};
-
-	// offset 632 bit 18
-	bool injectorState7 : 1 {};
-
-	// offset 632 bit 19
-	bool injectorState8 : 1 {};
-
-	// offset 632 bit 20
-	bool injectorState9 : 1 {};
-
-	// offset 632 bit 21
-	bool injectorState10 : 1 {};
-
-	// offset 632 bit 22
-	bool injectorState11 : 1 {};
-
-	// offset 632 bit 23
-	bool injectorState12 : 1 {};
-
-	// offset 632 bit 24
-	bool unusedBit_298_24 : 1 {};
-
-	// offset 632 bit 25
-	bool unusedBit_298_25 : 1 {};
-
-	// offset 632 bit 26
-	bool unusedBit_298_26 : 1 {};
-
-	// offset 632 bit 27
-	bool unusedBit_298_27 : 1 {};
-
-	// offset 632 bit 28
-	bool unusedBit_298_28 : 1 {};
-
-	// offset 632 bit 29
-	bool unusedBit_298_29 : 1 {};
-
-	// offset 632 bit 30
-	bool unusedBit_298_30 : 1 {};
-
-	// offset 632 bit 31
-	bool unusedBit_298_31 : 1 {};
-
+	// %
 	// offset 636
-	uint32_t outputRequestPeriod = (uint32_t)0;
+	scaled_channel<uint8_t, 2, 1> boostOpenLoopBlendBias[BOOST_BLEND_COUNT];
+
+	// %
+	// offset 638
+	scaled_channel<int8_t, 1, 1> boostOpenLoopBlendOutput[BOOST_BLEND_COUNT];
 
 	// offset 640
+	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendParameter[BOOST_BLEND_COUNT];
+
+	// %
+	// offset 644
+	scaled_channel<uint8_t, 2, 1> boostClosedLoopBlendBias[BOOST_BLEND_COUNT];
+
+	// %
+	// offset 646
+	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendOutput[BOOST_BLEND_COUNT];
+
+	// need 4 byte alignment
+	// units
+	// offset 650
+	uint8_t alignmentFill_at_650[2];
+
+	// offset 652 bit 0
+	bool coilState1 : 1 {};
+
+	// offset 652 bit 1
+	bool coilState2 : 1 {};
+
+	// offset 652 bit 2
+	bool coilState3 : 1 {};
+
+	// offset 652 bit 3
+	bool coilState4 : 1 {};
+
+	// offset 652 bit 4
+	bool coilState5 : 1 {};
+
+	// offset 652 bit 5
+	bool coilState6 : 1 {};
+
+	// offset 652 bit 6
+	bool coilState7 : 1 {};
+
+	// offset 652 bit 7
+	bool coilState8 : 1 {};
+
+	// offset 652 bit 8
+	bool coilState9 : 1 {};
+
+	// offset 652 bit 9
+	bool coilState10 : 1 {};
+
+	// offset 652 bit 10
+	bool coilState11 : 1 {};
+
+	// offset 652 bit 11
+	bool coilState12 : 1 {};
+
+	// offset 652 bit 12
+	bool injectorState1 : 1 {};
+
+	// offset 652 bit 13
+	bool injectorState2 : 1 {};
+
+	// offset 652 bit 14
+	bool injectorState3 : 1 {};
+
+	// offset 652 bit 15
+	bool injectorState4 : 1 {};
+
+	// offset 652 bit 16
+	bool injectorState5 : 1 {};
+
+	// offset 652 bit 17
+	bool injectorState6 : 1 {};
+
+	// offset 652 bit 18
+	bool injectorState7 : 1 {};
+
+	// offset 652 bit 19
+	bool injectorState8 : 1 {};
+
+	// offset 652 bit 20
+	bool injectorState9 : 1 {};
+
+	// offset 652 bit 21
+	bool injectorState10 : 1 {};
+
+	// offset 652 bit 22
+	bool injectorState11 : 1 {};
+
+	// offset 652 bit 23
+	bool injectorState12 : 1 {};
+
+	// offset 652 bit 24
+	bool unusedBit_305_24 : 1 {};
+
+	// offset 652 bit 25
+	bool unusedBit_305_25 : 1 {};
+
+	// offset 652 bit 26
+	bool unusedBit_305_26 : 1 {};
+
+	// offset 652 bit 27
+	bool unusedBit_305_27 : 1 {};
+
+	// offset 652 bit 28
+	bool unusedBit_305_28 : 1 {};
+
+	// offset 652 bit 29
+	bool unusedBit_305_29 : 1 {};
+
+	// offset 652 bit 30
+	bool unusedBit_305_30 : 1 {};
+
+	// offset 652 bit 31
+	bool unusedBit_305_31 : 1 {};
+
+	// offset 656
+	uint32_t outputRequestPeriod = (uint32_t)0;
+
+	// offset 660
 	float mapFast = (float)0;
 
 	// value
-	// offset 644
+	// offset 664
 	float luaGauges[LUA_GAUGE_COUNT];
 
 	// V
-	// offset 652
+	// offset 672
 	scaled_channel<uint16_t, 1000, 1> rawMaf2 = (uint16_t)0;
 
 	// @@GAUGE_NAME_AIR_FLOW_MEASURED_2@@
 	// kg/h
-	// offset 654
+	// offset 674
 	scaled_channel<uint16_t, 10, 1> mafMeasured2 = (uint16_t)0;
 
-	// offset 656
+	// offset 676
 	uint16_t schedulingUsedCount = (uint16_t)0;
 
-	// offset 658
+	// offset 678
 	uint8_t unusedAtTheEnd[136];
 
 	// need 4 byte alignment
 	// units
-	// offset 794
-	uint8_t alignmentFill_at_794[2];
+	// offset 814
+	uint8_t alignmentFill_at_814[2];
 
 };
-static_assert(sizeof(output_channels_s) == 796);
+static_assert(sizeof(output_channels_s) == 816);
 

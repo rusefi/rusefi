@@ -4,6 +4,7 @@ import com.rusefi.config.*;
 
 public class TriggerStatePrimary {
 	public static final int BANKS_COUNT = 2;
+	public static final int BOOST_BLEND_COUNT = 2;
 	public static final int CAM_INPUTS_COUNT = 4;
 	public static final int CAMS_PER_BANK = 2;
 	public static final int EGT_CHANNEL_COUNT = 8;
@@ -166,7 +167,7 @@ public class TriggerStatePrimary {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 0, FieldType.BIT, 0).setBaseOffset(1248);
+	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 0, FieldType.BIT, 0).setBaseOffset(1268);
 	public static final Field[] VALUES = {
 	M_HASSYNCHRONIZEDPHASE,
 	};
