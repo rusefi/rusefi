@@ -41,6 +41,7 @@ Release template (copy/paste this for new release):
  - Better idle VE table transition
  - Detected gear available as gppwm channel
  - Y axis override for Idle VE table. Helps with idle quality on ITB setups. #94
+ - Blend tables for boost open and closed loop control #73
 
 ## April 2023 Release - "Day 419"
 
