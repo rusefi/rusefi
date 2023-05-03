@@ -2,6 +2,7 @@
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
+
 #include "rusefi_types.h"
 // start of stft_cell_cfg_s
 struct stft_cell_cfg_s {
