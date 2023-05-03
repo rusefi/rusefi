@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 02 22:24:30 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed May 03 20:02:14 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5167,8 +5167,16 @@ struct persistent_config_s {
 	 * offset 22400
 	 */
 	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaValues[12];
+	/**
+	 * offset 22424
+	 */
+	blend_table_s boostOpenLoopBlends[BOOST_BLEND_COUNT];
+	/**
+	 * offset 22800
+	 */
+	blend_table_s boostClosedLoopBlends[BOOST_BLEND_COUNT];
 };
-static_assert(sizeof(persistent_config_s) == 22424);
+static_assert(sizeof(persistent_config_s) == 23176);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 02 22:24:30 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed May 03 20:02:14 UTC 2023

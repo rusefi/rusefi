@@ -1,12 +1,13 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Sun Apr 30 15:04:36 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Wed May 03 20:01:25 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class TriggerStatePrimary {
 	public static final int BANKS_COUNT = 2;
+	public static final int BOOST_BLEND_COUNT = 2;
 	public static final int CAM_INPUTS_COUNT = 4;
 	public static final int CAMS_PER_BANK = 2;
 	public static final int EGT_CHANNEL_COUNT = 8;
@@ -175,7 +176,7 @@ public class TriggerStatePrimary {
 	public static final int PACK_MULT_VSS = 100;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 0, FieldType.BIT, 0).setBaseOffset(1268);
+	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 0, FieldType.BIT, 0).setBaseOffset(1288);
 	public static final Field[] VALUES = {
 	M_HASSYNCHRONIZEDPHASE,
 	};
