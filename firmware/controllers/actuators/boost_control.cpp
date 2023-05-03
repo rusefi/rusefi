@@ -67,7 +67,20 @@ expected<float> BoostController::getSetpoint() {
 
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_closedLoopTargetMap != nullptr, "boost closed loop target", unexpected);
 
-    return m_closedLoopTargetMap->getValue(rpm, driverIntent.Value) * luaTargetMult + luaTargetAdd;
+	float target = m_closedLoopTargetMap->getValue(rpm, driverIntent.Value);
+
+	// Add any blends if configured
+	for (size_t i = 0; i < efi::size(config->boostClosedLoopBlends); i++) {
+		auto result = calculateBlend(config->boostClosedLoopBlends[i], rpm, driverIntent.Value);
+
+		engine->outputChannels.boostClosedLoopBlendParameter[i] = result.BlendParameter;
+		engine->outputChannels.boostClosedLoopBlendBias[i] = result.Bias;
+		engine->outputChannels.boostClosedLoopBlendOutput[i] = result.Value;
+
+		target += result.Value;
+	}
+
+	return target * luaTargetMult + luaTargetAdd;
 }
 
 expected<percent_t> BoostController::getOpenLoop(float target) {
@@ -85,9 +98,21 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_openLoopMap != nullptr, "boost open loop", unexpected);
 
-	openLoopPart = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, driverIntent.Value);
+	float openLoop = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, driverIntent.Value);
 
-	return openLoopPart;
+	// Add any blends if configured
+	for (size_t i = 0; i < efi::size(config->boostOpenLoopBlends); i++) {
+		auto result = calculateBlend(config->boostOpenLoopBlends[i], rpm, driverIntent.Value);
+
+		engine->outputChannels.boostOpenLoopBlendParameter[i] = result.BlendParameter;
+		engine->outputChannels.boostOpenLoopBlendBias[i] = result.Bias;
+		engine->outputChannels.boostOpenLoopBlendOutput[i] = result.Value;
+
+		openLoop += result.Value;
+	}
+
+	openLoopPart = openLoop;
+	return openLoop;
 }
 
 percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressure) {

@@ -761,6 +761,34 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		xBins = veBlends4_blendBins, veBlendParameter4
 		yBins = veBlends4_blendValues
 
+	curve = boostOpenLoopBlend1Bias, "Boost open loop blend 1 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = boostOpenLoopBlends1_blendBins, boostOpenLoopBlendParameter1
+		yBins = boostOpenLoopBlends1_blendValues
+
+	curve = boostOpenLoopBlend2Bias, "Boost open loop blend 2 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = boostOpenLoopBlends2_blendBins, boostOpenLoopBlendParameter2
+		yBins = boostOpenLoopBlends2_blendValues
+
+	curve = boostClosedLoopBlend1Bias, "Boost Closed loop blend 1 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = boostClosedLoopBlends1_blendBins, boostClosedLoopBlendParameter1
+		yBins = boostClosedLoopBlends1_blendValues
+
+	curve = boostClosedLoopBlend2Bias, "Boost Closed loop blend 2 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = boostClosedLoopBlends2_blendBins, boostClosedLoopBlendParameter2
+		yBins = boostClosedLoopBlends2_blendValues
+
 	curve = throttleEffectiveArea, "Throttle effective area"
 		columnLabel = "TPS", "normalized flow"
 		xAxis = 0, 100, 11
@@ -902,6 +930,30 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		xBins		= veBlends4_rpmBins, RPMValue
 		yBins		= veBlends4_loadBins, fuelingLoad
 		zBins		= veBlends4_table
+		gridOrient  = 250, 0, 340
+
+	table = boostOpenBlend1Table, boostOpenBlend1Map, "Boost open loop blend 1", 1
+		xBins		= boostOpenLoopBlends1_rpmBins, RPMValue
+		yBins		= boostOpenLoopBlends1_loadBins, TPSValue
+		zBins		= boostOpenLoopBlends1_table
+		gridOrient  = 250, 0, 340
+
+	table = boostOpenBlend2Table, boostOpenBlend2Map, "Boost open loop blend 2", 1
+		xBins		= boostOpenLoopBlends2_rpmBins, RPMValue
+		yBins		= boostOpenLoopBlends2_loadBins, TPSValue
+		zBins		= boostOpenLoopBlends2_table
+		gridOrient  = 250, 0, 340
+
+	table = boostClosedBlend1Table, boostClosedBlend1Map, "Boost closed loop blend 1", 1
+		xBins		= boostClosedLoopBlends1_rpmBins, RPMValue
+		yBins		= boostClosedLoopBlends1_loadBins, TPSValue
+		zBins		= boostClosedLoopBlends1_table
+		gridOrient  = 250, 0, 340
+
+	table = boostClosedBlend2Table, boostClosedBlend2Map, "Boost closed loop blend 2", 1
+		xBins		= boostClosedLoopBlends2_rpmBins, RPMValue
+		yBins		= boostClosedLoopBlends2_loadBins, TPSValue
+		zBins		= boostClosedLoopBlends2_table
 		gridOrient  = 250, 0, 340
 
 	table = ignitionIatCorrTableTbl,  ignitionIatCorrTableMap,  "Ignition Intake Air Temp correction",	1
@@ -1717,6 +1769,17 @@ menuDialog = main
 		subMenu = boostOpenLoopDialog,	"Boost control open loop", { isBoostControlEnabled }
 		subMenu = boostPidDialog,		"Boost control PID", { isBoostControlEnabled && boostType == 1 }
 		subMenu = boostTargetDialog,	"Boost control target", { isBoostControlEnabled && boostType == 1 }
+
+		groupMenu = "Boost blend tables"
+		groupChildMenu = boostOpenBlend1Cfg,		"Open loop 1 bias",		{ isBoostControlEnabled }
+		groupChildMenu = boostOpenBlend1Table,		"Open loop 1 adder",	{ isBoostControlEnabled && boostOpenLoopBlends1_blendParameter != 0 }
+		groupChildMenu = boostOpenBlend2Cfg,		"Open loop 2 bias",		{ isBoostControlEnabled }
+		groupChildMenu = boostOpenBlend2Table,		"Open loop 2 adder",	{ isBoostControlEnabled && boostOpenLoopBlends2_blendParameter != 0 }
+		groupChildMenu = boostClosedBlend1Cfg,		"Closed loop 1 bias",	{ isBoostControlEnabled && boostType == 1 }
+		groupChildMenu = boostClosedBlend2Table,	"Closed loop 1 adder",	{ isBoostControlEnabled && boostType == 1 && boostClosedLoopBlends1_blendParameter != 0 }
+		groupChildMenu = boostClosedBlend2Cfg,		"Closed loop 2 bias",	{ isBoostControlEnabled && boostType == 1 }
+		groupChildMenu = boostClosedBlend2Table,	"Closed loop 2 adder",	{ isBoostControlEnabled && boostType == 1 && boostClosedLoopBlends2_blendParameter != 0 }
+
 		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { etbFunctions1 == @@dc_function_e_DC_Wastegate@@ || etbFunctions2 == @@dc_function_e_DC_Wastegate@@ }
 
 		subMenu = std_separator
@@ -2466,6 +2529,46 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#parameter below."
 		field = "Blend parameter", veBlends4_blendParameter
 		panel = veBlend4Bias
+
+	dialog = boostOpenBlend1Cfg, "Boost open loop blend 1 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the open loop boost table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in +5.0 added to the boost open loop %."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
+		field = "Blend parameter", boostOpenLoopBlends1_blendParameter
+		panel = boostOpenLoopBlend1Bias
+
+	dialog = boostOpenBlend2Cfg, "Boost open loop blend 2 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the open loop boost table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in +5.0 added to the boost open loop %."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
+		field = "Blend parameter", boostOpenLoopBlends2_blendParameter
+		panel = boostOpenLoopBlend2Bias
+
+	dialog = boostClosedBlend1Cfg, "Boost closed loop blend 1 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the closed loop boost table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in +5.0 added to the boost closed loop %."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
+		field = "Blend parameter", boostClosedLoopBlends1_blendParameter
+		panel = boostClosedLoopBlend1Bias
+
+	dialog = boostClosedBlend2Cfg, "Boost closed loop blend 2 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the closed loop boost table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in +5.0 added to the boost closed loop %."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
+		field = "Blend parameter", boostClosedLoopBlends2_blendParameter
+		panel = boostClosedLoopBlend2Bias
 
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection

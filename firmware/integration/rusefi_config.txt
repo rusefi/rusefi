@@ -1700,6 +1700,9 @@ blend_table_s[VE_BLEND_COUNT iterate] veBlends
 uint16_t[12] autoscale throttleEstimateEffectiveAreaBins;;"%", 0.1, 0, 0, 100, 1
 uint16_t[12] autoscale throttleEstimateEffectiveAreaValues;In units of g/s normalized to choked flow conditions;"g/s", 0.1, 0, 0, 6500, 1
 
+blend_table_s[BOOST_BLEND_COUNT iterate] boostOpenLoopBlends
+blend_table_s[BOOST_BLEND_COUNT iterate] boostClosedLoopBlends
+
 end_struct
 
 ! Pedal Position Sensor

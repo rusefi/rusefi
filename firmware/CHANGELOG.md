@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
 ### Added
  - Detected gear and wastegate position to CAN format
  - Y axis override for Idle VE table. Helps with idle quality on ITB setups. #94
+ - Blend tables for boost open and closed loop control #73
 
 ### Fixed
  - Sensor checker wasn't checking sensors
