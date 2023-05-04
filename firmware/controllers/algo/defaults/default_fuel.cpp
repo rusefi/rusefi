@@ -237,6 +237,10 @@ void setDefaultFuel() {
 	setDefaultVETable();
 	setDefaultLambdaTable();
 
+	setRpmTableBin(config->mapEstimateRpmBins);
+	setLinearCurve(config->mapEstimateTpsBins, 0, 100);
+	setTable(config->mapEstimateTable, 60);
+
 	// -400 will close the injector just before TDC at the end of the exhaust stroke,
 	// around the time the intake valve opens.
 	setTable(config->injectionPhase, -400.0f);
