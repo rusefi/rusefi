@@ -332,12 +332,12 @@ float IdleController::getIdlePosition(float rpm) {
 			iacPosition = engine->blipIdlePosition;
 			idleState = BLIP;
 		} else {
-			// Always apply closed loop correction
+			// Always apply open loop correction
 			iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
 			baseIdlePosition = iacPosition;
 
 			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
-			// If TPS is working and automatic mode enabled, add any automatic correction
+			// If TPS is working and automatic mode enabled, add any closed loop correction
 			if (useClosedLoop) {
 				iacPosition += getClosedLoop(phase, tps.Value, rpm, targetRpm);
 			}
@@ -348,14 +348,14 @@ float IdleController::getIdlePosition(float rpm) {
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 		engine->outputChannels.isIdleClosedLoop = phase == Phase::Idling;
 
-			if (engineConfiguration->idleMode == IM_AUTO) {
-				// see also tsOutputChannels->idlePosition
-				getIdlePid()->postState(engine->outputChannels.idleStatus);
-			} else {
-				engine->outputChannels.idleCurrentPosition = iacPosition;
-				extern StepperMotor iacMotor;
-				engine->outputChannels.idleTargetPosition = iacMotor.getTargetPosition();
-			}
+		if (engineConfiguration->idleMode == IM_AUTO) {
+			// see also tsOutputChannels->idlePosition
+			getIdlePid()->postState(engine->outputChannels.idleStatus);
+		}
+
+		engine->outputChannels.idleAirValvePosition = iacPosition;
+		extern StepperMotor iacMotor;
+		engine->outputChannels.idleTargetPosition = iacMotor.getTargetPosition();
 #endif /* EFI_TUNER_STUDIO */
 
 		currentIdlePosition = iacPosition;
