@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed May 03 20:01:26 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu May 04 14:58:07 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1574,88 +1574,88 @@ struct engine_configuration_s {
 	offset 728 bit 7 */
 	bool isVerboseAlternator : 1 {};
 	/**
-	offset 728 bit 8 */
-	bool verboseQuad : 1 {};
-	/**
 	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
-	offset 728 bit 9 */
+	offset 728 bit 8 */
 	bool useStepperIdle : 1 {};
 	/**
-	offset 728 bit 10 */
+	offset 728 bit 9 */
 	bool enabledStep1Limiter : 1 {};
 	/**
-	offset 728 bit 11 */
+	offset 728 bit 10 */
 	bool useTpicAdvancedMode : 1 {};
 	/**
-	offset 728 bit 12 */
+	offset 728 bit 11 */
 	bool unused760b12 : 1 {};
 	/**
-	offset 728 bit 13 */
+	offset 728 bit 12 */
 	bool verboseTLE8888 : 1 {};
 	/**
 	 * CAN broadcast using custom rusEFI protocol
 	 * enable can_broadcast/disable can_broadcast
-	offset 728 bit 14 */
+	offset 728 bit 13 */
 	bool enableVerboseCanTx : 1 {};
 	/**
-	offset 728 bit 15 */
+	offset 728 bit 14 */
 	bool etb1configured : 1 {};
 	/**
-	offset 728 bit 16 */
+	offset 728 bit 15 */
 	bool etb2configured : 1 {};
 	/**
 	 * Useful for individual intakes
-	offset 728 bit 17 */
+	offset 728 bit 16 */
 	bool measureMapOnlyInOneCylinder : 1 {};
 	/**
-	offset 728 bit 18 */
+	offset 728 bit 17 */
 	bool stepperForceParkingEveryRestart : 1 {};
 	/**
 	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
-	offset 728 bit 19 */
+	offset 728 bit 18 */
 	bool isFasterEngineSpinUpEnabled : 1 {};
 	/**
 	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	offset 728 bit 20 */
+	offset 728 bit 19 */
 	bool coastingFuelCutEnabled : 1 {};
 	/**
 	 * Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
-	offset 728 bit 21 */
+	offset 728 bit 20 */
 	bool useIacTableForCoasting : 1 {};
 	/**
-	offset 728 bit 22 */
+	offset 728 bit 21 */
 	bool useNoiselessTriggerDecoder : 1 {};
 	/**
-	offset 728 bit 23 */
+	offset 728 bit 22 */
 	bool useIdleTimingPidControl : 1 {};
 	/**
 	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	offset 728 bit 24 */
+	offset 728 bit 23 */
 	bool disableEtbWhenEngineStopped : 1 {};
 	/**
-	offset 728 bit 25 */
+	offset 728 bit 24 */
 	bool is_enabled_spi_4 : 1 {};
 	/**
 	 * Disable the electronic throttle motor and DC idle motor for testing.
 	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	offset 728 bit 26 */
+	offset 728 bit 25 */
 	bool pauseEtbControl : 1 {};
 	/**
-	offset 728 bit 27 */
+	offset 728 bit 26 */
 	bool alignEngineSnifferAtTDC : 1 {};
 	/**
-	offset 728 bit 28 */
+	offset 728 bit 27 */
 	bool verboseKLine : 1 {};
 	/**
-	offset 728 bit 29 */
+	offset 728 bit 28 */
 	bool idleIncrementalPidCic : 1 {};
 	/**
 	 * AEM X-Series or rusEFI Wideband
-	offset 728 bit 30 */
+	offset 728 bit 29 */
 	bool enableAemXSeries : 1 {};
 	/**
+	offset 728 bit 30 */
+	bool unusedBit_222_30 : 1 {};
+	/**
 	offset 728 bit 31 */
-	bool unusedBit_223_31 : 1 {};
+	bool unusedBit_222_31 : 1 {};
 	/**
 	 * offset 732
 	 */
@@ -5179,4 +5179,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23176);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed May 03 20:01:26 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu May 04 14:58:07 UTC 2023

@@ -391,9 +391,6 @@ float getConfigValueByName(const char *name) {
 // isVerboseAlternator
 		case -956913549:
 			return engineConfiguration->isVerboseAlternator;
-// verboseQuad
-		case -1055678778:
-			return engineConfiguration->verboseQuad;
 // useStepperIdle
 		case -920116109:
 			return engineConfiguration->useStepperIdle;
@@ -2228,11 +2225,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -956913549:
 	{
 		engineConfiguration->isVerboseAlternator = (int)value;
-		return;
-	}
-		case -1055678778:
-	{
-		engineConfiguration->verboseQuad = (int)value;
 		return;
 	}
 		case -920116109:
