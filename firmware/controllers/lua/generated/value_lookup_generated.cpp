@@ -103,9 +103,6 @@ float getConfigValueByName(const char *name) {
 // useTLE8888_stepper
 		case -647008743:
 			return engineConfiguration->useTLE8888_stepper;
-// enableMapEstimationTableFallback
-		case 1992465535:
-			return engineConfiguration->enableMapEstimationTableFallback;
 // usescriptTableForCanSniffingFiltering
 		case 671821024:
 			return engineConfiguration->usescriptTableForCanSniffingFiltering;
@@ -280,9 +277,6 @@ float getConfigValueByName(const char *name) {
 // airByRpmTaper
 		case 2070727975:
 			return engineConfiguration->airByRpmTaper;
-// failedMapFallback
-		case -1730107688:
-			return engineConfiguration->failedMapFallback;
 // boostControlSafeDutyCycle
 		case -1965075262:
 			return engineConfiguration->boostControlSafeDutyCycle;
@@ -391,6 +385,9 @@ float getConfigValueByName(const char *name) {
 // isVerboseAlternator
 		case -956913549:
 			return engineConfiguration->isVerboseAlternator;
+// verboseQuad
+		case -1055678778:
+			return engineConfiguration->verboseQuad;
 // useStepperIdle
 		case -920116109:
 			return engineConfiguration->useStepperIdle;
@@ -1747,11 +1744,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useTLE8888_stepper = (int)value;
 		return;
 	}
-		case 1992465535:
-	{
-		engineConfiguration->enableMapEstimationTableFallback = (int)value;
-		return;
-	}
 		case 671821024:
 	{
 		engineConfiguration->usescriptTableForCanSniffingFiltering = (int)value;
@@ -2042,11 +2034,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->airByRpmTaper = value;
 		return;
 	}
-		case -1730107688:
-	{
-		engineConfiguration->failedMapFallback = (int)value;
-		return;
-	}
 		case -1965075262:
 	{
 		engineConfiguration->boostControlSafeDutyCycle = (int)value;
@@ -2225,6 +2212,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -956913549:
 	{
 		engineConfiguration->isVerboseAlternator = (int)value;
+		return;
+	}
+		case -1055678778:
+	{
+		engineConfiguration->verboseQuad = (int)value;
 		return;
 	}
 		case -920116109:

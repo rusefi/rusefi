@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 04 14:58:06 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 04 15:05:24 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -726,40 +726,39 @@ struct engine_configuration_s {
 	offset 120 bit 21 */
 	bool useTLE8888_stepper : 1 {};
 	/**
-	 * If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 	offset 120 bit 22 */
-	bool enableMapEstimationTableFallback : 1 {};
-	/**
-	offset 120 bit 23 */
 	bool usescriptTableForCanSniffingFiltering : 1 {};
 	/**
 	 * Print incoming and outgoing first bus CAN messages in rusEFI console
-	offset 120 bit 24 */
+	offset 120 bit 23 */
 	bool verboseCan : 1 {};
 	/**
 	 * Experimental setting that will cause a misfire
 	 * DO NOT ENABLE.
-	offset 120 bit 25 */
+	offset 120 bit 24 */
 	bool artificialTestMisfire : 1 {};
 	/**
 	 * On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
-	offset 120 bit 26 */
+	offset 120 bit 25 */
 	bool useFordRedundantPps : 1 {};
 	/**
+	offset 120 bit 26 */
+	bool unusedBit_40_26 : 1 {};
+	/**
 	offset 120 bit 27 */
-	bool unusedBit_41_27 : 1 {};
+	bool unusedBit_40_27 : 1 {};
 	/**
 	offset 120 bit 28 */
-	bool unusedBit_41_28 : 1 {};
+	bool unusedBit_40_28 : 1 {};
 	/**
 	offset 120 bit 29 */
-	bool unusedBit_41_29 : 1 {};
+	bool unusedBit_40_29 : 1 {};
 	/**
 	offset 120 bit 30 */
-	bool unusedBit_41_30 : 1 {};
+	bool unusedBit_40_30 : 1 {};
 	/**
 	offset 120 bit 31 */
-	bool unusedBit_41_31 : 1 {};
+	bool unusedBit_40_31 : 1 {};
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
@@ -1106,22 +1105,21 @@ struct engine_configuration_s {
 	 */
 	spi_device_e hip9011SpiDevice;
 	/**
-	 * Single value to be used in event of a failed MAP sensor 
-	 * This value is only used for speed density fueling calculations.
-	kPa
-	 * offset 477
-	 */
-	uint8_t failedMapFallback;
-	/**
 	 * Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.
 	%
-	 * offset 478
+	 * offset 477
 	 */
 	uint8_t boostControlSafeDutyCycle;
 	/**
-	 * offset 479
+	 * offset 478
 	 */
 	adc_channel_e mafAdcChannel;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 479
+	 */
+	uint8_t alignmentFill_at_479[1];
 	/**
 	coef
 	 * offset 480
@@ -1574,88 +1572,88 @@ struct engine_configuration_s {
 	offset 728 bit 7 */
 	bool isVerboseAlternator : 1 {};
 	/**
-	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	offset 728 bit 8 */
+	bool verboseQuad : 1 {};
+	/**
+	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
+	offset 728 bit 9 */
 	bool useStepperIdle : 1 {};
 	/**
-	offset 728 bit 9 */
+	offset 728 bit 10 */
 	bool enabledStep1Limiter : 1 {};
 	/**
-	offset 728 bit 10 */
+	offset 728 bit 11 */
 	bool useTpicAdvancedMode : 1 {};
 	/**
-	offset 728 bit 11 */
+	offset 728 bit 12 */
 	bool unused760b12 : 1 {};
 	/**
-	offset 728 bit 12 */
+	offset 728 bit 13 */
 	bool verboseTLE8888 : 1 {};
 	/**
 	 * CAN broadcast using custom rusEFI protocol
 	 * enable can_broadcast/disable can_broadcast
-	offset 728 bit 13 */
+	offset 728 bit 14 */
 	bool enableVerboseCanTx : 1 {};
 	/**
-	offset 728 bit 14 */
+	offset 728 bit 15 */
 	bool etb1configured : 1 {};
 	/**
-	offset 728 bit 15 */
+	offset 728 bit 16 */
 	bool etb2configured : 1 {};
 	/**
 	 * Useful for individual intakes
-	offset 728 bit 16 */
+	offset 728 bit 17 */
 	bool measureMapOnlyInOneCylinder : 1 {};
 	/**
-	offset 728 bit 17 */
+	offset 728 bit 18 */
 	bool stepperForceParkingEveryRestart : 1 {};
 	/**
 	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
-	offset 728 bit 18 */
+	offset 728 bit 19 */
 	bool isFasterEngineSpinUpEnabled : 1 {};
 	/**
 	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	offset 728 bit 19 */
+	offset 728 bit 20 */
 	bool coastingFuelCutEnabled : 1 {};
 	/**
 	 * Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
-	offset 728 bit 20 */
+	offset 728 bit 21 */
 	bool useIacTableForCoasting : 1 {};
 	/**
-	offset 728 bit 21 */
+	offset 728 bit 22 */
 	bool useNoiselessTriggerDecoder : 1 {};
 	/**
-	offset 728 bit 22 */
+	offset 728 bit 23 */
 	bool useIdleTimingPidControl : 1 {};
 	/**
 	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	offset 728 bit 23 */
+	offset 728 bit 24 */
 	bool disableEtbWhenEngineStopped : 1 {};
 	/**
-	offset 728 bit 24 */
+	offset 728 bit 25 */
 	bool is_enabled_spi_4 : 1 {};
 	/**
 	 * Disable the electronic throttle motor and DC idle motor for testing.
 	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	offset 728 bit 25 */
+	offset 728 bit 26 */
 	bool pauseEtbControl : 1 {};
 	/**
-	offset 728 bit 26 */
+	offset 728 bit 27 */
 	bool alignEngineSnifferAtTDC : 1 {};
 	/**
-	offset 728 bit 27 */
+	offset 728 bit 28 */
 	bool verboseKLine : 1 {};
 	/**
-	offset 728 bit 28 */
+	offset 728 bit 29 */
 	bool idleIncrementalPidCic : 1 {};
 	/**
 	 * AEM X-Series or rusEFI Wideband
-	offset 728 bit 29 */
+	offset 728 bit 30 */
 	bool enableAemXSeries : 1 {};
 	/**
-	offset 728 bit 30 */
-	bool unusedBit_222_30 : 1 {};
-	/**
 	offset 728 bit 31 */
-	bool unusedBit_222_31 : 1 {};
+	bool unusedBit_223_31 : 1 {};
 	/**
 	 * offset 732
 	 */
@@ -5179,4 +5177,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23176);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 04 14:58:06 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 04 15:05:24 UTC 2023
