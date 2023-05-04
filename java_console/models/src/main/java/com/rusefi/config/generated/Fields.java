@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu May 04 21:49:10 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu May 04 22:25:43 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -452,7 +452,7 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_FLOW = "fuel: Flow rate";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
-	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last injection";
+	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last inj pulse width";
 	public static final String GAUGE_NAME_FUEL_LEVEL = "fuel level";
 	public static final String GAUGE_NAME_FUEL_LOAD = "fuel: load";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
@@ -1014,6 +1014,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 158941303;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1237,7 +1238,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.04.f407-discovery.4087236623";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.04.f407-discovery.158941303";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1424;
