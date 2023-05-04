@@ -61,7 +61,7 @@
 ! A: That's a template placeholder for field offset within the resulting data structure.
 !
 ! Q: What is "[0:2]"?
-! A: That part of the bit declaration specified usage of three bits - from bit 0 to bit 2  
+! A: That part of the bit declaration specified usage of three bits - from bit 0 to bit 2
 !
 ! Q: how does 'custom' work?
 ! A: let's look at
@@ -102,7 +102,7 @@
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
 
-struct_no_prefix persistent_config_s 
+struct_no_prefix persistent_config_s
 
 struct_no_prefix engine_configuration_s
 
@@ -117,7 +117,7 @@ struct_no_prefix engine_configuration_s
 #define GAP_TRACKING_LENGTH 18
 
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
-#define MAIN_HELP_URL "http://www.rusefi.com/"
+#define MAIN_HELP_URL "https://wiki.fome.tech/"
 
 #define ETB_BIAS_CURVE_LENGTH 8
 
@@ -199,7 +199,7 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_GAP_TO "gapTo"
 #define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
 
-! 
+!
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
 ! or packing numeric voltage inside an integer byte
 !
@@ -328,7 +328,7 @@ custom air_pressure_sensor_type_e 1 bits, U08, @OFFSET@, [0:4], "Custom", "DENSO
 
 !
 ! lower 16 values are used on stm32 rusEFI, values above 16 are related to Kinetis work in progress
-! 
+!
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
 custom adc_channel_e 1 bits, U08, @OFFSET@, [0:5], @@adc_channel_e_enum@@
 
@@ -516,8 +516,8 @@ int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
 
 	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor
-adc_channel_e vbattAdcChannel;This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB. 
-adc_channel_e fuelLevelSensor;This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
+adc_channel_e vbattAdcChannel;This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB.
+adc_channel_e fuelLevelSensor;This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined.
 	adc_channel_e tps2_1AdcChannel;Second throttle body, first sensor
 
 
@@ -538,7 +538,7 @@ trigger_config_s trigger;
 
     float airByRpmTaper;Extra air taper amount;"%", 1, 0, 0, 50, 1
 
-custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4" 
+custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4"
 	uint8_t boostControlSafeDutyCycle;Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.;"%", 1, 0, 0, 100, 0
 
 adc_channel_e throttlePedalPositionAdcChannel;Throttle pedal position first channel
@@ -689,7 +689,7 @@ bit is_enabled_spi_2
 	bit isSdCardEnabled;enable sd/disable sd
 	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit isVerboseAlternator
-	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed. 
+	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	
 	bit enabledStep1Limiter
 	bit verboseTLE8888
@@ -750,7 +750,7 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 	uint8_t etbMaximumPosition;Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.;"%", 1, 0, 70, 100, 0
 
 
-custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
+custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3"
 	uint16_t sdCardLogFrequency;Rate the ECU will log to the SD card, in hz (log lines per second).;"hz", 1, 0, 1, 250, 0
 	Gpio debugMapAveraging;
 	output_pin_e starterRelayDisablePin;
@@ -1159,7 +1159,7 @@ int16_t tps2Max;;"ADC", 1, 0, 0, 1023, 0
 	float tChargeMinRpmMinTps;;"", 1, 0, 0, 3, 4
 	float tChargeMinRpmMaxTps;;"", 1, 0, 0, 3, 4
 	float tChargeMaxRpmMinTps;;"", 1, 0, 0, 3, 4
-	float tChargeMaxRpmMaxTps;;"", 1, 0, 0, 3, 4   
+	float tChargeMaxRpmMaxTps;;"", 1, 0, 0, 3, 4
 
 custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	pwm_freq_t[CAMS_PER_BANK iterate] vvtOutputFrequency;
@@ -1850,11 +1850,11 @@ end_struct
 
 
 ! 0x57 pageValueWrite
-#define TS_SINGLE_WRITE_COMMAND 'W' 
+#define TS_SINGLE_WRITE_COMMAND 'W'
 ! 0x43 pageChunkWrite
-#define TS_CHUNK_WRITE_COMMAND 'C' 
+#define TS_CHUNK_WRITE_COMMAND 'C'
 ! 0x42 burnCommand
-#define TS_BURN_COMMAND 'B' 
+#define TS_BURN_COMMAND 'B'
 ! 0x77
 #define TS_IO_TEST_COMMAND 'Z'
 
