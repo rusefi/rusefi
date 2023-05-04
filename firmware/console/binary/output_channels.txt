@@ -13,28 +13,28 @@ bit sd_present
 bit sd_logging_internal
 bit triggerScopeReady
 bit antilagTriggered
-bit isFanOn;radiator fan
+bit isFanOn;Radiator Fan
 bit isO2HeaterOn;
 bit checkEngine;
 bit needBurn;
 
-bit sd_msd
-bit isFan2On
-bit acrActive;
-bit toothLogReady;
-bit isTpsError;
-bit isCltError;
-bit isMapError;
-bit isIatError;
-bit isTriggerError;
-bit hasCriticalError;
-bit isWarnNow;
-bit isPedalError;
-bit launchTriggered;
-bit isTps2Error;
-bit isIdleClosedLoop;
-bit injectorFault;
-bit ignitionFault;
+bit sd_msd;SD is MSD
+bit isFan2On;Radiator Fan2
+bit acrActive;Harley ACR Active
+bit toothLogReady;Tooth Logger Ready
+bit isTpsError;Error: TPS
+bit isCltError;Error: CLT
+bit isMapError;Error: MAP
+bit isIatError;Error: IAT
+bit isTriggerError;Error: Trigger
+bit hasCriticalError;Error, Critical: ECM
+bit isWarnNow;Warning: ECM
+bit isPedalError;Error: Pedal
+bit launchTriggered;Launch Control Triggered
+bit isTps2Error;Error: TPS2
+bit isIdleClosedLoop;Closed Loop Idle
+bit injectorFault;Injector Fault
+bit ignitionFault;Ignition Fault
 
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
