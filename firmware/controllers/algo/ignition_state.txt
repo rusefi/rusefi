@@ -13,8 +13,8 @@ struct_no_prefix ignition_state_s
 
 float dwellVoltageCorrection
 
-    float luaTimingAdd;;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
-    float luaTimingMult;;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+    float luaTimingAdd;Ign: Lua timing add;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+    float luaTimingMult;Ign: Lua timing mult;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
 
 end_struct
 
