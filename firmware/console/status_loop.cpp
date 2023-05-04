@@ -683,10 +683,6 @@ DcHardware *getdcHardware();
 		tsOutputChannels->egt[i] = getMax31855EgtValue(i);
 #endif /* EFI_MAX_31855 */
 
-#if EFI_IDLE_CONTROL
-	tsOutputChannels->idleAirValvePosition = getIdlePosition();
-#endif
-
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
 	for (int i = 0; i < 8;i++) {
