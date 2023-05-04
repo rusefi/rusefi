@@ -184,12 +184,12 @@ float getOutputValueByName(const char *name) {
 // tpsAccelFuel
 		case -384925312:
 			return engine->outputChannels.tpsAccelFuel;
-// warningCounter
-		case 1492724763:
-			return engine->outputChannels.warningCounter;
-// lastErrorCode
-		case -1346040258:
-			return engine->outputChannels.lastErrorCode;
+// currentIgnitionMode
+		case -3603666:
+			return engine->outputChannels.currentIgnitionMode;
+// currentInjectionMode
+		case -921867120:
+			return engine->outputChannels.currentInjectionMode;
 // coilDutyCycle
 		case 1029096098:
 			return engine->outputChannels.coilDutyCycle;
@@ -265,6 +265,12 @@ float getOutputValueByName(const char *name) {
 // orderingErrorCounter
 		case -1326404407:
 			return engine->outputChannels.orderingErrorCounter;
+// warningCounter
+		case 1492724763:
+			return engine->outputChannels.warningCounter;
+// lastErrorCode
+		case -1346040258:
+			return engine->outputChannels.lastErrorCode;
 // debugFloatField1
 		case 1240443767:
 			return engine->outputChannels.debugFloatField1;

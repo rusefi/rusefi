@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 22:43:32 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 23:15:42 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -358,158 +358,160 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 300, 1> tpsAccelFuel = (int16_t)0;
 	/**
-	 * @@GAUGE_NAME_WARNING_COUNTER@@
-	count
 	 * offset 76
 	 */
-	uint16_t warningCounter = (uint16_t)0;
+	uint8_t currentIgnitionMode = (uint8_t)0;
 	/**
-	 * @@GAUGE_NAME_WARNING_LAST@@
-	error
-	 * offset 78
+	 * offset 77
 	 */
-	uint16_t lastErrorCode = (uint16_t)0;
+	uint8_t currentInjectionMode = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_DWELL_DUTY@@
 	%
-	 * offset 80
+	 * offset 78
 	 */
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_IAC@@
 	%
-	 * offset 82
+	 * offset 80
 	 */
 	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
 	/**
 	 * ETB Target
 	%
-	 * offset 84
+	 * offset 82
 	 */
 	scaled_channel<int16_t, 100, 1> etbTarget = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ETB_DUTY@@
 	%
-	 * offset 86
+	 * offset 84
 	 */
 	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 	/**
 	 * Fuel level
 	%
-	 * offset 88
+	 * offset 86
 	 */
 	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	grams
-	 * offset 90
+	 * offset 88
 	 */
 	uint16_t totalFuelConsumption = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_FLOW@@
 	gram/s
-	 * offset 92
+	 * offset 90
 	 */
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_TPS2@@
 	%
-	 * offset 94
+	 * offset 92
 	 */
 	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TUNE_CRC16@@
 	crc16
-	 * offset 96
+	 * offset 94
 	 */
 	uint16_t tuneCrc16 = (uint16_t)0;
 	/**
-	 * need 4 byte alignment
-	units
-	 * offset 98
-	 */
-	uint8_t alignmentFill_at_98[2];
-	/**
 	 * @@GAUGE_NAME_KNOCK_LEVEL@@
 	Volts
-	 * offset 100
+	 * offset 96
 	 */
 	float knockLevel = (float)0;
 	/**
 	 * @@GAUGE_NAME_UPTIME@@
 	sec
-	 * offset 104
+	 * offset 100
 	 */
 	uint32_t seconds = (uint32_t)0;
 	/**
 	 * Engine Mode
 	em
-	 * offset 108
+	 * offset 104
 	 */
 	uint32_t engineMode = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_VERSION@@
 	version_f
-	 * offset 112
+	 * offset 108
 	 */
 	uint32_t firmwareVersion = (uint32_t)0;
 	/**
 	V
-	 * offset 116
+	 * offset 112
 	 */
 	scaled_channel<int16_t, 1000, 1> rawIdlePositionSensor = (int16_t)0;
 	/**
 	V
-	 * offset 118
+	 * offset 114
 	 */
 	scaled_channel<int16_t, 1000, 1> rawWastegatePosition = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_X@@
 	G
-	 * offset 120
+	 * offset 116
 	 */
 	scaled_channel<int16_t, 100, 1> accelerationX = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_Y@@
 	G
-	 * offset 122
+	 * offset 118
 	 */
 	scaled_channel<int16_t, 100, 1> accelerationY = (int16_t)0;
 	/**
-	 * offset 124
+	 * offset 120
 	 */
 	uint32_t tsConfigVersion = (uint32_t)0;
 	/**
-	 * offset 128
+	 * offset 124
 	 */
 	float calibrationValue = (float)0;
 	/**
-	 * offset 132
+	 * offset 128
 	 */
 	uint8_t calibrationMode = (uint8_t)0;
 	/**
-	 * offset 133
+	 * offset 129
 	 */
 	uint8_t idleTargetPosition = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_DETECTED_GEAR@@
-	 * offset 134
+	 * offset 130
 	 */
 	uint8_t detectedGear = (uint8_t)0;
 	/**
-	 * offset 135
+	 * offset 131
 	 */
 	uint8_t maxTriggerReentrant = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_TRG_ERR@@
 	counter
-	 * offset 136
+	 * offset 132
 	 */
 	uint32_t totalTriggerErrorCounter = (uint32_t)0;
 	/**
-	 * offset 140
+	 * offset 136
 	 */
 	uint32_t orderingErrorCounter = (uint32_t)0;
+	/**
+	 * @@GAUGE_NAME_WARNING_COUNTER@@
+	count
+	 * offset 140
+	 */
+	uint16_t warningCounter = (uint16_t)0;
+	/**
+	 * @@GAUGE_NAME_WARNING_LAST@@
+	error
+	 * offset 142
+	 */
+	uint16_t lastErrorCode = (uint16_t)0;
 	/**
 	error
 	 * offset 144
@@ -851,94 +853,94 @@ struct output_channels_s {
 	bool isUsbConnected : 1 {};
 	/**
 	offset 324 bit 2 */
-	bool unusedBit_163_2 : 1 {};
+	bool unusedBit_164_2 : 1 {};
 	/**
 	offset 324 bit 3 */
-	bool unusedBit_163_3 : 1 {};
+	bool unusedBit_164_3 : 1 {};
 	/**
 	offset 324 bit 4 */
-	bool unusedBit_163_4 : 1 {};
+	bool unusedBit_164_4 : 1 {};
 	/**
 	offset 324 bit 5 */
-	bool unusedBit_163_5 : 1 {};
+	bool unusedBit_164_5 : 1 {};
 	/**
 	offset 324 bit 6 */
-	bool unusedBit_163_6 : 1 {};
+	bool unusedBit_164_6 : 1 {};
 	/**
 	offset 324 bit 7 */
-	bool unusedBit_163_7 : 1 {};
+	bool unusedBit_164_7 : 1 {};
 	/**
 	offset 324 bit 8 */
-	bool unusedBit_163_8 : 1 {};
+	bool unusedBit_164_8 : 1 {};
 	/**
 	offset 324 bit 9 */
-	bool unusedBit_163_9 : 1 {};
+	bool unusedBit_164_9 : 1 {};
 	/**
 	offset 324 bit 10 */
-	bool unusedBit_163_10 : 1 {};
+	bool unusedBit_164_10 : 1 {};
 	/**
 	offset 324 bit 11 */
-	bool unusedBit_163_11 : 1 {};
+	bool unusedBit_164_11 : 1 {};
 	/**
 	offset 324 bit 12 */
-	bool unusedBit_163_12 : 1 {};
+	bool unusedBit_164_12 : 1 {};
 	/**
 	offset 324 bit 13 */
-	bool unusedBit_163_13 : 1 {};
+	bool unusedBit_164_13 : 1 {};
 	/**
 	offset 324 bit 14 */
-	bool unusedBit_163_14 : 1 {};
+	bool unusedBit_164_14 : 1 {};
 	/**
 	offset 324 bit 15 */
-	bool unusedBit_163_15 : 1 {};
+	bool unusedBit_164_15 : 1 {};
 	/**
 	offset 324 bit 16 */
-	bool unusedBit_163_16 : 1 {};
+	bool unusedBit_164_16 : 1 {};
 	/**
 	offset 324 bit 17 */
-	bool unusedBit_163_17 : 1 {};
+	bool unusedBit_164_17 : 1 {};
 	/**
 	offset 324 bit 18 */
-	bool unusedBit_163_18 : 1 {};
+	bool unusedBit_164_18 : 1 {};
 	/**
 	offset 324 bit 19 */
-	bool unusedBit_163_19 : 1 {};
+	bool unusedBit_164_19 : 1 {};
 	/**
 	offset 324 bit 20 */
-	bool unusedBit_163_20 : 1 {};
+	bool unusedBit_164_20 : 1 {};
 	/**
 	offset 324 bit 21 */
-	bool unusedBit_163_21 : 1 {};
+	bool unusedBit_164_21 : 1 {};
 	/**
 	offset 324 bit 22 */
-	bool unusedBit_163_22 : 1 {};
+	bool unusedBit_164_22 : 1 {};
 	/**
 	offset 324 bit 23 */
-	bool unusedBit_163_23 : 1 {};
+	bool unusedBit_164_23 : 1 {};
 	/**
 	offset 324 bit 24 */
-	bool unusedBit_163_24 : 1 {};
+	bool unusedBit_164_24 : 1 {};
 	/**
 	offset 324 bit 25 */
-	bool unusedBit_163_25 : 1 {};
+	bool unusedBit_164_25 : 1 {};
 	/**
 	offset 324 bit 26 */
-	bool unusedBit_163_26 : 1 {};
+	bool unusedBit_164_26 : 1 {};
 	/**
 	offset 324 bit 27 */
-	bool unusedBit_163_27 : 1 {};
+	bool unusedBit_164_27 : 1 {};
 	/**
 	offset 324 bit 28 */
-	bool unusedBit_163_28 : 1 {};
+	bool unusedBit_164_28 : 1 {};
 	/**
 	offset 324 bit 29 */
-	bool unusedBit_163_29 : 1 {};
+	bool unusedBit_164_29 : 1 {};
 	/**
 	offset 324 bit 30 */
-	bool unusedBit_163_30 : 1 {};
+	bool unusedBit_164_30 : 1 {};
 	/**
 	offset 324 bit 31 */
-	bool unusedBit_163_31 : 1 {};
+	bool unusedBit_164_31 : 1 {};
 	/**
 	count
 	 * offset 328
@@ -995,94 +997,94 @@ struct output_channels_s {
 	bool tpsAccelActive : 1 {};
 	/**
 	offset 356 bit 2 */
-	bool unusedBit_205_2 : 1 {};
+	bool unusedBit_206_2 : 1 {};
 	/**
 	offset 356 bit 3 */
-	bool unusedBit_205_3 : 1 {};
+	bool unusedBit_206_3 : 1 {};
 	/**
 	offset 356 bit 4 */
-	bool unusedBit_205_4 : 1 {};
+	bool unusedBit_206_4 : 1 {};
 	/**
 	offset 356 bit 5 */
-	bool unusedBit_205_5 : 1 {};
+	bool unusedBit_206_5 : 1 {};
 	/**
 	offset 356 bit 6 */
-	bool unusedBit_205_6 : 1 {};
+	bool unusedBit_206_6 : 1 {};
 	/**
 	offset 356 bit 7 */
-	bool unusedBit_205_7 : 1 {};
+	bool unusedBit_206_7 : 1 {};
 	/**
 	offset 356 bit 8 */
-	bool unusedBit_205_8 : 1 {};
+	bool unusedBit_206_8 : 1 {};
 	/**
 	offset 356 bit 9 */
-	bool unusedBit_205_9 : 1 {};
+	bool unusedBit_206_9 : 1 {};
 	/**
 	offset 356 bit 10 */
-	bool unusedBit_205_10 : 1 {};
+	bool unusedBit_206_10 : 1 {};
 	/**
 	offset 356 bit 11 */
-	bool unusedBit_205_11 : 1 {};
+	bool unusedBit_206_11 : 1 {};
 	/**
 	offset 356 bit 12 */
-	bool unusedBit_205_12 : 1 {};
+	bool unusedBit_206_12 : 1 {};
 	/**
 	offset 356 bit 13 */
-	bool unusedBit_205_13 : 1 {};
+	bool unusedBit_206_13 : 1 {};
 	/**
 	offset 356 bit 14 */
-	bool unusedBit_205_14 : 1 {};
+	bool unusedBit_206_14 : 1 {};
 	/**
 	offset 356 bit 15 */
-	bool unusedBit_205_15 : 1 {};
+	bool unusedBit_206_15 : 1 {};
 	/**
 	offset 356 bit 16 */
-	bool unusedBit_205_16 : 1 {};
+	bool unusedBit_206_16 : 1 {};
 	/**
 	offset 356 bit 17 */
-	bool unusedBit_205_17 : 1 {};
+	bool unusedBit_206_17 : 1 {};
 	/**
 	offset 356 bit 18 */
-	bool unusedBit_205_18 : 1 {};
+	bool unusedBit_206_18 : 1 {};
 	/**
 	offset 356 bit 19 */
-	bool unusedBit_205_19 : 1 {};
+	bool unusedBit_206_19 : 1 {};
 	/**
 	offset 356 bit 20 */
-	bool unusedBit_205_20 : 1 {};
+	bool unusedBit_206_20 : 1 {};
 	/**
 	offset 356 bit 21 */
-	bool unusedBit_205_21 : 1 {};
+	bool unusedBit_206_21 : 1 {};
 	/**
 	offset 356 bit 22 */
-	bool unusedBit_205_22 : 1 {};
+	bool unusedBit_206_22 : 1 {};
 	/**
 	offset 356 bit 23 */
-	bool unusedBit_205_23 : 1 {};
+	bool unusedBit_206_23 : 1 {};
 	/**
 	offset 356 bit 24 */
-	bool unusedBit_205_24 : 1 {};
+	bool unusedBit_206_24 : 1 {};
 	/**
 	offset 356 bit 25 */
-	bool unusedBit_205_25 : 1 {};
+	bool unusedBit_206_25 : 1 {};
 	/**
 	offset 356 bit 26 */
-	bool unusedBit_205_26 : 1 {};
+	bool unusedBit_206_26 : 1 {};
 	/**
 	offset 356 bit 27 */
-	bool unusedBit_205_27 : 1 {};
+	bool unusedBit_206_27 : 1 {};
 	/**
 	offset 356 bit 28 */
-	bool unusedBit_205_28 : 1 {};
+	bool unusedBit_206_28 : 1 {};
 	/**
 	offset 356 bit 29 */
-	bool unusedBit_205_29 : 1 {};
+	bool unusedBit_206_29 : 1 {};
 	/**
 	offset 356 bit 30 */
-	bool unusedBit_205_30 : 1 {};
+	bool unusedBit_206_30 : 1 {};
 	/**
 	offset 356 bit 31 */
-	bool unusedBit_205_31 : 1 {};
+	bool unusedBit_206_31 : 1 {};
 	/**
 	kPa
 	 * offset 360
@@ -1381,10 +1383,10 @@ struct output_channels_s {
 	bool vvtChannel4 : 1 {};
 	/**
 	offset 648 bit 30 */
-	bool unusedBit_310_30 : 1 {};
+	bool unusedBit_311_30 : 1 {};
 	/**
 	offset 648 bit 31 */
-	bool unusedBit_310_31 : 1 {};
+	bool unusedBit_311_31 : 1 {};
 	/**
 	 * offset 652
 	 */
@@ -1427,4 +1429,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 812);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 22:43:32 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 23:15:42 UTC 2023
