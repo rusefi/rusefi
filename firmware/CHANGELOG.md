@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
 ### Breaking Changes
  - LCD & joystick support removed
  - CJ125 support removed
+ - Single value to be used in event of a failed MAP removed, fallback table is the only option now
 
 ### Added
  - Detected gear and wastegate position to CAN format
