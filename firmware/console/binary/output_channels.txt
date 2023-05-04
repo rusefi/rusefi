@@ -132,6 +132,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	int16_t autoscale accelerationX;@@GAUGE_NAME_ACCEL_X@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale accelerationY;@@GAUGE_NAME_ACCEL_Y@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
+int8_t[4] unusedPadding
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 	uint32_t tsConfigVersion;;"", 1, 0, 0, 0, 0
