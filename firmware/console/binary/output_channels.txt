@@ -101,8 +101,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint16_t canReadCounter;;"",1, 0, 0, 0, 0
 	int16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 ! Ignition
-	uint8_t currentIgnitionMode;
-	uint8_t currentInjectionMode;
+	uint8_t currentIgnitionMode;@@GAUGE_NAME_IGNITION_MODE@@
+	uint8_t currentInjectionMode;@@GAUGE_NAME_INJECTION_MODE@@
 
 	uint16_t autoscale coilDutyCycle;@@GAUGE_NAME_DWELL_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 ! Idle & ETB
@@ -150,7 +150,7 @@ int8_t[4] unusedPadding
 	! it wants to send have been sent.
 	float calibrationValue;;"", 1, 0, 0, 0, 0
 	uint8_t calibrationMode;;"", 1, 0, 0, 0, 0
-	uint8_t idleTargetPosition;;"", 1, 0, 0, 0, 0
+	uint8_t idleTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
 
 	uint8_t detectedGear;@@GAUGE_NAME_DETECTED_GEAR@@;"", 1, 0, 0, @@GEARS_COUNT@@, 0
 	uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
