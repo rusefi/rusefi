@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Tue Jan 17 04:03:03 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Thu May 04 22:43:32 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -108,7 +108,7 @@ struct boost_control_s {
 	 */
 	scaled_channel<int16_t, 2, 1> luaTargetAdd = (int16_t)0;
 	/**
-	 * "Boost: Output"
+	 * @@GAUGE_NAME_BOOST_OUTPUT@@
 	percent
 	 * offset 6
 	 */
@@ -120,7 +120,7 @@ struct boost_control_s {
 	 */
 	float luaTargetMult = (float)0;
 	/**
-	 * "Boost: Open Loop"
+	 * @@GAUGE_NAME_BOOST_OPEN_LOOP@@
 	v
 	 * offset 12
 	 */
@@ -153,4 +153,4 @@ struct boost_control_s {
 static_assert(sizeof(boost_control_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Tue Jan 17 04:03:03 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Thu May 04 22:43:32 UTC 2023

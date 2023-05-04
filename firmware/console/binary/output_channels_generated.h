@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed May 03 20:01:24 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 22:43:32 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -303,6 +303,7 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> veValue = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_INJECTION_TIMING@@
 	deg
 	 * offset 56
 	 */
@@ -620,6 +621,7 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 1000, 1> rawPpsSecondary = (int16_t)0;
 	/**
+	 * Knock: Cyl
 	dBv
 	 * offset 234
 	 */
@@ -1425,4 +1427,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 812);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed May 03 20:01:24 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 22:43:32 UTC 2023
