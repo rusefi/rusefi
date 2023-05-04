@@ -396,7 +396,7 @@
 #define GAUGE_CATEGORY_ETB "ETB more"
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
 #define GAUGE_CATEGORY_TIMING "Timing"
-#define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
+#define GAUGE_COIL_DWELL_TIME "Ign: Dwell"
 #define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -433,7 +433,7 @@
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 #define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
 #define GAUGE_NAME_DETECTED_GEAR "Detected Gear"
-#define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
+#define GAUGE_NAME_DWELL_DUTY "Ign: Coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
 #define GAUGE_NAME_ETB_DUTY "ETB: Duty"
@@ -446,7 +446,6 @@
 #define GAUGE_NAME_FUEL_CLT_CORR "Fuel: CLT correction"
 #define GAUGE_NAME_FUEL_CONSUMPTION "Fuel: Total consumed"
 #define GAUGE_NAME_FUEL_CRANKING "Fuel: cranking"
-#define GAUGE_NAME_FUEL_EL_EXTRA "Fuel: engine load acceleration extra fuel"
 #define GAUGE_NAME_FUEL_FLOW "Fuel: Flow rate"
 #define GAUGE_NAME_FUEL_IAT_CORR "Fuel: IAT correction"
 #define GAUGE_NAME_FUEL_INJ_DUTY "Fuel: injector duty cycle"
@@ -459,8 +458,8 @@
 #define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
 #define GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS "kPa"
 #define GAUGE_NAME_FUEL_RUNNING "Fuel: running"
-#define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS acceleration add fuel ms"
-#define GAUGE_NAME_FUEL_TPS_ROC "Fuel: TPS change"
+#define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS AE add fuel ms"
+#define GAUGE_NAME_FUEL_TPS_ROC "Fuel: TPS AE change"
 #define GAUGE_NAME_FUEL_TRIM "Fuel: fuel trim"
 #define GAUGE_NAME_FUEL_TRIM_2 "Fuel: fuel trim 2"
 #define GAUGE_NAME_FUEL_VE "Fuel: VE"
@@ -468,10 +467,12 @@
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "Fuel: wall correction"
 #define GAUGE_NAME_FW_VERSION "ECU Software Version"
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
-#define GAUGE_NAME_IAC "Idle Air Valve"
+#define GAUGE_NAME_IAC "Idle: Position"
 #define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_IDLE_POSITION "Idle position sensor"
-#define GAUGE_NAME_IGNITION_LOAD "ign: load"
+#define GAUGE_NAME_IGNITION_LOAD "Ign: Load"
+#define GAUGE_NAME_IGNITION_MODE "Ign: Mode"
+#define GAUGE_NAME_INJECTION_MODE "Fuel: Injection mode"
 #define GAUGE_NAME_INJECTOR_LAG "Fuel: injector lag"
 #define GAUGE_NAME_ISS "Input Shaft Speed"
 #define GAUGE_NAME_KNOCK_COUNTER "Knock: Count"
@@ -492,7 +493,7 @@
 #define GAUGE_NAME_TCHARGE "Fuel: SD tCharge"
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_TIME "Time"
-#define GAUGE_NAME_TIMING_ADVANCE "timing"
+#define GAUGE_NAME_TIMING_ADVANCE "Ign: Timing"
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
@@ -1033,7 +1034,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 1599690253
+#define SIGNATURE_HASH 1318263122
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1300,7 +1301,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.05.04.f407-discovery.1599690253"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.05.04.f407-discovery.1318263122"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

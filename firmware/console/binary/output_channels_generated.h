@@ -312,9 +312,11 @@ struct output_channels_s {
 	// offset 76
 	scaled_channel<int16_t, 50, 1> ignitionAdvance = (int16_t)0;
 
+	// @@GAUGE_NAME_IGNITION_MODE@@
 	// offset 78
 	uint8_t currentIgnitionMode = (uint8_t)0;
 
+	// @@GAUGE_NAME_INJECTION_MODE@@
 	// offset 79
 	uint8_t currentInjectionMode = (uint8_t)0;
 
@@ -416,6 +418,7 @@ struct output_channels_s {
 	// offset 132
 	uint8_t calibrationMode = (uint8_t)0;
 
+	// Idle: Stepper target position
 	// offset 133
 	uint8_t idleTargetPosition = (uint8_t)0;
 
