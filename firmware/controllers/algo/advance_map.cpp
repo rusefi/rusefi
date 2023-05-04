@@ -126,7 +126,7 @@ static angle_t getAdvanceCorrections(float engineLoad) {
 #endif // EFI_SHAFT_POSITION_INPUT && EFI_IDLE_CONTROL
 
 #if EFI_TUNER_STUDIO
-		engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
+	engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 
 	return engine->ignitionState.timingIatCorrection

@@ -18,16 +18,8 @@ LuaAdjustments lua
 
 
 struct speed_density_s
-
-
-	float tCharge;speed density\nRate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.;
-	float tChargeK
-
-
-floatms_t airFlow
-
-
-! speed_density_s
+	int16_t autoscale tCharge;Charge temperature estimate;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
+	float tChargeK;Charge temperature estimate K
 end_struct
 
 speed_density_s sd;
