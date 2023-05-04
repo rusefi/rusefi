@@ -111,8 +111,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.veValue;
 		case -243031057:
 			return engine->outputChannels.injectionOffset;
-		case -744295709:
-			return engine->outputChannels.tCharge;
 		case 1615892023:
 			return engine->outputChannels.injectorLagMs;
 		case 1726931380:
@@ -167,6 +165,14 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.accelerationX;
 		case 633018088:
 			return engine->outputChannels.accelerationY;
+		case 283558758:
+			return engine->outputChannels.detectedGear;
+		case -1595441102:
+			return engine->outputChannels.maxTriggerReentrant;
+		case -628741220:
+			return engine->outputChannels.lowFuelPressure;
+		case -1973799222:
+			return engine->outputChannels.highFuelPressure;
 		case 1299611400:
 			return engine->outputChannels.tsConfigVersion;
 		case -1560670902:
@@ -175,10 +181,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.calibrationMode;
 		case -2029665121:
 			return engine->outputChannels.idleTargetPosition;
-		case 283558758:
-			return engine->outputChannels.detectedGear;
-		case -1595441102:
-			return engine->outputChannels.maxTriggerReentrant;
 		case 2018173863:
 			return engine->outputChannels.totalTriggerErrorCounter;
 		case -1326404407:
@@ -237,10 +239,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.rawLowFuelPressure;
 		case 990714516:
 			return engine->outputChannels.rawHighFuelPressure;
-		case -628741220:
-			return engine->outputChannels.lowFuelPressure;
-		case -1973799222:
-			return engine->outputChannels.highFuelPressure;
 		case -1093429509:
 			return engine->outputChannels.AFRValue;
 		case -513494613:
@@ -609,8 +607,6 @@ float getOutputValueByName(const char *name) {
 			return engine->engineState.sd.tCharge;
 		case 584726739:
 			return engine->engineState.sd.tChargeK;
-		case 585422686:
-			return engine->engineState.sd.airFlow;
 		case 794378193:
 			return engine->engineState.engineCycleDurationMs;
 		case 392259965:

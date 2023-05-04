@@ -18,14 +18,17 @@ struct ignition_state_s {
 	// offset 8
 	angle_t dwellAngle = (angle_t)0;
 
+	// Ign: CLT correction
 	// deg
 	// offset 12
 	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
 
+	// Ign: IAT correction
 	// deg
 	// offset 14
 	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
 
+	// Idle: Timing adjustment
 	// deg
 	// offset 16
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
@@ -35,6 +38,7 @@ struct ignition_state_s {
 	// offset 18
 	uint8_t alignmentFill_at_18[2];
 
+	// Ign: Dwell voltage correction
 	// offset 20
 	float dwellVoltageCorrection = (float)0;
 
