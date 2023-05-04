@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Thu May 04 23:46:54 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Thu May 04 23:56:00 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -16,7 +16,7 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_CATEGORY_FUEL_MATH = "Fuel: math";
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
-	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
+	public static final String GAUGE_COIL_DWELL_TIME = "Ign: Dwell";
 	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
@@ -55,7 +55,7 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_DEBUG_I5 = "debug i5";
 	public static final String GAUGE_NAME_DESIRED_GEAR = "Desired Gear";
 	public static final String GAUGE_NAME_DETECTED_GEAR = "Detected Gear";
-	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
+	public static final String GAUGE_NAME_DWELL_DUTY = "Ign: Coil duty cycle";
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_CRC16 = "Engine CRC16";
 	public static final String GAUGE_NAME_ETB_DUTY = "ETB: Duty";
@@ -80,8 +80,8 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS = "kPa";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "Fuel: running";
-	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS acceleration add fuel ms";
-	public static final String GAUGE_NAME_FUEL_TPS_ROC = "Fuel: TPS change";
+	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS AE add fuel ms";
+	public static final String GAUGE_NAME_FUEL_TPS_ROC = "Fuel: TPS AE change";
 	public static final String GAUGE_NAME_FUEL_TRIM = "Fuel: fuel trim";
 	public static final String GAUGE_NAME_FUEL_TRIM_2 = "Fuel: fuel trim 2";
 	public static final String GAUGE_NAME_FUEL_VE = "Fuel: VE";
@@ -89,10 +89,12 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel: wall correction";
 	public static final String GAUGE_NAME_FW_VERSION = "ECU Software Version";
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
-	public static final String GAUGE_NAME_IAC = "Idle Air Valve";
+	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle position sensor";
-	public static final String GAUGE_NAME_IGNITION_LOAD = "ign: load";
+	public static final String GAUGE_NAME_IGNITION_LOAD = "Ign: Load";
+	public static final String GAUGE_NAME_IGNITION_MODE = "Ign: Mode";
+	public static final String GAUGE_NAME_INJECTION_MODE = "Fuel: Injection mode";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "Fuel: injector lag";
 	public static final String GAUGE_NAME_ISS = "Input Shaft Speed";
 	public static final String GAUGE_NAME_KNOCK_COUNTER = "Knock: Count";
@@ -114,7 +116,7 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_TCHARGE = "Fuel: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
-	public static final String GAUGE_NAME_TIMING_ADVANCE = "timing";
+	public static final String GAUGE_NAME_TIMING_ADVANCE = "Ign: Timing";
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
 	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";

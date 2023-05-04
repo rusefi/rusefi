@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 23:46:53 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 23:56:00 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -358,10 +358,12 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 300, 1> tpsAccelFuel = (int16_t)0;
 	/**
+	 * @@GAUGE_NAME_IGNITION_MODE@@
 	 * offset 76
 	 */
 	uint8_t currentIgnitionMode = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_INJECTION_MODE@@
 	 * offset 77
 	 */
 	uint8_t currentInjectionMode = (uint8_t)0;
@@ -482,6 +484,7 @@ struct output_channels_s {
 	 */
 	uint8_t calibrationMode = (uint8_t)0;
 	/**
+	 * Idle: Stepper target position
 	 * offset 133
 	 */
 	uint8_t idleTargetPosition = (uint8_t)0;
@@ -1433,4 +1436,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 816);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 23:46:53 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 04 23:56:00 UTC 2023
