@@ -47,7 +47,7 @@ public class IgnitionState {
 	public static final String GAUGE_NAME_DEBUG_I3 = "debug i3";
 	public static final String GAUGE_NAME_DEBUG_I4 = "debug i4";
 	public static final String GAUGE_NAME_DEBUG_I5 = "debug i5";
-	public static final String GAUGE_NAME_DESIRED_GEAR = "Desired Gear";
+	public static final String GAUGE_NAME_DESIRED_GEAR = "TCU: Desired Gear";
 	public static final String GAUGE_NAME_DETECTED_GEAR = "Detected Gear";
 	public static final String GAUGE_NAME_DWELL_DUTY = "Ign: Coil duty cycle";
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
@@ -90,7 +90,7 @@ public class IgnitionState {
 	public static final String GAUGE_NAME_IGNITION_MODE = "Ign: Mode";
 	public static final String GAUGE_NAME_INJECTION_MODE = "Fuel: Injection mode";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "Fuel: injector lag";
-	public static final String GAUGE_NAME_ISS = "Input Shaft Speed";
+	public static final String GAUGE_NAME_ISS = "TCU: Input Shaft Speed";
 	public static final String GAUGE_NAME_KNOCK_COUNTER = "Knock: Count";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "Knock: Current level";
 	public static final String GAUGE_NAME_KNOCK_RETARD = "Knock: Retard";
@@ -105,7 +105,7 @@ public class IgnitionState {
 	public static final String GAUGE_NAME_RPM = "RPM";
 	public static final String GAUGE_NAME_TARGET_AFR = "Fuel: target AFR";
 	public static final String GAUGE_NAME_TARGET_LAMBDA = "Fuel: target lambda";
-	public static final String GAUGE_NAME_TC_RATIO = "Torque Converter Ratio";
+	public static final String GAUGE_NAME_TC_RATIO = "TCU: Torque Converter Ratio";
 	public static final String GAUGE_NAME_TCHARGE = "Fuel: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";

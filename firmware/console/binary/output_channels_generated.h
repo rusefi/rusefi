@@ -296,6 +296,7 @@ struct output_channels_s {
 	// offset 68
 	scaled_channel<int16_t, 100, 1> deltaTpsValue = (int16_t)0;
 
+	// CAN: Rx
 	// offset 70
 	uint16_t canReadCounter = (uint16_t)0;
 
@@ -600,6 +601,7 @@ struct output_channels_s {
 	// offset 270
 	scaled_channel<int16_t, 50, 1> vvtPositionB2E = (int16_t)0;
 
+	// Fuel: Trim bank
 	// %
 	// offset 272
 	scaled_channel<int16_t, 100, 1> fuelPidCorrection[2];
@@ -660,12 +662,12 @@ struct output_channels_s {
 	// offset 302
 	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
 
-	// Spark Cut Code
+	// Ign: Cut Code
 	// code
 	// offset 304
 	int8_t sparkCutReason = (int8_t)0;
 
-	// Fuel Cut Code
+	// Fuel: Cut Code
 	// code
 	// offset 305
 	int8_t fuelCutReason = (int8_t)0;
@@ -812,7 +814,7 @@ struct output_channels_s {
 	// offset 332
 	uint8_t testBenchIter = (uint8_t)0;
 
-	// "Current Range"
+	// "TCU: Current Range"
 	// offset 333
 	uint8_t tcu_currentRange = (uint8_t)0;
 
@@ -947,9 +949,11 @@ struct output_channels_s {
 	// offset 360
 	uint16_t maxLockedDuration = (uint16_t)0;
 
+	// CAN: Tx OK
 	// offset 362
 	uint16_t canWriteOk = (uint16_t)0;
 
+	// CAN: Tx err
 	// offset 364
 	uint16_t canWriteNotOk = (uint16_t)0;
 
