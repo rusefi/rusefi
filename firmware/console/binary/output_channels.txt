@@ -81,8 +81,6 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint8_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/2}, 0, 0, 0, 1
 	int16_t injectionOffset;@@GAUGE_NAME_FUEL_INJECTION_TIMING@@;"deg", 1, 0, 0, 0, 0
 
-	int16_t autoscale tCharge;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
-
 !  Corrections
 ! todo: inline this further to injectorModel deadTime
 	uint16_t autoscale injectorLagMs;@@GAUGE_NAME_INJECTOR_LAG@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
@@ -130,11 +128,16 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int16_t autoscale accelerationX;@@GAUGE_NAME_ACCEL_X@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale accelerationY;@@GAUGE_NAME_ACCEL_Y@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
-int8_t[4] unusedPadding
+	uint8_t detectedGear;@@GAUGE_NAME_DETECTED_GEAR@@;"", 1, 0, 0, @@GEARS_COUNT@@, 0
+	uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
+
+	int16_t autoscale lowFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_LOW@@;"kpa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 	uint32_t tsConfigVersion;;"", 1, 0, 0, 0, 0
 
+	int16_t autoscale highFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_HIGH@@;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
 	! These two fields indicate to TS that we'd like to set a particular field to a particular value
 	! We use a maintainConstantValue in TS for each field we'd like to set, like this:
@@ -149,9 +152,6 @@ int8_t[4] unusedPadding
 	float calibrationValue;;"", 1, 0, 0, 0, 0
 	uint8_t calibrationMode;;"", 1, 0, 0, 0, 0
 	uint8_t idleTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
-
-	uint8_t detectedGear;@@GAUGE_NAME_DETECTED_GEAR@@;"", 1, 0, 0, @@GEARS_COUNT@@, 0
-	uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
 
 ! Errors
 	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
@@ -179,7 +179,7 @@ int8_t[4] unusedPadding
 	int16_t debugIntField5;;"val", 1, 0, 0, 0, 0
 
 ! todo: { max31855_cs1 != 0}
-	uint16_t[EGT_CHANNEL_COUNT iterate] egt;;"deg C", 1, 0, 0, 0, 0
+	uint16_t[EGT_CHANNEL_COUNT iterate] egt;EGT;"deg C", 1, 0, 0, 0, 0
 
 	int16_t autoscale rawTps1Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
@@ -202,9 +202,6 @@ int8_t[4] unusedPadding
 
 	int16_t autoscale rawLowFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawHighFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
-
-	int16_t autoscale lowFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_LOW@@;"kpa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
-	int16_t autoscale highFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_HIGH@@;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale AFRValue;@@GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 
@@ -300,7 +297,7 @@ int8_t[4] unusedPadding
 
     uint8_t starterState;;"", 1, 0, -10000, 10000, 3
     uint8_t starterRelayDisable;;"", 1, 0, -10000, 10000, 3
-    uint8_t multiSparkCounter;;"", 1, 0, -10000, 10000, 3
+    uint8_t multiSparkCounter;Ign: Multispark count;"", 1, 0, -10000, 10000, 3
 
 	uint8_t extiOverflowCount;;"", 1, 0, 0, 255, 0
 
@@ -312,8 +309,8 @@ int8_t[4] unusedPadding
 
 	pid_status_s[CAM_INPUTS_COUNT iterate] vvtStatus
 
-	uint16_t auxSpeed1;aux speed 1;"s",1, 0, 0, 0, 0
-	uint16_t auxSpeed2;aux speed 2;"s",1, 0, 0, 0, 0
+	uint16_t auxSpeed1;Aux speed 1;"s",1, 0, 0, 0, 0
+	uint16_t auxSpeed2;Aux speed 2;"s",1, 0, 0, 0, 0
 
 	uint16_t ISSValue;@@GAUGE_NAME_ISS@@;"RPM",1, 0, 0, 8000, 0
 

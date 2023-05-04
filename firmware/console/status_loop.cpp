@@ -517,9 +517,6 @@ static void updateMiscSensors() {
 #if	HAL_USE_ADC
 	engine->outputChannels.internalMcuTemperature = getMCUInternalTemperature();
 #endif /* HAL_USE_ADC */
-
-	// tCharge depends on the previous state, so we should use the stored value.
-	engine->outputChannels.tCharge = engine->engineState.sd.tCharge;
 }
 
 static void updateSensors() {
