@@ -43,8 +43,6 @@ void setDefaultBaseEngine() {
 	engineConfiguration->cutFuelOnHardLimit = true;
 	engineConfiguration->cutSparkOnHardLimit = true;
 
-	setTable(config->mapEstimateTable, 60);
-
 	engineConfiguration->ALSMinRPM = 400;
 	engineConfiguration->ALSMaxRPM = 3200;
 	engineConfiguration->ALSMaxDuration = 3.5;
