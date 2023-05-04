@@ -6,12 +6,12 @@ struct_no_prefix ignition_state_s
 
 	angle_t dwellAngle;ignition dwell duration\nas crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell;"deg", 1,0, 0,120, 1,@@GAUGE_CATEGORY_TIMING@@
 
-	int16_t autoscale cltTimingCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
-	int16_t autoscale timingIatCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
-	int16_t autoscale timingPidCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
+	int16_t autoscale cltTimingCorrection;Ign: CLT correction;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
+	int16_t autoscale timingIatCorrection;Ign: IAT correction;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
+	int16_t autoscale timingPidCorrection;Idle: Timing adjustment;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
 
 
-float dwellVoltageCorrection
+float dwellVoltageCorrection;Ign: Dwell voltage correction
 
     float luaTimingAdd;Ign: Lua timing add;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
     float luaTimingMult;Ign: Lua timing mult;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
