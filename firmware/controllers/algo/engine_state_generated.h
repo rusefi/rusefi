@@ -1,9 +1,12 @@
 #pragma once
 #include "rusefi_types.h"
 struct LuaAdjustments {
+	// Lua: Fuel add
+	// g
 	// offset 0
 	float fuelAdd = (float)0;
 
+	// Lua: Fuel mult
 	// offset 4
 	float fuelMult = (float)0;
 

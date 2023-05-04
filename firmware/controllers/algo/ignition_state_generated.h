@@ -38,10 +38,12 @@ struct ignition_state_s {
 	// offset 20
 	float dwellVoltageCorrection = (float)0;
 
+	// Ign: Lua timing add
 	// deg
 	// offset 24
 	float luaTimingAdd = (float)0;
 
+	// Ign: Lua timing mult
 	// deg
 	// offset 28
 	float luaTimingMult = (float)0;

@@ -29,8 +29,8 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
-	public static final String GAUGE_NAME_BOOST_CLOSED_LOOP = "Boost: Closed Loop";
-	public static final String GAUGE_NAME_BOOST_OPEN_LOOP = "Boost: Open Loop";
+	public static final String GAUGE_NAME_BOOST_CLOSED_LOOP = "Boost: Closed loop";
+	public static final String GAUGE_NAME_BOOST_OPEN_LOOP = "Boost: Open loop";
 	public static final String GAUGE_NAME_BOOST_OUTPUT = "Boost: Output";
 	public static final String GAUGE_NAME_BOOST_TARGET = "Boost: Target";
 	public static final String GAUGE_NAME_CLT = "CLT";
@@ -157,7 +157,7 @@ public class TriggerStatePrimary {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 0, FieldType.BIT, 0).setBaseOffset(1268);
+	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 0, FieldType.BIT, 0).setBaseOffset(1264);
 	public static final Field[] VALUES = {
 	M_HASSYNCHRONIZEDPHASE,
 	};
