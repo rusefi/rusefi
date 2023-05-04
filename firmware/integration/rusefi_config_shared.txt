@@ -146,7 +146,6 @@
 #define GAUGE_NAME_FUEL_TPS_ROC "Fuel: TPS change"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "Fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS acceleration add fuel ms"
-#define GAUGE_NAME_FUEL_EL_EXTRA "Fuel: engine load acceleration extra fuel"
 #define GAUGE_NAME_FUEL_CLT_CORR "Fuel: CLT correction"
 #define GAUGE_NAME_FUEL_IAT_CORR "Fuel: IAT correction"
 #define GAUGE_NAME_FUEL_VE "Fuel: VE"
