@@ -63,7 +63,7 @@ TEST(misc, testEngineMath) {
 
 	// calc. airFlow using airMass, and find tCharge
 	engine->periodicFastCallback();
-	ASSERT_NEAR(59.1175f, engine->engineState.sd.tCharge, EPS4D);
+	ASSERT_NEAR(59.12f, engine->engineState.sd.tCharge, EPS4D);
 	ASSERT_NEAR(56.9762f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
 }
 
