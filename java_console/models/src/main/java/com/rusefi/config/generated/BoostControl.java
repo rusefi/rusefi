@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Wed May 03 20:01:24 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Thu May 04 21:48:18 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -68,7 +68,6 @@ public class BoostControl {
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CONSUMPTION = "fuel: Total consumed";
 	public static final String GAUGE_NAME_FUEL_CRANKING = "fuel: cranking";
-	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
 	public static final String GAUGE_NAME_FUEL_FLOW = "fuel: Flow rate";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
