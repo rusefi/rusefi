@@ -106,8 +106,8 @@
 
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 
-#define GAUGE_NAME_AUX_LINEAR_1 "Aux Linear #1"
-#define GAUGE_NAME_AUX_LINEAR_2 "Aux Linear #2"
+#define GAUGE_NAME_AUX_LINEAR_1 "Aux linear #1"
+#define GAUGE_NAME_AUX_LINEAR_2 "Aux linear #2"
 
 #define GAUGE_NAME_BOOST_OUTPUT "Boost: Output"
 #define GAUGE_NAME_BOOST_CLOSED_LOOP "Boost: Closed loop"
