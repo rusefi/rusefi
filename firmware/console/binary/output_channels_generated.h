@@ -262,6 +262,7 @@ struct output_channels_s {
 	// offset 55
 	scaled_channel<uint8_t, 2, 1> veValue = (uint8_t)0;
 
+	// @@GAUGE_NAME_FUEL_INJECTION_TIMING@@
 	// deg
 	// offset 56
 	int16_t injectionOffset = (int16_t)0;
@@ -531,6 +532,7 @@ struct output_channels_s {
 	// offset 236
 	scaled_channel<int16_t, 1000, 1> rawPpsSecondary = (int16_t)0;
 
+	// Knock: Cyl
 	// dBv
 	// offset 238
 	int8_t knock[12];

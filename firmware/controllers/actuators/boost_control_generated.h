@@ -102,7 +102,7 @@ struct boost_control_s {
 	// offset 4
 	scaled_channel<int16_t, 2, 1> luaTargetAdd = (int16_t)0;
 
-	// "Boost: Output"
+	// @@GAUGE_NAME_BOOST_OUTPUT@@
 	// percent
 	// offset 6
 	scaled_channel<int16_t, 100, 1> boostOutput = (int16_t)0;
@@ -112,7 +112,7 @@ struct boost_control_s {
 	// offset 8
 	float luaTargetMult = (float)0;
 
-	// "Boost: Open Loop"
+	// @@GAUGE_NAME_BOOST_OPEN_LOOP@@
 	// v
 	// offset 12
 	float openLoopPart = (float)0;
