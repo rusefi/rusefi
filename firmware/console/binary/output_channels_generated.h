@@ -1213,8 +1213,12 @@ struct output_channels_s {
 	// offset 668
 	uint16_t schedulingUsedCount = (uint16_t)0;
 
+	// %
 	// offset 670
-	uint8_t unusedAtTheEnd[136];
+	scaled_channel<uint16_t, 100, 1> Gego = (uint16_t)0;
+
+	// offset 672
+	uint8_t unusedAtTheEnd[134];
 
 	// need 4 byte alignment
 	// units
