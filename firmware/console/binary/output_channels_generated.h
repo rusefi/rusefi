@@ -418,150 +418,150 @@ struct output_channels_s {
 	// offset 118
 	scaled_channel<int16_t, 10, 1> highFuelPressure = (int16_t)0;
 
-	// offset 120
-	uint32_t tsConfigVersion = (uint32_t)0;
-
-	// offset 124
-	float calibrationValue = (float)0;
-
-	// offset 128
-	uint8_t calibrationMode = (uint8_t)0;
-
-	// Idle: Stepper target position
-	// offset 129
-	uint8_t idleTargetPosition = (uint8_t)0;
-
-	// need 4 byte alignment
-	// units
-	// offset 130
-	uint8_t alignmentFill_at_130[2];
-
-	// @@GAUGE_NAME_TRG_ERR@@
-	// counter
-	// offset 132
-	uint32_t totalTriggerErrorCounter = (uint32_t)0;
-
-	// offset 136
-	uint32_t orderingErrorCounter = (uint32_t)0;
-
-	// @@GAUGE_NAME_WARNING_COUNTER@@
-	// count
-	// offset 140
-	uint16_t warningCounter = (uint16_t)0;
-
-	// @@GAUGE_NAME_WARNING_LAST@@
-	// error
-	// offset 142
-	uint16_t lastErrorCode = (uint16_t)0;
-
-	// error
-	// offset 144
-	uint16_t recentErrorCode[8];
-
-	// val
-	// offset 160
-	float debugFloatField1 = (float)0;
-
-	// val
-	// offset 164
-	float debugFloatField2 = (float)0;
-
-	// val
-	// offset 168
-	float debugFloatField3 = (float)0;
-
-	// val
-	// offset 172
-	float debugFloatField4 = (float)0;
-
-	// val
-	// offset 176
-	float debugFloatField5 = (float)0;
-
-	// val
-	// offset 180
-	float debugFloatField6 = (float)0;
-
-	// val
-	// offset 184
-	float debugFloatField7 = (float)0;
-
-	// val
-	// offset 188
-	uint32_t debugIntField1 = (uint32_t)0;
-
-	// val
-	// offset 192
-	uint32_t debugIntField2 = (uint32_t)0;
-
-	// val
-	// offset 196
-	uint32_t debugIntField3 = (uint32_t)0;
-
-	// val
-	// offset 200
-	int16_t debugIntField4 = (int16_t)0;
-
-	// val
-	// offset 202
-	int16_t debugIntField5 = (int16_t)0;
-
-	// EGT
-	// deg C
-	// offset 204
-	uint16_t egt[EGT_CHANNEL_COUNT];
-
-	// V
-	// offset 220
-	scaled_channel<int16_t, 1000, 1> rawTps1Primary = (int16_t)0;
-
-	// V
-	// offset 222
-	scaled_channel<int16_t, 1000, 1> rawPpsPrimary = (int16_t)0;
-
-	// V
-	// offset 224
-	scaled_channel<int16_t, 1000, 1> rawClt = (int16_t)0;
-
-	// V
-	// offset 226
-	scaled_channel<int16_t, 1000, 1> rawIat = (int16_t)0;
-
-	// V
-	// offset 228
-	scaled_channel<int16_t, 1000, 1> rawOilPressure = (int16_t)0;
-
-	// offset 230
-	uint8_t fuelClosedLoopBinIdx = (uint8_t)0;
-
-	// @@GAUGE_NAME_CURRENT_GEAR@@
-	// gear
-	// offset 231
-	int8_t tcuCurrentGear = (int8_t)0;
-
-	// V
-	// offset 232
-	scaled_channel<int16_t, 1000, 1> rawPpsSecondary = (int16_t)0;
-
-	// Knock: Cyl
-	// dBv
-	// offset 234
-	int8_t knock[12];
-
 	// @@GAUGE_NAME_DESIRED_GEAR@@
 	// gear
-	// offset 246
+	// offset 120
 	int8_t tcuDesiredGear = (int8_t)0;
 
 	// @@GAUGE_NAME_FLEX@@
 	// %
-	// offset 247
+	// offset 121
 	scaled_channel<uint8_t, 2, 1> flexPercent = (uint8_t)0;
 
 	// @@GAUGE_NAME_WG_POSITION@@
 	// %
-	// offset 248
+	// offset 122
 	scaled_channel<int16_t, 100, 1> wastegatePositionSensor = (int16_t)0;
+
+	// offset 124
+	uint32_t tsConfigVersion = (uint32_t)0;
+
+	// offset 128
+	float calibrationValue = (float)0;
+
+	// offset 132
+	uint8_t calibrationMode = (uint8_t)0;
+
+	// Idle: Stepper target position
+	// offset 133
+	uint8_t idleTargetPosition = (uint8_t)0;
+
+	// need 4 byte alignment
+	// units
+	// offset 134
+	uint8_t alignmentFill_at_134[2];
+
+	// @@GAUGE_NAME_TRG_ERR@@
+	// counter
+	// offset 136
+	uint32_t totalTriggerErrorCounter = (uint32_t)0;
+
+	// offset 140
+	uint32_t orderingErrorCounter = (uint32_t)0;
+
+	// @@GAUGE_NAME_WARNING_COUNTER@@
+	// count
+	// offset 144
+	uint16_t warningCounter = (uint16_t)0;
+
+	// @@GAUGE_NAME_WARNING_LAST@@
+	// error
+	// offset 146
+	uint16_t lastErrorCode = (uint16_t)0;
+
+	// error
+	// offset 148
+	uint16_t recentErrorCode[8];
+
+	// val
+	// offset 164
+	float debugFloatField1 = (float)0;
+
+	// val
+	// offset 168
+	float debugFloatField2 = (float)0;
+
+	// val
+	// offset 172
+	float debugFloatField3 = (float)0;
+
+	// val
+	// offset 176
+	float debugFloatField4 = (float)0;
+
+	// val
+	// offset 180
+	float debugFloatField5 = (float)0;
+
+	// val
+	// offset 184
+	float debugFloatField6 = (float)0;
+
+	// val
+	// offset 188
+	float debugFloatField7 = (float)0;
+
+	// val
+	// offset 192
+	uint32_t debugIntField1 = (uint32_t)0;
+
+	// val
+	// offset 196
+	uint32_t debugIntField2 = (uint32_t)0;
+
+	// val
+	// offset 200
+	uint32_t debugIntField3 = (uint32_t)0;
+
+	// val
+	// offset 204
+	int16_t debugIntField4 = (int16_t)0;
+
+	// val
+	// offset 206
+	int16_t debugIntField5 = (int16_t)0;
+
+	// EGT
+	// deg C
+	// offset 208
+	uint16_t egt[EGT_CHANNEL_COUNT];
+
+	// V
+	// offset 224
+	scaled_channel<int16_t, 1000, 1> rawTps1Primary = (int16_t)0;
+
+	// V
+	// offset 226
+	scaled_channel<int16_t, 1000, 1> rawPpsPrimary = (int16_t)0;
+
+	// V
+	// offset 228
+	scaled_channel<int16_t, 1000, 1> rawClt = (int16_t)0;
+
+	// V
+	// offset 230
+	scaled_channel<int16_t, 1000, 1> rawIat = (int16_t)0;
+
+	// V
+	// offset 232
+	scaled_channel<int16_t, 1000, 1> rawOilPressure = (int16_t)0;
+
+	// offset 234
+	uint8_t fuelClosedLoopBinIdx = (uint8_t)0;
+
+	// @@GAUGE_NAME_CURRENT_GEAR@@
+	// gear
+	// offset 235
+	int8_t tcuCurrentGear = (int8_t)0;
+
+	// V
+	// offset 236
+	scaled_channel<int16_t, 1000, 1> rawPpsSecondary = (int16_t)0;
+
+	// Knock: Cyl
+	// dBv
+	// offset 238
+	int8_t knock[12];
 
 	// @@GAUGE_NAME_AFR@@
 	// AFR
