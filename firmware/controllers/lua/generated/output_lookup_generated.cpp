@@ -47,8 +47,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.launchTriggered;
 		case -1529936844:
 			return engine->outputChannels.isTps2Error;
-		case 1473688883:
-			return engine->outputChannels.isIdleClosedLoop;
 		case 1608791711:
 			return engine->outputChannels.injectorFault;
 		case -1158382750:
@@ -125,8 +123,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.currentInjectionMode;
 		case 1029096098:
 			return engine->outputChannels.coilDutyCycle;
-		case -606474478:
-			return engine->outputChannels.idleAirValvePosition;
 		case -2105094009:
 			return engine->outputChannels.etbTarget;
 		case 1021133095:
@@ -167,6 +163,8 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.lowFuelPressure;
 		case -1973799222:
 			return engine->outputChannels.highFuelPressure;
+		case -1798336054:
+			return engine->outputChannels.rawPpsSecondary;
 		case 471298448:
 			return engine->outputChannels.tcuDesiredGear;
 		case 404628421:
@@ -227,8 +225,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.fuelClosedLoopBinIdx;
 		case -559761101:
 			return engine->outputChannels.tcuCurrentGear;
-		case -1798336054:
-			return engine->outputChannels.rawPpsSecondary;
 		case -1093429509:
 			return engine->outputChannels.AFRValue;
 		case -513494613:
