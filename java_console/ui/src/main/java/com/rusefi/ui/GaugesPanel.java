@@ -35,7 +35,7 @@ public class GaugesPanel {
             Sensor.TPS,
 
             Sensor.MAP,
-            Sensor.tCharge,
+//            Sensor.tCharge,
             Sensor.baseFuel,
             Sensor.runningFuel,
 
