@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri May 05 21:38:47 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri May 05 21:46:01 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -434,7 +434,7 @@ public class Fields {
 	public static final String GAUGE_NAME_DEBUG_I3 = "debug i3";
 	public static final String GAUGE_NAME_DEBUG_I4 = "debug i4";
 	public static final String GAUGE_NAME_DEBUG_I5 = "debug i5";
-	public static final String GAUGE_NAME_DESIRED_GEAR = "Desired Gear";
+	public static final String GAUGE_NAME_DESIRED_GEAR = "TCU: Desired Gear";
 	public static final String GAUGE_NAME_DETECTED_GEAR = "Detected Gear";
 	public static final String GAUGE_NAME_DWELL_DUTY = "Ign: Coil duty cycle";
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
@@ -477,7 +477,7 @@ public class Fields {
 	public static final String GAUGE_NAME_IGNITION_MODE = "Ign: Mode";
 	public static final String GAUGE_NAME_INJECTION_MODE = "Fuel: Injection mode";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "Fuel: injector lag";
-	public static final String GAUGE_NAME_ISS = "Input Shaft Speed";
+	public static final String GAUGE_NAME_ISS = "TCU: Input Shaft Speed";
 	public static final String GAUGE_NAME_KNOCK_1 = "knock 1";
 	public static final String GAUGE_NAME_KNOCK_10 = "knock 10";
 	public static final String GAUGE_NAME_KNOCK_11 = "knock 11";
@@ -505,7 +505,7 @@ public class Fields {
 	public static final String GAUGE_NAME_RPM = "RPM";
 	public static final String GAUGE_NAME_TARGET_AFR = "Fuel: target AFR";
 	public static final String GAUGE_NAME_TARGET_LAMBDA = "Fuel: target lambda";
-	public static final String GAUGE_NAME_TC_RATIO = "Torque Converter Ratio";
+	public static final String GAUGE_NAME_TC_RATIO = "TCU: Torque Converter Ratio";
 	public static final String GAUGE_NAME_TCHARGE = "Air: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
@@ -1017,7 +1017,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1308134169;
+	public static final int SIGNATURE_HASH = 1263086206;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1241,7 +1241,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.05.f407-discovery.1308134169";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.05.f407-discovery.1263086206";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1372;
