@@ -43,6 +43,7 @@ Release template (copy/paste this for new release):
  - Detected gear available as gppwm channel
  - Y axis override for Idle VE table. Helps with idle quality on ITB setups.
  - Blend tables for boost open and closed loop control
+ - Boost Cut Pressure Hysteresis #4529
 
 ## April 2023 Release - "Day 419"
 
