@@ -458,7 +458,7 @@
 #define GAUGE_NAME_ETB_TARGET "ETB: position target"
 #define GAUGE_NAME_FLEX "Flex Ethanol %"
 #define GAUGE_NAME_FUEL_BARO_CORR "Fuel: Barometric pressure mult"
-#define GAUGE_NAME_FUEL_BASE "Fuel: base mass"
+#define GAUGE_NAME_FUEL_BASE "Fuel: base cycle mass"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "Fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_CLT_CORR "Fuel: CLT correction"
 #define GAUGE_NAME_FUEL_CONSUMPTION "Fuel: Total consumed"
@@ -469,7 +469,7 @@
 #define GAUGE_NAME_FUEL_INJECTION_TIMING "Fuel: Injection timing SOI"
 #define GAUGE_NAME_FUEL_LAST_INJECTION "Fuel: Last inj pulse width"
 #define GAUGE_NAME_FUEL_LEVEL "Fuel level"
-#define GAUGE_NAME_FUEL_LOAD "Fuel: load"
+#define GAUGE_NAME_FUEL_LOAD "Fuel: Load"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS "bar"
 #define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
@@ -1026,7 +1026,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 821179598
+#define SIGNATURE_HASH 2107771486
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1318,12 +1318,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.05.05.subaru_eg33_f7.821179598"
+#define TS_SIGNATURE "rusEFI master.2023.05.05.subaru_eg33_f7.2107771486"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1392
+#define TS_TOTAL_OUTPUT_SIZE 1376
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

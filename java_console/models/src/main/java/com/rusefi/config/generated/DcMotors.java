@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Fri May 05 16:36:44 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Fri May 05 17:56:33 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -63,7 +63,7 @@ public class DcMotors {
 	public static final String GAUGE_NAME_ETB_TARGET = "ETB: position target";
 	public static final String GAUGE_NAME_FLEX = "Flex Ethanol %";
 	public static final String GAUGE_NAME_FUEL_BARO_CORR = "Fuel: Barometric pressure mult";
-	public static final String GAUGE_NAME_FUEL_BASE = "Fuel: base mass";
+	public static final String GAUGE_NAME_FUEL_BASE = "Fuel: base cycle mass";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "Fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "Fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CONSUMPTION = "Fuel: Total consumed";
@@ -74,7 +74,7 @@ public class DcMotors {
 	public static final String GAUGE_NAME_FUEL_INJECTION_TIMING = "Fuel: Injection timing SOI";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "Fuel: Last inj pulse width";
 	public static final String GAUGE_NAME_FUEL_LEVEL = "Fuel level";
-	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: load";
+	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: Load";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS = "bar";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
@@ -165,10 +165,10 @@ public class DcMotors {
 	public static final int PACK_MULT_VSS = 100;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field DCOUTPUT0 = Field.create("DCOUTPUT0", 0, FieldType.FLOAT).setBaseOffset(1372);
-	public static final Field ISENABLED0_INT = Field.create("ISENABLED0_INT", 4, FieldType.INT8).setScale(1.0).setBaseOffset(1372);
-	public static final Field ALIGNMENTFILL_AT_5 = Field.create("ALIGNMENTFILL_AT_5", 5, FieldType.INT8).setScale(1.0).setBaseOffset(1372);
-	public static final Field ISENABLED0 = Field.create("ISENABLED0", 8, FieldType.BIT, 0).setBaseOffset(1372);
+	public static final Field DCOUTPUT0 = Field.create("DCOUTPUT0", 0, FieldType.FLOAT).setBaseOffset(1356);
+	public static final Field ISENABLED0_INT = Field.create("ISENABLED0_INT", 4, FieldType.INT8).setScale(1.0).setBaseOffset(1356);
+	public static final Field ALIGNMENTFILL_AT_5 = Field.create("ALIGNMENTFILL_AT_5", 5, FieldType.INT8).setScale(1.0).setBaseOffset(1356);
+	public static final Field ISENABLED0 = Field.create("ISENABLED0", 8, FieldType.BIT, 0).setBaseOffset(1356);
 	public static final Field[] VALUES = {
 	DCOUTPUT0,
 	ISENABLED0_INT,

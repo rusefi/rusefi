@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri May 05 16:37:41 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri May 05 17:57:37 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -444,7 +444,7 @@ public class Fields {
 	public static final String GAUGE_NAME_ETB_TARGET = "ETB: position target";
 	public static final String GAUGE_NAME_FLEX = "Flex Ethanol %";
 	public static final String GAUGE_NAME_FUEL_BARO_CORR = "Fuel: Barometric pressure mult";
-	public static final String GAUGE_NAME_FUEL_BASE = "Fuel: base mass";
+	public static final String GAUGE_NAME_FUEL_BASE = "Fuel: base cycle mass";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "Fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "Fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CONSUMPTION = "Fuel: Total consumed";
@@ -455,7 +455,7 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_INJECTION_TIMING = "Fuel: Injection timing SOI";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "Fuel: Last inj pulse width";
 	public static final String GAUGE_NAME_FUEL_LEVEL = "Fuel level";
-	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: load";
+	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: Load";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS = "bar";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
@@ -1017,7 +1017,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1609996476;
+	public static final int SIGNATURE_HASH = 312911404;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1241,10 +1241,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.05.f407-discovery.1609996476";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.05.f407-discovery.312911404";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1392;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1376;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
