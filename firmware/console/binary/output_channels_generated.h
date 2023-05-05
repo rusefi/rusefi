@@ -23,9 +23,11 @@ struct pid_status_s {
 static_assert(sizeof(pid_status_s) == 16);
 
 struct output_channels_s {
+	// SD: Present
 	// offset 0 bit 0
 	bool sd_present : 1 {};
 
+	// SD: Logging
 	// offset 0 bit 1
 	bool sd_logging_internal : 1 {};
 
@@ -35,7 +37,7 @@ struct output_channels_s {
 	// offset 0 bit 3
 	bool antilagTriggered : 1 {};
 
-	// radiator fan
+	// Radiator Fan
 	// offset 0 bit 4
 	bool isFanOn : 1 {};
 
@@ -48,54 +50,71 @@ struct output_channels_s {
 	// offset 0 bit 7
 	bool needBurn : 1 {};
 
+	// SD: MSD
 	// offset 0 bit 8
 	bool sd_msd : 1 {};
 
+	// Radiator Fan 2
 	// offset 0 bit 9
 	bool isFan2On : 1 {};
 
+	// Harley ACR: Active
 	// offset 0 bit 10
 	bool acrActive : 1 {};
 
+	// Tooth Logger Ready
 	// offset 0 bit 11
 	bool toothLogReady : 1 {};
 
+	// Error: TPS
 	// offset 0 bit 12
 	bool isTpsError : 1 {};
 
+	// Error: CLT
 	// offset 0 bit 13
 	bool isCltError : 1 {};
 
+	// Error: MAP
 	// offset 0 bit 14
 	bool isMapError : 1 {};
 
+	// Error: IAT
 	// offset 0 bit 15
 	bool isIatError : 1 {};
 
+	// Error: Trigger
 	// offset 0 bit 16
 	bool isTriggerError : 1 {};
 
+	// Error, Critical: ECM
 	// offset 0 bit 17
 	bool hasCriticalError : 1 {};
 
+	// Warning: ECM
 	// offset 0 bit 18
 	bool isWarnNow : 1 {};
 
+	// Error: Pedal
 	// offset 0 bit 19
 	bool isPedalError : 1 {};
 
+	// Launch Control Triggered
 	// offset 0 bit 20
 	bool launchTriggered : 1 {};
 
+	// Error: TPS2
 	// offset 0 bit 21
 	bool isTps2Error : 1 {};
 
+	// Idle: Closed Loop
 	// offset 0 bit 22
 	bool isIdleClosedLoop : 1 {};
 
+	// Injector Fault
 	// offset 0 bit 23
 	bool injectorFault : 1 {};
 
+	// Ignition Fault
 	// offset 0 bit 24
 	bool ignitionFault : 1 {};
 
