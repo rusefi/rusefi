@@ -2012,7 +2012,6 @@ cmd_burn_without_flash		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_h
 cmd_set_wideband_idx_0		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_WIDEBAND_16_hex@@\x00\x00"
 cmd_set_wideband_idx_1		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_WIDEBAND_16_hex@@\x00\x01"
 
-cmd_call_from_pit				= "@@TS_IO_TEST_COMMAND_char@@\x00\x20\x34\x56"
 cmd_stop_engine				= "@@TS_IO_TEST_COMMAND_char@@\x00\x79\x00\x00"
 
 ; reboot ECU
@@ -4055,7 +4054,6 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Spark #12", cmd_test_spk12, { cylindersCount >= 12 }
 
 	dialog = testMisc, "Misc"
-;		commandButton = "Come To Pit", cmd_call_from_pit
 		commandButton = "Main Relay", cmd_test_main_relay@@if_ts_show_main_relay
 		commandButton = "Fuel Pump", cmd_test_fuel_pump
 		commandButton = "Cooling Fan", cmd_test_fan_1
