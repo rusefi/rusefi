@@ -17,6 +17,7 @@
 #include "pch.h"
 #include "chprintf.h"
 #include "rusEfiFunctionalTest.h"
+#include "flash_int.h"
 
 #include <iostream>
 #include <filesystem>
@@ -213,11 +214,13 @@ static std::string makeFileName(flashaddr_t addr) {
 	return ss.str();
 }
 
-int intFlashErase(flashaddr_t address, size_t size) {
+int intFlashErase(flashaddr_t address, size_t) {
 	// Try to delete the file, swallow any errors (we can overwrite it anyway)
 	try {
 		std::filesystem::remove(makeFileName(address));
 	} catch (...) { }
+
+	return FLASH_RETURN_SUCCESS;
 }
 
 int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
