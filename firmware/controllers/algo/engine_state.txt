@@ -16,27 +16,14 @@ end_struct
 
 LuaAdjustments lua
 
-
 struct speed_density_s
-	int16_t autoscale tCharge;Charge temperature estimate;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
-	float tChargeK;Charge temperature estimate K
+	int16_t autoscale tCharge;Air: Charge temperature estimate;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
+	float tChargeK;Air: Charge temperature estimate K
 end_struct
 
 speed_density_s sd;
 
-float engineCycleDurationMs;
-
-
-float minRpmKcurrentTPS
-
-uint32_t currentTpsAdc
-float tpsVoltageMCU
-float tpsVoltageBoard
-
-	float currentBaroCorrectedVE;
-	float injectorFlowCorrection;
 float baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@
-
 
 struct cranking_fuel_s
 

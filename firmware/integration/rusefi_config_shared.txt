@@ -84,8 +84,7 @@
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
 #define GAUGE_NAME_ETB_ERROR "ETB: position error"
 #define GAUGE_NAME_ETB_DUTY "ETB: Duty"
-#define GAUGE_NAME_IDLE_POSITION "Idle position sensor"
-#define GAUGE_NAME_WARNING_COUNT "Warning count"
+#define GAUGE_NAME_IDLE_POSITION "Idle: Position sensor"
 #define GAUGE_NAME_LAST_ERROR "Last error"
 #define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
 #define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
@@ -128,11 +127,11 @@
 
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF"
 #define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF #2"
-#define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
-#define GAUGE_NAME_AIR_MASS "air mass"
+#define GAUGE_NAME_AIR_FLOW_ESTIMATE "Air: Flow estimate"
+#define GAUGE_NAME_AIR_MASS "Air: Cylinder airmass"
 
-#define GAUGE_NAME_WARNING_LAST "warning: last"
-#define GAUGE_NAME_WARNING_COUNTER "warning: counter"
+#define GAUGE_NAME_WARNING_LAST "Warning: last"
+#define GAUGE_NAME_WARNING_COUNTER "Warning: counter"
 
 #define GAUGE_NAME_FUEL_LEVEL "Fuel level"
 #define GAUGE_NAME_KNOCK_LEVEL "Knock: Current level"
@@ -162,7 +161,7 @@
 #define GAUGE_NAME_FUEL_FLOW "Fuel: Flow rate"
 
 #define GAUGE_NAME_FUEL_INJ_DUTY "Fuel: injector duty cycle"
-#define GAUGE_NAME_TCHARGE "Fuel: SD tCharge"
+#define GAUGE_NAME_TCHARGE "Air: SD tCharge"
 #define GAUGE_NAME_TARGET_AFR "Fuel: target AFR"
 #define GAUGE_NAME_TARGET_LAMBDA "Fuel: target lambda"
 #define GAUGE_NAME_FUEL_INJECTION_TIMING "Fuel: Injection timing SOI"

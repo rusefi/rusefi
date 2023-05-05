@@ -1,7 +1,7 @@
 struct_no_prefix throttle_model_s
-	bit throttleUseWotModel
+	bit throttleUseWotModel;Air: Throttle model WOT
 
-	int16_t autoscale throttleModelCrossoverAngle;;"%", 0.01, 0, 0, 100, 1
+	int16_t autoscale throttleModelCrossoverAngle;Air: Throttle crossover pos;"%", 0.01, 0, 0, 100, 1
 
-	float throttleEstimatedFlow;;"g/s", 1, 0, 0, 5, 2
+	float throttleEstimatedFlow;Air: Throttle flow estimate;"g/s", 1, 0, 0, 5, 2
 end_struct
