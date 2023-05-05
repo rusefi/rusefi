@@ -156,7 +156,7 @@
 #define GAUGE_NAME_FUEL_TRIM_2 "Fuel: fuel trim 2"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "Fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "Fuel: wall correction"
-#define GAUGE_NAME_FUEL_LOAD "Fuel: load"
+#define GAUGE_NAME_FUEL_LOAD "Fuel: Load"
 #define GAUGE_NAME_FUEL_CONSUMPTION "Fuel: Total consumed"
 #define GAUGE_NAME_FUEL_FLOW "Fuel: Flow rate"
 
