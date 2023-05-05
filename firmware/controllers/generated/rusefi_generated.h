@@ -426,10 +426,10 @@
 #define GAUGE_NAME_ADJUSTED_TIMING "Timing: ignition"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
-#define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
+#define GAUGE_NAME_AIR_FLOW_ESTIMATE "Air: Flow estimate"
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF"
 #define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF #2"
-#define GAUGE_NAME_AIR_MASS "air mass"
+#define GAUGE_NAME_AIR_MASS "Air: Cylinder airmass"
 #define GAUGE_NAME_AUX_LINEAR_1 "Aux linear #1"
 #define GAUGE_NAME_AUX_LINEAR_2 "Aux linear #2"
 #define GAUGE_NAME_AUX_TEMP1 "Aux temp 1"
@@ -492,7 +492,7 @@
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
 #define GAUGE_NAME_IAC "Idle: Position"
 #define GAUGE_NAME_IAT "IAT"
-#define GAUGE_NAME_IDLE_POSITION "Idle position sensor"
+#define GAUGE_NAME_IDLE_POSITION "Idle: Position sensor"
 #define GAUGE_NAME_IGNITION_LOAD "Ign: Load"
 #define GAUGE_NAME_IGNITION_MODE "Ign: Mode"
 #define GAUGE_NAME_INJECTION_MODE "Fuel: Injection mode"
@@ -526,7 +526,7 @@
 #define GAUGE_NAME_TARGET_AFR "Fuel: target AFR"
 #define GAUGE_NAME_TARGET_LAMBDA "Fuel: target lambda"
 #define GAUGE_NAME_TC_RATIO "Torque Converter Ratio"
-#define GAUGE_NAME_TCHARGE "Fuel: SD tCharge"
+#define GAUGE_NAME_TCHARGE "Air: SD tCharge"
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_TIME "Time"
 #define GAUGE_NAME_TIMING_ADVANCE "Ign: Timing"
@@ -549,8 +549,8 @@
 #define GAUGE_NAME_VVT_TARGET_B2E "VVT: bank 2 exhaust target"
 #define GAUGE_NAME_VVT_TARGET_B2I "VVT: bank 2 intake target"
 #define GAUGE_NAME_WARNING_COUNT "Warning count"
-#define GAUGE_NAME_WARNING_COUNTER "warning: counter"
-#define GAUGE_NAME_WARNING_LAST "warning: last"
+#define GAUGE_NAME_WARNING_COUNTER "Warning: counter"
+#define GAUGE_NAME_WARNING_LAST "Warning: last"
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
 #define gear_controller_e_enum "None", "Button Shift"
 #define gear_e_GEAR_1 1
@@ -1075,7 +1075,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 757498056
+#define SIGNATURE_HASH 1609996476
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1366,12 +1366,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.05.05.f407-discovery.757498056"
+#define TS_SIGNATURE "rusEFI master.2023.05.05.f407-discovery.1609996476"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1420
+#define TS_TOTAL_OUTPUT_SIZE 1392
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

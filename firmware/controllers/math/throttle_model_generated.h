@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/math/throttle_model.txt Sun Apr 30 03:31:28 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/math/throttle_model.txt Fri May 05 16:36:44 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,6 +6,7 @@
 // start of throttle_model_s
 struct throttle_model_s {
 	/**
+	 * Air: Throttle model WOT
 	offset 0 bit 0 */
 	bool throttleUseWotModel : 1 {};
 	/**
@@ -102,6 +103,7 @@ struct throttle_model_s {
 	offset 0 bit 31 */
 	bool unusedBit_1_31 : 1 {};
 	/**
+	 * Air: Throttle crossover pos
 	%
 	 * offset 4
 	 */
@@ -113,6 +115,7 @@ struct throttle_model_s {
 	 */
 	uint8_t alignmentFill_at_6[2];
 	/**
+	 * Air: Throttle flow estimate
 	g/s
 	 * offset 8
 	 */
@@ -121,4 +124,4 @@ struct throttle_model_s {
 static_assert(sizeof(throttle_model_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/math/throttle_model.txt Sun Apr 30 03:31:28 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/math/throttle_model.txt Fri May 05 16:36:44 UTC 2023

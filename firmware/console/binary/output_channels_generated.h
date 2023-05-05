@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 02:53:55 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 16:36:44 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -97,11 +97,11 @@ struct output_channels_s {
 	offset 0 bit 16 */
 	bool isTriggerError : 1 {};
 	/**
-	 * Error, Critical: ECM
+	 * Error, Error: Active
 	offset 0 bit 17 */
 	bool hasCriticalError : 1 {};
 	/**
-	 * Warning: ECM
+	 * Warning: Active
 	offset 0 bit 18 */
 	bool isWarnNow : 1 {};
 	/**
@@ -1460,4 +1460,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 812);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 02:53:55 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 16:36:44 UTC 2023

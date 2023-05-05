@@ -927,27 +927,6 @@ float getOutputValueByName(const char *name) {
 // sd.tChargeK
 		case 584726739:
 			return engine->engineState.sd.tChargeK;
-// engineCycleDurationMs
-		case 794378193:
-			return engine->engineState.engineCycleDurationMs;
-// minRpmKcurrentTPS
-		case 392259965:
-			return engine->engineState.minRpmKcurrentTPS;
-// currentTpsAdc
-		case 528119655:
-			return engine->engineState.currentTpsAdc;
-// tpsVoltageMCU
-		case -1930648237:
-			return engine->engineState.tpsVoltageMCU;
-// tpsVoltageBoard
-		case 2045413142:
-			return engine->engineState.tpsVoltageBoard;
-// currentBaroCorrectedVE
-		case 713674786:
-			return engine->engineState.currentBaroCorrectedVE;
-// injectorFlowCorrection
-		case -389464909:
-			return engine->engineState.injectorFlowCorrection;
 // baroCorrection
 		case -281693247:
 			return engine->engineState.baroCorrection;

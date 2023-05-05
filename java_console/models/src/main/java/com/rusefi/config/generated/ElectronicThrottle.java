@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Fri May 05 01:46:17 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Fri May 05 16:36:44 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -25,10 +25,10 @@ public class ElectronicThrottle {
 	public static final String GAUGE_NAME_ADJUSTED_TIMING = "Timing: ignition";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
-	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "MAF estimate";
+	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "Air: Flow estimate";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF #2";
-	public static final String GAUGE_NAME_AIR_MASS = "air mass";
+	public static final String GAUGE_NAME_AIR_MASS = "Air: Cylinder airmass";
 	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux linear #1";
 	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux linear #2";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
@@ -91,7 +91,7 @@ public class ElectronicThrottle {
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
-	public static final String GAUGE_NAME_IDLE_POSITION = "Idle position sensor";
+	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
 	public static final String GAUGE_NAME_IGNITION_LOAD = "Ign: Load";
 	public static final String GAUGE_NAME_IGNITION_MODE = "Ign: Mode";
 	public static final String GAUGE_NAME_INJECTION_MODE = "Fuel: Injection mode";
@@ -113,7 +113,7 @@ public class ElectronicThrottle {
 	public static final String GAUGE_NAME_TARGET_AFR = "Fuel: target AFR";
 	public static final String GAUGE_NAME_TARGET_LAMBDA = "Fuel: target lambda";
 	public static final String GAUGE_NAME_TC_RATIO = "Torque Converter Ratio";
-	public static final String GAUGE_NAME_TCHARGE = "Fuel: SD tCharge";
+	public static final String GAUGE_NAME_TCHARGE = "Air: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "Ign: Timing";
@@ -135,9 +135,8 @@ public class ElectronicThrottle {
 	public static final String GAUGE_NAME_VVT_TARGET_B1I = "VVT: bank 1 intake target";
 	public static final String GAUGE_NAME_VVT_TARGET_B2E = "VVT: bank 2 exhaust target";
 	public static final String GAUGE_NAME_VVT_TARGET_B2I = "VVT: bank 2 intake target";
-	public static final String GAUGE_NAME_WARNING_COUNT = "Warning count";
-	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
-	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
+	public static final String GAUGE_NAME_WARNING_COUNTER = "Warning: counter";
+	public static final String GAUGE_NAME_WARNING_LAST = "Warning: last";
 	public static final String GAUGE_NAME_WG_POSITION = "Wastegate position sensor";
 	public static final int GEARS_COUNT = 8;
 	public static final int IGN_BLEND_COUNT = 4;
@@ -166,23 +165,23 @@ public class ElectronicThrottle {
 	public static final int PACK_MULT_VSS = 100;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field IDLEPOSITION = Field.create("IDLEPOSITION", 0, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field TRIM = Field.create("TRIM", 4, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field LUAADJUSTMENT = Field.create("LUAADJUSTMENT", 8, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field M_WASTEGATEPOSITION = Field.create("M_WASTEGATEPOSITION", 12, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 16, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field ETBINTEGRALERROR = Field.create("ETBINTEGRALERROR", 20, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field ETBCURRENTTARGET = Field.create("ETBCURRENTTARGET", 24, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 28, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1336);
-	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1336);
-	public static final Field ETBDUTYRATEOFCHANGE = Field.create("ETBDUTYRATEOFCHANGE", 36, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field ETBDUTYAVERAGE = Field.create("ETBDUTYAVERAGE", 40, FieldType.FLOAT).setBaseOffset(1336);
-	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 44, FieldType.INT16).setScale(1.0).setBaseOffset(1336);
-	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 46, FieldType.INT16).setScale(1.0).setBaseOffset(1336);
-	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1336);
-	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1336);
-	public static final Field JAMTIMER = Field.create("JAMTIMER", 50, FieldType.INT16).setScale(0.01).setBaseOffset(1336);
+	public static final Field IDLEPOSITION = Field.create("IDLEPOSITION", 0, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field TRIM = Field.create("TRIM", 4, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field LUAADJUSTMENT = Field.create("LUAADJUSTMENT", 8, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field M_WASTEGATEPOSITION = Field.create("M_WASTEGATEPOSITION", 12, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 16, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field ETBINTEGRALERROR = Field.create("ETBINTEGRALERROR", 20, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field ETBCURRENTTARGET = Field.create("ETBCURRENTTARGET", 24, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 28, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1308);
+	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1308);
+	public static final Field ETBDUTYRATEOFCHANGE = Field.create("ETBDUTYRATEOFCHANGE", 36, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field ETBDUTYAVERAGE = Field.create("ETBDUTYAVERAGE", 40, FieldType.FLOAT).setBaseOffset(1308);
+	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 44, FieldType.INT16).setScale(1.0).setBaseOffset(1308);
+	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 46, FieldType.INT16).setScale(1.0).setBaseOffset(1308);
+	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1308);
+	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1308);
+	public static final Field JAMTIMER = Field.create("JAMTIMER", 50, FieldType.INT16).setScale(0.01).setBaseOffset(1308);
 	public static final Field[] VALUES = {
 	IDLEPOSITION,
 	TRIM,
