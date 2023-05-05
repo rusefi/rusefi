@@ -1248,7 +1248,7 @@ gaugeCategory = Boost PID
 	boostStatus_resetCounterGauge = boostStatus_resetCounter,"Boost PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
 
 gaugeCategory = Idle
-	idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",	0,	100,	0,	0,	100,  100,	1,	1
+	idleAirValvePositionGauge = currentIdlePosition, "Idle position", "%",	0,	100,	0,	0,	100,  100,	1,	1
 	idleStatus_iTermGauge = idleStatus_iTerm,"Idle PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	idleStatus_dTermGauge = idleStatus_dTerm,"Idle PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	idleStatus_outputGauge = idleStatus_output,"Idle PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1561,7 +1561,7 @@ gaugeCategory = GPPWM Outputs
 	indicator =			{ isIdleClosedLoop },			"Not idling",				"Idling",  white,  black,  green,  black
 	indicator =				{ isIdleCoasting },		"Not coasting",			"Coasting",  white,  black,  green,  black
 	indicator =					{ dfcoActive },  "Not decel fuel cut",	"Decel fuel cut",  white,  black, yellow,  black
-	indicator =				{ tpsAccelActive },		"No TPS accel",  "TPS accel active",  white,  black, yellow,  black
+	indicator =				{ isAboveAccelThreshold },		"No TPS accel",  "TPS accel active",  white,  black, yellow,  black
 	; error codes
 	indicator =					{ isTpsError },				"TPS OK",			"TPS error",	white, black,	red,  black
 

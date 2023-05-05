@@ -32,7 +32,9 @@ int IdleController::getTargetRpm(float clt) {
 	// alternator duty cycle has a similar logic
 	targetRpmAcBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleRpmBump : 0;
 
-	return targetRpmByClt + targetRpmAcBump;
+	auto target = targetRpmByClt + targetRpmAcBump;
+	idleTarget = target;
+	return target;
 }
 
 IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
@@ -40,9 +42,8 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
 	}
-	badTps = !tps;
 
-	if (badTps) {
+	if (!tps) {
 		// If the TPS has failed, assume the engine is running
 		return Phase::Running;
 	}
@@ -336,29 +337,30 @@ float IdleController::getIdlePosition(float rpm) {
 			iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
 			baseIdlePosition = iacPosition;
 
-			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 			// If TPS is working and automatic mode enabled, add any closed loop correction
-			if (useClosedLoop) {
-				iacPosition += getClosedLoop(phase, tps.Value, rpm, targetRpm);
+			if (tps.Valid && engineConfiguration->idleMode == IM_AUTO) {
+				auto closedLoop = getClosedLoop(phase, tps.Value, rpm, targetRpm);
+				idleClosedLoop = closedLoop;
+				iacPosition += closedLoop;
+			} else {
+				idleClosedLoop = 0;
 			}
 
 			iacPosition = clampPercentValue(iacPosition);
 		}
 
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
-		engine->outputChannels.isIdleClosedLoop = phase == Phase::Idling;
-
 		if (engineConfiguration->idleMode == IM_AUTO) {
 			// see also tsOutputChannels->idlePosition
 			getIdlePid()->postState(engine->outputChannels.idleStatus);
 		}
 
-		engine->outputChannels.idleAirValvePosition = iacPosition;
 		extern StepperMotor iacMotor;
 		engine->outputChannels.idleTargetPosition = iacMotor.getTargetPosition();
 #endif /* EFI_TUNER_STUDIO */
 
 		currentIdlePosition = iacPosition;
+		isIdleClosedLoop = phase == Phase::Idling;
 		return iacPosition;
 #else
 		return 0;

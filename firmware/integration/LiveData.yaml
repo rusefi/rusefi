@@ -130,6 +130,7 @@ Usages:
   - name: idle_state
     java: IdleState.java
     folder: controllers/actuators
+    prepend: integration/rusefi_config_shared.txt
     output_name: idle
 
   - name: electronic_throttle
