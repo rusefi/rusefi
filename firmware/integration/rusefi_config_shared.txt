@@ -142,7 +142,6 @@
 #define GAUGE_NAME_FUEL_BARO_CORR "Fuel: Barometric pressure mult"
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_INJECTOR_LAG "Fuel: injector lag"
-#define GAUGE_NAME_FUEL_TPS_ROC "Fuel: TPS AE change"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "Fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS AE add fuel ms"
 #define GAUGE_NAME_FUEL_CLT_CORR "Fuel: CLT correction"

@@ -88,7 +88,6 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int16_t autoscale wallFuelCorrectionValue;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 
 	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
-	int16_t autoscale deltaTpsValue;@@GAUGE_NAME_FUEL_TPS_ROC@@;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t canReadCounter;;"",1, 0, 0, 0, 0
 	int16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
@@ -246,9 +245,6 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint16_t autoscale rawMap;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint16_t autoscale rawAfr;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-	uint8_t tpsAccelFrom;Fuel: TPS AE From;"%", 1, 0, 0, 100, 0
-	uint8_t tpsAccelTo;Fuel: TPS AE To;"%", 1, 0, 0, 100, 0
-
 	float calibrationValue2;;"", 1, 0, 0, 0, 0
     bit isMainRelayOn;
     bit isUsbConnected;isUsbConnected\nOriginal reason for this is to check if USB is connected from Lua
@@ -269,7 +265,6 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int16_t autoscale auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 0.01, 0, 0, 0, 2
 
 	bit dfcoActive
-	bit tpsAccelActive
 
 	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1
 
