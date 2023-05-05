@@ -1521,7 +1521,8 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	uint8_t autoscale rpmSoftLimitFuelAdded;% of fuel ADDED during window;"%", 0.2, 0, 0, 50, 1
 	uint8_t autoscale rpmHardLimitHyst;Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached;"RPM", 10, 0, 0, 2500, 0
 	uint16_t autoscale benchTestOffTime;Time between bench test pulses;"ms", 0.1, 0, 0, 2000, 1
-uint8_t[32] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	uint8_t autoscale boostCutPressureHyst;Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached;"kPa (absolute)", 0.4, 0, 0, 100, 0
+uint8_t[31] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

@@ -3737,6 +3737,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "RPM hard limit",						rpmHardLimit, { (cutFuelOnHardLimit || cutSparkOnHardLimit) &&  !useCltBasedRpmLimit }
 		field = "RPM limit hysteresis",					rpmHardLimitHyst
 		field = "Boost cut pressure",					boostCutPressure
+		field = "Boost cut pressure hysteresis",		boostCutPressureHyst
 		field = "Minimum oil pressure after start",		minOilPressureAfterStart
 
 	dialog = softRpmLimitSettings, "Soft RPM Limit"
