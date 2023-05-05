@@ -52,6 +52,9 @@ void setDefaultBaseEngine() {
 	// let's have valid default while we still have the field
 	engineConfiguration->debugMode = DBG_INSTANT_RPM;
 
+	engineConfiguration->boostCutPressure = 300;
+	engineConfiguration->boostCutPressureHyst = 20;
+
 	// Limits and Fallbacks
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->rpmHardLimitHyst = 50;
