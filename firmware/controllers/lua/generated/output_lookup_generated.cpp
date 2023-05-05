@@ -95,14 +95,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.oilPressure;
 		case 1384666006:
 			return engine->outputChannels.vvtPositionB1I;
-		case -1836794433:
-			return engine->outputChannels.chargeAirMass;
-		case 326389246:
-			return engine->outputChannels.crankingFuelMs;
-		case 727098956:
-			return engine->outputChannels.baseFuel;
-		case -395575790:
-			return engine->outputChannels.fuelRunning;
 		case 681043126:
 			return engine->outputChannels.actualLastInjection;
 		case -354325031:
@@ -169,6 +161,10 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.detectedGear;
 		case -1595441102:
 			return engine->outputChannels.maxTriggerReentrant;
+		case -148455898:
+			return engine->outputChannels.rawLowFuelPressure;
+		case 990714516:
+			return engine->outputChannels.rawHighFuelPressure;
 		case -628741220:
 			return engine->outputChannels.lowFuelPressure;
 		case -1973799222:
@@ -235,10 +231,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.flexPercent;
 		case 53406649:
 			return engine->outputChannels.wastegatePositionSensor;
-		case -148455898:
-			return engine->outputChannels.rawLowFuelPressure;
-		case 990714516:
-			return engine->outputChannels.rawHighFuelPressure;
 		case -1093429509:
 			return engine->outputChannels.AFRValue;
 		case -513494613:
@@ -507,8 +499,6 @@ float getOutputValueByName(const char *name) {
 			return engine->fuelComputer.sdTcharge_coff;
 		case 1650433343:
 			return engine->fuelComputer.sdAirMassInOneCylinder;
-		case 816610019:
-			return engine->fuelComputer.sdIsTChargeAirModel;
 		case -1777838088:
 			return engine->ignitionState.baseDwell;
 		case -903101570:
@@ -609,10 +599,6 @@ float getOutputValueByName(const char *name) {
 			return engine->engineState.sd.tCharge;
 		case 584726739:
 			return engine->engineState.sd.tChargeK;
-		case -281693247:
-			return engine->engineState.baroCorrection;
-		case 1119735859:
-			return engine->engineState.crankingFuel.baseFuel;
 		case -1206067863:
 			return engine->engineState.crankingFuel.coolantTemperatureCoefficient;
 		case 20251202:
@@ -621,6 +607,8 @@ float getOutputValueByName(const char *name) {
 			return engine->engineState.crankingFuel.durationCoefficient;
 		case -180401224:
 			return engine->engineState.crankingFuel.fuel;
+		case -281693247:
+			return engine->engineState.baroCorrection;
 		case -295556270:
 			return engine->engineState.hellenBoardId;
 		case -797965330:

@@ -57,7 +57,7 @@ public class FuelComputer {
 	public static final String GAUGE_NAME_ETB_TARGET = "ETB: position target";
 	public static final String GAUGE_NAME_FLEX = "Flex Ethanol %";
 	public static final String GAUGE_NAME_FUEL_BARO_CORR = "Fuel: Barometric pressure mult";
-	public static final String GAUGE_NAME_FUEL_BASE = "Fuel: base mass";
+	public static final String GAUGE_NAME_FUEL_BASE = "Fuel: base cycle mass";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "Fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "Fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CONSUMPTION = "Fuel: Total consumed";
@@ -68,7 +68,7 @@ public class FuelComputer {
 	public static final String GAUGE_NAME_FUEL_INJECTION_TIMING = "Fuel: Injection timing SOI";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "Fuel: Last inj pulse width";
 	public static final String GAUGE_NAME_FUEL_LEVEL = "Fuel level";
-	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: load";
+	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: Load";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS = "bar";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
@@ -156,20 +156,19 @@ public class FuelComputer {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field TOTALFUELCORRECTION = Field.create("TOTALFUELCORRECTION", 0, FieldType.FLOAT).setBaseOffset(808);
-	public static final Field RUNNING_POSTCRANKINGFUELCORRECTION = Field.create("RUNNING_POSTCRANKINGFUELCORRECTION", 4, FieldType.FLOAT).setBaseOffset(808);
-	public static final Field RUNNING_INTAKETEMPERATURECOEFFICIENT = Field.create("RUNNING_INTAKETEMPERATURECOEFFICIENT", 8, FieldType.FLOAT).setBaseOffset(808);
-	public static final Field RUNNING_COOLANTTEMPERATURECOEFFICIENT = Field.create("RUNNING_COOLANTTEMPERATURECOEFFICIENT", 12, FieldType.FLOAT).setBaseOffset(808);
-	public static final Field RUNNING_TIMESINCECRANKINGINSECS = Field.create("RUNNING_TIMESINCECRANKINGINSECS", 16, FieldType.FLOAT).setBaseOffset(808);
-	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 20, FieldType.FLOAT).setBaseOffset(808);
-	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 24, FieldType.FLOAT).setBaseOffset(808);
-	public static final Field AFRTABLEYAXIS = Field.create("AFRTABLEYAXIS", 28, FieldType.INT16).setScale(0.01).setBaseOffset(808);
-	public static final Field TARGETLAMBDA = Field.create("TARGETLAMBDA", 30, FieldType.INT16).setScale(1.0E-4).setBaseOffset(808);
-	public static final Field TARGETAFR = Field.create("TARGETAFR", 32, FieldType.INT16).setScale(0.001).setBaseOffset(808);
-	public static final Field STOICHIOMETRICRATIO = Field.create("STOICHIOMETRICRATIO", 34, FieldType.INT16).setScale(0.001).setBaseOffset(808);
-	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 36, FieldType.FLOAT).setBaseOffset(808);
-	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 40, FieldType.FLOAT).setBaseOffset(808);
-	public static final Field SDISTCHARGEAIRMODEL = Field.create("SDISTCHARGEAIRMODEL", 44, FieldType.BIT, 0).setBaseOffset(808);
+	public static final Field TOTALFUELCORRECTION = Field.create("TOTALFUELCORRECTION", 0, FieldType.FLOAT).setBaseOffset(800);
+	public static final Field RUNNING_POSTCRANKINGFUELCORRECTION = Field.create("RUNNING_POSTCRANKINGFUELCORRECTION", 4, FieldType.FLOAT).setBaseOffset(800);
+	public static final Field RUNNING_INTAKETEMPERATURECOEFFICIENT = Field.create("RUNNING_INTAKETEMPERATURECOEFFICIENT", 8, FieldType.FLOAT).setBaseOffset(800);
+	public static final Field RUNNING_COOLANTTEMPERATURECOEFFICIENT = Field.create("RUNNING_COOLANTTEMPERATURECOEFFICIENT", 12, FieldType.FLOAT).setBaseOffset(800);
+	public static final Field RUNNING_TIMESINCECRANKINGINSECS = Field.create("RUNNING_TIMESINCECRANKINGINSECS", 16, FieldType.FLOAT).setBaseOffset(800);
+	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 20, FieldType.INT16).setScale(0.01).setBaseOffset(800);
+	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 22, FieldType.INT16).setScale(0.01).setBaseOffset(800);
+	public static final Field AFRTABLEYAXIS = Field.create("AFRTABLEYAXIS", 24, FieldType.INT16).setScale(0.01).setBaseOffset(800);
+	public static final Field TARGETLAMBDA = Field.create("TARGETLAMBDA", 26, FieldType.INT16).setScale(1.0E-4).setBaseOffset(800);
+	public static final Field TARGETAFR = Field.create("TARGETAFR", 28, FieldType.INT16).setScale(0.001).setBaseOffset(800);
+	public static final Field STOICHIOMETRICRATIO = Field.create("STOICHIOMETRICRATIO", 30, FieldType.INT16).setScale(0.001).setBaseOffset(800);
+	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 32, FieldType.FLOAT).setBaseOffset(800);
+	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 36, FieldType.FLOAT).setBaseOffset(800);
 	public static final Field[] VALUES = {
 	TOTALFUELCORRECTION,
 	RUNNING_POSTCRANKINGFUELCORRECTION,
@@ -184,6 +183,5 @@ public class FuelComputer {
 	STOICHIOMETRICRATIO,
 	SDTCHARGE_COFF,
 	SDAIRMASSINONECYLINDER,
-	SDISTCHARGEAIRMODEL,
 	};
 }

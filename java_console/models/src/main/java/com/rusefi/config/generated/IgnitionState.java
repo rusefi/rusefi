@@ -57,7 +57,7 @@ public class IgnitionState {
 	public static final String GAUGE_NAME_ETB_TARGET = "ETB: position target";
 	public static final String GAUGE_NAME_FLEX = "Flex Ethanol %";
 	public static final String GAUGE_NAME_FUEL_BARO_CORR = "Fuel: Barometric pressure mult";
-	public static final String GAUGE_NAME_FUEL_BASE = "Fuel: base mass";
+	public static final String GAUGE_NAME_FUEL_BASE = "Fuel: base cycle mass";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "Fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "Fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CONSUMPTION = "Fuel: Total consumed";
@@ -68,7 +68,7 @@ public class IgnitionState {
 	public static final String GAUGE_NAME_FUEL_INJECTION_TIMING = "Fuel: Injection timing SOI";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "Fuel: Last inj pulse width";
 	public static final String GAUGE_NAME_FUEL_LEVEL = "Fuel level";
-	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: load";
+	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: Load";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS = "bar";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
@@ -156,16 +156,16 @@ public class IgnitionState {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field BASEDWELL = Field.create("BASEDWELL", 0, FieldType.FLOAT).setBaseOffset(856);
-	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 4, FieldType.FLOAT).setBaseOffset(856);
-	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 8, FieldType.FLOAT).setBaseOffset(856);
-	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 12, FieldType.INT16).setScale(0.01).setBaseOffset(856);
-	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 14, FieldType.INT16).setScale(0.01).setBaseOffset(856);
-	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 16, FieldType.INT16).setScale(0.01).setBaseOffset(856);
-	public static final Field ALIGNMENTFILL_AT_18 = Field.create("ALIGNMENTFILL_AT_18", 18, FieldType.INT8).setScale(1.0).setBaseOffset(856);
-	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 20, FieldType.FLOAT).setBaseOffset(856);
-	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 24, FieldType.FLOAT).setBaseOffset(856);
-	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 28, FieldType.FLOAT).setBaseOffset(856);
+	public static final Field BASEDWELL = Field.create("BASEDWELL", 0, FieldType.FLOAT).setBaseOffset(840);
+	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 4, FieldType.FLOAT).setBaseOffset(840);
+	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 8, FieldType.FLOAT).setBaseOffset(840);
+	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 12, FieldType.INT16).setScale(0.01).setBaseOffset(840);
+	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 14, FieldType.INT16).setScale(0.01).setBaseOffset(840);
+	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 16, FieldType.INT16).setScale(0.01).setBaseOffset(840);
+	public static final Field ALIGNMENTFILL_AT_18 = Field.create("ALIGNMENTFILL_AT_18", 18, FieldType.INT8).setScale(1.0).setBaseOffset(840);
+	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 20, FieldType.FLOAT).setBaseOffset(840);
+	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 24, FieldType.FLOAT).setBaseOffset(840);
+	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 28, FieldType.FLOAT).setBaseOffset(840);
 	public static final Field[] VALUES = {
 	BASEDWELL,
 	SPARKDWELL,
