@@ -135,12 +135,12 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 1
 
 	int16_t autoscale wastegatePositionSensor;@@GAUGE_NAME_WG_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	int16_t autoscale highFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_HIGH@@;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 	uint32_t tsConfigVersion;;"", 1, 0, 0, 0, 0
 
-	int16_t autoscale highFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_HIGH@@;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
 	! These two fields indicate to TS that we'd like to set a particular field to a particular value
 	! We use a maintainConstantValue in TS for each field we'd like to set, like this:
