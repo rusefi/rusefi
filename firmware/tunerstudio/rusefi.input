@@ -205,10 +205,6 @@ enable2ndByteCanID = false
 	gearCountArray = array, S08, [@@TCU_GEAR_COUNT@@], "Gear", 1, 0, -1, { @@TCU_GEAR_COUNT@@ - 2 }, 0, noMsqSave
 	solenoidCountArray = array, U08, [@@TCU_SOLENOID_COUNT@@], "Solenoid", 1, 0, 1, @@TCU_SOLENOID_COUNT@@, 0, noMsqSave
 
-; These are inverted (false = "Yes") so that they default to enabled
-	enableLogDebugChannels = bits, U08, [0:0], "Yes", "No"
-	enableLogErrorList = bits, U08, [0:0], "Yes", "No"
-
 ; wall of debug mode :)
 ; https://rusefi.com/wiki/index.php?title=Manual:Debug_fields
 ;											Alternator					TPS Acceleration						Idle										Engine Load Acc		Trigger Counters									VVT1 PID													Cranking						Ignition Timing		Fu Corr  VSS			SD Card	Knock								Wall Wetting			ETB PID						Executor																				InstantRpm											CJ125				CAN			MAP													TLE8888			Analog inputs 2												Start									ETB Autotune																												DYNO_VIEW	LOGIC_ANALYZER	Wideband				TCU					Lua					VVT2 PID						VVT3 PID						VVT4 PID
@@ -1916,7 +1912,6 @@ menuDialog = main
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
-		subMenu = datalogSettings,			"Datalogging"
 		subMenu = ioTest,					"Bench test"
 		subMenu = injTest,					"Injector test"
 		subMenu = engineTypeDialog,			"Popular vehicles"
@@ -4285,11 +4280,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Logic input channel 4",				logicAnalyzerPins4
 		field = ""
 		field = "Engine chart size",					engineChartSize
-
-	dialog = datalogSettings, "Datalogging Settings"
-		field = "#Disabling optional logging may increase update rate!"
-		field = "Log debug channels",					enableLogDebugChannels
-		field = "Log recent errors list",				enableLogErrorList
 
 				;			Racing Features->Launch Control
 	dialog = smLaunchControlWest, "Launch Control Settings"
