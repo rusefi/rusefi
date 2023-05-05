@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:06:50 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:13:12 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -249,9 +249,9 @@ public class TsOutputs {
 	public static final Field TCUDESIREDGEAR = Field.create("TCUDESIREDGEAR", 116, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field FLEXPERCENT = Field.create("FLEXPERCENT", 117, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field WASTEGATEPOSITIONSENSOR = Field.create("WASTEGATEPOSITIONSENSOR", 118, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TSCONFIGVERSION = Field.create("TSCONFIGVERSION", 120, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field HIGHFUELPRESSURE = Field.create("HIGHFUELPRESSURE", 124, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_126 = Field.create("ALIGNMENTFILL_AT_126", 126, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field HIGHFUELPRESSURE = Field.create("HIGHFUELPRESSURE", 120, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_122 = Field.create("ALIGNMENTFILL_AT_122", 122, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TSCONFIGVERSION = Field.create("TSCONFIGVERSION", 124, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field CALIBRATIONVALUE = Field.create("CALIBRATIONVALUE", 128, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field CALIBRATIONMODE = Field.create("CALIBRATIONMODE", 132, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLETARGETPOSITION = Field.create("IDLETARGETPOSITION", 133, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -747,9 +747,9 @@ public class TsOutputs {
 	TCUDESIREDGEAR,
 	FLEXPERCENT,
 	WASTEGATEPOSITIONSENSOR,
-	TSCONFIGVERSION,
 	HIGHFUELPRESSURE,
-	ALIGNMENTFILL_AT_126,
+	ALIGNMENTFILL_AT_122,
+	TSCONFIGVERSION,
 	CALIBRATIONVALUE,
 	CALIBRATIONMODE,
 	IDLETARGETPOSITION,

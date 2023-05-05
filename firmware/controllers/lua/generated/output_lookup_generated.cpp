@@ -253,12 +253,12 @@ float getOutputValueByName(const char *name) {
 // wastegatePositionSensor
 		case 53406649:
 			return engine->outputChannels.wastegatePositionSensor;
-// tsConfigVersion
-		case 1299611400:
-			return engine->outputChannels.tsConfigVersion;
 // highFuelPressure
 		case -1973799222:
 			return engine->outputChannels.highFuelPressure;
+// tsConfigVersion
+		case 1299611400:
+			return engine->outputChannels.tsConfigVersion;
 // calibrationValue
 		case -1560670902:
 			return engine->outputChannels.calibrationValue;

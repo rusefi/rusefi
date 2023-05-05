@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:06:50 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:13:12 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -492,21 +492,21 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 100, 1> wastegatePositionSensor = (int16_t)0;
 	/**
-	 * offset 120
-	 */
-	uint32_t tsConfigVersion = (uint32_t)0;
-	/**
 	 * @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@
 	bar
-	 * offset 124
+	 * offset 120
 	 */
 	scaled_channel<int16_t, 10, 1> highFuelPressure = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 126
+	 * offset 122
 	 */
-	uint8_t alignmentFill_at_126[2];
+	uint8_t alignmentFill_at_122[2];
+	/**
+	 * offset 124
+	 */
+	uint32_t tsConfigVersion = (uint32_t)0;
 	/**
 	 * offset 128
 	 */
@@ -1415,4 +1415,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:06:50 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:13:12 UTC 2023
