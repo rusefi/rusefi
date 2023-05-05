@@ -617,10 +617,6 @@ DcHardware *getdcHardware();
 	tsOutputChannels->mafMeasured2 = Sensor::getOrZero(SensorType::Maf2);
 	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;
 
-	// offset 116
-	// TPS acceleration
-	tsOutputChannels->deltaTpsValue = engine->tpsAccelEnrichment.getMaxDelta();
-
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
 	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;

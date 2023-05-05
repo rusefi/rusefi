@@ -104,6 +104,7 @@ Usages:
   - name: tps_accel_state
     java: TpsAccelState.java
     folder: controllers/algo
+    prepend: integration/rusefi_config_shared.txt
 
   - name: trigger_central
     java: TriggerCentral.java
