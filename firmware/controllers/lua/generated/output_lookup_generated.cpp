@@ -73,6 +73,12 @@ float getOutputValueByName(const char *name) {
 // isIdleClosedLoop
 		case 1473688883:
 			return engine->outputChannels.isIdleClosedLoop;
+// injectorFault
+		case 1608791711:
+			return engine->outputChannels.injectorFault;
+// ignitionFault
+		case -1158382750:
+			return engine->outputChannels.ignitionFault;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;

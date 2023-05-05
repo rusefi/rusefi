@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 01:46:17 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 02:21:13 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -47,7 +47,7 @@ struct output_channels_s {
 	offset 0 bit 3 */
 	bool antilagTriggered : 1 {};
 	/**
-	 * radiator fan
+	 * Radiator Fan
 	offset 0 bit 4 */
 	bool isFanOn : 1 {};
 	/**
@@ -60,77 +60,93 @@ struct output_channels_s {
 	offset 0 bit 7 */
 	bool needBurn : 1 {};
 	/**
+	 * SD is MSD
 	offset 0 bit 8 */
 	bool sd_msd : 1 {};
 	/**
+	 * Radiator Fan2
 	offset 0 bit 9 */
 	bool isFan2On : 1 {};
 	/**
 	offset 0 bit 10 */
 	bool unusedBitLAtwfs : 1 {};
 	/**
+	 * Tooth Logger Ready
 	offset 0 bit 11 */
 	bool toothLogReady : 1 {};
 	/**
+	 * Error: TPS
 	offset 0 bit 12 */
 	bool isTpsError : 1 {};
 	/**
+	 * Error: CLT
 	offset 0 bit 13 */
 	bool isCltError : 1 {};
 	/**
+	 * Error: MAP
 	offset 0 bit 14 */
 	bool isMapError : 1 {};
 	/**
+	 * Error: IAT
 	offset 0 bit 15 */
 	bool isIatError : 1 {};
 	/**
+	 * Error: Trigger
 	offset 0 bit 16 */
 	bool isTriggerError : 1 {};
 	/**
+	 * Error, Critical: ECM
 	offset 0 bit 17 */
 	bool hasCriticalError : 1 {};
 	/**
+	 * Warning: ECM
 	offset 0 bit 18 */
 	bool isWarnNow : 1 {};
 	/**
+	 * Error: Pedal
 	offset 0 bit 19 */
 	bool isPedalError : 1 {};
 	/**
 	offset 0 bit 20 */
 	bool isKnockChipOk : 1 {};
 	/**
+	 * Launch Control Triggered
 	offset 0 bit 21 */
 	bool launchTriggered : 1 {};
 	/**
+	 * Error: TPS2
 	offset 0 bit 22 */
 	bool isTps2Error : 1 {};
 	/**
+	 * Closed Loop Idle
 	offset 0 bit 23 */
 	bool isIdleClosedLoop : 1 {};
 	/**
+	 * Injector Fault
 	offset 0 bit 24 */
-	bool unusedBit_24_24 : 1 {};
+	bool injectorFault : 1 {};
 	/**
+	 * Ignition Fault
 	offset 0 bit 25 */
-	bool unusedBit_24_25 : 1 {};
+	bool ignitionFault : 1 {};
 	/**
 	offset 0 bit 26 */
-	bool unusedBit_24_26 : 1 {};
+	bool unusedBit_26_26 : 1 {};
 	/**
 	offset 0 bit 27 */
-	bool unusedBit_24_27 : 1 {};
+	bool unusedBit_26_27 : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool unusedBit_24_28 : 1 {};
+	bool unusedBit_26_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_24_29 : 1 {};
+	bool unusedBit_26_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_24_30 : 1 {};
+	bool unusedBit_26_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_24_31 : 1 {};
+	bool unusedBit_26_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	RPM
@@ -1442,4 +1458,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 812);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 01:46:17 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 02:21:13 UTC 2023

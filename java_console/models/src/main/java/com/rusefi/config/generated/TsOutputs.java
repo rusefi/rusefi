@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 01:46:17 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 02:21:13 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -189,6 +189,8 @@ public class TsOutputs {
 	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 0, FieldType.BIT, 23).setBaseOffset(0);
+	public static final Field INJECTORFAULT = Field.create("INJECTORFAULT", 0, FieldType.BIT, 24).setBaseOffset(0);
+	public static final Field IGNITIONFAULT = Field.create("IGNITIONFAULT", 0, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -693,6 +695,8 @@ public class TsOutputs {
 	LAUNCHTRIGGERED,
 	ISTPS2ERROR,
 	ISIDLECLOSEDLOOP,
+	INJECTORFAULT,
+	IGNITIONFAULT,
 	RPMVALUE,
 	RPMACCELERATION,
 	SPEEDTORPMRATIO,
