@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu May 04 23:56:50 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri May 05 00:38:43 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -415,8 +415,8 @@ public class Fields {
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
-	public static final String GAUGE_NAME_BOOST_CLOSED_LOOP = "Boost: Closed Loop";
-	public static final String GAUGE_NAME_BOOST_OPEN_LOOP = "Boost: Open Loop";
+	public static final String GAUGE_NAME_BOOST_CLOSED_LOOP = "Boost: Closed loop";
+	public static final String GAUGE_NAME_BOOST_OPEN_LOOP = "Boost: Open loop";
 	public static final String GAUGE_NAME_BOOST_OUTPUT = "Boost: Output";
 	public static final String GAUGE_NAME_BOOST_TARGET = "Boost: Target";
 	public static final String GAUGE_NAME_CLT = "CLT";
@@ -1017,7 +1017,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1438182648;
+	public static final int SIGNATURE_HASH = 1968862112;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1241,7 +1241,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.05.f407-discovery.1438182648";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.05.f407-discovery.1968862112";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1428;

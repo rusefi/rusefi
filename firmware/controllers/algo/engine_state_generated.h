@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Jan 15 04:27:57 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri May 05 00:37:54 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,10 +6,13 @@
 // start of LuaAdjustments
 struct LuaAdjustments {
 	/**
+	 * Lua: Fuel add
+	g
 	 * offset 0
 	 */
 	float fuelAdd = (float)0;
 	/**
+	 * Lua: Fuel mult
 	 * offset 4
 	 */
 	float fuelMult = (float)0;
@@ -378,4 +381,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 120);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Jan 15 04:27:57 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri May 05 00:37:54 UTC 2023

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Thu May 04 23:56:00 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Fri May 05 00:37:54 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -34,8 +34,8 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
-	public static final String GAUGE_NAME_BOOST_CLOSED_LOOP = "Boost: Closed Loop";
-	public static final String GAUGE_NAME_BOOST_OPEN_LOOP = "Boost: Open Loop";
+	public static final String GAUGE_NAME_BOOST_CLOSED_LOOP = "Boost: Closed loop";
+	public static final String GAUGE_NAME_BOOST_OPEN_LOOP = "Boost: Open loop";
 	public static final String GAUGE_NAME_BOOST_OUTPUT = "Boost: Output";
 	public static final String GAUGE_NAME_BOOST_TARGET = "Boost: Target";
 	public static final String GAUGE_NAME_CLT = "CLT";

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Wed Apr 12 19:28:25 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Fri May 05 00:37:54 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -68,13 +68,13 @@ struct ignition_state_s {
 	 */
 	float dwellVoltageCorrection = (float)0;
 	/**
-	 * "Ignition: Lua add"
+	 * Ign: Lua timing add
 	deg
 	 * offset 28
 	 */
 	float luaTimingAdd = (float)0;
 	/**
-	 * "Ignition: Lua mult"
+	 * Ign: Lua timing mult
 	deg
 	 * offset 32
 	 */
@@ -88,4 +88,4 @@ struct ignition_state_s {
 static_assert(sizeof(ignition_state_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Wed Apr 12 19:28:25 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Fri May 05 00:37:54 UTC 2023
