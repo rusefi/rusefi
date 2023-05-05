@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:13:12 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:44:59 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -329,6 +329,7 @@ struct output_channels_s {
 	 */
 	uint16_t revolutionCounterSinceStart = (uint16_t)0;
 	/**
+	 * CAN: Rx
 	 * offset 60
 	 */
 	uint16_t canReadCounter = (uint16_t)0;
@@ -713,6 +714,7 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 50, 1> vvtPositionB2E = (int16_t)0;
 	/**
+	 * Fuel: Trim bank
 	%
 	 * offset 266
 	 */
@@ -782,13 +784,13 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
 	/**
-	 * Spark Cut Code
+	 * Ign: Cut Code
 	code
 	 * offset 296
 	 */
 	int8_t sparkCutReason = (int8_t)0;
 	/**
-	 * Fuel Cut Code
+	 * Fuel: Cut Code
 	code
 	 * offset 297
 	 */
@@ -941,7 +943,7 @@ struct output_channels_s {
 	 */
 	uint8_t testBenchIter = (uint8_t)0;
 	/**
-	 * "Current Range"
+	 * "TCU: Current Range"
 	 * offset 325
 	 */
 	uint8_t tcu_currentRange = (uint8_t)0;
@@ -1086,10 +1088,12 @@ struct output_channels_s {
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
+	 * CAN: Tx OK
 	 * offset 354
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
+	 * CAN: Tx err
 	 * offset 356
 	 */
 	uint16_t canWriteNotOk = (uint16_t)0;
@@ -1415,4 +1419,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:13:12 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:44:59 UTC 2023

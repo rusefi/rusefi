@@ -454,7 +454,7 @@
 #define GAUGE_NAME_DEBUG_I3 "debug i3"
 #define GAUGE_NAME_DEBUG_I4 "debug i4"
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
-#define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
+#define GAUGE_NAME_DESIRED_GEAR "TCU: Desired Gear"
 #define GAUGE_NAME_DETECTED_GEAR "Detected Gear"
 #define GAUGE_NAME_DWELL_DUTY "Ign: Coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
@@ -497,7 +497,7 @@
 #define GAUGE_NAME_IGNITION_MODE "Ign: Mode"
 #define GAUGE_NAME_INJECTION_MODE "Fuel: Injection mode"
 #define GAUGE_NAME_INJECTOR_LAG "Fuel: injector lag"
-#define GAUGE_NAME_ISS "Input Shaft Speed"
+#define GAUGE_NAME_ISS "TCU: Input Shaft Speed"
 #define GAUGE_NAME_KNOCK_1 "knock 1"
 #define GAUGE_NAME_KNOCK_10 "knock 10"
 #define GAUGE_NAME_KNOCK_11 "knock 11"
@@ -525,7 +525,7 @@
 #define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_TARGET_AFR "Fuel: target AFR"
 #define GAUGE_NAME_TARGET_LAMBDA "Fuel: target lambda"
-#define GAUGE_NAME_TC_RATIO "Torque Converter Ratio"
+#define GAUGE_NAME_TC_RATIO "TCU: Torque Converter Ratio"
 #define GAUGE_NAME_TCHARGE "Air: SD tCharge"
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_TIME "Time"
@@ -1075,7 +1075,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 632788415
+#define SIGNATURE_HASH 587609304
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1366,7 +1366,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.05.05.cypress.632788415"
+#define TS_SIGNATURE "rusEFI master.2023.05.05.cypress.587609304"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
