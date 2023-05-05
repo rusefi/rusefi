@@ -1,10 +1,10 @@
 struct_no_prefix wideband_state_s
-	uint8_t faultCode
+	uint8_t faultCode;WB: Fault code
 
-	uint8_t heaterDuty;;"%", 1, 0, 0, 100, 0
-	uint8_t pumpDuty;;"%", 1, 0, 0, 100, 0
+	uint8_t heaterDuty;WB: Heater duty;"%", 1, 0, 0, 100, 0
+	uint8_t pumpDuty;WB: Pump duty;"%", 1, 0, 0, 100, 0
 
-	uint16_t tempC;;"C", 1, 0, 500, 1000, 0
-	uint16_t autoscale nernstVoltage;;"V", 0.001, 0, 0, 1, 3
-	uint16_t esr
+	uint16_t tempC;WB: Temperature;"C", 1, 0, 500, 1000, 0
+	uint16_t autoscale nernstVoltage;WB: Nernst Voltage;"V", 0.001, 0, 0, 1, 3
+	uint16_t esr;WB: ESR;"ohm", 1, 0, 0, 10000, 0
 end_struct
