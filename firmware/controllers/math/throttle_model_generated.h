@@ -1,6 +1,7 @@
 #pragma once
 #include "rusefi_types.h"
 struct throttle_model_s {
+	// Air: Throttle model WOT
 	// offset 0 bit 0
 	bool throttleUseWotModel : 1 {};
 
@@ -97,6 +98,7 @@ struct throttle_model_s {
 	// offset 0 bit 31
 	bool unusedBit_1_31 : 1 {};
 
+	// Air: Throttle crossover pos
 	// %
 	// offset 4
 	scaled_channel<int16_t, 100, 1> throttleModelCrossoverAngle = (int16_t)0;
@@ -106,6 +108,7 @@ struct throttle_model_s {
 	// offset 6
 	uint8_t alignmentFill_at_6[2];
 
+	// Air: Throttle flow estimate
 	// g/s
 	// offset 8
 	float throttleEstimatedFlow = (float)0;

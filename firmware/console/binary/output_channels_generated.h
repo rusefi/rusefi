@@ -86,11 +86,11 @@ struct output_channels_s {
 	// offset 0 bit 16
 	bool isTriggerError : 1 {};
 
-	// Error, Critical: ECM
+	// Error, Error: Active
 	// offset 0 bit 17
 	bool hasCriticalError : 1 {};
 
-	// Warning: ECM
+	// Warning: Active
 	// offset 0 bit 18
 	bool isWarnNow : 1 {};
 

@@ -389,10 +389,10 @@ public class Fields {
 	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
-	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "MAF estimate";
+	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "Air: Flow estimate";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF #2";
-	public static final String GAUGE_NAME_AIR_MASS = "air mass";
+	public static final String GAUGE_NAME_AIR_MASS = "Air: Cylinder airmass";
 	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux linear #1";
 	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux linear #2";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
@@ -454,7 +454,7 @@ public class Fields {
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
-	public static final String GAUGE_NAME_IDLE_POSITION = "Idle position sensor";
+	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
 	public static final String GAUGE_NAME_IGNITION_LOAD = "Ign: Load";
 	public static final String GAUGE_NAME_IGNITION_MODE = "Ign: Mode";
 	public static final String GAUGE_NAME_INJECTION_MODE = "Fuel: Injection mode";
@@ -475,7 +475,7 @@ public class Fields {
 	public static final String GAUGE_NAME_TARGET_AFR = "Fuel: target AFR";
 	public static final String GAUGE_NAME_TARGET_LAMBDA = "Fuel: target lambda";
 	public static final String GAUGE_NAME_TC_RATIO = "TCU: Torque Converter Ratio";
-	public static final String GAUGE_NAME_TCHARGE = "Fuel: SD tCharge";
+	public static final String GAUGE_NAME_TCHARGE = "Air: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "Ign: Timing";
@@ -497,9 +497,8 @@ public class Fields {
 	public static final String GAUGE_NAME_VVT_TARGET_B1I = "VVT: bank 1 intake target";
 	public static final String GAUGE_NAME_VVT_TARGET_B2E = "VVT: bank 2 exhaust target";
 	public static final String GAUGE_NAME_VVT_TARGET_B2I = "VVT: bank 2 intake target";
-	public static final String GAUGE_NAME_WARNING_COUNT = "Warning count";
-	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
-	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
+	public static final String GAUGE_NAME_WARNING_COUNTER = "Warning: counter";
+	public static final String GAUGE_NAME_WARNING_LAST = "Warning: last";
 	public static final String GAUGE_NAME_WG_POSITION = "Wastegate position sensor";
 	public static final int gear_e_GEAR_1 = 1;
 	public static final int gear_e_GEAR_2 = 2;
@@ -982,6 +981,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 538888220;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1185,10 +1185,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.05.05.f407-discovery.3837182406";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.05.05.f407-discovery.538888220";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1392;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1364;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;

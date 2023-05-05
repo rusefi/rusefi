@@ -20,10 +20,10 @@ public class BoostControl {
 	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
-	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "MAF estimate";
+	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "Air: Flow estimate";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF #2";
-	public static final String GAUGE_NAME_AIR_MASS = "air mass";
+	public static final String GAUGE_NAME_AIR_MASS = "Air: Cylinder airmass";
 	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux linear #1";
 	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux linear #2";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
@@ -85,7 +85,7 @@ public class BoostControl {
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
-	public static final String GAUGE_NAME_IDLE_POSITION = "Idle position sensor";
+	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
 	public static final String GAUGE_NAME_IGNITION_LOAD = "Ign: Load";
 	public static final String GAUGE_NAME_IGNITION_MODE = "Ign: Mode";
 	public static final String GAUGE_NAME_INJECTION_MODE = "Fuel: Injection mode";
@@ -106,7 +106,7 @@ public class BoostControl {
 	public static final String GAUGE_NAME_TARGET_AFR = "Fuel: target AFR";
 	public static final String GAUGE_NAME_TARGET_LAMBDA = "Fuel: target lambda";
 	public static final String GAUGE_NAME_TC_RATIO = "TCU: Torque Converter Ratio";
-	public static final String GAUGE_NAME_TCHARGE = "Fuel: SD tCharge";
+	public static final String GAUGE_NAME_TCHARGE = "Air: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "Ign: Timing";
@@ -128,9 +128,8 @@ public class BoostControl {
 	public static final String GAUGE_NAME_VVT_TARGET_B1I = "VVT: bank 1 intake target";
 	public static final String GAUGE_NAME_VVT_TARGET_B2E = "VVT: bank 2 exhaust target";
 	public static final String GAUGE_NAME_VVT_TARGET_B2I = "VVT: bank 2 intake target";
-	public static final String GAUGE_NAME_WARNING_COUNT = "Warning count";
-	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
-	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
+	public static final String GAUGE_NAME_WARNING_COUNTER = "Warning: counter";
+	public static final String GAUGE_NAME_WARNING_LAST = "Warning: last";
 	public static final String GAUGE_NAME_WG_POSITION = "Wastegate position sensor";
 	public static final int GEARS_COUNT = 8;
 	public static final int IGN_BLEND_COUNT = 4;
