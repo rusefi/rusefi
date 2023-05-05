@@ -512,12 +512,6 @@ static void updateFuelCorrections() {
 }
 
 static void updateFuelResults() {
-	// todo: kill outputChannel while taking care of gauge name and scale!
-	engine->outputChannels.chargeAirMass = engine->fuelComputer.sdAirMassInOneCylinder;
-
-	engine->outputChannels.baseFuel = engine->engineState.baseFuel * 1000;	// Convert grams to mg
-	engine->outputChannels.fuelRunning = engine->fuelComputer.running.fuel;
-
 	engine->outputChannels.fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 	engine->outputChannels.totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
 }
@@ -533,8 +527,6 @@ static void updateFuelInfo() {
 	engine->outputChannels.injectionOffset = engine->engineState.injectionOffset;
 
 	engine->outputChannels.veValue = engine->engineState.currentVe;
-
-	engine->outputChannels.crankingFuelMs = engine->engineState.crankingFuel.fuel;
 }
 
 static void updateIgnition(int rpm) {

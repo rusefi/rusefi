@@ -31,8 +31,6 @@ fuel_Map3D_t veMap;
 #define tpMax 100
 
 float IFuelComputer::getTChargeCoefficient(int rpm, float tps) {
-	sdIsTChargeAirModel = engineConfiguration->tChargeMode == TCHARGE_MODE_AIR_INTERP;
-
 	// First, do TPS mode since it doesn't need any of the airflow math.
 	if (engineConfiguration->tChargeMode == TCHARGE_MODE_RPM_TPS) {
 		float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin,

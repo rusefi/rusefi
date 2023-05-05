@@ -39,10 +39,8 @@ static mapEstimate_Map3D_t mapEstimationTable;
 
 #if EFI_ENGINE_CONTROL
 
-float getCrankingFuel3(
-	float baseFuel,
-		uint32_t revolutionCounterSinceStart) {
-	// these magic constants are in Celsius
+float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
+
 	float baseCrankingFuel;
 	if (engineConfiguration->useRunningMathForCranking) {
 		baseCrankingFuel = baseFuel;
@@ -50,9 +48,8 @@ float getCrankingFuel3(
 		// parameter is in milligrams, convert to grams
 		baseCrankingFuel = engineConfiguration->cranking.baseFuel * 0.001f;
 	}
-	/**
-	 * Cranking fuel changes over time
-	 */
+
+	// Cranking fuel changes over time
 	engine->engineState.crankingFuel.durationCoefficient = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef);
 
@@ -113,21 +110,16 @@ float getCrankingFuel3(
 float getRunningFuel(float baseFuel) {
 	ScopePerf perf(PE::GetRunningFuel);
 
-	engine->fuelComputer.running.baseFuel = baseFuel;
-
 	float iatCorrection = engine->fuelComputer.running.intakeTemperatureCoefficient;
-
 	float cltCorrection = engine->fuelComputer.running.coolantTemperatureCoefficient;
-
 	float postCrankingFuelCorrection = engine->fuelComputer.running.postCrankingFuelCorrection;
-
 	float baroCorrection = engine->engineState.baroCorrection;
 
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
-    float correction = baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
+	float correction = baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
 
 #if EFI_ANTILAG_SYSTEM
 	correction *= (1 + engine->antilagController.fuelALSCorrection / 100);
@@ -137,12 +129,13 @@ float getRunningFuel(float baseFuel) {
 	correction *= engine->launchController.getFuelCoefficient();
 #endif
 
-    engine->fuelComputer.totalFuelCorrection = correction;
-
 	float runningFuel = baseFuel * correction;
 
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
 
+	// Publish output state
+	engine->fuelComputer.running.baseFuel = baseFuel * 1000;
+	engine->fuelComputer.totalFuelCorrection = correction;
 	engine->fuelComputer.running.fuel = runningFuel * 1000;
 
 	return runningFuel;
