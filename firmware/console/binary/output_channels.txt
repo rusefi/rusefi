@@ -222,22 +222,22 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0
 
 ! fun fact: we have a separate pid_state.txt file for a bit of a different structure huh?
-    struct pid_status_s
-    	float pTerm;;"", 1, 0, -50000, 50000, 2
-    	int16_t autoscale iTerm;;"", 0.01, 0, -327, 327, 2
-    	int16_t autoscale dTerm;;"", 0.01, 0, -327, 327, 2
-    	int16_t autoscale output;;"", 0.01, 0, -327, 327, 2
-    	int16_t autoscale error;;"", 0.01, 0, -327, 327, 2
-    	uint32_t resetCounter;;"", 1, 0, 0, 10000, 0
-    end_struct
+	struct pid_status_s
+		float pTerm;;"", 1, 0, -50000, 50000, 2
+		int16_t autoscale iTerm;;"", 0.01, 0, -327, 327, 2
+		int16_t autoscale dTerm;;"", 0.01, 0, -327, 327, 2
+		int16_t autoscale output;;"", 0.01, 0, -327, 327, 2
+		int16_t autoscale error;;"", 0.01, 0, -327, 327, 2
+		uint32_t resetCounter;;"", 1, 0, 0, 10000, 0
+	end_struct
 
 	int16_t autoscale tps1Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale tps2Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale tps12Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale accPedalSplit;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
-    int8_t sparkCutReason;Ign: Cut Code;"code",1, 0, 0, 0, 0
-    int8_t fuelCutReason;Fuel: Cut Code;"code",1, 0, 0, 0, 0
+	int8_t sparkCutReason;Ign: Cut Code;"code",1, 0, 0, 0, 0
+	int8_t fuelCutReason;Fuel: Cut Code;"code",1, 0, 0, 0, 0
 
 	uint16_t autoscale mafEstimate;@@GAUGE_NAME_AIR_FLOW_ESTIMATE@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
 	uint16_t instantRpm;sync: instant RPM;"rpm", 1, 0, 0, 0, 0
@@ -246,20 +246,20 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint16_t autoscale rawAfr;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	float calibrationValue2;;"", 1, 0, 0, 0, 0
-    bit isMainRelayOn;
-    bit isUsbConnected;isUsbConnected\nOriginal reason for this is to check if USB is connected from Lua
+	bit isMainRelayOn;
+	bit isUsbConnected;isUsbConnected\nOriginal reason for this is to check if USB is connected from Lua
 
-    uint32_t luaInvocationCounter;Lua: Tick counter;"count",1, 0, 0, 0, 0
-    uint32_t luaLastCycleDuration;Lua: Last tick duration;"nt",1, 0, 0, 0, 0
-    uint8_t testBenchIter;;"count",1, 0, 0, 0, 0
+	uint32_t luaInvocationCounter;Lua: Tick counter;"count",1, 0, 0, 0, 0
+	uint32_t luaLastCycleDuration;Lua: Last tick duration;"nt",1, 0, 0, 0, 0
+	uint8_t testBenchIter;;"count",1, 0, 0, 0, 0
 
 	uint8_t tcu_currentRange;"TCU: Current Range";"", 1, 0, 0, 0, 0
 
 	uint16_t autoscale tcRatio;@@GAUGE_NAME_TC_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	float lastShiftTime
 
-    uint32_t vssEdgeCounter
-    uint32_t issEdgeCounter
+	uint32_t vssEdgeCounter
+	uint32_t issEdgeCounter
 
 	int16_t autoscale auxLinear1;@@GAUGE_NAME_AUX_LINEAR_1@@;"", 0.01, 0, 0, 0, 2
 	int16_t autoscale auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 0.01, 0, 0, 0, 2
@@ -270,10 +270,10 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 655, 2
 
-    uint16_t maxLockedDuration;;"us", 1, 0, 0, 65535, 0
+	uint16_t maxLockedDuration;;"us", 1, 0, 0, 65535, 0
 
-    uint16_t canWriteOk;CAN: Tx OK;"", 1, 0, -10000, 10000, 3
-    uint16_t canWriteNotOk;CAN: Tx err;"", 1, 0, -10000, 10000, 3
+	uint16_t canWriteOk;CAN: Tx OK;"", 1, 0, -10000, 10000, 3
+	uint16_t canWriteNotOk;CAN: Tx err;"", 1, 0, -10000, 10000, 3
 
     uint32_t triggerPrimaryFall;;"", 1, 0, -10000, 10000, 3
     uint32_t triggerPrimaryRise;;"", 1, 0, -10000, 10000, 3
@@ -285,9 +285,9 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
     uint16_t triggerVvt2Rise;;"", 1, 0, 0, 3000, 0, @@GAUGE_CATEGORY_SYNC@@
 
 
-    uint8_t starterState;;"", 1, 0, -10000, 10000, 3
-    uint8_t starterRelayDisable;;"", 1, 0, -10000, 10000, 3
-    uint8_t multiSparkCounter;Ign: Multispark count;"", 1, 0, -10000, 10000, 3
+	uint8_t starterState;;"", 1, 0, -10000, 10000, 3
+	uint8_t starterRelayDisable;;"", 1, 0, -10000, 10000, 3
+	uint8_t multiSparkCounter;Ign: Multispark count;"", 1, 0, -10000, 10000, 3
 
 	uint8_t extiOverflowCount;;"", 1, 0, 0, 255, 0
 
