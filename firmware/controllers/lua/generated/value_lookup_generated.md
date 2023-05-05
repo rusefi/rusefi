@@ -1567,3 +1567,6 @@ Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then wh
 ### benchTestOffTime
 Time between bench test pulses
 
+### boostCutPressureHyst
+Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached
+
