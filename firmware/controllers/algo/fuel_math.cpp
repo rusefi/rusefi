@@ -129,6 +129,8 @@ float getRunningFuel(float baseFuel) {
 	correction *= engine->launchController.getFuelCoefficient();
 #endif
 
+	correction *= getLimpManager()->getLimitingFuelCorrection();
+
 	float runningFuel = baseFuel * correction;
 
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
