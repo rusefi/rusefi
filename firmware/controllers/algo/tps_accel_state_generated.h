@@ -1,12 +1,15 @@
 #pragma once
 #include "rusefi_types.h"
 struct tps_accel_state_s {
+	// Fuel: TPS AE from
 	// offset 0
 	percent_t tpsFrom = (percent_t)0;
 
+	// Fuel: TPS AE to
 	// offset 4
 	percent_t tpsTo = (percent_t)0;
 
+	// Fuel: TPS AE change
 	// offset 8
 	percent_t deltaTps = (percent_t)0;
 
@@ -16,6 +19,7 @@ struct tps_accel_state_s {
 	// offset 16
 	float valueFromTable = (float)0;
 
+	// Fuel: TPS AE Active
 	// offset 20 bit 0
 	bool isAboveAccelThreshold : 1 {};
 

@@ -287,77 +287,77 @@ struct output_channels_s {
 	// offset 58
 	uint16_t revolutionCounterSinceStart = (uint16_t)0;
 
-	// @@GAUGE_NAME_FUEL_TPS_ROC@@
-	// ratio
-	// offset 60
-	scaled_channel<int16_t, 100, 1> deltaTpsValue = (int16_t)0;
-
 	// CAN: Rx
-	// offset 62
+	// offset 60
 	uint16_t canReadCounter = (uint16_t)0;
 
 	// @@GAUGE_NAME_FUEL_TPS_EXTRA@@
 	// ms
-	// offset 64
+	// offset 62
 	scaled_channel<int16_t, 300, 1> tpsAccelFuel = (int16_t)0;
 
 	// @@GAUGE_NAME_TIMING_ADVANCE@@
 	// deg
-	// offset 66
+	// offset 64
 	scaled_channel<int16_t, 50, 1> ignitionAdvance = (int16_t)0;
 
 	// @@GAUGE_NAME_IGNITION_MODE@@
-	// offset 68
+	// offset 66
 	uint8_t currentIgnitionMode = (uint8_t)0;
 
 	// @@GAUGE_NAME_INJECTION_MODE@@
-	// offset 69
+	// offset 67
 	uint8_t currentInjectionMode = (uint8_t)0;
 
 	// @@GAUGE_NAME_DWELL_DUTY@@
 	// %
-	// offset 70
+	// offset 68
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 
 	// @@GAUGE_NAME_IAC@@
 	// %
-	// offset 72
+	// offset 70
 	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
 
 	// ETB Target
 	// %
-	// offset 74
+	// offset 72
 	scaled_channel<int16_t, 100, 1> etbTarget = (int16_t)0;
 
 	// @@GAUGE_NAME_ETB_DUTY@@
 	// %
-	// offset 76
+	// offset 74
 	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 
 	// Fuel level
 	// %
-	// offset 78
+	// offset 76
 	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
 
 	// @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	// grams
-	// offset 80
+	// offset 78
 	uint16_t totalFuelConsumption = (uint16_t)0;
 
 	// @@GAUGE_NAME_FUEL_FLOW@@
 	// gram/s
-	// offset 82
+	// offset 80
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
 
 	// @@GAUGE_NAME_TPS2@@
 	// %
-	// offset 84
+	// offset 82
 	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
 
 	// @@GAUGE_NAME_TUNE_CRC16@@
 	// crc16
-	// offset 86
+	// offset 84
 	uint16_t tuneCrc16 = (uint16_t)0;
+
+	// need 4 byte alignment
+	// units
+	// offset 86
+	uint8_t alignmentFill_at_86[2];
 
 	// @@GAUGE_NAME_KNOCK_LEVEL@@
 	// Volts
@@ -685,15 +685,10 @@ struct output_channels_s {
 	// offset 304
 	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
 
-	// Fuel: TPS AE From
-	// %
+	// need 4 byte alignment
+	// units
 	// offset 306
-	uint8_t tpsAccelFrom = (uint8_t)0;
-
-	// Fuel: TPS AE To
-	// %
-	// offset 307
-	uint8_t tpsAccelTo = (uint8_t)0;
+	uint8_t alignmentFill_at_306[2];
 
 	// offset 308
 	float calibrationValue2 = (float)0;
@@ -707,94 +702,94 @@ struct output_channels_s {
 	bool isUsbConnected : 1 {};
 
 	// offset 312 bit 2
-	bool unusedBit_158_2 : 1 {};
+	bool unusedBit_157_2 : 1 {};
 
 	// offset 312 bit 3
-	bool unusedBit_158_3 : 1 {};
+	bool unusedBit_157_3 : 1 {};
 
 	// offset 312 bit 4
-	bool unusedBit_158_4 : 1 {};
+	bool unusedBit_157_4 : 1 {};
 
 	// offset 312 bit 5
-	bool unusedBit_158_5 : 1 {};
+	bool unusedBit_157_5 : 1 {};
 
 	// offset 312 bit 6
-	bool unusedBit_158_6 : 1 {};
+	bool unusedBit_157_6 : 1 {};
 
 	// offset 312 bit 7
-	bool unusedBit_158_7 : 1 {};
+	bool unusedBit_157_7 : 1 {};
 
 	// offset 312 bit 8
-	bool unusedBit_158_8 : 1 {};
+	bool unusedBit_157_8 : 1 {};
 
 	// offset 312 bit 9
-	bool unusedBit_158_9 : 1 {};
+	bool unusedBit_157_9 : 1 {};
 
 	// offset 312 bit 10
-	bool unusedBit_158_10 : 1 {};
+	bool unusedBit_157_10 : 1 {};
 
 	// offset 312 bit 11
-	bool unusedBit_158_11 : 1 {};
+	bool unusedBit_157_11 : 1 {};
 
 	// offset 312 bit 12
-	bool unusedBit_158_12 : 1 {};
+	bool unusedBit_157_12 : 1 {};
 
 	// offset 312 bit 13
-	bool unusedBit_158_13 : 1 {};
+	bool unusedBit_157_13 : 1 {};
 
 	// offset 312 bit 14
-	bool unusedBit_158_14 : 1 {};
+	bool unusedBit_157_14 : 1 {};
 
 	// offset 312 bit 15
-	bool unusedBit_158_15 : 1 {};
+	bool unusedBit_157_15 : 1 {};
 
 	// offset 312 bit 16
-	bool unusedBit_158_16 : 1 {};
+	bool unusedBit_157_16 : 1 {};
 
 	// offset 312 bit 17
-	bool unusedBit_158_17 : 1 {};
+	bool unusedBit_157_17 : 1 {};
 
 	// offset 312 bit 18
-	bool unusedBit_158_18 : 1 {};
+	bool unusedBit_157_18 : 1 {};
 
 	// offset 312 bit 19
-	bool unusedBit_158_19 : 1 {};
+	bool unusedBit_157_19 : 1 {};
 
 	// offset 312 bit 20
-	bool unusedBit_158_20 : 1 {};
+	bool unusedBit_157_20 : 1 {};
 
 	// offset 312 bit 21
-	bool unusedBit_158_21 : 1 {};
+	bool unusedBit_157_21 : 1 {};
 
 	// offset 312 bit 22
-	bool unusedBit_158_22 : 1 {};
+	bool unusedBit_157_22 : 1 {};
 
 	// offset 312 bit 23
-	bool unusedBit_158_23 : 1 {};
+	bool unusedBit_157_23 : 1 {};
 
 	// offset 312 bit 24
-	bool unusedBit_158_24 : 1 {};
+	bool unusedBit_157_24 : 1 {};
 
 	// offset 312 bit 25
-	bool unusedBit_158_25 : 1 {};
+	bool unusedBit_157_25 : 1 {};
 
 	// offset 312 bit 26
-	bool unusedBit_158_26 : 1 {};
+	bool unusedBit_157_26 : 1 {};
 
 	// offset 312 bit 27
-	bool unusedBit_158_27 : 1 {};
+	bool unusedBit_157_27 : 1 {};
 
 	// offset 312 bit 28
-	bool unusedBit_158_28 : 1 {};
+	bool unusedBit_157_28 : 1 {};
 
 	// offset 312 bit 29
-	bool unusedBit_158_29 : 1 {};
+	bool unusedBit_157_29 : 1 {};
 
 	// offset 312 bit 30
-	bool unusedBit_158_30 : 1 {};
+	bool unusedBit_157_30 : 1 {};
 
 	// offset 312 bit 31
-	bool unusedBit_158_31 : 1 {};
+	bool unusedBit_157_31 : 1 {};
 
 	// Lua: Tick counter
 	// count
@@ -840,97 +835,97 @@ struct output_channels_s {
 	bool dfcoActive : 1 {};
 
 	// offset 344 bit 1
-	bool tpsAccelActive : 1 {};
+	bool unusedBit_198_1 : 1 {};
 
 	// offset 344 bit 2
-	bool unusedBit_200_2 : 1 {};
+	bool unusedBit_198_2 : 1 {};
 
 	// offset 344 bit 3
-	bool unusedBit_200_3 : 1 {};
+	bool unusedBit_198_3 : 1 {};
 
 	// offset 344 bit 4
-	bool unusedBit_200_4 : 1 {};
+	bool unusedBit_198_4 : 1 {};
 
 	// offset 344 bit 5
-	bool unusedBit_200_5 : 1 {};
+	bool unusedBit_198_5 : 1 {};
 
 	// offset 344 bit 6
-	bool unusedBit_200_6 : 1 {};
+	bool unusedBit_198_6 : 1 {};
 
 	// offset 344 bit 7
-	bool unusedBit_200_7 : 1 {};
+	bool unusedBit_198_7 : 1 {};
 
 	// offset 344 bit 8
-	bool unusedBit_200_8 : 1 {};
+	bool unusedBit_198_8 : 1 {};
 
 	// offset 344 bit 9
-	bool unusedBit_200_9 : 1 {};
+	bool unusedBit_198_9 : 1 {};
 
 	// offset 344 bit 10
-	bool unusedBit_200_10 : 1 {};
+	bool unusedBit_198_10 : 1 {};
 
 	// offset 344 bit 11
-	bool unusedBit_200_11 : 1 {};
+	bool unusedBit_198_11 : 1 {};
 
 	// offset 344 bit 12
-	bool unusedBit_200_12 : 1 {};
+	bool unusedBit_198_12 : 1 {};
 
 	// offset 344 bit 13
-	bool unusedBit_200_13 : 1 {};
+	bool unusedBit_198_13 : 1 {};
 
 	// offset 344 bit 14
-	bool unusedBit_200_14 : 1 {};
+	bool unusedBit_198_14 : 1 {};
 
 	// offset 344 bit 15
-	bool unusedBit_200_15 : 1 {};
+	bool unusedBit_198_15 : 1 {};
 
 	// offset 344 bit 16
-	bool unusedBit_200_16 : 1 {};
+	bool unusedBit_198_16 : 1 {};
 
 	// offset 344 bit 17
-	bool unusedBit_200_17 : 1 {};
+	bool unusedBit_198_17 : 1 {};
 
 	// offset 344 bit 18
-	bool unusedBit_200_18 : 1 {};
+	bool unusedBit_198_18 : 1 {};
 
 	// offset 344 bit 19
-	bool unusedBit_200_19 : 1 {};
+	bool unusedBit_198_19 : 1 {};
 
 	// offset 344 bit 20
-	bool unusedBit_200_20 : 1 {};
+	bool unusedBit_198_20 : 1 {};
 
 	// offset 344 bit 21
-	bool unusedBit_200_21 : 1 {};
+	bool unusedBit_198_21 : 1 {};
 
 	// offset 344 bit 22
-	bool unusedBit_200_22 : 1 {};
+	bool unusedBit_198_22 : 1 {};
 
 	// offset 344 bit 23
-	bool unusedBit_200_23 : 1 {};
+	bool unusedBit_198_23 : 1 {};
 
 	// offset 344 bit 24
-	bool unusedBit_200_24 : 1 {};
+	bool unusedBit_198_24 : 1 {};
 
 	// offset 344 bit 25
-	bool unusedBit_200_25 : 1 {};
+	bool unusedBit_198_25 : 1 {};
 
 	// offset 344 bit 26
-	bool unusedBit_200_26 : 1 {};
+	bool unusedBit_198_26 : 1 {};
 
 	// offset 344 bit 27
-	bool unusedBit_200_27 : 1 {};
+	bool unusedBit_198_27 : 1 {};
 
 	// offset 344 bit 28
-	bool unusedBit_200_28 : 1 {};
+	bool unusedBit_198_28 : 1 {};
 
 	// offset 344 bit 29
-	bool unusedBit_200_29 : 1 {};
+	bool unusedBit_198_29 : 1 {};
 
 	// offset 344 bit 30
-	bool unusedBit_200_30 : 1 {};
+	bool unusedBit_198_30 : 1 {};
 
 	// offset 344 bit 31
-	bool unusedBit_200_31 : 1 {};
+	bool unusedBit_198_31 : 1 {};
 
 	// kPa
 	// offset 348
@@ -1163,28 +1158,28 @@ struct output_channels_s {
 	bool injectorState12 : 1 {};
 
 	// offset 636 bit 24
-	bool unusedBit_297_24 : 1 {};
+	bool unusedBit_296_24 : 1 {};
 
 	// offset 636 bit 25
-	bool unusedBit_297_25 : 1 {};
+	bool unusedBit_296_25 : 1 {};
 
 	// offset 636 bit 26
-	bool unusedBit_297_26 : 1 {};
+	bool unusedBit_296_26 : 1 {};
 
 	// offset 636 bit 27
-	bool unusedBit_297_27 : 1 {};
+	bool unusedBit_296_27 : 1 {};
 
 	// offset 636 bit 28
-	bool unusedBit_297_28 : 1 {};
+	bool unusedBit_296_28 : 1 {};
 
 	// offset 636 bit 29
-	bool unusedBit_297_29 : 1 {};
+	bool unusedBit_296_29 : 1 {};
 
 	// offset 636 bit 30
-	bool unusedBit_297_30 : 1 {};
+	bool unusedBit_296_30 : 1 {};
 
 	// offset 636 bit 31
-	bool unusedBit_297_31 : 1 {};
+	bool unusedBit_296_31 : 1 {};
 
 	// offset 640
 	uint32_t outputRequestPeriod = (uint32_t)0;

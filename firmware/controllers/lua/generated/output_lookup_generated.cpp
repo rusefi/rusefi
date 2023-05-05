@@ -113,8 +113,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.wallFuelCorrectionValue;
 		case -1555114948:
 			return engine->outputChannels.revolutionCounterSinceStart;
-		case -917860253:
-			return engine->outputChannels.deltaTpsValue;
 		case 1247316691:
 			return engine->outputChannels.canReadCounter;
 		case -384925312:
@@ -281,10 +279,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.rawMap;
 		case 417943720:
 			return engine->outputChannels.rawAfr;
-		case -384928248:
-			return engine->outputChannels.tpsAccelFrom;
-		case 997467671:
-			return engine->outputChannels.tpsAccelTo;
 		case 37467836:
 			return engine->outputChannels.calibrationValue2;
 		case -822552576:
@@ -313,8 +307,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.auxLinear2;
 		case -622949795:
 			return engine->outputChannels.dfcoActive;
-		case 1506646480:
-			return engine->outputChannels.tpsAccelActive;
 		case -940825965:
 			return engine->outputChannels.fallbackMap;
 		case -1162308767:
