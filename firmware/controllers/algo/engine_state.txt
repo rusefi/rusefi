@@ -31,18 +31,18 @@ struct_no_prefix engine_state_s
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
-    int16_t hellenBoardId;Detected Board ID;"id", 1, 0, 0, 3000, 0
+	int16_t hellenBoardId;Detected Board ID;"id", 1, 0, 0, 3000, 0
 
-    bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
-    bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
-    bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
-    bit startStopState
-    uint32_t startStopStateToggleCounter
+	bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
+	bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
+	bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
+	bit startStopState
+	uint32_t startStopStateToggleCounter
 
-    float egtValue1
-    float egtValue2
+	float egtValue1
+	float egtValue2
 
-    int16_t desiredRpmLimit;User-defined RPM hard limit;"rpm", 1, 0, 0, 30000, 0
+	int16_t desiredRpmLimit;User-defined RPM hard limit;"rpm", 1, 0, 0, 30000, 0
 
 	uint32_t fuelInjectionCounter;Fuel: Injection counter
 	uint32_t sparkCounter;Ign: Spark counter
