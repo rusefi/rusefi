@@ -247,6 +247,15 @@ float getOutputValueByName(const char *name) {
 // lowFuelPressure
 		case -628741220:
 			return engine->outputChannels.lowFuelPressure;
+// tcuDesiredGear
+		case 471298448:
+			return engine->outputChannels.tcuDesiredGear;
+// flexPercent
+		case 404628421:
+			return engine->outputChannels.flexPercent;
+// wastegatePositionSensor
+		case 53406649:
+			return engine->outputChannels.wastegatePositionSensor;
 // tsConfigVersion
 		case 1299611400:
 			return engine->outputChannels.tsConfigVersion;
@@ -334,15 +343,6 @@ float getOutputValueByName(const char *name) {
 // rawPpsSecondary
 		case -1798336054:
 			return engine->outputChannels.rawPpsSecondary;
-// tcuDesiredGear
-		case 471298448:
-			return engine->outputChannels.tcuDesiredGear;
-// flexPercent
-		case 404628421:
-			return engine->outputChannels.flexPercent;
-// wastegatePositionSensor
-		case 53406649:
-			return engine->outputChannels.wastegatePositionSensor;
 // idlePositionSensor
 		case 782384530:
 			return engine->outputChannels.idlePositionSensor;
