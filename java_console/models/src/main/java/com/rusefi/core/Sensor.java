@@ -67,7 +67,7 @@ public enum Sensor implements BinaryLogEntry {
 //    injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.FUEL, FieldType.UINT8, 56, 0.5, 0, 100, "%"),
     veValue(GAUGE_NAME_FUEL_VE, SensorCategory.FUEL, FieldType.UINT8, TsOutputs.VEVALUE, 0.5, 0, 100, "%"),
     // injectionOffset
-    tCharge(GAUGE_NAME_TCHARGE, SensorCategory.FUEL, FieldType.FLOAT, TsOutputs.TCHARGE, 1.0 / PACK_MULT_TEMPERATURE, 30, 140, "C"),
+//    tCharge(GAUGE_NAME_TCHARGE, SensorCategory.FUEL, FieldType.FLOAT, TsOutputs.TCHARGE, 1.0 / PACK_MULT_TEMPERATURE, 30, 140, "C"),
 //
 //    // Corrections
 //    injectorLagMs(GAUGE_NAME_INJECTOR_LAG, SensorCategory.FUEL, FieldType.UINT16, 62, 1.0 / PACK_MULT_MS, 0, 15, "ms"),
