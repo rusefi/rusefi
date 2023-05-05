@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Fri May 05 00:37:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Fri May 05 01:35:23 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -27,19 +27,19 @@ struct ignition_state_s {
 	 */
 	angle_t dwellAngle = (angle_t)0;
 	/**
-	 * "Ignition: CLT correction"
+	 * Ign: CLT correction
 	deg
 	 * offset 12
 	 */
 	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
 	/**
-	 * "Ignition: IAT correction"
+	 * Ign: IAT correction
 	deg
 	 * offset 14
 	 */
 	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
 	/**
-	 * "Ignition: PID correction"
+	 * Idle: Timing adjustment
 	deg
 	 * offset 16
 	 */
@@ -63,7 +63,7 @@ struct ignition_state_s {
 	 */
 	uint8_t alignmentFill_at_22[2];
 	/**
-	 * "Ignition: dwell corr"
+	 * Ign: Dwell voltage correction
 	 * offset 24
 	 */
 	float dwellVoltageCorrection = (float)0;
@@ -88,4 +88,4 @@ struct ignition_state_s {
 static_assert(sizeof(ignition_state_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Fri May 05 00:37:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Fri May 05 01:35:23 UTC 2023
