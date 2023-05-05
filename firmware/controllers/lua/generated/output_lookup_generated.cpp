@@ -121,9 +121,9 @@ float getOutputValueByName(const char *name) {
 // lambdaValue
 		case -1119268893:
 			return engine->outputChannels.lambdaValue;
-// idleCurrentPosition
-		case -736671365:
-			return engine->outputChannels.idleCurrentPosition;
+// knockRetard
+		case -2096715875:
+			return engine->outputChannels.knockRetard;
 // VBatt
 		case 277722310:
 			return engine->outputChannels.VBatt;
@@ -421,9 +421,6 @@ float getOutputValueByName(const char *name) {
 // instantRpm
 		case -658597643:
 			return engine->outputChannels.instantRpm;
-// systemEventReuse
-		case -1111834928:
-			return engine->outputChannels.systemEventReuse;
 // rawMap
 		case 417956621:
 			return engine->outputChannels.rawMap;
