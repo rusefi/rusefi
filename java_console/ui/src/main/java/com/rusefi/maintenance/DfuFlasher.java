@@ -5,6 +5,7 @@ import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.BufferedSerialIoStream;
@@ -45,6 +46,18 @@ public class DfuFlasher {
 
         StatusWindow wnd = createStatusWindow();
 
+        boolean needsEraseFirst = false;
+        if (BundleUtil.getBundleTarget().contains("f7")) {
+            int result = JOptionPane.showConfirmDialog(parent, "Firmware update requires a full erase of the ECU. If your tune is not saved in TunerStudio, it will be lost.\nEnsure that TunerStudio has your current tune saved!\n\nAfter updating, re-connect TunerStudio to restore your tune.\n\nPress OK to continue with the update, or Cancel to abort so you can save your tune.", "WARNING", JOptionPane.OK_CANCEL_OPTION);
+
+            // 0 means they clicked "OK", 1 means they clicked "Cancel"
+            if (result != 0) {
+                return;
+            }
+
+            needsEraseFirst = true;
+        }
+
         AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, wnd);
         if (isSignatureValidated == null)
             return;
@@ -54,9 +67,11 @@ public class DfuFlasher {
                 wnd.append("rusEFI console can only program on Windows");
                 return;
             }
+
+            boolean finalNeedsEraseFirst = needsEraseFirst;
             submitAction(() -> {
                 timeForDfuSwitch(wnd);
-                executeDFU(wnd);
+                executeDFU(wnd, finalNeedsEraseFirst);
             });
         } else {
             wnd.append("Please use manual DFU to change bundle type.");
@@ -134,15 +149,19 @@ public class DfuFlasher {
 
     public static void runDfuProgramming() {
         StatusWindow wnd = createStatusWindow();
-        submitAction(() -> executeDFU(wnd));
+        submitAction(() -> executeDFU(wnd, false));
     }
 
-    private static void executeDFU(StatusWindow wnd) {
+    private static void executeDFU(StatusWindow wnd, boolean fullErase) {
         boolean driverIsHappy = detectSTM32BootloaderDriverState(wnd);
         if (!driverIsHappy) {
             wnd.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
             wnd.setErrorState();
             return;
+        }
+
+        if (fullErase) {
+            runDfuErase(wnd);
         }
 
         StringBuffer stdout = new StringBuffer();
