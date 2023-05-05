@@ -172,6 +172,7 @@ TEST(limp, boostCut) {
 
 	// Cut above 100kPa
 	engineConfiguration->boostCutPressure = 100;
+	engineConfiguration->boostCutPressureHyst = 20;
 
 	LimpManager dut;
 

@@ -100,8 +100,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	// Limit fuel only on boost pressure (limiting spark bends valves)
 	float mapCut = engineConfiguration->boostCutPressure;
 	if (mapCut != 0) {
-		// require drop of 20kPa to resume fuel
-		if (m_boostCutHysteresis.test(Sensor::getOrZero(SensorType::Map), mapCut, mapCut - 20)) {
+		// require drop of 'boostCutPressureHyst' kPa to resume fuel
+		if (m_boostCutHysteresis.test(Sensor::getOrZero(SensorType::Map), mapCut, mapCut - engineConfiguration->boostCutPressureHyst)) {
 			allowFuel.clear(ClearReason::BoostCut);
 		}
 	}
