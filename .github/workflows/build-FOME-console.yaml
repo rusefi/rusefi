@@ -11,19 +11,19 @@ jobs:
         with:
           submodules: true
 
-      # - uses: actions/setup-java@v3
-      #   with:
-      #     distribution: 'zulu'
-      #     java-version: '8'
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '8'
 
       - name: Test Compiler
         run: javac -version
 
-      # - name: Install Tools
-      #   working-directory: ./.github/workflows/
-      #   run: |
-      #     sudo ./add-ubuntu-latest-apt-mirrors.sh
-      #     sudo apt-get install sshpass mtools
+      - name: Install Tools
+        working-directory: ./.github/workflows/
+        run: |
+          sudo ./add-ubuntu-latest-apt-mirrors.sh
+          sudo apt-get install sshpass mtools
 
       - name: Generate Configs, Enums & Live Documentation
         working-directory: ./firmware/
