@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri May 05 01:27:32 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri May 05 01:46:17 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -29,8 +29,8 @@ public class EngineState {
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF #2";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
-	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux Linear #1";
-	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux Linear #2";
+	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux linear #1";
+	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux linear #2";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
@@ -173,39 +173,39 @@ public class EngineState {
 	public static final Field LUA_ACREQUESTSTATE = Field.create("LUA_ACREQUESTSTATE", 8, FieldType.BIT, 2).setBaseOffset(1044);
 	public static final Field LUA_LUADISABLEETB = Field.create("LUA_LUADISABLEETB", 8, FieldType.BIT, 3).setBaseOffset(1044);
 	public static final Field LUA_LUAIGNCUT = Field.create("LUA_LUAIGNCUT", 8, FieldType.BIT, 4).setBaseOffset(1044);
-	public static final Field SD_TCHARGE = Field.create("SD_TCHARGE", 12, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field SD_TCHARGE = Field.create("SD_TCHARGE", 12, FieldType.INT16).setScale(0.01).setBaseOffset(1044);
+	public static final Field SD_ALIGNMENTFILL_AT_2 = Field.create("SD_ALIGNMENTFILL_AT_2", 14, FieldType.INT8).setScale(1.0).setBaseOffset(1044);
 	public static final Field SD_TCHARGEK = Field.create("SD_TCHARGEK", 16, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field SD_AIRFLOW = Field.create("SD_AIRFLOW", 20, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field ENGINECYCLEDURATIONMS = Field.create("ENGINECYCLEDURATIONMS", 24, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field MINRPMKCURRENTTPS = Field.create("MINRPMKCURRENTTPS", 28, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field CURRENTTPSADC = Field.create("CURRENTTPSADC", 32, FieldType.INT).setScale(1.0).setBaseOffset(1044);
-	public static final Field TPSVOLTAGEMCU = Field.create("TPSVOLTAGEMCU", 36, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field TPSVOLTAGEBOARD = Field.create("TPSVOLTAGEBOARD", 40, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field CURRENTBAROCORRECTEDVE = Field.create("CURRENTBAROCORRECTEDVE", 44, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field INJECTORFLOWCORRECTION = Field.create("INJECTORFLOWCORRECTION", 48, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 52, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field CRANKINGFUEL_BASEFUEL = Field.create("CRANKINGFUEL_BASEFUEL", 56, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT", 60, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field CRANKINGFUEL_TPSCOEFFICIENT = Field.create("CRANKINGFUEL_TPSCOEFFICIENT", 64, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field CRANKINGFUEL_DURATIONCOEFFICIENT = Field.create("CRANKINGFUEL_DURATIONCOEFFICIENT", 68, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field CRANKINGFUEL_FUEL = Field.create("CRANKINGFUEL_FUEL", 72, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field HELLENBOARDID = Field.create("HELLENBOARDID", 76, FieldType.INT16).setScale(1.0).setBaseOffset(1044);
-	public static final Field ALIGNMENTFILL_AT_78 = Field.create("ALIGNMENTFILL_AT_78", 78, FieldType.INT8).setScale(1.0).setBaseOffset(1044);
-	public static final Field CLUTCHUPSTATE = Field.create("CLUTCHUPSTATE", 80, FieldType.BIT, 0).setBaseOffset(1044);
-	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 80, FieldType.BIT, 1).setBaseOffset(1044);
-	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 80, FieldType.BIT, 2).setBaseOffset(1044);
-	public static final Field STARTSTOPSTATE = Field.create("STARTSTOPSTATE", 80, FieldType.BIT, 3).setBaseOffset(1044);
-	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 84, FieldType.INT).setScale(1.0).setBaseOffset(1044);
-	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 88, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 92, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 96, FieldType.INT16).setScale(1.0).setBaseOffset(1044);
-	public static final Field ALIGNMENTFILL_AT_98 = Field.create("ALIGNMENTFILL_AT_98", 98, FieldType.INT8).setScale(1.0).setBaseOffset(1044);
-	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 100, FieldType.INT).setScale(1.0).setBaseOffset(1044);
-	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 104, FieldType.INT).setScale(1.0).setBaseOffset(1044);
-	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 108, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 112, FieldType.FLOAT).setBaseOffset(1044);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 116, FieldType.INT16).setScale(0.01).setBaseOffset(1044);
-	public static final Field ALIGNMENTFILL_AT_118 = Field.create("ALIGNMENTFILL_AT_118", 118, FieldType.INT8).setScale(1.0).setBaseOffset(1044);
+	public static final Field ENGINECYCLEDURATIONMS = Field.create("ENGINECYCLEDURATIONMS", 20, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field MINRPMKCURRENTTPS = Field.create("MINRPMKCURRENTTPS", 24, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field CURRENTTPSADC = Field.create("CURRENTTPSADC", 28, FieldType.INT).setScale(1.0).setBaseOffset(1044);
+	public static final Field TPSVOLTAGEMCU = Field.create("TPSVOLTAGEMCU", 32, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field TPSVOLTAGEBOARD = Field.create("TPSVOLTAGEBOARD", 36, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field CURRENTBAROCORRECTEDVE = Field.create("CURRENTBAROCORRECTEDVE", 40, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field INJECTORFLOWCORRECTION = Field.create("INJECTORFLOWCORRECTION", 44, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 48, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field CRANKINGFUEL_BASEFUEL = Field.create("CRANKINGFUEL_BASEFUEL", 52, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT", 56, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field CRANKINGFUEL_TPSCOEFFICIENT = Field.create("CRANKINGFUEL_TPSCOEFFICIENT", 60, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field CRANKINGFUEL_DURATIONCOEFFICIENT = Field.create("CRANKINGFUEL_DURATIONCOEFFICIENT", 64, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field CRANKINGFUEL_FUEL = Field.create("CRANKINGFUEL_FUEL", 68, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field HELLENBOARDID = Field.create("HELLENBOARDID", 72, FieldType.INT16).setScale(1.0).setBaseOffset(1044);
+	public static final Field ALIGNMENTFILL_AT_74 = Field.create("ALIGNMENTFILL_AT_74", 74, FieldType.INT8).setScale(1.0).setBaseOffset(1044);
+	public static final Field CLUTCHUPSTATE = Field.create("CLUTCHUPSTATE", 76, FieldType.BIT, 0).setBaseOffset(1044);
+	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 76, FieldType.BIT, 1).setBaseOffset(1044);
+	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 76, FieldType.BIT, 2).setBaseOffset(1044);
+	public static final Field STARTSTOPSTATE = Field.create("STARTSTOPSTATE", 76, FieldType.BIT, 3).setBaseOffset(1044);
+	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 80, FieldType.INT).setScale(1.0).setBaseOffset(1044);
+	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 84, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 88, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 92, FieldType.INT16).setScale(1.0).setBaseOffset(1044);
+	public static final Field ALIGNMENTFILL_AT_94 = Field.create("ALIGNMENTFILL_AT_94", 94, FieldType.INT8).setScale(1.0).setBaseOffset(1044);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 96, FieldType.INT).setScale(1.0).setBaseOffset(1044);
+	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 100, FieldType.INT).setScale(1.0).setBaseOffset(1044);
+	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 104, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 108, FieldType.FLOAT).setBaseOffset(1044);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 112, FieldType.INT16).setScale(0.01).setBaseOffset(1044);
+	public static final Field ALIGNMENTFILL_AT_114 = Field.create("ALIGNMENTFILL_AT_114", 114, FieldType.INT8).setScale(1.0).setBaseOffset(1044);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -215,8 +215,8 @@ public class EngineState {
 	LUA_LUADISABLEETB,
 	LUA_LUAIGNCUT,
 	SD_TCHARGE,
+	SD_ALIGNMENTFILL_AT_2,
 	SD_TCHARGEK,
-	SD_AIRFLOW,
 	ENGINECYCLEDURATIONMS,
 	MINRPMKCURRENTTPS,
 	CURRENTTPSADC,
@@ -231,7 +231,7 @@ public class EngineState {
 	CRANKINGFUEL_DURATIONCOEFFICIENT,
 	CRANKINGFUEL_FUEL,
 	HELLENBOARDID,
-	ALIGNMENTFILL_AT_78,
+	ALIGNMENTFILL_AT_74,
 	CLUTCHUPSTATE,
 	CLUTCHDOWNSTATE,
 	BRAKEPEDALSTATE,
@@ -240,12 +240,12 @@ public class EngineState {
 	EGTVALUE1,
 	EGTVALUE2,
 	DESIREDRPMLIMIT,
-	ALIGNMENTFILL_AT_98,
+	ALIGNMENTFILL_AT_94,
 	FUELINJECTIONCOUNTER,
 	SPARKCOUNTER,
 	FUELINGLOAD,
 	IGNITIONLOAD,
 	VETABLEYAXIS,
-	ALIGNMENTFILL_AT_118,
+	ALIGNMENTFILL_AT_114,
 	};
 }

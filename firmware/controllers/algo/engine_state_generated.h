@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri May 05 00:37:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri May 05 01:46:17 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -118,21 +118,24 @@ static_assert(sizeof(LuaAdjustments) == 12);
 // start of speed_density_s
 struct speed_density_s {
 	/**
-	 * speed density
-	 * Rate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.
+	 * Charge temperature estimate
+	deg C
 	 * offset 0
 	 */
-	float tCharge = (float)0;
+	scaled_channel<int16_t, 100, 1> tCharge = (int16_t)0;
 	/**
+	 * need 4 byte alignment
+	units
+	 * offset 2
+	 */
+	uint8_t alignmentFill_at_2[2];
+	/**
+	 * Charge temperature estimate K
 	 * offset 4
 	 */
 	float tChargeK = (float)0;
-	/**
-	 * offset 8
-	 */
-	floatms_t airFlow = (floatms_t)0;
 };
-static_assert(sizeof(speed_density_s) == 12);
+static_assert(sizeof(speed_density_s) == 8);
 
 // start of cranking_fuel_s
 struct cranking_fuel_s {
@@ -177,208 +180,208 @@ struct engine_state_s {
 	 */
 	speed_density_s sd;
 	/**
-	 * offset 24
+	 * offset 20
 	 */
 	float engineCycleDurationMs = (float)0;
 	/**
-	 * offset 28
+	 * offset 24
 	 */
 	float minRpmKcurrentTPS = (float)0;
 	/**
-	 * offset 32
+	 * offset 28
 	 */
 	uint32_t currentTpsAdc = (uint32_t)0;
 	/**
-	 * offset 36
+	 * offset 32
 	 */
 	float tpsVoltageMCU = (float)0;
 	/**
-	 * offset 40
+	 * offset 36
 	 */
 	float tpsVoltageBoard = (float)0;
 	/**
-	 * offset 44
+	 * offset 40
 	 */
 	float currentBaroCorrectedVE = (float)0;
 	/**
-	 * offset 48
+	 * offset 44
 	 */
 	float injectorFlowCorrection = (float)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_BARO_CORR@@
-	 * offset 52
+	 * offset 48
 	 */
 	float baroCorrection = (float)0;
 	/**
-	 * offset 56
+	 * offset 52
 	 */
 	cranking_fuel_s crankingFuel;
 	/**
 	 * Detected Board ID
 	id
-	 * offset 76
+	 * offset 72
 	 */
 	int16_t hellenBoardId = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 78
+	 * offset 74
 	 */
-	uint8_t alignmentFill_at_78[2];
+	uint8_t alignmentFill_at_74[2];
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_UP@@
-	offset 80 bit 0 */
+	offset 76 bit 0 */
 	bool clutchUpState : 1 {};
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_DOWN@@
-	offset 80 bit 1 */
+	offset 76 bit 1 */
 	bool clutchDownState : 1 {};
 	/**
 	 * @@INDICATOR_NAME_BRAKE_DOWN@@
-	offset 80 bit 2 */
+	offset 76 bit 2 */
 	bool brakePedalState : 1 {};
 	/**
-	offset 80 bit 3 */
+	offset 76 bit 3 */
 	bool startStopState : 1 {};
 	/**
-	offset 80 bit 4 */
+	offset 76 bit 4 */
 	bool unusedBit_17_4 : 1 {};
 	/**
-	offset 80 bit 5 */
+	offset 76 bit 5 */
 	bool unusedBit_17_5 : 1 {};
 	/**
-	offset 80 bit 6 */
+	offset 76 bit 6 */
 	bool unusedBit_17_6 : 1 {};
 	/**
-	offset 80 bit 7 */
+	offset 76 bit 7 */
 	bool unusedBit_17_7 : 1 {};
 	/**
-	offset 80 bit 8 */
+	offset 76 bit 8 */
 	bool unusedBit_17_8 : 1 {};
 	/**
-	offset 80 bit 9 */
+	offset 76 bit 9 */
 	bool unusedBit_17_9 : 1 {};
 	/**
-	offset 80 bit 10 */
+	offset 76 bit 10 */
 	bool unusedBit_17_10 : 1 {};
 	/**
-	offset 80 bit 11 */
+	offset 76 bit 11 */
 	bool unusedBit_17_11 : 1 {};
 	/**
-	offset 80 bit 12 */
+	offset 76 bit 12 */
 	bool unusedBit_17_12 : 1 {};
 	/**
-	offset 80 bit 13 */
+	offset 76 bit 13 */
 	bool unusedBit_17_13 : 1 {};
 	/**
-	offset 80 bit 14 */
+	offset 76 bit 14 */
 	bool unusedBit_17_14 : 1 {};
 	/**
-	offset 80 bit 15 */
+	offset 76 bit 15 */
 	bool unusedBit_17_15 : 1 {};
 	/**
-	offset 80 bit 16 */
+	offset 76 bit 16 */
 	bool unusedBit_17_16 : 1 {};
 	/**
-	offset 80 bit 17 */
+	offset 76 bit 17 */
 	bool unusedBit_17_17 : 1 {};
 	/**
-	offset 80 bit 18 */
+	offset 76 bit 18 */
 	bool unusedBit_17_18 : 1 {};
 	/**
-	offset 80 bit 19 */
+	offset 76 bit 19 */
 	bool unusedBit_17_19 : 1 {};
 	/**
-	offset 80 bit 20 */
+	offset 76 bit 20 */
 	bool unusedBit_17_20 : 1 {};
 	/**
-	offset 80 bit 21 */
+	offset 76 bit 21 */
 	bool unusedBit_17_21 : 1 {};
 	/**
-	offset 80 bit 22 */
+	offset 76 bit 22 */
 	bool unusedBit_17_22 : 1 {};
 	/**
-	offset 80 bit 23 */
+	offset 76 bit 23 */
 	bool unusedBit_17_23 : 1 {};
 	/**
-	offset 80 bit 24 */
+	offset 76 bit 24 */
 	bool unusedBit_17_24 : 1 {};
 	/**
-	offset 80 bit 25 */
+	offset 76 bit 25 */
 	bool unusedBit_17_25 : 1 {};
 	/**
-	offset 80 bit 26 */
+	offset 76 bit 26 */
 	bool unusedBit_17_26 : 1 {};
 	/**
-	offset 80 bit 27 */
+	offset 76 bit 27 */
 	bool unusedBit_17_27 : 1 {};
 	/**
-	offset 80 bit 28 */
+	offset 76 bit 28 */
 	bool unusedBit_17_28 : 1 {};
 	/**
-	offset 80 bit 29 */
+	offset 76 bit 29 */
 	bool unusedBit_17_29 : 1 {};
 	/**
-	offset 80 bit 30 */
+	offset 76 bit 30 */
 	bool unusedBit_17_30 : 1 {};
 	/**
-	offset 80 bit 31 */
+	offset 76 bit 31 */
 	bool unusedBit_17_31 : 1 {};
 	/**
-	 * offset 84
+	 * offset 80
 	 */
 	uint32_t startStopStateToggleCounter = (uint32_t)0;
 	/**
-	 * offset 88
+	 * offset 84
 	 */
 	float egtValue1 = (float)0;
 	/**
-	 * offset 92
+	 * offset 88
 	 */
 	float egtValue2 = (float)0;
 	/**
 	 * User-defined RPM hard limit
 	rpm
-	 * offset 96
+	 * offset 92
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 98
+	 * offset 94
 	 */
-	uint8_t alignmentFill_at_98[2];
+	uint8_t alignmentFill_at_94[2];
 	/**
-	 * offset 100
+	 * offset 96
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
-	 * offset 104
+	 * offset 100
 	 */
 	uint32_t sparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 108
+	 * offset 104
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 112
+	 * offset 108
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	%
-	 * offset 116
+	 * offset 112
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 118
+	 * offset 114
 	 */
-	uint8_t alignmentFill_at_118[2];
+	uint8_t alignmentFill_at_114[2];
 };
-static_assert(sizeof(engine_state_s) == 120);
+static_assert(sizeof(engine_state_s) == 116);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri May 05 00:37:54 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri May 05 01:46:17 UTC 2023

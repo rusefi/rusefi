@@ -157,9 +157,6 @@ float getOutputValueByName(const char *name) {
 // injectionOffset
 		case -243031057:
 			return engine->outputChannels.injectionOffset;
-// tCharge
-		case -744295709:
-			return engine->outputChannels.tCharge;
 // injectorLagMs
 		case 1615892023:
 			return engine->outputChannels.injectorLagMs;
@@ -241,9 +238,21 @@ float getOutputValueByName(const char *name) {
 // accelerationY
 		case 633018088:
 			return engine->outputChannels.accelerationY;
+// detectedGear
+		case 283558758:
+			return engine->outputChannels.detectedGear;
+// maxTriggerReentrant
+		case -1595441102:
+			return engine->outputChannels.maxTriggerReentrant;
+// lowFuelPressure
+		case -628741220:
+			return engine->outputChannels.lowFuelPressure;
 // tsConfigVersion
 		case 1299611400:
 			return engine->outputChannels.tsConfigVersion;
+// highFuelPressure
+		case -1973799222:
+			return engine->outputChannels.highFuelPressure;
 // calibrationValue
 		case -1560670902:
 			return engine->outputChannels.calibrationValue;
@@ -253,12 +262,6 @@ float getOutputValueByName(const char *name) {
 // idleTargetPosition
 		case -2029665121:
 			return engine->outputChannels.idleTargetPosition;
-// detectedGear
-		case 283558758:
-			return engine->outputChannels.detectedGear;
-// maxTriggerReentrant
-		case -1595441102:
-			return engine->outputChannels.maxTriggerReentrant;
 // totalTriggerErrorCounter
 		case 2018173863:
 			return engine->outputChannels.totalTriggerErrorCounter;
@@ -349,12 +352,6 @@ float getOutputValueByName(const char *name) {
 // rawHighFuelPressure
 		case 990714516:
 			return engine->outputChannels.rawHighFuelPressure;
-// lowFuelPressure
-		case -628741220:
-			return engine->outputChannels.lowFuelPressure;
-// highFuelPressure
-		case -1973799222:
-			return engine->outputChannels.highFuelPressure;
 // AFRValue
 		case -1093429509:
 			return engine->outputChannels.AFRValue;
@@ -924,9 +921,6 @@ float getOutputValueByName(const char *name) {
 // sd.tChargeK
 		case 584726739:
 			return engine->engineState.sd.tChargeK;
-// sd.airFlow
-		case 585422686:
-			return engine->engineState.sd.airFlow;
 // engineCycleDurationMs
 		case 794378193:
 			return engine->engineState.engineCycleDurationMs;
