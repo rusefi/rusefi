@@ -37,5 +37,6 @@ Release template (copy/paste this for new release):
  - Sensor checker wasn't checking sensors
  - Removed vestigial warning about unset ignition pins #79
  - Gear detection sometimes didn't work
+ - Restore built-in INI storage on STM32F7-based ECUs
 
 ### For older changelog entries prior to fork from rusEFI, see CHANGELOG.rusefi.md
