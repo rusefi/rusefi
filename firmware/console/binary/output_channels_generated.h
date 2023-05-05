@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 02:21:13 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 02:53:55 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -35,9 +35,11 @@ static_assert(sizeof(pid_status_s) == 16);
 // start of output_channels_s
 struct output_channels_s {
 	/**
+	 * SD: Present
 	offset 0 bit 0 */
 	bool sd_present : 1 {};
 	/**
+	 * SD: Logging
 	offset 0 bit 1 */
 	bool sd_logging_internal : 1 {};
 	/**
@@ -60,11 +62,11 @@ struct output_channels_s {
 	offset 0 bit 7 */
 	bool needBurn : 1 {};
 	/**
-	 * SD is MSD
+	 * SD: MSD
 	offset 0 bit 8 */
 	bool sd_msd : 1 {};
 	/**
-	 * Radiator Fan2
+	 * Radiator Fan 2
 	offset 0 bit 9 */
 	bool isFan2On : 1 {};
 	/**
@@ -118,7 +120,7 @@ struct output_channels_s {
 	offset 0 bit 22 */
 	bool isTps2Error : 1 {};
 	/**
-	 * Closed Loop Idle
+	 * Idle: Closed Loop
 	offset 0 bit 23 */
 	bool isIdleClosedLoop : 1 {};
 	/**
@@ -1458,4 +1460,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 812);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 02:21:13 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 02:53:55 UTC 2023
