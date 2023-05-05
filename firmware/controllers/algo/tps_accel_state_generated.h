@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Mon Jan 02 17:57:24 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Fri May 05 21:06:50 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,14 +6,17 @@
 // start of tps_accel_state_s
 struct tps_accel_state_s {
 	/**
+	 * Fuel: TPS AE from
 	 * offset 0
 	 */
 	percent_t tpsFrom = (percent_t)0;
 	/**
+	 * Fuel: TPS AE to
 	 * offset 4
 	 */
 	percent_t tpsTo = (percent_t)0;
 	/**
+	 * Fuel: TPS AE change
 	 * offset 8
 	 */
 	percent_t deltaTps = (percent_t)0;
@@ -26,6 +29,7 @@ struct tps_accel_state_s {
 	 */
 	float valueFromTable = (float)0;
 	/**
+	 * Fuel: TPS AE Active
 	offset 20 bit 0 */
 	bool isAboveAccelThreshold : 1 {};
 	/**
@@ -152,4 +156,4 @@ struct tps_accel_state_s {
 static_assert(sizeof(tps_accel_state_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Mon Jan 02 17:57:24 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Fri May 05 21:06:50 UTC 2023

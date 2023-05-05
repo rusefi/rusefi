@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Fri May 05 17:56:33 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Fri May 05 21:06:50 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -81,7 +81,6 @@ public class BoostControl {
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS = "kPa";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "Fuel: running";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS AE add fuel ms";
-	public static final String GAUGE_NAME_FUEL_TPS_ROC = "Fuel: TPS AE change";
 	public static final String GAUGE_NAME_FUEL_TRIM = "Fuel: fuel trim";
 	public static final String GAUGE_NAME_FUEL_TRIM_2 = "Fuel: fuel trim 2";
 	public static final String GAUGE_NAME_FUEL_VE = "Fuel: VE";
@@ -165,23 +164,23 @@ public class BoostControl {
 	public static final int PACK_MULT_VSS = 100;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field ISTPSINVALID = Field.create("ISTPSINVALID", 0, FieldType.BIT, 0).setBaseOffset(984);
-	public static final Field M_SHOULDRESETPID = Field.create("M_SHOULDRESETPID", 0, FieldType.BIT, 1).setBaseOffset(984);
-	public static final Field ISBELOWCLOSEDLOOPTHRESHOLD = Field.create("ISBELOWCLOSEDLOOPTHRESHOLD", 0, FieldType.BIT, 2).setBaseOffset(984);
-	public static final Field ISNOTCLOSEDLOOP = Field.create("ISNOTCLOSEDLOOP", 0, FieldType.BIT, 3).setBaseOffset(984);
-	public static final Field ISZERORPM = Field.create("ISZERORPM", 0, FieldType.BIT, 4).setBaseOffset(984);
-	public static final Field HASINITBOOST = Field.create("HASINITBOOST", 0, FieldType.BIT, 5).setBaseOffset(984);
-	public static final Field RPMTOOLOW = Field.create("RPMTOOLOW", 0, FieldType.BIT, 6).setBaseOffset(984);
-	public static final Field TPSTOOLOW = Field.create("TPSTOOLOW", 0, FieldType.BIT, 7).setBaseOffset(984);
-	public static final Field MAPTOOLOW = Field.create("MAPTOOLOW", 0, FieldType.BIT, 8).setBaseOffset(984);
-	public static final Field LUATARGETADD = Field.create("LUATARGETADD", 4, FieldType.INT16).setScale(0.5).setBaseOffset(984);
-	public static final Field BOOSTOUTPUT = Field.create("BOOSTOUTPUT", 6, FieldType.INT16).setScale(0.01).setBaseOffset(984);
-	public static final Field LUATARGETMULT = Field.create("LUATARGETMULT", 8, FieldType.FLOAT).setBaseOffset(984);
-	public static final Field OPENLOOPPART = Field.create("OPENLOOPPART", 12, FieldType.FLOAT).setBaseOffset(984);
-	public static final Field LUAOPENLOOPADD = Field.create("LUAOPENLOOPADD", 16, FieldType.FLOAT).setBaseOffset(984);
-	public static final Field BOOSTCONTROLLERCLOSEDLOOPPART = Field.create("BOOSTCONTROLLERCLOSEDLOOPPART", 20, FieldType.INT8).setScale(0.5).setBaseOffset(984);
-	public static final Field ALIGNMENTFILL_AT_21 = Field.create("ALIGNMENTFILL_AT_21", 21, FieldType.INT8).setScale(1.0).setBaseOffset(984);
-	public static final Field BOOSTCONTROLTARGET = Field.create("BOOSTCONTROLTARGET", 22, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(984);
+	public static final Field ISTPSINVALID = Field.create("ISTPSINVALID", 0, FieldType.BIT, 0).setBaseOffset(980);
+	public static final Field M_SHOULDRESETPID = Field.create("M_SHOULDRESETPID", 0, FieldType.BIT, 1).setBaseOffset(980);
+	public static final Field ISBELOWCLOSEDLOOPTHRESHOLD = Field.create("ISBELOWCLOSEDLOOPTHRESHOLD", 0, FieldType.BIT, 2).setBaseOffset(980);
+	public static final Field ISNOTCLOSEDLOOP = Field.create("ISNOTCLOSEDLOOP", 0, FieldType.BIT, 3).setBaseOffset(980);
+	public static final Field ISZERORPM = Field.create("ISZERORPM", 0, FieldType.BIT, 4).setBaseOffset(980);
+	public static final Field HASINITBOOST = Field.create("HASINITBOOST", 0, FieldType.BIT, 5).setBaseOffset(980);
+	public static final Field RPMTOOLOW = Field.create("RPMTOOLOW", 0, FieldType.BIT, 6).setBaseOffset(980);
+	public static final Field TPSTOOLOW = Field.create("TPSTOOLOW", 0, FieldType.BIT, 7).setBaseOffset(980);
+	public static final Field MAPTOOLOW = Field.create("MAPTOOLOW", 0, FieldType.BIT, 8).setBaseOffset(980);
+	public static final Field LUATARGETADD = Field.create("LUATARGETADD", 4, FieldType.INT16).setScale(0.5).setBaseOffset(980);
+	public static final Field BOOSTOUTPUT = Field.create("BOOSTOUTPUT", 6, FieldType.INT16).setScale(0.01).setBaseOffset(980);
+	public static final Field LUATARGETMULT = Field.create("LUATARGETMULT", 8, FieldType.FLOAT).setBaseOffset(980);
+	public static final Field OPENLOOPPART = Field.create("OPENLOOPPART", 12, FieldType.FLOAT).setBaseOffset(980);
+	public static final Field LUAOPENLOOPADD = Field.create("LUAOPENLOOPADD", 16, FieldType.FLOAT).setBaseOffset(980);
+	public static final Field BOOSTCONTROLLERCLOSEDLOOPPART = Field.create("BOOSTCONTROLLERCLOSEDLOOPPART", 20, FieldType.INT8).setScale(0.5).setBaseOffset(980);
+	public static final Field ALIGNMENTFILL_AT_21 = Field.create("ALIGNMENTFILL_AT_21", 21, FieldType.INT8).setScale(1.0).setBaseOffset(980);
+	public static final Field BOOSTCONTROLTARGET = Field.create("BOOSTCONTROLTARGET", 22, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(980);
 	public static final Field[] VALUES = {
 	ISTPSINVALID,
 	M_SHOULDRESETPID,

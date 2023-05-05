@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Fri May 05 17:56:33 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Fri May 05 21:06:50 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -81,7 +81,6 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS = "kPa";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "Fuel: running";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS AE add fuel ms";
-	public static final String GAUGE_NAME_FUEL_TPS_ROC = "Fuel: TPS AE change";
 	public static final String GAUGE_NAME_FUEL_TRIM = "Fuel: fuel trim";
 	public static final String GAUGE_NAME_FUEL_TRIM_2 = "Fuel: fuel trim 2";
 	public static final String GAUGE_NAME_FUEL_VE = "Fuel: VE";
@@ -165,7 +164,7 @@ public class TriggerStatePrimary {
 	public static final int PACK_MULT_VSS = 100;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 0, FieldType.BIT, 0).setBaseOffset(1240);
+	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 0, FieldType.BIT, 0).setBaseOffset(1236);
 	public static final Field[] VALUES = {
 	M_HASSYNCHRONIZEDPHASE,
 	};

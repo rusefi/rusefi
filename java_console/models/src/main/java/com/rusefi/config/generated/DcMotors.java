@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Fri May 05 17:56:33 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Fri May 05 21:06:50 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -81,7 +81,6 @@ public class DcMotors {
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS = "kPa";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "Fuel: running";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS AE add fuel ms";
-	public static final String GAUGE_NAME_FUEL_TPS_ROC = "Fuel: TPS AE change";
 	public static final String GAUGE_NAME_FUEL_TRIM = "Fuel: fuel trim";
 	public static final String GAUGE_NAME_FUEL_TRIM_2 = "Fuel: fuel trim 2";
 	public static final String GAUGE_NAME_FUEL_VE = "Fuel: VE";
@@ -165,10 +164,10 @@ public class DcMotors {
 	public static final int PACK_MULT_VSS = 100;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field DCOUTPUT0 = Field.create("DCOUTPUT0", 0, FieldType.FLOAT).setBaseOffset(1356);
-	public static final Field ISENABLED0_INT = Field.create("ISENABLED0_INT", 4, FieldType.INT8).setScale(1.0).setBaseOffset(1356);
-	public static final Field ALIGNMENTFILL_AT_5 = Field.create("ALIGNMENTFILL_AT_5", 5, FieldType.INT8).setScale(1.0).setBaseOffset(1356);
-	public static final Field ISENABLED0 = Field.create("ISENABLED0", 8, FieldType.BIT, 0).setBaseOffset(1356);
+	public static final Field DCOUTPUT0 = Field.create("DCOUTPUT0", 0, FieldType.FLOAT).setBaseOffset(1352);
+	public static final Field ISENABLED0_INT = Field.create("ISENABLED0_INT", 4, FieldType.INT8).setScale(1.0).setBaseOffset(1352);
+	public static final Field ALIGNMENTFILL_AT_5 = Field.create("ALIGNMENTFILL_AT_5", 5, FieldType.INT8).setScale(1.0).setBaseOffset(1352);
+	public static final Field ISENABLED0 = Field.create("ISENABLED0", 8, FieldType.BIT, 0).setBaseOffset(1352);
 	public static final Field[] VALUES = {
 	DCOUTPUT0,
 	ISENABLED0_INT,
