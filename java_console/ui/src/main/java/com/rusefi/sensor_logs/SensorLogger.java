@@ -57,7 +57,7 @@ public class SensorLogger {
 //            Sensor.cltCorrection,
 //
 //            Sensor.CHARGE_AIR_MASS,
-            Sensor.runningFuel,
+//            Sensor.runningFuel,
 //            Sensor.injectorLagMs,
 //
 //            Sensor.vvtPositionB1I,
