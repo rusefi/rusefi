@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 04 15:05:24 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri May 05 21:37:56 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4337,10 +4337,16 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> benchTestOffTime;
 	/**
-	units
+	 * Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached
+	kPa (absolute)
 	 * offset 3940
 	 */
-	uint8_t mainUnusedEnd[32];
+	scaled_channel<uint8_t, 2, 1> boostCutPressureHyst;
+	/**
+	units
+	 * offset 3941
+	 */
+	uint8_t mainUnusedEnd[31];
 };
 static_assert(sizeof(engine_configuration_s) == 3972);
 
@@ -5177,4 +5183,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23176);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 04 15:05:24 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri May 05 21:37:56 UTC 2023

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri May 05 21:14:01 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri May 05 21:38:47 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1017,7 +1017,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1731689746;
+	public static final int SIGNATURE_HASH = 1308134169;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1241,7 +1241,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.05.f407-discovery.1731689746";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.05.f407-discovery.1308134169";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1372;
@@ -2528,7 +2528,8 @@ public class Fields {
 	public static final Field RPMSOFTLIMITFUELADDED = Field.create("RPMSOFTLIMITFUELADDED", 3936, FieldType.INT8).setScale(0.2).setBaseOffset(0);
 	public static final Field RPMHARDLIMITHYST = Field.create("RPMHARDLIMITHYST", 3937, FieldType.INT8).setScale(10.0).setBaseOffset(0);
 	public static final Field BENCHTESTOFFTIME = Field.create("BENCHTESTOFFTIME", 3938, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3940, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field BOOSTCUTPRESSUREHYST = Field.create("BOOSTCUTPRESSUREHYST", 3940, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3941, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 3972, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4004, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4036, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3991,6 +3992,7 @@ public class Fields {
 	RPMSOFTLIMITFUELADDED,
 	RPMHARDLIMITHYST,
 	BENCHTESTOFFTIME,
+	BOOSTCUTPRESSUREHYST,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

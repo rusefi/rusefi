@@ -1573,6 +1573,9 @@ float getConfigValueByName(const char *name) {
 // benchTestOffTime
 		case -1655178001:
 			return engineConfiguration->benchTestOffTime;
+// boostCutPressureHyst
+		case -2111374247:
+			return engineConfiguration->boostCutPressureHyst;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -4192,6 +4195,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -1655178001:
 	{
 		engineConfiguration->benchTestOffTime = (int)value;
+		return;
+	}
+		case -2111374247:
+	{
+		engineConfiguration->boostCutPressureHyst = (int)value;
 		return;
 	}
 	}
