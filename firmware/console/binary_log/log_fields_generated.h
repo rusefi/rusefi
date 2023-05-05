@@ -272,6 +272,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.mafMeasured2, "MAF #2", "kg/h", 1},
 	{engine->outputChannels.schedulingUsedCount, "schedulingUsedCount", "", 0},
 	{engine->outputChannels.vehicleSpeedKph, "Vehicle Speed", "kph", 2},
+	{engine->outputChannels.Gego, "Gego", "%", 2},
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 	{engine->fuelComputer.running.postCrankingFuelCorrection, "Fuel: Post cranking mult", "", 0},
 	{engine->fuelComputer.running.intakeTemperatureCoefficient, "Fuel: IAT correction", "", 0},
