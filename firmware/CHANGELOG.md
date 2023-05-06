@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - Detected gear and wastegate position to CAN format
  - Y axis override for Idle VE table. Helps with idle quality on ITB setups. #94
  - Blend tables for boost open and closed loop control #73
+ - Log channels to make MegaLogViewer VE Analyze work #82
 
 ### Fixed
  - Sensor checker wasn't checking sensors
