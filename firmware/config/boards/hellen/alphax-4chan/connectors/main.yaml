@@ -361,6 +361,15 @@ pins:
     ts_name: F2 - VVT#1
     color: purple
 
+  - pin: F2g
+    # H144_IGN_7
+    id: B9
+    function: VVT#1 rev G
+    class: outputs
+    type: ls
+    ts_name: F2 - VVT#1 rev G
+    color: purple
+
   # also used as knock input (is hard-coded at the moment)
   - pin: F3
     # H144_IN_SENS4
@@ -378,6 +387,15 @@ pins:
     class: outputs
     type: ls
     ts_name: F4 - VVT#2
+    color: purple
+
+  - pin: F4g
+    # H144_IGN_8
+    id: E6
+    function: VVT#2 rev G
+    class: outputs
+    type: ls
+    ts_name: F4 - VVT#2 rev G
     color: purple
 
   - pin: F5
