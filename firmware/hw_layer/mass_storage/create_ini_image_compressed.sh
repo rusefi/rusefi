@@ -31,9 +31,6 @@ fatlabel $IMAGE "FOME EFI"
 
 
 
-
-cp hw_layer/mass_storage/filesystem_contents/rusEFI_Wiki_template.url hw_layer/mass_storage/wiki.temp
-echo "URL=${BOARD_SPECIFIC_URL}" >> hw_layer/mass_storage/wiki.temp
 cp hw_layer/mass_storage/filesystem_contents/README.nozip.template.txt hw_layer/mass_storage/readme.temp
 echo ${BOARD_SPECIFIC_URL}       >> hw_layer/mass_storage/readme.temp
 
@@ -51,9 +48,9 @@ fi
 mcopy -i $IMAGE $FULL_INI ::
 # Put a readme text file in there too
 mcopy -i $IMAGE hw_layer/mass_storage/readme.temp ::README-${current_date}.txt
-mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
-mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Quick\ Start.url ::
-mcopy -i $IMAGE hw_layer/mass_storage/wiki.temp ::rusEFI\ ${SHORT_BOARDNAME}\ Wiki.url
+mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/FOME\ Wiki.url ::
+mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/FOME\ Discord.url ::
+mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/FOME\ Releases.url ::
 
 # Compress the image as DEFLATE with gzip
 gzip $IMAGE
