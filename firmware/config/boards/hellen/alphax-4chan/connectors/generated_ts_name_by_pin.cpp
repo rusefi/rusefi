@@ -10,6 +10,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::A7: return "E7 - Flex";
 		case Gpio::A8: return "A3 - Fuel Pump";
 		case Gpio::B1: return "C2/C3 Crank Sensor VR";
+		case Gpio::B9: return "F2 - VVT#1 rev G";
 		case Gpio::C13: return "A6 - Ignition 1";
 		case Gpio::C7: return "D2 - Out Boost";
 		case Gpio::C9: return "F1 - Idle2";
@@ -24,6 +25,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E3: return "D7 - Ignition 4";
 		case Gpio::E4: return "D6 - Ignition 3";
 		case Gpio::E5: return "A7 - Ignition 2";
+		case Gpio::E6: return "F4 - VVT#2 rev G";
 		case Gpio::F11: return "C4 - 2Step/Digital";
 		case Gpio::F3: return "D3 - Digital In 2";
 		case Gpio::F4: return "E3 - Digital In 3";
