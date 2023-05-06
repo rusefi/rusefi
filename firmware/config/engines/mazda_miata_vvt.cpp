@@ -279,7 +279,7 @@ static void setCommonMazdaNB() {
 	engineConfiguration->idle_antiwindupFreq = 0.03;
 	engineConfiguration->idleRpmPid.dFactor = 0.002;
 	engineConfiguration->idleRpmPid.minValue = -8;
-	engineConfiguration->idleRpmPid.minValue = 76;
+	engineConfiguration->idleRpmPid.maxValue = 10;
 	engineConfiguration->idlerpmpid_iTermMin = -15;
 	engineConfiguration->idlerpmpid_iTermMax =  30;
 

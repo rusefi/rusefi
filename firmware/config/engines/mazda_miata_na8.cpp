@@ -29,7 +29,8 @@ static void commonNA8() {
 	engineConfiguration->idle_derivativeFilterLoss = 0.08;
 	engineConfiguration->idle_antiwindupFreq = 0.03;
 	engineConfiguration->idleRpmPid.dFactor = 0.002;
-	engineConfiguration->idleRpmPid.minValue = 76;
+	engineConfiguration->idleRpmPid.minValue = -20;
+	engineConfiguration->idleRpmPid.maxValue = 20;
 	engineConfiguration->idlerpmpid_iTermMin = -15;
 	engineConfiguration->idlerpmpid_iTermMax = 30;
 	engineConfiguration->acIdleExtraOffset = 15;

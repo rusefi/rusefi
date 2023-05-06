@@ -530,8 +530,8 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->idleRpmPid.pFactor = 0.05;
 	engineConfiguration->idleRpmPid.iFactor = 0.002;
 
-	engineConfiguration->idleRpmPid.minValue = 0;
-	engineConfiguration->idleRpmPid.maxValue = 99;
+	engineConfiguration->idleRpmPid.minValue = -20;
+	engineConfiguration->idleRpmPid.maxValue = 20;
 	/**
 	 * between variation between different sensor and weather and fabrication tolerance
 	 * five percent looks like a safer default
