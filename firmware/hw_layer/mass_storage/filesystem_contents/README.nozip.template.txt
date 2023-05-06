@@ -1,6 +1,4 @@
-Welcome to rusEFI!
+Welcome to FOME!
 
-Use the rusEFI ini file in this folder with TunerStudio
+Use the FOME ini file in this folder with TunerStudio
 to connect to your ECU.
-
-See also
