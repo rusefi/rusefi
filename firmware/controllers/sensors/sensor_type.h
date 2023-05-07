@@ -90,6 +90,9 @@ enum class SensorType : unsigned char {
 	MapSlow2,
 	MapFast2,
 
+	// Pressure sensor before the throttle, after any turbo/etc
+	ThrottleInletPressure,
+
 	DetectedGear,
 
 	// analog voltage inputs for Lua
