@@ -354,7 +354,7 @@ pins:
 
   - pin: F2
     # H144_OUT_PWM7
-#    id: D15
+#    id: D15 pin was moved to Aux on rev G
     function: VVT#1
     class: outputs
     type: ls
@@ -382,7 +382,7 @@ pins:
 
   - pin: F4
     # H144_OUT_PWM8
-    id: D12
+#    id: D12 pin was moved to Aux on rev G
     function: VVT#2
     class: outputs
     type: ls

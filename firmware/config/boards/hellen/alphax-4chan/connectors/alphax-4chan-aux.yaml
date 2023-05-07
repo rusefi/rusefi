@@ -41,7 +41,7 @@ pins:
     id: D12
     function: HighSide 2
     class: outputs
-    ts_name: Aux10 - High2
+    ts_name: Aux10 - High2 legacy F4
 
 info:
   directory: hellen/alphax-4chan
