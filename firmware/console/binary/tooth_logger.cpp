@@ -1,6 +1,9 @@
 /*
  * @file tooth_logger.cpp
  *
+ * At least some of the code here is related to xxx.teeth files
+ * See also misc\tooth_log_converter\log_convert.cpp
+ *
  * @date Jul 7, 2019
  * @author Matthew Kennedy
  */
