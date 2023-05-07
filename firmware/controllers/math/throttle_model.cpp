@@ -121,7 +121,7 @@ expected<float> ThrottleModelBase::estimateThrottleFlow(float map, float tps) {
 	// or use Baro sensor if no TIP
 	// or use 101.325kPa (std atmosphere) if no Baro
 	// TODO: have a real TIP sensor
-	auto tip = 	Sensor::hasSensor(SensorType::AuxLinear1) ? Sensor::get(SensorType::AuxLinear1) :
+	auto tip = 	Sensor::hasSensor(SensorType::ThrottleInletPressure) ? Sensor::get(SensorType::ThrottleInletPressure) :
 				Sensor::hasSensor(SensorType::BarometricPressure) ? Sensor::get(SensorType::BarometricPressure) :
 				SensorResult(101.325f);
 
