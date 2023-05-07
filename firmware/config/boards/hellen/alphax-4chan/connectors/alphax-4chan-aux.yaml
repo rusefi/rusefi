@@ -22,12 +22,26 @@ pins:
     class: analog_inputs
     ts_name: X5 - AIN3
 
+  - pin: X6
+    # H144_IGN_5
+    id: E2
+    function: Ignition 5
+    class: outputs
+    ts_name: Aux6 - Ignition 5
+
   - pin: X7
     #H144_IN_AUX3
     id: EFI_ADC_15
     function: Analog Input 4
     class: analog_inputs
     ts_name: X5 - AIN4
+
+  - pin: X8
+    # H144_IGN_6
+    id: B8
+    function: Ignition 6
+    class: outputs
+    ts_name: Aux8 - Ignition 6
 
   - pin: X9
     # H144_OUT_PWM7
