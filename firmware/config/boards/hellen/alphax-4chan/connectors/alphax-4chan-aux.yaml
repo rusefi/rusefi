@@ -34,7 +34,7 @@ pins:
     id: D15
     function: HighSide 1
     class: outputs
-    ts_name: Aux9 - High1
+    ts_name: Aux9 - High1 legacy F2
 
   - pin: X10
     # H144_OUT_PWM8

@@ -354,7 +354,7 @@ pins:
 
   - pin: F2
     # H144_OUT_PWM7
-    id: D15
+#    id: D15
     function: VVT#1
     class: outputs
     type: ls
