@@ -152,6 +152,7 @@ void setBoardConfigOverrides() {
 	} else {
 	    // rev G and newer uses hellen mega-module
 	    setHellenSdCardSpi1();
+	    configureHellenMegaAccCS2Pin();
 	}
 
     setDefaultHellenAtPullUps();
