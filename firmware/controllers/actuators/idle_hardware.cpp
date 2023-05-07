@@ -59,12 +59,11 @@ void applyIACposition(percent_t position) {
 		if (!engineConfiguration->isDoubleSolenoidIdle) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(duty);
 		} else {
-			/* use 0.01..0.99 range */
-			float idle_range = 0.98; /* move to config? */
-			float idle_open, idle_close;
+			// use 0.01..0.99 range
+			float idle_range = 0.98; // move to config?
 
-			idle_open = 0.01 + idle_range * duty;
-			idle_close = 0.01 + idle_range * (1.0 - duty);
+			float idle_open = 0.01 + idle_range * duty;
+			float idle_close = 0.01 + idle_range * (1.0 - duty);
 
 			idleSolenoidOpen.setSimplePwmDutyCycle(idle_open);
 			idleSolenoidClose.setSimplePwmDutyCycle(idle_close);
