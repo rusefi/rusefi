@@ -146,7 +146,13 @@ void setBoardConfigOverrides() {
 	// todo: do we need this conditional on boardId or not really?
 	setHellenMegaEnPin();
 
-	setHellenSdCardSpi2();
+    int16_t hellenBoardId = engine->engineState.hellenBoardId;
+    if (hellenBoardId == BOARD_ID_4chan_d || hellenBoardId == BOARD_ID_4chan_e || hellenBoardId == BOARD_ID_4chan_f) {
+	    setHellenSdCardSpi2();
+	} else {
+	    // rev G and newer uses hellen mega-module
+	    setHellenSdCardSpi1();
+	}
 
     setDefaultHellenAtPullUps();
 

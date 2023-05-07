@@ -13,6 +13,11 @@
 #define BOARD_ID_2chan_e 112
 #define BOARD_ID_2chan_f 115
 
+#define BOARD_ID_4chan_d 103
+#define BOARD_ID_4chan_e 105
+#define BOARD_ID_4chan_f 113
+#define BOARD_ID_4chan_g 203
+
 void hellenWbo();
 
 void setHellen144LedPins();
