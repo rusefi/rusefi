@@ -96,6 +96,8 @@ case SensorType::PlaceholderLast:
   return "PlaceholderLast";
 case SensorType::Rpm:
   return "Rpm";
+case SensorType::ThrottleInletPressure:
+  return "ThrottleInletPressure";
 case SensorType::Tps1:
   return "Tps1";
 case SensorType::Tps1Primary:
