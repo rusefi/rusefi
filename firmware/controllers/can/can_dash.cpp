@@ -11,6 +11,7 @@
 
 #if EFI_CAN_SUPPORT
 #include "can_dash.h"
+#include "can_dash_ms.h"
 #include "can_msg_tx.h"
 #include "can_bmw.h"
 #include "can_vag.h"
@@ -168,6 +169,9 @@ void updateDash(CanCycle cycle) {
 		break;
 	case CAN_AIM_DASH:
 		canDashboardAim(cycle);
+		break;
+	case CAN_BUS_MS_SIMPLE_BROADCAST:
+		canDashboardTS(cycle);
 		break;
 	default:
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
