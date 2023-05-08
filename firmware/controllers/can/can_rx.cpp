@@ -75,14 +75,23 @@ static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
 
 	int id = CAN_ID(rx);
 
-	// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
-	efiPrintf("CAN RX bus %d ID %x(%d) DLC %d: %02x %02x %02x %02x %02x %02x %02x %02x",
-			busIndex,
-			id,	id, // once in hex, once in dec
-			rx.DLC,
-			rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
-			rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
-
+	if (rx.IDE == CAN_IDE_EXT) {
+		// print extended IDs in hex only
+		efiPrintf("CAN%d RX: ID %07x DLC %d: %02x %02x %02x %02x %02x %02x %02x %02x",
+				busIndex,
+				id,
+				rx.DLC,
+				rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
+				rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
+	} else {
+		// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
+		efiPrintf("CAN%d RX: ID %03x(%d) DLC %d: %02x %02x %02x %02x %02x %02x %02x %02x",
+				busIndex,
+				id,	id, // once in hex, once in dec
+				rx.DLC,
+				rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
+				rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
+	}
 }
 
 volatile float canMap = 0;
