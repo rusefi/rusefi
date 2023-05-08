@@ -11,10 +11,12 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::A7: return "Cam - K15";
 		case Gpio::A9: return "Aux P67";
 		case Gpio::B1: return "Crank - K17 rev B";
+		case Gpio::B7: return "X2 AuxLS3";
 		case Gpio::C13: return "Coil 1";
 		case Gpio::D10: return "INJ_4 k28";
 		case Gpio::D11: return "INJ_3 k27";
 		case Gpio::D12: return "MIL";
+		case Gpio::D14: return "X3 AuxLS2";
 		case Gpio::D15: return "Tacho";
 		case Gpio::D3: return "Aux P66";
 		case Gpio::D9: return "VVT1";
