@@ -1,12 +1,26 @@
 pins:
-  - pin: A1
+  - pin: X1
     function: GND
     type: gnd
-  - pin: A6
+
+  - pin: X2
+    # H_SPI1_CS2
+    id: B7
+    class: outputs
+    ts_name: X2 AuxLS3
+    function: AuxLS3
+
+  - pin: X3
+    # H144_OUT_PWM6
+    id: D14
+    class: outputs
+    ts_name: X3 AuxLS2
+    function: AuxLS2
+
+  - pin: X6
     function: 12v raw
 
-
-  - pin: A12
+  - pin: X12
     function: 5v
 
 info:
@@ -15,13 +29,40 @@ info:
   image:
     file: 154hyundaiAUX.jpg
   pins:
-    - pin: A1
+    - pin: X1
       x: 77
       y: 75
-    - pin: A6
+    - pin: X2
+      x: 147
+      y: 75
+    - pin: X3
+      x: 214
+      y: 75
+    - pin: X4
+      x: 284
+      y: 75
+    - pin: X5
+      x: 351
+      y: 75
+    - pin: X6
       x: 418
       y: 75
 
-    - pin: A12
+    - pin: X7
+      x: 77
+      y: 141
+    - pin: X8
+      x: 147
+      y: 141
+    - pin: X9
+      x: 214
+      y: 141
+    - pin: X10
+      x: 284
+      y: 141
+    - pin: X11
+      x: 351
+      y: 141
+    - pin: X12
       x: 418
       y: 141
