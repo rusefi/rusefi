@@ -405,8 +405,8 @@ static bool mountMmc() {
 #endif
 
 #if HAL_USE_USB_MSD
-	// Wait for the USB stack to wake up, or a 5 second timeout, whichever occurs first
-	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(5000));
+	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
+	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
 
 	bool hasUsb = usbResult == MSG_OK;
 
