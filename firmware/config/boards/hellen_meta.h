@@ -19,6 +19,7 @@
 #define BOARD_ID_4chan_e 105
 #define BOARD_ID_4chan_f 113
 #define BOARD_ID_4chan_g 203
+#define BOARD_ID_4chan_h 114
 
 void hellenWbo();
 
