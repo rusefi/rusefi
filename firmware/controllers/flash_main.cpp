@@ -260,11 +260,27 @@ static FlashState readConfiguration() {
 	mfs_error_t err = mfsReadRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
 						&settings_size, (uint8_t *)&persistentState);
 
-	// TODO: check err result better?
 	if (err == MFS_NO_ERROR) {
+		// readed size is not exactly the same
+		if (settings_size != sizeof(persistentState))
+			return FlashState::IncompatibleVersion;
+		// claimed size or versio is not the same
+		if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState))
+			return FlashState::IncompatibleVersion;
+
+		// now crc
+		auto flashCrc = flashStateCrc(persistentState);
+
+		if (flashCrc != persistentState.value) {
+			// If the stored crc is all 1s, that probably means the flash is actually blank, not that the crc failed.
+			if (persistentState.value == ((decltype(persistentState.value))-1)) {
+				return FlashState::BlankChip;
+			} else {
+				return FlashState::CrcFailed;
+			}
+		}
 		return FlashState::Ok;
 	} else {
-		// TODO: is this correct?
 		return FlashState::BlankChip;
 	}
 #endif
