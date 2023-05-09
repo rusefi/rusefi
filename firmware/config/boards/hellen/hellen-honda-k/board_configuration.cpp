@@ -141,6 +141,7 @@ void setBoardDefaultConfiguration() {
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
+	engineConfiguration->enableVerboseCanTx = true;
 
 	engineConfiguration->etbFunctions[0] = DC_None;
 	engineConfiguration->etbFunctions[1] = DC_Wastegate;

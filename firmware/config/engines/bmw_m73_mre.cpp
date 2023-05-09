@@ -96,8 +96,6 @@ void setEngineBMW_M73_microRusEfi() {
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->enableVerboseCanTx = true;
 
 
