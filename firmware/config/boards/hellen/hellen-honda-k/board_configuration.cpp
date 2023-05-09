@@ -65,6 +65,7 @@ void setBoardConfigOverrides() {
 
 	setHellenSdCardSpi1();
 	configureHellenMegaAccCS2Pin();
+	configureHellenCanTerminator();
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;

@@ -53,6 +53,16 @@ void configureHellenMegaAccCS2Pin() {
 	}
 }
 
+void configureHellenCanTerminator() {
+    static bool initialized = false;
+    static OutputPin terminatorControlPin;
+    if (!initialized) {
+        initialized = true;
+	    cs2pin.initPin("CAN-term", H_SPI3_CS); // todo: make this pin configurable
+	    cs2pin.setValue(engineConfiguration->boardUseCanTerminator);
+	}
+}
+
 // this should be called before setHellenXXXLedPins()
 void detectHellenMcuType() {
 	// we test the red LED1 pin because the red LED used has the smallest voltage drop,

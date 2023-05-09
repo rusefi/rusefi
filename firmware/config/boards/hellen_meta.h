@@ -27,6 +27,7 @@ void setHellen144LedPins();
 void setHellen176LedPins();
 void setHellenMegaEnPin();
 void configureHellenMegaAccCS2Pin();
+void configureHellenCanTerminator();
 
 void setHellenCan();
 

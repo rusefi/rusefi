@@ -269,6 +269,7 @@ enable2ndByteCanID = false
 	maintainConstantValue = throttlePedalWOTVoltage, { (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue  : throttlePedalWOTVoltage }
 	maintainConstantValue = throttlePedalSecondaryWOTVoltage, { (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue2 : throttlePedalSecondaryWOTVoltage }
 
+	requiresPowerCycle = boardUseCanTerminator
 	requiresPowerCycle = lps25BaroSensorScl
 	requiresPowerCycle = lps25BaroSensorSda
 	requiresPowerCycle = warningLedPin
@@ -4356,6 +4357,7 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = fancyHardwareDialog, "Fancy Boards"
 		field = "Tachometer Output",						boardUseTachPullUp
+		field = boardUseCanTerminator,                      boardUseCanTerminator
 		field = "boardUseTempPullUp",						boardUseTempPullUp
 		field = "boardUseCrankPullUp",						boardUseCrankPullUp
 		field = "2-step input",								boardUse2stepPullDown

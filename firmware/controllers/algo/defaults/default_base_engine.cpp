@@ -43,6 +43,7 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->compressionRatio = 9;
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
+	engineConfiguration->boardUseCanTerminator = true;
 
     setDefaultHPFP();
 
