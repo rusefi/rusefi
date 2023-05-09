@@ -75,7 +75,7 @@ static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
 
 	int id = CAN_ID(rx);
 
-	if (rx.IDE == CAN_IDE_EXT) {
+	if (CAN_ISX(rx)) {
 		// print extended IDs in hex only
 		efiPrintf("CAN%d RX: ID %07x DLC %d: %02x %02x %02x %02x %02x %02x %02x %02x",
 				busIndex,
