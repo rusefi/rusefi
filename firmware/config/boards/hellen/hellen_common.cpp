@@ -58,8 +58,8 @@ void configureHellenCanTerminator() {
     static OutputPin terminatorControlPin;
     if (!initialized) {
         initialized = true;
-	    cs2pin.initPin("CAN-term", H_SPI3_CS); // todo: make this pin configurable
-	    cs2pin.setValue(engineConfiguration->boardUseCanTerminator);
+	    terminatorControlPin.initPin("CAN-term", H_SPI3_CS); // todo: make this pin configurable
+	    terminatorControlPin.setValue(engineConfiguration->boardUseCanTerminator);
 	}
 }
 
