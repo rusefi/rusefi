@@ -4357,7 +4357,6 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = fancyHardwareDialog, "Fancy Boards"
 		field = "Tachometer Output",						boardUseTachPullUp
-		field = boardUseCanTerminator,                      boardUseCanTerminator
 		field = "boardUseTempPullUp",						boardUseTempPullUp
 		field = "boardUseCrankPullUp",						boardUseCrankPullUp
 		field = "2-step input",								boardUse2stepPullDown
