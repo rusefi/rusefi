@@ -988,7 +988,7 @@ bit launchSparkCutEnable;This is the Cut Mode normally used
 	bit boardUseD3PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD4PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD5PullDown,"With Pull Down","With Pull Up"
-bit verboseIsoTp
+bit verboseIsoTp;Are you a developer troubleshooting TS over CAN ISO/TP?
 bit engineSnifferFocusOnInputs
 bit launchActivateInverted
 bit twoStroke,"Two Stroke","Four Stroke"
