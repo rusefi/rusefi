@@ -1305,9 +1305,9 @@ gaugeCategory = Etb PID
 	wgStatus_resetCounterGauge = wastegateDcStatus_resetCounter,"WG PID resetCounter", "", 0,100.0, 0,100.0, 0,100.0, 0,0
 
 gaugeCategory = CAN
-	canReadCounterGauge = canReadCounter,"canReadCounter", "", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
-	canWriteOkGauge = canWriteOk,"canWriteOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	canWriteNotOkGauge = canWriteNotOk,"canWriteNotOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	canReadCounterGauge = canReadCounter,@@GAUGE_NAME_CAN_READ_OK@@, "", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+	canWriteOkGauge = canWriteOk,@@GAUGE_NAME_CAN_WRITE_OK@@, "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	canWriteNotOkGauge = canWriteNotOk,@@GAUGE_NAME_CAN_WRITE_ERR@@, "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 
 gaugeCategory = GDI
 	di_nextStartGauge = di_nextStart,"DI: next start", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0

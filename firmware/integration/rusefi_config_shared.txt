@@ -43,6 +43,10 @@
 #define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
 #define GAUGE_NAME_ADJUSTED_TIMING "Timing: ignition"
 
+#define GAUGE_NAME_CAN_READ_OK "CAN: Rx"
+#define GAUGE_NAME_CAN_WRITE_OK "CAN: Tx OK"
+#define GAUGE_NAME_CAN_WRITE_ERR "CAN: Tx err"
+
 #define GAUGE_CATEGORY_TIMING "Timing"
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
