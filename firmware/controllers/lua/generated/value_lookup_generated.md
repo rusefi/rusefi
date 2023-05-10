@@ -749,7 +749,7 @@ This is the Cut Mode normally used
 
 
 ### verboseIsoTp
-
+Are you a developer troubleshooting TS over CAN ISO/TP?
 
 ### engineSnifferFocusOnInputs
 

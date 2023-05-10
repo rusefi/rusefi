@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri May 05 21:37:58 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed May 10 23:53:33 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2402,6 +2402,7 @@ struct engine_configuration_s {
 	offset 1312 bit 26 */
 	bool boardUseD5PullDown : 1 {};
 	/**
+	 * Are you a developer troubleshooting TS over CAN ISO/TP?
 	offset 1312 bit 27 */
 	bool verboseIsoTp : 1 {};
 	/**
@@ -5183,4 +5184,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23176);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri May 05 21:37:58 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed May 10 23:53:33 UTC 2023
