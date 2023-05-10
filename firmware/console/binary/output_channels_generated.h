@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:48:40 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed May 10 00:32:43 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -329,7 +329,7 @@ struct output_channels_s {
 	 */
 	uint16_t revolutionCounterSinceStart = (uint16_t)0;
 	/**
-	 * CAN: Rx
+	 * @@GAUGE_NAME_CAN_READ_OK@@
 	 * offset 60
 	 */
 	uint16_t canReadCounter = (uint16_t)0;
@@ -1088,12 +1088,12 @@ struct output_channels_s {
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
-	 * CAN: Tx OK
+	 * @@GAUGE_NAME_CAN_WRITE_OK@@
 	 * offset 354
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
-	 * CAN: Tx err
+	 * @@GAUGE_NAME_CAN_WRITE_ERR@@
 	 * offset 356
 	 */
 	uint16_t canWriteNotOk = (uint16_t)0;
@@ -1424,4 +1424,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri May 05 21:48:40 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed May 10 00:32:43 UTC 2023

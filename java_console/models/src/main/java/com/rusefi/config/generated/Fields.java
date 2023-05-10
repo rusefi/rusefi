@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 09 23:37:39 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed May 10 00:33:33 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -420,6 +420,9 @@ public class Fields {
 	public static final String GAUGE_NAME_BOOST_OPEN_LOOP = "Boost: Open loop";
 	public static final String GAUGE_NAME_BOOST_OUTPUT = "Boost: Output";
 	public static final String GAUGE_NAME_BOOST_TARGET = "Boost: Target";
+	public static final String GAUGE_NAME_CAN_READ_OK = "CAN: Rx";
+	public static final String GAUGE_NAME_CAN_WRITE_ERR = "CAN: Tx err";
+	public static final String GAUGE_NAME_CAN_WRITE_OK = "CAN: Tx OK";
 	public static final String GAUGE_NAME_CLT = "CLT";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
 	public static final String GAUGE_NAME_CURRENT_GEAR = "Current Gear";
@@ -1241,7 +1244,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.10.f407-discovery.3523225323";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.10.f407-discovery.2694885075";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1372;

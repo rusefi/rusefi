@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//sent_state.txt Fri May 05 21:44:59 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//sent_state.txt Wed May 10 00:32:44 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -38,6 +38,9 @@ public class SentState {
 	public static final String GAUGE_NAME_BOOST_OPEN_LOOP = "Boost: Open loop";
 	public static final String GAUGE_NAME_BOOST_OUTPUT = "Boost: Output";
 	public static final String GAUGE_NAME_BOOST_TARGET = "Boost: Target";
+	public static final String GAUGE_NAME_CAN_READ_OK = "CAN: Rx";
+	public static final String GAUGE_NAME_CAN_WRITE_ERR = "CAN: Tx err";
+	public static final String GAUGE_NAME_CAN_WRITE_OK = "CAN: Tx OK";
 	public static final String GAUGE_NAME_CLT = "CLT";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
 	public static final String GAUGE_NAME_CURRENT_GEAR = "Current Gear";
