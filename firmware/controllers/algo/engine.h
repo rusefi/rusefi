@@ -132,7 +132,7 @@ public:
 #if EFI_HPFP && EFI_ENGINE_CONTROL
 		HpfpController,
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
-		ThrottleModel,
+		Mockable<ThrottleModel>,
 #if EFI_ALTERNATOR_CONTROL
 		AlternatorController,
 #endif /* EFI_ALTERNATOR_CONTROL */

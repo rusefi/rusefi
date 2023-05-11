@@ -4,6 +4,8 @@
 
 struct ThrottleModelBase : public throttle_model_s, public EngineModule {
 public:
+	using interface_t = ThrottleModelBase;
+
 	void onSlowCallback() override;
 
 	float estimateThrottleFlow(float tip, float tps, float map, float iat);
