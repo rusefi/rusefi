@@ -261,6 +261,8 @@ public class StartupFrame {
         // these should be about 213px wide
         if (bundle.contains("proteus")) {
             logoName = LOGO_PATH + "logo_proteus.png";
+        } else if (bundle.contains("honda")) {
+            logoName = LOGO_PATH + "logo_tutomo.png";
         } else if (bundle.contains("alphax")) {
             logoName = LOGO_PATH + "logo_alphax.png";
         } else if (bundle.contains(".mre")) {
