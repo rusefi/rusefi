@@ -13,17 +13,17 @@
 #include "defaults.h"
 
 static OutputPin alphaEn;
-static OutputPin alphaTachPullUp;
+//static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
 static OutputPin alphaCrankNPullUp;
 static OutputPin alpha2stepPullDown;
 static OutputPin alphaCamPullDown;
 static OutputPin alphaCamVrPullUp;
-static OutputPin alphaD2PullDown;
-static OutputPin alphaD3PullDown;
-static OutputPin alphaD4PullDown;
-static OutputPin alphaD5PullDown;
+//static OutputPin alphaD2PullDown;
+//static OutputPin alphaD3PullDown;
+//static OutputPin alphaD4PullDown;
+//static OutputPin alphaD5PullDown;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -134,7 +134,7 @@ void boardInitHardware() {
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
-	alphaTachPullUp.setValue(engineConfiguration->boardUseTachPullUp);
+//	alphaTachPullUp.setValue(engineConfiguration->boardUseTachPullUp);
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
 	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
 	alphaCrankNPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
@@ -142,10 +142,10 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
 	alphaCamVrPullUp.setValue(engineConfiguration->boardUseCamVrPullUp);
 
-	alphaD2PullDown.setValue(engineConfiguration->boardUseD2PullDown);
-	alphaD3PullDown.setValue(engineConfiguration->boardUseD3PullDown);
-	alphaD4PullDown.setValue(engineConfiguration->boardUseD4PullDown);
-	alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
+//	alphaD2PullDown.setValue(engineConfiguration->boardUseD2PullDown);
+//	alphaD3PullDown.setValue(engineConfiguration->boardUseD3PullDown);
+//	alphaD4PullDown.setValue(engineConfiguration->boardUseD4PullDown);
+//	alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
 
 void setBoardConfigOverrides() {
