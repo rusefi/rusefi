@@ -126,10 +126,10 @@ void boardInitHardware() {
 	alpha2stepPullDown.initPin("a-2step", H144_OUT_IO7);
 	alphaCamPullDown.initPin("a-cam", H144_OUT_IO8);
 	alphaCamVrPullUp.initPin("a-cam-vr", H144_OUT_IO9);
-	alphaD2PullDown.initPin("a-d2", H144_LS_5);
-	alphaD3PullDown.initPin("a-d3", H144_LS_6);
-	alphaD4PullDown.initPin("a-d4", H144_LS_7);
-	alphaD5PullDown.initPin("a-d5", H144_LS_8);
+//	alphaD2PullDown.initPin("a-d2", H144_LS_5);
+//	alphaD3PullDown.initPin("a-d3", H144_LS_6);
+//	alphaD4PullDown.initPin("a-d4", H144_LS_7);
+//	alphaD5PullDown.initPin("a-d5", H144_LS_8);
 	boardOnConfigurationChange(nullptr);
 }
 
