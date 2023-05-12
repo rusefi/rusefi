@@ -32,6 +32,9 @@ void setStepperHw() {
 	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
 // open question if we need custom logic to handle shared disable pin?	engineConfiguration->stepperDcIo[1].disablePin = H144_GP5; // ETB_DIS
 #endif // HW_HELLEN
+
+#if HW_PROTEUS
+#endif // HW_PROTEUS
 }
 
 void setSbc() {
