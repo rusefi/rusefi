@@ -44,6 +44,7 @@ Release template (copy/paste this for new release):
  - Y axis override for Idle VE table. Helps with idle quality on ITB setups.
  - Blend tables for boost open and closed loop control
  - Boost Cut Pressure Hysteresis #4529
+ - Enable knock sensing on F407 Discovery build, hardcoded to PA3 #5254
 
 ## April 2023 Release - "Day 419"
 
