@@ -60,8 +60,9 @@ void resetConfigurationExt(engine_type_e engineType);
 void rememberCurrentConfiguration();
 #endif /* __cplusplus */
 
-void setBoardDefaultConfiguration(void);
-void setBoardConfigOverrides(void);
+void setBoardDefaultConfiguration();
+void setBoardConfigOverrides();
+void onBoardStandBy();
 void boardOnConfigurationChange(engine_configuration_s *previousConfiguration);
 
 #if !EFI_UNIT_TEST
