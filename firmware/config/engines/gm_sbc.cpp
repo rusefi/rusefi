@@ -34,6 +34,25 @@ void setStepperHw() {
 #endif // HW_HELLEN
 
 #if HW_PROTEUS
+	// coil #1
+	// PWM pin
+	engineConfiguration->stepperDcIo[0].controlPin = Gpio::D12;
+	// DIR pin
+	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::D10;
+	// Disable pin
+	engineConfiguration->stepperDcIo[0].disablePin = Gpio::D11;
+	// Unused
+	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
+
+	// coil #2
+	// PWM pin
+	engineConfiguration->stepperDcIo[1].controlPin = Gpio::D13;
+	// DIR pin
+	engineConfiguration->stepperDcIo[1].directionPin1 = Gpio::D9;
+	// Disable pin
+	engineConfiguration->stepperDcIo[1].disablePin = Gpio::D8;
+	// Unused
+	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
 #endif // HW_PROTEUS
 }
 
