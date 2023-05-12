@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - Log channels to make MegaLogViewer VE Analyze work #82
  - Enable knock sensing on F407 Discovery build, hardcoded to PA3 #105
  - Support gauge and differential fuel pressure sensors (in addition to absolute) #32
+ - Snapshot builds have a date code in the folder name #91
 
 ### Fixed
  - Sensor checker wasn't checking sensors
