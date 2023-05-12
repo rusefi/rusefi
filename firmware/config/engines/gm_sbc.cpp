@@ -14,6 +14,9 @@ void setStepperHw() {
 	engineConfiguration->stepper_dc_use_two_wires = false;
 	engineConfiguration->stepperDcInvertedPins = false; // or true?
 
+    // for instance IWP069
+	engineConfiguration->injector.flow = 482.5;
+
 #if HW_HELLEN
     engineConfiguration->stepperDcInvertedPins = true; // todo: fix test harness not today
 
