@@ -119,7 +119,7 @@ void boardInitHardware() {
 	alphaEn.initPin("a-EN", H144_OUT_IO3);
 	alphaEn.setValue(1);
 
-	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
+//	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
 	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
 	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
