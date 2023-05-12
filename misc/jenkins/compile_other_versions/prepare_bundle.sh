@@ -8,7 +8,8 @@ echo "RUSEFI_BUILD_FTP_USER=$RUSEFI_BUILD_FTP_USER"
 
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
 
-if [ "$3" = "master" ]; then
+# No arg 3 means this is a snapshot "no name", just use the timestamp
+if [ -z $3 ]; then
   export FOLDER="temp/fome.snapshot.${TIMESTAMP}.${BUNDLE_NAME}"
 else
   export FOLDER="temp/fome.${3}.${BUNDLE_NAME}"

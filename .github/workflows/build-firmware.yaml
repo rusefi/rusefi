@@ -9,6 +9,10 @@ on:
         description: 'Upload Build Outputs'
         required: false
         type: boolean
+      build_name:
+        description: 'Release Build Name'
+        required: false
+        type: string
 
 jobs:
   build-firmware:
@@ -268,7 +272,7 @@ jobs:
 
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
-      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }}
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{  }}
 
     # - name: Upload HyperTuner .ini
     #   if: ${{ env.full == 'true' && env.upload == 'true' }}
