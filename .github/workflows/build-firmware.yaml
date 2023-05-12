@@ -5,8 +5,8 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
-      lts:
-        description: 'LTS Build'
+      do_upload:
+        description: 'Upload Build Outputs'
         required: false
         type: boolean
 
@@ -182,7 +182,7 @@ jobs:
         if [ "${{github.repository}}" = "FOME-Tech/fome-fw" ]\
         && [ "${{github.event_name}}" = "push" ]\
         && [ "${{github.ref}}" = "refs/heads/master" ]\
-        || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
+        || [ "${{toJSON(inputs.do_upload)}}" = "true" ]; then
           echo "full=true" >> $GITHUB_ENV
           echo "upload=true" >> $GITHUB_ENV
         elif [ "${{github.event_name}}" = "push" ]\
@@ -268,7 +268,7 @@ jobs:
 
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
-      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }}
 
     # - name: Upload HyperTuner .ini
     #   if: ${{ env.full == 'true' && env.upload == 'true' }}
