@@ -62,26 +62,19 @@ void configureGmTriggerWaveform(TriggerWaveform *s) {
 
 	float w = 5;
 
-	s->addEvent360(60 - w, TriggerValue::RISE);
-	s->addEvent360(60, TriggerValue::FALL);
+	s->addToothRiseFall(60, w);
 
-	s->addEvent360(120 - w, TriggerValue::RISE);
-	s->addEvent360(120.0, TriggerValue::FALL);
+	s->addToothRiseFall(120, w);
 
-	s->addEvent360(180 - w, TriggerValue::RISE);
-	s->addEvent360(180, TriggerValue::FALL);
+	s->addToothRiseFall(180, w);
 
-	s->addEvent360(240 - w, TriggerValue::RISE);
-	s->addEvent360(240.0, TriggerValue::FALL);
+	s->addToothRiseFall(240, w);
 
-	s->addEvent360(300 - w, TriggerValue::RISE);
-	s->addEvent360(300.0, TriggerValue::FALL);
+	s->addToothRiseFall(300, w);
 
-	s->addEvent360(350 - w, TriggerValue::RISE);
-	s->addEvent360(350.0, TriggerValue::FALL);
+	s->addToothRiseFall(350, w);
 
-	s->addEvent360(360 - w, TriggerValue::RISE);
-	s->addEvent360(360.0, TriggerValue::FALL);
+	s->addToothRiseFall(360, w);
 
 	s->setTriggerSynchronizationGap(6);
 }

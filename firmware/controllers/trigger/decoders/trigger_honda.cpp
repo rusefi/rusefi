@@ -56,15 +56,14 @@ void configureOnePlus16(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	int count = 16;
-	float tooth = s->getCycleDuration() / count;
+	float tooth = s->getCycleDuration() / 2 / count;
 	float width = tooth / 2; // for VR we only handle rises so width does not matter much
 
 	s->addEventAngle(1, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEventAngle(5, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	for (int i = 1; i <= count; i++) {
-		s->addEventAngle(tooth * i - width, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-		s->addEventAngle(tooth * i,         TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addToothRiseFall(tooth * i, width, TriggerWheel::T_SECONDARY);
 	}
 
 	s->isSynchronizationNeeded = false;
