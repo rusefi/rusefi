@@ -626,7 +626,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	case TT_MITSU_4G63_CRANK:
 	    initializeMitsubishi4gSymmetricalCrank(this);
         break;
-	case TT_UNUSED_4:
+	case TT_VVT_FORD_COYOTE:
 	case TT_UNUSED_11:
 	case TT_UNUSED_75:
 	case TT_UNUSED_77:

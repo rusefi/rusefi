@@ -498,7 +498,7 @@ case TT_UNUSED:
   return "TT_UNUSED";
 case TT_UNUSED_11:
   return "TT_UNUSED_11";
-case TT_UNUSED_4:
+case TT_VVT_FORD_COYOTE:
   return "TT_UNUSED_4";
 case TT_UNUSED_75:
   return "TT_UNUSED_75";
