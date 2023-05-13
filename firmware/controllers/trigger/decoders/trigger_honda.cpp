@@ -102,20 +102,12 @@ void configureHondaK_4_1(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.5, 4.5);	// nominal 2.27
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.1, 0.5);	// nominal 0.28
 
-	angle_t start = 55.5;
 	angle_t end = 70.5;
-	s->addEvent360(start + 90 * 0, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end + 90 * 0, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	int w = 15;
+	s->addToothRiseFall(end + 90 * 0, w);
+	s->addToothRiseFall(end + 90 * 1, w);
+	s->addToothRiseFall(end + 90 * 2, w);
+	s->addToothRiseFall(end + 90 * 3, w);
 
-	s->addEvent360(start + 90 * 1, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end + 90 * 1, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(start + 90 * 2, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end + 90 * 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(start + 90 * 3, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end + 90 * 3, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(353, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(360, 7);
 }
