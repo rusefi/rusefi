@@ -13,16 +13,15 @@
 #include "defaults.h"
 
 static OutputPin alphaEn;
-//static OutputPin alphaTachPullUp;
+static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
-static OutputPin alphaCrankNPullUp;
 static OutputPin alpha2stepPullDown;
 static OutputPin alphaCamPullDown;
-static OutputPin alphaCamVrPullUp;
-//static OutputPin alphaD2PullDown;
-//static OutputPin alphaD3PullDown;
-//static OutputPin alphaD4PullDown;
+//static OutputPin alphaCamVrPullUp;
+static OutputPin alphaD2PullDown;
+static OutputPin alphaD3PullDown;
+static OutputPin alphaD4PullDown;
 //static OutputPin alphaD5PullDown;
 
 static void setInjectorPins() {
@@ -119,33 +118,31 @@ void boardInitHardware() {
 	alphaEn.initPin("a-EN", H144_OUT_IO3);
 	alphaEn.setValue(1);
 
-//	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
-	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
-	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
+	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO5);
+	alphaTachPullUp.initPin("a-tach", H144_OUT_IO6);
 	alpha2stepPullDown.initPin("a-2step", H144_OUT_IO7);
 	alphaCamPullDown.initPin("a-cam", H144_OUT_IO8);
-	alphaCamVrPullUp.initPin("a-cam-vr", H144_OUT_IO9);
-//	alphaD2PullDown.initPin("a-d2", H144_LS_5);
-//	alphaD3PullDown.initPin("a-d3", H144_LS_6);
-//	alphaD4PullDown.initPin("a-d4", H144_LS_7);
-//	alphaD5PullDown.initPin("a-d5", H144_LS_8);
+	//alphaCamVrPullUp.initPin("a-cam-vr", H144_OUT_IO9);
+	alphaD2PullDown.initPin("a-d2", H_SPI3_SCK);
+	alphaD3PullDown.initPin("a-d3", H_SPI3_MISO);
+	alphaD4PullDown.initPin("a-d4", H_SPI3_MOSI);
+	//alphaD5PullDown.initPin("a-d5", H144_LS_8);
 	boardOnConfigurationChange(nullptr);
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
-//	alphaTachPullUp.setValue(engineConfiguration->boardUseTachPullUp);
+	alphaTachPullUp.setValue(engineConfiguration->boardUseTachPullUp);
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
 	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
-	alphaCrankNPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
 	alpha2stepPullDown.setValue(engineConfiguration->boardUse2stepPullDown);
 	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
-	alphaCamVrPullUp.setValue(engineConfiguration->boardUseCamVrPullUp);
+	//alphaCamVrPullUp.setValue(engineConfiguration->boardUseCamVrPullUp);
 
-//	alphaD2PullDown.setValue(engineConfiguration->boardUseD2PullDown);
-//	alphaD3PullDown.setValue(engineConfiguration->boardUseD3PullDown);
-//	alphaD4PullDown.setValue(engineConfiguration->boardUseD4PullDown);
-//	alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
+	alphaD2PullDown.setValue(engineConfiguration->boardUseD2PullDown);
+	alphaD3PullDown.setValue(engineConfiguration->boardUseD3PullDown);
+	alphaD4PullDown.setValue(engineConfiguration->boardUseD4PullDown);
+	//alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
 
 void setBoardConfigOverrides() {
