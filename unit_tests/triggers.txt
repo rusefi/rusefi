@@ -96,7 +96,7 @@ event 8 1 1 484.14 nan
 event 9 1 0 553.82 nan
 event 10 0 1 648.08 1.517134
 event 11 1 1 663.82 nan
-TRIGGERTYPE 4 4 TT_UNUSED_4 0.00
+TRIGGERTYPE 4 4 TT_VVT_FORD_COYOTE 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
