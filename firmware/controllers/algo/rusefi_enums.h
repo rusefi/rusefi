@@ -222,7 +222,7 @@ typedef enum {
 	/**
 	 * 720 degree engine cycle but trigger is defined using a 360 cycle which is when repeated.
 	 * For historical reasons we have a pretty weird approach where one crank trigger revolution is
-	 * defined as if it's stretched to 720 degress. See CRANK_MODE_MULTIPLIER
+	 * defined as if it's stretched to 720 degrees. See CRANK_MODE_MULTIPLIER
 	 */
 	FOUR_STROKE_CRANK_SENSOR = 1,
 	/**
