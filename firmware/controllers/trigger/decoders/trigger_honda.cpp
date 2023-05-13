@@ -51,6 +51,7 @@ void configureHondaCbr600(TriggerWaveform *s) {
 	s->addEvent720(720.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
 
+// todo: what is this 1+16 trigger about? should it have been defined as skipped + cam or else?
 void configureOnePlus16(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
