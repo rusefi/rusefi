@@ -40,6 +40,11 @@ void setHellenMegaEnPin() {
 	}
 }
 
+void hellenBoardStandBy() {
+    //efiPrintf("Hellen StandBy");
+    //todo: see if we need to turn 'megaEn' and pause for a bit to make sure that WBO is off and does not wake main firmware right away
+}
+
 /**
  * dirty hack
  */
