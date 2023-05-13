@@ -210,8 +210,6 @@ typedef enum __attribute__ ((__packed__)) {
 	PI_PULLDOWN = 2
 } pin_input_mode_e;
 
-#define CRANK_MODE_MULTIPLIER 2.0f
-
 /**
  * @see getCycleDuration
  * @see getEngineCycle

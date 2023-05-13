@@ -9,9 +9,11 @@
 
 #include "trigger_gm.h"
 
+#define GM_60_W 6
+
 static float addTooth(float offset, TriggerWaveform *s) {
-	s->addToothRiseFall(offset / 2 + 3, 3, TriggerWheel::T_SECONDARY);
-	return offset + CRANK_MODE_MULTIPLIER * 6;
+	s->addToothRiseFall(offset + GM_60_W / 2, GM_60_W / 2, TriggerWheel::T_SECONDARY);
+	return offset + GM_60_W;
 }
 
 /**
@@ -23,37 +25,35 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 	s->isSecondWheelCam = true;
 
-	float m = CRANK_MODE_MULTIPLIER;
-	int offset = 1 * m;
+	int offset = 1;
 
 	for (int i=0;i<12;i++) {
 		offset = addTooth(offset, s);
 	}
 
-	offset += m * 2 * 6;
+	offset += 2 * GM_60_W;
 
 	for (int i=0;i<18;i++) {
 		offset = addTooth(offset, s);
 	}
 
-	offset += m * 2 * 6;
+	offset += 2 * GM_60_W;
 
 	for (int i=0;i<18;i++) {
 		offset = addTooth(offset, s);
 	}
 
-	offset += m * 2 * 6;
+	offset += 2 * GM_60_W;
 
 	for (int i=0;i<5;i++) {
 		offset = addTooth(offset, s);
 	}
 
-
-	s->addEventAngle(m * (360 - 6), TriggerValue::RISE);
+	s->addEvent360(360 - GM_60_W, TriggerValue::RISE);
 
 	offset = addTooth(offset, s);
 
-	s->addEventAngle(m * (360), TriggerValue::FALL);
+	s->addEvent360(360, TriggerValue::FALL);
 
 }
 

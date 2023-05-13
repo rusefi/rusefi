@@ -69,12 +69,6 @@ void configureOnePlus16(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 }
 
-static void kseriesTooth(TriggerWaveform* s, float end) {
-	// for VR we only handle rises so width does not matter much
-	s->addEvent360(end - 4, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end    , TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-}
-
 // TT_HONDA_K_CRANK_12_1
 void configureHondaK_12_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
@@ -87,11 +81,14 @@ void configureHondaK_12_1(TriggerWaveform *s) {
 	int count = 12;
 	float tooth = 360 / count; // hint: tooth = 30
 
+	// for VR we only handle rises so width does not matter much
+    int width = 4;
+
 	// Extra "+1" tooth happens 1/3 of the way between first two teeth
-	kseriesTooth(s, tooth / 3);
+	s->addToothRiseFall(tooth / 3, width);
 
 	for (int i = 1; i <= count; i++) {
-		kseriesTooth(s, tooth * i);
+		s->addToothRiseFall(tooth * i, width);
 	}
 }
 

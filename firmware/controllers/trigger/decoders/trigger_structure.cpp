@@ -225,6 +225,7 @@ void TriggerWaveform::addEvent720(angle_t angle, TriggerValue const state, Trigg
 
 void TriggerWaveform::addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
+#define CRANK_MODE_MULTIPLIER 2.0f
 	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
 
