@@ -184,6 +184,8 @@ public:
 	 */
 	void addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
+	void addToothRiseFall(angle_t angle, angle_t width = 10, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
+
 	/**
 	 * This version of the method is best when same wheel could be mounted either on crank or cam
 	 *

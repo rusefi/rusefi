@@ -10,11 +10,8 @@
 #include "trigger_gm.h"
 
 static float addTooth(float offset, TriggerWaveform *s) {
-	s->addEventAngle(offset, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	offset += CRANK_MODE_MULTIPLIER * 3;
-	s->addEventAngle(offset, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	offset += CRANK_MODE_MULTIPLIER * 3;
-	return offset;
+	s->addToothRiseFall(offset / 2 + 3, 3, TriggerWheel::T_SECONDARY);
+	return offset + CRANK_MODE_MULTIPLIER * 6;
 }
 
 /**
@@ -89,13 +86,13 @@ void configureGmTriggerWaveform(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(6);
 }
 
-static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s, int mult, float shortToothWidth)
+static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s, float shortToothWidth)
 {
-	int window = (isShortLong ? shortToothWidth : (15 - shortToothWidth)) * mult;
-	int end = startAngle + mult * 15;
+	int window = (isShortLong ? shortToothWidth : (15 - shortToothWidth));
+	int end = startAngle + 15;
 
-	s->addEvent720(startAngle + window, TriggerValue::RISE);
-	s->addEvent720(end, TriggerValue::FALL);
+	s->addEvent360(startAngle + window, TriggerValue::RISE);
+	s->addEvent360(end, TriggerValue::FALL);
 
 	return end;
 }
@@ -149,7 +146,7 @@ static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 		bool bit = code & 0x000001;
 		code = code >> 1;
 
-		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER, shortToothWidth);
+		angle = gm_tooth_pair(angle, bit, s, shortToothWidth);
 	}
 }
 

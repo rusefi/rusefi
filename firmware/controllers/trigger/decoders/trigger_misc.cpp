@@ -131,25 +131,18 @@ void configureBarra3plus1cam(TriggerWaveform *s) {
 	// long = 120 deg
 
 	{
-		int offset = 120;
+		int offset = 60;
+		int w = 5;
 
-		s->addEventAngle(offset + 2 * 0 - 10, TriggerValue::RISE);
-		s->addEventAngle(offset + 2 * 0 +  0, TriggerValue::FALL);
+		s->addToothRiseFall(offset, w);
 
 		// short gap 60 deg
-
-		s->addEventAngle(offset + 2 * 60 - 10, TriggerValue::RISE);
-		s->addEventAngle(offset + 2 * 60 +  0, TriggerValue::FALL);
+		s->addToothRiseFall(offset + 60, w);
 
 		// long gap 120 deg
-
-		s->addEventAngle(offset + 2 * 180 - 10, TriggerValue::RISE);
-		s->addEventAngle(offset + 2 * 180 +  0, TriggerValue::FALL);
-
+		s->addToothRiseFall(offset + 180, w);
 		// long gap 120 deg
-
-		s->addEventAngle(offset + 2 * 300 - 10, TriggerValue::RISE);
-		s->addEventAngle(offset + 2 * 300 +  0, TriggerValue::FALL);
+		s->addToothRiseFall(offset + 300, w);
 
 		// short gap, 60 deg back to zero/720
 	}

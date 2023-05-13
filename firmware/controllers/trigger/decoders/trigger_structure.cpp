@@ -18,11 +18,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "pch.h"
 
-
 #include "trigger_chrysler.h"
+#include "trigger_ford.h"
 #include "trigger_gm.h"
 #include "trigger_nissan.h"
 #include "trigger_mazda.h"
@@ -227,6 +226,11 @@ void TriggerWaveform::addEvent720(angle_t angle, TriggerValue const state, Trigg
 void TriggerWaveform::addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
 	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
+}
+
+void TriggerWaveform::addToothRiseFall(angle_t angle, angle_t width, TriggerWheel const channelIndex) {
+    addEvent360(angle - width, TriggerValue::RISE, channelIndex);
+    addEvent360(angle, TriggerValue::FALL, channelIndex);
 }
 
 void TriggerWaveform::addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
@@ -627,6 +631,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    initializeMitsubishi4gSymmetricalCrank(this);
         break;
 	case TT_VVT_FORD_COYOTE:
+// todo	    configureFordCoyote(this);
+//        break;
 	case TT_UNUSED_11:
 	case TT_UNUSED_75:
 	case TT_UNUSED_77:
