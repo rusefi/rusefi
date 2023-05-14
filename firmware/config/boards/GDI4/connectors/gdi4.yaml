@@ -17,19 +17,27 @@ pins:
 
   - pin: 44a
     function: Injector Control 1
-    color: blue
+    color: green
 
   - pin: 45a
-    function: Injector Control 2
-    color: blue
+    function: Injector Control 5
+    color: grey
 
   - pin: 46a
     function: Injector Control 3
     color: blue
 
   - pin: 47a
+    function: Injector Control 6
+    color: yellow
+
+  - pin: 48a
+    function: Injector Control 2
+    color: white
+
+  - pin: 49a
     function: Injector Control 4
-    color: blue
+    color: orange/brown
 
   - pin: 52a
     function: CAN High
