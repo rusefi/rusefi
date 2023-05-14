@@ -87,10 +87,12 @@ pins:
 
   - pin: 16
     function: CAN bus low
+    color: blue
     type: can
 
   - pin: 17
     function: CAN bus high
+    color: green
     type: can
 
   - pin: 18
@@ -110,9 +112,13 @@ pins:
 
   - pin: 21
     function: CAN2 bus low
+    type: can
+    color: blue
 
   - pin: 22
     function: CAN2 bus high
+    type: can
+    color: green
 
   - pin: 23
     function: Power supply from main relay. Connect this pin to the output of the car's main relay that also powers injectors, coils, etc. Supplies power to electronic throttle drivers and high side outputs.
