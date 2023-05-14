@@ -41,11 +41,11 @@ pins:
 
   - pin: 52a
     function: CAN High
-    color: yellow
+    color: green
 
   - pin: 53a
     function: CAN Low
-    color: yellow
+    color: blue
 
   - pin: 90a
     function: Injector Output 3 Negative
