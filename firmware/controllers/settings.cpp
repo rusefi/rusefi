@@ -888,7 +888,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, CMD_RPM)) {
 		setTriggerEmulatorRPM(valueI);
 #endif // EFI_EMULATE_POSITION_SENSORS
-#if EFI_MC33816
 	} else if (strEqualCaseInsensitive(paramStr, "mc33_hvolt")) {
 		engineConfiguration->mc33_hvolt = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "mc33_i_peak")) {
@@ -899,7 +898,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->mc33_t_max_boost = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "mc33_t_peak_off")) {
 		engineConfiguration->mc33_t_peak_off = valueI;
-#endif // EFI_MC33816
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
 		engineConfiguration->vvtOffsets[0] = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
