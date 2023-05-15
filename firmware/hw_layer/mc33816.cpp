@@ -194,14 +194,14 @@ void Pt2001::init() {
 	initIfNeeded();
 }
 
-static bool isInitializaed = false;
+static bool isInitialized = false;
 
 void Pt2001::initIfNeeded() {
 	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
-		isInitializaed = false;
+		isInitialized = false;
 	} else {
-		if (!isInitializaed) {
-			isInitializaed = restart();
+		if (!isInitialized) {
+			isInitialized = restart();
 		}
 	}
 }
