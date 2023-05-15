@@ -46,16 +46,12 @@ void initializeMitsubishi4g9xCam(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap2(2.0f, 5.0f);
 
 	// 131 deg before #1 TDC
-	s->addEvent720(270, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-
 	// 49 deg after #1 TDC
-	s->addEvent720(450, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(225, /*width*/90);
 
 	// 131 deg before #4 TDC
-	s->addEvent720(630, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-
 	// 41 deg before #4 TDC
-	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(360, /*width*/45);
 }
 
 void initializeMitsubishi4g63Cam(TriggerWaveform *s) {
@@ -123,24 +119,14 @@ void initializeVvt3A92(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	int w = 5;
-	s->addEvent360(120 - w, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(120, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(120, w);
 
-	s->addEvent360(12 + 120 - w, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(12 + 120, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(12 + 120, w);
 
-	s->addEvent360(240 - w, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(240, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(240, w);
 
-	s->addEvent360(360 - w, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(360, w);
 
 	s->setTriggerSynchronizationGap(9);
 	s->setSecondTriggerSynchronizationGap(0.11); // redundancy
 }
-
-void initializeVvt6G75(TriggerWaveform /* *s */) {
-	//	s->shapeWithoutTdc = true;
-	//	s->isSynchronizationNeeded = false;
-}
-

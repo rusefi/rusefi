@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Apr 29 19:54:38 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat May 13 15:41:58 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -498,8 +498,6 @@ case TT_UNUSED:
   return "TT_UNUSED";
 case TT_UNUSED_11:
   return "TT_UNUSED_11";
-case TT_UNUSED_4:
-  return "TT_UNUSED_4";
 case TT_UNUSED_75:
   return "TT_UNUSED_75";
 case TT_UNUSED_77:
@@ -510,6 +508,8 @@ case TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
+case TT_VVT_FORD_COYOTE:
+  return "TT_VVT_FORD_COYOTE";
 case TT_VVT_JZ:
   return "TT_VVT_JZ";
 case TT_VVT_MAZDA_SKYACTIV:

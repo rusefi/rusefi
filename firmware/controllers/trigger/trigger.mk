@@ -8,6 +8,7 @@ TRIGGER_DECODERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/trigger/decoders/auto_generated_sync_edge.cpp \
 	$(CONTROLLERS_DIR)/trigger/trigger_decoder.cpp \
 	$(CONTROLLERS_DIR)/trigger/trigger_simulator.cpp \
+	$(CONTROLLERS_DIR)/trigger/decoders/trigger_ford.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_mitsubishi.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_nissan.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_subaru.cpp \

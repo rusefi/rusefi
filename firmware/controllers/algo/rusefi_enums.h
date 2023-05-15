@@ -110,6 +110,8 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_MITSUBISHI_4G9x = 17,
 	VVT_MITSUBISHI_4G63 = 18,
 
+	VVT_FORD_COYOTE = 19,
+
 } vvt_mode_e;
 
 /**
@@ -208,8 +210,6 @@ typedef enum __attribute__ ((__packed__)) {
 	PI_PULLDOWN = 2
 } pin_input_mode_e;
 
-#define CRANK_MODE_MULTIPLIER 2.0f
-
 /**
  * @see getCycleDuration
  * @see getEngineCycle
@@ -220,7 +220,7 @@ typedef enum {
 	/**
 	 * 720 degree engine cycle but trigger is defined using a 360 cycle which is when repeated.
 	 * For historical reasons we have a pretty weird approach where one crank trigger revolution is
-	 * defined as if it's stretched to 720 degress. See CRANK_MODE_MULTIPLIER
+	 * defined as if it's stretched to 720 degrees. See CRANK_MODE_MULTIPLIER
 	 */
 	FOUR_STROKE_CRANK_SENSOR = 1,
 	/**

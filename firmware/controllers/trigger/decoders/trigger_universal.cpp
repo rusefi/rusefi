@@ -125,30 +125,21 @@ void configureKawaKX450F(TriggerWaveform *s) {
 	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, 18, 0, toothWidth, 0, engineCycle,
 			NO_LEFT_FILTER, 720 - 39);
 
-	s->addEvent(0.97, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent(1, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(360, /* width*/10.80);
 }
 
 void configureQuickStartSenderWheel(TriggerWaveform *s) {
+	// todo: most cam wheels are defined as 'SyncEdge::Rise' or 'SyncEdge::RiseOnly' shall we unify?
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
-
-	int offset = 20;
 
 	// our preference is to sync not too close to crank sync point
 	s->setTriggerSynchronizationGap(0.645);
 	s->setSecondTriggerSynchronizationGap(1.556);
 
-	s->addEvent360(offset + 0, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(offset + 70, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(offset + 90, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(offset + 110, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(offset + 180, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(offset + 200, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(offset + 270, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(offset + 340, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(90, /* width*/ 70);
+	s->addToothRiseFall(130, /* width*/ 20);
+	s->addToothRiseFall(220, /* width*/ 20);
+	s->addToothRiseFall(360, /* width*/ 70);
 }
 
 // Useful for:

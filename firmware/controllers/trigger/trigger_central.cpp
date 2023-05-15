@@ -184,6 +184,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 		return tc->syncAndReport(getCrankDivider(operationMode), 0);
 	case VVT_2JZ:
 	case VVT_TOYOTA_4_1:
+	case VVT_FORD_COYOTE:
 	case VVT_FORD_ST170:
 	case VVT_BARRA_3_PLUS_1:
 	case VVT_NISSAN_MR:

@@ -318,7 +318,7 @@ typedef enum {
 	TT_DODGE_NEON_1995 = 2,
 	// https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
 	TT_MAZDA_MIATA_NA = 3,
-	TT_UNUSED_4 = 4,
+	TT_VVT_FORD_COYOTE = 4,
 	TT_GM_7X = 5,
 	TT_DAIHATSU = 6,
 	TT_MAZDA_SOHC_4 = 7,

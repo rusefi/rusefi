@@ -51,28 +51,22 @@ void configureHondaCbr600(TriggerWaveform *s) {
 	s->addEvent720(720.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
 
+// todo: what is this 1+16 trigger about? should it have been defined as skipped + cam or else?
 void configureOnePlus16(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	int count = 16;
-	float tooth = s->getCycleDuration() / count;
+	float tooth = s->getCycleDuration() / 2 / count;
 	float width = tooth / 2; // for VR we only handle rises so width does not matter much
 
 	s->addEventAngle(1, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEventAngle(5, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	for (int i = 1; i <= count; i++) {
-		s->addEventAngle(tooth * i - width, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-		s->addEventAngle(tooth * i,         TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addToothRiseFall(tooth * i, width, TriggerWheel::T_SECONDARY);
 	}
 
 	s->isSynchronizationNeeded = false;
-}
-
-static void kseriesTooth(TriggerWaveform* s, float end) {
-	// for VR we only handle rises so width does not matter much
-	s->addEvent360(end - 4, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end    , TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
 // TT_HONDA_K_CRANK_12_1
@@ -87,11 +81,14 @@ void configureHondaK_12_1(TriggerWaveform *s) {
 	int count = 12;
 	float tooth = 360 / count; // hint: tooth = 30
 
+	// for VR we only handle rises so width does not matter much
+    int width = 4;
+
 	// Extra "+1" tooth happens 1/3 of the way between first two teeth
-	kseriesTooth(s, tooth / 3);
+	s->addToothRiseFall(tooth / 3, width);
 
 	for (int i = 1; i <= count; i++) {
-		kseriesTooth(s, tooth * i);
+		s->addToothRiseFall(tooth * i, width);
 	}
 }
 
@@ -105,20 +102,12 @@ void configureHondaK_4_1(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.5, 4.5);	// nominal 2.27
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.1, 0.5);	// nominal 0.28
 
-	angle_t start = 55.5;
 	angle_t end = 70.5;
-	s->addEvent360(start + 90 * 0, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end + 90 * 0, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	int w = 15;
+	s->addToothRiseFall(end + 90 * 0, w);
+	s->addToothRiseFall(end + 90 * 1, w);
+	s->addToothRiseFall(end + 90 * 2, w);
+	s->addToothRiseFall(end + 90 * 3, w);
 
-	s->addEvent360(start + 90 * 1, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end + 90 * 1, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(start + 90 * 2, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end + 90 * 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(start + 90 * 3, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(end + 90 * 3, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(353, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(360, 7);
 }

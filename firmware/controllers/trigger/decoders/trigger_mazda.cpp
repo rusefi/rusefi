@@ -78,9 +78,8 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	s->addEventAngle(180.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
 
-static void addNBCrankTooth(TriggerWaveform *s, angle_t angle, TriggerWheel const channelIndex) {
-	s->addEvent720(angle, TriggerValue::RISE, channelIndex);
-	s->addEvent720(angle + 4, TriggerValue::FALL, channelIndex);
+static void addNBCrankTooth(TriggerWaveform *s, angle_t angle) {
+	s->addToothRiseFall(angle / 2 + 2, 2, TriggerWheel::T_SECONDARY);
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float offset) {
@@ -95,10 +94,10 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	 */
 	s->addEvent720(20.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	addNBCrankTooth(s, offset + 66.0f, TriggerWheel::T_SECONDARY);
-	addNBCrankTooth(s, offset + 66.0f + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
-	addNBCrankTooth(s, offset + 66.0f + 180, TriggerWheel:: T_SECONDARY);
-	addNBCrankTooth(s, offset + 66.0f + 180 + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f);
+	addNBCrankTooth(s, offset + 66.0f + NB_CRANK_MAGIC);
+	addNBCrankTooth(s, offset + 66.0f + 180);
+	addNBCrankTooth(s, offset + 66.0f + 180 + NB_CRANK_MAGIC);
 
 	s->addEvent720(340.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent720(360.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
@@ -106,10 +105,10 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	s->addEvent720(380.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent720(400.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	addNBCrankTooth(s, offset + 66.0f + 360, TriggerWheel:: T_SECONDARY);
-	addNBCrankTooth(s, offset + 66.0f + 360 + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
-	addNBCrankTooth(s, offset + 66.0f + 540, TriggerWheel:: T_SECONDARY);
-	addNBCrankTooth(s, offset + 66.0f + 540 + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 360);
+	addNBCrankTooth(s, offset + 66.0f + 360 + NB_CRANK_MAGIC);
+	addNBCrankTooth(s, offset + 66.0f + 540);
+	addNBCrankTooth(s, offset + 66.0f + 540 + NB_CRANK_MAGIC);
 
 	s->addEvent720(720.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
@@ -120,25 +119,17 @@ void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
 
 void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
-//	s->initialState[0] = 1;
-
-//	float w = 720 / 4 * 0.215;
-	float a = 5;
 
 	float z = 0.093;
-	a = 180;
-	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	float a = 90;
+	s->addToothRiseFall(a, z * 360);
 
-	a += 180;
-	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	a += 180;
-	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	a += 180;
-	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	a += 90;
+	s->addToothRiseFall(a, z * 360);
+	a += 90;
+	s->addToothRiseFall(a, z * 360);
+	a += 90;
+	s->addToothRiseFall(a, z * 360);
 
 	s->isSynchronizationNeeded = false;
 	s->shapeWithoutTdc = true;
@@ -153,17 +144,17 @@ void configureMazdaProtegeLx(TriggerWaveform *s) {
 	s->addEvent720(95.329254, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
 	s->addEvent720(95.329254 + 14.876692, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(95.329254 + 82.693557, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(178.022811, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
 	s->addEvent720(95.329254 + 137.119154, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	s->addEvent720(95.329254 + 192.378308, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(95.329254 + 261.556418, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(356.885672, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
 	s->addEvent720(95.329254 + 373.060597, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(95.329254 + 443.503184, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(538.832438, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(95.329254 + 555.349776, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(720-69.32097, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
 	s->tdcPosition = 137.119154;
@@ -193,27 +184,17 @@ void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 void initializeMazdaSkyactivCam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
-    // wide
-	s->addEvent360(50, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(70, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-    // narrow
-	s->addEvent360(80, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(90, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+    int wide = 20;
+    int narrow = 10;
 
-    // wide
-	s->addEvent360(140, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(160, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-    // narrow
-	s->addEvent360(170, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(70, wide);
+	s->addToothRiseFall(90, narrow);
 
-    // wide
-	s->addEvent360(250, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(270, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(160, wide);
+	s->addToothRiseFall(180, narrow);
 
-    // wide
-	s->addEvent360(340, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addToothRiseFall(270, wide);
+	s->addToothRiseFall(360, wide);
 
 	s->setTriggerSynchronizationGap(0.43);
 	s->setSecondTriggerSynchronizationGap(0.78);

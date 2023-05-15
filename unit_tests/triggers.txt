@@ -96,7 +96,7 @@ event 8 1 1 484.14 nan
 event 9 1 0 553.82 nan
 event 10 0 1 648.08 1.517134
 event 11 1 1 663.82 nan
-TRIGGERTYPE 4 4 TT_UNUSED_4 0.00
+TRIGGERTYPE 4 14 TT_VVT_FORD_COYOTE 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
@@ -104,15 +104,25 @@ isSecondWheelCam=false
 cycleDuration=720
 gapsCount=2
 isSynchronizationNeeded=1
-gapFrom.0=2.000000
-gapTo.0=5.000000
-gapFrom.1=0.200000
-gapTo.1=0.800000
+gapFrom.0=2.250000
+gapTo.0=3.750000
+gapFrom.1=0.375000
+gapTo.1=0.625000
 # end of meta section
 event 0 0 1 0.00 3.000000
-event 1 0 0 180.00 0.666667
-event 2 0 1 360.00 1.000000
-event 3 0 0 450.00 0.500000
+event 1 0 0 0.00 nan
+event 2 0 1 90.00 0.500000
+event 3 0 0 90.00 nan
+event 4 0 1 180.00 1.000000
+event 5 0 0 180.00 nan
+event 6 0 1 300.00 1.333333
+event 7 0 0 300.00 nan
+event 8 0 1 360.00 0.500000
+event 9 0 0 360.00 nan
+event 10 0 1 480.00 2.000000
+event 11 0 0 480.00 nan
+event 12 0 1 540.00 0.500000
+event 13 0 0 540.00 nan
 TRIGGERTYPE 5 28 TT_GM_7X 0.00
 knownOperationMode=true
 crankBased=true

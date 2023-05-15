@@ -58,6 +58,10 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
+void onBoardStandBy() {
+    hellenBoardStandBy();
+}
+
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setHellenMegaEnPin();

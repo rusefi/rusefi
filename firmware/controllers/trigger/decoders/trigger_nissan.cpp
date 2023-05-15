@@ -37,25 +37,17 @@ void initializeNissanSR20VE_4(TriggerWaveform *s) {
 	s->addEvent720(4 * 180, TriggerValue::FALL);
 }
 
-static void addPrimaryToothEndingAt(TriggerWaveform *s, float fallAngle) {
-	int vvtWidth = 20;
-
-	s->addEventAngle(fallAngle - vvtWidth, TriggerValue::RISE);
-	s->addEventAngle(fallAngle, TriggerValue::FALL);
-
-}
-
 void initializeNissanVQvvt(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
-	int offset = 720 - 520;
+	int offset = 360 - 260;
 
-	addPrimaryToothEndingAt(s, offset + 40);
-	addPrimaryToothEndingAt(s, offset + 160);
-	addPrimaryToothEndingAt(s, offset + 200);
-	addPrimaryToothEndingAt(s, offset + 280);
-	addPrimaryToothEndingAt(s, offset + 320);
-	addPrimaryToothEndingAt(s, offset + 520);
+	s->addToothRiseFall(offset + 20);
+	s->addToothRiseFall(offset + 80);
+	s->addToothRiseFall(offset + 100);
+	s->addToothRiseFall(offset + 140);
+	s->addToothRiseFall(offset + 160);
+	s->addToothRiseFall(offset + 260);
 
 	s->setTriggerSynchronizationGap2(4, 6);
 	s->setSecondTriggerSynchronizationGap2(0.35f, 0.7f);

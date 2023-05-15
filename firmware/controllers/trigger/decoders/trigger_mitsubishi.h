@@ -20,4 +20,3 @@ void initialize36_2_1_1(TriggerWaveform *s);
 void initialize36_2_1(TriggerWaveform *s);
 
 void initializeVvt3A92(TriggerWaveform *s);
-void initializeVvt6G75(TriggerWaveform *s);

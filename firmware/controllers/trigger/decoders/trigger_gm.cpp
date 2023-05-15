@@ -9,12 +9,11 @@
 
 #include "trigger_gm.h"
 
+#define GM_60_W 6
+
 static float addTooth(float offset, TriggerWaveform *s) {
-	s->addEventAngle(offset, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	offset += CRANK_MODE_MULTIPLIER * 3;
-	s->addEventAngle(offset, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	offset += CRANK_MODE_MULTIPLIER * 3;
-	return offset;
+	s->addToothRiseFall(offset + GM_60_W / 2, GM_60_W / 2, TriggerWheel::T_SECONDARY);
+	return offset + GM_60_W;
 }
 
 /**
@@ -26,37 +25,35 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 	s->isSecondWheelCam = true;
 
-	float m = CRANK_MODE_MULTIPLIER;
-	int offset = 1 * m;
+	int offset = 1;
 
 	for (int i=0;i<12;i++) {
 		offset = addTooth(offset, s);
 	}
 
-	offset += m * 2 * 6;
+	offset += 2 * GM_60_W;
 
 	for (int i=0;i<18;i++) {
 		offset = addTooth(offset, s);
 	}
 
-	offset += m * 2 * 6;
+	offset += 2 * GM_60_W;
 
 	for (int i=0;i<18;i++) {
 		offset = addTooth(offset, s);
 	}
 
-	offset += m * 2 * 6;
+	offset += 2 * GM_60_W;
 
 	for (int i=0;i<5;i++) {
 		offset = addTooth(offset, s);
 	}
 
-
-	s->addEventAngle(m * (360 - 6), TriggerValue::RISE);
+	s->addEvent360(360 - GM_60_W, TriggerValue::RISE);
 
 	offset = addTooth(offset, s);
 
-	s->addEventAngle(m * (360), TriggerValue::FALL);
+	s->addEvent360(360, TriggerValue::FALL);
 
 }
 
@@ -65,37 +62,30 @@ void configureGmTriggerWaveform(TriggerWaveform *s) {
 
 	float w = 5;
 
-	s->addEvent360(60 - w, TriggerValue::RISE);
-	s->addEvent360(60, TriggerValue::FALL);
+	s->addToothRiseFall(60, w);
 
-	s->addEvent360(120 - w, TriggerValue::RISE);
-	s->addEvent360(120.0, TriggerValue::FALL);
+	s->addToothRiseFall(120, w);
 
-	s->addEvent360(180 - w, TriggerValue::RISE);
-	s->addEvent360(180, TriggerValue::FALL);
+	s->addToothRiseFall(180, w);
 
-	s->addEvent360(240 - w, TriggerValue::RISE);
-	s->addEvent360(240.0, TriggerValue::FALL);
+	s->addToothRiseFall(240, w);
 
-	s->addEvent360(300 - w, TriggerValue::RISE);
-	s->addEvent360(300.0, TriggerValue::FALL);
+	s->addToothRiseFall(300, w);
 
-	s->addEvent360(350 - w, TriggerValue::RISE);
-	s->addEvent360(350.0, TriggerValue::FALL);
+	s->addToothRiseFall(350, w);
 
-	s->addEvent360(360 - w, TriggerValue::RISE);
-	s->addEvent360(360.0, TriggerValue::FALL);
+	s->addToothRiseFall(360, w);
 
 	s->setTriggerSynchronizationGap(6);
 }
 
-static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s, int mult, float shortToothWidth)
+static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s, float shortToothWidth)
 {
-	int window = (isShortLong ? shortToothWidth : (15 - shortToothWidth)) * mult;
-	int end = startAngle + mult * 15;
+	int window = (isShortLong ? shortToothWidth : (15 - shortToothWidth));
+	int end = startAngle + 15;
 
-	s->addEvent720(startAngle + window, TriggerValue::RISE);
-	s->addEvent720(end, TriggerValue::FALL);
+	s->addEvent360(startAngle + window, TriggerValue::RISE);
+	s->addEvent360(end, TriggerValue::FALL);
 
 	return end;
 }
@@ -149,7 +139,7 @@ static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 		bool bit = code & 0x000001;
 		code = code >> 1;
 
-		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER, shortToothWidth);
+		angle = gm_tooth_pair(angle, bit, s, shortToothWidth);
 	}
 }
 
