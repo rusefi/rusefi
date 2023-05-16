@@ -353,7 +353,7 @@ static int lua_getAirmass(lua_State* l) {
 	}
 
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
-	auto result = airmass->getAirmass(rpm).CylinderAirmass;
+	auto result = airmass->getAirmass(rpm, false).CylinderAirmass;
 
 	lua_pushnumber(l, result);
 	return 1;
