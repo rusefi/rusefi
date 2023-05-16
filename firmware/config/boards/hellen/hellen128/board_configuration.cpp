@@ -69,8 +69,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 
-	engineConfiguration->afr.hwChannel = EFI_ADC_1;
-
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
