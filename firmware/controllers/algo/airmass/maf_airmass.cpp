@@ -31,17 +31,17 @@ float MafAirmass::getMaf() const {
 	}
 }
 
-AirmassResult MafAirmass::getAirmass(int rpm) {
+AirmassResult MafAirmass::getAirmass(int rpm, bool postState) {
 	float maf = getMaf();
 
-	return getAirmassImpl(maf, rpm);
+	return getAirmassImpl(maf, rpm, postState);
 }
 
 /**
  * Function block now works to create a standardised load from the cylinder filling as well as tune fuel via VE table. 
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
-AirmassResult MafAirmass::getAirmassImpl(float massAirFlow, int rpm) const {
+AirmassResult MafAirmass::getAirmassImpl(float massAirFlow, int rpm, bool postState) const {
 	// If the engine is stopped, MAF is meaningless
 	if (rpm == 0) {
 		return {};
@@ -64,7 +64,7 @@ AirmassResult MafAirmass::getAirmassImpl(float massAirFlow, int rpm) const {
 	float airChargeLoad = 100 * cylinderAirmass / getStandardAirCharge();
 	
 	//Correct air mass by VE table
-	mass_t correctedAirmass = cylinderAirmass * getVe(rpm, airChargeLoad);
+	mass_t correctedAirmass = cylinderAirmass * getVe(rpm, airChargeLoad, postState);
 
 	return {
 		correctedAirmass,
