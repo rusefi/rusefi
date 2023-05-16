@@ -163,7 +163,7 @@ AirmassModelBase* getAirmassModel(engine_load_mode_e mode) {
 }
 
 float getMaxAirflowAtMap(float map) {
-	return sdAirmass.getAirflow(Sensor::getOrZero(SensorType::Rpm), map);
+	return sdAirmass.getAirflow(Sensor::getOrZero(SensorType::Rpm), map, false);
 }
 
 // Per-cylinder base fuel mass
@@ -174,7 +174,7 @@ static float getBaseFuelMass(int rpm) {
 	auto model = getAirmassModel(engineConfiguration->fuelAlgorithm);
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
 
-	auto airmass = model->getAirmass(rpm);
+	auto airmass = model->getAirmass(rpm, true);
 
 	// Plop some state for others to read
 	engine->fuelComputer.sdAirMassInOneCylinder = airmass.CylinderAirmass;

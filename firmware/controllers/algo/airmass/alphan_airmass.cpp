@@ -2,7 +2,7 @@
 
 #include "alphan_airmass.h"
 
-AirmassResult AlphaNAirmass::getAirmass(int rpm) {
+AirmassResult AlphaNAirmass::getAirmass(int rpm, bool postState) {
 	auto tps = Sensor::get(SensorType::Tps1);
 
 	if (!tps.Valid) {
@@ -11,7 +11,7 @@ AirmassResult AlphaNAirmass::getAirmass(int rpm) {
 	}
 
 	// In this case, VE directly describes the cylinder filling relative to the ideal
-	float ve = getVe(rpm, tps.Value);
+	float ve = getVe(rpm, tps.Value, postState);
 
 	// TODO: should this be barometric pressure and/or temperature compensated?
 	mass_t airmass = getAirmassImpl(

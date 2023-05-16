@@ -9,11 +9,11 @@ public:
 		, m_mapEstimationTable(&mapEstimationTable)
 	{}
 
-	AirmassResult getAirmass(int rpm) override;
-	AirmassResult getAirmass(float rpm, float map);
-	float getAirflow(float rpm, float map);
+	AirmassResult getAirmass(int rpm, bool postState) override;
+	AirmassResult getAirmass(float rpm, float map, bool postState);
+	float getAirflow(float rpm, float map, bool postState);
 
-	float getMap(int rpm) const;
+	float getMap(int rpm, bool postState) const;
 
 private:
 	const ValueProvider3D* const m_mapEstimationTable;
