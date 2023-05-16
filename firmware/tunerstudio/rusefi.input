@@ -1834,7 +1834,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = auxInputsDialog,			"Lua Analog Inputs"
-		subMenu = luaDigitalInputsDialog,   "Lua Digital Inputs"
+# TODO finish https://github.com/rusefi/rusefi/issues/4861		subMenu = luaDigitalInputsDialog,   "Lua Digital Inputs"
 		subMenu = luaOutputs,				"Lua Script PWM Outputs"
 
 		groupMenu = "Lua Calibrations"
