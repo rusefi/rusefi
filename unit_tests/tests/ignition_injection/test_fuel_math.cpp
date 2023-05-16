@@ -55,7 +55,7 @@ TEST(AirmassModes, AlphaNNormal) {
 	// Mass of 1 liter of air * VE
 	mass_t expectedAirmass = 1.2047f * 0.35f;
 
-	auto result = dut.getAirmass(1200);
+	auto result = dut.getAirmass(1200, false);
 	EXPECT_NEAR(result.CylinderAirmass, expectedAirmass, EPS4D);
 	EXPECT_NEAR(result.EngineLoadPercent, 0.71f, EPS4D);
 }
@@ -73,7 +73,7 @@ TEST(AirmassModes, AlphaNFailedTps) {
 	// Ensure that it's actually failed
 	ASSERT_FALSE(Sensor::get(SensorType::Tps1).Valid);
 
-	auto result = dut.getAirmass(1200);
+	auto result = dut.getAirmass(1200, false);
 	EXPECT_EQ(result.CylinderAirmass, 0);
 }
 
@@ -89,7 +89,7 @@ TEST(AirmassModes, MafNormal) {
 
 	MafAirmass dut(veTable);
 
-	auto airmass = dut.getAirmassImpl(200, 6000);
+	auto airmass = dut.getAirmassImpl(200, 6000, false);
 
 	// Check results
 	EXPECT_NEAR(0.277777f * 0.75f, airmass.CylinderAirmass, EPS4D);
@@ -111,9 +111,9 @@ TEST(AirmassModes, VeOverride) {
 	struct DummyAirmassModel : public AirmassVeModelBase {
 		DummyAirmassModel(const ValueProvider3D& veTable) : AirmassVeModelBase(veTable) {}
 
-		AirmassResult getAirmass(int rpm) override {
+		AirmassResult getAirmass(int rpm, bool postState) override {
 			// Default load value 10, will be overriden
-			getVe(rpm, 10.0f);
+			getVe(rpm, 10.0f, postState);
 
 			return {};
 		}
@@ -123,13 +123,13 @@ TEST(AirmassModes, VeOverride) {
 	DummyAirmassModel dut(veTable);
 
 	// Use default mode - will call with 10
-	dut.getAirmass(0);
+	dut.getAirmass(0, true);
 	EXPECT_FLOAT_EQ(engine->engineState.veTableYAxis, 10.0f);
 
 	// Override to TPS
 	engineConfiguration->veOverrideMode = VE_TPS;
 	Sensor::setMockValue(SensorType::Tps1, 30.0f);
-	dut.getAirmass(0);
+	dut.getAirmass(0, true);
 	EXPECT_FLOAT_EQ(engine->engineState.veTableYAxis, 30.0f);
 }
 
@@ -157,11 +157,11 @@ TEST(AirmassModes, FallbackMap) {
 
 	// Working MAP sensor at 40 kPa
 	Sensor::setMockValue(SensorType::Map, 40);
-	EXPECT_FLOAT_EQ(dut.getMap(1234), 40);
+	EXPECT_FLOAT_EQ(dut.getMap(1234, false), 40);
 
 	// Failed MAP sensor, should use table
 	Sensor::resetMockValue(SensorType::Map);
-	EXPECT_FLOAT_EQ(dut.getMap(5678), 75);
+	EXPECT_FLOAT_EQ(dut.getMap(5678, false), 75);
 }
 
 void setInjectionMode(int value);
@@ -170,7 +170,7 @@ TEST(FuelMath, testDifferentInjectionModes) {
 	EngineTestHelper eth(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
-	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
 
 	setInjectionMode((int)IM_BATCH);
@@ -196,7 +196,7 @@ TEST(FuelMath, deadtime) {
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
-	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
 
 	// First test with no deadtime
@@ -214,7 +214,7 @@ TEST(FuelMath, deadtime) {
 TEST(FuelMath, CylinderFuelTrim) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{1, 50.0f}));
 
 	setTable(config->fuelTrims[0].table, -4);
@@ -265,26 +265,26 @@ TEST(FuelMath, IdleVeTable) {
 
 	// Gets normal VE table
 	idler.isIdling = false;
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.5f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
 
 	// Gets idle VE table
 	idler.isIdling = true;
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
 
 	// Below half threshold, fully use idle VE table
 	Sensor::setMockValue(SensorType::Tps1, 0);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
 	Sensor::setMockValue(SensorType::Tps1, 2);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
 	Sensor::setMockValue(SensorType::Tps1, 5);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
 
 	// As TPS approaches idle threshold, phase-out the idle VE table
 
 	Sensor::setMockValue(SensorType::Tps1, 6);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.42f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.42f);
 	Sensor::setMockValue(SensorType::Tps1, 8);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.46f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.46f);
 	Sensor::setMockValue(SensorType::Tps1, 10);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.5f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
 }

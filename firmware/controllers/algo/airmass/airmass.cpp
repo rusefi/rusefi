@@ -14,7 +14,7 @@ static float getVeLoadAxis(ve_override_e mode, float passedLoad) {
 	}
 }
 
-float AirmassVeModelBase::getVe(int rpm, float load) const {
+float AirmassVeModelBase::getVe(int rpm, float load, bool postState) const {
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_veTable != nullptr, "VE table null", 0);
 
 	// Override the load value if necessary
@@ -48,9 +48,11 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 	for (size_t i = 0; i < efi::size(config->veBlends); i++) {
 		auto result = calculateBlend(config->veBlends[i], rpm, load);
 
-		engine->outputChannels.veBlendParameter[i] = result.BlendParameter;
-		engine->outputChannels.veBlendBias[i] = result.Bias;
-		engine->outputChannels.veBlendOutput[i] = result.Value;
+		if (postState) {
+			engine->outputChannels.veBlendParameter[i] = result.BlendParameter;
+			engine->outputChannels.veBlendBias[i] = result.Bias;
+			engine->outputChannels.veBlendOutput[i] = result.Value;
+		}
 
 		if (result.Value == 0) {
 			continue;
@@ -61,7 +63,10 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 		ve *= ((100 + result.Value) * 0.01f);
 	}
 
-	engine->engineState.currentVe = ve;
-	engine->engineState.veTableYAxis = load;
+	if (postState) {
+		engine->engineState.currentVe = ve;
+		engine->engineState.veTableYAxis = load;
+	}
+
 	return ve * PERCENT_DIV;
 }

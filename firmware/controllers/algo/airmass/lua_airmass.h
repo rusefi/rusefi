@@ -4,7 +4,7 @@
 
 class LuaAirmass final : public AirmassModelBase {
 public:
-	AirmassResult getAirmass(int /*rpm*/) override {
+	AirmassResult getAirmass(int /*rpm*/, bool /*postState*/) override {
 		return m_airmass;
 	}
 

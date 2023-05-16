@@ -7,6 +7,8 @@
 
 #include "pch.h"
 
+using ::testing::_;
+
 static void doRevolution(EngineTestHelper& eth, int periodMs) {
 	float halfToothTime = (periodMs / 6.0f) / 2;
 
@@ -32,7 +34,7 @@ TEST(fuelControl, transitionIssue1592) {
 	engine->tdcMarkEnabled = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
-	EXPECT_CALL(*eth.mockAirmass, getAirmass(500))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(500, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	// This is easiest to trip on a wheel that requires sync
