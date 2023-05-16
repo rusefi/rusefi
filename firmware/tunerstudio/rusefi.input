@@ -2741,7 +2741,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "MC33816 flag0",						mc33816_flag0
 
 		field = "Boost voltage",						mc33_hvolt
-
 		field = "Boost current target",					mc33_i_boost
 		field = "Min boost time",						mc33_t_min_boost
 		field = "Max boost time (timeout)",				mc33_t_max_boost
@@ -2754,7 +2753,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Hold current target",					mc33_i_hold
 		field = "Hold phase loop off time",				mc33_t_hold_off
 		field = "Maximum injection duration",			mc33_t_hold_tot
-
 
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
