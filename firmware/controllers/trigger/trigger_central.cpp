@@ -196,6 +196,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_HONDA_K_INTAKE:
 	    // with 4 evenly spaced tooth we cannot use this wheel for engine sync
         firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Honda K Intake is not suitable for engine sync");
+        [[fallthrough]];
 	case VVT_INACTIVE:
 		// do nothing
 		return 0;
