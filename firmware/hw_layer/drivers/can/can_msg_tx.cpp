@@ -10,6 +10,7 @@
 #include "pch.h"
 
 #include "can_msg_tx.h"
+#include "auto_generated_can_category.h"
 
 #include "can.h"
 
@@ -63,7 +64,8 @@ CanTxMessage::~CanTxMessage() {
 	}
 
 	if (engineConfiguration->verboseCan) {
-		efiPrintf("Sending CAN bus%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
+		efiPrintf("%s Sending CAN bus%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
+		        getCanCategory(category),
 				busIndex,
 #ifndef STM32H7XX
 				(m_frame.IDE == CAN_IDE_EXT) ? CAN_EID(m_frame) : CAN_SID(m_frame),
