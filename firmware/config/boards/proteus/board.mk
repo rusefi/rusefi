@@ -1,6 +1,5 @@
 # List of all the board related files.
-BOARDCPPSRC =  $(BOARD_DIR)/board_configuration.cpp \
-				$(BOARD_DIR)/adc_hack.cpp
+BOARDCPPSRC =  $(BOARD_DIR)/board_configuration.cpp
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   IS_STM32F429 = yes
@@ -35,11 +34,6 @@ endif
 
 # We are running on Proteus hardware!
 DDEFS += -DHW_PROTEUS=1
-
-# Proteus <=v0.2 needs ADC hack - vbatt is on ADC3
-ifeq ($(PROTEUS_LEGACY),TRUE)
-	DDEFS +=  -DUSE_ADC3_VBATT_HACK
-endif
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DSHORT_BOARD_NAME=proteus_f7
