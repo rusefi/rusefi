@@ -132,10 +132,6 @@ jobs:
             folder: config/boards/proteus
             ini-file: fome_proteus_h7.ini
 
-          # - build-target: proteus_legacy
-          #   folder: config/boards/proteus
-          #   ini-file: fome_proteus_f7.ini
-
           - build-target: stm32f429_nucleo
             folder: config/boards/nucleo_f429
             ini-file: fome_stm32f429_nucleo.ini
