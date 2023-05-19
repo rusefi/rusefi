@@ -99,7 +99,6 @@ jobs:
             proteus_f7,
             proteus_f7_hardware_QC_special_build,
             proteus_h7,
-            proteus_legacy,
             stm32f429_nucleo,
             stm32f767_nucleo,
             stm32h743_nucleo,
