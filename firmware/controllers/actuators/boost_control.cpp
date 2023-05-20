@@ -113,7 +113,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 	// Add gear-based adder
 	auto gear = Sensor::getOrZero(SensorType::DetectedGear);
-	float gearAdder = config->gearBasedOpenLoopBoostAdder[static_cast<int>(gear) + 1];
+	float gearAdder = engineConfiguration->gearBasedOpenLoopBoostAdder[static_cast<int>(gear) + 1];
 	openLoop += gearAdder;
 
 	openLoopPart = openLoop;
