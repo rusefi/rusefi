@@ -814,6 +814,13 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		yBins = throttleEstimateEffectiveAreaValues
 		gauge = TPSGauge
 
+	curve = boostOpenLoopGearAdderCurve, "Boost Open Loop gear-based adder"
+		columnLabel = "Gear", "duty cycle"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = gearCountArray, tcuCurrentGear
+		yBins = gearBasedOpenLoopBoostAdder
+
 [TableEditor]
 	;		table_id,	map3d_id,	"title",		page
 
@@ -1798,10 +1805,11 @@ menuDialog = main
 		subMenu = ignitionCylExtra,			"Cylinder offsets", 0
 
 		subMenu = std_separator
-		subMenu = boostDialog,			"Boost control"
-		subMenu = boostOpenLoopDialog,	"Boost control open loop", { isBoostControlEnabled }
-		subMenu = boostPidDialog,		"Boost control PID", { isBoostControlEnabled && boostType == 1 }
-		subMenu = boostTargetDialog,	"Boost control target", { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostDialog,					"Boost control"
+		subMenu = boostOpenLoopDialog,			"Boost control open loop", { isBoostControlEnabled }
+		subMenu = boostOpenLoopGearAdderDialog,	"Boost control open loop gear adder", { isBoostControlEnabled }
+		subMenu = boostPidDialog,				"Boost control PID", { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostTargetDialog,			"Boost control target", { isBoostControlEnabled && boostType == 1 }
 
 		groupMenu = "Boost blend tables"
 		groupChildMenu = boostOpenBlend1Cfg,		"Open loop 1 bias",		{ isBoostControlEnabled }
@@ -3991,6 +3999,9 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = boostOpenLoopDialog, "", border
 		panel = boostTableTbl, Center
+
+	dialog = boostOpenLoopGearAdderDialog, "", border
+		panel = boostOpenLoopGearAdderCurve, Center
 
 ;Boost Closed Loop
 
