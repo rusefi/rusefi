@@ -123,6 +123,10 @@ static void SystemClock_Config(void)
 
   /* Initializes the RCC Oscillators according to the specified parameters
    * in the RCC_OscInitTypeDef structure.
+   * rusEFI main firmware can depend external oscillator frequency and we actually fabricate some boards
+   * with different oscillators over the time. Until we add similar code into OpenBLT we go with internal oscillator for such
+   * boards
+   * TODO: actually why not go with internal for _all_ boards? Maybe remove all main_external_osc.c files?
    */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
