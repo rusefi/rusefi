@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed May 10 23:53:30 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun May 21 01:06:25 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4344,10 +4344,16 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> boostCutPressureHyst;
 	/**
-	units
+	 * Boost duty cycle added by gear
+	%
 	 * offset 3941
 	 */
-	uint8_t mainUnusedEnd[31];
+	scaled_channel<uint8_t, 2, 1> gearBasedOpenLoopBoostAdder[GEARS_COUNT];
+	/**
+	units
+	 * offset 3949
+	 */
+	uint8_t mainUnusedEnd[23];
 };
 static_assert(sizeof(engine_configuration_s) == 3972);
 
@@ -5184,4 +5190,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23176);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed May 10 23:53:30 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun May 21 01:06:25 UTC 2023
