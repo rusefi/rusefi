@@ -2,6 +2,8 @@
  * @file        lps25.cpp
  * @brief       Driver for the ST LPS25HB pressure sensor
  *
+ * At the moment uses bit-banged I2C driver
+ *
  * @date February 6, 2020
  * @author Matthew Kennedy, (c) 2020
  */
