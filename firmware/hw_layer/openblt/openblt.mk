@@ -85,6 +85,18 @@ PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.h
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.h
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_core.h
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_conf.h
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_def.h
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_desc.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_desc.h
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_ctlreq.h
+PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/usbd_bulk.h
+PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/usbd_core.c
+PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
+PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
+PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Source/backdoor.c
+PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/usbd_bulk.c
+PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/usbd_conf.c
 
 # CPU-dependent sources
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
