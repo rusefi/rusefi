@@ -130,6 +130,7 @@
 /** \brief Enable/disable hooks functions to override the user program checksum handling. */
 #define BOOT_NVM_CHECKSUM_HOOKS_ENABLE  (0)
 
+#define BOOT_BACKDOOR_HOOKS_ENABLE (0)
 
 #define BOOT_COM_USB_TX_MAX_DATA        (63)
 #define BOOT_COM_USB_RX_MAX_DATA        (63)
