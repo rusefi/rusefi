@@ -131,6 +131,9 @@
 #define BOOT_NVM_CHECKSUM_HOOKS_ENABLE  (0)
 
 
+#define BOOT_COM_USB_TX_MAX_DATA        (63)
+#define BOOT_COM_USB_RX_MAX_DATA        (63)
+
 /****************************************************************************************
 *   F L A S H   M E M O R Y   D R I V E R   C O N F I G U R A T I O N
 ****************************************************************************************/
