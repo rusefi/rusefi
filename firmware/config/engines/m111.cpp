@@ -59,6 +59,7 @@ void setM111EngineConfiguration() {
 	gppwm_channel *scClutch = &engineConfiguration->gppwm[1];
 #if HW_MICRO_RUSEFI
     scClutch->pin = MRE_LS_2;
+    engineConfiguration->vvtPins[0] = MRE_LS_1;
 #endif // HW_MICRO_RUSEFI
     strcpy(engineConfiguration->gpPwmNote[1], "SC Clutch");
 
