@@ -83,7 +83,8 @@ void setBoardConfigOverrides() {
 	// exhaust input same on both revisions
 	engineConfiguration->camInputs[1] = H144_IN_D_AUX4;
 
-	if (engine->engineState.hellenBoardId == -1) {
+    int16_t hellenBoardId = engine->engineState.hellenBoardId;
+    if (hellenBoardId == -1) {
 	    engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
 	    engineConfiguration->camInputs[0] = H144_IN_CAM;
 
@@ -91,6 +92,7 @@ void setBoardConfigOverrides() {
 		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
 		engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
 		engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
+	   	engineConfiguration->etbIo[0].disablePin = Gpio::Unassigned;
 		engineConfiguration->etb_use_two_wires = true;
 
 		// first revision of did not have Hellen Board ID
@@ -98,6 +100,7 @@ void setBoardConfigOverrides() {
 		engineConfiguration->etbIo[1].directionPin1 = Gpio::Unassigned;
 		engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
 		engineConfiguration->etbIo[1].controlPin = Gpio::Unassigned;
+	   	engineConfiguration->etbIo[1].disablePin = Gpio::Unassigned;
 
 		if (isFirstInvocation) {
 			isFirstInvocation = false;
@@ -105,7 +108,7 @@ void setBoardConfigOverrides() {
 			efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
 			efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
 		}
-	} else if (engine->engineState.hellenBoardId == BOARD_ID_154hyundai_c) {
+	} else if (hellenBoardId == BOARD_ID_154hyundai_c || hellenBoardId == BOARD_ID_154hyundai_d) {
 		engineConfiguration->triggerInputPins[0] = H144_IN_SENS2;
 		engineConfiguration->camInputs[0] = H144_IN_SENS3;
 
