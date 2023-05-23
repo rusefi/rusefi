@@ -60,10 +60,11 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	#CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/STM32/STM32H7xx/platform.mk
 	CPU_PLATFORM = ${CHIBIOS_CONTRIB}/os/hal/ports/STM32/STM32H7xx/platform.mk
 	CPU_HWLAYER = ports/stm32/stm32h7
-else ifeq ($(PROJECT_CPU),kinetis)
-	CPU_STARTUP_DIR = $(KINETIS_CONTRIB)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_ke1xf.mk
-	CPU_PLATFORM = $(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/platform.mk
-	CPU_HWLAYER = ports/kinetis
+else ifeq ($(PROJECT_CPU),custom_platform)
+include $(BOARD_DIR)/custom_platform.mk
+$(info Using custom CPU_STARTUP_DIR $(CPU_STARTUP_DIR))
+$(info Using custom CPU_PLATFORM $(CPU_PLATFORM))
+$(info Using custom CPU_HWLAYER $(CPU_HWLAYER))
 else ifeq ($(PROJECT_CPU),cypress)
 	CPU_STARTUP_DIR = $(CYPRESS_CONTRIB)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_S6E2CxAH.mk
 	CPU_PLATFORM = $(CYPRESS_CONTRIB)/os/hal/ports/Cypress/S6E2CxAH/platform.mk
