@@ -27,6 +27,11 @@ ifeq ($(BOARD_DIR),)
 	BOARD_DIR = $(BOARDS_DIR)/$(PROJECT_BOARD)
 endif
 
+ifeq ($(PROJECT_CPU),)
+  # while building PROJECT_CPU is provided as male command line argument value and we do not seem to be able to change that value
+  PROJECT_CPU = technical_debt_only_for_clean
+endif
+
 -include $(BOARD_DIR)/config.mk
 
 PIN_NAMES_FILE=$(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
@@ -61,6 +66,7 @@ $(info Using custom CPU_STARTUP_DIR $(CPU_STARTUP_DIR))
 $(info Using custom CPU_PLATFORM $(CPU_PLATFORM))
 $(info Using custom CPU_HWLAYER $(CPU_HWLAYER))
 else ifeq ($(PROJECT_CPU),simulator)
+else ifeq ($(PROJECT_CPU),technical_debt_only_for_clean)
 else
 $(error Unexpected PROJECT_CPU [$(PROJECT_CPU)])
 endif
