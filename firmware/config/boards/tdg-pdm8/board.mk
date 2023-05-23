@@ -1,8 +1,6 @@
 
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
-PROJECT_CPU = ARCH_STM32F4
-
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::C11
 
 # No USB
