@@ -27,11 +27,6 @@ ifeq ($(BOARD_DIR),)
 	BOARD_DIR = $(BOARDS_DIR)/$(PROJECT_BOARD)
 endif
 
-ifeq ($(PROJECT_CPU),)
-  # many boards all the way to Proteus use this F4 default
-  PROJECT_CPU = ARCH_STM32F4
-endif
-
 -include $(BOARD_DIR)/config.mk
 
 PIN_NAMES_FILE=$(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
