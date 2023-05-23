@@ -7,8 +7,9 @@ PROJECT_CPU=$2
 set -e
 
 SCRIPT_NAME="common_make.sh"
-echo "Entering $SCRIPT_NAME with board $1 and CPU $2"
+echo "Entering $SCRIPT_NAME with board [$1] and CPU [$2]"
 
+# todo: technical debt: https://github.com/rusefi/rusefi/issues/5284
 cd ../../..
 
 mkdir -p .dep
