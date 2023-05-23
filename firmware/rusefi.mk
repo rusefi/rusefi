@@ -24,13 +24,18 @@ BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 # allow passing a custom board dir, otherwise generate it based on the board name
 ifeq ($(BOARD_DIR),)
+$(info Empty BOARD_DIR [$(BOARD_DIR)])
 	BOARD_DIR = $(BOARDS_DIR)/$(PROJECT_BOARD)
+$(info Using default BOARD_DIR [$(BOARD_DIR)])
 endif
 
 ifeq ($(PROJECT_CPU),)
   # many boards all the way to Proteus use this F4 default
-  PROJECT_CPU = ARCH_STM32F4
+$(info 2Empty PROJECT_CPU [$(PROJECT_CPU)])
+PROJECT_CPU=ARCH_STM32F4
+  $(info 2Just assigned default PROJECT_CPU [$(PROJECT_CPU)])
 endif
+$(info 2 Unexpected PROJECT_CPU [$(PROJECT_CPU)])
 
 -include $(BOARD_DIR)/config.mk
 
