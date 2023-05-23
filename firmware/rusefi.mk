@@ -28,8 +28,9 @@ ifeq ($(BOARD_DIR),)
 endif
 
 ifeq ($(PROJECT_CPU),)
-  # while building PROJECT_CPU is provided as male command line argument value and we do not seem to be able to change that value
-  PROJECT_CPU = technical_debt_only_for_clean
+  # while building PROJECT_CPU is provided as 'make' command line argument value and we do not seem to be able to change that value
+  # looks like 'make clean' is the only consumer of this value?!
+  PROJECT_CPU = ARCH_STM32F4
 endif
 
 -include $(BOARD_DIR)/config.mk
@@ -66,7 +67,6 @@ $(info Using custom CPU_STARTUP_DIR $(CPU_STARTUP_DIR))
 $(info Using custom CPU_PLATFORM $(CPU_PLATFORM))
 $(info Using custom CPU_HWLAYER $(CPU_HWLAYER))
 else ifeq ($(PROJECT_CPU),simulator)
-else ifeq ($(PROJECT_CPU),technical_debt_only_for_clean)
 else
 $(error Unexpected PROJECT_CPU [$(PROJECT_CPU)])
 endif
