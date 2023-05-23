@@ -65,10 +65,6 @@ include $(BOARD_DIR)/custom_platform.mk
 $(info Using custom CPU_STARTUP_DIR $(CPU_STARTUP_DIR))
 $(info Using custom CPU_PLATFORM $(CPU_PLATFORM))
 $(info Using custom CPU_HWLAYER $(CPU_HWLAYER))
-else ifeq ($(PROJECT_CPU),cypress)
-	CPU_STARTUP_DIR = $(CYPRESS_CONTRIB)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_S6E2CxAH.mk
-	CPU_PLATFORM = $(CYPRESS_CONTRIB)/os/hal/ports/Cypress/S6E2CxAH/platform.mk
-	CPU_HWLAYER = ports/cypress
 else ifeq ($(PROJECT_CPU),simulator)
 else
 $(error Unexpected PROJECT_CPU [$(PROJECT_CPU)])
