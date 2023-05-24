@@ -25,7 +25,7 @@ void Pid::initPidClass(pid_s *parameters) {
 	this->parameters = parameters;
 	resetCounter = 0;
 
-	reset();
+	Pid::reset();
 }
 
 bool Pid::isSame(const pid_s *parameters) const {
@@ -190,12 +190,12 @@ void Pid::updateITerm(float value) {
 
 PidCic::PidCic() {
 	// call our derived reset()
-	reset();
+	PidCic::reset();
 }
 
 PidCic::PidCic(pid_s *parameters) : Pid(parameters) {
 	// call our derived reset()
-	reset();
+	PidCic::reset();
 }
 
 void PidCic::reset(void) {
