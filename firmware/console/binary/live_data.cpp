@@ -168,7 +168,11 @@ const sent_state_s* getLiveData(size_t) {
 
 template<>
 const throttle_model_s* getLiveData(size_t) {
+#if EFI_IDLE_CONTROL
 	return &engine->module<ThrottleModel>().unmock();
+#else
+	return nullptr;
+#endif
 }
 
 static const FragmentEntry fragments[] = {
