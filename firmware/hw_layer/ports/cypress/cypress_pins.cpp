@@ -115,8 +115,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 /**
  * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
  */
-ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
-{
+ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
 	if (!isBrainPinValid(brainPin))
 			return EFI_ERROR_CODE;
 
