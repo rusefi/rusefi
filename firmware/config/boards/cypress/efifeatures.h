@@ -8,8 +8,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#ifndef EFIFEATURES_H_
-#define EFIFEATURES_H_
+#pragma once
 
 #define EFI_GPIO_HARDWARE TRUE
 
@@ -372,7 +371,3 @@
 		chThdSleepMilliseconds(20); \
 	} \
 }
-
-
-
-#endif /* EFIFEATURES_H_ */
