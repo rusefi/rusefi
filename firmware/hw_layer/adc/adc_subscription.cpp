@@ -109,10 +109,10 @@ TODO: this code is similar to initIfValid, what is the plan? shall we extract he
 		return;
 	}
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && HAL_USE_ADC
 	// Release the pin
 	efiSetPadUnused(getAdcChannelBrainPin("adc unsubscribe", entry->Channel));
-#endif // EFI_PROD_CODE
+#endif // EFI_PROD_CODE && HAL_USE_ADC
 
 	sensor.unregister();
 
