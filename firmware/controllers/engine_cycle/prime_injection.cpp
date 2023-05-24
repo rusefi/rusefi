@@ -69,21 +69,19 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 	setKeyCycleCounter(ignSwitchCounter + 1);
 }
 
-#if EFI_PROD_CODE
-uint32_t PrimeController::getKeyCycleCounter() const {
-	return backupRamLoad(BACKUP_IGNITION_SWITCH_COUNTER);
-}
-
 void PrimeController::setKeyCycleCounter(uint32_t count) {
+#if EFI_BACKUP_SRAM
 	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, count);
-}
-#else // not EFI_PROD_CODE
-uint32_t PrimeController::getKeyCycleCounter() const {
-	return 0;
+#endif // EFI_BACKUP_SRAM
 }
 
-void PrimeController::setKeyCycleCounter(uint32_t) { }
-#endif
+uint32_t PrimeController::getKeyCycleCounter() const {
+#if EFI_BACKUP_SRAM
+	return backupRamLoad(BACKUP_IGNITION_SWITCH_COUNTER);
+#else // not EFI_BACKUP_SRAM
+	return 0;
+#endif // EFI_BACKUP_SRAM
+}
 
 void PrimeController::onPrimeStart() {
 	auto durationMs = getPrimeDuration();
