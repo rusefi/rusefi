@@ -51,16 +51,8 @@ static int getPortIndex(ioportid_t port) {
 	return -1;
 }
 
-ioportid_t getBrainPinPort(brain_pin_e brainPin) {
-	return getGpioPorts()[(brainPin - Gpio::A0) / PORT_SIZE];
-}
-
 ioportid_t * getGpioPorts() {
     return ports;
-}
-
-int getBrainPinIndex(brain_pin_e brainPin) {
-	return (brainPin - Gpio::A0) % PORT_SIZE;
 }
 
 int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
