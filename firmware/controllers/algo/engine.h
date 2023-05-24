@@ -120,7 +120,9 @@ public:
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 
+#if EFI_ENGINE_CONTROL
 	FuelComputer fuelComputer;
+#endif // EFI_ENGINE_CONTROL
 
 	type_list<
 		Mockable<InjectorModel>,
