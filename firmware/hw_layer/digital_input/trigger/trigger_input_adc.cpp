@@ -10,15 +10,16 @@
 #include "pch.h"
 #include "trigger_input_adc.h"
 
-/*static*/ TriggerAdcDetector trigAdcState;
 
-// hardware-dependent part
-#if (EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || defined(__DOXYGEN__)
+/*static*/ TriggerAdcDetector trigAdcState;
 
 #define DELTA_THRESHOLD_CNT_LOW (GPT_FREQ_FAST / GPT_PERIOD_FAST / 32)		// ~1/32 second?
 #define DELTA_THRESHOLD_CNT_HIGH (GPT_FREQ_FAST / GPT_PERIOD_FAST / 4)		// ~1/4 second?
 
 #define triggerVoltsToAdcDivided(volts) (voltsToAdc(volts) / trigAdcState.triggerInputDividerCoefficient)
+
+// hardware-dependent part
+#if (EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || defined(__DOXYGEN__)
 
 #include "digital_input_exti.h"
 
