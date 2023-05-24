@@ -8,6 +8,8 @@
 #include "fuel_math.h"
 #include "fuel_computer.h"
 
+#if EFI_ENGINE_CONTROL
+
 mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) {
 	load = getTargetLambdaLoadAxis(load);
 	
@@ -80,3 +82,5 @@ float IFuelComputer::getLoadOverride(float defaultLoad, load_override_e override
 		default: return 0;
 	}
 }
+
+#endif // EFI_ENGINE_CONTROL
