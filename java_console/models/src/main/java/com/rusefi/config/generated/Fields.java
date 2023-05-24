@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed May 24 03:41:10 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed May 24 06:58:04 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -158,6 +158,7 @@ public class Fields {
 	public static final String CMD_IDLE_PIN = "set_idle_pin";
 	public static final String CMD_IGNITION = "ignition";
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
+	public static final String CMD_INDIVIDUAL_INJECTION = "set_individual_coils_ignition";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
@@ -1244,7 +1245,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.24.f407-discovery.2480716264";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.24.f407-discovery.2889588369";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1372;
