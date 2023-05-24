@@ -167,11 +167,12 @@ static EngineStateBlinkingTask engineStateBlinkingTask;
 
 static void resetAccel() {
 	engine->tpsAccelEnrichment.resetAE();
-
+#if EFI_ENGINE_CONTROL
 	for (size_t i = 0; i < efi::size(engine->injectionEvents.elements); i++)
 	{
 		engine->injectionEvents.elements[i].wallFuel.resetWF();
 	}
+#endif // EFI_ENGINE_CONTROL
 }
 
 static void doPeriodicSlowCallback() {
