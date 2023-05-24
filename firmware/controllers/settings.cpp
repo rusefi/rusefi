@@ -971,9 +971,9 @@ void initSettings(void) {
 	addConsoleActionS("bench_clearpin", benchClearPin);
 	addConsoleActionS("bench_setpin", benchSetPin);
 	addConsoleActionS("readpin", readPin);
-	addConsoleAction("adc_report", printFullAdcReport);
 
 #if HAL_USE_ADC
+	addConsoleAction("adc_report", printFullAdcReport);
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
 #endif // HAL_USE_ADC
 	addConsoleActionSS(CMD_LOGIC_PIN, setLogicInputPin);
