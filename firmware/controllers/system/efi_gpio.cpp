@@ -784,14 +784,14 @@ const char *portname(ioportid_t GPIOx) {
 	if (GPIOx == GPIOI)
 		return "PI";
 #endif /* GPIOI */
-#if defined(GPIOJ)
+#if defined(GPIOJ_BASE)
 	if (GPIOx == GPIOJ)
 		return "PJ";
-#endif /* GPIOJ */
-#if defined(GPIOK)
+#endif /* GPIOJ_BASE */
+#if defined(GPIOK_BASE)
 	if (GPIOx == GPIOK)
 		return "PK";
-#endif /* GPIOK */
+#endif /* GPIOK_BASE */
 	return "unknown";
 }
 
@@ -825,14 +825,14 @@ static int getPortIndex(ioportid_t port) {
 	if (port == GPIOI)
 		return 8;
 #endif /* STM32_HAS_GPIOI */
-#if defined(GPIOJ)
+#if defined(GPIOJ_BASE)
 	if (port == GPIOJ)
 		return 9;
-#endif /* GPIOJ */
-#if defined(GPIOK)
+#endif /* GPIOJ_BASE */
+#if defined(GPIOK_BASE)
 	if (port == GPIOK)
 		return 10;
-#endif /* GPIOK */
+#endif /* GPIOK_BASE */
 	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 	return -1;
 }
