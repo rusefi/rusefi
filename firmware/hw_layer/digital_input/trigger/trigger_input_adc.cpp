@@ -268,7 +268,7 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 }
 
 void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t value) {
-#if ! EFI_SIMULATOR
+#if ! EFI_SIMULATOR && EFI_SHAFT_POSITION_INPUT
 	if (curAdcMode != TRIGGER_ADC_ADC) {
 		return;
 	}
@@ -365,9 +365,9 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 	}
 
 	if (transitionCooldownCnt <= 0) {
-#if EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
+#if HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 		onTriggerChanged(stamp - stampCorrectionForAdc, true, transition == 1);
-#endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
+#endif // HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 		// let's skip some nearest possible measurements:
 		// the transition cannot be SO fast, but the jitter can!
 		transitionCooldownCnt = transitionCooldown;
@@ -389,9 +389,9 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		// we need at least 3 high-signal teeth to be certain!
 		if (switchingTeethCnt++ > 3) {
 			switchingTeethCnt = 0;
-#if EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
+#if HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 			setTriggerAdcMode(TRIGGER_ADC_EXTI);
-#endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
+#endif // HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 			// we don't want to loose the signal on return
 			minDeltaThresholdCntPos = DELTA_THRESHOLD_CNT_HIGH;
 			minDeltaThresholdCntNeg = DELTA_THRESHOLD_CNT_HIGH;
@@ -411,7 +411,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 	
 	prevValue = transition;
 	prevStamp = stamp;
-#endif // ! EFI_SIMULATOR
+#endif // ! EFI_SIMULATOR && EFI_SHAFT_POSITION_INPUT
 }
 
 triggerAdcMode_t getTriggerAdcMode(void) {
