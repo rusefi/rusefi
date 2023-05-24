@@ -75,7 +75,7 @@ static AdcSubscriptionEntry* findEntry() {
 		return;
 	}
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && HAL_USE_ADC
 	// Enable the input pin
 /**
 TODO: this code is similar to initIfValid, what is the plan? shall we extract helper method or else?
@@ -90,7 +90,7 @@ TODO: this code is similar to initIfValid, what is the plan? shall we extract he
 	if (voltsPerAdcVolt == 0) {
 		voltsPerAdcVolt = getAnalogInputDividerCoefficient(channel);
 	}
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_PROD_CODE && HAL_USE_ADC */
 	// Populate the entry
 	entry->VoltsPerAdcVolt = voltsPerAdcVolt;
 	entry->Channel = channel;
@@ -161,7 +161,7 @@ void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 	}
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && HAL_USE_ADC
 void AdcSubscription::PrintInfo() {
 	for (size_t i = 0; i < efi::size(s_entries); i++) {
 		auto& entry = s_entries[i];
@@ -188,6 +188,6 @@ void AdcSubscription::PrintInfo() {
 		);
 	}
 }
-#endif // EFI_PROD_CODE
+#endif // EFI_PROD_CODE && HAL_USE_ADC
 
 #endif // !EFI_UNIT_TEST
