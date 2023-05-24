@@ -821,7 +821,7 @@ static int getPortIndex(ioportid_t port) {
 	if (port == GPIOH)
 		return 7;
 #endif /* GPIOH */
-#if defined(GPIOF)
+#if defined(GPIOI)
 	if (port == GPIOI)
 		return 8;
 #endif /* STM32_HAS_GPIOI */
