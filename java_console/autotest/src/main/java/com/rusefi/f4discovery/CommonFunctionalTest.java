@@ -1,6 +1,6 @@
 package com.rusefi.f4discovery;
 
-
+import com.rusefi.config.generated.Fields;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -301,7 +301,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
     public void test1995DodgeNeon() {
         ecu.setEngineType(engine_type_e.DODGE_NEON_1995);
         EngineChart chart;
-        sendComplexCommand("set_individual_coils_ignition");
+        sendComplexCommand(Fields.CMD_INDIVIDUAL_INJECTION);
         /**
          * note that command order matters - RPM change resets wave chart
          */
@@ -424,7 +424,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(chart, EngineChart.SPARK_1);
 
         // let's enable more channels dynamically
-        sendComplexCommand("set_individual_coils_ignition");
+        sendComplexCommand(Fields.CMD_INDIVIDUAL_INJECTION);
         chart = nextChart();
         assertWaveNotNull("Switching Aspire into INDIVIDUAL_COILS mode", chart, EngineChart.SPARK_2);
         assertWaveNotNull(chart, EngineChart.SPARK_3);
