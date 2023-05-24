@@ -31,13 +31,13 @@ void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 
 uint8_t* getWorkingPageAddr();
 
+void requestBurn();
+
 #if EFI_TUNER_STUDIO
 #include "thread_controller.h"
 #include "thread_priority.h"
 
 void updateTunerStudioState();
-
-void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
 

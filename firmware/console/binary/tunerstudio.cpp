@@ -321,7 +321,7 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, ts_response_fo
 
 #endif // EFI_TUNER_STUDIO
 
-void requestBurn(void) {
+void requestBurn() {
 #if !EFI_UNIT_TEST
 	onBurnRequest();
 
