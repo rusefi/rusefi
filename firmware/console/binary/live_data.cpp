@@ -67,7 +67,11 @@ const ac_control_s* getLiveData(size_t) {
 
 template<>
 const fuel_computer_s* getLiveData(size_t) {
+#if EFI_ENGINE_CONTROL
 	return &engine->fuelComputer;
+#else
+	return nullptr;
+#endif
 }
 
 template<>
