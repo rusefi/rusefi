@@ -4,6 +4,8 @@
 #include "closed_loop_fuel_cell.h"
 #include "deadband.h"
 
+#if EFI_ENGINE_CONTROL
+
 struct FuelingBank {
 	ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];
 };
@@ -133,3 +135,5 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 
 	return result;
 }
+
+#endif // EFI_ENGINE_CONTROL
