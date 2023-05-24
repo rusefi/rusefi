@@ -1954,6 +1954,7 @@ end_struct
 #define CMD_SET "set"
 #define CMD_GET "get"
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
+#define CMD_INDIVIDUAL_INJECTION "set_individual_coils_ignition"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUEL_PUMP_BENCH "fuelpumpbench"
