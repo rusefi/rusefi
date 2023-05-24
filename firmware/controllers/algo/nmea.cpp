@@ -64,7 +64,7 @@ static int str_till_comma(const char * const a, char * const dStr) {
 	if (sLen > GPS_MAX_STRING)
 		sLen = GPS_MAX_STRING;
 
-	while (a[i] != 44 && i < sLen) {	// while not comma or end
+	while (i < sLen && a[i] != 44) {	// while not comma or end
 		dStr[i] = a[i];
 		i++;
 	}
