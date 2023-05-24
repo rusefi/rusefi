@@ -18,23 +18,6 @@ static ioportid_t ports[] = {GPIOA,
 		GPIOE
 };
 
-/**
- * @deprecated - use hwPortname() instead
- */
-const char *portname(ioportid_t GPIOx) {
-	if (GPIOx == GPIOA)
-		return "PA";
-	if (GPIOx == GPIOB)
-		return "PB";
-	if (GPIOx == GPIOC)
-		return "PC";
-	if (GPIOx == GPIOD)
-		return "PD";
-	if (GPIOx == GPIOE)
-		return "PE";
-	return "unknown";
-}
-
 static int getPortIndex(ioportid_t port) {
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
 	if (port == GPIOA)

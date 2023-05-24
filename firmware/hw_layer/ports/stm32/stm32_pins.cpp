@@ -57,49 +57,6 @@ ioportid_t * getGpioPorts() {
     return ports;
 }
 
-/**
- * @deprecated - use hwPortname() instead
- */
-const char *portname(ioportid_t GPIOx) {
-	if (GPIOx == GPIOA)
-		return "PA";
-	if (GPIOx == GPIOB)
-		return "PB";
-	if (GPIOx == GPIOC)
-		return "PC";
-	if (GPIOx == GPIOD)
-		return "PD";
-#if defined(GPIOF)
-	if (GPIOx == GPIOE)
-		return "PE";
-#endif /* GPIOE */
-#if defined(GPIOF)
-	if (GPIOx == GPIOF)
-		return "PF";
-#endif /* GPIOF */
-#if defined(GPIOG)
-	if (GPIOx == GPIOG)
-		return "PG";
-#endif /* GPIOG */
-#if defined(GPIOH)
-	if (GPIOx == GPIOH)
-		return "PH";
-#endif /* GPIOH */
-#if defined(GPIOI)
-	if (GPIOx == GPIOI)
-		return "PI";
-#endif /* GPIOI */
-#if defined(GPIOJ)
-	if (GPIOx == GPIOJ)
-		return "PJ";
-#endif /* GPIOJ */
-#if defined(GPIOK)
-	if (GPIOx == GPIOK)
-		return "PK";
-#endif /* GPIOK */
-	return "unknown";
-}
-
 static int getPortIndex(ioportid_t port) {
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
 	if (port == GPIOA)
@@ -110,34 +67,34 @@ static int getPortIndex(ioportid_t port) {
 		return 2;
 	if (port == GPIOD)
 		return 3;
-#if STM32_HAS_GPIOE
+#if defined(GPIOF)
 	if (port == GPIOE)
 		return 4;
-#endif /* STM32_HAS_GPIOE */
-#if STM32_HAS_GPIOF
+#endif /* GPIOE */
+#if defined(GPIOF)
 	if (port == GPIOF)
 		return 5;
-#endif /* STM32_HAS_GPIOF */
-#if STM32_HAS_GPIOG
+#endif /* GPIOF */
+#if defined(GPIOG)
 	if (port == GPIOG)
 		return 6;
-#endif /* STM32_HAS_GPIOG */
-#if STM32_HAS_GPIOH
+#endif /* GPIOG */
+#if defined(GPIOH)
 	if (port == GPIOH)
 		return 7;
-#endif /* STM32_HAS_GPIOH */
-#if STM32_HAS_GPIOI
+#endif /* GPIOH */
+#if defined(GPIOF)
 	if (port == GPIOI)
 		return 8;
 #endif /* STM32_HAS_GPIOI */
-#if STM32_HAS_GPIOJ
+#if defined(GPIOJ)
 	if (port == GPIOJ)
 		return 9;
-#endif /* STM32_HAS_GPIOJ */
-#if STM32_HAS_GPIOK
+#endif /* GPIOJ */
+#if defined(GPIOK)
 	if (port == GPIOK)
 		return 10;
-#endif /* STM32_HAS_GPIOK */
+#endif /* GPIOK */
 	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 	return -1;
 }

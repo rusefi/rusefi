@@ -32,35 +32,6 @@ static brain_pin_e portMap[16] = {
 #include "pin_repository.h"
 #include "io_pins.h"
 
-/**
- * @deprecated - use hwPortname() instead
- */
-const char *portname(ioportid_t GPIOx) {
-	if (GPIOx == GPIOA)
-		return "P0";
-	if (GPIOx == GPIOB)
-		return "P1";
-	if (GPIOx == GPIOC)
-		return "P2";
-	if (GPIOx == GPIOD)
-		return "P3";
-	if (GPIOx == GPIOE)
-		return "P4";
-	if (GPIOx == GPIOF)
-		return "P5";
-	if (GPIOx == GPIOG)
-		return "P7";
-	if (GPIOx == GPIOH)
-		return "PA";
-	if (GPIOx == GPIOI)
-		return "PB";
-	if (GPIOx == GPIOJ)
-		return "PC";
-	if (GPIOx == GPIOK)
-		return "PF";
-	return "unknown";
-}
-
 ioportid_t * getGpioPorts() {
     return ports;
 }

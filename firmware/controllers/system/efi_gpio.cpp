@@ -752,4 +752,47 @@ ioportid_t getBrainPinPort(brain_pin_e brainPin) {
 	return getGpioPorts()[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
+/**
+ * @deprecated - use hwPortname() instead
+ */
+const char *portname(ioportid_t GPIOx) {
+	if (GPIOx == GPIOA)
+		return "PA";
+	if (GPIOx == GPIOB)
+		return "PB";
+	if (GPIOx == GPIOC)
+		return "PC";
+	if (GPIOx == GPIOD)
+		return "PD";
+#if defined(GPIOF)
+	if (GPIOx == GPIOE)
+		return "PE";
+#endif /* GPIOE */
+#if defined(GPIOF)
+	if (GPIOx == GPIOF)
+		return "PF";
+#endif /* GPIOF */
+#if defined(GPIOG)
+	if (GPIOx == GPIOG)
+		return "PG";
+#endif /* GPIOG */
+#if defined(GPIOH)
+	if (GPIOx == GPIOH)
+		return "PH";
+#endif /* GPIOH */
+#if defined(GPIOI)
+	if (GPIOx == GPIOI)
+		return "PI";
+#endif /* GPIOI */
+#if defined(GPIOJ)
+	if (GPIOx == GPIOJ)
+		return "PJ";
+#endif /* GPIOJ */
+#if defined(GPIOK)
+	if (GPIOx == GPIOK)
+		return "PK";
+#endif /* GPIOK */
+	return "unknown";
+}
+
 #endif // EFI_GPIO_HARDWARE
