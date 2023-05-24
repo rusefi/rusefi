@@ -392,13 +392,14 @@ void initHardwareNoConfig() {
 	initPrimaryPins();
 #endif // EFI_GPIO_HARDWARE
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_SIGNAL_EXECUTOR_ONE_TIMER
 	// it's important to initialize this pretty early in the game before any scheduling usages
 	initSingleTimerExecutorHardware();
-#if EFI_RTC
+#endif // EFI_PROD_CODE && EFI_SIGNAL_EXECUTOR_ONE_TIMER
+
+#if EFI_PROD_CODE && EFI_RTC
 	initRtc();
-#endif // EFI_RTC
-#endif // EFI_PROD_CODE
+#endif // EFI_PROD_CODE && EFI_RTC
 
 #if EFI_INTERNAL_FLASH
 	initFlash();
