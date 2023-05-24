@@ -195,7 +195,9 @@ void runRusEfi() {
 #endif
 
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
+#if EFI_DFU_JUMP
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
+#endif /* EFI_DFU_JUMP */
 
 	/**
 	 * we need to initialize table objects before default configuration can set values

@@ -121,7 +121,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 
 #endif /* HAL_USE_ADC */
 
-#if EFI_PROD_CODE
+#if EFI_DFU_JUMP
 #define BOOTLOADER_LOCATION 0x1C00001CUL
 void jump_to_bootloader() {
 	typedef void (*bootloader_start_t)(void * arg);
@@ -132,4 +132,4 @@ void jump_to_bootloader() {
 	// Will not return from here
 	NVIC_SystemReset();
 }
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_DFU_JUMP */

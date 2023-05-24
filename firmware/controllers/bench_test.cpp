@@ -507,9 +507,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 	case 0xba:
-#if EFI_PROD_CODE
+#if EFI_DFU_JUMP
 		jump_to_bootloader();
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_DFU_JUMP */
 		break;
 
 	case 0xbb:

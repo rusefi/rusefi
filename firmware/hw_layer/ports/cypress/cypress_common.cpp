@@ -158,11 +158,3 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 }
 
 #endif /* HAL_USE_ADC */
-
-#if EFI_PROD_CODE
-void jump_to_bootloader() {
-	// todo:
-	// Will not return from here
-	NVIC_SystemReset();
-}
-#endif /* EFI_PROD_CODE */

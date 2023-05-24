@@ -29,6 +29,10 @@
 #define EFI_BACKUP_SRAM TRUE
 #endif
 
+#ifndef EFI_DFU_JUMP
+#define EFI_DFU_JUMP TRUE
+#endif
+
 #define EFI_DYNO_VIEW TRUE
 
 #ifndef EFI_CDM_INTEGRATION
