@@ -69,34 +69,34 @@ const char *portname(ioportid_t GPIOx) {
 		return "PC";
 	if (GPIOx == GPIOD)
 		return "PD";
-#if STM32_HAS_GPIOE
+#if defined(GPIOF)
 	if (GPIOx == GPIOE)
 		return "PE";
-#endif /* STM32_HAS_GPIOE */
-#if STM32_HAS_GPIOF
+#endif /* GPIOE */
+#if defined(GPIOF)
 	if (GPIOx == GPIOF)
 		return "PF";
-#endif /* STM32_HAS_GPIOF */
-#if STM32_HAS_GPIOG
+#endif /* GPIOF */
+#if defined(GPIOG)
 	if (GPIOx == GPIOG)
 		return "PG";
-#endif /* STM32_HAS_GPIOG */
-#if STM32_HAS_GPIOH
+#endif /* GPIOG */
+#if defined(GPIOH)
 	if (GPIOx == GPIOH)
 		return "PH";
-#endif /* STM32_HAS_GPIOH */
-#if STM32_HAS_GPIOI
+#endif /* GPIOH */
+#if defined(GPIOI)
 	if (GPIOx == GPIOI)
 		return "PI";
-#endif /* STM32_HAS_GPIOI */
-#if STM32_HAS_GPIOJ
+#endif /* GPIOI */
+#if defined(GPIOJ)
 	if (GPIOx == GPIOJ)
 		return "PJ";
-#endif /* STM32_HAS_GPIOJ */
-#if STM32_HAS_GPIOK
+#endif /* GPIOJ */
+#if defined(GPIOK)
 	if (GPIOx == GPIOK)
 		return "PK";
-#endif /* STM32_HAS_GPIOK */
+#endif /* GPIOK */
 	return "unknown";
 }
 
