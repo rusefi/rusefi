@@ -64,7 +64,9 @@ int indexOf(const char *string, char ch);
 float atoff(const char *string);
 int atoi(const char *string);
 
+#ifndef UNUSED
 #define UNUSED(x) (void)(x)
+#endif
 
 /**
  * Rounds value to specified precision.
