@@ -25,6 +25,7 @@ Usages:
     folder: controllers/algo/fuel
     prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->fuelComputer"
+    conditional_compilation: "EFI_ENGINE_CONTROL"
 
   - name: ignition_state
     java: IgnitionState.java
