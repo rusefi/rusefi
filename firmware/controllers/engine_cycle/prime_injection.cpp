@@ -110,8 +110,8 @@ void PrimeController::onPrimeEnd() {
 
 void PrimeController::onSlowCallback() {
 	if (!getEngineRotationState()->isStopped()) {
-#if EFI_PROD_CODE
+#if EFI_BACKUP_SRAM
 		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_BACKUP_SRAM */
 	}
 }
