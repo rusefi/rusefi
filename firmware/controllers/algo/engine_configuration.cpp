@@ -393,6 +393,7 @@ static void setDefaultEngineNoiseTable() {
  * This method should NOT be setting any default pinout
  */
 static void setDefaultEngineConfiguration() {
+#if EFI_ENGINE_CONTROL
 #if (! EFI_UNIT_TEST)
 	efi::clear(persistentState.persistentConfiguration);
 #endif
@@ -481,7 +482,6 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(config->alsFuelAdjustmentLoadBins, 2, 10, 1);
 	setRpmTableBin(config->alsFuelAdjustmentrpmBins);
 
-#if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection();
 
 	setLinearCurve(engineConfiguration->map.samplingAngleBins, 800, 7000, 1);

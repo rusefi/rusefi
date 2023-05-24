@@ -3,6 +3,7 @@
 #include "defaults.h"
 #include "table_helper.h"
 
+#if EFI_ENGINE_CONTROL
 static void setDefaultMultisparkParameters() {
 	// 1ms spark + 2ms dwell
 	engineConfiguration->multisparkSparkDuration = 1;
@@ -98,3 +99,4 @@ void setDefaultIgnition() {
 	// IAT correction
 	setDefaultIatTimingCorrection();
 }
+#endif // EFI_ENGINE_CONTROL
