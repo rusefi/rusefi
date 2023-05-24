@@ -55,6 +55,10 @@ ioportid_t getBrainPinPort(brain_pin_e brainPin) {
 	return getGpioPorts()[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
+ioportid_t * getGpioPorts() {
+    return ports;
+}
+
 int getBrainPinIndex(brain_pin_e brainPin) {
 	return (brainPin - Gpio::A0) % PORT_SIZE;
 }

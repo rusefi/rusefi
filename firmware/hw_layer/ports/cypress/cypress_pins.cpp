@@ -61,6 +61,10 @@ const char *portname(ioportid_t GPIOx) {
 	return "unknown";
 }
 
+ioportid_t * getGpioPorts() {
+    return ports;
+}
+
 static int getPortIndex(ioportid_t port) {
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
 	if (port == GPIOA)
