@@ -722,47 +722,75 @@ float getOutputValueByName(const char *name) {
 		case 2090288615:
 			return engine->outputChannels.Gego;
 // totalFuelCorrection
+#if EFI_ENGINE_CONTROL
 		case -1779658835:
 			return engine->fuelComputer.totalFuelCorrection;
+#endif
 // running.postCrankingFuelCorrection
+#if EFI_ENGINE_CONTROL
 		case -1288205717:
 			return engine->fuelComputer.running.postCrankingFuelCorrection;
+#endif
 // running.intakeTemperatureCoefficient
+#if EFI_ENGINE_CONTROL
 		case 197173469:
 			return engine->fuelComputer.running.intakeTemperatureCoefficient;
+#endif
 // running.coolantTemperatureCoefficient
+#if EFI_ENGINE_CONTROL
 		case 1822238385:
 			return engine->fuelComputer.running.coolantTemperatureCoefficient;
+#endif
 // running.timeSinceCrankingInSecs
+#if EFI_ENGINE_CONTROL
 		case 526786951:
 			return engine->fuelComputer.running.timeSinceCrankingInSecs;
+#endif
 // running.baseFuel
+#if EFI_ENGINE_CONTROL
 		case -42886021:
 			return engine->fuelComputer.running.baseFuel;
+#endif
 // running.fuel
+#if EFI_ENGINE_CONTROL
 		case -794283008:
 			return engine->fuelComputer.running.fuel;
+#endif
 // afrTableYAxis
+#if EFI_ENGINE_CONTROL
 		case 995190836:
 			return engine->fuelComputer.afrTableYAxis;
+#endif
 // targetLambda
+#if EFI_ENGINE_CONTROL
 		case -734904659:
 			return engine->fuelComputer.targetLambda;
+#endif
 // targetAFR
+#if EFI_ENGINE_CONTROL
 		case 2122891301:
 			return engine->fuelComputer.targetAFR;
+#endif
 // stoichiometricRatio
+#if EFI_ENGINE_CONTROL
 		case 341978922:
 			return engine->fuelComputer.stoichiometricRatio;
+#endif
 // sdTcharge_coff
+#if EFI_ENGINE_CONTROL
 		case 1417236183:
 			return engine->fuelComputer.sdTcharge_coff;
+#endif
 // sdAirMassInOneCylinder
+#if EFI_ENGINE_CONTROL
 		case 1650433343:
 			return engine->fuelComputer.sdAirMassInOneCylinder;
+#endif
 // injectorHwIssue
+#if EFI_ENGINE_CONTROL
 		case -1237512821:
 			return engine->fuelComputer.injectorHwIssue;
+#endif
 // baseDwell
 		case -1777838088:
 			return engine->ignitionState.baseDwell;
