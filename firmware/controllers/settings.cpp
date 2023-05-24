@@ -300,14 +300,6 @@ static void setIgnitionMode(int value) {
 #endif // EFI_ENGINE_CONTROL
 }
 
-static void setOneCoilIgnition() {
-	setIgnitionMode((int)IM_ONE_COIL);
-}
-
-static void setWastedIgnition() {
-	setIgnitionMode((int)IM_WASTED_SPARK);
-}
-
 static void setIndividualCoilsIgnition() {
 	setIgnitionMode((int)IM_INDIVIDUAL_COILS);
 }
@@ -939,9 +931,7 @@ void initSettings(void) {
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
 
-    // some of these commands are used
-//	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);
-//	addConsoleAction("set_wasted_spark_ignition", setWastedIgnition);
+    // used by HW CI
 	addConsoleAction(CMD_INDIVIDUAL_INJECTION, setIndividualCoilsIgnition);
 
 	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
