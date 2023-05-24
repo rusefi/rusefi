@@ -102,14 +102,6 @@ int getBrainPinIndex(ioportid_t port, ioportmask_t pin) {
 	return portIndex * PORT_SIZE + pin;
 }
 
-ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
-	if (!isBrainPinValid(brainPin)) {
-		firmwareError(ObdCode::CUSTOM_ERR_INVALID_PIN, "%s: Invalid Gpio: %d", msg, brainPin);
-		return GPIO_NULL;
-	}
-	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
-}
-
 /**
  * Parse string representation of physical pin into brain_pin_e ordinal.
  *

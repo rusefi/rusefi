@@ -52,7 +52,7 @@ static int getPortIndex(ioportid_t port) {
 }
 
 ioportid_t getBrainPinPort(brain_pin_e brainPin) {
-	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
+	return getGpioPorts()[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
 int getBrainPinIndex(brain_pin_e brainPin) {
@@ -62,14 +62,6 @@ int getBrainPinIndex(brain_pin_e brainPin) {
 int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
 	int portIndex = getPortIndex(port);
 	return portIndex * PORT_SIZE + pin;
-}
-
-ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
-	if (!isBrainPinValid(brainPin)) {
-		firmwareError(ObdCode::CUSTOM_ERR_INVALID_PIN, "%s: Invalid Gpio: %d", msg, brainPin);
-		return GPIO_NULL;
-	}
-	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
 /**
