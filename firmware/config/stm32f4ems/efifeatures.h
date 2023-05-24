@@ -25,6 +25,10 @@
 #define EFI_ANTILAG_SYSTEM TRUE
 #endif
 
+#ifndef EFI_BACKUP_SRAM
+#define EFI_BACKUP_SRAM TRUE
+#endif
+
 #define EFI_DYNO_VIEW TRUE
 
 #ifndef EFI_CDM_INTEGRATION

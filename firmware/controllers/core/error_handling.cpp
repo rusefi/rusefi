@@ -25,6 +25,7 @@ const char* getCriticalErrorMessage(void) {
 
 #if EFI_PROD_CODE
 void checkLastBootError() {
+#if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
 	
 	switch (sramState->Cookie) {
@@ -57,15 +58,18 @@ void checkLastBootError() {
 
 	efiPrintf("Power cycle count: %d", sramState->BootCount);
 	sramState->BootCount++;
+#endif // EFI_BACKUP_SRAM
 }
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
+#if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
 	sramState->Cookie = ErrorCookie::HardFault;
 	sramState->FaultType = type;
 	sramState->FaultAddress = faultAddress;
 	sramState->Csfr = csfr;
 	memcpy(&sramState->FaultCtx, ctx, sizeof(port_extctx));
+#endif // EFI_BACKUP_SRAM
 }
 
 extern ioportid_t criticalErrorLedPort;
@@ -258,11 +262,13 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 		strcpy((char*)(criticalErrorMessageBuffer) + errorMessageSize, versionBuffer);
 	}
 
+#if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
 	if (sramState != nullptr) {
 		strncpy(sramState->ErrorString, criticalErrorMessageBuffer, efi::size(sramState->ErrorString));
 		sramState->Cookie = ErrorCookie::FirmwareError;
 	}
+#endif // EFI_BACKUP_SRAM
 #else
 
 	char errorBuffer[200];
