@@ -292,22 +292,12 @@ static void setInjectionMode(int value) {
 }
 
 static void setIgnitionMode(int value) {
+#if EFI_ENGINE_CONTROL
 	engineConfiguration->ignitionMode = (ignition_mode_e) value;
 	incrementGlobalConfigurationVersion();
 	prepareOutputSignals();
 	doPrintConfiguration();
-}
-
-static void setOneCoilIgnition() {
-	setIgnitionMode((int)IM_ONE_COIL);
-}
-
-static void setWastedIgnition() {
-	setIgnitionMode((int)IM_WASTED_SPARK);
-}
-
-static void setIndividualCoilsIgnition() {
-	setIgnitionMode((int)IM_INDIVIDUAL_COILS);
+#endif // EFI_ENGINE_CONTROL
 }
 
 static void setTriggerType(int value) {
@@ -936,10 +926,6 @@ void initSettings(void) {
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-
-	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);
-	addConsoleAction("set_wasted_spark_ignition", setWastedIgnition);
-	addConsoleAction("set_individual_coils_ignition", setIndividualCoilsIgnition);
 
 	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
