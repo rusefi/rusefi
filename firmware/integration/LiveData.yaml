@@ -113,6 +113,7 @@ Usages:
 # something special about 'error: "ts_show_vbatt" redefined'' why is trigger.h special?
 #    prepend: integration/rusefi_config.txt
     constexpr: "engine->triggerCentral"
+    conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
 
   - name: trigger_state
     java: TriggerState.java
