@@ -124,6 +124,7 @@ brain_pin_e parseBrainPin(const char *str) {
 	} else if (port >= 'A' && port <= 'Z') {
 		port = 10 + (port - 'A');
 	} else if (port >= '0' && port <= '9') {
+// cypress-specific code
 		port = 0 + (port - '0');
 	} else {
 		return Gpio::Invalid;
