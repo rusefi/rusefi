@@ -361,12 +361,12 @@ void applyNewHardwareSettings() {
 	adcConfigListener(engine);
 }
 
-#if EFI_PROD_CODE
+#if EFI_BOR_LEVEL
 void setBor(int borValue) {
 	efiPrintf("setting BOR to %d", borValue);
 	BOR_Set((BOR_Level_t)borValue);
 }
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_BOR_LEVEL */
 
 // This function initializes hardware that can do so before configuration is loaded
 void initHardwareNoConfig() {

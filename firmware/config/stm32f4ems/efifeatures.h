@@ -33,6 +33,10 @@
 #define EFI_DFU_JUMP TRUE
 #endif
 
+#ifndef EFI_BOR_LEVEL
+#define EFI_BOR_LEVEL TRUE
+#endif
+
 #define EFI_DYNO_VIEW TRUE
 
 #ifndef EFI_CDM_INTEGRATION
