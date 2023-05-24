@@ -36,39 +36,6 @@ ioportid_t * getGpioPorts() {
     return ports;
 }
 
-static int getPortIndex(ioportid_t port) {
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
-	if (port == GPIOA)
-		return 0;
-	if (port == GPIOB)
-		return 1;
-	if (port == GPIOC)
-		return 2;
-	if (port == GPIOD)
-		return 3;
-	if (port == GPIOE)
-		return 4;
-	if (port == GPIOF)
-		return 5;
-	if (port == GPIOG)
-		return 6;
-	if (port == GPIOH)
-		return 7;
-	if (port == GPIOI)
-		return 8;
-	if (port == GPIOJ)
-		return 9;
-	if (port == GPIOK)
-		return 10;
-	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
-	return -1;
-}
-
-int getBrainPinIndex(ioportid_t port, ioportmask_t pin) {
-	int portIndex = getPortIndex(port);
-	return portIndex * PORT_SIZE + pin;
-}
-
 /**
  * Parse string representation of physical pin into brain_pin_e ordinal.
  *

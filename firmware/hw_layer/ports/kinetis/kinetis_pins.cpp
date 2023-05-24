@@ -18,29 +18,8 @@ static ioportid_t ports[] = {GPIOA,
 		GPIOE
 };
 
-static int getPortIndex(ioportid_t port) {
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
-	if (port == GPIOA)
-		return 0;
-	if (port == GPIOB)
-		return 1;
-	if (port == GPIOC)
-		return 2;
-	if (port == GPIOD)
-		return 3;
-	if (port == GPIOE)
-		return 4;
-	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
-	return -1;
-}
-
 ioportid_t * getGpioPorts() {
     return ports;
-}
-
-int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
-	int portIndex = getPortIndex(port);
-	return portIndex * PORT_SIZE + pin;
 }
 
 /**

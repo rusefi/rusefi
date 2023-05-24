@@ -795,4 +795,51 @@ const char *portname(ioportid_t GPIOx) {
 	return "unknown";
 }
 
+static int getPortIndex(ioportid_t port) {
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
+	if (port == GPIOA)
+		return 0;
+	if (port == GPIOB)
+		return 1;
+	if (port == GPIOC)
+		return 2;
+	if (port == GPIOD)
+		return 3;
+#if defined(GPIOF)
+	if (port == GPIOE)
+		return 4;
+#endif /* GPIOE */
+#if defined(GPIOF)
+	if (port == GPIOF)
+		return 5;
+#endif /* GPIOF */
+#if defined(GPIOG)
+	if (port == GPIOG)
+		return 6;
+#endif /* GPIOG */
+#if defined(GPIOH)
+	if (port == GPIOH)
+		return 7;
+#endif /* GPIOH */
+#if defined(GPIOF)
+	if (port == GPIOI)
+		return 8;
+#endif /* STM32_HAS_GPIOI */
+#if defined(GPIOJ)
+	if (port == GPIOJ)
+		return 9;
+#endif /* GPIOJ */
+#if defined(GPIOK)
+	if (port == GPIOK)
+		return 10;
+#endif /* GPIOK */
+	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
+	return -1;
+}
+
+int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
+	int portIndex = getPortIndex(port);
+	return portIndex * PORT_SIZE + pin;
+}
+
 #endif // EFI_GPIO_HARDWARE
