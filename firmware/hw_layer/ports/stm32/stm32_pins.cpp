@@ -12,8 +12,6 @@
 
 #if EFI_GPIO_HARDWARE
 
-#define PORT_SIZE 16
-
 static ioportid_t ports[] = {GPIOA,
 		GPIOB,
 		GPIOC,
@@ -164,20 +162,6 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 		return GPIO_NULL;
 	}
 	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
-}
-
-/**
- * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
- */
-ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
-	if (!isBrainPinValid(brainPin))
-			return EFI_ERROR_CODE;
-
-	if (brain_pin_is_onchip(brainPin))
-		return getBrainPinIndex(brainPin);
-
-	firmwareError(ObdCode::CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip Gpio: %d", msg, brainPin);
-	return EFI_ERROR_CODE;
 }
 
 /**

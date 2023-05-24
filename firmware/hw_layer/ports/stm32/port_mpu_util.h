@@ -1,5 +1,5 @@
 /**
- * @file	stm32_common_mpu_util.h
+ * @file	port_mpu_util.h
  * @brief	Low level common STM32 header
  *
  * @date Aug 3, 2019
@@ -9,6 +9,8 @@
 #pragma once
 
 #include "device_mpu_util.h"
+
+#define PORT_SIZE 16
 
 #define MCU_SERIAL_NUMBER_BYTES 12
 
