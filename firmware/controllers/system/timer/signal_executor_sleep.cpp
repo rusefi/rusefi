@@ -3,7 +3,6 @@
  * @brief   Asynchronous output signal code
  *
  * Here we have the simplest, thread-based implementation of signal executor.
- * TODO: https://sourceforge.net/p/rusefi/tickets/6/
  *
  * @date Feb 10, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
