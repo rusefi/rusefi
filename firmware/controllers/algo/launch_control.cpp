@@ -139,6 +139,9 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 
 SoftSparkLimiter::SoftSparkLimiter(bool allowHardCut) {
     this->allowHardCut = allowHardCut;
+#if EFI_UNIT_TEST
+    initLaunchControl();
+#endif // EFI_UNIT_TEST
 }
 
 void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {

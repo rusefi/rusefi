@@ -140,8 +140,6 @@ static void setDefaultLaunchParameters() {
 TEST(LaunchControl, CompleteRun) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	initLaunchControl();
-
 	//load default config
 	setDefaultLaunchParameters();
 
