@@ -490,7 +490,9 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 				continue;
 			}
 #if EFI_LAUNCH_CONTROL
-			if (engine->softSparkLimiter.shouldSkip()) {
+            bool sparkLimited = engine->softSparkLimiter.shouldSkip() || engine->hardSparkLimiter.shouldSkip();
+            engine->ignitionState.luaIgnitionSkip = sparkLimited;
+			if (sparkLimited) {
 				continue;
 			}
 #endif // EFI_LAUNCH_CONTROL
