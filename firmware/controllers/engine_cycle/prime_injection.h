@@ -24,6 +24,9 @@ public:
 	}
 
 private:
+	scheduling_s m_start;
+	scheduling_s m_end;
+
 	bool m_isPriming = false;
 
 	static void onPrimeStartAdapter(PrimeController* instance) {
