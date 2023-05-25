@@ -137,6 +137,10 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
 }
 
+SoftSparkLimiter::SoftSparkLimiter(bool allowHardCut) {
+    this->allowHardCut = allowHardCut;
+}
+
 void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {
 	this->targetSkipRatio = targetSkipRatio;
 }

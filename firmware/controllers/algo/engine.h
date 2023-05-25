@@ -170,6 +170,8 @@ public:
 #if EFI_LAUNCH_CONTROL
 	LaunchControlBase launchController;
 	SoftSparkLimiter softSparkLimiter;
+	// technically not directly related to EFI_LAUNCH_CONTROL since useful for TCU
+	SoftSparkLimiter hardSparkLimiter;
 #endif // EFI_LAUNCH_CONTROL
 
 #if EFI_ANTILAG_SYSTEM

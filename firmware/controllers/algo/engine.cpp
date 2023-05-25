@@ -275,7 +275,17 @@ extern bool kAcRequestState;
 #endif // EFI_GPIO_HARDWARE
 }
 
-Engine::Engine() {
+Engine::Engine()
+#if EFI_LAUNCH_CONTROL
+
+	: softSparkLimiter(false), hardSparkLimiter(true)
+
+#if EFI_ANTILAG_SYSTEM
+	, ALSsoftSparkLimiter(false)
+#endif /* EFI_ANTILAG_SYSTEM */
+
+#endif // EFI_LAUNCH_CONTROL
+{
 	reset();
 }
 
