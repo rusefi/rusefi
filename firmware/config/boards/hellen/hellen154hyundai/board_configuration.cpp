@@ -108,6 +108,7 @@ void setBoardConfigOverrides() {
 			efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
 			efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
 		}
+		engineConfiguration->stepperDcInvertedPins = false;
 	} else if (hellenBoardId == BOARD_ID_154hyundai_c || hellenBoardId == BOARD_ID_154hyundai_d) {
 		engineConfiguration->triggerInputPins[0] = H144_IN_SENS2;
 		engineConfiguration->camInputs[0] = H144_IN_SENS3;
