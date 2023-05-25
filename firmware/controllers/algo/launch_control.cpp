@@ -148,13 +148,13 @@ void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {
 static tinymt32_t tinymt;
 
 bool SoftSparkLimiter::shouldSkip()  {
-	if (targetSkipRatio == 0 || wasJustSkipped) {
+	if (targetSkipRatio == 0 || (!allowHardCut && wasJustSkipped)) {
 		wasJustSkipped = false;
 		return false;
 	}
 
 	float r = tinymt32_generate_float(&tinymt);
-	wasJustSkipped = r < 2 * targetSkipRatio;
+	wasJustSkipped = r < (allowHardCut ? 1 : 2) * targetSkipRatio;
 	return wasJustSkipped;
 }
 

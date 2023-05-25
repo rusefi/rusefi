@@ -193,3 +193,35 @@ TEST(LaunchControl, CompleteRun) {
 	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 }
+
+TEST(LaunchControl, hardSkip) {
+	SoftSparkLimiter hardSparkLimiter(true);
+	ASSERT_FALSE(hardSparkLimiter.shouldSkip());
+
+
+	hardSparkLimiter.setTargetSkipRatio(1);
+	// open question if we need special handling of '1' or random would just work?
+	ASSERT_TRUE(hardSparkLimiter.shouldSkip());
+
+	int counter = 0;
+	hardSparkLimiter.setTargetSkipRatio(0.5);
+	for (int i =0;i<1000;i++) {
+		if (hardSparkLimiter.shouldSkip()) {
+			counter++;
+		}
+
+	}
+	ASSERT_TRUE(counter > 400 && counter < 600) << "How good is random " << counter;
+}
+
+
+
+
+
+
+
+
+
+
+
+
