@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Wed May 10 00:32:43 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Thu May 25 17:16:18 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -191,6 +191,7 @@ public class IgnitionState {
 	public static final Field PERCYLINDERTIMING10 = Field.create("PERCYLINDERTIMING10", 45, FieldType.INT8).setScale(1.0).setBaseOffset(844);
 	public static final Field PERCYLINDERTIMING11 = Field.create("PERCYLINDERTIMING11", 46, FieldType.INT8).setScale(1.0).setBaseOffset(844);
 	public static final Field PERCYLINDERTIMING12 = Field.create("PERCYLINDERTIMING12", 47, FieldType.INT8).setScale(1.0).setBaseOffset(844);
+	public static final Field LUAIGNITIONSKIP = Field.create("LUAIGNITIONSKIP", 48, FieldType.BIT, 0).setBaseOffset(844);
 	public static final Field[] VALUES = {
 	BASEDWELL,
 	SPARKDWELL,
@@ -216,5 +217,6 @@ public class IgnitionState {
 	PERCYLINDERTIMING10,
 	PERCYLINDERTIMING11,
 	PERCYLINDERTIMING12,
+	LUAIGNITIONSKIP,
 	};
 }

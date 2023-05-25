@@ -821,6 +821,9 @@ float getOutputValueByName(const char *name) {
 // luaTimingMult
 		case -1626770351:
 			return engine->ignitionState.luaTimingMult;
+// luaIgnitionSkip
+		case -1916613921:
+			return engine->ignitionState.luaIgnitionSkip;
 // isTpsInvalid
 #if EFI_BOOST_CONTROL
 		case -575666209:
