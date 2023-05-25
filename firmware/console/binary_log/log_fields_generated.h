@@ -270,7 +270,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.luaGauges[1], "Lua: Gauge 2", "value", 3},
 	{engine->outputChannels.rawMaf2, "rawMaf2", "V", 3},
 	{engine->outputChannels.mafMeasured2, "MAF #2", "kg/h", 1},
-	{engine->outputChannels.schedulingUsedCount, "schedulingUsedCount", "", 0},
 	{engine->outputChannels.vehicleSpeedKph, "Vehicle Speed", "kph", 2},
 	{engine->outputChannels.Gego, "Gego", "%", 2},
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
