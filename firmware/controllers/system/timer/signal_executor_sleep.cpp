@@ -32,12 +32,6 @@ bool printSchedulerDebug = true;
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
-struct CallbackContext
-{
-	scheduling_s* scheduling = nullptr;
-	bool shouldFree = false;
-};
-
 void SleepExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
 	scheduleForLater(msg, scheduling, timeUs - getTimeNowUs(), action);
 }
@@ -46,30 +40,18 @@ void SleepExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* schedul
 	scheduleByTimestamp(msg, scheduling, NT2US(timeNt), action);
 }
 
-static void timerCallback(CallbackContext* ctx) {
+static void timerCallback(scheduling_s *scheduling) {
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printSchedulerDebug) {
-		if (ctx->scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
-			printf("executing cb=turnInjectionPinLow p=%d sch=%d now=%d\r\n", (int)ctx->scheduling->action.getArgument(), (int)scheduling,
+		if (scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
+			printf("executing cb=turnInjectionPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->action.getArgument(), (int)scheduling,
 				(int)getTimeNowUs());
 		} else {
 //		printf("exec cb=%d p=%d\r\n", (int)scheduling->callback, (int)scheduling->param);
 		}
 	}
 #endif // EFI_PRINTF_FUEL_DETAILS
-
-	// Grab the action but clear it in the event so we can reschedule from the action's execution
-	action_s action = ctx->scheduling->action;
-	ctx->scheduling->action = {};
-
-	// Clean up any memory we allocated
-	if (ctx->shouldFree) {
-		delete ctx->scheduling;
-	}
-	delete ctx;
-
-	// Lastly, actually execute the action
-	action.execute();
+	scheduling->action.execute();
 }
 
 static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
@@ -83,14 +65,6 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	}
 
 	chibios_rt::CriticalSectionLocker csl;
-
-	auto ctx = new CallbackContext;
-	if (!scheduling) {
-		scheduling = new scheduling_s;
-		chVTObjectInit(&scheduling->timer);
-		ctx->shouldFree = true;
-	}
-	ctx->scheduling = scheduling;
 
 	scheduling->action = action;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
@@ -109,7 +83,7 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	}
 #endif /* EFI_SIMULATOR */
 
-	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, ctx);
+	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, scheduling);
 }
 
 void SleepExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) {
