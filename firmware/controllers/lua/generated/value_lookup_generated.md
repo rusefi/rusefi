@@ -1085,7 +1085,7 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 How many test bench pulses do you want
 
 ### benchTestOnTime
-Length of each of the test pulses
+Duration of each test pulse
 
 ### boostCutPressure
 MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.

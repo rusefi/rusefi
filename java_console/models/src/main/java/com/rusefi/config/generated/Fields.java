@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 29 23:42:04 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 29 23:50:17 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1022,6 +1022,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 159741597;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1245,7 +1246,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.30.f407-discovery.2874563208";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.30.f407-discovery.159741597";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1376;
@@ -2023,7 +2024,7 @@ public class Fields {
 	public static final Field KLINEDOHONDASEND = Field.create("KLINEDOHONDASEND", 1572, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 1576, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_1577 = Field.create("ALIGNMENTFILL_AT_1577", 1577, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1578, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1578, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field LAUNCHACTIVATEPINMODE = Field.create("LAUNCHACTIVATEPINMODE", 1580, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_1581 = Field.create("ALIGNMENTFILL_AT_1581", 1581, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CAN2TXPIN = Field.create("CAN2TXPIN", 1582, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);

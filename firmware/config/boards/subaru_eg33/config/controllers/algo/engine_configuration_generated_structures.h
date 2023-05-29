@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun May 21 01:06:27 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon May 29 23:49:31 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3083,7 +3083,6 @@ struct engine_configuration_s {
 	bool unusedBit_523_31 : 1 {};
 	/**
 	 * How many test bench pulses do you want
-	count
 	 * offset 1576
 	 */
 	uint8_t benchTestCount;
@@ -3094,11 +3093,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_1577[1];
 	/**
-	 * Length of each of the test pulses
+	 * Duration of each test pulse
 	ms
 	 * offset 1578
 	 */
-	scaled_channel<uint16_t, 10, 1> benchTestOnTime;
+	scaled_channel<uint16_t, 100, 1> benchTestOnTime;
 	/**
 	 * offset 1580
 	 */
@@ -5190,4 +5189,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23176);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun May 21 01:06:27 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon May 29 23:49:31 UTC 2023
