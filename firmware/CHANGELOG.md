@@ -26,6 +26,11 @@ Release template (copy/paste this for new release):
 
 # Changelog
 
+## Unreleased
+
+### Fixed
+ - Improved bench test resolution (more usable for testing injectors, dwell, etc)
+
 ## May 2023 Release
 
 ### Added
