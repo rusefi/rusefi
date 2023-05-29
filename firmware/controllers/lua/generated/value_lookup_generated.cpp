@@ -131,6 +131,10 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->triggerSimulatorRpm;
 		case -1578655365:
 			return engineConfiguration->cylindersCount;
+		case -204721234:
+			return engineConfiguration->benchTestCount;
+		case -1992436143:
+			return engineConfiguration->benchTestOnTime;
 		case 1425664391:
 			return engineConfiguration->cylinderBore;
 		case 1523832034:
@@ -689,10 +693,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->injectorFlowAsMassFlow;
 		case -1655178001:
 			return engineConfiguration->benchTestOffTime;
-		case -204721234:
-			return engineConfiguration->benchTestCount;
-		case -1992436143:
-			return engineConfiguration->benchTestOnTime;
 		case -1992945039:
 			return engineConfiguration->boostCutPressure;
 		case -1359134883:
@@ -1303,6 +1303,16 @@ void setConfigValueByName(const char *name, float value) {
 		case -1578655365:
 	{
 		engineConfiguration->cylindersCount = (int)value;
+		return;
+	}
+		case -204721234:
+	{
+		engineConfiguration->benchTestCount = (int)value;
+		return;
+	}
+		case -1992436143:
+	{
+		engineConfiguration->benchTestOnTime = (int)value;
 		return;
 	}
 		case 1425664391:
@@ -2698,16 +2708,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -1655178001:
 	{
 		engineConfiguration->benchTestOffTime = (int)value;
-		return;
-	}
-		case -204721234:
-	{
-		engineConfiguration->benchTestCount = (int)value;
-		return;
-	}
-		case -1992436143:
-	{
-		engineConfiguration->benchTestOnTime = (int)value;
 		return;
 	}
 		case -1992945039:

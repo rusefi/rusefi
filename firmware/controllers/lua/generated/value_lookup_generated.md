@@ -190,6 +190,12 @@ Engine displacement in litres
 ### cylindersCount
 Number of cylinder the engine has.
 
+### benchTestCount
+How many test bench pulses do you want
+
+### benchTestOnTime
+Duration of each test pulse
+
 ### cylinderBore
 Cylinder diameter in mm.
 
@@ -1026,12 +1032,6 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 
 ### benchTestOffTime
 Time between bench test pulses
-
-### benchTestCount
-How many test bench pulses do you want
-
-### benchTestOnTime
-Length of each of the test pulses
 
 ### boostCutPressure
 MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.
