@@ -529,7 +529,7 @@ void onConfigurationChangeBenchTest() {
 		engineConfiguration->benchTestOnTime = 4; 
 	}
 
-	if (engineConfiguration->benchTestOffTime < 5)
+	if (engineConfiguration->benchTestOffTime < 5) {
 		engineConfiguration->benchTestOffTime = 500;
 	}
 
