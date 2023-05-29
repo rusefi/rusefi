@@ -534,12 +534,18 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 }
 
 void onConfigurationChangeBenchTest() {
-	if (engineConfiguration->benchTestOnTime == 0)
-		engineConfiguration->benchTestOnTime = 4; // default value if configuration was not specified
+	// default values if configuration was not specified
+	if (engineConfiguration->benchTestOnTime == 0) {
+		engineConfiguration->benchTestOnTime = 4; 
+	}
+
 	if (engineConfiguration->benchTestOffTime < 5)
-		engineConfiguration->benchTestOffTime = 500; // default value if configuration was not specified
-	if (engineConfiguration->benchTestCount < 1)
-		engineConfiguration->benchTestCount = 3; // default value if configuration was not specified
+		engineConfiguration->benchTestOffTime = 500;
+	}
+
+	if (engineConfiguration->benchTestCount < 1) {
+		engineConfiguration->benchTestCount = 3;
+	}
 }
 
 void initBenchTest() {
