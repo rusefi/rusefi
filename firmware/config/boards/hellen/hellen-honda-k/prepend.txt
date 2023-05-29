@@ -3,7 +3,7 @@
 #define ts_show_hip9011 false
 #define ts_show_can_terminator true
 
-
+#define ts_show_vbatt false
 #define ts_show_egt false
 #define ts_show_gps false
 #define ts_show_etb_pins false
