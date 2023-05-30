@@ -1139,9 +1139,9 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		zBins		= throttle2TrimTable
 		gridOrient  = 250,	0, 340 ; Space 123 rotation of grid in degrees.
 
-	table = maxKnockRetardTbl, maxKnockRetardMap,  "Max knock retard",	1
-		xBins		= maxKnockRetardRpmBins,  RPMValue
-		yBins		= maxKnockRetardLoadBins,  TPSValue
+	table = maxKnockRetardTbl, maxKnockRetardMap, "Max knock retard",	1
+		xBins		= maxKnockRetardRpmBins, RPMValue
+		yBins		= maxKnockRetardLoadBins, ignitionLoad
 		zBins		= maxKnockRetardTable
 		gridOrient  = 250,	0, 340 ; Space 123 rotation of grid in degrees.
 

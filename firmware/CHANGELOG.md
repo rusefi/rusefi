@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)
+ - Maximum knock retard table displays correct Y axis values in TunerStudio
 
 ## May 2023 Release
 
