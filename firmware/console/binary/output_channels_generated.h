@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 25 14:11:16 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed May 31 21:17:03 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -764,666 +764,672 @@ struct output_channels_s {
 	 */
 	uint16_t turboSpeed = (uint16_t)0;
 	/**
-	%
+	 * Ign: Timing Cyl
+	deg
 	 * offset 288
+	 */
+	scaled_channel<int16_t, 50, 1> ignitionAdvanceCyl[MAX_CYLINDER_COUNT];
+	/**
+	%
+	 * offset 312
 	 */
 	scaled_channel<int16_t, 100, 1> tps1Split = (int16_t)0;
 	/**
 	%
-	 * offset 290
+	 * offset 314
 	 */
 	scaled_channel<int16_t, 100, 1> tps2Split = (int16_t)0;
 	/**
 	%
-	 * offset 292
+	 * offset 316
 	 */
 	scaled_channel<int16_t, 100, 1> tps12Split = (int16_t)0;
 	/**
 	%
-	 * offset 294
+	 * offset 318
 	 */
 	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
 	/**
 	 * Ign: Cut Code
 	code
-	 * offset 296
+	 * offset 320
 	 */
 	int8_t sparkCutReason = (int8_t)0;
 	/**
 	 * Fuel: Cut Code
 	code
-	 * offset 297
+	 * offset 321
 	 */
 	int8_t fuelCutReason = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_AIR_FLOW_ESTIMATE@@
 	kg/h
-	 * offset 298
+	 * offset 322
 	 */
 	scaled_channel<uint16_t, 10, 1> mafEstimate = (uint16_t)0;
 	/**
 	 * sync: instant RPM
 	rpm
-	 * offset 300
+	 * offset 324
 	 */
 	uint16_t instantRpm = (uint16_t)0;
 	/**
 	V
-	 * offset 302
+	 * offset 326
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawMap = (uint16_t)0;
 	/**
 	V
-	 * offset 304
+	 * offset 328
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 306
+	 * offset 330
 	 */
-	uint8_t alignmentFill_at_306[2];
+	uint8_t alignmentFill_at_330[2];
 	/**
-	 * offset 308
+	 * offset 332
 	 */
 	float calibrationValue2 = (float)0;
 	/**
-	offset 312 bit 0 */
+	offset 336 bit 0 */
 	bool isMainRelayOn : 1 {};
 	/**
 	 * isUsbConnected
 	 * Original reason for this is to check if USB is connected from Lua
-	offset 312 bit 1 */
+	offset 336 bit 1 */
 	bool isUsbConnected : 1 {};
 	/**
-	offset 312 bit 2 */
-	bool unusedBit_157_2 : 1 {};
+	offset 336 bit 2 */
+	bool unusedBit_158_2 : 1 {};
 	/**
-	offset 312 bit 3 */
-	bool unusedBit_157_3 : 1 {};
+	offset 336 bit 3 */
+	bool unusedBit_158_3 : 1 {};
 	/**
-	offset 312 bit 4 */
-	bool unusedBit_157_4 : 1 {};
+	offset 336 bit 4 */
+	bool unusedBit_158_4 : 1 {};
 	/**
-	offset 312 bit 5 */
-	bool unusedBit_157_5 : 1 {};
+	offset 336 bit 5 */
+	bool unusedBit_158_5 : 1 {};
 	/**
-	offset 312 bit 6 */
-	bool unusedBit_157_6 : 1 {};
+	offset 336 bit 6 */
+	bool unusedBit_158_6 : 1 {};
 	/**
-	offset 312 bit 7 */
-	bool unusedBit_157_7 : 1 {};
+	offset 336 bit 7 */
+	bool unusedBit_158_7 : 1 {};
 	/**
-	offset 312 bit 8 */
-	bool unusedBit_157_8 : 1 {};
+	offset 336 bit 8 */
+	bool unusedBit_158_8 : 1 {};
 	/**
-	offset 312 bit 9 */
-	bool unusedBit_157_9 : 1 {};
+	offset 336 bit 9 */
+	bool unusedBit_158_9 : 1 {};
 	/**
-	offset 312 bit 10 */
-	bool unusedBit_157_10 : 1 {};
+	offset 336 bit 10 */
+	bool unusedBit_158_10 : 1 {};
 	/**
-	offset 312 bit 11 */
-	bool unusedBit_157_11 : 1 {};
+	offset 336 bit 11 */
+	bool unusedBit_158_11 : 1 {};
 	/**
-	offset 312 bit 12 */
-	bool unusedBit_157_12 : 1 {};
+	offset 336 bit 12 */
+	bool unusedBit_158_12 : 1 {};
 	/**
-	offset 312 bit 13 */
-	bool unusedBit_157_13 : 1 {};
+	offset 336 bit 13 */
+	bool unusedBit_158_13 : 1 {};
 	/**
-	offset 312 bit 14 */
-	bool unusedBit_157_14 : 1 {};
+	offset 336 bit 14 */
+	bool unusedBit_158_14 : 1 {};
 	/**
-	offset 312 bit 15 */
-	bool unusedBit_157_15 : 1 {};
+	offset 336 bit 15 */
+	bool unusedBit_158_15 : 1 {};
 	/**
-	offset 312 bit 16 */
-	bool unusedBit_157_16 : 1 {};
+	offset 336 bit 16 */
+	bool unusedBit_158_16 : 1 {};
 	/**
-	offset 312 bit 17 */
-	bool unusedBit_157_17 : 1 {};
+	offset 336 bit 17 */
+	bool unusedBit_158_17 : 1 {};
 	/**
-	offset 312 bit 18 */
-	bool unusedBit_157_18 : 1 {};
+	offset 336 bit 18 */
+	bool unusedBit_158_18 : 1 {};
 	/**
-	offset 312 bit 19 */
-	bool unusedBit_157_19 : 1 {};
+	offset 336 bit 19 */
+	bool unusedBit_158_19 : 1 {};
 	/**
-	offset 312 bit 20 */
-	bool unusedBit_157_20 : 1 {};
+	offset 336 bit 20 */
+	bool unusedBit_158_20 : 1 {};
 	/**
-	offset 312 bit 21 */
-	bool unusedBit_157_21 : 1 {};
+	offset 336 bit 21 */
+	bool unusedBit_158_21 : 1 {};
 	/**
-	offset 312 bit 22 */
-	bool unusedBit_157_22 : 1 {};
+	offset 336 bit 22 */
+	bool unusedBit_158_22 : 1 {};
 	/**
-	offset 312 bit 23 */
-	bool unusedBit_157_23 : 1 {};
+	offset 336 bit 23 */
+	bool unusedBit_158_23 : 1 {};
 	/**
-	offset 312 bit 24 */
-	bool unusedBit_157_24 : 1 {};
+	offset 336 bit 24 */
+	bool unusedBit_158_24 : 1 {};
 	/**
-	offset 312 bit 25 */
-	bool unusedBit_157_25 : 1 {};
+	offset 336 bit 25 */
+	bool unusedBit_158_25 : 1 {};
 	/**
-	offset 312 bit 26 */
-	bool unusedBit_157_26 : 1 {};
+	offset 336 bit 26 */
+	bool unusedBit_158_26 : 1 {};
 	/**
-	offset 312 bit 27 */
-	bool unusedBit_157_27 : 1 {};
+	offset 336 bit 27 */
+	bool unusedBit_158_27 : 1 {};
 	/**
-	offset 312 bit 28 */
-	bool unusedBit_157_28 : 1 {};
+	offset 336 bit 28 */
+	bool unusedBit_158_28 : 1 {};
 	/**
-	offset 312 bit 29 */
-	bool unusedBit_157_29 : 1 {};
+	offset 336 bit 29 */
+	bool unusedBit_158_29 : 1 {};
 	/**
-	offset 312 bit 30 */
-	bool unusedBit_157_30 : 1 {};
+	offset 336 bit 30 */
+	bool unusedBit_158_30 : 1 {};
 	/**
-	offset 312 bit 31 */
-	bool unusedBit_157_31 : 1 {};
+	offset 336 bit 31 */
+	bool unusedBit_158_31 : 1 {};
 	/**
 	 * Lua: Tick counter
 	count
-	 * offset 316
+	 * offset 340
 	 */
 	uint32_t luaInvocationCounter = (uint32_t)0;
 	/**
 	 * Lua: Last tick duration
 	nt
-	 * offset 320
+	 * offset 344
 	 */
 	uint32_t luaLastCycleDuration = (uint32_t)0;
 	/**
 	count
-	 * offset 324
+	 * offset 348
 	 */
 	uint8_t testBenchIter = (uint8_t)0;
 	/**
 	 * "TCU: Current Range"
-	 * offset 325
+	 * offset 349
 	 */
 	uint8_t tcu_currentRange = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_TC_RATIO@@
 	value
-	 * offset 326
+	 * offset 350
 	 */
 	scaled_channel<uint16_t, 100, 1> tcRatio = (uint16_t)0;
 	/**
-	 * offset 328
+	 * offset 352
 	 */
 	float lastShiftTime = (float)0;
 	/**
-	 * offset 332
+	 * offset 356
 	 */
 	uint32_t vssEdgeCounter = (uint32_t)0;
 	/**
-	 * offset 336
+	 * offset 360
 	 */
 	uint32_t issEdgeCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_AUX_LINEAR_1@@
-	 * offset 340
+	 * offset 364
 	 */
 	scaled_channel<int16_t, 100, 1> auxLinear1 = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_AUX_LINEAR_2@@
-	 * offset 342
+	 * offset 366
 	 */
 	scaled_channel<int16_t, 100, 1> auxLinear2 = (int16_t)0;
 	/**
-	offset 344 bit 0 */
+	offset 368 bit 0 */
 	bool dfcoActive : 1 {};
 	/**
-	offset 344 bit 1 */
-	bool unusedBit_198_1 : 1 {};
+	offset 368 bit 1 */
+	bool unusedBit_199_1 : 1 {};
 	/**
-	offset 344 bit 2 */
-	bool unusedBit_198_2 : 1 {};
+	offset 368 bit 2 */
+	bool unusedBit_199_2 : 1 {};
 	/**
-	offset 344 bit 3 */
-	bool unusedBit_198_3 : 1 {};
+	offset 368 bit 3 */
+	bool unusedBit_199_3 : 1 {};
 	/**
-	offset 344 bit 4 */
-	bool unusedBit_198_4 : 1 {};
+	offset 368 bit 4 */
+	bool unusedBit_199_4 : 1 {};
 	/**
-	offset 344 bit 5 */
-	bool unusedBit_198_5 : 1 {};
+	offset 368 bit 5 */
+	bool unusedBit_199_5 : 1 {};
 	/**
-	offset 344 bit 6 */
-	bool unusedBit_198_6 : 1 {};
+	offset 368 bit 6 */
+	bool unusedBit_199_6 : 1 {};
 	/**
-	offset 344 bit 7 */
-	bool unusedBit_198_7 : 1 {};
+	offset 368 bit 7 */
+	bool unusedBit_199_7 : 1 {};
 	/**
-	offset 344 bit 8 */
-	bool unusedBit_198_8 : 1 {};
+	offset 368 bit 8 */
+	bool unusedBit_199_8 : 1 {};
 	/**
-	offset 344 bit 9 */
-	bool unusedBit_198_9 : 1 {};
+	offset 368 bit 9 */
+	bool unusedBit_199_9 : 1 {};
 	/**
-	offset 344 bit 10 */
-	bool unusedBit_198_10 : 1 {};
+	offset 368 bit 10 */
+	bool unusedBit_199_10 : 1 {};
 	/**
-	offset 344 bit 11 */
-	bool unusedBit_198_11 : 1 {};
+	offset 368 bit 11 */
+	bool unusedBit_199_11 : 1 {};
 	/**
-	offset 344 bit 12 */
-	bool unusedBit_198_12 : 1 {};
+	offset 368 bit 12 */
+	bool unusedBit_199_12 : 1 {};
 	/**
-	offset 344 bit 13 */
-	bool unusedBit_198_13 : 1 {};
+	offset 368 bit 13 */
+	bool unusedBit_199_13 : 1 {};
 	/**
-	offset 344 bit 14 */
-	bool unusedBit_198_14 : 1 {};
+	offset 368 bit 14 */
+	bool unusedBit_199_14 : 1 {};
 	/**
-	offset 344 bit 15 */
-	bool unusedBit_198_15 : 1 {};
+	offset 368 bit 15 */
+	bool unusedBit_199_15 : 1 {};
 	/**
-	offset 344 bit 16 */
-	bool unusedBit_198_16 : 1 {};
+	offset 368 bit 16 */
+	bool unusedBit_199_16 : 1 {};
 	/**
-	offset 344 bit 17 */
-	bool unusedBit_198_17 : 1 {};
+	offset 368 bit 17 */
+	bool unusedBit_199_17 : 1 {};
 	/**
-	offset 344 bit 18 */
-	bool unusedBit_198_18 : 1 {};
+	offset 368 bit 18 */
+	bool unusedBit_199_18 : 1 {};
 	/**
-	offset 344 bit 19 */
-	bool unusedBit_198_19 : 1 {};
+	offset 368 bit 19 */
+	bool unusedBit_199_19 : 1 {};
 	/**
-	offset 344 bit 20 */
-	bool unusedBit_198_20 : 1 {};
+	offset 368 bit 20 */
+	bool unusedBit_199_20 : 1 {};
 	/**
-	offset 344 bit 21 */
-	bool unusedBit_198_21 : 1 {};
+	offset 368 bit 21 */
+	bool unusedBit_199_21 : 1 {};
 	/**
-	offset 344 bit 22 */
-	bool unusedBit_198_22 : 1 {};
+	offset 368 bit 22 */
+	bool unusedBit_199_22 : 1 {};
 	/**
-	offset 344 bit 23 */
-	bool unusedBit_198_23 : 1 {};
+	offset 368 bit 23 */
+	bool unusedBit_199_23 : 1 {};
 	/**
-	offset 344 bit 24 */
-	bool unusedBit_198_24 : 1 {};
+	offset 368 bit 24 */
+	bool unusedBit_199_24 : 1 {};
 	/**
-	offset 344 bit 25 */
-	bool unusedBit_198_25 : 1 {};
+	offset 368 bit 25 */
+	bool unusedBit_199_25 : 1 {};
 	/**
-	offset 344 bit 26 */
-	bool unusedBit_198_26 : 1 {};
+	offset 368 bit 26 */
+	bool unusedBit_199_26 : 1 {};
 	/**
-	offset 344 bit 27 */
-	bool unusedBit_198_27 : 1 {};
+	offset 368 bit 27 */
+	bool unusedBit_199_27 : 1 {};
 	/**
-	offset 344 bit 28 */
-	bool unusedBit_198_28 : 1 {};
+	offset 368 bit 28 */
+	bool unusedBit_199_28 : 1 {};
 	/**
-	offset 344 bit 29 */
-	bool unusedBit_198_29 : 1 {};
+	offset 368 bit 29 */
+	bool unusedBit_199_29 : 1 {};
 	/**
-	offset 344 bit 30 */
-	bool unusedBit_198_30 : 1 {};
+	offset 368 bit 30 */
+	bool unusedBit_199_30 : 1 {};
 	/**
-	offset 344 bit 31 */
-	bool unusedBit_198_31 : 1 {};
+	offset 368 bit 31 */
+	bool unusedBit_199_31 : 1 {};
 	/**
 	kPa
-	 * offset 348
+	 * offset 372
 	 */
 	scaled_channel<uint16_t, 10, 1> fallbackMap = (uint16_t)0;
 	/**
 	 * Instant MAP
 	kPa
-	 * offset 350
+	 * offset 374
 	 */
 	scaled_channel<uint16_t, 30, 1> instantMAPValue = (uint16_t)0;
 	/**
 	us
-	 * offset 352
+	 * offset 376
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_CAN_WRITE_OK@@
-	 * offset 354
+	 * offset 378
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_CAN_WRITE_ERR@@
-	 * offset 356
+	 * offset 380
 	 */
 	uint16_t canWriteNotOk = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 358
-	 */
-	uint8_t alignmentFill_at_358[2];
-	/**
-	 * offset 360
-	 */
-	uint32_t triggerPrimaryFall = (uint32_t)0;
-	/**
-	 * offset 364
-	 */
-	uint32_t triggerPrimaryRise = (uint32_t)0;
-	/**
-	 * offset 368
-	 */
-	uint32_t triggerSecondaryFall = (uint32_t)0;
-	/**
-	 * offset 372
-	 */
-	uint32_t triggerSecondaryRise = (uint32_t)0;
-	/**
-	 * offset 376
-	 */
-	uint16_t triggerVvtFall = (uint16_t)0;
-	/**
-	 * offset 378
-	 */
-	uint16_t triggerVvtRise = (uint16_t)0;
-	/**
-	 * offset 380
-	 */
-	uint16_t triggerVvt2Fall = (uint16_t)0;
-	/**
 	 * offset 382
 	 */
-	uint16_t triggerVvt2Rise = (uint16_t)0;
+	uint8_t alignmentFill_at_382[2];
 	/**
 	 * offset 384
 	 */
+	uint32_t triggerPrimaryFall = (uint32_t)0;
+	/**
+	 * offset 388
+	 */
+	uint32_t triggerPrimaryRise = (uint32_t)0;
+	/**
+	 * offset 392
+	 */
+	uint32_t triggerSecondaryFall = (uint32_t)0;
+	/**
+	 * offset 396
+	 */
+	uint32_t triggerSecondaryRise = (uint32_t)0;
+	/**
+	 * offset 400
+	 */
+	uint16_t triggerVvtFall = (uint16_t)0;
+	/**
+	 * offset 402
+	 */
+	uint16_t triggerVvtRise = (uint16_t)0;
+	/**
+	 * offset 404
+	 */
+	uint16_t triggerVvt2Fall = (uint16_t)0;
+	/**
+	 * offset 406
+	 */
+	uint16_t triggerVvt2Rise = (uint16_t)0;
+	/**
+	 * offset 408
+	 */
 	uint8_t starterState = (uint8_t)0;
 	/**
-	 * offset 385
+	 * offset 409
 	 */
 	uint8_t starterRelayDisable = (uint8_t)0;
 	/**
 	 * Ign: Multispark count
-	 * offset 386
+	 * offset 410
 	 */
 	uint8_t multiSparkCounter = (uint8_t)0;
 	/**
-	 * offset 387
+	 * offset 411
 	 */
 	uint8_t extiOverflowCount = (uint8_t)0;
 	/**
-	 * offset 388
+	 * offset 412
 	 */
 	pid_status_s alternatorStatus;
 	/**
-	 * offset 404
+	 * offset 428
 	 */
 	pid_status_s idleStatus;
 	/**
-	 * offset 420
+	 * offset 444
 	 */
 	pid_status_s etbStatus;
 	/**
-	 * offset 436
+	 * offset 460
 	 */
 	pid_status_s boostStatus;
 	/**
-	 * offset 452
+	 * offset 476
 	 */
 	pid_status_s wastegateDcStatus;
 	/**
-	 * offset 468
+	 * offset 492
 	 */
 	pid_status_s vvtStatus[CAM_INPUTS_COUNT];
 	/**
 	 * Aux speed 1
 	s
-	 * offset 532
+	 * offset 556
 	 */
 	uint16_t auxSpeed1 = (uint16_t)0;
 	/**
 	 * Aux speed 2
 	s
-	 * offset 534
+	 * offset 558
 	 */
 	uint16_t auxSpeed2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ISS@@
 	RPM
-	 * offset 536
+	 * offset 560
 	 */
 	uint16_t ISSValue = (uint16_t)0;
 	/**
 	V
-	 * offset 538
+	 * offset 562
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAnalogInput[LUA_ANALOG_INPUT_COUNT];
 	/**
 	 * GPPWM Output
 	%
-	 * offset 554
+	 * offset 578
 	 */
 	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
 	/**
-	 * offset 558
+	 * offset 582
 	 */
 	scaled_channel<int16_t, 1, 1> gppwmXAxis[4];
 	/**
-	 * offset 566
+	 * offset 590
 	 */
 	scaled_channel<int16_t, 10, 1> gppwmYAxis[4];
 	/**
 	V
-	 * offset 574
+	 * offset 598
 	 */
 	scaled_channel<int16_t, 1000, 1> rawBattery = (int16_t)0;
 	/**
-	 * offset 576
+	 * offset 600
 	 */
 	scaled_channel<int16_t, 10, 1> ignBlendParameter[IGN_BLEND_COUNT];
 	/**
 	%
-	 * offset 584
+	 * offset 608
 	 */
 	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT];
 	/**
 	deg
-	 * offset 588
+	 * offset 612
 	 */
 	scaled_channel<int16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT];
 	/**
-	 * offset 596
+	 * offset 620
 	 */
 	scaled_channel<int16_t, 10, 1> veBlendParameter[VE_BLEND_COUNT];
 	/**
 	%
-	 * offset 604
+	 * offset 628
 	 */
 	scaled_channel<uint8_t, 2, 1> veBlendBias[VE_BLEND_COUNT];
 	/**
 	%
-	 * offset 608
+	 * offset 632
 	 */
 	scaled_channel<int16_t, 100, 1> veBlendOutput[VE_BLEND_COUNT];
 	/**
-	 * offset 616
+	 * offset 640
 	 */
 	scaled_channel<int16_t, 10, 1> boostOpenLoopBlendParameter[BOOST_BLEND_COUNT];
 	/**
 	%
-	 * offset 620
+	 * offset 644
 	 */
 	scaled_channel<uint8_t, 2, 1> boostOpenLoopBlendBias[BOOST_BLEND_COUNT];
 	/**
 	%
-	 * offset 622
+	 * offset 646
 	 */
 	scaled_channel<int8_t, 1, 1> boostOpenLoopBlendOutput[BOOST_BLEND_COUNT];
 	/**
-	 * offset 624
+	 * offset 648
 	 */
 	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendParameter[BOOST_BLEND_COUNT];
 	/**
 	%
-	 * offset 628
+	 * offset 652
 	 */
 	scaled_channel<uint8_t, 2, 1> boostClosedLoopBlendBias[BOOST_BLEND_COUNT];
 	/**
 	%
-	 * offset 630
+	 * offset 654
 	 */
 	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendOutput[BOOST_BLEND_COUNT];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 634
+	 * offset 658
 	 */
-	uint8_t alignmentFill_at_634[2];
+	uint8_t alignmentFill_at_658[2];
 	/**
-	offset 636 bit 0 */
+	offset 660 bit 0 */
 	bool coilState1 : 1 {};
 	/**
-	offset 636 bit 1 */
+	offset 660 bit 1 */
 	bool coilState2 : 1 {};
 	/**
-	offset 636 bit 2 */
+	offset 660 bit 2 */
 	bool coilState3 : 1 {};
 	/**
-	offset 636 bit 3 */
+	offset 660 bit 3 */
 	bool coilState4 : 1 {};
 	/**
-	offset 636 bit 4 */
+	offset 660 bit 4 */
 	bool coilState5 : 1 {};
 	/**
-	offset 636 bit 5 */
+	offset 660 bit 5 */
 	bool coilState6 : 1 {};
 	/**
-	offset 636 bit 6 */
+	offset 660 bit 6 */
 	bool coilState7 : 1 {};
 	/**
-	offset 636 bit 7 */
+	offset 660 bit 7 */
 	bool coilState8 : 1 {};
 	/**
-	offset 636 bit 8 */
+	offset 660 bit 8 */
 	bool coilState9 : 1 {};
 	/**
-	offset 636 bit 9 */
+	offset 660 bit 9 */
 	bool coilState10 : 1 {};
 	/**
-	offset 636 bit 10 */
+	offset 660 bit 10 */
 	bool coilState11 : 1 {};
 	/**
-	offset 636 bit 11 */
+	offset 660 bit 11 */
 	bool coilState12 : 1 {};
 	/**
-	offset 636 bit 12 */
+	offset 660 bit 12 */
 	bool injectorState1 : 1 {};
 	/**
-	offset 636 bit 13 */
+	offset 660 bit 13 */
 	bool injectorState2 : 1 {};
 	/**
-	offset 636 bit 14 */
+	offset 660 bit 14 */
 	bool injectorState3 : 1 {};
 	/**
-	offset 636 bit 15 */
+	offset 660 bit 15 */
 	bool injectorState4 : 1 {};
 	/**
-	offset 636 bit 16 */
+	offset 660 bit 16 */
 	bool injectorState5 : 1 {};
 	/**
-	offset 636 bit 17 */
+	offset 660 bit 17 */
 	bool injectorState6 : 1 {};
 	/**
-	offset 636 bit 18 */
+	offset 660 bit 18 */
 	bool injectorState7 : 1 {};
 	/**
-	offset 636 bit 19 */
+	offset 660 bit 19 */
 	bool injectorState8 : 1 {};
 	/**
-	offset 636 bit 20 */
+	offset 660 bit 20 */
 	bool injectorState9 : 1 {};
 	/**
-	offset 636 bit 21 */
+	offset 660 bit 21 */
 	bool injectorState10 : 1 {};
 	/**
-	offset 636 bit 22 */
+	offset 660 bit 22 */
 	bool injectorState11 : 1 {};
 	/**
-	offset 636 bit 23 */
+	offset 660 bit 23 */
 	bool injectorState12 : 1 {};
 	/**
-	offset 636 bit 24 */
+	offset 660 bit 24 */
 	bool triggerChannel1 : 1 {};
 	/**
-	offset 636 bit 25 */
+	offset 660 bit 25 */
 	bool triggerChannel2 : 1 {};
 	/**
-	offset 636 bit 26 */
+	offset 660 bit 26 */
 	bool vvtChannel1 : 1 {};
 	/**
-	offset 636 bit 27 */
+	offset 660 bit 27 */
 	bool vvtChannel2 : 1 {};
 	/**
-	offset 636 bit 28 */
+	offset 660 bit 28 */
 	bool vvtChannel3 : 1 {};
 	/**
-	offset 636 bit 29 */
+	offset 660 bit 29 */
 	bool vvtChannel4 : 1 {};
 	/**
-	offset 636 bit 30 */
-	bool unusedBit_304_30 : 1 {};
+	offset 660 bit 30 */
+	bool unusedBit_305_30 : 1 {};
 	/**
-	offset 636 bit 31 */
-	bool unusedBit_304_31 : 1 {};
+	offset 660 bit 31 */
+	bool unusedBit_305_31 : 1 {};
 	/**
-	 * offset 640
+	 * offset 664
 	 */
 	uint32_t outputRequestPeriod = (uint32_t)0;
 	/**
-	 * offset 644
+	 * offset 668
 	 */
 	float mapFast = (float)0;
 	/**
 	 * Lua: Gauge
 	value
-	 * offset 648
+	 * offset 672
 	 */
 	float luaGauges[LUA_GAUGE_COUNT];
 	/**
 	V
-	 * offset 656
+	 * offset 680
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawMaf2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_AIR_FLOW_MEASURED_2@@
 	kg/h
-	 * offset 658
+	 * offset 682
 	 */
 	scaled_channel<uint16_t, 10, 1> mafMeasured2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_VVS@@
 	kph
-	 * offset 660
+	 * offset 684
 	 */
 	scaled_channel<uint16_t, 100, 1> vehicleSpeedKph = (uint16_t)0;
 	/**
 	%
-	 * offset 662
+	 * offset 686
 	 */
 	scaled_channel<uint16_t, 100, 1> Gego = (uint16_t)0;
 	/**
-	 * offset 664
+	 * offset 688
 	 */
 	uint8_t unusedAtTheEnd[134];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 798
+	 * offset 822
 	 */
-	uint8_t alignmentFill_at_798[2];
+	uint8_t alignmentFill_at_822[2];
 };
-static_assert(sizeof(output_channels_s) == 800);
+static_assert(sizeof(output_channels_s) == 824);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 25 14:11:16 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed May 31 21:17:03 UTC 2023
