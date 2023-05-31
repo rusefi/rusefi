@@ -43,10 +43,11 @@ static int lua_vin(lua_State* l) {
 }
 
 static int lua_readpin(lua_State* l) {
-	auto msg = luaL_checkstring(l, 1);
+	const char * msg = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
 	brain_pin_e pin = parseBrainPin(msg);
 	if (!isBrainPinValid(pin)) {
+	    efiPrintf("LUA: invalid pin [%s]", msg);
 		lua_pushnil(l);
 	} else {
 		int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
