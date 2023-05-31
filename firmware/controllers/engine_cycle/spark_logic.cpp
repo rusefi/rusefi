@@ -9,11 +9,6 @@
 
 #include "spark_logic.h"
 
-// dependency injection
-#include "engine_state.h"
-#include "rpm_calculator_api.h"
-// end of injection
-
 #include "utlist.h"
 #include "event_queue.h"
 
@@ -94,7 +89,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		// Negate because timing *before* TDC, and we schedule *after* TDC
 		- getEngineState()->timingAdvance[event->cylinderNumber];
 
-    engine->ignitionState.perCylinderTiming[event->cylinderIndex] = correctedSparkAngle;
+    engine->outputChannels.ignitionAdvanceCyl[event->cylinderIndex] = correctedSparkAngle;
 
     angle_t sparkAngle = correctedSparkAngle
 			// Offset by this cylinder's position in the cycle

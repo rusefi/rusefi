@@ -17,7 +17,6 @@ float dwellVoltageCorrection;Ign: Dwell voltage correction
 
     float luaTimingAdd;Ign: Lua timing add;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
     float luaTimingMult;Ign: Lua timing mult;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
-    uint8_t[MAX_CYLINDER_COUNT iterate] perCylinderTiming;;"Timing Cyl", 1, 0, 0, 0, 0
 bit luaIgnitionSkip;Ign: Lua Spark Skip
 
 end_struct
