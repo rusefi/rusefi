@@ -284,7 +284,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 	if (wave.phaseCount == 0) {
 		wave.phaseCount = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			wave.setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i]);
+			wave.setChannelState(i, /* switchIndex */ 0, TriggerValue::FALL);
 		}
 
 		isRiseEvent[0] = TriggerValue::RISE == state;
