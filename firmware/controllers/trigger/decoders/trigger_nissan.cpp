@@ -24,24 +24,24 @@ void initializeNissanSR20VE_4(TriggerWaveform *s) {
 
 	float width = 4;
 
-	s->addEvent720(1 * 180 - 4 * width, TriggerValue::RISE);
-	s->addEvent720(1 * 180, TriggerValue::FALL);
+	s->addEvent720(1 * 180 - 4 * width, true);
+	s->addEvent720(1 * 180, false);
 
-	s->addEvent720(2 * 180 - width, TriggerValue::RISE);
-	s->addEvent720(2 * 180, TriggerValue::FALL);
+	s->addEvent720(2 * 180 - width, true);
+	s->addEvent720(2 * 180, false);
 
-	s->addEvent720(3 * 180 - width, TriggerValue::RISE);
-	s->addEvent720(3 * 180, TriggerValue::FALL);
+	s->addEvent720(3 * 180 - width, true);
+	s->addEvent720(3 * 180, false);
 
-	s->addEvent720(4 * 180 - width, TriggerValue::RISE);
-	s->addEvent720(4 * 180, TriggerValue::FALL);
+	s->addEvent720(4 * 180 - width, true);
+	s->addEvent720(4 * 180, false);
 }
 
 static void addPrimaryToothEndingAt(TriggerWaveform *s, float fallAngle) {
 	int vvtWidth = 20;
 
-	s->addEventAngle(fallAngle - vvtWidth, TriggerValue::RISE);
-	s->addEventAngle(fallAngle, TriggerValue::FALL);
+	s->addEventAngle(fallAngle - vvtWidth, true);
+	s->addEventAngle(fallAngle, false);
 
 }
 
@@ -71,8 +71,8 @@ void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t tota
 	float currentAngle = missing * toothAngle;
 	for (size_t i = 0; i < toothCount; i++) {
 		currentAngle += toothAngle;
-		s->addEventAngle(currentAngle - 5, TriggerValue::RISE);
-		s->addEventAngle(currentAngle, TriggerValue::FALL);
+		s->addEventAngle(currentAngle - 5, true);
+		s->addEventAngle(currentAngle, false);
 	}
 }
 
@@ -108,14 +108,14 @@ void initializeNissanQR25crank(TriggerWaveform *s) {
 	float currentAngle = 20;
 	for (int i = 0;i < 16;i++) {
 		currentAngle += 10;
-		s->addEventAngle(currentAngle - 5, TriggerValue::RISE);
-		s->addEventAngle(currentAngle, TriggerValue::FALL);
+		s->addEventAngle(currentAngle - 5, true);
+		s->addEventAngle(currentAngle, false);
 	}
 }
 
 static void addvq30tooth(TriggerWaveform *s, float angle) {
-	s->addEvent360(angle - 4, TriggerValue::RISE);
-	s->addEvent360(angle, TriggerValue::FALL);
+	s->addEvent360(angle - 4, true);
+	s->addEvent360(angle, false);
 }
 
 // yes, this is CAM shaft shape NOT crank shaft shape!

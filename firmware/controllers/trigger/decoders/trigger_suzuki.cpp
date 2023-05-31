@@ -15,20 +15,20 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 	float w = 5;
 	float specialTooth = 20;
 
-	s->addEvent720(180 - w, TriggerValue::RISE);
-	s->addEvent720(180, TriggerValue::FALL);
+	s->addEvent720(180 - w, true);
+	s->addEvent720(180, false);
 
-	s->addEvent720(2 * specialTooth + 180 - w, TriggerValue::RISE);
-	s->addEvent720(2 * specialTooth + 180, TriggerValue::FALL);
+	s->addEvent720(2 * specialTooth + 180 - w, true);
+	s->addEvent720(2 * specialTooth + 180, false);
 
-	s->addEvent720(360 - w, TriggerValue::RISE);
-	s->addEvent720(360, TriggerValue::FALL);
+	s->addEvent720(360 - w, true);
+	s->addEvent720(360, false);
 
-	s->addEvent720(540 - w, TriggerValue::RISE);
-	s->addEvent720(540, TriggerValue::FALL);
+	s->addEvent720(540 - w, true);
+	s->addEvent720(540, false);
 
-	s->addEvent720(720 - w, TriggerValue::RISE);
-	s->addEvent720(720, TriggerValue::FALL);
+	s->addEvent720(720 - w, true);
+	s->addEvent720(720, false);
 
 	s->setTriggerSynchronizationGap(0.22);
 	s->setSecondTriggerSynchronizationGap(1);
