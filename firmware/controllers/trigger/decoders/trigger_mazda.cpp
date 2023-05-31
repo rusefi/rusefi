@@ -120,7 +120,6 @@ void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
 
 void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
-//	s->initialState[0] = 1;
 
 //	float w = 720 / 4 * 0.215;
 	float a = 5;

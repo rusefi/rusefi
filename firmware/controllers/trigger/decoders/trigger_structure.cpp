@@ -69,7 +69,6 @@ void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEd
 	this->operationMode = operationMode;
 	this->syncEdge = syncEdge;
 	triggerShapeSynchPointIndex = 0;
-	memset(initialState, 0, sizeof(initialState));
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
 	wave.waveCount = TRIGGER_INPUT_PIN_COUNT;
@@ -266,7 +265,7 @@ void TriggerWaveform::addEvent(angle_t angle, bool state, TriggerWheel const cha
 	if (wave.phaseCount == 0) {
 		wave.phaseCount = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			wave.setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i] == TriggerValue::RISE);
+			wave.setChannelState(i, /* switchIndex */ 0, /* value */ false);
 		}
 
 		isRiseEvent[0] = state;
