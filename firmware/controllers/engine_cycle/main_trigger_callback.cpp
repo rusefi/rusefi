@@ -41,7 +41,6 @@
 #include "cyclic_buffer.h"
 #include "fuel_math.h"
 #include "cdm_ion_sense.h"
-#include "tooth_logger.h"
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "injector_model.h"

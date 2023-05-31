@@ -12,7 +12,6 @@
 #include "trigger_decoder.h"
 #include "main_trigger_callback.h"
 #include "listener_array.h"
-#include "tooth_logger.h"
 #include "hip9011.h"
 #include "logic_analyzer.h"
 
@@ -20,7 +19,6 @@
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
 
-#include "tooth_logger.h"
 #include "map_averaging.h"
 #include "main_trigger_callback.h"
 #include "status_loop.h"
@@ -491,7 +489,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 
 #endif /* EFI_TOOTH_LOGGER */
 
-	// for effective noise filtering, we need both signal edges, 
+	// for effective noise filtering, we need both signal edges,
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!engineConfiguration->useNoiselessTriggerDecoder) {
 		if (!isUsefulSignal(signal, getTriggerCentral()->triggerShape)) {
@@ -558,9 +556,9 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEve
 }
 
 /**
- * This is used to filter noise spikes (interference) in trigger signal. See 
+ * This is used to filter noise spikes (interference) in trigger signal. See
  * The basic idea is to use not just edges, but the average amount of time the signal stays in '0' or '1'.
- * So we update 'accumulated periods' to track where the signal is. 
+ * So we update 'accumulated periods' to track where the signal is.
  * And then compare between the current period and previous, with some tolerance (allowing for the wheel speed change).
  * @return true if the signal is passed through.
  */
@@ -574,18 +572,18 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	TriggerWheel ti = triggerIdx[signal];
 	// falling is opposite to rising, and vise versa
 	trigger_event_e os = opposite[signal];
-	
+
 	// todo: currently only primary channel is filtered, because there are some weird trigger types on other channels
 	if (ti != TriggerWheel::T_PRIMARY)
 		return true;
-	
+
 	// update period accumulator: for rising signal, we update '0' accumulator, and for falling - '1'
 	if (lastSignalTimes[signal] != -1)
 		accumSignalPeriods[signal] += nowNt - lastSignalTimes[signal];
 	// save current time for this trigger channel
 	lastSignalTimes[signal] = nowNt;
-	
-	// now we want to compare current accumulated period to the stored one 
+
+	// now we want to compare current accumulated period to the stored one
 	efitick_t currentPeriod = accumSignalPeriods[signal];
 	// the trick is to compare between different
 	efitick_t allowedPeriod = accumSignalPrevPeriods[os];
@@ -593,18 +591,18 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	// but first check if we're expecting a gap
 	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->getShaftSynchronized() &&
 			(triggerState->currentCycle.eventCount[(int)ti] + 1) == TRIGGER_WAVEFORM(getExpectedEventCount(ti));
-	
+
 	if (isGapExpected) {
 		// usually we need to extend the period for gaps, based on the trigger info
 		allowedPeriod *= TRIGGER_WAVEFORM(syncRatioAvg);
 	}
-	
+
 	// also we need some margin for rapidly changing trigger-wheel speed,
 	// that's why we expect the period to be no less than 2/3 of the previous period (this is just an empirical 'magic' coef.)
 	efitick_t minAllowedPeriod = 2 * allowedPeriod / 3;
 	// but no longer than 5/4 of the previous 'normal' period
 	efitick_t maxAllowedPeriod = 5 * allowedPeriod / 4;
-	
+
 	// above all, check if the signal comes not too early
 	if (currentPeriod >= minAllowedPeriod) {
 		// now we store this period as a reference for the next time,
