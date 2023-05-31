@@ -14,6 +14,10 @@ allprojects {
     }
 }
 
+tasks.named('wrapper') {
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 // gradlew allDeps 
 subprojects {
     task allDeps(type: DependencyReportTask) {}
