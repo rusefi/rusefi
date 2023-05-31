@@ -28,6 +28,9 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F12: return "40 - INJ_6";
 		case Gpio::F13: return "10 - VTC Left";
 		case Gpio::F14: return "11 - VTC Right";
+		case Gpio::F3: return "9 DIN 1";
+		case Gpio::F4: return "7 DIN 2";
+		case Gpio::F6: return "4 DIN 3";
 		case Gpio::F9: return "101 - Brake Input";
 		case Gpio::G14: return "111 Main Relay";
 		case Gpio::G5: return "104 ETB Relay";
