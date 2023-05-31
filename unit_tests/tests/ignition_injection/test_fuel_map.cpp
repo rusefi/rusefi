@@ -87,17 +87,17 @@ TEST(misc, testFuelMap) {
 static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
-	s->addEvent720(53.747, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(121.90, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(232.76, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(300.54, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(53.747, true, TriggerWheel::T_SECONDARY);
+	s->addEvent720(121.90, false, TriggerWheel::T_SECONDARY);
+	s->addEvent720(232.76, true, TriggerWheel::T_SECONDARY);
+	s->addEvent720(300.54, false, TriggerWheel::T_SECONDARY);
+	s->addEvent720(360, true, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(409.8412, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(478.6505, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(588.045, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(657.03, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(409.8412, true, TriggerWheel::T_SECONDARY);
+	s->addEvent720(478.6505, false, TriggerWheel::T_SECONDARY);
+	s->addEvent720(588.045, true, TriggerWheel::T_SECONDARY);
+	s->addEvent720(657.03, false, TriggerWheel::T_SECONDARY);
+	s->addEvent720(720, false, TriggerWheel::T_PRIMARY);
 
 	ASSERT_FLOAT_EQ(53.747 / 720, s->wave.getSwitchTime(0));
 	ASSERT_EQ(true,  s->wave.getChannelState(1, 0)) << "@0";

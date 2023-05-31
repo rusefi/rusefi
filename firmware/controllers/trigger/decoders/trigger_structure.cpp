@@ -163,7 +163,11 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	return cycleStartAngle + positionWithinCycle;
 }
 
-void TriggerWaveform::addEventClamped(angle_t angle, TriggerValue const stateParam, TriggerWheel const channelIndex, float filterLeft, float filterRight) {
+void TriggerWaveform::addEventClamped(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex, float filterLeft, float filterRight) {
+	addEventClamped(angle, state == TriggerValue::RISE, channelIndex, filterLeft, filterRight);
+}
+
+void TriggerWaveform::addEventClamped(angle_t angle, bool stateParam, TriggerWheel const channelIndex, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight) {
 		addEvent(angle / getEngineCycle(operationMode), stateParam, channelIndex);
 	}
@@ -232,6 +236,10 @@ void TriggerWaveform::addEvent360(angle_t angle, bool state, TriggerWheel const 
 }
 
 void TriggerWaveform::addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
+	addEventAngle(angle, state == TriggerValue::RISE, channelIndex);
+}
+
+void TriggerWaveform::addEventAngle(angle_t angle, bool state, TriggerWheel const channelIndex) {
 	addEvent(angle / getCycleDuration(), state, channelIndex);
 }
 

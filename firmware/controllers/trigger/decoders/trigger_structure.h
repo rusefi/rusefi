@@ -206,11 +206,13 @@ public:
 	 * @param angle (0..360] or (0..720] depending on configuration
 	 */
 	void addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
+	void addEventAngle(angle_t angle, bool state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
 	/* (0..720] angle range
 	 * Deprecated?
 	 */
 	void addEventClamped(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex, float filterLeft, float filterRight);
+	void addEventClamped(angle_t angle, bool state, TriggerWheel const channelIndex, float filterLeft, float filterRight);
 	operation_mode_e getWheelOperationMode() const;
 
 	void initialize(operation_mode_e operationMode, SyncEdge syncEdge);
