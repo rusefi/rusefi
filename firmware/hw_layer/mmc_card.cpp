@@ -19,7 +19,6 @@
 #include "buffered_writer.h"
 #include "status_loop.h"
 #include "binary_logging.h"
-#include "tooth_logger.h"
 
 static bool fs_ready = false;
 

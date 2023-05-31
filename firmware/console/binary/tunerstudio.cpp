@@ -73,7 +73,6 @@
 #include "console_io.h"
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
-#include "tooth_logger.h"
 #include "trigger_scope.h"
 #include "electronic_throttle.h"
 #include "live_data.h"

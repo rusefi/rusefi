@@ -12,14 +12,12 @@
 #include "trigger_decoder.h"
 #include "main_trigger_callback.h"
 #include "listener_array.h"
-#include "tooth_logger.h"
 #include "logic_analyzer.h"
 
 #include "local_version_holder.h"
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
 
-#include "tooth_logger.h"
 #include "map_averaging.h"
 #include "main_trigger_callback.h"
 #include "status_loop.h"

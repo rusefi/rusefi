@@ -15,9 +15,7 @@
 
 #include "pch.h"
 
-
 #include "trigger_central.h"
-#include "tooth_logger.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"

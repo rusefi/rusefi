@@ -36,6 +36,7 @@
 #include "perf_trace.h"
 #include "hardware.h"
 #include "thread_priority.h"
+#include "tooth_logger.h"
 
 #if EFI_UNIT_TEST
 #include <gtest/gtest.h>

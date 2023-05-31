@@ -16,7 +16,6 @@
 
 #include "utlist.h"
 #include "event_queue.h"
-#include "tooth_logger.h"
 
 #include "knock_logic.h"
 

@@ -2,12 +2,7 @@
  * injection_gpio.cpp
  */
 
-#include "injection_gpio.h"
-#include "engine_state.h"
-#include "tooth_logger.h"
-#include "tunerstudio_outputs.h"
-#include "engine_configuration.h"
-#include "efi_gpio.h"
+#include "pch.h"
 
 extern bool printFuelDebug;
 

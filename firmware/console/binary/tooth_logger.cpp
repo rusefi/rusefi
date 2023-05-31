@@ -7,8 +7,6 @@
 
 #include "pch.h"
 
-#include "tooth_logger.h"
-
 #if EFI_TOOTH_LOGGER
 
 /**
