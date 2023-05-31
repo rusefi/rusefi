@@ -12,7 +12,6 @@
 #include "fuel_math.h"
 #include "accel_enrichment.h"
 #include "advance_map.h"
-#include "tooth_logger.h"
 #include "logicdata.h"
 #include "hardware.h"
 

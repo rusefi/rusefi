@@ -222,6 +222,10 @@ void TriggerWaveform::addEvent720(angle_t angle, TriggerValue const state, Trigg
 }
 
 void TriggerWaveform::addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
+	addEvent360(angle, state == TriggerValue::RISE, channelIndex);
+}
+
+void TriggerWaveform::addEvent360(angle_t angle, bool state, TriggerWheel const channelIndex) {
 	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
 	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
@@ -230,10 +234,11 @@ void TriggerWaveform::addEventAngle(angle_t angle, TriggerValue const state, Tri
 	addEvent(angle / getCycleDuration(), state, channelIndex);
 }
 
-void TriggerWaveform::addEvent(angle_t angle, TriggerValue const stateTv, TriggerWheel const channelIndex) {
-	// TODO: #55
-	bool state = stateTv == TriggerValue::RISE;
+void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
+	addEvent(angle, state == TriggerValue::RISE, channelIndex);
+}
 
+void TriggerWaveform::addEvent(angle_t angle, bool state, TriggerWheel const channelIndex) {
 	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	if (channelIndex == TriggerWheel:: T_SECONDARY) {

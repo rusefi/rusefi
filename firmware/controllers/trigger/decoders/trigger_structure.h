@@ -181,6 +181,7 @@ public:
 	 * @param angle (0..1]
 	 */
 	void addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
+	void addEvent(angle_t angle, bool state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 	/* (0..720] angle range
 	 * Deprecated! many usages should be replaced by addEvent360
 	 */
@@ -190,6 +191,7 @@ public:
 	 * this method helps us use real world 360 degrees shape for FOUR_STROKE_CAM_SENSOR and FOUR_STROKE_CRANK_SENSOR
 	 */
 	void addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
+	void addEvent360(angle_t angle, bool state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
 	/**
 	 * This version of the method is best when same wheel could be mounted either on crank or cam
