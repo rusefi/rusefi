@@ -96,14 +96,15 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 			+ getPerCylinderFiringOrderOffset(event->cylinderIndex, event->cylinderNumber);
 
 	efiAssertVoid(ObdCode::CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
+	wrapAngle2(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
+	event->sparkAngle = sparkAngle;
 
 	auto ignitionMode = getCurrentIgnitionMode();
 	engine->outputChannels.currentIgnitionMode = static_cast<uint8_t>(ignitionMode);
 
 	const int index = getIgnitionPinForIndex(event->cylinderIndex, ignitionMode);
 	const int coilIndex = ID2INDEX(getCylinderId(index));
-	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
-
+	event->outputs[0] = &enginePins.coils[coilIndex];
 	IgnitionOutputPin *secondOutput;
 
 	// We need two outputs if:
@@ -121,11 +122,8 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	assertPinAssigned(output);
 
-	event->outputs[0] = output;
 	event->outputs[1] = secondOutput;
 
-	wrapAngle2(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
-	event->sparkAngle = sparkAngle;
 	// Stash which cylinder we're scheduling so that knock sensing knows which
 	// cylinder just fired
 	event->cylinderNumber = coilIndex;
