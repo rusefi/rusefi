@@ -157,7 +157,7 @@ public:
 	 * These signals are used for trigger export only
 	 */
 	TriggerWheel triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
-	TriggerValue triggerSignalStates[PWM_PHASE_MAX_COUNT];
+	bool triggerSignalStates[PWM_PHASE_MAX_COUNT];
 	// see also 'doesTriggerImplyOperationMode'
 	bool knownOperationMode = true;
 #endif

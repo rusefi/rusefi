@@ -11,11 +11,6 @@
 #include "rusefi_enums.h"
 #include <rusefi/expected.h>
 
-enum class TriggerValue : uint8_t {
-	FALL = 0,
-	RISE = 1
-};
-
 // see also 'HW_EVENT_TYPES'
 typedef enum {
 	SHAFT_PRIMARY_FALLING = 0,

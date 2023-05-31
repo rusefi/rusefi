@@ -236,7 +236,7 @@ void TriggerWaveform::addEvent(angle_t angle, bool state, TriggerWheel const cha
 #if EFI_UNIT_TEST
 	assertIsInBounds(wave.phaseCount, triggerSignalIndeces, "trigger shape overflow");
 	triggerSignalIndeces[wave.phaseCount] = channelIndex;
-	triggerSignalStates[wave.phaseCount] = state ? TriggerValue::RISE : TriggerValue::FALL;
+	triggerSignalStates[wave.phaseCount] = state;
 #endif // EFI_UNIT_TEST
 
 
