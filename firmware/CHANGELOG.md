@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - Log per-cylinder true ignition timing (includes trim, knock retard, etc) #76
+
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)
  - Maximum knock retard table displays correct Y axis values in TunerStudio

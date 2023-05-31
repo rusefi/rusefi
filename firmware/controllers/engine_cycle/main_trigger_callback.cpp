@@ -23,11 +23,6 @@
 
 #include "pch.h"
 
-// dependency injection
-#include "engine_state.h"
-#include "rpm_calculator_api.h"
-// end of injection
-
 #if EFI_PRINTF_FUEL_DETAILS
 	bool printFuelDebug = false;
 #endif // EFI_PRINTF_FUEL_DETAILS

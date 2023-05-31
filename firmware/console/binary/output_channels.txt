@@ -217,6 +217,8 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int8_t[4 iterate] vvtTargets;;"deg",1, 0, 0, 0, 0
 	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0
 
+	int16_t[12 iterate] autoscale ignitionAdvanceCyl;Ign: Timing Cyl;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
+
 ! fun fact: we have a separate pid_state.txt file for a bit of a different structure huh?
 	struct pid_status_s
 		float pTerm;;"", 1, 0, -50000, 50000, 2
