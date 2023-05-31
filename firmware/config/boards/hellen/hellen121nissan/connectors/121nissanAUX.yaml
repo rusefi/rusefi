@@ -18,6 +18,8 @@ pins:
     function: Aux Low 2
 
   - pin: aux4
+    # H144_IN_SENS4
+    id: F6
     ts_name: 4 DIN 3
     function: DIN3
 
@@ -30,8 +32,10 @@ pins:
     function: 12V
 
   - pin: aux7
+    # H144_IN_SENS2
+    id: F4
     ts_name: 7 DIN 2
-    function: DIN 2
+    function: DIN2
 
   - pin: aux8
     class: outputs
@@ -41,6 +45,8 @@ pins:
     function: Aux Low 1
 
   - pin: aux9
+    # H144_IN_SENS1
+    id: F3
     ts_name: 9 DIN 1
     function: DIN1
 
