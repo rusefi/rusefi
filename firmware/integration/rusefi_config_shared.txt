@@ -163,7 +163,7 @@
 #define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_IAC "Idle: Position"
 
-#define GAUGE_NAME_TIMING_ADVANCE "Ign: Timing"
+#define GAUGE_NAME_TIMING_ADVANCE "Ign: Timing Base"
 #define GAUGE_NAME_DWELL_DUTY "Ign: Coil duty cycle"
 #define GAUGE_COIL_DWELL_TIME "Ign: Dwell"
 #define GAUGE_NAME_IGNITION_LOAD "Ign: Load"

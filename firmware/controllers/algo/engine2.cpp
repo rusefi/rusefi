@@ -160,6 +160,9 @@ void EngineState::periodicFastCallback() {
 	float ignitionLoad = getIgnitionLoad();
 	float advance = getAdvance(rpm, ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
 
+	// that's weird logic. also seems broken for two stroke?
+	engine->outputChannels.ignitionAdvance = (float)(advance > FOUR_STROKE_CYCLE_DURATION / 2 ? advance - FOUR_STROKE_CYCLE_DURATION : advance);
+
 	// compute per-bank fueling
 	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
 		float corr = clResult.banks[i];
