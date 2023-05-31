@@ -214,10 +214,11 @@ void TriggerWaveform::calculateExpectedEventCounts() {
 
 }
 
-/**
- * See header for documentation
- */
 void TriggerWaveform::addEvent720(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
+	addEvent720(angle, state == TriggerValue::RISE, channelIndex);
+}
+
+void TriggerWaveform::addEvent720(angle_t angle, bool state, TriggerWheel const channelIndex) {
 	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
 

@@ -186,6 +186,7 @@ public:
 	 * Deprecated! many usages should be replaced by addEvent360
 	 */
 	void addEvent720(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
+	void addEvent720(angle_t angle, bool state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
 	/**
 	 * this method helps us use real world 360 degrees shape for FOUR_STROKE_CAM_SENSOR and FOUR_STROKE_CRANK_SENSOR
