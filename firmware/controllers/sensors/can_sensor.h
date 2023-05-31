@@ -82,7 +82,7 @@ public:
 
 	CanListener* request() override {
 		{
-			CanTxMessage msg(CanCategory::OBD, OBD_TEST_REQUEST);
+			CanTxMessage msg(OBD_TEST_REQUEST);
 			msg[0] = _OBD_2;
 			msg[1] = OBD_CURRENT_DATA;
 			msg[2] = PID;

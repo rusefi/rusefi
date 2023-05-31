@@ -12,7 +12,6 @@
 #include <cstdint>
 #include <cstddef>
 
-#include "can_category.h"
 #include "can.h"
 
 /**
@@ -29,14 +28,12 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, size_t bus = 0, bool isExtended = false);
+	explicit CanTxMessage(uint32_t eid, uint8_t dlc = 8, size_t bus = 0, bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	 */
 	~CanTxMessage();
-
-    CanCategory category;
 
 #if EFI_CAN_SUPPORT
 	/**
@@ -94,7 +91,7 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(CanCategory category, uint32_t id, bool isExtended) : CanTxMessage(category, id, sizeof(TData), isExtended) { }
+	explicit CanTxTyped(uint32_t id, bool isExtended) : CanTxMessage(id, sizeof(TData), isExtended) { }
 
 #if EFI_CAN_SUPPORT
 	/**
@@ -115,9 +112,9 @@ public:
 };
 
 template <typename TData>
-void transmitStruct(CanCategory category, uint32_t id, bool isExtended)
+void transmitStruct(uint32_t id, bool isExtended)
 {
-	CanTxTyped<TData> frame(category, id, isExtended);
+	CanTxTyped<TData> frame(id, isExtended);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());

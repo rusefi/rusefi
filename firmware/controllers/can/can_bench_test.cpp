@@ -29,7 +29,7 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	}
 	uint8_t command = frame.data8[1];
 	if (command == CAN_BENCH_GET_COUNT) {
-		CanTxMessage msg(CanCategory::BENCH_TEST, CAN_ECU_HW_META + 1, 8);
+		CanTxMessage msg(CAN_ECU_HW_META + 1, 8);
 		msg[0] = CAN_BENCH_HEADER;
 		msg[1] = 0;
 		msg[2] = getBoardMetaOutputsCount();

@@ -50,7 +50,7 @@ void updateWidebandFirmware() {
 	for (int i = 0; i < 2; i++) {
 		{
 			// Send bootloader entry command
-			CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_ENTER, 0, bus, true);
+			CanTxMessage m(WB_BL_ENTER, 0, bus, true);
 		}
 
 		if (!waitAck()) {
@@ -66,7 +66,7 @@ void updateWidebandFirmware() {
 
 	{
 		// Erase flash - opcode 1, magic value 0x5A5A
-		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF1'5A5A, 0, bus, true);
+		CanTxMessage m(0xEF1'5A5A, 0, bus, true);
 	}
 
 	if (!waitAck()) {
@@ -81,7 +81,7 @@ void updateWidebandFirmware() {
 	// Send flash data 8 bytes at a time
 	for (size_t i = 0; i < totalSize; i += 8) {
 		{
-			CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF2'0000 + i, 8, bus, true);
+			CanTxMessage m(0xEF2'0000 + i, 8, bus, true);
 			memcpy(&m[0], build_wideband_image_bin + i, 8);
 		}
 
@@ -95,7 +95,7 @@ void updateWidebandFirmware() {
 
 	{
 		// Reboot to firmware!
-		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF3'0000, 0, bus, true);
+		CanTxMessage m(0xEF3'0000, 0, bus, true);
 	}
 
 	waitAck();
@@ -116,7 +116,7 @@ void setWidebandOffset(uint8_t index) {
 	efiPrintf("Setting all connected widebands to index %d...", index);
 
 	{
-		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 1, getWidebandBus(), true);
+		CanTxMessage m(WB_MSG_SET_INDEX, 1, getWidebandBus(), true);
 		m[0] = index;
 	}
 
@@ -128,7 +128,7 @@ void setWidebandOffset(uint8_t index) {
 }
 
 void sendWidebandInfo() {
-	CanTxMessage m(CanCategory::WBO_SERVICE, WB_MGS_ECU_STATUS, 2, getWidebandBus(), true);
+	CanTxMessage m(WB_MGS_ECU_STATUS, 2, getWidebandBus(), true);
 
 	float vbatt = Sensor::getOrZero(SensorType::BatteryVoltage) * 10;
 
