@@ -7,12 +7,12 @@
 // Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
 enum class ClearReason : uint8_t {
 	None, // 0
-	Fatal,
-	Settings,
+	Fatal, // 1
+	Settings, // 2
 	HardLimit, // 3
 	FaultRevLimit,
 	BoostCut, // 5
-	OilPressure,
+	OilPressure, // 6
 	StopRequested, // 7
 	EtbProblem, // 8
 	LaunchCut, // 9
@@ -21,7 +21,7 @@ enum class ClearReason : uint8_t {
 	EnginePhase, // 12
 	KickStart, // 13
 	IgnitionOff, // 14
-	Lua,
+	Lua, // 15
 
 	// Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
 	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in rusefi.input
@@ -29,16 +29,16 @@ enum class ClearReason : uint8_t {
 
 enum class TpsState : uint8_t {
 	None, // 0
-	EngineStopped,
-	TpsError,
+	EngineStopped, // 1
+	TpsError, // 2
 	PpsError, // 3
-	IntermittentTps,
-	PidJitter,
+	IntermittentTps, // 4
+	PidJitter, // 5
 	Lua, // 6
-	Manual,
-	NotConfigured,
+	Manual, // 7
+	NotConfigured, // 8
 	Redundancy, // 9
-	IntermittentPps,
+	IntermittentPps, // 10
 	// keep this list in sync with etbCutCodeList in rusefi.input!
 };
 
