@@ -104,7 +104,8 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	const int index = getIgnitionPinForIndex(event->cylinderIndex, ignitionMode);
 	const int coilIndex = ID2INDEX(getCylinderId(index));
-	event->outputs[0] = &enginePins.coils[coilIndex];
+	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
+	event->outputs[0] = output;
 	IgnitionOutputPin *secondOutput;
 
 	// We need two outputs if:
