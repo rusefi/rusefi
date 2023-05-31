@@ -20,14 +20,6 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 
 java -DSystemOut.name=logs/gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
-	-outputPath hw_layer/drivers/can \
-	-generatedFile can_category \
-	-enumInputFile hw_layer/drivers/can/can_category.h
-
-[ $? -eq 0 ] || { echo "ERROR generating enums"; exit 1; }
-
-java -DSystemOut.name=logs/gen_enum_to_string \
-	-jar ../java_tools/enum2string.jar \
 	-outputPath controllers/trigger/decoders \
 	-generatedFile sync_edge \
 	-enumInputFile controllers/trigger/decoders/sync_edge.h
