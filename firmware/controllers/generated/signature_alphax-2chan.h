@@ -1,2 +1,2 @@
-#define SIGNATURE_HASH 628691567
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.05.31.alphax-2chan.628691567"
+#define SIGNATURE_HASH 2473623036
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.05.31.alphax-2chan.2473623036"

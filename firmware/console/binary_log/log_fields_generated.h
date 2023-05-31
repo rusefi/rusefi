@@ -32,7 +32,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.revolutionCounterSinceStart, "revolutionCounterSinceStart", "", 0},
 	{engine->outputChannels.canReadCounter, "CAN: Rx", "", 0},
 	{engine->outputChannels.tpsAccelFuel, "Fuel: TPS AE add fuel ms", "ms", 3},
-	{engine->outputChannels.ignitionAdvance, "Ign: Timing", "deg", 1},
+	{engine->outputChannels.ignitionAdvance, "Ign: Timing Base", "deg", 1},
 	{engine->outputChannels.currentIgnitionMode, "Ign: Mode", "", 0},
 	{engine->outputChannels.currentInjectionMode, "Fuel: Injection mode", "", 0},
 	{engine->outputChannels.coilDutyCycle, "Ign: Coil duty cycle", "%", 0},
