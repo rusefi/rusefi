@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
 }
 
 defaultTasks 'shadowJar'
