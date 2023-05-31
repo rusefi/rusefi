@@ -12,20 +12,15 @@
 
 #include "datalogging.h"
 
-enum class FrontDirection : uint8_t {
-	UP,
-	DOWN
-};
-
 void addEngineSnifferTdcEvent(int rpm);
-void addEngineSnifferLogicAnalyzerEvent(int laIndex, FrontDirection frontDirection);
+void addEngineSnifferLogicAnalyzerEvent(int laIndex, bool isRise);
 /**
  * @param wheelIndex 0 or 1
  * @triggerEventIndex index from sync point, from 0 to number of teeth in engine cycle
  */
-void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, FrontDirection frontDirection);
-void addEngineSnifferVvtEvent(int vvtIndex, FrontDirection frontDirection);
-void addEngineSnifferOutputPinEvent(NamedOutputPin *pin, FrontDirection frontDirection);
+void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, bool isRise);
+void addEngineSnifferVvtEvent(int vvtIndex, bool isRise);
+void addEngineSnifferOutputPinEvent(NamedOutputPin *pin, bool isRise);
 
 #if EFI_ENGINE_SNIFFER
 

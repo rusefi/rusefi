@@ -213,7 +213,7 @@ static void logVvtFront(bool isImportantFront, bool isRising, efitick_t nowNt, i
 	}
 
 	// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
-	addEngineSnifferVvtEvent(index, isRising ? FrontDirection::UP : FrontDirection::DOWN);
+	addEngineSnifferVvtEvent(index, isRising);
 
 #if EFI_TOOTH_LOGGER
 	LogTriggerTooth(isRising ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, nowNt);
@@ -451,10 +451,10 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEve
 
 	bool isUp = isUpEvent[(int) ckpSignalType];
 
-	addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp ? FrontDirection::UP : FrontDirection::DOWN);
+	addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp);
 	if (addOppositeEvent) {
 		// let's add the opposite event right away
-		addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp ? FrontDirection::DOWN : FrontDirection::UP);
+		addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, !isUp);
 	}
 }
 

@@ -352,7 +352,7 @@ void NamedOutputPin::setHigh() {
 	setValue(true);
 
 #if EFI_ENGINE_SNIFFER
-    addEngineSnifferOutputPinEvent(this, FrontDirection::UP);
+    addEngineSnifferOutputPinEvent(this, true);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
@@ -367,7 +367,7 @@ void NamedOutputPin::setLow() {
 	setValue(false);
 
 #if EFI_ENGINE_SNIFFER
-	addEngineSnifferOutputPinEvent(this, FrontDirection::DOWN);
+	addEngineSnifferOutputPinEvent(this, false);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 

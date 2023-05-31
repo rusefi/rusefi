@@ -74,7 +74,7 @@ static void riseCallback(WaveReader *reader) {
 	reader->riseEventCounter++;
 	reader->lastActivityTimeUs = nowUs;
 	assertIsrContext(ObdCode::CUSTOM_ERR_6670);
-	addEngineSnifferLogicAnalyzerEvent(reader->laIndex, FrontDirection::UP);
+	addEngineSnifferLogicAnalyzerEvent(reader->laIndex, true);
 
 	uint32_t width = nowUs - reader->periodEventTimeUs;
 	reader->last_wave_low_widthUs = width;
@@ -88,7 +88,7 @@ void WaveReader::onFallEvent() {
 	fallEventCounter++;
 	lastActivityTimeUs = nowUs;
 	assertIsrContext(ObdCode::CUSTOM_ERR_6670);
-	addEngineSnifferLogicAnalyzerEvent(laIndex, FrontDirection::DOWN);
+	addEngineSnifferLogicAnalyzerEvent(laIndex, false);
 
 	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
