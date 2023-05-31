@@ -1087,9 +1087,6 @@ float getConfigValueByName(const char *name) {
 // kLineDoHondaSend
 		case 304164959:
 			return engineConfiguration->kLineDoHondaSend;
-// benchTestCount
-		case -204721234:
-			return engineConfiguration->benchTestCount;
 // benchTestOnTime
 		case -1992436143:
 			return engineConfiguration->benchTestOnTime;
@@ -1576,6 +1573,9 @@ float getConfigValueByName(const char *name) {
 // boostCutPressureHyst
 		case -2111374247:
 			return engineConfiguration->boostCutPressureHyst;
+// benchTestCount
+		case -204721234:
+			return engineConfiguration->benchTestCount;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3387,11 +3387,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->kLineDoHondaSend = (int)value;
 		return;
 	}
-		case -204721234:
-	{
-		engineConfiguration->benchTestCount = (int)value;
-		return;
-	}
 		case -1992436143:
 	{
 		engineConfiguration->benchTestOnTime = (int)value;
@@ -4200,6 +4195,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -2111374247:
 	{
 		engineConfiguration->boostCutPressureHyst = (int)value;
+		return;
+	}
+		case -204721234:
+	{
+		engineConfiguration->benchTestCount = (int)value;
 		return;
 	}
 	}

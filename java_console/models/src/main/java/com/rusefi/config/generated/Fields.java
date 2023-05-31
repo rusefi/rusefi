@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed May 31 21:17:51 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed May 31 22:11:38 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1022,7 +1022,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1772439381;
+	public static final int SIGNATURE_HASH = 2114707638;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1246,7 +1246,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.05.31.f407-discovery.1772439381";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.05.31.f407-discovery.2114707638";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
@@ -2022,7 +2022,7 @@ public class Fields {
 	public static final Field INJECTORFLOWASMASSFLOW = Field.create("INJECTORFLOWASMASSFLOW", 1572, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field BOARDUSECANTERMINATOR = Field.create("BOARDUSECANTERMINATOR", 1572, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field KLINEDOHONDASEND = Field.create("KLINEDOHONDASEND", 1572, FieldType.BIT, 5).setBaseOffset(0);
-	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 1576, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 1576, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_1577 = Field.create("ALIGNMENTFILL_AT_1577", 1577, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1578, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field LAUNCHACTIVATEPINMODE = Field.create("LAUNCHACTIVATEPINMODE", 1580, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
@@ -2543,7 +2543,9 @@ public class Fields {
 	public static final Field GEARBASEDOPENLOOPBOOSTADDER6 = Field.create("GEARBASEDOPENLOOPBOOSTADDER6", 3946, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field GEARBASEDOPENLOOPBOOSTADDER7 = Field.create("GEARBASEDOPENLOOPBOOSTADDER7", 3947, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field GEARBASEDOPENLOOPBOOSTADDER8 = Field.create("GEARBASEDOPENLOOPBOOSTADDER8", 3948, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3949, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_3949 = Field.create("ALIGNMENTFILL_AT_3949", 3949, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 3952, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3956, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 3972, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4004, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4036, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3505,7 +3507,7 @@ public class Fields {
 	INJECTORFLOWASMASSFLOW,
 	BOARDUSECANTERMINATOR,
 	KLINEDOHONDASEND,
-	BENCHTESTCOUNT,
+	UNUSEDHERE,
 	ALIGNMENTFILL_AT_1577,
 	BENCHTESTONTIME,
 	LAUNCHACTIVATEPINMODE,
@@ -4015,6 +4017,8 @@ public class Fields {
 	GEARBASEDOPENLOOPBOOSTADDER6,
 	GEARBASEDOPENLOOPBOOSTADDER7,
 	GEARBASEDOPENLOOPBOOSTADDER8,
+	ALIGNMENTFILL_AT_3949,
+	BENCHTESTCOUNT,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

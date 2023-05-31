@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon May 29 23:49:31 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed May 31 22:10:52 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3082,10 +3082,9 @@ struct engine_configuration_s {
 	offset 1572 bit 31 */
 	bool unusedBit_523_31 : 1 {};
 	/**
-	 * How many test bench pulses do you want
 	 * offset 1576
 	 */
-	uint8_t benchTestCount;
+	uint8_t unusedHere;
 	/**
 	 * need 4 byte alignment
 	units
@@ -4349,10 +4348,21 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> gearBasedOpenLoopBoostAdder[GEARS_COUNT];
 	/**
+	 * need 4 byte alignment
 	units
 	 * offset 3949
 	 */
-	uint8_t mainUnusedEnd[23];
+	uint8_t alignmentFill_at_3949[3];
+	/**
+	 * How many test bench pulses do you want
+	 * offset 3952
+	 */
+	uint32_t benchTestCount;
+	/**
+	units
+	 * offset 3956
+	 */
+	uint8_t mainUnusedEnd[16];
 };
 static_assert(sizeof(engine_configuration_s) == 3972);
 
@@ -5189,4 +5199,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23176);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon May 29 23:49:31 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed May 31 22:10:52 UTC 2023

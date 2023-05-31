@@ -1081,9 +1081,6 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 ### kLineDoHondaSend
 
 
-### benchTestCount
-How many test bench pulses do you want
-
 ### benchTestOnTime
 Duration of each test pulse
 
@@ -1569,4 +1566,7 @@ Time between bench test pulses
 
 ### boostCutPressureHyst
 Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached
+
+### benchTestCount
+How many test bench pulses do you want
 
