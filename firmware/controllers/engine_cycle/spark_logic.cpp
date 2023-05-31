@@ -85,15 +85,15 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// let's save planned duration so that we can later compare it with reality
 	event->sparkDwell = sparkDwell;
 
-	angle_t correctedSparkAngle =
+	angle_t finalIgnitionTiming =	getEngineState()->timingAdvance[event->cylinderNumber];
+
+    engine->outputChannels.ignitionAdvanceCyl[event->cylinderIndex] = finalIgnitionTiming;
+
+	angle_t sparkAngle =
 		// Negate because timing *before* TDC, and we schedule *after* TDC
-		- getEngineState()->timingAdvance[event->cylinderNumber];
-
-    engine->outputChannels.ignitionAdvanceCyl[event->cylinderIndex] = correctedSparkAngle;
-
-    angle_t sparkAngle = correctedSparkAngle
-			// Offset by this cylinder's position in the cycle
-			+ getPerCylinderFiringOrderOffset(event->cylinderIndex, event->cylinderNumber);
+		- finalIgnitionTiming
+		// Offset by this cylinder's position in the cycle
+		+ getPerCylinderFiringOrderOffset(event->cylinderIndex, event->cylinderNumber);
 
 	efiAssertVoid(ObdCode::CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 	wrapAngle2(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
