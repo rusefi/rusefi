@@ -20,11 +20,13 @@ pins:
   - pin: aux4
     # H144_IN_SENS4
     id: F6
+    class: switch_inputs
     ts_name: 4 DIN 3
     function: DIN3
 
   - pin: aux5
     ts_name: 5 AIN 3
+    class: analog_inputs
     function: AIN3
 
   - pin: aux6
@@ -34,6 +36,7 @@ pins:
   - pin: aux7
     # H144_IN_SENS2
     id: F4
+    class: switch_inputs
     ts_name: 7 DIN 2
     function: DIN2
 
@@ -47,14 +50,17 @@ pins:
   - pin: aux9
     # H144_IN_SENS1
     id: F3
+    class: switch_inputs
     ts_name: 9 DIN 1
     function: DIN1
 
   - pin: aux10
+    class: analog_inputs
     ts_name: 10 AIN 2
     function: AIN 2
 
   - pin: aux11
+    class: analog_inputs
     ts_name: 11 AIN 1
     function: AIN 1
 
