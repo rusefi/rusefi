@@ -72,12 +72,12 @@ public class PinoutLogicIntegratedTest {
 
         BoardInputs testBoard = new BoardInputs() {
             @Override
-            public List<?> getBoardYamlKeys() {
-                return Collections.singletonList("key");
+            public List<? extends File> getBoardYamlKeys() {
+                return Collections.singletonList(new File("key"));
             }
 
             @Override
-            public Reader getReader(Object yamlKey) {
+            public Reader getReader(File yamlKey) {
                 return input;
             }
 

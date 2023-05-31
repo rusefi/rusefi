@@ -32,13 +32,13 @@ public class FileSystemBoardInputsImpl implements BoardInputs {
     }
 
     @Override
-    public List<?> getBoardYamlKeys() {
+    public List<? extends File> getBoardYamlKeys() {
         return boardYamlFiles;
     }
 
     @Override
-    public Reader getReader(Object yamlKey) throws FileNotFoundException {
-        return new FileReader((File)yamlKey);
+    public Reader getReader(File yamlKey) throws FileNotFoundException {
+        return new FileReader(yamlKey);
     }
 
     @Override

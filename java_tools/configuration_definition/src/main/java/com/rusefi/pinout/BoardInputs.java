@@ -1,15 +1,12 @@
 package com.rusefi.pinout;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.util.List;
 
 public interface BoardInputs {
-    List<?> getBoardYamlKeys();
+    List<? extends File> getBoardYamlKeys();
 
-    Reader getReader(Object yamlKey) throws FileNotFoundException;
+    Reader getReader(File yamlKey) throws FileNotFoundException;
 
     String getName();
 
