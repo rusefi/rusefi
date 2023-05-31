@@ -68,7 +68,6 @@ void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEd
 	this->operationMode = operationMode;
 	this->syncEdge = syncEdge;
 	triggerShapeSynchPointIndex = 0;
-	memset(initialState, 0, sizeof(initialState));
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
 	wave.waveCount = TRIGGER_INPUT_PIN_COUNT;
