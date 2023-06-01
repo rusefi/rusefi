@@ -63,7 +63,8 @@ void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEd
 	gapTrackingLength = 1;
 
 	tdcPosition = 0;
-	shapeDefinitionError = useOnlyPrimaryForSync = false;
+	shapeDefinitionError = false;
+	useOnlyPrimaryForSync = false;
 
 	this->operationMode = operationMode;
 	this->syncEdge = syncEdge;
