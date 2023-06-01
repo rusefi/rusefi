@@ -17,7 +17,7 @@ void printResults(DynoView *dut) {
 
 
 TEST(DynoView, VSS_T1) {
-    EngineTestHelper eth(TEST_ENGINE);
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
     DynoView dut;
 
@@ -36,7 +36,7 @@ TEST(DynoView, VSS_T1) {
 }
 
 TEST(DynoView, algo) {
-    EngineTestHelper eth(TEST_ENGINE);
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
     DynoView dut;
 
@@ -60,7 +60,7 @@ TEST(DynoView, algo) {
 }
 
 TEST(DynoView, VSS_fast) {
-    EngineTestHelper eth(TEST_ENGINE);
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
     DynoView dut;
 
@@ -83,7 +83,7 @@ TEST(DynoView, VSS_fast) {
 
 
 TEST(DynoView, VSS_Torque) {
-    EngineTestHelper eth(TEST_ENGINE);
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
     DynoView dut;
 

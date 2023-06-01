@@ -13,7 +13,7 @@
 #include "nissan_primera.h"
 
 void setNissanPrimeraEngineConfiguration() {
-	engineConfiguration->trigger.type = TT_NISSAN_SR20VE;
+	engineConfiguration->trigger.type = trigger_type_e::TT_NISSAN_SR20VE;
 
 	engineConfiguration->auxValves[0] = Gpio::E14;
 	engineConfiguration->auxValves[1] = Gpio::E12;

@@ -2,7 +2,7 @@
 #include "value_lookup.h"
 
 TEST(LuaBasic, configLookup) {
-	EngineTestHelper eth(FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
 	{
 		const char * name = "ignitionDwellForCrankingMs";
 		setConfigValueByName(name, 1.6);

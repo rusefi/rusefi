@@ -64,7 +64,7 @@ static void addMitsu93(TriggerWaveform *s, bool addSecondary) {
 }
 
 /**
- * TT_MITSUBISHI_4G93 = 11
+ * trigger_type_e::TT_MITSUBISHI_4G93 = 11
  */
 void initializeMitsubishi4G93(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);

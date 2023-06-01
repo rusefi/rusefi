@@ -503,7 +503,7 @@ static void add4cylblock(int off, TriggerWaveform *s) {
 	s->addEvent720(174 + off + 2, false, TriggerWheel::T_SECONDARY);
 }
 
-// TT_JEEP_4_CYL
+// trigger_type_e::TT_JEEP_4_CYL
 void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSynchronizationNeeded = false;

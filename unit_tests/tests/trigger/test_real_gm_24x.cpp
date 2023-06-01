@@ -6,11 +6,11 @@ TEST(crankingGm24x, gmRealCrankingFromFile) {
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/gm_24x_cranking.csv");
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(TT_GM_24x);
+	eth.setTriggerType(trigger_type_e::TT_GM_24x);
 
 	int eventCount = 0;
 	bool gotRpm = false;

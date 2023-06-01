@@ -5,7 +5,7 @@ extern float getTachDuty(void);
 
 TEST(Actuators, Tachometer) {
     // This engine has a tach pin set - we need that
-    EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
+    EngineTestHelper eth(engine_type_e::FRANKENSO_MAZDA_MIATA_2003);
 
     // We don't actually care about ign/inj at all, just tach
     engineConfiguration->isInjectionEnabled = false;
@@ -18,7 +18,7 @@ TEST(Actuators, Tachometer) {
     engineConfiguration->tachPulseDurationAsDutyCycle = true;
 
     // Set predictable trigger settings
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
     engineConfiguration->trigger.customTotalToothCount = 8;
     engineConfiguration->trigger.customSkippedToothCount = 0;
     setCamOperationMode();

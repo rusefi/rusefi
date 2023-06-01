@@ -30,13 +30,13 @@ static void commonRenix(TriggerWaveform *s) {
 	s->addEventAngle(s->getCycleDuration(), false);
 }
 
-// TT_RENIX_44_2_2
+// trigger_type_e::TT_RENIX_44_2_2
 void initializeRenix44_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
 	commonRenix(s);
 }
 
-// TT_RENIX_66_2_2_2
+// trigger_type_e::TT_RENIX_66_2_2_2
 void initializeRenix66_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
 	commonRenix(s);

@@ -102,7 +102,7 @@ void setEngineBMW_M73_microRusEfi() {
 
 
 	// do I have VR wires flipped?
-	engineConfiguration->trigger.type = TT_60_2_VW;
+	engineConfiguration->trigger.type = trigger_type_e::TT_60_2_VW;
 
 	//set tps_min 891
 	engineConfiguration->tpsMin = 891;

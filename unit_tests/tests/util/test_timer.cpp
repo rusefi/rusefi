@@ -2,7 +2,7 @@
 #include "timer.h"
 
 TEST(util, timer) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	Timer timer;
 	ASSERT_TRUE(timer.hasElapsedSec(3));
 	timer.reset();

@@ -3,7 +3,7 @@
 #include "launch_control.h"
 
 TEST(LaunchControl, TpsCondition) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	LaunchControlBase dut;
 
@@ -24,7 +24,7 @@ TEST(LaunchControl, TpsCondition) {
 
 
 TEST(LaunchControl, VSSCondition) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	LaunchControlBase dut;
 
@@ -41,7 +41,7 @@ TEST(LaunchControl, VSSCondition) {
 }
 
 TEST(LaunchControl, RPMCondition) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	LaunchControlBase dut;
 
@@ -53,7 +53,7 @@ TEST(LaunchControl, RPMCondition) {
 }
 
 TEST(LaunchControl, SwitchInputCondition) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	LaunchControlBase dut;
 
@@ -95,7 +95,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 }
 
 TEST(LaunchControl, CombinedCondition) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	LaunchControlBase dut;
 
@@ -138,7 +138,7 @@ static void setDefaultLaunchParameters() {
 }
 
 TEST(LaunchControl, CompleteRun) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	initLaunchControl();
 

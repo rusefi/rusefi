@@ -650,7 +650,7 @@ void loadConfiguration() {
 
 #if EFI_INTERNAL_FLASH
 	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
-		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
+		engineConfiguration->engineType = engine_type_e::DEFAULT_ENGINE_TYPE;
 		resetConfigurationExt(engineConfiguration->engineType);
 		writeToFlashNow();
 	} else {
@@ -660,7 +660,7 @@ void loadConfiguration() {
 	}
 #else // not EFI_INTERNAL_FLASH
 	// This board doesn't load configuration, initialize the default
-	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
+	engineConfiguration->engineType = engine_type_e::DEFAULT_ENGINE_TYPE;
 	resetConfigurationExt(engineConfiguration->engineType);
 #endif /* EFI_INTERNAL_FLASH */
 
@@ -694,268 +694,268 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case MINIMAL_PINS:
+	case engine_type_e::MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
 #if EFI_UNIT_TEST
-	case TEST_ISSUE_366_BOTH:
+	case engine_type_e::TEST_ISSUE_366_BOTH:
 		setTestEngineIssue366both();
 		break;
-	case TEST_ISSUE_366_RISE:
+	case engine_type_e::TEST_ISSUE_366_RISE:
 		setTestEngineIssue366rise();
 		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
-	case MRE_VW_B6:
+	case engine_type_e::MRE_VW_B6:
 		setMreVwPassatB6();
 		break;
-	case MRE_M111:
+	case engine_type_e::MRE_M111:
 		setM111EngineConfiguration();
 		break;
-	case MRE_SUBARU_EJ18:
+	case engine_type_e::MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE();
 		break;
-	case MRE_BOARD_NEW_TEST:
+	case engine_type_e::MRE_BOARD_NEW_TEST:
 		mreBoardNewTest();
 		break;
-	case BMW_M73_MRE:
-	case BMW_M73_MRE_SLAVE:
+	case engine_type_e::BMW_M73_MRE:
+	case engine_type_e::BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi();
 		break;
-	case MRE_MIATA_94_MAP:
+	case engine_type_e::MRE_MIATA_94_MAP:
 		setMiata94_MAP_MRE();
 		break;
-	case MRE_MIATA_NA6_MAP:
+	case engine_type_e::MRE_MIATA_NA6_MAP:
 		setMiataNA6_MAP_MRE();
 		break;
-	case MRE_BODY_CONTROL:
+	case engine_type_e::MRE_BODY_CONTROL:
 		mreBCM();
 		break;
 #endif // HW_MICRO_RUSEFI
 #if HW_PROTEUS
-	case WASTEGATE_PROTEUS_TEST:
+	case engine_type_e::WASTEGATE_PROTEUS_TEST:
 		proteusDcWastegateTest();
 		break;
-	case PROTEUS_GM_LS_4:
+	case engine_type_e::PROTEUS_GM_LS_4:
 		setProteusGmLs4();
 		break;
-	case PROTEUS_VW_B6:
+	case engine_type_e::PROTEUS_VW_B6:
 		setProteusVwPassatB6();
 		break;
-	case PROTEUS_QC_TEST_BOARD:
+	case engine_type_e::PROTEUS_QC_TEST_BOARD:
 		proteusBoardTest();
 		break;
-	case PROTEUS_LUA_DEMO:
+	case engine_type_e::PROTEUS_LUA_DEMO:
 		proteusLuaDemo();
 		break;
-	case PROTEUS_HARLEY:
+	case engine_type_e::PROTEUS_HARLEY:
 		proteusHarley();
 		break;
-	case PROTEUS_BMW_M73:
+	case engine_type_e::PROTEUS_BMW_M73:
 		setEngineBMW_M73_Proteus();
 		break;
-	case MIATA_PROTEUS_TCU:
+	case engine_type_e::MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU();
 		break;
-	case PROTEUS_HONDA_K:
+	case engine_type_e::PROTEUS_HONDA_K:
 		setProteusHondaElement2003();
 		break;
-	case PROTEUS_HONDA_OBD2A:
+	case engine_type_e::PROTEUS_HONDA_OBD2A:
 		setProteusHondaOBD2A();
 		break;
-	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
+	case engine_type_e::PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
 		setEngineProteusGearboxManInTheMiddle();
 		break;
-	case PROTEUS_MIATA_NA6:
+	case engine_type_e::PROTEUS_MIATA_NA6:
 		setMiataNa6_Proteus();
 		break;
-	case PROTEUS_MIATA_NB2:
+	case engine_type_e::PROTEUS_MIATA_NB2:
 		setMiataNB2_Proteus();
 		break;
 #ifdef HARDWARE_CI
-	case PROTEUS_ANALOG_PWM_TEST:
+	case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
 		setProteusAnalogPwmTest();
 		break;
 #endif // HARDWARE_CI
 #endif // HW_PROTEUS
 #if HW_HELLEN
-	case HELLEN_128_MERCEDES_4_CYL:
+	case engine_type_e::HELLEN_128_MERCEDES_4_CYL:
 		setHellenMercedes128_4_cyl();
 		break;
-	case HELLEN_128_MERCEDES_6_CYL:
+	case engine_type_e::HELLEN_128_MERCEDES_6_CYL:
 		setHellenMercedes128_6_cyl();
 		break;
-	case HELLEN_128_MERCEDES_8_CYL:
+	case engine_type_e::HELLEN_128_MERCEDES_8_CYL:
 		setHellenMercedes128_8_cyl();
 		break;
-	case HELLEN_NB2:
+	case engine_type_e::HELLEN_NB2:
 		setMiataNB2_Hellen72();
 		break;
-	case HELLEN_NB2_36:
+	case engine_type_e::HELLEN_NB2_36:
 		setMiataNB2_Hellen72_36();
 		break;
-	case HELLEN_NA8_96:
+	case engine_type_e::HELLEN_NA8_96:
 		setHellenMiata96();
 		break;
-	case HELLEN_NB1:
+	case engine_type_e::HELLEN_NB1:
 		setHellenNB1();
 		break;
-	case HELLEN_121_NISSAN_4_CYL:
+	case engine_type_e::HELLEN_121_NISSAN_4_CYL:
 		setHellen121nissanQR();
 		break;
-	case HELLEN_121_NISSAN_6_CYL:
+	case engine_type_e::HELLEN_121_NISSAN_6_CYL:
 		setHellen121nissanVQ();
 		break;
-	case HELLEN_121_VAG_5_CYL:
+	case engine_type_e::HELLEN_121_VAG_5_CYL:
 		setHellen121Vag_5_cyl();
 		break;
-	case HELLEN_121_VAG_V6_CYL:
+	case engine_type_e::HELLEN_121_VAG_V6_CYL:
 		setHellen121Vag_v6_cyl();
 		break;
-	case HELLEN_121_VAG_VR6_CYL:
+	case engine_type_e::HELLEN_121_VAG_VR6_CYL:
 		setHellen121Vag_vr6_cyl();
 		break;
-	case HELLEN_121_VAG_8_CYL:
+	case engine_type_e::HELLEN_121_VAG_8_CYL:
 		setHellen121Vag_8_cyl();
 		break;
-	case HELLEN_121_VAG_4_CYL:
-	case HELLEN_55_BMW:
-	case HELLEN_88_BMW:
-	case HELLEN_134_BMW:
-	case HELLEN_154_VAG:
+	case engine_type_e::HELLEN_121_VAG_4_CYL:
+	case engine_type_e::HELLEN_55_BMW:
+	case engine_type_e::HELLEN_88_BMW:
+	case engine_type_e::HELLEN_134_BMW:
+	case engine_type_e::HELLEN_154_VAG:
 		break;
-	case HELLEN_154_HYUNDAI_COUPE_BK1:
+	case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1:
 		setGenesisCoupeBK1();
 		break;
-	case HELLEN_154_HYUNDAI_COUPE_BK2:
+	case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2:
 		setGenesisCoupeBK2();
 		break;
-	case HELLEN_NA6:
+	case engine_type_e::HELLEN_NA6:
 		setHellenNA6();
 		break;
-	case HELLEN_NA94:
+	case engine_type_e::HELLEN_NA94:
 		setHellenNA94();
 		break;
 #endif // HW_HELLEN
 #if HW_FRANKENSO
-	case DEFAULT_FRANKENSO:
+	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
 		break;
-	case DISCOVERY_PDM:
-	case TEST_ENGINE:
+	case engine_type_e::DISCOVERY_PDM:
+	case engine_type_e::TEST_ENGINE:
 		setTestCamEngineConfiguration();
 		break;
-	case TEST_CRANK_ENGINE:
+	case engine_type_e::TEST_CRANK_ENGINE:
 		setTestCrankEngineConfiguration();
 		break;
-	case FRANKENSO_QA_ENGINE:
+	case engine_type_e::FRANKENSO_QA_ENGINE:
 		setFrankensoBoardTestConfiguration();
 		break;
-	case FRANKENSO_BMW_M73_F:
+	case engine_type_e::FRANKENSO_BMW_M73_F:
 		setBMW_M73_TwoCoilUnitTest();
 		break;
-	case BMW_M73_M:
+	case engine_type_e::BMW_M73_M:
 		setEngineBMW_M73_Manhattan();
 		break;
-	case DODGE_NEON_1995:
+	case engine_type_e::DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration();
 		break;
-	case DODGE_NEON_2003_CRANK:
+	case engine_type_e::DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration();
 		break;
-	case FORD_ASPIRE_1996:
+	case engine_type_e::FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration();
 		break;
-	case NISSAN_PRIMERA:
+	case engine_type_e::NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration();
 		break;
-	case FRANKENSO_MIATA_NA6_MAP:
+	case engine_type_e::FRANKENSO_MIATA_NA6_MAP:
 		setMiataNA6_MAP_Frankenso();
 		break;
-	case ETB_BENCH_ENGINE:
+	case engine_type_e::ETB_BENCH_ENGINE:
 		setEtbTestConfiguration();
 		break;
-	case L9779_BENCH_ENGINE:
+	case engine_type_e::L9779_BENCH_ENGINE:
 		setL9779TestConfiguration();
 		break;
-	case EEPROM_BENCH_ENGINE:
+	case engine_type_e::EEPROM_BENCH_ENGINE:
 #if EFI_PROD_CODE
 		setEepromTestConfiguration();
 #endif
 		break;
-	case TLE8888_BENCH_ENGINE:
+	case engine_type_e::TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration();
 		break;
-	case FRANKENSO_MAZDA_MIATA_NA8:
+	case engine_type_e::FRANKENSO_MAZDA_MIATA_NA8:
 		setFrankensoMazdaMiataNA8Configuration();
 		break;
-	case MITSU_4G93:
+	case engine_type_e::MITSU_4G93:
 		setMitsubishiConfiguration();
 		break;
-	case FORD_INLINE_6_1995:
+	case engine_type_e::FORD_INLINE_6_1995:
 		setFordInline6();
 		break;
-	case GY6_139QMB:
+	case engine_type_e::GY6_139QMB:
 		setGy6139qmbDefaultEngineConfiguration();
 		break;
-	case HONDA_600:
+	case engine_type_e::HONDA_600:
 		setHonda600();
 		break;
-	case FORD_ESCORT_GT:
+	case engine_type_e::FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
-	case MIATA_1996:
+	case engine_type_e::MIATA_1996:
 		setFrankensteinMiata1996();
 		break;
-	case CITROEN_TU3JP:
+	case engine_type_e::CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration();
 		break;
-	case SUBARU_2003_WRX:
+	case engine_type_e::SUBARU_2003_WRX:
 		setSubaru2003Wrx();
 		break;
-	case DODGE_RAM:
+	case engine_type_e::DODGE_RAM:
 		setDodgeRam1996();
 		break;
-	case VW_ABA:
+	case engine_type_e::VW_ABA:
 		setVwAba();
 		break;
-	case FRANKENSO_MAZDA_MIATA_2003:
+	case engine_type_e::FRANKENSO_MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration();
 		break;
-	case MAZDA_MIATA_2003_NA_RAIL:
+	case engine_type_e::MAZDA_MIATA_2003_NA_RAIL:
 		setMazdaMiata2003EngineConfigurationNaFuelRail();
 		break;
-	case MAZDA_MIATA_2003_BOARD_TEST:
+	case engine_type_e::MAZDA_MIATA_2003_BOARD_TEST:
 		setMazdaMiata2003EngineConfigurationBoardTest();
 		break;
-	case TEST_ENGINE_VVT:
+	case engine_type_e::TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration();
 		break;
-	case TEST_DC_WASTEGATE_DISCOVERY:
+	case engine_type_e::TEST_DC_WASTEGATE_DISCOVERY:
 		setTestDcWastegateConfiguration();
 		break;
-	case SACHS:
+	case engine_type_e::SACHS:
 		setSachs();
 		break;
-	case CAMARO_4:
+	case engine_type_e::CAMARO_4:
 		setCamaro4();
 		break;
-	case TOYOTA_2JZ_GTE_VVTi:
+	case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
 		setToyota_2jz_vics();
 		break;
-	case TEST_33816:
+	case engine_type_e::TEST_33816:
 		setTest33816EngineConfiguration();
 		break;
-	case TEST_100:
-	case TEST_101:
-	case TEST_102:
-	case TEST_ROTARY:
+	case engine_type_e::TEST_100:
+	case engine_type_e::TEST_101:
+	case engine_type_e::TEST_102:
+	case engine_type_e::TEST_ROTARY:
 		setRotary();
 		break;
 #endif // HW_FRANKENSO
 #ifdef HW_SUBARU_EG33
-	case SUBARUEG33_DEFAULTS:
+	case engine_type_e::SUBARUEG33_DEFAULTS:
 		setSubaruEG33Defaults();
 		break;
 #endif //HW_SUBARU_EG33

@@ -15,6 +15,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration);
 void scheduleStopEngine(void);
 
 void setEngineType(int value);
+void setEngineType(engine_type_e value);
 void readPin(const char *pinName);
 
 void printDateTime();

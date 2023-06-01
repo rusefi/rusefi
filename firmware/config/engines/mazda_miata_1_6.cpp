@@ -92,7 +92,7 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	// Trigger
-	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
+	engineConfiguration->trigger.type = trigger_type_e::TT_MAZDA_MIATA_NA;
 
 	// Cranking
 	engineConfiguration->cranking.rpm = 400;

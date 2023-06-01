@@ -14,7 +14,7 @@ public:
 };
 
 TEST(FuelComputer, getCycleFuel) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	MockFuelComputer dut;
 
@@ -30,7 +30,7 @@ TEST(FuelComputer, getCycleFuel) {
 }
 
 TEST(FuelComputer, FlexFuel) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	FuelComputer dut;
 

@@ -106,7 +106,7 @@ TEST(InjectorModel, nonLinearFordMode) {
 }
 
 TEST(InjectorModel, nonlinearPolynomial) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	InjectorModel dut;
 
 	engineConfiguration->applyNonlinearBelowPulse = 10;
@@ -130,7 +130,7 @@ TEST(InjectorModel, nonlinearPolynomial) {
 }
 
 TEST(InjectorModel, Deadtime) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Some test data in the injector correction table
 	for (size_t i = 0; i < efi::size(engineConfiguration->injector.battLagCorr); i++) {
@@ -172,7 +172,7 @@ TEST_P(FlowRateFixture, PressureRatio) {
 	StrictMock<TesterGetRailPressure> dut;
 	EXPECT_CALL(dut, getFuelDifferentialPressure()).WillOnce(Return(400 * pressureRatio));
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Use injector compensation
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -187,7 +187,7 @@ TEST_P(FlowRateFixture, PressureRatio) {
 TEST(InjectorModel, NegativePressureDelta) {
 	StrictMock<TesterGetRailPressure> dut;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Use injector compensation
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -204,7 +204,7 @@ TEST(InjectorModel, NegativePressureDelta) {
 TEST(InjectorModel, VariableInjectorFlowModeNone) {
 	StrictMock<TesterGetRailPressure> dut;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->injectorCompensationMode = ICM_None;
 
@@ -215,7 +215,7 @@ TEST(InjectorModel, VariableInjectorFlowModeNone) {
 TEST(InjectorModel, RailPressureFixed) {
 	InjectorModel dut;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->fuelReferencePressure = 350;
@@ -234,7 +234,7 @@ TEST(InjectorModel, RailPressureFixed) {
 TEST(InjectorModel, RailPressureSensedAbsolute) {
 	InjectorModel dut;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -254,7 +254,7 @@ TEST(InjectorModel, RailPressureSensedAbsolute) {
 TEST(InjectorModel, RailPressureSensedGauge) {
 	InjectorModel dut;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -275,7 +275,7 @@ TEST(InjectorModel, RailPressureSensedGauge) {
 TEST(InjectorModel, RailPressureSensedDifferential) {
 	InjectorModel dut;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -293,7 +293,7 @@ TEST(InjectorModel, RailPressureSensedDifferential) {
 TEST(InjectorModel, FailedPressureSensor) {
 	InjectorModel dut;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -311,7 +311,7 @@ TEST(InjectorModel, FailedPressureSensor) {
 TEST(InjectorModel, MissingPressureSensor) {
 	InjectorModel dut;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;

@@ -110,9 +110,6 @@ public class VariableRegistry {
         TreeMap<Integer, String> valueNameById = new TreeMap<>();
 
         for (Value value : stringValueMap.values()) {
-            if (value.isForceSize())
-                continue;
-
             if (isNumeric(value.getValue())) {
                 valueNameById.put(value.getIntValue(), value.getName());
             } else {

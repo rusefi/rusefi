@@ -39,7 +39,7 @@ void setFordInline6() {
 	 * We treat the trigger as 6/0 toothed wheel
 	 */
 	engineConfiguration->skippedWheelOnCam = true;
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 

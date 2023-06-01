@@ -26,7 +26,6 @@ public class EnumToStringTest {
         assertTrue(isKeyValueLine("MIN"));
         assertTrue(isKeyValueLine("MIN = 2,"));
         assertTrue(isKeyValueLine("MIN = -3,"));
-        assertTrue(isKeyValueLine("Force_4_bytes_size_operation_mode_e = ENUM_32_BITS,"));
         assertTrue(isKeyValueLine("MIN = 0x02,"));
         assertTrue(isKeyValueLine("MIN = 0xa2,"));
         assertTrue(isKeyValueLine("MIN = 0xB2,"));

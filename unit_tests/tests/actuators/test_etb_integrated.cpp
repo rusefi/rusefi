@@ -24,7 +24,7 @@ static EtbController * initEtbIntegratedTest() {
 }
 
 TEST(etb, integrated) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
 
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 40);
@@ -50,7 +50,7 @@ TEST(etb, integrated) {
 extern int timeNowUs;
 
 TEST(etb, intermittentTps) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
 
 	// Tell the sensor checker that the ignition is on
@@ -94,7 +94,7 @@ TEST(etb, intermittentTps) {
 }
 
 TEST(etb, intermittentPps) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	EtbController *etb = initEtbIntegratedTest();

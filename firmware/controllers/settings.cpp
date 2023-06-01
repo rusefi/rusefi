@@ -698,19 +698,24 @@ void setDateTime(const char * const isoDateTime) {
 #endif // ! EFI_UNIT_TEST
 
 void setEngineType(int value) {
+	setEngineType((engine_type_e)value);
+}
+
+void setEngineType(engine_type_e value) {
 	{
 #if EFI_PROD_CODE
 		chibios_rt::CriticalSectionLocker csl;
 #endif // EFI_PROD_CODE
 
-		engineConfiguration->engineType = (engine_type_e)value;
-		resetConfigurationExt((engine_type_e)value);
+		engineConfiguration->engineType = value;
+		resetConfigurationExt(value);
 		engine->resetEngineSnifferIfInTestMode();
 
 #if EFI_INTERNAL_FLASH
 		writeToFlashNow();
 #endif // EFI_INTERNAL_FLASH
 	}
+
 	incrementGlobalConfigurationVersion();
 #if ! EFI_UNIT_TEST
 #endif // ! EFI_UNIT_TEST

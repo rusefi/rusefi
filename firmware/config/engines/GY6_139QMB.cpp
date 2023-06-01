@@ -34,7 +34,7 @@ void setGy6139qmbDefaultEngineConfiguration() {
 	/**
 	 * We treat the trigger as 8-1 toothed wheel
 	 */
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 

@@ -7,7 +7,7 @@
 #include "spark_logic.h"
 
 TEST(issues, issueOneCylinderSpecialCase968) {
-	EngineTestHelper eth(GY6_139QMB);
+	EngineTestHelper eth(engine_type_e::GY6_139QMB);
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
@@ -16,7 +16,7 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 
 	setCrankOperationMode();
 
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 
 	ASSERT_EQ( 0,  engine->executor.size()) << "start";
 

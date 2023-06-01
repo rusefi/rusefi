@@ -13,7 +13,7 @@ TEST(misc, changeEngineType) {
 	/**
 	 * this configuration has triggerInputDebugPins defined
 	 */
-	EngineTestHelper eth (FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 
 	brain_pin_e brainPin = engineConfiguration->triggerInputDebugPins[0];
 	ASSERT_TRUE(brainPin != Gpio::Unassigned);
@@ -25,7 +25,7 @@ TEST(misc, changeEngineType) {
 	// above we have asserted that triggerInputDebugPins is in fact used
 	// now let's change into engine type without triggerInputDebugPins and assert shut down
 
-	setEngineType((int)CITROEN_TU3JP);
+	setEngineType(engine_type_e::CITROEN_TU3JP);
 	ASSERT_TRUE(activeConfiguration.triggerInputDebugPins[0] == Gpio::Unassigned);
 
 	ASSERT_TRUE(engineConfiguration->triggerInputDebugPins[0] == Gpio::Unassigned);

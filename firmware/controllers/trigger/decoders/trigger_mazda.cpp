@@ -56,7 +56,7 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-// TT_MIATA_VVT
+// trigger_type_e::TT_MIATA_VVT
 void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	/**
 	 * Note how we use 0..180 range while defining FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR trigger

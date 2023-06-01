@@ -71,7 +71,7 @@ TEST(nissan, vq_vvt) {
 	// hold a reference to the heap allocated scheduling events until the test is done
 	std::vector<std::shared_ptr<TriggerCallback>> ptrs;
 
-	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
+	EngineTestHelper eth(engine_type_e::HELLEN_121_NISSAN_6_CYL);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;

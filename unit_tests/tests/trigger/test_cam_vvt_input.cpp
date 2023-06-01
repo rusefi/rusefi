@@ -13,9 +13,9 @@ extern WarningCodeState unitTestWarningCodeState;
 extern WaveChart waveChart;
 
 TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 
 	eth.fireTriggerEvents2(/*count*/10, /*duration*/50);
@@ -24,11 +24,11 @@ TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 }
 
 TEST(trigger, testNoStartUpWarnings) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 3;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
-	eth.setTriggerType(TT_TOOTHED_WHEEL);
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL);
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 
 	for (int i = 0;i < 10;i++) {
@@ -58,7 +58,7 @@ TEST(trigger, testNoStartUpWarnings) {
 }
 
 TEST(trigger, testNoisyInput) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoisyInput RPM";
 
@@ -80,13 +80,13 @@ TEST(trigger, testNoisyInput) {
 
 TEST(trigger, testCamInput) {
 	// setting some weird engine
-	EngineTestHelper eth(FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setCrankOperationMode();
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffsets[0] = 360;
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 	engineConfiguration->camInputs[0] = Gpio::A10; // we just need to indicate that we have CAM
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";
@@ -132,7 +132,7 @@ TEST(trigger, testCamInput) {
 }
 
 TEST(trigger, testNB2CamInput) {
-	EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
+	EngineTestHelper eth(engine_type_e::FRANKENSO_MAZDA_MIATA_2003);
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 

@@ -16,7 +16,7 @@
 /**
  * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
  */
-typedef enum __attribute__ ((__packed__)) {
+enum class engine_type_e : uint32_t {
 	DEFAULT_FRANKENSO = 0,
 
 	MIATA_PROTEUS_TCU = 1,
@@ -219,11 +219,7 @@ typedef enum __attribute__ ((__packed__)) {
 	TEST_100 = 100,
 	TEST_101 = 101,
 	TEST_102 = 102,
-
-	// java code generator handles this value in a special way
-	// also looks like 2 enums are either 1 byte or 4 bytes
-	Force_4_bytes_size_engine_type = 70000,
-} engine_type_e;
+};
 
 /**
  * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
@@ -298,8 +294,7 @@ typedef enum __attribute__ ((__packed__)) {
 /**
  * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
  */
-typedef enum {
-
+enum class trigger_type_e : uint32_t {
 	TT_TOOTHED_WHEEL = 0,
 	TT_FORD_ASPIRE = 1,
 	TT_DODGE_NEON_1995 = 2,
@@ -509,12 +504,7 @@ typedef enum {
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run fome_test.exe from unit_tests
 	//
 	TT_UNUSED = 75, // this is used if we want to iterate over all trigger types
-
-    // java code generator handles this value in a special way
-    // also looks like 2 enums are either 1 byte or 4 bytes
-	Force_4_bytes_size_trigger_type = 70000,
-} trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
-
+};
 
 typedef enum {
 	TS_DEBUG_MODE = 0,

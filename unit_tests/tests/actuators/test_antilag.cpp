@@ -2,7 +2,7 @@
 #include "fuel_math.h"
 
 TEST(Actuators, AntiLag) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->antiLagEnabled = true;
 

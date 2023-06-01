@@ -11,6 +11,6 @@
 // TEST(trigger, miataNA) {
 // 	TriggerWaveform naShape;
 // 	initializeMazdaMiataNaShape(&naShape);
-// 	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
+// 	EngineTestHelper eth(engine_type_e::FRANKENSO_MIATA_NA6_MAP);
 // 	// todo: https://github.com/rusefi/rusefi/issues/679
 // }

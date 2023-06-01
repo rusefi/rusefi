@@ -10,7 +10,7 @@ using ::testing::InSequence;
 using ::testing::_;
 
 TEST(FuelMath, getStandardAirCharge) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Miata 1839cc 4cyl
 	engineConfiguration->displacement = 1.839f;
@@ -37,7 +37,7 @@ TEST(FuelMath, getStandardAirCharge) {
 }
 
 TEST(AirmassModes, AlphaNNormal) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// 4 cylinder 4 liter = easy math
 	engineConfiguration->displacement = 4.0f;
 	engineConfiguration->cylindersCount = 4;
@@ -61,7 +61,7 @@ TEST(AirmassModes, AlphaNNormal) {
 }
 
 TEST(AirmassModes, AlphaNFailedTps) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Shouldn't get called
 	StrictMock<MockVp3d> veTable;
@@ -78,7 +78,7 @@ TEST(AirmassModes, AlphaNFailedTps) {
 }
 
 TEST(AirmassModes, MafNormal) {
-	EngineTestHelper eth(FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
 
@@ -119,7 +119,7 @@ TEST(AirmassModes, VeOverride) {
 		}
 	};
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	DummyAirmassModel dut(veTable);
 
 	// Use default mode - will call with 10
@@ -148,7 +148,7 @@ TEST(AirmassModes, FallbackMap) {
 		EXPECT_CALL(mapFallback, getValue(5678, 20)).WillOnce(Return(75));
 	}
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	SpeedDensityAirmass dut(veTable, mapFallback);
 
@@ -167,7 +167,7 @@ TEST(AirmassModes, FallbackMap) {
 void setInjectionMode(int value);
 
 TEST(FuelMath, testDifferentInjectionModes) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
@@ -192,7 +192,7 @@ TEST(FuelMath, testDifferentInjectionModes) {
 }
 
 TEST(FuelMath, deadtime) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
@@ -212,7 +212,7 @@ TEST(FuelMath, deadtime) {
 }
 
 TEST(FuelMath, CylinderFuelTrim) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{1, 50.0f}));
@@ -242,7 +242,7 @@ struct MockIdle : public MockIdleController {
 };
 
 TEST(FuelMath, IdleVeTable) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	MockAirmass dut;
 

@@ -12,7 +12,7 @@ TEST(realk20, cranking) {
 	reader.open("tests/trigger/resources/civic-K20-cranking.csv", NORMAL_ORDER, REVERSE_ORDER);
 	reader.twoBanksSingleCamMode = false;
 
-	EngineTestHelper eth (PROTEUS_HONDA_K);
+	EngineTestHelper eth(engine_type_e::PROTEUS_HONDA_K);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);

@@ -3,7 +3,7 @@
 
 
 float GetVssFor(float revPerKm, float axle, float teeth, float hz) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	VehicleSpeedConverter dut;
 

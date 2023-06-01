@@ -16,7 +16,7 @@ using ::testing::FloatNear;
 
 TEST(misc, testFuelMap) {
 	printf("Setting up FORD_ASPIRE_1996\r\n");
-	EngineTestHelper eth(FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
 		engineConfiguration->injector.battLagCorrBins[i] = i;
@@ -129,7 +129,7 @@ static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 TEST(misc, testAngleResolver) {
 	printf("*************************************************** testAngleResolver\r\n");
 
-	EngineTestHelper eth(FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 

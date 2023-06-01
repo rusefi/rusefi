@@ -67,7 +67,7 @@ void setDiscoveryPdm() {
 
 // todo: should this be part of more default configurations?
 void setFrankensoConfiguration() {
-	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
+	engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
 
 	commonFrankensoAnalogInputs();
 
@@ -229,7 +229,7 @@ void setEtbTestConfiguration() {
 	engineConfiguration->rpmHardLimit = 30000;
 
 	setCrankOperationMode();
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 
 
 	engineConfiguration->ignitionPins[0] = Gpio::Unassigned;
@@ -786,7 +786,7 @@ void setRotary() {
 	engineConfiguration->cylindersCount = 2;
 	engineConfiguration->firingOrder = FO_1_2;
 
-	engineConfiguration->trigger.type = TT_36_2_2_2;
+	engineConfiguration->trigger.type = trigger_type_e::TT_36_2_2_2;
 	// todo: fix UI to make this possible via TS
 	setTwoStrokeOperationMode();
 

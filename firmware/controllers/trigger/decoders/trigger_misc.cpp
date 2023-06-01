@@ -10,7 +10,7 @@
 #include "trigger_misc.h"
 #include "trigger_universal.h"
 
-// TT_FIAT_IAW_P8
+// trigger_type_e::TT_FIAT_IAW_P8
 void configureFiatIAQ_P8(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
@@ -25,7 +25,7 @@ void configureFiatIAQ_P8(TriggerWaveform * s) {
 	s->setTriggerSynchronizationGap(3);
 }
 
-// TT_TRI_TACH
+// trigger_type_e::TT_TRI_TACH
 void configureTriTach(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 

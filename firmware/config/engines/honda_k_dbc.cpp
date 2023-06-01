@@ -16,7 +16,7 @@ void setHondaK() {
 	engineConfiguration->displacement = 2.4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->engineSyncCam = SC_Exhaust_First;
-	engineConfiguration->trigger.type = TT_HONDA_K_CRANK_12_1;
+	engineConfiguration->trigger.type = trigger_type_e::TT_HONDA_K_CRANK_12_1;
 	engineConfiguration->globalTriggerAngleOffset = 675;
 
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
@@ -54,12 +54,12 @@ void setHondaK() {
  */
 void setProteusHondaElement2003() {
     setHondaK();
-//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+//	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
 //	engineConfiguration->trigger.customTotalToothCount = 12;
 //	engineConfiguration->trigger.customSkippedToothCount = 0;
 
 
-//	engineConfiguration->trigger.type = TT_HONDA_K_CAM_4_1; // cam as primary, ignoring crank
+//	engineConfiguration->trigger.type = trigger_type_e::TT_HONDA_K_CAM_4_1; // cam as primary, ignoring crank
 //	engineConfiguration->globalTriggerAngleOffset = 570;
 
 

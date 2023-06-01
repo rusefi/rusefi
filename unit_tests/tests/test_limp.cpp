@@ -21,7 +21,7 @@ TEST(limp, testFatalError) {
 }
 
 TEST(limp, revLimit) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->rpmHardLimit = 2500;
 
@@ -44,7 +44,7 @@ TEST(limp, revLimit) {
 }
 
 TEST(limp, revLimitCltBased) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->rpmHardLimit = 2500;
 
@@ -94,7 +94,7 @@ TEST(limp, revLimitCltBased) {
 }
 
 TEST(limp, boostCut) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Cut above 100kPa
 	engineConfiguration->boostCutPressure = 100;
@@ -131,7 +131,7 @@ TEST(limp, boostCut) {
 extern int timeNowUs;
 
 TEST(limp, oilPressureFailureCase) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 200;
 
 	LimpManager dut;
@@ -164,7 +164,7 @@ TEST(limp, oilPressureFailureCase) {
 }
 
 TEST(limp, oilPressureSuccessCase) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 200;
 
 	LimpManager dut;

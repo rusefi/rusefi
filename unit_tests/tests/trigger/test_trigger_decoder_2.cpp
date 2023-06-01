@@ -41,7 +41,7 @@ static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& 
 #define doTooth(dut, shape, cfg, t) dut.decodeTriggerEvent("", shape, nullptr, cfg, SHAFT_PRIMARY_RISING, t)
 
 TEST(TriggerDecoder, FindsFirstSyncPoint) {
-	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({trigger_type_e::TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -84,7 +84,7 @@ TEST(TriggerDecoder, FindsFirstSyncPoint) {
 
 
 TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
-	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({trigger_type_e::TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -134,7 +134,7 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 }
 
 TEST(TriggerDecoder, TooManyTeeth_CausesError) {
-	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({trigger_type_e::TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -212,7 +212,7 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 }
 
 TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
-	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({trigger_type_e::TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -289,7 +289,7 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 }
 
 TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {
-	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({trigger_type_e::TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -320,7 +320,7 @@ TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {
 }
 
 TEST(TriggerDecoder, PrimaryDecoderNeedsDisambiguation) {
-	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({trigger_type_e::TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CRANK_SENSOR, cfg);

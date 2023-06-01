@@ -73,7 +73,7 @@ void setToyota_2jz_vics() {
 	common2jz();
 
 	setCrankOperationMode();
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_2;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_36_2;
 
 	engineConfiguration->triggerInputPins[0] = Gpio::A5; // crank sensor
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned; // cam sensor will he handled by custom vtti code

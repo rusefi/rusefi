@@ -10,7 +10,7 @@ TEST(real4g93, cranking) {
 	CsvReader reader(1, /* vvtCount */ 1);
 
 	reader.open("tests/trigger/resources/4g93-cranking.csv");
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
@@ -21,7 +21,7 @@ TEST(real4g93, cranking) {
 	engineConfiguration->trigger.customTotalToothCount = 2;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 	engineConfiguration->skippedWheelOnCam = false;
-	eth.setTriggerType(TT_TOOTHED_WHEEL);
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL);
 
 	bool gotRpm = false;
 	bool gotSync = false;
@@ -60,13 +60,13 @@ TEST(real4g93, crankingOn11) {
 	CsvReader reader(2, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/4g93-cranking.csv");
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
 	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 
-	eth.setTriggerType(TT_MITSUBISHI_4G93);
+	eth.setTriggerType(trigger_type_e::TT_MITSUBISHI_4G93);
 
 	bool gotRpm = false;
 	while (reader.haveMore()) {
@@ -90,11 +90,11 @@ TEST(real4g93, crankingCamOnly) {
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/4g93-cranking-cam-only.csv");
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(TT_MITSU_4G9x_CAM);
+	eth.setTriggerType(trigger_type_e::TT_MITSU_4G9x_CAM);
 
 	bool gotRpm = false;
 	bool gotSync = false;

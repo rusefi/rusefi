@@ -101,7 +101,7 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
 }
 
 /**
- * TT_GM_24x and TT_GM_24x_2
+ * trigger_type_e::TT_GM_24x and trigger_type_e::TT_GM_24x_2
  * https://www.mediafire.com/?40mfgeoe4ctti
  * http://www.ls1gto.com/forums/archive/index.php/t-190549.htm
  * http://www.ls2.com/forums/showthread.php/834483-LS-Timing-Reluctor-Wheels-Explained
@@ -153,7 +153,7 @@ static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 	}
 }
 
-// TT_GM_24x
+// trigger_type_e::TT_GM_24x
 void initGmLS24_5deg(TriggerWaveform *s) {
 	initGmLS24(s, 5);
 
@@ -165,7 +165,7 @@ void initGmLS24_5deg(TriggerWaveform *s) {
 	s->tdcPosition = 50;
 }
 
-// TT_GM_24x_2
+// trigger_type_e::TT_GM_24x_2
 void initGmLS24_3deg(TriggerWaveform *s) {
 	initGmLS24(s, 3);
 

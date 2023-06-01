@@ -708,7 +708,7 @@ void triggerInfo(void) {
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			getSyncEdge(TRIGGER_WAVEFORM(syncEdge)), TRIGGER_WAVEFORM(tdcPosition));
 
-	if (engineConfiguration->trigger.type == TT_TOOTHED_WHEEL) {
+	if (engineConfiguration->trigger.type == trigger_type_e::TT_TOOTHED_WHEEL) {
 		efiPrintf("total %d/skipped %d", engineConfiguration->trigger.customTotalToothCount,
 				engineConfiguration->trigger.customSkippedToothCount);
 	}

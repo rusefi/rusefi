@@ -15,7 +15,7 @@ TEST(cranking, realCrankingFromFile) {
 	// this logic data file has first trigger channel in second column and second trigger channel in first column
 	reader.open("tests/trigger/resources/cranking_na_3.csv", REVERSE_ORDER);
 
-	EngineTestHelper eth (FRANKENSO_MIATA_NA6_MAP);
+	EngineTestHelper eth(engine_type_e::FRANKENSO_MIATA_NA6_MAP);
 	engineConfiguration->alwaysInstantRpm = true;
 
 	ssize_t read;

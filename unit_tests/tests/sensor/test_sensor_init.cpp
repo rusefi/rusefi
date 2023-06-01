@@ -24,7 +24,7 @@ static void postToFuncSensor(Sensor* s, float value) {
 	}
 
 TEST(SensorInit, Tps) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->tpsMin = 200;	// 1 volt
 	engineConfiguration->tpsMax = 800;	// 4 volts
@@ -50,7 +50,7 @@ TEST(SensorInit, Tps) {
 }
 
 TEST(SensorInit, TpsValuesTooClose) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Should fail, 0.49 volts apart
 	engineConfiguration->tpsMin = 200;	// 1.00 volt
@@ -97,7 +97,7 @@ TEST(SensorInit, TpsValuesTooClose) {
 }
 
 TEST(SensorInit, Pedal) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_0;
 	engineConfiguration->throttlePedalUpVoltage = 1;
@@ -124,7 +124,7 @@ TEST(SensorInit, Pedal) {
 }
 
 TEST(SensorInit, DriverIntentNoPedal) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// We have no pedal - so we should get the TPS
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
@@ -145,7 +145,7 @@ TEST(SensorInit, DriverIntentNoPedal) {
 
 
 TEST(SensorInit, DriverIntentWithPedal) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// We have a pedal, so we should get it
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_0;
@@ -164,7 +164,7 @@ TEST(SensorInit, DriverIntentWithPedal) {
 }
 
 TEST(SensorInit, OilPressure) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->oilPressure.hwChannel = EFI_ADC_0;
 	engineConfiguration->oilPressure.v1 = 1;
@@ -189,7 +189,7 @@ TEST(SensorInit, OilPressure) {
 }
 
 TEST(SensorInit, Clt) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// 2003 neon sensor
 	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
@@ -212,7 +212,7 @@ TEST(SensorInit, Clt) {
 }
 
 TEST(SensorInit, Lambda) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// No channel -> no sensor
 	initLambda();
@@ -233,7 +233,7 @@ TEST(SensorInit, Lambda) {
 }
 
 TEST(SensorInit, Map) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
 	initMap();

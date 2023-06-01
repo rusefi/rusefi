@@ -1,7 +1,7 @@
 #include "pch.h"
 
 float GetGearRatioFor(float revPerKm, float axle, float kph, float rpm) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->driveWheelRevPerKm = revPerKm;
 	engineConfiguration->finalGearRatio = axle;
@@ -29,7 +29,7 @@ TEST(GearDetector, ComputeGearRatio) {
 
 
 TEST(GearDetector, GetRpmInGear) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->driveWheelRevPerKm = 507;
 	engineConfiguration->finalGearRatio = 4.10f;
@@ -68,7 +68,7 @@ TEST(GearDetector, GetRpmInGear) {
 }
 
 TEST(GearDetector, DetermineGearSingleSpeed) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& dut = engine->module<GearDetector>().unmock();
 
 	engineConfiguration->totalGearsCount = 1;
@@ -92,7 +92,7 @@ TEST(GearDetector, DetermineGearSingleSpeed) {
 }
 
 TEST(GearDetector, DetermineGear5Speed) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& dut = engine->module<GearDetector>().unmock();
 
 	engineConfiguration->totalGearsCount = 5;
@@ -136,7 +136,7 @@ TEST(GearDetector, DetermineGear5Speed) {
 }
 
 TEST(GearDetector, MiataNb6Speed) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& dut = engine->module<GearDetector>().unmock();
 
 	engineConfiguration->totalGearsCount = 6;
@@ -164,7 +164,7 @@ TEST(GearDetector, MiataNb6Speed) {
 }
 
 TEST(GearDetector, DetermineGear8Speed) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& dut = engine->module<GearDetector>().unmock();
 
 	// ZF 8HP 70
@@ -203,7 +203,7 @@ TEST(GearDetector, DetermineGear8Speed) {
 }
 
 TEST(GearDetector, ParameterValidation) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& dut = engine->module<GearDetector>().unmock();
 
 	// Defaults should work

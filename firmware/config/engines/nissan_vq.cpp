@@ -13,7 +13,7 @@
 #define NISSAN_VQ_VVT_OFFSET 157
 
 void setHellen121nissanQR() {
-	engineConfiguration->trigger.type = TT_NISSAN_QR25;
+	engineConfiguration->trigger.type = trigger_type_e::TT_NISSAN_QR25;
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
@@ -34,7 +34,7 @@ void setHellen121nissanQR() {
 void setHellen121nissanVQ() {
     #include "nissan_vq.lua"
 
-	engineConfiguration->trigger.type = TT_NISSAN_VQ35;
+	engineConfiguration->trigger.type = trigger_type_e::TT_NISSAN_VQ35;
 
 	setNissanMAF0031(config);
 

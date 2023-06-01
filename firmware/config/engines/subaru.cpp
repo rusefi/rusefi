@@ -15,7 +15,7 @@
 #include "defaults.h"
 
 void setSubaru2003Wrx() {
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 5;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
@@ -35,7 +35,7 @@ void setSubaru2003Wrx() {
  * set engine_type 37
  */
 void setSubaruEJ18_MRE() {
-	engineConfiguration->trigger.type = TT_SUBARU_7_WITHOUT_6;
+	engineConfiguration->trigger.type = trigger_type_e::TT_SUBARU_7_WITHOUT_6;
 
 
 //	engineConfiguration->isDoubleSolenoidIdle = true;
@@ -65,7 +65,7 @@ void setSubaruEJ18_MRE() {
 void setSubaruEG33Defaults() {
 	setCamOperationMode();
 
-	engineConfiguration->trigger.type = TT_SUBARU_SVX;
+	engineConfiguration->trigger.type = trigger_type_e::TT_SUBARU_SVX;
 
 	engineConfiguration->cylindersCount = 6;
 	setLeftRightBanksNeedBetterName();

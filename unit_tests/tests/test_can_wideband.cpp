@@ -99,7 +99,7 @@ TEST(CanWideband, DecodeValidAemFormat) {
 
 TEST(CanWideband, DecodeRusefiStandard)
 {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	dut.Register();
@@ -139,7 +139,7 @@ TEST(CanWideband, DecodeRusefiStandard)
 
 TEST(CanWideband, DecodeRusefiStandardWrongVersion)
 {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	dut.Register();

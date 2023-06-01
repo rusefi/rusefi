@@ -73,7 +73,7 @@ static const uint8_t miataNA8_maf_advance_table[16][16] = { {/*0  engineLoad=1.2
 #endif
 
 static void commonMiataNa() {
-	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
+	engineConfiguration->trigger.type = trigger_type_e::TT_MAZDA_MIATA_NA;
 	engineConfiguration->engineChartSize = 100;
 
 	engineConfiguration->triggerInputPins[0] = Gpio::C6; // 2G YEL/BLU

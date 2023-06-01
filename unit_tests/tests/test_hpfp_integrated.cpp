@@ -8,7 +8,7 @@
 #include "pch.h"
 
 TEST(HPFP, IntegratedSchedule) {
-	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
 	});
 
@@ -19,7 +19,7 @@ TEST(HPFP, IntegratedSchedule) {
 
 	engineConfiguration->trigger.customTotalToothCount = 16;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
-	eth.setTriggerType(TT_TOOTHED_WHEEL);
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL);
     setCamOperationMode();
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 

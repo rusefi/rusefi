@@ -7,7 +7,7 @@
 #include "pch.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
 	engine->tdcMarkEnabled = false;
 	// turn on FasterEngineSpinUp mode
@@ -39,7 +39,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	// check all events starting from now
 	// advance 1 revolution
-	// because we have trivial TT_ONE trigger here synchronization would happen with just one rise front
+	// because we have trivial trigger_type_e::TT_ONE trigger here synchronization would happen with just one rise front
 	eth.fireRise(200);
 
 	// check if the mode is changed
@@ -104,11 +104,11 @@ TEST(cranking, testFasterEngineSpinningUp) {
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-	setupSimpleTestEngineWithMaf(&eth, IM_SEQUENTIAL, TT_TOOTHED_WHEEL_60_2);
+	setupSimpleTestEngineWithMaf(&eth, IM_SEQUENTIAL, trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 	eth.moveTimeForwardMs(startUpDelayMs);
 
 	// fire 30 tooth rise/fall signals

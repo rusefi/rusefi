@@ -401,165 +401,165 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	shapeDefinitionError = false;
 
 	switch (triggerConfig.TriggerType.type) {
-	case TT_TOOTHED_WHEEL:
+	case trigger_type_e::TT_TOOTHED_WHEEL:
 		initializeSkippedToothTrigger(this, triggerConfig.TriggerType.customTotalToothCount,
 				triggerConfig.TriggerType.customSkippedToothCount, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
-	case TT_MAZDA_MIATA_NA:
+	case trigger_type_e::TT_MAZDA_MIATA_NA:
 		initializeMazdaMiataNaShape(this);
 		break;
 
-	case TT_MITSUBISHI_MESS:
+	case trigger_type_e::TT_MITSUBISHI_MESS:
 	    initializeMitsubishi4gMess(this);
         break;
 
-	case TT_MAZDA_MIATA_VVT_TEST:
+	case trigger_type_e::TT_MAZDA_MIATA_VVT_TEST:
 		initializeMazdaMiataVVtTestShape(this);
 		break;
 
-	case TT_SUZUKI_G13B:
+	case trigger_type_e::TT_SUZUKI_G13B:
 		initializeSuzukiG13B(this);
 		break;
 
-	case TT_FORD_TFI_PIP:
+	case trigger_type_e::TT_FORD_TFI_PIP:
 		configureFordPip(this);
 		break;
 
-	case TT_FORD_ST170:
+	case trigger_type_e::TT_FORD_ST170:
 		configureFordST170(this);
 		break;
 
-	case TT_VVT_MIATA_NB:
+	case trigger_type_e::TT_VVT_MIATA_NB:
 		initializeMazdaMiataVVtCamShape(this);
 		break;
 
-	case TT_RENIX_66_2_2_2:
+	case trigger_type_e::TT_RENIX_66_2_2_2:
 		initializeRenix66_2_2(this);
 		break;
 
-	case TT_RENIX_44_2_2:
+	case trigger_type_e::TT_RENIX_44_2_2:
 		initializeRenix44_2_2(this);
 		break;
 
-	case TT_MIATA_VVT:
+	case trigger_type_e::TT_MIATA_VVT:
 		initializeMazdaMiataNb2Crank(this);
 		break;
 
-	case TT_DODGE_NEON_1995:
-	case TT_DODGE_NEON_1995_ONLY_CRANK:
+	case trigger_type_e::TT_DODGE_NEON_1995:
+	case trigger_type_e::TT_DODGE_NEON_1995_ONLY_CRANK:
 		configureNeon1995TriggerWaveformOnlyCrank(this);
 		break;
 
-	case TT_DODGE_STRATUS:
+	case trigger_type_e::TT_DODGE_STRATUS:
 		configureDodgeStratusTriggerWaveform(this);
 		break;
 
-	case TT_DODGE_NEON_2003_CAM:
+	case trigger_type_e::TT_DODGE_NEON_2003_CAM:
 		configureNeon2003TriggerWaveformCam(this);
 		break;
 
-	case TT_DODGE_NEON_2003_CRANK:
+	case trigger_type_e::TT_DODGE_NEON_2003_CRANK:
 		configureNeon2003TriggerWaveformCam(this);
 //		configureNeon2003TriggerWaveformCrank(triggerShape);
 		break;
 
-	case TT_FORD_ASPIRE:
+	case trigger_type_e::TT_FORD_ASPIRE:
 		configureFordAspireTriggerWaveform(this);
 		break;
 
-	case TT_VVT_NISSAN_VQ35:
+	case trigger_type_e::TT_VVT_NISSAN_VQ35:
 		initializeNissanVQvvt(this);
 		break;
 
-    case TT_VVT_MITSUBISHI_3A92:
+    case trigger_type_e::TT_VVT_MITSUBISHI_3A92:
 		initializeVvt3A92(this);
 		break;
 
-    case TT_VVT_TOYOTA_4_1:
+    case trigger_type_e::TT_VVT_TOYOTA_4_1:
 		initializeSkippedToothTrigger(this, 4, 1, triggerOperationMode, SyncEdge::RiseOnly);
 		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.60, 2.40);
 		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.75, 1.25);
 		break;
 
-    case TT_VVT_MITSUBISHI_6G75:
-	case TT_NISSAN_QR25:
+    case trigger_type_e::TT_VVT_MITSUBISHI_6G75:
+	case trigger_type_e::TT_NISSAN_QR25:
 		initializeNissanQR25crank(this);
 		break;
 
-	case TT_NISSAN_VQ30:
+	case trigger_type_e::TT_NISSAN_VQ30:
 		initializeNissanVQ30cam(this);
 		break;
 
-	case TT_NISSAN_VQ35:
+	case trigger_type_e::TT_NISSAN_VQ35:
 		initializeNissanVQ35crank(this);
 		break;
 
-	case TT_NISSAN_MR18_CRANK:
+	case trigger_type_e::TT_NISSAN_MR18_CRANK:
 		initializeNissanMR18crank(this);
 		break;
 
-	case TT_NISSAN_MR18_CAM_VVT:
+	case trigger_type_e::TT_NISSAN_MR18_CAM_VVT:
 		initializeNissanMRvvt(this);
 		break;
 
-	case TT_KAWA_KX450F:
+	case trigger_type_e::TT_KAWA_KX450F:
 		configureKawaKX450F(this);
 		break;
 
-	case TT_SKODA_FAVORIT:
+	case trigger_type_e::TT_SKODA_FAVORIT:
 		setSkodaFavorit(this);
 		break;
 
-	case TT_GM_60_2_2_2:
+	case trigger_type_e::TT_GM_60_2_2_2:
 		configureGm60_2_2_2(this);
 		break;
 
-	case TT_GM_7X:
+	case trigger_type_e::TT_GM_7X:
 		configureGmTriggerWaveform(this);
 		break;
 
-	case TT_MAZDA_DOHC_1_4:
+	case trigger_type_e::TT_MAZDA_DOHC_1_4:
 		configureMazdaProtegeLx(this);
 		break;
 
-	case TT_ONE_PLUS_ONE:
+	case trigger_type_e::TT_ONE_PLUS_ONE:
 		configureOnePlusOne(this);
 		break;
 
-	case TT_3_1_CAM:
+	case trigger_type_e::TT_3_1_CAM:
 		configure3_1_cam(this);
 		break;
 
-	case TT_MERCEDES_2_SEGMENT:
+	case trigger_type_e::TT_MERCEDES_2_SEGMENT:
 		setMercedesTwoSegment(this);
 		break;
 
-	case TT_ONE:
+	case trigger_type_e::TT_ONE:
 		initializeSkippedToothTrigger(this, 1, 0, triggerOperationMode, SyncEdge::Rise);
 		break;
 
-	case TT_MAZDA_SOHC_4:
+	case trigger_type_e::TT_MAZDA_SOHC_4:
 		configureMazdaProtegeSOHC(this);
 		break;
 
-	case TT_DAIHATSU:
+	case trigger_type_e::TT_DAIHATSU:
 		configureDaihatsu4(this);
 		break;
 
-	case TT_VVT_JZ:
+	case trigger_type_e::TT_VVT_JZ:
 		initializeSkippedToothTrigger(this, 3, 0, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
-	case TT_36_2_1_1:
+	case trigger_type_e::TT_36_2_1_1:
 	    initialize36_2_1_1(this);
 	    break;
 
-	case TT_36_2_1:
+	case trigger_type_e::TT_36_2_1:
 	    initialize36_2_1(this);
 	    break;
 
-	case TT_TOOTHED_WHEEL_32_2:
+	case trigger_type_e::TT_TOOTHED_WHEEL_32_2:
 		initializeSkippedToothTrigger(this, 32, 2, triggerOperationMode, SyncEdge::RiseOnly);
 		// todo: why is this 32/2 asking for third gap while 60/2 is happy with just two gaps?
 		// method above sets second gap, here we add third
@@ -567,139 +567,139 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		setThirdTriggerSynchronizationGap(1);
 		break;
 
-	case TT_TOOTHED_WHEEL_60_2:
+	case trigger_type_e::TT_TOOTHED_WHEEL_60_2:
 		initializeSkippedToothTrigger(this, 60, 2, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
-	case TT_TOOTHED_WHEEL_36_2:
+	case trigger_type_e::TT_TOOTHED_WHEEL_36_2:
 		initializeSkippedToothTrigger(this, 36, 2, triggerOperationMode, SyncEdge::RiseOnly);
 		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 3.5);
 		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.7, 1.3); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
-	case TT_60_2_VW:
+	case trigger_type_e::TT_60_2_VW:
 		setVwConfiguration(this);
 		break;
 
-	case TT_TOOTHED_WHEEL_36_1:
+	case trigger_type_e::TT_TOOTHED_WHEEL_36_1:
 		initializeSkippedToothTrigger(this, 36, 1, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
-	case TT_VVT_BOSCH_QUICK_START:
+	case trigger_type_e::TT_VVT_BOSCH_QUICK_START:
 		configureQuickStartSenderWheel(this);
 		break;
 
-	case TT_VVT_BARRA_3_PLUS_1:
+	case trigger_type_e::TT_VVT_BARRA_3_PLUS_1:
 		configureBarra3plus1cam(this);
 		break;
 
-	case TT_HONDA_K_CAM_4_1:
+	case trigger_type_e::TT_HONDA_K_CAM_4_1:
 		configureHondaK_4_1(this);
 		break;
 
-	case TT_HONDA_K_CRANK_12_1:
+	case trigger_type_e::TT_HONDA_K_CRANK_12_1:
 		configureHondaK_12_1(this);
 		break;
 
-	case TT_SUBARU_EZ30:
+	case trigger_type_e::TT_SUBARU_EZ30:
 		initializeSubaruEZ30(this);
 		break;
 
-	case TT_VVT_MAZDA_SKYACTIV:
+	case trigger_type_e::TT_VVT_MAZDA_SKYACTIV:
 	    initializeMazdaSkyactivCam(this);
         break;
 
-	case TT_BENELLI_TRE:
+	case trigger_type_e::TT_BENELLI_TRE:
 	    configureBenelli(this);
         break;
 
-	case TT_MITSU_4G63_CAM:
+	case trigger_type_e::TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);
 		break;
-	case TT_MITSU_4G9x_CAM:
+	case trigger_type_e::TT_MITSU_4G9x_CAM:
 	    initializeMitsubishi4g9xCam(this);
         break;
-	case TT_1_16:
+	case trigger_type_e::TT_1_16:
 		configureOnePlus16(this);
 		break;
 
-	case TT_HONDA_CBR_600:
+	case trigger_type_e::TT_HONDA_CBR_600:
 		configureHondaCbr600(this);
 		break;
 
-	case TT_CHRYSLER_NGC_36_2_2:
+	case trigger_type_e::TT_CHRYSLER_NGC_36_2_2:
 		configureChryslerNGC_36_2_2(this);
 		break;
 
-	case TT_MITSUBISHI_4G93:
+	case trigger_type_e::TT_MITSUBISHI_4G93:
 		initializeMitsubishi4G93(this);
 		break;
 
-	case TT_DODGE_RAM:
+	case trigger_type_e::TT_DODGE_RAM:
 		initDodgeRam(this);
 		break;
 
-	case TT_JEEP_4_CYL:
+	case trigger_type_e::TT_JEEP_4_CYL:
 		initJeep_XJ_4cyl_2500(this);
 		break;
 
-	case TT_JEEP_18_2_2_2:
+	case trigger_type_e::TT_JEEP_18_2_2_2:
 		initJeep18_2_2_2(this);
 		break;
 
-	case TT_SUBARU_7_6:
+	case trigger_type_e::TT_SUBARU_7_6:
 		initializeSubaru7_6(this);
 		break;
 
-	case TT_36_2_2_2:
+	case trigger_type_e::TT_36_2_2_2:
 		initialize36_2_2_2(this);
 		break;
 
-	case TT_2JZ_3_34:
+	case trigger_type_e::TT_2JZ_3_34:
 		initialize2jzGE3_34_simulation_shape(this);
 		break;
 
-	case TT_12_TOOTH_CRANK:
+	case trigger_type_e::TT_12_TOOTH_CRANK:
 		configure12ToothCrank(this);
 		break;
 
-	case TT_NISSAN_SR20VE:
+	case trigger_type_e::TT_NISSAN_SR20VE:
 		initializeNissanSR20VE_4(this);
 		break;
 
-	case TT_ROVER_K:
+	case trigger_type_e::TT_ROVER_K:
 		initializeRoverK(this);
 		break;
 
-	case TT_FIAT_IAW_P8:
+	case trigger_type_e::TT_FIAT_IAW_P8:
 		configureFiatIAQ_P8(this);
 		break;
 
-	case TT_TRI_TACH:
+	case trigger_type_e::TT_TRI_TACH:
 		configureTriTach(this);
 		break;
 
-	case TT_GM_24x:
+	case trigger_type_e::TT_GM_24x:
 		initGmLS24_5deg(this);
 		break;
 
-	case TT_GM_24x_2:
+	case trigger_type_e::TT_GM_24x_2:
 		initGmLS24_3deg(this);
 		break;
 
-	case TT_SUBARU_7_WITHOUT_6:
+	case trigger_type_e::TT_SUBARU_7_WITHOUT_6:
 		initializeSubaruOnly7(this);
 		break;
 
-	case TT_SUBARU_SVX:
+	case trigger_type_e::TT_SUBARU_SVX:
 		initializeSubaru_SVX(this);
 		break;
 
-	case TT_SUBARU_SVX_CRANK_1:
+	case trigger_type_e::TT_SUBARU_SVX_CRANK_1:
 		initializeSubaru_SVX(this);
 		break;
 
-	case TT_SUBARU_SVX_CAM_VVT:
+	case trigger_type_e::TT_SUBARU_SVX_CAM_VVT:
 		initializeSubaru_SVX(this);
 		break;
 

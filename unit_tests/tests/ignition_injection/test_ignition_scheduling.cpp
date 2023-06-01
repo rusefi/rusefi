@@ -11,7 +11,7 @@
 using ::testing::_;
 
 TEST(ignition, twoCoils) {
-	EngineTestHelper eth(FRANKENSO_BMW_M73_F);
+	EngineTestHelper eth(engine_type_e::FRANKENSO_BMW_M73_F);
 
 	// let's recalculate with zero timing so that we can focus on relation advance between cylinders
 	setArrayValues(engine->engineState.timingAdvance, 0.0f);
@@ -43,7 +43,7 @@ TEST(ignition, twoCoils) {
 }
 
 TEST(ignition, trailingSpark) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	/**
@@ -127,7 +127,7 @@ TEST(ignition, trailingSpark) {
 }
 
 TEST(ignition, CylinderTimingTrim) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Base timing 15 degrees
 	setTable(config->ignitionTable, 15);

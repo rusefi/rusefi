@@ -19,7 +19,7 @@
 #include "custom_engine.h"
 
 void setDodgeNeon1995EngineConfiguration() {
-	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
+	engineConfiguration->trigger.type = trigger_type_e::TT_DODGE_NEON_1995;
 
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
@@ -103,7 +103,7 @@ void setDodgeNeon1995EngineConfiguration() {
 }
 
 void setDodgeNeonNGCEngineConfiguration() {
-	engineConfiguration->trigger.type = TT_DODGE_NEON_2003_CAM;
+	engineConfiguration->trigger.type = trigger_type_e::TT_DODGE_NEON_2003_CAM;
 
 	// set global_trigger_offset_angle 38
 	engineConfiguration->globalTriggerAngleOffset = 38;

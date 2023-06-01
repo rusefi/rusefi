@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ToJavaEnum {
-
-    public static final String FORCE_2_BYTES_SIZE = "Force_2_bytes_size";
-    public static final String FORCE_4_BYTES_SIZE = "Force_4_bytes_size";
-
     public static void main(String[] args) throws IOException {
         InvokeReader invokeReader = new InvokeReader(args).invoke();
         String outputPath = invokeReader.getOutputPath();
@@ -61,9 +57,7 @@ public class ToJavaEnum {
         int index = 0;
         for (Value value : sorted) {
             int numericValue = value.getIntValueMaybeResolve(registry);
-            if (index != numericValue
-                    && !value.getName().startsWith(FORCE_2_BYTES_SIZE)
-                    && !value.getName().startsWith(FORCE_4_BYTES_SIZE))
+            if (index != numericValue)
                 throw new IllegalStateException("Got explicit ordinal " + numericValue + " instead of ordinal " + index + " in " + value);
             sb.append("\t" + value.getName() + ",\n");
             index++;
