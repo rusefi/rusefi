@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat May 13 15:41:58 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Jun 01 04:33:34 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -362,8 +362,6 @@ case WASTEGATE_PROTEUS_TEST:
 }
 const char *getTrigger_type_e(trigger_type_e value){
 switch(value) {
-case Force_4_bytes_size_trigger_type:
-  return "Force_4_bytes_size_trigger_type";
 case TT_12_TOOTH_CRANK:
   return "TT_12_TOOTH_CRANK";
 case TT_1_16:
