@@ -502,9 +502,6 @@ Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
 ### invertCamVVTSignal
 get invertCamVVTSignal
 
-### consumeObdSensors
-This property is useful if using rusEFI as TCM or BCM only\nenable consumeObdSensors
-
 ### knockBankCyl1
 
 

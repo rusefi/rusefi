@@ -1479,10 +1479,8 @@ struct engine_configuration_s {
 	// offset 804 bit 11
 	bool invertCamVVTSignal : 1 {};
 
-	// This property is useful if using rusEFI as TCM or BCM only
-	// enable consumeObdSensors
 	// offset 804 bit 12
-	bool consumeObdSensors : 1 {};
+	bool unused804b12 : 1 {};
 
 	// offset 804 bit 13
 	bool knockBankCyl1 : 1 {};

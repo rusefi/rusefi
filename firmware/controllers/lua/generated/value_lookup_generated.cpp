@@ -339,8 +339,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->verboseVVTDecoding;
 		case 1081026348:
 			return engineConfiguration->invertCamVVTSignal;
-		case 950993889:
-			return engineConfiguration->consumeObdSensors;
 		case 1509355728:
 			return engineConfiguration->knockBankCyl1;
 		case 1509355729:
@@ -1823,11 +1821,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 1081026348:
 	{
 		engineConfiguration->invertCamVVTSignal = (int)value;
-		return;
-	}
-		case 950993889:
-	{
-		engineConfiguration->consumeObdSensors = (int)value;
 		return;
 	}
 		case 1509355728:

@@ -1181,7 +1181,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.01.f407-discovery.2695502717";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.01.f407-discovery.2452186239";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1372;
@@ -1591,7 +1591,6 @@ public class Fields {
 	public static final Field ENABLESOFTWAREKNOCK = Field.create("ENABLESOFTWAREKNOCK", 804, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field VERBOSEVVTDECODING = Field.create("VERBOSEVVTDECODING", 804, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field INVERTCAMVVTSIGNAL = Field.create("INVERTCAMVVTSIGNAL", 804, FieldType.BIT, 11).setBaseOffset(0);
-	public static final Field CONSUMEOBDSENSORS = Field.create("CONSUMEOBDSENSORS", 804, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field KNOCKBANKCYL1 = Field.create("KNOCKBANKCYL1", 804, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field KNOCKBANKCYL2 = Field.create("KNOCKBANKCYL2", 804, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field KNOCKBANKCYL3 = Field.create("KNOCKBANKCYL3", 804, FieldType.BIT, 15).setBaseOffset(0);
@@ -2949,7 +2948,6 @@ public class Fields {
 	ENABLESOFTWAREKNOCK,
 	VERBOSEVVTDECODING,
 	INVERTCAMVVTSIGNAL,
-	CONSUMEOBDSENSORS,
 	KNOCKBANKCYL1,
 	KNOCKBANKCYL2,
 	KNOCKBANKCYL3,
