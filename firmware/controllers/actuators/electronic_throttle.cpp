@@ -235,9 +235,9 @@ void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 	if (m_motor && !m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
 	}
-    m_dutyRocAverage.init(engineConfiguration->etbRocExpAverageLength);
-    m_dutyAverage.init(engineConfiguration->etbExpAverageLength);
-    doInitElectronicThrottle();
+	m_dutyRocAverage.init(engineConfiguration->etbRocExpAverageLength);
+	m_dutyAverage.init(engineConfiguration->etbExpAverageLength);
+	doInitElectronicThrottle();
 }
 
 void EtbController::showStatus() {
@@ -321,9 +321,9 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	percent_t targetPosition = idlePosition + getLuaAdjustment();
 
 #if EFI_ANTILAG_SYSTEM 
-    if (engine->antilagController.isAntilagCondition) {
-	    targetPosition += engineConfiguration->ALSEtbAdd;
-    }
+	if (engine->antilagController.isAntilagCondition) {
+		targetPosition += engineConfiguration->ALSEtbAdd;
+	}
 #endif /* EFI_ANTILAG_SYSTEM */
 
 	// Apply any adjustment that this throttle alone needs
@@ -401,7 +401,7 @@ expected<percent_t> EtbController::getOpenLoop(percent_t target) {
 		&& m_function != DC_IdleValve) {
 		etbFeedForward = interpolate2d(target, config->etbBiasBins, config->etbBiasValues);
 	} else {
-	    etbFeedForward = 0;
+		etbFeedForward = 0;
 	}
 
 	return etbFeedForward;
@@ -566,10 +566,10 @@ bool EtbController::checkStatus() {
 #endif /* EFI_TUNER_STUDIO */
 
 	if (!isEtbMode()) {
-        // no validation for h-bridge or idle mode
-        return true;
-    }
-    // ETB-specific code belo. The whole mix-up between DC and ETB is shameful :(
+		// no validation for h-bridge or idle mode
+		return true;
+	}
+	// ETB-specific code belo. The whole mix-up between DC and ETB is shameful :(
 
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
@@ -621,7 +621,7 @@ bool EtbController::checkStatus() {
 
 	etbErrorCode = (int8_t)localReason;
 
-    return localReason == TpsState::None;
+	return localReason == TpsState::None;
 }
 
 void EtbController::update() {
@@ -638,7 +638,7 @@ void EtbController::update() {
 		return;
 	}
 
-    bool isOk = checkStatus();
+	bool isOk = checkStatus();
 
 	if (!isOk) {
 		// If engine is stopped and so configured, skip the ETB update entirely
