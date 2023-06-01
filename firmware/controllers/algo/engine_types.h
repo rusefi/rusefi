@@ -14,7 +14,7 @@
 
 
 /**
- * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
+ * https://github.com/rusefi/rusefi/wiki/Engine-Types
  */
 typedef enum __attribute__ ((__packed__)) {
 	DEFAULT_FRANKENSO = 0,
