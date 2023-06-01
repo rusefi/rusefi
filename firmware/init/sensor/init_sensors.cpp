@@ -63,10 +63,6 @@ static void deInitAuxDigital() {
 }
 
 void initNewSensors() {
-#if EFI_PROD_CODE && EFI_CAN_SUPPORT
-	initCanSensors();
-#endif
-
 	initVbatt();
 	initMap();
 	initTps();

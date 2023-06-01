@@ -2280,8 +2280,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = triggerConfiguration_gap
 
 	dialog = triggerConfiguration, "", xAxis
-		panel = trigger_primary, {1}, { consumeObdSensors == 0 }
-		panel = trigger_cams, {1}, { consumeObdSensors == 0 }
+		panel = trigger_primary
+		panel = trigger_cams
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
@@ -4273,7 +4273,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Secondary PPS maximum",				ppsSecondaryMaximum, {useFordRedundantPps}
 		field = "ADC vRef voltage",						adcVcc
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
-		field = "consumeObdSensors",						consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",						artificialTestMisfire
 		field = "Instant Rpm Range",                    instantRpmRange
 		field = "Always use instant RPM",				alwaysInstantRpm

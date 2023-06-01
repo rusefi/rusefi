@@ -659,8 +659,6 @@ void mreBCM() {
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 	engineConfiguration->fanPin = Gpio::Unassigned;
-	engineConfiguration->consumeObdSensors = true;
-
 }
 
 /**
