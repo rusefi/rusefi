@@ -33,7 +33,7 @@ struct TriggerExportHelper
 
 static TriggerExportHelper exportHelper;
 
-class AllTriggersFixture : public ::testing::TestWithParam<trigger_type_e> {
+class AllTriggersFixture : public ::testing::TestWithParam<int> {
 };
 
 INSTANTIATE_TEST_SUITE_P(
@@ -41,7 +41,7 @@ INSTANTIATE_TEST_SUITE_P(
 	AllTriggersFixture,
 	// Test all triggers from the first valid trigger thru the last
 	// (Skip index 0, that's custom toothed wheel which is covered by others)
-	::testing::Range((trigger_type_e)TEST_FROM_TRIGGER_ID, (trigger_type_e)TEST_TO_TRIGGER_ID)
+	::testing::Range((int)TEST_FROM_TRIGGER_ID, (int)TEST_TO_TRIGGER_ID)
 );
 
 extern bool printTriggerDebug;
@@ -52,7 +52,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	//printTriggerDebug = true;
 	//printTriggerTrace = true;
 
-	auto tt = GetParam();
+	trigger_type_e tt = (trigger_type_e)GetParam();
 	auto fp = exportHelper.fp;
 
 	printf("Exporting %s\r\n", getTrigger_type_e(tt));
