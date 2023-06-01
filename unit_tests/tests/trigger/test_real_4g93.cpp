@@ -10,7 +10,7 @@ TEST(real4g93, cranking) {
 	CsvReader reader(1, /* vvtCount */ 1);
 
 	reader.open("tests/trigger/resources/4g93-cranking.csv");
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
@@ -73,7 +73,7 @@ TEST(real4g93, crankingOn11) {
 	CsvReader reader(2, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/4g93-cranking.csv");
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
@@ -102,7 +102,7 @@ TEST(real4g93, crankingCamOnly) {
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/4g93-cranking-cam-only.csv");
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 

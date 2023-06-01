@@ -68,7 +68,7 @@ TEST(binary, testWriteCrc) {
 }
 
 TEST(TunerstudioCommands, writeChunkEngineConfig) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	::testing::NiceMock<MockTsChannel> channel;
 
 	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);

@@ -161,7 +161,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 TEST(trigger, noiselessDecoder) {
 	printf("====================================================================================== testNoiselessDecoder\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 

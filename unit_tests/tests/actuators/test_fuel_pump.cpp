@@ -12,7 +12,7 @@
 extern int timeNowUs;
 
 TEST(Actuators, FuelPump) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	FuelPumpController dut;
 

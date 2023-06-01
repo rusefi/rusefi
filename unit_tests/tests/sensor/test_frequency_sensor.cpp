@@ -50,7 +50,7 @@ public:
  */
 TEST_F(FrequencySensorTest, testValidWithPwm) {
 	ASSERT_TRUE(dut.Register());
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Should be invalid - not set yet
 	{

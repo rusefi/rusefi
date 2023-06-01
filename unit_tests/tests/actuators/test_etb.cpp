@@ -21,7 +21,7 @@ using ::testing::StrictMock;
 TEST(etb, initializationNoPedal) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -37,7 +37,7 @@ TEST(etb, initializationNoPedal) {
 TEST(etb, initializationMissingThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->etbFunctions[0] = DC_None;
 		engineConfiguration->etbFunctions[1] = DC_None;
 	});
@@ -63,7 +63,7 @@ TEST(etb, initializationSingleThrottle) {
 	EXPECT_CALL(mocks[0], isEtbMode())
 	      .WillOnce(Return(TRUE));
 
-	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->etbFunctions[0] = DC_Throttle1;
 		engineConfiguration->etbFunctions[1] = DC_None;
 	});
@@ -91,7 +91,7 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 	EXPECT_CALL(mocks[1], isEtbMode())
 	      .WillOnce(Return(TRUE));
 
-	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->etbFunctions[0] = DC_None;
 		engineConfiguration->etbFunctions[1] = DC_Throttle1;
 	});
@@ -121,7 +121,7 @@ TEST(etb, initializationDualThrottle) {
 	EXPECT_CALL(mocks[1], isEtbMode())
 	      .WillOnce(Return(TRUE));
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -152,7 +152,7 @@ TEST(etb, initializationWastegate) {
 	EXPECT_CALL(mocks[0], isEtbMode())
 	      .WillOnce(Return(false));
 
-	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->etbFunctions[0] = DC_Wastegate;
 		engineConfiguration->etbFunctions[1] = DC_None;
 	});
@@ -231,7 +231,7 @@ TEST(etb, initializationNoThrottles) {
 	// This tests the case where you don't want an ETB, and expect everything to go fine
 	EtbController duts[2];
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &duts[i];
@@ -254,7 +254,7 @@ TEST(etb, initializationNoThrottles) {
 TEST(etb, idlePlumbing) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 
@@ -268,7 +268,7 @@ TEST(etb, idlePlumbing) {
 }
 
 TEST(etb, testSetpointOnlyPedal) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	EtbController etb;
 
@@ -327,7 +327,7 @@ TEST(etb, testSetpointOnlyPedal) {
 }
 
 TEST(etb, setpointSecondThrottleTrim) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Mock pedal map that's just passthru pedal -> target
 	StrictMock<MockVp3d> pedalMap;
@@ -354,7 +354,7 @@ TEST(etb, setpointSecondThrottleTrim) {
 }
 
 TEST(etb, setpointIdle) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Use ETB for idle, but don't give it any range (yet)
 	engineConfiguration->etbIdleThrottleRange = 0;
@@ -410,7 +410,7 @@ TEST(etb, setpointIdle) {
 }
 
 TEST(etb, setpointRevLimit) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Configure 5000 limit start, with 750 rpm taper
 	engineConfiguration->etbRevLimitStart = 5000;
@@ -504,7 +504,7 @@ TEST(etb, setpointWastegateController) {
 }
 
 TEST(etb, setpointLuaAdder) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
@@ -594,7 +594,7 @@ TEST(etb, etbTpsSensor) {
 }
 
 TEST(etb, setOutputInvalid) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
@@ -613,7 +613,7 @@ TEST(etb, setOutputInvalid) {
 }
 
 TEST(etb, setOutputValid) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
@@ -633,7 +633,7 @@ TEST(etb, setOutputValid) {
 }
 
 TEST(etb, setOutputValid2) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
@@ -653,7 +653,7 @@ TEST(etb, setOutputValid2) {
 }
 
 TEST(etb, setOutputOutOfRangeHigh) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
@@ -673,7 +673,7 @@ TEST(etb, setOutputOutOfRangeHigh) {
 }
 
 TEST(etb, setOutputOutOfRangeLow) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
@@ -693,7 +693,7 @@ TEST(etb, setOutputOutOfRangeLow) {
 }
 
 TEST(etb, setOutputPauseControl) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
@@ -714,7 +714,7 @@ TEST(etb, setOutputPauseControl) {
 }
 
 TEST(etb, setOutputLimpHome) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
@@ -766,7 +766,7 @@ TEST(etb, closedLoopPid) {
 extern int timeNowUs;
 
 TEST(etb, jamDetection) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	pid_s pid = {};
 
@@ -817,7 +817,7 @@ TEST(etb, jamDetection) {
 }
 
 TEST(etb, openLoopThrottle) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
@@ -839,7 +839,7 @@ TEST(etb, openLoopThrottle) {
 }
 
 TEST(etb, openLoopNonThrottle) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);

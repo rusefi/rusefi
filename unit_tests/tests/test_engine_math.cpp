@@ -13,7 +13,7 @@
 
 TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
-	EngineTestHelper eth(FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
 
 	engine->periodicFastCallback();
 	assertEqualsM("testIgnitionPlanning_AFR", 13.5, engine->fuelComputer.targetAFR);
@@ -25,7 +25,7 @@ TEST(misc, testEngineMath) {
 	printf("*************************************************** testEngineMath\r\n");
 
 	// todo: let's see if we can make 'engine' unneeded in this test?
-	EngineTestHelper eth(FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
 
     setCamOperationMode();
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;

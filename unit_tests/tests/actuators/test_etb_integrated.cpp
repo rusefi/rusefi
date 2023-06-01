@@ -24,7 +24,7 @@ static EtbController * initEtbIntegratedTest() {
 }
 
 TEST(etb, integrated) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
 
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 40);
@@ -51,7 +51,7 @@ extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 
 TEST(etb, intermittentTps) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
 	warningBuffer_t &recentWarnings = unitTestWarningCodeState.recentWarnings;
 	recentWarnings.clear();
@@ -108,7 +108,7 @@ TEST(etb, intermittentTps) {
 }
 
 TEST(etb, intermittentPps) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	EtbController *etb = initEtbIntegratedTest();
@@ -153,7 +153,7 @@ TEST(etb, intermittentPps) {
 }
 
 TEST(etb, sentTpsIntegrated) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 
 	engineConfiguration->sentInputPins[0] = Gpio::B3;
 	engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
@@ -168,7 +168,7 @@ TEST(etb, sentTpsIntegrated) {
 }
 
 TEST(etb, sentTpsIntegratedDecode) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 
 	engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
 

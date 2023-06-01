@@ -8,7 +8,7 @@
 #include "pch.h"
 
 TEST(subaru, overrideGap) {
-	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
+	EngineTestHelper eth(engine_type_e::FRANKENSO_MIATA_NA6_MAP);
 
 	engineConfiguration->overrideTriggerGaps = true;
 	engineConfiguration->gapTrackingLengthOverride = 2;

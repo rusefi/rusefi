@@ -55,7 +55,7 @@ public:
 	TestCanStreamerState() : CanStreamerState(&streamer) {}
 
 	void test(const std::vector<std::string> & dataList, const std::vector<std::string> & frames, int fifoLeftoverSize, const std::vector<size_t> & receiveChunks) {
-		EngineTestHelper eth(TEST_ENGINE);
+		EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 		size_t totalSize = 0;
 		std::string totalData;

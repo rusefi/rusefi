@@ -4,7 +4,7 @@
 #include "trigger_emulator_algo.h"
 
 TEST(miata, miata_na_tdc) {
-	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
+	EngineTestHelper eth(engine_type_e::FRANKENSO_MIATA_NA6_MAP);
 	engineConfiguration->alwaysInstantRpm = true;
 
 #define TEST_REVOLUTIONS 6

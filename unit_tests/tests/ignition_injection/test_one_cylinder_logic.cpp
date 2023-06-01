@@ -7,7 +7,7 @@
 #include "spark_logic.h"
 
 TEST(issues, issueOneCylinderSpecialCase968) {
-	EngineTestHelper eth(GY6_139QMB);
+	EngineTestHelper eth(engine_type_e::GY6_139QMB);
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;

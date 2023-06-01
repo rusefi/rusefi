@@ -8,7 +8,7 @@
 #include "pch.h"
 
 TEST(sensors, test2jz) {
-	EngineTestHelper eth(TOYOTA_2JZ_GTE_VVTi);
+	EngineTestHelper eth(engine_type_e::TOYOTA_2JZ_GTE_VVTi);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	eth.setTriggerType(TT_ONE);

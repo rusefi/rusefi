@@ -72,7 +72,7 @@ static void simulateTrigger(TriggerAdcDetector &trigAdcState, CsvReader &reader,
 TEST(big, testTriggerInputAdc) {
 	printf("====================================================================================== testTriggerInputAdc\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 

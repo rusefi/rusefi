@@ -23,7 +23,7 @@ TEST(LuaHooks, TestCrc8) {
 }
 
 TEST(LuaHooks, TestGetCalibration) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	const char* sourceCode = R"(
 
 	function testFunc()
@@ -35,7 +35,7 @@ TEST(LuaHooks, TestGetCalibration) {
 }
 
 TEST(LuaHooks, TestSetCalibration) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 		const char* sourceCode = R"(
 	
 		function testFunc()
@@ -92,7 +92,7 @@ TEST(LuaHooks, Table3d) {
 	end
 	)";
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	setTable(config->scriptTable2, (uint8_t)33);
 	EXPECT_EQ(testLuaReturnsNumber(tableTest), 33);

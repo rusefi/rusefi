@@ -35,7 +35,7 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, TriggerWhe
 }
 
 TEST(cranking, hardcodedRealCranking) {
-	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
+	EngineTestHelper eth(engine_type_e::FRANKENSO_MIATA_NA6_MAP);
 	engineConfiguration->alwaysInstantRpm = true;
 
 #define EVENT(timestamp, channel, value) { fireTriggerEvent(&eth, timestamp, channel, value); }
@@ -169,7 +169,7 @@ TEST(cranking, naCrankFromFile) {
 	CsvReader reader(2, /* vvtCount */ 0);
 	reader.open("tests/trigger/resources/cranking_na_4.csv", REVERSE_ORDER);
 
-	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
+	EngineTestHelper eth(engine_type_e::FRANKENSO_MIATA_NA6_MAP);
 	engineConfiguration->alwaysInstantRpm = true;
 
 	while (reader.haveMore()) {
