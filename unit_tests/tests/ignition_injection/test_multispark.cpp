@@ -9,7 +9,7 @@
 #include "advance_map.h"
 
 TEST(Multispark, DefaultConfiguration) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	EXPECT_EQ(0, getMultiSparkCount(0    ));
 	EXPECT_EQ(0, getMultiSparkCount(100  ));
@@ -37,7 +37,7 @@ static void multisparkCfg() {
 }
 
 TEST(Multispark, EnabledNoMaxRpm) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	multisparkCfg();
 
@@ -62,7 +62,7 @@ TEST(Multispark, EnabledNoMaxRpm) {
 }
 
 TEST(Multispark, RpmLimit) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	multisparkCfg();
 

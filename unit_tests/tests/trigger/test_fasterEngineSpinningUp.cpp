@@ -7,7 +7,7 @@
 #include "pch.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
 	engine->tdcMarkEnabled = false;
 	// turn on FasterEngineSpinUp mode
@@ -104,7 +104,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 

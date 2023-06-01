@@ -19,7 +19,7 @@ static std::unique_ptr<EngineTestHelper> ethPtr;
 static EngineTestHelper* getEth() {
 	if (!ethPtr) {
 	    printf("make_unique<EngineTestHelper>(TEST_ENGINE)\n");
-		ethPtr = std::make_unique<EngineTestHelper>(TEST_ENGINE);
+		ethPtr = std::make_unique<EngineTestHelper>(engine_type_e::TEST_ENGINE);
 	}
 	return ethPtr.get();
 }

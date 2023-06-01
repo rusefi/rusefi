@@ -3,7 +3,7 @@
 #include "main_relay.h"
 
 TEST(Actuators, MainRelay) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	MainRelayController dut;
 

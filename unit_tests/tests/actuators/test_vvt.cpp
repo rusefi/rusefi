@@ -6,7 +6,7 @@ using ::testing::StrictMock;
 using ::testing::Return;
 
 TEST(Vvt, TestSetPoint) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Set up a mock target map
 	StrictMock<MockVp3d> targetMap;
@@ -25,7 +25,7 @@ TEST(Vvt, TestSetPoint) {
 }
 
 TEST(Vvt, observePlant) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engine->triggerCentral.vvtPosition[0][0] = 23;
 
@@ -43,7 +43,7 @@ TEST(Vvt, openLoop) {
 }
 
 TEST(Vvt, ClosedLoopNotInverted) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	VvtController dut;
 	dut.init(0, 0, 0, nullptr);
@@ -58,7 +58,7 @@ TEST(Vvt, ClosedLoopNotInverted) {
 }
 
 TEST(Vvt, ClosedLoopInverted) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	VvtController dut;
 	dut.init(0, 0, 0, nullptr);

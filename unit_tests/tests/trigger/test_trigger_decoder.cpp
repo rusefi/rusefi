@@ -44,7 +44,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 }
 
 TEST(trigger, testSkipped2_0) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 2;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
@@ -53,7 +53,7 @@ TEST(trigger, testSkipped2_0) {
 }
 
 TEST(trigger, testSomethingWeird) {
-	EngineTestHelper eth(FORD_INLINE_6_1995);
+	EngineTestHelper eth(engine_type_e::FORD_INLINE_6_1995);
 
 	TriggerDecoderBase state_("test");
 	TriggerDecoderBase *sta = &state_;
@@ -80,9 +80,9 @@ TEST(trigger, testSomethingWeird) {
 }
 
 TEST(trigger, test1995FordInline6TriggerDecoder) {
-	ASSERT_EQ( 0,  getTriggerZeroEventIndex(FORD_INLINE_6_1995)) << "triggerIndex ";
+	ASSERT_EQ( 0,  getTriggerZeroEventIndex(engine_type_e::FORD_INLINE_6_1995)) << "triggerIndex ";
 
-	EngineTestHelper eth(FORD_INLINE_6_1995);
+	EngineTestHelper eth(engine_type_e::FORD_INLINE_6_1995);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	setWholeTimingTable(-13);
 
@@ -110,7 +110,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 }
 
 TEST(misc, testGetCoilDutyCycleIssue977) {
-	EngineTestHelper eth(FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
@@ -122,9 +122,9 @@ TEST(misc, testGetCoilDutyCycleIssue977) {
 TEST(misc, testFordAspire) {
 	printf("*************************************************** testFordAspire\r\n");
 
-	ASSERT_EQ( 4,  getTriggerZeroEventIndex(FORD_ASPIRE_1996)) << "getTriggerZeroEventIndex";
+	ASSERT_EQ( 4,  getTriggerZeroEventIndex(engine_type_e::FORD_ASPIRE_1996)) << "getTriggerZeroEventIndex";
 
-	EngineTestHelper eth(FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 
 	ASSERT_EQ( 4,  getTriggerCentral()->triggerShape.getTriggerWaveformSynchPointIndex()) << "getTriggerWaveformSynchPointIndex";
 
@@ -169,7 +169,7 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 extern bool_t debugSignalExecutor;
 
 TEST(misc, testRpmCalculator) {
-	EngineTestHelper eth(FORD_INLINE_6_1995);
+	EngineTestHelper eth(engine_type_e::FORD_INLINE_6_1995);
 
 	setTable(config->injectionPhase, -180.0f);
 
@@ -316,7 +316,7 @@ TEST(misc, testRpmCalculator) {
 }
 
 TEST(trigger, testAnotherTriggerDecoder) {
-	testTriggerDecoder2("Miata 2003", FRANKENSO_MAZDA_MIATA_2003, 3, 0.38888889, 0.0);
+	testTriggerDecoder2("Miata 2003", engine_type_e::FRANKENSO_MAZDA_MIATA_2003, 3, 0.38888889, 0.0);
 }
 
 TEST(trigger, testTriggerDecoder) {
@@ -338,39 +338,39 @@ TEST(trigger, testTriggerDecoder) {
 	}
 
 	printf("====================================================================================== testTriggerDecoder part 2\r\n");
-	testTriggerDecoder2("Dodge Neon 1995", DODGE_NEON_1995, 0, 0.4931, 0.2070);
+	testTriggerDecoder2("Dodge Neon 1995", engine_type_e::DODGE_NEON_1995, 0, 0.4931, 0.2070);
 
-	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.0000, 0.5);
+	testTriggerDecoder2("ford aspire", engine_type_e::FORD_ASPIRE_1996, 4, 0.0000, 0.5);
 
-	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
+	testTriggerDecoder2("dodge ram", engine_type_e::DODGE_RAM, 16, 0.5000, 0.06);
 
-	testTriggerDecoder2("Miata NB2", HELLEN_NB2, 3, 0.3888888955, 0);
+	testTriggerDecoder2("Miata NB2", engine_type_e::HELLEN_NB2, 3, 0.3888888955, 0);
 
 	printf("====================================================================================== testTriggerDecoder part 3\r\n");
 
-	testTriggerDecoder2("test 2/1 both", TEST_ISSUE_366_BOTH, 0, 0.2500, 0.0);
-	testTriggerDecoder2("test 2/1 rise", TEST_ISSUE_366_RISE, 0, 0.0000, 0.0);
+	testTriggerDecoder2("test 2/1 both", engine_type_e::TEST_ISSUE_366_BOTH, 0, 0.2500, 0.0);
+	testTriggerDecoder2("test 2/1 rise", engine_type_e::TEST_ISSUE_366_RISE, 0, 0.0000, 0.0);
 
-	testTriggerDecoder2("test engine", TEST_ENGINE, 0, 0.7500, 0.2500);
-	testTriggerDecoder2("testGY6_139QMB", GY6_139QMB, 0, 0.4375, 0.0);
-	testTriggerDecoder2("testSubary", SUBARU_2003_WRX, 0, 0.4000, 0.0);
+	testTriggerDecoder2("test engine", engine_type_e::TEST_ENGINE, 0, 0.7500, 0.2500);
+	testTriggerDecoder2("testGY6_139QMB", engine_type_e::GY6_139QMB, 0, 0.4375, 0.0);
+	testTriggerDecoder2("testSubary", engine_type_e::SUBARU_2003_WRX, 0, 0.4000, 0.0);
 
-	testTriggerDecoder2("testFordEscortGt", FORD_ESCORT_GT, 0, 0.8096, 0.3844);
+	testTriggerDecoder2("testFordEscortGt", engine_type_e::FORD_ESCORT_GT, 0, 0.8096, 0.3844);
 
-	testTriggerDecoder2("NISSAN_PRIMERA", NISSAN_PRIMERA, 2, 0.9611, 0.0);
+	testTriggerDecoder2("NISSAN_PRIMERA", engine_type_e::NISSAN_PRIMERA, 2, 0.9611, 0.0);
 
-	testTriggerDecoder2("test1+1", DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
+	testTriggerDecoder2("test1+1", engine_type_e::DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
-	testTriggerDecoder2("testCitroen", CITROEN_TU3JP, 0, 0.4833, 0);
+	testTriggerDecoder2("testCitroen", engine_type_e::CITROEN_TU3JP, 0, 0.4833, 0);
 
-	testTriggerDecoder2("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
+	testTriggerDecoder2("citroen", engine_type_e::CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
-	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);
+	testTriggerDecoder2("CAMARO_4", engine_type_e::CAMARO_4, 40, 0.5, 0);
 
-	testTriggerDecoder2("neon NGC4", DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
+	testTriggerDecoder2("neon NGC4", engine_type_e::DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
-		EngineTestHelper eth(DODGE_NEON_2003_CRANK);
+		EngineTestHelper eth(engine_type_e::DODGE_NEON_2003_CRANK);
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 
@@ -379,9 +379,9 @@ TEST(trigger, testTriggerDecoder) {
 
 	}
 
-	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
+	testTriggerDecoder2("sachs", engine_type_e::SACHS, 0, 0.4800, 0.000);
 
-	testTriggerDecoder2("vw ABA", VW_ABA, 0, 0.51666, 0.0);
+	testTriggerDecoder2("vw ABA", engine_type_e::VW_ABA, 0, 0.51666, 0.0);
 }
 
 static void assertInjectionEventBase(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
@@ -530,7 +530,7 @@ static void setArray(float* p, size_t count, float value) {
 void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
@@ -778,7 +778,7 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 }
 
 TEST(big, testTwoWireBatch) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
@@ -807,7 +807,7 @@ TEST(big, testTwoWireBatch) {
 
 
 TEST(big, testSequential) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
@@ -835,7 +835,7 @@ TEST(big, testSequential) {
 }
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
@@ -954,7 +954,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 TEST(big, testSparkReverseOrderBug319) {
 	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 
@@ -1059,7 +1059,7 @@ TEST(big, testSparkReverseOrderBug319) {
 TEST(big, testMissedSpark299) {
 	printf("*************************************************** testMissedSpark299\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	engineConfiguration->isIgnitionEnabled = true;

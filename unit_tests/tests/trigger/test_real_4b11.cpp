@@ -10,7 +10,7 @@ TEST(real4b11, running) {
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/4b11-running.csv");
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
@@ -46,7 +46,7 @@ TEST(real4b11, runningDoubledEdge) {
 
 	// This log has an extra duplicate edge at 5.393782 seconds (hand added)
 	reader.open("tests/trigger/resources/4b11-running-doubled-edge.csv");
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 

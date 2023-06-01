@@ -12,7 +12,7 @@ TEST(BoostControl, Setpoint) {
 	EXPECT_CALL(targetMap, getValue(_, _))
 		.WillRepeatedly([](float xRpm, float tps) { return tps; });
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->boostType = CLOSED_LOOP;
 
 	BoostController bc;
@@ -32,7 +32,7 @@ TEST(BoostControl, Setpoint) {
 }
 
 TEST(BoostControl, ObservePlant) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	BoostController bc;
 
@@ -53,7 +53,7 @@ TEST(BoostControl, OpenLoop) {
 	EXPECT_CALL(openMap, getValue(_, _))
 		.WillRepeatedly([](float xRpm, float tps) { return tps; });
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	BoostController bc;
 
@@ -68,7 +68,7 @@ TEST(BoostControl, OpenLoop) {
 }
 
 TEST(BoostControl, TestClosedLoop) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	BoostController bc;
 
@@ -107,7 +107,7 @@ TEST(BoostControl, TestClosedLoop) {
 }
 
 TEST(BoostControl, SetOutput) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->isBoostControlEnabled = true;
 

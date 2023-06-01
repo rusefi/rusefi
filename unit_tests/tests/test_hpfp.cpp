@@ -7,7 +7,7 @@ using ::testing::_;
 using ::testing::StrictMock;
 
 TEST(HPFP, Lobe) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->hpfpCam = HPFP_CAM_NONE;
 	engineConfiguration->hpfpPeakPos = 123;
@@ -51,7 +51,7 @@ TEST(HPFP, Lobe) {
 }
 
 TEST(HPFP, InjectionReplacementFuel) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->hpfpCamLobes = 4;
@@ -104,7 +104,7 @@ TEST(HPFP, InjectionReplacementFuel) {
 }
 
 TEST(HPFP, PI) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->hpfpCamLobes = 4;
@@ -161,7 +161,7 @@ TEST(HPFP, PI) {
 }
 
 TEST(HPFP, Angle) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->hpfpCamLobes = 4;
@@ -207,7 +207,7 @@ TEST(HPFP, Angle) {
 }
 
 TEST(HPFP, Schedule) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->hpfpCamLobes = 4;

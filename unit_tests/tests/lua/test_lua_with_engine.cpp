@@ -19,7 +19,7 @@ end
 )";
 
 TEST(LuaHooks, TestCurve) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	strcpy(engineConfiguration->scriptCurveName[3], "hello");
 	setLinearCurve(config->scriptCurve4, 500, 600, 1);

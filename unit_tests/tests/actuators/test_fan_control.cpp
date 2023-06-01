@@ -3,7 +3,7 @@
 #include "fan_control.h"
 
 TEST(Actuators, Fan) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->fanOnTemperature = 90;
 	engineConfiguration->fanOffTemperature = 80;

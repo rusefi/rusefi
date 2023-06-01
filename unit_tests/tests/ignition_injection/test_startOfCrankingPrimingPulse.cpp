@@ -8,7 +8,7 @@
 #include "pch.h"
 
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
@@ -34,7 +34,7 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 
 
 TEST(priming, startScheduling) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "RPM=0";
 
@@ -45,7 +45,7 @@ TEST(priming, startScheduling) {
 }
 
 TEST(priming, duration) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	MockInjectorModel2 injectorModel;
 	engine->module<InjectorModel>().set(&injectorModel);

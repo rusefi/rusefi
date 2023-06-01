@@ -13,7 +13,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/nick_1.csv");
-	EngineTestHelper eth (VW_ABA);
+	EngineTestHelper eth (engine_type_e::VW_ABA);
 	engineConfiguration->alwaysInstantRpm = true;
 	eth.setTriggerType(TT_60_2_VW);
 
@@ -26,7 +26,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 }
 
 TEST(crankingVW, crankingTwiceWithGap) {
-	EngineTestHelper eth (VW_ABA);
+	EngineTestHelper eth (engine_type_e::VW_ABA);
 	engineConfiguration->alwaysInstantRpm = true;
 	eth.setTriggerType(TT_60_2_VW);
 

@@ -16,7 +16,7 @@ using ::testing::_;
 #define EXPECT_CUT() EXPECT_FLOAT_EQ(0, engine->engineState.injectionDuration)
 
 TEST(fuelCut, coasting) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
@@ -131,7 +131,7 @@ TEST(fuelCut, coasting) {
 }
 
 TEST(fuelCut, delay) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 

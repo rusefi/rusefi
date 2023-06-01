@@ -7,7 +7,7 @@
 
 TEST(trigger, testQuadCam) {
 	// setting some weird engine
-	EngineTestHelper eth(FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engineConfiguration->alwaysInstantRpm = true;
 

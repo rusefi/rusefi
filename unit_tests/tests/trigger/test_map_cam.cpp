@@ -6,7 +6,7 @@
 
 TEST(trigger, map_cam_by_magic_point) {
 
-	EngineTestHelper eth(TEST_CRANK_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	engineConfiguration->camInputs[0] = Gpio::A0;

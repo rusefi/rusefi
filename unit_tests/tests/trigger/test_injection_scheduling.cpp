@@ -9,7 +9,7 @@ using ::testing::InSequence;
 TEST(injectionScheduling, InjectionIsScheduled) {
 	StrictMock<MockExecutor> mockExec;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engine->executor.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;
@@ -49,7 +49,7 @@ TEST(injectionScheduling, InjectionIsScheduled) {
 TEST(injectionScheduling, InjectionIsScheduledBeforeWraparound) {
 	StrictMock<MockExecutor> mockExec;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engine->executor.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;
@@ -88,7 +88,7 @@ TEST(injectionScheduling, InjectionIsScheduledBeforeWraparound) {
 TEST(injectionScheduling, InjectionIsScheduledAfterWraparound) {
 	StrictMock<MockExecutor> mockExec;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engine->executor.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;
@@ -128,7 +128,7 @@ TEST(injectionScheduling, InjectionNotScheduled) {
 	// StrictMock since we expect no scheduler calls!
 	StrictMock<MockExecutor> mockExec;
 
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engine->executor.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;

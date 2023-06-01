@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "turbocharger_speed_converter.h"
 
-static constexpr engine_type_e ENGINE_TEST_HELPER = TEST_ENGINE;
+static constexpr engine_type_e ENGINE_TEST_HELPER = engine_type_e::TEST_ENGINE;
 
 class TurbochargerSpeedConverterTest : public ::testing::Test {
 

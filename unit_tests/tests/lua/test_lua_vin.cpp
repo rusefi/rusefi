@@ -9,7 +9,7 @@
 
 
 TEST(LuaVin, Test) {
-	EngineTestHelper eth(TEST_CRANK_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
 
 	strcpy(engineConfiguration->vinNumber, "GM123");
 

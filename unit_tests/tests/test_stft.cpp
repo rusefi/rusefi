@@ -77,7 +77,7 @@ TEST(ClosedLoopFuel, CellSelection) {
 }
 
 TEST(ClosedLoopFuel, afrLimits) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->stft.minAfr = 10;  // 10.0 AFR
 	engineConfiguration->stft.maxAfr = 18;  // 18.0 AFR

@@ -12,7 +12,7 @@
 TEST(Actuators, AuxValves) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
 
-	EngineTestHelper eth(NISSAN_PRIMERA);
+	EngineTestHelper eth(engine_type_e::NISSAN_PRIMERA);
 
 	// Engine must be "spinning" for scheduleByAngle to work
 	engine->rpmCalculator.setRpmValue(1000);

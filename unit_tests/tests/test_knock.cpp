@@ -15,7 +15,7 @@ struct MockKnockController : public KnockControllerBase {
 };
 
 TEST(Knock, Retards) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Aggression of 10%
 	engineConfiguration->knockRetardAggression = 10;
@@ -48,7 +48,7 @@ TEST(Knock, Retards) {
 }
 
 TEST(Knock, Reapply) {
-	EngineTestHelper eth(TEST_ENGINE);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	MockKnockController dut;
 	dut.onFastCallback();

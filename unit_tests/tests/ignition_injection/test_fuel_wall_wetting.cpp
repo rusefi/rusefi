@@ -16,7 +16,7 @@ struct MockWallController : public IWallFuelController {
 };
 
 TEST(fuel, testWallWettingEnrichmentMath) {
-	EngineTestHelper eth(FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 
 	MockWallController wallController;
 
@@ -62,7 +62,7 @@ TEST(fuel, testWallWettingEnrichmentMath) {
 
 TEST(fuel, testWallWettingEnrichmentScheduling) {
 
-	EngineTestHelper eth(FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	setCrankOperationMode();
