@@ -407,9 +407,17 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		switchingTeethCnt = 0;
 	}
 	
-	prevValue = transition;
 	prevStamp = stamp;
 #endif // ! EFI_SIMULATOR && EFI_SHAFT_POSITION_INPUT
+}
+
+void TriggerAdcDetector::setWeakSignal(bool isWeak) {
+	isSignalWeak = isWeak;
+	if (!isSignalWeak) {
+		minDeltaThresholdCntPos = minDeltaThresholdCntNeg = DELTA_THRESHOLD_CNT_LOW;
+	} else {
+		minDeltaThresholdCntPos = minDeltaThresholdCntNeg = 0;
+	}
 }
 
 triggerAdcMode_t getTriggerAdcMode(void) {
