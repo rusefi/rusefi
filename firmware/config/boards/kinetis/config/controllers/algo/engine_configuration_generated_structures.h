@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jun 01 04:33:36 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jun 01 04:41:01 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -427,12 +427,6 @@ struct trigger_config_s {
 	 * offset 0
 	 */
 	trigger_type_e type;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 1
-	 */
-	uint8_t alignmentFill_at_1[3];
 	/**
 	number
 	 * offset 4
@@ -5205,4 +5199,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23176);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jun 01 04:33:36 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jun 01 04:41:01 UTC 2023
