@@ -336,20 +336,6 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		}
 	}
 
-	// detect the edge
-	int transition = 0;
-	if (delta > zeroThreshold && prevValue == -1)	{
-		// a rising transition found!
-		transition = 1;
-	} 
-	else if (delta <= -zeroThreshold && prevValue == 1) {
-		// a falling transition found!
-		transition = -1;
-	}
-	else {
-		return; // both are positive/negative/zero: not interested!
-	}
-
  	if (isSignalWeak) {
 		 if (minDeltaThresholdCntPos >= DELTA_THRESHOLD_CNT_LOW && minDeltaThresholdCntNeg >= DELTA_THRESHOLD_CNT_LOW) {
 			// ok, now we have a legit strong signal, let's restore the threshold
@@ -363,9 +349,21 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 	}
 
 	if (transitionCooldownCnt <= 0) {
-#if HAL_TRIGGER_USE_ADC && HAL_USE_ADC
+		// detect the edge
+		int transition = 0;
+		if (delta > zeroThreshold && prevValue == -1)	{
+			// a rising transition found!
+			transition = 1;
+		}
+		else if (delta <= -zeroThreshold && prevValue == 1) {
+			// a falling transition found!
+			transition = -1;
+		}
+		else {
+			return; // both are positive/negative/zero: not interested!
+		}
+
 		onTriggerChanged(stamp - stampCorrectionForAdc, true, transition == 1);
-#endif // HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 		// let's skip some nearest possible measurements:
 		// the transition cannot be SO fast, but the jitter can!
 		transitionCooldownCnt = transitionCooldown;
@@ -380,6 +378,8 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 			triggerAdcITerm = maxF(triggerAdcITerm, triggerAdcITermMin);
 		}
 #endif // 0
+
+		prevValue = transition;
 	}
 
 	if (switchingCnt >= analogToDigitalTransitionCnt) {
