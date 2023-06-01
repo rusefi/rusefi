@@ -81,7 +81,7 @@ void setSbc() {
  	setStepperHw();
 
 	// 8 cylinders one coil HEI trigger
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 	engineConfiguration->skippedWheelOnCam = true;

@@ -16,7 +16,7 @@
 
 // TEST_ENGINE
 void setTestCamEngineConfiguration() {
-	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
+	engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
 	setCamOperationMode();
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
@@ -44,7 +44,7 @@ void setTestCamEngineConfiguration() {
 void setTestCrankEngineConfiguration() {
 	setTestCamEngineConfiguration();
 
-	engineConfiguration->trigger.type = TT_ONE;
+	engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
 
 	setCrankOperationMode();
 	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
@@ -70,7 +70,7 @@ void setTestDcWastegateConfiguration() {
 void setTestVVTEngineConfiguration() {
 	setCrankOperationMode();
 
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 3;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
@@ -93,7 +93,7 @@ void setTestEngineIssue366both() {
 	engineConfiguration->trigger.customTotalToothCount = 2;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
 }
 
 void setTestEngineIssue366rise() {
@@ -104,7 +104,7 @@ void setTestEngineIssue366rise() {
 #ifdef HARDWARE_CI
 void setProteusAnalogPwmTest() {
 	// lowest cpu trigger possible
-	engineConfiguration->trigger.type = TT_ONE;
+	engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
 
 	// Disable trigger stim
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned;

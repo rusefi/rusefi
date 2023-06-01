@@ -310,8 +310,9 @@ typedef enum __attribute__ ((__packed__)) {
 
 /**
  * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
+ * TriggerProcessor.java has this "trigger_type_e" name hard-coded!
  */
-typedef enum {
+enum class trigger_type_e : uint32_t {
 
 	TT_TOOTHED_WHEEL = 0,
 	TT_FORD_ASPIRE = 1,
@@ -439,7 +440,7 @@ typedef enum {
     // java code generator handles this value in a special way
     // also looks like 2 enums are either 1 byte or 4 bytes
 	Force_4_bytes_size_trigger_type = 70000,
-} trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
+};
 
 typedef enum {
     TS_14_0 = 0,

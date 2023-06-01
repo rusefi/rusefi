@@ -70,12 +70,12 @@ operation_mode_e lookupOperationMode() {
 // this is related to 'knownOperationMode' flag
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 	switch (type) {
-		case TT_TOOTHED_WHEEL:
-		case TT_ONE:
-		case TT_3_1_CAM:
-		case TT_36_2_2_2:	// TODO: should this one be in this list?
-		case TT_TOOTHED_WHEEL_60_2:
-		case TT_TOOTHED_WHEEL_36_1:
+		case trigger_type_e::TT_TOOTHED_WHEEL:
+		case trigger_type_e::TT_ONE:
+		case trigger_type_e::TT_3_1_CAM:
+		case trigger_type_e::TT_36_2_2_2:	// TODO: should this one be in this list?
+		case trigger_type_e::TT_TOOTHED_WHEEL_60_2:
+		case trigger_type_e::TT_TOOTHED_WHEEL_36_1:
 			// These modes could be either cam or crank speed
 			return false;
 		default:

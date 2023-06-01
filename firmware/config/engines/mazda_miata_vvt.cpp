@@ -251,7 +251,7 @@ static void setCommonMazdaNB() {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	// Trigger
-	engineConfiguration->trigger.type = TT_MIATA_VVT;
+	engineConfiguration->trigger.type = trigger_type_e::TT_MIATA_VVT;
 	engineConfiguration->vvtMode[0] = VVT_MIATA_NB;
 	engineConfiguration->vvtOffsets[0] = 98;
 
@@ -644,7 +644,7 @@ void setMiataNB2_Proteus_TCU() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->vehicleName, "TCU test");
 
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 10;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 
@@ -778,7 +778,7 @@ void setMiataNB2_Hellen72() {
 void setMiataNB2_Hellen72_36() {
 	setMiataNB2_Hellen72();
 
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_36_1;
 	engineConfiguration->globalTriggerAngleOffset = 76;
 }
 

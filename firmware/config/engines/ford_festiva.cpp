@@ -66,7 +66,7 @@ static const uint8_t racingFestivaVeTable[16][16] = {
 void setFordEscortGt() {
 	common079721_2351();
 
-	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
+	engineConfiguration->trigger.type = trigger_type_e::TT_MAZDA_DOHC_1_4;
 
 	setDensoTODO(config);
 

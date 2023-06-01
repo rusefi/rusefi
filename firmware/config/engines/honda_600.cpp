@@ -24,7 +24,7 @@ static void setDefaultCustomMaps() {
 
 void setHonda600() {
 
-	engineConfiguration->trigger.type = TT_HONDA_CBR_600;
+	engineConfiguration->trigger.type = trigger_type_e::TT_HONDA_CBR_600;
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	// upside down wiring
