@@ -146,7 +146,7 @@ static TriggerWaveform * getTriggerForEmulation() {
     if (hackVvtSim) {
         static TriggerWaveform mShape;
         trigger_config_s triggerType;
-        triggerType.type = TT_MAZDA_MIATA_NA;
+        triggerType.type = trigger_type_e::TT_MAZDA_MIATA_NA;
         mShape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, triggerType);
         return &mShape;
     }
