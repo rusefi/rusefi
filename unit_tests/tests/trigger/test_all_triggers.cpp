@@ -9,7 +9,7 @@
 //#define TEST_FROM_TRIGGER_ID ((int)TT_UNUSED - 1)
 #define TEST_FROM_TRIGGER_ID 1
 
-#define TEST_TO_TRIGGER_ID TT_UNUSED
+#define TEST_TO_TRIGGER_ID trigger_type_e::TT_UNUSED
 // uncomment to test only one trigger
 //#define TEST_TO_TRIGGER_ID (TEST_FROM_TRIGGER_ID + 1)
 

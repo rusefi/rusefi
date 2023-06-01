@@ -47,7 +47,7 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
 	engineConfiguration->tpsAccelLookback = 2;
 
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 
 
 	Sensor::setMockValue(SensorType::Tps1, 0);

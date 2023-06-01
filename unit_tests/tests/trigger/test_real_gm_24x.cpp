@@ -10,7 +10,7 @@ TEST(crankingGm24x, gmRealCrankingFromFile) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(TT_GM_24x);
+	eth.setTriggerType(trigger_type_e::TT_GM_24x);
 
 	int eventCount = 0;
 	bool gotRpm = false;
