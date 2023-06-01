@@ -15,7 +15,7 @@ void initIfValid(const char* msg, adc_channel_e channel) {
 		return;
 	}
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && HAL_USE_ADC
 /**
 TODO: this code is similar to AdcSubscription::SubscribeSensor, what is the plan? shall we extract helper method or else?
  */
@@ -26,7 +26,7 @@ TODO: this code is similar to AdcSubscription::SubscribeSensor, what is the plan
 	    return;
 	}
 	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
-#endif
+#endif // EFI_PROD_CODE && HAL_USE_ADC
 }
 
 void deInitIfValid(const char* msg, adc_channel_e channel) {
@@ -34,10 +34,10 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 		return;
 	}
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && HAL_USE_ADC
 	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
 	efiSetPadUnused(pin);
-#endif
+#endif // EFI_PROD_CODE && HAL_USE_ADC
 }
 
 static void initOldAnalogInputs() {
