@@ -94,7 +94,6 @@ PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429Z
 PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/usbd_core.c
 PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
 PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
-PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Source/backdoor.c
 PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/usbd_bulk.c
 PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/usbd_conf.c
 
