@@ -16,9 +16,7 @@
 #define DELTA_THRESHOLD_CNT_LOW (GPT_FREQ_FAST / GPT_PERIOD_FAST / 32)		// ~1/32 second?
 #define DELTA_THRESHOLD_CNT_HIGH (GPT_FREQ_FAST / GPT_PERIOD_FAST / 4)		// ~1/4 second?
 
-#if HAL_USE_ADC
 #define triggerVoltsToAdcDivided(volts) (voltsToAdc(volts) / trigAdcState.triggerInputDividerCoefficient)
-#endif // HAL_USE_ADC
 
 // hardware-dependent part
 #if (EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || defined(__DOXYGEN__)
@@ -180,7 +178,7 @@ void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 
 
 void TriggerAdcDetector::init() {
-#if ! EFI_SIMULATOR && HAL_USE_ADC
+#if ! EFI_SIMULATOR
 
 	// todo: move some of these to config
 
@@ -214,7 +212,7 @@ void TriggerAdcDetector::init() {
 	modeSwitchCnt = 0;
 
 	reset();
-#endif // ! EFI_SIMULATOR && HAL_USE_ADC
+#endif // ! EFI_SIMULATOR
 }
 
 void TriggerAdcDetector::reset() {
@@ -237,14 +235,12 @@ void TriggerAdcDetector::reset() {
 }
 
 void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool rise) {
-#if ! EFI_SIMULATOR
+#if !EFI_SIMULATOR && EFI_SHAFT_POSITION_INPUT
 	if (curAdcMode != TRIGGER_ADC_EXTI) {
 		return;
 	}
 
-#if EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 	onTriggerChanged(stamp, isPrimary, rise);
-#endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 
 	if ((stamp - prevStamp) > minDeltaTimeForStableAdcDetectionNt) {
 		switchingCnt++;
@@ -260,14 +256,13 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 		if (switchingTeethCnt++ > 3) {
 			switchingTeethCnt = 0;
 			prevValue = rise ? 1: -1;
-#if EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
+
 			setTriggerAdcMode(TRIGGER_ADC_ADC);
-#endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 		}
 	}
 
 	prevStamp = stamp;
-#endif // ! EFI_SIMULATOR
+#endif // !EFI_SIMULATOR && EFI_SHAFT_POSITION_INPUT
 }
 
 void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t value) {
@@ -392,9 +387,9 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		// we need at least 3 high-signal teeth to be certain!
 		if (switchingTeethCnt++ > 3) {
 			switchingTeethCnt = 0;
-#if HAL_TRIGGER_USE_ADC && HAL_USE_ADC
+
 			setTriggerAdcMode(TRIGGER_ADC_EXTI);
-#endif // HAL_TRIGGER_USE_ADC && HAL_USE_ADC
+			
 			// we don't want to loose the signal on return
 			minDeltaThresholdCntPos = DELTA_THRESHOLD_CNT_HIGH;
 			minDeltaThresholdCntNeg = DELTA_THRESHOLD_CNT_HIGH;
