@@ -177,7 +177,7 @@ typedef enum __attribute__ ((__packed__)) {
 	// 84
 	HELLEN_121_NISSAN_4_CYL = 84,
 
-    HELLEN_121_NISSAN_8_CYL = 85,
+	HELLEN_121_NISSAN_8_CYL = 85,
 
 	HELLEN_NB2_36 = 86,
 
@@ -195,14 +195,14 @@ typedef enum __attribute__ ((__packed__)) {
 
 	ET_UNUSED_93 = 93,
 
-    HELLEN_NB1_36 = 94,
+	HELLEN_NB1_36 = 94,
 
 	HELLEN_154_HYUNDAI_COUPE_BK2 = 95,
 
-    WASTEGATE_PROTEUS_TEST = 96,
+	WASTEGATE_PROTEUS_TEST = 96,
 	PROTEUS_MIATA_NA6 = 4,
-    ET_UNUSED_97 = 97,
-    ET_UNUSED_98 = 98,
+	ET_UNUSED_97 = 97,
+	ET_UNUSED_98 = 98,
 	ET_UNUSED_17 = 17,
 	ET_UNUSED_11 = 11,
 	ET_UNUSED_12 = 12,
@@ -220,8 +220,8 @@ typedef enum __attribute__ ((__packed__)) {
 	TEST_101 = 101,
 	TEST_102 = 102,
 
-    // java code generator handles this value in a special way
-    // also looks like 2 enums are either 1 byte or 4 bytes
+	// java code generator handles this value in a special way
+	// also looks like 2 enums are either 1 byte or 4 bytes
 	Force_4_bytes_size_engine_type = 70000,
 } engine_type_e;
 

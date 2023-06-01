@@ -69,12 +69,12 @@ bool AntilagSystemBase::isAntilagConditionMet(int rpm) {
 	ALSMaxThrottleIntentCondition = isALSMaxThrottleIntentCondition();
 	ALSSwitchCondition = isInsideALSSwitchCondition();
 
-	return ALSMinRPMCondition &&
-	    ALSMaxRPMCondition &&
-	    ALSMinCLTCondition &&
-	    ALSMaxCLTCondition &&
-	    ALSMaxThrottleIntentCondition &&
-	    ALSSwitchCondition;
+	return	ALSMinRPMCondition &&
+			ALSMaxRPMCondition &&
+			ALSMinCLTCondition &&
+			ALSMaxCLTCondition &&
+			ALSMaxThrottleIntentCondition &&
+			ALSSwitchCondition;
 }
 
 void AntilagSystemBase::update() {

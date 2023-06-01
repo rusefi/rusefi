@@ -420,12 +420,12 @@ static void setDefaultEngineConfiguration() {
 	setDefaultEtbBiasCurve();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_BOOST_CONTROL
-    setDefaultBoostParameters();
+	setDefaultBoostParameters();
 #endif
 
-    // OBD-II default rate is 500kbps
-    engineConfiguration->canBaudRate = B500KBPS;
-    engineConfiguration->can2BaudRate = B500KBPS;
+	// OBD-II default rate is 500kbps
+	engineConfiguration->canBaudRate = B500KBPS;
+	engineConfiguration->can2BaudRate = B500KBPS;
 
 	engineConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(config);
@@ -504,7 +504,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->launchRpm = 3000;
 // 	engineConfiguration->launchTimingRetard = 10;
 	engineConfiguration->launchTimingRpmRange = 500;
-    engineConfiguration->launchSpeedThreshold = 30;
+	engineConfiguration->launchSpeedThreshold = 30;
 	engineConfiguration->hardCutRpmRange = 500;
 
 	engineConfiguration->engineSnifferRpmThreshold = 2500;
@@ -978,8 +978,8 @@ void validateConfiguration() {
 		engineConfiguration->adcVcc = 3.3f;
 	}
 	if (engineConfiguration->instantRpmRange == 0) {
-        // todo: extract constant in instant_rpm_calculator.h?
-	    engineConfiguration->instantRpmRange = 90;
+		// todo: extract constant in instant_rpm_calculator.h?
+		engineConfiguration->instantRpmRange = 90;
 	}
 	engine->preCalculate();
 }

@@ -51,13 +51,13 @@ public:
 	DcHardware() : dcMotor(m_disablePin) {}
 
 	void start(bool useTwoWires,
-    			brain_pin_e pinEnable,
-    			brain_pin_e pinDir1,
-    			brain_pin_e pinDir2,
-    			brain_pin_e pinDisable,
-    			bool isInverted,
-    			ExecutorInterface* executor,
-    			int frequency);
+				brain_pin_e pinEnable,
+				brain_pin_e pinDir1,
+				brain_pin_e pinDir2,
+				brain_pin_e pinDisable,
+				bool isInverted,
+				ExecutorInterface* executor,
+				int frequency);
 
 	TwoPinDcMotor dcMotor;
 

@@ -394,17 +394,17 @@ float getBaroCorrection() {
 
 percent_t getFuelALSCorrection(int rpm) {
 #if EFI_ANTILAG_SYSTEM
-        if (engine->antilagController.isAntilagCondition) {
-        	float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
-		    auto AlsFuelAdd = interpolate3d(
+		if (engine->antilagController.isAntilagCondition) {
+			float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
+			auto AlsFuelAdd = interpolate3d(
 			config->ALSFuelAdjustment,
 			config->alsFuelAdjustmentLoadBins, throttleIntent,
 			config->alsFuelAdjustmentrpmBins, rpm
-	    );
-	    return AlsFuelAdd;	
-    } else
+		);
+		return AlsFuelAdd;	
+	} else
 #endif /* EFI_ANTILAG_SYSTEM */
-    {
+	{
 		return 0;
 	}
 }

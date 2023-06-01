@@ -204,12 +204,12 @@ void sendCanVerbose() {
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
 
-	transmitStruct<Status>	    (base + 0, isExt);
-	transmitStruct<Speeds>	    (base + 1, isExt);
-	transmitStruct<PedalAndTps> (base + CAN_PEDAL_TPS_OFFSET, isExt);
+	transmitStruct<Status>		(base + 0, isExt);
+	transmitStruct<Speeds>		(base + 1, isExt);
+	transmitStruct<PedalAndTps>	(base + CAN_PEDAL_TPS_OFFSET, isExt);
 	transmitStruct<Sensors1>	(base + CAN_SENSOR_1_OFFSET, isExt);
 	transmitStruct<Sensors2>	(base + 4, isExt);
-	transmitStruct<Fueling>	    (base + 5, isExt);
+	transmitStruct<Fueling>		(base + 5, isExt);
 	transmitStruct<Fueling2>	(base + 6, isExt);
 	transmitStruct<Fueling3>	(base + 7, isExt);
 	transmitStruct<Cams>		(base + 8, isExt);

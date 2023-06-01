@@ -53,15 +53,15 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	);
 
 #if EFI_ANTILAG_SYSTEM
-    if (engine->antilagController.isAntilagCondition) {
-	    float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
+	if (engine->antilagController.isAntilagCondition) {
+		float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
 		engine->antilagController.timingALSCorrection = interpolate3d(
 			config->ALSTimingRetardTable,
 			config->alsIgnRetardLoadBins, throttleIntent,
 			config->alsIgnRetardrpmBins, rpm
 		);
 		advanceAngle += engine->antilagController.timingALSCorrection;
-    }
+	}
 #endif /* EFI_ANTILAG_SYSTEM */
 
 	// Add any adjustments if configured
@@ -78,7 +78,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	// get advance from the separate table for Idle
 #if EFI_IDLE_CONTROL
 	if (engineConfiguration->useSeparateAdvanceForIdle &&
-	    engine->module<IdleController>()->isIdlingOrTaper()) {
+		engine->module<IdleController>()->isIdlingOrTaper()) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
@@ -91,15 +91,15 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 
 #if EFI_LAUNCH_CONTROL
 	if (engine->launchController.isLaunchCondition && engineConfiguration->enableLaunchRetard) {
-        if (engineConfiguration->launchSmoothRetard) {
-       	    float launchAngle = engineConfiguration->launchTimingRetard;
-	        int launchRpm = engineConfiguration->launchRpm;
-	        int launchRpmWithTimingRange = launchRpm + engineConfiguration->launchTimingRpmRange;
+		if (engineConfiguration->launchSmoothRetard) {
+			float launchAngle = engineConfiguration->launchTimingRetard;
+			int launchRpm = engineConfiguration->launchRpm;
+			int launchRpmWithTimingRange = launchRpm + engineConfiguration->launchTimingRpmRange;
 			 // interpolate timing from rpm at launch triggered to full retard at launch launchRpm + launchTimingRpmRange
 			return interpolateClamped(launchRpm, advanceAngle, launchRpmWithTimingRange, launchAngle, rpm);
 		} else {
 			return engineConfiguration->launchTimingRetard;
-        }
+		}
 	}
 #endif /* EFI_LAUNCH_CONTROL */
 
