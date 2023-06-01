@@ -284,7 +284,6 @@ public class Fields {
 	public static final int engine_type_e_ET_UNUSED_97 = 97;
 	public static final int engine_type_e_ET_UNUSED_98 = 98;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
-	public static final int engine_type_e_Force_4_bytes_size_engine_type = 70000;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
 	public static final int engine_type_e_FORD_ESCORT_GT = 14;
 	public static final int engine_type_e_FORD_INLINE_6_1995 = 7;
@@ -1036,7 +1035,6 @@ public class Fields {
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
 	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 2;
-	public static final int trigger_type_e_Force_4_bytes_size_trigger_type = 70000;
 	public static final int trigger_type_e_TT_12_TOOTH_CRANK = 38;
 	public static final int trigger_type_e_TT_1_16 = 50;
 	public static final int trigger_type_e_TT_2JZ_3_34 = 25;

@@ -81,5 +81,4 @@ public enum trigger_type_e {
 	TT_VVT_TOYOTA_4_1,
 	TT_GM_24x_2,
 	TT_UNUSED,
-	Force_4_bytes_size_trigger_type,
 }
