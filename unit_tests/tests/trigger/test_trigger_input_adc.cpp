@@ -2,6 +2,8 @@
  * @file	test_trigger_input_adc.cpp
  *
  * @date Jul 24, 2021
+ * @author andreika <prometheus.pcb@gmail.com>
+ * @author Andrey Belomutskiy, (c) 2012-2023
  */
 
 #include "pch.h"
@@ -26,24 +28,36 @@
 
 extern TriggerAdcDetector trigAdcState;
 
+static int triggerChangedRisingCnt = 0, triggerChangedFallingCnt = 0;
+
+
 void setTriggerAdcMode(triggerAdcMode_t adcMode) {
 	trigAdcState.curAdcMode = adcMode;
 }
 
 void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
-	printf("*\r\n");
+	if (isRising)
+		triggerChangedRisingCnt++;
+	else
+		triggerChangedFallingCnt++;
+
+	hwHandleShaftSignal(isPrimary ? 0 : 1, isRising, stamp);
 }
 
-static void simulateTrigger(TriggerAdcDetector &trigAdcState, CsvReader &reader, float voltageDiv, float adcMaxVoltage) {
+static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &trigAdcState, CsvReader &reader, float voltageDiv, float adcMaxVoltage) {
 	static const float Vil = 0.3f * adcMaxVoltage;
 	static const float Vih = 0.7f * adcMaxVoltage;
+
+	efitimeus_t startUs = eth.getTimeNowUs();
 
 	int prevLogicValue = -1;
 	while (reader.haveMore()) {
 		double value = 0;
 		double stamp = reader.readTimestampAndValues(&value);
-		efitick_t stampUs = (efitick_t)(stamp * 1'000'000);
-//		printf("--simulateTrigger %lld %f\r\n", stamp, (float)value);
+		efitimeus_t stampUs = (efitick_t)(stamp * 1'000'000) + startUs;
+		eth.setTimeAndInvokeEventsUs(stampUs);
+		efitick_t stampNt = US2NT(stampUs);
+
 		// convert into mcu-adc voltage
 		value = minF(maxF(value / voltageDiv, 0), adcMaxVoltage);
 		if (trigAdcState.curAdcMode == TRIGGER_ADC_EXTI) {
@@ -55,7 +69,7 @@ static void simulateTrigger(TriggerAdcDetector &trigAdcState, CsvReader &reader,
 				if (prevLogicValue != -1) {
 //					printf("--> DIGITAL %d %d\r\n", logicValue, prevLogicValue);
 
-					trigAdcState.digitalCallback(stampUs, true, logicValue > prevLogicValue ? true : false);
+					trigAdcState.digitalCallback(stampNt, true, logicValue > prevLogicValue ? true : false);
 				}
 				prevLogicValue = logicValue;
 			}
@@ -64,14 +78,12 @@ static void simulateTrigger(TriggerAdcDetector &trigAdcState, CsvReader &reader,
 			
 //			printf("--> ANALOG %d\r\n", sampleValue);
 
-			trigAdcState.analogCallback(stampUs, sampleValue);
+			trigAdcState.analogCallback(stampNt, sampleValue);
 		}
 	}
 }
 
-TEST(big, testTriggerInputAdc) {
-	printf("====================================================================================== testTriggerInputAdc\r\n");
-
+static void testOnCsvData(const char *fileName, int finalRpm, int risingCnt, int fallingCnt) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
@@ -82,18 +94,56 @@ TEST(big, testTriggerInputAdc) {
 	// we'll test on 60-2 wheel
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 
+	// we generate the data that way
+	engineConfiguration->invertPrimaryTriggerSignal = true;
+
 	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	ASSERT_EQ(0,  Sensor::getOrZero(SensorType::Rpm)) << "testTriggerInputAdc RPM #1";
+	ASSERT_EQ(0,  Sensor::getOrZero(SensorType::Rpm)) << "testTriggerInputAdc RPM #1 on " << fileName;
 
 	trigAdcState.init();
+
+	// disable weak signal detector for this test
+	trigAdcState.setWeakSignal(false);
+
 	setTriggerAdcMode(TRIGGER_ADC_ADC);
+
+	// reset counters
+	triggerChangedRisingCnt = 0; triggerChangedFallingCnt = 0;
+
+	// skip some time to avoid conflicts with ADC sampling time correction
+	eth.moveTimeForwardUs(NT2US(trigAdcState.stampCorrectionForAdc));
 
 	CsvReader reader(1, 0);
 
-	reader.open("tests/trigger/resources/trigger_adc_1.csv");
-	simulateTrigger(trigAdcState, reader, 2.0f, 3.3f);
+	reader.open(fileName);
+	simulateTrigger(eth, trigAdcState, reader, 2.0f, 3.3f);
 
 	ASSERT_EQ(0,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	ASSERT_EQ(0,  Sensor::getOrZero(SensorType::Rpm)) << "testTriggerInputAdc RPM #2";
+	ASSERT_EQ(risingCnt,  triggerChangedRisingCnt);
+	ASSERT_EQ(fallingCnt,  triggerChangedFallingCnt);
+	ASSERT_NEAR(finalRpm,  Sensor::getOrZero(SensorType::Rpm), 0.5f) << "testTriggerInputAdc RPM #2 on " << fileName;
+}
+
+
+TEST(big, testTriggerInputAdc1) {
+	printf("====================================================================================== testTriggerInputAdc 1\r\n");
+
+	testOnCsvData("tests/trigger/resources/trigger_adc_1.csv", 1524, 74, 73);
+}
+
+
+
+TEST(big, testTriggerInputAdc750) {
+	printf("====================================================================================== testTriggerInputAdc 750\r\n");
+
+	testOnCsvData("tests/trigger/resources/trigger_adc_750.csv", 750, 144, 144);
+}
+
+
+
+TEST(big, testTriggerInputAdc1000) {
+	printf("====================================================================================== testTriggerInputAdc 1000\r\n");
+
+	testOnCsvData("tests/trigger/resources/trigger_adc_1000.csv", 1000, 194, 194);
 }
 
