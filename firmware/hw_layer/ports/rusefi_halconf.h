@@ -51,8 +51,12 @@
 	#define HAL_USE_GPT                 FALSE
 #else
 	// We are not the bootloader, enable stuff!
+	#ifndef HAL_USE_ADC
 	#define HAL_USE_ADC                 TRUE
+	#endif // HAL_USE_ADC
+	#ifndef HAL_USE_GPT
 	#define HAL_USE_GPT                 TRUE
+	#endif // HAL_USE_GPT
 #endif
 
 #define HAL_USE_PAL                 TRUE
