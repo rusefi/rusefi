@@ -70,6 +70,7 @@ jobs:
             alphax-8chan,
             m74_9,
             s105,
+            t-b-g,
             harley81,
             hellen72,
             hellen81,
@@ -140,6 +141,11 @@ jobs:
           - build-target: s105
             folder: config/boards/s105
             ini-file: rusefi_s105.ini
+            skip-rate: 90
+
+          - build-target: t-b-g
+            folder: config/boards/test-build-guards
+            ini-file: rusefi_t-b-g.ini
             skip-rate: 90
 
           - build-target: m74_9
