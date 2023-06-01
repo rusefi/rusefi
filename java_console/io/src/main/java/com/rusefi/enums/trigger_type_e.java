@@ -85,4 +85,5 @@ public enum trigger_type_e {
 	TT_UNUSED_77,
 	TT_UNUSED_78,
 	TT_UNUSED,
+	Force_4_bytes_size_trigger_type,
 }
