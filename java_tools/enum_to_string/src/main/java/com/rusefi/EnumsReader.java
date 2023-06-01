@@ -19,6 +19,9 @@ import java.util.TreeSet;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * this class reads enum definition from a C/C++ header
+ */
 public class EnumsReader {
     private static final Logging log = getLogging(EnumsReader.class);
     private static final String ENUMCLASS_PREFIX = "enumclass";

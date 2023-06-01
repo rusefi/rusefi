@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * produces java enum class from an enum defined in a C/C++ header
+ */
 public class ToJavaEnum {
 
     public static final String FORCE_2_BYTES_SIZE = "Force_2_bytes_size";
