@@ -435,6 +435,10 @@ typedef enum {
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
 	TT_UNUSED = 79, // this is used if we want to iterate over all trigger types
+
+    // java code generator handles this value in a special way
+    // also looks like 2 enums are either 1 byte or 4 bytes
+	Force_4_bytes_size_trigger_type = 70000,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
 
 typedef enum {
