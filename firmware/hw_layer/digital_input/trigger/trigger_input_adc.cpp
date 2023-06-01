@@ -16,7 +16,9 @@
 #define DELTA_THRESHOLD_CNT_LOW (GPT_FREQ_FAST / GPT_PERIOD_FAST / 32)		// ~1/32 second?
 #define DELTA_THRESHOLD_CNT_HIGH (GPT_FREQ_FAST / GPT_PERIOD_FAST / 4)		// ~1/4 second?
 
+#if HAL_USE_ADC
 #define triggerVoltsToAdcDivided(volts) (voltsToAdc(volts) / trigAdcState.triggerInputDividerCoefficient)
+#endif // HAL_USE_ADC
 
 // hardware-dependent part
 #if (EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || defined(__DOXYGEN__)
@@ -71,7 +73,7 @@ void setTriggerAdcMode(triggerAdcMode_t adcMode) {
 	trigAdcState.curAdcMode = adcMode;
 	trigAdcState.modeSwitchCnt++;
 
-	palSetPadMode(triggerInputPort, triggerInputPin, 
+	palSetPadMode(triggerInputPort, triggerInputPin,
 		(adcMode == TRIGGER_ADC_ADC) ? PAL_MODE_INPUT_ANALOG : PAL_MODE_EXTINT);
 }
 
@@ -118,9 +120,9 @@ int adcTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 
 	ioline_t pal_line = PAL_LINE(triggerInputPort, triggerInputPin);
 	efiPrintf("turnOnTriggerInputPin %s l=%d", hwPortname(brainPin), pal_line);
-	
+
 	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
-	
+
 	// ADC mode is default, because we don't know if the wheel is already spinning
 	setTriggerAdcMode(TRIGGER_ADC_ADC);
 
@@ -178,7 +180,7 @@ void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 
 
 void TriggerAdcDetector::init() {
-#if ! EFI_SIMULATOR
+#if ! EFI_SIMULATOR && HAL_USE_ADC
 
 	// todo: move some of these to config
 
@@ -212,7 +214,7 @@ void TriggerAdcDetector::init() {
 	modeSwitchCnt = 0;
 
 	reset();
-#endif // ! EFI_SIMULATOR
+#endif // ! EFI_SIMULATOR && HAL_USE_ADC
 }
 
 void TriggerAdcDetector::reset() {
