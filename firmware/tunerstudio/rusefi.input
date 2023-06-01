@@ -1826,11 +1826,6 @@ menuDialog = main
 #		subMenu = 32Dialog, "3-2 Shift Solenoid Percent by Speed"
 
 	menu = "&Sensors"
-		# Base analog input settings
-		subMenu = otherSensorInputs,		"Misc sensors"
-		subMenu = analogInputSettings,		"Analog input settings"
-		subMenu = std_separator
-
 		# Thermistors
 		subMenu = cltSensor,				"CLT sensor"
 		subMenu = iatSensor,				"IAT sensor"
@@ -1870,6 +1865,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = auxLinearSensors,			"Aux Sensors"
+		subMenu = otherSensorInputs,		"Misc sensors"
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -3051,6 +3047,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Type",									baroSensor_type, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@ || lps25BaroSensorScl != 0 }
 		field = "LPS2x Baro SCL",						lps25BaroSensorScl, { baroSensor_hwChannel == @@ADC_CHANNEL_NONE@@}
 		field = "LPS2x Baro SDA",						lps25BaroSensorSda, { baroSensor_hwChannel == @@ADC_CHANNEL_NONE@@}
+		field = "Use fixed baro corr from MAP",			useFixedBaroCorrFromMap
 
 	dialog = mapCurves, "MAP sampling", yAxis
 		field = "isMapAveragingEnabled",				isMapAveragingEnabled
@@ -3553,14 +3550,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = speedSensorLeft
 		gauge = VSSGauge
 		panel = gearDetection
-
-;			Engine->Other inputs
-	dialog = analogInputSettings, "Analog Input Settings"
-		field = "!ECU reboot needed to apply these settings"
-		field = "ADC vRef voltage",						adcVcc
-		field = "Use fixed baro corr from MAP",		useFixedBaroCorrFromMap
-		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
-
 
 ;			Board->Connection
 	dialog = tsPort, "Calibration Secondary Serial"
@@ -4282,7 +4271,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Secondary TPS maximum",				tpsSecondaryMaximum, {useFordRedundantTps}
 		field = "Ford redundant PPS mode",				useFordRedundantPps
 		field = "Secondary PPS maximum",				ppsSecondaryMaximum, {useFordRedundantPps}
-
+		field = "ADC vRef voltage",						adcVcc
+		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
 		field = "consumeObdSensors",						consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",						artificialTestMisfire
 		field = "Instant Rpm Range",                    instantRpmRange
