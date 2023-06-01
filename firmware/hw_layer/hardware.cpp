@@ -134,7 +134,7 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 	firmwareError(ObdCode::CUSTOM_ERR_UNEXPECTED_SPI, "Unexpected SPI device: %d", spiDevice);
 	return NULL;
 }
-#endif
+#endif // HAL_USE_SPI
 
 #if HAL_USE_ADC
 
@@ -143,7 +143,7 @@ static FastAdcToken hipSampleIndex;
 
 #if HAL_TRIGGER_USE_ADC
 static FastAdcToken triggerSampleIndex;
-#endif
+#endif // HAL_TRIGGER_USE_ADC
 
 extern AdcDevice fastAdc;
 
