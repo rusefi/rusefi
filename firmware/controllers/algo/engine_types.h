@@ -16,7 +16,7 @@
 /**
  * https://github.com/rusefi/rusefi/wiki/Engine-Types
  */
-typedef enum __attribute__ ((__packed__)) {
+enum class engine_type_e : uint32_t {
 	DEFAULT_FRANKENSO = 0,
 
 	MIATA_PROTEUS_TCU = 1,
@@ -232,11 +232,7 @@ typedef enum __attribute__ ((__packed__)) {
 	PROTEUS_NISSAN_VQ35 = 103,
 
 	PROTEUS_HYUNDAI_PB = 104,
-
-    // java code generator handles this value in a special way
-    // also looks like 2 enums are either 1 byte or 4 bytes
-	Force_4_bytes_size_engine_type = 70000,
-} engine_type_e;
+};
 
 /**
  * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
