@@ -307,7 +307,6 @@
 #define engine_type_e_DODGE_RAM 64
 #define engine_type_e_EEPROM_BENCH_ENGINE 61
 #define engine_type_e_ETB_BENCH_ENGINE 58
-#define engine_type_e_Force_4_bytes_size_engine_type 70000
 #define engine_type_e_FORD_ASPIRE_1996 3
 #define engine_type_e_FORD_ESCORT_GT 14
 #define engine_type_e_FORD_INLINE_6_1995 7
