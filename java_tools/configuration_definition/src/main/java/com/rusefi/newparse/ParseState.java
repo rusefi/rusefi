@@ -83,9 +83,6 @@ public class ParseState implements DefinitionsState {
         if (stringValueMap == null)
             return null;
         for (Value value : stringValueMap.values()) {
-            if (value.isForceSize())
-                continue;
-
             if (isNumeric(value.getValue())) {
                 valueNameById.put(value.getIntValue(), value.getName());
             } else {
