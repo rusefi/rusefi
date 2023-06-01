@@ -13,3 +13,15 @@ TEST(LuaNissan, wheelSpeed) {
 
         EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 32.54);
 }
+
+TEST(LuaNissan, rpm) {
+#define realRpmPacket "\ndata = { 0x63, 0x00, 0x00, 0x1B, 0x01, 0xCC, 0x00, 0x70}\n "
+	const char* script = 	TWO_BYTES_LSB	realRpmPacket	R"(
+    	function testFunc()
+    		engineTorque = getTwoBytesLSB(data, 3, 3.15)
+    		return engineTorque
+    	end
+    	)";
+
+        EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 891.45);
+}

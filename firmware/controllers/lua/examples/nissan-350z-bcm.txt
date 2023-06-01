@@ -38,8 +38,14 @@ function arrayToString(arr)
 	return str
 end
 
+function getTwoBytesLSB(data, offset, factor)
+	return (data[offset + 2] * 256 + data[offset + 1]) * factor
+end
+
 function onRpmData(bus, id, dlc, data)
 --    print('onRpmData ' ..arrayToString(data))
+    rpm = getTwoBytesLSB(data, 3, 3.15)
+    print ('RPM ' .. rpm)
 end
 
 function onSpeedData(bus, id, dlc, data)
