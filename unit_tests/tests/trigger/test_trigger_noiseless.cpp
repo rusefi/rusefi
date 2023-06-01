@@ -166,7 +166,7 @@ TEST(trigger, noiselessDecoder) {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	// we'll test on 60-2 wheel
-	eth.setTriggerType(TT_TOOTHED_WHEEL_60_2);
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 
 	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "testNoiselessDecoder RPM";

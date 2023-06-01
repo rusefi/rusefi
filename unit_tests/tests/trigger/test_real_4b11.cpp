@@ -14,7 +14,7 @@ TEST(real4b11, running) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(TT_36_2_1);
+	eth.setTriggerType(trigger_type_e::TT_36_2_1);
 
 	int eventCount = 0;
 	bool gotRpm = false;
@@ -50,7 +50,7 @@ TEST(real4b11, runningDoubledEdge) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(TT_36_2_1);
+	eth.setTriggerType(trigger_type_e::TT_36_2_1);
 
 	int eventCount = 0;
 	bool gotRpm = false;

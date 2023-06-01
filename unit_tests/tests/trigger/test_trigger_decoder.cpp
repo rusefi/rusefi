@@ -48,7 +48,7 @@ TEST(trigger, testSkipped2_0) {
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 2;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
-	eth.setTriggerType(TT_TOOTHED_WHEEL);
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL);
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 }
 
@@ -969,7 +969,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	// this is needed to update injectorLag
 	engine->updateSlowSensors();
 
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 	eth.engine.periodicFastCallback();
 
 	setWholeTimingTable(0);

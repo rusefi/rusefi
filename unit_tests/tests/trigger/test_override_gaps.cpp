@@ -17,7 +17,7 @@ TEST(subaru, overrideGap) {
 	engineConfiguration->triggerGapOverrideFrom[1] = 0.75;
 	engineConfiguration->triggerGapOverrideTo[1] = 1.25;
 
-	eth.setTriggerType(TT_SUBARU_7_WITHOUT_6);
+	eth.setTriggerType(trigger_type_e::TT_SUBARU_7_WITHOUT_6);
 
 	ASSERT_EQ(2, engine->triggerCentral.triggerShape.gapTrackingLength);
 

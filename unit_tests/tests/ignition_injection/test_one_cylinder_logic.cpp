@@ -16,7 +16,7 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 
 	setCrankOperationMode();
 
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 
 	ASSERT_EQ( 0,  engine->executor.size()) << "start";
 

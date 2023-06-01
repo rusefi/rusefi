@@ -13,7 +13,7 @@ static void runRpmTest(bool isTwoStroke, bool isCam, int expected) {
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->twoStroke = isTwoStroke;
 	engineConfiguration->skippedWheelOnCam = isCam;
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 
 	eth.smartFireTriggerEvents2(/*count*/200, /*delay*/ 40);
 	ASSERT_EQ(expected, Sensor::getOrZero(SensorType::Rpm));

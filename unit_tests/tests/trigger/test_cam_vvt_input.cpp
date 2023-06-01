@@ -15,7 +15,7 @@ extern WaveChart waveChart;
 TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 	EngineTestHelper eth(TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 
 	eth.fireTriggerEvents2(/*count*/10, /*duration*/50);
@@ -28,7 +28,7 @@ TEST(trigger, testNoStartUpWarnings) {
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 3;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
-	eth.setTriggerType(TT_TOOTHED_WHEEL);
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL);
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 
 	for (int i = 0;i < 10;i++) {
@@ -86,7 +86,7 @@ TEST(trigger, testCamInput) {
 	setCrankOperationMode();
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffsets[0] = 360;
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 	engineConfiguration->camInputs[0] = Gpio::A10; // we just need to indicate that we have CAM
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";

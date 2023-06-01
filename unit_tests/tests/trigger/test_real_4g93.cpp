@@ -18,7 +18,7 @@ TEST(real4g93, cranking) {
 
 	engineConfiguration->vvtMode[0] = VVT_MITSUBISHI_4G63;
 
-	eth.setTriggerType(TT_MITSU_4G63_CRANK);
+	eth.setTriggerType(trigger_type_e::TT_MITSU_4G63_CRANK);
 
 	bool gotRpm = false;
 	bool gotSync = false;
@@ -78,7 +78,7 @@ TEST(real4g93, crankingOn11) {
 
 	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 
-	eth.setTriggerType(TT_MAZDA_MIATA_NA);
+	eth.setTriggerType(trigger_type_e::TT_MAZDA_MIATA_NA);
 
 	bool gotRpm = false;
 	while (reader.haveMore()) {
@@ -106,7 +106,7 @@ TEST(real4g93, crankingCamOnly) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(TT_MITSU_4G9x_CAM);
+	eth.setTriggerType(trigger_type_e::TT_MITSU_4G9x_CAM);
 
 	bool gotRpm = false;
 	bool gotSync = false;

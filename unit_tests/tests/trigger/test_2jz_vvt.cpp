@@ -11,7 +11,7 @@ TEST(sensors, test2jz) {
 	EngineTestHelper eth(TOYOTA_2JZ_GTE_VVTi);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
-	eth.setTriggerType(TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_ONE);
 
 	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM";
 	for (int i = 0; i < 2;i++) {
