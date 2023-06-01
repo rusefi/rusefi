@@ -137,10 +137,10 @@ expected<uint32_t> TriggerStimulatorHelper::findTriggerSyncPoint(
 	}
 	shape.setShapeDefinitionError(true);
 
-    if (engineConfiguration->overrideTriggerGaps) {
-	    firmwareError(ObdCode::CUSTOM_ERR_CUSTOM_GAPS_BAD, "Your custom trigger gaps are not good.");
+	if (engineConfiguration->overrideTriggerGaps) {
+		firmwareError(ObdCode::CUSTOM_ERR_CUSTOM_GAPS_BAD, "The custom trigger gaps are invalid for the current trigger type.");
 	} else {
-	    firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
+		firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
 	}
 	return unexpected;
 }
