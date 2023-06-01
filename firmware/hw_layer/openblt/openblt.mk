@@ -84,18 +84,17 @@ PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.h
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.h
-PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_core.h
-PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_conf.h
-PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_def.h
+
+# USB support
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_desc.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_desc.h
-PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_ctlreq.h
-PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/usbd_bulk.h
-PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/usbd_core.c
-PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
-PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
-PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/usbd_bulk.c
-PROJ_FILES += $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/usbd_conf.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_conf.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_conf.h
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_bulk.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_bulk.h
+# Common USB lib
+PROJ_FILES += $(wildcard $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/*.c)
+PROJ_FILES += $(wildcard $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Inc/*.h)
 
 # CPU-dependent sources
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
@@ -229,6 +228,8 @@ $(OBJ_PATH)%.o: %.c
 $(OBJ_PATH):
 	@echo AOBJS = $(AOBJS)
 	@echo COBJS = $(COBJS)
+	@echo PROJ_CHDRS = $(PROJ_CHDRS)
+	@echo INC_PATH = $(INC_PATH)
 	@mkdir -p $(OBJ_PATH)
 
 #|--------------------------------------------------------------------------------------|
