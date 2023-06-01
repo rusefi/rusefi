@@ -20,6 +20,8 @@ public:
 	void digitalCallback(efitick_t stamp, bool isPrimary, bool rise);
 	void analogCallback(efitick_t stamp, triggerAdcSample_t value);
 
+	void setWeakSignal(bool isWeak);
+
 public:
 	triggerAdcSample_t adcDefaultThreshold;
 	triggerAdcSample_t adcMinThreshold;
