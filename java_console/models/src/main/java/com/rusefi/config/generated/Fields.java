@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jun 01 01:06:55 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jun 01 04:26:15 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1022,7 +1022,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 2114707638;
+	public static final int SIGNATURE_HASH = 1899591142;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1246,7 +1246,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.06.01.f407-discovery.2114707638";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.06.01.f407-discovery.1899591142";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
@@ -2535,14 +2535,7 @@ public class Fields {
 	public static final Field RPMHARDLIMITHYST = Field.create("RPMHARDLIMITHYST", 3937, FieldType.INT8).setScale(10.0).setBaseOffset(0);
 	public static final Field BENCHTESTOFFTIME = Field.create("BENCHTESTOFFTIME", 3938, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field BOOSTCUTPRESSUREHYST = Field.create("BOOSTCUTPRESSUREHYST", 3940, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field GEARBASEDOPENLOOPBOOSTADDER1 = Field.create("GEARBASEDOPENLOOPBOOSTADDER1", 3941, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field GEARBASEDOPENLOOPBOOSTADDER2 = Field.create("GEARBASEDOPENLOOPBOOSTADDER2", 3942, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field GEARBASEDOPENLOOPBOOSTADDER3 = Field.create("GEARBASEDOPENLOOPBOOSTADDER3", 3943, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field GEARBASEDOPENLOOPBOOSTADDER4 = Field.create("GEARBASEDOPENLOOPBOOSTADDER4", 3944, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field GEARBASEDOPENLOOPBOOSTADDER5 = Field.create("GEARBASEDOPENLOOPBOOSTADDER5", 3945, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field GEARBASEDOPENLOOPBOOSTADDER6 = Field.create("GEARBASEDOPENLOOPBOOSTADDER6", 3946, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field GEARBASEDOPENLOOPBOOSTADDER7 = Field.create("GEARBASEDOPENLOOPBOOSTADDER7", 3947, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field GEARBASEDOPENLOOPBOOSTADDER8 = Field.create("GEARBASEDOPENLOOPBOOSTADDER8", 3948, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field GEARBASEDOPENLOOPBOOSTADDER = Field.create("GEARBASEDOPENLOOPBOOSTADDER", 3941, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3949 = Field.create("ALIGNMENTFILL_AT_3949", 3949, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 3952, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3956, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -4009,14 +4002,7 @@ public class Fields {
 	RPMHARDLIMITHYST,
 	BENCHTESTOFFTIME,
 	BOOSTCUTPRESSUREHYST,
-	GEARBASEDOPENLOOPBOOSTADDER1,
-	GEARBASEDOPENLOOPBOOSTADDER2,
-	GEARBASEDOPENLOOPBOOSTADDER3,
-	GEARBASEDOPENLOOPBOOSTADDER4,
-	GEARBASEDOPENLOOPBOOSTADDER5,
-	GEARBASEDOPENLOOPBOOSTADDER6,
-	GEARBASEDOPENLOOPBOOSTADDER7,
-	GEARBASEDOPENLOOPBOOSTADDER8,
+	GEARBASEDOPENLOOPBOOSTADDER,
 	ALIGNMENTFILL_AT_3949,
 	BENCHTESTCOUNT,
 	MAINUNUSEDEND,
