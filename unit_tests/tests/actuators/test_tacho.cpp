@@ -18,7 +18,7 @@ TEST(Actuators, Tachometer) {
     engineConfiguration->tachPulseDurationAsDutyCycle = true;
 
     // Set predictable trigger settings
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
     engineConfiguration->trigger.customTotalToothCount = 8;
     engineConfiguration->trigger.customSkippedToothCount = 0;
     setCamOperationMode();

@@ -16,7 +16,7 @@ void setHondaK() {
 	engineConfiguration->displacement = 2.4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->engineSyncCam = SC_Exhaust_First;
-	engineConfiguration->trigger.type = TT_HONDA_K_CRANK_12_1;
+	engineConfiguration->trigger.type = trigger_type_e::TT_HONDA_K_CRANK_12_1;
 	int magic = 12; // note that offset and VVT are related
 	engineConfiguration->globalTriggerAngleOffset = 675 - magic;
 

@@ -26,7 +26,7 @@ void setVwAba() {
 
 
 	setCrankOperationMode();
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 
