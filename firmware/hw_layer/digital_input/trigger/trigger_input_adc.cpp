@@ -16,7 +16,9 @@
 #define DELTA_THRESHOLD_CNT_LOW (GPT_FREQ_FAST / GPT_PERIOD_FAST / 32)		// ~1/32 second?
 #define DELTA_THRESHOLD_CNT_HIGH (GPT_FREQ_FAST / GPT_PERIOD_FAST / 4)		// ~1/4 second?
 
+#if HAL_USE_ADC || EFI_UNIT_TEST
 #define triggerVoltsToAdcDivided(volts) (voltsToAdc(volts) / trigAdcState.triggerInputDividerCoefficient)
+#endif // HAL_USE_ADC || EFI_UNIT_TEST
 
 // hardware-dependent part
 #if (EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || defined(__DOXYGEN__)
@@ -182,6 +184,7 @@ void TriggerAdcDetector::init() {
 
 	// todo: move some of these to config
 
+#if HAL_USE_ADC || EFI_UNIT_TEST
 	// 4.7k||5.1k + 4.7k
 	triggerInputDividerCoefficient = 1.52f;	// = analogInputDividerCoefficient
 
@@ -208,6 +211,7 @@ void TriggerAdcDetector::init() {
 	// they should exceed the MCU schmitt trigger thresholds (usually 0.3*Vdd and 0.7*Vdd)
 	switchingThresholdLow = triggerVoltsToAdcDivided(1.0f);  // = 0.2*Vdd (<0.3*Vdd)
 	switchingThresholdHigh = triggerVoltsToAdcDivided(4.0f); // = 0.8*Vdd (>0.7*Vdd)
+#endif // HAL_USE_ADC || EFI_UNIT_TEST
 
 	modeSwitchCnt = 0;
 
@@ -218,6 +222,7 @@ void TriggerAdcDetector::init() {
 void TriggerAdcDetector::reset() {
 	switchingCnt = 0;
 	switchingTeethCnt = 0;
+#if HAL_USE_ADC || EFI_UNIT_TEST
 	// when the strong signal becomes weak, we want to ignore the increased noise
 	// so we create a dead-zone between the pos. and neg. thresholds
 	zeroThreshold = minDeltaThresholdWeakSignal / 2;
@@ -228,10 +233,12 @@ void TriggerAdcDetector::reset() {
 	isSignalWeak = true;
 	integralSum = 0;
 	transitionCooldownCnt = 0;
-	prevValue = 0;	// not set
-	prevStamp = 0;
 	minDeltaThresholdCntPos = 0;
 	minDeltaThresholdCntNeg = 0;
+#endif // HAL_USE_ADC || EFI_UNIT_TEST
+
+	prevValue = 0;	// not set
+	prevStamp = 0;
 }
 
 void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool rise) {
@@ -242,6 +249,7 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 
 	onTriggerChanged(stamp, isPrimary, rise);
 
+#if (HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || EFI_UNIT_TEST
 	if ((stamp - prevStamp) > minDeltaTimeForStableAdcDetectionNt) {
 		switchingCnt++;
 	} else {
@@ -256,17 +264,17 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 		if (switchingTeethCnt++ > 3) {
 			switchingTeethCnt = 0;
 			prevValue = rise ? 1: -1;
-
 			setTriggerAdcMode(TRIGGER_ADC_ADC);
 		}
 	}
+#endif // (HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || EFI_UNIT_TEST
 
 	prevStamp = stamp;
 #endif // !EFI_SIMULATOR && EFI_SHAFT_POSITION_INPUT
 }
 
 void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t value) {
-#if ! EFI_SIMULATOR && EFI_SHAFT_POSITION_INPUT
+#if ! EFI_SIMULATOR && ((HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || EFI_UNIT_TEST)
 	if (curAdcMode != TRIGGER_ADC_ADC) {
 		return;
 	}
@@ -382,6 +390,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		prevValue = transition;
 	}
 
+#ifdef EFI_SHAFT_POSITION_INPUT
 	if (switchingCnt >= analogToDigitalTransitionCnt) {
 		switchingCnt = 0;
 		// we need at least 3 high-signal teeth to be certain!
@@ -406,18 +415,21 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		// we don't see "big teeth" anymore 
 		switchingTeethCnt = 0;
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 	
 	prevStamp = stamp;
-#endif // ! EFI_SIMULATOR && EFI_SHAFT_POSITION_INPUT
+#endif // ! EFI_SIMULATOR && ((HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || EFI_UNIT_TEST)
 }
 
 void TriggerAdcDetector::setWeakSignal(bool isWeak) {
+#if HAL_USE_ADC || EFI_UNIT_TEST
 	isSignalWeak = isWeak;
 	if (!isSignalWeak) {
 		minDeltaThresholdCntPos = minDeltaThresholdCntNeg = DELTA_THRESHOLD_CNT_LOW;
 	} else {
 		minDeltaThresholdCntPos = minDeltaThresholdCntNeg = 0;
 	}
+#endif // HAL_USE_ADC || EFI_UNIT_TEST
 }
 
 triggerAdcMode_t getTriggerAdcMode(void) {
