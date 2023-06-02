@@ -3644,7 +3644,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 ;			Engine->Other inputs
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
-		field = "ADC vRef voltage",						adcVcc
+		field = "ADC vRef voltage",						adcVcc@@if_ts_show_vbatt
 		field = "Use fixed baro corr from MAP",		useFixedBaroCorrFromMap
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
 
