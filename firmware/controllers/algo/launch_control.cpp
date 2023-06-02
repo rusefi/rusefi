@@ -113,7 +113,7 @@ void LaunchControlBase::update() {
 	or it is supposed to be referencing 'launchTimingRpmRange'?
 	         + (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchAdvanceRpmRange : 0)
 */
-	         + engineConfiguration->hardCutRpmRange;
+			+ engineConfiguration->hardCutRpmRange;
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer

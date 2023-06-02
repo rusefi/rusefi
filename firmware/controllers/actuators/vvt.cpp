@@ -159,9 +159,9 @@ void stopVvtControlPins() {
 }
 
 void initVvtActuators() {
-    if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
-        engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
-    }
+	if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
+		engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
+	}
 
 	vvtTable1.init(config->vvtTable1, config->vvtTable1LoadBins,
 			config->vvtTable1RpmBins);
