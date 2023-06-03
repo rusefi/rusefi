@@ -1,7 +1,7 @@
 package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.io.IoStream;
+import com.rusefi.util.HexBinary;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,7 +13,7 @@ public abstract class IsoTpConnector {
     public static void sendStrategy(byte[] bytes, IsoTpConnector connector) {
         log.info("-------sendBytesToCan " + bytes.length + " byte(s):");
 
-        log.info(IoStream.printHexBinary(bytes));
+        log.info(HexBinary.printHexBinary(bytes));
 
 
         // 1 frame

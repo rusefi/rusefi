@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.util.HexBinary;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.can.IsoTpCanDecoder;
 import com.rusefi.io.can.IsoTpConnector;
@@ -54,7 +55,7 @@ public class SocketCANIoStream extends AbstractIoStream {
             log.debug("-------sendIsoTp " + total.length + " byte(s):");
 
         if (log.debugEnabled())
-            log.debug("Sending " + IoStream.printHexBinary(total));
+            log.debug("Sending " + HexBinary.printHexBinary(total));
 
         CanFrame packet = CanFrame.create(Fields.CAN_ECU_SERIAL_RX_ID, FD_NO_FLAGS, total);
         try {

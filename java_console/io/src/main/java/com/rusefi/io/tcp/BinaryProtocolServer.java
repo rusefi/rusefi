@@ -11,7 +11,7 @@ import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.io.IoStream;
+import com.rusefi.util.HexBinary;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.HelloCommand;
@@ -280,7 +280,7 @@ public class BinaryProtocolServer {
         int crc = in.readInt();
         int fromPacket = IoHelper.getCrc32(packet);
         if (crc != fromPacket)
-            throw new IOException("CRC mismatch crc=" + Integer.toString(crc, 16) + " vs packet=" + Integer.toString(fromPacket, 16) + " len=" + packet.length + " data: " + IoStream.printHexBinary(packet));
+            throw new IOException("CRC mismatch crc=" + Integer.toString(crc, 16) + " vs packet=" + Integer.toString(fromPacket, 16) + " len=" + packet.length + " data: " + HexBinary.printHexBinary(packet));
         in.onPacketArrived();
         return new Packet(packet, crc);
     }

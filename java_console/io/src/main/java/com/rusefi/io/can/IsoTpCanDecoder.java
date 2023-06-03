@@ -1,7 +1,7 @@
 package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.io.IoStream;
+import com.rusefi.util.HexBinary;
 
 import java.util.Arrays;
 
@@ -74,7 +74,7 @@ public class IsoTpCanDecoder {
         }
         byte[] bytes = Arrays.copyOfRange(data, dataOffset, dataOffset + numBytesAvailable);
         if (log.debugEnabled())
-            log.debug(numBytesAvailable + " bytes(s) arrived in this packet: " + IoStream.printByteArray(bytes));
+            log.debug(numBytesAvailable + " bytes(s) arrived in this packet: " + HexBinary.printByteArray(bytes));
         return bytes;
     }
 

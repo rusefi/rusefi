@@ -3,6 +3,7 @@ package com.rusefi.io.can;
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.util.HexBinary;
 import com.rusefi.io.IoStream;
 import org.jetbrains.annotations.NotNull;
 
@@ -219,7 +220,7 @@ public class Elm327Connector implements Closeable {
 
     private void sendCanData(byte [] data) {
         if (log.debugEnabled()) {
-            log.debug("sendCanData total  " + IoStream.printByteArray(data));
+            log.debug("sendCanData total  " + HexBinary.printByteArray(data));
         }
     	//log.info("--------sendData offset="+Integer.toString(offset) + " len=" + Integer.toString(len) + "hdr.len=" + Integer.toString(hdr.length));
 

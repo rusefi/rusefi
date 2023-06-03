@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.io.IoStream;
+import com.rusefi.util.HexBinary;
 import com.rusefi.io.can.IsoTpCanDecoder;
 import com.rusefi.io.can.IsoTpConnector;
 import com.rusefi.io.serial.AbstractIoStream;
@@ -76,7 +76,7 @@ public class PCanIoStream extends AbstractIoStream {
             log.debug("-------sendIsoTp " + payLoad.length + " byte(s):");
 
         if (log.debugEnabled())
-            log.debug("Sending " + IoStream.printHexBinary(payLoad));
+            log.debug("Sending " + HexBinary.printHexBinary(payLoad));
 
         TPCANMsg msg = new TPCANMsg(Fields.CAN_ECU_SERIAL_RX_ID, PCAN_MESSAGE_STANDARD.getValue(),
                 (byte) payLoad.length, payLoad);
@@ -140,7 +140,7 @@ public class PCanIoStream extends AbstractIoStream {
 
     private void debugPacket(TPCANMsg rx) {
         if (log.debugEnabled())
-            log.debug("Got [" + rx + "] id=" + String.format("%X", rx.getID()) + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+            log.debug("Got [" + rx + "] id=" + String.format("%X", rx.getID()) + " len=" + rx.getLength() + ": " + HexBinary.printByteArray(rx.getData()));
     }
 
     @Override

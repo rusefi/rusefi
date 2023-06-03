@@ -1,6 +1,6 @@
 package com.rusefi.io.can;
 
-import com.rusefi.io.IoStream;
+import com.rusefi.util.HexBinary;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class IsoTpConnectorTest {
             public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
                 byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
 
-                String packetAsString = IoStream.printHexBinary(Elm327Connector.byteToString(total));
+                String packetAsString = HexBinary.printHexBinary(Elm327Connector.byteToString(total));
                 packets.add(packetAsString);
 
             }
