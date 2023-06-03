@@ -18,9 +18,6 @@ public class IsoTpCanDecoder {
     }
 
     private final static int ISO_TP_FRAME_FLOW_CONTROL = 3;
-    final static int ISO_TP_FRAME_SINGLE = 0;
-    final static int ISO_TP_FRAME_FIRST = 1;
-    final static int ISO_TP_FRAME_CONSECUTIVE = 2;
 
     private final static int FC_ContinueToSend = 0;
 
@@ -33,14 +30,14 @@ public class IsoTpCanDecoder {
         int frameIdx;
         int dataOffset;
         switch (frameType) {
-            case ISO_TP_FRAME_SINGLE:
+            case IsoTpConstants.ISO_TP_FRAME_SINGLE:
                 numBytesAvailable = data[0] & 0xf;
                 dataOffset = 1;
                 this.waitingForNumBytes = 0;
                 if (log.debugEnabled())
                     log.debug("ISO_TP_FRAME_SINGLE " + numBytesAvailable);
                 break;
-            case ISO_TP_FRAME_FIRST:
+            case IsoTpConstants.ISO_TP_FRAME_FIRST:
                 this.waitingForNumBytes = ((data[0] & 0xf) << 8) | data[1];
                 if (log.debugEnabled())
                     log.debug("Total expected: " + waitingForNumBytes);
@@ -50,7 +47,7 @@ public class IsoTpCanDecoder {
                 dataOffset = 2;
                 onTpFirstFrame();
                 break;
-            case ISO_TP_FRAME_CONSECUTIVE:
+            case IsoTpConstants.ISO_TP_FRAME_CONSECUTIVE:
                 frameIdx = data[0] & 0xf;
                 if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
                     throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? waitingForNumBytes=" + waitingForNumBytes + " waitingForFrameIndex=" + waitingForFrameIndex + " frameIdx=" + frameIdx);
