@@ -67,10 +67,10 @@
 #define MRE_IN_ANALOG_VOLT_10 EFI_ADC_4
 
 // 33
-#define MRE_GPOUT_3 Gpio::TLE8888_PIN_22
+#define MRE_GPOUT_3 Gpio::TLE8888_PIN_23
 
 // 34
-#define MRE_GPOUT_2 Gpio::TLE8888_PIN_21
+#define MRE_GPOUT_2 Gpio::TLE8888_PIN_22
 
 // 35
 #define MRE_GPOUT_1 Gpio::TLE8888_PIN_21
