@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 03 05:43:56 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 04 00:33:06 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -111,6 +111,7 @@ public class Fields {
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
 	public static final int CAN_ECU_SERIAL_TX_ID = 0x102;
 	public static final int can_nbc_e_CAN_AIM_DASH = 12;
+	public static final int can_nbc_e_CAN_BUS_BMW_E46 = 4;
 	public static final int can_nbc_e_CAN_BUS_BMW_E90 = 6;
 	public static final int can_nbc_e_CAN_BUS_GENESIS_COUPE = 10;
 	public static final int can_nbc_e_CAN_BUS_Haltech = 7;
@@ -118,7 +119,6 @@ public class Fields {
 	public static final int can_nbc_e_CAN_BUS_MAZDA_RX8 = 3;
 	public static final int can_nbc_e_CAN_BUS_MQB = 8;
 	public static final int can_nbc_e_CAN_BUS_MS_SIMPLE_BROADCAST = 13;
-	public static final int can_nbc_e_CAN_BUS_NBC_BMW = 4;
 	public static final int can_nbc_e_CAN_BUS_NBC_FIAT = 1;
 	public static final int can_nbc_e_CAN_BUS_NBC_NONE = 0;
 	public static final int can_nbc_e_CAN_BUS_NBC_VAG = 2;
@@ -1021,7 +1021,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 693371501;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1244,7 +1243,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.06.03.f407-discovery.693371501";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.06.04.f407-discovery.3877694439";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
