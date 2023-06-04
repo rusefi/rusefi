@@ -2906,8 +2906,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Aux ADC #6",							auxAnalogInputs6
 		field = "Aux ADC #7",							auxAnalogInputs7
 		field = "Aux ADC #8",							auxAnalogInputs8
-		field = "GPS RX",								gps_rx_pin @@if_ts_show_gps
-		field = "GPS TX",								gps_tx_pin @@if_ts_show_gps
 		field = "CAN RX pin",							canRxPin @@if_ts_show_can_pins
 		field = "CAN TX pin",							canTxPin @@if_ts_show_can_pins
 		field = "SPI1 MOSI",							spi1mosiPin, { spi1mosiPin != 0 || is_enabled_spi_1 == 1} @@if_ts_show_spi
@@ -3703,10 +3701,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SD logger rate",						sdCardLogFrequency
 		field = "SD logger mode",						sdTriggerLog
 
-	dialog = gpsReceiver, "GPS Receiver"
-		field = "gps RX",								gps_rx_pin
-		field = "gps TX",								gps_tx_pin
-
 	dialog = tle8888, "TLE8888", yAxis
 		field = "TLE8888 Chip Select",					tle8888_cs @@if_ts_show_spi
 		field = "TLE8888 SPI",							tle8888spiDevice @@if_ts_show_spi
@@ -3720,7 +3714,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = tsPort							@@if_ts_show_tunerstudio_port
 		field = "uartConsoleSerialSpeed",				uartConsoleSerialSpeed
 		panel = auxSerial
-		panel = gpsReceiver							@@if_ts_show_gps
 		field = enableKline, enableKline
 
 	dialog = monitoringSettings, "rusEFI Console Settings"
