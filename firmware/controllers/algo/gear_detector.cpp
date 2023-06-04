@@ -31,7 +31,7 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 	// validate gears
 	for (size_t i = 0; i < gearCount; i++) {
 		if (engineConfiguration->gearRatio[i] <= 0) {
-			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid gear ratio for #%d", i + 1);
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Expecting positive gear ratio for #%d", i + 1);
 			return;
 		}
 	}
