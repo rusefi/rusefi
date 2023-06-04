@@ -1607,7 +1607,7 @@ gaugeCategory = GPPWM Outputs
 	indicator =			{ isIdleClosedLoop },			"Not idling",				"Idling",  white,  black,  green,  black
 	indicator =				{ isIdleCoasting },		"Not coasting",			"Coasting",  white,  black,  green,  black
 	indicator =					{ dfcoActive },  "Not decel fuel cut",	"Decel fuel cut",  white,  black, yellow,  black
-	indicator =				{ tpsAccelActive },		"No TPS accel",  "TPS accel active",  white,  black, yellow,  black
+	indicator =				{ isAboveAccelThreshold },		"No TPS accel",  "TPS accel active",  white,  black, yellow,  black
 	; error codes
 	indicator =					{ isTpsError },				"TPS OK",			"TPS error",	white, black,	red,  black
 
