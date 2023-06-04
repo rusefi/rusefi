@@ -494,7 +494,7 @@ typedef enum __attribute__ ((__packed__)) {
 	CAN_BUS_NBC_FIAT = 1,
 	CAN_BUS_NBC_VAG = 2,
 	CAN_BUS_MAZDA_RX8 = 3,
-	CAN_BUS_NBC_BMW = 4,
+	CAN_BUS_BMW_E46 = 4,
 	CAN_BUS_W202_C180 = 5,
     CAN_BUS_BMW_E90 = 6,
 	CAN_BUS_Haltech = 7,

@@ -120,11 +120,11 @@ static bool cluster_time_set;
 constexpr uint8_t e90_temp_offset = 49;
 
 // todo: those forward declarations are out of overall code style
-void canDashboardBMW(CanCycle cycle);
+void canDashboardBmwE46(CanCycle cycle);
 void canDashboardFiat(CanCycle cycle);
 void canMazdaRX8(CanCycle cycle);
 void canDashboardW202(CanCycle cycle);
-void canDashboardBMWE90(CanCycle cycle);
+void canDashboardBmwE90(CanCycle cycle);
 void canDashboardVagMqb(CanCycle cycle);
 void canDashboardNissanVQ(CanCycle cycle);
 void canDashboardGenesisCoupe(CanCycle cycle);
@@ -137,8 +137,8 @@ void updateDash(CanCycle cycle) {
 	switch (engineConfiguration->canNbcType) {
 	case CAN_BUS_NBC_NONE:
 		break;
-	case CAN_BUS_NBC_BMW:
-		canDashboardBMW(cycle);
+	case CAN_BUS_BMW_E46:
+		canDashboardBmwE46(cycle);
 		break;
 	case CAN_BUS_Haltech:
 		canDashboardHaltech(cycle);
@@ -156,7 +156,7 @@ void updateDash(CanCycle cycle) {
 		canDashboardW202(cycle);
 		break;
 	case CAN_BUS_BMW_E90:
-		canDashboardBMWE90(cycle);
+		canDashboardBmwE90(cycle);
 		break;
 	case CAN_BUS_MQB:
 		canDashboardVagMqb(cycle);
