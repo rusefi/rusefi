@@ -95,9 +95,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
 
-//	engineConfiguration->gps_rx_pin = Gpio::B7;
-//	engineConfiguration->gps_tx_pin = Gpio::B6;
-
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::D1;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::D2;
 
