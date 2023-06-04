@@ -38,6 +38,11 @@ function arrayToString(arr)
 	return str
 end
 
+-- pretty LOL if you ask me: RPM and vehicle speed uses different byte order
+function getTwoBytesMSB(data, offset, factor)
+	return (data[offset + 1] * 256 + data[offset + 2]) * factor
+end
+
 function getTwoBytesLSB(data, offset, factor)
 	return (data[offset + 2] * 256 + data[offset + 1]) * factor
 end
@@ -46,10 +51,15 @@ function onRpmData(bus, id, dlc, data)
 --    print('onRpmData ' ..arrayToString(data))
     rpm = getTwoBytesLSB(data, 3, 3.15)
     print ('RPM ' .. rpm)
+    rpmSensor : set(rpm)
 end
 
 function onSpeedData(bus, id, dlc, data)
 --    print('onSpeedData ' ..arrayToString(data))
+    speed = getTwoBytesMSB(data, 4, 0.01)
+    print ('speed ' .. speed)
+    speedSensor : set(speed)
 end
 
 canRxAdd(1, 0x23D, onRpmData)
+canRxAdd(1, 0x280, onSpeedData)
