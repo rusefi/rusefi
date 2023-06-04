@@ -655,17 +655,12 @@ void proteusBoardTest() {
 }
 #endif // HW_PROTEUS
 
-void mreBCM() {
+void mreSecondaryCan() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 	engineConfiguration->fanPin = Gpio::Unassigned;
-	engineConfiguration->consumeObdSensors = true;
-
-}
-
-void mreSecondaryCan() {
 	engineConfiguration->triggerInputPins[0] = Gpio::Unassigned;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
@@ -707,6 +702,12 @@ function onTick()
 end
 )", efi::size(config->luaScript));
 
+}
+
+void mreBCM() {
+    mreSecondaryCan();
+    // maybe time to kill this feature is pretty soon?
+	engineConfiguration->consumeObdSensors = true;
 }
 
 /**

@@ -4209,7 +4209,7 @@ dialog = tcuControls, "Transmission Settings"
 
 		commandButton = "microRusEFI M111",             cmd_set_engine_type_MRE_M111@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI GDI VAG B6 test", cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets
-		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
+;		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Subaru EJ18",		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
