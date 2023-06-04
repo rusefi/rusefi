@@ -269,9 +269,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->alternatorControl.dFactor = 0.1;
 	engineConfiguration->alternatorControl.periodMs = 10;
 
-	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
-
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
 
 	engineConfiguration->wwaeTau = 1.0f;
