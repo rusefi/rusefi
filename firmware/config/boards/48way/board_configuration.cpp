@@ -63,7 +63,6 @@ void setBoardConfigOverrides() {
 	setStepperConfig();
 
 	// PE3 is error LED, configured in board.mk
-	engineConfiguration->communicationLedPin = Gpio::Unassigned;
 	engineConfiguration->runningLedPin = Gpio::C10;
 	engineConfiguration->warningLedPin = Gpio::Unassigned;
 

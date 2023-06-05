@@ -124,9 +124,6 @@ static void setupDefaultSensorInputs() {
 
 static void setLedPins() {
 	// PE3 is error LED, configured in board.mk
-	engineConfiguration->communicationLedPin = Gpio::Unassigned;
-	engineConfiguration->runningLedPin = Gpio::Unassigned;
-	engineConfiguration->warningLedPin = Gpio::Unassigned;
 }
 
 void setBoardDefaultConfiguration(void) {
