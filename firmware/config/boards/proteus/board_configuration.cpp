@@ -49,11 +49,17 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-static void setLedPins() {
-	// PE3 is error LED, configured in board.mk
-	engineConfiguration->communicationLedPin = Gpio::E4;
-	engineConfiguration->runningLedPin = Gpio::E5;
-	engineConfiguration->warningLedPin = Gpio::E6;
+// PE3 is error LED, configured in board.mk
+Gpio getCommsLedPin() {
+	return Gpio::E4;
+}
+
+Gpio getRunningLedPin() {
+	return Gpio::E5;
+}
+
+Gpio getWarningLedPin() {
+	return Gpio::E6;
 }
 
 static void setupVbatt() {
