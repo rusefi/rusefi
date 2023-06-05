@@ -68,8 +68,20 @@ RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, size_t pi
 	: next(registeredOutputHead)
 	, registrationName(registrationName)
 	, m_pinOffset(static_cast<uint16_t>(pinOffset))
+	, m_hasPinMode(true)
 	, m_pinModeOffset(static_cast<uint16_t>(pinModeOffset))
-	{
+{
+	// adding into head of the list is so easy and since we do not care about order that's what we shall do
+	registeredOutputHead = this;
+}
+
+RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, size_t pinOffset)
+	: next(registeredOutputHead)
+	, registrationName(registrationName)
+	, m_pinOffset(static_cast<uint16_t>(pinOffset))
+	, m_hasPinMode(false)
+	, m_pinModeOffset(-1)
+{
 	// adding into head of the list is so easy and since we do not care about order that's what we shall do
 	registeredOutputHead = this;
 }
@@ -78,10 +90,15 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 #if EFI_PROD_CODE
 	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[m_pinOffset]));
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[m_pinOffset]));
+	bool pinChanged = curPin != newPin;
 
-    pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[m_pinModeOffset]));
-    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
-    return curPin != newPin || curMode != newMode;
+	if (!m_hasPinMode) {
+		return pinChanged;
+	}
+
+	pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[m_pinModeOffset]));
+	pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
+	return pinChanged || curMode != newMode;
 #else
     return true;
 #endif // EFI_PROD_CODE
@@ -89,7 +106,13 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 
 void RegisteredOutputPin::init() {
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[m_pinOffset]));
-    pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
+
+	pin_output_mode_e* newMode;
+	if (m_hasPinMode) {
+		newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
+	} else {
+		newMode = &DEFAULT_OUTPUT;
+	}
 
     if (isPinConfigurationChanged()) {
 		this->initPin(registrationName, newPin, newMode);
