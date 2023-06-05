@@ -142,8 +142,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->stepperEnablePin = Gpio::Unassigned;
 	engineConfiguration->stepperEnablePinMode = OM_DEFAULT;
 
-	engineConfiguration->runningLedPin = Gpio::A13; //Gpio::A13; // yellow LED
-
 	engineConfiguration->triggerInputPins[0] = Gpio::A5;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	engineConfiguration->camInputs[0] = is469 ? Gpio::E9 : Gpio::A6;
@@ -204,3 +202,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->isSdCardEnabled = true;
 }
 
+
+Gpio getRunningLedPin() {
+	return Gpio::A13; //Gpio::A13; // yellow LED
+}

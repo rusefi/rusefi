@@ -84,15 +84,23 @@ static void setStepperConfig() {
 	engineConfiguration->stepperEnablePin = Gpio::F9;
 }
 
+// PE3 is error LED, configured in board.mk
+Gpio getCommsLedPin() {
+	return Gpio::G12;
+}
+
+Gpio getRunningLedPin() {
+	return Gpio::G9;
+}
+
+Gpio getWarningLedPin() {
+	return Gpio::G10;
+}
+
 void setBoardConfigOverrides() {
 	setupVbatt();
 	setEtbConfig();
 	setStepperConfig();
-
-	// PE3 is error LED, configured in board.mk
-	engineConfiguration->communicationLedPin = Gpio::G12;
-	engineConfiguration->runningLedPin = Gpio::G9;
-	engineConfiguration->warningLedPin = Gpio::G10;
 
 	engineConfiguration->clt.config.bias_resistor = 2490;
 	engineConfiguration->iat.config.bias_resistor = 2490;
