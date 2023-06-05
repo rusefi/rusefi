@@ -136,7 +136,6 @@ static void setupSdCard() {
 
 void setBoardConfigOverrides() {
 	setupSdCard();
-	setLedPins();
 	setupVbatt();
 
 	engineConfiguration->clt.config.bias_resistor = PROTEUS_DEFAULT_AT_PULLUP;
