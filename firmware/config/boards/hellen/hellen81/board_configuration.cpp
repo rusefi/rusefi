@@ -31,18 +31,12 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = Gpio::H10;
-#endif /* EFI_COMMUNICATION_PIN */
+Gpio getCommsLedPin() {
+	return Gpio::H10;
+}
 
-	//!!!!!!!!!!!
-	engineConfiguration->runningLedPin = Gpio::Unassigned;
-	//engineConfiguration->runningLedPin = Gpio::H9;  // green
-	
-	engineConfiguration->warningLedPin = Gpio::H11; // yellow
+Gpio getWarningLedPin() {
+	return Gpio::H11;
 }
 
 static void setupVbatt() {
@@ -79,7 +73,6 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides() {
-	setLedPins();
 	setupVbatt();
 
 // Hellen81a uses SPI2 for SD-card

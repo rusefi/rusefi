@@ -39,14 +39,18 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = Gpio::E2; // d23 = blue
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = Gpio::E4;		// d22 = green
-	engineConfiguration->warningLedPin = Gpio::E1;		// d27 = orange or yellow
+Gpio getCommsLedPin() {
+	return Gpio::E2; // d23 = blue
+}
+
+Gpio getRunningLedPin() {
+	// D22 = green
+	return Gpio::E4;
+}
+
+Gpio getWarningLedPin() {
+	// D27 = orange or yellow
+	return Gpio::E1;
 }
 
 static void setupVbatt() {
@@ -132,7 +136,6 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides() {
-	setLedPins();
 	setupVbatt();
 	setupTle8888();
 	setupEtb();

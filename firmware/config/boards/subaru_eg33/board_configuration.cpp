@@ -11,6 +11,14 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 
+Gpio getCommsLedPin() {
+	return Gpio::G6;	/* LD1 - green */
+}
+
+Gpio getRunningLedPin() {
+	return Gpio::G8; /* LD3 - yellow */
+}
+
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
@@ -87,11 +95,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->isDoubleSolenoidIdle = true;
 	engineConfiguration->idle.solenoidPin = Gpio::TLE6240_PIN_11;
 	engineConfiguration->secondSolenoidPin = Gpio::TLE6240_PIN_12;
-
-	engineConfiguration->communicationLedPin = Gpio::G6;	/* LD1 - green */
-	engineConfiguration->runningLedPin = Gpio::G8; /* LD3 - yellow */
-	engineConfiguration->warningLedPin = Gpio::Unassigned; 	/* LD3 - yellow*/
-	//engineConfiguration->unusedErrorPin = LED_ERROR_BRAIN_PIN;	/* LD2 - red */
 
 	/* IF you have BOTH camshaft position sensor and crankshaft position sensor
 	 * camshaft is always trigger#1 input and then crankshaft is trigger#2. */
