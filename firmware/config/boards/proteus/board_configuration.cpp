@@ -132,7 +132,6 @@ static void setupSdCard() {
 
 void setBoardConfigOverrides() {
 	setupSdCard();
-	setLedPins();
 	setupVbatt();
 
 	engineConfiguration->clt.config.bias_resistor = 2700;

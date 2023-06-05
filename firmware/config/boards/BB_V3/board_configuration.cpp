@@ -117,19 +117,11 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->lps25BaroSensorSda = Gpio::Unassigned;
 }
 
-
-static void setLedPins() {
-	// PE3 is error LED, configured in board.mk
-}
-
 void setBoardDefaultConfiguration(void) {
-	
 	setInjectorPins();
 	setIgnitionPins();
 	setupVbatt();	
-	setLedPins();
 
-	
 	//engineConfiguration->sdCardPeriodMs = 50;
 	engineConfiguration->isSdCardEnabled = true;
 
