@@ -97,8 +97,9 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
 }
 
+#include "hellen_leds_144.cpp"
+
 void setBoardConfigOverrides() {
-	setHellen144LedPins();
 	setupVbatt();
 
 	// rev.D uses SPI1 pins for CAN2, but rev.E and later uses SPI1 for SD-card

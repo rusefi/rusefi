@@ -8,21 +8,9 @@ void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
-void setHellen144LedPins() {
-	engineConfiguration->communicationLedPin = H144_LED3;
-	engineConfiguration->runningLedPin = H144_LED2;
-	engineConfiguration->warningLedPin = H144_LED4;
-}
-
 void setHellenCan() {
 	engineConfiguration->canTxPin = Gpio::D1;
 	engineConfiguration->canRxPin = Gpio::D0;
-}
-
-void setHellen176LedPins() {
-	engineConfiguration->communicationLedPin = Gpio::H10;
-	engineConfiguration->runningLedPin = Gpio::H9;  // green
-	engineConfiguration->warningLedPin = Gpio::H11; // yellow
 }
 
 void setHellenMegaEnPin() {

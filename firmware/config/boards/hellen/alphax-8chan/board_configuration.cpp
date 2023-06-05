@@ -148,8 +148,9 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
 
+#include "hellen_leds_144.cpp"
+
 void setBoardConfigOverrides() {
-	setHellen144LedPins();
 	setupVbatt();
 
 	setHellenSdCardSpi2();

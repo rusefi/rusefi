@@ -12,8 +12,6 @@
 
 void hellenWbo();
 
-void setHellen144LedPins();
-void setHellen176LedPins();
 void setHellenMegaEnPin();
 
 void setHellenCan();

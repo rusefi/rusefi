@@ -105,8 +105,9 @@ void boardInitHardware() {
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
 }
 
+#include "hellen_leds_144.cpp"
+
 void setBoardConfigOverrides() {
-	setHellen144LedPins();
 	setupVbatt();
 
 	setHellenSdCardSpi2();

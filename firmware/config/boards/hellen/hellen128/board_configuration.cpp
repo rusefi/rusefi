@@ -130,8 +130,9 @@ static void setHellen128ETBConfig() {
 	}	
 }
 
+#include "hellen_leds_176.cpp"
+
 void setBoardConfigOverrides() {
-	setHellen176LedPins();
 	setupVbatt();
 
 	setHellenSdCardSpi2();

@@ -64,8 +64,9 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
+#include "hellen_leds_176.cpp"
+
 void setBoardConfigOverrides() {
-	setHellen176LedPins();
 	setupVbatt();
 
 	if (engine->engineState.hellenBoardId == -1) {
