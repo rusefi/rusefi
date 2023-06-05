@@ -770,8 +770,6 @@ void triggerInfo(void) {
 		}
 	}
 
-	efiPrintf("trigger error extra LED: %s %s", hwPortname(engineConfiguration->triggerErrorPin),
-			getPin_output_mode_e(engineConfiguration->triggerErrorPinMode));
 	efiPrintf("primary logic input: %s", hwPortname(engineConfiguration->logicAnalyzerPins[0]));
 	efiPrintf("secondary logic input: %s", hwPortname(engineConfiguration->logicAnalyzerPins[1]));
 
