@@ -57,11 +57,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->mapMinBufferLength = 4;
 
-	engineConfiguration->communicationLedPin = Gpio::Unassigned;//GPIOJ_0;
-	engineConfiguration->runningLedPin = Gpio::Unassigned;
-	engineConfiguration->warningLedPin = Gpio::Unassigned;
-	engineConfiguration->triggerErrorPin = Gpio::Unassigned;
-
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13;
 	engineConfiguration->clt.adcChannel = EFI_ADC_26;
 	engineConfiguration->iat.adcChannel = EFI_ADC_27;
