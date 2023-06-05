@@ -97,8 +97,9 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
 }
 
+#include "hellen_leds_144.cpp"
+
 void setBoardConfigOverrides() {
-	setHellen144LedPins();
 	// todo: do we need this conditional on boardId or not really?
 	setHellenMegaEnPin();
 	setupVbatt();

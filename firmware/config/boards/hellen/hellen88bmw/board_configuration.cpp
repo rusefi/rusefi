@@ -69,8 +69,9 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
+#include "hellen_leds_144.cpp"
+
 void setBoardConfigOverrides() {
-	setHellen144LedPins();
 	setupVbatt();
 
     // hellen88bmw uses L6205PD

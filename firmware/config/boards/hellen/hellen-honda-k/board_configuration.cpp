@@ -62,8 +62,9 @@ void onBoardStandBy() {
     hellenBoardStandBy();
 }
 
+#include "hellen_leds_144.cpp"
+
 void setBoardConfigOverrides() {
-	setHellen144LedPins();
 	setHellenMegaEnPin();
 	setupVbatt();
 
