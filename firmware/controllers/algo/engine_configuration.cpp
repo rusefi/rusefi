@@ -250,10 +250,6 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 }
 
 void setDefaultBasePins() {
-	engineConfiguration->warningLedPin = Gpio::D13; // orange LED on discovery
-	engineConfiguration->communicationLedPin = Gpio::D15; // blue LED on discovery
-	engineConfiguration->runningLedPin = Gpio::D12; // green LED on discovery
-
 #if EFI_PROD_CODE
 	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
 	// needed also by bootloader code
