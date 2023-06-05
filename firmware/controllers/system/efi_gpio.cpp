@@ -682,16 +682,12 @@ ioportid_t criticalErrorLedPort;
 ioportmask_t criticalErrorLedPin;
 uint8_t criticalErrorLedState;
 
-#ifndef LED_ERROR_BRAIN_PIN_MODE
-#define LED_ERROR_BRAIN_PIN_MODE OM_DEFAULT
-#endif /* LED_ERROR_BRAIN_PIN_MODE */
-
 #if EFI_PROD_CODE
 static void initErrorLed(Gpio led) {
-	enginePins.errorLedPin.initPin("led: CRITICAL status", led, (LED_ERROR_BRAIN_PIN_MODE));
+	enginePins.errorLedPin.initPin("led: CRITICAL status", led, (LED_PIN_MODE));
 	criticalErrorLedPort = getHwPort("CRITICAL", led);
 	criticalErrorLedPin = getHwPin("CRITICAL", led);
-	criticalErrorLedState = (LED_ERROR_BRAIN_PIN_MODE == OM_INVERTED) ? 0 : 1;
+	criticalErrorLedState = (LED_PIN_MODE == OM_INVERTED) ? 0 : 1;
 }
 #endif /* EFI_PROD_CODE */
 

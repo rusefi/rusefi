@@ -378,9 +378,6 @@
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
 #define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::D14
 #endif
-#ifndef LED_ERROR_BRAIN_PIN_MODE
-#define LED_ERROR_BRAIN_PIN_MODE OM_DEFAULT
-#endif
 
 #ifndef CONFIG_RESET_SWITCH_PORT
 // looks like this feature is not extremely popular, we can try living without it now :)
