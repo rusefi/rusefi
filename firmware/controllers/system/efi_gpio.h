@@ -163,3 +163,7 @@ void printSpiConfig(const char *msg, spi_device_e device);
 brain_pin_e parseBrainPin(const char *str);
 
 extern EnginePins enginePins;
+
+#ifndef LED_PIN_MODE
+#define LED_PIN_MODE OM_DEFAULT
+#endif /* LED_PIN_MODE */
