@@ -13,7 +13,7 @@ GearDetector::~GearDetector() {
 	unregister();
 }
 
-void GearDetector::onConfigurationChange(engine_configuration_s const * /*previousConfig*/) {
+void GearDetector::initGearDetector() {
 	// Compute gear thresholds between gears
 
 	uint8_t gearCount = engineConfiguration->totalGearsCount;
@@ -51,7 +51,17 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 	Register();
 }
 
+void GearDetector::onConfigurationChange(engine_configuration_s const * /*previousConfig*/) {
+    initGearDetector();
+}
+
 void GearDetector::onSlowCallback() {
+    static bool isInitialized = false;
+    if (!isInitialized) {
+        initGearDetector();
+        isInitialized = true;
+    }
+
 	float ratio = computeGearboxRatio();
 	m_gearboxRatio = ratio;
 
