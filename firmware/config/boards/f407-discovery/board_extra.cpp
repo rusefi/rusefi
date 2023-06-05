@@ -26,6 +26,18 @@ static void setCanFrankensoDefaults() {
 	engineConfiguration->canRxPin = Gpio::B12;
 }
 
+Gpio getWarningLedPin() {
+	return Gpio::D13; // orange LED on discovery
+}
+
+Gpio getCommunicationLedPin() {
+	return Gpio::D15; // blue LED on discovery
+}
+
+Gpio getRunningLedPin() {
+	return Gpio::D12; // green LED on discovery
+}
+
 static void setHip9011FrankensoPinout() {
 	/**
 	 * SPI on PB13/14/15
