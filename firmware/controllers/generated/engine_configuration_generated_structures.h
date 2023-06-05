@@ -1389,12 +1389,8 @@ struct engine_configuration_s {
 	// offset 746
 	uint16_t startCrankingDuration;
 
-	// This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	// offset 748
-	Gpio triggerErrorPin;
-
-	// offset 750
-	pin_output_mode_e triggerErrorPinMode;
+	uint8_t unused748[3];
 
 	// offset 751
 	pin_output_mode_e acRelayPinMode;
@@ -1541,13 +1537,13 @@ struct engine_configuration_s {
 	bool verboseCan2 : 1 {};
 
 	// offset 808 bit 29
-	bool unusedBit_289_29 : 1 {};
+	bool unusedBit_288_29 : 1 {};
 
 	// offset 808 bit 30
-	bool unusedBit_289_30 : 1 {};
+	bool unusedBit_288_30 : 1 {};
 
 	// offset 808 bit 31
-	bool unusedBit_289_31 : 1 {};
+	bool unusedBit_288_31 : 1 {};
 
 	// offset 812
 	dc_io etbIo[ETB_COUNT];
@@ -1925,10 +1921,10 @@ struct engine_configuration_s {
 	bool ALSActivateInverted : 1 {};
 
 	// offset 1200 bit 30
-	bool unusedBit_394_30 : 1 {};
+	bool unusedBit_393_30 : 1 {};
 
 	// offset 1200 bit 31
-	bool unusedBit_394_31 : 1 {};
+	bool unusedBit_393_31 : 1 {};
 
 	// count
 	// offset 1204
@@ -2235,88 +2231,88 @@ struct engine_configuration_s {
 	bool injectorFlowAsMassFlow : 1 {};
 
 	// offset 1436 bit 4
-	bool unusedBit_468_4 : 1 {};
+	bool unusedBit_467_4 : 1 {};
 
 	// offset 1436 bit 5
-	bool unusedBit_468_5 : 1 {};
+	bool unusedBit_467_5 : 1 {};
 
 	// offset 1436 bit 6
-	bool unusedBit_468_6 : 1 {};
+	bool unusedBit_467_6 : 1 {};
 
 	// offset 1436 bit 7
-	bool unusedBit_468_7 : 1 {};
+	bool unusedBit_467_7 : 1 {};
 
 	// offset 1436 bit 8
-	bool unusedBit_468_8 : 1 {};
+	bool unusedBit_467_8 : 1 {};
 
 	// offset 1436 bit 9
-	bool unusedBit_468_9 : 1 {};
+	bool unusedBit_467_9 : 1 {};
 
 	// offset 1436 bit 10
-	bool unusedBit_468_10 : 1 {};
+	bool unusedBit_467_10 : 1 {};
 
 	// offset 1436 bit 11
-	bool unusedBit_468_11 : 1 {};
+	bool unusedBit_467_11 : 1 {};
 
 	// offset 1436 bit 12
-	bool unusedBit_468_12 : 1 {};
+	bool unusedBit_467_12 : 1 {};
 
 	// offset 1436 bit 13
-	bool unusedBit_468_13 : 1 {};
+	bool unusedBit_467_13 : 1 {};
 
 	// offset 1436 bit 14
-	bool unusedBit_468_14 : 1 {};
+	bool unusedBit_467_14 : 1 {};
 
 	// offset 1436 bit 15
-	bool unusedBit_468_15 : 1 {};
+	bool unusedBit_467_15 : 1 {};
 
 	// offset 1436 bit 16
-	bool unusedBit_468_16 : 1 {};
+	bool unusedBit_467_16 : 1 {};
 
 	// offset 1436 bit 17
-	bool unusedBit_468_17 : 1 {};
+	bool unusedBit_467_17 : 1 {};
 
 	// offset 1436 bit 18
-	bool unusedBit_468_18 : 1 {};
+	bool unusedBit_467_18 : 1 {};
 
 	// offset 1436 bit 19
-	bool unusedBit_468_19 : 1 {};
+	bool unusedBit_467_19 : 1 {};
 
 	// offset 1436 bit 20
-	bool unusedBit_468_20 : 1 {};
+	bool unusedBit_467_20 : 1 {};
 
 	// offset 1436 bit 21
-	bool unusedBit_468_21 : 1 {};
+	bool unusedBit_467_21 : 1 {};
 
 	// offset 1436 bit 22
-	bool unusedBit_468_22 : 1 {};
+	bool unusedBit_467_22 : 1 {};
 
 	// offset 1436 bit 23
-	bool unusedBit_468_23 : 1 {};
+	bool unusedBit_467_23 : 1 {};
 
 	// offset 1436 bit 24
-	bool unusedBit_468_24 : 1 {};
+	bool unusedBit_467_24 : 1 {};
 
 	// offset 1436 bit 25
-	bool unusedBit_468_25 : 1 {};
+	bool unusedBit_467_25 : 1 {};
 
 	// offset 1436 bit 26
-	bool unusedBit_468_26 : 1 {};
+	bool unusedBit_467_26 : 1 {};
 
 	// offset 1436 bit 27
-	bool unusedBit_468_27 : 1 {};
+	bool unusedBit_467_27 : 1 {};
 
 	// offset 1436 bit 28
-	bool unusedBit_468_28 : 1 {};
+	bool unusedBit_467_28 : 1 {};
 
 	// offset 1436 bit 29
-	bool unusedBit_468_29 : 1 {};
+	bool unusedBit_467_29 : 1 {};
 
 	// offset 1436 bit 30
-	bool unusedBit_468_30 : 1 {};
+	bool unusedBit_467_30 : 1 {};
 
 	// offset 1436 bit 31
-	bool unusedBit_468_31 : 1 {};
+	bool unusedBit_467_31 : 1 {};
 
 	// Time between bench test pulses
 	// ms

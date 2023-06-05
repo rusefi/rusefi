@@ -1181,7 +1181,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.05.f407-discovery.2840886425";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.05.f407-discovery.3488379173";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1372;
@@ -1554,8 +1554,7 @@ public class Fields {
 	public static final Field TPS1SECONDARYMAX = Field.create("TPS1SECONDARYMAX", 742, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ANTILAGRPMTRESHOLD = Field.create("ANTILAGRPMTRESHOLD", 744, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field STARTCRANKINGDURATION = Field.create("STARTCRANKINGDURATION", 746, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 748, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field TRIGGERERRORPINMODE = Field.create("TRIGGERERRORPINMODE", 750, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSED748 = Field.create("UNUSED748", 748, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ACRELAYPINMODE = Field.create("ACRELAYPINMODE", 751, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 752, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final String[] maf_sensor_type_e = {"v0", "v1", "v2", "v3"};
@@ -2911,8 +2910,7 @@ public class Fields {
 	TPS1SECONDARYMAX,
 	ANTILAGRPMTRESHOLD,
 	STARTCRANKINGDURATION,
-	TRIGGERERRORPIN,
-	TRIGGERERRORPINMODE,
+	UNUSED748,
 	ACRELAYPINMODE,
 	ACRELAYPIN,
 	MAFSENSORTYPE,
