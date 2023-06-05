@@ -56,7 +56,6 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 }
 
 void GearDetector::onSlowCallback() {
-    static bool isInitialized = false;
     if (!isInitialized) {
         initGearDetector();
         isInitialized = true;

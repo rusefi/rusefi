@@ -22,6 +22,7 @@ private:
 	float computeGearboxRatio() const;
 	float getDriveshaftRpm() const;
 	void initGearDetector();
+    bool isInitialized = false;
 
 	float m_gearboxRatio = 0;
 	size_t m_currentGear = 0;
