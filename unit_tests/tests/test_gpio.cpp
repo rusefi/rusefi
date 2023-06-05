@@ -11,7 +11,7 @@ TEST(gpio, testPinInitNonInverted) {
 
 	// this should turn it off
 	pin_output_mode_e mode = OM_DEFAULT;
-	dut.initPin("test", Gpio::A6, &mode);
+	dut.initPin("test", Gpio::A6, mode);
 
 	EXPECT_FALSE(efiReadPin(Gpio::A6));
 }
@@ -27,7 +27,7 @@ TEST(gpio, testPinInitInverted) {
 
 	// this should turn it off
 	pin_output_mode_e mode = OM_INVERTED;
-	dut.initPin("test", Gpio::A6, &mode);
+	dut.initPin("test", Gpio::A6, mode);
 
 	EXPECT_TRUE(efiReadPin(Gpio::A6));
 }
@@ -61,7 +61,7 @@ TEST(gpio, pinSetNotInverted) {
 	OutputPin dut;
 
 	pin_output_mode_e mode = OM_DEFAULT;
-	dut.initPin("test", Gpio::A6, &mode);
+	dut.initPin("test", Gpio::A6, mode);
 
 	// Initial state should be logic 0
 	EXPECT_FALSE(efiReadPin(Gpio::A6));
@@ -79,7 +79,7 @@ TEST(gpio, pinSetInverted) {
 	OutputPin dut;
 
 	pin_output_mode_e mode = OM_INVERTED;
-	dut.initPin("test", Gpio::A6, &mode);
+	dut.initPin("test", Gpio::A6, mode);
 
 	// Initial state should be logic 0
 	EXPECT_TRUE(efiReadPin(Gpio::A6));
