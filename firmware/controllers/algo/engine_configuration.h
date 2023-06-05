@@ -63,6 +63,9 @@ void rememberCurrentConfiguration();
 void setBoardDefaultConfiguration(void);
 void setBoardConfigOverrides(void);
 void boardOnConfigurationChange(engine_configuration_s *previousConfiguration);
+Gpio getCommsLedPin();
+Gpio getWarningLedPin();
+Gpio getRunningLedPin();
 
 #if !EFI_UNIT_TEST
 extern persistent_config_container_s persistentState;
