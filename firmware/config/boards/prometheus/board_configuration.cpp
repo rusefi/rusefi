@@ -142,9 +142,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->stepperEnablePin = Gpio::Unassigned;
 	engineConfiguration->stepperEnablePinMode = OM_DEFAULT;
 
-	engineConfiguration->communicationLedPin = Gpio::Unassigned;// Gpio::A13; // yellow LED
 	engineConfiguration->runningLedPin = Gpio::A13; //Gpio::A13; // yellow LED
-	engineConfiguration->warningLedPin = Gpio::Unassigned;
 
 	engineConfiguration->triggerInputPins[0] = Gpio::A5;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
