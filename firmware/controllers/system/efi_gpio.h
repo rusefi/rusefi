@@ -110,7 +110,6 @@ public:
 
 	RegisteredNamedOutputPin tachOut;
 
-	RegisteredOutputPin triggerDecoderErrorPin;
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;
 
