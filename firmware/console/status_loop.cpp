@@ -244,21 +244,15 @@ void updateDevConsoleState() {
 }
 
 __attribute__((weak)) Gpio getCommsLedPin() {
-	// TODO #35, remove the field from engineConfiguration
-	return engineConfiguration->communicationLedPin;
-	//return Gpio::Unassigned;
+	return Gpio::Unassigned;
 }
 
 __attribute__((weak)) Gpio getWarningLedPin() {
-	// TODO #35, remove the field from engineConfiguration
-	return engineConfiguration->warningLedPin;
-	//return Gpio::Unassigned;
+	return Gpio::Unassigned;
 }
 
 __attribute__((weak)) Gpio getRunningLedPin() {
-	// TODO #35, remove the field from engineConfiguration
-	return engineConfiguration->runningLedPin;
-	//return Gpio::Unassigned;
+	return Gpio::Unassigned;
 }
 
 static OutputPin* leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
