@@ -85,10 +85,6 @@ extern WaveChart waveChart;
 
 #include "sensor_chart.h"
 
-#define LED_WARNING_BRAIN_PIN_MODE	LED_PIN_MODE
-#define LED_RUNING_BRAIN_PIN_MODE	LED_PIN_MODE
-#define LED_COMMUNICATION_BRAIN_PIN_MODE	LED_PIN_MODE
-
 int warningEnabled = true;
 
 extern int maxTriggerReentrant;
@@ -248,15 +244,33 @@ void updateDevConsoleState() {
 #endif /* EFI_LOGIC_ANALYZER */
 }
 
-static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
+__attribute__((weak)) Gpio getCommsLedPin() {
+	// TODO #35, remove the field from engineConfiguration
+	return engineConfiguration->communicationLedPin;
+	//return Gpio::Unassigned;
+}
+
+__attribute__((weak)) Gpio getWarningLedPin() {
+	// TODO #35, remove the field from engineConfiguration
+	return engineConfiguration->warningLedPin;
+	//return Gpio::Unassigned;
+}
+
+__attribute__((weak)) Gpio getRunningLedPin() {
+	// TODO #35, remove the field from engineConfiguration
+	return engineConfiguration->runningLedPin;
+	//return Gpio::Unassigned;
+}
+
+static OutputPin* leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds() {
-	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin, LED_COMMUNICATION_BRAIN_PIN_MODE, true);
+	enginePins.communicationLedPin.initPin("led: comm status", getCommsLedPin(), LED_PIN_MODE, true);
 	// checkEnginePin is already initialized by the time we get here
 
-	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin, LED_WARNING_BRAIN_PIN_MODE, true);
-	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin, LED_RUNING_BRAIN_PIN_MODE, true);
+	enginePins.warningLedPin.initPin("led: warning status", getWarningLedPin(), LED_PIN_MODE, true);
+	enginePins.runningLedPin.initPin("led: running status", getRunningLedPin(), LED_PIN_MODE, true);
 }
 
 #if EFI_PROD_CODE
