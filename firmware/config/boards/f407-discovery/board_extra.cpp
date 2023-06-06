@@ -26,6 +26,18 @@ static void setCanFrankensoDefaults() {
 	engineConfiguration->canRxPin = Gpio::B12;
 }
 
+Gpio getWarningLedPin() {
+	return Gpio::D13; // orange LED on discovery
+}
+
+Gpio getCommunicationLedPin() {
+	return Gpio::D15; // blue LED on discovery
+}
+
+Gpio getRunningLedPin() {
+	return Gpio::D12; // green LED on discovery
+}
+
 static void setHip9011FrankensoPinout() {
 	/**
 	 * SPI on PB13/14/15
@@ -94,9 +106,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
 	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
-
-//	engineConfiguration->gps_rx_pin = Gpio::B7;
-//	engineConfiguration->gps_tx_pin = Gpio::B6;
 
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::D1;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::D2;

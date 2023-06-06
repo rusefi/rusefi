@@ -120,68 +120,18 @@ static bool cluster_time_set;
 constexpr uint8_t e90_temp_offset = 49;
 
 // todo: those forward declarations are out of overall code style
-void canDashboardBMW(CanCycle cycle);
 void canDashboardFiat(CanCycle cycle);
 void canMazdaRX8(CanCycle cycle);
 void canDashboardW202(CanCycle cycle);
-void canDashboardBMWE90(CanCycle cycle);
 void canDashboardVagMqb(CanCycle cycle);
 void canDashboardNissanVQ(CanCycle cycle);
 void canDashboardGenesisCoupe(CanCycle cycle);
 void canDashboardAim(CanCycle cycle);
 void canDashboardHaltech(CanCycle cycle);
 
-void updateDash(CanCycle cycle) {
-
-	// Transmit dash data, if enabled
-	switch (engineConfiguration->canNbcType) {
-	case CAN_BUS_NBC_NONE:
-		break;
-	case CAN_BUS_NBC_BMW:
-		canDashboardBMW(cycle);
-		break;
-	case CAN_BUS_Haltech:
-		canDashboardHaltech(cycle);
-		break;
-	case CAN_BUS_NBC_FIAT:
-		canDashboardFiat(cycle);
-		break;
-	case CAN_BUS_NBC_VAG:
-		canDashboardVAG(cycle);
-		break;
-	case CAN_BUS_MAZDA_RX8:
-		canMazdaRX8(cycle);
-		break;
-	case CAN_BUS_W202_C180:
-		canDashboardW202(cycle);
-		break;
-	case CAN_BUS_BMW_E90:
-		canDashboardBMWE90(cycle);
-		break;
-	case CAN_BUS_MQB:
-		canDashboardVagMqb(cycle);
-		break;
-	case CAN_BUS_NISSAN_VQ:
-		canDashboardNissanVQ(cycle);
-		break;
-	case CAN_BUS_GENESIS_COUPE:
-		canDashboardGenesisCoupe(cycle);
-		break;
-	case CAN_AIM_DASH:
-		canDashboardAim(cycle);
-		break;
-	case CAN_BUS_MS_SIMPLE_BROADCAST:
-		canDashboardTS(cycle);
-		break;
-	default:
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
-		break;
-	}
-}
-
 //BMW Dashboard
 //todo: we use 50ms fixed cycle, trace is needed to check for correct period
-void canDashboardBMW(CanCycle cycle) {
+static void canDashboardBmwE46(CanCycle cycle) {
 	
 	if (cycle.isInterval(CI::_50ms)) {
 		{
@@ -430,8 +380,7 @@ void canDashboardVagMqb(CanCycle cycle) {
 	}
 }
 
-void canDashboardBMWE90(CanCycle cycle)
-{
+static void canDashboardBmwE90(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_50ms)) {
 		
@@ -1313,6 +1262,54 @@ void canDashboardAim(CanCycle cycle) {
 	// transmitStruct<Aim5fb>(0x5fb, false);
 	// transmitStruct<Aim5fc>(0x5fc, false);
 	// transmitStruct<Aim5fd>(0x5fd, false);
+}
+
+void updateDash(CanCycle cycle) {
+
+	// Transmit dash data, if enabled
+	switch (engineConfiguration->canNbcType) {
+	case CAN_BUS_NBC_NONE:
+		break;
+	case CAN_BUS_BMW_E46:
+		canDashboardBmwE46(cycle);
+		break;
+	case CAN_BUS_Haltech:
+		canDashboardHaltech(cycle);
+		break;
+	case CAN_BUS_NBC_FIAT:
+		canDashboardFiat(cycle);
+		break;
+	case CAN_BUS_NBC_VAG:
+		canDashboardVAG(cycle);
+		break;
+	case CAN_BUS_MAZDA_RX8:
+		canMazdaRX8(cycle);
+		break;
+	case CAN_BUS_W202_C180:
+		canDashboardW202(cycle);
+		break;
+	case CAN_BUS_BMW_E90:
+		canDashboardBmwE90(cycle);
+		break;
+	case CAN_BUS_MQB:
+		canDashboardVagMqb(cycle);
+		break;
+	case CAN_BUS_NISSAN_VQ:
+		canDashboardNissanVQ(cycle);
+		break;
+	case CAN_BUS_GENESIS_COUPE:
+		canDashboardGenesisCoupe(cycle);
+		break;
+	case CAN_AIM_DASH:
+		canDashboardAim(cycle);
+		break;
+	case CAN_BUS_MS_SIMPLE_BROADCAST:
+		canDashboardTS(cycle);
+		break;
+	default:
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
+		break;
+	}
 }
 
 #endif // EFI_CAN_SUPPORT

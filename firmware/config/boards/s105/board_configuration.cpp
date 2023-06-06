@@ -34,10 +34,7 @@ void setBoardDefaultConfiguration() {
     strcpy(engineConfiguration->engineMake, "UAZ");
     strcpy(engineConfiguration->engineCode, "451");
 
-	// No LEDs on this board so let's toggle. PC14 of LSI did not work for blinking, any better alternatives?
-	engineConfiguration->communicationLedPin = Gpio::Unassigned;
-	engineConfiguration->runningLedPin = Gpio::Unassigned;
-	engineConfiguration->warningLedPin = Gpio::Unassigned;
+	// No LEDs on this board, do we need some unused pin tp toggle? PC14 of LSI did not work for blinking, any better alternatives?
 
     engineConfiguration->malfunctionIndicatorPin = Gpio::E14;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_OPENDRAIN;

@@ -156,32 +156,37 @@ jobs:
           - build-target: harley81
             folder: config/boards/hellen/harley81
             ini-file: rusefi_harley81.ini
-            skip-rate: 90
+            skip-rate: 99
+
+          - build-target: small-can-board
+            folder: config/boards/hellen/small-can-board
+            ini-file: rusefi_small-can-board.ini
+            skip-rate: 99
 
           - build-target: hellen88bmw
             folder: config/boards/hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
-            skip-rate: 90
+            skip-rate: 99
 
           - build-target: hellen88bmw_avr
             folder: config/boards/hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
-            skip-rate: 90
+            skip-rate: 99
 
           - build-target: hellen-nb1
             folder: config/boards/hellen/hellen-nb1
             ini-file: rusefi_hellen-nb1.ini
-            skip-rate: 90
+            skip-rate: 99
 
           - build-target: hellen-gm-e67
             folder: config/boards/hellen/hellen-gm-e67
             ini-file: rusefi_hellen-gm-e67.ini
-            skip-rate: 90
+            skip-rate: 99
 
           - build-target: hellenNA8_96
             folder: config/boards/hellen/hellenNA8_96
             ini-file: rusefi_hellenNA8_96.ini
-            skip-rate: 90
+            skip-rate: 99
 
           - build-target: hellenNA6
             folder: config/boards/hellen/hellen64_miataNA6_94
@@ -196,7 +201,7 @@ jobs:
           - build-target: hellen121vag
             folder: config/boards/hellen/hellen121vag
             ini-file: rusefi_hellen121vag.ini
-            skip-rate: 90
+            skip-rate: 99
 
           - build-target: hellen121nissan
             folder: config/boards/hellen/hellen121nissan

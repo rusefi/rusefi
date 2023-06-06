@@ -433,122 +433,6 @@ void setTle8888TestConfiguration() {
 	engineConfiguration->tpsMax = 799;
 }
 
-/**
- * This configuration is used for MRE board Quality Assurance validation
- * todo: inline
- */
-static void mreBoardOldTest() {
-#if (BOARD_TLE8888_COUNT > 0)
-	engineConfiguration->debugMode = DBG_TLE8888;
-
-	engineConfiguration->triggerSimulatorRpm = 202;
-	// set cranking_rpm 500
-	engineConfiguration->cranking.rpm = 100;
-	// set cranking_dwell 200
-	engineConfiguration->ignitionDwellForCrankingMs = 200;
-	// set cranking_fuel 300
-	engineConfiguration->cranking.baseFuel = 190;
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-
-	// EFI_ADC_1: "23 - AN temp 2"
-	// test harness: Red/Green, 2K PD. expected 2.0v
-	// iat in microrusefi/board_configuration.cpp
-
-	// EFI_ADC_2: "24 - AN temp 3"
-	// test harness: Blue/White, 2K PD. expected 2.0v
-
-
-	// EFI_ADC_10: "27 - AN volt 1"
-	// test harness: Blue/Red, 3.84K PD / 5.3 PU. expected 1.6v
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-
-	// EFI_ADC_14: "32 - AN volt 6"
-	// test harness: Red/White 3.6K PD / 5.2 PU. expected 1.6v
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_14;
-
-
-	// EFI_ADC_4: "28 - AN volt 10"
-	// test harness: Red/Yellow
-	engineConfiguration->afr.hwChannel = EFI_ADC_4;
-
-
-	// EFI_ADC_7: "31 - AN volt 3"
-	// test harness: White/Red
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
-
-
-	//engineConfiguration->baroSensor.hwChannel
-	//engineConfiguration->oilPressure.hwChannel
-	//engineConfiguration->fuelLevelSensor
-
-	// TPS tps1_1AdcChannel EFI_ADC_13
-
-	engineConfiguration->cylindersCount = 10;
-	engineConfiguration->firingOrder = FO_1_10_9_4_3_6_5_8_7_2;
-
-	// red LED #1
-	engineConfiguration->ignitionPins[1 - 1] = Gpio::D4;
-	engineConfiguration->ignitionPins[10 - 1] = Gpio::D3;
-	engineConfiguration->ignitionPins[9 - 1] = Gpio::D6;
-	engineConfiguration->ignitionPins[4 - 1] = Gpio::D7;
-	engineConfiguration->ignitionPins[3 - 1] = Gpio::D1;
-	engineConfiguration->ignitionPins[6 - 1] = Gpio::D2;
-	engineConfiguration->ignitionPins[1] =  Gpio::Unassigned;
-	engineConfiguration->ignitionPins[4] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[6] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[7] = Gpio::Unassigned;
-
-
-	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
-	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
-	engineConfiguration->fanPin = Gpio::Unassigned;
-
-	// fuel pump is useful to test power on/off scenario
-//	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_22;
-
-
-	// LED #1
-	// Gpio::TLE8888_PIN_22: "34 - GP Out 2"
-	engineConfiguration->injectionPins[1 - 1] = Gpio::TLE8888_PIN_22;
-
-	// LED #2
-	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->injectionPins[10 - 1] = MRE_GPOUT_3;
-
-	// Gpio::TLE8888_PIN_1: LED #3 - INJ#2
-	engineConfiguration->injectionPins[9 - 1] = Gpio::TLE8888_PIN_1;
-
-	// Gpio::TLE8888_PIN_2: LED #4 - INJ#1
-	engineConfiguration->injectionPins[4 - 1] = Gpio::TLE8888_PIN_2;
-
-	// Gpio::TLE8888_PIN_3: LED #5 - INJ#3
-	engineConfiguration->injectionPins[3 - 1] = Gpio::TLE8888_PIN_3;
-
-	// Gpio::TLE8888_PIN_4: LED #6 - INJ#4
-	engineConfiguration->injectionPins[6 - 1] = Gpio::TLE8888_PIN_4;
-
-	// LED #7
-	// Gpio::TLE8888_PIN_24: "43 - GP Out 4"
-	engineConfiguration->injectionPins[5 - 1] = Gpio::TLE8888_PIN_24;
-
-	// LED #8
-	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
-	// Gpio::TLE8888_PIN_21: "35 - GP Out 1"
-	engineConfiguration->injectionPins[8 - 1] = Gpio::TLE8888_PIN_21;
-
-	// LED #9
-	// TLE8888 high current low side: IN10
-	// Gpio::TLE8888_PIN_6: "7 - Lowside 1"
-	engineConfiguration->injectionPins[7 - 1] = Gpio::TLE8888_PIN_6;
-
-	// LED #10
-	// TLE8888 high current low side: VVT2 IN9 / OUT5
-	// Gpio::TLE8888_PIN_5: "3 - Lowside 2"
-	engineConfiguration->injectionPins[2 - 1] = Gpio::TLE8888_PIN_5;
-#endif /* BOARD_TLE8888_COUNT */
-}
-
 #if HW_PROTEUS
 /*
  * set engine_type 96
@@ -655,17 +539,12 @@ void proteusBoardTest() {
 }
 #endif // HW_PROTEUS
 
-void mreBCM() {
+void mreSecondaryCan() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 	engineConfiguration->fanPin = Gpio::Unassigned;
-	engineConfiguration->consumeObdSensors = true;
-
-}
-
-void mreSecondaryCan() {
 	engineConfiguration->triggerInputPins[0] = Gpio::Unassigned;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
@@ -709,12 +588,60 @@ end
 
 }
 
+void mreBCM() {
+    mreSecondaryCan();
+    // maybe time to kill this feature is pretty soon?
+	engineConfiguration->consumeObdSensors = true;
+}
+
 /**
  * MRE_BOARD_NEW_TEST
  * set engine_type 31
  */
 void mreBoardNewTest() {
-	mreBoardOldTest();
+#if (BOARD_TLE8888_COUNT > 0)
+	engineConfiguration->debugMode = DBG_TLE8888;
+
+	engineConfiguration->triggerSimulatorRpm = 202;
+	// set cranking_rpm 500
+	engineConfiguration->cranking.rpm = 100;
+	// set cranking_dwell 200
+	engineConfiguration->ignitionDwellForCrankingMs = 200;
+	// set cranking_fuel 300
+	engineConfiguration->cranking.baseFuel = 190;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+
+	// EFI_ADC_1: "23 - AN temp 2"
+	// test harness: Red/Green, 2K PD. expected 2.0v
+	// iat in microrusefi/board_configuration.cpp
+
+	// EFI_ADC_2: "24 - AN temp 3"
+	// test harness: Blue/White, 2K PD. expected 2.0v
+
+
+	// EFI_ADC_10: "27 - AN volt 1"
+	// test harness: Blue/Red, 3.84K PD / 5.3 PU. expected 1.6v
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+
+	// EFI_ADC_14: "32 - AN volt 6"
+	// test harness: Red/White 3.6K PD / 5.2 PU. expected 1.6v
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_14;
+
+	// EFI_ADC_4: "28 - AN volt 10"
+	// test harness: Red/Yellow
+	engineConfiguration->afr.hwChannel = EFI_ADC_4;
+
+	// EFI_ADC_7: "31 - AN volt 3"
+	// test harness: White/Red
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
+
+	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
+	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
+	engineConfiguration->fanPin = Gpio::Unassigned;
+
+
+#endif /* BOARD_TLE8888_COUNT */
 
 	engineConfiguration->cylindersCount = 12;
 	engineConfiguration->firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;

@@ -1,12 +1,13 @@
 #include "pch.h"
 
-void setBoardConfigOverrides() {
-	// PB14 is error LED, configured in board.mk
-	engineConfiguration->communicationLedPin = Gpio::E1;
-	engineConfiguration->runningLedPin = Gpio::B0;
+// PB14 is error LED, configured in board.mk
+// Board only has 3 LEDs, so no warning LED
+Gpio getCommsLedPin() {
+	return Gpio::E1;
+}
 
-	// Board only has 3 LEDs
-	engineConfiguration->warningLedPin = Gpio::Unassigned;
+Gpio getRunningLedPin() {
+	return Gpio::B0;
 }
 
 void preHalInit() {

@@ -220,13 +220,13 @@ void StepDirectionStepper::initialize(brain_pin_e stepPin, brain_pin_e direction
 	setReactionTime(reactionTime);
 
 	this->directionPinMode = directionPinMode;
-	this->directionPin.initPin("Stepper DIR", directionPin, &this->directionPinMode);
+	this->directionPin.initPin("Stepper DIR", directionPin, this->directionPinMode);
 
 	this->stepPinMode = OM_DEFAULT;	// todo: do we need configurable stepPinMode?
-	this->stepPin.initPin("Stepper step", stepPin, &this->stepPinMode);
+	this->stepPin.initPin("Stepper step", stepPin, this->stepPinMode);
 
 	this->enablePinMode = enablePinMode;
-	this->enablePin.initPin("Stepper EN", enablePin, &this->enablePinMode);
+	this->enablePin.initPin("Stepper EN", enablePin, this->enablePinMode);
 
 	// All pins must be 0 for correct hardware startup (e.g. stepper auto-disabling circuit etc.).
 	this->enablePin.setValue(true); // disable stepper

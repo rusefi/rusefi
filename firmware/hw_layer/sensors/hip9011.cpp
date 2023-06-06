@@ -530,8 +530,8 @@ void stopHip9001_pins() {
 }
 
 void startHip9001_pins() {
-	intHold.initPin("hip int/hold", engineConfiguration->hip9011IntHoldPin, &engineConfiguration->hip9011IntHoldPinMode);
-	Cs.initPin("hip CS", engineConfiguration->hip9011CsPin, &engineConfiguration->hip9011CsPinMode);
+	intHold.initPin("hip int/hold", engineConfiguration->hip9011IntHoldPin, engineConfiguration->hip9011IntHoldPinMode);
+	Cs.initPin("hip CS", engineConfiguration->hip9011CsPin, engineConfiguration->hip9011CsPinMode);
 }
 
 void initHip9011() {

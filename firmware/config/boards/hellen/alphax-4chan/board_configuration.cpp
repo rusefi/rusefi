@@ -140,8 +140,9 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
 
+#include "hellen_leds_144.cpp"
+
 void setBoardConfigOverrides() {
-	setHellen144LedPins();
 	setupVbatt();
 	// todo: do we need this conditional on boardId or not really?
 	setHellenMegaEnPin();

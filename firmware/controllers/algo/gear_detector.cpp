@@ -5,16 +5,15 @@ static constexpr float geometricMean(float x, float y) {
 }
 
 GearDetector::GearDetector()
-	: StoredValueSensor(SensorType::DetectedGear, MS2NT(100))
+	: Sensor(SensorType::DetectedGear)
 {
-	Register();
 }
 
 GearDetector::~GearDetector() {
 	unregister();
 }
 
-void GearDetector::onConfigurationChange(engine_configuration_s const * /*previousConfig*/) {
+void GearDetector::initGearDetector() {
 	// Compute gear thresholds between gears
 
 	uint8_t gearCount = engineConfiguration->totalGearsCount;
@@ -32,7 +31,7 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 	// validate gears
 	for (size_t i = 0; i < gearCount; i++) {
 		if (engineConfiguration->gearRatio[i] <= 0) {
-			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid gear ratio for #%d", i + 1);
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Expecting positive gear ratio for #%d", i + 1);
 			return;
 		}
 	}
@@ -48,14 +47,24 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 
 		m_gearThresholds[i] = geometricMean(gearI, gearIplusOne);
 	}
+
+	Register();
+}
+
+void GearDetector::onConfigurationChange(engine_configuration_s const * /*previousConfig*/) {
+    initGearDetector();
 }
 
 void GearDetector::onSlowCallback() {
+    if (!isInitialized) {
+        initGearDetector();
+        isInitialized = true;
+    }
+
 	float ratio = computeGearboxRatio();
 	m_gearboxRatio = ratio;
 
-	auto gear = determineGearFromRatio(ratio);
-	setValidValue(gear, getTimeNowNt());
+	m_currentGear = determineGearFromRatio(ratio);
 }
 
 size_t GearDetector::determineGearFromRatio(float ratio) const {
@@ -134,4 +143,14 @@ float GearDetector::getRpmInGear(size_t gear) const {
 
 float GearDetector::getGearboxRatio() const {
 	return m_gearboxRatio;
+}
+
+SensorResult GearDetector::get() const {
+	return m_currentGear;
+}
+
+void GearDetector::showInfo(const char* sensorName) const {
+	efiPrintf("Sensor \"%s\" is gear detector.", sensorName);
+	efiPrintf("    Gearbox ratio: %.3f", m_gearboxRatio);
+	efiPrintf("    Detected gear: %d", m_currentGear);
 }

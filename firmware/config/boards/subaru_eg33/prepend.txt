@@ -2,7 +2,7 @@
 
 #define ts_show_hip9011 true
 #define ts_show_egt false
-#define ts_show_gps false
+
 #define ts_show_etb_pins true
 #define ts_show_analog_divider false
 #define ts_show_spi true

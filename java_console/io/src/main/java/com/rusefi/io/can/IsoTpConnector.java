@@ -1,7 +1,7 @@
 package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.io.IoStream;
+import com.rusefi.util.HexBinary;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,18 +13,18 @@ public abstract class IsoTpConnector {
     public static void sendStrategy(byte[] bytes, IsoTpConnector connector) {
         log.info("-------sendBytesToCan " + bytes.length + " byte(s):");
 
-        log.info(IoStream.printHexBinary(bytes));
+        log.info(HexBinary.printHexBinary(bytes));
 
 
         // 1 frame
         if (bytes.length <= 7) {
-            connector.sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_SINGLE << 4) | bytes.length, bytes, 0, bytes.length);
+            connector.sendCanFrame((IsoTpConstants.ISO_TP_FRAME_SINGLE << 4) | bytes.length, bytes, 0, bytes.length);
             return;
         }
 
         // multiple frames
         // send the first header frame
-        connector.sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
+        connector.sendCanFrame((IsoTpConstants.ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
         // get a flow control frame
         connector.receiveData();
 
@@ -34,7 +34,7 @@ public abstract class IsoTpConnector {
         while (remaining > 0) {
             int len = Math.min(remaining, 7);
             // send the consecutive frames
-            connector.sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
+            connector.sendCanFrame((IsoTpConstants.ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
             offset += len;
             remaining -= len;
         }

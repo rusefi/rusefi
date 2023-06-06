@@ -49,11 +49,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->clt.config.resistance_2 = 5.0f;
 	engineConfiguration->clt.config.tempC_2 = 120.0f,
 	engineConfiguration->clt.config.bias_resistor = 3300;
-	
-	//engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
-	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = false;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
@@ -61,11 +56,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
 	engineConfiguration->mapMinBufferLength = 4;
-
-	engineConfiguration->communicationLedPin = Gpio::Unassigned;//GPIOJ_0;
-	engineConfiguration->runningLedPin = Gpio::Unassigned;
-	engineConfiguration->warningLedPin = Gpio::Unassigned;
-	engineConfiguration->triggerErrorPin = Gpio::Unassigned;
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13;
 	engineConfiguration->clt.adcChannel = EFI_ADC_26;

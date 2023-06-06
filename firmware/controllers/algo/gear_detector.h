@@ -1,6 +1,6 @@
 #pragma once
 
-class GearDetector : public EngineModule, public StoredValueSensor {
+class GearDetector : public EngineModule, public Sensor {
 public:
 	GearDetector();
 	~GearDetector();
@@ -15,9 +15,14 @@ public:
 
 	float getRpmInGear(size_t gear) const;
 
+	SensorResult get() const;
+	void showInfo(const char* sensorName) const;
+
 private:
 	float computeGearboxRatio() const;
 	float getDriveshaftRpm() const;
+	void initGearDetector();
+    bool isInitialized = false;
 
 	float m_gearboxRatio = 0;
 	size_t m_currentGear = 0;

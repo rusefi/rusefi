@@ -41,12 +41,14 @@ for BOARD in \
    "config/boards/hellen/hellen-gm-e67 hellen-gm-e67" \
    "config/boards/hellen/hellen64_miataNA6_94 hellenNA6" \
    "config/boards/hellen/hellenNA8_96 hellenNA8_96" \
+   "config/boards/hellen/small-can-board small-can-board" \
    "config/boards/microrusefi mre_f7" \
    "config/boards/microrusefi mre_f4" \
    "config/boards/core8 core8" \
    "config/boards/48way 48way" \
    "config/boards/m74_9 m74_9" \
    "config/boards/s105 s105" \
+   "config/boards/test-build-guards t-b-g" \
    "config/boards/frankenso frankenso_na6" \
    "config/boards/prometheus prometheus_469" \
    "config/boards/prometheus prometheus_405" \

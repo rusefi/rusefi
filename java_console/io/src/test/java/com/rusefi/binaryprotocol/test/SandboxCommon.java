@@ -7,6 +7,7 @@ import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.util.HexBinary;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.StreamConnector;
@@ -87,7 +88,7 @@ public class SandboxCommon {
         dataBuffer.waitForBytes("hello", System.currentTimeMillis(), fResponse.length);
         dataBuffer.getData(fResponse);
         if (log.debugEnabled())
-            log.debug(prefix + " Got GetProtocol F response " + IoStream.printByteArray(fResponse));
+            log.debug(prefix + " Got GetProtocol F response " + HexBinary.printByteArray(fResponse));
         if (fResponse[0] != '0' || fResponse[1] != '0' || fResponse[2] != '1')
             throw new IllegalStateException("Unexpected TS_COMMAND_F response " + Arrays.toString(fResponse));
     }

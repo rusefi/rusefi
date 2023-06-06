@@ -5,29 +5,9 @@ void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
-void setHellen144LedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = H144_LED3;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = H144_LED2;
-	engineConfiguration->warningLedPin = H144_LED4;
-}
-
 void setHellenCan() {
 	engineConfiguration->canTxPin = Gpio::D1;
 	engineConfiguration->canRxPin = Gpio::D0;
-}
-
-void setHellen176LedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = Gpio::H10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = Gpio::H9;  // green
-	engineConfiguration->warningLedPin = Gpio::H11; // yellow
 }
 
 void setHellenMegaEnPin() {

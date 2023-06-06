@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat May 13 15:41:57 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jun 04 00:32:14 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -282,6 +282,8 @@ const char *getCan_nbc_e(can_nbc_e value){
 switch(value) {
 case CAN_AIM_DASH:
   return "CAN_AIM_DASH";
+case CAN_BUS_BMW_E46:
+  return "CAN_BUS_BMW_E46";
 case CAN_BUS_BMW_E90:
   return "CAN_BUS_BMW_E90";
 case CAN_BUS_GENESIS_COUPE:
@@ -296,8 +298,6 @@ case CAN_BUS_MQB:
   return "CAN_BUS_MQB";
 case CAN_BUS_MS_SIMPLE_BROADCAST:
   return "CAN_BUS_MS_SIMPLE_BROADCAST";
-case CAN_BUS_NBC_BMW:
-  return "CAN_BUS_NBC_BMW";
 case CAN_BUS_NBC_FIAT:
   return "CAN_BUS_NBC_FIAT";
 case CAN_BUS_NBC_NONE:

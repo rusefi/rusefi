@@ -3,15 +3,13 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/l9779.h"
 
-void setBoardConfigOverrides() {
-	// PB14 is error LED, configured in board.mk
-	// blue, LD2
-	engineConfiguration->communicationLedPin = Gpio::B7;
-	// green, LD1
-	engineConfiguration->runningLedPin = Gpio::B0;
+// PB14 is error LED, configured in board.mk
+Gpio getCommsLedPin() {
+	return Gpio::B7;
+}
 
-	// Board only has 3 LEDs
-	engineConfiguration->warningLedPin = Gpio::Unassigned;
+Gpio getRunningLedPin() {
+	return Gpio::B0;
 }
 
 void preHalInit() {

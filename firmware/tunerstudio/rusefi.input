@@ -272,8 +272,6 @@ enable2ndByteCanID = false
 	requiresPowerCycle = boardUseCanTerminator
 	requiresPowerCycle = lps25BaroSensorScl
 	requiresPowerCycle = lps25BaroSensorSda
-	requiresPowerCycle = warningLedPin
-	requiresPowerCycle = runningLedPin
 	requiresPowerCycle = binarySerialTxPin
 	requiresPowerCycle = binarySerialRxPin
 	requiresPowerCycle = tunerStudioSerialSpeed
@@ -1607,7 +1605,7 @@ gaugeCategory = GPPWM Outputs
 	indicator =			{ isIdleClosedLoop },			"Not idling",				"Idling",  white,  black,  green,  black
 	indicator =				{ isIdleCoasting },		"Not coasting",			"Coasting",  white,  black,  green,  black
 	indicator =					{ dfcoActive },  "Not decel fuel cut",	"Decel fuel cut",  white,  black, yellow,  black
-	indicator =				{ tpsAccelActive },		"No TPS accel",  "TPS accel active",  white,  black, yellow,  black
+	indicator =				{ isAboveAccelThreshold },		"No TPS accel",  "TPS accel active",  white,  black, yellow,  black
 	; error codes
 	indicator =					{ isTpsError },				"TPS OK",			"TPS error",	white, black,	red,  black
 
@@ -2831,8 +2829,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = allPins1_1
 		field = "trigger stimulator output #1",			triggerSimulatorPins1
 		field = "trigger stimulator output #2",			triggerSimulatorPins2
-		field = "Critical Led",							criticalLedPin @@if_ts_show_critical_led
-		field = "Warning Led",							warningLedPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
 
@@ -2906,8 +2902,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Aux ADC #6",							auxAnalogInputs6
 		field = "Aux ADC #7",							auxAnalogInputs7
 		field = "Aux ADC #8",							auxAnalogInputs8
-		field = "GPS RX",								gps_rx_pin @@if_ts_show_gps
-		field = "GPS TX",								gps_tx_pin @@if_ts_show_gps
 		field = "CAN RX pin",							canRxPin @@if_ts_show_can_pins
 		field = "CAN TX pin",							canTxPin @@if_ts_show_can_pins
 		field = "SPI1 MOSI",							spi1mosiPin, { spi1mosiPin != 0 || is_enabled_spi_1 == 1} @@if_ts_show_spi
@@ -2926,9 +2920,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "DRV8860 CS Mode",						drv8860_csPinMode
 		field = "DRV8860 MISO pin",						drv8860_miso
 		field = "DRV8860 SPI",							drv8860spiDevice
-		field = "comm status light",					communicationLedPin
-		field = "running status light",					runningLedPin
-
 
 	dialog = allPins3_1
 		panel = allPinsSensors
@@ -3416,13 +3407,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
         panel = fanSetting, Center
 
 	dialog = statusLeds, "Status LEDs"
-		field = "Critical Led",							criticalLedPin @@if_ts_show_critical_led
-		field = "Running status LED",					runningLedPin
-		field = "TS communication status LED",			communicationLedPin
-		field = "Warning LED",							warningLedPin
 		field = "Trigger error LED",					triggerErrorPin
 		field = "Debug Trigger Sync",					debugTriggerSync
-
 
 	dialog = softwareKnockCfg, "Sense"
 		field = "Enable",				enableSoftwareKnock
@@ -3644,7 +3630,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 ;			Engine->Other inputs
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
-		field = "ADC vRef voltage",						adcVcc
+		field = "ADC vRef voltage",						adcVcc@@if_ts_show_vbatt
 		field = "Use fixed baro corr from MAP",		useFixedBaroCorrFromMap
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
 
@@ -3703,10 +3689,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SD logger rate",						sdCardLogFrequency
 		field = "SD logger mode",						sdTriggerLog
 
-	dialog = gpsReceiver, "GPS Receiver"
-		field = "gps RX",								gps_rx_pin
-		field = "gps TX",								gps_tx_pin
-
 	dialog = tle8888, "TLE8888", yAxis
 		field = "TLE8888 Chip Select",					tle8888_cs @@if_ts_show_spi
 		field = "TLE8888 SPI",							tle8888spiDevice @@if_ts_show_spi
@@ -3720,7 +3702,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = tsPort							@@if_ts_show_tunerstudio_port
 		field = "uartConsoleSerialSpeed",				uartConsoleSerialSpeed
 		panel = auxSerial
-		panel = gpsReceiver							@@if_ts_show_gps
 		field = enableKline, enableKline
 
 	dialog = monitoringSettings, "rusEFI Console Settings"
@@ -4216,7 +4197,7 @@ dialog = tcuControls, "Transmission Settings"
 
 		commandButton = "microRusEFI M111",             cmd_set_engine_type_MRE_M111@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI GDI VAG B6 test", cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets
-		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
+;		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Subaru EJ18",		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 

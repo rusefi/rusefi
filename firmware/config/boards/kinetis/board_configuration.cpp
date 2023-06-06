@@ -48,11 +48,6 @@ void setBoardOverrides() {
 	engineConfiguration->clt.config.resistance_2 = 5.0f;
 	engineConfiguration->clt.config.tempC_2 = 120.0f,
 	engineConfiguration->clt.config.bias_resistor = 3300;
-	
-	//engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
-	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = false;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);

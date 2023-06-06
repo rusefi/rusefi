@@ -44,12 +44,14 @@ public:
 class RegisteredOutputPin : public virtual OutputPin {
 public:
 	RegisteredOutputPin(const char *registrationName, size_t pinOffset, size_t pinModeOffset);
+	RegisteredOutputPin(const char *registrationName, size_t pinOffset);
 	void init();
 	void unregister();
 	RegisteredOutputPin* const next;
 	const char *registrationName;
 private:
 	const uint16_t m_pinOffset;
+	const bool m_hasPinMode;
 	const uint16_t m_pinModeOffset;
 	bool isPinConfigurationChanged();
 };
@@ -161,3 +163,7 @@ void printSpiConfig(const char *msg, spi_device_e device);
 brain_pin_e parseBrainPin(const char *str);
 
 extern EnginePins enginePins;
+
+#ifndef LED_PIN_MODE
+#define LED_PIN_MODE OM_DEFAULT
+#endif /* LED_PIN_MODE */
