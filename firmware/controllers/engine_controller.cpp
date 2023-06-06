@@ -509,6 +509,8 @@ bool validateConfig() {
 		ensureArrayIsAscending("Injection phase load", config->injPhaseLoadBins);
 		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
 
+		ensureArrayIsAscending("Fuel Level Sensor", engineConfiguration->fuelLevelBins);
+
 		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
 		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
 

@@ -451,7 +451,7 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(config->scriptCurve1Bins, 0, 100, 1);
 	setLinearCurve(config->scriptCurve1, 0, 100, 1);
 
-	setLinearCurve(config->scriptCurve2Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve2Bins, 0, 100, /*precision*/1);
 	setLinearCurve(config->scriptCurve2, 30, 170, 1);
 
 	setLinearCurve(config->scriptCurve3Bins, 0, 100, 1);
@@ -459,10 +459,11 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(config->scriptCurve5Bins, 0, 100, 1);
 	setLinearCurve(config->scriptCurve6Bins, 0, 100, 1);
 
-	setLinearCurve(config->alsIgnRetardLoadBins, 2, 10, 1);
+	setLinearCurve(config->alsIgnRetardLoadBins, 2, 10, /*precision*/1);
 	setRpmTableBin(config->alsIgnRetardrpmBins);
-	setLinearCurve(config->alsFuelAdjustmentLoadBins, 2, 10, 1);
+	setLinearCurve(config->alsFuelAdjustmentLoadBins, 2, 10, /*precision*/1);
 	setRpmTableBin(config->alsFuelAdjustmentrpmBins);
+	setLinearCurve(engineConfiguration->fuelLevelBins, 0, 5);
 
 	setDefaultWarmupIdleCorrection();
 
