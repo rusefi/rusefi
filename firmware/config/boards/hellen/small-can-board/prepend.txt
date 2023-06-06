@@ -1,0 +1,11 @@
+#define MAIN_HELP_URL "https://rusefi.com/"
+
+
+
+
+
+#define ts_show_egt false
+
+#define ts_show_etb_pins false
+#define ts_show_analog_divider false
+
