@@ -129,6 +129,7 @@ typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint16_t, uint16_t, uint16_t> map
 
 /**
  * @param precision for example '0.1' for one digit fractional part. Default to 0.01, two digits.
+ * see also: ensureArrayIsAscending
  */
 template<typename TValue, int TSize>
 void setLinearCurve(TValue (&array)[TSize], float from, float to, float precision = 0.01f) {
