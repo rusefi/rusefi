@@ -158,6 +158,11 @@ jobs:
             ini-file: rusefi_harley81.ini
             skip-rate: 99
 
+          - build-target: small-can-board
+            folder: config/boards/hellen/small-can-board
+            ini-file: rusefi_small-can-board.ini
+            skip-rate: 99
+
           - build-target: hellen88bmw
             folder: config/boards/hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
