@@ -1,4 +1,4 @@
-Gpio getCommunicationLedPin() {
+Gpio getCommsLedPin() {
 	return Gpio::H10;  // blue
 }
 
