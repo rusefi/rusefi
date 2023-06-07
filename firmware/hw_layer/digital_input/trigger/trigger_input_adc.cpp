@@ -205,7 +205,7 @@ void TriggerAdcDetector::init() {
 	const triggerAdcSample_t adcDeltaThreshold = triggerVoltsToAdcDivided(0.25f);
 	adcDefaultThreshold = triggerVoltsToAdcDivided(2.5f);	// this corresponds to VREF1 on Hellen boards
 	adcMinThreshold = adcDefaultThreshold - adcDeltaThreshold;
-	adcMaxThreshold = adcDefaultThreshold - adcDeltaThreshold;
+	adcMaxThreshold = adcDefaultThreshold + adcDeltaThreshold;
 
 	// these thresholds allow to switch from ADC mode to EXTI mode, indicating the clamping of the signal
 	// they should exceed the MCU schmitt trigger thresholds (usually 0.3*Vdd and 0.7*Vdd)
