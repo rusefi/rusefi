@@ -32,7 +32,7 @@ HW_LAYER_PORT_CPP = \
 	$(PROJECT_DIR)/hw_layer/adc/mcp3208.cpp
 
 ifeq ($(USE_OPENBLT),yes)
-	HW_LAYER_EMS += \
+	HW_LAYER_PORT += \
 		$(PROJECT_DIR)/hw_layer/openblt/shared_params.c
 endif
 

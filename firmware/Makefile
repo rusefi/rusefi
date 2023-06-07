@@ -238,7 +238,7 @@ CSRC =  check.c \
   $(DEV_SRC) \
   $(BOOTLOADERSRC) \
   ${HW_MASS_STORAGE_SRC_C} \
-  $(HW_LAYER_EMS) \
+  $(HW_LAYER_PORT) \
   $(HW_LAYER_DRIVERS_CORE) \
   $(HW_LAYER_DRIVERS) \
   $(RUSEFI_LIB_C) \
