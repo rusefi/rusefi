@@ -7,7 +7,7 @@ HW_LAYER_INC=	$(PROJECT_DIR)/hw_layer $(PROJECT_DIR)/hw_layer/adc \
 HW_INC = hw_layer/$(CPU_HWLAYER) \
 	$(PROJECT_DIR)/hw_layer/ports
 
-HW_LAYER_EMS_CPP = \
+HW_LAYER_CPP = \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer/microsecond_timer.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/digital_input_exti.cpp \
@@ -32,7 +32,7 @@ HW_LAYER_EMS_CPP = \
 	$(PROJECT_DIR)/hw_layer/adc/mcp3208.cpp
 
 ifeq ($(USE_OPENBLT),yes)
-	HW_LAYER_EMS += \
+	HW_LAYER += \
 		$(PROJECT_DIR)/hw_layer/openblt/shared_params.c
 endif
 

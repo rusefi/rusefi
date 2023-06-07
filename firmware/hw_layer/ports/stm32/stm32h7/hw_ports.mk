@@ -1,10 +1,10 @@
 include $(PROJECT_DIR)/hw_layer/ports/stm32/stm32_common.mk
 
-HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash.c \
-				$(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash_ex.c
+HW_LAYER_PORT += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash.c \
+				 $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash_ex.c
 
-HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/mpu_util.cpp \
-					$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_adc_v4.cpp \
+HW_LAYER_PORT_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/mpu_util.cpp \
+					 $(PROJECT_DIR)/hw_layer/ports/stm32/stm32_adc_v4.cpp \
 
 # This MCU has a cache, align functions to a cache line for maximum cache efficiency
 USE_OPT += -falign-functions=16
