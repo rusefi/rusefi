@@ -174,6 +174,7 @@ include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 CSRC =  $(ALLCSRC) \
 	$(BOARDSRC) \
 	$(DEV_SRC) \
+	$(HW_LAYER) \
 	$(HW_LAYER_PORT) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(FATFSSRC) \
