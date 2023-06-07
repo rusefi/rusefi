@@ -29,7 +29,7 @@ Gpio getWarningLedPin() {
 	return Gpio::D13; // orange LED on discovery
 }
 
-Gpio getCommunicationLedPin() {
+Gpio getCommsLedPin() {
 	return Gpio::D15; // blue LED on discovery
 }
 
