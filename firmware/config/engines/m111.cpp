@@ -45,6 +45,7 @@ void setM111EngineConfiguration() {
   	engineConfiguration->map.sensor.highValue = 250;
    	engineConfiguration->mapHighValueVoltage = 4.65;
 
+	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
 	engineConfiguration->etb.pFactor = 5.12;
 	engineConfiguration->etb.iFactor = 47;
 	engineConfiguration->etb.dFactor = 0.088;
