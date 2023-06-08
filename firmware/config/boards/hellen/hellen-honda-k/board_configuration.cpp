@@ -59,6 +59,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void onBoardStandBy() {
+    efiPrintf("K: onBoardStandBy");
     hellenBoardStandBy();
 }
 

@@ -10,9 +10,10 @@ void setHellenCan() {
 	engineConfiguration->canRxPin = Gpio::D0;
 }
 
+static OutputPin megaEn;
+
 void setHellenMegaEnPin() {
     static bool initialized = false;
-    static OutputPin megaEn;
     if (!initialized) {
         initialized = true;
 	    megaEn.initPin("mm-EN", H144_GP8); // OUT_PWR_EN
@@ -21,8 +22,10 @@ void setHellenMegaEnPin() {
 }
 
 void hellenBoardStandBy() {
-    //efiPrintf("Hellen StandBy");
-    //todo: see if we need to turn 'megaEn' and pause for a bit to make sure that WBO is off and does not wake main firmware right away
+    // we need to turn 'megaEn' and pause for a bit to make sure that WBO is off and does not wake main firmware right away
+    megaEn.setValue(0);
+    // todo: 200ms is totally random what's the science for this sleep duration?
+    chThdSleepMilliseconds(200);
 }
 
 /**
