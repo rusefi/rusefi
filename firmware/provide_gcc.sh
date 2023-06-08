@@ -28,6 +28,7 @@ if [ ! -f "${TMP_DIR}"/*/bin/arm-none-eabi-ld ] ||\
 	cd "${TMP_DIR}"
 	curl -L -o "${archive}" "${URL}"
 	tar -xaf "${archive}"
+	echo "Cleaning ${archive}"
 	rm "${archive}"
 else
 	echo "Toolkit already present"
@@ -35,4 +36,5 @@ fi
 
 # Create colloquially named link
 cd "$SWD"
+echo "Linking ${TMP_DIR} ${COLLOQUIAL}"
 ln -sf "${TMP_DIR}"/* "${COLLOQUIAL}"
