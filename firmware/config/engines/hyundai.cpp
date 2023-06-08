@@ -32,6 +32,10 @@ void setHyundaiPb() {
    	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
    	// page 98, Fuel System > Engine Control System > Rail Pressure Sensor (RPS) > Specifications
    	engineConfiguration->highPressureFuel.value2 = 20'000;
+	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
+
+	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
+	coolantControl->pin = PROTEUS_LS_5;
 }
 
 void setProteusHyundaiPb() {
