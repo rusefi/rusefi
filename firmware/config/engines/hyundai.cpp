@@ -34,8 +34,10 @@ void setHyundaiPb() {
    	engineConfiguration->highPressureFuel.value2 = 20'000;
 	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
 
+#if HW_PROTEUS
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 	coolantControl->pin = PROTEUS_LS_5;
+#endif // HW_PROTEUS
 }
 
 void setProteusHyundaiPb() {
@@ -48,6 +50,7 @@ void setProteusHyundaiPb() {
 	setPPSInputs(PROTEUS_IN_PPS, PROTEUS_IN_PPS2);
 
 
+// something something input levels are not happy for digital input pin?
 //	engineConfiguration->starterControlPin = PROTEUS_LS_14;
 	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
 	engineConfiguration->startStopButtonMode = PI_DEFAULT;

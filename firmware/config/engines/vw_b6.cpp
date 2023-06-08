@@ -191,7 +191,7 @@ void setProteusVwPassatB6() {
 
     #include "vw_b6.lua"
 
-#endif
+#endif // HW_PROTEUS
 }
 
 /**
