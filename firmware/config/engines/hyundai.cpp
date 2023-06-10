@@ -24,9 +24,7 @@ void setHyundaiPb() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Gamma");
 
-	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
-	engineConfiguration->trigger.customTotalToothCount = 60;
-	engineConfiguration->trigger.customSkippedToothCount = 1;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
 	set201xHyundai();
@@ -55,6 +53,7 @@ void setHyundaiPb() {
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 	coolantControl->pin = PROTEUS_LS_5;
     engineConfiguration->tachOutputPin = PROTEUS_IGN_12;
+    engineConfiguration->hpfpValvePin = PROTEUS_LS_6;
 #endif // HW_PROTEUS
 }
 
