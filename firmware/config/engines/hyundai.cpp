@@ -27,6 +27,8 @@ void setHyundaiPb() {
 
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
+    engineConfiguration->hpfpCamLobes = 4;
+
    	engineConfiguration->highPressureFuel.v1 = 0.5; /* volts */;
    	engineConfiguration->highPressureFuel.value1 = 0;
    	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
@@ -37,6 +39,7 @@ void setHyundaiPb() {
 #if HW_PROTEUS
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 	coolantControl->pin = PROTEUS_LS_5;
+    engineConfiguration->tachOutputPin = PROTEUS_IGN_12;
 #endif // HW_PROTEUS
 }
 
