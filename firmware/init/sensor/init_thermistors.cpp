@@ -35,7 +35,7 @@ static void validateThermistorConfig(const char *msg, thermistor_conf_s& cfg) {
 }
 
 static SensorConverter& configureTempSensorFunction(const char *msg,
-		thermistor_conf_s& cfg, FuncPair& p, bool isLinear) {
+		thermistor_conf_s& cfg, FuncPair& p, bool isLinear, bool isPulldown) {
 	if (isLinear) {
 		p.linear.configure(cfg.resistance_1, cfg.tempC_1, cfg.resistance_2, cfg.tempC_2, -50, 250);
 
@@ -43,7 +43,7 @@ static SensorConverter& configureTempSensorFunction(const char *msg,
 	} else /* sensor is thermistor */ {
 		validateThermistorConfig(msg, cfg);
 
-		p.thermistor.get<resist>().configure(5.0f, cfg.bias_resistor);
+		p.thermistor.get<resist>().configure(5.0f, cfg.bias_resistor, isPulldown);
 		p.thermistor.get<therm>().configure(cfg);
 
 		return p.thermistor;
@@ -54,21 +54,23 @@ static void configTherm(const char *msg,
 		FunctionalSensor &sensor,
 					FuncPair &p,
 					ThermistorConf &config,
-					bool isLinear) {
+					bool isLinear,
+					bool isPulldown) {
 	// nothing to do if no channel
 	if (!isAdcChannelValid(config.adcChannel)) {
 		return;
 	}
 
 	// Configure the conversion function for this sensor
-	sensor.setFunction(configureTempSensorFunction(msg, config.config, p, isLinear));
+	sensor.setFunction(configureTempSensorFunction(msg, config.config, p, isLinear, isPulldown));
 }
 
 static void configureTempSensor(const char *msg,
 								FunctionalSensor &sensor,
 								FuncPair &p,
 								ThermistorConf &config,
-								bool isLinear) {
+								bool isLinear,
+								bool isPulldown = false) {
 	auto channel = config.adcChannel;
 
 	// Only register if we have a sensor
@@ -76,7 +78,7 @@ static void configureTempSensor(const char *msg,
 		return;
 	}
 
-	configTherm(msg, sensor, p, config, isLinear);
+	configTherm(msg, sensor, p, config, isLinear, isPulldown);
 
 	// Register & subscribe
 	AdcSubscription::SubscribeSensor(sensor, channel, 2);
@@ -88,13 +90,15 @@ void initThermistors() {
 						clt,
 						fclt,
 						engineConfiguration->clt,
-						engineConfiguration->useLinearCltSensor);
+						engineConfiguration->useLinearCltSensor,
+						engineConfiguration->cltSensorPulldown);
 
 	configureTempSensor("iat",
 						iat,
 						fiat,
 						engineConfiguration->iat,
-						engineConfiguration->useLinearIatSensor);
+						engineConfiguration->useLinearIatSensor,
+						engineConfiguration->iatSensorPulldown);
 
 	configureTempSensor("aux1",
 						aux1,
