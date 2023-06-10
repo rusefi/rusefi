@@ -9,6 +9,7 @@
 
 #include "hyundai.h"
 #include "proteus_meta.h"
+#include "defaults.h"
 
 static void set201xHyundai() {
 	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
@@ -28,6 +29,9 @@ void setHyundaiPb() {
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
 	set201xHyundai();
+	// Injectors flow 1214 cc/min at 100 bar pressure
+	engineConfiguration->injector.flow = 1214;
+	setGDIFueling();
 
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
 	engineConfiguration->map.sensor.lowValue = 20;
