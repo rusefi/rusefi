@@ -47,7 +47,6 @@ Important note - we now use submodules:
 # Building the Code
 Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
-
 # Release Notes
 
 See [the changelog](firmware/CHANGELOG.md)
