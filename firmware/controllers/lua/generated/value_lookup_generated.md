@@ -109,6 +109,12 @@ Experimental setting that will cause a misfire\nDO NOT ENABLE.
 ### useFordRedundantPps
 On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
+### cltSensorPulldown
+
+
+### iatSensorPulldown
+
+
 ### tpsMin
 Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X
 

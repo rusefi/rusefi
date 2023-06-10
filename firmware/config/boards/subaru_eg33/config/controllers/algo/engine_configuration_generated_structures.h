@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Jun 05 18:43:30 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jun 10 22:34:28 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -743,22 +743,22 @@ struct engine_configuration_s {
 	bool useFordRedundantPps : 1 {};
 	/**
 	offset 120 bit 26 */
-	bool unusedBit_40_26 : 1 {};
+	bool cltSensorPulldown : 1 {};
 	/**
 	offset 120 bit 27 */
-	bool unusedBit_40_27 : 1 {};
+	bool iatSensorPulldown : 1 {};
 	/**
 	offset 120 bit 28 */
-	bool unusedBit_40_28 : 1 {};
+	bool unusedBit_42_28 : 1 {};
 	/**
 	offset 120 bit 29 */
-	bool unusedBit_40_29 : 1 {};
+	bool unusedBit_42_29 : 1 {};
 	/**
 	offset 120 bit 30 */
-	bool unusedBit_40_30 : 1 {};
+	bool unusedBit_42_30 : 1 {};
 	/**
 	offset 120 bit 31 */
-	bool unusedBit_40_31 : 1 {};
+	bool unusedBit_42_31 : 1 {};
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
@@ -5176,4 +5176,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23168);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Jun 05 18:43:30 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jun 10 22:34:28 UTC 2023

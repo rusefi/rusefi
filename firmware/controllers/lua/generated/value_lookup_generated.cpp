@@ -115,6 +115,12 @@ float getConfigValueByName(const char *name) {
 // useFordRedundantPps
 		case -1284359115:
 			return engineConfiguration->useFordRedundantPps;
+// cltSensorPulldown
+		case 1925843479:
+			return engineConfiguration->cltSensorPulldown;
+// iatSensorPulldown
+		case 1570551154:
+			return engineConfiguration->iatSensorPulldown;
 // tpsMin
 		case 513872736:
 			return engineConfiguration->tpsMin;
@@ -1765,6 +1771,16 @@ void setConfigValueByName(const char *name, float value) {
 		case -1284359115:
 	{
 		engineConfiguration->useFordRedundantPps = (int)value;
+		return;
+	}
+		case 1925843479:
+	{
+		engineConfiguration->cltSensorPulldown = (int)value;
+		return;
+	}
+		case 1570551154:
+	{
+		engineConfiguration->iatSensorPulldown = (int)value;
 		return;
 	}
 		case 513872736:
