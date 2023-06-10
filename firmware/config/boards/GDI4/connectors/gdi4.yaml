@@ -97,11 +97,11 @@ pins:
 
   - pin: 114a
     function: Injector Output 1 Negative
-    color: blue
+    color: green
 
   - pin: 115a
     function: Injector Output 6 Negative
-    color: green
+    color: yellow
 
   - pin: 116a
     function: Injector Output 5 Positive
@@ -113,7 +113,7 @@ pins:
 
   - pin: 118a
     function: Injector Output 1 Positive
-    color: blue
+    color: green
 
   - pin: 119a
     function: Injector Output 2 Negative
@@ -121,7 +121,7 @@ pins:
 
   - pin: 120a
     function: Injector Output 6 Positive
-    color: green
+    color: yellow
 
   - pin: 121a
     function: Injector Output 2 Positive
