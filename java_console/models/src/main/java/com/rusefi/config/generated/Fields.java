@@ -979,7 +979,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1635190199;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1182,7 +1181,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.07.f407-discovery.1635190199";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.10.f407-discovery.2822859608";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1372;
@@ -1279,6 +1278,8 @@ public class Fields {
 	public static final Field VERBOSECAN = Field.create("VERBOSECAN", 88, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 88, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field USEFORDREDUNDANTPPS = Field.create("USEFORDREDUNDANTPPS", 88, FieldType.BIT, 23).setBaseOffset(0);
+	public static final Field CLTSENSORPULLDOWN = Field.create("CLTSENSORPULLDOWN", 88, FieldType.BIT, 24).setBaseOffset(0);
+	public static final Field IATSENSORPULLDOWN = Field.create("IATSENSORPULLDOWN", 88, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field TPSMIN = Field.create("TPSMIN", 92, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSMAX = Field.create("TPSMAX", 94, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSERRORDETECTIONTOOLOW = Field.create("TPSERRORDETECTIONTOOLOW", 96, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -2645,6 +2646,8 @@ public class Fields {
 	VERBOSECAN,
 	ARTIFICIALTESTMISFIRE,
 	USEFORDREDUNDANTPPS,
+	CLTSENSORPULLDOWN,
+	IATSENSORPULLDOWN,
 	TPSMIN,
 	TPSMAX,
 	TPSERRORDETECTIONTOOLOW,

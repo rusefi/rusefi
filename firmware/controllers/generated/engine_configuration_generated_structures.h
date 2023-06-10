@@ -600,28 +600,28 @@ struct engine_configuration_s {
 	bool useFordRedundantPps : 1 {};
 
 	// offset 88 bit 24
-	bool unusedBit_39_24 : 1 {};
+	bool cltSensorPulldown : 1 {};
 
 	// offset 88 bit 25
-	bool unusedBit_39_25 : 1 {};
+	bool iatSensorPulldown : 1 {};
 
 	// offset 88 bit 26
-	bool unusedBit_39_26 : 1 {};
+	bool unusedBit_41_26 : 1 {};
 
 	// offset 88 bit 27
-	bool unusedBit_39_27 : 1 {};
+	bool unusedBit_41_27 : 1 {};
 
 	// offset 88 bit 28
-	bool unusedBit_39_28 : 1 {};
+	bool unusedBit_41_28 : 1 {};
 
 	// offset 88 bit 29
-	bool unusedBit_39_29 : 1 {};
+	bool unusedBit_41_29 : 1 {};
 
 	// offset 88 bit 30
-	bool unusedBit_39_30 : 1 {};
+	bool unusedBit_41_30 : 1 {};
 
 	// offset 88 bit 31
-	bool unusedBit_39_31 : 1 {};
+	bool unusedBit_41_31 : 1 {};
 
 	// Closed throttle, 1 volt = 200 units
 	// ADC
