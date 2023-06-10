@@ -10,6 +10,13 @@
 #include "hyundai.h"
 #include "proteus_meta.h"
 
+static void set201xHyundai() {
+	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
+
+    // note how these numbers are very flipped m111 defaults?
+    setTPS1Calibration(98, 926, 891, 69);
+}
+
 void setHyundaiPb() {
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
@@ -21,6 +28,14 @@ void setHyundaiPb() {
 	engineConfiguration->trigger.customTotalToothCount = 60;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 	engineConfiguration->globalTriggerAngleOffset = 90;
+
+	set201xHyundai();
+
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->map.sensor.lowValue = 20;
+	engineConfiguration->mapLowValueVoltage = 0.79;
+	engineConfiguration->map.sensor.highValue = 101.3;
+	engineConfiguration->mapHighValueVoltage = 4;
 
 	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
 	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
@@ -54,12 +69,14 @@ void setProteusHyundaiPb() {
 
 
 // something something input levels are not happy for digital input pin?
-//	engineConfiguration->starterControlPin = PROTEUS_LS_14;
+	engineConfiguration->starterControlPin = PROTEUS_LS_14;
 	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
 	engineConfiguration->startStopButtonMode = PI_DEFAULT;
 }
 
 static void commonGenesisCoupe() {
+	set201xHyundai();
+
 	strncpy(config->luaScript, R"(
 
 setTickRate(100)

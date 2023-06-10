@@ -54,8 +54,6 @@ static void setupDefaultSensorInputs() {
 
 	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
-	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
-
 	setPPSInputs(EFI_ADC_3, EFI_ADC_14);
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
@@ -194,6 +192,4 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 
 
-    // note how these numbers are very flipped m111 defaults?
-    setTPS1Calibration(98, 926, 891, 69);
 }
