@@ -22,6 +22,7 @@ import static com.rusefi.output.GetOutputValueConsumer.wrapSwitchStatement;
 /**
  * Here we generate C++ code for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getcalibrationname
  * @see GetOutputValueConsumer
+ * @see GetConfigValueConsumerTest
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer implements ConfigurationConsumer {
