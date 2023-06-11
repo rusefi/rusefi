@@ -118,6 +118,7 @@ pins:
 info:
   title: Small CAN
   name: Small CAN
+  directory: hellen/small-can-board
   image:
     file: alphax-2chan.jpg
   pins:
