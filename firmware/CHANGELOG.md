@@ -28,6 +28,10 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+
+## June 2023 Release "Day 466"
+
 ### Breaking Changes
  - LCD & joystick support removed
  - CJ125 support removed
