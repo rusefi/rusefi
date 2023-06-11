@@ -85,7 +85,7 @@ public class LiveDataProcessor {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional) throws IOException;
+        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule) throws IOException;
     }
 
     private int handleYaml(Map<String, Object> data) throws IOException {
@@ -101,7 +101,7 @@ public class LiveDataProcessor {
 
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional) throws IOException {
+            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule) throws IOException {
                 // TODO: use outputNames
 
                 int startingPosition = javaSensorsConsumer.sensorTsPosition;
@@ -133,8 +133,13 @@ public class LiveDataProcessor {
                     state.addDestination((state1, structure) -> sdCardFieldsConsumer.handleEndStruct(state1, structure));
 
                     outputValueConsumer.currentSectionPrefix = constexpr;
+                    outputValueConsumer.moduleMode = false;
                     outputValueConsumer.conditional = conditional;
                     state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
+
+                } else if (engineModule != null) {
+                    outputValueConsumer.currentEngineModule = engineModule;
+                    outputValueConsumer.moduleMode = true;
 
                 }
                 state.addDestination(new ConfigurationConsumer() {
@@ -163,6 +168,7 @@ public class LiveDataProcessor {
             String folder = (String) entry.get("folder");
             String prepend = (String) entry.get("prepend");
             String constexpr = (String) entry.get("constexpr");
+            String engineModule = (String) entry.get("engineModule");
             String conditional = (String) entry.get("conditional_compilation");
             Boolean withCDefines = (Boolean) entry.get("withCDefines");
             // Defaults to false if not specified
@@ -182,7 +188,7 @@ public class LiveDataProcessor {
                 nameList.toArray(outputNamesArr);
             }
 
-            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr, conditional);
+            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule);
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
