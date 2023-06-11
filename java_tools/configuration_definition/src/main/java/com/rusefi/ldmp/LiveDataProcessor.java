@@ -140,7 +140,8 @@ public class LiveDataProcessor {
                 } else if (engineModule != null) {
                     outputValueConsumer.currentEngineModule = engineModule;
                     outputValueConsumer.moduleMode = true;
-
+                    outputValueConsumer.conditional = conditional;
+                    state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
                 }
                 state.addDestination(new ConfigurationConsumer() {
                     @Override

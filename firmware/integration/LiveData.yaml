@@ -85,6 +85,7 @@ Usages:
     java: FuelPump.java
     folder: controllers/actuators
     output_name: fuelPump
+    engineModule: FuelPumpController
 
   - name: main_relay
     java: MainRelay.java
