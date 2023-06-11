@@ -108,9 +108,9 @@ jobs:
           #   folder: config/boards/microrusefi
           #   ini-file: fome_mre_f4.ini
 
-          # - build-target: mre_f7
-          #   folder: config/boards/microrusefi
-          #   ini-file: fome_mre_f7.ini
+          - build-target: mre_f7
+            folder: config/boards/microrusefi
+            ini-file: fome_mre_f7.ini
 
           # - build-target: prometheus_405
           #   folder: config/boards/prometheus
