@@ -102,8 +102,6 @@ public class ConsoleUI {
         }
         if (!linkManager.isLogViewer()) {
             tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
-            if (tabbedPane.paneSettings.showEtbPane)
-                tabbedPane.addTab("ETB", new ETBPane(uiContext).getContent());
             tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
         }
 
