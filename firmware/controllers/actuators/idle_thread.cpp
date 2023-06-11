@@ -93,7 +93,7 @@ float IdleController::getCrankingOpenLoop(float clt) const {
 	return engineConfiguration->crankingIACposition * mult;
 }
 
-percent_t IdleController::getRunningOpenLoop(int phaseXXX, float rpm, float clt, SensorResult tps) {
+percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float rpm, float clt, SensorResult tps) {
 	float running =
 		engineConfiguration->manIdlePosition		// Base idle position (slider)
 		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
@@ -148,7 +148,7 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 		return interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting);
 	}
 
-	percent_t running = getRunningOpenLoop(/*phase*/0, rpm, clt, tps);
+	percent_t running = getRunningOpenLoop(IIdleController::Phase::Cranking, rpm, clt, tps);
 
 	// Interpolate between cranking and running over a short time
 	// This clamps once you fall off the end, so no explicit check for >1 required
