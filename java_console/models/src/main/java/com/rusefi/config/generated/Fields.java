@@ -1181,7 +1181,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.10.f407-discovery.2822859608";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.11.f407-discovery.3178062656";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1372;
@@ -1280,6 +1280,7 @@ public class Fields {
 	public static final Field USEFORDREDUNDANTPPS = Field.create("USEFORDREDUNDANTPPS", 88, FieldType.BIT, 23).setBaseOffset(0);
 	public static final Field CLTSENSORPULLDOWN = Field.create("CLTSENSORPULLDOWN", 88, FieldType.BIT, 24).setBaseOffset(0);
 	public static final Field IATSENSORPULLDOWN = Field.create("IATSENSORPULLDOWN", 88, FieldType.BIT, 25).setBaseOffset(0);
+	public static final Field ALLOWIDENTICALPPS = Field.create("ALLOWIDENTICALPPS", 88, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field TPSMIN = Field.create("TPSMIN", 92, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSMAX = Field.create("TPSMAX", 94, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSERRORDETECTIONTOOLOW = Field.create("TPSERRORDETECTIONTOOLOW", 96, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -2648,6 +2649,7 @@ public class Fields {
 	USEFORDREDUNDANTPPS,
 	CLTSENSORPULLDOWN,
 	IATSENSORPULLDOWN,
+	ALLOWIDENTICALPPS,
 	TPSMIN,
 	TPSMAX,
 	TPSERRORDETECTIONTOOLOW,

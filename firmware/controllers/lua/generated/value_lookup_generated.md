@@ -106,6 +106,9 @@ On some Ford and Toyota vehicles one of the pedal sensors is not linear on the f
 ### iatSensorPulldown
 
 
+### allowIdenticalPps
+
+
 ### tpsMin
 Closed throttle, 1 volt = 200 units
 

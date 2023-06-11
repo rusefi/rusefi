@@ -606,22 +606,22 @@ struct engine_configuration_s {
 	bool iatSensorPulldown : 1 {};
 
 	// offset 88 bit 26
-	bool unusedBit_41_26 : 1 {};
+	bool allowIdenticalPps : 1 {};
 
 	// offset 88 bit 27
-	bool unusedBit_41_27 : 1 {};
+	bool unusedBit_42_27 : 1 {};
 
 	// offset 88 bit 28
-	bool unusedBit_41_28 : 1 {};
+	bool unusedBit_42_28 : 1 {};
 
 	// offset 88 bit 29
-	bool unusedBit_41_29 : 1 {};
+	bool unusedBit_42_29 : 1 {};
 
 	// offset 88 bit 30
-	bool unusedBit_41_30 : 1 {};
+	bool unusedBit_42_30 : 1 {};
 
 	// offset 88 bit 31
-	bool unusedBit_41_31 : 1 {};
+	bool unusedBit_42_31 : 1 {};
 
 	// Closed throttle, 1 volt = 200 units
 	// ADC
