@@ -251,7 +251,8 @@ TEST(idle_v2, openLoopRunningTaper) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
 
-	EXPECT_CALL(dut, getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 30, SensorResult(0))).WillRepeatedly(Return(25));
+	EXPECT_CALL(dut, getRunningOpenLoop(IIdleController::Phase::CrankToIdleTaper, 0, 30, SensorResult(0))).WillRepeatedly(Return(25));
+	EXPECT_CALL(dut, getRunningOpenLoop(IIdleController::Phase::Running, 0, 30, SensorResult(0))).WillRepeatedly(Return(25));
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillRepeatedly(Return(75));
 
 	// 0 cycles - no taper yet, pure cranking value

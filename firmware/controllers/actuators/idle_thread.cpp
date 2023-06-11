@@ -148,7 +148,7 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 		return interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting);
 	}
 
-	percent_t running = getRunningOpenLoop(IIdleController::Phase::Cranking, rpm, clt, tps);
+	percent_t running = getRunningOpenLoop(phase, rpm, clt, tps);
 
 	// Interpolate between cranking and running over a short time
 	// This clamps once you fall off the end, so no explicit check for >1 required
