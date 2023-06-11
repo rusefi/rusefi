@@ -4259,6 +4259,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "CLT sensor is pulldown instead of pullup", cltSensorPulldown
 		field = "IAT sensor is pulldown instead of pullup", iatSensorPulldown
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
+		field = "BRZ/FRS/GT86 pedal",							allowIdenticalPps
 		field = "Artificial Misfire",						artificialTestMisfire
 		field = "Instant Rpm Range",                    instantRpmRange
 		field = "Always use instant RPM",				alwaysInstantRpm
