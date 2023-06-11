@@ -198,13 +198,13 @@ TEST(idle_v2, runningOpenLoopTpsTaper) {
 	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
 
 	// Check in-bounds points
-	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(0, 0, 0));
-	EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(0, 0, 5));
-	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(0, 0, 10));
+	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(ICP::Running, 0, 0, 0));
+	EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(ICP::Running, 0, 0, 5));
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(ICP::Running, 0, 0, 10));
 
 	// Check out of bounds - shouldn't leave the interval [0, 10]
-	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(0, 0, -5));
-	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(0, 0, 20));
+	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(ICP::Running, 0, 0, -5));
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(ICP::Running, 0, 0, 20));
 }
 
 TEST(idle_v2, runningOpenLoopRpmTaper) {
