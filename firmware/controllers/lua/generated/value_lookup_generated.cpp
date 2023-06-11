@@ -121,6 +121,9 @@ float getConfigValueByName(const char *name) {
 // iatSensorPulldown
 		case 1570551154:
 			return engineConfiguration->iatSensorPulldown;
+// allowIdenticalPps
+		case 445194564:
+			return engineConfiguration->allowIdenticalPps;
 // tpsMin
 		case 513872736:
 			return engineConfiguration->tpsMin;
@@ -1781,6 +1784,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 1570551154:
 	{
 		engineConfiguration->iatSensorPulldown = (int)value;
+		return;
+	}
+		case 445194564:
+	{
+		engineConfiguration->allowIdenticalPps = (int)value;
 		return;
 	}
 		case 513872736:

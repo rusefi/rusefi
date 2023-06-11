@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 10 22:35:29 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 11 23:06:18 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -749,16 +749,16 @@ struct engine_configuration_s {
 	bool iatSensorPulldown : 1 {};
 	/**
 	offset 120 bit 28 */
-	bool unusedBit_42_28 : 1 {};
+	bool allowIdenticalPps : 1 {};
 	/**
 	offset 120 bit 29 */
-	bool unusedBit_42_29 : 1 {};
+	bool unusedBit_43_29 : 1 {};
 	/**
 	offset 120 bit 30 */
-	bool unusedBit_42_30 : 1 {};
+	bool unusedBit_43_30 : 1 {};
 	/**
 	offset 120 bit 31 */
-	bool unusedBit_42_31 : 1 {};
+	bool unusedBit_43_31 : 1 {};
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
@@ -5176,4 +5176,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23168);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 10 22:35:29 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 11 23:06:18 UTC 2023

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 10 23:01:38 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 11 23:06:18 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1021,6 +1021,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 417175053;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1243,7 +1244,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.06.11.f407-discovery.2873969895";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.06.12.f407-discovery.417175053";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
@@ -1351,6 +1352,7 @@ public class Fields {
 	public static final Field USEFORDREDUNDANTPPS = Field.create("USEFORDREDUNDANTPPS", 120, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field CLTSENSORPULLDOWN = Field.create("CLTSENSORPULLDOWN", 120, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field IATSENSORPULLDOWN = Field.create("IATSENSORPULLDOWN", 120, FieldType.BIT, 27).setBaseOffset(0);
+	public static final Field ALLOWIDENTICALPPS = Field.create("ALLOWIDENTICALPPS", 120, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field TPSMIN = Field.create("TPSMIN", 124, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSMAX = Field.create("TPSMAX", 126, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSERRORDETECTIONTOOLOW = Field.create("TPSERRORDETECTIONTOOLOW", 128, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -2845,6 +2847,7 @@ public class Fields {
 	USEFORDREDUNDANTPPS,
 	CLTSENSORPULLDOWN,
 	IATSENSORPULLDOWN,
+	ALLOWIDENTICALPPS,
 	TPSMIN,
 	TPSMAX,
 	TPSERRORDETECTIONTOOLOW,
