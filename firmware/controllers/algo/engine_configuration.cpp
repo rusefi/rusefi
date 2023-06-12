@@ -490,7 +490,7 @@ static void setDefaultEngineConfiguration() {
     // is this same old setCommonNTCSensor?
 	engineConfiguration->clt.config = {0, 23.8889, 48.8889, 9500, 2100, 1000, 1500};
 
-    setCommonNTCSensor(&engineConfiguration->iat, PROTEUS_DEFAULT_AT_PULLUP);
+    setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
 	// wow unit tests have much cooler setDefaultLaunchParameters method
 	engineConfiguration->launchRpm = 3000;
