@@ -32,6 +32,8 @@ void setHyundaiPb() {
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
 	setGDIFueling();
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+   	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
 	engineConfiguration->map.sensor.lowValue = 20;
