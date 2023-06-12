@@ -75,6 +75,7 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: ac
+    engineModule: AcController
 
   - name: fan_control
     java: FanControl.java

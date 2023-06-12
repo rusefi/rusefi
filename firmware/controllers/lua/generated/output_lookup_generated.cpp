@@ -904,6 +904,39 @@ float getOutputValueByName(const char *name) {
 		case -1712045196:
 			return engine->boostController.boostControlTarget;
 #endif
+// acButtonState
+		case -1809939546:
+			return engine->module<AcController>()->acButtonState;
+// m_acEnabled
+		case 449790048:
+			return engine->module<AcController>()->m_acEnabled;
+// engineTooSlow
+		case 1183441554:
+			return engine->module<AcController>()->engineTooSlow;
+// engineTooFast
+		case 1182962523:
+			return engine->module<AcController>()->engineTooFast;
+// noClt
+		case 268704037:
+			return engine->module<AcController>()->noClt;
+// engineTooHot
+		case 1467505752:
+			return engine->module<AcController>()->engineTooHot;
+// tpsTooHigh
+		case 249515182:
+			return engine->module<AcController>()->tpsTooHigh;
+// isDisabledByLua
+		case 1199244598:
+			return engine->module<AcController>()->isDisabledByLua;
+// acCompressorState
+		case -1015278697:
+			return engine->module<AcController>()->acCompressorState;
+// latest_usage_ac_control
+		case 1630756809:
+			return engine->module<AcController>()->latest_usage_ac_control;
+// acSwitchLastChangeTimeMs
+		case -954065340:
+			return engine->module<AcController>()->acSwitchLastChangeTimeMs;
 // isPrime
 		case -1429286498:
 			return engine->module<FuelPumpController>()->isPrime;
