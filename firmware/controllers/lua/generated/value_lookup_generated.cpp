@@ -1585,6 +1585,12 @@ float getConfigValueByName(const char *name) {
 // benchTestCount
 		case -204721234:
 			return engineConfiguration->benchTestCount;
+// iacByTpsHoldTime
+		case -235994182:
+			return engineConfiguration->iacByTpsHoldTime;
+// iacByTpsDecayTime
+		case 1742748825:
+			return engineConfiguration->iacByTpsDecayTime;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -4224,6 +4230,16 @@ void setConfigValueByName(const char *name, float value) {
 		case -204721234:
 	{
 		engineConfiguration->benchTestCount = (int)value;
+		return;
+	}
+		case -235994182:
+	{
+		engineConfiguration->iacByTpsHoldTime = (int)value;
+		return;
+	}
+		case 1742748825:
+	{
+		engineConfiguration->iacByTpsDecayTime = (int)value;
 		return;
 	}
 	}
