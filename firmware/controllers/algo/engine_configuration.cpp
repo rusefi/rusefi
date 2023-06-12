@@ -487,10 +487,10 @@ static void setDefaultEngineConfiguration() {
 
 	setDefaultEngineNoiseTable();
 
+    // is this same old setCommonNTCSensor?
 	engineConfiguration->clt.config = {0, 23.8889, 48.8889, 9500, 2100, 1000, 1500};
 
-// todo: this value is way off! I am pretty sure temp coeffs are off also
-	engineConfiguration->iat.config = {32, 75, 120, 9500, 2100, 1000, 2700};
+    setCommonNTCSensor(&engineConfiguration->iat, PROTEUS_DEFAULT_AT_PULLUP);
 
 	// wow unit tests have much cooler setDefaultLaunchParameters method
 	engineConfiguration->launchRpm = 3000;
