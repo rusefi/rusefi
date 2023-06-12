@@ -111,12 +111,27 @@ if (engine->antilagController.isAntilagCondition) {
 }
 #endif /* EFI_ANTILAG_SYSTEM */
 
+	// 'dashpot' (hold+decay) logic for coasting->idle
+	float tpsForTaper = tps.value_or(0);
+	efitimeus_t nowUs = getTimeNowUs();
+	if (phase == Phase::Running) {
+		lastTimeRunningUs = nowUs;
+	}
+	// imitate a slow pedal release for TPS taper (to avoid engine stalls)
+	if (tpsForTaper <= engineConfiguration->idlePidDeactivationTpsThreshold) {
+		float timeSinceRunningPhaseSecs = (float)(nowUs - lastTimeRunningUs) / US_PER_SECOND_F;
+		// we shift the time to implement the hold correction (time can be negative)
+		float timeSinceRunningAfterHoldSecs = timeSinceRunningPhaseSecs - engineConfiguration->iacByTpsHoldTime;
+		// implement the decay correction (from tpsForTaper to 0)
+		tpsForTaper = interpolateClamped(0, engineConfiguration->idlePidDeactivationTpsThreshold, engineConfiguration->iacByTpsDecayTime, tpsForTaper, timeSinceRunningAfterHoldSecs);
+	}
+
 	// Now bump it by the specified amount when the throttle is opened (if configured)
 	// nb: invalid tps will make no change, no explicit check required
 	iacByTpsTaper = interpolateClamped(
 		0, 0,
 		engineConfiguration->idlePidDeactivationTpsThreshold, engineConfiguration->iacByTpsTaper,
-		tps.value_or(0));
+		tpsForTaper);
 
 	running += iacByTpsTaper;
 
