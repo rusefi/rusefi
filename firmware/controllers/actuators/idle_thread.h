@@ -93,6 +93,8 @@ private:
 	Phase m_lastPhase = Phase::Cranking;
 	int m_lastTargetRpm = 0;
 	efitimeus_t restoreAfterPidResetTimeUs = 0;
+	// used by 'dashpot' (hold+decay) logic for iacByTpsTaper
+	efitimeus_t lastTimeRunningUs = 0;
 
 	// This is stored by getClosedLoop and used in case we want to "do nothing"
 	float m_lastAutomaticPosition = 0;
