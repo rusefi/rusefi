@@ -38,7 +38,8 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf, float pullup) {
 	 * 294 Ohm @ 80C
 	 * http://www.rexbo.eu/hella/coolant-temperature-sensor-6pt009107121?c=100334&at=3130
 	 */
-	thermistorConf->config = {-20, 23.8889, 120, 18000, 2100, 100, pullup};
+	thermistorConf->config = {/*temp*/-20, /*temp*/23.8889, /*temp*/120,
+	/*resistance*/18000, /*resistance*/2100, /*resistance*/100, pullup};
 }
 
 void set10K_4050K(ThermistorConf *thermistorConf, float pullup) {
