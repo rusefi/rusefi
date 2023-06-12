@@ -27,8 +27,6 @@
 
 #include "global.h"
 
-#define EXPECTED_REMAINING_STACK 128
-
 /*
  * Stack debugging
  */

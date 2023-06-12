@@ -39,3 +39,7 @@
 #include "datalogging.h"
 #include "cli_registry.h"
 #endif /* __cplusplus */
+
+#define EXPECTED_REMAINING_STACK 128
+
+#define assertRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)
