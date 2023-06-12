@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Jun 11 23:05:26 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Jun 12 17:32:27 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4336,10 +4336,22 @@ struct engine_configuration_s {
 	 */
 	uint32_t benchTestCount;
 	/**
-	units
+	 * How long the dashpot holds TPS before it starts to decay.
+	seconds
 	 * offset 3948
 	 */
-	uint8_t mainUnusedEnd[16];
+	scaled_channel<uint8_t, 10, 1> iacByTpsHoldTime;
+	/**
+	 * The length of time over which the dashpot effect will be smoothly removed.
+	seconds
+	 * offset 3949
+	 */
+	scaled_channel<uint8_t, 10, 1> iacByTpsDecayTime;
+	/**
+	units
+	 * offset 3950
+	 */
+	uint8_t mainUnusedEnd[14];
 };
 static_assert(sizeof(engine_configuration_s) == 3964);
 
@@ -5176,4 +5188,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23168);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Jun 11 23:05:26 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Jun 12 17:32:27 UTC 2023

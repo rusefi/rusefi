@@ -1579,3 +1579,9 @@ Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU 
 ### benchTestCount
 How many test bench pulses do you want
 
+### iacByTpsHoldTime
+How long the dashpot holds TPS before it starts to decay.
+
+### iacByTpsDecayTime
+The length of time over which the dashpot effect will be smoothly removed.
+
