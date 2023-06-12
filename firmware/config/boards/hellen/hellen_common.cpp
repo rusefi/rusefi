@@ -10,15 +10,28 @@ void setHellenCan() {
 	engineConfiguration->canRxPin = Gpio::D0;
 }
 
+void setHellen64Can() {
+	engineConfiguration->canTxPin = Gpio::B9;
+	engineConfiguration->canRxPin = Gpio::B8;
+}
+
 static OutputPin megaEn;
 
-void setHellenMegaEnPin() {
+static void setHellenMegaEnPin(Gpio pin) {
     static bool initialized = false;
     if (!initialized) {
         initialized = true;
-	    megaEn.initPin("mm-EN", H144_GP8); // OUT_PWR_EN
+	    megaEn.initPin("mm-EN", pin);
 	    megaEn.setValue(1);
 	}
+}
+
+void setHellenMegaEnPin() {
+    setHellenMegaEnPin(H144_GP8); // OUT_PWR_EN
+}
+
+void setHellen64MegaEnPin() {
+    setHellenMegaEnPin(H64_IO1); // OUT_PWR_EN
 }
 
 void hellenBoardStandBy() {

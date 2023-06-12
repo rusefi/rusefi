@@ -3,7 +3,6 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
-import com.rusefi.core.Pair;
 import com.rusefi.output.variables.VariableRecord;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.output.ConfigStructureImpl.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
-import static com.rusefi.output.GetConfigValueConsumer.FILE_HEADER;
 import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 
 /**
@@ -29,6 +27,8 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     private final String fileName;
 
     public String currentSectionPrefix = "engine->outputChannels";
+    public boolean moduleMode;
+    public String currentEngineModule;
     public String conditional;
 
     public GetOutputValueConsumer(String fileName) {
@@ -55,9 +55,14 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         }
 
         String userName = prefix + cf.getName();
-        String javaName = currentSectionPrefix + "." + prefix;
+        String javaName;
+        if (moduleMode) {
+            javaName = "engine->module<" + currentEngineModule + ">()->" + prefix;
+        } else {
+            javaName = currentSectionPrefix + "." + prefix;
+        }
 
-        getterPairs.add(new VariableRecord(userName, javaName + cf.getName(),  null, conditional));
+        getterPairs.add(new VariableRecord(userName, javaName + cf.getName(), null, conditional));
 
 
         return "";
@@ -75,7 +80,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
         String fullSwitch = wrapSwitchStatement(switchBody);
 
-        return FILE_HEADER +
+        return GetConfigValueConsumer.getHeader(getClass()) +
                 "float getOutputValueByName(const char *name) {\n" +
                 fullSwitch +
                 getterBody + GetConfigValueConsumer.GET_METHOD_FOOTER;

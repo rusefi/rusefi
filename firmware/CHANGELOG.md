@@ -28,6 +28,13 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+
+### Fixed
+ - fuel_pump_control is accessible as getOutput("isFuelPumpOn") in Lua #5239 
+
+## June 2023 Release "Day 466"
+
 ### Breaking Changes
  - LCD & joystick support removed
  - CJ125 support removed

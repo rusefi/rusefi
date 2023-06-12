@@ -102,8 +102,6 @@ public class ConsoleUI {
         }
         if (!linkManager.isLogViewer()) {
             tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
-            if (tabbedPane.paneSettings.showEtbPane)
-                tabbedPane.addTab("ETB", new ETBPane(uiContext).getContent());
             tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
         }
 
@@ -150,7 +148,11 @@ public class ConsoleUI {
 
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 
-        uiContext.sensorLogger.init();
+        if (false) {
+            // this feature is not totally happy safer to disabke to reduce user confusion
+            // https://github.com/rusefi/rusefi/issues/5292
+            uiContext.sensorLogger.init();
+        }
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);

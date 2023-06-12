@@ -995,7 +995,7 @@ void validateConfiguration() {
 
 void applyNonPersistentConfiguration() {
 #if EFI_PROD_CODE
-	efiAssertVoid(ObdCode::CUSTOM_APPLY_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "apply c");
+	efiAssertVoid(ObdCode::CUSTOM_APPLY_STACK, assertRemainingStack(), "apply c");
 	efiPrintf("applyNonPersistentConfiguration()");
 #endif
 

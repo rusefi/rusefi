@@ -4399,6 +4399,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Secondary PPS maximum",				ppsSecondaryMaximum, {useFordRedundantPps}
 
 		field = "consumeObdSensors",						consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
+		field = "BRZ/FRS/GT86 pedal",							allowIdenticalPps
 		field = "Artificial Misfire",						artificialTestMisfire
 		field = "Always use instant RPM",				alwaysInstantRpm
 		field = vinNumber,										vinNumber

@@ -47,15 +47,8 @@ static void commonPassatB6() {
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
-	// Use high pressure sensor
-	engineConfiguration->injectorPressureType = IPT_High;
-	// Automatic compensation of injector flow based on rail pressure
-	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
-	// Reference rail pressure is 10 000 kPa = 100 bar
-	engineConfiguration->fuelReferencePressure = 10000;
-	//setting "flat" 0.2 ms injector's lag time
-	setArrayValues(engineConfiguration->injector.battLagCorr, 0.2);
-	
+	setGDIFueling();
+
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_VAG);
 	strcpy(engineConfiguration->engineCode, "BPY");
 	strcpy(engineConfiguration->vehicleName, "test");

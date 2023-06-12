@@ -47,6 +47,22 @@ pins:
     function: CAN Low
     color: blue
 
+  - pin: 82a
+    function: Pump Negative
+    color: white
+
+  - pin: 83a
+    function: Pump Negative
+    color: white
+
+  - pin: 84a
+    function: Pump Positive
+    color: green
+
+  - pin: 85a
+    function: Pump Positive
+    color: green
+
   - pin: 90a
     function: Injector Output 3 Negative
     color: blue
@@ -57,11 +73,11 @@ pins:
 
   - pin: 92a
     function: Injector Output 4 Negative
-    color: blue
+    color: brown
 
   - pin: 93a
     function: Injector Output 4 Negative
-    color: blue
+    color: brown
 
   - pin: 94a
     function: Injector Output 3 Positive
@@ -73,19 +89,19 @@ pins:
 
   - pin: 96a
     function: Injector Output 4 Positive
-    color: blue
+    color: brown
 
   - pin: 97a
     function: Injector Output 4 Positive
-    color: blue
+    color: brown
 
   - pin: 114a
     function: Injector Output 1 Negative
-    color: blue
+    color: green
 
   - pin: 115a
     function: Injector Output 6 Negative
-    color: green
+    color: yellow
 
   - pin: 116a
     function: Injector Output 5 Positive
@@ -97,19 +113,19 @@ pins:
 
   - pin: 118a
     function: Injector Output 1 Positive
-    color: blue
+    color: green
 
   - pin: 119a
     function: Injector Output 2 Negative
-    color: blue
+    color: white
 
   - pin: 120a
     function: Injector Output 6 Positive
-    color: green
+    color: yellow
 
   - pin: 121a
     function: Injector Output 2 Positive
-    color: blue
+    color: white
 
 
 info:

@@ -1,3 +1,3 @@
 Gpio getCommsLedPin() {
-	return H64_BLUE_LED;  // blue
+	return H64_LED2_BLUE;
 }

@@ -127,7 +127,7 @@ static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> freeBuffers;
 // filledBuffers contains a queue of buffers currently waiting to be written to the output buffer
 static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> filledBuffers;
 
-class LoggingBufferFlusher : public ThreadController<256> {
+class LoggingBufferFlusher : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	LoggingBufferFlusher() : ThreadController("log flush", PRIO_TEXT_LOG) { }
 

@@ -24,14 +24,29 @@
 void hellenWbo();
 
 void setHellenMegaEnPin();
+void setHellen64MegaEnPin();
 void hellenBoardStandBy();
 void configureHellenMegaAccCS2Pin();
 void configureHellenCanTerminator();
 
 void setHellenCan();
+void setHellen64Can();
 
 int detectHellenBoardId();
 void detectHellenBoardType();
+
+#define H64_LED1_RED Gpio::B0
+#define H64_LED2_BLUE Gpio::B1
+
+#define H64_IO1 Gpio::C13
+#define H64_SPI1_CS1 Gpio::D2
+
+#define H64_OUT_PWM1 Gpio::B7
+#define H64_OUT_PWM2 Gpio::C8
+#define H64_OUT_PWM3 Gpio::C9
+#define H64_OUT_PWM4 Gpio::A8
+#define H64_OUT_PWM5 Gpio::A9
+#define H64_OUT_PWM6 Gpio::A15
 
 // stm32 UART8
 #define H144_UART1_RX Gpio::E0
@@ -231,14 +246,23 @@ void detectHellenBoardType();
 #define H_SPI3_SCK Gpio::C10
 #define H_SPI3_CS Gpio::A15
 
-static void setHellenSdCardSpi1() {
+static void setHellenSdCardSpi1NoCS() {
     engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->spi1mosiPin = H_SPI1_MOSI;
 	engineConfiguration->spi1misoPin = H_SPI1_MISO;
 	engineConfiguration->spi1sckPin = H_SPI1_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI1_CS1;
 	engineConfiguration->is_enabled_spi_1 = true;
+}
+
+static void setHellenSdCardSpi1() {
+    setHellenSdCardSpi1NoCS();
+    engineConfiguration->sdCardCsPin = H_SPI1_CS1;
+}
+
+static void setHellen64SdCardSpi1() {
+    setHellenSdCardSpi1NoCS();
+	engineConfiguration->sdCardCsPin = H64_SPI1_CS1;
 }
 
 static void setHellenSdCardSpi2() {

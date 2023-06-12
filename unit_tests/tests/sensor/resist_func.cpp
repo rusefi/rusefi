@@ -9,7 +9,7 @@
 TEST(resistance, OutOfRange)
 {
     ResistanceFunc f;
-    f.configure(5, 10000);
+    f.configure(5, 10000, false);
 
     // Something in the middle should be valid
     {
@@ -45,7 +45,7 @@ TEST(resistance, OutOfRange)
 TEST(resistance, InRange)
 {
     ResistanceFunc f;
-    f.configure(5, 10000);
+    f.configure(5, 10000, false);
 
     // 1 volt -> 2500 ohms low side
     {
@@ -72,6 +72,41 @@ TEST(resistance, InRange)
     // 4 volt -> 40000 ohms low side
     {
         auto r = f.convert(4.0f);
+        EXPECT_TRUE(r.Valid);
+        EXPECT_FLOAT_EQ(r.Value, 40000);
+    }
+}
+
+TEST(resistance, PulldownMode)
+{
+    ResistanceFunc f;
+    f.configure(5, 10000, true);
+
+    // 4 volt -> 2500 ohms high side
+    {
+        auto r = f.convert(4.0f);
+        EXPECT_TRUE(r.Valid);
+        EXPECT_FLOAT_EQ(r.Value, 2500);
+    }
+
+    // 3 volt -> 6666.667 ohm ohms high side
+    // 20k/3 gives us an exact result
+    {
+        auto r = f.convert(3.0f);
+        EXPECT_TRUE(r.Valid);
+        EXPECT_FLOAT_EQ(r.Value, 20000.0f / 3);
+    }
+
+    // 2 volt -> 15000 ohms high side
+    {
+        auto r = f.convert(2.0f);
+        EXPECT_TRUE(r.Valid);
+        EXPECT_FLOAT_EQ(r.Value, 15000);
+    }
+
+    // 1 volt -> 40000 ohms high side
+    {
+        auto r = f.convert(1.0f);
         EXPECT_TRUE(r.Valid);
         EXPECT_FLOAT_EQ(r.Value, 40000);
     }

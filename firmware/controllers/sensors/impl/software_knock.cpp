@@ -133,7 +133,7 @@ void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t
 	lastKnockSampleTime = getTimeNowNt();
 }
 
-class KnockThread : public ThreadController<256> {
+class KnockThread : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	KnockThread() : ThreadController("knock", PRIO_KNOCK_PROCESS) {}
 	void ThreadTask() override;

@@ -237,6 +237,7 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 #endif // EFI_UNIT_TEST
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
+    efiAssertVoid(ObdCode::CUSTOM_ERR_6650, assertRemainingStack(), "l-t-t");
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
 		return;

@@ -1039,7 +1039,7 @@ static void calculateTriggerSynchPoint(
 		TriggerDecoderBase& initState) {
 
 #if EFI_PROD_CODE
-	efiAssertVoid(ObdCode::CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
+	efiAssertVoid(ObdCode::CUSTOM_TRIGGER_STACK, assertRemainingStack(), "calc s");
 #endif
 
 	shape.initializeSyncPoint(initState, primaryTriggerConfiguration);

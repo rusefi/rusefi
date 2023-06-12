@@ -9,6 +9,14 @@
 
 #include "hyundai.h"
 #include "proteus_meta.h"
+#include "defaults.h"
+
+static void set201xHyundai() {
+	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
+
+    // note how these numbers are very flipped m111 defaults?
+    setTPS1Calibration(98, 926, 891, 69);
+}
 
 void setHyundaiPb() {
 	engineConfiguration->cylindersCount = 4;
@@ -17,15 +25,28 @@ void setHyundaiPb() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Gamma");
 
-	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
-	engineConfiguration->trigger.customTotalToothCount = 60;
-	engineConfiguration->trigger.customSkippedToothCount = 1;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 90;
+
+	set201xHyundai();
+	// Injectors flow 1214 cc/min at 100 bar pressure
+	engineConfiguration->injector.flow = 1214;
+	setGDIFueling();
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+   	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->map.sensor.lowValue = 20;
+	engineConfiguration->mapLowValueVoltage = 0.79;
+	engineConfiguration->map.sensor.highValue = 101.3;
+	engineConfiguration->mapHighValueVoltage = 4;
 
 	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
 	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
 
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+
+    engineConfiguration->hpfpCamLobes = 4;
 
    	engineConfiguration->highPressureFuel.v1 = 0.5; /* volts */;
    	engineConfiguration->highPressureFuel.value1 = 0;
@@ -37,6 +58,8 @@ void setHyundaiPb() {
 #if HW_PROTEUS
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 	coolantControl->pin = PROTEUS_LS_5;
+    engineConfiguration->tachOutputPin = PROTEUS_IGN_12;
+    engineConfiguration->hpfpValvePin = PROTEUS_LS_6;
 #endif // HW_PROTEUS
 }
 
@@ -51,12 +74,14 @@ void setProteusHyundaiPb() {
 
 
 // something something input levels are not happy for digital input pin?
-//	engineConfiguration->starterControlPin = PROTEUS_LS_14;
+	engineConfiguration->starterControlPin = PROTEUS_LS_14;
 	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
 	engineConfiguration->startStopButtonMode = PI_DEFAULT;
 }
 
 static void commonGenesisCoupe() {
+	set201xHyundai();
+
 	strncpy(config->luaScript, R"(
 
 setTickRate(100)

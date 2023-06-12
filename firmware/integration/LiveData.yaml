@@ -75,6 +75,7 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: ac
+    engineModule: AcController
 
   - name: fan_control
     java: FanControl.java
@@ -85,6 +86,7 @@ Usages:
     java: FuelPump.java
     folder: controllers/actuators
     output_name: fuelPump
+    engineModule: FuelPumpController
 
   - name: main_relay
     java: MainRelay.java
