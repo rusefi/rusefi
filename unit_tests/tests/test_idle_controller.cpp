@@ -331,6 +331,7 @@ TEST(idle_v2, openLoopRunningTaper) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
 
+	EXPECT_CALL(dut, getRunningOpenLoop(ICP::CrankToIdleTaper, 0, 30, SensorResult(0))).WillRepeatedly(Return(25));
 	EXPECT_CALL(dut, getRunningOpenLoop(ICP::Running, 0, 30, SensorResult(0))).WillRepeatedly(Return(25));
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillRepeatedly(Return(75));
 
