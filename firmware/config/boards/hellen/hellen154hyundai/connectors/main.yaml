@@ -207,6 +207,13 @@ pins:
     ts_name: IAT
     function: IAT
 
+  - pin: K55
+    # IN_MAP3
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: A/C pressure
+    function: A/C pressure
+
   - pin: K57
     function: Analog Ground
 
