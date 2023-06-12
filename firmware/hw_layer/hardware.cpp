@@ -80,7 +80,7 @@ extern bool isSpiInitialized[5];
  * Only one consumer can use SPI bus at a given time
  */
 void lockSpi(spi_device_e device) {
-	efiAssertVoid(ObdCode::CUSTOM_STACK_SPI, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lockSpi");
+	efiAssertVoid(ObdCode::CUSTOM_STACK_SPI, assertRemainingStack(), "lockSpi");
 	spiAcquireBus(getSpiDevice(device));
 }
 
@@ -177,7 +177,7 @@ void onFastAdcComplete(adcsample_t*) {
 	/**
 	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
 	 */
-	efiAssertVoid(ObdCode::CUSTOM_STACK_ADC, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#9b");
+	efiAssertVoid(ObdCode::CUSTOM_STACK_ADC, assertRemainingStack(), "lowstck#9b");
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
 	if (getEngineState()->sensorChartMode == SC_AUX_FAST1) {
@@ -370,7 +370,7 @@ void setBor(int borValue) {
 
 // This function initializes hardware that can do so before configuration is loaded
 void initHardwareNoConfig() {
-	efiAssertVoid(ObdCode::CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
+	efiAssertVoid(ObdCode::CUSTOM_IH_STACK, assertRemainingStack(), "init h");
 
 	efiPrintf("initHardware()");
 

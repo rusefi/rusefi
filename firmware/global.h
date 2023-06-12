@@ -57,6 +57,8 @@ typedef unsigned int time_t;
 
 #define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
 
+#define assertRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)
+
 #define EFI_ERROR_CODE 0xffffffff
 
 /**

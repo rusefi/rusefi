@@ -413,7 +413,7 @@ void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
 void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, const trigger_config_s &triggerType) {
 
 #if EFI_PROD_CODE
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6641, assertRemainingStack(), "init t");
 	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerType.type), (int)triggerType.type);
 #endif
 
