@@ -207,7 +207,7 @@ pins:
     ts_name: IAT
     function: IAT
 
-  - pin: K55
+  - pin: K54
     # IN_MAP3
     id: EFI_ADC_2
     class: analog_inputs
