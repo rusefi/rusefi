@@ -352,7 +352,7 @@ int getSlowAdcCounter() {
 }
 
 
-class SlowAdcController : public PeriodicController<256> {
+class SlowAdcController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	SlowAdcController() 
 		: PeriodicController("ADC", PRIO_ADC, SLOW_ADC_RATE)
