@@ -64,12 +64,12 @@ function onCanConfiguration3(bus, id, dlc, data)
 	print("GDI4 says HoldCurrent   "..getTwoBytesLSB(data, 0, 1 / 128) )
 	print("GDI4 says TholdOff      "..getTwoBytesLSB(data, 2, 1) )
 	print("GDI4 says THoldDuration "..getTwoBytesLSB(data, 4, 1) )
-	print("GDI4 says PumpPeakCurrent"..getTwoBytesLSB(data, 6, 1 / 128) )
+	print("GDI4 says PumpPeakCurrent "..getTwoBytesLSB(data, 6, 1 / 128) )
 end
 
 function onCanConfiguration4(bus, id, dlc, data)
 	print("Received configuration4 "..arrayToString(data))
-	print("GDI4 says PumpHoldCurrent   "..getTwoBytesLSB(data, 0, 1 / 128) )
+	print("GDI4 says PumpHoldCurrent "..getTwoBytesLSB(data, 0, 1 / 128) )
 end
 
 function onCanVersion(bus, id, dlc, data)
@@ -117,7 +117,7 @@ function onTick()
 	print("To send 3: TholdOff " .. TholdOff .. " THoldDuration " .. THoldDuration)
 
 	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
-	pumpHoldCurrent      = getCalibration("mc33_i_hold")
+	pumpHoldCurrent      = getCalibration("mc33_hpfp_i_hold")
 
 	setTwoBytesLsb(data_set_settings, 1, boostVoltage)
 	setTwoBytesLsb(data_set_settings, 3, boostCurrent * FIXED_POINT)
