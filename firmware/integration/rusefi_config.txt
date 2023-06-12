@@ -1524,7 +1524,9 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	uint8_t[GEARS_COUNT] autoscale gearBasedOpenLoopBoostAdder;Boost duty cycle added by gear;"%", 0.5, 0, 0, 100, 1
 
 	uint32_t benchTestCount;How many test bench pulses do you want;"", 1, 0, 0, 10000000, 0
-uint8_t[16] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	uint8_t autoscale iacByTpsHoldTime;How long the dashpot holds TPS before it starts to decay.;"seconds", 0.1, 0, 0, 25, 1
+	uint8_t autoscale iacByTpsDecayTime;The length of time over which the dashpot effect will be smoothly removed.;"seconds", 0.1, 0, 0, 25, 1
+uint8_t[14] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
