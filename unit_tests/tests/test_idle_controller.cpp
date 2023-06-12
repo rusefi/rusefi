@@ -207,6 +207,46 @@ TEST(idle_v2, runningOpenLoopTpsTaper) {
 	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 0, 20));
 }
 
+extern int timeNowUs;
+
+TEST(idle_v2, runningOpenLoopTpsTaperWithDashpot) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+
+	// Zero out base tempco table
+	setArrayValues(config->cltIdleCorr, 0.0f);
+
+	// Add 50% idle position
+	engineConfiguration->iacByTpsTaper = 50;
+	// At 10% TPS
+	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
+
+	// set hold and decay time
+	engineConfiguration->iacByTpsHoldTime = 10;	// 10 secs
+	engineConfiguration->iacByTpsDecayTime = 10;	// 10 secs
+
+	// save the lastTimeRunningUs time - let it be the start of the hold phase
+	timeNowUs += 5'000'000;
+	// full throttle = max.iac
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(ICP::Running, 0, 0, 100));
+
+	// jump to the end of the 'hold' phase of dashpot
+	timeNowUs += 10'000'000;
+
+	// change the state to idle (release the pedal) - but still 100% max.iac!
+    EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(ICP::Idling, 0, 0, 0));
+    // now we're in the middle of decay
+    timeNowUs += 5'000'000;
+    // 50% decay (50% of 50 is 25)
+    EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(ICP::Idling, 0, 0, 0));
+    // now the decay is finished
+    timeNowUs += 5'000'000;
+    // no correction
+    EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(ICP::Idling, 0, 0, 0));
+    // still react to the pedal
+    EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(ICP::Idling, 0, 0, 10));
+}
+
 TEST(idle_v2, runningOpenLoopRpmTaper) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
