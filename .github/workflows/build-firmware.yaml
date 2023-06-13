@@ -136,7 +136,7 @@ jobs:
           - build-target: alphax-8chan
             folder: config/boards/hellen/alphax-8chan
             ini-file: rusefi_alphax-8chan.ini
-            skip-rate: 90
+            skip-rate: 0
 
           - build-target: s105
             folder: config/boards/s105
