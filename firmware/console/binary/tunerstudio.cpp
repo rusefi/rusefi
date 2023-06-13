@@ -457,7 +457,7 @@ bool TunerStudio::handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) 
 TunerStudio tsInstance;
 
 static int tsProcessOne(TsChannelBase* tsChannel) {
-	validateStack("communication", ObdCode::STACK_USAGE_COMMUNICATION, 128);
+	validateStack("communication", ObdCode::STACK_USAGE_COMMUNICATION, EXPECTED_REMAINING_STACK);
 
 	if (!tsChannel->isReady()) {
 		chThdSleepMilliseconds(10);

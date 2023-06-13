@@ -84,7 +84,7 @@ private:
 	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
 
-		validateStack("MIL", ObdCode::STACK_USAGE_MIL, 128);
+		validateStack("MIL", ObdCode::STACK_USAGE_MIL, EXPECTED_REMAINING_STACK);
 #if EFI_SHAFT_POSITION_INPUT
 		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < MS2NT(500)) {
 			enginePins.checkEnginePin.setValue(1);

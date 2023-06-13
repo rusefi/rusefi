@@ -283,7 +283,7 @@ private:
 		UNUSED(nowNt);
 		setPeriod(50 /* ms */);
 
-		validateStack("Bench", ObdCode::STACK_USAGE_BENCH, 128);
+		validateStack("Bench", ObdCode::STACK_USAGE_BENCH, EXPECTED_REMAINING_STACK);
 
 		// naive inter-thread communication - waiting for a flag
 		if (isBenchTestPending) {
