@@ -51,8 +51,18 @@ function onAnythingFromTCU(bus, id, dlc, data)
     txCan(ECU_BUS, id, 0, data) -- relay non-ECU message to ECU
 end
 
+MOTOR_1 = 0x282
+
+function interceptAndReplaceContent(bus, id, dlc, data)
+    rpm = 200
+    data[3] = rpm
+    -- send adjusted packet into the other bus
+    txCan(TCU_BUS, MOTOR_1, 0, data)
+end
+
 -- VAG Motor_1 just as example
 -- canRxAdd(ECU_BUS, 0x280, printAndDrop)
+-- canRxAdd(ECU_BUS, MOTOR_1, interceptAndReplaceContent)
 
 -- last option: unconditional forward of all remaining messages
 canRxAddMask(ECU_BUS, 0, 0, onAnythingFromECU)
