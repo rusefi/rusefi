@@ -45,9 +45,11 @@ pins:
 
   - pin: B5
     function: AUX analog out 1
+    color: white
 
   - pin: B4
     function: AUX analog out 2
+    color: yellow
 
   - pin: B3
     function: L (first) LSU Vm (yellow)
@@ -74,9 +76,11 @@ pins:
 
   - pin: C5
     function: CAN L
+    color: blue
 
   - pin: C4
     function: CAN H
+    color: green
 
   - pin: C3
     function: L EGT+
