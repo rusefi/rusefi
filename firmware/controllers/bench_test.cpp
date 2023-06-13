@@ -252,12 +252,12 @@ void starterRelayBench(void) {
 }
 
 static void fuelPumpBenchExt(float durationMs) {
-	pinbench(0.0, durationMs, 100.0, 1.0,
+	pinbench(/*startdelay*/0, durationMs, 100.0, 1.0,
 		&enginePins.fuelPumpRelay, engineConfiguration->fuelPumpPin);
 }
 
 void acRelayBench(void) {
-	pinbench(0.0, 1000.0, 100.0, 1,
+	pinbench(/*startdelay*/0, 1000.0, 100.0, 1,
 		&enginePins.acRelay, engineConfiguration->acRelayPin);
 }
 
@@ -267,7 +267,7 @@ static void mainRelayBench(void) {
 }
 
 static void hpfpValveBench(void) {
-	pinbench(1000.0, 20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
+	pinbench(/*startdelay*/0, 20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
 		&enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
 }
 
