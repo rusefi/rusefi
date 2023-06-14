@@ -34,6 +34,9 @@ void checkLastBootError() {
 		break;
 	case ErrorCookie::HardFault: {
 		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
+		if (engineConfiguration->rethrowHardFault) {
+		    firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
+		}
 
 		// Print out the context as a sequence of uintptr
 		uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->FaultCtx);

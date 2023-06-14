@@ -50,6 +50,7 @@ void setHyundaiPb() {
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
     engineConfiguration->hpfpCamLobes = 4;
+    engineConfiguration->rethrowHardFault = true;
 
    	engineConfiguration->highPressureFuel.v1 = 0.5; /* volts */;
    	engineConfiguration->highPressureFuel.value1 = 0;
