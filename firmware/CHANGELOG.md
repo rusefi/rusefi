@@ -29,6 +29,7 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Dashpot for return-to-idle from coasting #5303
 
 ### Fixed
  - fuel_pump_control is accessible as getOutput("isFuelPumpOn") in Lua #5239 
