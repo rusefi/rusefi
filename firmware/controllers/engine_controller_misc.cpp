@@ -68,7 +68,6 @@ void slowStartStopButtonCallback() {
    		return;
    	}
 
-	// todo: should this be simply FSIO?
 	if (engine->rpmCalculator.isRunning()) {
 		// turn starter off once engine is running
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
