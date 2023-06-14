@@ -28,6 +28,9 @@ void setHyundaiPb() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->enableAemXSeries = true;
+
 	set201xHyundai();
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
