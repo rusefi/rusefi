@@ -72,10 +72,10 @@ pins:
     type: can
 
   - pin: 153
-    function: GND
+    function: Power GND
     type: GND
   - pin: 154
-    function: GND
+    function: Power GND
     type: GND
   - pin: 155
     function: +12V TBD
