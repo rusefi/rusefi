@@ -53,7 +53,6 @@ static void onStartStopButtonToggle() {
 	}
 }
 
-
 void slowStartStopButtonCallback() {
 	bool startStopState = startStopButtonDebounce.readPinEvent();
 
@@ -77,6 +76,7 @@ void slowStartStopButtonCallback() {
 		}
 	}
 
+    // todo: migrate to 'Timer' class
 	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * engineConfiguration->startCrankingDuration) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
 		if (wasStarterEngaged) {
