@@ -4375,18 +4375,19 @@ dialog = tcuControls, "Transmission Settings"
 		field = "etbDutyShutdownThreshold",                 etbDutyShutdownThreshold
 
 	dialog = parkingLot, "Experimental/Broken"
-	    field = uiMode,                                 uiMode
+;	    field = uiMode,                                 uiMode
 		field = kLineBaudRate,                          kLineBaudRate
 		field = verboseKLine,                           verboseKLine
 		field = auxiliarySetting1,                      auxiliarySetting1
 		field = kLineDoHondaSend,                       kLineDoHondaSend
 		field = hondaK,                         hondaK
 		field = kLinePeriodUs,                          kLinePeriodUs
+		field = rethrowHardFault,                       rethrowHardFault
 		field = canGpioType,                            canGpioType
 		field = "I understand ECU Locking",				yesUnderstandLocking
 		field = "Tune read/write password",				tuneHidingKey, { yesUnderstandLocking == 1 }
 		field = verboseQuad,									verboseQuad
-		field = useEeprom,										useEeprom
+;		field = useEeprom,										useEeprom
 		field = "#System hacks"
 		field = "vvtBooleanForVerySpecialCases",		vvtBooleanForVerySpecialCases
 		field = tempBooleanForVerySpecialLogic,			tempBooleanForVerySpecialLogic
