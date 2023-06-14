@@ -382,6 +382,9 @@ enable sd/disable sd
 ### rusefiVerbose29b
 Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 
+### rethrowHardFault
+
+
 ### isHip9011Enabled
 
 

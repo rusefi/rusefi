@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 12 17:33:17 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 14 13:12:29 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1554,7 +1554,7 @@ struct engine_configuration_s {
 	bool rusefiVerbose29b : 1 {};
 	/**
 	offset 724 bit 5 */
-	bool unusedIsEngineControlEnabled : 1 {};
+	bool rethrowHardFault : 1 {};
 	/**
 	offset 724 bit 6 */
 	bool isHip9011Enabled : 1 {};
@@ -5188,4 +5188,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23168);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 12 17:33:17 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 14 13:12:29 UTC 2023
