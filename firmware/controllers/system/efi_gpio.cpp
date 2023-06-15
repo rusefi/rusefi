@@ -351,7 +351,7 @@ void NamedOutputPin::setHigh(const char *msg) {
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// turn the output level ACTIVE
-	setValue(true);
+	setValue(msg, true);
 
 #if EFI_ENGINE_SNIFFER
     addEngineSnifferOutputPinEvent(this, FrontDirection::UP);
@@ -370,7 +370,7 @@ void NamedOutputPin::setLow(const char *msg) {
 #endif // EFI_UNIT_TEST
 
 	// turn off the output
-	setValue(false);
+	setValue(msg, false);
 
 #if EFI_ENGINE_SNIFFER
 	addEngineSnifferOutputPinEvent(this, FrontDirection::DOWN);
@@ -380,7 +380,7 @@ void NamedOutputPin::setLow(const char *msg) {
 bool NamedOutputPin::stop() {
 #if EFI_GPIO_HARDWARE
 	if (isInitialized() && getLogicValue()) {
-		setValue(false);
+		setValue("stop", false);
 		efiPrintf("turning off %s", name);
 		return true;
 	}
@@ -392,7 +392,7 @@ void InjectorOutputPin::reset() {
 	// If this injector was open, close it and reset state
 	if (overlappingCounter != 0) {
 		overlappingCounter = 0;
-		setValue(0);
+		setValue("reset", 0);
 	}
 
 	// todo: this could be refactored by calling some super-reset method
@@ -471,7 +471,7 @@ bool OutputPin::isInitialized() {
 }
 
 void OutputPin::toggle() {
-	setValue(!getLogicValue());
+	setValue("toggle", !getLogicValue());
 }
 
 bool OutputPin::getAndSet(int logicValue) {
