@@ -192,7 +192,7 @@ public:
 	FanControl1 fan1;
 	FanControl2 fan2;
 
-	efitick_t startStopStateLastPushTime = 0;
+	Timer startStopStateLastPush;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateProperState(efitick_t nowNt) override;

@@ -15,7 +15,7 @@ static void onStartStopButtonToggle() {
 	if (engine->rpmCalculator.isStopped()) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
-		    engine->startStopStateLastPushTime = getTimeNowNt();
+		    engine->startStopStateLastPush.reset();
 		    efiPrintf("Let's crank this engine for up to %d seconds via %s!",
 		    		engineConfiguration->startCrankingDuration,
 					hwPortname(engineConfiguration->starterControlPin));
@@ -26,35 +26,36 @@ static void onStartStopButtonToggle() {
 	}
 }
 
+static void disengageStarterIfNeeded() {
+	if (engine->rpmCalculator.isRunning()) {
+		// turn starter off once engine is now running!
+		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
+		if (wasStarterEngaged) {
+			efiPrintf("Engine runs we can disengage the starter");
+		}
+	} else {
+    	if (engine->startStopStateLastPush.hasElapsedSec(engineConfiguration->startCrankingDuration)) {
+    		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
+    		if (wasStarterEngaged) {
+    			efiPrintf("Cranking timeout %d seconds", engineConfiguration->startCrankingDuration);
+    		}
+    	}
+    }
+}
+
 void slowStartStopButtonCallback() {
 	bool startStopState = startStopButtonDebounce.readPinEvent();
 
 	if (startStopState && !engine->engineState.startStopState) {
 		// we are here on transition from 0 to 1
+		// TODO: huh? looks like 'stop engine' feature is broken?! we invoke 'toggle' method under "from off to on" condition?!
 		onStartStopButtonToggle();
 	}
 	engine->engineState.startStopState = startStopState;
 
-	if (engine->startStopStateLastPushTime == 0) {
-   		// nothing is going on with startStop button
-   		return;
+    bool isStarterEngaged = enginePins.starterControl.getLogicValue();
+
+	if (isStarterEngaged) {
+	    disengageStarterIfNeeded();
    	}
-
-	if (engine->rpmCalculator.isRunning()) {
-		// turn starter off once engine is running
-		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
-		if (wasStarterEngaged) {
-			efiPrintf("Engine runs we can disengage the starter");
-			engine->startStopStateLastPushTime = 0;
-		}
-	}
-
-    // todo: migrate to 'Timer' class
-	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * engineConfiguration->startCrankingDuration) {
-		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
-		if (wasStarterEngaged) {
-			efiPrintf("Cranking timeout %d seconds", engineConfiguration->startCrankingDuration);
-			engine->startStopStateLastPushTime = 0;
-		}
-	}
 }
