@@ -32,10 +32,16 @@ public:
 	float getElapsedUs() const;
 	// WOW yes returns US while parameter is NT
 	float getElapsedUs(efitick_t nowNt) const;
+	// too many options for the API probably?
+	uint32_t getElapsedNt(efitick_t nowNt) const;
 
 	// Perform an atomic update event based on the passed timestamp,
 	// returning the delta between the last reset and the provided timestamp
 	float getElapsedSecondsAndReset(efitick_t nowNt);
+
+	efitick_t get() {
+	    return m_lastReset;
+	}
 
 private:
 	// Use not-quite-minimum value to avoid overflow

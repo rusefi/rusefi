@@ -51,7 +51,7 @@ float Timer::getElapsedUs() const {
 	return getElapsedUs(getTimeNowNt());
 }
 
-float Timer::getElapsedUs(efitick_t nowNt) const {
+uint32_t Timer::getElapsedNt(efitick_t nowNt) const {
 	auto deltaNt = nowNt - m_lastReset;
 
 	// Yes, things can happen slightly in the future if we get a lucky interrupt between
@@ -64,8 +64,11 @@ float Timer::getElapsedUs(efitick_t nowNt) const {
 	if (deltaNt > UINT32_MAX - 1) {
 		deltaNt = UINT32_MAX - 1;
 	}
+	return deltaNt;
+}
 
-	auto delta32 = (uint32_t)deltaNt;
+float Timer::getElapsedUs(efitick_t nowNt) const {
+	auto delta32 = getElapsedNt(nowNt);
 
 	return NT2US(delta32);
 }
