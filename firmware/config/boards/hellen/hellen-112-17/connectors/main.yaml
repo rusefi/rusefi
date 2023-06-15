@@ -2,13 +2,25 @@ pins:
 
   - pin: 103
     function: Pedal Analog GND
+    type: GND
   - pin: 104
     function: Sensor GND
     type: GND
   - pin: 105
     function: Throttle Analog GND
+    type: GND
   - pin: 106
     function: Pedal Analog GND
+    type: GND
+  - pin: 107
+    class: analog_inputs
+    ts_name: 107 A/C pressure
+    function: 107 A/C pressure
+
+  - pin: 111
+    class: analog_inputs
+    function: 111 Analog Input
+    ts_name: 111 Analog Input
 
   - pin: 112
     class: analog_inputs
@@ -20,6 +32,7 @@ pins:
 
   - pin: 114
     function: Pedal Position 2
+    class: analog_inputs
   - pin: 115
     class: outputs
     ts_name: Main Relay
@@ -29,12 +42,16 @@ pins:
     function: Ignition Switch KL15 / Battery Voltage Analog Input
     ts_name: 116 - Voltage From Key
     color: white
-
+  - pin: 119
+    class: analog_inputs
+    ts_name: 119 A/C pressure
+    function: 119 A/C pressure
   - pin: 120
     function: 120 Switch
 
   - pin: 121
     function: Pedal Position 1
+    class: analog_inputs
 
   - pin: 123
     function: 123 Input
@@ -46,9 +63,23 @@ pins:
     color: black
     type: 3.3v
 
+  - pin: 127
+    function: K-Line
+
+  - pin: 128
+    function: Tach Output
+
   - pin: 132
     function: CAN bus high
     type: can
+
+  - pin: 134
+    function: 134 Switch
+  - pin: 135
+    function: 135 Switch
+  - pin: 136
+    function: 136 Switch
+
   - pin: 138
     function: Analog Supply TPS
     color: black
@@ -56,12 +87,12 @@ pins:
   - pin: 140
     class: outputs
     function: 140 relay output
-    color: orange B4
+    color: orange
     type: ls
   - pin: 141
     class: outputs
     function: Engine Radiator Fan
-    color: orange B4
+    color: orange
     type: ls
   - pin: 142
     class: outputs
@@ -70,7 +101,14 @@ pins:
   - pin: 144
     function: CAN bus low
     type: can
-
+  - pin: 147
+    function: 147 Switch
+  - pin: 151
+    class: outputs
+    function: 151 relay output
+  - pin: 152
+    class: outputs
+    function: 152 relay output
   - pin: 153
     function: Power GND
     type: GND
@@ -91,6 +129,15 @@ pins:
   - pin: 204
     function: Sensor GND
     type: GND
+  - pin: 205
+    function: Sensor GND
+    type: GND
+  - pin: 206
+    function: Sensor GND
+    type: GND
+  - pin: 207
+    function: Sensor GND
+    type: GND
 
   - pin: 210
     function: Pedal +5V Supply
@@ -107,6 +154,7 @@ pins:
     function: Manifold Pressure Sensor
 
   - pin: 220
+    class: analog_inputs
     function: Throttle Position 2
   - pin: 223
     function: Analog Supply MAP
@@ -126,6 +174,12 @@ pins:
   - pin: 233
     function: MAF analog of frequency
 
+  - pin: 135
+    function: 135 Low Side Output?
+  - pin: 137
+    function: Knock 1
+  - pin: 138
+    function: Knock 2
   - pin: 242
     function: injector output 2
   - pin: 243
