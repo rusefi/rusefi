@@ -1,10 +1,10 @@
 // this is a work-around since our Makefile does not recognise .cc format
 // todo: adjust the makefile so that we can remove this
 
-#include "googletest/googletest/src/gtest.cc"
-#include "googletest/googletest/src/gtest-death-test.cc"
-#include "googletest/googletest/src/gtest-filepath.cc"
-#include "googletest/googletest/src/gtest-port.cc"
-#include "googletest/googletest/src/gtest-printers.cc"
-#include "googletest/googletest/src/gtest-test-part.cc"
-#include "googletest/googletest/src/gtest-typed-test.cc"
+#include "src/gtest.cc"
+#include "src/gtest-death-test.cc"
+#include "src/gtest-filepath.cc"
+#include "src/gtest-port.cc"
+#include "src/gtest-printers.cc"
+#include "src/gtest-test-part.cc"
+#include "src/gtest-typed-test.cc"
