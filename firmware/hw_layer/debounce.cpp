@@ -80,6 +80,7 @@ void ButtonDebounce::startConfiguration () {
 @returns true if the button is pressed, and will not return true again within the set timeout
 */
 bool ButtonDebounce::readPinEvent() {
+    // TRICKY: depending on which API you use (readPinEvent vs readPinState) same variable holds different kind of state
     storedValue = false;
     return readPinState();
 }
@@ -91,6 +92,7 @@ bool ButtonDebounce::readPinState() {
     efitick_t timeNowNt = getTimeNowNt();
     // If it's been less than the threshold since we were last called
     if (timeLast.getElapsedNt(timeNowNt) < m_threshold) {
+        // see 'TRICKY' comment in readPinEvent()
         return storedValue;
     }
     // storedValue is a class variable, so it needs to be reset.
