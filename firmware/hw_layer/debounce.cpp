@@ -29,7 +29,6 @@ void ButtonDebounce::init (efitimems_t threshold, brain_pin_e &pin, pin_input_mo
         s_firstDebounce = this;
     }
     m_threshold = MS2NT(threshold);
-    timeLast = 0;
     m_pin = &pin;
     m_mode = &mode;
     startConfiguration();
@@ -89,9 +88,9 @@ bool ButtonDebounce::readPinState() {
     if (!isBrainPinValid(*m_pin)) {
         return false;
     }
-    efitick_t timeNow = getTimeNowNt();
+    efitick_t timeNowNt = getTimeNowNt();
     // If it's been less than the threshold since we were last called
-    if ((timeNow - timeLast) < m_threshold) {
+    if (timeLast.getElapsedNt(timeNowNt) < m_threshold) {
         return storedValue;
     }
     // storedValue is a class variable, so it needs to be reset.
@@ -108,7 +107,7 @@ bool ButtonDebounce::readPinState() {
         storedValue = !storedValue;
     }
     if (storedValue) {
-        timeLast = timeNow;
+        timeLast.reset();
     }
     return storedValue;
 }
