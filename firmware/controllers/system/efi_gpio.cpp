@@ -337,6 +337,10 @@ extern bool verboseMode;
 #endif // EFI_UNIT_TEST
 
 void NamedOutputPin::setHigh() {
+    setHigh(nullptr);
+}
+
+void NamedOutputPin::setHigh(const char *msg) {
 #if EFI_UNIT_TEST
 	if (verboseMode) {
 		efiPrintf("pin %s goes high", name);
@@ -355,6 +359,10 @@ void NamedOutputPin::setHigh() {
 }
 
 void NamedOutputPin::setLow() {
+    setLow(nullptr);
+}
+
+void NamedOutputPin::setLow(const char *msg) {
 #if EFI_UNIT_TEST
 	if (verboseMode) {
 		efiPrintf("pin %s goes low", name);
@@ -483,6 +491,10 @@ void OutputPin::setOnchipValue(int electricalValue) {
 	palWritePad(port, pin, electricalValue);
 }
 #endif // EFI_PROD_CODE
+
+void OutputPin::setValue(const char *msg, int logicValue) {
+    setValue(logicValue);
+}
 
 void OutputPin::setValue(int logicValue) {
 #if ENABLE_PERF_TRACE

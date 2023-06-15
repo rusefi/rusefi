@@ -22,7 +22,7 @@ void MainRelayController::onSlowCallback() {
 	mainRelayState = !isBenchTest;
 #endif
 
-	enginePins.mainRelay.setValue(mainRelayState);
+	enginePins.mainRelay.setValue("mr", mainRelayState);
 }
 
 bool MainRelayController::needsDelayedShutoff() {

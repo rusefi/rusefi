@@ -32,6 +32,7 @@ public:
 	bool isInitialized();
 
 	bool getAndSet(int logicValue);
+	void setValue(const char *msg, int logicValue);
 	TEST_VIRTUAL void setValue(int logicValue);
 	void toggle();
 	bool getLogicValue() const;
@@ -75,6 +76,8 @@ class NamedOutputPin : public virtual OutputPin {
 public:
 	NamedOutputPin();
 	explicit NamedOutputPin(const char *name);
+	virtual void setHigh(const char *msg);
+	virtual void setLow(const char *msg);
 	virtual void setHigh();
 	virtual void setLow();
 	const char *getName() const;

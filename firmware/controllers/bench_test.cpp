@@ -58,8 +58,10 @@ bool isRunningBenchTest(void) {
 static scheduling_s benchSchedStart;
 static scheduling_s benchSchedEnd;
 
+#define BENCH_MSG "bench"
+
 static void benchOn(OutputPin* output) {
-	output->setValue(true);
+	output->setValue(BENCH_MSG, true);
 }
 
 static char pin_error[64];
@@ -74,7 +76,7 @@ static void benchOff(OutputPin* output) {
 		efiPrintf("Diag says %s", pin_error);
 	}
 #endif // EFI_PROD_CODE
-	output->setValue(false);
+	output->setValue(BENCH_MSG, false);
 }
 
 static void runBench(brain_pin_e brainPin, OutputPin *output, float startDelayMs, float onTimeMs, float offTimeMs,
