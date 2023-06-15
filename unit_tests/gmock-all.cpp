@@ -1,4 +1,4 @@
-// this is a work-around since our Makefile does not recognice .cc format
+// this is a work-around since our Makefile does not recognise .cc format
 // todo: adjust the makefile so that we can remove this
 
 #include "googletest/googlemock/src/gmock-cardinalities.cc"
