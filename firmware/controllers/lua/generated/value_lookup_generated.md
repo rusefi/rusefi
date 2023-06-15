@@ -1022,7 +1022,7 @@ Turns off alternator output above specified TPS, enabling this reduced parasitic
 This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 
 ### iacByTpsTaper
-Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value
+IAC Value added when coasting and transitioning into idle.
 
 ### tpsAccelLookback
 How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
@@ -1583,8 +1583,8 @@ Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU 
 How many test bench pulses do you want
 
 ### iacByTpsHoldTime
-How long the dashpot holds TPS before it starts to decay.
+How long initial IAC adder is held before starting to decay.
 
 ### iacByTpsDecayTime
-The length of time over which the dashpot effect will be smoothly removed.
+How long it takes to remove initial IAC adder to return to normal idle.
 

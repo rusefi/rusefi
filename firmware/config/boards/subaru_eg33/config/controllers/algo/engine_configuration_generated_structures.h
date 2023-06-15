@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Jun 14 13:11:40 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Jun 15 04:58:27 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2802,7 +2802,7 @@ struct engine_configuration_s {
 	 */
 	int16_t afterCrankingIACtaperDuration;
 	/**
-	 * Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value
+	 * IAC Value added when coasting and transitioning into idle.
 	percent
 	 * offset 1506
 	 */
@@ -4336,13 +4336,13 @@ struct engine_configuration_s {
 	 */
 	uint32_t benchTestCount;
 	/**
-	 * How long the dashpot holds TPS before it starts to decay.
+	 * How long initial IAC adder is held before starting to decay.
 	seconds
 	 * offset 3948
 	 */
 	scaled_channel<uint8_t, 10, 1> iacByTpsHoldTime;
 	/**
-	 * The length of time over which the dashpot effect will be smoothly removed.
+	 * How long it takes to remove initial IAC adder to return to normal idle.
 	seconds
 	 * offset 3949
 	 */
@@ -5188,4 +5188,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23168);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Jun 14 13:11:40 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Jun 15 04:58:27 UTC 2023
