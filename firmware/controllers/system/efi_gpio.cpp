@@ -492,11 +492,11 @@ void OutputPin::setOnchipValue(int electricalValue) {
 }
 #endif // EFI_PROD_CODE
 
-void OutputPin::setValue(const char *msg, int logicValue) {
-    setValue(logicValue);
+void OutputPin::setValue(int logicValue) {
+    setValue(nullptr, logicValue);
 }
 
-void OutputPin::setValue(int logicValue) {
+void OutputPin::setValue(const char *msg, int logicValue) {
 #if ENABLE_PERF_TRACE
 // todo: https://github.com/rusefi/rusefi/issues/1638
 //	ScopePerf perf(PE::OutputPinSetValue);
