@@ -1110,7 +1110,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float alternatorOffAboveTps;Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.;"%", 1, 0, 0, 200, 2
 	int16_t afterCrankingIACtaperDuration;This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.;"cycles", 1, 0, 0, 5000, 0
 	
-	int16_t iacByTpsTaper;Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent", 1, 0, 0, 500, 0
+	int16_t iacByTpsTaper;IAC Value added when coasting and transitioning into idle.;"percent", 1, 0, 0, 500, 0
 
 	Gpio auxSerialTxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial;
 	Gpio auxSerialRxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial;
@@ -1524,8 +1524,8 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	uint8_t[GEARS_COUNT] autoscale gearBasedOpenLoopBoostAdder;Boost duty cycle added by gear;"%", 0.5, 0, 0, 100, 1
 
 	uint32_t benchTestCount;How many test bench pulses do you want;"", 1, 0, 0, 10000000, 0
-	uint8_t autoscale iacByTpsHoldTime;How long the dashpot holds TPS before it starts to decay.;"seconds", 0.1, 0, 0, 25, 1
-	uint8_t autoscale iacByTpsDecayTime;The length of time over which the dashpot effect will be smoothly removed.;"seconds", 0.1, 0, 0, 25, 1
+	uint8_t autoscale iacByTpsHoldTime;How long initial IAC adder is held before starting to decay.;"seconds", 0.1, 0, 0, 25, 1
+	uint8_t autoscale iacByTpsDecayTime;How long it takes to remove initial IAC adder to return to normal idle.;"seconds", 0.1, 0, 0, 25, 1
 uint8_t[14] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
