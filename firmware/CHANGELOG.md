@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - fuel_pump_control is accessible as getOutput("isFuelPumpOn") in Lua #5239 
+ - start button logic does not crank started for first X seconds since ECU boot #5324
 
 ## June 2023 Release "Day 466"
 
