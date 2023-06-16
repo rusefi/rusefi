@@ -8,6 +8,7 @@
 #include "pch.h"
 
 #include "backup_ram.h"
+#include "error_handling_led.h"
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
@@ -65,6 +66,7 @@ void checkLastBootError() {
 }
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
+    TURN_FATAL_LED();
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
 	sramState->Cookie = ErrorCookie::HardFault;
@@ -75,9 +77,6 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint3
 #endif // EFI_BACKUP_SRAM
 }
 
-extern ioportid_t criticalErrorLedPort;
-extern ioportmask_t criticalErrorLedPin;
-extern uint8_t criticalErrorLedState;
 #endif /* EFI_PROD_CODE */
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
@@ -238,7 +237,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
 	va_end(ap);
 #endif
-	palWritePad(criticalErrorLedPort, criticalErrorLedPin, criticalErrorLedState);
+    TURN_FATAL_LED();
 	turnAllPinsOff();
 	enginePins.communicationLedPin.setValue(1);
 
