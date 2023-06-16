@@ -144,11 +144,6 @@ public class ParseState implements DefinitionsState {
         addDefinition(name, value, definitionOverwritePolicy);
     }
 
-    @Override
-    public void setDefinitionPolicy(Definition.OverwritePolicy policy) {
-        this.definitionOverwritePolicy = policy;
-    }
-
     public ParseTreeListener getListener() {
         return new RusefiConfigGrammarBaseListener() {
 
@@ -204,63 +199,14 @@ public class ParseState implements DefinitionsState {
 
     @Override
     public void exitScalarTypedefSuffix(RusefiConfigGrammarParser.ScalarTypedefSuffixContext ctx) {
-        Type datatype = Type.findByTsType(ctx.Datatype().getText());
-
-        FieldOptions options = new FieldOptions();
-        handleFieldOptionsList(options, ctx.fieldOptionsList());
-
-        typedefs.put(typedefName, new ScalarTypedef(typedefName, datatype, options));
     }
 
     @Override
     public void enterEnumTypedefSuffix(RusefiConfigGrammarParser.EnumTypedefSuffixContext ctx) {
-        int endBit = Integer.parseInt(ctx.integer(1).getText());
-
-        Type datatype = Type.findByTsType(ctx.Datatype().getText());
-
-        String rhs = ctx.enumRhs().getText();
-
-        String[] values = null;
-
-        if (rhs.startsWith("@@")) {
-            String defName = rhs.replaceAll("@", "");
-
-            if (defName.endsWith(AUTO_ENUM_SUFFIX)) {
-                // clip off the "_auto_enum" part
-                defName = defName.substring(0, defName.length() - 10);
-                values = resolveEnumValues(defName);
-            } else {
-                Definition def = definitions.get(defName);
-
-                if (def == null) {
-                    throw new RuntimeException("couldn't find definition for " + rhs);
-                }
-
-                Object value = def.value;
-
-                if (!(value instanceof String)) {
-                    throw new RuntimeException("Found definition for " + rhs + " but it wasn't a string as expected");
-                }
-
-                rhs = (String)value;
-            }
-        }
-
-        if (values == null) {
-            values = Arrays.stream(rhs.split(","))                    // Split on commas
-                        .map(String::trim)                                  // trim whitespace
-                        .map(s -> s.replaceAll("\"", ""))   // Remove quotes
-                        .toArray(String[]::new);                            // Convert back to array
-        }
-
-        typedefs.put(typedefName, new EnumTypedef(typedefName, datatype, endBit, values));
     }
 
     @Override
     public void exitStringTypedefSuffix(RusefiConfigGrammarParser.StringTypedefSuffixContext ctx) {
-        Double stringLength = ParseState.this.evalResults.remove();
-
-        ParseState.this.typedefs.put(ParseState.this.typedefName, new StringTypedef(ParseState.this.typedefName, stringLength.intValue()));
     }
 
     @Override
@@ -355,61 +301,6 @@ public class ParseState implements DefinitionsState {
 
     @Override
     public void exitScalarField(RusefiConfigGrammarParser.ScalarFieldContext ctx) {
-        String type = ctx.identifier(0).getText();
-        String name = ctx.identifier(1).getText();
-        boolean autoscale = ctx.Autoscale() != null;
-
-        // First check if this is an instance of a struct
-        if (structs.containsKey(type)) {
-            scope.structFields.add(new StructField(structs.get(type), name));
-            return;
-        }
-
-        // Check first if we have a typedef for this type
-        Typedef typedef = typedefs.get(type);
-
-        FieldOptions options = null;
-        if (typedef != null) {
-            if (typedef instanceof ScalarTypedef) {
-                ScalarTypedef scTypedef = (ScalarTypedef)typedef;
-                // Copy the typedef's options list - we don't want to edit it
-                options = scTypedef.options.copy();
-                // Switch to the "real" type, that is the typedef's type
-                type = scTypedef.type.cType;
-            } else if (typedef instanceof EnumTypedef) {
-                EnumTypedef bTypedef = (EnumTypedef) typedef;
-
-                options = new FieldOptions();
-
-                // Merge the read-in options list with the default from the typedef (if exists)
-                handleFieldOptionsList(options, ctx.fieldOptionsList());
-
-                scope.structFields.add(new EnumField(bTypedef.type, type, name, bTypedef.endBit, bTypedef.values, options));
-                return;
-            } else if (typedef instanceof StringTypedef) {
-                options = new FieldOptions();
-                handleFieldOptionsList(options, ctx.fieldOptionsList());
-
-                StringTypedef sTypedef = (StringTypedef) typedef;
-                scope.structFields.add(new StringField(name, sTypedef.size, options.comment));
-                return;
-            } else {
-                // TODO: throw
-            }
-        } else {
-            // If no typedef found, it MUST be a native type
-            if (!Type.findByCtype(type).isPresent()) {
-                throw new RuntimeException("didn't understand type " + type + " for element " + name);
-            }
-
-            // no typedef found, create new options list
-            options = new FieldOptions();
-        }
-
-        // Merge the read-in options list with the default from the typedef (if exists)
-        handleFieldOptionsList(options, ctx.fieldOptionsList());
-
-        scope.structFields.add(new ScalarField(Type.findByCtype(type).get(), name, options, autoscale));
     }
 
     @Override
@@ -454,17 +345,8 @@ public class ParseState implements DefinitionsState {
     public void exitArrayField(RusefiConfigGrammarParser.ArrayFieldContext ctx) {
     }
 
-    private int[] arrayDim = null;
-
     @Override
     public void exitArrayLengthSpec(RusefiConfigGrammarParser.ArrayLengthSpecContext ctx) {
-        int arrayDim0 = evalResults.remove().intValue();
-
-        if (ctx.ArrayDimensionSeparator() != null) {
-            this.arrayDim = new int[] { arrayDim0, evalResults.remove().intValue() };
-        } else {
-            this.arrayDim = new int[] { arrayDim0 };
-        }
     }
 
     @Override
