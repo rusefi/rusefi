@@ -2,7 +2,7 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
-import com.rusefi.TypesHelper;
+import com.rusefi.parse.TypesHelper;
 import com.rusefi.output.variables.VariableRecord;
 import org.jetbrains.annotations.NotNull;
 

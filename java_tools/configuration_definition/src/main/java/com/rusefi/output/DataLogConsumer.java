@@ -3,7 +3,7 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
-import com.rusefi.TypesHelper;
+import com.rusefi.parse.TypesHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

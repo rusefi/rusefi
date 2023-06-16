@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
+import com.rusefi.parse.TypesHelper;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -278,7 +279,7 @@ public class ConfigFieldImpl implements ConfigField {
     }
 
     /**
-     * @see com.rusefi.newparse.parsing.Type
+     * @see TypesHelper
      */
     @Override
     public String getType() {

@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.*;
+import com.rusefi.parse.TypesHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;

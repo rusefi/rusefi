@@ -4,8 +4,8 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
-import com.rusefi.TypesHelper;
-import com.rusefi.newparse.parsing.Type;
+import com.rusefi.parse.Type;
+import com.rusefi.parse.TypesHelper;
 
 import java.util.TreeSet;
 

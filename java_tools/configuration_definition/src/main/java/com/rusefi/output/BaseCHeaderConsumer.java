@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.*;
+import com.rusefi.parse.TypesHelper;
 
 import static com.rusefi.ToolUtil.EOL;
 

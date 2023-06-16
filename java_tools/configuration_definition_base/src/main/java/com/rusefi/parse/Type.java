@@ -1,5 +1,8 @@
-package com.rusefi.newparse.parsing;
+package com.rusefi.parse;
 
+/**
+ * todo: migrate from TypesHelper to this class?
+ */
 public enum Type {
     U08("uint8_t", "U08", 1),
     S08("int8_t", "S08", 1),

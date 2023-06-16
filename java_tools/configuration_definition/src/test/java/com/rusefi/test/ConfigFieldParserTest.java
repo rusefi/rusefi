@@ -2,6 +2,7 @@ package com.rusefi.test;
 
 import com.rusefi.*;
 import com.rusefi.output.*;
+import com.rusefi.parse.TypesHelper;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
