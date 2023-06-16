@@ -6,6 +6,7 @@
 #include "pch.h"
 
 #include "fuel_pump.h"
+#include "bench_test.h"
 
 void FuelPumpController::onSlowCallback() {
 	auto timeSinceIgn = m_ignOnTimer.getElapsedSeconds();

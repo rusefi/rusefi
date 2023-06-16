@@ -299,7 +299,7 @@ public:
 
 
 	SensorsState sensors;
-	efitick_t mainRelayBenchStartNt = 0;
+	Timer mainRelayBenchStart;
 
 
 	void preCalculate();

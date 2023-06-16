@@ -51,7 +51,7 @@
 
 static bool isRunningBench = false;
 
-bool isRunningBenchTest(void) {
+bool isRunningBenchTest() {
 	return isRunningBench;
 }
 
@@ -263,7 +263,7 @@ void acRelayBench(void) {
 
 static void mainRelayBench(void) {
 	// main relay is usually "ON" via FSIO thus bench testing that one is pretty unusual
-	engine->mainRelayBenchStartNt = getTimeNowNt();
+	engine->mainRelayBenchStart.reset();
 }
 
 static void hpfpValveBench(void) {
