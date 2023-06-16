@@ -22,7 +22,7 @@ public class WriteSimulatorConfiguration {
         IoUtil.connectToSimulator(linkManager, true);
         BinaryProtocol bp = Objects.requireNonNull(linkManager.getBinaryProtocol(), "getBinaryProtocol");
         ConfigurationImage configuration = bp.getControllerConfiguration();
-        System.out.println("Got " + configuration);
+        System.out.println("Got " + Objects.requireNonNull(configuration, "configuration"));
         IniFileModel ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
         if (ini == null)
             throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);

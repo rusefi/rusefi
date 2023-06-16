@@ -117,8 +117,11 @@ public class IoUtil {
 
     public static void connectToSimulator(LinkManager linkManager, boolean startProcess) throws InterruptedException {
         if (startProcess) {
-            if (!TcpConnector.getAvailablePorts().isEmpty())
-                throw new IllegalStateException("Port already binded on startup?");
+            if (FileLog.isWindows()) {
+                // this check seems not to work on Linux
+                if (!TcpConnector.getAvailablePorts().isEmpty())
+                    throw new IllegalStateException("Port already binded on startup?");
+            }
             SimulatorExecHelper.startSimulator();
         }
 
