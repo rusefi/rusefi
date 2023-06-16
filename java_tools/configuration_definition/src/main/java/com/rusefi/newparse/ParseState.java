@@ -55,16 +55,13 @@ public class ParseState implements DefinitionsState {
             switch (existingDefinition.overwritePolicy) {
                 case NotAllowed:
                     throw new IllegalStateException("Tried to add definition for " + name + ", but one already existed.");
-                case Replace:
-                    definitions.remove(name);
-                    break;
                 case IgnoreNew:
                     // ignore the new definition, do nothing
                     return;
             }
         }
 
-        definitions.put(name, new Definition(name, value, overwritePolicy));
+        definitions.put(name, new Definition(value, overwritePolicy));
     }
 
     private void addDefinition(String name, Object value) {
