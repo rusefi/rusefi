@@ -20,7 +20,9 @@ void FuelPumpController::onSlowCallback() {
 
 	isFuelPumpOn = isPrime || engineTurnedRecently;
 
-	enginePins.fuelPumpRelay.setValue(isFuelPumpOn);
+    if (!isRunningBenchTest()) {
+	    enginePins.fuelPumpRelay.setValue("FP", isFuelPumpOn);
+	}
 }
 
 void FuelPumpController::onIgnitionStateChanged(bool ignitionOnParam) {
