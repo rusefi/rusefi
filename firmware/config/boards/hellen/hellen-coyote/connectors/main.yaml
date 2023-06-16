@@ -1,0 +1,198 @@
+pins:
+
+  - pin: A1
+    function: Starter Motor Control Sense
+
+  - pin: A5
+    function: Case Ground
+  - pin: A8
+    function: Clutch Deactivation Top of Travel
+  - pin: A9
+    function: Clutch Switch Bottom of Travel
+  - pin: A10
+    function: High Cooling Fans
+
+  - pin: A13
+    function: Starting RC
+
+  - pin: A14
+    function: Fuel Pump Command
+
+  - pin: A17
+    function: Low Cooling Fans
+
+
+  - pin: A22
+    function: Shift Down
+  - pin: A23
+    function: Shift Up
+
+  - pin: A26
+    function: Starting Load Input
+  - pin: A27
+    function: Fuel Pump Monitor
+
+  - pin: A29
+    function: Sensor Power
+  - pin: A30
+    function: Analog Ground
+
+  - pin: A32
+    function: Reserve Switch
+  - pin: A33
+    function: Air Conditioner Pressure Sensor
+
+  - pin: A35
+    function: Pedal Position Ground 1
+  - pin: A36
+    function: Pedal Position Power 1
+
+  - pin: A39
+    function: Canister Ventilation Solenoid
+  - pin: A40
+    function: Pedal Position Power 2
+
+  - pin: A44
+    function: Fuel Temperature Sensor
+    class: analog_inputs
+
+  - pin: A46
+    function: Fuel Pressure Sensor
+    class: analog_inputs
+
+  - pin: A47
+    function: Ambient Air Sensor
+    class: analog_inputs
+
+  - pin: A49
+    function: Fuel Pump On
+
+
+
+  - pin: A51
+    function: Generator Current Sensor
+  - pin: A52
+    function: Sensor Power
+  - pin: A53
+    function: Battery Monitor
+
+  - pin: A59
+    function: Pedal Position Ground 2
+  - pin: A60
+    function: Pedal Position Signal 2
+  - pin: A61
+    function: Pedal Position Signal 1
+
+
+  - pin: A73
+    function: MAF
+
+  - pin: A75
+    function: HS1 CAN High
+  - pin: A76
+    function: HS1 CAN Low
+
+  - pin: A90
+    function: Heated Oxygen Sensor
+  - pin: A91
+    function: Heated Oxygen Sensor
+
+  - pin: A97
+    function: +12 from Main Relay
+  - pin: A99
+    function: +12 from Main Relay
+
+  - pin: A100
+    function: Power GND
+    type: GND
+  - pin: A102
+    function: Power GND
+    type: GND
+  - pin: A103
+    function: Power GND
+    type: GND
+
+
+  - pin: B1
+    function: Injector 1
+  - pin: B2
+    function: Injector 5
+  - pin: B3
+    function: Injector 4
+
+  - pin: B4
+    function: VVT12
+  - pin: B5
+    function: VVT11
+  - pin: B6
+    function: VVT22
+  - pin: B7
+    function: VVT21
+
+  - pin: B16
+    function: Injector 8
+
+  - pin: B17
+    function: Cam Sensors Power
+
+  - pin: B27
+    function: Intake
+
+  - pin: B31
+    function: Injector 6
+
+  - pin: B39
+    function: Crank Shield
+
+  - pin: B40
+    function: Cam22 Ground
+  - pin: B41
+    function: Cam22 Signal
+  - pin: B42
+    function: Cam21 Signal
+
+  - pin: B52
+    function: Knock1 Neg
+  - pin: B53
+    function: Knock1 Pos
+  - pin: B54
+    function: Cam12 Ground
+  - pin: B55
+    function: Cam12 Signal
+
+  - pin: B60
+    function: Intake Manifold Runner Control
+
+
+  - pin: B61
+    function: Injector 7
+  - pin: B62
+    function: Injector 2
+
+  - pin: B67
+    function: Knock2 Neg
+  - pin: B68
+    function: Knock2 Pos
+  - pin: B69
+    function: Crank Negative
+  - pin: B70
+    function: Crank Positive
+
+  - pin: B87
+    function: Coil 7
+  - pin: B88
+    function: Coil 6
+  - pin: B89
+    function: Coil 5
+  - pin: B90
+    function: Coil 8
+
+  - pin: B92
+    function: Coil 4
+  - pin: B93
+    function: Coil 1
+  - pin: B94
+    function: Coil 3
+  - pin: B95
+    function: Coil 2
+
