@@ -15,7 +15,7 @@ public class SimulatorExecHelper {
 
     // see also SimulatorHelper
     private static final String SIMULATOR_BINARY = "../simulator/build/rusefi_simulator.exe";
-    static Process simulatorProcess;
+    private static Process simulatorProcess;
 
     /**
      * This is currently used by auto-tests only. Todo: reuse same code for UI-launched simulator?

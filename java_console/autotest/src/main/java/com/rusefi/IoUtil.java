@@ -115,7 +115,7 @@ public class IoUtil {
         FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart));
     }
 
-    static void connectToSimulator(LinkManager linkManager, boolean startProcess) throws InterruptedException {
+    public static void connectToSimulator(LinkManager linkManager, boolean startProcess) throws InterruptedException {
         if (startProcess) {
             if (!TcpConnector.getAvailablePorts().isEmpty())
                 throw new IllegalStateException("Port already binded on startup?");
