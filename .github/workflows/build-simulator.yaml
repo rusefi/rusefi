@@ -46,6 +46,10 @@ jobs:
       working-directory: ./simulator/
       run: ./compile.sh
 
+    - name: Load Default Tune from Linux Simulator
+      working-directory: ./simulator/
+      run: ./write_tune.sh
+
     - name: Commit fresh generated default simulator tune
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
