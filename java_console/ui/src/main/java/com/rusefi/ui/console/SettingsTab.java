@@ -42,7 +42,7 @@ public class SettingsTab {
     }
 
     public void showContent() {
-        final Map<String, DialogModel> dialogs = IniFileModel.getInstance().getDialogs();
+        final Map<String, DialogModel> dialogs = uiContext.getIni().getDialogs();
         if (dialogs.isEmpty()) {
             content.removeAll();
             content.add(new JLabel("Meta data not found: " + RUSEFI_INI_PREFIX + "*" + RUSEFI_INI_SUFFIX));
@@ -134,7 +134,7 @@ public class SettingsTab {
         dialog.setText(name);
         dialogBody.removeAll();
 
-        DialogModel m = IniFileModel.getInstance().getDialogs().get(name);
+        DialogModel m = uiContext.getIni().getDialogs().get(name);
 
         dialogBody.setLayout(new GridLayout(m.getFields().size(), 1));
 

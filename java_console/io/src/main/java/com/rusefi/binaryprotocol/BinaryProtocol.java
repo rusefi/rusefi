@@ -2,6 +2,7 @@ package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
@@ -365,7 +366,7 @@ public class BinaryProtocol {
         if (arguments != null && arguments.saveFile) {
             try {
                 ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
-                Msq tune = MsqFactory.valueOf(image);
+                Msq tune = MsqFactory.valueOf(image, IniFileModel.getInstance());
                 tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
             } catch (Exception e) {
                 System.err.println("Ignoring " + e);

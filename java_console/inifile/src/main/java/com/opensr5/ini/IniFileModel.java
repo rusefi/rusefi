@@ -1,7 +1,6 @@
 package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
-import com.devexperts.util.IndexedSet;
 import com.opensr5.ini.field.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,23 +25,24 @@ public class IniFileModel {
     private static IniFileModel INSTANCE;
     private String dialogId;
     private String dialogUiName;
-    private Map<String, DialogModel> dialogs = new TreeMap<>();
-    private Map<String, DialogModel.Field> allFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, DialogModel> dialogs = new TreeMap<>();
+    private final Map<String, DialogModel.Field> allFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     // this is only used while reading model - TODO extract reader
-    private List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
+    private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
     public Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public Map<String, String> tooltips = new TreeMap<>();
     public Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
-    private String currentSection;
     private String currentYBins;
     private String currentXBins;
     private final Map<String, String> xBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, String> yBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public static void main(String[] args) {
-        log.info("Dialogs: " + IniFileModel.getInstance().dialogs);
+        IniFileModel iniFile = new IniFileModel();
+        iniFile.findAndReadIniFile(INI_FILE_PATH);
+        log.info("Dialogs: " + iniFile.dialogs);
     }
 
     private boolean isInSettingContextHelp = false;
@@ -148,7 +148,6 @@ public class IniFileModel {
 
             if (first.startsWith("[") && first.endsWith("]")) {
                 log.info("Section " + first);
-                currentSection = first;
                 isConstantsSection = first.equals("[Constants]");
             }
 

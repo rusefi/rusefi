@@ -359,7 +359,7 @@ public class ConsoleTools {
         ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
         System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
 
-        Msq tune = MsqFactory.valueOf(image);
+        Msq tune = MsqFactory.valueOf(image, IniFileModel.getInstance());
         tune.writeXmlFile(Online.outputXmlFileName);
         String authToken = AuthTokenPanel.getAuthToken();
         System.out.println("Using " + authToken);

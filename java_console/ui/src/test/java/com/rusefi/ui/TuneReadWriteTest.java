@@ -9,7 +9,6 @@ import com.rusefi.tools.tune.CurveData;
 import com.rusefi.tools.tune.TS2C;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -28,14 +27,10 @@ public class TuneReadWriteTest {
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.rusefi_binary";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
 
-    @Before
-    public void before() {
-        IniFileModel.getInstance().readIniFile(TEST_INI);
-    }
+    private final IniFileModel model = new IniFileModel().readIniFile(TEST_INI);
 
     @Test
     public void testIniReader() throws IOException {
-        IniFileModel model = IniFileModel.getInstance();
         assertTrue(model.getTables().contains("fueltable"));
         assertEquals(21, model.getTables().size());
         assertEquals("fuelRpmBins", model.getXBin("FUELTable"));
@@ -110,7 +105,6 @@ public class TuneReadWriteTest {
                 "}\n";
 
         String tableReference = "config->ve";
-        IniFileModel model = IniFileModel.getInstance();
         String tableName = "veTable";
 
         String copyMethodBody = TS2C.getCopyMethodBody(tableReference, model, tableName);
@@ -133,7 +127,6 @@ public class TuneReadWriteTest {
     @Test
     public void testCopyCode() {
         String tableReference = "config->ve";
-        IniFileModel model = IniFileModel.getInstance();
         String tableName = "veTable";
 
         String copyMethodBody = TS2C.getCopyMethodBody(tableReference, model, tableName);
@@ -153,12 +146,12 @@ public class TuneReadWriteTest {
         assertNotNull(flow);
         assertEquals("2", flow.getDigits());
 
-        ConfigurationImage tsBinaryData = tsTune.asImage(IniFileModel.getInstance(), LEGACY_TOTAL_CONFIG_SIZE);
+        ConfigurationImage tsBinaryData = tsTune.asImage(model, LEGACY_TOTAL_CONFIG_SIZE);
 
         System.out.println("Reading " + TEST_BINARY_FILE);
         ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
 
-        int mismatchCounter = compareImages(tsBinaryData, fileBinaryData);
+        int mismatchCounter = compareImages(tsBinaryData, fileBinaryData, model);
         assertEquals(0, mismatchCounter);
     }
 
@@ -170,7 +163,7 @@ public class TuneReadWriteTest {
         String fileName = path.getFileName().toString();
 
         // writing TS XML tune file with rusEFI code
-        Msq tuneFromBinary = MsqFactory.valueOf(fileBinaryData);
+        Msq tuneFromBinary = MsqFactory.valueOf(fileBinaryData, model);
         tuneFromBinary.writeXmlFile(fileName);
 
         Constant batteryCorrection = tuneFromBinary.findPage().findParameter("injector_battLagCorrBins");
@@ -198,14 +191,14 @@ public class TuneReadWriteTest {
         Msq tuneFromFile = Msq.readTune(fileName);
         assertNotNull(tuneFromFile.getVersionInfo().getSignature());
 
-        ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(IniFileModel.getInstance(), LEGACY_TOTAL_CONFIG_SIZE);
+        ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(model, LEGACY_TOTAL_CONFIG_SIZE);
 
-        assertEquals(0, compareImages(binaryDataFromXml, fileBinaryData));
+        assertEquals(0, compareImages(binaryDataFromXml, fileBinaryData, model));
         // todo: looks like this is not removing the temporary file?
         Files.delete(path);
     }
 
-    private static int compareImages(ConfigurationImage image1, ConfigurationImage fileData) {
+    private static int compareImages(ConfigurationImage image1, ConfigurationImage fileData, IniFileModel ini) {
         byte[] tsBinaryDataContent = image1.getContent();
         byte[] fileBinaryDataContent = fileData.getContent();
 
@@ -215,7 +208,7 @@ public class TuneReadWriteTest {
             byte tsByte = tsBinaryDataContent[i];
             byte fileByte = fileBinaryDataContent[i];
             if (tsByte != fileByte) {
-                IniField field = IniFileModel.getInstance().findByOffset(i);
+                IniField field = ini.findByOffset(i);
                 System.out.println("Mismatch at offset=" + i + ", " + (field == null ? "(no field)" : field) + " runtime=" + tsByte + "/file=" + fileByte);
                 mismatchCounter++;
             }
