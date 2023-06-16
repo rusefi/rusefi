@@ -13,9 +13,14 @@ import java.util.function.Consumer;
 public class SimulatorExecHelper {
     private final static NamedThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorExecHelper", true);
 
+    private static final String SIMULATOR_BUILD_RUSEFI_SIMULATOR = "../simulator/build/rusefi_simulator";
     // see also SimulatorHelper
-    private static final String SIMULATOR_BINARY = "../simulator/build/rusefi_simulator.exe";
+    private static final String SIMULATOR_BINARY = getSimulatorBinary();
     private static Process simulatorProcess;
+
+    private static String getSimulatorBinary() {
+        return FileLog.isWindows() ? SIMULATOR_BUILD_RUSEFI_SIMULATOR + ".exe" : SIMULATOR_BUILD_RUSEFI_SIMULATOR;
+    }
 
     /**
      * This is currently used by auto-tests only. Todo: reuse same code for UI-launched simulator?

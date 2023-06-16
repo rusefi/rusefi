@@ -196,7 +196,7 @@ public class LinkManager implements Closeable {
     public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
             COMMUNICATION_QUEUE,
-            new NamedThreadFactory("communication executor"));
+            new NamedThreadFactory("communication executor", true));
 
     public void assertCommunicationThread() {
         if (Thread.currentThread() != communicationThread) {
