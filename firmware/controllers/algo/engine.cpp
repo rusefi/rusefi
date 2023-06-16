@@ -34,11 +34,10 @@
  #include "mc33816.h"
 #endif // EFI_MC33816
 
+#include "bench_test.h"
+
 #if EFI_PROD_CODE
 #include "trigger_emulator_algo.h"
-#include "bench_test.h"
-#else
-#define isRunningBenchTest() true
 #endif /* EFI_PROD_CODE */
 
 #if (BOARD_TLE8888_COUNT > 0)

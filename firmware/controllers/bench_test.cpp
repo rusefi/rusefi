@@ -22,6 +22,12 @@
 
 #include "pch.h"
 
+static bool isRunningBench = false;
+
+bool isRunningBenchTest() {
+	return isRunningBench;
+}
+
 #if EFI_ENGINE_CONTROL
 #if !EFI_UNIT_TEST
 
@@ -48,12 +54,6 @@
 #if (BOARD_TLE8888_COUNT > 0)
 #include "gpio/tle8888.h"
 #endif // BOARD_TLE8888_COUNT
-
-static bool isRunningBench = false;
-
-bool isRunningBenchTest() {
-	return isRunningBench;
-}
 
 static scheduling_s benchSchedStart;
 static scheduling_s benchSchedEnd;
