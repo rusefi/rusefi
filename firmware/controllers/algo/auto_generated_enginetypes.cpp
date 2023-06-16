@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Jun 01 16:49:21 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Jun 16 00:44:43 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -173,6 +173,8 @@ case engine_type_e::ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
 case engine_type_e::FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
+case engine_type_e::FORD_COYOTE:
+  return "FORD_COYOTE";
 case engine_type_e::FORD_ESCORT_GT:
   return "FORD_ESCORT_GT";
 case engine_type_e::FORD_INLINE_6_1995:
@@ -341,8 +343,6 @@ case engine_type_e::TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case engine_type_e::FORD_COYOTE:
-  return "UNUSED_11";
 case engine_type_e::UNUSED_12:
   return "UNUSED_12";
 case engine_type_e::UNUSED_13:

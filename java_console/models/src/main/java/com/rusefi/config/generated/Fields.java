@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jun 15 23:32:28 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 16 00:45:38 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -291,6 +291,7 @@ public class Fields {
 	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
+	public static final int engine_type_e_FORD_COYOTE = 11;
 	public static final int engine_type_e_FORD_ESCORT_GT = 14;
 	public static final int engine_type_e_FORD_INLINE_6_1995 = 7;
 	public static final int engine_type_e_FRANKENSO_BMW_M73_F = 40;
@@ -375,7 +376,6 @@ public class Fields {
 	public static final int engine_type_e_TEST_ROTARY = 19;
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
-	public static final int engine_type_e_UNUSED_11 = 11;
 	public static final int engine_type_e_UNUSED_12 = 12;
 	public static final int engine_type_e_UNUSED_13 = 13;
 	public static final int engine_type_e_UNUSED_15 = 15;
