@@ -2,22 +2,17 @@ package com.rusefi.test;
 
 import com.rusefi.BitState;
 import com.rusefi.ReaderStateImpl;
-import com.rusefi.newparse.outputs.OutputChannelWriter;
 import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.GaugeConsumer;
-import com.rusefi.output.GetOutputValueConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
-import java.io.IOException;
-
-import static com.rusefi.test.newParse.NewParseHelper.parseToOutputChannels;
 import static org.junit.Assert.assertEquals;
 
 public class OutputsTest {
     @Test
-    public void generateSomething() throws IOException {
+    public void generateSomething() {
         ReaderStateImpl state = new ReaderStateImpl();
         state.getVariableRegistry().register("GAUGE_NAME_FUEL_WALL_CORRECTION", "wall");
         String test = "struct total\n" +
@@ -28,15 +23,6 @@ public class OutputsTest {
                 "angle_t m_requested_pump;Computed requested pump \n" +
                 "float tCharge;speed density\n" +
                 "end_struct\n";
-
-        String expected = "root_afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
-                "root_afr_typet = scalar, U08, 4, \"ms\", 1, 0\n" +
-                "root_isForcedInduction = bits, U32, 8, [0:0]\n" +
-                "root_enableFan1WithAc = bits, U32, 8, [1:1]\n" +
-                "root_m_requested_pump = scalar, F32, 12, \"\", 1, 0\n" +
-                "root_tCharge = scalar, F32, 16, \"\", 1, 0\n" +
-                "; total TS size = 20\n";
-        assertEquals(expected, parseToOutputChannels(test));
 
         String expectedLegacy = "afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
                 "afr_typet = scalar, U08, 4, \"ms\", 1, 0\n" +
@@ -59,9 +45,6 @@ public class OutputsTest {
         runOriginalImplementation(test);
     }
 
-    /**
-     * while we have {@link OutputChannelWriter} here we use the current 'legacy' implementation
-     */
     private static OutputsSectionConsumer runOriginalImplementation(String test) {
         ReaderStateImpl state = new ReaderStateImpl();
 
