@@ -3,22 +3,25 @@ package com.rusefi.tools;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.IoUtil;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.io.LinkManager;
 import com.rusefi.tune.xml.Msq;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.Objects;
 
 public class WriteSimulatorConfiguration {
     // f407-discovery is historically the most inclusive .ini file
-    private static String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini";
+    private static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini";
 
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
         // SimulatorExecHelper
         LinkManager linkManager = new LinkManager();
-        IoUtil.connectToSimulator(linkManager, false);
-        ConfigurationImage configuration = linkManager.getBinaryProtocol().getControllerConfiguration();
+        IoUtil.connectToSimulator(linkManager, true);
+        BinaryProtocol bp = Objects.requireNonNull(linkManager.getBinaryProtocol(), "getBinaryProtocol");
+        ConfigurationImage configuration = bp.getControllerConfiguration();
         System.out.println("Got " + configuration);
         IniFileModel ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
         if (ini == null)

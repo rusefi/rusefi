@@ -1,0 +1,1 @@
+java -cp ../java_console/ui/build/libs/rusefi_console.jar com.rusefi.tools.WriteSimulatorConfiguration
