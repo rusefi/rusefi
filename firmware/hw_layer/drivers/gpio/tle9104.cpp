@@ -195,7 +195,7 @@ brain_pin_diag_e Tle9104::getDiag(size_t pin) {
 		case 3:
 			// overtemp and overcurrent
 			result |= PIN_DRIVER_OVERTEMP;
-			// falls through
+			[[fallthrough]];
 		case 4:
 			result |= PIN_OVERLOAD;
 			break;
