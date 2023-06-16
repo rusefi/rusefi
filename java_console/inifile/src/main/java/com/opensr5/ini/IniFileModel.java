@@ -87,7 +87,7 @@ public class IniFileModel {
         if (!dir.isDirectory())
             return null;
         log.info("Searching for " + prefix + "*" + suffix + " in " + fileDirectory);
-        for (String file : dir.list()) {
+        for (String file : Objects.requireNonNull(dir.list())) {
             if (file.contains(" "))
                 continue; // spaces not acceptable
             if (file.startsWith(prefix) && file.endsWith(suffix))
@@ -164,16 +164,22 @@ public class IniFileModel {
             }
 
 
-            if ("dialog".equals(first)) {
-                handleDialog(list);
-            } else if ("table".equals(first)) {
-                handleTable(list);
-            } else if ("xBins".equals(first)) {
-                handleXBins(list);
-            } else if ("yBins".equals(first)) {
-                handleYBins(list);
-            } else if ("zBins".equals(first)) {
-                handleZBins(list);
+            switch (first) {
+                case "dialog":
+                    handleDialog(list);
+                    break;
+                case "table":
+                    handleTable(list);
+                    break;
+                case "xBins":
+                    handleXBins(list);
+                    break;
+                case "yBins":
+                    handleYBins(list);
+                    break;
+                case "zBins":
+                    handleZBins(list);
+                    break;
             }
         } catch (RuntimeException e) {
             throw new IllegalStateException("While [" + rawText + "]", e);
@@ -216,16 +222,21 @@ public class IniFileModel {
     }
 
     private void handleFieldDefinition(LinkedList<String> list) {
-        if (list.get(1).equals(FIELD_TYPE_SCALAR)) {
-            registerField(ScalarIniField.parse(list));
-        } else if (list.get(1).equals(FIELD_TYPE_STRING)) {
-            registerField(StringIniField.parse(list));
-        } else if (list.get(1).equals(FIELD_TYPE_ARRAY)) {
-            registerField(ArrayIniField.parse(list));
-        } else if (list.get(1).equals(FIELD_TYPE_BITS)) {
-            registerField(EnumIniField.parse(list));
-        } else {
-            throw new IllegalStateException("Unexpected " + list);
+        switch (list.get(1)) {
+            case FIELD_TYPE_SCALAR:
+                registerField(ScalarIniField.parse(list));
+                break;
+            case FIELD_TYPE_STRING:
+                registerField(StringIniField.parse(list));
+                break;
+            case FIELD_TYPE_ARRAY:
+                registerField(ArrayIniField.parse(list));
+                break;
+            case FIELD_TYPE_BITS:
+                registerField(EnumIniField.parse(list));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected " + list);
         }
     }
 
