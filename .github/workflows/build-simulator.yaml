@@ -24,6 +24,10 @@ jobs:
         distribution: 'zulu'
         java-version: '8'
 
+    - name: Gradle edition of java console
+      working-directory: ./java_tools
+      run: ./gradlew :ui:shadowJar
+
     - name: Print GCC version
       working-directory: .
       run: gcc -v
