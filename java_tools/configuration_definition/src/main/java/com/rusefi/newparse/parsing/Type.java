@@ -1,8 +1,5 @@
 package com.rusefi.newparse.parsing;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum Type {
     U08("uint8_t", "U08", 1),
     S08("int8_t", "S08", 1),
@@ -26,13 +23,4 @@ public enum Type {
         this.size = size;
     }
 
-    public static Optional<Type> findByCtype(String cType) {
-        // todo: better implementation of type aliases!
-        String cTypeWithAlas = "floatms_t".equals(cType) ? "float" : cType;
-        return Arrays.stream(Type.values()).filter(t -> t.cType.equals(cTypeWithAlas)).findFirst();
-    }
-
-    public static Type findByTsType(String tsType) {
-        return Arrays.stream(Type.values()).filter(t -> t.tsType.equals(tsType)).findFirst().get();
-    }
 }
