@@ -48,7 +48,7 @@ enum class engine_type_e : uint32_t {
 
 	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
 	HELLEN_NA8_96 = 10,
-	UNUSED_11 = 11,
+	FORD_COYOTE = 11,
 	UNUSED_12 = 12,
 	UNUSED_13 = 13,
 	MRE_MIATA_NA6_MAP = 66,
