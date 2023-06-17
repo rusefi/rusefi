@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23368">
+    <page number="0" size="23436">
         <constant name="accelerometerSpiDevice">"Off"</constant>
         <constant digits="1" name="acDelay" units="sec">0.0</constant>
         <constant name="acFanPin">"NONE"</constant>
@@ -2874,27 +2874,7 @@ end</constant>
         <constant name="mafSensorType">"v1"</constant>
         <constant name="mainRelayPin">"NONE"</constant>
         <constant name="mainRelayPinMode">"default"</constant>
-        <constant cols="1" digits="0" name="mainUnusedEnd" rows="214">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant cols="1" digits="0" name="mainUnusedEnd" rows="194">
          0.0
          0.0
          0.0
@@ -3954,6 +3934,106 @@ end</constant>
          0.0
          0.0
 </constant>
+        <constant cols="1" digits="0" name="tcu_rangeD" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant name="tcu_rangeInput1">"NONE"</constant>
+        <constant name="tcu_rangeInput2">"NONE"</constant>
+        <constant name="tcu_rangeInput3">"NONE"</constant>
+        <constant name="tcu_rangeInput4">"NONE"</constant>
+        <constant name="tcu_rangeInput5">"NONE"</constant>
+        <constant name="tcu_rangeInput6">"NONE"</constant>
+        <constant name="tcu_rangeInputMode1">"DEFAULT"</constant>
+        <constant name="tcu_rangeInputMode2">"DEFAULT"</constant>
+        <constant name="tcu_rangeInputMode3">"DEFAULT"</constant>
+        <constant name="tcu_rangeInputMode4">"DEFAULT"</constant>
+        <constant name="tcu_rangeInputMode5">"DEFAULT"</constant>
+        <constant name="tcu_rangeInputMode6">"DEFAULT"</constant>
+        <constant cols="1" digits="0" name="tcu_rangeLow" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="tcu_rangeM" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="tcu_rangeM1" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="tcu_rangeM2" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="tcu_rangeM3" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="tcu_rangeMinus" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="tcu_rangeN" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="tcu_rangeP" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="tcu_rangePlus" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="tcu_rangeR" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
         <constant name="tcu_solenoid1">"NONE"</constant>
         <constant name="tcu_solenoid2">"NONE"</constant>
         <constant name="tcu_solenoid3">"NONE"</constant>
@@ -4755,7 +4835,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20230611" nPages="1" signature="rusEFI master.2023.06.17.f407-discovery.3158123863" version="5.0"/>
+    <versionInfo firmwareInfo="20230611" nPages="1" signature="rusEFI master.2023.06.17.f407-discovery.2506925808" version="5.0"/>
     <bibliography author="rusEFI 20230611" writeDate="date"/>
     <settings/>
     <userComments/>
