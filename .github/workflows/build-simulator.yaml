@@ -58,6 +58,10 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
+        if [ "${{github.event_name}}" != "push" ] || [ "${{github.repository}}" != "master" ]; then
+          echo "::set-env name=NOCOMMIT::true"
+          exit 0
+        fi
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-default-tune Action"
         git add 'simulator/generated/*xml'
