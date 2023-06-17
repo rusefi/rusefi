@@ -2,6 +2,10 @@
 
 echo "This batch files reads rusefi_enums.h and produces auto_generated_enums.* files"
 
+cd ../java_tools
+./gradlew :config_definition:shadowJar
+cd ../firmware
+
 rm gen_enum_to_string.log
 
 java -DSystemOut.name=logs/gen_java_enum -cp ../java_tools/enum2string.jar com.rusefi.ToJavaEnum -enumInputFile controllers/sensors/sensor_type.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
