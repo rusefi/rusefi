@@ -1,4 +1,4 @@
-package com.rusefi.ui;
+package com.rusefi.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
@@ -17,13 +17,10 @@ import java.nio.file.Path;
 
 import static org.junit.Assert.*;
 
-/**
- * from IDEA this unit test needs to be executed with "empty" working directory
- */
 public class TuneReadWriteTest {
     private static final String PATH = "src/test/resources/frankenso/";
-    private static final String TUNE_NAME = PATH + "CurrentTune.msq";
-    private static final String TEST_INI = PATH + "mainController.ini";
+    private static final String TUNE_NAME = PATH + "test-CurrentTune.msq";
+    private static final String TEST_INI = PATH + "test-mainController.ini";
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.rusefi_binary";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
 
