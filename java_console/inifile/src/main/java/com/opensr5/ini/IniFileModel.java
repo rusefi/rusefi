@@ -29,6 +29,7 @@ public class IniFileModel {
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
     public Map<String, IniField> allIniFields = new LinkedHashMap<>();
+    public final List<DialogModel.Field> fieldsInUiOrder = new ArrayList<>();
 
     public Map<String, String> tooltips = new TreeMap<>();
     public Map<String, String> protocolMeta = new TreeMap<>();
@@ -101,6 +102,7 @@ public class IniFileModel {
         if (dialogUiName == null)
             dialogUiName = dialogId;
         dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog));
+        fieldsInUiOrder.addAll(fieldsOfCurrentDialog);
 
         dialogId = null;
         fieldsOfCurrentDialog.clear();
@@ -164,6 +166,9 @@ public class IniFileModel {
 
 
             switch (first) {
+                case "field":
+                    handleField(list);
+                    break;
                 case "dialog":
                     handleDialog(list);
                     break;
@@ -243,6 +248,20 @@ public class IniFileModel {
         if (allIniFields.containsKey(field.getName()))
             return;
         allIniFields.put(field.getName(), field);
+    }
+
+    private void handleField(LinkedList<String> list) {
+        list.removeFirst(); // "field"
+
+        String uiFieldName = list.isEmpty() ? "" : list.removeFirst();
+
+        String key = list.isEmpty() ? null : list.removeFirst();
+
+        DialogModel.Field field = new DialogModel.Field(key, uiFieldName);
+
+        if (key != null)
+            fieldsOfCurrentDialog.add(field);
+        log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
     private void handleDialog(LinkedList<String> list) {
