@@ -84,7 +84,6 @@
 
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
-! so not forget to change fileVersion in rusefi.ini
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 #define TS_FILE_VERSION 20210312
