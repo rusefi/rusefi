@@ -28,7 +28,7 @@ public class IniFileModel {
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
-    public Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public Map<String, IniField> allIniFields = new LinkedHashMap<>();
 
     public Map<String, String> tooltips = new TreeMap<>();
     public Map<String, String> protocolMeta = new TreeMap<>();
@@ -240,9 +240,8 @@ public class IniFileModel {
     }
 
     private void registerField(IniField field) {
-        // todo: only the first occurrence should matter, but com.rusefi.ui.TuneReadWriteTest is failing when uncommented :(
-        //if (allIniFields.containsKey(field.getName()))
-        //	return;
+        if (allIniFields.containsKey(field.getName()))
+            return;
         allIniFields.put(field.getName(), field);
     }
 

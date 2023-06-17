@@ -7,8 +7,6 @@ import com.rusefi.tune.xml.Page;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Map;
-
 import static com.rusefi.tune.TuneReadWriteTest.SRC_TEST_RESOURCES;
 import static com.rusefi.tune.TuneReadWriteTest.TEST_INI;
 import static org.junit.Assert.assertFalse;
@@ -26,9 +24,10 @@ public class LoadOlderTuneTest {
         int sameValueCounter = 0;
         int notSameValueCounter = 0;
 
-        for (Map.Entry<String, Constant> e : customOldTune.getConstantsAsMap().entrySet()) {
-            String name = e.getKey();
-            Constant customValue = e.getValue();
+        IniFileModel ini = new IniFileModel().readIniFile(TEST_INI);
+
+        for (String name : ini.allIniFields.keySet()) {
+            Constant customValue = customOldTune.getConstantsAsMap().get(name);
             Constant newerDefault = lessOldDefaultTune.getConstantsAsMap().get(name);
             if (newerDefault == null) {
                 noLongerPresent++;
@@ -49,7 +48,6 @@ public class LoadOlderTuneTest {
         Assert.assertTrue(sameValueCounter > 0);
         Assert.assertTrue(notSameValueCounter > 0);
 
-        IniFileModel ini = new IniFileModel().readIniFile(TEST_INI);
         System.out.printf(ini.toString());
     }
 
