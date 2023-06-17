@@ -38,7 +38,5 @@ public interface ReaderState {
 
     List<String> getPrependFiles();
 
-    boolean isDestinationsEmpty();
-
     boolean isStackEmpty();
 }

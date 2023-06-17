@@ -94,7 +94,7 @@ public class ReaderStateImpl implements ReaderState {
 
     @Override
     public void doJob() throws IOException {
-        if (isDestinationsEmpty())
+        if (destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
 
         for (String prependFile : prependFiles)
@@ -428,11 +428,6 @@ public class ReaderStateImpl implements ReaderState {
     @Override
     public List<String> getPrependFiles() {
         return prependFiles;
-    }
-
-    @Override
-    public boolean isDestinationsEmpty() {
-        return destinations.isEmpty();
     }
 
     @Override

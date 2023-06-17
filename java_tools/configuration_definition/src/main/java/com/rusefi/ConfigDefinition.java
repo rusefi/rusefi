@@ -7,6 +7,8 @@ import com.rusefi.trigger.TriggerWheelTSLogic;
 import com.rusefi.util.SystemOut;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -39,7 +41,10 @@ public class ConfigDefinition {
 
     public static void main(String[] args) {
         try {
-            doJob(args, new ReaderStateImpl());
+            List<String> options = Files.readAllLines(Paths.get("../java_tools/configuration_definition/src/main/resources/config_definition.options"));
+            options.addAll(Arrays.asList(args));
+            String[] totalArgs = options.toArray(new String[0]);
+            doJob(totalArgs, new ReaderStateImpl());
         } catch (Throwable e) {
             SystemOut.println(e);
             e.printStackTrace();
