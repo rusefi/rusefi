@@ -94,8 +94,6 @@ public class ReaderStateImpl implements ReaderState {
 
     @Override
     public void doJob() throws IOException {
-        if (destinations.isEmpty())
-            throw new IllegalArgumentException("No destinations specified");
 
         for (String prependFile : prependFiles)
             variableRegistry.readPrependValues(prependFile);
@@ -105,7 +103,7 @@ public class ReaderStateImpl implements ReaderState {
          * the destinations/writers
          */
         SystemOut.println("Reading definition from " + definitionInputFile);
-        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(RootHolder.ROOT + definitionInputFile), IoUtils.CHARSET.name()));
         readBufferedReader(definitionReader, destinations);
 
         if (destCDefinesFileName != null) {

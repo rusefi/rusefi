@@ -61,7 +61,7 @@ public class VariableRegistry {
     }
 
     public void readPrependValues(String prependFile) throws IOException {
-        readPrependValues(new FileReader(prependFile));
+        readPrependValues(new FileReader(RootHolder.ROOT + prependFile));
     }
 
     public void readPrependValues(Reader fileReader) throws IOException {

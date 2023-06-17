@@ -32,7 +32,7 @@ public class IoUtil2 {
     }
 
     private static long getCrc32(String fileName) throws IOException {
-        File file = new File(fileName);
+        File file = new File(RootHolder.ROOT + fileName);
         byte[] fileContent = Files.readAllBytes(file.toPath());
         for (int i = 0; i < fileContent.length; i++) {
             byte aByte = fileContent[i];

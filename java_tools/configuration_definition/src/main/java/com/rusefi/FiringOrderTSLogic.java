@@ -39,7 +39,7 @@ public class FiringOrderTSLogic {
     }
 
     private static void readFiringOrders(String fileName, State state) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        BufferedReader br = new BufferedReader(new FileReader(RootHolder.ROOT + fileName));
 
         String line;
         while ((line = br.readLine()) != null) {
