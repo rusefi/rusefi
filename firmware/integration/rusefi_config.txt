@@ -18,21 +18,28 @@
 ! See also tunerstudio/readme.md
 !
 ! # Adding new fields
+!
 ! The most important thing to note when adding fields is that if you change the offset
 ! of any other fields, users will have their configs scrambled when they update their firmware.
-! As a result, this file is an organism that must be handled carefully. You may notice that
-! there isn't much organization to this file with fields in amongst unrelated fields.
-! That's OK, it's just a result of things being removed and new things being put in their
-! places, and new things only being able to be added at the end of the structure or where
-! other things were removed previously.
+! As a result, this file is an organism that must be handled carefully.
+!
+! You may notice that there isn't much organization to this file with fields in amongst unrelated fields.
+! That's OK, it's just a result of things being removed and new things being put in their places, and new
+! things only being able to be added at the end of the structure or where other things were removed previously.
+! TODO: technically we can clean this every once in a while and maybe we should
+!
 ! Find a "padding" field (usually the huge mainUnusedEnd[] array at the end of the structure)
 ! The standard practice is to name these "unusedSomething", so you can find them easily
 ! by searching for "unused" within this file.
+!
 ! Rename or substitute the field with any new fields that total to the same size.
 ! If you're adding a field to the end of the file, add it just before mainUnusedEnd[],
 ! and subtract the size of the field you added from mainUnusedEnd[].
 ! For example, if you added a uint8_t field, and mainUnusedEnd was `uint8_t[100]`,
 ! it should now be `uint8_t[99]`
+!
+! When we run out of mainUnusedEnd space we have to bump FLASH_DATA_VERSION and add extra mainUnusedEnd
+!
 ! At this point it's a good idea to save your changes in version control, i.e. with `git commit`,
 !	so that you can roll back to the current state after you generate the config files.
 ! This is important because we do not include the generated files in pull requests.
@@ -1525,7 +1532,10 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	uint32_t benchTestCount;How many test bench pulses do you want;"", 1, 0, 0, 10000000, 0
 	uint8_t autoscale iacByTpsHoldTime;How long initial IAC adder is held before starting to decay.;"seconds", 0.1, 0, 0, 25, 1
 	uint8_t autoscale iacByTpsDecayTime;How long it takes to remove initial IAC adder to return to normal idle.;"seconds", 0.1, 0, 0, 25, 1
-uint8_t[14] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+!
+! Just a shortcut to facilitate compatible configuration changes, i.e. a change which does not touch FLASH_DATA_VERSION and thus does not require manual tune migration
+!
+uint8_t[214] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
