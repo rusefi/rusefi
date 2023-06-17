@@ -26,6 +26,7 @@ dependencies {
 
 shadowJar {
     dependsOn(':enum_to_string:shadowJar')
+    dependsOn(':config_definition:shadowJar')
     archivesBaseName = 'rusefi_console'
     archiveClassifier = ''
 
