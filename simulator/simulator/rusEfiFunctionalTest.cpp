@@ -87,7 +87,7 @@ static void runCanGpioTest() {
 }
 
 static void writeSimulatorTune() {
-	FILE *ptr = fopen("generated/simulator_tune_image.bin", "wb");
+	FILE *ptr = fopen(SIMULATOR_TUNE_BIN_FILE_NAME, "wb");
 	fwrite(&persistentState.persistentConfiguration, 1, sizeof(persistentState.persistentConfiguration), ptr);
 	fclose(ptr);
 }

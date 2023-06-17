@@ -27,9 +27,8 @@ public class WriteSimulatorConfiguration {
     }
 
     private static void writeTune() throws JAXBException, IOException {
-        String s = "generated/simulator_tune_image.bin";
-        byte[] fileContent = Files.readAllBytes(new File(s).toPath());
-        System.out.println("Got " + fileContent.length + " from " + s + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
+        byte[] fileContent = Files.readAllBytes(new File(Fields.SIMULATOR_TUNE_BIN_FILE_NAME).toPath());
+        System.out.println("Got " + fileContent.length + " from " + Fields.SIMULATOR_TUNE_BIN_FILE_NAME + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         if (fileContent.length != Fields.TOTAL_CONFIG_SIZE)
             throw new IllegalStateException("Unexpected image size " + fileContent.length);
         ConfigurationImage configuration = new ConfigurationImage(fileContent);
