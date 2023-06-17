@@ -16,6 +16,6 @@ public class Definition {
 
     @Override
     public String toString() {
-        return this.value.toString();
+        return value.toString();
     }
 }

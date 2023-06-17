@@ -36,8 +36,6 @@ public interface ReaderState {
 
     void setTsFileOutputName(String tsFileOutputName);
 
-    String getDefinitionInputFile();
-
     List<String> getPrependFiles();
 
     boolean isDestinationsEmpty();

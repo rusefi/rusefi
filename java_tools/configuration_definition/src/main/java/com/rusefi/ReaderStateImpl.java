@@ -42,6 +42,7 @@ public class ReaderStateImpl implements ReaderState {
     // well, technically those should be a builder for state, not this state class itself
     private String tsFileOutputName = "rusefi.ini";
     private String definitionInputFile = null;
+    String destCDefinesFileName = null;
     private boolean withC_Defines = true;
     private final List<String> prependFiles = new ArrayList<>();
     private final List<ConfigurationConsumer> destinations = new ArrayList<>();
@@ -93,6 +94,9 @@ public class ReaderStateImpl implements ReaderState {
 
     @Override
     public void doJob() throws IOException {
+        if (isDestinationsEmpty())
+            throw new IllegalArgumentException("No destinations specified");
+
         for (String prependFile : prependFiles)
             variableRegistry.readPrependValues(prependFile);
 
@@ -103,6 +107,10 @@ public class ReaderStateImpl implements ReaderState {
         SystemOut.println("Reading definition from " + definitionInputFile);
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
         readBufferedReader(definitionReader, destinations);
+
+        if (destCDefinesFileName != null) {
+            ExtraUtil.writeDefinesToFile(getVariableRegistry(), destCDefinesFileName, definitionInputFile);
+        }
     }
 
     public void read(Reader reader) throws IOException {
@@ -415,11 +423,6 @@ public class ReaderStateImpl implements ReaderState {
     @Override
     public void setTsFileOutputName(String tsFileOutputName) {
         this.tsFileOutputName = tsFileOutputName;
-    }
-
-    @Override
-    public String getDefinitionInputFile() {
-        return definitionInputFile;
     }
 
     @Override

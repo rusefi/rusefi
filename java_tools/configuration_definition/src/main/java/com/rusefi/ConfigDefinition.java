@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.DefinitionsState;
 import com.rusefi.output.*;
 import com.rusefi.pinout.PinoutLogic;
 import com.rusefi.trigger.TriggerWheelTSLogic;
@@ -63,10 +63,8 @@ public class ConfigDefinition {
         SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsInputFileFolder = null;
-        String destCDefinesFileName = null;
-        // we postpone reading so that in case of cache hit we do less work
-        String firingEnumFileName = null;
-        String triggersInputFolder = null;
+
+        DefinitionsState parseState = state.getEnumsReader().parseState;
         String signatureDestination = null;
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
@@ -96,7 +94,7 @@ public class ConfigDefinition {
                     state.setWithC_Defines(Boolean.parseBoolean(args[i + 1]));
                     break;
                 case KEY_C_DEFINES:
-                    destCDefinesFileName = args[i + 1];
+                    state.destCDefinesFileName = args[i + 1];
                     break;
                 case KEY_JAVA_DESTINATION:
                     state.addJavaDestination(args[i + 1]);
@@ -118,12 +116,16 @@ public class ConfigDefinition {
                         throw new IllegalStateException("While processing " + fileName, e);
                     }
                     state.addInputFile(fileName);
-                case KEY_FIRING:
-                    firingEnumFileName = args[i + 1];
+                case KEY_FIRING: {
+                    String firingEnumFileName = args[i + 1];
+                    ExtraUtil.handleFiringOrder(firingEnumFileName, state.getVariableRegistry(), parseState);
                     state.addInputFile(firingEnumFileName);
+                    }
                     break;
-                case "-triggerInputFolder":
-                    triggersInputFolder = args[i + 1];
+                case "-triggerInputFolder": {
+                    String triggersInputFolder = args[i + 1];
+                    new TriggerWheelTSLogic().execute(triggersInputFolder, state.getVariableRegistry());
+                }
                     break;
                 case KEY_PREPEND:
                     state.addPrepend(args[i + 1].trim());
@@ -164,45 +166,13 @@ public class ConfigDefinition {
             SystemOut.println(state.getEnumsReader().getEnums().size() + " total enumsReader");
         }
 
-        ParseState parseState = new ParseState(state.getEnumsReader());
         // Add the variable for the config signature
         FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.getInputFiles()));
         SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFileFolder, uniqueId);
 
-        ExtraUtil.handleFiringOrder(firingEnumFileName, state.getVariableRegistry(), parseState);
-
-        new TriggerWheelTSLogic().execute(triggersInputFolder, state.getVariableRegistry());
 
         if (pinoutLogic != null) {
             pinoutLogic.registerBoardSpecificPinNames(state.getVariableRegistry(), parseState, state.getEnumsReader());
-        }
-
-        // Parse the input files
-        {
-            // Load prepend files
-            {
-                // Ignore duplicates of definitions made during prepend phase
-//                parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
-
-                for (String prependFile : state.getPrependFiles()) {
-//                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prependFile);
-                }
-            }
-
-            // Now load the main config file
-            {
-                // don't allow duplicates in the main file
-//                parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
-//                RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.definitionInputFile);
-            }
-
-            // Write C structs
-            // CStructWriter cStructs = new CStructWriter();
-            // cStructs.writeCStructs(parseState, destCHeaderFileName + ".test");
-
-            // Write tunerstudio layout
-            // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(parseState, tsInputFileFolder + "/rusefi.input", tsInputFileFolder + "/" + state.tsFileOutputName);
         }
 
         if (tsInputFileFolder != null) {
@@ -215,13 +185,6 @@ public class ConfigDefinition {
             state.addDestination(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
 
-        if (state.isDestinationsEmpty())
-            throw new IllegalArgumentException("No destinations specified");
-
         state.doJob();
-
-        if (destCDefinesFileName != null) {
-            ExtraUtil.writeDefinesToFile(state.getVariableRegistry(), destCDefinesFileName, state.getDefinitionInputFile());
-        }
     }
 }

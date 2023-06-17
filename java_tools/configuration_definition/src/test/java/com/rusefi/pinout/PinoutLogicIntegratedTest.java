@@ -1,11 +1,8 @@
 package com.rusefi.pinout;
 
-import com.rusefi.EnumsReader;
-import com.rusefi.ReaderState;
 import com.rusefi.ReaderStateImpl;
-import com.rusefi.VariableRegistry;
 import com.rusefi.enum_reader.Value;
-import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.DefinitionsState;
 import org.junit.Test;
 
 import java.io.*;
@@ -105,7 +102,7 @@ public class PinoutLogicIntegratedTest {
                                                         "E11 = 0x0B,\n" +
                                                         "};"));
 
-        ParseState definitionState = new ParseState(state.getEnumsReader());
+        DefinitionsState definitionState = state.getEnumsReader().parseState;
 
         PinoutLogic logic = new PinoutLogic(testBoard);
 

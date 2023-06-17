@@ -8,12 +8,12 @@ import com.rusefi.newparse.parsing.Definition;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParseState implements DefinitionsState {
+public class DefinitionsStateImpl implements DefinitionsState {
     private final Map<String, Definition> definitions = new HashMap<>();
 
     private final Definition.OverwritePolicy definitionOverwritePolicy = Definition.OverwritePolicy.NotAllowed;
 
-    public ParseState(EnumsReader enumsReader) {
+    public DefinitionsStateImpl(EnumsReader enumsReader) {
 
         for (Map.Entry<String, EnumsReader.EnumState> enumType : enumsReader.getEnums().entrySet()) {
             String name = enumType.getKey();

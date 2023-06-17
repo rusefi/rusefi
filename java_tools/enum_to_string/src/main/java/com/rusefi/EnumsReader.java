@@ -3,6 +3,8 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
 
+import com.rusefi.newparse.DefinitionsState;
+import com.rusefi.newparse.DefinitionsStateImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -27,6 +29,8 @@ public class EnumsReader {
     private static final String ENUMCLASS_PREFIX = "enumclass";
 
     protected final Map<String, EnumState> enums = new TreeMap<>();
+
+    public DefinitionsState parseState = new DefinitionsStateImpl(this);
 
     /**
      * core implementation sorts by name, we need special considerations to sort by value
