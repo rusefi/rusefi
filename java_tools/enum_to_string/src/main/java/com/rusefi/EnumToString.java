@@ -20,7 +20,7 @@ public class EnumToString {
     /**
      * same header for .cpp and .h
      */
-    private final static StringBuilder commonFilesHeader = new StringBuilder("// by enum2string.jar tool " +
+    private final static StringBuilder commonFilesHeader = new StringBuilder("// by enum_to_string.jar tool " +
             "on " + new Date() + "\n" +
             "// see also gen_config_and_enums.bat\n" +
             "\n" +
