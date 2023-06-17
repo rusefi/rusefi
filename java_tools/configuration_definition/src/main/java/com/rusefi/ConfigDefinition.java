@@ -116,6 +116,7 @@ public class ConfigDefinition {
                         throw new IllegalStateException("While processing " + fileName, e);
                     }
                     state.addInputFile(fileName);
+                    break;
                 case KEY_FIRING: {
                     String firingEnumFileName = args[i + 1];
                     ExtraUtil.handleFiringOrder(firingEnumFileName, state.getVariableRegistry(), parseState);
