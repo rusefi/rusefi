@@ -183,7 +183,7 @@
 <constant name="injectionMode">"Sequential"</constant>
 <constant digits="2" name="extraInjectionOffset" units="deg">0.0</constant>
 <constant digits="2" name="crankingTimingAngle" units="deg">0.0</constant>
-<constant name="ignitionMode">"One coil"</constant>
+<constant name="ignitionMode">"Single coil"</constant>
 <constant digits="0" name="ignitionOffset" units="RPM">0.0</constant>
 <constant name="timingMode">"dynamic"</constant>
 <constant digits="0" name="fixedModeTiming" units="RPM">50.0</constant>

@@ -155,6 +155,17 @@ public class EnumsReader {
             this.isEnumClass = isEnumClass;
         }
 
+        public String findByValue(int i) {
+            String key = "";
+            for (Map.Entry<String, Value> entry : entrySet()) {
+                if (entry.getValue().getIntValue() == i) {
+                    key = entry.getKey();
+                    break;
+                }
+            }
+            return key;
+        }
+
         public Collection<Value> values() {
             return values.values();
         }

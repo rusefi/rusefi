@@ -97,7 +97,7 @@ public class PinoutLogic {
 
         for (int i = 0; i < values.size(); i++) {
             appendCommaIfNeeded(simpleForm);
-            String key = findKey(enumList, i);
+            String key = enumList.findByValue(i);
 
             String value = values.get(i);
             if (i == 0) {
@@ -121,17 +121,6 @@ public class PinoutLogic {
     private static void appendCommaIfNeeded(StringBuilder sb) {
         if (sb.length() > 0)
             sb.append(",");
-    }
-
-    private static String findKey(EnumsReader.EnumState enumList, int i) {
-        String key = "";
-        for (Map.Entry<String, Value> entry : enumList.entrySet()) {
-            if (entry.getValue().getIntValue() == i) {
-                key = entry.getKey();
-                break;
-            }
-        }
-        return key;
     }
 
     @SuppressWarnings("unchecked")

@@ -1,5 +1,7 @@
 package com.rusefi.tools.tune;
 
+import org.jetbrains.annotations.NotNull;
+
 public class TuneTools {
     private static String quote(String string) {
         return "\"" + string + "\"";
@@ -15,5 +17,10 @@ public class TuneTools {
                 return i;
         }
         throw new IllegalStateException("Enum name [" + key + "] not found in " + tsCustomLine);
+    }
+
+    @NotNull
+    public static String getAssignmentCode(String name, String value) {
+        return "\tengineConfiguration->" + name + " = " + value + ";\n";
     }
 }

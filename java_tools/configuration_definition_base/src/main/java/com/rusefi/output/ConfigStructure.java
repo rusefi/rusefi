@@ -9,6 +9,8 @@ public interface ConfigStructure {
 
     String getName();
 
+    ConfigField getTsFieldByName(String name);
+
     int getTotalSize();
 
     List<ConfigField> getTsFields();

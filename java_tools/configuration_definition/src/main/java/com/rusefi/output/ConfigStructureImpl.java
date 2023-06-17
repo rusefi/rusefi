@@ -3,10 +3,7 @@ package com.rusefi.output;
 import com.rusefi.*;
 import com.rusefi.parse.TypesHelper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.rusefi.ConfigFieldImpl.BOOLEAN_T;
 
@@ -25,6 +22,8 @@ public class ConfigStructureImpl implements ConfigStructure {
     private final boolean withPrefix;
     private final List<ConfigField> cFields = new ArrayList<>();
     private final List<ConfigField> tsFields = new ArrayList<>();
+
+    private final Map<String, ConfigField> tsFieldsMap = new TreeMap<>();
 
     private int totalSize;
 
@@ -88,7 +87,7 @@ public class ConfigStructureImpl implements ConfigStructure {
 
     public void addBoth(ConfigFieldImpl cf) {
         addC(cf);
-        tsFields.add(cf);
+        addTs(cf);
     }
 
     public void addC(ConfigFieldImpl cf) {
@@ -107,6 +106,12 @@ public class ConfigStructureImpl implements ConfigStructure {
 
     public void addTs(ConfigFieldImpl cf) {
         tsFields.add(cf);
+        tsFieldsMap.put(cf.getName(), cf);
+    }
+
+    @Override
+    public ConfigField getTsFieldByName(String name) {
+        return tsFieldsMap.get(name);
     }
 
     public void addBitPadding(ReaderStateImpl readerState) {

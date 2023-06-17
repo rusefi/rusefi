@@ -32,6 +32,7 @@ public class ConfigDefinition {
     private static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     private static final String KEY_BOARD_NAME = "-board";
+    public static final String CONFIG_PATH = "java_tools/configuration_definition/src/main/resources/config_definition.options";
     /**
      * This flag controls if we assign default zero value (useful while generating structures used for class inheritance)
      * versus not assigning default zero value like we need for non-class headers
@@ -41,7 +42,7 @@ public class ConfigDefinition {
 
     public static void main(String[] args) {
         try {
-            List<String> options = Files.readAllLines(Paths.get("../java_tools/configuration_definition/src/main/resources/config_definition.options"));
+            List<String> options = Files.readAllLines(Paths.get("../" + CONFIG_PATH));
             options.addAll(Arrays.asList(args));
             String[] totalArgs = options.toArray(new String[0]);
             if (totalArgs.length < 2) {
@@ -63,7 +64,7 @@ public class ConfigDefinition {
         }
     }
 
-    private static void doJob(String[] args, ReaderStateImpl state) throws IOException {
+    public static void doJob(String[] args, ReaderStateImpl state) throws IOException {
         SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsInputFileFolder = null;
@@ -146,7 +147,7 @@ public class ConfigDefinition {
                 case EnumToString.KEY_ENUM_INPUT_FILE: {
                     String enumInputFile = args[i + 1];
                     enumInputFiles.add(enumInputFile);
-                    state.read(new FileReader(enumInputFile));
+                    state.read(new FileReader(RootHolder.ROOT + enumInputFile));
                 }
                     break;
                 case "-ts_output_name":
