@@ -1,8 +1,8 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
+import com.rusefi.VariableRegistry;
 
 import java.io.IOException;
 
@@ -66,7 +66,7 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
     }
 
     public static String quote(String string) {
-        return "\"" + string + "\"";
+        return VariableRegistry.quote(string);
     }
 
     public String getContent() {

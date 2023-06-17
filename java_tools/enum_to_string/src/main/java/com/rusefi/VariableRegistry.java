@@ -140,7 +140,7 @@ public class VariableRegistry {
         return getHumanSortedTsKeyValueString(valueNameById);
     }
 
-    private static String quote(String string) {
+    public static String quote(String string) {
         return "\"" + string + "\"";
     }
 
