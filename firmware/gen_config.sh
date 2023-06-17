@@ -22,7 +22,7 @@ config/boards/subaru_eg33/config/gen_subaru_config.sh
 
 #
 # see also build-firmware where we compile all versions of firmware
-#
+# *** IMPORTANT *** most inclusive f407-discovery is last for a reason - we want it's generated files to be in repo
 #
 for BOARD in \
    "config/boards/hellen/alphax-2chan alphax-2chan" \
@@ -55,13 +55,13 @@ for BOARD in \
    "config/boards/proteus proteus_f7" \
    "config/boards/proteus proteus_f4" \
    "config/boards/proteus proteus_h7" \
-   "config/boards/f407-discovery f407-discovery" \
    "config/boards/f429-discovery f429-discovery" \
    "config/boards/nucleo_f429 nucleo_f429" \
    "config/boards/nucleo_f767 nucleo_f767" \
    "config/boards/nucleo_h743 nucleo_h743" \
    "config/boards/atlas atlas"\
    "config/boards/tdg-pdm8 tdg-pdm8"\
+   "config/boards/f407-discovery f407-discovery" \
    ; do
  BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
@@ -80,8 +80,8 @@ done
 #
 # default config should be generated after normal custom boards so that it would be default
 # firmware/controllers/generated/rusefi_generated.h file which would be pushed into VCS
-./gen_config_default.sh
-[ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }
+#./gen_config_default.sh
+#[ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }
 
 
 exit 0
