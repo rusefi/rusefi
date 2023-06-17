@@ -4014,8 +4014,15 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = 32Dialog, "3-2 Shift Solenoid Percent by Speed"
 		panel = 32Curve
 
-	dialog = rangeMatrixDialog, "Range Selector Input Matrix"
-		panel = rangeMatrix
+	dialog = rangeMatrixDocumentation, "Cell Values"
+		field = "0 = this pin must be low to reach this state"
+		field = "1 = this pin must be high to reach this state"
+		field = "2 = this pin is ignored for reaching this state"
+		field = "3 = this state is unreachable"
+
+	dialog = rangeMatrixDialog, "Range Selector Input Matrix", border
+		panel = rangeMatrix, Center
+		panel = rangeMatrixDocumentation, South
 
 ;Boost Open Loop
 
