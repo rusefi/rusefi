@@ -89,7 +89,8 @@ static void runCanGpioTest() {
 static void writeSimulatorTune() {
 	FILE *ptr = fopen(SIMULATOR_TUNE_BIN_FILE_NAME, "wb");
 	if (ptr == nullptr) {
-		printf("ERROR creating file maybe folder needs to be created? [%s]", SIMULATOR_TUNE_BIN_FILE_NAME);
+		printf("ERROR creating file: [%s]", SIMULATOR_TUNE_BIN_FILE_NAME);
+		printf("/nPlease check folder exists and is writeable.");
 		return;
 	}
 	fwrite(&persistentState.persistentConfiguration, 1, sizeof(persistentState.persistentConfiguration), ptr);
