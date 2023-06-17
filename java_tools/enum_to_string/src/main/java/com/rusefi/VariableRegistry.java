@@ -23,7 +23,6 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class VariableRegistry {
     public static final String AUTO_ENUM_SUFFIX = "_auto_enum";
-    public static final String INVALID = "INVALID";
     private static final Logging log = getLogging(VariableRegistry.class);
 
     public static final String _16_HEX_SUFFIX = "_16_hex";

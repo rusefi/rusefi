@@ -23,7 +23,8 @@ public class PinoutLogic {
     static final String CONNECTORS = "/connectors";
     private static final String NONE = "NONE";
     private static final String QUOTED_NONE = quote(NONE);
-    public static final String QUOTED_INVALID = quote(VariableRegistry.INVALID);
+    private static final String INVALID = "INVALID";
+    public static final String QUOTED_INVALID = quote(INVALID);
 
     private final ArrayList<PinState> globalList = new ArrayList<>();
     private final Map</*id*/String, /*tsName*/String> tsNameById = new TreeMap<>();
