@@ -19,7 +19,15 @@ public class WriteSimulatorConfiguration {
     private static final String FOLDER = "generated";
 
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
-        // SimulatorExecHelper
+        try {
+            writeTune();
+        } finally {
+            // No way to set Process.exec to be a daemon, we need explicit exit
+            System.exit(0);
+        }
+    }
+
+    private static void writeTune() throws InterruptedException, JAXBException, IOException {
         LinkManager linkManager = new LinkManager();
         IoUtil.connectToSimulator(linkManager, true);
         BinaryProtocol bp = Objects.requireNonNull(linkManager.getBinaryProtocol(), "getBinaryProtocol");
@@ -31,6 +39,5 @@ public class WriteSimulatorConfiguration {
         Msq m = MsqFactory.valueOf(configuration, ini);
         new File(FOLDER).mkdirs();
         m.writeXmlFile(FOLDER + File.separator + "simulator_tune.xml");
-        System.exit(0);
     }
 }

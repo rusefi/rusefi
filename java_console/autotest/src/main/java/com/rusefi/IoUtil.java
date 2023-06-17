@@ -104,13 +104,15 @@ public class IoUtil {
         log.info("AUTOTEST RPM change [" + rpm + "] executed in " + (System.currentTimeMillis() - time));
     }
 
-    static void waitForFirstResponse() throws InterruptedException {
+    private static void waitForFirstResponse() throws InterruptedException {
         log.info("Let's give it some time to start...");
         final CountDownLatch startup = new CountDownLatch(1);
         long waitStart = System.currentTimeMillis();
 
         ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPMValue, value -> startup.countDown());
-        startup.await(5, TimeUnit.SECONDS);
+        boolean haveResponse = startup.await(10, TimeUnit.SECONDS);
+        if (!haveResponse)
+            throw new IllegalStateException("No response from simulator");
         listener.remove();
         FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart));
     }
