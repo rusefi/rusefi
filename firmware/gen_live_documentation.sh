@@ -2,6 +2,10 @@
 
 rm gen_live_documentation.log
 
+cd ../java_tools
+./gradlew :config_definition:shadowJar
+cd ../firmware
+
 java -DSystemOut.name=logs/gen_live_documentation \
  -cp ../java_tools/configuration_definition/build/libs/config_definition.jar \
  com.rusefi.ldmp.LiveDataProcessor integration/LiveData.yaml
