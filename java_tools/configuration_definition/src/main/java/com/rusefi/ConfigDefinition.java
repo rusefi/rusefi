@@ -43,13 +43,13 @@ public class ConfigDefinition {
         } catch (Throwable e) {
             SystemOut.println(e);
             e.printStackTrace();
-            SystemOut.close();
             System.exit(-1);
+        } finally {
+            SystemOut.close();
         }
-        SystemOut.close();
     }
 
-    public static void doJob(String[] args, ReaderStateImpl state) throws IOException {
+    private static void doJob(String[] args, ReaderStateImpl state) throws IOException {
         if (args.length < 2) {
             SystemOut.println("Please specify\r\n"
                     + KEY_DEFINITION + " x\r\n"
