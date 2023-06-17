@@ -44,6 +44,15 @@ public class ConfigDefinition {
             List<String> options = Files.readAllLines(Paths.get("../java_tools/configuration_definition/src/main/resources/config_definition.options"));
             options.addAll(Arrays.asList(args));
             String[] totalArgs = options.toArray(new String[0]);
+            if (totalArgs.length < 2) {
+                SystemOut.println("Please specify\r\n"
+                        + KEY_DEFINITION + " x\r\n"
+                        + KEY_TS_DESTINATION + " x\r\n"
+                        + KEY_C_DESTINATION + " x\r\n"
+                        + KEY_JAVA_DESTINATION + " x\r\n"
+                );
+                return;
+            }
             doJob(totalArgs, new ReaderStateImpl());
         } catch (Throwable e) {
             SystemOut.println(e);
@@ -55,16 +64,6 @@ public class ConfigDefinition {
     }
 
     private static void doJob(String[] args, ReaderStateImpl state) throws IOException {
-        if (args.length < 2) {
-            SystemOut.println("Please specify\r\n"
-                    + KEY_DEFINITION + " x\r\n"
-                    + KEY_TS_DESTINATION + " x\r\n"
-                    + KEY_C_DESTINATION + " x\r\n"
-                    + KEY_JAVA_DESTINATION + " x\r\n"
-            );
-            return;
-        }
-
         SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsInputFileFolder = null;
@@ -144,8 +143,11 @@ public class ConfigDefinition {
                 case KEY_SIGNATURE_DESTINATION:
                     signatureDestination = args[i + 1];
                     break;
-                case EnumToString.KEY_ENUM_INPUT_FILE:
-                    enumInputFiles.add(args[i + 1]);
+                case EnumToString.KEY_ENUM_INPUT_FILE: {
+                    String enumInputFile = args[i + 1];
+                    enumInputFiles.add(enumInputFile);
+                    state.read(new FileReader(enumInputFile));
+                }
                     break;
                 case "-ts_output_name":
                     state.setTsFileOutputName(args[i + 1]);
@@ -164,13 +166,7 @@ public class ConfigDefinition {
             state.addInputFile(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
         }
 
-        if (!enumInputFiles.isEmpty()) {
-            for (String ef : enumInputFiles) {
-                state.read(new FileReader(ef));
-            }
-
-            SystemOut.println(state.getEnumsReader().getEnums().size() + " total enumsReader");
-        }
+        SystemOut.println(state.getEnumsReader().getEnums().size() + " total enumsReader");
 
         // Add the variable for the config signature
         FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.getInputFiles()));
