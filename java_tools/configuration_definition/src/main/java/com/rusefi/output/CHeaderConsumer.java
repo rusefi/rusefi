@@ -30,6 +30,10 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
         this.withC_Defines = withC_Defines;
         SystemOut.println("Writing C header to " + destCHeader);
         cHeader = new LazyFile(destCHeader);
+    }
+
+    @Override
+    public void startFile() {
         cHeader.write("// this section " + state.getHeader() + EOL);
         cHeader.write("// by " + getClass() + EOL);
         cHeader.write("// begin" + EOL);
