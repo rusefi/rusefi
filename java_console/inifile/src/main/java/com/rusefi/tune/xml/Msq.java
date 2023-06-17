@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @XmlRootElement
@@ -121,5 +122,9 @@ public class Msq {
 
     public VersionInfo getVersionInfo() {
         return versionInfo;
+    }
+
+    public Map<String, Constant> getConstantsAsMap() {
+        return findPage().getConstantsAsMap();
     }
 }

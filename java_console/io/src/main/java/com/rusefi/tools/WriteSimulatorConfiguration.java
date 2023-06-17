@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class WriteSimulatorConfiguration {
     // f407-discovery is historically the most inclusive .ini file
-    private static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini";
+    public static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini";
     private static final String FOLDER = "generated";
 
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {

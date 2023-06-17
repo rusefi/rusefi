@@ -18,8 +18,9 @@ import java.nio.file.Path;
 import static org.junit.Assert.*;
 
 public class TuneReadWriteTest {
-    private static final String PATH = "src/test/resources/frankenso/";
-    private static final String TUNE_NAME = PATH + "test-CurrentTune.msq";
+    public static final String SRC_TEST_RESOURCES = "src/test/resources/";
+    private static final String PATH = SRC_TEST_RESOURCES + "frankenso/";
+    static final String TUNE_NAME = PATH + "test-CurrentTune.msq";
     private static final String TEST_INI = PATH + "test-mainController.ini";
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.rusefi_binary";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
