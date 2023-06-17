@@ -89,7 +89,7 @@ static void runCanGpioTest() {
 static void writeSimulatorTune() {
 	FILE *ptr = fopen(SIMULATOR_TUNE_BIN_FILE_NAME, "wb");
 	if (ptr == nullptr)
-		\\throw std::logic_error("Error opening file maybe folder needs to be created?");
+		// throw std::logic_error("Error opening file maybe folder needs to be created?");
 	        throw std::logic_error("Error opening file:", SIMULATOR_TUNE_BIN_FILE_NAME ,"/n Please check folder exists and is writeable.");
 	fwrite(&persistentState.persistentConfiguration, 1, sizeof(persistentState.persistentConfiguration), ptr);
 	fclose(ptr);
