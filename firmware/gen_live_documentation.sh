@@ -3,7 +3,7 @@
 rm gen_live_documentation.log
 
 java -DSystemOut.name=logs/gen_live_documentation \
- -cp ../java_tools/ConfigDefinition.jar \
+ -cp ../java_tools/configuration_definition/build/libs/config_definition.jar \
  com.rusefi.ldmp.LiveDataProcessor integration/LiveData.yaml
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 
