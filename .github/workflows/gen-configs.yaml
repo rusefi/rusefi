@@ -20,10 +20,22 @@ jobs:
         git submodule update --init --depth=1 firmware/controllers/lua/luaaa
         git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
 
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '8'
+
+    - name: Test Compiler
+      run: javac -version
+
     - name: Install Tools
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install sshpass sshpass mtools
+
+    - name: Configuration Definition CI, without pushing new .jar
+      working-directory: ./java_tools
+      run: ./gradlew :config_definition:shadowJar
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
@@ -63,6 +75,8 @@ jobs:
         git add *_generated.h
         # get the original ramdisk images back in order to not overwrite the default placeholder
         git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
+        git checkout -- java_tools/ConfigDefinition.jar
+        git checkout -- java_tools/enum2string.jar
         git status
         OUT=$(git commit -am "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
