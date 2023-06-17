@@ -94,8 +94,10 @@ public class TsOutput {
                 }
 
                 if (configField.getState().getTsCustomLine().containsKey(configField.getType())) {
+                    // todo: rename 'bits' to 'customLine' or something since _not_ bits for array?
                     String bits = configField.getState().getTsCustomLine().get(configField.getType());
                     if (!bits.startsWith("bits")) {
+                        // 'array' would be handled here
                         bits = handleTsInfo(configField, bits, 5);
                     }
 
