@@ -26,7 +26,6 @@ public class IniFileModel {
     private String dialogId;
     private String dialogUiName;
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
-    private final Map<String, DialogModel.Field> allFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
     public Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -245,31 +244,6 @@ public class IniFileModel {
         //if (allIniFields.containsKey(field.getName()))
         //	return;
         allIniFields.put(field.getName(), field);
-    }
-
-    private void handleField(LinkedList<String> list) {
-        list.removeFirst(); // "field"
-
-        String uiFieldName = list.isEmpty() ? "" : list.removeFirst();
-
-        String key = list.isEmpty() ? null : list.removeFirst();
-
-        DialogModel.Field field = new DialogModel.Field(key, uiFieldName);
-        if (key != null) {
-            // UI labels do not have 'key'
-            allFields.put(key, field);
-        }
-        fieldsOfCurrentDialog.add(field);
-        log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
-    }
-
-    public Map<String, DialogModel.Field> getAllFields() {
-        return allFields;
-    }
-
-    @Nullable
-    public DialogModel.Field getField(String key) {
-        return allFields.get(key);
     }
 
     private void handleDialog(LinkedList<String> list) {
