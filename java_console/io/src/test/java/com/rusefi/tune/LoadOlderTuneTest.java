@@ -3,6 +3,7 @@ package com.rusefi.tune;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.tools.tune.TuneTools;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
@@ -62,5 +63,20 @@ public class LoadOlderTuneTest {
         if (value == null)
             return value;
         return value.replaceAll("\\s+", " ").trim();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testLegacyCustomEnumOrdinal() {
+        String tsCustomLine = "bits, U08, @OFFSET@, [0:1], \"Single Coil\", \"Individual Coils\", \"Wasted Spark\", \"Two Distributors\"";
+
+        assertEquals(0, TuneTools.resolveEnumByName(tsCustomLine, "One coil"));
+    }
+
+    @Test
+    public void testCustomEnumOrdinal() {
+        String tsCustomLine = "bits, U08, @OFFSET@, [0:1], \"Single Coil\", \"Individual Coils\", \"Wasted Spark\", \"Two Distributors\"";
+
+        assertEquals(0, TuneTools.resolveEnumByName(tsCustomLine, "Single coil"));
+        assertEquals(3, TuneTools.resolveEnumByName(tsCustomLine, "Two Distributors"));
     }
 }
