@@ -50,6 +50,5 @@ public class LoadOlderTuneTest {
         Assert.assertTrue(notSameValueCounter > 0);
 
         //IniFileModel ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
-
     }
 }
