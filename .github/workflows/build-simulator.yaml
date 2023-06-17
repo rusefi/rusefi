@@ -50,30 +50,30 @@ jobs:
       working-directory: ./simulator/
       run: ./build/rusefi_simulator 10
 
-#    - name: Load Default Tune from Linux Simulator
-#      working-directory: ./simulator/
-#      run: ./write_tune.sh
-#
-#    - name: Commit fresh generated default simulator tune
-#      env:
-#        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-#      run: |
-#        git config --local user.email "action@github.com"
-#        git config --local user.name "GitHub gen-default-tune Action"
-#        git add simulator/generated
-#        git status
-#        OUT=$(git commit -am "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
-#        if echo "$OUT" | grep 'nothing to commit'; then
-#          echo "default tune: looks like nothing to commit"
-#          echo "::set-env name=NOCOMMIT::true"
-#          exit 0
-#        elif echo "$OUT" | grep 'changed'; then
-#          echo "default tune: looks like something has changed"
-#          exit 0
-#        else
-#          echo "default tune: looks like something unexpected"
-#          exit 1
-#        fi
+    - name: Load Default Tune from Linux Simulator
+      working-directory: ./simulator/
+      run: ./write_tune.sh
+
+    - name: Commit fresh generated default simulator tune
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub gen-default-tune Action"
+        git add 'simulator/generated/*xml'
+        git status
+        OUT=$(git commit -am "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "default tune: looks like nothing to commit"
+          echo "::set-env name=NOCOMMIT::true"
+          exit 0
+        elif echo "$OUT" | grep 'changed'; then
+          echo "default tune: looks like something has changed"
+          exit 0
+        else
+          echo "default tune: looks like something unexpected"
+          exit 1
+        fi
 
     - name: Upload Linux built simulator
       uses: actions/upload-artifact@v3

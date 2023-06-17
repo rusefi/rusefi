@@ -78,7 +78,7 @@ public class SimulatorExecHelper {
             BufferedReader err =
                     new BufferedReader(new InputStreamReader(process.getErrorStream()));
             try {
-                String prefix = "from console: ";
+                String prefix = "ERROR from console: ";
                 Consumer<String> PRINT_AND_LOG = string -> {
                     System.out.println(prefix + string);
                     FileLog.SIMULATOR_CONSOLE.logLine(string);

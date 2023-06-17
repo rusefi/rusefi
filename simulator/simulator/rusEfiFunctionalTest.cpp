@@ -86,6 +86,12 @@ static void runChprintfTest() {
 static void runCanGpioTest() {
 }
 
+static void writeSimulatorTune() {
+	FILE *ptr = fopen("generated/simulator_tune_image.bin", "wb");
+	fwrite(&persistentState.persistentConfiguration, 1, sizeof(persistentState.persistentConfiguration), ptr);
+	fclose(ptr);
+}
+
 void rusEfiFunctionalTest(void) {
 	printToConsole("Running rusEFI simulator version:");
 	static char versionBuffer[20];
@@ -111,6 +117,8 @@ void rusEfiFunctionalTest(void) {
 	enableTriggerStimulator(false);
 
 	initStatusLoop();
+
+	writeSimulatorTune();
 
     /**
      * !!!! TESTS !
