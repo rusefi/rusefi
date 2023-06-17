@@ -85,7 +85,7 @@ public class ReaderStateImpl implements ReaderState {
         String trueName = bitNameParts.length > 1 ? bitNameParts[1].replaceAll("\"", "") : null;
         String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
 
-        ConfigFieldImpl bitField = new ConfigFieldImpl(state, bitNameParts[0], comment, null, BOOLEAN_T, new int[0], null, false, false, false, trueName, falseName);
+        ConfigFieldImpl bitField = new ConfigFieldImpl(state, bitNameParts[0], comment, null, BOOLEAN_T, new int[0], null, false, false, trueName, falseName);
         if (state.stack.isEmpty())
             throw new IllegalStateException("Parent structure expected");
         ConfigStructureImpl structure = state.stack.peek();
@@ -299,7 +299,7 @@ public class ReaderStateImpl implements ReaderState {
         if (cf == null) {
             if (ConfigFieldImpl.isPreprocessorDirective(line)) {
                 cf = new ConfigFieldImpl(state, "", line, null,
-                        ConfigFieldImpl.DIRECTIVE_T, new int[0], null, false, false, false,
+                        ConfigFieldImpl.DIRECTIVE_T, new int[0], null, false, false,
                         null, null);
             } else {
                 throw new IllegalStateException("Cannot parse line [" + line + "]");
@@ -328,7 +328,7 @@ public class ReaderStateImpl implements ReaderState {
             for (int i = 1; i <= cf.getArraySizes()[0]; i++) {
                 String commentWithIndex = getCommentWithIndex(cf, i);
                 ConfigFieldImpl element = new ConfigFieldImpl(state, cf.getName() + i, commentWithIndex, null,
-                        cf.getType(), new int[0], cf.getTsInfo(), false, false, cf.isHasAutoscale(), null, null);
+                        cf.getType(), new int[0], cf.getTsInfo(), false, cf.isHasAutoscale(), null, null);
                 element.setFromIterate(cf.getName(), i);
                 structure.addTs(element);
             }

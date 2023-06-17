@@ -80,7 +80,7 @@ public class ConfigStructureImpl implements ConfigStructure {
             }
             ConfigFieldImpl fill = new ConfigFieldImpl(state, ALIGNMENT_FILL_AT + totalSize, "need 4 byte alignment",
                     "" + fillSize,
-                    TypesHelper.UINT8_T, fillSizeArray, "\"units\", 1, 0, -20, 100, 0", false, false, false, null, null);
+                    TypesHelper.UINT8_T, fillSizeArray, "\"units\", 1, 0, -20, 100, 0", false, false, null, null);
             addBoth(fill);
         }
         totalSize += fillSize;
@@ -114,7 +114,7 @@ public class ConfigStructureImpl implements ConfigStructure {
             return;
         int sizeAtStartOfPadding = cFields.size();
         while (readingBitState.get() < 32) {
-            ConfigFieldImpl bitField = new ConfigFieldImpl(readerState, UNUSED_BIT_PREFIX + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, false, null, null);
+            ConfigFieldImpl bitField = new ConfigFieldImpl(readerState, UNUSED_BIT_PREFIX + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, null, null);
             addBitField(bitField);
         }
         readingBitState.reset();

@@ -295,9 +295,9 @@ public class ConfigFieldParserTest {
     public void testFsioVisible() {
         {
             ReaderStateImpl state = new ReaderStateImpl();
-            ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int fsio_visible field");
+            ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int field");
             assertEquals(cf.getType(), "int");
-            assertTrue(cf.isFsioVisible());
+
             assertEquals("Name", cf.getName(), "field");
         }
 

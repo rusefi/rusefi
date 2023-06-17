@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ConfigFieldImpl implements ConfigField {
     private static final Logging log = getLogging(ConfigFieldImpl.class);
-    public static final ConfigFieldImpl VOID = new ConfigFieldImpl(null, "", null, null, null, new int[0], null, false, false, false, null, null);
+    public static final ConfigFieldImpl VOID = new ConfigFieldImpl(null, "", null, null, null, new int[0], null, false, false, null, null);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
 
@@ -49,7 +49,6 @@ public class ConfigFieldImpl implements ConfigField {
     private final String tsInfo;
     private final boolean isIterate;
     private final ReaderStateImpl state;
-    private final boolean fsioVisible;
     private final boolean hasAutoscale;
     private final String trueName;
     private final String falseName;
@@ -68,11 +67,9 @@ public class ConfigFieldImpl implements ConfigField {
                            int[] arraySizes,
                            @Nullable String tsInfo,
                            boolean isIterate,
-                           boolean fsioVisible,
                            boolean hasAutoscale,
                            String trueName,
                            String falseName) {
-        this.fsioVisible = fsioVisible;
         this.hasAutoscale = hasAutoscale;
         this.trueName = trueName == null ? "true" : trueName;
         this.falseName = falseName == null ? "false" : falseName;
@@ -172,8 +169,6 @@ public class ConfigFieldImpl implements ConfigField {
         String[] nameTokens = nameString.split("\\s");
         String name = nameTokens[nameTokens.length - 1];
 
-        boolean isFsioVisible = Arrays.stream(nameTokens).anyMatch(s -> s.equalsIgnoreCase("fsio_visible"));
-
         boolean hasAutoscale = false;
         for (String autoscaler : nameTokens) {
             if (autoscaler.equals("autoscale")) {
@@ -206,7 +201,7 @@ public class ConfigFieldImpl implements ConfigField {
 
 
         ConfigFieldImpl field = new ConfigFieldImpl(state, name, comment, arraySizeAsText, type, arraySizes,
-                tsInfo, isIterate, isFsioVisible, hasAutoscale, null, null);
+                tsInfo, isIterate, hasAutoscale, null, null);
         if (log.debugEnabled())
             log.debug("type " + type);
         if (log.debugEnabled())
@@ -312,11 +307,6 @@ public class ConfigFieldImpl implements ConfigField {
     @Override
     public String getTsInfo() {
         return tsInfo;
-    }
-
-    @Override
-    public boolean isFsioVisible() {
-        return fsioVisible;
     }
 
     @Override

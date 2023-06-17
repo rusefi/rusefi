@@ -89,12 +89,6 @@ public interface ConfigField {
         public String getTsInfo() {
             return null;
         }
-
-        @Override
-        public boolean isFsioVisible() {
-            return false;
-        }
-
         @Override
         public String autoscaleSpec() {
             return null;
@@ -189,9 +183,6 @@ public interface ConfigField {
     ReaderState getState();
 
     String getTsInfo();
-
-    boolean isFsioVisible();
-
     String autoscaleSpec();
 
     double autoscaleSpecNumber();
