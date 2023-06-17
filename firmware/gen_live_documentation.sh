@@ -4,6 +4,7 @@ rm gen_live_documentation.log
 
 cd ../java_tools
 ./gradlew :config_definition:shadowJar
+./gradlew :enum_to_string:shadowJar
 cd ../firmware
 
 java -DSystemOut.name=logs/gen_live_documentation \
