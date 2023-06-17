@@ -235,12 +235,8 @@ public class IniFileReaderTest {
         assertEquals(1, model.allIniFields.size());
 
         EnumIniField field = (EnumIniField) model.allIniFields.get("name");
-        // todo: we need the first field to be added, not the second one
-        //assertEquals(0, field.getBitPosition());
-        //assertEquals(2, field.getBitSize0());
-        //assertEquals(1, field.getEnums().size());
-        assertEquals(3, field.getBitPosition());
-        assertEquals(1, field.getBitSize0());
-        assertEquals(2, field.getEnums().size());
+        assertEquals(0, field.getBitPosition());
+        assertEquals(2, field.getBitSize0());
+        assertEquals(1, field.getEnums().size());
     }
 }
