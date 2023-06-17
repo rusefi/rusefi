@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jun 17 00:51:55 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jun 17 03:00:04 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4348,10 +4348,24 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> iacByTpsDecayTime;
 	/**
-	units
 	 * offset 3950
 	 */
-	uint8_t mainUnusedEnd[214];
+	switch_input_pin_e tcu_rangeInput[RANGE_INPUT_COUNT];
+	/**
+	 * offset 3962
+	 */
+	pin_input_mode_e tcu_rangeInputMode[RANGE_INPUT_COUNT];
+	/**
+	units
+	 * offset 3968
+	 */
+	uint8_t mainUnusedEnd[194];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4162
+	 */
+	uint8_t alignmentFill_at_4162[2];
 };
 static_assert(sizeof(engine_configuration_s) == 4164);
 
@@ -5184,8 +5198,69 @@ struct persistent_config_s {
 	 * offset 22992
 	 */
 	blend_table_s boostClosedLoopBlends[BOOST_BLEND_COUNT];
+	/**
+	level
+	 * offset 23368
+	 */
+	uint8_t tcu_rangeP[6];
+	/**
+	level
+	 * offset 23374
+	 */
+	uint8_t tcu_rangeR[6];
+	/**
+	level
+	 * offset 23380
+	 */
+	uint8_t tcu_rangeN[6];
+	/**
+	level
+	 * offset 23386
+	 */
+	uint8_t tcu_rangeD[6];
+	/**
+	level
+	 * offset 23392
+	 */
+	uint8_t tcu_rangeM[6];
+	/**
+	level
+	 * offset 23398
+	 */
+	uint8_t tcu_rangeM3[6];
+	/**
+	level
+	 * offset 23404
+	 */
+	uint8_t tcu_rangeM2[6];
+	/**
+	level
+	 * offset 23410
+	 */
+	uint8_t tcu_rangeM1[6];
+	/**
+	level
+	 * offset 23416
+	 */
+	uint8_t tcu_rangePlus[6];
+	/**
+	level
+	 * offset 23422
+	 */
+	uint8_t tcu_rangeMinus[6];
+	/**
+	level
+	 * offset 23428
+	 */
+	uint8_t tcu_rangeLow[6];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 23434
+	 */
+	uint8_t alignmentFill_at_23434[2];
 };
-static_assert(sizeof(persistent_config_s) == 23368);
+static_assert(sizeof(persistent_config_s) == 23436);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jun 17 00:51:55 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jun 17 03:00:04 UTC 2023
