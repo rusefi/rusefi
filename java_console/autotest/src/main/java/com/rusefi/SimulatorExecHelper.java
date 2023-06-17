@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /**
@@ -52,14 +53,14 @@ public class SimulatorExecHelper {
         Thread thread = THREAD_FACTORY.newThread(createErrorStreamEcho(process));
         thread.start();
 
+        AtomicInteger counter = new AtomicInteger();
         String prefix = "from console: ";
         Consumer<String> PRINT_AND_LOG = string -> {
 // looks like this is a performance issue since so many lines are printed? looks like it's helping to not write this?
-
-//            System.out.println(prefix + string);
+            if (counter.incrementAndGet() < 1000)
+                System.out.println(prefix + string);
 //            FileLog.SIMULATOR_CONSOLE.logLine(string);
         };
-
 
         readAndPrint(PRINT_AND_LOG, input);
         input.close();
@@ -101,11 +102,6 @@ public class SimulatorExecHelper {
         if (!new File(SIMULATOR_BINARY).exists())
             throw new IllegalStateException(SIMULATOR_BINARY + " not found");
         FileLog.MAIN.logLine("startSimulator...");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runSimulator();
-            }
-        }, "simulator process").start();
+        new Thread(() -> runSimulator(), "simulator process").start();
     }
 }
