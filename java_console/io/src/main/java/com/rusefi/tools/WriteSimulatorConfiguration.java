@@ -20,6 +20,8 @@ public class WriteSimulatorConfiguration {
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
         try {
             writeTune();
+        } catch (Throwable e) {
+            System.err.println("Unfortunately " + e);
         } finally {
             // No way to set Process.exec to be a daemon, we need explicit exit
             System.exit(0);
