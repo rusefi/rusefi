@@ -7,6 +7,7 @@ import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.tools.tune.CurveData;
 import com.rusefi.tools.tune.TS2C;
+import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.Assert;
@@ -19,8 +20,7 @@ import java.nio.file.Path;
 import static org.junit.Assert.*;
 
 public class TuneReadWriteTest {
-    public static final String SRC_TEST_RESOURCES = "src/test/resources/";
-    private static final String PATH = SRC_TEST_RESOURCES + "frankenso/";
+    private static final String PATH = TuneCanTool.SRC_TEST_RESOURCES + "frankenso/";
     static final String TUNE_NAME = PATH + "test-CurrentTune.msq";
     static final String TEST_INI = PATH + "test-mainController.ini";
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.rusefi_binary";

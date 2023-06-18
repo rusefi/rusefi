@@ -1,8 +1,14 @@
 plugins {
     id 'java-library'
+    id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
 }
 
 dependencies {
     api project(':config_definition')
     api project(':ecu_io')
+}
+
+shadowJar {
+    dependsOn(':enum_to_string:shadowJar')
+    archiveClassifier = ''
 }

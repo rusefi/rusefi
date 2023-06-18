@@ -1,4 +1,4 @@
-package com.rusefi.tools;
+package com.rusefi.tools.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
@@ -15,7 +15,6 @@ import java.util.Objects;
 public class WriteSimulatorConfiguration {
     // f407-discovery is historically the most inclusive .ini file
     public static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini";
-    private static final String FOLDER = "generated";
 
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
         try {
@@ -39,6 +38,6 @@ public class WriteSimulatorConfiguration {
         if (ini == null)
             throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
         Msq m = MsqFactory.valueOf(configuration, ini);
-        m.writeXmlFile(FOLDER + File.separator + "simulator_tune.xml");
+        m.writeXmlFile(TuneCanTool.DEFAULT_TUNE);
     }
 }

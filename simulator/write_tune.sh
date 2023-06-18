@@ -1,1 +1,1 @@
-java -cp ../java_console/ui/build/libs/rusefi_console.jar com.rusefi.tools.WriteSimulatorConfiguration
+java -cp ../java_tools/tune-tools/build/libs/tune-tools.jar com.rusefi.tools.tune.WriteSimulatorConfiguration
