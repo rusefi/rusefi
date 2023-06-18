@@ -1,4 +1,6 @@
+include ':trigger-image'
 include ':proxy_server'
+// gradle naming convention does not like '_' symbol
 project(':proxy_server').projectDir = new File('proxy_server')
 include ':core_io'
 project(':core_io').projectDir = new File('../java_console/shared_io')
@@ -11,11 +13,8 @@ project(':gcc_map_reader').projectDir = new File('gcc_map_reader')
 include ':enum_to_string'
 project(':enum_to_string').projectDir = new File('enum_to_string')
 include ':logicdata2c'
-project(':logicdata2c').projectDir = new File('logicdata2c')
 include ':version2header'
-project(':version2header').projectDir = new File('version2header')
 include ':bin2header'
-project(':bin2header').projectDir = new File('bin2header')
 include ':config_definition_base'
 project(':config_definition_base').projectDir = new File('configuration_definition_base')
 include ':config_definition'

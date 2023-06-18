@@ -13,6 +13,7 @@ dependencies {
     implementation project(':autotest')
     implementation project(':luaformatter')
     implementation project(':config_definition')
+    // todo: should this be enough? implementation project(':trigger-image')
     implementation global_libs.antlr
     implementation 'com.miglayout:miglayout-swing:4.1'
     implementation files('../lib/dfu/dfu_java.jar')
