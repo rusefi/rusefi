@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 18 14:06:50 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 18 16:00:40 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -300,7 +300,6 @@ public class Fields {
 	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
-	public static final int engine_type_e_HELLEN72_ETB = 33;
 	public static final int engine_type_e_HELLEN_121_NISSAN_4_CYL = 84;
 	public static final int engine_type_e_HELLEN_121_NISSAN_6_CYL = 72;
 	public static final int engine_type_e_HELLEN_121_NISSAN_8_CYL = 85;
@@ -313,12 +312,9 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_128_MERCEDES_4_CYL = 36;
 	public static final int engine_type_e_HELLEN_128_MERCEDES_6_CYL = 88;
 	public static final int engine_type_e_HELLEN_128_MERCEDES_8_CYL = 89;
-	public static final int engine_type_e_HELLEN_134_BMW = 75;
 	public static final int engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1 = 82;
 	public static final int engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2 = 95;
 	public static final int engine_type_e_HELLEN_154_VAG = 76;
-	public static final int engine_type_e_HELLEN_55_BMW = 73;
-	public static final int engine_type_e_HELLEN_88_BMW = 74;
 	public static final int engine_type_e_HELLEN_NA6 = 34;
 	public static final int engine_type_e_HELLEN_NA8_96 = 10;
 	public static final int engine_type_e_HELLEN_NA94 = 80;
@@ -359,7 +355,6 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_NISSAN_VQ35 = 103;
 	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
 	public static final int engine_type_e_PROTEUS_SBC = 98;
-	public static final int engine_type_e_PROTEUS_VAG_80_18T = 92;
 	public static final int engine_type_e_PROTEUS_VW_B6 = 39;
 	public static final int engine_type_e_SACHS = 29;
 	public static final int engine_type_e_SUBARU_2003_WRX = 22;
@@ -379,7 +374,12 @@ public class Fields {
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_UNUSED_15 = 15;
+	public static final int engine_type_e_UNUSED_33 = 33;
 	public static final int engine_type_e_UNUSED_57 = 57;
+	public static final int engine_type_e_UNUSED_73 = 73;
+	public static final int engine_type_e_UNUSED_74 = 74;
+	public static final int engine_type_e_UNUSED_75 = 75;
+	public static final int engine_type_e_UNUSED_92 = 92;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_WASTEGATE_PROTEUS_TEST = 96;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;

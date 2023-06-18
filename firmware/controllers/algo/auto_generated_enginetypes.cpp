@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Jun 18 14:05:22 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Jun 18 15:59:14 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -191,8 +191,6 @@ case engine_type_e::FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
 case engine_type_e::GY6_139QMB:
   return "GY6_139QMB";
-case engine_type_e::HELLEN72_ETB:
-  return "HELLEN72_ETB";
 case engine_type_e::HELLEN_121_NISSAN_4_CYL:
   return "HELLEN_121_NISSAN_4_CYL";
 case engine_type_e::HELLEN_121_NISSAN_6_CYL:
@@ -217,18 +215,12 @@ case engine_type_e::HELLEN_128_MERCEDES_6_CYL:
   return "HELLEN_128_MERCEDES_6_CYL";
 case engine_type_e::HELLEN_128_MERCEDES_8_CYL:
   return "HELLEN_128_MERCEDES_8_CYL";
-case engine_type_e::HELLEN_134_BMW:
-  return "HELLEN_134_BMW";
 case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1:
   return "HELLEN_154_HYUNDAI_COUPE_BK1";
 case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2:
   return "HELLEN_154_HYUNDAI_COUPE_BK2";
 case engine_type_e::HELLEN_154_VAG:
   return "HELLEN_154_VAG";
-case engine_type_e::HELLEN_55_BMW:
-  return "HELLEN_55_BMW";
-case engine_type_e::HELLEN_88_BMW:
-  return "HELLEN_88_BMW";
 case engine_type_e::HELLEN_NA6:
   return "HELLEN_NA6";
 case engine_type_e::HELLEN_NA8_96:
@@ -309,8 +301,6 @@ case engine_type_e::PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
 case engine_type_e::PROTEUS_SBC:
   return "PROTEUS_SBC";
-case engine_type_e::PROTEUS_VAG_80_18T:
-  return "PROTEUS_VAG_80_18T";
 case engine_type_e::PROTEUS_VW_B6:
   return "PROTEUS_VW_B6";
 case engine_type_e::SACHS:
@@ -349,8 +339,18 @@ case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case engine_type_e::UNUSED_15:
   return "UNUSED_15";
+case engine_type_e::UNUSED_33:
+  return "UNUSED_33";
 case engine_type_e::UNUSED_57:
   return "UNUSED_57";
+case engine_type_e::UNUSED_73:
+  return "UNUSED_73";
+case engine_type_e::UNUSED_74:
+  return "UNUSED_74";
+case engine_type_e::UNUSED_75:
+  return "UNUSED_75";
+case engine_type_e::UNUSED_92:
+  return "UNUSED_92";
 case engine_type_e::VW_ABA:
   return "VW_ABA";
 case engine_type_e::WASTEGATE_PROTEUS_TEST:
