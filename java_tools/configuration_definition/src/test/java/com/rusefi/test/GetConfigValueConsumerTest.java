@@ -1,6 +1,6 @@
 package com.rusefi.test;
 
-import com.rusefi.MaybeSemicolorWasMissedException;
+import com.rusefi.MaybeSemicolonWasMissedException;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.GetConfigValueConsumer;
 import org.junit.Test;
@@ -257,7 +257,7 @@ public class GetConfigValueConsumerTest {
                 "\n", getConfigValueConsumer.getMdContent());
     }
 
-    @Test(expected = MaybeSemicolorWasMissedException.class)
+    @Test(expected = MaybeSemicolonWasMissedException.class)
     public void generateSuspiciousTsInfo() {
         String test = "struct total\n" +
                 "uint8_t hello;\"unit\", 1, 0, 0, 100, 0\n" +

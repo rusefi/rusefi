@@ -7,6 +7,14 @@ import static com.rusefi.ToolUtil.EOL;
 
 public class BaseCHeaderConsumer implements ConfigurationConsumer {
     private static final String BOOLEAN_TYPE = "bool";
+    /**
+     * This flag controls if we assign default zero value (useful while generating structures used for class inheritance)
+     * versus not assigning default zero value like we need for non-class headers
+     * This could be related to configuration header use-case versus "live data" (not very alive idea) use-case
+     *
+     * TODO: STATIC MUTABLE?! Not good code at all.
+     */
+    public static boolean needZeroInit = true;
     private final StringBuilder content = new StringBuilder();
 
     private static String getHeaderText(FieldIteratorWithOffset iterator) {
@@ -29,7 +37,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         if (!configField.isArray()) {
             // not an array
             cEntry += "\t" + typeName + " " + configField.getName();
-            if (ConfigDefinition.needZeroInit && TypesHelper.isPrimitive(configField.getType())) {
+            if (needZeroInit && TypesHelper.isPrimitive(configField.getType())) {
                 // we need this cast in case of enums
                 cEntry += " = (" + configField.getType() + ")0";
             }

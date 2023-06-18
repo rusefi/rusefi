@@ -107,7 +107,7 @@ public class ReaderStateImpl implements ReaderState {
         readBufferedReader(definitionReader, destinations);
 
         if (destCDefinesFileName != null) {
-            ExtraUtil.writeDefinesToFile(getVariableRegistry(), destCDefinesFileName, definitionInputFile);
+            CHeaderConsumer.writeDefinesToFile(getVariableRegistry(), destCDefinesFileName, definitionInputFile);
         }
     }
 

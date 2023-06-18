@@ -33,12 +33,6 @@ public class ConfigDefinition {
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     private static final String KEY_BOARD_NAME = "-board";
     public static final String CONFIG_PATH = "java_tools/configuration_definition/src/main/resources/config_definition.options";
-    /**
-     * This flag controls if we assign default zero value (useful while generating structures used for class inheritance)
-     * versus not assigning default zero value like we need for non-class headers
-     * This could be related to configuration header use-case versus "live data" (not very alive idea) use-case
-     */
-    public static boolean needZeroInit = true;
 
     public static void main(String[] args) {
         try {
@@ -93,7 +87,7 @@ public class ConfigDefinition {
                     state.addCHeaderDestination(args[i + 1]);
                     break;
                 case KEY_ZERO_INIT:
-                    needZeroInit = Boolean.parseBoolean(args[i + 1]);
+                    BaseCHeaderConsumer.needZeroInit = Boolean.parseBoolean(args[i + 1]);
                     break;
                 case KEY_WITH_C_DEFINES:
                     state.setWithC_Defines(Boolean.parseBoolean(args[i + 1]));

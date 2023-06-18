@@ -48,7 +48,7 @@ public class ConfigStructureImpl implements ConfigStructure {
         return name;
     }
 
-    public void addAlignmentFill(ReaderStateImpl state, int alignment) {
+    public void addAlignmentFill(ReaderState state, int alignment) {
         if (alignment == 0)
             return;
         /**

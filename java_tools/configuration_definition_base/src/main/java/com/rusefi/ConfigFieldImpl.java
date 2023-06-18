@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.core.Pair;
 import com.rusefi.output.ConfigStructure;
-import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 
 import java.util.Arrays;
@@ -13,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 import com.rusefi.parse.TypesHelper;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +46,7 @@ public class ConfigFieldImpl implements ConfigField {
 
     private final String tsInfo;
     private final boolean isIterate;
-    private final ReaderStateImpl state;
+    private final ReaderState state;
     private final boolean hasAutoscale;
     private final String trueName;
     private final String falseName;
@@ -59,7 +57,7 @@ public class ConfigFieldImpl implements ConfigField {
     /**
      * todo: one day someone should convert this into a builder
      */
-    public ConfigFieldImpl(ReaderStateImpl state,
+    public ConfigFieldImpl(ReaderState state,
                            String name,
                            String comment,
                            String arraySizeAsText,
@@ -160,7 +158,7 @@ public class ConfigFieldImpl implements ConfigField {
     /**
      * @see ConfigFieldParserTest#testParseLine()
      */
-    public static ConfigFieldImpl parse(ReaderStateImpl state, String line) {
+    public static ConfigFieldImpl parse(ReaderState state, String line) {
         Matcher matcher = FIELD.matcher(line);
         if (!matcher.matches())
             return null;
@@ -219,7 +217,7 @@ public class ConfigFieldImpl implements ConfigField {
         if (comment.isEmpty())
             return;
         if (comment.charAt(0) == '"' && !EnumIniField.isQuoted(comment))
-            throw new MaybeSemicolorWasMissedException("This comment looks like semicolon was missed: " + comment);
+            throw new MaybeSemicolonWasMissedException("This comment looks like semicolon was missed: " + comment);
     }
 
     public static boolean isPreprocessorDirective(String line) {
@@ -445,7 +443,7 @@ public class ConfigFieldImpl implements ConfigField {
      */
     public String getCommentOrName() {
         if (comment == null || comment.trim().isEmpty())
-            return quote(name);
+            return VariableRegistry.quote(name);
         return comment;
     }
 
