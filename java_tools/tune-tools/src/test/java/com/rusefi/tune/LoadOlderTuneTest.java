@@ -4,8 +4,8 @@ import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.core.preferences.storage.Node;
-import com.rusefi.tools.tune.TuneTools;
 import com.rusefi.output.ConfigStructure;
+import com.rusefi.tools.tune.TuneTools;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
@@ -16,9 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static com.rusefi.VariableRegistry.unquote;
-import static com.rusefi.tune.TuneReadWriteTest.SRC_TEST_RESOURCES;
-import static com.rusefi.tune.TuneReadWriteTest.TEST_INI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
