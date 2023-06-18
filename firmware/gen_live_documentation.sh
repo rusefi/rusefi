@@ -3,12 +3,12 @@
 rm gen_live_documentation.log
 
 cd ../java_tools
-./gradlew :config_definition:shadowJar
+./gradlew :config_definition_base:shadowJar
 ./gradlew :enum_to_string:shadowJar
 cd ../firmware
 
 java -DSystemOut.name=logs/gen_live_documentation \
- -cp ../java_tools/configuration_definition/build/libs/config_definition.jar \
+ -cp ../java_tools/configuration_definition_base/build/libs/config_definition_base.jar \
  com.rusefi.ldmp.LiveDataProcessor integration/LiveData.yaml
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 

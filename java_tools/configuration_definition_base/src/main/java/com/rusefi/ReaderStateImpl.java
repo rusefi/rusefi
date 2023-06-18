@@ -101,7 +101,7 @@ public class ReaderStateImpl implements ReaderState {
          * this is the most important invocation - here we read the primary input file and generated code into all
          * the destinations/writers
          */
-        SystemOut.println("Reading definition from " + definitionInputFile);
+        SystemOut.println("Reading definition from " + Objects.requireNonNull(definitionInputFile));
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(RootHolder.ROOT + definitionInputFile), IoUtils.CHARSET.name()));
         readBufferedReader(definitionReader, destinations);
 
