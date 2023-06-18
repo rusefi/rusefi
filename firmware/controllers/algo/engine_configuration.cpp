@@ -694,7 +694,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case engine_type_e::HELLEN72_ETB:
 	case engine_type_e::MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -780,7 +779,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
 		setEngineProteusGearboxManInTheMiddle();
 		break;
-	case engine_type_e::PROTEUS_VAG_80_18T:
 	case engine_type_e::PROTEUS_N73:
 	case engine_type_e::PROTEUS_MIATA_NB2:
 		setMiataNB2_Proteus();
@@ -835,9 +833,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	    setHellen121Vag_8_cyl();
         break;
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
-	case engine_type_e::HELLEN_55_BMW:
-	case engine_type_e::HELLEN_88_BMW:
-	case engine_type_e::HELLEN_134_BMW:
 	case engine_type_e::HELLEN_154_VAG:
 		break;
 	case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1:

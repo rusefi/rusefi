@@ -94,7 +94,7 @@ enum class engine_type_e : uint32_t {
 
 	VW_ABA = 32,
 
-	HELLEN72_ETB = 33,
+	UNUSED_33 = 33,
 
 	HELLEN_NA6 = 34,
 
@@ -174,9 +174,9 @@ enum class engine_type_e : uint32_t {
 
 	HELLEN_121_VAG_4_CYL = 71,
 	HELLEN_121_NISSAN_6_CYL = 72,
-	HELLEN_55_BMW = 73,
-	HELLEN_88_BMW = 74,
-	HELLEN_134_BMW = 75,
+	UNUSED_73 = 73,
+	UNUSED_74 = 74,
+	UNUSED_75 = 75,
 	HELLEN_154_VAG = 76,
 
 	HELLEN_121_VAG_5_CYL = 77,
@@ -206,7 +206,7 @@ enum class engine_type_e : uint32_t {
 
 	PROTEUS_HONDA_OBD2A = 91,
 
-	PROTEUS_VAG_80_18T = 92,
+	UNUSED_92 = 92,
 
 	PROTEUS_N73 = 93,
 
