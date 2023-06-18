@@ -343,9 +343,9 @@ case engine_type_e::TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case engine_type_e::UNUSED_12:
+case engine_type_e::MITSUBISHI_3A92:
   return "UNUSED_12";
-case engine_type_e::UNUSED_13:
+case engine_type_e::TOYOTA_1NZ_FE:
   return "UNUSED_13";
 case engine_type_e::UNUSED_15:
   return "UNUSED_15";

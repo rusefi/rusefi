@@ -32,6 +32,7 @@ ALLCPPSRC += \
 ALLINC += \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
+	$(ENGINES_INC) \
 	$(PROJECT_DIR)/config/engines \
 	$(BOARDS_DIR) \
 	$(PROJECT_DIR)/hw_layer/algo \
