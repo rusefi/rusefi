@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Jun 18 05:16:27 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Jun 18 14:05:22 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -260,7 +260,7 @@ case engine_type_e::MINIMAL_PINS:
 case engine_type_e::MITSUBISHI_3A92:
   return "MITSUBISHI_3A92";
 case engine_type_e::MITSUBISHI_4G93:
-  return "MITSU_4G93";
+  return "MITSUBISHI_4G93";
 case engine_type_e::MRE_BOARD_NEW_TEST:
   return "MRE_BOARD_NEW_TEST";
 case engine_type_e::MRE_BODY_CONTROL:
