@@ -3,6 +3,7 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
+import com.rusefi.VariableRegistry;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,7 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.rusefi.output.DataLogConsumer.getHumanGaugeName;
-import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class GaugeConsumer implements ConfigurationConsumer {
     private final String fileName;
@@ -44,7 +44,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;
         }
-        comment = quote(comment);
+        comment = VariableRegistry.quote(comment);
 
 
         double min = configField.getMin();
@@ -58,7 +58,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
 
         String fullName = prefix + configField.getName();
         String gaugeEntry = fullName + "Gauge = " + fullName + "," + comment +
-                ", " + quote(configField.getUnits()) +
+                ", " + VariableRegistry.quote(configField.getUnits()) +
                 ", " + min + "," + max +
                 ", " + min + "," + max +
                 ", " + min + "," + max +

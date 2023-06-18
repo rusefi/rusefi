@@ -133,7 +133,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
         StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, variables);
 
-        String fullSwitch = wrapSwitchStatement(switchBody);
+        String fullSwitch = GetOutputValueConsumer.wrapSwitchStatement(switchBody);
 
         return GET_METHOD_HEADER +
                 fullSwitch +
@@ -144,7 +144,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         StringBuilder switchBody = new StringBuilder();
 
         StringBuilder setterBody = new StringBuilder();
-        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(variables);
+        HashMap<Integer, AtomicInteger> hashConflicts = GetOutputValueConsumer.getHashConflicts(variables);
 
         for (VariableRecord pair : variables) {
 
@@ -164,7 +164,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             }
         }
 
-        String fullSwitch = wrapSwitchStatement(switchBody);
+        String fullSwitch = GetOutputValueConsumer.wrapSwitchStatement(switchBody);
 
         return fullSwitch + setterBody;
     }
