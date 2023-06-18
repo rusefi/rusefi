@@ -2117,6 +2117,11 @@ cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@t
 
 cmd_set_engine_type_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
 
+; cmd_set_engine_type_						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e__16_hex@@"
+cmd_set_engine_type_MITSUBISHI_3A92						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MITSUBISHI_3A92_16_hex@@"
+cmd_set_engine_type_MITSUBISHI_4G93						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MITSUBISHI_4G93_16_hex@@"
+cmd_set_engine_type_TOYOTA_1NZ_FE						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_TOYOTA_1NZ_FE_16_hex@@"
+
 cmd_set_engine_type_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_M111_16_hex@@"
 
 cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_NA6_16_hex@@"
@@ -4253,6 +4258,10 @@ dialog = tcuControls, "Transmission Settings"
 		field = "!Once you send the command, please reconnect to rusEFI controller in order to read fresh values"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",	cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
+
+		commandButton = "Mitsubishi 3A92",             cmd_set_engine_type_MITSUBISHI_3A92
+		commandButton = "Mitsubishi 4G93",             cmd_set_engine_type_MITSUBISHI_4G93
+		commandButton = "Toyota 1NZ-FE",                cmd_set_engine_type_TOYOTA_1NZ_FE
 
 		commandButton = "microRusEFI M111",             cmd_set_engine_type_MRE_M111@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI GDI VAG B6 test", cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets

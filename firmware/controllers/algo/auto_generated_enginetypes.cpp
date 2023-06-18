@@ -259,7 +259,7 @@ case engine_type_e::MINIMAL_PINS:
   return "MINIMAL_PINS";
 case engine_type_e::MITSUBISHI_3A92:
   return "MITSUBISHI_3A92";
-case engine_type_e::MITSU_4G93:
+case engine_type_e::MITSUBISHI_4G93:
   return "MITSU_4G93";
 case engine_type_e::MRE_BOARD_NEW_TEST:
   return "MRE_BOARD_NEW_TEST";

@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-
+#include "engine_configuration.h"
 #include "m111.h"
 #include "thermistors.h"
 #include "defaults.h"

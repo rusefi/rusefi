@@ -74,6 +74,8 @@
 #include "vw_b6.h"
 #include "chevrolet_camaro_4.h"
 #include "toyota_jzs147.h"
+#include "toyota_1NZ_FE.h"
+#include "mitsubishi_3A92.h"
 #include "ford_festiva.h"
 #include "boost_control.h"
 #if EFI_IDLE_CONTROL
@@ -905,7 +907,13 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::FRANKENSO_MAZDA_MIATA_NA8:
 		setFrankensoMazdaMiataNA8Configuration();
 		break;
-	case engine_type_e::MITSU_4G93:
+	case engine_type_e::MITSUBISHI_3A92:
+	    setMitsubishi3A92();
+	    break;
+	case engine_type_e::TOYOTA_1NZ_FE:
+	    setToyota1NZFE();
+	    break;
+	case engine_type_e::MITSUBISHI_4G93:
 	case engine_type_e::FORD_INLINE_6_1995:
 		setFordInline6();
 		break;

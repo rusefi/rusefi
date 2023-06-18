@@ -62,7 +62,7 @@ enum class engine_type_e : uint32_t {
 
 	FORD_ESCORT_GT = 14,
 
-	MITSU_4G93 = 16,
+	MITSUBISHI_4G93 = 16,
 
 	TEST_33816 = 18,
 
