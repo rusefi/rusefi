@@ -155,7 +155,7 @@ public class IniFileModel {
             if (isConstantsSection) {
                 if (isInsidePageDefinition) {
                     if (list.size() > 1)
-                        handleFieldDefinition(list);
+                        handleFieldDefinition(list, line);
                     return;
                 } else {
                     if (list.size() > 1) {
@@ -225,7 +225,7 @@ public class IniFileModel {
         list.removeFirst();
     }
 
-    private void handleFieldDefinition(LinkedList<String> list) {
+    private void handleFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
         switch (list.get(1)) {
             case FIELD_TYPE_SCALAR:
                 registerField(ScalarIniField.parse(list));
@@ -237,7 +237,7 @@ public class IniFileModel {
                 registerField(ArrayIniField.parse(list));
                 break;
             case FIELD_TYPE_BITS:
-                registerField(EnumIniField.parse(list));
+                registerField(EnumIniField.parse(list, line));
                 break;
             default:
                 throw new IllegalStateException("Unexpected " + list);

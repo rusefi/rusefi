@@ -1,6 +1,8 @@
 package com.opensr5.ini.field;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileReader;
+import com.opensr5.ini.RawIniFile;
 import com.rusefi.config.FieldType;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
@@ -9,15 +11,18 @@ import javax.management.ObjectName;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 public class EnumIniField extends IniField {
     private final FieldType type;
-    private final List<String> enums;
+    private final EnumKeyValueMap enums;
     private final int bitPosition;
     // weird format where 'one bit' width means 0 and "two bits" means "1"
     private final int bitSize0;
 
-    public EnumIniField(String name, int offset, FieldType type, List<String> enums, int bitPosition, int bitSize0) {
+    public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0) {
         super(name, offset);
         this.type = type;
         this.enums = enums;
@@ -38,7 +43,7 @@ public class EnumIniField extends IniField {
         return bitSize0;
     }
 
-    public List<String> getEnums() {
+    public EnumKeyValueMap getEnums() {
         return enums;
     }
 
@@ -107,7 +112,7 @@ public class EnumIniField extends IniField {
         return ordinal;
     }
 
-    public static EnumIniField parse(LinkedList<String> list) {
+    public static EnumIniField parse(LinkedList<String> list, RawIniFile.Line line) {
         String name = list.get(0);
         FieldType type = FieldType.parseTs(list.get(2));
         int offset = Integer.parseInt(list.get(3));
@@ -117,9 +122,15 @@ public class EnumIniField extends IniField {
         int bitPosition = parseBitRange.getBitPosition();
         int bitSize0 = parseBitRange.getBitSize0();
 
-        List<String> enums = list.subList(5, list.size());
-
+        EnumKeyValueMap enums = EnumKeyValueMap.valueOf(line.getRawText());
         return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0);
+    }
+
+    public static int ordinalIndexOf(String str, String substr, int n) {
+        int pos = str.indexOf(substr);
+        while (--n > 0 && pos != -1)
+            pos = str.indexOf(substr, pos + 1);
+        return pos;
     }
 
     public static class ParseBitRange {
@@ -142,6 +153,59 @@ public class EnumIniField extends IniField {
             bitPosition = Integer.parseInt(bitPositions[0]);
             bitSize0 = Integer.parseInt(bitPositions[1]) - bitPosition;
             return this;
+        }
+    }
+
+    public static class EnumKeyValueMap {
+        private static final String STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS = "^\\d+\\s*=.*";
+        private static Pattern IS_KEY_VALUE_SYNTAX = Pattern.compile(STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS);
+
+        private final Map<Integer, String> keyValues;
+
+        public EnumKeyValueMap(Map<Integer, String> keyValues) {
+            this.keyValues = keyValues;
+        }
+
+        public static EnumKeyValueMap valueOf(String rawText) {
+            Map<Integer, String> keyValues = new TreeMap<>();
+
+            int interestingIndex = EnumIniField.ordinalIndexOf(rawText, ",", 4);
+            // yes that could have been done with a regex as well
+            String interestingPart = rawText.substring(interestingIndex + /*skipping comma*/1).trim();
+            boolean isKeyValueSyntax = IS_KEY_VALUE_SYNTAX.matcher(interestingPart).matches();
+            int offset = 5;
+            String[] tokens = IniFileReader.splitTokens(rawText);
+
+            if (isKeyValueSyntax) {
+                for (int i = 0; i < tokens.length - offset; i += 2) {
+                    keyValues.put(Integer.valueOf(tokens[i + offset]), tokens[i + offset + 1]);
+                }
+
+
+            } else {
+                for (int i = 0; i < tokens.length - offset; i++) {
+                    keyValues.put(i, tokens[i + offset]);
+                }
+            }
+
+
+            return new EnumKeyValueMap(keyValues);
+        }
+
+        public int size() {
+            return keyValues.size();
+        }
+
+        public String get(int ordinal) {
+            return keyValues.get(ordinal);
+        }
+
+        public int indexOf(String value) {
+            for (Map.Entry<Integer, String> e : keyValues.entrySet()) {
+                if (e.getValue().equals(value))
+                    return e.getKey();
+            }
+            throw new IllegalArgumentException("Nothing for " + value);
         }
     }
 }
