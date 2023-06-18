@@ -109,7 +109,7 @@ public class LiveDataProcessor {
 
                 baseAddressCHeader.append("#define " + name.toUpperCase() + "_BASE_ADDRESS " + startingPosition + "\n");
 
-                ReaderStateImpl state = new ReaderStateImpl();
+                ReaderState state = new ReaderStateImpl();
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.setWithC_Defines(withCDefines);
 
