@@ -5,7 +5,7 @@ BOARDCPPSRC = $(BOARD_DIR)/board_extra.cpp
 DDEFS += -DSTM32F407xx
 
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
-  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=DEFAULT_FRANKENSO
+  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::DEFAULT_FRANKENSO
 endif
 
 # here we use different names for env variable and macro name in order to reduce confusion. overall this is about Frankenso builds defining FIRMWARE_ID

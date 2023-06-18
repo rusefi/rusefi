@@ -18,7 +18,7 @@ export EXTRA_PARAMS="-DDUMMY \
  -DHW_CHECK_ALWAYS_STIMULATE=TRUE \
  -DRAMDISK_INVALID"
 
-export VAR_DEF_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=MRE_BOARD_NEW_TEST
+export VAR_DEF_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=engine_type_e::MRE_BOARD_NEW_TEST
 
 # this QC configuration is used to assert our status with debug info
 export DEBUG_LEVEL_OPT="-O0 -ggdb -g"

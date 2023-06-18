@@ -502,7 +502,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case TS_SET_DEFAULT_ENGINE:
 		fatalErrorForPresetApply();
-		setEngineType((int)engine_type_e::DEFAULT_ENGINE_TYPE);
+		setEngineType((int)DEFAULT_ENGINE_TYPE);
 		break;
 
 	case 0x79:
