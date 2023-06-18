@@ -2117,7 +2117,7 @@ cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@t
 
 cmd_set_engine_type_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
 
-; cmd_set_engine_type_						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e__16_hex@@"
+; cmd_set_engine_type_						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_
 cmd_set_engine_type_MITSUBISHI_3A92						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MITSUBISHI_3A92_16_hex@@"
 cmd_set_engine_type_MITSUBISHI_4G93						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MITSUBISHI_4G93_16_hex@@"
 cmd_set_engine_type_TOYOTA_1NZ_FE						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_TOYOTA_1NZ_FE_16_hex@@"
