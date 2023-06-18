@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 apply from: '../../android/dependencies.gradle'
 
 android {
+    namespace "com.rusefi.app"
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
