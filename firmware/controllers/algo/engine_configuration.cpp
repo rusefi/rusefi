@@ -76,6 +76,7 @@
 #include "toyota_jzs147.h"
 #include "toyota_1NZ_FE.h"
 #include "mitsubishi_3A92.h"
+#include "mitsubishi_4G93.h"
 #include "ford_festiva.h"
 #include "boost_control.h"
 #if EFI_IDLE_CONTROL
@@ -914,6 +915,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	    setToyota1NZFE();
 	    break;
 	case engine_type_e::MITSUBISHI_4G93:
+	    setMitsubishi4G93();
+	    break;
 	case engine_type_e::FORD_INLINE_6_1995:
 		setFordInline6();
 		break;
