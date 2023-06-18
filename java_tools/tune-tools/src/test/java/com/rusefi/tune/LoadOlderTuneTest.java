@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static com.rusefi.ConfigFieldImpl.unquote;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -59,7 +60,7 @@ public class LoadOlderTuneTest {
                 }
 
                 if (cf.getType().equals("boolean")) {
-                    // todo
+                    sb.append(TuneTools.getAssignmentCode(customValue.getName(), unquote(customValue.getValue())));
                     continue;
                 }
 
@@ -80,7 +81,7 @@ public class LoadOlderTuneTest {
 
                     int ordinal;
                     try {
-                        ordinal = TuneTools.resolveEnumByName(customEnum, VariableRegistry.unquote(customValue.getValue()));
+                        ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()));
                     } catch (IllegalStateException e) {
                         System.out.println("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
                         continue;
@@ -107,7 +108,27 @@ public class LoadOlderTuneTest {
                 "\tengineConfiguration->mc33_hvolt = 0.0;\n" +
                 "\tengineConfiguration->mc33_i_boost = 0.0;\n" +
                 "\tengineConfiguration->mc33_i_peak = 0.0;\n" +
-                "\tengineConfiguration->mc33_i_hold ", sb.substring(0, 500));
+                "\tengineConfiguration->mc33_i_hold = 0.0;\n" +
+                "\tengineConfiguration->mc33_t_max_boost = 0.0;\n" +
+                "\tengineConfiguration->mc33_t_peak_off = 0.0;\n" +
+                "\tengineConfiguration->mc33_t_peak_tot = 0.0;\n" +
+                "\tengineConfiguration->mc33_t_bypass = 0.0;\n" +
+                "\tengineConfiguration->mc33_t_hold_off = 0.0;\n" +
+                "\tengineConfiguration->mc33_t_hold_tot = 0.0;\n" +
+                "\tengineConfiguration->clutchDownPinMode = 1.0;\n" +
+                "\tengineConfiguration->clutchUpPinMode = 1.0;\n" +
+                "\tengineConfiguration->mapErrorDetectionTooHigh = 250.0;\n" +
+                "\tengineConfiguration->idleStepperReactionTime = 10.0;\n" +
+                "\tengineConfiguration->idleStepperTotalSteps = 150.0;\n" +
+                "\tengineConfiguration->stepperForceParkingEveryRestart = false;\n" +
+                "\tengineConfiguration->idlerpmpid_iTermMin = -200.0;\n" +
+                "\tengineConfiguration->idlerpmpid_iTermMax = 200.0;\n" +
+                "\tengineConfiguration->idlePidRpmUpperLimit = 0.0;\n" +
+                "\tengineConfiguration->idlePidDeactivationTpsThreshold = 2.0;\n" +
+                "\tengineConfiguration->warningPeriod = 10.0;\n" +
+                "\tengineConfiguration->isHip9011Enabled = true;\n" +
+                "\tengineConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;\n" +
+                "\tengineConfiguration->hip9011CsPinMode = ", sb.substring(0, 1500));
     }
 
     private static boolean isHardwareEnum(String type) {
