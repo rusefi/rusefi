@@ -1,0 +1,3 @@
+! todo: remove from rusefi_config.txt
+
+#define TRIGGERS_FILE_NAME "triggers.txt"

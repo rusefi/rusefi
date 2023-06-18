@@ -2,6 +2,7 @@
  * @file test_all_triggers.cpp
  */
 #include "pch.h"
+#include "TriggerMeta.h"
 
 // uncomment to test starting from specific trigger
 //#define TEST_FROM_TRIGGER_ID ((int)TT_MAZDA_MIATA_NA)

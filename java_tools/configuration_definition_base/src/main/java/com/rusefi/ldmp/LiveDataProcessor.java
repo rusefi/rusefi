@@ -1,10 +1,7 @@
 package com.rusefi.ldmp;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.EnumToString;
-import com.rusefi.InvokeReader;
-import com.rusefi.ReaderState;
-import com.rusefi.ReaderStateImpl;
+import com.rusefi.*;
 import com.rusefi.output.*;
 import com.rusefi.util.LazyFile;
 import org.yaml.snakeyaml.Yaml;
@@ -51,6 +48,7 @@ public class LiveDataProcessor {
             System.err.println("One parameter expected: name of live data yaml input file");
             System.exit(-1);
         }
+        TriggerMetaGenerator.main(null);
         String yamlFileName = args[0];
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(new FileReader(yamlFileName));
