@@ -1,6 +1,5 @@
 package com.rusefi.trigger;
 
-import com.rusefi.config.generated.Fields;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -8,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.TriggerMeta.*;
 
 public class TriggerWheelInfo {
     private static final String TRIGGERTYPE = "TRIGGERTYPE";
@@ -123,7 +122,7 @@ public class TriggerWheelInfo {
     }
 
     static void readWheels(String workingFolder, TriggerWheelInfoConsumer consumer) {
-        String fileName = workingFolder + File.separator + Fields.TRIGGERS_FILE_NAME;
+        String fileName = workingFolder + File.separator + TRIGGERS_FILE_NAME;
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(fileName));

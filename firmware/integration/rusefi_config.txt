@@ -203,17 +203,6 @@ struct_no_prefix engine_configuration_s
 
 #define CAN_DEFAULT_BASE 0x200
 
-#define TRIGGER_IS_CRANK_KEY "crankBased"
-#define TRIGGER_CYCLE_DURATION "cycleDuration"
-#define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
-#define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
-#define TRIGGER_HARDCODED_OPERATION_MODE "knownOperationMode"
-#define TRIGGER_COMMENT "#"
-#define TRIGGER_GAPS_COUNT "gapsCount"
-#define TRIGGER_GAP_FROM "gapFrom"
-#define TRIGGER_GAP_TO "gapTo"
-#define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
-
 !
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
 ! or packing numeric voltage inside an integer byte

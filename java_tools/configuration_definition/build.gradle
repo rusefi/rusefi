@@ -11,7 +11,6 @@ defaultTasks 'shadowJar'
 dependencies {
     api project(':config_definition_base')
     api project(':trigger-image')
-    api project(':models')
     antlr global_libs.antlr
 }
 
