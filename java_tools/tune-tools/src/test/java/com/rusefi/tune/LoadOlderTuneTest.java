@@ -1,23 +1,14 @@
 package com.rusefi.tune;
 
-import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
-import com.rusefi.core.preferences.storage.Node;
-import com.rusefi.output.ConfigStructure;
 import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tools.tune.TuneTools;
-import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
-import static com.rusefi.ConfigFieldImpl.unquote;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -33,71 +24,9 @@ public class LoadOlderTuneTest {
         IniFileModel ini = new IniFileModel().readIniFile(TuneReadWriteTest.TEST_INI);
         assertFalse(ini.fieldsInUiOrder.isEmpty());
 
-        List<String> options = Files.readAllLines(Paths.get("../../" + ConfigDefinition.CONFIG_PATH));
-        String[] totalArgs = options.toArray(new String[0]);
-
         RootHolder.ROOT = "../../firmware/";
-        ReaderStateImpl state = new ReaderStateImpl();
-        ConfigDefinition.doJob(totalArgs, state);
 
-        StringBuilder sb = new StringBuilder();
-        for (DialogModel.Field f : ini.fieldsInUiOrder) {
-            String name = f.getKey();
-            Constant customValue = customOldTune.getConstantsAsMap().get(name);
-            Constant defaultValue = lessOldDefaultTune.getConstantsAsMap().get(name);
-            if (defaultValue == null) {
-                // no longer present
-                continue;
-            }
-
-            boolean isSameValue = simplerSpaces(defaultValue.getValue()).equals(simplerSpaces(customValue.getValue()));
-            if (!isSameValue) {
-                ConfigStructure s = state.getStructures().get("engine_configuration_s");
-                System.out.println(s);
-                ConfigField cf = s.getTsFieldByName(name);
-                if (cf == null) {
-                    System.out.println("Not found " + name);
-                    continue;
-                }
-
-                if (cf.getType().equals("boolean")) {
-                    sb.append(TuneTools.getAssignmentCode(customValue.getName(), unquote(customValue.getValue())));
-                    continue;
-                }
-
-
-                if (!Node.isNumeric(customValue.getValue())) {
-                    // todo: smarter logic for enums
-
-                    String type = cf.getType();
-                    if (isHardwareEnum(type)) {
-                        continue;
-                    }
-                    EnumsReader.EnumState sourceCodeEnum = state.getEnumsReader().getEnums().get(type);
-                    if (sourceCodeEnum == null) {
-                        System.out.println("No info for " + type);
-                        continue;
-                    }
-                    String customEnum = state.getTsCustomLine().get(type);
-
-                    int ordinal;
-                    try {
-                        ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()));
-                    } catch (IllegalStateException e) {
-                        System.out.println("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
-                        continue;
-                    }
-
-                    System.out.println(cf + " " + sourceCodeEnum + " " + customEnum + " " + ordinal);
-
-                    String sourceCodeValue = sourceCodeEnum.findByValue(ordinal);
-                    sb.append(TuneTools.getAssignmentCode(customValue.getName(), sourceCodeValue));
-
-                    continue;
-                }
-                sb.append(TuneTools.getAssignmentCode(customValue.getName(), customValue.getValue()));
-            }
-        }
+        StringBuilder sb = TuneCanTool.getTunePatch2(customOldTune, lessOldDefaultTune, ini);
 
         assertEquals("\tengineConfiguration->ignitionMode = IM_ONE_COIL;\n" +
                 "\tengineConfiguration->cylindersCount = 4;\n" +
@@ -130,23 +59,6 @@ public class LoadOlderTuneTest {
                 "\tengineConfiguration->isHip9011Enabled = true;\n" +
                 "\tengineConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;\n" +
                 "\tengineConfiguration->hip9011CsPinMode = ", sb.substring(0, 1500));
-    }
-
-    private static boolean isHardwareEnum(String type) {
-        switch (type) {
-            case "output_pin_e":
-            case "brain_input_pin_e":
-            case "adc_channel_e":
-            case "Gpio":
-                return true;
-        }
-        return false;
-    }
-
-    private static Object simplerSpaces(String value) {
-        if (value == null)
-            return value;
-        return value.replaceAll("\\s+", " ").trim();
     }
 
     @Test(expected = IllegalStateException.class)

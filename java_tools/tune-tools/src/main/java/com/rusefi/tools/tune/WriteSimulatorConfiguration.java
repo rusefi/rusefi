@@ -39,5 +39,8 @@ public class WriteSimulatorConfiguration {
             throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
         Msq m = MsqFactory.valueOf(configuration, ini);
         m.writeXmlFile(TuneCanTool.DEFAULT_TUNE);
+
+        Msq newTuneJustToValidate = Msq.readTune(TuneCanTool.DEFAULT_TUNE);
+        System.out.println("Looks valid " + newTuneJustToValidate);
     }
 }

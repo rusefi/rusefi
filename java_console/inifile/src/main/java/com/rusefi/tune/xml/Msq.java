@@ -66,7 +66,7 @@ public class Msq {
         return ci;
     }
 
-    public static Msq readTune(String fileName) throws Exception {
+    public static Msq readTune(String fileName) throws JAXBException {
         return XmlUtil.readModel(Msq.class, fileName);
     }
 
