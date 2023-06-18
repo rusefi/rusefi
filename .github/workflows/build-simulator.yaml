@@ -58,7 +58,7 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
-        if [ "${{github.event_name}}" != "push" ] || [ "${{github.repository}}" != "master" ]; then
+        if [ "${{github.event_name}}" != "push" ] || [ "${{github.repository}}" != "rusefi/rusefi" ]; then
           echo "::set-env name=NOCOMMIT::true"
           exit 0
         fi
