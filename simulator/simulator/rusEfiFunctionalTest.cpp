@@ -86,6 +86,7 @@ static void runChprintfTest() {
 static void runCanGpioTest() {
 }
 
+// todo: reuse intFlashRead method?
 static void writeSimulatorTune() {
 	FILE *ptr = fopen(SIMULATOR_TUNE_BIN_FILE_NAME, "wb");
 	if (ptr == nullptr) {
