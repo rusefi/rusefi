@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 18 05:17:58 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 18 14:06:50 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -333,8 +333,8 @@ public class Fields {
 	public static final int engine_type_e_MIATA_1996 = 21;
 	public static final int engine_type_e_MIATA_PROTEUS_TCU = 1;
 	public static final int engine_type_e_MINIMAL_PINS = 99;
-	public static final int engine_type_e_MITSU_4G93 = 16;
 	public static final int engine_type_e_MITSUBISHI_3A92 = 12;
+	public static final int engine_type_e_MITSUBISHI_4G93 = 16;
 	public static final int engine_type_e_MRE_BOARD_NEW_TEST = 31;
 	public static final int engine_type_e_MRE_BODY_CONTROL = 23;
 	public static final int engine_type_e_MRE_M111 = 68;
@@ -1022,7 +1022,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 521958329;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1235,7 +1234,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.06.18.f407-discovery.521958329";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.06.18.f407-discovery.2331586979";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
