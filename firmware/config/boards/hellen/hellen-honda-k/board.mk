@@ -4,7 +4,7 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 # Set this if you want a default engine type other than normal
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
-#  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_154_HYUNDAI_COUPE_BK2
+#  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2
 endif
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE

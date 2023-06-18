@@ -319,7 +319,7 @@ void readFromFlash() {
 	getFlashAddrFirstCopy();
 	getFlashAddrSecondCopy();
 
-	resetConfigurationExt(engine_type_e::DEFAULT_ENGINE_TYPE);
+	resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 
 	FlashState result = FlashState::Ok;
 #else
@@ -332,7 +332,7 @@ void readFromFlash() {
 			efiPrintf("Need to reset flash to default due to CRC mismatch");
 			[[fallthrough]];
 		case FlashState::BlankChip:
-			resetConfigurationExt(engine_type_e::DEFAULT_ENGINE_TYPE);
+			resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 			break;
 		case FlashState::IncompatibleVersion:
 			// Preserve engine type from old config

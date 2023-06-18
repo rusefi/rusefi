@@ -650,7 +650,7 @@ void loadConfiguration() {
 
 #if EFI_INTERNAL_FLASH
 	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
-		engineConfiguration->engineType = engine_type_e::DEFAULT_ENGINE_TYPE;
+		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 		resetConfigurationExt(engineConfiguration->engineType);
 		writeToFlashNow();
 	} else {
@@ -660,7 +660,7 @@ void loadConfiguration() {
 	}
 #else // not EFI_INTERNAL_FLASH
 	// This board doesn't load configuration, initialize the default
-	engineConfiguration->engineType = engine_type_e::DEFAULT_ENGINE_TYPE;
+	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 	resetConfigurationExt(engineConfiguration->engineType);
 #endif /* EFI_INTERNAL_FLASH */
 

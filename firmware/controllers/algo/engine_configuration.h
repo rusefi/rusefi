@@ -11,7 +11,7 @@
 #include "persistent_configuration.h"
 
 #ifndef DEFAULT_ENGINE_TYPE
-#define DEFAULT_ENGINE_TYPE MINIMAL_PINS
+#define DEFAULT_ENGINE_TYPE engine_type_e::MINIMAL_PINS
 #endif
 
 #define CLT_MANUAL_IDLE_CORRECTION config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE
