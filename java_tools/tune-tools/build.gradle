@@ -1,0 +1,9 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api project(':config_definition')
+    api project(':models')
+    api project(':ecu_io')
+}

@@ -9,6 +9,7 @@ import com.rusefi.output.ConfigStructure;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.nio.file.Files;
@@ -82,7 +83,7 @@ public class LoadOlderTuneTest {
 
                     int ordinal;
                     try {
-                        ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()));
+                        ordinal = TuneTools.resolveEnumByName(customEnum, VariableRegistry.unquote(customValue.getValue()));
                     } catch (IllegalStateException e) {
                         System.out.println("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
                         continue;
@@ -133,14 +134,14 @@ public class LoadOlderTuneTest {
     public void testLegacyCustomEnumOrdinal() {
         String tsCustomLine = "bits, U08, @OFFSET@, [0:1], \"Single Coil\", \"Individual Coils\", \"Wasted Spark\", \"Two Distributors\"";
 
-        assertEquals(0, TuneTools.resolveEnumByName(tsCustomLine, "One coil"));
+        Assert.assertEquals(0, TuneTools.resolveEnumByName(tsCustomLine, "One coil"));
     }
 
     @Test
     public void testCustomEnumOrdinal() {
         String tsCustomLine = "bits, U08, @OFFSET@, [0:1], \"Single Coil\", \"Individual Coils\", \"Wasted Spark\", \"Two Distributors\"";
 
-        assertEquals(0, TuneTools.resolveEnumByName(tsCustomLine, "Single coil"));
-        assertEquals(3, TuneTools.resolveEnumByName(tsCustomLine, "Two Distributors"));
+        Assert.assertEquals(0, TuneTools.resolveEnumByName(tsCustomLine, "Single coil"));
+        Assert.assertEquals(3, TuneTools.resolveEnumByName(tsCustomLine, "Two Distributors"));
     }
 }
