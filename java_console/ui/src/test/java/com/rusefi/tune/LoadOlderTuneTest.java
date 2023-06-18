@@ -28,9 +28,9 @@ public class LoadOlderTuneTest {
         Page dataPage = customOldTune.findPage();
         assertFalse(dataPage.constant.isEmpty());
 
-        Msq lessOldDefaultTune = Msq.readTune(SRC_TEST_RESOURCES + "simulator_tune-2023-06.xml");
+        Msq lessOldDefaultTune = Msq.readTune(TuneReadWriteTest.SRC_TEST_RESOURCES + "simulator_tune-2023-06.xml");
 
-        IniFileModel ini = new IniFileModel().readIniFile(TEST_INI);
+        IniFileModel ini = new IniFileModel().readIniFile(TuneReadWriteTest.TEST_INI);
         assertFalse(ini.fieldsInUiOrder.isEmpty());
 
         List<String> options = Files.readAllLines(Paths.get("../../" + ConfigDefinition.CONFIG_PATH));
