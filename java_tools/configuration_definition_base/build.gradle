@@ -14,5 +14,6 @@ dependencies {
 }
 
 shadowJar {
+    dependsOn(':enum_to_string:shadowJar')
     archiveClassifier = ''
 }
