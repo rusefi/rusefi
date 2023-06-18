@@ -7,6 +7,10 @@
 
 set -e
 
+cd ../java_tools
+./gradlew :config_definition:shadowJar
+cd ../firmware
+
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
 echo "the storage section of rusefiXXX.ini is updated as well"
 
