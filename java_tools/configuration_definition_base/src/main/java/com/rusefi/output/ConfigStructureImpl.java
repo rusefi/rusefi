@@ -114,7 +114,7 @@ public class ConfigStructureImpl implements ConfigStructure {
         return tsFieldsMap.get(name);
     }
 
-    public void addBitPadding(ReaderStateImpl readerState) {
+    public void addBitPadding(ReaderState readerState) {
         if (readingBitState.get() == 0)
             return;
         int sizeAtStartOfPadding = cFields.size();

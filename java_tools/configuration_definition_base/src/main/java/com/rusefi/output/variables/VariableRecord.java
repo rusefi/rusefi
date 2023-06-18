@@ -1,7 +1,5 @@
 package com.rusefi.output.variables;
 
-import com.rusefi.core.Pair;
-
 public class VariableRecord {
     public final String type;
     private final String humanName;

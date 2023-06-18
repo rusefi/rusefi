@@ -3,6 +3,7 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
+import com.rusefi.VariableRegistry;
 import com.rusefi.parse.TypesHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.util.TreeSet;
 
 import static com.rusefi.VariableRegistry.unquote;
-import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 /**
  * here we generate [Datalog] section of TS .ini file
@@ -99,7 +99,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
             throw new IllegalStateException("[" + comment + "] is too long for log files at " + comment.length());
 
         if (comment.charAt(0) != '"')
-            comment = quote(comment);
+            comment = VariableRegistry.quote(comment);
         return comment;
     }
 

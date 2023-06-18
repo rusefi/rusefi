@@ -1,7 +1,5 @@
 package com.rusefi.output;
 
-import com.rusefi.core.SensorCategory;
-
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 

@@ -16,7 +16,6 @@ import java.util.*;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigFieldImpl.BOOLEAN_T;
 import static com.rusefi.VariableRegistry.unquote;
-import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 /**
  * We keep state here as we read configuration definition
@@ -343,7 +342,7 @@ public class ReaderStateImpl implements ReaderState {
     private static String getCommentWithIndex(ConfigFieldImpl cf, int i) {
         String unquoted = unquote(cf.getCommentOrName());
         String string = unquoted + " " + i;
-        return quote(string);
+        return VariableRegistry.quote(string);
     }
 
     @Override
