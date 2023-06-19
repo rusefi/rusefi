@@ -29,7 +29,7 @@ public class IniFileModel {
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
     public Map<String, IniField> allIniFields = new LinkedHashMap<>();
-    public final List<DialogModel.Field> fieldsInUiOrder = new ArrayList<>();
+    public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
     public Map<String, String> tooltips = new TreeMap<>();
     public Map<String, String> protocolMeta = new TreeMap<>();
@@ -102,7 +102,6 @@ public class IniFileModel {
         if (dialogUiName == null)
             dialogUiName = dialogId;
         dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog));
-        fieldsInUiOrder.addAll(fieldsOfCurrentDialog);
 
         dialogId = null;
         fieldsOfCurrentDialog.clear();
@@ -259,8 +258,10 @@ public class IniFileModel {
 
         DialogModel.Field field = new DialogModel.Field(key, uiFieldName);
 
-        if (key != null)
+        if (key != null) {
             fieldsOfCurrentDialog.add(field);
+            fieldsInUiOrder.put(key, field);
+        }
         log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 

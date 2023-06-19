@@ -57,6 +57,8 @@ public class TuneCanTool {
             case "brain_input_pin_e":
             case "adc_channel_e":
             case "Gpio":
+            case "spi_device_e":
+            case "pin_input_mode_e":
                 return true;
         }
         return false;
@@ -77,7 +79,7 @@ public class TuneCanTool {
         ConfigDefinition.doJob(totalArgs, state);
 
         StringBuilder sb = new StringBuilder();
-        for (DialogModel.Field f : ini.fieldsInUiOrder) {
+        for (DialogModel.Field f : ini.fieldsInUiOrder.values()) {
             String name = f.getKey();
             Constant customValue = customTune.getConstantsAsMap().get(name);
             Constant defaultValue = defaultTune.getConstantsAsMap().get(name);
