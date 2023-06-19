@@ -26,7 +26,7 @@ public class LoadOlderTuneTest {
 
         RootHolder.ROOT = "../../firmware/";
 
-        StringBuilder sb = TuneCanTool.getTunePatch2(customOldTune, lessOldDefaultTune, ini);
+        StringBuilder sb = TuneCanTool.getTunePatch2(lessOldDefaultTune, customOldTune, ini);
 
         assertEquals("\tengineConfiguration->ignitionMode = IM_ONE_COIL;\n" +
                 "\tengineConfiguration->cylindersCount = 4;\n" +

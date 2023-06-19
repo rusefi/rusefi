@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 import static com.rusefi.ConfigFieldImpl.unquote;
 import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR;
@@ -60,7 +61,7 @@ public class TuneCanTool {
     }
 
     @NotNull
-    public static StringBuilder getTunePatch2(Msq customOldTune, Msq lessOldDefaultTune, IniFileModel ini) throws IOException {
+    public static StringBuilder getTunePatch2(Msq defaultTune, Msq customTune, IniFileModel ini) throws IOException {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
         String[] totalArgs = options.toArray(new String[0]);
 
@@ -70,12 +71,18 @@ public class TuneCanTool {
         StringBuilder sb = new StringBuilder();
         for (DialogModel.Field f : ini.fieldsInUiOrder) {
             String name = f.getKey();
-            Constant customValue = customOldTune.getConstantsAsMap().get(name);
-            Constant defaultValue = lessOldDefaultTune.getConstantsAsMap().get(name);
+            Constant customValue = customTune.getConstantsAsMap().get(name);
+            Constant defaultValue = defaultTune.getConstantsAsMap().get(name);
             if (defaultValue == null) {
                 // no longer present
                 continue;
             }
+            Objects.requireNonNull(defaultValue.getValue(), "d value");
+            if (customValue == null) {
+                System.out.println("Skipping " + name + " TODO");
+                continue;
+            }
+            Objects.requireNonNull(customValue.getValue(), "c value");
 
             boolean isSameValue = simplerSpaces(defaultValue.getValue()).equals(simplerSpaces(customValue.getValue()));
             if (!isSameValue) {
