@@ -33,7 +33,12 @@ public class TuneCanTool {
         RootHolder.ROOT = "../firmware/";
 
 
-        String fileName = "C:\\Users\\Dell2019\\Downloads\\1258.msq";
+        // 3A92 "La Mitsubicha"
+//        String fileName = "C:\\Users\\Dell2019\\Downloads\\1258.msq";
+        // Scion 1NZ-FE "xB Chinita auto"
+        // String fileName = "C:\\Users\\Dell2019\\Downloads\\1448.msq";
+        // 4g93
+        String fileName = "C:\\Users\\Dell2019\\Downloads\\1425.msq";
 
         Msq custom = Msq.readTune(fileName);
 
@@ -95,7 +100,7 @@ public class TuneCanTool {
                 }
 
                 if (cf.getType().equals("boolean")) {
-                    sb.append(TuneTools.getAssignmentCode(customValue.getName(), unquote(customValue.getValue())));
+                    sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), unquote(customValue.getValue())));
                     continue;
                 }
 
@@ -125,11 +130,11 @@ public class TuneCanTool {
                     System.out.println(cf + " " + sourceCodeEnum + " " + customEnum + " " + ordinal);
 
                     String sourceCodeValue = sourceCodeEnum.findByValue(ordinal);
-                    sb.append(TuneTools.getAssignmentCode(customValue.getName(), sourceCodeValue));
+                    sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), sourceCodeValue));
 
                     continue;
                 }
-                sb.append(TuneTools.getAssignmentCode(customValue.getName(), customValue.getValue()));
+                sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), customValue.getValue()));
             }
         }
         return sb;

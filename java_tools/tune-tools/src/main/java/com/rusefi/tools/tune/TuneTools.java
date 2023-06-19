@@ -1,5 +1,6 @@
 package com.rusefi.tools.tune;
 
+import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 
 public class TuneTools {
@@ -20,7 +21,8 @@ public class TuneTools {
     }
 
     @NotNull
-    public static String getAssignmentCode(String name, String value) {
-        return "\tengineConfiguration->" + name + " = " + value + ";\n";
+    public static String getAssignmentCode(Constant defaultValue, String name, String value) {
+        return //"\t // default " + defaultValue.getValue() + "\n" +
+                "\tengineConfiguration->" + name + " = " + value + ";\n";
     }
 }
