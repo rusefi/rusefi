@@ -303,7 +303,7 @@
         <constant name="canTxPin">"NONE"</constant>
         <constant name="canRxPin">"NONE"</constant>
         <constant name="throttlePedalUpPinMode">"DEFAULT"</constant>
-        <constant digits="0" name="acIdleExtraOffset" units="%">0.0</constant>
+        <constant digits="0" name="acIdleExtraOffset" units="%">15.0</constant>
         <constant digits="2" name="finalGearRatio" units="ratio">1.0</constant>
         <constant name="tcuInputSpeedSensorPin">"NONE"</constant>
         <constant digits="0" name="tcuInputSpeedSensorTeeth" units="">1.0</constant>
