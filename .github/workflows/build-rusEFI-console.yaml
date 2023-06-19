@@ -58,6 +58,14 @@ jobs:
         if: success() || failure() # always run even if the previous step fails
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
+          detailed_summary: true
+
+      - name: Attach Gradle junit results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: gradle junit
+          path: '**/build/test-results/test/TEST-*.xml'
 
       - name: Build console
         working-directory: ./java_console
