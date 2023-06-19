@@ -70,6 +70,8 @@ void setDefaultBaseEngine() {
 	engineConfiguration->boostCutPressure = 300;
 	engineConfiguration->boostCutPressureHyst = 20;
 
+	engineConfiguration->primingDelay = 0.5;
+
 	// Limits and Fallbacks
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->rpmHardLimitHyst = 50;

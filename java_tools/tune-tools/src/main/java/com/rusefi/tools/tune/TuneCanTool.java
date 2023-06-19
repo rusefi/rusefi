@@ -38,7 +38,10 @@ public class TuneCanTool {
         // Scion 1NZ-FE "xB Chinita auto"
         // String fileName = "C:\\Users\\Dell2019\\Downloads\\1448.msq";
         // 4g93
-        String fileName = "C:\\Users\\Dell2019\\Downloads\\1425.msq";
+        //String fileName = "C:\\Users\\Dell2019\\Downloads\\1425.msq";
+        // mtmotorsport BMW https://rusefi.com/online/view.php?msq=1479
+        String fileName = "C:\\Users\\Dell2019\\Downloads\\1479.msq";
+
 
         Msq custom = Msq.readTune(fileName);
 
