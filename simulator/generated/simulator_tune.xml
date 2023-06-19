@@ -43,14 +43,14 @@
          15.0
 </constant>
         <constant cols="1" digits="2" name="injector_battLagCorr" rows="8">
-         3.371000051498413
-         1.9739999771118164
-         1.3830000162124634
-         1.194000005722046
-         1.0399999618530273
-         0.9139999747276306
-         0.796999990940094
-         0.7260000109672546
+         3.371
+         1.974
+         1.383
+         1.194
+         1.04
+         0.914
+         0.797
+         0.726
 </constant>
         <constant name="isForcedInduction">"false"</constant>
         <constant name="useFordRedundantTps">"false"</constant>
@@ -135,15 +135,15 @@
         <constant name="map_sensor_type">"MPX4250"</constant>
         <constant name="map_sensor_hwChannel">"Disabled"</constant>
         <constant digits="1" name="clt_tempC_1" units="*C">0.0</constant>
-        <constant digits="1" name="clt_tempC_2" units="*C">23.888900756835938</constant>
-        <constant digits="1" name="clt_tempC_3" units="*C">48.88890075683594</constant>
+        <constant digits="1" name="clt_tempC_2" units="*C">23.8889</constant>
+        <constant digits="1" name="clt_tempC_3" units="*C">48.8889</constant>
         <constant digits="1" name="clt_resistance_1" units="Ohm">9500.0</constant>
         <constant digits="1" name="clt_resistance_2" units="Ohm">2100.0</constant>
         <constant digits="1" name="clt_resistance_3" units="Ohm">1000.0</constant>
         <constant digits="1" name="clt_bias_resistor" units="Ohm">1500.0</constant>
         <constant name="clt_adcChannel">"Disabled"</constant>
         <constant digits="1" name="iat_tempC_1" units="*C">-20.0</constant>
-        <constant digits="1" name="iat_tempC_2" units="*C">23.888900756835938</constant>
+        <constant digits="1" name="iat_tempC_2" units="*C">23.8889</constant>
         <constant digits="1" name="iat_tempC_3" units="*C">120.0</constant>
         <constant digits="1" name="iat_resistance_1" units="Ohm">18000.0</constant>
         <constant digits="1" name="iat_resistance_2" units="Ohm">2100.0</constant>
@@ -174,7 +174,7 @@
         <constant digits="0" name="fixedModeTiming" units="RPM">50.0</constant>
         <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">0.0</constant>
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
-        <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333492279053</constant>
+        <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
         <constant digits="0" name="fanOnTemperature" units="deg C">95.0</constant>
         <constant digits="0" name="fanOffTemperature" units="deg C">91.0</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
@@ -205,9 +205,9 @@
         <constant name="afr_hwChannel">"Disabled"</constant>
         <constant name="afr_hwChannel2">"Disabled"</constant>
         <constant digits="2" name="afr_v1" units="volts">0.0</constant>
-        <constant digits="2" name="afr_value1" units="AFR">9.996000289916992</constant>
+        <constant digits="2" name="afr_value1" units="AFR">9.996</constant>
         <constant digits="2" name="afr_v2" units="volts">5.0</constant>
-        <constant digits="2" name="afr_value2" units="AFR">19.992000579833984</constant>
+        <constant digits="2" name="afr_value2" units="AFR">19.992</constant>
         <constant name="throttlePedalPositionAdcChannel">"Disabled"</constant>
         <constant name="tle6240_cs">"NONE"</constant>
         <constant name="tle6240_csPinMode">"default"</constant>
@@ -494,7 +494,7 @@
         <constant name="ALSActivatePin">"NONE"</constant>
         <constant name="launchActivatePin">"NONE"</constant>
         <constant digits="4" name="boostPid_pFactor" units="">0.5</constant>
-        <constant digits="4" name="boostPid_iFactor" units="">0.30000001192092896</constant>
+        <constant digits="4" name="boostPid_iFactor" units="">0.3</constant>
         <constant digits="4" name="boostPid_dFactor" units="">0.0</constant>
         <constant digits="0" name="boostPid_offset" units="">0.0</constant>
         <constant digits="0" name="boostPid_periodMs" units="ms">0.0</constant>
@@ -509,7 +509,7 @@
         <constant digits="0" name="launchFuelAdded" units="%">0.0</constant>
         <constant digits="0" name="launchBoostDuty" units="%">0.0</constant>
         <constant digits="0" name="hardCutRpmRange" units="RPM">500.0</constant>
-        <constant digits="0" name="turbochargerFilter" units="">0.009999999776482582</constant>
+        <constant digits="0" name="turbochargerFilter" units="">0.01</constant>
         <constant digits="0" name="launchTpsThreshold" units="">0.0</constant>
         <constant digits="0" name="launchActivateDelay" units="">0.0</constant>
         <constant digits="0" name="stft_maxIdleRegionRpm" units="RPM">1000.0</constant>
@@ -558,7 +558,7 @@
          1.43
          2.14
          2.86
-         3.5700000000000003
+         3.57
          4.29
          5.0
 </constant>
@@ -584,7 +584,7 @@
 </constant>
         <constant cols="1" digits="2" name="vrThreshold1_values" rows="6">
          0.6
-         0.7000000000000001
+         0.7
          0.8
          1.0
          1.1
@@ -601,7 +601,7 @@
 </constant>
         <constant cols="1" digits="2" name="vrThreshold2_values" rows="6">
          0.6
-         0.7000000000000001
+         0.7
          0.8
          1.0
          1.1
@@ -698,7 +698,7 @@
         <constant digits="0" name="noAccelAfterHardLimitPeriodSecs" units="sec">3.0</constant>
         <constant digits="0" name="mapAveragingSchedulingAtIndex" units="index">0.0</constant>
         <constant digits="2" name="tachPulseDuractionMs" units="">0.5</constant>
-        <constant digits="2" name="wwaeTau" units="Seconds">0.30000001192092896</constant>
+        <constant digits="2" name="wwaeTau" units="Seconds">0.3</constant>
         <constant digits="4" name="alternatorControl_pFactor" units="">30.0</constant>
         <constant digits="4" name="alternatorControl_iFactor" units="">0.0</constant>
         <constant digits="4" name="alternatorControl_dFactor" units="">0.0</constant>
@@ -708,7 +708,7 @@
         <constant digits="0" name="alternatorControl_maxValue" units="">90.0</constant>
         <constant digits="4" name="etb_pFactor" units="">1.0</constant>
         <constant digits="4" name="etb_iFactor" units="">10.0</constant>
-        <constant digits="4" name="etb_dFactor" units="">0.05000000074505806</constant>
+        <constant digits="4" name="etb_dFactor" units="">0.05</constant>
         <constant digits="0" name="etb_offset" units="">0.0</constant>
         <constant digits="0" name="etb_periodMs" units="ms">0.0</constant>
         <constant digits="0" name="etb_minValue" units="">-100.0</constant>
@@ -727,14 +727,14 @@
         <constant digits="2" name="mapErrorDetectionTooHigh" units="kPa">410.0</constant>
         <constant digits="2" name="multisparkSparkDuration" units="ms">1.0</constant>
         <constant digits="2" name="multisparkDwell" units="ms">2.0</constant>
-        <constant digits="4" name="idleRpmPid_pFactor" units="">0.05000000074505806</constant>
-        <constant digits="4" name="idleRpmPid_iFactor" units="">0.0020000000949949026</constant>
+        <constant digits="4" name="idleRpmPid_pFactor" units="">0.05</constant>
+        <constant digits="4" name="idleRpmPid_iFactor" units="">0.002</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.0</constant>
         <constant digits="0" name="idleRpmPid_offset" units="">0.0</constant>
         <constant digits="0" name="idleRpmPid_periodMs" units="ms">0.0</constant>
         <constant digits="0" name="idleRpmPid_minValue" units="">-20.0</constant>
         <constant digits="0" name="idleRpmPid_maxValue" units="">20.0</constant>
-        <constant digits="2" name="wwaeBeta" units="Fraction">0.30000001192092896</constant>
+        <constant digits="2" name="wwaeBeta" units="Fraction">0.3</constant>
         <constant name="binarySerialTxPin">"PC10"</constant>
         <constant name="binarySerialRxPin">"PC11"</constant>
         <constant name="auxValves1">"NONE"</constant>
@@ -846,7 +846,7 @@
         <constant digits="4" name="tChargeMinRpmMinTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMinRpmMaxTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMaxRpmMinTps" units="">0.25</constant>
-        <constant digits="4" name="tChargeMaxRpmMaxTps" units="">0.8999999761581421</constant>
+        <constant digits="4" name="tChargeMaxRpmMaxTps" units="">0.9</constant>
         <constant digits="0" name="vvtOutputFrequency1" units="Hz">300.0</constant>
         <constant digits="0" name="vvtOutputFrequency2" units="Hz">0.0</constant>
         <constant digits="0" name="alternatorPwmFrequency" units="Hz">300.0</constant>
@@ -879,7 +879,7 @@
         <constant name="injectorCompensationMode">"None"</constant>
         <constant name="fan2PinMode">"default"</constant>
         <constant digits="0" name="fuelReferencePressure" units="kPa">300.0</constant>
-        <constant digits="2" name="postCrankingFactor" units="mult">1.2000000476837158</constant>
+        <constant digits="2" name="postCrankingFactor" units="mult">1.2</constant>
         <constant digits="0" name="postCrankingDurationSec" units="seconds">10.0</constant>
         <constant digits="1" name="auxTempSensor1_tempC_1" units="*C">0.0</constant>
         <constant digits="1" name="auxTempSensor1_tempC_2" units="*C">0.0</constant>
@@ -938,7 +938,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="4" name="auxPid1_pFactor" units="">2.0</constant>
-        <constant digits="4" name="auxPid1_iFactor" units="">0.004999999888241291</constant>
+        <constant digits="4" name="auxPid1_iFactor" units="">0.005</constant>
         <constant digits="4" name="auxPid1_dFactor" units="">0.0</constant>
         <constant digits="0" name="auxPid1_offset" units="">33.0</constant>
         <constant digits="0" name="auxPid1_periodMs" units="ms">0.0</constant>
@@ -973,7 +973,7 @@
         <constant digits="2" name="oilPressure_v1" units="volts">0.5</constant>
         <constant digits="2" name="oilPressure_value1" units="kPa">0.0</constant>
         <constant digits="2" name="oilPressure_v2" units="volts">4.5</constant>
-        <constant digits="2" name="oilPressure_value2" units="kPa">689.4760131835938</constant>
+        <constant digits="2" name="oilPressure_value2" units="kPa">689.476</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
         <constant name="fan2Pin">"NONE"</constant>
         <constant digits="0" name="fan2OnTemperature" units="deg C">95.0</constant>
@@ -1017,16 +1017,16 @@
          0.0
          0.0
 </constant>
-        <constant digits="3" name="tChargeAirCoefMin" units="">0.09799999743700027</constant>
-        <constant digits="3" name="tChargeAirCoefMax" units="">0.9020000100135803</constant>
-        <constant digits="1" name="tChargeAirFlowMax" units="kg/h">153.60000610351562</constant>
+        <constant digits="3" name="tChargeAirCoefMin" units="">0.098</constant>
+        <constant digits="3" name="tChargeAirCoefMax" units="">0.902</constant>
+        <constant digits="1" name="tChargeAirFlowMax" units="kg/h">153.6</constant>
         <constant digits="1" name="tChargeAirIncrLimit" units="deg/sec">1.0</constant>
         <constant digits="1" name="tChargeAirDecrLimit" units="deg/sec">12.5</constant>
         <constant name="tChargeMode">"RPM+TPS (Default)"</constant>
         <constant digits="2" name="hip9011Gain" units="">1.0</constant>
         <constant digits="0" name="etb_iTermMin" units="">-30.0</constant>
         <constant digits="0" name="etb_iTermMax" units="">30.0</constant>
-        <constant digits="4" name="idleTimingPid_pFactor" units="">0.10000000149011612</constant>
+        <constant digits="4" name="idleTimingPid_pFactor" units="">0.1</constant>
         <constant digits="4" name="idleTimingPid_iFactor" units="">0.0</constant>
         <constant digits="4" name="idleTimingPid_dFactor" units="">0.0</constant>
         <constant digits="0" name="idleTimingPid_offset" units="">0.0</constant>
@@ -1040,7 +1040,7 @@
         <constant name="mc33816spiDevice">"Off"</constant>
         <constant digits="0" name="idlerpmpid_iTermMin" units="">-20.0</constant>
         <constant name="tle6240spiDevice">"Off"</constant>
-        <constant digits="1" name="stoichRatioPrimary" units=":1">14.700000000000001</constant>
+        <constant digits="1" name="stoichRatioPrimary" units=":1">14.7</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20.0</constant>
         <constant digits="0" name="etbIdleThrottleRange" units="%">5.0</constant>
         <constant digits="0" name="cylinderBankSelect1" units="">0.0</constant>
@@ -1424,9 +1424,9 @@
 </constant>
         <constant cols="1" digits="3" name="hpfpCompensationLoadBins" rows="10">
          0.005
-         0.018000000000000002
+         0.018
          0.031
-         0.043000000000000003
+         0.043
          0.056
          0.069
          0.082
@@ -1475,14 +1475,14 @@
          1.17
          1.05
          0.9
-         0.8200000000000001
+         0.82
          0.75
-         0.7000000000000001
+         0.7
 </constant>
         <constant cols="1" digits="2" name="wwBetaCltValues" rows="8">
          0.73
          0.66
-         0.5700000000000001
+         0.57
          0.46
          0.38
          0.31
@@ -1502,10 +1502,10 @@
         <constant cols="1" digits="2" name="wwTauMapValues" rows="8">
          0.38
          0.55
-         0.6900000000000001
+         0.69
          0.86
          0.9
-         0.9500000000000001
+         0.95
          0.97
          1.0
 </constant>
@@ -1516,7 +1516,7 @@
          0.79
          0.85
          0.9
-         0.9500000000000001
+         0.95
          1.0
 </constant>
         <constant cols="6" digits="0" name="torqueTable" rows="6">
@@ -2481,16 +2481,16 @@ end</constant>
         <constant cols="1" digits="2" name="cltFuelCorr" rows="16">
          1.5
          1.5
-         1.4199999570846558
-         1.3600000143051147
-         1.2799999713897705
-         1.190000057220459
-         1.1200000047683716
-         1.100000023841858
-         1.059999942779541
-         1.059999942779541
-         1.0299999713897705
-         1.0099999904632568
+         1.42
+         1.36
+         1.28
+         1.19
+         1.12
+         1.1
+         1.06
+         1.06
+         1.03
+         1.01
          1.0
          1.0
          1.0
@@ -2533,12 +2533,12 @@ end</constant>
          1.0
 </constant>
         <constant cols="1" digits="2" name="crankingFuelCoef" rows="8">
-         2.799999952316284
-         2.200000047683716
-         1.7999999523162842
-         1.5499999523162842
-         1.2999999523162842
-         1.100000023841858
+         2.8
+         2.2
+         1.8
+         1.55
+         1.3
+         1.1
          1.0
          1.0
 </constant>
@@ -2554,7 +2554,7 @@ end</constant>
 </constant>
         <constant cols="1" digits="2" name="crankingCycleCoef" rows="8">
          2.0
-         1.2999999523162842
+         1.3
          1.0
          1.0
          1.0
@@ -2593,16 +2593,16 @@ end</constant>
         <constant cols="1" digits="2" name="cltIdleCorr" rows="16">
          1.5
          1.5
-         1.3333333730697632
-         1.3333333730697632
-         1.3333333730697632
-         1.3333333730697632
-         1.3333333730697632
-         1.3333333730697632
-         1.3333333730697632
-         1.2333333492279053
-         1.1666666269302368
-         1.100000023841858
+         1.333333
+         1.333333
+         1.333333
+         1.333333
+         1.333333
+         1.333333
+         1.333333
+         1.233333
+         1.166667
+         1.1
          1.0
          1.0
          1.0
@@ -2612,7 +2612,7 @@ end</constant>
          -34.5
          -6.0
          10.5
-         105.30000305175781
+         105.3
          387.5
          738.0
          3000.0
@@ -2869,10 +2869,10 @@ end</constant>
         <constant cols="1" digits="2" name="mafDecodingBins" rows="256">
          0.0
          0.78125
-         1.38671875
-         2.91015625
-         4.2578125
-         4.98046875
+         1.386719
+         2.910156
+         4.257813
+         4.980469
          2016.0
          2017.0
          2018.0
@@ -3335,22 +3335,22 @@ end</constant>
          7000.0
 </constant>
         <constant cols="16" digits="1" name="ignitionTable" rows="16">
-         12.200000000000001 14.200000000000001 18.1 22.0 25.900000000000002 29.900000000000002 33.800000000000004 37.7 41.6 42.900000000000006 42.900000000000006 42.900000000000006 42.900000000000006 42.900000000000006 42.900000000000006 42.900000000000006
-         12.100000000000001 14.0 17.900000000000002 21.700000000000003 25.6 29.5 33.300000000000004 37.2 41.0 42.300000000000004 42.300000000000004 42.300000000000004 42.300000000000004 42.300000000000004 42.300000000000004 42.300000000000004
-         12.0 13.9 17.7 21.5 25.3 29.1 32.800000000000004 36.6 40.400000000000006 41.7 41.7 41.7 41.7 41.7 41.7 41.7
-         11.8 13.700000000000001 17.400000000000002 21.200000000000003 24.900000000000002 28.700000000000003 32.4 36.1 39.900000000000006 41.1 41.1 41.1 41.1 41.1 41.1 41.1
-         11.600000000000001 13.5 17.1 20.8 24.400000000000002 28.1 31.700000000000003 35.300000000000004 39.0 40.2 40.2 40.2 40.2 40.2 40.2 40.2
-         11.5 13.3 16.900000000000002 20.5 24.1 27.700000000000003 31.200000000000003 34.800000000000004 38.400000000000006 39.6 39.6 39.6 39.6 39.6 39.6 39.6
-         11.4 13.200000000000001 16.7 20.200000000000003 23.700000000000003 27.3 30.8 34.300000000000004 37.800000000000004 39.0 39.0 39.0 39.0 39.0 39.0 39.0
-         11.3 13.0 16.5 19.900000000000002 23.400000000000002 26.900000000000002 30.3 33.800000000000004 37.2 38.400000000000006 38.400000000000006 38.400000000000006 38.400000000000006 38.400000000000006 38.400000000000006 38.400000000000006
-         11.100000000000001 12.8 16.2 19.6 23.0 26.5 29.900000000000002 33.300000000000004 36.7 37.800000000000004 37.800000000000004 37.800000000000004 37.800000000000004 37.800000000000004 37.800000000000004 37.800000000000004
-         10.9 12.600000000000001 15.9 19.200000000000003 22.5 25.900000000000002 29.200000000000003 32.5 35.800000000000004 36.9 36.9 36.9 36.9 36.9 36.9 36.9
-         10.8 12.4 15.700000000000001 18.900000000000002 22.200000000000003 25.5 28.700000000000003 32.0 35.2 36.300000000000004 36.300000000000004 36.300000000000004 36.300000000000004 36.300000000000004 36.300000000000004 36.300000000000004
-         10.700000000000001 12.3 15.5 18.7 21.900000000000002 25.1 28.200000000000003 31.400000000000002 34.6 35.7 35.7 35.7 35.7 35.7 35.7 35.7
-         10.5 12.100000000000001 15.200000000000001 18.400000000000002 21.5 24.700000000000003 27.8 30.900000000000002 34.1 35.1 35.1 35.1 35.1 35.1 35.1 35.1
-         10.5 12.100000000000001 15.200000000000001 18.3 21.5 24.6 27.700000000000003 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0
-         10.5 12.100000000000001 15.200000000000001 18.3 21.5 24.6 27.700000000000003 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0
-         10.5 12.100000000000001 15.200000000000001 18.3 21.5 24.6 27.700000000000003 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0
+         12.2 14.2 18.1 22.0 25.9 29.9 33.8 37.7 41.6 42.9 42.9 42.9 42.9 42.9 42.9 42.9
+         12.1 14.0 17.9 21.7 25.6 29.5 33.3 37.2 41.0 42.3 42.3 42.3 42.3 42.3 42.3 42.3
+         12.0 13.9 17.7 21.5 25.3 29.1 32.8 36.6 40.4 41.7 41.7 41.7 41.7 41.7 41.7 41.7
+         11.8 13.7 17.4 21.2 24.9 28.7 32.4 36.1 39.9 41.1 41.1 41.1 41.1 41.1 41.1 41.1
+         11.6 13.5 17.1 20.8 24.4 28.1 31.7 35.3 39.0 40.2 40.2 40.2 40.2 40.2 40.2 40.2
+         11.5 13.3 16.9 20.5 24.1 27.7 31.2 34.8 38.4 39.6 39.6 39.6 39.6 39.6 39.6 39.6
+         11.4 13.2 16.7 20.2 23.7 27.3 30.8 34.3 37.8 39.0 39.0 39.0 39.0 39.0 39.0 39.0
+         11.3 13.0 16.5 19.9 23.4 26.9 30.3 33.8 37.2 38.4 38.4 38.4 38.4 38.4 38.4 38.4
+         11.1 12.8 16.2 19.6 23.0 26.5 29.9 33.3 36.7 37.8 37.8 37.8 37.8 37.8 37.8 37.8
+         10.9 12.6 15.9 19.2 22.5 25.9 29.2 32.5 35.8 36.9 36.9 36.9 36.9 36.9 36.9 36.9
+         10.8 12.4 15.7 18.9 22.2 25.5 28.7 32.0 35.2 36.3 36.3 36.3 36.3 36.3 36.3 36.3
+         10.7 12.3 15.5 18.7 21.9 25.1 28.2 31.4 34.6 35.7 35.7 35.7 35.7 35.7 35.7 35.7
+         10.5 12.1 15.2 18.4 21.5 24.7 27.8 30.9 34.1 35.1 35.1 35.1 35.1 35.1 35.1 35.1
+         10.5 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0
+         10.5 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0
+         10.5 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0
 </constant>
         <constant cols="1" digits="0" name="ignitionLoadBins" rows="16">
          21.0
@@ -3448,17 +3448,17 @@ end</constant>
          1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
          1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
          1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
-         0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523 0.9523809523809523
-         0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755 0.9183673469387755
-         0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694 0.8979591836734694
-         0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034 0.891156462585034
-         0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632 0.8775510204081632
-         0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571 0.8571428571428571
-         0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551 0.836734693877551
-         0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742 0.8027210884353742
-         0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972 0.7687074829931972
-         0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911 0.7482993197278911
-         0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585 0.727891156462585
+         0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381 0.952381
+         0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367 0.918367
+         0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959 0.897959
+         0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156 0.891156
+         0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551 0.877551
+         0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143 0.857143
+         0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735 0.836735
+         0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721 0.802721
+         0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707 0.768707
+         0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299
+         0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891
 </constant>
         <constant cols="1" digits="0" name="lambdaLoadBins" rows="16">
          30.0
@@ -3815,7 +3815,7 @@ end</constant>
          0.0 0.0 0.0 0.0
 </constant>
         <constant cols="1" digits="2" name="crankingFuelCoefE100" rows="8">
-         2.8000000000000003
+         2.8
          2.2
          1.8
          1.55
@@ -4524,7 +4524,7 @@ end</constant>
          54.6
          63.6
          72.7
-         81.80000000000001
+         81.8
          90.9
          100.0
 </constant>
