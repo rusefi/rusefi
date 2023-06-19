@@ -689,7 +689,7 @@
         <constant name="camInputsDebug2">"NONE"</constant>
         <constant name="camInputsDebug3">"NONE"</constant>
         <constant name="camInputsDebug4">"NONE"</constant>
-        <constant digits="0" name="acIdleRpmBump" units="RPM">200.0</constant>
+        <constant digits="0" name="acIdleRpmBump" units="RPM">50.0</constant>
         <constant digits="0" name="warningPeriod" units="seconds">0.0</constant>
         <constant digits="2" name="knockDetectionWindowStart" units="angle">20.0</constant>
         <constant digits="2" name="knockDetectionWindowEnd" units="angle">60.0</constant>
@@ -853,7 +853,7 @@
         <constant name="vvtMode1">"Inactive"</constant>
         <constant name="vvtMode2">"Inactive"</constant>
         <constant digits="0" name="fan2ExtraIdle" units="%">0.0</constant>
-        <constant digits="2" name="primingDelay" units="sec">0.0</constant>
+        <constant digits="2" name="primingDelay" units="sec">0.5</constant>
         <constant name="auxAnalogInputs1">"Disabled"</constant>
         <constant name="auxAnalogInputs2">"Disabled"</constant>
         <constant name="auxAnalogInputs3">"Disabled"</constant>
@@ -1042,7 +1042,7 @@
         <constant name="tle6240spiDevice">"Off"</constant>
         <constant digits="1" name="stoichRatioPrimary" units=":1">14.7</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20.0</constant>
-        <constant digits="0" name="etbIdleThrottleRange" units="%">5.0</constant>
+        <constant digits="0" name="etbIdleThrottleRange" units="%">15.0</constant>
         <constant digits="0" name="cylinderBankSelect1" units="">0.0</constant>
         <constant digits="0" name="cylinderBankSelect2" units="">0.0</constant>
         <constant digits="0" name="cylinderBankSelect3" units="">0.0</constant>
@@ -1299,7 +1299,7 @@
         <constant digits="3" name="triggerGapOverrideTo18" units="ratio">0.0</constant>
         <constant digits="0" name="maxCamPhaseResolveRpm" units="rpm">0.0</constant>
         <constant digits="1" name="dfcoDelay" units="sec">0.0</constant>
-        <constant digits="1" name="acDelay" units="sec">0.0</constant>
+        <constant digits="1" name="acDelay" units="sec">0.5</constant>
         <constant digits="3" name="fordInjectorSmallPulseBreakPoint" units="mg">0.0</constant>
         <constant cols="1" digits="2" name="tpsTspCorrValues" rows="4">
          1.0
