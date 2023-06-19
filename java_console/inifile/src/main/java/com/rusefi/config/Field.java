@@ -158,7 +158,7 @@ public class Field {
                 '}';
     }
 
-    public Object getAnyValue(ConfigurationImage ci, double multiplier) {
+    public String getAnyValue(ConfigurationImage ci, double multiplier) {
         if (options == null) {
             // we are here for non-enum types
             return niceToString(getValue(ci, multiplier));
