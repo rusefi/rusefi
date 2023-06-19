@@ -9,7 +9,9 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,31 +26,42 @@ public class TuneCanTool {
     private static final String FOLDER = "generated";
     public static final String DEFAULT_TUNE = FOLDER + File.separator + "simulator_tune.xml";
 
+    private static Msq simulatorDefaultTune;
+    private static IniFileModel ini;
+
+
     public static void main(String[] args) throws Exception {
-        IniFileModel ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
+        simulatorDefaultTune = Msq.readTune(TuneCanTool.DEFAULT_TUNE);
+        ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
         if (ini == null)
             throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
-        Msq simulatorDefaultTune = Msq.readTune(TuneCanTool.DEFAULT_TUNE);
 
         RootHolder.ROOT = "../firmware/";
 
+        handle("Mitsubicha", 1258);
+        handle("Scion 1NZ-FE", 1448);
+        handle("4g93", 1425);
+        handle("BMW-mtmotorsport", 1479);
+    }
 
-        // 3A92 "La Mitsubicha"
-//        String fileName = "C:\\Users\\Dell2019\\Downloads\\1258.msq";
-        // Scion 1NZ-FE "xB Chinita auto"
-        // String fileName = "C:\\Users\\Dell2019\\Downloads\\1448.msq";
-        // 4g93
-        //String fileName = "C:\\Users\\Dell2019\\Downloads\\1425.msq";
-        // mtmotorsport BMW https://rusefi.com/online/view.php?msq=1479
-        String fileName = "C:\\Users\\Dell2019\\Downloads\\1479.msq";
+    private static void handle(String vehicleName, int tuneId) throws JAXBException, IOException {
+        String fileName = "C:\\Users\\Dell2019\\Downloads\\" + tuneId + ".msq";
+        String url = "https://rusefi.com/online/view.php?msq=" + tuneId;
 
+        String reportsFolder = "tune_reports";
+        new File(reportsFolder).mkdir();
 
         Msq custom = Msq.readTune(fileName);
+        StringBuilder sb = TuneCanTool.getTunePatch(simulatorDefaultTune, custom, ini);
 
-        StringBuilder sb = TuneCanTool.getTunePatch2(simulatorDefaultTune, custom, ini);
+        FileWriter w = new FileWriter(reportsFolder + "/" + vehicleName + ".md");
+        w.append("# " + vehicleName + "\n");
+        w.append("Tune " + url + "\n\n");
 
-        System.out.println(sb);
-
+        w.append("```\n");
+        w.append(sb);
+        w.append("```\n");
+        w.close();
     }
 
     private static boolean isHardwareEnum(String type) {
@@ -59,6 +72,7 @@ public class TuneCanTool {
             case "Gpio":
             case "spi_device_e":
             case "pin_input_mode_e":
+            case "pin_output_mode_e":
                 return true;
         }
         return false;
@@ -71,7 +85,7 @@ public class TuneCanTool {
     }
 
     @NotNull
-    public static StringBuilder getTunePatch2(Msq defaultTune, Msq customTune, IniFileModel ini) throws IOException {
+    public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini) throws IOException {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
         String[] totalArgs = options.toArray(new String[0]);
 
