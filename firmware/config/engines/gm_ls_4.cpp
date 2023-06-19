@@ -24,8 +24,6 @@ void setGmLs4() {
 	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->displacement = 6.2;
 
-	engineConfiguration->etbIdleThrottleRange = 15;
-
 	engineConfiguration->tChargeAirIncrLimit = 5;
 	engineConfiguration->tChargeAirDecrLimit = 15;
 

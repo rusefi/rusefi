@@ -126,7 +126,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fanOnTemperature = 85;
 	engineConfiguration->fanOffTemperature = 81;
 
-	engineConfiguration->etbIdleThrottleRange = 10;
 	engineConfiguration->cutFuelOnHardLimit = false;
 	engineConfiguration->idlePidRpmUpperLimit = 300;
 	engineConfiguration->mapErrorDetectionTooLow = 10;

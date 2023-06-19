@@ -955,7 +955,7 @@ void setBoschVNH2SP30Curve() {
 }
 
 void setDefaultEtbParameters() {
-	engineConfiguration->etbIdleThrottleRange = 5;
+	engineConfiguration->etbIdleThrottleRange = 15;
 
 	engineConfiguration->etbExpAverageLength = 50;
 	engineConfiguration->etbRocExpAverageLength = 50;

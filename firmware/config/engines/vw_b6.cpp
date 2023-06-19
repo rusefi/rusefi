@@ -22,7 +22,6 @@ static void commonPassatB6() {
 
     engineConfiguration->globalTriggerAngleOffset = 90;
 
-	engineConfiguration->etbIdleThrottleRange = 10;
 	engineConfiguration->idlePidRpmDeadZone = 500;
 	engineConfiguration->idleMode = IM_AUTO;
 
