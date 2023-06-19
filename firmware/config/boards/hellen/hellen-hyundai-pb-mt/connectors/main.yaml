@@ -41,7 +41,7 @@ pins:
 
   - pin: A27
     ts_name: A27 Fuel Pump Control
-    function: LP Fuel Pump Control
+    function: LP Fuel Pump Control w/o smart key
     class: outputs
     type: ls
 
@@ -345,7 +345,7 @@ pins:
 
   - pin: K90
     ts_name: K90 Fuel Pump Control
-    function: LP Fuel Pump Control
+    function: LP Fuel Pump Control w smart key
     class: outputs
     type: ls
 
