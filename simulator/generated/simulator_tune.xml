@@ -983,7 +983,7 @@
         <constant name="tle8888_csPinMode">"default"</constant>
         <constant name="mc33816_cs">"NONE"</constant>
         <constant digits="0" name="auxFrequencyFilter" units="">0.0</constant>
-        <constant digits="0" name="vvtControlMinRpm" units="RPM">0.0</constant>
+        <constant digits="0" name="vvtControlMinRpm" units="RPM">500.0</constant>
         <constant name="sentInputPins1">"NONE"</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="">0.0</constant>
         <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
