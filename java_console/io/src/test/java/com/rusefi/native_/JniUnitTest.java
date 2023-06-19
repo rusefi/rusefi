@@ -75,7 +75,7 @@ public class JniUnitTest {
         System.out.println("engineLogic.invokeEtbCycle");
         engineLogic.invokeEtbCycle();
 
-        assertEquals(120.38, getValue(engineLogic.getOutputs(), Sensor.etb1DutyCycle));
+        assertEquals("ETB duty", 120.38, getValue(engineLogic.getOutputs(), Sensor.etb1DutyCycle));
     }
 
     private double getField(EngineLogic engineLogic, Field field) {
