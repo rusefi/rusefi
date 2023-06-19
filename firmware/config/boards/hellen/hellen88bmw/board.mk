@@ -4,7 +4,7 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 # Set this if you want a default engine type other than normal hellen88bmw
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
-  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
+  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::MINIMAL_PINS
 endif
 
 
