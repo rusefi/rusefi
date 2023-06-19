@@ -39,7 +39,7 @@ public class TuneCanTool {
         RootHolder.ROOT = "../firmware/";
 
         handle("Mitsubicha", 1258);
-        handle("Scion 1NZ-FE", 1448);
+        handle("Scion-1NZ-FE", 1448);
         handle("4g93", 1425);
         handle("BMW-mtmotorsport", 1479);
     }
@@ -55,7 +55,7 @@ public class TuneCanTool {
         StringBuilder sb = TuneCanTool.getTunePatch(simulatorDefaultTune, custom, ini);
 
         FileWriter w = new FileWriter(reportsFolder + "/" + vehicleName + ".md");
-        w.append("# " + vehicleName + "\n");
+        w.append("# " + vehicleName + "\n\n");
         w.append("Tune " + url + "\n\n");
 
         w.append("```\n");

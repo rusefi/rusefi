@@ -22,7 +22,7 @@ public class TuneTools {
 
     @NotNull
     public static String getAssignmentCode(Constant defaultValue, String name, String value) {
-        return "\t // default " + defaultValue.getValue() + "\n" +
-                "\tengineConfiguration->" + name + " = " + value + ";\n";
+        return "    // default " + defaultValue.getValue() + "\n" +
+                "    engineConfiguration->" + name + " = " + value + ";\n";
     }
 }
