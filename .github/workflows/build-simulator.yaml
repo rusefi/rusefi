@@ -55,7 +55,6 @@ jobs:
       run: ./write_tune.sh
 
     - name: Commit fresh generated default simulator tune
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
@@ -79,7 +78,7 @@ jobs:
         fi
 
     - name: Push fresh default tune
-      if: ${{env.NOCOMMIT != 'true'}}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }} && ${{env.NOCOMMIT != 'true'}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
