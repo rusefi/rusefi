@@ -19,12 +19,14 @@ pins:
     function: CAN bus2 high (CANH2)
     type: can
     ts_name: A3 - CAN2 High
+    color: black
 
   - pin: A4
     id: C7
     type: can
     function: CAN bus2 low (CANL2)
     ts_name: A4 - CAN2 Low
+    color: yellow
 
   - pin: A5
     function: Sensor Ground
@@ -43,8 +45,7 @@ pins:
     function: Low Side Output 1 5A
     class: outputs
     ts_name: A8 - Low Side
-    color: blue
-
+    color: green
 
   - pin: B2
     # H144_IN_MAP2 AIN10 PC1
