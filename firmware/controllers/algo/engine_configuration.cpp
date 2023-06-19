@@ -596,6 +596,7 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->acIdleRpmBump = 50;
 	engineConfiguration->acDelay = 0.5;
+	engineConfiguration->acIdleExtraOffset = 15;
 
 	/* these two are used for HIP9011 only
 	 * Currently this is offset from fire event, not TDC */
