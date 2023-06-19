@@ -594,7 +594,8 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 
-	engineConfiguration->acIdleRpmBump = 200;
+	engineConfiguration->acIdleRpmBump = 50;
+	engineConfiguration->acDelay = 0.5;
 
 	/* these two are used for HIP9011 only
 	 * Currently this is offset from fire event, not TDC */
