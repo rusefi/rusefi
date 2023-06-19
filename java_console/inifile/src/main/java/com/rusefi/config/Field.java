@@ -13,12 +13,12 @@ import java.util.Objects;
 import static com.rusefi.config.FieldType.*;
 
 /**
- * @see Fields
+ * See Fields
  */
 
 public class Field {
     public static final int NO_BIT_OFFSET = -1;
-    public static final int FIELD_PRECISION = 7;
+    public static final int FIELD_PRECISION = 5;
 
     private final String name;
     private final int offset;
@@ -236,8 +236,10 @@ public class Field {
         } else if (type == UINT16) {
             short signed = wrapped.getShort();
             value = signed & 0xFFFF;
-        } else {
+        } else if (type == FLOAT) {
             value = wrapped.getFloat();
+        } else {
+            throw new IllegalStateException("Unexpected " + type);
         }
         return value.doubleValue() * multiplier;
     }
@@ -274,7 +276,7 @@ public class Field {
     }
 
     public boolean getBooleanValue(ConfigurationImage ci) {
-        return getValue(ci) != 0.0;
+        return getValue(ci).doubleValue() != 0.0;
     }
 
     public Field setScale(double scale) {
