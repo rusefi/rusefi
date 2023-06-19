@@ -192,7 +192,7 @@ public class TuneReadWriteTest {
 
         ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(model, LEGACY_TOTAL_CONFIG_SIZE);
 
-        assertEquals(0, compareImages(binaryDataFromXml, fileBinaryData, model));
+        assertEquals("Binary match expected", 0, compareImages(binaryDataFromXml, fileBinaryData, model));
         // todo: looks like this is not removing the temporary file?
         Files.delete(path);
     }

@@ -49,7 +49,8 @@ public class ScalarIniField extends IniField {
     public String getValue(ConfigurationImage image) {
         Field f = new Field(getName(), getOffset(), getType());
         try {
-            return f.getValue(image, multiplier).toString();
+            Double value = f.getValue(image, multiplier);
+            return Field.niceToString(value, Field.FIELD_PRECISION);
         } catch (Throwable e) {
             throw new IllegalStateException("While getting " + getName(), e);
         }

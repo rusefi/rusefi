@@ -18,6 +18,6 @@ public class TuneWriterTest {
         double value = 0.9;
         floatField.setValue(image, new Constant("x", "y", Double.toString(value), "2"));
 
-        assertEquals("0.8999999761581421", floatField.getValue(image));
+        assertEquals("0.89999998", floatField.getValue(image));
     }
 }

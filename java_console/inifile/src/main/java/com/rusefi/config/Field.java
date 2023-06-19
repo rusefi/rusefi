@@ -18,7 +18,7 @@ import static com.rusefi.config.FieldType.*;
 
 public class Field {
     public static final int NO_BIT_OFFSET = -1;
-    private static final int FIELD_PRECISION = 3;
+    public static final int FIELD_PRECISION = 7;
 
     private final String name;
     private final int offset;
@@ -100,6 +100,8 @@ public class Field {
         Number number = value;
         if (number instanceof Float)
             return niceToString(number.floatValue(), precision);
+        if (number instanceof Double)
+            return niceToString(number.doubleValue(), precision);
         return number.toString();
     }
 
