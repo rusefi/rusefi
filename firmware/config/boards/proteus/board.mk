@@ -43,5 +43,5 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	DDEFS += -DSHORT_BOARD_NAME=proteus_h7
 else
-$(error Unsupported PROJECT_CPU for Proteus: [$(PROJECT_CPU)])
+$(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
