@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.rusefi.ConfigFieldImpl.unquote;
+import static com.rusefi.config.Field.niceToString;
 import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR;
 
 public class TuneCanTool {
@@ -42,6 +43,7 @@ public class TuneCanTool {
         handle("Scion-1NZ-FE", 1448);
         handle("4g93", 1425);
         handle("BMW-mtmotorsport", 1479);
+        handle("m111-alex", 1490);
     }
 
     private static void handle(String vehicleName, int tuneId) throws JAXBException, IOException {
@@ -153,7 +155,12 @@ public class TuneCanTool {
 
                     continue;
                 }
-                sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), customValue.getValue()));
+                boolean isInteger = !customValue.getValue().contains(".");
+                if (isInteger) {
+                    sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), customValue.getValue()));
+                } else {
+                    sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), niceToString(Double.valueOf(customValue.getValue()))));
+                }
             }
         }
         return sb;
