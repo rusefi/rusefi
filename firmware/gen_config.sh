@@ -27,7 +27,9 @@ config/boards/subaru_eg33/config/gen_subaru_config.sh
 for BOARD in \
    "config/boards/hellen/alphax-2chan alphax-2chan" \
    "config/boards/hellen/alphax-4chan alphax-4chan" \
+   "config/boards/hellen/alphax-4chan alphax-4chan-f7" \
    "config/boards/hellen/alphax-8chan alphax-8chan" \
+   "config/boards/hellen/alphax-8chan alphax-8chan-f7" \
    "config/boards/hellen/harley81 harley81" \
    "config/boards/hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
    "config/boards/hellen/hellen121vag hellen121vag" \
