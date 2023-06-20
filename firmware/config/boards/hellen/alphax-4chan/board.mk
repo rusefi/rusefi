@@ -20,4 +20,9 @@ include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 
-DDEFS += -DSHORT_BOARD_NAME=alphax-4chan
+DDEFS += -DSHORT_BOARD_NAME=
+ifeq ($(PROJECT_CPU),ARCH_STM32F7)
+	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan-f7
+else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
+	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan
+else
