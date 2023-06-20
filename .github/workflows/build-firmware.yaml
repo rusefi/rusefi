@@ -67,6 +67,7 @@ jobs:
         build-target: [
             alphax-2chan,
             alphax-4chan,
+            alphax-4chan-f7,
             alphax-8chan,
             m74_9,
             s105,
@@ -133,9 +134,18 @@ jobs:
             folder: config/boards/hellen/alphax-4chan
             ini-file: rusefi_alphax-4chan.ini
 
+          - build-target: alphax-4chan-f7
+            folder: config/boards/hellen/alphax-4chan
+            ini-file: rusefi_alphax-4chan-f7.ini
+
           - build-target: alphax-8chan
             folder: config/boards/hellen/alphax-8chan
             ini-file: rusefi_alphax-8chan.ini
+            skip-rate: 0
+
+          - build-target: alphax-8chan
+            folder: config/boards/hellen/alphax-8chan
+            ini-file: rusefi_alphax-8chan-f7.ini
             skip-rate: 0
 
           - build-target: s105
