@@ -53,7 +53,7 @@ void UartTsChannel::start(uint32_t baud) {
 		.cr1 			= 0,
 		.cr2 			= USART_CR2_STOP1_BITS | USART_CR2_LINEN,
 		.cr3 			= 0,
-#if defined(STM32F4XX)
+#if defined(STM32F4XX) || defined(CPU_MKE16F512VLH16)
 		.rxhalf_cb		= NULL
 #endif
 	};
