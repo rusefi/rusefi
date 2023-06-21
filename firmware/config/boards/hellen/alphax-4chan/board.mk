@@ -4,8 +4,8 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
-# Turn off stuff proteus doesn't have/need
-DDEFS += -DEFI_MAX_31855=FALSE -DBOARD_L9779_COUNT=0 -DBOARD_TLE8888_COUNT=0
+# Turn off stuff we don't have/need
+DDEFS += -DBOARD_TLE8888_COUNT=0
 
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"AlphaX-4chan\"
@@ -20,7 +20,7 @@ include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan-f7
-	# TODO: why do I strugle to fit into flash? compare with Proteus
+	# TODO: why do I struggle to fit into flash? compare with Proteus
 	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan
