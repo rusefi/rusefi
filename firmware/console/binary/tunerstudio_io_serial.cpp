@@ -46,11 +46,16 @@ void UartTsChannel::start(uint32_t baud) {
 		.rxchar_cb		= NULL,
 		.rxerr_cb		= NULL,
 		.timeout_cb		= NULL,
+#if defined(STM32F7XX)
+		.timeout        = 0,
+#endif
 		.speed 			= baud,
 		.cr1 			= 0,
 		.cr2 			= USART_CR2_STOP1_BITS | USART_CR2_LINEN,
 		.cr3 			= 0,
+#if defined(STM32F4XX)
 		.rxhalf_cb		= NULL
+#endif
 	};
 
 	uartStart(m_driver, &m_config);
