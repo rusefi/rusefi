@@ -171,3 +171,12 @@ void configureBenelli(TriggerWaveform *s) {
 		s->addEvent360(angle, TriggerValue::FALL);
 	}
 }
+
+void configure60degSingleTooth(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
+	s->addEvent360(300, TriggerValue::RISE);
+	s->addEvent360(360, TriggerValue::FALL);
+	s->tdcPosition = 60;
+	s->isSynchronizationNeeded = false;
+	s->useOnlyPrimaryForSync = true;
+}

@@ -422,7 +422,9 @@ enum class trigger_type_e : uint32_t {
 	TT_GM_24x_2 = 74,
 	TT_UNUSED_75 = 75,
 	TT_MITSU_4G63_CRANK = 76,
-	TT_UNUSED_77 = 77,
+	/* pull-up'ed(inverted in): pull down 2x 30 deg before tdc on cam, till tdc. 
+	   e.g. Sovek, Saruman ignition blind type */
+	TT_60DEG_TOOTH = 77,
 	TT_UNUSED_78 = 78,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
