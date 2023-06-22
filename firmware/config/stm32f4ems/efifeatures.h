@@ -341,8 +341,9 @@
  */
 #define EFI_UART_GPS FALSE
 
+#ifndef EFI_ELECTRONIC_THROTTLE_BODY
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
-//#define EFI_ELECTRONIC_THROTTLE_BODY FALSE
+#endif
 
 /**
  * Do we need Malfunction Indicator blinking logic?
