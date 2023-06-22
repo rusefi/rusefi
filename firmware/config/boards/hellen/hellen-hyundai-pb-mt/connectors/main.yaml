@@ -12,6 +12,12 @@ pins:
   - pin: A5
     function: WBO Heater
 
+  - pin: A14
+    class: outputs
+# 2013 kia
+    function: Fan Relay High
+    type: ls
+
   - pin: A15
     class: outputs
     function: Exhaust VVT
@@ -39,6 +45,10 @@ pins:
     type: gnd
     color: brown
 
+  - pin: A26
+    class: analog_inputs
+    function: Fuel Tank Pressure Signal
+
   - pin: A27
     ts_name: A27 Fuel Pump Control
     function: LP Fuel Pump Control w/o smart key
@@ -47,6 +57,7 @@ pins:
 
   - pin: A29
     class: outputs
+# veloster
     function: A/C Relay Output
     type: ls
 
@@ -119,6 +130,10 @@ pins:
     class: outputs
     function: Cooling Fan PWM Output
 
+  - pin: A60
+    class: outputs
+    function: VIS Control
+
   - pin: K1
     function: Power GND
     type: gnd
@@ -158,6 +173,10 @@ pins:
     function: Pedal Sensor No2 Ground
     type: gnd
 
+  - pin: K12
+    function: Fuel Tank Pressure Sensor Ground
+    type: gnd
+
   - pin: K13
     function: BVS Brake Vacuum Sensor Ground
     type: gnd
@@ -178,13 +197,18 @@ pins:
   - pin: K20
     function: APT/RPS Supply +5v
 
+  - pin: K21
+    function: ISG Switch
+
   - pin: K22
     function: Wiper Switch Input Active High
-
+  - pin: K23
+    function: Neutral Switch
   - pin: K24
     function: Alternator PWM Control
 
-
+  - pin: K27
+    function: ISG Switch Indicator
   - pin: K29
     # VIGN PA5
     id: EFI_ADC_5
@@ -247,7 +271,10 @@ pins:
     type: av
   - pin: K46
     function: VSS Vehicle Speed Signal
-
+  - pin: K47
+    function: Start Relay HI Output
+  - pin: K50
+    function: Check Engine Light
   - pin: K52
     function: WBO Virtual Gnd
   - pin: K53
