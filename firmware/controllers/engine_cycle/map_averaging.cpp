@@ -26,6 +26,9 @@
 
 
 #if EFI_MAP_AVERAGING
+#if !EFI_SHAFT_POSITION_INPUT
+	fail("EFI_SHAFT_POSITION_INPUT required to have EFI_EMULATE_POSITION_SENSORS")
+#endif
 
 #include "map_averaging.h"
 #include "trigger_central.h"

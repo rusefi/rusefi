@@ -30,6 +30,10 @@ bool needEvent(const int currentIndex, const MultiChannelStateSequence & mcss, i
 
 #if EFI_EMULATE_POSITION_SENSORS
 
+#if !EFI_SHAFT_POSITION_INPUT
+	fail("EFI_SHAFT_POSITION_INPUT required to have EFI_EMULATE_POSITION_SENSORS")
+#endif
+
 #include "trigger_emulator_algo.h"
 #include "trigger_central.h"
 #include "trigger_simulator.h"

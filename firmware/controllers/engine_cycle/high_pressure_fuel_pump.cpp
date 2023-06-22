@@ -31,6 +31,9 @@
 #include "fuel_computer.h"
 
 #if EFI_HPFP
+#if !EFI_SHAFT_POSITION_INPUT
+	fail("EFI_SHAFT_POSITION_INPUT required to have EFI_EMULATE_POSITION_SENSORS")
+#endif
 
 // A constant we use; doesn't seem important to hoist into engineConfiguration.
 static constexpr int rpm_spinning_cutoff = 60; // Below this RPM, we don't run the logic
