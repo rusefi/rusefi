@@ -27,7 +27,11 @@
 #include "sensor_chart.h"
 #include "trigger_central.h"
 
-persistent_config_container_s persistentState CCM_OPTIONAL;
+#ifndef PERSISTENT_LOCATION
+#define PERSISTENT_LOCATION CCM_OPTIONAL;
+#endif
+
+persistent_config_container_s persistentState;
 
 #else // EFI_UNIT_TEST
 
