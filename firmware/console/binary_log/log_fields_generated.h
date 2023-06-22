@@ -284,19 +284,45 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.mafMeasured2, "MAF #2", "kg/h", 1},
 	{engine->outputChannels.vehicleSpeedKph, "Vehicle Speed", "kph", 2},
 	{engine->outputChannels.Gego, "Gego", "%", 2},
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.running.postCrankingFuelCorrection, "Fuel: Post cranking mult", "", 0},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.running.intakeTemperatureCoefficient, "Fuel: IAT correction", "", 0},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.running.coolantTemperatureCoefficient, "Fuel: CLT correction", "", 0},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.running.timeSinceCrankingInSecs, "running.timeSinceCrankingInSecs", "secs", 0, "Fuel: math"},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.running.baseFuel, "Fuel: base cycle mass", "mg", 3},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.running.fuel, "Fuel: running", "mg", 3},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.afrTableYAxis, "afrTableYAxis", "%", 0},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.targetLambda, "Fuel: target lambda", "", 2, "Fuel: math"},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.targetAFR, "Fuel: target AFR", "ratio", 2, "Fuel: math"},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.stoichiometricRatio, "Fuel: Stoich ratio", "ratio", 2},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.sdTcharge_coff, "sdTcharge_coff", "", 0},
+#endif
+#if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.sdAirMassInOneCylinder, "Air: Cylinder airmass", "g", 3},
+#endif
 	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.sparkDwell, "Ign: Dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.dwellAngle, "Ignition: dwell duration", "deg", 1, "Timing"},
@@ -308,13 +334,27 @@ static constexpr LogField fields[] = {
 	{engine->ignitionState.dwellVoltageCorrection, "Ign: Dwell voltage correction", "", 0},
 	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
 	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
+#if EFI_BOOST_CONTROL
 	{engine->boostController.luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
 	{engine->boostController.boostOutput, "Boost: Output", "percent", 2, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
 	{engine->boostController.luaTargetMult, "Boost: Lua target mult", "v", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
 	{engine->boostController.openLoopPart, "Boost: Open loop", "v", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
 	{engine->boostController.luaOpenLoopAdd, "Boost: Lua open loop add", "v", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
 	{engine->boostController.boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
 	{engine->boostController.boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
+#endif
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
 	{engine->engineState.sd.tCharge, "Air: Charge temperature estimate", "deg C", 1},
@@ -334,20 +374,48 @@ static constexpr LogField fields[] = {
 	{engine->engineState.fuelingLoad, "Fuel: Load", "", 0},
 	{engine->engineState.ignitionLoad, "Ign: Load", "", 0},
 	{engine->engineState.veTableYAxis, "veTableYAxis", "%", 0},
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.hwEventCounters[0], "Hardware events since boot 1", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.hwEventCounters[1], "Hardware events since boot 2", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.hwEventCounters[2], "Hardware events since boot 3", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.hwEventCounters[3], "Hardware events since boot 4", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.hwEventCounters[4], "Hardware events since boot 5", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.hwEventCounters[5], "Hardware events since boot 6", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.vvtCamCounter, "Sync: total cams front counter", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.mapVvt_MAP_AT_SPECIAL_POINT, "mapVvt_MAP_AT_SPECIAL_POINT", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.mapVvt_MAP_AT_DIFF, "mapVvt_MAP_AT_DIFF", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.mapVvt_MAP_AT_CYCLE_COUNT, "mapVvt_MAP_AT_CYCLE_COUNT", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.mapVvt_map_peak, "mapVvt_map_peak", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.currentEngineDecodedPhase, "Sync: Engine Phase", "deg", 0, "Sync"},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerToothAngleError, "Sync: trigger angle error", "deg", 2},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerIgnoredToothCount, "triggerIgnoredToothCount", "", 0},
+#endif
 	{engine->dc_motors.dcOutput0, "DC: output0", "per", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "per", 2, "ETB more"},
 };
