@@ -11,6 +11,7 @@ public class SdCardFieldsContent {
     private final StringBuilder body = new StringBuilder();
 
     public String home = "engine->outputChannels";
+    public String conditional;
 
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
@@ -47,7 +48,11 @@ public class SdCardFieldsContent {
             categoryStr = ", " + categoryStr;
         }
 
-        return "\t{" + home + "." + name +
+        String before = conditional == null ? "" : "#if " + conditional + "\n";
+        String after = conditional == null ? "" : "#endif\n";
+
+        return before
+                + "\t{" + home + "." + name +
                 ", "
                 + DataLogConsumer.getHumanGaugeName(prefix, configField) +
                 ", " +
@@ -55,7 +60,8 @@ public class SdCardFieldsContent {
                 ", " +
                 configField.getDigits() +
                 categoryStr +
-                "},\n";
+                "},\n" +
+                after;
     }
 
     public String getBody() {
