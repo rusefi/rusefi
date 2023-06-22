@@ -356,8 +356,9 @@
 #define CONSOLE_MAX_ACTIONS 180
 #endif
 
+#ifndef EFI_MAP_AVERAGING
 #define EFI_MAP_AVERAGING TRUE
-//#define EFI_MAP_AVERAGING FALSE
+#endif
 
 // todo: most of this should become configurable
 

@@ -686,7 +686,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 #endif // EFI_LAUNCH_CONTROL
 
-#if EFI_SHAFT_POSITION_INPUT && !EFI_UNIT_TEST
+#if EFI_EMULATE_POSITION_SENSORS && !EFI_UNIT_TEST
 	lua_register(l, "selfStimulateRPM", [](lua_State* l) {
 		auto rpm = luaL_checkinteger(l, 1);
 		if (rpm < 1) {
