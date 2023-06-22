@@ -311,7 +311,9 @@
 	// small memory F40x can't fit perf trace
 	#define ENABLE_PERF_TRACE FALSE
 
+	#ifndef LUA_USER_HEAP
 	#define LUA_USER_HEAP 25000
+	#endif
 #endif
 
 #ifndef EFI_LUA
@@ -323,14 +325,15 @@
 #endif
 
 #define EFI_HISTOGRAMS FALSE
-#define EFI_SENSOR_CHART TRUE
 
-#if defined __GNUC__
+#ifndef EFI_SENSOR_CHART
+#define EFI_SENSOR_CHART TRUE
+#endif
+
 #define EFI_PERF_METRICS FALSE
+
+#ifndef DL_OUTPUT_BUFFER
 #define DL_OUTPUT_BUFFER 6500
-#else
-#define EFI_PERF_METRICS FALSE
-#define DL_OUTPUT_BUFFER 8000
 #endif
 
 /**
