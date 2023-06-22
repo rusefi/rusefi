@@ -583,13 +583,15 @@ bool EtbController::checkStatus() {
 
 	TpsState localReason = TpsState::None;
 	if (etbTpsErrorCounter > 50) {
-		localReason = TpsState::IntermittentTps;
+		// TODO: https://github.com/FOME-Tech/fome-fw/issues/169
+		// localReason = TpsState::IntermittentTps;
 #if EFI_SHAFT_POSITION_INPUT
 	} else if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
 		localReason = TpsState::EngineStopped;
 #endif // EFI_SHAFT_POSITION_INPUT
 	} else if (etbPpsErrorCounter > 50) {
-		localReason = TpsState::IntermittentPps;
+		// TODO: https://github.com/FOME-Tech/fome-fw/issues/169
+		// localReason = TpsState::IntermittentPps;
 	} else if (engine->engineState.lua.luaDisableEtb) {
 		localReason = TpsState::Lua;
 	}
