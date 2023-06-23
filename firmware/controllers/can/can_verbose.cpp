@@ -27,8 +27,8 @@ struct Status {
 	uint8_t fuelPump : 1;
 	uint8_t checkEngine : 1;
 	uint8_t o2Heater : 1;
+	uint8_t lambdaProtectActive : 1;
 
-	uint8_t pad6 : 1;
 	uint8_t pad7 : 1;
 	uint8_t pad8 : 1;
 
@@ -46,6 +46,9 @@ static void populateFrame(Status& msg) {
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
+
+	// TODO: https://github.com/FOME-Tech/fome-fw/issues/75
+	msg.lambdaProtectActive = false;
 
 	msg.gear = Sensor::getOrZero(SensorType::DetectedGear);
 }
