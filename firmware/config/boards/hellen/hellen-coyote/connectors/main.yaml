@@ -2,7 +2,6 @@ pins:
 
   - pin: A1
     function: Starter Motor Control Sense
-
   - pin: A5
     function: Case Ground
   - pin: A8
@@ -11,82 +10,89 @@ pins:
     function: Clutch Switch Bottom of Travel
   - pin: A10
     function: High Cooling Fans
-
   - pin: A13
     function: Starting RC
-
   - pin: A14
     function: Fuel Pump Command
-
+  - pin: A15
+    function: A/C Control Relay
   - pin: A17
     function: Low Cooling Fans
-
-
+  - pin: A20
+    function: Main Relay Control
   - pin: A22
-    function: Shift Down
+    function: UNUSED Shift Down
   - pin: A23
-    function: Shift Up
-
+    function: UNUSED Shift Up
   - pin: A26
-    function: Starting Load Input
+    function: Alternator Load Input
   - pin: A27
     function: Fuel Pump Monitor
-
   - pin: A29
-    function: Sensor Power
+    function: UNUSED Sensor Power
   - pin: A30
-    function: Analog Ground
-
+    function: UNUSED Analog Ground
+  - pin: A31
+    function: UNUSED Fuel Pump Monitor 2 5.2
   - pin: A32
     function: Reserve Switch
   - pin: A33
     function: Air Conditioner Pressure Sensor
-
+  - pin: A34
+    function: UNUSED Fuel Rail Pressure 5.2
   - pin: A35
     function: Pedal Position Ground 1
   - pin: A36
     function: Pedal Position Power 1
-
   - pin: A39
-    function: Canister Ventilation Solenoid
+    function: UNUSED Canister Ventilation Solenoid
   - pin: A40
     function: Pedal Position Power 2
-
+  - pin: A42
+    function: Start Stop Switch
   - pin: A44
-    function: Fuel Temperature Sensor
+    function: UNUSED Fuel Temperature Sensor 5.2
     class: analog_inputs
-
   - pin: A46
-    function: Fuel Pressure Sensor
+    function: UNUSED Fuel Pressure Sensor
     class: analog_inputs
-
   - pin: A47
-    function: Ambient Air Sensor
+    function: UNUSED Ambient Air Sensor
     class: analog_inputs
-
   - pin: A49
     function: Fuel Pump On
-
-
-
   - pin: A51
     function: Generator Current Sensor
   - pin: A52
     function: Sensor Power
   - pin: A53
-    function: Battery Monitor
-
+    function: Battery Monitor Sensor
+  - pin: A54
+    function: MAF Return
+  - pin: A55
+    function: UNUSED Diff Sensor
+  - pin: A58
+    function: Starter Control
   - pin: A59
     function: Pedal Position Ground 2
   - pin: A60
     function: Pedal Position Signal 2
   - pin: A61
     function: Pedal Position Signal 1
-
-
+  - pin: A63
+    function: UNUSED Trans Pump
+  - pin: A64
+    function: Ignition Power Input
+  - pin: A65
+    function: Fuel Pump Control
+  - pin: A66
+    function: UNUSED BPS
+  - pin: A67
+    function: UNUSED BOO
+  - pin: A69
+    function: UNUSED Aux Trans Pump
   - pin: A73
     function: MAF
-
   - pin: A75
     function: HS1 CAN High
   - pin: A76
@@ -119,7 +125,6 @@ pins:
     function: Injector 5
   - pin: B3
     function: Injector 4
-
   - pin: B4
     function: VVT12
   - pin: B5
@@ -128,18 +133,44 @@ pins:
     function: VVT22
   - pin: B7
     function: VVT21
-
+  - pin: B8
+    function: ETB Pos
+  - pin: B9
+    function: TPS1
+  - pin: B10
+    function: TPS2
+  - pin: B11
+    function: Muffler Control
+  - pin: B14
+    function: UNUSED TCU
+  - pin: B15
+    function: UNUSED TCU
   - pin: B16
     function: Injector 8
 
   - pin: B17
     function: Cam Sensors Power
+  - pin: B18
+    function: VPWR F
+  - pin: B23
+    function: ETB Neg
+  - pin: B24
+    function: UNUSED TCU
+  - pin: B25
+    function: UNUSED TCU
+  - pin: B26
+    function: UNUSED TCU
 
   - pin: B27
-    function: Intake
-
+    function: Intake Air Temperature
+  - pin: B30
+    function: UNUSED Oil Level Switch
   - pin: B31
     function: Injector 6
+  - pin: B34
+    function: Cam Sensor Power
+  - pin: B37
+    function: UNUSED TCU
 
   - pin: B39
     function: Crank Shield
@@ -150,7 +181,18 @@ pins:
     function: Cam22 Signal
   - pin: B42
     function: Cam21 Signal
-
+  - pin: B44
+    function: Intake Sensor
+  - pin: B45
+    function: Intake Sensor 2
+  - pin: B46
+    function: Injector 3
+  - pin: B47
+    function: Cylinder Head Temperature
+  - pin: B48
+    function: UNUSED Oil Pressure Switch
+  - pin: B49
+    function: Analog Ground
   - pin: B52
     function: Knock1 Neg
   - pin: B53
@@ -159,11 +201,12 @@ pins:
     function: Cam12 Ground
   - pin: B55
     function: Cam12 Signal
-
+  - pin: B56
+    function: Position 1 Ex Signal
+  - pin: B59
+    function: Manifold Header
   - pin: B60
     function: Intake Manifold Runner Control
-
-
   - pin: B61
     function: Injector 7
   - pin: B62
@@ -177,6 +220,23 @@ pins:
     function: Crank Negative
   - pin: B70
     function: Crank Positive
+  - pin: B71
+    function: UNUSED Canister Purge
+  - pin: B72
+    function: UNUSED TCU
+  - pin: B73
+    function: UNUSED TCU
+  - pin: B74
+    function: UNUSED TCU
+  - pin: B75
+    function: UNUSED TCU
+  - pin: B77
+    function: UNUSED TCU
+  - pin: B81
+    function: Throttle Actuator Neg
+  - pin: B82
+    function: Throttle Actuator Pos
+
 
   - pin: B87
     function: Coil 7
