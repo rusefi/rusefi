@@ -23,7 +23,7 @@ ifneq ($(PROJECT_CPU),ARCH_STM32H7)
 	DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE
 endif
 
-# disable hardware serial ports on H7
+# serial ports only on F4
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	# Hardware serial port on UART 2 -> PD5/PD6
 	DDEFS += -DSTM32_UART_USE_USART2=TRUE
