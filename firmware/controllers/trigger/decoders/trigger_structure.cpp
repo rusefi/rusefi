@@ -551,6 +551,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_ONE:
+		/** @note TT_ONE setup events as 180 and 360 degrees. It uses SyncEdge::Rise
+		 *  for additionaly phase align on falling edge and will not work with non-
+		 *  symmetrical blind type where open and closed sections are not qual */
 		initializeSkippedToothTrigger(this, 1, 0, triggerOperationMode, SyncEdge::Rise);
 		break;
 
@@ -634,9 +637,17 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	case trigger_type_e::TT_VVT_FORD_COYOTE:
 	    configureFordCoyote(this);
         break;
+	case trigger_type_e::TT_60DEG_TOOTH:
+		/** @note
+		 * Have a something like TT_ONE_PHASED trigger with 
+		 * externally setuped blind width will be a good 
+		 * approach to utilize ::Rise(and::Both in future) 
+		 * with both edges phase-sync, but to stay simple I suggest
+		 * just to use another enum for each trigger type. */
+		configure60degSingleTooth(this);
+		break;
 	case trigger_type_e::TT_UNUSED_11:
 	case trigger_type_e::TT_UNUSED_75:
-	case trigger_type_e::TT_UNUSED_77:
 	case trigger_type_e::TT_UNUSED_78:
 	case trigger_type_e::TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);
