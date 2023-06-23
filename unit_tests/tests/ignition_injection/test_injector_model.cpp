@@ -308,6 +308,8 @@ TEST(InjectorModel, FailedPressureSensor) {
 	EXPECT_EQ(1.0f, dut.getInjectorFlowRatio());
 }
 
+extern WarningCodeState unitTestWarningCodeState;
+
 TEST(InjectorModel, MissingPressureSensor) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -319,6 +321,12 @@ TEST(InjectorModel, MissingPressureSensor) {
 	// Sensor is missing!
 	Sensor::resetMockValue(SensorType::FuelPressureInjector);
 
+	int warningsBefore = eth.recentWarnings()->getCount();
+	dut.getInjectorFlowRatio();
+	int warningsAfter = eth.recentWarnings()->getCount();
+	ASSERT_EQ(1, warningsAfter - warningsBefore);
+	EXPECT_EQ(ObdCode::OBD_Fuel_Pressure_Sensor_Missing, unitTestWarningCodeState.recentWarnings.get(0).Code);
+
 	// Missing sensor should trigger a fatal as it's a misconfiguration
-	EXPECT_FATAL_ERROR(dut.getInjectorFlowRatio());
+	//EXPECT_FATAL_ERROR(dut.getInjectorFlowRatio());
 }
