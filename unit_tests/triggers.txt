@@ -5303,23 +5303,21 @@ event 4 0 1 360.00 nan
 event 5 0 0 360.00 nan
 event 6 0 1 540.00 nan
 event 7 0 0 540.00 nan
-TRIGGERTYPE 77 4 TT_UNUSED_77 0.00
+TRIGGERTYPE 77 4 TT_60DEG_TOOTH 60.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-cycleDuration=720
-gapsCount=2
-isSynchronizationNeeded=1
-gapFrom.0=2.000000
-gapTo.0=5.000000
-gapFrom.1=0.200000
-gapTo.1=0.800000
+cycleDuration=360
+gapsCount=1
+isSynchronizationNeeded=0
+gapFrom.0=1.500000
+gapTo.0=2.500000
 # end of meta section
 event 0 0 1 0.00 3.000000
-event 1 0 0 180.00 0.666667
-event 2 0 1 360.00 1.000000
-event 3 0 0 450.00 0.500000
+event 1 0 0 60.00 nan
+event 2 0 1 360.00 nan
+event 3 0 0 420.00 nan
 TRIGGERTYPE 78 4 TT_UNUSED_78 0.00
 knownOperationMode=true
 crankBased=false
