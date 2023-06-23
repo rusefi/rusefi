@@ -54,6 +54,7 @@ BO_ 512 BASE0: 8 Vector__XXX
  SG_ FuelPumpAct : 34|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ CELAct : 35|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ EGOHeatAct : 36|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LambdaProtectAct : 37|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ CurrentGear : 40|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 513 BASE1: 8 Vector__XXX
@@ -123,6 +124,7 @@ CM_ SG_ 512 MainRelayAct "Main Relay Active";
 CM_ SG_ 512 FuelPumpAct "Fuel Pump Output Active";
 CM_ SG_ 512 CELAct "Check Engine Light Active";
 CM_ SG_ 512 EGOHeatAct "EGO Heater Commanded On";
+CM_ SG_ 512 LambdaProtectAct "Lambda protection active (fault detected)";
 CM_ SG_ 512 CurrentGear "Current detected gear. 0 means neutral, 1 means first, etc.";
 CM_ SG_ 513 RPM "Current RPM";
 CM_ SG_ 513 IgnitionTiming "Current Ignition Timing. Positive is advance.";
