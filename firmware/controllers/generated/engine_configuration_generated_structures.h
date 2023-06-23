@@ -520,7 +520,7 @@ struct engine_configuration_s {
 	bool useFordRedundantTps : 1 {};
 
 	// offset 88 bit 2
-	bool unused88b2 : 1 {};
+	bool lambdaProtectionEnable : 1 {};
 
 	// offset 88 bit 3
 	bool overrideTriggerGaps : 1 {};
@@ -1131,8 +1131,12 @@ struct engine_configuration_s {
 	// offset 640
 	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseSlope;
 
+	// RPM
 	// offset 642
-	uint8_t unused638[2];
+	scaled_channel<uint8_t, 1, 100> lambdaProtectionMinRpm;
+
+	// offset 643
+	scaled_channel<uint8_t, 1, 10> lambdaProtectionMinLoad;
 
 	// offset 644 bit 0
 	bool is_enabled_spi_1 : 1 {};
@@ -1217,31 +1221,31 @@ struct engine_configuration_s {
 	bool enableAemXSeries : 1 {};
 
 	// offset 644 bit 23
-	bool unusedBit_195_23 : 1 {};
+	bool unusedBit_196_23 : 1 {};
 
 	// offset 644 bit 24
-	bool unusedBit_195_24 : 1 {};
+	bool unusedBit_196_24 : 1 {};
 
 	// offset 644 bit 25
-	bool unusedBit_195_25 : 1 {};
+	bool unusedBit_196_25 : 1 {};
 
 	// offset 644 bit 26
-	bool unusedBit_195_26 : 1 {};
+	bool unusedBit_196_26 : 1 {};
 
 	// offset 644 bit 27
-	bool unusedBit_195_27 : 1 {};
+	bool unusedBit_196_27 : 1 {};
 
 	// offset 644 bit 28
-	bool unusedBit_195_28 : 1 {};
+	bool unusedBit_196_28 : 1 {};
 
 	// offset 644 bit 29
-	bool unusedBit_195_29 : 1 {};
+	bool unusedBit_196_29 : 1 {};
 
 	// offset 644 bit 30
-	bool unusedBit_195_30 : 1 {};
+	bool unusedBit_196_30 : 1 {};
 
 	// offset 644 bit 31
-	bool unusedBit_195_31 : 1 {};
+	bool unusedBit_196_31 : 1 {};
 
 	// offset 648
 	brain_input_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
@@ -1390,7 +1394,15 @@ struct engine_configuration_s {
 	uint16_t startCrankingDuration;
 
 	// offset 748
-	uint8_t unused748[3];
+	scaled_channel<uint8_t, 1, 1> lambdaProtectionMinTps;
+
+	// Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
+	// s
+	// offset 749
+	scaled_channel<uint8_t, 10, 1> lambdaProtectionTimeout;
+
+	// offset 750
+	uint8_t unused748;
 
 	// offset 751
 	pin_output_mode_e acRelayPinMode;
@@ -1537,13 +1549,13 @@ struct engine_configuration_s {
 	bool verboseCan2 : 1 {};
 
 	// offset 808 bit 29
-	bool unusedBit_288_29 : 1 {};
+	bool unusedBit_291_29 : 1 {};
 
 	// offset 808 bit 30
-	bool unusedBit_288_30 : 1 {};
+	bool unusedBit_291_30 : 1 {};
 
 	// offset 808 bit 31
-	bool unusedBit_288_31 : 1 {};
+	bool unusedBit_291_31 : 1 {};
 
 	// offset 812
 	dc_io etbIo[ETB_COUNT];
@@ -1921,10 +1933,10 @@ struct engine_configuration_s {
 	bool ALSActivateInverted : 1 {};
 
 	// offset 1200 bit 30
-	bool unusedBit_393_30 : 1 {};
+	bool unusedBit_396_30 : 1 {};
 
 	// offset 1200 bit 31
-	bool unusedBit_393_31 : 1 {};
+	bool unusedBit_396_31 : 1 {};
 
 	// count
 	// offset 1204
@@ -2231,88 +2243,88 @@ struct engine_configuration_s {
 	bool injectorFlowAsMassFlow : 1 {};
 
 	// offset 1436 bit 4
-	bool unusedBit_467_4 : 1 {};
+	bool unusedBit_470_4 : 1 {};
 
 	// offset 1436 bit 5
-	bool unusedBit_467_5 : 1 {};
+	bool unusedBit_470_5 : 1 {};
 
 	// offset 1436 bit 6
-	bool unusedBit_467_6 : 1 {};
+	bool unusedBit_470_6 : 1 {};
 
 	// offset 1436 bit 7
-	bool unusedBit_467_7 : 1 {};
+	bool unusedBit_470_7 : 1 {};
 
 	// offset 1436 bit 8
-	bool unusedBit_467_8 : 1 {};
+	bool unusedBit_470_8 : 1 {};
 
 	// offset 1436 bit 9
-	bool unusedBit_467_9 : 1 {};
+	bool unusedBit_470_9 : 1 {};
 
 	// offset 1436 bit 10
-	bool unusedBit_467_10 : 1 {};
+	bool unusedBit_470_10 : 1 {};
 
 	// offset 1436 bit 11
-	bool unusedBit_467_11 : 1 {};
+	bool unusedBit_470_11 : 1 {};
 
 	// offset 1436 bit 12
-	bool unusedBit_467_12 : 1 {};
+	bool unusedBit_470_12 : 1 {};
 
 	// offset 1436 bit 13
-	bool unusedBit_467_13 : 1 {};
+	bool unusedBit_470_13 : 1 {};
 
 	// offset 1436 bit 14
-	bool unusedBit_467_14 : 1 {};
+	bool unusedBit_470_14 : 1 {};
 
 	// offset 1436 bit 15
-	bool unusedBit_467_15 : 1 {};
+	bool unusedBit_470_15 : 1 {};
 
 	// offset 1436 bit 16
-	bool unusedBit_467_16 : 1 {};
+	bool unusedBit_470_16 : 1 {};
 
 	// offset 1436 bit 17
-	bool unusedBit_467_17 : 1 {};
+	bool unusedBit_470_17 : 1 {};
 
 	// offset 1436 bit 18
-	bool unusedBit_467_18 : 1 {};
+	bool unusedBit_470_18 : 1 {};
 
 	// offset 1436 bit 19
-	bool unusedBit_467_19 : 1 {};
+	bool unusedBit_470_19 : 1 {};
 
 	// offset 1436 bit 20
-	bool unusedBit_467_20 : 1 {};
+	bool unusedBit_470_20 : 1 {};
 
 	// offset 1436 bit 21
-	bool unusedBit_467_21 : 1 {};
+	bool unusedBit_470_21 : 1 {};
 
 	// offset 1436 bit 22
-	bool unusedBit_467_22 : 1 {};
+	bool unusedBit_470_22 : 1 {};
 
 	// offset 1436 bit 23
-	bool unusedBit_467_23 : 1 {};
+	bool unusedBit_470_23 : 1 {};
 
 	// offset 1436 bit 24
-	bool unusedBit_467_24 : 1 {};
+	bool unusedBit_470_24 : 1 {};
 
 	// offset 1436 bit 25
-	bool unusedBit_467_25 : 1 {};
+	bool unusedBit_470_25 : 1 {};
 
 	// offset 1436 bit 26
-	bool unusedBit_467_26 : 1 {};
+	bool unusedBit_470_26 : 1 {};
 
 	// offset 1436 bit 27
-	bool unusedBit_467_27 : 1 {};
+	bool unusedBit_470_27 : 1 {};
 
 	// offset 1436 bit 28
-	bool unusedBit_467_28 : 1 {};
+	bool unusedBit_470_28 : 1 {};
 
 	// offset 1436 bit 29
-	bool unusedBit_467_29 : 1 {};
+	bool unusedBit_470_29 : 1 {};
 
 	// offset 1436 bit 30
-	bool unusedBit_467_30 : 1 {};
+	bool unusedBit_470_30 : 1 {};
 
 	// offset 1436 bit 31
-	bool unusedBit_467_31 : 1 {};
+	bool unusedBit_470_31 : 1 {};
 
 	// Time between bench test pulses
 	// ms
@@ -3800,6 +3812,17 @@ struct persistent_config_s {
 	// offset 22476
 	blend_table_s boostClosedLoopBlends[BOOST_BLEND_COUNT];
 
+	// lambda
+	// offset 22852
+	scaled_channel<uint8_t, 100, 1> lambdaMaxDeviationTable[4][4];
+
+	// offset 22868
+	uint16_t lambdaMaxDeviationLoadBins[4];
+
+	// RPM
+	// offset 22876
+	uint16_t lambdaMaxDeviationRpmBins[4];
+
 };
-static_assert(sizeof(persistent_config_s) == 22852);
+static_assert(sizeof(persistent_config_s) == 22884);
 
