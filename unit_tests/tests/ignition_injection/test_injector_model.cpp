@@ -319,6 +319,11 @@ TEST(InjectorModel, MissingPressureSensor) {
 	// Sensor is missing!
 	Sensor::resetMockValue(SensorType::FuelPressureInjector);
 
-	// Missing sensor should trigger a fatal as it's a misconfiguration
-	EXPECT_FATAL_ERROR(dut.getInjectorFlowRatio());
+	// no warning before
+	ASSERT_EQ(0, eth.recentWarnings()->getCount());
+
+	// Missing sensor should return 1.0 flow ratio and log a warning
+	EXPECT_EQ(1.0f, dut.getInjectorFlowRatio());
+
+	EXPECT_EQ(1, eth.recentWarnings()->getCount());
 }
