@@ -29,6 +29,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->isForcedInduction;
 		case -1284354759:
 			return engineConfiguration->useFordRedundantTps;
+		case 1451020756:
+			return engineConfiguration->lambdaProtectionEnable;
 		case 1362186948:
 			return engineConfiguration->overrideTriggerGaps;
 		case -298185774:
@@ -243,6 +245,10 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->compressionRatio;
 		case -1465119085:
 			return engineConfiguration->fordInjectorSmallPulseSlope;
+		case 1758659040:
+			return engineConfiguration->lambdaProtectionMinRpm;
+		case -2094010831:
+			return engineConfiguration->lambdaProtectionMinLoad;
 		case -722238362:
 			return engineConfiguration->is_enabled_spi_1;
 		case -722238361:
@@ -321,6 +327,10 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->antiLagRpmTreshold;
 		case 644409862:
 			return engineConfiguration->startCrankingDuration;
+		case 1758661224:
+			return engineConfiguration->lambdaProtectionMinTps;
+		case -1645106444:
+			return engineConfiguration->lambdaProtectionTimeout;
 		case -1171325035:
 			return engineConfiguration->clutchUpPinInverted;
 		case -675074552:
@@ -1054,6 +1064,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useFordRedundantTps = (int)value;
 		return;
 	}
+		case 1451020756:
+	{
+		engineConfiguration->lambdaProtectionEnable = (int)value;
+		return;
+	}
 		case 1362186948:
 	{
 		engineConfiguration->overrideTriggerGaps = (int)value;
@@ -1589,6 +1604,16 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->fordInjectorSmallPulseSlope = (int)value;
 		return;
 	}
+		case 1758659040:
+	{
+		engineConfiguration->lambdaProtectionMinRpm = (int)value;
+		return;
+	}
+		case -2094010831:
+	{
+		engineConfiguration->lambdaProtectionMinLoad = (int)value;
+		return;
+	}
 		case -722238362:
 	{
 		engineConfiguration->is_enabled_spi_1 = (int)value;
@@ -1782,6 +1807,16 @@ void setConfigValueByName(const char *name, float value) {
 		case 644409862:
 	{
 		engineConfiguration->startCrankingDuration = (int)value;
+		return;
+	}
+		case 1758661224:
+	{
+		engineConfiguration->lambdaProtectionMinTps = (int)value;
+		return;
+	}
+		case -1645106444:
+	{
+		engineConfiguration->lambdaProtectionTimeout = (int)value;
 		return;
 	}
 		case -1171325035:

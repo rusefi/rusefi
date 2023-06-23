@@ -37,6 +37,9 @@ Does the vehicle have a turbo or supercharger?
 ### useFordRedundantTps
 On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
+### lambdaProtectionEnable
+
+
 ### overrideTriggerGaps
 
 
@@ -358,6 +361,12 @@ Just for reference really, not taken into account by any logic at this point
 ### fordInjectorSmallPulseSlope
 
 
+### lambdaProtectionMinRpm
+
+
+### lambdaProtectionMinLoad
+
+
 ### is_enabled_spi_1
 
 
@@ -474,6 +483,12 @@ Below this throttle position, the engine is considered idling. If you have an el
 
 ### startCrankingDuration
 Maximum time to crank starter when start/stop button is pressed
+
+### lambdaProtectionMinTps
+
+
+### lambdaProtectionTimeout
+Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 
 ### clutchUpPinInverted
 
