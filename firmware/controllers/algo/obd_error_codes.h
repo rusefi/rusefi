@@ -108,7 +108,7 @@ enum class ObdCode : uint16_t {
 	//P0087 Fuel Rail/System Pressure - Too Low
 	//P0088 Fuel Rail/System Pressure - Too High
 	//P0089 Fuel Pressure Regulator 1 Performance
-	//P0090 Fuel Pressure Regulator 1 Control Circuit
+	OBD_Fuel_Pressure_Sensor_Missing = 90,
 	//P0091 Fuel Pressure Regulator 1 Control Circuit Low
 	//P0092 Fuel Pressure Regulator 1 Control Circuit High
 	//P0093 Fuel System Leak Detected - Large Leak
