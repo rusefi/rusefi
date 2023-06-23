@@ -27,11 +27,14 @@
 #include "sensor_chart.h"
 #include "trigger_central.h"
 
-#ifndef PERSISTENT_LOCATION
-#define PERSISTENT_LOCATION CCM_OPTIONAL;
+#ifndef PERSISTENT_LOCATION_TODO
+#define PERSISTENT_LOCATION CCM_OPTIONAL
+#else
+#pragma message(PERSISTENT_LOCATION_VALUE)
+#define PERSISTENT_LOCATION __attribute__((section(".ram1")))
 #endif
 
-persistent_config_container_s persistentState;
+persistent_config_container_s persistentState PERSISTENT_LOCATION;
 
 #else // EFI_UNIT_TEST
 
