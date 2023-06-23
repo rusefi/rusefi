@@ -15,6 +15,7 @@ void configureHondaCbr600(TriggerWaveform *s) {
 	s->useOnlyPrimaryForSync = true;
 	s->setTriggerSynchronizationGap(6);
 
+    s->tdcPosition = 0; // todo: hard-code TDC position once we know it
 
 	int totalTeethCount = 24;
 	int skippedCount = 0;
@@ -30,19 +31,13 @@ void configureHondaCbr600(TriggerWaveform *s) {
 	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
 	361, 649);
 
-
-
 	s->addEvent720(650.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	s->addEvent720(660.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
 	s->addEvent720(660 + 0.2, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-
 	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
 	661, 709);
-
-
-//	exit(-1);
 
 	s->addEvent720(710.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
