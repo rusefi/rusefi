@@ -31,8 +31,8 @@
 #define PERSISTENT_LOCATION CCM_OPTIONAL
 #else
 #pragma message(PERSISTENT_LOCATION_VALUE)
-#define PERSISTENT_LOCATION CCM_OPTIONAL
-//#define PERSISTENT_LOCATION __attribute__((section(".ram1")))
+//#define PERSISTENT_LOCATION CCM_OPTIONAL
+#define PERSISTENT_LOCATION __attribute__((section(".ram1")))
 #endif
 
 persistent_config_container_s persistentState PERSISTENT_LOCATION;
