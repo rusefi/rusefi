@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23436">
+    <page number="0" size="23468">
         <constant name="engineType">"MINIMAL_PINS"</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000.0</constant>
@@ -181,7 +181,7 @@
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="unused440" units="">0.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0230623E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0230624E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -333,7 +333,7 @@
         <constant name="useStepperIdle">"false"</constant>
         <constant name="enabledStep1Limiter">"false"</constant>
         <constant name="useTpicAdvancedMode">"false"</constant>
-        <constant name="unused760b12">"false"</constant>
+        <constant name="lambdaProtectionEnable">"false"</constant>
         <constant name="verboseTLE8888">"false"</constant>
         <constant name="enableVerboseCanTx">"false"</constant>
         <constant name="etb1configured">"false"</constant>
@@ -1680,11 +1680,11 @@
         <constant name="tcu_rangeInputMode4">"DEFAULT"</constant>
         <constant name="tcu_rangeInputMode5">"DEFAULT"</constant>
         <constant name="tcu_rangeInputMode6">"DEFAULT"</constant>
-        <constant cols="1" digits="0" name="mainUnusedEnd" rows="194">
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="0" name="lambdaProtectionMinRpm" units="RPM">0.0</constant>
+        <constant digits="0" name="lambdaProtectionMinLoad" units="">0.0</constant>
+        <constant digits="0" name="lambdaProtectionMinTps" units="">0.0</constant>
+        <constant digits="1" name="lambdaProtectionTimeout" units="s">0.0</constant>
+        <constant cols="1" digits="0" name="mainUnusedEnd" rows="190">
          0.0
          0.0
          0.0
@@ -4834,8 +4834,26 @@ end</constant>
          0.0
          0.0
 </constant>
+        <constant cols="4" digits="2" name="lambdaMaxDeviationTable" rows="4">
+         0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="1" digits="0" name="lambdaMaxDeviationLoadBins" rows="4">
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="lambdaMaxDeviationRpmBins" rows="4">
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
     </page>
-    <versionInfo firmwareInfo="20230611" nPages="1" signature="rusEFI master.2023.06.23.f407-discovery.3978602650" version="5.0"/>
+    <versionInfo firmwareInfo="20230611" nPages="1" signature="rusEFI master.2023.06.24.f407-discovery.1278519085" version="5.0"/>
     <bibliography author="rusEFI 20230611" writeDate="date"/>
     <settings/>
     <userComments/>
