@@ -403,6 +403,9 @@ This setting should only be used if you have a stepper motor idle valve and a st
 ### useTpicAdvancedMode
 
 
+### lambdaProtectionEnable
+
+
 ### verboseTLE8888
 
 
@@ -1587,4 +1590,16 @@ How long initial IAC adder is held before starting to decay.
 
 ### iacByTpsDecayTime
 How long it takes to remove initial IAC adder to return to normal idle.
+
+### lambdaProtectionMinRpm
+
+
+### lambdaProtectionMinLoad
+
+
+### lambdaProtectionMinTps
+
+
+### lambdaProtectionTimeout
+Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 

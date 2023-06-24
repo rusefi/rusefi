@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 17 03:00:53 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 24 01:08:00 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1576,7 +1576,7 @@ struct engine_configuration_s {
 	bool useTpicAdvancedMode : 1 {};
 	/**
 	offset 724 bit 12 */
-	bool unused760b12 : 1 {};
+	bool lambdaProtectionEnable : 1 {};
 	/**
 	offset 724 bit 13 */
 	bool verboseTLE8888 : 1 {};
@@ -4356,10 +4356,29 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e tcu_rangeInputMode[RANGE_INPUT_COUNT];
 	/**
-	units
+	RPM
 	 * offset 3968
 	 */
-	uint8_t mainUnusedEnd[194];
+	scaled_channel<uint8_t, 1, 100> lambdaProtectionMinRpm;
+	/**
+	 * offset 3969
+	 */
+	scaled_channel<uint8_t, 1, 10> lambdaProtectionMinLoad;
+	/**
+	 * offset 3970
+	 */
+	scaled_channel<uint8_t, 1, 1> lambdaProtectionMinTps;
+	/**
+	 * Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
+	s
+	 * offset 3971
+	 */
+	scaled_channel<uint8_t, 10, 1> lambdaProtectionTimeout;
+	/**
+	units
+	 * offset 3972
+	 */
+	uint8_t mainUnusedEnd[190];
 	/**
 	 * need 4 byte alignment
 	units
@@ -5254,13 +5273,27 @@ struct persistent_config_s {
 	 */
 	uint8_t tcu_rangeLow[6];
 	/**
-	 * need 4 byte alignment
-	units
+	lambda
 	 * offset 23434
 	 */
-	uint8_t alignmentFill_at_23434[2];
+	scaled_channel<uint8_t, 100, 1> lambdaMaxDeviationTable[4][4];
+	/**
+	 * offset 23450
+	 */
+	uint16_t lambdaMaxDeviationLoadBins[4];
+	/**
+	RPM
+	 * offset 23458
+	 */
+	uint16_t lambdaMaxDeviationRpmBins[4];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 23466
+	 */
+	uint8_t alignmentFill_at_23466[2];
 };
-static_assert(sizeof(persistent_config_s) == 23436);
+static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 17 03:00:53 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 24 01:08:00 UTC 2023

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jun 23 23:28:38 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 24 01:08:00 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -945,7 +945,7 @@ public class Fields {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int PACK_MULT_VSS = 100;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
-	public static final int persistent_config_s_size = 23436;
+	public static final int persistent_config_s_size = 23468;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -1022,6 +1022,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1278519085;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1059,7 +1060,7 @@ public class Fields {
 	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TORQUE_CURVE_SIZE = 6;
-	public static final int TOTAL_CONFIG_SIZE = 23436;
+	public static final int TOTAL_CONFIG_SIZE = 23468;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_TPS_ACCEL_CLT_CORR_TABLE = 4;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
@@ -1234,7 +1235,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.06.24.f407-discovery.3978602650";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.06.24.f407-discovery.1278519085";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
@@ -1584,6 +1585,7 @@ public class Fields {
 	public static final Field USESTEPPERIDLE = Field.create("USESTEPPERIDLE", 724, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 724, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field USETPICADVANCEDMODE = Field.create("USETPICADVANCEDMODE", 724, FieldType.BIT, 11).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONENABLE = Field.create("LAMBDAPROTECTIONENABLE", 724, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 724, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 724, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field ETB1CONFIGURED = Field.create("ETB1CONFIGURED", 724, FieldType.BIT, 15).setBaseOffset(0);
@@ -2540,7 +2542,11 @@ public class Fields {
 	public static final Field TCU_RANGEINPUTMODE4 = Field.create("TCU_RANGEINPUTMODE4", 3965, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_RANGEINPUTMODE5 = Field.create("TCU_RANGEINPUTMODE5", 3966, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_RANGEINPUTMODE6 = Field.create("TCU_RANGEINPUTMODE6", 3967, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3968, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONMINRPM = Field.create("LAMBDAPROTECTIONMINRPM", 3968, FieldType.INT8).setScale(100.0).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONMINLOAD = Field.create("LAMBDAPROTECTIONMINLOAD", 3969, FieldType.INT8).setScale(10.0).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONMINTPS = Field.create("LAMBDAPROTECTIONMINTPS", 3970, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONTIMEOUT = Field.create("LAMBDAPROTECTIONTIMEOUT", 3971, FieldType.INT8).setScale(0.1).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3972, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4162 = Field.create("ALIGNMENTFILL_AT_4162", 4162, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4164, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4196, FieldType.FLOAT).setBaseOffset(0);
@@ -2819,7 +2825,10 @@ public class Fields {
 	public static final Field TCU_RANGEPLUS = Field.create("TCU_RANGEPLUS", 23416, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_RANGEMINUS = Field.create("TCU_RANGEMINUS", 23422, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_RANGELOW = Field.create("TCU_RANGELOW", 23428, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_23434 = Field.create("ALIGNMENTFILL_AT_23434", 23434, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LAMBDAMAXDEVIATIONTABLE = Field.create("LAMBDAMAXDEVIATIONTABLE", 23434, FieldType.INT8).setScale(0.01).setBaseOffset(0);
+	public static final Field LAMBDAMAXDEVIATIONLOADBINS = Field.create("LAMBDAMAXDEVIATIONLOADBINS", 23450, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field LAMBDAMAXDEVIATIONRPMBINS = Field.create("LAMBDAMAXDEVIATIONRPMBINS", 23458, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_23466 = Field.create("ALIGNMENTFILL_AT_23466", 23466, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -3096,6 +3105,7 @@ public class Fields {
 	USESTEPPERIDLE,
 	ENABLEDSTEP1LIMITER,
 	USETPICADVANCEDMODE,
+	LAMBDAPROTECTIONENABLE,
 	VERBOSETLE8888,
 	ENABLEVERBOSECANTX,
 	ETB1CONFIGURED,
@@ -4034,6 +4044,10 @@ public class Fields {
 	TCU_RANGEINPUTMODE4,
 	TCU_RANGEINPUTMODE5,
 	TCU_RANGEINPUTMODE6,
+	LAMBDAPROTECTIONMINRPM,
+	LAMBDAPROTECTIONMINLOAD,
+	LAMBDAPROTECTIONMINTPS,
+	LAMBDAPROTECTIONTIMEOUT,
 	MAINUNUSEDEND,
 	ALIGNMENTFILL_AT_4162,
 	ETBBIASBINS,
@@ -4313,6 +4327,9 @@ public class Fields {
 	TCU_RANGEPLUS,
 	TCU_RANGEMINUS,
 	TCU_RANGELOW,
-	ALIGNMENTFILL_AT_23434,
+	LAMBDAMAXDEVIATIONTABLE,
+	LAMBDAMAXDEVIATIONLOADBINS,
+	LAMBDAMAXDEVIATIONRPMBINS,
+	ALIGNMENTFILL_AT_23466,
 	};
 }

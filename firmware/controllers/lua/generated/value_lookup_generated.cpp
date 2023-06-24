@@ -409,6 +409,9 @@ float getConfigValueByName(const char *name) {
 // useTpicAdvancedMode
 		case -1037977635:
 			return engineConfiguration->useTpicAdvancedMode;
+// lambdaProtectionEnable
+		case 1451020756:
+			return engineConfiguration->lambdaProtectionEnable;
 // verboseTLE8888
 		case -1251676000:
 			return engineConfiguration->verboseTLE8888;
@@ -1594,6 +1597,18 @@ float getConfigValueByName(const char *name) {
 // iacByTpsDecayTime
 		case 1742748825:
 			return engineConfiguration->iacByTpsDecayTime;
+// lambdaProtectionMinRpm
+		case 1758659040:
+			return engineConfiguration->lambdaProtectionMinRpm;
+// lambdaProtectionMinLoad
+		case -2094010831:
+			return engineConfiguration->lambdaProtectionMinLoad;
+// lambdaProtectionMinTps
+		case 1758661224:
+			return engineConfiguration->lambdaProtectionMinTps;
+// lambdaProtectionTimeout
+		case -1645106444:
+			return engineConfiguration->lambdaProtectionTimeout;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -2273,6 +2288,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -1037977635:
 	{
 		engineConfiguration->useTpicAdvancedMode = (int)value;
+		return;
+	}
+		case 1451020756:
+	{
+		engineConfiguration->lambdaProtectionEnable = (int)value;
 		return;
 	}
 		case -1251676000:
@@ -4248,6 +4268,26 @@ void setConfigValueByName(const char *name, float value) {
 		case 1742748825:
 	{
 		engineConfiguration->iacByTpsDecayTime = (int)value;
+		return;
+	}
+		case 1758659040:
+	{
+		engineConfiguration->lambdaProtectionMinRpm = (int)value;
+		return;
+	}
+		case -2094010831:
+	{
+		engineConfiguration->lambdaProtectionMinLoad = (int)value;
+		return;
+	}
+		case 1758661224:
+	{
+		engineConfiguration->lambdaProtectionMinTps = (int)value;
+		return;
+	}
+		case -1645106444:
+	{
+		engineConfiguration->lambdaProtectionTimeout = (int)value;
 		return;
 	}
 	}
