@@ -115,6 +115,7 @@ jobs:
 
         include:
           # Board configurations
+          # 'target' should match corresponding SHORT_BOARD_NAME
           - build-target: hellen72
             folder: config/boards/hellen/hellen72
             ini-file: rusefi_hellen72.ini
