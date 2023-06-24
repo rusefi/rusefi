@@ -28,6 +28,8 @@ const char* getCriticalErrorMessage(void) {
 void checkLastBootError() {
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
+	if (sramState == NULL)
+		return;
 	
 	switch (sramState->Cookie) {
 	case ErrorCookie::FirmwareError:
@@ -82,6 +84,9 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint3
     TURN_FATAL_LED();
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
+	if (sramState == NULL)
+		return;
+
 	sramState->Cookie = ErrorCookie::HardFault;
 	sramState->FaultType = type;
 	sramState->FaultAddress = faultAddress;
