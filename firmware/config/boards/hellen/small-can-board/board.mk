@@ -1,6 +1,6 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
-DDEFS += -DFIRMWARE_ID=small-can-board
+DDEFS += -DFIRMWARE_ID=\"small-can-board\"
 DDEFS += -DSHORT_BOARD_NAME=small-can-board
 
 #DDEFS += -DEFI_SENT_SUPPORT=TRUE
