@@ -85,6 +85,8 @@ void setSbc() {
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 	engineConfiguration->skippedWheelOnCam = true;
+
+	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 }
 
 void set8chanSbc() {
