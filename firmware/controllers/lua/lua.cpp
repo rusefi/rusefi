@@ -17,9 +17,9 @@
 #define LUA_USER_HEAP 1
 #endif // LUA_USER_HEAP
 
-#ifdef PERSISTENT_LOCATION_TODO
-#define LUA_HEAD_RAM_SECTION CCM_OPTIONAL
-#endif
+//#ifdef PERSISTENT_LOCATION_TODO
+//#define LUA_HEAD_RAM_SECTION CCM_OPTIONAL
+//#endif
 
 static char luaUserHeap[LUA_USER_HEAP]
 #ifdef EFI_HAS_EXT_SDRAM
