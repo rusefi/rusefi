@@ -77,7 +77,10 @@ void setSbc() {
 
 #if HW_PROTEUS
     ignOverride->pin = PROTEUS_IGN_12;
+	engineConfiguration->fanPin = Gpio::Unassigned;
+	// reminder about D101
    	engineConfiguration->injectionPins[0] = PROTEUS_LS_14; // #1
+   	// reminder about D104
    	engineConfiguration->injectionPins[3] = PROTEUS_LS_15; // #4
 #endif // HW_PROTEUS
 
