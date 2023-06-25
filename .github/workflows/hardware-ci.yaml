@@ -64,8 +64,12 @@ jobs:
       working-directory: ./firmware/
       run: ./gen_live_documentation.sh
 
+    - name: Acquire GCC
+      working-directory: ./firmware/
+      run: ./provide_gcc.sh
+
     - name: Add compiler to PATH
-      run: echo "$HOME/.rusefi-tools/arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi/bin" >> $GITHUB_PATH
+      run: echo "${GITHUB_WORKSPACE}/firmware/gcc-arm-none-eabi/bin" >> $GITHUB_PATH
 
     # Make sure the compiler works
     - name: Test/Identify Compiler
