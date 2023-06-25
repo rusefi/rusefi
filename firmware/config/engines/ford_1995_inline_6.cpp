@@ -27,8 +27,6 @@ void setFordInline6() {
 	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_BATCH;
-	engineConfiguration->twoWireBatchInjection = true;
-
 
 	/**
 	 * 0.5ms dwell time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway

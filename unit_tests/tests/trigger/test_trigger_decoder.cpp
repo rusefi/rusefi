@@ -785,7 +785,6 @@ TEST(big, testTwoWireBatch) {
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	engineConfiguration->injectionMode = IM_BATCH;
-	engineConfiguration->twoWireBatchInjection = true;
 
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration

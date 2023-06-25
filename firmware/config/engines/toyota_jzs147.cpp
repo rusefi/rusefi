@@ -87,7 +87,6 @@ void setToyota_2jz_vics() {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK; // just for now
 	engineConfiguration->injectionMode = IM_BATCH; // just for now
 	engineConfiguration->twoWireBatchIgnition = true;
-	engineConfiguration->twoWireBatchInjection = true;
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_TOYOTA);
 	strcpy(engineConfiguration->engineCode, "2JZ");

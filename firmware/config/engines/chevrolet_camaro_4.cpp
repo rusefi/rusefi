@@ -28,7 +28,7 @@ void setCamaro4() {
 	engineConfiguration->triggerInputPins[1] = Gpio::C6;
 
 	engineConfiguration->injectionMode = IM_BATCH;
-	engineConfiguration->twoWireBatchInjection = true;
+
 	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
