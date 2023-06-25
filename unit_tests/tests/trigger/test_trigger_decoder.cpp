@@ -420,7 +420,6 @@ static void setTestBug299(EngineTestHelper *eth) {
 		.WillRepeatedly(Return(AirmassResult{0.1008001f, 50.0f}));
 
 	Engine *engine = &eth->engine;
-	
 
 
 	eth->assertRpm(0, "RPM=0");
@@ -443,18 +442,18 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #1 |........|.......#|........|.......#|
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#00";
 	ASSERT_EQ( 3,  getRevolutionCounter()) << "rev cnt#3";
-	eth->assertInjectorUpEvent("setTestBug299: 1@0", 0, MS2US(8.5), 0);
-	eth->assertInjectorDownEvent("@1", 1, MS2US(10), 0);
-	eth->assertInjectorUpEvent("1@2", 2, MS2US(18.5), 1);
-	eth->assertInjectorDownEvent("1@3", 3, MS2US(20), 1);
+	eth->assertInjectorUpEvent("setTestBug299: 1@0", 0, MS2US(8.5), 2);
+	eth->assertInjectorDownEvent("@1", 1, MS2US(10), 2);
+	eth->assertInjectorUpEvent("1@2", 2, MS2US(18.5), 3);
+	eth->assertInjectorDownEvent("1@3", 3, MS2US(20), 3);
 	ASSERT_EQ( 0,  eth->executeActions()) << "exec#0";
 
 	FuelSchedule * t = &engine->injectionEvents;
 
-	assertInjectionEvent("#0", &t->elements[0], 0, 1, 153 + 360);
-	assertInjectionEvent("#1_i_@", &t->elements[1], 1, 1, 333 + 360);
-	assertInjectionEvent("#2@", &t->elements[2], 0, 0, 153);
-	assertInjectionEvent("inj#3@", &t->elements[3], 1, 0, 153 + 180);
+	assertInjectionEventBatch("#0", &t->elements[0],     0, 3, 1, 153 + 360);
+	assertInjectionEventBatch("#1_i_@", &t->elements[1], 2, 1, 1, 333 + 360);
+	assertInjectionEventBatch("#2@", &t->elements[2],    3, 0, 0, 153);
+	assertInjectionEventBatch("inj#3@", &t->elements[3], 1, 2, 0, 153 + 180);
 
 	/**
 	 * Trigger down - no new events, executing some
@@ -466,10 +465,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #1 |........|.......#|........|.......#|
 	ASSERT_EQ( 8,  engine->executor.size()) << "qs#0";
 	ASSERT_EQ( 3,  getRevolutionCounter()) << "rev cnt#3";
-	eth->assertInjectorUpEvent("02@0", 0, MS2US(-11.5), 0);
-	eth->assertInjectorDownEvent("@1", 1, MS2US(-10), 0);
-	eth->assertInjectorUpEvent("@2", 2, MS2US(-1.5), 1);
-	eth->assertInjectorDownEvent("02@3", 3, MS2US(0), 1);
+	eth->assertInjectorUpEvent("02@0", 0, MS2US(-11.5), 2);
+	eth->assertInjectorDownEvent("@1", 1, MS2US(-10), 2);
+	eth->assertInjectorUpEvent("@2", 2, MS2US(-1.5), 3);
+	eth->assertInjectorDownEvent("02@3", 3, MS2US(0), 3);
 	eth->assertInjectorUpEvent("02@4", 4, MS2US(8.5), 0);
 	eth->assertInjectorDownEvent("@5", 5, MS2US(10), 0);
 	eth->assertInjectorUpEvent("02@6", 6, MS2US(18.5), 1);
@@ -493,10 +492,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// time...|-20.....|-10.....|0.......|10......|20
 	// inj #0 |.......#|........|.......#|........|
 	// inj #1 |........|.......#|........|.......#|
-	eth->assertInjectorUpEvent("2@0", 0, MS2US(8.5), 0);
-	eth->assertInjectorDownEvent("@1", 1, MS2US(10), 0);
-	eth->assertInjectorUpEvent("@2", 2, MS2US(18.5), 1);
-	eth->assertInjectorDownEvent("2@3", 3, MS2US(20), 1);
+	eth->assertInjectorUpEvent("2@0", 0, MS2US(8.5), 2);
+	eth->assertInjectorDownEvent("@1", 1, MS2US(10), 2);
+	eth->assertInjectorUpEvent("@2", 2, MS2US(18.5), 3);
+	eth->assertInjectorDownEvent("2@3", 3, MS2US(20), 3);
 	ASSERT_EQ( 0,  eth->executeActions()) << "exec#2";
 
 
@@ -620,10 +619,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &engine->injectionEvents;
 
-	assertInjectionEvent("#0", &t->elements[0], 0, 0, 315);
-	assertInjectionEvent("#1__", &t->elements[1], 1, 1, 495);
-	assertInjectionEvent("inj#2", &t->elements[2], 0, 0, 153);
-	assertInjectionEvent("inj#3", &t->elements[3], 1, 0, 333);
+	assertInjectionEventBatch("#0",    &t->elements[0], 0, 3, 0, 315);
+	assertInjectionEventBatch("#1__",  &t->elements[1], 2, 1, 1, 495);
+	assertInjectionEventBatch("inj#2", &t->elements[2], 3, 0, 0, 153);
+	assertInjectionEventBatch("inj#3", &t->elements[3], 1, 2, 0, 333);
 
 	eth.moveTimeForwardUs(MS2US(20));
 	ASSERT_EQ( 5,  engine->executor.size()) << "qs#02";
@@ -692,10 +691,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ( 5,  engine->executor.size()) << "Queue.size#03";
 
-	eth.assertInjectorUpEvent("07@0", 0, MS2US(7.5), 1);
-	eth.assertInjectorDownEvent("07@1", 1, MS2US(10), 0);
+	eth.assertInjectorUpEvent("07@0", 0, MS2US(7.5), 3);
+	eth.assertInjectorDownEvent("07@1", 1, MS2US(10), 2);
 	eth.assertInjectorUpEvent("07@2", 2, MS2US(17.5), 0);
-	eth.assertInjectorDownEvent("07@3", 3, MS2US(20), 1);
+	eth.assertInjectorDownEvent("07@3", 3, MS2US(20), 3);
 	eth.assertInjectorDownEvent("07@4", 4, MS2US(30), 0);
 //	assertInjectorDownEvent("07@5", 5, MS2US(30), 0);
 //	assertInjectorUpEvent("07@6", 6, MS2US(37.5), 0);
@@ -708,10 +707,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &engine->injectionEvents;
 
-	assertInjectionEvent("#0#", &t->elements[0], 0, 0, 135 + 180);
-	assertInjectionEvent("#1#", &t->elements[1], 1, 1, 135 + 360);
-	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 135 + 540);
-	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 135);
+	assertInjectionEventBatch("#0#", &t->elements[0], 0, 3, 0, 135 + 180);
+	assertInjectionEventBatch("#1#", &t->elements[1], 2, 1, 1, 135 + 360);
+	assertInjectionEventBatch("#2#", &t->elements[2], 3, 0, 1, 135 + 540);
+	assertInjectionEventBatch("#3#", &t->elements[3], 1, 2, 0, 135);
 
 	engine->engineState.injectionDuration = 17.5;
 	// Injection duration of 17.5ms
@@ -723,7 +722,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
 
 
-	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315);
+	assertInjectionEventBatch("#03", &t->elements[0], 0, 3, 0, 315);
 
 
 	ASSERT_EQ( 1,  enginePins.injectors[0].currentLogicValue) << "inj#0";
@@ -753,10 +752,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &engine->injectionEvents;
 
-	assertInjectionEvent("#00", &t->elements[0], 0, 0, 225); // 87.5 duty cycle
-	assertInjectionEvent("#10", &t->elements[1], 1, 1, 45  + 360);
-	assertInjectionEvent("#20", &t->elements[2], 0, 1, 225 + 360);
-	assertInjectionEvent("#30", &t->elements[3], 1, 0, 45);
+	assertInjectionEventBatch("#00", &t->elements[0], 0, 3, 0, 225); // 87.5 duty cycle
+	assertInjectionEventBatch("#10", &t->elements[1], 2, 1, 1, 45  + 360);
+	assertInjectionEventBatch("#20", &t->elements[2], 3, 0, 1, 225 + 360);
+	assertInjectionEventBatch("#30", &t->elements[3], 1, 2, 0, 45);
 
 	 // todo: what's what? a mix of new something and old something?
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#5";
@@ -875,12 +874,12 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	// inj #0 |########|########|########|.....###|########|........|........|
 	// inj #1 |..######|########|....####|########|........|........|........|
 	ASSERT_EQ( 6,  engine->executor.size()) << "Lqs#4";
-	eth.assertInjectorUpEvent("L04@0", 0, MS2US(8.5), 0);
+	eth.assertInjectorUpEvent("L04@0", 0, MS2US(8.5), 2);
 	eth.assertInjectorUpEvent("L04@1", 1, MS2US(12.5), 0);
 	// special overlapping injection is merged with one of the scheduled injections
-	eth.assertInjectorUpEvent("L04@2", 2, MS2US(18.5), 1);
+	eth.assertInjectorUpEvent("L04@2", 2, MS2US(18.5), 3);
 
-	eth.assertInjectorDownEvent("L04@3", 3, MS2US(26), 0);
+	eth.assertInjectorDownEvent("L04@3", 3, MS2US(26), 2);
 	eth.assertInjectorDownEvent("L04@4", 4, MS2US(30), 0);
 
 //	assertInjectorDownEvent("L04@5", 5, MS2US(30), 0);
@@ -901,11 +900,11 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.fireFall(20);
 
 	ASSERT_EQ( 6,  engine->executor.size()) << "Lqs#04";
-	eth.assertInjectorUpEvent("L015@0", 0, MS2US(-1.5), 1);
+	eth.assertInjectorUpEvent("L015@0", 0, MS2US(-1.5), 3);
 	eth.assertInjectorUpEvent("L015@1", 1, MS2US(2.5), 1);
-	eth.assertInjectorDownEvent("L015@2", 2, MS2US(6), 0);
+	eth.assertInjectorDownEvent("L015@2", 2, MS2US(6), 2);
 	eth.assertInjectorDownEvent("L015@3", 3, MS2US(10), 0);
-	eth.assertInjectorDownEvent("L015@4", 4, MS2US(16), 1);
+	eth.assertInjectorDownEvent("L015@4", 4, MS2US(16), 3);
 //todo	assertInjectorDownEvent("L015@5", 5, MS2US(30), 0);
 
 
@@ -947,10 +946,10 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.firePrimaryTriggerRise();
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#5";
-	eth.assertInjectorUpEvent("L05@0", 0, MS2US(8), 0);
-	eth.assertInjectorDownEvent("L05@1", 1, MS2US(10), 0);
-	eth.assertInjectorUpEvent("L05@2", 2, MS2US(18), 1);
-	eth.assertInjectorDownEvent("L05@3", 3, MS2US(20), 1);
+	eth.assertInjectorUpEvent("L05@0", 0, MS2US(8), 2);
+	eth.assertInjectorDownEvent("L05@1", 1, MS2US(10), 2);
+	eth.assertInjectorUpEvent("L05@2", 2, MS2US(18), 3);
+	eth.assertInjectorDownEvent("L05@3", 3, MS2US(20), 3);
 
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
