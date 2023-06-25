@@ -34,7 +34,7 @@
 uint32_t hwSetTimerDuration;
 
 void globalTimerCallback() {
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6624, assertRemainingStack(), "lowstck#2y");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6624, hasLotsOfRemainingStack(), "lowstck#2y");
 
 	___engine.executor.onTimerCallback();
 }

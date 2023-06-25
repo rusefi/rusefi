@@ -694,7 +694,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 		TriggerWaveform& shape,
 		const TriggerConfiguration& triggerConfiguration) {
 #if EFI_PROD_CODE
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, assertRemainingStack(), "findPos", -1);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, hasLotsOfRemainingStack(), "findPos", -1);
 #endif
 
 

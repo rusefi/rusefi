@@ -42,4 +42,5 @@
 
 #define EXPECTED_REMAINING_STACK 128
 
-#define assertRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)
+// see also validateStack
+#define hasLotsOfRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)

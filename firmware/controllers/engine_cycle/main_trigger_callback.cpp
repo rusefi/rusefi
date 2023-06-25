@@ -197,7 +197,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 static void handleFuel(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::HandleFuel);
 	
-	efiAssertVoid(ObdCode::CUSTOM_STACK_6627, assertRemainingStack(), "lowstck#3");
+	efiAssertVoid(ObdCode::CUSTOM_STACK_6627, hasLotsOfRemainingStack(), "lowstck#3");
 
 	LimpState limitedFuelState = getLimpManager()->allowInjection();
 

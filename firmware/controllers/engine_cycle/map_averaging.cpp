@@ -62,7 +62,7 @@ static void endAveraging(MapAverager* arg);
 static size_t currentMapAverager = 0;
 
 static void startAveraging(scheduling_s *endAveragingScheduling) {
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, assertRemainingStack(), "lowstck#9");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, hasLotsOfRemainingStack(), "lowstck#9");
 
 	// TODO: set currentMapAverager based on cylinder bank
 	auto& averager = getMapAvg(currentMapAverager);
@@ -129,7 +129,7 @@ void MapAverager::stop() {
  * as fast as possible
  */
 void mapAveragingAdcCallback(float instantVoltage) {
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6650, assertRemainingStack(), "lowstck#9a");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6650, hasLotsOfRemainingStack(), "lowstck#9a");
 
 	SensorResult mapResult = getMapAvg(currentMapAverager).submit(instantVoltage);
 
