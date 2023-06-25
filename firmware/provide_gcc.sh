@@ -5,14 +5,14 @@
 set -e
 
 # URL to download original toolchain from
-URL="https://github.com/rusefi/build_support/raw/master/rusefi-arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi.tar.xz"
+URL="https://github.com/rusefi/build_support/raw/master/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz"
 # This is the md5sum of the /bin/arm-none-eabi-ld executable within the archive, used for verifying we have the proper version.
 # If you change the above URL, you will need to update this checksum as well.
-MANIFEST_SUM="8e50ee1adb41acfd56fc38d74d6bb18e"
+MANIFEST_SUM="d7145e6152652d550651e1ceeb9eea86"
 # colloquial directory name, to afford re-use of script
 COLLOQUIAL="gcc-arm-none-eabi"
 # temporary working directory
-TMP_DIR="/tmp/rusefi-provide_gcc"
+TMP_DIR="/tmp/rusefi-provide_gcc12"
 
 archive="${URL##*/}"
 
