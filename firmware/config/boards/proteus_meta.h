@@ -40,6 +40,7 @@
 
 // pin 10/black35
 #define PROTEUS_LS_13 Gpio::B9
+// pin 11/black35
 #define PROTEUS_LS_14 Gpio::E0
 // pin 12/black35
 #define PROTEUS_LS_15 Gpio::E1

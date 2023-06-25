@@ -77,6 +77,8 @@ void setSbc() {
 
 #if HW_PROTEUS
     ignOverride->pin = PROTEUS_IGN_12;
+   	engineConfiguration->injectionPins[0] = PROTEUS_LS_14; // #1
+   	engineConfiguration->injectionPins[3] = PROTEUS_LS_15; // #4
 #endif // HW_PROTEUS
 
  	setStepperHw();
