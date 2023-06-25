@@ -1863,10 +1863,8 @@ struct engine_configuration_s {
 	// offset 1200 bit 11
 	bool isManualSpinningMode : 1 {};
 
-	// This is needed if your coils are individually wired and you wish to use batch injection.
-	// enable two_wire_batch_injection
 	// offset 1200 bit 12
-	bool twoWireBatchInjection : 1 {};
+	bool unused1200b12 : 1 {};
 
 	// offset 1200 bit 13
 	bool neverInstantRpm : 1 {};

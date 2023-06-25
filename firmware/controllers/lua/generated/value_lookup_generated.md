@@ -787,9 +787,6 @@ Verbose info in console below engineSnifferRpmThreshold\nenable trigger_details
 ### isManualSpinningMode
 Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
 
-### twoWireBatchInjection
-This is needed if your coils are individually wired and you wish to use batch injection.\nenable two_wire_batch_injection
-
 ### neverInstantRpm
 
 

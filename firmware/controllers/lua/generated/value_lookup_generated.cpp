@@ -529,8 +529,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->verboseTriggerSynchDetails;
 		case -795241238:
 			return engineConfiguration->isManualSpinningMode;
-		case -1248413509:
-			return engineConfiguration->twoWireBatchInjection;
 		case 240697653:
 			return engineConfiguration->neverInstantRpm;
 		case 201676494:
@@ -2312,11 +2310,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -795241238:
 	{
 		engineConfiguration->isManualSpinningMode = (int)value;
-		return;
-	}
-		case -1248413509:
-	{
-		engineConfiguration->twoWireBatchInjection = (int)value;
 		return;
 	}
 		case 240697653:
