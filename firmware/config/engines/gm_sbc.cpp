@@ -59,8 +59,8 @@ void setSbc() {
 	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
 	engineConfiguration->displacement = 5.2;
 
-    engineConfiguration->crankingInjectionMode = IM_SINGLE_POINT;
-    engineConfiguration->injectionMode = IM_SINGLE_POINT;
+    engineConfiguration->crankingInjectionMode = IM_BATCH;
+    engineConfiguration->injectionMode = IM_BATCH;
 
 	engineConfiguration->etbFunctions[0] = DC_None;
 	engineConfiguration->etbFunctions[1] = DC_None;
@@ -68,12 +68,13 @@ void setSbc() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 	strcpy(engineConfiguration->engineCode, "SBC");
 
-    gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
-   	vtsControl->pwmFrequency = 0;
+    gppwm_channel *ignOverride = &engineConfiguration->gppwm[0];
+   	ignOverride->pwmFrequency = 0;
    	strcpy(engineConfiguration->gpPwmNote[0], "ign ovrrd B");
+   	setTable(ignOverride->table, 100);
 
 #if HW_PROTEUS
-    vtsControl->pin = PROTEUS_IGN_12;
+    ignOverride->pin = PROTEUS_IGN_12;
 #endif // HW_PROTEUS
 
  	setStepperHw();
