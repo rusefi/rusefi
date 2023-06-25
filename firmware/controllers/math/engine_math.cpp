@@ -232,8 +232,7 @@ static size_t getFiringOrderLength() {
 	return 1;
 }
 
-static const uint8_t* getFiringOrderTable()
-{
+static const uint8_t* getFiringOrderTable() {
 	switch (engineConfiguration->firingOrder) {
 	case FO_1:
 		return order_1;
