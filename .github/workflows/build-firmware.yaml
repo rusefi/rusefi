@@ -518,6 +518,13 @@ jobs:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
+    - name: Upload build map
+      if: ${{ env.partial == 'true' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: rusefi_${{matrix.build-target}}.map
+        path: ./firmware/build/rusefi.map
+
     - name: Upload build bin
       if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v3
