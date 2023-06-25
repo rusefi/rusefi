@@ -127,17 +127,8 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 	injection_mode_e mode = getCurrentInjectionMode();
 	engine->outputChannels.currentInjectionMode = static_cast<uint8_t>(mode);
 
-	int injectorIndex;
-	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
-		// These modes only have one injector
-		injectorIndex = 0;
-	} else if (mode == IM_SEQUENTIAL || mode == IM_BATCH) {
-		// Map order index -> cylinder index (firing order)
-		injectorIndex = getCylinderId(i) - 1;
-	} else {
-		firmwareError(ObdCode::CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
-		injectorIndex = 0;
-	}
+	// Map order index -> cylinder index (firing order)
+	int injectorIndex = ID2INDEX(getCylinderId(i));
 
 	InjectorOutputPin *secondOutput;
 
@@ -155,12 +146,9 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 		secondOutput = nullptr;
 	}
 
-	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
-	bool isSimultaneous = mode == IM_SIMULTANEOUS;
-
-	ev->outputs[0] = output;
+	ev->outputs[0] = &enginePins.injectors[injectorIndex];
 	ev->outputs[1] = secondOutput;
-	ev->isSimultaneous = isSimultaneous;
+	ev->isSimultaneous = mode == IM_SIMULTANEOUS;
 	// Stash the cylinder number so we can select the correct fueling bank later
 	ev->cylinderNumber = injectorIndex;
 
