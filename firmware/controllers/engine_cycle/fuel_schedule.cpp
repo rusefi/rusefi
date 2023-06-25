@@ -65,10 +65,9 @@ InjectionEvent::InjectionEvent() {
 // Returns the start angle of this injector in engine coordinates (0-720 for a 4 stroke),
 // or unexpected if unable to calculate the start angle due to missing information.
 expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
-	floatus_t oneDegreeUs = getEngineRotationState()->getOneDegreeUs(); // local copy
+	floatus_t oneDegreeUs = getEngineRotationState()->getOneDegreeUs();
 	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
-		// wonder if this line slows engine startup?
 		return unexpected;
 	}
 
@@ -130,7 +129,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 	// Map order index -> cylinder index (firing order)
 	int injectorIndex = ID2INDEX(getCylinderId(i));
 
-	InjectorOutputPin *secondOutput;
+	InjectorOutputPin *secondOutput = nullptr;
 
 	if (mode == IM_BATCH) {
 		/**
@@ -140,10 +139,8 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 		// Each injector gets fired as a primary (the same as sequential), but also
 		// fires the injector 360 degrees later in the firing order.
 		int secondOrder = (i + (engineConfiguration->cylindersCount / 2)) % engineConfiguration->cylindersCount;
-		int secondIndex = getCylinderId(secondOrder) - 1;
+		int secondIndex = ID2INDEX(getCylinderId(secondOrder));
 		secondOutput = &enginePins.injectors[secondIndex];
-	} else {
-		secondOutput = nullptr;
 	}
 
 	ev->outputs[0] = &enginePins.injectors[injectorIndex];

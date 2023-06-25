@@ -98,15 +98,13 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	const int index = getIgnitionPinForIndex(event->cylinderIndex, ignitionMode);
 	const int coilIndex = ID2INDEX(getCylinderId(index));
 
-	IgnitionOutputPin *secondOutput;
+	IgnitionOutputPin *secondOutput = nullptr;
 
 	// If wasted spark, find the paired coil in addition to "main" output for this cylinder
 	if (ignitionMode == IM_WASTED_SPARK) {
 		int secondIndex = index + engineConfiguration->cylindersCount / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex));
 		secondOutput = &enginePins.coils[secondCoilIndex];
-	} else {
-		secondOutput = nullptr;
 	}
 
 	event->outputs[0] = &enginePins.coils[coilIndex];
