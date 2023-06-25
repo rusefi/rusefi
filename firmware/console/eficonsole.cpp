@@ -142,13 +142,6 @@ static void sayHello() {
 	chThdSleepMilliseconds(5);
 }
 
-void validateStack(const char*msg, ObdCode code, int desiredStackUnusedSize) {
-	int unusedStack = getCurrentRemainingStack();
-	if (unusedStack < desiredStackUnusedSize) {
-		warning(code, "Stack low on %s: %d", msg, unusedStack);
-	}
-}
-
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 int CountFreeStackSpace(const void* wabase) {
 	const uint8_t* stackBase = reinterpret_cast<const uint8_t*>(wabase);

@@ -32,4 +32,6 @@
  */
 EXTERNC int getRemainingStack(thread_t *otp);
 int CountFreeStackSpace(const void* wabase);
-void validateStack(const char*msg, ObdCode code, int stackUnusedSize);
+
+#define assertStackVoid(message, code, desiredAvailableStack) { if (getCurrentRemainingStack() < desiredAvailableStack) { firmwareError(code, "stack: %s", message); return; } }
+#define assertStack(message, code, desiredAvailableStack, result) { if (getCurrentRemainingStack() < desiredAvailableStack) { firmwareError(code, "stack: %s", message); return result; } }
