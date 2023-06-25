@@ -126,6 +126,7 @@ static bool hasInitTriggerEmulator = false;
 # if !EFI_UNIT_TEST
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
+    assertStackVoid("emulator", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);
 	if (engine->triggerCentral.directSelfStimulation) {
 		/**
 		 * this callback would invoke the input signal handlers directly

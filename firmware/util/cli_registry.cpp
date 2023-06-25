@@ -505,6 +505,7 @@ static int handleConsoleLineInternal(const char *commandLine, int lineLength) {
 void handleConsoleLine(char *line) {
 	if (line == NULL)
 		return; // error detected
+	assertStackVoid("console", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);
 
 	int lineLength = strlen(line);
 	if (lineLength > MAX_CMD_LINE_LENGTH) {

@@ -169,6 +169,7 @@ __attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*
  * See preCalculate which is invoked BOTH on start and configuration change
  */
 void incrementGlobalConfigurationVersion(const char * msg) {
+    assertStackVoid("increment", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);
     if (!hasRememberedConfiguration) {
         firmwareError(ObdCode::OBD_PCM_Processor_Fault, "too early to invoke incrementGlobalConfigurationVersion %s", msg);
     }
