@@ -11,10 +11,6 @@
 void setGmLs4() {
 	engineConfiguration->globalTriggerAngleOffset = 86;
 
-    // would not hurt just in case no cam
-	engineConfiguration->twoWireBatchInjection = true;
-
-
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 	engineConfiguration->injector.flow = 440;

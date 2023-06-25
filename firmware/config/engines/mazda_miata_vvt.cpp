@@ -416,8 +416,6 @@ void setMazdaMiata2003EngineConfiguration() {
 
 //	engineConfiguration->is_enabled_spi_1 = true;
 
-	engineConfiguration->twoWireBatchInjection = true; // this is needed for #492 testing
-
 	engineConfiguration->alternatorControlPin = Gpio::E10;
 	engineConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 

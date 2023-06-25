@@ -264,9 +264,6 @@ void setMiataNA6_MAP_MRE() {
 
 	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
 
-
-	engineConfiguration->twoWireBatchInjection = true;
-
 	engineConfiguration->useIacTableForCoasting = true;
 	engineConfiguration->idlePidDeactivationTpsThreshold = 90;
 

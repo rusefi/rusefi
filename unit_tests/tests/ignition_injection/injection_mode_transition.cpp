@@ -56,8 +56,6 @@ TEST(fuelControl, transitionIssue1592) {
 
 	// Test the transition from batch cranking to sequential running
 	engineConfiguration->crankingInjectionMode = IM_BATCH;
-	engineConfiguration->twoWireBatchInjection = true;
-
 
 	// First sync point will schedule cranking pulse since we're in "faster spin up" mode
 	doRevolution(eth, 240);

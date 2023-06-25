@@ -389,9 +389,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 #endif // EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		engineConfiguration->useStepperIdle = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
-		engineConfiguration->twoWireBatchInjection = isEnabled;
-		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "boardUseTempPullUp")) {
 		engineConfiguration->boardUseTempPullUp = isEnabled;
 		incrementGlobalConfigurationVersion();

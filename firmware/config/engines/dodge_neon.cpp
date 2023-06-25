@@ -46,10 +46,6 @@ void setDodgeNeon1995EngineConfiguration() {
 	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
-	// this is needed for injector lag auto-tune research if switching to batch
-	// enable two_wire_batch_injection
-	engineConfiguration->twoWireBatchInjection = true;
-
 	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	// set_firing_order 2
