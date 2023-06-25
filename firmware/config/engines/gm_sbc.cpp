@@ -61,7 +61,6 @@ void setSbc() {
 
     // see engine sniffer at https://github.com/rusefi/rusefi/issues/5353
     // if injectors are wired in groups of four best to use channels 1 and 4
-    engineConfiguration->twoWireBatchInjection = true;
     engineConfiguration->crankingInjectionMode = IM_BATCH;
     engineConfiguration->injectionMode = IM_BATCH;
 
