@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 24 01:06:11 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 25 04:27:10 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2493,10 +2493,8 @@ struct engine_configuration_s {
 	offset 1320 bit 11 */
 	bool isManualSpinningMode : 1 {};
 	/**
-	 * This is needed if your coils are individually wired and you wish to use batch injection.
-	 * enable two_wire_batch_injection
 	offset 1320 bit 12 */
-	bool twoWireBatchInjection : 1 {};
+	bool unused1200b12 : 1 {};
 	/**
 	offset 1320 bit 13 */
 	bool hondaK : 1 {};
@@ -5296,4 +5294,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 24 01:06:11 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 25 04:27:10 UTC 2023
