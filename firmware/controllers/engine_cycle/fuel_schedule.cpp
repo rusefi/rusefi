@@ -127,7 +127,8 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 	engine->outputChannels.currentInjectionMode = static_cast<uint8_t>(mode);
 
 	// Map order index -> cylinder index (firing order)
-	int injectorIndex = ID2INDEX(getCylinderId(i));
+	// Single point only uses injector 1 (index 0)
+	int injectorIndex = mode == IM_SINGLE_POINT ? 0 : ID2INDEX(getCylinderId(i));
 
 	InjectorOutputPin *secondOutput = nullptr;
 
