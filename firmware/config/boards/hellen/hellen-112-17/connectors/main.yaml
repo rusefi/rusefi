@@ -72,6 +72,9 @@ pins:
   - pin: 129
     function: A29 output
 
+  - pin: 131
+    function: A31 A/C output
+
   - pin: 132
     function: CAN bus high
     type: can
