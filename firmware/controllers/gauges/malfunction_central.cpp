@@ -30,6 +30,8 @@ void clearWarnings(void) {
 	error_codes_set.count = 0;
 }
 
+// TODO: wow this is not used by real firmware?!
+#if EFI_UNIT_TEST
 void addError(ObdCode errorCode) {
 	if (error_codes_set.count < MAX_ERROR_CODES_COUNT && find_position(errorCode) == -1) {
 		error_codes_set.error_codes[error_codes_set.count] = errorCode;
@@ -48,14 +50,7 @@ void removeError(ObdCode errorCode) {
 		error_codes_set.error_codes[--error_codes_set.count] = (ObdCode)0;				// place 0
 	}
 }
-
-void setError(bool isError, ObdCode errorCode) {
-	if (isError) {
-		addError(errorCode);
-	} else {
-		removeError(errorCode);
-	}
-}
+#endif // EFI_UNIT_TEST
 
 void getErrorCodes(error_codes_set_s * copy) {
 	copy->count = error_codes_set.count;

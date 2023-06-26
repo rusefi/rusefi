@@ -91,6 +91,7 @@ private:
 			chThdSleepMilliseconds(500);
 			enginePins.checkEnginePin.setValue(0);
 		}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 		static error_codes_set_s localErrorCopy;
 		// todo: why do I not see this on a real vehicle? is this whole blinking logic not used?
@@ -100,7 +101,6 @@ private:
 			int code = (int)localErrorCopy.error_codes[p];
 			DisplayErrorCode(DigitLength(code), code);
 		}
-#endif // EFI_SHAFT_POSITION_INPUT
 	}
 };
 
