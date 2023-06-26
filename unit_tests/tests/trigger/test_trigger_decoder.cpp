@@ -803,7 +803,6 @@ TEST(big, testTwoWireBatch) {
 	assertInjectionEventBatch("inj#3@", &t->elements[3],	1, 2, 0, 153 + 180);	// Cyl 2 and 3
 }
 
-
 TEST(big, testSequential) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
@@ -830,6 +829,62 @@ TEST(big, testSequential) {
 	assertInjectionEvent("#1_i_@", &t->elements[1],	2, 1, 126 + 540);	// Cyl 3
 	assertInjectionEvent("#2@", &t->elements[2],	3, 0, 126);	// Cyl 4
 	assertInjectionEvent("inj#3@", &t->elements[3],	1, 0, 126 + 180);	// Cyl 2
+}
+
+TEST(big, testBatch) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setTable(config->injectionPhase, -180.0f);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	engineConfiguration->injectionMode = IM_BATCH;
+
+	eth.fireTriggerEventsWithDuration(20);
+	// still no RPM since need to cycles measure cycle duration
+	eth.fireTriggerEventsWithDuration(20);
+	eth.executeActions();
+
+	/**
+	 * Trigger up - scheduling fuel for full engine cycle
+	 */
+	eth.fireRise(20);
+
+	FuelSchedule * t = &engine->injectionEvents;
+
+	assertInjectionEventBatch("#0",		&t->elements[0], 0, 3, 1, 153 + 360);	// Cyl 1 + 4
+	assertInjectionEventBatch("#1_i_@",	&t->elements[1], 2, 1, 1, 153 + 540);	// Cyl 3 + 2
+	assertInjectionEventBatch("#2@",	&t->elements[2], 3, 0, 0, 153);			// Cyl 4 + 1
+	assertInjectionEventBatch("inj#3@",	&t->elements[3], 1, 2, 0, 153 + 180);	// Cyl 2 + 3
+}
+
+TEST(big, testSinglePoint) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setTable(config->injectionPhase, -180.0f);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	engineConfiguration->injectionMode = IM_SINGLE_POINT;
+
+	eth.fireTriggerEventsWithDuration(20);
+	// still no RPM since need to cycles measure cycle duration
+	eth.fireTriggerEventsWithDuration(20);
+	eth.executeActions();
+
+	/**
+	 * Trigger up - scheduling fuel for full engine cycle
+	 */
+	eth.fireRise(20);
+
+	FuelSchedule * t = &engine->injectionEvents;
+
+	assertInjectionEvent("#0",		&t->elements[0], 0, 1, 126 + 360);	// Cyl 1
+	assertInjectionEvent("#1_i_@",	&t->elements[1], 0, 1, 126 + 540);	// Cyl 3
+	assertInjectionEvent("#2@",		&t->elements[2], 0, 0, 126);		// Cyl 4
+	assertInjectionEvent("inj#3@",	&t->elements[3], 0, 0, 126 + 180);	// Cyl 2
 }
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
