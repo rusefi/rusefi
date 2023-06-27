@@ -20,6 +20,9 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D15: return "Tacho";
 		case Gpio::D3: return "Aux P66";
 		case Gpio::D9: return "VVT1";
+		case Gpio::E12: return "X9 Digital1";
+		case Gpio::E13: return "X7 Digital2";
+		case Gpio::E14: return "X4 Digital3";
 		case Gpio::E3: return "Coil 4";
 		case Gpio::E4: return "Coil 3";
 		case Gpio::E5: return "Coil 2";
@@ -27,7 +30,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F11: return "K40 VSS";
 		case Gpio::F12: return "VVT2";
 		case Gpio::F13: return "K47 BK1 Wastegate Solenoid";
-		case Gpio::F14: return "K48 LS1";
+		case Gpio::F14: return "X8 AuxLS1";
 		case Gpio::F4: return "Crank - K17 rev C";
 		case Gpio::F5: return "Cam - K62 rev C";
 		case Gpio::F8: return "A29 Brake Input";
