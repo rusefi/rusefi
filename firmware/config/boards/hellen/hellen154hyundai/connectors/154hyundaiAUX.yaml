@@ -44,7 +44,7 @@ pins:
     id: F14
     class: outputs
     ts_name: X8 AuxLS1
-    function: AuxLS1
+    function: AuxLS1, also K48 on main connector
 
   - pin: X9
     # H144_IN_D_1
