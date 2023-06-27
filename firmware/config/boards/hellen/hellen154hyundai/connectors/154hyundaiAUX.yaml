@@ -33,6 +33,12 @@ pins:
   - pin: X6
     function: 12v raw
 
+  - pin: X7
+    # H144_IN_D_2
+    id: E13
+    class: switch_inputs
+    ts_name: X7 Digital2
+
   - pin: X8
     # H144_LS_8
     id: F14
@@ -47,16 +53,10 @@ pins:
     ts_name: X9 Digital1
 
   - pin: X10
-    # H144_IN_D_2
-    id: E13
-    class: switch_inputs
-    ts_name: X10 Digital2
-
-  - pin: X10
     # H144_IN_CAM_ANALOG
     id: EFI_ADC_6
     class: analog_inputs
-    ts_name: X10 AIN1
+    ts_name: X10 AIN2
 
   - pin: X11
     # H144_IN_CRANK_ANALOG
