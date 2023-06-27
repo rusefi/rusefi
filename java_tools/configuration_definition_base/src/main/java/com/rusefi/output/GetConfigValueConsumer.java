@@ -39,7 +39,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             "float getConfigValueByName(const char *name) {\n";
 
     static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
-    private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
+    private static final String SET_METHOD_HEADER = "bool setConfigValueByName(const char *name, float value) {\n";
     private static final String SET_METHOD_FOOTER = "}\n";
     private final List<VariableRecord> variables = new ArrayList<>();
     private final String outputFileName;
@@ -110,7 +110,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     private String getAssignment(String cast, String value) {
         return "\t{\n" + "\t\t" + value + " = " + cast +
                 "value;\n" +
-                "\t\treturn;\n\t}\n";
+                "\t\treturn 1;\n\t}\n";
     }
 
     @NotNull
@@ -163,6 +163,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
                 setterBody.append(str);
             }
         }
+        switchBody.append("return 0;\n");
 
         String fullSwitch = GetOutputValueConsumer.wrapSwitchStatement(switchBody);
 
