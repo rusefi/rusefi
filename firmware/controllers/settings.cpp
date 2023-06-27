@@ -915,6 +915,12 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		// rusEfi console invokes this method with timestamp in local timezone
 		setDateTime(valueStr);
 	}
+
+	bool isGoodName = setConfigValueByName(paramStr, valueF);
+    if (isGoodName) {
+       efiPrintf("Settings: applying [%s][%f]", paramStr, valueF);
+    }
+
 	engine->resetEngineSnifferIfInTestMode();
 }
 
@@ -947,8 +953,8 @@ void initSettings(void) {
 	addConsoleActionS(CMD_ENABLE, enable);
 	addConsoleActionS(CMD_DISABLE, disable);
 
-	addConsoleActionSS("set", setValue);
-	addConsoleActionS("get", getValue);
+	addConsoleActionSS(CMD_SET, setValue);
+	addConsoleActionS(CMD_GET, getValue);
 
 #if EFI_PROD_CODE
 	addConsoleActionS("showpin", showPinFunction);

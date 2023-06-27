@@ -163,11 +163,10 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
                 setterBody.append(str);
             }
         }
-        switchBody.append("return 0;\n");
 
         String fullSwitch = GetOutputValueConsumer.wrapSwitchStatement(switchBody);
 
-        return fullSwitch + setterBody;
+        return fullSwitch + "\treturn 0;\n" + setterBody;
     }
 
     public String getContent() {

@@ -4282,6 +4282,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->lambdaProtectionTimeout = (int)value;
 		return 1;
 	}
-return 0;
 	}
+    return 0;
 }

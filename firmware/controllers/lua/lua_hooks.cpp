@@ -842,7 +842,12 @@ void configureRusefiLuaHooks(lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
 		auto value = luaL_checknumber(l, 2);
 		auto incrementVersion = lua_toboolean(l, 3);
-		setConfigValueByName(propertyName, value);
+		bool isGoodName = setConfigValueByName(propertyName, value);
+		if (isGoodName) {
+		    efiPrintf("LUA: applying [%s][%f]", propertyName, value);
+		} else {
+		    efiPrintf("LUA: invalid calibration key [%s]", propertyName);
+		}
 		if (incrementVersion) {
 			incrementGlobalConfigurationVersion("lua");
 		}
