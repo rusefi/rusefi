@@ -17,8 +17,53 @@ pins:
     ts_name: X3 AuxLS2
     function: AuxLS2
 
+  - pin: X4
+    # H144_IN_D_3
+    id: E14
+    class: switch_inputs
+    ts_name: X4 Digital3
+
+#  - pin: X5
+#    # H144_IN_VSS
+#    id:
+#    class: analog_inputs
+#    ts_name: X5 AIN3
+#    function: NOT POPULATED BY DEFAULT, SHARED WITH A/C PRESSURE
+
   - pin: X6
     function: 12v raw
+
+  - pin: X8
+    # H144_LS_8
+    id: F14
+    class: outputs
+    ts_name: X8 AuxLS1
+    function: AuxLS1
+
+  - pin: X9
+    # H144_IN_D_1
+    id: E12
+    class: switch_inputs
+    ts_name: X9 Digital1
+
+  - pin: X10
+    # H144_IN_D_2
+    id: E13
+    class: switch_inputs
+    ts_name: X10 Digital2
+
+  - pin: X10
+    # H144_IN_CAM_ANALOG
+    id: EFI_ADC_6
+    class: analog_inputs
+    ts_name: X10 AIN1
+
+  - pin: X11
+    # H144_IN_CRANK_ANALOG
+    id: EFI_ADC_9
+    class: analog_inputs
+    ts_name: X11 AIN1
+
 
   - pin: X12
     function: 5v
