@@ -19,6 +19,7 @@
 #include "uart.h"
 #include "can.h"
 #include "spi.h"
+#include "persistence.h"
 
 #define BL_PORT GPIOC
 #define BL_PIN 13
@@ -62,6 +63,7 @@ int main(void) {
    */
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
 
+  InitConfiguration();
   InitUart();
   InitCan();
   InitSpi();
