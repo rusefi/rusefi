@@ -46,6 +46,7 @@ else
   # standalone images (for use with no bootloader)
   cp build/rusefi.bin  deliver/
   cp build/rusefi.dfu  deliver/
+  cp build/rusefi.hex  deliver/
 fi
 
 # bootloader and composite image
