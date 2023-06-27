@@ -267,7 +267,7 @@ static void mainRelayBench(void) {
 }
 
 static void hpfpValveBench(void) {
-	pinbench(/*startdelay*/0, 20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
+	pinbench(/*startdelay*/0, engineConfiguration->benchTestOnTime, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
 		&enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
 }
 
