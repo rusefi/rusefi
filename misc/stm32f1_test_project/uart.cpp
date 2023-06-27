@@ -28,14 +28,13 @@ static const UARTConfig uartCfg =
 static char printBuffer[200];
 
 extern TestConfiguration configuration;
+extern mfs_error_t flashState;
 
 static THD_WORKING_AREA(waUartThread, 256);
 static void UartThread(void*)
 {
-    while(true)
-    {
-
-        size_t writeCount = chsnprintf(printBuffer, 200, "%d.%03d\t%d\t%d\r\n", 0, 0, configuration.version, 100);
+    while (true) {
+        size_t writeCount = chsnprintf(printBuffer, 200, "%d.%03d\t%d\t%d\r\n", 0, (int)flashState, configuration.updateCounter, 100);
         uartStartSend(&UARTD1, writeCount, printBuffer);
 
         pokeConfiguration();

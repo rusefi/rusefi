@@ -49,28 +49,29 @@ static size_t GetConfigurationSize() {
     return sizeof(TestConfiguration);
 }
 
+mfs_error_t flashState;
+
 int InitConfiguration() {
-    size_t size = GetConfigurationSize();
 
     /* Starting EFL driver.*/
     eflStart(&EFLD1, NULL);
 
     mfsObjectInit(&mfs1);
-    mfs_error_t err;
 
 #define FLASH_SIZE_IN_K_ADDRESS     0x1FFFF7E0
     int flashSize = (*(uint16_t*)FLASH_SIZE_IN_K_ADDRESS);
     if (flashSize > 128) {
-        err = mfsStart(&mfs1, &mfscfg_1k);
+        flashState = mfsStart(&mfs1, &mfscfg_1k);
     } else {
-        err = mfsStart(&mfs1, &mfscfg_2k);
+        flashState = mfsStart(&mfs1, &mfscfg_2k);
     }
-    if (err != MFS_NO_ERROR) {
+    if (flashState != MFS_NO_ERROR) {
         return -1;
     }
 
-    err = mfsReadRecord(&mfs1, MFS_CONFIGURATION_RECORD_ID, &size, GetConfigurationPtr());
-    if ((err != MFS_NO_ERROR) || (size != GetConfigurationSize() || !configuration.IsValid())) {
+    size_t size = GetConfigurationSize();
+    flashState = mfsReadRecord(&mfs1, MFS_CONFIGURATION_RECORD_ID, &size, GetConfigurationPtr());
+    if ((flashState != MFS_NO_ERROR) || size != GetConfigurationSize() || !configuration.IsValid()) {
         /* load defaults */
         configuration.resetToDefaults();
     }
@@ -79,6 +80,6 @@ int InitConfiguration() {
 }
 
 void pokeConfiguration() {
-    configuration.version++;
-//    mfsWriteRecord(&mfs1, MFS_CONFIGURATION_RECORD_ID, GetConfigurationSize(), GetConfigurationPtr());
+    configuration.updateCounter++;
+    flashState = mfsWriteRecord(&mfs1, MFS_CONFIGURATION_RECORD_ID, GetConfigurationSize(), GetConfigurationPtr());
 }
