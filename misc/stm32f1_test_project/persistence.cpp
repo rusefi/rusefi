@@ -4,6 +4,7 @@
 static const MFSConfig mfscfg_1k = {
   .flashp           = (BaseFlash *)&EFLD1,
   .erased           = 0xFFFFFFFFU,
+// 1k page * 1 sector = 1024
   .bank_size        = 1024U,
   .bank0_start      = 62U,
   .bank0_sectors    = 1U,
@@ -17,6 +18,7 @@ static const MFSConfig mfscfg_2k = {
     /* 256K flash device with 2K pages
      * use last 8 pages for settings
      * one bank is 8K */
+// 2k page * 4 sectors = 8096
     .bank_size        = 8096U,
     .bank0_start      = 120U,
     .bank0_sectors    = 4U,
