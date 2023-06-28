@@ -2,31 +2,18 @@
 #include "persistence.h"
 
 static const MFSConfig mfscfg_1k = {
-    .flashp           = (BaseFlash *)&EFLD1,
-    .erased           = 0xFFFFFFFFU,
-    /* 128K flash device with 1K pages
-     * use last 8 pages for settings
-     * one bank is 4K */
-    .bank_size        = 4096U,
-    .bank0_start      = 120U,
-    .bank0_sectors    = 4U,
-    .bank1_start      = 124U,
-    .bank1_sectors    = 4U
-#ifdef STM32F103xE
-    /* 256K flash device with 2K pages
-     * use last 8 pages for settings
-     * one bank is 8K */
-    .bank_size        = 8096U,
-    .bank0_start      = 120U,
-    .bank0_sectors    = 4U,
-    .bank1_start      = 124U,
-    .bank1_sectors    = 4U
-#endif
+  .flashp           = (BaseFlash *)&EFLD1,
+  .erased           = 0xF1F2F3F4U,
+  .bank_size        = 1024U,
+  .bank0_start      = 62U,
+  .bank0_sectors    = 1U,
+  .bank1_start      = 63U,
+  .bank1_sectors    = 1U
 };
 
 static const MFSConfig mfscfg_2k = {
     .flashp           = (BaseFlash *)&EFLD1,
-    .erased           = 0xFFFFFFFFU,
+    .erased           = 0xF2F3F4F5U,
     /* 256K flash device with 2K pages
      * use last 8 pages for settings
      * one bank is 8K */
