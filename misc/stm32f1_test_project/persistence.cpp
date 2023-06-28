@@ -74,6 +74,8 @@ int InitConfiguration() {
     if ((flashState != MFS_NO_ERROR) || size != GetConfigurationSize() || !configuration.IsValid()) {
         /* load defaults */
         configuration.resetToDefaults();
+    } else {
+        configuration.rebootCounter++;
     }
 
     return 0;

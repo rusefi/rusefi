@@ -34,7 +34,7 @@ static THD_WORKING_AREA(waUartThread, 256);
 static void UartThread(void*)
 {
     while (true) {
-        size_t writeCount = chsnprintf(printBuffer, 200, "%d.%03d\t%d\t%d\r\n", 0, (int)flashState, configuration.updateCounter, 100);
+        size_t writeCount = chsnprintf(printBuffer, 200, "%d.%03d\twrites=%d\treboots=%d\r\n", 0, (int)flashState, configuration.updateCounter, configuration.rebootCounter);
         uartStartSend(&UARTD1, writeCount, printBuffer);
 
         pokeConfiguration();

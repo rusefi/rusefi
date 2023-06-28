@@ -9,7 +9,8 @@
 struct TestConfiguration {
     void resetToDefaults() {
         version = PERSISTENCE_VERSION;
-        updateCounter = 20;
+        updateCounter = 100;
+        rebootCounter = 0;
     }
     bool IsValid() const {
         return version == PERSISTENCE_VERSION;
@@ -17,6 +18,7 @@ struct TestConfiguration {
 
     int version;
     int updateCounter;
+    int rebootCounter;
 };
 
 int InitConfiguration();
