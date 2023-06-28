@@ -36,6 +36,10 @@ static size_t GetConfigurationSize() {
     return sizeof(TestConfiguration);
 }
 
+static bool isMfsOkIsh(mfs_error_t state) {
+    return state == MFS_NO_ERROR || state == MFS_WARN_REPAIR || state == MFS_WARN_GC;
+}
+
 mfs_error_t flashState;
 
 int InitConfiguration() {
@@ -52,13 +56,10 @@ int InitConfiguration() {
     } else {
         flashState = mfsStart(&mfs1, &mfscfg_2k);
     }
-    if (flashState != MFS_NO_ERROR) {
-        return -1;
-    }
 
     size_t size = GetConfigurationSize();
     flashState = mfsReadRecord(&mfs1, MFS_CONFIGURATION_RECORD_ID, &size, GetConfigurationPtr());
-    if ((flashState != MFS_NO_ERROR) || size != GetConfigurationSize() || !configuration.IsValid()) {
+    if (!isMfsOkIsh(flashState) || size != GetConfigurationSize() || !configuration.IsValid()) {
         /* load defaults */
         configuration.resetToDefaults();
     } else {
