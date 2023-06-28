@@ -54,9 +54,9 @@ int InitConfiguration() {
 #define FLASH_SIZE_IN_K_ADDRESS     0x1FFFF7E0
     int flashSize = (*(uint16_t*)FLASH_SIZE_IN_K_ADDRESS);
     if (flashSize > 128) {
-        flashState = mfsStart(&mfs1, &mfscfg_1k);
-    } else {
         flashState = mfsStart(&mfs1, &mfscfg_2k);
+    } else {
+        flashState = mfsStart(&mfs1, &mfscfg_1k);
     }
 
     size_t size = GetConfigurationSize();
