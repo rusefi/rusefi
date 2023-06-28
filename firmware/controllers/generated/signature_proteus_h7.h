@@ -1,2 +1,2 @@
 #define SIGNATURE_HASH 3054652317
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.06.26.proteus_h7.3054652317"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.06.29.proteus_h7.3054652317"
