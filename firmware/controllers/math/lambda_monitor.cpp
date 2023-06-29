@@ -87,7 +87,17 @@ bool LambdaMonitorBase::isCurrentlyGood(float rpm, float load) const {
 }
 
 bool LambdaMonitorBase::restoreConditionsMet(float rpm, float load) const {
-	// TODO #75
+	if (rpm > engineConfiguration->lambdaProtectionRestoreRpm) {
+		return false;
+	}
+
+	if (load > engineConfiguration->lambdaProtectionRestoreLoad) {
+		return false;
+	}
+
+	if (Sensor::getOrZero(SensorType::Tps1) > engineConfiguration->lambdaProtectionRestoreTps) {
+		return false;
+	}
 
 	return true;
 }
