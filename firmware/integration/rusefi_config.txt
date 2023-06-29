@@ -688,7 +688,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 	uint16_t autoscale fordInjectorSmallPulseSlope;;"g/s", 0.001, 0, 0, 65, 3
 
 	uint8_t autoscale lambdaProtectionMinRpm;;"RPM", 100, 0, 0, 25000, 0
-	uint8_t autoscale lambdaProtectionMinLoad;;"", 10, 0, 0, 1000, 0
+	uint8_t autoscale lambdaProtectionMinLoad;;"%", 10, 0, 0, 1000, 0
 
 bit is_enabled_spi_1
 bit is_enabled_spi_2
@@ -776,10 +776,10 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	int16_t antiLagRpmTreshold;;"rpm", 1, 0, 0, 20000, 0
 	uint16_t startCrankingDuration;Maximum time to crank starter when start/stop button is pressed;"Seconds", 1, 0, 0, 30, 0
 
-	uint8_t autoscale lambdaProtectionMinTps;;"", 1, 0, 0, 100, 0
+	uint8_t autoscale lambdaProtectionMinTps;;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale lambdaProtectionTimeout;Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed;"s", 0.1, 0, 0, 10, 1
 
-	uint8_t unused748
+	uint8_t autoscale lambdaProtectionRestoreRpm;;"RPM", 100, 0, 25000, 0
 
 	pin_output_mode_e acRelayPinMode;
 	output_pin_e acRelayPin;
@@ -1129,7 +1129,10 @@ int16_t tps2Max;;"ADC", 1, 0, 0, 1023, 0
 	bit can2OpenBLT; Allow OpenBLT on Secondary CAN
 	bit injectorFlowAsMassFlow,"mass flow","volumetric flow";Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
 	uint8_t autoscale benchTestOffTime;Time between bench test pulses;"ms", 5, 0, 0, 2000, 1
-	uint8_t[2] unused1445
+
+	uint8_t autoscale lambdaProtectionRestoreTps;;"%", 1, 0, 0, 100, 0
+	uint8_t autoscale lambdaProtectionRestoreLoad;;"%", 10, 0, 0, 1000, 0
+
 	pin_input_mode_e launchActivatePinMode;
 	Gpio can2TxPin;set_can2_tx_pin X
 	Gpio can2RxPin;set_can2_rx_pin X
