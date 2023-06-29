@@ -373,6 +373,12 @@ float getConfigValueByName(const char *name) {
 // fordInjectorSmallPulseSlope
 		case -1465119085:
 			return engineConfiguration->fordInjectorSmallPulseSlope;
+// lambdaProtectionMinRpm
+		case 1758659040:
+			return engineConfiguration->lambdaProtectionMinRpm;
+// lambdaProtectionMinLoad
+		case -2094010831:
+			return engineConfiguration->lambdaProtectionMinLoad;
 // is_enabled_spi_1
 		case -722238362:
 			return engineConfiguration->is_enabled_spi_1;
@@ -514,6 +520,15 @@ float getConfigValueByName(const char *name) {
 // startCrankingDuration
 		case 644409862:
 			return engineConfiguration->startCrankingDuration;
+// lambdaProtectionMinTps
+		case 1758661224:
+			return engineConfiguration->lambdaProtectionMinTps;
+// lambdaProtectionTimeout
+		case -1645106444:
+			return engineConfiguration->lambdaProtectionTimeout;
+// lambdaProtectionRestoreRpm
+		case 872435040:
+			return engineConfiguration->lambdaProtectionRestoreRpm;
 // clutchUpPinInverted
 		case -1171325035:
 			return engineConfiguration->clutchUpPinInverted;
@@ -1102,6 +1117,12 @@ float getConfigValueByName(const char *name) {
 // benchTestOnTime
 		case -1992436143:
 			return engineConfiguration->benchTestOnTime;
+// lambdaProtectionRestoreTps
+		case 872437224:
+			return engineConfiguration->lambdaProtectionRestoreTps;
+// lambdaProtectionRestoreLoad
+		case -1274631759:
+			return engineConfiguration->lambdaProtectionRestoreLoad;
 // boostCutPressure
 		case -1992945039:
 			return engineConfiguration->boostCutPressure;
@@ -1594,18 +1615,6 @@ float getConfigValueByName(const char *name) {
 // iacByTpsDecayTime
 		case 1742748825:
 			return engineConfiguration->iacByTpsDecayTime;
-// lambdaProtectionMinRpm
-		case 1758659040:
-			return engineConfiguration->lambdaProtectionMinRpm;
-// lambdaProtectionMinLoad
-		case -2094010831:
-			return engineConfiguration->lambdaProtectionMinLoad;
-// lambdaProtectionMinTps
-		case 1758661224:
-			return engineConfiguration->lambdaProtectionMinTps;
-// lambdaProtectionTimeout
-		case -1645106444:
-			return engineConfiguration->lambdaProtectionTimeout;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -2227,6 +2236,16 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->fordInjectorSmallPulseSlope = (int)value;
 		return 1;
 	}
+		case 1758659040:
+	{
+		engineConfiguration->lambdaProtectionMinRpm = (int)value;
+		return 1;
+	}
+		case -2094010831:
+	{
+		engineConfiguration->lambdaProtectionMinLoad = (int)value;
+		return 1;
+	}
 		case -722238362:
 	{
 		engineConfiguration->is_enabled_spi_1 = (int)value;
@@ -2460,6 +2479,21 @@ bool setConfigValueByName(const char *name, float value) {
 		case 644409862:
 	{
 		engineConfiguration->startCrankingDuration = (int)value;
+		return 1;
+	}
+		case 1758661224:
+	{
+		engineConfiguration->lambdaProtectionMinTps = (int)value;
+		return 1;
+	}
+		case -1645106444:
+	{
+		engineConfiguration->lambdaProtectionTimeout = (int)value;
+		return 1;
+	}
+		case 872435040:
+	{
+		engineConfiguration->lambdaProtectionRestoreRpm = (int)value;
 		return 1;
 	}
 		case -1171325035:
@@ -3442,6 +3476,16 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->benchTestOnTime = (int)value;
 		return 1;
 	}
+		case 872437224:
+	{
+		engineConfiguration->lambdaProtectionRestoreTps = (int)value;
+		return 1;
+	}
+		case -1274631759:
+	{
+		engineConfiguration->lambdaProtectionRestoreLoad = (int)value;
+		return 1;
+	}
 		case -1992945039:
 	{
 		engineConfiguration->boostCutPressure = value;
@@ -4260,26 +4304,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1742748825:
 	{
 		engineConfiguration->iacByTpsDecayTime = (int)value;
-		return 1;
-	}
-		case 1758659040:
-	{
-		engineConfiguration->lambdaProtectionMinRpm = (int)value;
-		return 1;
-	}
-		case -2094010831:
-	{
-		engineConfiguration->lambdaProtectionMinLoad = (int)value;
-		return 1;
-	}
-		case 1758661224:
-	{
-		engineConfiguration->lambdaProtectionMinTps = (int)value;
-		return 1;
-	}
-		case -1645106444:
-	{
-		engineConfiguration->lambdaProtectionTimeout = (int)value;
 		return 1;
 	}
 	}

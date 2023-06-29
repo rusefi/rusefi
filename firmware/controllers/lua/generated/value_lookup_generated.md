@@ -367,6 +367,12 @@ Just for reference really, not taken into account by any logic at this point
 ### fordInjectorSmallPulseSlope
 
 
+### lambdaProtectionMinRpm
+
+
+### lambdaProtectionMinLoad
+
+
 ### is_enabled_spi_1
 
 
@@ -507,6 +513,15 @@ Below this throttle position, the engine is considered idling. If you have an el
 
 ### startCrankingDuration
 Maximum time to crank starter when start/stop button is pressed
+
+### lambdaProtectionMinTps
+
+
+### lambdaProtectionTimeout
+Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
+
+### lambdaProtectionRestoreRpm
+
 
 ### clutchUpPinInverted
 
@@ -1096,6 +1111,12 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 ### benchTestOnTime
 Duration of each test pulse
 
+### lambdaProtectionRestoreTps
+
+
+### lambdaProtectionRestoreLoad
+
+
 ### boostCutPressure
 MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.
 
@@ -1587,16 +1608,4 @@ How long initial IAC adder is held before starting to decay.
 
 ### iacByTpsDecayTime
 How long it takes to remove initial IAC adder to return to normal idle.
-
-### lambdaProtectionMinRpm
-
-
-### lambdaProtectionMinLoad
-
-
-### lambdaProtectionMinTps
-
-
-### lambdaProtectionTimeout
-Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 
