@@ -3455,8 +3455,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "and after delay", lambdaProtectionTimeout { lambdaProtectionEnable }
 		field = "Then cut fuel until:"
 		field = "Load less than", lambdaProtectionRestoreLoad, { lambdaProtectionEnable }
-		field = "TPS less than", lambdaProtectionRestoreRpm, { lambdaProtectionEnable }
-		field = "RPM less than", lambdaProtectionRestoreRpm, { lambdaProtectionEnable }
+		field = "and TPS less than", lambdaProtectionRestoreTps, { lambdaProtectionEnable }
+		field = "and RPM less than", lambdaProtectionRestoreRpm, { lambdaProtectionEnable }
 
 	dialog = lambdaProtectionRight, "Lambda Difference Table"
 		panel = lambdaMaxDeviationTableTbl
