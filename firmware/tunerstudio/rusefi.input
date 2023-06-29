@@ -232,7 +232,7 @@ enable2ndByteCanID = false
 	ignModeList = bits, U08, [0:3], "Single Coil", "Sequential", "Wasted", "Two Coils"
 
 ; ClearReason
-	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off", "Lua"
+	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off", "Lua", "ACR", "Lambda Prot"
 
 ; TpsState
 	etbCutCodeList = bits, U08, [0:7], "None", "engine stopped", "TPS error", "PPS error", "TPS noise", "PID noise", "Lua", "Manual", "N/A", "Redundancy", "PPS noise"
@@ -3243,7 +3243,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "No2 Direction #1",						stepperDcIo2_directionPin1
 		field = "No2 Direction #2",						stepperDcIo2_directionPin2
 		field = "No2 Disable",							stepperDcIo2_disablePin
-	
+
 	dialog = stepperHbridgeHardware, "Stepper H-Bridge Hardware"
 		topicHelp = "stepperHbridgeHardwareHelp"
 		field = "Inverted driver pins",					stepperDcInvertedPins
