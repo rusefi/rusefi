@@ -185,7 +185,7 @@ public class IniFileModel {
                     break;
             }
         } catch (RuntimeException e) {
-            throw new IllegalStateException("While [" + rawText + "]", e);
+            throw new IllegalStateException("Failed to handle [" + rawText + "]: " + e, e);
         }
     }
 
