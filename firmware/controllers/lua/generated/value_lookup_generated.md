@@ -490,6 +490,9 @@ Maximum time to crank starter when start/stop button is pressed
 ### lambdaProtectionTimeout
 Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 
+### lambdaProtectionRestoreRpm
+
+
 ### clutchUpPinInverted
 
 
@@ -1050,6 +1053,12 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 
 ### benchTestOffTime
 Time between bench test pulses
+
+### lambdaProtectionRestoreTps
+
+
+### lambdaProtectionRestoreLoad
+
 
 ### boostCutPressure
 MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.

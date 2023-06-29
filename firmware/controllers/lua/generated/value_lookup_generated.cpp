@@ -331,6 +331,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->lambdaProtectionMinTps;
 		case -1645106444:
 			return engineConfiguration->lambdaProtectionTimeout;
+		case 872435040:
+			return engineConfiguration->lambdaProtectionRestoreRpm;
 		case -1171325035:
 			return engineConfiguration->clutchUpPinInverted;
 		case -675074552:
@@ -705,6 +707,10 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->injectorFlowAsMassFlow;
 		case -1655178001:
 			return engineConfiguration->benchTestOffTime;
+		case 872437224:
+			return engineConfiguration->lambdaProtectionRestoreTps;
+		case -1274631759:
+			return engineConfiguration->lambdaProtectionRestoreLoad;
 		case -1992945039:
 			return engineConfiguration->boostCutPressure;
 		case -1359134883:
@@ -1817,6 +1823,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->lambdaProtectionTimeout = (int)value;
 		return;
 	}
+		case 872435040:
+	{
+		engineConfiguration->lambdaProtectionRestoreRpm = (int)value;
+		return;
+	}
 		case -1171325035:
 	{
 		engineConfiguration->clutchUpPinInverted = (int)value;
@@ -2750,6 +2761,16 @@ void setConfigValueByName(const char *name, float value) {
 		case -1655178001:
 	{
 		engineConfiguration->benchTestOffTime = (int)value;
+		return;
+	}
+		case 872437224:
+	{
+		engineConfiguration->lambdaProtectionRestoreTps = (int)value;
+		return;
+	}
+		case -1274631759:
+	{
+		engineConfiguration->lambdaProtectionRestoreLoad = (int)value;
 		return;
 	}
 		case -1992945039:

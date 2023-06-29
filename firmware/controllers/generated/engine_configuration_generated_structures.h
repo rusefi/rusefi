@@ -1135,6 +1135,7 @@ struct engine_configuration_s {
 	// offset 642
 	scaled_channel<uint8_t, 1, 100> lambdaProtectionMinRpm;
 
+	// %
 	// offset 643
 	scaled_channel<uint8_t, 1, 10> lambdaProtectionMinLoad;
 
@@ -1393,6 +1394,7 @@ struct engine_configuration_s {
 	// offset 746
 	uint16_t startCrankingDuration;
 
+	// %
 	// offset 748
 	scaled_channel<uint8_t, 1, 1> lambdaProtectionMinTps;
 
@@ -1401,8 +1403,9 @@ struct engine_configuration_s {
 	// offset 749
 	scaled_channel<uint8_t, 10, 1> lambdaProtectionTimeout;
 
+	// RPM
 	// offset 750
-	uint8_t unused748;
+	scaled_channel<uint8_t, 1, 100> lambdaProtectionRestoreRpm;
 
 	// offset 751
 	pin_output_mode_e acRelayPinMode;
@@ -2329,8 +2332,13 @@ struct engine_configuration_s {
 	// offset 1440
 	scaled_channel<uint8_t, 1, 5> benchTestOffTime;
 
+	// %
 	// offset 1441
-	uint8_t unused1445[2];
+	scaled_channel<uint8_t, 1, 1> lambdaProtectionRestoreTps;
+
+	// %
+	// offset 1442
+	scaled_channel<uint8_t, 1, 10> lambdaProtectionRestoreLoad;
 
 	// offset 1443
 	pin_input_mode_e launchActivatePinMode;

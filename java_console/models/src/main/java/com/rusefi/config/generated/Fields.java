@@ -979,7 +979,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 746728726;
+	public static final int SIGNATURE_HASH = 301420220;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1182,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.29.f407-discovery.746728726";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.06.29.f407-discovery.301420220";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1372;
@@ -1562,7 +1562,7 @@ public class Fields {
 	public static final Field STARTCRANKINGDURATION = Field.create("STARTCRANKINGDURATION", 746, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field LAMBDAPROTECTIONMINTPS = Field.create("LAMBDAPROTECTIONMINTPS", 748, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field LAMBDAPROTECTIONTIMEOUT = Field.create("LAMBDAPROTECTIONTIMEOUT", 749, FieldType.INT8).setScale(0.1).setBaseOffset(0);
-	public static final Field UNUSED748 = Field.create("UNUSED748", 750, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONRESTORERPM = Field.create("LAMBDAPROTECTIONRESTORERPM", 750, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field ACRELAYPINMODE = Field.create("ACRELAYPINMODE", 751, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 752, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final String[] maf_sensor_type_e = {"v0", "v1", "v2", "v3"};
@@ -1883,7 +1883,8 @@ public class Fields {
 	public static final Field CAN2OPENBLT = Field.create("CAN2OPENBLT", 1436, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field INJECTORFLOWASMASSFLOW = Field.create("INJECTORFLOWASMASSFLOW", 1436, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field BENCHTESTOFFTIME = Field.create("BENCHTESTOFFTIME", 1440, FieldType.INT8).setScale(5.0).setBaseOffset(0);
-	public static final Field UNUSED1445 = Field.create("UNUSED1445", 1441, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONRESTORETPS = Field.create("LAMBDAPROTECTIONRESTORETPS", 1441, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONRESTORELOAD = Field.create("LAMBDAPROTECTIONRESTORELOAD", 1442, FieldType.INT8).setScale(10.0).setBaseOffset(0);
 	public static final Field LAUNCHACTIVATEPINMODE = Field.create("LAUNCHACTIVATEPINMODE", 1443, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field CAN2TXPIN = Field.create("CAN2TXPIN", 1444, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 1446, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -2927,7 +2928,7 @@ public class Fields {
 	STARTCRANKINGDURATION,
 	LAMBDAPROTECTIONMINTPS,
 	LAMBDAPROTECTIONTIMEOUT,
-	UNUSED748,
+	LAMBDAPROTECTIONRESTORERPM,
 	ACRELAYPINMODE,
 	ACRELAYPIN,
 	MAFSENSORTYPE,
@@ -3241,7 +3242,8 @@ public class Fields {
 	CAN2OPENBLT,
 	INJECTORFLOWASMASSFLOW,
 	BENCHTESTOFFTIME,
-	UNUSED1445,
+	LAMBDAPROTECTIONRESTORETPS,
+	LAMBDAPROTECTIONRESTORELOAD,
 	LAUNCHACTIVATEPINMODE,
 	CAN2TXPIN,
 	CAN2RXPIN,
