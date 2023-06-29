@@ -16,7 +16,14 @@
 #define EFI_EMBED_INI_MSD FALSE
 #endif
 
+#ifndef ENABLE_PERF_TRACE
+#define ENABLE_PERF_TRACE TRUE
+#endif
+
+// note order of include - first we set F7 defaults (above) and only later we apply F4 defaults
 #include "../stm32f4ems/efifeatures.h"
+
+// todo: get rid of the 'undef' patter just move all defaults above f4 include?
 
 #pragma once
 
@@ -49,10 +56,8 @@
 #undef EFI_CONSOLE_RX_BRAIN_PIN
 #define EFI_CONSOLE_RX_BRAIN_PIN Gpio::D9
 
+// see also EFI_EMBED_INI_MSD which is disabled above
 #define EFI_USE_COMPRESSED_INI_MSD
-
-#undef ENABLE_PERF_TRACE
-#define ENABLE_PERF_TRACE TRUE
 
 // F7 may have dual bank, so flash on its own (low priority) thread so as to not block any other operations
 #define EFI_FLASH_WRITE_THREAD TRUE
