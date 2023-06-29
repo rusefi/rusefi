@@ -69,7 +69,7 @@ pins:
     id: [A7]
     function: Cam Sensor
     class: [event_inputs]
-    ts_name: Cam - K15
+    ts_name: 'Cam - K15 (2014: yellow)'
 
   - pin: K16
     function: Analog Ground
@@ -198,7 +198,7 @@ pins:
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: IAT
-    function: IAT
+    function: 'IAT (2014: green)'
 
   - pin: K54
     # IN_MAP3
@@ -208,38 +208,38 @@ pins:
     function: A/C pressure
 
   - pin: K57
-    function: Analog Ground
+    function: 'Analog Ground (2014: green)'
 
   - pin: K58
 # IN_O2S2 AIN12 PA1 EFI_ADC_1
     id: EFI_ADC_1
     class: analog_inputs
     ts_name: K58 Oil Temp
-    function: Oil Temperature
+    function: 'Oil Temperature (2014: blue/orange)'
 
   - pin: K59
-    function: Analog Ground
+    function: 'Analog Ground (2014: black)'
 
   - pin: K60
-    function: sensor +5v feed
+    function: 'sensor +5v feed (2014: grey)'
     type: 5v
 
   - pin: K61
-    function: Analog Ground
+    function: 'Analog Ground (2014: yellow)'
 
   - pin: K62b
 # cam1 IN_CAM
     id: [A6]
     function: Cam Sensor
     class: [event_inputs]
-    ts_name: Cam - K62 rev B
+    ts_name: 'Cam - K62 rev B'
 
   - pin: K62c
     # H144_IN_SENS3
     id: [F5]
     function: Cam Sensor
     class: [event_inputs]
-    ts_name: Cam - K62 rev C
+    ts_name: 'Cam - K62 rev C  (2014: white)'
 
   - pin: K63
     function: sensor +5v feed
