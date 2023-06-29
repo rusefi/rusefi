@@ -10,6 +10,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+ #pragma once
+
 // Disable ini ramdisk as a mitigation of https://github.com/rusefi/rusefi/issues/3775
 // See STM32F7.ld for more info
 #ifndef EFI_EMBED_INI_MSD
@@ -24,8 +26,6 @@
 #include "../stm32f4ems/efifeatures.h"
 
 // todo: get rid of the 'undef' patter just move all defaults above f4 include?
-
-#pragma once
 
 #undef EFI_POTENTIOMETER
 #define EFI_POTENTIOMETER FALSE
