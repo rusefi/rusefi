@@ -96,9 +96,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1SecondaryMax = 0;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
-	engineConfiguration->baroSensor.type = MT_MPXH6400;
-	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -175,7 +172,13 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->vvtPins[0] = H144_OUT_PWM7;
 	engineConfiguration->vvtPins[1] = H144_OUT_PWM8;
 
+    // todo: should be conditional? currently set best for newest boards based on MegaModule
 	setHellenMMbaro();
+    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3; // On-board MAP
+    engineConfiguration->map.type = MT_MPXH6400;
+    //	engineConfiguration->baroSensor.type = MT_MPXH6400;
+    //	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3; // On-board MAP
+
     engineConfiguration->boardUseTempPullUp = true;
 
 	engineConfiguration->acSwitch = Gpio::Unassigned;
