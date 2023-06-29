@@ -46,9 +46,7 @@ static void populateFrame(Status& msg) {
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
-
-	// TODO: https://github.com/FOME-Tech/fome-fw/issues/75
-	msg.lambdaProtectActive = false;
+	msg.lambdaProtectActive = engine->lambdaMonitor.isCut();
 
 	msg.gear = Sensor::getOrZero(SensorType::DetectedGear);
 }
