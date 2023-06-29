@@ -129,13 +129,13 @@ function onTick()
 	setTwoBytesLsb(data_set_settings, 3, peakCurrent * FIXED_POINT)
 	setTwoBytesLsb(data_set_settings, 5, TpeakDuration)
 	print('Will be sending ' ..arrayToString(data_set_settings))
-	txCan(1, GDI_CHANGE_ADDRESS + 1, 1, data_set_settings)
+--	txCan(1, GDI_CHANGE_ADDRESS + 1, 1, data_set_settings)
 
 	setTwoBytesLsb(data_set_settings, 1, TpeakOff)
 	setTwoBytesLsb(data_set_settings, 3, Tbypass)
 	setTwoBytesLsb(data_set_settings, 5, holdCurrent * FIXED_POINT)
 	print('Will be sending ' ..arrayToString(data_set_settings))
-	txCan(1, GDI_CHANGE_ADDRESS + 2, 1, data_set_settings)
+--	txCan(1, GDI_CHANGE_ADDRESS + 2, 1, data_set_settings)
 
 	setTwoBytesLsb(data_set_settings, 1, TholdOff)
 	setTwoBytesLsb(data_set_settings, 3, THoldDuration)
@@ -144,6 +144,9 @@ function onTick()
 	txCan(1, GDI_CHANGE_ADDRESS + 3, 1, data_set_settings)
 
 	setTwoBytesLsb(data_set_settings, 1, pumpHoldCurrent * FIXED_POINT)
+	outputCanID = 0
+	outputCanID = GDI4_BASE_ADDRESS
+	setTwoBytesLsb(data_set_settings, 3, outputCanID)
 	print('Will be sending ' ..arrayToString(data_set_settings))
 	txCan(1, GDI_CHANGE_ADDRESS + 4, 1, data_set_settings)
 end
