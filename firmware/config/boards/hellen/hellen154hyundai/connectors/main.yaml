@@ -67,9 +67,9 @@ pins:
   - pin: K15
 # cam2  IN_AUX4
     id: [A7]
-    function: Cam Sensor
+    function: 'Cam Sensor (2014: yellow)'
     class: [event_inputs]
-    ts_name: 'Cam - K15 (2014: yellow)'
+    ts_name: Cam - K15
 
   - pin: K16
     function: Analog Ground
@@ -232,14 +232,14 @@ pins:
     id: [A6]
     function: Cam Sensor
     class: [event_inputs]
-    ts_name: 'Cam - K62 rev B'
+    ts_name: Cam - K62 rev B
 
   - pin: K62c
     # H144_IN_SENS3
     id: [F5]
-    function: Cam Sensor
+    function: "Cam Sensor (2014: white)"
     class: [event_inputs]
-    ts_name: 'Cam - K62 rev C  (2014: white)'
+    ts_name: Cam - K62 rev C
 
   - pin: K63
     function: sensor +5v feed
