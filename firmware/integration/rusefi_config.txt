@@ -814,7 +814,7 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	uint8_t autoscale lambdaProtectionMinTps;;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale lambdaProtectionTimeout;Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed;"s", 0.1, 0, 0, 10, 1
 
-	uint8_t autoscale lambdaProtectionRestoreRpm;;"RPM", 100, 0, 25000, 0
+	uint8_t autoscale lambdaProtectionRestoreRpm;;"RPM", 100, 0, 0, 25000, 0
 
 
 	pin_output_mode_e acRelayPinMode;
