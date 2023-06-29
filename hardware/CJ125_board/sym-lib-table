@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name cj125)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/cj125.lib)(options "")(descr ""))
-)

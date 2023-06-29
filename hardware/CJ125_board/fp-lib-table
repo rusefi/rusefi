@@ -1,3 +1,0 @@
-(fp_lib_table
-  (lib (name rsuEFI_Lib)(type KiCad)(uri "$(KIPRJMOD)\\..\\rusefi_lib\\rusefi_lib.pretty")(options "")(descr ""))
-)
