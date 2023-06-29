@@ -1304,6 +1304,8 @@ gaugeCategory = Trigger
 	triggerSecondaryRiseGauge = triggerSecondaryRise,"triggerSecondaryRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	triggerVvtFallGauge = triggerVvtFall,"triggerVvtFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	triggerVvtRiseGauge = triggerVvtRise,"triggerVvtRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	triggerVvt2FallGauge = triggerVvt2Fall,"triggerVvt2Fall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	triggerVvt2RiseGauge = triggerVvt2Rise,"triggerVvt2Rise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 
 gaugeCategory = Test Bench
 	testBenchIterGauge = testBenchIter, "Test Bench Iterations", "count", -10, {benchTestCount + 10}, -5, 0, {benchTestCount}, {benchTestCount + 5}, 1, 1

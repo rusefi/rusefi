@@ -83,7 +83,7 @@ pins:
     ts_name: Crank - K17 rev B
 
   - pin: K17c
-    function: Crank Sensor
+    function: "Crank Sensor (2014: pink)"
     # H144_IN_SENS2
     id: [F4]
     class: [event_inputs]
