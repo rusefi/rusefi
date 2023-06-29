@@ -64,9 +64,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
-	engineConfiguration->baroSensor.type = MT_MPXH6400;
-	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -131,6 +128,12 @@ void setBoardDefaultConfiguration() {
 	if (hellenBoardId == BOARD_ID_2chan_e || hellenBoardId == BOARD_ID_2chan_f) {
 	    // todo: flip that condition to check for "if not old board"
 	    setHellenMMbaro();
+	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3; // On-board MAP
+	    engineConfiguration->map.type = MT_MPXH6400;
+	} else {
+	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2; // B2 external signal
+	    engineConfiguration->baroSensor.type = MT_MPXH6400;
+    	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3; // On-board MAP
 	}
 
     engineConfiguration->boardUseTempPullUp = true;
