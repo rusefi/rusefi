@@ -57,14 +57,13 @@ pins:
 
   - pin: 9
     id: B7
-    function: "Injector #11"
+    function: "Injector #11 or radiator fan relay"
     class: outputs
     ts_name: Lowside 11
     type: ls
 
   - pin: 10
     id: B9
-    function: main relay
     class: outputs
     ts_name: Lowside 13
     type: ls
@@ -78,7 +77,6 @@ pins:
 
   - pin: 12
     id: E1
-    function: radiator fan relay
     class: outputs
     ts_name: Lowside 15
     type: ls
@@ -128,14 +126,14 @@ pins:
 
   - pin: 20
     id: B6
-    function: "Injector #10"
+    function: "Injector #10 or Fuel Pump relay"
     class: outputs
     ts_name: Lowside 10
     type: ls
 
   - pin: 21
     id: B8
-    function: "Injector #12"
+    function: "Injector #12 or Main relay"
     class: outputs
     ts_name: Lowside 12
     type: ls
@@ -149,7 +147,6 @@ pins:
 
   - pin: 23
     id: E2
-    function: Fuel Pump
     class: outputs
     ts_name: Lowside 16
     type: ls

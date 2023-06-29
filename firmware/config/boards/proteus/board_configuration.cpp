@@ -186,9 +186,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
 #if HW_PROTEUS & EFI_PROD_CODE
-	engineConfiguration->mainRelayPin = PROTEUS_LS_13;
-	engineConfiguration->fanPin = PROTEUS_LS_15;
-	engineConfiguration->fuelPumpPin = PROTEUS_LS_16;
+	engineConfiguration->mainRelayPin = PROTEUS_LS_12;
+	engineConfiguration->fanPin = PROTEUS_LS_11;
+	engineConfiguration->fuelPumpPin = PROTEUS_LS_10;
 #endif // HW_PROTEUS
 
 	// If we're running as hardware CI, borrow a few extra pins for that
