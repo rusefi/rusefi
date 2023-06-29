@@ -175,7 +175,7 @@ void setBoardDefaultConfiguration() {
     // todo: should be conditional? currently set best for newest boards based on MegaModule
 	setHellenMMbaro();
     engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3; // On-board MAP
-    engineConfiguration->map.type = MT_MPXH6400;
+    engineConfiguration->map.sensor.type = MT_MPXH6400;
     //	engineConfiguration->baroSensor.type = MT_MPXH6400;
     //	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3; // On-board MAP
 

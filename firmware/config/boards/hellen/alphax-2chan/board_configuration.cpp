@@ -129,7 +129,7 @@ void setBoardDefaultConfiguration() {
 	    // todo: flip that condition to check for "if not old board"
 	    setHellenMMbaro();
 	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3; // On-board MAP
-	    engineConfiguration->map.type = MT_MPXH6400;
+	    engineConfiguration->map.sensor.type = MT_MPXH6400;
 	} else {
 	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2; // B2 external signal
 	    engineConfiguration->baroSensor.type = MT_MPXH6400;
