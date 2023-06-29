@@ -12,20 +12,28 @@ float LambdaMonitor::getMaxAllowedLambda(float rpm, float load) const {
 		);
 }
 
+bool LambdaMonitorBase::isCut() const {
+	return m_isCut;
+}
+
 void LambdaMonitorBase::update(float rpm, float load) {
 	if (isCurrentlyGood(rpm, load)) {
 		m_timeSinceGoodLambda.reset();
 	}
 
-	float timeout = engineConfiguration->lambdaProtectionTimeout;
+	if (m_timeSinceGoodLambda.hasElapsedSec(engineConfiguration->lambdaProtectionTimeout)) {
+		// Things have been bad long enough, cut!
+		m_isCut = true;
+	}
 
-	if (m_timeSinceGoodLambda.hasElapsedSec(timeout)) {
-		// Things have been bad long enough, respond!
-
-		// TODO
+	if (m_isCut) {
+		// If things are back to normal, cancel the cut and force a reset
+		if (restoreConditionsMet(rpm, load)) {
+			m_isCut = false;
+			m_timeSinceGoodLambda.reset();
+		}
 	}
 }
-
 
 bool LambdaMonitorBase::isCurrentlyGood(float rpm, float load) const {
 	// Lambda is always good if disabled
@@ -76,4 +84,10 @@ bool LambdaMonitorBase::isCurrentlyGood(float rpm, float load) const {
 
 	// All checks failed, lambda is currently bad.
 	return false;
+}
+
+bool LambdaMonitorBase::restoreConditionsMet(float rpm, float load) const {
+	// TODO #75
+
+	return true;
 }

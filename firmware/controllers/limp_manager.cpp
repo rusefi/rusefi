@@ -80,6 +80,10 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		}
 	}
 
+	if (engine->lambdaMonitor.isCut()) {
+		allowFuel.clear(ClearReason::LambdaProtection);
+	}
+
 #if EFI_SHAFT_POSITION_INPUT
 	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0])
 			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
