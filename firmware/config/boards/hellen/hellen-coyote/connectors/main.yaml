@@ -176,9 +176,9 @@ pins:
     function: Crank Shield
 
   - pin: B40
-    function: Cam22 Ground
+    function: Cam22 VR Ground
   - pin: B41
-    function: Cam22 Signal
+    function: Cam22 VR Signal
   - pin: B42
     function: Cam21 Signal
   - pin: B44
@@ -198,9 +198,9 @@ pins:
   - pin: B53
     function: Knock1 Pos
   - pin: B54
-    function: Cam12 Ground
+    function: Cam12 VR Ground
   - pin: B55
-    function: Cam12 Signal
+    function: Cam12 VR Signal
   - pin: B56
     function: Position 1 Ex Signal
   - pin: B59
@@ -217,9 +217,9 @@ pins:
   - pin: B68
     function: Knock2 Pos
   - pin: B69
-    function: Crank Negative
+    function: Crank VR Negative
   - pin: B70
-    function: Crank Positive
+    function: Crank VR Positive
   - pin: B71
     function: UNUSED Canister Purge
   - pin: B72
