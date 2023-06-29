@@ -79,7 +79,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	eth.assertEvent5("inj end#2", 1, (void*)endSimultaneousInjection, 149999);
 
 	// Now perform a fake VVT sync and check that ignition mode changes to sequential
-	engine->triggerCentral.syncAndReport(1, 0);
+	engine->triggerCentral.syncAndReport(2, 0);
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentIgnitionMode());
 
 	// skip, clear & advance 1 more revolution at higher RPM
