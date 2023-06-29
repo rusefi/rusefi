@@ -210,6 +210,19 @@ void setDefaultWallWetting() {
 	copyArray(engineConfiguration->wwBetaMapValues, betaMap);
 }
 
+static void setDefaultLambdaProtection() {
+	engineConfiguration->lambdaProtectionEnable = false;
+
+	engineConfiguration->lambdaProtectionMinLoad = 60;
+	engineConfiguration->lambdaProtectionMinRpm = 2500;
+	engineConfiguration->lambdaProtectionMinTps = 50;
+	engineConfiguration->lambdaProtectionTimeout = 0.5f;
+
+	engineConfiguration->lambdaProtectionRestoreLoad = 30;
+	engineConfiguration->lambdaProtectionRestoreRpm = 2000;
+	engineConfiguration->lambdaProtectionRestoreTps = 20;
+}
+
 void setDefaultFuel() {
 	// Base injection configuration
 	engineConfiguration->isInjectionEnabled = true;
@@ -278,4 +291,7 @@ void setDefaultFuel() {
 
 	// Some reasonable reference pressure that many vehicles use
 	engineConfiguration->fuelReferencePressure = 300;
+
+	// Lambda protection defaults
+	setDefaultLambdaProtection();
 }
