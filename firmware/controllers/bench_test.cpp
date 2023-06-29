@@ -60,10 +60,10 @@ static void benchOn(OutputPin* output) {
 	output->setValue(true);
 }
 
-static char pin_error[64];
-
 static void benchOff(OutputPin* output) {
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
+	static char pin_error[64];
+
 	brain_pin_diag_e diag = output->getDiag();
 	if (diag == PIN_INVALID) {
 		efiPrintf("No Diag on this pin");
@@ -123,6 +123,8 @@ static int count;
 static brain_pin_e brainPin;
 static OutputPin* pinX;
 
+static chibios_rt::CounterSemaphore benchSemaphore(0);
+
 static void pinbench(float startdelay, float ontime, float offtime, int iterations,
 	OutputPin* pinParam, brain_pin_e brainPinParam)
 {
@@ -134,6 +136,7 @@ static void pinbench(float startdelay, float ontime, float offtime, int iteratio
 	brainPin = brainPinParam;
 	// let's signal bench thread to wake up
 	isBenchTestPending = true;
+	benchSemaphore.signal();
 }
 
 /*==========================================================================*/
@@ -271,27 +274,25 @@ void fuelPumpBench(void) {
 	fuelPumpBenchExt(3000.0);
 }
 
-class BenchController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+class BenchController : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
-	BenchController() : PeriodicController("BenchThread") { }
+	BenchController() : ThreadController("BenchTest", PRIO_BENCH_TEST) { }
 private:
-	void PeriodicTask(efitick_t nowNt) override	{
-		UNUSED(nowNt);
-		setPeriod(50 /* ms */);
+	void ThreadTask() override	{
+		while (true) {
+			benchSemaphore.wait();
 
-		validateStack("Bench", ObdCode::STACK_USAGE_BENCH, 128);
+			if (isBenchTestPending) {
+				isBenchTestPending = false;
+				runBench(brainPin, pinX, startDelayMs, onTime, offTime, count);
+			}
 
-		// naive inter-thread communication - waiting for a flag
-		if (isBenchTestPending) {
-			isBenchTestPending = false;
-			runBench(brainPin, pinX, startDelayMs, onTime, offTime, count);
-		}
-
-		if (widebandUpdatePending) {
-#if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
-			updateWidebandFirmware();
-#endif
-			widebandUpdatePending = false;
+			if (widebandUpdatePending) {
+	#if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
+				updateWidebandFirmware();
+	#endif
+				widebandUpdatePending = false;
+			}
 		}
 	}
 };
@@ -394,6 +395,7 @@ static void handleCommandX14(uint16_t index) {
 #endif
 	case 0x12:
 		widebandUpdatePending = true;
+		benchSemaphore.signal();
 		return;
 	case 0x14:
 #ifdef STM32F7
@@ -446,7 +448,6 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case TS_IGNITION_CATEGORY:
 		if (!running) {
-			/* WARN: fixed charge time */
 			doRunSparkBench(index, 300.0, engineConfiguration->benchTestOnTime,
 				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
@@ -568,7 +569,6 @@ void initBenchTest() {
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
 	addConsoleActionFFFFF("luabench2", luaOutBench2);
-	instance.setPeriod(200 /*ms*/);
 	instance.start();
 	onConfigurationChangeBenchTest();
 }
