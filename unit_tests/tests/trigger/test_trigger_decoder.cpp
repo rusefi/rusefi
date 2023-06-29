@@ -1027,7 +1027,7 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	setConstantDwell(45);
 
-	engine->triggerCentral.syncAndReport(1, 0);
+	engine->triggerCentral.syncAndReport(2, 0);
 
 	// this is needed to update injectorLag
 	engine->updateSlowSensors();
@@ -1040,7 +1040,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.fireFall(20);
 
-	engine->triggerCentral.syncAndReport(1, 0);
+	engine->triggerCentral.syncAndReport(2, 0);
 
 	eth.executeActions();
 

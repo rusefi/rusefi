@@ -153,8 +153,15 @@ static angle_t adjustCrankPhase(int camIndex) {
 		return 0;
 	}
 
-	TriggerCentral *tc = getTriggerCentral();
 	operation_mode_e operationMode = getEngineRotationState()->getOperationMode();
+
+	auto crankDivider = getCrankDivider(operationMode);
+	if (crankDivider == 1) {
+		// Crank divider of 1 means there's no ambiguity, so don't try to resolve it
+		return 0;
+	}
+
+	TriggerCentral *tc = getTriggerCentral();
 
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
 	switch (vvtMode) {
@@ -162,16 +169,11 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MAP_V_TWIN:
 	case VVT_MITSUBISHI_4G63:
 	case VVT_MITSUBISHI_4G9x:
-		return tc->syncAndReport(getCrankDivider(operationMode), 1);
+		return tc->syncAndReport(crankDivider, 1);
 	case VVT_SECOND_HALF:
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
-		return tc->syncAndReport(getCrankDivider(operationMode), 0);
 	case VVT_MIATA_NB:
-		/**
-		 * NB2 is a symmetrical crank, there are four phases total
-		 */
-		return tc->syncAndReport(getCrankDivider(operationMode), 0);
 	case VVT_2JZ:
 	case VVT_TOYOTA_4_1:
 	case VVT_FORD_ST170:
@@ -181,7 +183,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MITSUBISHI_3A92:
 	case VVT_MITSUBISHI_6G75:
 	case VVT_HONDA_K_EXHAUST:
-		return tc->syncAndReport(getCrankDivider(operationMode), 0);
+		return tc->syncAndReport(crankDivider, 0);
 	case VVT_HONDA_K_INTAKE:
 	case VVT_INACTIVE:
 		// do nothing
