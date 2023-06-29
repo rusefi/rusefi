@@ -7,10 +7,9 @@
  * @author Andrey Gusakov, 2021
  */
 
-#include "../../stm32f7ems/efifeatures.h"
+#pragma once
 
-#ifndef EFIFEATURES_SUBARUEG33_H_
-#define EFIFEATURES_SUBARUEG33_H_
+#include "../../stm32f7ems/efifeatures.h"
 
 /* debug console */
 #define TS_PRIMARY_UxART_PORT		SD1
@@ -117,5 +116,3 @@
 
 #undef EFI_STORAGE_INT_FLASH
 #define EFI_STORAGE_INT_FLASH   	FALSE
-
-#endif /* EFIFEATURES_SUBARUEG33_H_ */
