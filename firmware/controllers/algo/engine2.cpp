@@ -164,6 +164,7 @@ void EngineState::periodicFastCallback() {
 
 	float fuelLoad = getFuelingLoad();
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
+	engine->lambdaMonitor.update(rpm, fuelLoad);
 
 	float ignitionLoad = getIgnitionLoad();
 	float baseAdvance = getAdvance(rpm, ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
