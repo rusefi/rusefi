@@ -23,6 +23,7 @@ enum class ClearReason : uint8_t {
 	IgnitionOff, // 14
 	Lua, // 15
 	ACR, // 16 - Harley Automatic Compression Release
+	LambdaProtection, // 17
 
 	// Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
 	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in rusefi.input
