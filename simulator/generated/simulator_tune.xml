@@ -181,7 +181,7 @@
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="unused440" units="">0.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0230627E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.023063E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
