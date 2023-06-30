@@ -321,6 +321,8 @@
         <constant name="maf2AdcChannel">"Disabled"</constant>
         <constant name="o2heaterPin">"NONE"</constant>
         <constant name="o2heaterPinModeTodO">"default"</constant>
+        <constant digits="0" name="lambdaProtectionMinRpm" units="RPM">2500.0</constant>
+        <constant digits="0" name="lambdaProtectionMinLoad" units="%">60.0</constant>
         <constant name="is_enabled_spi_1">"false"</constant>
         <constant name="is_enabled_spi_2">"false"</constant>
         <constant name="is_enabled_spi_3">"false"</constant>
@@ -427,6 +429,9 @@
         <constant name="triggerErrorPin">"NONE"</constant>
         <constant name="triggerErrorPinMode">"default"</constant>
         <constant name="acRelayPin">"NONE"</constant>
+        <constant digits="0" name="lambdaProtectionMinTps" units="%">50.0</constant>
+        <constant digits="1" name="lambdaProtectionTimeout" units="s">0.5</constant>
+        <constant digits="0" name="lambdaProtectionRestoreRpm" units="RPM">2000.0</constant>
         <constant name="acRelayPinMode">"default"</constant>
         <constant digits="2" name="scriptSetting1" units="">0.0</constant>
         <constant digits="2" name="scriptSetting2" units="">0.0</constant>
@@ -787,6 +792,8 @@
         <constant name="unused1130">"false"</constant>
         <constant digits="0" name="unusedHere" units="">0.0</constant>
         <constant digits="2" name="benchTestOnTime" units="ms">4.0</constant>
+        <constant digits="0" name="lambdaProtectionRestoreTps" units="%">20.0</constant>
+        <constant digits="0" name="lambdaProtectionRestoreLoad" units="%">30.0</constant>
         <constant name="launchActivatePinMode">"DEFAULT"</constant>
         <constant name="can2TxPin">"NONE"</constant>
         <constant name="can2RxPin">"NONE"</constant>
@@ -1680,10 +1687,6 @@
         <constant name="tcu_rangeInputMode4">"DEFAULT"</constant>
         <constant name="tcu_rangeInputMode5">"DEFAULT"</constant>
         <constant name="tcu_rangeInputMode6">"DEFAULT"</constant>
-        <constant digits="0" name="lambdaProtectionMinRpm" units="RPM">0.0</constant>
-        <constant digits="0" name="lambdaProtectionMinLoad" units="">0.0</constant>
-        <constant digits="0" name="lambdaProtectionMinTps" units="">0.0</constant>
-        <constant digits="1" name="lambdaProtectionTimeout" units="s">0.0</constant>
         <constant cols="1" digits="0" name="mainUnusedEnd" rows="190">
          0.0
          0.0
@@ -4853,7 +4856,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20230611" nPages="1" signature="rusEFI master.2023.06.29.f407-discovery.345254341" version="5.0"/>
+    <versionInfo firmwareInfo="20230611" nPages="1" signature="rusEFI master.2023.06.30.f407-discovery.4189343662" version="5.0"/>
     <bibliography author="rusEFI 20230611" writeDate="date"/>
     <settings/>
     <userComments/>
