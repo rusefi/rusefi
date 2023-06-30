@@ -302,9 +302,6 @@
 
 #define EFI_WARNING_LED FALSE
 
-#undef CONSOLE_MODE_SWITCH_PORT
-#undef CONFIG_RESET_SWITCH_PORT
-
 /**
  * This is the size of the MemoryStream used by chvprintf
  */

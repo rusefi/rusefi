@@ -84,11 +84,6 @@
 #undef TS_SERIAL_AF
 #define TS_SERIAL_AF				8
 
-/* no console switch */
-#undef CONSOLE_MODE_SWITCH_PORT
-#undef CONSOLE_MODE_SWITCH_PIN
-#define GET_CONSOLE_MODE_VALUE()	(FALSE)
-
 /* no reset switch */
 #undef CONFIG_RESET_SWITCH_PORT
 #undef CONFIG_RESET_SWITCH_PIN
