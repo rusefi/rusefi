@@ -114,6 +114,7 @@ pins:
 
   - pin: 21D
     # H144_OUT_IO13
+    id: G6
     class: outputs
     function: Tachometer Output
     ts_name: 21D - Tachometer
