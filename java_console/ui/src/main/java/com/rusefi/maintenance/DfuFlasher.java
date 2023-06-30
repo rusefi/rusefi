@@ -120,12 +120,16 @@ public class DfuFlasher {
     public static void runDfuErase() {
         StatusWindow wnd = createStatusWindow();
         submitAction(() -> {
-            ExecHelper.executeCommand(DFU_BINARY_LOCATION,
-                    getDfuEraseCommand(),
-                    DFU_BINARY, wnd, new StringBuffer());
+            runDfuErase(wnd);
             // it's a lengthy operation let's signal end
             Toolkit.getDefaultToolkit().beep();
         });
+    }
+
+    private static void runDfuErase(StatusWindow wnd) {
+        ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                getDfuEraseCommand(),
+                DFU_BINARY, wnd, new StringBuffer());
     }
 
     public static void runDfuProgramming() {
