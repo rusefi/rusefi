@@ -40,6 +40,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::G12: return "8B - Main Relay LS";
 		case Gpio::G13: return "12D - NOS";
 		case Gpio::G2: return "9D - Fan Relay";
+		case Gpio::G6: return "21D - Tachometer";
 		case Gpio::G7: return "4A - Injector 1";
 		case Gpio::G8: return "3A - Injector 2";
 		default: return nullptr;
