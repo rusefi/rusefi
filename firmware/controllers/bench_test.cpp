@@ -286,11 +286,11 @@ private:
 		while (true) {
 			benchSemaphore.wait();
 
-		    assertStackVoid("Bench", ObdCode::STACK_USAGE_BENCH, EXPECTED_REMAINING_STACK);
+		    assertStackVoid("Bench", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);
 
 			if (isBenchTestPending) {
 				isBenchTestPending = false;
-				runBench(brainPin, pinX, startDelayMs, onTime, offTime, count);
+				runBench(brainPin, pinX, startDelayMs, onTimeMs, offTimeMs, count);
 			}
 
 			if (widebandUpdatePending) {
