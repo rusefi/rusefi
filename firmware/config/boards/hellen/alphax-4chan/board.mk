@@ -22,6 +22,7 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan-f7
 	# TODO: why do I struggle to fit into flash? compare with Proteus
 	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
+    DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan
 	# This board has trigger scope hardware!
