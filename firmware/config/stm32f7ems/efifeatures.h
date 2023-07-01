@@ -22,6 +22,15 @@
 #define ENABLE_PERF_TRACE TRUE
 #endif
 
+#ifndef EFI_CONSOLE_TX_BRAIN_PIN
+// todo: kill default & move into board configuration?
+#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::D8
+#endif
+
+#ifndef EFI_CONSOLE_RX_BRAIN_PIN
+#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::D9
+#endif
+
 // note order of include - first we set F7 defaults (above) and only later we apply F4 defaults
 #include "../stm32f4ems/efifeatures.h"
 
@@ -49,12 +58,6 @@
 // UART driver not implemented on F7
 
 #define AUX_SERIAL_DEVICE (&SD6)
-
-#undef EFI_CONSOLE_TX_BRAIN_PIN
-#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::D8
-
-#undef EFI_CONSOLE_RX_BRAIN_PIN
-#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::D9
 
 // see also EFI_EMBED_INI_MSD which is disabled above
 #define EFI_USE_COMPRESSED_INI_MSD
