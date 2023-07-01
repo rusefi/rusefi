@@ -18,15 +18,18 @@ DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
 
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
+DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
+
+# This board has trigger scope hardware!
+DDEFS += -DTRIGGER_SCOPE
+
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan_f7
 	# TODO: why do I struggle to fit into flash? compare with Proteus
-	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
+	#Linker options, flash size
+    USE_OPT += -Wl,--defsym=FLASH_SIZE=768k
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan
-	# This board has trigger scope hardware!
-    DDEFS += -DTRIGGER_SCOPE
-    DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 else
 $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
