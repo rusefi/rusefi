@@ -19,7 +19,7 @@ DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
-	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan-f7
+	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan_f7
 	# TODO: why do I struggle to fit into flash? compare with Proteus
 	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
