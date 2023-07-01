@@ -181,7 +181,7 @@
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="unused440" units="">0.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.023063E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0230701E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -4856,7 +4856,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20230611" nPages="1" signature="rusEFI master.2023.06.30.f407-discovery.4189343662" version="5.0"/>
+    <versionInfo firmwareInfo="20230611" nPages="1" signature="rusEFI master.2023.07.01.f407-discovery.4189343662" version="5.0"/>
     <bibliography author="rusEFI 20230611" writeDate="date"/>
     <settings/>
     <userComments/>
