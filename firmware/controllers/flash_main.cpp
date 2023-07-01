@@ -178,7 +178,7 @@ void writeToFlashNow(void) {
 	err = mfsWriteRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
 						 sizeof(persistentState), (uint8_t *)&persistentState);
 
-	if (err == MFS_NO_ERROR)
+	if (err >= MFS_NO_ERROR)
 		isSuccess = true;
 #endif
 
@@ -260,7 +260,7 @@ static FlashState readConfiguration() {
 	mfs_error_t err = mfsReadRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
 						&settings_size, (uint8_t *)&persistentState);
 
-	if (err == MFS_NO_ERROR) {
+	if (err >= MFS_NO_ERROR) {
 		// readed size is not exactly the same
 		if (settings_size != sizeof(persistentState))
 			return FlashState::IncompatibleVersion;
@@ -372,7 +372,7 @@ void initFlash() {
 	/* MFS */
 	mfsObjectInit(&mfsd);
 	err = mfsStart(&mfsd, &mfsd_nor_config);
-	if (err != MFS_NO_ERROR) {
+	if (err < MFS_NO_ERROR) {
 		/* hm...? */
 	}
 #endif
