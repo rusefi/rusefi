@@ -18,8 +18,6 @@ DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
 
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
-DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
-
 # This board has trigger scope hardware!
 DDEFS += -DTRIGGER_SCOPE
 
@@ -28,8 +26,11 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	# TODO: why do I struggle to fit into flash? compare with Proteus
 	#Linker options, flash size
     USE_OPT += -Wl,--defsym=FLASH_SIZE=768k
+    # TODO do we only support serial on F7 but not UART?
+    DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=Gpio::D6 -DEFI_CONSOLE_RX_BRAIN_PIN=Gpio::D5 -DTS_PRIMARY_UxART_PORT=SD2 -DSTM32_SERIAL_USE_USART2=TRUE -DSTM32_UART_USE_USART2=FALSE
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	DDEFS += -DSHORT_BOARD_NAME=alphax-4chan
+	DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 else
 $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
