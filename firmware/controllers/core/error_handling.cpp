@@ -39,10 +39,23 @@ void checkLastBootError() {
 		    firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
 		}
 
-		// Print out the context as a sequence of uintptr
-		uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->FaultCtx);
-		for (size_t i = 0; i < sizeof(port_extctx) / sizeof(uintptr_t); i++) {
-			efiPrintf("Fault ctx %d: %x", i, data[i]);
+		auto ctx = &sramState->FaultCtx;
+		efiPrintf("r0  0x%x", ctx->r0);
+		efiPrintf("r1  0x%x", ctx->r1);
+		efiPrintf("r2  0x%x", ctx->r2);
+		efiPrintf("r3  0x%x", ctx->r3);
+		efiPrintf("r12 0x%x", ctx->r12);
+		efiPrintf("lr (thread)  0x%x", ctx->lr_thd);
+		efiPrintf("pc  0x%x", ctx->pc);
+		efiPrintf("xpsr  0x%x", ctx->xpsr);
+
+		/* FPU registers - not very usefull for debug */
+		if (0) {
+			// Print rest the context as a sequence of uintptr
+			uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->FaultCtx);
+			for (size_t i = 8; i < sizeof(port_extctx) / sizeof(uintptr_t); i++) {
+				efiPrintf("Fault ctx %d: %x", i, data[i]);
+			}
 		}
 
 		break;
