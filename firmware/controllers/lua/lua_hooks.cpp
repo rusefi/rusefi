@@ -808,12 +808,14 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	lua_register(l, "getOutput", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
 		auto result = getOutputValueByName(propertyName);
 		lua_pushnumber(l, result);
 		return 1;
 	});
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 #if EFI_SHAFT_POSITION_INPUT
 	lua_register(l, "getEngineState", [](lua_State* l) {
