@@ -4,14 +4,14 @@
 #include "injector_model_generated.h"
 #include "engine_module.h"
 
-struct IInjectorModel : public EngineModule {
+struct IInjectorModel : public EngineModule, public injector_model_s {
 	virtual void prepare() = 0;
 	virtual floatms_t getInjectionDuration(float fuelMassGram) const = 0;
 	virtual float getFuelMassForDuration(floatms_t duration) const = 0;
 	virtual floatms_t getDeadtime() const = 0;
 };
 
-class InjectorModelBase : public IInjectorModel, public injector_model_s {
+class InjectorModelBase : public IInjectorModel {
 public:
 	void prepare() override;
 	floatms_t getInjectionDuration(float fuelMassGram) const override;
