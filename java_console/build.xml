@@ -43,12 +43,12 @@
     <target name="build" depends="jar, test"/>
 
     <target name="compile">
-        <fail message="Unsupported Java version detected: ${ant.java.version}.
+        <fail message="Unsupported Java version detected: [${ant.java.version}]
   Make sure that the Java version is exactly 11.">
             <condition>
                 <not>
                     <or>
-                        <equals arg1="${ant.java.version}" arg2="11.0"/>
+                        <equals arg1="${ant.java.version}" arg2="11"/>
                     </or>
                 </not>
             </condition>
