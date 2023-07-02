@@ -145,6 +145,7 @@ public class OutputsTest {
         outputValueConsumer.conditional = "EFI_BOOST_CONTROL";
         state.readBufferedReader(test, (outputValueConsumer));
         assertEquals(
+                "#if !EFI_UNIT_TEST\n" +
                 "#include \"pch.h\"\n" +
                         "#include \"value_lookup.h\"\n" +
                         "float getOutputValueByName(const char *name) {\n" +
@@ -164,7 +165,8 @@ public class OutputsTest {
                         "#endif\n" +
                         "\t}\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
-                        "}\n", outputValueConsumer.getContent());
+                        "}\n" +
+                        "#endif\n", outputValueConsumer.getContent());
     }
 
     @Test
