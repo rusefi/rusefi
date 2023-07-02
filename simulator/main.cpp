@@ -32,7 +32,7 @@ static thread_t *cdtp;
 
 #define cputs(msg) chMsgSend(cdtp, (msg_t)msg)
 
-void printToConsole(char *p) {
+void printToConsole(const char *p) {
 	cputs(p);
 }
 
@@ -59,7 +59,7 @@ extern int isSerialOverTcpReady;
  *
  * @param[in] id event id.
  */
-static void termination_handler(eventid_t id) {
+static void termination_handler(eventid_t /*id*/) {
 
 	chThdSleepMilliseconds(10);
 
