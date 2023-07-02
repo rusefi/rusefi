@@ -48,6 +48,8 @@ case LDS_trigger_state:
   return "LDS_trigger_state";
 case LDS_trigger_state_primary:
   return "LDS_trigger_state_primary";
+case LDS_vvt:
+  return "LDS_vvt";
 case LDS_wall_fuel_state:
   return "LDS_wall_fuel_state";
 case LDS_wideband_state:

@@ -27,6 +27,7 @@ LDS_electronic_throttle,
 LDS_wideband_state,
 LDS_dc_motors,
 LDS_sent_state,
+LDS_vvt,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define FUEL_COMPUTER_BASE_ADDRESS 820
@@ -53,3 +54,4 @@ LDS_sent_state,
 #define WIDEBAND_STATE_BASE_ADDRESS 1340
 #define DC_MOTORS_BASE_ADDRESS 1352
 #define SENT_STATE_BASE_ADDRESS 1364
+#define VVT_BASE_ADDRESS 1372
