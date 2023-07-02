@@ -76,9 +76,6 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int16_t injectionOffset;@@GAUGE_NAME_FUEL_INJECTION_TIMING@@;"deg", 1, 0, 0, 0, 0
 
 !  Corrections
-! todo: inline this further to injectorModel deadTime
-	uint16_t autoscale injectorLagMs;@@GAUGE_NAME_INJECTOR_LAG@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
-
 ! we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
 	uint16_t engineMakeCodeNameCrc16;@@GAUGE_NAME_ENGINE_CRC16@@;"crc16",1, 0, 0, 0, 0
 ! Wall model AE

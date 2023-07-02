@@ -50,6 +50,9 @@ Usages:
   - name: injector_model
     java: InjectorModel.java
     folder: controllers/algo/fuel
+    prepend: integration/rusefi_config_shared.txt
+    constexpr: "___engine.module<InjectorModel>()"
+    isPtr: true
 
   - name: launch_control_state
     java: LaunchControl.java

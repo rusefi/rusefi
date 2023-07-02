@@ -508,9 +508,6 @@ static void updateFuelCorrections() {
 	engine->outputChannels.fuelPidCorrection[0] = 100.0f * (engine->stftCorrection[0] - 1.0f);
 	engine->outputChannels.fuelPidCorrection[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
 	engine->outputChannels.Gego = 100.0f * engine->stftCorrection[0];
-
-// get rid of this, have gauges use injector model info directly
-	engine->outputChannels.injectorLagMs = engine->module<InjectorModel>()->getDeadtime();
 }
 
 static void updateFuelResults() {
