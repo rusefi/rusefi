@@ -8,7 +8,6 @@ import com.rusefi.livedata.LiveDataParserSandbox;
 import com.rusefi.livedata.ParseResult;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -40,7 +39,7 @@ public class LiveDataParserTest {
                 "}\n";
 
         SourceCodePainter painter = run(name -> null, sourceCode);
-        verify(painter, times(7)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
+        verify(painter, times(6)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
     }
 
     @Test
