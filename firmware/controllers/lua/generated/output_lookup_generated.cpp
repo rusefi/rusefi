@@ -504,12 +504,6 @@ float getOutputValueByName(const char *name) {
 			return engine->ignitionState.luaTimingAdd;
 		case -1626770351:
 			return engine->ignitionState.luaTimingMult;
-		case -1167844818:
-			return ___engine.module<InjectorModel>()->m_deadtime;
-		case -376325528:
-			return ___engine.module<InjectorModel>()->pressureDelta;
-		case -359858019:
-			return ___engine.module<InjectorModel>()->pressureRatio;
 #if EFI_BOOST_CONTROL
 		case -575666209:
 			return engine->boostController.isTpsInvalid;
