@@ -161,7 +161,7 @@ public:
 	 * Slightly shorter helper function to keep the code looking clean.
 	 */
 	template<typename get_t>
-	auto & module() {
+	constexpr auto & module() {
 		return engineModules.get<get_t>();
 	}
 
