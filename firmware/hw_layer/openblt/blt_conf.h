@@ -53,6 +53,19 @@
 /****************************************************************************************
 *   C O M M U N I C A T I O N   I N T E R F A C E   C O N F I G U R A T I O N
 ****************************************************************************************/
+/* The USB communication interface is selected by setting the BOOT_COM_USB_ENABLE
+ * configurable to 1. The maximum amount of data bytes in a message for data transmission
+ * and reception is set through BOOT_COM_USB_TX_MAX_DATA and BOOT_COM_USB_RX_MAX_DATA,
+ * respectively.
+ *
+ */
+/** \brief Enable/disable USB transport layer. */
+#define BOOT_COM_USB_ENABLE             (1)
+/** \brief Configure number of bytes in the target->host data packet. */
+#define BOOT_COM_USB_TX_MAX_DATA        (63)
+/** \brief Configure number of bytes in the host->target data packet. */
+#define BOOT_COM_USB_RX_MAX_DATA        (63)
+
 /* The CAN communication interface is selected by setting the BOOT_COM_CAN_ENABLE
  * configurable to 1. Configurable BOOT_COM_CAN_BAUDRATE selects the communication speed
  * in bits/second. Two CAN messages are reserved for communication with the host. The

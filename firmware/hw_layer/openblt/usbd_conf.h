@@ -31,8 +31,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "stm32f4xx.h"
-#include "stm32f4xx_hal.h"
+#ifdef STM32F429xx
+#include "stm32f4xx.h"                           /* STM32 CPU and HAL header           */
+#endif
+#ifdef STM32F767xx
+#include "stm32f7xx.h"                           /* STM32 CPU and HAL header           */
+#endif
+#ifdef STM32H743xx
+#include "stm32h7xx.h"                           /* STM32 CPU and HAL header           */
+#endif
 
 /* USER CODE BEGIN INCLUDE */
 
