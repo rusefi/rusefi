@@ -52,7 +52,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void printToConsole(char *p);
+void printToConsole(const char *p);
 
 #define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
 
