@@ -79,7 +79,7 @@ public class LiveDataProcessor {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional) throws IOException;
+        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, Boolean isPtr) throws IOException;
     }
 
     private int handleYaml(Map<String, Object> data) throws IOException {
@@ -93,7 +93,7 @@ public class LiveDataProcessor {
 
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional) throws IOException {
+            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, Boolean isPtr) throws IOException {
                 // TODO: use outputNames
 
                 int startingPosition = outputsSections.sensorTsPosition;
@@ -122,10 +122,12 @@ public class LiveDataProcessor {
 
                 if (constexpr != null) {
                     sdCardFieldsConsumer.home = constexpr;
+                    sdCardFieldsConsumer.isPtr = isPtr;
                     state.addDestination((state1, structure) -> sdCardFieldsConsumer.handleEndStruct(state1, structure));
 
                     outputValueConsumer.currentSectionPrefix = constexpr;
                     outputValueConsumer.conditional = conditional;
+                    outputValueConsumer.isPtr = isPtr;
                     state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
 
                 }
@@ -157,8 +159,10 @@ public class LiveDataProcessor {
             String constexpr = (String) entry.get("constexpr");
             String conditional = (String) entry.get("conditional_compilation");
             Boolean withCDefines = (Boolean) entry.get("withCDefines");
+            Boolean isPtr = (Boolean) entry.get("isPtr");
             // Defaults to false if not specified
             withCDefines = withCDefines != null && withCDefines;
+            isPtr = isPtr != null && isPtr;
 
             Object outputNames = entry.get("output_name");
 
@@ -174,7 +178,7 @@ public class LiveDataProcessor {
                 nameList.toArray(outputNamesArr);
             }
 
-            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr, conditional);
+            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr, conditional, isPtr);
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention

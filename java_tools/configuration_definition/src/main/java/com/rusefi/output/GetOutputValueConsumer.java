@@ -30,6 +30,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
     public String currentSectionPrefix = "engine->outputChannels";
     public String conditional;
+    public Boolean isPtr = false;
 
     public GetOutputValueConsumer(String fileName) {
         this.fileName = fileName;
@@ -55,7 +56,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         }
 
         String userName = prefix + cf.getName();
-        String javaName = currentSectionPrefix + "." + prefix;
+        String javaName = currentSectionPrefix + (isPtr ? "->" : ".") + prefix;
 
         getterPairs.add(new VariableRecord(userName, javaName + cf.getName(),  null, conditional));
 

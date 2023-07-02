@@ -13,6 +13,7 @@ public class SdCardFieldsContent {
     private final StringBuilder body = new StringBuilder();
 
     public String home = "engine->outputChannels";
+    public Boolean isPtr = false;
 
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
@@ -49,7 +50,7 @@ public class SdCardFieldsContent {
             categoryStr = ", " + categoryStr;
         }
 
-        return "\t{" + home + "." + name +
+        return "\t{" + home + (isPtr ? "->" : ".") + name +
                 ", "
                 + DataLogConsumer.getHumanGaugeName(prefix, configField) +
                 ", " +
