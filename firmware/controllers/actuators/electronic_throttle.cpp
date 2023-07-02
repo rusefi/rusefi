@@ -84,7 +84,7 @@ static Map3D<6, 6, int8_t, uint8_t, uint8_t> throttle2TrimTable;
 
 constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
 
-static bool startupPositionError = false;
+//static bool startupPositionError = false;
 
 #define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
 
@@ -289,10 +289,10 @@ expected<percent_t> EtbController::getSetpointEtb() {
 		return 50.0f;
 	}
 
-	// A few extra preconditions if throttle control is invalid
-	if (startupPositionError) {
-		return unexpected;
-	}
+//	// A few extra preconditions if throttle control is invalid
+//	if (startupPositionError) {
+//		return unexpected;
+//	}
 
 	// If the pedal map hasn't been set, we can't provide a setpoint.
 	if (!m_pedalMap) {
