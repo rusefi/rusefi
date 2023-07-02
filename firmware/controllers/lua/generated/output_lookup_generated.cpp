@@ -1,3 +1,4 @@
+#if !EFI_UNIT_TEST
 #include "pch.h"
 #include "value_lookup.h"
 float getOutputValueByName(const char *name) {
@@ -654,3 +655,4 @@ float getOutputValueByName(const char *name) {
 	}
 	return EFI_ERROR_CODE;
 }
+#endif
