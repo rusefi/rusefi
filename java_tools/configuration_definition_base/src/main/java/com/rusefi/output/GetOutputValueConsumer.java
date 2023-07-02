@@ -30,6 +30,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     public boolean moduleMode;
     public String currentEngineModule;
     public String conditional;
+    public Boolean isPtr = false;
 
     public GetOutputValueConsumer(String fileName) {
         this.fileName = fileName;
@@ -59,7 +60,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         if (moduleMode) {
             javaName = "engine->module<" + currentEngineModule + ">()->" + prefix;
         } else {
-            javaName = currentSectionPrefix + "." + prefix;
+            javaName = currentSectionPrefix + (isPtr ? "->" : ".") + prefix;
         }
 
         getterPairs.add(new VariableRecord(userName, javaName + cf.getName(), null, conditional));

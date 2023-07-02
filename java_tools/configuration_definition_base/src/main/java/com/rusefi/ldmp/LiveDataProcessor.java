@@ -83,7 +83,7 @@ public class LiveDataProcessor {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule) throws IOException;
+        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr) throws IOException;
     }
 
     private int handleYaml(Map<String, Object> data) throws IOException {
@@ -99,7 +99,7 @@ public class LiveDataProcessor {
 
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule) throws IOException {
+            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr) throws IOException {
                 // TODO: use outputNames
 
                 int startingPosition = javaSensorsConsumer.sensorTsPosition;
@@ -129,6 +129,7 @@ public class LiveDataProcessor {
                 if (constexpr != null) {
                     sdCardFieldsConsumer.home = constexpr;
                     sdCardFieldsConsumer.conditional = conditional;
+                    sdCardFieldsConsumer.isPtr = isPtr;
                     state.addDestination((state1, structure) -> sdCardFieldsConsumer.handleEndStruct(state1, structure));
 
                     outputValueConsumer.currentSectionPrefix = constexpr;
@@ -140,6 +141,7 @@ public class LiveDataProcessor {
                     outputValueConsumer.currentEngineModule = engineModule;
                     outputValueConsumer.moduleMode = true;
                     outputValueConsumer.conditional = conditional;
+                    outputValueConsumer.isPtr = isPtr;
                     state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
                 }
                 state.addDestination(new ConfigurationConsumer() {
@@ -171,8 +173,10 @@ public class LiveDataProcessor {
             String engineModule = (String) entry.get("engineModule");
             String conditional = (String) entry.get("conditional_compilation");
             Boolean withCDefines = (Boolean) entry.get("withCDefines");
+            Boolean isPtr = (Boolean) entry.get("isPtr");
             // Defaults to false if not specified
             withCDefines = withCDefines != null && withCDefines;
+            isPtr = isPtr != null && isPtr;
 
             Object outputNames = entry.get("output_name");
 
@@ -188,7 +192,7 @@ public class LiveDataProcessor {
                 nameList.toArray(outputNamesArr);
             }
 
-            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule);
+            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule, isPtr);
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
