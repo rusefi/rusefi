@@ -85,18 +85,16 @@ PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.h
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.h
 
-ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-	# USB support
-	PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_desc.c
-	PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_desc.h
-	PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_conf.c
-	PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_conf.h
-	PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_bulk.c
-	PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_bulk.h
-	# Common USB lib
-	PROJ_FILES += $(wildcard $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/*.c)
-	PROJ_FILES += $(wildcard $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Inc/*.h)
-endif
+# USB support
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_desc.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_desc.h
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_conf.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_conf.h
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_bulk.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/usbd_bulk.h
+# Common USB lib
+PROJ_FILES += $(wildcard $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Src/*.c)
+PROJ_FILES += $(wildcard $(PROJECT_DIR)/ext/openblt/Target/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32_USB_Device_Library/Core/Inc/*.h)
 
 # CPU-dependent sources
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)

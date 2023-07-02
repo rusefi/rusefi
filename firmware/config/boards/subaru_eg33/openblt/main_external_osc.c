@@ -113,7 +113,7 @@ static void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 25;
   RCC_OscInitStruct.PLL.PLLN = 432;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 2;
+  RCC_OscInitStruct.PLL.PLLQ = 9; //48 MHz for USB
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     /* Clock configuration incorrect or hardware failure. Hang the system to prevent
@@ -176,6 +176,10 @@ void HAL_MspInit(void)
   /* CAN clock enable. */
   __HAL_RCC_CAN1_CLK_ENABLE();
 #endif
+#if (BOOT_COM_USB_ENABLE > 0)
+  /* USB clock enable. */
+  __HAL_RCC_USB_OTG_FS_CLK_ENABLE();
+#endif
 
   /* Configure GPIO pin for the Red LED. */
   GPIO_InitStruct.Pin = STATUS_LED_PIN;
@@ -217,7 +221,15 @@ void HAL_MspInit(void)
   GPIO_InitStruct.Alternate = GPIO_AF9_CAN1;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 #endif
-
+#if (BOOT_COM_USB_ENABLE > 0)
+  /* USB pin configuration. */
+  GPIO_InitStruct.Pin = GPIO_PIN_11 | GPIO_PIN_12;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+#endif
 } /*** end of HAL_MspInit ***/
 
 
@@ -239,6 +251,14 @@ void HAL_MspDeInit(void)
   /* Deinit used GPIOs. */
   HAL_GPIO_DeInit(GPIOB, GPIO_PIN_7);
   HAL_GPIO_DeInit(GPIOC, GPIO_PIN_13);
+
+#if (BOOT_COM_USB_ENABLE > 0)
+  /* Deinit used GPIOs. */
+  HAL_GPIO_DeInit(GPIOA, GPIO_PIN_11);
+  HAL_GPIO_DeInit(GPIOA, GPIO_PIN_12);
+  /* USB clock enable. */
+  __HAL_RCC_USB_OTG_FS_CLK_ENABLE();
+#endif
 
 #if (BOOT_COM_CAN_ENABLE > 0)
   /* Deinit used GPIOs. */

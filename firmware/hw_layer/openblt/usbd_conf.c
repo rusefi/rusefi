@@ -20,8 +20,18 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx.h"
+#ifdef STM32F429xx
+#include "stm32f4xx.h"                           /* STM32 CPU and HAL header           */
 #include "stm32f4xx_hal.h"
+#endif
+#ifdef STM32F767xx
+#include "stm32f7xx.h"                           /* STM32 CPU and HAL header           */
+#include "stm32f7xx_hal.h"
+#endif
+#ifdef STM32H743xx
+#include "stm32h7xx.h"                           /* STM32 CPU and HAL header           */
+#include "stm32h7xx_hal.h"
+#endif
 #include "usbd_def.h"
 #include "usbd_core.h"
 #include "usbd_bulk.h"
