@@ -26,7 +26,7 @@
         <string>lib/SteelSeries-3.9.30.jar</string>
         <string>lib/annotations.jar</string>
         <string>lib/miglayout-4.0.jar</string>
-        <string>../java_tools/configuration_definition/lib/antlr-4.9.3-complete.jar</string>
+        <string>../java_tools/configuration_definition/lib/antlr-4.10-complete.jar</string>
         <string>lib/javacan-core.jar</string>
     </resources>
     <pathconvert property="lib_list" refid="libs" pathsep=":" />
