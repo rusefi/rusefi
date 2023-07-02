@@ -58,6 +58,8 @@ expected<angle_t> VvtController::getSetpoint() {
 	engine->outputChannels.vvtTargets[index] = target;
 #endif
 
+	vvtTarget = target;
+
 	return target;
 }
 
@@ -99,6 +101,8 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 	bool enabled = rpm > engineConfiguration->vvtControlMinRpm
 			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
 			 ;
+
+	vvtOutput = outputValue.value_or(0);
 
 	if (outputValue && enabled) {
 		m_pwm.setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
