@@ -263,90 +263,90 @@ struct output_channels_s {
 	// offset 48
 	int16_t injectionOffset = (int16_t)0;
 
-	// @@GAUGE_NAME_INJECTOR_LAG@@
-	// ms
-	// offset 50
-	scaled_channel<uint16_t, 300, 1> injectorLagMs = (uint16_t)0;
-
 	// @@GAUGE_NAME_ENGINE_CRC16@@
 	// crc16
-	// offset 52
+	// offset 50
 	uint16_t engineMakeCodeNameCrc16 = (uint16_t)0;
 
 	// @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
 	// mg
-	// offset 54
+	// offset 52
 	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
 
 	// @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
 	// mg
-	// offset 56
+	// offset 54
 	scaled_channel<int16_t, 100, 1> wallFuelCorrectionValue = (int16_t)0;
 
-	// offset 58
+	// offset 56
 	uint16_t revolutionCounterSinceStart = (uint16_t)0;
 
 	// CAN: Rx
-	// offset 60
+	// offset 58
 	uint16_t canReadCounter = (uint16_t)0;
 
 	// @@GAUGE_NAME_FUEL_TPS_EXTRA@@
 	// ms
-	// offset 62
+	// offset 60
 	scaled_channel<int16_t, 300, 1> tpsAccelFuel = (int16_t)0;
 
 	// @@GAUGE_NAME_TIMING_ADVANCE@@
 	// deg
-	// offset 64
+	// offset 62
 	scaled_channel<int16_t, 50, 1> ignitionAdvance = (int16_t)0;
 
 	// @@GAUGE_NAME_IGNITION_MODE@@
-	// offset 66
+	// offset 64
 	uint8_t currentIgnitionMode = (uint8_t)0;
 
 	// @@GAUGE_NAME_INJECTION_MODE@@
-	// offset 67
+	// offset 65
 	uint8_t currentInjectionMode = (uint8_t)0;
 
 	// @@GAUGE_NAME_DWELL_DUTY@@
 	// %
-	// offset 68
+	// offset 66
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 
 	// ETB Target
 	// %
-	// offset 70
+	// offset 68
 	scaled_channel<int16_t, 100, 1> etbTarget = (int16_t)0;
 
 	// @@GAUGE_NAME_ETB_DUTY@@
 	// %
-	// offset 72
+	// offset 70
 	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 
 	// Fuel level
 	// %
-	// offset 74
+	// offset 72
 	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
 
 	// @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	// grams
-	// offset 76
+	// offset 74
 	uint16_t totalFuelConsumption = (uint16_t)0;
 
 	// @@GAUGE_NAME_FUEL_FLOW@@
 	// gram/s
-	// offset 78
+	// offset 76
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
 
 	// @@GAUGE_NAME_TPS2@@
 	// %
-	// offset 80
+	// offset 78
 	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
 
 	// @@GAUGE_NAME_TUNE_CRC16@@
 	// crc16
-	// offset 82
+	// offset 80
 	uint16_t tuneCrc16 = (uint16_t)0;
+
+	// need 4 byte alignment
+	// units
+	// offset 82
+	uint8_t alignmentFill_at_82[2];
 
 	// @@GAUGE_NAME_KNOCK_LEVEL@@
 	// Volts
