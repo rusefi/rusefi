@@ -63,13 +63,13 @@ struct type_list {
 	 * The return type is type_list<get_t> or type_list<Mockable<get_t>>
 	 */
 	template<typename get_t>
-	auto get() -> std::enable_if_t<decltype(first)::template has<get_t>(),
+	constexpr auto get() -> std::enable_if_t<decltype(first)::template has<get_t>(),
 				       decltype(first.template get<get_t>())> {
 		return first.template get<get_t>();
 	}
 
 	template<typename get_t>
-	auto get() -> std::enable_if_t<!decltype(first)::template has<get_t>(),
+	constexpr auto get() -> std::enable_if_t<!decltype(first)::template has<get_t>(),
 				       decltype(others.template get<get_t>())> {
 		return others.template get<get_t>();
 	}
@@ -111,19 +111,19 @@ public:
 	}
 
 	template<typename get_t, typename = std::enable_if_t<has<get_t>()>>
-	auto & get() {
+	constexpr auto & get() {
 		return *this;
 	}
 
-	auto & unmock() {
+	constexpr auto & unmock() {
 		return me;
 	}
 
-	base_t * operator->() {
+	constexpr base_t * operator->() {
 		return &me;
 	}
 
-	base_t & operator*() {
+	constexpr base_t & operator*() {
 		return me;
 	}
 };
@@ -170,7 +170,7 @@ public:
 	}
 
 	template<typename get_t, typename = std::enable_if_t<has<get_t>()>>
-	auto & get() {
+	constexpr auto & get() {
 		return *this;
 	}
 
@@ -186,11 +186,11 @@ public:
 		}
 	}
 
-	auto * operator->() {
+	constexpr auto * operator->() {
 		return cur;
 	}
 
-	auto & operator*() {
+	constexpr auto & operator*() {
 		return *cur;
 	}
 
