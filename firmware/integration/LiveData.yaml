@@ -155,5 +155,9 @@ Usages:
 
   - name: sent_state
     java: SentState.java
-    folder: controllers/sensors/
+    folder: controllers/sensors
     prepend: integration/rusefi_config_shared.txt
+
+  - name: vvt
+    java: VvtState.java
+    folder: controllers/actuators
