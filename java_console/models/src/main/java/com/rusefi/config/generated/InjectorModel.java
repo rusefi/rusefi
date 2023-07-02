@@ -155,9 +155,9 @@ public class InjectorModel {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field M_DEADTIME = Field.create("M_DEADTIME", 0, FieldType.FLOAT).setBaseOffset(944);
-	public static final Field PRESSUREDELTA = Field.create("PRESSUREDELTA", 4, FieldType.FLOAT).setBaseOffset(944);
-	public static final Field PRESSURERATIO = Field.create("PRESSURERATIO", 8, FieldType.FLOAT).setBaseOffset(944);
+	public static final Field M_DEADTIME = Field.create("M_DEADTIME", 0, FieldType.FLOAT).setBaseOffset(932);
+	public static final Field PRESSUREDELTA = Field.create("PRESSUREDELTA", 4, FieldType.FLOAT).setBaseOffset(932);
+	public static final Field PRESSURERATIO = Field.create("PRESSURERATIO", 8, FieldType.FLOAT).setBaseOffset(932);
 	public static final Field[] VALUES = {
 	M_DEADTIME,
 	PRESSUREDELTA,

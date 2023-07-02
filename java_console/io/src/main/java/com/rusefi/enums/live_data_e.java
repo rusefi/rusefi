@@ -9,7 +9,6 @@ public enum live_data_e {
 	LDS_fuel_computer,
 	LDS_ignition_state,
 	LDS_knock_controller,
-	LDS_throttle_model,
 	LDS_high_pressure_fuel_pump,
 	LDS_injector_model,
 	LDS_launch_control_state,
@@ -30,5 +29,6 @@ public enum live_data_e {
 	LDS_wideband_state,
 	LDS_dc_motors,
 	LDS_sent_state,
+	LDS_throttle_model,
 	LDS_vvt,
 }

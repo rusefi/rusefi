@@ -155,17 +155,17 @@ public class AcControl {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field ACBUTTONSTATE = Field.create("ACBUTTONSTATE", 0, FieldType.BIT, 0).setBaseOffset(1000);
-	public static final Field M_ACENABLED = Field.create("M_ACENABLED", 0, FieldType.BIT, 1).setBaseOffset(1000);
-	public static final Field ENGINETOOSLOW = Field.create("ENGINETOOSLOW", 0, FieldType.BIT, 2).setBaseOffset(1000);
-	public static final Field ENGINETOOFAST = Field.create("ENGINETOOFAST", 0, FieldType.BIT, 3).setBaseOffset(1000);
-	public static final Field NOCLT = Field.create("NOCLT", 0, FieldType.BIT, 4).setBaseOffset(1000);
-	public static final Field ENGINETOOHOT = Field.create("ENGINETOOHOT", 0, FieldType.BIT, 5).setBaseOffset(1000);
-	public static final Field TPSTOOHIGH = Field.create("TPSTOOHIGH", 0, FieldType.BIT, 6).setBaseOffset(1000);
-	public static final Field ISDISABLEDBYLUA = Field.create("ISDISABLEDBYLUA", 0, FieldType.BIT, 7).setBaseOffset(1000);
-	public static final Field ACCOMPRESSORSTATE = Field.create("ACCOMPRESSORSTATE", 0, FieldType.BIT, 8).setBaseOffset(1000);
-	public static final Field LATEST_USAGE_AC_CONTROL = Field.create("LATEST_USAGE_AC_CONTROL", 4, FieldType.INT).setScale(1.0).setBaseOffset(1000);
-	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 8, FieldType.INT).setScale(1.0).setBaseOffset(1000);
+	public static final Field ACBUTTONSTATE = Field.create("ACBUTTONSTATE", 0, FieldType.BIT, 0).setBaseOffset(988);
+	public static final Field M_ACENABLED = Field.create("M_ACENABLED", 0, FieldType.BIT, 1).setBaseOffset(988);
+	public static final Field ENGINETOOSLOW = Field.create("ENGINETOOSLOW", 0, FieldType.BIT, 2).setBaseOffset(988);
+	public static final Field ENGINETOOFAST = Field.create("ENGINETOOFAST", 0, FieldType.BIT, 3).setBaseOffset(988);
+	public static final Field NOCLT = Field.create("NOCLT", 0, FieldType.BIT, 4).setBaseOffset(988);
+	public static final Field ENGINETOOHOT = Field.create("ENGINETOOHOT", 0, FieldType.BIT, 5).setBaseOffset(988);
+	public static final Field TPSTOOHIGH = Field.create("TPSTOOHIGH", 0, FieldType.BIT, 6).setBaseOffset(988);
+	public static final Field ISDISABLEDBYLUA = Field.create("ISDISABLEDBYLUA", 0, FieldType.BIT, 7).setBaseOffset(988);
+	public static final Field ACCOMPRESSORSTATE = Field.create("ACCOMPRESSORSTATE", 0, FieldType.BIT, 8).setBaseOffset(988);
+	public static final Field LATEST_USAGE_AC_CONTROL = Field.create("LATEST_USAGE_AC_CONTROL", 4, FieldType.INT).setScale(1.0).setBaseOffset(988);
+	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 8, FieldType.INT).setScale(1.0).setBaseOffset(988);
 	public static final Field[] VALUES = {
 	ACBUTTONSTATE,
 	M_ACENABLED,

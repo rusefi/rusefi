@@ -3,7 +3,6 @@ decl_frag<output_channels_s>{},
 decl_frag<fuel_computer_s>{},
 decl_frag<ignition_state_s>{},
 decl_frag<knock_controller_s>{},
-decl_frag<throttle_model_s>{},
 decl_frag<high_pressure_fuel_pump_s>{},
 decl_frag<injector_model_s>{},
 decl_frag<launch_control_state_s>{},
@@ -31,4 +30,5 @@ decl_frag<wideband_state_s, 0>{},	// wb1
 // decl_frag<wideband_state_s, 1>{},	// wb2
 decl_frag<dc_motors_s>{},
 decl_frag<sent_state_s>{},
+decl_frag<throttle_model_s>{},
 decl_frag<vvt_s>{},
