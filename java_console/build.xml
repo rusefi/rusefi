@@ -43,8 +43,8 @@
     <target name="build" depends="jar, test"/>
 
     <target name="compile">
-        <fail message="Unsupported Java version: ${ant.java.version}.
-  Make sure that the Java version is exactly 11 see https://github.com/rusefi/rusefi/issues/3128 Detected ${ant.java.version}">
+        <fail message="Unsupported Java version detected: ${ant.java.version}.
+  Make sure that the Java version is exactly 11.">
             <condition>
                 <not>
                     <or>
