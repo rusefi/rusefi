@@ -51,6 +51,7 @@ public enum Sensor implements BinaryLogEntry {
     MAF_RAE(GAUGE_NAME_MAF + " raw", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.RAWMAF, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "Volts"),
     MAF(GAUGE_NAME_MAF, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.MAFMEASURED, 1.0 / PACK_MULT_MASS_FLOW, 0, 5, "Volts"),
     MAP(GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.MAPVALUE, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
+    BARO(GAUGE_NAME_BARO_PRESSURE, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.BAROPRESSURE, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
     Lambda(GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.LAMBDAVALUE, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
 
