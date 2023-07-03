@@ -28,6 +28,7 @@
 * Include files
 ****************************************************************************************/
 #include "boot.h"                                /* bootloader generic header          */
+#include "shared_params.h"                       /* Shared parameters header           */
 #ifdef STM32F429xx
 #include "stm32f4xx.h"                           /* STM32 CPU and HAL header           */
 #endif
@@ -56,6 +57,8 @@ int main(void)
 {
   /* initialize the microcontroller */
   Init();
+  /* initialize the shared parameters module */
+  SharedParamsInit();
   /* initialize the bootloader */
   BootInit();
 
@@ -70,6 +73,18 @@ int main(void)
   return 0;
 } /*** end of main ***/
 
+/************************************************************************************//**
+** \brief     Interrupt service routine of the timer.
+** \return    none.
+**
+****************************************************************************************/
+void SysTick_Handler(void)
+{
+  /* Increment the tick counter. */
+  HAL_IncTick();
+  /* Invoke the system tick handler. */
+  HAL_SYSTICK_IRQHandler();
+} /*** end of TimerISRHandler ***/
 
 /************************************************************************************//**
 ** \brief     Initializes the microcontroller.
@@ -168,19 +183,6 @@ void HAL_MspInit(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
 
-#if (BOOT_COM_RS232_ENABLE > 0)
-  /* UART clock enable. */
-  __HAL_RCC_USART1_CLK_ENABLE();
-#endif
-#if (BOOT_COM_CAN_ENABLE > 0)
-  /* CAN clock enable. */
-  __HAL_RCC_CAN1_CLK_ENABLE();
-#endif
-#if (BOOT_COM_USB_ENABLE > 0)
-  /* USB clock enable. */
-  __HAL_RCC_USB_OTG_FS_CLK_ENABLE();
-#endif
-
   /* Configure GPIO pin for the Red LED. */
   GPIO_InitStruct.Pin = STATUS_LED_PIN;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -204,6 +206,9 @@ void HAL_MspInit(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* UART clock enable. */
+  __HAL_RCC_USART1_CLK_ENABLE();
 #endif
 #if (BOOT_COM_CAN_ENABLE > 0)
   /* CAN enable pin */
@@ -220,6 +225,9 @@ void HAL_MspInit(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF9_CAN1;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /* CAN clock enable. */
+  __HAL_RCC_CAN1_CLK_ENABLE();
 #endif
 #if (BOOT_COM_USB_ENABLE > 0)
   /* USB pin configuration. */
@@ -229,6 +237,9 @@ void HAL_MspInit(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* USB clock enable. */
+  __HAL_RCC_USB_OTG_FS_CLK_ENABLE();
 #endif
 } /*** end of HAL_MspInit ***/
 
@@ -256,8 +267,8 @@ void HAL_MspDeInit(void)
   /* Deinit used GPIOs. */
   HAL_GPIO_DeInit(GPIOA, GPIO_PIN_11);
   HAL_GPIO_DeInit(GPIOA, GPIO_PIN_12);
-  /* USB clock enable. */
-  __HAL_RCC_USB_OTG_FS_CLK_ENABLE();
+  /* USB clock disable. */
+  __HAL_RCC_USB_OTG_FS_CLK_DISABLE();
 #endif
 
 #if (BOOT_COM_CAN_ENABLE > 0)
