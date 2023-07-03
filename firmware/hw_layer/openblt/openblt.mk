@@ -108,6 +108,7 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	LFLAGS      = -Wl,-script="$(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/openblt/STM32F4xx.ld"
 	# Port specific options
 	PORTFLAGS  += -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
+	PORTFLAGS  += -DSTM32F4XX
 else ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	# Collect bootloader port files
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM7_STM32F7/*.c)
@@ -119,6 +120,7 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	LFLAGS     += -Wl,-script="$(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/openblt/STM32F7xx.ld"
 	# Port specific options
 	PORTFLAGS   = -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-sp-d16
+	PORTFLAGS  += -DSTM32F7XX
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	# Collect bootloader port files
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM7_STM32H7/*.c)
@@ -130,6 +132,7 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	LFLAGS      = -Wl,-script="$(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/openblt/STM32H7xx.ld"
 	# Port specific options
 	PORTFLAGS  += -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16
+	PORTFLAGS  += -DSTM32H7XX
 endif
 
 OPTFLAGS    = -Os
