@@ -5,10 +5,6 @@ import com.rusefi.ldmp.StateDictionary;
 
 public class StateDictionaryFactory {
     public static void initialize(StateDictionary stateDictionary) {
-        //register(live_data_e.LDS_ETB_PID, PidState.VALUES); // 7
-        //register(live_data_e.LDS_IDLE_PID, PidState.VALUES);
-        //register(live_data_e.LDS_ALTERNATOR_PID,
-        // LDS_CJ125_PID
         //register(live_data_e.LDS_IDLE, IdleState.VALUES);
         // todo: code generate this!
         stateDictionary.register(live_data_e.LDS_output_channels, TsOutputs.VALUES, "status_loop");
