@@ -65,6 +65,8 @@ jobs:
         git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
         # not out place to update live data etc
         git checkout -- **/*.java
+        git checkout -- **/*.ini
+        git checkout -- **/*.h
         git status
         OUT=$(git commit -am "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
