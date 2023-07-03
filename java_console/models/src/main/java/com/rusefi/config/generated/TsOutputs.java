@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed May 31 21:17:03 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Jul 03 16:38:04 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -218,24 +218,24 @@ public class TsOutputs {
 	public static final Field INJECTORDUTYCYCLE = Field.create("INJECTORDUTYCYCLE", 46, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field VEVALUE = Field.create("VEVALUE", 47, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field INJECTIONOFFSET = Field.create("INJECTIONOFFSET", 48, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field INJECTORLAGMS = Field.create("INJECTORLAGMS", 50, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
-	public static final Field ENGINEMAKECODENAMECRC16 = Field.create("ENGINEMAKECODENAMECRC16", 52, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field WALLFUELAMOUNT = Field.create("WALLFUELAMOUNT", 54, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field WALLFUELCORRECTIONVALUE = Field.create("WALLFUELCORRECTIONVALUE", 56, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field REVOLUTIONCOUNTERSINCESTART = Field.create("REVOLUTIONCOUNTERSINCESTART", 58, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field CANREADCOUNTER = Field.create("CANREADCOUNTER", 60, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field TPSACCELFUEL = Field.create("TPSACCELFUEL", 62, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
-	public static final Field CURRENTIGNITIONMODE = Field.create("CURRENTIGNITIONMODE", 64, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field CURRENTINJECTIONMODE = Field.create("CURRENTINJECTIONMODE", 65, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field COILDUTYCYCLE = Field.create("COILDUTYCYCLE", 66, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field IDLEAIRVALVEPOSITION = Field.create("IDLEAIRVALVEPOSITION", 68, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ETBTARGET = Field.create("ETBTARGET", 70, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ETB1DUTYCYCLE = Field.create("ETB1DUTYCYCLE", 72, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field FUELTANKLEVEL = Field.create("FUELTANKLEVEL", 74, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TOTALFUELCONSUMPTION = Field.create("TOTALFUELCONSUMPTION", 76, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field FUELFLOWRATE = Field.create("FUELFLOWRATE", 78, FieldType.INT16).setScale(0.005).setBaseOffset(0);
-	public static final Field TPS2VALUE = Field.create("TPS2VALUE", 80, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TUNECRC16 = Field.create("TUNECRC16", 82, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ENGINEMAKECODENAMECRC16 = Field.create("ENGINEMAKECODENAMECRC16", 50, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field WALLFUELAMOUNT = Field.create("WALLFUELAMOUNT", 52, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field WALLFUELCORRECTIONVALUE = Field.create("WALLFUELCORRECTIONVALUE", 54, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field REVOLUTIONCOUNTERSINCESTART = Field.create("REVOLUTIONCOUNTERSINCESTART", 56, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field CANREADCOUNTER = Field.create("CANREADCOUNTER", 58, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field TPSACCELFUEL = Field.create("TPSACCELFUEL", 60, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
+	public static final Field CURRENTIGNITIONMODE = Field.create("CURRENTIGNITIONMODE", 62, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field CURRENTINJECTIONMODE = Field.create("CURRENTINJECTIONMODE", 63, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field COILDUTYCYCLE = Field.create("COILDUTYCYCLE", 64, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field IDLEAIRVALVEPOSITION = Field.create("IDLEAIRVALVEPOSITION", 66, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ETBTARGET = Field.create("ETBTARGET", 68, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field ETB1DUTYCYCLE = Field.create("ETB1DUTYCYCLE", 70, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field FUELTANKLEVEL = Field.create("FUELTANKLEVEL", 72, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field TOTALFUELCONSUMPTION = Field.create("TOTALFUELCONSUMPTION", 74, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field FUELFLOWRATE = Field.create("FUELFLOWRATE", 76, FieldType.INT16).setScale(0.005).setBaseOffset(0);
+	public static final Field TPS2VALUE = Field.create("TPS2VALUE", 78, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field TUNECRC16 = Field.create("TUNECRC16", 80, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_82 = Field.create("ALIGNMENTFILL_AT_82", 82, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field KNOCKLEVEL = Field.create("KNOCKLEVEL", 84, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field SECONDS = Field.create("SECONDS", 88, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ENGINEMODE = Field.create("ENGINEMODE", 92, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -727,7 +727,6 @@ public class TsOutputs {
 	INJECTORDUTYCYCLE,
 	VEVALUE,
 	INJECTIONOFFSET,
-	INJECTORLAGMS,
 	ENGINEMAKECODENAMECRC16,
 	WALLFUELAMOUNT,
 	WALLFUELCORRECTIONVALUE,
@@ -745,6 +744,7 @@ public class TsOutputs {
 	FUELFLOWRATE,
 	TPS2VALUE,
 	TUNECRC16,
+	ALIGNMENTFILL_AT_82,
 	KNOCKLEVEL,
 	SECONDS,
 	ENGINEMODE,

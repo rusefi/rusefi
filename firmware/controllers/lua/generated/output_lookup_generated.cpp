@@ -152,9 +152,6 @@ float getOutputValueByName(const char *name) {
 // injectionOffset
 		case -243031057:
 			return engine->outputChannels.injectionOffset;
-// injectorLagMs
-		case 1615892023:
-			return engine->outputChannels.injectorLagMs;
 // engineMakeCodeNameCrc16
 		case 1726931380:
 			return engine->outputChannels.engineMakeCodeNameCrc16;

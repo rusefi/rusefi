@@ -31,3 +31,4 @@ decl_frag<wideband_state_s, 0>{},	// wb1
 // decl_frag<wideband_state_s, 1>{},	// wb2
 decl_frag<dc_motors_s>{},
 decl_frag<sent_state_s>{},
+decl_frag<vvt_s>{},

@@ -24,7 +24,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.injectorDutyCycle, "Fuel: injector duty cycle", "%", 0},
 	{engine->outputChannels.veValue, "Fuel: VE", "ratio", 1},
 	{engine->outputChannels.injectionOffset, "Fuel: Injection timing SOI", "deg", 0},
-	{engine->outputChannels.injectorLagMs, "Fuel: injector lag", "ms", 3},
 	{engine->outputChannels.engineMakeCodeNameCrc16, "Engine CRC16", "crc16", 0},
 	{engine->outputChannels.wallFuelAmount, "Fuel: wall amount", "mg", 3},
 	{engine->outputChannels.wallFuelCorrectionValue, "Fuel: wall correction", "mg", 3},

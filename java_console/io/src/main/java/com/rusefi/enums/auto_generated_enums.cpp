@@ -1,6 +1,6 @@
 #include "global.h"
 #include "live_data_ids.h"
-// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Sun Apr 30 00:29:40 UTC 2023
+// was generated automatically by rusEFI tool  from live_data_ids.h // by enum_to_string.jar tool on Mon Jul 03 16:38:04 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -53,6 +53,8 @@ case LDS_trigger_state:
   return "LDS_trigger_state";
 case LDS_trigger_state_primary:
   return "LDS_trigger_state_primary";
+case LDS_vvt:
+  return "LDS_vvt";
 case LDS_wall_fuel_state:
   return "LDS_wall_fuel_state";
 case LDS_wideband_state:
