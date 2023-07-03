@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
 
 ### Breaking Changes
  - Always operate in "two wire" mode for batch fuel, fixing batch firing order #5353
+ - rusEFI console requires java 11
 
 ## June 2023 Release "Day 466"
 
