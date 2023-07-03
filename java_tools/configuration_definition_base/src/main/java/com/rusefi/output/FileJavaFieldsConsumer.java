@@ -3,7 +3,7 @@ package com.rusefi.output;
 import com.rusefi.ReaderState;
 import com.rusefi.ToolUtil;
 import com.rusefi.util.LazyFile;
-import com.rusefi.util.LazyFileImpl;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,12 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
         super(state, baseOffset);
         javaFields = fileFactory.create(javaDestination);
         String className = new File(javaDestination).getName();
-        this.className = className.substring(0, className.indexOf('.'));
+        this.className = remoteExtension(className);
+    }
+
+    @NotNull
+    public static String remoteExtension(String fileNameWithExtension) {
+        return fileNameWithExtension.substring(0, fileNameWithExtension.indexOf('.'));
     }
 
     @Override
