@@ -4,6 +4,7 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.parse.TypesHelper;
 import com.rusefi.output.variables.VariableRecord;
+import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,8 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.output.ConfigStructureImpl.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
-import static com.rusefi.output.GetOutputValueConsumer.getHashConflicts;
-import static com.rusefi.output.GetOutputValueConsumer.wrapSwitchStatement;
 
 /**
  * Here we generate C++ code for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getcalibrationname
@@ -44,21 +43,23 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     private final List<VariableRecord> variables = new ArrayList<>();
     private final String outputFileName;
     private final String mdOutputFileName;
+    private final LazyFile.LazyFileFactory lazyFileFactory;
 
     private final StringBuilder mdContent = new StringBuilder();
 
     public GetConfigValueConsumer() {
-        this(null, null);
+        this(null, null, LazyFile.REAL);
     }
 
-    public GetConfigValueConsumer(String outputFileName, String mdOutputFileName) {
+    public GetConfigValueConsumer(String outputFileName, String mdOutputFileName, LazyFile.LazyFileFactory lazyFileFactory) {
         this.outputFileName = outputFileName;
         this.mdOutputFileName = mdOutputFileName;
+        this.lazyFileFactory = lazyFileFactory;
     }
 
-    public static void writeStringToFile(@Nullable String fileName, String content) throws IOException {
+    public static void writeStringToFile(@Nullable String fileName, String content, LazyFile.LazyFileFactory lazyFileFactory) throws IOException {
         if (fileName != null) {
-            FileWriter fw = new FileWriter(fileName);
+            LazyFile fw = lazyFileFactory.create(fileName);
             fw.write(content);
             fw.close();
         }
@@ -75,8 +76,8 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-        writeStringToFile(outputFileName, getContent());
-        writeStringToFile(mdOutputFileName, getMdContent());
+        writeStringToFile(outputFileName, getContent(), lazyFileFactory);
+        writeStringToFile(mdOutputFileName, getMdContent(), lazyFileFactory);
     }
 
     private String processConfig(ConfigField cf, String prefix) {

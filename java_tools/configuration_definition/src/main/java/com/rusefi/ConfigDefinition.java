@@ -4,6 +4,7 @@ import com.rusefi.newparse.DefinitionsState;
 import com.rusefi.output.*;
 import com.rusefi.pinout.PinoutLogic;
 import com.rusefi.trigger.TriggerWheelTSLogic;
+import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 
 import java.io.*;
@@ -102,7 +103,7 @@ public class ConfigDefinition {
                     String cppFile = args[i + 1];
                     String mdFile = args[i + 2];
                     i++;
-                    state.addDestination(new GetConfigValueConsumer(cppFile, mdFile));
+                    state.addDestination(new GetConfigValueConsumer(cppFile, mdFile, LazyFile.REAL));
                 }
                     break;
                 case "-readfile":

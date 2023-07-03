@@ -3,6 +3,7 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
 import com.rusefi.util.LazyFile;
+import com.rusefi.util.LazyFileImpl;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -50,7 +51,7 @@ public enum FileLog {
     }
 
     private static void writeReadmeFile() {
-        LazyFile file = new LazyFile(Logger.DIR + "README.html");
+        LazyFile file = new LazyFileImpl(Logger.DIR + "README.html");
         file.write("<center>" + "<a href='" + WIKI_URL + "'>More info online<br/><img src=https://raw.githubusercontent.com/wiki/rusefi/rusefi/logo.gif></a>");
         try {
             file.close();

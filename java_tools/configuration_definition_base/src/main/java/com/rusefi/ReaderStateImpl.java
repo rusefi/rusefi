@@ -6,7 +6,7 @@ import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.output.*;
 import com.rusefi.parse.TypesHelper;
-import com.rusefi.util.IoUtils;
+import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +38,7 @@ public class ReaderStateImpl implements ReaderState {
     private final Map<String, String> tsCustomLine = new HashMap<>();
     private final Map<String, ConfigStructureImpl> structures = new HashMap<>();
     private final ReaderProvider readerProvider;
+    private final LazyFile.LazyFileFactory fileFactory;
     private String headerMessage;
     // well, technically those should be a builder for state, not this state class itself
     private String tsFileOutputName = "rusefi.ini";
@@ -51,11 +52,12 @@ public class ReaderStateImpl implements ReaderState {
     private final VariableRegistry variableRegistry = new VariableRegistry();
 
     public ReaderStateImpl() {
-        this(ReaderProvider.REAL);
+        this(ReaderProvider.REAL, LazyFile.REAL);
     }
 
-    public ReaderStateImpl(ReaderProvider readerProvider) {
+    public ReaderStateImpl(ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory) {
         this.readerProvider = readerProvider;
+        this.fileFactory = fileFactory;
     }
 
     @Override
@@ -371,11 +373,11 @@ public class ReaderStateImpl implements ReaderState {
 
     @Override
     public void addCHeaderDestination(String cHeader) {
-        destinations.add(new CHeaderConsumer(this, cHeader, withC_Defines));
+        destinations.add(new CHeaderConsumer(this, cHeader, withC_Defines, fileFactory));
     }
 
     public void addJavaDestination(String fileName) {
-        destinations.add(new FileJavaFieldsConsumer(this, fileName, 0));
+        destinations.add(new FileJavaFieldsConsumer(this, fileName, 0, fileFactory));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.rusefi.output;
 
 import com.rusefi.*;
 import com.rusefi.util.LazyFile;
+import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.SystemOut;
 
 import java.io.IOException;
@@ -24,18 +25,18 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
     private final LazyFile cHeader;
     private final VariableRegistry variableRegistry;
 
-    public CHeaderConsumer(ReaderState state, String destCHeader, boolean withC_Defines) {
+    public CHeaderConsumer(ReaderState state, String destCHeader, boolean withC_Defines, LazyFile.LazyFileFactory fileFactory) {
         this.variableRegistry = state.getVariableRegistry();
         this.state = state;
         this.withC_Defines = withC_Defines;
         SystemOut.println("Writing C header to " + destCHeader);
-        cHeader = new LazyFile(destCHeader);
+        cHeader = fileFactory.create(destCHeader);
     }
 
     public static void writeDefinesToFile(VariableRegistry variableRegistry, String fileName, String headerComment) throws IOException {
 
         SystemOut.println("Writing to " + fileName);
-        LazyFile cHeader = new LazyFile(fileName);
+        LazyFile cHeader = new LazyFileImpl(fileName);
 
         cHeader.write("//\n// " + ToolUtil.getGeneratedAutomaticallyTag() + headerComment + "\n//\n\n");
         cHeader.write(variableRegistry.getDefinesSection());

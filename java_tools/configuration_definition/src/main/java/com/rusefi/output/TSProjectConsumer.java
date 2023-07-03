@@ -1,7 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.*;
-import com.rusefi.util.LazyFile;
+import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.Output;
 import com.rusefi.util.SystemOut;
 
@@ -42,7 +42,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
         // File.getPath() would eliminate potential separator at the end of the path
         String fileName = getTsFileOutputName(new File(tsPath).getPath());
-        Output tsHeader = new LazyFile(fileName);
+        Output tsHeader = new LazyFileImpl(fileName);
         writeContent(fieldsSection, tsContent, tsHeader);
     }
 

@@ -3,8 +3,8 @@ package com.rusefi.ldmp;
 import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.output.*;
-import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
+import com.rusefi.util.LazyFileImpl;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -23,6 +23,7 @@ public class LiveDataProcessor {
     private final static String tsOutputsDestination = "console/binary/";
 
     private final ReaderProvider readerProvider;
+    private final LazyFile.LazyFileFactory fileFactory;
 
     private final GaugeConsumer gaugeConsumer = new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini");
 
@@ -43,8 +44,9 @@ public class LiveDataProcessor {
 
     private final String extraPrepend = System.getProperty("LiveDataProcessor.extra_prepend");
 
-    public LiveDataProcessor(ReaderProvider readerProvider) {
+    public LiveDataProcessor(ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory) {
         this.readerProvider = readerProvider;
+        this.fileFactory = fileFactory;
     }
 
     public static void main(String[] args) throws IOException {
@@ -57,7 +59,7 @@ public class LiveDataProcessor {
         Map<String, Object> data = getStringObjectMap(new FileReader(yamlFileName));
 
 
-        LiveDataProcessor liveDataProcessor = new LiveDataProcessor(ReaderProvider.REAL);
+        LiveDataProcessor liveDataProcessor = new LiveDataProcessor(ReaderProvider.REAL, LazyFile.REAL);
 
         int sensorTsPosition = liveDataProcessor.handleYaml(data);
         liveDataProcessor.writeFiles();
@@ -104,7 +106,7 @@ public class LiveDataProcessor {
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
-        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer("controllers/lua/generated/output_lookup_generated.cpp");
+        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer("controllers/lua/generated/output_lookup_generated.cpp", fileFactory);
 
         EntryHandler handler = new EntryHandler() {
             @Override
@@ -116,7 +118,7 @@ public class LiveDataProcessor {
 
                 baseAddressCHeader.append("#define " + name.toUpperCase() + "_BASE_ADDRESS " + startingPosition + "\n");
 
-                ReaderState state = new ReaderStateImpl(readerProvider);
+                ReaderState state = new ReaderStateImpl(readerProvider, fileFactory);
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.setWithC_Defines(withCDefines);
 
@@ -133,7 +135,7 @@ public class LiveDataProcessor {
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
 
                 int baseOffset = outputsSections.getBaseOffset();
-                state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
+                state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset, fileFactory));
 
                 if (constexpr != null) {
                     sdCardFieldsConsumer.home = constexpr;
@@ -232,7 +234,7 @@ public class LiveDataProcessor {
         }
         enumContent.append("} live_data_e;\n");
 
-        LazyFile lazyFile = new LazyFile("console/binary_log/log_fields_generated.h");
+        LazyFile lazyFile = fileFactory.create("console/binary_log/log_fields_generated.h");
         SdCardFieldsConsumer.wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
         lazyFile.close();
 

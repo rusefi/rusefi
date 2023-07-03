@@ -2,6 +2,7 @@ package com.rusefi.output;
 
 import com.rusefi.ReaderState;
 import com.rusefi.util.LazyFile;
+import com.rusefi.util.LazyFileImpl;
 
 import java.io.IOException;
 
@@ -14,7 +15,7 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
     private final LazyFile output;
 
     public SdCardFieldsConsumer(String outputFileName) {
-        output = new LazyFile(outputFileName);
+        output = new LazyFileImpl(outputFileName);
     }
 
     @Override

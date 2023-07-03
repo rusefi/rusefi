@@ -4,6 +4,7 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.parse.TypesHelper;
 import com.rusefi.output.variables.VariableRecord;
+import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 public class GetOutputValueConsumer implements ConfigurationConsumer {
     private final List<VariableRecord> getterPairs = new ArrayList<>();
     private final String fileName;
+    private final LazyFile.LazyFileFactory fileFactory;
 
     public String currentSectionPrefix = "engine->outputChannels";
     public boolean moduleMode;
@@ -32,8 +34,9 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     public String conditional;
     public Boolean isPtr = false;
 
-    public GetOutputValueConsumer(String fileName) {
+    public GetOutputValueConsumer(String fileName, LazyFile.LazyFileFactory fileFactory) {
         this.fileName = fileName;
+        this.fileFactory = fileFactory;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-        GetConfigValueConsumer.writeStringToFile(fileName, getContent());
+        GetConfigValueConsumer.writeStringToFile(fileName, getContent(), fileFactory);
     }
 
     public String getContent() {

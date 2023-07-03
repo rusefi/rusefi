@@ -2,6 +2,7 @@ package com.rusefi.test;
 
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.GetOutputValueConsumer;
+import com.rusefi.util.LazyFile;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +17,7 @@ public class GetOutputValueConsumerTest {
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null);
+        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null, LazyFile.REAL);
         outputValueConsumer.conditional = "EFI_BOOST_CONTROL";
         state.readBufferedReader(test, (outputValueConsumer));
         assertEquals(
@@ -57,7 +58,7 @@ public class GetOutputValueConsumerTest {
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null);
+        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null, LazyFile.REAL);
         outputValueConsumer.moduleMode = true;
         outputValueConsumer.currentEngineModule = "FuelPumpController";
 

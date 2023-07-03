@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.LazyFile;
+import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.SystemOut;
 
 import java.io.*;
@@ -67,11 +68,11 @@ public class EnumToString {
     }
 
     private void writeCppAndHeaderFiles(String outFileName) throws IOException {
-        LazyFile bw = new LazyFile(outFileName + ".cpp");
+        LazyFile bw = new LazyFileImpl(outFileName + ".cpp");
         bw.write(cppFileContent.toString());
         bw.close();
 
-        bw = new LazyFile(outFileName + ".h");
+        bw = new LazyFileImpl(outFileName + ".h");
         bw.write(headerFileContent.toString());
         bw.close();
     }
