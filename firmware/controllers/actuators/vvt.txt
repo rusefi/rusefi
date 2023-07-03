@@ -1,0 +1,3 @@
+struct_no_prefix vvt_s
+	int vvt_placeholder
+end_struct
