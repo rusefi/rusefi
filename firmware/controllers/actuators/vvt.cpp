@@ -12,10 +12,6 @@
 
 #define NO_PIN_PERIOD 500
 
-#if defined(HAS_OS_ACCESS)
-#error "Unexpected OS ACCESS HERE"
-#endif /* HAS_OS_ACCESS */
-
 using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, int8_t, uint16_t, uint16_t>;
 
 static vvt_map_t vvtTable1;
@@ -184,3 +180,16 @@ void initVvtActuators() {
 }
 
 #endif
+
+template<>
+const vvt_s* getLiveData(size_t idx) {
+#if EFI_AUX_PID
+	if (idx >= efi::size(instances)) {
+		return nullptr;
+	}
+
+	return &instances[idx];
+#else
+	return nullptr;
+#endif
+}

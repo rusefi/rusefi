@@ -11,6 +11,7 @@
 #include "closed_loop_controller.h"
 #include "pwm_generator_logic.h"
 #include "efi_pid.h"
+#include "vvt_generated.h"
 
 class ValueProvider3D;
 
@@ -18,7 +19,7 @@ void initVvtActuators();
 void startVvtControlPins();
 void stopVvtControlPins();
 
-class VvtController : public PeriodicTimerController, public ClosedLoopController<angle_t, percent_t> {
+class VvtController : public PeriodicTimerController, public ClosedLoopController<angle_t, percent_t>, public vvt_s {
 public:
 	void init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap);
 
