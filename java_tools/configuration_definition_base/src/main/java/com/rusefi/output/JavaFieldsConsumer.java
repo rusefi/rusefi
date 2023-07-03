@@ -87,9 +87,9 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                     writeJavaFieldName(nameWithPrefix, tsPosition);
                     content.append("FieldType.FLOAT)" + terminateField());
                 } else {
-                    String enumOptions = state.getVariableRegistry().get(configField.getType() + VariableRegistry.FULL_JAVA_ENUM);
+                    String enumOptions = state.getVariableRegistry().get(configField.getType() + VariableRegistry.ARRAY_FORMAT_ENUM);
                     if (enumOptions == null)
-                        enumOptions = state.getVariableRegistry().get(configField.getType() + VariableRegistry.ENUM_SUFFIX);
+                        enumOptions = state.getVariableRegistry().get(configField.getType() + VariableRegistry.KEY_VALUE_FORMAT_ENUM);
 
                     if (enumOptions != null && !existingJavaEnums.contains(configField.getType())) {
                         existingJavaEnums.add(configField.getType());

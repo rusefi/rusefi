@@ -13,8 +13,8 @@ import java.io.*;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.VariableRegistry.FULL_JAVA_ENUM;
-import static com.rusefi.VariableRegistry.ENUM_SUFFIX;
+import static com.rusefi.VariableRegistry.ARRAY_FORMAT_ENUM;
+import static com.rusefi.VariableRegistry.KEY_VALUE_FORMAT_ENUM;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 public class PinoutLogic {
@@ -83,9 +83,9 @@ public class PinoutLogic {
             EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
             if (pair.getArrayForm().length() > 0) {
                 // we seem to be here if specific pin category like switch_inputs has no pins
-                parseState.addDefinition(registry, outputEnumName + ENUM_SUFFIX, pair.getKeyValueForm(), Definition.OverwritePolicy.IgnoreNew);
+                parseState.addDefinition(registry, outputEnumName + KEY_VALUE_FORMAT_ENUM, pair.getKeyValueForm(), Definition.OverwritePolicy.IgnoreNew);
             }
-            parseState.addDefinition(registry, outputEnumName + FULL_JAVA_ENUM, pair.getArrayForm(), Definition.OverwritePolicy.IgnoreNew);
+            parseState.addDefinition(registry, outputEnumName + ARRAY_FORMAT_ENUM, pair.getArrayForm(), Definition.OverwritePolicy.IgnoreNew);
         }
     }
 
