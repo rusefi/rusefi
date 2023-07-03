@@ -546,4 +546,6 @@ alignmentFill_at_5("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldT
 value0("ETB: SENT value0", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1380, 1.0, 0.0, 3.0, "value"),
 value1("ETB: SENT value1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1382, 1.0, 0.0, 3.0, "value"),
 errorRate("ETB: SENT error rate", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1384, 1.0, 0.0, 3.0, "ratio"),
-vvt_placeholder("vvt_placeholder", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1388, 1.0, -1.0, -1.0, ""),
+vvtTarget("vvtTarget", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1388, 0.1, -90.0, 90.0, "deg"),
+vvtOutput("vvtOutput", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1390, 0.5, 100.0, 1.0, "%"),
+alignmentFill_at_3("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1391, 1.0, -20.0, 100.0, "units"),
