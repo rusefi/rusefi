@@ -84,10 +84,12 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
         String fullSwitch = wrapSwitchStatement(switchBody);
 
-        return GetConfigValueConsumer.getHeader(getClass()) +
+        return  "#if !EFI_UNIT_TEST\n" +
+                GetConfigValueConsumer.getHeader(getClass()) +
                 "float getOutputValueByName(const char *name) {\n" +
                 fullSwitch +
-                getterBody + GetConfigValueConsumer.GET_METHOD_FOOTER;
+                getterBody + GetConfigValueConsumer.GET_METHOD_FOOTER +
+                "#endif\n";
     }
 
     @NotNull
