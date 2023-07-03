@@ -16,6 +16,7 @@
 Usages:
 #  output_channels always goes first at least because it has protocol version at well-known offset
   - name: output_channels
+    cppFileName: status_loop
     java: TsOutputs.java
     folder: console/binary
     prepend: integration/rusefi_config_shared.txt
@@ -29,6 +30,7 @@ Usages:
     conditional_compilation: "EFI_ENGINE_CONTROL"
 
   - name: ignition_state
+    cppFileName: advance_map
     java: IgnitionState.java
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
@@ -54,10 +56,12 @@ Usages:
     folder: controllers/algo/fuel
 
   - name: launch_control_state
+    cppFileName: launch_control
     java: LaunchControl.java
     folder: controllers/algo
 
   - name: antilag_system_state
+    cppFileName: antilag_system
     java: AntilagSystem.java
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
@@ -84,6 +88,7 @@ Usages:
     output_name: [ "fan1", "fan2" ]
 
   - name: fuel_pump_control
+    cppFileName: fuel_pump
     java: FuelPump.java
     folder: controllers/actuators
     output_name: fuelPump
@@ -100,12 +105,14 @@ Usages:
   #   folder: util/math
 
   - name: engine_state
+    cppFileName: engine
     java: EngineState.java
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->engineState"
 
   - name: tps_accel_state
+    cppFileName: accel_enrichment
     java: TpsAccelState.java
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
@@ -120,21 +127,25 @@ Usages:
     conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
 
   - name: trigger_state
+    cppFileName: trigger_decoder
     java: TriggerState.java
     folder: controllers/trigger
     prepend: integration/rusefi_config_shared.txt
     output_name: [ "trg", "vvt1i", "vvt1e", "vvt2i", "vvt2e" ]
 
   - name: trigger_state_primary
+    cppFileName: trigger_decoder
     java: TriggerStatePrimary.java
     folder: controllers/trigger
     prepend: integration/rusefi_config_shared.txt
 
   - name: wall_fuel_state
+    cppFileName: wall_fuel
     java: WallFuelState.java
     folder: controllers/algo
 
   - name: idle_state
+    cppFileName: idle_thread
     java: IdleState.java
     folder: controllers/actuators
     output_name: idle
@@ -146,6 +157,7 @@ Usages:
     output_name: [ "etb1", "etb2" ]
 
   - name: wideband_state
+    cppFileName: AemXSeriesLambda
     java: WidebandController.java
     folder: controllers/sensors/
     output_name: [ "wb1", "wb2" ]
@@ -157,6 +169,7 @@ Usages:
     constexpr: "engine->dc_motors"
 
   - name: sent_state
+    cppFileName: sent
     java: SentState.java
     folder: controllers/sensors/
     prepend: integration/rusefi_config_shared.txt
