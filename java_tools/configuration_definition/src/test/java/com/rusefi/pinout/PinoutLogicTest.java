@@ -1,7 +1,6 @@
 package com.rusefi.pinout;
 
 import com.rusefi.EnumsReader;
-import com.rusefi.pinout.PinoutLogic;
 import com.rusefi.enum_reader.Value;
 import org.junit.Test;
 
@@ -22,14 +21,14 @@ public class PinoutLogicTest {
 
         {
             ArrayList<String> list = new ArrayList<>(Arrays.asList("1", "NO", "10"));
-            String result = PinoutLogic.enumToOptionsList("NO", enumState, list).getShorterForm();
+            String result = PinoutLogic.enumToOptionsList("NO", enumState, list).getKeyValueForm();
             assertEquals("0=\"NONE\",2=\"10\",1=\"NO\"", result);
 
         }
 
         {
             ArrayList<String> list = new ArrayList<>(Arrays.asList("1", "NO", null, null, null, null, null, "10"));
-            String result = PinoutLogic.enumToOptionsList("NO", enumState, list).getShorterForm();
+            String result = PinoutLogic.enumToOptionsList("NO", enumState, list).getKeyValueForm();
             assertEquals("0=\"NONE\",7=\"10\",1=\"NO\"", result);
         }
     }

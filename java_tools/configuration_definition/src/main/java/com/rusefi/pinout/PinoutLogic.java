@@ -81,22 +81,23 @@ public class PinoutLogic {
             String nothingName = namePinType.getNothingName();
             EnumsReader.EnumState enumList = enumsReader.getEnums().get(pinType);
             EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
-            if (pair.getSimpleForm().length() > 0) {
+            if (pair.getArrayForm().length() > 0) {
                 // we seem to be here if specific pin category like switch_inputs has no pins
-                parseState.addDefinition(registry, outputEnumName + ENUM_SUFFIX, pair.getShorterForm(), Definition.OverwritePolicy.IgnoreNew);
+                parseState.addDefinition(registry, outputEnumName + ENUM_SUFFIX, pair.getKeyValueForm(), Definition.OverwritePolicy.IgnoreNew);
             }
-            parseState.addDefinition(registry, outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm(), Definition.OverwritePolicy.IgnoreNew);
+            parseState.addDefinition(registry, outputEnumName + FULL_JAVA_ENUM, pair.getArrayForm(), Definition.OverwritePolicy.IgnoreNew);
         }
     }
 
     @NotNull
     public static EnumPair enumToOptionsList(String nothingName, EnumsReader.EnumState enumList, ArrayList<String> values) {
-        StringBuilder simpleForm = new StringBuilder();
+        // "value0", "value1", "value2" format
+        StringBuilder arrayFormat = new StringBuilder();
 
         Map<Integer, String> pinMap = new HashMap<>();
 
         for (int i = 0; i < values.size(); i++) {
-            appendCommaIfNeeded(simpleForm);
+            appendCommaIfNeeded(arrayFormat);
             String key = enumList.findByValue(i);
 
             String value = values.get(i);
@@ -106,16 +107,17 @@ public class PinoutLogic {
                 pinMap.put(i, value);
             }
             if (key.equals(nothingName)) {
-                simpleForm.append(QUOTED_NONE);
+                arrayFormat.append(QUOTED_NONE);
             } else if (value == null) {
-                simpleForm.append(QUOTED_INVALID);
+                arrayFormat.append(QUOTED_INVALID);
             } else {
                 String quotedValue = quote(value);
-                simpleForm.append(quotedValue);
+                arrayFormat.append(quotedValue);
             }
         }
+        // 2="Value2",5="value5" format
         String keyValueForm = VariableRegistry.getHumanSortedTsKeyValueString(pinMap);
-        return new EnumPair(keyValueForm, simpleForm.toString());
+        return new EnumPair(keyValueForm, arrayFormat.toString());
     }
 
     private static void appendCommaIfNeeded(StringBuilder sb) {
