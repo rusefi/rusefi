@@ -13,8 +13,11 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +29,7 @@ public class TuneCanTool {
     public static final String SRC_TEST_RESOURCES = "src/test/resources/";
     private static final String FOLDER = "generated";
     public static final String DEFAULT_TUNE = FOLDER + File.separator + "simulator_tune.xml";
+    private static final String workingFolder = "downloaded_tunes";
 
     private static Msq simulatorDefaultTune;
     private static IniFileModel ini;
@@ -47,16 +51,18 @@ public class TuneCanTool {
     }
 
     private static void handle(String vehicleName, int tuneId) throws JAXBException, IOException {
-        String fileName = "C:\\Users\\Dell2019\\Downloads\\" + tuneId + ".msq";
+        String localFileName = workingFolder + File.separator + tuneId + ".msq";
         String url = "https://rusefi.com/online/view.php?msq=" + tuneId;
 
-        String reportsFolder = "tune_reports";
-        new File(reportsFolder).mkdir();
+        downloadTune(tuneId, localFileName);
 
-        Msq custom = Msq.readTune(fileName);
+        String reportsOutputFolder = "tune_reports";
+        new File(reportsOutputFolder).mkdir();
+
+        Msq custom = Msq.readTune(localFileName);
         StringBuilder sb = TuneCanTool.getTunePatch(simulatorDefaultTune, custom, ini);
 
-        FileWriter w = new FileWriter(reportsFolder + "/" + vehicleName + ".md");
+        FileWriter w = new FileWriter(reportsOutputFolder + "/" + vehicleName + ".md");
         w.append("# " + vehicleName + "\n\n");
         w.append("Tune " + url + "\n\n");
 
@@ -64,6 +70,13 @@ public class TuneCanTool {
         w.append(sb);
         w.append("```\n");
         w.close();
+    }
+
+    private static void downloadTune(int tuneId, String localFileName) throws IOException {
+        new File(workingFolder).mkdirs();
+        String downloadUrl = "https://rusefi.com/online/download.php?msq=" + tuneId;
+        InputStream in = new URL(downloadUrl).openStream();
+        Files.copy(in, Paths.get(localFileName), StandardCopyOption.REPLACE_EXISTING);
     }
 
     private static boolean isHardwareEnum(String type) {
