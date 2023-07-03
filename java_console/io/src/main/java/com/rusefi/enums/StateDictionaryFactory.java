@@ -1,12 +1,10 @@
 package com.rusefi.enums;
-
+//was generated automatically by rusEFI tool config_definition_base.jar based on StateDictionaryGenerator integration/LiveData.yaml on Mon Jul 03 15:56:33 UTC 2023n
 import com.rusefi.config.generated.*;
 import com.rusefi.ldmp.StateDictionary;
 
 public class StateDictionaryFactory {
     public static void initialize(StateDictionary stateDictionary) {
-        //register(live_data_e.LDS_IDLE, IdleState.VALUES);
-        // todo: code generate this!
         stateDictionary.register(live_data_e.LDS_output_channels, TsOutputs.VALUES, "status_loop");
         stateDictionary.register(live_data_e.LDS_fuel_computer, FuelComputer.VALUES, "fuel_computer");
         stateDictionary.register(live_data_e.LDS_ignition_state, IgnitionState.VALUES, "advance_map");
@@ -18,7 +16,7 @@ public class StateDictionaryFactory {
         stateDictionary.register(live_data_e.LDS_antilag_system_state, AntilagSystem.VALUES, "antilag_system");
         stateDictionary.register(live_data_e.LDS_boost_control, BoostControl.VALUES, "boost_control");
         stateDictionary.register(live_data_e.LDS_ac_control, AcControl.VALUES, "ac_control");
-        stateDictionary.register(live_data_e.LDS_fan_control, FuelPump.VALUES, "fan_control");
+        stateDictionary.register(live_data_e.LDS_fan_control, FanControl.VALUES, "fan_control");
         stateDictionary.register(live_data_e.LDS_fuel_pump_control, FuelPump.VALUES, "fuel_pump");
         stateDictionary.register(live_data_e.LDS_main_relay, MainRelay.VALUES, "main_relay");
         stateDictionary.register(live_data_e.LDS_engine_state, EngineState.VALUES, "engine");
