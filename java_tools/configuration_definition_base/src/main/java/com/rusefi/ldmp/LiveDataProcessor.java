@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.output.*;
 import com.rusefi.util.LazyFile;
-import com.rusefi.util.LazyFileImpl;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -38,15 +37,18 @@ public class LiveDataProcessor {
 
     private final StringBuilder fancyNewStuff = new StringBuilder();
 
+    public final StateDictionaryGenerator stateDictionaryGenerator;
+
     private final StringBuilder fancyNewMenu = new StringBuilder();
 
     private final StringBuilder fragmentsContent = new StringBuilder(header);
 
     private final String extraPrepend = System.getProperty("LiveDataProcessor.extra_prepend");
 
-    public LiveDataProcessor(ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory) {
+    public LiveDataProcessor(String yamlFileName, ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory) {
         this.readerProvider = readerProvider;
         this.fileFactory = fileFactory;
+        stateDictionaryGenerator = new StateDictionaryGenerator(yamlFileName);
     }
 
     public static void main(String[] args) throws IOException {
@@ -59,7 +61,7 @@ public class LiveDataProcessor {
         Map<String, Object> data = getStringObjectMap(new FileReader(yamlFileName));
 
 
-        LiveDataProcessor liveDataProcessor = new LiveDataProcessor(ReaderProvider.REAL, LazyFile.REAL);
+        LiveDataProcessor liveDataProcessor = new LiveDataProcessor(yamlFileName, ReaderProvider.REAL, LazyFile.REAL);
 
         int sensorTsPosition = liveDataProcessor.handleYaml(data);
         liveDataProcessor.writeFiles();
@@ -94,7 +96,7 @@ public class LiveDataProcessor {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr) throws IOException;
+        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName) throws IOException;
     }
 
     public int handleYaml(Map<String, Object> data) throws IOException {
@@ -110,8 +112,10 @@ public class LiveDataProcessor {
 
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr) throws IOException {
+            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName) throws IOException {
                 // TODO: use outputNames
+
+                stateDictionaryGenerator.onEntry(name, javaName, folder, prepend, withCDefines, outputNames, constexpr, conditional, engineModule, isPtr, cppFileName);
 
                 int startingPosition = javaSensorsConsumer.sensorTsPosition;
                 log.info("Starting " + name + " at " + startingPosition + " with [" + conditional + "]");
@@ -182,6 +186,9 @@ public class LiveDataProcessor {
             String prepend = (String) entry.get("prepend");
             String constexpr = (String) entry.get("constexpr");
             String engineModule = (String) entry.get("engineModule");
+            String cppFileName = (String) entry.get("cppFileName");
+            if (cppFileName == null)
+                cppFileName = name;
             String conditional = (String) entry.get("conditional_compilation");
             Boolean withCDefines = (Boolean) entry.get("withCDefines");
             Boolean isPtr = (Boolean) entry.get("isPtr");
@@ -203,7 +210,7 @@ public class LiveDataProcessor {
                 nameList.toArray(outputNamesArr);
             }
 
-            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule, isPtr);
+            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName);
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
@@ -239,6 +246,8 @@ public class LiveDataProcessor {
         lazyFile.close();
 
         outputValueConsumer.endFile();
+
+        GetConfigValueConsumer.writeStringToFile("../java_console/io/src/main/java/com/rusefi/enums/StateDictionaryFactory.java", stateDictionaryGenerator.getCompleteClass(), fileFactory);
 
         totalSensors.append(javaSensorsConsumer.getContent());
 
