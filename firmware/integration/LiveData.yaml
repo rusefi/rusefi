@@ -52,6 +52,7 @@ Usages:
   - name: injector_model
     java: InjectorModel.java
     folder: controllers/algo/fuel
+    prepend: integration/rusefi_config_shared.txt
 
   - name: launch_control_state
     cppFileName: launch_control
