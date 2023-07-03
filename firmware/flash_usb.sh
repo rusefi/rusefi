@@ -2,7 +2,7 @@
 
 # This script will try to flash/update RusEFI part of firmware over USB interface.
 
-echo This script may need root privileges for accessing USB device or special udev rules (TODO)
+echo "This script may need root privileges for accessing USB device or special udev rules (TODO)"
 
 BootCommander -t=xcp_usb deliver/rusefi_update.srec
 
