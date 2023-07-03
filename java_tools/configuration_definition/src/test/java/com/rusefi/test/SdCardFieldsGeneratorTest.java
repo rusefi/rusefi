@@ -79,7 +79,7 @@ public class SdCardFieldsGeneratorTest {
     }
 
     private static void processAndAssert(String input, String expectedOutput, Actor actor) {
-        ReaderStateImpl state = new ReaderStateImpl();
+        ReaderStateImpl state = new ReaderStateImpl(null);
         actor.act(state);
 
         SdCardFieldsConsumer consumer = new SdCardFieldsConsumer(LazyFile.TEST);

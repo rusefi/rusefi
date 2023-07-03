@@ -37,6 +37,7 @@ public class ReaderStateImpl implements ReaderState {
     private final Map<String, Integer> tsCustomSize = new HashMap<>();
     private final Map<String, String> tsCustomLine = new HashMap<>();
     private final Map<String, ConfigStructureImpl> structures = new HashMap<>();
+    private final ReaderProvider readerProvider;
     private String headerMessage;
     // well, technically those should be a builder for state, not this state class itself
     private String tsFileOutputName = "rusefi.ini";
@@ -48,6 +49,14 @@ public class ReaderStateImpl implements ReaderState {
 
     private final EnumsReader enumsReader = new EnumsReader();
     private final VariableRegistry variableRegistry = new VariableRegistry();
+
+    public ReaderStateImpl() {
+        this(ReaderProvider.REAL);
+    }
+
+    public ReaderStateImpl(ReaderProvider readerProvider) {
+        this.readerProvider = readerProvider;
+    }
 
     @Override
     public void setWithC_Defines(boolean withC_Defines) {
@@ -91,6 +100,7 @@ public class ReaderStateImpl implements ReaderState {
         structure.addBitField(bitField);
     }
 
+
     @Override
     public void doJob() throws IOException {
 
@@ -102,7 +112,7 @@ public class ReaderStateImpl implements ReaderState {
          * the destinations/writers
          */
         SystemOut.println("Reading definition from " + Objects.requireNonNull(definitionInputFile));
-        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(RootHolder.ROOT + definitionInputFile), IoUtils.CHARSET.name()));
+        BufferedReader definitionReader = new BufferedReader(readerProvider.read(RootHolder.ROOT + definitionInputFile));
         readBufferedReader(definitionReader, destinations);
 
         if (destCDefinesFileName != null) {

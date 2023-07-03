@@ -3,13 +3,11 @@ package com.rusefi.ldmp;
 import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.output.*;
+import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -23,6 +21,8 @@ public class LiveDataProcessor {
     private final static String enumContentFileName = "console/binary/generated/live_data_ids.h";
 
     private final static String tsOutputsDestination = "console/binary/";
+
+    private final ReaderProvider readerProvider;
 
     private final GaugeConsumer gaugeConsumer = new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini");
 
@@ -43,6 +43,10 @@ public class LiveDataProcessor {
 
     private final String extraPrepend = System.getProperty("LiveDataProcessor.extra_prepend");
 
+    public LiveDataProcessor(ReaderProvider readerProvider) {
+        this.readerProvider = readerProvider;
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.err.println("One parameter expected: name of live data yaml input file");
@@ -50,10 +54,10 @@ public class LiveDataProcessor {
         }
         TriggerMetaGenerator.main(null);
         String yamlFileName = args[0];
-        Yaml yaml = new Yaml();
-        Map<String, Object> data = yaml.load(new FileReader(yamlFileName));
+        Map<String, Object> data = getStringObjectMap(new FileReader(yamlFileName));
 
-        LiveDataProcessor liveDataProcessor = new LiveDataProcessor();
+
+        LiveDataProcessor liveDataProcessor = new LiveDataProcessor(ReaderProvider.REAL);
 
         int sensorTsPosition = liveDataProcessor.handleYaml(data);
         liveDataProcessor.writeFiles();
@@ -78,6 +82,11 @@ public class LiveDataProcessor {
         liveDataProcessor.end();
     }
 
+    public static Map<String, Object> getStringObjectMap(Reader reader) {
+        Yaml yaml = new Yaml();
+        return yaml.load(reader);
+    }
+
     private void end() throws IOException {
         gaugeConsumer.endFile();
     }
@@ -86,7 +95,7 @@ public class LiveDataProcessor {
         void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr) throws IOException;
     }
 
-    private int handleYaml(Map<String, Object> data) throws IOException {
+    public int handleYaml(Map<String, Object> data) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
 
         OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
@@ -107,7 +116,7 @@ public class LiveDataProcessor {
 
                 baseAddressCHeader.append("#define " + name.toUpperCase() + "_BASE_ADDRESS " + startingPosition + "\n");
 
-                ReaderState state = new ReaderStateImpl();
+                ReaderState state = new ReaderStateImpl(readerProvider);
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.setWithC_Defines(withCDefines);
 
