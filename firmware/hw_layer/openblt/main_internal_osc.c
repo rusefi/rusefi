@@ -41,6 +41,11 @@
 #include "stm32h7xx.h"                           /* STM32 CPU and HAL header           */
 #endif
 
+/* Clocked from APB1 */
+#define STM32_TIMCLK2 (168000000 / 4)
+#define ENABLE_AUTO_DETECT_HSE 1
+#include "../ports/stm32/osc_detector.cpp"
+
 
 /****************************************************************************************
 * Function prototypes
@@ -128,11 +133,11 @@ static void SystemClock_Config(void)
    * boards
    * TODO: actually why not go with internal for _all_ boards? Maybe remove all main_external_osc.c files?
    */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 16;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 25;  /* in case of maximum possible 25MHz external osc */
   RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
@@ -158,6 +163,8 @@ static void SystemClock_Config(void)
      */
     ASSERT_RT(BLT_FALSE);
   }
+
+  OscDetector();
 } /*** end of SystemClock_Config ***/
 
 

@@ -14,7 +14,9 @@
  * (PLLM is set to N for an N-MHz HSE crystal).
  */
 
+#ifdef __cplusplus
 #include "pch.h"
+#endif
 
 #if ENABLE_AUTO_DETECT_HSE
 
@@ -50,12 +52,14 @@ static uint32_t getTimerCounts(size_t count) {
 	return lastCapture - firstCapture;
 }
 
+#ifdef __cplusplus
 // These clocks must all be enabled for this to work
 static_assert(STM32_HSI_ENABLED);
 static_assert(STM32_HSE_ENABLED);
+#endif
 
 #ifdef STM32H7XX
-static constexpr float rtcpreDivider = 63;
+static const float rtcpreDivider = 63;
 
 static void enableTimer() {
 	RCC->APB2ENR |= RCC_APB2ENR_TIM17EN;
@@ -94,10 +98,12 @@ static void reprogramPll(uint8_t roundedHseMhz) {
 }
 #else // not STM32H7
 
-static constexpr float rtcpreDivider = 31;
+static const float rtcpreDivider = 31;
 
+#ifdef __cplusplus
 // This only works if you're using the PLL as the configured clock source!
 static_assert(STM32_SW == RCC_CFGR_SW_PLL);
+#endif
 
 static void enableTimer() {
 	RCC->APB2ENR |= RCC_APB2ENR_TIM11EN;
@@ -130,12 +136,16 @@ static void reprogramPll(uint8_t roundedHseMhz) {
 	// Switch clock source back to PLL
 	RCC->CFGR &= ~RCC_CFGR_SW;
 	RCC->CFGR |= RCC_CFGR_SW_PLL;
-	while ((RCC->CFGR & RCC_CFGR_SWS) != (STM32_SW << 2));
+	while ((RCC->CFGR & RCC_CFGR_SWS) != (RCC_CFGR_SW_PLL << RCC_CFGR_SWS_Pos));
 }
 #endif
 
+#ifdef __cplusplus
 // __late_init runs after bss/zero initialziation, but before static constructors and main
 extern "C" void __late_init() {
+#else
+void OscDetector() {
+#endif
 	// Set RTCPRE to /31 - just set all the bits
 	RCC->CFGR |= RCC_CFGR_RTCPRE_Msk;
 
@@ -161,15 +171,14 @@ extern "C" void __late_init() {
 	TIMER->CR1 |= TIM_CR1_CEN;
 
 	// Measure HSE against SYSCLK
-	auto hseCounts = getTimerCounts(10);
+	uint32_t hseCounts = getTimerCounts(10);
 
 	// Turn off timer now that we're done with it
 	disableTimer();
 
 	float hseFrequencyHz = 10 * rtcpreDivider * STM32_TIMCLK2 / hseCounts;
 
-	hseFrequencyMhz = hseFrequencyHz / 1e6;
-	autoDetectedRoundedMhz = efiRound(hseFrequencyMhz, 1);
+	autoDetectedRoundedMhz = ((int)hseFrequencyHz + (1e6 / 2)) / 1e6;
 
 	reprogramPll(autoDetectedRoundedMhz);
 }
