@@ -85,9 +85,11 @@ enable2ndByteCanID = false
 	;  name					= bits,	type, offset,  bits
 	;  name					= array,  type, offset,  shape, units,	scale, translate,	lo,		hi, digits
 	;  name					= scalar, type, offset,			units,	scale, translate,	lo,		hi, digits
+#define gpio_list=@@Gpio_enum@@
 #define switch_input_pin_e_list=@@switch_input_pin_e_fullenum@@
 #define output_pin_e_list=@@output_pin_e_fullenum@@
 #define brain_input_pin_e_list=@@brain_input_pin_e_fullenum@@
+#define adc_channel_e_list=@@adc_channel_e_fullenum@@
 
 ; CONFIG_DEFINITION_START
 
