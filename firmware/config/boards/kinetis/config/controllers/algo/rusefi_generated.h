@@ -39,6 +39,7 @@
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_enum "Disabled", "PA2", "PA3", "INVALID", "PD3", "INVALID", "INVALID", "INVALID", "PB12", "PB13", "INVALID", "PE2", "INVALID", "PC14", "PC15", "PC16", "PC17"
+#define adc_channel_e_fullenum "Disabled", "PA2", "PA3", "INVALID", "PD3", "INVALID", "INVALID", "INVALID", "PB12", "PB13", "INVALID", "PE2", "INVALID", "PC14", "PC15", "PC16", "PC17"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define AFTERSTART_DECAY_CURVE_SIZE 8
@@ -1082,7 +1083,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 1706744909
+#define SIGNATURE_HASH 463270280
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1362,7 +1363,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.07.03.kin.1706744909"
+#define TS_SIGNATURE "rusEFI master.2023.07.03.kin.463270280"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
