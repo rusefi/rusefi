@@ -34,7 +34,7 @@ void setHonda600() {
 
 	// set global_trigger_offset_angle 180
 	// set global_trigger_offset_angle 540
-	engineConfiguration->globalTriggerAngleOffset = 540;
+	engineConfiguration->globalTriggerAngleOffset = 70; // huh why is this here? do we need better tdcPosition in configureHondaCbr600?
 
     engineConfiguration->cylindersCount = 4;
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

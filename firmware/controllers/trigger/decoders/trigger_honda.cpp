@@ -15,7 +15,8 @@ void configureHondaCbr600(TriggerWaveform *s) {
 	s->useOnlyPrimaryForSync = true;
 	s->setTriggerSynchronizationGap(6);
 
-    s->tdcPosition = 0; // todo: hard-code TDC position once we know it
+    s->tdcPosition = 470; // todo: hard-code TDC position once we know it
+    s->setTriggerSynchronizationGap2(/*from*/5, /*to*/9);
 
 	int totalTeethCount = 24;
 	int skippedCount = 0;
