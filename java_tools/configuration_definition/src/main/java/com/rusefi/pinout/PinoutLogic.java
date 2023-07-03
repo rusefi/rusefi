@@ -84,8 +84,8 @@ public class PinoutLogic {
             if (!pair.isEmpty()) {
                 // we seem to be here if specific pin category like switch_inputs has no pins
                 parseState.addDefinition(registry, outputEnumName + KEY_VALUE_FORMAT_ENUM, pair.getKeyValueForm(), Definition.OverwritePolicy.IgnoreNew);
+                parseState.addDefinition(registry, outputEnumName + ARRAY_FORMAT_ENUM, pair.getArrayForm(), Definition.OverwritePolicy.IgnoreNew);
             }
-            parseState.addDefinition(registry, outputEnumName + ARRAY_FORMAT_ENUM, pair.getArrayForm(), Definition.OverwritePolicy.IgnoreNew);
         }
     }
 
@@ -191,6 +191,7 @@ public class PinoutLogic {
     public void registerBoardSpecificPinNames(VariableRegistry registry, DefinitionsState parseState, EnumsReader enumsReader) throws IOException {
         if (boardInputs.getBoardYamlKeys().isEmpty()) {
             // we have a board without yaml so no reason to generate board-specific .cpp file
+            log.info("Not generating .cpp since no yaml files");
             return;
         }
         readFiles();
