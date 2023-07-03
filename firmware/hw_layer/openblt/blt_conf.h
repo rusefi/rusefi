@@ -156,6 +156,8 @@
  */
 #define BOOT_FLASH_CUSTOM_LAYOUT_ENABLE (1)
 
+#define BOOT_FLASH_CUSTOM_INIT_ENABLE   (1)
+
 /** \brief Use one of 'reserved' IRQ vectors at the beginig on vector table.
  */
 #define BOOT_FLASH_VECTOR_TABLE_CS_OFFSET (0x1C)
