@@ -41,7 +41,7 @@ public class StateDictionaryGeneratorTest {
             }
         });
         liveDataProcessor.handleYaml(data);
-        assertEquals(6, fileCapture.size());
+        assertEquals(7, fileCapture.size());
 
 
         assertEquals("        stateDictionary.register(live_data_e.LDS_output_channels, TsOutputs.VALUES, \"status_loop\");\n" +
