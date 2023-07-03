@@ -1,5 +1,5 @@
 #!/bin/bash
 
-export USE_OPENBLT=yes
+# one step back export USE_OPENBLT=yes
 
 bash ../common_make.sh proteus ARCH_STM32F4
