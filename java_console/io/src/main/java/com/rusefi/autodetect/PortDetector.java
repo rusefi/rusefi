@@ -24,7 +24,7 @@ import static com.rusefi.io.can.Elm327Connector.ELM327_DEFAULT_BAUDRATE;
 public class PortDetector {
     private final static Logging log = Logging.getLogging(PortDetector.class);
 
-    private static final NamedThreadFactory AUTO_DETECT_PORT = new NamedThreadFactory("AutoDetectPort");
+    private static final NamedThreadFactory AUTO_DETECT_PORT = new NamedThreadFactory("ECU AutoDetectPort", true);
     public static final String AUTO = "auto";
 
     public enum DetectorMode {
