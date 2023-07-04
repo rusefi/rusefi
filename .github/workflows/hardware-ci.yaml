@@ -57,17 +57,13 @@ jobs:
       working-directory: ./firmware/
       run: ./gen_config_default.sh
 
-    - name: Generate Enum Strings
+    - name: Generate Live Documentation
       working-directory: ./firmware/
-      run: ./gen_enum_to_string.sh
+      run: ./gen_live_documentation.sh
 
     - name: Generate Board config
       working-directory: ./firmware/
       run: bash gen_config_board.sh ${{matrix.folder}} ${{matrix.config-name}}
-
-    - name: Generate Live Documentation
-      working-directory: ./firmware/
-      run: ./gen_live_documentation.sh
 
     - name: Acquire GCC
       working-directory: ./firmware/

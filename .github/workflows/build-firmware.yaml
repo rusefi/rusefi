@@ -430,12 +430,6 @@ jobs:
       working-directory: ./firmware/
       run: ./gen_live_documentation.sh
 
-      # live_data_ids.h is generated above so order of operations is important here!
-    - name: Generate Enum Strings
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./firmware/
-      run: ./gen_enum_to_string.sh
-
     - name: Generate Configs for build-target
       if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
