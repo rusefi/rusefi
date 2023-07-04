@@ -219,7 +219,7 @@ void setTpsDecelMult(float value) {
 
 void setTpsAccelLen(int length) {
 	if (length < 1) {
-		efiPrintf("setTpsAccelLen: Length should be positive");
+		efiPrintf("setTpsAccelLen: Length should be positive [%d]", length);
 		return;
 	}
 	engine->tpsAccelEnrichment.setLength(length);
