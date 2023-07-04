@@ -33,13 +33,13 @@ dependencies {
     testFixturesApi global_libs.junit
 }
 
-compileJava {
-    doLast {
-        // gradle java plugin always generates JNI headers
-        copy {
-            from 'build/generated/sources/headers/java/main'
-            into "../../unit_tests/native"
-            include 'com*.h'
-        }
-    }
+tasks.register('copyJniHeader', Copy) {
+    dependsOn("compileJava")
+    from 'build/generated/sources/headers/java/main'
+    into "../../unit_tests/native"
+    include 'com*.h'
+}
+
+test {
+    dependsOn("copyJniHeader")
 }
