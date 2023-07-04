@@ -15,3 +15,20 @@ dependencies {
     testImplementation testFixtures( project(':ecu_io'))
     implementation files('../ts_plugin_launcher/lib/TunerStudioPluginAPI.jar')
 }
+
+jar {
+    manifest {
+        attributes(
+                'Built-Date': new Date().format('yyyy-MM-dd HH:mm:ss'),
+                'Signature-Vendor': 'rusEFI LLC',
+        )
+    }
+}
+
+shadowJar {
+    archiveBaseName = 'rusefi_plugin_body'
+    archiveClassifier = ''
+    manifest {
+        inheritFrom project.tasks.jar.manifest
+    }
+}

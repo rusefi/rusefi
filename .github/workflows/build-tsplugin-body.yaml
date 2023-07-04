@@ -12,7 +12,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '8'
+          java-version: '11'
 
       - name: Test Compiler
         run: javac -version
@@ -23,10 +23,10 @@ jobs:
           sudo apt-get install sshpass
 
       - name: Build TS plugin body
-        working-directory: ./java_tools/ts_plugin
-        run: ant
+        working-directory: ./java_tools/
+        run: ./gradlew :ts_plugin:shadowJar
 
       - name: Upload plugin body
         working-directory: .
-        run: java_console/upload_file.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} build_server/autoupdate java_tools/ts_plugin/build/jar/rusefi_plugin_body.jar
+        run: java_console/upload_file.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} build_server/autoupdate java_tools/ts_plugin/build/libs/rusefi_plugin_body.jar
 

@@ -18,7 +18,6 @@ dependencies {
   testImplementation global_libs.junit
 }
 
-def TODAY = new Date().format('yyyy-MM-dd HH:mm:ss')
 def jarName = 'rusefi_ts_plugin_launcher'
 def jarDir = 'jar'
 def localPath = '.efianalytics/TunerStudio/plugins'
@@ -29,7 +28,7 @@ jar {
 
   manifest {
     attributes(
-      'Built-Date': TODAY,
+      'Built-Date': new Date().format('yyyy-MM-dd HH:mm:ss'),
       'Signature-Vendor': 'rusEFI LLC',
       'ApplicationPlugin': 'com.rusefi.ts_plugin.TsPluginLauncher'
     )
