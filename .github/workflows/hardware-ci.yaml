@@ -68,8 +68,7 @@ jobs:
       run: lsusb | grep 'ST-LINK\|STLINK'
 
     - name: OpenOCD wipe & flash STM32
-      working-directory: ./firmware
-      run: openocd -f "${{matrix.openocd-script}}" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "deliver/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
+      run: .github/workflows/hw-ci/openocd_wipe_and_flash.sh ${{matrix.openocd-script}}
 
     - name: Generate Autotest Jar
       working-directory: ./java_tools
