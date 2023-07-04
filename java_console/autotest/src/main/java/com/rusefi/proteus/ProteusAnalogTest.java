@@ -27,8 +27,7 @@ public class ProteusAnalogTest extends RusefiTestBase {
         double vbatt = SensorCentral.getInstance().getValue(Sensor.VBATT);
 
         // allow some tolerance for the supply voltage...
-        assertTrue(vbatt > 11);
-        assertTrue(vbatt < 13);
+        assertTrue("VBatt " + vbatt + " out of range", vbatt > 11 && vbatt < 13);
     }
 
     // not really 'analog' test. Not the best placement since we are unable to rebuild discovery HW CI :(
