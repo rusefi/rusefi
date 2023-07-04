@@ -27,7 +27,7 @@ public class SerialIoStream extends AbstractIoStream {
     static {
         log.info("Using com.fazecast.jSerialComm " + SerialPort.getVersion());
         // NamedThreadFactory has daemon=false by default and we like that!
-        SerialPortThreadFactory.set(new NamedThreadFactory("jSerialComm"));
+        SerialPortThreadFactory.set(new NamedThreadFactory("ECU SerialIoStream jSerialComm"));
     }
 
     public SerialIoStream(@Nullable SerialPort sp, String port) {
@@ -102,7 +102,6 @@ public class SerialIoStream extends AbstractIoStream {
         if (sp == null)
             return;
         sp.addDataListener(new SerialPortDataListener() {
-            private boolean isFirstEvent = true;
 
             @Override
             public int getListeningEvents() {
@@ -124,11 +123,6 @@ requires jSerialComm newer than 2.7
 */
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                     return;
-                if (isFirstEvent) {
-                    // a hack to have explicit thread name, see https://github.com/Fazecast/jSerialComm/issues/308
-                    Thread.currentThread().setName("Serial Port Event Thread");
-                    isFirstEvent = false;
-                }
                 int bytesAvailable = sp.bytesAvailable();
                 if (Bug3923.obscene)
                     log.info("serialEvent bytesAvailable " + bytesAvailable);

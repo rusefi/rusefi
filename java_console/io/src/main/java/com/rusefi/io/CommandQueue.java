@@ -119,7 +119,7 @@ public class CommandQueue {
                 }
             }
         };
-        Thread thread = new Thread(runnable, "Commands Queue");
+        Thread thread = new Thread(runnable, "ECU Commands Queue");
         thread.setDaemon(true);
         thread.start();
     }
