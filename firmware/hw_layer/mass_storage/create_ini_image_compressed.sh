@@ -6,6 +6,11 @@
 # fail on error
 set -e
 
+if [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ]; then
+  echo No image on CYGWIN
+  exit 0
+fi
+
 FULL_INI=$1
 H_OUTPUT=$2
 FS_SIZE=$3
