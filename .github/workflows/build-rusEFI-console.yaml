@@ -64,8 +64,8 @@ jobs:
           path: '**/build/test-results/test/TEST-*.xml'
 
       - name: Build console
-        working-directory: ./java_console
-        run: ant jar
+        working-directory: ./java_tools
+        run: ./gradlew :ui:shadowJar
 
       - name: Attach Ant console junit results
         if: always()
