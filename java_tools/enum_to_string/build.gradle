@@ -22,10 +22,6 @@ shadowJar {
         )
     }
 
-    /*
-     to keep only classes from logging
-     and logging-api as in build.xml
-    */
     dependencies {
         exclude(dependency(global_libs.jsr305))
         exclude(dependency(global_libs.junit))

@@ -60,8 +60,6 @@ shadowJar {
   }
 }
 
-
-// custom task from build.xml
 tasks.register('launcher_local_install', Copy) {
   dependsOn tasks.shadowJar
   from layout.buildDirectory.dir( jarDir + '/' + jarName + '.jar')
