@@ -9,7 +9,7 @@ BOARD_DIR="$1"
 # for example 'proteus_f4'
 export BUNDLE_NAME="$2"
 
-SCRIPT_NAME=compile_and_upload.sh
+SCRIPT_NAME=compile.sh
 echo "Entering $SCRIPT_NAME with folder $BOARD_DIR and bundle name $BUNDLE_NAME"
 
 [ -n $BOARD_DIR ] || { echo "BOARD_DIR parameter expected"; exit 1; }
