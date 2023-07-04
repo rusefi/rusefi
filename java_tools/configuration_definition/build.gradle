@@ -1,7 +1,6 @@
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
-    id 'antlr'
 }
 
 apply from: '../../java_tools/dependencies.gradle'
@@ -11,7 +10,6 @@ defaultTasks 'shadowJar'
 dependencies {
     api project(':config_definition_base')
     api project(':trigger-image')
-    antlr global_libs.antlr
 }
 
 shadowJar {

@@ -100,10 +100,6 @@ jobs:
       working-directory: ./firmware
       run: openocd -f "${{matrix.openocd-script}}" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "deliver/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
 
-    - name: Generate Java (Antlr)
-      working-directory: ./java_tools
-      run: ./gradlew :config_definition:generateGrammarSource
-
     - name: Generate Autotest Jar
       working-directory: ./java_tools
       run: ./gradlew :autotest:shadowJar

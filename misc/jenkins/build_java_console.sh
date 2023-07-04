@@ -3,11 +3,6 @@
 echo "java version"
 java -version
 
-echo "Generating Java (Antlr)"
-cd java_tools
-./gradlew :config_definition:generateGrammarSource
-cd ..
-
 echo "Building java console"
 pwd
 cd java_console
