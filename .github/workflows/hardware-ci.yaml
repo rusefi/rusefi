@@ -16,7 +16,6 @@ jobs:
             runs-on: hw-ci-f4-discovery
             test-suite: com.rusefi.HwCiF4Discovery
             folder: config/boards/f407-discovery
-            config-name: all
             openocd-script: ../.github/workflows/openocd_ci_f4_discovery.cfg
             serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_2B003B000A51343033393930-if01
 
@@ -25,7 +24,6 @@ jobs:
             runs-on: hw-ci-proteus
             test-suite: com.rusefi.HwCiF4Proteus
             folder: config/boards/proteus
-            config-name: proteus_f4
             openocd-script: ../.github/workflows/openocd_ci_proteus.cfg
             serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_41003D000451383037343335-if01
 
@@ -58,7 +56,7 @@ jobs:
 
     - name: Generate Board config
       working-directory: ./firmware/
-      run: bash gen_config_board.sh ${{matrix.folder}} ${{matrix.config-name}}
+      run: bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
 
     - name: Acquire GCC
       working-directory: ./firmware/
