@@ -29,7 +29,7 @@ shadowJar {
     dependsOn(':enum_to_string:shadowJar')
     dependsOn(':config_definition_base:shadowJar')
     dependsOn(':config_definition:shadowJar')
-    archivesBaseName = 'rusefi_console'
+    archivesBaseName = "${rootDir}/../java_console_binary/rusefi_console"
     archiveClassifier = ''
 
     manifest {
