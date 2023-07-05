@@ -4,7 +4,7 @@ plugins {
 }
 
 configurations {
-    // not sure what is this and why but it's huge
+    // icu4j is huge: https://en.wikipedia.org/wiki/International_Components_for_Unicode
     all*.exclude group: 'com.ibm.icu', module: 'icu4j'
 }
 
