@@ -137,7 +137,6 @@ void setProteusGmLs4() {
 #if HW_PROTEUS
 	engineConfiguration->etbFunctions[1] = DC_None;
 
-	engineConfiguration->mainRelayPin = PROTEUS_LS_12;
 	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_2, PROTEUS_IN_ANALOG_VOLT_11);
 	setTPS1Inputs(PROTEUS_IN_ANALOG_VOLT_4, PROTEUS_IN_ANALOG_VOLT_3);
 
