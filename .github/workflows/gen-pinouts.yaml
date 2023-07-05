@@ -64,5 +64,7 @@ jobs:
           }
 
     - name: Upload Pinouts
-      if: ${{ '' != secrets.RUSEFI_SSH_PASS }}
+      env:
+        pass: ${{ secrets.RUSEFI_SSH_PASS }}
+      if: ${{ env.pass != '' }}
       run: tar -czf - pinouts | sshpass -p "${{ secrets.RUSEFI_SSH_PASS }}" ssh -o StrictHostKeyChecking=no "${{ secrets.RUSEFI_SSH_USER }}"@"${{ secrets.RUSEFI_SSH_SERVER }}" "tar -xzf - -C docs"
