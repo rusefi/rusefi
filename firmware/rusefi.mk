@@ -61,11 +61,16 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	#CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/STM32/STM32H7xx/platform.mk
 	CPU_PLATFORM = ${CHIBIOS_CONTRIB}/os/hal/ports/STM32/STM32H7xx/platform.mk
 	CPU_HWLAYER = ports/stm32/stm32h7
+else ifeq ($(PROJECT_CPU),ARCH_AT32F4)
+	CPU_STARTUP = startup_at32f4xx.mk
+	CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/AT32/AT32F4xx/platform.mk
+	# Reuse STM32F4 port
+	CPU_HWLAYER = ports/stm32/stm32f4
 else ifeq ($(PROJECT_CPU),custom_platform)
-include $(BOARD_DIR)/custom_platform.mk
-$(info Using custom CPU_STARTUP_DIR $(CPU_STARTUP_DIR))
-$(info Using custom CPU_PLATFORM $(CPU_PLATFORM))
-$(info Using custom CPU_HWLAYER $(CPU_HWLAYER))
+	include $(BOARD_DIR)/custom_platform.mk
+	$(info Using custom CPU_STARTUP_DIR $(CPU_STARTUP_DIR))
+	$(info Using custom CPU_PLATFORM $(CPU_PLATFORM))
+	$(info Using custom CPU_HWLAYER $(CPU_HWLAYER))
 else ifeq ($(PROJECT_CPU),simulator)
 else
 $(error Unexpected PROJECT_CPU [$(PROJECT_CPU)])
