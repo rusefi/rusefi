@@ -182,7 +182,7 @@ CSRC =  $(ALLCSRC) \
 # todo: reduce code duplication with primary Makefile!!!
 # setting.
 CPPSRC = $(ALLCPPSRC) \
-	$(HW_LAYER_EMS_CPP) \
+	$(HW_LAYER_PORT_CPP) \
 	$(BOARDCPPSRC) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \

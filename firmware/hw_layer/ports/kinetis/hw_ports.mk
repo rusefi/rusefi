@@ -5,7 +5,7 @@ endif
 HW_LAYER_EMS += 	$(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/fsl/fsl_ftfx_flexnvm.c \
 					$(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/fsl/fsl_ftfx_controller.c
 
-HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/ports/kinetis/mpu_util.cpp \
+HW_LAYER_PORT_CPP += $(PROJECT_DIR)/hw_layer/ports/kinetis/mpu_util.cpp \
 	$(PROJECT_DIR)/hw_layer/ports/kinetis/kinetis_pins.cpp \
 	$(PROJECT_DIR)/hw_layer/ports/kinetis/backup_ram.cpp \
 	$(PROJECT_DIR)/hw_layer/ports/kinetis/kinetis_common.cpp \

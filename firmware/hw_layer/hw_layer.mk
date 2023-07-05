@@ -7,7 +7,7 @@ HW_LAYER_INC=	$(PROJECT_DIR)/hw_layer $(PROJECT_DIR)/hw_layer/adc \
 HW_INC = hw_layer/$(CPU_HWLAYER) \
 	$(PROJECT_DIR)/hw_layer/ports
 
-HW_LAYER_EMS_CPP = \
+HW_LAYER_PORT_CPP = \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer/microsecond_timer.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/digital_input_exti.cpp \
