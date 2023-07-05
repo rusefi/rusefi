@@ -32,6 +32,7 @@ typedef enum {
     BOR_Level_3 = PWR_CR_PLS_LEV7  // 0x00     Supply voltage ranges from 2.70 to 3.60 V
 } BOR_Level_t;
 #else
+#include "stm32f4xx_hal_flash_ex.h"
 typedef enum {
 	BOR_Level_None = OB_BOR_OFF, // 0x0C=12  Supply voltage ranges from 1.62 to 2.10 V
 	BOR_Level_1 = OB_BOR_LEVEL1, // 0x08     Supply voltage ranges from 2.10 to 2.40 V
