@@ -60,36 +60,6 @@ typedef unsigned int time_t;
 
 #define EFI_ERROR_CODE 0xffffffff
 
-/**
- * rusEfi is placing some of data structures into CCM memory simply
- * in order to use that memory - no magic about which RAM is faster etc.
- * That said, CCM/TCM could be faster as there will be less bus contention
- * with DMA.
- *
- * Please note that DMA does not work with CCM memory
- */
-#if defined(STM32F4XX)
-// CCM memory is 64k
-#define CCM_OPTIONAL __attribute__((section(".ram4")))
-#define SDRAM_OPTIONAL __attribute__((section(".ram7")))
-#define NO_CACHE	// F4 has no cache, do nothing
-#elif defined(STM32F7XX)
-// DTCM memory is 128k
-#define CCM_OPTIONAL __attribute__((section(".ram3")))
-//TODO: update LD file!
-#define SDRAM_OPTIONAL __attribute__((section(".ram7")))
-// SRAM2 is 16k and set to disable dcache
-#define NO_CACHE __attribute__((section(".ram2")))
-#elif defined(STM32H7XX)
-// DTCM memory is 128k
-#define CCM_OPTIONAL __attribute__((section(".ram5")))
-//TODO: update LD file!
-#define SDRAM_OPTIONAL __attribute__((section(".ram8")))
-// SRAM3 is 32k and set to disable dcache
-#define NO_CACHE __attribute__((section(".ram3")))
-#else /* this MCU doesn't need these */
-#define CCM_OPTIONAL
-#define NO_CACHE
-#endif
+#include "global_port.h"
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() {}
