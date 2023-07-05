@@ -7,7 +7,12 @@
  * Please note that DMA does not work with CCM memory
  */
 
+#if defined(AT32F4XX)
+#define CCM_OPTIONAL
+#define SDRAM_OPTIONAL
+#define NO_CACHE
 // CCM memory is 64k
 #define CCM_OPTIONAL __attribute__((section(".ram4")))
 #define SDRAM_OPTIONAL __attribute__((section(".ram7")))
 #define NO_CACHE	// F4 has no cache, do nothing
+#endif
