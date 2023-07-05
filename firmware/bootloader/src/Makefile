@@ -174,7 +174,7 @@ include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 CSRC =  $(ALLCSRC) \
 	$(BOARDSRC) \
 	$(DEV_SRC) \
-	$(HW_LAYER_EMS) \
+	$(HW_LAYER_PORT) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(FATFSSRC) \
 
@@ -182,7 +182,7 @@ CSRC =  $(ALLCSRC) \
 # todo: reduce code duplication with primary Makefile!!!
 # setting.
 CPPSRC = $(ALLCPPSRC) \
-	$(HW_LAYER_EMS_CPP) \
+	$(HW_LAYER_PORT_CPP) \
 	$(BOARDCPPSRC) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \

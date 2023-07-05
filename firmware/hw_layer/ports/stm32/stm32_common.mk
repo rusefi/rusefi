@@ -1,6 +1,6 @@
 HW_STM32_PORT_DIR = $(PROJECT_DIR)/hw_layer/ports/stm32
 
-HW_LAYER_EMS_CPP += \
+HW_LAYER_PORT_CPP += \
     $(HW_STM32_PORT_DIR)/serial_over_usb/usbconsole.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_pins.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_common.cpp \
