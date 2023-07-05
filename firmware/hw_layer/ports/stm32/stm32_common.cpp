@@ -393,6 +393,18 @@ bool isValidSerialRxPin(brain_pin_e pin) {
 
 #if EFI_PROD_CODE
 
+#ifdef AT32F4XX
+BOR_Level_t BOR_Get(void) {
+	/* TODO: Artery */
+	/* Fake */
+	return BOR_Level_None;
+}
+
+BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
+	/* NOP */
+	return BOR_Result_Ok;
+}
+#else
 BOR_Level_t BOR_Get(void) {
 	FLASH_OBProgramInitTypeDef FLASH_Handle;
 
@@ -428,6 +440,7 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
 
 	return BOR_Result_Ok;
 }
+#endif
 
 void baseMCUInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
