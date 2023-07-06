@@ -64,7 +64,9 @@ function onCanConfiguration3(bus, id, dlc, data)
 	print("GDI4 says HoldCurrent   "..getTwoBytesLSB(data, 0, 1 / 128) )
 	print("GDI4 says TholdOff      "..getTwoBytesLSB(data, 2, 1) )
 	print("GDI4 says THoldDuration "..getTwoBytesLSB(data, 4, 1) )
-	print("GDI4 says PumpPeakCurrent "..getTwoBytesLSB(data, 6, 1 / 128) )
+	pumpPeak = getTwoBytesLSB(data, 6, 1 / 128)
+	print("GDI4 says PumpPeakCurrent ".. pumpPeak)
+	setLuaGauge(1, pumpPeak)
 end
 
 function onCanConfiguration4(bus, id, dlc, data)

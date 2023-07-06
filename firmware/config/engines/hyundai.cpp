@@ -87,6 +87,15 @@ FIXED_POINT = 128
 
 setTickRate(2)
 
+function onCanConfiguration3(bus, id, dlc, data)
+--	print("Received configuration3 "..arrayToString(data))
+	pumpPeak = getTwoBytesLSB(data, 6, 1 / 128)
+--	print("GDI4 says PumpPeakCurrent ".. pumpPeak)
+	setLuaGauge(1, pumpPeak)
+end
+
+canRxAdd(GDI4_BASE_ADDRESS + 3, onCanConfiguration3)
+
 function onTick()
 
 	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
