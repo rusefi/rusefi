@@ -1,6 +1,9 @@
 #pragma once
 
-#define _CHIBIOS_HAL_CONF_VER_8_0_
+#define _CHIBIOS_HAL_CONF_
+#define _CHIBIOS_HAL_CONF_VER_7_1_
+
+#include "mcuconf.h"
 
 #include "efifeatures.h"
 #include "thread_priority.h"
@@ -22,6 +25,24 @@
 	#define FATFS_HAL_DEVICE EFI_SDC_DEVICE
 #else
 	#define HAL_USE_SDC FALSE
+#endif
+
+/**
+ * @brief   Number of initialization attempts before rejecting the card.
+ * @note    Attempts are performed at 10mS intervals.
+ */
+#if !defined(SDC_INIT_RETRY) || defined(__DOXYGEN__)
+#define SDC_INIT_RETRY                      100
+#endif
+
+/**
+ * @brief   Delays insertions.
+ * @details If enabled this options inserts delays into the MMC waiting
+ *          routines releasing some extra CPU time for the threads with
+ *          lower priority, this may slow down the driver a bit however.
+ */
+#if !defined(SDC_NICE_WAITING) || defined(__DOXYGEN__)
+#define SDC_NICE_WAITING                    TRUE
 #endif
 
 // If EFI_FILE_LOGGING but not SDC, use SPI instead
@@ -62,6 +83,85 @@
 #endif
 
 #define HAL_USE_PAL                 TRUE
+
+/*===========================================================================*/
+/* PAL driver related settings.                                              */
+/*===========================================================================*/
+
+/**
+ * @brief   Enables synchronous APIs.
+ * @note    Disabling this option saves both code and data space.
+ */
+#if !defined(PAL_USE_WAIT) || defined(__DOXYGEN__)
+#define PAL_USE_WAIT                        FALSE
+#endif
+
+/**
+ * @brief   No DAC subsystem.
+ */
+#if !defined(HAL_USE_DAC) || defined(__DOXYGEN__)
+#define HAL_USE_DAC                 FALSE
+#endif
+
+/**
+ * @brief   Enables the PWM subsystem.
+ */
+#if !defined(HAL_USE_PWM) || defined(__DOXYGEN__)
+#define HAL_USE_PWM                 TRUE
+#endif
+
+/**
+ * @brief   Enables the SPI subsystem.
+ */
+#if !defined(HAL_USE_SPI) || defined(__DOXYGEN__)
+#define HAL_USE_SPI                         TRUE
+#endif
+
+/**
+ * @brief   Enables the SDC subsystem.
+ */
+#if !defined(HAL_USE_SDC) || defined(__DOXYGEN__)
+#define HAL_USE_SDC                         FALSE
+#endif
+
+/**
+ * @brief   Enables the WDG subsystem.
+ */
+#if !defined(HAL_USE_WDG) || defined(__DOXYGEN__)
+#define HAL_USE_WDG                 FALSE
+#endif
+
+/*===========================================================================*/
+/* SERIAL driver related settings.                                           */
+/*===========================================================================*/
+
+/**
+ * @brief   Default bit rate.
+ * @details Configuration parameter, this is the baud rate selected for the
+ *          default configuration.
+ */
+#if !defined(SERIAL_DEFAULT_BITRATE) || defined(__DOXYGEN__)
+#define SERIAL_DEFAULT_BITRATE              38400
+#endif
+
+/**
+ * @brief   Serial buffers size.
+ * @details Configuration parameter, you can change the depth of the queue
+ *          buffers depending on the requirements of your application.
+ * @note    The default is 16 bytes for both the transmission and receive
+ *          buffers.
+ */
+#if !defined(SERIAL_BUFFERS_SIZE) || defined(__DOXYGEN__)
+#define SERIAL_BUFFERS_SIZE         16
+#endif
+
+/**
+ * @brief   Enables the @p uartAcquireBus() and @p uartReleaseBus() APIs.
+ * @note    Disabling this option saves both code and data space.
+ */
+#if !defined(UART_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
+#define UART_USE_MUTUAL_EXCLUSION           FALSE
+#endif
 
 // Options for individual drivers
 
