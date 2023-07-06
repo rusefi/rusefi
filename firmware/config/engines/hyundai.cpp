@@ -44,6 +44,9 @@ void setHyundaiPb() {
 	engineConfiguration->map.sensor.highValue = 101.3;
 	engineConfiguration->mapHighValueVoltage = 4;
 
+    engineConfiguration->mc33_hpfp_i_peak = 8;
+    engineConfiguration->mc33_hpfp_i_hold = 4;
+
 	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
 	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
 
