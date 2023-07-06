@@ -193,17 +193,20 @@ public:
 		}
 
 		const PWMConfig pwmcfg = {
-			c_timerFrequency,
-			m_period,
-			nullptr,
-			{
+			.frequency = c_timerFrequency,
+			.period = m_period,
+			.callback = nullptr,
+			.channels = {
 				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
 				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
 				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
 				{PWM_OUTPUT_ACTIVE_HIGH, nullptr}
 			},
-			0,
-			0
+			.cr2 = 0,
+		    #if STM32_PWM_USE_ADVANCED
+		    .bdtr = 0,
+		    #endif
+			.dier = 0,
 		};
 
 		// Start the timer running
