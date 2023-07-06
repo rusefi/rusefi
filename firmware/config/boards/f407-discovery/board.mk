@@ -18,6 +18,8 @@ endif
 # See also ts_show_critical_led
 DDEFS += -DFLEXIBLE_CRITICAL_LED=1
 
+DDEFS += -DEFI_SENT_SUPPORT=TRUE
+
 # User can configure LIN/K-line interface
 DDEFS += -DEFI_KLINE=TRUE
 DDEFS += -DKLINE_SERIAL_DEVICE_RX=Gpio::C11 -DKLINE_SERIAL_DEVICE_TX=Gpio::C10
