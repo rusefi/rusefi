@@ -74,6 +74,48 @@ void setHyundaiPb() {
     engineConfiguration->tachOutputPin = PROTEUS_IGN_12;
     engineConfiguration->hpfpValvePin = PROTEUS_LS_6;
 #endif // HW_PROTEUS
+
+	strncpy(config->luaScript, R"(
+
+GDI4_BASE_ADDRESS = 0xF0
+GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
+
+GDI4_CAN_SET_TAG = 0x78
+local data_set_settings = { GDI4_CAN_SET_TAG, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
+FIXED_POINT = 128
+
+setTickRate(2)
+
+function onTick()
+
+	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
+	pumpHoldCurrent      = getCalibration("mc33_hpfp_i_hold")
+
+	TholdOff = getCalibration("mc33_t_hold_off")
+	THoldDuration = getCalibration("mc33_t_hold_tot")
+
+
+	setTwoBytesLsb(data_set_settings, 1, TholdOff)
+	setTwoBytesLsb(data_set_settings, 3, THoldDuration)
+	setTwoBytesLsb(data_set_settings, 5, pumpPeakCurrent * FIXED_POINT)
+	print('Will be sending ' ..arrayToString(data_set_settings))
+	txCan(1, GDI_CHANGE_ADDRESS + 3, 1, data_set_settings)
+
+	setTwoBytesLsb(data_set_settings, 1, pumpHoldCurrent * FIXED_POINT)
+	outputCanID = 0
+	outputCanID = GDI4_BASE_ADDRESS
+	setTwoBytesLsb(data_set_settings, 3, outputCanID)
+	print('Will be sending ' ..arrayToString(data_set_settings))
+	txCan(1, GDI_CHANGE_ADDRESS + 4, 1, data_set_settings)
+
+
+end
+
+)", efi::size(config->luaScript));
+
+
+
 }
 
 void setProteusHyundaiPb() {
