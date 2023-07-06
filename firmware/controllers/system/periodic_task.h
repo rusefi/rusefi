@@ -38,9 +38,8 @@ public:
 	virtual void start() {
 #if !EFI_UNIT_TEST
 		chVTObjectInit(&timer);
-#endif // EFI_UNIT_TEST
-
 		runAndScheduleNext(this);
+#endif // EFI_UNIT_TEST
 	}
 };
 
