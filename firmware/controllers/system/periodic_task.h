@@ -11,7 +11,9 @@
 
 class PeriodicTimerController;
 
-void runAndScheduleNext(PeriodicTimerController *controller);
+#if !EFI_UNIT_TEST
+void runAndScheduleNext(virtual_timer_t*, PeriodicTimerController *controller);
+#endif /* EFI_UNIT_TEST */
 
 /**
  * this is an intermediate implementation - we should probably move from using virtual_timer_t which works on interrupts
@@ -38,7 +40,7 @@ public:
 	virtual void start() {
 #if !EFI_UNIT_TEST
 		chVTObjectInit(&timer);
-		runAndScheduleNext(this);
+		runAndScheduleNext(&timer, this);
 #endif // EFI_UNIT_TEST
 	}
 };

@@ -9,13 +9,24 @@
 #include "os_util.h"
 #include "perf_trace.h"
 
-void runAndScheduleNext(PeriodicTimerController *controller) {
+void runAndScheduleNext(virtual_timer_t* t, PeriodicTimerController *controller);
+
+void runAndScheduleNext2(
+		virtual_timer_t* t,
+		void *param) {
+	// C++ kludge :(
+	PeriodicTimerController *controller = (PeriodicTimerController *) param;
+	runAndScheduleNext(t, controller);
+}
+
+void runAndScheduleNext(virtual_timer_t*, PeriodicTimerController *controller) {
 #if !EFI_UNIT_TEST
 	{
 		ScopePerf perf(PE::PeriodicTimerControllerPeriodicTask);
 		controller->PeriodicTask();
 	}
+	vtfunc_t f = (vtfunc_t) &runAndScheduleNext2;
 
-	chVTSetAny(&controller->timer, TIME_MS2I(controller->getPeriodMs()), (vtfunc_t) &runAndScheduleNext, controller);
+	chVTSetAny(&controller->timer, TIME_MS2I(controller->getPeriodMs()), f, controller);
 #endif /* EFI_UNIT_TEST */
 }
