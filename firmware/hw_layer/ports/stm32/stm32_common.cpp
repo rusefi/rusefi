@@ -203,9 +203,7 @@ public:
 				{PWM_OUTPUT_ACTIVE_HIGH, nullptr}
 			},
 			.cr2 = 0,
-		    #if STM32_PWM_USE_ADVANCED
-		    .bdtr = 0,
-		    #endif
+			.bdtr = 0,
 			.dier = 0,
 		};
 
