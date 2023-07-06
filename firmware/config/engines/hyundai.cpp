@@ -28,6 +28,9 @@ void setHyundaiPb() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
+    // ETB buzzing is annoying :(
+	engineConfiguration->disableEtbWhenEngineStopped = true;
+
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->enableAemXSeries = true;
 
