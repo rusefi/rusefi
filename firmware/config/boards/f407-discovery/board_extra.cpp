@@ -4,7 +4,6 @@
 
 #include "pch.h"
 #include "hip9011_logic.h"
-#include "chconf_common.h"
 
 /**
  * @brief   Board-specific pin configuration code overrides. Needed by bootloader code.
