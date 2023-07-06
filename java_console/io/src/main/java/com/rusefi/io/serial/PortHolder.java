@@ -87,13 +87,17 @@ public class PortHolder {
      */
     public void packAndSend(final String command, boolean fireEvent) throws InterruptedException {
         if (bp == null) {
-            SwingUtilities.invokeLater(() -> {
-                Window[] windows = JDialog.getWindows();
-                Window window = windows.length == 0 ? null : windows[0];
-                JOptionPane.showMessageDialog(window, "No connectivity, will close",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                IoUtils.exit("No connectivity, will close",-1);
-            });
+            if (GraphicsEnvironment.isHeadless()) {
+                IoUtils.exit("No connectivity, will close", -1);
+            } else {
+                SwingUtilities.invokeLater(() -> {
+                    Window[] windows = JDialog.getWindows();
+                    Window window = windows.length == 0 ? null : windows[0];
+                    JOptionPane.showMessageDialog(window, "No connectivity, will close",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    IoUtils.exit("No connectivity, will close", -1);
+                });
+            }
             return;
         }
 
