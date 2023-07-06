@@ -148,7 +148,8 @@ static void reportPins() {
 			int pin = getBrainPinIndex(brainPin);
 			ioportid_t port = getBrainPinPort(brainPin);
 
-			efiPrintf("pin %s%d: %s", portname(port), pin, pin_user);
+            const char *boardPinName = getBoardSpecificPinName(brainPin);
+			efiPrintf("pin %s%d (%s): %s", portname(port), pin, boardPinName, pin_user);
 			totalPinsUsed++;
 		}
 	}
