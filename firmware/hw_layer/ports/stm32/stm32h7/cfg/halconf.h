@@ -59,6 +59,13 @@
 #endif
 
 /**
+ * @brief   Enables the PWM subsystem.
+ */
+#if !defined(HAL_USE_PWM) || defined(__DOXYGEN__)
+#define HAL_USE_PWM                         TRUE
+#endif
+
+/**
  * @brief   Enables the RTC subsystem.
  */
 #if !defined(HAL_USE_RTC) || defined(__DOXYGEN__)
@@ -100,6 +107,18 @@
  */
 #if !defined(HAL_USE_WSPI) || defined(__DOXYGEN__)
 #define HAL_USE_WSPI                        FALSE
+#endif
+
+/*===========================================================================*/
+/* PAL driver related settings.                                              */
+/*===========================================================================*/
+
+/**
+ * @brief   Enables synchronous APIs.
+ * @note    Disabling this option saves both code and data space.
+ */
+#if !defined(PAL_USE_WAIT) || defined(__DOXYGEN__)
+#define PAL_USE_WAIT                        FALSE
 #endif
 
 /*===========================================================================*/

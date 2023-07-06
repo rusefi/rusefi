@@ -89,25 +89,10 @@
 /*===========================================================================*/
 
 /**
- * @brief   Enables synchronous APIs.
- * @note    Disabling this option saves both code and data space.
- */
-#if !defined(PAL_USE_WAIT) || defined(__DOXYGEN__)
-#define PAL_USE_WAIT                        FALSE
-#endif
-
-/**
  * @brief   No DAC subsystem.
  */
 #if !defined(HAL_USE_DAC) || defined(__DOXYGEN__)
 #define HAL_USE_DAC                 FALSE
-#endif
-
-/**
- * @brief   Enables the PWM subsystem.
- */
-#if !defined(HAL_USE_PWM) || defined(__DOXYGEN__)
-#define HAL_USE_PWM                 TRUE
 #endif
 
 /**

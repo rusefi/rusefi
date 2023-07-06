@@ -37,6 +37,10 @@
 #define HAL_USE_FLASH               FALSE
 #endif
 
+#if !defined(PAL_USE_WAIT) || defined(__DOXYGEN__)
+#define PAL_USE_WAIT                FALSE
+#endif
+
 /**
  * @brief   Enables the EXT subsystem.
  */
@@ -56,6 +60,13 @@
  */
 #if !defined(HAL_USE_ICU) || defined(__DOXYGEN__)
 #define HAL_USE_ICU                 TRUE
+#endif
+
+/**
+ * @brief   Enables the PWM subsystem.
+ */
+#if !defined(HAL_USE_PWM) || defined(__DOXYGEN__)
+#define HAL_USE_PWM                 TRUE
 #endif
 
 /**
