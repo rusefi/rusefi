@@ -15,7 +15,9 @@
 #endif // HW_HELLEN
 
 // These may not be defined due to the HAL, but they're necessary for the compiler to do it's magic
+//#if EFI_SIMULATOR
 class UARTDriver;
+//#endif // EFI_SIMULATOR
 class UartDmaTsChannel;
 class UartTsChannel;
 class SerialTsChannel;
