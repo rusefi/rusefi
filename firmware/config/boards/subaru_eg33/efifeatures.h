@@ -13,6 +13,7 @@
 
 /* debug console */
 #define TS_PRIMARY_UxART_PORT		SD1
+#define EFI_TS_PRIMARY_IS_SERIAL TRUE
 
 /* Knock detection */
 #undef EFI_HIP_9011

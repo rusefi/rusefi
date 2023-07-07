@@ -14,27 +14,16 @@
 #include "hellen_meta.h"
 #endif // HW_HELLEN
 
-// These may not be defined due to the HAL, but they're necessary for the compiler to do it's magic
-class UARTDriver;
-class UartDmaTsChannel;
-class UartTsChannel;
-class SerialTsChannel;
-
 #ifdef TS_PRIMARY_UxART_PORT
 
-// We want to instantiate the correct channel type depending on what type of serial port we're
-// using.  ChibiOS supports two - UART and Serial.  We compare the type of the port we're given
-// against UartDriver and decide whether to instantiate a UART TS Channel or a Serial version.  The
-// UART is further subdivided into two depending whether we support DMA or not.  We use the right
-// combination of std::conditional, std::is_same, and #if to get what we want.
-	std::conditional_t<
-		std::is_same_v<decltype(TS_PRIMARY_UxART_PORT), UARTDriver>,
-#if EFI_USE_UART_DMA
-		UartDmaTsChannel,
-#else // EFI_USE_UART_DMA
-		UartTsChannel,
-#endif // EFI_USE_UART_DMA
-		SerialTsChannel> primaryChannel(TS_PRIMARY_UxART_PORT);
+#if EFI_TS_PRIMARY_IS_SERIAL
+    SerialTsChannel
+#elif EFI_USE_UART_DMA
+	UartDmaTsChannel
+#else
+	UartTsChannel
+#endif
+    primaryChannel(TS_PRIMARY_UxART_PORT);
 
 	struct PrimaryChannelThread : public TunerstudioThread {
 		PrimaryChannelThread() : TunerstudioThread("Primary TS Channel") { }
@@ -57,14 +46,14 @@ class SerialTsChannel;
 #endif // defined(TS_PRIMARY_UxART_PORT)
 
 #ifdef TS_SECONDARY_UxART_PORT
-	std::conditional_t<
-		std::is_same_v<decltype(TS_SECONDARY_UxART_PORT), UARTDriver>,
-#if EFI_USE_UART_DMA
-		UartDmaTsChannel,
-#else // EFI_USE_UART_DMA
-		UartTsChannel,
-#endif // EFI_USE_UART_DMA
-		SerialTsChannel> secondaryChannel(TS_SECONDARY_UxART_PORT);
+#if EFI_TS_SECONDARY_IS_SERIAL
+    SerialTsChannel
+#elif EFI_USE_UART_DMA
+	UartDmaTsChannel
+#else
+	UartTsChannel
+#endif
+    secondaryChannel(TS_SECONDARY_UxART_PORT);
 
 	struct SecondaryChannelThread : public TunerstudioThread {
 		SecondaryChannelThread() : TunerstudioThread("Secondary TS Channel") { }
