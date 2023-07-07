@@ -205,11 +205,11 @@ pins:
     function: Power GND
     type: GND
   - pin: 251
-    function: ETB positive
+    function: ETB positive DC Motor
     type: etb
     color: purple
   - pin: 252
-    function: ETB negative
+    function: ETB negative DC Motor
     type: etb
     color: purple
   - pin: 253
