@@ -126,21 +126,21 @@ pins:
   - pin: B3
     function: Injector 4
   - pin: B4
-    function: VVT12
+    function: VVT12 Solenoid
   - pin: B5
-    function: VVT11
+    function: VVT11 Solenoid
   - pin: B6
-    function: VVT22
+    function: VVT22 Solenoid
   - pin: B7
-    function: VVT21
+    function: VVT21 Solenoid
   - pin: B8
-    function: ETB Pos
+    function: ETB Pos DC Motor
   - pin: B9
     function: TPS1
   - pin: B10
     function: TPS2
   - pin: B11
-    function: Muffler Control
+    function: Muffler Control Solenoid
   - pin: B14
     function: UNUSED TCU
   - pin: B15
@@ -153,7 +153,7 @@ pins:
   - pin: B18
     function: VPWR F
   - pin: B23
-    function: ETB Neg
+    function: ETB Neg DC Motor
   - pin: B24
     function: UNUSED TCU
   - pin: B25
@@ -206,7 +206,7 @@ pins:
   - pin: B59
     function: Manifold Header
   - pin: B60
-    function: Intake Manifold Runner Control
+    function: Intake Manifold Runner Control Solenoid
   - pin: B61
     function: Injector 7
   - pin: B62

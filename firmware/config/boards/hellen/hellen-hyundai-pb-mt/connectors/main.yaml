@@ -20,7 +20,7 @@ pins:
 
   - pin: A15
     class: outputs
-    function: Exhaust VVT
+    function: Exhaust VVT Solenoid
     type: ls
 
   - pin: A16
@@ -78,7 +78,7 @@ pins:
   - pin: A35
     class: outputs
     ts_name: ETB_OUT-
-    function: -ETB_OUT
+    function: -ETB_OUT DC Motor
 
   - pin: A37
     function: Knock Signal
@@ -92,7 +92,7 @@ pins:
 
   - pin: A45
     class: outputs
-    function: Intake VVT
+    function: Intake VVT Solenoid
     type: ls
   - pin: A46
     class: outputs
@@ -111,7 +111,7 @@ pins:
   - pin: A50
     class: outputs
     ts_name: ETB_OUT+
-    function: +ETB_OUT
+    function: +ETB_OUT DC Motor
 
   - pin: A53
     function: Brake Test Switch 12v
