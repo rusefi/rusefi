@@ -10,6 +10,7 @@
 #include "hyundai.h"
 #include "proteus_meta.h"
 #include "defaults.h"
+#include "lua_lib.h"
 
 static void set201xHyundai() {
 	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
@@ -75,7 +76,8 @@ void setHyundaiPb() {
     engineConfiguration->hpfpValvePin = PROTEUS_LS_6;
 #endif // HW_PROTEUS
 
-	strncpy(config->luaScript, R"(
+#if HW_PROTEUS
+	strncpy(config->luaScript, SET_TWO_BYTES HYUNDAI_SUM_NIBBLES R"(
 
 GDI4_BASE_ADDRESS = 0xF0
 GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
@@ -96,7 +98,40 @@ end
 
 canRxAdd(GDI4_BASE_ADDRESS + 3, onCanConfiguration3)
 
+EMS_DCT11_128 = 0x80
+EMS_DCT12_129 = 0x81
+EMS11_790 = 0x316
+EMS14_1349 = 0x545
+
+int counter = 0
+
+payLoad128 =  { 0x00, 0x17, 0x70, 0x0F, 0x1B, 0x2C, 0x1B, 0x75 }
+payLoad129 =  { 0x40, 0x84, 0x5F, 0x00, 0x00, 0x00, 0x00, 0x75 }
+payLoad1349 = { 0xCA, 0x16, 0x00, 0x8A, 0x75, 0xFF, 0x75, 0xFF }
+
 function onTick()
+	local RPMread = math.floor(getSensor("RPM") * 4)
+	local RPMhi = RPMread >> 8
+	local RPMlo = RPMread & 0xff
+
+    payLoad128[3] = RPMlo
+    payLoad128[4] = RPMhi
+
+    counter = (counter + 1) % 16
+
+    check128 = hyuindaiSumNibbles(payLoad128, counter)
+    payLoad128[8] = check128 * 16 + counter
+    txCan(1, EMS_DCT11_128, 0, payLoad128)
+
+    check129 = hyuindaiSumNibbles(payLoad129, counter)
+    payLoad129[8] = check129 * 16 + counter
+    txCan(1, EMS_DCT12_129, 0, payLoad129)
+
+
+	canRPMpayload = { 0x05, 0x1B, RPMlo, RPMhi, 0x1B, 0x2C, 0x00, 0x7F }
+
+	txCan(1, EMS11_790, 0, canRPMpayload)
+	txCan(1, EMS14_1349, 0, payLoad1349)
 
 	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
 	pumpHoldCurrent      = getCalibration("mc33_hpfp_i_hold")
@@ -122,8 +157,7 @@ function onTick()
 end
 
 )", efi::size(config->luaScript));
-
-
+#endif // HW_PROTEUS
 
 }
 
