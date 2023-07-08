@@ -14,6 +14,8 @@
  *   non-direct: false
  *
  * CRC of the string "123456789" is 0x68
+ *
+ * keywords: honda checksum
  */
 
 uint8_t crc_hondak_calc(const uint8_t *data, size_t len);
