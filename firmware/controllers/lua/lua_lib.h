@@ -124,7 +124,7 @@ end \
 "
 
 #define HYUNDAI_SUM_NIBBLES "\
-function hyuindaiSumNibbles(seed) \
+function hyuindaiSumNibbles(data, seed) \
   local sum = seed \
   for i = 1, 7, 1 \
   do \
