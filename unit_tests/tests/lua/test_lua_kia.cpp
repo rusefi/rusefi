@@ -29,3 +29,13 @@ rpm = 990
                                              		)"
 			).value_or(0), 0);
 }
+
+TEST(LuaKia, calcSumOfNibbles) {
+#define real81Packet "\ndata = { 0x40, 0x85, 0x5F, 0x00, 0x00, 0x00, 0x00, 0xED}\n "
+	const char* script = HYUNDAI_SUM_NIBBLES	real81Packet	R"(
+function testFunc()
+  return hyuindaiSumNibbles(0xD)
+end
+    	)";
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0xE);
+}

@@ -123,4 +123,15 @@ function setBitRange(data, totalBitIndex, bitWidth, value) \
 end \
 "
 
+#define HYUNDAI_SUM_NIBBLES "\
+function hyuindaiSumNibbles(seed) \
+  local sum = seed \
+  for i = 1, 7, 1 \
+  do \
+    b = data[i] \
+    sum =  sum +  (b % 16) + math.floor(b / 16) \
+  end \
+  return (16 - sum) % 16 \
+end \
+"
 
