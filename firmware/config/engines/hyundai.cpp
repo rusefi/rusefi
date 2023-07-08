@@ -77,7 +77,7 @@ void setHyundaiPb() {
 #endif // HW_PROTEUS
 
 #if HW_PROTEUS
-	strncpy(config->luaScript, SET_TWO_BYTES HYUNDAI_SUM_NIBBLES R"(
+	strncpy(config->luaScript, TWO_BYTES_LSB PRINT_ARRAY SET_TWO_BYTES HYUNDAI_SUM_NIBBLES R"(
 
 GDI4_BASE_ADDRESS = 0xF0
 GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
@@ -103,7 +103,7 @@ EMS_DCT12_129 = 0x81
 EMS11_790 = 0x316
 EMS14_1349 = 0x545
 
-int counter = 0
+counter = 0
 
 payLoad128 =  { 0x00, 0x17, 0x70, 0x0F, 0x1B, 0x2C, 0x1B, 0x75 }
 payLoad129 =  { 0x40, 0x84, 0x5F, 0x00, 0x00, 0x00, 0x00, 0x75 }

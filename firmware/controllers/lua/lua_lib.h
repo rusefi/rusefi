@@ -71,9 +71,9 @@ end  \
 
 // Little-endian System, "Intel"
 #define SET_TWO_BYTES "	function setTwoBytes(data, offset, value) \
-		value = math.floor(value) \
-		data[offset + 2] = value >> 8 \
-		data[offset + 1] = value & 0xff \
+		value = math.floor(value) \n\
+		data[offset + 2] = value >> 8 \n\
+		data[offset + 1] = value & 0xff \n\
 	end \
 	"
 
@@ -124,11 +124,11 @@ end \
 "
 
 #define HYUNDAI_SUM_NIBBLES "\
-function hyuindaiSumNibbles(data, seed) \
-  local sum = seed \
-  for i = 1, 7, 1 \
-  do \
-    b = data[i] \
+function hyuindaiSumNibbles(data, seed) \n\
+  local sum = seed \n\
+  for i = 1, 7, 1 \n\
+  do \n\
+    b = data[i] \n\
     sum =  sum +  (b % 16) + math.floor(b / 16) \
   end \
   return (16 - sum) % 16 \
