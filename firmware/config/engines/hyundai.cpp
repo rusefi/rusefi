@@ -127,7 +127,6 @@ function onTick()
     payLoad129[8] = check129 * 16 + counter
     txCan(1, EMS_DCT12_129, 0, payLoad129)
 
-
 	canRPMpayload = { 0x05, 0x1B, RPMlo, RPMhi, 0x1B, 0x2C, 0x00, 0x7F }
 
 	txCan(1, EMS11_790, 0, canRPMpayload)
