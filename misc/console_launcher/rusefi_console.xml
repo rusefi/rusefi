@@ -23,10 +23,8 @@
   </jre>
   <messages>
     <startupErr>An error occurred while starting the application.</startupErr>
-    <jreNotFoundErr>This application requires a Java Runtime Environment.
-https://rusefi.com/s/j/</jreNotFoundErr>
-    <jreVersionErr>This application requires a Java Runtime Environment.
-https://rusefi.com/s/j/</jreVersionErr>
+    <jreNotFoundErr>Please visit https://rusefi.com/s/j/ for Java (JRE) </jreNotFoundErr>
+    <jreVersionErr>Please visit https://rusefi.com/s/j/ for Java (JRE) </jreVersionErr>
     <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.</launcherErr>
     <instanceAlreadyExistsMsg>An application instance is already running.</instanceAlreadyExistsMsg>
   </messages>
