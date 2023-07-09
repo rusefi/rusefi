@@ -11,33 +11,37 @@ public class HexUtil {
         return hexToBytes(hex);
     }
 
-    public static byte[] hexToBytes(String s) {
+    public static byte[] hexToBytes(CharSequence s) {
         return hexToBytes(s, 0);
     }
 
-    private static byte[] hexToBytes(String s, int off) {
+    private static byte[] hexToBytes(CharSequence s, int off) {
         byte[] bs = new byte[off + (1 + s.length()) / 2];
         hexToBytes(s, bs, off);
         return bs;
     }
 
-    private static void hexToBytes(String s, byte[] out, int off) throws NumberFormatException, IndexOutOfBoundsException {
+    public static void hexToBytes(CharSequence s, byte[] out, int off) throws NumberFormatException, IndexOutOfBoundsException {
         int slen = s.length();
         if ((slen % 2) != 0) {
-            s = '0' + s;
+            byte nibble = (byte) Character.digit(s.charAt(0), 16);
+            out[off] = nibble;
+            hexToBytes(s.subSequence(1, s.length()), out, off + 1);
+            return;
         }
         if (out.length < off + slen / 2) {
             throw new IndexOutOfBoundsException("Output buffer too small for input (" + out.length + "<" + off + slen / 2 + ")");
         }
         // Safe to assume the string is even length
-        byte b1, b2;
+        byte firstNibble, secondNibble;
         for (int i = 0; i < slen; i += 2) {
-            b1 = (byte) Character.digit(s.charAt(i), 16);
-            b2 = (byte) Character.digit(s.charAt(i + 1), 16);
-            if ((b1 < 0) || (b2 < 0)) {
+            firstNibble = (byte) Character.digit(s.charAt(i), 16);
+            secondNibble = (byte) Character.digit(s.charAt(i + 1), 16);
+            if ((firstNibble < 0) || (secondNibble < 0)) {
+                // todo: huh? when does char produce a negative byte?!
                 throw new NumberFormatException();
             }
-            out[off + i / 2] = (byte) (b1 << 4 | b2);
+            out[off + i / 2] = (byte) (firstNibble << 4 | secondNibble);
         }
     }
 }

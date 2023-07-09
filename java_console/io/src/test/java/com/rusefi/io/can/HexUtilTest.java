@@ -17,6 +17,13 @@ public class HexUtilTest {
         assertArrayEquals(new byte[]{1, (byte) 0xab, (byte) 0xcd}, pa);
     }
 
+    @Test
+    public void decodeUnevenInfoOffset() {
+        byte[] destination = new byte[7];
+        HexUtil.hexToBytes("1abcd", destination, 2);
+        assertArrayEquals(new byte[]{0, 0, 1, (byte) 0xab, (byte) 0xcd, 0, 0}, destination);
+    }
+
     @Test(expected = NumberFormatException.class)
     public void unexpected() {
         HexUtil.hexToBytes("0xff");
