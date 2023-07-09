@@ -11,7 +11,7 @@ public class HexUtil {
         return hexToBytes(hex);
     }
 
-    private static byte[] hexToBytes(String s) {
+    public static byte[] hexToBytes(String s) {
         return hexToBytes(s, 0);
     }
 
