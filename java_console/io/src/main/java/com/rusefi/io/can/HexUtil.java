@@ -1,6 +1,10 @@
 package com.rusefi.io.can;
 
 public class HexUtil {
+    private static final String HEX_STRING = "0123456789ABCDEF";
+    public static final byte[] HEX_BYTE_ARRAY = HEX_STRING.getBytes();
+    public static final char[] HEX_CHAR_ARRAY = HexUtil.HEX_STRING.toCharArray();
+
     public static byte[] asBytes(String hex) {
         if (hex.indexOf(' ') >= 0) {
             hex = hex.replaceAll(" ", "");
@@ -9,6 +13,16 @@ public class HexUtil {
             hex = hex.substring(2);
         }
         return hexToBytes(hex);
+    }
+
+    public static String asString(byte[] input) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : input) {
+            int i = b & 0xff;
+            sb.append(HEX_STRING.charAt(i / 16));
+            sb.append(HEX_STRING.charAt(i % 16));
+        }
+        return sb.toString();
     }
 
     public static byte[] hexToBytes(CharSequence s) {

@@ -3,6 +3,7 @@ package com.rusefi.io.can;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class HexUtilTest {
     @Test
@@ -27,5 +28,10 @@ public class HexUtilTest {
     @Test(expected = NumberFormatException.class)
     public void unexpected() {
         HexUtil.hexToBytes("0xff");
+    }
+
+    @Test
+    public void asString() {
+        assertEquals("AB01", HexUtil.asString(new byte[]{(byte) 0xab, 1}));
     }
 }

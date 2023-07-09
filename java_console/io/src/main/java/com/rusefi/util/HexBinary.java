@@ -1,10 +1,12 @@
 package com.rusefi.util;
 
+import com.rusefi.io.can.HexUtil;
+
 public class HexBinary {
     public static String printHexBinary(byte[] data) {
         if (data == null)
             return "(null)";
-        char[] hexCode = "0123456789ABCDEF".toCharArray();
+        char[] hexCode = HexUtil.HEX_CHAR_ARRAY;
 
         StringBuilder r = new StringBuilder(data.length * 2);
         for (byte b : data) {

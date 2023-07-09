@@ -25,9 +25,7 @@ public class Elm327Connector implements Closeable {
 		log.configureDebugEnabled(false);
 	}
 
-	private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes();
-
-//	public final static int ELM327_DEFAULT_BAUDRATE = 115200; // OBDlink SX, 1.3a STN1110
+	//	public final static int ELM327_DEFAULT_BAUDRATE = 115200; // OBDlink SX, 1.3a STN1110
     public final static int ELM327_DEFAULT_BAUDRATE = 38400;
     private final static int BIG_TIMEOUT = 2 * SECOND;
     private final static int TIMEOUT = 70;
@@ -243,8 +241,8 @@ public class Elm327Connector implements Closeable {
 		for (int i = 0; i < length; i++) {
 			int j = i * 2;
 			int v = data[i] & 0xFF;
-			hexData[j] = HEX_ARRAY[v >>> 4];
-			hexData[j + 1] = HEX_ARRAY[v & 0x0F];
+			hexData[j] = HexUtil.HEX_BYTE_ARRAY[v >>> 4];
+			hexData[j + 1] = HexUtil.HEX_BYTE_ARRAY[v & 0x0F];
 		}
 		hexData[length * 2] = '\r';
 		return hexData;
