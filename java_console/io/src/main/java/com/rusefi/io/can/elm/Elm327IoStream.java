@@ -1,4 +1,4 @@
-package com.rusefi.io.can;
+package com.rusefi.io.can.elm;
 
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;

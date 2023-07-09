@@ -2,7 +2,7 @@ package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.io.stream.PCanIoStream;
+import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.tools.CANConnectorStartup;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;

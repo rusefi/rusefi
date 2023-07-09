@@ -1,4 +1,4 @@
-package com.rusefi.io.can;
+package com.rusefi.io.can.isotp;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.util.HexBinary;

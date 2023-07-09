@@ -1,5 +1,6 @@
 package com.rusefi.io.can;
 
+import com.rusefi.io.can.isotp.IsoTpConnector;
 import com.rusefi.util.HexBinary;
 import org.junit.Test;
 

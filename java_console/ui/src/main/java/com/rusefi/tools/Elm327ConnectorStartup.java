@@ -3,7 +3,7 @@ package com.rusefi.tools;
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
-import com.rusefi.io.can.Elm327Connector;
+import com.rusefi.io.can.elm.Elm327Connector;
 import com.rusefi.io.serial.SerialIoStream;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.TcpConnector;

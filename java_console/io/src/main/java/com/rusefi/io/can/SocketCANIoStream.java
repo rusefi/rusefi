@@ -1,4 +1,4 @@
-package com.rusefi.io.stream;
+package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
@@ -6,8 +6,8 @@ import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.can.IsoTpCanDecoder;
-import com.rusefi.io.can.IsoTpConnector;
+import com.rusefi.io.can.isotp.IsoTpCanDecoder;
+import com.rusefi.io.can.isotp.IsoTpConnector;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import org.jetbrains.annotations.Nullable;

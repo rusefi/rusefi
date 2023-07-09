@@ -5,7 +5,7 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.AbstractIoStream;
-import com.rusefi.io.stream.SocketCANIoStream;
+import com.rusefi.io.can.SocketCANIoStream;
 
 import java.io.IOException;
 

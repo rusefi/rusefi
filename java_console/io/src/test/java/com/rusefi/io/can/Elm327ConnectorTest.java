@@ -1,5 +1,6 @@
 package com.rusefi.io.can;
 
+import com.rusefi.io.can.elm.Elm327Connector;
 import com.rusefi.util.HexBinary;
 import org.junit.Test;
 

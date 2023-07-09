@@ -6,7 +6,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.AbstractIoStream;
-import com.rusefi.io.stream.PCanIoStream;
+import com.rusefi.io.can.PCanIoStream;
 
 import java.io.IOException;
 

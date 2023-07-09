@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import static com.rusefi.io.can.Elm327Connector.ELM327_DEFAULT_BAUDRATE;
+import static com.rusefi.io.can.elm.Elm327Connector.ELM327_DEFAULT_BAUDRATE;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
