@@ -41,7 +41,7 @@ public class AndroidSerial extends AbstractIoStream {
 
     public AndroidSerial(UsbSerialPort usbSerialPort) {
         this.usbSerialPort = usbSerialPort;
-        dataBuffer = createDataBuffer("");
+        dataBuffer = createDataBuffer();
     }
 
     private static UsbSerialDriver getSerialDriver(rusEFI rusEFI, TextView mStatusView, UsbManager usbManager, PermissionGrantedAction action) {
