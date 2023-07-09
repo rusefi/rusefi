@@ -16,7 +16,7 @@ TEST(LuaKia, idleRpm1) {
 
 TEST(LuaKia, packRpm) {
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(
-			TWO_BYTES_MSB ARRAY_EQUALS SET_TWO_BYTES PRINT_ARRAY R"(
+			TWO_BYTES_MSB ARRAY_EQUALS SET_TWO_BYTES_LSB PRINT_ARRAY R"(
 rpm = 990
                                              		function testFunc()
 		canEngine = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }

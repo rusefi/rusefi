@@ -33,7 +33,7 @@ TEST(LuaVag, Checksum) {
 
 // LSB (Least Significant Byte comes first) "Intel"
 TEST(LuaVag, packMotor1) {
-	const char* realdata = PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
+	const char* realdata = PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES_LSB R"(
 
 	function testFunc()
 		engineTorque = 15.21
@@ -134,7 +134,7 @@ TEST(LuaVag, unpackMotor1_torq_req) {
 #define realMotor3Packet "\ndata = { 0x00, 0x62, 0xFA, 0xDA, 0x22, 0x00, 0x00, 0xFA}\n "
 
 TEST(LuaVag, packMotor3) {
-	const char* script = SET_BIT_RANGE_LSB PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
+	const char* script = SET_BIT_RANGE_LSB PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES_LSB R"(
 
 	function testFunc()
 		tps = 100

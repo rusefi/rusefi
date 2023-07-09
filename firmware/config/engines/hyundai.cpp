@@ -77,7 +77,7 @@ void setHyundaiPb() {
 #endif // HW_PROTEUS
 
 #if HW_PROTEUS
-	strncpy(config->luaScript, TWO_BYTES_LSB PRINT_ARRAY SET_TWO_BYTES HYUNDAI_SUM_NIBBLES R"(
+	strncpy(config->luaScript, TWO_BYTES_LSB PRINT_ARRAY SET_TWO_BYTES_LSB HYUNDAI_SUM_NIBBLES R"(
 
 GDI4_BASE_ADDRESS = 0xBB20
 GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
@@ -146,9 +146,7 @@ function onTick()
 	txCan(1, GDI_CHANGE_ADDRESS + 3, 1, data_set_settings)
 
 	setTwoBytesLsb(data_set_settings, 1, pumpHoldCurrent * FIXED_POINT)
-	outputCanID = 0
-	outputCanID = GDI4_BASE_ADDRESS
-	setTwoBytesLsb(data_set_settings, 3, outputCanID)
+	setTwoBytesLsb(data_set_settings, 3, GDI4_BASE_ADDRESS)
 	print('Will be sending ' ..arrayToString(data_set_settings))
 	txCan(1, GDI_CHANGE_ADDRESS + 4, 1, data_set_settings)
 

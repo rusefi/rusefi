@@ -56,26 +56,26 @@ function arrayToString(arr)  \
 	local index = 1   \
 	while arr[index] ~= nil do  \
 		str = str..\" \"..toHexString(math.floor(arr[index]))  \
-		index = index + 1  \
-	end  \
-	return str  \
-end  \
- \
+		index = index + 1\
+	end\
+	return str\
+end\
 \
 "
 
 // LSB (Least Significant Byte comes first) "Intel"
-#define TWO_BYTES_LSB "function getTwoBytesLSB(data, offset, factor)        \
-		return (data[offset + 2] * 256 + data[offset + 1]) * factor   \
-	end"
+#define TWO_BYTES_LSB "function getTwoBytesLSB(data, offset, factor)\
+		return (data[offset + 2] * 256 + data[offset + 1]) * factor\
+	end\
+"
 
 // Little-endian System, "Intel"
-#define SET_TWO_BYTES "	function setTwoBytes(data, offset, value) \
-		value = math.floor(value) \n\
-		data[offset + 2] = value >> 8 \n\
-		data[offset + 1] = value & 0xff \n\
+#define SET_TWO_BYTES_LSB "	function setTwoBytesLsb(data, offset, value) \
+		value = math.floor(value)\
+		data[offset + 2] = value >> 8\
+		data[offset + 1] = value & 0xff\
 	end \
-	"
+"
 
 // MOTOROLA order, MSB (Most Significant Byte/Big Endian) comes first.
 #define TWO_BYTES_MSB "function getTwoBytesMSB(data, offset, factor)        \
@@ -87,8 +87,8 @@ end  \
 		value = math.floor(value) \
 		data[offset + 1] = value >> 8 \
 		data[offset + 2] = value & 0xff \
-	end \
-	"
+	end\
+"
 
 // one day we shall get Preprocessor macros with C++11 raw string literals
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55971
@@ -132,6 +132,6 @@ function hyuindaiSumNibbles(data, seed) \n\
     sum =  sum +  (b % 16) + math.floor(b / 16) \
   end \
   return (16 - sum) % 16 \
-end \
+end\
 "
 
