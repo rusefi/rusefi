@@ -91,7 +91,7 @@ public class PCanIoStream extends AbstractIoStream {
     private PCanIoStream(PCANBasic can, StatusConsumer statusListener) {
         this.can = can;
         this.statusListener = statusListener;
-        dataBuffer = createDataBuffer("[PCAN] ");
+        dataBuffer = createDataBuffer();
     }
 
     @Override

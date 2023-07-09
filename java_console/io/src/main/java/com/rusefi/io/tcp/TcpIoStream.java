@@ -35,7 +35,7 @@ public class TcpIoStream extends AbstractIoStream {
         this.socket = socket;
         input = new BufferedInputStream(socket.getInputStream());
         output = new BufferedOutputStream(socket.getOutputStream());
-        dataBuffer = createDataBuffer(loggingPrefix);
+        dataBuffer = createDataBuffer();
     }
 
     @NotNull

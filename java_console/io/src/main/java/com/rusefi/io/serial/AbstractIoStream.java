@@ -13,8 +13,8 @@ public abstract class AbstractIoStream implements IoStream {
     private final AtomicInteger bytesOut = new AtomicInteger();
     private long latestActivity;
 
-    public IncomingDataBuffer createDataBuffer(String loggingPrefix) {
-        IncomingDataBuffer incomingData = new IncomingDataBuffer(loggingPrefix, getStreamStats());
+    public IncomingDataBuffer createDataBuffer() {
+        IncomingDataBuffer incomingData = new IncomingDataBuffer(getClass().getSimpleName(), getStreamStats());
         setInputListener(incomingData::addData);
         return incomingData;
     }

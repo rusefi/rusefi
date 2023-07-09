@@ -33,7 +33,7 @@ public class Elm327IoStream extends AbstractIoStream {
 
     public Elm327IoStream(Elm327Connector con) {
         this.con = con;
-        dataBuffer = createDataBuffer("elm327Stream");
+        dataBuffer = createDataBuffer();
 
 //        ByteBuffer inBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
         outBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);

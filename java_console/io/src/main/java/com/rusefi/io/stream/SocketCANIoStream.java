@@ -77,7 +77,7 @@ public class SocketCANIoStream extends AbstractIoStream {
             throw new IllegalStateException("Error looking up", e);
         }
         // buffer could only be created once socket variable is not null due to callback
-        dataBuffer = createDataBuffer("[SocketCAN] ");
+        dataBuffer = createDataBuffer();
     }
 
     @Nullable

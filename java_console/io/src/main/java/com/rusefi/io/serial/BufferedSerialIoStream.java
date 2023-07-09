@@ -23,7 +23,7 @@ public class BufferedSerialIoStream extends SerialIoStream {
      */
     private BufferedSerialIoStream(SerialPort sp, String port) {
         super(sp, port);
-        dataBuffer = createDataBuffer("[serial] ");
+        dataBuffer = createDataBuffer();
     }
 
     @Override
