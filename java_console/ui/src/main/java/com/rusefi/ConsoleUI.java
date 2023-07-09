@@ -102,7 +102,6 @@ public class ConsoleUI {
         }
         if (!linkManager.isLogViewer()) {
             tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
-            tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
         }
 
         if (!linkManager.isLogViewer()) {
