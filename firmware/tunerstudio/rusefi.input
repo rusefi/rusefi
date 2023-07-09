@@ -1889,7 +1889,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = auxInputsDialog,			"Lua Analog Inputs"
-# TODO finish https://github.com/rusefi/rusefi/issues/4861		subMenu = luaDigitalInputsDialog,   "Lua Digital Inputs"
+		subMenu = luaDigitalInputsDialog,   "Lua Digital Inputs"
 		subMenu = luaOutputs,				"Lua Script PWM Outputs"
 
 		groupMenu = "Lua Calibrations"
@@ -3949,7 +3949,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Mode #7",							luaDigitalInputPinModes7
 		field = "Mode #8",							luaDigitalInputPinModes8
 
-	dialog = luaDigitalInputsDialog, "Lua Digital Inputs", border
+	dialog = luaDigitalInputsDialog, "Lua Digital Aux Inputs", border
 		panel = luaDigitalInputsLeftDialog,	West
 		panel = luaDigitalInputsRightDialog,	East
 
