@@ -330,8 +330,11 @@ static int lua_getAuxDigital(lua_State* l) {
 		return 1;
 	}
 
+#if !EFI_SIMULATOR
 	bool state = efiReadPin(engineConfiguration->luaDigitalInputPins[idx]);
 	lua_pushboolean(l, state);
+#endif // !EFI_SIMULATOR
+
 	return 1;
 }
 
