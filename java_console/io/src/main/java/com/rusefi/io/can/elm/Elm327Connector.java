@@ -154,8 +154,7 @@ public class Elm327Connector implements Closeable {
 
 	private final IsoTpConnector connector = new IsoTpConnector() {
 		@Override
-		public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
-			byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
+		public void sendCanData(byte[] total) {
 			Elm327Connector.this.sendCanData(total);
 		}
 

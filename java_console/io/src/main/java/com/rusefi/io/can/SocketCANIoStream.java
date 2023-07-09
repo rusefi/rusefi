@@ -39,14 +39,8 @@ public class SocketCANIoStream extends AbstractIoStream {
 
     private final IsoTpConnector isoTpConnector = new IsoTpConnector() {
         @Override
-        public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
-            byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
-
+        public void sendCanData(byte[] total) {
             sendCanPacket(total);
-        }
-
-        @Override
-        public void receiveData() {
         }
     };
 

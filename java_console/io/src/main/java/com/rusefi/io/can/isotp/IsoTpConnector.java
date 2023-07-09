@@ -56,7 +56,13 @@ public abstract class IsoTpConnector {
         sendCanData(new byte[]{(byte) hdr0, (byte) hdr1}, data, dataOffset, dataLength);
     }
 
-    public abstract void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength);
+    public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
+        byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
+        sendCanData(total);
+    }
 
-    public abstract void receiveData();
+    public abstract void sendCanData(byte[] total);
+
+    public void receiveData() {
+    }
 }

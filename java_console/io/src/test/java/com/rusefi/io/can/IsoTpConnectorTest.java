@@ -19,15 +19,9 @@ public class IsoTpConnectorTest {
 
         IsoTpConnector testConnector = new IsoTpConnector() {
             @Override
-            public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
-                byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
-
+            public void sendCanData(byte[] total) {
                 String packetAsString = HexBinary.printHexBinary(total);
                 packets.add(packetAsString);
-            }
-
-            @Override
-            public void receiveData() {
             }
         };
 

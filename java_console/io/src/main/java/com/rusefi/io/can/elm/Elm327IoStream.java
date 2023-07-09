@@ -3,6 +3,7 @@ package com.rusefi.io.can.elm;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.io.can.isotp.IsoTpCanDecoder;
 import com.rusefi.io.serial.AbstractIoStream;
 import org.jetbrains.annotations.NotNull;
 
