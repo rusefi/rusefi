@@ -1,0 +1,39 @@
+pins:
+  - pin: I1
+    function: +12v
+    color: brown
+
+  - pin: I2
+    function: Analog Output
+    color: white
+
+  - pin: I3
+    function: CAN High
+    color: green
+
+  - pin: I4
+    function: CAN Low
+    color: red
+
+  - pin: I5
+    function: Ground
+    color: black
+
+  - pin: I6
+    function: Analog Output
+    color: yellow
+
+info:
+  image:
+    file: integration.png
+  pins:
+    - pin: I4
+      x: 113
+      y: 248
+    - pin: I5
+      x: 113
+      y: 195
+    - pin: I6
+      x: 113
+      y: 141
+
