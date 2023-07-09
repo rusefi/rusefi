@@ -316,6 +316,28 @@ static int lua_getDigital(lua_State* l) {
 	return 1;
 }
 
+static int lua_getAuxDigital(lua_State* l) {
+	auto idx = luaL_checkinteger(l, 1);
+	if (idx < 0 || idx >= LUA_DIGITAL_INPUT_COUNT) {
+		// Return nil to indicate invalid parameter
+		lua_pushnil(l);
+		return 1;
+	}
+
+	if (!isBrainPinValid(engineConfiguration->luaDigitalInputPins[idx])) {
+		// Return nil to indicate invalid pin
+		lua_pushnil(l);
+		return 1;
+	}
+
+#if !EFI_SIMULATOR
+	bool state = efiReadPin(engineConfiguration->luaDigitalInputPins[idx]);
+	lua_pushboolean(l, state);
+#endif // !EFI_SIMULATOR
+
+	return 1;
+}
+
 static int lua_setDebug(lua_State* l) {
 	// wrong debug mode, ignore
 	if (engineConfiguration->debugMode != DBG_LUA) {
@@ -892,6 +914,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "getFan", lua_fan);
 	lua_register(l, "getDigital", lua_getDigital);
+	lua_register(l, "getAuxDigital", lua_getAuxDigital);
 	lua_register(l, "setDebug", lua_setDebug);
 	lua_register(l, "getAirmass", lua_getAirmass);
 	lua_register(l, "setAirmass", lua_setAirmass);
