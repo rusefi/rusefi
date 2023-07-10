@@ -52,7 +52,7 @@ enum class engine_type_e : uint32_t {
 	MITSUBISHI_3A92 = 12,
 	TOYOTA_1NZ_FE = 13,
 	MRE_MIATA_NA6_MAP = 66,
-	UNUSED_15 = 15,
+	FUEL_BENCH = 15,
 
 	TEST_ROTARY = 19,
 	// Frankenso board
