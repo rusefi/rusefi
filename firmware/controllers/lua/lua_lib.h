@@ -57,9 +57,10 @@ function arrayToString(arr)  \
 	while arr[index] ~= nil do  \
 		str = str..\" \"..toHexString(math.floor(arr[index]))  \
 		index = index + 1\
-	end\
-	return str\
-end\
+	end  \
+	return str  \
+end  \
+ \
 \
 "
 

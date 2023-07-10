@@ -46,7 +46,7 @@ TEST(LuaVag, packMotor1) {
 		canMotor1 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
 		canMotor1[2] = engineTorque / 0.39
-		setTwoBytes(canMotor1, 2, rpm / 0.25)
+		setTwoBytesLsb(canMotor1, 2, rpm / 0.25)
 		canMotor1[5] = innerTorqWithoutExt / 0.4
  		canMotor1[6] = tps / 0.4
 		canMotor1[7] = torqueLoss / 0.39

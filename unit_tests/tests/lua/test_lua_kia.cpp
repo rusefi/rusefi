@@ -20,7 +20,7 @@ TEST(LuaKia, packRpm) {
 rpm = 990
                                              		function testFunc()
 		canEngine = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
-		setTwoBytes(canEngine, 2, 4 * rpm)
+		setTwoBytesLsb(canEngine, 2, 4 * rpm)
 
 		print(arrayToString(canEngine))
 		expected = { 0x00, 0x00, 0x78, 0x0F, 0x00, 0x00, 0x00, 0x00 }
