@@ -77,7 +77,7 @@ void setHyundaiPb() {
 #endif // HW_PROTEUS
 
 #if HW_PROTEUS
-	strncpy(config->luaScript, TWO_BYTES_LSB PRINT_ARRAY SET_TWO_BYTES_LSB HYUNDAI_SUM_NIBBLES R"(
+	strncpy(config->luaScript, GET_BIT_RANGE_LSB TWO_BYTES_LSB PRINT_ARRAY SET_TWO_BYTES_LSB HYUNDAI_SUM_NIBBLES R"(
 
 GDI4_BASE_ADDRESS = 0xBB20
 GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
@@ -108,6 +108,17 @@ counter = 0
 payLoad128 =  { 0x00, 0x17, 0x70, 0x0F, 0x1B, 0x2C, 0x1B, 0x75 }
 payLoad129 =  { 0x40, 0x84, 0x5F, 0x00, 0x00, 0x00, 0x00, 0x75 }
 payLoad1349 = { 0xCA, 0x16, 0x00, 0x8A, 0x75, 0xFF, 0x75, 0xFF }
+
+speedSensor = Sensor.new("VehicleSpeed")
+speedSensor : setTimeout(3000)
+
+function onCluPacket(bus, id, dlc, data)
+	speedKph = getBitRange(data, 8, 9) * 0.5
+	print('onCAR_SPEED ' ..speedKph)
+	speedSensor : set(speedKph)
+end
+
+canRxAdd(1, 1264, onCluPacket)
 
 function onTick()
 	local RPMread = math.floor(getSensor("RPM") * 4)
