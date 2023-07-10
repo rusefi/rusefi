@@ -732,6 +732,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::MRE_MIATA_94_MAP:
 		setMiata94_MAP_MRE();
 		break;
+	case engine_type_e::FUEL_BENCH:
+	    fuelBenchMode();
+		break;
 	case engine_type_e::MRE_MIATA_NA6_MAP:
 		setMiataNA6_MAP_MRE();
 		break;

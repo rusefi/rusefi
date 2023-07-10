@@ -952,3 +952,11 @@ void detectBoardType() {
 #endif //HW_HELLEN
 	// todo: add board ID detection?
 }
+
+void fuelBenchMode() {
+    engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
+    engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+
+	engineConfiguration->wwaeTau = 0.0;
+	engineConfiguration->wwaeBeta = 0.0;
+}

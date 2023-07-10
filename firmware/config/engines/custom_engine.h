@@ -22,6 +22,8 @@ void mreBoardNewTest();
 void mreSecondaryCan();
 void mreBCM();
 
+void fuelBenchMode();
+
 /**
  * PROTEUS_QC_TEST_BOARD
  * set engine_type 42

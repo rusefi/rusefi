@@ -2170,6 +2170,8 @@ cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts
 ; MAZDA_MIATA_2003 = 47
 cmd_set_engine_type_Frankenso_Miata_NB2			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
+cmd_set_engine_type_FUEL_BENCH						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FUEL_BENCH_16_hex@@"
+
 cmd_set_engine_type_Proteus_M73						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_VW_B6					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_VW_B6_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_GM_LS_4				    = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_GM_LS_4_16_hex@@"@@if_show_Proteus_presets
@@ -4317,6 +4319,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Proteus Honda K",			cmd_set_engine_type_PROTEUS_HONDA_K@@if_show_Proteus_presets
 		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets
 		commandButton = "Proteus Harley",			cmd_set_engine_type_PROTEUS_HARLEY@@if_show_Proteus_presets
+		commandButton = "Fuel Bench",               cmd_set_engine_type_FUEL_BENCH
 
 		commandButton = "SBC",			            cmd_set_engine_type_ALPHAX_8CHAN_SBC@@if_show_8chan_presets
 
