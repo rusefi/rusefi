@@ -150,6 +150,14 @@ public interface ConfigField {
         }
     };
 
+    default String getOriginalArrayName() {
+        if (isFromIterate()) {
+            return getIterateOriginalName() + "[" + (getIterateIndex() - 1) + "]";
+        } else {
+            return getName();
+        }
+    }
+
     ConfigStructure getStructureType();
 
     boolean isArray();

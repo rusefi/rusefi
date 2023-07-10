@@ -43,6 +43,7 @@ public class TuneCanTool {
 
         RootHolder.ROOT = "../firmware/";
 
+        handle("PB", 1502);
         handle("Mitsubicha", 1258);
         handle("Scion-1NZ-FE", 1448);
         handle("4g93", 1425);
@@ -132,6 +133,7 @@ public class TuneCanTool {
                     System.out.println("Not found " + name);
                     continue;
                 }
+                String cName = cf.getOriginalArrayName();
 
                 if (cf.getType().equals("boolean")) {
                     sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), unquote(customValue.getValue())));
@@ -168,11 +170,13 @@ public class TuneCanTool {
 
                     continue;
                 }
-                boolean isInteger = !customValue.getValue().contains(".");
+                double doubleValue = Double.valueOf(customValue.getValue());
+                int intValue = (int) doubleValue;
+                boolean isInteger = intValue == doubleValue;
                 if (isInteger) {
-                    sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), customValue.getValue()));
+                    sb.append(TuneTools.getAssignmentCode(defaultValue, cName, Integer.toString(intValue)));
                 } else {
-                    sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), niceToString(Double.valueOf(customValue.getValue()))));
+                    sb.append(TuneTools.getAssignmentCode(defaultValue, cName, niceToString(doubleValue)));
                 }
             }
         }

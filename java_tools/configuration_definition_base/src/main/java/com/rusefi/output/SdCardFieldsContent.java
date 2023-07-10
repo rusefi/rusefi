@@ -32,12 +32,8 @@ public class SdCardFieldsContent {
         if (configField.isBit())
             return "";
 
-        if (configField.isFromIterate()) {
-            String name = configField.getIterateOriginalName() + "[" + (configField.getIterateIndex() - 1) + "]";
-            return getLine(configField, prefix, prefix + name);
-        } else {
-            return getLine(configField, prefix, prefix + configField.getName());
-        }
+        String name = configField.getOriginalArrayName();
+        return getLine(configField, prefix, prefix + name);
     }
 
     private String getLine(ConfigField configField, String prefix, String name) {

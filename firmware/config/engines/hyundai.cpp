@@ -29,6 +29,15 @@ void setHyundaiPb() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
+    engineConfiguration->etbIdleThrottleRange = 6.0;
+
+    engineConfiguration->totalGearsCount = 5;
+    engineConfiguration->gearRatio[0] = 12;
+    engineConfiguration->gearRatio[1] = 6;
+    engineConfiguration->gearRatio[2] = 4.4;
+    engineConfiguration->gearRatio[3] = 2.4;
+    engineConfiguration->gearRatio[4] = 1;
+
     // ETB buzzing is annoying :(
 	engineConfiguration->disableEtbWhenEngineStopped = true;
 
@@ -48,7 +57,7 @@ void setHyundaiPb() {
 	engineConfiguration->map.sensor.highValue = 101.3;
 	engineConfiguration->mapHighValueVoltage = 4;
 
-    engineConfiguration->mc33_hpfp_i_peak = 8;
+    engineConfiguration->mc33_hpfp_i_peak = 10;
     engineConfiguration->mc33_hpfp_i_hold = 4;
 
 	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
