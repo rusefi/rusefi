@@ -23,6 +23,7 @@ pins:
   - pin: 4
     function: "Variable Reluctance #2 positive"
     type: vr
+    color: blue
 
   - id: E8
     class: event_inputs
@@ -31,6 +32,7 @@ pins:
   - pin: 5
     function: "Variable Reluctance #1 positive"
     type: vr
+    color: blue
 
   - id: E7
     class: event_inputs
@@ -39,14 +41,17 @@ pins:
   - pin: 6
     function: ETB 1 negative
     type: etb
+    color: white
 
   - pin: 7
     function: ETB 1 positive
     type: etb
+    color: blue
 
   - pin: 8
     function: ETB 2 negative
     type: etb
+    color: white
 
   - pin: 9
     id: [E13, E13]
@@ -72,10 +77,12 @@ pins:
   - pin: 12
     function: "Variable Reluctance #2 negative"
     type: vr
+    color: white
 
   - pin: 13
     function: "Variable Reluctance #1 negative"
     type: vr
+    color: white
 
   - pin: 14
     function: Ground
@@ -84,6 +91,7 @@ pins:
   - pin: 15
     function: ETB 2 positive
     type: etb
+    color: blue
 
   - pin: 16
     function: CAN bus low

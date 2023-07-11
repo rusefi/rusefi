@@ -19,6 +19,7 @@ pins:
     class: outputs
     ts_name: Lowside 1
     type: ls
+    color: green
 
   - pin: 4
     id: G10
@@ -26,6 +27,7 @@ pins:
     class: outputs
     ts_name: Lowside 3
     type: ls
+    color: blue
 
   - pin: 5
     id: G12
@@ -101,6 +103,7 @@ pins:
     class: outputs
     ts_name: Lowside 2
     type: ls
+    color: white
 
   - pin: 16
     id: G11
@@ -108,6 +111,7 @@ pins:
     class: outputs
     ts_name: Lowside 4
     type: ls
+    color: orange/brown
 
   - pin: 17
     function: Power GND
@@ -144,6 +148,8 @@ pins:
     class: outputs
     ts_name: Ign 3
     type: hl
+    color: blue
+
 
   - pin: 23
     id: E2
@@ -217,6 +223,7 @@ pins:
     class: outputs
     ts_name: Ign 4
     type: hl
+    color: orange/brown
 
   - pin: 34
     id: D3
@@ -224,6 +231,7 @@ pins:
     class: outputs
     ts_name: Ign 2
     type: hl
+    color: white
 
   - pin: 35
     id: D4
@@ -231,6 +239,7 @@ pins:
     class: outputs
     ts_name: Ign 1
     type: hl
+    color: green
 
 info:
   title: Proteus
