@@ -263,9 +263,5 @@ public class LiveDataProcessor {
         try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.h")) {
             fw.write(fragmentsContent.toString());
         }
-
-        String outputPath = "../java_console/io/src/main/java/com/rusefi/enums";
-        InvokeReader request = new InvokeReader(outputPath, Collections.singletonList(enumContentFileName));
-        EnumToString.handleRequest(request);
     }
 }
