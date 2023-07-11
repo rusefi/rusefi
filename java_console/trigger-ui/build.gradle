@@ -1,0 +1,12 @@
+plugins {
+    id 'java-library'
+}
+
+apply from: '../../java_tools/dependencies.gradle'
+
+dependencies {
+    api project(':core_ui')
+    api project(':shared_ui')
+    api project(':models')
+    api project(':trigger-image')
+}
