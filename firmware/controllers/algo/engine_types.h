@@ -94,7 +94,7 @@ enum class engine_type_e : uint32_t {
 
 	VW_ABA = 32,
 
-	UNUSED_33 = 33,
+	ME17_9_MISC = 33,
 
 	HELLEN_NA6 = 34,
 
