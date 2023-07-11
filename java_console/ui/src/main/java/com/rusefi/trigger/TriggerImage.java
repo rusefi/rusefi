@@ -1,7 +1,7 @@
 package com.rusefi.trigger;
 
-import com.rusefi.StartupFrame;
 import com.rusefi.enums.trigger_type_e;
+import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.engine.UpDownImage;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class TriggerImage {
     private static final String OUTPUT_FOLDER = "triggers";
-    private static final String TOP_MESSAGE = StartupFrame.LINK_TEXT;
+    private static final String TOP_MESSAGE = LogoHelper.LINK_TEXT;
 
     private static final int WHEEL_BORDER = 20;
     private static final int WHEEL_DIAMETER = 500;
@@ -148,7 +148,7 @@ public class TriggerImage {
                 triggerWheelInfo);
 
         topPanel.add(firstWheelControl);
-        topPanel.add(StartupFrame.createLogoLabel());
+        topPanel.add(LogoHelper.createLogoLabel());
 
         List<WaveState> waves = TriggerImage.convertSignalsToWaves(triggerWheelInfo.getSignals());
 

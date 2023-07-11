@@ -11,6 +11,7 @@ import com.rusefi.maintenance.DriverInstall;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.PcanConnectorUI;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
@@ -18,7 +19,6 @@ import com.rusefi.ui.util.UiUtils;
 import com.rusefi.util.IoUtils;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -46,10 +46,6 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
 public class StartupFrame {
     private static final Logging log = getLogging(Launcher.class);
 
-    public static final String LOGO_PATH = "/com/rusefi/";
-    private static final String LOGO = LOGO_PATH + "logo.png";
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2023";
-    private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
 
     private final JFrame frame;
@@ -205,10 +201,10 @@ public class StartupFrame {
             rightPanel.add(urlLabel);
         }
 
-        JLabel logo = createLogoLabel();
+        JLabel logo = LogoHelper.createLogoLabel();
         if (logo != null)
             rightPanel.add(logo);
-        rightPanel.add(new URLLabel(LINK_TEXT, URI));
+        rightPanel.add(new URLLabel(LogoHelper.LINK_TEXT, LogoHelper.URI));
         rightPanel.add(new JLabel("Version " + Launcher.CONSOLE_VERSION));
 
         JPanel content = new JPanel(new BorderLayout());
@@ -238,39 +234,9 @@ public class StartupFrame {
     }
 
     public static void setFrameIcon(Frame frame) {
-        ImageIcon icon = getBundleIcon();
+        ImageIcon icon = LogoHelper.getBundleIcon();
         if (icon != null)
             frame.setIconImage(icon.getImage());
-    }
-
-    public static JLabel createLogoLabel() {
-        ImageIcon logoIcon = getBundleIcon();
-        if (logoIcon == null)
-            return null;
-        JLabel logo = new JLabel(logoIcon);
-        logo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-        URLLabel.addUrlAction(logo, URLLabel.createUri(URI));
-        logo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return logo;
-    }
-
-    @Nullable
-    private static ImageIcon getBundleIcon() {
-        String bundle = BundleUtil.readBundleFullNameNotNull();
-        String logoName;
-        // these should be about 213px wide
-        if (bundle.contains("proteus")) {
-            logoName = LOGO_PATH + "logo_proteus.png";
-        } else if (bundle.contains("honda")) {
-            logoName = LOGO_PATH + "logo_tutomo.png";
-        } else if (bundle.contains("alphax")) {
-            logoName = LOGO_PATH + "logo_alphax.png";
-        } else if (bundle.contains(".mre")) {
-            logoName = LOGO_PATH + "logo_mre.png";
-        } else {
-            logoName = LOGO;
-        }
-        return AutoupdateUtil.loadIcon(logoName);
     }
 
     private void connectButtonAction(JComboBox<String> comboSpeeds) {

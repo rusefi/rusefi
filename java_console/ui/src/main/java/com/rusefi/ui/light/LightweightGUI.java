@@ -11,6 +11,7 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.UIContext;
 import com.rusefi.core.ui.FrameHelper;
 import org.putgemin.VerticalFlowLayout;
@@ -19,7 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.StartupFrame.createLogoLabel;
+import static com.rusefi.ui.LogoHelper.createLogoLabel;
 
 public class LightweightGUI {
     private static final Logging log = getLogging(LightweightGUI.class);
@@ -85,7 +86,7 @@ public class LightweightGUI {
     private static JPanel createLogoUrlPanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        panel.add(new JLabel(StartupFrame.LINK_TEXT), BorderLayout.SOUTH);
+        panel.add(new JLabel(LogoHelper.LINK_TEXT), BorderLayout.SOUTH);
         JLabel logo = createLogoLabel();
         if (logo != null) {
             panel.add(logo, BorderLayout.CENTER);
