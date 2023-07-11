@@ -53,6 +53,7 @@ pins:
     ts_name: Analog Volt 1
     function: "Analog Voltage Input #1 MAP"
     type: av
+    color: yellow
 
   - pin: 14
     id: [C2, EFI_ADC_12]
@@ -60,6 +61,7 @@ pins:
     ts_name: Analog Volt 3
     function: "Analog Voltage Input #3 TPS1_2"
     type: av
+    color: blue
 
   - pin: 15
     id: [A0, EFI_ADC_0]
@@ -74,6 +76,7 @@ pins:
     ts_name: Analog Volt 7
     function: "Analog Voltage Input #7 (PPS2)"
     type: av
+    color: orange/brown
 
   - pin: 17
     id: [A4, EFI_ADC_4]
@@ -81,6 +84,7 @@ pins:
     ts_name: Analog Volt 9
     function: "Analog Voltage Input #9 (PPS)"
     type: av
+    color: white
 
   - pin: 18
     id: [A6, EFI_ADC_6]
@@ -102,6 +106,7 @@ pins:
     ts_name: Analog Temp 3
     function: "Analog Thermistor Input #3 (CLT)"
     type: at
+    color: grey
 
   - pin: 21
     function: "Analog Voltage +5 supply #1"
@@ -121,6 +126,7 @@ pins:
     ts_name: Analog Volt 2
     function: "Analog Voltage Input #2 TPS"
     type: av
+    color: green
 
   - pin: 25
     id: [C3, EFI_ADC_13]
@@ -160,6 +166,7 @@ pins:
     ts_name: Analog Temp 2
     function: Intake air temperature IAT
     type: at
+    color: blue
 
   - pin: 31
     id: [B1, EFI_ADC_9]

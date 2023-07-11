@@ -134,6 +134,7 @@ pins:
     class: outputs
     ts_name: Lowside 10
     type: ls
+    color: white
 
   - pin: 21
     id: B8
@@ -141,6 +142,7 @@ pins:
     class: outputs
     ts_name: Lowside 12
     type: ls
+    color: grey
 
   - pin: 22
     id: C9

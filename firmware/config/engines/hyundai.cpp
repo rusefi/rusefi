@@ -1,6 +1,9 @@
 /*
  * @file hyundai.cpp
  *
+https://rusefi.com/docs/pinouts/hellen/hellen-hyundai-pb-mt/
+ *
+https://rusefi.com/docs/pinouts/hellen/hellen154hyundai/
  * @date Oct 11, 2021
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
