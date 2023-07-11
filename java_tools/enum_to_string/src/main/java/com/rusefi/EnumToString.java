@@ -88,7 +88,7 @@ public class EnumToString {
         enumsReader.read(new FileReader(f));
     }
 
-    public EnumToString outputData(EnumsReader enumsReader) {
+    public void outputData(EnumsReader enumsReader) {
         SystemOut.println("Preparing output for " + enumsReader.getEnums().size() + " enums\n");
 
         for (Map.Entry<String, EnumsReader.EnumState> e : enumsReader.getEnums().entrySet()) {
@@ -102,7 +102,6 @@ public class EnumToString {
                 headerFileContent.append("#endif //__cplusplus\n");
         }
         SystemOut.println("EnumToString: " + headerFileContent.length() + " bytes of content\n");
-        return this;
     }
 
     private static String makeCode(String enumName, EnumsReader.EnumState enumState) {
