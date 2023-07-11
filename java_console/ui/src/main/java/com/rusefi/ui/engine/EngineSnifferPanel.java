@@ -297,7 +297,18 @@ public class EngineSnifferPanel {
             signalBody = Color.gray;
         }
 
-        UpDownImage image = new UpDownImage(name) {
+        UpDownImage image = new UpDownImage(name, new UpDownImage.PinNameSource() {
+            @Override
+            public String getPinByName(String name) {
+                return ChannelNaming.INSTANCE.channelName2PhysicalPin.get(name);
+            }
+
+            @Override
+            public boolean isSimulationMode() {
+                System.out.println("isSimulationMode");
+                return false;
+            }
+        }) {
             @Override
             protected boolean isShowTdcLabel() {
                 /**

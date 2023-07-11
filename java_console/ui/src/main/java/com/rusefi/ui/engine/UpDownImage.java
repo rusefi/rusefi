@@ -3,7 +3,6 @@ package com.rusefi.ui.engine;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.LinkManager;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
@@ -33,7 +32,6 @@ public class UpDownImage extends JPanel {
             new float[]{7.0f, 21.0f}, 0.0f);
     private static final BasicStroke ENGINE_CYCLE_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
             new float[]{21.0f, 7.0f}, 0.0f);
-
     public EngineReport engineReport;
     private StringBuilder revolutions;
     private final String name;
@@ -56,10 +54,30 @@ public class UpDownImage extends JPanel {
         this.renderText = renderText;
     }
 
-    public UpDownImage(final String name) {
-        this(EngineReport.MOCK, name);
+    interface PinNameSource {
+        PinNameSource VOID = new PinNameSource() {
+            @Override
+            public String getPinByName(String name) {
+                return null;
+            }
+
+            @Override
+            public boolean isSimulationMode() {
+                return false;
+            }
+        };
+
+        String getPinByName(String name);
+
+        boolean isSimulationMode();
+    }
+
+    private final PinNameSource pinNameSource;
+
+    public UpDownImage(final String name, PinNameSource pinNameSource) {
+        this(EngineReport.MOCK, name, pinNameSource);
         setToolTip();
-        String pin = ChannelNaming.INSTANCE.channelName2PhysicalPin.get(name);
+        String pin = pinNameSource.getPinByName(name);
         if (pin != null)
             setPhysicalPin(pin);
     }
@@ -74,12 +92,17 @@ public class UpDownImage extends JPanel {
 
     public void setToolTip() {
         // no physical pin information in simulator
-        String secondLine = LinkManager.isSimulationMode ? "" : "Physical pin: " + pin;
+        String secondLine = pinNameSource.isSimulationMode() ? "" : "Physical pin: " + pin;
         UiUtils.setToolTip(this, "Channel " + NameUtil.getUiName(name), secondLine);
     }
 
     public UpDownImage(EngineReport wr, String name) {
+        this(wr, name, PinNameSource.VOID);
+    }
+
+    public UpDownImage(EngineReport wr, String name, PinNameSource pinNameSource) {
         this.name = name;
+        this.pinNameSource = pinNameSource;
         setWaveReport(wr, null);
         setOpaque(true);
         translator = createTranslator();
