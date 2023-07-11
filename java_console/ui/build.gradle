@@ -10,6 +10,7 @@ configurations {
 
 dependencies {
     implementation project(':shared_ui')
+    implementation project(':trigger-ui')
     implementation project(':autotest')
     implementation project(':luaformatter')
     implementation project(':config_definition')

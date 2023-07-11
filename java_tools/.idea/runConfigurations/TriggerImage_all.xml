@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TriggerImage all" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.trigger.TriggerImage" />
-    <module name="java_tools.ui.main" />
+    <module name="java_tools.trigger-ui.main" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.trigger.*" />
