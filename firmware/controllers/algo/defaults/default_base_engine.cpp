@@ -190,3 +190,8 @@ void setEtbPID(float p, float i, float d) {
 	engineConfiguration->etb.iFactor = i;
 	engineConfiguration->etb.dFactor = d;
 }
+
+void setInline4() {
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
+}

@@ -25,8 +25,7 @@ static void commonPassatB6() {
 	engineConfiguration->idlePidRpmDeadZone = 500;
 	engineConfiguration->idleMode = IM_AUTO;
 
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
+	setInline4();
 	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 
 	engineConfiguration->disableEtbWhenEngineStopped = true;

@@ -68,6 +68,7 @@
 #include "gm_ls_4.h"
 #include "gm_sbc.h"
 #include "subaru.h"
+#include "slingshot.h"
 #include "test_engine.h"
 #include "sachs.h"
 #include "vw.h"
@@ -721,6 +722,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE();
+		break;
+	case ME17_9_MISC:
+	    setSlingshot();
 		break;
 	case engine_type_e::MRE_BOARD_NEW_TEST:
 		mreBoardNewTest();
