@@ -723,7 +723,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE();
 		break;
-	case ME17_9_MISC:
+	case engine_type_e::ME17_9_MISC:
 	    setSlingshot();
 		break;
 	case engine_type_e::MRE_BOARD_NEW_TEST:
