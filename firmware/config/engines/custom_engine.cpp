@@ -954,8 +954,13 @@ void detectBoardType() {
 }
 
 void fuelBenchMode() {
-    engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
+    engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
     engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
+
+	engineConfiguration->mapAveragingSchedulingAtIndex = 999; // this should disable map averaging right?
 
 	engineConfiguration->wwaeTau = 0.0;
 	engineConfiguration->wwaeBeta = 0.0;
