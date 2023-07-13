@@ -5,9 +5,9 @@
 #include "TriggerMeta.h"
 
 // uncomment to test starting from specific trigger
-//#define TEST_FROM_TRIGGER_ID ((int)TT_MAZDA_MIATA_NA)
+//#define TEST_FROM_TRIGGER_ID ((int)trigger_type_e::TT_MAZDA_MIATA_NA)
 // uncomment to test only newest trigger
-//#define TEST_FROM_TRIGGER_ID ((int)TT_UNUSED - 1)
+//#define TEST_FROM_TRIGGER_ID ((int)trigger_type_e::TT_UNUSED - 1)
 #define TEST_FROM_TRIGGER_ID 1
 
 #define TEST_TO_TRIGGER_ID trigger_type_e::TT_UNUSED
