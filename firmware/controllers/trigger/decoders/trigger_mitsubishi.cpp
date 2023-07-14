@@ -59,17 +59,13 @@ void initializeMitsubishi4g63Cam(TriggerWaveform *s) {
 	initializeMitsubishi4g9xCam(s);
 }
 
-void initialize36_2_1_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
-	s->tdcPosition = 90;
-	int totalTeethCount = 36;
-
-	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
+static void add36_2_1_1(TriggerWaveform *s, float engineCycle, float off) {
 	float toothWidth = 0.5;
 
-	float oneTooth = 720 / totalTeethCount;
+	int totalTeethCount = 36;
+	float oneTooth = engineCycle / totalTeethCount;
 
-	float offset = (36 - 11 - 12 - 11) * oneTooth;
+	float offset = off + (36 - 11 - 12 - 11) * oneTooth;
 
 	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
 			NO_LEFT_FILTER, offset + 11 * oneTooth + 1);
@@ -84,6 +80,24 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 
 	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
 			NO_LEFT_FILTER, offset + 10 * oneTooth + 1);
+}
+
+void initialize36_2_1_1(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
+	s->tdcPosition = 90;
+
+	add36_2_1_1(s, FOUR_STROKE_ENGINE_CYCLE, 0);
+	s->setTriggerSynchronizationGap(3);
+	s->setSecondTriggerSynchronizationGap(1); // redundancy
+}
+
+void initialize36_2_1_1_3cyl(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+	s->tdcPosition = 90;
+	s->isMitsubicha = true;
+
+	add36_2_1_1(s, 360, 0);
+	add36_2_1_1(s, 360, 360);
 
 	s->setTriggerSynchronizationGap(3);
 	s->setSecondTriggerSynchronizationGap(1); // redundancy

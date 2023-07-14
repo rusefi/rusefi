@@ -82,6 +82,14 @@ public:
 	 * For example pick-up in distributor with mechanical ignition firing order control.
 	 */
 	bool shapeWithoutTdc = false;
+
+	// 3 cylinder negatively affects sync on crank patter, let's handle it as a special kind of cam
+	bool isMitsubicha = false;
+
+	int getMitsubichaMult() const {
+		return isMitsubicha ? 2 : 1;
+	}
+
 	/**
 	 * this flag tells us if we should ignore events on second input channel
 	 * that's the way to ignore noise from the disconnected wire

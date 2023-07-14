@@ -304,7 +304,7 @@ bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerSha
 	// We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	bool isDecodingError = false;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.getExpectedEventCount((TriggerWheel)i));
+		isDecodingError |= (triggerShape.getMitsubichaMult() * currentCycle.eventCount[i] != triggerShape.getExpectedEventCount((TriggerWheel)i));
 	}
 
 #if EFI_UNIT_TEST

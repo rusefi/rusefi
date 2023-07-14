@@ -107,7 +107,7 @@ void TriggerStimulatorHelper::assertSyncPosition(
 	}
 
 	int revolutionCounter = state.getCrankSynchronizationCounter();
-	if (revolutionCounter != TEST_REVOLUTIONS) {
+	if (revolutionCounter != TEST_REVOLUTIONS * shape.getMitsubichaMult()) {
 		warning(ObdCode::CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s revolutionCounter=%d",
 				getTrigger_type_e(triggerConfiguration.TriggerType.type),
 				revolutionCounter);

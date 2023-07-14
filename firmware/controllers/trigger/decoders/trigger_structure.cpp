@@ -51,6 +51,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEd
 	isSecondWheelCam = false;
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
+	isMitsubicha = false;
 
 	// If RiseOnly, ignore falling edges completely.
 	useOnlyRisingEdges = syncEdge == SyncEdge::RiseOnly;
@@ -648,9 +649,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 	case trigger_type_e::TT_UNUSED_11:
 	case trigger_type_e::TT_UNUSED_75:
-	case trigger_type_e::TT_UNUSED_78:
 	case trigger_type_e::TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);
+		break;
+
+	case trigger_type_e::TT_UNUSED_78:
+		initialize36_2_1_1_3cyl(this);
 		break;
 
 	case trigger_type_e::TT_MITSU_4G9x_CAM:

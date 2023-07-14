@@ -17,6 +17,7 @@ void initializeMitsubishi4g9xCam(TriggerWaveform *s);
 void configureFordAspireTriggerWaveform(TriggerWaveform * s);
 
 void initialize36_2_1_1(TriggerWaveform *s);
+void initialize36_2_1_1_3cyl(TriggerWaveform *s);
 void initialize36_2_1(TriggerWaveform *s);
 
 void initializeVvt3A92(TriggerWaveform *s);
