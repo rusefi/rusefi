@@ -1,11 +1,12 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool enum_to_string.jar based on (unknown script) integration/rusefi_config_trigger.txt Sat Jun 17 22:43:03 EDT 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) integration/rusefi_config_trigger.txt Fri Jul 14 15:20:46 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class TriggerMeta {
+	public static final String IGNITION_OUTPUT = "Ignition Output";
 	public static final String TRIGGER_COMMENT = "#";
 	public static final String TRIGGER_CYCLE_DURATION = "cycleDuration";
 	public static final String TRIGGER_GAP_FROM = "gapFrom";
