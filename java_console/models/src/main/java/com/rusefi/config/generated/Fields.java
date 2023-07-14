@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Jul 13 23:34:03 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 14 15:23:04 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -864,6 +864,7 @@ public class Fields {
 	public static final int ignition_mode_e_IM_ONE_COIL = 0;
 	public static final int ignition_mode_e_IM_TWO_COILS = 3;
 	public static final int ignition_mode_e_IM_WASTED_SPARK = 2;
+	public static final String IGNITION_OUTPUT = "Ignition Output";
 	public static final int imu_type_e_IMU_MM5_10 = 2;
 	public static final int imu_type_e_IMU_NONE = 0;
 	public static final int imu_type_e_IMU_TYPE_3 = 3;
@@ -1066,8 +1067,17 @@ public class Fields {
 	public static final int TransmissionControllerMode_Gm4l6x = 2;
 	public static final int TransmissionControllerMode_None = 0;
 	public static final int TransmissionControllerMode_SimpleTransmissionController = 1;
+	public static final String TRIGGER_COMMENT = "#";
 	public static final int trigger_config_s_size = 12;
+	public static final String TRIGGER_CYCLE_DURATION = "cycleDuration";
+	public static final String TRIGGER_GAP_FROM = "gapFrom";
+	public static final String TRIGGER_GAP_TO = "gapTo";
+	public static final String TRIGGER_GAPS_COUNT = "gapsCount";
+	public static final String TRIGGER_HARDCODED_OPERATION_MODE = "knownOperationMode";
+	public static final String TRIGGER_HAS_SECOND_CHANNEL = "hasSecondChannel";
 	public static final int TRIGGER_INPUT_PIN_COUNT = 2;
+	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
+	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 2;
 	public static final int trigger_type_e_TT_12_TOOTH_CRANK = 38;
 	public static final int trigger_type_e_TT_1_16 = 50;
@@ -1149,6 +1159,8 @@ public class Fields {
 	public static final int trigger_type_e_TT_VVT_MITSUBISHI_6G75 = 72;
 	public static final int trigger_type_e_TT_VVT_NISSAN_VQ35 = 59;
 	public static final int trigger_type_e_TT_VVT_TOYOTA_4_1 = 73;
+	public static final String TRIGGER_WITH_SYNC = "isSynchronizationNeeded";
+	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TriggerWheel_T_PRIMARY = 0;
 	public static final int TriggerWheel_T_SECONDARY = 1;
 	public static final int TRIM_SIZE = 4;
@@ -1234,7 +1246,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.07.14.f407-discovery.3164343399";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.07.14.f407-discovery.3880485766";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1392;
