@@ -2273,7 +2273,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Injection phase control mode",				injectionTimingMode, { isInjectionEnabled }
 
 	dialog = ignitionOutputs, "Ignition Outputs"
-	    field = "# Numbered from the end with pulleys"
+	    field = "# As Numbered from the end with pulleys"
 		field = "Ignition Output Mode",						ignitionPinMode, {isIgnitionEnabled == 1}@@if_ts_show_ignitionPinMode
 		field = "@@IGNITION_OUTPUT@@ 1",							ignitionPins1, {isIgnitionEnabled == 1}
 		; see rusefi_config.txt comment next to 'ignitionPin2logic' which says
@@ -2414,6 +2414,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "Use only first half of outputs for batch mode"
+		field = "# As Numbered from the end with pulleys"
 		field = "Injection Output 1",						injectionPins1, {isInjectionEnabled == 1}
 		field = "Injection Output 2",						injectionPins2, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 1}
 		field = "Injection Output 3",						injectionPins3, {isInjectionEnabled == 1 && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 2}
