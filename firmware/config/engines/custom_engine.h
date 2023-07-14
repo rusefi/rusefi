@@ -21,6 +21,7 @@ void setEepromTestConfiguration();
 void mreBoardNewTest();
 void mreSecondaryCan();
 void mreBCM();
+void setBodyControlUnit();
 
 void fuelBenchMode();
 

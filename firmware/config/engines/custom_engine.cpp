@@ -539,7 +539,14 @@ void proteusBoardTest() {
 }
 #endif // HW_PROTEUS
 
-void mreSecondaryCan() {
+void setBodyControlUnit() {
+    engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
+
+	engineConfiguration->mapAveragingSchedulingAtIndex = 999; // this should disable map averaging right?
+
+	engineConfiguration->wwaeTau = 0.0;
+	engineConfiguration->wwaeBeta = 0.0;
+
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
@@ -552,7 +559,11 @@ void mreSecondaryCan() {
 	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+}
 
+
+void mreSecondaryCan() {
+	setBodyControlUnit();
 
 	engineConfiguration->auxAnalogInputs[0] = MRE_IN_TPS;
 	engineConfiguration->auxAnalogInputs[1] = MRE_IN_MAP;
@@ -954,14 +965,5 @@ void detectBoardType() {
 }
 
 void fuelBenchMode() {
-    engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
-    engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
-
-	engineConfiguration->mapAveragingSchedulingAtIndex = 999; // this should disable map averaging right?
-
-	engineConfiguration->wwaeTau = 0.0;
-	engineConfiguration->wwaeBeta = 0.0;
+    setBodyControlUnit();
 }
