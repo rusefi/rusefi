@@ -861,6 +861,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::ALPHAX_8CHAN_SBC:
 	    set8chanSbc();
         break;
+	case engine_type_e::HELLEN_HONDA_BCM:
+	    setHondaCivicBcm();
+        break;
 #endif // HW_HELLEN
 #if HW_FRANKENSO
 	case engine_type_e::DEFAULT_FRANKENSO:
@@ -911,9 +914,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration();
 		break;
-	case engine_type_e::HELLEN_HONDA_BCM:
-	    setHondaCivicBcm();
-        break;
 	case engine_type_e::FRANKENSO_MAZDA_MIATA_NA8:
 		setFrankensoMazdaMiataNA8Configuration();
 		break;

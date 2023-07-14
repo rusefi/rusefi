@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "custom_engine.h"
 
+// set engine_type 57
 void setHondaCivicBcm() {
     setBodyControlUnit();
     engineConfiguration->totalGearsCount = 6;
