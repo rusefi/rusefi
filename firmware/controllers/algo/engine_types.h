@@ -148,7 +148,7 @@ enum class engine_type_e : uint32_t {
 
 	FRANKENSO_MAZDA_MIATA_NA8 = 56,
 
-	UNUSED_57 = 57,
+	HELLEN_HONDA_BCM = 57,
 
 	ETB_BENCH_ENGINE = 58,
 

@@ -50,6 +50,7 @@
 
 #include "honda_k_dbc.h"
 #include "honda_600.h"
+#include "honda.h"
 #include "hyundai.h"
 
 #include "GY6_139QMB.h"
@@ -737,7 +738,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMiata94_MAP_MRE();
 		break;
 	case engine_type_e::FUEL_BENCH:
-	    fuelBenchMode();
+	    setBodyControlUnit();
 		break;
 	case engine_type_e::MRE_MIATA_NA6_MAP:
 		setMiataNA6_MAP_MRE();
@@ -910,6 +911,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration();
 		break;
+	case engine_type_e::HELLEN_HONDA_BCM:
+	    setHondaCivicBcm();
+        break;
 	case engine_type_e::FRANKENSO_MAZDA_MIATA_NA8:
 		setFrankensoMazdaMiataNA8Configuration();
 		break;
