@@ -17,5 +17,6 @@ COMMON_GEN_CONFIG="
  -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
  -signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
  -ts_output_name generated/${INI} \
+ -prepend integration/rusefi_config_trigger.txt \
  -prepend ${BOARD_DIR}/prepend.txt \
  -board ${BOARD_DIR}"
