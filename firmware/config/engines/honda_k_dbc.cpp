@@ -17,21 +17,21 @@ void setHondaK() {
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->engineSyncCam = SC_Exhaust_First;
 	engineConfiguration->trigger.type = trigger_type_e::TT_HONDA_K_CRANK_12_1;
-	int magic = 12; // note that offset and VVT are related
-	engineConfiguration->globalTriggerAngleOffset = 675 - magic;
+	int magic = 0; // note that offset and VVT are related
+	engineConfiguration->globalTriggerAngleOffset = 663 - magic;
 
 	// VVT is here just single tooth? and we do not even use it!?
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
 	// also known as 'CAM sync'? i am pretty confused at this point
 	engineConfiguration->vvtMode[1] = VVT_HONDA_K_EXHAUST;
 	engineConfiguration->vvtOffsets[0] = -21;
-	engineConfiguration->vvtOffsets[1] = 171 + magic;
+	engineConfiguration->vvtOffsets[1] = 183 + magic;
 
 	// set cranking_fuel 15
 	engineConfiguration->cranking.baseFuel = 75;
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
-// todo; quote some source?
+// todo: quote some source?
 	engineConfiguration->injector.flow = 270;
 	engineConfiguration->injector.flow = 310;
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
@@ -40,6 +40,11 @@ void setHondaK() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	engineConfiguration->crankingIACposition = 70;
+    engineConfiguration->postCrankingFactor = 1.25;
+    engineConfiguration->postCrankingDurationSec = 15;
+    engineConfiguration->useRunningMathForCranking = true;
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_HONDA);
 	strcpy(engineConfiguration->engineCode, "K24");
