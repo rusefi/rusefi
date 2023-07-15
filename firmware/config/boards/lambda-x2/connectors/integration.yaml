@@ -27,6 +27,16 @@ info:
   image:
     file: integration.png
   pins:
+    - pin: I1
+      x: 227
+      y: 141
+    - pin: I2
+      x: 227
+      y: 195
+    - pin: I3
+      x: 227
+      y: 248
+
     - pin: I4
       x: 113
       y: 248
