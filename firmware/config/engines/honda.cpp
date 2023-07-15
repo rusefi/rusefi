@@ -28,6 +28,9 @@ ppsSensor : setTimeout(timeout)
 speedSensor = Sensor.new("VehicleSpeed")
 speedSensor : setTimeout(timeout)
 
+canTimer = Timer.new()
+canTimer : reset()
+
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
 function getTwoBytesMSB(data, offset, factor)
@@ -39,6 +42,9 @@ function getTwoBytesLSB(data, offset, factor)
 end
 
 function onPOWERTRAIN_DATA(bus, id, dlc, data)
+    canTimer : reset()
+--    print('onPOWERTRAIN_DATA ' ..arrayToString(data))
+
     ppsValue = data[1] * 100.0 / 255
     ppsSensor : set(ppsValue)
 
@@ -48,6 +54,7 @@ function onPOWERTRAIN_DATA(bus, id, dlc, data)
 end
 
 function onCAR_SPEED(bus, id, dlc, data)
+    canTimer : reset()
     speedKph = getTwoBytesLSB(data, 1, 0.01)
     print('onCAR_SPEED ' .. speedKph)
     speedSensor : set(speedKph)
@@ -58,6 +65,12 @@ end
 
 canRxAdd(1, 0x17C, onPOWERTRAIN_DATA)
 canRxAdd(1, 0x309, onCAR_SPEED)
+
+function onTick()
+	if canTimer : getElapsedSeconds() > 20 then
+		mcu_standby()
+	end
+end
 )", efi::size(config->luaScript));
 #endif // HW_SMALL_CAN_BOARD
 }
