@@ -90,39 +90,44 @@ static bool isCanEnabled = false;
  * CAN_TI0R_STID "Standard Identifier or Extended Identifier"? not mentioned as well
  */
 #if defined(STM32F4XX) || defined(STM32F7XX)
+
+#define STM32FxMCR (CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP)
+
 static const CANConfig canConfig50 = {
-	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.mcr = STM32FxMCR,
 	.btr = CAN_BTR_50
 };
 
 static const CANConfig canConfig83 = {
-	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.mcr = STM32FxMCR,
 	.btr = CAN_BTR_83
 };
 
 static const CANConfig canConfig100 = {
-	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.mcr = STM32FxMCR,
 	.btr = CAN_BTR_100
 };
 
 static const CANConfig canConfig125 = {
-	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.mcr = STM32FxMCR,
 	.btr = CAN_BTR_125
 };
 
 static const CANConfig canConfig250 = {
-	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.mcr = STM32FxMCR,
 	.btr = CAN_BTR_250
 };
 
 static const CANConfig canConfig500 = {
-	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.mcr = STM32FxMCR,
 	.btr = CAN_BTR_500
 };
 
 static const CANConfig canConfig1000 = {
-CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_1k0 };
+    .mcr = STM32FxMCR,
+	.btr = CAN_BTR_1k0
+};
+
 #elif defined(STM32H7XX)
 static const CANConfig canConfig50 = {
 	.NBTP = CAN_NBTP_50,
