@@ -1114,6 +1114,12 @@ float getConfigValueByName(const char *name) {
 // kLineDoHondaSend
 		case 304164959:
 			return engineConfiguration->kLineDoHondaSend;
+// can1ListenMode
+		case 178430876:
+			return engineConfiguration->can1ListenMode;
+// can2ListenMode
+		case -1879090979:
+			return engineConfiguration->can2ListenMode;
 // benchTestOnTime
 		case -1992436143:
 			return engineConfiguration->benchTestOnTime;
@@ -3469,6 +3475,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case 304164959:
 	{
 		engineConfiguration->kLineDoHondaSend = (int)value;
+		return 1;
+	}
+		case 178430876:
+	{
+		engineConfiguration->can1ListenMode = (int)value;
+		return 1;
+	}
+		case -1879090979:
+	{
+		engineConfiguration->can2ListenMode = (int)value;
 		return 1;
 	}
 		case -1992436143:

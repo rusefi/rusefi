@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jul 16 19:55:52 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jul 16 23:57:22 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1246,7 +1246,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.07.16.f407-discovery.4259366982";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.07.17.f407-discovery.3993404736";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1392;
@@ -2027,6 +2027,8 @@ public class Fields {
 	public static final Field INJECTORFLOWASMASSFLOW = Field.create("INJECTORFLOWASMASSFLOW", 1568, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field BOARDUSECANTERMINATOR = Field.create("BOARDUSECANTERMINATOR", 1568, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field KLINEDOHONDASEND = Field.create("KLINEDOHONDASEND", 1568, FieldType.BIT, 5).setBaseOffset(0);
+	public static final Field CAN1LISTENMODE = Field.create("CAN1LISTENMODE", 1568, FieldType.BIT, 6).setBaseOffset(0);
+	public static final Field CAN2LISTENMODE = Field.create("CAN2LISTENMODE", 1568, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 1572, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_1573 = Field.create("ALIGNMENTFILL_AT_1573", 1573, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1574, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -3542,6 +3544,8 @@ public class Fields {
 	INJECTORFLOWASMASSFLOW,
 	BOARDUSECANTERMINATOR,
 	KLINEDOHONDASEND,
+	CAN1LISTENMODE,
+	CAN2LISTENMODE,
 	UNUSEDHERE,
 	ALIGNMENTFILL_AT_1573,
 	BENCHTESTONTIME,

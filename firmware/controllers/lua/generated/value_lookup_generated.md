@@ -1108,6 +1108,12 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 ### kLineDoHondaSend
 
 
+### can1ListenMode
+
+
+### can2ListenMode
+
+
 ### benchTestOnTime
 Duration of each test pulse
 

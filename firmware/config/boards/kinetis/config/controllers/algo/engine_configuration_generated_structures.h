@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Jun 29 19:32:53 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jul 16 23:55:43 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3006,10 +3006,10 @@ struct engine_configuration_s {
 	bool kLineDoHondaSend : 1 {};
 	/**
 	offset 1568 bit 6 */
-	bool unused1129 : 1 {};
+	bool can1ListenMode : 1 {};
 	/**
 	offset 1568 bit 7 */
-	bool unused1130 : 1 {};
+	bool can2ListenMode : 1 {};
 	/**
 	offset 1568 bit 8 */
 	bool unusedBit_524_8 : 1 {};
@@ -5311,4 +5311,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Jun 29 19:32:53 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jul 16 23:55:43 UTC 2023
