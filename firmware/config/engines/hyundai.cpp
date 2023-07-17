@@ -85,6 +85,8 @@ void setHyundaiPb() {
 	coolantControl->pin = PROTEUS_LS_5;
     engineConfiguration->tachOutputPin = PROTEUS_IGN_12;
     engineConfiguration->hpfpValvePin = PROTEUS_LS_6;
+    engineConfiguration->vvtPins[0] = PROTEUS_LS_15; // intake
+    engineConfiguration->vvtPins[1] = PROTEUS_LS_16; // exhaust
 #endif // HW_PROTEUS
 
 #if HW_PROTEUS
