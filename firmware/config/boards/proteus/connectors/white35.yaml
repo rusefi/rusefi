@@ -59,7 +59,7 @@ pins:
     id: [C2, EFI_ADC_12]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 3
-    function: "Analog Voltage Input #3 TPS1_2"
+    function: "Analog Voltage Input #3 TPS2/TPS1_2"
     type: av
     color: blue
 
