@@ -134,7 +134,7 @@ info:
   directory: hellen/alphax-8chan
   name: AlphaX 8chan
   image:
-    file: 8chan-D.jpg
+    file: 26pins-4k.jpg
   pins:
     - pin: 1D
       x: 85
