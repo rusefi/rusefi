@@ -13,10 +13,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
 
     - name: Check for Pinout Changes
       run: |
-        echo "CHANGED=$(git diff --name-only HEAD~2 HEAD | grep -e "connectors/.*\.yaml")" >> $GITHUB_ENV
+        echo "CHANGED=$(git diff --name-only HEAD^..HEAD | grep -e "connectors/.*\.yaml")" >> $GITHUB_ENV
 
     - name: Generate Pinouts
       uses: chuckwagoncomputing/interactive-pinout@2.7
