@@ -1,0 +1,66 @@
+#
+# See https://github.com/rusefi/rusefi/wiki/Connector-Mapping
+#
+
+name: Check Interactive Pinouts
+
+on:
+  pull_request:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Check for Pinout Changes
+      run: |
+        echo "CHANGED=$(git diff --name-only HEAD~2 HEAD | grep -e "connectors/.*\.yaml")" >> $GITHUB_ENV
+
+    - name: Generate Pinouts
+      uses: chuckwagoncomputing/interactive-pinout@2.7
+      with:
+        mapping-path: ${{ env.CHANGED }}
+        warnings: "false"
+        warning-dupe: "error"
+        columns: |
+          {
+          "pin":"Pin Number",
+          "ts_name":"TS Name",
+          "type":"Type",
+          "function":"Typical Function",
+          "color":"Pigtail Color"
+          }
+        print-columns: |
+          [
+          "function"
+          ]
+        info-column: "type"
+        colors: |
+          {
+          "12v":"yellow";
+          "12V":"yellow";
+          "5v":"red",
+          "5V":"red",
+          "at":"green",
+          "av":"brown",
+          "can":"blue",
+          "din":"lime",
+          "etb":"darkcyan",
+          "gnd":"darkgreen",
+          "gp_high":"aqua",
+          "gp_low":"aquamarine",
+          "gp_pp":"cyan",
+          "hall":"darkolivegreen",
+          "hl":"gold",
+          "hs":"indigo",
+          "ign":"magenta",
+          "inj":"maroon",
+          "ls":"lightgreen",
+          "mr":"firebrick",
+          "pgnd":"coral",
+          "sgnd":"olive",
+          "usb":"lightseagreen",
+          "vr":"sienna"
+          }
