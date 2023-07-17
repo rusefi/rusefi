@@ -73,11 +73,11 @@ static void testBinary() {
  */
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x) {
 	if (cisnan(x1) || cisnan(x2) || cisnan(y1) || cisnan(y2)) {
-		warning(ObdCode::CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why param", msg);
+		warning(ObdCode::CUSTOM_ERR_INTERPOLATE_1, "interpolate%s: why param", msg);
 		return NAN;
 	}
 	if (cisnan(x)) {
-		warning(ObdCode::CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why X", msg);
+		warning(ObdCode::CUSTOM_ERR_INTERPOLATE_2, "interpolate%s: why X", msg);
 		return NAN;
 	}
 	// todo: double comparison using EPS
@@ -85,7 +85,7 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 		/**
 		 * we could end up here for example while resetting bins while changing engine type
 		 */
-		warning(ObdCode::CUSTOM_INTEPOLATE_ERROR, "interpolate%s: Same x1 and x2 in interpolate: %.2f/%.2f", msg, x1, x2);
+		warning(ObdCode::CUSTOM_ERR_INTERPOLATE_3, "interpolate%s: Same x1 and x2 in interpolate: %.2f/%.2f", msg, x1, x2);
 		return NAN;
 	}
 
@@ -94,7 +94,7 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 //	efiAssertVoid(ObdCode::CUSTOM_ERR_ASSERT_VOID, x1 != x2, "no way we can interpolate");
 	float a = INTERPOLATION_A(x1, y1, x2, y2);
 	if (cisnan(a)) {
-		warning(ObdCode::CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why a", msg);
+		warning(ObdCode::CUSTOM_ERR_INTERPOLATE_4, "interpolate%s: why a", msg);
 		return NAN;
 	}
 	float b = y1 - a * x1;
