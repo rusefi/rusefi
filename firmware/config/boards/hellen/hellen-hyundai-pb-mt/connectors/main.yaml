@@ -165,12 +165,12 @@ pins:
 
 
   - pin: K9
-    function: Pedal Signal No1
+    function: PPS Pedal Signal No1
     class: analog_inputs
 
 
   - pin: K10
-    function: Pedal Sensor No2 Ground
+    function: PPS Pedal Sensor No2 Ground
     type: gnd
 
   - pin: K12
@@ -191,7 +191,7 @@ pins:
     function: Fuel Tank Level Sender
 
   - pin: K18
-    function: Pedal Supply +5v No2
+    function: PPS Pedal Supply +5v No2
   - pin: K19
     function: BVS Booster Vacuum Supply +5v
   - pin: K20
@@ -222,11 +222,11 @@ pins:
 
 
   - pin: K31
-    function: Pedal Signal No2
+    function: PPS Pedal Signal No2
     class: analog_inputs
 
   - pin: K32
-    function: Pedal Sensor No1 Ground
+    function: PPS Pedal Sensor No1 Ground
     type: gnd
     color: brown
 
@@ -253,7 +253,7 @@ pins:
     function: TPS Supply +5v
 
   - pin: K40
-    function: Pedal Supply +5v No1
+    function: PPS Pedal Supply +5v No1
   - pin: K41
     function: Map/Fuel Sensor Supply +5v
 
