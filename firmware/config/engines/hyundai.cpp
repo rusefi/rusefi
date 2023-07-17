@@ -184,7 +184,7 @@ void setProteusHyundaiPb() {
     setHyundaiPb();
 	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_1;
-	engineConfiguration->camInputs[1] = PROTEUS_DIGITAL_2;
+	engineConfiguration->camInputs[1] = PROTEUS_DIGITAL_2; // currently intake, TODO: flip!
 
 	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
 	setPPSInputs(PROTEUS_IN_PPS, PROTEUS_IN_PPS2);
