@@ -1,6 +1,6 @@
 /**
  * @file obd_error_codes.h
- * @brief Standart OBD-II error codes
+ * @brief Standard and custom OBD-II error codes
  *
  * More info at http://www.obd-codes.com/faq/obd2-codes-explained.php
  *
@@ -1724,10 +1724,10 @@ enum class ObdCode : uint16_t {
 
 	CUSTOM_6010 = 6010,
 	CUSTOM_6011 = 6011,
-	CUSTOM_INTEPOLATE_ERROR = 6012,
-	CUSTOM_INTEPOLATE_ERROR_2 = 6013,
-	CUSTOM_INTEPOLATE_ERROR_3 = 6014,
-	CUSTOM_INTEPOLATE_ERROR_4 = 6015,
+	CUSTOM_ERR_INTERPOLATE_1 = 6012,
+	CUSTOM_ERR_INTERPOLATE_2 = 6013,
+	CUSTOM_ERR_INTERPOLATE_3 = 6014,
+	CUSTOM_ERR_INTERPOLATE_4 = 6015,
 	CUSTOM_PARAM_RANGE = 6016,
 	CUSTOM_MAF_NEEDED = 6017,
 	CUSTOM_UNKNOWN_ALGORITHM = 6018,
