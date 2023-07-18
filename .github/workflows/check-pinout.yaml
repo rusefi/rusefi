@@ -18,7 +18,7 @@ jobs:
 
     - name: Check for Pinout Changes
       run: |
-        DIFF=$(git diff --name-only --diff-filter=ACMR HEAD^..HEAD | grep -e "connectors/.*\.yaml")
+        DIFF=$(git diff --name-only --diff-filter=ACMR HEAD^..HEAD | grep -e "connectors/.*\.yaml"; true)
         echo "CHANGED<<DELIM" >> $GITHUB_ENV
         echo "$DIFF" >> $GITHUB_ENV
         echo "DELIM" >> $GITHUB_ENV
