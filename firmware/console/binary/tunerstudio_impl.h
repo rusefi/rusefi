@@ -38,7 +38,6 @@ public:
 	void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count);
 	void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint8_t value);
 	void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count);
-	void handleScatteredReadCommand(TsChannelBase* tsChannel);
 
 private:
 	void sendErrorCode(TsChannelBase* tsChannel, uint8_t code);

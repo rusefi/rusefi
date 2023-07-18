@@ -189,50 +189,6 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_
 	tsChannel->sendResponse(mode, (const uint8_t *) &crc, 4);
 }
 
-void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
-	int totalResponseSize = 0;
-	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
-		int packed = engineConfiguration->highSpeedOffsets[i];
-		int type = packed >> 13;
-
-		int size = type == 0 ? 0 : 1 << (type - 1);
-#if EFI_SIMULATOR
-//		printf("handleScatteredReadCommand 0x%x %d %d\n", packed, size, offset);
-#endif /* EFI_SIMULATOR */
-		totalResponseSize += size;
-	}
-#if EFI_SIMULATOR
-//	printf("totalResponseSize %d\n", totalResponseSize);
-#endif /* EFI_SIMULATOR */
-
-
-	// Command part of CRC
-	uint32_t crc = tsChannel->writePacketHeader(TS_RESPONSE_OK, totalResponseSize);
-
-	uint8_t dataBuffer[8];
-	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
-		int packed = engineConfiguration->highSpeedOffsets[i];
-		int type = packed >> 13;
-		int offset = packed & 0x1FFF;
-
-		if (type == 0)
-			continue;
-		int size = 1 << (type - 1);
-
-		// write each data point and CRC incrementally
-		copyRange(dataBuffer, getLiveDataFragments(), offset, size);
-		tsChannel->write(dataBuffer, size, false);
-		crc = crc32inc((void*)dataBuffer, crc, size);
-	}
-#if EFI_SIMULATOR
-//	printf("CRC %x\n", crc);
-#endif /* EFI_SIMULATOR */
-	// now write total CRC
-	*(uint32_t*)dataBuffer = SWAP_UINT32(crc);
-	tsChannel->write(reinterpret_cast<uint8_t*>(dataBuffer), 4, true);
-	tsChannel->flush();
-}
-
 /**
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
@@ -340,7 +296,6 @@ static bool isKnownCommand(char command) {
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
-			|| command == TS_GET_SCATTERED_GET_COMMAND
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
@@ -677,9 +632,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			uint8_t value = data[4];
 			handleWriteValueCommand(tsChannel, TS_CRC, offset, value);
 		}
-		break;
-	case TS_GET_SCATTERED_GET_COMMAND:
-		handleScatteredReadCommand(tsChannel);
 		break;
 	case TS_CRC_CHECK_COMMAND:
 		handleCrc32Check(tsChannel, TS_CRC, offset, count);

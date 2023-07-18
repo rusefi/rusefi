@@ -123,26 +123,6 @@ public class TcpServerSandbox {
         } else if (command == Fields.TS_OUTPUT_COMMAND) {
             byte[] response = getOutputCommandResponse(payload, ecuState.outputs);
             stream.sendPacket(response);
-        } else if (command == Fields.TS_GET_SCATTERED_GET_COMMAND) {
-//            System.out.println("Cool TS_GET_SCATTERED_GET_COMMAND");
-            int startOffset = HIGHSPEEDOFFSETS.getOffset();
-            int totalResponseSize = 0;
-            for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
-                int higherByte = getByte(startOffset + 1);
-                int type = higherByte >> 5;
-                int size = getSize(type);
-
-                totalResponseSize += size;
-
-                int twoBytes = getByte(startOffset) + (higherByte & 0x1F) * 256;
-//                System.out.println("TS_GET_SCATTERED_GET_COMMAND index=" + i + " type=" + type + " offset=" + twoBytes);
-                startOffset += 2;
-            }
-
-            byte[] response = new byte[1 + totalResponseSize];
-            response[0] = (byte) TS_OK.charAt(0);
-            stream.sendPacket(response);
-
         } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
             ByteRange byteRange = ByteRange.valueOf(payload);
             System.out.println("TS_CHUNK_WRITE_COMMAND " + byteRange + " payload " + payload.length);

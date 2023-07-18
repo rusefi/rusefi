@@ -92,7 +92,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 20008
+#define FLASH_DATA_VERSION 20009
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -1438,9 +1438,6 @@ float etbMinimumPosition;;"%", 1, 0, 0.01, 100, 2
 
 uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
-#define HIGH_SPEED_COUNT 32
-uint16_t[HIGH_SPEED_COUNT] highSpeedOffsets;;"", 1.0000, 0.00000,0.00,65535, 0, noMsqSave
-
 SentEtbType sentEtbType
 
 #define fuel_pressure_sensor_mode_e_enum "Absolute", "Gauge", "Differential", "INVALID"
@@ -1841,8 +1838,6 @@ end_struct
 ! 0x45
 #define TS_EXECUTE 'E'
 #define TS_ONLINE_PROTOCOL 'z'
-! 0x34
-#define TS_GET_SCATTERED_GET_COMMAND '9'
 
 ! Performance tracing
 #define TS_PERF_TRACE_BEGIN '_'
