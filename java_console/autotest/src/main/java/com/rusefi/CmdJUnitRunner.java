@@ -3,10 +3,23 @@ package com.rusefi;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
+import java.util.Set;
+
 public class CmdJUnitRunner {
+    public static void runHardwareTestAndExit(Class[] classes) {
+        boolean isOk = runHardwareTest(classes);
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        System.out.println("Have we left any non-daemon threads?");
+        System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
+        for (Thread t : threads) {
+            System.out.printf("%-15s \t %-15s \t %-15d \t %s\n", t.getName(), t.getState(), t.getPriority(), t.isDaemon());
+        }
+        System.exit(isOk ? 0 : -1);
+    }
+
     /**
-     * @return true if test is a SUCCESS, false if a FAILURE
      * @param classes
+     * @return true if test is a SUCCESS, false if a FAILURE
      */
     public static boolean runHardwareTest(Class[] classes) {
         JUnitCore junit = new JUnitCore();

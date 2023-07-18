@@ -42,7 +42,7 @@ import static com.rusefi.config.generated.Fields.*;
  */
 public class BinaryProtocol {
     private static final Logging log = getLogging(BinaryProtocol.class);
-    private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("text pull");
+    private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
 
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
