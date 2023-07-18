@@ -28,10 +28,6 @@ shadowJar {
                 'Main-Class': 'com.rusefi.ConfigDefinition'
         )
     }
-    /*
-     to keep only classes from logging
-     and loggin-api as in build.xml
-    */
     dependencies {
         exclude(dependency(global_libs.jsr305))
         exclude(dependency(global_libs.junit))
