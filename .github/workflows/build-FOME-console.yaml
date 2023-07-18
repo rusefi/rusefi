@@ -44,7 +44,7 @@ jobs:
 
       - name: Build console
         working-directory: ./java_console
-        run: ant jar
+        run: ./gradlew :ui:shadowJar
 
       - name: Attach console junit results
         if: always()
