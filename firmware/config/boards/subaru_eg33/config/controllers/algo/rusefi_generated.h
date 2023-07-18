@@ -245,7 +245,7 @@
 #define ego_sensor_e_ES_Innovate_MTX_L 1
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
-#define engine_configuration_s_size 3760
+#define engine_configuration_s_size 3696
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_LM_ALPHA_N 2
@@ -375,7 +375,7 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FLASH_DATA_VERSION 20008
+#define FLASH_DATA_VERSION 20009
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define fuel_pressure_sensor_mode_e_auto_enum 0="FPM_Absolute",2="FPM_Differential",1="FPM_Gauge"
@@ -764,7 +764,6 @@
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_NOTE_SIZE 16
 #define GPPWM_RPM_COUNT 8
-#define HIGH_SPEED_COUNT 32
 #define hpfp_cam_e_auto_enum 0="HPFP_CAM_NONE",2="HPFP_CAM_EX1",4="HPFP_CAM_EX2",1="HPFP_CAM_IN1",3="HPFP_CAM_IN2"
 #define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"
 #define hpfp_cam_e_HPFP_CAM_EX1 2
@@ -894,7 +893,7 @@
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PEDAL_TO_TPS_SIZE 8
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 22884
+#define persistent_config_s_size 22820
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -981,7 +980,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 583617090
+#define SIGNATURE_HASH 4153932928
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1027,7 +1026,7 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
-#define TOTAL_CONFIG_SIZE 22884
+#define TOTAL_CONFIG_SIZE 22820
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 #define TPS_TPS_ACCEL_TABLE 8
@@ -1187,8 +1186,6 @@
 #define TS_GET_FIRMWARE_VERSION_char V
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F_char F
-#define TS_GET_SCATTERED_GET_COMMAND '9'
-#define TS_GET_SCATTERED_GET_COMMAND_char 9
 #define TS_GET_TEXT 'G'
 #define TS_GET_TEXT_char G
 #define TS_HELLO_COMMAND 'S'
@@ -1248,7 +1245,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.07.18.subaru_eg33_f7.583617090"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.07.18.subaru_eg33_f7.4153932928"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
