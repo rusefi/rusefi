@@ -20,6 +20,9 @@ static void set201xHyundai() {
 
     // note how these numbers are very flipped m111 defaults?
     setTPS1Calibration(98, 926, 891, 69);
+    setEtbPID(8.8944, 70.2307, 0.1855);
+   	// Some sensible defaults for other options
+   	setAlgorithm(LM_SPEED_DENSITY);
 }
 
 void setHyundaiPb() {
@@ -200,6 +203,24 @@ void setProteusHyundaiPb() {
 
 static void commonGenesisCoupe() {
 	set201xHyundai();
+
+
+	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
+
+	engineConfiguration->enableSoftwareKnock = true;
+	engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
+
+	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
+
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
+	engineConfiguration->displacement = 1.998;
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
+	strcpy(engineConfiguration->engineCode, "Theta II");
+	engineConfiguration->globalTriggerAngleOffset = 90;
+
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
+
 
 	strncpy(config->luaScript, R"(
 

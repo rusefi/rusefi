@@ -150,11 +150,6 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
-
-	engineConfiguration->enableSoftwareKnock = true;
-	engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
-
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
@@ -172,24 +167,4 @@ void setBoardDefaultConfiguration() {
 	setupDefaultSensorInputs();
 
 	engineConfiguration->etbFunctions[1] = DC_Wastegate;
-
-	// Some sensible defaults for other options
-	setCrankOperationMode();
-
-	setAlgorithm(LM_SPEED_DENSITY);
-
-	setEtbPID(8.8944, 70.2307, 0.1855);
-
-	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
-
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
-	engineConfiguration->displacement = 1.998;
-	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
-	strcpy(engineConfiguration->engineCode, "Theta II");
-	engineConfiguration->globalTriggerAngleOffset = 90;
-
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-
-
 }
