@@ -87,8 +87,7 @@ void setHyundaiPb() {
     engineConfiguration->acRelayPin = PROTEUS_LS_6;
     engineConfiguration->acSwitch = PROTEUS_DIGITAL_5;
 
-	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
-	coolantControl->pin = PROTEUS_LS_5;
+	engineConfiguration->fanPin = PROTEUS_LS_5;
     engineConfiguration->tachOutputPin = PROTEUS_IGN_12;
     engineConfiguration->hpfpValvePin = PROTEUS_LS_6;
     engineConfiguration->vvtPins[0] = PROTEUS_LS_15; // intake
