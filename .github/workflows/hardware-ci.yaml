@@ -20,8 +20,8 @@ jobs:
             runs-on: hw-ci-f4-discovery-2
             test-suite: com.rusefi.HwCiF4Discovery
             folder: config/boards/f407-discovery
-            openocd-script: ../.github/workflows/openocd_ci_f4_discovery.cfg
-            serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_2B003B000A51343033393930-if01
+            openocd-script: ../.github/workflows/openocd_ci_f4_discovery_2.cfg
+            serial-device: /dev/serial/by-id/usb-FOME_FOME_Engine_Management_ECU_1E0032000851353238333131-if01
 
           # - build-target: proteus_f4
           #   runs-on: hw-ci-proteus
