@@ -8,10 +8,7 @@ public class TsOutputs {
 	public static final int CAM_INPUTS_COUNT = 4;
 	public static final int CAMS_PER_BANK = 2;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final String GAUGE_CATEGORY_BOOST_CONTROL = "Boost Control";
 	public static final String GAUGE_CATEGORY_ETB = "ETB more";
-	public static final String GAUGE_CATEGORY_FUEL_MATH = "Fuel: math";
-	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ign: Dwell";
 	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
