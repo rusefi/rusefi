@@ -1,6 +1,9 @@
 {
 	"editor.detectIndentation": false,
 	"editor.insertSpaces": false,
+	"[java]": {
+		"editor.insertSpaces": true
+	},
 	"files.exclude": {
 		"**/.dep": true,
 		"**/build/lst": true,
