@@ -39,9 +39,6 @@
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
 #define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
 
-#define GAUGE_CATEGORY_TIMING "Timing"
-#define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
-#define GAUGE_CATEGORY_BOOST_CONTROL "Boost Control"
 #define GAUGE_CATEGORY_ETB "ETB more"
 
 #define GAUGE_NAME_VVT_B1I "VVT: bank 1 intake"

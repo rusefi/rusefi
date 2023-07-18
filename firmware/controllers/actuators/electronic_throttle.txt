@@ -1,11 +1,11 @@
 ! units,scale,offset,min,max,digits
 
 struct_no_prefix electronic_throttle_s
-	float idlePosition;"ETB: idlePosition";"per", 1,0, 0,10, 2,@@GAUGE_CATEGORY_ETB@@
+	float idlePosition;"ETB: idlePosition";"per", 1,0, 0,10, 2
 	float trim;"ETB: trim"
-	float luaAdjustment;"ETB: luaAdjustment";"per", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
+	float luaAdjustment;"ETB: luaAdjustment";"per", 1,0, 0,3, 2
 
-	float m_wastegatePosition;"DC: wastegatePosition";"per", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
+	float m_wastegatePosition;"DC: wastegatePosition";"per", 1,0, 0,3, 2
 
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
@@ -18,10 +18,10 @@ struct_no_prefix electronic_throttle_s
 	bit etbRevLimitActive
 	bit jamDetected
 
-	float etbDutyRateOfChange;"ETB duty rate of change";"per", 1,0, -0,20, 2,@@GAUGE_CATEGORY_ETB@@
-	float etbDutyAverage;"ETB average duty";"per", 1,0, -20,50, 2,@@GAUGE_CATEGORY_ETB@@
-	uint16_t etbTpsErrorCounter;"ETB TPS error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
-	uint16_t etbPpsErrorCounter;"ETB pedal error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
+	float etbDutyRateOfChange;"ETB duty rate of change";"per", 1,0, -0,20, 2
+	float etbDutyAverage;"ETB average duty";"per", 1,0, -20,50, 2
+	uint16_t etbTpsErrorCounter;"ETB TPS error counter";"count", 1,0, 0,3, 0
+	uint16_t etbPpsErrorCounter;"ETB pedal error counter";"count", 1,0, 0,3, 0
 
 	int8_t etbErrorCode
 

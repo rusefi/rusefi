@@ -27,8 +27,6 @@ public class LiveDataProcessor {
 
     private final static String tsOutputsDestination = "console/binary/";
 
-    private final GaugeConsumer gaugeConsumer = new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini");
-
     private final StringBuilder enumContent = new StringBuilder(header +
             "#pragma once\n" +
             "\n" +
@@ -71,11 +69,6 @@ public class LiveDataProcessor {
         try (FileWriter fw = new FileWriter("console/binary/generated/fancy_menu.ini")) {
             fw.write(liveDataProcessor.fancyNewMenu.toString());
         }
-        liveDataProcessor.end();
-    }
-
-    private void end() throws IOException {
-        gaugeConsumer.endFile();
     }
 
     interface EntryHandler {
@@ -131,12 +124,6 @@ public class LiveDataProcessor {
                     state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
 
                 }
-                state.addDestination(new ConfigurationConsumer() {
-                    @Override
-                    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-                        gaugeConsumer.handleEndStruct(readerState, structure);
-                    }
-                });
 
                 state.doJob();
 

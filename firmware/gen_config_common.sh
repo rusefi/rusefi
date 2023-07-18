@@ -9,7 +9,6 @@ COMMON_GEN_CONFIG="
  -readfile DATALOG_SECTION_FROM_FILE console/binary/generated/data_logs.ini \
  -readfile LIVE_DATA_MENU_FROM_FILE console/binary/generated/fancy_menu.ini \
  -readfile LIVE_DATA_PANELS_FROM_FILE console/binary/generated/fancy_content.ini \
- -readfile LIVE_DATA_GAUGES_FROM_FILE console/binary/generated/gauges.ini \
  -ts_destination tunerstudio \
  -firing_order controllers/algo/firing_order.h \
  -triggerInputFolder ../unit_tests \

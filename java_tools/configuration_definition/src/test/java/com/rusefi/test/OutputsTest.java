@@ -4,7 +4,6 @@ import com.rusefi.BitState;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.newparse.outputs.OutputChannelWriter;
 import com.rusefi.output.DataLogConsumer;
-import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.GetOutputValueConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -183,22 +182,13 @@ public class OutputsTest {
         ReaderStateImpl state = new ReaderStateImpl();
         state.getVariableRegistry().register("GAUGE_CATEGORY", "Alternator");
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
-        GaugeConsumer gaugeConsumer = new GaugeConsumer(null);
-        state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
+        state.readBufferedReader(test, dataLogConsumer);
         assertEquals(
                 "entry = alternatorStatus_iTerm, \"alternatorStatus_iTerm\", float,  \"%.3f\"\n" +
                         "entry = alternatorStatus_dTerm, \"alternatorStatus_dTerm\", float,  \"%.3f\"\n" +
                         "entry = idleStatus_iTerm, \"idleStatus_iTerm\", float,  \"%.3f\"\n" +
                         "entry = idleStatus_dTerm, \"idleStatus_dTerm\", float,  \"%.3f\"\n",
                 dataLogConsumer.getContent());
-
-        assertEquals("\tgaugeCategory = Alternator\n" +
-                        "alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
-                        "alternatorStatus_dTermGauge = alternatorStatus_dTerm,\"alternatorStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
-                        "idleStatus_iTermGauge = idleStatus_iTerm,\"idleStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
-                        "idleStatus_dTermGauge = idleStatus_dTerm,\"idleStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n",
-                gaugeConsumer.getContent());
-
     }
 
     @Test

@@ -1,20 +1,20 @@
 ! "units",scale,offset, min,max, digits,category
 
 struct_no_prefix ignition_state_s
-    float baseDwell;;"ms", 1,0, 0,30, 1,@@GAUGE_CATEGORY_TIMING@@
-	floatms_t sparkDwell;@@GAUGE_COIL_DWELL_TIME@@;"ms", 1,0, 0,30, 1,@@GAUGE_CATEGORY_TIMING@@
+    float baseDwell;;"ms", 1,0, 0,30, 1
+	floatms_t sparkDwell;@@GAUGE_COIL_DWELL_TIME@@;"ms", 1,0, 0,30, 1
 
-	angle_t dwellAngle;ignition dwell duration\nas crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell;"deg", 1,0, 0,120, 1,@@GAUGE_CATEGORY_TIMING@@
+	angle_t dwellAngle;ignition dwell duration\nas crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell;"deg", 1,0, 0,120, 1
 
-	int16_t autoscale cltTimingCorrection;Ign: CLT correction;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
-	int16_t autoscale timingIatCorrection;Ign: IAT correction;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
-	int16_t autoscale timingPidCorrection;Idle: Timing adjustment;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
+	int16_t autoscale cltTimingCorrection;Ign: CLT correction;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2
+	int16_t autoscale timingIatCorrection;Ign: IAT correction;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2
+	int16_t autoscale timingPidCorrection;Idle: Timing adjustment;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2
 
 
 float dwellVoltageCorrection;Ign: Dwell voltage correction
 
-    float luaTimingAdd;Ign: Lua timing add;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
-    float luaTimingMult;Ign: Lua timing mult;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+    float luaTimingAdd;Ign: Lua timing add;"deg",1, 0, -20, 20, 2
+    float luaTimingMult;Ign: Lua timing mult;"deg",1, 0, -20, 20, 2
 
 end_struct
 
