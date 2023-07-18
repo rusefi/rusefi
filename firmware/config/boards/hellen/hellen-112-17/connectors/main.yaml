@@ -1,4 +1,8 @@
 pins:
+  - pin: 101
+    function: low side output 101
+  - pin: 102
+    function: low side output 101
 
   - pin: 103
     function: Pedal Analog GND
@@ -231,6 +235,12 @@ info:
   image:
     file: main.jpg
   pins:
+    - pin: 101
+      x: 117
+      y: 345
+    - pin: 102
+      x: 153
+      y: 345
     - pin: 103
       x: 195
       y: 345
