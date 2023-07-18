@@ -20,6 +20,12 @@ pins:
     class: analog_inputs
     ts_name: 107 A/C pressure
     function: 107 A/C pressure
+  - pin: 109
+    class: analog_inputs
+    function: Analog 109
+  - pin: 110
+    class: analog_inputs
+    function: Analog 110
 
   - pin: 111
     class: analog_inputs
@@ -89,6 +95,8 @@ pins:
     function: 135 Switch
   - pin: 136
     function: 136 Switch
+  - pin: 137
+    function: 137 Polaris
 
   - pin: 138
     function: Analog Supply TPS
@@ -147,6 +155,9 @@ pins:
     type: GND
   - pin: 207
     function: Sensor GND
+    type: GND
+  - pin: 208
+    function: Sensor GND CLT Polaris
     type: GND
 
   - pin: 210
@@ -253,6 +264,15 @@ info:
     - pin: 106
       x: 295
       y: 345
+    - pin: 107
+      x: 324
+      y: 345
+    - pin: 109
+      x: 394
+      y: 345
+    - pin: 110
+      x: 428
+      y: 345
     - pin: 112
       x: 500
       y: 345
@@ -287,6 +307,16 @@ info:
       y: 251
     - pin: 132
       x: 365
+      y: 251
+
+    - pin: 134
+      x: 429
+      y: 251
+    - pin: 135
+      x: 462
+      y: 251
+    - pin: 136
+      x: 497
       y: 251
 
     - pin: 138
@@ -327,6 +357,18 @@ info:
       y: 350
     - pin: 204
       x: 775
+      y: 350
+    - pin: 205
+      x: 820
+      y: 350
+    - pin: 206
+      x: 854
+      y: 350
+    - pin: 207
+      x: 889
+      y: 350
+    - pin: 208
+      x: 928
       y: 350
     - pin: 210
       x: 975
