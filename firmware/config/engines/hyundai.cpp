@@ -85,7 +85,7 @@ void setHyundaiPb() {
 	setCommonNTCSensor(&engineConfiguration->iat, PROTEUS_DEFAULT_AT_PULLUP);
 
     engineConfiguration->acRelayPin = PROTEUS_LS_6;
-    engineConfiguration->acSwitch = PROTEUS_DIGITAL_1;
+    engineConfiguration->acSwitch = PROTEUS_DIGITAL_5;
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 	coolantControl->pin = PROTEUS_LS_5;
