@@ -18,7 +18,10 @@ jobs:
 
     - name: Check for Pinout Changes
       run: |
-        echo "CHANGED=$(git diff --name-only HEAD^..HEAD | grep -e "connectors/.*\.yaml")" >> $GITHUB_ENV
+        DIFF=$(git diff --name-only HEAD^..HEAD | grep -e "connectors/.*\.yaml")
+        echo "CHANGED<<DELIM" >> $GITHUB_ENV
+        echo "$DIFF" >> $GITHUB_ENV
+        echo "DELIM" >> $GITHUB_ENV
 
     - name: Generate Pinouts
       uses: chuckwagoncomputing/interactive-pinout@2.7
