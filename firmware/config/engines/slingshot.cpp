@@ -7,6 +7,7 @@ https://rusefi.com/docs/pinouts/hellen/hellen-112-17/
 #include "proteus_meta.h"
 
 // set engine_type 33
+// ME17_9_MISC
 void setSlingshot() {
 	strcpy(engineConfiguration->engineMake, "Polaris");
     setInline4();
