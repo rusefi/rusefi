@@ -189,6 +189,9 @@ public class StructLayout extends Layout {
         ps.println("};");
         ps.println("static_assert(sizeof(" + this.typeName + ") == " + getSize() + ");");
 
+        // Emit assertions to check that the offset of each child is correct according to the C++ compiler
+        this.children.forEach(c -> c.writeCOffsetCheck(ps, this.typeName));
+
         ps.println();
     }
 

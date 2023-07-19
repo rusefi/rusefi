@@ -65,6 +65,8 @@ public abstract class Layout {
         throw new IllegalStateException("This type can't be in an array!");
     }
 
+    public void writeCOffsetCheck(PrintStream ps, String parentTypeName) { }
+
     public void writeOutputChannelLayout(PrintStream ps, String prefix, int offsetAdd) {
         StructNamePrefixer prefixer = new StructNamePrefixer();
 

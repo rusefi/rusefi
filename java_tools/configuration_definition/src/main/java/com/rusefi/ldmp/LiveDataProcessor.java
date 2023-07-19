@@ -7,6 +7,7 @@ import com.rusefi.ReaderState;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.RusefiParseErrorStrategy;
 import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.outputs.CStructWriter;
 import com.rusefi.newparse.outputs.OutputChannelWriter;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
@@ -114,7 +115,8 @@ public class LiveDataProcessor {
                 if (extraPrepend != null)
                     state.addPrepend(extraPrepend);
                 state.addPrepend(prepend);
-                state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
+                String cHeaderDestination = folder + File.separator + name + "_generated.h";
+                state.addCHeaderDestination(cHeaderDestination);
 
                 int baseOffset = outputsSections.getBaseOffset();
                 state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
@@ -142,11 +144,14 @@ public class LiveDataProcessor {
 
                     RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.getDefinitionInputFile());
 
+                    // CStructWriter cStructs = new CStructWriter();
+                    // cStructs.writeCStructs(parseState, cHeaderDestination);
+
                     // if (outputNames.length == 0) {
                     //     outputChannelWriter.writeOutputChannels(parseState, null);
                     // } else {
                     //     for (int i = 0; i < outputNames.length; i++) {
-                    //         outputChannelWriter.writeOutputChannels(parseState, fragmentDialogConsumer, outputNames[i]);
+                    //         outputChannelWriter.writeOutputChannels(parseState, outputNames[i]);
                     //     }
                     // }
                 }

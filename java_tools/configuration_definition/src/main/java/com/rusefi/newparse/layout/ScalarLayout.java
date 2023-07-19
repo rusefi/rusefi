@@ -148,6 +148,17 @@ public class ScalarLayout extends Layout {
         ps.println("\t" + cTypeName + " " + this.name + "[" + al + "];");
     }
 
+    @Override
+    public void writeCOffsetCheck(PrintStream ps, String parentTypeName) {
+        ps.print("static_assert(offsetof(");
+        ps.print(parentTypeName);
+        ps.print(", ");
+        ps.print(this.name);
+        ps.print(") == ");
+        ps.print(this.offsetWithinStruct);
+        ps.println(");");
+    }
+
     private void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, String name) {
         ps.print(prefixer.get(name));
         //ps.print(" = " + fieldType + ", ");

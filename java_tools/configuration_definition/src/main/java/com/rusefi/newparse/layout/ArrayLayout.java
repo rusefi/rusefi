@@ -75,6 +75,11 @@ public class ArrayLayout extends Layout {
     }
 
     @Override
+    public void writeCOffsetCheck(PrintStream ps, String parentTypeName) {
+        this.prototypeLayout.writeCOffsetCheck(ps, parentTypeName);
+    }
+
+    @Override
     protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
         this.prototypeLayout.writeOutputChannelLayout(ps, prefixer, offsetAdd, this.length);
     }

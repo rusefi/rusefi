@@ -59,4 +59,15 @@ public class StringLayout extends Layout {
         this.writeCOffsetHeader(ps, this.comment, null);
         ps.println("\tchar " + this.name + "[" + arrayLength[0] + "][" + this.size + "];");
     }
+
+    @Override
+    public void writeCOffsetCheck(PrintStream ps, String parentTypeName) {
+        ps.print("static_assert(offsetof(");
+        ps.print(parentTypeName);
+        ps.print(", ");
+        ps.print(this.name);
+        ps.print(") == ");
+        ps.print(this.offsetWithinStruct);
+        ps.println(");");
+    }
 }
