@@ -197,7 +197,7 @@ void setInline4() {
 }
 
 void setProteusEtbIO() {
-#if HW_PROTEUS
+#if HW_PROTEUS && EFI_PROD_CODE
 	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
 	setPPSInputs(PROTEUS_IN_PPS, PROTEUS_IN_PPS2);
 #endif // HW_PROTEUS
