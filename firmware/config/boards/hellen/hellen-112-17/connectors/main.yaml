@@ -143,7 +143,7 @@ pins:
     ts_name: 201 Crank VR-
   - pin: 203
     class: analog_inputs
-    function: Throttle Position 1
+    function: TPS Throttle Position 1
   - pin: 204
     function: Sensor GND
     type: GND
@@ -176,7 +176,7 @@ pins:
 
   - pin: 220
     class: analog_inputs
-    function: Throttle Position 2
+    function: TPS Throttle Position 2
   - pin: 223
     function: Analog Supply MAP
     color: red
