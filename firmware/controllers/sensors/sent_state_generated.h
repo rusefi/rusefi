@@ -5,17 +5,14 @@ struct sent_state_s {
 	// value
 	// offset 0
 	uint16_t value0 = (uint16_t)0;
-
 	// "ETB: SENT value1"
 	// value
 	// offset 2
 	uint16_t value1 = (uint16_t)0;
-
 	// "ETB: SENT error rate"
 	// ratio
 	// offset 4
 	float errorRate = (float)0;
-
 };
 static_assert(sizeof(sent_state_s) == 8);
 
