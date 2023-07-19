@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -30,7 +32,7 @@ public class LiveDataProcessor {
 
     private final static String enumContentFileName = "console/binary/generated/live_data_ids.h";
 
-    private final static String tsOutputsDestination = "console/binary/";
+    private final static String tsOutputsDestination = "tunerstudio/generated/temp/";
 
     private final StringBuilder enumContent = new StringBuilder(header +
             "#pragma once\n" +
@@ -52,6 +54,10 @@ public class LiveDataProcessor {
             System.err.println("One parameter expected: name of live data yaml input file");
             System.exit(-1);
         }
+
+        // ensure outputs directory exists - it's gitignored
+        Files.createDirectories(Paths.get(tsOutputsDestination));
+
         String yamlFileName = args[0];
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(new FileReader(yamlFileName));
@@ -67,11 +73,11 @@ public class LiveDataProcessor {
             fw.write("#define TS_TOTAL_OUTPUT_SIZE " + sensorTsPosition);
         }
 
-        try (FileWriter fw = new FileWriter("console/binary/generated/fancy_content.ini")) {
+        try (FileWriter fw = new FileWriter(tsOutputsDestination + "fancy_content.ini")) {
             fw.write(liveDataProcessor.fancyNewStuff.toString());
         }
 
-        try (FileWriter fw = new FileWriter("console/binary/generated/fancy_menu.ini")) {
+        try (FileWriter fw = new FileWriter(tsOutputsDestination + "fancy_menu.ini")) {
             fw.write(liveDataProcessor.fancyNewMenu.toString());
         }
     }
@@ -81,9 +87,9 @@ public class LiveDataProcessor {
     }
 
     private int handleYaml(Map<String, Object> data) throws IOException {
-        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "output_channels.ini");
 
-        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
+        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "data_logs.ini");
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
