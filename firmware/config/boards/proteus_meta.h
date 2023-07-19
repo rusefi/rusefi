@@ -160,3 +160,5 @@ PROTEUS_LS_15,
 PROTEUS_LS_16,
 };
 #endif // HW_PROTEUS
+
+void setProteusEtbIO();
