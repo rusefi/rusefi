@@ -1,11 +1,11 @@
 struct_no_prefix fuel_computer_s
 
-	float totalFuelCorrection;Fuel: Total correction;"mult", 1,0, 0,3, 2
+	float totalFuelCorrection;Fuel: Total correction;"mult", 1, 0, 0, 3, 2
 	struct running_fuel_s
 		float postCrankingFuelCorrection;Fuel: Post cranking mult
 		float intakeTemperatureCoefficient;@@GAUGE_NAME_FUEL_IAT_CORR@@
 		float coolantTemperatureCoefficient;@@GAUGE_NAME_FUEL_CLT_CORR@@
-		float timeSinceCrankingInSecs;;"secs", 1,0, 0,600000, 0
+		float timeSinceCrankingInSecs;;"secs", 1, 0, 0, 600000, 0
 
 		uint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 		uint16_t autoscale fuel;@@GAUGE_NAME_FUEL_RUNNING@@\nTotal fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
@@ -15,9 +15,9 @@ struct_no_prefix fuel_computer_s
 	! actually define a member of 'running_fuel_s' type
 	running_fuel_s running
 
-	uint16_t autoscale afrTableYAxis;;"%",{1/100},0, 0, 0, 0
-	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@},0, 0.5,1.5, 2
-	uint16_t autoscale targetAFR;@@GAUGE_NAME_TARGET_AFR@@;"ratio", {1/@@PACK_MULT_AFR@@},0, 10,20, 2
+	uint16_t autoscale afrTableYAxis;;"%",{1/100}, 0, 0, 0, 0
+	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0.5,1.5, 2
+	uint16_t autoscale targetAFR;@@GAUGE_NAME_TARGET_AFR@@;"ratio", {1/@@PACK_MULT_AFR@@}, 0, 10,20, 2
 
 	uint16_t autoscale stoichiometricRatio;Fuel: Stoich ratio;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 

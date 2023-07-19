@@ -5,6 +5,10 @@ import com.rusefi.EnumToString;
 import com.rusefi.InvokeReader;
 import com.rusefi.ReaderState;
 import com.rusefi.ReaderStateImpl;
+import com.rusefi.RusefiParseErrorStrategy;
+import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.outputs.OutputChannelWriter;
+import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.util.LazyFile;
 import org.yaml.snakeyaml.Yaml;
@@ -84,6 +88,8 @@ public class LiveDataProcessor {
 
         GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer("controllers/lua/generated/output_lookup_generated.cpp");
 
+        //OutputChannelWriter outputChannelWriter = new OutputChannelWriter(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+
         EntryHandler handler = new EntryHandler() {
             @Override
             public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, Boolean isPtr) throws IOException {
@@ -123,6 +129,26 @@ public class LiveDataProcessor {
                     outputValueConsumer.isPtr = isPtr;
                     state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
 
+                }
+
+                {
+                    ParseState parseState = new ParseState(state.getEnumsReader());
+
+                    parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
+
+                    if (prepend != null && !prepend.isEmpty()) {
+                        RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prepend);
+                    }
+
+                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.getDefinitionInputFile());
+
+                    // if (outputNames.length == 0) {
+                    //     outputChannelWriter.writeOutputChannels(parseState, null);
+                    // } else {
+                    //     for (int i = 0; i < outputNames.length; i++) {
+                    //         outputChannelWriter.writeOutputChannels(parseState, fragmentDialogConsumer, outputNames[i]);
+                    //     }
+                    // }
                 }
 
                 state.doJob();

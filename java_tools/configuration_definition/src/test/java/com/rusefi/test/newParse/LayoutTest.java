@@ -287,7 +287,9 @@ public class LayoutTest {
 
     @Test
     public void bigOutputChannels() throws IOException {
-        String input = "struct_no_prefix total\n" +
+        String input = 
+                "#define GAUGE_NAME_FUEL_WALL_CORRECTION \"wall\"\n" +
+                "struct_no_prefix total\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "uint8_t afr_typet;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "bit isForcedInduction;isForcedInduction\\nDoes the vehicle have a turbo or supercharger?\n" +

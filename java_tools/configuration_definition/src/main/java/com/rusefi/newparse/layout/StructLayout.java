@@ -182,11 +182,6 @@ public class StructLayout extends Layout {
     }
 
     public void writeCLayoutRoot(PrintStream ps) {
-        if (this.comment != null) {
-            ps.println("/**\n * @brief " + this.comment);
-            ps.println("*/");
-        }
-
         ps.println("struct " + this.typeName + " {");
 
         this.children.forEach(c -> c.writeCLayout(ps));
@@ -197,16 +192,34 @@ public class StructLayout extends Layout {
         ps.println();
     }
 
-    @Override
-    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+    private void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, String name) {
         if (!this.noPrefix) {
-            prefixer.push(this.name);
+            prefixer.push(name);
         }
 
         this.children.forEach(c -> c.writeOutputChannelLayout(ps, prefixer, offsetAdd));
 
         if (!this.noPrefix) {
             prefixer.pop();
+        }
+    }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        writeOutputChannelLayout(ps, prefixer, offsetAdd, this.name);
+    }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
+        if (arrayLength.length != 1) {
+            throw new IllegalStateException("Output channels don't support multi dimension arrays");
+        }
+
+        int elementOffset = offsetAdd;
+
+        for (int i = 0; i < arrayLength[0]; i++) {
+            writeOutputChannelLayout(ps, prefixer, elementOffset, this.name + (i + 1));
+            elementOffset += this.size;
         }
     }
 }

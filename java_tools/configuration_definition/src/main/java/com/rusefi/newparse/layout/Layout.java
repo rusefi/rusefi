@@ -38,28 +38,25 @@ public abstract class Layout {
     }
 
     protected void writeCOffsetHeader(PrintStream ps, String comment, String units) {
-        ps.println("\t/**");
-
         if (comment != null) {
             comment = comment.replaceAll("[+]", "");
-            comment = comment.replaceAll("\\n", "\n\t * ");
+            comment = comment.replaceAll("\\n", "\n\t// ");
             if (comment.length() == 0) {
                 comment = null;
             }
         }
 
         if (comment != null) {
-            comment = comment.replaceAll("\\\\n", "\n\t * ");
+            comment = comment.replaceAll("\\\\n", "\n\t// ");
 
-            ps.println("\t * " + comment);
+            ps.println("\t// " + comment);
         }
 
         if (units != null && units.length() > 2) {
-            ps.println("\t" + units.replace("\"", ""));
+            ps.println("\t// " + units.replace("\"", ""));
         }
 
-        ps.println("\t * offset " + this.offsetWithinStruct);
-        ps.println("\t */");
+        ps.println("\t// offset " + this.offsetWithinStruct);
     }
 
     public void writeCLayout(PrintStream ps) { }

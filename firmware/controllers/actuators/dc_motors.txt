@@ -1,8 +1,8 @@
 ! units,scale,offset,min,max,digits
 
 struct_no_prefix dc_motors_s
-	float dcOutput0;"DC: output0";"per", 1,0, 0,10, 2
-	uint8_t isEnabled0_int;"DC: en0";"per", 1,0, 0,10, 2
+	float dcOutput0;"DC: output0";"per", 1, 0, 0, 10, 2
+	uint8_t isEnabled0_int;"DC: en0";"per", 1, 0, 0, 10, 2
 	bit isEnabled0
 
 end_struct

@@ -71,20 +71,14 @@ public class TSProjectConsumerTest {
                 "\t// ms\n" +
                 "\t// offset 0\n" +
                 "\tint periodMs2 = (int)0;\n" +
-                "\n" +
                 "\t// offset 4\n" +
                 "\tafr_table_t afrTable;\n" +
-                "\n" +
                 "\t// PID dTime\n" +
                 "\t// ms\n" +
                 "\t// offset 20\n" +
                 "\tscaled_channel<int16_t, 10, 1> periodMs = (int16_t)0;\n" +
-                "\n" +
-                "\t// need 4 byte alignment\n" +
-                "\t// units\n" +
                 "\t// offset 22\n" +
                 "\tuint8_t alignmentFill_at_22[2];\n" +
-                "\n" +
                 "};\n" +
                 "static_assert(sizeof(pid_s) == 24);\n" +
                 "\n", consumer.getContent());

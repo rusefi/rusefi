@@ -9,6 +9,7 @@ import com.rusefi.newparse.parsing.*;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.rusefi.VariableRegistry.AUTO_ENUM_SUFFIX;
@@ -19,6 +20,7 @@ public class ParseState implements DefinitionsState {
     private final List<Struct> structList = new ArrayList<>();
     private final Map<String, Typedef> typedefs = new HashMap<>();
     private static final Pattern CHAR_LITERAL = Pattern.compile("'.'");
+    private static final Pattern AT_SIGN_REPLACEMENT = Pattern.compile("\\@\\@([A-Za-z0-9_]+)\\@\\@");
 
     private final EnumsReader enumsReader;
     private Definition.OverwritePolicy definitionOverwritePolicy = Definition.OverwritePolicy.NotAllowed;
@@ -297,6 +299,8 @@ public class ParseState implements DefinitionsState {
                 options.comment = "";
             }
 
+            options.comment = processComment(options.comment);
+
             // this is a legacy field option list, parse it as such
             if (!ctx.numexpr().isEmpty()) {
                 options.units = ctx.QuotedString().getText();
@@ -323,7 +327,7 @@ public class ParseState implements DefinitionsState {
                     options.units = sValue;
                     break;
                 case "comment":
-                    options.comment = sValue;
+                    options.comment = processComment(sValue);
                     break;
                 case "digits":
                     options.digits = Integer.parseInt(sValue);
@@ -439,6 +443,8 @@ public class ParseState implements DefinitionsState {
 
         String comment = ctx.SemicolonedSuffix() == null ? null : ctx.SemicolonedSuffix().getText().substring(1).trim();
 
+        comment = processComment(comment);
+
         String trueValue = "\"true\"";
         String falseValue = "\"false\"";
 
@@ -448,6 +454,31 @@ public class ParseState implements DefinitionsState {
         }
 
         group.addBitField(new BitField(name, comment, trueValue, falseValue));
+    }
+
+    private String processComment(String comment) {
+        if (comment != null && !comment.isEmpty()) {
+            // Try and perform definition replacement on the comment - this is used for output channel
+            // human readable names.
+            final Matcher matcher = AT_SIGN_REPLACEMENT.matcher(comment);
+
+            if (matcher.find()) {
+                String defName = matcher.group(1);
+
+                if (!definitions.containsKey(defName)) {
+                    throw new RuntimeException("Definition not found for " + defName);
+                }
+
+                comment = definitions.get(defName).value.toString();
+            }
+
+            // De-quote any quoted comment
+            if (comment.startsWith("\"") && comment.endsWith("\"")) {
+                comment = comment.substring(1, comment.length() - 1);
+            }
+        }
+
+        return comment;
     }
 
     @Override

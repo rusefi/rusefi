@@ -17,9 +17,9 @@ import static org.junit.Assert.assertEquals;
 public class OutputsTest {
     @Test
     public void generateSomething() throws IOException {
-        ReaderStateImpl state = new ReaderStateImpl();
-        state.getVariableRegistry().register("GAUGE_NAME_FUEL_WALL_CORRECTION", "wall");
-        String test = "struct total\n" +
+        String test =
+                "#define GAUGE_NAME_FUEL_WALL_CORRECTION \"wall\"\n" +
+                "struct total\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "uint8_t afr_typet;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "bit isForcedInduction;isForcedInduction\\nDoes the vehicle have a turbo or supercharger?\n" +
@@ -44,7 +44,7 @@ public class OutputsTest {
                 "m_requested_pump = scalar, F32, 12, \"\", 1, 0\n" +
                 "tCharge = scalar, F32, 16, \"\", 1, 0\n" +
                 "; total TS size = 20\n";
-        assertEquals(expectedLegacy, runOriginalImplementation(test, state).getContent());
+        assertEquals(expectedLegacy, runOriginalImplementation(test, new ReaderStateImpl()).getContent());
     }
 
     @Test(expected = BitState.TooManyBitsInARow.class)

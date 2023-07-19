@@ -13,7 +13,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         if (configField.isBit()) {
             // unused bits are needed for proper struct memsize
             String comment = packComment(configField.getComment(), "\t// ") + "\t// offset " + iterator.currentOffset + " bit " + iterator.bitState.get() + EOL;
-            return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL + EOL;
+            return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
         }
 
         String cEntry = getComment(configField.getComment(), iterator.currentOffset, configField.getUnits());
@@ -32,9 +32,9 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
                 // we need this cast in case of enums
                 cEntry += " = (" + configField.getType() + ")0";
             }
-            cEntry += ";" + EOL + EOL;
+            cEntry += ";" + EOL;
         } else {
-            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.getArraySizeVariableName() + "];" + EOL + EOL;
+            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.getArraySizeVariableName() + "];" + EOL;
         }
         return cEntry;
     }

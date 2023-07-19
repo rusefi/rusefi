@@ -366,122 +366,80 @@ public class ConfigFieldParserTest {
         assertEquals("struct pid_s {\n" +
                 "\t// offset 0\n" +
                 "\tint8_t byte1 = (int8_t)0;\n" +
-                "\n" +
-                "\t// need 4 byte alignment\n" +
-                "\t// units\n" +
                 "\t// offset 1\n" +
                 "\tuint8_t alignmentFill_at_1[1];\n" +
-                "\n" +
                 "\t// offset 2\n" +
                 "\tint16_t short = (int16_t)0;\n" +
-                "\n" +
                 "\t// offset 4\n" +
                 "\tint int2 = (int)0;\n" +
-                "\n" +
                 "\t// offset 8\n" +
                 "\tint8_t byte2 = (int8_t)0;\n" +
-                "\n" +
-                "\t// need 4 byte alignment\n" +
-                "\t// units\n" +
                 "\t// offset 9\n" +
                 "\tuint8_t alignmentFill_at_9[3];\n" +
-                "\n" +
                 "\t// offset 12 bit 0\n" +
                 "\tbool periodMs : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 1\n" +
                 "\tbool unusedBit_7_1 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 2\n" +
                 "\tbool unusedBit_7_2 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 3\n" +
                 "\tbool unusedBit_7_3 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 4\n" +
                 "\tbool unusedBit_7_4 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 5\n" +
                 "\tbool unusedBit_7_5 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 6\n" +
                 "\tbool unusedBit_7_6 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 7\n" +
                 "\tbool unusedBit_7_7 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 8\n" +
                 "\tbool unusedBit_7_8 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 9\n" +
                 "\tbool unusedBit_7_9 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 10\n" +
                 "\tbool unusedBit_7_10 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 11\n" +
                 "\tbool unusedBit_7_11 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 12\n" +
                 "\tbool unusedBit_7_12 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 13\n" +
                 "\tbool unusedBit_7_13 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 14\n" +
                 "\tbool unusedBit_7_14 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 15\n" +
                 "\tbool unusedBit_7_15 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 16\n" +
                 "\tbool unusedBit_7_16 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 17\n" +
                 "\tbool unusedBit_7_17 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 18\n" +
                 "\tbool unusedBit_7_18 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 19\n" +
                 "\tbool unusedBit_7_19 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 20\n" +
                 "\tbool unusedBit_7_20 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 21\n" +
                 "\tbool unusedBit_7_21 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 22\n" +
                 "\tbool unusedBit_7_22 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 23\n" +
                 "\tbool unusedBit_7_23 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 24\n" +
                 "\tbool unusedBit_7_24 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 25\n" +
                 "\tbool unusedBit_7_25 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 26\n" +
                 "\tbool unusedBit_7_26 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 27\n" +
                 "\tbool unusedBit_7_27 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 28\n" +
                 "\tbool unusedBit_7_28 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 29\n" +
                 "\tbool unusedBit_7_29 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 30\n" +
                 "\tbool unusedBit_7_30 : 1 {};\n" +
-                "\n" +
                 "\t// offset 12 bit 31\n" +
                 "\tbool unusedBit_7_31 : 1 {};\n" +
-                "\n" +
                 "};\n" +
                 "static_assert(sizeof(pid_s) == 16);\n" +
                 "\n", consumer.getContent());
@@ -504,7 +462,6 @@ public class ConfigFieldParserTest {
                 "\t// ratio\n" +
                 "\t// offset 0\n" +
                 "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE];\n" +
-                "\n" +
                 "};\n" +
                 "static_assert(sizeof(pid_s) == 4);\n" +
                 "\n", consumer.getContent());
@@ -515,7 +472,6 @@ public class ConfigFieldParserTest {
         String test = "struct struct_s\n" +
                 "\tint int2\n" +
                 "end_struct\n" +
-
                 "struct_no_prefix pid_s\n" +
                 "\tint8_t byte1\n" +
                 "\tstruct_s struct\n" +
@@ -527,22 +483,16 @@ public class ConfigFieldParserTest {
         assertEquals("struct struct_s {\n" +
                         "\t// offset 0\n" +
                         "\tint int2 = (int)0;\n" +
-                        "\n" +
                         "};\n" +
                         "static_assert(sizeof(struct_s) == 4);\n" +
                         "\n" +
                         "struct pid_s {\n" +
                         "\t// offset 0\n" +
                         "\tint8_t byte1 = (int8_t)0;\n" +
-                        "\n" +
-                        "\t// need 4 byte alignment\n" +
-                        "\t// units\n" +
                         "\t// offset 1\n" +
                         "\tuint8_t alignmentFill_at_1[3];\n" +
-                        "\n" +
                         "\t// offset 4\n" +
                         "\tstruct_s struct;\n" +
-                        "\n" +
                         "};\n" +
                         "static_assert(sizeof(pid_s) == 8);\n" +
                         "\n",
@@ -563,15 +513,10 @@ public class ConfigFieldParserTest {
         assertEquals("struct pid_s {\n" +
                         "\t// offset 0\n" +
                         "\tint8_t byte1 = (int8_t)0;\n" +
-                        "\n" +
                         "\t// offset 1\n" +
                         "\tint8_t byte2 = (int8_t)0;\n" +
-                        "\n" +
-                        "\t// need 4 byte alignment\n" +
-                        "\t// units\n" +
                         "\t// offset 2\n" +
                         "\tuint8_t alignmentFill_at_2[2];\n" +
-                        "\n" +
                         "};\n" +
                         "static_assert(sizeof(pid_s) == 4);\n" +
                         "\n",

@@ -1,6 +1,8 @@
 package com.rusefi;
 
+// import com.rusefi.newparse.outputs.CStructWriter;
 import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.pinout.PinoutLogic;
 import com.rusefi.trigger.TriggerWheelTSLogic;
@@ -64,6 +66,7 @@ public class ConfigDefinition {
 
         String tsInputFileFolder = null;
         String destCDefinesFileName = null;
+        String cHeaderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
         String firingEnumFileName = null;
         String triggersInputFolder = null;
@@ -83,6 +86,7 @@ public class ConfigDefinition {
                     tsInputFileFolder = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
+                    cHeaderDestination = args[i + 1];
                     state.addCHeaderDestination(args[i + 1]);
                     break;
                 case KEY_ZERO_INIT:
@@ -176,23 +180,23 @@ public class ConfigDefinition {
             // Load prepend files
             {
                 // Ignore duplicates of definitions made during prepend phase
-//                parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
+                parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
                 for (String prependFile : state.getPrependFiles()) {
-//                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prependFile);
+                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prependFile);
                 }
             }
 
             // Now load the main config file
             {
                 // don't allow duplicates in the main file
-//                parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
-//                RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.definitionInputFile);
+                parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
+                RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.definitionInputFile);
             }
 
             // Write C structs
             // CStructWriter cStructs = new CStructWriter();
-            // cStructs.writeCStructs(parseState, destCHeaderFileName + ".test");
+            // cStructs.writeCStructs(parseState, cHeaderDestination + ".test");
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();

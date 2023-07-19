@@ -77,9 +77,9 @@ public class ConfigStructureImpl implements ConfigStructure {
             } else {
                 fillSizeArray = new int[0];
             }
-            ConfigFieldImpl fill = new ConfigFieldImpl(state, ALIGNMENT_FILL_AT + totalSize, "need 4 byte alignment",
+            ConfigFieldImpl fill = new ConfigFieldImpl(state, ALIGNMENT_FILL_AT + totalSize, "",
                     "" + fillSize,
-                    TypesHelper.UINT8_T, fillSizeArray, "\"units\", 1, 0, -20, 100, 0", false, false, false, null, null);
+                    TypesHelper.UINT8_T, fillSizeArray, "\"\", 1, 0, -20, 100, 0", false, false, false, null, null);
             addBoth(fill);
         }
         totalSize += fillSize;

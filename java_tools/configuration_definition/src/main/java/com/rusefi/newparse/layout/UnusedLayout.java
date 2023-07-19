@@ -39,6 +39,6 @@ public class UnusedLayout extends Layout {
     @Override
     public void writeCLayout(PrintStream ps) {
         this.writeCOffsetHeader(ps, null, null);
-        ps.println("\tchar unused" + this.offsetWithinStruct + "[" + this.size + "];");
+        ps.println("\tuint8_t alignmentFill_at_" + this.offsetWithinStruct + "[" + this.size + "];");
     }
 }

@@ -1,4 +1,4 @@
 struct_no_prefix vvt_s
 	uint16_t autoscale vvtTarget;;"deg", 0.1, 0, -90, 90, 1
-	uint8_t autoscale vvtOutput;;"%", 0.5, 0, 100, 1
+	uint8_t autoscale vvtOutput;;"%", 0.5, 0, 0, 100, 1
 end_struct
