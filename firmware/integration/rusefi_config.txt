@@ -342,7 +342,7 @@ struct gppwm_channel
 	gppwm_channel_e rpmAxis;Selects the X axis to use for the table.;
 
 	int16_t[GPPWM_LOAD_COUNT] autoscale loadBins;;"load", 0.1, 0, -1000, 1000, 1
-	int16_t[GPPWM_RPM_COUNT] autoscale rpmBins;;"RPM", 1, 0, -30000, 30000, 0
+	int16_t[GPPWM_RPM_COUNT] rpmBins;;"RPM", 1, 0, -30000, 30000, 0
 	uint8_t[GPPWM_RPM_COUNT x GPPWM_LOAD_COUNT] autoscale table;;"duty", 0.5, 0, 0, 100, 1
 end_struct
 
@@ -816,7 +816,7 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	pin_output_mode_e triggerErrorPinMode;
 	output_pin_e acRelayPin;
 
-	uint8_t autoscale lambdaProtectionMinTps;;"%", 1, 0, 0, 100, 0
+	uint8_t lambdaProtectionMinTps;;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale lambdaProtectionTimeout;Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed;"s", 0.1, 0, 0, 10, 1
 
 	uint8_t autoscale lambdaProtectionRestoreRpm;;"RPM", 100, 0, 0, 25000, 0
@@ -1179,7 +1179,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t unusedHere
 	uint16_t autoscale benchTestOnTime;Duration of each test pulse;"ms", 0.01, 0, 0, 100, 2
 
-	uint8_t autoscale lambdaProtectionRestoreTps;;"%", 1, 0, 0, 100, 0
+	uint8_t lambdaProtectionRestoreTps;;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale lambdaProtectionRestoreLoad;;"%", 10, 0, 0, 1000, 0
 
 	pin_input_mode_e launchActivatePinMode;
