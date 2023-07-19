@@ -5,10 +5,10 @@ COMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARDNAME} \
 COMMON_GEN_CONFIG="
  -enumInputFile controllers/algo/engine_types.h \
  -enumInputFile controllers/algo/rusefi_enums.h \
- -readfile OUTPUTS_SECTION_FROM_FILE console/binary/generated/output_channels.ini \
- -readfile DATALOG_SECTION_FROM_FILE console/binary/generated/data_logs.ini \
- -readfile LIVE_DATA_MENU_FROM_FILE console/binary/generated/fancy_menu.ini \
- -readfile LIVE_DATA_PANELS_FROM_FILE console/binary/generated/fancy_content.ini \
+ -readfile OUTPUTS_SECTION_FROM_FILE tunerstudio/generated/temp/output_channels.ini \
+ -readfile DATALOG_SECTION_FROM_FILE tunerstudio/generated/temp/data_logs.ini \
+ -readfile LIVE_DATA_MENU_FROM_FILE tunerstudio/generated/temp/fancy_menu.ini \
+ -readfile LIVE_DATA_PANELS_FROM_FILE tunerstudio/generated/temp/fancy_content.ini \
  -ts_destination tunerstudio \
  -firing_order controllers/algo/firing_order.h \
  -triggerInputFolder ../unit_tests \
