@@ -13,6 +13,12 @@ allprojects {
         }
     }
 
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+
     tasks.withType(JavaExec).configureEach {
         if (name.endsWith("main()")) {
             // https://github.com/gradle/gradle/issues/21364
