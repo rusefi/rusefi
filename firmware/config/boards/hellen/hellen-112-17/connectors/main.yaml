@@ -20,6 +20,10 @@ pins:
     class: analog_inputs
     ts_name: 107 A/C pressure
     function: 107 A/C pressure
+  - pin: 108
+    function: Sometimes GND
+    type: GND
+
   - pin: 109
     class: analog_inputs
     function: Analog 109
@@ -266,6 +270,9 @@ info:
       y: 345
     - pin: 107
       x: 324
+      y: 345
+    - pin: 108
+      x: 360
       y: 345
     - pin: 109
       x: 394
