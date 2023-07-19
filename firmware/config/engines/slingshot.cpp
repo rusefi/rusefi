@@ -6,5 +6,6 @@ https://rusefi.com/docs/pinouts/hellen/hellen-112-17/
 #include "defaults.h"
 
 void setSlingshot() {
+	strcpy(engineConfiguration->engineMake, "Polaris");
     setInline4();
 }

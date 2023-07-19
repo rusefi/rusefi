@@ -711,6 +711,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setTestEngineIssue366rise();
 		break;
 #endif // EFI_UNIT_TEST
+	case engine_type_e::ME17_9_MISC:
+	    setSlingshot();
+		break;
 #if HW_MICRO_RUSEFI
 	case engine_type_e::MRE_VW_B6:
 		setMreVwPassatB6();
@@ -723,9 +726,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE();
-		break;
-	case engine_type_e::ME17_9_MISC:
-	    setSlingshot();
 		break;
 	case engine_type_e::MRE_BOARD_NEW_TEST:
 		mreBoardNewTest();
