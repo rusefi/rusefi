@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jul 16 23:55:44 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 19 14:57:58 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4829,7 +4829,7 @@ struct persistent_config_s {
 	deg
 	 * offset 16476
 	 */
-	int16_t injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
+	int16_t injectionPhase[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	Load
 	 * offset 16988
@@ -5311,4 +5311,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jul 16 23:55:44 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 19 14:57:58 UTC 2023
