@@ -3,6 +3,9 @@
 #include "defaults.h"
 #include "vr_pwm.h"
 #include "kline.h"
+#if HW_PROTEUS
+#include "proteus_meta.h"
+#endif // HW_PROTEUS
 
 static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorOffAboveTps = 120;
