@@ -14,7 +14,9 @@ void setSlingshot() {
 
     engineConfiguration->ignitionMode = IM_WASTED_SPARK; // just for now
     engineConfiguration->twoWireBatchIgnition = true;
+    engineConfiguration->globalTriggerAngleOffset = 110;
 
+	//engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
 	// GM TMAP is recommended
 	engineConfiguration->map.sensor.lowValue = 20;
