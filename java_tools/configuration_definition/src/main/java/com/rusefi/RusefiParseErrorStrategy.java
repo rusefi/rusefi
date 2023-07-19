@@ -11,9 +11,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-/**
- * dead code? shall we drop it yet?
- */
 public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
     private boolean hadError = false;
 
