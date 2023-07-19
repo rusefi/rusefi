@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 19 14:57:59 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 19 16:29:18 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -896,9 +896,7 @@ struct engine_configuration_s {
 	 */
 	injection_mode_e crankingInjectionMode;
 	/**
-	 * This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups. If your injectors are individually wired you will also need to enable "Two wire batch emulation". 
-	 * set injection_mode X
-	 * See also twoWireBatchInjection
+	 * This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.
 	 * offset 383
 	 */
 	injection_mode_e injectionMode;
@@ -5311,4 +5309,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 19 14:57:59 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 19 16:29:18 UTC 2023
