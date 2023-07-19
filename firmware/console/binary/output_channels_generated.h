@@ -750,7 +750,7 @@ struct output_channels_s {
 	// offset 574
 	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
 	// offset 578
-	scaled_channel<int16_t, 1, 1> gppwmXAxis[4];
+	int16_t gppwmXAxis[4];
 	// offset 586
 	scaled_channel<int16_t, 10, 1> gppwmYAxis[4];
 	// V
@@ -779,7 +779,7 @@ struct output_channels_s {
 	scaled_channel<uint8_t, 2, 1> boostOpenLoopBlendBias[BOOST_BLEND_COUNT];
 	// %
 	// offset 642
-	scaled_channel<int8_t, 1, 1> boostOpenLoopBlendOutput[BOOST_BLEND_COUNT];
+	int8_t boostOpenLoopBlendOutput[BOOST_BLEND_COUNT];
 	// offset 644
 	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendParameter[BOOST_BLEND_COUNT];
 	// %
