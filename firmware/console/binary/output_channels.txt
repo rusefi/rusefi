@@ -299,7 +299,7 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	int16_t[LUA_ANALOG_INPUT_COUNT iterate] autoscale rawAnalogInput;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint8_t[4 iterate] autoscale gppwmOutput;GPPWM Output;"%", 0.5, 0, 0, 100, 2
-	int16_t[4 iterate] autoscale gppwmXAxis;;"", 1, 0, -30000, 30000, 0
+	int16_t[4 iterate] gppwmXAxis;;"", 1, 0, -30000, 30000, 0
 	int16_t[4 iterate] autoscale gppwmYAxis;;"", 0.1, 0, -1000, 1000, 1
 
 	int16_t autoscale rawBattery;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
@@ -314,7 +314,7 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendBias;;"%", 0.5, 0, 0, 100, 1
-	int8_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendOutput;;"%", 1, 0, -100, 100, 0
+	int8_t[BOOST_BLEND_COUNT iterate] boostOpenLoopBlendOutput;;"%", 1, 0, -100, 100, 0
 
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendBias;;"%", 0.5, 0, 0, 100, 1
