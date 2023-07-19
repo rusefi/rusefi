@@ -1472,7 +1472,8 @@ struct engine_configuration_s {
 	pid_s etb;
 	// offset 1296
 	Gpio triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
-	// RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
+	// RPM range above upper limit for extra air taper
+	// RPM
 	// offset 1300
 	int16_t airTaperRpmRange;
 	// offset 1302
@@ -1772,8 +1773,7 @@ struct engine_configuration_s {
 	// value
 	// offset 1504
 	float egoValueShift;
-	// VVT output
-	// TODO: rename to vvtOutputs
+	// VVT output solenoid pin for this cam
 	// offset 1508
 	output_pin_e vvtPins[CAM_INPUTS_COUNT];
 	// This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
@@ -1931,6 +1931,7 @@ struct engine_configuration_s {
 	can_vss_nbc_e canVssNbcType;
 	// offset 1870
 	Gpio mc33816_cs;
+	// hz
 	// offset 1872
 	float auxFrequencyFilter;
 	// RPM
@@ -1938,6 +1939,7 @@ struct engine_configuration_s {
 	int16_t vvtControlMinRpm;
 	// offset 1878
 	brain_input_pin_e sentInputPins[SENT_INPUT_COUNT];
+	// %
 	// offset 1880
 	int8_t launchFuelAdderPercent;
 	// Time required to detect a stuck throttle.
@@ -2301,6 +2303,7 @@ struct engine_configuration_s {
 	uint8_t alsMinTimeBetween;
 	// offset 3573
 	uint8_t alsEtbPosition;
+	// %
 	// offset 3574
 	uint8_t acRelayAlternatorDutyAdder;
 	// deg
