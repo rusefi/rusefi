@@ -224,9 +224,9 @@ void setFordEscortGt() {
 		7000
 	};
 
+#if (IGN_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	copyArray(config->ignitionRpmBins, ignitionRpmBins);
 
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTable(config->ignitionTable, racingFestivaIgnitionTable);
 #endif
 
