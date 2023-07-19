@@ -625,7 +625,7 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@ 0
 
 	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
-	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
+	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
 
 	#define ve_override_e_enum "None", "MAP", "TPS"
 	custom ve_override_e 1 bits, U08, @OFFSET@, [0:1], @@ve_override_e_enum@@
@@ -1040,7 +1040,7 @@ bit launchSmoothRetard;Interpolates the Ignition Retard from 0 to 100% within th
 bit isPhaseSyncRequiredForIgnition;Some engines are OK running semi-random sequential while other engine require phase synchronization
 bit useCltBasedRpmLimit,"yes","no";If enabled, use a curve for RPM limit (based on coolant temperature) instead of a constant value.
 bit forceO2Heating,"yes","no";If enabled, don't wait for engine start to heat O2 sensors. WARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
-bit invertVvtControlIntake, "retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
+bit invertVvtControlIntake,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit useBiQuadOnAuxSpeedSensors
 bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
@@ -1085,7 +1085,7 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	pid_s alternatorControl;
 	pid_s etb;
 	Gpio[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
-	int16_t airTaperRpmRange;RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
+	int16_t airTaperRpmRange;RPM range above upper limit for extra air taper;"RPM", 1, 0, 0, 1500, 0
 	brain_input_pin_e turboSpeedSensorInputPin;
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC", 1, 0, 0, 1023, 0
@@ -1206,7 +1206,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float mapHighValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2
 	float egoValueShift;EGO value correction;"value", 1, 0, -10, 10, 2
 
-	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;VVT output\nTODO: rename to vvtOutputs
+	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;VVT output solenoid pin for this cam
 
 	pin_output_mode_e sdCardCsPinMode;
 
@@ -1298,12 +1298,12 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	pin_output_mode_e tle8888_csPinMode;
 	Gpio mc33816_cs;
 
-	float auxFrequencyFilter
+	float auxFrequencyFilter;;"hz", 1, 0, 0, 100, 1
 	int16_t vvtControlMinRpm;;"RPM", 1, 0, 0, 3000, 0
 
     sent_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
 
-    int8_t launchFuelAdderPercent
+	int8_t launchFuelAdderPercent;;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale etbJamTimeout;Time required to detect a stuck throttle.;"sec", 0.02, 0, 0, 5, 2
 	uint16_t etbExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	float etbDutyThreshold
@@ -1427,10 +1427,10 @@ tChargeMode_e tChargeMode;
         uint8_t hpfpMinAngle;If the requested activation time is below this angle, don't bother running the pump;"deg", 1, 0, 0, 255, 0
         uint16_t autoscale hpfpPumpVolume;Size of the pump chamber in cc.  Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.;"cc", 0.001, 0, 0, 65, 3
         uint8_t hpfpActivationAngle;How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own);"deg", 1, 0, 0, 255, 0
-				uint8_t issFilterReciprocal
+		uint8_t issFilterReciprocal;;"", 1, 0, 0, 255, 0
         uint16_t autoscale hpfpPidP;;"%/kPa", 0.001, 0, 0, 65, 3
         uint16_t autoscale hpfpPidI;;"%/kPa/lobe", 0.00001, 0, 0, 0.65, 5
-        uint16_t hpfpTargetDecay;The fastest rate the target pressure can be reduced by.  This is because HPFP have no way to bleed off pressure other than injecting fuel.;"kPa/s", 1, 0, 0, 65000, 0
+        uint16_t hpfpTargetDecay;The fastest rate the target pressure can be reduced by. This is because HPFP have no way to bleed off pressure other than injecting fuel.;"kPa/s", 1, 0, 0, 65000, 0
         uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
         uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1
         uint8_t[HPFP_DEADTIME_SIZE] hpfpDeadtimeVoltsBins;;"volts", 1, 0, 0, 255, 0
@@ -1511,7 +1511,7 @@ int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
 	int8_t ALSMaxCLT;;"C", 1, 0, 0, 105, 0
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
 uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
-    uint8_t acRelayAlternatorDutyAdder
+    uint8_t acRelayAlternatorDutyAdder;;"%", 1, 0, 0, 100, 0
 	SentEtbType sentEtbType
 	uint16_t customSentTpsMin
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
