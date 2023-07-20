@@ -34,6 +34,7 @@ Release template (copy/paste this for new release):
 ### Fixed
  - fuel_pump_control is accessible as getOutput("isFuelPumpOn") in Lua #5239 
  - start button logic does not crank started for first X seconds since ECU boot #5324
+ - launch control: Speed threshold should not depend on launch mode, also zero speed limit handling #5419
 
 ### Breaking Changes
  - Always operate in "two wire" mode for batch fuel, fixing batch firing order #5353

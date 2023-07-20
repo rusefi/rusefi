@@ -68,8 +68,7 @@ TEST(LaunchControl, VSSConditionWithSwitch) {
     EXPECT_TRUE(dut.isInsideSpeedCondition());
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
-	EXPECT_TRUE(dut.isInsideSpeedCondition());
-
+	EXPECT_FALSE(dut.isInsideSpeedCondition());
 }
 
 TEST(LaunchControl, RPMCondition) {

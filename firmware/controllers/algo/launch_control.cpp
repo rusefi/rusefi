@@ -54,7 +54,7 @@ bool LaunchControlBase::isInsideSpeedCondition() const {
 
 	int speed = Sensor::getOrZero(SensorType::VehicleSpeed);
 	
-	return (engineConfiguration->launchSpeedThreshold > speed) || (!(engineConfiguration->launchActivationMode ==  ALWAYS_ACTIVE_LAUNCH));
+	return engineConfiguration->launchSpeedThreshold > speed;
 }
 
 /**
