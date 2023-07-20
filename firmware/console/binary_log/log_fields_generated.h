@@ -345,4 +345,6 @@ static constexpr LogField fields[] = {
 	{engine->triggerCentral.triggerIgnoredToothCount, "triggerIgnoredToothCount", "", 0},
 	{engine->dc_motors.dcOutput0, "DC: output0", "per", 2},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "per", 2},
+	{___engine.module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
+	{___engine.module<VvtController1>()->vvtOutput, "vvtOutput", "%", 1},
 };

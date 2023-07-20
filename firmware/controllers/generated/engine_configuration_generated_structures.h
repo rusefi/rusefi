@@ -1789,7 +1789,9 @@ struct engine_configuration_s {
 	// offset 1532
 	float tChargeMaxRpmMaxTps;
 	// offset 1536
-	pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
+	pwm_freq_t vvtOutputFrequency;
+	// offset 1538
+	uint16_t unused1538;
 	// Hz
 	// offset 1540
 	int alternatorPwmFrequency;

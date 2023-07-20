@@ -646,6 +646,10 @@ float getOutputValueByName(const char *name) {
 			return engine->dc_motors.isEnabled0_int;
 		case 1691876092:
 			return engine->dc_motors.isEnabled0;
+		case -2132393748:
+			return ___engine.module<VvtController1>()->vvtTarget;
+		case 1990697206:
+			return ___engine.module<VvtController1>()->vvtOutput;
 	}
 	return EFI_ERROR_CODE;
 }
