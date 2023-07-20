@@ -11,6 +11,7 @@ import com.rusefi.ui.UIContext;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.UnexpectedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +44,11 @@ public class EnumConfigField extends BaseConfigField {
                     Pair<Integer, ?> p = FieldCommandResponse.parseResponse(message);
                     if (p != null && p.first == field.getOffset()) {
                         int ordinal = (Integer) p.second;
-                        setValue(ordinal);
+                        try {
+                            setValue(ordinal);
+                        } catch (UnexpectedEnumOridnalException e) {
+                            System.out.println("ERROR " + e);
+                        }
                     }
                 }
             }
@@ -63,12 +68,14 @@ public class EnumConfigField extends BaseConfigField {
         });
     }
 
-    private void setValue(int ordinal) {
+    private void setValue(int ordinal) throws UnexpectedEnumOridnalException {
         String item;
         if (ordinal >= options.length) {
             item = "unexpected_" + ordinal;
             view.addItem(item);
         } else {
+            if (ordinal >= options.length)
+                throw new UnexpectedEnumOridnalException(ordinal + " unexpected on " + field);
             item = options[ordinal];
         }
 
@@ -89,6 +96,10 @@ public class EnumConfigField extends BaseConfigField {
         } else {
             ordinal = getByteBuffer(ci).getInt();
         }
-        setValue(ordinal);
+        try {
+            setValue(ordinal);
+        } catch (UnexpectedEnumOridnalException e) {
+            log.error("Error loading value " + e);
+        }
     }
 }

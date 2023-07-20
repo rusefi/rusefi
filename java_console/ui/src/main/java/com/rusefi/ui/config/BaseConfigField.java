@@ -19,7 +19,7 @@ import java.nio.ByteBuffer;
 import static com.devexperts.logging.Logging.getLogging;
 
 public abstract class BaseConfigField {
-    private static final Logging log = getLogging(BaseConfigField.class);
+    protected static final Logging log = getLogging(BaseConfigField.class);
 
     protected final JLabel status = new JLabel("P");
     private final JPanel panel = new JPanel(new BorderLayout());
