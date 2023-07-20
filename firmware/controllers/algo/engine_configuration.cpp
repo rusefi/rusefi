@@ -691,7 +691,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
 	setBoardDefaultConfiguration();
 	setBoardConfigOverrides();
-#endif
+#endif // EFI_PROD_CODE
 
 	engineConfiguration->engineType = engineType;
 
