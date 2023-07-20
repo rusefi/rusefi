@@ -547,9 +547,6 @@ float getConfigValueByName(const char *name) {
 // unfinishedenableLaunchBoost
 		case -246028069:
 			return engineConfiguration->unfinishedenableLaunchBoost;
-// unfinishedlaunchDisableBySpeed
-		case 963548365:
-			return engineConfiguration->unfinishedlaunchDisableBySpeed;
 // enableCanVss
 		case 245947066:
 			return engineConfiguration->enableCanVss;
@@ -2530,11 +2527,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -246028069:
 	{
 		engineConfiguration->unfinishedenableLaunchBoost = (int)value;
-		return 1;
-	}
-		case 963548365:
-	{
-		engineConfiguration->unfinishedlaunchDisableBySpeed = (int)value;
 		return 1;
 	}
 		case 245947066:

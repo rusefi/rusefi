@@ -541,9 +541,6 @@ If enabled we use two H-bridges to drive stepper idle air valve
 ### unfinishedenableLaunchBoost
 
 
-### unfinishedlaunchDisableBySpeed
-
-
 ### enableCanVss
 Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 
@@ -644,7 +641,7 @@ Output Max Duty Cycle
 
 
 ### launchSpeedThreshold
-Disabled above this speed
+Launch disabled above this speed if setting is above zero
 
 ### launchTimingRpmRange
 Range from Launch RPM for Timing Retard to activate
