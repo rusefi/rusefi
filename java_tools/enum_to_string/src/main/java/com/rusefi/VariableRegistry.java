@@ -200,17 +200,20 @@ public class VariableRegistry {
         return line;
     }
 
-    public void register(String var, String param) {
+    public void register(String var, String rawValue) {
         try {
-            String value = doRegister(var, param);
+            String value = doRegister(var, rawValue);
             if (value == null)
                 return;
             tryToRegisterAsInteger(var, value);
         } catch (RuntimeException e) {
-            throw new IllegalStateException("While [" + var + "][" + param + "]", e);
+            throw new IllegalStateException("While [" + var + "][" + rawValue + "]", e);
         }
     }
 
+    /**
+     * @return input value with template variables applied
+     */
     @Nullable
     private String doRegister(String var, String value) {
         if (data.containsKey(var)) {
