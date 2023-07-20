@@ -151,7 +151,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	// If duty cycle is high, impose a fuel cut rev limiter.
 	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
 	// only reset once below 20% duty to force the driver to lift
-	if (m_injectorDutyCutHysteresis.test(getInjectorDutyCycle(rpm), 96, 20)) {
+	float maxAllowedDuty = isGdiEngine() ? 50 : 96; // at the moment GDI means GDI4 and PT2001 which means duty cycle limited at 50% by hardware
+	if (m_injectorDutyCutHysteresis.test(getInjectorDutyCycle(rpm), maxAllowedDuty, 20)) {
 		allowFuel.clear(ClearReason::InjectorDutyCycle);
 	}
 
