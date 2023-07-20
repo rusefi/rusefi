@@ -79,6 +79,7 @@ TESTS_SRC_CPP = \
 	tests/test_accel_enrichment.cpp \
 	tests/test_gpiochip.cpp \
 	tests/test_deadband.cpp \
+	tests/test_sticky_pps.cpp \
 	tests/test_knock.cpp \
 	tests/test_lambda_monitor.cpp \
 	tests/sensor/basic_sensor.cpp \
