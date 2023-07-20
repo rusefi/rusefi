@@ -40,6 +40,40 @@ TEST(LaunchControl, VSSCondition) {
 
 }
 
+
+TEST(LaunchControl, ZeroVSSCondition) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	LaunchControlBase dut;
+
+	// Test Speed threshold
+	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
+    engineConfiguration->launchSpeedThreshold = 0;
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
+	EXPECT_FALSE(dut.isInsideSpeedCondition());
+
+}
+
+TEST(LaunchControl, VSSConditionWithSwitch) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	LaunchControlBase dut;
+
+	// Test Speed threshold
+	engineConfiguration->launchActivationMode = SWITCH_INPUT_LAUNCH;
+	engineConfiguration->launchActivatePin = Gpio::G1;
+	setMockState(engineConfiguration->launchActivatePin, true);
+    engineConfiguration->launchSpeedThreshold = 30;
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
+    EXPECT_TRUE(dut.isInsideSpeedCondition());
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
+	EXPECT_TRUE(dut.isInsideSpeedCondition());
+
+}
+
 TEST(LaunchControl, RPMCondition) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
