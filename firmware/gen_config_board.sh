@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # file gen_config_board.sh
+#                    ./gen_config_board.sh config/boards/hellen/hellen-honda-k hellen-honda-k
 #        for example ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini
 #                 or ./gen_config_board.sh config/boards/hellen/hellen128 hellen128
 # which is short for ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128.ini
@@ -46,7 +47,7 @@ echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 # work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
 # in rare cases order of arguments is important - '-tool' should be specified before '-definition'
-java \
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
  $COMMON_GEN_CONFIG_PREFIX \
  	-tool gen_config.sh \
  $COMMON_GEN_CONFIG \
