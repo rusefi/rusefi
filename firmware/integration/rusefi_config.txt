@@ -875,7 +875,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit multisparkEnable
 	bit enableLaunchRetard
 	bit unfinishedenableLaunchBoost
-	bit unfinishedlaunchDisableBySpeed
+	bit unusedBitLDBS
 	bit enableCanVss;Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
@@ -924,7 +924,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     custom antiLagActivationMode_e  1 bits, S08, @OFFSET@, [0:0], @@antiLagActivationMode_e_enum@@
     antiLagActivationMode_e antiLagActivationMode;
 
-    int launchSpeedThreshold;Disabled above this speed;"Kph", 1, 0, 0, 300, 0
+    int launchSpeedThreshold;Launch disabled above this speed if setting is above zero;"Kph", 1, 0, 0, 300, 0
     int launchTimingRpmRange;Range from Launch RPM for Timing Retard to activate;"RPM", 1, 0, 0, 8000, 0
     int launchFuelAdded;Extra Fuel Added;"%", 1, 0, 0, 100, 0
     int launchBoostDuty;Duty Cycle for the Boost Solenoid;"%", 1, 0, 0, 100, 0

@@ -45,12 +45,13 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 }
 
 /**
- * Returns True in case Vehicle speed is less then threshold.
- * This condition would only return true based on speed if DisablebySpeed is true
- * The condition logic is written in that way, that if we do not use disable by speed
- * then we have to return true, and trust that we would disable by other condition!
+ * Returns True when Vehicle speed ALLOWS launch control
  */ 
 bool LaunchControlBase::isInsideSpeedCondition() const {
+	if (engineConfiguration->launchSpeedThreshold == 0) {
+		return true; // allow launch, speed does not matter
+	}
+
 	int speed = Sensor::getOrZero(SensorType::VehicleSpeed);
 	
 	return (engineConfiguration->launchSpeedThreshold > speed) || (!(engineConfiguration->launchActivationMode ==  ALWAYS_ACTIVE_LAUNCH));

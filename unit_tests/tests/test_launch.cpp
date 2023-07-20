@@ -40,7 +40,6 @@ TEST(LaunchControl, VSSCondition) {
 
 }
 
-
 TEST(LaunchControl, ZeroVSSCondition) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -51,8 +50,7 @@ TEST(LaunchControl, ZeroVSSCondition) {
     engineConfiguration->launchSpeedThreshold = 0;
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
-	EXPECT_FALSE(dut.isInsideSpeedCondition());
-
+	EXPECT_TRUE(dut.isInsideSpeedCondition());
 }
 
 TEST(LaunchControl, VSSConditionWithSwitch) {
