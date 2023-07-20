@@ -19,13 +19,14 @@ void initVvtActuators();
 void startVvtControlPins();
 void stopVvtControlPins();
 
-class VvtController : public PeriodicTimerController, public ClosedLoopController<angle_t, percent_t>, public vvt_s {
+class VvtController : public EngineModule, public ClosedLoopController<angle_t, percent_t>, public vvt_s {
 public:
-	void init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap);
+	VvtController(int index, int bankIndex, int camIndex);
 
-	// PeriodicTimerController implementation
-	int getPeriodMs() override;
-	void PeriodicTask() override;
+	void init(const ValueProvider3D* targetMap, IPwm* pwm);
+
+	// EngineModule implementation
+	void onFastCallback() override;
 
 	// ClosedLoopController implementation
 	expected<angle_t> observePlant() const override;
@@ -36,18 +37,31 @@ public:
 	void setOutput(expected<percent_t> outputValue) override;
 
 private:
-	Pid m_pid;
-	const ValueProvider3D* m_targetMap = nullptr;
-	int index = 0;
-
+	const int index = 0;
 	// Bank index, 0 or 1
-	uint8_t m_bank = 0;
-
+	const uint8_t m_bank = 0;
 	// Cam index, 0 = intake, 1 = exhaust
-	uint8_t m_cam = 0;
+	const uint8_t m_cam = 0;
 
-public:
-	// todo: encapsulate or inject these
-	SimplePwm m_pwm;
-	OutputPin m_pin;
+	Pid m_pid;
+
+	const ValueProvider3D* m_targetMap = nullptr;
+	IPwm* m_pwm = nullptr;
+};
+
+// Unique types for each VVT so they can be engine modules
+struct VvtController1 : public VvtController {
+	VvtController1() : VvtController(0, 0, 0) { }
+};
+
+struct VvtController2 : public VvtController {
+	VvtController2() : VvtController(1, 0, 1) { }
+};
+
+struct VvtController3 : public VvtController {
+	VvtController3() : VvtController(2, 1, 0) { }
+};
+
+struct VvtController4 : public VvtController {
+	VvtController4() : VvtController(3, 1, 1) { }
 };

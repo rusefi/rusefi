@@ -278,7 +278,6 @@ enable2ndByteCanID = false
 	requiresPowerCycle = boostPwmFrequency
 	requiresPowerCycle = alternatorPwmFrequency
 	requiresPowerCycle = vvtOutputFrequency1
-	requiresPowerCycle = vvtOutputFrequency2
 	requiresPowerCycle = vvtPins1
 	requiresPowerCycle = vvtPins2
 	requiresPowerCycle = vvtPins3
@@ -3501,7 +3500,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "VVT solenoid bank 1 exhaust",						vvtPins2
 		field = "VVT solenoid bank 2 intake",						vvtPins3
 		field = "VVT solenoid bank 2 exhaust",						vvtPins4
-		field = "PWM frequency",						vvtOutputFrequency1, {vvtPins1 != 0 || vvtPins2 != 0}
+		field = "PWM frequency",						vvtOutputFrequency, {vvtPins1 != 0 || vvtPins2 != 0}
 		field = "VVT solenoid intake cams control direction", invertVvtControlIntake, { vvtPins1 != 0 || vvtPins3 != 0 }
 		field = "VVT solenoid exhaust cams control direction", invertVvtControlExhaust, { vvtPins2 != 0 || vvtPins4 != 0 }
 

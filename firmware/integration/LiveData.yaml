@@ -161,3 +161,5 @@ Usages:
   - name: vvt
     java: VvtState.java
     folder: controllers/actuators
+    constexpr: "___engine.module<VvtController1>()"
+    isPtr: true

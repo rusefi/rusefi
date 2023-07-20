@@ -17,23 +17,27 @@ using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, int8_t, uint16_t, uint16
 static vvt_map_t vvtTable1;
 static vvt_map_t vvtTable2;
 
-void VvtController::init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap) {
-	this->index = index;
-	m_bank = bankIndex;
-	m_cam = camIndex;
+VvtController::VvtController(int index, int bankIndex, int camIndex)
+	: index(index)
+	, m_bank(bankIndex)
+	, m_cam(camIndex)
+{
+}
 
+void VvtController::init(const ValueProvider3D* targetMap, IPwm* pwm) {
 	// Use the same settings for the Nth cam in every bank (ie, all exhaust cams use the same PID)
-	m_pid.initPidClass(&engineConfiguration->auxPid[camIndex]);
+	m_pid.initPidClass(&engineConfiguration->auxPid[index]);
 
 	m_targetMap = targetMap;
+	m_pwm = pwm;
 }
 
-int VvtController::getPeriodMs() {
-	return isBrainPinValid(engineConfiguration->vvtPins[index]) ?
-		GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]) : NO_PIN_PERIOD;
-}
+void VvtController::onFastCallback() {
+	if (!m_pwm || !m_targetMap) {
+		// not init yet
+		return;
+	}
 
-void VvtController::PeriodicTask() {
 	if (engine->auxParametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
 		m_pid.reset();
 	}
@@ -105,9 +109,9 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 	vvtOutput = outputValue.value_or(0);
 
 	if (outputValue && enabled) {
-		m_pwm.setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
+		m_pwm->setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
 	} else {
-		m_pwm.setSimplePwmDutyCycle(0);
+		m_pwm->setSimplePwmDutyCycle(0);
 
 		// we need to avoid accumulating iTerm while engine is not running
 		m_pid.reset();
@@ -130,20 +134,19 @@ static const char *vvtOutputNames[CAM_INPUTS_COUNT] = {
 #endif
  };
 
-
-static VvtController instances[CAM_INPUTS_COUNT];
+static OutputPin vvtPins[CAM_INPUTS_COUNT];
+static SimplePwm vvtPwms[CAM_INPUTS_COUNT];
 
 static void turnVvtPidOn(int index) {
 	if (!isBrainPinValid(engineConfiguration->vvtPins[index])) {
 		return;
 	}
 
-	startSimplePwmExt(&instances[index].m_pwm, vvtOutputNames[index],
+	startSimplePwmExt(&vvtPwms[index], vvtOutputNames[index],
 			&engine->executor,
 			engineConfiguration->vvtPins[index],
-			&instances[index].m_pin,
-			// todo: do we need two separate frequencies?
-			engineConfiguration->vvtOutputFrequency[0], 0.1);
+			&vvtPins[index],
+			engineConfiguration->vvtOutputFrequency, 0);
 }
 
 void startVvtControlPins() {
@@ -154,7 +157,7 @@ void startVvtControlPins() {
 
 void stopVvtControlPins() {
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		instances[i].m_pin.deInit();
+		vvtPins[i].deInit();
 	}
 }
 
@@ -168,32 +171,13 @@ void initVvtActuators() {
 	vvtTable2.init(config->vvtTable2, config->vvtTable2LoadBins,
 			config->vvtTable2RpmBins);
 
-	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 
-		int camIndex = i % CAMS_PER_BANK;
-		int bankIndex = i / CAMS_PER_BANK;
-		auto targetMap = camIndex == 0 ? &vvtTable1 : &vvtTable2;
-		instances[i].init(i, bankIndex, camIndex, targetMap);
-	}
+	engine->module<VvtController1>()->init(&vvtTable1, &vvtPwms[0]);
+	engine->module<VvtController2>()->init(&vvtTable2, &vvtPwms[1]);
+	engine->module<VvtController3>()->init(&vvtTable1, &vvtPwms[2]);
+	engine->module<VvtController4>()->init(&vvtTable2, &vvtPwms[3]);
 
 	startVvtControlPins();
-
-	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		instances[i].start();
-	}
 }
 
 #endif
-
-template<>
-const vvt_s* getLiveData(size_t idx) {
-#if EFI_AUX_PID
-	if (idx >= efi::size(instances)) {
-		return nullptr;
-	}
-
-	return &instances[idx];
-#else
-	return nullptr;
-#endif
-}
