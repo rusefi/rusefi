@@ -181,6 +181,9 @@ Usages:
   - name: vvt
     java: VvtState.java
     folder: controllers/actuators
+    constexpr: "___engine.module<VvtController1>()"
+    isPtr: true
+    conditional_compilation: "EFI_VVT_PID"
 
   - name: lambda_monitor
     java: LambdaMonitor.java

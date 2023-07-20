@@ -51,6 +51,7 @@
 #include "gc_generic.h"
 #include "lambda_monitor.h"
 #include "efi_output.h"
+#include "vvt.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -157,6 +158,12 @@ public:
 		KnockController,
 		SensorChecker,
 		LimpManager,
+#if EFI_VVT_PID
+		VvtController1,
+		VvtController2,
+		VvtController3,
+		VvtController4,
+#endif // EFI_VVT_PID
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
