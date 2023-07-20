@@ -65,11 +65,11 @@ for BOARD in \
    "config/boards/tdg-pdm8 tdg-pdm8"\
    "config/boards/f407-discovery f407-discovery" \
    ; do
- BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 1)
+ BOARD_DIR=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
  INI=$(echo "$BOARD" | cut -d " " -f 3)
- ./gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME $INI
- [ $? -eq 0 ] || { echo "ERROR generating board $BOARD_NAME $BOARD_SHORT_NAME $INI"; exit 1; }
+ ./gen_config_board.sh $BOARD_DIR $BOARD_SHORT_NAME $INI
+ [ $? -eq 0 ] || { echo "ERROR generating board dir=[$BOARD_DIR] short=[$BOARD_SHORT_NAME] ini=[$INI]"; exit 1; }
 done
 
 exit 0
