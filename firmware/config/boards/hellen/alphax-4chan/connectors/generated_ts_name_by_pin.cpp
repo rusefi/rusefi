@@ -39,8 +39,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F9: return "E5/E6 Cam Sensor VR";
 		case Gpio::G11: return "E2 - Out NOS";
 		case Gpio::G12: return "F5 - MAIN";
+		case Gpio::G14: return "A4 - Tachometer";
 		case Gpio::G2: return "C1 - Fan Relay";
-		case Gpio::G6: return "A4 - Tachometer";
 		case Gpio::G7: return "A8 - Injector 1";
 		case Gpio::G8: return "B8 - Injector 2";
 		default: return nullptr;
