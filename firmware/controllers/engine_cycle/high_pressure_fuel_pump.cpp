@@ -150,12 +150,16 @@ angle_t HpfpQuantity::pumpAngleFuel(int rpm, HpfpController *model) {
 			     engineConfiguration->hpfpLobeProfileAngle);
 }
 
+bool isGdiEngine() {
+    return engineConfiguration->hpfpCamLobes > 0;
+}
+
 void HpfpController::onFastCallback() {
 	// Pressure current/target calculation
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	isHpfpInactive = rpm < rpm_spinning_cutoff ||
-		    engineConfiguration->hpfpCamLobes == 0 ||
+		    !isGdiEngine() ||
 		    engineConfiguration->hpfpPumpVolume == 0 ||
 		    !enginePins.hpfpValve.isInitialized();
 	// What conditions can we not handle?

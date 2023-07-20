@@ -31,6 +31,8 @@ public:
 	angle_t findNextLobe(); ///< Calculate the angle (after crank TDC) for the top of the next lobe
 };
 
+bool isGdiEngine();
+
 class HpfpController;
 
 class HpfpQuantity {

@@ -585,7 +585,7 @@ bool validateConfig() {
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
 
-	if (engineConfiguration->hpfpCamLobes > 0) {
+	if (isGdiEngine()) {
 		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
 		ensureArrayIsAscending("HPFP deadtime", engineConfiguration->hpfpDeadtimeVoltsBins);
 		ensureArrayIsAscending("HPFP lobe profile", engineConfiguration->hpfpLobeProfileQuantityBins);
