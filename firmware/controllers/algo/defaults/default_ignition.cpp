@@ -75,6 +75,9 @@ void setDefaultIgnition() {
 	engineConfiguration->timingMode = TM_DYNAMIC;
 	engineConfiguration->fixedModeTiming = 50;
 
+	engineConfiguration->minimumIgnitionTiming = -10;
+	engineConfiguration->maximumIgnitionTiming = 60;
+
 	// Dwell table
 	setConstantDwell(4);
 

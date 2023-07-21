@@ -92,7 +92,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 20009
+#define FLASH_DATA_VERSION 20010
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -1169,7 +1169,8 @@ int16_t tps2Max;;"ADC", 1, 0, 0, 1023, 0
 
 custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	pwm_freq_t vvtOutputFrequency
-	uint16_t unused1538
+	int8_t minimumIgnitionTiming;Minimim timing advance allowed. No spark on any cylinder will ever fire after this angle BTDC. For example, setting -10 here means no spark ever fires later than 10 deg ATDC. Note that this only concerns the primary spark: any trailing sparks or multispark may violate this constraint.;"deg BTDC", 1, 0, -90, 90, 0
+	int8_t maximumIgnitionTiming;Maximum timing advance allowed. No spark on any cylinder will ever fire before this angle BTDC. For example, setting 45 here means no spark ever fires earlier than 45 deg BTDC;"deg BTDC", 1, 0, -90, 90, 0
 	int alternatorPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
 

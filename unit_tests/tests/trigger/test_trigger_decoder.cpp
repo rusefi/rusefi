@@ -84,6 +84,8 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 
 	EngineTestHelper eth(engine_type_e::FORD_INLINE_6_1995);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
+
+	engineConfiguration->minimumIgnitionTiming = -15;
 	setWholeTimingTable(-13);
 
 	Sensor::setMockValue(SensorType::Iat, 49.579071f);
@@ -104,7 +106,9 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ(true,  ecl->isReady) << "ford inline ignition events size";
 
 	EXPECT_NEAR(ecl->elements[0].dwellAngle, 8.960f, 1e-3);
+	EXPECT_NEAR(ecl->elements[0].sparkAngle, 14.96f, 1e-3);
 	EXPECT_NEAR(ecl->elements[5].dwellAngle, 608.960f, 1e-3);
+	EXPECT_NEAR(ecl->elements[5].sparkAngle, 614.960f, 1e-3);
 
 	ASSERT_FLOAT_EQ(0.5, engine->ignitionState.getSparkDwell(2000)) << "running dwell";
 }
@@ -188,6 +192,7 @@ TEST(misc, testRpmCalculator) {
 
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6670, engineConfiguration!=NULL, "null config in engine");
 
+	engineConfiguration->minimumIgnitionTiming = -15;
 	setWholeTimingTable(-13);
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
@@ -237,6 +242,7 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
 	EXPECT_NEAR(ilist->elements[0].dwellAngle, 8.5f, 1e-3);
+	EXPECT_NEAR(ilist->elements[0].sparkAngle, 13.0f, 1e-3);
 
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #2";
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size/2";

@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - Log per-cylinder true ignition timing (includes trim, knock retard, etc) #76
  - Add mode for CLT/IAT sensors that are installed "high side" instead of typical "low side" #116
  - Automatic supply voltage compensation for VVT solenoids, giving more stable control as battery voltage changes #209
+ - Configurable ignition timing limits, adding safety particularly for engines running wasted spark with a large cam #211
 
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)
