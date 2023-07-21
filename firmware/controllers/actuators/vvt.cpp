@@ -106,12 +106,21 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
 			 ;
 
-	vvtOutput = outputValue.value_or(0);
-
 	if (outputValue && enabled) {
-		m_pwm->setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
+		float vvtPct = outputValue.Value;
+
+		// Compensate for battery voltage so that the % output is actually % solenoid current normalized
+		// to a 14v supply (boost duty when battery is low, etc)
+		float voltageRatio = 14 / Sensor::get(SensorType::BatteryVoltage).value_or(14);
+		vvtPct *= voltageRatio;
+
+		vvtOutput = vvtPct;
+
+		m_pwm->setSimplePwmDutyCycle(PERCENT_TO_DUTY(vvtPct));
 	} else {
 		m_pwm->setSimplePwmDutyCycle(0);
+
+		vvtOutput = 0;
 
 		// we need to avoid accumulating iTerm while engine is not running
 		m_pid.reset();
