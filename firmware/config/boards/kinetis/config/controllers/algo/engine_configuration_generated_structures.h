@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Jul 20 20:11:44 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 04:48:25 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -203,7 +203,7 @@ struct gppwm_channel {
 	RPM
 	 * offset 26
 	 */
-	scaled_channel<int16_t, 1, 1> rpmBins[GPPWM_RPM_COUNT];
+	int16_t rpmBins[GPPWM_RPM_COUNT];
 	/**
 	duty
 	 * offset 42
@@ -1921,7 +1921,7 @@ struct engine_configuration_s {
 	%
 	 * offset 850
 	 */
-	scaled_channel<uint8_t, 1, 1> lambdaProtectionMinTps;
+	uint8_t lambdaProtectionMinTps;
 	/**
 	 * Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 	s
@@ -3100,7 +3100,7 @@ struct engine_configuration_s {
 	%
 	 * offset 1576
 	 */
-	scaled_channel<uint8_t, 1, 1> lambdaProtectionRestoreTps;
+	uint8_t lambdaProtectionRestoreTps;
 	/**
 	%
 	 * offset 1577
@@ -5309,4 +5309,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Jul 20 20:11:44 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 04:48:25 UTC 2023
