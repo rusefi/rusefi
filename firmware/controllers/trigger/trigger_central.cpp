@@ -295,8 +295,6 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 	tc->currentVVTEventPosition[bankIndex][camIndex] = currentPosition;
 #endif // EFI_UNIT_TEST
 
-	tc->triggerState.vvtCurrentPosition = currentPosition;
-
 	if (isVvtWithRealDecoder && vvtDecoder.currentCycle.current_index != 0) {
 		// this is not sync tooth - exiting
 		return;
