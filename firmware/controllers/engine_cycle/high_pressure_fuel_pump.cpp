@@ -150,10 +150,6 @@ angle_t HpfpQuantity::pumpAngleFuel(int rpm, HpfpController *model) {
 			     engineConfiguration->hpfpLobeProfileAngle);
 }
 
-bool isGdiEngine() {
-    return engineConfiguration->hpfpCamLobes > 0;
-}
-
 void HpfpController::onFastCallback() {
 	// Pressure current/target calculation
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -242,3 +238,7 @@ void HpfpController::scheduleNextCycle() {
 }
 
 #endif // EFI_HPFP
+
+bool isGdiEngine() {
+    return engineConfiguration->hpfpCamLobes > 0;
+}
