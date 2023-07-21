@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 04:48:27 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 05:02:21 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -249,10 +249,6 @@ struct air_pressure_sensor_config_s {
 };
 static_assert(sizeof(air_pressure_sensor_config_s) == 12);
 
-/**
- * @brief MAP averaging configuration
-
-*/
 // start of MAP_sensor_config_s
 struct MAP_sensor_config_s {
 	/**
@@ -328,10 +324,6 @@ struct thermistor_conf_s {
 };
 static_assert(sizeof(thermistor_conf_s) == 28);
 
-/**
- * @brief Linear sensor interpolation
-
-*/
 // start of linear_sensor_s
 struct linear_sensor_s {
 	/**
@@ -367,10 +359,6 @@ struct linear_sensor_s {
 };
 static_assert(sizeof(linear_sensor_s) == 20);
 
-/**
- * @brief Thermistor curve parameters
-
-*/
 // start of ThermistorConf
 struct ThermistorConf {
 	/**
@@ -415,10 +403,6 @@ struct injector_s {
 };
 static_assert(sizeof(injector_s) == 68);
 
-/**
- * @brief Trigger wheel(s) configuration
-
-*/
 // start of trigger_config_s
 struct trigger_config_s {
 	/**
@@ -2672,7 +2656,8 @@ struct engine_configuration_s {
 	 */
 	Gpio triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
-	 * RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
+	 * RPM range above upper limit for extra air taper
+	RPM
 	 * offset 1424
 	 */
 	int16_t airTaperRpmRange;
@@ -3201,8 +3186,7 @@ struct engine_configuration_s {
 	 */
 	float egoValueShift;
 	/**
-	 * VVT output
-	 * TODO: rename to vvtOutputs
+	 * VVT output solenoid pin for this cam
 	 * offset 1644
 	 */
 	output_pin_e vvtPins[CAM_INPUTS_COUNT];
@@ -3503,6 +3487,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_2014[2];
 	/**
+	hz
 	 * offset 2016
 	 */
 	float auxFrequencyFilter;
@@ -3516,6 +3501,7 @@ struct engine_configuration_s {
 	 */
 	sent_input_pin_e sentInputPins[SENT_INPUT_COUNT];
 	/**
+	%
 	 * offset 2024
 	 */
 	int8_t launchFuelAdderPercent;
@@ -4237,6 +4223,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t alsEtbPosition;
 	/**
+	%
 	 * offset 3892
 	 */
 	uint8_t acRelayAlternatorDutyAdder;
@@ -5309,4 +5296,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 04:48:27 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 05:02:21 UTC 2023

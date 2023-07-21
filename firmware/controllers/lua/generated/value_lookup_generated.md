@@ -965,7 +965,7 @@ Output Min Duty Cycle
 Output Max Duty Cycle
 
 ### airTaperRpmRange
-RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
+RPM range above upper limit for extra air taper
 
 ### tps2Min
 Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X
@@ -1265,13 +1265,13 @@ Cooling fan turn-on temperature threshold, in Celsius
 Cooling fan turn-off temperature threshold, in Celsius
 
 ### auxFrequencyFilter
-null
+
 
 ### vvtControlMinRpm
 
 
 ### launchFuelAdderPercent
-null
+
 
 ### etbJamTimeout
 Time required to detect a stuck throttle.
@@ -1481,7 +1481,7 @@ Size of the pump chamber in cc. Typical Bosch HDP5 has a 9.0mm diameter, typical
 How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own)
 
 ### issFilterReciprocal
-null
+
 
 ### hpfpPidP
 
@@ -1550,7 +1550,7 @@ null
 
 
 ### acRelayAlternatorDutyAdder
-null
+
 
 ### customSentTpsMin
 null
