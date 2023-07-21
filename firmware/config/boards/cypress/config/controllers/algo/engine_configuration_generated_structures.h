@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 05:02:20 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 05:15:22 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -342,7 +342,6 @@ struct linear_sensor_s {
 	 */
 	float v1;
 	/**
-	kPa
 	 * offset 8
 	 */
 	float value1;
@@ -352,7 +351,6 @@ struct linear_sensor_s {
 	 */
 	float v2;
 	/**
-	kPa
 	 * offset 16
 	 */
 	float value2;
@@ -5296,4 +5294,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 05:02:20 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 05:15:22 UTC 2023
