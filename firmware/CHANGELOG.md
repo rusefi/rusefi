@@ -56,4 +56,5 @@ Release template (copy/paste this for new release):
  - Restore built-in INI storage on STM32F7-based ECUs
  - Improve log field names, easier to find the channel you're looking for #98
 
-### For older changelog entries prior to fork from rusEFI, see CHANGELOG.rusefi.md
+### For older changelog entries prior to fork from rusEFI
+see [CHANGELOG.rusefi.md](CHANGELOG.rusefi.md)
