@@ -147,8 +147,6 @@ void Engine::periodicSlowCallback() {
 
 	engine->engineModules.apply_all([](auto & m) { m.onSlowCallback(); });
 
-	updateFans(module<AcController>().unmock().isAcEnabled());
-
 #if EFI_BOOST_CONTROL
 	engine->boostController.update();
 #endif // EFI_BOOST_CONTROL

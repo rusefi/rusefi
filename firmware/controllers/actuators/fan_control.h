@@ -2,8 +2,8 @@
 
 #include "fan_control_generated.h"
 
-struct FanController : public fan_control_s {
-	void update(bool acActive);
+struct FanController : public EngineModule, public fan_control_s {
+	void onSlowCallback() override;
 
 private:
 	bool getState(bool acActive, bool lastState);
@@ -15,8 +15,6 @@ protected:
 	virtual bool enableWithAc() = 0;
 	virtual bool disableWhenStopped() = 0;
 };
-
-void updateFans(bool acActive);
 
 struct FanControl1 : public FanController {
 	OutputPin& getPin() {

@@ -141,7 +141,9 @@ public:
 		FuelPumpController,
 		MainRelayController,
 		IgnitionController,
-		AcController,
+		Mockable<AcController>,
+		FanControl1,
+		FanControl2,
 		PrimeController,
 		DfcoController,
 		HarleyAcr,
@@ -194,9 +196,6 @@ public:
 
 	IgnitionState ignitionState;
 	void resetLua();
-
-	FanControl1 fan1;
-	FanControl2 fan2;
 
 	efitick_t startStopStateLastPushTime = 0;
 

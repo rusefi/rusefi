@@ -39,21 +39,18 @@ bool FanController::getState(bool acActive, bool lastState) {
 	}
 }
 
-void FanController::update(bool acActive) {
-	auto& pin = getPin();
-
-	bool result = getState(acActive, pin.getLogicValue());
-
-	pin.setValue(result);
-}
-
-void updateFans(bool acActive) {
+void FanController::onSlowCallback() {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
 		return; // let's not mess with bench testing
 	}
 #endif
 
-	engine->fan1.update(acActive);
-	engine->fan2.update(acActive);
+	bool acActive = engine->module<AcController>()->isAcEnabled();
+
+	auto& pin = getPin();
+
+	bool result = getState(acActive, pin.getLogicValue());
+
+	pin.setValue(result);
 }

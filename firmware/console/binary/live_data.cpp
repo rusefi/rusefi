@@ -74,8 +74,8 @@ const fuel_computer_s* getLiveData(size_t) {
 template<>
 const fan_control_s* getLiveData(size_t idx) {
 	switch (idx) {
-		case 0: return &engine->fan1;
-		case 1: return &engine->fan2;
+		case 0: return &engine->module<FanControl1>().unmock();
+		case 1: return &engine->module<FanControl2>().unmock();
 		default: return nullptr;
 	}
 }

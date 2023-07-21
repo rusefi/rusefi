@@ -3,11 +3,13 @@
 #include "ac_control_generated.h"
 #include "timer.h"
 
-class AcController final : public ac_control_s, public EngineModule {
+class AcController : public ac_control_s, public EngineModule {
 public:
+	using interface_t = AcController;
+
 	void onSlowCallback() override;
 
-	bool isAcEnabled() const;
+	virtual bool isAcEnabled() const;
 
 private:
 	bool getAcState();
