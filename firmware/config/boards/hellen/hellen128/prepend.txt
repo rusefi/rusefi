@@ -16,7 +16,6 @@
 #define ts_show_software_knock true
 #define ts_show_hardware_simulator false
 #define ts_show_sd_pins false
-#define ts_show_injectionPinMode false
 #define ts_show_ignitionPinMode false
 
 #define show_test_presets false
