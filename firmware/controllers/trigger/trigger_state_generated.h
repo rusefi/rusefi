@@ -7,19 +7,17 @@ struct trigger_state_s {
 	uint32_t crankSynchronizationCounter = (uint32_t)0;
 	// offset 4
 	float vvtSyncGapRatio = (float)0;
-	// offset 8
-	float vvtCurrentPosition = (float)0;
 	// @@GAUGE_NAME_TRG_GAP@@
-	// offset 12
+	// offset 8
 	float triggerSyncGapRatio = (float)0;
-	// offset 16
+	// offset 12
 	uint8_t triggerStateIndex = (uint8_t)0;
-	// offset 17
+	// offset 13
 	uint8_t vvtCounter = (uint8_t)0;
-	// offset 18
+	// offset 14
 	uint8_t camResyncCounter = (uint8_t)0;
-	// offset 19
+	// offset 15
 	uint8_t vvtStateIndex = (uint8_t)0;
 };
-static_assert(sizeof(trigger_state_s) == 20);
+static_assert(sizeof(trigger_state_s) == 16);
 
