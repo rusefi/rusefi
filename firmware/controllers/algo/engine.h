@@ -145,7 +145,9 @@ public:
 		FuelPumpController,
 		MainRelayController,
 		IgnitionController,
-		AcController,
+		Mockable<AcController>,
+		FanControl1,
+		FanControl2,
 		PrimeController,
 		DfcoController,
 		Mockable<WallFuelController>,
@@ -197,9 +199,6 @@ public:
 
 	IgnitionState ignitionState;
 	void resetLua();
-
-	FanControl1 fan1;
-	FanControl2 fan2;
 
 	Timer startStopStateLastPush;
 

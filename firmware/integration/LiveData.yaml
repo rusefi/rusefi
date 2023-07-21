@@ -86,6 +86,8 @@ Usages:
     java: FanControl.java
     folder: controllers/actuators
     output_name: [ "fan1", "fan2" ]
+    constexpr: "___engine.module<FanControl1>()"
+    isPtr: true
 
   - name: fuel_pump_control
     cppFileName: fuel_pump

@@ -158,8 +158,6 @@ void Engine::periodicSlowCallback() {
 
 	engine->engineModules.apply_all([](auto & m) { m.onSlowCallback(); });
 
-	updateFans(module<AcController>().unmock().isAcEnabled());
-
 #if (BOARD_TLE8888_COUNT > 0)
 	tle8888startup();
 #endif
