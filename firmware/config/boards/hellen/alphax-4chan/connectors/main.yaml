@@ -20,17 +20,17 @@ pins:
     ts_name: A3 - Fuel Pump
     color: purple
 
-#  - pin: A4old
-#    # H144_OUT_IO13
-#    id: G6
-#    class: outputs
-#    function: Tachometer Output
-#    ts_name: A4 - Tachometer
-#    color: purple
+  - pin: A4old
+    # H144_OUT_IO13
+    id: G6
+    class: outputs
+    function: Tachometer Output
+    ts_name: A4 - Tachometer
+    color: purple
 
   - pin: A4
-    # H144_OUT_IO3
-    id: G14
+    # H144_GP3
+    id: G10
     class: outputs
     function: Tachometer Output
     ts_name: A4 - Tachometer
