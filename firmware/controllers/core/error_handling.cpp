@@ -79,7 +79,7 @@ void checkLastBootError() {
 }
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
-    TURN_FATAL_LED();
+    criticalShutdown();
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
 	sramState->Cookie = ErrorCookie::HardFault;
@@ -250,8 +250,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
 	va_end(ap);
 #endif
-    TURN_FATAL_LED();
-	turnAllPinsOff();
+    criticalShutdown();
 	enginePins.communicationLedPin.setValue(1);
 
 	hasFirmwareErrorFlag = true;

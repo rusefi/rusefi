@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - Dashpot for return-to-idle from coasting #5303
  - injector duty cycle limited at 50% for GDI engines #5416
  - STM32Cube v2.14 #5418
+ - turning coils and injectors off in case of extremely unexpected errors #5429
 
 ### Fixed
  - fuel_pump_control is accessible as getOutput("isFuelPumpOn") in Lua #5239 
