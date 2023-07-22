@@ -92,6 +92,12 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		finalIgnitionTiming -= 720;
 	}
 
+	// Clamp the final ignition timing to the configured limits
+	// finalIgnitionTiming is deg BTDC
+	// minimumIgnitionTiming limits maximium retard
+	// maximumIgnitionTiming limits maximum advance
+	finalIgnitionTiming = clampF(engineConfiguration->minimumIgnitionTiming, finalIgnitionTiming, engineConfiguration->maximumIgnitionTiming);
+
     engine->outputChannels.ignitionAdvanceCyl[event->cylinderIndex] = finalIgnitionTiming;
 
 	angle_t sparkAngle =

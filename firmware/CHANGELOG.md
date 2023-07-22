@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
  - injector duty cycle limited at 50% for GDI engines #5416
  - STM32Cube v2.14 #5418
  - turning coils and injectors off in case of extremely unexpected errors #5429
+ - Configurable ignition timing limits, adding safety particularly for engines running wasted spark with a large cam FOME#211
 
 ### Fixed
  - fuel_pump_control is accessible as getOutput("isFuelPumpOn") in Lua #5239 

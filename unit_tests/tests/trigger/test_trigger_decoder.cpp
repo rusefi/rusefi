@@ -84,6 +84,8 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 
 	EngineTestHelper eth(engine_type_e::FORD_INLINE_6_1995);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
+
+	engineConfiguration->minimumIgnitionTiming = -15;
 	setWholeTimingTable(-13);
 
 	Sensor::setMockValue(SensorType::Iat, 49.579071f);
@@ -190,6 +192,7 @@ TEST(misc, testRpmCalculator) {
 
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6670, engineConfiguration!=NULL, "null config in engine");
 
+	engineConfiguration->minimumIgnitionTiming = -15;
 	setWholeTimingTable(-13);
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
