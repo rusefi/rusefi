@@ -731,6 +731,9 @@ void turnAllPinsOff(void) {
 		enginePins.coils[i].setValue(false);
 		enginePins.trailingCoils[i].setValue(false);
 	}
+	enginePins.mainRelay.setValue(false);
+	enginePins.fuelPumpRelay.setValue(false);
+	enginePins.checkEnginePin.setValue(true); // yes this one can go ON
 }
 #endif /* EFI_GPIO_HARDWARE */
 
