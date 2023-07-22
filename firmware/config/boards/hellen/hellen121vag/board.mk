@@ -13,6 +13,9 @@ DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 DDEFS += -DFIRMWARE_ID=\"hellen121vag\" $(VAR_DEF_ENGINE_TYPE)
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 
+# Use less Flash memory for this config
+DDEFS += -DEFI_LUA_LOOKUP=FALSE
+
 DDEFS += -DSHORT_BOARD_NAME=hellen121vag
 
 include $(BOARDS_DIR)/hellen/hellen-common176.mk
