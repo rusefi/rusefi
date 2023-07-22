@@ -1,0 +1,216 @@
+pins:
+
+  - pin: 1D
+    function: DC3 positive
+    type: etb
+    color: purple
+
+  - pin: 2D
+    function: DC3 negative
+    type: etb
+    color: purple
+
+  - pin: 3D
+    function: CAN2 bus high (CANH)
+    type: can
+    color: green
+
+  - pin: 4D
+    function: CAN2 bus low (CANL)
+    type: can
+    color: green
+
+  - pin: 5D
+    function: CAN1 bus high (CANH)
+    type: can
+    color: green
+
+  - pin: 6D
+    function: CAN1 bus low (CANL)
+    type: can
+    color: green
+
+  - pin: 7D
+    function: Power GND
+    type: gnd
+
+  - pin: 8D
+    # H144_OUT_IO12
+    id: A8
+    class: outputs
+    function: Fuel Pump Relay Output (low)
+    type: ls
+    ts_name: 8D - Fuel Pump
+    color: purple
+
+  - pin: 9D
+    # H144_OUT_IO11
+    id: G2
+    class: outputs
+    function: Fan Relay Output (low)
+    type: ls
+    ts_name: 9D - Fan Relay
+    color: purple
+
+  - pin: 10D
+    # H144_OUT_IO1
+    id: D3
+    class: outputs
+    function: Low Side Output 7 (low)
+    type: ls
+    ts_name: 10D - LS 7
+    color: purple
+
+  - pin: 11D
+    # H144_OUT_IO2
+    id: A9
+    class: outputs
+    function: Low Side Output 8 (low)
+    type: ls
+    ts_name: 11D - LS 8
+    color: purple
+
+  - pin: 12D
+    # H144_OUT_IO9
+    id: G13
+    class: outputs
+    function: NOS Output (low)
+    type: ls
+    ts_name: 12D - NOS
+    color: purple
+
+  - pin: 13D
+    # H144_OUT_PWM3
+    id: C7
+    class: outputs
+    function: Boost Output (low)
+    type: ls
+    ts_name: 13D - Boost
+    color: purple
+
+  - pin: 14D
+    # H144_IN_AUX3 + 16 = 15 + 16
+    id: EFI_ADC_31
+    class: analog_inputs
+    function: Analog 4
+    ts_name: 14D - AN4
+    color: orange
+
+  - pin: 15D
+    # H144_IN_AUX4
+    id: EFI_ADC_7
+    class: analog_inputs
+    function: Analog 5
+    ts_name: 15D - AN5
+    color: orange
+
+  - pin: 16D
+    # H144_IN_AUX4 + 16 = 7 + 16
+    id: EFI_ADC_23
+    class: analog_inputs
+    function: Analog 6
+    ts_name: 16D - AN6
+    color: orange
+
+  - pin: 21D
+    # H144_OUT_IO13
+    id: G6
+    class: outputs
+    function: Tachometer Output
+    ts_name: 21D - Tachometer
+    type: ls
+    color: purple
+
+  - pin: 23D
+    function: +5v sensors
+
+  - pin: 24D
+    function: Analog Ground
+    color: black
+    type: gnd
+
+info:
+  title: AlphaX 8chan
+  directory: hellen/alphax-8chan
+  name: AlphaX 8chan
+  image:
+    file: 26pins-4k.jpg
+  pins:
+    - pin: 1D
+      x: 85
+      y: 90
+    - pin: 2D
+      x: 110
+      y: 90
+    - pin: 3D
+      x: 135
+      y: 90
+    - pin: 4D
+      x: 160
+      y: 90
+    - pin: 5D
+      x: 185
+      y: 90
+    - pin: 6D
+      x: 205
+      y: 90
+    - pin: 7D
+      x: 230
+      y: 90
+    - pin: 8D
+      x: 100
+      y: 120
+    - pin: 9D
+      x: 125
+      y: 120
+    - pin: 10D
+      x: 145
+      y: 120
+    - pin: 11D
+      x: 170
+      y: 120
+    - pin: 12D
+      x: 195
+      y: 120
+    - pin: 13D
+      x: 220
+      y: 120
+    - pin: 14D
+      x: 100
+      y: 150
+    - pin: 15D
+      x: 125
+      y: 150
+    - pin: 16D
+      x: 145
+      y: 150
+    - pin: 17D
+      x: 170
+      y: 150
+    - pin: 18D
+      x: 195
+      y: 150
+    - pin: 19D
+      x: 220
+      y: 150
+    - pin: 20D
+      x: 85
+      y: 180
+    - pin: 21D
+      x: 110
+      y: 180
+    - pin: 22D
+      x: 135
+      y: 180
+    - pin: 23D
+      x: 155
+      y: 180
+    - pin: 24D
+      x: 180
+      y: 180
+    - pin: 25D
+      x: 205
+      y: 180
+    - pin: 26D
+      x: 230
+      y: 180

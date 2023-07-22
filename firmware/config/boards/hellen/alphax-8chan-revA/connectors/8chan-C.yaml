@@ -1,0 +1,280 @@
+pins:
+  - pin: 1C
+    function: ETB negative
+    type: etb
+    color: purple
+
+
+  - pin: 5C
+    function: Hall Input 4 (5v pull-up, with hysteresis)
+    # H144_IN_MAP3_DIGITAL
+    id: A2
+    class: event_inputs
+    ts_name: 5C - Hall Input 4
+
+  - pin: 6C
+    # H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: PPS2 Sensor Input
+    ts_name: 31C - PPS2
+    color: orange
+
+
+  - pin: 9C
+    function: Power GND
+    type: gnd
+
+  - pin: 10C
+    function: ETB positive
+    type: etb
+    color: purple
+
+
+  - pin: 13C
+    function: 2-Step/Generic Digital Input (configurable pull-up/pull-down, no hysteresis)
+    # IN_2STEP
+    id: E0
+    class: event_inputs
+    ts_name: 13C - 2-Step Input
+
+  - pin: 14C
+    function: Power Ground
+    color: black
+    type: gnd
+
+  - pin: 15C
+    # H144_IN_TPS AIN17 PA4
+    id: EFI_ADC_4
+    class: analog_inputs
+    function: TPS Sensor Input
+    ts_name: 23C - TPS
+    color: orange
+
+  - pin: 16C
+    # H144_IN_AUX1
+    id: EFI_ADC_8
+    class: analog_inputs
+    function: TPS2 Sensor Input
+    ts_name: 24C - TPS2
+    color: orange
+
+  - pin: 17C
+    function: Power Ground
+    color: black
+    type: gnd
+
+  - pin: 18C
+    # H144_IGN_8
+    id: E6
+    class: outputs
+    function: Smart Ignition 8 Output
+    type: ign
+    ts_name: 18C - Ignition 8
+    color: yellow
+
+  - pin: 19C
+    # H144_IGN_7
+    id: B9
+    class: outputs
+    function: Smart Ignition 7 Output
+    type: ign
+    ts_name: 19C - Ignition 7
+    color: yellow
+
+  - pin: 20C
+    # H144_IGN_6
+    id: B8
+    class: outputs
+    function: Smart Ignition 6 Output
+    type: ign
+    ts_name: 20C - Ignition 6
+    color: yellow
+
+  - pin: 21C
+    # H144_IGN_5
+    id: E2
+    class: outputs
+    function: Smart Ignition 5 Output
+    type: ign
+    ts_name: 21C - Ignition 5
+    color: yellow
+  
+
+  - pin: 25C
+    function: Analog Ground
+    color: black
+    type: gnd
+
+  - pin: 26C
+    # H144_LS_8
+    id: F14
+    function: Injector 8
+    class: outputs
+    type: inj
+    ts_name: 26C - Injector 8
+    color: blue
+
+  - pin: 27C
+    # H144_LS_7
+    id: F13
+    function: Injector 7
+    class: outputs
+    type: inj
+    ts_name: 27C - Injector 7
+    color: blue
+
+  - pin: 28C
+    # H144_LS_6
+    id: F12
+    function: Injector 6
+    class: outputs
+    type: inj
+    ts_name: 28C - Injector 6
+    color: blue
+
+  - pin: 29C
+    # H144_LS_5
+    id: D9
+    function: Injector 5
+    class: outputs
+    type: inj
+    ts_name: 29C - Injector 5
+    color: blue
+
+  - pin: 30C
+    function: 12v raw in? out?
+    type: 12v
+
+  - pin: 31C
+    # H144_IN_IAT + 16 = 14 + 16
+    id: EFI_ADC_30
+    class: analog_inputs
+    function: Temperature 3
+    ts_name: 6C - AT3
+    color: orange
+
+  - pin: 32C
+    # EFI_ADC_12 + 16 = 12 + 16
+    id: EFI_ADC_28
+    class: analog_inputs
+    function: Temperature 4
+    ts_name: 7C - AT4
+    color: orange
+
+  - pin: 33C
+    ts_name: ___ KNOCK2
+    function: knock2 sensor signal
+
+  - pin: 34C
+    ts_name: ___ KNOCK1
+    function: knock1 sensor signal
+
+info:
+  title: AlphaX 8chan
+  name: AlphaX 8chan
+  image:
+    file: 34pins-4k.jpg
+  pins:
+    - pin: 1C
+      x: 75
+      y: 90
+    - pin: 2C
+      x: 95
+      y: 90
+    - pin: 3C
+      x: 120
+      y: 90
+    - pin: 4C
+      x: 145
+      y: 90
+    - pin: 5C
+      x: 165
+      y: 90
+    - pin: 6C
+      x: 190
+      y: 90
+    - pin: 7C
+      x: 215
+      y: 90
+    - pin: 8C
+      x: 240
+      y: 90
+    - pin: 9C
+      x: 265
+      y: 90
+    - pin: 10C
+      x: 85
+      y: 120
+    - pin: 11C
+      x: 105
+      y: 120
+    - pin: 12C
+      x: 130
+      y: 120
+    - pin: 13C
+      x: 155
+      y: 120
+    - pin: 14C
+      x: 180
+      y: 120
+    - pin: 15C
+      x: 205
+      y: 120
+    - pin: 16C
+      x: 225
+      y: 120
+    - pin: 17C
+      x: 245
+      y: 120
+    - pin: 18C
+      x: 85
+      y: 150
+    - pin: 19C
+      x: 110
+      y: 150
+    - pin: 20C
+      x: 130
+      y: 150
+    - pin: 21C
+      x: 155
+      y: 150
+    - pin: 22C
+      x: 180
+      y: 150
+    - pin: 23C
+      x: 205
+      y: 150
+    - pin: 24C
+      x: 225
+      y: 150
+    - pin: 25C
+      x: 245
+      y: 150
+    - pin: 26C
+      x: 74
+      y: 180
+    - pin: 27C
+      x: 98
+      y: 180
+    - pin: 28C
+      x: 122
+      y: 180
+    - pin: 29C
+      x: 146
+      y: 180
+    - pin: 30C
+      x: 170
+      y: 180
+    - pin: 31C
+      x: 195
+      y: 180
+    - pin: 32C
+      x: 220
+      y: 180
+    - pin: 33C
+      x: 245
+      y: 180
+    - pin: 34C
+      x: 265
+      y: 180
