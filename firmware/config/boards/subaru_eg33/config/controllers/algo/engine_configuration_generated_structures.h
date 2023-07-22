@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 05:15:23 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 02:27:44 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3223,7 +3223,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1676
 	 */
-	pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
+	pwm_freq_t vvtOutputFrequency;
+	/**
+	 * offset 1678
+	 */
+	uint16_t unused1538;
 	/**
 	Hz
 	 * offset 1680
@@ -5294,4 +5298,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 21 05:15:23 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 02:27:44 UTC 2023

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 01:05:52 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 02:29:20 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1023,6 +1023,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1983609923;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1246,7 +1247,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.07.22.f407-discovery.4166089708";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.07.22.f407-discovery.1983609923";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1392;
@@ -2062,8 +2063,8 @@ public class Fields {
 	public static final Field TCHARGEMINRPMMAXTPS = Field.create("TCHARGEMINRPMMAXTPS", 1664, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TCHARGEMAXRPMMINTPS = Field.create("TCHARGEMAXRPMMINTPS", 1668, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TCHARGEMAXRPMMAXTPS = Field.create("TCHARGEMAXRPMMAXTPS", 1672, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field VVTOUTPUTFREQUENCY1 = Field.create("VVTOUTPUTFREQUENCY1", 1676, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field VVTOUTPUTFREQUENCY2 = Field.create("VVTOUTPUTFREQUENCY2", 1678, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field VVTOUTPUTFREQUENCY = Field.create("VVTOUTPUTFREQUENCY", 1676, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSED1538 = Field.create("UNUSED1538", 1678, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 1680, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2JZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K Intake", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "Mazda Skyactiv", "Honda K Exhaust", "Mitsubishi 4G92/93/94", "Mitsubishi 4G63", "Ford Coyote"};
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 1684, FieldType.INT8, vvt_mode_e).setScale(1.0).setBaseOffset(0);
@@ -3578,8 +3579,8 @@ public class Fields {
 	TCHARGEMINRPMMAXTPS,
 	TCHARGEMAXRPMMINTPS,
 	TCHARGEMAXRPMMAXTPS,
-	VVTOUTPUTFREQUENCY1,
-	VVTOUTPUTFREQUENCY2,
+	VVTOUTPUTFREQUENCY,
+	UNUSED1538,
 	ALTERNATORPWMFREQUENCY,
 	VVTMODE1,
 	VVTMODE2,
