@@ -323,6 +323,10 @@
 #define EFI_LUA TRUE
 #endif
 
+#ifndef EFI_LUA_LOOKUP
+#define EFI_LUA_LOOKUP TRUE
+#endif
+
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
 #endif
