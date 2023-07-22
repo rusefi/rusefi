@@ -87,6 +87,11 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	angle_t finalIgnitionTiming =	getEngineState()->timingAdvance[event->cylinderNumber];
 
+	// 10 ATDC ends up as 710, convert it to -10 so we can log and clamp correctly
+	if (finalIgnitionTiming > 360) {
+		finalIgnitionTiming -= 720;
+	}
+
     engine->outputChannels.ignitionAdvanceCyl[event->cylinderIndex] = finalIgnitionTiming;
 
 	angle_t sparkAngle =
