@@ -142,8 +142,7 @@ static void turnVvtPidOn(int index) {
 			&engine->executor,
 			engineConfiguration->vvtPins[index],
 			&instances[index].m_pin,
-			// todo: do we need two separate frequencies?
-			engineConfiguration->vvtOutputFrequency[0], 0.1);
+			engineConfiguration->vvtOutputFrequency, 0.1);
 }
 
 void startVvtControlPins() {

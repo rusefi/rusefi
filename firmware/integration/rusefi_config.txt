@@ -1217,7 +1217,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float tChargeMaxRpmMaxTps;;"", 1, 0, 0, 3, 4
 
 custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
-	pwm_freq_t[CAMS_PER_BANK iterate] vvtOutputFrequency;
+	pwm_freq_t vvtOutputFrequency
+	uint16_t unused1538
 	int alternatorPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
 
