@@ -397,7 +397,7 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FLASH_DATA_VERSION 230616
+#define FLASH_DATA_VERSION 230721
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define fuel_pressure_sensor_mode_e_auto_enum 0="FPM_Absolute",2="FPM_Differential",1="FPM_Gauge"
@@ -1031,7 +1031,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3534629231
+#define SIGNATURE_HASH 718097759
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1248,7 +1248,7 @@
 #define TS_CRC_CHECK_COMMAND_char k
 #define TS_EXECUTE 'E'
 #define TS_EXECUTE_char E
-#define TS_FILE_VERSION 20230616
+#define TS_FILE_VERSION 20230721
 #define TS_FILE_VERSION_OFFSET 124
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY_char 8
@@ -1322,7 +1322,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.07.22.subaru_eg33_f7.3534629231"
+#define TS_SIGNATURE "rusEFI master.2023.07.22.subaru_eg33_f7.718097759"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

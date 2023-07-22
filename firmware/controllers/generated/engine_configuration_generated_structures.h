@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 02:29:20 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 03:11:37 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3225,9 +3225,17 @@ struct engine_configuration_s {
 	 */
 	pwm_freq_t vvtOutputFrequency;
 	/**
+	 * Minimim timing advance allowed. No spark on any cylinder will ever fire after this angle BTDC. For example, setting -10 here means no spark ever fires later than 10 deg ATDC. Note that this only concerns the primary spark: any trailing sparks or multispark may violate this constraint.
+	deg BTDC
 	 * offset 1678
 	 */
-	uint16_t unused1538;
+	int8_t minimumIgnitionTiming;
+	/**
+	 * Maximum timing advance allowed. No spark on any cylinder will ever fire before this angle BTDC. For example, setting 45 here means no spark ever fires earlier than 45 deg BTDC
+	deg BTDC
+	 * offset 1679
+	 */
+	int8_t maximumIgnitionTiming;
 	/**
 	Hz
 	 * offset 1680
@@ -5298,4 +5306,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 02:29:20 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 03:11:37 UTC 2023
