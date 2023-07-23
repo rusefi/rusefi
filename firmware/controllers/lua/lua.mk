@@ -6,9 +6,16 @@ ALLCPPSRC += $(LUA_DIR)/lua.cpp \
 			 $(LUA_DIR)/can_filter.cpp \
 			 $(LUA_DIR)/lua_hooks_util.cpp \
 			 $(LUA_DIR)/script_impl.cpp \
-			 $(LUA_DIR)/generated/output_lookup_generated.cpp \
-			 $(LUA_DIR)/generated/value_lookup_generated.cpp \
 			 $(LUA_DIR)/lua_can_rx.cpp \
+
+ifeq ($(EFI_LUA_LOOKUP), FALSE)
+  ALLCPPSRC += $(LUA_DIR)/value_lookup_stubs.cpp \
+
+else
+  ALLCPPSRC += $(LUA_DIR)/generated/output_lookup_generated.cpp \
+			   $(LUA_DIR)/generated/value_lookup_generated.cpp \
+
+endif
 
 ALLINC += $(LUA_DIR) $(LUA_DIR)/luaaa $(LUA_EXT)
 ALLCSRC += \
