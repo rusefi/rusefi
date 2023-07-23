@@ -7,7 +7,8 @@ set -e
 # for instance
 #
 # .github/workflows/hw-ci/openocd_wipe_and_flash.sh ../.github/workflows/openocd_ci_f4_discovery.cfg
-# .github/workflows/hw-ci/openocd_wipe_and_flash.sh ../.github/workflows/openocd_ci_proteus.cfg
+# .github/workflows/hw-ci/openocd_wipe_and_flash.sh ../.github/workflows/openocd_ci_proteus_f4.cfg
+# .github/workflows/hw-ci/openocd_wipe_and_flash.sh ../.github/workflows/openocd_ci_proteus_f7.cfg
 
 cd firmware
 
