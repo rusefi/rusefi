@@ -340,8 +340,6 @@ pins:
     color: green
     
   - pin: 19B
-    # H144_GP2
-    id: [D2, D2]
     class: [event_inputs, switch_inputs]
     function: Flex (configurable pull-up/pull-down,  ? hysteresis)
     type: hall
