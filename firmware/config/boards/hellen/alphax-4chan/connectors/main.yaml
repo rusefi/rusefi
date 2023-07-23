@@ -25,7 +25,7 @@ pins:
     id: G6
     class: outputs
     function: Tachometer Output
-    ts_name: A4 - Tachometer
+    ts_name: A4 - Tachometer legacy up to rev F
     color: purple
 
   - pin: A4
