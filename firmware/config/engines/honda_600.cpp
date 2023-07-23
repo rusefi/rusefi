@@ -49,7 +49,6 @@ void setHonda600() {
   //setIndividualCoilsIgnition();
 
 	commonFrankensoAnalogInputs();
-	setTable(config->injectionPhase, 320.0f);
 
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
