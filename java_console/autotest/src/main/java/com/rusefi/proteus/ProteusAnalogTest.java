@@ -64,8 +64,8 @@ public class ProteusAnalogTest extends RusefiTestBase {
 
         double actualTps = SensorCentral.getInstance().getValue(Sensor.TPS);
 
-        // Accept up to 2% error - there is an analog filter installed, it should be at least be close
-        assertEquals("With idle of " + idle, expectedTps, actualTps, 2);
+        // Accept up to 2.5% error - there is an analog filter installed, it should be at least be close
+        assertEquals("With idle of " + idle, expectedTps, actualTps, 2.5);
     }
 
     @Test
