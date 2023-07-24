@@ -9,9 +9,6 @@
 #include "pch.h"
 
 static void setInjectorPins() {
-	
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
-
 	engineConfiguration->injectionPins[0] = Gpio::E5;
 	engineConfiguration->injectionPins[1] = Gpio::E6;
 	engineConfiguration->injectionPins[2] = Gpio::E0;
@@ -23,9 +20,6 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-
 	engineConfiguration->ignitionPins[0] = Gpio::B9;
 	engineConfiguration->ignitionPins[1] = Gpio::B6;
 	engineConfiguration->ignitionPins[2] = Gpio::B7;

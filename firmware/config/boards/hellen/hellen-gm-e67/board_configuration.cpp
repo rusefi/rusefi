@@ -23,8 +23,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[6] = H144_LS_7;
 	engineConfiguration->injectionPins[7] = H144_LS_8;
 
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
-
 	engineConfiguration->clutchDownPin = Gpio::C4; // Clutch switch input
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
@@ -40,8 +38,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[5] = H144_IGN_6;
 	engineConfiguration->ignitionPins[6] = H144_IGN_7;
 	engineConfiguration->ignitionPins[7] = H144_IGN_8;
-
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 static void setupVbatt() {

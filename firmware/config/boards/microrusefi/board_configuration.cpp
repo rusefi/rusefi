@@ -26,8 +26,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[1] = MRE_INJ_2;
 	engineConfiguration->injectionPins[2] = MRE_INJ_3;
 	engineConfiguration->injectionPins[3] = MRE_INJ_4;
-
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
@@ -35,8 +33,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = Gpio::D3;
 	engineConfiguration->ignitionPins[2] = Gpio::D2;
 	engineConfiguration->ignitionPins[3] = Gpio::D1;
-
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 Gpio getCommsLedPin() {
