@@ -747,14 +747,14 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			{
 				auto toothBuffer = GetToothLoggerBufferNonblocking();
 
-				if (toothBuffer) {
-					tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
-
-					ReturnToothLoggerBuffer(toothBuffer);
-				} else {
+//				if (toothBuffer) {
+//					tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
+//
+//					ReturnToothLoggerBuffer(toothBuffer);
+//				} else {
 					// TS asked for a tooth logger buffer, but we don't have one to give it.
 					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-				}
+//				}
 			}
 			break;
 #ifdef TRIGGER_SCOPE
