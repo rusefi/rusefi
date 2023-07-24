@@ -93,6 +93,7 @@ void EnableToothLogger() {
 	}
 
 	buffers = bufferHandle.get<CompositeBuffer>();
+	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, buffers != nullptr, "para 1");
 
 	// Reset all buffers
 	for (size_t i = 0; i < bufferCount; i++) {
