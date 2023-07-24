@@ -24,12 +24,8 @@ void setVwAba() {
 	// set global_trigger_offset_angle 93
 	engineConfiguration->globalTriggerAngleOffset = 93;
 
-
 	setCrankOperationMode();
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
-
-	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-
 
 	//Base engine setting
 	engineConfiguration->cylindersCount = 4;
@@ -41,6 +37,8 @@ void setVwAba() {
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
+#if HW_FRANKENSO
+	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
@@ -48,6 +46,7 @@ void setVwAba() {
 
 	engineConfiguration->idlePositionSensor = EFI_ADC_3; // PA3
 	engineConfiguration->wastegatePositionSensor = EFI_ADC_4; // PA4
+#endif // HW_FRANKENSO
 
 	float mapRange = 110;
 
