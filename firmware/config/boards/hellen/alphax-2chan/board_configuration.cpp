@@ -10,6 +10,7 @@
 
 #include "pch.h"
 #include "hellen_meta.h"
+#include "defaults.h"
 
 static OutputPin alphaEn;
 static OutputPin alphaTachPullUp;
@@ -143,8 +144,7 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
+	setInline4();
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 

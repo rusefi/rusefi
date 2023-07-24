@@ -11,6 +11,7 @@
 
 #include "vw.h"
 #include "custom_engine.h"
+#include "defaults.h"
 
 // VW_ABA
 // set engine_type 32
@@ -28,7 +29,7 @@ void setVwAba() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 
 	//Base engine setting
-	engineConfiguration->cylindersCount = 4;
+	setInline4();
 	engineConfiguration->displacement = 2.0;
 	engineConfiguration->injector.flow = 320; // 30lb/h
 	// set algorithm 3
