@@ -67,12 +67,12 @@ void DisableToothLogger() {
 
 #else // not EFI_UNIT_TEST
 
-static constexpr size_t totalEntryCount = BIG_BUFFER_SIZE / sizeof(composite_logger_s);
-static constexpr size_t bufferCount = totalEntryCount / toothLoggerEntriesPerBuffer;
+static constexpr size_t TOTAL_ENTRY_COUNT = BIG_BUFFER_SIZE / sizeof(composite_logger_s);
+static constexpr size_t BUFFER_COUNT = TOTAL_ENTRY_COUNT / toothLoggerEntriesPerBuffer;
 
 static CompositeBuffer* buffers = nullptr;
-static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers CCM_OPTIONAL;
-static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers CCM_OPTIONAL;
+static chibios_rt::Mailbox<CompositeBuffer*, BUFFER_COUNT> freeBuffers CCM_OPTIONAL;
+static chibios_rt::Mailbox<CompositeBuffer*, BUFFER_COUNT> filledBuffers CCM_OPTIONAL;
 
 static CompositeBuffer* currentBuffer = nullptr;
 
@@ -95,7 +95,7 @@ void EnableToothLogger() {
 	buffers = bufferHandle.get<CompositeBuffer>();
 
 	// Reset all buffers
-	for (size_t i = 0; i < bufferCount; i++) {
+	for (size_t i = 0; i < BUFFER_COUNT; i++) {
 		buffers[i].nextIdx = 0;
 	}
 
@@ -107,7 +107,7 @@ void EnableToothLogger() {
 	while (MSG_TIMEOUT != filledBuffers.fetchI(&dummy)) ;
 
 	// Put all buffers in the free list
-	for (size_t i = 0; i < bufferCount; i++) {
+	for (size_t i = 0; i < BUFFER_COUNT; i++) {
 		freeBuffers.postI(&buffers[i]);
 	}
 
