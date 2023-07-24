@@ -13,6 +13,7 @@
 
 #include "pch.h"
 #include "test_engine.h"
+#include "proteus_meta.h"
 
 // TEST_ENGINE
 void setTestCamEngineConfiguration() {
@@ -102,6 +103,7 @@ void setTestEngineIssue366rise() {
 #endif /* EFI_UNIT_TEST */
 
 #ifdef HARDWARE_CI
+// set engine_type 30
 void setProteusAnalogPwmTest() {
 	// lowest cpu trigger possible
 	engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
@@ -111,7 +113,7 @@ void setProteusAnalogPwmTest() {
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
 
 	// The idle control pin is connected to the default TPS input, analog volt 2
-	engineConfiguration->idle.solenoidPin = Gpio::G4;
+	engineConfiguration->idle.solenoidPin = PROTEUS_IGN_10;
 
 	// 5893hz is coprime with the analog sample rate, 500hz, so hopefully we get less aliasing
 	engineConfiguration->idle.solenoidFrequency = 5893;
@@ -120,4 +122,4 @@ void setProteusAnalogPwmTest() {
 	engineConfiguration->tpsMin = 200;
 	engineConfiguration->tpsMax = 800;
 }
-#endif
+#endif // HARDWARE_CI
