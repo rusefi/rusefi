@@ -94,7 +94,6 @@ static void commonMiataNa() {
 	engineConfiguration->ignitionPins[1] = Gpio::E14; // Frankenstein: high side #4
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->cranking.baseFuel = 24;
 
@@ -160,7 +159,6 @@ void setFrankensteinMiata1996() {
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[2] = Gpio::E14; // Frankenstein: high side #4
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	// harness is sequential but we have a limited board
 	engineConfiguration->crankingInjectionMode = IM_BATCH;
@@ -172,5 +170,4 @@ void setFrankensteinMiata1996() {
 	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }

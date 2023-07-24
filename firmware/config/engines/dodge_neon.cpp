@@ -80,11 +80,8 @@ void setDodgeNeon1995EngineConfiguration() {
 	engineConfiguration->injectionPins[3] = Gpio::E5; // Frankenstein: low side - out #6
 
 	engineConfiguration->fuelPumpPin = Gpio::C13; // Frankenstein: low side - out #4
-	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 	engineConfiguration->mapErrorDetectionTooHigh = 120;
-
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 	// Frankenstein: high side #1: PE8
 	// Frankenstein: high side #2: PE10
@@ -92,8 +89,6 @@ void setDodgeNeon1995EngineConfiguration() {
 	engineConfiguration->ignitionPins[0] = Gpio::E8; // Frankenstein: high side #1
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[2] = Gpio::E10; // // Frankenstein: high side #2
-
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
 }
@@ -184,7 +179,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->manIdlePosition = 36;
 
 	engineConfiguration->fuelPumpPin = Gpio::E3;
-	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 	engineConfiguration->triggerInputPins[0] = Gpio::A5;
 	engineConfiguration->triggerInputPins[1] = Gpio::C6;
