@@ -227,7 +227,7 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 	// Then cycle buffers and set the ready flag.
 	if (bufferFull || bufferTimedOut) {
 		// Post to the output queue
-		filledBuffers.postI(buffer);
+//		filledBuffers.postI(buffer);
 
 		// Null the current buffer so we get a new one next time
 		currentBuffer = nullptr;
