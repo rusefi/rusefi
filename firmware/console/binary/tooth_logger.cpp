@@ -132,6 +132,7 @@ void DisableToothLogger() {
 }
 
 static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
+    chibios_rt::CriticalSectionLocker csl;
 	CompositeBuffer* buffer;
 	msg_t msg = filledBuffers.fetch(&buffer, timeout);
 
