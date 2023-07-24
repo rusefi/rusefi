@@ -630,6 +630,11 @@ static void setDefaultEngineConfiguration() {
     #include "default_script.lua"
 }
 
+#if defined(STM32F7) && defined(HARDWARE_CI)
+// part of F7 drama looks like we are having a hard time erasing configuration on HW CI :(
+#define IGNORE_FLASH_CONFIGURATION true
+#endif
+
 // by default, do not ignore config from flash! use it!
 #ifndef IGNORE_FLASH_CONFIGURATION
 #define IGNORE_FLASH_CONFIGURATION false
