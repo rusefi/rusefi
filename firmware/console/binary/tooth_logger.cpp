@@ -219,22 +219,22 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		entry->injector = currentInjectorState;
 	}
 
-	// if the buffer is full...
-	bool bufferFull = nextIdx >= efi::size(buffer->buffer);
-	// ... or it's been too long since the last flush
-	bool bufferTimedOut = buffer->startTime.hasElapsedSec(5);
-
-	// Then cycle buffers and set the ready flag.
-	if (bufferFull || bufferTimedOut) {
-		// Post to the output queue
-		filledBuffers.postI(buffer);
-
-		// Null the current buffer so we get a new one next time
-		currentBuffer = nullptr;
-
-		// Flag that we are ready
-		setToothLogReady(true);
-	}
+//	// if the buffer is full...
+//	bool bufferFull = nextIdx >= efi::size(buffer->buffer);
+//	// ... or it's been too long since the last flush
+//	bool bufferTimedOut = buffer->startTime.hasElapsedSec(5);
+//
+//	// Then cycle buffers and set the ready flag.
+//	if (bufferFull || bufferTimedOut) {
+//		// Post to the output queue
+//		filledBuffers.postI(buffer);
+//
+//		// Null the current buffer so we get a new one next time
+//		currentBuffer = nullptr;
+//
+//		// Flag that we are ready
+//		setToothLogReady(true);
+//	}
 }
 
 #endif // EFI_UNIT_TEST
