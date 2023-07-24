@@ -85,10 +85,6 @@
 #undef TS_SERIAL_AF
 #define TS_SERIAL_AF				8
 
-/* no reset switch */
-#undef CONFIG_RESET_SWITCH_PORT
-#undef CONFIG_RESET_SWITCH_PIN
-
 #undef ADC_VCC
 #define ADC_VCC						2.5f
 
