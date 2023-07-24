@@ -865,6 +865,15 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	    setHondaCivicBcm();
         break;
 #endif // HW_HELLEN
+#if HW_FRANKENSO || HW_PROTEUS
+    // used in HW CI
+	case engine_type_e::VW_ABA:
+		setVwAba();
+		break;
+	case engine_type_e::FRANKENSO_BMW_M73_F:
+		setBMW_M73_TwoCoilUnitTest();
+		break;
+#endif // HW_FRANKENSO || HW_PROTEUS
 #if HW_FRANKENSO
 	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
@@ -878,9 +887,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::FRANKENSO_QA_ENGINE:
 		setFrankensoBoardTestConfiguration();
-		break;
-	case engine_type_e::FRANKENSO_BMW_M73_F:
-		setBMW_M73_TwoCoilUnitTest();
 		break;
 	case engine_type_e::BMW_M73_M:
 		setEngineBMW_M73_Manhattan();
@@ -949,9 +955,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::DODGE_RAM:
 		setDodgeRam1996();
-		break;
-	case engine_type_e::VW_ABA:
-		setVwAba();
 		break;
 	case engine_type_e::FRANKENSO_MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration();
