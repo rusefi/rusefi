@@ -38,7 +38,7 @@ DDEFS += -DHW_PROTEUS=1
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DSHORT_BOARD_NAME=proteus_f7
 	ifeq ($(DEBUG_LEVEL_OPT),)
-		DEBUG_LEVEL_OPT = -Os -ggdb -g
+		DEBUG_LEVEL_OPT = -O1 -ggdb -g
 	endif
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	DDEFS += -DSHORT_BOARD_NAME=proteus_f4
