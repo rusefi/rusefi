@@ -579,9 +579,12 @@ static void sdTriggerLogger() {
 	while (true) {
 		auto buffer = GetToothLoggerBufferBlocking();
 
-		logBuffer.write(reinterpret_cast<const char*>(buffer->buffer), buffer->nextIdx * sizeof(composite_logger_s));
+		// can return nullptr
+		if (buffer) {
+			logBuffer.write(reinterpret_cast<const char*>(buffer->buffer), buffer->nextIdx * sizeof(composite_logger_s));
 
-		ReturnToothLoggerBuffer(buffer);
+			ReturnToothLoggerBuffer(buffer);
+		}
 	}
 #endif /* EFI_TOOTH_LOGGER */
 }
