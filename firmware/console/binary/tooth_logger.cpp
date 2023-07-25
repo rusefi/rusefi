@@ -233,7 +233,7 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		currentBuffer = nullptr;
 
 		// Flag that we are ready
-		setToothLogReady(true);
+//		setToothLogReady(true);
 	}
 }
 
