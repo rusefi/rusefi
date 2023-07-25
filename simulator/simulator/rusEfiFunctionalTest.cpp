@@ -98,6 +98,42 @@ static void writeSimulatorTune() {
 	fclose(ptr);
 }
 
+static void runToothLoggerTest() {
+	EnableToothLoggerIfNotEnabled();
+
+	{
+		// no data yet
+		CompositeBuffer * toothBuffer = GetToothLoggerBufferNonblocking();
+		if (toothBuffer != nullptr) {
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "nullptr buffer expected");
+		}
+	}
+
+	getTriggerCentral()->isEngineSnifferEnabled = true;
+
+	for (int i = 0;i < 400;i++) {
+		efitick_t nowNt = getTimeNowNt();
+		LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
+	}
+
+	{
+		CompositeBuffer * toothBuffer = GetToothLoggerBufferNonblocking();
+		if (toothBuffer == nullptr) {
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "filled buffer expected");
+		}
+
+		size_t size = toothBuffer->nextIdx * sizeof(composite_logger_s);
+		if (size == 0) {
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Positive payload size expected");
+		}
+
+		const uint8_t* ptr = reinterpret_cast<const uint8_t*>(toothBuffer->buffer);
+		if (ptr == nullptr) {
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Payload reference expected");
+		}
+	}
+}
+
 void rusEfiFunctionalTest(void) {
 	printToConsole("Running rusEFI simulator version:");
 	static char versionBuffer[20];
@@ -130,6 +166,7 @@ void rusEfiFunctionalTest(void) {
      * !!!! TESTS !
      */
 	runChprintfTest();
+	runToothLoggerTest();
 	runCanGpioTest();
     /**
      * end of TESTS !
