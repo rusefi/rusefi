@@ -145,6 +145,13 @@ static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
 		return nullptr;
 	}
 
+	chibios_rt::CriticalSectionLocker csl;
+
+	// If the used list is empty, clear the ready flag
+	if (filledBuffers.getUsedCountI() == 0) {
+		setToothLogReady(false);
+	}
+
 	return buffer;
 }
 
@@ -161,11 +168,6 @@ void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
 
 	msg_t msg = freeBuffers.postI(buffer);
 	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail");
-
-	// If the used list is empty, clear the ready flag
-	if (filledBuffers.getUsedCountI() == 0) {
-		setToothLogReady(false);
-	}
 }
 
 static CompositeBuffer* findBuffer(efitick_t timestamp) {
