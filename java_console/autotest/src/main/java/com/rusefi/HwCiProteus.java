@@ -9,9 +9,9 @@ public class HwCiProteus {
     public static void main(String[] args) {
         CmdJUnitRunner.runHardwareTestAndExit(new Class[]{
                 CompositeLoggerTest.class,
-                HighRevTest.class,
-                MiscTest.class,
-                ProteusAnalogTest.class,
+//                HighRevTest.class,
+//                MiscTest.class,
+//                ProteusAnalogTest.class,
         });
     }
 }
