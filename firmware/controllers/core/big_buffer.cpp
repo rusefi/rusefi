@@ -2,6 +2,9 @@
 
 #include "big_buffer.h"
 
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+
 static BigBufferUser s_currentUser;
 static uint8_t s_bigBuffer[BIG_BUFFER_SIZE];
 
