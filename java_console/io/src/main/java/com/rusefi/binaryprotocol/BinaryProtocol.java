@@ -232,7 +232,7 @@ public class BinaryProtocol {
                                     System.out.println("requestOutputChannels " + isGoodOutputChannels);
                                 if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
-                                binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
+                                //binaryProtocolLogger.compositeLogic(BinaryProtocol.this); this is somehow broken only on F7 with Os
                                 if (linkManager.isNeedPullText()) {
                                     String text = requestPendingTextMessages();
                                     if (text != null) {
