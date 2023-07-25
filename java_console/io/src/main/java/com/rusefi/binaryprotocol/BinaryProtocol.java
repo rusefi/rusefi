@@ -67,7 +67,7 @@ public class BinaryProtocol {
     // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();
 
-    BinaryProtocolLogger binaryProtocolLogger;
+    private final BinaryProtocolLogger binaryProtocolLogger;
     public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
 
     public static String findCommand(byte command) {
