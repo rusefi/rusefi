@@ -20,6 +20,7 @@ public class CompositeLoggerTest extends RusefiTestBase {
                 binaryProtocolLogger.getComposite(linkManager.getBinaryProtocol());
             }
         });
+        ecu.changeRpm(200);
     }
 
 }
