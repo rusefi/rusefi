@@ -10,6 +10,9 @@
 
 #include "pch.h"
 
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+
 #if EFI_TOOTH_LOGGER
 #if !EFI_SHAFT_POSITION_INPUT
 	fail("EFI_SHAFT_POSITION_INPUT required to have EFI_EMULATE_POSITION_SENSORS")
