@@ -23,7 +23,7 @@
 static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite packet size");
 
 static volatile bool ToothLoggerEnabled = false;
-static uint32_t lastEdgeTimestamp = 0;
+//static uint32_t lastEdgeTimestamp = 0;
 
 static bool currentTrigger1 = false;
 static bool currentTrigger2 = false;
@@ -112,7 +112,7 @@ void EnableToothLogger() {
 	}
 
 	// Reset the last edge to now - this prevents the first edge logged from being bogus
-	lastEdgeTimestamp = getTimeNowUs();
+	//lastEdgeTimestamp = getTimeNowUs();
 
 	// Enable logging of edges as they come
 	ToothLoggerEnabled = true;
