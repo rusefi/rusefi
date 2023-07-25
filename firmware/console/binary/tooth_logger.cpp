@@ -123,12 +123,12 @@ void EnableToothLogger() {
 void DisableToothLogger() {
 	chibios_rt::CriticalSectionLocker csl;
 
+	ToothLoggerEnabled = false;
+	setToothLogReady(false);
+
 	// Release the big buffer for another user
 	bufferHandle = {};
 	buffers = nullptr;
-
-	ToothLoggerEnabled = false;
-	setToothLogReady(false);
 }
 
 static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
