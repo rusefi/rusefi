@@ -4,6 +4,8 @@ BOARDCPPSRC = $(BOARD_DIR)/board_extra.cpp
 # MCU defines
 DDEFS += -DSTM32F407xx
 
+DEBUG_LEVEL_OPT = -Os -ggdb -g
+
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
   VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::DEFAULT_FRANKENSO
 endif
