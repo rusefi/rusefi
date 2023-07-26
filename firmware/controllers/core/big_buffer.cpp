@@ -3,7 +3,11 @@
 #include "big_buffer.h"
 
 static BigBufferUser s_currentUser;
-static uint8_t s_bigBuffer[BIG_BUFFER_SIZE];
+
+// this buffer requires 4 byte alignment
+// Some users place C++ objects in this memory, and that has certain alignment
+// requirements.
+static __attribute__((aligned(4))) uint8_t s_bigBuffer[BIG_BUFFER_SIZE];
 
 static void releaseBuffer(void* bufferPtr, BigBufferUser user) {
 	if (bufferPtr != &s_bigBuffer || user != s_currentUser) {

@@ -53,6 +53,11 @@ struct CompositeBuffer {
 	Timer startTime;
 };
 
+// Require that the composite buffer be a multiple of 4 bytes long.
+// The bigBuffer is guaranteed to be aligned on 4 bytes, but we need all elements to be aligned too.
+// If misaligned, Timer will crash.
+static_assert(sizeof(CompositeBuffer) % 4 == 0);
+
 // Get a reference to the buffer
 // Returns nullptr if no buffer is available
 CompositeBuffer* GetToothLoggerBufferNonblocking();
