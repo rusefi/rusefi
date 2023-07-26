@@ -141,6 +141,5 @@ Usages:
     isPtr: true
 
   - name: lambda_monitor
-    java: LambdaMonitor.java
     folder: controllers/math
     constexpr: "___engine.lambdaMonitor"
