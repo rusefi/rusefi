@@ -71,7 +71,7 @@ jobs:
         OUT=$(git commit -am "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "default tune: looks like nothing to commit"
-          echo "::set-env name=NOCOMMIT::true"
+          echo "NOCOMMIT=true" >> $GITHUB_ENV
           exit 0
         elif echo "$OUT" | grep 'changed'; then
           echo "default tune: looks like something has changed"
