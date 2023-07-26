@@ -100,9 +100,6 @@ public class ConsoleUI {
 //            EcuStimulator stimulator = EcuStimulator.getInstance();
 //            tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
 //        }
-//        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-
-        tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
 
         if (tabbedPane.paneSettings.showTriggerShapePane)
             tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());

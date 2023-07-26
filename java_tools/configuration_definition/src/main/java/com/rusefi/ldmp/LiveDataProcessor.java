@@ -125,7 +125,10 @@ public class LiveDataProcessor {
                 state.addCHeaderDestination(cHeaderDestination);
 
                 int baseOffset = outputsSections.getBaseOffset();
-                state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
+
+                if (javaName != null) {
+                    state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
+                }
 
                 if (constexpr != null) {
                     sdCardFieldsConsumer.home = constexpr;

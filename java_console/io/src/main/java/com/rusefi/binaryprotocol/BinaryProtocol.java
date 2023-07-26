@@ -18,7 +18,6 @@ import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -231,13 +230,6 @@ public class BinaryProtocol {
                                         if (verbose)
                                             System.out.println("textListener");
                                     }
-                                }
-
-                                if (linkManager.isNeedPullLiveData()) {
-                                    LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
-                                    LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
-                                    if (verbose)
-                                        System.out.println("Got livedata");
                                 }
                             }
                         });

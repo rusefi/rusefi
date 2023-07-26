@@ -50,7 +50,6 @@ public class LinkManager implements Closeable {
     private boolean isStarted;
     private boolean needPullData = true;
     private boolean needPullText = true;
-    private boolean needPullLiveData = true;
     public final MessagesListener messageListener = (source, message) -> System.out.println(source + ": " + message);
     private Thread communicationThread;
 
@@ -142,15 +141,6 @@ public class LinkManager implements Closeable {
 
     public boolean isNeedPullText() {
         return needPullText;
-    }
-
-    public boolean isNeedPullLiveData() {
-        return needPullLiveData;
-    }
-
-    public LinkManager setNeedPullLiveData(boolean needPullLiveData) {
-        this.needPullLiveData = needPullLiveData;
-        return this;
     }
 
     public LinkManager setNeedPullData(boolean needPullData) {

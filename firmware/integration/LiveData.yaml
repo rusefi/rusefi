@@ -21,46 +21,38 @@ Usages:
     constexpr: "engine->outputChannels"
 
   - name: fuel_computer
-    java: FuelComputer.java
     folder: controllers/algo/fuel
     prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->fuelComputer"
 
   - name: ignition_state
-    java: IgnitionState.java
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->ignitionState"
 
   - name: knock_controller
-    java: KnockController.java
     folder: controllers/engine_cycle
     output_name: knock
 
   - name: high_pressure_fuel_pump
-    java: HighPressureFuelPump.java
     folder: controllers/engine_cycle
     output_name: hpfp
 
   - name: injector_model
-    java: InjectorModel.java
     folder: controllers/algo/fuel
     prepend: integration/rusefi_config_shared.txt
     # constexpr: "___engine.module<InjectorModel>()"
     # isPtr: true
 
   - name: launch_control_state
-    java: LaunchControl.java
     folder: controllers/algo
 
   - name: antilag_system_state
-    java: AntilagSystem.java
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
     output_name: als
 
   - name: boost_control
-    java: BoostControl.java
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: boost
@@ -68,100 +60,82 @@ Usages:
     conditional_compilation: "EFI_BOOST_CONTROL"
 
   - name: ac_control
-    java: AcControl.java
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: ac
 
   - name: fan_control
-    java: FanControl.java
     folder: controllers/actuators
     output_name: [ "fan1", "fan2" ]
     constexpr: "___engine.module<FanControl1>()"
     isPtr: true
 
   - name: fuel_pump_control
-    java: FuelPump.java
     folder: controllers/actuators
     output_name: fuelPump
 
   - name: main_relay
-    java: MainRelay.java
     folder: controllers/actuators
     output_name: mainRelay
 
   #todo: handle ETB pid and Idle pid which point at same pid_state.txt
   # - name: pid_state
-  #   java: PidState.java
   #   folder: util/math
 
   - name: engine_state
-    java: EngineState.java
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->engineState"
 
   - name: tps_accel_state
-    java: TpsAccelState.java
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
 
   - name: trigger_central
-    java: TriggerCentral.java
     folder: controllers/trigger
     withCDefines: true
     constexpr: "engine->triggerCentral"
 
   - name: trigger_state
-    java: TriggerState.java
     folder: controllers/trigger
     prepend: integration/rusefi_config_shared.txt
     output_name: [ "trg", "vvt1i", "vvt1e", "vvt2i", "vvt2e" ]
 
   - name: trigger_state_primary
-    java: TriggerStatePrimary.java
     folder: controllers/trigger
     prepend: integration/rusefi_config_shared.txt
 
   - name: wall_fuel_state
-    java: WallFuelState.java
     folder: controllers/algo
 
   - name: idle_state
-    java: IdleState.java
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: idle
 
   - name: electronic_throttle
-    java: ElectronicThrottle.java
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: [ "etb1", "etb2" ]
 
   - name: wideband_state
-    java: WidebandController.java
     folder: controllers/sensors/
     output_name: [ "wb1", "wb2" ]
 
   - name: dc_motors
-    java: DcMotors.java
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->dc_motors"
 
   - name: sent_state
-    java: SentState.java
     folder: controllers/sensors
     prepend: integration/rusefi_config_shared.txt
 
   - name: throttle_model
-    java: ThrottleModel.java
     folder: controllers/math
     output_name: throttle_model
 
   - name: vvt
-    java: VvtState.java
     folder: controllers/actuators
     constexpr: "___engine.module<VvtController1>()"
     isPtr: true
