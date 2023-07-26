@@ -49,6 +49,7 @@ public enum StateDictionary {
         register(live_data_e.LDS_sent_state, SentState.VALUES, "sent");
         register(live_data_e.LDS_throttle_model, ThrottleModel.VALUES, "throttle_model");
         register(live_data_e.LDS_vvt, VvtState.VALUES, "vvt");
+        register(live_data_e.LDS_lambda_monitor, VvtState.VALUES, "lambda_monitor");
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());
