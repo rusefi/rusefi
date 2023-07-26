@@ -466,7 +466,7 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         ./firmware/provide_gcc.sh
-        echo "::add-path::`pwd`/gcc-arm-none-eabi/bin"
+        echo "`pwd`/gcc-arm-none-eabi/bin" >> $GITHUB_PATH
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
