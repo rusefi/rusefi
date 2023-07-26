@@ -1080,6 +1080,15 @@ float getOutputValueByName(const char *name) {
 // isEnabled0
 		case 1691876092:
 			return engine->dc_motors.isEnabled0;
+// lambdaCurrentlyGood
+		case 350535927:
+			return ___engine.lambdaMonitor.lambdaCurrentlyGood;
+// lambdaMonitorCut
+		case 1849938842:
+			return ___engine.lambdaMonitor.lambdaMonitorCut;
+// lambdaTimeSinceGood
+		case 481450608:
+			return ___engine.lambdaMonitor.lambdaTimeSinceGood;
 	}
 	return EFI_ERROR_CODE;
 }
