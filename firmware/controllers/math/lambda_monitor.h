@@ -1,6 +1,8 @@
 #pragma once
 
-struct LambdaMonitorBase {
+#include "lambda_monitor_generated.h"
+
+struct LambdaMonitorBase : public lambda_monitor_s {
 	void update(float rpm, float load);
 	bool isCut() const;
 
@@ -19,7 +21,6 @@ protected:
 
 private:
 	Timer m_timeSinceGoodLambda;
-	bool m_isCut = false;
 };
 
 class LambdaMonitor : public LambdaMonitorBase {
