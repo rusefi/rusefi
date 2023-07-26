@@ -664,6 +664,12 @@ float getOutputValueByName(const char *name) {
 			return ___engine.module<VvtController1>()->vvtTarget;
 		case 1990697206:
 			return ___engine.module<VvtController1>()->vvtOutput;
+		case 350535927:
+			return ___engine.lambdaMonitor.lambdaCurrentlyGood;
+		case 1849938842:
+			return ___engine.lambdaMonitor.lambdaMonitorCut;
+		case 481450608:
+			return ___engine.lambdaMonitor.lambdaTimeSinceGood;
 	}
 	return EFI_ERROR_CODE;
 }

@@ -30,6 +30,8 @@ case LDS_injector_model:
   return "LDS_injector_model";
 case LDS_knock_controller:
   return "LDS_knock_controller";
+case LDS_lambda_monitor:
+  return "LDS_lambda_monitor";
 case LDS_launch_control_state:
   return "LDS_launch_control_state";
 case LDS_main_relay:

@@ -28,6 +28,7 @@ LDS_dc_motors,
 LDS_sent_state,
 LDS_throttle_model,
 LDS_vvt,
+LDS_lambda_monitor,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define FUEL_COMPUTER_BASE_ADDRESS 820
@@ -55,3 +56,4 @@ LDS_vvt,
 #define SENT_STATE_BASE_ADDRESS 1348
 #define THROTTLE_MODEL_BASE_ADDRESS 1356
 #define VVT_BASE_ADDRESS 1368
+#define LAMBDA_MONITOR_BASE_ADDRESS 1372
