@@ -23,7 +23,7 @@
 static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite packet size");
 
 static volatile bool ToothLoggerEnabled = false;
-static uint32_t lastEdgeTimestamp = 0;
+//static uint32_t lastEdgeTimestamp = 0;
 
 static bool currentTrigger1 = false;
 static bool currentTrigger2 = false;
@@ -112,7 +112,7 @@ void EnableToothLogger() {
 	}
 
 	// Reset the last edge to now - this prevents the first edge logged from being bogus
-	lastEdgeTimestamp = getTimeNowUs();
+	//lastEdgeTimestamp = getTimeNowUs();
 
 	// Enable logging of edges as they come
 	ToothLoggerEnabled = true;
@@ -123,12 +123,12 @@ void EnableToothLogger() {
 void DisableToothLogger() {
 	chibios_rt::CriticalSectionLocker csl;
 
+	ToothLoggerEnabled = false;
+	setToothLogReady(false);
+
 	// Release the big buffer for another user
 	bufferHandle = {};
 	buffers = nullptr;
-
-	ToothLoggerEnabled = false;
-	setToothLogReady(false);
 }
 
 static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
@@ -143,6 +143,13 @@ static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
 	if (msg != MSG_OK) {
 		// What even happened if we didn't get timeout, but also didn't get OK?
 		return nullptr;
+	}
+
+	chibios_rt::CriticalSectionLocker csl;
+
+	// If the used list is empty, clear the ready flag
+	if (filledBuffers.getUsedCountI() == 0) {
+		setToothLogReady(false);
 	}
 
 	return buffer;
@@ -161,11 +168,6 @@ void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
 
 	msg_t msg = freeBuffers.postI(buffer);
 	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail");
-
-	// If the used list is empty, clear the ready flag
-	if (filledBuffers.getUsedCountI() == 0) {
-		setToothLogReady(false);
-	}
 }
 
 static CompositeBuffer* findBuffer(efitick_t timestamp) {
