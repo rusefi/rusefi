@@ -12,6 +12,10 @@ float LambdaMonitor::getMaxAllowedLambda(float rpm, float load) const {
 		);
 }
 
+float LambdaMonitor::getTimeout() const {
+	return engineConfiguration->lambdaProtectionTimeout;
+}
+
 bool LambdaMonitorBase::isCut() const {
 	return lambdaMonitorCut;
 }
@@ -25,7 +29,7 @@ void LambdaMonitorBase::update(float rpm, float load) {
 
 	lambdaTimeSinceGood = m_timeSinceGoodLambda.getElapsedSeconds();
 
-	if (m_timeSinceGoodLambda.hasElapsedSec(engineConfiguration->lambdaProtectionTimeout)) {
+	if (m_timeSinceGoodLambda.hasElapsedSec(getTimeout())) {
 		// Things have been bad long enough, cut!
 		lambdaMonitorCut = true;
 	}
