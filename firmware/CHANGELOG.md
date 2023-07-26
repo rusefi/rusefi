@@ -28,7 +28,7 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
-## July 2023 Release "Day 517"
+## July 2023 Release "Day 518"
 
 ### Added
  - Dashpot for return-to-idle from coasting #5303
@@ -42,6 +42,7 @@ Release template (copy/paste this for new release):
  - start button logic does not crank started for first X seconds since ECU boot #5324
  - launch control: Speed threshold should not depend on launch mode, also zero speed limit handling #5419
  - hard fault due to misaligned big buffer on F7 firmware #5354
+ - Pointing at https://adoptium.net/download/ as JRE source
 
 ### Breaking Changes
  - Always operate in "two wire" mode for batch fuel, fixing batch firing order #5353
