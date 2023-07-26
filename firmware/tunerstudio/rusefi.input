@@ -582,7 +582,6 @@ enable2ndByteCanID = false
 		xBins		= cltFuelCorrBins, coolant
 		yBins		= cltFuelCorr
 		yBins		= wueAnalRecommend
-		;gauge		= cltGauge
 
 		lineLabel	= "Warmup Correction"
 		lineLabel	= "Recommended WUE"
