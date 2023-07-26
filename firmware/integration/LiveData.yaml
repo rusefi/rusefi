@@ -176,3 +176,8 @@ Usages:
   - name: vvt
     java: VvtState.java
     folder: controllers/actuators
+
+  - name: lambda_monitor
+    java: LambdaMonitor.java
+    folder: controllers/math
+    constexpr: "___engine.lambdaMonitor"

@@ -180,6 +180,11 @@ const throttle_model_s* getLiveData(size_t) {
 #endif
 }
 
+template<>
+const lambda_monitor_s* getLiveData(size_t) {
+	return &engine->lambdaMonitor;
+}
+
 static const FragmentEntry fragments[] = {
 // This header is generated - do not edit by hand!
 #include "live_data_fragments.h"
