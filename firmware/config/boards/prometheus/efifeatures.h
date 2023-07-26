@@ -66,7 +66,6 @@
 #define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::A13
 
 #undef CONSOLE_MODE_SWITCH_PORT
-#undef CONFIG_RESET_SWITCH_PORT
 
 //!!!!!!!!!!!!!!!
 //#undef EFI_INTERNAL_ADC

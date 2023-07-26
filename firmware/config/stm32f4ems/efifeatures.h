@@ -379,15 +379,6 @@
 #define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::D14
 #endif
 
-#ifndef CONFIG_RESET_SWITCH_PORT
-// looks like this feature is not extremely popular, we can try living without it now :)
-//#define CONFIG_RESET_SWITCH_PORT GPIOD
-#endif
-
-#ifndef CONFIG_RESET_SWITCH_PIN
-#define CONFIG_RESET_SWITCH_PIN 6
-#endif
-
 #ifndef EFI_STORAGE_INT_FLASH
 #define EFI_STORAGE_INT_FLASH   TRUE
 #endif

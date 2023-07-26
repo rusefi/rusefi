@@ -607,31 +607,19 @@ static void setDefaultEngineConfiguration() {
     #include "default_script.lua"
 }
 
-#ifdef CONFIG_RESET_SWITCH_PORT
-// this pin is not configurable at runtime so that we have a reliable way to reset configuration
-#define SHOULD_IGNORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
-#else
-#define SHOULD_IGNORE_FLASH() (false)
-#endif // CONFIG_RESET_SWITCH_PORT
-
 // by default, do not ignore config from flash! use it!
 #ifndef IGNORE_FLASH_CONFIGURATION
 #define IGNORE_FLASH_CONFIGURATION false
 #endif
 
 void loadConfiguration() {
-#ifdef CONFIG_RESET_SWITCH_PORT
-	// initialize the reset pin if necessary
-	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
-#endif /* CONFIG_RESET_SWITCH_PORT */
-
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	// Clear the active configuration so that registered output pins (etc) detect the change on startup and init properly
 	prepareVoidConfiguration(&activeConfiguration);
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 #if EFI_INTERNAL_FLASH
-	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
+	if (IGNORE_FLASH_CONFIGURATION) {
 		engineConfiguration->engineType = engine_type_e::DEFAULT_ENGINE_TYPE;
 		resetConfigurationExt(engineConfiguration->engineType);
 		writeToFlashNow();
