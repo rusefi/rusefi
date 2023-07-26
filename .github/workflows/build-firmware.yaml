@@ -466,7 +466,7 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         ./firmware/provide_gcc.sh
-        echo "::add-path::`pwd`/gcc-arm-none-eabi/bin"
+        echo "`pwd`/gcc-arm-none-eabi/bin" >> $GITHUB_PATH
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
@@ -478,9 +478,9 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
-        echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
-        echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
-        echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
+        echo "RUSEFI_SSH_SERVER=${{secrets.RUSEFI_SSH_SERVER}}" >> $GITHUB_ENV
+        echo "RUSEFI_SSH_USER=${{secrets.RUSEFI_SSH_USER}}" >> $GITHUB_ENV
+        echo "RUSEFI_SSH_PASS=${{secrets.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
 
     # Build rusEFI console
     - name: Build console
