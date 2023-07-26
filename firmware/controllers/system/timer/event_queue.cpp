@@ -27,6 +27,10 @@ EventQueue::EventQueue(efitick_t lateDelay)
 	for (size_t i = 0; i < efi::size(m_pool); i++) {
 		tryReturnScheduling(&m_pool[i]);
 	}
+
+#if EFI_PROD_CODE
+	getTunerStudioOutputChannels()->schedulingUsedCount = 0;
+#endif
 }
 
 scheduling_s* EventQueue::getFreeScheduling() {
