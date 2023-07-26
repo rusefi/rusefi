@@ -168,7 +168,7 @@ pins:
 info:
   title: Proteus
   name: Black23
-  board_url: "https://wiki.rusefi.com/Hardware/Proteus/Proteus/"
+  board_url: "https://github.com/rusefi/rusefi/wiki/Proteus-Manual"
   directory: proteus
   cid: black23
   image:
