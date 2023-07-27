@@ -99,8 +99,6 @@ enum class engine_type_e : uint32_t {
 
 	PROTEUS_QC_TEST_BOARD = 42,
 
-	HONDA_600 = 43,
-
 	TOYOTA_2JZ_GTE_VVTi = 44,
 
 	TEST_ENGINE_VVT = 45,

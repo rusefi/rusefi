@@ -49,7 +49,6 @@
 #include "ford_1995_inline_6.h"
 
 #include "honda_k_dbc.h"
-#include "honda_600.h"
 #include "hyundai.h"
 
 #include "GY6_139QMB.h"
@@ -868,9 +867,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::GY6_139QMB:
 		setGy6139qmbDefaultEngineConfiguration();
-		break;
-	case engine_type_e::HONDA_600:
-		setHonda600();
 		break;
 	case engine_type_e::FORD_ESCORT_GT:
 		setFordEscortGt();
