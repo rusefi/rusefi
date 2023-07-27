@@ -278,6 +278,7 @@ public class Fields {
 	public static final int engine_type_e_ET_UNUSED_15 = 15;
 	public static final int engine_type_e_ET_UNUSED_17 = 17;
 	public static final int engine_type_e_ET_UNUSED_33 = 33;
+	public static final int engine_type_e_ET_UNUSED_43 = 43;
 	public static final int engine_type_e_ET_UNUSED_57 = 57;
 	public static final int engine_type_e_ET_UNUSED_92 = 92;
 	public static final int engine_type_e_ET_UNUSED_93 = 93;
@@ -318,7 +319,6 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_NB1_36 = 94;
 	public static final int engine_type_e_HELLEN_NB2 = 69;
 	public static final int engine_type_e_HELLEN_NB2_36 = 86;
-	public static final int engine_type_e_HONDA_600 = 43;
 	public static final int engine_type_e_L9779_BENCH_ENGINE = 60;
 	public static final int engine_type_e_MAZDA_MIATA_2003_BOARD_TEST = 55;
 	public static final int engine_type_e_MAZDA_MIATA_2003_NA_RAIL = 54;
@@ -1177,7 +1177,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.07.27.f407-discovery.324296357";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.07.28.f407-discovery.324296357";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;
