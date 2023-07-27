@@ -207,6 +207,7 @@ enum class engine_type_e : uint32_t {
 	ET_UNUSED_13 = 13,
 	ET_UNUSED_15 = 15,
 	ET_UNUSED_33 = 33,
+	ET_UNUSED_43 = 43,
 	ET_UNUSED_57 = 57,
 
 	/**
