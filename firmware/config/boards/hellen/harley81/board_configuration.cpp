@@ -20,8 +20,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
-
 	engineConfiguration->clutchDownPin = Gpio::Unassigned;
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
@@ -33,8 +31,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = H144_IGN_2;
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 static void setupEtb() {

@@ -723,8 +723,6 @@ void setMiataNB2_Proteus() {
     engineConfiguration->injectionPins[1] = PROTEUS_LS_2;  // BLK
     engineConfiguration->injectionPins[2] = PROTEUS_LS_3; // GRN
     engineConfiguration->injectionPins[3] = PROTEUS_LS_4; // WHT
-    engineConfiguration->injectionPinMode = OM_DEFAULT;
-
 
     engineConfiguration->enableSoftwareKnock = true;
 

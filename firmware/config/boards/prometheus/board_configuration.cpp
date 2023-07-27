@@ -147,15 +147,10 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->camInputs[0] = is469 ? Gpio::E9 : Gpio::A6;
 	
 	engineConfiguration->tachOutputPin = Gpio::C8;
-	engineConfiguration->tachOutputPinMode = OM_DEFAULT;
 	engineConfiguration->fuelPumpPin = is469 ? Gpio::D6 : Gpio::B7;
-	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 	engineConfiguration->mainRelayPin = is469 ? Gpio::B11 : Gpio::B2;
-	engineConfiguration->mainRelayPinMode = OM_DEFAULT;
 	engineConfiguration->fanPin = Gpio::C9;
-	engineConfiguration->fanPinMode = OM_DEFAULT;
 	engineConfiguration->malfunctionIndicatorPin = Gpio::C1;
-	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 
 	

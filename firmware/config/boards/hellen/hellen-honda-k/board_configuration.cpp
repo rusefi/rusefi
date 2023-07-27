@@ -16,8 +16,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[1] = H144_LS_2;
 	engineConfiguration->injectionPins[2] = H144_LS_3;
 	engineConfiguration->injectionPins[3] = H144_LS_4;
-
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
@@ -25,8 +23,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = H144_IGN_2;
 	engineConfiguration->ignitionPins[2] = H144_IGN_3;
 	engineConfiguration->ignitionPins[3] = H144_IGN_4;
-	
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 static void setupVbatt() {

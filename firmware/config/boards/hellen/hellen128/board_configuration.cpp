@@ -25,8 +25,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[5] = H176_LS_6;
 	engineConfiguration->injectionPins[6] = H176_LS_7;
 	engineConfiguration->injectionPins[7] = H176_LS_8;
-
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
@@ -38,8 +36,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[5] = Gpio::I5;
 	engineConfiguration->ignitionPins[6] = Gpio::I6;
 	engineConfiguration->ignitionPins[7] = Gpio::I7;
-	
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 static void setupVbatt() {

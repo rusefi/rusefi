@@ -153,7 +153,6 @@ void setFordEscortGt() {
 	engineConfiguration->ignitionPins[1] = Gpio::C7;
 	engineConfiguration->ignitionPins[2] = Gpio::E8;
 	engineConfiguration->ignitionPins[3] = Gpio::E12;
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
@@ -182,7 +181,6 @@ void setFordEscortGt() {
 	engineConfiguration->idle.solenoidPin = Gpio::B9;
 
 	engineConfiguration->malfunctionIndicatorPin = Gpio::E5;
-	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 	engineConfiguration->tunerStudioSerialSpeed = 19200;
 

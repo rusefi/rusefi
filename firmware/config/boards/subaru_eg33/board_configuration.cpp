@@ -114,11 +114,9 @@ void setBoardDefaultConfiguration() {
 
 	/* TLE6240 - OUT3, also PG2 through 3.3V-> 5.0V level translator - not installed */
 	engineConfiguration->tachOutputPin = Gpio::TLE6240_PIN_2;
-	engineConfiguration->tachOutputPinMode = OM_DEFAULT;
 
 	/* spi driven - TLE6240 - OUT5 */
 	engineConfiguration->fuelPumpPin = Gpio::TLE6240_PIN_5;
-	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 	/* Self shutdown ouput:
 	 * High level on this pin will keep Main Relay enabled in any position of ignition key
@@ -128,17 +126,13 @@ void setBoardDefaultConfiguration() {
 	 * The only puprose of this output is to keep ECU powered to finish some stuff before power off itself
 	 * To support this we need to sense ING input from key switch */
 	//engineConfiguration->mainRelayPin = Gpio::H7;
-	//engineConfiguration->mainRelayPinMode = OM_DEFAULT;
 
 	/* spi driven - TLE6240 - OUT1, OUT2 */
 	engineConfiguration->fanPin = Gpio::TLE6240_PIN_1;
-	engineConfiguration->fanPinMode = OM_DEFAULT;
 	/* TODO: second fan */
 	//engineConfiguration->fanPin[1] = Gpio::TLE6240_2;
-	//engineConfiguration->fanPinMode[1] = OM_DEFAULT;
 	/* spi driven - TLE6240 - OUT8 */
 	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE6240_PIN_7;
-	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 	/* SPIs */
 	engineConfiguration->is_enabled_spi_1 = true;

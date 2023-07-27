@@ -45,7 +45,6 @@ void setVwAba() {
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->wastegatePositionSensor = EFI_ADC_4; // PA4
 

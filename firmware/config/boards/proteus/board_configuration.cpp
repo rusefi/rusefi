@@ -41,12 +41,10 @@ static const brain_pin_e ignPins[] = {
 
 static void setInjectorPins() {
 	copyArray(engineConfiguration->injectionPins, injPins);
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
 	copyArray(engineConfiguration->ignitionPins, ignPins);
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 // PE3 is error LED, configured in board.mk
