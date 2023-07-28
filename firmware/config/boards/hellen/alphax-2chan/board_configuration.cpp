@@ -148,8 +148,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 
-	engineConfiguration->clutchDownPin = H144_IN_D_2;
-	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
