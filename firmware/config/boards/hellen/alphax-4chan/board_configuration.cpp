@@ -100,6 +100,11 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
+static bool is_F_OrOlder() {
+    int16_t hellenBoardId = engine->engineState.hellenBoardId;
+    return hellenBoardId == BOARD_ID_4chan_d || hellenBoardId == BOARD_ID_4chan_e || hellenBoardId == BOARD_ID_4chan_f;
+}
+
 void boardInitHardware() {
 	alphaEn.initPin("a-EN", H144_OUT_IO3);
 	alphaEn.setValue(1);
@@ -111,7 +116,11 @@ void boardInitHardware() {
 	alpha2stepPullDown.initPin("a-2step", H144_OUT_IO7);
 	alphaCamPullDown.initPin("a-cam", H144_OUT_IO8);
 	alphaCamVrPullUp.initPin("a-cam-vr", H144_OUT_IO9);
-	alphaD2PullDown.initPin("a-d2", H144_LS_5);
+	if (is_F_OrOlder()) {
+	     alphaD2PullDown.initPin("a-d2", H144_LS_5);
+	} else {
+	    // todo
+	}
 	alphaD3PullDown.initPin("a-d3", H144_LS_6);
 	alphaD4PullDown.initPin("a-d4", H144_LS_7);
 	alphaD5PullDown.initPin("a-d5", H144_LS_8);
@@ -140,8 +149,7 @@ void setBoardConfigOverrides() {
 	// todo: do we need this conditional on boardId or not really?
 	setHellenMegaEnPin();
 
-    int16_t hellenBoardId = engine->engineState.hellenBoardId;
-    if (hellenBoardId == BOARD_ID_4chan_d || hellenBoardId == BOARD_ID_4chan_e || hellenBoardId == BOARD_ID_4chan_f) {
+    if (is_F_OrOlder()) {
 	    setHellenSdCardSpi2();
 	} else {
 	    // rev G and newer uses hellen mega-module
