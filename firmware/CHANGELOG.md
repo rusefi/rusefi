@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - Latest jSerialComm 2.10.3
+
 ## July 2023 Release "Day 518"
 
 ### Added
