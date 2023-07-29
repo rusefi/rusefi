@@ -118,19 +118,13 @@ static void runToothLoggerTest() {
 
 	{
 		CompositeBuffer * toothBuffer = GetToothLoggerBufferNonblocking();
-		if (toothBuffer == nullptr) {
-			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "filled buffer expected");
-		}
+		efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, toothBuffer != nullptr, "filled buffer expected");
 
 		size_t size = toothBuffer->nextIdx * sizeof(composite_logger_s);
-		if (size == 0) {
-			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Positive payload size expected");
-		}
+		efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, size != 0, "Positive payload size expected");
 
 		const uint8_t* ptr = reinterpret_cast<const uint8_t*>(toothBuffer->buffer);
-		if (ptr == nullptr) {
-			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Payload reference expected");
-		}
+		efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, ptr != nullptr, "Payload reference expected");
 	}
 }
 
