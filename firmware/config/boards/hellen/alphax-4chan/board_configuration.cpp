@@ -12,7 +12,6 @@
 #include "hellen_meta.h"
 #include "defaults.h"
 
-static OutputPin alphaEn;
 static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
@@ -106,9 +105,6 @@ static bool is_F_OrOlder() {
 }
 
 void boardInitHardware() {
-	alphaEn.initPin("a-EN", H144_OUT_IO3);
-	alphaEn.setValue(1);
-
 	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
 	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
@@ -149,12 +145,12 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 
 void setBoardConfigOverrides() {
 	setupVbatt();
-	// todo: do we need this conditional on boardId or not really?
-	setHellenMegaEnPin();
 
     if (is_F_OrOlder()) {
+        setHellenEnPin(H144_OUT_IO3);
 	    setHellenSdCardSpi2();
 	} else {
+	    setHellenMegaEnPin();
 	    // rev G and newer uses hellen mega-module
 	    setHellenSdCardSpi1();
 	    configureHellenMegaAccCS2Pin();
