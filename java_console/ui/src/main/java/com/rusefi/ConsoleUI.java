@@ -146,6 +146,7 @@ public class ConsoleUI {
         MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
 
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
+        tabbedPane.addTab("Connection", new ConnectionTab(uiContext).getContent());
 
         if (false) {
             // this feature is not totally happy safer to disabke to reduce user confusion

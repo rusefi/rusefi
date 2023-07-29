@@ -123,8 +123,7 @@ public class TextEditor {
     }
 
     public static void installKeyAction(KeyStroke undoKeyStroke, String actionName, JComponent control, AbstractAction action) {
-        control.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(undoKeyStroke, actionName);
+        control.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(undoKeyStroke, actionName);
         control.getActionMap().put(actionName, action);
     }
 
