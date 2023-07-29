@@ -12,7 +12,6 @@
 #include "hellen_meta.h"
 #include "defaults.h"
 
-static OutputPin alphaEn;
 static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
@@ -70,8 +69,6 @@ static void setupDefaultSensorInputs() {
 }
 
 void boardInitHardware() {
-	alphaEn.initPin("a-EN", H144_OUT_IO3);
-	alphaEn.setValue(1);
 
 	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
@@ -96,6 +93,11 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 void setBoardConfigOverrides() {
 	// todo: do we need this conditional on boardId or not really?
 	setHellenMegaEnPin();
+	// todo: make this conditional on 2chan revision
+	static OutputPin alphaEn;
+    alphaEn.initPin("a-EN", H144_OUT_IO3);
+    alphaEn.setValue(1);
+
 	setupVbatt();
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 
