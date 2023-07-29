@@ -14,6 +14,9 @@ ENUM_JAR=../java_tools/enum_to_string/build/libs/enum_to_string.jar
 java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/sensors/sensor_type.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
 
+java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/trigger/decoders/sync_edge.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
+[ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
+
 java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/algo/engine_types.h   -outputPath ../java_console/models/src/main/java/com/rusefi/enums -definition integration/rusefi_config.txt
 [ $? -eq 0 ] || { echo "ERROR generating types"; exit 1; }
 
