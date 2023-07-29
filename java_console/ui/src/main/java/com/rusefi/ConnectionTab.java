@@ -8,11 +8,8 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-
-import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 
 public class ConnectionTab {
     private final UIContext uiContext;
@@ -29,9 +26,7 @@ public class ConnectionTab {
 
         JButton disconnect = new JButton("Disconnect");
 
-        KeyStroke disconnectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK);
-        KeyStroke connectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK);
-
+        vertical.add(new JLabel("Same shortcuts work while on Lua tab"));
         vertical.add(new JLabel("Ctrl+R connect"));
         vertical.add(connect);
         vertical.add(new JLabel("Ctrl+D disconnect"));
@@ -42,27 +37,27 @@ public class ConnectionTab {
             disconnect.setEnabled(isConnected);
         });
 
+        installConnectAndDisconnect(uiContext, content);
+        disconnect.addActionListener(e -> disconnect(uiContext));
+        connect.addActionListener(e -> reconnect(uiContext));
+    }
 
-        TextEditor.installKeyAction(connectKeyStroke, "connectCommand", content, new AbstractAction() {
+    public static void installConnectAndDisconnect(UIContext uiContext, JComponent control) {
+        KeyStroke disconnectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK);
+        KeyStroke connectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK);
+        TextEditor.installKeyAction(connectKeyStroke, "connectCommand", control, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reconnect(uiContext);
             }
         });
 
-        TextEditor.installKeyAction(disconnectKeyStroke, "disconnectCommand", content, new AbstractAction() {
+        TextEditor.installKeyAction(disconnectKeyStroke, "disconnectCommand", control, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 disconnect(uiContext);
             }
         });
-
-
-        disconnect.addActionListener(e -> disconnect(uiContext));
-
-        connect.addActionListener(e -> reconnect(uiContext));
-
-
     }
 
     private static void reconnect(UIContext uiContext) {
