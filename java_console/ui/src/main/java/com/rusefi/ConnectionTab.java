@@ -32,9 +32,9 @@ public class ConnectionTab {
         KeyStroke disconnectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK);
         KeyStroke connectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK);
 
-        vertical.add(new JLabel("Ctrl+C connect"));
+        vertical.add(new JLabel("Ctrl+R connect"));
         vertical.add(connect);
-        vertical.add(new JLabel("Ctrl+R disconnect"));
+        vertical.add(new JLabel("Ctrl+D disconnect"));
         vertical.add(disconnect);
 
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
