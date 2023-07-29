@@ -61,7 +61,7 @@ public class DetachedSensor {
     private Sensor sensor;
     @org.jetbrains.annotations.NotNull
     private final UIContext uiContext;
-    private int width;
+    private final int width;
 
     public DetachedSensor(UIContext uiContext, Sensor sensor, int width) {
         this.uiContext = uiContext;
