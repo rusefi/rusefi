@@ -10,6 +10,7 @@
 #define TRIGGER_GAP_FROM "gapFrom"
 #define TRIGGER_GAP_TO "gapTo"
 #define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
+#define TRIGGER_SYNC_EDGE "syncEdge"
 
 ! this is shared between rusefi.input and FiringOrderTSLogic
 #define IGNITION_OUTPUT "Ignition Output"
