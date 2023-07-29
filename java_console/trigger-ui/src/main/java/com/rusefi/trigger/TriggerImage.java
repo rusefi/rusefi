@@ -41,6 +41,7 @@ public class TriggerImage {
 
     /**
      * todo: https://github.com/rusefi/rusefi/issues/2077
+     *
      * @see TriggerWheelInfo#isCrankBased
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
@@ -163,6 +164,7 @@ public class TriggerImage {
 
         triggerPanel.tdcPosition = triggerWheelInfo.getTdcPosition();
         triggerPanel.gaps = triggerWheelInfo.getGaps();
+        triggerPanel.syncEdge = triggerWheelInfo.getSyncEdge();
 
         EngineReport re0 = new EngineReport(waves.get(0).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
@@ -328,6 +330,7 @@ public class TriggerImage {
         public String id;
         // angle
         public double tdcPosition;
+        public String syncEdge;
         public UpDownImage image;
         public TriggerWheelInfo.TriggerGaps gaps;
 
@@ -364,13 +367,22 @@ public class TriggerImage {
             } else {
                 tdcMessage = "TDC at synchronization point";
             }
-            g.drawString("     " + tdcMessage, 0, tdcFontSize);
+            int y = tdcFontSize;
+            String prefix = "     ";
+            g.drawString(prefix + tdcMessage, 0, y);
+            y += tdcFontSize;
             g.setColor(Color.darkGray);
             if (image == null)
                 return;
             for (int i = 0; i < gaps.gapFrom.length; i++) {
                 String message = "Sync " + (i + 1) + ": From " + gaps.gapFrom[i] + " to " + gaps.gapTo[i];
-                g.drawString("            " + message, 0, tdcFontSize * (2 + i));
+                g.drawString(prefix + "       " + message, 0, y);
+                y += tdcFontSize;
+            }
+
+            if (syncEdge != null) {
+                g.drawString(prefix + syncEdge, 0, y);
+                y += tdcFontSize;
             }
 
             int tdcX = image.engineReport.getTimeAxisTranslator().timeToScreen(MIN_TIME + tdcPosition, w);
