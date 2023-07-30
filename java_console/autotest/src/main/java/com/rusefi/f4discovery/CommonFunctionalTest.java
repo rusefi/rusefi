@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.assertNull;
+import static com.rusefi.config.generated.Fields.CMD_SET_SENSOR_MOCK;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -114,7 +115,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
         ecu.sendCommand("set algorithm 2");
         // Set tps to 25% - make alpha-n happy
-        ecu.sendCommand("set_sensor_mock " + SensorType.Tps1.ordinal() + " 25");
+        ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.Tps1.ordinal() + " 25");
         ecu.sendCommand("set rpm_hard_limit 2500");
 
         {
@@ -205,8 +206,8 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.setEngineType(engine_type_e.DODGE_NEON_2003_CRANK);
         ecu.sendCommand("set wwaeTau 0");
         ecu.sendCommand("set wwaeBeta 0");
-        ecu.sendCommand("set_sensor_mock " + SensorType.Map.ordinal() + " 69.12");
-        ecu.sendCommand("set_sensor_mock " + SensorType.BatteryVoltage.ordinal() + " 12");
+        ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.Map.ordinal() + " 69.12");
+        ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.BatteryVoltage.ordinal() + " 12");
         ecu.sendCommand("disable cylinder_cleanup");
         EngineChart chart;
         String msg = "2003 Neon cranking ";
@@ -271,12 +272,12 @@ public class CommonFunctionalTest extends RusefiTestBase {
     public void testMazdaProtege() {
         ecu.setEngineType(engine_type_e.FORD_ESCORT_GT);
         EngineChart chart;
-        ecu.sendCommand("set_sensor_mock " + SensorType.BatteryVoltage.ordinal() + " 12");
+        ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.BatteryVoltage.ordinal() + " 12");
 
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
         ecu.sendCommand("set algorithm 2");
         // Set tps to 25% - make alpha-n happy
-        ecu.sendCommand("set_sensor_mock " + SensorType.Tps1.ordinal() + " 25");
+        ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.Tps1.ordinal() + " 25");
 
         ecu.changeRpm(200);
         ecu.changeRpm(260);
@@ -320,7 +321,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(msg, chart, EngineChart.SPARK_3);
 
         // switching to Speed Density
-        ecu.sendCommand("set_sensor_mock " + SensorType.Map.ordinal() + " 69.12");
+        ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.Map.ordinal() + " 69.12");
         sendComplexCommand("set algorithm 0");
         ecu.changeRpm(2600);
         ecu.changeRpm(2000);
@@ -349,8 +350,8 @@ public class CommonFunctionalTest extends RusefiTestBase {
     public void testFordAspire() {
         ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
         ecu.sendCommand("disable cylinder_cleanup");
-        ecu.sendCommand("set_sensor_mock " + SensorType.Map.ordinal() + " 69.12");
-        ecu.sendCommand("set_sensor_mock " + SensorType.BatteryVoltage.ordinal() + " 12");
+        ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.Map.ordinal() + " 69.12");
+        ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.BatteryVoltage.ordinal() + " 12");
         String msg;
         EngineChart chart;
         // todo: interesting changeRpm(100);

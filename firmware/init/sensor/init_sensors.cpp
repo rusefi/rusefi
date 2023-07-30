@@ -144,8 +144,8 @@ void reconfigureSensors() {
 
 // Mocking/testing helpers
 static void initSensorCli() {
-	addConsoleActionIF("set_sensor_mock", Sensor::setMockValue);
-	addConsoleAction("reset_sensor_mocks", Sensor::resetAllMocks);
+	addConsoleActionIF(CMD_SET_SENSOR_MOCK, Sensor::setMockValue);
+	addConsoleAction(CMD_RESET_SENSOR_MOCKS, Sensor::resetAllMocks);
 	addConsoleAction("show_sensors", Sensor::showAllSensorInfo);
 	addConsoleActionI("show_sensor",
 		[](int idx) {
