@@ -34,7 +34,7 @@ TEST(LuaKia, calcSumOfNibbles) {
 #define real81Packet "\npacket = { 0x40, 0x85, 0x5F, 0x00, 0x00, 0x00, 0x00, 0xED}\n "
 	const char* script = HYUNDAI_SUM_NIBBLES	real81Packet	R"(
 function testFunc()
-  return hyuindaiSumNibbles(packet, 0xD)
+  return hyundaiSumNibbles(packet, 0xD)
 end
     	)";
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0xE);
