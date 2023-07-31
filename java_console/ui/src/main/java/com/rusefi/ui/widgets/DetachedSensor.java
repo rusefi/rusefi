@@ -1,6 +1,8 @@
 package com.rusefi.ui.widgets;
 
+import com.rusefi.SensorTypeHelper;
 import com.rusefi.core.Sensor;
+import com.rusefi.enums.SensorType;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.IMethodInvocation;
 import com.rusefi.io.InvocationConfirmationListener;
@@ -8,6 +10,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +24,8 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.rusefi.config.generated.Fields.CMD_SET_SENSOR_MOCK;
+
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 11/2/14
@@ -31,7 +36,7 @@ public class DetachedSensor {
 
     private static final Collection<Sensor> MOCKABLE = Arrays.asList(
             Sensor.CLT,
-            Sensor.Lambda,
+            Sensor.Lambda1,
             Sensor.IAT,
             Sensor.MAF,
             Sensor.MAP,
@@ -59,7 +64,7 @@ public class DetachedSensor {
     private final JFrame frame;
     private final JPanel mockControlPanel = new JPanel(new BorderLayout());
     private Sensor sensor;
-    @org.jetbrains.annotations.NotNull
+    @NotNull
     private final UIContext uiContext;
     private final int width;
 
@@ -105,7 +110,7 @@ public class DetachedSensor {
         mockControlPanel.removeAll();
         boolean isMockable = isMockable();
         if (isMockable) {
-            Component mockComponent = createMockVoltageSlider(uiContext.getCommandQueue(), sensor);
+            Component mockComponent = createMockValueSlider(uiContext.getCommandQueue(), sensor);
             mockControlPanel.add(mockComponent);
         }
         UiUtils.trueLayout(content);
@@ -118,8 +123,11 @@ public class DetachedSensor {
         return MOCKABLE.contains(sensor) && LinkManager.isSimulationMode;
     }
 
-    public static Component createMockVoltageSlider(CommandQueue commandQueue, final Sensor sensor) {
-        final JSlider slider = new JSlider(0, _5_VOLTS_WITH_DECIMAL);
+    public static Component createMockValueSlider(CommandQueue commandQueue, final Sensor sensor) {
+        SensorType sensorType = SensorTypeHelper.valueOfAnyCase(sensor.getName());
+
+        int maxValue = 200;
+        final JSlider slider = new JSlider(0, maxValue);
         slider.setLabelTable(SLIDER_LABELS);
         slider.setPaintLabels(true);
         slider.setPaintTicks(true);
@@ -131,7 +139,7 @@ public class DetachedSensor {
         IMethodInvocation commandSender = new IMethodInvocation() {
             @Override
             public String getCommand() {
-                return "set mock_" + sensor.name().toLowerCase() + "_voltage " + pendingValue.get();
+                return CMD_SET_SENSOR_MOCK + " " + sensorType.ordinal() + " " + pendingValue.get();
             }
 
             @Override
@@ -152,7 +160,7 @@ public class DetachedSensor {
 
 
         slider.addChangeListener(e -> {
-            double value = slider.getValue() / 10.0;
+            double value = slider.getValue();
             pendingValue.set(value);
 
             /*

@@ -2,7 +2,6 @@ package com.rusefi.core;
 
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
-import com.rusefi.config.generated.EngineState;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.FuelComputer;
 import com.rusefi.config.generated.TsOutputs;
@@ -53,7 +52,7 @@ public enum Sensor implements BinaryLogEntry {
     MAP(GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.MAPVALUE, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
     BARO(GAUGE_NAME_BARO_PRESSURE, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.BAROPRESSURE, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
-    Lambda(GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.LAMBDAVALUE, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
+    Lambda1(GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.LAMBDAVALUE, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
 
     VBATT(GAUGE_NAME_VBAT, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.VBATT, 1.0 / PACK_MULT_VOLTAGE, 4, 18, "Volts"),
 //    oilPressure(GAUGE_NAME_OIL_PRESSURE, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 40, 1.0 / PACK_MULT_PRESSURE, 0, 5, "X"),

@@ -41,7 +41,7 @@ public class GaugesPanel {
 
             Sensor.etbTarget,
             Sensor.lastErrorCode,
-            Sensor.Lambda,
+            Sensor.Lambda1,
             Sensor.VBATT,
             Sensor.vehicleSpeedKph,
 
