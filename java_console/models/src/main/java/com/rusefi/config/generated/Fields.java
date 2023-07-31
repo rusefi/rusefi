@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Jul 31 04:05:06 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Jul 31 21:48:57 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1025,7 +1025,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 218662252;
+	public static final int SIGNATURE_HASH = 2090786698;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1250,7 +1250,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.07.31.f407-discovery.218662252";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.07.31.f407-discovery.2090786698";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1400;
@@ -1720,6 +1720,7 @@ public class Fields {
 	public static final Field MULTISPARKENABLE = Field.create("MULTISPARKENABLE", 912, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field ENABLELAUNCHRETARD = Field.create("ENABLELAUNCHRETARD", 912, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field UNFINISHEDENABLELAUNCHBOOST = Field.create("UNFINISHEDENABLELAUNCHBOOST", 912, FieldType.BIT, 5).setBaseOffset(0);
+	public static final Field ISSIMULATOR = Field.create("ISSIMULATOR", 912, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field ENABLECANVSS = Field.create("ENABLECANVSS", 912, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 912, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field SHOWHUMANREADABLEWARNING = Field.create("SHOWHUMANREADABLEWARNING", 912, FieldType.BIT, 9).setBaseOffset(0);
@@ -3242,6 +3243,7 @@ public class Fields {
 	MULTISPARKENABLE,
 	ENABLELAUNCHRETARD,
 	UNFINISHEDENABLELAUNCHBOOST,
+	ISSIMULATOR,
 	ENABLECANVSS,
 	ENABLEINNOVATELC2,
 	SHOWHUMANREADABLEWARNING,
