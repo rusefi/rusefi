@@ -67,7 +67,7 @@ end  \
 // LSB (Least Significant Byte comes first) "Intel"
 #define TWO_BYTES_LSB "function getTwoBytesLSB(data, offset, factor)\
 		return (data[offset + 2] * 256 + data[offset + 1]) * factor \n\
-	end\n
+	end\n\
 \
 "
 
