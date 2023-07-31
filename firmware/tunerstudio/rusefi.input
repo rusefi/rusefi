@@ -2015,6 +2015,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = simulatorSensors, "Simulator", { isSimulator != 0 }
 		subMenu = antiLagDialog,                "Anti-Lag ALS"
 		subMenu = rotaryDialog,			"Rotary"
 		subMenu = throttleEffectiveArea, "Throttle effective area"
@@ -4267,6 +4268,10 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Reset to OpenBLT", cmd_openblt
 		commandButton = "F7 nDBANK fix", cmd_nDBANK@@if_ts_show_f7_presets
 		commandButton = "No flash Burn mode", cmd_burn_without_flash
+
+    dialog = simulatorSensors, "Simulator"
+        field = "Field 1"
+        field = "Field 2"
 
 	; bench test
 	dialog = ioTest, "Bench Test & Commands", xAxis
