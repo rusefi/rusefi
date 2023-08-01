@@ -1816,10 +1816,6 @@ end_struct
 #define CMD_SET_SENSOR_MOCK "set_sensor_mock"
 #define CMD_RESET_SENSOR_MOCKS "reset_sensor_mocks"
 
-! Pedal Position Sensor
-#define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
-#define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"
-
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_UPTIME "Uptime"
 ! WARNING! THIS GAUGE NAME IS PART of REO integration API
