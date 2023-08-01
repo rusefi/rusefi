@@ -61,8 +61,6 @@ pins:
     type: gnd
 
   - pin: 10C
-    # H144_IGN_5
-    id: E2
     class: outputs
     function: Smart Ignition 8 Output
     type: ign
@@ -70,8 +68,6 @@ pins:
     color: yellow
     
   - pin: 11C
-    # H144_IGN_5
-    id: E2
     class: outputs
     function: Smart Ignition 7 Output
     type: ign
@@ -79,8 +75,6 @@ pins:
     color: yellow
 
   - pin: 12C
-    # H144_IGN_5
-    id: E2
     class: outputs
     function: Smart Ignition 6 Output
     type: ign
@@ -88,8 +82,6 @@ pins:
     color: yellow
 
   - pin: 13C
-    # H144_IGN_5
-    id: E2
     class: outputs
     function: Smart Ignition 5 Output
     type: ign
