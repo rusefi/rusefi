@@ -965,8 +965,6 @@
 #define MAX_CYLINDER_COUNT 12
 #define MLQ_FIELD_HEADER_SIZE 89
 #define MLQ_HEADER_SIZE 24
-#define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
-#define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 #define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2
 #define operation_mode_e_FOUR_STROKE_CRANK_SENSOR 1
@@ -1086,7 +1084,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 2090786698
+#define SIGNATURE_HASH 1189962150
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1378,7 +1376,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.08.01.f407-discovery.2090786698"
+#define TS_SIGNATURE "rusEFI master.2023.08.01.f407-discovery.1189962150"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
