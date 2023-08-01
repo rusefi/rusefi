@@ -340,6 +340,7 @@ pins:
     color: green
     
   - pin: 19B
+
     class: [event_inputs, switch_inputs]
     function: Flex (configurable pull-up/pull-down,  ? hysteresis)
     type: hall
