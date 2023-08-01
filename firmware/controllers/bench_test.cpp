@@ -114,7 +114,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float startDelayMs
 	isRunningBench = false;
 }
 
-static volatile bool isBenchTestPending = false;
+static bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
 static float onTime;
 static float offTime;
