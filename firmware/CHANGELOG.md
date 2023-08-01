@@ -29,6 +29,15 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Latest jSerialComm 2.10.3
+ - Working disconnect button in Console #4862
+
+### Fixed
+ - simulator: sensor mocking UI #5473
+
+## July 2023 Release "Day 518"
+
+### Added
  - Dashpot for return-to-idle from coasting #5303
  - injector duty cycle limited at 50% for GDI engines #5416
  - STM32Cube v2.14 #5418
@@ -39,6 +48,8 @@ Release template (copy/paste this for new release):
  - fuel_pump_control is accessible as getOutput("isFuelPumpOn") in Lua #5239 
  - start button logic does not crank started for first X seconds since ECU boot #5324
  - launch control: Speed threshold should not depend on launch mode, also zero speed limit handling #5419
+ - hard fault due to misaligned big buffer on F7 firmware #5354
+ - Pointing at https://adoptium.net/download/ as JRE source
 
 ### Breaking Changes
  - Always operate in "two wire" mode for batch fuel, fixing batch firing order #5353

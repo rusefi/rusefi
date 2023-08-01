@@ -22,13 +22,14 @@ public class TriggerWheelInfo {
     private final boolean hasSecondChannel;
     private final boolean hardcodedOperationMode;
     private final TriggerGaps gaps;
+    private final String syncEdge;
 
     public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<TriggerSignal> signals,
                             boolean isCrankBased,
                             boolean isSecondWheelCam,
                             boolean hasSecondChannel,
                             boolean hardcodedOperationMode,
-                            TriggerGaps gaps) {
+                            TriggerGaps gaps, String syncEdge) {
         this.id = id;
         this.isSecondWheelCam = isSecondWheelCam;
         this.tdcPosition = tdcPosition;
@@ -38,6 +39,7 @@ public class TriggerWheelInfo {
         this.hasSecondChannel = hasSecondChannel;
         this.hardcodedOperationMode = hardcodedOperationMode;
         this.gaps = gaps;
+        this.syncEdge = syncEdge;
     }
 
     private static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
@@ -58,6 +60,8 @@ public class TriggerWheelInfo {
         boolean hasSecondChannel = false;
         boolean hardcodedOperationMode = false;
         TriggerWheelInfo.TriggerGaps gaps = null;
+        String syncEdge = null;
+
         while (true) {
             line = reader.readLine();
             if (line == null || line.trim().startsWith("#"))
@@ -100,6 +104,9 @@ public class TriggerWheelInfo {
                 case TRIGGER_WITH_SYNC:
                     //isSynchronizationNeeded = Integer.parseInt(value) > 0;
                     break;
+                case TRIGGER_SYNC_EDGE:
+                    syncEdge = value;
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected key/value: " + line);
             }
@@ -113,7 +120,8 @@ public class TriggerWheelInfo {
                 isSecondWheelCam,
                 hasSecondChannel,
                 hardcodedOperationMode,
-                gaps
+                gaps,
+                syncEdge
         );
     }
 
@@ -226,6 +234,10 @@ public class TriggerWheelInfo {
 
     public TriggerGaps getGaps() {
         return gaps;
+    }
+
+    public String getSyncEdge() {
+        return syncEdge;
     }
 
     public interface TriggerWheelInfoConsumer {

@@ -9,14 +9,14 @@
 
 #include "nissan_vq.h"
 #include "hellen_meta.h"
+#include "defaults.h"
 
 #define NISSAN_VQ_VVT_OFFSET 157
 
 void setHellen121nissanQR() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_NISSAN_QR25;
 
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
+	setInline4();
 	engineConfiguration->displacement = 2;
 	strcpy(engineConfiguration->engineCode, "QR");
 

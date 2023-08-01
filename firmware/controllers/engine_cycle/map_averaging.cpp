@@ -117,7 +117,7 @@ void MapAverager::stop() {
 
 		setValidValue(minPressure, getTimeNowNt());
 	} else {
-		warning(ObdCode::CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
+		warning(ObdCode::CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values to average");
 	}
 }
 
@@ -203,7 +203,7 @@ void refreshMapAveragingPreCalc() {
  */
 void mapAveragingTriggerCallback(
 		uint32_t index, efitick_t edgeTimestamp) {
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
 	// this callback is invoked on interrupt thread
 	if (index != (uint32_t)engineConfiguration->mapAveragingSchedulingAtIndex)
 		return;
@@ -255,7 +255,7 @@ void mapAveragingTriggerCallback(
 		scheduleByAngle(startTimer, edgeTimestamp, samplingStart,
 				{ startAveraging, endTimer });
 	}
-#endif
+#endif // EFI_ENGINE_CONTROL && EFI_PROD_CODE
 }
 
 void initMapAveraging() {

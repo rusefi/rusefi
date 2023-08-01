@@ -66,17 +66,14 @@ void setCitroenBerlingoTU3JPConfiguration() {
 	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 
 	engineConfiguration->fanPin = Gpio::E0;
-	engineConfiguration->fanPinMode = OM_DEFAULT;
 	engineConfiguration->fanOffTemperature = 95;
 	engineConfiguration->fanOnTemperature = 99;
 
 	engineConfiguration->malfunctionIndicatorPin = Gpio::E1;
-	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 	engineConfiguration->mainRelayPin = Gpio::B8;
 
 	engineConfiguration->fuelPumpPin = Gpio::B9;
-	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 
 //	engineConfiguration->o2heaterPin = Gpio::C13;

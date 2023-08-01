@@ -32,3 +32,4 @@ decl_frag<wideband_state_s, 0>{},	// wb1
 decl_frag<dc_motors_s>{},
 decl_frag<sent_state_s>{},
 decl_frag<vvt_s>{},
+decl_frag<lambda_monitor_s>{},

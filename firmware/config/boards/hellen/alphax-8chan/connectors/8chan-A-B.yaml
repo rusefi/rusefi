@@ -48,7 +48,7 @@ pins:
     type: 12v
     color: red
 
-   - pin: 6A
+  - pin: 6A
     function: VR1-
     type: event_inputs
     color: white
@@ -339,22 +339,21 @@ pins:
     ts_name: 18B - Hall5
     color: green
     
-      - pin: 19B
-    # H144_GP2
-    id: [D2, D2]
+  - pin: 19B
+
     class: [event_inputs, switch_inputs]
     function: Flex (configurable pull-up/pull-down,  ? hysteresis)
     type: hall
     ts_name: 19B - Flex
     color: green
     
-   - pin: 20B
+  - pin: 20B
     class: event_inputs
     function: VR3-
     ts_name: 20B - VR3-
     color: white
     
-   - pin: 21B
+  - pin: 21B
     class: event_inputs
     function: VR4-
     ts_name: 21B - VR4-

@@ -1,42 +1,102 @@
 pins:
   - pin: 1C
-    function: ETB negative
-    type: etb
-    color: purple
+    # H144_LS_8
+    id: F14
+    function: Injector 8
+    class: outputs
+    type: inj
+    ts_name: 1C - Injector 8
+    color: blue
 
-
+  - pin: 2C
+    function: Injector 7
+    class: outputs
+    type: inj
+    ts_name: 2C - Injector 7
+    color: blue
+    
+  - pin: 3C
+    function: Injector 6
+    class: outputs
+    type: inj
+    ts_name: 3C - Injector 6
+    color: blue
+    
+  - pin: 4C
+    # H144_LS_8
+    id: F14
+    function: Injector 5
+    class: outputs
+    type: inj
+    ts_name: 4C - Injector 5
+    color: blue
+    
   - pin: 5C
-    function: Hall Input 4 (5v pull-up, with hysteresis)
+    function: Switch4 (5v pull-up, with hysteresis)
     # H144_IN_MAP3_DIGITAL
     id: A2
     class: event_inputs
-    ts_name: 5C - Hall Input 4
+    ts_name: 5C - Switch4
 
   - pin: 6C
     # H144_IN_AUX2
     id: EFI_ADC_14
     class: analog_inputs
-    function: PPS2 Sensor Input
-    ts_name: 31C - PPS2
+    function: PPS1 Sensor Input
+    ts_name: 6C - PPS1
     color: orange
-
+    
+  - pin: 7C
+    function: ETB positive
+    type: etb
+    ts_name: 7C - ETB+
+    color: purple
+    
+  - pin: 8C
+    function: ETB negative
+    type: etb
+    ts_name: 7C - ETB-
+    color: purple
 
   - pin: 9C
     function: Power GND
     type: gnd
 
   - pin: 10C
-    function: ETB positive
-    type: etb
-    color: purple
+    # H144_IGN_5
+    id: E2
+    class: outputs
+    function: Smart Ignition 8 Output
+    type: ign
+    ts_name: 10C - Ignition 8
+    color: yellow
+    
+  - pin: 11C
+    # H144_IGN_5
+    id: E2
+    class: outputs
+    function: Smart Ignition 7 Output
+    type: ign
+    ts_name: 10C - Ignition 7
+    color: yellow
 
+  - pin: 12C
+    # H144_IGN_5
+    id: E2
+    class: outputs
+    function: Smart Ignition 6 Output
+    type: ign
+    ts_name: 10C - Ignition 6
+    color: yellow
 
   - pin: 13C
-    function: 2-Step/Generic Digital Input (configurable pull-up/pull-down, no hysteresis)
-    # IN_2STEP
-    id: E0
-    class: event_inputs
-    ts_name: 13C - 2-Step Input
+    # H144_IGN_5
+    id: E2
+    class: outputs
+    function: Smart Ignition 5 Output
+    type: ign
+    ts_name: 10C - Ignition 5
+    color: yellow
 
   - pin: 14C
     function: Power Ground
@@ -68,38 +128,61 @@ pins:
     # H144_IGN_8
     id: E6
     class: outputs
-    function: Smart Ignition 8 Output
+    function: Smart Ignition 12 Output
     type: ign
-    ts_name: 18C - Ignition 8
+    ts_name: 18C - Ignition 12
     color: yellow
 
   - pin: 19C
     # H144_IGN_7
     id: B9
     class: outputs
-    function: Smart Ignition 7 Output
+    function: Smart Ignition 11 Output
     type: ign
-    ts_name: 19C - Ignition 7
+    ts_name: 19C - Ignition 11
     color: yellow
 
   - pin: 20C
     # H144_IGN_6
     id: B8
     class: outputs
-    function: Smart Ignition 6 Output
+    function: Smart Ignition 10 Output
     type: ign
-    ts_name: 20C - Ignition 6
+    ts_name: 20C - Ignition 10
     color: yellow
 
   - pin: 21C
     # H144_IGN_5
     id: E2
     class: outputs
-    function: Smart Ignition 5 Output
+    function: Smart Ignition 9 Output
     type: ign
-    ts_name: 21C - Ignition 5
+    ts_name: 21C - Ignition 9
     color: yellow
+    
+  - pin: 22C
+    # H144_IN_TPS AIN17 PA4
+    id: EFI_ADC_4
+    class: analog_inputs
+    function: Analog2
+    ts_name: 22C - Analog2
+    color: orange
+    
+  - pin: 23C
+    # H144_IN_TPS AIN17 PA4
+    id: EFI_ADC_4
+    class: analog_inputs
+    function: Analog3
+    ts_name: 23C - Analog3
+    color: orange
   
+  - pin: 24C
+    # H144_IN_TPS AIN17 PA4
+    id: EFI_ADC_4
+    class: analog_inputs
+    function: Analog4
+    ts_name: 24C - Analog4
+    color: orange
 
   - pin: 25C
     function: Analog Ground
@@ -109,37 +192,37 @@ pins:
   - pin: 26C
     # H144_LS_8
     id: F14
-    function: Injector 8
+    function: Injector 12
     class: outputs
     type: inj
-    ts_name: 26C - Injector 8
+    ts_name: 26C - Injector 12
     color: blue
 
   - pin: 27C
     # H144_LS_7
     id: F13
-    function: Injector 7
+    function: Injector 11
     class: outputs
     type: inj
-    ts_name: 27C - Injector 7
+    ts_name: 27C - Injector 11
     color: blue
 
   - pin: 28C
     # H144_LS_6
     id: F12
-    function: Injector 6
+    function: Injector 10
     class: outputs
     type: inj
-    ts_name: 28C - Injector 6
+    ts_name: 28C - Injector 10
     color: blue
 
   - pin: 29C
     # H144_LS_5
     id: D9
-    function: Injector 5
+    function: Injector 9
     class: outputs
     type: inj
-    ts_name: 29C - Injector 5
+    ts_name: 29C - Injector 9
     color: blue
 
   - pin: 30C

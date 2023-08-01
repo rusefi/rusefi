@@ -111,6 +111,42 @@ pins:
     function: Analog 6
     ts_name: 16D - AN6
     color: orange
+    
+  - pin: 17D
+    # H144_OUT_PWM3
+    id: C7
+    class: outputs
+    function: Lowside1 (low)
+    type: ls
+    ts_name: 13D - Lowside1
+    color: purple
+    
+  - pin: 18D
+    # H144_OUT_PWM3
+    id: C7
+    class: outputs
+    function: Lowside2 (low)
+    type: ls
+    ts_name: 18D - Lowside2
+    color: purple
+    
+  - pin: 19D
+    # H144_OUT_PWM3
+    id: C7
+    class: outputs
+    function: Lowside3 (low)
+    type: ls
+    ts_name: 19D - Lowside3
+    color: purple
+
+  - pin: 20D
+    # H144_OUT_PWM3
+    id: C7
+    class: outputs
+    function: HighSide2 (low)
+    type: ls
+    ts_name: 20D - Highside2
+    color: purple
 
   - pin: 21D
     # H144_OUT_IO13
@@ -120,6 +156,15 @@ pins:
     ts_name: 21D - Tachometer
     type: ls
     color: purple
+    
+  - pin: 22D
+    # H144_OUT_PWM3
+    id: C7
+    class: outputs
+    function: Highside3 (low)
+    type: ls
+    ts_name: 22D - Highside3
+    color: purple
 
   - pin: 23D
     function: +5v sensors
@@ -128,6 +173,16 @@ pins:
     function: Analog Ground
     color: black
     type: gnd
+    
+  - pin: 25D
+    function: DC4 positive
+    type: etb
+    color: purple
+
+  - pin: 25D
+    function: DC4 negative
+    type: etb
+    color: purple    
 
 info:
   title: AlphaX 8chan

@@ -6,7 +6,9 @@ plugins {
 defaultTasks 'shadowJar'
 
 jar {
-    mainClassName = 'rusefi.GccMapReader'
+    application {
+        mainClass = 'rusefi.GccMapReader'
+    }
 
     destinationDirectory = file( '$rootDir/../..' )
     manifest {

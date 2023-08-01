@@ -6,6 +6,7 @@ HW_TARGET=$2
 # for instance
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/f407-discovery f407-discovery
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/proteus        proteus_f4
+# .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/proteus        proteus_f7_debug
 
 set -e
 echo "HW CI build [$HW_FOLDER][$HW_TARGET]"

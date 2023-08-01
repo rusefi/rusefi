@@ -8,9 +8,9 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case Gpio::A10: return "8A - Crank VR";
+		case Gpio::A10: return "8A - VR1+";
 		case Gpio::A2: return "5C - Hall Input 4";
-		case Gpio::A6: return "23A - Hall Input 1";
+		case Gpio::A6: return "23A - VR2-";
 		case Gpio::A8: return "8D - Fuel Pump";
 		case Gpio::A9: return "11D - LS 8";
 		case Gpio::B8: return "20C - Ignition 6";
@@ -19,12 +19,12 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::C7: return "13D - Boost";
 		case Gpio::D10: return "1A - Injector 4";
 		case Gpio::D11: return "2A - Injector 3";
-		case Gpio::D2: return "17B - Digital In Flex";
+		case Gpio::D2: return "17B - Hall4";
 		case Gpio::D3: return "10D - LS 7";
 		case Gpio::D9: return "29C - Injector 5";
 		case Gpio::E0: return "13C - 2-Step Input";
-		case Gpio::E14: return "30A - Hall Input 2";
-		case Gpio::E15: return "31A - Hall Input 3";
+		case Gpio::E14: return "30A - Hall Input 1";
+		case Gpio::E15: return "31A - Hall Input 2";
 		case Gpio::E2: return "21C - Ignition 5";
 		case Gpio::E3: return "10A - Ignition 4";
 		case Gpio::E4: return "11A - Ignition 3";
@@ -33,10 +33,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F12: return "28C - Injector 6";
 		case Gpio::F13: return "27C - Injector 7";
 		case Gpio::F14: return "26C - Injector 8";
-		case Gpio::F3: return "14B - Digital In 2";
-		case Gpio::F4: return "15B - Digital In 3";
-		case Gpio::F5: return "16B - Digital In 4";
-		case Gpio::F9: return "9A - Cam VR";
+		case Gpio::F5: return "16B - Hall3";
+		case Gpio::F9: return "9A - VR2+";
 		case Gpio::G12: return "8B - Main Relay LS";
 		case Gpio::G13: return "12D - NOS";
 		case Gpio::G2: return "9D - Fan Relay";

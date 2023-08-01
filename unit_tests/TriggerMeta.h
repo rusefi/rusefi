@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) integration/rusefi_config_trigger.txt Fri Jul 14 15:20:46 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) integration/rusefi_config_trigger.txt Sat Jul 29 17:52:56 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -13,7 +13,8 @@
 #define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
 #define TRIGGER_IS_CRANK_KEY "crankBased"
 #define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
+#define TRIGGER_SYNC_EDGE "syncEdge"
 #define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
 #define TRIGGERS_FILE_NAME "triggers.txt"
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) integration/rusefi_config_trigger.txt Fri Jul 14 15:20:46 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) integration/rusefi_config_trigger.txt Sat Jul 29 17:52:56 UTC 2023

@@ -91,7 +91,7 @@ public class BinaryProtocolLogger {
         compositeLogs.clear();
     }
 
-    private void getComposite(BinaryProtocol binaryProtocol) {
+    public void getComposite(BinaryProtocol binaryProtocol) {
         if (binaryProtocol.isClosed)
             return;
 

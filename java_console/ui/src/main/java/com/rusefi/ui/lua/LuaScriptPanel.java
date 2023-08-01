@@ -1,12 +1,12 @@
 package com.rusefi.ui.lua;
 
 import com.opensr5.ConfigurationImage;
+import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.MessagesPanel;
-import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
@@ -30,6 +30,7 @@ public class LuaScriptPanel {
 
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
+        ConnectionTab.installConnectAndDisconnect(context, mainPanel);
         command = AnyCommand.createField(context, config, true, true);
 
         // Upper panel: command entry, etc

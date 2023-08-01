@@ -3,7 +3,10 @@
 #include "big_buffer.h"
 
 static BigBufferUser s_currentUser;
-static uint8_t s_bigBuffer[BIG_BUFFER_SIZE];
+// uint32_t type to get 4-byte alignment
+// alignment is required since we sometimes allocate objects in the buffer (like Timer of CompositeBuffer)
+// we've only observed issue on F7 in -Os compiler configuration but technically all processors care
+static uint32_t s_bigBuffer[BIG_BUFFER_SIZE / sizeof(uint32_t)];
 
 static void releaseBuffer(void* bufferPtr, BigBufferUser user) {
 	if (bufferPtr != &s_bigBuffer || user != s_currentUser) {

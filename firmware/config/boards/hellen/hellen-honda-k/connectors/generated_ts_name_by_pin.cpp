@@ -29,7 +29,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F5: return "C18 Aux Digital 3";
 		case Gpio::F8: return "A25 VTT CAM";
 		case Gpio::F9: return "A7 Crankshaft Sensor";
-		case Gpio::G11: return "B15 VTS HS";
+		case Gpio::G11: return "B15 VTEC/VTS Output";
 		case Gpio::G12: return "E26 Tachometer";
 		case Gpio::G13: return "B18 Alternator Control";
 		case Gpio::G14: return "E7 Main Relay Control";

@@ -84,7 +84,7 @@ void setHyundaiPb() {
 	setCommonNTCSensor(&engineConfiguration->clt, PROTEUS_DEFAULT_AT_PULLUP);
 	setCommonNTCSensor(&engineConfiguration->iat, PROTEUS_DEFAULT_AT_PULLUP);
 
-    engineConfiguration->acRelayPin = PROTEUS_LS_6;
+//    engineConfiguration->acRelayPin = PROTEUS_LS_6;
     engineConfiguration->acSwitch = PROTEUS_DIGITAL_5;
 
 	engineConfiguration->fanPin = PROTEUS_LS_5;
@@ -105,7 +105,7 @@ local data_set_settings = { GDI4_CAN_SET_TAG, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 
 FIXED_POINT = 128
 
-setTickRate(2)
+setTickRate(100)
 
 function onCanConfiguration3(bus, id, dlc, data)
 --	print("Received configuration3 "..arrayToString(data))
@@ -118,13 +118,23 @@ canRxAdd(GDI4_BASE_ADDRESS + 3, onCanConfiguration3)
 
 EMS_DCT11_128 = 0x80
 EMS_DCT12_129 = 0x81
+EMS_H12_399 = 0x18f
+EMS6_608 = 0x260
+EMS5_672 = 0x2a0
 EMS11_790 = 0x316
+EMS12_809 = 0x329
+EMS9_898 = 0x382
 EMS14_1349 = 0x545
 
 counter = 0
 
 payLoad128 =  { 0x00, 0x17, 0x70, 0x0F, 0x1B, 0x2C, 0x1B, 0x75 }
 payLoad129 =  { 0x40, 0x84, 0x5F, 0x00, 0x00, 0x00, 0x00, 0x75 }
+payLoad399 = {0x00, 0x30, 0x1d, 0x00, 0x00, 0x63, 0x00, 0x00}
+payLoad608 = {0x05, 0x1d, 0x00, 0x30, 0x01, 0xa5, 0x7f, 0x31}
+payLoad672 = {0xe0, 0x00, 0x5f, 0x98, 0x39, 0x12, 0x9e, 0x08}
+payLoad809 = {0xd7, 0x7b, 0x7e, 0x0c, 0x11, 0x2c, 0x00, 0x10}
+payLoad898 = {0x40, 0xfe, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x08}
 payLoad1349 = { 0xCA, 0x16, 0x00, 0x8A, 0x75, 0xFF, 0x75, 0xFF }
 
 speedSensor = Sensor.new("VehicleSpeed")
@@ -148,11 +158,11 @@ function onTick()
 
     counter = (counter + 1) % 16
 
-    check128 = hyuindaiSumNibbles(payLoad128, counter)
+    check128 = hyundaiSumNibbles(payLoad128, counter)
     payLoad128[8] = check128 * 16 + counter
     txCan(1, EMS_DCT11_128, 0, payLoad128)
 
-    check129 = hyuindaiSumNibbles(payLoad129, counter)
+    check129 = hyundaiSumNibbles(payLoad129, counter)
     payLoad129[8] = check129 * 16 + counter
     txCan(1, EMS_DCT12_129, 0, payLoad129)
 
@@ -160,6 +170,12 @@ function onTick()
 
 	txCan(1, EMS11_790, 0, canRPMpayload)
 	txCan(1, EMS14_1349, 0, payLoad1349)
+
+	txCan(1, EMS_H12_399, 0, payLoad399)
+	txCan(1, EMS6_608, 0, payLoad608)
+	txCan(1, EMS5_672, 0, payLoad672)
+	txCan(1, EMS12_809, 0, payLoad809)
+	txCan(1, EMS9_898, 0, payLoad898)
 
 	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
 	pumpHoldCurrent      = getCalibration("mc33_hpfp_i_hold")
@@ -178,8 +194,6 @@ function onTick()
 	setTwoBytesLsb(data_set_settings, 3, GDI4_BASE_ADDRESS)
 	print('Will be sending ' ..arrayToString(data_set_settings))
 	txCan(1, GDI_CHANGE_ADDRESS + 4, 1, data_set_settings)
-
-
 end
 
 )", efi::size(config->luaScript));

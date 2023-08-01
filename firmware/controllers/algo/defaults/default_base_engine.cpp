@@ -54,9 +54,8 @@ static void setDefaultHPFP() {
 
 void setDefaultBaseEngine() {
 	// Base Engine Settings
-	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->displacement = 2;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
+	setInline4();
 
 	engineConfiguration->compressionRatio = 9;
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;

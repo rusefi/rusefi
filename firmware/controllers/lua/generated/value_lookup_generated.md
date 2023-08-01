@@ -541,6 +541,9 @@ If enabled we use two H-bridges to drive stepper idle air valve
 ### unfinishedenableLaunchBoost
 
 
+### isSimulator
+
+
 ### enableCanVss
 Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 

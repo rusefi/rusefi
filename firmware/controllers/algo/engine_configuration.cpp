@@ -630,12 +630,10 @@ static void setDefaultEngineConfiguration() {
     #include "default_script.lua"
 }
 
-#ifdef CONFIG_RESET_SWITCH_PORT
-// this pin is not configurable at runtime so that we have a reliable way to reset configuration
-#define SHOULD_IGNORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
-#else
-#define SHOULD_IGNORE_FLASH() (false)
-#endif // CONFIG_RESET_SWITCH_PORT
+#if defined(STM32F7) && defined(HARDWARE_CI)
+// part of F7 drama looks like we are having a hard time erasing configuration on HW CI :(
+#define IGNORE_FLASH_CONFIGURATION true
+#endif
 
 // by default, do not ignore config from flash! use it!
 #ifndef IGNORE_FLASH_CONFIGURATION
@@ -643,10 +641,6 @@ static void setDefaultEngineConfiguration() {
 #endif
 
 void loadConfiguration() {
-#ifdef CONFIG_RESET_SWITCH_PORT
-	// initialize the reset pin if necessary
-	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
-#endif /* CONFIG_RESET_SWITCH_PORT */
 
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	// Clear the active configuration so that registered output pins (etc) detect the change on startup and init properly
@@ -654,7 +648,7 @@ void loadConfiguration() {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 #if EFI_INTERNAL_FLASH
-	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
+	if (IGNORE_FLASH_CONFIGURATION) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 		resetConfigurationExt(engineConfiguration->engineType);
 		writeToFlashNow();
@@ -865,6 +859,15 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	    setHondaCivicBcm();
         break;
 #endif // HW_HELLEN
+#if HW_FRANKENSO || HW_PROTEUS
+    // used in HW CI
+	case engine_type_e::VW_ABA:
+		setVwAba();
+		break;
+	case engine_type_e::FRANKENSO_BMW_M73_F:
+		setBMW_M73_TwoCoilUnitTest();
+		break;
+#endif // HW_FRANKENSO || HW_PROTEUS
 #if HW_FRANKENSO
 	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
@@ -878,9 +881,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::FRANKENSO_QA_ENGINE:
 		setFrankensoBoardTestConfiguration();
-		break;
-	case engine_type_e::FRANKENSO_BMW_M73_F:
-		setBMW_M73_TwoCoilUnitTest();
 		break;
 	case engine_type_e::BMW_M73_M:
 		setEngineBMW_M73_Manhattan();
@@ -949,9 +949,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::DODGE_RAM:
 		setDodgeRam1996();
-		break;
-	case engine_type_e::VW_ABA:
-		setVwAba();
 		break;
 	case engine_type_e::FRANKENSO_MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration();

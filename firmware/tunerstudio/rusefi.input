@@ -910,7 +910,6 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 		zBins		= scriptTable4
 
 	table = IgnRetardTableALS, IgnRetardALS,  "Ignition adjustment",   1
-      ;       constant, variable
       xBins       = alsIgnRetardrpmBins,  RPMValue
       yBins       = alsIgnRetardLoadBins,  TPSValue
       zBins       = ALSTimingRetardTable
@@ -919,7 +918,6 @@ curve = rangeMatrix, "Range Switch Input Matrix"
       upDownLabel = "(RICHER)", "(LEANER)"
 
    table = FuelAdderTableALS, FuelAdderALS,  "Fuel adjustment",   1
-      ;       constant, variable
       xBins       = alsFuelAdjustmentrpmBins,  RPMValue
       yBins       = alsFuelAdjustmentLoadBins,  TPSValue
       zBins       = ALSFuelAdjustment
@@ -1051,7 +1049,7 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 		zBins		= torqueTable
 
 	table = veTableTbl,  veTableMap,  "VE Table",	1
-		;		constant, variable
+		xyLabels = "RPM", "load"
 		xBins		= veRpmBins,  RPMValue
 		yBins		= veLoadBins, veTableYAxis
 		zBins		= veTable
@@ -1060,6 +1058,7 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 		upDownLabel = "(RICHER)", "(LEANER)"
 
 	table = idleVeTableTbl, idleVeTable, "Idle VE"
+		xyLabels = "RPM", "load"
 		xBins		= idleVeRpmBins,  RPMValue
 		yBins		= idleVeLoadBins, veTableYAxis
 		zBins		= idleVeTable
@@ -1205,7 +1204,6 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 
 	table = injPhaseTableTbl,  injPhaseTableMap,  "Injection Phase",	1
 		topicHelp = "fuelHelp"
-		;		constant, variable
 		xBins		= injPhaseRpmBins,  RPMValue
 		yBins		= injPhaseLoadBins,  fuelingLoad
 		zBins		= injectionPhase
@@ -1214,7 +1212,6 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 		upDownLabel = "(Later)", "(Sooner)"
 
 	table = pedalToTpsTbl,  pedalToTpsMap,  "ETB Pedal to TPS",	1
-		;		constant, variable
 		xBins		= pedalToTpsRpmBins,  RPMValue
 		yBins		= pedalToTpsPedalBins,  throttlePedalPosition
 		zBins		= pedalToTpsTable
@@ -1239,7 +1236,6 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 #else
 	table = afrTableTbl,  afrTableMap,  "Target AFR Table",	1
 #endif
-		;		constant, variable
 		xBins		= lambdaRpmBins,  RPMValue
 		yBins		= lambdaLoadBins, afrTableYAxis
 		zBins		= lambdaTable
@@ -1254,7 +1250,6 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 		zBins = lambdaMaxDeviationTable
 
 	table = iacPidMultTbl,  iacPidMultMap,  "IAC PID Multiplier Table",	1
-		;		constant, variable
 		xBins		= iacPidMultRpmBins,  RPMValue
 		yBins		= iacPidMultLoadBins,  fuelingLoad
 		zBins		= iacPidMultTable
@@ -2020,6 +2015,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = simulatorSensors, "Simulator", { isSimulator != 0 }
 		subMenu = antiLagDialog,                "Anti-Lag ALS"
 		subMenu = rotaryDialog,			"Rotary"
 		subMenu = throttleEffectiveArea, "Throttle effective area"
@@ -4272,6 +4268,10 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Reset to OpenBLT", cmd_openblt
 		commandButton = "F7 nDBANK fix", cmd_nDBANK@@if_ts_show_f7_presets
 		commandButton = "No flash Burn mode", cmd_burn_without_flash
+
+    dialog = simulatorSensors, "Simulator"
+        field = "Field 1"
+        field = "Field 2"
 
 	; bench test
 	dialog = ioTest, "Bench Test & Commands", xAxis

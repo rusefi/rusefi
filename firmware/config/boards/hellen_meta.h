@@ -24,6 +24,7 @@
 void hellenWbo();
 
 void setHellenMegaEnPin();
+void setHellenEnPin(Gpio pin);
 void setHellen64MegaEnPin();
 void hellenBoardStandBy();
 void configureHellenMegaAccCS2Pin();

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 03:10:03 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Jul 31 21:47:05 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2011,7 +2011,7 @@ struct engine_configuration_s {
 	bool unfinishedenableLaunchBoost : 1 {};
 	/**
 	offset 912 bit 6 */
-	bool unusedBitLDBS : 1 {};
+	bool isSimulator : 1 {};
 	/**
 	 * Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	offset 912 bit 7 */
@@ -5306,4 +5306,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 22 03:10:03 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Jul 31 21:47:05 UTC 2023

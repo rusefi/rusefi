@@ -218,9 +218,9 @@ pins:
 # H144_OUT_IO6
     id: G11
     class: outputs
-    ts_name: ___ VTS HS
+    ts_name: ___ VTEC/VTS Output
   # not to be confused with VTC aka VVT
-    function: VTS High Side
+    function: VTEC Output
 
   - pin: B17
     # H144_IN_IAT AIN14 PC3

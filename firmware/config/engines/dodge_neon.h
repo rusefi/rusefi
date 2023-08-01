@@ -12,9 +12,3 @@
 void setDodgeNeon1995EngineConfiguration();
 
 void setDodgeNeonNGCEngineConfiguration();
-
-/**
- * testing or broken CAM sensor option
- */
-void setDodgeNeonNGCEngineConfigurationCrankBased();
-

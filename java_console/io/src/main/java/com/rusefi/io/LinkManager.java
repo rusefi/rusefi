@@ -59,6 +59,7 @@ public class LinkManager implements Closeable {
     private boolean needPullLiveData = true;
     public final MessagesListener messageListener = (source, message) -> System.out.println(source + ": " + message);
     private Thread communicationThread;
+    private boolean isDisconnectedByUser;
 
     public LinkManager() {
         Future<?> future = submit(() -> {
@@ -178,6 +179,16 @@ public class LinkManager implements Closeable {
         return this;
     }
 
+    public void disconnect() {
+        isDisconnectedByUser = true;
+        close();
+    }
+
+    public void reconnect() {
+        isDisconnectedByUser = false;
+        restart();
+    }
+
     public enum LogLevel {
         INFO,
         DEBUG,
@@ -191,7 +202,6 @@ public class LinkManager implements Closeable {
     public final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
-     *
      */
     public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
@@ -299,7 +309,8 @@ public class LinkManager implements Closeable {
     }
 
     public void restart() {
-        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        if (isDisconnectedByUser)
+            return;
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
         String[] ports = getCommPorts();
@@ -312,8 +323,10 @@ public class LinkManager implements Closeable {
 
     @Override
     public void close() {
-        if (connector != null)
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        if (connector != null) {
             connector.stop();
+        }
         isStarted = false; // Connector is dead and cant be in started state (Otherwise the Exception will raised)
     }
 

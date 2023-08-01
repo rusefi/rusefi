@@ -67,6 +67,7 @@ void setDiscoveryPdm() {
 
 // todo: should this be part of more default configurations?
 void setFrankensoConfiguration() {
+#if HW_FRANKENSO
 	engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
 
 	commonFrankensoAnalogInputs();
@@ -164,6 +165,7 @@ void setFrankensoConfiguration() {
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
+#endif // HW_FRANKENSO
 }
 
 /**

@@ -17,7 +17,7 @@ void setHellen64Can() {
 
 static OutputPin megaEn;
 
-static void setHellenMegaEnPin(Gpio pin) {
+void setHellenEnPin(Gpio pin) {
     static bool initialized = false;
     if (!initialized) {
         initialized = true;
@@ -27,11 +27,11 @@ static void setHellenMegaEnPin(Gpio pin) {
 }
 
 void setHellenMegaEnPin() {
-    setHellenMegaEnPin(H144_GP8); // OUT_PWR_EN
+    setHellenEnPin(H144_GP8); // OUT_PWR_EN
 }
 
 void setHellen64MegaEnPin() {
-    setHellenMegaEnPin(H64_IO1); // OUT_PWR_EN
+    setHellenEnPin(H64_IO1); // OUT_PWR_EN
 }
 
 void hellenBoardStandBy() {

@@ -3,6 +3,7 @@
  */
 #include "pch.h"
 #include "TriggerMeta.h"
+#include "auto_generated_sync_edge.h"
 
 // uncomment to test starting from specific trigger
 //#define TEST_FROM_TRIGGER_ID ((int)trigger_type_e::TT_MAZDA_MIATA_NA)
@@ -94,6 +95,7 @@ extern TriggerDecoderBase initState;
 	fprintf(fp, "%s=%s\n", TRIGGER_IS_SECOND_WHEEL_CAM, shape->isSecondWheelCam ? "true" : "false");
 	fprintf(fp, "%s=%d\n", TRIGGER_CYCLE_DURATION, (int)shape->getCycleDuration());
 	fprintf(fp, "%s=%d\n", TRIGGER_GAPS_COUNT, shape->gapTrackingLength);
+	fprintf(fp, "%s=%s\n", TRIGGER_SYNC_EDGE, getSyncEdge(shape->syncEdge));
 	fprintf(fp, "%s=%d\n", TRIGGER_WITH_SYNC, shape->isSynchronizationNeeded);
 	for (int i = 0; i < shape->gapTrackingLength; i++) {
 		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_FROM, i, shape->syncronizationRatioFrom[i]);

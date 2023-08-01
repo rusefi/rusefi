@@ -119,17 +119,9 @@ public class SensorGauge {
     }
 
     public static Radial createRadial(String title, String units, double maxValue, double minValue) {
-//        final Section[] SECTIONS =
-//                {
-//                        new Section(0, to, Color.red)
-//                };
-
         Radial radial1 = new Radial();
-//        radial1.setSections(SECTIONS);
         radial1.setTitle(title);
         radial1.setUnitString(units);
-
-        //radial1.setTrackStop(to);
 
         radial1.setMinValue(minValue);
         if (minValue == maxValue) {

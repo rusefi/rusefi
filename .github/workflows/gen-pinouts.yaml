@@ -19,7 +19,7 @@ jobs:
     - name: Generate Pinouts
       uses: chuckwagoncomputing/interactive-pinout@2.8
       with:
-        mapping-path: ./firmware/config/boards/*/connectors/*.yaml
+        mapping-path: firmware/config/boards/*/connectors/*.yaml
         warnings: "false"
         warning-dupe: "error"
         columns: |

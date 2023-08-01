@@ -1,7 +1,6 @@
 package com.rusefi.ui.lua;
 
 import com.rusefi.config.generated.Fields;
-import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -100,9 +99,7 @@ public class TextEditor {
         document.addUndoableEditListener(e -> undoManager.addEdit(e.getEdit()));
 
         // Map undo action
-        textArea.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(undoKeyStroke, "undoKeyStroke");
-        textArea.getActionMap().put("undoKeyStroke", new AbstractAction() {
+        installKeyAction(undoKeyStroke, "undoKeyStroke", textArea, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -113,9 +110,7 @@ public class TextEditor {
             }
         });
         // Map redo action
-        textArea.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(redoKeyStroke, "redoKeyStroke");
-        textArea.getActionMap().put("redoKeyStroke", new AbstractAction() {
+        installKeyAction(redoKeyStroke, "redoKeyStroke", textArea, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -125,6 +120,11 @@ public class TextEditor {
                 }
             }
         });
+    }
+
+    public static void installKeyAction(KeyStroke undoKeyStroke, String actionName, JComponent control, AbstractAction action) {
+        control.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(undoKeyStroke, actionName);
+        control.getActionMap().put(actionName, action);
     }
 
     public JComponent getControl() {

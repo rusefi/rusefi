@@ -20,10 +20,17 @@ jobs:
 
           - build-target: proteus_f4
             runs-on: hw-ci-proteus
-            test-suite: com.rusefi.HwCiF4Proteus
+            test-suite: com.rusefi.HwCiProteus
             folder: config/boards/proteus
-            openocd-script: ../.github/workflows/openocd_ci_proteus.cfg
+            openocd-script: ../.github/workflows/openocd_ci_proteus_f4.cfg
             serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_41003D000451383037343335-if01
+
+          - build-target: proteus_f7
+            runs-on: andrey
+            test-suite: com.rusefi.HwCiProteus
+            folder: config/boards/proteus
+            openocd-script: ../.github/workflows/openocd_ci_proteus_f7.cfg
+            serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_38002B0005504B4634303120-if01
 
     runs-on: ${{matrix.runs-on}}
 

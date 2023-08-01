@@ -10,8 +10,8 @@
 
 #include "pch.h"
 #include "hellen_meta.h"
+#include "defaults.h"
 
-static OutputPin alphaEn;
 static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
@@ -25,8 +25,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
-
 	engineConfiguration->clutchDownPin = Gpio::Unassigned;
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
@@ -38,8 +36,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[2] = H144_IGN_2;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 static void setupVbatt() {
@@ -73,8 +69,6 @@ static void setupDefaultSensorInputs() {
 }
 
 void boardInitHardware() {
-	alphaEn.initPin("a-EN", H144_OUT_IO3);
-	alphaEn.setValue(1);
 
 	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
@@ -99,6 +93,11 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 void setBoardConfigOverrides() {
 	// todo: do we need this conditional on boardId or not really?
 	setHellenMegaEnPin();
+	// todo: make this conditional on 2chan revision
+	static OutputPin alphaEn;
+    alphaEn.initPin("a-EN", H144_OUT_IO3);
+    alphaEn.setValue(1);
+
 	setupVbatt();
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 
@@ -147,13 +146,10 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
+	setInline4();
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 
-	engineConfiguration->clutchDownPin = H144_IN_D_2;
-	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;

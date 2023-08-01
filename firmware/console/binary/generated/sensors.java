@@ -549,3 +549,5 @@ errorRate("ETB: SENT error rate", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1
 vvtTarget("vvtTarget", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1388, 0.1, -90.0, 90.0, "deg"),
 vvtOutput("vvtOutput", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1390, 0.5, 100.0, 1.0, "%"),
 alignmentFill_at_3("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1391, 1.0, -20.0, 100.0, "units"),
+lambdaTimeSinceGood("lambdaTimeSinceGood", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1396, 0.01, 0.0, 1.0, "sec"),
+alignmentFill_at_6("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1398, 1.0, -20.0, 100.0, "units"),

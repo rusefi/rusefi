@@ -11,6 +11,7 @@
 
 #include "vw.h"
 #include "custom_engine.h"
+#include "defaults.h"
 
 // VW_ABA
 // set engine_type 32
@@ -24,15 +25,11 @@ void setVwAba() {
 	// set global_trigger_offset_angle 93
 	engineConfiguration->globalTriggerAngleOffset = 93;
 
-
 	setCrankOperationMode();
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-
-
 	//Base engine setting
-	engineConfiguration->cylindersCount = 4;
+	setInline4();
 	engineConfiguration->displacement = 2.0;
 	engineConfiguration->injector.flow = 320; // 30lb/h
 	// set algorithm 3
@@ -41,14 +38,16 @@ void setVwAba() {
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
+#if HW_FRANKENSO
+	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->idlePositionSensor = EFI_ADC_3; // PA3
 	engineConfiguration->wastegatePositionSensor = EFI_ADC_4; // PA4
+#endif // HW_FRANKENSO
 
 	float mapRange = 110;
 

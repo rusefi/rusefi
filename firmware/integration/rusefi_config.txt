@@ -875,7 +875,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit multisparkEnable
 	bit enableLaunchRetard
 	bit unfinishedenableLaunchBoost
-	bit unusedBitLDBS
+	bit isSimulator
 	bit enableCanVss;Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
@@ -1812,6 +1812,9 @@ uint16_t[4] lambdaMaxDeviationLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[4] lambdaMaxDeviationRpmBins;;"RPM",  1, 0, 0, 18000, 0
 
 end_struct
+
+#define CMD_SET_SENSOR_MOCK "set_sensor_mock"
+#define CMD_RESET_SENSOR_MOCKS "reset_sensor_mocks"
 
 ! Pedal Position Sensor
 #define MOCK_PPS_POSITION_COMMAND "mock_pps_position"

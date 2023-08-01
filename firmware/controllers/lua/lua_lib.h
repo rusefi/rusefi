@@ -66,8 +66,9 @@ end  \
 
 // LSB (Least Significant Byte comes first) "Intel"
 #define TWO_BYTES_LSB "function getTwoBytesLSB(data, offset, factor)\
-		return (data[offset + 2] * 256 + data[offset + 1]) * factor\
-	end\
+		return (data[offset + 2] * 256 + data[offset + 1]) * factor \n\
+	end\n\
+\
 "
 
 // Little-endian System, "Intel"
@@ -95,16 +96,16 @@ end  \
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55971
 // for when you want "I want bitWidth number of bits starting at bitIndex in data array
 #define GET_BIT_RANGE_LSB " \
-function getBitRange(data, bitIndex, bitWidth) \
-	byteIndex = bitIndex >> 3 \
-	shift = bitIndex - byteIndex * 8 \
-	value = data[1 + byteIndex] \
-	if (shift + bitWidth > 8) then \
+function getBitRange(data, bitIndex, bitWidth) \n\
+	byteIndex = bitIndex >> 3 \n\
+	shift = bitIndex - byteIndex * 8 \n\
+	value = data[1 + byteIndex] \n\
+	if (shift + bitWidth > 8) then \n\
 		value = value + data[2 + byteIndex] * 256 \
-	end \
-	mask = (1 << bitWidth) - 1 \
-	return (value >> shift) & mask \
-end \
+	end \n\
+	mask = (1 << bitWidth) - 1 \n\
+	return (value >> shift) & mask \n\
+end \n\
 "
 
 #define SET_BIT_RANGE_LSB " \
@@ -121,11 +122,11 @@ function setBitRange(data, totalBitIndex, bitWidth, value) \
 	maskedValue = value & mask \
 	shiftedValue = maskedValue << bitInByteIndex \
 	data[1 + byteIndex] = data[1 + byteIndex] | shiftedValue \
-end \
+end \n\
 "
 
 #define HYUNDAI_SUM_NIBBLES "\
-function hyuindaiSumNibbles(data, seed) \n\
+function hyundaiSumNibbles(data, seed) \n\
   local sum = seed \n\
   for i = 1, 7, 1 \n\
   do \n\
