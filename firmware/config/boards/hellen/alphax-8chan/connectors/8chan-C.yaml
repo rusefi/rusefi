@@ -151,24 +151,18 @@ pins:
     color: yellow
     
   - pin: 22C
-    # H144_IN_TPS AIN17 PA4
-    id: EFI_ADC_4
     class: analog_inputs
     function: Analog2
     ts_name: 22C - Analog2
     color: orange
     
   - pin: 23C
-    # H144_IN_TPS AIN17 PA4
-    id: EFI_ADC_4
     class: analog_inputs
     function: Analog3
     ts_name: 23C - Analog3
     color: orange
   
   - pin: 24C
-    # H144_IN_TPS AIN17 PA4
-    id: EFI_ADC_4
     class: analog_inputs
     function: Analog4
     ts_name: 24C - Analog4
