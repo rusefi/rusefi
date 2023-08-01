@@ -113,8 +113,6 @@ pins:
     color: orange
     
   - pin: 17D
-    # H144_OUT_PWM3
-    id: C7
     class: outputs
     function: Lowside1 (low)
     type: ls
@@ -122,8 +120,6 @@ pins:
     color: purple
     
   - pin: 18D
-    # H144_OUT_PWM3
-    id: C7
     class: outputs
     function: Lowside2 (low)
     type: ls
@@ -131,8 +127,6 @@ pins:
     color: purple
     
   - pin: 19D
-    # H144_OUT_PWM3
-    id: C7
     class: outputs
     function: Lowside3 (low)
     type: ls
@@ -140,8 +134,6 @@ pins:
     color: purple
 
   - pin: 20D
-    # H144_OUT_PWM3
-    id: C7
     class: outputs
     function: HighSide2 (low)
     type: ls
@@ -158,8 +150,6 @@ pins:
     color: purple
     
   - pin: 22D
-    # H144_OUT_PWM3
-    id: C7
     class: outputs
     function: Highside3 (low)
     type: ls
