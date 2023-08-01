@@ -169,7 +169,7 @@ pins:
     type: etb
     color: purple
 
-  - pin: 25D
+  - pin: 26D
     function: DC4 negative
     type: etb
     color: purple    
