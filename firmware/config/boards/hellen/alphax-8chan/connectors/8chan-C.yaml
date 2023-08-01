@@ -23,8 +23,6 @@ pins:
     color: blue
     
   - pin: 4C
-    # H144_LS_8
-    id: F14
     function: Injector 5
     class: outputs
     type: inj
@@ -190,8 +188,6 @@ pins:
     type: gnd
 
   - pin: 26C
-    # H144_LS_8
-    id: F14
     function: Injector 12
     class: outputs
     type: inj
