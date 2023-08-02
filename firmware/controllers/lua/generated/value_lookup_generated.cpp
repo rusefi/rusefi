@@ -547,9 +547,6 @@ float getConfigValueByName(const char *name) {
 // unfinishedenableLaunchBoost
 		case -246028069:
 			return engineConfiguration->unfinishedenableLaunchBoost;
-// isSimulator
-		case -1989715903:
-			return engineConfiguration->isSimulator;
 // enableCanVss
 		case 245947066:
 			return engineConfiguration->enableCanVss;
@@ -2536,11 +2533,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -246028069:
 	{
 		engineConfiguration->unfinishedenableLaunchBoost = (int)value;
-		return 1;
-	}
-		case -1989715903:
-	{
-		engineConfiguration->isSimulator = (int)value;
 		return 1;
 	}
 		case 245947066:
