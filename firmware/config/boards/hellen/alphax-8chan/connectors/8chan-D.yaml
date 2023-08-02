@@ -165,13 +165,11 @@ pins:
     type: gnd
     
   - pin: 25D
-    function: DC4 positive
-    type: etb
+    function: Lowside 9
     color: purple
 
   - pin: 26D
-    function: DC4 negative
-    type: etb
+    function: Lowside 10
     color: purple    
 
 info:
