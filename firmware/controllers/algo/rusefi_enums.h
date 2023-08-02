@@ -438,7 +438,10 @@ typedef enum __attribute__ ((__packed__)) {
 	 * 4 bar
 	 */
 	MT_MPXH6400 = 14,
-
+	/**
+	 * 3 bar
+	 */
+	MT_MPXH6300 = 15,
 
 } air_pressure_sensor_type_e;
 
