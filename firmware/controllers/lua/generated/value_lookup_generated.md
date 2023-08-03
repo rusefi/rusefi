@@ -202,9 +202,6 @@ Engine displacement in litres
 ### cylindersCount
 Number of cylinder the engine has.
 
-### benchTestCount
-How many test bench pulses do you want
-
 ### benchTestOnTime
 Duration of each test pulse
 
@@ -222,6 +219,9 @@ Minimum TPS to enable boost control. Use this to avoid solenoid noise at idle, a
 
 ### boostControlMinMap
 Minimum MAP to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
+
+### benchTestCount
+How many test bench pulses do you want
 
 ### crankingTimingAngle
 Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance

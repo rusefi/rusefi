@@ -139,8 +139,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->triggerSimulatorRpm;
 		case -1578655365:
 			return engineConfiguration->cylindersCount;
-		case -204721234:
-			return engineConfiguration->benchTestCount;
 		case -1992436143:
 			return engineConfiguration->benchTestOnTime;
 		case 1425664391:
@@ -153,6 +151,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->boostControlMinTps;
 		case -1976642929:
 			return engineConfiguration->boostControlMinMap;
+		case -204721234:
+			return engineConfiguration->benchTestCount;
 		case 2071041633:
 			return engineConfiguration->crankingTimingAngle;
 		case -2079960526:
@@ -1347,11 +1347,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->cylindersCount = (int)value;
 		return;
 	}
-		case -204721234:
-	{
-		engineConfiguration->benchTestCount = (int)value;
-		return;
-	}
 		case -1992436143:
 	{
 		engineConfiguration->benchTestOnTime = (int)value;
@@ -1380,6 +1375,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -1976642929:
 	{
 		engineConfiguration->boostControlMinMap = (int)value;
+		return;
+	}
+		case -204721234:
+	{
+		engineConfiguration->benchTestCount = (int)value;
 		return;
 	}
 		case 2071041633:

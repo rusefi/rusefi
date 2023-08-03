@@ -368,7 +368,7 @@ public class Fields {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 20010;
+	public static final int FLASH_DATA_VERSION = 20011;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int fuel_pressure_sensor_mode_e_FPM_Absolute = 0;
@@ -975,7 +975,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 324296357;
+	public static final int SIGNATURE_HASH = 161724182;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1177,7 +1177,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.08.01.f407-discovery.324296357";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.08.03.f407-discovery.161724182";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;
@@ -1322,7 +1322,7 @@ public class Fields {
 	public static final Field TRIGGERSIMULATORRPM = Field.create("TRIGGERSIMULATORRPM", 330, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field CYLINDERSCOUNT = Field.create("CYLINDERSCOUNT", 332, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field FIRINGORDER = Field.create("FIRINGORDER", 336, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 337, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDOLDBENCHTEST = Field.create("UNUSEDOLDBENCHTEST", 337, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 338, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 340, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] engine_load_mode_e = {"Speed Density", "MAF Air Charge", "Alpha-N", "Lua"};
@@ -1338,7 +1338,7 @@ public class Fields {
 	public static final Field BOOSTCONTROLMINMAP = Field.create("BOOSTCONTROLMINMAP", 355, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TIMINGMODE = Field.create("TIMINGMODE", 356, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MAFADCCHANNEL = Field.create("MAFADCCHANNEL", 357, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_358 = Field.create("ALIGNMENTFILL_AT_358", 358, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 358, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field CRANKINGTIMINGANGLE = Field.create("CRANKINGTIMINGANGLE", 360, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field GAPTRACKINGLENGTHOVERRIDE = Field.create("GAPTRACKINGLENGTHOVERRIDE", 364, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MAXIDLEVSS = Field.create("MAXIDLEVSS", 365, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2697,7 +2697,7 @@ public class Fields {
 	TRIGGERSIMULATORRPM,
 	CYLINDERSCOUNT,
 	FIRINGORDER,
-	BENCHTESTCOUNT,
+	UNUSEDOLDBENCHTEST,
 	BENCHTESTONTIME,
 	CYLINDERBORE,
 	FUELALGORITHM,
@@ -2711,7 +2711,7 @@ public class Fields {
 	BOOSTCONTROLMINMAP,
 	TIMINGMODE,
 	MAFADCCHANNEL,
-	ALIGNMENTFILL_AT_358,
+	BENCHTESTCOUNT,
 	CRANKINGTIMINGANGLE,
 	GAPTRACKINGLENGTHOVERRIDE,
 	MAXIDLEVSS,

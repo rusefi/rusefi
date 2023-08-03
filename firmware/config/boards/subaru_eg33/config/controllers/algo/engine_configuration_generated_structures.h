@@ -520,9 +520,8 @@ struct engine_configuration_s {
 	uint32_t cylindersCount;
 	// offset 336
 	firing_order_e firingOrder;
-	// How many test bench pulses do you want
 	// offset 337
-	uint8_t benchTestCount;
+	uint8_t unusedOldBenchTest;
 	// Duration of each test pulse
 	// ms
 	// offset 338
@@ -564,8 +563,9 @@ struct engine_configuration_s {
 	timing_mode_e timingMode;
 	// offset 357
 	adc_channel_e mafAdcChannel;
+	// How many test bench pulses do you want
 	// offset 358
-	uint8_t alignmentFill_at_358[2];
+	uint16_t benchTestCount;
 	// Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.
 	// There is tapering towards running timing advance
 	// deg
