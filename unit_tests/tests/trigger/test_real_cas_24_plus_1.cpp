@@ -19,7 +19,7 @@ TEST(realCas24Plus1, spinningOnBench) {
 
 	// 24 teeth at cam speed + 1 tooth
 	// AKA 12 teeth at crank speed + 1 cam tooth
-	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	eth.setTriggerType(trigger_type_e::TT_12_TOOTH_CRANK);
 
 	int eventCount = 0;
