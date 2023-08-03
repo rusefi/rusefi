@@ -211,11 +211,6 @@ jobs:
       working-directory: ./firmware/
       run: ./gen_live_documentation.sh
 
-      # live_data_ids.h is generated above so order of operations is important here!
-    - name: Generate Enum Strings
-      working-directory: ./firmware/
-      run: ./gen_enum_to_string.sh
-
     - name: Generate Configs for build-target
       working-directory: ./firmware/
       # todo: we have code duplication with gen_config.sh here :(
