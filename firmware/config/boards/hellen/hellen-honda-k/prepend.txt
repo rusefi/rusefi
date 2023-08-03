@@ -26,3 +26,7 @@
 #define show_Proteus_presets false
 #define show_Hellen_hyundai_154 false
 
+#define IGN_RPM_COUNT 24
+#define IGN_LOAD_COUNT 24
+
+
