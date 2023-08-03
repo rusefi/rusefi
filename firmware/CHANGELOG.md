@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Breaking Changes
+ - Simplified VVT single tooth cam modes. "Single tooth second half" and "single tooth first half" have been replaced by simply "single tooth". This may require re-setting your trigger and VVT timing offsets if you used "single tooth first half" prior to this change. #178
+
 ### Added
  - Log per-cylinder true ignition timing (includes trim, knock retard, etc) #76
  - Add mode for CLT/IAT sensors that are installed "high side" instead of typical "low side" #116

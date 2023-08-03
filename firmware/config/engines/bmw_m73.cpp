@@ -97,7 +97,7 @@ void m73engine() {
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
 
-	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
 	setCrankOperationMode();

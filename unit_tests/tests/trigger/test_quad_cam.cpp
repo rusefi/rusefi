@@ -14,8 +14,8 @@ TEST(trigger, testQuadCam) {
 	setCrankOperationMode();
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
-	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
-	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
 
 	engineConfiguration->camInputs[0] = Gpio::A10; // we just need to indicate that we have CAM
 
@@ -68,7 +68,7 @@ TEST(trigger, testQuadCam) {
 	float basePos = -80.2f;
 
 	// All four cams should now have the same position
-	EXPECT_NEAR_M3(360 + basePos, engine->triggerCentral.getVVTPosition(firstBank, firstCam));
+	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(firstBank, firstCam));
 	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(firstBank, secondCam));
 	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(secondBank, firstCam));
 	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(secondBank, secondCam));

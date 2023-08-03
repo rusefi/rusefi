@@ -89,7 +89,7 @@ void setTestVVTEngineConfiguration() {
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
-	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 }
 
 #if EFI_UNIT_TEST

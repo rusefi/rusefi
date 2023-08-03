@@ -43,8 +43,8 @@ static void setupVbatt() {
 }
 
 static void setupDefaultSensorInputs() {
-	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
-	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
 
     engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 

@@ -76,8 +76,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_HONDA_K_EXHAUST:
 		return trigger_type_e::TT_HONDA_K_CAM_4_1;
 	case VVT_HONDA_K_INTAKE:
-	case VVT_FIRST_HALF:
-	case VVT_SECOND_HALF:
+	case VVT_SINGLE_TOOTH:
 	case VVT_MAP_V_TWIN:
 		return trigger_type_e::TT_ONE;
 	case VVT_FORD_ST170:

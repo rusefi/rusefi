@@ -84,7 +84,7 @@ TEST(trigger, testCamInput) {
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setCrankOperationMode();
-	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtOffsets[0] = 360;
 	eth.setTriggerType(trigger_type_e::TT_ONE);
 	engineConfiguration->camInputs[0] = Gpio::A10; // we just need to indicate that we have CAM
@@ -110,11 +110,6 @@ TEST(trigger, testCamInput) {
 	unitTestWarningCodeState.recentWarnings.clear();
 
 	for (int i = 0; i < 600;i++) {
-		eth.moveTimeForwardUs(MS2US(25));
-
-		eth.firePrimaryTriggerRise();
-		EXPECT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
-
 		eth.moveTimeForwardUs(MS2US(10));
 
 		// cam comes every other crank rev
@@ -123,12 +118,17 @@ TEST(trigger, testCamInput) {
 		}
 
 		eth.moveTimeForwardUs(MS2US(15));
+
+		eth.firePrimaryTriggerRise();
+		EXPECT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
+
+		eth.moveTimeForwardUs(MS2US(25));
 		eth.firePrimaryTriggerFall();
 	}
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0, unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	EXPECT_NEAR_M3(-109, engine->triggerCentral.getVVTPosition(0, 0));
+	EXPECT_NEAR_M3(71, engine->triggerCentral.getVVTPosition(0, 0));
 }
 
 TEST(trigger, testNB2CamInput) {
