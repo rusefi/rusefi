@@ -177,6 +177,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MITSUBISHI_4G9x:
 		return tc->syncAndReport(crankDivider, 1);
 	case VVT_SINGLE_TOOTH:
+	case VVT_UNUSED:
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
 	case VVT_MIATA_NB:
