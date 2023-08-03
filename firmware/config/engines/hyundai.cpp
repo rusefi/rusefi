@@ -65,8 +65,8 @@ void setHyundaiPb() {
     engineConfiguration->mc33_hpfp_i_peak = 10;
     engineConfiguration->mc33_hpfp_i_hold = 4;
 
-	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
-	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
 
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
