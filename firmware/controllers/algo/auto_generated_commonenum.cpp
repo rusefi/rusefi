@@ -728,8 +728,6 @@ case VVT_BARRA_3_PLUS_1:
   return "VVT_BARRA_3_PLUS_1";
 case VVT_BOSCH_QUICK_START:
   return "VVT_BOSCH_QUICK_START";
-case VVT_FIRST_HALF:
-  return "VVT_FIRST_HALF";
 case VVT_FORD_ST170:
   return "VVT_FORD_ST170";
 case VVT_HONDA_K_EXHAUST:
@@ -756,8 +754,8 @@ case VVT_NISSAN_MR:
   return "VVT_NISSAN_MR";
 case VVT_NISSAN_VQ:
   return "VVT_NISSAN_VQ";
-case VVT_SECOND_HALF:
-  return "VVT_SECOND_HALF";
+case VVT_SINGLE_TOOTH:
+  return "VVT_SINGLE_TOOTH";
 case VVT_TOYOTA_4_1:
   return "VVT_TOYOTA_4_1";
   }
