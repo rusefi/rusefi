@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
 ### Added
  - Latest jSerialComm 2.10.3
  - Working disconnect button in Console #4862
+ - Preset for Mpxh6300 MAP sensor #5481
 
 ### Fixed
  - simulator: sensor mocking UI #5473
