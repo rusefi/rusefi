@@ -16,6 +16,8 @@ public:
 	// Allow implicit conversion from schfunc_t to action_s
 	action_s(schfunc_t callback) : action_s(callback, nullptr) { }
 	action_s(schfunc_t callback, void *param) : callback(callback), param(param) { }
+	template <typename TParam>
+	action_s(schfunc_t callback, TParam& param) : callback(callback), param(&param) { }
 
 	// Allow any function that takes a single pointer parameter, so long as param is also of the same pointer type.
 	// This constructor means you shouldn't ever have to cast to schfunc_t on your own.
