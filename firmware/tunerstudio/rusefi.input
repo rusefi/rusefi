@@ -1994,6 +1994,8 @@ cmd_test_inj10 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY
 cmd_test_inj11 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x0b"
 cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x0c"
 
+cmd_test_cancel = = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_CANCEL_16_hex@@"
+
 cmd_test_sol1 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x01"
 cmd_test_sol2 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x02"
 cmd_test_sol3 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x03"
@@ -2386,6 +2388,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		commandButton = "Lua Out #6",	cmd_test_lua6
 		commandButton = "Lua Out #7",	cmd_test_lua7
 		commandButton = "Lua Out #8",	cmd_test_lua8
+		commandButton = "Abort test", cmd_test_cancel
 
 	dialog = testInjectors, "Injector Test"
 		commandButton = "Injector #1", cmd_test_inj1
@@ -2400,6 +2403,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		commandButton = "Injector #10", cmd_test_inj10, { cylindersCount >= 10 }
 		commandButton = "Injector #11", cmd_test_inj11, { cylindersCount >= 11 }
 		commandButton = "Injector #12", cmd_test_inj12, { cylindersCount >= 12 }
+		commandButton = "Abort test", cmd_test_cancel
 
 	dialog = testSolenoids, "TCU Solenoid Test"
 		commandButton = "Solenoid #1", cmd_test_sol1
@@ -2408,6 +2412,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		commandButton = "Solenoid #4", cmd_test_sol4
 		commandButton = "Solenoid #5", cmd_test_sol5
 		commandButton = "Solenoid #6", cmd_test_sol6
+		commandButton = "Abort test", cmd_test_cancel
 
 	dialog = testOther
 		field = "Count", benchTestCount
@@ -4074,6 +4079,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Spark #10", cmd_test_spk10, { cylindersCount >= 10 }
 		commandButton = "Spark #11", cmd_test_spk11, { cylindersCount >= 11 }
 		commandButton = "Spark #12", cmd_test_spk12, { cylindersCount >= 12 }
+		commandButton = "Abort test", cmd_test_cancel
 
 	dialog = testMisc, "Misc"
 		commandButton = "Main Relay", cmd_test_main_relay@@if_ts_show_main_relay
