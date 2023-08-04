@@ -134,7 +134,7 @@ typedef void (*VoidIntVoidPtr)(int, void*);
 typedef void (*VoidFloat)(float);
 typedef void (*VoidFloatFloat)(float, float);
 typedef void (*VoidFloatFloatFloat)(float, float, float);
-typedef void (*VoidFloatFloatFloatFloatFloat)(float, float, float, float, float);
+typedef void (*VoidFloatFloatFloatFloat)(float, float, float, float);
 typedef void (*VoidFloatFloatVoidPtr)(float, float, void*);
 typedef void (*VoidIntInt)(int, int);
 typedef void (*VoidIntIntVoidPtr)(int, int, void*);

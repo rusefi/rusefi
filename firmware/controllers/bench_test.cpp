@@ -72,9 +72,8 @@ static void benchOff(OutputPin* output) {
 	output->setValue(false);
 }
 
-static void runBench(OutputPin *output, float startDelayMs, float onTimeMs, float offTimeMs,
+static void runBench(OutputPin *output, float onTimeMs, float offTimeMs,
 		int count) {
-	int startDelayUs = MS2US(maxF(0.1, startDelayMs));
 	int onTimeUs = MS2US(maxF(0.1, onTimeMs));
 	int offTimeUs = MS2US(maxF(0.1, offTimeMs));
 
@@ -85,8 +84,6 @@ static void runBench(OutputPin *output, float startDelayMs, float onTimeMs, floa
 
 	efiPrintf("Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, count);
 	efiPrintf("output on %s", hwPortname(output->brainPin));
-
-	chThdSleepMicroseconds(startDelayUs);
 
 	isRunningBench = true;
 
@@ -115,15 +112,13 @@ static bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
 static float onTime;
 static float offTime;
-static float startDelayMs;
 static int count;
 static OutputPin* pinX;
 
 static chibios_rt::CounterSemaphore benchSemaphore(0);
 
-static void pinbench(float startdelay, float ontime, float offtime, int iterations, OutputPin* pinParam)
+static void pinbench(float ontime, float offtime, int iterations, OutputPin* pinParam)
 {
-	startDelayMs = startdelay;
 	onTime = ontime;
 	offTime = offtime;
 	count = iterations;
@@ -139,58 +134,58 @@ static void cancelBenchTest() {
 
 /*==========================================================================*/
 
-static void doRunFuelInjBench(size_t humanIndex, float delay, float onTime, float offTime, int count) {
+static void doRunFuelInjBench(size_t humanIndex, float onTime, float offTime, int count) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->cylindersCount) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(delay, onTime, offTime, count, &enginePins.injectors[humanIndex - 1]);
+	pinbench(onTime, offTime, count, &enginePins.injectors[humanIndex - 1]);
 }
 
-static void doRunSparkBench(size_t humanIndex, float delay, float onTime, float offTime, int count) {
+static void doRunSparkBench(size_t humanIndex, float onTime, float offTime, int count) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->cylindersCount) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(delay, onTime, offTime, count, &enginePins.coils[humanIndex - 1]);
+	pinbench(onTime, offTime, count, &enginePins.coils[humanIndex - 1]);
 }
 
-static void doRunSolenoidBench(size_t humanIndex, float delay, float onTime, float offTime, int count) {
+static void doRunSolenoidBench(size_t humanIndex, float onTime, float offTime, int count) {
 	if (humanIndex < 1 || humanIndex > TCU_SOLENOID_COUNT) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(delay, onTime, offTime, count, &enginePins.tcuSolenoids[humanIndex - 1]);
+	pinbench(onTime, offTime, count, &enginePins.tcuSolenoids[humanIndex - 1]);
 }
 
-static void doRunBenchTestLuaOutput(size_t humanIndex, float delay, float onTime, float offTime, int count) {
+static void doRunBenchTestLuaOutput(size_t humanIndex, float onTime, float offTime, int count) {
 	if (humanIndex < 1 || humanIndex > LUA_PWM_COUNT) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(delay, onTime, offTime, count, &enginePins.luaOutputPins[humanIndex - 1]);
+	pinbench(onTime, offTime, count, &enginePins.luaOutputPins[humanIndex - 1]);
 }
 
 /**
- * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 3 times
- * fuelInjBenchExt 100 2 5 1000 3
+ * cylinder #2, 5ms ON, 1000ms OFF, repeat 3 times
+ * fuelInjBenchExt 2 5 1000 3
  */
-static void fuelInjBenchExt(float delay, float humanIndex, float onTime, float offTime, float count) {
-	doRunFuelInjBench((int)humanIndex, delay, onTime, offTime, (int)count);
+static void fuelInjBenchExt(float humanIndex, float onTime, float offTime, float count) {
+	doRunFuelInjBench((int)humanIndex, onTime, offTime, (int)count);
 }
 
 /**
  * fuelbench 5 1000 2
  */
 static void fuelInjBench(float onTime, float offTime, float count) {
-	fuelInjBenchExt(0.0, 1, onTime, offTime, count);
+	fuelInjBenchExt(1, onTime, offTime, count);
 }
 
 /**
- * sparkbench2 0 1 5 1000 2
+ * sparkbench2 1 5 1000 2
  */
-static void sparkBenchExt(float delay, float humanIndex, float onTime, float offTime, float count) {
-	doRunSparkBench((int)humanIndex, delay, onTime, offTime, (int)count);
+static void sparkBenchExt(float humanIndex, float onTime, float offTime, float count) {
+	doRunSparkBench((int)humanIndex, onTime, offTime, (int)count);
 }
 
 /**
@@ -198,27 +193,27 @@ static void sparkBenchExt(float delay, float humanIndex, float onTime, float off
  * 5 ms ON, 400 ms OFF, two times
  */
 static void sparkBench(float onTime, float offTime, float count) {
-	sparkBenchExt(0.0, 1, onTime, offTime, count);
+	sparkBenchExt(1, onTime, offTime, count);
 }
 
 /**
- * delay 100, solenoid #2, 1000ms ON, 1000ms OFF, repeat 3 times
- * tcusolbench 100 2 1000 1000 3
+ * solenoid #2, 1000ms ON, 1000ms OFF, repeat 3 times
+ * tcusolbench 2 1000 1000 3
  */
-static void tcuSolenoidBench(float delay, float humanIndex, float onTime, float offTime, float count) {
-	doRunSolenoidBench((int)humanIndex, delay, onTime, offTime, (int)count);
+static void tcuSolenoidBench(float humanIndex, float onTime, float offTime, float count) {
+	doRunSolenoidBench((int)humanIndex, onTime, offTime, (int)count);
 }
 
 /**
- * delay 100, channel #1, 5ms ON, 1000ms OFF, repeat 3 times
- * fsiobench2 100 1 5 1000 3
+ * channel #1, 5ms ON, 1000ms OFF, repeat 3 times
+ * fsiobench2 1 5 1000 3
  */
-static void luaOutBench2(float delay, float humanIndex, float onTime, float offTime, float count) {
-	doRunBenchTestLuaOutput((int)humanIndex, delay, onTime, offTime, (int)count);
+static void luaOutBench2(float humanIndex, float onTime, float offTime, float count) {
+	doRunBenchTestLuaOutput((int)humanIndex, onTime, offTime, (int)count);
 }
 
 static void fanBenchExt(float onTime) {
-	pinbench(0.0, onTime, 100.0, 1.0, &enginePins.fanRelay);
+	pinbench(onTime, 100.0, 1.0, &enginePins.fanRelay);
 }
 
 void fanBench(void) {
@@ -226,26 +221,26 @@ void fanBench(void) {
 }
 
 void fan2Bench(void) {
-	pinbench(0.0, 3000.0, 100.0, 1.0, &enginePins.fanRelay2);
+	pinbench(3000.0, 100.0, 1.0, &enginePins.fanRelay2);
 }
 
 /**
  * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
  */
 void milBench(void) {
-	pinbench(0.0, 500.0, 500.0, 16, &enginePins.checkEnginePin);
+	pinbench(500.0, 500.0, 16, &enginePins.checkEnginePin);
 }
 
 void starterRelayBench(void) {
-	pinbench(0.0, 6000.0, 100.0, 1, &enginePins.starterControl);
+	pinbench(6000.0, 100.0, 1, &enginePins.starterControl);
 }
 
 static void fuelPumpBenchExt(float durationMs) {
-	pinbench(0.0, durationMs, 100.0, 1.0, &enginePins.fuelPumpRelay);
+	pinbench(durationMs, 100.0, 1.0, &enginePins.fuelPumpRelay);
 }
 
 void acRelayBench(void) {
-	pinbench(0.0, 1000.0, 100.0, 1, &enginePins.acRelay);
+	pinbench(1000.0, 100.0, 1, &enginePins.acRelay);
 }
 
 static void mainRelayBench(void) {
@@ -254,7 +249,7 @@ static void mainRelayBench(void) {
 }
 
 static void hpfpValveBench(void) {
-	pinbench(1000.0, 20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount, &enginePins.hpfpValve);
+	pinbench(20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount, &enginePins.hpfpValve);
 }
 
 void fuelPumpBench(void) {
@@ -271,7 +266,7 @@ private:
 
 			if (isBenchTestPending) {
 				isBenchTestPending = false;
-				runBench(pinX, startDelayMs, onTime, offTime, count);
+				runBench(pinX, onTime, offTime, count);
 			}
 
 			if (widebandUpdatePending) {
@@ -438,28 +433,28 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case TS_IGNITION_CATEGORY:
 		if (!running) {
-			doRunSparkBench(index, 300.0, engineConfiguration->benchTestOnTime,
+			doRunSparkBench(index, engineConfiguration->benchTestOnTime,
 				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;
 
 	case TS_INJECTOR_CATEGORY:
 		if (!running) {
-			doRunFuelInjBench(index, 300.0 , engineConfiguration->benchTestOnTime,
+			doRunFuelInjBench(index, engineConfiguration->benchTestOnTime,
 				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;
 
 	case TS_SOLENOID_CATEGORY:
 		if (!running) {
-			doRunSolenoidBench(index, 300.0, 1000.0,
+			doRunSolenoidBench(index, 1000.0,
 				1000.0, engineConfiguration->benchTestCount);
 		}
 		break;
 
 	case TS_LUA_OUTPUT_CATEGORY:
 		if (!running) {
-			doRunBenchTestLuaOutput(index, 300.0, 4.0,
+			doRunBenchTestLuaOutput(index, 4.0,
 				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;
@@ -534,12 +529,12 @@ void initBenchTest() {
 	addConsoleActionF("fuelpumpbench2", fuelPumpBenchExt);
 
 	addConsoleActionFFF(CMD_FUEL_BENCH, fuelInjBench);
-	addConsoleActionFFFFF("fuelbench2", fuelInjBenchExt);
+	addConsoleActionFFFF("fuelbench2", fuelInjBenchExt);
 
 	addConsoleActionFFF(CMD_SPARK_BENCH, sparkBench);
-	addConsoleActionFFFFF("sparkbench2", sparkBenchExt);
+	addConsoleActionFFFF("sparkbench2", sparkBenchExt);
 
-	addConsoleActionFFFFF("tcusolbench", tcuSolenoidBench);
+	addConsoleActionFFFF("tcusolbench", tcuSolenoidBench);
 
 	addConsoleAction(CMD_AC_RELAY_BENCH, acRelayBench);
 
@@ -558,7 +553,7 @@ void initBenchTest() {
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
-	addConsoleActionFFFFF("luabench2", luaOutBench2);
+	addConsoleActionFFFF("luabench2", luaOutBench2);
 	instance.start();
 	onConfigurationChangeBenchTest();
 }
