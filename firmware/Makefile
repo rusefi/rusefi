@@ -43,6 +43,8 @@ ifeq ($(DEBUG_LEVEL_OPT),)
   # Comment the above and uncomment the line below if you want to debug the firmware (it's difficult-to-impossible
   # to debug firmware with optimization enabled).
   # DEBUG_LEVEL_OPT = -O0 -ggdb -g
+  # without optimization many configurations do not fit into flash. Compiling without Lua is one of the way to get a debug image
+  # DEBUG_LEVEL_OPT += -DEFI_LUA=FALSE
 endif
 
 
