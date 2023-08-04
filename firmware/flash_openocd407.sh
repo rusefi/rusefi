@@ -6,7 +6,7 @@ STLINK=$(lsusb | grep 'ST-LINK\|STLINK')
 if [ "$STLINK" ]; then
   echo "I see $STLINK make sure your board file accepts this specific kind of ST-LINK"
 else
-  echo "Do not see any ST-LINK. If you are on WSL make sure you have binded USB"
+  echo "Do not see any ST-LINK. If you are on WSL make sure you have bound USB"
   exit -1
 fi
 
