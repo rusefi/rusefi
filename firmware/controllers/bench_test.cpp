@@ -72,22 +72,28 @@ static void benchOff(OutputPin* output) {
 	output->setValue(false);
 }
 
-static void runBench(OutputPin *output, float onTimeMs, float offTimeMs,
-		int count) {
-	int onTimeUs = MS2US(maxF(0.1, onTimeMs));
-	int offTimeUs = MS2US(maxF(0.1, offTimeMs));
+struct BenchParams {
+	OutputPin* Pin;
+	float OnTimeMs;
+	float OffTimeMs;
+	size_t Count = 1;
+};
+
+static void runBench(BenchParams& params) {
+	int onTimeUs = MS2US(maxF(0.1, params.OnTimeMs));
+	int offTimeUs = MS2US(maxF(0.1, params.OffTimeMs));
 
 	if (onTimeUs > TOO_FAR_INTO_FUTURE_US) {
 		firmwareError(ObdCode::CUSTOM_ERR_BENCH_PARAM, "onTime above limit %dus", TOO_FAR_INTO_FUTURE_US);
 		return;
 	}
 
-	efiPrintf("Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, count);
-	efiPrintf("output on %s", hwPortname(output->brainPin));
+	efiPrintf("Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, params.Count);
+	efiPrintf("output on %s", hwPortname(params.Pin->brainPin));
 
 	isRunningBench = true;
 
-	for (int i = 0; isRunningBench && i < count; i++) {
+	for (size_t i = 0; isRunningBench && i < params.Count; i++) {
 		engine->outputChannels.testBenchIter = i;
 		efitick_t nowNt = getTimeNowNt();
 		// start in a short time so the scheduler can precisely schedule the start event
@@ -95,8 +101,8 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs,
 		efitick_t endTime = startTime + US2NT(onTimeUs);
 
 		// Schedule both events
-		engine->executor.scheduleByTimestampNt("bstart", nullptr, startTime, {benchOn, output});
-		engine->executor.scheduleByTimestampNt("bend", nullptr, endTime, {benchOff, output});
+		engine->executor.scheduleByTimestampNt("bstart", nullptr, startTime, {benchOn, params.Pin});
+		engine->executor.scheduleByTimestampNt("bend", nullptr, endTime, {benchOff, params.Pin});
 
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
@@ -110,19 +116,15 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs,
 
 static bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
-static float onTime;
-static float offTime;
-static int count;
-static OutputPin* pinX;
+
+static BenchParams benchParams;
 
 static chibios_rt::CounterSemaphore benchSemaphore(0);
 
-static void pinbench(float ontime, float offtime, int iterations, OutputPin* pinParam)
+static void pinbench(float ontime, float offtime, size_t iterations, OutputPin& pin)
 {
-	onTime = ontime;
-	offTime = offtime;
-	count = iterations;
-	pinX = pinParam;
+	benchParams = { &pin, ontime, offtime, iterations };
+
 	// let's signal bench thread to wake up
 	isBenchTestPending = true;
 	benchSemaphore.signal();
@@ -139,7 +141,7 @@ static void doRunFuelInjBench(size_t humanIndex, float onTime, float offTime, in
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(onTime, offTime, count, &enginePins.injectors[humanIndex - 1]);
+	pinbench(onTime, offTime, count, enginePins.injectors[humanIndex - 1]);
 }
 
 static void doRunSparkBench(size_t humanIndex, float onTime, float offTime, int count) {
@@ -147,7 +149,7 @@ static void doRunSparkBench(size_t humanIndex, float onTime, float offTime, int 
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(onTime, offTime, count, &enginePins.coils[humanIndex - 1]);
+	pinbench(onTime, offTime, count, enginePins.coils[humanIndex - 1]);
 }
 
 static void doRunSolenoidBench(size_t humanIndex, float onTime, float offTime, int count) {
@@ -155,7 +157,7 @@ static void doRunSolenoidBench(size_t humanIndex, float onTime, float offTime, i
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(onTime, offTime, count, &enginePins.tcuSolenoids[humanIndex - 1]);
+	pinbench(onTime, offTime, count, enginePins.tcuSolenoids[humanIndex - 1]);
 }
 
 static void doRunBenchTestLuaOutput(size_t humanIndex, float onTime, float offTime, int count) {
@@ -163,7 +165,7 @@ static void doRunBenchTestLuaOutput(size_t humanIndex, float onTime, float offTi
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench(onTime, offTime, count, &enginePins.luaOutputPins[humanIndex - 1]);
+	pinbench(onTime, offTime, count, enginePins.luaOutputPins[humanIndex - 1]);
 }
 
 /**
@@ -213,7 +215,7 @@ static void luaOutBench2(float humanIndex, float onTime, float offTime, float co
 }
 
 static void fanBenchExt(float onTime) {
-	pinbench(onTime, 100.0, 1.0, &enginePins.fanRelay);
+	pinbench(onTime, 100.0, 1.0, enginePins.fanRelay);
 }
 
 void fanBench(void) {
@@ -221,26 +223,26 @@ void fanBench(void) {
 }
 
 void fan2Bench(void) {
-	pinbench(3000.0, 100.0, 1.0, &enginePins.fanRelay2);
+	pinbench(3000.0, 100.0, 1.0, enginePins.fanRelay2);
 }
 
 /**
  * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
  */
 void milBench(void) {
-	pinbench(500.0, 500.0, 16, &enginePins.checkEnginePin);
+	pinbench(500.0, 500.0, 16, enginePins.checkEnginePin);
 }
 
 void starterRelayBench(void) {
-	pinbench(6000.0, 100.0, 1, &enginePins.starterControl);
+	pinbench(6000.0, 100.0, 1, enginePins.starterControl);
 }
 
 static void fuelPumpBenchExt(float durationMs) {
-	pinbench(durationMs, 100.0, 1.0, &enginePins.fuelPumpRelay);
+	pinbench(durationMs, 100.0, 1.0, enginePins.fuelPumpRelay);
 }
 
 void acRelayBench(void) {
-	pinbench(1000.0, 100.0, 1, &enginePins.acRelay);
+	pinbench(1000.0, 100.0, 1, enginePins.acRelay);
 }
 
 static void mainRelayBench(void) {
@@ -249,7 +251,7 @@ static void mainRelayBench(void) {
 }
 
 static void hpfpValveBench(void) {
-	pinbench(20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount, &enginePins.hpfpValve);
+	pinbench(20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount, enginePins.hpfpValve);
 }
 
 void fuelPumpBench(void) {
@@ -266,7 +268,7 @@ private:
 
 			if (isBenchTestPending) {
 				isBenchTestPending = false;
-				runBench(pinX, onTime, offTime, count);
+				runBench(benchParams);
 			}
 
 			if (widebandUpdatePending) {
