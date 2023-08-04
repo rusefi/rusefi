@@ -28,7 +28,7 @@ typedef enum {
 	TWO_INTS_PARAMETER_P,
 	FLOAT_FLOAT_PARAMETER,
 	FLOAT_FLOAT_FLOAT_PARAMETER,
-	FLOAT_FLOAT_FLOAT_FLOAT_FLOAT_PARAMETER,
+	FLOAT_FLOAT_FLOAT_FLOAT_PARAMETER,
 	FLOAT_FLOAT_PARAMETER_P,
 	INT_FLOAT_PARAMETER,
 } action_type_e;
@@ -71,7 +71,7 @@ void addConsoleActionNANF(const char *token, VoidFloat callback);
 
 void addConsoleActionFF(const char *token, VoidFloatFloat callback);
 void addConsoleActionFFF(const char *token, VoidFloatFloatFloat callback);
-void addConsoleActionFFFFF(const char *token, VoidFloatFloatFloatFloatFloat callback);
+void addConsoleActionFFFF(const char *token, VoidFloatFloatFloatFloat callback);
 void addConsoleActionFFP(const char *token, VoidFloatFloatVoidPtr callback, void *param);
 
 void addConsoleActionS(const char *token, VoidCharPtr callback);
