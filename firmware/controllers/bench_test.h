@@ -13,7 +13,7 @@
 void initBenchTest();
 void onConfigurationChangeBenchTest();
 
-bool isRunningBenchTest(void);
+bool isRunningBenchTest();
 
 void fanBench(void);
 void fan2Bench(void);
