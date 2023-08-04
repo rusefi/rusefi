@@ -34,7 +34,6 @@ bool isRunningBenchTest() {
 #include "flash_main.h"
 #include "bench_test.h"
 #include "main_trigger_callback.h"
-#include "idle_thread.h"
 #include "periodic_thread_controller.h"
 #include "electronic_throttle.h"
 #include "electronic_throttle_impl.h"
@@ -97,7 +96,7 @@ static void runBench(OutputPin *output, float startDelayMs, float onTimeMs, floa
 
 	isRunningBench = true;
 
-	for (int i = 0; i < count; i++) {
+	for (int i = 0; isRunningBench && i < count; i++) {
 		engine->outputChannels.testBenchIter = i;
 		efitick_t nowNt = getTimeNowNt();
 		// start in a short time so the scheduler can precisely schedule the start event
@@ -139,6 +138,10 @@ static void pinbench(float startdelay, float p_ontimeMs, float p_offtimeMs, int 
 	// let's signal bench thread to wake up
 	isBenchTestPending = true;
 	benchSemaphore.signal();
+}
+
+static void cancelBenchTest() {
+	isRunningBench = false;
 }
 
 /*==========================================================================*/
@@ -330,6 +333,9 @@ static void handleBenchCategory(uint16_t index) {
 		return;
 	case BENCH_FAN_RELAY_2:
 		fan2Bench();
+		return;
+	case BENCH_CANCEL:
+		cancelBenchTest();
 		return;
 	default:
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected bench function %d", index);
