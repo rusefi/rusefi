@@ -816,12 +816,16 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		auto nextToothIndex = triggerIndexForListeners;
 		angle_t nextPhase = 0;
 
+		int loopAllowance = 1000000;
 		do {
 			// I don't love this.
 			nextToothIndex = (nextToothIndex + 1) % engineCycleEventCount;
 			nextPhase = getTriggerCentral()->triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
 			wrapAngle(nextPhase, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
-		} while (nextPhase == currentEngineDecodedPhase);
+		} while (nextPhase == currentEngineDecodedPhase && --loopAllowance > 0);
+		if (loopAllowance == 0) {
+			firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_ZERO, "handleShaftSignal endless loop");
+		}
 
 		float expectNextPhase = nextPhase + tdcPosition();
 		wrapAngle(expectNextPhase, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
