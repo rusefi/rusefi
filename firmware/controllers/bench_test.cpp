@@ -282,7 +282,7 @@ private:
 
 			if (isBenchTestPending) {
 				isBenchTestPending = false;
-				runBench(brainPin, pinX, startDelayMs, onTimeMs, offTimeMs, count);
+				runBench(pinX, startDelayMs, onTimeMs, offTimeMs, count);
 			}
 
 			if (widebandUpdatePending) {
