@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 05 04:54:03 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 05 18:20:52 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -69,6 +69,7 @@ public class Fields {
 	public static final int BANKS_COUNT = 2;
 	public static final int BARO_CORR_SIZE = 4;
 	public static final int bench_mode_e_BENCH_AC_COMPRESSOR_RELAY = 6;
+	public static final int bench_mode_e_BENCH_CANCEL = 15;
 	public static final int bench_mode_e_BENCH_CHECK_ENGINE_LIGHT = 7;
 	public static final int bench_mode_e_BENCH_FAN_RELAY = 4;
 	public static final int bench_mode_e_BENCH_FAN_RELAY_2 = 5;
@@ -1248,7 +1249,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.08.05.f407-discovery.2750060266";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.08.05.f407-discovery.3252298426";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1400;

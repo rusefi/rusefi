@@ -71,6 +71,7 @@
 #define BANKS_COUNT 2
 #define BARO_CORR_SIZE 4
 #define bench_mode_e_BENCH_AC_COMPRESSOR_RELAY 6
+#define bench_mode_e_BENCH_CANCEL 15
 #define bench_mode_e_BENCH_CHECK_ENGINE_LIGHT 7
 #define bench_mode_e_BENCH_FAN_RELAY 4
 #define bench_mode_e_BENCH_FAN_RELAY_2 5
@@ -1085,7 +1086,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 2750060266
+#define SIGNATURE_HASH 3252298426
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1377,7 +1378,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.08.05.f407-discovery.2750060266"
+#define TS_SIGNATURE "rusEFI master.2023.08.05.f407-discovery.3252298426"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
