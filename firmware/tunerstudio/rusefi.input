@@ -2075,7 +2075,7 @@ cmd_test_inj10 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY
 cmd_test_inj11 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x0b"
 cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x0c"
 
-cmd_test_cancel = = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_CANCEL_16_hex@@"
+cmd_test_cancel = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_CANCEL_16_hex@@"
 
 cmd_test_sol1 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x01"
 cmd_test_sol2 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x02"
