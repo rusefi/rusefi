@@ -38,6 +38,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - simulator: sensor mocking UI #5473
+ - Custom Trigger Tooth with 1+0 causes endless loop #5471
 
 ## July 2023 Release "Day 518"
 
