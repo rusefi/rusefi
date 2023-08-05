@@ -258,7 +258,7 @@ jobs:
           - build-target: mre_f4_debug
             folder: config/boards/microrusefi
             ini-file: rusefi_mre_f4.ini
-            skip-rate: 95
+            skip-rate: 80
 
           - build-target: mre_f4_recovery
             folder: config/boards/microrusefi
@@ -300,7 +300,7 @@ jobs:
           - build-target: proteus_f7_debug
             folder: config/boards/proteus
             ini-file: rusefi_proteus_f7.ini
-            skip-rate: 0
+            skip-rate: 80
 
           - build-target: proteus_f7_hardware_QC_special_build
             folder: config/boards/proteus
