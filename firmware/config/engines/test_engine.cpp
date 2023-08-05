@@ -45,7 +45,7 @@ void setTestCamEngineConfiguration() {
 void setTestCrankEngineConfiguration() {
 	setTestCamEngineConfiguration();
 
-	engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
+	engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
 
 	setCrankOperationMode();
 	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
@@ -106,7 +106,7 @@ void setTestEngineIssue366rise() {
 // set engine_type 30
 void setProteusAnalogPwmTest() {
 	// lowest cpu trigger possible
-	engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
+	engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
 
 	// Disable trigger stim
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned;

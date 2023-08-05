@@ -66,7 +66,7 @@ void Engine::resetEngineSnifferIfInTestMode() {
 trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	switch (vvtMode) {
 	case VVT_INACTIVE:
-		return trigger_type_e::TT_ONE;
+		return trigger_type_e::TT_HALF_MOON;
 	case VVT_2JZ:
 		return trigger_type_e::TT_VVT_JZ;
 	case VVT_MIATA_NB:
@@ -78,7 +78,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_HONDA_K_INTAKE:
 	case VVT_SINGLE_TOOTH:
 	case VVT_MAP_V_TWIN:
-		return trigger_type_e::TT_ONE;
+		return trigger_type_e::TT_HALF_MOON;
 	case VVT_FORD_ST170:
 		return trigger_type_e::TT_FORD_ST170;
 	case VVT_BARRA_3_PLUS_1:
@@ -102,7 +102,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return trigger_type_e::TT_MITSU_4G63_CAM;
 	default:
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
-		return trigger_type_e::TT_ONE; // we have to return something for the sake of -Werror=return-type
+		return trigger_type_e::TT_HALF_MOON; // we have to return something for the sake of -Werror=return-type
 	}
 }
 

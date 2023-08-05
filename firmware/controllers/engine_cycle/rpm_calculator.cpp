@@ -71,7 +71,7 @@ operation_mode_e lookupOperationMode() {
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 	switch (type) {
 		case trigger_type_e::TT_TOOTHED_WHEEL:
-		case trigger_type_e::TT_ONE:
+		case trigger_type_e::TT_HALF_MOON:
 		case trigger_type_e::TT_3_1_CAM:
 		case trigger_type_e::TT_36_2_2_2:	// TODO: should this one be in this list?
 		case trigger_type_e::TT_TOOTHED_WHEEL_60_2:

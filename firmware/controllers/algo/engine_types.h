@@ -324,7 +324,8 @@ enum class trigger_type_e : uint32_t {
 	TT_TOOTHED_WHEEL_60_2 = 8,
 	TT_TOOTHED_WHEEL_36_1 = 9,
 	TT_MERCEDES_2_SEGMENT = 10,
-	TT_UNUSED_11 = 11,
+    // a single tooth on lazy Hall or VR. See also TT_HALF_MOON
+	TT_NARROW_SINGLE_TOOTH = 11,
 	TT_SUBARU_EZ30 = 12,
 	TT_VVT_MAZDA_SKYACTIV = 13,
 	// cam-based
@@ -336,8 +337,8 @@ enum class trigger_type_e : uint32_t {
 	TT_ONE_PLUS_ONE = 16,
 	//  * VVT for 2JZ, three evenly spaces teeth
 	TT_VVT_JZ = 17,
-	// just one channel with just one tooth
-	TT_ONE = 18,
+	// just one channel with one perfectly 180 degree tooth with proper reliable Hall sensor, see also TT_NARROW_SINGLE_TOOTH
+	TT_HALF_MOON = 18,
 	TT_DODGE_RAM = 19,
 	//  * It looks like this is the VR shape if you have your wires flipped
 	TT_60_2_VW = 20,

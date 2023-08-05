@@ -542,7 +542,7 @@ void proteusBoardTest() {
 #endif // HW_PROTEUS
 
 void setBodyControlUnit() {
-    engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
+    engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
 
 	engineConfiguration->mapAveragingSchedulingAtIndex = 999; // this should disable map averaging right?
 

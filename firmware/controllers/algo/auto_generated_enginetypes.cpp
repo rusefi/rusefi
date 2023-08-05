@@ -456,7 +456,7 @@ case trigger_type_e::TT_NISSAN_VQ30:
   return "TT_NISSAN_VQ30";
 case trigger_type_e::TT_NISSAN_VQ35:
   return "TT_NISSAN_VQ35";
-case trigger_type_e::TT_ONE:
+case trigger_type_e::TT_HALF_MOON:
   return "TT_ONE";
 case trigger_type_e::TT_ONE_PLUS_ONE:
   return "TT_ONE_PLUS_ONE";
@@ -496,7 +496,7 @@ case trigger_type_e::TT_TRI_TACH:
   return "TT_TRI_TACH";
 case trigger_type_e::TT_UNUSED:
   return "TT_UNUSED";
-case trigger_type_e::TT_UNUSED_11:
+case trigger_type_e::TT_NARROW_SINGLE_TOOTH:
   return "TT_UNUSED_11";
 case trigger_type_e::TT_UNUSED_75:
   return "TT_UNUSED_75";
