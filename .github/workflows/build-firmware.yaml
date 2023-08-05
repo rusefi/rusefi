@@ -112,7 +112,6 @@ jobs:
             subaru_eg33_f7,
             subaru_eg33_f7_no_bl,
             f407-discovery,
-            f407-discovery_debug,
             f429-discovery,
             core8,
             48way,
