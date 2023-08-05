@@ -2,7 +2,9 @@ package com.rusefi.maintenance;
 
 public enum HwPlatform {
     F4("stm32f4discovery.cfg"),
-    F7("st_nucleo_f7.cfg");
+    F7("st_nucleo_f7.cfg"),
+    H7("st_nucleo_h743zi.cfg"),
+    ;
 
     private final String openOcdName;
 

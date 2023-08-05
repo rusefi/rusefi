@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.rusefi.Launcher;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 
@@ -92,6 +93,10 @@ public class FirmwareFlasher {
 
     @NotNull
     public static HwPlatform getHardwareKind() {
+        String bundle = BundleUtil.readBundleFullNameNotNull();
+        if (bundle.contains("h7"))
+            return HwPlatform.H7;
+        // how does this "hardware" key even work? does it work? shall we rely on bunbdle name like above?
         String value = getConfig().getRoot().getProperty("hardware", HwPlatform.F4.name());
         return HwPlatform.resolve(value);
     }
