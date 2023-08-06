@@ -1028,7 +1028,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	// this is needed to update injectorLag
 	engine->updateSlowSensors();
 
-	eth.setTriggerType(trigger_type_e::TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
 	eth.engine.periodicFastCallback();
 
 	setWholeTimingTable(0);

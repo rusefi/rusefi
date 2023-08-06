@@ -67,7 +67,7 @@ TEST(fuel, testWallWettingEnrichmentScheduling) {
 
 	setCrankOperationMode();
 
-	eth.setTriggerType(trigger_type_e::TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
 
 
 	eth.fireTriggerEvents2(/* count */ 4, 25 /* ms */);

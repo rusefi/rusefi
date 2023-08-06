@@ -20,7 +20,7 @@ TEST(trigger, testQuadCam) {
 	engineConfiguration->camInputs[0] = Gpio::A10; // we just need to indicate that we have CAM
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
-	eth.setTriggerType(trigger_type_e::TT_ONE);
+	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
 
 	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 
