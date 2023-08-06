@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Aug 05 18:18:29 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Aug 06 03:53:25 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -414,6 +414,8 @@ case trigger_type_e::TT_GM_60_2_2_2:
   return "TT_GM_60_2_2_2";
 case trigger_type_e::TT_GM_7X:
   return "TT_GM_7X";
+case trigger_type_e::TT_HALF_MOON:
+  return "TT_HALF_MOON";
 case trigger_type_e::TT_HONDA_CBR_600:
   return "TT_HONDA_CBR_600";
 case trigger_type_e::TT_HONDA_K_CAM_4_1:
@@ -444,6 +446,8 @@ case trigger_type_e::TT_MITSU_4G63_CRANK:
   return "TT_MITSU_4G63_CRANK";
 case trigger_type_e::TT_MITSU_4G9x_CAM:
   return "TT_MITSU_4G9x_CAM";
+case trigger_type_e::TT_NARROW_SINGLE_TOOTH:
+  return "TT_NARROW_SINGLE_TOOTH";
 case trigger_type_e::TT_NISSAN_MR18_CAM_VVT:
   return "TT_NISSAN_MR18_CAM_VVT";
 case trigger_type_e::TT_NISSAN_MR18_CRANK:
@@ -456,8 +460,6 @@ case trigger_type_e::TT_NISSAN_VQ30:
   return "TT_NISSAN_VQ30";
 case trigger_type_e::TT_NISSAN_VQ35:
   return "TT_NISSAN_VQ35";
-case trigger_type_e::TT_HALF_MOON:
-  return "TT_ONE";
 case trigger_type_e::TT_ONE_PLUS_ONE:
   return "TT_ONE_PLUS_ONE";
 case trigger_type_e::TT_RENIX_44_2_2:
@@ -496,8 +498,6 @@ case trigger_type_e::TT_TRI_TACH:
   return "TT_TRI_TACH";
 case trigger_type_e::TT_UNUSED:
   return "TT_UNUSED";
-case trigger_type_e::TT_NARROW_SINGLE_TOOTH:
-  return "TT_UNUSED_11";
 case trigger_type_e::TT_UNUSED_75:
   return "TT_UNUSED_75";
 case trigger_type_e::TT_UNUSED_78:
