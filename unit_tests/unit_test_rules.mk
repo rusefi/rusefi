@@ -151,6 +151,7 @@ AOPT = -fPIC -I$(JAVA_HOME)/include
 
 ifeq ($(OS),Windows_NT)
 # TODO: add validation to assert that we do not have Windows slash in JAVA_HOME variable
+# for instance "C:/Progra~1/Zulu/zulu-11" would be good "C:\Progra~1\Zulu\zulu-11" would be bad
  AOPT += -I$(JAVA_HOME)/include/win32
 else
  ifeq ($(IS_MAC),yes)
