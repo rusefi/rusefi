@@ -1248,7 +1248,7 @@ gaugeCategory = Trigger
 	triggerVvtRiseGauge = triggerVvtRise,"triggerVvtRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 
 gaugeCategory = Test Bench
-	testBenchIterGauge = testBenchIter, "Test Bench Iterations", "count", -10, {benchTestCount + 10}, -5, 0, {benchTestCount}, {benchTestCount + 5}, 1, 1
+	testBenchIterGauge = testBenchIter, "Test Bench Iterations", "count", 0, {benchTestCount}, 0, 0, {benchTestCount}, {benchTestCount}, 0, 0
 
 gaugeCategory = LUA
 	luaInvocationCounterGauge = luaInvocationCounter,"luaInvocationCounter", "count", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
