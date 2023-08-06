@@ -18,7 +18,7 @@ void FuelPumpController::onSlowCallback() {
 	engineTurnedRecently = engine->triggerCentral.engineMovedRecently();
 #endif //EFI_SHAFT_POSITION_INPUT
 
-	isFuelPumpOn = isPrime || engineTurnedRecently;
+	isFuelPumpOn = isPrime || engineTurnedRecently || m_forceState;
 
 	enginePins.fuelPumpRelay.setValue(isFuelPumpOn);
 }
@@ -29,4 +29,8 @@ void FuelPumpController::onIgnitionStateChanged(bool ignitionOnParam) {
 	if (ignitionOn) {
 		m_ignOnTimer.reset();
 	}
+}
+
+void FuelPumpController::forcePumpState(bool state) {
+	m_forceState = state;
 }

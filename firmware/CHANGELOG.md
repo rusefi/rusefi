@@ -36,6 +36,7 @@ Release template (copy/paste this for new release):
  - Add mode for CLT/IAT sensors that are installed "high side" instead of typical "low side" #116
  - Automatic supply voltage compensation for VVT solenoids, giving more stable control as battery voltage changes #209
  - Configurable ignition timing limits, adding safety particularly for engines running wasted spark with a large cam #211
+ - Improved injection, ignition bench test UI and functionality: More gauges, fuel pump on/off buttons for injector testing, and configurable duration/count #219
 
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)

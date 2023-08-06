@@ -13,6 +13,9 @@ public:
 	void onSlowCallback() override;
 	void onIgnitionStateChanged(bool ignitionOn) override;
 
+	void forcePumpState(bool state);
+
 private:
 	Timer m_ignOnTimer;
+	bool m_forceState = false;
 };

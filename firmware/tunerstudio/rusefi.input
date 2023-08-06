@@ -1999,6 +1999,9 @@ cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY
 
 cmd_test_cancel = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_CANCEL_16_hex@@"
 
+cmd_fuel_pump_on  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_FUEL_PUMP_ON_16_hex@@"
+cmd_fuel_pump_off = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_FUEL_PUMP_OFF_16_hex@@"
+
 cmd_test_sol1 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x01"
 cmd_test_sol2 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x02"
 cmd_test_sol3 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x03"
@@ -2007,7 +2010,6 @@ cmd_test_sol5 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_
 cmd_test_sol6 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x06"
 
 cmd_test_main_relay			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_MAIN_RELAY_16_hex@@"
-cmd_test_fuel_pump				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_FUEL_PUMP_16_hex@@"
 cmd_test_starter_relay			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_STARTER_ENABLE_RELAY_16_hex@@"
 cmd_test_starter_disable_relay	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_STARTER_DISABLE_RELAY_16_hex@@"
 cmd_test_ac_relay				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_AC_COMPRESSOR_RELAY_16_hex@@"
@@ -4044,7 +4046,8 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = testMisc, "Misc"
 		commandButton = "Main Relay", cmd_test_main_relay@@if_ts_show_main_relay
-		commandButton = "Fuel Pump", cmd_test_fuel_pump
+		commandButton = "Fuel pump on", cmd_fuel_pump_on
+		commandButton = "Fuel pump off", cmd_fuel_pump_off
 		commandButton = "Cooling Fan", cmd_test_fan_1
 		commandButton = "Cooling Fan 2", cmd_test_fan_2
 		commandButton = "A/C Relay", cmd_test_ac_relay
@@ -4086,7 +4089,13 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Iterations", benchTestCount
 		field = "ON time", benchTestOnTime
 		field = "OFF time", benchTestOffTime
+		field = ""
 		commandButton = "Abort test", cmd_test_cancel
+		field = ""
+		field = "Use these buttons to run the"
+		field = "fuel pump for testing injectors"
+		commandButton = "Fuel pump on", cmd_fuel_pump_on
+		commandButton = "Fuel pump off", cmd_fuel_pump_off
 		gauge = testBenchIterGauge
 
 	dialog = injTest_r, "Reference gauges", yAxis

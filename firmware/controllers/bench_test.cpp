@@ -291,10 +291,6 @@ static void handleBenchCategory(uint16_t index) {
 	case BENCH_HPFP_VALVE:
 		hpfpValveBench();
 		return;
-	case BENCH_FUEL_PUMP:
-		// cmd_test_fuel_pump
-		fuelPumpBench();
-		return;
 	case BENCH_STARTER_ENABLE_RELAY:
 		starterRelayBench();
 		return;
@@ -319,6 +315,12 @@ static void handleBenchCategory(uint16_t index) {
 		return;
 	case BENCH_CANCEL:
 		cancelBenchTest();
+		return;
+	case BENCH_FUEL_PUMP_ON:
+		engine->module<FuelPumpController>()->forcePumpState(true);
+		return;
+	case BENCH_FUEL_PUMP_OFF:
+		engine->module<FuelPumpController>()->forcePumpState(false);
 		return;
 	default:
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected bench function %d", index);
