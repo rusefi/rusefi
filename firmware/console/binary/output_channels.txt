@@ -34,6 +34,9 @@ bit launchTriggered;Launch Control Triggered
 bit isTps2Error;Error: TPS2
 bit injectorFault;Injector Fault
 bit ignitionFault;Ignition Fault
+bit isMainRelayOn;
+bit isUsbConnected;isUsbConnected\nOriginal reason for this is to check if USB is connected from Lua
+bit dfcoActive
 
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
@@ -241,12 +244,9 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint16_t autoscale rawAfr;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	float calibrationValue2;;"", 1, 0, 0, 0, 0
-	bit isMainRelayOn;
-	bit isUsbConnected;isUsbConnected\nOriginal reason for this is to check if USB is connected from Lua
 
 	uint32_t luaInvocationCounter;Lua: Tick counter;"count",1, 0, 0, 0, 0
 	uint32_t luaLastCycleDuration;Lua: Last tick duration;"nt",1, 0, 0, 0, 0
-	uint8_t testBenchIter;;"count",1, 0, 0, 0, 0
 
 	uint8_t tcu_currentRange;"TCU: Current Range";"", 1, 0, 0, 0, 0
 
@@ -259,7 +259,6 @@ uint16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int16_t autoscale auxLinear1;@@GAUGE_NAME_AUX_LINEAR_1@@;"", 0.01, 0, 0, 0, 2
 	int16_t autoscale auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 0.01, 0, 0, 0, 2
 
-	bit dfcoActive
 
 	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1
 
@@ -356,5 +355,7 @@ float mapFast
 
 	uint16_t autoscale Gego;;"%", 0.01, 0, 50, 150, 2
 
-	uint8_t[134 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint16_t testBenchIter;;"count",1, 0, 0, 0, 0
+
+	uint8_t[140 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
