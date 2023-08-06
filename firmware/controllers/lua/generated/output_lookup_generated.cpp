@@ -52,6 +52,12 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.injectorFault;
 		case -1158382750:
 			return engine->outputChannels.ignitionFault;
+		case -822552576:
+			return engine->outputChannels.isMainRelayOn;
+		case 1836976702:
+			return engine->outputChannels.isUsbConnected;
+		case -622949795:
+			return engine->outputChannels.dfcoActive;
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
 		case -968092482:
@@ -276,16 +282,10 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.rawAfr;
 		case 37467836:
 			return engine->outputChannels.calibrationValue2;
-		case -822552576:
-			return engine->outputChannels.isMainRelayOn;
-		case 1836976702:
-			return engine->outputChannels.isUsbConnected;
 		case 1766132801:
 			return engine->outputChannels.luaInvocationCounter;
 		case 823476017:
 			return engine->outputChannels.luaLastCycleDuration;
-		case 1092959609:
-			return engine->outputChannels.testBenchIter;
 		case -518694176:
 			return engine->outputChannels.tcu_currentRange;
 		case -732434245:
@@ -300,8 +300,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.auxLinear1;
 		case 803810400:
 			return engine->outputChannels.auxLinear2;
-		case -622949795:
-			return engine->outputChannels.dfcoActive;
 		case -940825965:
 			return engine->outputChannels.fallbackMap;
 		case -1162308767:
@@ -460,6 +458,8 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.schedulingUsedCount;
 		case 2090288615:
 			return engine->outputChannels.Gego;
+		case 1092959609:
+			return engine->outputChannels.testBenchIter;
 		case -1779658835:
 			return engine->fuelComputer.totalFuelCorrection;
 		case -1288205717:
