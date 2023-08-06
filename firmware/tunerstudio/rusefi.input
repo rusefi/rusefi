@@ -1647,7 +1647,8 @@ menuDialog = main
 	menu = "Fuel"
 		# basic
 		subMenu = injectorConfig,			"Injection configuration"
-		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
+		subMenu = injectorPins,				"Injection hardware", 0, {isInjectionEnabled == 1}
+		subMenu = injTest,					"Injector test", 0, {isInjectionEnabled}
 		subMenu = cylinderBankSelect,		"Cylinder bank selection", 0, {isInjectionEnabled == 1}
 		subMenu = injectorNonlinear,		"Injector small-pulse correction", 0, {isInjectionEnabled == 1}
 
@@ -1712,6 +1713,7 @@ menuDialog = main
 
 	menu = "Ignition"
 		subMenu = ignitionSettings,			"Ignition settings"
+		subMenu = ignTest,					"Ignition coil test", 0, {isIgnitionEnabled}
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled}
@@ -1892,7 +1894,8 @@ menuDialog = main
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
 		subMenu = ioTest,					"Bench test"
-		subMenu = injTest,					"Injector test"
+		subMenu = injTest,					"Injector test", 0, {isInjectionEnabled}
+		subMenu = ignTest,					"Ignition coil test", 0, {isIgnitionEnabled}
 		subMenu = engineTypeDialog,			"Popular vehicles"
 		subMenu = std_separator
 
@@ -2326,7 +2329,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Stoichiometric ratio",			stoichRatioPrimary, {isInjectionEnabled == 1}
 		field = "E100 stoichiometric ratio",	stoichRatioSecondary, {isInjectionEnabled == 1 && flexSensorPin != 0 }
 
-	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
+	dialog = injectorPins, "Injector Outputs",	yAxis
 		field = "Use only first half of outputs for batch mode"
 		field = "Injection Output 1",						injectionPins1, {isInjectionEnabled == 1}
 		field = "Injection Output 2",						injectionPins2, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 1}
@@ -2390,21 +2393,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		commandButton = "Lua Out #8",	cmd_test_lua8
 		commandButton = "Abort test", cmd_test_cancel
 
-	dialog = testInjectors, "Injector Test"
-		commandButton = "Injector #1", cmd_test_inj1
-		commandButton = "Injector #2", cmd_test_inj2, { cylindersCount >= 2 }
-		commandButton = "Injector #3", cmd_test_inj3, { cylindersCount >= 3 }
-		commandButton = "Injector #4", cmd_test_inj4, { cylindersCount >= 4 }
-		commandButton = "Injector #5", cmd_test_inj5, { cylindersCount >= 5 }
-		commandButton = "Injector #6", cmd_test_inj6, { cylindersCount >= 6 }
-		commandButton = "Injector #7", cmd_test_inj7, { cylindersCount >= 7 }
-		commandButton = "Injector #8", cmd_test_inj8, { cylindersCount >= 8 }
-		commandButton = "Injector #9", cmd_test_inj9, { cylindersCount >= 9 }
-		commandButton = "Injector #10", cmd_test_inj10, { cylindersCount >= 10 }
-		commandButton = "Injector #11", cmd_test_inj11, { cylindersCount >= 11 }
-		commandButton = "Injector #12", cmd_test_inj12, { cylindersCount >= 12 }
-		commandButton = "Abort test", cmd_test_cancel
-
 	dialog = testSolenoids, "TCU Solenoid Test"
 		commandButton = "Solenoid #1", cmd_test_sol1
 		commandButton = "Solenoid #2", cmd_test_sol2
@@ -2419,18 +2407,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "On Time", benchTestOnTime
 		field = "Off Time", benchTestOffTime
 		panel = testSolenoids
-
-	dialog = injectionSettingsEast, "", yAxis
-		panel = testInjectors
-		field = ""
-
-	dialog = injectionSettingsWest, "", yAxis
-		panel = injectorOutputSettings
-		field = ""
-
-	dialog = injectionSettings, "", xAxis
-		panel = injectionSettingsWest
-		panel = injectionSettingsEast
 
 	dialog = injectorConfig, "", yAxis
 		topicHelp = "fuelHelp"
@@ -4066,21 +4042,6 @@ dialog = tcuControls, "Transmission Settings"
 		panel = etbDialogLeft, West
 		panel = etbDialogRight, East
 
-	dialog = testSpark, "Spark"
-		commandButton = "Spark #1",  cmd_test_spk1
-		commandButton = "Spark #2",  cmd_test_spk2,  { cylindersCount >= 2 }
-		commandButton = "Spark #3",  cmd_test_spk3,  { cylindersCount >= 3 }
-		commandButton = "Spark #4",  cmd_test_spk4,  { cylindersCount >= 4 }
-		commandButton = "Spark #5",  cmd_test_spk5,  { cylindersCount >= 5 }
-		commandButton = "Spark #6",  cmd_test_spk6,  { cylindersCount >= 6 }
-		commandButton = "Spark #7",  cmd_test_spk7,  { cylindersCount >= 7 }
-		commandButton = "Spark #8",  cmd_test_spk8,  { cylindersCount >= 8 }
-		commandButton = "Spark #9",  cmd_test_spk9,  { cylindersCount >= 9 }
-		commandButton = "Spark #10", cmd_test_spk10, { cylindersCount >= 10 }
-		commandButton = "Spark #11", cmd_test_spk11, { cylindersCount >= 11 }
-		commandButton = "Spark #12", cmd_test_spk12, { cylindersCount >= 12 }
-		commandButton = "Abort test", cmd_test_cancel
-
 	dialog = testMisc, "Misc"
 		commandButton = "Main Relay", cmd_test_main_relay@@if_ts_show_main_relay
 		commandButton = "Fuel Pump", cmd_test_fuel_pump
@@ -4102,25 +4063,66 @@ dialog = tcuControls, "Transmission Settings"
 
 	; bench test
 	dialog = ioTest, "Bench Test & Commands", xAxis
-		panel = testSpark
-		panel = testInjectors
 		panel = testOther
 		panel = testLuaOut
 		panel = testMisc
 
 	; Injectors test
-	dialog = injTest_l, "Output test modes", yAxis
+	dialog = injTest_l, ""
+		commandButton = "Injector #1", cmd_test_inj1
+		commandButton = "Injector #2", cmd_test_inj2, { cylindersCount >= 2 }
+		commandButton = "Injector #3", cmd_test_inj3, { cylindersCount >= 3 }
+		commandButton = "Injector #4", cmd_test_inj4, { cylindersCount >= 4 }
+		commandButton = "Injector #5", cmd_test_inj5, { cylindersCount >= 5 }
+		commandButton = "Injector #6", cmd_test_inj6, { cylindersCount >= 6 }
+		commandButton = "Injector #7", cmd_test_inj7, { cylindersCount >= 7 }
+		commandButton = "Injector #8", cmd_test_inj8, { cylindersCount >= 8 }
+		commandButton = "Injector #9", cmd_test_inj9, { cylindersCount >= 9 }
+		commandButton = "Injector #10", cmd_test_inj10, { cylindersCount >= 10 }
+		commandButton = "Injector #11", cmd_test_inj11, { cylindersCount >= 11 }
+		commandButton = "Injector #12", cmd_test_inj12, { cylindersCount >= 12 }
+
+	dialog = injTest_c, "", yAxis
 		field = "Iterations", benchTestCount
-		field = "ON time", benchTestOffTime
-		field = "OFF time", benchTestOnTime
+		field = "ON time", benchTestOnTime
+		field = "OFF time", benchTestOffTime
+		commandButton = "Abort test", cmd_test_cancel
+		gauge = testBenchIterGauge
 
 	dialog = injTest_r, "Reference gauges", yAxis
 		gauge = VBattGauge,North
-		gauge = testBenchIterGauge,South
+		gauge = lowFuelPressureGauge
 
 	dialog = injTest, "", xAxis
 		panel = injTest_l
+		panel = injTest_c
 		panel = injTest_r
+
+	; Ignition coils test
+	dialog = ignTest_l, ""
+		commandButton = "Spark #1",  cmd_test_spk1
+		commandButton = "Spark #2",  cmd_test_spk2,  { cylindersCount >= 2 }
+		commandButton = "Spark #3",  cmd_test_spk3,  { cylindersCount >= 3 }
+		commandButton = "Spark #4",  cmd_test_spk4,  { cylindersCount >= 4 }
+		commandButton = "Spark #5",  cmd_test_spk5,  { cylindersCount >= 5 }
+		commandButton = "Spark #6",  cmd_test_spk6,  { cylindersCount >= 6 }
+		commandButton = "Spark #7",  cmd_test_spk7,  { cylindersCount >= 7 }
+		commandButton = "Spark #8",  cmd_test_spk8,  { cylindersCount >= 8 }
+		commandButton = "Spark #9",  cmd_test_spk9,  { cylindersCount >= 9 }
+		commandButton = "Spark #10", cmd_test_spk10, { cylindersCount >= 10 }
+		commandButton = "Spark #11", cmd_test_spk11, { cylindersCount >= 11 }
+		commandButton = "Spark #12", cmd_test_spk12, { cylindersCount >= 12 }
+
+	dialog = ignTest_c, ""
+		field = "Iterations", benchTestCount
+		field = "ON time", benchTestOnTime
+		field = "OFF time", benchTestOffTime
+		commandButton = "Abort test", cmd_test_cancel
+		gauge = testBenchIterGauge
+
+	dialog = ignTest, "", xAxis
+		panel = ignTest_l
+		panel = ignTest_c
 
 	dialog = widebandConfig, "CAN Wideband Config"
 		field = "!Please connect exactly one wideband controller before pressing these buttons!"
