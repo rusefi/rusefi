@@ -64,22 +64,23 @@
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define BANKS_COUNT 2
 #define BARO_CORR_SIZE 4
-#define bench_mode_e_BENCH_AC_COMPRESSOR_RELAY 6
-#define bench_mode_e_BENCH_CANCEL 15
-#define bench_mode_e_BENCH_CHECK_ENGINE_LIGHT 7
-#define bench_mode_e_BENCH_FAN_RELAY 4
-#define bench_mode_e_BENCH_FAN_RELAY_2 5
-#define bench_mode_e_BENCH_FUEL_PUMP 1
-#define bench_mode_e_BENCH_GPPWM1_VALVE 10
-#define bench_mode_e_BENCH_GPPWM2_VALVE 11
-#define bench_mode_e_BENCH_GPPWM3_VALVE 12
-#define bench_mode_e_BENCH_GPPWM4_VALVE 13
-#define bench_mode_e_BENCH_HPFP_VALVE 9
-#define bench_mode_e_BENCH_IDLE_VALVE 8
+#define bench_mode_e_BENCH_AC_COMPRESSOR_RELAY 5
+#define bench_mode_e_BENCH_CANCEL 14
+#define bench_mode_e_BENCH_CHECK_ENGINE_LIGHT 6
+#define bench_mode_e_BENCH_FAN_RELAY 3
+#define bench_mode_e_BENCH_FAN_RELAY_2 4
+#define bench_mode_e_BENCH_FUEL_PUMP_OFF 16
+#define bench_mode_e_BENCH_FUEL_PUMP_ON 15
+#define bench_mode_e_BENCH_GPPWM1_VALVE 9
+#define bench_mode_e_BENCH_GPPWM2_VALVE 10
+#define bench_mode_e_BENCH_GPPWM3_VALVE 11
+#define bench_mode_e_BENCH_GPPWM4_VALVE 12
+#define bench_mode_e_BENCH_HPFP_VALVE 8
+#define bench_mode_e_BENCH_IDLE_VALVE 7
 #define bench_mode_e_BENCH_MAIN_RELAY 0
-#define bench_mode_e_BENCH_SECOND_IDLE_VALVE 14
-#define bench_mode_e_BENCH_STARTER_DISABLE_RELAY 3
-#define bench_mode_e_BENCH_STARTER_ENABLE_RELAY 2
+#define bench_mode_e_BENCH_SECOND_IDLE_VALVE 13
+#define bench_mode_e_BENCH_STARTER_DISABLE_RELAY 2
+#define bench_mode_e_BENCH_STARTER_ENABLE_RELAY 1
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 750
 #define BOOST_BLEND_COUNT 2
@@ -1028,7 +1029,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 116282267
+#define SIGNATURE_HASH 578999303
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1292,7 +1293,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.08.06.f407-discovery.116282267"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.08.06.f407-discovery.578999303"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
