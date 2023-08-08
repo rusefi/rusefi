@@ -43,8 +43,6 @@ static inline uint32_t SWAP_UINT32(uint32_t x)
 // number of microseconds in one period of given frequency (per second)
 #define frequency2periodUs(freq) ((1000000.0f) / (freq))
 
-#define ATOI_ERROR_CODE 311223344
-
 #define Q(x) #x
 #define QUOTE(x) Q(x)
 
@@ -62,7 +60,6 @@ uint32_t efiStrlen(const char *param);
 int efiPow10(int param);
 bool startsWith(const char *line, const char *prefix);
 float atoff(const char *string);
-int atoi(const char *string);
 
 #ifndef UNUSED
 #define UNUSED(x) (void)(x)
@@ -81,9 +78,6 @@ char* itoa10(char *p, int num);
  * clamps value into the [0, 100] range
  */
 #define clampPercentValue(x) (clampF(0, x, 100))
-
-bool strEqualCaseInsensitive(const char *str1, const char *str2);
-bool strEqual(const char *str1, const char *str2);
 
 // Currently used by air-interp. tCharge mode (see EngineState::updateTChargeK()).
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed);

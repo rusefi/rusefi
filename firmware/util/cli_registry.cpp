@@ -16,12 +16,17 @@
 
 #include "pch.h"
 #include <cstring>
+#include <cstdint>
 #include "efiprintf.h"
 #include "efistringutil.h"
 #include "cli_registry.h"
 
 /* for isspace() */
 #include <ctype.h>
+
+#ifndef CONSOLE_MAX_ACTIONS
+#define CONSOLE_MAX_ACTIONS 256
+#endif
 
 #ifndef MAX_CMD_LINE_LENGTH
 #define MAX_CMD_LINE_LENGTH		100

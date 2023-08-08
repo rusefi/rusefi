@@ -19,6 +19,7 @@
 
 #include "global.h"
 #include "efifeatures.h"
+#include "efistringutil.h"
 #include "rusefi_generated.h"
 #include "loggingcentral.h"
 #include "error_handling.h"
