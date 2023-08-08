@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "rusefi_types.h"
-
 typedef enum {
 	NO_PARAMETER,
 	NO_PARAMETER_P,
