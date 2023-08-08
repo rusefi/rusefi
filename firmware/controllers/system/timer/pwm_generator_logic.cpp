@@ -315,16 +315,16 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
 		OutputPin *output, float frequency, float dutyCycle) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
-	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= PWM_MAX_DUTY, "dutyCycle");
 	if (frequency < 1) {
 		warning(ObdCode::CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
 		return;
 	}
 
 	state->seq.setSwitchTime(0, dutyCycle);
-	state->seq.setSwitchTime(1, 1);
+	state->seq.setSwitchTime(1, PWM_MAX_DUTY);
 	state->seq.setChannelState(0, 0, TriggerValue::FALL);
-	state->seq.setChannelState(0, 1, TriggerValue::RISE);
+	state->seq.setChannelState(0, PWM_MAX_DUTY, TriggerValue::RISE);
 
 	state->outputPins[0] = output;
 

@@ -130,6 +130,8 @@ public:
  */
 void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
 
+#define PWM_MAX_DUTY 1
+
 /**
  * Start a one-channel software PWM driver.
  *
