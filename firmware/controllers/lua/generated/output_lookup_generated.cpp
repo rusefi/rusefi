@@ -80,6 +80,15 @@ float getOutputValueByName(const char *name) {
 // ignitionFault
 		case -1158382750:
 			return engine->outputChannels.ignitionFault;
+// isMainRelayOn
+		case -822552576:
+			return engine->outputChannels.isMainRelayOn;
+// isUsbConnected
+		case 1836976702:
+			return engine->outputChannels.isUsbConnected;
+// dfcoActive
+		case -622949795:
+			return engine->outputChannels.dfcoActive;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
@@ -416,12 +425,6 @@ float getOutputValueByName(const char *name) {
 // calibrationValue2
 		case 37467836:
 			return engine->outputChannels.calibrationValue2;
-// isMainRelayOn
-		case -822552576:
-			return engine->outputChannels.isMainRelayOn;
-// isUsbConnected
-		case 1836976702:
-			return engine->outputChannels.isUsbConnected;
 // luaInvocationCounter
 		case 1766132801:
 			return engine->outputChannels.luaInvocationCounter;
@@ -452,9 +455,6 @@ float getOutputValueByName(const char *name) {
 // auxLinear2
 		case 803810400:
 			return engine->outputChannels.auxLinear2;
-// dfcoActive
-		case -622949795:
-			return engine->outputChannels.dfcoActive;
 // fallbackMap
 		case -940825965:
 			return engine->outputChannels.fallbackMap;
