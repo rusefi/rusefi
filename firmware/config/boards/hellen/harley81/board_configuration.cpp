@@ -12,8 +12,6 @@
 #include "hellen_meta.h"
 #include "defaults.h"
 
-static OutputPin alphaEn;
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
 	engineConfiguration->injectionPins[1] = H144_LS_2;
@@ -92,8 +90,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void boardInitHardware() {
-	alphaEn.initPin("a-EN", H144_OUT_IO3);
-	alphaEn.setValue(1);
+    setHellenEnPin(H144_OUT_IO3);
 
 	boardOnConfigurationChange(nullptr);
 }

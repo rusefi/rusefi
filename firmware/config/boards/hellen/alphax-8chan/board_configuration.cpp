@@ -12,7 +12,6 @@
 #include "hellen_meta.h"
 #include "defaults.h"
 
-static OutputPin alphaEn;
 static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
@@ -111,8 +110,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void boardInitHardware() {
-	alphaEn.initPin("a-EN", H144_OUT_IO3);
-	alphaEn.setValue(1);
+	setHellenEnPin(H144_OUT_IO3);
 
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
 	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO5);
