@@ -15,11 +15,10 @@
  */
 
 #include "pch.h"
+#include <cstring>
+#include "efiprintf.h"
+#include "efistringutil.h"
 #include "cli_registry.h"
-
-#if ! EFI_UNIT_TEST
-#include "eficonsole.h"
-#endif /* ! EFI_UNIT_TEST */
 
 /* for isspace() */
 #include <ctype.h>
@@ -40,7 +39,7 @@ void resetConsoleActions(void) {
 
 static void doAddAction(const char *token, action_type_e type, Void callback, void *param) {
 #if !defined(EFI_DISABLE_CONSOLE_ACTIONS)
-	for (uint32_t i = 0; i < efiStrlen(token);i++) {
+	for (uint32_t i = 0; i < strlen(token);i++) {
 		char ch = token[i];
 		if (isupper(ch)) {
 			firmwareError(ObdCode::CUSTOM_ERR_COMMAND_LOWER_CASE_EXPECTED, "lowerCase expected [%s]", token);

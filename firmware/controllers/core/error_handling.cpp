@@ -6,6 +6,7 @@
  */
 
 #include "pch.h"
+#include "efistringutil.h"
 
 #include "backup_ram.h"
 #include "error_handling_led.h"

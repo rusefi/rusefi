@@ -103,8 +103,6 @@ using floatus_t = float;
  */
 using percent_t = float;
 
-typedef void (*Void)(void);
-
 using lua_script_t = char[LUA_SCRIPT_SIZE];
 
 using warning_message_t = char[WARNING_BUFFER_SIZE];
@@ -127,25 +125,3 @@ using brain_input_pin_e = brain_pin_e;
 using switch_input_pin_e = brain_pin_e;
 using sent_input_pin_e = brain_pin_e;
 using output_pin_e = brain_pin_e;
-
-typedef void (*VoidPtr)(void*);
-
-typedef void (*VoidInt)(int);
-typedef void (*VoidIntVoidPtr)(int, void*);
-typedef void (*VoidFloat)(float);
-typedef void (*VoidFloatFloat)(float, float);
-typedef void (*VoidFloatFloatFloat)(float, float, float);
-typedef void (*VoidFloatFloatFloatFloat)(float, float, float, float);
-typedef void (*VoidFloatFloatVoidPtr)(float, float, void*);
-typedef void (*VoidIntInt)(int, int);
-typedef void (*VoidIntIntVoidPtr)(int, int, void*);
-typedef void (*VoidIntFloat)(int, float);
-
-typedef void (*VoidCharPtr)(const char *);
-typedef void (*VoidCharPtrVoidPtr)(const char *, void*);
-
-typedef void (*VoidCharPtrCharPtr)(const char *, const char *);
-typedef void (*VoidCharPtrCharPtrVoidPtr)(const char *, const char *, void*);
-
-typedef void (*VoidCharPtrCharPtrCharPtr)(const char *, const char *, const char *);
-typedef void (*VoidCharPtrCharPtrCharPtrCharPtrCharPtr)(const char *, const char *, const char *, const char *, const char *);
