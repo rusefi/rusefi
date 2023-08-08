@@ -21,7 +21,7 @@ void setHellenEnPin(Gpio pin) {
     static bool initialized = false;
     if (!initialized) {
         initialized = true;
-	    megaEn.initPin("mm-EN", pin);
+	    megaEn.initPin("EN", pin);
 	    megaEn.setValue(1);
 	}
 }

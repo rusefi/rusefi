@@ -90,21 +90,22 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 
 #include "hellen_leds_144.cpp"
 
-void setBoardConfigOverrides() {
-	// todo: do we need this conditional on boardId or not really?
-	setHellenMegaEnPin();
-	// todo: make this conditional on 2chan revision
-	static OutputPin alphaEn;
-    alphaEn.initPin("a-EN", H144_OUT_IO3);
-    alphaEn.setValue(1);
+static bool isMegaModuleRevision() {
+    int16_t hellenBoardId = engine->engineState.hellenBoardId;
+    return hellenBoardId != BOARD_ID_2chan_b && hellenBoardId != BOARD_ID_2chan_c && hellenBoardId != BOARD_ID_2chan_d;
+}
 
+void setBoardConfigOverrides() {
 	setupVbatt();
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 
 	// rev.D uses SPI1 pins for CAN2, but rev.E and later uses mega-module meaning SPI1 for SD-card
-	if (hellenBoardId != BOARD_ID_2chan_d) {
+	if (isMegaModuleRevision()) {
 		setHellenSdCardSpi1();
 		configureHellenMegaAccCS2Pin();
+	    setHellenMegaEnPin(H144_OUT_IO3);
+	} else {
+	    setHellenEnPin(H144_OUT_IO3);
 	}
 
     setDefaultHellenAtPullUps();
@@ -124,8 +125,7 @@ void setBoardDefaultConfiguration() {
 	setIgnitionPins();
 
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
-	if (hellenBoardId == BOARD_ID_2chan_e || hellenBoardId == BOARD_ID_2chan_f) {
-	    // todo: flip that condition to check for "if not old board"
+	if (isMegaModuleRevision()) {
 	    setHellenMMbaro();
 	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3; // On-board MAP
 	    engineConfiguration->map.sensor.type = MT_MPXH6400;
