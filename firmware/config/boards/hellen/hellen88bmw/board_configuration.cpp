@@ -103,18 +103,16 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fuelPumpPin = Gpio::D12;	// OUT_IO9 // 113 Fuel Pump Relay
 	engineConfiguration->idle.solenoidPin = H144_OUT_PWM5;
 //	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = Gpio::G14;	// pin: 111a, OUT_IO3
+	engineConfiguration->mainRelayPin = H144_OUT_IO3;	// pin: 111a
 	engineConfiguration->tachOutputPin = H144_OUT_PWM7;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-
 	// Some sensible defaults for other options
 	setCrankOperationMode();
 
 	setAlgorithm(LM_SPEED_DENSITY);
-
 
 	// Bosch VQ40 VR56 VK56 0280158007
 	engineConfiguration->injector.flow = 296.2;

@@ -150,9 +150,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
 	engineConfiguration->fuelPumpPin = H144_OUT_IO9;
-//	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
 //	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = Gpio::G14;	// pin: 111a, OUT_IO3
+	engineConfiguration->mainRelayPin = H144_OUT_IO3;	// pin: 111a
 	engineConfiguration->malfunctionIndicatorPin = H144_OUT_PWM8;
 
 	engineConfiguration->brakePedalPin = H144_IN_RES3;
