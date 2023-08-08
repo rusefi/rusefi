@@ -188,6 +188,18 @@ static void cmd_threads() {
 #endif
 }
 
+/**
+ * @brief This is just a test function
+ */
+static void echo(int value) {
+	efiPrintf("got value: %d", value);
+}
+
+void checkStackAndHandleConsoleLine(char *line) {
+	assertStackVoid("console", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);
+    handleConsoleLine(line);
+}
+
 void initializeConsole() {
 	initConsoleLogic();
 
@@ -195,6 +207,7 @@ void initializeConsole() {
 
 	sayHello();
 	addConsoleAction("test", [](){ /* do nothing */});
+	addConsoleActionI("echo", echo);
 	addConsoleAction("hello", sayHello);
 #if EFI_HAS_RESET
 	addConsoleAction("reset", scheduleReset);

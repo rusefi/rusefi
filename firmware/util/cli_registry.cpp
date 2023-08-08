@@ -24,7 +24,9 @@
 /* for isspace() */
 #include <ctype.h>
 
+#ifndef MAX_CMD_LINE_LENGTH
 #define MAX_CMD_LINE_LENGTH		100
+#endif
 
 // todo: support \t as well
 #define SPACE_CHAR ' '
@@ -178,21 +180,12 @@ static int getParameterCount(action_type_e parameterType) {
  * @brief This function prints out a list of all available commands
  */
 void helpCommand(void) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
 	efiPrintf("%d actions available", consoleActionCount);
 	for (int i = 0; i < consoleActionCount; i++) {
 		TokenCallback *current = &consoleActions[i];
 		efiPrintf("  %s: %d parameters", current->token, getParameterCount(current->parameterType));
 	}
-#endif
-	efiPrintf("For more visit http://rusefi.com/wiki/index.php?title=Manual:Software:dev_console_commands");
-}
-
-/**
- * @brief This is just a test function
- */
-static void echo(int value) {
-	efiPrintf("got value: %d", value);
+	efiPrintf("For more visit https://github.com/rusefi/rusefi/wiki/Dev-Console-Commands");
 }
 
 int findEndOfToken(const char *line) {
@@ -461,9 +454,7 @@ int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
 }
 
 void initConsoleLogic() {
-//	resetConsoleActions();
 	addConsoleAction("help", helpCommand);
-	addConsoleActionI("echo", echo);
 }
 
 static char handleBuffer[MAX_CMD_LINE_LENGTH + 1];
@@ -506,7 +497,6 @@ static int handleConsoleLineInternal(const char *commandLine, int lineLength) {
 void handleConsoleLine(char *line) {
 	if (line == NULL)
 		return; // error detected
-	assertStackVoid("console", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);
 
 	int lineLength = strlen(line);
 	if (lineLength > MAX_CMD_LINE_LENGTH) {
@@ -522,7 +512,5 @@ void handleConsoleLine(char *line) {
 		return;
 	}
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 	efiPrintf("confirmation_%s:%d", line, lineLength);
-#endif
 }
