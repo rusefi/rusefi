@@ -103,6 +103,9 @@ void addConsoleActionSSP(const char *token, VoidCharPtrCharPtrVoidPtr callback, 
 void addConsoleActionSSS(const char *token, VoidCharPtrCharPtrCharPtr callback);
 void addConsoleActionSSSSS(const char *token, VoidCharPtrCharPtrCharPtrCharPtrCharPtr callback);
 
+void onCliCaseError(const char *token);
+void onCliDuplicateError(const char *token);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

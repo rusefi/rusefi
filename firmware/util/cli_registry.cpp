@@ -47,12 +47,14 @@ static void doAddAction(const char *token, action_type_e type, Void callback, vo
 	for (uint32_t i = 0; i < strlen(token);i++) {
 		char ch = token[i];
 		if (isupper(ch)) {
-			firmwareError(ObdCode::CUSTOM_ERR_COMMAND_LOWER_CASE_EXPECTED, "lowerCase expected [%s]", token);
+		    onCliCaseError(token);
+		    return;
 		}
 	}
 	for (int i = 0; i < consoleActionCount; i++) {
 		if (strcmp(token, consoleActions[i].token) == 0 /* zero result means strings are equal */) {
-			firmwareError(ObdCode::CUSTOM_SAME_TWICE, "Same action twice [%s]", token);
+			onCliDuplicateError(token);
+		    return;
 		}
 	}
 

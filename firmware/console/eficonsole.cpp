@@ -200,6 +200,14 @@ void checkStackAndHandleConsoleLine(char *line) {
     handleConsoleLine(line);
 }
 
+void onCliCaseError(const char *token) {
+	firmwareError(ObdCode::CUSTOM_ERR_COMMAND_LOWER_CASE_EXPECTED, "lowerCase expected [%s]", token);
+}
+
+void onCliDuplicateError(const char *token) {
+    firmwareError(ObdCode::CUSTOM_SAME_TWICE, "Same action twice [%s]", token);
+}
+
 void initializeConsole() {
 	initConsoleLogic();
 

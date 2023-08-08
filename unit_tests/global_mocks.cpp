@@ -5,7 +5,6 @@
 #include "pch.h"
 
 #include "trigger_central.h"
-#include "map_resize.h"
 
 bool verboseMode = false;
 
@@ -27,5 +26,11 @@ void initLogging(LoggingWithStorage *logging, const char *name) {
 }
 
 void setBoardConfigOverrides() {
+}
+
+void onCliCaseError(const char *token) {
+}
+
+void onCliDuplicateError(const char *token) {
 }
 
