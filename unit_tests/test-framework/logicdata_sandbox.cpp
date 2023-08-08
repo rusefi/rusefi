@@ -3,6 +3,8 @@
  *
  */
 
+this test file is not currently being compiled
+
 #include <cstdio>
 #include "logicdata.h"
 
