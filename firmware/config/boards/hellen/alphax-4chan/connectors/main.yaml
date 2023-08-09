@@ -20,6 +20,14 @@ pins:
     ts_name: A3 - Fuel Pump
     color: purple
 
+  - pin: A4old
+    # H144_OUT_IO13
+    id: G6
+    class: outputs
+    function: Tachometer Output
+    ts_name: A4 - Tachometer legacy up to rev F
+    color: purple
+
   - pin: A4
     # H144_GP3
     id: G10
@@ -217,22 +225,13 @@ pins:
     ts_name: D2 - Out Boost
     color: purple
 
-  - pin: D3old
+  - pin: D3
     # H144_IN_SENS1
     id: F3
     class: switch_inputs
-    function: Digital Input 2 legacy up to rev F
+    function: Digital Input 2
     type: hall
-    ts_name: D3 - Digital In 2 legacy up to rev F
-    color: green
-
-  - pin: D3
-    # H144_OUT_IO13
-    id: G6
-    class: switch_inputs
-    function: Digital Input 2. On older boards this pin is A4 tachometer out.
-    type: hall
-    ts_name: D3 - Digital In 2 (A4 tach out up to rev F)
+    ts_name: D3 - Digital In 2
     color: green
 
   - pin: D4
