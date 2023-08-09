@@ -71,6 +71,7 @@ void setSbc() {
 	strcpy(engineConfiguration->engineCode, "SBC");
 	// white wire "HEI E" plug pin D
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	engineConfiguration->globalTriggerAngleOffset = 24;
 
     gppwm_channel *ignOverride = &engineConfiguration->gppwm[0];
    	ignOverride->pwmFrequency = 0;
