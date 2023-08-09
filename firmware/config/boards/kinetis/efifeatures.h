@@ -25,6 +25,10 @@
 
 #define EFI_HPFP FALSE
 
+#define ATOFF_BUFFER_SIZE 4
+
+#define ATOFF_BUFFER_SIZE 4
+
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
@@ -288,7 +292,7 @@
 #define LOGIC_ANALYZER_BUFFER_SIZE 10 /*1800*/
 #define DL_OUTPUT_BUFFER 10 /*6500*/
 
-#define UTILITY_THREAD_STACK_SIZE 270 /*400*/
+#define UTILITY_THREAD_STACK_SIZE 20 /*400*/
 
 //#define CONSOLE_THREAD_STACK_SIZE UTILITY_THREAD_STACK_SIZE
 
