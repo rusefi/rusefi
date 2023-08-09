@@ -2,7 +2,7 @@
  * @file test_all_triggers.cpp
  */
 #include "pch.h"
-#include "TriggerMeta.h"
+#include "trigger_meta_generated.h"
 #include "auto_generated_sync_edge.h"
 
 // uncomment to test starting from specific trigger
