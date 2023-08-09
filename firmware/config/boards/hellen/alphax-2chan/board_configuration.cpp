@@ -103,7 +103,7 @@ void setBoardConfigOverrides() {
 	if (isMegaModuleRevision()) {
 		setHellenSdCardSpi1();
 		configureHellenMegaAccCS2Pin();
-	    setHellenMegaEnPin(H144_OUT_IO3);
+	    setHellenMegaEnPin();
 	} else {
 	    setHellenEnPin(H144_OUT_IO3);
 	}
