@@ -105,6 +105,7 @@ void addConsoleActionSSSSS(const char *token, VoidCharPtrCharPtrCharPtrCharPtrCh
 
 void onCliCaseError(const char *token);
 void onCliDuplicateError(const char *token);
+void onCliOverflowError();
 
 #ifdef __cplusplus
 }

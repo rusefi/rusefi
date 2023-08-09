@@ -14,9 +14,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "pch.h"
 #include <cstring>
 #include <cstdint>
+#include <rusefi/isnan.h>
+#include <rusefi/math.h>
 #include "efiprintf.h"
 #include "efistringutil.h"
 #include "cli_registry.h"
@@ -58,7 +59,11 @@ static void doAddAction(const char *token, action_type_e type, Void callback, vo
 		}
 	}
 
-	efiAssertVoid(ObdCode::CUSTOM_CONSOLE_TOO_MANY, consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
+    if (consoleActionCount >= CONSOLE_MAX_ACTIONS) {
+		onCliOverflowError();
+		return;
+    }
+
 	TokenCallback *current = &consoleActions[consoleActionCount++];
 	current->token = token;
 	current->parameterType = type;

@@ -34,3 +34,5 @@ void onCliCaseError(const char *token) {
 void onCliDuplicateError(const char *token) {
 }
 
+void onCliOverflowError() {
+}

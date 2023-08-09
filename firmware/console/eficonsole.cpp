@@ -208,6 +208,10 @@ void onCliDuplicateError(const char *token) {
     firmwareError(ObdCode::CUSTOM_SAME_TWICE, "Same action twice [%s]", token);
 }
 
+void onCliOverflowError() {
+    firmwareError(ObdCode::CUSTOM_CONSOLE_TOO_MANY, "Too many console actions");
+}
+
 void initializeConsole() {
 	initConsoleLogic();
 
