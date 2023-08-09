@@ -16,6 +16,8 @@ uint32_t vvtCamCounter;Sync: total cams front counter
 	float triggerToothAngleError;Sync: trigger angle error;"deg", 1, 0, -30, 30, 2
 
 	uint8_t triggerIgnoredToothCount
+    angle_t mapCamPrevToothAngle;Sync: MAP: prev angle;"deg", 1, 0, -3000, 3000, 2
+	bit isDecodingMapCam
 
 end_struct
 
