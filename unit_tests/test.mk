@@ -1,8 +1,9 @@
-FRAMEWORK_SRC_CPP = unit_test_framework.cpp \
-	engine_test_helper.cpp \
-	logicdata_csv_reader.cpp \
+FRAMEWORK_SRC_CPP = test-framework/unit_test_framework.cpp \
+	test-framework/engine_test_helper.cpp \
+	test-framework/logicdata_csv_reader.cpp \
 	boards.cpp \
-	global_execution_queue.cpp \
+	test-framework/global_execution_queue.cpp \
 	test_basic_math/test_find_index.cpp \
 	test_basic_math/test_interpolation_3d.cpp \
 
+FRAMEWORK_INC = test-framework

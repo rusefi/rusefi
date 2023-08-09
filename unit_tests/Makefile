@@ -49,6 +49,7 @@ INCDIR += \
 	$(UNIT_TESTS_DIR) \
 	$(ALLINC) \
 	$(PROJECT_DIR)/config/boards/hellen \
+	$(FRAMEWORK_INC) \
 	$(UNIT_TESTS_DIR)/test_data_structures \
 	$(UNIT_TESTS_DIR)/chibios-mock \
 	$(UNIT_TESTS_DIR)/native \
