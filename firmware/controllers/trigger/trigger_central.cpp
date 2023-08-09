@@ -620,8 +620,9 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 }
 
 void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
-	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
-			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm) {
+    isDecodingMapCam = engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
+                       			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm;
+	if (isDecodingMapCam) {
 		// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
 		auto toothAngle360 = currentPhase;
 		while (toothAngle360 >= 360) {
