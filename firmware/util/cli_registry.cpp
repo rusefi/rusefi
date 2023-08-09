@@ -19,7 +19,7 @@
 #include <rusefi/isnan.h>
 #include <rusefi/math.h>
 #include "efiprintf.h"
-#include "efistringutil.h"
+#include "rusefi/efistringutil.h"
 #include "cli_registry.h"
 
 /* for isspace() */

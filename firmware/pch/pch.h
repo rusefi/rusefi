@@ -16,10 +16,10 @@
 #include <rusefi/isnan.h>
 #include <rusefi/math.h>
 #include <rusefi/pt2001.h>
+#include <rusefi/efistringutil.h>
 
 #include "global.h"
 #include "efifeatures.h"
-#include "efistringutil.h"
 #include "rusefi_generated.h"
 #include "loggingcentral.h"
 #include "error_handling.h"
