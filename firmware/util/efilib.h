@@ -13,7 +13,6 @@
 #include <rusefi/arrays.h>
 #endif // __cplusplus
 
-#define TO_LOWER(x) (((x)>='A' && (x)<='Z') ? (x) - 'A' + 'a' : (x))
 int djb2lowerCase(const char *str);
 
 #define _MAX_FILLER 11
@@ -56,8 +55,6 @@ const char * boolToString(bool value);
 
 char * efiTrim(char *param);
 int mytolower(const char c);
-// todo: do we even need? does 'strlen' just work like we use it in cli_registry?
-uint32_t efiStrlen(const char *param);
 int efiPow10(int param);
 bool startsWith(const char *line, const char *prefix);
 
