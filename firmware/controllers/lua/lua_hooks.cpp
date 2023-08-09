@@ -248,7 +248,7 @@ static int lua_startPwm(lua_State* l) {
 	auto freq = luaL_checknumber(l, 2);
 	auto duty = luaL_checknumber(l, 3);
 
-    if (freq > PWM_MAX_DUTY) {
+    if (duty < 0 || duty > PWM_MAX_DUTY) {
         luaL_error(l, "Duty parameter should be from 0 to 1 got %f", duty);
         return 0;
     }
