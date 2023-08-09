@@ -233,7 +233,9 @@ void runRusEfi() {
 #endif /* EFI_TUNER_STUDIO */
 
 	// Start hardware serial ports (including bluetooth, if present)
+#if EFI_TUNER_STUDIO
 	startSerialChannels();
+#endif // EFI_TUNER_STUDIO
 
 	runRusEfiWithConfig();
 

@@ -6,7 +6,7 @@
 
 #include "pch.h"
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 #include "connector_uart_dma.h"
