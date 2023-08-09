@@ -51,7 +51,7 @@
 /**
  * TunerStudio support.
  */
-#define EFI_TUNER_STUDIO TRUE
+#define EFI_TUNER_STUDIO FALSE
 
 /**
  * Bluetooth UART setup support.
