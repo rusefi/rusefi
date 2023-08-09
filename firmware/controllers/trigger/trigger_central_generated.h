@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Mar 29 00:38:14 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Aug 09 09:38:59 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -60,8 +60,110 @@ struct trigger_central_s {
 	 * offset 49
 	 */
 	uint8_t alignmentFill_at_49[3];
+	/**
+	 * Sync: MAP: prev angle
+	deg
+	 * offset 52
+	 */
+	angle_t mapCamPrevToothAngle = (angle_t)0;
+	/**
+	offset 56 bit 0 */
+	bool isDecodingMapCam : 1 {};
+	/**
+	offset 56 bit 1 */
+	bool unusedBit_13_1 : 1 {};
+	/**
+	offset 56 bit 2 */
+	bool unusedBit_13_2 : 1 {};
+	/**
+	offset 56 bit 3 */
+	bool unusedBit_13_3 : 1 {};
+	/**
+	offset 56 bit 4 */
+	bool unusedBit_13_4 : 1 {};
+	/**
+	offset 56 bit 5 */
+	bool unusedBit_13_5 : 1 {};
+	/**
+	offset 56 bit 6 */
+	bool unusedBit_13_6 : 1 {};
+	/**
+	offset 56 bit 7 */
+	bool unusedBit_13_7 : 1 {};
+	/**
+	offset 56 bit 8 */
+	bool unusedBit_13_8 : 1 {};
+	/**
+	offset 56 bit 9 */
+	bool unusedBit_13_9 : 1 {};
+	/**
+	offset 56 bit 10 */
+	bool unusedBit_13_10 : 1 {};
+	/**
+	offset 56 bit 11 */
+	bool unusedBit_13_11 : 1 {};
+	/**
+	offset 56 bit 12 */
+	bool unusedBit_13_12 : 1 {};
+	/**
+	offset 56 bit 13 */
+	bool unusedBit_13_13 : 1 {};
+	/**
+	offset 56 bit 14 */
+	bool unusedBit_13_14 : 1 {};
+	/**
+	offset 56 bit 15 */
+	bool unusedBit_13_15 : 1 {};
+	/**
+	offset 56 bit 16 */
+	bool unusedBit_13_16 : 1 {};
+	/**
+	offset 56 bit 17 */
+	bool unusedBit_13_17 : 1 {};
+	/**
+	offset 56 bit 18 */
+	bool unusedBit_13_18 : 1 {};
+	/**
+	offset 56 bit 19 */
+	bool unusedBit_13_19 : 1 {};
+	/**
+	offset 56 bit 20 */
+	bool unusedBit_13_20 : 1 {};
+	/**
+	offset 56 bit 21 */
+	bool unusedBit_13_21 : 1 {};
+	/**
+	offset 56 bit 22 */
+	bool unusedBit_13_22 : 1 {};
+	/**
+	offset 56 bit 23 */
+	bool unusedBit_13_23 : 1 {};
+	/**
+	offset 56 bit 24 */
+	bool unusedBit_13_24 : 1 {};
+	/**
+	offset 56 bit 25 */
+	bool unusedBit_13_25 : 1 {};
+	/**
+	offset 56 bit 26 */
+	bool unusedBit_13_26 : 1 {};
+	/**
+	offset 56 bit 27 */
+	bool unusedBit_13_27 : 1 {};
+	/**
+	offset 56 bit 28 */
+	bool unusedBit_13_28 : 1 {};
+	/**
+	offset 56 bit 29 */
+	bool unusedBit_13_29 : 1 {};
+	/**
+	offset 56 bit 30 */
+	bool unusedBit_13_30 : 1 {};
+	/**
+	offset 56 bit 31 */
+	bool unusedBit_13_31 : 1 {};
 };
-static_assert(sizeof(trigger_central_s) == 52);
+static_assert(sizeof(trigger_central_s) == 60);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Mar 29 00:38:14 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Aug 09 09:38:59 UTC 2023

@@ -1071,6 +1071,16 @@ float getOutputValueByName(const char *name) {
 		case 989545496:
 			return engine->triggerCentral.triggerIgnoredToothCount;
 #endif
+// mapCamPrevToothAngle
+#if EFI_SHAFT_POSITION_INPUT
+		case 1581624998:
+			return engine->triggerCentral.mapCamPrevToothAngle;
+#endif
+// isDecodingMapCam
+#if EFI_SHAFT_POSITION_INPUT
+		case 756216589:
+			return engine->triggerCentral.isDecodingMapCam;
+#endif
 // dcOutput0
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;

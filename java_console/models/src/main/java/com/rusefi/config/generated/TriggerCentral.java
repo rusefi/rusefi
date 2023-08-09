@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Aug 08 09:10:42 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Aug 09 09:38:59 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -23,6 +23,8 @@ public class TriggerCentral {
 	public static final Field TRIGGERTOOTHANGLEERROR = Field.create("TRIGGERTOOTHANGLEERROR", 44, FieldType.FLOAT).setBaseOffset(1168);
 	public static final Field TRIGGERIGNOREDTOOTHCOUNT = Field.create("TRIGGERIGNOREDTOOTHCOUNT", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1168);
 	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1168);
+	public static final Field MAPCAMPREVTOOTHANGLE = Field.create("MAPCAMPREVTOOTHANGLE", 52, FieldType.FLOAT).setBaseOffset(1168);
+	public static final Field ISDECODINGMAPCAM = Field.create("ISDECODINGMAPCAM", 56, FieldType.BIT, 0).setBaseOffset(1168);
 	public static final Field[] VALUES = {
 	HWEVENTCOUNTERS1,
 	HWEVENTCOUNTERS2,
@@ -40,5 +42,7 @@ public class TriggerCentral {
 	TRIGGERTOOTHANGLEERROR,
 	TRIGGERIGNOREDTOOTHCOUNT,
 	ALIGNMENTFILL_AT_49,
+	MAPCAMPREVTOOTHANGLE,
+	ISDECODINGMAPCAM,
 	};
 }

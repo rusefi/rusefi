@@ -415,6 +415,9 @@ static constexpr LogField fields[] = {
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerIgnoredToothCount, "triggerIgnoredToothCount", "", 0},
 #endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
+#endif
 	{engine->dc_motors.dcOutput0, "DC: output0", "per", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "per", 2, "ETB more"},
 	{___engine.lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
