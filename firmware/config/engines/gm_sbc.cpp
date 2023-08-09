@@ -69,6 +69,8 @@ void setSbc() {
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 	strcpy(engineConfiguration->engineCode, "SBC");
+	// white wire "HEI E" plug pin D
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
     gppwm_channel *ignOverride = &engineConfiguration->gppwm[0];
    	ignOverride->pwmFrequency = 0;
@@ -76,13 +78,18 @@ void setSbc() {
    	setTable(ignOverride->table, 100);
 
 #if HW_PROTEUS
+    // tan wire with a black trace - "HEI B", plug pin B
     ignOverride->pin = PROTEUS_IGN_12;
 	engineConfiguration->fanPin = Gpio::Unassigned;
 	// reminder about D101
    	engineConfiguration->injectionPins[0] = PROTEUS_LS_14; // #1
    	// reminder about D104
    	engineConfiguration->injectionPins[3] = PROTEUS_LS_15; // #4
+
+    // wow high side relay control
+    engineConfiguration->fuelPumpPin = PROTEUS_HS_1;
 #endif // HW_PROTEUS
+	engineConfiguration->mainRelayPin = Gpio::Unassigned; // vehicle controls main relay
 
  	setStepperHw();
 
@@ -91,6 +98,7 @@ void setSbc() {
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 	engineConfiguration->skippedWheelOnCam = true;
+	// Proteus Digital 1 is Tach input "HEI R", plug pin C
 
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 }
