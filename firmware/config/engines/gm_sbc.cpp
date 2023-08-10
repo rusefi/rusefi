@@ -89,6 +89,7 @@ void setSbc() {
 
     // wow high side relay control
     engineConfiguration->fuelPumpPin = PROTEUS_HS_1;
+    setGmCltSensor(&engineConfiguration->clt, PROTEUS_DEFAULT_AT_PULLUP);
 #endif // HW_PROTEUS
 	engineConfiguration->mainRelayPin = Gpio::Unassigned; // vehicle controls main relay
 

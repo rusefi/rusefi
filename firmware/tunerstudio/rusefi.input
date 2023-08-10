@@ -3042,7 +3042,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}@@if_ts_show_clt_iat_pullup
 
 		settingSelector = "Common CLT Sensors"
-			settingOption = "GM CLT", clt_tempC_1=0,clt_resistance_1=9240,clt_tempC_2=40,clt_resistance_2=1459,clt_tempC_3=100,clt_resistance_3=177,useLinearCltSensor=0
+			settingOption = "GM CLT", clt_tempC_1=-40,clt_resistance_1=100000,clt_tempC_2=40,clt_resistance_2=1459,clt_tempC_3=130,clt_resistance_3=70,useLinearCltSensor=0
 			settingOption = "Miata NA", clt_tempC_1=-20,clt_resistance_1=16150,clt_tempC_2=40,clt_resistance_2=1150,clt_tempC_3=80,clt_resistance_3=330,useLinearCltSensor=0
 			settingOption = "Miata NB", clt_tempC_1=-10,clt_resistance_1=9000,clt_tempC_2=20,clt_resistance_2=2500,clt_tempC_3=80,clt_resistance_3=320,useLinearCltSensor=0
 			settingOption = "Bosch Various", clt_tempC_1=0,clt_resistance_1=5896,clt_tempC_2=50,clt_resistance_2=834,clt_tempC_3=100,clt_resistance_3=187,useLinearCltSensor=0
