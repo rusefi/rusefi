@@ -478,8 +478,6 @@ int tle6240_add(brain_pin_e base, unsigned int index, const tle6240_config *cfg)
 			chip->o_direct_mask |= (1 << ((i < 4) ? i : (i + 4)));
 	}
 
-	chip->drv_state = TLE6240_WAIT_INIT;
-
 	/* register, return gpio chip base */
 	ret = gpiochip_register(base, DRIVER_NAME, *chip, TLE6240_OUTPUTS);
 	if (ret < 0)
