@@ -33,10 +33,6 @@ static void auxInfo() {
 }
 
 void enableAuxSerial() {
-	engineConfiguration->auxSerialTxPin = engineConfiguration->auxSerialTxPin;
-	engineConfiguration->auxSerialRxPin = engineConfiguration->auxSerialRxPin;
-	engineConfiguration->auxSerialSpeed = engineConfiguration->auxSerialSpeed;
-	
 	uartCfg.speed = engineConfiguration->auxSerialSpeed;
 	sdStart(AUX_SERIAL_DEVICE, &uartCfg);
 
