@@ -204,7 +204,7 @@ pins:
     # IN_MAP3
     id: EFI_ADC_2
     class: analog_inputs
-    ts_name: A/C pressure
+    ts_name: K54 A/C pressure
     function: A/C pressure
 
   - pin: K57
