@@ -2195,6 +2195,7 @@ cmd_set_engine_type_PROTEUS_SBC	        			= "@@TS_IO_TEST_COMMAND_char@@@@ts_co
 cmd_set_engine_type_PROTEUS_M111    				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_M111_16_hex@@"@@if_show_Proteus_presets
 
 cmd_set_engine_type_ALPHAX_8CHAN_SBC       			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_ALPHAX_8CHAN_SBC_16_hex@@"
+cmd_set_engine_type_SMALL_CB_HONDA_BCM              = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_HONDA_BCM_16_hex@@"@@if_show_small_can_board_presets
 
 
 ; ETB_BENCH_ENGINE = 58
@@ -4340,6 +4341,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Fuel Bench",               cmd_set_engine_type_FUEL_BENCH
 
 		commandButton = "SBC",			            cmd_set_engine_type_ALPHAX_8CHAN_SBC@@if_show_8chan_presets
+		commandButton = "Honda BCM",	            cmd_set_engine_type_SMALL_CB_HONDA_BCM@@if_show_small_can_board_presets
 
 		commandButton = "Hellen NA6",				cmd_set_engine_type_hellen_NA6@@if_show_HellenNA6_presets
 		commandButton = "Hellen NA8 94-95",			cmd_set_engine_type_hellen_NA94@@if_show_HellenNA6_presets
