@@ -8,6 +8,7 @@
 #include "lua_airmass.h"
 #include "value_lookup.h"
 #include "can_filter.h"
+#include "tunerstudio.h"
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 #endif // EFI_CAN_SUPPORT
@@ -665,6 +666,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		auto result = getscriptTable(humanTableIdx - HUMAN_OFFSET)->getValue(x, y);
 
 		lua_pushnumber(l, result);
+		return 1;
+	});
+
+	lua_register(l, "secondsSinceTsActivity", [](lua_State* l) {
+		lua_pushnumber(l, getSecondsSinceChannelsRequest());
 		return 1;
 	});
 

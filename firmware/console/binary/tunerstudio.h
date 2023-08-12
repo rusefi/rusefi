@@ -32,6 +32,8 @@ void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 uint8_t* getWorkingPageAddr();
 
 void requestBurn();
+// Lua script might want to know how long since last TS request to see if unit is being actively monitored
+int getSecondsSinceChannelsRequest();
 
 #if EFI_TUNER_STUDIO
 #include "thread_controller.h"
