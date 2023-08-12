@@ -75,7 +75,7 @@ canRxAdd(1, 0x17C, onPOWERTRAIN_DATA)
 canRxAdd(1, 0x309, onCAR_SPEED)
 
 function onTick()
-	if canTimer : getElapsedSeconds() > 20 and secondsSinceTsActivity() > 20 then
+	if (canTimer : getElapsedSeconds() > 20) and (secondsSinceTsActivity() > 20) then
 		mcu_standby()
 	end
 end
