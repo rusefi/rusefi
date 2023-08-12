@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "can_bench_test.h"
 #include "can_msg_tx.h"
+#include "can_common.h"
 
 #define CAN_BENCH_HEADER 0x66
 #define CAN_BENCH_GET_COUNT 0
