@@ -25,6 +25,7 @@ static void setPin(const CANRxFrame& frame, int value) {
 }
 
 void sendEventCounters() {
+#if EFI_SHAFT_POSITION_INPUT
 	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_EVENT_COUNTERS, 8);
 
 	int primaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
@@ -44,6 +45,7 @@ void sendEventCounters() {
 
 		msg[2 + camIdx] = TRUNCATE_TO_BYTE(vvtRise + vvtFall);
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 void processCanBenchTest(const CANRxFrame& frame) {
