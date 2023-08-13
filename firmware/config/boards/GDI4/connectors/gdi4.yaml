@@ -28,7 +28,7 @@ pins:
     color: blue
 
   - pin: 47a
-    function: Injector Control 6
+    function: Injector Control 6 or HPFP Control
     color: yellow
 
   - pin: 48a
