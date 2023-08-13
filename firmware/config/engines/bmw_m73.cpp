@@ -274,6 +274,9 @@ void setEngineBMW_M73_Proteus() {
 	engineConfiguration->starterControlPin = PROTEUS_LS_14;
 	engineConfiguration->startStopButtonPin = PROTEUS_DIGITAL_3;
 	engineConfiguration->startStopButtonMode = PI_PULLUP;
+	engineConfiguration->fuelPumpPin = PROTEUS_LS_16;
+	engineConfiguration->fanPin = PROTEUS_LS_15;
+	engineConfiguration->mainRelayPin = PROTEUS_LS_13;
 
 	// tps and pps
 	setProteusHitachiEtbDefaults();
