@@ -74,16 +74,17 @@ static bool isFirstInvocation = true;
 
 static void setHellen128ETBConfig() {
 	BitbangI2c m_i2c;
-	uint8_t variant[2]={0xff,0xff};
+	uint8_t variant[2] = {0xff, 0xff};
 
 	//same pins as for LPS25
 	if (isFirstInvocation) {
 		isFirstInvocation = false;
 		m_i2c.init(Gpio::B10, Gpio::B11);
 	}
-	m_i2c.read(0x20, variant, sizeof(variant));
+	// looks like we support PCF8575 i2c I/O expander
+	m_i2c.read(/*address*/0x20, variant, sizeof(variant));
 
-	efiPrintf ("BoardID [%02x%02x] ", variant[0],variant[1] );
+	efiPrintf("BoardID [%02x%02x] ", variant[0], variant[1]);
 
 	//Rev C is different then Rev A/B
 	if ((variant[0] == 0x63) && (variant[1] == 0x00)) {
