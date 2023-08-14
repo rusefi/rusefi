@@ -7,3 +7,4 @@
 
 void processCanBenchTest(const CANRxFrame& frame);
 void sendEventCounters();
+void sendRawAnalogValues();
