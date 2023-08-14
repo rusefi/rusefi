@@ -10,7 +10,10 @@
 #define CAN_BENCH_GET_CLEAR 2
 
 #define TRUNCATE_TO_BYTE(i) ((i) & 0xff)
+// raw values are 0..5V, convert it to 8-bit (0..255)
+#define RAW_TO_BYTE(v) TRUNCATE_TO_BYTE((int)(v * 255.0 / 5.0))
 
+#define RAW_ANALOG_VALUES_COUNT 8
 
 #if EFI_CAN_SUPPORT
 
@@ -46,6 +49,28 @@ void sendEventCounters() {
 		msg[2 + camIdx] = TRUNCATE_TO_BYTE(vvtRise + vvtFall);
 	}
 #endif // EFI_SHAFT_POSITION_INPUT
+}
+
+void sendRawAnalogValues() {
+	const float values[RAW_ANALOG_VALUES_COUNT] = { 
+		engine->outputChannels.rawTps1Primary, 
+		engine->outputChannels.rawTps1Secondary,
+		engine->outputChannels.rawPpsPrimary,
+		engine->outputChannels.rawPpsSecondary,
+		engine->outputChannels.rawMap,
+		engine->outputChannels.rawClt,
+		engine->outputChannels.rawIat,
+		engine->outputChannels.rawBattery,
+	};
+
+	// send the first packet
+	{
+		CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_RAW_ANALOG, 8);
+		for (int valueIdx = 0; valueIdx < 8; valueIdx++) {
+			msg[valueIdx] = (valueIdx < RAW_ANALOG_VALUES_COUNT) ? RAW_TO_BYTE(values[valueIdx]) : 0;
+		}
+	}
+	// todo: send the second packet
 }
 
 void processCanBenchTest(const CANRxFrame& frame) {

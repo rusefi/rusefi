@@ -57,6 +57,7 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 
 	if (cycle.isInterval(CI::_100ms)) {
 		sendEventCounters();
+		sendRawAnalogValues();
 	}
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
