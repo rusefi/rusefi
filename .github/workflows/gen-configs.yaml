@@ -137,7 +137,7 @@ jobs:
           echo "NOCOMMIT=true" >> $GITHUB_ENV
           exit 0
         elif echo "$OUT" | grep 'changed'; then
-          echo "NOCOMMIT=true" >> $GITHUB_ENV
+          echo "NOCOMMIT=false" >> $GITHUB_ENV
           echo "triggers: looks like something has changed"
           exit 0
         else
