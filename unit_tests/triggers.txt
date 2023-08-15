@@ -449,24 +449,20 @@ event 8 0 1 407.00 nan
 event 9 0 0 417.00 nan
 event 10 0 1 540.00 nan
 event 11 0 0 550.00 nan
-TRIGGERTYPE 11 4 TT_UNUSED_11 0.00
-knownOperationMode=true
+TRIGGERTYPE 11 2 TT_NARROW_SINGLE_TOOTH 0.00
+knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=720
-gapsCount=2
-syncEdge=Both
-isSynchronizationNeeded=1
-gapFrom.0=2.000000
-gapTo.0=5.000000
-gapFrom.1=0.200000
-gapTo.1=0.800000
+gapsCount=1
+syncEdge=RiseOnly
+isSynchronizationNeeded=0
+gapFrom.0=0.750000
+gapTo.0=1.250000
 # end of meta section
-event 0 0 1 0.00 3.000000
-event 1 0 0 180.00 0.666667
-event 2 0 1 360.00 1.000000
-event 3 0 0 450.00 0.500000
+event 0 0 1 0.00 1.353383
+event 1 0 0 0.00 nan
 TRIGGERTYPE 12 120 TT_SUBARU_EZ30 240.00
 knownOperationMode=true
 crankBased=true
@@ -715,7 +711,7 @@ event 2 0 1 240.00 1.000000
 event 3 0 0 240.00 nan
 event 4 0 1 480.00 1.000000
 event 5 0 0 480.00 nan
-TRIGGERTYPE 18 2 TT_ONE 0.00
+TRIGGERTYPE 18 2 TT_HALF_MOON 0.00
 knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
@@ -5341,24 +5337,254 @@ event 92 0 1 690.00 nan
 event 93 0 0 693.00 nan
 event 94 0 1 696.00 nan
 event 95 0 0 708.00 nan
-TRIGGERTYPE 75 4 TT_UNUSED_75 0.00
+TRIGGERTYPE 75 232 TT_60_2_2_F3R 0.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-cycleDuration=720
-gapsCount=2
-syncEdge=Both
+cycleDuration=360
+gapsCount=3
+syncEdge=RiseOnly
 isSynchronizationNeeded=1
-gapFrom.0=2.000000
-gapTo.0=5.000000
-gapFrom.1=0.200000
-gapTo.1=0.800000
+gapFrom.0=0.375000
+gapTo.0=0.625000
+gapFrom.1=0.750000
+gapTo.1=1.250000
+gapFrom.2=1.500000
+gapTo.2=2.500000
 # end of meta section
-event 0 0 1 0.00 3.000000
-event 1 0 0 180.00 0.666667
-event 2 0 1 360.00 1.000000
-event 3 0 0 450.00 0.500000
+event 0 0 1 0.00 0.500000
+event 1 0 0 0.00 nan
+event 2 0 1 6.00 1.000000
+event 3 0 0 6.00 nan
+event 4 0 1 12.00 1.000000
+event 5 0 0 12.00 nan
+event 6 0 1 18.00 1.000000
+event 7 0 0 18.00 nan
+event 8 0 1 24.00 1.000000
+event 9 0 0 24.00 nan
+event 10 0 1 30.00 1.000000
+event 11 0 0 30.00 nan
+event 12 0 1 36.00 1.000000
+event 13 0 0 36.00 nan
+event 14 0 1 42.00 1.000000
+event 15 0 0 42.00 nan
+event 16 0 1 48.00 1.000000
+event 17 0 0 48.00 nan
+event 18 0 1 54.00 1.000000
+event 19 0 0 54.00 nan
+event 20 0 1 60.00 1.000000
+event 21 0 0 60.00 nan
+event 22 0 1 66.00 1.000000
+event 23 0 0 66.00 nan
+event 24 0 1 72.00 1.000000
+event 25 0 0 72.00 nan
+event 26 0 1 78.00 1.000000
+event 27 0 0 78.00 nan
+event 28 0 1 84.00 1.000000
+event 29 0 0 84.00 nan
+event 30 0 1 90.00 1.000000
+event 31 0 0 90.00 nan
+event 32 0 1 96.00 1.000000
+event 33 0 0 96.00 nan
+event 34 0 1 102.00 1.000000
+event 35 0 0 102.00 nan
+event 36 0 1 108.00 1.000000
+event 37 0 0 108.00 nan
+event 38 0 1 114.00 1.000000
+event 39 0 0 114.00 nan
+event 40 0 1 120.00 1.000000
+event 41 0 0 120.00 nan
+event 42 0 1 126.00 1.000000
+event 43 0 0 126.00 nan
+event 44 0 1 132.00 1.000000
+event 45 0 0 132.00 nan
+event 46 0 1 138.00 1.000000
+event 47 0 0 138.00 nan
+event 48 0 1 144.00 1.000000
+event 49 0 0 144.00 nan
+event 50 0 1 150.00 1.000000
+event 51 0 0 150.00 nan
+event 52 0 1 156.00 1.000000
+event 53 0 0 156.00 nan
+event 54 0 1 162.00 1.000000
+event 55 0 0 162.00 nan
+event 56 0 1 168.00 1.000000
+event 57 0 0 168.00 nan
+event 58 0 1 174.00 1.000000
+event 59 0 0 174.00 nan
+event 60 0 1 180.00 1.000000
+event 61 0 0 180.00 nan
+event 62 0 1 186.00 1.000000
+event 63 0 0 186.00 nan
+event 64 0 1 192.00 1.000000
+event 65 0 0 192.00 nan
+event 66 0 1 198.00 1.000000
+event 67 0 0 198.00 nan
+event 68 0 1 204.00 1.000000
+event 69 0 0 204.00 nan
+event 70 0 1 210.00 1.000000
+event 71 0 0 210.00 nan
+event 72 0 1 216.00 1.000000
+event 73 0 0 216.00 nan
+event 74 0 1 222.00 1.000000
+event 75 0 0 222.00 nan
+event 76 0 1 228.00 1.000000
+event 77 0 0 228.00 nan
+event 78 0 1 234.00 1.000000
+event 79 0 0 234.00 nan
+event 80 0 1 240.00 1.000000
+event 81 0 0 240.00 nan
+event 82 0 1 246.00 1.000000
+event 83 0 0 246.00 nan
+event 84 0 1 252.00 1.000000
+event 85 0 0 252.00 nan
+event 86 0 1 258.00 1.000000
+event 87 0 0 258.00 nan
+event 88 0 1 264.00 1.000000
+event 89 0 0 264.00 nan
+event 90 0 1 270.00 1.000000
+event 91 0 0 270.00 nan
+event 92 0 1 276.00 1.000000
+event 93 0 0 276.00 nan
+event 94 0 1 282.00 1.000000
+event 95 0 0 282.00 nan
+event 96 0 1 288.00 1.000000
+event 97 0 0 288.00 nan
+event 98 0 1 294.00 1.000000
+event 99 0 0 294.00 nan
+event 100 0 1 300.00 1.000000
+event 101 0 0 300.00 nan
+event 102 0 1 306.00 1.000000
+event 103 0 0 306.00 nan
+event 104 0 1 312.00 1.000000
+event 105 0 0 312.00 nan
+event 106 0 1 318.00 1.000000
+event 107 0 0 318.00 nan
+event 108 0 1 324.00 1.000000
+event 109 0 0 324.00 nan
+event 110 0 1 330.00 1.000000
+event 111 0 0 330.00 nan
+event 112 0 1 342.00 2.000000
+event 113 0 0 342.00 nan
+event 114 0 1 354.00 1.000000
+event 115 0 0 354.00 nan
+event 116 0 1 360.00 nan
+event 117 0 0 360.00 nan
+event 118 0 1 366.00 nan
+event 119 0 0 366.00 nan
+event 120 0 1 372.00 nan
+event 121 0 0 372.00 nan
+event 122 0 1 378.00 nan
+event 123 0 0 378.00 nan
+event 124 0 1 384.00 nan
+event 125 0 0 384.00 nan
+event 126 0 1 390.00 nan
+event 127 0 0 390.00 nan
+event 128 0 1 396.00 nan
+event 129 0 0 396.00 nan
+event 130 0 1 402.00 nan
+event 131 0 0 402.00 nan
+event 132 0 1 408.00 nan
+event 133 0 0 408.00 nan
+event 134 0 1 414.00 nan
+event 135 0 0 414.00 nan
+event 136 0 1 420.00 nan
+event 137 0 0 420.00 nan
+event 138 0 1 426.00 nan
+event 139 0 0 426.00 nan
+event 140 0 1 432.00 nan
+event 141 0 0 432.00 nan
+event 142 0 1 438.00 nan
+event 143 0 0 438.00 nan
+event 144 0 1 444.00 nan
+event 145 0 0 444.00 nan
+event 146 0 1 450.00 nan
+event 147 0 0 450.00 nan
+event 148 0 1 456.00 nan
+event 149 0 0 456.00 nan
+event 150 0 1 462.00 nan
+event 151 0 0 462.00 nan
+event 152 0 1 468.00 nan
+event 153 0 0 468.00 nan
+event 154 0 1 474.00 nan
+event 155 0 0 474.00 nan
+event 156 0 1 480.00 nan
+event 157 0 0 480.00 nan
+event 158 0 1 486.00 nan
+event 159 0 0 486.00 nan
+event 160 0 1 492.00 nan
+event 161 0 0 492.00 nan
+event 162 0 1 498.00 nan
+event 163 0 0 498.00 nan
+event 164 0 1 504.00 nan
+event 165 0 0 504.00 nan
+event 166 0 1 510.00 nan
+event 167 0 0 510.00 nan
+event 168 0 1 516.00 nan
+event 169 0 0 516.00 nan
+event 170 0 1 522.00 nan
+event 171 0 0 522.00 nan
+event 172 0 1 528.00 nan
+event 173 0 0 528.00 nan
+event 174 0 1 534.00 nan
+event 175 0 0 534.00 nan
+event 176 0 1 540.00 nan
+event 177 0 0 540.00 nan
+event 178 0 1 546.00 nan
+event 179 0 0 546.00 nan
+event 180 0 1 552.00 nan
+event 181 0 0 552.00 nan
+event 182 0 1 558.00 nan
+event 183 0 0 558.00 nan
+event 184 0 1 564.00 nan
+event 185 0 0 564.00 nan
+event 186 0 1 570.00 nan
+event 187 0 0 570.00 nan
+event 188 0 1 576.00 nan
+event 189 0 0 576.00 nan
+event 190 0 1 582.00 nan
+event 191 0 0 582.00 nan
+event 192 0 1 588.00 nan
+event 193 0 0 588.00 nan
+event 194 0 1 594.00 nan
+event 195 0 0 594.00 nan
+event 196 0 1 600.00 nan
+event 197 0 0 600.00 nan
+event 198 0 1 606.00 nan
+event 199 0 0 606.00 nan
+event 200 0 1 612.00 nan
+event 201 0 0 612.00 nan
+event 202 0 1 618.00 nan
+event 203 0 0 618.00 nan
+event 204 0 1 624.00 nan
+event 205 0 0 624.00 nan
+event 206 0 1 630.00 nan
+event 207 0 0 630.00 nan
+event 208 0 1 636.00 nan
+event 209 0 0 636.00 nan
+event 210 0 1 642.00 nan
+event 211 0 0 642.00 nan
+event 212 0 1 648.00 nan
+event 213 0 0 648.00 nan
+event 214 0 1 654.00 nan
+event 215 0 0 654.00 nan
+event 216 0 1 660.00 nan
+event 217 0 0 660.00 nan
+event 218 0 1 666.00 nan
+event 219 0 0 666.00 nan
+event 220 0 1 672.00 nan
+event 221 0 0 672.00 nan
+event 222 0 1 678.00 nan
+event 223 0 0 678.00 nan
+event 224 0 1 684.00 nan
+event 225 0 0 684.00 nan
+event 226 0 1 690.00 nan
+event 227 0 0 690.00 nan
+event 228 0 1 702.00 nan
+event 229 0 0 702.00 nan
+event 230 0 1 714.00 nan
+event 231 0 0 714.00 nan
 TRIGGERTYPE 76 8 TT_MITSU_4G63_CRANK 0.00
 knownOperationMode=false
 crankBased=false
@@ -5371,7 +5597,7 @@ isSynchronizationNeeded=0
 gapFrom.0=0.750000
 gapTo.0=1.250000
 # end of meta section
-event 0 0 1 0.00 3.000000
+event 0 0 1 0.00 0.500000
 event 1 0 0 0.00 nan
 event 2 0 1 180.00 nan
 event 3 0 0 180.00 nan
@@ -5391,7 +5617,7 @@ isSynchronizationNeeded=0
 gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
-event 0 0 1 0.00 3.000000
+event 0 0 1 0.00 0.500000
 event 1 0 0 60.00 nan
 event 2 0 1 360.00 nan
 event 3 0 0 420.00 nan
