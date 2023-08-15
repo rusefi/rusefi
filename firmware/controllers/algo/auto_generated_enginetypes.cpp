@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Aug 06 03:53:25 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Aug 15 12:53:54 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -378,6 +378,8 @@ case trigger_type_e::TT_3_1_CAM:
   return "TT_3_1_CAM";
 case trigger_type_e::TT_60DEG_TOOTH:
   return "TT_60DEG_TOOTH";
+case trigger_type_e::TT_60_2_2_F3R:
+  return "TT_60_2_2_F3R";
 case trigger_type_e::TT_60_2_VW:
   return "TT_60_2_VW";
 case trigger_type_e::TT_BENELLI_TRE:
@@ -498,8 +500,6 @@ case trigger_type_e::TT_TRI_TACH:
   return "TT_TRI_TACH";
 case trigger_type_e::TT_UNUSED:
   return "TT_UNUSED";
-case trigger_type_e::TT_60_2_2_F3R:
-  return "TT_UNUSED_75";
 case trigger_type_e::TT_UNUSED_78:
   return "TT_UNUSED_78";
 case trigger_type_e::TT_VVT_BARRA_3_PLUS_1:
