@@ -27,6 +27,7 @@
 #include "trigger_mazda.h"
 #include "trigger_misc.h"
 #include "trigger_mitsubishi.h"
+#include "trigger_renault.h"
 #include "trigger_subaru.h"
 #include "trigger_suzuki.h"
 #include "trigger_structure.h"
@@ -652,6 +653,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configure60degSingleTooth(this);
 		break;
 	case trigger_type_e::TT_60_2_2_F3R:
+	    initialize60_2_2_Renault_F(this);
+        break;
 	case trigger_type_e::TT_UNUSED_78:
 	case trigger_type_e::TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);

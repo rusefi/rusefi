@@ -36,6 +36,7 @@ Release template (copy/paste this for new release):
  - Latest jSerialComm 2.10.3
  - Working disconnect button in Console #4862
  - Preset for Mpxh6300 MAP sensor #5481
+ - Renault F 60-2-2 trigger wheel #5513
 
 ### Fixed
  - simulator: sensor mocking UI #5473
