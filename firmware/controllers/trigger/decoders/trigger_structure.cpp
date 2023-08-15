@@ -651,7 +651,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		 * just to use another enum for each trigger type. */
 		configure60degSingleTooth(this);
 		break;
-	case trigger_type_e::TT_UNUSED_75:
+	case trigger_type_e::TT_60_2_2_F3R:
 	case trigger_type_e::TT_UNUSED_78:
 	case trigger_type_e::TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);

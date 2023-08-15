@@ -421,7 +421,8 @@ enum class trigger_type_e : uint32_t {
 	TT_VVT_TOYOTA_4_1 = 73,
 	// GM 24x with 3/12 degree gaps
 	TT_GM_24x_2 = 74,
-	TT_UNUSED_75 = 75,
+	// Renault F3R
+	TT_60_2_2_F3R = 75,
 	TT_MITSU_4G63_CRANK = 76,
 	/* pull-up'ed(inverted in): pull down 2x 30 deg before tdc on cam, till tdc. 
 	   e.g. Sovek, Saruman ignition blind type */

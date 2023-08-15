@@ -498,7 +498,7 @@ case trigger_type_e::TT_TRI_TACH:
   return "TT_TRI_TACH";
 case trigger_type_e::TT_UNUSED:
   return "TT_UNUSED";
-case trigger_type_e::TT_UNUSED_75:
+case trigger_type_e::TT_60_2_2_F3R:
   return "TT_UNUSED_75";
 case trigger_type_e::TT_UNUSED_78:
   return "TT_UNUSED_78";
