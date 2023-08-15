@@ -16,19 +16,24 @@ angle_t getEngineCycle(operation_mode_e operationMode) {
 	return operationMode == TWO_STROKE ? 360 : FOUR_STROKE_ENGINE_CYCLE;
 }
 
+/**
+ * last fall aligned at 720 and skipped area is right before 720
+ */
 void addSkippedToothTriggerEvents(TriggerWheel wheel, TriggerWaveform *s, int totalTeethCount, int skippedCount,
 		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6586, totalTeethCount > 0, "total count");
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6587, skippedCount >= 0, "skipped count");
 
+	float oneTooth = engineCycle / totalTeethCount;
+
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
-		float angleDown = engineCycle / totalTeethCount * (i + (1 - toothWidth));
-		float angleUp = engineCycle / totalTeethCount * (i + 1);
+		float angleDown = oneTooth * (i + (1 - toothWidth));
+		float angleUp = oneTooth * (i + 1);
 		s->addEventClamped(offset + angleDown, TriggerValue::RISE, wheel, filterLeft, filterRight);
 		s->addEventClamped(offset + angleUp, TriggerValue::FALL, wheel, filterLeft, filterRight);
 	}
 
-	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
+	float angleDown = oneTooth * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
 	s->addEventClamped(offset + angleDown, TriggerValue::RISE, wheel, filterLeft, filterRight);
 	// custom handling of last event in order to avoid rounding error
 	s->addEventClamped(offset + engineCycle, TriggerValue::FALL, wheel, filterLeft, filterRight);
