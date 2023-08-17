@@ -278,6 +278,9 @@ void setEngineBMW_M73_Proteus() {
 	engineConfiguration->fanPin = PROTEUS_LS_15;
 	engineConfiguration->mainRelayPin = PROTEUS_LS_13;
 
+    engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_ANALOG_VOLT_8; // M73 adapter board
+    engineConfiguration->map.sensor.type = MT_MPX4250A;
+
 	// tps and pps
 	setProteusHitachiEtbDefaults();
 }
