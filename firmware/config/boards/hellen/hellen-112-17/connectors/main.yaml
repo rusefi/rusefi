@@ -2,7 +2,7 @@ pins:
   - pin: 101
     function: low side output 101
   - pin: 102
-    function: low side output 101
+    function: low side output 102
 
   - pin: 103
     function: Pedal Analog GND
@@ -197,7 +197,7 @@ pins:
     ts_name: 232 - VSS
     function: VSS in
   - pin: 233
-    function: MAF analog of frequency
+    function: MAF analog or frequency
 
   - pin: 235
     function: 135 Low Side Output?
