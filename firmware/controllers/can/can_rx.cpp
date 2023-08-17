@@ -18,42 +18,6 @@
 
 typedef float SCRIPT_TABLE_8x8_f32t_linear[SCRIPT_TABLE_8 * SCRIPT_TABLE_8];
 
-bool acceptCanRx(int /*sid*/) {
-	if (!engineConfiguration->usescriptTableForCanSniffingFiltering) {
-		// accept anything if filtering is not enabled
-		return true;
-	}
-/*
-	// the whole table reuse and 2D table cast to 1D array is a major hack, but it's OK for prototyping
-	SCRIPT_TABLE_8x8_f32t_linear *array =
-			(SCRIPT_TABLE_8x8_f32t_linear*) (void*) &config->scriptTable1;
-
-	int arraySize = efi::size(*array);
-
-	int showOnlyCount = (int) array[arraySize - 1];
-	if (showOnlyCount > 0 && showOnlyCount < arraySize) {
-		for (int i = 0; i < showOnlyCount; i++) {
-			if (sid == (int) array[arraySize - 2 - i]) {
-				return true;
-			}
-		}
-		// if white list is not empty and element not on the white list we do not check ignore list
-		return false;
-	}
-
-	int ignoreListCount = (int) array[0];
-	if (ignoreListCount > 0 && ignoreListCount < arraySize) {
-		for (int i = 0; i < ignoreListCount; i++) {
-			if (sid == (int) array[1 + i]) {
-				// element is in ignore list
-				return false;
-			}
-		}
-	}
-*/
-	return true;
-}
-
 #if EFI_CAN_SUPPORT
 
 #include "can.h"
@@ -66,11 +30,6 @@ bool acceptCanRx(int /*sid*/) {
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
 static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
-//	bool accept = acceptCanRx(CAN_SID(rx));
-//	if (!accept) {
-//		return;
-//	}
-
 	// only print info if we're in can debug mode
 
 	int id = CAN_ID(rx);
