@@ -1821,6 +1821,8 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
+		subMenu = softwareKnock,			"Software knock" @@if_ts_show_software_knock
+		subMenu = maxKnockRetardTbl,		"Max knock retard" @@if_ts_show_software_knock
 
 	menu = "&Cranking"
 		subMenu = crankingDialog,			"Cranking settings"
@@ -2004,8 +2006,6 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
-		subMenu = softwareKnock,			"Software knock" @@if_ts_show_software_knock
-		subMenu = maxKnockRetardTbl,		"Max knock retard" @@if_ts_show_software_knock
 
 		; TODO: move lambdaProtection to the fuel menu once ready
 		; https://github.com/FOME-Tech/fome-fw/issues/75
