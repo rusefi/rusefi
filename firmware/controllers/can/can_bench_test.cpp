@@ -75,6 +75,7 @@ void sendRawAnalogValues() {
 }
 
 void sendBoardStatus() {
+#if EFI_PROD_CODE
 	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BOARD_STATUS, 8);
 
 	int boardId = getBoardId();
@@ -85,6 +86,7 @@ void sendBoardStatus() {
 	msg[2] = TRUNCATE_TO_BYTE(numSecondsSinceReset >> 16);
 	msg[3] = TRUNCATE_TO_BYTE(numSecondsSinceReset >> 8);
 	msg[4] = TRUNCATE_TO_BYTE(numSecondsSinceReset);
+#endif // EFI_PROD_CODE
 }
 
 void processCanBenchTest(const CANRxFrame& frame) {
