@@ -13,6 +13,6 @@ DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"hellen88bmw\" $(VAR_DEF_ENGINE_TYPE)
 
-DDEFS += -DSHORT_BOARD_NAME=hellen88bmw
+DDEFS += -DSHORT_BOARD_NAME=hellen88bmw -DSTATIC_BOARD_ID=STATIC_BOARD_ID_HELLEN_88_BMW
 
 include $(BOARDS_DIR)/hellen/hellen-common144.mk

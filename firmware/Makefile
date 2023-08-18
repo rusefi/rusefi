@@ -168,6 +168,7 @@ MAKEFLAGS += ${NUMJOBS}
 
 BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
+BOARDCPPSRC += $(BOARDS_DIR)/board_id.cpp
 
 # Include various ChibiOS mk files
 # Licensing files.

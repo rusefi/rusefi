@@ -60,6 +60,10 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 		sendRawAnalogValues();
 	}
 
+	if (cycle.isInterval(CI::_250ms)) {
+		sendBoardStatus();
+	}
+
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms)) {
 		sendWidebandInfo();

@@ -1,5 +1,6 @@
 
 #include "pch.h"
+#include "board_id.h"
 #include "can_bench_test.h"
 #include "can_msg_tx.h"
 #include "can_common.h"
@@ -71,6 +72,21 @@ void sendRawAnalogValues() {
 		}
 	}
 	// todo: send the second packet
+}
+
+void sendBoardStatus() {
+#if EFI_PROD_CODE
+	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BOARD_STATUS, 8);
+
+	int boardId = getBoardId();
+	msg[0] = TRUNCATE_TO_BYTE(boardId >> 8);
+	msg[1] = TRUNCATE_TO_BYTE(boardId);
+	
+	int numSecondsSinceReset = getTimeNowS();
+	msg[2] = TRUNCATE_TO_BYTE(numSecondsSinceReset >> 16);
+	msg[3] = TRUNCATE_TO_BYTE(numSecondsSinceReset >> 8);
+	msg[4] = TRUNCATE_TO_BYTE(numSecondsSinceReset);
+#endif // EFI_PROD_CODE
 }
 
 void processCanBenchTest(const CANRxFrame& frame) {
