@@ -28,4 +28,4 @@ else
 $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
 
-DDEFS += -DSHORT_BOARD_NAME=alphax-8chan
+DDEFS += -DSHORT_BOARD_NAME=alphax-8chan -DSTATIC_BOARD_ID=STATIC_BOARD_ID_ALPHAX_8CHAN
