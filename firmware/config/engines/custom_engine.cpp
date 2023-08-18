@@ -968,5 +968,6 @@ void detectBoardType() {
 
 void fuelBenchMode() {
     engineConfiguration->cranking.rpm = 12000;
+    setFlatInjectorLag(0);
     setBodyControlUnit();
 }

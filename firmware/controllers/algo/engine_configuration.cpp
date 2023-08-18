@@ -731,9 +731,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::MRE_MIATA_94_MAP:
 		setMiata94_MAP_MRE();
 		break;
-	case engine_type_e::FUEL_BENCH:
-	    setBodyControlUnit();
-		break;
 	case engine_type_e::MRE_MIATA_NA6_MAP:
 		setMiataNA6_MAP_MRE();
 		break;
@@ -741,6 +738,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		mreBCM();
 		break;
 #endif // HW_MICRO_RUSEFI
+	case engine_type_e::FUEL_BENCH:
+	    fuelBenchMode();
+		break;
 #if HW_PROTEUS
     case engine_type_e::PROTEUS_M111:
         setProteusM111EngineConfiguration();
