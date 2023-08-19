@@ -76,6 +76,10 @@ void setDefaultBaseEngine() {
 	engineConfiguration->benchTestOffTime = 500;
 	engineConfiguration->benchTestCount = 3;
 
+	engineConfiguration->ignTestOnTime = 3;
+	engineConfiguration->ignTestOffTime = 500;
+	engineConfiguration->ignTestCount = 3;
+
 	// Fans
 	engineConfiguration->fanOnTemperature = 95;
 	engineConfiguration->fanOffTemperature = 91;

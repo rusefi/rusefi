@@ -1089,6 +1089,7 @@ int16_t tps2Max;;"ADC", 1, 0, 0, 1023, 0
 	uint8_t coastingFuelCutVssLow;Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;"kph", 1, 0, 0, 255, 0
 	uint8_t coastingFuelCutVssHigh;Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;"kph", 1, 0, 0, 255, 0
 	uint8_t autoscale noFuelTrimAfterDfcoTime;Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.;"sec", 0.1, 0, 0, 10, 1
+	uint8_t autoscale ignTestOnTime;Duration of each test pulse;"ms", 0.1, 0, 0, 10, 1
 	float tpsAccelEnrichmentThreshold;Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 1
 
     brain_input_pin_e[2 iterate] auxSpeedSensorInputPin;
@@ -1471,7 +1472,10 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 
 	uint8_t autoscale rpmHardLimitHyst;If the hard limit is 7200rpm and hysteresis is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached;"RPM", 10, 0, 0, 2500, 0
 
-uint8_t[95] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	uint8_t ignTestCount;How many test bench pulses do you want;"", 1, 0, 0, 50, 0
+	uint8_t autoscale ignTestOffTime;Time between bench test pulses;"ms", 5, 0, 0, 2000, 0
+
+uint8_t[93] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

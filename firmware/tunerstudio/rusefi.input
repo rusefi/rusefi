@@ -1249,6 +1249,7 @@ gaugeCategory = Trigger
 
 gaugeCategory = Test Bench
 	testBenchIterGauge = testBenchIter, "Test Bench Iterations", "count", 0, {benchTestCount}, 0, 0, {benchTestCount}, {benchTestCount}, 0, 0
+	testIgnIterGauge = testBenchIter, "Ignition Test Iterations", "count", 0, {ignTestCount}, 0, 0, {ignTestCount}, {ignTestCount}, 0, 0
 
 gaugeCategory = LUA
 	luaInvocationCounterGauge = luaInvocationCounter,"luaInvocationCounter", "count", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
@@ -4123,11 +4124,11 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Spark #12", cmd_test_spk12, { cylindersCount >= 12 }
 
 	dialog = ignTest_c, ""
-		field = "Iterations", benchTestCount
-		field = "ON time", benchTestOnTime
-		field = "OFF time", benchTestOffTime
+		field = "Iterations", ignTestCount
+		field = "ON time", ignTestOnTime
+		field = "OFF time", ignTestOffTime
 		commandButton = "Abort test", cmd_test_cancel
-		gauge = testBenchIterGauge
+		gauge = testIgnIterGauge
 
 	dialog = ignTest, "", xAxis
 		panel = ignTest_l
