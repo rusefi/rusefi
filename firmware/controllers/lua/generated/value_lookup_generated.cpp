@@ -671,6 +671,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->coastingFuelCutVssHigh;
 		case 1286770247:
 			return engineConfiguration->noFuelTrimAfterDfcoTime;
+		case -763118033:
+			return engineConfiguration->ignTestOnTime;
 		case 1313479950:
 			return engineConfiguration->tpsAccelEnrichmentThreshold;
 		case -2114430012:
@@ -1001,6 +1003,10 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->ppsSecondaryMaximum;
 		case 1756514810:
 			return engineConfiguration->rpmHardLimitHyst;
+		case 2045089740:
+			return engineConfiguration->ignTestCount;
+		case 257613965:
+			return engineConfiguration->ignTestOffTime;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -2677,6 +2683,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->noFuelTrimAfterDfcoTime = (int)value;
 		return;
 	}
+		case -763118033:
+	{
+		engineConfiguration->ignTestOnTime = (int)value;
+		return;
+	}
 		case 1313479950:
 	{
 		engineConfiguration->tpsAccelEnrichmentThreshold = value;
@@ -3500,6 +3511,16 @@ void setConfigValueByName(const char *name, float value) {
 		case 1756514810:
 	{
 		engineConfiguration->rpmHardLimitHyst = (int)value;
+		return;
+	}
+		case 2045089740:
+	{
+		engineConfiguration->ignTestCount = (int)value;
+		return;
+	}
+		case 257613965:
+	{
+		engineConfiguration->ignTestOffTime = (int)value;
 		return;
 	}
 	}

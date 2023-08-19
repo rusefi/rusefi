@@ -1574,8 +1574,12 @@ struct engine_configuration_s {
 	// sec
 	// offset 1389
 	scaled_channel<uint8_t, 10, 1> noFuelTrimAfterDfcoTime;
+	// Duration of each test pulse
+	// ms
 	// offset 1390
-	uint8_t alignmentFill_at_1390[2];
+	scaled_channel<uint8_t, 10, 1> ignTestOnTime;
+	// offset 1391
+	uint8_t alignmentFill_at_1391[1];
 	// Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
 	// roc
 	// offset 1392
@@ -1656,61 +1660,61 @@ struct engine_configuration_s {
 	// offset 1436 bit 3
 	bool injectorFlowAsMassFlow : 1 {};
 	// offset 1436 bit 4
-	bool unusedBit_470_4 : 1 {};
+	bool unusedBit_471_4 : 1 {};
 	// offset 1436 bit 5
-	bool unusedBit_470_5 : 1 {};
+	bool unusedBit_471_5 : 1 {};
 	// offset 1436 bit 6
-	bool unusedBit_470_6 : 1 {};
+	bool unusedBit_471_6 : 1 {};
 	// offset 1436 bit 7
-	bool unusedBit_470_7 : 1 {};
+	bool unusedBit_471_7 : 1 {};
 	// offset 1436 bit 8
-	bool unusedBit_470_8 : 1 {};
+	bool unusedBit_471_8 : 1 {};
 	// offset 1436 bit 9
-	bool unusedBit_470_9 : 1 {};
+	bool unusedBit_471_9 : 1 {};
 	// offset 1436 bit 10
-	bool unusedBit_470_10 : 1 {};
+	bool unusedBit_471_10 : 1 {};
 	// offset 1436 bit 11
-	bool unusedBit_470_11 : 1 {};
+	bool unusedBit_471_11 : 1 {};
 	// offset 1436 bit 12
-	bool unusedBit_470_12 : 1 {};
+	bool unusedBit_471_12 : 1 {};
 	// offset 1436 bit 13
-	bool unusedBit_470_13 : 1 {};
+	bool unusedBit_471_13 : 1 {};
 	// offset 1436 bit 14
-	bool unusedBit_470_14 : 1 {};
+	bool unusedBit_471_14 : 1 {};
 	// offset 1436 bit 15
-	bool unusedBit_470_15 : 1 {};
+	bool unusedBit_471_15 : 1 {};
 	// offset 1436 bit 16
-	bool unusedBit_470_16 : 1 {};
+	bool unusedBit_471_16 : 1 {};
 	// offset 1436 bit 17
-	bool unusedBit_470_17 : 1 {};
+	bool unusedBit_471_17 : 1 {};
 	// offset 1436 bit 18
-	bool unusedBit_470_18 : 1 {};
+	bool unusedBit_471_18 : 1 {};
 	// offset 1436 bit 19
-	bool unusedBit_470_19 : 1 {};
+	bool unusedBit_471_19 : 1 {};
 	// offset 1436 bit 20
-	bool unusedBit_470_20 : 1 {};
+	bool unusedBit_471_20 : 1 {};
 	// offset 1436 bit 21
-	bool unusedBit_470_21 : 1 {};
+	bool unusedBit_471_21 : 1 {};
 	// offset 1436 bit 22
-	bool unusedBit_470_22 : 1 {};
+	bool unusedBit_471_22 : 1 {};
 	// offset 1436 bit 23
-	bool unusedBit_470_23 : 1 {};
+	bool unusedBit_471_23 : 1 {};
 	// offset 1436 bit 24
-	bool unusedBit_470_24 : 1 {};
+	bool unusedBit_471_24 : 1 {};
 	// offset 1436 bit 25
-	bool unusedBit_470_25 : 1 {};
+	bool unusedBit_471_25 : 1 {};
 	// offset 1436 bit 26
-	bool unusedBit_470_26 : 1 {};
+	bool unusedBit_471_26 : 1 {};
 	// offset 1436 bit 27
-	bool unusedBit_470_27 : 1 {};
+	bool unusedBit_471_27 : 1 {};
 	// offset 1436 bit 28
-	bool unusedBit_470_28 : 1 {};
+	bool unusedBit_471_28 : 1 {};
 	// offset 1436 bit 29
-	bool unusedBit_470_29 : 1 {};
+	bool unusedBit_471_29 : 1 {};
 	// offset 1436 bit 30
-	bool unusedBit_470_30 : 1 {};
+	bool unusedBit_471_30 : 1 {};
 	// offset 1436 bit 31
-	bool unusedBit_470_31 : 1 {};
+	bool unusedBit_471_31 : 1 {};
 	// Time between bench test pulses
 	// ms
 	// offset 1440
@@ -2344,9 +2348,16 @@ struct engine_configuration_s {
 	// RPM
 	// offset 3600
 	scaled_channel<uint8_t, 1, 10> rpmHardLimitHyst;
-	// units
+	// How many test bench pulses do you want
 	// offset 3601
-	uint8_t mainUnusedEnd[95];
+	uint8_t ignTestCount;
+	// Time between bench test pulses
+	// ms
+	// offset 3602
+	scaled_channel<uint8_t, 1, 5> ignTestOffTime;
+	// units
+	// offset 3603
+	uint8_t mainUnusedEnd[93];
 };
 static_assert(sizeof(engine_configuration_s) == 3696);
 

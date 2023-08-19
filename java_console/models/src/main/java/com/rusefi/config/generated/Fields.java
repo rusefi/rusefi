@@ -977,7 +977,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 578999303;
+	public static final int SIGNATURE_HASH = 2069067075;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1179,7 +1179,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.08.19.f407-discovery.578999303";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.08.19.f407-discovery.2069067075";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;
@@ -1849,7 +1849,8 @@ public class Fields {
 	public static final Field COASTINGFUELCUTVSSLOW = Field.create("COASTINGFUELCUTVSSLOW", 1387, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTVSSHIGH = Field.create("COASTINGFUELCUTVSSHIGH", 1388, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field NOFUELTRIMAFTERDFCOTIME = Field.create("NOFUELTRIMAFTERDFCOTIME", 1389, FieldType.INT8).setScale(0.1).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_1390 = Field.create("ALIGNMENTFILL_AT_1390", 1390, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field IGNTESTONTIME = Field.create("IGNTESTONTIME", 1390, FieldType.INT8).setScale(0.1).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_1391 = Field.create("ALIGNMENTFILL_AT_1391", 1391, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 1392, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field AUXSPEEDSENSORINPUTPIN1 = Field.create("AUXSPEEDSENSORINPUTPIN1", 1396, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXSPEEDSENSORINPUTPIN2 = Field.create("AUXSPEEDSENSORINPUTPIN2", 1398, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
@@ -2345,7 +2346,9 @@ public class Fields {
 	public static final Field LUADIGITALINPUTPINMODES7 = Field.create("LUADIGITALINPUTPINMODES7", 3598, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LUADIGITALINPUTPINMODES8 = Field.create("LUADIGITALINPUTPINMODES8", 3599, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMHARDLIMITHYST = Field.create("RPMHARDLIMITHYST", 3600, FieldType.INT8).setScale(10.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3601, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field IGNTESTCOUNT = Field.create("IGNTESTCOUNT", 3601, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field IGNTESTOFFTIME = Field.create("IGNTESTOFFTIME", 3602, FieldType.INT8).setScale(5.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3603, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 3696, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 3728, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 3760, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3211,7 +3214,8 @@ public class Fields {
 	COASTINGFUELCUTVSSLOW,
 	COASTINGFUELCUTVSSHIGH,
 	NOFUELTRIMAFTERDFCOTIME,
-	ALIGNMENTFILL_AT_1390,
+	IGNTESTONTIME,
+	ALIGNMENTFILL_AT_1391,
 	TPSACCELENRICHMENTTHRESHOLD,
 	AUXSPEEDSENSORINPUTPIN1,
 	AUXSPEEDSENSORINPUTPIN2,
@@ -3696,6 +3700,8 @@ public class Fields {
 	LUADIGITALINPUTPINMODES7,
 	LUADIGITALINPUTPINMODES8,
 	RPMHARDLIMITHYST,
+	IGNTESTCOUNT,
+	IGNTESTOFFTIME,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,
