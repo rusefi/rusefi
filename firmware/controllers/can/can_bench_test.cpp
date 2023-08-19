@@ -4,6 +4,7 @@
 #include "can_bench_test.h"
 #include "can_msg_tx.h"
 #include "can_common.h"
+#include "frequency_sensor.h"
 
 #define CAN_BENCH_HEADER 0x66
 #define CAN_BENCH_GET_COUNT 0
@@ -49,6 +50,9 @@ void sendEventCounters() {
 
 		msg[2 + camIdx] = TRUNCATE_TO_BYTE(vvtRise + vvtFall);
 	}
+
+	extern FrequencySensor vehicleSpeedSensor;
+	msg[6] = TRUNCATE_TO_BYTE(vehicleSpeedSensor.eventCounter);
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
