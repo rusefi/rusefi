@@ -7,5 +7,6 @@
 
 void processCanBenchTest(const CANRxFrame& frame);
 void sendEventCounters();
+void sendButtonCounters();
 void sendRawAnalogValues();
 void sendBoardStatus();

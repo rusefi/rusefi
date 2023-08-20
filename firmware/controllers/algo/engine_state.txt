@@ -54,5 +54,9 @@ struct_no_prefix engine_state_s
 
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 
+	uint16_t brakePedalToggleCounter
+	uint16_t clutchUpToggleCounter
+	uint16_t acButtonToggleCounter
+
 ! engine_state_s
 end_struct

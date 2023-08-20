@@ -257,10 +257,16 @@ extern bool kAcRequestState;
 		AcController & acController = engine->module<AcController>().unmock();
 		if (acController.acButtonState != currentState) {
 			acController.acButtonState = currentState;
+			engine->engineState.acButtonToggleCounter++;
 			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
 	}
-	engine->engineState.clutchUpState = getClutchUpState();
+	
+	bool newClutchUpState = getClutchUpState();
+	if (newClutchUpState != engine->engineState.clutchUpState) {
+		engine->engineState.clutchUpState = newClutchUpState;
+		engine->engineState.clutchUpToggleCounter++;
+	}
 
 #if EFI_IDLE_CONTROL
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
@@ -268,7 +274,11 @@ extern bool kAcRequestState;
 	}
 #endif // EFI_IDLE_CONTROL
 
-	engine->engineState.brakePedalState = getBrakePedalState();
+	bool newBrakePedalState = getBrakePedalState();
+	if (newBrakePedalState != engine->engineState.brakePedalState) {
+		engine->engineState.brakePedalState = newBrakePedalState;
+		engine->engineState.brakePedalToggleCounter++;
+	}
 
 #endif // EFI_GPIO_HARDWARE
 }

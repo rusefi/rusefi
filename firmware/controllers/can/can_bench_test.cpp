@@ -56,6 +56,13 @@ void sendEventCounters() {
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
+void sendButtonCounters() {
+	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BUTTON_COUNTERS, 8);
+	msg[0] = TRUNCATE_TO_BYTE(engine->engineState.brakePedalToggleCounter);
+	msg[1] = TRUNCATE_TO_BYTE(engine->engineState.clutchUpToggleCounter);
+	msg[2] = TRUNCATE_TO_BYTE(engine->engineState.acButtonToggleCounter);
+}
+
 void sendRawAnalogValues() {
 	const float values[RAW_ANALOG_VALUES_COUNT] = { 
 		engine->outputChannels.rawTps1Primary, 
