@@ -314,10 +314,14 @@ pins:
     function: Aux Low 1
 
   - pin: C14
-    function: CAN Low
+    function: CAN bus low
+    color: blue
+    type: can
 
   - pin: C15
-    function: CAN High
+    function: CAN bus high
+    color: green
+    type: can
 
   - pin: C18
     # H144_IN_SENS3
