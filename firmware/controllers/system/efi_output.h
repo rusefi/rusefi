@@ -8,6 +8,17 @@
 
 #pragma once
 
+class SwitchState {
+    void init(bool *state, uint16_t *counter) {
+        this->state = state;
+        this->counter = counter;
+    }
+
+    bool *state;
+    uint16_t *counter;
+    void update(bool newState);
+};
+
 // Used if you want a function to be virtual only for unit testing purposes
 #if EFI_UNIT_TEST
 #define TEST_VIRTUAL virtual
