@@ -6,16 +6,13 @@
 #include "can_common.h"
 #include "frequency_sensor.h"
 
-#define CAN_BENCH_HEADER 0x66
-#define CAN_BENCH_GET_COUNT 0
-#define CAN_BENCH_GET_SET 1
-#define CAN_BENCH_GET_CLEAR 2
-
 #define TRUNCATE_TO_BYTE(i) ((i) & 0xff)
 // raw values are 0..5V, convert it to 8-bit (0..255)
 #define RAW_TO_BYTE(v) TRUNCATE_TO_BYTE((int)(v * 255.0 / 5.0))
 
 #define RAW_ANALOG_VALUES_COUNT 8
+
+bool qcDirectPinControlMode = false;
 
 #if EFI_CAN_SUPPORT
 
@@ -26,6 +23,7 @@ static void setPin(const CANRxFrame& frame, int value) {
 		Gpio pin = getBoardMetaOutputs()[index];
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 		palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
+		// todo: add smart chip support support
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }
 
@@ -94,15 +92,16 @@ void sendBoardStatus() {
 }
 
 void processCanBenchTest(const CANRxFrame& frame) {
-	if (CAN_EID(frame) != CAN_ECU_HW_META) {
+	if (CAN_EID(frame) != BENCH_TEST_IO_CONTROL) {
 		return;
 	}
 	if (frame.data8[0] != CAN_BENCH_HEADER) {
 		return;
 	}
+	qcDirectPinControlMode = true;
 	uint8_t command = frame.data8[1];
 	if (command == CAN_BENCH_GET_COUNT) {
-		CanTxMessage msg(CanCategory::BENCH_TEST, CAN_ECU_HW_META + 1, 8, /*bus*/0, /*isExtended*/true);
+		CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_IO_META_INFO, 8, /*bus*/0, /*isExtended*/true);
 		msg[0] = CAN_BENCH_HEADER;
 		msg[1] = 0;
 		msg[2] = getBoardMetaOutputsCount();

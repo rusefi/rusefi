@@ -496,7 +496,13 @@ void OutputPin::setValue(int logicValue) {
     setValue(nullptr, logicValue);
 }
 
+extern bool qcDirectPinControlMode;
+
 void OutputPin::setValue(const char *msg, int logicValue) {
+    if (qcDirectPinControlMode) {
+        return;
+    }
+
 #if ENABLE_PERF_TRACE
 // todo: https://github.com/rusefi/rusefi/issues/1638
 //	ScopePerf perf(PE::OutputPinSetValue);
