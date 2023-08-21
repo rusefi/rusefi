@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Aug 02 01:31:55 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Aug 21 23:12:25 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -549,6 +549,10 @@ struct engine_configuration_s {
 	 */
 	engine_type_e engineType;
 	/**
+	 * offset 2
+	 */
+	uint16_t unusedEnType;
+	/**
 	 * Disable sensor sniffer above this rpm
 	RPM
 	 * offset 4
@@ -734,13 +738,13 @@ struct engine_configuration_s {
 	bool allowIdenticalPps : 1 {};
 	/**
 	offset 120 bit 29 */
-	bool unusedBit_43_29 : 1 {};
+	bool unusedBit_44_29 : 1 {};
 	/**
 	offset 120 bit 30 */
-	bool unusedBit_43_30 : 1 {};
+	bool unusedBit_44_30 : 1 {};
 	/**
 	offset 120 bit 31 */
-	bool unusedBit_43_31 : 1 {};
+	bool unusedBit_44_31 : 1 {};
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
@@ -1633,7 +1637,7 @@ struct engine_configuration_s {
 	bool enableAemXSeries : 1 {};
 	/**
 	offset 724 bit 31 */
-	bool unusedBit_223_31 : 1 {};
+	bool unusedBit_224_31 : 1 {};
 	/**
 	 * offset 728
 	 */
@@ -2993,76 +2997,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1568 bit 8 */
-	bool unusedBit_524_8 : 1 {};
+	bool unusedBit_525_8 : 1 {};
 	/**
 	offset 1568 bit 9 */
-	bool unusedBit_524_9 : 1 {};
+	bool unusedBit_525_9 : 1 {};
 	/**
 	offset 1568 bit 10 */
-	bool unusedBit_524_10 : 1 {};
+	bool unusedBit_525_10 : 1 {};
 	/**
 	offset 1568 bit 11 */
-	bool unusedBit_524_11 : 1 {};
+	bool unusedBit_525_11 : 1 {};
 	/**
 	offset 1568 bit 12 */
-	bool unusedBit_524_12 : 1 {};
+	bool unusedBit_525_12 : 1 {};
 	/**
 	offset 1568 bit 13 */
-	bool unusedBit_524_13 : 1 {};
+	bool unusedBit_525_13 : 1 {};
 	/**
 	offset 1568 bit 14 */
-	bool unusedBit_524_14 : 1 {};
+	bool unusedBit_525_14 : 1 {};
 	/**
 	offset 1568 bit 15 */
-	bool unusedBit_524_15 : 1 {};
+	bool unusedBit_525_15 : 1 {};
 	/**
 	offset 1568 bit 16 */
-	bool unusedBit_524_16 : 1 {};
+	bool unusedBit_525_16 : 1 {};
 	/**
 	offset 1568 bit 17 */
-	bool unusedBit_524_17 : 1 {};
+	bool unusedBit_525_17 : 1 {};
 	/**
 	offset 1568 bit 18 */
-	bool unusedBit_524_18 : 1 {};
+	bool unusedBit_525_18 : 1 {};
 	/**
 	offset 1568 bit 19 */
-	bool unusedBit_524_19 : 1 {};
+	bool unusedBit_525_19 : 1 {};
 	/**
 	offset 1568 bit 20 */
-	bool unusedBit_524_20 : 1 {};
+	bool unusedBit_525_20 : 1 {};
 	/**
 	offset 1568 bit 21 */
-	bool unusedBit_524_21 : 1 {};
+	bool unusedBit_525_21 : 1 {};
 	/**
 	offset 1568 bit 22 */
-	bool unusedBit_524_22 : 1 {};
+	bool unusedBit_525_22 : 1 {};
 	/**
 	offset 1568 bit 23 */
-	bool unusedBit_524_23 : 1 {};
+	bool unusedBit_525_23 : 1 {};
 	/**
 	offset 1568 bit 24 */
-	bool unusedBit_524_24 : 1 {};
+	bool unusedBit_525_24 : 1 {};
 	/**
 	offset 1568 bit 25 */
-	bool unusedBit_524_25 : 1 {};
+	bool unusedBit_525_25 : 1 {};
 	/**
 	offset 1568 bit 26 */
-	bool unusedBit_524_26 : 1 {};
+	bool unusedBit_525_26 : 1 {};
 	/**
 	offset 1568 bit 27 */
-	bool unusedBit_524_27 : 1 {};
+	bool unusedBit_525_27 : 1 {};
 	/**
 	offset 1568 bit 28 */
-	bool unusedBit_524_28 : 1 {};
+	bool unusedBit_525_28 : 1 {};
 	/**
 	offset 1568 bit 29 */
-	bool unusedBit_524_29 : 1 {};
+	bool unusedBit_525_29 : 1 {};
 	/**
 	offset 1568 bit 30 */
-	bool unusedBit_524_30 : 1 {};
+	bool unusedBit_525_30 : 1 {};
 	/**
 	offset 1568 bit 31 */
-	bool unusedBit_524_31 : 1 {};
+	bool unusedBit_525_31 : 1 {};
 	/**
 	 * offset 1572
 	 */
@@ -5306,4 +5310,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Aug 02 01:31:55 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Aug 21 23:12:25 UTC 2023
