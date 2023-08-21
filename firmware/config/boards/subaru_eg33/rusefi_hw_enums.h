@@ -243,36 +243,4 @@ enum class Gpio : uint16_t {
 #define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - Gpio::A0 + 1)
 /* Please keep updating these defines */
 
-typedef enum __attribute__ ((__packed__)) {
-	EFI_ADC_NONE = 0,
-
-	EFI_ADC_0 = 1,
-	EFI_ADC_1 = 2,
-	EFI_ADC_2 = 3,
-	EFI_ADC_3 = 4,
-	EFI_ADC_4 = 5,
-	EFI_ADC_5 = 6,
-	EFI_ADC_6 = 7,
-	EFI_ADC_7 = 8,
-	EFI_ADC_8 = 9,
-	EFI_ADC_9 = 10,
-	EFI_ADC_10 = 11,
-	EFI_ADC_11 = 12,
-	EFI_ADC_12 = 13,
-	EFI_ADC_13 = 14,
-	EFI_ADC_14 = 15,
-	EFI_ADC_15 = 16,
-
-	EFI_ADC3_4 = 17,			// PF6
-	EFI_ADC3_5 = 18,			// PF7
-	EFI_ADC3_6 = 19,			// PF8
-	EFI_ADC3_7 = 20,			// PF9
-	EFI_ADC3_8 = 21,			// PF10
-	EFI_ADC3_9 = 22,			// PF3
-	EFI_ADC3_14 = 23,			// PF4
-	EFI_ADC3_15 = 24,			// PF5
-
-	EFI_ADC_LAST_CHANNEL = 25,	// Please keep this in sync with the last valid channel index!
-
-	EFI_ADC_ERROR = 50,
-} adc_channel_e;
+#include "rusefi_hw_adc_enums.h"

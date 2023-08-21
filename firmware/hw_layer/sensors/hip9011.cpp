@@ -639,8 +639,8 @@ static void showHipInfo() {
 		engineConfiguration->knockDetectionWindowEnd);
 
 	if (!instance.adv_mode) {
-		efiPrintf(" Adc input %s (%.2f V)",
-			getAdc_channel_e(engineConfiguration->hipOutputChannel),
+		efiPrintf(" Adc input %d (%.2f V)",
+			(int)engineConfiguration->hipOutputChannel,
 			getVoltage("hipinfo", engineConfiguration->hipOutputChannel));
 	}
 
