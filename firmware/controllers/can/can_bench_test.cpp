@@ -89,8 +89,9 @@ void sendBoardStatus() {
 	msg[3] = TRUNCATE_TO_BYTE(numSecondsSinceReset >> 8);
 	msg[4] = TRUNCATE_TO_BYTE(numSecondsSinceReset);
 
-	msg[5] = engineConfiguration->engineType >> 8;
-	msg[6] = engineConfiguration->engineType
+    int engineType = (int) engineConfiguration->engineType;
+	msg[5] = engineType >> 8;
+	msg[6] = engineType;
 #endif // EFI_PROD_CODE
 }
 
