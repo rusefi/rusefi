@@ -31,7 +31,7 @@ static void setPin(const CANRxFrame& frame, int value) {
 
 void sendEventCounters() {
 #if EFI_SHAFT_POSITION_INPUT
-	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_EVENT_COUNTERS, 8);
+	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_EVENT_COUNTERS, 8, /*isExtended*/true);
 
 	int primaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 	int primaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
@@ -70,7 +70,7 @@ void sendRawAnalogValues() {
 
 	// send the first packet
 	{
-		CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_RAW_ANALOG, 8);
+		CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_RAW_ANALOG, 8, /*isExtended*/true);
 		for (int valueIdx = 0; valueIdx < 8; valueIdx++) {
 			msg[valueIdx] = (valueIdx < RAW_ANALOG_VALUES_COUNT) ? RAW_TO_BYTE(values[valueIdx]) : 0;
 		}
@@ -80,7 +80,7 @@ void sendRawAnalogValues() {
 
 void sendBoardStatus() {
 #if EFI_PROD_CODE
-	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BOARD_STATUS, 8);
+	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BOARD_STATUS, 8, /*isExtended*/true);
 
 	int boardId = getBoardId();
 	msg[0] = TRUNCATE_TO_BYTE(boardId >> 8);
@@ -102,7 +102,7 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	}
 	uint8_t command = frame.data8[1];
 	if (command == CAN_BENCH_GET_COUNT) {
-		CanTxMessage msg(CanCategory::BENCH_TEST, CAN_ECU_HW_META + 1, 8);
+		CanTxMessage msg(CanCategory::BENCH_TEST, CAN_ECU_HW_META + 1, 8, /*isExtended*/true);
 		msg[0] = CAN_BENCH_HEADER;
 		msg[1] = 0;
 		msg[2] = getBoardMetaOutputsCount();
