@@ -148,7 +148,7 @@ enum class Gpio : uint16_t {
 	CAN_PIN_7 = 257,
 };
 
-/* Plase keep updating these defines */
+/* Please keep updating these defines */
 #define BRAIN_PIN_ONCHIP_LAST	Gpio::E17
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - Gpio::A0 + 1)
 #define BRAIN_PIN_LAST 			Gpio::TLE6240_PIN_16

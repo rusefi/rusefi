@@ -245,12 +245,12 @@ enum class Gpio : uint16_t {
 	CAN_PIN_7 = 257,
 };
 
-/* Plase keep updating these defines */
+/* Please keep updating these defines */
 #define BRAIN_PIN_ONCHIP_LAST	Gpio::I15
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - Gpio::A0 + 1)
 #define BRAIN_PIN_LAST 			Gpio::MC33810_1_GD_3
 #define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - Gpio::A0 + 1)
-/* Plase keep updating these defines */
+/* Please keep updating these defines */
 
 typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_NONE = 0,
