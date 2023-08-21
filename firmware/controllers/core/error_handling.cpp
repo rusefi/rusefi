@@ -37,7 +37,7 @@ void checkLastBootError() {
 	case ErrorCookie::HardFault: {
 		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
 		if (engineConfiguration->rethrowHardFault) {
-		    firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
+		    criticalError("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
 		}
 
 		auto ctx = &sramState->FaultCtx;
@@ -114,7 +114,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	exit(-1);
 #else // EFI_PROD_CODE
 
-	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "assert fail %s %s:%d", msg, file, line);
+	criticalError("assert fail %s %s:%d", msg, file, line);
 
 	// If on the main thread, longjmp back to the init process so we can keep USB alive
 	if (chThdGetSelfX()->threadId == 0) {

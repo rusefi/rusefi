@@ -194,7 +194,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 		return tc->syncAndReport(crankDivider, 0);
 	case VVT_HONDA_K_INTAKE:
 	    // with 4 evenly spaced tooth we cannot use this wheel for engine sync
-        firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Honda K Intake is not suitable for engine sync");
+        criticalError("Honda K Intake is not suitable for engine sync");
         [[fallthrough]];
 	case VVT_INACTIVE:
 		// do nothing
@@ -1145,11 +1145,11 @@ bool TriggerCentral::isTriggerConfigChanged() {
 
 void validateTriggerInputs() {
 	if (!isBrainPinValid(engineConfiguration->triggerInputPins[0]) && isBrainPinValid(engineConfiguration->triggerInputPins[1])) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "First trigger channel is missing");
+		criticalError("First trigger channel is missing");
 	}
 
 	if (!isBrainPinValid(engineConfiguration->camInputs[0]) && isBrainPinValid(engineConfiguration->camInputs[2])) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "First bank cam input is required if second bank specified");
+		criticalError("First bank cam input is required if second bank specified");
 	}
 }
 

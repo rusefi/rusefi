@@ -253,7 +253,7 @@ CH_FAST_IRQ_HANDLER(VectorE0) {
 
 // TODO: non-stm32 exti
 void efiExtiInit() {
-	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "exti not supported");
+	criticalError("exti not supported");
 }
 
 void efiExtiEnablePin(const char *, brain_pin_e, uint32_t, ExtiCallback, void *) { }

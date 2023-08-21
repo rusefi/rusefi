@@ -104,7 +104,7 @@ void EventQueue::remove(scheduling_s* scheduling) {
 
 		// Walked off the end, this is an error since this *should* have been scheduled
 		if (!current) {
-			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "EventQueue::remove didn't find element");
+			criticalError("EventQueue::remove didn't find element");
 			return;
 		}
 

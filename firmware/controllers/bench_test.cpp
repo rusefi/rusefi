@@ -331,7 +331,7 @@ static void handleBenchCategory(uint16_t index) {
 		cancelBenchTest();
 		return;
 	default:
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected bench function %d", index);
+		criticalError("Unexpected bench function %d", index);
 	}
 }
 
@@ -410,7 +410,7 @@ static void handleCommandX14(uint16_t index) {
 		sys_dual_bank();
 		rebootNow();
 #else
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected dbank command", index);
+		criticalError("Unexpected dbank command", index);
 #endif
 		return;
 	case 0x15:
@@ -420,7 +420,7 @@ static void handleCommandX14(uint16_t index) {
 #endif // EFI_PROD_CODE
 		return;
 	default:
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);
+		criticalError("Unexpected bench x14 %d", index);
 	}
 }
 
@@ -523,7 +523,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #endif
 
 	default:
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected bench subsystem %d %d", subsystem, index);
+		criticalError("Unexpected bench subsystem %d %d", subsystem, index);
 	}
 }
 

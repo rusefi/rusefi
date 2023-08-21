@@ -64,7 +64,7 @@ float IFuelComputer::getTChargeCoefficient(int rpm, float tps) {
 			engineConfiguration->tchargeValues
 		);
 	} else {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected tChargeMode: %d", engineConfiguration->tChargeMode);
+		criticalError("Unexpected tChargeMode: %d", engineConfiguration->tChargeMode);
 		return 0;
 	}
 }

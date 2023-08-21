@@ -256,7 +256,7 @@ bool isLockedFromUser() {
 	int lock = engineConfiguration->tuneHidingKey;
 	bool isLocked = lock > 0;
 	if (isLocked) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "password protected");
+		criticalError("password protected");
 	}
 	return isLocked;
 }

@@ -360,7 +360,7 @@ void initCan() {
 
 	// Devices can't be the same!
 	if (device1 == device2) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "CAN pins must be set to different devices");
+		criticalError("CAN pins must be set to different devices");
 		return;
 	}
 

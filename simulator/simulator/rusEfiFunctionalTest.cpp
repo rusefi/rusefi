@@ -39,7 +39,7 @@ int getRemainingStack(thread_t*) {
 static void assertString(const char*actual, const char *expected) {
 	if (strcmp(actual, expected) != 0) {
 		printf("assertString FAILED\n");
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "chprintf test: got %s while %s", actual, expected);
+		criticalError("chprintf test: got %s while %s", actual, expected);
 	}
 }
 
@@ -105,7 +105,7 @@ static void runToothLoggerTest() {
 		// no data yet
 		CompositeBuffer * toothBuffer = GetToothLoggerBufferNonblocking();
 		if (toothBuffer != nullptr) {
-			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "nullptr buffer expected");
+			criticalError("nullptr buffer expected");
 		}
 	}
 

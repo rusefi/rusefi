@@ -168,13 +168,13 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 	LuaHandle ls = lua_newstate(alloc, NULL);
 
 	if (!ls) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Failed to start Lua interpreter");
+		criticalError("Failed to start Lua interpreter");
 
 		return nullptr;
 	}
 
 	lua_atpanic(ls, [](lua_State* l) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Lua panic: %s", lua_tostring(l, -1));
+		criticalError("Lua panic: %s", lua_tostring(l, -1));
 
 		// hang the lua thread
 		while (true) ;

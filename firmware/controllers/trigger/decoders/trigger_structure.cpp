@@ -123,7 +123,7 @@ bool TriggerWaveform::needsDisambiguation() const {
 		case TWO_STROKE:
 			return false;
 		default:
-			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "bad operationMode() in needsDisambiguation");
+			criticalError("bad operationMode() in needsDisambiguation");
 			return true;
 	}
 }

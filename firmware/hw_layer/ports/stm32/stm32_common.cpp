@@ -135,7 +135,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	case Gpio::Unassigned:
 		return EFI_ADC_NONE;
 	default:
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "getAdcChannel %d", pin);
+		criticalError("getAdcChannel %d", pin);
 		return EFI_ADC_ERROR;
 	}
 }
@@ -218,7 +218,7 @@ public:
 
 	void setDuty(float duty) override {
 		if (!m_driver) {
-			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Attempted to set duty on null hard PWM device");
+			criticalError("Attempted to set duty on null hard PWM device");
 			return;
 		}
 
@@ -312,7 +312,7 @@ stm32_hardware_pwm* getNextPwmDevice() {
 		}
 	}
 
-	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Run out of hardware PWM devices!");
+	criticalError("Run out of hardware PWM devices!");
 	return nullptr;
 }
 
@@ -497,7 +497,7 @@ static int getSpiAf(SPIDriver *driver) {
 		return EFI_SPI3_AF;
 	}
 #endif
-	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "SPI AF not available");
+	criticalError("SPI AF not available");
 	return -1;
 }
 
@@ -558,7 +558,7 @@ void turnOnSpi(spi_device_e device) {
 				engineConfiguration->spi1MosiMode,
 				engineConfiguration->spi1MisoMode);
 #else
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "SPI1 not available in this binary");
+		criticalError("SPI1 not available in this binary");
 #endif /* STM32_SPI_USE_SPI1 */
 	}
 	if (device == SPI_DEVICE_2) {
@@ -571,7 +571,7 @@ void turnOnSpi(spi_device_e device) {
 				engineConfiguration->spi2MosiMode,
 				engineConfiguration->spi2MisoMode);
 #else
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "SPI2 not available in this binary");
+		criticalError("SPI2 not available in this binary");
 #endif /* STM32_SPI_USE_SPI2 */
 	}
 	if (device == SPI_DEVICE_3) {
@@ -584,7 +584,7 @@ void turnOnSpi(spi_device_e device) {
 				engineConfiguration->spi3MosiMode,
 				engineConfiguration->spi3MisoMode);
 #else
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "SPI3 not available in this binary");
+		criticalError("SPI3 not available in this binary");
 #endif /* STM32_SPI_USE_SPI3 */
 	}
 	if (device == SPI_DEVICE_4) {
@@ -593,7 +593,7 @@ void turnOnSpi(spi_device_e device) {
 		/* there are no configuration fields for SPI4 in engineConfiguration, rely on board init code
 		 * it should set proper functions for SPI4 pins */
 #else
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "SPI4 not available in this binary");
+		criticalError("SPI4 not available in this binary");
 #endif /* STM32_SPI_USE_SPI4 */
 	}
 }
@@ -722,7 +722,7 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
    if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))
       return &CAND2;
 #endif
-   firmwareError(ObdCode::OBD_PCM_Processor_Fault, "invalid CAN pins tx %s and rx %s", hwPortname(pinTx), hwPortname(pinRx));
+   criticalError("invalid CAN pins tx %s and rx %s", hwPortname(pinTx), hwPortname(pinRx));
    return nullptr;
 }
 

@@ -164,7 +164,7 @@ static void fast_adc_callback(GPTDriver*) {
 	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
 		fastAdc.errorsCount++;
-		// todo: when? why? firmwareError(ObdCode::OBD_PCM_Processor_Fault, "ADC fast not ready?");
+		// todo: when? why? criticalError("ADC fast not ready?");
 		chSysUnlockFromISR()
 		;
 		return;
@@ -253,7 +253,7 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	if ((channelCount + 1) >= ADC_MAX_CHANNELS_COUNT) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Too many ADC channels configured");
+		criticalError("Too many ADC channels configured");
 		return;
 	}
 

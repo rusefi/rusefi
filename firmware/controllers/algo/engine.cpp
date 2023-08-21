@@ -101,7 +101,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_MITSUBISHI_4G63:
 		return trigger_type_e::TT_MITSU_4G63_CAM;
 	default:
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
+		criticalError("getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
 		return trigger_type_e::TT_HALF_MOON; // we have to return something for the sake of -Werror=return-type
 	}
 }
@@ -125,7 +125,7 @@ void Engine::updateTriggerWaveform() {
 #if ANALOG_HW_CHECK_MODE
 static void assertCloseTo(const char* msg, float actual, float expected) {
 	if (actual < 0.95f * expected || actual > 1.05f * expected) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "%s validation failed actual=%f vs expected=%f", msg, actual, expected);
+		criticalError("%s validation failed actual=%f vs expected=%f", msg, actual, expected);
 	}
 }
 #endif // ANALOG_HW_CHECK_MODE
