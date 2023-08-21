@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool config_definition.jar based on hellen_cypress_gen_config.bat by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 1303599568
-#define TS_SIGNATURE "rusEFI master.2023.08.21.cypress.1303599568"
+#define SIGNATURE_HASH 1691718878
+#define TS_SIGNATURE "rusEFI master.2023.08.21.cypress.1691718878"

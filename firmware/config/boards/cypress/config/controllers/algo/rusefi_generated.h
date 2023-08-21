@@ -116,7 +116,6 @@
 #define can_baudrate_e_B83KBPS 1
 #define can_baudrate_e_enum "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
-#define CAN_ECU_HW_META 0xAB1234
 #define CAN_ECU_SERIAL_RX_ID 0x100
 #define CAN_ECU_SERIAL_TX_ID 0x102
 #define can_nbc_e_auto_enum 0="CAN_BUS_NBC_NONE",12="CAN_AIM_DASH",4="CAN_BUS_BMW_E46",6="CAN_BUS_BMW_E90",10="CAN_BUS_GENESIS_COUPE",11="CAN_BUS_HONDA_K",7="CAN_BUS_Haltech",3="CAN_BUS_MAZDA_RX8",8="CAN_BUS_MQB",13="CAN_BUS_MS_SIMPLE_BROADCAST",1="CAN_BUS_NBC_FIAT",2="CAN_BUS_NBC_VAG",9="CAN_BUS_NISSAN_VQ",5="CAN_BUS_W202_C180"
@@ -1086,7 +1085,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 1303599568
+#define SIGNATURE_HASH 1691718878
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1378,7 +1377,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.08.21.cypress.1303599568"
+#define TS_SIGNATURE "rusEFI master.2023.08.21.cypress.1691718878"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
