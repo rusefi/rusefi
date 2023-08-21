@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "rusefi_hw_pin_mode.h"
-
 /**
  * Hardware pin. This enum is platform-specific.
  */

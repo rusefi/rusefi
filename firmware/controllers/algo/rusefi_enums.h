@@ -20,6 +20,7 @@
 // we do not want to start the search for header from current folder so we use brackets here
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
+#include "rusefi_hw_pin_mode.h"
 
 #define PERCENT_MULT 100.0f
 #define PERCENT_DIV 0.01f
