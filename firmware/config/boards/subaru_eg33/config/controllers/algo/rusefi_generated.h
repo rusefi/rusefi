@@ -958,12 +958,7 @@
 #define pin_input_mode_e_PI_DEFAULT 0
 #define pin_input_mode_e_PI_PULLDOWN 2
 #define pin_input_mode_e_PI_PULLUP 1
-#define pin_mode_e_auto_enum 0="PO_DEFAULT",4="PO_OPENDRAIN",64="PO_PULLDOWN",32="PO_PULLUP"
 #define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
-#define pin_mode_e_PO_DEFAULT 0
-#define pin_mode_e_PO_OPENDRAIN 4
-#define pin_mode_e_PO_PULLDOWN 64
-#define pin_mode_e_PO_PULLUP 32
 #define pin_output_mode_e_auto_enum 0="OM_DEFAULT",1="OM_INVERTED",2="OM_OPENDRAIN",3="OM_OPENDRAIN_INVERTED"
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
 #define pin_output_mode_e_OM_DEFAULT 0

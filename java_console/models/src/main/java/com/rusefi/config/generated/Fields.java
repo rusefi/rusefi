@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Aug 21 19:01:11 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Aug 21 22:39:49 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -962,10 +962,6 @@ public class Fields {
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
 	public static final int pin_input_mode_e_PI_PULLUP = 1;
-	public static final int pin_mode_e_PO_DEFAULT = 0;
-	public static final int pin_mode_e_PO_OPENDRAIN = 4;
-	public static final int pin_mode_e_PO_PULLDOWN = 64;
-	public static final int pin_mode_e_PO_PULLUP = 32;
 	public static final int pin_output_mode_e_OM_DEFAULT = 0;
 	public static final int pin_output_mode_e_OM_INVERTED = 1;
 	public static final int pin_output_mode_e_OM_OPENDRAIN = 2;

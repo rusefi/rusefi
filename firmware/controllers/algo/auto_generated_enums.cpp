@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Fri Jan 06 02:29:15 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum_to_string.jar tool on Mon Aug 21 22:38:11 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -590,19 +590,6 @@ case EFI_ADC_LAST_CHANNEL:
   return "EFI_ADC_LAST_CHANNEL";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-  }
- return NULL;
-}
-const char *getPin_mode_e(pin_mode_e value){
-switch(value) {
-case PO_DEFAULT:
-  return "PO_DEFAULT";
-case PO_OPENDRAIN:
-  return "PO_OPENDRAIN";
-case PO_PULLDOWN:
-  return "PO_PULLDOWN";
-case PO_PULLUP:
-  return "PO_PULLUP";
   }
  return NULL;
 }
