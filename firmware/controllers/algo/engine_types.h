@@ -16,7 +16,7 @@
 /**
  * https://github.com/rusefi/rusefi/wiki/Engine-Types
  */
-enum class engine_type_e : uint32_t {
+enum class engine_type_e : uint16_t {
 	DEFAULT_FRANKENSO = 0,
 
 	MIATA_PROTEUS_TCU = 1,
