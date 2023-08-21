@@ -39,7 +39,10 @@ CanTxMessage::CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, size
 	if (isExtended) {
 		CAN_EID(m_frame) = eid;
 	} else {
-	    efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, eid < 0x800, "Looks like extended CAN ID");
+	    if (eid >= 0x800) {
+	        firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Looks like extended CAN ID %x %s", eid, getCanCategory(category));
+	        return;
+	    }
 		CAN_SID(m_frame) = eid;
 	}
 
