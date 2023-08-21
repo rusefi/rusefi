@@ -56,14 +56,14 @@ void sendEventCounters() {
 
 void sendRawAnalogValues() {
 	const float values[RAW_ANALOG_VALUES_COUNT] = { 
-		engine->outputChannels.rawTps1Primary, 
-		engine->outputChannels.rawTps1Secondary,
-		engine->outputChannels.rawPpsPrimary,
-		engine->outputChannels.rawPpsSecondary,
-		engine->outputChannels.rawMap,
-		engine->outputChannels.rawClt,
-		engine->outputChannels.rawIat,
-		engine->outputChannels.rawBattery,
+		Sensor::getRaw(SensorType::Tps1Primary),
+		Sensor::getRaw(SensorType::Tps1Secondary),
+		Sensor::getRaw(SensorType::AcceleratorPedalPrimary),
+		Sensor::getRaw(SensorType::AcceleratorPedalSecondary),
+		Sensor::getRaw(SensorType::MapSlow),
+		Sensor::getRaw(SensorType::Iat),
+		Sensor::getRaw(SensorType::Clt),
+		Sensor::getRaw(SensorType::BatteryVoltage),
 	};
 
 	// send the first packet
