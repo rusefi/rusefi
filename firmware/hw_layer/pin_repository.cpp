@@ -11,14 +11,12 @@
 
 #include "pch.h"
 
-unsigned int getBrainPinTotalNum(void) {
+static size_t getBrainPinTotalNum() {
 	return BRAIN_PIN_TOTAL_PINS;
 }
 
-const char* & getBrainUsedPin(unsigned int idx) {
-	/*if (idx >= getBrainPinTotalNum())
-		return NULL;*/
-	return engine->pinRepository.PIN_USED[idx];
+const char* & getBrainUsedPin(size_t index) {
+	return engine->pinRepository.getBrainUsedPin(index);
 }
 
 /* Common for firmware and unit tests */
@@ -33,13 +31,11 @@ bool isBrainPinValid(brain_pin_e brainPin) {
 	return true;
 }
 
-int brainPin_to_index(brain_pin_e brainPin) {
-	unsigned int i;
-
+int brainPin_to_index(Gpio brainPin) {
 	if (brainPin < Gpio::A0)
 		return -1;
 
-	i = brainPin - Gpio::A0;
+	size_t i = brainPin - Gpio::A0;
 
 	if (i >= getBrainPinTotalNum())
 		return -1;
@@ -52,7 +48,7 @@ int brainPin_to_index(brain_pin_e brainPin) {
  * @return true if this pin was already used, false otherwise
  */
 
-bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
+bool brain_pin_markUsed(Gpio brainPin, const char *msg) {
 #if ! EFI_BOOTLOADER
 	efiPrintf("pin_markUsed: %s on %s", msg, hwPortname(brainPin));
 #endif
@@ -61,13 +57,12 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 	if (index < 0)
 		return true;
 
-	if (getBrainUsedPin(index) != NULL) {
+	if (engine->pinRepository.getBrainUsedPin(index) != NULL) {
 		/* TODO: get readable name of brainPin... */
-		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\" %s",
+		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\"",
 				hwPortname(brainPin),
 				msg,
-				getBrainUsedPin(index),
-				getEngine_type_e(engineConfiguration->engineType));
+				getBrainUsedPin(index));
 		return true;
 	}
 

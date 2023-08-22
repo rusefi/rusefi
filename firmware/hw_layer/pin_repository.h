@@ -13,31 +13,20 @@
 #include "global.h"
 #include "io_pins.h"
 #include "efi_gpio.h"
+#include "plain_pin_repository.h"
 
-class PinRepository {
-	public:
-	/**
-	 * Class constructors are a great way to have simple initialization sequence
-	 */
-	PinRepository();
-	const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
-};
+bool isBrainPinValid(Gpio brainPin);
 
-bool isBrainPinValid(brain_pin_e brainPin);
-
-void initPinRepository(void);
-bool brain_pin_is_onchip(brain_pin_e brainPin);
-bool brain_pin_is_ext(brain_pin_e brainPin);
+void initPinRepository();
+bool brain_pin_is_onchip(Gpio brainPin);
+bool brain_pin_is_ext(Gpio brainPin);
 void pinDiag2string(char *buffer, size_t size, brain_pin_diag_e pin_diag);
 
 /**
  * Usually high-level code would invoke efiSetPadMode, not this method directly
  */
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg);
-/**
- * See also efiSetPadUnused
- */
-void brain_pin_markUnused(brain_pin_e brainPin);
+
 const char * getPinFunction(brain_input_pin_e brainPin);
 
 #if EFI_PROD_CODE
@@ -49,12 +38,10 @@ void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin);
 /* defined in ports/ */
 int getPortPinIndex(ioportid_t port, ioportmask_t pin);
 ioportid_t getBrainPinPort(brain_pin_e brainPin);
-int getBrainPinIndex(brain_pin_e brainPin);
-int brainPin_to_index(brain_pin_e brainPin);
-unsigned int getBrainPinOnchipNum(void);
-unsigned int getBrainPinTotalNum(void);
-const char *hwPortname(brain_pin_e brainPin);
+int getBrainPinIndex(Gpio brainPin);
+size_t getBrainPinOnchipNum();
+const char *hwPortname(Gpio brainPin);
 // the main usage for human-readable board-specific pin reference is convenience of error messages in case of pin conflict.
-const char * getBoardSpecificPinName(brain_pin_e brainPin);
+const char * getBoardSpecificPinName(Gpio brainPin);
 
-const char* & getBrainUsedPin(unsigned int idx);
+const char* & getBrainUsedPin(size_t idx);
