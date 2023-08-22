@@ -50,7 +50,7 @@ java \
  $COMMON_GEN_CONFIG_PREFIX \
  	-tool gen_config.sh \
  $COMMON_GEN_CONFIG \
-	-enumInputFile controllers/algo/rusefi_hw_enums.h \
+	-enumInputFile controllers/algo/rusefi_hw_stm32_enums.h \
 	-enumInputFile controllers/algo/rusefi_hw_adc_enums.h \
   -c_defines        controllers/generated/rusefi_generated.h \
   -c_destination    controllers/generated/engine_configuration_generated_structures.h
