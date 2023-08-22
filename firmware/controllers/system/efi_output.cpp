@@ -9,7 +9,7 @@
 
 bool SwitchedState::update(bool newState) {
     if (newState != *state) {
-        *state = newState;
+        *state = newState ? 1 : 0;
         counter++;
         return true;
     }

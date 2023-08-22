@@ -12,7 +12,7 @@
 // This class acts as a boolean, but has a switch counter inside
 class SwitchedState {
 public:
-    SwitchedState(bool *state) {
+    SwitchedState(int8_t *state) {
         this->state = state;
     }
 
@@ -21,11 +21,11 @@ public:
     uint16_t getCounter();
 
     operator bool() const {
-        return *state;
+        return (bool)*state;
     }
 
 private:
-    bool *state;
+    int8_t *state;
     uint16_t counter = 0;
 };
 
