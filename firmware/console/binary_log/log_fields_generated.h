@@ -356,6 +356,8 @@ static constexpr LogField fields[] = {
 #endif
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
+	{engine->engineState.lua.clutchUpState, "lua.clutchUpState", "", 0},
+	{engine->engineState.lua.brakePedalState, "lua.brakePedalState", "", 0},
 	{engine->engineState.sd.tCharge, "Air: Charge temperature estimate", "deg C", 1},
 	{engine->engineState.sd.tChargeK, "Air: Charge temperature estimate K", "", 0},
 	{engine->engineState.crankingFuel.coolantTemperatureCoefficient, "Fuel: cranking CLT mult", "", 0},
