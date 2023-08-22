@@ -61,8 +61,8 @@ void sendRawAnalogValues() {
 		Sensor::getRaw(SensorType::AcceleratorPedalPrimary),
 		Sensor::getRaw(SensorType::AcceleratorPedalSecondary),
 		Sensor::getRaw(SensorType::MapSlow),
-		Sensor::getRaw(SensorType::Iat),
 		Sensor::getRaw(SensorType::Clt),
+		Sensor::getRaw(SensorType::Iat),
 		Sensor::getRaw(SensorType::BatteryVoltage),
 	};
 
