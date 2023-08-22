@@ -12,7 +12,7 @@
 // This class acts as a boolean, but has a switch counter inside
 class SwitchedState {
 public:
-    SwitchedState(bool state = false) {
+    SwitchedState(bool *state) {
         this->state = state;
     }
 
@@ -20,34 +20,12 @@ public:
     bool update(bool newState);
     uint16_t getCounter();
 
-    SwitchedState operator!() const {
-        return SwitchedState(!state);
-    }
-
-    SwitchedState operator&&(const SwitchedState & other) const {
-        return SwitchedState(state && other.state);
-    }
-
-    SwitchedState operator||(const SwitchedState & other) const {
-        return SwitchedState(state || other.state);
-    }
-
-    bool operator==(const SwitchedState & other) const {
-        // we don't care to compare counters!
-        return state == other.state;
-    }
-
-    bool operator!=(const SwitchedState & other) const {
-        // we don't care to compare counters!
-        return state != other.state;
-    }
-    
     operator bool() const {
-        return state;
+        return *state;
     }
 
 private:
-    bool state;
+    bool *state;
     uint16_t counter = 0;
 };
 

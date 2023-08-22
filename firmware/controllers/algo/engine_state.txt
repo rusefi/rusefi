@@ -4,9 +4,8 @@ struct_no_prefix engine_state_s
 		float fuelAdd;Lua: Fuel add;"g", 1, 0, 0, 1, 3
 		float fuelMult;Lua: Fuel mult;
 
-			custom SwitchedState 1 bits, S08, @OFFSET@, [0:1], "True", "False"
-		SwitchedState clutchUpState
-		SwitchedState brakePedalState
+		bit clutchUpState
+		bit brakePedalState
 		bit acRequestState
 		bit luaDisableEtb
 		bit luaIgnCut

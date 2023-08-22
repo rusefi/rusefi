@@ -8,8 +8,8 @@
 
 
 bool SwitchedState::update(bool newState) {
-    if (newState != state) {
-        state = newState;
+    if (newState != *state) {
+        *state = newState;
         counter++;
         return true;
     }
