@@ -337,9 +337,9 @@ public:
 	AirmassModelBase* mockAirmassModel = nullptr;
 #endif
 
-	SwitchedState clutchUpSwitchedState(&engine->engineState.clutchUpState);
-	SwitchedState brakePedalSwitchedState(&engine->engineState.brakePedalState);
-	SwitchedState acButtonSwitchedState(&engine->module<AcController>().unmock().acButtonState);
+	SwitchedState clutchUpSwitchedState(&engineState.clutchUpState);
+	SwitchedState brakePedalSwitchedState(&engineState.brakePedalState);
+	SwitchedState acButtonSwitchedState(&module<AcController>().unmock().acButtonState);
 
 private:
 	void reset();
