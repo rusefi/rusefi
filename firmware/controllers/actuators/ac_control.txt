@@ -1,7 +1,7 @@
 struct_no_prefix ac_control_s
 
 ! main input and output to be displayed on top of View dialog
-bit acButtonState;@@INDICATOR_NAME_AC_SWITCH@@
+int8_t acButtonState;@@INDICATOR_NAME_AC_SWITCH@@
 bit m_acEnabled;AC enabled
 
 
