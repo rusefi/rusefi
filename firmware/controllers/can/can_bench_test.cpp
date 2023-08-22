@@ -54,6 +54,15 @@ void sendEventCounters() {
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
+void sendButtonCounters() {
+	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BUTTON_COUNTERS, 8);
+	msg[0] = TRUNCATE_TO_BYTE(engine->engineState.brakePedalState.getCounter());
+	msg[1] = TRUNCATE_TO_BYTE(engine->engineState.clutchUpState.getCounter());
+	
+	AcController &acController = engine->module<AcController>().unmock();
+	msg[2] = TRUNCATE_TO_BYTE(acController.acButtonState.getCounter());
+}
+
 void sendRawAnalogValues() {
 	const float values[RAW_ANALOG_VALUES_COUNT] = { 
 		Sensor::getRaw(SensorType::Tps1Primary),
