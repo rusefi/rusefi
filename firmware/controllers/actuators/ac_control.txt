@@ -1,6 +1,7 @@
 struct_no_prefix ac_control_s
 
 ! main input and output to be displayed on top of View dialog
+	custom SwitchedState 1 bits, S08, @OFFSET@, [0:1], "True", "False"
 SwitchedState acButtonState;@@INDICATOR_NAME_AC_SWITCH@@
 bit m_acEnabled;AC enabled
 
