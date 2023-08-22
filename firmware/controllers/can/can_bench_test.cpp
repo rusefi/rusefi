@@ -55,7 +55,7 @@ void sendEventCounters() {
 }
 
 void sendButtonCounters() {
-	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BUTTON_COUNTERS, 8);
+	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BUTTON_COUNTERS, 8, /*bus*/0, /*isExtended*/true);
 	msg[0] = TRUNCATE_TO_BYTE(engine->brakePedalSwitchedState.getCounter());
 	msg[1] = TRUNCATE_TO_BYTE(engine->clutchUpSwitchedState.getCounter());
 	msg[2] = TRUNCATE_TO_BYTE(engine->acButtonSwitchedState.getCounter());
