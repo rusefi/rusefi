@@ -50,6 +50,7 @@
 #include "throttle_model.h"
 #include "gc_generic.h"
 #include "lambda_monitor.h"
+#include "efi_output.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -337,9 +338,9 @@ public:
 	AirmassModelBase* mockAirmassModel = nullptr;
 #endif
 
-	SwitchedState clutchUpSwitchedState(&engineState.clutchUpState);
-	SwitchedState brakePedalSwitchedState(&engineState.brakePedalState);
-	SwitchedState acButtonSwitchedState(&module<AcController>().unmock().acButtonState);
+	SwitchedState clutchUpSwitchedState;
+	SwitchedState brakePedalSwitchedState;
+	SwitchedState acButtonSwitchedState;
 
 private:
 	void reset();
