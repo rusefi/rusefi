@@ -62,6 +62,7 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 
 	if (cycle.isInterval(CI::_250ms)) {
 		sendBoardStatus();
+		sendButtonCounters();
 	}
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
