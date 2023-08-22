@@ -3,11 +3,20 @@
  *
  */
 
+#include "pch.h"
 #include "efi_output.h"
 
-void SwitchState::update(bool newState) {
+
+bool SwitchedState::update(bool newState) {
     if (newState != *state) {
-        *state = newState;
+        *state = newState ? 1 : 0;
         counter++;
+        return true;
     }
+    return false;
 }
+
+uint16_t SwitchedState::getCounter() {
+	return counter;
+}
+

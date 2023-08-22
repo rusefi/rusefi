@@ -281,6 +281,9 @@ Engine::Engine()
 #if EFI_ANTILAG_SYSTEM
 	, ALSsoftSparkLimiter(false)
 #endif /* EFI_ANTILAG_SYSTEM */
+	, clutchUpSwitchedState(&engineState.clutchUpState)
+	, brakePedalSwitchedState(&engineState.brakePedalState)
+	, acButtonSwitchedState(&module<AcController>().unmock().acButtonState)
 
 #endif // EFI_LAUNCH_CONTROL
 {

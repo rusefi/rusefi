@@ -50,6 +50,7 @@
 #include "throttle_model.h"
 #include "gc_generic.h"
 #include "lambda_monitor.h"
+#include "efi_output.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -336,6 +337,10 @@ public:
 #if EFI_UNIT_TEST
 	AirmassModelBase* mockAirmassModel = nullptr;
 #endif
+
+	SwitchedState clutchUpSwitchedState;
+	SwitchedState brakePedalSwitchedState;
+	SwitchedState acButtonSwitchedState;
 
 private:
 	void reset();
