@@ -12,7 +12,7 @@
 // This class acts as a boolean, but has a switch counter inside
 class SwitchedState {
 public:
-    void SwitchedState(bool state = false) {
+    SwitchedState(bool state = false) {
         this->state = state;
     }
 
