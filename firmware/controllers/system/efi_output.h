@@ -3,20 +3,52 @@
  *
  */
 
+#pragma once
+
 #include "io_pins.h"
 #include "smart_gpio.h"
 
-#pragma once
 
-class SwitchState {
-    void init(bool *state, uint16_t *counter) {
+// This class acts as a boolean, but has a switch counter inside
+class SwitchedState {
+public:
+    void SwitchedState(bool state = false) {
         this->state = state;
-        this->counter = counter;
     }
 
-    bool *state;
-    uint16_t *counter;
-    void update(bool newState);
+    // returns true if the state has been changed
+    bool update(bool newState);
+    uint16_t getCounter();
+
+    SwitchedState operator!() const {
+        return SwitchedState(!state);
+    }
+
+    SwitchedState operator&&(const SwitchedState & other) const {
+        return SwitchedState(state && other.state);
+    }
+
+    SwitchedState operator||(const SwitchedState & other) const {
+        return SwitchedState(state || other.state);
+    }
+
+    bool operator==(const SwitchedState & other) const {
+        // we don't care to compare counters!
+        return state == other.state;
+    }
+
+    bool operator!=(const SwitchedState & other) const {
+        // we don't care to compare counters!
+        return state != other.state;
+    }
+    
+    operator bool() const {
+        return state;
+    }
+
+private:
+    bool state;
+    uint16_t counter = 0;
 };
 
 // Used if you want a function to be virtual only for unit testing purposes
