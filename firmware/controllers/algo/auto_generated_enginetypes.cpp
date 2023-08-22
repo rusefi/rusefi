@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Aug 15 12:53:54 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Aug 22 04:36:09 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -309,6 +309,8 @@ case engine_type_e::PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
 case engine_type_e::PROTEUS_SBC:
   return "PROTEUS_SBC";
+case engine_type_e::PROTEUS_STIM_QC:
+  return "PROTEUS_STIM_QC";
 case engine_type_e::PROTEUS_VW_B6:
   return "PROTEUS_VW_B6";
 case engine_type_e::SACHS:
@@ -345,8 +347,6 @@ case engine_type_e::TOYOTA_1NZ_FE:
   return "TOYOTA_1NZ_FE";
 case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case engine_type_e::UNUSED_73:
-  return "UNUSED_73";
 case engine_type_e::UNUSED_74:
   return "UNUSED_74";
 case engine_type_e::UNUSED_75:
