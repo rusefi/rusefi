@@ -56,11 +56,10 @@ void sendEventCounters() {
 
 void sendButtonCounters() {
 	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BUTTON_COUNTERS, 8);
-	msg[0] = TRUNCATE_TO_BYTE(engine->engineState.brakePedalState.getCounter());
-	msg[1] = TRUNCATE_TO_BYTE(engine->engineState.clutchUpState.getCounter());
-	
-	AcController &acController = engine->module<AcController>().unmock();
-	msg[2] = TRUNCATE_TO_BYTE(acController.acButtonState.getCounter());
+	msg[0] = TRUNCATE_TO_BYTE(engine->brakePedalSwitchedState.getCounter());
+	msg[1] = TRUNCATE_TO_BYTE(engine->clutchUpSwitchedState.getCounter());
+	msg[2] = TRUNCATE_TO_BYTE(engine->acButtonSwitchedState.getCounter());
+	// todo: start button
 }
 
 void sendRawAnalogValues() {
