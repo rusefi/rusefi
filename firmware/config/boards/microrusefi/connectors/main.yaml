@@ -153,7 +153,7 @@ pins:
     id: [A3, A3, EFI_ADC_3]
     class: [event_inputs, switch_inputs, analog_inputs]
     color: dark green
-    ts_name: 22 - AN temp 4
+    ts_name: 22 - AN temp 4 or Hall Input
     type: at
 
   - pin: 23
@@ -168,7 +168,7 @@ pins:
     id: [A2, A2, EFI_ADC_2]
     class: [event_inputs, switch_inputs, analog_inputs]
     color: dark green
-    ts_name: 24 - AN temp 3
+    ts_name: 24 - AN temp 3 or Hall Input
     type: at
 
   # RC filter input for hall
