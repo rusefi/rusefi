@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
  - Working disconnect button in Console #4862
  - Preset for Mpxh6300 MAP sensor #5481
  - Renault F 60-2-2 trigger wheel #5513
+ - AEM WBO EGO preset
 
 ### Fixed
  - simulator: sensor mocking UI #5473
