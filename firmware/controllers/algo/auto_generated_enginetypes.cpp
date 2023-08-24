@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Aug 22 04:36:09 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Aug 24 03:48:52 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -225,6 +225,10 @@ case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2:
   return "HELLEN_154_HYUNDAI_COUPE_BK2";
 case engine_type_e::HELLEN_154_VAG:
   return "HELLEN_154_VAG";
+case engine_type_e::HELLEN_2CHAN_STIM_QC:
+  return "HELLEN_2CHAN_STIM_QC";
+case engine_type_e::HELLEN_4CHAN_STIM_QC:
+  return "HELLEN_4CHAN_STIM_QC";
 case engine_type_e::HELLEN_HONDA_BCM:
   return "HELLEN_HONDA_BCM";
 case engine_type_e::HELLEN_NA6:
@@ -347,10 +351,6 @@ case engine_type_e::TOYOTA_1NZ_FE:
   return "TOYOTA_1NZ_FE";
 case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case engine_type_e::UNUSED_74:
-  return "UNUSED_74";
-case engine_type_e::UNUSED_75:
-  return "UNUSED_75";
 case engine_type_e::UNUSED_92:
   return "UNUSED_92";
 case engine_type_e::VW_ABA:

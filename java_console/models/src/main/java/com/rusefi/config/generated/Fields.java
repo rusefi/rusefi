@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 24 02:00:18 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 24 03:50:33 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -319,6 +319,8 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1 = 82;
 	public static final int engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2 = 95;
 	public static final int engine_type_e_HELLEN_154_VAG = 76;
+	public static final int engine_type_e_HELLEN_2CHAN_STIM_QC = 75;
+	public static final int engine_type_e_HELLEN_4CHAN_STIM_QC = 74;
 	public static final int engine_type_e_HELLEN_HONDA_BCM = 57;
 	public static final int engine_type_e_HELLEN_NA6 = 34;
 	public static final int engine_type_e_HELLEN_NA8_96 = 10;
@@ -380,8 +382,6 @@ public class Fields {
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
-	public static final int engine_type_e_UNUSED_74 = 74;
-	public static final int engine_type_e_UNUSED_75 = 75;
 	public static final int engine_type_e_UNUSED_92 = 92;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_WASTEGATE_PROTEUS_TEST = 96;
