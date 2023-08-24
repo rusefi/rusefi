@@ -19,6 +19,11 @@
 #include "hellen_meta.h"
 #include "odometer.h"
 #include "defaults.h"
+#include "../board_id/qc_stim_meta.h"
+
+static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
+static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
+static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -975,6 +980,8 @@ void fuelBenchMode() {
     setBodyControlUnit();
 }
 
+// PROTEUS_STIM_QC
+// set engine_type 73
 void proteusStimQc() {
     engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
 
