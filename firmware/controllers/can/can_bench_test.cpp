@@ -18,7 +18,7 @@ bool qcDirectPinControlMode = false;
 #if EFI_CAN_SUPPORT
 
 static void setPin(const CANRxFrame& frame, int value) {
-		int index = frame.data8[1];
+		int index = frame.data8[2];
 		if (index >= getBoardMetaOutputsCount())
 			return;
 		Gpio pin = getBoardMetaOutputs()[index];
