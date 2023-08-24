@@ -3203,6 +3203,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 ;			Sensors->EGO sensor
 	dialog = egoSettings_sensor,	"EGO sensor"
+		settingSelector = "EGO Type"
+			settingOption = "BPSX", afr_v1=0,afr_value1=9,afr_v2=5,afr_value2=19
+			settingOption = "Innovate", afr_v1=0,afr_value1=7.35,afr_v2=5,afr_value2=22.39
+			settingOption = "14Point7", afr_v1=0,afr_value1=9.996,afr_v2=5,afr_value2=19.992
+			settingOption = "PLX", afr_v1=0,afr_value1=10,afr_v2=5,afr_value2=20
+			settingOption = "Narrow Band", afr_v1=0.1,afr_value1=15,afr_v2=0.9,afr_value2=14
+			settingOption = "AEM", afr_v1=0.5,afr_value1=8.5,afr_v2=4.5,afr_value2=18
+
 		field = "Type",									afr_type
 ; todo: only use these values for custom!
 		field = "low voltage",							afr_v1
