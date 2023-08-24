@@ -101,8 +101,6 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail() {
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4
 
-	setEgoSensor(ES_14Point7_Free);
-
 	engineConfiguration->cranking.baseFuel = 27; // higher value for return system NA conversion since lower fuel pressure
 	engineConfiguration->vbattDividerCoeff = 9.30; // actual value on my new board
 

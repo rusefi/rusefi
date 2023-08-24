@@ -21,8 +21,6 @@ void setSachs() {
 	engineConfiguration->firingOrder = FO_1;
 	engineConfiguration->engineChartSize = 400;
 
-	setEgoSensor(ES_Innovate_MTX_L);
-
 	/**
 	 * 50/2 trigger
 	 */
