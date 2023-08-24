@@ -974,3 +974,14 @@ void fuelBenchMode() {
 	setArrayValues(config->crankingCycleCoef, 1.0f);
     setBodyControlUnit();
 }
+
+void proteusStimQc() {
+    engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
+
+   	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1;
+   	engineConfiguration->triggerInputPins[1] = PROTEUS_DIGITAL_2;
+   	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_3;
+   	engineConfiguration->camInputs[1] = PROTEUS_DIGITAL_4;
+   	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_DIGITAL_5;
+   	engineConfiguration->brakePedalPin = PROTEUS_DIGITAL_6;
+}

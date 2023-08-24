@@ -785,6 +785,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setEngineProteusGearboxManInTheMiddle();
 		break;
 	case engine_type_e::PROTEUS_STIM_QC:
+	    proteusStimQc();
+		break;
 	case engine_type_e::PROTEUS_N73:
 	case engine_type_e::PROTEUS_MIATA_NB2:
 		setMiataNB2_Proteus();
