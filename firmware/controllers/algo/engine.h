@@ -169,7 +169,11 @@ public:
 #if EFI_TCU
 	GearControllerBase *gearController;
 #endif
-	
+
+	SwitchedState clutchUpSwitchedState;
+   	SwitchedState brakePedalSwitchedState;
+   	SwitchedState acButtonSwitchedState;
+
 #if EFI_LAUNCH_CONTROL
 	LaunchControlBase launchController;
 	SoftSparkLimiter softSparkLimiter;
@@ -337,10 +341,6 @@ public:
 #if EFI_UNIT_TEST
 	AirmassModelBase* mockAirmassModel = nullptr;
 #endif
-
-	SwitchedState clutchUpSwitchedState;
-	SwitchedState brakePedalSwitchedState;
-	SwitchedState acButtonSwitchedState;
 
 private:
 	void reset();

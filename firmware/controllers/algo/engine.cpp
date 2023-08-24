@@ -273,16 +273,17 @@ extern bool kAcRequestState;
 }
 
 Engine::Engine()
+    : clutchUpSwitchedState(&engineState.clutchUpState),
+	brakePedalSwitchedState(&engineState.brakePedalState),
+	acButtonSwitchedState(&module<AcController>().unmock().acButtonState)
+
 #if EFI_LAUNCH_CONTROL
 
-	: softSparkLimiter(false), hardSparkLimiter(true)
+	, softSparkLimiter(false), hardSparkLimiter(true)
 
 #if EFI_ANTILAG_SYSTEM
 	, ALSsoftSparkLimiter(false)
 #endif /* EFI_ANTILAG_SYSTEM */
-	, clutchUpSwitchedState(&engineState.clutchUpState)
-	, brakePedalSwitchedState(&engineState.brakePedalState)
-	, acButtonSwitchedState(&module<AcController>().unmock().acButtonState)
 
 #endif // EFI_LAUNCH_CONTROL
 {
