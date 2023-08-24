@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 24 03:50:33 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 24 20:52:39 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1020,7 +1020,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 791295028;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1245,7 +1244,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.08.24.f407-discovery.791295028";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.08.24.f407-discovery.2975503466";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1404;
@@ -1546,7 +1545,7 @@ public class Fields {
 	public static final Field TPS2_2ADCCHANNEL = Field.create("TPS2_2ADCCHANNEL", 647, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field THROTTLEPEDALPOSITIONSECONDADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONSECONDADCCHANNEL", 648, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FUELLEVELVALUES = Field.create("FUELLEVELVALUES", 649, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"};
+	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "AEM"};
 	public static final Field AFR_TYPE = Field.create("AFR_TYPE", 657, FieldType.INT8, ego_sensor_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_658 = Field.create("ALIGNMENTFILL_AT_658", 658, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLE_ANTIWINDUPFREQ = Field.create("IDLE_ANTIWINDUPFREQ", 660, FieldType.FLOAT).setBaseOffset(0);

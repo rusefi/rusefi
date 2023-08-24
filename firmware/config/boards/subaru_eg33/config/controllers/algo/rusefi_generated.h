@@ -260,7 +260,7 @@
 #define display_mode_e_DM_NONE 0
 #define DWELL_CURVE_SIZE 8
 #define ego_sensor_e_auto_enum 0="ES_BPSX_D1",2="ES_14Point7_Free",6="ES_AEM",5="ES_Custom",1="ES_Innovate_MTX_L",3="ES_NarrowBand",4="ES_PLX"
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "AEM"
 #define ego_sensor_e_ES_14Point7_Free 2
 #define ego_sensor_e_ES_AEM 6
 #define ego_sensor_e_ES_BPSX_D1 0
@@ -1027,7 +1027,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2344575256
+#define SIGNATURE_HASH 365936966
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1319,7 +1319,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.08.24.subaru_eg33_f7.2344575256"
+#define TS_SIGNATURE "rusEFI master.2023.08.24.subaru_eg33_f7.365936966"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
