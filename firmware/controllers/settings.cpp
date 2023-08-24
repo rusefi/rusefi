@@ -789,7 +789,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"tpsErrorDetectionTooHigh", setTpsErrorDetectionTooHigh},
 		{"fixed_mode_timing", setFixedModeTiming},
 		{"timing_mode", setTimingMode},
-		{CMD_ENGINE_TYPE, setEngineType},
+		{CMD_ENGINE_TYPE, setEngineTypeAndSave},
 		{"rpm_hard_limit", setRpmHardLimit},
 		{"firing_order", setFiringOrder},
 		{"algorithm", setAlgorithmInt},
@@ -1022,7 +1022,11 @@ void setDateTime(const char * const isoDateTime) {
 
 #endif // ! EFI_UNIT_TEST
 
-void setEngineType(int value) {
+void setEngineTypeAndSave(int value) {
+	setEngineType(value, true);
+}
+	
+void setEngineType(int value, bool isWriteToFlash) {
 	{
 #if EFI_PROD_CODE
 		chibios_rt::CriticalSectionLocker csl;
@@ -1033,7 +1037,9 @@ void setEngineType(int value) {
 		engine->resetEngineSnifferIfInTestMode();
 
 #if EFI_INTERNAL_FLASH
-		writeToFlashNow();
+		if (isWriteToFlash) {
+			writeToFlashNow();
+		}
 #endif // EFI_INTERNAL_FLASH
 	}
 	incrementGlobalConfigurationVersion("engineType");

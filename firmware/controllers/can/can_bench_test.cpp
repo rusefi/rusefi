@@ -5,6 +5,7 @@
 #include "can_msg_tx.h"
 #include "can_common.h"
 #include "frequency_sensor.h"
+#include "settings.h"
 
 #define TRUNCATE_TO_BYTE(i) ((i) & 0xff)
 // raw values are 0..5V, convert it to 8-bit (0..255)
@@ -122,6 +123,9 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	    setPin(frame, 1);
 	} else if (command == CAN_BENCH_GET_CLEAR) {
 	    setPin(frame, 0);
+	} else if (command == CAN_BENCH_SET_ENGINE_TYPE) {
+		int eType = frame.data8[2];
+		setEngineType(eType, false);
 	}
 }
 
