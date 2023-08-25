@@ -427,7 +427,7 @@ enum class trigger_type_e : uint32_t {
 	/* pull-up'ed(inverted in): pull down 2x 30 deg before tdc on cam, till tdc. 
 	   e.g. Sovek, Saruman ignition blind type */
 	TT_60DEG_TOOTH = 77,
-	TT_UNUSED_78 = 78,
+	TT_VVT_MITSUBISHI_4G69 = 78,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
