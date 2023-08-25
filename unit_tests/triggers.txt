@@ -5621,7 +5621,7 @@ event 0 0 1 0.00 0.500000
 event 1 0 0 60.00 nan
 event 2 0 1 360.00 nan
 event 3 0 0 420.00 nan
-TRIGGERTYPE 78 4 TT_UNUSED_78 0.00
+TRIGGERTYPE 78 4 TT_VVT_MITSUBISHI_4G69 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
