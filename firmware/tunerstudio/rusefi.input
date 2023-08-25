@@ -2944,6 +2944,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		settingSelector = "Common IAT Sensors", {iat_adcChannel != 0}
 			settingOption = "GM IAT", iat_tempC_1=8.9,iat_resistance_1=7000,iat_tempC_2=30.6,iat_resistance_2=1930,iat_tempC_3=63.3,iat_resistance_3=560,useLinearIatSensor=0
 			settingOption = "Miata NA/NB", iat_tempC_1=-20,iat_resistance_1=16150,iat_tempC_2=40,iat_resistance_2=1150,iat_tempC_3=80,iat_resistance_3=330,useLinearIatSensor=0
+			settingOption = "Miata MSM IAT2", iat_tempC_1=0,iat_resistance_1=112000,iat_tempC_2=40,iat_resistance_2=17000,iat_tempC_3=60,iat_resistance_3=8000,useLinearIatSensor=0
 			settingOption = "Bosch Various", iat_tempC_1=-10,iat_resistance_1=9397,iat_tempC_2=30,iat_resistance_2=1707,iat_tempC_3=70,iat_resistance_3=436,useLinearIatSensor=0
 
 		field = "#Input three pairs of thermistor temperature and resistance."
