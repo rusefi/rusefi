@@ -54,7 +54,7 @@ endif
 USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
 
 # Pretend we are all different hardware so that all canned engine configs are included
-USE_OPT += -DHW_MICRO_RUSEFI=1 -DHW_PROTEUS=1 -DHW_FRANKENSO=1 -DHW_HELLEN=1
+USE_OPT += -DHW_MICRO_RUSEFI=1 -DHW_PROTEUS=1 -DHW_FRANKENSO=1 -DHW_HELLEN=1 -DHW_HELLEN_NISSAN=1
 
 DDEFS += -DSHORT_BOARD_NAME=f407-discovery
 
