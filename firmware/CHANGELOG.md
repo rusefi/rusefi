@@ -38,6 +38,7 @@ Release template (copy/paste this for new release):
  - Preset for Mpxh6300 MAP sensor #5481
  - Renault F 60-2-2 trigger wheel #5513
  - AEM WBO EGO preset
+ - Mitsubishi 4G69 Cam pattern #5541
 
 ### Fixed
  - simulator: sensor mocking UI #5473
