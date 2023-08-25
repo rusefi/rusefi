@@ -705,9 +705,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setTestEngineIssue366rise();
 		break;
 #endif // EFI_UNIT_TEST
-	case engine_type_e::ME17_9_MISC:
-	    setSlingshot();
-		break;
 #if HW_MICRO_RUSEFI
 	case engine_type_e::MRE_VW_B6:
 		setMreVwPassatB6();
@@ -742,6 +739,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	    fuelBenchMode();
 		break;
 #if HW_PROTEUS
+	case engine_type_e::ME17_9_MISC:
+	    setSlingshot();
+		break;
     case engine_type_e::PROTEUS_M111:
         setProteusM111EngineConfiguration();
         break;
@@ -800,7 +800,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // HARDWARE_CI
 #endif // HW_PROTEUS
-#if HW_HELLEN
+
+#if HW_HELLEN_MERCEDES
 	case engine_type_e::HELLEN_128_MERCEDES_4_CYL:
 		setHellenMercedes128_4_cyl();
 		break;
@@ -810,6 +811,27 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::HELLEN_128_MERCEDES_8_CYL:
 		setHellenMercedes128_8_cyl();
 		break;
+#endif
+
+#if HW_HELLEN_NISSAN
+	case engine_type_e::HELLEN_121_NISSAN_4_CYL:
+		setHellen121nissanQR();
+		break;
+	case engine_type_e::HELLEN_121_NISSAN_6_CYL:
+		setHellen121nissanVQ();
+		break;
+#endif
+
+#if HW_HELLEN_HYUNDAI
+	case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1:
+		setGenesisCoupeBK1();
+		break;
+	case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2:
+		setGenesisCoupeBK2();
+		break;
+#endif
+
+#if HW_HELLEN
 	case engine_type_e::HELLEN_NB2:
 		setMiataNB2_Hellen72();
 		break;
@@ -821,12 +843,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::HELLEN_NB1:
 		setHellenNB1();
-		break;
-	case engine_type_e::HELLEN_121_NISSAN_4_CYL:
-		setHellen121nissanQR();
-		break;
-	case engine_type_e::HELLEN_121_NISSAN_6_CYL:
-		setHellen121nissanVQ();
 		break;
 	case engine_type_e::HELLEN_121_VAG_5_CYL:
 	    setHellen121Vag_5_cyl();
@@ -842,12 +858,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
         break;
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::HELLEN_154_VAG:
-		break;
-	case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1:
-		setGenesisCoupeBK1();
-		break;
-	case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2:
-		setGenesisCoupeBK2();
 		break;
 	case engine_type_e::HELLEN_NA6:
 		setHellenNA6();
