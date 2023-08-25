@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Aug 25 02:53:24 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Aug 25 05:13:09 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1288,7 +1288,6 @@ public class Fields {
 	public static final int VSS_FILTER_MAX = 200;
 	public static final int VSS_FILTER_MIN = 3;
 	public static final int vvt_mode_e_VVT_2JZ = 2;
-	public static final int vvt_mode_e_VVT_4G69 = 4;
 	public static final int vvt_mode_e_VVT_BARRA_3_PLUS_1 = 8;
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
 	public static final int vvt_mode_e_VVT_FORD_COYOTE = 19;
@@ -1301,6 +1300,7 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_MIATA_NB = 3;
 	public static final int vvt_mode_e_VVT_MITSUBISHI_3A92 = 12;
 	public static final int vvt_mode_e_VVT_MITSUBISHI_4G63 = 18;
+	public static final int vvt_mode_e_VVT_MITSUBISHI_4G69 = 4;
 	public static final int vvt_mode_e_VVT_MITSUBISHI_4G9x = 17;
 	public static final int vvt_mode_e_VVT_MITSUBISHI_6G75 = 14;
 	public static final int vvt_mode_e_VVT_NISSAN_MR = 11;
