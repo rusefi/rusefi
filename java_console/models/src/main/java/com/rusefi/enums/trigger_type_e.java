@@ -83,6 +83,6 @@ public enum trigger_type_e {
 	TT_60_2_2_F3R,
 	TT_MITSU_4G63_CRANK,
 	TT_60DEG_TOOTH,
-	TT_UNUSED_78,
+	TT_VVT_MITSUBISHI_4G69,
 	TT_UNUSED,
 }

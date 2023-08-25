@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 24 20:52:39 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Aug 25 02:53:24 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1020,6 +1020,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1098872973;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1146,7 +1147,6 @@ public class Fields {
 	public static final int trigger_type_e_TT_TOOTHED_WHEEL_60_2 = 8;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
 	public static final int trigger_type_e_TT_UNUSED = 79;
-	public static final int trigger_type_e_TT_UNUSED_78 = 78;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int trigger_type_e_TT_VVT_FORD_COYOTE = 4;
@@ -1154,6 +1154,7 @@ public class Fields {
 	public static final int trigger_type_e_TT_VVT_MAZDA_SKYACTIV = 13;
 	public static final int trigger_type_e_TT_VVT_MIATA_NB = 43;
 	public static final int trigger_type_e_TT_VVT_MITSUBISHI_3A92 = 62;
+	public static final int trigger_type_e_TT_VVT_MITSUBISHI_4G69 = 78;
 	public static final int trigger_type_e_TT_VVT_MITSUBISHI_6G75 = 72;
 	public static final int trigger_type_e_TT_VVT_NISSAN_VQ35 = 59;
 	public static final int trigger_type_e_TT_VVT_TOYOTA_4_1 = 73;
@@ -1244,7 +1245,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.08.24.f407-discovery.2975503466";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.08.25.f407-discovery.1098872973";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1404;
@@ -1287,6 +1288,7 @@ public class Fields {
 	public static final int VSS_FILTER_MAX = 200;
 	public static final int VSS_FILTER_MIN = 3;
 	public static final int vvt_mode_e_VVT_2JZ = 2;
+	public static final int vvt_mode_e_VVT_4G69 = 4;
 	public static final int vvt_mode_e_VVT_BARRA_3_PLUS_1 = 8;
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
 	public static final int vvt_mode_e_VVT_FORD_COYOTE = 19;
@@ -1305,7 +1307,6 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
 	public static final int vvt_mode_e_VVT_SINGLE_TOOTH = 1;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
-	public static final int vvt_mode_e_VVT_UNUSED = 4;
 	public static final int WARNING_BUFFER_SIZE = 120;
 	public static final int WWAE_TABLE_SIZE = 8;
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1436,7 +1437,7 @@ public class Fields {
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 447, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLE_DERIVATIVEFILTERLOSS = Field.create("IDLE_DERIVATIVEFILTERLOSS", 448, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TRAILINGSPARKANGLE = Field.create("TRAILINGSPARKANGLE", 452, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Single Tooth", "EZ30", "INVALID", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Half Moon", "Dodge Ram 1+16", "60/2 VW", "Benelli Tre", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "Mitsubishi 4G92/93/94 Cam 29", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "Mitsubishi 4G63 Cam 34", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "12 tooth crank", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "60-2-2 F3R", "Mitsu 4G63 Crank", "x2 30 Deg camshaft BTDC", "trg78", "trg79"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Single Tooth", "EZ30", "INVALID", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Half Moon", "Dodge Ram 1+16", "60/2 VW", "Benelli Tre", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "Mitsubishi 4G92/93/94 Cam 29", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "Mitsubishi 4G63 Cam 34", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "12 tooth crank", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "60-2-2 F3R", "Mitsu 4G63 Crank", "x2 30 Deg camshaft BTDC", "INVALID", "trg79", "trg80"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 456, FieldType.INT, trigger_type_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = Field.create("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 460, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 464, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -2065,7 +2066,7 @@ public class Fields {
 	public static final Field MINIMUMIGNITIONTIMING = Field.create("MINIMUMIGNITIONTIMING", 1678, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MAXIMUMIGNITIONTIMING = Field.create("MAXIMUMIGNITIONTIMING", 1679, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 1680, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth", "2JZ", "Miata NB2", "INVALID", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K Intake", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "Mazda Skyactiv", "Honda K Exhaust", "Mitsubishi 4G92/93/94", "Mitsubishi 4G63", "Ford Coyote"};
+	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth", "2JZ", "Miata NB2", "Mitsu 4G69", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K Intake", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "Mazda Skyactiv", "Honda K Exhaust", "Mitsubishi 4G92/93/94", "Mitsubishi 4G63", "Ford Coyote"};
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 1684, FieldType.INT8, vvt_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 1685, FieldType.INT8, vvt_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FAN2EXTRAIDLE = Field.create("FAN2EXTRAIDLE", 1686, FieldType.INT8).setScale(1.0).setBaseOffset(0);
