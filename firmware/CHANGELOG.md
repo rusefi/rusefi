@@ -39,6 +39,7 @@ Release template (copy/paste this for new release):
  - Renault F 60-2-2 trigger wheel #5513
  - AEM WBO EGO preset
  - Mitsubishi 4G69 Cam pattern #5541
+ - Preset for Mazdaspeed Miata (NB) IAT sensor
 
 ### Fixed
  - simulator: sensor mocking UI #5473
