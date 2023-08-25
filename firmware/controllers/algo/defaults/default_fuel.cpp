@@ -223,6 +223,15 @@ static void setDefaultLambdaProtection() {
 	engineConfiguration->lambdaProtectionRestoreTps = 20;
 }
 
+static void setDefaultPriming() {
+	// These defaults are reasonable for ~500cc cylinders
+	static constexpr int8_t primeBins[]     = { -40, -20,   0,  20, 40, 60, 80, 100 };
+	static constexpr uint16_t primeValues[] = { 755, 605, 265, 140, 75, 50, 45,  40 };
+
+	copyArray(engineConfiguration->primeBins, primeBins);
+	copyArray(engineConfiguration->primeValues, primeValues);
+}
+
 void setDefaultFuel() {
 	// Base injection configuration
 	engineConfiguration->isInjectionEnabled = true;
@@ -295,4 +304,6 @@ void setDefaultFuel() {
 
 	// Lambda protection defaults
 	setDefaultLambdaProtection();
+
+	setDefaultPriming();
 }
