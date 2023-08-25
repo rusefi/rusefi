@@ -130,3 +130,32 @@ void initializeVvt3A92(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(9);
 	s->setSecondTriggerSynchronizationGap(0.11); // redundancy
 }
+
+void initializeMitsubishi4G69Cam(TriggerWaveform *s) {
+    s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+
+    int tooth = 5;
+
+    int extraTooth = 20;
+
+	s->addEvent360( 90 - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360( 90, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	s->addEvent360(180 - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	s->addEvent360(180 + extraTooth - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(180 + extraTooth, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	s->addEvent360(270 - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(270, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	s->addEvent360(270 + extraTooth - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(270 + extraTooth, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	s->addEvent360(360 - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    s->setTriggerSynchronizationGap(1.29);
+   	s->setSecondTriggerSynchronizationGap(3.5);
+}

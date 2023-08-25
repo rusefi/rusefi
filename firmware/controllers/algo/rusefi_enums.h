@@ -67,7 +67,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	 */
 	VVT_MIATA_NB = 3,
 
-	VVT_4G69 = 4,
+	VVT_MITSUBISHI_4G69 = 4,
 
 	/**
 	 * @see TT_VVT_BOSCH_QUICK_START

@@ -91,6 +91,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return trigger_type_e::TT_VVT_NISSAN_VQ35;
 	case VVT_TOYOTA_4_1:
 		return trigger_type_e::TT_VVT_TOYOTA_4_1;
+	case VVT_MITSUBISHI_4G69:
+	    return trigger_type_e::TT_VVT_MITSUBISHI_4G69;
 	case VVT_MITSUBISHI_3A92:
 		return trigger_type_e::TT_VVT_MITSUBISHI_3A92;
 	case VVT_MITSUBISHI_6G75:
