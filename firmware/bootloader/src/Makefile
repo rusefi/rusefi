@@ -107,7 +107,7 @@ endif
 
 # Enables the use of FPU on Cortex-M4 (no, softfp, hard).
 ifeq ($(USE_FPU),)
-  USE_FPU = softfp
+  USE_FPU = hard
 endif
 
 #
