@@ -27,6 +27,8 @@ Logging::Logging(char const* /*name*/, char* /*buffer*/, int /*bufferSize*/) {
 LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {
 }
 
+void setPinConfigurationOverrides() { }
+
 // this is supposed to be taken from chconf_common.h but it does not work? I am not sure why :(
 // TODO: make this be defined by chconf_common.h?
 //#if ! ENABLE_PERF_TRACE
