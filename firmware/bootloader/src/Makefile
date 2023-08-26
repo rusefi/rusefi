@@ -193,11 +193,11 @@ CPPSRC = $(ALLCPPSRC) \
 	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
 	$(PROJECT_DIR)/controllers/persistent_store.cpp \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
+	$(PROJECT_DIR)/hw_layer/serial_over_usb/usbcfg.cpp \
 	$(PROJECT_DIR)/util/efilib.cpp \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(RUSEFI_LIB_CPP) \
 	src/rusefi_stubs.cpp \
-	src/dfu.cpp \
 	src/main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
