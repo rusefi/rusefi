@@ -386,19 +386,6 @@ static void handleCommandX14(uint16_t index) {
 		widebandUpdatePending = true;
 		benchSemaphore.signal();
 		return;
-	case 0x14:
-#ifdef STM32F7
-		void sys_dual_bank(void);
-		/**
-		 * yes, this would instantly cause a hard fault as a random sequence of bytes is decoded as instructions
-		 * and that's the intended behavious - the point is to set flash properly and to re-flash once in proper configuration
-		 */
-		sys_dual_bank();
-		rebootNow();
-#else
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Unexpected dbank command", index);
-#endif
-		return;
 	case 0x15:
 #if EFI_PROD_CODE
 		extern bool burnWithoutFlash;
