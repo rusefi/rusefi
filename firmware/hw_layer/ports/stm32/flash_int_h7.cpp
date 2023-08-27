@@ -14,29 +14,21 @@
 #include "flash_int.h"
 #include <string.h>
 
-#ifdef STM32H7XX
-	// Use bank 2 on H7
-	#define FLASH_CR FLASH->CR2
-	#define FLASH_SR FLASH->SR2
-	#define FLASH_KEYR FLASH->KEYR2
+// Use bank 2 on H7
+// TODO: Support bank 1 as well for the bootloader to work properly!
+#define FLASH_CR FLASH->CR2
+#define FLASH_SR FLASH->SR2
+#define FLASH_KEYR FLASH->KEYR2
 
-	// I have no idea why ST changed the register name from STRT -> START
-	#define FLASH_CR_STRT FLASH_CR_START
+// I have no idea why ST changed the register name from STRT -> START
+#define FLASH_CR_STRT FLASH_CR_START
 
-	#undef FLASH_BASE
-	// This is the start of the second bank, since H7 sector numbers are bank relative
-	#define FLASH_BASE 0x08100000
+// #undef FLASH_BASE
+// This is the start of the second bank, since H7 sector numbers are bank relative
+// #define FLASH_BASE 0x08100000
 
-	// QW bit supercedes the older BSY bit
-	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH_SR & FLASH_SR_QW);
-#else
-	#define FLASH_CR FLASH->CR
-	#define FLASH_SR FLASH->SR
-	#define FLASH_KEYR FLASH->KEYR
-
-	// Wait for the flash operation to finish
-	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
-#endif
+// QW bit supercedes the older BSY bit
+#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH_SR & FLASH_SR_QW);
 
 flashaddr_t intFlashSectorBegin(flashsector_t sector) {
 	flashaddr_t address = FLASH_BASE;
@@ -60,11 +52,7 @@ flashsector_t intFlashSectorAt(flashaddr_t address) {
 
 static void intFlashClearErrors(void)
 {
-#ifdef STM32H7XX
 	FLASH->CCR2 = 0xffffffff;
-#else
-	FLASH_SR = 0x0000ffff;
-#endif
 }
 
 static int intFlashCheckErrors(void)
@@ -122,29 +110,9 @@ static bool intFlashUnlock(void) {
  */
 #define intFlashLock() { FLASH_CR |= FLASH_CR_LOCK; }
 
-#ifdef STM32F7XX
-static bool isDualBank(void) {
-	// cleared bit indicates dual bank
-	return (FLASH->OPTCR & FLASH_OPTCR_nDBANK) == 0;
-}
-#endif
-
 int intFlashSectorErase(flashsector_t sector) {
 	int ret;
 	uint8_t sectorRegIdx = sector;
-#ifdef STM32F7XX
-	// On dual bank STM32F7, sector index doesn't match register value.
-	// High bit indicates bank, low 4 bits indicate sector within bank.
-	// Since each bank has 12 sectors, increment second-bank sector idx
-	// by 4 so that the first sector of the second bank (12) ends up with
-	// index 16 (0b10000)
-	if (isDualBank() && sectorRegIdx >= 12) {
-		sectorRegIdx -= 12;
-		/* bit 4 defines bank.
-		 * Sectors starting from 12 are in bank #2 */
-		sectorRegIdx |= 0x10;
-	}
-#endif
 
 	/* Unlock flash for write access */
 	if (intFlashUnlock() == HAL_FAILED)
@@ -274,7 +242,6 @@ int intFlashRead(flashaddr_t source, char* destination, size_t size) {
 	return FLASH_RETURN_SUCCESS;
 }
 
-#ifdef STM32H7XX
 int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	/* Unlock flash for write access */
 	if (intFlashUnlock() == HAL_FAILED)
@@ -327,111 +294,5 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 
 	return FLASH_RETURN_SUCCESS;
 }
-
-#else // not STM32H7XX
-static int intFlashWriteData(flashaddr_t address, const flashdata_t data) {
-	/* Clearing error status bits.*/
-	intFlashClearErrors();
-
-	/* Enter flash programming mode */
-	FLASH->CR |= FLASH_CR_PG;
-
-	/* Write the data */
-	*(flashdata_t*) address = data;
-
-	// Cortex-M7 (STM32F7/H7) can execute out order - need to force a full flush
-	// so that we actually wait for the operation to complete!
-#if CORTEX_MODEL == 7
-	__DSB();
-#endif
-
-	/* Wait for completion */
-	intFlashWaitWhileBusy();
-
-	/* Exit flash programming mode */
-	FLASH->CR &= ~FLASH_CR_PG;
-
-	return intFlashCheckErrors();
-}
-
-int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
-	int ret = FLASH_RETURN_SUCCESS;
-
-	/* Unlock flash for write access */
-	if (intFlashUnlock() == HAL_FAILED)
-		return FLASH_RETURN_NO_PERMISSION;
-
-	/* Wait for any busy flags */
-	intFlashWaitWhileBusy();
-
-	/* Setup parallelism before any program/erase */
-	FLASH->CR &= ~FLASH_CR_PSIZE_MASK;
-	FLASH->CR |= FLASH_CR_PSIZE_VALUE;
-
-	/* Check if the flash address is correctly aligned */
-	size_t alignOffset = address % sizeof(flashdata_t);
-//	print("flash alignOffset=%d\r\n", alignOffset);
-	if (alignOffset != 0) {
-		/* Not aligned, thus we have to read the data in flash already present
-		 * and update them with buffer's data */
-
-		/* Align the flash address correctly */
-		flashaddr_t alignedFlashAddress = address - alignOffset;
-
-		/* Read already present data */
-		flashdata_t tmp = *(volatile flashdata_t*) alignedFlashAddress;
-
-		/* Compute how much bytes one must update in the data read */
-		size_t chunkSize = sizeof(flashdata_t) - alignOffset;
-		if (chunkSize > size)
-			chunkSize = size; // this happens when both address and address + size are not aligned
-
-		/* Update the read data with buffer's data */
-		memcpy((char*) &tmp + alignOffset, buffer, chunkSize);
-
-		/* Write the new data in flash */
-		ret = intFlashWriteData(alignedFlashAddress, tmp);
-		if (ret != FLASH_RETURN_SUCCESS)
-			goto exit;
-
-		/* Advance */
-		address += chunkSize;
-		buffer += chunkSize;
-		size -= chunkSize;
-	}
-
-	/* Now, address is correctly aligned. One can copy data directly from
-	 * buffer's data to flash memory until the size of the data remaining to be
-	 * copied requires special treatment. */
-	while (size >= sizeof(flashdata_t)) {
-//		print("flash write size=%d\r\n", size);
-		ret = intFlashWriteData(address, *(const flashdata_t*) buffer);
-		if (ret != FLASH_RETURN_SUCCESS)
-			goto exit;
-		address += sizeof(flashdata_t);
-		buffer += sizeof(flashdata_t);
-		size -= sizeof(flashdata_t);
-	}
-
-	/* Now, address is correctly aligned, but the remaining data are to
-	 * small to fill a entier flashdata_t. Thus, one must read data already
-	 * in flash and update them with buffer's data before writing an entire
-	 * flashdata_t to flash memory. */
-	if (size > 0) {
-		flashdata_t tmp = *(volatile flashdata_t*) address;
-		memcpy(&tmp, buffer, size);
-		ret = intFlashWriteData(address, tmp);
-		if (ret != FLASH_RETURN_SUCCESS)
-			goto exit;
-	}
-
-exit:
-	/* Lock flash again */
-	intFlashLock()
-	;
-
-	return ret;
-}
-#endif
 
 #endif /* EFI_INTERNAL_FLASH */
