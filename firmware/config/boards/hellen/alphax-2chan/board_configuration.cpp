@@ -172,3 +172,4 @@ int getBoardMetaOutputsCount() {
 Gpio* getBoardMetaOutputs() {
     return OUTPUTS;
 }
+
