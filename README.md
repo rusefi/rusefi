@@ -59,7 +59,7 @@ Initialize the checkout:
 
 ## Building
 
-See [firmware/check.c](firmware/check.c) for the recommended version of GCC.
+See [firmware/gcc_version_check.c](firmware/gcc_version_check.c) for the recommended version of GCC.
 
 Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
 

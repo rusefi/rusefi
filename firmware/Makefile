@@ -229,8 +229,8 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-# check.c goes first to throw error as soon as possible
-CSRC =  check.c \
+# gcc_version_check.c goes first to throw error as soon as possible
+CSRC =  gcc_version_check.c \
   $(ALLCSRC) \
   $(BOARDSRC) \
   $(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
