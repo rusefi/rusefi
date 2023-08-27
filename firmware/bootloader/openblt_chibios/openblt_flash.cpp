@@ -14,9 +14,9 @@ blt_bool FlashVerifyChecksum() {
 }
 
 blt_addr FlashGetUserProgBaseAddress() {
-#if STM32H7
+#ifdef STM32H7XX
 	return 0x08020000;
-#endif
+#else // not STM32H7
 	return 0x08008000;
 #endif
 }
