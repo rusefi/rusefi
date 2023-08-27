@@ -183,11 +183,6 @@ void runRusEfi() {
 	checkLastBootError();
 #endif
 
-#ifdef STM32F7
-	void sys_dual_bank(void);
-	addConsoleAction("dual_bank", sys_dual_bank);
-#endif
-
 #if defined(STM32F4) || defined(STM32F7)
 //	addConsoleAction("stm32_stop", stm32_stop);
 	addConsoleAction("stm32_standby", stm32_standby);

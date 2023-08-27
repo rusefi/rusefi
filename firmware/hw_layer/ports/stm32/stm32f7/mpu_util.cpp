@@ -147,33 +147,6 @@ static void stm32f7_flash_mass_erase_dual_block()
     FLASH_CR &= ~(FLASH_CR_MER1 | FLASH_CR_MER2);
 }
 
-// todo: at the moment this does not work :(
-// https://github.com/rusefi/rusefi/issues/2996
-void sys_dual_bank(void) {
-    uint32_t reg;
-    efiPrintf("FLASH->SR before %x", FLASH->SR);
-
-    /* Unlock OPTCR */
-    FLASH_OPTKEYR = FLASH_OPTKEY1;
-    FLASH_OPTKEYR = FLASH_OPTKEY2;
-    flash_wait_complete();
-
-    /* Disable protection + Switch to dual bank */
-    reg = FLASH_OPTCR;
-    reg &= ~0x000FF00;
-    reg |= 0x0000AA00;
-    reg &= ~(FLASH_OPTCR_nDBANK);
-    FLASH_OPTCR = reg;
-    __DSB();
-    FLASH_OPTCR |= FLASH_OPTCR_STRT;
-    flash_wait_complete();
-    efiPrintf("FLASH->SR after %x", FLASH->SR);
-    /*
-     * see https://github.com/danielinux/stm32f7-dualbank-tool/issues/1
-     stm32f7_flash_mass_erase_dual_block();
-     */
-}
-
 /*
 STOP mode for F7 is needed for wakeup from multiple EXTI pins. For example PD0, which is CAN rx.
 However, for F40X & F42X this may be useless. STOP in itself eats more current than standby. 
