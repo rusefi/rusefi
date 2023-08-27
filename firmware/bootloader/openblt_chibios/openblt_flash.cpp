@@ -13,11 +13,12 @@ blt_bool FlashVerifyChecksum() {
 	return intFlashIsErased(FlashGetUserProgBaseAddress(), 4) ? BLT_FALSE : BLT_TRUE;
 }
 
-// Bootloader size imported from the linker script
-extern uint32_t bootloader_size;
-
 blt_addr FlashGetUserProgBaseAddress() {
-	return 0x08000000 + bootloader_size;
+#if STM32H7
+	return 0x08020000;
+#endif
+	return 0x08008000;
+#endif
 }
 
 blt_bool FlashWrite(blt_addr addr, blt_int32u len, blt_int8u *data) {
