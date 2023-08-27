@@ -70,10 +70,10 @@ cp firmware/deliver/fome.dfu $FOLDER
 cp firmware/deliver/fome.hex $FOLDER
 
 # bootloader
-[ -e firmware/deliver/openblt.bin ] && { cp firmware/deliver/openblt.bin $FOLDER ; }
-[ -e firmware/deliver/openblt.dfu ] && { cp firmware/deliver/openblt.dfu $FOLDER ; }
+[ -e firmware/deliver/fome_bl.bin ] && { cp firmware/deliver/fome_bl.bin $FOLDER ; }
+[ -e firmware/deliver/fome_bl.dfu ] && { cp firmware/deliver/fome_bl.dfu $FOLDER ; }
 # update srec
-[ -e firmware/deliver/rusefi_update.srec ] && { cp firmware/deliver/rusefi_update.srec $FOLDER ; }
+[ -e firmware/deliver/fome_update.srec ] && { cp firmware/deliver/fome_update.srec $FOLDER ; }
 
 if [ -n "$BUNDLE_NAME" ]; then
     mv $FOLDER/fome.dfu $FOLDER/fome_$BUNDLE_NAME.dfu

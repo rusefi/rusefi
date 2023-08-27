@@ -7,12 +7,11 @@
 
 ifeq ($(DEBUG_LEVEL_OPT),)
   # this value would be used by default. For 'debug' configuration override with '-O0 -ggdb -g' or something along these lines
-  DEBUG_LEVEL_OPT = -O2
+  DEBUG_LEVEL_OPT = -Os -ggdb -g
   DDEFS += -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
 endif
 
-# let everyone know that we are compiling bootloader
-IS_RE_BOOTLOADER = yes
+DDEFS += -DENABLE_AUTO_DETECT_HSE=TRUE -DSTM32_HSECLK=25000000
 
 # disable some modules to shrink bootloader binary
 DDEFS += -DEFI_BOOTLOADER
@@ -22,8 +21,7 @@ DDEFS += -DHAL_USE_FLASH=FALSE
 
 DDEFS += -DEFI_USE_UART_DMA=FALSE
 
-# disable USB (The bootloader has currently UART support only)
-DDEFS += -DEFI_USB_SERIAL=FALSE
+DDEFS += -DEFI_USB_SERIAL=TRUE -DHAL_USE_USB_MSD=FALSE
 # disable CAN
 DDEFS += -DEFI_CAN_SUPPORT=FALSE
 
@@ -33,6 +31,9 @@ DDEFS += -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=1 -DEFI_SIMULATOR=0
 ifeq ($(USE_OPT),)
   USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
 endif
+
+# Configure the linker script to build the bootloader, not the firmware
+USE_OPT += -Wl,--defsym=IS_BOOTLOADER=1
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
@@ -50,13 +51,6 @@ endif
 # Enable this if you want the linker to remove unused code and data
 ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
-endif
-
-ifeq ($(CCACHE_DIR),)
- $(info No CCACHE_DIR)
-else
- $(info CCACHE_DIR is ${CCACHE_DIR})
- CCPREFIX=ccache
 endif
 
 # Linker extra options here.
@@ -107,7 +101,7 @@ endif
 
 # Enables the use of FPU on Cortex-M4 (no, softfp, hard).
 ifeq ($(USE_FPU),)
-  USE_FPU = softfp
+  USE_FPU = hard
 endif
 
 #
@@ -119,7 +113,7 @@ endif
 #
 
 # Define project name here
-PROJECT = bootloader
+PROJECT = fome_bl
 PROJECT_DIR = ..
 
 # Configure precompiled header
@@ -175,7 +169,14 @@ CSRC =  $(ALLCSRC) \
 	$(BOARDSRC) \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
-	$(FATFSSRC) \
+	$(PROJECT_DIR)/hw_layer/openblt/shared_params.c \
+	$(PROJECT_DIR)/hw_layer/main_hardfault.c \
+	$(PROJECT_DIR)/ext/openblt/Target/Source/backdoor.c \
+	$(PROJECT_DIR)/ext/openblt/Target/Source/boot.c \
+	$(PROJECT_DIR)/ext/openblt/Target/Source/com.c \
+	$(PROJECT_DIR)/ext/openblt/Target/Source/xcp.c \
+	$(PROJECT_DIR)/bootloader/openblt_chibios/nvm.c \
+	$(PROJECT_DIR)/hw_layer/openblt/hooks.c \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # todo: reduce code duplication with primary Makefile!!!
@@ -183,19 +184,13 @@ CSRC =  $(ALLCSRC) \
 CPPSRC = $(ALLCPPSRC) \
 	$(HW_LAYER_EMS_CPP) \
 	$(BOARDCPPSRC) \
-	$(HW_SENSORS_SRC) \
-	$(TUNERSTUDIO_SRC_CPP) \
-	$(CONSOLE_SRC_CPP) \
-	$(PROJECT_DIR)/console/binary/tunerstudio_io.cpp \
-	$(PROJECT_DIR)/console/binary/tunerstudio_io_serial.cpp \
-	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
-	$(PROJECT_DIR)/controllers/persistent_store.cpp \
-	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
 	$(PROJECT_DIR)/util/efilib.cpp \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(RUSEFI_LIB_CPP) \
+	$(PROJECT_DIR)/bootloader/openblt_chibios/openblt_chibios.cpp \
+	$(PROJECT_DIR)/bootloader/openblt_chibios/openblt_flash.cpp \
+	$(PROJECT_DIR)/bootloader/openblt_chibios/openblt_usb.cpp \
 	src/rusefi_stubs.cpp \
-	src/dfu.cpp \
 	src/main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
@@ -220,7 +215,7 @@ TCPPSRC =
 
 # List ASM source files here
 # List ASM source files here
-ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
+ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) $(PROJECT_DIR)/hw_layer/main_hardfault_asm.S
 
 INCDIR = $(ALLINC) \
 	$(PCH_DIR) \
@@ -245,6 +240,8 @@ INCDIR = $(ALLINC) \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
 	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/sensors \
+	$(PROJECT_DIR)/controllers/sensors/impl \
+	$(PROJECT_DIR)/controllers/sensors/core \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/ports \
 	$(PROJECT_DIR)/console/binary/generated \
@@ -258,6 +255,10 @@ INCDIR = $(ALLINC) \
 	$(PROJECT_DIR)/controllers/sensors \
 	$(PROJECT_DIR)/init \
 	$(RUSEFI_LIB_INC) \
+	$(BOARDS_DIR) \
+	$(PROJECT_DIR)/hw_layer/openblt \
+	$(PROJECT_DIR)/ext/openblt/Target/Source \
+	$(PROJECT_DIR)/bootloader/openblt_chibios \
 	config
 
 BUILDDIR=blbuild

@@ -267,69 +267,6 @@ void setEtbTestConfiguration() {
 	// see also setDefaultEtbBiasCurve
 }
 
-#if HW_FRANKENSO && EFI_PROD_CODE
-
-
-// todo: page_size + 2
-// todo:  CC_SECTION(".nocache")
-static uint8_t write_buf[EE_PAGE_SIZE + 10];
-
-
-#define EEPROM_WRITE_TIME_MS    10          /* time to write one page in ms. Consult datasheet! */
-
-/**
- * https://www.onsemi.com/pdf/datasheet/cat24c32-d.pdf
- * CAT24C32
- */
-static const I2CEepromFileConfig i2cee = {
-		.barrier_low = 0,
-		.barrier_hi = EE_SIZE - 1,
-		.size = EE_SIZE,
-		.pagesize = EE_PAGE_SIZE,
-		.write_time = TIME_MS2I(EEPROM_WRITE_TIME_MS),
-    .i2cp = &EE_U2CD,
-    .addr = 0x50,
-	.write_buf = write_buf
-};
-
-extern EepromDevice eepdev_24xx;
-static I2CEepromFileStream ifile;
-
-/**
- * set engine_type 61
- */
-void setEepromTestConfiguration() {
-    engineConfiguration->useEeprom = true;
-	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
-	// dirty hack
-	brain_pin_markUnused(Gpio::C9);
-    efiSetPadMode("I2C", Gpio::A8, PAL_MODE_ALTERNATE(4));
-    efiSetPadMode("I2C", Gpio::C9, PAL_MODE_ALTERNATE(4));
-
-
-    	addConsoleActionI("ee_read",
-    		[](int value) {
-    			if (ifile.vmt != eepdev_24xx.efsvmt) {
-    				EepromFileOpen((EepromFileStream *)&ifile, (EepromFileConfig *)&i2cee, &eepdev_24xx);
-    			}
-
-    			ifile.vmt->setposition(&ifile, 0);
-//    			chFileStreamSeek(&ifile, 0);
-    			int v2;
-    			streamRead(&ifile, (uint8_t *)&v2, 4);
-    			efiPrintf("EE has %d", v2);
-
-    			v2 += 3;
-    			ifile.vmt->setposition(&ifile, 0);
-    			streamWrite(&ifile, (uint8_t *)&v2, 4);
-
-
-    		});
-
-
-}
-#endif //HW_FRANKENSO
-
 // F407 discovery
 void setL9779TestConfiguration() {
 	// enable_spi 3

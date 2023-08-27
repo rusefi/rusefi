@@ -15,8 +15,10 @@ mkdir -p .dep
 make -j6 -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
 [ -e build/fome.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 if [ "$USE_OPENBLT" = "yes" ]; then
-  make openblt PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
-  [ -e build-openblt/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
+  # TODO: why is this rm necessary?
+  rm -f pch/pch.h.gch/*
+  cd bootloader; make -f src/Makefile PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU -j12; cd ..
+  [ -e bootloader/blbuild/fome_bl.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
 
 if uname | grep "NT"; then
@@ -34,32 +36,29 @@ $HEX2DFU -i build/fome.hex -C 0x1C -o build/fome.dfu
 
 if [ "$USE_OPENBLT" = "yes" ]; then
   # this image is suitable for update through bootloader only
-  # do not deliver update images in any format that can confuse users
-  #cp build/fome.bin  deliver/fome_update.bin
-  #cp build/fome.dfu  deliver/fome_update.dfu
-  #cp build/fome.hex  deliver/fome_update.hex
   # srec is the only format used by OpenBLT host tools
   cp build/fome.srec deliver/fome_update.srec
 else
   # standalone images (for use with no bootloader)
   cp build/fome.bin  deliver/
   cp build/fome.dfu  deliver/
+  # cp build/fome.hex  deliver/
 fi
 
 # bootloader and composite image
 if [ "$USE_OPENBLT" = "yes" ]; then
-  rm -f deliver/openblt.dfu
+  rm -f deliver/fome_bl.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
-  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -o build-openblt/openblt_$PROJECT_BOARD.dfu
+  $HEX2DFU -i bootloader/blbuild/fome_bl.hex -o bootloader/blbuild/fome_bl.dfu
 
   # do we need all these formats?
-  cp build-openblt/openblt_$PROJECT_BOARD.bin  deliver/openblt.bin
-  cp build-openblt/openblt_$PROJECT_BOARD.dfu  deliver/openblt.dfu
-  #cp build-openblt/openblt_$PROJECT_BOARD.hex  deliver/openblt.hex
+  cp bootloader/blbuild/fome_bl.bin  deliver/fome_bl.bin
+  cp bootloader/blbuild/fome_bl.dfu  deliver/fome_bl.dfu
+  #cp bootloader/blbuild/fome_bl.hex  deliver/fome_bl.hex
 
   rm -f deliver/fome_openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"
-  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/fome.hex -C 0x1C -o deliver/fome.dfu -b deliver/fome.bin
+  $HEX2DFU -i bootloader/blbuild/fome_bl.hex -i build/fome.hex -C 0x1C -o deliver/fome.dfu -b deliver/fome.bin
   #todo: how to create 'signed' hex and srec? Do we need?
 fi
 

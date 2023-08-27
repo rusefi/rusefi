@@ -7,6 +7,9 @@
  */
 
 #include "pch.h"
+
+#if HAL_USE_ADC
+
 #include "mpu_util.h"
 #include "map_averaging.h"
 
@@ -185,3 +188,5 @@ adcsample_t getFastAdc(FastAdcToken token) {
 
 	return fastSampleBuffer[token];
 }
+
+#endif // HAL_USE_ADC

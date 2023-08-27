@@ -29,13 +29,19 @@ RAM3_SIZE = DEFINED(STM32F4_HAS_SRAM3) ? 64k : 0;
 /* Only STM32F429I-Discovery has external SDRAM */
 SDRAM_SIZE = DEFINED(STM32_HAS_SDRAM) ? 8M : 0;
 
+/* change address & length if bootloader */
+bootloader_size = 32k;
+flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
+flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 768k;
+image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
+
 /* OpenBLT <-> main FW shared area */
-_OpenBLT_Shared_Params_Size = DEFINED(BOOTLOADER) ? 16 : 0;
+_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 16 : 0;
 
 MEMORY
 {
-    bl      : org = 0x08000000, len = 16k     /* bootloader section */
-    flash0  : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 736k : 768k  /* change address & length if bootloader */
+    bl      : org = 0x08000000, len = bootloader_size     /* bootloader section */
+    flash0  : org = flash_start, len = image_size
     flash1  : org = 0x00000000, len = 0
     flash2  : org = 0x00000000, len = 0
     flash3  : org = 0x00000000, len = 0

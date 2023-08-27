@@ -25,20 +25,20 @@
  * 'bl' is related to rusefi bootloader
  */
 
- /* TODO: 512k flash limit is a mitigation for https://github.com/rusefi/rusefi/issues/3566 and https://github.com/rusefi/rusefi/issues/3775 */
-/* flash_size = DEFINED(FLASH_SIZE) ? FLASH_SIZE : 512k; */
-flash_size = DEFINED(FLASH_SIZE) ? FLASH_SIZE : 768k;
+/* change address & length if bootloader */
+bootloader_size = 32k;
+flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
+flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 768k;
+image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
 
 /* OpenBLT <-> main FW shared area */
-_OpenBLT_Shared_Params_Size = DEFINED(BOOTLOADER) ? 16 : 0;
+_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 16 : 0;
 
 MEMORY
 {
-    bl          : org = 0x08000000, len = 16k       /* bootloader section */
-    /* change address & length if bootloader */
-    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? (flash_size - 32k) : flash_size
-    /* TODO: should we use same flash_size for flash@ITCM? */
-    flash1 (rx) : org = DEFINED(BOOTLOADER) ? 0x00208000 : 0x00200000, len = DEFINED(BOOTLOADER) ? (2m - 32k) : 2m /* Flash as ITCM */
+    bl          : org = 0x08000000, len = bootloader_size       /* bootloader section */
+    flash0 (rx) : org = flash_start, len = image_size
+    flash1 (rx) : org = flash_start - 0x07e00000, len = image_size /* Flash as ITCM */
     flash2 (rx) : org = 0x00000000, len = 0
     flash3 (rx) : org = 0x00000000, len = 0
     flash4 (rx) : org = 0x00000000, len = 0
