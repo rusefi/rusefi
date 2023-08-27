@@ -163,3 +163,18 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->etbFunctions[1] = DC_Wastegate;
 }
+
+static Gpio OUTPUTS[] = {
+		H144_LS_1,
+		H144_LS_2,
+		H144_LS_3,
+		H144_LS_4,
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return OUTPUTS;
+}
