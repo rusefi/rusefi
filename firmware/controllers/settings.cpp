@@ -569,6 +569,8 @@ static void setSpiMode(int index, bool mode) {
 	printSpiState(engineConfiguration);
 }
 
+bool verboseRxCan = false;
+
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
 		engineConfiguration->useTLE8888_cranking_hack = isEnabled;
@@ -578,6 +580,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 #endif // EFI_SHAFT_POSITION_INPUT
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		engineConfiguration->verboseTLE8888 = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verboseRxCan")) {
+		verboseRxCan = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseCan")) {
 		engineConfiguration->verboseCan = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseIsoTp")) {

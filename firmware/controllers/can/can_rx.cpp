@@ -163,8 +163,10 @@ static void processCanRxImu(const CANRxFrame& frame) {
 	}
 }
 
+extern bool verboseRxCan;
+
 void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) {
-	if (engineConfiguration->verboseCan && busIndex == 0) {
+	if ((engineConfiguration->verboseCan && busIndex == 0) || verboseRxCan) {
 		printPacket(busIndex, frame);
 	} else if (engineConfiguration->verboseCan2 && busIndex == 1) {
 		printPacket(busIndex, frame);
