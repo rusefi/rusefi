@@ -166,3 +166,7 @@ int intFlashRead(flashaddr_t source, char* destination, size_t size);
  * @return FLASH_RETURN_NO_PERMISSION   Access denied.
  */
 int intFlashWrite(flashaddr_t address, const char* buffer, size_t size);
+
+flashaddr_t intFlashSectorBegin(flashsector_t sector);
+flashaddr_t intFlashSectorEnd(flashsector_t sector);
+flashsector_t intFlashSectorAt(flashaddr_t address);
