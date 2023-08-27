@@ -2,6 +2,8 @@
 
 #include "pch.h"
 
+#if HAL_USE_CAN
+
 #if EFI_PROD_CODE
 
 // Values below calculated with http://www.bittiming.can-wiki.info/
@@ -190,3 +192,5 @@ const CANConfig* findCanConfig(can_baudrate_e rate) {
 		return &canConfig500;
 	}
 }
+
+#endif // HAL_USE_CAN
