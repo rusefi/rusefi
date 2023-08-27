@@ -85,7 +85,7 @@ void sendRawAnalogValues() {
 	// todo: send the second packet
 }
 
-static sendOutBoardMeta() {
+static void sendOutBoardMeta() {
 #if EFI_PROD_CODE
 	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_IO_META_INFO, 8, /*bus*/0, /*isExtended*/true);
 	msg[0] = CAN_BENCH_HEADER;
