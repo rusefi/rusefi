@@ -15,17 +15,12 @@
 #include <string.h>
 
 // Use bank 2 on H7
-// TODO: Support bank 1 as well for the bootloader to work properly!
-#define FLASH_CR FLASH->CR2
-#define FLASH_SR FLASH->SR2
-#define FLASH_KEYR FLASH->KEYR2
+#define FLASH_CR ((ctlr) ? FLASH->CR2 : FLASH->CR1)
+#define FLASH_SR ((ctlr) ? FLASH->SR2 : FLASH->SR1)
+#define FLASH_KEYR ((ctlr) ? FLASH->KEYR2 : FLASH->KEYR1)
 
 // I have no idea why ST changed the register name from STRT -> START
 #define FLASH_CR_STRT FLASH_CR_START
-
-#undef FLASH_BASE
-// This is the start of the second bank, since H7 sector numbers are bank relative
-#define FLASH_BASE 0x08100000
 
 // QW bit supercedes the older BSY bit
 #define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH_SR & FLASH_SR_QW);
@@ -39,12 +34,12 @@ flashaddr_t intFlashSectorBegin(flashsector_t sector) {
 	return address;
 }
 
-static void intFlashClearErrors(void)
+static void intFlashClearErrors(uint8_t ctlr)
 {
-	FLASH->CCR2 = 0xffffffff;
+	ctlr ? FLASH->CCR2 : FLASH->CCR1 = 0xffffffff;
 }
 
-static int intFlashCheckErrors(void)
+static int intFlashCheckErrors(uint8_t ctlr)
 {
 	uint32_t sr = FLASH_SR;
 
@@ -79,7 +74,7 @@ static int intFlashCheckErrors(void)
  * @return HAL_SUCCESS  Unlock was successful.
  * @return HAL_FAILED    Unlock failed.
  */
-static bool intFlashUnlock(void) {
+static bool intFlashUnlock(size_t ctlr) {
 	/* Check if unlock is really needed */
 	if (!(FLASH_CR & FLASH_CR_LOCK))
 		return HAL_SUCCESS;
@@ -101,17 +96,28 @@ static bool intFlashUnlock(void) {
 
 int intFlashSectorErase(flashsector_t sector) {
 	int ret;
-	uint8_t sectorRegIdx = sector;
+	uint8_t sectorRegIdx;
+
+	uint8_t ctlr;
+
+	if (sector >= 8) {
+		// Use second bank's controller: convert to sector within the bank
+		ctlr = 1;
+		sectorRegIdx = sector - 8;
+	} else {
+		ctlr = 0;
+		sectorRegIdx = sector;
+	}
 
 	/* Unlock flash for write access */
-	if (intFlashUnlock() == HAL_FAILED)
+	if (intFlashUnlock(ctlr) == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
 
 	/* Wait for any busy flags. */
 	intFlashWaitWhileBusy();
 
 	/* Clearing error status bits.*/
-	intFlashClearErrors();
+	intFlashClearErrors(ctlr);
 
 	/* Setup parallelism before any program/erase */
 	FLASH_CR &= ~FLASH_CR_PSIZE_MASK;
@@ -141,10 +147,9 @@ int intFlashSectorErase(flashsector_t sector) {
 	FLASH_CR &= ~FLASH_CR_SER;
 
 	/* Lock flash again */
-	intFlashLock()
-	;
+	intFlashLock();
 
-	ret = intFlashCheckErrors();
+	ret = intFlashCheckErrors(ctlr);
 	if (ret != FLASH_RETURN_SUCCESS)
 		return ret;
 
@@ -157,8 +162,12 @@ int intFlashSectorErase(flashsector_t sector) {
 }
 
 int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
+	// Select the appropriate controller for this address
+	flashsector_t sector = intFlashSectorAt(address);
+	uint8_t ctlr = sector >= 8;
+
 	/* Unlock flash for write access */
-	if (intFlashUnlock() == HAL_FAILED)
+	if (intFlashUnlock(ctlr) == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
 
 	/* Wait for any busy flags */
