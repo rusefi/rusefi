@@ -273,7 +273,6 @@ public class Fields {
 	public static final int engine_type_e_DODGE_NEON_1995 = 2;
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
 	public static final int engine_type_e_DODGE_RAM = 64;
-	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
 	public static final int engine_type_e_ET_UNUSED_11 = 11;
 	public static final int engine_type_e_ET_UNUSED_12 = 12;
 	public static final int engine_type_e_ET_UNUSED_13 = 13;
@@ -282,6 +281,7 @@ public class Fields {
 	public static final int engine_type_e_ET_UNUSED_33 = 33;
 	public static final int engine_type_e_ET_UNUSED_43 = 43;
 	public static final int engine_type_e_ET_UNUSED_57 = 57;
+	public static final int engine_type_e_ET_UNUSED_61 = 61;
 	public static final int engine_type_e_ET_UNUSED_92 = 92;
 	public static final int engine_type_e_ET_UNUSED_93 = 93;
 	public static final int engine_type_e_ET_UNUSED_97 = 97;
