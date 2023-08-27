@@ -85,6 +85,15 @@ void sendRawAnalogValues() {
 	// todo: send the second packet
 }
 
+static sendOutBoardMeta() {
+#if EFI_PROD_CODE
+	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_IO_META_INFO, 8, /*bus*/0, /*isExtended*/true);
+	msg[0] = CAN_BENCH_HEADER;
+	msg[1] = 0;
+	msg[2] = getBoardMetaOutputsCount();
+#endif // EFI_PROD_CODE
+}
+
 void sendBoardStatus() {
 #if EFI_PROD_CODE
 	CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_BOARD_STATUS, 8, /*bus*/0, /*isExtended*/true);
@@ -101,6 +110,7 @@ void sendBoardStatus() {
     int engineType = (int) engineConfiguration->engineType;
 	msg[5] = engineType >> 8;
 	msg[6] = engineType;
+	sendOutBoardMeta();
 #endif // EFI_PROD_CODE
 }
 
@@ -114,11 +124,7 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	qcDirectPinControlMode = true;
 	uint8_t command = frame.data8[1];
 	if (command == CAN_BENCH_GET_COUNT) {
-		CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_IO_META_INFO, 8, /*bus*/0, /*isExtended*/true);
-		msg[0] = CAN_BENCH_HEADER;
-		msg[1] = 0;
-		msg[2] = getBoardMetaOutputsCount();
-
+	    sendOutBoardMeta();
 	} else if (command == CAN_BENCH_GET_SET) {
 	    setPin(frame, 1);
 	} else if (command == CAN_BENCH_GET_CLEAR) {
