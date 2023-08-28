@@ -9,6 +9,9 @@ rm -f gen_config_board.log
 # todo: who is the consumer of this folder? shall we move that 'mkdir' command closer to usage?
 mkdir build
 
+cd ../java_tools
+./gradlew :config_definition:shadowJar
+cd ../firmware
 
 # todo: we have a bit of code duplication with build-firmware.yaml here :(
 config/boards/kinetis/config/gen_kinetis_config.sh
