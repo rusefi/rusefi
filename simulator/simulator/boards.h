@@ -34,14 +34,3 @@ typedef uint16_t adcsample_t;
 #define spiAcquireBus(x) {}
 #define spiReleaseBus(x) {}
 // end of mock SPI
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
