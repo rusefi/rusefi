@@ -71,7 +71,7 @@ void setBoardConfigOverrides() {
 	setupVbatt();
 
     // hellen88bmw uses L6205PD
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM2; // ETB+
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM2; // ETB+
 	engineConfiguration->etbIo[0].directionPin2 = Gpio::H144_OUT_PWM3; // ETB-
 	engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM1; // ETB_EN
 	engineConfiguration->etb_use_two_wires = true;
@@ -101,10 +101,10 @@ void setBoardDefaultConfiguration() {
 	setHellenCan();
 
 	engineConfiguration->fuelPumpPin = Gpio::D12;	// OUT_IO9 // 113 Fuel Pump Relay
-	engineConfiguration->idle.solenoidPin = H144_OUT_PWM5;
+	engineConfiguration->idle.solenoidPin = Gpio::H144_OUT_PWM5;
 //	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = H144_OUT_IO3;	// pin: 111a
-	engineConfiguration->tachOutputPin = H144_OUT_PWM7;
+	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;	// pin: 111a
+	engineConfiguration->tachOutputPin = Gpio::H144_OUT_PWM7;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

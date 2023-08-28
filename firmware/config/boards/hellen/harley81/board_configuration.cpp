@@ -39,11 +39,11 @@ static void setupEtb() {
 	// DIS - disables motor (enable low)
 
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
+	engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM1;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO1;
+	engineConfiguration->etbIo[0].disablePin = Gpio::H144_OUT_IO1;
 	// Unused
 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
@@ -80,7 +80,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 	engineConfiguration->baroSensor.type = MT_MPXH6400;
-	engineConfiguration->baroSensor.hwChannel = Gpio::H144_IN_MAP3;
+	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 
@@ -90,7 +90,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void boardInitHardware() {
-    setHellenEnPin(H144_OUT_IO3);
+    setHellenEnPin(Gpio::H144_OUT_IO3);
 
 	boardOnConfigurationChange(nullptr);
 }
@@ -123,8 +123,8 @@ void setBoardDefaultConfiguration() {
 	setIgnitionPins();
 	setupEtb();
 	engineConfiguration->acSwitch = Gpio::Unassigned;
-//	engineConfiguration->fuelPumpPin = Gpio::Unassigned;//H144_OUT_PWM2;
-//	engineConfiguration->fanPin = Gpio::Unassigned;//H144_OUT_PWM4;
+//	engineConfiguration->fuelPumpPin = Gpio::Unassigned;//Gpio::H144_OUT_PWM2;
+//	engineConfiguration->fanPin = Gpio::Unassigned;//Gpio::H144_OUT_PWM4;
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
     engineConfiguration->tachOutputPin = Gpio::H144_OUT_PWM3;
 
@@ -150,7 +150,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
-	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM4;
+	engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM4;
 }
 
 void boardPrepareForStop() {

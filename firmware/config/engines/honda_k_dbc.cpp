@@ -81,17 +81,17 @@ void setProteusHondaElement2003() {
 	// offset -41
 
 
-	engineConfiguration->injectionPins[0] = PROTEUS_LS_8;
-	engineConfiguration->injectionPins[1] = PROTEUS_LS_7;
-	engineConfiguration->injectionPins[2] = PROTEUS_LS_6;
-	engineConfiguration->injectionPins[3] = PROTEUS_LS_5;
+	engineConfiguration->injectionPins[0] = Gpio::PROTEUS_LS_8;
+	engineConfiguration->injectionPins[1] = Gpio::PROTEUS_LS_7;
+	engineConfiguration->injectionPins[2] = Gpio::PROTEUS_LS_6;
+	engineConfiguration->injectionPins[3] = Gpio::PROTEUS_LS_5;
 
 	vtsControl->pin = PROTEUS_HS_1;
 	engineConfiguration->vvtPins[0] = PROTEUS_HS_2;
 
-	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
-	engineConfiguration->idle.solenoidPin = PROTEUS_LS_15;
-	engineConfiguration->fanPin = PROTEUS_LS_1;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::PROTEUS_LS_10;
+	engineConfiguration->idle.solenoidPin = Gpio::PROTEUS_LS_15;
+	engineConfiguration->fanPin = Gpio::PROTEUS_LS_1;
 
 	engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_1;
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_2;
@@ -99,8 +99,8 @@ void setProteusHondaElement2003() {
 	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_ANALOG_VOLT_6;
 	engineConfiguration->fanPin = Gpio::Unassigned;
 
-	engineConfiguration->mainRelayPin = PROTEUS_LS_9;
-	engineConfiguration->fuelPumpPin = PROTEUS_LS_11;
+	engineConfiguration->mainRelayPin = Gpio::PROTEUS_LS_9;
+	engineConfiguration->fuelPumpPin = Gpio::PROTEUS_LS_11;
 
 #endif // HW_PROTEUS
 }

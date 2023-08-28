@@ -1,21 +1,18 @@
-# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+meta: config/boards/hellen_meta.h
 
 pins:
   - pin: P66
-    # LOW3 IO1
-    id: D3
+    meta: H144_OUT_IO1
     class: outputs
     ts_name: Aux P66
 
   - pin: P67
-    # LOW4 IO2
-    id: A9
+    meta: H144_OUT_IO2
     class: outputs
     ts_name: Aux P67
 
   - pin: P68
-    # LOW6 IO4
-    id: G5
+    meta: H144_OUT_IO4
     class: outputs
     ts_name: Aux P68
 
@@ -100,28 +97,28 @@ pins:
     ts_name: BK2 Wastegate Position - 22
 
   - pin: K25
-    id: G7
+    meta: H144_LS_1
     class: outputs
     ts_name: INJ_1 k25
     function: Injector 1
     type: inj
 
   - pin: K26
-    id: G8
+    meta: H144_LS_2
     class: outputs
     ts_name: INJ_2 k26
     function: Injector 2
     type: inj
 
   - pin: K27
-    id: D11
+    meta: H144_LS_3
     class: outputs
     ts_name: INJ_3 k27
     function: Injector 3
     type: inj
 
   - pin: K28
-    id: D10
+    meta: H144_LS_4
     class: outputs
     ts_name: INJ_4 k28
     function: Injector 4
@@ -187,8 +184,7 @@ pins:
     function: Analog Ground
 
   - pin: K47
-    # H144_LS_7
-    id: F13
+    meta: H144_LS_7
     class: outputs
     ts_name: K47 BK1 Wastegate Solenoid
     function: BK1 Wastegate Solenoid
@@ -246,38 +242,33 @@ pins:
     type: 5v
 
   - pin: K64
-# H144_OUT_IO3
-    id: G14
+    meta: H144_OUT_IO3
     class: outputs
     ts_name: Main Relay K64
     function: Main relay control
     type: ls
 
   - pin: K65
-    # H144_OUT_IO7
-    id: G3
+    meta: H144_OUT_IO7
     class: outputs
     ts_name: Fan Relay Low
     function: Fan relay low
 
   - pin: K66
-    # H144_LS_5
-    id: D9
+    meta: H144_LS_5
     class: outputs
     ts_name: VVT1
     function: VVT1
 
   - pin: K68
-    # H144_LS_6
-    id: F12
+    meta: H144_LS_6
     class: outputs
     ts_name: VVT2
     function: VVT2
 
 
   - pin: K70
-# H144_OUT_IO9
-    id: G13
+    meta: H144_OUT_IO9
     class: outputs
     ts_name: Fuel Pump K70
     function: Fuel Pump Relay
@@ -319,36 +310,32 @@ pins:
     function: Analog Ground
 
   - pin: K86
-    # H144_OUT_PWM7
-    id: D15
+    meta: H144_OUT_PWM7
     class: outputs
     ts_name: Tacho
     function: Tachometer
 
   - pin: K87
-    # H144_OUT_IO10
-    id: G12
+    meta: H144_OUT_IO10
     class: outputs
     ts_name: K87 AC Relay
     function: A/C Relay
     type: ls
 
   - pin: K88
-    # H144_OUT_IO8
-    id: G4
+    meta: H144_OUT_IO8
     class: outputs
     ts_name: Fan Relay HI
     function: Fan relay high
 
   - pin: K92
-    # H144_OUT_PWM8
-    id: D12
+    meta: H144_OUT_PWM8
     class: outputs
     ts_name: MIL
     function: Check Engine Light
 
   - pin: A1
-    id: E3
+    meta: H144_IGN_4
     class: outputs
     ts_name: Coil 4
     function: Coil 4
@@ -361,7 +348,7 @@ pins:
     function: Ground
 
   - pin: A16
-    id: E5
+    meta: H144_IGN_2
     class: outputs
     ts_name: Coil 2
     function: Coil 2
@@ -376,7 +363,7 @@ pins:
 
 
   - pin: A31
-    id: C13
+    meta: H144_IGN_1
     class: outputs
     ts_name: Coil 1
     function: Coil 1
@@ -393,7 +380,7 @@ pins:
     function: BK2 DC Wastegate Pos
 
   - pin: A46
-    id: E4
+    meta: H144_IGN_3
     class: outputs
     ts_name: Coil 3
     function: Coil 3

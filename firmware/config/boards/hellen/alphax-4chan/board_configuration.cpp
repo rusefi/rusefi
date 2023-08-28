@@ -44,7 +44,7 @@ static void setupEtb() {
 	// DIS - disables motor (enable low)
 
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
+	engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
 	// Disable pin
@@ -105,24 +105,24 @@ static bool is_F_OrOlder() {
 }
 
 void boardInitHardware() {
-	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
-	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
-	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
-	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
-	alpha2stepPullDown.initPin("a-2step", H144_OUT_IO7);
-	alphaCamVrPullUp.initPin("a-cam-vr", H144_OUT_IO9);
+	alphaTachPullUp.initPin("a-tach", Gpio::H144_OUT_IO1);
+	alphaTempPullUp.initPin("a-temp", Gpio::H144_OUT_IO4);
+	alphaCrankPPullUp.initPin("a-crank-p", Gpio::H144_OUT_IO2);
+	alphaCrankNPullUp.initPin("a-crank-n", Gpio::H144_OUT_IO5);
+	alpha2stepPullDown.initPin("a-2step", Gpio::H144_OUT_IO7);
+	alphaCamVrPullUp.initPin("a-cam-vr", Gpio::H144_OUT_IO9);
 	if (is_F_OrOlder()) {
-	    alphaD2PullDown.initPin("a-d2", H144_LS_5);
-		alphaCamPullDown.initPin("a-cam", H144_OUT_IO8);
-		alphaD3PullDown.initPin("a-d3", H144_LS_6);
+	    alphaD2PullDown.initPin("a-d2", Gpio::H144_LS_5);
+		alphaCamPullDown.initPin("a-cam", Gpio::H144_OUT_IO8);
+		alphaD3PullDown.initPin("a-d3", Gpio::H144_LS_6);
 	} else {
-	    alphaD2PullDown.initPin("a-d2", Gpio::H144_OUT_IO13;);
+	    alphaD2PullDown.initPin("a-d2", Gpio::H144_OUT_IO13);
 		alphaCamPullDown.initPin("a-cam", H144_GP4);
-		alphaD3PullDown.initPin("a-d3", H144_OUT_IO8);
+		alphaD3PullDown.initPin("a-d3", Gpio::H144_OUT_IO8);
 	}
 	
 	alphaD4PullDown.initPin("a-d4", Gpio::H144_LS_7);
-	alphaD5PullDown.initPin("a-d5", H144_LS_8);
+	alphaD5PullDown.initPin("a-d5", Gpio::H144_LS_8);
 	boardOnConfigurationChange(nullptr);
 }
 
@@ -147,7 +147,7 @@ void setBoardConfigOverrides() {
 	setupVbatt();
 
     if (is_F_OrOlder()) {
-        setHellenEnPin(H144_OUT_IO3);
+        setHellenEnPin(Gpio::H144_OUT_IO3);
 	    setHellenSdCardSpi2();
 	} else {
 	    setHellenMegaEnPin();
@@ -174,8 +174,8 @@ void setBoardDefaultConfiguration() {
 	setupEtb();
 	if (is_F_OrOlder()) {
         engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO13;;
-	    engineConfiguration->vvtPins[0] = H144_OUT_PWM7;
-	    engineConfiguration->vvtPins[1] = H144_OUT_PWM8;
+	    engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM7;
+	    engineConfiguration->vvtPins[1] = Gpio::H144_OUT_PWM8;
 	} else {
     	engineConfiguration->vvtPins[0] = Gpio::H144_IGN_7;
 	    engineConfiguration->vvtPins[1] = Gpio::H144_IGN_8;
@@ -185,10 +185,10 @@ void setBoardDefaultConfiguration() {
 
     // todo: should be conditional? currently set best for newest boards based on MegaModule
 	setHellenMMbaro();
-    engineConfiguration->map.sensor.hwChannel = Gpio::H144_IN_MAP3; // On-board MAP
+    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3; // On-board MAP
     engineConfiguration->map.sensor.type = MT_MPXH6400;
     //	engineConfiguration->baroSensor.type = MT_MPXH6400;
-    //	engineConfiguration->baroSensor.hwChannel = Gpio::H144_IN_MAP3; // On-board MAP
+    //	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3; // On-board MAP
 
     engineConfiguration->boardUseTempPullUp = true;
 
@@ -210,8 +210,8 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
-	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
-	engineConfiguration->vrThreshold[1].pin = H144_OUT_PWM4;
+	engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM6;
+	engineConfiguration->vrThreshold[1].pin = Gpio::H144_OUT_PWM4;
 }
 
 void boardPrepareForStop() {

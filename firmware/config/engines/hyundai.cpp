@@ -84,14 +84,14 @@ void setHyundaiPb() {
 	setCommonNTCSensor(&engineConfiguration->clt, PROTEUS_DEFAULT_AT_PULLUP);
 	setCommonNTCSensor(&engineConfiguration->iat, PROTEUS_DEFAULT_AT_PULLUP);
 
-//    engineConfiguration->acRelayPin = PROTEUS_LS_6;
+//    engineConfiguration->acRelayPin = Gpio::PROTEUS_LS_6;
     engineConfiguration->acSwitch = PROTEUS_DIGITAL_5;
 
-	engineConfiguration->fanPin = PROTEUS_LS_5;
-    engineConfiguration->tachOutputPin = PROTEUS_IGN_12;
-    engineConfiguration->hpfpValvePin = PROTEUS_LS_6;
-    engineConfiguration->vvtPins[0] = PROTEUS_LS_15; // intake
-    engineConfiguration->vvtPins[1] = PROTEUS_LS_16; // exhaust
+	engineConfiguration->fanPin = Gpio::PROTEUS_LS_5;
+    engineConfiguration->tachOutputPin = Gpio::PROTEUS_IGN_12;
+    engineConfiguration->hpfpValvePin = Gpio::PROTEUS_LS_6;
+    engineConfiguration->vvtPins[0] = Gpio::PROTEUS_LS_15; // intake
+    engineConfiguration->vvtPins[1] = Gpio::PROTEUS_LS_16; // exhaust
 #endif // HW_PROTEUS
 
 #if HW_PROTEUS
@@ -210,7 +210,7 @@ void setProteusHyundaiPb() {
 	setProteusEtbIO();
 
 // something something input levels are not happy for digital input pin?
-	engineConfiguration->starterControlPin = PROTEUS_LS_14;
+	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
 	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
 	engineConfiguration->startStopButtonMode = PI_DEFAULT;
 }

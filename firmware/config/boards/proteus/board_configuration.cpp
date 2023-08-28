@@ -10,23 +10,23 @@
 #include "proteus_meta.h"
 
 static const brain_pin_e injPins[] = {
-	PROTEUS_LS_1,
-	PROTEUS_LS_2,
-	PROTEUS_LS_3,
-	PROTEUS_LS_4,
-	PROTEUS_LS_5,
-	PROTEUS_LS_6,
-	PROTEUS_LS_7,
-	PROTEUS_LS_8,
-	PROTEUS_LS_9,
-	PROTEUS_LS_10,
-	PROTEUS_LS_11,
-	PROTEUS_LS_12
+    Gpio::PROTEUS_LS_1,
+	Gpio::PROTEUS_LS_2,
+	Gpio::PROTEUS_LS_3,
+	Gpio::PROTEUS_LS_4,
+	Gpio::PROTEUS_LS_5,
+	Gpio::PROTEUS_LS_6,
+	Gpio::PROTEUS_LS_7,
+	Gpio::PROTEUS_LS_8,
+	Gpio::PROTEUS_LS_9,
+	Gpio::PROTEUS_LS_10,
+	Gpio::PROTEUS_LS_11,
+	Gpio::PROTEUS_LS_12
 };
 
 static const brain_pin_e ignPins[] = {
-	PROTEUS_IGN_1,
-	PROTEUS_IGN_2,
+	Gpio::PROTEUS_IGN_1,
+	Gpio::PROTEUS_IGN_2,
 	PROTEUS_IGN_3,
 	PROTEUS_IGN_4,
 	PROTEUS_IGN_5,
@@ -34,9 +34,9 @@ static const brain_pin_e ignPins[] = {
 	PROTEUS_IGN_7,
 	PROTEUS_IGN_8,
 	PROTEUS_IGN_9,
-	PROTEUS_IGN_10,
-	PROTEUS_IGN_11,
-	PROTEUS_IGN_12,
+	Gpio::PROTEUS_IGN_10,
+	Gpio::PROTEUS_IGN_11,
+	Gpio::PROTEUS_IGN_12,
 };
 
 static void setInjectorPins() {
@@ -184,9 +184,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
 #if HW_PROTEUS & EFI_PROD_CODE
-	engineConfiguration->mainRelayPin = PROTEUS_LS_12;
-	engineConfiguration->fanPin = PROTEUS_LS_11;
-	engineConfiguration->fuelPumpPin = PROTEUS_LS_10;
+	engineConfiguration->mainRelayPin = Gpio::PROTEUS_LS_12;
+	engineConfiguration->fanPin = Gpio::PROTEUS_LS_11;
+	engineConfiguration->fuelPumpPin = Gpio::PROTEUS_LS_10;
 #endif // HW_PROTEUS
 
 	// If we're running as hardware CI, borrow a few extra pins for that

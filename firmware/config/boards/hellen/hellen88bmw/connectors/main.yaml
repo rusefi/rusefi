@@ -1,4 +1,4 @@
-# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+meta: config/boards/hellen_meta.h
 
 pins:
 # extension header pins

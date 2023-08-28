@@ -16,7 +16,7 @@ void proteusHarley() {
 
 	engineConfiguration->mapCamDetectionAnglePosition = 50;
 
-	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
+	engineConfiguration->luaOutputPins[0] = Gpio::PROTEUS_LS_12;
 #if HW_PROTEUS
 	strncpy(config->luaScript, R"(
 outputIndex = 0

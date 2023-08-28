@@ -113,7 +113,7 @@ void setProteusAnalogPwmTest() {
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
 
 	// The idle control pin is connected to the default TPS input, analog volt 2
-	engineConfiguration->idle.solenoidPin = PROTEUS_IGN_10;
+	engineConfiguration->idle.solenoidPin = Gpio::PROTEUS_IGN_10;
 
 	// 5893hz is coprime with the analog sample rate, 500hz, so hopefully we get less aliasing
 	engineConfiguration->idle.solenoidFrequency = 5893;

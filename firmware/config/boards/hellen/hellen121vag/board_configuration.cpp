@@ -108,15 +108,15 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->enableSoftwareKnock = true;
 
-	engineConfiguration->fuelPumpPin = H144_OUT_IO3;
+	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO3;
 	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; // 47 - CEL
-	engineConfiguration->tachOutputPin = H144_OUT_PWM7;
+	engineConfiguration->tachOutputPin = Gpio::H144_OUT_PWM7;
 
 // earlier revisions?	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
-    engineConfiguration->idle.solenoidPin = H144_OUT_IO4;
+    engineConfiguration->idle.solenoidPin = Gpio::H144_OUT_IO4;
 
-	engineConfiguration->fanPin = H144_OUT_PWM8;
-	engineConfiguration->mainRelayPin = H144_OUT_IO1;
+	engineConfiguration->fanPin = Gpio::H144_OUT_PWM8;
+	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO1;
 
 //	engineConfiguration->injectorCompensationMode
 	engineConfiguration->fuelReferencePressure = 300;
@@ -132,6 +132,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 
-	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
+	engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM6;
 	hellenWbo();
 }

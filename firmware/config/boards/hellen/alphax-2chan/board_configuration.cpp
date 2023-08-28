@@ -70,12 +70,12 @@ static void setupDefaultSensorInputs() {
 
 void boardInitHardware() {
 
-	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
-	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
-	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
-	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
-	alpha2stepPullDown.initPin("a-2step", H144_OUT_IO7);
-	alphaCamPullDown.initPin("a-cam", H144_OUT_IO8);
+	alphaTachPullUp.initPin("a-tach", Gpio::H144_OUT_IO1);
+	alphaTempPullUp.initPin("a-temp", Gpio::H144_OUT_IO4);
+	alphaCrankPPullUp.initPin("a-crank-p", Gpio::H144_OUT_IO2);
+	alphaCrankNPullUp.initPin("a-crank-n", Gpio::H144_OUT_IO5);
+	alpha2stepPullDown.initPin("a-2step", Gpio::H144_OUT_IO7);
+	alphaCamPullDown.initPin("a-cam", Gpio::H144_OUT_IO8);
 	boardOnConfigurationChange(nullptr);
 }
 
@@ -105,7 +105,7 @@ void setBoardConfigOverrides() {
 		configureHellenMegaAccCS2Pin();
 	    setHellenMegaEnPin();
 	} else {
-	    setHellenEnPin(H144_OUT_IO3);
+	    setHellenEnPin(Gpio::H144_OUT_IO3);
 	}
 
     setDefaultHellenAtPullUps();
@@ -127,19 +127,19 @@ void setBoardDefaultConfiguration() {
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 	if (isMegaModuleRevision()) {
 	    setHellenMMbaro();
-	    engineConfiguration->map.sensor.hwChannel = Gpio::H144_IN_MAP3; // On-board MAP
+	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3; // On-board MAP
 	    engineConfiguration->map.sensor.type = MT_MPXH6400;
 	} else {
 	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2; // B2 external signal
 	    engineConfiguration->baroSensor.type = MT_MPXH6400;
-    	engineConfiguration->baroSensor.hwChannel = Gpio::H144_IN_MAP3; // On-board MAP
+    	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3; // On-board MAP
 	}
 
     engineConfiguration->boardUseTempPullUp = true;
 
 	engineConfiguration->acSwitch = Gpio::Unassigned;
-	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;
-	engineConfiguration->fanPin = H144_OUT_PWM4;
+	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_PWM2;
+	engineConfiguration->fanPin = Gpio::H144_OUT_PWM4;
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
     engineConfiguration->tachOutputPin = Gpio::H144_OUT_PWM3;
 
@@ -152,7 +152,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
-	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
+	engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM6;
 }
 
 void boardPrepareForStop() {

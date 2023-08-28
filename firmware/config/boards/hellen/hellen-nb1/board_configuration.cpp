@@ -22,7 +22,7 @@ static void setInjectorPins() {
 	engineConfiguration->clutchDownPin = Gpio::C4; // Clutch switch input
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO8;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_IO8;
 }
 
 static void setIgnitionPins() {
@@ -97,8 +97,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = Gpio::I2;	// OUT_LOW3
     engineConfiguration->tachOutputPin = Gpio::H144_OUT_PWM1;
-	engineConfiguration->alternatorControlPin = H144_OUT_PWM7;
-	engineConfiguration->fan2Pin = H144_OUT_IO2;
+	engineConfiguration->alternatorControlPin = Gpio::H144_OUT_PWM7;
+	engineConfiguration->fan2Pin = Gpio::H144_OUT_IO2;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

@@ -75,8 +75,8 @@ void setBoardConfigOverrides() {
 
     // NB2 still uses L6205PD
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3; // ETB+
-	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM4; // ETB-
-	engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2; // ETB_EN
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::H144_OUT_PWM4; // ETB-
+	engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2; // ETB_EN
 	engineConfiguration->etb_use_two_wires = true;
 
     setDefaultHellenAtPullUps();

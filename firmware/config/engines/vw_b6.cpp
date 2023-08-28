@@ -164,16 +164,16 @@ void setProteusVwPassatB6() {
 	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
-	coolantControl->pin = PROTEUS_LS_5;
+	coolantControl->pin = Gpio::PROTEUS_LS_5;
 
-	engineConfiguration->mainRelayPin = PROTEUS_LS_6;
+	engineConfiguration->mainRelayPin = Gpio::PROTEUS_LS_6;
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
-	lowPressureFuelPumpControl->pin = PROTEUS_LS_7;
+	lowPressureFuelPumpControl->pin = Gpio::PROTEUS_LS_7;
 
-	//engineConfiguration->boostControlPin = PROTEUS_LS_8;
-	engineConfiguration->vvtPins[0] = PROTEUS_LS_9;
-	engineConfiguration->hpfpValvePin = PROTEUS_LS_15;
+	//engineConfiguration->boostControlPin = Gpio::PROTEUS_LS_8;
+	engineConfiguration->vvtPins[0] = Gpio::PROTEUS_LS_9;
+	engineConfiguration->hpfpValvePin = Gpio::PROTEUS_LS_15;
 
     setProteusEtbIO();
 

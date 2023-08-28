@@ -80,7 +80,7 @@ void setBoardConfigOverrides() {
 
 //    //ETB1
 //    // PWM pin
-//    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
+//    engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2;
 //    // DIR pin
 //	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3;
 //   	// Disable pin
@@ -114,7 +114,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
-    engineConfiguration->vvtPins[0] = H144_OUT_PWM4;
+    engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM4;
 
     gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
     // vtsControl->pin = Gpio::H144_OUT_IO6;
@@ -122,8 +122,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO13;;
 	engineConfiguration->idle.solenoidPin = Gpio::H144_LS_6;
 	engineConfiguration->fanPin = Gpio::H144_OUT_IO12;
-	engineConfiguration->mainRelayPin = H144_OUT_IO3;
-	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO7;
+	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_IO7;
 
 	// how come this is not denso 183?!
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
@@ -164,10 +164,10 @@ void setBoardDefaultConfiguration() {
 }
 
 static Gpio OUTPUTS[] = {
-		H144_LS_1,
-		H144_LS_2,
-		H144_LS_3,
-		H144_LS_4,
+		Gpio::H144_LS_1,
+		Gpio::H144_LS_2,
+		Gpio::H144_LS_3,
+		Gpio::H144_LS_4,
 };
 
 int getBoardMetaOutputsCount() {

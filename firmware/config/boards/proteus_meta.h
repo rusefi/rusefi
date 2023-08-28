@@ -12,40 +12,40 @@
 
 #define PROTEUS_DEFAULT_AT_PULLUP 2700
 
-#define PROTEUS_LS_1 Gpio::D7
+#define PROTEUS_LS_1 D7
 // pin 15/black35
-#define PROTEUS_LS_2 Gpio::G9
+#define PROTEUS_LS_2 G9
 
 // pin 4/black35
-#define PROTEUS_LS_3 Gpio::G10
+#define PROTEUS_LS_3 G10
 
 // pin 16/black35
-#define PROTEUS_LS_4 Gpio::G11
+#define PROTEUS_LS_4 G11
 
 // pin 5/black35
-#define PROTEUS_LS_5 Gpio::G12
+#define PROTEUS_LS_5 G12
 
 // pin 6/black35
-#define PROTEUS_LS_6 Gpio::G13
+#define PROTEUS_LS_6 G13
 
 // pin 7/black35
-#define PROTEUS_LS_7 Gpio::G14
-#define PROTEUS_LS_8 Gpio::B4
-#define PROTEUS_LS_9 Gpio::B5
+#define PROTEUS_LS_7 G14
+#define PROTEUS_LS_8 B4
+#define PROTEUS_LS_9 B5
 
 // pin 20/black35
-#define PROTEUS_LS_10 Gpio::B6
-#define PROTEUS_LS_11 Gpio::B7
-#define PROTEUS_LS_12 Gpio::B8
+#define PROTEUS_LS_10 B6
+#define PROTEUS_LS_11 B7
+#define PROTEUS_LS_12 B8
 
 // pin 10/black35
-#define PROTEUS_LS_13 Gpio::B9
+#define PROTEUS_LS_13 B9
 // pin 11/black35
-#define PROTEUS_LS_14 Gpio::E0
+#define PROTEUS_LS_14 E0
 // pin 12/black35
-#define PROTEUS_LS_15 Gpio::E1
+#define PROTEUS_LS_15 E1
 // pin 23/black35
-#define PROTEUS_LS_16 Gpio::E2
+#define PROTEUS_LS_16 E2
 
 
 // pin 2/black35
@@ -59,10 +59,10 @@
 #define PROTEUS_HS_4 Gpio::D14
 
 // pin 35/black35
-#define PROTEUS_IGN_1 Gpio::D4
+#define PROTEUS_IGN_1 D4
 
 // pin 34/black35
-#define PROTEUS_IGN_2 Gpio::D3
+#define PROTEUS_IGN_2 D3
 
 // pin 22/black35
 #define PROTEUS_IGN_3 Gpio::C9
@@ -72,9 +72,9 @@
 #define PROTEUS_IGN_7 Gpio::G7
 #define PROTEUS_IGN_8 Gpio::G6
 #define PROTEUS_IGN_9 Gpio::G5
-#define PROTEUS_IGN_10 Gpio::G4
-#define PROTEUS_IGN_11 Gpio::G3
-#define PROTEUS_IGN_12 Gpio::G2
+#define PROTEUS_IGN_10 G4
+#define PROTEUS_IGN_11 G3
+#define PROTEUS_IGN_12 G2
 
 // Analog Temp 1 = PC4
 #define PROTEUS_IN_ANALOG_TEMP_1 EFI_ADC_14
@@ -143,22 +143,24 @@
 
 #if HW_PROTEUS
 static Gpio PROTEUS_OUTPUTS[] = {
-PROTEUS_LS_1,
-PROTEUS_LS_2,
-PROTEUS_LS_3,
-PROTEUS_LS_4,
-PROTEUS_LS_5,
-PROTEUS_LS_6,
-PROTEUS_LS_7,
-PROTEUS_LS_8,
-PROTEUS_LS_9,
-PROTEUS_LS_10,
-PROTEUS_LS_11,
-PROTEUS_LS_12,
-PROTEUS_LS_13,
-PROTEUS_LS_14,
-PROTEUS_LS_15,
-PROTEUS_LS_16,
+Gpio::PROTEUS_LS_1,
+Gpio::PROTEUS_LS_2,
+Gpio::PROTEUS_LS_3,
+Gpio::PROTEUS_LS_4,
+Gpio::PROTEUS_LS_5,
+Gpio::PROTEUS_LS_6,
+Gpio::PROTEUS_LS_7,
+Gpio::PROTEUS_LS_8,
+Gpio::PROTEUS_LS_9,
+Gpio::PROTEUS_LS_10,
+Gpio::PROTEUS_LS_11,
+Gpio::PROTEUS_LS_12,
+Gpio::PROTEUS_LS_13,
+Gpio::PROTEUS_LS_14,
+Gpio::PROTEUS_LS_15,
+Gpio::PROTEUS_LS_16,
+	Gpio::PROTEUS_IGN_1,
+	Gpio::PROTEUS_IGN_2,
 };
 #endif // HW_PROTEUS
 

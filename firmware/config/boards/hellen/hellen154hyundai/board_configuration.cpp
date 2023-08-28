@@ -85,7 +85,7 @@ void setBoardConfigOverrides() {
 
 		// control pins are inverted since overall ECU pinout seems to be inverted
 		engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3;
-		engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
+		engineConfiguration->etbIo[0].directionPin2 = Gpio::H144_OUT_PWM2;
 		engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_IO12;
 	   	engineConfiguration->etbIo[0].disablePin = Gpio::Unassigned;
 		engineConfiguration->etb_use_two_wires = true;
@@ -99,9 +99,9 @@ void setBoardConfigOverrides() {
 
 		if (isFirstInvocation) {
 			isFirstInvocation = false;
-			efiSetPadMode("ETB FIX0", H144_OUT_PWM4, PAL_MODE_INPUT_ANALOG);
-			efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
-			efiSetPadMode("ETB FIX2", Gpio::H144_OUT_IO13;, PAL_MODE_INPUT_ANALOG);
+			efiSetPadMode("ETB FIX0", Gpio::H144_OUT_PWM4, PAL_MODE_INPUT_ANALOG);
+			efiSetPadMode("ETB FIX1", Gpio::H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
+			efiSetPadMode("ETB FIX2", Gpio::H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
 		}
 		engineConfiguration->stepperDcInvertedPins = false;
 	} else if (hellenBoardId == BOARD_ID_154hyundai_c || hellenBoardId == BOARD_ID_154hyundai_d) {
@@ -114,7 +114,7 @@ void setBoardConfigOverrides() {
 
 	    //ETB1
 	    // PWM pin
-	    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
+	    engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2;
 	    // DIR pin
 		engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3;
 	   	// Disable pin
@@ -125,9 +125,9 @@ void setBoardConfigOverrides() {
 		// wastegate DC motor
 	    //ETB2
 	    // PWM pin
-	    engineConfiguration->etbIo[1].controlPin = H144_OUT_PWM4;
+	    engineConfiguration->etbIo[1].controlPin = Gpio::H144_OUT_PWM4;
 	    // DIR pin
-		engineConfiguration->etbIo[1].directionPin1 = H144_OUT_PWM5;
+		engineConfiguration->etbIo[1].directionPin1 = Gpio::H144_OUT_PWM5;
 	   	// Disable pin
 	   	engineConfiguration->etbIo[1].disablePin = Gpio::H144_OUT_IO13;;
 	   	// Unused
@@ -149,10 +149,10 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
-	engineConfiguration->fuelPumpPin = H144_OUT_IO9;
+	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO9;
 //	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = H144_OUT_IO3;	// pin: 111a
-	engineConfiguration->malfunctionIndicatorPin = H144_OUT_PWM8;
+	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;	// pin: 111a
+	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_PWM8;
 
 	engineConfiguration->brakePedalPin = H144_IN_RES3;
 	engineConfiguration->clutchUpPin = H144_IN_RES2;
@@ -165,10 +165,10 @@ void setBoardDefaultConfiguration() {
 }
 
 static Gpio OUTPUTS[] = {
-		H144_LS_1,
-		H144_LS_2,
-		H144_LS_3,
-		H144_LS_4,
+		Gpio::H144_LS_1,
+		Gpio::H144_LS_2,
+		Gpio::H144_LS_3,
+		Gpio::H144_LS_4,
 };
 
 int getBoardMetaOutputsCount() {

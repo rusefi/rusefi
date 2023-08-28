@@ -26,7 +26,7 @@ static void setInjectorPins() {
 	engineConfiguration->clutchDownPin = Gpio::C4; // Clutch switch input
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO8;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_IO8;
 }
 
 static void setIgnitionPins() {
@@ -92,11 +92,11 @@ void setBoardConfigOverrides() {
 
     //ETB1
     // PWM pin
-    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM8;
+    engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM8;
     // DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_IO13;;
    	// Disable pin
-   	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO4;
+   	engineConfiguration->etbIo[0].disablePin = Gpio::H144_OUT_IO4;
    	// Unused
  	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
@@ -120,14 +120,14 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->luaOutputPins[0] = Gpio::H144_OUT_IO6; // starter relay
 
-	engineConfiguration->boostControlPin = H144_OUT_PWM5;
+	engineConfiguration->boostControlPin = Gpio::H144_OUT_PWM5;
 	engineConfiguration->brakePedalPin = H144_IN_RES2;
 //	engineConfiguration->acSwitch =
 //	engineConfiguration->acRelayPin =
-	engineConfiguration->fuelPumpPin = H144_OUT_IO5;
+	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO5;
 	engineConfiguration->fanPin = Gpio::H144_OUT_IO12;
-	engineConfiguration->mainRelayPin = H144_OUT_IO3;
-    engineConfiguration->tachOutputPin = H144_OUT_PWM7;
+	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;
+    engineConfiguration->tachOutputPin = Gpio::H144_OUT_PWM7;
 	engineConfiguration->alternatorControlPin = Gpio::H144_OUT_PWM1;
 //	engineConfiguration->fan2Pin =
 

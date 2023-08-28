@@ -80,12 +80,12 @@ void setSbc() {
 
 #if HW_PROTEUS
     // tan wire with a black trace - "HEI B", plug pin B
-    ignOverride->pin = PROTEUS_IGN_12;
+    ignOverride->pin = Gpio::PROTEUS_IGN_12;
 	engineConfiguration->fanPin = Gpio::Unassigned;
 	// reminder about D101
-   	engineConfiguration->injectionPins[0] = PROTEUS_LS_14; // #1
+   	engineConfiguration->injectionPins[0] = Gpio::PROTEUS_LS_14; // #1
    	// reminder about D104
-   	engineConfiguration->injectionPins[3] = PROTEUS_LS_15; // #4
+   	engineConfiguration->injectionPins[3] = Gpio::PROTEUS_LS_15; // #4
 
     // wow high side relay control
     engineConfiguration->fuelPumpPin = PROTEUS_HS_1;

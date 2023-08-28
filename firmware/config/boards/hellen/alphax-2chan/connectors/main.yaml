@@ -15,8 +15,7 @@ pins:
     color: red
   
   - pin: A3
-    # H144_OUT_PWM2
-    id: C6
+    meta: H144_OUT_PWM2
     class: outputs
     function: Fuel Pump Relay Output (low)
     type: ls
@@ -24,8 +23,7 @@ pins:
     color: purple
 
   - pin: A4
-    # H144_OUT_PWM3
-    id: C7
+    meta: H144_OUT_PWM3
     class: outputs
     function: Tachometer Output
     ts_name: A4 - Tachometer
@@ -127,8 +125,7 @@ pins:
     color: blue
 
   - pin: C1
-    # H144_OUT_PWM4
-    id: C8
+    meta: H144_OUT_PWM4
     class: outputs
     function: Fan Relay or 5A Power Output (low)
     type: ls
@@ -191,8 +188,7 @@ pins:
     color: brown
 
   - pin: C8
-    # H144_OUT_PWM1
-    id: D13
+    meta: H144_OUT_PWM1
     class: outputs
     function: Idle Output (low)
     type: ls

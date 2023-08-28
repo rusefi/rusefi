@@ -271,12 +271,12 @@ void setEngineBMW_M73_Proteus() {
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_4;
 
 
-	engineConfiguration->starterControlPin = PROTEUS_LS_14;
+	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
 	engineConfiguration->startStopButtonPin = PROTEUS_DIGITAL_3;
 	engineConfiguration->startStopButtonMode = PI_PULLUP;
-	engineConfiguration->fuelPumpPin = PROTEUS_LS_16;
-	engineConfiguration->fanPin = PROTEUS_LS_15;
-	engineConfiguration->mainRelayPin = PROTEUS_LS_13;
+	engineConfiguration->fuelPumpPin = Gpio::PROTEUS_LS_16;
+	engineConfiguration->fanPin = Gpio::PROTEUS_LS_15;
+	engineConfiguration->mainRelayPin = Gpio::PROTEUS_LS_13;
 
     engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_ANALOG_VOLT_8; // M73 adapter board
     engineConfiguration->map.sensor.type = MT_MPX4250A;

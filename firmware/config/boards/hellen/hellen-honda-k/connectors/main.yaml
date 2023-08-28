@@ -1,3 +1,5 @@
+meta: config/boards/hellen_meta.h
+
 pins:
   - pin: auxhigh1
     # H144_OUT_IO5
@@ -7,8 +9,7 @@ pins:
     function: AuxHigh1
 
   - pin: auxpp1
-    # H144_OUT_IO11
-    id: G2
+    meta: H144_OUT_IO11
     class: outputs
     ts_name: AuxPP1
     function: AuxPP1
@@ -49,8 +50,7 @@ pins:
     type: gnda
 
   - pin: A12
-    # H144_LS_6
-    id: F12
+    meta: H144_LS_6
     class: outputs
     ts_name: A12 Idle Air Control
     function: Idle Air Control Valve
@@ -124,28 +124,24 @@ pins:
     function: Cam Sensor
 
   - pin: A27
-    # H144_IGN_4
-    id: E3
+    meta: H144_IGN_4
     class: outputs
     ts_name: A27 - IGN4
     function: Ignition 4
   - pin: A28
-    # H144_IGN_3
-    id: E4
+    meta: H144_IGN_3
     class: outputs
     ts_name: A28 - IGN3
     function: Ignition 3
 
   - pin: A29
-    # H144_IGN_2
-    id: E5
+    meta: H144_IGN_2
     class: outputs
     ts_name: A29 - IGN2
     function: Ignition 2
 
   - pin: A30
-    # H144_IGN_1
-    id: C13
+    meta: H144_IGN_1
     class: outputs
     ts_name: A30 - IGN1
     function: Ignition 1
@@ -154,45 +150,39 @@ pins:
     function: VTC +12 supply
 
   - pin: B2
-    # H144_LS_4
-    id: D10
+    meta: H144_LS_4
     class: outputs
     type: inj
     ts_name: B2 - Injector 4
     function: Injector 4
   - pin: B3
-    # H144_LS_3
-    id: D11
+    meta: H144_LS_3
     class: outputs
     type: inj
     ts_name: B3 - Injector 3
     function: Injector 3
 
   - pin: B4
-    # H144_LS_2
-    id: G8
+    meta: H144_LS_2
     class: outputs
     type: inj
     ts_name: B4 - Injector 2
     function: Injector 2
 
   - pin: B5
-    # H144_LS_1
-    id: G7
+    meta: H144_LS_1
     class: outputs
     ts_name: B5 - Injector 1
     function: Injector 1
   - pin: B6
-    # H144_OUT_IO12
-    id: A8
+    meta: H144_OUT_IO12
     class: outputs
     type: ls
     ts_name: B6 Radiator Relay
     function: Radiator Relay Output
 
   - pin: B7
-    # H144_LS_8
-    id: F14
+    meta: H144_LS_8
     class: outputs
     ts_name: ___ Lockout Solenoid
     function: Lockout Solenoid
@@ -215,8 +205,7 @@ pins:
     function: Alternator Field
 
   - pin: B15
-# H144_OUT_IO6
-    id: G11
+    meta: H144_OUT_IO6
     class: outputs
     ts_name: ___ VTEC/VTS Output
   # not to be confused with VTC aka VVT
@@ -229,29 +218,25 @@ pins:
     ts_name: ___ IAT
     function: IAT
   - pin: B18
-    # H144_OUT_IO9
-    id: G13
+    meta: H144_OUT_IO9
     class: outputs
     ts_name: ___ Alternator Control
     function: Alternator Control
 
   - pin: B21
-    # H144_OUT_PWM5
-    id: C9
+    meta: H144_OUT_PWM5
     class: outputs
     ts_name: ___ - EVAP
     function: EVAP
 
   - pin: B22
-    # H144_LS_7
-    id: F13
+    meta: H144_LS_7
     class: outputs
     ts_name: ___ Intake Runner
     function: Intake Runner
 
   - pin: B23
-# H144_OUT_PWM4
-    id: C8
+    meta: H144_OUT_PWM4
     class: outputs
     ts_name: ___ VTC VVT
     function: VTC VVT
@@ -295,21 +280,18 @@ pins:
 
 
   - pin: C11
-    # H144_OUT_PWM7
-    id: D15
+    meta: H144_OUT_PWM7
     class: outputs
     ts_name: ___ Aux Low 3
     function: Aux Low 3
 
   - pin: C12
-    # H144_OUT_PWM6
-    id: D14
+    meta: H144_OUT_PWM6
     class: outputs
     function: Aux Low 2
 
   - pin: C13
-    # H144_OUT_PWM2
-    id: C6
+    meta: H144_OUT_PWM2
     class: outputs
     function: Aux Low 1
 
@@ -354,8 +336,7 @@ pins:
     color: orange
 
   - pin: E1
-    # H144_OUT_IO13
-    id: G6
+    meta: H144_OUT_IO13
     class: outputs
     ts_name: E1 Fuel Relay
     function: Fuel Relay
@@ -373,8 +354,7 @@ pins:
     function: 5V Sensor Power
 
   - pin: E7
-    # H144_OUT_IO3
-    id: G14
+    meta: H144_OUT_IO3
     class: outputs
     ts_name: E7 Main Relay Control
     function: Main Relay Control

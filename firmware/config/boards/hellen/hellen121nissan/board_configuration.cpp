@@ -74,8 +74,8 @@ void setBoardConfigOverrides() {
 	setupVbatt();
 	setHellenSdCardSpi3();
 
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM7;
-	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM6;
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM7;
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::H144_OUT_PWM6;
 	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
 	engineConfiguration->etb_use_two_wires = true;
 
@@ -103,7 +103,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fuelPumpPin = Gpio::D12;	// OUT_IO9 // 113 Fuel Pump Relay
 	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
 //	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = H144_OUT_IO3;
+	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -133,8 +133,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
-	engineConfiguration->luaOutputPins[0] = H144_OUT_IO4; // 104 ETB Relay
-	engineConfiguration->luaOutputPins[1] = H144_OUT_PWM2; // aux LS1, upstream oxygen heaters
+	engineConfiguration->luaOutputPins[0] = Gpio::H144_OUT_IO4; // 104 ETB Relay
+	engineConfiguration->luaOutputPins[1] = Gpio::H144_OUT_PWM2; // aux LS1, upstream oxygen heaters
 
 	setPPSCalibration(0.75, 4.45, 0.43, 2.20);
 

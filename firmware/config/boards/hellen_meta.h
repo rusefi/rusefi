@@ -95,13 +95,13 @@ void detectHellenBoardType();
 #define H176_IGN_5 Gpio::E2
 
 #define H144_OUT_PWM1 D13
-#define H144_OUT_PWM2 Gpio::C6
+#define H144_OUT_PWM2 C6
 #define H144_OUT_PWM3 C7
-#define H144_OUT_PWM4 Gpio::C8
-#define H144_OUT_PWM5 Gpio::C9
-#define H144_OUT_PWM6 Gpio::D14
-#define H144_OUT_PWM7 Gpio::D15
-#define H144_OUT_PWM8 Gpio::D12
+#define H144_OUT_PWM4 C8
+#define H144_OUT_PWM5 C9
+#define H144_OUT_PWM6 D14
+#define H144_OUT_PWM7 D15
+#define H144_OUT_PWM8 D12
 
 
 // also IO1/IO5 on rev 0.6
@@ -116,15 +116,15 @@ void detectHellenBoardType();
 #define H144_GP8 Gpio::E10
 #define H144_GP9 Gpio::F2
 
-#define H144_OUT_IO1 Gpio::D3
-#define H144_OUT_IO2 Gpio::A9
-#define H144_OUT_IO3 Gpio::G14
-#define H144_OUT_IO4 Gpio::G5
-#define H144_OUT_IO5 Gpio::D2
+#define H144_OUT_IO1 D3
+#define H144_OUT_IO2 A9
+#define H144_OUT_IO3 G14
+#define H144_OUT_IO4 G5
+#define H144_OUT_IO5 D2
 #define H144_OUT_IO6 G11
-#define H144_OUT_IO7 Gpio::G3
-#define H144_OUT_IO8 Gpio::G4
-#define H144_OUT_IO9 Gpio::G13
+#define H144_OUT_IO7 G3
+#define H144_OUT_IO8 G4
+#define H144_OUT_IO9 G13
 #define H144_OUT_IO10 G12
 #define H144_OUT_IO11 G2
 #define H144_OUT_IO12 A8

@@ -710,7 +710,7 @@ void setMiataNB2_Proteus() {
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
     #if EFI_PROD_CODE
-    engineConfiguration->ignitionPins[0] = PROTEUS_IGN_1;
+    engineConfiguration->ignitionPins[0] = Gpio::PROTEUS_IGN_1;
     engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
     engineConfiguration->ignitionPins[2] = PROTEUS_IGN_3;
     engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
@@ -719,14 +719,14 @@ void setMiataNB2_Proteus() {
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 
-    engineConfiguration->injectionPins[0] = PROTEUS_LS_1;  // BLU  # pin 3/black35
-    engineConfiguration->injectionPins[1] = PROTEUS_LS_2;  // BLK
-    engineConfiguration->injectionPins[2] = PROTEUS_LS_3; // GRN
-    engineConfiguration->injectionPins[3] = PROTEUS_LS_4; // WHT
+    engineConfiguration->injectionPins[0] = Gpio::PROTEUS_LS_1;  // BLU  # pin 3/black35
+    engineConfiguration->injectionPins[1] = Gpio::PROTEUS_LS_2;  // BLK
+    engineConfiguration->injectionPins[2] = Gpio::PROTEUS_LS_3; // GRN
+    engineConfiguration->injectionPins[3] = Gpio::PROTEUS_LS_4; // WHT
 
     engineConfiguration->enableSoftwareKnock = true;
 
-    engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
+    engineConfiguration->malfunctionIndicatorPin = Gpio::PROTEUS_LS_10;
 
     engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_MAP;
 
@@ -740,9 +740,9 @@ void setMiataNB2_Proteus() {
     engineConfiguration->clt.adcChannel =  PROTEUS_IN_ANALOG_TEMP_1;
     engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_3;
 
-    engineConfiguration->fuelPumpPin = PROTEUS_LS_6;
+    engineConfiguration->fuelPumpPin = Gpio::PROTEUS_LS_6;
 
-    engineConfiguration->idle.solenoidPin = PROTEUS_LS_7;
+    engineConfiguration->idle.solenoidPin = Gpio::PROTEUS_LS_7;
 
 
     engineConfiguration->fanPin = Gpio::B7;

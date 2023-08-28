@@ -151,8 +151,11 @@ public class PinoutLogic {
             }
             if (meta != null) {
                 pinId = map.get(meta);
-                if (pinId == null)
+                if (pinId == null) {
+                    if (map.isEmpty())
+                        throw new IllegalStateException("Empty meta mapping");
                     throw new IllegalStateException("Failing to resolve [" + meta + "]");
+                }
             }
             Object pinClass = pin.get("class");
             Object pinName = pin.get("pin");
