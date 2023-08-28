@@ -133,6 +133,9 @@ public class PinoutLogic {
             SystemOut.println("Null yaml for " + yamlFile);
             return;
         }
+        Map</*meta name*/String, /*native name*/String> map = processMetaHeader(yamlData);
+
+
         List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
         if (data == null) {
             SystemOut.println("Null yaml for " + yamlFile);
@@ -173,6 +176,36 @@ public class PinoutLogic {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
         }
+    }
+
+    private Map<String, String> processMetaHeader(Map<String, Object> yamlData) {
+        String metaHeader = (String) yamlData.get("meta");
+        if (metaHeader==null)
+            return Collections.emptyMap();
+
+        return getStringStringMap(boardInputs.getBoardMeta(metaHeader));
+    }
+
+    @NotNull
+    public static Map<String, String> getStringStringMap(List<String> lines) {
+        Map</*meta name*/String, /*native name*/String> map = new HashMap<>();
+
+        for (String line : lines) {
+            line = line.trim();
+            if (ToolUtil.startsWithToken(line, VariableRegistry.DEFINE)) {
+                line = line.substring(VariableRegistry.DEFINE.length() + 1);
+
+                int index = line.indexOf(' ');
+
+                if (index == -1)
+                    continue;
+                String name = line.substring(0, index);
+                String value = line.substring(index).trim();
+
+                map.put(name, value);
+            }
+        }
+        return map;
     }
 
     private void addPinToList(String id, String pinTsName, String pinClass) {

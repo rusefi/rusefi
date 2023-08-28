@@ -13,4 +13,6 @@ public interface BoardInputs {
     List<String> getInputFiles();
 
     Writer getWriter() throws IOException;
+
+    List<String> getBoardMeta(String boardMetaFileName);
 }

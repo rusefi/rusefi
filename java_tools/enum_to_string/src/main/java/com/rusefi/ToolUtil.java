@@ -44,7 +44,7 @@ public class ToolUtil {
         return line.length() == 0 || line.startsWith("!") || line.startsWith("//");
     }
 
-    static boolean startsWithToken(String line, String token) {
+    public static boolean startsWithToken(String line, String token) {
         return line.startsWith(token + " ") || line.startsWith(token + "\t");
     }
 

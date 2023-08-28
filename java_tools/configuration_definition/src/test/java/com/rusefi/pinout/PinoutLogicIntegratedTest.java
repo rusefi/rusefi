@@ -6,15 +6,34 @@ import com.rusefi.newparse.DefinitionsState;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
 public class PinoutLogicIntegratedTest {
+
+    private static final List<String> META_CONTENT = Arrays.asList("#define H144_LS_1 Gpio::G7\n",
+            "#define H144_LS_2 Gpio::G8\n",
+            "// IN_O2S AIN13 A13 PA0\n",
+            "#define H144_IN_O2S EFI_ADC_0\n",
+            "// IN_O2S2 AIN12 PA1\n",
+            "#define H144_IN_O2S2 EFI_ADC_1");
+
+    @Test
+    public void testMetaParsing() {
+        Map</*meta name*/String, /*native name*/String> map = PinoutLogic.getStringStringMap(META_CONTENT);
+        assertEquals(4, map.size());
+
+        assertEquals("EFI_ADC_0", map.get("H144_IN_O2S"));
+    }
+
     @Test
     public void testWholeThing() throws IOException {
-        runPinoutTest("pins:\n" +
+        runPinoutTest("meta: meta.h\n" +
+                        "pins:\n" +
                 "  - pin: 1\n" +
                 "    id: [E11, E11]\n" +
                 "    class: [event_inputs, switch_inputs]\n" +
@@ -40,6 +59,11 @@ public class PinoutLogicIntegratedTest {
     @Test
     public void testTemplate() throws IOException {
         runPinoutTest("pins:\n" +
+                        "  - pin: 2\n" +
+                        "    id: G8\n" +
+                        "    class: outputs\n" +
+                        "    function: Digital trigger/switch input for instance Hall type CAM\n" +
+                        "    ts_name: ___ - Digital 1\n" +
                         "  - pin: 1\n" +
                         "    id: [E11, E11]\n" +
                         "    class: [event_inputs, switch_inputs]\n" +
@@ -55,6 +79,7 @@ public class PinoutLogicIntegratedTest {
                         "const char * getBoardSpecificPinName(brain_pin_e brainPin) {\n" +
                         "\tswitch(brainPin) {\n" +
                         "\t\tcase Gpio::E11: return \"1 - Digital 2\";\n" +
+                        "\t\tcase Gpio::G8: return \"2 - Digital 1\";\n" +
                         "\t\tdefault: return nullptr;\n" +
                         "\t}\n" +
                         "\treturn nullptr;\n" +
@@ -92,6 +117,11 @@ public class PinoutLogicIntegratedTest {
             public Writer getWriter() {
                 return testWriter;
             }
+
+            @Override
+            public List<String> getBoardMeta(String boardMetaFileName) {
+                return META_CONTENT;
+            }
         };
 
         ReaderStateImpl state = new ReaderStateImpl();
@@ -99,6 +129,7 @@ public class PinoutLogicIntegratedTest {
         state.getEnumsReader().read(new StringReader("enum class Gpio : uint16_t {\n" +
                                                         "Unassigned = 0,\n" +
                                                         "Invalid = 0x01,\n" +
+                                                        "G8 = 5,\n" +
                                                         "E11 = 0x0B,\n" +
                                                         "};"));
 

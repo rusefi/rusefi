@@ -3,6 +3,9 @@ package com.rusefi.pinout;
 import com.devexperts.logging.Logging;
 
 import java.io.*;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,5 +61,14 @@ public class FileSystemBoardInputsImpl implements BoardInputs {
     @Override
     public Writer getWriter() throws IOException {
         return new FileWriter(boardName + PinoutLogic.CONNECTORS + File.separator + "generated_ts_name_by_pin.cpp");
+    }
+
+    @Override
+    public List<String> getBoardMeta(String boardMetaFileName) {
+        try {
+            return Files.readAllLines(Paths.get(URI.create(boardMetaFileName)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
