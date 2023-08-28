@@ -77,6 +77,19 @@
 			"rtos": "auto"
 		},
 		{
+			"name": "Debug Bootloader F42x",
+			"type": "cortex-debug",
+			"request": "launch",
+			"cwd": "${workspaceFolder}/firmware",
+			"executable": "${workspaceRoot}/firmware/bootloader/blbuild/fome_bl.elf",
+			"device": "STM32F429Z",
+			"v1": false,
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/STM32F427.svd",
+			"servertype": "openocd",
+			"configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
+			"rtos": "auto"
+		},
+		{
 			"name": "Debug F7x6",
 			"type": "cortex-debug",
 			"request": "launch",
@@ -95,6 +108,19 @@
 			"request": "launch",
 			"cwd": "${workspaceFolder}/firmware",
 			"executable": "${workspaceRoot}/firmware/build/fome.elf",
+			"device": "STM32H743V",
+			"v1": false,
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/STM32H743x.svd",
+			"servertype": "openocd",
+			"configFiles": ["interface/stlink.cfg", "target/stm32h7x.cfg"],
+			"rtos": "auto"
+		},
+		{
+			"name": "Debug Bootloader H743",
+			"type": "cortex-debug",
+			"request": "launch",
+			"cwd": "${workspaceFolder}/firmware",
+			"executable": "${workspaceRoot}/firmware/bootloader/blbuild/fome_bl.elf",
 			"device": "STM32H743V",
 			"v1": false,
 			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/STM32H743x.svd",
