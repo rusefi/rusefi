@@ -70,23 +70,23 @@ void detectHellenBoardType();
 
 #define H176_LED1_RED Gpio::H8
 
-#define H144_LS_1 Gpio::G7
-#define H144_LS_2 Gpio::G8
-#define H144_LS_3 Gpio::D11
-#define H144_LS_4 Gpio::D10
-#define H144_LS_5 Gpio::D9
-#define H144_LS_6 Gpio::F12
-#define H144_LS_7 Gpio::F13
-#define H144_LS_8 Gpio::F14
+#define H144_LS_1 G7
+#define H144_LS_2 G8
+#define H144_LS_3 D11
+#define H144_LS_4 D10
+#define H144_LS_5 D9
+#define H144_LS_6 F12
+#define H144_LS_7 F13
+#define H144_LS_8 F14
 
-#define H144_IGN_1 Gpio::C13
-#define H144_IGN_2 Gpio::E5
-#define H144_IGN_3 Gpio::E4
-#define H144_IGN_4 Gpio::E3
-#define H144_IGN_5 Gpio::E2
-#define H144_IGN_6 Gpio::B8
-#define H144_IGN_7 Gpio::B9
-#define H144_IGN_8 Gpio::E6
+#define H144_IGN_1 C13
+#define H144_IGN_2 E5
+#define H144_IGN_3 E4
+#define H144_IGN_4 E3
+#define H144_IGN_5 E2
+#define H144_IGN_6 B8
+#define H144_IGN_7 B9
+#define H144_IGN_8 E6
 
 #define H176_IGN_1 Gpio::I8
 #define H176_IGN_2 Gpio::E5
@@ -94,9 +94,9 @@ void detectHellenBoardType();
 #define H176_IGN_4 Gpio::E3
 #define H176_IGN_5 Gpio::E2
 
-#define H144_OUT_PWM1 Gpio::D13
+#define H144_OUT_PWM1 D13
 #define H144_OUT_PWM2 Gpio::C6
-#define H144_OUT_PWM3 Gpio::C7
+#define H144_OUT_PWM3 C7
 #define H144_OUT_PWM4 Gpio::C8
 #define H144_OUT_PWM5 Gpio::C9
 #define H144_OUT_PWM6 Gpio::D14
@@ -108,7 +108,7 @@ void detectHellenBoardType();
 #define H144_GP1 Gpio::D4
 // also IO2/IO5 on rev 0.6
 #define H144_GP2 Gpio::D7
-#define H144_GP3 Gpio::G10
+#define H144_GP3 G10
 #define H144_GP4 Gpio::G9
 #define H144_GP5 Gpio::G15
 #define H144_GP6 Gpio::D8
@@ -121,14 +121,14 @@ void detectHellenBoardType();
 #define H144_OUT_IO3 Gpio::G14
 #define H144_OUT_IO4 Gpio::G5
 #define H144_OUT_IO5 Gpio::D2
-#define H144_OUT_IO6 Gpio::G11
+#define H144_OUT_IO6 G11
 #define H144_OUT_IO7 Gpio::G3
 #define H144_OUT_IO8 Gpio::G4
 #define H144_OUT_IO9 Gpio::G13
-#define H144_OUT_IO10 Gpio::G12
-#define H144_OUT_IO11 Gpio::G2
-#define H144_OUT_IO12 Gpio::A8
-#define H144_OUT_IO13 Gpio::G6
+#define H144_OUT_IO10 G12
+#define H144_OUT_IO11 G2
+#define H144_OUT_IO12 A8
+#define H144_OUT_IO13 G6
 
 // A24
 #define H144_IN_CRANK Gpio::B1

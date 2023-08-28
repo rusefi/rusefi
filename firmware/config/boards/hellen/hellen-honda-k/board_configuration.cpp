@@ -12,17 +12,17 @@
 #include "honda_k_dbc.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = H144_LS_1;
-	engineConfiguration->injectionPins[1] = H144_LS_2;
-	engineConfiguration->injectionPins[2] = H144_LS_3;
-	engineConfiguration->injectionPins[3] = H144_LS_4;
+	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
+	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
+	engineConfiguration->injectionPins[2] = Gpio::H144_LS_3;
+	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = H144_IGN_1;
-	engineConfiguration->ignitionPins[1] = H144_IGN_2;
-	engineConfiguration->ignitionPins[2] = H144_IGN_3;
-	engineConfiguration->ignitionPins[3] = H144_IGN_4;
+	engineConfiguration->ignitionPins[0] = Gpio::H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_3;
+	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
 }
 
 static void setupVbatt() {
@@ -82,9 +82,9 @@ void setBoardConfigOverrides() {
 //    // PWM pin
 //    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
 //    // DIR pin
-//	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
+//	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3;
 //   	// Disable pin
-//   	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO12;
+//   	engineConfiguration->etbIo[0].disablePin = Gpio::H144_OUT_IO12;
 //   	// Unused
 // 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
@@ -117,11 +117,11 @@ void setBoardDefaultConfiguration() {
     engineConfiguration->vvtPins[0] = H144_OUT_PWM4;
 
     gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
-    // vtsControl->pin = H144_OUT_IO6;
+    // vtsControl->pin = Gpio::H144_OUT_IO6;
 
-	engineConfiguration->fuelPumpPin = H144_OUT_IO13;
-	engineConfiguration->idle.solenoidPin = H144_LS_6;
-	engineConfiguration->fanPin = H144_OUT_IO12;
+	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO13;;
+	engineConfiguration->idle.solenoidPin = Gpio::H144_LS_6;
+	engineConfiguration->fanPin = Gpio::H144_OUT_IO12;
 	engineConfiguration->mainRelayPin = H144_OUT_IO3;
 	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO7;
 
@@ -138,8 +138,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->verboseKLine = true;
 
 	engineConfiguration->brakePedalPin = H144_IN_CAM;
-	engineConfiguration->acRelayPin = H144_LS_5;
-    engineConfiguration->tachOutputPin = H144_OUT_IO10;
+	engineConfiguration->acRelayPin = Gpio::H144_LS_5;
+    engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO10;
     // A/C switch on k-line
 
 	// "required" hardware is done - set some reasonable defaults

@@ -145,6 +145,15 @@ public class PinoutLogic {
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
             Object pinId = pin.get("id");
+            String meta = (String) pin.get("meta");
+            if (meta != null && pinId != null) {
+                throw new IllegalStateException(pinId + " not expected with meta=" + meta);
+            }
+            if (meta != null) {
+                pinId = map.get(meta);
+                if (pinId == null)
+                    throw new IllegalStateException("Failing to resolve [" + meta + "]");
+            }
             Object pinClass = pin.get("class");
             Object pinName = pin.get("pin");
             Object pinTsName = pin.get("ts_name");
@@ -180,7 +189,7 @@ public class PinoutLogic {
 
     private Map<String, String> processMetaHeader(Map<String, Object> yamlData) {
         String metaHeader = (String) yamlData.get("meta");
-        if (metaHeader==null)
+        if (metaHeader == null)
             return Collections.emptyMap();
 
         return getStringStringMap(boardInputs.getBoardMeta(metaHeader));

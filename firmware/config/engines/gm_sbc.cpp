@@ -21,7 +21,7 @@ void setStepperHw() {
     setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
 	// using 8chan pinout for DC1: A26 (OUT_DC1+ AH pin "D") and A27 (OUT_DC1- AL pin "C")
 	engineConfiguration->stepperDcIo[0].controlPin = H144_GP4; // DC1_PWM
-	engineConfiguration->stepperDcIo[0].directionPin1 = H144_GP3; // DC1_DIR
+	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::H144_GP3; // DC1_DIR
 	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
 	engineConfiguration->stepperDcIo[0].disablePin = H144_GP5; // ETB_DIS
 	// using 8chan pinout for DC2: A28 (OUT_DC2+ BL pin "A") and A29 (OUT_DC2- BH pin "B")

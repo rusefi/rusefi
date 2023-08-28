@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class PinoutLogicIntegratedTest {
 
     private static final List<String> META_CONTENT = Arrays.asList("#define H144_LS_1 Gpio::G7\n",
-            "#define H144_LS_2 Gpio::G8\n",
+            "#define H144_LS_2 G8\n",
             "// IN_O2S AIN13 A13 PA0\n",
             "#define H144_IN_O2S EFI_ADC_0\n",
             "// IN_O2S2 AIN12 PA1\n",
@@ -32,8 +32,7 @@ public class PinoutLogicIntegratedTest {
 
     @Test
     public void testWholeThing() throws IOException {
-        runPinoutTest("meta: meta.h\n" +
-                        "pins:\n" +
+        runPinoutTest("pins:\n" +
                 "  - pin: 1\n" +
                 "    id: [E11, E11]\n" +
                 "    class: [event_inputs, switch_inputs]\n" +
@@ -58,9 +57,10 @@ public class PinoutLogicIntegratedTest {
 
     @Test
     public void testTemplate() throws IOException {
-        runPinoutTest("pins:\n" +
+        runPinoutTest("meta: meta.h\n" +
+                        "pins:\n" +
                         "  - pin: 2\n" +
-                        "    id: G8\n" +
+                        "    meta: H144_LS_2\n" +
                         "    class: outputs\n" +
                         "    function: Digital trigger/switch input for instance Hall type CAM\n" +
                         "    ts_name: ___ - Digital 1\n" +

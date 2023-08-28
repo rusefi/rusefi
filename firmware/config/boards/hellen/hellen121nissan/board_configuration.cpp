@@ -16,21 +16,21 @@
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = H144_LS_1;
-	engineConfiguration->injectionPins[1] = H144_LS_2;
-	engineConfiguration->injectionPins[2] = H144_LS_3;
-	engineConfiguration->injectionPins[3] = H144_LS_4;
-	engineConfiguration->injectionPins[4] = H144_LS_5;
-	engineConfiguration->injectionPins[5] = H144_LS_6;
+	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
+	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
+	engineConfiguration->injectionPins[2] = Gpio::H144_LS_3;
+	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
+	engineConfiguration->injectionPins[4] = Gpio::H144_LS_5;
+	engineConfiguration->injectionPins[5] = Gpio::H144_LS_6;
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = H144_IGN_1;
-	engineConfiguration->ignitionPins[1] = H144_IGN_2;
-	engineConfiguration->ignitionPins[2] = H144_IGN_3;
-	engineConfiguration->ignitionPins[3] = H144_IGN_4;
-	engineConfiguration->ignitionPins[4] = H144_IGN_5;
-	engineConfiguration->ignitionPins[5] = H144_IGN_6;
+	engineConfiguration->ignitionPins[0] = Gpio::H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_3;
+	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
+	engineConfiguration->ignitionPins[4] = Gpio::H144_IGN_5;;
+	engineConfiguration->ignitionPins[5] = Gpio::H144_IGN_6;
 }
 
 static void setupVbatt() {

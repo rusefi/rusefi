@@ -14,13 +14,13 @@
 #include "defaults.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = H144_LS_1;
-	engineConfiguration->injectionPins[1] = H144_LS_2;
-	engineConfiguration->injectionPins[2] = H144_LS_3;
-	engineConfiguration->injectionPins[3] = H144_LS_4;
-	engineConfiguration->injectionPins[4] = H144_LS_5;
-	engineConfiguration->injectionPins[5] = H144_LS_6;
-	engineConfiguration->injectionPins[6] = H144_LS_7;
+	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
+	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
+	engineConfiguration->injectionPins[2] = Gpio::H144_LS_3;
+	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
+	engineConfiguration->injectionPins[4] = Gpio::H144_LS_5;
+	engineConfiguration->injectionPins[5] = Gpio::H144_LS_6;
+	engineConfiguration->injectionPins[6] = Gpio::H144_LS_7;
 	engineConfiguration->injectionPins[7] = H144_LS_8;
 
 	engineConfiguration->clutchDownPin = Gpio::C4; // Clutch switch input
@@ -30,14 +30,14 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = H144_IGN_1;
-	engineConfiguration->ignitionPins[1] = H144_IGN_2;
-	engineConfiguration->ignitionPins[2] = H144_IGN_3;
-	engineConfiguration->ignitionPins[3] = H144_IGN_4;
-	engineConfiguration->ignitionPins[4] = H144_IGN_5;
-	engineConfiguration->ignitionPins[5] = H144_IGN_6;
-	engineConfiguration->ignitionPins[6] = H144_IGN_7;
-	engineConfiguration->ignitionPins[7] = H144_IGN_8;
+	engineConfiguration->ignitionPins[0] = Gpio::H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_3;
+	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
+	engineConfiguration->ignitionPins[4] = Gpio::H144_IGN_5;;
+	engineConfiguration->ignitionPins[5] = Gpio::H144_IGN_6;
+	engineConfiguration->ignitionPins[6] = Gpio::H144_IGN_7;
+	engineConfiguration->ignitionPins[7] = Gpio::H144_IGN_8;
 }
 
 static void setupVbatt() {
@@ -94,7 +94,7 @@ void setBoardConfigOverrides() {
     // PWM pin
     engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM8;
     // DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_IO13;
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_IO13;;
    	// Disable pin
    	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO4;
    	// Unused
@@ -118,17 +118,17 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->invertPrimaryTriggerSignal = true;
 
-	engineConfiguration->luaOutputPins[0] = H144_OUT_IO6; // starter relay
+	engineConfiguration->luaOutputPins[0] = Gpio::H144_OUT_IO6; // starter relay
 
 	engineConfiguration->boostControlPin = H144_OUT_PWM5;
 	engineConfiguration->brakePedalPin = H144_IN_RES2;
 //	engineConfiguration->acSwitch =
 //	engineConfiguration->acRelayPin =
 	engineConfiguration->fuelPumpPin = H144_OUT_IO5;
-	engineConfiguration->fanPin = H144_OUT_IO12;
+	engineConfiguration->fanPin = Gpio::H144_OUT_IO12;
 	engineConfiguration->mainRelayPin = H144_OUT_IO3;
     engineConfiguration->tachOutputPin = H144_OUT_PWM7;
-	engineConfiguration->alternatorControlPin = H144_OUT_PWM1;
+	engineConfiguration->alternatorControlPin = Gpio::H144_OUT_PWM1;
 //	engineConfiguration->fan2Pin =
 
 	// "required" hardware is done - set some reasonable defaults

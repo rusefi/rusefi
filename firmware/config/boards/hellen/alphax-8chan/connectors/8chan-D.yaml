@@ -1,5 +1,6 @@
-pins:
+meta: config/boards/hellen_meta.h
 
+pins:
   - pin: 1D
     function: DC3 positive
     type: etb

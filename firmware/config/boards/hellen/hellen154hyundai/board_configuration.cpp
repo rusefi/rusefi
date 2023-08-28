@@ -15,17 +15,17 @@
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = H144_LS_1;
-	engineConfiguration->injectionPins[1] = H144_LS_2;
-	engineConfiguration->injectionPins[2] = H144_LS_3;
-	engineConfiguration->injectionPins[3] = H144_LS_4;
+	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
+	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
+	engineConfiguration->injectionPins[2] = Gpio::H144_LS_3;
+	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = H144_IGN_1;
-	engineConfiguration->ignitionPins[1] = H144_IGN_2;
-	engineConfiguration->ignitionPins[2] = H144_IGN_3;
-	engineConfiguration->ignitionPins[3] = H144_IGN_4;
+	engineConfiguration->ignitionPins[0] = Gpio::H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_3;
+	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
 }
 
 static void setupVbatt() {
@@ -84,9 +84,9 @@ void setBoardConfigOverrides() {
 	    engineConfiguration->camInputs[0] = H144_IN_CAM;
 
 		// control pins are inverted since overall ECU pinout seems to be inverted
-		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
+		engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3;
 		engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
-		engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
+		engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_IO12;
 	   	engineConfiguration->etbIo[0].disablePin = Gpio::Unassigned;
 		engineConfiguration->etb_use_two_wires = true;
 
@@ -101,7 +101,7 @@ void setBoardConfigOverrides() {
 			isFirstInvocation = false;
 			efiSetPadMode("ETB FIX0", H144_OUT_PWM4, PAL_MODE_INPUT_ANALOG);
 			efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
-			efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
+			efiSetPadMode("ETB FIX2", Gpio::H144_OUT_IO13;, PAL_MODE_INPUT_ANALOG);
 		}
 		engineConfiguration->stepperDcInvertedPins = false;
 	} else if (hellenBoardId == BOARD_ID_154hyundai_c || hellenBoardId == BOARD_ID_154hyundai_d) {
@@ -116,9 +116,9 @@ void setBoardConfigOverrides() {
 	    // PWM pin
 	    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
 	    // DIR pin
-		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
+		engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3;
 	   	// Disable pin
-	   	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO12;
+	   	engineConfiguration->etbIo[0].disablePin = Gpio::H144_OUT_IO12;
 	   	// Unused
 	 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
@@ -129,7 +129,7 @@ void setBoardConfigOverrides() {
 	    // DIR pin
 		engineConfiguration->etbIo[1].directionPin1 = H144_OUT_PWM5;
 	   	// Disable pin
-	   	engineConfiguration->etbIo[1].disablePin = H144_OUT_IO13;
+	   	engineConfiguration->etbIo[1].disablePin = Gpio::H144_OUT_IO13;;
 	   	// Unused
 	 	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
     }

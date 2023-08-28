@@ -17,7 +17,7 @@ static void common() {
 void setHellenMercedes128_4_cyl() {
     common();
 #if HW_HELLEN
-	engineConfiguration->injectionPins[0] = H144_LS_7;
+	engineConfiguration->injectionPins[0] = Gpio::H144_LS_7;
 	engineConfiguration->injectionPins[1] = H176_LS_6;
 	engineConfiguration->injectionPins[2] = H176_LS_8;
 	engineConfiguration->injectionPins[3] = H176_LS_5;

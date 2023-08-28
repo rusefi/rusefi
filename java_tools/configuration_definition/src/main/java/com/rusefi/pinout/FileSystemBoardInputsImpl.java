@@ -66,7 +66,7 @@ public class FileSystemBoardInputsImpl implements BoardInputs {
     @Override
     public List<String> getBoardMeta(String boardMetaFileName) {
         try {
-            return Files.readAllLines(Paths.get(URI.create(boardMetaFileName)));
+            return Files.readAllLines(Paths.get(boardMetaFileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

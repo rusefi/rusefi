@@ -1,4 +1,4 @@
-# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+meta: config/boards/hellen_meta.h
 
 pins:
   - pin: A1
@@ -37,8 +37,7 @@ pins:
     color: brown
 
   - pin: A6
-    # H144_IGN_1
-    id: C13
+    meta: H144_IGN_1
     class: outputs
     function: Smart Ignition A Output
     type: ign
@@ -46,8 +45,7 @@ pins:
     color: yellow
 
   - pin: A7
-    # H144_IGN_2
-    id: E5
+    meta: H144_IGN_2
     class: outputs
     function: Smart Ignition B Output
     type: ign
@@ -55,8 +53,7 @@ pins:
     color: yellow
 
   - pin: A8
-    # H144_LS_1
-    id: G7
+    meta: H144_LS_1
     function: Injector A Output
     class: outputs
     type: inj
@@ -122,8 +119,7 @@ pins:
     color: orange
 
   - pin: B8
-    # H144_LS_2
-    id: G8
+    meta: H144_LS_2
     function: Injector B Output
     class: outputs
     type: inj

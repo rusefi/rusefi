@@ -1,3 +1,5 @@
+meta: config/boards/hellen_meta.h
+
 pins:
   - pin: On-board MAP
     # H144_IN_MAP2

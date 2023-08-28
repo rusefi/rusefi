@@ -1,4 +1,4 @@
-# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+meta: config/boards/hellen_meta.h
 
 pins:
   - pin: A1
@@ -21,16 +21,14 @@ pins:
     color: purple
 
   - pin: A4old
-    # H144_OUT_IO13
-    id: G6
+    meta: H144_OUT_IO13
     class: outputs
     function: Tachometer Output
     ts_name: A4 - Tachometer legacy up to rev F
     color: purple
 
   - pin: A4
-    # H144_GP3
-    id: G10
+    meta: H144_GP3
     class: outputs
     function: Tachometer Output
     ts_name: A4 - Tachometer
@@ -42,8 +40,7 @@ pins:
     color: brown
 
   - pin: A6
-    # H144_IGN_1
-    id: C13
+    meta: H144_IGN_1
     class: outputs
     function: Smart Ignition 1
     type: ign
@@ -51,8 +48,7 @@ pins:
     color: yellow
 
   - pin: A7
-    # H144_IGN_2
-    id: E5
+    meta: H144_IGN_2
     class: outputs
     function: Smart Ignition 2 Output
     type: ign
@@ -60,8 +56,7 @@ pins:
     color: yellow
 
   - pin: A8
-    # H144_LS_1
-    id: G7
+    meta: H144_LS_1
     function: Injector 1 Output
     class: outputs
     type: inj
@@ -74,8 +69,7 @@ pins:
     color: black
 
   - pin: On-board MAP
-    # H144_IN_MAP3
-    id: EFI_ADC_2
+    meta: H144_IN_MAP3
     class: analog_inputs
     function: MAP Sensor Input
     ts_name: On-board MAP
@@ -127,8 +121,7 @@ pins:
     color: orange
 
   - pin: B8
-    # H144_LS_2
-    id: G8
+    meta: H144_LS_2
     function: Injector 2 Output
     class: outputs
     type: inj
@@ -136,8 +129,7 @@ pins:
     color: blue
 
   - pin: C1
-    # H144_OUT_IO11
-    id: G2
+    meta: H144_OUT_IO11
     class: outputs
     function: Fan Relay or 5A Power Output (low)
     type: ls
@@ -200,8 +192,7 @@ pins:
     color: brown
 
   - pin: C8
-    # H144_OUT_PWM1
-    id: D13
+    meta: H144_OUT_PWM1
     class: outputs
     function: Idle Output (low)
     type: ls
@@ -209,8 +200,7 @@ pins:
     color: purple
 
   - pin: D1
-    # H144_LS_3
-    id: D11
+    meta: H144_LS_3
     function: Injector 3
     class: outputs
     type: inj
@@ -218,8 +208,7 @@ pins:
     color: blue
 
   - pin: D2
-    # H144_OUT_PWM3
-    id: C7
+    meta: H144_OUT_PWM3
     function: Out Boost
     class: outputs
     ts_name: D2 - Out Boost
@@ -259,8 +248,7 @@ pins:
     color: orange
 
   - pin: D6
-    # H144_IGN_3
-    id: E4
+    meta: H144_IGN_3
     class: outputs
     function: Smart Ignition 3 Output
     type: ign
@@ -268,8 +256,7 @@ pins:
     color: yellow
 
   - pin: D7
-    # H144_IGN_4
-    id: E3
+    meta: H144_IGN_4
     class: outputs
     function: Smart Ignition 4 Output
     type: ign
@@ -282,8 +269,7 @@ pins:
     color: black
 
   - pin: E1
-    # H144_LS_4
-    id: D10
+    meta: H144_LS_4
     function: Injector 4
     class: outputs
     type: inj
@@ -291,8 +277,7 @@ pins:
     color: blue
 
   - pin: E2
-    # H144_OUT_IO6
-    id: G11
+    meta: H144_OUT_IO6
     function: Out NOS
     class: outputs
     ts_name: E2 - Out NOS
@@ -370,8 +355,7 @@ pins:
     color: purple
 
   - pin: F2g
-    # H144_IGN_7
-    id: B9
+    meta: H144_IGN_7
     function: VVT#1 rev G
     class: outputs
     type: ls
@@ -398,8 +382,7 @@ pins:
     color: purple
 
   - pin: F4g
-    # H144_IGN_8
-    id: E6
+    meta: H144_IGN_8
     function: VVT#2 rev G
     class: outputs
     type: ls

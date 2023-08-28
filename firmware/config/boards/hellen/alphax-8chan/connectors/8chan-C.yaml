@@ -1,3 +1,5 @@
+meta: config/boards/hellen_meta.h
+
 pins:
   - pin: 1C
     # H144_LS_8

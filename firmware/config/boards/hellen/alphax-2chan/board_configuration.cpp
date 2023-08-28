@@ -20,8 +20,8 @@ static OutputPin alpha2stepPullDown;
 static OutputPin alphaCamPullDown;
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = H144_LS_1;
-	engineConfiguration->injectionPins[1] = H144_LS_2;
+	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
+	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
 	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 
@@ -32,9 +32,9 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = H144_IGN_1;
+	engineConfiguration->ignitionPins[0] = Gpio::H144_IGN_1;
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[2] = H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_2;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 }
 
@@ -127,12 +127,12 @@ void setBoardDefaultConfiguration() {
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 	if (isMegaModuleRevision()) {
 	    setHellenMMbaro();
-	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3; // On-board MAP
+	    engineConfiguration->map.sensor.hwChannel = Gpio::H144_IN_MAP3; // On-board MAP
 	    engineConfiguration->map.sensor.type = MT_MPXH6400;
 	} else {
 	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2; // B2 external signal
 	    engineConfiguration->baroSensor.type = MT_MPXH6400;
-    	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3; // On-board MAP
+    	engineConfiguration->baroSensor.hwChannel = Gpio::H144_IN_MAP3; // On-board MAP
 	}
 
     engineConfiguration->boardUseTempPullUp = true;
@@ -141,7 +141,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;
 	engineConfiguration->fanPin = H144_OUT_PWM4;
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
-    engineConfiguration->tachOutputPin = H144_OUT_PWM3;
+    engineConfiguration->tachOutputPin = Gpio::H144_OUT_PWM3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -161,8 +161,8 @@ void boardPrepareForStop() {
 }
 
 static Gpio OUTPUTS[] = {
-		H144_LS_1,
-		H144_LS_2,
+		Gpio::H144_LS_1,
+		Gpio::H144_LS_2,
 };
 
 int getBoardMetaOutputsCount() {

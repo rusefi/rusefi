@@ -13,8 +13,8 @@
 #include "defaults.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = H144_LS_1;
-	engineConfiguration->injectionPins[1] = H144_LS_2;
+	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
+	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
 	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 
@@ -25,8 +25,8 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = H144_IGN_1;
-	engineConfiguration->ignitionPins[1] = H144_IGN_2;
+	engineConfiguration->ignitionPins[0] = Gpio::H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 }
@@ -41,7 +41,7 @@ static void setupEtb() {
 	// PWM pin
 	engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM1;
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM1;
 	// Disable pin
 	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO1;
 	// Unused
@@ -80,7 +80,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 	engineConfiguration->baroSensor.type = MT_MPXH6400;
-	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
+	engineConfiguration->baroSensor.hwChannel = Gpio::H144_IN_MAP3;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 
@@ -126,7 +126,7 @@ void setBoardDefaultConfiguration() {
 //	engineConfiguration->fuelPumpPin = Gpio::Unassigned;//H144_OUT_PWM2;
 //	engineConfiguration->fanPin = Gpio::Unassigned;//H144_OUT_PWM4;
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
-    engineConfiguration->tachOutputPin = H144_OUT_PWM3;
+    engineConfiguration->tachOutputPin = Gpio::H144_OUT_PWM3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
