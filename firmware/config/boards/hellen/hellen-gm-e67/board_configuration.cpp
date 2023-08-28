@@ -21,7 +21,7 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[4] = Gpio::H144_LS_5;
 	engineConfiguration->injectionPins[5] = Gpio::H144_LS_6;
 	engineConfiguration->injectionPins[6] = Gpio::H144_LS_7;
-	engineConfiguration->injectionPins[7] = H144_LS_8;
+	engineConfiguration->injectionPins[7] = Gpio::H144_LS_8;
 
 	engineConfiguration->clutchDownPin = Gpio::C4; // Clutch switch input
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
