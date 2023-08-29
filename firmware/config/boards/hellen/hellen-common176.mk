@@ -6,4 +6,6 @@ endif
 
 DDEFS += $(LED_CRITICAL_ERROR_BRAIN_PIN)
 
+DDEFS += -DHELLEN_BOARD_ID_PIN_1=Gpio::F0 -DHELLEN_BOARD_ID_PIN_2=Gpio::F1
+
 include $(BOARDS_DIR)/hellen/hellen-common.mk

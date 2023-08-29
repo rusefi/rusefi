@@ -48,6 +48,10 @@ jobs:
           #   folder: config/boards/hellen/harley81
           #   ini-file: fome_harley81.ini
 
+          - build-target: small-can-board
+            folder: config/boards/hellen/small-can-board
+            ini-file: rusefi_small-can-board.ini
+
           # - build-target: hellen88bmw
           #   folder: config/boards/hellen/hellen88bmw
           #   ini-file: fome_hellen88bmw.ini

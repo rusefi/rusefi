@@ -11,6 +11,7 @@
 #include "pch.h"
 
 static bool getAcrState() {
+#if EFI_SHAFT_POSITION_INPUT
 	auto currentPhase = getTriggerCentral()->getCurrentEnginePhase(getTimeNowNt());
 	if (!currentPhase) {
 		return false;
@@ -21,12 +22,7 @@ static bool getAcrState() {
 		return false;
 	}
 
-#if EFI_SHAFT_POSITION_INPUT
 	int revCount = getTriggerCentral()->triggerState.getCrankSynchronizationCounter();
-#else
-	int revCount = 0;
-#endif
-
 	if (revCount > engineConfiguration->acrRevolutions) {
 		// Enough revs have elapsed that we're done with ACR
 		return false;
@@ -44,6 +40,9 @@ static bool getAcrState() {
 		// ACR active - not enough revs completed
 		return true;
 	}
+#else // EFI_SHAFT_POSITION_INPUT
+	return false;
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 void HarleyAcr::onSlowCallback() {

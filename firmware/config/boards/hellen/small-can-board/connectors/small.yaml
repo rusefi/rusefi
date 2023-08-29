@@ -1,0 +1,199 @@
+meta: config/boards/hellen_meta.h
+
+pins:
+  - pin: A1
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: A2
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: +12V
+    ts_name: A2 Battery Sense
+    type: 12v
+    color: red
+
+  - pin: A3
+    id: C6
+    function: CAN bus2 high (CANH2)
+    type: can
+    ts_name: A3 - CAN2 High
+    color: black
+
+  - pin: A4
+    id: C7
+    type: can
+    function: CAN bus2 low (CANL2)
+    ts_name: A4 - CAN2 Low
+    color: yellow
+
+  - pin: A5
+    function: Sensor Ground
+    type: gnd
+    color: brown
+
+  - pin: A6
+    class: outputs
+    function: LIN bus
+    ts_name: A6 - Lin Bus
+    color: yellow
+
+  - pin: A8
+    # H144_LS_1
+    id: G7
+    function: Low Side Output 1 5A
+    class: outputs
+    ts_name: A8 - Low Side
+    color: green
+
+  - pin: B2
+    # H144_IN_MAP2 AIN10 PC1
+    id: EFI_ADC_11
+    class: analog_inputs
+    function: Analog input 1
+    ts_name: B2 - Analog input
+    color: orange
+
+  - pin: B4
+    # H144_IN_O2S2 AIN12 PA1
+    id: EFI_ADC_1
+    class: analog_inputs
+    function: Analog input 2
+    ts_name: B4 - Analog input
+    color: orange
+
+  - pin: B8
+    # H144_LS_2
+    id: G8
+    function: Low Side Output 2 5A
+    class: outputs
+    type: inj
+    ts_name: B8 - Low Side
+    color: blue
+
+  - pin: C1
+    # H144_OUT_PWM4
+    id: C8
+    class: outputs
+    function: Low Side Output 3 5A
+    type: ls
+    ts_name: C1 - Low Side
+    color: purple
+
+  - pin: C2
+    # H144_IN_D_3
+    id: [E14, E14]
+    class: [event_inputs, switch_inputs]
+    function: Digital Input 1
+    type: hall
+    ts_name: C2 - Digital Input 1
+
+  - pin: C3
+    # H144_IN_D_1
+    id: [E12, E12]
+    class: [event_inputs, switch_inputs]
+    function: Digital Input 2 / SENT
+    type: hall
+    ts_name: C3 - Digital Input 2
+
+  - pin: C4
+    # H144_IN_VSS
+    id: F11
+    class: switch_inputs
+    function: Digital Input 3
+    type: hall
+    ts_name: C4 - Digital Input 3
+    color: gray
+
+  - pin: C5
+    function: CAN bus high (CANH)
+    type: can
+    color: green
+
+  - pin: C6
+    function: CAN bus low (CANL)
+    type: can
+    color: blue
+
+info:
+  title: Small CAN
+  name: Small CAN
+  directory: hellen/small-can-board
+  image:
+    file: alphax-2chan.jpg
+  pins:
+    - pin: A8
+      x: 316
+      y: 239
+    - pin: A7
+      x: 413
+      y: 239
+    - pin: A6
+      x: 489
+      y: 239
+    - pin: A5
+      x: 564
+      y: 239
+    - pin: A4
+      x: 635
+      y: 239
+    - pin: A3
+      x: 710
+      y: 239
+    - pin: A2
+      x: 786
+      y: 239
+    - pin: A1
+      x: 882
+      y: 239
+
+    - pin: B8
+      x: 316
+      y: 352
+    - pin: B7
+      x: 413
+      y: 352
+    - pin: B6
+      x: 489
+      y: 352
+    - pin: B5
+      x: 564
+      y: 352
+    - pin: B4
+      x: 635
+      y: 352
+    - pin: B3
+      x: 710
+      y: 352
+    - pin: B2
+      x: 786
+      y: 352
+    - pin: B1
+      x: 882
+      y: 352
+
+    - pin: C8
+      x: 316
+      y: 466
+    - pin: C7
+      x: 413
+      y: 466
+    - pin: C6
+      x: 489
+      y: 466
+    - pin: C5
+      x: 564
+      y: 466
+    - pin: C4
+      x: 635
+      y: 466
+    - pin: C3
+      x: 710
+      y: 466
+    - pin: C2
+      x: 786
+      y: 466
+    - pin: C1
+      x: 882
+      y: 466
