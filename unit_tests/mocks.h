@@ -71,7 +71,7 @@ public:
 	MockOutputPin();
 	virtual ~MockOutputPin();
 
-	MOCK_METHOD(void, setValue, (int value), (override));
+	MOCK_METHOD(void, setValue, (int value, bool isForce), (override));
 };
 
 class MockExecutor : public TestExecutor {

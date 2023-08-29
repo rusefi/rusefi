@@ -252,7 +252,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	va_end(ap);
 #endif
     criticalShutdown();
-	enginePins.communicationLedPin.setValue(1);
+	enginePins.communicationLedPin.setValue(1, /*force*/true);
 
 	hasFirmwareErrorFlag = true;
 	if (indexOf(fmt, '%') == -1) {

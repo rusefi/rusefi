@@ -492,14 +492,14 @@ void OutputPin::setOnchipValue(int electricalValue) {
 }
 #endif // EFI_PROD_CODE
 
-void OutputPin::setValue(int logicValue) {
-    setValue(nullptr, logicValue);
+void OutputPin::setValue(int logicValue, bool isForce) {
+    setValue(nullptr, logicValue, isForce);
 }
 
 extern bool qcDirectPinControlMode;
 
-void OutputPin::setValue(const char *msg, int logicValue) {
-    if (qcDirectPinControlMode) {
+void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
+    if (qcDirectPinControlMode && !isForce) {
         return;
     }
 
@@ -553,7 +553,7 @@ bool OutputPin::getLogicValue() const {
 void OutputPin::setDefaultPinState(pin_output_mode_e outputMode) {
 	assertOMode(mode);
 	this->mode = outputMode;
-	setValue(false); // initial state
+	setValue(false, /*force*/true); // initial state
 }
 
 brain_pin_diag_e OutputPin::getDiag() const {

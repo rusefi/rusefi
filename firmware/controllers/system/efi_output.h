@@ -53,8 +53,8 @@ public:
 	bool isInitialized();
 
 	bool getAndSet(int logicValue);
-	void setValue(const char *msg, int logicValue);
-	TEST_VIRTUAL void setValue(int logicValue);
+	void setValue(const char *msg, int logicValue, bool isForce = false);
+	TEST_VIRTUAL void setValue(int logicValue, bool isForce = false);
 	void toggle();
 	bool getLogicValue() const;
 

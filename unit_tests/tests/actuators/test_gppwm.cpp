@@ -50,14 +50,14 @@ TEST(GpPwm, OutputOnOff) {
 		InSequence i;
 
 		// Rising edge test
-		EXPECT_CALL(pin, setValue(0));
-		EXPECT_CALL(pin, setValue(1));
-		EXPECT_CALL(pin, setValue(1));
+		EXPECT_CALL(pin, setValue(0, false));
+		EXPECT_CALL(pin, setValue(1, false));
+		EXPECT_CALL(pin, setValue(1, false));
 
 		// Falling edge test
-		EXPECT_CALL(pin, setValue(1));
-		EXPECT_CALL(pin, setValue(0));
-		EXPECT_CALL(pin, setValue(0));
+		EXPECT_CALL(pin, setValue(1, false));
+		EXPECT_CALL(pin, setValue(0, false));
+		EXPECT_CALL(pin, setValue(0, false));
 	}
 
 	ch.init(false, nullptr, &pin, nullptr, &cfg);

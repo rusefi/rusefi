@@ -9,7 +9,7 @@ using ::testing::StrictMock;
 TEST(DcMotor, Disable) {
 	StrictMock<MockOutputPin> dpin;
 
-	EXPECT_CALL(dpin, setValue(1))
+	EXPECT_CALL(dpin, setValue(1, testing::_))
 		.Times(2);	// happens twice - once for initial disable, once for set(0)
 
 	TwoPinDcMotor dut(dpin);
@@ -18,7 +18,7 @@ TEST(DcMotor, Disable) {
 TEST(DcMotor, Disable2) {
 	StrictMock<MockOutputPin> dpin;
 
-	EXPECT_CALL(dpin, setValue(1)).Times(4);
+	EXPECT_CALL(dpin, setValue(1, testing::_)).Times(4);
 
 	TwoPinDcMotor dut(dpin);
 
@@ -32,10 +32,10 @@ TEST(DcMotor, Enable) {
 		InSequence is;
 
 		// Construction disables
-		EXPECT_CALL(dpin, setValue(1)).Times(2);
+		EXPECT_CALL(dpin, setValue(1, testing::_)).Times(2);
 
 		// Then enable
-		EXPECT_CALL(dpin, setValue(0));
+		EXPECT_CALL(dpin, setValue(0, testing::_));
 	}
 
 	TwoPinDcMotor dut(dpin);
@@ -44,7 +44,7 @@ TEST(DcMotor, Enable) {
 
 TEST(DcMotor, SetUnconfigured) {
 	StrictMock<MockOutputPin> dpin;
-	EXPECT_CALL(dpin, setValue(1)).Times(3);
+	EXPECT_CALL(dpin, setValue(1, testing::_)).Times(3);
 
 	TwoPinDcMotor dut(dpin);
 	EXPECT_FLOAT_EQ(dut.get(), 0);

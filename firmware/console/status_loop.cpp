@@ -290,7 +290,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 		// make sure we do not turn the critical LED off if already have
 		// critical error by now
 		for (uint32_t i = 0; !hasFirmwareError() && i < sizeof(leds) / sizeof(leds[0]); i++) {
-			leds[i]->setValue(value);
+			leds[i]->setValue(value, /*force*/true);
 		}
 	}
 
@@ -306,7 +306,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			// second invocation of BlinkingTask
 			setAllLeds(0);
 		} else if (counter % 2 == 0) {
-			enginePins.communicationLedPin.setValue(0);
+			enginePins.communicationLedPin.setValue(0, /*force*/true);
 #if HW_CHECK_SD
 extern int totalLoggedBytes;
 			if (totalLoggedBytes > 2000) {
@@ -342,7 +342,7 @@ extern int totalLoggedBytes;
 				offTimeMs = 0.6 * onTimeMs;
 			}
 
-			enginePins.communicationLedPin.setValue(1);
+			enginePins.communicationLedPin.setValue(1, /*force*/true);
 //#if HW_CHECK_MODE
 //			// we have to do anything possible to help users notice FACTORY MODE
 //			enginePins.errorLedPin.setValue(0);
