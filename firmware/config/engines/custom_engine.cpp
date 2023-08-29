@@ -984,6 +984,8 @@ void fuelBenchMode() {
 // set engine_type 73
 void proteusStimQc() {
     engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
 
    	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1;
    	engineConfiguration->triggerInputPins[1] = PROTEUS_DIGITAL_2;
@@ -991,4 +993,11 @@ void proteusStimQc() {
    	engineConfiguration->camInputs[1] = PROTEUS_DIGITAL_4;
    	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_DIGITAL_5;
    	engineConfiguration->brakePedalPin = PROTEUS_DIGITAL_6;
+
+   	engineConfiguration->fan2Pin = PROTEUS_LS_9;
+   	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_13;
+   	engineConfiguration->tachOutputPin = PROTEUS_LS_14;
+
+   	engineConfiguration->vvtPins[0] = PROTEUS_LS_15;
+   	engineConfiguration->vvtPins[1] = PROTEUS_LS_16;
 }
