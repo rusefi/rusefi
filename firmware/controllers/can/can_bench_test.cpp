@@ -23,6 +23,12 @@ static void setPin(const CANRxFrame& frame, int value) {
 			return;
 		Gpio pin = getBoardMetaOutputs()[index];
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
+
+        int index = brainPin_to_index(pin);
+        if (engine->pinRepository.getBrainUsedPin(index) == nullptr) {
+            criticalError("trying to test unused pin %s", hwPortname(pin));
+        }
+
 		palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
 		// todo: add smart chip support support
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
