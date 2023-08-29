@@ -106,6 +106,11 @@ TEST(HPFP, InjectionReplacementFuel) {
 TEST(HPFP, PI) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
+	engineConfiguration->hpfpTargetDecay = 0;
+	engineConfiguration->hpfpPidP = 0;
+	engineConfiguration->hpfpPidI = 0;
+	engineConfiguration->hpfpPeakPos = 0;
+
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->hpfpCamLobes = 4;
 	engine->engineState.injectionMass[0] = 0.05 /* cc/cyl */ * fuelDensity;
@@ -162,6 +167,11 @@ TEST(HPFP, PI) {
 
 TEST(HPFP, Angle) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->hpfpTargetDecay = 0;
+	engineConfiguration->hpfpPidP = 0;
+	engineConfiguration->hpfpPidI = 0;
+	engineConfiguration->hpfpPeakPos = 0;
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->hpfpCamLobes = 4;
