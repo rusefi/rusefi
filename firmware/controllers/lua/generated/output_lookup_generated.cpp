@@ -638,22 +638,38 @@ float getOutputValueByName(const char *name) {
 			return engine->engineState.ignitionLoad;
 		case 1568071542:
 			return engine->engineState.veTableYAxis;
+#if EFI_SHAFT_POSITION_INPUT
 		case 477303734:
 			return engine->triggerCentral.vvtCamCounter;
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 		case -1727829859:
 			return engine->triggerCentral.mapVvt_MAP_AT_SPECIAL_POINT;
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 		case -1585778708:
 			return engine->triggerCentral.mapVvt_MAP_AT_DIFF;
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 		case 1637661099:
 			return engine->triggerCentral.mapVvt_MAP_AT_CYCLE_COUNT;
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 		case 845799744:
 			return engine->triggerCentral.mapVvt_map_peak;
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 		case 162105111:
 			return engine->triggerCentral.currentEngineDecodedPhase;
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 		case -280624712:
 			return engine->triggerCentral.triggerToothAngleError;
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 		case 989545496:
 			return engine->triggerCentral.triggerIgnoredToothCount;
+#endif
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;
 		case -1236599226:
