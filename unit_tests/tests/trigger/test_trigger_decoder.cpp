@@ -867,6 +867,7 @@ TEST(big, testBatch) {
 
 TEST(big, testSinglePoint) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->hpfpCamLobes = 0;
 	setTable(config->injectionPhase, -180.0f);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
@@ -895,6 +896,7 @@ TEST(big, testSinglePoint) {
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->hpfpCamLobes = 0;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;

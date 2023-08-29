@@ -39,9 +39,9 @@ void setLeftRightBanksNeedBetterName() {
 }
 
 static void setDefaultHPFP() {
+	engineConfiguration->hpfpCamLobes = 3;
 // todo: would be nice for unit tests to be happy about these defaults
 #if EFI_PROD_CODE
-	engineConfiguration->hpfpCamLobes = 3;
 	engineConfiguration->hpfpPumpVolume = 0.290;
 	engineConfiguration->hpfpMinAngle = 10;
 	engineConfiguration->hpfpActivationAngle = 30;
