@@ -13,12 +13,45 @@ void setHellenCan() {
 	engineConfiguration->canRxPin = Gpio::D0;
 }
 
+void setHellen64Can() {
+	engineConfiguration->canTxPin = Gpio::B9;
+	engineConfiguration->canRxPin = Gpio::B8;
+}
+
+void setHellenEnPin(Gpio pin) {
+	static bool initialized = false;
+	if (!initialized) {
+		initialized = true;
+		megaEn.initPin("EN", pin);
+		megaEn.setValue(1);
+	}
+}
+
 void setHellenMegaEnPin() {
-    static bool initialized = false;
-    if (!initialized) {
-        initialized = true;
-	    megaEn.initPin("mm-EN", H144_GP8); // OUT_PWR_EN
-	    megaEn.setValue(1);
+	setHellenEnPin(H144_GP8); // OUT_PWR_EN
+}
+
+void setHellen64MegaEnPin() {
+	setHellenEnPin(H64_IO1); // OUT_PWR_EN
+}
+
+void hellenBoardStandBy() {
+	// we need to turn 'megaEn' and pause for a bit to make sure that WBO is off and does not wake main firmware right away
+	megaEn.setValue(0);
+	// todo: 200ms is totally random what's the science for this sleep duration?
+	chThdSleepMilliseconds(200);
+}
+
+/**
+ * dirty hack
+ */
+void configureHellenMegaAccCS2Pin() {
+	static bool initialized = false;
+	static OutputPin cs2pin;
+	if (!initialized) {
+		initialized = true;
+		cs2pin.initPin("mm-CS2", H_SPI1_CS2);
+		cs2pin.setValue(1);
 	}
 }
 

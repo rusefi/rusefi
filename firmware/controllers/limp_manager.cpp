@@ -42,7 +42,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
 
-#if !EFI_UNIT_TEST
+#if !EFI_UNIT_TEST && EFI_SHAFT_POSITION_INPUT
 	// if the ignition is off, cut fuel + spark
 	// UNLESS we're self stimulating, so you can test the ECU on the bench on USB
 	if (!m_ignitionOn && !engine->triggerCentral.directSelfStimulation) {

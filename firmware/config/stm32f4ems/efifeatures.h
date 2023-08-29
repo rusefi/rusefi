@@ -289,12 +289,12 @@
 #define EFI_ENGINE_SNIFFER TRUE
 #endif
 
+#ifndef EFI_SENSOR_CHART
 #define EFI_SENSOR_CHART TRUE
+#endif
 
-#if defined __GNUC__
+#ifndef DL_OUTPUT_BUFFER
 #define DL_OUTPUT_BUFFER 6500
-#else
-#define DL_OUTPUT_BUFFER 8000
 #endif
 
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
@@ -308,8 +308,9 @@
 //#define EFI_MALFUNCTION_INDICATOR FALSE
 #endif
 
+#ifndef EFI_MAP_AVERAGING
 #define EFI_MAP_AVERAGING TRUE
-//#define EFI_MAP_AVERAGING FALSE
+#endif
 
 // todo: most of this should become configurable
 

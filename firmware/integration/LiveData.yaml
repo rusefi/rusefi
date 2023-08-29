@@ -95,6 +95,7 @@ Usages:
     folder: controllers/trigger
     withCDefines: true
     constexpr: "engine->triggerCentral"
+    conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
 
   - name: trigger_state
     folder: controllers/trigger

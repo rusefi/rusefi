@@ -7,17 +7,51 @@
 
 #pragma once
 
+// see https://github.com/andreika-git/hellen-one/blob/master/board_id/board_ids.csv
 #define BOARD_ID_154hyundai_c 10
+#define BOARD_ID_154hyundai_d 201
+
+#define BOARD_ID_2chan_b 3
+#define BOARD_ID_2chan_c 5
 #define BOARD_ID_2chan_d 107
+// mega-module starts here
+#define BOARD_ID_2chan_e 112
+#define BOARD_ID_2chan_f 115
+#define BOARD_ID_2chan_g 210
+
+#define BOARD_ID_4chan_d 103
+#define BOARD_ID_4chan_e 105
+#define BOARD_ID_4chan_f 113
+#define BOARD_ID_4chan_g 203
+#define BOARD_ID_4chan_h 114
 
 void hellenWbo();
 
 void setHellenMegaEnPin();
+void setHellenEnPin(Gpio pin);
+void setHellen64MegaEnPin();
+void hellenBoardStandBy();
+void configureHellenMegaAccCS2Pin();
+void configureHellenCanTerminator();
 
 void setHellenCan();
+void setHellen64Can();
 
 int detectHellenBoardId();
 void detectHellenBoardType();
+
+#define H64_LED1_RED Gpio::B0
+#define H64_LED2_BLUE Gpio::B1
+
+#define H64_IO1 Gpio::C13
+#define H64_SPI1_CS1 Gpio::D2
+
+#define H64_OUT_PWM1 Gpio::B7
+#define H64_OUT_PWM2 Gpio::C8
+#define H64_OUT_PWM3 Gpio::C9
+#define H64_OUT_PWM4 Gpio::A8
+#define H64_OUT_PWM5 Gpio::A9
+#define H64_OUT_PWM6 Gpio::A15
 
 // stm32 UART8
 #define H144_UART1_RX Gpio::E0
@@ -31,6 +65,8 @@ void detectHellenBoardType();
 #define H144_LED2 Gpio::G1
 #define H144_LED3 Gpio::E7
 #define H144_LED4 Gpio::E8
+
+#define H144_USB1ID Gpio::A10
 
 #define H176_LED1_RED Gpio::H8
 
@@ -115,12 +151,16 @@ void detectHellenBoardType();
 // VIGN PA5
 #define H144_IN_VBATT EFI_ADC_5
 
+// muxed
+#define H144_IN_TPS2 EFI_ADC_20
+
 // IN_MAP1 AIN9 PC0
 #define H144_IN_MAP1 EFI_ADC_10
 // AIN10 PC1
 #define H144_IN_MAP2 EFI_ADC_11
 // AIN15 A15 PA2
 #define H144_IN_MAP3 EFI_ADC_2
+#define H144_IN_MAP3_DIGITAL Gpio::A2
 
 // AIN7
 #define H144_IN_RES1 Gpio::F9
@@ -157,9 +197,9 @@ void detectHellenBoardType();
 // IN_O2S2 AIN12 PA1
 #define H144_IN_O2S2 EFI_ADC_1
 
-// IN_D1(old) or IN_DIG8(new)
+// IN_D1(old) or IN_DIG8(new/mega-module)
 #define H144_IN_D_1 Gpio::E12
-// IN_D2(old) or IN_DIG9(new)
+// IN_D2(old) or IN_DIG9(new/mm)
 #define H144_IN_D_2 Gpio::E13
 // IN_D3(old) or IN_DIG10(new)
 #define H144_IN_D_3 Gpio::E14
@@ -211,16 +251,27 @@ void detectHellenBoardType();
 #define H_SPI3_SCK Gpio::C10
 #define H_SPI3_CS Gpio::A15
 
-static void setHellenSdCardSpi1() {
+static void setHellenSdCardSpi1NoCS() {
+	engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->spi1mosiPin = H_SPI1_MOSI;
 	engineConfiguration->spi1misoPin = H_SPI1_MISO;
 	engineConfiguration->spi1sckPin = H_SPI1_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI1_CS1;
 	engineConfiguration->is_enabled_spi_1 = true;
 }
 
+static void setHellenSdCardSpi1() {
+	setHellenSdCardSpi1NoCS();
+	engineConfiguration->sdCardCsPin = H_SPI1_CS1;
+}
+
+static void setHellen64SdCardSpi1() {
+	setHellenSdCardSpi1NoCS();
+	engineConfiguration->sdCardCsPin = H64_SPI1_CS1;
+}
+
 static void setHellenSdCardSpi2() {
+	engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
 	engineConfiguration->spi2misoPin = H_SPI2_MISO;
@@ -230,6 +281,7 @@ static void setHellenSdCardSpi2() {
 }
 
 static void setHellenSdCardSpi3() {
+	engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	engineConfiguration->spi3mosiPin = H_SPI3_MOSI;
 	engineConfiguration->spi3misoPin = H_SPI3_MISO;
@@ -244,4 +296,9 @@ static void setHellenSdCardSpi3() {
 static void setDefaultHellenAtPullUps(){
 	engineConfiguration->clt.config.bias_resistor = HELLEN_DEFAULT_AT_PULLUP;
 	engineConfiguration->iat.config.bias_resistor = HELLEN_DEFAULT_AT_PULLUP;
+}
+
+static void setHellenMMbaro() {
+	engineConfiguration->lps25BaroSensorScl = Gpio::B10;
+	engineConfiguration->lps25BaroSensorSda = Gpio::B11;
 }

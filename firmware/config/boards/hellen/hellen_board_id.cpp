@@ -304,13 +304,12 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimesAveraged(int i, float & T
 
 int detectHellenBoardId() {
 	int boardId = -1;
-#if EFI_PROD_CODE
+#ifdef HELLEN_BOARD_ID_PIN_1
 	efiPrintf("Starting Hellen Board ID detection...");
 	efitick_t beginNt = getTimeNowNt();
 	
-	// Hellen boards use Gpio::F0 and Gpio::F1.
 	const int numPins = 2;
-	Gpio rPins[numPins] = { Gpio::F0, Gpio::F1 };
+	Gpio rPins[numPins] = { HELLEN_BOARD_ID_PIN_1, HELLEN_BOARD_ID_PIN_2};
 	
 	// We start from the estimated capacitance, but the real one can be +-10%
 	float C = HELLEN_BOARD_ID_CAPACITOR;
@@ -381,6 +380,6 @@ int detectHellenBoardId() {
 	}
 
 	efiPrintf("* RESULT: BoardId = %d, R1 = %.0f, R2 = %.0f (Elapsed time: %d ms)", boardId, R[0], R[1], elapsed_Ms);
-#endif /* EFI_PROD_CODE */
+#endif /* HELLEN_BOARD_ID_PIN_1 */
 	return boardId;
 }
