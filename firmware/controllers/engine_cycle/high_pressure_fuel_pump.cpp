@@ -240,5 +240,9 @@ void HpfpController::scheduleNextCycle() {
 #endif // EFI_HPFP
 
 bool isGdiEngine() {
+#if EFI_PROD_CODE
+    return enginePins.hpfpValve.isInitialized();
+#else
     return engineConfiguration->hpfpCamLobes > 0;
+#endif
 }
