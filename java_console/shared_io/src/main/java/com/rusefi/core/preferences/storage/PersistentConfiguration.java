@@ -44,6 +44,14 @@ public class PersistentConfiguration {
         }));
     }
 
+    public static boolean getBoolProperty(String name) {
+        return getConfig().getRoot().getBoolProperty(name);
+    }
+
+    public static void setBoolProperty(String name, boolean value) {
+        getConfig().getRoot().setBoolProperty(name, value);
+    }
+
     @SuppressWarnings("unchecked")
     public void load() {
         if (!config.isEmpty()) {

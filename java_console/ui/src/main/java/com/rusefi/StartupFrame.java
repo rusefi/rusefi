@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
@@ -45,6 +46,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  */
 public class StartupFrame {
     private static final Logging log = getLogging(Launcher.class);
+    public static final String ALWAYS_AUTO_PORT = "always_auto_port";
 
     // private static final int RUSEFI_ORANGE = 0xff7d03;
 
@@ -112,6 +114,22 @@ public class StartupFrame {
         final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
         //connectButton.setBackground(new Color(RUSEFI_ORANGE)); // custom orange
         setToolTip(connectButton, "Connect to real hardware");
+
+        JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Always auto-connect port");
+        menuItem.setState(PersistentConfiguration.getBoolProperty(ALWAYS_AUTO_PORT));
+        menuItem.addActionListener(e -> PersistentConfiguration.setBoolProperty(ALWAYS_AUTO_PORT, menuItem.getState()));
+
+        connectButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (!SwingUtilities.isRightMouseButton(e))
+                    return;
+                JPopupMenu menu = new JPopupMenu();
+                menu.add(menuItem);
+                menu.show(connectButton, e.getX(), e.getY());
+            }
+        });
+
         connectPanel.add(connectButton);
         connectPanel.setVisible(false);
 
@@ -319,7 +337,10 @@ public class StartupFrame {
         for (final String port : ports)
             comboPorts.addItem(port);
         String defaultPort = getConfig().getRoot().getProperty(ConsoleUI.PORT_KEY);
-        comboPorts.setSelectedItem(defaultPort);
+        if (!PersistentConfiguration.getBoolProperty(ALWAYS_AUTO_PORT)) {
+            comboPorts.setSelectedItem(defaultPort);
+        }
+
         trueLayout(comboPorts);
     }
 
