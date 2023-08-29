@@ -173,7 +173,7 @@ void setBoardDefaultConfiguration() {
 	setIgnitionPins();
 	setupEtb();
 	if (is_F_OrOlder()) {
-        engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO13;;
+        engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO13;
 	    engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM7;
 	    engineConfiguration->vvtPins[1] = Gpio::H144_OUT_PWM8;
 	} else {
