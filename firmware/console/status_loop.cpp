@@ -314,11 +314,6 @@ extern int totalLoggedBytes;
 			}
 #endif // HW_CHECK_SD
 
-//#if HW_CHECK_MODE
-//			// we have to do anything possible to help users notice FACTORY MODE
-//			enginePins.errorLedPin.setValue(1);
-//			enginePins.runningLedPin.setValue(1);
-//#endif // HW_CHECK_MODE
 			if (!lowVBatt) {
 				enginePins.warningLedPin.setValue(0);
 			}
