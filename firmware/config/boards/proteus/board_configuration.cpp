@@ -201,6 +201,10 @@ void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
 
+int getBoardMetaLowSideOutputsCount() {
+    return 16;
+}
+
 int getBoardMetaOutputsCount() {
     return efi::size(PROTEUS_OUTPUTS);
 }

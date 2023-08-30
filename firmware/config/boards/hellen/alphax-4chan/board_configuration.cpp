@@ -224,6 +224,10 @@ static Gpio OUTPUTS[] = {
 		Gpio::H144_LS_2,
 		Gpio::H144_LS_3,
 		Gpio::H144_LS_4,
+		// vvt1
+		Gpio::H144_IGN_7,
+		// vvt2
+		Gpio::H144_IGN_8,
 };
 
 int getBoardMetaOutputsCount() {

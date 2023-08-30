@@ -97,5 +97,7 @@ extern bool isActiveConfigurationVoid;
 
 #define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))
 
+// total number of outputs: low side + high side
 int getBoardMetaOutputsCount();
+int getBoardMetaLowSideOutputsCount();
 Gpio* getBoardMetaOutputs();

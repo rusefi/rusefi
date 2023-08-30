@@ -1060,4 +1060,6 @@ __attribute__((weak)) void setBoardConfigOverrides() { }
 __attribute__((weak)) void onBoardStandBy() { }
 
 __attribute__((weak)) int getBoardMetaOutputsCount() { return 0; }
+// default implementation: treat all outputs as low side
+__attribute__((weak)) int getBoardMetaLowSideOutputsCount() { return getBoardMetaOutputsCount(); }
 __attribute__((weak)) Gpio* getBoardMetaOutputs() { return nullptr; }
