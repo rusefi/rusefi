@@ -509,21 +509,21 @@ void proteusBoardTest() {
     engineConfiguration->luaOutputPins[1] = Gpio::PROTEUS_LS_14;
     engineConfiguration->luaOutputPins[2] = Gpio::PROTEUS_LS_15;
     engineConfiguration->luaOutputPins[3] = Gpio::PROTEUS_LS_16;
-    engineConfiguration->luaOutputPins[4] = PROTEUS_HS_2;
-    engineConfiguration->luaOutputPins[5] = PROTEUS_HS_4;
+    engineConfiguration->luaOutputPins[4] = Gpio::PROTEUS_HS_2;
+    engineConfiguration->luaOutputPins[5] = Gpio::PROTEUS_HS_4;
 
 	engineConfiguration->ignitionPins[0] = Gpio::PROTEUS_IGN_1;
 	engineConfiguration->ignitionPins[1] = Gpio::PROTEUS_IGN_2;
-	engineConfiguration->ignitionPins[2] = PROTEUS_IGN_4;
-	engineConfiguration->ignitionPins[3] = PROTEUS_IGN_5;
-	engineConfiguration->ignitionPins[4] = PROTEUS_IGN_6;
-	engineConfiguration->ignitionPins[5] = PROTEUS_IGN_7;
+	engineConfiguration->ignitionPins[2] = Gpio::PROTEUS_IGN_4;
+	engineConfiguration->ignitionPins[3] = Gpio::PROTEUS_IGN_5;
+	engineConfiguration->ignitionPins[4] = Gpio::PROTEUS_IGN_6;
+	engineConfiguration->ignitionPins[5] = Gpio::PROTEUS_IGN_7;
 
-	engineConfiguration->ignitionPins[6] = PROTEUS_HS_3;
-	engineConfiguration->ignitionPins[7] = PROTEUS_IGN_3;
-	engineConfiguration->ignitionPins[8] = PROTEUS_IGN_9;
-	engineConfiguration->ignitionPins[9] = PROTEUS_IGN_8;
-	engineConfiguration->ignitionPins[10] = PROTEUS_HS_1;
+	engineConfiguration->ignitionPins[6] = Gpio::PROTEUS_HS_3;
+	engineConfiguration->ignitionPins[7] = Gpio::PROTEUS_IGN_3;
+	engineConfiguration->ignitionPins[8] = Gpio::PROTEUS_IGN_9;
+	engineConfiguration->ignitionPins[9] = Gpio::PROTEUS_IGN_8;
+	engineConfiguration->ignitionPins[10] = Gpio::PROTEUS_HS_1;
 	engineConfiguration->ignitionPins[11] = Gpio::PROTEUS_IGN_12;
 
 	strncpy(config->luaScript, R"(

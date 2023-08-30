@@ -49,14 +49,14 @@
 
 
 // pin 2/black35
-#define PROTEUS_HS_1 Gpio::A9
+#define PROTEUS_HS_1 A9
 
 // pin 1/black35
-#define PROTEUS_HS_2 Gpio::A8
+#define PROTEUS_HS_2 A8
 
-#define PROTEUS_HS_3 Gpio::D15
+#define PROTEUS_HS_3 D15
 
-#define PROTEUS_HS_4 Gpio::D14
+#define PROTEUS_HS_4 D14
 
 // pin 35/black35
 #define PROTEUS_IGN_1 D4
@@ -65,13 +65,13 @@
 #define PROTEUS_IGN_2 D3
 
 // pin 22/black35
-#define PROTEUS_IGN_3 Gpio::C9
-#define PROTEUS_IGN_4 Gpio::C8
-#define PROTEUS_IGN_5 Gpio::C7
-#define PROTEUS_IGN_6 Gpio::G8
-#define PROTEUS_IGN_7 Gpio::G7
-#define PROTEUS_IGN_8 Gpio::G6
-#define PROTEUS_IGN_9 Gpio::G5
+#define PROTEUS_IGN_3 C9
+#define PROTEUS_IGN_4 C8
+#define PROTEUS_IGN_5 C7
+#define PROTEUS_IGN_6 G8
+#define PROTEUS_IGN_7 G7
+#define PROTEUS_IGN_8 G6
+#define PROTEUS_IGN_9 G5
 #define PROTEUS_IGN_10 G4
 #define PROTEUS_IGN_11 G3
 #define PROTEUS_IGN_12 G2
@@ -161,6 +161,20 @@ Gpio::PROTEUS_LS_15,
 Gpio::PROTEUS_LS_16,
 	Gpio::PROTEUS_IGN_1,
 	Gpio::PROTEUS_IGN_2,
+	Gpio::PROTEUS_IGN_3,
+	Gpio::PROTEUS_IGN_4,
+	Gpio::PROTEUS_IGN_5,
+	Gpio::PROTEUS_IGN_6,
+	Gpio::PROTEUS_IGN_7,
+	Gpio::PROTEUS_IGN_8,
+	Gpio::PROTEUS_IGN_9,
+	Gpio::PROTEUS_IGN_10,
+	Gpio::PROTEUS_IGN_11,
+	Gpio::PROTEUS_IGN_12,
+	Gpio::PROTEUS_HS_1,
+	Gpio::PROTEUS_HS_2,
+	Gpio::PROTEUS_HS_3,
+	Gpio::PROTEUS_HS_4
 };
 #endif // HW_PROTEUS
 

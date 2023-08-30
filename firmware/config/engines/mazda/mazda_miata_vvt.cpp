@@ -712,7 +712,7 @@ void setMiataNB2_Proteus() {
     #if EFI_PROD_CODE
     engineConfiguration->ignitionPins[0] = Gpio::PROTEUS_IGN_1;
     engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
-    engineConfiguration->ignitionPins[2] = PROTEUS_IGN_3;
+    engineConfiguration->ignitionPins[2] = Gpio::PROTEUS_IGN_3;
     engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
