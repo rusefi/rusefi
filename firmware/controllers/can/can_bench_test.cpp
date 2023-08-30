@@ -18,15 +18,16 @@ bool qcDirectPinControlMode = false;
 #if EFI_CAN_SUPPORT
 
 static void setPin(const CANRxFrame& frame, int value) {
-		int index = frame.data8[2];
-		if (index >= getBoardMetaOutputsCount())
+		int outputIndex = frame.data8[2];
+		if (outputIndex >= getBoardMetaOutputsCount())
 			return;
-		Gpio pin = getBoardMetaOutputs()[index];
+		Gpio pin = getBoardMetaOutputs()[outputIndex];
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 
-        int index = brainPin_to_index(pin);
-        if (engine->pinRepository.getBrainUsedPin(index) == nullptr) {
-            criticalError("trying to test unused pin %s", hwPortname(pin));
+        int hwIndex = brainPin_to_index(pin);
+        if (engine->pinRepository.getBrainUsedPin(hwIndex) == nullptr) {
+            // if pin is assigned we better configure it
+            efiSetPadMode("QC_SET", pin, PAL_MODE_OUTPUT_PUSHPULL);
         }
 
 		palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
