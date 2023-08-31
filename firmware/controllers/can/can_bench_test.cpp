@@ -139,8 +139,9 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	    setPin(frame, 0);
 	} else if (command == CAN_BENCH_SET_ENGINE_TYPE) {
 		int eType = frame.data8[2];
-		// todo: fix firmware for 'false' to be possible here?
+		// todo: fix firmware for 'false' to be possible - i.e. more of properties should be applied on the fly
 		setEngineType(eType, true);
+		scheduleReboot();
 	}
 }
 
