@@ -19,6 +19,7 @@
 using time_t = uint32_t;
 #endif
 
+#include <rusefi/rusefi_time_types.h>
 #include "rusefi_generated.h"
 #include "rusefi_enums.h"
 #include "firing_order.h"
@@ -51,11 +52,6 @@ using efitimesec_t = time_t;
  * See MS2US
  */
 
-/**
- * platform-dependent tick since boot
- * in case of stm32f4 that's 32-bit timer ticks (SCHEDULER_TIMER_DEVICE == TIM5) extended to 64 bits
- */
-using efitick_t = int64_t;
 
 /**
  * 64 bit time in microseconds (1/1_000_000 of a second), since boot

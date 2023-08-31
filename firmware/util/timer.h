@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "efitime.h"
+#include <rusefi/rusefi_time_types.h>
 
 /**
  * Helper class with "has X amount of time elapsed since most recent reset" methods
