@@ -2,6 +2,8 @@
 
 #if !EFI_UNIT_TEST
 
+#include <rusefi/rusefi_time_wraparound.h>
+
 static WrapAround62 timeNt;
 
 /**
