@@ -11,13 +11,7 @@
 #include <stdbool.h>
 #include <float.h>
 #include <stdint.h>
-#if defined __GNUC__
-// GCC
 #include <sys/types.h>
-#else
-// IAR
-using time_t = uint32_t;
-#endif
 
 #include <rusefi/rusefi_time_types.h>
 #include "rusefi_generated.h"

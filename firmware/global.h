@@ -20,14 +20,7 @@
 // for US_TO_NT_MULTIPLIER
 #include "mpu_util.h"
 
-// this is about MISRA not liking 'time.h'. todo: figure out something
-#if defined __GNUC__
-// GCC
 #include <sys/types.h>
-#else
-// IAR
-typedef unsigned int time_t;
-#endif
 
 #ifdef __cplusplus
 #include "eficonsole.h"
