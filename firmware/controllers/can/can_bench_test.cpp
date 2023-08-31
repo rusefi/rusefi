@@ -139,7 +139,8 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	    setPin(frame, 0);
 	} else if (command == CAN_BENCH_SET_ENGINE_TYPE) {
 		int eType = frame.data8[2];
-		setEngineType(eType, false);
+		// todo: fix firmware for 'false' to be possible here?
+		setEngineType(eType, true);
 	}
 }
 
