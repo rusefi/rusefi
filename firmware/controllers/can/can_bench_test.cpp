@@ -27,7 +27,7 @@ static void setPin(const CANRxFrame& frame, int value) {
         int hwIndex = brainPin_to_index(pin);
         if (engine->pinRepository.getBrainUsedPin(hwIndex) == nullptr) {
             // if pin is assigned we better configure it
-            efiSetPadMode("QC_SET", pin, PAL_MODE_OUTPUT_PUSHPULL);
+            efiSetPadModeWithoutOwnershipAcquisition("QC_SET", pin, PAL_MODE_OUTPUT_PUSHPULL);
         }
 
 		palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
