@@ -12,7 +12,7 @@
 #include "trigger_decoder.h"
 #include "instant_rpm_calculator.h"
 #include "trigger_central_generated.h"
-#include "timer.h"
+#include <rusefi/timer.h>
 #include "pin_repository.h"
 #include "local_version_holder.h"
 #include "cyclic_buffer.h"

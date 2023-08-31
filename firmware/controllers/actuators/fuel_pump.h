@@ -6,7 +6,7 @@
 
 #include "engine_module.h"
 #include "fuel_pump_control_generated.h"
-#include "timer.h"
+#include <rusefi/timer.h>
 
 class FuelPumpController : public EngineModule, public fuel_pump_control_s {
 public:

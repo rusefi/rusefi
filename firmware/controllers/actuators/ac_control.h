@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ac_control_generated.h"
-#include "timer.h"
+#include <rusefi/timer.h>
 
 class AcController final : public ac_control_s, public EngineModule {
 public:

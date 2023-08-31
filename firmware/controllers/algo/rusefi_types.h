@@ -32,26 +32,6 @@
 #define STOICH_RATIO 14.7f
 #define CONST_PI 3.14159265358979323846
 
-
-// time in seconds
-using efitimesec_t = time_t;
-
-/**
- * We use a signed type here so that subtraction result is a proper negative value.
- * A typical use-case negative result is when we do 'timeNow() - timeOfEvent' where timeOfEvent
- * is actually after timeNow() due to interrupt context switches
- *
- * See getTimeNowNt()
- * See US2NT
- * See MS2US
- */
-
-
-/**
- * 64 bit time in microseconds (1/1_000_000 of a second), since boot
- */
-using efitimeus_t = int64_t;
-
 /**
  * 64 bit time in milliseconds (1/1_000 of a second), since boot
  */

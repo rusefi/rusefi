@@ -2,7 +2,7 @@
  * @file frequency_sensor.h
  */
 #include "functional_sensor.h"
-#include "timer.h"
+#include <rusefi/timer.h>
 #include "biquad.h"
 
 class FrequencySensor : public FunctionalSensor {

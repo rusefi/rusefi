@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "timer.h"
+#include <rusefi/timer.h>
 
 TEST(util, timer) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);

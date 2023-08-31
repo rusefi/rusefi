@@ -12,35 +12,17 @@
 #include "efifeatures.h"
 #include "rusefi_types.h"
 #include "global.h"
+#include <rusefi/rusefi_time_math.h>
 
 #if EFI_PROD_CODE
 // for US_TO_NT_MULTIPLIER which is port-specific
 #include "port_mpu_util.h"
 #endif
 
-#define MS_PER_SECOND 1000
-#define US_PER_SECOND 1000000
-#define US_PER_SECOND_F 1000000.0
-#define US_PER_SECOND_LL 1000000LL
-#define NT_PER_SECOND (US2NT(US_PER_SECOND_LL))
-
-#define MS2US(MS_TIME) ((MS_TIME) * 1000)
-#define US2MS(US_TIME) ((US_TIME) / 1000)
-
 // microseconds to ticks
 // since only about 20 seconds of ticks fit in 32 bits this macro is casting parameter into 64 bits 'efitick_t' type
 // please note that int64 <-> float is a heavy operation thus we have 'USF2NT' below
 #define US2NT(us) (((efitick_t)(us)) * US_TO_NT_MULTIPLIER)
-
-// microseconds to ticks, but floating point
-// If converting a floating point time period, use this macro to avoid
-// the expensive conversions from int64 <-> float
-#define USF2NT(us_float) ((us_float) * US_TO_NT_MULTIPLIER)
-#define USF2MS(us_float) (0.001f * (us_float))
-
-// And back
-#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
-#define NT2USF(x) (((float)(x)) / US_TO_NT_MULTIPLIER)
 
 // milliseconds to ticks
 #define MS2NT(msTime) US2NT(MS2US(msTime))
@@ -84,26 +66,6 @@ private:
  * Main source of EFI clock, SW-extended to 64bits
  */
 uint32_t getTimeNowLowerNt();
-
-/**
- * 64-bit counter CPU/timer cycles since MCU reset
- *
- * See getTimeNowLowerNt for a quicker version which returns only lower 32 bits
- * Lower 32 bits are enough if all we need is to measure relatively short time durations
- * (BTW 2^32 cpu cycles at 168MHz is 25.59 seconds)
- */
-efitick_t getTimeNowNt();
-
-/**
- * 64-bit counter of microseconds (1/1 000 000 of a second) since MCU reset
- *
- * By using 64 bit, we can achieve a very precise timestamp which does not overflow.
- * The primary implementation counts the number of CPU cycles from MCU reset.
- *
- * WARNING: you should use getTimeNowNt where possible for performance reasons.
- * The heaviest part is '__aeabi_ildivmod' - non-native 64 bit division
- */
-efitimeus_t getTimeNowUs();
 
 /**
  * @brief   Returns the number of milliseconds since the board initialization.

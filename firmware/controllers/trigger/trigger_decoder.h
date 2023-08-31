@@ -10,7 +10,7 @@
 #include "trigger_structure.h"
 #include "trigger_state_generated.h"
 #include "trigger_state_primary_generated.h"
-#include "timer.h"
+#include <rusefi/timer.h>
 
 const char *getTrigger_event_e(trigger_event_e value);
 const char *getTrigger_value_e(TriggerValue value);

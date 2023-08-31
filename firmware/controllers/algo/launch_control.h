@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "timer.h"
+#include <rusefi/timer.h>
 #include "launch_control_state_generated.h"
 
 void initLaunchControl();

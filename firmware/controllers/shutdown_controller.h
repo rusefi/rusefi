@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "timer.h"
+#include <rusefi/timer.h>
 
 void doScheduleStopEngine();
 

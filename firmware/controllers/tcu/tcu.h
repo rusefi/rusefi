@@ -11,7 +11,7 @@
 #include "io_pins.h"
 #include "persistent_configuration.h"
 #include "engine_configuration_generated_structures.h"
-#include "timer.h"
+#include <rusefi/timer.h>
 
 #if EFI_TCU
 class TransmissionControllerBase {

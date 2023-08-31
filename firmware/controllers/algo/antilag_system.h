@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "timer.h"
+#include <rusefi/timer.h>
 #include "antilag_system_state_generated.h"
 
 void initAntilagSystem();

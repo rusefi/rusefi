@@ -8,7 +8,7 @@
 #pragma once
 
 #include "static_vector.h"
-#include "timer.h"
+#include <rusefi/timer.h>
 
 #define MOCK_ADC_SIZE 26
 
