@@ -11,8 +11,6 @@
 // raw values are 0..5V, convert it to 8-bit (0..255)
 #define RAW_TO_BYTE(v) TRUNCATE_TO_BYTE((int)(v * 255.0 / 5.0))
 
-#define RAW_ANALOG_VALUES_COUNT 8
-
 bool qcDirectPinControlMode = false;
 
 #if EFI_CAN_SUPPORT
@@ -71,7 +69,7 @@ void sendButtonCounters() {
 }
 
 void sendRawAnalogValues() {
-	const float values[RAW_ANALOG_VALUES_COUNT] = { 
+	const float values_1[] = {
 		Sensor::getRaw(SensorType::Tps1Primary),
 		Sensor::getRaw(SensorType::Tps1Secondary),
 		Sensor::getRaw(SensorType::AcceleratorPedalPrimary),
@@ -82,14 +80,31 @@ void sendRawAnalogValues() {
 		Sensor::getRaw(SensorType::BatteryVoltage),
 	};
 
+	const float values_2[] = {
+		Sensor::getRaw(SensorType::Tps2Primary),
+		Sensor::getRaw(SensorType::Tps2Secondary),
+		Sensor::getRaw(SensorType::AuxLinear1),
+		Sensor::getRaw(SensorType::AuxLinear2),
+	};
+	static_assert(efi::size(values_1) <= 8);
+	static_assert(efi::size(values_2) <= 8);
+
+
 	// send the first packet
 	{
-		CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_RAW_ANALOG, 8, /*bus*/0, /*isExtended*/true);
-		for (int valueIdx = 0; valueIdx < 8; valueIdx++) {
-			msg[valueIdx] = (valueIdx < RAW_ANALOG_VALUES_COUNT) ? RAW_TO_BYTE(values[valueIdx]) : 0;
+		CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_RAW_ANALOG_1, 8, /*bus*/0, /*isExtended*/true);
+		for (int valueIdx = 0; valueIdx < efi::size(values_1); valueIdx++) {
+			msg[valueIdx] = RAW_TO_BYTE(values_1[valueIdx]);
 		}
 	}
+	{
+		CanTxMessage msg(CanCategory::BENCH_TEST, BENCH_TEST_RAW_ANALOG_2, 8, /*bus*/0, /*isExtended*/true);
+		for (int valueIdx = 0; valueIdx < efi::size(values_2); valueIdx++) {
+			msg[valueIdx] = RAW_TO_BYTE(values_2[valueIdx]);
+		}
+
 	// todo: send the second packet
+	}
 }
 
 static void sendOutBoardMeta() {
