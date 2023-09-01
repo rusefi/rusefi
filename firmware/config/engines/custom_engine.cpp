@@ -995,6 +995,10 @@ void proteusStimQc() {
    	engineConfiguration->brakePedalPin = PROTEUS_DIGITAL_6;
 
 	setProteusEtbIO();
+	// EFI_ADC_13: "Analog Volt 4"
+   	engineConfiguration->tps2_1AdcChannel = PROTEUS_IN_TPS2_1;
+   	// EFI_ADC_0: "Analog Volt 5"
+   	engineConfiguration->tps2_2AdcChannel = PROTEUS_IN_ANALOG_VOLT_5;
 	engineConfiguration->auxLinear1.hwChannel = PROTEUS_IN_ANALOG_TEMP_1;
 	engineConfiguration->auxLinear2.hwChannel = PROTEUS_IN_ANALOG_TEMP_4;
 
