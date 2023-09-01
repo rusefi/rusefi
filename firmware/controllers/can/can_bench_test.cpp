@@ -141,7 +141,9 @@ void processCanBenchTest(const CANRxFrame& frame) {
 		int eType = frame.data8[2];
 		// todo: fix firmware for 'false' to be possible - i.e. more of properties should be applied on the fly
 		setEngineType(eType, true);
+#if EFI_PROD_CODE
 		scheduleReboot();
+#endif // EFI_PROD_CODE
 	}
 }
 
