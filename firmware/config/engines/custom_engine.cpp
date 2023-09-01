@@ -994,6 +994,10 @@ void proteusStimQc() {
    	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_DIGITAL_5;
    	engineConfiguration->brakePedalPin = PROTEUS_DIGITAL_6;
 
+	setProteusEtbIO();
+	engineConfiguration->auxLinear1.hwChannel = PROTEUS_IN_ANALOG_TEMP_1;
+	engineConfiguration->auxLinear2.hwChannel = PROTEUS_IN_ANALOG_TEMP_4;
+
 //   	engineConfiguration->fan2Pin = Gpio::PROTEUS_LS_9;
 //   	engineConfiguration->malfunctionIndicatorPin = Gpio::PROTEUS_LS_13;
 //   	engineConfiguration->tachOutputPin = Gpio::PROTEUS_LS_14;
