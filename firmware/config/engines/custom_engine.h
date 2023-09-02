@@ -42,3 +42,5 @@ void setRotary();
 void setVrThresholdTest();
 
 void detectBoardType();
+
+void alphax4chanStimQc();

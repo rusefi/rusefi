@@ -1009,3 +1009,11 @@ void proteusStimQc() {
 //   	engineConfiguration->vvtPins[0] = Gpio::PROTEUS_LS_15;
 //   	engineConfiguration->vvtPins[1] = Gpio::PROTEUS_LS_16;
 }
+
+// HELLEN_4CHAN_STIM_QC
+// set engine_type 74
+void alphax4chanStimQc() {
+    engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
+}
