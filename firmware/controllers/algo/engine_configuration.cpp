@@ -833,7 +833,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 
 #if HW_HELLEN
     case engine_type_e::HELLEN_4CHAN_STIM_QC:
-        alphax4chanStimQc()();
+        alphax4chanStimQc();
 		break;
 	case engine_type_e::HELLEN_NB2:
 		setMiataNB2_Hellen72();
