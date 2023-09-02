@@ -102,8 +102,6 @@ void sendRawAnalogValues() {
 		for (int valueIdx = 0; valueIdx < efi::size(values_2); valueIdx++) {
 			msg[valueIdx] = RAW_TO_BYTE(values_2[valueIdx]);
 		}
-
-	// todo: send the second packet
 	}
 }
 
