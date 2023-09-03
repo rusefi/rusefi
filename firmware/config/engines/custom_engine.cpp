@@ -1017,10 +1017,10 @@ void alphax4chanStimQc() {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
 
-   	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CAM;
-   	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_D_4;
-   	engineConfiguration->camInputs[0] = Gpio::H144_IN_VSS;
-   	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_AUX4;
-   	engineConfiguration->camInputs[2] = Gpio::H144_IN_SENS2;
-   	engineConfiguration->camInputs[3] = Gpio::H144_IN_SENS3;
+   	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CAM; // C7
+   	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_D_4; // E6
+   	engineConfiguration->camInputs[0] = Gpio::H144_IN_VSS; // C4
+   	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_AUX4; // E7
+   	engineConfiguration->camInputs[2] = Gpio::H144_IN_SENS2; // E3
+   	engineConfiguration->camInputs[3] = Gpio::H144_IN_SENS3; // E4
 }
