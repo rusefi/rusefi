@@ -200,11 +200,11 @@ void detectHellenBoardType();
 // IN_D1(old) or IN_DIG8(new/mega-module)
 #define H144_IN_D_1 E12
 // IN_D2(old) or IN_DIG9(new/mm)
-#define H144_IN_D_2 Gpio::E13
+#define H144_IN_D_2 E13
 // IN_D3(old) or IN_DIG10(new)
 #define H144_IN_D_3 E14
 // IN_D4(old) or IN_DIG11(new)
-#define H144_IN_D_4 Gpio::E15
+#define H144_IN_D_4 E15
 
 // A22
 #define H144_IN_D_AUX3 Gpio::C5

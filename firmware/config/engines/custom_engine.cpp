@@ -1016,4 +1016,7 @@ void alphax4chanStimQc() {
     engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
+
+   	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CAM;
+   	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_D_4;
 }

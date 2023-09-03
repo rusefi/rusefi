@@ -291,8 +291,7 @@ pins:
     color: white
 
   - pin: E6
-    # H144_IN_D_4
-    id: [E15, E15]
+    id: [H144_IN_D_4, H144_IN_D_4]
     class: [event_inputs, switch_inputs]
     function: Cam Sensor VR+ as Hall
     type: hall
