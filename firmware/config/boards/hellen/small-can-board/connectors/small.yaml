@@ -40,8 +40,7 @@ pins:
     color: yellow
 
   - pin: A8
-    # H144_LS_1
-    id: G7
+    meta: H144_LS_1
     function: Low Side Output 1 5A
     class: outputs
     ts_name: A8 - Low Side
@@ -64,8 +63,7 @@ pins:
     color: orange
 
   - pin: B8
-    # H144_LS_2
-    id: G8
+    meta: H144_LS_2
     function: Low Side Output 2 5A
     class: outputs
     type: inj
@@ -73,8 +71,7 @@ pins:
     color: blue
 
   - pin: C1
-    # H144_OUT_PWM4
-    id: C8
+    meta: H64_OUT_PWM2
     class: outputs
     function: Low Side Output 3 5A
     type: ls

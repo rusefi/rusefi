@@ -47,9 +47,9 @@ void detectHellenBoardType();
 #define H64_SPI1_CS1 Gpio::D2
 
 #define H64_OUT_PWM1 Gpio::B7
-#define H64_OUT_PWM2 Gpio::C8
+#define H64_OUT_PWM2 C8
 #define H64_OUT_PWM3 Gpio::C9
-#define H64_OUT_PWM4 Gpio::A8
+#define H64_OUT_PWM4 A8
 #define H64_OUT_PWM5 Gpio::A9
 #define H64_OUT_PWM6 Gpio::A15
 
@@ -131,13 +131,13 @@ void detectHellenBoardType();
 #define H144_OUT_IO13 G6
 
 // A24
-#define H144_IN_CRANK Gpio::B1
+#define H144_IN_CRANK B1
 #define H144_IN_CRANK_ANALOG EFI_ADC_9
 // A19
-#define H144_IN_CAM Gpio::A6
+#define H144_IN_CAM A6
 #define H144_IN_CAM_ANALOG EFI_ADC_6
 // DIN5
-#define H144_IN_VSS Gpio::F11
+#define H144_IN_VSS F11
 
 // IN_CLT AIN11 PC2
 #define H144_IN_CLT EFI_ADC_12
@@ -186,11 +186,11 @@ void detectHellenBoardType();
 // A1 AIN1 no code to use ADC3 as analog
 #define H144_IN_SENS1 Gpio::F3
 // A2 AIN2 no code to use ADC3 as analog
-#define H144_IN_SENS2 Gpio::F4
+#define H144_IN_SENS2 F4
 // A3 AIN3 no code to use ADC3 as analog
-#define H144_IN_SENS3 Gpio::F5
+#define H144_IN_SENS3 F5
 // A4 AIN4 no code to use ADC3 as analog
-#define H144_IN_SENS4 Gpio::F6
+#define H144_IN_SENS4 F6
 
 // IN_O2S AIN13 A13 PA0
 #define H144_IN_O2S EFI_ADC_0
@@ -198,11 +198,11 @@ void detectHellenBoardType();
 #define H144_IN_O2S2 EFI_ADC_1
 
 // IN_D1(old) or IN_DIG8(new/mega-module)
-#define H144_IN_D_1 Gpio::E12
+#define H144_IN_D_1 E12
 // IN_D2(old) or IN_DIG9(new/mm)
 #define H144_IN_D_2 Gpio::E13
 // IN_D3(old) or IN_DIG10(new)
-#define H144_IN_D_3 Gpio::E14
+#define H144_IN_D_3 E14
 // IN_D4(old) or IN_DIG11(new)
 #define H144_IN_D_4 Gpio::E15
 

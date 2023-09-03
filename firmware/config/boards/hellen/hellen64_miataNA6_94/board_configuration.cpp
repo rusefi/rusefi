@@ -99,7 +99,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->tachOutputPin = Gpio::I0;
 	engineConfiguration->malfunctionIndicatorPin = Gpio::G9;
 
-	engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
+	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_VSS;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

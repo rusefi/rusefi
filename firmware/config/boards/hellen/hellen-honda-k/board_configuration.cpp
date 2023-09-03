@@ -40,7 +40,7 @@ static void setupVbatt() {
 }
 
 static void setupDefaultSensorInputs() {
-    engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
+    engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_VSS;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 
@@ -137,7 +137,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->hondaK = true;
 	engineConfiguration->verboseKLine = true;
 
-	engineConfiguration->brakePedalPin = H144_IN_CAM;
+	engineConfiguration->brakePedalPin = Gpio::H144_IN_CAM;
 	engineConfiguration->acRelayPin = Gpio::H144_LS_5;
     engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO10;
     // A/C switch on k-line

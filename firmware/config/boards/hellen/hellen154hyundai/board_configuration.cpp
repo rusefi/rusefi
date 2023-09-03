@@ -46,7 +46,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
 
-    engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
+    engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_VSS;
 
 	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
@@ -80,8 +80,8 @@ void setBoardConfigOverrides() {
 
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
     if (hellenBoardId == -1) {
-	    engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	    engineConfiguration->camInputs[0] = H144_IN_CAM;
+	    engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CRANK;
+	    engineConfiguration->camInputs[0] = Gpio::H144_IN_CAM;
 
 		// control pins are inverted since overall ECU pinout seems to be inverted
 		engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3;
@@ -105,8 +105,8 @@ void setBoardConfigOverrides() {
 		}
 		engineConfiguration->stepperDcInvertedPins = false;
 	} else if (hellenBoardId == BOARD_ID_154hyundai_c || hellenBoardId == BOARD_ID_154hyundai_d) {
-		engineConfiguration->triggerInputPins[0] = H144_IN_SENS2;
-		engineConfiguration->camInputs[0] = H144_IN_SENS3;
+		engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_SENS2;
+		engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS3;
 
 
 		// todo You would not believe how you invert TLE9201 #4579

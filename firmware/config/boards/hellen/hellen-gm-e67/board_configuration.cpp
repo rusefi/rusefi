@@ -56,9 +56,9 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = H144_IN_SENS2;
+	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_SENS2;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->camInputs[0] = H144_IN_SENS4;
+	engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS4;
 
 	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
