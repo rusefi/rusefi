@@ -36,3 +36,5 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 else
 $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
+
+DDEFS += -DHW_HELLEN_4CHAN=1
