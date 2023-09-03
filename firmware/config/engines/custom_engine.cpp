@@ -1019,4 +1019,8 @@ void alphax4chanStimQc() {
 
    	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CAM;
    	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_D_4;
+   	engineConfiguration->camInputs[0] = Gpio::H144_IN_VSS;
+   	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_AUX4;
+   	engineConfiguration->camInputs[2] = Gpio::H144_IN_SENS2;
+   	engineConfiguration->camInputs[3] = Gpio::H144_IN_SENS3;
 }

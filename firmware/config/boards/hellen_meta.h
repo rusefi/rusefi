@@ -207,9 +207,9 @@ void detectHellenBoardType();
 #define H144_IN_D_4 E15
 
 // A22
-#define H144_IN_D_AUX3 Gpio::C5
+#define H144_IN_D_AUX3 C5
 // A20 AIN20
-#define H144_IN_D_AUX4 Gpio::A7
+#define H144_IN_D_AUX4 A7
 
 #define H176_LS_1 Gpio::G7
 #define H176_LS_2 Gpio::G8
