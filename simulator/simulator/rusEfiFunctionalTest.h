@@ -7,15 +7,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void rusEfiFunctionalTest(void);
 void printPendingMessages(void);
 void logMsg(const char *fmt, ...);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
