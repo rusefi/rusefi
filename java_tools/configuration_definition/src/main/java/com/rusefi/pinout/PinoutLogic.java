@@ -133,8 +133,7 @@ public class PinoutLogic {
             SystemOut.println("Null yaml for " + yamlFile);
             return;
         }
-        Map</*meta name*/String, /*native name*/String> map = processMetaHeader(yamlData);
-
+        Map</*meta name*/String, /*native name*/String> metaMapping = processMetaHeader(yamlData);
 
         List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
         if (data == null) {
@@ -150,9 +149,9 @@ public class PinoutLogic {
                 throw new IllegalStateException(pinId + " not expected with meta=" + meta);
             }
             if (meta != null) {
-                pinId = map.get(meta);
+                pinId = metaMapping.get(meta);
                 if (pinId == null) {
-                    if (map.isEmpty())
+                    if (metaMapping.isEmpty())
                         throw new IllegalStateException("Empty meta mapping");
                     throw new IllegalStateException("Failing to resolve [" + meta + "]");
                 }
@@ -176,6 +175,9 @@ public class PinoutLogic {
                     throw new IllegalStateException(pinName + ": id array length should match class array length: " + pinId + " vs " + pinClassArray);
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = pinIds.get(i);
+                    // we are a bit inconsistent between single-function and array syntax:
+                    // for array syntax we just apply mapping on the fly while for single we use 'meta' keyword instead of 'pin' keyword
+                    id = applyMetaMapping(metaMapping, id);
                     addPinToList(id, (String) pinTsName, pinClassArray.get(i));
                 }
             } else if (pinId instanceof String) {
@@ -188,6 +190,10 @@ public class PinoutLogic {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
         }
+    }
+
+    private static String applyMetaMapping(Map<String, String> metaMapping, String id) {
+        return metaMapping.getOrDefault(id, id);
     }
 
     private Map<String, String> processMetaHeader(Map<String, Object> yamlData) {
@@ -203,9 +209,10 @@ public class PinoutLogic {
         Map</*meta name*/String, /*native name*/String> map = new HashMap<>();
 
         for (String line : lines) {
+            line = line.replace('\t', ' ');
             line = line.trim();
             if (ToolUtil.startsWithToken(line, VariableRegistry.DEFINE)) {
-                line = line.substring(VariableRegistry.DEFINE.length() + 1);
+                line = line.substring(VariableRegistry.DEFINE.length() + 1).trim();
 
                 int index = line.indexOf(' ');
 

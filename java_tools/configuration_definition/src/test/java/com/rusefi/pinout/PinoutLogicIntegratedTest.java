@@ -15,8 +15,9 @@ import static org.junit.Assert.assertEquals;
 
 public class PinoutLogicIntegratedTest {
 
-    private static final List<String> META_CONTENT = Arrays.asList("#define H144_LS_1 Gpio::G7\n",
-            "#define H144_LS_2 G8\n",
+    private static final List<String> META_CONTENT = Arrays.asList("#define H144_LS_1 G7\n",
+            "#define H144_DIGITAL\tE11\n",
+            "\t\t\t\t#define\t\t\tH144_LS_2 G8\t\t\t\n",
             "// IN_O2S AIN13 A13 PA0\n",
             "#define H144_IN_O2S EFI_ADC_0\n",
             "// IN_O2S2 AIN12 PA1\n",
@@ -25,8 +26,9 @@ public class PinoutLogicIntegratedTest {
     @Test
     public void testMetaParsing() {
         Map</*meta name*/String, /*native name*/String> map = PinoutLogic.getStringStringMap(META_CONTENT);
-        assertEquals(4, map.size());
+        assertEquals(5, map.size());
 
+        assertEquals("G8", map.get("H144_LS_2"));
         assertEquals("EFI_ADC_0", map.get("H144_IN_O2S"));
     }
 
@@ -65,7 +67,7 @@ public class PinoutLogicIntegratedTest {
                         "    function: Digital trigger/switch input for instance Hall type CAM\n" +
                         "    ts_name: ___ - Digital 1\n" +
                         "  - pin: 1\n" +
-                        "    id: [E11, E11]\n" +
+                        "    id: [H144_DIGITAL, H144_DIGITAL]\n" +
                         "    class: [event_inputs, switch_inputs]\n" +
                         "    function: Digital trigger/switch input for instance Hall type CAM\n" +
                         "    ts_name: ___ - Digital 2\n" +
