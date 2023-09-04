@@ -1010,6 +1010,7 @@ void proteusStimQc() {
 //   	engineConfiguration->vvtPins[1] = Gpio::PROTEUS_LS_16;
 }
 
+#if HW_HELLEN_4CHAN
 // HELLEN_4CHAN_STIM_QC
 // set engine_type 74
 void alphax4chanStimQc() {
@@ -1024,3 +1025,4 @@ void alphax4chanStimQc() {
    	engineConfiguration->camInputs[2] = Gpio::H144_IN_SENS2; // E3
    	engineConfiguration->camInputs[3] = Gpio::H144_IN_SENS3; // E4
 }
+#endif // HW_HELLEN_4CHAN

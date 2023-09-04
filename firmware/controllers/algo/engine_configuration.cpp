@@ -835,7 +835,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
     case engine_type_e::HELLEN_4CHAN_STIM_QC:
         alphax4chanStimQc();
 		break;
-#endif
+#endif // HW_HELLEN_4CHAN
 
 #if HW_HELLEN_8CHAN
 	case engine_type_e::ALPHAX_8CHAN_SBC:
@@ -858,10 +858,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
-#if HW_HELLEN
-	case engine_type_e::HELLEN_NA8_96:
-		setHellenMiata96();
-		break;
+#if HW_HELLEN_121_VAG
 	case engine_type_e::HELLEN_121_VAG_5_CYL:
 	    setHellen121Vag_5_cyl();
         break;
@@ -874,6 +871,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::HELLEN_121_VAG_8_CYL:
 	    setHellen121Vag_8_cyl();
         break;
+#endif
+
+#if HW_HELLEN
+	case engine_type_e::HELLEN_NA8_96:
+		setHellenMiata96();
+		break;
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::HELLEN_154_VAG:
 		break;
