@@ -30,6 +30,8 @@ public class PinoutLogic {
     private final Map</*id*/String, /*tsName*/String> tsNameById = new TreeMap<>();
     private final StringBuilder header = new StringBuilder("//DO NOT EDIT MANUALLY, let automation work hard.\n\n");
     private final BoardInputs boardInputs;
+    private final List<String> lowSideOutputs = new ArrayList<>();
+    private final List<String> highSideOutputs = new ArrayList<>();
 
     public PinoutLogic(BoardInputs boardInputs) {
         this.boardInputs = boardInputs;
@@ -67,12 +69,12 @@ public class PinoutLogic {
                 throw new IllegalStateException(boardName + ": Not found " + id + " in " + className);
             }
 
-                    int index = kv.getValue().getIntValue();
-                    classList.ensureCapacity(index + 1);
-                    for (int ii = classList.size(); ii <= index; ii++) {
-                        classList.add(null);
-                    }
-                    classList.set(index, listPin.getPinTsName());
+            int index = kv.getValue().getIntValue();
+            classList.ensureCapacity(index + 1);
+            for (int ii = classList.size(); ii <= index; ii++) {
+                classList.add(null);
+            }
+            classList.set(index, listPin.getPinTsName());
         }
         for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
             PinType namePinType = PinType.find(kv.getKey());
@@ -140,7 +142,7 @@ public class PinoutLogic {
             SystemOut.println("Null yaml for " + yamlFile);
             return;
         }
-        log.info("Got from " + yamlFile + ": " +  data);
+        log.info("Got from " + yamlFile + ": " + data);
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
             Object pinId = pin.get("id");
@@ -148,17 +150,22 @@ public class PinoutLogic {
             if (meta != null && pinId != null) {
                 throw new IllegalStateException(pinId + " not expected with meta=" + meta);
             }
+            String headerValue;
             if (meta != null) {
+                headerValue = meta;
                 pinId = metaMapping.get(meta);
                 if (pinId == null) {
                     if (metaMapping.isEmpty())
                         throw new IllegalStateException("Empty meta mapping");
                     throw new IllegalStateException("Failing to resolve [" + meta + "]");
                 }
+            } else {
+                headerValue = (pinId instanceof String) ? (String) pinId : null;
             }
             Object pinClass = pin.get("class");
             Object pinName = pin.get("pin");
             Object pinTsName = pin.get("ts_name");
+            Object pinType = pin.get("type");
             if (pinId == null || pinClass == null || pinTsName == null) {
                 log.info("Skipping " + pinId + "/" + pinClass + "/" + pinTsName);
                 continue;
@@ -175,21 +182,24 @@ public class PinoutLogic {
                     throw new IllegalStateException(pinName + ": id array length should match class array length: " + pinId + " vs " + pinClassArray);
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = pinIds.get(i);
+                    String originalValue = id;
                     // we are a bit inconsistent between single-function and array syntax:
                     // for array syntax we just apply mapping on the fly while for single we use 'meta' keyword instead of 'pin' keyword
                     id = applyMetaMapping(metaMapping, id);
-                    addPinToList(id, (String) pinTsName, pinClassArray.get(i));
+                    addPinToList(id, originalValue, null, (String) pinTsName, pinClassArray.get(i));
                 }
             } else if (pinId instanceof String) {
                 String pinIdString = (String) pinId;
                 if (pinIdString.length() == 0) {
                     throw new IllegalStateException("Unexpected empty ID field");
                 }
+                // array type is allowed even for pins with non-array class
+                String stringPinType = pinType instanceof String ? (String) pinType : null;
                 if (!(pinTsName instanceof String))
-                    throw new IllegalStateException("Wrong type: " + pinTsName.getClass() + " while " + pinIdString);
+                    throw new IllegalStateException("Wrong TsName: " + pinTsName + " while " + pinIdString);
                 if (!(pinClass instanceof String))
-                    throw new IllegalStateException("Wrong type: " + pinClass.getClass() + " while " + pinIdString);
-                addPinToList(pinIdString, (String) pinTsName, (String) pinClass);
+                    throw new IllegalStateException("Wrong class: " + pinClass + " while " + pinIdString);
+                addPinToList(pinIdString, headerValue, stringPinType, (String) pinTsName, (String) pinClass);
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
@@ -231,11 +241,20 @@ public class PinoutLogic {
         return map;
     }
 
-    private void addPinToList(String id, String pinTsName, String pinClass) {
+    private void addPinToList(String id, String headerValue,
+                              String pinType,
+                              String pinTsName, String pinClass) {
         String existingTsName = tsNameById.get(id);
         if (existingTsName != null && !existingTsName.equals(pinTsName))
             throw new IllegalStateException("ID used multiple times with different ts_name: " + id);
         tsNameById.put(id, pinTsName);
+        if ("outputs".equalsIgnoreCase(pinClass)) {
+            if ("ls".equalsIgnoreCase(pinType) || "inj".equalsIgnoreCase(pinType)) {
+                lowSideOutputs.add(headerValue);
+            } else {
+                highSideOutputs.add(headerValue);
+            }
+        }
         PinState thisPin = new PinState(id, pinTsName, pinClass);
         globalList.add(thisPin);
     }
@@ -253,7 +272,7 @@ public class PinoutLogic {
         readFiles();
         registerPins(boardInputs.getName(), globalList, registry, parseState, enumsReader);
 
-        try (Writer getTsNameByIdFile = boardInputs.getWriter()) {
+        try (Writer getTsNameByIdFile = boardInputs.getBoardNamesWriter()) {
             getTsNameByIdFile.append(header);
 
             getTsNameByIdFile.append("#include \"pch.h\"\n\n");
@@ -272,6 +291,22 @@ public class PinoutLogic {
 
             getTsNameByIdFile.append("\treturn nullptr;\n}\n");
         }
+
+        try (Writer outputs = boardInputs.getOutputsWriter()) {
+            outputs.append(header);
+            outputs.write("#pragma once\n\n");
+
+            outputs.write("Gpio GENERATED_OUTPUTS = {\n");
+
+            for (String output : lowSideOutputs)
+                outputs.write("\tGpio::" + output + ",\n");
+            for (String output : highSideOutputs)
+                outputs.write("\tGpio::" + output + ",\n");
+
+            outputs.write("}\n");
+
+        }
+
     }
 
     private void readFiles() throws IOException {
