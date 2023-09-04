@@ -138,9 +138,9 @@ pins:
     function: Power GND
     type: GND
   - pin: 155
-    function: +12V TBD
+    function: +12V From Main Relay
   - pin: 156
-    function: +12V TBD
+    function: +12V From Main Relay
 
   - pin: 201
     function: Crank Sensor VR- Negative Input
