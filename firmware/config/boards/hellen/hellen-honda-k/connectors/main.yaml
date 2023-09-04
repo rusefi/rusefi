@@ -2,8 +2,7 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: auxhigh1
-    # H144_OUT_IO5
-    id: D2
+    meta: H144_OUT_IO5
     class: outputs
     ts_name: AuxHigh1
     function: AuxHigh1
@@ -30,8 +29,7 @@ pins:
     type: gnd
 
   - pin: A7
-    # H144_IN_RES1
-    id: F9
+    meta: H144_IN_RES1
     class: event_inputs
     ts_name: A7 Crankshaft Sensor
     function: Crankshaft Sensor
@@ -62,8 +60,7 @@ pins:
 
 
   - pin: A15
-    # H144_IN_TPS
-    id: EFI_ADC_4
+    meta: H144_IN_TPS
     class: analog_inputs
     ts_name: ___ TPS
     function: TPS
@@ -75,15 +72,13 @@ pins:
     color: black
 
   - pin: A18
-    # H144_IN_VSS
-    id: F11
+    meta: H144_IN_VSS
     class: event_inputs
     ts_name: A18 - VSS
     function: Vehicle Speed Sensor
 
   - pin: A19
-    # IN_MAP1 AIN9
-    id: EFI_ADC_10
+    meta: H144_IN_MAP1
     class: analog_inputs
     ts_name: A19 - MAP
     function: MAP Sensor
@@ -107,8 +102,7 @@ pins:
     color: black
 
   - pin: A25
-# H144_IN_RES3
-    id: F8
+    meta: H144_IN_RES3
     class: event_inputs
 # intake
     ts_name: A25 VTT CAM
@@ -116,8 +110,7 @@ pins:
 
 
   - pin: A26
-    # H144_IN_RES2
-    id: F10
+    meta: H144_IN_RES2
     class: event_inputs
 # exhaust
     ts_name: A26 Cam Sync
@@ -187,8 +180,7 @@ pins:
     ts_name: ___ Lockout Solenoid
     function: Lockout Solenoid
   - pin: B8
-    # H144_IN_CLT AIN11 PC2
-    id: EFI_ADC_12
+    meta: H144_IN_CLT
     class: analog_inputs
     ts_name: B8 - CLT
     function: CLT
@@ -212,8 +204,7 @@ pins:
     function: VTEC Output
 
   - pin: B17
-    # H144_IN_IAT AIN14 PC3
-    id: EFI_ADC_13
+    meta: H144_IN_IAT
     class: analog_inputs
     ts_name: ___ IAT
     function: IAT
@@ -263,18 +254,15 @@ pins:
     function: WHITE LSU4.9 Heater Negative
 
   - pin: C8
-    # EFI_ADC_15
-    id:
+    meta: H144_IN_AUX3
     class: analog_inputs
     function: Aux Analog 3
   - pin: C9
-    # H144_IN_AUX2
-    id: EFI_ADC_14
+    meta: H144_IN_AUX2
     class: analog_inputs
     function: Aux Analog 2
   - pin: C10
-    # EFI_ADC_8
-    id: EFI_ADC_8
+    meta: H144_IN_AUX1
     class: analog_inputs
     function: Aux Analog 1
 
@@ -306,15 +294,13 @@ pins:
     type: can
 
   - pin: C18
-    # H144_IN_SENS3
-    id: [F5, F5]
+    id: [H144_IN_SENS3, H144_IN_SENS3]
     class: [event_inputs, switch_inputs]
     function: Aux Digital 3
     ts_name: ___ Aux Digital 3
 
   - pin: C19
-    # H144_IN_SENS2
-    id: [F4, F4]
+    id: [H144_IN_SENS2, H144_IN_SENS2]
     class: [event_inputs, switch_inputs]
     function: Aux Digital 2
     ts_name: ___ Aux Digital 2
@@ -325,8 +311,7 @@ pins:
     color: black
 
   - pin: C21
-    # H144_IN_SENS1
-    id: [F3, F3]
+    id: [H144_IN_SENS1, H144_IN_SENS1]
     class: [event_inputs, switch_inputs]
     function: Aux Digital 1
     ts_name: ___ Aux Digital 1
@@ -360,8 +345,7 @@ pins:
     function: Main Relay Control
 
   - pin: E9
-    # VIGN PA5
-    id: EFI_ADC_5
+    meta: H144_IN_VBATT
     class: analog_inputs
     ts_name: E9 Ignition Key Voltage
     function: +12V engine ECU power source, run/start
@@ -383,8 +367,7 @@ pins:
     function: Steering Pressure Switch
 
   - pin: E18
-# H144_LS_5
-    id: D9
+    meta: H144_LS_5
     class: outputs
     ts_name: ___ - AC Relay
     function: A/C Relay
@@ -397,8 +380,7 @@ pins:
     function: EVAP nc
 
   - pin: E22
-    # H144_IN_CAM
-    id: A6
+    meta: H144_IN_CAM
     class: switch_inputs
     ts_name: E22 Brake
     function: Brake
@@ -410,8 +392,7 @@ pins:
     function: SEFMJ K-Line
 
   - pin: E26
-    # PP2 IO10
-    id: G12
+    meta: H144_OUT_IO10
     class: outputs
     ts_name: E26 Tachometer
     function: Tachometer
@@ -423,8 +404,7 @@ pins:
     function: SCS Service Check Short
 
   - pin: E31
-    #H144_OUT_IO7
-    id: G3
+    meta: H144_OUT_IO7
     class: outputs
     ts_name: E31 Check Engine
     function: Check Engine

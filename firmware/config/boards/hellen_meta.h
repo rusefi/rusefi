@@ -184,7 +184,7 @@ void detectHellenBoardType();
 #define H144_IN_AUX4 EFI_ADC_7
 
 // A1 AIN1 no code to use ADC3 as analog
-#define H144_IN_SENS1 Gpio::F3
+#define H144_IN_SENS1 F3
 // A2 AIN2 no code to use ADC3 as analog
 #define H144_IN_SENS2 F4
 // A3 AIN3 no code to use ADC3 as analog
