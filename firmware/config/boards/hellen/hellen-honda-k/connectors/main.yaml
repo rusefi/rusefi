@@ -50,6 +50,7 @@ pins:
   - pin: A12
     meta: H144_LS_6
     class: outputs
+    type: ls
     ts_name: A12 Idle Air Control
     function: Idle Air Control Valve
 
@@ -177,6 +178,7 @@ pins:
   - pin: B7
     meta: H144_LS_8
     class: outputs
+    type: ls
     ts_name: ___ Lockout Solenoid
     function: Lockout Solenoid
   - pin: B8
@@ -217,12 +219,14 @@ pins:
   - pin: B21
     meta: H144_OUT_PWM5
     class: outputs
+    type: ls
     ts_name: ___ - EVAP
     function: EVAP
 
   - pin: B22
     meta: H144_LS_7
     class: outputs
+    type: ls
     ts_name: ___ Intake Runner
     function: Intake Runner
 
@@ -270,18 +274,21 @@ pins:
   - pin: C11
     meta: H144_OUT_PWM7
     class: outputs
+    type: ls
     ts_name: ___ Aux Low 3
     function: Aux Low 3
 
   - pin: C12
     meta: H144_OUT_PWM6
     class: outputs
-    function: Aux Low 2
+    type: ls
+    function: ___ Aux Low 2
 
   - pin: C13
     meta: H144_OUT_PWM2
     class: outputs
-    function: Aux Low 1
+    type: ls
+    function: ___ Aux Low 1
 
   - pin: C14
     function: CAN bus low
@@ -323,6 +330,7 @@ pins:
   - pin: E1
     meta: H144_OUT_IO13
     class: outputs
+    type: ls
     ts_name: E1 Fuel Relay
     function: Fuel Relay
   - pin: E3
@@ -341,6 +349,7 @@ pins:
   - pin: E7
     meta: H144_OUT_IO3
     class: outputs
+    type: ls
     ts_name: E7 Main Relay Control
     function: Main Relay Control
 
