@@ -62,7 +62,7 @@ pins:
   - pin: K15
     meta: H144_IN_D_AUX4
     function: 'Cam Sensor (2014: yellow)'
-    class: [event_inputs]
+    class: event_inputs
     ts_name: Cam - K15
 
   - pin: K16
@@ -72,13 +72,13 @@ pins:
   - pin: K17b
     function: Crank Sensor
     meta: H144_IN_CRANK
-    class: [event_inputs]
+    class: event_inputs
     ts_name: Crank - K17 rev B
 
   - pin: K17c
     function: "Crank Sensor (2014: pink)"
     meta: H144_IN_SENS2
-    class: [event_inputs]
+    class: event_inputs
     ts_name: Crank - K17 rev C
 
   - pin: K21

@@ -185,6 +185,10 @@ public class PinoutLogic {
                 if (pinIdString.length() == 0) {
                     throw new IllegalStateException("Unexpected empty ID field");
                 }
+                if (!(pinTsName instanceof String))
+                    throw new IllegalStateException("Wrong type: " + pinTsName.getClass() + " while " + pinIdString);
+                if (!(pinClass instanceof String))
+                    throw new IllegalStateException("Wrong type: " + pinClass.getClass() + " while " + pinIdString);
                 addPinToList(pinIdString, (String) pinTsName, (String) pinClass);
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
