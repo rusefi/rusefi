@@ -102,7 +102,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->acSwitchMode = PI_PULLUP;
 
 	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_VSS;
-	engineConfiguration->clutchDownPin = H144_IN_RES3;
+	engineConfiguration->clutchDownPin = Gpio::H144_IN_RES3;
 	engineConfiguration->clutchDownPinInverted = true;
 
 	engineConfiguration->fuelPumpPin = Gpio::G2;	// OUT_IO9

@@ -121,7 +121,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->luaOutputPins[0] = Gpio::H144_OUT_IO6; // starter relay
 
 	engineConfiguration->boostControlPin = Gpio::H144_OUT_PWM5;
-	engineConfiguration->brakePedalPin = H144_IN_RES2;
+	engineConfiguration->brakePedalPin = Gpio::H144_IN_RES2;
 //	engineConfiguration->acSwitch =
 //	engineConfiguration->acRelayPin =
 	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO5;

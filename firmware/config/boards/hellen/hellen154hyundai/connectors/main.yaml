@@ -21,8 +21,7 @@ pins:
     type: gnd
 
   - pin: K2
-    # VIGN PA5
-    id: EFI_ADC_5
+    meta: H144_IN_VBATT
     class: analog_inputs
     ts_name: K2 Ignition Key Voltage
     function: V ign
@@ -43,8 +42,7 @@ pins:
 
   - pin: K10
     function: K10 presure sensor
-    # IN_MAP2
-    id: EFI_ADC_11
+    meta: H144_IN_MAP2
     class: analog_inputs
     ts_name: K10 Sensor
 
@@ -62,8 +60,7 @@ pins:
     function: Analog Ground
 
   - pin: K15
-# cam2  IN_AUX4
-    id: [A7]
+    meta: H144_IN_D_AUX4
     function: 'Cam Sensor (2014: yellow)'
     class: [event_inputs]
     ts_name: Cam - K15
@@ -74,21 +71,18 @@ pins:
 
   - pin: K17b
     function: Crank Sensor
-    # IN_CRANK AIN24 A24
-    id: [B1]
+    meta: H144_IN_CRANK
     class: [event_inputs]
     ts_name: Crank - K17 rev B
 
   - pin: K17c
     function: "Crank Sensor (2014: pink)"
-    # H144_IN_SENS2
-    id: [F4]
+    meta: H144_IN_SENS2
     class: [event_inputs]
     ts_name: Crank - K17 rev C
 
   - pin: K21
-    # H144_IN_O2S
-    id: EFI_ADC_0
+    meta: H144_IN_O2S
     class: analog_inputs
     ts_name: K21 Ambient Temperature
     function: Ambient Temperature
@@ -129,22 +123,19 @@ pins:
     type: 5v
 
   - pin: K31
-# IN_MAP1 AIN9
-    id: EFI_ADC_10
+    meta: H144_IN_MAP1
     class: analog_inputs
     ts_name: Map Sensor K31
     function: Manifold Pressure Sensor
 
   - pin: K32
-# IN_AUX1 AIN23 PB0
-    id: EFI_ADC_8
+    meta: H144_IN_AUX1
     class: analog_inputs
     ts_name: TPS 2
     function: TPS 2 sensor input
 
   - pin: K33
-# IN_CLT AIN11
-    id: EFI_ADC_12
+    meta: H144_IN_CLT
     class: analog_inputs
     ts_name: CLT
     function: CLT
@@ -153,8 +144,7 @@ pins:
     function: Analog Ground
 
   - pin: K35
-# IN_AUX2 AIN21 PC4
-    id: EFI_ADC_14
+    meta: H144_IN_AUX2
     class: analog_inputs
     ts_name: PPS 2
     function: PPS 2 sensor input
@@ -170,8 +160,7 @@ pins:
     function: Analog Ground
 
   - pin: K40
-    # H144_IN_VSS
-    id: F11
+    meta: H144_IN_VSS
     class: event_inputs
     ts_name: K40 VSS
     function: Vehicle Speed Sensor
@@ -190,15 +179,13 @@ pins:
     function: BK1 Wastegate Solenoid
 
   - pin: K53
-    # IN_IAT AIN14 PC3
-    id: EFI_ADC_13
+    meta: H144_IN_IAT
     class: analog_inputs
     ts_name: IAT
     function: 'IAT (2014: green)'
 
   - pin: K54
-    # IN_MAP3
-    id: EFI_ADC_2
+    meta: H144_IN_MAP3
     class: analog_inputs
     ts_name: K54 A/C pressure
     function: A/C pressure
@@ -207,8 +194,7 @@ pins:
     function: 'Analog Ground (2014: green)'
 
   - pin: K58
-# IN_O2S2 AIN12 PA1 EFI_ADC_1
-    id: EFI_ADC_1
+    meta: H144_IN_O2S2
     class: analog_inputs
     ts_name: K58 Oil Temp
     function: 'Oil Temperature (2014: blue/orange)'
@@ -224,17 +210,15 @@ pins:
     function: 'Analog Ground (2014: yellow)'
 
   - pin: K62b
-# cam1 IN_CAM
-    id: [A6]
+    meta: H144_IN_CAM
     function: Cam Sensor
-    class: [event_inputs]
+    class: event_inputs
     ts_name: Cam - K62 rev B
 
   - pin: K62c
-    # H144_IN_SENS3
-    id: [F5]
+    meta: H144_IN_SENS3
     function: "Cam Sensor (2014: white)"
-    class: [event_inputs]
+    class: event_inputs
     ts_name: Cam - K62 rev C
 
   - pin: K63
@@ -294,14 +278,13 @@ pins:
     function: Analog Ground
 
   - pin: K80
-# IN_TPS AIN17 PA4
-    id: EFI_ADC_4
+    meta: H144_IN_TPS
     class: analog_inputs
     ts_name: TPS 1
     function: TPS 1 sensor input
 
   - pin: K82
-    id: EFI_ADC_3
+    meta: H144_IN_PPS
     class: analog_inputs
     ts_name: PPS 1
     function: PPS 1 sensor input
@@ -355,8 +338,7 @@ pins:
     type: ign
 
   - pin: A29
-    # H144_IN_RES3
-    id: F8
+    meta: H144_IN_RES3
     class: switch_inputs
     ts_name: A29 Brake Input
     function: Brake Switch
@@ -370,8 +352,7 @@ pins:
     type: ign
 
   - pin: A43
-# H144_IN_RES2
-    id: F10
+    meta: H144_IN_RES2
     class: switch_inputs
     ts_name: A43 Clutch Input
     function: Clutch Input
@@ -387,8 +368,7 @@ pins:
     type: ign
 
   - pin: A57
-    # H144_IN_RES1
-    id: F9
+    meta: H144_IN_RES1
     class: switch_inputs
     ts_name: A57 AC Request
     function: AC Request Switch

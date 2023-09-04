@@ -163,14 +163,14 @@ void detectHellenBoardType();
 #define H144_IN_MAP3_DIGITAL Gpio::A2
 
 // AIN7
-#define H144_IN_RES1 Gpio::F9
+#define H144_IN_RES1 F9
 
 // AIN16
-#define H144_IN_RES2 Gpio::F10
+#define H144_IN_RES2 F10
 #define H144_ADC_IN_RES2 ADC_CHANNEL_IN8
 
 // AIN8
-#define H144_IN_RES3 Gpio::F8
+#define H144_IN_RES3 F8
 #define H144_ADC_IN_RES3 ADC_CHANNEL_IN6
 
 

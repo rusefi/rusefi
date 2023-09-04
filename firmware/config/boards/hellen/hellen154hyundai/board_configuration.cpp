@@ -154,9 +154,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;	// pin: 111a
 	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_PWM8;
 
-	engineConfiguration->brakePedalPin = H144_IN_RES3;
-	engineConfiguration->clutchUpPin = H144_IN_RES2;
-	engineConfiguration->acSwitch = H144_IN_RES1;
+	engineConfiguration->brakePedalPin = Gpio::H144_IN_RES3;
+	engineConfiguration->clutchUpPin = Gpio::H144_IN_RES2;
+	engineConfiguration->acSwitch = Gpio::H144_IN_RES1;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
