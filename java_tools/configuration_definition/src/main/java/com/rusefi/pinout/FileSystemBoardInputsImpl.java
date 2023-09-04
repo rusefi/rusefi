@@ -59,8 +59,13 @@ public class FileSystemBoardInputsImpl implements BoardInputs {
     }
 
     @Override
-    public Writer getWriter() throws IOException {
+    public Writer getBoardNamesWriter() throws IOException {
         return new FileWriter(boardName + PinoutLogic.CONNECTORS + File.separator + "generated_ts_name_by_pin.cpp");
+    }
+
+    @Override
+    public Writer getOutputsWriter() throws IOException {
+        return new FileWriter(boardName + PinoutLogic.CONNECTORS + File.separator + "generated_outputs.h");
     }
 
     @Override
