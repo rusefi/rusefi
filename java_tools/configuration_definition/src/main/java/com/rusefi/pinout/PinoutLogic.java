@@ -165,7 +165,7 @@ public class PinoutLogic {
             Object pinClass = pin.get("class");
             Object pinName = pin.get("pin");
             Object pinTsName = pin.get("ts_name");
-            String pinType = (String) pin.get("type");
+            Object pinType = pin.get("type");
             if (pinId == null || pinClass == null || pinTsName == null) {
                 log.info("Skipping " + pinId + "/" + pinClass + "/" + pinTsName);
                 continue;
@@ -197,7 +197,7 @@ public class PinoutLogic {
                     throw new IllegalStateException("Wrong type: " + pinTsName.getClass() + " while " + pinIdString);
                 if (!(pinClass instanceof String))
                     throw new IllegalStateException("Wrong type: " + pinClass.getClass() + " while " + pinIdString);
-                addPinToList(pinIdString, headerValue, pinType, (String) pinTsName, (String) pinClass);
+                addPinToList(pinIdString, headerValue, (String) pinType, (String) pinTsName, (String) pinClass);
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
