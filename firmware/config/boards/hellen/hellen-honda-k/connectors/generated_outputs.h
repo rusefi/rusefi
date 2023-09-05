@@ -12,7 +12,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_LS_8,
 	Gpio::H144_OUT_PWM5,
 	Gpio::H144_LS_7,
-	Gpio::H144_OUT_PWM7,
+	Gpio::H144_OUT_PWM8,
 	Gpio::H144_OUT_IO13,
 	Gpio::H144_OUT_IO3,
 	Gpio::H144_LS_5,
