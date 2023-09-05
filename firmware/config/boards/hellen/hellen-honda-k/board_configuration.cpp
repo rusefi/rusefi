@@ -168,6 +168,13 @@ static Gpio OUTPUTS[] = {
 		Gpio::H144_LS_2,
 		Gpio::H144_LS_3,
 		Gpio::H144_LS_4,
+	Gpio::H144_LS_5,
+	Gpio::H144_LS_6,
+	Gpio::H144_LS_7,
+	Gpio::H144_LS_8,
+	Gpio::H144_OUT_IO12,
+	Gpio::H144_OUT_PWM5,
+	Gpio::H144_OUT_PWM4,
 };
 
 int getBoardMetaOutputsCount() {
