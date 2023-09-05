@@ -39,7 +39,6 @@ PwmConfig::PwmConfig() {
 	stateChangeCallback = nullptr;
 	executor = nullptr;
 	name = "[noname]";
-	arg = this;
 }
 
 /**
@@ -73,10 +72,10 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	// Handle zero and full duty cycle.  This will cause the PWM output to behave like a plain digital output.
 	if (dutyCycle == 0.0f && stateChangeCallback) {
 		// Manually fire falling edge
-		stateChangeCallback(0, arg);
+		stateChangeCallback(0, this);
 	} else if (dutyCycle == 1.0f && stateChangeCallback) {
 		// Manually fire rising edge
-		stateChangeCallback(1, arg);
+		stateChangeCallback(1, this);
 	}
 
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
@@ -185,7 +184,7 @@ efitick_t PwmConfig::togglePwmState() {
 		/**
 		 * NaN period means PWM is paused, we also set the pin low
 		 */
-		stateChangeCallback(0, arg);
+		stateChangeCallback(0, this);
 		return getTimeNowNt() + MS2NT(NAN_FREQUENCY_SLEEP_PERIOD_MS);
 	}
 	if (mode != PM_NORMAL) {
@@ -212,7 +211,7 @@ efitick_t PwmConfig::togglePwmState() {
 
 	{
 		ScopePerf perf(PE::PwmConfigStateChangeCallback);
-		stateChangeCallback(cbStateIndex, arg);
+		stateChangeCallback(cbStateIndex, this);
 	}
 
 	efitick_t nextSwitchTimeNt = getNextSwitchTimeNt(this);

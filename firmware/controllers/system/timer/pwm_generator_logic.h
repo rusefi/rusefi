@@ -53,7 +53,6 @@ typedef enum {
 class PwmConfig {
 public:
 	PwmConfig();
-	void *arg = nullptr;
 
 	void weComplexInit(const char *msg,
 			ExecutorInterface *executor,
