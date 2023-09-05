@@ -330,7 +330,7 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 
 	state->setFrequency(frequency);
 	state->setSimplePwmDutyCycle(dutyCycle);
-	state->weComplexInit(msg, executor, &state->seq, NULL, (pwm_gen_callback*)applyPinState);
+	state->weComplexInit(msg, executor, &state->seq, NULL, applyPinState);
 }
 
 void startSimplePwmExt(SimplePwm *state, const char *msg,

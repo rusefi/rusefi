@@ -170,7 +170,7 @@ static void startSimulatedTriggerSignal() {
 	triggerEmulatorSignal.weComplexInit("position sensor",
 			&engine->executor,
 			&s->wave,
-			updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
+			updateTriggerWaveformIfNeeded, emulatorApplyPinState);
 
 	hasInitTriggerEmulator = true;
 }

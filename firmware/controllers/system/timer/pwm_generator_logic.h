@@ -39,7 +39,7 @@ typedef struct {
 class PwmConfig;
 
 typedef void (pwm_cycle_callback)(PwmConfig *state);
-typedef void (pwm_gen_callback)(int stateIndex, void *arg);
+typedef void (pwm_gen_callback)(int stateIndex, PwmConfig *arg);
 
 typedef enum {
 	PM_ZERO,
