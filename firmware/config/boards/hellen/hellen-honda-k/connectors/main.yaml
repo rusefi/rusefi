@@ -217,7 +217,7 @@ pins:
     function: Alternator Control
 
   - pin: B21
-    meta: H144_OUT_PWM5
+    meta: H144_OUT_PWM6
     class: outputs
     type: ls
     ts_name: ___ - EVAP
@@ -231,7 +231,7 @@ pins:
     function: Intake Runner
 
   - pin: B23
-    meta: H144_OUT_PWM4
+    meta: H144_OUT_PWM5
     class: outputs
     ts_name: ___ VTC VVT
     function: VTC VVT
