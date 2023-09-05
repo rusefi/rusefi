@@ -41,7 +41,7 @@ jobs:
         distribution: 'zulu'
         java-version: '11'
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Checkout Submodules
       run: |

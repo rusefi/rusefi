@@ -415,7 +415,7 @@ jobs:
           echo "partial=true" >> $GITHUB_ENV
         fi
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       if: ${{ env.skip != 'true' }}
 
     - name: Checkout Submodules
