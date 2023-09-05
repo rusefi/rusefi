@@ -313,7 +313,7 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 }
 
 void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
-		OutputPin *output, float frequency, float dutyCycle) {
+		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *callback) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
 	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= PWM_MAX_DUTY, "dutyCycle");
 	if (frequency < 1) {
@@ -330,7 +330,7 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 
 	state->setFrequency(frequency);
 	state->setSimplePwmDutyCycle(dutyCycle);
-	state->weComplexInit(msg, executor, &state->seq, NULL, applyPinState);
+	state->weComplexInit(msg, executor, &state->seq, NULL, callback);
 }
 
 void startSimplePwmExt(SimplePwm *state, const char *msg,
