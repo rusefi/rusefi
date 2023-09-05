@@ -164,17 +164,17 @@ void setBoardDefaultConfiguration() {
 }
 
 static Gpio OUTPUTS[] = {
-		Gpio::H144_LS_1,
+		Gpio::H144_LS_1, // 1 inj 1
 		Gpio::H144_LS_2,
 		Gpio::H144_LS_3,
-		Gpio::H144_LS_4,
-	Gpio::H144_LS_5,
-	Gpio::H144_LS_6,
-	Gpio::H144_LS_7,
-	Gpio::H144_LS_8,
-	Gpio::H144_OUT_IO12,
-	Gpio::H144_OUT_PWM5,
-	Gpio::H144_OUT_PWM4,
+		Gpio::H144_LS_4, // 4
+	Gpio::H144_LS_5, // 5 A/C relay
+	Gpio::H144_LS_6, // 6 idle air
+	Gpio::H144_LS_7, // 7 intake runner
+	Gpio::H144_LS_8, // 8 Lockout Solenoid
+	Gpio::H144_OUT_IO12, // 9 Radiator Relay Output
+	Gpio::H144_OUT_PWM6, // 10 B21 EVAP
+	Gpio::H144_OUT_PWM5, // 11 B23 VTC VVT
 };
 
 int getBoardMetaOutputsCount() {

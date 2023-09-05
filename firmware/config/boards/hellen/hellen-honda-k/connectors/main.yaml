@@ -272,20 +272,20 @@ pins:
 
 
   - pin: C11
-    meta: H144_OUT_PWM7
+    meta: H144_OUT_PWM8
     class: outputs
     type: ls
     ts_name: ___ Aux Low 3
     function: Aux Low 3
 
   - pin: C12
-    meta: H144_OUT_PWM6
+    meta: H144_OUT_PWM7
     class: outputs
     type: ls
     function: ___ Aux Low 2
 
   - pin: C13
-    meta: H144_OUT_PWM2
+    meta: H144_OUT_PWM3
     class: outputs
     type: ls
     function: ___ Aux Low 1
