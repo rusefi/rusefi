@@ -152,7 +152,7 @@ void startSimplePwmExt(SimplePwm *state,
 		const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output,
-		float frequency, float dutyCycle);
+		float frequency, float dutyCycle, pwm_gen_callback *callback = applyPinState);
 
 void startSimplePwmHard(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,

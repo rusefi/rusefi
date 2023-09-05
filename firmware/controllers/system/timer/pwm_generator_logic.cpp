@@ -336,11 +336,11 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 void startSimplePwmExt(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
-		float dutyCycle) {
+		float dutyCycle, pwm_gen_callback *callback) {
 
 	output->initPin(msg, brainPin);
 
-	startSimplePwm(state, msg, executor, output, frequency, dutyCycle);
+	startSimplePwm(state, msg, executor, output, frequency, dutyCycle, callback);
 }
 
 /**
