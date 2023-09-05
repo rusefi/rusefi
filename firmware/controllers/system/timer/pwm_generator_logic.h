@@ -53,6 +53,7 @@ typedef enum {
 class PwmConfig {
 public:
 	PwmConfig();
+	// technical debt? our way to have unit tests working is to have this field instead of proper 'this'
 	PwmConfig *arg = nullptr;
 
 	void weComplexInit(const char *msg,
