@@ -86,6 +86,10 @@
 #define bench_mode_e_BENCH_SECOND_IDLE_VALVE 14
 #define bench_mode_e_BENCH_STARTER_DISABLE_RELAY 3
 #define bench_mode_e_BENCH_STARTER_ENABLE_RELAY 2
+#define bench_mode_e_BENCH_VVT0_VALVE 16
+#define bench_mode_e_BENCH_VVT1_VALVE 17
+#define bench_mode_e_BENCH_VVT2_VALVE 18
+#define bench_mode_e_BENCH_VVT3_VALVE 19
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 750
 #define BOOST_BLEND_COUNT 2

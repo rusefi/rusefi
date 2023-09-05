@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Aug 25 02:51:46 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Sep 05 17:47:12 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -39,6 +39,14 @@ case BENCH_STARTER_DISABLE_RELAY:
   return "BENCH_STARTER_DISABLE_RELAY";
 case BENCH_STARTER_ENABLE_RELAY:
   return "BENCH_STARTER_ENABLE_RELAY";
+case BENCH_VVT0_VALVE:
+  return "BENCH_VVT0_VALVE";
+case BENCH_VVT1_VALVE:
+  return "BENCH_VVT1_VALVE";
+case BENCH_VVT2_VALVE:
+  return "BENCH_VVT2_VALVE";
+case BENCH_VVT3_VALVE:
+  return "BENCH_VVT3_VALVE";
   }
  return NULL;
 }

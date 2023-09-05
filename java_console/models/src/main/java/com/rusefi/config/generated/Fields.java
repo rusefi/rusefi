@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Sep 05 01:26:37 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Sep 05 17:49:25 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -84,6 +84,10 @@ public class Fields {
 	public static final int bench_mode_e_BENCH_SECOND_IDLE_VALVE = 14;
 	public static final int bench_mode_e_BENCH_STARTER_DISABLE_RELAY = 3;
 	public static final int bench_mode_e_BENCH_STARTER_ENABLE_RELAY = 2;
+	public static final int bench_mode_e_BENCH_VVT0_VALVE = 16;
+	public static final int bench_mode_e_BENCH_VVT1_VALVE = 17;
+	public static final int bench_mode_e_BENCH_VVT2_VALVE = 18;
+	public static final int bench_mode_e_BENCH_VVT3_VALVE = 19;
 	public static final int blend_table_s_size = 188;
 	public static final int BLOCKING_FACTOR = 750;
 	public static final int BOOST_BLEND_COUNT = 2;
