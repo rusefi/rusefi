@@ -18,6 +18,7 @@ class ValueProvider3D;
 void initVvtActuators();
 void startVvtControlPins();
 void stopVvtControlPins();
+OutputPin* getVvtOutputPin(int index);
 
 class VvtController : public PeriodicTimerController, public ClosedLoopController<angle_t, percent_t>, public vvt_s {
 public:

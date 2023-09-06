@@ -133,6 +133,15 @@ static const char *vvtOutputNames[CAM_INPUTS_COUNT] = {
 
 static VvtController instances[CAM_INPUTS_COUNT];
 
+OutputPin* getVvtOutputPin(int index) {
+    return &instances[index].m_pin;
+}
+
+static void applyVvtPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
+    OutputPin *output = state->outputPins[0];
+
+}
+
 static void turnVvtPidOn(int index) {
 	if (!isBrainPinValid(engineConfiguration->vvtPins[index])) {
 		return;
@@ -141,7 +150,7 @@ static void turnVvtPidOn(int index) {
 	startSimplePwmExt(&instances[index].m_pwm, vvtOutputNames[index],
 			&engine->executor,
 			engineConfiguration->vvtPins[index],
-			&instances[index].m_pin,
+			getVvtOutputPin(index),
 			engineConfiguration->vvtOutputFrequency, 0.1);
 }
 
@@ -153,7 +162,7 @@ void startVvtControlPins() {
 
 void stopVvtControlPins() {
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		instances[i].m_pin.deInit();
+		getVvtOutputPin(i)->deInit();
 	}
 }
 
