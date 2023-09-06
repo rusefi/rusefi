@@ -3,4 +3,4 @@
 #define ts_show_etb_pins false
 #define ts_show_analog_divider false
 
-!#define LUA_SCRIPT_SIZE 30000
+#define LUA_SCRIPT_SIZE 25000
