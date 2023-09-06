@@ -98,7 +98,7 @@ static void flashWriteThread(void*) {
 }
 #endif // EFI_FLASH_WRITE_THREAD
 
-void setNeedToWriteConfiguration(void) {
+void setNeedToWriteConfiguration() {
 	efiPrintf("Scheduling configuration write");
 	needToWriteConfiguration = true;
 
@@ -110,7 +110,7 @@ void setNeedToWriteConfiguration(void) {
 #endif // EFI_FLASH_WRITE_THREAD
 }
 
-bool getNeedToWriteConfiguration(void) {
+bool getNeedToWriteConfiguration() {
 	return needToWriteConfiguration;
 }
 
@@ -154,7 +154,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 
 bool burnWithoutFlash = false;
 
-void writeToFlashNow(void) {
+void writeToFlashNow() {
 	engine->configBurnTimer.reset();
 	bool isSuccess = false;
 
