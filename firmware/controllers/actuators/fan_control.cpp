@@ -7,8 +7,13 @@
 bool FanController::getState(bool acActive, bool lastState) {
 	auto clt = Sensor::get(SensorType::Clt);
 
+#if EFI_SHAFT_POSITION_INPUT
 	cranking = engine->rpmCalculator.isCranking();
 	notRunning = !engine->rpmCalculator.isRunning();
+#else
+	cranking = false;
+	notRunning = true;
+#endif
 
 	disabledWhileEngineStopped = notRunning && disableWhenStopped();
 	brokenClt = !clt;
