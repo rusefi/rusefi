@@ -9,6 +9,7 @@
 
 #include "local_version_holder.h"
 #include "vvt.h"
+#include "bench_test.h"
 
 #define NO_PIN_PERIOD 500
 
@@ -139,7 +140,10 @@ OutputPin* getVvtOutputPin(int index) {
 
 static void applyVvtPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
     OutputPin *output = state->outputPins[0];
-
+    if (output == getOutputOnTheBenchTest()) {
+        return;
+    }
+    state->applyPwmValue(output, stateIndex);
 }
 
 static void turnVvtPidOn(int index) {
@@ -151,7 +155,8 @@ static void turnVvtPidOn(int index) {
 			&engine->executor,
 			engineConfiguration->vvtPins[index],
 			getVvtOutputPin(index),
-			engineConfiguration->vvtOutputFrequency, 0.1);
+			engineConfiguration->vvtOutputFrequency, 0.1,
+			applyVvtPinState);
 }
 
 void startVvtControlPins() {
