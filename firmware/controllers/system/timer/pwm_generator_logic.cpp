@@ -288,16 +288,10 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 	this->executor = executor;
 	isStopRequested = false;
 
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
-	if (seq->phaseCount == 0) {
-		firmwareError(ObdCode::CUSTOM_ERR_PWM_1, "signal length cannot be zero");
-		return;
-	}
-	if (seq->phaseCount > PWM_PHASE_MAX_COUNT) {
-		firmwareError(ObdCode::CUSTOM_ERR_PWM_2, "too many phases in PWM");
-		return;
-	}
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6583, seq->waveCount > 0, "waveCount should be positive");
+	criticalAssertVoid(periodNt != 0, "period is not initialized");
+	criticalAssertVoid(seq->phaseCount != 0, "signal length cannot be zero");
+	criticalAssertVoid(seq->phaseCount <= PWM_PHASE_MAX_COUNT, "too many phases in PWM");
+	criticalAssertVoid(seq->waveCount > 0, "waveCount should be positive");
 
 	this->pwmCycleCallback = pwmCycleCallback;
 	this->stateChangeCallback = stateChangeCallback;
