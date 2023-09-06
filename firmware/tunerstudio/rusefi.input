@@ -3504,7 +3504,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
     dialog = outputsDialog, "Outputs", border
         panel = outputsDialogLeft, West
         panel = fanSetting, Center
-        pabel = outputsDialogRight, East
+        panel = outputsDialogRight, East
 
 	dialog = statusLeds, "Status LEDs"
 		field = "Trigger error LED",					triggerErrorPin
