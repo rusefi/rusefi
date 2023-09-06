@@ -2097,6 +2097,10 @@ cmd_test_check_engine_light	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENC
 cmd_test_idle_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_IDLE_VALVE_16_hex@@"
 cmd_test_second_idle_valve		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_SECOND_IDLE_VALVE_16_hex@@"
 cmd_test_hpfp_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_HPFP_VALVE_16_hex@@"
+cmd_test_vvt0_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT0_VALVE_16_hex@@"
+cmd_test_vvt1_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT1_VALVE_16_hex@@"
+cmd_test_vvt2_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT2_VALVE_16_hex@@"
+cmd_test_vvt3_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT3_VALVE_16_hex@@"
 
 cmd_calibrate_tps_1_closed	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x02"
 cmd_calibrate_tps_1_wot		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x03"
@@ -3661,6 +3665,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "D factor",									auxPid1_dFactor, {vvtPins1 != 0}
 		field = "Min",											auxPid1_minValue, {vvtPins1 != 0}
 		field = "Max",											auxPid1_maxValue, {vvtPins1 != 0}
+		commandButton = "VVT 1", cmd_test_vvt0_valve
+		commandButton = "VVT 2", cmd_test_vvt2_valve
 
 	dialog = vvtPidDialog2, "Exhaust PID"
 		field = "offset",										auxPid2_offset, {vvtPins2 != 0}
@@ -3669,6 +3675,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "D factor",									auxPid2_dFactor, {vvtPins2 != 0}
 		field = "Min",											auxPid2_minValue, {vvtPins2 != 0}
 		field = "Max",											auxPid2_maxValue, {vvtPins2 != 0}
+		commandButton = "VVT 1", cmd_test_vvt1_valve
+		commandButton = "VVT 2", cmd_test_vvt3_valve
 
 	dialog = vvtPidDialog, "VVT Configuration & PID", border
 		panel = vvtPidDialog0,			West
