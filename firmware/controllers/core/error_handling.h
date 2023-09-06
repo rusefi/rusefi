@@ -59,6 +59,8 @@ int getRusEfiVersion(void);
   #define efiAssertVoid(code, condition, message) { }
 #endif /* EFI_ENABLE_ASSERTS */
 
+#define criticalAssertVoid(condition, message) efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, condition, message)
+
 #if EFI_PROD_CODE
 #include <hal.h>
 
