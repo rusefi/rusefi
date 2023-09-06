@@ -83,6 +83,7 @@ public:
 	MultiChannelStateSequence const * multiChannelStateSequence = nullptr;
 	efitick_t togglePwmState();
 	void stop();
+	void applyPwmValue(OutputPin *output, int stateIndex, int channelIndex = 0);
 
 	int dbgNestingLevel;
 

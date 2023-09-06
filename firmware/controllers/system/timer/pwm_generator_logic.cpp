@@ -357,6 +357,11 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
 #endif
 }
 
+void PwmConfig::applyPwmValue(OutputPin *output, int stateIndex, /* weird argument order to facilitate default parameter value */int channelIndex) {
+	TriggerValue value = multiChannelStateSequence->getChannelState(channelIndex, stateIndex);
+	output->setValue(value == TriggerValue::RISE);
+}
+
 /**
  * This method controls the actual hardware pins
  *
@@ -377,7 +382,6 @@ void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6664, state->multiChannelStateSequence->waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence->waveCount; channelIndex++) {
 		OutputPin *output = state->outputPins[channelIndex];
-		TriggerValue value = state->multiChannelStateSequence->getChannelState(channelIndex, stateIndex);
-		output->setValue(value == TriggerValue::RISE);
+		state->applyPwmValue(output, stateIndex, channelIndex);
 	}
 }
