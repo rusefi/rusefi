@@ -17,10 +17,10 @@ void initFlash();
  * about 1-2 seconds, we cannot afford to do that while the engine is
  * running so we postpone the write until the engine is stopped.
  */
-void writeToFlashNow(void);
-void setNeedToWriteConfiguration(void);
+void writeToFlashNow();
+void setNeedToWriteConfiguration();
 /**
  * @return true if an flash write is pending
  */
-bool getNeedToWriteConfiguration(void);
-void writeToFlashIfPending(void);
+bool getNeedToWriteConfiguration();
+void writeToFlashIfPending();
