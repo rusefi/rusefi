@@ -192,6 +192,10 @@ static void doPeriodicSlowCallback() {
 	}
 
 	engine->periodicSlowCallback();
+#else /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
+	#if EFI_INTERNAL_FLASH
+		writeToFlashIfPending();
+	#endif /* EFI_INTERNAL_FLASH */
 #endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_TCU
