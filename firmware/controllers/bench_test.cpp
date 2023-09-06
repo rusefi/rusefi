@@ -23,9 +23,14 @@
 #include "pch.h"
 
 static bool isRunningBench = false;
+static OutputPin *outputOnTheBenchTest = nullptr;
 
 bool isRunningBenchTest() {
 	return isRunningBench;
+}
+
+const OutputPin *getOutputOnTheBenchTest() {
+    return outputOnTheBenchTest;
 }
 
 #if EFI_ENGINE_CONTROL
@@ -39,6 +44,7 @@ bool isRunningBenchTest() {
 #include "electronic_throttle_impl.h"
 #include "malfunction_central.h"
 #include "trigger_emulator_algo.h"
+#include "vvt.h"
 #include "microsecond_timer.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
@@ -91,6 +97,7 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 	efiPrintf("output on %s", hwPortname(output->brainPin));
 
 	isRunningBench = true;
+	outputOnTheBenchTest = output;
 
 	for (int i = 0; isRunningBench && i < count; i++) {
 		engine->outputChannels.testBenchIter = i;
@@ -110,6 +117,7 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 	engine->outputChannels.testBenchIter++;
 
 	efiPrintf("Done!");
+	outputOnTheBenchTest = nullptr;
 	isRunningBench = false;
 }
 
@@ -224,22 +232,22 @@ static void fanBenchExt(float onTimeMs) {
 	pinbench(onTimeMs, 100.0, 1.0, &enginePins.fanRelay);
 }
 
-void fanBench(void) {
+void fanBench() {
 	fanBenchExt(3000.0);
 }
 
-void fan2Bench(void) {
+void fan2Bench() {
 	pinbench(3000.0, 100.0, 1.0, &enginePins.fanRelay2);
 }
 
 /**
  * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
  */
-void milBench(void) {
+void milBench() {
 	pinbench(500.0, 500.0, 16, &enginePins.checkEnginePin);
 }
 
-void starterRelayBench(void) {
+void starterRelayBench() {
 	pinbench(6000.0, 100.0, 1, &enginePins.starterControl);
 }
 
@@ -248,22 +256,29 @@ static void fuelPumpBenchExt(float durationMs) {
 		&enginePins.fuelPumpRelay);
 }
 
-void acRelayBench(void) {
+void acRelayBench() {
 	pinbench(1000.0, 100.0, 1, &enginePins.acRelay);
 }
 
-static void mainRelayBench(void) {
+static void mainRelayBench() {
 	// main relay is usually "ON" via FSIO thus bench testing that one is pretty unusual
 	engine->mainRelayBenchStart.reset();
 }
 
-static void hpfpValveBench(void) {
+static void hpfpValveBench() {
 	pinbench(engineConfiguration->benchTestOnTime, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
 		&enginePins.hpfpValve);
 }
 
-void fuelPumpBench(void) {
+void fuelPumpBench() {
 	fuelPumpBenchExt(3000.0);
+}
+
+static void vvtValveBench(int vvtIndex) {
+#if EFI_VVT_PID
+	pinbench(engineConfiguration->benchTestOnTime, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
+		getVvtOutputPin(vvtIndex));
+#endif // EFI_VVT_PID
 }
 
 class BenchController : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
@@ -295,6 +310,18 @@ static BenchController instance;
 
 static void handleBenchCategory(uint16_t index) {
 	switch(index) {
+	case BENCH_VVT0_VALVE:
+	    vvtValveBench(0);
+		return;
+	case BENCH_VVT1_VALVE:
+	    vvtValveBench(1);
+		return;
+	case BENCH_VVT2_VALVE:
+	    vvtValveBench(2);
+		return;
+	case BENCH_VVT3_VALVE:
+	    vvtValveBench(3);
+		return;
 	case BENCH_MAIN_RELAY:
 		mainRelayBench();
 		return;
