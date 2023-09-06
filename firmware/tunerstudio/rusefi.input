@@ -3452,28 +3452,33 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Output",							fuelPumpPin
 		field = "Output mode",					fuelPumpPinMode
 		field = "Prime duration",				startUpFuelPumpDuration
+		commandButton = "Test Fuel Pump", cmd_test_fuel_pump
 
 ;			Controller->Actuator Outputs
 	dialog = mainRelayDialog, "Main relay output"
 		field = "microRusEFI main relay control is hard wired on pin #29"@@if_ts_show_main_relay_microRusEFI_message
 		field = "Output",						mainRelayPin@@if_ts_show_main_relay
 		field = "Output mode",					mainRelayPinMode@@if_ts_show_main_relay
+		commandButton = "Test Main Relay", cmd_test_main_relay@@if_ts_show_main_relay
 
 	dialog = starterRelayDialog, "Starter Disable"
 		field = "Output",						starterRelayDisablePin
 		field = "Output mode",					starterRelayDisablePinMode
+		commandButton = "Test Starter Disable", cmd_test_starter_disable_relay
 
 	dialog = startStopDialog, "Starter Control"
 		field = "Start/Stop Button input",		startStopButtonPin
 		field = "Start/Stop Button input mode",				startStopButtonMode
 		field = "Starter Control",						starterControlPin, { starterControlPin != 0 || startStopButtonPin != 0}
 		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
+		commandButton = "Test Starter Relay", cmd_test_starter_relay
 
 ;			Engine->MIL Settings
 	dialog = malfunctionDialog,	"Check Engine Settings"
 		field = "Output",						malfunctionIndicatorPin
 		field = "Output mode",				malfunctionIndicatorPinMode
 		field = "Warning Period",									warningPeriod
+		commandButton = "Test Check Engine", cmd_test_check_engine_light
 
 	dialog = tachSettings, "Tachometer output"
 		field = "Output",									tachOutputPin
@@ -3486,6 +3491,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = mainRelayDialog
 		panel = fuelPumpDialog
 		panel = tachSettings
+
+    dialog = outputsDialogRight
 		panel = startStopDialog
 		panel = starterRelayDialog
 		panel = malfunctionDialog
@@ -3493,6 +3500,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
     dialog = outputsDialog, "Outputs", border
         panel = outputsDialogLeft, West
         panel = fanSetting, Center
+        pabel = outputsDialogRight, East
 
 	dialog = statusLeds, "Status LEDs"
 		field = "Trigger error LED",					triggerErrorPin
@@ -4267,16 +4275,10 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Abort test", cmd_test_cancel
 
 	dialog = testMisc, "Misc"
-		commandButton = "Main Relay", cmd_test_main_relay@@if_ts_show_main_relay
-		commandButton = "Fuel Pump", cmd_test_fuel_pump
-		commandButton = "Cooling Fan", cmd_test_fan_1
-		commandButton = "Cooling Fan 2", cmd_test_fan_2
 		commandButton = "A/C Relay", cmd_test_ac_relay
-		commandButton = "Check Engine", cmd_test_check_engine_light
 		commandButton = "Idle Air Valve", cmd_test_idle_valve
 		commandButton = "Idle Second Air Valve", cmd_test_second_idle_valve
 		commandButton = "HPFP Valve", cmd_test_hpfp_valve
-		commandButton = "Starter Relay", cmd_test_starter_relay
 		commandButton = "Stop Engine", cmd_stop_engine
 		commandButton = "Write Config", cmd_write_config
 		commandButton = "Reset ECU", cmd_reset_controller
