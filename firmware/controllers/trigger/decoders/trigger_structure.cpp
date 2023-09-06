@@ -342,7 +342,7 @@ void TriggerWaveform::setTriggerSynchronizationGap2(float syncRatioFrom, float s
 
 void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, gapIndex >= 0 && gapIndex < GAP_TRACKING_LENGTH, "gapIndex out of range");
+	criticalAssertVoid(gapIndex >= 0 && gapIndex < GAP_TRACKING_LENGTH, "gapIndex out of range");
 	syncronizationRatioFrom[gapIndex] = syncRatioFrom;
 	syncronizationRatioTo[gapIndex] = syncRatioTo;
 	if (gapIndex == 0) {

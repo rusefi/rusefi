@@ -107,7 +107,7 @@ void EventQueue::remove(scheduling_s* scheduling) {
 			return;
 		}
 
-		efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, current == scheduling, "current not equal to scheduling");
+		criticalAssertVoid(current == scheduling, "current not equal to scheduling");
 
 		// Link around the removed item
 		prev->nextScheduling_s = current->nextScheduling_s;

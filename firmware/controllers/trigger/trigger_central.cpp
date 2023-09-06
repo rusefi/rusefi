@@ -979,7 +979,7 @@ static void resetRunningTriggerCounters() {
 void onConfigurationChangeTriggerCallback() {
 	bool changed = false;
 	// todo: how do we static_assert here?
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, efi::size(engineConfiguration->camInputs) == efi::size(engineConfiguration->vvtOffsets), "sizes");
+	criticalAssertVoid(efi::size(engineConfiguration->camInputs) == efi::size(engineConfiguration->vvtOffsets), "sizes");
 
 	for (size_t camIndex = 0; camIndex < efi::size(engineConfiguration->camInputs); camIndex++) {
 		changed |= isConfigurationChanged(camInputs[camIndex]);

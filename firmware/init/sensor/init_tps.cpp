@@ -189,7 +189,7 @@ bool isDigitalTps1() {
 }
 
 void initTps() {
-    efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, engineConfiguration != nullptr, "null engineConfiguration");
+    criticalAssertVoid(engineConfiguration != nullptr, "null engineConfiguration");
 	percent_t min = engineConfiguration->tpsErrorDetectionTooLow;
 	percent_t max = engineConfiguration->tpsErrorDetectionTooHigh;
 

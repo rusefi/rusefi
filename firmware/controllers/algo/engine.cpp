@@ -180,7 +180,7 @@ void Engine::periodicSlowCallback() {
 #endif // EFI_PROD_CODE
 
 #if ANALOG_HW_CHECK_MODE
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
+	criticalAssertVoid(isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowS();
 
 #if ! HW_CHECK_ALWAYS_STIMULATE

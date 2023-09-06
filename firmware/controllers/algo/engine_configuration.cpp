@@ -256,7 +256,7 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 }
 
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
+	criticalAssertVoid(engineConfiguration != NULL, "ec NULL");
 	efi::clear(engineConfiguration);
 
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;

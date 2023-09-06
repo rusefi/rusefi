@@ -50,7 +50,7 @@ static bool hwStarted = false;
  * This function should be invoked under kernel lock which would disable interrupts.
  */
 void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, hwStarted, "HW.started");
+	criticalAssertVoid(hwStarted, "HW.started");
 
 	// How many ticks in the future is this event?
 	auto timeDeltaNt = setTimeNt - nowNt;

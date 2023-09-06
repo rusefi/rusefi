@@ -19,7 +19,7 @@ void initialize60_2_2_Renault_F(TriggerWaveform *s) {
     		NO_LEFT_FILTER, 719);
 
 #if EFI_UNIT_TEST
-    efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, s->wave.phaseCount == (totalTeethCount - skipped) * 2 - 1, "Tooth count 60-3");
+    criticalAssertVoid(s->wave.phaseCount == (totalTeethCount - skipped) * 2 - 1, "Tooth count 60-3");
 #endif // EFI_UNIT_TEST
 
     float specialPosition = 58 * oneTooth;
@@ -30,7 +30,7 @@ void initialize60_2_2_Renault_F(TriggerWaveform *s) {
     		specialPosition - 1, specialPosition - 1 + oneTooth);
 
 #if EFI_UNIT_TEST
-    efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, s->wave.phaseCount == (totalTeethCount - skipped) * 2 + 1, "Tooth count 60-2-2");
+    criticalAssertVoid(s->wave.phaseCount == (totalTeethCount - skipped) * 2 + 1, "Tooth count 60-2-2");
 #endif // EFI_UNIT_TEST
 
     s->addEvent(1, TriggerValue::FALL, TriggerWheel::T_PRIMARY);

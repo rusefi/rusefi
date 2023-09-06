@@ -163,7 +163,7 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 			fixAngle(angle, "trgSync", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE_RANGE);
 
 			if (shape->useOnlyRisingEdges) {
-				efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, triggerDefinitionIndex < triggerShapeLength, "trigger shape fail");
+				criticalAssertVoid(triggerDefinitionIndex < triggerShapeLength, "trigger shape fail");
 				assertIsInBounds(triggerDefinitionIndex, shape->isRiseEvent, "isRise");
 
 				// In case this is a rising event, replace the following fall event with the rising as well

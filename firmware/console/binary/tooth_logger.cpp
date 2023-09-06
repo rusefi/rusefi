@@ -167,7 +167,7 @@ void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
 	chibios_rt::CriticalSectionLocker csl;
 
 	msg_t msg = freeBuffers.postI(buffer);
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail");
+	criticalAssertVoid(msg == MSG_OK, "Composite logger post to free buffer fail");
 }
 
 static CompositeBuffer* findBuffer(efitick_t timestamp) {

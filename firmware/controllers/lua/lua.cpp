@@ -54,7 +54,7 @@ public:
 	}
 
 	void reinit(char *buffer, size_t size) {
-		efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, m_memoryUsed == 0, "Too late to reinit Lua heap");
+		criticalAssertVoid(m_memoryUsed == 0, "Too late to reinit Lua heap");
 
 		m_size = size;
 		m_buffer = buffer;

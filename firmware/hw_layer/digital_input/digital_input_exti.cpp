@@ -42,7 +42,7 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, Exti
 		return;
 	}
 
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, msg, "efiExtiEnablePin msg must not be null");
+	criticalAssertVoid(msg, "efiExtiEnablePin msg must not be null");
 
 	ioportid_t port = getHwPort(msg, brainPin);
 	if (port == NULL) {
