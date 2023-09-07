@@ -1,4 +1,4 @@
-meta: config/boards/hellen_meta.h
+meta: config/boards/hellen_mm176_meta.h
 
 pins:
   - pin: 1D
