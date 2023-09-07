@@ -18,7 +18,7 @@ jobs:
     if: ${{ github.repository == 'FOME-Tech/fome-fw' }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Check last date
       run: if [ "$(git log -1 --pretty=%B)" = "Update date" ]; then echo "skip=true" >> $GITHUB_ENV; fi
