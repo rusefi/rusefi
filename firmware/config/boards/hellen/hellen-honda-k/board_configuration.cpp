@@ -175,6 +175,7 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_OUT_IO12, // 9 Radiator Relay Output
 	Gpio::H144_OUT_PWM6, // 10 B21 EVAP
 	Gpio::H144_OUT_PWM5, // 11 B23 VTC VVT
+	Gpio::H144_OUT_IO3, // E7 12 main relay
 };
 
 int getBoardMetaOutputsCount() {
