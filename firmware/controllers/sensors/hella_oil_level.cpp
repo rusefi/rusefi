@@ -2,6 +2,8 @@
 
 #include "hella_oil_level.h"
 
+#include "digital_input_exti.h"
+
 static void hellaSensorExtiCallback(void* arg, efitick_t nowNt) {
 	reinterpret_cast<HellaOilLevelSensor*>(arg)->onEdge(nowNt);
 }
@@ -61,7 +63,7 @@ void HellaOilLevelSensor::onEdge(efitick_t nowNt) {
 		if (m_nextPulse == NextPulse::Diag) {
 			// TODO: decode diag pulse?
 			return;
-		} else if (m_nextPulse = NextPulse::Temp) {
+		} else if (m_nextPulse == NextPulse::Temp) {
 			// 22ms = Short circuit temp sensor
 			// 23ms = -40C
 			// 87ms = 160C
@@ -77,7 +79,7 @@ void HellaOilLevelSensor::onEdge(efitick_t nowNt) {
 				float tempC = interpolateClamped(23, -40, 87, 160, lastPulseMs);
 				// setValidValue(tempC, nowNt);
 			}
-		} else if (m_nextPulse = NextPulse::Level) {
+		} else if (m_nextPulse == NextPulse::Level) {
 			// 22ms = Unreliable signal
 			// 23ms = level 0mm
 			// 87.86ms = level 150mm
