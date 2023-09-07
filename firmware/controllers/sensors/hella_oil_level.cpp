@@ -60,6 +60,12 @@ void HellaOilLevelSensor::onEdge(efitick_t nowNt) {
 		// Stop timing at the falling edge
 		float lastPulseMs = 1000 * m_pulseTimer.getElapsedSeconds(nowNt);
 
+		if (lastPulseMs > 100 || lastPulseMs < 20) {
+			// Impossibly short or long pulse, something went wrong
+			m_nextPulse = NextPulse::None;
+			return;
+		}
+
 		if (m_nextPulse == NextPulse::Diag) {
 			// TODO: decode diag pulse?
 			return;
