@@ -168,17 +168,11 @@ void incrementGlobalConfigurationVersion() {
 
 	boardOnConfigurationChange(&activeConfiguration);
 
-/**
- * All these callbacks could be implemented as listeners, but these days I am saving RAM
- */
 	engine->preCalculate();
 #if EFI_ALTERNATOR_CONTROL
 	onConfigurationChangeAlternatorCallback(&activeConfiguration);
 #endif /* EFI_ALTERNATOR_CONTROL */
 
-#if EFI_BOOST_CONTROL
-	onConfigurationChangeBoostCallback(&activeConfiguration);
-#endif
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */

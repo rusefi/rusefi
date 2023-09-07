@@ -56,7 +56,8 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: boost
-    constexpr: "engine->boostController"
+    constexpr: "___engine.module<BoostController>()"
+    isPtr: true
     conditional_compilation: "EFI_BOOST_CONTROL"
 
   - name: ac_control

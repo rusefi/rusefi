@@ -13,15 +13,16 @@
 
 struct IPwm;
 
-class BoostController : public boost_control_s, public ClosedLoopController<float, percent_t>  {
+class BoostController : public EngineModule, public boost_control_s, public ClosedLoopController<float, percent_t>  {
 public:
 	void init(IPwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
-	void update();
+
+	void onFastCallback() override;
 	void resetLua();
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
-	void onConfigurationChange(pid_s* previousConfiguration);
+	void onConfigurationChange(engine_configuration_s const * previousConfig) override;
 
 	// Helpers for individual parts of boost control
 	expected<float> observePlant() const override;
@@ -45,4 +46,3 @@ private:
 void startBoostPin();
 void initBoostCtrl();
 void setDefaultBoostParameters();
-void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration);
