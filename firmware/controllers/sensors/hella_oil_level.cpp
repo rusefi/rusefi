@@ -25,7 +25,13 @@ void HellaOilLevelSensor::init(brain_pin_e pin) {
 }
 
 void HellaOilLevelSensor::onEdge(efitick_t nowNt) {
-	if (efiReadPin(m_pin)) {
+#if EFI_PROD_CODE
+	onEdge(nowNt, efiReadPin(m_pin));
+#endif
+}
+
+void HellaOilLevelSensor::onEdge(efitick_t nowNt, bool value) {
+	if (value) {
 		// Start pulse width timing at the rising edge
 		m_pulseTimer.reset(nowNt);
 
