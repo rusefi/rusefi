@@ -147,7 +147,7 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 		return 0;
 	}
 
-	return m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	return m_pid.getOutput(target, manifoldPressure, FAST_CALLBACK_PERIOD_MS / 1000.0f);
 }
 
 expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
@@ -181,11 +181,11 @@ void BoostController::setOutput(expected<float> output) {
 
 void BoostController::update() {
 	if (!hasInitBoost) {
-	    return;
+		return;
 	}
 
-	m_pid.iTermMin = -50;
-	m_pid.iTermMax = 50;
+	m_pid.iTermMin = -20;
+	m_pid.iTermMax = 20;
 
 	rpmTooLow = Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->boostControlMinRpm;
 	tpsTooLow = Sensor::getOrZero(SensorType::Tps1) < engineConfiguration->boostControlMinTps;

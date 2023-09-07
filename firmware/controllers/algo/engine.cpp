@@ -160,10 +160,6 @@ void Engine::periodicSlowCallback() {
 
 	updateFans(module<AcController>().unmock().isAcEnabled());
 
-#if EFI_BOOST_CONTROL
-	engine->boostController.update();
-#endif // EFI_BOOST_CONTROL
-
 #if (BOARD_TLE8888_COUNT > 0)
 	tle8888startup();
 #endif
@@ -554,6 +550,10 @@ void Engine::periodicFastCallback() {
 	tachSignalCallback();
 
 	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
+
+#if EFI_BOOST_CONTROL
+	engine->boostController.update();
+#endif // EFI_BOOST_CONTROL
 }
 
 EngineRotationState * getEngineRotationState() {
