@@ -209,7 +209,7 @@ pins:
     ts_name: 28A - Aux Temp 2
 
   - pin: 31A
-    meta: MM176_IN_TPS1_ANALOG
+    meta: MM176_IN_TPS_ANALOG
     class: analog_inputs
     function: TPS Sensor Input
     ts_name: 31A - TPS Sensor Input
@@ -236,7 +236,7 @@ pins:
 
   - pin: 1B
     function: VR1-/Hall Input
-    meta: MM176_USBID
+    meta: MM176_USB1ID
     class: event_inputs
     ts_name: 1B - VR1-/Hall Input
     color: red
@@ -244,11 +244,11 @@ pins:
   - pin: 2B
     function: VR1+
 
-  - pin: 1B2B
-    function: VR1
-    meta: MM176_USBID
-    class: event_inputs
-    ts_name: 1B/2B - VR1
+#  - pin: 1B2B
+#    function: VR1
+#    meta: MM176_USBID
+#    class: event_inputs
+#    ts_name: 1B/2B - VR1
 
   - pin: 3B
     function: VR2+
