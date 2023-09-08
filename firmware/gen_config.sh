@@ -33,6 +33,7 @@ for BOARD in \
    "config/boards/hellen/alphax-4chan alphax-4chan_f7" \
    "config/boards/hellen/alphax-8chan alphax-8chan" \
    "config/boards/hellen/alphax-8chan alphax-8chan_f7" \
+   "config/boards/hellen/alphax-8chan-revA alphax-8chan-revA" \
    "config/boards/hellen/harley81 harley81" \
    "config/boards/hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
    "config/boards/hellen/hellen121vag hellen121vag" \
