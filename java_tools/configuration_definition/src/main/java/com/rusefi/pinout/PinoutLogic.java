@@ -146,7 +146,10 @@ public class PinoutLogic {
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
             Object pinId = pin.get("id");
-            String meta = (String) pin.get("meta");
+            Object metaAsObject = pin.get("meta");
+            if (metaAsObject != null && !(metaAsObject instanceof String))
+                throw new IllegalStateException("[" + metaAsObject + "] meta could only be a string for " + pinId);
+            String meta = (String) metaAsObject;
             if (meta != null && pinId != null) {
                 throw new IllegalStateException(pinId + " not expected with meta=" + meta);
             }
