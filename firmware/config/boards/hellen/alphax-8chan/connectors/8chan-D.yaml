@@ -2,176 +2,192 @@ meta: config/boards/hellen_mm176_meta.h
 
 pins:
   - pin: 1D
-    function: DC3 positive
-    type: etb
+    meta: MM176_INJ1
+    function: Injector 1
+    class: outputs
+    type: inj
+    ts_name: 1D - Injector 1
     color: purple
 
   - pin: 2D
-    function: DC3 negative
-    type: etb
+    meta: MM176_INJ2
+    function: Injector 2
+    class: outputs
+    type: inj
+    ts_name: 2D - Injector 2
     color: purple
 
   - pin: 3D
-    function: CAN2 bus high (CANH)
-    type: can
+    meta: MM176_INJ3
+    function: Injector 3
+    class: outputs
+    type: inj
+    ts_name: 3D - Injector 3
     color: green
 
   - pin: 4D
-    function: CAN2 bus low (CANL)
-    type: can
+    meta: MM176_INJ4
+    function: Injector 4
+    class: outputs
+    type: inj
+    ts_name: 4D - Injector 4
     color: green
 
   - pin: 5D
-    function: CAN1 bus high (CANH)
-    type: can
+    meta: MM176_INJ5
+    function: Injector 5
+    class: outputs
+    type: inj
+    ts_name: 5D - Injector 5
     color: green
 
   - pin: 6D
-    function: CAN1 bus low (CANL)
-    type: can
+    meta: MM176_INJ6
+    function: Injector 6
+    class: outputs
+    type: inj
+    ts_name: 6D - Injector 6
     color: green
 
   - pin: 7D
-    function: Power GND
-    type: gnd
+    meta: MM176_INJ7
+    function: Injector 7
+    class: outputs
+    type: inj
+    ts_name: 7D - Injector 7
+
 
   - pin: 8D
-    # H144_OUT_IO12
-    id: A8
+    function: VVT 1
+    meta: MM176_OUT_PWM1
     class: outputs
-    function: Fuel Pump Relay Output (low)
-    type: ls
-    ts_name: 8D - Fuel Pump
+    ts_name: 8D - VVT 1
     color: purple
 
   - pin: 9D
-    # H144_OUT_IO11
-    id: G2
+    function: Fuel Pump Relay Output (low)
+    meta: MM176_GP3
     class: outputs
-    function: Fan Relay Output (low)
-    type: ls
-    ts_name: 9D - Fan Relay
+    ts_name: 9D - Fuel Pump
     color: purple
 
   - pin: 10D
-    # H144_OUT_IO1
-    id: D3
+    function: Fan Relay Output (low)
+    meta: MM176_GP2
     class: outputs
-    function: Low Side Output 7 (low)
-    type: ls
-    ts_name: 10D - LS 7
+    ts_name: 10D - Fan
     color: purple
 
   - pin: 11D
-    # H144_OUT_IO2
-    id: A9
+    function: Main Relay Output (low)
+    meta: MM176_GP1
     class: outputs
-    function: Low Side Output 8 (low)
-    type: ls
-    ts_name: 11D - LS 8
+    ts_name: 11D - Main Relay
     color: purple
 
   - pin: 12D
-    # H144_OUT_IO9
-    id: G13
+    function: NOS Relay Output (low)
+    meta: MM176_OUT_IO8
     class: outputs
-    function: NOS Output (low)
-    type: ls
     ts_name: 12D - NOS
     color: purple
 
   - pin: 13D
-    # H144_OUT_PWM3
-    id: C7
+    meta: MM176_INJ8
+    function: Injector 8
     class: outputs
-    function: Boost Output (low)
-    type: ls
-    ts_name: 13D - Boost
+    type: inj
+    ts_name: 13D - Injector 8
     color: purple
 
+
   - pin: 14D
-    # H144_IN_AUX3 + 16 = 15 + 16
-    id: EFI_ADC_31
-    class: analog_inputs
-    function: Analog 4
-    ts_name: 14D - AN4
+    function: VVT 2
+    meta: MM176_OUT_PWM2
+    class: outputs
+    ts_name: 14D - VVT 2
     color: orange
 
   - pin: 15D
-    # H144_IN_AUX4
-    id: EFI_ADC_7
-    class: analog_inputs
-    function: Analog 5
-    ts_name: 15D - AN5
+    function: Tachometer Output (low)
+    meta: MM176_OUT_IO13
+    class: outputs
+    ts_name: 15D - Tachometer
     color: orange
 
   - pin: 16D
-    # H144_IN_AUX4 + 16 = 7 + 16
-    id: EFI_ADC_23
-    class: analog_inputs
-    function: Analog 6
-    ts_name: 16D - AN6
+    function: Low Side 1
+    meta: MM176_OUT_PWM6
+    class: outputs
+    ts_name: 16C - Low Side 1
     color: orange
     
   - pin: 17D
-    class: outputs
-    function: Lowside1 (low)
-    type: ls
-    ts_name: 13D - Lowside1
+    function: Power GND
+    type: gnd
     color: purple
     
   - pin: 18D
-    class: outputs
-    function: Lowside2 (low)
-    type: ls
-    ts_name: 18D - Lowside2
+    function: Power GND
+    type: gnd
     color: purple
     
   - pin: 19D
+    meta: MM176_GP17
+    function: Injector 9
     class: outputs
-    function: Lowside3 (low)
-    type: ls
-    ts_name: 19D - Lowside3
+    type: inj
+    ts_name: 19D - Injector 9
     color: purple
 
+
   - pin: 20D
+    function: VVT 3
+    meta: MM176_OUT_PWM3
     class: outputs
-    function: HighSide2 (low)
-    type: ls
-    ts_name: 20D - Highside2
+    ts_name: 20D - VVT 3
     color: purple
 
   - pin: 21D
-    # H144_OUT_IO13
-    id: G6
+    function: VVT 4
+    meta: MM176_OUT_PWM4
     class: outputs
-    function: Tachometer Output
-    ts_name: 21D - Tachometer
-    type: ls
+    ts_name: 21D - VVT 4
     color: purple
     
   - pin: 22D
+    function: Boost (low)
+    meta: MM176_OUT_PWM5
     class: outputs
-    function: Highside3 (low)
-    type: ls
-    ts_name: 22D - Highside3
+    ts_name: 22C - Boost
     color: purple
 
   - pin: 23D
-    function: +5v sensors
+    function: Low Side 2
+    meta: MM176_OUT_PWM7
+    class: outputs
+    ts_name: 23C - Low Side 2
 
   - pin: 24D
-    function: Analog Ground
-    color: black
-    type: gnd
+    meta: MM176_GP20
+    function: Injector 9
+    class: outputs
+    type: inj
+    ts_name: 24D - Injector 12
     
   - pin: 25D
-    function: Lowside 9
-    color: purple
+    meta: MM176_GP19
+    function: Injector 11
+    class: outputs
+    type: inj
+    ts_name: 25D - Injector 11
 
   - pin: 26D
-    function: Lowside 10
-    color: purple    
+    meta: MM176_GP18
+    function: Injector 10
+    class: outputs
+    type: inj
+    ts_name: 26D - Injector 10
 
 info:
   title: AlphaX 8chan
