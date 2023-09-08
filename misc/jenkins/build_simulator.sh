@@ -8,6 +8,7 @@ make -v
 mkdir -p out
 rm -rf build
 rm -rf .dep
+export SIMULATOR_DEBUG_LEVEL_OPT="-O2"
 bash compile.sh
 ls build
 cd ..

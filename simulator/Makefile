@@ -37,13 +37,14 @@ else
   SANITIZE = no
 endif
 
+ifeq ($(SIMULATOR_DEBUG_LEVEL_OPT),)
+# If you would like to debug the simulator, swap which of these lines is commented. It's commented because debug info causes a 10-15x increase in binary size.
+  SIMULATOR_DEBUG_LEVEL_OPT = -O0 -g
+endif
+
 # Compiler options here.
 ifeq ($(USE_OPT),)
   USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
-
-# If you would like to debug the simulator, swap which of these lines is commented. It's commented because debug info causes a 10-15x increase in binary size.
-  USE_OPT += -O2
-#  USE_OPT += -O0 -g
 
   ifeq ($(OS),Windows_NT)
     USE_OPT += -DEFI_SIM_IS_WINDOWS=1
@@ -53,7 +54,7 @@ ifeq ($(USE_OPT),)
 endif
 
 # See explanation in main firmware Makefile for these three defines
-USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=1
+USE_OPT += $(SIMULATOR_DEBUG_LEVEL_OPT) $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=1
 
 # Enable address sanitizer, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
 ifeq ($(SANITIZE),yes)
