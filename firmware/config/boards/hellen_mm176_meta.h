@@ -1,22 +1,22 @@
 #pragma once
 
-#define MM176_IGN_1 C13
-#define MM176_IGN_2 E5
-#define MM176_IGN_3 E4
-#define MM176_IGN_4 E3
-#define MM176_IGN_5 E2
-#define MM176_IGN_6 B8
-#define MM176_IGN_7 B9
-#define MM176_IGN_8 E6
+#define MM176_IGN1 C13
+#define MM176_IGN2 E5
+#define MM176_IGN3 E4
+#define MM176_IGN4 E3
+#define MM176_IGN5 E2
+#define MM176_IGN6 B8
+#define MM176_IGN7 B9
+#define MM176_IGN8 E6
 
-#define MM176_LS_1 G7
-#define MM176_LS_2 G8
-#define MM176_LS_3 D11
-#define MM176_LS_4 D10
-#define MM176_LS_5 D9
-#define MM176_LS_6 F12
-#define MM176_LS_7 F13
-#define MM176_LS_8 F14
+#define MM176_INJ1 G7
+#define MM176_INJ2 G8
+#define MM176_INJ3 D11
+#define MM176_INJ4 D10
+#define MM176_INJ5 D9
+#define MM176_INJ6 F12
+#define MM176_INJ7 F13
+#define MM176_INJ8 F14
 
 #define MM176_OUT_PWM1 D13
 #define MM176_OUT_PWM2 C6
