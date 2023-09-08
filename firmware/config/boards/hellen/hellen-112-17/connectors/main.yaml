@@ -1,81 +1,112 @@
+#
+# VAZ 21126–1411020-40
+#
+#
+
 pins:
   - pin: 101
-    function: low side output 101
+# RZR wastegate
+    function: 101 low side 1.5A output
+    class: outputs
+    type: ls
   - pin: 102
-    function: low side output 102
+# RZR fuel pump driver PWM
+    function: 102 low side 1.5A output
+    class: outputs
+    type: ls
 
   - pin: 103
-    function: Pedal Analog GND
+    function: Analog GND
     type: GND
   - pin: 104
-    function: Sensor GND
+    function: Analog GND
     type: GND
   - pin: 105
-    function: Throttle Analog GND
+    function: Analog GND
     type: GND
   - pin: 106
-    function: Pedal Analog GND
+    function: Analog GND
     type: GND
+
   - pin: 107
     class: analog_inputs
-    ts_name: 107 A/C pressure
-    function: 107 A/C pressure
+# RZR start command
+# VAZ mentions A/C pressure maybe switch? maybe AV?
+# jumper
+    ts_name: 107
+    function: 107 TODO
   - pin: 108
+# jumper
     function: Sometimes GND
     type: GND
 
   - pin: 109
+# RZR Boost MAP
     class: analog_inputs
     function: Analog 109
   - pin: 110
+# RZR Ambient Pressure
     class: analog_inputs
-    function: Analog 110
+    function: 110 Analog Input
 
   - pin: 111
+# jumper
+# RZR & Polaris PPS2
     class: analog_inputs
-    function: 111 Analog Input
+    function: ___ PPS2
     ts_name: 111 Analog Input
 
   - pin: 112
+# RZR Fuel Level
     class: analog_inputs
-    function: Fuel Level
-    ts_name: 112 Fuel Level
+    function: 112 Analog Input
+    ts_name: 112 Analog Input
+
   - pin: 113
     function: Brake Input
     ts_name: 113 Brake Input
 
   - pin: 114
-    function: Pedal Position 2
+# jumper
+# I cannot find where have I seen 114 as PPS2?
+    function: 114 Analog Input
     class: analog_inputs
+
   - pin: 115
     class: outputs
     ts_name: Main Relay
     function: Main Relay Control
     type: ls
+
   - pin: 116
     function: Ignition Switch KL15 / Battery Voltage Analog Input
     ts_name: 116 - Voltage From Key
     color: white
+
   - pin: 119
     class: analog_inputs
-    ts_name: 119 A/C pressure
-    function: 119 A/C pressure
+    function: ___ Analog Input
+
   - pin: 120
     function: 120 Switch
 
   - pin: 121
-    function: Pedal Position 1
+# jumper
+# RZR Polaris VAZ PPS1
+    function: ___ PPS1
     class: analog_inputs
 
   - pin: 123
     function: 123 Input
 
   - pin: 125
-    function: Pedal +5V Supply
+# jumper
+    function: 125 Analog Supply
+
   - pin: 126
-    function: 3.3 Analog Supply PPS2
+    # jumper
+    function: 126 Analog Supply
     color: black
-    type: 3.3v
 
   - pin: 127
     function: K-Line
@@ -87,7 +118,10 @@ pins:
     function: A29 output
 
   - pin: 131
-    function: A31 A/C output
+# Polaris Radiator Relay
+    function: 131 Relay Output
+    class: outputs
+    type: ls
 
   - pin: 132
     function: CAN bus high
@@ -96,14 +130,17 @@ pins:
   - pin: 134
     function: 134 Switch
   - pin: 135
-    function: 135 Switch
+# VAZ brake pedal
+    function: ___ Switch Input
   - pin: 136
-    function: 136 Switch
+# VAZ clutch pedal
+    function: 136 Switch Input
   - pin: 137
     function: 137 Polaris
 
   - pin: 138
-    function: Analog Supply TPS
+    # jumper
+    function: 138 Analog Supply
     color: black
 
   - pin: 140
@@ -143,30 +180,40 @@ pins:
     function: +12V From Main Relay
 
   - pin: 201
+    # jumper
     function: Crank Sensor VR- Negative Input
     ts_name: 201 Crank VR-
+  - pin: 202
+    # via
+    function: 203 Oxygen Sensor
+
   - pin: 203
     class: analog_inputs
-    function: TPS Throttle Position 1
+    function: ___ TPS Throttle Position 1
+
   - pin: 204
-    function: Sensor GND
+    function: Analog GND
     type: GND
+
   - pin: 205
-    function: Sensor GND
+    function: Analog GND
     type: GND
+
   - pin: 206
-    function: Sensor GND
+    function: Analog GND
     type: GND
   - pin: 207
-    function: Sensor GND
+    function: Analog GND
     type: GND
+# Polaris CLT GND
   - pin: 208
-    function: Sensor GND CLT Polaris
+    function: Analog GND
     type: GND
 
   - pin: 210
     function: Pedal +5V Supply
   - pin: 213
+    # jumper
     function: Crank Sensor VR+ Positive Input
     ts_name: 213 Crank VR+
   - pin: 215
@@ -180,14 +227,16 @@ pins:
 
   - pin: 220
     class: analog_inputs
-    function: TPS Throttle Position 2
+    function: ___ TPS Throttle Position 2
+
   - pin: 223
-    function: Analog Supply MAP
+# jumper
+    function: ___ Analog Supply
     color: red
 
   - pin: 227
     ts_name: 227 IAT
-    function: Intake Air Temperature
+    function: ___ Intake Air Temperature
   - pin: 231
     class: event_inputs
     ts_name: 231 Cam
@@ -196,38 +245,56 @@ pins:
     class: event_inputs
     ts_name: 232 - VSS
     function: VSS in
+
   - pin: 233
-    function: MAF analog or frequency
+# jumper
+# 1KHz-12KHz
+# 1k pull-up to 5v or 12v with hardware mod/jumper https://github.com/rusefi/hellen-112-17/issues/10
+    function: MAF frequency
 
   - pin: 235
     function: 135 Low Side Output?
   - pin: 237
-    function: Knock 1
+    # jumper
+    function: Knock Signal
   - pin: 238
-    function: Knock 2
+    # jumper
+    function: Analog GND for Knock
+    type: GND
+
   - pin: 242
+    class: outputs
+    type: ls
     function: injector output 2
   - pin: 243
+    class: outputs
+    type: ls
     function: injector output 3
   - pin: 244
+    class: outputs
+    type: ls
     function: injector output 1
   - pin: 245
+    class: outputs
+    type: ls
     function: injector output 4
   - pin: 246
-    function: Low Side Output?
-    type: ls?
+    function: ___  low side 1.5A output
+    type: ls
   - pin: 247
-    function: Sensor GND
+    function: Analog GND
     type: GND
 
   - pin: 250
     function: Power GND
     type: GND
   - pin: 251
+    # jumper
     function: ETB positive DC Motor
     type: etb
     color: purple
   - pin: 252
+    # jumper
     function: ETB negative DC Motor
     type: etb
     color: purple
