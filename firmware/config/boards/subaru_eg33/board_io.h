@@ -149,7 +149,7 @@
  * PB0  - oxygen sensor #2
  * PB1  - EGR t sensor
  * PB2  - boot mode - pulled low
- * PB3  - ignition #1
+ * PB3  - ignition #4
  * PB4  - ignition #3
  * PB5  - ignition #7
  * PB6  - QSPI CS
@@ -268,7 +268,7 @@
  * PC10 - UART4 TX
  * PC11 - UART4 Rx
  * PC12 - bluetooth/wifi mode
- * PC13 - ignition #4
+ * PC13 - ignition #1
  * PC14 - ignition #2
  * PC15 - ignition #6
  */
