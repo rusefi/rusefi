@@ -356,7 +356,7 @@ void Engine::OnTriggerSynchronizationLost() {
 	}
 }
 
-void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) {
+void Engine::OnTriggerSynchronization(bool wasSynchronized, bool isDecodingError) {
 	// TODO: this logic probably shouldn't be part of engine.cpp
 
 	// We only care about trigger shape once we have synchronized trigger. Anything could happen

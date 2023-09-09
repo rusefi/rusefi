@@ -557,7 +557,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			bool isDecodingError = validateEventCounters(triggerShape);
 
 			if (triggerStateListener) {
-				triggerStateListener->OnTriggerSyncronization(wasSynchronized, isDecodingError);
+				triggerStateListener->OnTriggerSynchronization(wasSynchronized, isDecodingError);
 			}
 
 			// If we got a sync point, but the wrong number of events since the last sync point
