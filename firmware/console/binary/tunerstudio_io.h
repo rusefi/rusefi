@@ -66,7 +66,7 @@ public:
 	 * As soon as tsProcessOne was able to receive valid packet with valid size and crc
 	 * TsChannel becomes "in sync". That means it will react on any futher errors: it will
 	 * emit packet with error code and switch back to "not in sync" mode.
-	 * This insures that RE will send only one error message after lost of syncronization
+	 * This insures that RE will send only one error message after lost of synchronization
 	 * with TS.
 	 * Also while in "not in sync" state - tsProcessOne will not try to receive whole packet
 	 * by one read. Instead after getting packet size it will try to receive one byte of

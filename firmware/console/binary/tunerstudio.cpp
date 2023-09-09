@@ -515,7 +515,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	char command;
 	if (tsChannel->in_sync) {
 		/* we are in sync state, packet size should be correct so lets receive full packet and then check if command is supported
-		 * otherwise (if abort reception in middle of packet) it will break syncronization and cause error on next packet */
+		 * otherwise (if abort reception in middle of packet) it will break synchronization and cause error on next packet */
 		received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer), expectedSize, TS_COMMUNICATION_TIMEOUT);
 		command = tsChannel->scratchBuffer[0];
 

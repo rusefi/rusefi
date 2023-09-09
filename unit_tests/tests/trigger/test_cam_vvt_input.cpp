@@ -12,7 +12,7 @@ extern WarningCodeState unitTestWarningCodeState;
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
 
-TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
+TEST(trigger, testNoStartUpWarningsNoSynchronizationTrigger) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
 	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
@@ -20,7 +20,7 @@ TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 
 	eth.fireTriggerEvents2(/*count*/10, /*duration*/50);
 	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarningsNoSyncronizationTrigger";
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarningsNoSynchronizationTrigger";
 }
 
 TEST(trigger, testNoStartUpWarnings) {
