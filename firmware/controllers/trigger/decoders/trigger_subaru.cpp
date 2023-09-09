@@ -205,8 +205,8 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 #define CRANK_1_RISE(n)		(CRANK_1_FALL(n) - width)
 
 #define SUBARU_SVX_CRANK1_PULSE(n) \
-	s->addEventAngle(20 + (30 * (n)) + offset - width, TriggerValue::RISE, SVX_CRANK_1);	\
-	s->addEventAngle(20 + (30 * (n)) + offset, TriggerValue::FALL, SVX_CRANK_1)
+	s->addEventAngle(CRANK_1_RISE(n), TriggerValue::RISE, SVX_CRANK_1);	\
+	s->addEventAngle(CRANK_1_FALL(n), TriggerValue::FALL, SVX_CRANK_1)
 
 	/* cam falling edge offset from preceding Cr #1 falling edge */
 	float cam_offset = (10.0 + 30.0 + 30.0 + 30.0) - 90.0;

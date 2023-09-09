@@ -11,11 +11,11 @@
 
 #include "../../../hw_layer/ports/stm32/stm32f7/cfg/mcuconf.h"
 
-//#undef STM32_LSE_ENABLED
-//#define STM32_LSE_ENABLED FALSE
+#undef STM32_LSE_ENABLED
+#define STM32_LSE_ENABLED				FALSE
 
 #undef STM32_RTCSEL
-#define STM32_RTCSEL					STM32_RTCSEL_HSEDIV // STM32_RTCSEL_LSI
+#define STM32_RTCSEL					STM32_RTCSEL_HSEDIV
 
 /* serials and uarts */ 
 #undef STM32_SERIAL_USE_USART1
