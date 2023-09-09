@@ -98,8 +98,8 @@ extern TriggerDecoderBase initState;
 	fprintf(fp, "%s=%s\n", TRIGGER_SYNC_EDGE, getSyncEdge(shape->syncEdge));
 	fprintf(fp, "%s=%d\n", TRIGGER_WITH_SYNC, shape->isSynchronizationNeeded);
 	for (int i = 0; i < shape->gapTrackingLength; i++) {
-		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_FROM, i, shape->syncronizationRatioFrom[i]);
-		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_TO, i, shape->syncronizationRatioTo[i]);
+		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_FROM, i, shape->synchronizationRatioFrom[i]);
+		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_TO, i, shape->synchronizationRatioTo[i]);
 	}
 	fprintf(fp, "# end of meta section\n");
 

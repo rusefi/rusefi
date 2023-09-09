@@ -861,7 +861,7 @@ static void triggerShapeInfo() {
 	TriggerWaveform *shape = &getTriggerCentral()->triggerShape;
 	TriggerFormDetails *triggerFormDetails = &getTriggerCentral()->triggerFormDetails;
 	efiPrintf("syncEdge=%s", getSyncEdge(TRIGGER_WAVEFORM(syncEdge)));
-	efiPrintf("gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
+	efiPrintf("gap from %.2f to %.2f", TRIGGER_WAVEFORM(synchronizationRatioFrom[0]), TRIGGER_WAVEFORM(synchronizationRatioTo[0]));
 
 	for (size_t i = 0; i < shape->getSize(); i++) {
 		efiPrintf("event %d %.2f", i, triggerFormDetails->eventAngles[i]);
@@ -921,7 +921,7 @@ void triggerInfo(void) {
 			boolToString(tc->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {
-		efiPrintf("gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
+		efiPrintf("gap from %.2f to %.2f", TRIGGER_WAVEFORM(synchronizationRatioFrom[0]), TRIGGER_WAVEFORM(synchronizationRatioTo[0]));
 	}
 
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
@@ -1089,8 +1089,8 @@ void TriggerCentral::updateWaveform() {
 
 		// fill the remainder with the default gaps
 		for (; gapIndex < GAP_TRACKING_LENGTH; gapIndex++) {
-			triggerShape.syncronizationRatioFrom[gapIndex] = NAN;
-			triggerShape.syncronizationRatioTo[gapIndex] = NAN;
+			triggerShape.synchronizationRatioFrom[gapIndex] = NAN;
+			triggerShape.synchronizationRatioTo[gapIndex] = NAN;
 		}
 	}
 

@@ -104,8 +104,8 @@ public:
 	 * gaps ratios to sync
 	 */
 
-	float syncronizationRatioFrom[GAP_TRACKING_LENGTH];
-	float syncronizationRatioTo[GAP_TRACKING_LENGTH];
+	float synchronizationRatioFrom[GAP_TRACKING_LENGTH];
+	float synchronizationRatioTo[GAP_TRACKING_LENGTH];
 
 
 	/**

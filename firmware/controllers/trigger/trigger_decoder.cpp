@@ -475,7 +475,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			    const char * prefix = verbose ? "[vrb]" : "[err]";
 
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
-					float ratioFrom = triggerShape.syncronizationRatioFrom[i];
+					float ratioFrom = triggerShape.synchronizationRatioFrom[i];
 					if (cisnan(ratioFrom)) {
 						// we do not track gap at this depth
 						continue;
@@ -488,7 +488,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 							    prefix
                         );
 					} else {
-						float ratioTo = triggerShape.syncronizationRatioTo[i];
+						float ratioTo = triggerShape.synchronizationRatioTo[i];
 
 						bool gapOk = isInRange(ratioFrom, gap, ratioTo);
 
@@ -516,8 +516,8 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 							triggerConfiguration.PrintPrefix,
 							i,
 							gap,
-							triggerShape.syncronizationRatioFrom[i],
-							triggerShape.syncronizationRatioTo[i],
+							triggerShape.synchronizationRatioFrom[i],
+							triggerShape.synchronizationRatioTo[i],
 							boolToString(someSortOfTriggerError()));
 				}
 			}
@@ -647,8 +647,8 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 	if (triggerType == trigger_type_e::TT_MIATA_VVT) {
 		auto secondGap = (float)toothDurations[1] / toothDurations[2];
 
-		bool currentGapOk = isInRange(triggerShape.syncronizationRatioFrom[0], (float)triggerSyncGapRatio, triggerShape.syncronizationRatioTo[0]);
-		bool secondGapOk  = isInRange(triggerShape.syncronizationRatioFrom[1], secondGap,  triggerShape.syncronizationRatioTo[1]);
+		bool currentGapOk = isInRange(triggerShape.synchronizationRatioFrom[0], (float)triggerSyncGapRatio, triggerShape.synchronizationRatioTo[0]);
+		bool secondGapOk  = isInRange(triggerShape.synchronizationRatioFrom[1], secondGap,  triggerShape.synchronizationRatioTo[1]);
 
 		// One or both teeth was impossible range, this is not the sync point
 		if (!currentGapOk || !secondGapOk) {
@@ -661,8 +661,8 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 	}
 
 	for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
-		auto from = triggerShape.syncronizationRatioFrom[i];
-		auto to = triggerShape.syncronizationRatioTo[i];
+		auto from = triggerShape.synchronizationRatioFrom[i];
+		auto to = triggerShape.synchronizationRatioTo[i];
 
 		if (cisnan(from)) {
 			// don't check this gap, skip it

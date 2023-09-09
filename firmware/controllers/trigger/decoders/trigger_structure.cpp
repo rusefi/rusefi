@@ -343,8 +343,8 @@ void TriggerWaveform::setTriggerSynchronizationGap2(float syncRatioFrom, float s
 void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
 	criticalAssertVoid(gapIndex >= 0 && gapIndex < GAP_TRACKING_LENGTH, "gapIndex out of range");
-	syncronizationRatioFrom[gapIndex] = syncRatioFrom;
-	syncronizationRatioTo[gapIndex] = syncRatioTo;
+	synchronizationRatioFrom[gapIndex] = syncRatioFrom;
+	synchronizationRatioTo[gapIndex] = syncRatioTo;
 	if (gapIndex == 0) {
 		// we have a special case here - only sync with one gap has this feature
 		this->syncRatioAvg = (int)efiRound((syncRatioFrom + syncRatioTo) * 0.5f, 1.0f);
