@@ -268,9 +268,9 @@
  * PC10 - UART4 TX
  * PC11 - UART4 Rx
  * PC12 - bluetooth/wifi mode
- * PC13 - ignition #1
- * PC14 - ignition #2
- * PC15 - ignition #6
+ * PC13 - ignition #1 (TODO: move to other pin, this pin is weak and may be powered from Vbat)
+ * PC14 - ignition #2 (TODO: move to other pin, this pin is weak and may be powered from Vbat, also may be used for OSC32)
+ * PC15 - ignition #6 (TODO: move to other pin, this pin is weak and may be powered from Vbat, also may be used for OSC32)
  */
 #define VAL_GPIOC_MODER     (PIN_MODE_ANALOG(0)		| \
 							 PIN_MODE_ANALOG(1)		| \
@@ -317,9 +317,9 @@
 							 DEFAULT_GPIO_SPEED(10)	| \
 							 DEFAULT_GPIO_SPEED(11)	| \
 							 DEFAULT_GPIO_SPEED(12)	| \
-							 DEFAULT_GPIO_SPEED(13)	| \
-							 DEFAULT_GPIO_SPEED(14)	| \
-							 DEFAULT_GPIO_SPEED(15))
+							 PIN_OSPEED_VERYLOW(13)	| \
+							 PIN_OSPEED_VERYLOW(14)	| \
+							 PIN_OSPEED_VERYLOW(15))
 #define VAL_GPIOC_PUPDR		(PIN_PUPDR_FLOATING( 0)	| \
 							 PIN_PUPDR_FLOATING( 1)	| \
 							 PIN_PUPDR_FLOATING( 2)	| \
