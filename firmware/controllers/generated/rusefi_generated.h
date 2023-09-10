@@ -427,7 +427,7 @@
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_TIMING "Timing"
-#define GAUGE_COIL_DWELL_TIME "Ign: Dwell"
+#define GAUGE_COIL_DWELL_TIME "Ignition: coil charge time"
 #define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -469,7 +469,7 @@
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 #define GAUGE_NAME_DESIRED_GEAR "TCU: Desired Gear"
 #define GAUGE_NAME_DETECTED_GEAR "Detected Gear"
-#define GAUGE_NAME_DWELL_DUTY "Ign: Coil duty cycle"
+#define GAUGE_NAME_DWELL_DUTY "Ignition: coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
 #define GAUGE_NAME_ETB_DUTY "ETB: Duty"
@@ -506,8 +506,8 @@
 #define GAUGE_NAME_IAC "Idle: Position"
 #define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_IDLE_POSITION "Idle: Position sensor"
-#define GAUGE_NAME_IGNITION_LOAD "Ign: Load"
-#define GAUGE_NAME_IGNITION_MODE "Ign: Mode"
+#define GAUGE_NAME_IGNITION_LOAD "Ignition: load"
+#define GAUGE_NAME_IGNITION_MODE "Ignition: Mode"
 #define GAUGE_NAME_INJECTION_MODE "Fuel: Injection mode"
 #define GAUGE_NAME_INJECTOR_LAG "Fuel: injector lag"
 #define GAUGE_NAME_ISS "TCU: Input Shaft Speed"
@@ -542,7 +542,7 @@
 #define GAUGE_NAME_TCHARGE "Air: SD tCharge"
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_TIME "Time"
-#define GAUGE_NAME_TIMING_ADVANCE "Ign: Timing"
+#define GAUGE_NAME_TIMING_ADVANCE "Ignition: Timing"
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
@@ -1084,7 +1084,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 1421029135
+#define SIGNATURE_HASH 796920900
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1376,7 +1376,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI master.2023.09.10.f407-discovery.1421029135"
+#define TS_SIGNATURE "rusEFI master.2023.09.10.f407-discovery.796920900"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

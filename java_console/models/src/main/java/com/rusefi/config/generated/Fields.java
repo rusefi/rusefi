@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 10 01:31:23 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 10 17:23:09 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -405,7 +405,7 @@ public class Fields {
 	public static final String GAUGE_CATEGORY_FUEL_MATH = "Fuel: math";
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
-	public static final String GAUGE_COIL_DWELL_TIME = "Ign: Dwell";
+	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
 	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
@@ -447,7 +447,7 @@ public class Fields {
 	public static final String GAUGE_NAME_DEBUG_I5 = "debug i5";
 	public static final String GAUGE_NAME_DESIRED_GEAR = "TCU: Desired Gear";
 	public static final String GAUGE_NAME_DETECTED_GEAR = "Detected Gear";
-	public static final String GAUGE_NAME_DWELL_DUTY = "Ign: Coil duty cycle";
+	public static final String GAUGE_NAME_DWELL_DUTY = "Ignition: coil duty cycle";
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_CRC16 = "Engine CRC16";
 	public static final String GAUGE_NAME_ETB_DUTY = "ETB: Duty";
@@ -484,8 +484,8 @@ public class Fields {
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
-	public static final String GAUGE_NAME_IGNITION_LOAD = "Ign: Load";
-	public static final String GAUGE_NAME_IGNITION_MODE = "Ign: Mode";
+	public static final String GAUGE_NAME_IGNITION_LOAD = "Ignition: load";
+	public static final String GAUGE_NAME_IGNITION_MODE = "Ignition: Mode";
 	public static final String GAUGE_NAME_INJECTION_MODE = "Fuel: Injection mode";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "Fuel: injector lag";
 	public static final String GAUGE_NAME_ISS = "TCU: Input Shaft Speed";
@@ -520,7 +520,7 @@ public class Fields {
 	public static final String GAUGE_NAME_TCHARGE = "Air: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
-	public static final String GAUGE_NAME_TIMING_ADVANCE = "Ign: Timing";
+	public static final String GAUGE_NAME_TIMING_ADVANCE = "Ignition: Timing";
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
 	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";
@@ -1024,7 +1024,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1421029135;
+	public static final int SIGNATURE_HASH = 796920900;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1249,7 +1249,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.09.10.f407-discovery.1421029135";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.09.10.f407-discovery.796920900";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1404;

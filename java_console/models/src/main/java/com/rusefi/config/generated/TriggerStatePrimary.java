@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Tue Aug 22 18:30:13 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Sun Sep 10 17:21:18 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -16,7 +16,7 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_CATEGORY_FUEL_MATH = "Fuel: math";
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
-	public static final String GAUGE_COIL_DWELL_TIME = "Ign: Dwell";
+	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
 	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
@@ -58,7 +58,7 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_DEBUG_I5 = "debug i5";
 	public static final String GAUGE_NAME_DESIRED_GEAR = "TCU: Desired Gear";
 	public static final String GAUGE_NAME_DETECTED_GEAR = "Detected Gear";
-	public static final String GAUGE_NAME_DWELL_DUTY = "Ign: Coil duty cycle";
+	public static final String GAUGE_NAME_DWELL_DUTY = "Ignition: coil duty cycle";
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_CRC16 = "Engine CRC16";
 	public static final String GAUGE_NAME_ETB_DUTY = "ETB: Duty";
@@ -94,8 +94,8 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
-	public static final String GAUGE_NAME_IGNITION_LOAD = "Ign: Load";
-	public static final String GAUGE_NAME_IGNITION_MODE = "Ign: Mode";
+	public static final String GAUGE_NAME_IGNITION_LOAD = "Ignition: load";
+	public static final String GAUGE_NAME_IGNITION_MODE = "Ignition: Mode";
 	public static final String GAUGE_NAME_INJECTION_MODE = "Fuel: Injection mode";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "Fuel: injector lag";
 	public static final String GAUGE_NAME_ISS = "TCU: Input Shaft Speed";
@@ -118,7 +118,7 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_TCHARGE = "Air: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
-	public static final String GAUGE_NAME_TIMING_ADVANCE = "Ign: Timing";
+	public static final String GAUGE_NAME_TIMING_ADVANCE = "Ignition: Timing";
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
 	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";
