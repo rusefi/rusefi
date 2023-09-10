@@ -268,6 +268,9 @@ float getConfigValueByName(const char *name) {
 // canSleepPeriodMs
 		case 296563315:
 			return engineConfiguration->canSleepPeriodMs;
+// camDecoder2jzPrecision
+		case 306303086:
+			return engineConfiguration->camDecoder2jzPrecision;
 // byFirmwareVersion
 		case 171869155:
 			return engineConfiguration->byFirmwareVersion;
@@ -1117,6 +1120,9 @@ float getConfigValueByName(const char *name) {
 // can2ListenMode
 		case -1879090979:
 			return engineConfiguration->can2ListenMode;
+// camDecoder2jzPosition
+		case 594789367:
+			return engineConfiguration->camDecoder2jzPosition;
 // benchTestOnTime
 		case -1992436143:
 			return engineConfiguration->benchTestOnTime;
@@ -2068,6 +2074,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 296563315:
 	{
 		engineConfiguration->canSleepPeriodMs = (int)value;
+		return 1;
+	}
+		case 306303086:
+	{
+		engineConfiguration->camDecoder2jzPrecision = (int)value;
 		return 1;
 	}
 		case 171869155:
@@ -3483,6 +3494,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1879090979:
 	{
 		engineConfiguration->can2ListenMode = (int)value;
+		return 1;
+	}
+		case 594789367:
+	{
+		engineConfiguration->camDecoder2jzPosition = (int)value;
 		return 1;
 	}
 		case -1992436143:

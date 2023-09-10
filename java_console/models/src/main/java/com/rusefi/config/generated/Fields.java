@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 10 01:03:20 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 10 01:31:23 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1024,7 +1024,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1491968783;
+	public static final int SIGNATURE_HASH = 1421029135;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1249,7 +1249,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.09.10.f407-discovery.1491968783";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.09.10.f407-discovery.1421029135";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1404;
@@ -1432,7 +1432,7 @@ public class Fields {
 	public static final Field CANNBCTYPE = Field.create("CANNBCTYPE", 428, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_429 = Field.create("ALIGNMENTFILL_AT_429", 429, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CANSLEEPPERIODMS = Field.create("CANSLEEPPERIODMS", 432, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSED440 = Field.create("UNUSED440", 436, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field CAMDECODER2JZPRECISION = Field.create("CAMDECODER2JZPRECISION", 436, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_437 = Field.create("ALIGNMENTFILL_AT_437", 437, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 440, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TPS1_1ADCCHANNEL = Field.create("TPS1_1ADCCHANNEL", 444, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
@@ -2032,7 +2032,7 @@ public class Fields {
 	public static final Field KLINEDOHONDASEND = Field.create("KLINEDOHONDASEND", 1568, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field CAN1LISTENMODE = Field.create("CAN1LISTENMODE", 1568, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field CAN2LISTENMODE = Field.create("CAN2LISTENMODE", 1568, FieldType.BIT, 7).setBaseOffset(0);
-	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 1572, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field CAMDECODER2JZPOSITION = Field.create("CAMDECODER2JZPOSITION", 1572, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_1573 = Field.create("ALIGNMENTFILL_AT_1573", 1573, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1574, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field LAMBDAPROTECTIONRESTORETPS = Field.create("LAMBDAPROTECTIONRESTORETPS", 1576, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2966,7 +2966,7 @@ public class Fields {
 	CANNBCTYPE,
 	ALIGNMENTFILL_AT_429,
 	CANSLEEPPERIODMS,
-	UNUSED440,
+	CAMDECODER2JZPRECISION,
 	ALIGNMENTFILL_AT_437,
 	BYFIRMWAREVERSION,
 	TPS1_1ADCCHANNEL,
@@ -3550,7 +3550,7 @@ public class Fields {
 	KLINEDOHONDASEND,
 	CAN1LISTENMODE,
 	CAN2LISTENMODE,
-	UNUSEDHERE,
+	CAMDECODER2JZPOSITION,
 	ALIGNMENTFILL_AT_1573,
 	BENCHTESTONTIME,
 	LAMBDAPROTECTIONRESTORETPS,

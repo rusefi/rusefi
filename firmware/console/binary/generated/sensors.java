@@ -507,7 +507,7 @@ mapCamPrevToothAngle("Sync: MAP: prev angle", SensorCategory.SENSOR_INPUTS, Fiel
 crankSynchronizationCounter("sync: Crank sync counter\nUsually matches crank revolutions", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1232, 1.0, -1.0, -1.0, ""),
 vvtSyncGapRatio("vvtSyncGapRatio", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1236, 1.0, -10000.0, 10000.0, ""),
 vvtToothDurations0("vvtToothDurations0", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1240, 1.0, 0.0, 100000.0, "us"),
-vvtCurrentPosition("vvtCurrentPosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1244, 1.0, -10000.0, 10000.0, ""),
+vvtCurrentPosition("vvtCurrentPosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1244, 1.0, -10000.0, 10000.0, "sync: Primary Cam Position"),
 triggerSyncGapRatio("Trigger Sync Latest Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1248, 1.0, -10000.0, 10000.0, ""),
 triggerStateIndex("triggerStateIndex", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1252, 1.0, -1.0, -1.0, ""),
 vvtCounter("vvtCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1253, 1.0, -1.0, -1.0, ""),

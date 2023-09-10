@@ -262,6 +262,9 @@ Number of revolutions per kilometer for the wheels your vehicle speed sensor is 
 ### canSleepPeriodMs
 CANbus thread period in ms
 
+### camDecoder2jzPrecision
+null
+
 ### byFirmwareVersion
 
 
@@ -1110,6 +1113,9 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 
 ### can2ListenMode
 
+
+### camDecoder2jzPosition
+null
 
 ### benchTestOnTime
 Duration of each test pulse
