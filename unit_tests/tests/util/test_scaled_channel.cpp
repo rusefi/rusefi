@@ -43,3 +43,12 @@ TEST(ScaledChannel, IntegerBehavior) {
 
 	EXPECT_EQ(a, b);
 }
+
+TEST(ScaledChannel, IntegerUnsigned8Behavior) {
+	scaled_channel<uint8_t, 1, 1> test;
+
+	uint32_t a = 140;
+	test = a;
+	uint32_t b = test;
+	EXPECT_EQ(a, b) << a << " unsigned8 " << b;
+}
