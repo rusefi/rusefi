@@ -1,3 +1,3 @@
 struct_no_prefix trigger_state_primary_s
-	bit m_hasSynchronizedPhase
+	bit m_hasSynchronizedPhase;sync: Known Engine Phase
 end_struct

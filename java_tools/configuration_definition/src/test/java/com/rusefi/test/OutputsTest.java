@@ -73,7 +73,7 @@ public class OutputsTest {
                 "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
                 "bit isBrakePedalDown;is pedal down?\n" +
                 "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
-                "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
+                "bit enableFan1WithAc,yes,no;Turn on this fan when AC is on.\n" +
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
         state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
@@ -96,7 +96,7 @@ public class OutputsTest {
                         "entry = afr_typet, \"afr_typet\", int,    \"%d\"\n" +
                         "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n" +
                         "entry = isBrakePedalDown, \"is pedal down?\", int,    \"%d\"\n" +
-                        "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", dataLogConsumer.getContent());
+                        "entry = enableFan1WithAc, \"Turn on this fan when AC is on.\", int,    \"%d\"\n", dataLogConsumer.getContent());
 
     }
 
