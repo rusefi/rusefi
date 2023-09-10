@@ -31,7 +31,7 @@ void setHellenMegaEnPin() {
 }
 
 void setHellen64MegaEnPin() {
-    setHellenEnPin(H64_IO1); // OUT_PWR_EN
+    setHellenEnPin(Gpio::H64_IO1); // OUT_PWR_EN
 }
 
 void hellenBoardStandBy() {
