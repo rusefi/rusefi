@@ -2,6 +2,8 @@
 
 #include "hella_oil_level.h"
 
+#if EFI_HELLA_OIL
+
 #include "digital_input_exti.h"
 
 static void hellaSensorExtiCallback(void* arg, efitick_t nowNt) {
@@ -100,3 +102,5 @@ void HellaOilLevelSensor::onEdge(efitick_t nowNt) {
 		}
 	}
 }
+
+#endif // EFI_HELLA_OIL
