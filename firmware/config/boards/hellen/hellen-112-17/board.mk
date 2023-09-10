@@ -9,7 +9,7 @@ endif
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
-#DDEFS += -DADC_MUX_PIN=Gpio::F2
+#no mux on mm100
 
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"hellen-112-17\" $(VAR_DEF_ENGINE_TYPE)
@@ -18,5 +18,5 @@ DDEFS += -DFIRMWARE_ID=\"hellen-112-17\" $(VAR_DEF_ENGINE_TYPE)
 DDEFS += -DSHORT_BOARD_NAME=hellen-112-17
 DDEFS += -DHW_HELLEN_K=TRUE
 
-include $(BOARDS_DIR)/hellen/hellen-common144.mk
+include $(BOARDS_DIR)/hellen/hellen-common100.mk
 DDEFS += -DHW_HELLEN_HONDA=1

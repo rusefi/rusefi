@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "hellen_mm100_meta.h"
 
 // see https://github.com/andreika-git/hellen-one/blob/master/board_id/board_ids.csv
 #define BOARD_ID_154hyundai_c 10
