@@ -75,6 +75,9 @@ void setDefaultBaseEngine() {
 	engineConfiguration->primingDelay = 0.5;
 	engineConfiguration->vvtControlMinRpm = 500.0;
 
+    engineConfiguration->camDecoder2jzPosition = 75;
+    engineConfiguration->camDecoder2jzPrecision = 25;
+
 	// Limits and Fallbacks
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->rpmHardLimitHyst = 50;

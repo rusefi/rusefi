@@ -350,12 +350,16 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
+	{
+	    int from = engineConfiguration->camDecoder2jzPosition - engineConfiguration->camDecoder2jzPrecision;
+	    int to   = engineConfiguration->camDecoder2jzPosition + engineConfiguration->camDecoder2jzPrecision;
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
-		if ((currentPosition < engineConfiguration->scriptSetting[4]       || currentPosition > engineConfiguration->scriptSetting[5]) &&
-		    (currentPosition < engineConfiguration->scriptSetting[4] + 360 || currentPosition > engineConfiguration->scriptSetting[5] + 360)) {
+		if ((currentPosition < from       || to) &&
+		    (currentPosition < from + 360 || to + 360)) {
 			// outside of the expected range
 			return;
 		}
+	}
 		break;
 	default:
 		// else, do nothing
