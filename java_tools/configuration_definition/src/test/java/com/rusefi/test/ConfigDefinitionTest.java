@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class ConfigDefinitionTest {
-    private static final String FIRMWARE = "../../firmware";
+    public static final String FIRMWARE = "../../firmware";
 
     @Test
     public void testEnumIntoType() throws IOException {
