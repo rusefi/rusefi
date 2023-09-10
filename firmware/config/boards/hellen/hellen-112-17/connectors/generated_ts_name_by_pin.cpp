@@ -6,6 +6,9 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::E12: return "231 Cam";
+		case Gpio::E13: return "232 VSS";
+		case Gpio::E6: return "Main Relay";
 		default: return nullptr;
 	}
 	return nullptr;

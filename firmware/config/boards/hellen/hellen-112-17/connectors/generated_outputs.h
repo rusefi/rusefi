@@ -4,4 +4,5 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
+	Gpio::MM100_IGN8,
 }
