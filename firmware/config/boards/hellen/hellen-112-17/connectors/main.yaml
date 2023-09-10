@@ -5,11 +5,13 @@
 
 pins:
   - pin: 101
+    meta: MM100_INJ5
 # RZR wastegate
     function: 101 low side 1.5A output
     class: outputs
     type: ls
   - pin: 102
+    meta: MM100_INJ6
 # RZR fuel pump driver PWM
     function: 102 low side 1.5A output
     class: outputs
@@ -29,6 +31,7 @@ pins:
     type: GND
 
   - pin: 107
+    meta: MM100_IN_CAM_ANALOG
     class: analog_inputs
 # RZR start command
 # VAZ mentions A/C pressure maybe switch? maybe AV?
@@ -41,15 +44,18 @@ pins:
     type: GND
 
   - pin: 109
+    meta: MM100_IN_MAP2_ANALOG
 # RZR Boost MAP
     class: analog_inputs
     function: Analog 109
   - pin: 110
+    meta: MM100_IN_AUX1_ANALOG
 # RZR Ambient Pressure
     class: analog_inputs
     function: 110 Analog Input
 
   - pin: 111
+    meta: MM100_IN_AUX2_ANALOG
 # jumper
 # RZR & Polaris PPS2
     class: analog_inputs
@@ -57,46 +63,55 @@ pins:
     ts_name: 111 Analog Input
 
   - pin: 112
+    meta: MM100_IN_AUX3_ANALOG
 # RZR Fuel Level
     class: analog_inputs
     function: 112 Analog Input
     ts_name: 112 Analog Input
 
   - pin: 113
+    meta: MM100_IN_D3
     function: Brake Input
     ts_name: 113 Brake Input
 
   - pin: 114
+    meta: MM100_IN_O2S2_ANALOG
 # jumper
 # I cannot find where have I seen 114 as PPS2?
     function: 114 Analog Input
     class: analog_inputs
 
   - pin: 115
+    meta: MM100_IGN8
     class: outputs
     ts_name: Main Relay
     function: Main Relay Control
     type: ls
 
   - pin: 116
+    meta: MM100_IN_VBATT
     function: Ignition Switch KL15 / Battery Voltage Analog Input
     ts_name: 116 - Voltage From Key
     color: white
 
   - pin: 119
+    meta: MM100_IN_AUX4_ANALOG
     class: analog_inputs
     function: ___ Analog Input
 
   - pin: 120
+    meta: MM100_IN_D4
     function: 120 Switch
 
   - pin: 121
+    meta: MM100_IN_PPS_ANALOG
 # jumper
 # RZR Polaris VAZ PPS1
     function: ___ PPS1
     class: analog_inputs
 
   - pin: 123
+    meta: MM100_SPI3_MOSI
     function: 123 Input
 
   - pin: 125
@@ -112,12 +127,15 @@ pins:
     function: K-Line
 
   - pin: 128
+    meta: MM100_OUT_PWM1
     function: Tach Output
 
   - pin: 129
+    meta: MM100_OUT_PWM1
     function: A29 output
 
   - pin: 131
+    meta: MM100_OUT_PWM3
 # Polaris Radiator Relay
     function: 131 Relay Output
     class: outputs
@@ -128,11 +146,14 @@ pins:
     type: can
 
   - pin: 134
+    meta: MM100_SPI2_SCK
     function: 134 Switch
   - pin: 135
+    meta: MM100_SPI2_CS
 # VAZ brake pedal
     function: ___ Switch Input
   - pin: 136
+    meta: MM100_SPI3_SCK
 # VAZ clutch pedal
     function: 136 Switch Input
   - pin: 137
@@ -144,16 +165,19 @@ pins:
     color: black
 
   - pin: 140
+    meta: MM100_IGN6
     class: outputs
     function: 140 relay output
     color: orange
     type: ls
   - pin: 141
+    meta: MM100_OUT_PWM4
     class: outputs
     function: Engine Radiator Fan
     color: orange
     type: ls
   - pin: 142
+    meta: MM100_OUT_PWM5
     class: outputs
     function: Fuel Pump Relay
     type: ls
@@ -161,11 +185,14 @@ pins:
     function: CAN bus low
     type: can
   - pin: 147
+    meta: MM100_SPI3_MISO
     function: 147 Switch
   - pin: 151
+    meta: MM100_IGN5
     class: outputs
     function: 151 relay output
   - pin: 152
+    meta: MM100_IGN6
     class: outputs
     function: 152 relay output
   - pin: 153
@@ -188,6 +215,7 @@ pins:
     function: 203 Oxygen Sensor
 
   - pin: 203
+    meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
     function: ___ TPS Throttle Position 1
 
@@ -217,15 +245,18 @@ pins:
     function: Crank Sensor VR+ Positive Input
     ts_name: 213 Crank VR+
   - pin: 215
+    meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
     ts_name: 215 CLT
     function: CLT sensor
   - pin: 219
+    meta: MM100_IN_MAP1_ANALOG
     class: analog_inputs
     ts_name: 219 MAP
     function: Manifold Pressure Sensor
 
   - pin: 220
+    meta: MM100_IN_O2S_ANALOG
     class: analog_inputs
     function: ___ TPS Throttle Position 2
 
@@ -235,24 +266,29 @@ pins:
     color: red
 
   - pin: 227
+    meta: MM100_IN_IAT_ANALOG
     ts_name: 227 IAT
     function: ___ Intake Air Temperature
   - pin: 231
+    meta: MM100_IN_D1
     class: event_inputs
     ts_name: 231 Cam
     function: Cam Sensor
   - pin: 232
+    meta: MM100_IN_D2
     class: event_inputs
     ts_name: 232 - VSS
     function: VSS in
 
   - pin: 233
+    meta: MM100_IN_VSS
 # jumper
 # 1KHz-12KHz
 # 1k pull-up to 5v or 12v with hardware mod/jumper https://github.com/rusefi/hellen-112-17/issues/10
     function: MAF frequency
 
   - pin: 235
+    meta: MM100_OUT_INJ6
     function: 135 Low Side Output?
   - pin: 237
     # jumper
@@ -263,22 +299,27 @@ pins:
     type: GND
 
   - pin: 242
+    meta: MM100_OUT_INJ2
     class: outputs
     type: ls
     function: injector output 2
   - pin: 243
+    meta: MM100_OUT_INJ3
     class: outputs
     type: ls
     function: injector output 3
   - pin: 244
+    meta: MM100_OUT_INJ1
     class: outputs
     type: ls
     function: injector output 1
   - pin: 245
+    meta: MM100_OUT_INJ4
     class: outputs
     type: ls
     function: injector output 4
   - pin: 246
+    meta: MM100_OUT_INJ8
     function: ___  low side 1.5A output
     type: ls
   - pin: 247
@@ -299,12 +340,16 @@ pins:
     type: etb
     color: purple
   - pin: 253
+    meta: MM100_IGN2
     function: Coil 2
   - pin: 254
+    meta: MM100_IGN3
     function: Coil 3
   - pin: 255
+    meta: MM100_IGN4
     function: Coil 4
   - pin: 256
+    meta: MM100_IGN1
     function: Coil 1
 
 
