@@ -102,7 +102,7 @@ void setBoardDefaultConfiguration() {
 	setIgnitionPins();
 	setHondaK();
 
-    // not override since sometimes we have isues?
+    // not override since sometimes we have issues?
 	setHellenMMbaro();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
