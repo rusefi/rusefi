@@ -70,6 +70,7 @@ public class PinoutLogicIntegratedTest {
                         "pins:\n" +
                         "  - pin: 3\n" +
                         "    id: A9\n" +
+                        "    # comment\n" +
                         "    class: outputs\n" +
                         "    function: Digital trigger/switch input for instance Hall type CAM\n" +
                         "    ts_name: ___ - Digital 1\n" +
