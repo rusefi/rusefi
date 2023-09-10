@@ -639,7 +639,7 @@ DcHardware *getdcHardware();
 	// 68
 	// 140
 #if EFI_ENGINE_CONTROL
-	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm);
+	tsOutputChannels->injectorDutyCycle = minF(/*let's avoid scaled "uint8_t, 2" overflow*/127, getInjectorDutyCycle(rpm));
 #endif
 
 	// 224
