@@ -115,9 +115,8 @@ static int getCrankDivider(operation_mode_e operationMode) {
 }
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
-	// todo: why does VVT_2JZ not use real decoder?
 	return vvtMode != VVT_INACTIVE
-			&& vvtMode != VVT_2JZ
+			&& vvtMode != VVT_2JZ /* VVT_2JZ is an unusual 3/0 missed tooth symmetrical wheel */
 			&& vvtMode != VVT_HONDA_K_INTAKE
 			&& vvtMode != VVT_MAP_V_TWIN
 			&& vvtMode != VVT_SINGLE_TOOTH;

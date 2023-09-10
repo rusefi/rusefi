@@ -539,7 +539,7 @@ custom can_nbc_e 1 bits, U08, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
-uint8_t unused440
+uint8_t camDecoder2jzPrecision
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
 
 	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor. See also pedalPositionAdcChannel
@@ -1178,7 +1178,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit kLineDoHondaSend
 	bit can1ListenMode
 	bit can2ListenMode
-	uint8_t unusedHere
+	uint8_t camDecoder2jzPosition
 	uint16_t autoscale benchTestOnTime;Duration of each test pulse;"ms", 0.01, 0, 0, 500, 2
 
 	uint8_t lambdaProtectionRestoreTps;;"%", 1, 0, 0, 100, 0
