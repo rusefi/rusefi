@@ -1,3 +1,5 @@
+meta: config/boards/hellen_mm100_meta.h
+
 #
 # VAZ 21126–1411020-40
 #
@@ -84,9 +86,9 @@ pins:
   - pin: 115
     meta: MM100_IGN8
     class: outputs
+    type: ls
     ts_name: Main Relay
     function: Main Relay Control
-    type: ls
 
   - pin: 116
     meta: MM100_IN_VBATT
@@ -167,20 +169,20 @@ pins:
   - pin: 140
     meta: MM100_IGN6
     class: outputs
+    type: ls
     function: 140 relay output
     color: orange
-    type: ls
   - pin: 141
     meta: MM100_OUT_PWM4
     class: outputs
+    type: ls
     function: Engine Radiator Fan
     color: orange
-    type: ls
   - pin: 142
     meta: MM100_OUT_PWM5
     class: outputs
-    function: Fuel Pump Relay
     type: ls
+    function: Fuel Pump Relay
   - pin: 144
     function: CAN bus low
     type: can
@@ -190,10 +192,12 @@ pins:
   - pin: 151
     meta: MM100_IGN5
     class: outputs
+    type: ls
     function: 151 relay output
   - pin: 152
     meta: MM100_IGN6
     class: outputs
+    type: ls
     function: 152 relay output
   - pin: 153
     function: Power GND
@@ -266,18 +270,19 @@ pins:
     color: red
 
   - pin: 227
+    class: analog_inputs
     meta: MM100_IN_IAT_ANALOG
     ts_name: 227 IAT
     function: ___ Intake Air Temperature
   - pin: 231
     meta: MM100_IN_D1
     class: event_inputs
-    ts_name: 231 Cam
+    ts_name: ___ Cam
     function: Cam Sensor
   - pin: 232
     meta: MM100_IN_D2
     class: event_inputs
-    ts_name: 232 - VSS
+    ts_name: ___ VSS
     function: VSS in
 
   - pin: 233
@@ -288,8 +293,10 @@ pins:
     function: MAF frequency
 
   - pin: 235
-    meta: MM100_OUT_INJ6
+    meta: MM100_INJ6
     function: 135 Low Side Output?
+    class: outputs
+    type: ls
   - pin: 237
     # jumper
     function: Knock Signal
@@ -299,27 +306,27 @@ pins:
     type: GND
 
   - pin: 242
-    meta: MM100_OUT_INJ2
+    meta: MM100_INJ2
     class: outputs
     type: ls
     function: injector output 2
   - pin: 243
-    meta: MM100_OUT_INJ3
+    meta: MM100_INJ3
     class: outputs
     type: ls
     function: injector output 3
   - pin: 244
-    meta: MM100_OUT_INJ1
+    meta: MM100_INJ1
     class: outputs
     type: ls
     function: injector output 1
   - pin: 245
-    meta: MM100_OUT_INJ4
+    meta: MM100_INJ4
     class: outputs
     type: ls
     function: injector output 4
   - pin: 246
-    meta: MM100_OUT_INJ8
+    meta: MM100_INJ8
     function: ___  low side 1.5A output
     type: ls
   - pin: 247
