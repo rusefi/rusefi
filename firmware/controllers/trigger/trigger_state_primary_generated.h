@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Wed Aug 24 22:14:46 UTC 2022
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Sun Sep 10 01:01:29 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,6 +6,7 @@
 // start of trigger_state_primary_s
 struct trigger_state_primary_s {
 	/**
+	 * sync: Known Engine Phase
 	offset 0 bit 0 */
 	bool m_hasSynchronizedPhase : 1 {};
 	/**
@@ -105,4 +106,4 @@ struct trigger_state_primary_s {
 static_assert(sizeof(trigger_state_primary_s) == 4);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Wed Aug 24 22:14:46 UTC 2022
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Sun Sep 10 01:01:29 UTC 2023

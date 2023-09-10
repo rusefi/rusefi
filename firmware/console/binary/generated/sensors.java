@@ -511,7 +511,7 @@ vvtCurrentPosition("vvtCurrentPosition", SensorCategory.SENSOR_INPUTS, FieldType
 triggerSyncGapRatio("Trigger Sync Latest Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1248, 1.0, -10000.0, 10000.0, ""),
 triggerStateIndex("triggerStateIndex", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1252, 1.0, -1.0, -1.0, ""),
 vvtCounter("vvtCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1253, 1.0, -1.0, -1.0, ""),
-camResyncCounter("camResyncCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1254, 1.0, -1.0, -1.0, ""),
+camResyncCounter("sync: Phase Re-Sync Counter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1254, 1.0, -1.0, -1.0, ""),
 vvtStateIndex("vvtStateIndex", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1255, 1.0, -1.0, -1.0, ""),
 wallFuelCorrection("fuel wallwetting injection time\n correction to account for wall wetting effect for current cycle", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1260, 1.0, -1.0, -1.0, ""),
 wallFuel("Fuel on the wall\nin ms of injector open time for each injector.", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1264, 1.0, -1.0, -1.0, ""),

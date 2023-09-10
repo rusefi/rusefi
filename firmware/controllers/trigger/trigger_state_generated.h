@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Fri Mar 31 02:45:22 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Sep 10 01:01:29 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -38,6 +38,7 @@ struct trigger_state_s {
 	 */
 	uint8_t vvtCounter = (uint8_t)0;
 	/**
+	 * sync: Phase Re-Sync Counter
 	 * offset 22
 	 */
 	uint8_t camResyncCounter = (uint8_t)0;
@@ -49,4 +50,4 @@ struct trigger_state_s {
 static_assert(sizeof(trigger_state_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Fri Mar 31 02:45:22 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Sep 10 01:01:29 UTC 2023
