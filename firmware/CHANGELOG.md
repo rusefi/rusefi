@@ -45,6 +45,7 @@ Release template (copy/paste this for new release):
  - simulator: sensor mocking UI #5473
  - Custom Trigger Tooth with 1+0 causes endless loop #5471
  - nucleo-h7 bundle st-link flushing #5486
+ - 2JZ cam trigger configuration is much easier to adjust #5557
 
 ## July 2023 Release "Day 518"
 

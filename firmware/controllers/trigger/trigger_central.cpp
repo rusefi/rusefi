@@ -354,8 +354,8 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	    int from = engineConfiguration->camDecoder2jzPosition - engineConfiguration->camDecoder2jzPrecision;
 	    int to   = engineConfiguration->camDecoder2jzPosition + engineConfiguration->camDecoder2jzPrecision;
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
-		if ((currentPosition < from       || to) &&
-		    (currentPosition < from + 360 || to + 360)) {
+		if ((currentPosition < from       || currentPosition > to) &&
+		    (currentPosition < from + 360 || currentPosition > to + 360)) {
 			// outside of the expected range
 			return;
 		}
