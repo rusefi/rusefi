@@ -1953,20 +1953,6 @@ end_struct
 #define GAUGE_NAME_FUEL_CONSUMPTION "fuel: Total consumed"
 #define GAUGE_NAME_FUEL_FLOW "fuel: Flow rate"
 
-#define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
-#define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
-#define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
-#define GAUGE_NAME_TARGET_LAMBDA "fuel: target lambda"
-#define GAUGE_NAME_AFR "Air/Fuel Ratio"
-#define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
-#define GAUGE_NAME_LAMBDA "Lambda"
-#define GAUGE_NAME_LAMBDA2 "Lambda 2"
-#define GAUGE_NAME_IAC "Idle Air Valve"
-
-#define GAUGE_NAME_DWELL_DUTY "Ignition: coil duty cycle"
-#define GAUGE_COIL_DWELL_TIME "Ignition: coil charge time"
-#define GAUGE_NAME_IGNITION_LOAD "Ignition: load"
-
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
 #define GAUGE_NAME_DEBUG_F3 "debug f3: prevError"
