@@ -4,5 +4,19 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
+	Gpio::MM100_INJ5,
+	Gpio::MM100_INJ6,
 	Gpio::MM100_IGN8,
+	Gpio::MM100_OUT_PWM2,
+	Gpio::MM100_OUT_PWM3,
+	Gpio::MM100_IGN7,
+	Gpio::MM100_OUT_PWM4,
+	Gpio::MM100_OUT_PWM5,
+	Gpio::MM100_IGN5,
+	Gpio::MM100_IGN6,
+	Gpio::MM100_INJ7,
+	Gpio::MM100_INJ2,
+	Gpio::MM100_INJ1,
+	Gpio::MM100_INJ4,
+	Gpio::MM100_OUT_PWM1,
 }
