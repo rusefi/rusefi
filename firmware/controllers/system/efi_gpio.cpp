@@ -508,9 +508,13 @@ void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
 //	ScopePerf perf(PE::OutputPinSetValue);
 #endif // ENABLE_PERF_TRACE
 
-#if EFI_UNIT_TEST
-	unitTestTurnedOnCounter++;
+#if EFI_UNIT_TEST || EFI_SIMULATOR
+    if (currentLogicValue != logicValue) {
+	    pinToggleCounter++;
+	}
+#endif // EFI_UNIT_TEST || EFI_SIMULATOR
 
+#if EFI_UNIT_TEST
 	if (verboseMode) {
 		efiPrintf("pin goes %d", logicValue);
 	}
@@ -587,7 +591,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e outputMode, bool forceInitWithFatalError) {
 #if EFI_UNIT_TEST
-	unitTestTurnedOnCounter = 0;
+	pinToggleCounter = 0;
 #endif
 
 	if (!isBrainPinValid(brainPin)) {

@@ -65,8 +65,8 @@ public:
 	uint8_t pin = 0;
 #endif /* EFI_GPIO_HARDWARE */
 
-#if EFI_UNIT_TEST
-	int unitTestTurnedOnCounter = 0;
+#if EFI_UNIT_TEST || EFI_SIMULATOR
+	int pinToggleCounter = 0;
 #endif
 
 	brain_pin_e brainPin = Gpio::Unassigned;
