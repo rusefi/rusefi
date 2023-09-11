@@ -23,10 +23,6 @@ void turnAllPinsOff(void);
 #define turnAllPinsOff() {}
 #endif /* EFI_GPIO_HARDWARE */
 
-
-#ifdef __cplusplus
-
-
 class IgnitionOutputPin : public NamedOutputPin {
 public:
 	IgnitionOutputPin();
@@ -131,8 +127,6 @@ private:
 	void stopIgnitionPins();
 	void stopAuxValves();
 };
-
-#endif /* __cplusplus */
 
 /**
  * it's a macro to be sure that stack is not used
