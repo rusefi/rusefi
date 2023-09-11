@@ -187,11 +187,11 @@ void SensorChecker::onSlowCallback() {
 		auto diag = pin.getDiag();
 		if (diag != PIN_OK && diag != PIN_INVALID) {
 		    withInjectorIssues = true;
-			auto code = getCodeForInjector(i + 1, diag);
+			auto code = getCodeForInjector(i, diag);
 
 			char description[32];
 			pinDiag2string(description, efi::size(description), diag);
-			warning(code, "Injector %d fault: %s", i, description);
+			warning(code, "Injector %d fault: %s", i + 1, description);
 		}
 	}
 	engine->fuelComputer.injectorHwIssue = withInjectorIssues;
@@ -207,11 +207,11 @@ void SensorChecker::onSlowCallback() {
 
 		auto diag = pin.getDiag();
 		if (diag != PIN_OK && diag != PIN_INVALID) {
-			auto code = getCodeForIgnition(i + 1, diag);
+			auto code = getCodeForIgnition(i, diag);
 
 			char description[32];
 			pinDiag2string(description, efi::size(description), diag);
-			warning(code, "Ignition %d fault: %s", i, description);
+			warning(code, "Ignition %d fault: %s", i + 1, description);
 		}
 	}
 #endif // BOARD_EXT_GPIOCHIPS > 0
