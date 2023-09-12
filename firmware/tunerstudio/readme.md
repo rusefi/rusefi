@@ -1,4 +1,4 @@
-# TunerStudio
+# TunerStudio (TS)
 
 This directory contains the initialization and configuration files for the
 rusEFI interface to TunerStudio.
@@ -9,6 +9,9 @@ the only files a typical end user needs.
 
 The ```translations``` directory contains non-English-language translations
 for TunerStudio.
+
+In TunerStudio some fields have little question mark on the left of the name for additional field tips.
+Those tips are defined in `../integration/rusefi_config.txt`
 
 The initialization files are automatically generated from a combination
 of input files located both in this directory and in the board-specific
@@ -28,4 +31,4 @@ On Windows this may be run with ```gen_config.bat```.
 
 Q: how do I offer my changes to TS project?
 
-A: please PR only rusefi.input. Once merged, gen_config.bat would be executed automatically and results would be pushed by automation.
+A: please PR only source files (rusefi.input & rusefi_config.txt). Once merged, gen_config.bat would be executed automatically and results would be pushed by automation.
