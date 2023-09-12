@@ -1098,7 +1098,7 @@ int16_t tps2Max;;"ADC", 1, 0, 0, 1023, 0
 	custom InjectionTimingMode 1 bits, U08, @OFFSET@, [0:1], "End of injection", "Start of injection", "Center of injection"
 	InjectionTimingMode injectionTimingMode;Sets what part of injection's is controlled by the injection phase table.
 
-	debug_mode_e debugMode;See http://rusefi.com/s/debugmode
+	debug_mode_e debugMode;See https://wiki.fome.tech/r/debugmode
 	uint8_t fan1ExtraIdle;Additional idle % when fan #1 is active;"%", 1, 0, 0, 100, 0
 
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
