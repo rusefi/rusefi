@@ -1591,7 +1591,7 @@ struct engine_configuration_s {
 	// Sets what part of injection's is controlled by the injection phase table.
 	// offset 1401
 	InjectionTimingMode injectionTimingMode;
-	// See http://rusefi.com/s/debugmode
+	// See https://wiki.fome.tech/r/debugmode
 	// offset 1402
 	debug_mode_e debugMode;
 	// Additional idle % when fan #1 is active
