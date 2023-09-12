@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+import static com.rusefi.SimulatorFunctionalTestLauncher.isHappy;
+
 /**
  * 3/18/14
  * Andrey Belomutskiy, (c) 2013-2020
@@ -43,7 +45,11 @@ public class SimulatorExecHelper {
 
             System.out.println("end of console");
         } catch (Exception err) {
-            throw new IllegalStateException(err);
+            if (isHappy) {
+                System.out.println("Already happy " + err);
+            } else {
+                throw new IllegalStateException(err);
+            }
         }
     }
 

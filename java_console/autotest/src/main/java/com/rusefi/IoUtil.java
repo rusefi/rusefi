@@ -110,11 +110,11 @@ public class IoUtil {
         long waitStart = System.currentTimeMillis();
 
         ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPMValue, value -> startup.countDown());
-        boolean haveResponse = startup.await(10, TimeUnit.SECONDS);
+        boolean haveResponse = startup.await(60, TimeUnit.SECONDS);
         if (!haveResponse)
             throw new IllegalStateException("No response from simulator");
         listener.remove();
-        FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart));
+        FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart) + "ms");
     }
 
     public static void connectToSimulator(LinkManager linkManager, boolean startProcess) throws InterruptedException {

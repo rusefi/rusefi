@@ -7,6 +7,7 @@ import com.rusefi.io.LinkManager;
  * As of Dec 2020 this seems very broken?
  */
 public class SimulatorFunctionalTestLauncher {
+    static boolean isHappy;
     public static void main(String[] args) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             e.printStackTrace();
@@ -32,8 +33,9 @@ public class SimulatorFunctionalTestLauncher {
         }
         if (failed)
             System.exit(-1);
+        isHappy = true;
         FileLog.MAIN.logLine("*******************************************************************************");
-        FileLog.MAIN.logLine("************************************  Looks good! *****************************");
+        FileLog.MAIN.logLine("**** SimulatorFunctionalTestLauncher  Looks good! *****************************");
         FileLog.MAIN.logLine("*******************************************************************************");
         long time = (System.currentTimeMillis() - start) / 1000;
         FileLog.MAIN.logLine("Done in " + time + "secs");
