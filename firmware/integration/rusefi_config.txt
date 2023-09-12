@@ -2110,6 +2110,7 @@ end_struct
 ! returns getFirmwareError(), works together with ind_hasFatalError
 #define TS_GET_CONFIG_ERROR 'e'
 
+#define TS_SIMULATE_CAN '>'
 
 ! 0x57 pageValueWrite
 #define TS_SINGLE_WRITE_COMMAND 'W'
