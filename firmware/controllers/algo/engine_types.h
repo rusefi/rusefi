@@ -238,17 +238,15 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_UNUSED12 = 12,
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
-	DBG_KNOCK = 15,
+	DBG_15 = 15,
 	DBG_16 = 16,
 	/**
 	 * See also DBG_ELECTRONIC_THROTTLE_EXTRA
 	 */
 	DBG_ELECTRONIC_THROTTLE_PID = 17,
 	DBG_EXECUTOR = 18,
-	/**
-	 * See tunerstudio.cpp
-	 */
-	DBG_BENCH_TEST = 19,
+
+	DBG_19 = 19,
 	DBG_20 = 20,
 	/**
 	 * ADC
