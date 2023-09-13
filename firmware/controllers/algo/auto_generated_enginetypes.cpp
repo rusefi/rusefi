@@ -85,6 +85,8 @@ case DBG_38:
   return "DBG_38";
 case DBG_43:
   return "DBG_43";
+case DBG_45:
+  return "DBG_45";
 case DBG_46:
   return "DBG_46";
 case DBG_6:
@@ -113,8 +115,6 @@ case DBG_INSTANT_RPM:
   return "DBG_INSTANT_RPM";
 case DBG_ION:
   return "DBG_ION";
-case DBG_LOGIC_ANALYZER:
-  return "DBG_LOGIC_ANALYZER";
 case DBG_LUA:
   return "DBG_LUA";
 case DBG_MAP:

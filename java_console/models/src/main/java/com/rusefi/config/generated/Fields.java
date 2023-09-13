@@ -209,6 +209,7 @@ public class Fields {
 	public static final int debug_mode_e_DBG_37 = 37;
 	public static final int debug_mode_e_DBG_38 = 38;
 	public static final int debug_mode_e_DBG_43 = 43;
+	public static final int debug_mode_e_DBG_45 = 45;
 	public static final int debug_mode_e_DBG_46 = 46;
 	public static final int debug_mode_e_DBG_6 = 6;
 	public static final int debug_mode_e_DBG_7 = 7;
@@ -223,7 +224,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_EXECUTOR = 18;
 	public static final int debug_mode_e_DBG_INSTANT_RPM = 22;
 	public static final int debug_mode_e_DBG_ION = 30;
-	public static final int debug_mode_e_DBG_LOGIC_ANALYZER = 45;
 	public static final int debug_mode_e_DBG_LUA = 48;
 	public static final int debug_mode_e_DBG_MAP = 27;
 	public static final int debug_mode_e_DBG_METRICS = 28;
