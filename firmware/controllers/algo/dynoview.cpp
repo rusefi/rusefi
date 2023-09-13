@@ -44,15 +44,7 @@ void DynoView::update(vssSrc src) {
         
         //updating here would display acceleration = 0 at constant speed
         updateAcceleration(deltaTime, deltaSpeed);
-#if EFI_TUNER_STUDIO
-	    if (engineConfiguration->debugMode == DBG_LOGIC_ANALYZER) {
-		    engine->outputChannels.debugIntField1 = deltaTime;
-		    engine->outputChannels.debugFloatField1 = vss;
-		    engine->outputChannels.debugFloatField2 = speed;
-		    engine->outputChannels.debugFloatField3 = deltaSpeed;
-            engine->outputChannels.debugFloatField4 = acceleration;
-	    }
-#endif /* EFI_TUNER_STUDIO */        
+
         updateHP();
 
     } else {
