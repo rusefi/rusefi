@@ -731,6 +731,11 @@ DcHardware *getdcHardware();
 		tle8888PostState();
 #endif /* BOARD_TLE8888_COUNT */
 		break;
+	case DBG_LOGIC_ANALYZER: 
+#if EFI_LOGIC_ANALYZER	
+		reportLogicAnalyzerToTS();
+#endif /* EFI_LOGIC_ANALYZER */		
+		break;
 	default:
 		;
 	}
