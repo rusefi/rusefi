@@ -50,7 +50,7 @@ public enum debug_mode_e {
 	DBG_UNUSED_42,
 	DBG_43,
 	DBG_DYNO_VIEW,
-	DBG_45,
+	DBG_LOGIC_ANALYZER,
 	DBG_46,
 	DBG_TCU,
 	DBG_LUA,
