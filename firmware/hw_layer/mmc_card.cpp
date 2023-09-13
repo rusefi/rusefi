@@ -546,13 +546,6 @@ void mlgLogger() {
 		}
 #endif
 
-		if (engineConfiguration->debugMode == DBG_SD_CARD) {
-			engine->outputChannels.debugIntField1 = totalLoggedBytes;
-			engine->outputChannels.debugIntField2 = totalWritesCounter;
-			engine->outputChannels.debugIntField3 = totalSyncCounter;
-			engine->outputChannels.debugIntField4 = fileCreatedCounter;
-		}
-
 		writeSdLogLine(logBuffer);
 
 		// Something went wrong (already handled), so cancel further writes

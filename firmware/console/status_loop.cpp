@@ -560,13 +560,6 @@ static void updateFlags() {
 #endif /* EFI_INTERNAL_FLASH */
 }
 
-// weird thing: one of the reasons for this to be a separate method is stack usage reduction in non-optimized build
-// see https://github.com/rusefi/rusefi/issues/3302 and linked tickets
-static void updateTpsDebug() {
-	// TPS 1 pri/sec ratio - useful for ford ETB that has partial-range second channel
-	engine->outputChannels.debugFloatField5 = 100 * Sensor::getOrZero(SensorType::Tps1Primary) / Sensor::getOrZero(SensorType::Tps1Secondary);
-}
-
 // sensor state for EFI Analytics Tuner Studio
 // todo: the 'let's copy internal state for external consumers' approach is DEPRECATED
 // As of 2022 it's preferred to leverage LiveData where all state is exposed
@@ -725,13 +718,6 @@ DcHardware *getdcHardware();
 		postMapState(tsOutputChannels);
 		break;
 #endif /* EFI_MAP_AVERAGING */
-	case DBG_ANALOG_INPUTS:
-		tsOutputChannels->debugFloatField4 = isAdcChannelValid(engineConfiguration->map.sensor.hwChannel) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel) : 0.0f;
-		tsOutputChannels->debugFloatField7 = isAdcChannelValid(engineConfiguration->afr.hwChannel) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel) : 0.0f;
-		break;
-	case DBG_ANALOG_INPUTS2:
-		updateTpsDebug();
-		break;
 	case DBG_INSTANT_RPM:
 		{
 #if EFI_SHAFT_POSITION_INPUT
