@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +18,8 @@ import static com.rusefi.SimulatorFunctionalTestLauncher.isHappy;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class SimulatorExecHelper {
+    private final static Logging log = Logging.getLogging(SimulatorExecHelper.class);
+
     private final static NamedThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorExecHelper", true);
 
     private static final String SIMULATOR_BUILD_RUSEFI_SIMULATOR = "../simulator/build/rusefi_simulator";
@@ -114,7 +118,7 @@ public class SimulatorExecHelper {
         CountDownLatch simulatorStarted = new CountDownLatch(1);
         new Thread(() -> runSimulator(simulatorStarted), "simulator process").start();
         simulatorStarted.await(1, TimeUnit.MINUTES);
-        System.out.println("Let's give it some time to start...");
-        Thread.sleep(5);
+        log.info("Let's give it some time to start...");
+        Thread.sleep(35);
     }
 }
