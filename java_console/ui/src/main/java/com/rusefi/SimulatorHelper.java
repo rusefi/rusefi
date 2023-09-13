@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadFactory;
 
 import static com.rusefi.ui.util.UiUtils.setToolTip;
@@ -36,7 +37,7 @@ public class SimulatorHelper {
                     FileLog.SIMULATOR_CONSOLE.start();
                     process = Runtime.getRuntime().exec(BINARY);
                     FileLog.MAIN.logLine("Executing " + BINARY + "=" + process);
-                    SimulatorExecHelper.dumpProcessOutput(process);
+                    SimulatorExecHelper.dumpProcessOutput(process, new CountDownLatch(1));
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }

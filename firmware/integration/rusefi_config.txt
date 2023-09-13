@@ -1817,6 +1817,7 @@ end_struct
 
 #define CMD_SET_SENSOR_MOCK "set_sensor_mock"
 #define CMD_RESET_SENSOR_MOCKS "reset_sensor_mocks"
+#define CMD_RESET_SIMULATOR "reset_simulator"
 
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_UPTIME "Uptime"

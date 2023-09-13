@@ -206,7 +206,7 @@ enum class engine_type_e : uint16_t {
 
 	PROTEUS_HONDA_OBD2A = 91,
 
-	UNUSED_92 = 92,
+	SIMULATOR_CONFIG = 92,
 
 	PROTEUS_N73 = 93,
 

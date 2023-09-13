@@ -256,10 +256,11 @@ public class LinkManager implements Closeable {
             Callable<IoStream> streamFactory = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
-                    messageListener.postMessage(getClass(), "Opening port: " + port);
+                    messageListener.postMessage(getClass(), "Opening TCP port: " + port);
                     try {
                         return TcpIoStream.open(port);
                     } catch (Throwable e) {
+                        log.error("TCP error " + e);
                         stateListener.onConnectionFailed("Error " + e);
                         return null;
                     }

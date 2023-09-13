@@ -105,7 +105,6 @@ public class IoUtil {
     }
 
     private static void waitForFirstResponse() throws InterruptedException {
-        log.info("Let's give it some time to start...");
         final CountDownLatch startup = new CountDownLatch(1);
         long waitStart = System.currentTimeMillis();
 
