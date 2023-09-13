@@ -121,6 +121,6 @@ public class SimulatorExecHelper {
         log.info("Let's give it some time to start...");
         // yes quite long delay is needed to GHA to be reliable even while we have a latch for simulator process console output
         // technically we can do a loop waiting for port to open if one day we would start caring
-        Thread.sleep(35);
+        Thread.sleep(35 * Timeouts.SECOND);
     }
 }
