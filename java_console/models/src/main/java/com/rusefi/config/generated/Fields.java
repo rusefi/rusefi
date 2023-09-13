@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Sep 12 03:32:33 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Sep 13 16:31:20 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -175,6 +175,7 @@ public class Fields {
 	public static final String CMD_REBOOT_OPENBLT = "reboot_openblt";
 	public static final String CMD_RESET_ENGINE_SNIFFER = "reset_engine_chart";
 	public static final String CMD_RESET_SENSOR_MOCKS = "reset_sensor_mocks";
+	public static final String CMD_RESET_SIMULATOR = "reset_simulator";
 	public static final String CMD_RPM = "rpm";
 	public static final String CMD_SELF_STIMULATION = "self_stimulation";
 	public static final String CMD_SET = "set";
@@ -370,6 +371,7 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_STIM_QC = 73;
 	public static final int engine_type_e_PROTEUS_VW_B6 = 39;
 	public static final int engine_type_e_SACHS = 29;
+	public static final int engine_type_e_SIMULATOR_CONFIG = 92;
 	public static final int engine_type_e_SUBARU_2003_WRX = 22;
 	public static final int engine_type_e_SUBARUEG33_DEFAULTS = 70;
 	public static final int engine_type_e_TEST_100 = 100;
@@ -386,7 +388,6 @@ public class Fields {
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
-	public static final int engine_type_e_UNUSED_92 = 92;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_WASTEGATE_PROTEUS_TEST = 96;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
@@ -1024,6 +1025,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1444137939;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1248,7 +1250,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.09.12.f407-discovery.3233292613";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.09.13.f407-discovery.1444137939";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
