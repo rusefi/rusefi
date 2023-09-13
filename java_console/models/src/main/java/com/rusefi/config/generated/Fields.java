@@ -190,7 +190,9 @@ public class Fields {
 	public static final int debug_mode_e_DBG_0 = 0;
 	public static final int debug_mode_e_DBG_10 = 10;
 	public static final int debug_mode_e_DBG_11 = 11;
+	public static final int debug_mode_e_DBG_15 = 15;
 	public static final int debug_mode_e_DBG_16 = 16;
+	public static final int debug_mode_e_DBG_19 = 19;
 	public static final int debug_mode_e_DBG_2 = 2;
 	public static final int debug_mode_e_DBG_20 = 20;
 	public static final int debug_mode_e_DBG_24 = 24;
@@ -209,7 +211,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_9 = 9;
 	public static final int debug_mode_e_DBG_ANALOG_INPUTS = 21;
 	public static final int debug_mode_e_DBG_ANALOG_INPUTS2 = 32;
-	public static final int debug_mode_e_DBG_BENCH_TEST = 19;
 	public static final int debug_mode_e_DBG_COMPOSITE_LOG = 40;
 	public static final int debug_mode_e_DBG_DWELL_METRIC = 33;
 	public static final int debug_mode_e_DBG_DYNO_VIEW = 44;
@@ -219,7 +220,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_EXECUTOR = 18;
 	public static final int debug_mode_e_DBG_INSTANT_RPM = 22;
 	public static final int debug_mode_e_DBG_ION = 30;
-	public static final int debug_mode_e_DBG_KNOCK = 15;
 	public static final int debug_mode_e_DBG_LOGIC_ANALYZER = 45;
 	public static final int debug_mode_e_DBG_LUA = 48;
 	public static final int debug_mode_e_DBG_MAP = 27;
@@ -1178,7 +1178,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.12.f407-discovery.3194253959";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.13.f407-discovery.3194253959";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;

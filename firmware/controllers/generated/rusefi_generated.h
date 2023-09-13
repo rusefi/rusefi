@@ -194,11 +194,13 @@
 #define dc_function_e_DC_Wastegate 3
 #define dc_io_size 8
 #define DC_PER_STEPPER 2
-#define debug_mode_e_auto_enum 0="DBG_0",10="DBG_10",11="DBG_11",16="DBG_16",2="DBG_2",20="DBG_20",24="DBG_24",25="DBG_25",26="DBG_26",29="DBG_29",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",7="DBG_7",8="DBG_8",9="DBG_9",21="DBG_ANALOG_INPUTS",32="DBG_ANALOG_INPUTS2",19="DBG_BENCH_TEST",40="DBG_COMPOSITE_LOG",33="DBG_DWELL_METRIC",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",22="DBG_INSTANT_RPM",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",27="DBG_MAP",28="DBG_METRICS",13="DBG_SD_CARD",6="DBG_SOFT_SPARK_CUT",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",1="DBG_TPS_ACCEL",5="DBG_TRIGGER_COUNTERS",12="DBG_UNUSED12",41="DBG_UNUSED41",42="DBG_UNUSED_42",23="UNUSED23"
+#define debug_mode_e_auto_enum 0="DBG_0",10="DBG_10",11="DBG_11",15="DBG_15",16="DBG_16",19="DBG_19",2="DBG_2",20="DBG_20",24="DBG_24",25="DBG_25",26="DBG_26",29="DBG_29",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",7="DBG_7",8="DBG_8",9="DBG_9",21="DBG_ANALOG_INPUTS",32="DBG_ANALOG_INPUTS2",40="DBG_COMPOSITE_LOG",33="DBG_DWELL_METRIC",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",22="DBG_INSTANT_RPM",30="DBG_ION",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",27="DBG_MAP",28="DBG_METRICS",13="DBG_SD_CARD",6="DBG_SOFT_SPARK_CUT",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",1="DBG_TPS_ACCEL",5="DBG_TRIGGER_COUNTERS",12="DBG_UNUSED12",41="DBG_UNUSED41",42="DBG_UNUSED_42",23="UNUSED23"
 #define debug_mode_e_DBG_0 0
 #define debug_mode_e_DBG_10 10
 #define debug_mode_e_DBG_11 11
+#define debug_mode_e_DBG_15 15
 #define debug_mode_e_DBG_16 16
+#define debug_mode_e_DBG_19 19
 #define debug_mode_e_DBG_2 2
 #define debug_mode_e_DBG_20 20
 #define debug_mode_e_DBG_24 24
@@ -217,7 +219,6 @@
 #define debug_mode_e_DBG_9 9
 #define debug_mode_e_DBG_ANALOG_INPUTS 21
 #define debug_mode_e_DBG_ANALOG_INPUTS2 32
-#define debug_mode_e_DBG_BENCH_TEST 19
 #define debug_mode_e_DBG_COMPOSITE_LOG 40
 #define debug_mode_e_DBG_DWELL_METRIC 33
 #define debug_mode_e_DBG_DYNO_VIEW 44
@@ -227,7 +228,6 @@
 #define debug_mode_e_DBG_EXECUTOR 18
 #define debug_mode_e_DBG_INSTANT_RPM 22
 #define debug_mode_e_DBG_ION 30
-#define debug_mode_e_DBG_KNOCK 15
 #define debug_mode_e_DBG_LOGIC_ANALYZER 45
 #define debug_mode_e_DBG_LUA 48
 #define debug_mode_e_DBG_MAP 27
@@ -1293,7 +1293,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.09.12.f407-discovery.3194253959"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.09.13.f407-discovery.3194253959"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

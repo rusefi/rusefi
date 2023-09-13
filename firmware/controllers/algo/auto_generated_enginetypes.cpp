@@ -47,8 +47,12 @@ case DBG_10:
   return "DBG_10";
 case DBG_11:
   return "DBG_11";
+case DBG_15:
+  return "DBG_15";
 case DBG_16:
   return "DBG_16";
+case DBG_19:
+  return "DBG_19";
 case DBG_2:
   return "DBG_2";
 case DBG_20:
@@ -85,8 +89,6 @@ case DBG_ANALOG_INPUTS:
   return "DBG_ANALOG_INPUTS";
 case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
-case DBG_BENCH_TEST:
-  return "DBG_BENCH_TEST";
 case DBG_COMPOSITE_LOG:
   return "DBG_COMPOSITE_LOG";
 case DBG_DWELL_METRIC:
@@ -105,8 +107,6 @@ case DBG_INSTANT_RPM:
   return "DBG_INSTANT_RPM";
 case DBG_ION:
   return "DBG_ION";
-case DBG_KNOCK:
-  return "DBG_KNOCK";
 case DBG_LOGIC_ANALYZER:
   return "DBG_LOGIC_ANALYZER";
 case DBG_LUA:
