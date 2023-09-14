@@ -10,4 +10,4 @@
 void setGenesisCoupeBK1();
 void setGenesisCoupeBK2();
 
-void setProteusHyundaiPb();
+void setHyundaiPb();

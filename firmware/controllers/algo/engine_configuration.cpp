@@ -738,6 +738,13 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::FUEL_BENCH:
 	    fuelBenchMode();
 		break;
+
+#if HW_PROTEUS || HW_HELLEN_4CHAN || HW_HELLEN_8CHAN
+    case engine_type_e::HYUNDAI_PB:
+        setHyundaiPb();
+		break;
+#endif
+
 #if HW_PROTEUS
 	case engine_type_e::ME17_9_MISC:
 	    setSlingshot();
@@ -748,9 +755,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
     case engine_type_e::WASTEGATE_PROTEUS_TEST:
         proteusDcWastegateTest();
         break;
-    case engine_type_e::PROTEUS_HYUNDAI_PB:
-        setProteusHyundaiPb();
-		break;
     case engine_type_e::PROTEUS_NISSAN_VQ35:
         setProteusNissanVQ();
 		break;

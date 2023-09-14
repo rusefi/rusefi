@@ -231,7 +231,8 @@ enum class engine_type_e : uint16_t {
 
 	PROTEUS_NISSAN_VQ35 = 103,
 
-	PROTEUS_HYUNDAI_PB = 104,
+    // both Proteus and 4chan/8chan
+	HYUNDAI_PB = 104,
 };
 
 /**

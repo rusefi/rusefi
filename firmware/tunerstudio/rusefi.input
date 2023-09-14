@@ -2193,11 +2193,14 @@ cmd_set_engine_type_Proteus_Miata_TCU				= "@@TS_IO_TEST_COMMAND_char@@@@ts_comm
 cmd_set_engine_type_PROTEUS_LUA_DEMO				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_HARLEY					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HARLEY_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_NISSAN_VQ35				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_NISSAN_VQ35_16_hex@@"@@if_show_Proteus_presets
-cmd_set_engine_type_PROTEUS_HYUNDAI_PB				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HYUNDAI_PB_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_SBC	        			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_SBC_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_M111    				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_M111_16_hex@@"@@if_show_Proteus_presets
 
-cmd_set_engine_type_ALPHAX_8CHAN_SBC       			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_ALPHAX_8CHAN_SBC_16_hex@@"
+cmd_set_engine_type_HYUNDAI_PB				        = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HYUNDAI_PB_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_HYUNDAI_PB				        = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HYUNDAI_PB_16_hex@@"@@if_show_4chan_presets
+cmd_set_engine_type_HYUNDAI_PB				        = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HYUNDAI_PB_16_hex@@"@@if_show_8chan_presets
+
+cmd_set_engine_type_ALPHAX_8CHAN_SBC       			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_ALPHAX_8CHAN_SBC_16_hex@@"@@if_show_8chan_presets
 cmd_set_engine_type_SMALL_CB_HONDA_BCM              = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_HONDA_BCM_16_hex@@"@@if_show_small_can_board_presets
 
 
@@ -4344,8 +4347,11 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "microRusEFI Subaru EJ18",		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
+		commandButton = "Hyundai PB",		cmd_set_engine_type_PROTEUS_HYUNDAI_PB@@if_show_Proteus_presets
+		commandButton = "Hyundai PB",		cmd_set_engine_type_PROTEUS_HYUNDAI_PB@@if_show_4chan_presets
+		commandButton = "Hyundai PB",		cmd_set_engine_type_PROTEUS_HYUNDAI_PB@@if_show_8chan_presets
+
 		commandButton = "Proteus Nissan VQ",		cmd_set_engine_type_PROTEUS_NISSAN_VQ35@@if_show_Proteus_presets
-		commandButton = "Proteus Hyundai PB",		cmd_set_engine_type_PROTEUS_HYUNDAI_PB@@if_show_Proteus_presets
 		commandButton = "Proteus M111",		        cmd_set_engine_type_PROTEUS_M111@@if_show_Proteus_presets
 		commandButton = "Proteus M73 v12",			cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus GDI VAG B6 test",  cmd_set_engine_type_PROTEUS_VW_B6@@if_show_Proteus_presets

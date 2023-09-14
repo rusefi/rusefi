@@ -92,6 +92,18 @@ void setHyundaiPb() {
     engineConfiguration->hpfpValvePin = Gpio::PROTEUS_LS_6;
     engineConfiguration->vvtPins[0] = Gpio::PROTEUS_LS_15; // intake
     engineConfiguration->vvtPins[1] = Gpio::PROTEUS_LS_16; // exhaust
+
+
+	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
+	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_1;
+	engineConfiguration->camInputs[1] = PROTEUS_DIGITAL_2; // currently intake, TODO: flip!
+
+	setProteusEtbIO();
+
+// something something input levels are not happy for digital input pin?
+	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
+	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
+	engineConfiguration->startStopButtonMode = PI_DEFAULT;
 #endif // HW_PROTEUS
 
 #if HW_PROTEUS
@@ -199,20 +211,6 @@ end
 )", efi::size(config->luaScript));
 #endif // HW_PROTEUS
 
-}
-
-void setProteusHyundaiPb() {
-    setHyundaiPb();
-	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
-	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_1;
-	engineConfiguration->camInputs[1] = PROTEUS_DIGITAL_2; // currently intake, TODO: flip!
-
-	setProteusEtbIO();
-
-// something something input levels are not happy for digital input pin?
-	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
-	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
-	engineConfiguration->startStopButtonMode = PI_DEFAULT;
 }
 
 static void commonGenesisCoupe() {
