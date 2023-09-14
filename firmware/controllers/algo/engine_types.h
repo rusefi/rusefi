@@ -327,10 +327,14 @@ enum class trigger_type_e : uint32_t {
 	//  * Note: this trigger is used only by unit tests
 	//  * see also TT_ONE a bit below
 	TT_ONE_PLUS_ONE = 16,
-	//  * VVT for 2JZ, three evenly spaces teeth
-	TT_VVT_JZ = 17,
+	/**
+	 * VVT for 2JZ
+	 * three evenly spaces teeth
+	 */
+	TT_VVT_TOYOTA_3_TOOTH = 17,
 	// just one channel with one perfectly 180 degree tooth with proper reliable Hall sensor, see also TT_NARROW_SINGLE_TOOTH
 	TT_HALF_MOON = 18,
+
 	TT_DODGE_RAM = 19,
 	//  * It looks like this is the VR shape if you have your wires flipped
 	TT_60_2_VW = 20,
@@ -416,7 +420,7 @@ enum class trigger_type_e : uint32_t {
 	// Renault F3R
 	TT_60_2_2_F3R = 75,
 	TT_MITSU_4G63_CRANK = 76,
-	/* pull-up'ed(inverted in): pull down 2x 30 deg before tdc on cam, till tdc. 
+	/* pull-up'ed(inverted in): pull down 2x 30 deg before tdc on cam, till tdc.
 	   e.g. Sovek, Saruman ignition blind type */
 	TT_60DEG_TOOTH = 77,
 	TT_VVT_MITSUBISHI_4G69 = 78,

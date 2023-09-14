@@ -9,7 +9,7 @@ TEST(realToyota3ToothCam, running) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	engineConfiguration->vvtMode[0] = VVT_2JZ;
+	engineConfiguration->vvtMode[0] = VVT_TOYOTA_3_TOOTH;
 	engineConfiguration->vvtOffsets[0] = 152.583f;
 
 	engineConfiguration->trigger.customTotalToothCount = 36;

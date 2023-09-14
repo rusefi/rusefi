@@ -2359,8 +2359,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		; todo: https://github.com/rusefi/rusefi/issues/2077
 
 		field = "Cam mode (intake)",				vvtMode1, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
-		field = "2JZ Position",                     camDecoder2jzPosition, 1, {vvtMode1 == @@vvt_mode_e_VVT_2JZ@@}
-		field = "2JZ Precision",                    camDecoder2jzPrecision, 1, {vvtMode1 == @@vvt_mode_e_VVT_2JZ@@}
+		field = "2JZ Position",                     camDecoder2jzPosition, 1, {vvtMode1 == @@vvt_mode_e_VVT_TOYOTA_3_TOOTH@@}
+		field = "2JZ Precision",                    camDecoder2jzPrecision, 1, {vvtMode1 == @@vvt_mode_e_VVT_TOYOTA_3_TOOTH@@}
 		field = "Cam mode (exhaust)",				vvtMode2, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
 		field = ""
 		field = "Cam sensor bank 1 intake",			camInputs1, { camInputs1 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ ) }

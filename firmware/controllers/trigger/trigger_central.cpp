@@ -116,7 +116,7 @@ static int getCrankDivider(operation_mode_e operationMode) {
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
-			&& vvtMode != VVT_2JZ /* VVT_2JZ is an unusual 3/0 missed tooth symmetrical wheel */
+			&& vvtMode != VVT_TOYOTA_3_TOOTH /* VVT_2JZ is an unusual 3/0 missed tooth symmetrical wheel */
 			&& vvtMode != VVT_HONDA_K_INTAKE
 			&& vvtMode != VVT_MAP_V_TWIN
 			&& vvtMode != VVT_SINGLE_TOOTH;
@@ -179,7 +179,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
 	case VVT_MIATA_NB:
-	case VVT_2JZ:
+	case VVT_TOYOTA_3_TOOTH:
 	case VVT_TOYOTA_4_1:
 	case VVT_FORD_COYOTE:
 	case VVT_FORD_ST170:
@@ -349,7 +349,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	}
 
 	switch(engineConfiguration->vvtMode[camIndex]) {
-	case VVT_2JZ:
+	case VVT_TOYOTA_3_TOOTH:
 	{
 	    int from = engineConfiguration->camDecoder2jzPosition - engineConfiguration->camDecoder2jzPrecision;
 	    int to   = engineConfiguration->camDecoder2jzPosition + engineConfiguration->camDecoder2jzPrecision;

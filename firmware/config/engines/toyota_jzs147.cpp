@@ -79,7 +79,7 @@ void setToyota_2jz_vics() {
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned; // cam sensor will he handled by custom vtti code
 
 	engineConfiguration->camInputs[0] = Gpio::C6;
-	engineConfiguration->vvtMode[0] = VVT_2JZ;
+	engineConfiguration->vvtMode[0] = VVT_TOYOTA_3_TOOTH;
 
 	// set global_trigger_offset_angle 155
 	engineConfiguration->globalTriggerAngleOffset = 155; // todo
