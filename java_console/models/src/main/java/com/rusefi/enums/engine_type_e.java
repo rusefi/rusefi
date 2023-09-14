@@ -109,5 +109,5 @@ public enum engine_type_e {
 	TEST_101,
 	TEST_102,
 	PROTEUS_NISSAN_VQ35,
-	PROTEUS_HYUNDAI_PB,
+	HYUNDAI_PB,
 }

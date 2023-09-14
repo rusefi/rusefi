@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Sep 14 14:21:54 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Sep 14 14:38:40 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -335,6 +335,7 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_NB2 = 69;
 	public static final int engine_type_e_HELLEN_NB2_36 = 86;
 	public static final int engine_type_e_HONDA_600 = 43;
+	public static final int engine_type_e_HYUNDAI_PB = 104;
 	public static final int engine_type_e_L9779_BENCH_ENGINE = 60;
 	public static final int engine_type_e_MAZDA_MIATA_2003_BOARD_TEST = 55;
 	public static final int engine_type_e_MAZDA_MIATA_2003_NA_RAIL = 54;
@@ -360,7 +361,6 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_HARLEY = 6;
 	public static final int engine_type_e_PROTEUS_HONDA_K = 90;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
-	public static final int engine_type_e_PROTEUS_HYUNDAI_PB = 104;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
 	public static final int engine_type_e_PROTEUS_M111 = 17;
 	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
@@ -1025,7 +1025,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1444137939;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1250,7 +1249,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.09.14.f407-discovery.1444137939";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.09.14.f407-discovery.3948716233";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
