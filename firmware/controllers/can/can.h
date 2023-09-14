@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define HAS_CAN_FRAME (EFI_SIMULATOR || HAL_USE_CAN || EFI_UNIT_TEST)
+
 #if EFI_UNIT_TEST || !EFI_CAN_SUPPORT
 #include "can_mocks.h"
 #endif // EFI_PROD_CODE

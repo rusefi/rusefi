@@ -14,6 +14,11 @@
 
 #include "can.h"
 
+#if EFI_SIMULATOR
+#include "fifo_buffer.h"
+fifo_buffer<CANTxFrame, 1024> txCanBuffer;
+#endif // EFI_SIMULATOR
+
 #if EFI_CAN_SUPPORT
 /*static*/ CANDriver* CanTxMessage::s_devices[2] = {nullptr, nullptr};
 
@@ -25,7 +30,7 @@
 
 CanTxMessage::CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, size_t bus, bool isExtended) {
     this->category = category;
-#if HAL_USE_CAN || EFI_UNIT_TEST
+#if HAS_CAN_FRAME
 #ifndef STM32H7XX
 	// ST bxCAN device
 	m_frame.IDE = isExtended ? CAN_IDE_EXT : CAN_IDE_STD;
@@ -51,10 +56,14 @@ CanTxMessage::CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, size
 	setBus(bus);
 
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
-#endif // HAL_USE_CAN || EFI_UNIT_TEST
+#endif // HAS_CAN_FRAME
 }
 
 CanTxMessage::~CanTxMessage() {
+#if EFI_SIMULATOR
+	txCanBuffer.put(m_frame);
+#endif // EFI_SIMULATOR
+
 #if EFI_CAN_SUPPORT
 	auto device = s_devices[busIndex];
 
@@ -95,7 +104,7 @@ CanTxMessage::~CanTxMessage() {
 #endif /* EFI_CAN_SUPPORT */
 }
 
-#if HAL_USE_CAN || EFI_UNIT_TEST
+#if HAS_CAN_FRAME
 void CanTxMessage::setDlc(uint8_t dlc) {
 	m_frame.DLC = dlc;
 }
@@ -116,5 +125,5 @@ void CanTxMessage::setBit(size_t byteIdx, size_t bitIdx) {
 uint8_t& CanTxMessage::operator[](size_t index) {
 	return m_frame.data8[index];
 }
-#endif // HAL_USE_CAN || EFI_UNIT_TEST
+#endif // HAS_CAN_FRAME
 

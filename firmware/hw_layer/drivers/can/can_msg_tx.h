@@ -66,14 +66,14 @@ public:
 
 	void setBus(size_t bus);
 
-#if HAL_USE_CAN || EFI_UNIT_TEST
+#if HAS_CAN_FRAME
 	const CANTxFrame *getFrame() const {
 		return &m_frame;
 	}
 #endif // HAL_USE_CAN || EFI_UNIT_TEST
 
 protected:
-#if HAL_USE_CAN || EFI_UNIT_TEST
+#if HAS_CAN_FRAME
 	CANTxFrame m_frame;
 #endif // HAL_USE_CAN || EFI_UNIT_TEST
 
