@@ -493,8 +493,6 @@ case trigger_type_e::TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case trigger_type_e::TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
-case trigger_type_e::TT_VVT_JZ:
-  return "TT_VVT_JZ";
 case trigger_type_e::TT_VVT_MAZDA_SKYACTIV:
   return "TT_VVT_MAZDA_SKYACTIV";
 case trigger_type_e::TT_VVT_MIATA_NB:
@@ -505,6 +503,8 @@ case trigger_type_e::TT_VVT_MITSUBISHI_6G75:
   return "TT_VVT_MITSUBISHI_6G75";
 case trigger_type_e::TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
+case trigger_type_e::TT_VVT_TOYOTA_3_TOOTH:
+  return "TT_VVT_TOYOTA_3_TOOTH";
 case trigger_type_e::TT_VVT_TOYOTA_4_1:
   return "TT_VVT_TOYOTA_4_1";
   }

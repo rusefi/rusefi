@@ -22,7 +22,7 @@ public enum trigger_type_e {
 	TT_DODGE_NEON_2003_CAM,
 	TT_MAZDA_DOHC_1_4,
 	TT_ONE_PLUS_ONE,
-	TT_VVT_JZ,
+	TT_VVT_TOYOTA_3_TOOTH,
 	TT_ONE,
 	TT_DODGE_RAM,
 	TT_60_2_VW,
