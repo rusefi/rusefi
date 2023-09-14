@@ -244,14 +244,14 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_STEPPER_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
-	DBG_SOFT_SPARK_CUT = 6,
+	DBG_6 = 6,
 	DBG_7 = 7,
 	DBG_8 = 8,
 	DBG_9 = 9,
 	DBG_10 = 10,
 	DBG_11 = 11,
-	DBG_UNUSED12 = 12,
-	DBG_SD_CARD = 13,
+	DBG_12 = 12,
+	DBG_13 = 13,
 	DBG_SR5_PROTOCOL = 14,
 	DBG_KNOCK = 15,
 	DBG_16 = 16,
@@ -260,16 +260,10 @@ typedef enum __attribute__ ((__packed__)) {
 	 */
 	DBG_ELECTRONIC_THROTTLE_PID = 17,
 	DBG_EXECUTOR = 18,
-	/**
-	 * See tunerstudio.cpp
-	 */
-	DBG_BENCH_TEST = 19,
+
+	DBG_19 = 19,
 	DBG_20 = 20,
-	/**
-	 * ADC
-	 * See also DBG_ANALOG_INPUTS2
-	 */
-	DBG_ANALOG_INPUTS = 21,
+	DBG_21 = 21,
 
 	DBG_INSTANT_RPM = 22,
 	UNUSED23 = 23,
@@ -281,10 +275,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_29 = 29,
 	DBG_ION = 30,
 	DBG_TLE8888 = 31,
-	/**
-	 * See also DBG_ANALOG_INPUTS
-	 */
-	DBG_ANALOG_INPUTS2 = 32,
+	DBG_32 = 32,
 	DBG_DWELL_METRIC = 33,
 	DBG_34 = 34,
 	DBG_35 = 35,
