@@ -57,7 +57,7 @@ public class LinkManager implements Closeable {
     private boolean needPullData = true;
     private boolean needPullText = true;
     private boolean needPullLiveData = true;
-    public final MessagesListener messageListener = (source, message) -> System.out.println(source + ": " + message);
+    public final MessagesListener messageListener = (source, message) -> log.info(source + ": " + message);
     private Thread communicationThread;
     private boolean isDisconnectedByUser;
 
