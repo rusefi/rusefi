@@ -54,13 +54,6 @@ float WallFuel::adjust(float desiredMassGrams) {
 	float fuelFilmMass = wallFuel;
 	float M_cmd = (desiredMassGrams - (1 - alpha) * fuelFilmMass) / (1 - beta);
 
-#if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_KNOCK) {
-		engine->outputChannels.debugFloatField3 = fuelFilmMass;
-		engine->outputChannels.debugFloatField4 = M_cmd;
-	}
-#endif // EFI_TUNER_STUDIO
-
 	// We can't inject a negative amount of fuel
 	// If this goes below zero we will be over-fueling slightly,
 	// but that's ok.
@@ -70,12 +63,6 @@ float WallFuel::adjust(float desiredMassGrams) {
 
 	// remainder on walls from last time + new from this time
 	float fuelFilmMassNext = alpha * fuelFilmMass + beta * M_cmd;
-
-#if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_KNOCK) {
-		engine->outputChannels.debugFloatField5 = fuelFilmMassNext;
-	}
-#endif // EFI_TUNER_STUDIO
 
 	wallFuel = fuelFilmMassNext;
 	wallFuelCorrection = M_cmd - desiredMassGrams;
@@ -185,12 +172,4 @@ void WallFuelController::onFastCallback() {
 	m_alpha = alpha;
 	m_beta = beta;
 	m_enable = true;
-
-#if EFI_TUNER_STUDIO
-	// TODO: why DBG_KNOCK? That seems wrong.
-	if (engineConfiguration->debugMode == DBG_KNOCK) {
-		engine->outputChannels.debugFloatField1 = alpha;
-		engine->outputChannels.debugFloatField2 = beta;
-	}
-#endif // EFI_TUNER_STUDIO
 }
