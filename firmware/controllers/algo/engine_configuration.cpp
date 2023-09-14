@@ -942,9 +942,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setEepromTestConfiguration();
 #endif
 		break;
-	case engine_type_e::TLE8888_BENCH_ENGINE:
-		setTle8888TestConfiguration();
-		break;
+	case engine_type_e::UNUSED_59:
 	case engine_type_e::FRANKENSO_MAZDA_MIATA_NA8:
 		setFrankensoMazdaMiataNA8Configuration();
 		break;

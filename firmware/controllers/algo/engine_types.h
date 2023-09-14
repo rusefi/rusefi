@@ -152,7 +152,7 @@ enum class engine_type_e : uint16_t {
 
 	ETB_BENCH_ENGINE = 58,
 
-	TLE8888_BENCH_ENGINE = 59,
+	UNUSED_59 = 59,
 
 	L9779_BENCH_ENGINE = 60,
 
