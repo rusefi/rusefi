@@ -141,6 +141,8 @@ static virtual_timer_t exitTimer;
  * Simulator main.                                                        *
  *------------------------------------------------------------------------*/
 int main(int argc, char** argv) {
+	setbuf(stdout, NULL);
+
 	/*
 	 * System initializations.
 	 * - HAL initialization, this also initializes the configured device drivers
