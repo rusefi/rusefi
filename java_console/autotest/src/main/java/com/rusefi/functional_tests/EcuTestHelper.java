@@ -80,11 +80,6 @@ public class EcuTestHelper {
     }
 
     @NotNull
-    public static EcuTestHelper createInstance() {
-        return createInstance(false);
-    }
-
-    @NotNull
     public static EcuTestHelper createInstance(boolean allowHardwareTriggerInput) {
         EcuTestHelper ecu = new EcuTestHelper(ControllerConnectorState.getLinkManager());
         if (allowHardwareTriggerInput) {
