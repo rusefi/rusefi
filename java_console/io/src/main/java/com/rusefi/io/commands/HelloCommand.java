@@ -30,7 +30,7 @@ public class HelloCommand implements Command {
     @Nullable
     public static String getStringResponse(String msg, IncomingDataBuffer incomingData) throws EOFException {
         byte[] response = incomingData.getPacket(msg);
-        if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK))
+        if (!checkResponseCode(response))
             return null;
         return new String(response, 1, response.length - 1);
     }

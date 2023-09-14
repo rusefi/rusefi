@@ -46,7 +46,7 @@ public class SerialAutoChecker {
         try {
             HelloCommand.send(stream);
             byte[] response = incomingData.getPacket("auto detect");
-            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK))
+            if (!checkResponseCode(response))
                 return null;
             String signature = new String(response, 1, response.length - 1);
             if (!signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {

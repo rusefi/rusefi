@@ -54,7 +54,7 @@ public class Elm327Sandbox {
         {
             tsStream.sendPacket(new byte[]{Fields.TS_HELLO_COMMAND});
             byte[] response = dataBuffer.getPacket("[hello command]");
-            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK))
+            if (!checkResponseCode(response))
                 return;
             String signature = new String(response, 1, response.length - 1);
             System.out.println(Fields.TS_HELLO_COMMAND + " returned " + signature);
