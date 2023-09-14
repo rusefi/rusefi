@@ -198,7 +198,7 @@ public class BinaryProtocol {
 
         String msg = "load TS_CONFIG_VERSION";
         byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, msg);
-        if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
+        if (!checkResponseCode(response) || response.length != requestSize + 1) {
             close();
             return "Failed to " + msg;
         }
@@ -346,7 +346,7 @@ public class BinaryProtocol {
 
             byte[] response = executeCommand(Fields.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
-            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
+            if (!checkResponseCode(response) || response.length != requestSize + 1) {
                 if (extractCode(response) == TS_RESPONSE_OUT_OF_RANGE) {
                     throw new IllegalStateException("TS_RESPONSE_OUT_OF_RANGE ECU/console version mismatch?");
                 }
@@ -427,7 +427,7 @@ public class BinaryProtocol {
         byte[] packet = createRequestCrcPayload(configSize);
         byte[] response = executeCommand(Fields.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
 
-        if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
+        if (checkResponseCode(response) && response.length == 5) {
             ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
             // that's unusual - most of the protocol is LITTLE_ENDIAN
             bb.order(ByteOrder.BIG_ENDIAN);
@@ -511,7 +511,7 @@ public class BinaryProtocol {
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(Fields.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
-            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != 1) {
+            if (!checkResponseCode(response) || response.length != 1) {
                 log.error("writeData: Something is wrong, retrying...");
                 continue;
             }

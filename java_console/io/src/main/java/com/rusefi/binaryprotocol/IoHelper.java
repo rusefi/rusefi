@@ -1,6 +1,7 @@
 package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.util.HexBinary;
 
 import java.util.zip.CRC32;
@@ -65,6 +66,10 @@ public class IoHelper {
     public static void putShort(byte[] packet, int offset, int value) {
         packet[offset + 1] = (byte) value;
         packet[offset] = (byte) (value >> 8);
+    }
+
+    public static boolean checkResponseCode(byte[] response) {
+        return checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK);
     }
 
     /**
