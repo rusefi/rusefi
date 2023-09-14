@@ -675,7 +675,7 @@ event 0 0 1 0.00 1.000000
 event 1 0 0 180.00 nan
 event 2 1 1 360.00 nan
 event 3 1 0 540.00 nan
-TRIGGERTYPE 17 6 TT_VVT_JZ 0.00
+TRIGGERTYPE 17 6 TT_VVT_TOYOTA_3_TOOTH 0.00
 knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
