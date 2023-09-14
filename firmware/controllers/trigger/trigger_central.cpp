@@ -299,14 +299,15 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 	}
 
 	switch(engineConfiguration->vvtMode[camIndex]) {
-	case VVT_2JZ:
-		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
-		if ((currentPosition < engineConfiguration->scriptSetting[4]       || currentPosition > engineConfiguration->scriptSetting[5]) &&
-		    (currentPosition < engineConfiguration->scriptSetting[4] + 360 || currentPosition > engineConfiguration->scriptSetting[5] + 360)) {
-			// outside of the expected range
+	case VVT_2JZ: {
+		// Consider the tooth in the first 1/3 of the engine phase
+		bool inRange = angleFromPrimarySyncPoint > 0 && angleFromPrimarySyncPoint < (720 / 3);
+
+		if (!inRange) {
 			return;
 		}
-		break;
+
+		} break;
 	default:
 		// else, do nothing
 		break;
