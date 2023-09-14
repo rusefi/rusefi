@@ -52,7 +52,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	/**
 	 * Toyota 2JZ has three cam tooth. We pick one of these three tooth to synchronize based on the expected angle position of the event
 	 */
-	VVT_2JZ = 2,
+	VVT_TOYOTA_3_TOOTH = 2,
 	/**
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
 	 * @see TT_VVT_MIATA_NB

@@ -67,8 +67,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	switch (vvtMode) {
 	case VVT_INACTIVE:
 		return trigger_type_e::TT_ONE;
-	case VVT_2JZ:
-		return trigger_type_e::TT_VVT_JZ;
+	case VVT_TOYOTA_3_TOOTH:
+		return trigger_type_e::TT_VVT_TOYOTA_3_TOOTH;
 	case VVT_MIATA_NB:
 		return trigger_type_e::TT_VVT_MIATA_NB;
 	case VVT_BOSCH_QUICK_START:

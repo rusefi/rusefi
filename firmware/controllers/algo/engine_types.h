@@ -322,7 +322,7 @@ enum class trigger_type_e : uint32_t {
 	 * VVT for 2JZ
 	 * three evenly spaces teeth
 	 */
-	TT_VVT_JZ = 17,
+	TT_VVT_TOYOTA_3_TOOTH = 17,
 	// just one channel with just one tooth
 	TT_ONE = 18,
 

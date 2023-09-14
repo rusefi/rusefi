@@ -107,9 +107,9 @@ static int getCrankDivider(operation_mode_e operationMode) {
 }
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
-	// todo: why does VVT_2JZ not use real decoder?
+	// todo: why does VVT_TOYOTA_3_TOOTH not use real decoder?
 	return vvtMode != VVT_INACTIVE
-			&& vvtMode != VVT_2JZ
+			&& vvtMode != VVT_TOYOTA_3_TOOTH
 			&& vvtMode != VVT_HONDA_K_INTAKE
 			&& vvtMode != VVT_MAP_V_TWIN
 			&& vvtMode != VVT_SINGLE_TOOTH;
@@ -172,7 +172,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
 	case VVT_MIATA_NB:
-	case VVT_2JZ:
+	case VVT_TOYOTA_3_TOOTH:
 	case VVT_TOYOTA_4_1:
 	case VVT_FORD_ST170:
 	case VVT_BARRA_3_PLUS_1:
@@ -299,7 +299,7 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 	}
 
 	switch(engineConfiguration->vvtMode[camIndex]) {
-	case VVT_2JZ: {
+	case VVT_TOYOTA_3_TOOTH: {
 		// Consider the tooth in the first 1/3 of the engine phase
 		bool inRange = angleFromPrimarySyncPoint > 0 && angleFromPrimarySyncPoint < (720 / 3);
 
