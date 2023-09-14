@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Sep 13 16:29:30 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Sep 14 12:55:57 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -355,12 +355,12 @@ case engine_type_e::TEST_ISSUE_366_RISE:
   return "TEST_ISSUE_366_RISE";
 case engine_type_e::TEST_ROTARY:
   return "TEST_ROTARY";
-case engine_type_e::TLE8888_BENCH_ENGINE:
-  return "TLE8888_BENCH_ENGINE";
 case engine_type_e::TOYOTA_1NZ_FE:
   return "TOYOTA_1NZ_FE";
 case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
+case engine_type_e::UNUSED_59:
+  return "UNUSED_59";
 case engine_type_e::VW_ABA:
   return "VW_ABA";
 case engine_type_e::WASTEGATE_PROTEUS_TEST:
