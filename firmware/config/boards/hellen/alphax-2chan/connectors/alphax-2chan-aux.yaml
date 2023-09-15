@@ -1,0 +1,55 @@
+meta: config/boards/hellen_meta.h
+
+pins:
+  - pin: X1
+    meta: H144_IN_AUX1
+    function: Analog Input 1
+    class: analog_inputs
+    ts_name: X1 - AIN1
+
+  - pin: X2
+    meta: H144_LS_3
+    function: Inj 3
+    class: outputs
+    type: ls
+    ts_name: Aux2 - Inj 3
+
+  - pin: X3
+    meta: H144_IN_AUX2
+    function: Analog Input 2
+    class: analog_inputs
+    ts_name: X3 - AIN2
+
+  - pin: X4
+    meta: H144_LS_4
+    function: Inj 4
+    class: outputs
+    type: ls
+    ts_name: Aux4 - Inj 4
+
+  - pin: X6
+    meta: H144_IGN_4
+    function: Ign 4
+    class: outputs
+    type: ls
+    ts_name: Aux6 - Ign 4
+
+  - pin: X7
+    meta: H144_IN_AUX4
+    function: Analog Input 4
+    class: analog_inputs
+    ts_name: X7 - AIN4
+
+  - pin: X8
+    meta: H144_IGN_3
+    function: Ign 3
+    class: outputs
+    type: ls
+    ts_name: Aux8 - Ign 3
+
+
+info:
+  title: AlphaX 2chan
+  name: AlphaX 2chan
+  board_url: https://rusefi.com/s/2chan
+  directory: hellen/alphax-2chan
