@@ -5,8 +5,8 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::D9,
-	Gpio::F12,
+	Gpio::H144_LS_5,
+	Gpio::H144_LS_6,
 	Gpio::H144_OUT_IO12,
 	Gpio::H144_LS_1,
 	Gpio::H144_LS_2,
@@ -18,10 +18,10 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_IGN_7,
 	Gpio::H144_IGN_8,
 	Gpio::G12,
-	Gpio::E2,
-	Gpio::B8,
-	Gpio::D15,
-	Gpio::D12,
+	Gpio::H144_IGN_5,
+	Gpio::H144_IGN_6,
+	Gpio::H144_OUT_PWM7,
+	Gpio::H144_OUT_PWM8,
 	Gpio::H144_OUT_IO13,
 	Gpio::H144_GP3,
 	Gpio::H144_IGN_1,
