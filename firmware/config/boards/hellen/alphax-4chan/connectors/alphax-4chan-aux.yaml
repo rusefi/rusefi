@@ -1,58 +1,52 @@
+meta: config/boards/hellen_meta.h
+
 pins:
   - pin: X2
-# H144_LS_5
-    id: D9
+    meta: H144_LS_5
     function: Inj 5
     class: outputs
     type: ls
     ts_name: Aux2 - Inj 5
 
   - pin: X4
-    # H144_LS_6
-    id: F12
+    meta: H144_LS_6
     function: Inj 6
     class: outputs
     type: ls
     ts_name: Aux4 - Inj 6
 
   - pin: X5
-#H144_IN_MAP1
-    id: EFI_ADC_10
+    meta: H144_IN_MAP1
     function: Analog Input 3
     class: analog_inputs
     ts_name: X5 - AIN3
 
   - pin: X6
-    # H144_IGN_5
-    id: E2
+    meta: H144_IGN_5
     function: Ignition 5
     class: outputs
     ts_name: Aux6 - Ignition 5
 
   - pin: X7
-    #H144_IN_AUX3
-    id: EFI_ADC_15
+    meta: H144_IN_AUX3
     function: Analog Input 4
     class: analog_inputs
     ts_name: X5 - AIN4
 
   - pin: X8
-    # H144_IGN_6
-    id: B8
+    meta: H144_IGN_6
     function: Ignition 6
     class: outputs
     ts_name: Aux8 - Ignition 6
 
   - pin: X9
-    # H144_OUT_PWM7
-    id: D15
+    meta: H144_OUT_PWM7
     function: HighSide 1
     class: outputs
     ts_name: Aux9 - High1 legacy F2
 
   - pin: X10
-    # H144_OUT_PWM8
-    id: D12
+    meta: H144_OUT_PWM8
     function: HighSide 2
     class: outputs
     ts_name: Aux10 - High2 legacy F4
