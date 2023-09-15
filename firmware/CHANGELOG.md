@@ -44,6 +44,7 @@ Release template (copy/paste this for new release):
  - Maximum knock retard table displays correct Y axis values in TunerStudio
  - Make errors about fuel pressure sensors less aggressive #111 #117
  - Always operate in "two wire" mode for batch fuel, fixing batch firing order #23
+ - Fix "Toyota 3 Tooth Cam" VVT mode (1JZ, 2JZ, 1G, etc) actually works now #237
 
 ## May 2023 Release
 
