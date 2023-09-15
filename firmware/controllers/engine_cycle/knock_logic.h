@@ -31,7 +31,7 @@ public:
 	virtual float getMaximumRetard() const = 0;
 
 private:
-	using PD = PeakDetect<float, MS2NT(100)>;
+	using PD = PeakDetect<float, MS2NT(50)>;
 	PD peakDetectors[12];
 	PD allCylinderPeakDetector;
 };
