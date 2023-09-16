@@ -47,6 +47,14 @@ public class CircularByteBuffer extends ByteBuffer {
         buf = new byte[size];
     }
 
+    /**
+     * creates buffer FILLED with specified content
+     */
+    public CircularByteBuffer(byte[] buf) {
+        length = size = buf.length;
+        this.buf = buf;
+    }
+
     @Override
     public void clear() {
         length = 0;

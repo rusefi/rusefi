@@ -361,6 +361,9 @@ static bool isKnownCommand(char command) {
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
+#if EFI_SIMULATOR
+			|| command == TS_SIMULATE_CAN
+#endif // EFI_SIMULATOR
 			|| command == TS_GET_SCATTERED_GET_COMMAND
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
@@ -717,6 +720,12 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	case 'T':
 		handleTestCommand(tsChannel);
 		break;
+#if EFI_SIMULATOR
+    case TS_SIMULATE_CAN:
+        void handleWrapCan(TsChannelBase* tsChannel);
+		handleWrapCan(tsChannel);
+		break;
+#endif // EFI_SIMULATOR
 	case TS_IO_TEST_COMMAND:
 		{
 			uint16_t subsystem = SWAP_UINT16(data16[0]);

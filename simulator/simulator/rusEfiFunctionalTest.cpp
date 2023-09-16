@@ -26,6 +26,9 @@
 #include "rusefi_lua.h"
 #include "can_hw.h"
 #include "flash_main.h"
+#include "can_msg_tx.h"
+#include "fifo_buffer.h"
+extern fifo_buffer<CANTxFrame, 1024> txCanBuffer;
 
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
@@ -223,4 +226,22 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 #endif // HAL_USE_CAN
 
 void setBoardConfigOverrides() {
+}
+
+static uint8_t wrapOutBuffer[BLOCKING_FACTOR + 100];
+
+void handleWrapCan(TsChannelBase* tsChannel) {
+    int size = minI(txCanBuffer.getSize(), BLOCKING_FACTOR / sizeof(CANTxFrame));
+
+    memcpy(wrapOutBuffer, &size, 2);
+    int outputSize = 2;
+
+    for (int i = 0;i < size;i++) {
+    	CANTxFrame f = txCanBuffer.get();
+        void *frame = (void *)&f;
+        memcpy(((void*)wrapOutBuffer) + outputSize, frame, sizeof(CANTxFrame));
+        outputSize += sizeof(CANTxFrame);
+    }
+    tsChannel->sendResponse(TS_CRC, wrapOutBuffer, outputSize, true);
+
 }

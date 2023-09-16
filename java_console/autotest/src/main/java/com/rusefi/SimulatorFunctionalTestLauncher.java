@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.io.LinkManager;
+import com.rusefi.simulator.SimulatorFunctionalTest;
 
 /**
  * this class runs rusEFI functional tests against rusEFI simulator
@@ -23,8 +24,7 @@ public class SimulatorFunctionalTestLauncher {
         try {
             LinkManager linkManager = new LinkManager();
             IoUtil.connectToSimulator(linkManager, startSimulator);
-            // todo: new implementation for unit tests?
-//            new FunctionalTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
+            new SimulatorFunctionalTest(linkManager).mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
             failed = true;
