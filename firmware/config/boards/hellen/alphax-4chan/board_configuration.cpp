@@ -101,7 +101,7 @@ static void setupDefaultSensorInputs() {
 
 static bool is_F_OrOlder() {
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
-    return hellenBoardId == BOARD_ID_4chan_d || hellenBoardId == BOARD_ID_4chan_e || hellenBoardId == BOARD_ID_4chan_f;
+    return hellenBoardId == BOARD_ID_ALPHA4CH_D || hellenBoardId == BOARD_ID_ALPHA4CH_E || hellenBoardId == BOARD_ID_ALPHA4CH_F;
 }
 
 void boardInitHardware() {

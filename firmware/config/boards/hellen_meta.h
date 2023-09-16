@@ -7,24 +7,7 @@
 
 #pragma once
 #include "hellen_mm100_meta.h"
-
-// see https://github.com/andreika-git/hellen-one/blob/master/board_id/board_ids.csv
-#define BOARD_ID_154hyundai_c 10
-#define BOARD_ID_154hyundai_d 201
-
-#define BOARD_ID_2chan_b 3
-#define BOARD_ID_2chan_c 5
-#define BOARD_ID_2chan_d 107
-// mega-module starts here
-#define BOARD_ID_2chan_e 112
-#define BOARD_ID_2chan_f 115
-#define BOARD_ID_2chan_g 210
-
-#define BOARD_ID_4chan_d 103
-#define BOARD_ID_4chan_e 105
-#define BOARD_ID_4chan_f 113
-#define BOARD_ID_4chan_g 203
-#define BOARD_ID_4chan_h 114
+#include "../../board_id/boards_id.h"
 
 void hellenWbo();
 

@@ -104,7 +104,7 @@ void setBoardConfigOverrides() {
 			efiSetPadMode("ETB FIX2", Gpio::H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
 		}
 		engineConfiguration->stepperDcInvertedPins = false;
-	} else if (hellenBoardId == BOARD_ID_154hyundai_c || hellenBoardId == BOARD_ID_154hyundai_d) {
+	} else if (hellenBoardId == BOARD_ID_154HYUNDAI_C || hellenBoardId == BOARD_ID_154HYUNDAI_D) {
 		engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_SENS2;
 		engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS3;
 

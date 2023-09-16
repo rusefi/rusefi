@@ -92,7 +92,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 
 static bool isMegaModuleRevision() {
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
-    return hellenBoardId != BOARD_ID_2chan_b && hellenBoardId != BOARD_ID_2chan_c && hellenBoardId != BOARD_ID_2chan_d;
+    return hellenBoardId != BOARD_ID_ALPHA2CH_B && hellenBoardId != BOARD_ID_ALPHA2CH_C && hellenBoardId != BOARD_ID_ALPHA2CH_D;
 }
 
 void setBoardConfigOverrides() {
