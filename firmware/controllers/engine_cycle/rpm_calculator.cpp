@@ -72,8 +72,8 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 	switch (type) {
 		case trigger_type_e::TT_TOOTHED_WHEEL:
 		case trigger_type_e::TT_HALF_MOON:
-		case trigger_type_e::TT_3_1_CAM:
-		case trigger_type_e::TT_36_2_2_2:	// TODO: should this one be in this list?
+		case trigger_type_e::TT_3_1_CAM:   // huh why is this trigger with CAM suffix right in the name on this exception list?!
+		case trigger_type_e::TT_36_2_2_2:	// this trigger is special due to rotary application https://github.com/rusefi/rusefi/issues/5566
 		case trigger_type_e::TT_TOOTHED_WHEEL_60_2:
 		case trigger_type_e::TT_TOOTHED_WHEEL_36_1:
 			// These modes could be either cam or crank speed
