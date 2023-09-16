@@ -83,7 +83,7 @@ extern TriggerDecoderBase initState;
 
 	fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", tt, shape->getLength(), getTrigger_type_e(tt), shape->tdcPosition);
 
-	fprintf(fp, "%s=%s\n", TRIGGER_HARDCODED_OPERATION_MODE, shape->knownOperationMode ? "true" : "false");
+	fprintf(fp, "%s=%s\n", TRIGGER_KNOWN_OPERATION_MODE, shape->knownOperationMode ? "true" : "false");
 	operation_mode_e mode = shape->getWheelOperationMode();
 	bool isOneOfCrankShapes = mode == FOUR_STROKE_CRANK_SENSOR ||
 			mode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||

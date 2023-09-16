@@ -98,7 +98,7 @@ public class TriggerWheelInfo {
                 case TRIGGER_HAS_SECOND_CHANNEL:
                     hasSecondChannel = Boolean.parseBoolean(value);
                     break;
-                case TRIGGER_HARDCODED_OPERATION_MODE:
+                case TRIGGER_KNOWN_OPERATION_MODE:
                     hardcodedOperationMode = Boolean.parseBoolean(value);
                     break;
                 case TRIGGER_WITH_SYNC:

@@ -12,7 +12,7 @@ public class TriggerMeta {
 	public static final String TRIGGER_GAP_FROM = "gapFrom";
 	public static final String TRIGGER_GAP_TO = "gapTo";
 	public static final String TRIGGER_GAPS_COUNT = "gapsCount";
-	public static final String TRIGGER_HARDCODED_OPERATION_MODE = "knownOperationMode";
+	public static final String TRIGGER_KNOWN_OPERATION_MODE = "knownOperationMode";
 	public static final String TRIGGER_HAS_SECOND_CHANNEL = "hasSecondChannel";
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
 	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
