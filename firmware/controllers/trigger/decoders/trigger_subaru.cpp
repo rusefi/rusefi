@@ -9,15 +9,8 @@
 
 #include "trigger_subaru.h"
 
-static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount, bool knownOperationModeHack) {
+static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
-
-#if EFI_UNIT_TEST
-	// placed on 'cam' on '2-stroke' rotary
-	if (knownOperationModeHack) {
-		s->knownOperationMode = false;
-	}
-#endif // EFI_UNIT_TEST
 
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
@@ -52,7 +45,13 @@ static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int s
  * https://rusefi.com/forum/viewtopic.php?f=2&t=1932
  */
 void initialize36_2_2_2(TriggerWaveform *s) {
-	initialize_one_of_36_2_2_2(s, 12, 15, /*knownOperationModeHack*/true);
+	initialize_one_of_36_2_2_2(s, 12, 15);
+
+#if EFI_UNIT_TEST
+	// usually used on crank but placed on 'cam' on '2-stroke' rotary
+	// this 'knownOperationMode' does not matter for trigger decoding only matters for .ini code generation and trigger images
+	s->knownOperationMode = false;
+#endif // EFI_UNIT_TEST
 
 	s->setTriggerSynchronizationGap(0.333f);
 	s->setSecondTriggerSynchronizationGap(1.0f);
@@ -60,7 +59,7 @@ void initialize36_2_2_2(TriggerWaveform *s) {
 }
 
 void initializeSubaruEZ30(TriggerWaveform *s) {
-	initialize_one_of_36_2_2_2(s, 18, 9, /*knownOperationModeHack*/false);
+	initialize_one_of_36_2_2_2(s, 18, 9);
 
     s->tdcPosition = 240;
 
