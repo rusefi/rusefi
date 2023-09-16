@@ -231,10 +231,17 @@ void setBoardConfigOverrides() {
 static uint8_t wrapOutBuffer[BLOCKING_FACTOR + 100];
 
 void handleWrapCan(TsChannelBase* tsChannel) {
-    int size = minI(txCanBuffer.getSize(), BLOCKING_FACTOR / sizeof(CanTxMessage));
+    int size = minI(txCanBuffer.getSize(), BLOCKING_FACTOR / sizeof(CANTxFrame));
 
     memcpy(wrapOutBuffer, &size, 2);
+    int outputSize = 2;
 
-    tsChannel->sendResponse(TS_CRC, wrapOutBuffer, 2, true);
+    for (int i = 0;i < size;i++) {
+    	CANTxFrame f = txCanBuffer.get();
+        void *frame = (void *)&f;
+        memcpy(((void*)wrapOutBuffer) + outputSize, frame, sizeof(CANTxFrame));
+        outputSize += sizeof(CANTxFrame);
+    }
+    tsChannel->sendResponse(TS_CRC, wrapOutBuffer, outputSize, true);
 
 }
