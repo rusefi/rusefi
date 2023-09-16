@@ -7,7 +7,7 @@ pins:
     color: black
 
   - pin: A2
-    id: EFI_ADC_5
+    meta: H144_IN_VBATT
     class: analog_inputs
     function: +12V
     ts_name: A2 Battery Sense
@@ -64,40 +64,35 @@ pins:
     color: black
 
   - pin: On-board MAP
-    # H144_IN_MAP3
-    id: EFI_ADC_2
+    meta: H144_IN_MAP3
     class: analog_inputs
     function: MAP Sensor Input
     ts_name: On-board MAP
     color: orange
 
   - pin: B2
-    # H144_IN_MAP2 AIN10 PC1
-    id: EFI_ADC_11
+    meta: H144_IN_MAP2
     class: analog_inputs
     function: MAP Sensor Input
     ts_name: B2 - MAP
     color: orange
 
   - pin: B3
-    # H144_IN_IAT AIN14 PC3
-    id: EFI_ADC_13
+    meta: H144_IN_IAT
     class: analog_inputs
     function: IAT Sensor Input
     ts_name: B3 - IAT
     color: orange
 
   - pin: B4
-    # H144_IN_O2S2 AIN12 PA1
-    id: EFI_ADC_1
+    meta: H144_IN_O2S2
     class: analog_inputs
     function: O2 Sensor Input
     ts_name: B4 - O2
     color: orange
 
   - pin: B5
-    # H144_IN_TPS AIN17 PA4
-    id: EFI_ADC_4
+    meta: H144_IN_TPS
     class: analog_inputs
     function: TPS Sensor Input
     ts_name: B5 - TPS
@@ -109,8 +104,7 @@ pins:
     color: orange
 
   - pin: B7
-    # H144_IN_CLT AIN11 PC2
-    id: EFI_ADC_12
+    meta: H144_IN_CLT
     class: analog_inputs
     function: CLT Sensor Input
     ts_name: B7 - CLT
@@ -133,8 +127,7 @@ pins:
     color: purple
 
   - pin: C2
-    # H144_IN_D_3
-    id: [E14, E14]
+    id: [H144_IN_D_3, H144_IN_D_3]
     class: [event_inputs, switch_inputs]
     function: Crank Sensor -
     type: hall
@@ -142,8 +135,7 @@ pins:
     color: white
 
   - pin: C3
-    # H144_IN_D_1
-    id: [E12, E12]
+    id: [H144_IN_D_1, H144_IN_D_1]
     class: [event_inputs, switch_inputs]
     function: Crank Sensor +
     type: hall
@@ -151,8 +143,7 @@ pins:
     color: gray
 
   - pin: C2C3
-    # H144_IN_CRANK
-    id: B1
+    meta: H144_IN_CRANK
     class: event_inputs
     function: Crank Sensor (VR)
     type: hall
@@ -160,8 +151,7 @@ pins:
     color: gray
 
   - pin: C4
-    # H144_IN_VSS
-    id: F11
+    meta: H144_IN_VSS
     class: switch_inputs
     function: 2Step Digital Input
     type: hall
@@ -179,8 +169,7 @@ pins:
     color: blue
 
   - pin: C7
-    # H144_IN_CAM
-    id: [A6, A6, EFI_ADC_6]
+    id: [H144_IN_CAM, H144_IN_CAM, EFI_ADC_6]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Camshaft HALL Sensor or Generic Digital Input
     type: hall
