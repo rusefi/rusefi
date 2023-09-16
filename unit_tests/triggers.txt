@@ -5586,7 +5586,7 @@ event 229 0 0 702.00 nan
 event 230 0 1 714.00 nan
 event 231 0 0 714.00 nan
 TRIGGERTYPE 76 8 TT_MITSU_4G63_CRANK 0.00
-knownOperationMode=false
+knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
