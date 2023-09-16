@@ -108,6 +108,18 @@ void setBoardConfigOverrides() {
 	    setHellenEnPin(Gpio::H144_OUT_IO3);
 	}
 
+	// todo: is it time for some helper method to work with sets?!
+	bool isBeforeRevG = hellenBoardId == BOARD_ID_ALPHA2CH_B ||
+	                    hellenBoardId == BOARD_ID_ALPHA2CH_C ||
+	                    hellenBoardId == BOARD_ID_ALPHA2CH_D ||
+	                    hellenBoardId == BOARD_ID_ALPHA2CH_E ||
+	                    hellenBoardId == BOARD_ID_ALPHA2CH_F;
+
+	if (!isBeforeRevG) {
+	    engineConfiguration->vrThreshold[0].pin = Gpio::Unassigned; // rev G started to use MAX9924
+	}
+
+    engineConfiguration->vrThreshold[1].pin = Gpio::Unassigned; // 2chan never had second VR
     setDefaultHellenAtPullUps();
 
 	setHellenCan();
