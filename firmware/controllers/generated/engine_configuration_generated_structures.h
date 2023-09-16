@@ -505,6 +505,7 @@ struct engine_configuration_s {
 	int launchTimingRetard;
 	// We calculate knock band based of cylinderBore
 	//  Use this to override - kHz knock band override
+	// Requires power cycling to effect
 	// kHz
 	// offset 324
 	float knockBandCustom;

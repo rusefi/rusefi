@@ -191,7 +191,7 @@ Pull-up resistor value on your board
 
 
 ### knockBandCustom
-We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override
+We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override\nRequires power cycling to effect
 
 ### displacement
 Engine displacement in litres
