@@ -152,6 +152,7 @@ public:
 	TriggerWheel triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
 	TriggerValue triggerSignalStates[PWM_PHASE_MAX_COUNT];
 	// see also 'doesTriggerImplyOperationMode'
+	// todo: reuse doesTriggerImplyOperationMode instead of separate field only which is only used for metadata anyway?
 	bool knownOperationMode = true;
 #endif
 
