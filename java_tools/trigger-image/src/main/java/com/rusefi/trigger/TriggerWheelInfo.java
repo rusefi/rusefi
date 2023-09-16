@@ -20,7 +20,7 @@ public class TriggerWheelInfo {
     private final List<TriggerSignal> signals;
     private final boolean isCrankBased;
     private final boolean hasSecondChannel;
-    private final boolean hardcodedOperationMode;
+    private final boolean knownOperationMode;
     private final TriggerGaps gaps;
     private final String syncEdge;
 
@@ -28,7 +28,7 @@ public class TriggerWheelInfo {
                             boolean isCrankBased,
                             boolean isSecondWheelCam,
                             boolean hasSecondChannel,
-                            boolean hardcodedOperationMode,
+                            boolean knownOperationMode,
                             TriggerGaps gaps, String syncEdge) {
         this.id = id;
         this.isSecondWheelCam = isSecondWheelCam;
@@ -37,7 +37,7 @@ public class TriggerWheelInfo {
         this.signals = signals;
         this.isCrankBased = isCrankBased;
         this.hasSecondChannel = hasSecondChannel;
-        this.hardcodedOperationMode = hardcodedOperationMode;
+        this.knownOperationMode = knownOperationMode;
         this.gaps = gaps;
         this.syncEdge = syncEdge;
     }
@@ -58,7 +58,7 @@ public class TriggerWheelInfo {
         boolean isCrankBased = false;
         boolean isSecondWheelCam = false;
         boolean hasSecondChannel = false;
-        boolean hardcodedOperationMode = false;
+        boolean knownOperationMode = false;
         TriggerWheelInfo.TriggerGaps gaps = null;
         String syncEdge = null;
 
@@ -99,7 +99,7 @@ public class TriggerWheelInfo {
                     hasSecondChannel = Boolean.parseBoolean(value);
                     break;
                 case TRIGGER_KNOWN_OPERATION_MODE:
-                    hardcodedOperationMode = Boolean.parseBoolean(value);
+                    knownOperationMode = Boolean.parseBoolean(value);
                     break;
                 case TRIGGER_WITH_SYNC:
                     //isSynchronizationNeeded = Integer.parseInt(value) > 0;
@@ -119,7 +119,7 @@ public class TriggerWheelInfo {
                 isCrankBased,
                 isSecondWheelCam,
                 hasSecondChannel,
-                hardcodedOperationMode,
+                knownOperationMode,
                 gaps,
                 syncEdge
         );
@@ -228,8 +228,8 @@ public class TriggerWheelInfo {
         return hasSecondChannel;
     }
 
-    public boolean isHardcodedOperationMode() {
-        return hardcodedOperationMode;
+    public boolean isKnownOperationMode() {
+        return knownOperationMode;
     }
 
     public TriggerGaps getGaps() {
