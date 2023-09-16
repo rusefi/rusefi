@@ -1157,7 +1157,7 @@ event 22 0 1 600.00 4.000000
 event 23 0 0 600.00 nan
 TRIGGERTYPE 23 120 TT_36_2_2_2 0.00
 knownOperationMode=false
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=360
@@ -5587,7 +5587,7 @@ event 230 0 1 714.00 nan
 event 231 0 0 714.00 nan
 TRIGGERTYPE 76 8 TT_MITSU_4G63_CRANK 0.00
 knownOperationMode=false
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=180
