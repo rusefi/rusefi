@@ -149,7 +149,7 @@ void Engine::periodicSlowCallback() {
 
 	tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
 
-	updateVrPwm();
+	updateVrThresholdPwm();
 
 	enginePins.o2heater.setValue(engineConfiguration->forceO2Heating || engine->rpmCalculator.isRunning());
 	enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);

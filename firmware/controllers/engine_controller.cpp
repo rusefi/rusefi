@@ -674,7 +674,7 @@ void initEngineController() {
 
 	engineStateBlinkingTask.start();
 
-	initVrPwm();
+	initVrThresholdPwm();
 
 #if EFI_PWM_TESTER
 	initPwmTester();

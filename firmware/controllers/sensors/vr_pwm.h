@@ -1,5 +1,5 @@
 #pragma once
 
-void initVrPwm();
-void updateVrPwm();
+void initVrThresholdPwm();
+void updateVrThresholdPwm();
 void setDefaultVrThresholds();
