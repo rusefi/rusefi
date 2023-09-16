@@ -34,6 +34,9 @@ void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 void initializeMitsubishi4gSymmetricalCrank(TriggerWaveform *s) {
 		initializeSkippedToothTrigger(s, /* reality */2 * /* symmetrical*/0.5,
 				0, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
+#if EFI_UNIT_TEST
+		s->knownOperationMode = true; // this is always placed on crank, overriding 'initializeSkippedToothTrigger' value
+#endif
 }
 
 void initializeMitsubishi4g9xCam(TriggerWaveform *s) {
