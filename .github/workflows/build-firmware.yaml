@@ -359,7 +359,7 @@ jobs:
           - build-target: core8
             folder: config/boards/core8
             ini-file: rusefi_core8.ini
-            skip-rate: 95
+            skip-rate: 0
 
           - build-target: 48way
             folder: config/boards/48way
