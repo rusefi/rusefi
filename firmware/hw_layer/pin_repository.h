@@ -41,6 +41,7 @@ ioportid_t getBrainPinPort(brain_pin_e brainPin);
 int getBrainPinIndex(Gpio brainPin);
 size_t getBrainPinOnchipNum();
 const char *hwPortname(Gpio brainPin);
+const char *hwPhysicalPinName(Gpio brainPin);
 // the main usage for human-readable board-specific pin reference is convenience of error messages in case of pin conflict.
 const char * getBoardSpecificPinName(Gpio brainPin);
 

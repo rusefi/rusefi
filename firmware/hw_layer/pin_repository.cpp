@@ -58,9 +58,13 @@ bool brain_pin_markUsed(Gpio brainPin, const char *msg) {
 		return true;
 
 	if (engine->pinRepository.getBrainUsedPin(index) != NULL) {
-		/* TODO: get readable name of brainPin... */
-		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\"",
+		// hwPortname and share a buffer behind the scenes, even while they probably never use it for different
+		// values here let's have an explicit second buffer to make this more reliable
+		char physicalPinName[32];
+		strncpy(physicalPinName, hwPhysicalPinName(brainPin), sizeof(physicalPinName) - 1);
+		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" (%s) required by \"%s\" but is used by \"%s\"",
 				hwPortname(brainPin),
+				physicalPinName,
 				msg,
 				getBrainUsedPin(index));
 		return true;
@@ -194,16 +198,12 @@ __attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e /*brainPi
 	return nullptr;
 }
 
-const char *hwPortname(brain_pin_e brainPin) {
+const char *hwPhysicalPinName(Gpio brainPin) {
 	if (brainPin == Gpio::Invalid) {
 		return "INVALID";
 	}
 	if (brainPin == Gpio::Unassigned) {
 		return "NONE";
-	}
-	const char * boardSpecificPinName = getBoardSpecificPinName(brainPin);
-	if (boardSpecificPinName != nullptr) {
-		return boardSpecificPinName;
 	}
 
 	portNameStream.eos = 0; // reset
@@ -233,6 +233,14 @@ const char *hwPortname(brain_pin_e brainPin) {
 	portNameStream.buffer[portNameStream.eos] = 0; // need to terminate explicitly
 
 	return portNameBuffer;
+}
+
+const char *hwPortname(brain_pin_e brainPin) {
+	const char * boardSpecificPinName = getBoardSpecificPinName(brainPin);
+	if (boardSpecificPinName != nullptr) {
+		return boardSpecificPinName;
+	}
+	return hwPhysicalPinName(brainPin);
 }
 
 void initPinRepository(void) {
@@ -306,7 +314,10 @@ const char *getPinFunction(brain_input_pin_e brainPin) {
 	return getBrainUsedPin(index);
 }
 #else
-const char *hwPortname(brain_pin_e brainPin) {
+const char *hwPhysicalPinName(Gpio brainPin) {
+	return "N/A";
+}
+const char *hwPortname(Gpio brainPin) {
 	(void)brainPin;
 	return "N/A";
 }
