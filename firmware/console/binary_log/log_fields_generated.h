@@ -322,6 +322,9 @@ static constexpr LogField fields[] = {
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.sdAirMassInOneCylinder, "Air: Cylinder airmass", "g", 3},
 #endif
+#if EFI_ENGINE_CONTROL
+	{engine->fuelComputer.normalizedCylinderFilling, "Air: Normalized cyl filling", "%", 1},
+#endif
 	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.sparkDwell, "Ignition: coil charge time", "ms", 1, "Timing"},
 	{engine->ignitionState.dwellAngle, "Ignition: dwell duration", "deg", 1, "Timing"},

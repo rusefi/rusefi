@@ -781,6 +781,11 @@ float getOutputValueByName(const char *name) {
 		case 1650433343:
 			return engine->fuelComputer.sdAirMassInOneCylinder;
 #endif
+// normalizedCylinderFilling
+#if EFI_ENGINE_CONTROL
+		case 1599780729:
+			return engine->fuelComputer.normalizedCylinderFilling;
+#endif
 // injectorHwIssue
 #if EFI_ENGINE_CONTROL
 		case -1237512821:
