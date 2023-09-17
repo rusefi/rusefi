@@ -1108,8 +1108,9 @@ struct engine_configuration_s {
 	// get invertCamVVTSignal
 	// offset 808 bit 11
 	bool invertCamVVTSignal : 1 {};
+	// In Alpha-N mode, compensate for air temperature.
 	// offset 808 bit 12
-	bool unused804b12 : 1 {};
+	bool alphaNUseIat : 1 {};
 	// offset 808 bit 13
 	bool knockBankCyl1 : 1 {};
 	// offset 808 bit 14

@@ -977,7 +977,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1575905700;
+	public static final int SIGNATURE_HASH = 1568315850;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1179,7 +1179,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.17.f407-discovery.1575905700";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.17.f407-discovery.1568315850";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1384;
@@ -1596,6 +1596,7 @@ public class Fields {
 	public static final Field ENABLESOFTWAREKNOCK = Field.create("ENABLESOFTWAREKNOCK", 808, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field VERBOSEVVTDECODING = Field.create("VERBOSEVVTDECODING", 808, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field INVERTCAMVVTSIGNAL = Field.create("INVERTCAMVVTSIGNAL", 808, FieldType.BIT, 11).setBaseOffset(0);
+	public static final Field ALPHANUSEIAT = Field.create("ALPHANUSEIAT", 808, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field KNOCKBANKCYL1 = Field.create("KNOCKBANKCYL1", 808, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field KNOCKBANKCYL2 = Field.create("KNOCKBANKCYL2", 808, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field KNOCKBANKCYL3 = Field.create("KNOCKBANKCYL3", 808, FieldType.BIT, 15).setBaseOffset(0);
@@ -2963,6 +2964,7 @@ public class Fields {
 	ENABLESOFTWAREKNOCK,
 	VERBOSEVVTDECODING,
 	INVERTCAMVVTSIGNAL,
+	ALPHANUSEIAT,
 	KNOCKBANKCYL1,
 	KNOCKBANKCYL2,
 	KNOCKBANKCYL3,

@@ -529,6 +529,9 @@ Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
 ### invertCamVVTSignal
 get invertCamVVTSignal
 
+### alphaNUseIat
+In Alpha-N mode, compensate for air temperature.
+
 ### knockBankCyl1
 
 
