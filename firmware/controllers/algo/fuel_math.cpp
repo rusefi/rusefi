@@ -177,7 +177,9 @@ static float getBaseFuelMass(int rpm) {
 	auto airmass = model->getAirmass(rpm, true);
 
 	// Plop some state for others to read
+	float normalizedCylinderFilling = 100 * airmass.CylinderAirmass / getStandardAirCharge();
 	engine->fuelComputer.sdAirMassInOneCylinder = airmass.CylinderAirmass;
+	engine->fuelComputer.normalizedCylinderFilling = normalizedCylinderFilling;
 	engine->engineState.fuelingLoad = airmass.EngineLoadPercent;
 	engine->engineState.ignitionLoad = engine->fuelComputer.getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
 	
