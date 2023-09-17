@@ -73,8 +73,7 @@ void setBoardConfigOverrides() {
 
     setDefaultHellenAtPullUps();
 
-	engineConfiguration->canTxPin = H176_CAN_TX;
-	engineConfiguration->canRxPin = H176_CAN_RX;
+	setHellenCan();
 }
 
 /**

@@ -6,8 +6,8 @@ void hellenWbo() {
 }
 
 void setHellenCan() {
-	engineConfiguration->canTxPin = Gpio::D1;
-	engineConfiguration->canRxPin = Gpio::D0;
+	engineConfiguration->canTxPin = H176_CAN_TX;
+	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
 void setHellen64Can() {

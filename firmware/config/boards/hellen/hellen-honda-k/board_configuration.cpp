@@ -111,8 +111,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->enableSoftwareKnock = true;
 
-	engineConfiguration->canTxPin = H176_CAN_TX;
-	engineConfiguration->canRxPin = H176_CAN_RX;
+	setHellenCan();
 
     engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM4;
 

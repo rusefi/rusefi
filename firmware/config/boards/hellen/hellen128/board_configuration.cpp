@@ -139,8 +139,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 2700;
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
-	engineConfiguration->canTxPin = H176_CAN_TX;
-	engineConfiguration->canRxPin = H176_CAN_RX;
+	setHellenCan();
 }
 
 /**

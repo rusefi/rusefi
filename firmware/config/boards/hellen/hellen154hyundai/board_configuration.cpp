@@ -146,8 +146,7 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->canTxPin = H176_CAN_TX;
-	engineConfiguration->canRxPin = H176_CAN_RX;
+	setHellenCan();
 
 	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO9;
 	engineConfiguration->fanPin = Gpio::H144_OUT_IO7;
