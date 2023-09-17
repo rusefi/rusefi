@@ -115,7 +115,9 @@ void setBoardConfigOverrides() {
 	                    hellenBoardId == BOARD_ID_ALPHA2CH_E ||
 	                    hellenBoardId == BOARD_ID_ALPHA2CH_F;
 
-	if (!isBeforeRevG) {
+	if (isBeforeRevG) {
+	    engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM6;
+	} else {
 	    engineConfiguration->vrThreshold[0].pin = Gpio::Unassigned; // rev G started to use MAX9924
 	}
 
@@ -164,7 +166,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
-	engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM6;
 }
 
 void boardPrepareForStop() {

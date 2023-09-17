@@ -107,7 +107,7 @@ pins:
     meta: H144_IN_CLT
     class: analog_inputs
     function: CLT Sensor Input
-    ts_name: B7 - CLT
+    ts_name: ___ - CLT
     color: orange
 
   - pin: B8
@@ -115,7 +115,7 @@ pins:
     function: Injector B Output
     class: outputs
     type: inj
-    ts_name: B8 - Injector B
+    ts_name: ___ - Injector B
     color: blue
 
   - pin: C1
@@ -123,7 +123,7 @@ pins:
     class: outputs
     function: Fan Relay or 5A Power Output (low)
     type: ls
-    ts_name: C1 - Fan Relay
+    ts_name: ___ - Fan Relay
     color: purple
 
   - pin: C2
@@ -131,7 +131,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Crank Sensor -
     type: hall
-    ts_name: C2 - Crank- (hall)
+    ts_name: ___ - Crank- (hall)
     color: white
 
   - pin: C3
@@ -139,7 +139,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Crank Sensor +
     type: hall
-    ts_name: C3 - Crank+ (hall)
+    ts_name: ___ - Crank+ (hall)
     color: gray
 
   - pin: C2C3
@@ -173,7 +173,7 @@ pins:
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Camshaft HALL Sensor or Generic Digital Input
     type: hall
-    ts_name: C7 - CAM Hall/Digital
+    ts_name: ___ - CAM Hall/Digital
     color: brown
 
   - pin: C8
@@ -181,7 +181,7 @@ pins:
     class: outputs
     function: Idle Output (low)
     type: ls
-    ts_name: C8 - Idle
+    ts_name: ___ - Idle
     color: purple
 
 info:
