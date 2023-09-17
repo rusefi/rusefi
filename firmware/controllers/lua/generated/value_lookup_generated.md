@@ -544,6 +544,9 @@ If enabled we use two H-bridges to drive stepper idle air valve
 ### unfinishedenableLaunchBoost
 
 
+### consumeObdSensors
+This property is useful if using rusEFI as TCM or BCM only
+
 ### enableCanVss
 Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 
@@ -568,8 +571,8 @@ Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
 ### invertCamVVTSignal
 get invertCamVVTSignal
 
-### consumeObdSensors
-This property is useful if using rusEFI as TCM or BCM only\nenable consumeObdSensors
+### alphaNUseIat
+In Alpha-N mode, compensate for air temperature.
 
 ### knockBankCyl1
 

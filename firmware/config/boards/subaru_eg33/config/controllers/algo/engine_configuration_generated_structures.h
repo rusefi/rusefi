@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 17 13:50:39 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 17 14:47:27 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2015,8 +2015,9 @@ struct engine_configuration_s {
 	offset 912 bit 5 */
 	bool unfinishedenableLaunchBoost : 1 {};
 	/**
+	 * This property is useful if using rusEFI as TCM or BCM only
 	offset 912 bit 6 */
-	bool unusedBitLDBS : 1 {};
+	bool consumeObdSensors : 1 {};
 	/**
 	 * Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	offset 912 bit 7 */
@@ -2047,10 +2048,9 @@ struct engine_configuration_s {
 	offset 912 bit 14 */
 	bool invertCamVVTSignal : 1 {};
 	/**
-	 * This property is useful if using rusEFI as TCM or BCM only
-	 * enable consumeObdSensors
+	 * In Alpha-N mode, compensate for air temperature.
 	offset 912 bit 15 */
-	bool consumeObdSensors : 1 {};
+	bool alphaNUseIat : 1 {};
 	/**
 	offset 912 bit 16 */
 	bool knockBankCyl1 : 1 {};
@@ -5311,4 +5311,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 17 13:50:39 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 17 14:47:27 UTC 2023

@@ -550,6 +550,9 @@ float getConfigValueByName(const char *name) {
 // unfinishedenableLaunchBoost
 		case -246028069:
 			return engineConfiguration->unfinishedenableLaunchBoost;
+// consumeObdSensors
+		case 950993889:
+			return engineConfiguration->consumeObdSensors;
 // enableCanVss
 		case 245947066:
 			return engineConfiguration->enableCanVss;
@@ -574,9 +577,9 @@ float getConfigValueByName(const char *name) {
 // invertCamVVTSignal
 		case 1081026348:
 			return engineConfiguration->invertCamVVTSignal;
-// consumeObdSensors
-		case 950993889:
-			return engineConfiguration->consumeObdSensors;
+// alphaNUseIat
+		case -253720028:
+			return engineConfiguration->alphaNUseIat;
 // knockBankCyl1
 		case 1509355728:
 			return engineConfiguration->knockBankCyl1;
@@ -2546,6 +2549,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->unfinishedenableLaunchBoost = (int)value;
 		return 1;
 	}
+		case 950993889:
+	{
+		engineConfiguration->consumeObdSensors = (int)value;
+		return 1;
+	}
 		case 245947066:
 	{
 		engineConfiguration->enableCanVss = (int)value;
@@ -2586,9 +2594,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->invertCamVVTSignal = (int)value;
 		return 1;
 	}
-		case 950993889:
+		case -253720028:
 	{
-		engineConfiguration->consumeObdSensors = (int)value;
+		engineConfiguration->alphaNUseIat = (int)value;
 		return 1;
 	}
 		case 1509355728:
