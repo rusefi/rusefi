@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 10 01:31:23 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 17 13:52:52 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -827,6 +827,7 @@ struct engine_configuration_s {
 	/**
 	 * We calculate knock band based of cylinderBore
 	 *  Use this to override - kHz knock band override
+	 * Requires power cycling to effect
 	kHz
 	 * offset 360
 	 */
@@ -5310,4 +5311,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 10 01:31:23 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 17 13:52:52 UTC 2023
