@@ -877,7 +877,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit multisparkEnable
 	bit enableLaunchRetard
 	bit unfinishedenableLaunchBoost
-	bit unusedBitLDBS
+	bit consumeObdSensors;This property is useful if using rusEFI as TCM or BCM only
 	bit enableCanVss;Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
@@ -886,7 +886,6 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
-	bit consumeObdSensors;This property is useful if using rusEFI as TCM or BCM only\nenable consumeObdSensors
 	bit knockBankCyl1,"Channel 2","Channel 1"
 	bit knockBankCyl2,"Channel 2","Channel 1"
 	bit knockBankCyl3,"Channel 2","Channel 1"
