@@ -15,9 +15,9 @@ import com.rusefi.stream.TSHighSpeedLog;
 import com.rusefi.stream.VcdStreamFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
@@ -32,7 +32,7 @@ public class BinaryProtocolLogger {
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
-    private final List<StreamFile> compositeLogs = new ArrayList<>();
+    private final List<StreamFile> compositeLogs = new CopyOnWriteArrayList();
 
     private final SensorCentral.SensorListener rpmListener;
     private final Thread hook = new Thread(() -> closeComposites(), "BinaryProtocol::hook");
