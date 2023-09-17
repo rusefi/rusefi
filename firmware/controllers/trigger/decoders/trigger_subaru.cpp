@@ -53,9 +53,11 @@ void initialize36_2_2_2(TriggerWaveform *s) {
 	s->knownOperationMode = false;
 #endif // EFI_UNIT_TEST
 
-	s->setTriggerSynchronizationGap(0.333f);
-	s->setSecondTriggerSynchronizationGap(1.0f);
-	s->setThirdTriggerSynchronizationGap(3.0f);
+    // 36/2/2/2 data from https://rusefi.com/online/view.php?log=1287
+    // todo: probably should be unified with EZ30 below?
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.25, 0.5);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.7, 1.7);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2.6, 4.2);
 }
 
 void initializeSubaruEZ30(TriggerWaveform *s) {
