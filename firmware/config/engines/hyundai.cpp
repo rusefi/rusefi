@@ -12,6 +12,7 @@ https://rusefi.com/docs/pinouts/hellen/hellen154hyundai/
 
 #include "hyundai.h"
 #include "proteus_meta.h"
+#include "hellen_meta.h"
 #include "defaults.h"
 #include "lua_lib.h"
 
@@ -78,9 +79,18 @@ void setHyundaiPb() {
    	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
    	// page 98, Fuel System > Engine Control System > Rail Pressure Sensor (RPS) > Specifications
    	engineConfiguration->highPressureFuel.value2 = 20'000;
-	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
+
+#if HW_HELLEN_4CHAN
+	engineConfiguration->highPressureFuel.hwChannel = H144_IN_O2S2;
+
+    engineConfiguration->hpfpValvePin = Gpio::H144_OUT_IO6; // E2
+	engineConfiguration->starterControlPin = Gpio::H144_OUT_PWM5; // F1
+	engineConfiguration->startStopButtonPin = Gpio::H144_IN_VSS; // C4
+	engineConfiguration->camInputs[0] = Gpio::H144_IN_D_4; // E6
+#endif // HW_HELLEN_4CHAN
 
 #if HW_PROTEUS
+	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
 	setCommonNTCSensor(&engineConfiguration->clt, PROTEUS_DEFAULT_AT_PULLUP);
 	setCommonNTCSensor(&engineConfiguration->iat, PROTEUS_DEFAULT_AT_PULLUP);
 
@@ -103,10 +113,10 @@ void setHyundaiPb() {
 // something something input levels are not happy for digital input pin?
 	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
 	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
-	engineConfiguration->startStopButtonMode = PI_DEFAULT;
 #endif // HW_PROTEUS
+	engineConfiguration->startStopButtonMode = PI_DEFAULT;
 
-#if HW_PROTEUS
+#if HW_PROTEUS || HW_HELLEN_4CHAN
 	strncpy(config->luaScript, GET_BIT_RANGE_LSB TWO_BYTES_LSB PRINT_ARRAY SET_TWO_BYTES_LSB HYUNDAI_SUM_NIBBLES R"(
 
 GDI4_BASE_ADDRESS = 0xBB20
