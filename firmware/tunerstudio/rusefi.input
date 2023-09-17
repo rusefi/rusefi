@@ -4560,11 +4560,11 @@ dialog = tcuControls, "Transmission Settings"
 		text = "<img src='https://rusefi.com/style/logo_100.gif'>"
 
 	dialog = vrThreshold1, "VR 1 Threshold"
-		field = "Pin", vrThreshold1_pin
+		field = "Pin", vrThreshold1_pin@@if_ts_show_vr_threshold_pins
 		panel = vrThresholdCurve1
 
 	dialog = vrThreshold2, "VR 2 Threshold"
-		field = "Pin", vrThreshold2_pin
+		field = "Pin", vrThreshold2_pin@@if_ts_show_vr_threshold_pins
 		panel = vrThresholdCurve2
 
 	dialog = vrThreshold
