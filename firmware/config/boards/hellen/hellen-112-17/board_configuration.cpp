@@ -56,12 +56,14 @@ static void setupDefaultSensorInputs() {
 #include "hellen_leds_100.cpp"
 
 void setBoardConfigOverrides() {
+	// rev A needs EN pin but newer revisions would potentially not use it
 	setHellenMegaEnPin();
 	setupVbatt();
 
 	setHellenSdCardSpi1();
 	configureHellenMegaAccCS2Pin();
 	configureHellenCanTerminator();
+	setHellenCan();
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
