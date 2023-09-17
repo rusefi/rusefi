@@ -486,6 +486,8 @@ float getOutputValueByName(const char *name) {
 			return engine->fuelComputer.sdTcharge_coff;
 		case 1650433343:
 			return engine->fuelComputer.sdAirMassInOneCylinder;
+		case 1599780729:
+			return engine->fuelComputer.normalizedCylinderFilling;
 		case -1777838088:
 			return engine->ignitionState.baseDwell;
 		case -903101570:

@@ -294,6 +294,7 @@ static constexpr LogField fields[] = {
 	{engine->fuelComputer.stoichiometricRatio, "Fuel: Stoich ratio", "ratio", 2},
 	{engine->fuelComputer.sdTcharge_coff, "sdTcharge_coff", "", 0},
 	{engine->fuelComputer.sdAirMassInOneCylinder, "Air: Cylinder airmass", "g", 3},
+	{engine->fuelComputer.normalizedCylinderFilling, "Air: Normalized cyl filling", "%", 1},
 	{engine->ignitionState.baseDwell, "baseDwell", "ms", 1},
 	{engine->ignitionState.sparkDwell, "Ign: Dwell", "ms", 1},
 	{engine->ignitionState.dwellAngle, "ignition dwell duration", "deg", 1},

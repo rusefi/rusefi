@@ -53,6 +53,10 @@ struct fuel_computer_s {
 	// g
 	// offset 36
 	float sdAirMassInOneCylinder = (float)0;
+	// Air: Normalized cyl filling
+	// %
+	// offset 40
+	float normalizedCylinderFilling = (float)0;
 };
-static_assert(sizeof(fuel_computer_s) == 40);
+static_assert(sizeof(fuel_computer_s) == 44);
 
