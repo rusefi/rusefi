@@ -2285,6 +2285,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Enabled",						isInjectionEnabled
 		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
 		field = "#Batch injection with individual wiring"
+		field = "Alpha-N uses IAT density correction",	alphaNUseIat, { fuelAlgorithm == @@engine_load_mode_e_LM_ALPHA_N@@ }
 		field = "Override VE table load axis",			veOverrideMode, { isInjectionEnabled }
 		field = "Override AFR table load axis",			afrOverrideMode, { isInjectionEnabled }
 		field = "Injection phase control mode",				injectionTimingMode, { isInjectionEnabled }
