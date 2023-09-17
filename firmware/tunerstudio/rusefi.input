@@ -4339,9 +4339,9 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "microRusEFI Subaru EJ18",		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
-		commandButton = "Hyundai PB",		cmd_set_engine_type_PROTEUS_HYUNDAI_PB@@if_show_Proteus_presets
-		commandButton = "Hyundai PB",		cmd_set_engine_type_PROTEUS_HYUNDAI_PB@@if_show_4chan_presets
-		commandButton = "Hyundai PB",		cmd_set_engine_type_PROTEUS_HYUNDAI_PB@@if_show_8chan_presets
+		commandButton = "Hyundai PB",		        cmd_set_engine_type_HYUNDAI_PB@@if_show_Proteus_presets
+		commandButton = "Hyundai PB",		        cmd_set_engine_type_HYUNDAI_PB@@if_show_4chan_presets
+		commandButton = "Hyundai PB",		        cmd_set_engine_type_HYUNDAI_PB@@if_show_8chan_presets
 
 		commandButton = "Proteus Nissan VQ",		cmd_set_engine_type_PROTEUS_NISSAN_VQ35@@if_show_Proteus_presets
 		commandButton = "Proteus M111",		        cmd_set_engine_type_PROTEUS_M111@@if_show_Proteus_presets
