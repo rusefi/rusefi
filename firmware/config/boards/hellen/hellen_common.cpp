@@ -5,6 +5,7 @@ void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
+// same for MM100, 144 and 176
 void setHellenCan() {
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
@@ -27,6 +28,7 @@ void setHellenEnPin(Gpio pin) {
 }
 
 void setHellenMegaEnPin() {
+    // H144_GP8 matches MM100_GP8 is used as PWR_EN on early mm100
     setHellenEnPin(H144_GP8); // OUT_PWR_EN
 }
 

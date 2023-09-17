@@ -91,6 +91,7 @@
 
 #define MM100_USB1ID A10
 
+// matches H144_GP8
 //GP8 = PWR_EN
 #define MM100_GP8 E10
 
