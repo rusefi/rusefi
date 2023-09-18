@@ -1668,7 +1668,7 @@ uint16_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0, 1, 0
 
-uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale mapEstimateTable;;"kPa", 0.01, 0, 0, 600, 2
+uint16_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale mapEstimateTable;;"kPa", 0.01, 0, 0, 600, 2
 uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
@@ -1689,9 +1689,9 @@ uint16_t[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 1000, 0
 uint16_t[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 #if LAMBDA
-uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale lambdaTable;;"lambda", {1/@@PACK_MULT_LAMBDA_CFG@@}, 0, 0.6, 1.5, 2
+uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;"lambda", {1/@@PACK_MULT_LAMBDA_CFG@@}, 0, 0.6, 1.5, 2
 #else
-uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale lambdaTable;;"afr", {1/@@PACK_MULT_AFR_CFG@@}, 0, 0, 25, 1
+uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;"afr", {1/@@PACK_MULT_AFR_CFG@@}, 0, 0, 25, 1
 #endif
 
 ! union
