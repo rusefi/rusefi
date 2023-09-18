@@ -8,6 +8,8 @@ case SensorType::AcceleratorPedalPrimary:
   return "AcceleratorPedalPrimary";
 case SensorType::AcceleratorPedalSecondary:
   return "AcceleratorPedalSecondary";
+case SensorType::AmbientTemperature:
+  return "AmbientTemperature";
 case SensorType::AuxAnalog1:
   return "AuxAnalog1";
 case SensorType::AuxAnalog2:
@@ -42,6 +44,10 @@ case SensorType::BatteryVoltage:
   return "BatteryVoltage";
 case SensorType::Clt:
   return "Clt";
+case SensorType::CompressorDischargePressure:
+  return "CompressorDischargePressure";
+case SensorType::CompressorDischargeTemperature:
+  return "CompressorDischargeTemperature";
 case SensorType::DetectedGear:
   return "DetectedGear";
 case SensorType::DriverThrottleIntent:
@@ -60,6 +66,8 @@ case SensorType::FuelPressureInjector:
   return "FuelPressureInjector";
 case SensorType::FuelPressureLow:
   return "FuelPressureLow";
+case SensorType::FuelTemperature:
+  return "FuelTemperature";
 case SensorType::Iat:
   return "Iat";
 case SensorType::InputShaftSpeed:
@@ -92,6 +100,8 @@ case SensorType::MapSlow2:
   return "MapSlow2";
 case SensorType::OilPressure:
   return "OilPressure";
+case SensorType::OilTemperature:
+  return "OilTemperature";
 case SensorType::PlaceholderLast:
   return "PlaceholderLast";
 case SensorType::Rpm:
