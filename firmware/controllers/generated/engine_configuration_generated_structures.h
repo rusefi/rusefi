@@ -2373,9 +2373,15 @@ struct engine_configuration_s {
 	ThermistorConf ambientTempSensor;
 	// offset 3704
 	ThermistorConf compressorDischargeTemperature;
-	// units
+	// Place the sensor before the throttle, but after any turbocharger/supercharger and intercoolers if fitted. Uses the same calibration as the MAP sensor.
 	// offset 3736
-	uint8_t mainUnusedEnd[256];
+	adc_channel_e throttleInletPressureChannel;
+	// Place the sensor after the turbocharger/supercharger, but before any intercoolers if fitted. Uses the same calibration as the MAP sensor.
+	// offset 3737
+	adc_channel_e compressorDischargePressureChannel;
+	// units
+	// offset 3738
+	uint8_t mainUnusedEnd[254];
 };
 static_assert(sizeof(engine_configuration_s) == 3992);
 

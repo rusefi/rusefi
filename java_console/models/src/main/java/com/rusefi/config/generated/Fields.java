@@ -1178,7 +1178,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.18.f407-discovery.4135413557";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.18.f407-discovery.3345710428";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1384;
@@ -2387,7 +2387,9 @@ public class Fields {
 	public static final Field COMPRESSORDISCHARGETEMPERATURE_BIAS_RESISTOR = Field.create("COMPRESSORDISCHARGETEMPERATURE_BIAS_RESISTOR", 3728, FieldType.INT).setScale(0.1).setBaseOffset(0);
 	public static final Field COMPRESSORDISCHARGETEMPERATURE_ADCCHANNEL = Field.create("COMPRESSORDISCHARGETEMPERATURE_ADCCHANNEL", 3732, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field COMPRESSORDISCHARGETEMPERATURE_ALIGNMENTFILL_AT_29 = Field.create("COMPRESSORDISCHARGETEMPERATURE_ALIGNMENTFILL_AT_29", 3733, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3736, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field THROTTLEINLETPRESSURECHANNEL = Field.create("THROTTLEINLETPRESSURECHANNEL", 3736, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field COMPRESSORDISCHARGEPRESSURECHANNEL = Field.create("COMPRESSORDISCHARGEPRESSURECHANNEL", 3737, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3738, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 3992, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4024, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4056, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3781,6 +3783,8 @@ public class Fields {
 	COMPRESSORDISCHARGETEMPERATURE_BIAS_RESISTOR,
 	COMPRESSORDISCHARGETEMPERATURE_ADCCHANNEL,
 	COMPRESSORDISCHARGETEMPERATURE_ALIGNMENTFILL_AT_29,
+	THROTTLEINLETPRESSURECHANNEL,
+	COMPRESSORDISCHARGEPRESSURECHANNEL,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

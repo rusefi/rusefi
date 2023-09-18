@@ -460,6 +460,18 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.Gego;
 		case 1092959609:
 			return engine->outputChannels.testBenchIter;
+		case 1628523935:
+			return engine->outputChannels.oilTemp;
+		case -1077373465:
+			return engine->outputChannels.fuelTemp;
+		case 309572379:
+			return engine->outputChannels.ambientTemp;
+		case 553570450:
+			return engine->outputChannels.compressorDischargeTemp;
+		case 1404346549:
+			return engine->outputChannels.compressorDischargePressure;
+		case 769340240:
+			return engine->outputChannels.throttleInletPressure;
 		case -1779658835:
 			return engine->fuelComputer.totalFuelCorrection;
 		case -1288205717:

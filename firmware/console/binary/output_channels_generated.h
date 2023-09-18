@@ -748,8 +748,26 @@ struct output_channels_s {
 	// count
 	// offset 676
 	uint16_t testBenchIter = (uint16_t)0;
+	// deg C
 	// offset 678
-	uint8_t unusedAtTheEnd[140];
+	scaled_channel<int16_t, 100, 1> oilTemp = (int16_t)0;
+	// deg C
+	// offset 680
+	scaled_channel<int16_t, 100, 1> fuelTemp = (int16_t)0;
+	// deg C
+	// offset 682
+	scaled_channel<int16_t, 100, 1> ambientTemp = (int16_t)0;
+	// deg C
+	// offset 684
+	scaled_channel<int16_t, 100, 1> compressorDischargeTemp = (int16_t)0;
+	// kPa
+	// offset 686
+	scaled_channel<uint16_t, 30, 1> compressorDischargePressure = (uint16_t)0;
+	// kPa
+	// offset 688
+	scaled_channel<uint16_t, 30, 1> throttleInletPressure = (uint16_t)0;
+	// offset 690
+	uint8_t unusedAtTheEnd[128];
 	// offset 818
 	uint8_t alignmentFill_at_818[2];
 };
