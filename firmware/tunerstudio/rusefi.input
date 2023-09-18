@@ -1858,6 +1858,10 @@ menuDialog = main
 		subMenu = iatSensor,				"IAT sensor"
 		subMenu = auxTempSensor1Sensor,		"AuxTemp1 sensor"
 		subMenu = auxTempSensor2Sensor,		"AuxTemp2 sensor"
+		subMenu = oilTempSensor,			"Oil temp sensor"
+		subMenu = fuelTempSensor,			"Fuel temp sensor"
+		subMenu = ambientTempSensor,		"Ambient temp sensor"
+		subMenu = compressorDischargeTemperature,	"Compressor discharge temp"
 		subMenu = std_separator
 
 		# TPS/pedal
@@ -2582,14 +2586,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = dwellCorrection
 		panel = dwellVoltageCorrection
 
-;			Sensors->AUX1 Thermistor Sensor Setting
 	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
 		field = "Input channel",			auxTempSensor1_adcChannel
-		field = "Bias resistor",				auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Pullup resistor",				auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 
-		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
-		field = ""
 		field = "Lowest temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
@@ -2599,14 +2599,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Highest temperature",					auxTempSensor1_tempC_3, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Resistance @ HT",						auxTempSensor1_resistance_3, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 
-;			Sensors->AUX2 Thermistor Sensor Setting
 	dialog = auxTempSensor2Sensor, "aux2 Thermistor Settings"
 		field = "Input channel",						auxTempSensor2_adcChannel
-		field = "Bias resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Pullup resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 
-		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
-		field = ""
 		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
@@ -2615,6 +2611,62 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = ""
 		field = "Highest temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+	dialog = oilTempSensor,	"Oil Temp Sensor Settings"
+		field = "Input channel",			oilTempSensor_adcChannel
+		field = "Pullup resistor",			oilTempSensor_bias_resistor, {oilTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+		field = "Lowest temperature",		oilTempSensor_tempC_1, {oilTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",			oilTempSensor_resistance_1, {oilTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = ""
+		field = "Middle temperature",		oilTempSensor_tempC_2, {oilTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",			oilTempSensor_resistance_2, {oilTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = ""
+		field = "Highest temperature",		oilTempSensor_tempC_3, {oilTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",			oilTempSensor_resistance_3, {oilTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+	dialog = fuelTempSensor,	"Fuel Temp Sensor Settings"
+		field = "Input channel",			fuelTempSensor_adcChannel
+		field = "Pullup resistor",			fuelTempSensor_bias_resistor, {fuelTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+		field = "Lowest temperature",		fuelTempSensor_tempC_1, {fuelTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",			fuelTempSensor_resistance_1, {fuelTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = ""
+		field = "Middle temperature",		fuelTempSensor_tempC_2, {fuelTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",			fuelTempSensor_resistance_2, {fuelTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = ""
+		field = "Highest temperature",		fuelTempSensor_tempC_3, {fuelTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",			fuelTempSensor_resistance_3, {fuelTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+	dialog = ambientTempSensor,	"Ambient Temp Sensor Settings"
+		field = "!Put this sensor before any turbocharger/supercharger"
+		field = "!near the air filter."
+		field = "Input channel",			ambientTempSensor_adcChannel
+		field = "Pullup resistor",			ambientTempSensor_bias_resistor, {ambientTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+		field = "Lowest temperature",		ambientTempSensor_tempC_1, {ambientTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",			ambientTempSensor_resistance_1, {ambientTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = ""
+		field = "Middle temperature",		ambientTempSensor_tempC_2, {ambientTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",			ambientTempSensor_resistance_2, {ambientTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = ""
+		field = "Highest temperature",		ambientTempSensor_tempC_3, {ambientTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",			ambientTempSensor_resistance_3, {ambientTempSensor_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+	dialog = compressorDischargeTemperature,	"Compressor Discharge Temp Settings"
+		field = "!Put this sensor after the turbocharger/supercharger"
+		field = "!but before the intercooler."
+		field = "Input channel",			compressorDischargeTemperature_adcChannel
+		field = "Pullup resistor",			compressorDischargeTemperature_bias_resistor, {compressorDischargeTemperature_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+		field = "Lowest temperature",		compressorDischargeTemperature_tempC_1, {compressorDischargeTemperature_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",			compressorDischargeTemperature_resistance_1, {compressorDischargeTemperature_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = ""
+		field = "Middle temperature",		compressorDischargeTemperature_tempC_2, {compressorDischargeTemperature_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",			compressorDischargeTemperature_resistance_2, {compressorDischargeTemperature_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = ""
+		field = "Highest temperature",		compressorDischargeTemperature_tempC_3, {compressorDischargeTemperature_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",			compressorDischargeTemperature_resistance_3, {compressorDischargeTemperature_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsNum1, "Throttle Body #1"
 		field = "Primary sensor",				tps1_1AdcChannel
@@ -2908,11 +2960,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = allPins2_1_and_2
 		panel = allPins2_3
 
-
-;			Sensors->CLT sensor
 	dialog = clt_thermistor, "CLT sensor"
 		field = "Input channel",						clt_adcChannel
-		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}@@if_ts_show_clt_iat_pullup
+		field = "Pullup resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}@@if_ts_show_clt_iat_pullup
 
 		settingSelector = "Common CLT Sensors"
 			settingOption = "GM CLT", clt_tempC_1=0,clt_resistance_1=9240,clt_tempC_2=40,clt_resistance_2=1459,clt_tempC_3=100,clt_resistance_3=177,useLinearCltSensor=0
@@ -2920,8 +2970,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 			settingOption = "Miata NB", clt_tempC_1=-10,clt_resistance_1=9000,clt_tempC_2=20,clt_resistance_2=2500,clt_tempC_3=80,clt_resistance_3=320,useLinearCltSensor=0
 			settingOption = "Bosch Various", clt_tempC_1=0,clt_resistance_1=5896,clt_tempC_2=50,clt_resistance_2=834,clt_tempC_3=100,clt_resistance_3=187,useLinearCltSensor=0
 
-		field = "#Input three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",					clt_tempC_1, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Resistance @ LT",								clt_resistance_1, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
@@ -2942,10 +2990,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = clt_thermistor, West
 		panel = cltGauges, East
 
-;			Sensors->IAT sensor
 	dialog = iat_thermistor, "IAT sensor"
 		field = "Input channel",						iat_adcChannel
-		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}@@if_ts_show_clt_iat_pullup
+		field = "Pullup resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}@@if_ts_show_clt_iat_pullup
 
 		settingSelector = "Common IAT Sensors", {iat_adcChannel != 0}
 			settingOption = "GM IAT", iat_tempC_1=8.9,iat_resistance_1=7000,iat_tempC_2=30.6,iat_resistance_2=1930,iat_tempC_3=63.3,iat_resistance_3=560,useLinearIatSensor=0
@@ -2953,8 +3000,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 			settingOption = "Miata MSM IAT2", iat_tempC_1=0,iat_resistance_1=112000,iat_tempC_2=40,iat_resistance_2=17000,iat_tempC_3=60,iat_resistance_3=8000,useLinearIatSensor=0
 			settingOption = "Bosch Various", iat_tempC_1=-10,iat_resistance_1=9397,iat_tempC_2=30,iat_resistance_2=1707,iat_tempC_3=70,iat_resistance_3=436,useLinearIatSensor=0
 
-		field = "#Input three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
@@ -2975,7 +3020,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = iat_thermistor, West
 		panel = iatGauges, East
 
-;			Sensors->Oil pressure sensor
 	dialog = oilp_settings, "Oil Pressure Sensor"
 		field = "Oil Pressure ADC input",				oilPressure_hwChannel
 		field = "low voltage",							oilPressure_v1, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
