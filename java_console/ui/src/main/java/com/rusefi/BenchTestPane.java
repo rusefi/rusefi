@@ -94,7 +94,7 @@ public class BenchTestPane {
     }
 
     private Component createFuelPumpTest() {
-        CommandControl panel = new FixedCommandControl(uiContext, "Fuel Pump", "fuel_pump.jpg", TEST, "fuelpumpbench");
+        CommandControl panel = new FixedCommandControl(uiContext, "Fuel Pump", "fuel_pump.jpg", TEST, CMD_FUEL_PUMP_BENCH);
         return panel.getContent();
     }
 
