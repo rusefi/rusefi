@@ -38,7 +38,7 @@ static const int8_t default_aspire_timing_table[16][16] = {
 #endif
 
 static void setDefaultAspireMaps() {
-#if (IGN_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	copyTable(config->ignitionTable, default_aspire_timing_table);
 #endif
 }

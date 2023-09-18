@@ -94,10 +94,10 @@ void setFordEscortGt() {
 		7000
 	};
 
+#if (IGN_RPM_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	copyArray(config->veRpmBins, veRpmBins);
-
-
 	copyTable(config->veTable, racingFestivaVeTable);
+#endif
 
 //	engineConfiguration->triggerInputPins[0] = Gpio::C6; // 2G YEL/BLU
 //	engineConfiguration->triggerInputPins[1] = Gpio::A5; // 2E White CKP
@@ -222,7 +222,7 @@ void setFordEscortGt() {
 		7000
 	};
 
-#if (IGN_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	copyArray(config->ignitionRpmBins, ignitionRpmBins);
 
 	copyTable(config->ignitionTable, racingFestivaIgnitionTable);

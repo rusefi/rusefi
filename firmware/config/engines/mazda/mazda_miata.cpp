@@ -140,7 +140,7 @@ void setFrankensteinMiata1996() {
 	commonMiataNa();
 	engineConfiguration->displacement = 1.839;
 
-#if (IGN_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	copyTable(config->ignitionTable, miataNA8_maf_advance_table);
 #endif
 
