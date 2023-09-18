@@ -34,6 +34,8 @@ float map[4][5] = {
 
 static float getValue(float rpm, float maf) {
 	Map3D<5, 4, float, float, float> x1;
+	// note "5, 4" above
+	// note "map[4][5], Bins[4], rpm[5] below
 	x1.init(map, mafBins, rpmBins);
 	float result1 = x1.getValue(rpm, maf);
 
