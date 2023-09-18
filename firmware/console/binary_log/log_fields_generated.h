@@ -160,7 +160,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.calibrationValue2, "calibrationValue2", "", 0},
 	{engine->outputChannels.luaInvocationCounter, "Lua: Tick counter", "count", 0},
 	{engine->outputChannels.luaLastCycleDuration, "Lua: Last tick duration", "nt", 0},
-	{engine->outputChannels.testBenchIter, "testBenchIter", "count", 0},
 	{engine->outputChannels.tcu_currentRange, "TCU: Current Range", "", 0},
 	{engine->outputChannels.tcRatio, "TCU: Torque Converter Ratio", "value", 0},
 	{engine->outputChannels.lastShiftTime, "lastShiftTime", "", 0},
@@ -283,6 +282,11 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.mafMeasured2, "MAF #2", "kg/h", 1},
 	{engine->outputChannels.vehicleSpeedKph, "Vehicle Speed", "kph", 2},
 	{engine->outputChannels.Gego, "Gego", "%", 2},
+	{engine->outputChannels.testBenchIter, "testBenchIter", "count", 0},
+	{engine->outputChannels.oilTemp, "oilTemp", "deg C", 1},
+	{engine->outputChannels.fuelTemp, "fuelTemp", "deg C", 1},
+	{engine->outputChannels.ambientTemp, "ambientTemp", "deg C", 1},
+	{engine->outputChannels.compressorDischargeTemp, "compressorDischargeTemp", "deg C", 1},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

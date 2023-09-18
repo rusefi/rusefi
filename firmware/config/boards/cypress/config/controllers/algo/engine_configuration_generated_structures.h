@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 18 12:22:40 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 18 12:56:55 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4418,10 +4418,20 @@ struct engine_configuration_s {
 	 */
 	ThermistorConf compressorDischargeTemperature;
 	/**
-	units
+	 * Place the sensor before the throttle, but after any turbocharger/supercharger and intercoolers if fitted. Uses the same calibration as the MAP sensor.
 	 * offset 4104
 	 */
-	uint8_t mainUnusedEnd[256];
+	adc_channel_e throttleInletPressureChannel;
+	/**
+	 * Place the sensor after the turbocharger/supercharger, but before any intercoolers if fitted. Uses the same calibration as the MAP sensor.
+	 * offset 4105
+	 */
+	adc_channel_e compressorDischargePressureChannel;
+	/**
+	units
+	 * offset 4106
+	 */
+	uint8_t mainUnusedEnd[254];
 };
 static_assert(sizeof(engine_configuration_s) == 4360);
 
@@ -5333,4 +5343,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23664);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 18 12:22:40 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 18 12:56:55 UTC 2023

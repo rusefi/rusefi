@@ -431,9 +431,6 @@ float getOutputValueByName(const char *name) {
 // luaLastCycleDuration
 		case 823476017:
 			return engine->outputChannels.luaLastCycleDuration;
-// testBenchIter
-		case 1092959609:
-			return engine->outputChannels.testBenchIter;
 // tcu_currentRange
 		case -518694176:
 			return engine->outputChannels.tcu_currentRange;
@@ -716,6 +713,21 @@ float getOutputValueByName(const char *name) {
 // Gego
 		case 2090288615:
 			return engine->outputChannels.Gego;
+// testBenchIter
+		case 1092959609:
+			return engine->outputChannels.testBenchIter;
+// oilTemp
+		case 1628523935:
+			return engine->outputChannels.oilTemp;
+// fuelTemp
+		case -1077373465:
+			return engine->outputChannels.fuelTemp;
+// ambientTemp
+		case 309572379:
+			return engine->outputChannels.ambientTemp;
+// compressorDischargeTemp
+		case 553570450:
+			return engine->outputChannels.compressorDischargeTemp;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

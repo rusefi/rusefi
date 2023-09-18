@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Aug 09 08:59:42 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 18 12:56:47 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -848,15 +848,16 @@ struct output_channels_s {
 	 */
 	uint32_t luaLastCycleDuration = (uint32_t)0;
 	/**
-	count
+	 * "TCU: Current Range"
 	 * offset 344
 	 */
-	uint8_t testBenchIter = (uint8_t)0;
+	uint8_t tcu_currentRange = (uint8_t)0;
 	/**
-	 * "TCU: Current Range"
+	 * need 4 byte alignment
+	units
 	 * offset 345
 	 */
-	uint8_t tcu_currentRange = (uint8_t)0;
+	uint8_t alignmentFill_at_345[1];
 	/**
 	 * @@GAUGE_NAME_TC_RATIO@@
 	value
@@ -1227,17 +1228,42 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> Gego = (uint16_t)0;
 	/**
+	count
 	 * offset 680
 	 */
-	uint8_t unusedAtTheEnd[134];
+	uint16_t testBenchIter = (uint16_t)0;
+	/**
+	deg C
+	 * offset 682
+	 */
+	scaled_channel<int16_t, 100, 1> oilTemp = (int16_t)0;
+	/**
+	deg C
+	 * offset 684
+	 */
+	scaled_channel<int16_t, 100, 1> fuelTemp = (int16_t)0;
+	/**
+	deg C
+	 * offset 686
+	 */
+	scaled_channel<int16_t, 100, 1> ambientTemp = (int16_t)0;
+	/**
+	deg C
+	 * offset 688
+	 */
+	scaled_channel<int16_t, 100, 1> compressorDischargeTemp = (int16_t)0;
+	/**
+	 * offset 690
+	 */
+	uint8_t unusedAtTheEnd[132];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 814
+	 * offset 822
 	 */
-	uint8_t alignmentFill_at_814[2];
+	uint8_t alignmentFill_at_822[2];
 };
-static_assert(sizeof(output_channels_s) == 816);
+static_assert(sizeof(output_channels_s) == 824);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Aug 09 08:59:42 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 18 12:56:47 UTC 2023
