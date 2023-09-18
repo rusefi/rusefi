@@ -1636,6 +1636,90 @@ float getConfigValueByName(const char *name) {
 // canVssScaling
 		case -846143628:
 			return engineConfiguration->canVssScaling;
+// oilTempSensor.config.tempC_1
+		case -1460957868:
+			return engineConfiguration->oilTempSensor.config.tempC_1;
+// oilTempSensor.config.tempC_2
+		case -1460957867:
+			return engineConfiguration->oilTempSensor.config.tempC_2;
+// oilTempSensor.config.tempC_3
+		case -1460957866:
+			return engineConfiguration->oilTempSensor.config.tempC_3;
+// oilTempSensor.config.resistance_1
+		case -1297544724:
+			return engineConfiguration->oilTempSensor.config.resistance_1;
+// oilTempSensor.config.resistance_2
+		case -1297544723:
+			return engineConfiguration->oilTempSensor.config.resistance_2;
+// oilTempSensor.config.resistance_3
+		case -1297544722:
+			return engineConfiguration->oilTempSensor.config.resistance_3;
+// oilTempSensor.config.bias_resistor
+		case -346622972:
+			return engineConfiguration->oilTempSensor.config.bias_resistor;
+// fuelTempSensor.config.tempC_1
+		case -713764196:
+			return engineConfiguration->fuelTempSensor.config.tempC_1;
+// fuelTempSensor.config.tempC_2
+		case -713764195:
+			return engineConfiguration->fuelTempSensor.config.tempC_2;
+// fuelTempSensor.config.tempC_3
+		case -713764194:
+			return engineConfiguration->fuelTempSensor.config.tempC_3;
+// fuelTempSensor.config.resistance_1
+		case -1195844556:
+			return engineConfiguration->fuelTempSensor.config.resistance_1;
+// fuelTempSensor.config.resistance_2
+		case -1195844555:
+			return engineConfiguration->fuelTempSensor.config.resistance_2;
+// fuelTempSensor.config.resistance_3
+		case -1195844554:
+			return engineConfiguration->fuelTempSensor.config.resistance_3;
+// fuelTempSensor.config.bias_resistor
+		case -1285484724:
+			return engineConfiguration->fuelTempSensor.config.bias_resistor;
+// ambientTempSensor.config.tempC_1
+		case 275986512:
+			return engineConfiguration->ambientTempSensor.config.tempC_1;
+// ambientTempSensor.config.tempC_2
+		case 275986513:
+			return engineConfiguration->ambientTempSensor.config.tempC_2;
+// ambientTempSensor.config.tempC_3
+		case 275986514:
+			return engineConfiguration->ambientTempSensor.config.tempC_3;
+// ambientTempSensor.config.resistance_1
+		case -1084296600:
+			return engineConfiguration->ambientTempSensor.config.resistance_1;
+// ambientTempSensor.config.resistance_2
+		case -1084296599:
+			return engineConfiguration->ambientTempSensor.config.resistance_2;
+// ambientTempSensor.config.resistance_3
+		case -1084296598:
+			return engineConfiguration->ambientTempSensor.config.resistance_3;
+// ambientTempSensor.config.bias_resistor
+		case -1899369472:
+			return engineConfiguration->ambientTempSensor.config.bias_resistor;
+// compressorDischargeTemperature.config.tempC_1
+		case -498450107:
+			return engineConfiguration->compressorDischargeTemperature.config.tempC_1;
+// compressorDischargeTemperature.config.tempC_2
+		case -498450106:
+			return engineConfiguration->compressorDischargeTemperature.config.tempC_2;
+// compressorDischargeTemperature.config.tempC_3
+		case -498450105:
+			return engineConfiguration->compressorDischargeTemperature.config.tempC_3;
+// compressorDischargeTemperature.config.resistance_1
+		case 878369917:
+			return engineConfiguration->compressorDischargeTemperature.config.resistance_1;
+// compressorDischargeTemperature.config.resistance_2
+		case 878369918:
+			return engineConfiguration->compressorDischargeTemperature.config.resistance_2;
+// compressorDischargeTemperature.config.resistance_3
+		case 878369919:
+			return engineConfiguration->compressorDischargeTemperature.config.resistance_3;
+// compressorDischargeTemperature.config.bias_resistor
+		case -1555883851:
+			return engineConfiguration->compressorDischargeTemperature.config.bias_resistor;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -4360,6 +4444,146 @@ bool setConfigValueByName(const char *name, float value) {
 		case -846143628:
 	{
 		engineConfiguration->canVssScaling = (int)value;
+		return 1;
+	}
+		case -1460957868:
+	{
+		engineConfiguration->oilTempSensor.config.tempC_1 = value;
+		return 1;
+	}
+		case -1460957867:
+	{
+		engineConfiguration->oilTempSensor.config.tempC_2 = value;
+		return 1;
+	}
+		case -1460957866:
+	{
+		engineConfiguration->oilTempSensor.config.tempC_3 = value;
+		return 1;
+	}
+		case -1297544724:
+	{
+		engineConfiguration->oilTempSensor.config.resistance_1 = value;
+		return 1;
+	}
+		case -1297544723:
+	{
+		engineConfiguration->oilTempSensor.config.resistance_2 = value;
+		return 1;
+	}
+		case -1297544722:
+	{
+		engineConfiguration->oilTempSensor.config.resistance_3 = value;
+		return 1;
+	}
+		case -346622972:
+	{
+		engineConfiguration->oilTempSensor.config.bias_resistor = value;
+		return 1;
+	}
+		case -713764196:
+	{
+		engineConfiguration->fuelTempSensor.config.tempC_1 = value;
+		return 1;
+	}
+		case -713764195:
+	{
+		engineConfiguration->fuelTempSensor.config.tempC_2 = value;
+		return 1;
+	}
+		case -713764194:
+	{
+		engineConfiguration->fuelTempSensor.config.tempC_3 = value;
+		return 1;
+	}
+		case -1195844556:
+	{
+		engineConfiguration->fuelTempSensor.config.resistance_1 = value;
+		return 1;
+	}
+		case -1195844555:
+	{
+		engineConfiguration->fuelTempSensor.config.resistance_2 = value;
+		return 1;
+	}
+		case -1195844554:
+	{
+		engineConfiguration->fuelTempSensor.config.resistance_3 = value;
+		return 1;
+	}
+		case -1285484724:
+	{
+		engineConfiguration->fuelTempSensor.config.bias_resistor = value;
+		return 1;
+	}
+		case 275986512:
+	{
+		engineConfiguration->ambientTempSensor.config.tempC_1 = value;
+		return 1;
+	}
+		case 275986513:
+	{
+		engineConfiguration->ambientTempSensor.config.tempC_2 = value;
+		return 1;
+	}
+		case 275986514:
+	{
+		engineConfiguration->ambientTempSensor.config.tempC_3 = value;
+		return 1;
+	}
+		case -1084296600:
+	{
+		engineConfiguration->ambientTempSensor.config.resistance_1 = value;
+		return 1;
+	}
+		case -1084296599:
+	{
+		engineConfiguration->ambientTempSensor.config.resistance_2 = value;
+		return 1;
+	}
+		case -1084296598:
+	{
+		engineConfiguration->ambientTempSensor.config.resistance_3 = value;
+		return 1;
+	}
+		case -1899369472:
+	{
+		engineConfiguration->ambientTempSensor.config.bias_resistor = value;
+		return 1;
+	}
+		case -498450107:
+	{
+		engineConfiguration->compressorDischargeTemperature.config.tempC_1 = value;
+		return 1;
+	}
+		case -498450106:
+	{
+		engineConfiguration->compressorDischargeTemperature.config.tempC_2 = value;
+		return 1;
+	}
+		case -498450105:
+	{
+		engineConfiguration->compressorDischargeTemperature.config.tempC_3 = value;
+		return 1;
+	}
+		case 878369917:
+	{
+		engineConfiguration->compressorDischargeTemperature.config.resistance_1 = value;
+		return 1;
+	}
+		case 878369918:
+	{
+		engineConfiguration->compressorDischargeTemperature.config.resistance_2 = value;
+		return 1;
+	}
+		case 878369919:
+	{
+		engineConfiguration->compressorDischargeTemperature.config.resistance_3 = value;
+		return 1;
+	}
+		case -1555883851:
+	{
+		engineConfiguration->compressorDischargeTemperature.config.bias_resistor = value;
 		return 1;
 	}
 	}

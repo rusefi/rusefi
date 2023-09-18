@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Mon May 15 13:24:54 UTC 2023
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Mon Sep 18 12:22:36 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -13,6 +13,8 @@ case SensorType::AcceleratorPedalPrimary:
   return "AcceleratorPedalPrimary";
 case SensorType::AcceleratorPedalSecondary:
   return "AcceleratorPedalSecondary";
+case SensorType::AmbientTemperature:
+  return "AmbientTemperature";
 case SensorType::AuxAnalog1:
   return "AuxAnalog1";
 case SensorType::AuxAnalog2:
@@ -47,6 +49,10 @@ case SensorType::BatteryVoltage:
   return "BatteryVoltage";
 case SensorType::Clt:
   return "Clt";
+case SensorType::CompressorDischargePressure:
+  return "CompressorDischargePressure";
+case SensorType::CompressorDischargeTemperature:
+  return "CompressorDischargeTemperature";
 case SensorType::DetectedGear:
   return "DetectedGear";
 case SensorType::DriverThrottleIntent:
@@ -65,6 +71,8 @@ case SensorType::FuelPressureInjector:
   return "FuelPressureInjector";
 case SensorType::FuelPressureLow:
   return "FuelPressureLow";
+case SensorType::FuelTemperature:
+  return "FuelTemperature";
 case SensorType::Iat:
   return "Iat";
 case SensorType::IdlePosition:
@@ -99,6 +107,8 @@ case SensorType::MapSlow2:
   return "MapSlow2";
 case SensorType::OilPressure:
   return "OilPressure";
+case SensorType::OilTemperature:
+  return "OilTemperature";
 case SensorType::PlaceholderLast:
   return "PlaceholderLast";
 case SensorType::Rpm:
