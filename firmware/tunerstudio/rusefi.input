@@ -1939,10 +1939,6 @@ menuDialog = main
 		subMenu = iatSensor,				"IAT sensor"
 		subMenu = auxTempSensor1Sensor,		"AuxTemp1 sensor"
 		subMenu = auxTempSensor2Sensor,		"AuxTemp2 sensor"
-		subMenu = oilTempSensor,			"Oil temp sensor"
-		subMenu = fuelTempSensor,			"Fuel temp sensor"
-		subMenu = ambientTempSensor,		"Ambient temp sensor"
-		subMenu = compressorDischargeTemperature,	"Compressor discharge temp"
 		subMenu = std_separator
 
 		# TPS/pedal
@@ -1971,8 +1967,12 @@ menuDialog = main
 		subMenu = vrThreshold,				"VR Sensor Threshold"@@if_ts_show_vr_threshold_all
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
+		subMenu = oilTempSensor,			"Oil temp sensor"
 		subMenu = fuelPressureSensor,		"Fuel pressure"
+		subMenu = fuelTempSensor,			"Fuel temp sensor"
 		subMenu = fuelLevelDialog,			"Fuel level sensor"
+		subMenu = ambientTempSensor,		"Ambient temp sensor"
+		subMenu = compressorDischargeTemperature,	"Compressor discharge temp"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
 		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 		subMenu = std_separator
