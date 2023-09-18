@@ -1507,3 +1507,6 @@ How many test bench pulses do you want
 ### ignTestOffTime
 Time between bench test pulses
 
+### canVssScaling
+Scale the reported vehicle speed value from CAN. Example: Parameter set to 1.1, CAN VSS reports 50kph, ECU will report 55kph instead.
+

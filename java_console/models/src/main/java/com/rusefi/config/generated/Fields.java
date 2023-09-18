@@ -370,7 +370,7 @@ public class Fields {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 20011;
+	public static final int FLASH_DATA_VERSION = 20012;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int fuel_pressure_sensor_mode_e_FPM_Absolute = 0;
@@ -977,7 +977,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1443760822;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1179,7 +1178,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.18.f407-discovery.1443760822";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.18.f407-discovery.2789924198";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1384;
@@ -2349,7 +2348,9 @@ public class Fields {
 	public static final Field RPMHARDLIMITHYST = Field.create("RPMHARDLIMITHYST", 3600, FieldType.INT8).setScale(10.0).setBaseOffset(0);
 	public static final Field IGNTESTCOUNT = Field.create("IGNTESTCOUNT", 3601, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IGNTESTOFFTIME = Field.create("IGNTESTOFFTIME", 3602, FieldType.INT8).setScale(5.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3603, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_3603 = Field.create("ALIGNMENTFILL_AT_3603", 3603, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field CANVSSSCALING = Field.create("CANVSSSCALING", 3604, FieldType.INT16).setScale(1.0E-4).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3606, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 3696, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 3728, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 3760, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3704,6 +3705,8 @@ public class Fields {
 	RPMHARDLIMITHYST,
 	IGNTESTCOUNT,
 	IGNTESTOFFTIME,
+	ALIGNMENTFILL_AT_3603,
+	CANVSSSCALING,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,
