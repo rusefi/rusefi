@@ -80,7 +80,7 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 	}
 
 	if (auto speed = processCanRxVssImpl(frame)) {
-		canSpeed.setValidValue(speed.Value, nowNt);
+		canSpeed.setValidValue(speed.Value * engineConfiguration->canVssScaling, nowNt);
 
 #if EFI_DYNO_VIEW
 		updateDynoViewCan();

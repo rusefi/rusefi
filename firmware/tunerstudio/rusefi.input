@@ -3549,7 +3549,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = speedSensorCan, "CAN Vehicle Speed"
 		field = "Enable CAN VSS",			enableCanVss, { canReadEnabled }
-		field = "VSS CAN message type",						canVssNbcType, { enableCanVss }
+		field = "CAN VSS type",				canVssNbcType, { enableCanVss }
+		field = "CAN VSS scaling",			canVssScaling, { canReadEnabled }
 
 	dialog = speedSensorLeft, "", yAxis
 		panel = speedSensorAnalog, { enableCanVss == 0 }
