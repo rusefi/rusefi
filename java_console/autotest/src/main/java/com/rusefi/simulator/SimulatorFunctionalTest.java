@@ -48,6 +48,14 @@ public class SimulatorFunctionalTest {
 
             }
         });
+        // todo 1 assert RAW_ANALOG can packet has arrived
+
+        // todo send new CAN command "request pin state for bench_mode_e pin BENCH_FUEL_PUMP
+
+        // todo ecu.sendCommand(CMD_FUEL_PUMP_BENCH
+
+
+
         gotCan.await(1, TimeUnit.MINUTES);
 
 
