@@ -38,6 +38,7 @@ Release template (copy/paste this for new release):
  - Configurable ignition timing limits, adding safety particularly for engines running wasted spark with a large cam #211
  - Improved injection, ignition bench test UI and functionality: More gauges, fuel pump on/off buttons for injector testing, and configurable duration/count #219
  - Preset for Mazdaspeed Miata (NB) IAT sensor
+ - Option to compensate Alpha-N fueling with intake air temperature
 
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)
