@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 18 12:56:56 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 18 19:37:16 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4861,7 +4861,7 @@ struct persistent_config_s {
 	deg
 	 * offset 16672
 	 */
-	int16_t injectionPhase[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
+	int16_t injectionPhase[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 	/**
 	Load
 	 * offset 17184
@@ -4881,7 +4881,7 @@ struct persistent_config_s {
 	kPa
 	 * offset 17308
 	 */
-	scaled_channel<uint16_t, 100, 1> mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
+	scaled_channel<uint16_t, 100, 1> mapEstimateTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 	/**
 	% TPS
 	 * offset 17820
@@ -4926,7 +4926,7 @@ struct persistent_config_s {
 	deg
 	 * offset 18076
 	 */
-	scaled_channel<int16_t, 10, 1> ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
+	scaled_channel<int16_t, 10, 1> ignitionTable[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 	/**
 	Load
 	 * offset 18588
@@ -4941,7 +4941,7 @@ struct persistent_config_s {
 	%
 	 * offset 18652
 	 */
-	scaled_channel<uint16_t, 10, 1> veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
+	scaled_channel<uint16_t, 10, 1> veTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 	/**
 	kPa
 	 * offset 19164
@@ -4956,7 +4956,7 @@ struct persistent_config_s {
 	lambda
 	 * offset 19228
 	 */
-	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
+	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 	/**
 	 * offset 19484
 	 */
@@ -5343,4 +5343,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23664);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 18 12:56:56 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 18 19:37:16 UTC 2023
