@@ -1548,11 +1548,12 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	switch_input_pin_e[RANGE_INPUT_COUNT iterate] tcu_rangeInput;
 	pin_input_mode_e[RANGE_INPUT_COUNT iterate] tcu_rangeInputMode;
 
+	uint16_t autoscale canVssScaling;Scale the reported vehicle speed value from CAN. Example: Parameter set to 1.1, CAN VSS reports 50kph, ECU will report 55kph instead.;"ratio", 0.0001, 0, 0.5, 1.5, 4
 
 !
 ! Just a shortcut to facilitate compatible configuration changes, i.e. a change which does not touch FLASH_DATA_VERSION and thus does not require manual tune migration
 !
-uint8_t[190] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint8_t[186] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

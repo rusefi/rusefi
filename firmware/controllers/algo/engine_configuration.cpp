@@ -431,6 +431,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
+	engineConfiguration->canVssScaling = 1.0f;
 
 	// Don't enable, but set default address
 	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
