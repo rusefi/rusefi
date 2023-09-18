@@ -987,9 +987,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::FRANKENSO_MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration();
 		break;
-	case engine_type_e::MAZDA_MIATA_2003_NA_RAIL:
-		setMazdaMiata2003EngineConfigurationNaFuelRail();
-		break;
 	case engine_type_e::MAZDA_MIATA_2003_BOARD_TEST:
 		setMazdaMiata2003EngineConfigurationBoardTest();
 		break;

@@ -17,10 +17,6 @@
  * set engine_type 47
  */
 void setMazdaMiata2003EngineConfiguration();
-/**
- * race car - NA body and fuel system with NB2 engine
- */
-void setMazdaMiata2003EngineConfigurationNaFuelRail();
 void setMazdaMiata2003EngineConfigurationBoardTest();
 
 /**

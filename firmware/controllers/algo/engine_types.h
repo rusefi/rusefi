@@ -138,11 +138,7 @@ enum class engine_type_e : uint16_t {
 	TEST_ISSUE_366_BOTH = 52,
 	TEST_ISSUE_366_RISE = 53,
 
-	/**
-	 * green Hunchback race car - VVT engine on a NA body with NA return fuel lines which
-	 * means different fuel pressure situation
-	 */
-	MAZDA_MIATA_2003_NA_RAIL = 54,
+	UNUSED_54 = 54,
 
 	MAZDA_MIATA_2003_BOARD_TEST = 55,
 
