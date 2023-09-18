@@ -251,7 +251,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	uint32_t luaInvocationCounter;Lua: Tick counter;"count",1, 0, 0, 0, 0
 	uint32_t luaLastCycleDuration;Lua: Last tick duration;"nt",1, 0, 0, 0, 0
-	uint8_t testBenchIter;;"count",1, 0, 0, 0, 0
 
 	uint8_t tcu_currentRange;"TCU: Current Range";"", 1, 0, 0, 0, 0
 
@@ -368,5 +367,12 @@ float mapFast
 
 	uint16_t autoscale Gego;;"%",0.01,0,50,150,2
 
-	uint8_t[134 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint16_t testBenchIter;;"count",1, 0, 0, 0, 0
+
+	int16_t autoscale oilTemp;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
+	int16_t autoscale fuelTemp;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
+	int16_t autoscale ambientTemp;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
+	int16_t autoscale compressorDischargeTemp;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
+
+	uint8_t[132 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
