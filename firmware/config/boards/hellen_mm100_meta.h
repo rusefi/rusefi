@@ -80,6 +80,7 @@
 #define MM100_SPI3_SCK C10
 #define MM100_SPI3_CS A15
 
+// matches H176_CAN_RX & H176_CAN_TX
 #define MM100_CAN_RX D0
 #define MM100_CAN_TX D1
 

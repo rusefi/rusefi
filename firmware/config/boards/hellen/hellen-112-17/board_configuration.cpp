@@ -71,7 +71,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_RES1;
 	engineConfiguration->camInputs[0] = Gpio::H144_IN_RES3;
 
-
     //ETB1
     // PWM pin
     engineConfiguration->etbIo[0].controlPin = Gpio::MM100_OUT_PWM6;
@@ -81,7 +80,6 @@ void setBoardConfigOverrides() {
    	engineConfiguration->etbIo[0].disablePin = Gpio::MM100_SPI2_MOSI;
    	// Unused
  	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
-
 }
 
 /**
@@ -106,10 +104,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->canTxPin = Gpio::MM100_CAN_TX;
 	engineConfiguration->canRxPin = Gpio::MM100_CAN_RX;
-
-
-    gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
-    // vtsControl->pin = Gpio::H144_OUT_IO6;
 
 	engineConfiguration->fuelPumpPin = Gpio::MM100_OUT_PWM5;;
 //	engineConfiguration->idle.solenoidPin = Gpio::H144_LS_6;
@@ -149,13 +143,17 @@ void setBoardDefaultConfiguration() {
 	//hellenWbo();
 }
 
-//static Gpio OUTPUTS[] = {
-//};
-//
-//int getBoardMetaOutputsCount() {
-//    return efi::size(OUTPUTS);
-//}
-//
-//Gpio* getBoardMetaOutputs() {
-//    return OUTPUTS;
-//}
+static Gpio OUTPUTS[] = {
+    Gpio::MM100_INJ1,
+    Gpio::MM100_INJ2,
+    Gpio::MM100_INJ3,
+    Gpio::MM100_INJ4,
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return OUTPUTS;
+}
