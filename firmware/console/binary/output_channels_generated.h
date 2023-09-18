@@ -109,7 +109,7 @@ struct output_channels_s {
 	// dRPM
 	// RPM acceleration
 	// offset 6
-	uint16_t rpmAcceleration = (uint16_t)0;
+	int16_t rpmAcceleration = (int16_t)0;
 	// @@GAUGE_NAME_GEAR_RATIO@@
 	// value
 	// offset 8
