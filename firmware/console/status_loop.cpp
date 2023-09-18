@@ -486,6 +486,9 @@ static void updatePressures() {
 	engine->outputChannels.MAPValue = Sensor::getOrZero(SensorType::Map);
 	engine->outputChannels.oilPressure = Sensor::getOrZero(SensorType::OilPressure);
 
+	engine->outputChannels.compressorDischargePressure = Sensor::getOrZero(SensorType::CompressorDischargePressure);
+	engine->outputChannels.throttleInletPressure = Sensor::getOrZero(SensorType::ThrottleInletPressure);
+
 	engine->outputChannels.auxLinear1 = Sensor::getOrZero(SensorType::AuxLinear1);
 	engine->outputChannels.auxLinear2 = Sensor::getOrZero(SensorType::AuxLinear2);
 }
