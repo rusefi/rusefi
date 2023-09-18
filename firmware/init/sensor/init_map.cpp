@@ -14,6 +14,8 @@ static FunctionalSensor baroSensor(SensorType::BarometricPressure, MS2NT(50));
 static LinearFunc mapConverter;
 static FunctionalSensor slowMapSensor(SensorType::MapSlow, MS2NT(50));
 static FunctionalSensor slowMapSensor2(SensorType::MapSlow2, MS2NT(50));
+static FunctionalSensor compressorDischargePress(SensorType::CompressorDischargePressure, MS2NT(50));
+static FunctionalSensor throttleInletPress(SensorType::ThrottleInletPressure, MS2NT(50));
 
 // lowest reasonable idle is maybe 600 rpm
 // one sample per cycle (1 cylinder, or "sample one cyl" mode) gives a period of 100ms
@@ -96,16 +98,18 @@ void configureMapFunction(LinearFunc& converter, air_pressure_sensor_type_e sens
 }
 
 void initMap() {
+	// Set up the conversion function
+	configureMapFunction(mapConverter, engineConfiguration->map.sensor.type);
+
+	slowMapSensor.setFunction(mapConverter);
+	slowMapSensor2.setFunction(mapConverter);
+	fastMapSensor.setFunction(mapConverter);
+	fastMapSensor2.setFunction(mapConverter);
+	compressorDischargePress.setFunction(mapConverter);
+	throttleInletPress.setFunction(mapConverter);
+
 	auto mapChannel = engineConfiguration->map.sensor.hwChannel;
 	if (isAdcChannelValid(mapChannel)) {
-		// Set up the conversion function
-		configureMapFunction(mapConverter, engineConfiguration->map.sensor.type);
-
-		slowMapSensor.setFunction(mapConverter);
-		slowMapSensor2.setFunction(mapConverter);
-		fastMapSensor.setFunction(mapConverter);
-		fastMapSensor2.setFunction(mapConverter);
-
 		slowMapSensor.Register();
 		slowMapSensor2.Register();
 		fastMapSensor.Register();
@@ -116,6 +120,9 @@ void initMap() {
 		// Configure slow MAP as a normal analog sensor
 		AdcSubscription::SubscribeSensor(slowMapSensor, mapChannel, 100);
 	}
+
+	AdcSubscription::SubscribeSensor(throttleInletPress, engineConfiguration->throttleInletPressureChannel, 100);
+	AdcSubscription::SubscribeSensor(compressorDischargePress, engineConfiguration->compressorDischargePressureChannel, 100);
 
 	auto baroChannel = engineConfiguration->baroSensor.hwChannel;
 	if (isAdcChannelValid(baroChannel)) {
@@ -131,4 +138,6 @@ void initMap() {
 void deinitMap() {
 	AdcSubscription::UnsubscribeSensor(slowMapSensor, engineConfiguration->map.sensor.hwChannel);
 	AdcSubscription::UnsubscribeSensor(baroSensor, engineConfiguration->baroSensor.hwChannel);
+	AdcSubscription::UnsubscribeSensor(throttleInletPress, engineConfiguration->throttleInletPressureChannel);
+	AdcSubscription::UnsubscribeSensor(compressorDischargePress, engineConfiguration->compressorDischargePressureChannel);
 }
