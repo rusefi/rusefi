@@ -89,6 +89,7 @@ static const uint8_t SCRIPT_TABLE_vvt_target[SCRIPT_TABLE_8][SCRIPT_TABLE_8] = {
 		{/* 7 85	*//* 0 700.0*/17,	/* 1 1000.0*/28,	/* 2 2000.0*/33,	/* 3 3000.0*/28,	/* 4 3500.0*/30,	/* 5 4500.0*/28,	/* 6 5500.0*/11,	/* 7 6500.0*/5,	},
 };
 
+#if FUEL_LOAD_COUNT == DEFAULT_FUEL_LOAD_COUNT
 const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT] = {700.0, 820.0, 950.0, 1100.0,
 		1300.0, 1550.0, 1800.0, 2150.0,
 		2500.0, 3000.0, 3500.0, 4150.0,
@@ -100,6 +101,7 @@ const float mazda_miata_nb2_LoadBins[FUEL_LOAD_COUNT] = {20.0, 25.0, 30.0, 35.0,
 		73.0, 85.0, 99.0, 116.0,
 		135.0, 158.0, 185.0, 220.0}
 ;
+#endif
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const  float ignition18vvtRpmBins[IGN_RPM_COUNT] = {

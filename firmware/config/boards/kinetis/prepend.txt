@@ -16,3 +16,6 @@
 
 #define IGN_RPM_COUNT 8
 #define IGN_LOAD_COUNT 8
+
+#define FUEL_RPM_COUNT 8
+#define FUEL_LOAD_COUNT 8
