@@ -1633,6 +1633,9 @@ float getConfigValueByName(const char *name) {
 // iacByTpsDecayTime
 		case 1742748825:
 			return engineConfiguration->iacByTpsDecayTime;
+// canVssScaling
+		case -846143628:
+			return engineConfiguration->canVssScaling;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -4352,6 +4355,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1742748825:
 	{
 		engineConfiguration->iacByTpsDecayTime = (int)value;
+		return 1;
+	}
+		case -846143628:
+	{
+		engineConfiguration->canVssScaling = (int)value;
 		return 1;
 	}
 	}

@@ -1627,3 +1627,6 @@ How long initial IAC adder is held before starting to decay.
 ### iacByTpsDecayTime
 How long it takes to remove initial IAC adder to return to normal idle.
 
+### canVssScaling
+Scale the reported vehicle speed value from CAN. Example: Parameter set to 1.1, CAN VSS reports 50kph, ECU will report 55kph instead.
+
