@@ -17,7 +17,11 @@ https://rusefi.com/docs/pinouts/hellen/hellen154hyundai/
 #include "lua_lib.h"
 
 static void set201xHyundai() {
+#if HW_PROTEUS
 	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
+#else
+	setPPSCalibration(0.73, 4.0, 0.74, 2.28);
+#endif
 
     // note how these numbers are very flipped m111 defaults?
     setTPS1Calibration(98, 926, 891, 69);
