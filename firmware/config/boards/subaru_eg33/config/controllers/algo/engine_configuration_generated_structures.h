@@ -2357,9 +2357,15 @@ struct engine_configuration_s {
 	// ms
 	// offset 3602
 	scaled_channel<uint8_t, 1, 5> ignTestOffTime;
-	// units
 	// offset 3603
-	uint8_t mainUnusedEnd[93];
+	uint8_t alignmentFill_at_3603[1];
+	// Scale the reported vehicle speed value from CAN. Example: Parameter set to 1.1, CAN VSS reports 50kph, ECU will report 55kph instead.
+	// ratio
+	// offset 3604
+	scaled_channel<uint16_t, 10000, 1> canVssScaling;
+	// units
+	// offset 3606
+	uint8_t mainUnusedEnd[90];
 };
 static_assert(sizeof(engine_configuration_s) == 3696);
 

@@ -1009,6 +1009,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->ignTestCount;
 		case 257613965:
 			return engineConfiguration->ignTestOffTime;
+		case -846143628:
+			return engineConfiguration->canVssScaling;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3528,6 +3530,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 257613965:
 	{
 		engineConfiguration->ignTestOffTime = (int)value;
+		return;
+	}
+		case -846143628:
+	{
+		engineConfiguration->canVssScaling = (int)value;
 		return;
 	}
 	}
