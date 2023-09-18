@@ -27,11 +27,16 @@ enum class SensorType : unsigned char {
 	Map,
 	Maf,
 
-	OilPressure, // 6
+	AmbientTemperature,
+
+	OilPressure,
+	OilTemperature,
 
 	FuelPressureLow, // in kPa
 	FuelPressureHigh, // in kPa
 	FuelPressureInjector,
+
+	FuelTemperature,
 
 	// This is the "resolved" position, potentially composited out of the following two
 	Tps1, // 10
@@ -88,6 +93,10 @@ enum class SensorType : unsigned char {
 	Map2,
 	MapSlow2,
 	MapFast2,
+
+	// Pressure sensor after compressor, before intercooler
+	CompressorDischargePressure,
+	CompressorDischargeTemperature,
 
 	// Pressure sensor before the throttle, after any turbo/etc
 	ThrottleInletPressure,
