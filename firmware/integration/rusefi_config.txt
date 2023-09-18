@@ -1662,7 +1662,7 @@ int8_t[8 x 8] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -25, 25, 1
 int8_t[8] ignitionIatCorrTempBins;;"C", 1, 0, -40, 120, 0
 uint8_t[8] autoscale ignitionIatCorrLoadBins;;"Load", 5, 0, 0, 1000, 0
 
-int16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
+int16_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
 uint16_t[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 1000, 0
 uint16_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
