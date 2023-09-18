@@ -1555,10 +1555,10 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	ThermistorConf ambientTempSensor
 	ThermistorConf compressorDischargeTemperature
 
-!
-! Just a shortcut to facilitate compatible configuration changes, i.e. a change which does not touch FLASH_DATA_VERSION and thus does not require manual tune migration
-!
-uint8_t[256] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	adc_channel_e throttleInletPressureChannel;Place the sensor before the throttle, but after any turbocharger/supercharger and intercoolers if fitted. Uses the same calibration as the MAP sensor.
+	adc_channel_e compressorDischargePressureChannel;Place the sensor after the turbocharger/supercharger, but before any intercoolers if fitted. Uses the same calibration as the MAP sensor.
+
+uint8_t[254] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
