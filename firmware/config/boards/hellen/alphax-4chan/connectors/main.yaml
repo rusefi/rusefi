@@ -7,8 +7,8 @@ pins:
     color: black
 
   - pin: A2
-    function: +12V
-    type: 12v
+    function: +12V from main relay
+    type: 12v from main relay
     color: red
 
   - pin: A3
