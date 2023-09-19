@@ -8,7 +8,7 @@ pins:
     id: EFI_ADC_11
     class: analog_inputs
     color: white right
-    function: 12V Supply from main relay output, see also pin #29
+    function: 12V Supply from main relay output, see also pin 29. DO NOT FORGET ABOUT PIN 5.
     ts_name: Battery Sense
     type: 12V
 
