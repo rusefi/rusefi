@@ -32,7 +32,7 @@ pins:
     color: white
 
   - pin: 5
-    function: 12V supply from Key (turn on/off power)
+    function: 12V supply from Key (turn on/off power) primary source of +12v
     type: 12V
     color: black
 
