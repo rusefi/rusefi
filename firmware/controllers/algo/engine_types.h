@@ -138,7 +138,7 @@ enum class engine_type_e : uint16_t {
 	TEST_ISSUE_366_BOTH = 52,
 	TEST_ISSUE_366_RISE = 53,
 
-	UNUSED_54 = 54,
+	MAVERICK_X3 = 54,
 
 	MAZDA_MIATA_2003_BOARD_TEST = 55,
 

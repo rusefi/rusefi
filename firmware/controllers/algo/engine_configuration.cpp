@@ -39,6 +39,7 @@
 #include "bmw_n73.h"
 
 #include "citroenBerlingoTU3JP.h"
+#include "canam.h"
 #include "custom_engine.h"
 #include "dodge_neon.h"
 #include "dodge_ram.h"
@@ -747,6 +748,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif
 
 #if HW_PROTEUS
+	case engine_type_e::MAVERICK_X3:
+	    setMaverickX3();
+		break;
 	case engine_type_e::ME17_9_MISC:
 	    setSlingshot();
 		break;
@@ -947,7 +951,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setEepromTestConfiguration();
 #endif
 		break;
-	case engine_type_e::UNUSED_59:
 	case engine_type_e::FRANKENSO_MAZDA_MIATA_NA8:
 		setFrankensoMazdaMiataNA8Configuration();
 		break;
