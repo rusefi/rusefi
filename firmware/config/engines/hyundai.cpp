@@ -175,7 +175,24 @@ end
 
 canRxAdd(1, 1264, onCluPacket)
 
+GDI4_BASE_ADDRESS = 0xBB20
+GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
+local data_set_settings = { GDI4_CAN_SET_TAG, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
 function onTick()
+	TholdOff = getCalibration("mc33_t_hold_off")
+	THoldDuration = getCalibration("mc33_t_hold_tot")
+
+	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
+	pumpHoldCurrent      = getCalibration("mc33_hpfp_i_hold")
+
+	setTwoBytesLsb(data_set_settings, 1, TholdOff)
+	setTwoBytesLsb(data_set_settings, 3, THoldDuration)
+-- set mc33_hpfp_i_peak 6
+	setTwoBytesLsb(data_set_settings, 5, pumpPeakCurrent * FIXED_POINT)
+	print('Will be sending ' ..arrayToString(data_set_settings))
+	txCan(1, GDI_CHANGE_ADDRESS + 3, 1, data_set_settings)
+
 	local RPMread = math.floor(getSensor("RPM") * 4)
 	local RPMhi = RPMread >> 8
 	local RPMlo = RPMread & 0xff
