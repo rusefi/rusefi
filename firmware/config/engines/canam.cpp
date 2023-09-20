@@ -11,7 +11,7 @@ void setMaverickX3() {
     strcpy(engineConfiguration->engineCode, "900 ACE");
 
     engineConfiguration->cylindersCount = 3;
-    engineConfiguration->firingOrder = FO_1_3_2;
+    engineConfiguration->firingOrder = FO_1_2_3;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 #if HW_PROTEUS
