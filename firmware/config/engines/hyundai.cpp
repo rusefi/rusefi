@@ -85,6 +85,7 @@ void setHyundaiPb() {
    	engineConfiguration->highPressureFuel.value2 = 20'000;
 
 #if HW_HELLEN_4CHAN
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	engineConfiguration->highPressureFuel.hwChannel = H144_IN_O2S2;
 
     engineConfiguration->hpfpValvePin = Gpio::H144_OUT_IO6; // E2
@@ -178,6 +179,18 @@ canRxAdd(1, 1264, onCluPacket)
 GDI4_BASE_ADDRESS = 0xBB20
 GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
 local data_set_settings = { GDI4_CAN_SET_TAG, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
+function onCanConfiguration3(bus, id, dlc, data)
+	print("Received configuration3 "..arrayToString(data))
+	print("GDI4 says HoldCurrent   "..getTwoBytesLSB(data, 0, 1 / 128) )
+	print("GDI4 says TholdOff      "..getTwoBytesLSB(data, 2, 1) )
+	print("GDI4 says THoldDuration "..getTwoBytesLSB(data, 4, 1) )
+	pumpPeak = getTwoBytesLSB(data, 6, 1 / 128)
+	print("GDI4 says PumpPeakCurrent ".. pumpPeak)
+	setLuaGauge(1, pumpPeak)
+end
+
+canRxAdd(GDI4_BASE_ADDRESS + 3, onCanConfiguration3)
 
 function onTick()
 	TholdOff = getCalibration("mc33_t_hold_off")
