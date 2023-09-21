@@ -24,6 +24,7 @@ static void set201xHyundai() {
 #endif
 
     // note how these numbers are very flipped m111 defaults?
+    // extract method?
     setTPS1Calibration(98, 926, 891, 69);
     setEtbPID(8.8944, 70.2307, 0.1855);
    	// Some sensible defaults for other options

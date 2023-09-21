@@ -3,6 +3,7 @@
 #include "defaults.h"
 #include "proteus_meta.h"
 #include "canam.h"
+#include "lua_lib.h"
 
 // set engine_type 54
 // https://www.youtube.com/watch?v=j8DOFp02QDY
@@ -12,10 +13,43 @@ void setMaverickX3() {
 
     engineConfiguration->cylindersCount = 3;
     engineConfiguration->firingOrder = FO_1_2_3;
+    engineConfiguration->displacement = 0.9;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 #if HW_PROTEUS
+	setPPSCalibration(0.25, 0.5, 1.5, 3);
+	// todo: matches Hyundai TODO extract method?
+	setTPS1Calibration(98, 926, 891, 69);
 	setProteusEtbIO();
+	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
+	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
+
+#endif // HW_PROTEUS
+
+#if HW_PROTEUS
+	strncpy(config->luaScript, GET_BIT_RANGE_LSB TWO_BYTES_LSB PRINT_ARRAY SET_TWO_BYTES_LSB R"(
+
+
+isUseful = Timer.new()
+isUseful : reset()
+
+function onTick()
+
+rpm = getSensor("RPM")
+vbat = getSensor("BatteryVoltage")
+
+--		print (vbat .. " " .. rpm)
+if (vbat < 8) or (rpm > 200) then
+-- keep alive if USB hooked up
+isUseful : reset()
+end
+
+	if (isUseful : getElapsedSeconds() > 17) then
+		mcu_standby()
+	end
+end
+
+)", efi::size(config->luaScript));
 #endif // HW_PROTEUS
 
 }
