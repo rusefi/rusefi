@@ -1,11 +1,11 @@
 Gpio getCommsLedPin() {
-	return Gpio::MM100_LED2;  // blue
+	return Gpio::MM100_LED3_BLUE;
 }
 
 Gpio getRunningLedPin() {
-	return Gpio::MM100_LED3;  // green
+	return Gpio::MM100_LED2_GREEN;
 }
 
 Gpio getWarningLedPin() {
-	return Gpio::MM100_LED4; // yellow
+	return Gpio::MM100_LED4_YELLOW;
 }

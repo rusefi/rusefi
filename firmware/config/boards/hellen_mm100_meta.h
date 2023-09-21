@@ -97,9 +97,9 @@
 #define MM100_GP8 E10
 
 #define MM100_LED1_RED D4
-#define MM100_LED2 D7
-#define MM100_LED3 E7
-#define MM100_LED4 E8
+#define MM100_LED2_GREEN D7
+#define MM100_LED3_BLUE E7
+#define MM100_LED4_YELLOW E8
 
 #define MM100_BOARD_ID1 D9
 #define MM100_BOARD_ID2 D8

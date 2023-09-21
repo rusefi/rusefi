@@ -1,3 +1,5 @@
+# hellen-common.mk
+
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design

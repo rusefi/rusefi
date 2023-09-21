@@ -46,9 +46,9 @@ void detectHellenBoardType();
 #define H144_UART2_TX Gpio::D5
 
 #define H144_LED1_RED Gpio::G0
-#define H144_LED2 Gpio::G1
-#define H144_LED3 Gpio::E7
-#define H144_LED4 Gpio::E8
+#define H144_LED2_GREEN Gpio::G1
+#define H144_LED3_BLUE Gpio::E7
+#define H144_LED4_YELLOW Gpio::E8
 
 #define H144_USB1ID Gpio::A10
 
