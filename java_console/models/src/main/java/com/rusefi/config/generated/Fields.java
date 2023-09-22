@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Sep 21 23:30:34 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Sep 22 16:18:54 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1025,6 +1025,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1052041655;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1249,7 +1250,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.09.22.f407-discovery.3050649016";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.09.22.f407-discovery.1052041655";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1315,7 +1316,7 @@ public class Fields {
 	public static final int WARNING_BUFFER_SIZE = 120;
 	public static final int WWAE_TABLE_SIZE = 8;
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDENTYPE = Field.create("UNUSEDENTYPE", 2, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field STARTBUTTONSUPPRESSONSTARTUPMS = Field.create("STARTBUTTONSUPPRESSONSTARTUPMS", 2, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHRPM = Field.create("LAUNCHRPM", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 8, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -2891,7 +2892,7 @@ public class Fields {
 	public static final Field ALIGNMENTFILL_AT_23662 = Field.create("ALIGNMENTFILL_AT_23662", 23662, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
-	UNUSEDENTYPE,
+	STARTBUTTONSUPPRESSONSTARTUPMS,
 	SENSORSNIFFERRPMTHRESHOLD,
 	LAUNCHRPM,
 	RPMHARDLIMIT,

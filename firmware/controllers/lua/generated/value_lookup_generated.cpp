@@ -4,6 +4,9 @@
 float getConfigValueByName(const char *name) {
 	int hash = djb2lowerCase(name);
 	switch(hash) {
+// startButtonSuppressOnStartUpMs
+		case 1856486116:
+			return engineConfiguration->startButtonSuppressOnStartUpMs;
 // sensorSnifferRpmThreshold
 		case -920133784:
 			return engineConfiguration->sensorSnifferRpmThreshold;
@@ -1726,6 +1729,11 @@ float getConfigValueByName(const char *name) {
 bool setConfigValueByName(const char *name, float value) {
 	int hash = djb2lowerCase(name);
 	switch(hash) {
+		case 1856486116:
+	{
+		engineConfiguration->startButtonSuppressOnStartUpMs = (int)value;
+		return 1;
+	}
 		case -920133784:
 	{
 		engineConfiguration->sensorSnifferRpmThreshold = (int)value;

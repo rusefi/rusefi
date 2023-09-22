@@ -1,3 +1,6 @@
+### startButtonSuppressOnStartUpMs
+null
+
 ### sensorSnifferRpmThreshold
 Disable sensor sniffer above this rpm
 
