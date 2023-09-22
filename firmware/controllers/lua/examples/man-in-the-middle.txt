@@ -36,13 +36,17 @@ end
 
 totalEcuMessages = 0
 totalTcuMessages = 0
+totalDropped = 0
+totalReplaced = 0
 
 function printAndDrop(bus, id, dlc, data)
     print('Dropping ' ..arrayToString(data))
+    totalDropped = totalDropped + 1
 end
 
 function onAnythingFromECU(bus, id, dlc, data)
     totalEcuMessages = totalEcuMessages + 1
+    print('from ECU ' .. id .. " " .. arrayToString(data) .. " dropped=" .. totalDropped .. " replaced " .. totalReplaced)
     txCan(TCU_BUS, id, 0, data) -- relay non-TCU message to TCU
 end
 
@@ -54,6 +58,7 @@ end
 MOTOR_1 = 0x282
 
 function interceptAndReplaceContent(bus, id, dlc, data)
+    totalReplaced = totalReplaced + 1
     rpm = 200
     data[3] = rpm
     -- send adjusted packet into the other bus
@@ -73,6 +78,6 @@ everySecondTimer = Timer.new()
 function onTick()
     if everySecondTimer:getElapsedSeconds() > 1 then
         everySecondTimer:reset()
-        print("Total from ECU " .. totalEcuMessages .. " from TCU " .. totalTcuMessages)
+        print("Total from ECU " .. totalEcuMessages .. " from TCU " .. totalTcuMessages .. " dropped=" .. totalDropped .. " replaced " .. totalReplaced)
     end
 end
