@@ -48,6 +48,11 @@ static void disengageStarterIfNeeded() {
 }
 
 void slowStartStopButtonCallback() {
+    if (getTimeNowMs() < engineConfiguration->startButtonSuppressOnStartUpMs) {
+        // where are odd cases of start button combined with ECU power source button we do not want to crank right on start
+        return;
+    }
+
 	bool startStopState = startStopButtonDebounce.readPinEvent();
 
 	if (startStopState && !engine->engineState.startStopState) {
