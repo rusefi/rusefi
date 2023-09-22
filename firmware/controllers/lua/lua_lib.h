@@ -137,3 +137,18 @@ function hyundaiSumNibbles(data, seed) \n\
 end\
 "
 
+// XOR of the array, skipping target index
+#define VAG_CHECKSUM " \
+function xorChecksum(data, targetIndex) \
+	local index = 1 \
+	local result = 0 \
+	while data[index] ~= nil do \
+		if index ~= targetIndex then \
+			result = result ~ data[index] \
+		end \
+		index = index + 1 \
+	end \
+	data[targetIndex] = result \
+	return result \
+end \
+"
