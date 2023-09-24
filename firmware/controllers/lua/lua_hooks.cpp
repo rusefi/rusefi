@@ -850,6 +850,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	lua_register(l, "getOutput", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
+		 // fresh values need to be requested explicitly, there is no periodic invocation of that method
+        updateTunerStudioState();
 		auto result = getOutputValueByName(propertyName);
 		lua_pushnumber(l, result);
 		return 1;
