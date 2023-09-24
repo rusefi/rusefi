@@ -40,6 +40,7 @@ Release template (copy/paste this for new release):
  - AEM WBO EGO preset
  - Mitsubishi 4G69 Cam pattern #5541
  - Preset for Mazdaspeed Miata (NB) IAT sensor
+ - option to Suppress start button on start up #5578
 
 ### Fixed
  - simulator: sensor mocking UI #5473
