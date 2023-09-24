@@ -17,6 +17,7 @@ void setMaverickX3() {
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 #if HW_PROTEUS
+	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_4;
 	setPPSCalibration(0.25, 0.5, 1.5, 3);
 	// todo: matches Hyundai TODO extract method?
 	setTPS1Calibration(98, 926, 891, 69);
