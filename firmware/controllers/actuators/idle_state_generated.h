@@ -60,46 +60,46 @@ struct idle_state_s {
 	bool looksLikeCoasting : 1 {};
 	// offset 24 bit 12
 	bool looksLikeCrankToIdle : 1 {};
-	// offset 24 bit 13
-	bool isVerboseIAC : 1 {};
 	// Idle: coasting
-	// offset 24 bit 14
+	// offset 24 bit 13
 	bool isIdleCoasting : 1 {};
 	// Idle: Closed loop active
-	// offset 24 bit 15
+	// offset 24 bit 14
 	bool isIdleClosedLoop : 1 {};
+	// offset 24 bit 15
+	bool unusedBit_21_15 : 1 {};
 	// offset 24 bit 16
-	bool unusedBit_22_16 : 1 {};
+	bool unusedBit_21_16 : 1 {};
 	// offset 24 bit 17
-	bool unusedBit_22_17 : 1 {};
+	bool unusedBit_21_17 : 1 {};
 	// offset 24 bit 18
-	bool unusedBit_22_18 : 1 {};
+	bool unusedBit_21_18 : 1 {};
 	// offset 24 bit 19
-	bool unusedBit_22_19 : 1 {};
+	bool unusedBit_21_19 : 1 {};
 	// offset 24 bit 20
-	bool unusedBit_22_20 : 1 {};
+	bool unusedBit_21_20 : 1 {};
 	// offset 24 bit 21
-	bool unusedBit_22_21 : 1 {};
+	bool unusedBit_21_21 : 1 {};
 	// offset 24 bit 22
-	bool unusedBit_22_22 : 1 {};
+	bool unusedBit_21_22 : 1 {};
 	// offset 24 bit 23
-	bool unusedBit_22_23 : 1 {};
+	bool unusedBit_21_23 : 1 {};
 	// offset 24 bit 24
-	bool unusedBit_22_24 : 1 {};
+	bool unusedBit_21_24 : 1 {};
 	// offset 24 bit 25
-	bool unusedBit_22_25 : 1 {};
+	bool unusedBit_21_25 : 1 {};
 	// offset 24 bit 26
-	bool unusedBit_22_26 : 1 {};
+	bool unusedBit_21_26 : 1 {};
 	// offset 24 bit 27
-	bool unusedBit_22_27 : 1 {};
+	bool unusedBit_21_27 : 1 {};
 	// offset 24 bit 28
-	bool unusedBit_22_28 : 1 {};
+	bool unusedBit_21_28 : 1 {};
 	// offset 24 bit 29
-	bool unusedBit_22_29 : 1 {};
+	bool unusedBit_21_29 : 1 {};
 	// offset 24 bit 30
-	bool unusedBit_22_30 : 1 {};
+	bool unusedBit_21_30 : 1 {};
 	// offset 24 bit 31
-	bool unusedBit_22_31 : 1 {};
+	bool unusedBit_21_31 : 1 {};
 	// Idle: Target RPM
 	// offset 28
 	int idleTarget = (int)0;
