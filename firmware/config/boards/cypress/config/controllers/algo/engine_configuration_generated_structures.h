@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Sep 22 16:16:49 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 25 12:41:13 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2315,10 +2315,8 @@ struct engine_configuration_s {
 	offset 1312 bit 1 */
 	bool fuelClosedLoopCorrectionEnabled : 1 {};
 	/**
-	 * Print details into rusEFI console
-	 * enable verbose_idle
 	offset 1312 bit 2 */
-	bool isVerboseIAC : 1 {};
+	bool unused1192b2 : 1 {};
 	/**
 	offset 1312 bit 3 */
 	bool boardUseTachPullUp : 1 {};
@@ -5343,4 +5341,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23664);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Sep 22 16:16:49 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Sep 25 12:41:13 UTC 2023

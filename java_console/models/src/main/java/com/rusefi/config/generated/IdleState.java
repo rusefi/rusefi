@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Sep 18 12:56:47 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Sep 25 12:41:04 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -26,8 +26,7 @@ public class IdleState {
 	public static final Field LOOKSLIKERUNNING = Field.create("LOOKSLIKERUNNING", 20, FieldType.BIT, 12).setBaseOffset(1280);
 	public static final Field LOOKSLIKECOASTING = Field.create("LOOKSLIKECOASTING", 20, FieldType.BIT, 13).setBaseOffset(1280);
 	public static final Field LOOKSLIKECRANKTOIDLE = Field.create("LOOKSLIKECRANKTOIDLE", 20, FieldType.BIT, 14).setBaseOffset(1280);
-	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 20, FieldType.BIT, 15).setBaseOffset(1280);
-	public static final Field ISIDLECOASTING = Field.create("ISIDLECOASTING", 20, FieldType.BIT, 16).setBaseOffset(1280);
+	public static final Field ISIDLECOASTING = Field.create("ISIDLECOASTING", 20, FieldType.BIT, 15).setBaseOffset(1280);
 	public static final Field TARGETRPMBYCLT = Field.create("TARGETRPMBYCLT", 24, FieldType.INT).setScale(1.0).setBaseOffset(1280);
 	public static final Field TARGETRPMACBUMP = Field.create("TARGETRPMACBUMP", 28, FieldType.INT).setScale(1.0).setBaseOffset(1280);
 	public static final Field IACBYRPMTAPER = Field.create("IACBYRPMTAPER", 32, FieldType.FLOAT).setBaseOffset(1280);
@@ -53,7 +52,6 @@ public class IdleState {
 	LOOKSLIKERUNNING,
 	LOOKSLIKECOASTING,
 	LOOKSLIKECRANKTOIDLE,
-	ISVERBOSEIAC,
 	ISIDLECOASTING,
 	TARGETRPMBYCLT,
 	TARGETRPMACBUMP,

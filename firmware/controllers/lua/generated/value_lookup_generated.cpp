@@ -715,9 +715,6 @@ float getConfigValueByName(const char *name) {
 // fuelClosedLoopCorrectionEnabled
 		case 1611799720:
 			return engineConfiguration->fuelClosedLoopCorrectionEnabled;
-// isVerboseIAC
-		case -546057276:
-			return engineConfiguration->isVerboseIAC;
 // boardUseTachPullUp
 		case 885690524:
 			return engineConfiguration->boardUseTachPullUp;
@@ -2912,11 +2909,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1611799720:
 	{
 		engineConfiguration->fuelClosedLoopCorrectionEnabled = (int)value;
-		return 1;
-	}
-		case -546057276:
-	{
-		engineConfiguration->isVerboseIAC = (int)value;
 		return 1;
 	}
 		case 885690524:

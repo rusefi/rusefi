@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Nov 01 20:59:53 UTC 2022
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Sep 25 12:41:04 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -42,21 +42,21 @@ struct idle_state_s {
 	offset 20 bit 0 */
 	bool mightResetPid : 1 {};
 	/**
-	 * idle: shouldResetPid
+	 * Idle: shouldResetPid
 	offset 20 bit 1 */
 	bool shouldResetPid : 1 {};
 	/**
-	 * idle: wasResetPid
+	 * Idle: wasResetPid
 	 * This is needed to slowly turn on the PID back after it was reset.
 	offset 20 bit 2 */
 	bool wasResetPid : 1 {};
 	/**
-	 * idle: mustResetPid
+	 * Idle: mustResetPid
 	 * This is used when the PID configuration is changed, to guarantee the reset
 	offset 20 bit 3 */
 	bool mustResetPid : 1 {};
 	/**
-	 * idle: cranking
+	 * Idle: cranking
 	offset 20 bit 4 */
 	bool isCranking : 1 {};
 	/**
@@ -66,11 +66,11 @@ struct idle_state_s {
 	offset 20 bit 6 */
 	bool notIdling : 1 {};
 	/**
-	 * idle: reset
+	 * Idle: reset
 	offset 20 bit 7 */
 	bool needReset : 1 {};
 	/**
-	 * idle: dead zone
+	 * Idle: dead zone
 	offset 20 bit 8 */
 	bool isInDeadZone : 1 {};
 	/**
@@ -92,57 +92,57 @@ struct idle_state_s {
 	offset 20 bit 14 */
 	bool looksLikeCrankToIdle : 1 {};
 	/**
+	 * Idle: coasting
 	offset 20 bit 15 */
-	bool isVerboseIAC : 1 {};
-	/**
-	 * idle: coasting
-	offset 20 bit 16 */
 	bool isIdleCoasting : 1 {};
 	/**
+	offset 20 bit 16 */
+	bool unusedBit_21_16 : 1 {};
+	/**
 	offset 20 bit 17 */
-	bool unusedBit_22_17 : 1 {};
+	bool unusedBit_21_17 : 1 {};
 	/**
 	offset 20 bit 18 */
-	bool unusedBit_22_18 : 1 {};
+	bool unusedBit_21_18 : 1 {};
 	/**
 	offset 20 bit 19 */
-	bool unusedBit_22_19 : 1 {};
+	bool unusedBit_21_19 : 1 {};
 	/**
 	offset 20 bit 20 */
-	bool unusedBit_22_20 : 1 {};
+	bool unusedBit_21_20 : 1 {};
 	/**
 	offset 20 bit 21 */
-	bool unusedBit_22_21 : 1 {};
+	bool unusedBit_21_21 : 1 {};
 	/**
 	offset 20 bit 22 */
-	bool unusedBit_22_22 : 1 {};
+	bool unusedBit_21_22 : 1 {};
 	/**
 	offset 20 bit 23 */
-	bool unusedBit_22_23 : 1 {};
+	bool unusedBit_21_23 : 1 {};
 	/**
 	offset 20 bit 24 */
-	bool unusedBit_22_24 : 1 {};
+	bool unusedBit_21_24 : 1 {};
 	/**
 	offset 20 bit 25 */
-	bool unusedBit_22_25 : 1 {};
+	bool unusedBit_21_25 : 1 {};
 	/**
 	offset 20 bit 26 */
-	bool unusedBit_22_26 : 1 {};
+	bool unusedBit_21_26 : 1 {};
 	/**
 	offset 20 bit 27 */
-	bool unusedBit_22_27 : 1 {};
+	bool unusedBit_21_27 : 1 {};
 	/**
 	offset 20 bit 28 */
-	bool unusedBit_22_28 : 1 {};
+	bool unusedBit_21_28 : 1 {};
 	/**
 	offset 20 bit 29 */
-	bool unusedBit_22_29 : 1 {};
+	bool unusedBit_21_29 : 1 {};
 	/**
 	offset 20 bit 30 */
-	bool unusedBit_22_30 : 1 {};
+	bool unusedBit_21_30 : 1 {};
 	/**
 	offset 20 bit 31 */
-	bool unusedBit_22_31 : 1 {};
+	bool unusedBit_21_31 : 1 {};
 	/**
 	 * idle: target by CLT
 	 * offset 24
@@ -167,4 +167,4 @@ struct idle_state_s {
 static_assert(sizeof(idle_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Nov 01 20:59:53 UTC 2022
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Sep 25 12:41:04 UTC 2023
