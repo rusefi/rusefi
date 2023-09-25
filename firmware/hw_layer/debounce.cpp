@@ -35,7 +35,7 @@ void ButtonDebounce::init (efitimems_t threshold, brain_pin_e &pin, pin_input_mo
     isInstanceRegisteredInGlobalList = true;
 }
 
-void ButtonDebounce::stopConfigurationList () {
+void ButtonDebounce::stopConfigurationList() {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
         listItem->stopConfiguration();
@@ -43,7 +43,7 @@ void ButtonDebounce::stopConfigurationList () {
     }
 }
 
-void ButtonDebounce::startConfigurationList () {
+void ButtonDebounce::startConfigurationList() {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
         listItem->startConfiguration();
@@ -51,7 +51,7 @@ void ButtonDebounce::startConfigurationList () {
     }
 }
 
-void ButtonDebounce::stopConfiguration () {
+void ButtonDebounce::stopConfiguration() {
     // If the configuration has changed
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
     if (*m_pin != active_pin || *m_mode != active_mode) {
@@ -65,7 +65,7 @@ void ButtonDebounce::stopConfiguration () {
     }
 }
 
-void ButtonDebounce::startConfiguration () {
+void ButtonDebounce::startConfiguration() {
 #if EFI_PROD_CODE
     if (needsPinInitialization) {
         efiSetPadMode(m_name, *m_pin, getInputMode(*m_mode));
