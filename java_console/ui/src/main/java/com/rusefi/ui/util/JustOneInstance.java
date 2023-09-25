@@ -1,13 +1,14 @@
 package com.rusefi.ui.util;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
  * This class is used to figure out if we have multiple instances of rusEfi console running
- *
+ * <p>
  * Andrey Belomutskiy, (c) 2013-2020
  * 5/4/2015
  */
@@ -39,13 +40,19 @@ public class JustOneInstance {
                     while (true) {
                         // Wait for a connection
                         Socket clientSocket = serverSocket.accept();
-                        // System.out.println("*** Got a connection! ");
-                        clientSocket.close();
+                        handleConnection(clientSocket);
                     }
                 } catch (IOException e) {
                 }
             }
         };
         new Thread(runnable, "JustOneInstance").start();
+    }
+
+    private static void handleConnection(Socket clientSocket) throws IOException {
+        try (clientSocket) {
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out.println(new java.util.Date() + "Already running " + ProcessHandle.current().pid() + "\r\n");
+        }
     }
 }
