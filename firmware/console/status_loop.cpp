@@ -544,8 +544,10 @@ static void updateFuelCorrections() {
 }
 
 static void updateFuelResults() {
-	engine->outputChannels.fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
-	engine->outputChannels.totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
+#if EFI_VEHICLE_SPEED
+	engine->outputChannels.fuelFlowRate = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
+	engine->outputChannels.totalFuelConsumption = engine->module<TripOdometer>()->getConsumedGrams();
+#endif // EFI_VEHICLE_SPEED
 }
 
 static void updateFuelInfo() {

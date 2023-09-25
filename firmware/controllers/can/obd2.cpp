@@ -163,7 +163,7 @@ static void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex) {
 		obdSendPacket(1, pid, 4, scaled << 16, busIndex);
 		break;
 	} case PID_FUEL_RATE: {
-		float gPerSecond = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
+		float gPerSecond = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
 		float gPerHour = gPerSecond * 3600;
 		float literPerHour = gPerHour * 0.00139f;
 		obdSendValue(_1_MODE, pid, 2, literPerHour * 20.0f, busIndex);	//	L/h.	(A*256+B)/20

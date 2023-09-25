@@ -52,6 +52,7 @@
 #include "lambda_monitor.h"
 #include "efi_output.h"
 #include "vvt.h"
+#include "trip_odometer.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -154,6 +155,7 @@ public:
 		Mockable<WallFuelController>,
 #if EFI_VEHICLE_SPEED
 		GearDetector,
+		TripOdometer,
 #endif // EFI_VEHICLE_SPEED
 		KnockController,
 		SensorChecker,
