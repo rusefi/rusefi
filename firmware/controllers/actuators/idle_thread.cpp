@@ -318,12 +318,6 @@ float IdleController::getIdlePosition(float rpm) {
 
 		bool isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
-		isVerboseIAC = engineConfiguration->isVerboseIAC && isAutomaticIdle;
-		if (isVerboseIAC) {
-			efiPrintf("Idle state %s", getIdle_state_e(idleState));
-			getIdlePid()->showPidStatus("idle");
-		}
-
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 

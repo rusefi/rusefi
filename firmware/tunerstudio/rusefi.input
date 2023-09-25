@@ -3277,7 +3277,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Override Idle VE table load axis", idleVeOverrideMode, { useSeparateVeForIdle == 1 }
 		field = "Use idle tables for cranking taper",		useSeparateIdleTablesForCrankingTaper
 		field = "Use coasting idle table",	useIacTableForCoasting
-		field = "Detailed status in console",			isVerboseIAC
 
 	dialog = idleSettings, "", yAxis
 		field = "Idle control mode",					idleMode

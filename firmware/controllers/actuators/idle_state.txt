@@ -25,7 +25,6 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
 	bit looksLikeRunning
 	bit looksLikeCoasting
 	bit looksLikeCrankToIdle
-	bit isVerboseIAC
 	bit isIdleCoasting;Idle: coasting
 	bit isIdleClosedLoop;Idle: Closed loop active
 
