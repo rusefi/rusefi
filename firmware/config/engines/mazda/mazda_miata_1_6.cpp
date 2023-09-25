@@ -285,8 +285,6 @@ void setMiataNA6_MAP_MRE() {
 	engineConfiguration->useIacTableForCoasting = true;
 	engineConfiguration->idlePidDeactivationTpsThreshold = 90;
 
-//	engineConfiguration->isVerboseIAC = true;
-
 	engineConfiguration->idleRpmPid.pFactor = 0.01;
 	engineConfiguration->idleRpmPid.iFactor = 0.02;
 	engineConfiguration->idle_derivativeFilterLoss = 0.1;

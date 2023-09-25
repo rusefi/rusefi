@@ -488,8 +488,6 @@ void setMazdaMiata2003EngineConfiguration() {
 	engineConfiguration->scriptSetting[3] = 12.0; // #4 voltage threshold
 
 	// enable auto_idle
-	// enable verbose_idle
-	engineConfiguration->isVerboseIAC = false;
 	// set idle_p 0.05
 	// set idle_i 0
 	// set idle_d 0
