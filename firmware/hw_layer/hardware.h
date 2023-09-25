@@ -51,11 +51,11 @@ void initHardwareNoConfig();
 // Initialize hardware with configuration loaded
 void initHardware();
 
+// todo: can we do simpler here? move conditional compilation into debounce.h?
 #if EFI_PROD_CODE
 #include "debounce.h"
-
+#else
+class ButtonDebounce;
 #endif /* EFI_PROD_CODE */
 
 void setBor(int borValue);
-
-class ButtonDebounce;
