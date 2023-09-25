@@ -37,6 +37,7 @@ Usages:
   - name: knock_controller
     java: KnockController.java
     folder: controllers/engine_cycle
+    prepend: integration/rusefi_config_shared.txt
     output_name: knock
 
   - name: throttle_model
