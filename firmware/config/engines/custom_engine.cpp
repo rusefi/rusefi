@@ -17,7 +17,6 @@
 #include "mre_meta.h"
 #include "proteus_meta.h"
 #include "hellen_meta.h"
-#include "odometer.h"
 #include "defaults.h"
 #include "../board_id/qc_stim_meta.h"
 

@@ -32,8 +32,6 @@ public:
 	// Per-injection fuel mass, including TPS accel enrich
 	float injectionMass[MAX_CYLINDER_COUNT] = {0};
 
-	FuelConsumptionState fuelConsumption;
-
 	Timer crankingTimer;
 
 	WarningCodeState warnings;
