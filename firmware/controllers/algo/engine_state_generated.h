@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Tue Aug 22 18:30:13 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Sep 25 18:12:01 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -220,62 +220,158 @@ struct engine_state_s {
 	 */
 	uint8_t alignmentFill_at_46[2];
 	/**
-	 * offset 48
-	 */
-	uint32_t startStopStateToggleCounter = (uint32_t)0;
+	offset 48 bit 0 */
+	bool startStopPhysicalState : 1 {};
+	/**
+	offset 48 bit 1 */
+	bool unusedBit_11_1 : 1 {};
+	/**
+	offset 48 bit 2 */
+	bool unusedBit_11_2 : 1 {};
+	/**
+	offset 48 bit 3 */
+	bool unusedBit_11_3 : 1 {};
+	/**
+	offset 48 bit 4 */
+	bool unusedBit_11_4 : 1 {};
+	/**
+	offset 48 bit 5 */
+	bool unusedBit_11_5 : 1 {};
+	/**
+	offset 48 bit 6 */
+	bool unusedBit_11_6 : 1 {};
+	/**
+	offset 48 bit 7 */
+	bool unusedBit_11_7 : 1 {};
+	/**
+	offset 48 bit 8 */
+	bool unusedBit_11_8 : 1 {};
+	/**
+	offset 48 bit 9 */
+	bool unusedBit_11_9 : 1 {};
+	/**
+	offset 48 bit 10 */
+	bool unusedBit_11_10 : 1 {};
+	/**
+	offset 48 bit 11 */
+	bool unusedBit_11_11 : 1 {};
+	/**
+	offset 48 bit 12 */
+	bool unusedBit_11_12 : 1 {};
+	/**
+	offset 48 bit 13 */
+	bool unusedBit_11_13 : 1 {};
+	/**
+	offset 48 bit 14 */
+	bool unusedBit_11_14 : 1 {};
+	/**
+	offset 48 bit 15 */
+	bool unusedBit_11_15 : 1 {};
+	/**
+	offset 48 bit 16 */
+	bool unusedBit_11_16 : 1 {};
+	/**
+	offset 48 bit 17 */
+	bool unusedBit_11_17 : 1 {};
+	/**
+	offset 48 bit 18 */
+	bool unusedBit_11_18 : 1 {};
+	/**
+	offset 48 bit 19 */
+	bool unusedBit_11_19 : 1 {};
+	/**
+	offset 48 bit 20 */
+	bool unusedBit_11_20 : 1 {};
+	/**
+	offset 48 bit 21 */
+	bool unusedBit_11_21 : 1 {};
+	/**
+	offset 48 bit 22 */
+	bool unusedBit_11_22 : 1 {};
+	/**
+	offset 48 bit 23 */
+	bool unusedBit_11_23 : 1 {};
+	/**
+	offset 48 bit 24 */
+	bool unusedBit_11_24 : 1 {};
+	/**
+	offset 48 bit 25 */
+	bool unusedBit_11_25 : 1 {};
+	/**
+	offset 48 bit 26 */
+	bool unusedBit_11_26 : 1 {};
+	/**
+	offset 48 bit 27 */
+	bool unusedBit_11_27 : 1 {};
+	/**
+	offset 48 bit 28 */
+	bool unusedBit_11_28 : 1 {};
+	/**
+	offset 48 bit 29 */
+	bool unusedBit_11_29 : 1 {};
+	/**
+	offset 48 bit 30 */
+	bool unusedBit_11_30 : 1 {};
+	/**
+	offset 48 bit 31 */
+	bool unusedBit_11_31 : 1 {};
 	/**
 	 * offset 52
 	 */
-	float egtValue1 = (float)0;
+	uint32_t startStopStateToggleCounter = (uint32_t)0;
 	/**
 	 * offset 56
+	 */
+	float egtValue1 = (float)0;
+	/**
+	 * offset 60
 	 */
 	float egtValue2 = (float)0;
 	/**
 	 * User-defined RPM hard limit
 	rpm
-	 * offset 60
+	 * offset 64
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 62
+	 * offset 66
 	 */
-	uint8_t alignmentFill_at_62[2];
+	uint8_t alignmentFill_at_66[2];
 	/**
 	 * Fuel: Injection counter
-	 * offset 64
+	 * offset 68
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * Ign: Spark counter
-	 * offset 68
+	 * offset 72
 	 */
 	uint32_t sparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 72
+	 * offset 76
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 76
+	 * offset 80
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	%
-	 * offset 80
+	 * offset 84
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 82
+	 * offset 86
 	 */
-	uint8_t alignmentFill_at_82[2];
+	uint8_t alignmentFill_at_86[2];
 };
-static_assert(sizeof(engine_state_s) == 84);
+static_assert(sizeof(engine_state_s) == 88);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Tue Aug 22 18:30:13 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Sep 25 18:12:01 UTC 2023

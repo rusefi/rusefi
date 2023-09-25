@@ -1021,6 +1021,9 @@ float getOutputValueByName(const char *name) {
 // startStopState
 		case 897099930:
 			return engine->engineState.startStopState;
+// startStopPhysicalState
+		case -1943724937:
+			return engine->engineState.startStopPhysicalState;
 // startStopStateToggleCounter
 		case -960645892:
 			return engine->engineState.startStopStateToggleCounter;

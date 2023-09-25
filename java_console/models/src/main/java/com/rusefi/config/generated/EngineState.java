@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Sep 18 12:56:47 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Sep 25 18:12:01 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -189,17 +189,18 @@ public class EngineState {
 	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 44, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
 	public static final Field STARTSTOPSTATE = Field.create("STARTSTOPSTATE", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
 	public static final Field ALIGNMENTFILL_AT_46 = Field.create("ALIGNMENTFILL_AT_46", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 48, FieldType.INT).setScale(1.0).setBaseOffset(1052);
-	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 52, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 56, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 60, FieldType.INT16).setScale(1.0).setBaseOffset(1052);
-	public static final Field ALIGNMENTFILL_AT_62 = Field.create("ALIGNMENTFILL_AT_62", 62, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 64, FieldType.INT).setScale(1.0).setBaseOffset(1052);
-	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 68, FieldType.INT).setScale(1.0).setBaseOffset(1052);
-	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 72, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 76, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 80, FieldType.INT16).setScale(0.01).setBaseOffset(1052);
-	public static final Field ALIGNMENTFILL_AT_82 = Field.create("ALIGNMENTFILL_AT_82", 82, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
+	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 48, FieldType.BIT, 0).setBaseOffset(1052);
+	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 52, FieldType.INT).setScale(1.0).setBaseOffset(1052);
+	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 56, FieldType.FLOAT).setBaseOffset(1052);
+	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 60, FieldType.FLOAT).setBaseOffset(1052);
+	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 64, FieldType.INT16).setScale(1.0).setBaseOffset(1052);
+	public static final Field ALIGNMENTFILL_AT_66 = Field.create("ALIGNMENTFILL_AT_66", 66, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 68, FieldType.INT).setScale(1.0).setBaseOffset(1052);
+	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1052);
+	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 76, FieldType.FLOAT).setBaseOffset(1052);
+	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 80, FieldType.FLOAT).setBaseOffset(1052);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 84, FieldType.INT16).setScale(0.01).setBaseOffset(1052);
+	public static final Field ALIGNMENTFILL_AT_86 = Field.create("ALIGNMENTFILL_AT_86", 86, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -223,16 +224,17 @@ public class EngineState {
 	BRAKEPEDALSTATE,
 	STARTSTOPSTATE,
 	ALIGNMENTFILL_AT_46,
+	STARTSTOPPHYSICALSTATE,
 	STARTSTOPSTATETOGGLECOUNTER,
 	EGTVALUE1,
 	EGTVALUE2,
 	DESIREDRPMLIMIT,
-	ALIGNMENTFILL_AT_62,
+	ALIGNMENTFILL_AT_66,
 	FUELINJECTIONCOUNTER,
 	SPARKCOUNTER,
 	FUELINGLOAD,
 	IGNITIONLOAD,
 	VETABLEYAXIS,
-	ALIGNMENTFILL_AT_82,
+	ALIGNMENTFILL_AT_86,
 	};
 }
