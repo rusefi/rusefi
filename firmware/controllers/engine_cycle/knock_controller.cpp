@@ -60,7 +60,7 @@ bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 	engine->outputChannels.knock[cylinderNumber] = roundf(cylPeak);
 
 	// Pass through all-cylinders peak detector
-	engine->outputChannels.knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
+	m_knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
 
 	// If this was a knock, count it!
 	if (isKnock) {
