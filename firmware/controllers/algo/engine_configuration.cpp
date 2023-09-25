@@ -169,7 +169,7 @@ __attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
  *
  * this method is NOT currently invoked on ECU start - actual user input has to happen!
- * See preCalculate which is invoked BOTH on start and configuration change
+ * See 'preCalculate' or 'startHardware' which are invoked BOTH on start and configuration change
  */
 void incrementGlobalConfigurationVersion(const char * msg) {
     assertStackVoid("increment", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);

@@ -12,7 +12,8 @@
 bool validateConfig();
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer);
 void initPeriodicEvents();
-void initEngineController();
+// see also applyNewHardwareSettings
+void initRealHardwareEngineController();
 void commonEarlyInit();
 void commonInitEngineController();
 void initStartStopButton();

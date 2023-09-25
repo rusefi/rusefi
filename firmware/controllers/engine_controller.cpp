@@ -403,8 +403,14 @@ static void initConfigActions() {
 }
 #endif /* EFI_UNIT_TEST */
 
+// one-time start-up
 // this method is used by real firmware and simulator and unit test
 void commonInitEngineController() {
+#if EFI_PROD_CODE
+	addConsoleAction("sensorinfo", printSensorInfo);
+	addConsoleAction("reset_accel", resetAccel);
+#endif /* EFI_PROD_CODE */
+
 	initInterpolation();
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
@@ -653,8 +659,8 @@ void commonEarlyInit() {
 #endif // HW_CHECK_ALWAYS_STIMULATE
 }
 
-void initEngineController() {
-	addConsoleAction("sensorinfo", printSensorInfo);
+// one-time start-up
+void initRealHardwareEngineController() {
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
 	initBenchTest();
@@ -693,11 +699,6 @@ void initEngineController() {
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
 	initEgoAveraging();
-
-#if EFI_PROD_CODE
-	addConsoleAction("reset_accel", resetAccel);
-#endif /* EFI_PROD_CODE */
-
 }
 
 /**

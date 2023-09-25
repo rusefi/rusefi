@@ -259,7 +259,7 @@ void runRusEfiWithConfig() {
 		 * Now let's initialize actual engine control logic
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
-		initEngineController();
+		initRealHardwareEngineController();
 
 
 		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen

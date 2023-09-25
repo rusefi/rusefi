@@ -144,7 +144,7 @@ void rusEfiFunctionalTest(void) {
 	initDataStructures();
 	initializeConsole();
 
-	// todo: reduce code duplication with initEngineController
+	// todo: reduce code duplication with initRealHardwareEngineController
 
 	initFlash();
 	loadConfiguration();

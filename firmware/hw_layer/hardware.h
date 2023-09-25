@@ -7,6 +7,7 @@
 
 #pragma once
 
+// 'startHardware' is invoked both on boot and configuration change
 void startHardware();
 void stopHardware();
 
