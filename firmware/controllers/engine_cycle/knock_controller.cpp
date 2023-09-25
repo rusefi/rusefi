@@ -58,7 +58,6 @@ bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 	// All-cylinders peak detector
 	m_knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
 
-	// TODO: retard timing, then put it back!
 	if (isKnock) {
 		m_knockCount++;
 
