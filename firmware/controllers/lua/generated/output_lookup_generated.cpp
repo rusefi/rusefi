@@ -92,8 +92,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.baroPressure;
 		case -1119268893:
 			return engine->outputChannels.lambdaValue;
-		case -2096715875:
-			return engine->outputChannels.knockRetard;
 		case 277722310:
 			return engine->outputChannels.VBatt;
 		case 598268994:
@@ -142,8 +140,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.TPS2Value;
 		case -1158359776:
 			return engine->outputChannels.tuneCrc16;
-		case 710253075:
-			return engine->outputChannels.knockLevel;
 		case -1962923820:
 			return engine->outputChannels.seconds;
 		case -2073424832:
@@ -176,14 +172,14 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.flexPercent;
 		case 53406649:
 			return engine->outputChannels.wastegatePositionSensor;
-		case 1299611400:
-			return engine->outputChannels.tsConfigVersion;
 		case -1560670902:
 			return engine->outputChannels.calibrationValue;
 		case 1774505810:
 			return engine->outputChannels.calibrationMode;
-		case -2029665121:
-			return engine->outputChannels.idleTargetPosition;
+		case 356548450:
+			return engine->outputChannels.idleStepperTargetPosition;
+		case 1299611400:
+			return engine->outputChannels.tsConfigVersion;
 		case 2018173863:
 			return engine->outputChannels.totalTriggerErrorCounter;
 		case -1326404407:
@@ -250,8 +246,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.rawTps2Primary;
 		case 70357120:
 			return engine->outputChannels.rawTps2Secondary;
-		case 699938372:
-			return engine->outputChannels.knockCount;
 		case 633018089:
 			return engine->outputChannels.accelerationZ;
 		case -1670865464:
@@ -518,6 +512,16 @@ float getOutputValueByName(const char *name) {
 			return engine->ignitionState.luaTimingAdd;
 		case -1626770351:
 			return engine->ignitionState.luaTimingMult;
+		case -1571781441:
+			return ___engine.module<KnockController>()->m_knockLevel;
+		case -94443575:
+			return ___engine.module<KnockController>()->m_knockRetard;
+		case -504596140:
+			return ___engine.module<KnockController>()->m_knockThreshold;
+		case -1582096144:
+			return ___engine.module<KnockController>()->m_knockCount;
+		case 164334513:
+			return ___engine.module<KnockController>()->m_maximumRetard;
 #if EFI_BOOST_CONTROL
 		case -575666209:
 			return ___engine.module<BoostController>()->isTpsInvalid;
