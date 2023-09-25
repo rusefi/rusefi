@@ -18,6 +18,12 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 		// in rare cases engines do not like random sequential mode
 		return true;
 	}
+	if (isGdiEngine()) {
+	    engineConfiguration->isPhaseSyncRequiredForIgnition = true;
+#if EFI_PROD_CODE
+	    criticalError("For GDI please configure CAM and require sync for ignition");
+#endif
+	}
 
 	// Odd cylinder count engines don't work properly with wasted spark, so wait for full sync (so that sequential works)
 	// See https://github.com/rusefi/rusefi/issues/4195 for the issue to properly support this case

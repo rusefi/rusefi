@@ -39,7 +39,11 @@ void setLeftRightBanksNeedBetterName() {
 }
 
 static void setDefaultHPFP() {
+#if ! EFI_UNIT_TEST
+    // unit tests rely on 'hpfpCamLobes' for isGdiEngine() and we need not-GDI by default for unit tests
 	engineConfiguration->hpfpCamLobes = 3;
+#endif
+
 // todo: would be nice for unit tests to be happy about these defaults
 #if EFI_PROD_CODE
 	engineConfiguration->hpfpPumpVolume = 0.290;
