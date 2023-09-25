@@ -86,7 +86,7 @@ void miataNAcommonEngineSettings() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->engineCode, "NA6");
 	engineConfiguration->vehicleWeight = 950;
-	engineConfiguration->compressionRatio = 9.1;
+	engineConfiguration->compressionRatio = 9.0;
 
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
@@ -95,21 +95,23 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_MAZDA_MIATA_NA;
 
 	// Cranking
+	engineConfiguration->primingDelay = 1.0;
+
 	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->crankingTimingAngle = 10;
 	engineConfiguration->cranking.baseFuel = 27.5;
 
-	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
+	config->crankingFuelCoef[0] = 3.36; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
-	config->crankingFuelCoef[1] = 2.2;
+	config->crankingFuelCoef[1] = 2.97;
 	config->crankingFuelBins[1] = -10;
-	config->crankingFuelCoef[2] = 1.8;
+	config->crankingFuelCoef[2] = 2.69;
 	config->crankingFuelBins[2] = 5;
-	config->crankingFuelCoef[3] = 1.5;
+	config->crankingFuelCoef[3] = 2.15;
 	config->crankingFuelBins[3] = 30;
-	config->crankingFuelCoef[4] = 1.0;
-	config->crankingFuelBins[4] = 35;
-	config->crankingFuelCoef[5] = 1.0;
+	config->crankingFuelCoef[4] = 1.78;
+	config->crankingFuelBins[4] = 40;
+	config->crankingFuelCoef[5] = 1.47;
 	config->crankingFuelBins[5] = 50;
 	config->crankingFuelCoef[6] = 1.0;
 	config->crankingFuelBins[6] = 65;
@@ -135,6 +137,11 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->idleTimingPid.minValue = -15;
 	engineConfiguration->idleTimingPid.maxValue =  15;
 
+	// Idle timing
+	static const uint16_t idleAdvanceBins[] = { 500, 650, 800, 950, 1050, 1200, 1350, 1500 };
+	copyArray(config->idleAdvanceBins, idleAdvanceBins);
+	setArrayValues(config->idleAdvance, 15);
+
 	// Fan
 	engineConfiguration->enableFan1WithAc = true;
 	engineConfiguration->enableFan2WithAc = true;
@@ -154,17 +161,25 @@ void miataNAcommonEngineSettings() {
 	setMapVeTable();
 	setTable(config->injectionPhase, 400);
 
+	static const float cltFuelMultValues[] = { 1.25, 1.23, 1.2, 1.18, 1.16, 1.14, 1.11, 1.09, 1.07, 1.05, 1.02, 1, 1, 1, 1, 1 };
+	copyArray(config->cltFuelCorr, cltFuelMultValues);
+
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
 	 * 90-93 (Blue) - #195500-1970
 	 */
 	engineConfiguration->injector.flow = 212;
 
+	static const float deadtimeBins[] = { 8, 9.6, 11.2, 12.8, 13.2, 14.4, 15.3, 16 };
+	static const float deadtimeValues[] = { 1.97, 1.52, 1.23, 1.04, 0.99, 0.9, 0.85, 0.73 };
+	copyArray(engineConfiguration->injector.battLagCorrBins, deadtimeBins);
+	copyArray(engineConfiguration->injector.battLagCorr, deadtimeValues);
+
 	// Sensors
 	// TPS
 	// my car was originally a manual so proper TPS
-	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
-	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMin = 92;
+	engineConfiguration->tpsMax = 872;
 
 	// CLT/IAT
 	engineConfiguration->clt.config = { -20, 40, 80, 16150, 1150, 330, 2700 };
@@ -193,6 +208,14 @@ void miataNAcommonEngineSettings() {
 	// 4.3 * 6 / 23 ~= 1.12
 	engineConfiguration->vssGearRatio = 4.3 * 6 / 23;
 	engineConfiguration->vssToothCount = 4;
+
+	// Set up closed loop fuel
+	engineConfiguration->fuelClosedLoopCorrectionEnabled = true;
+	engineConfiguration->stft.minAfr = 10;
+	engineConfiguration->stft.cellCfgs[0] = { 5, -5, 5 };
+	engineConfiguration->stft.cellCfgs[1] = { 15, -15, 10 };
+	engineConfiguration->stft.cellCfgs[2] = { 15, -15, 1 };
+	engineConfiguration->stft.cellCfgs[3] = { 5, -5, 30 };
 }
 
 static void miataNAcommon() {
@@ -360,9 +383,10 @@ void setHellenNA6() {
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 }
 
+#if HW_PROTEUS
 #include "proteus_meta.h"
 
-void setMiataNa6_Proteus() {
+void setMiataNa6_Polygonus() {
 	miataNAcommonEngineSettings();
 
 	// Triggers
@@ -379,11 +403,22 @@ void setMiataNa6_Proteus() {
 
 	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_ANALOG_VOLT_2;
 
-	engineConfiguration->acSwitch = PROTEUS_DIGITAL_4;
+#if EFI_PROD_CODE
+	engineConfiguration->clutchDownPin = getAdcChannelBrainPin("", PROTEUS_IN_ANALOG_VOLT_5);
+#endif // EFI_PROD_CODE
+	engineConfiguration->clutchDownPinInverted = true;
+
+	// Fuel pressure
+	engineConfiguration->lowPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_6;
+	engineConfiguration->lowPressureFuel.v1 = 0.5;
+	engineConfiguration->lowPressureFuel.value1 = 0;
+	engineConfiguration->lowPressureFuel.v2 = 4.5;
+	engineConfiguration->lowPressureFuel.value2 = 689.5;
 
 	// Built in wideband controller on bus 2
 	engineConfiguration->enableAemXSeries = true;
 	engineConfiguration->widebandOnSecondBus = true;
+	engineConfiguration->enableVerboseCanTx = true;
 
 	// Outputs
 	engineConfiguration->fuelPumpPin = PROTEUS_LS_9;
@@ -391,11 +426,17 @@ void setMiataNa6_Proteus() {
 	engineConfiguration->idle.solenoidPin = PROTEUS_LS_7;
 
 	// TODO: which is fan 1 or 2?
-	engineConfiguration->fanPin = PROTEUS_LS_5;
-	// engineConfiguration->fan2Pin = PROTEUS_LS_5;
+	engineConfiguration->fanPin = PROTEUS_LS_8;
+	engineConfiguration->fanOnTemperature = 90;
+	engineConfiguration->fanOffTemperature = 84;
+
+	engineConfiguration->acSwitch = PROTEUS_DIGITAL_4;
 	engineConfiguration->acRelayPin = PROTEUS_LS_10;
 
-	engineConfiguration->tachOutputPin = PROTEUS_LS_12;
-
 	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_11;
+
+	// Disable ETBs
+	engineConfiguration->etbFunctions[0] = dc_function_e::DC_None;
+	engineConfiguration->etbFunctions[1] = dc_function_e::DC_None;
 }
+#endif

@@ -29,4 +29,4 @@ void setHellenNA6();
 
 void setHellenNA94();
 
-void setMiataNa6_Proteus();
+void setMiataNa6_Polygonus();

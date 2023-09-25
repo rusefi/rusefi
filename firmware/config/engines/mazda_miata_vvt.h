@@ -29,10 +29,9 @@ void setMazdaMiata2003EngineConfigurationBoardTest();
  */
 void setMiataNB2_Proteus_TCU();
 
-/**
- * set engine_type 67
- */
-void setMiataNB2_Proteus();
+void setMiataNB1_Polygonus();
+void setMiataNB2_Polygonus();
+void setMiataNB_MSM_Polygonus();
 
 /**
  * set engine_type 69
