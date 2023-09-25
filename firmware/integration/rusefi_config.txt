@@ -425,7 +425,7 @@ bit antiLagEnabled;
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 bit useTLE8888_stepper
 bit usescriptTableForCanSniffingFiltering
-bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
+bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in FOME console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
 bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit cltSensorPulldown
@@ -696,13 +696,13 @@ bit is_enabled_spi_1
 bit is_enabled_spi_2
 	bit is_enabled_spi_3
 	bit isSdCardEnabled;enable sd/disable sd
-	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
+	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for FOME verbose CAN format.
 	bit isVerboseAlternator
 	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	
 	bit enabledStep1Limiter
 	bit verboseTLE8888
-	bit enableVerboseCanTx;CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
+	bit enableVerboseCanTx;CAN broadcast using custom FOME protocol\nenable can_broadcast/disable can_broadcast
 	bit etb1configured
 	bit etb2configured
 	bit measureMapOnlyInOneCylinder;Useful for individual intakes
@@ -860,7 +860,7 @@ sensor_chart_e sensorChartMode;rusEFI console Sensor Sniffer mode;
 	bit tcuEnabled
 bit canBroadcastUseChannelTwo,"second","first"
 	bit useRawOutputToDriveIdleStepper;If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
-bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
+bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in FOME console
 
 
 	dc_io[ETB_COUNT iterate] etbIo
@@ -901,9 +901,9 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 
 	dc_io[DC_PER_STEPPER iterate] stepperDcIo
 
-	vehicle_info_t engineMake;For example, BMW, GM or Chevrolet\nREQUIRED for rusEFI Online
-	vehicle_info_t engineCode;For example, LS1 or NB2\nREQUIRED for rusEFI Online
-	vehicle_info_t vehicleName;For example, Hunchback or Orange Miata\nVehicle name has to be unique between your vehicles.\nREQUIRED for rusEFI Online
+	vehicle_info_t engineMake;For example, BMW, GM or Chevrolet
+	vehicle_info_t engineCode;For example, LS1 or NB2
+	vehicle_info_t vehicleName;For example, Hunchback or Orange Miata\nVehicle name has to be unique between your vehicles.
 
 	output_pin_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid;
 
@@ -955,8 +955,8 @@ end_struct
 	bit boardUse2stepPullDown,"With Pull Down","With Pull Up"
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;This enables smart alternator control and activates the extra alternator settings.
-	bit invertPrimaryTriggerSignal;https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the primary engine speed sensor.
-	bit invertSecondaryTriggerSignal;https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the secondary engine speed sensor.
+	bit invertPrimaryTriggerSignal;Invert the signal from the primary trigger sensor.
+	bit invertSecondaryTriggerSignal;Invert the signal from the secondary trigger sensor.
 	
 bit cutFuelOnHardLimit,"yes","no"
 bit cutSparkOnHardLimit,"yes","no";Be careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
@@ -1812,7 +1812,7 @@ end_struct
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
-#define PROTOCOL_VERSION_TAG "rusEfiVersion"
+#define PROTOCOL_VERSION_TAG "fomeVersion"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
 #define PROTOCOL_SIGNATURE_PREFIX "rusEFI "
 
@@ -1839,7 +1839,7 @@ end_struct
 
 
 #define TS_PROTOCOL "001"
-! These commands are used by TunerStudio and the rusEFI console
+! These commands are used by TunerStudio and the FOME console
 ! 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'
 ! 0x53 queryCommand
@@ -1888,7 +1888,7 @@ end_struct
 ! Engine Sniffer time stamp unit, in microseconds
 #define ENGINE_SNIFFER_UNIT_US 10
 
-! These commands are used exclusively by the rusEFI console
+! These commands are used exclusively by the FOME console
 ! 0x74
 #define TS_TEST_COMMAND 't'
 
