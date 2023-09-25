@@ -61,6 +61,7 @@ void slowStartStopButtonCallback() {
 		onStartStopButtonToggle();
 	}
 	engine->engineState.startStopState = startStopState;
+	engine->engineState.startStopPhysicalState = startStopButtonDebounce.getPhysicalState();
 
     bool isStarterEngaged = enginePins.starterControl.getLogicValue();
 
