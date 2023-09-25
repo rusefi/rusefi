@@ -19,7 +19,6 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 		return true;
 	}
 	if (isGdiEngine()) {
-	    engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 #if EFI_PROD_CODE
 	    criticalError("For GDI please configure CAM and require sync for ignition");
 #endif
