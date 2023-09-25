@@ -466,7 +466,6 @@ void commonInitEngineController() {
 #endif
 
 	initButtonDebounce();
-	initStartStopButton();
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle();
