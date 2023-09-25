@@ -273,8 +273,6 @@ public class Fields {
 	public static final int engine_type_e_DODGE_NEON_1995 = 2;
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
 	public static final int engine_type_e_DODGE_RAM = 64;
-	public static final int engine_type_e_ET_UNUSED_11 = 11;
-	public static final int engine_type_e_ET_UNUSED_12 = 12;
 	public static final int engine_type_e_ET_UNUSED_13 = 13;
 	public static final int engine_type_e_ET_UNUSED_15 = 15;
 	public static final int engine_type_e_ET_UNUSED_17 = 17;
@@ -336,6 +334,10 @@ public class Fields {
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_MRE_VW_B6 = 62;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
+	public static final int engine_type_e_POLYGONUS_MIATA_MSM = 12;
+	public static final int engine_type_e_POLYGONUS_MIATA_NA6 = 4;
+	public static final int engine_type_e_POLYGONUS_MIATA_NB1 = 11;
+	public static final int engine_type_e_POLYGONUS_MIATA_NB2 = 67;
 	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 30;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
 	public static final int engine_type_e_PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9;
@@ -344,8 +346,6 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_HONDA_K = 90;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
-	public static final int engine_type_e_PROTEUS_MIATA_NA6 = 4;
-	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
 	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
 	public static final int engine_type_e_PROTEUS_VW_B6 = 39;
 	public static final int engine_type_e_SACHS = 29;
@@ -977,6 +977,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 242401758;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1178,7 +1179,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.25.f407-discovery.2565933743";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.25.f407-discovery.242401758";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;

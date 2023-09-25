@@ -166,10 +166,6 @@ case engine_type_e::DODGE_RAM:
   return "DODGE_RAM";
 case engine_type_e::ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
-case engine_type_e::ET_UNUSED_11:
-  return "ET_UNUSED_11";
-case engine_type_e::ET_UNUSED_12:
-  return "ET_UNUSED_12";
 case engine_type_e::ET_UNUSED_13:
   return "ET_UNUSED_13";
 case engine_type_e::ET_UNUSED_15:
@@ -290,6 +286,14 @@ case engine_type_e::MRE_VW_B6:
   return "MRE_VW_B6";
 case engine_type_e::NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
+case engine_type_e::POLYGONUS_MIATA_MSM:
+  return "POLYGONUS_MIATA_MSM";
+case engine_type_e::POLYGONUS_MIATA_NA6:
+  return "POLYGONUS_MIATA_NA6";
+case engine_type_e::POLYGONUS_MIATA_NB1:
+  return "POLYGONUS_MIATA_NB1";
+case engine_type_e::POLYGONUS_MIATA_NB2:
+  return "POLYGONUS_MIATA_NB2";
 case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case engine_type_e::PROTEUS_BMW_M73:
@@ -306,10 +310,6 @@ case engine_type_e::PROTEUS_HONDA_OBD2A:
   return "PROTEUS_HONDA_OBD2A";
 case engine_type_e::PROTEUS_LUA_DEMO:
   return "PROTEUS_LUA_DEMO";
-case engine_type_e::PROTEUS_MIATA_NA6:
-  return "PROTEUS_MIATA_NA6";
-case engine_type_e::PROTEUS_MIATA_NB2:
-  return "PROTEUS_MIATA_NB2";
 case engine_type_e::PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
 case engine_type_e::PROTEUS_VW_B6:
