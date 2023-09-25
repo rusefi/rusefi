@@ -29,6 +29,7 @@ void setGDIFueling() {
 
 	setTable(config->injectionPhase, -200.0f);
 	engineConfiguration->injectionTimingMode = InjectionTimingMode::Center;
+    engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 }
 
 /* Cylinder to bank mapping */

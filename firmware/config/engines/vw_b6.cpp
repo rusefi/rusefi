@@ -26,7 +26,6 @@ static void commonPassatB6() {
 	engineConfiguration->idleMode = IM_AUTO;
 
 	setInline4();
-	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 
 	engineConfiguration->disableEtbWhenEngineStopped = true;
 
