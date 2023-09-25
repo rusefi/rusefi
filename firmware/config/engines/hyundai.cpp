@@ -137,13 +137,22 @@ FIXED_POINT = 128
 setTickRate(100)
 
 function onCanConfiguration3(bus, id, dlc, data)
---	print("Received configuration3 "..arrayToString(data))
+	-- 	print("Received configuration3 "..arrayToString(data))
 	pumpPeak = getTwoBytesLSB(data, 6, 1 / 128)
---	print("GDI4 says PumpPeakCurrent ".. pumpPeak)
+	print("GDI4 says PumpPeakCurrent ".. pumpPeak)
 	setLuaGauge(1, pumpPeak)
 end
 
+function onCanVersion(bus, id, dlc, data)
+	year = data[1] * 100 + data[2]
+	month = data[3]
+	day = data[4]
+--	print ("GDI4 firmware " ..year ..'/' ..month ..'/' ..day)
+end
+
 canRxAdd(GDI4_BASE_ADDRESS + 3, onCanConfiguration3)
+canRxAdd(GDI4_BASE_ADDRESS + 5, onCanVersion)
+
 
 EMS_DCT11_128 = 0x80
 EMS_DCT12_129 = 0x81
@@ -157,13 +166,13 @@ EMS14_1349 = 0x545
 
 counter = 0
 
-payLoad128 =  { 0x00, 0x17, 0x70, 0x0F, 0x1B, 0x2C, 0x1B, 0x75 }
-payLoad129 =  { 0x40, 0x84, 0x5F, 0x00, 0x00, 0x00, 0x00, 0x75 }
-payLoad399 = {0x00, 0x30, 0x1d, 0x00, 0x00, 0x63, 0x00, 0x00}
-payLoad608 = {0x05, 0x1d, 0x00, 0x30, 0x01, 0xa5, 0x7f, 0x31}
-payLoad672 = {0xe0, 0x00, 0x5f, 0x98, 0x39, 0x12, 0x9e, 0x08}
-payLoad809 = {0xd7, 0x7b, 0x7e, 0x0c, 0x11, 0x2c, 0x00, 0x10}
-payLoad898 = {0x40, 0xfe, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x08}
+payLoad128 = { 0x00, 0x17, 0x70, 0x0F, 0x1B, 0x2C, 0x1B, 0x75 }
+payLoad129 = { 0x40, 0x84, 0x5F, 0x00, 0x00, 0x00, 0x00, 0x75 }
+payLoad399 = { 0x00, 0x30, 0x1d, 0x00, 0x00, 0x63, 0x00, 0x00 }
+payLoad608 = { 0x05, 0x1d, 0x00, 0x30, 0x01, 0xa5, 0x7f, 0x31 }
+payLoad672 = { 0xe0, 0x00, 0x5f, 0x98, 0x39, 0x12, 0x9e, 0x08 }
+payLoad809 = { 0xd7, 0x7b, 0x7e, 0x0c, 0x11, 0x2c, 0x00, 0x10 }
+payLoad898 = { 0x40, 0xfe, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x08 }
 payLoad1349 = { 0xCA, 0x16, 0x00, 0x8A, 0x75, 0xFF, 0x75, 0xFF }
 
 speedSensor = Sensor.new("VehicleSpeed")
@@ -171,58 +180,29 @@ speedSensor : setTimeout(3000)
 
 function onCluPacket(bus, id, dlc, data)
 	speedKph = getBitRange(data, 8, 9) * 0.5
-	print('onCAR_SPEED ' ..speedKph)
+--	print('onCAR_SPEED ' ..speedKph)
 	speedSensor : set(speedKph)
 end
 
 canRxAdd(1, 1264, onCluPacket)
 
-GDI4_BASE_ADDRESS = 0xBB20
-GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
-local data_set_settings = { GDI4_CAN_SET_TAG, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
-
-function onCanConfiguration3(bus, id, dlc, data)
-	print("Received configuration3 "..arrayToString(data))
-	print("GDI4 says HoldCurrent   "..getTwoBytesLSB(data, 0, 1 / 128) )
-	print("GDI4 says TholdOff      "..getTwoBytesLSB(data, 2, 1) )
-	print("GDI4 says THoldDuration "..getTwoBytesLSB(data, 4, 1) )
-	pumpPeak = getTwoBytesLSB(data, 6, 1 / 128)
-	print("GDI4 says PumpPeakCurrent ".. pumpPeak)
-	setLuaGauge(1, pumpPeak)
-end
-
-canRxAdd(GDI4_BASE_ADDRESS + 3, onCanConfiguration3)
-
 function onTick()
-	TholdOff = getCalibration("mc33_t_hold_off")
-	THoldDuration = getCalibration("mc33_t_hold_tot")
-
-	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
-	pumpHoldCurrent      = getCalibration("mc33_hpfp_i_hold")
-
-	setTwoBytesLsb(data_set_settings, 1, TholdOff)
-	setTwoBytesLsb(data_set_settings, 3, THoldDuration)
--- set mc33_hpfp_i_peak 6
-	setTwoBytesLsb(data_set_settings, 5, pumpPeakCurrent * FIXED_POINT)
-	print('Will be sending ' ..arrayToString(data_set_settings))
-	txCan(1, GDI_CHANGE_ADDRESS + 3, 1, data_set_settings)
-
 	local RPMread = math.floor(getSensor("RPM") * 4)
 	local RPMhi = RPMread >> 8
 	local RPMlo = RPMread & 0xff
 
-    payLoad128[3] = RPMlo
-    payLoad128[4] = RPMhi
+	payLoad128[3] = RPMlo
+	payLoad128[4] = RPMhi
 
-    counter = (counter + 1) % 16
+	counter = (counter + 1) % 16
 
-    check128 = hyundaiSumNibbles(payLoad128, counter)
-    payLoad128[8] = check128 * 16 + counter
-    txCan(1, EMS_DCT11_128, 0, payLoad128)
+	check128 = hyundaiSumNibbles(payLoad128, counter)
+	payLoad128[8] = check128 * 16 + counter
+	txCan(1, EMS_DCT11_128, 0, payLoad128)
 
-    check129 = hyundaiSumNibbles(payLoad129, counter)
-    payLoad129[8] = check129 * 16 + counter
-    txCan(1, EMS_DCT12_129, 0, payLoad129)
+	check129 = hyundaiSumNibbles(payLoad129, counter)
+	payLoad129[8] = check129 * 16 + counter
+	txCan(1, EMS_DCT12_129, 0, payLoad129)
 
 	canRPMpayload = { 0x05, 0x1B, RPMlo, RPMhi, 0x1B, 0x2C, 0x00, 0x7F }
 
@@ -235,8 +215,8 @@ function onTick()
 	txCan(1, EMS12_809, 0, payLoad809)
 	txCan(1, EMS9_898, 0, payLoad898)
 
-	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
-	pumpHoldCurrent      = getCalibration("mc33_hpfp_i_hold")
+	pumpPeakCurrent = getCalibration("mc33_hpfp_i_peak")
+	pumpHoldCurrent = getCalibration("mc33_hpfp_i_hold")
 
 	TholdOff = getCalibration("mc33_t_hold_off")
 	THoldDuration = getCalibration("mc33_t_hold_tot")
@@ -245,12 +225,12 @@ function onTick()
 	setTwoBytesLsb(data_set_settings, 1, TholdOff)
 	setTwoBytesLsb(data_set_settings, 3, THoldDuration)
 	setTwoBytesLsb(data_set_settings, 5, pumpPeakCurrent * FIXED_POINT)
-	print('Will be sending ' ..arrayToString(data_set_settings))
+--	print('Will be sending ' ..arrayToString(data_set_settings))
 	txCan(1, GDI_CHANGE_ADDRESS + 3, 1, data_set_settings)
 
 	setTwoBytesLsb(data_set_settings, 1, pumpHoldCurrent * FIXED_POINT)
 	setTwoBytesLsb(data_set_settings, 3, GDI4_BASE_ADDRESS)
-	print('Will be sending ' ..arrayToString(data_set_settings))
+--	print('Will be sending ' ..arrayToString(data_set_settings))
 	txCan(1, GDI_CHANGE_ADDRESS + 4, 1, data_set_settings)
 end
 
