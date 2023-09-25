@@ -347,8 +347,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->enableCanVss;
 		case 1382521617:
 			return engineConfiguration->enableInnovateLC2;
-		case 2046602309:
-			return engineConfiguration->showHumanReadableWarning;
 		case 1838375282:
 			return engineConfiguration->stftIgnoreErrorMagnitude;
 		case -1724873939:
@@ -1929,11 +1927,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 1382521617:
 	{
 		engineConfiguration->enableInnovateLC2 = (int)value;
-		return;
-	}
-		case 2046602309:
-	{
-		engineConfiguration->showHumanReadableWarning = (int)value;
 		return;
 	}
 		case 1838375282:

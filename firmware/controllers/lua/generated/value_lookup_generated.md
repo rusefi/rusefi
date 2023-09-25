@@ -514,9 +514,6 @@ Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 ### enableInnovateLC2
 
 
-### showHumanReadableWarning
-
-
 ### stftIgnoreErrorMagnitude
 If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 
