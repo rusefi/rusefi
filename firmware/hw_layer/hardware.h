@@ -43,8 +43,6 @@ brain_pin_e getSckPin(spi_device_e device);
 
 #endif /* HAL_USE_SPI */
 
-#ifdef __cplusplus
-
 void applyNewHardwareSettings();
 
 // Initialize hardware that doesn't require configuration to be loaded
@@ -61,5 +59,3 @@ void initHardware();
 void setBor(int borValue);
 
 class ButtonDebounce;
-
-#endif /* __cplusplus */
