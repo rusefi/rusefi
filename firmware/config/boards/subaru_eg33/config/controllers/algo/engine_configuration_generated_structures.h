@@ -435,7 +435,7 @@ struct engine_configuration_s {
 	bool useTLE8888_stepper : 1 {};
 	// offset 88 bit 20
 	bool usescriptTableForCanSniffingFiltering : 1 {};
-	// Print incoming and outgoing first bus CAN messages in rusEFI console
+	// Print incoming and outgoing first bus CAN messages in FOME console
 	// offset 88 bit 21
 	bool verboseCan : 1 {};
 	// Experimental setting that will cause a misfire
@@ -859,7 +859,7 @@ struct engine_configuration_s {
 	// enable sd/disable sd
 	// offset 644 bit 3
 	bool isSdCardEnabled : 1 {};
-	// Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
+	// Use 11 bit (standard) or 29 bit (extended) IDs for FOME verbose CAN format.
 	// offset 644 bit 4
 	bool rusefiVerbose29b : 1 {};
 	// offset 644 bit 5
@@ -871,7 +871,7 @@ struct engine_configuration_s {
 	bool enabledStep1Limiter : 1 {};
 	// offset 644 bit 8
 	bool verboseTLE8888 : 1 {};
-	// CAN broadcast using custom rusEFI protocol
+	// CAN broadcast using custom FOME protocol
 	// enable can_broadcast/disable can_broadcast
 	// offset 644 bit 9
 	bool enableVerboseCanTx : 1 {};
@@ -1142,7 +1142,7 @@ struct engine_configuration_s {
 	// If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
 	// offset 808 bit 27
 	bool useRawOutputToDriveIdleStepper : 1 {};
-	// Print incoming and outgoing second bus CAN messages in rusEFI console
+	// Print incoming and outgoing second bus CAN messages in FOME console
 	// offset 808 bit 28
 	bool verboseCan2 : 1 {};
 	// offset 808 bit 29
@@ -1206,16 +1206,13 @@ struct engine_configuration_s {
 	// offset 920
 	dc_io stepperDcIo[DC_PER_STEPPER];
 	// For example, BMW, GM or Chevrolet
-	// REQUIRED for rusEFI Online
 	// offset 936
 	vehicle_info_t engineMake;
 	// For example, LS1 or NB2
-	// REQUIRED for rusEFI Online
 	// offset 968
 	vehicle_info_t engineCode;
 	// For example, Hunchback or Orange Miata
 	// Vehicle name has to be unique between your vehicles.
-	// REQUIRED for rusEFI Online
 	// offset 1000
 	vehicle_info_t vehicleName;
 	// offset 1032
@@ -1284,12 +1281,10 @@ struct engine_configuration_s {
 	// This enables smart alternator control and activates the extra alternator settings.
 	// offset 1192 bit 13
 	bool isAlternatorControlEnabled : 1 {};
-	// https://wiki.rusefi.com/Trigger-Configuration-Guide
-	// This setting flips the signal from the primary engine speed sensor.
+	// Invert the signal from the primary trigger sensor.
 	// offset 1192 bit 14
 	bool invertPrimaryTriggerSignal : 1 {};
-	// https://wiki.rusefi.com/Trigger-Configuration-Guide
-	// This setting flips the signal from the secondary engine speed sensor.
+	// Invert the signal from the secondary trigger sensor.
 	// offset 1192 bit 15
 	bool invertSecondaryTriggerSignal : 1 {};
 	// offset 1192 bit 16
