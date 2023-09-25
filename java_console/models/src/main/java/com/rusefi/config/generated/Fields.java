@@ -977,7 +977,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 242401758;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1179,7 +1178,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.25.f407-discovery.242401758";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.25.f407-discovery.2621282758";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;
@@ -1263,7 +1262,6 @@ public class Fields {
 	public static final Field ENABLETRAILINGSPARKS = Field.create("ENABLETRAILINGSPARKS", 88, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field ETB_USE_TWO_WIRES = Field.create("ETB_USE_TWO_WIRES", 88, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field ISDOUBLESOLENOIDIDLE = Field.create("ISDOUBLESOLENOIDIDLE", 88, FieldType.BIT, 10).setBaseOffset(0);
-	public static final Field USEEEPROM = Field.create("USEEEPROM", 88, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 88, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field KICKSTARTCRANKING = Field.create("KICKSTARTCRANKING", 88, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field USESEPARATEIDLETABLESFORCRANKINGTAPER = Field.create("USESEPARATEIDLETABLESFORCRANKINGTAPER", 88, FieldType.BIT, 14).setBaseOffset(0);
@@ -2681,7 +2679,6 @@ public class Fields {
 	ENABLETRAILINGSPARKS,
 	ETB_USE_TWO_WIRES,
 	ISDOUBLESOLENOIDIDLE,
-	USEEEPROM,
 	USETLE8888_CRANKING_HACK,
 	KICKSTARTCRANKING,
 	USESEPARATEIDLETABLESFORCRANKINGTAPER,

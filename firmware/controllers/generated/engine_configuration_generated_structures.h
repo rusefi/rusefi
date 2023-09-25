@@ -413,7 +413,7 @@ struct engine_configuration_s {
 	// offset 88 bit 10
 	bool isDoubleSolenoidIdle : 1 {};
 	// offset 88 bit 11
-	bool useEeprom : 1 {};
+	bool unused88b11 : 1 {};
 	// offset 88 bit 12
 	bool useTLE8888_cranking_hack : 1 {};
 	// offset 88 bit 13
