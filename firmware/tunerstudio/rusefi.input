@@ -294,8 +294,6 @@ enable2ndByteCanID = false
 
 	requiresPowerCycle = knockBandCustom
 
-	readOnly = warning_message
-
 	defaultValue = gearCountArray, -1 0 1 2 3 4 5 6 7 8
 	readOnly = gearCountArray
 	defaultValue = solenoidCountArray, 1 2 3 4 5 6 7 8
@@ -4365,8 +4363,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "#System hacks"
 		field = "Global fuel correction",				globalFuelCorrection
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
-		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
-		field = "Warning Message",							warning_message
 		field = "Ford redundant TPS mode",				useFordRedundantTps
 		field = "Secondary TPS maximum",				tpsSecondaryMaximum, {useFordRedundantTps}
 		field = "Ford redundant PPS mode",				useFordRedundantPps

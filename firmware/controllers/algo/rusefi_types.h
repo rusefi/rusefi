@@ -107,8 +107,6 @@ typedef void (*Void)(void);
 
 using lua_script_t = char[LUA_SCRIPT_SIZE];
 
-using error_message_t = char[ERROR_BUFFER_SIZE];
-
 using vehicle_info_t = char[VEHICLE_INFO_SIZE];
 
 using vin_number_t = char[VIN_NUMBER_SIZE];

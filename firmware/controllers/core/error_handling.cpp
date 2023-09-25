@@ -144,12 +144,6 @@ bool warning(ObdCode code, const char *fmt, ...) {
 	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
 	va_end(ap);
 
-	if (engineConfiguration->showHumanReadableWarning) {
-#if EFI_TUNER_STUDIO
-  memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
-#endif /* EFI_TUNER_STUDIO */
-	}
-
 	efiPrintf("WARNING: %s", warningBuffer);
 #else
 	// todo: we need access to 'engine' here so that we can migrate to real 'engine->engineState.warnings'
