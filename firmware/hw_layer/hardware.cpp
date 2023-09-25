@@ -24,7 +24,6 @@
 #include "sensor_chart.h"
 #include "serial_hw.h"
 #include "idle_thread.h"
-#include "odometer.h"
 #include "kline.h"
 
 #if EFI_PROD_CODE
@@ -439,12 +438,6 @@ void initHardware() {
 	if (hasFirmwareError()) {
 		return;
 	}
-
-#if STM32_I2C_USE_I2C3
-	if (engineConfiguration->useEeprom) {
-	    i2cStart(&EE_U2CD, &i2cfg);
-	}
-#endif // STM32_I2C_USE_I2C3
 
 	boardInitHardware();
 

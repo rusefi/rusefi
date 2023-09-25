@@ -4366,7 +4366,6 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = parkingLot, "Experimental/Broken"
 		field = "I understand ECU Locking",				yesUnderstandLocking
 		field = "Tune read/write password",				tuneHidingKey, { yesUnderstandLocking == 1 }
-		field = useEeprom,										useEeprom
 		field = "#System hacks"
 		field = "Global fuel correction",				globalFuelCorrection
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex

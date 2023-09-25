@@ -24,7 +24,7 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel/fuel_computer.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel/injector_model.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel/dfco.cpp \
-	$(PROJECT_DIR)/controllers/algo/odometer.cpp \
+	$(PROJECT_DIR)/controllers/algo/trip_odometer.cpp \
 	$(PROJECT_DIR)/controllers/algo/defaults/default_base_engine.cpp \
 	$(PROJECT_DIR)/controllers/algo/defaults/default_cranking.cpp \
 	$(PROJECT_DIR)/controllers/algo/defaults/default_fuel.cpp \

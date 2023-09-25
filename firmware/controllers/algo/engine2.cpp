@@ -77,27 +77,6 @@ bool WarningCodeState::isWarningNow(ObdCode code) const {
 	return !warn->LastTriggered.hasElapsedSec(maxI(3, engineConfiguration->warningPeriod));
 }
 
-void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {
-	m_consumedGrams += grams;
-
-	float elapsedSecond = m_timer.getElapsedSecondsAndReset(nowNt);
-
-	// If it's been a long time since last injection, ignore this pulse
-	if (elapsedSecond > 0.2f) {
-		m_rate = 0;
-	} else {
-		m_rate = grams / elapsedSecond;
-	}
-}
-
-float FuelConsumptionState::getConsumedGrams() const {
-	return m_consumedGrams;
-}
-
-float FuelConsumptionState::getConsumptionGramPerSecond() const {
-	return m_rate;
-}
-
 EngineState::EngineState() {
 	timeSinceLastTChargeK = getTimeNowNt();
 }

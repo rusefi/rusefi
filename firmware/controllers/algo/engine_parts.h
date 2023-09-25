@@ -24,20 +24,6 @@ struct SensorsState {
 	Accelerometer accelerometer;
 };
 
-class FuelConsumptionState {
-public:
-	void consumeFuel(float grams, efitick_t nowNt);
-
-	float getConsumedGrams() const;
-	float getConsumptionGramPerSecond() const;
-
-private:
-	float m_consumedGrams = 0;
-	float m_rate = 0;
-
-	Timer m_timer;
-};
-
 class TransmissionState {
 public:
 	gear_e gearSelectorPosition;

@@ -17,7 +17,6 @@
 #include "mre_meta.h"
 #include "proteus_meta.h"
 #include "hellen_meta.h"
-#include "odometer.h"
 #include "defaults.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY

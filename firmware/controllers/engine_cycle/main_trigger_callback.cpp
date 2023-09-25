@@ -99,7 +99,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 		warning(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection %.2fms", injectionDuration);
 	}
 
-	getEngineState()->fuelConsumption.consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
+	engine->module<TripOdometer>()->consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 
 	if (this->cylinderNumber == 0) {
 		engine->outputChannels.actualLastInjection = injectionDuration;
