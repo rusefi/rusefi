@@ -91,7 +91,7 @@ static void populateFrame(ms1515& msg)
 	/* TODO */
 	msg.sensor1 = 0;
 	msg.sensor2 = 0;
-	msg.knk_rtd = engine->outputChannels.knockLevel;
+	msg.knk_rtd = engine->module<KnockController>()->m_knockLevel;
 	msg.unused = 0;
 }
 
