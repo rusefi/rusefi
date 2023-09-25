@@ -1255,10 +1255,8 @@ struct engine_configuration_s {
 	// Enables lambda sensor closed loop feedback for fuelling.
 	// offset 1192 bit 1
 	bool fuelClosedLoopCorrectionEnabled : 1 {};
-	// Print details into rusEFI console
-	// enable verbose_idle
 	// offset 1192 bit 2
-	bool isVerboseIAC : 1 {};
+	bool unused1192b2 : 1 {};
 	// offset 1192 bit 3
 	bool boardUseTachPullUp : 1 {};
 	// offset 1192 bit 4

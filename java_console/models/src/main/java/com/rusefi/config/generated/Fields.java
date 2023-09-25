@@ -1178,7 +1178,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.25.f407-discovery.2201859972";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.09.25.f407-discovery.3744710318";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1384;
@@ -1718,7 +1718,6 @@ public class Fields {
 	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1190, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field WIDEBANDONSECONDBUS = Field.create("WIDEBANDONSECONDBUS", 1192, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1192, FieldType.BIT, 1).setBaseOffset(0);
-	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1192, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field BOARDUSETACHPULLUP = Field.create("BOARDUSETACHPULLUP", 1192, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field BOARDUSETEMPPULLUP = Field.create("BOARDUSETEMPPULLUP", 1192, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field YESUNDERSTANDLOCKING = Field.create("YESUNDERSTANDLOCKING", 1192, FieldType.BIT, 5).setBaseOffset(0);
@@ -3125,7 +3124,6 @@ public class Fields {
 	TPS2SECONDARYMAX,
 	WIDEBANDONSECONDBUS,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
-	ISVERBOSEIAC,
 	BOARDUSETACHPULLUP,
 	BOARDUSETEMPPULLUP,
 	YESUNDERSTANDLOCKING,

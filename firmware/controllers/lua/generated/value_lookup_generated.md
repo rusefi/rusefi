@@ -664,9 +664,6 @@ Select which bus the wideband controller is attached to.
 ### fuelClosedLoopCorrectionEnabled
 Enables lambda sensor closed loop feedback for fuelling.
 
-### isVerboseIAC
-Print details into rusEFI console\nenable verbose_idle
-
 ### boardUseTachPullUp
 
 
