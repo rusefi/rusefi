@@ -3432,7 +3432,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Use coasting idle table",	useIacTableForCoasting
 		field = "Dashpot coasting-to-idle Hold time", iacByTpsHoldTime
 		field = "Dashpot coasting-to-idle Decay time", iacByTpsDecayTime
-		field = "Detailed status in console",			isVerboseIAC
 
 	dialog = idleSettings, "", yAxis
 		field = "Idle control mode",					idleMode

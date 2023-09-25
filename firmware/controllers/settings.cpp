@@ -607,10 +607,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion();
-	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
-		engineConfiguration->isHip9011Enabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
-		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
 		engineConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
@@ -1029,7 +1025,7 @@ void setDateTime(const char * const isoDateTime) {
 void setEngineTypeAndSave(int value) {
 	setEngineType(value, true);
 }
-	
+
 void setEngineType(int value, bool isWriteToFlash) {
 	{
 #if EFI_PROD_CODE
