@@ -32,7 +32,10 @@ Usages:
 
   - name: knock_controller
     folder: controllers/engine_cycle
+    prepend: integration/rusefi_config_shared.txt
     output_name: knock
+    constexpr: "___engine.module<KnockController>()"
+    isPtr: true
 
   - name: high_pressure_fuel_pump
     folder: controllers/engine_cycle

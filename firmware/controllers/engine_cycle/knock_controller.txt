@@ -1,6 +1,9 @@
 struct_no_prefix knock_controller_s
-	angle_t m_knockRetard;Knock Degrees retarded\nlarger number = more retard
-	float m_knockThreshold
-	uint32_t m_knockCount
-	float m_maximumRetard
+	float m_knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"Volts", 1, 0, 0, 0, 2
+	int8_t[12 iterate] m_knockCyl;Knock: Cyl;"dBv",1, 0, 0, 0, 0
+
+	angle_t m_knockRetard;@@GAUGE_NAME_KNOCK_RETARD@@;"deg",1,0,0,0,1
+	float m_knockThreshold;Knock: Threshold
+	uint32_t m_knockCount;@@GAUGE_NAME_KNOCK_COUNTER@@;"",1, 0, 0, 0, 0
+	float m_maximumRetard;Knock: Max retard
 end_struct

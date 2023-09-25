@@ -545,9 +545,6 @@ static void updateFuelInfo() {
 
 static void updateIgnition(int rpm) {
 	engine->outputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
-
-	engine->outputChannels.knockCount = engine->module<KnockController>()->getKnockCount();
-	engine->outputChannels.knockRetard = engine->module<KnockController>()->getKnockRetard();
 }
 
 static void updateFlags() {

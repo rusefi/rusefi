@@ -64,7 +64,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint16_t autoscale baroPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 1
 
 	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
-	uint8_t autoscale knockRetard;@@GAUGE_NAME_KNOCK_RETARD@@;"deg",{1/10}, 0, 0, 0, 1
 
 	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 2
 
@@ -107,8 +106,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	uint16_t tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
 
-	float knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"Volts", 1, 0, 0, 0, 2
-
 ! integration magic: TS requires exact 'seconds' name
 	uint32_t seconds;@@GAUGE_NAME_UPTIME@@;"sec", 1, 0, 0, 0, 0
 	uint32_t engineMode;Engine Mode;"em", 1, 0, 0, 0, 0
@@ -136,11 +133,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	int16_t autoscale wastegatePositionSensor;@@GAUGE_NAME_WG_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
-! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
-! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-	uint32_t tsConfigVersion;;"", 1, 0, 0, 0, 0
-
-
 	! These two fields indicate to TS that we'd like to set a particular field to a particular value
 	! We use a maintainConstantValue in TS for each field we'd like to set, like this:
 	!		maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
@@ -153,7 +145,11 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	! it wants to send have been sent.
 	float calibrationValue;;"", 1, 0, 0, 0, 0
 	uint8_t calibrationMode;;"", 1, 0, 0, 0, 0
-	uint8_t idleTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
+	uint8_t idleStepperTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
+
+! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
+! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
+	uint32_t tsConfigVersion;;"", 1, 0, 0, 0, 0
 
 ! Errors
 	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
@@ -190,8 +186,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint8_t fuelClosedLoopBinIdx;;"", 1, 0, 0, 0, 0
 	int8_t tcuCurrentGear;@@GAUGE_NAME_CURRENT_GEAR@@;"gear", 1, 0, -1, 10, 0
 
-	int8_t[12 iterate] knock;Knock: Cyl;"dBv",1, 0, 0, 0, 0
-
 	uint16_t autoscale AFRValue;@@GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 
 	uint16_t autoscale VssAcceleration;Vss Accel;"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 2
@@ -208,7 +202,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	int16_t autoscale rawTps2Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
-	uint16_t knockCount;@@GAUGE_NAME_KNOCK_COUNTER@@;"",1, 0, 0, 0, 0
 
 	int16_t autoscale accelerationZ;@@GAUGE_NAME_ACCEL_Z@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	int16_t autoscale accelerationRoll;@@GAUGE_NAME_ACCEL_ROLL@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0

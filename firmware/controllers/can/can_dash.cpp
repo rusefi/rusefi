@@ -770,7 +770,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x36A, 4);
 			/* Knock Level 1 */
-			tmp = (engine->outputChannels.knockLevel * 100);
+			tmp = (engine->module<KnockController>()->m_knockLevel * 100);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Knock Level 2 */
