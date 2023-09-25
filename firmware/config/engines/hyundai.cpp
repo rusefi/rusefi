@@ -31,6 +31,7 @@ static void set201xHyundai() {
    	setAlgorithm(LM_SPEED_DENSITY);
 }
 
+// set engine_type 104
 void setHyundaiPb() {
     setInline4();
 	engineConfiguration->displacement = 1.6;
