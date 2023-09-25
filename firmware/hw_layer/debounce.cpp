@@ -85,6 +85,14 @@ bool ButtonDebounce::readPinEvent() {
     return readPinState();
 }
 
+bool ButtonDebounce::getPhysicalState() {
+#if EFI_PROD_CODE || EFI_UNIT_TEST
+    return efiReadPin(active_pin);
+#else
+    return false;
+#endif
+}
+
 bool ButtonDebounce::readPinState() {
     if (!isBrainPinValid(*m_pin)) {
         return false;
@@ -99,11 +107,7 @@ bool ButtonDebounce::readPinState() {
     // We don't actually need it to be a class variable in this method,
     //  but when a method is implemented to actually get the pin's state,
     //  for example to implement long button presses, it will be needed.
-#if EFI_PROD_CODE || EFI_UNIT_TEST
-    storedValue = efiReadPin(active_pin);
-#else
-    storedValue = false;
-#endif
+    storedValue = getPhysicalState();
     // Invert
     if (active_mode == PI_PULLUP) {
         storedValue = !storedValue;
@@ -119,7 +123,7 @@ void ButtonDebounce::debug() {
     while (listItem != nullptr) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
         efiPrintf("%s timeLast %d", listItem->m_name, listItem->timeLast);
-        efiPrintf("physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
+        efiPrintf("physical state %d value %d", listItem->getPhysicalState(), listItem->storedValue);
 #endif
 
         listItem = listItem->nextDebounce;

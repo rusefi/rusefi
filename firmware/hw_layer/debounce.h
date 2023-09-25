@@ -23,6 +23,7 @@ public:
     static void stopConfigurationList();
     static void startConfigurationList();
     static void debug();
+    bool getPhysicalState();
 private:
     const char* const m_name;
     efitick_t m_threshold;
