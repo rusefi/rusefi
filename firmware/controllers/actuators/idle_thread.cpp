@@ -364,7 +364,6 @@ float IdleController::getIdlePosition(float rpm) {
 			getIdlePid()->postState(engine->outputChannels.idleStatus);
 		}
 
-		engine->outputChannels.idleAirValvePosition = iacPosition;
 		extern StepperMotor iacMotor;
 		engine->outputChannels.idleStepperTargetPosition = iacMotor.getTargetPosition();
 #endif /* EFI_TUNER_STUDIO */
