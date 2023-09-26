@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Mon Sep 25 21:16:29 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Tue Sep 26 01:20:38 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -167,11 +167,13 @@ public class KnockController {
 	public static final int PACK_MULT_VSS = 100;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field M_KNOCKRETARD = Field.create("M_KNOCKRETARD", 0, FieldType.FLOAT).setBaseOffset(912);
-	public static final Field M_KNOCKTHRESHOLD = Field.create("M_KNOCKTHRESHOLD", 4, FieldType.FLOAT).setBaseOffset(912);
-	public static final Field M_KNOCKCOUNT = Field.create("M_KNOCKCOUNT", 8, FieldType.INT).setScale(1.0).setBaseOffset(912);
-	public static final Field M_MAXIMUMRETARD = Field.create("M_MAXIMUMRETARD", 12, FieldType.FLOAT).setBaseOffset(912);
+	public static final Field M_KNOCKLEVEL = Field.create("M_KNOCKLEVEL", 0, FieldType.FLOAT).setBaseOffset(904);
+	public static final Field M_KNOCKRETARD = Field.create("M_KNOCKRETARD", 4, FieldType.FLOAT).setBaseOffset(904);
+	public static final Field M_KNOCKTHRESHOLD = Field.create("M_KNOCKTHRESHOLD", 8, FieldType.FLOAT).setBaseOffset(904);
+	public static final Field M_KNOCKCOUNT = Field.create("M_KNOCKCOUNT", 12, FieldType.INT).setScale(1.0).setBaseOffset(904);
+	public static final Field M_MAXIMUMRETARD = Field.create("M_MAXIMUMRETARD", 16, FieldType.FLOAT).setBaseOffset(904);
 	public static final Field[] VALUES = {
+	M_KNOCKLEVEL,
 	M_KNOCKRETARD,
 	M_KNOCKTHRESHOLD,
 	M_KNOCKCOUNT,

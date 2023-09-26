@@ -137,9 +137,6 @@ float getOutputValueByName(const char *name) {
 // lambdaValue
 		case -1119268893:
 			return engine->outputChannels.lambdaValue;
-// knockRetard
-		case -2096715875:
-			return engine->outputChannels.knockRetard;
 // VBatt
 		case 277722310:
 			return engine->outputChannels.VBatt;
@@ -212,9 +209,6 @@ float getOutputValueByName(const char *name) {
 // tuneCrc16
 		case -1158359776:
 			return engine->outputChannels.tuneCrc16;
-// knockLevel
-		case 710253075:
-			return engine->outputChannels.knockLevel;
 // seconds
 		case -1962923820:
 			return engine->outputChannels.seconds;
@@ -263,9 +257,6 @@ float getOutputValueByName(const char *name) {
 // highFuelPressure
 		case -1973799222:
 			return engine->outputChannels.highFuelPressure;
-// tsConfigVersion
-		case 1299611400:
-			return engine->outputChannels.tsConfigVersion;
 // calibrationValue
 		case -1560670902:
 			return engine->outputChannels.calibrationValue;
@@ -275,6 +266,9 @@ float getOutputValueByName(const char *name) {
 // idleTargetPosition
 		case -2029665121:
 			return engine->outputChannels.idleTargetPosition;
+// tsConfigVersion
+		case 1299611400:
+			return engine->outputChannels.tsConfigVersion;
 // totalTriggerErrorCounter
 		case 2018173863:
 			return engine->outputChannels.totalTriggerErrorCounter;
