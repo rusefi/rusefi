@@ -961,6 +961,27 @@ float getOutputValueByName(const char *name) {
 // acSwitchLastChangeTimeMs
 		case -954065340:
 			return engine->module<AcController>()->acSwitchLastChangeTimeMs;
+// cranking
+		case 182391090:
+			return ___engine.module<FanControl1>()->cranking;
+// notRunning
+		case -496961865:
+			return ___engine.module<FanControl1>()->notRunning;
+// disabledWhileEngineStopped
+		case 142778571:
+			return ___engine.module<FanControl1>()->disabledWhileEngineStopped;
+// brokenClt
+		case 545954889:
+			return ___engine.module<FanControl1>()->brokenClt;
+// enabledForAc
+		case 291043035:
+			return ___engine.module<FanControl1>()->enabledForAc;
+// hot
+		case 193494032:
+			return ___engine.module<FanControl1>()->hot;
+// cold
+		case 2090155911:
+			return ___engine.module<FanControl1>()->cold;
 // isPrime
 		case -1429286498:
 			return engine->module<FuelPumpController>()->isPrime;
