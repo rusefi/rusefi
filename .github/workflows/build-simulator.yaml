@@ -25,14 +25,6 @@ jobs:
         distribution: 'zulu'
         java-version: '11'
 
-    - name: Gradle edition of java console
-      working-directory: ./java_tools
-      run: ./gradlew shadowJar
-
-    - name: Gradle autotest java
-      working-directory: ./java_tools
-      run: ./gradlew :autotest:shadowJar
-
     - name: Print GCC version
       working-directory: .
       run: gcc -v
@@ -42,9 +34,17 @@ jobs:
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
 
+    - name: Code generation tools and java console
+      working-directory: ./java_tools
+      run: ./gradlew shadowJar
+
     - name: Generate Configs, Enums & Live Documentation
       working-directory: ./firmware/
       run: ./gen_default_everything.sh
+
+    - name: Gradle autotest java Using freshly generated java code
+      working-directory: ./java_tools
+      run: ./gradlew :autotest:shadowJar
 
     - name: Compile Linux Simulator
       working-directory: ./simulator/
