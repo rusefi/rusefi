@@ -19,8 +19,9 @@ public class SdCardFieldsTestConsumer implements ConfigurationConsumer {
     private final SdCardFieldsContent content = new SdCardFieldsContent();
     private final LazyFile output;
 
-    public SdCardFieldsTestConsumer(String outputFileName) {
+    public SdCardFieldsTestConsumer(String outputFileName, boolean isPtr) {
         output = new LazyFileImpl(outputFileName);
+        content.isPtr = isPtr;
     }
 
     @Override

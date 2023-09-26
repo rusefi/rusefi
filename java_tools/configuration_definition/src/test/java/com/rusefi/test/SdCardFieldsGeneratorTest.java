@@ -34,7 +34,7 @@ public class SdCardFieldsGeneratorTest {
                 "\t{engine->outputChannels.RPMValue, \"hello\", \"RPM\", 2, \"myCategory\"},\n" +
                 "\t{engine->outputChannels.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
                 "\t{engine->outputChannels.speedToRpmRatio, \"ra\", \"value\", 0},\n" +
-                "", actor);
+                "", actor, false);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class SdCardFieldsGeneratorTest {
                 "bit sd_logging_internal\n" +
                 "end_struct", "\t{engine->outputChannels.RPMValue, \"feee\", \"RPM\", 2},\n", readerState -> {
 
-        });
+        }, false);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class SdCardFieldsGeneratorTest {
                 "\t{engine->outputChannels.recentErrorCode[2], \"recentErrorCode 3\", \"error\", 0},\n" +
                 "\t{engine->outputChannels.recentErrorCode[3], \"recentErrorCode 4\", \"error\", 0},\n", readerState -> {
 
-        });
+        }, false);
     }
 
     @Test
@@ -67,21 +67,21 @@ public class SdCardFieldsGeneratorTest {
                         "    end_struct\n" +
                         "\tpid_status_s alternatorStatus\n" +
                         "end_struct",
-                "\t{engine->outputChannels.alternatorStatus.pTerm, \"alternatorStatus.pTerm\", \"\", 2},\n",
+                "\t{engine->outputChannels->alternatorStatus.pTerm, \"alternatorStatus.pTerm\", \"\", 2},\n",
                 readerState -> {
 
-                });
+                }, true);
     }
 
     interface Actor {
         void act(ReaderStateImpl readerState);
     }
 
-    private static void processAndAssert(String input, String expectedOutput, Actor actor) {
+    private static void processAndAssert(String input, String expectedOutput, Actor actor, boolean isPtr) {
         ReaderStateImpl state = new ReaderStateImpl(null, LazyFile.REAL);
         actor.act(state);
 
-        SdCardFieldsTestConsumer consumer = new SdCardFieldsTestConsumer(LazyFile.TEST);
+        SdCardFieldsTestConsumer consumer = new SdCardFieldsTestConsumer(LazyFile.TEST, isPtr);
         state.readBufferedReader(input, consumer);
         assertEquals(expectedOutput, consumer.getBody());
     }
