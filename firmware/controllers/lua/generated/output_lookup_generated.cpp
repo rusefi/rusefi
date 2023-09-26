@@ -833,6 +833,21 @@ float getOutputValueByName(const char *name) {
 // luaIgnitionSkip
 		case -1916613921:
 			return engine->ignitionState.luaIgnitionSkip;
+// m_knockLevel
+		case -1571781441:
+			return ___engine.module<KnockController>()->m_knockLevel;
+// m_knockRetard
+		case -94443575:
+			return ___engine.module<KnockController>()->m_knockRetard;
+// m_knockThreshold
+		case -504596140:
+			return ___engine.module<KnockController>()->m_knockThreshold;
+// m_knockCount
+		case -1582096144:
+			return ___engine.module<KnockController>()->m_knockCount;
+// m_maximumRetard
+		case 164334513:
+			return ___engine.module<KnockController>()->m_maximumRetard;
 // isTpsInvalid
 #if EFI_BOOST_CONTROL
 		case -575666209:
