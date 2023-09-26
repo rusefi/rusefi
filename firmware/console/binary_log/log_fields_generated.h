@@ -343,25 +343,25 @@ static constexpr LogField fields[] = {
 	{___engine.module<KnockController>()->m_knockCount, "Knock: Count", "", 0},
 	{___engine.module<KnockController>()->m_maximumRetard, "Knock: Max retard", "", 0},
 #if EFI_BOOST_CONTROL
-	{engine->boostController.luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
+	{___engine.module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->boostController.boostOutput, "Boost: Output", "percent", 2, "Boost Control"},
+	{___engine.module<BoostController>()->boostOutput, "Boost: Output", "percent", 2, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->boostController.luaTargetMult, "Boost: Lua target mult", "v", 1, "Boost Control"},
+	{___engine.module<BoostController>()->luaTargetMult, "Boost: Lua target mult", "v", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->boostController.openLoopPart, "Boost: Open loop", "v", 1, "Boost Control"},
+	{___engine.module<BoostController>()->openLoopPart, "Boost: Open loop", "v", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->boostController.luaOpenLoopAdd, "Boost: Lua open loop add", "v", 1, "Boost Control"},
+	{___engine.module<BoostController>()->luaOpenLoopAdd, "Boost: Lua open loop add", "v", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->boostController.boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
+	{___engine.module<BoostController>()->boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->boostController.boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
+	{___engine.module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
 #endif
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},

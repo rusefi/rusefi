@@ -848,82 +848,82 @@ float getOutputValueByName(const char *name) {
 // isTpsInvalid
 #if EFI_BOOST_CONTROL
 		case -575666209:
-			return engine->boostController.isTpsInvalid;
+			return ___engine.module<BoostController>()->isTpsInvalid;
 #endif
 // m_shouldResetPid
 #if EFI_BOOST_CONTROL
 		case 1846215200:
-			return engine->boostController.m_shouldResetPid;
+			return ___engine.module<BoostController>()->m_shouldResetPid;
 #endif
 // isBelowClosedLoopThreshold
 #if EFI_BOOST_CONTROL
 		case 1826317915:
-			return engine->boostController.isBelowClosedLoopThreshold;
+			return ___engine.module<BoostController>()->isBelowClosedLoopThreshold;
 #endif
 // isNotClosedLoop
 #if EFI_BOOST_CONTROL
 		case -1642402810:
-			return engine->boostController.isNotClosedLoop;
+			return ___engine.module<BoostController>()->isNotClosedLoop;
 #endif
 // isZeroRpm
 #if EFI_BOOST_CONTROL
 		case 2111912944:
-			return engine->boostController.isZeroRpm;
+			return ___engine.module<BoostController>()->isZeroRpm;
 #endif
 // hasInitBoost
 #if EFI_BOOST_CONTROL
 		case -2011570052:
-			return engine->boostController.hasInitBoost;
+			return ___engine.module<BoostController>()->hasInitBoost;
 #endif
 // rpmTooLow
 #if EFI_BOOST_CONTROL
 		case 193830616:
-			return engine->boostController.rpmTooLow;
+			return ___engine.module<BoostController>()->rpmTooLow;
 #endif
 // tpsTooLow
 #if EFI_BOOST_CONTROL
 		case -1033638560:
-			return engine->boostController.tpsTooLow;
+			return ___engine.module<BoostController>()->tpsTooLow;
 #endif
 // mapTooLow
 #if EFI_BOOST_CONTROL
 		case -734877977:
-			return engine->boostController.mapTooLow;
+			return ___engine.module<BoostController>()->mapTooLow;
 #endif
 // luaTargetAdd
 #if EFI_BOOST_CONTROL
 		case 119157463:
-			return engine->boostController.luaTargetAdd;
+			return ___engine.module<BoostController>()->luaTargetAdd;
 #endif
 // boostOutput
 #if EFI_BOOST_CONTROL
 		case 1239062717:
-			return engine->boostController.boostOutput;
+			return ___engine.module<BoostController>()->boostOutput;
 #endif
 // luaTargetMult
 #if EFI_BOOST_CONTROL
 		case -362320880:
-			return engine->boostController.luaTargetMult;
+			return ___engine.module<BoostController>()->luaTargetMult;
 #endif
 // openLoopPart
 #if EFI_BOOST_CONTROL
 		case -1481117304:
-			return engine->boostController.openLoopPart;
+			return ___engine.module<BoostController>()->openLoopPart;
 #endif
 // luaOpenLoopAdd
 #if EFI_BOOST_CONTROL
 		case 1944984220:
-			return engine->boostController.luaOpenLoopAdd;
+			return ___engine.module<BoostController>()->luaOpenLoopAdd;
 #endif
 // boostControllerClosedLoopPart
 #if EFI_BOOST_CONTROL
 		case -707712709:
-			return engine->boostController.boostControllerClosedLoopPart;
+			return ___engine.module<BoostController>()->boostControllerClosedLoopPart;
 #endif
 // boostControlTarget
 #if EFI_BOOST_CONTROL
 		case -1712045196:
-			return engine->boostController.boostControlTarget;
+			return ___engine.module<BoostController>()->boostControlTarget;
 #endif
 // acButtonState
 		case -1809939546:
