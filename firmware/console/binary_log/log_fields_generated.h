@@ -32,7 +32,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.currentIgnitionMode, "Ignition: Mode", "", 0},
 	{engine->outputChannels.currentInjectionMode, "Fuel: Injection mode", "", 0},
 	{engine->outputChannels.coilDutyCycle, "Ignition: coil duty cycle", "%", 0},
-	{engine->outputChannels.idleAirValvePosition, "Idle: Position", "%", 1},
 	{engine->outputChannels.etbTarget, "ETB Target", "%", 2},
 	{engine->outputChannels.etb1DutyCycle, "ETB: Duty", "%", 1},
 	{engine->outputChannels.fuelTankLevel, "Fuel level", "%", 0},

@@ -185,9 +185,6 @@ float getOutputValueByName(const char *name) {
 // coilDutyCycle
 		case 1029096098:
 			return engine->outputChannels.coilDutyCycle;
-// idleAirValvePosition
-		case -606474478:
-			return engine->outputChannels.idleAirValvePosition;
 // etbTarget
 		case -2105094009:
 			return engine->outputChannels.etbTarget;

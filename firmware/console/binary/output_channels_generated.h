@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 02:21:02 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 17:12:20 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -340,53 +340,53 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_IAC@@
-	%
-	 * offset 64
-	 */
-	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
-	/**
 	 * ETB Target
 	%
-	 * offset 66
+	 * offset 64
 	 */
 	scaled_channel<int16_t, 100, 1> etbTarget = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ETB_DUTY@@
 	%
-	 * offset 68
+	 * offset 66
 	 */
 	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 	/**
 	 * Fuel level
 	%
-	 * offset 70
+	 * offset 68
 	 */
 	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	grams
-	 * offset 72
+	 * offset 70
 	 */
 	uint16_t totalFuelConsumption = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_FLOW@@
 	gram/s
-	 * offset 74
+	 * offset 72
 	 */
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_TPS2@@
 	%
-	 * offset 76
+	 * offset 74
 	 */
 	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TUNE_CRC16@@
 	crc16
-	 * offset 78
+	 * offset 76
 	 */
 	uint16_t tuneCrc16 = (uint16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 78
+	 */
+	uint8_t alignmentFill_at_78[2];
 	/**
 	 * @@GAUGE_NAME_UPTIME@@
 	sec
@@ -1236,4 +1236,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 804);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 02:21:02 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 17:12:20 UTC 2023
