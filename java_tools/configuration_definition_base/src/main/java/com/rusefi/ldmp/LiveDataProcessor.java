@@ -156,6 +156,7 @@ public class LiveDataProcessor {
                     outputValueConsumer.currentSectionPrefix = constexpr;
                     outputValueConsumer.moduleMode = false;
                     outputValueConsumer.conditional = conditional;
+                    outputValueConsumer.isPtr = isPtr;
                     state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
 
                 } else if (engineModule != null) {
