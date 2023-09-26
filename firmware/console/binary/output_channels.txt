@@ -147,7 +147,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	! it wants to send have been sent.
 	float calibrationValue;;"", 1, 0, 0, 0, 0
 	uint8_t calibrationMode;;"", 1, 0, 0, 0, 0
-	uint8_t idleTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
+	uint8_t idleStepperTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
 
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
