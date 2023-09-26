@@ -152,6 +152,7 @@ Usages:
     cppFileName: idle_thread
     java: IdleState.java
     folder: controllers/actuators
+    prepend: integration/rusefi_config_shared.txt
     output_name: idle
 
   - name: electronic_throttle
