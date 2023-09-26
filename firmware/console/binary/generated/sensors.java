@@ -58,7 +58,7 @@ highFuelPressure("Fuel pressure (high)", SensorCategory.SENSOR_INPUTS, FieldType
 alignmentFill_at_114("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 114, 1.0, -20.0, 100.0, "units"),
 calibrationValue("calibrationValue", SensorCategory.SENSOR_INPUTS, FieldType.INT, 116, 1.0, 0.0, 0.0, ""),
 calibrationMode("calibrationMode", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 120, 1.0, 0.0, 0.0, ""),
-idleTargetPosition("Idle: Stepper target position", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 121, 1.0, 0.0, 0.0, ""),
+idleStepperTargetPosition("Idle: Stepper target position", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 121, 1.0, 0.0, 0.0, ""),
 alignmentFill_at_122("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 122, 1.0, -20.0, 100.0, "units"),
 tsConfigVersion("tsConfigVersion", SensorCategory.SENSOR_INPUTS, FieldType.INT, 124, 1.0, 0.0, 0.0, ""),
 totalTriggerErrorCounter("Trigger Error Counter", SensorCategory.SENSOR_INPUTS, FieldType.INT, 128, 1.0, 0.0, 0.0, "counter"),

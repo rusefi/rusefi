@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 01:20:37 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 01:59:57 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -255,7 +255,7 @@ public class TsOutputs {
 	public static final Field ALIGNMENTFILL_AT_114 = Field.create("ALIGNMENTFILL_AT_114", 114, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CALIBRATIONVALUE = Field.create("CALIBRATIONVALUE", 116, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field CALIBRATIONMODE = Field.create("CALIBRATIONMODE", 120, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field IDLETARGETPOSITION = Field.create("IDLETARGETPOSITION", 121, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field IDLESTEPPERTARGETPOSITION = Field.create("IDLESTEPPERTARGETPOSITION", 121, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_122 = Field.create("ALIGNMENTFILL_AT_122", 122, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TSCONFIGVERSION = Field.create("TSCONFIGVERSION", 124, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TOTALTRIGGERERRORCOUNTER = Field.create("TOTALTRIGGERERRORCOUNTER", 128, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -763,7 +763,7 @@ public class TsOutputs {
 	ALIGNMENTFILL_AT_114,
 	CALIBRATIONVALUE,
 	CALIBRATIONMODE,
-	IDLETARGETPOSITION,
+	IDLESTEPPERTARGETPOSITION,
 	ALIGNMENTFILL_AT_122,
 	TSCONFIGVERSION,
 	TOTALTRIGGERERRORCOUNTER,

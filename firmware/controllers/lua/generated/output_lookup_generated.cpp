@@ -263,9 +263,9 @@ float getOutputValueByName(const char *name) {
 // calibrationMode
 		case 1774505810:
 			return engine->outputChannels.calibrationMode;
-// idleTargetPosition
-		case -2029665121:
-			return engine->outputChannels.idleTargetPosition;
+// idleStepperTargetPosition
+		case 356548450:
+			return engine->outputChannels.idleStepperTargetPosition;
 // tsConfigVersion
 		case 1299611400:
 			return engine->outputChannels.tsConfigVersion;

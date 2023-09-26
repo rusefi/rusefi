@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 01:20:37 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 01:59:57 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -494,7 +494,7 @@ struct output_channels_s {
 	 * Idle: Stepper target position
 	 * offset 121
 	 */
-	uint8_t idleTargetPosition = (uint8_t)0;
+	uint8_t idleStepperTargetPosition = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	units
@@ -1242,4 +1242,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 816);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 01:20:37 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 01:59:57 UTC 2023

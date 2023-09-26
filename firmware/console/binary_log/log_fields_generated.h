@@ -58,7 +58,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.highFuelPressure, "Fuel pressure (high)", "bar", 0},
 	{engine->outputChannels.calibrationValue, "calibrationValue", "", 0},
 	{engine->outputChannels.calibrationMode, "calibrationMode", "", 0},
-	{engine->outputChannels.idleTargetPosition, "Idle: Stepper target position", "", 0},
+	{engine->outputChannels.idleStepperTargetPosition, "Idle: Stepper target position", "", 0},
 	{engine->outputChannels.tsConfigVersion, "tsConfigVersion", "", 0},
 	{engine->outputChannels.totalTriggerErrorCounter, "Trigger Error Counter", "counter", 0},
 	{engine->outputChannels.orderingErrorCounter, "orderingErrorCounter", "", 0},
