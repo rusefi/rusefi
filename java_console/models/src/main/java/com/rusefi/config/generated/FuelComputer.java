@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Tue Sep 26 01:20:38 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Tue Sep 26 02:21:02 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -167,21 +167,21 @@ public class FuelComputer {
 	public static final int PACK_MULT_VSS = 100;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field TOTALFUELCORRECTION = Field.create("TOTALFUELCORRECTION", 0, FieldType.FLOAT).setBaseOffset(816);
-	public static final Field RUNNING_POSTCRANKINGFUELCORRECTION = Field.create("RUNNING_POSTCRANKINGFUELCORRECTION", 4, FieldType.FLOAT).setBaseOffset(816);
-	public static final Field RUNNING_INTAKETEMPERATURECOEFFICIENT = Field.create("RUNNING_INTAKETEMPERATURECOEFFICIENT", 8, FieldType.FLOAT).setBaseOffset(816);
-	public static final Field RUNNING_COOLANTTEMPERATURECOEFFICIENT = Field.create("RUNNING_COOLANTTEMPERATURECOEFFICIENT", 12, FieldType.FLOAT).setBaseOffset(816);
-	public static final Field RUNNING_TIMESINCECRANKINGINSECS = Field.create("RUNNING_TIMESINCECRANKINGINSECS", 16, FieldType.FLOAT).setBaseOffset(816);
-	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 20, FieldType.INT16).setScale(0.01).setBaseOffset(816);
-	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 22, FieldType.INT16).setScale(0.01).setBaseOffset(816);
-	public static final Field AFRTABLEYAXIS = Field.create("AFRTABLEYAXIS", 24, FieldType.INT16).setScale(0.01).setBaseOffset(816);
-	public static final Field TARGETLAMBDA = Field.create("TARGETLAMBDA", 26, FieldType.INT16).setScale(1.0E-4).setBaseOffset(816);
-	public static final Field TARGETAFR = Field.create("TARGETAFR", 28, FieldType.INT16).setScale(0.001).setBaseOffset(816);
-	public static final Field STOICHIOMETRICRATIO = Field.create("STOICHIOMETRICRATIO", 30, FieldType.INT16).setScale(0.001).setBaseOffset(816);
-	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 32, FieldType.FLOAT).setBaseOffset(816);
-	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 36, FieldType.FLOAT).setBaseOffset(816);
-	public static final Field NORMALIZEDCYLINDERFILLING = Field.create("NORMALIZEDCYLINDERFILLING", 40, FieldType.FLOAT).setBaseOffset(816);
-	public static final Field INJECTORHWISSUE = Field.create("INJECTORHWISSUE", 44, FieldType.BIT, 0).setBaseOffset(816);
+	public static final Field TOTALFUELCORRECTION = Field.create("TOTALFUELCORRECTION", 0, FieldType.FLOAT).setBaseOffset(804);
+	public static final Field RUNNING_POSTCRANKINGFUELCORRECTION = Field.create("RUNNING_POSTCRANKINGFUELCORRECTION", 4, FieldType.FLOAT).setBaseOffset(804);
+	public static final Field RUNNING_INTAKETEMPERATURECOEFFICIENT = Field.create("RUNNING_INTAKETEMPERATURECOEFFICIENT", 8, FieldType.FLOAT).setBaseOffset(804);
+	public static final Field RUNNING_COOLANTTEMPERATURECOEFFICIENT = Field.create("RUNNING_COOLANTTEMPERATURECOEFFICIENT", 12, FieldType.FLOAT).setBaseOffset(804);
+	public static final Field RUNNING_TIMESINCECRANKINGINSECS = Field.create("RUNNING_TIMESINCECRANKINGINSECS", 16, FieldType.FLOAT).setBaseOffset(804);
+	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 20, FieldType.INT16).setScale(0.01).setBaseOffset(804);
+	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 22, FieldType.INT16).setScale(0.01).setBaseOffset(804);
+	public static final Field AFRTABLEYAXIS = Field.create("AFRTABLEYAXIS", 24, FieldType.INT16).setScale(0.01).setBaseOffset(804);
+	public static final Field TARGETLAMBDA = Field.create("TARGETLAMBDA", 26, FieldType.INT16).setScale(1.0E-4).setBaseOffset(804);
+	public static final Field TARGETAFR = Field.create("TARGETAFR", 28, FieldType.INT16).setScale(0.001).setBaseOffset(804);
+	public static final Field STOICHIOMETRICRATIO = Field.create("STOICHIOMETRICRATIO", 30, FieldType.INT16).setScale(0.001).setBaseOffset(804);
+	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 32, FieldType.FLOAT).setBaseOffset(804);
+	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 36, FieldType.FLOAT).setBaseOffset(804);
+	public static final Field NORMALIZEDCYLINDERFILLING = Field.create("NORMALIZEDCYLINDERFILLING", 40, FieldType.FLOAT).setBaseOffset(804);
+	public static final Field INJECTORHWISSUE = Field.create("INJECTORHWISSUE", 44, FieldType.BIT, 0).setBaseOffset(804);
 	public static final Field[] VALUES = {
 	TOTALFUELCORRECTION,
 	RUNNING_POSTCRANKINGFUELCORRECTION,
