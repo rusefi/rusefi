@@ -18,6 +18,7 @@ public class GetOutputValueConsumerTest {
         ReaderStateImpl state = new ReaderStateImpl();
 
         GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null, LazyFile.REAL);
+        outputValueConsumer.isPtr = true;
         outputValueConsumer.conditional = "EFI_BOOST_CONTROL";
         state.readBufferedReader(test, (outputValueConsumer));
         assertEquals(
@@ -31,17 +32,17 @@ public class GetOutputValueConsumerTest {
                         "// issue_294_31\n" +
                         "#if EFI_BOOST_CONTROL\n" +
                         "\t\tcase -1571463185:\n" +
-                        "\t\t\treturn engine->outputChannels.issue_294_31;\n" +
+                        "\t\t\treturn engine->outputChannels->issue_294_31;\n" +
                         "#endif\n" +
                         "// enableFan1WithAc\n" +
                         "#if EFI_BOOST_CONTROL\n" +
                         "\t\tcase -298185774:\n" +
-                        "\t\t\treturn engine->outputChannels.enableFan1WithAc;\n" +
+                        "\t\t\treturn engine->outputChannels->enableFan1WithAc;\n" +
                         "#endif\n" +
                         "// hwChannel\n" +
                         "#if EFI_BOOST_CONTROL\n" +
                         "\t\tcase -709106787:\n" +
-                        "\t\t\treturn engine->outputChannels.hwChannel;\n" +
+                        "\t\t\treturn engine->outputChannels->hwChannel;\n" +
                         "#endif\n" +
                         "\t}\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
