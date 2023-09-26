@@ -29,6 +29,8 @@ void BoostController::init(IPwm* pwm, const ValueProvider3D* openLoopMap, const 
 
 	m_pid.initPidClass(pidParams);
 	resetLua();
+
+	hasInitBoost = true;
 }
 
 void BoostController::resetLua() {
@@ -37,8 +39,8 @@ void BoostController::resetLua() {
 	luaOpenLoopAdd = 0;
 }
 
-void BoostController::onConfigurationChange(pid_s* previousConfiguration) {
-	if (!m_pid.isSame(previousConfiguration)) {
+void BoostController::onConfigurationChange(engine_configuration_s const * previousConfig) {
+	if (!m_pid.isSame(&previousConfig->boostPid)) {
 		m_shouldResetPid = true;
 	}
 }
@@ -179,7 +181,7 @@ void BoostController::setOutput(expected<float> output) {
 	setEtbWastegatePosition(boostOutput);
 }
 
-void BoostController::update() {
+void BoostController::onFastCallback() {
 	if (!hasInitBoost) {
 		return;
 	}
@@ -242,10 +244,6 @@ void startBoostPin() {
 #endif /* EFI_UNIT_TEST */
 }
 
-void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration) {
-	engine->boostController.onConfigurationChange(&previousConfiguration->boostPid);
-}
-
 void initBoostCtrl() {
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
 	// 'initVvtActuators' is an example of a subsystem without explicit enable
@@ -269,12 +267,11 @@ void initBoostCtrl() {
 	boostMapClosed.init(config->boostTableClosedLoop, config->boostTpsBins, config->boostRpmBins);
 
 	// Set up boost controller instance
-	engine->boostController.init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
+	engine->module<BoostController>().unmock().init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
 
 #if !EFI_UNIT_TEST
 	startBoostPin();
 #endif
-	engine->boostController.hasInitBoost = true;
 }
 
 #endif

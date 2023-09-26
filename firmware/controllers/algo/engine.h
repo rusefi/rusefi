@@ -164,6 +164,9 @@ public:
 		VvtController3,
 		VvtController4,
 #endif // EFI_VVT_PID
+#if EFI_BOOST_CONTROL
+		BoostController,
+#endif // EFI_BOOST_CONTROL
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -197,10 +200,6 @@ public:
 #if EFI_ANTILAG_SYSTEM
 	SoftSparkLimiter ALSsoftSparkLimiter;
 #endif /* EFI_ANTILAG_SYSTEM */
-
-#if EFI_BOOST_CONTROL
-	BoostController boostController;
-#endif // EFI_BOOST_CONTROL
 
 	LambdaMonitor lambdaMonitor;
 

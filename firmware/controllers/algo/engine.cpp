@@ -306,7 +306,7 @@ void Engine::resetLua() {
 	engineState.lua.luaDisableEtb = false;
 	engineState.lua.luaIgnCut = false;
 #if EFI_BOOST_CONTROL
-	boostController.resetLua();
+	module<BoostController>().unmock().resetLua();
 #endif // EFI_BOOST_CONTROL
 	ignitionState.luaTimingAdd = 0;
 	ignitionState.luaTimingMult = 1;
@@ -548,10 +548,6 @@ void Engine::periodicFastCallback() {
 	tachSignalCallback();
 
 	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
-
-#if EFI_BOOST_CONTROL
-	engine->boostController.update();
-#endif // EFI_BOOST_CONTROL
 }
 
 EngineRotationState * getEngineRotationState() {
