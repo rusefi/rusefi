@@ -39,6 +39,8 @@ Usages:
     folder: controllers/engine_cycle
     prepend: integration/rusefi_config_shared.txt
     output_name: knock
+    constexpr: "___engine.module<KnockController>()"
+    isPtr: true
 
   - name: throttle_model
     java: ThrottleModel.java
