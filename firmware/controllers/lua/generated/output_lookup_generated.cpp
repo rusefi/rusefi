@@ -1140,6 +1140,16 @@ float getOutputValueByName(const char *name) {
 // isEnabled0
 		case 1691876092:
 			return engine->dc_motors.isEnabled0;
+// vvtTarget
+#if EFI_VVT_PID
+		case -2132393748:
+			return ___engine.module<VvtController1>()->vvtTarget;
+#endif
+// vvtOutput
+#if EFI_VVT_PID
+		case 1990697206:
+			return ___engine.module<VvtController1>()->vvtOutput;
+#endif
 // lambdaCurrentlyGood
 		case 350535927:
 			return ___engine.lambdaMonitor.lambdaCurrentlyGood;

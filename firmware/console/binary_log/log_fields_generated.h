@@ -434,5 +434,11 @@ static constexpr LogField fields[] = {
 #endif
 	{engine->dc_motors.dcOutput0, "DC: output0", "per", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "per", 2, "ETB more"},
+#if EFI_VVT_PID
+	{___engine.module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
+#endif
+#if EFI_VVT_PID
+	{___engine.module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
+#endif
 	{___engine.lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
 };
