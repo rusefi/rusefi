@@ -27,7 +27,7 @@ bit badTps
 	bit looksLikeCoasting
 	bit looksLikeCrankToIdle
     bit isIdleCoasting;Idle: coasting
-
+	bit isIdleClosedLoop;Idle: Closed loop active
 
 int targetRpmByClt;idle: target by CLT
 int targetRpmAcBump;idle: A/C bump
