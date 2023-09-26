@@ -61,7 +61,6 @@ bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 	// All-cylinders peak detector
 	m_knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
 
-	// TODO: retard timing, then put it back!
 	if (isKnock) {
 		m_knockCount++;
 
@@ -105,10 +104,15 @@ void KnockControllerBase::onFastCallback() {
 		// Adjust knock retard under lock
 		chibios_rt::CriticalSectionLocker csl;
 
+		// Reduce knock retard at the requested rate
 		float newRetard = m_knockRetard - applyAmount;
 
 		// don't allow retard to go negative
-		m_knockRetard = maxF(0, newRetard);
+		if (newRetard < 0) {
+			m_knockRetard = 0;
+		} else {
+			m_knockRetard = newRetard;
+		}
 	}
 }
 
