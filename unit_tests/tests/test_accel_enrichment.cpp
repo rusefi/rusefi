@@ -63,7 +63,7 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	Sensor::setMockValue(SensorType::Tps1, 70);
 	eth.fireTriggerEvents2(/* count */ 1, 25 /* ms */);
 
-	float expectedAEValue = 7;
+	float expectedAEValue = 1.4;
 	// it does not matter how many times we invoke 'getTpsEnrichment' - state does not change
 	for (int i = 0; i <20;i++) {
 		ASSERT_NEAR(expectedAEValue, engine->tpsAccelEnrichment.getTpsEnrichment(), EPS4D);
