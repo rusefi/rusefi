@@ -54,22 +54,17 @@ int getCylinderKnockBank(uint8_t cylinderNumber) {
 bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime) {
 	bool isKnock = dbv > m_knockThreshold;
 
-#if EFI_TUNER_STUDIO
-	// Pass through per-cylinder peak detector
+	// Per-cylinder peak detector
 	float cylPeak = peakDetectors[cylinderNumber].detect(dbv, lastKnockTime);
-	engine->outputChannels.knock[cylinderNumber] = roundf(cylPeak);
+	m_knockCyl[cylinderNumber] = roundf(cylPeak);
 
-	// Pass through all-cylinders peak detector
+	// All-cylinders peak detector
 	m_knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
-
-	// If this was a knock, count it!
-	if (isKnock) {
-		m_knockCount++;
-	}
-#endif // EFI_TUNER_STUDIO
 
 	// TODO: retard timing, then put it back!
 	if (isKnock) {
+		m_knockCount++;
+
 		auto baseTiming = engine->engineState.timingAdvance[cylinderNumber];
 
 		// TODO: 20 configurable? Better explanation why 20?
