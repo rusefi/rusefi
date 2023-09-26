@@ -17,7 +17,7 @@ import static com.rusefi.VariableRegistry.unquote;
 /**
  * here we generate [Datalog] section of TS .ini file
  * DataLog section in turn references [OutputChannels] entities
- * @see SdCardFieldsConsumer
+ * @see SdCardFieldsContent
  */
 public class DataLogConsumer implements ConfigurationConsumer {
     // https://github.com/rusefi/web_backend/issues/166

@@ -1,6 +1,11 @@
-package com.rusefi.output;
+package com.rusefi.test;
 
 import com.rusefi.ReaderState;
+import com.rusefi.ldmp.LiveDataProcessor;
+import com.rusefi.output.ConfigStructure;
+import com.rusefi.output.ConfigurationConsumer;
+import com.rusefi.output.DataLogConsumer;
+import com.rusefi.output.SdCardFieldsContent;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.LazyFileImpl;
 
@@ -9,26 +14,19 @@ import java.io.IOException;
 /**
  * @see DataLogConsumer
  */
-public class SdCardFieldsConsumer implements ConfigurationConsumer {
+public class SdCardFieldsTestConsumer implements ConfigurationConsumer {
 
     private final SdCardFieldsContent content = new SdCardFieldsContent();
     private final LazyFile output;
 
-    public SdCardFieldsConsumer(String outputFileName) {
+    public SdCardFieldsTestConsumer(String outputFileName) {
         output = new LazyFileImpl(outputFileName);
     }
 
     @Override
     public void endFile() throws IOException {
-        wrapContent(output, getBody());
+        LiveDataProcessor.wrapContent(output, getBody());
         output.close();
-    }
-
-    public static void wrapContent(LazyFile output, String content) {
-        output.write("static constexpr LogField fields[] = {\r\n" +
-                "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n");
-        output.write(content);
-        output.write("};\r\n");
     }
 
     @Override

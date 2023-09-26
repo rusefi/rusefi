@@ -8,7 +8,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -89,6 +88,13 @@ public class LiveDataProcessor {
     public static Map<String, Object> getStringObjectMap(Reader reader) {
         Yaml yaml = new Yaml();
         return yaml.load(reader);
+    }
+
+    public static void wrapContent(LazyFile output, String content) {
+        output.write("static constexpr LogField fields[] = {\r\n" +
+                "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n");
+        output.write(content);
+        output.write("};\r\n");
     }
 
     private void end() throws IOException {
@@ -242,7 +248,7 @@ public class LiveDataProcessor {
         enumContent.append("} live_data_e;\n");
 
         LazyFile lazyFile = fileFactory.create("console/binary_log/log_fields_generated.h");
-        SdCardFieldsConsumer.wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
+        wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
         lazyFile.close();
 
         outputValueConsumer.endFile();

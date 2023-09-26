@@ -3,7 +3,6 @@ package com.rusefi.test;
 import static org.junit.Assert.assertEquals;
 
 import com.rusefi.ReaderStateImpl;
-import com.rusefi.output.SdCardFieldsConsumer;
 
 import com.rusefi.util.LazyFile;
 import org.junit.Test;
@@ -82,7 +81,7 @@ public class SdCardFieldsGeneratorTest {
         ReaderStateImpl state = new ReaderStateImpl(null, LazyFile.REAL);
         actor.act(state);
 
-        SdCardFieldsConsumer consumer = new SdCardFieldsConsumer(LazyFile.TEST);
+        SdCardFieldsTestConsumer consumer = new SdCardFieldsTestConsumer(LazyFile.TEST);
         state.readBufferedReader(input, consumer);
         assertEquals(expectedOutput, consumer.getBody());
     }
