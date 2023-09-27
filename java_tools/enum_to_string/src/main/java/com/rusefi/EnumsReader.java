@@ -141,7 +141,7 @@ public class EnumsReader {
 
     private static void validateValues(Map<String, Value> currentValues, VariableRegistry registry, boolean enumWithValues) {
         for (Map.Entry<String, Value> entry : currentValues.entrySet()) {
-            int v = entry.getValue().getIntValueMaybeResolve(registry);
+            int v = enumWithValues ? entry.getValue().getIntValueMaybeResolve(registry) : entry.getValue().getIntValue();
             if (v < 0 || (v >= currentValues.size() && !enumWithValues))
                 throw new IllegalStateException("Unexpected " + entry);
         }
