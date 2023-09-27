@@ -1,2 +1,2 @@
 #define SIGNATURE_HASH 1253132561
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.09.26.tdg-pdm8.1253132561"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.09.27.tdg-pdm8.1253132561"
