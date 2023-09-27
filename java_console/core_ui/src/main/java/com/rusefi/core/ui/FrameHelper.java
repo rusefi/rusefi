@@ -1,5 +1,8 @@
 package com.rusefi.core.ui;
 
+import com.rusefi.core.io.BundleUtil;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -19,6 +22,19 @@ public class FrameHelper {
 
     public FrameHelper(int operation) {
         frame.setDefaultCloseOperation(operation);
+        AutoupdateUtil.setAppIcon(frame);
+    }
+
+    @NotNull
+    public static String appendBundleName(String title) {
+        String bundleName = BundleUtil.readBundleFullNameNotNull();
+        return title + " " + bundleName;
+    }
+
+    public static FrameHelper createFrame(String title) {
+        FrameHelper frame = new FrameHelper();
+        frame.frame.setTitle(appendBundleName(title));
+        return frame;
     }
 
     public JFrame getFrame() {

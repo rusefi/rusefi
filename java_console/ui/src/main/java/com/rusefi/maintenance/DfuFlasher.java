@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import static com.rusefi.StartupFrame.appendBundleName;
+import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 
 /**
  * @see FirmwareFlasher

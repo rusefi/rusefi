@@ -6,6 +6,7 @@ import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.DriverInstall;
@@ -75,8 +76,7 @@ public class StartupFrame {
     public StartupFrame() {
 //        AudioPlayback.start();
         String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
-        frame = new JFrame(appendBundleName(title));
-        frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        frame = FrameHelper.createFrame(title).getFrame();
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent ev) {
@@ -86,13 +86,6 @@ public class StartupFrame {
                 }
             }
         });
-        AutoupdateUtil.setAppIcon(frame);
-    }
-
-    @NotNull
-    public static String appendBundleName(String title) {
-        String bundleName = BundleUtil.readBundleFullNameNotNull();
-        return title + " " + bundleName;
     }
 
     public void chooseSerialPort() {

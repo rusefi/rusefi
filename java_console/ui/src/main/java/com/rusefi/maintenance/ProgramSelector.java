@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.rusefi.StartupFrame.appendBundleName;
+import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
 
