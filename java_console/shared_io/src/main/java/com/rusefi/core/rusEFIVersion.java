@@ -5,11 +5,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class rusEFIVersion {
-    public static final int CONSOLE_VERSION = 20230925;
-    public static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
+public interface rusEFIVersion {
+    int CONSOLE_VERSION = 20230925;
+    AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
-    public static long classBuildTimeMillis() {
+    static long classBuildTimeMillis() {
         Class<?> clazz = rusEFIVersion.class;
         URL resource = clazz.getResource(clazz.getSimpleName() + ".class");
         if (resource == null) {

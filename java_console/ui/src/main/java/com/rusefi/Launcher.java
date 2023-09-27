@@ -20,7 +20,7 @@ import static com.devexperts.logging.Logging.getLogging;
  * @see StartupFrame
  * @see EngineSnifferPanel
  */
-public class Launcher extends rusEFIVersion {
+public class Launcher implements rusEFIVersion {
     private static final Logging log = getLogging(Launcher.class);
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
