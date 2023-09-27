@@ -225,9 +225,6 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 }
 #endif // HAL_USE_CAN
 
-void setBoardConfigOverrides() {
-}
-
 static uint8_t wrapOutBuffer[BLOCKING_FACTOR + 100];
 
 void handleWrapCan(TsChannelBase* tsChannel) {
