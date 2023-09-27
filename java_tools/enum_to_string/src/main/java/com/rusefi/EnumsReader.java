@@ -90,6 +90,7 @@ public class EnumsReader {
                 isInsideEnum = true;
                 enumName = null;
                 isEnumClass = false;
+                lastNumericValue = -1;
             } else if (line.startsWith(ENUMCLASS_PREFIX)) {
                 if (log.debugEnabled())
                     log.debug("  EnumsReader: Entering fancy enum class");
@@ -97,6 +98,7 @@ public class EnumsReader {
                 withAutoValue = false;
                 isInsideEnum = true;
                 isEnumClass = true;
+                lastNumericValue = -1;
                 int colonIndex = line.indexOf(":");
                 if (colonIndex == -1)
                     throw new IllegalStateException("color and Type not located in " + line);
