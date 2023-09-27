@@ -3,6 +3,7 @@ package com.rusefi.ui.logview;
 import com.opensr5.Logger;
 import com.rusefi.ConsoleUI;
 import com.rusefi.FileLog;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.file.FileUtils;
 import com.rusefi.ui.ChartRepository;
@@ -182,7 +183,7 @@ public class LogViewer extends JPanel {
         EngineState engineState = new EngineState(listener);
         // this is pretty dirty, better OOP desperately needed
         ConsoleUI.engineSnifferPanel.setOutpinListener(engineState);
-        engineState.registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
+        engineState.registerStringValueAction(Fields.PROTOCOL_ENGINE_SNIFFER, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 FileLog.MAIN.logLine("Got wave_chart: " + value);

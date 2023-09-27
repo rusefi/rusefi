@@ -153,7 +153,7 @@ public class EngineSnifferPanel {
 
         resetImagePanel();
 
-        uiContext.getLinkManager().getEngineState().registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
+        uiContext.getLinkManager().getEngineState().registerStringValueAction(Fields.PROTOCOL_ENGINE_SNIFFER, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 if (isPaused)
