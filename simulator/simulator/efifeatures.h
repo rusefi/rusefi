@@ -102,8 +102,7 @@
 #define EFI_HIP_9011 TRUE
 #define EFI_CJ125 TRUE
 
-// Simulator supports real CAN, but not on Windows (yet?)
-#define EFI_CAN_SUPPORT !EFI_SIM_IS_WINDOWS
+#define EFI_CAN_SUPPORT TRUE
 
 #define EFI_WIDEBAND_FIRMWARE_UPDATE TRUE
 #define EFI_MAX_31855 FALSE
