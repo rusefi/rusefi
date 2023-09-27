@@ -52,8 +52,7 @@ public class ProgramSelector {
         if (Arrays.asList(AUTO_DFU, MANUAL_DFU, ST_LINK, OPENBLT_CAN , DFU_ERASE, DFU_SWITCH).contains(persistedMode))
             mode.setSelectedItem(persistedMode);
 
-        JButton updateFirmware = new JButton("Update Firmware",
-                AutoupdateUtil.loadIcon("upload48.png"));
+        JButton updateFirmware = createUpdateFirmwareButton();
         controls.add(updateFirmware);
 
         updateFirmware.addActionListener(new ActionListener() {
@@ -93,6 +92,11 @@ public class ProgramSelector {
             }
         });
 
+    }
+
+    @NotNull
+    public static JButton createUpdateFirmwareButton() {
+        return new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
     }
 
     private void flashOpenBltCan() {
