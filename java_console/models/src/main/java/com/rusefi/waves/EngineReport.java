@@ -20,7 +20,6 @@ import static com.rusefi.config.generated.Fields.PROTOCOL_ES_UP;
  * @see SensorSnifferPane
  */
 public class EngineReport {
-    public static final String ENGINE_CHART = Fields.PROTOCOL_ENGINE_SNIFFER;
     public static final EngineReport MOCK = new EngineReport(Collections.singletonList(new UpDown(0, -1, 1, -1, Double.NaN, Double.NaN)));
     /**
      * number of Engine Sniffer ticks per ms
