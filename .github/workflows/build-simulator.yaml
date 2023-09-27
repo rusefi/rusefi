@@ -62,6 +62,10 @@ jobs:
       run: |
         git reset --hard
 
+    - name: Gradle tune-tools
+      working-directory: ./java_tools
+      run: ./gradlew :tune-tools:shadowJar
+
     - name: Convert .bin from Linux Simulator into .xml
       working-directory: ./simulator/
       run: ./write_tune.sh
