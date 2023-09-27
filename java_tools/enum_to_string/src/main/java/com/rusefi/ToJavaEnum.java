@@ -15,11 +15,16 @@ import java.util.Map;
  * produces java enum class from an enum defined in a C/C++ header
  */
 public class ToJavaEnum {
+    static private boolean enumWithValues = false;
+
     public static void main(String[] args) throws IOException {
         InvokeReader invokeReader = new InvokeReader(args).invoke();
         String outputPath = invokeReader.getOutputPath();
 
         EnumsReader enumsReader = new EnumsReader();
+
+        enumWithValues = "true".equalsIgnoreCase(System.getProperty("enum_with_values"));
+        System.out.println("enumWithValues=" + enumWithValues);
 
         VariableRegistry registry = new VariableRegistry();
         for (String fileName : invokeReader.getDefinitionInputFiles())
@@ -32,7 +37,7 @@ public class ToJavaEnum {
             SystemOut.println("Reading enums from " + f);
             sb.append("// based on ").append(f).append("\n");
 
-            enumsReader.read(new FileReader(f));
+            enumsReader.read(new FileReader(f), registry, enumWithValues);
         }
 
         for (Map.Entry<String /*enum name*/, EnumsReader.EnumState> e : enumsReader.getEnums().entrySet()) {
@@ -60,10 +65,20 @@ public class ToJavaEnum {
         int index = 0;
         for (Value value : sorted) {
             int numericValue = value.getIntValueMaybeResolve(registry);
-            if (index != numericValue)
-                throw new IllegalStateException("Got explicit ordinal " + numericValue + " instead of ordinal " + index + " in " + value);
-            sb.append("\t" + value.getName() + ",\n");
+            if (enumWithValues) {
+                sb.append("\t" + value.getName() + "(" + numericValue + "),\n");
+            } else {
+                if (index != numericValue)
+                    throw new IllegalStateException("Got explicit ordinal " + numericValue + " instead of ordinal " + index + " in " + value);
+                sb.append("\t" + value.getName() + ",\n");
+            }
             index++;
+        }
+
+        if (enumWithValues) {
+            sb.append("\t;\n\n\n\tprivate int value;\n\n");
+            sb.append("\t" + key + "(int v) {\n\t\tvalue = v;\n\t}\n\n");
+            sb.append("\tpublic int get() {\n\t\treturn value;\n\t}\n");
         }
 
         sb.append("}\n");

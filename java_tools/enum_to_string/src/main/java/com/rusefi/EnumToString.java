@@ -85,7 +85,7 @@ public class EnumToString {
         commonFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + f.getName() + " ");
 
         includesSection.append("#include \"" + f.getName() + "\"\n");
-        enumsReader.read(new FileReader(f));
+        enumsReader.read(new FileReader(f), new VariableRegistry(), false);
     }
 
     public void outputData(EnumsReader enumsReader) {
