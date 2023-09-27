@@ -22,7 +22,7 @@ public class LiveDataParserSandbox {
 
         VariableValueSource valueSource = getVariableValueSource(values);
 
-        new FrameHelper(JDialog.EXIT_ON_CLOSE).showFrame(new LiveDataParserPanel(new UIContext(), valueSource, "ac_control.cpp").getContent());
+        new FrameHelper().showFrame(new LiveDataParserPanel(new UIContext(), valueSource, "ac_control.cpp").getContent());
     }
 
     @Nullable

@@ -9,6 +9,6 @@ public class LiveDataPaneSandbox {
         UIContext uiContext = new UIContext();
         InitOnFirstPaintPanel panel = LiveDataPane.createLazy(uiContext);
 
-        new FrameHelper(WindowConstants.EXIT_ON_CLOSE).showFrame(panel.getContent());
+        new FrameHelper().showFrame(panel.getContent());
     }
 }
