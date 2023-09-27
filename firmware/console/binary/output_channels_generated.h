@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 17:12:20 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Sep 27 01:12:02 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -120,37 +120,36 @@ struct output_channels_s {
 	offset 0 bit 22 */
 	bool isTps2Error : 1 {};
 	/**
-	 * Idle: Closed Loop
-	offset 0 bit 23 */
-	bool isIdleClosedLoop : 1 {};
-	/**
 	 * Injector Fault
-	offset 0 bit 24 */
+	offset 0 bit 23 */
 	bool injectorFault : 1 {};
 	/**
 	 * Ignition Fault
-	offset 0 bit 25 */
+	offset 0 bit 24 */
 	bool ignitionFault : 1 {};
 	/**
-	offset 0 bit 26 */
+	offset 0 bit 25 */
 	bool isMainRelayOn : 1 {};
 	/**
 	 * isUsbConnected
 	 * Original reason for this is to check if USB is connected from Lua
-	offset 0 bit 27 */
+	offset 0 bit 26 */
 	bool isUsbConnected : 1 {};
 	/**
-	offset 0 bit 28 */
+	offset 0 bit 27 */
 	bool dfcoActive : 1 {};
 	/**
+	offset 0 bit 28 */
+	bool unusedBit_28_28 : 1 {};
+	/**
 	offset 0 bit 29 */
-	bool unusedBit_29_29 : 1 {};
+	bool unusedBit_28_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_29_30 : 1 {};
+	bool unusedBit_28_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_29_31 : 1 {};
+	bool unusedBit_28_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	RPM
@@ -1236,4 +1235,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 804);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 26 17:12:20 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Sep 27 01:12:02 UTC 2023

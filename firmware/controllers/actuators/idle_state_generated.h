@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Sep 25 12:41:04 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Sep 27 01:12:03 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -96,53 +96,54 @@ struct idle_state_s {
 	offset 20 bit 15 */
 	bool isIdleCoasting : 1 {};
 	/**
+	 * Idle: Closed loop active
 	offset 20 bit 16 */
-	bool unusedBit_21_16 : 1 {};
+	bool isIdleClosedLoop : 1 {};
 	/**
 	offset 20 bit 17 */
-	bool unusedBit_21_17 : 1 {};
+	bool unusedBit_22_17 : 1 {};
 	/**
 	offset 20 bit 18 */
-	bool unusedBit_21_18 : 1 {};
+	bool unusedBit_22_18 : 1 {};
 	/**
 	offset 20 bit 19 */
-	bool unusedBit_21_19 : 1 {};
+	bool unusedBit_22_19 : 1 {};
 	/**
 	offset 20 bit 20 */
-	bool unusedBit_21_20 : 1 {};
+	bool unusedBit_22_20 : 1 {};
 	/**
 	offset 20 bit 21 */
-	bool unusedBit_21_21 : 1 {};
+	bool unusedBit_22_21 : 1 {};
 	/**
 	offset 20 bit 22 */
-	bool unusedBit_21_22 : 1 {};
+	bool unusedBit_22_22 : 1 {};
 	/**
 	offset 20 bit 23 */
-	bool unusedBit_21_23 : 1 {};
+	bool unusedBit_22_23 : 1 {};
 	/**
 	offset 20 bit 24 */
-	bool unusedBit_21_24 : 1 {};
+	bool unusedBit_22_24 : 1 {};
 	/**
 	offset 20 bit 25 */
-	bool unusedBit_21_25 : 1 {};
+	bool unusedBit_22_25 : 1 {};
 	/**
 	offset 20 bit 26 */
-	bool unusedBit_21_26 : 1 {};
+	bool unusedBit_22_26 : 1 {};
 	/**
 	offset 20 bit 27 */
-	bool unusedBit_21_27 : 1 {};
+	bool unusedBit_22_27 : 1 {};
 	/**
 	offset 20 bit 28 */
-	bool unusedBit_21_28 : 1 {};
+	bool unusedBit_22_28 : 1 {};
 	/**
 	offset 20 bit 29 */
-	bool unusedBit_21_29 : 1 {};
+	bool unusedBit_22_29 : 1 {};
 	/**
 	offset 20 bit 30 */
-	bool unusedBit_21_30 : 1 {};
+	bool unusedBit_22_30 : 1 {};
 	/**
 	offset 20 bit 31 */
-	bool unusedBit_21_31 : 1 {};
+	bool unusedBit_22_31 : 1 {};
 	/**
 	 * idle: target by CLT
 	 * offset 24
@@ -167,4 +168,4 @@ struct idle_state_s {
 static_assert(sizeof(idle_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Sep 25 12:41:04 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Sep 27 01:12:03 UTC 2023

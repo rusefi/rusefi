@@ -71,9 +71,6 @@ float getOutputValueByName(const char *name) {
 // isTps2Error
 		case -1529936844:
 			return engine->outputChannels.isTps2Error;
-// isIdleClosedLoop
-		case 1473688883:
-			return engine->outputChannels.isIdleClosedLoop;
 // injectorFault
 		case 1608791711:
 			return engine->outputChannels.injectorFault;

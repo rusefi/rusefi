@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Sep 26 16:47:30 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Sep 27 01:12:03 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -188,6 +188,7 @@ public class IdleState {
 	public static final Field LOOKSLIKECOASTING = Field.create("LOOKSLIKECOASTING", 20, FieldType.BIT, 13).setBaseOffset(1280);
 	public static final Field LOOKSLIKECRANKTOIDLE = Field.create("LOOKSLIKECRANKTOIDLE", 20, FieldType.BIT, 14).setBaseOffset(1280);
 	public static final Field ISIDLECOASTING = Field.create("ISIDLECOASTING", 20, FieldType.BIT, 15).setBaseOffset(1280);
+	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 20, FieldType.BIT, 16).setBaseOffset(1280);
 	public static final Field TARGETRPMBYCLT = Field.create("TARGETRPMBYCLT", 24, FieldType.INT).setScale(1.0).setBaseOffset(1280);
 	public static final Field TARGETRPMACBUMP = Field.create("TARGETRPMACBUMP", 28, FieldType.INT).setScale(1.0).setBaseOffset(1280);
 	public static final Field IACBYRPMTAPER = Field.create("IACBYRPMTAPER", 32, FieldType.FLOAT).setBaseOffset(1280);
@@ -214,6 +215,7 @@ public class IdleState {
 	LOOKSLIKECOASTING,
 	LOOKSLIKECRANKTOIDLE,
 	ISIDLECOASTING,
+	ISIDLECLOSEDLOOP,
 	TARGETRPMBYCLT,
 	TARGETRPMACBUMP,
 	IACBYRPMTAPER,
