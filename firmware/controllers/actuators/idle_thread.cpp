@@ -357,7 +357,7 @@ float IdleController::getIdlePosition(float rpm) {
 		}
 
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
-		engine->outputChannels.isIdleClosedLoop = phase == Phase::Idling;
+		isIdleClosedLoop = phase == Phase::Idling;
 
 		if (engineConfiguration->idleMode == IM_AUTO) {
 			// see also tsOutputChannels->idlePosition
