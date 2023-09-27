@@ -20,6 +20,14 @@ java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -
 java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/algo/engine_types.h   -outputPath ../java_console/models/src/main/java/com/rusefi/enums -definition integration/rusefi_config.txt
 [ $? -eq 0 ] || { echo "ERROR generating types"; exit 1; }
 
+java -DSystemOut.name=logs/gen_java_enum \
+	-Denum_with_values=true \
+	-cp ${ENUM_JAR} com.rusefi.ToJavaEnum \
+	-enumInputFile libfirmware/can/can_common.h \
+	-outputPath ../java_console/models/src/main/java/com/rusefi/enums \
+	-definition libfirmware/can/can_common.h
+[ $? -eq 0 ] || { echo "ERROR generating types"; exit 1; }
+
 java -DSystemOut.name=logs/gen_enum_to_string \
 	-jar ${ENUM_JAR} \
 	-outputPath controllers/algo \
