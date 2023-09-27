@@ -30,6 +30,7 @@ import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.StatusConsumer;
+import com.rusefi.ui.basic.BasicStartupFrame;
 import com.rusefi.ui.light.LightweightGUI;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,6 +64,7 @@ public class ConsoleTools {
     static {
         registerTool("help", args -> printTools(), "Print this help.");
         registerTool("headless", ConsoleTools::runHeadless, "Connect to rusEFI controller and start saving logs.");
+        registerTool("basic-ui", BasicStartupFrame::runTool, "Basic UI");
 
         registerTool("ptrace_enums", ConsoleTools::runPerfTraceTool, "NOT A USER TOOL. Development tool to process performance trace enums");
         registerTool("firing_order", ConsoleTools::runFiringOrderTool, "NOT A USER TOOL. Development tool relating to adding new firing order into rusEFI firmware.");
