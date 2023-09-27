@@ -1,5 +1,6 @@
 package com.rusefi.simulator;
 
+import com.rusefi.enums.bench_test_packet_ids_e;
 import com.rusefi.io.LinkManager;
 import etch.util.CircularByteBuffer;
 
@@ -12,6 +13,8 @@ import static com.rusefi.config.generated.Fields.TS_SIMULATE_CAN;
 
 public class SimulatorFunctionalTest {
     private final LinkManager linkManager;
+    private boolean gotCanPacketAnalog1 = false;
+    private boolean gotCanPacketAnalog2 = false;
 
     public SimulatorFunctionalTest(LinkManager linkManager) {
         this.linkManager = linkManager;
@@ -31,14 +34,19 @@ public class SimulatorFunctionalTest {
                 try {
                     int count = swap16(c.getShort());
 
-                    c.get();
-                    int dataLength = c.get();
-                    c.get();
-                    int ide = c.get();
-                    int eid = c.getInt();
+                    for (int idx = 0; idx < count; idx++) {
+                        c.get();
+                        int dataLength = c.get();
+                        c.get(); // rtr
+                        c.get(); // ide
+                        int eid = c.getInt();
+                        byte[] data = new byte[dataLength];
+                        c.get(data);
+                        processCanPacket(eid, data);
+                    }
+
 
                     System.out.println("Got " + count + " packets");
-                    System.out.println(response);
                     gotCan.countDown();
 
                 } catch (EOFException e) {
@@ -48,7 +56,14 @@ public class SimulatorFunctionalTest {
 
             }
         });
-        // todo 1 assert RAW_ANALOG can packet has arrived
+        gotCan.await(1, TimeUnit.MINUTES);
+
+        // assert RAW_ANALOG can packets have arrived
+        if (!gotCanPacketAnalog1 || !gotCanPacketAnalog2) {
+            throw new IllegalStateException("Didn't receive analog CAN packets! "
+                    + gotCanPacketAnalog1 + " " + gotCanPacketAnalog2);
+        }
+
 
         // todo send new CAN command "request pin state for bench_mode_e pin BENCH_FUEL_PUMP
 
@@ -56,8 +71,14 @@ public class SimulatorFunctionalTest {
 
 
 
-        gotCan.await(1, TimeUnit.MINUTES);
 
+    }
 
+    private void processCanPacket(int eid, byte[] data) {
+        if (eid == bench_test_packet_ids_e.RAW_ANALOG_1.get()) {
+            gotCanPacketAnalog1 = true;
+        } else if (eid == bench_test_packet_ids_e.RAW_ANALOG_2.get()) {
+            gotCanPacketAnalog2 = true;
+        }
     }
 }
