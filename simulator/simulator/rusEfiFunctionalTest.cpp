@@ -228,7 +228,7 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 static uint8_t wrapOutBuffer[BLOCKING_FACTOR + 100];
 
 void handleWrapCan(TsChannelBase* tsChannel) {
-    int size = minI(txCanBuffer.getSize(), BLOCKING_FACTOR / sizeof(CANTxFrame));
+    int size = minI(txCanBuffer.getCount(), BLOCKING_FACTOR / sizeof(CANTxFrame));
 
     memcpy(wrapOutBuffer, &size, 2);
     int outputSize = 2;
