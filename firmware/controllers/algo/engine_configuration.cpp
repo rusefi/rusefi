@@ -1069,12 +1069,12 @@ void commonFrankensoAnalogInputs() {
 }
 
 // These symbols are weak so that a board_configuration.cpp file can override them
-__attribute__((weak)) void setBoardDefaultConfiguration() { }
-__attribute__((weak)) void setBoardConfigOverrides() { }
+BOARD_WEAK void setBoardDefaultConfiguration() { }
+BOARD_WEAK void setBoardConfigOverrides() { }
 
-__attribute__((weak)) void onBoardStandBy() { }
+BOARD_WEAK void onBoardStandBy() { }
 
-__attribute__((weak)) int getBoardMetaOutputsCount() { return 0; }
+BOARD_WEAK int getBoardMetaOutputsCount() { return 0; }
 // default implementation: treat all outputs as low side
-__attribute__((weak)) int getBoardMetaLowSideOutputsCount() { return getBoardMetaOutputsCount(); }
-__attribute__((weak)) Gpio* getBoardMetaOutputs() { return nullptr; }
+BOARD_WEAK int getBoardMetaLowSideOutputsCount() { return getBoardMetaOutputsCount(); }
+BOARD_WEAK Gpio* getBoardMetaOutputs() { return nullptr; }
