@@ -212,7 +212,7 @@ public class StartupFrame {
         JLabel logo = LogoHelper.createLogoLabel();
         if (logo != null)
             rightPanel.add(logo);
-        rightPanel.add(new URLLabel(LogoHelper.LINK_TEXT, LogoHelper.URI));
+        rightPanel.add(LogoHelper.createUrlLabel());
         rightPanel.add(new JLabel("Version " + Launcher.CONSOLE_VERSION));
 
         JPanel content = new JPanel(new BorderLayout());

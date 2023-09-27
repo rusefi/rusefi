@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.util.URLLabel;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -42,5 +43,10 @@ public class LogoHelper {
             logoName = LOGO;
         }
         return AutoupdateUtil.loadIcon(logoName);
+    }
+
+    @NotNull
+    public static URLLabel createUrlLabel() {
+        return new URLLabel(LINK_TEXT, URI);
     }
 }
