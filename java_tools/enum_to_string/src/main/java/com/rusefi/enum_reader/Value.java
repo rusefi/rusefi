@@ -56,6 +56,6 @@ public class Value implements Comparable<Value> {
     private int handleNotInteger(VariableRegistry registry) {
         String resolvedValue = registry.get(value);
         Objects.requireNonNull(resolvedValue, value);
-        return Integer.parseInt(resolvedValue);
+        return Value.parseInt(resolvedValue);
     }
 }
