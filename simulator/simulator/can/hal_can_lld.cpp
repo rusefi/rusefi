@@ -26,9 +26,11 @@
 
 #if (HAL_USE_CAN == TRUE) || defined(__DOXYGEN__)
 
+#if !EFI_SIM_IS_WINDOWS
 #include <linux/can.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
+#endif /* !EFI_SIM_IS_WINDOWS */
 
 #include <algorithm>
 #include <cstring>
@@ -93,6 +95,7 @@ void can_lld_start(CANDriver *canp) {
 	// Check that a name is set
 	osalDbgCheck(canp->deviceName != nullptr);
 
+#if !EFI_SIM_IS_WINDOWS
 	// create socket
 	int sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
@@ -128,6 +131,7 @@ void can_lld_start(CANDriver *canp) {
 	instances.push_back(canp);
 
 	// TODO: can we even set bitrate from userspace?
+#endif /* !EFI_SIM_IS_WINDOWS */
 }
 
 /**
@@ -140,6 +144,7 @@ void can_lld_start(CANDriver *canp) {
 void can_lld_stop(CANDriver *canp) {
 	(void)canp;
 
+#if !EFI_SIM_IS_WINDOWS
 	// Remove from the "interrupt handler" list
 	std::remove(instances.begin(), instances.end(), canp);
 
@@ -149,6 +154,7 @@ void can_lld_stop(CANDriver *canp) {
 
 	// Free the rx queue
 	delete reinterpret_cast<std::queue<can_frame>*>(canp->rx);
+#endif /* !EFI_SIM_IS_WINDOWS */
 }
 
 /**
@@ -167,9 +173,13 @@ bool can_lld_is_tx_empty(CANDriver *canp, canmbx_t mailbox) {
 	(void)canp;
 	(void)mailbox;
 
+#if !EFI_SIM_IS_WINDOWS
 	// The queue is practically infinitely deep, so it is always safe to call can_lld_transmit.
 	// Therefore, just return whether or not the CAN interface actually got initialized
 	return canp->sock >= 0;
+#else
+	return true;
+#endif /* !EFI_SIM_IS_WINDOWS */
 }
 
 /**
@@ -186,6 +196,7 @@ void can_lld_transmit(CANDriver *canp,
                       const CANTxFrame *ctfp) {
 	(void)mailbox;
 
+#if !EFI_SIM_IS_WINDOWS
 	can_frame frame;
 
 	memcpy(frame.data, ctfp->data8, 8);
@@ -201,6 +212,10 @@ void can_lld_transmit(CANDriver *canp,
 		// TODO: handle err
 		return;
 	}
+#else
+	(void)canp;
+	(void)ctfp;
+#endif /* !EFI_SIM_IS_WINDOWS */
 }
 
 /**
@@ -217,18 +232,23 @@ void can_lld_transmit(CANDriver *canp,
  */
 bool can_lld_is_rx_nonempty(CANDriver *canp, canmbx_t mailbox) {
 	(void)mailbox;
-
+#if !EFI_SIM_IS_WINDOWS
 	// CAN init failed, claim that the queue is full.
 	if (canp->sock < 0) {
 		return false;
 	}
 
 	return !reinterpret_cast<std::queue<can_frame>*>(canp->rx)->empty();
+#else
+	(void)canp;
+	return false;
+#endif /* !EFI_SIM_IS_WINDOWS */
 }
 
 bool check_can_isr() {
 	bool intOccured = false;
 
+#if !EFI_SIM_IS_WINDOWS
 	for (auto canp : instances) {
 		can_frame frame;
 
@@ -247,6 +267,7 @@ bool check_can_isr() {
 		_can_rx_full_isr(canp, 0);
 		CH_IRQ_EPILOGUE();
 	}
+#endif /* !EFI_SIM_IS_WINDOWS */
 
 	return intOccured;
 }
@@ -265,6 +286,7 @@ void can_lld_receive(CANDriver *canp,
                      CANRxFrame *crfp) {
 	(void)mailbox;
 
+#if !EFI_SIM_IS_WINDOWS
 	auto queue = reinterpret_cast<std::queue<can_frame>*>(canp->rx);
 
 	can_frame frame = queue->front();
@@ -283,6 +305,10 @@ void can_lld_receive(CANDriver *canp,
 	crfp->EID = CAN_ERR_MASK & frame.can_id;
 
 	crfp->IDE = (frame.can_id &  CAN_EFF_FLAG) != 0;
+#else
+	(void)canp;
+	(void)crfp;
+#endif /* !EFI_SIM_IS_WINDOWS */
 }
 
 /**
