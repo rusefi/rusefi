@@ -27,6 +27,7 @@ public:
 
 	// EngineModule implementation
 	void onFastCallback() override;
+	void onConfigurationChange(engine_configuration_s const * previousConfig) override;
 
 	// ClosedLoopController implementation
 	expected<angle_t> observePlant() const override;

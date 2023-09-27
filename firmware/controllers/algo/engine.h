@@ -209,7 +209,6 @@ public:
 	void setConfig();
 
 	LocalVersionHolder versionForConfigurationListeners;
-	LocalVersionHolder auxParametersVersion;
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
