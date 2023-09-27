@@ -35,7 +35,7 @@ static void setPin(const CANRxFrame& frame, int value) {
 
 void sendEventCounters() {
 #if EFI_SHAFT_POSITION_INPUT
-	CanTxMessage msg(CanCategory::BENCH_TEST, bench_test_packet_ids_e::EVENT_COUNTERS, 8, /*bus*/0, /*isExtended*/true);
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::EVENT_COUNTERS, 8, /*bus*/0, /*isExtended*/true);
 
 	int primaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 	int primaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
@@ -61,7 +61,7 @@ void sendEventCounters() {
 }
 
 void sendButtonCounters() {
-	CanTxMessage msg(CanCategory::BENCH_TEST, bench_test_packet_ids_e::BUTTON_COUNTERS, 8, /*bus*/0, /*isExtended*/true);
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::BUTTON_COUNTERS, 8, /*bus*/0, /*isExtended*/true);
 	msg[0] = TRUNCATE_TO_BYTE(engine->brakePedalSwitchedState.getCounter());
 	msg[1] = TRUNCATE_TO_BYTE(engine->clutchUpSwitchedState.getCounter());
 	msg[2] = TRUNCATE_TO_BYTE(engine->acButtonSwitchedState.getCounter());
@@ -92,13 +92,13 @@ void sendRawAnalogValues() {
 
 	// send the first packet
 	{
-		CanTxMessage msg(CanCategory::BENCH_TEST, bench_test_packet_ids_e::RAW_ANALOG_1, 8, /*bus*/0, /*isExtended*/true);
+		CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::RAW_ANALOG_1, 8, /*bus*/0, /*isExtended*/true);
 		for (int valueIdx = 0; valueIdx < efi::size(values_1); valueIdx++) {
 			msg[valueIdx] = RAW_TO_BYTE(values_1[valueIdx]);
 		}
 	}
 	{
-		CanTxMessage msg(CanCategory::BENCH_TEST, bench_test_packet_ids_e::RAW_ANALOG_2, 8, /*bus*/0, /*isExtended*/true);
+		CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::RAW_ANALOG_2, 8, /*bus*/0, /*isExtended*/true);
 		for (int valueIdx = 0; valueIdx < efi::size(values_2); valueIdx++) {
 			msg[valueIdx] = RAW_TO_BYTE(values_2[valueIdx]);
 		}
@@ -107,7 +107,7 @@ void sendRawAnalogValues() {
 
 static void sendOutBoardMeta() {
 #if EFI_PROD_CODE
-	CanTxMessage msg(CanCategory::BENCH_TEST, bench_test_packet_ids_e::IO_META_INFO, 8, /*bus*/0, /*isExtended*/true);
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::IO_META_INFO, 8, /*bus*/0, /*isExtended*/true);
 	msg[0] = CAN_BENCH_HEADER;
 	msg[1] = 0;
 	msg[2] = getBoardMetaOutputsCount();
@@ -117,7 +117,7 @@ static void sendOutBoardMeta() {
 
 void sendBoardStatus() {
 #if EFI_PROD_CODE
-	CanTxMessage msg(CanCategory::BENCH_TEST, bench_test_packet_ids_e::BOARD_STATUS, 8, /*bus*/0, /*isExtended*/true);
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::BOARD_STATUS, 8, /*bus*/0, /*isExtended*/true);
 
 	int boardId = getBoardId();
 	msg[0] = TRUNCATE_TO_BYTE(boardId >> 8);
@@ -136,7 +136,7 @@ void sendBoardStatus() {
 }
 
 void processCanBenchTest(const CANRxFrame& frame) {
-	if (CAN_EID(frame) != bench_test_packet_ids_e::IO_CONTROL) {
+	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
 		return;
 	}
 	if (frame.data8[0] != CAN_BENCH_HEADER) {
