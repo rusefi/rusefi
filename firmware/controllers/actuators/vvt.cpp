@@ -39,11 +39,13 @@ void VvtController::onFastCallback() {
 		return;
 	}
 
-	if (engine->vvtParametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
+	update();
+}
+
+void VvtController::onConfigurationChange(engine_configuration_s const * previousConfig) {
+	if (!m_pid.isSame(&previousConfig->auxPid[index])) {
 		m_pid.reset();
 	}
-
-	update();
 }
 
 expected<angle_t> VvtController::observePlant() const {
