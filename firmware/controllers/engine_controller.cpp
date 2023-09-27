@@ -627,9 +627,9 @@ void initEngineController() {
 	initAlternatorCtrl();
 #endif /* EFI_ALTERNATOR_CONTROL */
 
-#if EFI_AUX_PID
+#if EFI_VVT_PID
 	initVvtActuators();
-#endif /* EFI_AUX_PID */
+#endif /* EFI_VVT_PID */
 
 #if EFI_MALFUNCTION_INDICATOR
 	initMalfunctionIndicator();

@@ -132,7 +132,7 @@ const trigger_state_s* getLiveData(size_t idx) {
 
 template<>
 const vvt_s* getLiveData(size_t idx) {
-#if EFI_AUX_PID
+#if EFI_VVT_PID
 	switch (idx) {
 		case 0: return &engine->module<VvtController1>().unmock();
 		case 1: return &engine->module<VvtController2>().unmock();

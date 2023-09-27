@@ -121,8 +121,8 @@
 #define EFI_ALTERNATOR_CONTROL TRUE
 #endif
 
-#ifndef EFI_AUX_PID
-#define EFI_AUX_PID TRUE
+#ifndef EFI_VVT_PID
+#define EFI_VVT_PID TRUE
 #endif
 
 #define EFI_SIGNAL_EXECUTOR_SLEEP FALSE

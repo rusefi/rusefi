@@ -156,12 +156,12 @@ public:
 		KnockController,
 		SensorChecker,
 		LimpManager,
-#if EFI_AUX_PID
+#if EFI_VVT_PID
 		VvtController1,
 		VvtController2,
 		VvtController3,
 		VvtController4,
-#endif // EFI_AUX_PID
+#endif // EFI_VVT_PID
 #if EFI_BOOST_CONTROL
 		BoostController,
 #endif // EFI_BOOST_CONTROL

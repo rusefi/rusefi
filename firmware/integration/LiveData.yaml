@@ -144,6 +144,7 @@ Usages:
     folder: controllers/actuators
     constexpr: "___engine.module<VvtController1>()"
     isPtr: true
+    conditional_compilation: "EFI_VVT_PID"
 
   - name: lambda_monitor
     folder: controllers/math
