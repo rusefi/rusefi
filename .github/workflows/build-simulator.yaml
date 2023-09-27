@@ -34,9 +34,9 @@ jobs:
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
 
-    - name: Code generation tools and java console
+    - name: Code generation tools
       working-directory: ./java_tools
-      run: ./gradlew shadowJar
+      run: ./gradlew :config_definition:shadowJar
 
     - name: Generate Configs, Enums & Live Documentation
       working-directory: ./firmware/
@@ -61,6 +61,10 @@ jobs:
     - name: Reset git
       run: |
         git reset --hard
+
+    - name: Gradle tune-tools
+      working-directory: ./java_tools
+      run: ./gradlew :tune-tools:shadowJar
 
     - name: Convert .bin from Linux Simulator into .xml
       working-directory: ./simulator/
