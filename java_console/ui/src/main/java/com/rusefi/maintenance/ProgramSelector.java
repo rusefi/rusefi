@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
@@ -29,8 +30,6 @@ public class ProgramSelector {
     private static final String DFU_ERASE = "Full Chip Erase";
     private static final String ST_LINK = "ST-LINK Update";
     private static final String OPENBLT_CAN = "OpenBLT via CAN";
-
-    public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().contains("win");
 
     private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware";
     public static final String BOOT_COMMANDER_EXE = "BootCommander.exe";
@@ -126,7 +125,7 @@ public class ProgramSelector {
         controls.setVisible(!currentHardware.isEmpty());
 
         mode.removeAllItems();
-        if (IS_WIN) {
+        if (FileLog.isWindows()) {
             if (!currentHardware.getKnownPorts().isEmpty())
                 mode.addItem(AUTO_DFU);
             if (currentHardware.isDfuFound()) {

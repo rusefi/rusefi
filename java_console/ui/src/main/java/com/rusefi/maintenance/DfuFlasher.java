@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.opensr5.ini.IniFileModel;
+import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
@@ -63,7 +64,7 @@ public class DfuFlasher {
         if (isSignatureValidated == null)
             return;
         if (isSignatureValidated.get()) {
-            if (!ProgramSelector.IS_WIN) {
+            if (!FileLog.isWindows()) {
                 wnd.append("Switched to DFU mode!");
                 wnd.append("rusEFI console can only program on Windows");
                 return;
