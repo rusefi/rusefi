@@ -5,8 +5,9 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
-    percent_t currentIdlePosition;"idle: current position\nthat's current position with CLT and IAT corrections"
+    percent_t currentIdlePosition;@@GAUGE_NAME_IAC@@;"%", 1, 0, 0, 0, 1
     percent_t baseIdlePosition;"idle: base value\ncurrent position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)"
+	percent_t idleClosedLoop;Idle: Closed loop
     percent_t iacByTpsTaper;idle: iacByTpsTaper portion
     int throttlePedalUpState;idle: throttlePedalUpState\ntrue in IDLE throttle pedal state, false if driver is touching the pedal\ntodo: better name for this field?
 
@@ -29,12 +30,13 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
     bit isIdleCoasting;Idle: coasting
 	bit isIdleClosedLoop;Idle: Closed loop active
 
-int targetRpmByClt;idle: target by CLT
-int targetRpmAcBump;idle: A/C bump
+	int idleTarget;Idle: Target RPM
+	int targetRpmByClt;Idle: Target RPM base
+	int targetRpmAcBump;Idle: Target A/C bump
 
-percent_t iacByRpmTaper;idle: iacByRpmTaper portion
+    percent_t iacByRpmTaper;idle: iacByRpmTaper portion
 
-percent_t luaAdd;idle: Lua Adder
+    percent_t luaAdd;idle: Lua Adder
 
 ! end of idle_state_s structure definition
 end_struct
