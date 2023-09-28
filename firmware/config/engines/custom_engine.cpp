@@ -895,6 +895,7 @@ void fuelBenchMode() {
     setBodyControlUnit();
 }
 
+#if HW_PROTEUS
 // PROTEUS_STIM_QC
 // set engine_type 73
 void proteusStimQc() {
@@ -914,6 +915,15 @@ void proteusStimQc() {
    	engineConfiguration->tps2_1AdcChannel = PROTEUS_IN_TPS2_1;
    	// EFI_ADC_0: "Analog Volt 5"
    	engineConfiguration->tps2_2AdcChannel = PROTEUS_IN_ANALOG_VOLT_5;
+   	engineConfiguration->oilPressure.hwChannel = PROTEUS_IN_ANALOG_VOLT_6;
+   	// pps2 volt 7
+
+    // pps1 volt 9
+    // afr volt 10
+    engineConfiguration->oilTempSensor.adcChannel = PROTEUS_IN_ANALOG_VOLT_11;
+	setCommonNTCSensor(&engineConfiguration->oilTempSensor, 2700);
+
+
 	engineConfiguration->auxLinear1.hwChannel = PROTEUS_IN_ANALOG_TEMP_1;
 	engineConfiguration->auxLinear2.hwChannel = PROTEUS_IN_ANALOG_TEMP_4;
 
@@ -924,6 +934,7 @@ void proteusStimQc() {
 //   	engineConfiguration->vvtPins[0] = Gpio::PROTEUS_LS_15;
 //   	engineConfiguration->vvtPins[1] = Gpio::PROTEUS_LS_16;
 }
+#endif // HW_PROTEUS
 
 #if HW_HELLEN_4CHAN
 // HELLEN_4CHAN_STIM_QC
