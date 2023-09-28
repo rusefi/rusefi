@@ -32,7 +32,9 @@ int IdleController::getTargetRpm(float clt) {
 	// alternator duty cycle has a similar logic
 	targetRpmAcBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleRpmBump : 0;
 
-	return targetRpmByClt + targetRpmAcBump;
+	auto target = targetRpmByClt + targetRpmAcBump;
+	idleTarget = target;
+	return target;
 }
 
 IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
@@ -350,7 +352,9 @@ float IdleController::getIdlePosition(float rpm) {
 			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 			// If TPS is working and automatic mode enabled, add any closed loop correction
 			if (useClosedLoop) {
-				iacPosition += getClosedLoop(phase, tps.Value, rpm, targetRpm);
+				auto closedLoop = getClosedLoop(phase, tps.Value, rpm, targetRpm);
+				idleClosedLoop = closedLoop;
+				iacPosition += closedLoop;
 			}
 
 			iacPosition = clampPercentValue(iacPosition);
