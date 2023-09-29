@@ -36,10 +36,13 @@ public class SimulatorFunctionalTest {
 
                     for (int idx = 0; idx < count; idx++) {
                         c.get();
-                        int dataLength = c.get();
-                        c.get(); // rtr
-                        c.get(); // ide
-                        int eid = c.getInt();
+                        int dataLength = c.get() & 0xf;
+                        c.get();
+                        c.get();
+                        c.get();
+                        int eid = c.get();
+                        eid |= c.get() << 8;
+                        eid |= c.get() << 16;
                         byte[] data = new byte[dataLength];
                         c.get(data);
                         processCanPacket(eid, data);
