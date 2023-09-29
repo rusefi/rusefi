@@ -89,7 +89,7 @@ pins:
 
   - pin: 116
     meta: MM100_IN_VBATT
-    function: Ignition Switch KL15 / Battery Voltage Analog Input
+    function: +12v Ignition Switch KL15 / Battery Voltage Analog Input
     ts_name: ___ Voltage From Key
     color: white
 
