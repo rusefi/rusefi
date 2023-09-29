@@ -4,23 +4,23 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::D9,
-	Gpio::F12,
-	Gpio::D10,
-	Gpio::F13,
-	Gpio::D3,
-	Gpio::D11,
-	Gpio::G8,
-	Gpio::G7,
-	Gpio::F14,
-	Gpio::G14,
-	Gpio::D12,
-	Gpio::E3,
-	Gpio::B8,
-	Gpio::E2,
-	Gpio::C9,
-	Gpio::D15,
-	Gpio::C13,
-	Gpio::E5,
-	Gpio::E4,
+	Gpio::D9, // 3 - INJ_5
+	Gpio::F12, // 4 - INJ_6
+	Gpio::D10, // 5 - INJ_4
+	Gpio::F13, // 7 - INJ_7/VVT
+	Gpio::D3, // 27 - MAIN
+	Gpio::D11, // 31 - INJ_3
+	Gpio::G8, // 32 - INJ_2
+	Gpio::G7, // 33 - INJ_1
+	Gpio::F14, // 35 - INJ_8
+	Gpio::G14, // 1 - OUT_PUMP
+	Gpio::D12, // 2 - IdleC
+	Gpio::E3, // 23 - Coil 4
+	Gpio::B8, // 24 - Coil 6
+	Gpio::E2, // 25 - Coil 5
+	Gpio::C9, // 29 - Idle
+	Gpio::D15, // 47 - Tach
+	Gpio::C13, // 50 - Coil 1
+	Gpio::E5, // 51 - Coil 2
+	Gpio::E4, // 52 - Coil 3
 }

@@ -4,7 +4,7 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::H144_LS_2,
-	Gpio::H64_OUT_PWM2,
-	Gpio::H144_LS_1,
+	Gpio::H144_LS_2, // B8 - Low Side
+	Gpio::H64_OUT_PWM2, // C1 - Low Side
+	Gpio::H144_LS_1, // A8 - Low Side
 }

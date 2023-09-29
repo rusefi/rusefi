@@ -4,28 +4,28 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::G4,
-	Gpio::D15,
-	Gpio::G12,
-	Gpio::D12,
-	Gpio::G11,
-	Gpio::D13,
-	Gpio::D14,
-	Gpio::G2,
-	Gpio::F14,
-	Gpio::F12,
-	Gpio::G13,
-	Gpio::G7,
-	Gpio::G8,
-	Gpio::D11,
-	Gpio::D10,
-	Gpio::D9,
-	Gpio::A9,
-	Gpio::D3,
-	Gpio::C1,
-	Gpio::C13,
-	Gpio::E5,
-	Gpio::C7,
-	Gpio::C8,
-	Gpio::C6,
+	Gpio::G4, // 1E - Check Engine Light
+	Gpio::D15, // 1O - ALTERN
+	Gpio::G12, // 1Q - Aternator Warning Lamp
+	Gpio::D12, // 1R - ECF
+	Gpio::G11, // 1S - AC Relay
+	Gpio::D13, // 2K - TACH
+	Gpio::D14, // 2Q - IDLE
+	Gpio::G2, // 2M US / 2P EUROPE - FPUMP
+	Gpio::F14, // 3Q - VICS
+	Gpio::F12, // 3T/4D - BOOST OUT
+	Gpio::G13, // 3V - O2H2
+	Gpio::G7, // 3W - INJ_1
+	Gpio::G8, // 3X - INJ_2
+	Gpio::D11, // 3Y - INJ_3
+	Gpio::D10, // 3Z - INJ_4
+	Gpio::D9, // 4E - VVT
+	Gpio::A9, // 1I AC Fan Relay
+	Gpio::D3, // 1U - O2H
+	Gpio::C1, // 3D - MAP
+	Gpio::C13, // 3G - IGN_1 (1&4)
+	Gpio::E5, // 3H - IGN_2 (2&3)
+	Gpio::C7, // ETB +
+	Gpio::C8, // ETB -
+	Gpio::C6, // ETB EN
 }

@@ -6,42 +6,42 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::D7,
-	Gpio::G10,
-	Gpio::G12,
-	Gpio::G13,
-	Gpio::G14,
-	Gpio::B5,
-	Gpio::B7,
-	Gpio::B9,
-	Gpio::E0,
-	Gpio::E1,
-	Gpio::G9,
-	Gpio::G11,
-	Gpio::B4,
-	Gpio::B6,
-	Gpio::B8,
-	Gpio::E2,
-	Gpio::D8,
-	Gpio::D9,
-	Gpio::D10,
-	Gpio::D11,
-	Gpio::D12,
-	Gpio::D13,
-	Gpio::A8,
-	Gpio::A9,
-	Gpio::D15,
-	Gpio::D14,
-	Gpio::C9,
-	Gpio::G2,
-	Gpio::G3,
-	Gpio::G4,
-	Gpio::G5,
-	Gpio::G6,
-	Gpio::G7,
-	Gpio::G8,
-	Gpio::C7,
-	Gpio::C8,
-	Gpio::D3,
-	Gpio::D4,
+	Gpio::D7, // Lowside 1
+	Gpio::G10, // Lowside 3
+	Gpio::G12, // Lowside 5
+	Gpio::G13, // Lowside 6
+	Gpio::G14, // Lowside 7
+	Gpio::B5, // Lowside 9
+	Gpio::B7, // Lowside 11
+	Gpio::B9, // Lowside 13
+	Gpio::E0, // Lowside 14
+	Gpio::E1, // Lowside 15
+	Gpio::G9, // Lowside 2
+	Gpio::G11, // Lowside 4
+	Gpio::B4, // Lowside 8
+	Gpio::B6, // Lowside 10
+	Gpio::B8, // Lowside 12
+	Gpio::E2, // Lowside 16
+	Gpio::D8, // STM32 PD8
+	Gpio::D9, // STM32 PD9
+	Gpio::D10, // STM32 PD10
+	Gpio::D11, // STM32 PD11
+	Gpio::D12, // STM32 PD12
+	Gpio::D13, // STM32 PD13
+	Gpio::A8, // Highside 2
+	Gpio::A9, // Highside 1
+	Gpio::D15, // Highside 3
+	Gpio::D14, // Highside 4
+	Gpio::C9, // Ign 3
+	Gpio::G2, // Ign 12
+	Gpio::G3, // Ign 11
+	Gpio::G4, // Ign 10
+	Gpio::G5, // Ign 9
+	Gpio::G6, // Ign 8
+	Gpio::G7, // Ign 7
+	Gpio::G8, // Ign 6
+	Gpio::C7, // Ign 5
+	Gpio::C8, // Ign 4
+	Gpio::D3, // Ign 2
+	Gpio::D4, // Ign 1
 }

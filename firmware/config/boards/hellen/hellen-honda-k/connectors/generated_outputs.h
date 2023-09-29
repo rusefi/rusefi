@@ -4,28 +4,28 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::H144_LS_6,
-	Gpio::H144_LS_4,
-	Gpio::H144_LS_3,
-	Gpio::H144_LS_2,
-	Gpio::H144_OUT_IO12,
-	Gpio::H144_LS_8,
-	Gpio::H144_OUT_PWM6,
-	Gpio::H144_LS_7,
-	Gpio::H144_OUT_PWM8,
-	Gpio::H144_OUT_IO13,
-	Gpio::H144_OUT_IO3,
-	Gpio::H144_LS_5,
-	Gpio::H144_OUT_IO5,
-	Gpio::H144_OUT_IO11,
-	Gpio::H144_IGN_4,
-	Gpio::H144_IGN_3,
-	Gpio::H144_IGN_2,
-	Gpio::H144_IGN_1,
-	Gpio::H144_LS_1,
-	Gpio::H144_OUT_IO6,
-	Gpio::H144_OUT_IO9,
-	Gpio::H144_OUT_PWM5,
-	Gpio::H144_OUT_IO10,
-	Gpio::H144_OUT_IO7,
+	Gpio::H144_LS_6, // A12 Idle Air Control
+	Gpio::H144_LS_4, // B2 - Injector 4
+	Gpio::H144_LS_3, // B3 - Injector 3
+	Gpio::H144_LS_2, // B4 - Injector 2
+	Gpio::H144_OUT_IO12, // B6 Radiator Relay
+	Gpio::H144_LS_8, // B7 Lockout Solenoid
+	Gpio::H144_OUT_PWM6, // B21 - EVAP
+	Gpio::H144_LS_7, // B22 Intake Runner
+	Gpio::H144_OUT_PWM8, // C11 Aux Low 3
+	Gpio::H144_OUT_IO13, // E1 Fuel Relay
+	Gpio::H144_OUT_IO3, // E7 Main Relay Control
+	Gpio::H144_LS_5, // E18 - AC Relay
+	Gpio::H144_OUT_IO5, // AuxHigh1
+	Gpio::H144_OUT_IO11, // AuxPP1
+	Gpio::H144_IGN_4, // A27 - IGN4
+	Gpio::H144_IGN_3, // A28 - IGN3
+	Gpio::H144_IGN_2, // A29 - IGN2
+	Gpio::H144_IGN_1, // A30 - IGN1
+	Gpio::H144_LS_1, // B5 - Injector 1
+	Gpio::H144_OUT_IO6, // B15 VTEC/VTS Output
+	Gpio::H144_OUT_IO9, // B18 Alternator Control
+	Gpio::H144_OUT_PWM5, // B23 VTC VVT
+	Gpio::H144_OUT_IO10, // E26 Tachometer
+	Gpio::H144_OUT_IO7, // E31 Check Engine
 }

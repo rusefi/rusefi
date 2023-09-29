@@ -5,12 +5,12 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::PROTECTED_PIN_7,
-	Gpio::PROTECTED_PIN_6,
-	Gpio::PROTECTED_PIN_5,
-	Gpio::PROTECTED_PIN_4,
-	Gpio::PROTECTED_PIN_3,
-	Gpio::PROTECTED_PIN_2,
-	Gpio::PROTECTED_PIN_1,
-	Gpio::PROTECTED_PIN_0,
+	Gpio::PROTECTED_PIN_7, // Out 8
+	Gpio::PROTECTED_PIN_6, // Out 7
+	Gpio::PROTECTED_PIN_5, // Out 6
+	Gpio::PROTECTED_PIN_4, // Out 5
+	Gpio::PROTECTED_PIN_3, // Out 4
+	Gpio::PROTECTED_PIN_2, // Out 3
+	Gpio::PROTECTED_PIN_1, // Out 2
+	Gpio::PROTECTED_PIN_0, // Out 1
 }
