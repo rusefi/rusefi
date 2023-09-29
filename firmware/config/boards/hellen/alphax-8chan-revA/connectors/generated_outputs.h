@@ -6,28 +6,28 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::D10,
-	Gpio::D11,
-	Gpio::G8,
-	Gpio::G7,
-	Gpio::G12,
-	Gpio::F14,
-	Gpio::F13,
-	Gpio::F12,
-	Gpio::D9,
-	Gpio::A8,
-	Gpio::G2,
-	Gpio::D3,
-	Gpio::A9,
-	Gpio::G13,
-	Gpio::C7,
-	Gpio::G6,
-	Gpio::E3,
-	Gpio::E4,
-	Gpio::E5,
-	Gpio::C13,
-	Gpio::E6,
-	Gpio::B9,
-	Gpio::B8,
-	Gpio::E2,
+	Gpio::D10, // 1A - Injector 4
+	Gpio::D11, // 2A - Injector 3
+	Gpio::G8, // 3A - Injector 2
+	Gpio::G7, // 4A - Injector 1
+	Gpio::G12, // 8B - Main Relay LS
+	Gpio::F14, // 26C - Injector 8
+	Gpio::F13, // 27C - Injector 7
+	Gpio::F12, // 28C - Injector 6
+	Gpio::D9, // 29C - Injector 5
+	Gpio::A8, // 8D - Fuel Pump
+	Gpio::G2, // 9D - Fan Relay
+	Gpio::D3, // 10D - LS 7
+	Gpio::A9, // 11D - LS 8
+	Gpio::G13, // 12D - NOS
+	Gpio::C7, // 13D - Boost
+	Gpio::G6, // 21D - Tachometer
+	Gpio::E3, // 10A - Ignition 4
+	Gpio::E4, // 11A - Ignition 3
+	Gpio::E5, // 12A - Ignition 2
+	Gpio::C13, // 13A - Ignition 1
+	Gpio::E6, // 18C - Ignition 8
+	Gpio::B9, // 19C - Ignition 7
+	Gpio::B8, // 20C - Ignition 6
+	Gpio::E2, // 21C - Ignition 5
 }

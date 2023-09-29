@@ -6,34 +6,34 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::TLE8888_PIN_5,
-	Gpio::TLE8888_PIN_6,
-	Gpio::TLE8888_PIN_1,
-	Gpio::TLE8888_PIN_2,
-	Gpio::TLE8888_PIN_3,
-	Gpio::TLE8888_PIN_4,
-	Gpio::B8,
-	Gpio::B9,
-	Gpio::C12,
-	Gpio::A15,
-	Gpio::D4,
-	Gpio::D3,
-	Gpio::D2,
-	Gpio::D1,
-	Gpio::D6,
-	Gpio::D7,
-	Gpio::A4,
-	Gpio::E0,
-	Gpio::B11,
-	Gpio::B10,
-	Gpio::C4,
-	Gpio::TLE8888_PIN_23,
-	Gpio::TLE8888_PIN_22,
-	Gpio::TLE8888_PIN_21,
-	Gpio::B0,
-	Gpio::B1,
-	Gpio::TLE8888_PIN_24,
-	Gpio::E6,
-	Gpio::E5,
-	Gpio::B7,
+	Gpio::TLE8888_PIN_5, // 3 - Lowside 2
+	Gpio::TLE8888_PIN_6, // 7 - Lowside 1
+	Gpio::TLE8888_PIN_1, // 37 - Injector 1
+	Gpio::TLE8888_PIN_2, // 38 - Injector 2
+	Gpio::TLE8888_PIN_3, // 41 - Injector 3
+	Gpio::TLE8888_PIN_4, // 42 - Injector 4
+	Gpio::B8, // AUX J2 PB8
+	Gpio::B9, // AUX J2 PB9
+	Gpio::C12, // AUX J2 PC12
+	Gpio::A15, // AUX J2 PA15
+	Gpio::D4, // 9 - Ignition 1
+	Gpio::D3, // 10 - Ignition 2
+	Gpio::D2, // 11 - Ignition 3
+	Gpio::D1, // 12 - Ignition 4
+	Gpio::D6, // 13 - GP Out 6
+	Gpio::D7, // 14 - GP Out 5
+	Gpio::A4, // 28 - AN volt 10, Aux Reuse
+	Gpio::E0, // AUX J6
+	Gpio::B11, // AUX J12
+	Gpio::B10, // AUX J13
+	Gpio::C4, // 32 - AN volt 6, Aux Reuse
+	Gpio::TLE8888_PIN_23, // 33 - GP Out 3
+	Gpio::TLE8888_PIN_22, // 34 - GP Out 2
+	Gpio::TLE8888_PIN_21, // 35 - GP Out 1
+	Gpio::B0, // 36 - AN volt 8, Aux Reuse
+	Gpio::B1, // 40 - AN volt 9, Aux Reuse
+	Gpio::TLE8888_PIN_24, // 43 - GP Out 4
+	Gpio::E6, // AUX J10 PE6
+	Gpio::E5, // AUX J11 PE5
+	Gpio::B7, // AUX J18 PB7
 }

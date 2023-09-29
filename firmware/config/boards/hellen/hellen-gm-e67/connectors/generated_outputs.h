@@ -4,40 +4,40 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::D11,
-	Gpio::G8,
-	Gpio::F14,
-	Gpio::D9,
-	Gpio::F12,
-	Gpio::D10,
-	Gpio::F13,
-	Gpio::G7,
-	Gpio::G11,
-	Gpio::G14,
-	Gpio::G4,
-	Gpio::C9,
-	Gpio::D3,
-	Gpio::C12,
-	Gpio::C11,
-	Gpio::C10,
-	Gpio::A15,
-	Gpio::D5,
-	Gpio::D6,
-	Gpio::E0,
-	Gpio::E1,
-	Gpio::C13,
-	Gpio::E6,
-	Gpio::E3,
-	Gpio::B9,
-	Gpio::E2,
-	Gpio::E5,
-	Gpio::B8,
-	Gpio::E4,
-	Gpio::D13,
-	Gpio::G13,
-	Gpio::A8,
-	Gpio::G2,
-	Gpio::D2,
-	Gpio::D15,
-	Gpio::D14,
+	Gpio::D11, // C2-16 INJ 3
+	Gpio::G8, // C2-32 INJ 2
+	Gpio::F14, // C2-48 INJ 8
+	Gpio::D9, // C2-49 INJ 5
+	Gpio::F12, // C2-52 INJ 6
+	Gpio::D10, // C2-70 INJ 4
+	Gpio::F13, // C2-71 INJ 7
+	Gpio::G7, // C2-72 INJ 1
+	Gpio::G11, // C1-26 - Starter Relay
+	Gpio::G14, // C1-40 - MAIN
+	Gpio::G4, // C1-56 - Starter Enable
+	Gpio::C9, // J4_4 Wastegate Solenoid
+	Gpio::D3, // J4_5 Error Light
+	Gpio::C12, // J7_1 AUX
+	Gpio::C11, // J7_2 AUX
+	Gpio::C10, // J7_3 AUX
+	Gpio::A15, // J7_4 AUX
+	Gpio::D5, // J7_5 AUX
+	Gpio::D6, // J7_6 AUX
+	Gpio::E0, // J7_7 AUX
+	Gpio::E1, // J7_8 AUX
+	Gpio::C13, // C2-1 - IGN 1
+	Gpio::E6, // C2-17 - IGN 8
+	Gpio::E3, // C2-18 - IGN 4
+	Gpio::B9, // C2-33 - IGN 7
+	Gpio::E2, // C2-34 - IGN 5
+	Gpio::E5, // C2-53 - IGN 2
+	Gpio::B8, // C2-54 - IGN 6
+	Gpio::E4, // C2-55 - IGN 3
+	Gpio::D13, // C3-7 - Alternator Enable
+	Gpio::G13, // C3-16 - Coolant Pump
+	Gpio::A8, // C3-49 - Fan Relay
+	Gpio::G2, // C1-12 Check Engine
+	Gpio::D2, // C1-13 - Fuel Pump
+	Gpio::D15, // C1-25 Tach
+	Gpio::D14, // C1-39 - VSS Output
 }

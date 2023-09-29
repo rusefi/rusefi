@@ -4,24 +4,24 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::G9,
-	Gpio::H15,
-	Gpio::D12,
-	Gpio::F14,
-	Gpio::G2,
-	Gpio::G7,
-	Gpio::G8,
-	Gpio::D14,
-	Gpio::D11,
-	Gpio::D10,
-	Gpio::I8,
-	Gpio::C13,
-	Gpio::E5,
-	Gpio::F12,
-	Gpio::I0,
-	Gpio::G12,
-	Gpio::D9,
-	Gpio::C7,
-	Gpio::C8,
-	Gpio::C6,
+	Gpio::G9, // 1E - Check Engine Light
+	Gpio::H15, // 1J - AC Relay
+	Gpio::D12, // Radiator Fan
+	Gpio::F14, // 2I - VVT
+	Gpio::G2, // Fuel Pump Relay
+	Gpio::G7, // 3U - Injector 1
+	Gpio::G8, // 3V - Injector 2
+	Gpio::D14, // 3W - IDLE
+	Gpio::D11, // 3Y - Injector 3
+	Gpio::D10, // 3Z - Injector 4
+	Gpio::I8, // 1G - Ignition 1 & 4 (rev C)
+	Gpio::C13, // 1G - Ignition 1 & 4 (rev D)
+	Gpio::E5, // 1H - Ignition 2 & 3
+	Gpio::F12, // 2J - Boost Control
+	Gpio::I0, // Tachometer (rev C)
+	Gpio::G12, // Tachometer (rev D)
+	Gpio::D9, // 3S - A/C Fan 94-95
+	Gpio::C7, // ETB +
+	Gpio::C8, // ETB -
+	Gpio::C6, // ETB EN
 }

@@ -4,34 +4,34 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::I2,
-	Gpio::F13,
-	Gpio::F14,
-	Gpio::D13,
-	Gpio::G4,
-	Gpio::H14,
-	Gpio::D10,
-	Gpio::G8,
-	Gpio::G7,
-	Gpio::D11,
-	Gpio::D14,
-	Gpio::G5,
-	Gpio::F12,
-	Gpio::D9,
-	Gpio::E5,
-	Gpio::I6,
-	Gpio::C9,
-	Gpio::I0,
-	Gpio::E3,
-	Gpio::I7,
-	Gpio::C1,
-	Gpio::I8,
-	Gpio::E2,
-	Gpio::A9,
-	Gpio::I5,
-	Gpio::E4,
-	Gpio::G3,
-	Gpio::C6,
-	Gpio::C7,
-	Gpio::C8,
+	Gpio::I2, // Main Relay
+	Gpio::F13, // 19 - INJ 7
+	Gpio::F14, // 24 - INJ 8
+	Gpio::D13, // 37 - TACH
+	Gpio::G4, // 47 - CEL
+	Gpio::H14, // 65 - Fuel Pump
+	Gpio::D10, // 88 - INJ_4
+	Gpio::G8, // 89 - INJ_2
+	Gpio::G7, // 96 - INJ_1
+	Gpio::D11, // 97 - INJ_3
+	Gpio::D14, // 105 - IDLE rev A,B
+	Gpio::G5, // 105 - IDLE rev C+
+	Gpio::F12, // 112 INJ 6
+	Gpio::D9, // 113 INJ 5
+	Gpio::E5, // 7 - IGN_2
+	Gpio::I6, // 8 - IGN_7
+	Gpio::C9, // 18 - VVT2 B1
+	Gpio::I0, // 22 - VVT1 1
+	Gpio::E3, // 94 - IGN_4
+	Gpio::I7, // 95 - IGN_8
+	Gpio::C1, // 101 - MAP2
+	Gpio::I8, // 102 - IGN_1
+	Gpio::E2, // 103 - IGN_5
+	Gpio::A9, // 104 Wastegate
+	Gpio::I5, // 110 - IGN_6
+	Gpio::E4, // 111 - IGN_3
+	Gpio::G3, // 115 - VVT1_2
+	Gpio::C6, // 117 ETB_OUT+
+	Gpio::C7, // 118 ETB_OUT-
+	Gpio::C8, // 120 - VVT2 B2
 }

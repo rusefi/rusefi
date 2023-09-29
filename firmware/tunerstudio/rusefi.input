@@ -3167,7 +3167,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = iatGauges, East
 
 	dialog = oilp_settings, "Oil Pressure Sensor"
-		field = "Oil Pressure ADC input",				oilPressure_hwChannel
+		field = "Oil Pressure input",				    oilPressure_hwChannel
 		field = "low voltage",							oilPressure_v1, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "low pressure",							oilPressure_value1, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "high voltage",							oilPressure_v2, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
@@ -3182,14 +3182,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = oilPressureGauges, East
 
 	dialog = fuelp_settings, "Fuel Pressure Sensor"
-		field = "Fuel low pressure ADC input",			lowPressureFuel_hwChannel
+		field = "Fuel low pressure input",			    lowPressureFuel_hwChannel
 		field = "low voltage",							lowPressureFuel_v1, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "low pressure",							lowPressureFuel_value1, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "high voltage",							lowPressureFuel_v2, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "high pressure",						lowPressureFuel_value2, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "sensor type",							fuelPressureSensorMode, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 
-		field = "Fuel high pressure ADC input",			highPressureFuel_hwChannel
+		field = "Fuel high pressure input",			    highPressureFuel_hwChannel
 		field = "low voltage",							highPressureFuel_v1, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "low pressure",							highPressureFuel_value1, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "high voltage",							highPressureFuel_v2, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
@@ -3206,14 +3206,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = fuelPressureGauges, East
 
 	dialog = auxLinearSensor1, "Aux Linear Sensor #1"
-		field = "ADC input",	auxLinear1_hwChannel
+		field = "Input",	    auxLinear1_hwChannel
 		field = "Low voltage",	auxLinear1_v1, {auxLinear1_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Low value",	auxLinear1_value1, {auxLinear1_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "High voltage",	auxLinear1_v2, {auxLinear1_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "High value",	auxLinear1_value2, {auxLinear1_hwChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = auxLinearSensor2, "Aux Linear Sensor #2"
-		field = "ADC input",	auxLinear2_hwChannel
+		field = "Input",	    auxLinear2_hwChannel
 		field = "Low voltage",	auxLinear2_v1, {auxLinear2_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Low value",	auxLinear2_value1, {auxLinear2_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "High voltage",	auxLinear2_v2, {auxLinear2_hwChannel != @@ADC_CHANNEL_NONE@@}
@@ -3227,7 +3227,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis
-		field = "MAP ADC input",						map_sensor_hwChannel
+		field = "MAP input",						    map_sensor_hwChannel
 		field = "MAP type",								map_sensor_type, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ }
 		field = "MAP value low point",				map_sensor_lowValue, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
 		field = "MAP voltage low point",				mapLowValueVoltage,  { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
@@ -3246,7 +3246,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = mapSensorAnalog
 
 	dialog = baroSettings, "Baro sensor"
-		field = "Baro ADC input",						baroSensor_hwChannel
+		field = "Baro input",						    baroSensor_hwChannel
 		field = "Low Value",					baroSensor_lowValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "High Value",					baroSensor_highValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Type",									baroSensor_type, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}

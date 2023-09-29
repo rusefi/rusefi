@@ -1,6 +1,14 @@
 # Boards Directory
 
-rusEFI supports quite a wide array of hardware - we support stm32f4 and we support stm32h7, we have [kinetis](https://www.nxp.com/products/processors-and-microcontrollers/arm-microcontrollers/general-purpose-mcus/k-series-cortex-m4:KINETIS_K_SERIES) and we support cypress MCUs. We support on-board a number of smart GPIO chips, overall we support quite a wide array of hardware. With all those options our goal is to provide nice _user_ experience which means upfront investment by _board designer_.
+rusEFI supports quite a wide array of hardware:
+ * most supported platforms are stm32f4 and stm32f4
+ * alpha version support stm32h7
+ * experimental support [kinetis](https://www.nxp.com/products/processors-and-microcontrollers/arm-microcontrollers/general-purpose-mcus/k-series-cortex-m4:KINETIS_K_SERIES) 
+ * experimental support cypress MCUs.
+ 
+Looking for most default firmware for your own hardware? See f407-discovery 
+
+We support on-board a number of smart GPIO chips, overall we support quite a wide array of hardware. With all those options our goal is to provide nice _user_ experience which means upfront investment by _board designer_.
 
 For best user experience we have more than a dozen of different _binaries_ which are all compiled from same _firmware_ files with different configuration. This folder is all about that process.
 

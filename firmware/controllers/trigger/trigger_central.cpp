@@ -323,6 +323,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		tc->triggerState.vvtStateIndex = vvtDecoder.currentCycle.current_index;
 	}
 
+    // here we count all cams together
 	tc->vvtCamCounter++;
 
 	auto currentPhase = tc->getCurrentEnginePhase(nowNt);
@@ -365,8 +366,6 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		// else, do nothing
 		break;
 	}
-
-	tc->triggerState.vvtCounter++;
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 

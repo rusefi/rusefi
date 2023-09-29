@@ -4,27 +4,27 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::D14,
-	Gpio::D12,
-	Gpio::D15,
-	Gpio::D13,
-	Gpio::D9,
-	Gpio::D10,
-	Gpio::B8,
-	Gpio::E0,
-	Gpio::B9,
-	Gpio::D0,
-	Gpio::D8,
-	Gpio::C7,
-	Gpio::C6,
-	Gpio::E9,
-	Gpio::E14,
-	Gpio::B14,
-	Gpio::D11,
-	Gpio::E5,
-	Gpio::E6,
-	Gpio::E12,
-	Gpio::D6,
-	Gpio::E10,
-	Gpio::D2,
+	Gpio::D14, // na 1 - IGN_3
+	Gpio::D12, // 2 - IGN_2_3
+	Gpio::D15, // na 4 - IGN_4
+	Gpio::D13, // 5 - IGN_1_4
+	Gpio::D9, // 6 - INJ_2
+	Gpio::D10, // 7 - INJ_3
+	Gpio::B8, // na 8 - TACH
+	Gpio::E0, // 9 - Unk Out 1
+	Gpio::B9, // 10 - ECO/CLT Out
+	Gpio::D0, // na 25 - R Diff Lock
+	Gpio::D8, // 27 - INJ_1
+	Gpio::C7, // 28 - Idle valve close
+	Gpio::C6, // 29 - Idle valve open
+	Gpio::E9, // opt 20 - Fan relay 2 / Unk Out 2
+	Gpio::E14, // 31 - CEL
+	Gpio::B14, // 46 - Absorber
+	Gpio::D11, // 47 - INJ_4
+	Gpio::E5, // 48 - AFR 1 Heater
+	Gpio::E6, // na 49 - AFR 2 Heater
+	Gpio::E12, // 50 - Starter Disable Relay
+	Gpio::D6, // opt 58 - Fan Relay 1
+	Gpio::E10, // opt 69 - AC Relay
+	Gpio::D2, // 70 - Fuel Pump Relay
 }

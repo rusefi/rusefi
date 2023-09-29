@@ -200,6 +200,11 @@ jobs:
             ini-file: rusefi_hellen-112-17.ini
             skip-rate: 0
 
+          - build-target: hellen-112-17_debug
+            folder: config/boards/hellen/hellen-112-17
+            ini-file: rusefi_hellen-112-17.ini
+            skip-rate: 0
+
           - build-target: hellen-gm-e67
             folder: config/boards/hellen/hellen-gm-e67
             ini-file: rusefi_hellen-gm-e67.ini

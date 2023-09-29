@@ -4,16 +4,16 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::G3,
-	Gpio::C7,
-	Gpio::D15,
-	Gpio::D14,
-	Gpio::G7,
-	Gpio::G8,
-	Gpio::G11,
-	Gpio::C13,
-	Gpio::D2,
-	Gpio::E5,
-	Gpio::G14,
-	Gpio::G5,
+	Gpio::G3, // auxMain
+	Gpio::C7, // auxWastegate
+	Gpio::D15, // 1 Right Oil Cooling
+	Gpio::D14, // 4 Left Oil Fan
+	Gpio::G7, // 6 Front Injector
+	Gpio::G8, // 7 Rear Injector
+	Gpio::G11, // 8 Rear ACR
+	Gpio::C13, // 24 Front Coil
+	Gpio::D2, // 25 Front ACR
+	Gpio::E5, // 43 Rear Coil
+	Gpio::G14, // 61 Reverse Gear
+	Gpio::G5, // 63 Cooling Pump
 }

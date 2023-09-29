@@ -85,6 +85,10 @@ void sendRawAnalogValues() {
 		Sensor::getRaw(SensorType::Tps2Secondary),
 		Sensor::getRaw(SensorType::AuxLinear1),
 		Sensor::getRaw(SensorType::AuxLinear2),
+		Sensor::getRaw(SensorType::OilPressure),
+		Sensor::getRaw(SensorType::FuelPressureLow),
+		Sensor::getRaw(SensorType::FuelPressureHigh),
+		Sensor::getRaw(SensorType::AuxTemp1),
 	};
 	static_assert(efi::size(values_1) <= 8);
 	static_assert(efi::size(values_2) <= 8);

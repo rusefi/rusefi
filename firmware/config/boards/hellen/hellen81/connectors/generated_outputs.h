@@ -4,38 +4,38 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::G8,
-	Gpio::D11,
-	Gpio::I2,
-	Gpio::F12,
-	Gpio::G7,
-	Gpio::A9,
-	Gpio::D9,
-	Gpio::G4,
-	Gpio::G3,
-	Gpio::D10,
-	Gpio::H14,
-	Gpio::I1,
-	Gpio::I0,
-	Gpio::D12,
-	Gpio::H15,
-	Gpio::G2,
-	Gpio::F13,
-	Gpio::F14,
-	Gpio::E5,
-	Gpio::E4,
-	Gpio::E3,
-	Gpio::I8,
-	Gpio::D14,
-	Gpio::D15,
-	Gpio::H13,
-	Gpio::E6,
-	Gpio::B9,
-	Gpio::B8,
-	Gpio::E2,
-	Gpio::D13,
-	Gpio::C9,
-	Gpio::C8,
-	Gpio::C7,
-	Gpio::C6,
+	Gpio::G8, // 6 - INJ_2
+	Gpio::D11, // 7 - INJ_3
+	Gpio::I2, // 14 - OUT_MAIN
+	Gpio::F12, // 25 - INJ_6
+	Gpio::G7, // 27 - INJ_1
+	Gpio::A9, // 28 - OUT_O2H2
+	Gpio::D9, // 30 - INJ_5
+	Gpio::G4, // 31 - OUT_CE
+	Gpio::G3, // 46 - OUT_CANIST
+	Gpio::D10, // 47 - INJ_4
+	Gpio::H14, // 48 - OUT_O2H
+	Gpio::I1, // 49 - OUT_HEATER
+	Gpio::I0, // 50 - OUT_STARTER
+	Gpio::D12, // 68 - OUT_ECF
+	Gpio::H15, // 69 - OUT_AC
+	Gpio::G2, // 70 - OUT_PUMP
+	Gpio::F13, // 72 - INJ_7
+	Gpio::F14, // 73 - INJ_8
+	Gpio::E5, // 1 - IGN_2
+	Gpio::E4, // 2 - IGN_3
+	Gpio::E3, // 4 - IGN_4
+	Gpio::I8, // 5 - IGN_1
+	Gpio::D14, // 8 - OUT_TACH
+	Gpio::D15, // 10 - OUT_FUEL
+	Gpio::H13, // 11 - OUT_HIGH
+	Gpio::E6, // 21 - IGN_8
+	Gpio::B9, // 22 - IGN_7
+	Gpio::B8, // 23 - IGN_6
+	Gpio::E2, // 24 - IGN_5
+	Gpio::D13, // 60 - OUT_IO
+	Gpio::C9, // 64 - OUT_COIL_B2
+	Gpio::C8, // 65 - OUT_COIL_B1
+	Gpio::C7, // 66 - OUT_COIL_A2
+	Gpio::C6, // 67 - OUT_COIL_A1
 }
