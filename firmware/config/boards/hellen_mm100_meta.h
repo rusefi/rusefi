@@ -9,7 +9,7 @@
 #define MM100_IGN7 B9
 #define MM100_IGN8 E6
 
-#define MM100_INJ1 D7
+#define MM100_INJ1 D3
 #define MM100_INJ2 A9
 #define MM100_INJ3 D11
 #define MM100_INJ4 D10
