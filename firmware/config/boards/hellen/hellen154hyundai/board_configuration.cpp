@@ -164,19 +164,22 @@ void setBoardDefaultConfiguration() {
 }
 
 static Gpio OUTPUTS[] = {
-		Gpio::H144_LS_1,
-		Gpio::H144_LS_2,
-		Gpio::H144_LS_3,
-		Gpio::H144_LS_4,
-	Gpio::H144_LS_5,
-	Gpio::H144_LS_6,
-	Gpio::H144_LS_7,
-	Gpio::H144_OUT_IO3,
-	Gpio::H144_OUT_IO7,
-	Gpio::H144_OUT_IO8,
-	Gpio::H144_OUT_IO9,
-	Gpio::H144_OUT_IO10,
-	Gpio::H144_OUT_PWM8,
+	Gpio::H144_LS_1, // INJ_1 k25
+	Gpio::H144_LS_2, // INJ_2 k26
+	Gpio::H144_LS_3, // INJ_3 k27
+	Gpio::H144_LS_4, // INJ_4 k28
+	Gpio::H144_LS_5, // VVT1
+	Gpio::H144_LS_6, // VVT2
+	Gpio::H144_LS_7, // K47 BK1 Wastegate Solenoid
+	Gpio::H144_OUT_IO7, // Fan Relay Low
+	Gpio::H144_OUT_IO3, // Main Relay K64
+	Gpio::H144_IGN_1, // Coil 1
+//	Gpio::H144_OUT_IO3,
+//	Gpio::H144_OUT_IO7,
+//	Gpio::H144_OUT_IO8,
+//	Gpio::H144_OUT_IO9,
+//	Gpio::H144_OUT_IO10,
+//	Gpio::H144_OUT_PWM8,
 };
 
 int getBoardMetaOutputsCount() {

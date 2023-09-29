@@ -4,17 +4,17 @@ pins:
   - pin: P66
     meta: H144_OUT_IO1
     class: outputs
-    ts_name: Aux P66
+    ts_name: Aux ___
 
   - pin: P67
     meta: H144_OUT_IO2
     class: outputs
-    ts_name: Aux P67
+    ts_name: Aux ___
 
   - pin: P68
     meta: H144_OUT_IO4
     class: outputs
-    ts_name: Aux P68
+    ts_name: Aux ___
 
   - pin: K1
     function: GND
@@ -125,7 +125,7 @@ pins:
   - pin: K31
     meta: H144_IN_MAP1
     class: analog_inputs
-    ts_name: Map Sensor K31
+    ts_name: Map Sensor ___
     function: Manifold Pressure Sensor
 
   - pin: K32
@@ -175,7 +175,7 @@ pins:
   - pin: K47
     meta: H144_LS_7
     class: outputs
-    ts_name: K47 BK1 Wastegate Solenoid
+    ts_name: ___ BK1 Wastegate Solenoid
     function: BK1 Wastegate Solenoid
 
   - pin: K53
@@ -187,7 +187,7 @@ pins:
   - pin: K54
     meta: H144_IN_MAP3
     class: analog_inputs
-    ts_name: K54 A/C pressure
+    ts_name: ___ A/C pressure
     function: A/C pressure
 
   - pin: K57
@@ -196,7 +196,7 @@ pins:
   - pin: K58
     meta: H144_IN_O2S2
     class: analog_inputs
-    ts_name: K58 Oil Temp
+    ts_name: ___ Oil Temp
     function: 'Oil Temperature (2014: blue/orange)'
 
   - pin: K59
@@ -228,7 +228,7 @@ pins:
   - pin: K64
     meta: H144_OUT_IO3
     class: outputs
-    ts_name: Main Relay K64
+    ts_name: Main Relay ___
     function: Main relay control
     type: ls
 
@@ -254,7 +254,7 @@ pins:
   - pin: K70
     meta: H144_OUT_IO9
     class: outputs
-    ts_name: Fuel Pump K70
+    ts_name: Fuel Pump ___
     function: Fuel Pump Relay
     type: ls
 
