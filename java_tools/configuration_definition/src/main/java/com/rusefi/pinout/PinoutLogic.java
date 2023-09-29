@@ -28,6 +28,7 @@ public class PinoutLogic {
 
     private final ArrayList<PinState> globalList = new ArrayList<>();
     private final Map</*id*/String, /*tsName*/String> tsNameById = new TreeMap<>();
+    private final Map</*id*/String, /*tsName*/String> tsNameByMeta = new TreeMap<>();
     private final StringBuilder header = new StringBuilder("//DO NOT EDIT MANUALLY, let automation work hard.\n\n");
     private final BoardInputs boardInputs;
     private final List<String> lowSideOutputs = new ArrayList<>();
@@ -251,6 +252,7 @@ public class PinoutLogic {
         if (existingTsName != null && !existingTsName.equals(pinTsName))
             throw new IllegalStateException("ID used multiple times with different ts_name: " + id);
         tsNameById.put(id, pinTsName);
+        tsNameByMeta.put(headerValue, pinTsName);
         if ("outputs".equalsIgnoreCase(pinClass)) {
             if ("ls".equalsIgnoreCase(pinType) || "inj".equalsIgnoreCase(pinType)) {
                 lowSideOutputs.add(headerValue);
@@ -301,10 +303,14 @@ public class PinoutLogic {
 
             outputs.write("Gpio GENERATED_OUTPUTS = {\n");
 
-            for (String output : lowSideOutputs)
-                outputs.write("\tGpio::" + output + ",\n");
-            for (String output : highSideOutputs)
-                outputs.write("\tGpio::" + output + ",\n");
+            for (String output : lowSideOutputs) {
+                String tsName = tsNameByMeta.get(output);
+                outputs.write("\tGpio::" + output + ", // " + tsName + "\n");
+            }
+            for (String output : highSideOutputs) {
+                String tsName = tsNameByMeta.get(output);
+                outputs.write("\tGpio::" + output + ", // " + tsName + "\n");
+            }
 
             outputs.write("}\n");
 
