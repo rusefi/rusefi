@@ -28,7 +28,6 @@ public class FirmwareFlasher {
     private static final String OPENOCD_BINARY_LOCATION = ".";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
-    private static final String NO_DRIVER_MESSAGE_TAG = "failed with LIBUSB_ERROR_NOT_SUPPORTED";
     public static final String TITLE = "rusEFI ST-LINK Firmware Flasher";
     public static final String DONE = "DONE!";
 
@@ -74,9 +73,7 @@ public class FirmwareFlasher {
         String error = executeOpenOCDCommand(getOpenocdCommand() + " -c \"program " +
                 fileName +
                 " verify reset exit 0x08000000\"", wnd);
-        if (error.contains(NO_DRIVER_MESSAGE_TAG)) {
-            wnd.append(" !!! ERROR: looks like stm32 driver is not installed? The link is above !!!");
-        } else if (error.contains(SUCCESS_MESSAGE_TAG) && !error.toLowerCase().contains(FAILED_MESSAGE_TAG)) {
+        if (error.contains(SUCCESS_MESSAGE_TAG) && !error.toLowerCase().contains(FAILED_MESSAGE_TAG)) {
             wnd.append("Flashing looks good!");
             sa.stop();
             wnd.setStatus(DONE);
