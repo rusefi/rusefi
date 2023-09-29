@@ -147,7 +147,7 @@ public class TestingUtils {
         return result.get();
     }
 
-    private static void installVoidEngineSnifferAction(CommandQueue commandQueue) {
+    public static void installVoidEngineSnifferAction(CommandQueue commandQueue) {
         commandQueue.getLinkManager().getEngineState().replaceStringValueAction(Fields.PROTOCOL_ENGINE_SNIFFER, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
     }
 }
