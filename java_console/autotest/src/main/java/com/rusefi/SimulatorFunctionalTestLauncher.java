@@ -24,6 +24,7 @@ public class SimulatorFunctionalTestLauncher {
         try {
             LinkManager linkManager = new LinkManager();
             IoUtil.connectToSimulator(linkManager, startSimulator);
+            TestingUtils.installVoidEngineSnifferAction(linkManager.getCommandQueue());
             new SimulatorFunctionalTest(linkManager).mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
