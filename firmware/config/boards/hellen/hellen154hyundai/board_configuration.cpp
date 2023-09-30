@@ -180,16 +180,16 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_IGN_2, // Coil 2
 	Gpio::H144_IGN_3, // Coil 3
 	Gpio::H144_IGN_4, // Coil 4
-//	Gpio::H144_OUT_IO3,
-//	Gpio::H144_OUT_IO7,
-//	Gpio::H144_OUT_IO8,
-//	Gpio::H144_OUT_IO9,
-//	Gpio::H144_OUT_IO10,
-//	Gpio::H144_OUT_PWM8,
+	Gpio::H144_OUT_PWM8, // MIL
+	Gpio::H144_OUT_PWM7, // Tacho
 };
 
 int getBoardMetaOutputsCount() {
     return efi::size(OUTPUTS);
+}
+
+int getBoardMetaLowSideOutputsCount() {
+    return getBoardMetaOutputsCount() - 1;
 }
 
 Gpio* getBoardMetaOutputs() {
