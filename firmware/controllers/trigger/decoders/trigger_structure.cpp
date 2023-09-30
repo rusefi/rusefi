@@ -697,7 +697,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initialize36_2_2_2(this);
 		break;
 
-	case trigger_type_e::TT_2JZ_3_34:
+	case trigger_type_e::TT_2JZ_3_34_SIMULATION_ONLY:
 		initialize2jzGE3_34_simulation_shape(this);
 		break;
 

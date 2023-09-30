@@ -341,7 +341,7 @@ enum class trigger_type_e : uint32_t {
 	//  * only the 4 tooth signal, without the 360 signal
 	//  * 8,2,2,2 Nissan pattern
 	TT_NISSAN_SR20VE = 24,
-	TT_2JZ_3_34 = 25,
+	TT_2JZ_3_34_SIMULATION_ONLY = 25,
 	TT_ROVER_K = 26,
 	// GM 24x with 5/10 degree gaps
 	TT_GM_24x = 27,
