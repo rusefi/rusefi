@@ -1311,7 +1311,7 @@ event 4 0 1 360.00 44.000000
 event 5 0 0 364.00 0.022727
 event 6 0 1 528.00 41.000000
 event 7 0 0 544.00 0.097561
-TRIGGERTYPE 25 142 TT_2JZ_3_34 0.00
+TRIGGERTYPE 25 142 TT_2JZ_3_34_SIMULATION_ONLY 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
