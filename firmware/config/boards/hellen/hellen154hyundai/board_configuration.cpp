@@ -177,6 +177,9 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_OUT_IO10, // 10: K87 AC Relay
 	Gpio::H144_OUT_IO8, // Fan Relay HI
 	Gpio::H144_IGN_1, // Coil 1
+	Gpio::H144_IGN_2, // Coil 2
+	Gpio::H144_IGN_3, // Coil 3
+	Gpio::H144_IGN_4, // Coil 4
 //	Gpio::H144_OUT_IO3,
 //	Gpio::H144_OUT_IO7,
 //	Gpio::H144_OUT_IO8,
