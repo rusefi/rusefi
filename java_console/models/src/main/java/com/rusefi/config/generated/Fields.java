@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Sep 30 00:54:52 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Sep 30 01:21:53 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1084,7 +1084,7 @@ public class Fields {
 	public static final String TRIGGER_SYNC_EDGE = "syncEdge";
 	public static final int trigger_type_e_TT_12_TOOTH_CRANK = 38;
 	public static final int trigger_type_e_TT_1_16 = 50;
-	public static final int trigger_type_e_TT_2JZ_3_34 = 25;
+	public static final int trigger_type_e_TT_2JZ_3_34_SIMULATION_ONLY = 25;
 	public static final int trigger_type_e_TT_36_2_1 = 70;
 	public static final int trigger_type_e_TT_36_2_1_1 = 71;
 	public static final int trigger_type_e_TT_36_2_2_2 = 23;
