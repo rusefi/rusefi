@@ -31,7 +31,7 @@ pins:
     type: gnd
 
   - pin: K4
-    function: V raw
+    function: +12v from main relay
 
   - pin: K5
     function: GND
