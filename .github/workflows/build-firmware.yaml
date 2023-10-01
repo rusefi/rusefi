@@ -241,7 +241,7 @@ jobs:
           - build-target: hellen154hyundai
             folder: config/boards/hellen/hellen154hyundai
             ini-file: rusefi_hellen154hyundai.ini
-            skip-rate: 90
+            skip-rate: 0
 
           - build-target: cypress
             folder: config/boards/cypress
@@ -307,10 +307,10 @@ jobs:
             folder: config/boards/proteus
             ini-file: rusefi_proteus_f7.ini
 
-          - build-target: proteus_f7_debug
-            folder: config/boards/proteus
-            ini-file: rusefi_proteus_f7.ini
-            skip-rate: 80
+#          - build-target: proteus_f7_debug
+#            folder: config/boards/proteus
+#            ini-file: rusefi_proteus_f7.ini
+#            skip-rate: 80
 
           - build-target: proteus_f7_hardware_QC_special_build
             folder: config/boards/proteus

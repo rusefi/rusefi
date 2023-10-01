@@ -1,10 +1,13 @@
 package com.rusefi.ui.util;
 
+import com.devexperts.logging.Logging;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 /**
  * This class is used to figure out if we have multiple instances of rusEfi console running
@@ -13,7 +16,8 @@ import java.net.Socket;
  * 5/4/2015
  */
 public class JustOneInstance {
-    private static final int PORT = 29212;
+    private final static Logging log = Logging.getLogging(JustOneInstance.class);
+    private static final int PORT = 29213;
     private static final int LOCAL_CONNECTION_TIMEOUT_MS = 100;
 
     public static boolean isAlreadyRunning() {
@@ -51,8 +55,10 @@ public class JustOneInstance {
 
     private static void handleConnection(Socket clientSocket) throws IOException {
         try (clientSocket) {
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(new java.util.Date() + "Already running " + ProcessHandle.current().pid() + "\r\n");
+            PrintWriter networkWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+            String msg = new Date() + "Already running " + ProcessHandle.current().pid() + "\r\n";
+            log.info(msg);
+            networkWriter.println(msg);
         }
     }
 }

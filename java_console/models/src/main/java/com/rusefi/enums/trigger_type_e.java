@@ -30,7 +30,7 @@ public enum trigger_type_e {
 	TT_DODGE_STRATUS,
 	TT_36_2_2_2,
 	TT_NISSAN_SR20VE,
-	TT_2JZ_3_34,
+	TT_2JZ_3_34_SIMULATION_ONLY,
 	TT_ROVER_K,
 	TT_GM_24x,
 	TT_HONDA_CBR_600,
@@ -84,5 +84,6 @@ public enum trigger_type_e {
 	TT_MITSU_4G63_CRANK,
 	TT_60DEG_TOOTH,
 	TT_VVT_MITSUBISHI_4G69,
+	TT_MITSU_6G72_CAM,
 	TT_UNUSED,
 }

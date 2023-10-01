@@ -25,7 +25,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D13: return "128 Tach Output";
 		case Gpio::D15: return "235 Low Side Output";
 		case Gpio::D2: return "101 low side 1.5A output";
-		case Gpio::D7: return "244 injector output 1";
+		case Gpio::D3: return "244 injector output 1";
 		case Gpio::E11: return "233 MAF frequency";
 		case Gpio::E12: return "231 Cam";
 		case Gpio::E13: return "232 VSS";
