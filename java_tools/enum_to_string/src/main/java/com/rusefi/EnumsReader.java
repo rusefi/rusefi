@@ -123,13 +123,15 @@ public class EnumsReader {
                             value = line.substring(index + 1);
                             line = line.substring(0, index);
                         } else {
-                            value = Integer.toString(lastNumericValue + 1);
+                            value = Integer.toString(enumWithValues ? lastNumericValue + 1 : currentValues.size());
                             withAutoValue = true;
                         }
                         if (log.debugEnabled())
                             log.debug("    EnumsReader: Line " + line);
                         Value newValue = new Value(line, value);
-                        lastNumericValue = newValue.getIntValueMaybeResolve(registry);
+                        if (enumWithValues) {
+                            lastNumericValue = newValue.getIntValueMaybeResolve(registry);
+                        }
                         currentValues.put(line, newValue);
                     } else {
                         if (log.debugEnabled())
