@@ -1628,16 +1628,6 @@ gaugeCategory = GPPWM Outputs
 	;			=							expression,				off-label,				on-label, off-bg, off-fg,  on-bg,  on-fg
 	; Line 1
 	; important status
-	; todo: do we want to drop this line since we have "config error" feature thing below?
-	indicator =				{ hasCriticalError },			"No errors",	"CRITICAL ERROR",  white,  black,	red,  black
-	indicator =						{ needBurn },	"Settings saved",	"Unsaved changes",  white,  black, yellow,  black
-	indicator =						{ isWarnNow },		"No warnings",			"Warning",  white,  black, yellow,  black
-	indicator =					{ checkEngine },	"No Check Engine",		"Check Engine",  white,  black,	red,  black
-	indicator =					{ isTriggerError},			"Trigger OK",		"Trigger ERR",  white,  black,	red,  black
-	indicator = { fuelCutReason  != 0 }, "Injection OK", { Fuel cut: bitStringValue(fuelIgnCutCodeList, fuelCutReason)}, white, black, yellow, black
-	indicator = { sparkCutReason != 0 }, "Ignition OK",  { Ign cut: bitStringValue(fuelIgnCutCodeList, sparkCutReason)}, white, black, yellow, black
-	indicator = { etbErrorCode != 0 }, "ETB OK",  { ETB: bitStringValue(etbCutCodeList, etbErrorCode)}, white, black, yellow, black
-
 	; this is required so that the "config error" feature works in TS
 	; DO NOT CHANGE THIS LINE - TS is looking for an indicator with particular text/styling
 	; you don't even have to show it by default
@@ -1646,6 +1636,15 @@ gaugeCategory = GPPWM Outputs
 	indicator = { hasCriticalError }, "Config Error", "Config Error", white, black, red, black
 	; DO NOT CHANGE THIS LINE
 	; DO NOT CHANGE THIS LINE
+	; todo: do we want to drop this line since we have "config error" thing above?
+	indicator =				{ hasCriticalError },			"No errors",	"CRITICAL ERROR",  white,  black,	red,  black
+	indicator =						{ needBurn },	"Settings saved",	"Unsaved changes",  white,  black, yellow,  black
+	indicator =						{ isWarnNow },		"No warnings",			"Warning",  white,  black, yellow,  black
+	indicator =					{ checkEngine },	"No Check Engine",		"Check Engine",  white,  black,	red,  black
+	indicator =					{ isTriggerError},			"Trigger OK",		"Trigger ERR",  white,  black,	red,  black
+	indicator = { fuelCutReason  != 0 }, "Injection OK", { Fuel cut: bitStringValue(fuelIgnCutCodeList, fuelCutReason)}, white, black, yellow, black
+	indicator = { sparkCutReason != 0 }, "Ignition OK",  { Ign cut: bitStringValue(fuelIgnCutCodeList, sparkCutReason)}, white, black, yellow, black
+	indicator = { etbErrorCode != 0 }, "ETB OK",  { ETB: bitStringValue(etbCutCodeList, etbErrorCode)}, white, black, yellow, black
 
 	; minor info
 	indicator =						{ isFanOn },				"Fan off",				"Fan on",  white,  black,  green,  black
