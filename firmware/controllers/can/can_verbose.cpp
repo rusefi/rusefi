@@ -122,18 +122,18 @@ static void populateFrame(Sensors1& msg) {
 }
 
 struct Sensors2 {
-	scaled_afr afr; // deprecated
+	uint8_t pad[2];
+
 	scaled_pressure oilPressure;
-	scaled_angle vvtPos;	// deprecated
+	uint8_t oilTemp;
+	uint8_t fuelTemp;
 	scaled_voltage vbatt;
 };
 
 static void populateFrame(Sensors2& msg) {
-	msg.afr = Sensor::getOrZero(SensorType::Lambda1) * STOICH_RATIO;
 	msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
-#if EFI_SHAFT_POSITION_INPUT
-	msg.vvtPos = engine->triggerCentral.getVVTPosition(0, 0);
-#endif // EFI_SHAFT_POSITION_INPUT
+	msg.oilTemp = Sensor::getOrZero(SensorType::OilTemperature) + PACK_ADD_TEMPERATURE;
+	msg.fuelTemp = Sensor::getOrZero(SensorType::FuelTemperature) + PACK_ADD_TEMPERATURE;
 	msg.vbatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 }
 

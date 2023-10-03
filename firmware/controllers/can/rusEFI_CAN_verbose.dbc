@@ -85,6 +85,8 @@ BO_ 515 BASE3: 8 Vector__XXX
 
 BO_ 516 BASE4: 8 Vector__XXX
  SG_ OilPress : 16|16@1+ (0.03333333,0) [0|0] "kPa" Vector__XXX
+ SG_ OilTemperature : 32|8@1+ (1,-40) [-40|215] "deg C" Vector__XXX
+ SG_ FuelTemperature : 40|8@1+ (1,-40) [-40|215] "deg C" Vector__XXX
  SG_ BattVolt : 48|16@1+ (0.001,0) [0|25] "mV" Vector__XXX
 
 BO_ 517 BASE5: 8 Vector__XXX
