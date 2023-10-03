@@ -29,12 +29,12 @@ struct Status {
 	uint8_t o2Heater : 1;
 	uint8_t lambdaProtectActive : 1;
 
-	uint8_t pad7 : 1;
-	uint8_t pad8 : 1;
+	uint8_t fan : 1;
+	uint8_t fan2 : 1;
 
 	uint8_t gear;
 
-	uint8_t pad[2];
+	uint16_t distanceTraveled;
 };
 
 static void populateFrame(Status& msg) {
@@ -47,8 +47,13 @@ static void populateFrame(Status& msg) {
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
 	msg.lambdaProtectActive = engine->lambdaMonitor.isCut();
+	msg.fan = enginePins.fanRelay.getLogicValue();
+	msg.fan2 = enginePins.fanRelay2.getLogicValue();
 
 	msg.gear = Sensor::getOrZero(SensorType::DetectedGear);
+
+	// scale to units of 0.1km
+	msg.distanceTraveled = engine->module<TripOdometer>()->getDistanceMeters() / 100;
 }
 
 struct Speeds {
@@ -201,6 +206,13 @@ static void populateFrame(Cams& msg) {
 	msg.Bank2ExhaustTarget = engine->outputChannels.vvtTargets[3];
 }
 
+struct Odometry {
+};
+
+static void populateFrame(Odometry& msg) {
+
+}
+
 void sendCanVerbose() {
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
@@ -214,6 +226,7 @@ void sendCanVerbose() {
 	transmitStruct<Fueling2>	(CanCategory::VERBOSE, base + 6, isExt);
 	transmitStruct<Fueling3>	(CanCategory::VERBOSE, base + 7, isExt);
 	transmitStruct<Cams>		(CanCategory::VERBOSE, base + 8, isExt);
+	transmitStruct<Odometry>	(CanCategory::VERBOSE, base + 9, isExt);
 }
 
 #endif // EFI_CAN_SUPPORT
