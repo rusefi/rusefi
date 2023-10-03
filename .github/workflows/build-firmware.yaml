@@ -88,9 +88,9 @@ jobs:
           #   folder: config/boards/hellen/hellen-honda-k
           #   ini-file: fome_hellen-honda-k.ini
 
-          - build-target: hellen154hyundai
-            folder: config/boards/hellen/hellen154hyundai
-            ini-file: fome_hellen154hyundai.ini
+          # - build-target: hellen154hyundai
+          #   folder: config/boards/hellen/hellen154hyundai
+          #   ini-file: fome_hellen154hyundai.ini
 
           # - build-target: frankenso_na6
           #   folder: config/boards/frankenso
