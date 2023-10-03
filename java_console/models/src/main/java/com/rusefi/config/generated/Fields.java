@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 02 13:32:19 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Oct 03 00:50:57 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1025,7 +1025,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1595928961;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1251,7 +1250,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.10.02.f407-discovery.1595928961";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.10.03.f407-discovery.4101553827";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1668,7 +1667,7 @@ public class Fields {
 	public static final Field STOICHRATIOSECONDARY = Field.create("STOICHRATIOSECONDARY", 810, FieldType.INT8).setScale(0.1).setBaseOffset(0);
 	public static final Field ETBMAXIMUMPOSITION = Field.create("ETBMAXIMUMPOSITION", 811, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SDCARDLOGFREQUENCY = Field.create("SDCARDLOGFREQUENCY", 812, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field IDLEPOSITIONSENSOR = Field.create("IDLEPOSITIONSENSOR", 814, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field IDLEPOSITIONCHANNEL = Field.create("IDLEPOSITIONCHANNEL", 814, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_815 = Field.create("ALIGNMENTFILL_AT_815", 815, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field DEBUGMAPAVERAGING = Field.create("DEBUGMAPAVERAGING", 816, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field STARTERRELAYDISABLEPIN = Field.create("STARTERRELAYDISABLEPIN", 818, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
@@ -3232,7 +3231,7 @@ public class Fields {
 	STOICHRATIOSECONDARY,
 	ETBMAXIMUMPOSITION,
 	SDCARDLOGFREQUENCY,
-	IDLEPOSITIONSENSOR,
+	IDLEPOSITIONCHANNEL,
 	ALIGNMENTFILL_AT_815,
 	DEBUGMAPAVERAGING,
 	STARTERRELAYDISABLEPIN,
