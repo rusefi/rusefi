@@ -233,7 +233,7 @@ void initTps() {
 
 		// TPS-like stuff that isn't actually a TPS
 		wastegate.init({ engineConfiguration->wastegatePositionSensor, (float)engineConfiguration->wastegatePositionMin, (float)engineConfiguration->wastegatePositionMax, min, max });
-		idlePos.init({ engineConfiguration->idlePositionSensor, (float)engineConfiguration->idlePositionMin, (float)engineConfiguration->idlePositionMax, min, max });
+		idlePos.init({ engineConfiguration->idlePositionChannel, (float)engineConfiguration->idlePositionMin, (float)engineConfiguration->idlePositionMax, min, max });
 	}
 
 	// Route the pedal or TPS to driverIntent as appropriate

@@ -45,7 +45,7 @@ void setVwAba() {
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
-	engineConfiguration->idlePositionSensor = EFI_ADC_3; // PA3
+	engineConfiguration->idlePositionChannel = EFI_ADC_3; // PA3
 	engineConfiguration->wastegatePositionSensor = EFI_ADC_4; // PA4
 #endif // HW_FRANKENSO
 
