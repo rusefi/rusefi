@@ -10,6 +10,8 @@ public:
 	uint32_t getConsumedGrams() const;
 	float getConsumptionGramPerSecond() const;
 	uint32_t getDistanceMeters() const;
+	uint32_t getIgnitionOnTime() const;
+	uint32_t getEngineRunTime() const;
 
 private:
 	// Fuel consumed

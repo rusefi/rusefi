@@ -6,6 +6,10 @@ void TripOdometer::reset() {
 
 	m_distanceMeters = 0;
 	m_distanceRemainder = 0;
+
+	m_slowCallbackCounter = 0;
+	m_engineRunningSeconds = 0;
+	m_ignitionOnSeconds = 0;
 }
 
 void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
@@ -63,4 +67,12 @@ void TripOdometer::onSlowCallback() {
 
 uint32_t TripOdometer::getDistanceMeters() const {
 	return m_distanceMeters;
+}
+
+uint32_t TripOdometer::getIgnitionOnTime() const {
+	return m_ignitionOnSeconds;
+}
+
+uint32_t TripOdometer::getEngineRunTime() const {
+	return m_engineRunningSeconds;
 }
