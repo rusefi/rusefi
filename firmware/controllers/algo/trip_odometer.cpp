@@ -45,6 +45,18 @@ void TripOdometer::onSlowCallback() {
 		m_distanceMeters++;
 		m_distanceRemainder--;
 	}
+
+	constexpr float slowCallbackPerSecond = 1000 / SLOW_CALLBACK_PERIOD_MS;
+	m_slowCallbackCounter++;
+	if (m_slowCallbackCounter == slowCallbackPerSecond) {
+		m_slowCallbackCounter = 0;
+
+		m_ignitionOnSeconds++;
+
+		if (engine->rpmCalculator.isRunning()) {
+			m_engineRunningSeconds++;
+		}
+	}
 }
 
 uint32_t TripOdometer::getDistanceMeters() const {
