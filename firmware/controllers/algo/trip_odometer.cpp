@@ -57,9 +57,11 @@ void TripOdometer::onSlowCallback() {
 
 		m_ignitionOnSeconds++;
 
+#if EFI_SHAFT_POSITION_INPUT
 		if (engine->rpmCalculator.isRunning()) {
 			m_engineRunningSeconds++;
 		}
+#endif // EFI_SHAFT_POSITION_INPUT
 	}
 }
 
