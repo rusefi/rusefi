@@ -201,14 +201,30 @@ void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
 
+static Gpio PROTEUS_CANAM_OUTPUTS[] = {
+    Gpio::PROTEUS_LS_1,
+    Gpio::PROTEUS_LS_2,
+    Gpio::PROTEUS_LS_3,
+    Gpio::PROTEUS_LS_14,
+};
+
 int getBoardMetaLowSideOutputsCount() {
+    if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
+        return getBoardMetaOutputsCount();
+    }
     return 16;
 }
 
 int getBoardMetaOutputsCount() {
+    if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
+        return efi::size(PROTEUS_CANAM_OUTPUTS);
+    }
     return efi::size(PROTEUS_OUTPUTS);
 }
 
 Gpio* getBoardMetaOutputs() {
+    if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
+        return PROTEUS_CANAM_OUTPUTS;
+    }
     return PROTEUS_OUTPUTS;
 }

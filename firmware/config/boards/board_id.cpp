@@ -12,6 +12,13 @@
 
 
 board_id_t getBoardId() {
+#if HW_PROTEUS
+    if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
+        // a way to test harness patch cord
+        return STATIC_BOARD_ID_PROTEUS_CANAM;
+    }
+#endif
+
 #if HW_HELLEN
 	return (board_id_t)engine->engineState.hellenBoardId;
 #elif STATIC_BOARD_ID
