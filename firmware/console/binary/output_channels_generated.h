@@ -749,10 +749,17 @@ struct output_channels_s {
 	// kPa
 	// offset 668
 	scaled_channel<uint16_t, 30, 1> throttleInletPressure = (uint16_t)0;
+	// sec
 	// offset 670
-	uint8_t unusedAtTheEnd[128];
-	// offset 798
-	uint8_t alignmentFill_at_798[2];
+	uint16_t ignitionOnTime = (uint16_t)0;
+	// sec
+	// offset 672
+	uint16_t engineRunTime = (uint16_t)0;
+	// km
+	// offset 674
+	scaled_channel<uint16_t, 10, 1> distanceTraveled = (uint16_t)0;
+	// offset 676
+	uint8_t unusedAtTheEnd[124];
 };
 static_assert(sizeof(output_channels_s) == 800);
 
