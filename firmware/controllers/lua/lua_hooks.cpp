@@ -906,4 +906,9 @@ void configureRusefiLuaHooks(lua_State* l) {
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	lua_register(l, "txCan", lua_txCan);
 #endif
+
+	lua_register(l, "resetOdometer", [](lua_State*) {
+		engine->module<TripOdometer>()->reset();
+		return 0;
+	});
 }
