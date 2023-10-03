@@ -528,6 +528,11 @@ static void updateFuelCorrections() {
 static void updateFuelResults() {
 	engine->outputChannels.fuelFlowRate = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
 	engine->outputChannels.totalFuelConsumption = engine->module<TripOdometer>()->getConsumedGrams();
+	engine->outputChannels.ignitionOnTime = engine->module<TripOdometer>()->getIgnitionOnTime();
+	engine->outputChannels.engineRunTime = engine->module<TripOdometer>()->getEngineRunTime();
+
+	// output channel in km
+	engine->outputChannels.distanceTraveled = 0.001f * engine->module<TripOdometer>()->getDistanceMeters();
 }
 
 static void updateFuelInfo() {
