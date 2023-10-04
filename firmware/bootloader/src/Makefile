@@ -220,6 +220,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) $(PROJECT_DIR)/hw_layer/main_hardf
 INCDIR = $(ALLINC) \
 	$(PCH_DIR) \
 	.. \
+	$(BOARDINC) \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
@@ -235,6 +236,7 @@ INCDIR = $(ALLINC) \
 	$(PROJECT_DIR)/console/binary_log \
 	$(PROJECT_DIR)/console/fl_binary \
 	$(PROJECT_DIR)/hw_layer \
+	$(PROJECT_DIR)/hw_layer/digital_input \
 	$(PROJECT_DIR)/hw_layer/adc \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
