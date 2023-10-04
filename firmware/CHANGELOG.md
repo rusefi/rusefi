@@ -39,6 +39,7 @@ Release template (copy/paste this for new release):
  - Improved injection, ignition bench test UI and functionality: More gauges, fuel pump on/off buttons for injector testing, and configurable duration/count #219
  - Preset for Mazdaspeed Miata (NB) IAT sensor
  - Option to compensate Alpha-N fueling with intake air temperature
+ - Gasoline-scale AFR gauge: instead of showing true AFR, show "gasoline scale" where 14.7 means stoichiometric
 
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)
@@ -46,6 +47,7 @@ Release template (copy/paste this for new release):
  - Make errors about fuel pressure sensors less aggressive #111 #117
  - Always operate in "two wire" mode for batch fuel, fixing batch firing order #23
  - Fix "Toyota 3 Tooth Cam" VVT mode (1JZ, 2JZ, 1G, etc) actually works now #237
+ - Fix autotune while TS project is in AFR mode - corrections now made properly for target AFR table values
 
 ## May 2023 Release
 
