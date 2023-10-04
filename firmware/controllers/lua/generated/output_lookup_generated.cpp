@@ -472,6 +472,10 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.engineRunTime;
 		case -1357387481:
 			return engine->outputChannels.distanceTraveled;
+		case 111403416:
+			return engine->outputChannels.afrGasolineScale;
+		case 2029444810:
+			return engine->outputChannels.afr2GasolineScale;
 		case -1779658835:
 			return engine->fuelComputer.totalFuelCorrection;
 		case -1288205717:

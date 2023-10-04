@@ -275,6 +275,8 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.ignitionOnTime, "ignitionOnTime", "sec", 1},
 	{engine->outputChannels.engineRunTime, "engineRunTime", "sec", 1},
 	{engine->outputChannels.distanceTraveled, "distanceTraveled", "km", 1},
+	{engine->outputChannels.afrGasolineScale, "Air/Fuel Ratio (Gas Scale)", "AFR", 2},
+	{engine->outputChannels.afr2GasolineScale, "Air/Fuel Ratio 2 (Gas Scale)", "AFR", 2},
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2},
 	{engine->fuelComputer.running.postCrankingFuelCorrection, "Fuel: Post cranking mult", "", 0},
 	{engine->fuelComputer.running.intakeTemperatureCoefficient, "Fuel: IAT correction", "", 0},

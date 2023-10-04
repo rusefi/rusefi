@@ -758,8 +758,16 @@ struct output_channels_s {
 	// km
 	// offset 674
 	scaled_channel<uint16_t, 10, 1> distanceTraveled = (uint16_t)0;
+	// @@GAUGE_NAME_AFR_GAS_SCALE@@
+	// AFR
 	// offset 676
-	uint8_t unusedAtTheEnd[124];
+	scaled_channel<uint16_t, 1000, 1> afrGasolineScale = (uint16_t)0;
+	// @@GAUGE_NAME_AFR2_GAS_SCALE@@
+	// AFR
+	// offset 678
+	scaled_channel<uint16_t, 1000, 1> afr2GasolineScale = (uint16_t)0;
+	// offset 680
+	uint8_t unusedAtTheEnd[120];
 };
 static_assert(sizeof(output_channels_s) == 800);
 
