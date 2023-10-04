@@ -374,5 +374,8 @@ float mapFast
 	uint16_t engineRunTime;;"sec",1,0,0,0,1
 	uint16_t autoscale distanceTraveled;;"km",0.1,0,0,0,1
 
-	uint8_t[124 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint16_t autoscale afrGasolineScale;@@GAUGE_NAME_AFR_GAS_SCALE@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
+	uint16_t autoscale afr2GasolineScale;@@GAUGE_NAME_AFR2_GAS_SCALE@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
+
+	uint8_t[120 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

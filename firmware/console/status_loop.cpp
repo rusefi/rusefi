@@ -433,10 +433,12 @@ static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	engine->outputChannels.lambdaValue = lambdaValue;
 	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer.stoichiometricRatio;
+	engine->outputChannels.afrGasolineScale = lambdaValue * STOICH_RATIO;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
 	engine->outputChannels.lambdaValue2 = lambda2Value;
 	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer.stoichiometricRatio;
+	engine->outputChannels.afr2GasolineScale = lambda2Value * STOICH_RATIO;
 }
 
 static void updateFuelSensors() {
