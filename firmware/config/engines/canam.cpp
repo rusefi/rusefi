@@ -25,7 +25,18 @@ void setMaverickX3() {
 	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
 	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
 
+	engineConfiguration->boostControlPin = Gpio::PROTEUS_LS_16;
+
+	gppwm_channel *icFanPwm = &engineConfiguration->gppwm[0];
+	icFanPwm->pin = Gpio::PROTEUS_LS_15;
+
+	gppwm_channel *accRelayPwm = &engineConfiguration->gppwm[1];
+	accRelayPwm->pin = Gpio::PROTEUS_LS_4;
 #endif // HW_PROTEUS
+
+	strcpy(engineConfiguration->gpPwmNote[0], "IC Fan");
+	strcpy(engineConfiguration->gpPwmNote[1], "Acc Relay");
+
 
 #if HW_PROTEUS
     #include "canam_2021.lua"
