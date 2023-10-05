@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Sep 27 01:12:02 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Oct 05 13:39:39 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1222,17 +1222,36 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 100, 1> compressorDischargeTemp = (int16_t)0;
 	/**
+	kPa
 	 * offset 670
 	 */
-	uint8_t unusedAtTheEnd[132];
+	scaled_channel<uint16_t, 30, 1> compressorDischargePressure = (uint16_t)0;
 	/**
-	 * need 4 byte alignment
-	units
-	 * offset 802
+	kPa
+	 * offset 672
 	 */
-	uint8_t alignmentFill_at_802[2];
+	scaled_channel<uint16_t, 30, 1> throttleInletPressure = (uint16_t)0;
+	/**
+	sec
+	 * offset 674
+	 */
+	uint16_t ignitionOnTime = (uint16_t)0;
+	/**
+	sec
+	 * offset 676
+	 */
+	uint16_t engineRunTime = (uint16_t)0;
+	/**
+	km
+	 * offset 678
+	 */
+	scaled_channel<uint16_t, 10, 1> distanceTraveled = (uint16_t)0;
+	/**
+	 * offset 680
+	 */
+	uint8_t unusedAtTheEnd[124];
 };
 static_assert(sizeof(output_channels_s) == 804);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Sep 27 01:12:02 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Oct 05 13:39:39 UTC 2023

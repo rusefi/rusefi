@@ -272,6 +272,11 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.fuelTemp, "fuelTemp", "deg C", 1},
 	{engine->outputChannels.ambientTemp, "ambientTemp", "deg C", 1},
 	{engine->outputChannels.compressorDischargeTemp, "compressorDischargeTemp", "deg C", 1},
+	{engine->outputChannels.compressorDischargePressure, "compressorDischargePressure", "kPa", 1},
+	{engine->outputChannels.throttleInletPressure, "throttleInletPressure", "kPa", 1},
+	{engine->outputChannels.ignitionOnTime, "ignitionOnTime", "sec", 1},
+	{engine->outputChannels.engineRunTime, "engineRunTime", "sec", 1},
+	{engine->outputChannels.distanceTraveled, "distanceTraveled", "km", 1},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

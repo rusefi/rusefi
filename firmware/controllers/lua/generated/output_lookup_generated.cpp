@@ -716,6 +716,21 @@ float getOutputValueByName(const char *name) {
 // compressorDischargeTemp
 		case 553570450:
 			return engine->outputChannels.compressorDischargeTemp;
+// compressorDischargePressure
+		case 1404346549:
+			return engine->outputChannels.compressorDischargePressure;
+// throttleInletPressure
+		case 769340240:
+			return engine->outputChannels.throttleInletPressure;
+// ignitionOnTime
+		case 795671090:
+			return engine->outputChannels.ignitionOnTime;
+// engineRunTime
+		case -1165835361:
+			return engine->outputChannels.engineRunTime;
+// distanceTraveled
+		case -1357387481:
+			return engine->outputChannels.distanceTraveled;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:
