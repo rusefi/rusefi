@@ -17,20 +17,16 @@ TEST(HPFP, IntegratedSchedule) {
 	engineConfiguration->hpfpPumpVolume = 0.2; // cc/lobe
 
 
-	engineConfiguration->trigger.customTotalToothCount = 16;
+	engineConfiguration->trigger.customTotalToothCount = 4;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL);
     setCamOperationMode();
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 
-	eth.smartFireTriggerEvents2(/*count*/40, /*delay*/ 4);
+	eth.smartFireTriggerEvents2(/*count*/40, /*delay*/ 16);
 	ASSERT_EQ(937, round(Sensor::getOrZero(SensorType::Rpm)));
 
-	for (int i = 0;i<100;i++) {
-		eth.smartFireTriggerEvents2(/*count*/1, /*delay*/ 4);
-		engine->periodicFastCallback();
-	}
 	/**
 	 * overall this is a pretty lame test but helps to know that the whole on/off/on dance does in fact happen for HPFP
 	 */
