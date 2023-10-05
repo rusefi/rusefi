@@ -201,6 +201,10 @@ void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
 
+static Gpio PROTEUS_ME17_ADAPTER_OUTPUTS[] = {
+    Gpio::PROTEUS_LS_1,
+};
+
 static Gpio PROTEUS_CANAM_OUTPUTS[] = {
     Gpio::PROTEUS_LS_1,
     Gpio::PROTEUS_LS_2,
@@ -218,6 +222,9 @@ int getBoardMetaLowSideOutputsCount() {
 int getBoardMetaOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
         return efi::size(PROTEUS_CANAM_OUTPUTS);
+    }
+    if (engineConfiguration->engineType == engine_type_e::ME17_9_MISC) {
+        return efi::size(PROTEUS_ME17_ADAPTER_OUTPUTS);
     }
     return efi::size(PROTEUS_OUTPUTS);
 }
