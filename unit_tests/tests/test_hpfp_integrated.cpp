@@ -52,6 +52,10 @@ TEST(HPFP, IntegratedSchedule) {
 	assertToggleCounterExtra(&eth, 6);
 
 	assertToggleCounterExtra(&eth, 6);
+
+	assertToggleCounterExtra(&eth, 6);
+
+	assertToggleCounterExtra(&eth, 6);
 }
 
 
