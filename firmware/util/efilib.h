@@ -8,9 +8,7 @@
 #pragma once
 
 #include <stdint.h>
-#ifdef __cplusplus
 #include <rusefi/arrays.h>
-#endif
 
 #define TO_LOWER(x) (((x)>='A' && (x)<='Z') ? (x) - 'A' + 'a' : (x))
 int djb2lowerCase(const char *str);
