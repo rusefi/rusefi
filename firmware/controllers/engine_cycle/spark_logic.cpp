@@ -375,6 +375,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	assertAngleRange(sparkAngle, "findAngle#a5", ObdCode::CUSTOM_ERR_6549);
 
 	bool scheduled = engine->module<TriggerScheduler>()->scheduleOrQueue(
+			"spark",
 		&event->sparkEvent, edgeTimestamp, sparkAngle,
 		{ fireSparkAndPrepareNextSchedule, event },
 		currentPhase, nextPhase);

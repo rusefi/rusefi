@@ -6,10 +6,10 @@ bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *e
        assertNotInListMethodBody(head, element, nextToothEvent)
 }
 
-void TriggerScheduler::schedule(AngleBasedEvent* event, angle_t angle, action_s action) {
+void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, angle_t angle, action_s action) {
 	event->setAngle(angle);
 
-	schedule(event, action);
+	schedule(msg, event, action);
 }
 
 /**
@@ -18,7 +18,7 @@ void TriggerScheduler::schedule(AngleBasedEvent* event, angle_t angle, action_s 
  * @return true if event corresponds to current tooth and was time-based scheduler
  *         false if event was put into queue for scheduling at a later tooth
  */
-bool TriggerScheduler::scheduleOrQueue(AngleBasedEvent *event,
+bool TriggerScheduler::scheduleOrQueue(const char *msg, AngleBasedEvent *event,
 		efitick_t edgeTimestamp,
 		angle_t angle,
 		action_s action,
@@ -38,13 +38,17 @@ bool TriggerScheduler::scheduleOrQueue(AngleBasedEvent *event,
 		return true;
 	} else {
 		// If not due now, add it to the queue to be scheduled later
-		schedule(event, action);
+		schedule(msg, event, action);
 
 		return false;
 	}
 }
 
-void TriggerScheduler::schedule(AngleBasedEvent* event, action_s action) {
+void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_s action) {
+	if (event->enginePhase < 0) {
+		criticalError("Negative angle %s %f", msg, event->enginePhase);
+	}
+
 	event->action = action;
 
 	{
