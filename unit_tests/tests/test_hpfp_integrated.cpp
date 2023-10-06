@@ -47,9 +47,9 @@ TEST(HPFP, IntegratedSchedule) {
 
 	assertToggleCounterExtra(&eth, 6);
 
-	//	engine->triggerCentral.vvtPosition[0][0] = -50; // Bank 0
+	engine->triggerCentral.vvtPosition[0][0] = -50; // Bank 0
 
-	assertToggleCounterExtra(&eth, 6);
+	assertToggleCounterExtra(&eth, 8);
 
 	assertToggleCounterExtra(&eth, 6);
 
