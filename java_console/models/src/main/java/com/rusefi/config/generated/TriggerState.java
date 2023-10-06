@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Thu Sep 28 03:23:35 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Fri Oct 06 17:24:04 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -171,20 +171,28 @@ public class TriggerState {
 	public static final Field VVTSYNCGAPRATIO = Field.create("VVTSYNCGAPRATIO", 4, FieldType.FLOAT).setBaseOffset(1244);
 	public static final Field VVTTOOTHDURATIONS0 = Field.create("VVTTOOTHDURATIONS0", 8, FieldType.INT).setScale(1.0).setBaseOffset(1244);
 	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 12, FieldType.FLOAT).setBaseOffset(1244);
-	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 16, FieldType.FLOAT).setBaseOffset(1244);
-	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 20, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
-	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 21, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
-	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 22, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
-	public static final Field ALIGNMENTFILL_AT_23 = Field.create("ALIGNMENTFILL_AT_23", 23, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
+	public static final Field VVTTOOTHPOSITION1 = Field.create("VVTTOOTHPOSITION1", 16, FieldType.FLOAT).setBaseOffset(1244);
+	public static final Field VVTTOOTHPOSITION2 = Field.create("VVTTOOTHPOSITION2", 20, FieldType.FLOAT).setBaseOffset(1244);
+	public static final Field VVTTOOTHPOSITION3 = Field.create("VVTTOOTHPOSITION3", 24, FieldType.FLOAT).setBaseOffset(1244);
+	public static final Field VVTTOOTHPOSITION4 = Field.create("VVTTOOTHPOSITION4", 28, FieldType.FLOAT).setBaseOffset(1244);
+	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 32, FieldType.FLOAT).setBaseOffset(1244);
+	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 36, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
+	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 37, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
+	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
+	public static final Field ALIGNMENTFILL_AT_39 = Field.create("ALIGNMENTFILL_AT_39", 39, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
 	public static final Field[] VALUES = {
 	CRANKSYNCHRONIZATIONCOUNTER,
 	VVTSYNCGAPRATIO,
 	VVTTOOTHDURATIONS0,
 	VVTCURRENTPOSITION,
+	VVTTOOTHPOSITION1,
+	VVTTOOTHPOSITION2,
+	VVTTOOTHPOSITION3,
+	VVTTOOTHPOSITION4,
 	TRIGGERSYNCGAPRATIO,
 	TRIGGERSTATEINDEX,
 	CAMRESYNCCOUNTER,
 	VVTSTATEINDEX,
-	ALIGNMENTFILL_AT_23,
+	ALIGNMENTFILL_AT_39,
 	};
 }
