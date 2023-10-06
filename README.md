@@ -10,7 +10,7 @@
 
 # rusEFI
 
-See [check.c](https://github.com/rusefi/rusefi/blob/master/firmware/check.c) for recommended version of GCC.
+See [check.c](https://github.com/rusefi/rusefi/blob/1104bd70f8de5369ba8732c03ba18ed0aaf2aa80/firmware/gcc_version_check.c) for recommended version of GCC.
 
 Current binaries are always available on our [build server](http://rusefi.com/build_server/)
 
