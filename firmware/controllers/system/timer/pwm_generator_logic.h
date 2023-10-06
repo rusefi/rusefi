@@ -39,7 +39,7 @@ typedef struct {
 class PwmConfig;
 
 typedef void (pwm_cycle_callback)(PwmConfig *state);
-typedef void (pwm_gen_callback)(int stateIndex, PwmConfig *arg);
+typedef void (pwm_gen_callback)(int stateIndex, PwmConfig* pwm);
 
 typedef enum {
 	PM_ZERO,
@@ -53,10 +53,8 @@ typedef enum {
 class PwmConfig {
 public:
 	PwmConfig();
-	// technical debt? our way to have unit tests working is to have this field instead of proper 'this'
-	PwmConfig *arg = nullptr;
 
-	void weComplexInit(const char *msg,
+	void weComplexInit(
 			ExecutorInterface *executor,
 			MultiChannelStateSequence const * seq,
 			pwm_cycle_callback *pwmCycleCallback,
