@@ -146,7 +146,7 @@ static void startSimulatedTriggerSignal() {
 
 	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
-	triggerSignal.weComplexInit("position sensor",
+	triggerSignal.weComplexInit(
 			&engine->executor,
 			&s->wave,
 			updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
