@@ -25,7 +25,9 @@ static void plainPinTurnOff(NamedOutputPin *output) {
 
 
 static void scheduleOpen(AuxActor *current) {
-	engine->module<TriggerScheduler>()->schedule(&current->open,
+	engine->module<TriggerScheduler>()->schedule(
+			"aux-valve",
+			&current->open,
 			current->extra + engine->engineState.auxValveStart,
 			{ auxPlainPinTurnOn, current }
 			);
@@ -41,7 +43,9 @@ void auxPlainPinTurnOn(AuxActor *current) {
 
 	fixAngle(duration, "duration", ObdCode::CUSTOM_ERR_6557);
 
-	engine->module<TriggerScheduler>()->schedule(&current->close,
+	engine->module<TriggerScheduler>()->schedule(
+			"aux-valve",
+			&current->close,
 			current->extra + engine->engineState.auxValveEnd,
 			{ plainPinTurnOff, output }
 			);

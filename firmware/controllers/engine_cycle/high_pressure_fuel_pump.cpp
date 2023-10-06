@@ -224,6 +224,7 @@ void HpfpController::scheduleNextCycle() {
 		 * We are good to use just one m_event instance because new events are scheduled when we turn off valve.
 		 */
 		engine->module<TriggerScheduler>()->schedule(
+		    "hpfp",
 			&m_event,
 			di_nextStart,
 			{ pinTurnOn, this });
@@ -235,6 +236,7 @@ void HpfpController::scheduleNextCycle() {
 		// will schedule the next lobe.
 		// todo: would it have been cleaner to schedule 'scheduleNextCycle' directly?
 		engine->module<TriggerScheduler>()->schedule(
+		    "hpfp",
 			&m_event, lobe,
 			{ pinTurnOff, this });
 	}
