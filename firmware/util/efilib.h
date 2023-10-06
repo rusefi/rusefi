@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "unused.h"
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -53,9 +54,6 @@ int mytolower(const char c);
 int efiPow10(int param);
 bool startsWith(const char *line, const char *prefix);
 
-#ifndef UNUSED
-#define UNUSED(x) (void)(x)
-#endif
 
 /**
  * Rounds value to specified precision.

@@ -7,7 +7,7 @@
 
 #include "hal.h"
 #include "stm32_gpio.h"
-#include "efilib.h"
+#include "unused.h"
 
 #include "board_io.h"
 
