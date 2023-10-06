@@ -21,9 +21,11 @@ struct AngleBasedEvent {
 	 */
 	AngleBasedEvent *nextToothEvent = nullptr;
 
-	float enginePhase;
+	angle_t enginePhase;
 
-	void setAngle(angle_t angle);
+	void setAngle(angle_t enginePhase) {
+    	this->enginePhase = enginePhase;
+    }
 
 	bool shouldSchedule(float currentPhase, float nextPhase) const;
 	float getAngleFromNow(float currentPhase) const;

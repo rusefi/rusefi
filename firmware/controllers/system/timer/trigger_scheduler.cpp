@@ -124,10 +124,6 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 	}
 }
 
-void AngleBasedEvent::setAngle(angle_t angle) {
-	this->enginePhase = angle;
-}
-
 bool AngleBasedEvent::shouldSchedule(float currentPhase, float nextPhase) const {
 	return isPhaseInRange(this->enginePhase, currentPhase, nextPhase);
 }
