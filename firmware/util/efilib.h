@@ -10,9 +10,7 @@
 #include "unused.h"
 #include <stdint.h>
 
-#ifdef __cplusplus
 #include <rusefi/arrays.h>
-#endif // __cplusplus
 
 int djb2lowerCase(const char *str);
 
