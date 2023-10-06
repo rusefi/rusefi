@@ -212,7 +212,6 @@ void HpfpController::scheduleNextCycle() {
 	}
 
 	angle_t lobe = m_lobe.findNextLobe();
-	wrapAngle(lobe, "lobe", ObdCode::CUSTOM_ERR_6557);
 	angle_t angle_requested = m_requested_pump;
 
 	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
