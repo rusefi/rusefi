@@ -14,8 +14,9 @@ public:
 						 efitick_t edgeTimestamp,
 						 float currentPhase, float nextPhase);
 
-	// For unit tests
+#if EFI_UNIT_TEST
 	AngleBasedEvent * getElementAtIndexForUnitTest(int index);
+#endif // EFI_UNIT_TEST
 
 private:
 	void schedule(AngleBasedEvent* event, action_s action);
