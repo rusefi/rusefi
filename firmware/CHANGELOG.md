@@ -48,6 +48,7 @@ Release template (copy/paste this for new release):
  - nucleo-h7 bundle st-link flushing #5486
  - 2JZ cam trigger configuration is much easier to adjust #5557
  - lua reads stale output values #5579
+ - High Pressure Fuel Pump scheduling goes into negative range #5596
 
 ## July 2023 Release "Day 518"
 
