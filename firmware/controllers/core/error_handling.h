@@ -11,11 +11,6 @@
 #include "rusefi_generated.h"
 #include <cstdint>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 /**
  * Something is wrong, but we can live with it: some minor sensor is disconnected
  * or something like that
@@ -60,6 +55,11 @@ int getRusEfiVersion(void);
 #endif /* EFI_ENABLE_ASSERTS */
 
 #define criticalAssertVoid(condition, message) efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, condition, message)
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
 #if EFI_PROD_CODE
 #include <hal.h>
