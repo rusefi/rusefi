@@ -46,11 +46,6 @@ static inline uint32_t SWAP_UINT32(uint32_t x)
 #define Q(x) #x
 #define QUOTE(x) Q(x)
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 const char * boolToString(bool value);
 
 char * efiTrim(char *param);
@@ -80,9 +75,6 @@ char* itoa10(char *p, int num);
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed);
 
 bool isPhaseInRange(float test, float current, float next);
-
-#ifdef __cplusplus
-}
 
 #include <cstddef>
 #include <cstring>
@@ -142,5 +134,3 @@ constexpr remove_reference_t<_Ty>&& move(_Ty&& _Arg) noexcept {
     return static_cast<remove_reference_t<_Ty>&&>(_Arg);
 }
 }
-
-#endif /* __cplusplus */
