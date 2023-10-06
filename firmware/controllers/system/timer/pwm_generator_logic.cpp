@@ -17,6 +17,8 @@
 
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
+// 99% duty cycle
+#define FULL_PWM_THRESHOLD 0.99
 
 SimplePwm::SimplePwm()
 {
@@ -69,19 +71,21 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	}
 #endif
 
-	// Handle zero and full duty cycle.  This will cause the PWM output to behave like a plain digital output.
-	if (dutyCycle == 0.0f && stateChangeCallback) {
-		// Manually fire falling edge
-		stateChangeCallback(0, this);
-	} else if (dutyCycle == 1.0f && stateChangeCallback) {
-		// Manually fire rising edge
-		stateChangeCallback(1, this);
-	}
-
+	// Handle near-zero and near-full duty cycle.  This will cause the PWM output to behave like a plain digital output.
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
 		mode = PM_ZERO;
+
+		if (stateChangeCallback) {
+			// Manually fire falling edge
+			stateChangeCallback(0, this);
+		}
 	} else if (dutyCycle > FULL_PWM_THRESHOLD) {
 		mode = PM_FULL;
+
+		if (stateChangeCallback) {
+			// Manually fire rising edge
+			stateChangeCallback(1, this);
+		}
 	} else {
 		mode = PM_NORMAL;
 		seq.setSwitchTime(0, dutyCycle);
