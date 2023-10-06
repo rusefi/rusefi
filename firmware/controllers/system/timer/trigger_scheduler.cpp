@@ -25,6 +25,7 @@ bool TriggerScheduler::scheduleOrQueue(AngleBasedEvent *event,
 		float currentPhase, float nextPhase) {
 	event->setAngle(angle);
 
+    // *kludge* naming mess: if (shouldSchedule) { scheduleByAngle } else { schedule } see header for more details
 	if (event->shouldSchedule(currentPhase, nextPhase)) {
 		// if we're due now, just schedule the event
 		scheduleByAngle(
