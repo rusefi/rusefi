@@ -6,6 +6,7 @@
  */
 
 #include "pch.h"
+using ::testing::_;
 
 TEST(HPFP, IntegratedSchedule) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
@@ -16,6 +17,8 @@ TEST(HPFP, IntegratedSchedule) {
 	engineConfiguration->hpfpCamLobes = 3;
 	engineConfiguration->hpfpPumpVolume = 0.2; // cc/lobe
 
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{/*airmass*/1, /*load*/50.0f}));
 
 	engineConfiguration->trigger.customTotalToothCount = 4;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
@@ -24,13 +27,13 @@ TEST(HPFP, IntegratedSchedule) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 
-	eth.smartFireTriggerEvents2(/*count*/40, /*delay*/ 16);
+	eth.smartFireTriggerEvents2(/*count*/8, /*delay*/ 16);
 	ASSERT_EQ(937, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	/**
 	 * overall this is a pretty lame test but helps to know that the whole on/off/on dance does in fact happen for HPFP
 	 */
-	ASSERT_EQ(8, enginePins.hpfpValve.pinToggleCounter);
+	ASSERT_EQ(10, enginePins.hpfpValve.pinToggleCounter);
 }
 
 
