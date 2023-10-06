@@ -349,6 +349,9 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		return;
 	}
 
+	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
+	tc->triggerState.vvtToothPosition[index] = vvtPosition;
+
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_TOYOTA_3_TOOTH:
 	{
@@ -366,8 +369,6 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		// else, do nothing
 		break;
 	}
-
-	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
 	// this could be just an 'if' but let's have it expandable for future use :)
 	switch(engineConfiguration->vvtMode[camIndex]) {
