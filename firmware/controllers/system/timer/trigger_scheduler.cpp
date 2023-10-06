@@ -46,6 +46,8 @@ bool TriggerScheduler::scheduleOrQueue(const char *msg, AngleBasedEvent *event,
 
 void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_s action) {
 	if (event->enginePhase < 0) {
+	    // at the moment we expect API consumer to wrap angle. shall we do the wrapping in the enginePhase setter?
+	    // i.e. what is the best level to take care of the range constraint?
 		criticalError("Negative angle %s %f", msg, event->enginePhase);
 	}
 
