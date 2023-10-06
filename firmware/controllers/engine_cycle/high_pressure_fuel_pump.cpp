@@ -217,6 +217,8 @@ void HpfpController::scheduleNextCycle() {
 	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
 	if (angleAboveMin) {
 		di_nextStart = lobe - angle_requested - m_deadtime;
+		wrapAngle(di_nextStart, "di_nextStart", ObdCode::CUSTOM_ERR_6557);
+
 
 		/**
 		 * We are good to use just one m_event instance because new events are scheduled when we turn off valve.
@@ -228,6 +230,7 @@ void HpfpController::scheduleNextCycle() {
 
 		// Off will be scheduled after turning the valve on
 	} else {
+	    wrapAngle(lobe, "lobe", ObdCode::CUSTOM_ERR_6557);
 		// Schedule this, even if we aren't opening the valve this time, since this
 		// will schedule the next lobe.
 		// todo: would it have been cleaner to schedule 'scheduleNextCycle' directly?
