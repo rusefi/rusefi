@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sat Oct 07 01:00:54 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sat Oct 07 15:05:35 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1143,15 +1143,19 @@ struct output_channels_s {
 	offset 632 bit 25 */
 	bool triggerChannel2 : 1 {};
 	/**
+	 * bank 1 intake cam input
 	offset 632 bit 26 */
 	bool vvtChannel1 : 1 {};
 	/**
+	 * bank 1 exhaust cam input
 	offset 632 bit 27 */
 	bool vvtChannel2 : 1 {};
 	/**
+	 * bank 2 intake cam input
 	offset 632 bit 28 */
 	bool vvtChannel3 : 1 {};
 	/**
+	 * bank 2 exhaust cam input
 	offset 632 bit 29 */
 	bool vvtChannel4 : 1 {};
 	/**
@@ -1266,4 +1270,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 804);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sat Oct 07 01:00:54 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sat Oct 07 15:05:35 UTC 2023
