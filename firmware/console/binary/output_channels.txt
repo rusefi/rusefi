@@ -344,10 +344,10 @@ bit injectorState11
 bit injectorState12
 bit triggerChannel1
 bit triggerChannel2
-bit vvtChannel1
-bit vvtChannel2
-bit vvtChannel3
-bit vvtChannel4
+bit vvtChannel1;bank 1 intake cam input
+bit vvtChannel2;bank 1 exhaust cam input
+bit vvtChannel3;bank 2 intake cam input
+bit vvtChannel4;bank 2 exhaust cam input
 
 uint32_t outputRequestPeriod
 float mapFast

@@ -261,6 +261,10 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	    engine->outputChannels.vvtChannel1 = front == TriggerValue::RISE;
 	} else if (index == 1) {
 	    engine->outputChannels.vvtChannel2 = front == TriggerValue::RISE;
+	} else if (index == 2) {
+	    engine->outputChannels.vvtChannel3 = front == TriggerValue::RISE;
+	} else if (index == 3) {
+	    engine->outputChannels.vvtChannel4 = front == TriggerValue::RISE;
 	}
 
 	int bankIndex = index / CAMS_PER_BANK;
