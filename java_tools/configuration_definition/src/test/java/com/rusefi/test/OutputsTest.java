@@ -65,15 +65,19 @@ public class OutputsTest {
                 "\t\tfloat pTerm;;\"\", 1, 0, -50000, 50000, 2\n" +
                 "\t\tint16_t autoscale dTerm;;\"\", 0.01, 0, -327, 327, 2\n" +
                 "\tend_struct\n" +
+                "\tpid_status_s[2 iterate] vvtStatus\n" +
                 "\tpid_status_s wastegateDcStatus\n" +
                 "\n" +
-                "\tpid_status_s[2 iterate] vvtStatus\n" +
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         state.readBufferedReader(test, dataLogConsumer);
         assertEquals(
-                "entry = wastegateDcStatus_pTerm, \"wastegateDcStatus_pTerm\", float,  \"%.3f\"\n" +
+                "entry = vvtStatus1_pTerm, \"vvtStatus1_pTerm\", float,  \"%.3f\"\n" +
+                        "entry = vvtStatus1_dTerm, \"vvtStatus1_dTerm\", float,  \"%.3f\"\n" +
+                        "entry = vvtStatus2_pTerm, \"vvtStatus2_pTerm\", float,  \"%.3f\"\n" +
+                        "entry = vvtStatus2_dTerm, \"vvtStatus2_dTerm\", float,  \"%.3f\"\n" +
+                        "entry = wastegateDcStatus_pTerm, \"wastegateDcStatus_pTerm\", float,  \"%.3f\"\n" +
                         "entry = wastegateDcStatus_dTerm, \"wastegateDcStatus_dTerm\", float,  \"%.3f\"\n",
                 dataLogConsumer.getContent());
     }

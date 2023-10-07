@@ -35,8 +35,19 @@ public class DataLogConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (readerState.isStackEmpty()) {
+            PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
+                @Override
+                public String process(ReaderState state, ConfigField configField, String prefix) {
+                    return handle(configField, prefix);
+                }
+
+                @Override
+                public boolean skip(ConfigField cf) {
+                    return false;
+                }
+            };
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
-                    (configField, prefix, prefix2) -> handle(prefix, prefix2));
+                    strategy);
             iterator.loop();
             String content = iterator.getContent();
             tsWriter.append(content);
