@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Oct 05 13:39:39 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sat Oct 07 01:00:54 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1247,11 +1247,23 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> distanceTraveled = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AFR_GAS_SCALE@@
+	AFR
 	 * offset 680
 	 */
-	uint8_t unusedAtTheEnd[124];
+	scaled_channel<uint16_t, 1000, 1> afrGasolineScale = (uint16_t)0;
+	/**
+	 * @@GAUGE_NAME_AFR2_GAS_SCALE@@
+	AFR
+	 * offset 682
+	 */
+	scaled_channel<uint16_t, 1000, 1> afr2GasolineScale = (uint16_t)0;
+	/**
+	 * offset 684
+	 */
+	uint8_t unusedAtTheEnd[120];
 };
 static_assert(sizeof(output_channels_s) == 804);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Oct 05 13:39:39 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sat Oct 07 01:00:54 UTC 2023
