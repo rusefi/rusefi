@@ -16,8 +16,19 @@ public class SdCardFieldsContent {
 
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
+            PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
+                @Override
+                public String process(ReaderState state, ConfigField configField, String prefix) {
+                    return processOutput(configField, prefix);
+                }
+
+                @Override
+                public String getArrayElementName(ConfigField cf) {
+                    return cf.getOriginalArrayName();
+                }
+            };
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
-                    (configField, prefix, prefix2) -> processOutput(prefix, prefix2), ".");
+                    strategy, ".");
             iterator.loop();
             String content = iterator.getContent();
             body.append(content);

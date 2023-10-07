@@ -34,12 +34,12 @@ class PerFieldWithStructuresIterator extends FieldIterator {
         ConfigStructure cs = cf.getState().getStructures().get(cf.getType());
         String content;
         if (cs != null) {
-            if (cf.isFromIterate()) {
+            if (strategy.skip(cf)) {
                 // do not support this case yet
                 content = "";
             } else {
                 // java side of things does not care for 'cs.withPrefix'
-                String extraPrefix = prefix + cf.getName() + prefixSeparator;
+                String extraPrefix = prefix + strategy.getArrayElementName(cf) + prefixSeparator;
                 PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.getTsFields(), extraPrefix, strategy, prefixSeparator);
                 fieldIterator.loop();
                 content = fieldIterator.sb.toString();
@@ -57,5 +57,13 @@ class PerFieldWithStructuresIterator extends FieldIterator {
 
     interface Strategy {
         String process(ReaderState state, ConfigField configField, String prefix);
+
+        default String getArrayElementName(ConfigField cf) {
+            return cf.getName();
+        }
+
+        default boolean skip(ConfigField cf) {
+            return cf.isFromIterate();
+        }
     }
 }

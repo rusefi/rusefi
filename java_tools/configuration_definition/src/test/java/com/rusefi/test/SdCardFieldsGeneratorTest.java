@@ -65,6 +65,7 @@ public class SdCardFieldsGeneratorTest {
                         "    struct pid_status_s\n" +
                         "    \tfloat pTerm;;\"\", 1, 0, -50000, 50000, 2\n" +
                         "    end_struct\n" +
+                        "\tpid_status_s[2 iterate] vvtStatus\n" +
                         "\tpid_status_s alternatorStatus\n" +
                         "end_struct",
                 "\t{engine->outputChannels->alternatorStatus.pTerm, \"alternatorStatus.pTerm\", \"\", 2},\n",

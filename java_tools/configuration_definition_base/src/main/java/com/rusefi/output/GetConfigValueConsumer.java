@@ -68,8 +68,19 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
+            PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
+                @Override
+                public String process(ReaderState state, ConfigField cf, String prefix) {
+                    return processConfig(cf, prefix);
+                }
+
+                @Override
+                public String getArrayElementName(ConfigField cf) {
+                    return cf.getOriginalArrayName();
+                }
+            };
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
-                    (readerState, cf, prefix) -> processConfig(cf, prefix), ".");
+                    strategy, ".");
             iterator.loop();
         }
     }
