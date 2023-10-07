@@ -954,8 +954,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "txCan", lua_txCan);
 #endif
 
+#if EFI_VEHICLE_SPEED
 	lua_register(l, "resetOdometer", [](lua_State*) {
 		engine->module<TripOdometer>()->reset();
 		return 0;
 	});
+#endif // EFI_VEHICLE_SPEED
 }
