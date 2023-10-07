@@ -17,7 +17,7 @@ TEST(Vvt, TestSetPoint) {
 	engine->engineState.fuelingLoad = 55;
 	Sensor::setMockValue(SensorType::Rpm,  4321);
 
-	VvtController dut(0, 0, 0);
+	VvtController dut(0);
 	dut.init(&targetMap, nullptr);
 
 	// Test dut
@@ -29,14 +29,14 @@ TEST(Vvt, observePlant) {
 
 	engine->triggerCentral.vvtPosition[0][0] = 23;
 
-	VvtController dut(0, 0, 0);
+	VvtController dut(0);
 	dut.init(nullptr, nullptr);
 
 	EXPECT_EQ(23, dut.observePlant().value_or(0));
 }
 
 TEST(Vvt, openLoop) {
-	VvtController dut(0, 0, 0);
+	VvtController dut(0);
 
 	// No open loop for now
 	EXPECT_EQ(dut.getOpenLoop(10), 0);
@@ -45,7 +45,7 @@ TEST(Vvt, openLoop) {
 TEST(Vvt, ClosedLoopNotInverted) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	VvtController dut(0, 0, 0);
+	VvtController dut(0);
 	dut.init(nullptr, nullptr);
 
 	engineConfiguration->auxPid[0].pFactor = 1.5f;
@@ -60,14 +60,16 @@ TEST(Vvt, ClosedLoopNotInverted) {
 TEST(Vvt, ClosedLoopInverted) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	VvtController dut(0, 0, 0);
+	int index = 0;
+	int camIndex = 0;
+	VvtController dut(index);
 	dut.init(nullptr, nullptr);
 
 	engineConfiguration->invertVvtControlIntake = true;
-	engineConfiguration->auxPid[0].pFactor = 1.5f;
-	engineConfiguration->auxPid[0].iFactor = 0;
-	engineConfiguration->auxPid[0].dFactor = 0;
-	engineConfiguration->auxPid[0].offset = 0;
+	engineConfiguration->auxPid[camIndex].pFactor = 1.5f;
+	engineConfiguration->auxPid[camIndex].iFactor = 0;
+	engineConfiguration->auxPid[camIndex].dFactor = 0;
+	engineConfiguration->auxPid[camIndex].offset = 0;
 
 	// Target of -30 with position -20 should yield positive duty, P=1.5 means 15% duty for 10% error
 	EXPECT_EQ(dut.getClosedLoop(-30, -20).value_or(0), 15);

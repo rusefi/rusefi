@@ -18,10 +18,10 @@ using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, int8_t, uint16_t, uint16
 static vvt_map_t vvtTable1;
 static vvt_map_t vvtTable2;
 
-VvtController::VvtController(int index, int bankIndex, int camIndex)
+VvtController::VvtController(int index)
 	: index(index)
-	, m_bank(bankIndex)
-	, m_cam(camIndex)
+	, m_bank(BANK_BY_INDEX(index))
+	, m_cam(CAM_BY_INDEX(index))
 {
 }
 

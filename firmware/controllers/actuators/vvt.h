@@ -20,9 +20,12 @@ void startVvtControlPins();
 void stopVvtControlPins();
 OutputPin* getVvtOutputPin(int index);
 
+#define BANK_BY_INDEX(index) (index / CAMS_PER_BANK)
+#define CAM_BY_INDEX(index) (index % CAMS_PER_BANK)
+
 class VvtController : public EngineModule, public ClosedLoopController<angle_t, percent_t>, public vvt_s {
 public:
-	VvtController(int index, int bankIndex, int camIndex);
+	VvtController(int index);
 
 	void init(const ValueProvider3D* targetMap, IPwm* pwm);
 
@@ -39,11 +42,11 @@ public:
 	void setOutput(expected<percent_t> outputValue) override;
 
 private:
-	const int index = 0;
+	const int index;
 	// Bank index, 0 or 1
-	const uint8_t m_bank = 0;
+	const uint8_t m_bank;
 	// Cam index, 0 = intake, 1 = exhaust
-	const uint8_t m_cam = 0;
+	const uint8_t m_cam;
 
 	Pid m_pid;
 
@@ -53,17 +56,17 @@ private:
 
 // Unique types for each VVT so they can be engine modules
 struct VvtController1 : public VvtController {
-	VvtController1() : VvtController(0, 0, 0) { }
+	VvtController1() : VvtController(0) { }
 };
 
 struct VvtController2 : public VvtController {
-	VvtController2() : VvtController(1, 0, 1) { }
+	VvtController2() : VvtController(1) { }
 };
 
 struct VvtController3 : public VvtController {
-	VvtController3() : VvtController(2, 1, 0) { }
+	VvtController3() : VvtController(2) { }
 };
 
 struct VvtController4 : public VvtController {
-	VvtController4() : VvtController(3, 1, 1) { }
+	VvtController4() : VvtController(3) { }
 };

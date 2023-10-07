@@ -267,8 +267,8 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	    engine->outputChannels.vvtChannel4 = front == TriggerValue::RISE;
 	}
 
-	int bankIndex = index / CAMS_PER_BANK;
-	int camIndex = index % CAMS_PER_BANK;
+	int bankIndex = BANK_BY_INDEX(index);
+	int camIndex = CAM_BY_INDEX(index);
 	if (front == TriggerValue::RISE) {
 		tc->vvtEventRiseCounter[index]++;
 	} else {
