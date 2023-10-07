@@ -28,6 +28,8 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## October 2023 "Day 591"
+
 ### Breaking Changes
  - Simplified VVT single tooth cam modes. "Single tooth second half" and "single tooth first half" have been replaced by simply "single tooth". This may require re-setting your trigger and VVT timing offsets if you used "single tooth first half" prior to this change.
  - "Single Tooth" renamed to "Half Moon", more proper "Single Tooth" crank trigger as a new trigger #5488
