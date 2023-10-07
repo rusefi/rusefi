@@ -33,6 +33,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.core.rusEFIVersion.CONSOLE_VERSION;
+import static com.rusefi.ui.util.UiUtils.createOnTopParent;
 
 /**
  * @see StartupFrame
@@ -205,7 +206,7 @@ public class ConsoleUI {
 
     private static void awtCode(String[] args) {
         if (JustOneInstance.isAlreadyRunning()) {
-            int result = JOptionPane.showConfirmDialog(null, "Looks like another instance is already running. Do you really want to start another instance?",
+            int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like another instance is already running. Do you really want to start another instance?",
                     "rusEfi", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.NO_OPTION)
                 System.exit(-1);

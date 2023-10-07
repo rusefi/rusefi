@@ -74,6 +74,16 @@ public class UiUtils {
         pauseButton.setText((isPaused ? RESUME.getMessage() : PAUSE.getMessage()) + suffix);
     }
 
+    /**
+     * problem: say we are downloading auto-update and remove progress bar window from front.
+     * Special considerations are required for a popup dialog to get to front of display
+     */
+    public static JDialog createOnTopParent() {
+        JDialog dialog = new JDialog();
+        dialog.setAlwaysOnTop(true);
+        return dialog;
+    }
+
     public static void centerWindow(Window w) {
         w.pack();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
