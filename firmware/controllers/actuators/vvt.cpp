@@ -27,7 +27,7 @@ VvtController::VvtController(int index)
 
 void VvtController::init(const ValueProvider3D* targetMap, IPwm* pwm) {
 	// Use the same settings for the Nth cam in every bank (ie, all exhaust cams use the same PID)
-	m_pid.initPidClass(&engineConfiguration->auxPid[index]);
+	m_pid.initPidClass(&engineConfiguration->auxPid[m_cam]);
 
 	m_targetMap = targetMap;
 	m_pwm = pwm;
@@ -43,7 +43,7 @@ void VvtController::onFastCallback() {
 }
 
 void VvtController::onConfigurationChange(engine_configuration_s const * previousConfig) {
-	if (!m_pid.isSame(&previousConfig->auxPid[index])) {
+	if (!m_pid.isSame(&previousConfig->auxPid[m_cam])) {
 		m_pid.reset();
 	}
 }

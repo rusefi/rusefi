@@ -41,6 +41,10 @@ public:
 	expected<percent_t> getClosedLoop(angle_t setpoint, angle_t observation) override;
 	void setOutput(expected<percent_t> outputValue) override;
 
+	uint8_t getCamIndex() {
+		return m_cam;
+	}
+
 private:
 	const int index;
 	// Bank index, 0 or 1

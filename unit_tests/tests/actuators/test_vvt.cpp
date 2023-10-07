@@ -45,13 +45,15 @@ TEST(Vvt, openLoop) {
 TEST(Vvt, ClosedLoopNotInverted) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	VvtController dut(0);
+	VvtController dut(/* second cam on second bank*/3);
+	int camIndex = 1;
+	ASSERT_EQ(dut.getCamIndex(), camIndex);
 	dut.init(nullptr, nullptr);
 
-	engineConfiguration->auxPid[0].pFactor = 1.5f;
-	engineConfiguration->auxPid[0].iFactor = 0;
-	engineConfiguration->auxPid[0].dFactor = 0;
-	engineConfiguration->auxPid[0].offset = 0;
+	engineConfiguration->auxPid[camIndex].pFactor = 1.5f;
+	engineConfiguration->auxPid[camIndex].iFactor = 0;
+	engineConfiguration->auxPid[camIndex].dFactor = 0;
+	engineConfiguration->auxPid[camIndex].offset = 0;
 
 	// Target of 30 with position 20 should yield positive duty, P=1.5 means 15% duty for 10% error
 	EXPECT_EQ(dut.getClosedLoop(30, 20).value_or(0), 15);
@@ -60,9 +62,9 @@ TEST(Vvt, ClosedLoopNotInverted) {
 TEST(Vvt, ClosedLoopInverted) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	int index = 0;
+	VvtController dut(/*first cam on second bank*/2);
 	int camIndex = 0;
-	VvtController dut(index);
+	ASSERT_EQ(dut.getCamIndex(), camIndex);
 	dut.init(nullptr, nullptr);
 
 	engineConfiguration->invertVvtControlIntake = true;
