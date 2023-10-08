@@ -5,6 +5,9 @@ tickRate = 100
 
 setTickRate(tickRate)
 
+TCU_1088_440 = 0x440
+TCU_1344_540 = 0x540
+
 timeout = 3000
 
 cuType = 0x02 -- TCU
@@ -202,8 +205,32 @@ function onCanTester(bus, id, dlc, data)
 	print('Got unexpected ' ..arrayToString(data))
 end
 
+function getBitRange(data, bitIndex, bitWidth)
+	byteIndex = bitIndex >> 3
+	shift = bitIndex - byteIndex * 8
+	value = data[1 + byteIndex]
+	if (shift + bitWidth > 8) then
+		value = value + data[2 + byteIndex] * 256
+	end
+	mask = (1 << bitWidth) - 1
+	return (value >> shift) & mask
+end
+
+function onTcu440(bus, id, dlc, data)
+    isShiftActive = getBitRange(data, 0, 1)
+    tcuStatus = getBitRange(data, 1, 1)
+    EGSRequirement = getBitRange(data, 7, 1)
+    setLuaGauge(1, isShiftActive)
+    print("TCU " .. isShiftActive .. " " .. tcuStatus .. " " .. EGSRequirement)
+
+
+    setLuaGauge(2, EGSRequirement * 100 + tcuStatus)
+
+end
+
 canRxAdd(VWTP_IN, onCanHello)
 canRxAdd(VWTP_TESTER, onCanTester)
+canRxAdd(TCU_1088_440, onTcu440)
 
 startTp()
 
