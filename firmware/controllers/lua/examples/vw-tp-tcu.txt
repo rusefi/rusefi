@@ -47,7 +47,7 @@ VWTP_TESTER = 0x300
 local cuId = 0
 
 function onCanHello(bus, id, dlc, data)
-	-- here we handle 201 packets
+	-- here we handle 201/202/etc/ packets
 	code = data[2]
 	print('Got 0x201 packet code ' ..toHexString(code) ..': TP Response ' ..arrayToString(data))
 
@@ -60,7 +60,7 @@ function onCanHello(bus, id, dlc, data)
 	cuId = data[6] * 256 + data[5]
 
 	out = { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF }
-	print("Responding to 0x201 packet from " ..cuId ..": Saying hello " ..arrayToString(out))
+	print("Responding to 0x20x packet from CU=" ..cuId ..": Saying hello " ..arrayToString(out))
 	txCan(1, cuId, 0, out)
 end
 
@@ -93,12 +93,14 @@ function startTp()
 end
 
 function requestErrorCodes()
+-- 1B 00 04 18 02 FF 00
 	out = { nextReq(), 0x00, 0x04, 0x18, 0x02, 0xFF, 0x00 }
 	txCan(1, cuId, 0, out)
 	print("Requesting error codes " ..arrayToString(out))
 end
 
 function requestEraseCodes()
+-- 1x 00 03 14 FF 00
 	out = { nextReq(), 00, 0x03, 0x14, 0xFF, 0x00 }
 	txCan(1, cuId, 0, out)
 	print("******************* Requesting to Erase Code(s) *****************************")
@@ -166,17 +168,22 @@ function onCanTester(bus, id, dlc, data)
 	if top4 == 2 or top4 == 1 then
 		print ("Looks like payload index " ..payLoadIndex ..": " ..arrayToString(data))
 
-		if payLoadIndex == 0 and data[4] == 0x58 then
+		if payLoadIndex == 0 and data[4] == 0x54 then
+-- 19 00 03 54 FF 00
+		    print("      erase 54 response")
+		elseif payLoadIndex == 0 and data[4] == 0x58 then
 			len = data[3]
-			print("Looks like CODES_REQ response of length " ..len)
+			print("Looks like CODES_REQ response of length=" ..len)
 
 			if len ~= 2 then
-				print("HAVE CODES " ..len)
+			    errorCount = data[5]
+				print("HAVE CODES count=" .. errorCount)
+--				print("first code ")
 				withErrorCodes = 1
 			else
+			-- 1F 00 02 58 00
 				withErrorCodes = 0
 			end
-
 		end
 
 		payLoadIndex = payLoadIndex + 1
@@ -194,7 +201,7 @@ function onCanTester(bus, id, dlc, data)
 			payLoadIndex = 0
 
 			if data[2] == 0 and data[3] == 2 and data[4] == 0x58 then
-				print("NO CODES")
+				print("******************************* NO CODES ****************************************")
 			end
 
 		end
@@ -216,13 +223,16 @@ function getBitRange(data, bitIndex, bitWidth)
 	return (value >> shift) & mask
 end
 
+counter440 = 0
 function onTcu440(bus, id, dlc, data)
     isShiftActive = getBitRange(data, 0, 1)
     tcuStatus = getBitRange(data, 1, 1)
     EGSRequirement = getBitRange(data, 7, 1)
     setLuaGauge(1, isShiftActive)
-    print("TCU " .. isShiftActive .. " " .. tcuStatus .. " " .. EGSRequirement)
-
+    counter440 = counter440 + 1
+    if counter440 % 70 == 0 then
+        print("TCU " .. isShiftActive .. " " .. tcuStatus .. " " .. EGSRequirement)
+    end
 
     setLuaGauge(2, EGSRequirement * 100 + tcuStatus)
 
@@ -230,7 +240,7 @@ end
 
 canRxAdd(VWTP_IN, onCanHello)
 canRxAdd(VWTP_TESTER, onCanTester)
-canRxAdd(TCU_1088_440, onTcu440)
+--canRxAdd(TCU_1088_440, onTcu440)
 
 startTp()
 
