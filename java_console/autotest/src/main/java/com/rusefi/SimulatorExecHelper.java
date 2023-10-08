@@ -46,10 +46,6 @@ public class SimulatorExecHelper {
             FileLog.MAIN.logLine("simulatorProcess: " + simulatorProcess);
 
             dumpProcessOutput(simulatorProcess, simulatorStarted);
-
-            FileLog.MAIN.logLine("exitValue: " + simulatorProcess.exitValue());
-
-            System.out.println("end of console");
         } catch (Exception err) {
             if (isHappy) {
                 System.out.println("Already happy " + err);
@@ -57,6 +53,14 @@ public class SimulatorExecHelper {
                 throw new IllegalStateException(err);
             }
         }
+
+        try {
+            FileLog.MAIN.logLine("exitValue: " + simulatorProcess.exitValue());
+        } catch (Exception err) {
+            log.warn("Error reading exit value", err);
+        }
+
+        System.out.println("end of console");
     }
 
     public static void dumpProcessOutput(Process process, CountDownLatch countDownLatch) throws IOException {

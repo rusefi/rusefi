@@ -8,11 +8,11 @@ import com.rusefi.simulator.SimulatorFunctionalTest;
  * As of Dec 2020 this seems very broken?
  */
 public class SimulatorFunctionalTestLauncher {
-    static boolean isHappy;
+    static volatile boolean isHappy;
     public static void main(String[] args) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             e.printStackTrace();
-            System.exit(-1);
+            System.exit(66);
         });
         boolean startSimulator = args.length == 1 && args[0].equalsIgnoreCase("start");
 
