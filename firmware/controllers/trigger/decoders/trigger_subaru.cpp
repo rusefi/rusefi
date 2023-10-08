@@ -57,7 +57,7 @@ void initialize36_2_2_2(TriggerWaveform *s) {
     // todo: probably should be unified with EZ30 below?
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.25, 0.5);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.7, 1.7);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2.6, 4.2);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2.25, 4.2);
 }
 
 void initializeSubaruEZ30(TriggerWaveform *s) {
