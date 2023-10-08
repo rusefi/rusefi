@@ -339,6 +339,16 @@ static const CANConfig * findConfig(can_baudrate_e rate) {
 	}
 }
 
+static void applyListenOnly(CANConfig* config, bool isListenOnly) {
+#if defined(STM32F4XX) || defined(STM32F7XX)
+    if (isListenOnly)
+        config->btr += CAN_BTR_SILM;
+#else
+    if (isListenOnly)
+        criticalError("CAN:ListenOnly not implemented yet");
+#endif
+}
+
 void initCan() {
 	addConsoleAction("caninfo", canInfo);
 
@@ -364,17 +374,20 @@ void initCan() {
 		return;
 	}
 
-	// Generate configs based on baud rate
-	auto config1 = findConfig(engineConfiguration->canBaudRate);
-	auto config2 = findConfig(engineConfiguration->can2BaudRate);
-
 	// Initialize peripherals
 	if (device1) {
-		canStart(device1, config1);
+	    // Config based on baud rate
+	    CANConfig config;
+	    memcpy(&config, findConfig(engineConfiguration->canBaudRate), sizeof(config));
+	    applyListenOnly(&config, engineConfiguration->can1ListenMode);
+		canStart(device1, &config);
 	}
 
 	if (device2) {
-		canStart(device2, config2);
+	    CANConfig config;
+	    memcpy(&config, findConfig(engineConfiguration->can2BaudRate), sizeof(config));
+	    applyListenOnly(&config, engineConfiguration->can2ListenMode);
+		canStart(device2, &config);
 	}
 
 	// Plumb CAN devices to tx system
