@@ -438,26 +438,26 @@ function onTick()
 	rpm = getSensor("RPM") or 0
 	vbat = getSensor("BatteryVoltage") or 0
 
- if rpm == 0 then
-   canMotorInfoTotalCounter = 0
- end
+	if rpm == 0 then
+		canMotorInfoTotalCounter = 0
+	end
 
- onMotor1(0, 0, 0, nil)
- sendMotor3()
+	onMotor1(0, 0, 0, nil)
+	sendMotor3()
 
- sendMotor2()
- sendMotor5()
- sendMotor6()
- sendMotor7()
- sendMotorBre()
- sendAccGra()
+	sendMotor2()
+	sendMotor5()
+	sendMotor6()
+	sendMotor7()
+	sendMotorBre()
+	sendAccGra()
 
 	local timeToTurnOff = shallSleep : getElapsedSeconds() > 2
 	local connectedToUsb = vbat < 4
 
 	if hadIgnitionEvent and timeToTurnOff then
 		-- looks like ignition key was removed
---		mcu_standby()
+		-- 		mcu_standby()
 	end
 
 	if everySecondTimer : getElapsedSeconds() > 1 then
@@ -465,7 +465,7 @@ function onTick()
 
 		motor5FuelCounter = motor5FuelCounter + 20
 
-  onMotorInfo(0, 0, 0, nil)
+		onMotorInfo(0, 0, 0, nil)
 
 	end
 end
