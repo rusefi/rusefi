@@ -1,9 +1,7 @@
 	strncpy(config->luaScript, R"(
 AIRBAG = 0x050
--- 1088
-TCU_1 = 0x440
--- 1344
-TCU_2 = 0x540
+TCU_1088_440 = 0x440
+TCU_1088_440 = 0x540
 -- 1440
 BRAKE_2 = 0x5A0
 
@@ -60,10 +58,6 @@ function arrayToString(arr)
 		index = index + 1
 	end
 	return str
-end
-
-function onTcu1(bus, id, dlc, data)
---	print("onTcu1")
 end
 
 function onTcu2(bus, id, dlc, data)
@@ -125,6 +119,19 @@ function getBitRange(data, bitIndex, bitWidth)
 	return (value >> shift) & mask
 end
 
+counter440 = 0
+function onTcu1(bus, id, dlc, data)
+--	print("onTcu1")
+	    isShiftActive = getBitRange(data, 0, 1)
+        tcuStatus = getBitRange(data, 1, 1)
+        EGSRequirement = getBitRange(data, 7, 1)
+
+            counter440 = counter440 + 1
+            if counter440 % 1 == 0 then
+                print("TCU " .. isShiftActive .. " " .. tcuStatus .. " " .. EGSRequirement)
+            end
+end
+
 motor1Data   = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motorBreData = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor2Data   = { 0x8A, 0x8D, 0x10, 0x04, 0x00, 0x4C, 0xDC, 0x87 }
@@ -148,8 +155,8 @@ mafCalibrationIndex = findCurveIndex("mafcurve")
 canMotorInfoTotalCounter = 0
 
 canRxAdd(AIRBAG, onAirBag)
-canRxAdd(TCU_1, onTcu1)
-canRxAdd(TCU_2, onTcu2)
+canRxAdd(TCU_1088_440, onTcu1)
+canRxAdd(TCU_1088_440, onTcu2)
 --canRxAdd(BRAKE_2)
 
 rpm = 0
