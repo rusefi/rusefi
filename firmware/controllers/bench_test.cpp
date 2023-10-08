@@ -308,7 +308,7 @@ private:
 
 static BenchController instance;
 
-static void handleBenchCategory(uint16_t index) {
+void handleBenchCategory(uint16_t index) {
 	switch(index) {
 	case BENCH_VVT0_VALVE:
 	    vvtValveBench(0);

@@ -1,5 +1,6 @@
 
 #include "pch.h"
+#include "bench_test.h"
 #include "board_id.h"
 #include "can_bench_test.h"
 #include "can_msg_tx.h"
@@ -148,19 +149,22 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	}
 	qcDirectPinControlMode = true;
 	uint8_t command = frame.data8[1];
-	if (command == CAN_BENCH_GET_COUNT) {
+	if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_COUNT) {
 	    sendOutBoardMeta();
-	} else if (command == CAN_BENCH_GET_SET) {
+	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_SET) {
 	    setPin(frame, 1);
-	} else if (command == CAN_BENCH_GET_CLEAR) {
+	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_CLEAR) {
 	    setPin(frame, 0);
-	} else if (command == CAN_BENCH_SET_ENGINE_TYPE) {
+	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_SET_ENGINE_TYPE) {
 		int eType = frame.data8[2];
 		// todo: fix firmware for 'false' to be possible - i.e. more of properties should be applied on the fly
 		setEngineType(eType, true);
 #if EFI_PROD_CODE
 		scheduleReboot();
 #endif // EFI_PROD_CODE
+	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_EXECUTE_BENCH_TEST) {
+		int benchCommandIdx = frame.data8[2];
+		handleBenchCategory(benchCommandIdx);
 	}
 }
 
