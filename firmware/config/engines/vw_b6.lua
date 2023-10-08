@@ -1,7 +1,7 @@
 	strncpy(config->luaScript, R"(
 AIRBAG = 0x050
 TCU_1088_440 = 0x440
-TCU_1088_440 = 0x540
+TCU_1344_540 = 0x540
 -- 1440
 BRAKE_2 = 0x5A0
 
@@ -156,7 +156,7 @@ canMotorInfoTotalCounter = 0
 
 canRxAdd(AIRBAG, onAirBag)
 canRxAdd(TCU_1088_440, onTcu1)
-canRxAdd(TCU_1088_440, onTcu2)
+canRxAdd(TCU_1344_540, onTcu2)
 --canRxAdd(BRAKE_2)
 
 rpm = 0
