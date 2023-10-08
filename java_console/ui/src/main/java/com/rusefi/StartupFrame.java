@@ -73,6 +73,7 @@ public class StartupFrame {
     public StartupFrame() {
 //        AudioPlayback.start();
         String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
+        log.info(title);
         frame = FrameHelper.createFrame(title).getFrame();
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -221,6 +222,7 @@ public class StartupFrame {
         frame.add(content);
         frame.pack();
         setFrameIcon(frame);
+        log.info("setVisible");
         frame.setVisible(true);
         UiUtils.centerWindow(frame);
 

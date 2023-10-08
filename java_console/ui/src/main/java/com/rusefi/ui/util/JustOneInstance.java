@@ -26,9 +26,12 @@ public class JustOneInstance {
         try {
             Socket clientSocket = new Socket();
             clientSocket.connect(new InetSocketAddress("localhost", PORT), LOCAL_CONNECTION_TIMEOUT_MS);
-            System.out.println("*** Already running!");
+            String msg = "*** Already running!";
+            System.out.println(msg);
+            log.info(msg);
             return true;
         } catch (IOException e) {
+            log.info("No other instances seem to be running");
             return false;
         }
     }
@@ -38,6 +41,7 @@ public class JustOneInstance {
             @Override
             public void run() {
                 ServerSocket serverSocket;
+                log.info("server socket " + PORT);
                 try {
                     serverSocket = new ServerSocket(PORT, 1);
 
