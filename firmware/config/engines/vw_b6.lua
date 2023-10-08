@@ -191,11 +191,6 @@ function onMotor1(bus, id, dlc, data)
 
 	fakeTorque = interpolate(0, 6, 100, 60, tps)
 
-	engineTorque = fakeTorque * 0.9
-	innerTorqWithoutExt = fakeTorque
-	torqueLoss = 20
-	requestedTorque = fakeTorque
-
 	sendMotor1()
 end
 
@@ -276,7 +271,7 @@ function sendAccGra()
 end
 
 canMotorInfoCounter = 0
-function onMotorInfo(bus, id, dlc, data)
+function sendMotorInfo()
 	canMotorInfoTotalCounter = canMotorInfoTotalCounter + 1
 	canMotorInfoCounter = (canMotorInfoCounter + 1) % 16
 
@@ -473,7 +468,7 @@ function onTick()
 
 		motor5FuelCounter = motor5FuelCounter + 20
 
-		onMotorInfo(0, 0, 0, nil)
+		sendMotorInfo()
 
 	end
 end
