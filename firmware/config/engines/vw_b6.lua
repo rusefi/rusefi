@@ -330,6 +330,7 @@ end
 
 canRxAdd(Kombi_1, onKombi)
 
+-- unused method did we mean to reset codes? todo: probably remove soon
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
 
