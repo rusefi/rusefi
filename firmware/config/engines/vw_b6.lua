@@ -189,50 +189,50 @@ function onMotor1(bus, id, dlc, data)
 	torqueLoss = 20
 	requestedTorque = fakeTorque
 
-    sendMotor1()
+	sendMotor1()
 end
 
 function sendMotor3()
 	iat = getSensor("IAT") or 0
 	tps = getSensor("TPS1") or 0
 
- desired_wheel_torque = fakeTorque
- canMotor3[2] = (iat + 48) / 0.75
- canMotor3[3] = tps / 0.4
- canMotor3[5] = 0x20
- setBitRange(canMotor3, 24, 12, math.floor(desired_wheel_torque / 0.39))
- canMotor3[8] = tps / 0.4
- txCan(TCU_BUS, MOTOR_3, 0, canMotor3)
+	desired_wheel_torque = fakeTorque
+	canMotor3[2] = (iat + 48) / 0.75
+	canMotor3[3] = tps / 0.4
+	canMotor3[5] = 0x20
+	setBitRange(canMotor3, 24, 12, math.floor(desired_wheel_torque / 0.39))
+	canMotor3[8] = tps / 0.4
+	txCan(TCU_BUS, MOTOR_3, 0, canMotor3)
 end
 
 
 motorBreCounter = 0
 function sendMotorBre()
- motorBreCounter = (motorBreCounter + 1) % 16
+	motorBreCounter = (motorBreCounter + 1) % 16
 
-    setBitRange(motorBreData, 8, 4, motorBreCounter)
-    xorChecksum(motorBreData, 1)
+	setBitRange(motorBreData, 8, 4, motorBreCounter)
+	xorChecksum(motorBreData, 1)
 
- txCan(TCU_BUS, MOTOR_BRE, 0, motorBreData)
+	txCan(TCU_BUS, MOTOR_BRE, 0, motorBreData)
 end
 
 motor2counter = 0
 function sendMotor2()
- motor2counter = (motor2counter + 1) % 16
+	motor2counter = (motor2counter + 1) % 16
 
-    minTorque = fakeTorque / 2
-    -- todo: add CLT
-    motor2Data[7] = math.floor(minTorque / 0.39)
+	minTorque = fakeTorque / 2
+	-- todo: add CLT
+	motor2Data[7] = math.floor(minTorque / 0.39)
 
 --print ( "brake " .. getBitRange(data, 16, 2) .. " " .. rpm)
 
-    brakeBit = rpm < 2000 and 1 or 0
-    setBitRange(motor2Data, 16, 1, brakeBit)
+	brakeBit = rpm < 2000 and 1 or 0
+	setBitRange(motor2Data, 16, 1, brakeBit)
 
-    index = math.floor(motor2counter / 4)
-    motor2Data[1] = motor2mux[1 + index]
+	index = math.floor(motor2counter / 4)
+	motor2Data[1] = motor2mux[1 + index]
 
- txCan(TCU_BUS, MOTOR_2, 0, motor2Data)
+	txCan(TCU_BUS, MOTOR_2, 0, motor2Data)
 end
 
 motor5FuelCounter = 0
@@ -244,52 +244,52 @@ end
 
 motor6counter = 0
 function sendMotor6()
- motor6counter = (motor6counter + 1) % 16
+	motor6counter = (motor6counter + 1) % 16
 
- engineTorque = fakeTorque * 0.9
- actualTorque = fakeTorque
- feedbackGearbox = 255
+	engineTorque = fakeTorque * 0.9
+	actualTorque = fakeTorque
+	feedbackGearbox = 255
 
- motor6Data[2] = math.floor(engineTorque / 0.39)
- motor6Data[3] = math.floor(actualTorque / 0.39)
- motor6Data[6] = math.floor(feedbackGearbox / 0.39)
- setBitRange(motor6Data, 60, 4, motor6counter)
+	motor6Data[2] = math.floor(engineTorque / 0.39)
+	motor6Data[3] = math.floor(actualTorque / 0.39)
+	motor6Data[6] = math.floor(feedbackGearbox / 0.39)
+	setBitRange(motor6Data, 60, 4, motor6counter)
 
- xorChecksum(motor6Data, 1)
- txCan(TCU_BUS, MOTOR_6, 0, motor6Data)
+	xorChecksum(motor6Data, 1)
+	txCan(TCU_BUS, MOTOR_6, 0, motor6Data)
 end
 
 accGraCounter = 0
 function sendAccGra()
- accGraCounter = (accGraCounter + 1) % 16
- setBitRange(accGraData, 60, 4, accGraCounter)
-    xorChecksum(accGraData, 1)
+	accGraCounter = (accGraCounter + 1) % 16
+	setBitRange(accGraData, 60, 4, accGraCounter)
+	xorChecksum(accGraData, 1)
 
- txCan(TCU_BUS, ACC_GRA, 0, accGraData)
+	txCan(TCU_BUS, ACC_GRA, 0, accGraData)
 end
 
 canMotorInfoCounter = 0
 function onMotorInfo(bus, id, dlc, data)
- canMotorInfoTotalCounter = canMotorInfoTotalCounter + 1
-  canMotorInfoCounter = (canMotorInfoCounter + 1) % 16
+	canMotorInfoTotalCounter = canMotorInfoTotalCounter + 1
+	canMotorInfoCounter = (canMotorInfoCounter + 1) % 16
 
- baseByte = canMotorInfoTotalCounter < 6 and 0x80 or 0x90
- canMotorInfo[1]  = baseByte + (canMotorInfoCounter)
- canMotorInfo1[1] = baseByte + (canMotorInfoCounter)
- canMotorInfo3[1] = baseByte + (canMotorInfoCounter)
- mod4 = canMotorInfoCounter % 4
+	baseByte = canMotorInfoTotalCounter < 6 and 0x80 or 0x90
+	canMotorInfo[1] = baseByte + (canMotorInfoCounter)
+	canMotorInfo1[1] = baseByte + (canMotorInfoCounter)
+	canMotorInfo3[1] = baseByte + (canMotorInfoCounter)
+	mod4 = canMotorInfoCounter % 4
 
- if (mod4 == 0 or mod4 == 2) then
-     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo)
- elseif (mod4 == 1) then
-     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo1)
- else
-     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo3)
-    end
+	if (mod4 == 0 or mod4 == 2) then
+		txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo)
+	elseif (mod4 == 1) then
+		txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo1)
+	else
+		txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo3)
+	end
 end
 
 function sendMotor7()
- txCan(TCU_BUS, MOTOR_7, 0, motor7Data)
+	txCan(TCU_BUS, MOTOR_7, 0, motor7Data)
 end
 
 local tcuId = 0
@@ -317,8 +317,8 @@ vssSensor = Sensor.new("VehicleSpeed")
 vssSensor : setTimeout(2000)
 
 function onKombi(bus, id, dlc, data)
-    speed = getBitRange(data, 46, 10) * 0.32
-    vssSensor : set(speed)
+	speed = getBitRange(data, 46, 10) * 0.32
+	vssSensor : set(speed)
 end
 
 canRxAdd(Kombi_1, onKombi)
