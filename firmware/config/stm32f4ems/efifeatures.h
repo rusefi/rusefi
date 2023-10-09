@@ -19,6 +19,10 @@
 #define EFI_BOOST_CONTROL TRUE
 #endif
 
+#ifndef EFI_DAC
+#define EFI_DAC FALSE
+#endif
+
 #ifndef EFI_LAUNCH_CONTROL
 #define EFI_LAUNCH_CONTROL TRUE
 #endif

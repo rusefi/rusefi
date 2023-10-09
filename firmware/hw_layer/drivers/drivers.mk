@@ -12,6 +12,7 @@ HW_LAYER_DRIVERS_INC = \
 HW_LAYER_DRIVERS_CORE = \
 
 HW_LAYER_DRIVERS_CORE_CPP = \
+	$(DRIVERS_DIR)/dac.cpp \
 	$(DRIVERS_DIR)/gpio/core.cpp \
 	$(DRIVERS_DIR)/sent/sent.cpp \
 	$(DRIVERS_DIR)/i2c/i2c_bb.cpp \

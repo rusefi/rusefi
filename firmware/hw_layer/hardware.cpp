@@ -27,6 +27,7 @@
 #include "idle_thread.h"
 #include "odometer.h"
 #include "kline.h"
+#include "dac.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
@@ -578,6 +579,10 @@ void initHardware() {
 #endif
 
 	initKLine();
+
+#if EFI_DAC
+	initDac();
+#endif
 
 	calcFastAdcIndexes();
 

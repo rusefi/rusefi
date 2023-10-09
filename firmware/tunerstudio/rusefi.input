@@ -2024,6 +2024,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = parkingLot2,				"Experimental 2"
 		subMenu = antiLagDialog,                "Anti-Lag ALS"
 		subMenu = rotaryDialog,			"Rotary"
 		subMenu = throttleEffectiveArea, "Throttle effective area"
@@ -4575,6 +4576,10 @@ dialog = tcuControls, "Transmission Settings"
 		field = "F3 Digital Input 5 Pull-Down",				boardUseD5PullDown @@if_show_4chan_presets
 		field = "etbDutyThreshold",                         etbDutyThreshold
 		field = "etbDutyShutdownThreshold",                 etbDutyShutdownThreshold
+
+    dialog = parkingLot2, "Experimental 2"
+        field = dacOutputPins1,         dacOutputPins1
+        field = dacOutputPins2,         dacOutputPins2
 
 	dialog = parkingLot, "Experimental/Broken"
 ;	    field = uiMode,                                 uiMode
