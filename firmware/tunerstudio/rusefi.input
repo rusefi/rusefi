@@ -4583,6 +4583,7 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = harleyAcr, "Harley Automatic Compression Release"
 		field = "Pin",	acrPin
+		field = "Pin 2", acrPin2
 		field = "#ACR is disabled after the specified number"
 		field = "#of revolutions, plus degrees of engine phase"
 		field = "Disable after revolutions",	acrRevolutions
