@@ -68,6 +68,10 @@ pins:
     function: Crank Sensor VR- Negative Input
     ts_name: 11 Crank VR-
 
+  - pin: 16
+    class: outputs
+    function: EVAP Purge
+
   - pin: 17
     class: outputs
     function: Front Intake VVT Control
