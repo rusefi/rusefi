@@ -35,6 +35,9 @@ float getOutputValueByName(const char *name) {
 // isFan2On
 		case -333212891:
 			return engine->outputChannels.isFan2On;
+// acrActive
+		case -1548941801:
+			return engine->outputChannels.acrActive;
 // toothLogReady
 		case -1662199734:
 			return engine->outputChannels.toothLogReady;

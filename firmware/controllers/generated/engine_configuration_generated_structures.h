@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 19:51:22 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 21:39:45 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4158,11 +4158,9 @@ struct engine_configuration_s {
 	 */
 	pwm_freq_t tcu_32_solenoid_freq;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 3770
 	 */
-	uint8_t alignmentFill_at_3770[2];
+	output_pin_e acrPin2;
 	/**
 	%
 	 * offset 3772
@@ -5352,4 +5350,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23668);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 19:51:22 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 21:39:45 UTC 2023

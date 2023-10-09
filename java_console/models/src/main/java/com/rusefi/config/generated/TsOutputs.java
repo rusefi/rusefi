@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sat Oct 07 01:00:54 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 09 21:37:28 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -179,6 +179,7 @@ public class TsOutputs {
 	public static final Field NEEDBURN = Field.create("NEEDBURN", 0, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field SD_MSD = Field.create("SD_MSD", 0, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field ISFAN2ON = Field.create("ISFAN2ON", 0, FieldType.BIT, 9).setBaseOffset(0);
+	public static final Field ACRACTIVE = Field.create("ACRACTIVE", 0, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field TOOTHLOGREADY = Field.create("TOOTHLOGREADY", 0, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field ISTPSERROR = Field.create("ISTPSERROR", 0, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field ISCLTERROR = Field.create("ISCLTERROR", 0, FieldType.BIT, 13).setBaseOffset(0);
@@ -668,6 +669,7 @@ public class TsOutputs {
 	NEEDBURN,
 	SD_MSD,
 	ISFAN2ON,
+	ACRACTIVE,
 	TOOTHLOGREADY,
 	ISTPSERROR,
 	ISCLTERROR,

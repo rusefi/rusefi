@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sat Oct 07 15:05:35 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 09 21:37:28 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -70,8 +70,9 @@ struct output_channels_s {
 	offset 0 bit 9 */
 	bool isFan2On : 1 {};
 	/**
+	 * Harley ACR Active
 	offset 0 bit 10 */
-	bool unusedBitLAtwfs : 1 {};
+	bool acrActive : 1 {};
 	/**
 	 * Tooth Logger Ready
 	offset 0 bit 11 */
@@ -1270,4 +1271,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 804);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sat Oct 07 15:05:35 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 09 21:37:28 UTC 2023
