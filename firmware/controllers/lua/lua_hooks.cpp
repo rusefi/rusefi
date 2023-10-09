@@ -176,8 +176,7 @@ static int lua_txCan(lua_State* l) {
 	}
 
 	// conform ext parameter to true/false
-	CanTxMessage msg(CanCategory::LUA, id, 8, /*bus*/0, ext == 0 ? false : true);
-	msg.busIndex = bus;
+	CanTxMessage msg(CanCategory::LUA, id, 8, bus, ext == 0 ? false : true);
 
 	// Unfortunately there is no way to inspect the length of a table,
 	// so we have to just iterate until we run out of numbers
