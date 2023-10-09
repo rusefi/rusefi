@@ -295,6 +295,9 @@ float getConfigValueByName(const char *name) {
 // boostControlSafeDutyCycle
 		case -1965075262:
 			return engineConfiguration->boostControlSafeDutyCycle;
+// acrRevolutions
+		case -1373423899:
+			return engineConfiguration->acrRevolutions;
 // globalFuelCorrection
 		case 1371979578:
 			return engineConfiguration->globalFuelCorrection;
@@ -1516,6 +1519,9 @@ float getConfigValueByName(const char *name) {
 // vvtActivationDelayMs
 		case 288250022:
 			return engineConfiguration->vvtActivationDelayMs;
+// acrDisablePhase
+		case 1574876352:
+			return engineConfiguration->acrDisablePhase;
 // auxLinear1.v1
 		case -1415669996:
 			return engineConfiguration->auxLinear1.v1;
@@ -2209,6 +2215,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1965075262:
 	{
 		engineConfiguration->boostControlSafeDutyCycle = (int)value;
+		return 1;
+	}
+		case -1373423899:
+	{
+		engineConfiguration->acrRevolutions = (int)value;
 		return 1;
 	}
 		case 1371979578:
@@ -4244,6 +4255,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 288250022:
 	{
 		engineConfiguration->vvtActivationDelayMs = (int)value;
+		return 1;
+	}
+		case 1574876352:
+	{
+		engineConfiguration->acrDisablePhase = (int)value;
 		return 1;
 	}
 		case -1415669996:
