@@ -4581,6 +4581,13 @@ dialog = tcuControls, "Transmission Settings"
         field = dacOutputPins1,         dacOutputPins1
         field = dacOutputPins2,         dacOutputPins2
 
+	dialog = harleyAcr, "Harley Automatic Compression Release"
+		field = "Pin",	acrPin
+		field = "#ACR is disabled after the specified number"
+		field = "#of revolutions, plus degrees of engine phase"
+		field = "Disable after revolutions",	acrRevolutions
+		field = "Disable after engine phase",	acrDisablePhase
+
 	dialog = parkingLot, "Experimental/Broken"
 ;	    field = uiMode,                                 uiMode
 		field = kLineBaudRate,                          kLineBaudRate
@@ -4620,6 +4627,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = useBiQuadOnAuxSpeedSensors,				useBiQuadOnAuxSpeedSensors
 		field = "TODO KS mode 4569",						kickStartCranking
 		panel = allTriggerDebug
+		panel = harleyAcr
 		panel = torqueTableTbl
 
 		help = helpGeneral, "rusEFI General Help"

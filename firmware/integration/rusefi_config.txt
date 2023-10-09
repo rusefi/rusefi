@@ -533,6 +533,8 @@ float vbattDividerCoeff;This is the ratio of the resistors for the battery volta
 float fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 float fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 
+output_pin_e acrPin;
+
 float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
 
 custom can_nbc_e 1 bits, U08, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW E46", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "AiM", "MS Simplified Broadcast", "type 14"
@@ -570,6 +572,8 @@ custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3",
 	spi_device_e hip9011SpiDevice;
 	uint8_t boostControlSafeDutyCycle;Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.;"%", 1, 0, 0, 100, 0
 	adc_channel_e mafAdcChannel
+
+	uint8_t acrRevolutions;;"", 1, 0, 0, 10, 0
 
 float globalFuelCorrection;;"coef", 1, 0, 0, 1000, 2
 
@@ -1475,6 +1479,8 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 #define transmission_controller_e_enum "None", "Simple Transmission", "GM 4L6X"
 		custom TransmissionControllerMode 1 bits, U08, @OFFSET@, [0:1], @@transmission_controller_e_enum@@
 		TransmissionControllerMode transmissionControllerMode
+
+	uint16_t acrDisablePhase;;"deg", 1, 0, 0, 720, 0
 
 linear_sensor_s auxLinear1
 linear_sensor_s auxLinear2
