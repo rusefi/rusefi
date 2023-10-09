@@ -19,6 +19,7 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	# TODO: why do I struggle to fit into flash? compare with Proteus
 	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
 	DDEFS += -DENABLE_PERF_TRACE=FALSE
+    USE_OPT += -Wl,--defsym=FLASH_SIZE=768k
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
     # This board has trigger scope hardware!
     DDEFS += -DTRIGGER_SCOPE
