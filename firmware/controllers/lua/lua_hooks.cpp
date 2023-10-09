@@ -9,6 +9,11 @@
 #include "value_lookup.h"
 #include "can_filter.h"
 #include "tunerstudio.h"
+
+#if EFI_DAC
+#include "dac.h"
+#endif // EFI_DAC
+
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 #endif // EFI_CAN_SUPPORT
@@ -959,4 +964,14 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 #endif // EFI_VEHICLE_SPEED
+
+#if EFI_DAC
+	lua_register(l, "setDacVoltage", [](lua_State* l) {
+		auto channel = luaL_checkinteger(l, 1);
+		auto voltage = luaL_checknumber(l, 2);
+		setDacVoltage(channel, voltage);
+		return 0;
+	});
+#endif // EFI_DAC
+
 }

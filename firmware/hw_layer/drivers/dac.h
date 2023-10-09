@@ -1,3 +1,5 @@
+// dac.h
+
 #pragma once
 
 #include <cstdint>
@@ -21,5 +23,6 @@ private:
 };
 
 void initDac();
+void setDacVoltage(int channel, float voltage);
 
 #endif

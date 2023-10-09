@@ -36,6 +36,17 @@ static Dac dac(DACD1);
 
 void initDac() {
     dac.Start(dacConfig);
+    for (size_t i = 0;i<DAC_OUTPUT_COUNT;i++) {
+        Gpio pin = engineConfiguration->dacOutputPins[i];
+        if (isBrainPinValid(pin)) {
+            // setting up the output pin as analog as suggested by the Reference Manual.
+            efiSetPadMode("dac", pin, PAL_MODE_INPUT_ANALOG);
+        }
+    }
+}
+
+void setDacVoltage(int channel, float voltage) {
+    dac.SetVoltage(channel, voltage);
 }
 
 #endif // EFI_DAC
