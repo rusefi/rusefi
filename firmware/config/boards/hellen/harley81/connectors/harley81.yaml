@@ -68,6 +68,10 @@ pins:
     function: Crank Sensor VR- Negative Input
     ts_name: 11 Crank VR-
 
+  - pin: 17
+    class: outputs
+    function: Front Intake VVT Control
+
   - pin: 20
     class: outputs
     ts_name: 20 ETB_OUT-
@@ -100,6 +104,9 @@ pins:
     ts_name: 27 - TPS 2
     function: TPS 2 sensor input
 
+  - pin: 28
+    function: Powertrain Power 2023
+
   - pin: 29
     type: gnd
     function: Sensor Ground
@@ -107,6 +114,10 @@ pins:
   - pin: 30
     function: Crank Sensor VR+ Positive Input
     ts_name: 30 Crank VR+
+
+  - pin: 31
+    class: analog_inputs
+    function: Fuel Level Input
 
   - pin: 32
 #  H144_IN_AUX2
@@ -208,6 +219,9 @@ pins:
     ts_name: 55 Engine Temperature
     function: Engine Temperature
 
+  - pin: 60
+    function: shift sensor
+
   - pin: 61
 # low6 huh?
     # H144_OUT_IO3
@@ -245,6 +259,10 @@ pins:
   - pin: 74
     type: gnd
     function: Sensor Ground
+
+  - pin: 77
+    function: FI CAM CMP Sensor Hall
+    class: event_inputs
 
   - pin: 78
     class: analog_inputs
