@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - DAC with Lua #5601
+
 ## October 2023 "Day 591"
 
 ### Breaking Changes
