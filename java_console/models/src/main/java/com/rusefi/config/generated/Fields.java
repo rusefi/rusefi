@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 15:37:53 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 16:36:20 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -66,6 +66,7 @@ public class Fields {
 	public static final int antiLagActivationMode_e_ALWAYS_ON_ANTILAG = 1;
 	public static final int antiLagActivationMode_e_SWITCH_INPUT_ANTILAG = 0;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
+	public static final int AUX_SPEED_SENSOR_COUNT = 2;
 	public static final int BANKS_COUNT = 2;
 	public static final int BARO_CORR_SIZE = 4;
 	public static final int bench_mode_e_BENCH_AC_COMPRESSOR_RELAY = 6;
@@ -197,6 +198,7 @@ public class Fields {
 	public static final int CRITICAL_BUFFER_SIZE = 120;
 	public static final String CRITICAL_PREFIX = "CRITICAL";
 	public static final int cyl_trim_s_size = 16;
+	public static final int DAC_OUTPUT_COUNT = 2;
 	public static final int dc_function_e_DC_IdleValve = 3;
 	public static final int dc_function_e_DC_None = 0;
 	public static final int dc_function_e_DC_Throttle1 = 1;
@@ -1252,7 +1254,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.10.09.f407-discovery.3359118075";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.10.09.f407-discovery.2458436288";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

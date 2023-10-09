@@ -32,6 +32,7 @@
 #define antiLagActivationMode_e_enum "Switch Input", "Always Active"
 #define antiLagActivationMode_e_SWITCH_INPUT_ANTILAG 0
 #define AUX_DIGITAL_VALVE_COUNT 2
+#define AUX_SPEED_SENSOR_COUNT 2
 #define BANKS_COUNT 2
 #define BARO_CORR_SIZE 4
 #define bench_mode_e_BENCH_AC_COMPRESSOR_RELAY 6
@@ -172,6 +173,7 @@
 #define CRITICAL_BUFFER_SIZE 120
 #define CRITICAL_PREFIX "CRITICAL"
 #define cyl_trim_s_size 16
+#define DAC_OUTPUT_COUNT 2
 #define dc_function_e_auto_enum 0="DC_None",3="DC_IdleValve",1="DC_Throttle1",2="DC_Throttle2",4="DC_Wastegate"
 #define dc_function_e_DC_IdleValve 3
 #define dc_function_e_DC_None 0
@@ -796,7 +798,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 703678318
+#define SIGNATURE_HASH 1933678421
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1090,7 +1092,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.10.09.kin.703678318"
+#define TS_SIGNATURE "rusEFI master.2023.10.09.kin.1933678421"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
