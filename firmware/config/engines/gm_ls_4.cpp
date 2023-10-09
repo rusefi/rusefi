@@ -23,6 +23,7 @@ void setGmLs4() {
 	engineConfiguration->tChargeAirIncrLimit = 5;
 	engineConfiguration->tChargeAirDecrLimit = 15;
 
+// see https://github.com/rusefi/rusefi_documentation/tree/master/OEM-Docs/GM/Tahoe-2011
     strncpy(config->luaScript, R"(
 
 function getBitRange(data, bitIndex, bitWidth)
