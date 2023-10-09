@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Oct 03 00:48:29 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 15:35:50 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4426,10 +4426,14 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e compressorDischargePressureChannel;
 	/**
-	units
 	 * offset 4106
 	 */
-	uint8_t mainUnusedEnd[254];
+	Gpio dacOutputPins[2];
+	/**
+	units
+	 * offset 4110
+	 */
+	uint8_t mainUnusedEnd[250];
 };
 static_assert(sizeof(engine_configuration_s) == 4360);
 
@@ -5341,4 +5345,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23664);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Oct 03 00:48:29 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 15:35:50 UTC 2023
