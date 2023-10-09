@@ -140,6 +140,7 @@ canMotorInfo = { 0x00, 0x00, 0x00, 0x14, 0x1C, 0x93, 0x48, 0x14 }
 canMotorInfo1= { 0x99, 0x14, 0x00, 0x7F, 0x00, 0xF0, 0x47, 0x01 }
 canMotorInfo3= { 0x9B, 0x14, 0x00, 0x11, 0x1F, 0xE0, 0x0C, 0x46 }
 canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+motor5mux = {0x1c, 0x54, 0x84, 0xc2}
 motor5Data   = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x00, 0xAD }
 motor6Data   = { 0x00, 0x00, 0x00, 0x7E, 0xFE, 0xFF, 0xFF, 0x00 }
 motor7Data   = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
@@ -237,9 +238,14 @@ function sendMotor2()
 	txCan(TCU_BUS, MOTOR_2, 0, motor2Data)
 end
 
+motor5counter = 0
 motor5FuelCounter = 0
 function sendMotor5()
-	setBitRange(motor5Data, 5, 9, motor5FuelCounter)
+    motor5counter = (motor5counter + 1) % 16
+	index = math.floor(motor5counter / 4)
+	motor5Data[1] = motor5mux[1 + index]
+
+--	setBitRange(motor5Data, 5, 9, motor5FuelCounter)
 	xorChecksum(motor5Data, 8)
 	txCan(TCU_BUS, MOTOR_5, 0, motor5Data)
 end
@@ -466,7 +472,11 @@ function onTick()
 	if everySecondTimer : getElapsedSeconds() > 1 then
 		everySecondTimer : reset()
 
-		motor5FuelCounter = motor5FuelCounter + 20
+		print("CAN OK " .. getOutput("canWriteOk") .. " not OK " .. getOutput("canWriteNotOk"))
+
+        if rpm > 0 then
+		    motor5FuelCounter = motor5FuelCounter + 20
+        end
 
 		sendMotorInfo()
 
