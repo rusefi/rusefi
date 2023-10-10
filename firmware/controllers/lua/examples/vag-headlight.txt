@@ -1,0 +1,97 @@
+
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
+ID_413_19D = 413
+ID_981_3D5 = 981
+
+byte413_3 = 0
+byte981_3 = 0
+
+function handle()
+
+	if byte413_3 == 0x18 then
+		print("marking lights")
+		setPwmDuty(0, 1)
+		setPwmDuty(1, 1)
+		setPwmDuty(2, 0)
+	elseif byte981_3 == 0x42 then
+		setPwmDuty(0, 0)
+		setPwmDuty(1, 0)
+		setPwmDuty(2, 1)
+		print(" *** fog lights *** ")
+	elseif byte981_3 == 0x41 then
+		print(" *** high beams *** ")
+		setPwmDuty(0, 1)
+		setPwmDuty(1, 0)
+		setPwmDuty(2, 1)
+	elseif byte981_3 == 0x40 then
+		setPwmDuty(0, 0)
+		setPwmDuty(1, 1)
+		setPwmDuty(2, 0)
+		print(" *** low beams *** ")
+	else
+		setPwmDuty(0, 0)
+		setPwmDuty(1, 0)
+		setPwmDuty(2, 0)
+		print(" *** OFF ")
+	end
+end
+
+function onMqbHeadlight(bus, id, dlc, data)
+	print('Received ' ..arrayToString(data))
+
+	canTimer : reset()
+
+	if id == ID_413_19D then
+		byte413_3 = data[3]
+	elseif id == ID_981_3D5 then
+		byte981_3 = data[3]
+	end
+    handle()
+end
+
+
+canRxAdd(ID_413_19D, onMqbHeadlight)
+canRxAdd(ID_981_3D5, onMqbHeadlight)
+
+canTimer = Timer.new()
+canTimer : reset()
+
+startPwm(0, 10, 0)
+startPwm(1, 10, 0)
+startPwm(2, 10, 0)
+
+canDelay = 1
+commDelay = 20
+
+function onTick()
+	if (canTimer : getElapsedSeconds() > canDelay) and (secondsSinceTsActivity() > commDelay) then
+		mcu_standby()
+	end
+    handle()
+end
+
