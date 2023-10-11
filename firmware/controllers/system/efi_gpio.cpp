@@ -520,7 +520,7 @@ void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
     if (currentLogicValue != logicValue) {
 	    if (pinToggleCounter > 0) {
 	        durationsInStateMs[0] = durationsInStateMs[1];
-            durationsInStateMs[1] = pinToggleTimer.e.getElapsedUs() / 1000;
+            durationsInStateMs[1] = pinToggleTimer.getElapsedUs() / 1000;
 	    }
 	    pinToggleCounter++;
 	    pinToggleTimer.reset();
