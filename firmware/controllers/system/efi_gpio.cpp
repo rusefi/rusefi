@@ -319,6 +319,40 @@ void EnginePins::startInjectionPins() {
 #endif /* EFI_PROD_CODE */
 }
 
+OutputPin *EnginePins::getOutputPinForBenchMode(bench_mode_e index) {
+	switch(index) {
+	case BENCH_VVT0_VALVE:
+		return getVvtOutputPin(0);
+	case BENCH_VVT1_VALVE:
+		return getVvtOutputPin(1);
+	case BENCH_VVT2_VALVE:
+		return getVvtOutputPin(2);
+	case BENCH_VVT3_VALVE:
+		return getVvtOutputPin(3);
+	case BENCH_MAIN_RELAY:
+		return &mainRelay;
+	case BENCH_HPFP_VALVE:
+		return &hpfpValve;
+	case BENCH_FUEL_PUMP:
+		return &fuelPumpRelay;
+	case BENCH_STARTER_ENABLE_RELAY:
+		return &starterControl;
+	case BENCH_CHECK_ENGINE_LIGHT:
+		return &checkEnginePin;
+	case BENCH_AC_COMPRESSOR_RELAY:
+		return &acRelay;
+	case BENCH_FAN_RELAY:
+		return &fanRelay;
+	case BENCH_IDLE_VALVE:
+		return &idleSolenoidPin;
+	case BENCH_FAN_RELAY_2:
+		return &fanRelay;
+	default:
+		criticalError("Unexpected bench pin %d", index);
+	}
+	return nullptr;
+}
+
 NamedOutputPin::NamedOutputPin() : OutputPin() {
 }
 

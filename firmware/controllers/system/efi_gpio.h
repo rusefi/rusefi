@@ -65,6 +65,8 @@ public:
 	static void debug();
 	bool stopPins();
 	void unregisterPins();
+	OutputPin *getOutputPinForBenchMode(bench_mode_e idx);
+
 	RegisteredOutputPin mainRelay;
 	/**
 	 * High Pressure Fuel Pump valve control
