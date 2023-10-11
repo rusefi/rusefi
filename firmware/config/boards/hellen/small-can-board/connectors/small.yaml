@@ -39,11 +39,18 @@ pins:
     ts_name: A6 - Lin Bus
     color: yellow
 
-  - pin: A8
-    meta: H144_LS_1
+  - pin: A7
+    meta: H64_OUT_PWM1
     function: Low Side Output 1 5A
     class: outputs
-    ts_name: A8 - Low Side
+    ts_name: ___ Low Side
+    color: green
+
+  - pin: A8
+    meta: H64_OUT_PWM2
+    function: Low Side Output 2 5A
+    class: outputs
+    ts_name: ___ Low Side
     color: green
 
   - pin: B2
@@ -63,36 +70,32 @@ pins:
     color: orange
 
   - pin: B8
-    meta: H144_LS_2
-    function: Low Side Output 2 5A
+    meta: H64_OUT_PWM3
+    function: Low Side Output 3 5A
     class: outputs
     type: inj
-    ts_name: B8 - Low Side
+    ts_name: ___ Low Side
     color: blue
 
   - pin: C1
-    meta: H64_OUT_PWM2
-    class: outputs
-    function: Low Side Output 3 5A
-    type: ls
-    ts_name: C1 - Low Side
+    function: Input6
     color: purple
 
   - pin: C2
     # H144_IN_D_3
     id: [E14, E14]
     class: [event_inputs, switch_inputs]
-    function: Digital Input 1
+    function: Digital Input 7
     type: hall
-    ts_name: C2 - Digital Input 1
+    ts_name: ___ Digital Input
 
   - pin: C3
     # H144_IN_D_1
     id: [E12, E12]
     class: [event_inputs, switch_inputs]
-    function: Digital Input 2 / SENT
+    function: Digital Input SENT
     type: hall
-    ts_name: C3 - Digital Input 2
+    ts_name: ___ Digital Input SENT
 
   - pin: C4
     # H144_IN_VSS
@@ -112,6 +115,14 @@ pins:
     function: CAN bus low (CANL)
     type: can
     color: blue
+
+  - pin: C8
+    meta: H64_OUT_PWM4
+    class: outputs
+    function: Low Side Output 4 5A
+    type: ls
+    ts_name: ___ Low Side
+    color: purple
 
 info:
   title: Small CAN
