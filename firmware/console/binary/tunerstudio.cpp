@@ -722,8 +722,8 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 #if EFI_SIMULATOR
     case TS_SIMULATE_CAN:
-        void handleWrapCan(TsChannelBase* tsChannel);
-		handleWrapCan(tsChannel);
+        void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize);
+		handleWrapCan(tsChannel, data, incomingPacketSize - 1);
 		break;
 #endif // EFI_SIMULATOR
 	case TS_IO_TEST_COMMAND:

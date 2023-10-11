@@ -227,7 +227,23 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 
 static uint8_t wrapOutBuffer[BLOCKING_FACTOR + 100];
 
-void handleWrapCan(TsChannelBase* tsChannel) {
+void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
+	// process incoming CAN packets
+	if (incomingPacketSize > 0) {
+		int numPackets = *data++;
+		incomingPacketSize--;
+
+		for (int i = 0; i < numPackets && incomingPacketSize >= sizeof(CANRxFrame); i++) {
+			CANRxFrame rxFrame;
+			memcpy(&rxFrame, data, sizeof(rxFrame));
+
+			processCanRxMessage(0, rxFrame, getTimeNowNt());
+
+			data += sizeof(rxFrame);
+			incomingPacketSize -= sizeof(rxFrame);
+		}
+	}
+
     int size = minI(txCanBuffer.getCount(), BLOCKING_FACTOR / sizeof(CANTxFrame));
 
     memcpy(wrapOutBuffer, &size, 2);
