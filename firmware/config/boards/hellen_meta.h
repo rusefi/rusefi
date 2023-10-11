@@ -246,7 +246,7 @@ static void setHellenSdCardSpi1() {
     engineConfiguration->sdCardCsPin = H_SPI1_CS1;
 }
 
-static void setHellen64SdCardSpi1() {
+static void setHellen64SdCardSpi() {
     setHellenSdCardSpi3NoCS();
 	engineConfiguration->sdCardCsPin = Gpio::MM64_SPI3_CS;
 }
