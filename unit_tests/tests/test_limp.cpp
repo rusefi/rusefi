@@ -25,6 +25,8 @@ TEST(limp, revLimit) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->rpmHardLimit = 2500;
+	engineConfiguration->cutFuelOnHardLimit = true;
+	engineConfiguration->cutSparkOnHardLimit = true;
 
 	LimpManager dut;
 
@@ -48,6 +50,8 @@ TEST(limp, revLimitCltBased) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->rpmHardLimit = 2500;
+	engineConfiguration->cutFuelOnHardLimit = true;
+	engineConfiguration->cutSparkOnHardLimit = true;
 
 	// Configure CLT-based rev limit curve
 	engineConfiguration->useCltBasedRpmLimit = true;
