@@ -10,6 +10,7 @@ public enum bench_test_io_control_e {
 	CAN_BENCH_GET_CLEAR(2),
 	CAN_BENCH_SET_ENGINE_TYPE(3),
 	CAN_BENCH_EXECUTE_BENCH_TEST(4),
+	CAN_BENCH_QUERY_PIN_STATE(5),
 	;
 
 

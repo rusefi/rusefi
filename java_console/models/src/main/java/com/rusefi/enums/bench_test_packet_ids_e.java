@@ -12,6 +12,7 @@ public enum bench_test_packet_ids_e {
 	BUTTON_COUNTERS(7798788),
 	IO_META_INFO(7798789),
 	RAW_ANALOG_2(7798790),
+	PIN_STATE(7798791),
 	;
 
 
