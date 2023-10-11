@@ -140,19 +140,25 @@ void sendBoardStatus() {
 #endif // EFI_PROD_CODE
 }
 
-#if 0
 // bench test fuel pump pin #5603
-static void sendPinStatePackets(int benchCommandIdx)
+static void sendPinStatePackets(bench_mode_e benchModePinIdx) {
+    OutputPin *pin = enginePins.getOutputPinForBenchMode(benchModePinIdx);
+    if (pin == nullptr)
+    	return;
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::PIN_STATE, 8, /*bus*/0, /*isExtended*/true);
+#if EFI_UNIT_TEST || EFI_SIMULATOR
+	msg[0] = TRUNCATE_TO_BYTE(pin->pinToggleCounter >> 8);
+	msg[1] = TRUNCATE_TO_BYTE(pin->pinToggleCounter);
+#endif // EFI_UNIT_TEST || EFI_SIMULATOR
 
-    OutputPin *pin = get pin by benchCommandIdx, at least for fuel pump and VVT
-    // packet one ID XXX
-    pack two bytes pinToggleCounter
-
-    // packet two ID XXX+1
-     four byes durationsInStateMs[0]
-     four byes durationsInStateMs[1]
-
-#endif
+#if EFI_SIMULATOR
+	for (int i = 0, mIdx = 2; i < 2; i++) {
+		msg[mIdx++] = TRUNCATE_TO_BYTE(pin->durationsInStateMs[i] >> 16);
+		msg[mIdx++] = TRUNCATE_TO_BYTE(pin->durationsInStateMs[i] >> 8);
+		msg[mIdx++] = TRUNCATE_TO_BYTE(pin->durationsInStateMs[i]);
+	}
+#endif // EFI_SIMULATOR
+}
 
 void processCanBenchTest(const CANRxFrame& frame) {
 	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
@@ -179,8 +185,9 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_EXECUTE_BENCH_TEST) {
 		int benchCommandIdx = frame.data8[2];
 		handleBenchCategory(benchCommandIdx);
-// else if (command == (uint8_t)bench_test_io_control_e::CAN_TEST_QUERY_PIN_STATE) {
-//      sendPinStatePackets(benchCommandIdx);
+	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_QUERY_PIN_STATE) {
+		bench_mode_e benchModePinIdx = (bench_mode_e)frame.data8[2];
+		sendPinStatePackets(benchModePinIdx);
 	}
 }
 
