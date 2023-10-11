@@ -6,7 +6,7 @@
 void setBoardConfigOverrides() {
 	setHellen64Can();
 	setHellen64MegaEnPin();
-	setHellen64SdCardSpi1();
+	setHellen64SdCardSpi();
 
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;

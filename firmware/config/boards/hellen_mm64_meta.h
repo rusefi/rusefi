@@ -70,6 +70,8 @@
 //GP1 = PWR_EN
 #define MM64_GP1 C13
 
+#define MM64_SPI3_CS D2
+
 // todo: remove H64 usages!
 #define H64_LED1_RED Gpio::B0
 #define H64_LED2_BLUE Gpio::B1
