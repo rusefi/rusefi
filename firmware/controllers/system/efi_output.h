@@ -7,7 +7,7 @@
 
 #include "io_pins.h"
 #include "smart_gpio.h"
-
+#include <rusefi/timer.h>
 
 // This class acts as a boolean, but has a switch counter inside
 class SwitchedState {
@@ -67,9 +67,11 @@ public:
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	int pinToggleCounter = 0;
-	uint32_t Timer pinToggleTimer;
-	uint32_t durationsInStateMs[2];
+#endif
 
+#if EFI_SIMULATOR
+	Timer pinToggleTimer;
+	uint32_t durationsInStateMs[2];
 #endif
 
 	brain_pin_e brainPin = Gpio::Unassigned;

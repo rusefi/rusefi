@@ -70,10 +70,9 @@ public class SimulatorFunctionalTest {
 
         // todo send new CAN command "request pin state for bench_mode_e pin BENCH_FUEL_PUMP
 
-        // todo ecu.sendCommand(CMD_FUEL_PUMP_BENCH
-
-
-
+        // todo ecu.send CAN Command(CAN_BENCH_EXECUTE_BENCH_TEST BENCH_FUEL_PUMP
+        // sleep BENCH_FUEL_PUMP_DURATION + extra second
+        // todo: assert some resemblance of BENCH_FUEL_PUMP_DURATION return via CAN_TEST_QUERY_PIN_STATE BENCH_FUEL_PUMP
 
     }
 

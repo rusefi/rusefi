@@ -510,7 +510,13 @@ void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
 //	ScopePerf perf(PE::OutputPinSetValue);
 #endif // ENABLE_PERF_TRACE
 
-#if EFI_UNIT_TEST || EFI_SIMULATOR
+#if EFI_UNIT_TEST
+    if (currentLogicValue != logicValue) {
+	    pinToggleCounter++;
+	}
+#endif // EFI_UNIT_TEST
+
+#if EFI_SIMULATOR
     if (currentLogicValue != logicValue) {
 	    if (pinToggleCounter > 0) {
 	        durationsInStateMs[0] = durationsInStateMs[1];
@@ -519,7 +525,7 @@ void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
 	    pinToggleCounter++;
 	    pinToggleTimer.reset();
 	}
-#endif // EFI_UNIT_TEST || EFI_SIMULATOR
+#endif // EFI_SIMULATOR
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
