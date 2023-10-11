@@ -35,6 +35,9 @@
 #define AUX_SPEED_SENSOR_COUNT 2
 #define BANKS_COUNT 2
 #define BARO_CORR_SIZE 4
+#define BENCH_FAN_DURATION 2000
+#define BENCH_FUEL_PUMP_DURATION 3000
+#define BENCH_MAIN_RELAY_DURATION 1000
 #define bench_mode_e_BENCH_AC_COMPRESSOR_RELAY 6
 #define bench_mode_e_BENCH_CANCEL 15
 #define bench_mode_e_BENCH_CHECK_ENGINE_LIGHT 7
@@ -55,6 +58,7 @@
 #define bench_mode_e_BENCH_VVT1_VALVE 17
 #define bench_mode_e_BENCH_VVT2_VALVE 18
 #define bench_mode_e_BENCH_VVT3_VALVE 19
+#define BENCH_VVT_DURATION 300
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 750
 #define BOOST_BLEND_COUNT 2
@@ -798,7 +802,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 1472218055
+#define SIGNATURE_HASH 1143015167
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1092,7 +1096,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.10.10.cypress.1472218055"
+#define TS_SIGNATURE "rusEFI master.2023.10.11.cypress.1143015167"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

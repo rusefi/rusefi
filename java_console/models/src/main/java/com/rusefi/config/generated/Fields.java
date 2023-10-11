@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 23:09:35 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Oct 11 01:35:10 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -69,6 +69,9 @@ public class Fields {
 	public static final int AUX_SPEED_SENSOR_COUNT = 2;
 	public static final int BANKS_COUNT = 2;
 	public static final int BARO_CORR_SIZE = 4;
+	public static final int BENCH_FAN_DURATION = 2000;
+	public static final int BENCH_FUEL_PUMP_DURATION = 3000;
+	public static final int BENCH_MAIN_RELAY_DURATION = 1000;
 	public static final int bench_mode_e_BENCH_AC_COMPRESSOR_RELAY = 6;
 	public static final int bench_mode_e_BENCH_CANCEL = 15;
 	public static final int bench_mode_e_BENCH_CHECK_ENGINE_LIGHT = 7;
@@ -89,6 +92,7 @@ public class Fields {
 	public static final int bench_mode_e_BENCH_VVT1_VALVE = 17;
 	public static final int bench_mode_e_BENCH_VVT2_VALVE = 18;
 	public static final int bench_mode_e_BENCH_VVT3_VALVE = 19;
+	public static final int BENCH_VVT_DURATION = 300;
 	public static final int blend_table_s_size = 188;
 	public static final int BLOCKING_FACTOR = 750;
 	public static final int BOOST_BLEND_COUNT = 2;
@@ -1254,7 +1258,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.10.10.f407-discovery.4107850236";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.10.11.f407-discovery.3879310532";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
