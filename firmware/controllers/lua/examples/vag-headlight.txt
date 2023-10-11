@@ -36,27 +36,32 @@ function handle()
 	if byte413_3 == 0x18 then
 		print("marking lights")
 		setPwmDuty(0, 1)
-		setPwmDuty(1, 1)
+		setPwmDuty(1, 0)
 		setPwmDuty(2, 0)
+		setPwmDuty(3, 0)
 	elseif byte981_3 == 0x42 then
 		setPwmDuty(0, 0)
-		setPwmDuty(1, 0)
-		setPwmDuty(2, 1)
+		setPwmDuty(1, 1)
+		setPwmDuty(2, 0)
+		setPwmDuty(3, 0)
 		print(" *** fog lights *** ")
 	elseif byte981_3 == 0x41 then
 		print(" *** high beams *** ")
-		setPwmDuty(0, 1)
+		setPwmDuty(0, 0)
 		setPwmDuty(1, 0)
 		setPwmDuty(2, 1)
+		setPwmDuty(3, 0)
 	elseif byte981_3 == 0x40 then
 		setPwmDuty(0, 0)
-		setPwmDuty(1, 1)
+		setPwmDuty(1, 0)
 		setPwmDuty(2, 0)
+		setPwmDuty(3, 1)
 		print(" *** low beams *** ")
 	else
 		setPwmDuty(0, 0)
 		setPwmDuty(1, 0)
 		setPwmDuty(2, 0)
+		setPwmDuty(3, 0)
 		print(" *** OFF ")
 	end
 end
@@ -84,6 +89,7 @@ canTimer : reset()
 startPwm(0, 10, 0)
 startPwm(1, 10, 0)
 startPwm(2, 10, 0)
+startPwm(3, 10, 0)
 
 canDelay = 1
 commDelay = 20
