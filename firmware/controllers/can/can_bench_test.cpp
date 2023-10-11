@@ -143,9 +143,9 @@ void sendBoardStatus() {
 // bench test fuel pump pin #5603
 static void sendPinStatePackets(bench_mode_e benchModePinIdx) {
     OutputPin *pin = enginePins.getOutputPinForBenchMode(benchModePinIdx);
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::PIN_STATE, 8, /*bus*/0, /*isExtended*/true);
     if (pin == nullptr)
     	return;
-	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::PIN_STATE, 8, /*bus*/0, /*isExtended*/true);
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	msg[0] = TRUNCATE_TO_BYTE(pin->pinToggleCounter >> 8);
 	msg[1] = TRUNCATE_TO_BYTE(pin->pinToggleCounter);
