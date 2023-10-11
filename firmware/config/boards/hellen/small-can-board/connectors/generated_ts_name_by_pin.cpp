@@ -6,12 +6,13 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case Gpio::C8: return "C1 - Low Side";
-		case Gpio::E12: return "C3 - Digital Input 2";
-		case Gpio::E14: return "C2 - Digital Input 1";
+		case Gpio::A8: return "C8 Low Side";
+		case Gpio::B7: return "A7 Low Side";
+		case Gpio::C8: return "A8 Low Side";
+		case Gpio::C9: return "B8 Low Side";
+		case Gpio::E12: return "C3 Digital Input SENT";
+		case Gpio::E14: return "C2 Digital Input";
 		case Gpio::F11: return "C4 - Digital Input 3";
-		case Gpio::G7: return "A8 - Low Side";
-		case Gpio::G8: return "B8 - Low Side";
 		default: return nullptr;
 	}
 	return nullptr;
