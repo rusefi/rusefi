@@ -233,7 +233,7 @@ static void fanBenchExt(float onTimeMs) {
 }
 
 void fanBench() {
-	fanBenchExt(3000.0);
+	fanBenchExt(BENCH_FAN_DURATION);
 }
 
 void fan2Bench() {
@@ -271,7 +271,7 @@ static void hpfpValveBench() {
 }
 
 void fuelPumpBench() {
-	fuelPumpBenchExt(3000.0);
+	fuelPumpBenchExt(BENCH_FUEL_PUMP_DURATION);
 }
 
 static void vvtValveBench(int vvtIndex) {

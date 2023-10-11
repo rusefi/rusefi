@@ -67,6 +67,9 @@ public:
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	int pinToggleCounter = 0;
+	uint32_t Timer pinToggleTimer;
+	uint32_t durationsInStateMs[2];
+
 #endif
 
 	brain_pin_e brainPin = Gpio::Unassigned;

@@ -2012,6 +2012,12 @@ end_struct
 #define CMD_AC_RELAY_BENCH "acrelaybench"
 #define CMD_FAN_BENCH "fanbench"
 #define CMD_FAN2_BENCH "fan2bench"
+
+#define BENCH_FUEL_PUMP_DURATION 3000
+#define BENCH_FAN_DURATION 2000
+#define BENCH_VVT_DURATION 300
+#define BENCH_MAIN_RELAY_DURATION 1000
+
 #define CMD_PINS "pins"
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_SELF_STIMULATION "self_stimulation"

@@ -140,6 +140,20 @@ void sendBoardStatus() {
 #endif // EFI_PROD_CODE
 }
 
+#if 0
+// bench test fuel pump pin #5603
+static void sendPinStatePackets(int benchCommandIdx)
+
+    OutputPin *pin = get pin by benchCommandIdx, at least for fuel pump and VVT
+    // packet one ID XXX
+    pack two bytes pinToggleCounter
+
+    // packet two ID XXX+1
+     four byes durationsInStateMs[0]
+     four byes durationsInStateMs[1]
+
+#endif
+
 void processCanBenchTest(const CANRxFrame& frame) {
 	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
 		return;
@@ -165,6 +179,8 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_EXECUTE_BENCH_TEST) {
 		int benchCommandIdx = frame.data8[2];
 		handleBenchCategory(benchCommandIdx);
+// else if (command == (uint8_t)bench_test_io_control_e::CAN_TEST_QUERY_PIN_STATE) {
+//      sendPinStatePackets(benchCommandIdx);
 	}
 }
 

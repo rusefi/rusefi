@@ -479,7 +479,7 @@ todo: move to shutdown_controller.cpp
 }
 
 bool Engine::isInMainRelayBench() {
-	return !mainRelayBenchStart.hasElapsedSec(1);
+	return !mainRelayBenchStart.hasElapsedMs(BENCH_MAIN_RELAY_DURATION);
 }
 
 bool Engine::isInShutdownMode() const {
