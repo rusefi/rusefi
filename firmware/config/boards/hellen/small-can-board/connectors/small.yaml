@@ -10,20 +10,20 @@ pins:
     meta: MM64_IN_ADC11_ANALOG
     class: analog_inputs
     function: +12V
-    ts_name: A2 Battery Sense
+    ts_name: ___ Battery Sense
     type: 12v
     color: red
 
   - pin: A3
     function: CAN bus2 high (CANH2)
     type: can
-    ts_name: A3 - CAN2 High
+    ts_name: ___ - CAN2 High
     color: black
 
   - pin: A4
     type: can
     function: CAN bus2 low (CANL2)
-    ts_name: A4 - CAN2 Low
+    ts_name: ___ - CAN2 Low
     color: yellow
 
   - pin: A5
@@ -34,21 +34,21 @@ pins:
   - pin: A6
     class: outputs
     function: LIN bus
-    ts_name: A6 - Lin Bus
+    ts_name: ___ - Lin Bus
     color: yellow
     
   - pin: A7
     meta: MM64_OUT_PWM1
     function: Low Side Output 1 5A
     class: outputs
-    ts_name: A7 - Low Side
+    ts_name: ___ - Low Side
     color: green    
 
   - pin: A8
     meta: MM64_OUT_PWM2
     function: Low Side Output 2 5A
     class: outputs
-    ts_name: A8 - Low Side
+    ts_name: ___ - Low Side
     color: green
     
   - pin: B1
@@ -60,28 +60,28 @@ pins:
     id: [MM64_IN_ADC2, MM64_IN_ADC2_ANALOG]
     class: [switch_inputs, analog_inputs]
     function: Analog/Digital Input 1
-    ts_name: B2 - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input
     color: orange
 
   - pin: B3
     id: [MM64_IN_ADC3, MM64_IN_ADC3_ANALOG]
     class: [switch_inputs, analog_inputs]
     function: Analog/Digital Input 2
-    ts_name: B3 - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input
     color: orange
 
   - pin: B4
     id: [MM64_IN_ADC4, MM64_IN_ADC4_ANALOG]
     class: [switch_inputs, analog_inputs]
     function: Analog/Digital Input 3
-    ts_name: B4 - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input
     color: orange
 
   - pin: B5
     id: [MM64_IN_ADC5, MM64_IN_ADC5_ANALOG]
     class: [switch_inputs, analog_inputs]
     function: Analog/Digital Input 4
-    ts_name: B5 - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input
     color: orange
     
   - pin: B6
@@ -93,28 +93,28 @@ pins:
     id: [MM64_IN_ADC6, MM64_IN_ADC6_ANALOG]
     class: [switch_inputs, analog_inputs]
     function: Analog/Digital Input 5
-    ts_name: B7 - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input
     color: orange
 
   - pin: B8
     meta: MM64_OUT_PWM3
     function: Low Side Output 3 5A
     class: outputs
-    ts_name: B8 - Low Side
+    ts_name: ___ - Low Side
     color: blue
 
   - pin: C1
     id: [MM64_IN_ADC7, MM64_IN_ADC7_ANALOG]
     class: [switch_inputs, analog_inputs]
     function: Analog/Digital Input 6
-    ts_name: C1 - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input
     color: purple
 
   - pin: C2
     id: [MM64_IN_ADC14, MM64_IN_ADC14_ANALOG]
     class: [switch_inputs, analog_inputs]
     function: Analog/Digital Input 7
-    ts_name: C2 - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input
     color: purple
 
   - pin: C3
@@ -122,13 +122,13 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Digital Input 2 / SENT
     type: hall
-    ts_name: C3 - Digital Input 2
+    ts_name: ___ - Digital Input 2
 
   - pin: C4
     id: [MM64_IN_ADC15, MM64_IN_ADC15_ANALOG]
     class: [switch_inputs, analog_inputs]
     function: Analog/Digital Input 8
-    ts_name: C4 - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input
     color: gray
 
   - pin: C5
@@ -145,7 +145,7 @@ pins:
     meta: MM64_OUT_PWM4
     function: Low Side Output 4 5A
     class: outputs
-    ts_name: C8 - Low Side
+    ts_name: ___ - Low Side
     color: blue
 
 info:
