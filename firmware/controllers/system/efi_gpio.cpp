@@ -321,6 +321,7 @@ void EnginePins::startInjectionPins() {
 
 OutputPin *EnginePins::getOutputPinForBenchMode(bench_mode_e index) {
 	switch(index) {
+#if EFI_VVT_PID
 	case BENCH_VVT0_VALVE:
 		return getVvtOutputPin(0);
 	case BENCH_VVT1_VALVE:
@@ -329,6 +330,7 @@ OutputPin *EnginePins::getOutputPinForBenchMode(bench_mode_e index) {
 		return getVvtOutputPin(2);
 	case BENCH_VVT3_VALVE:
 		return getVvtOutputPin(3);
+#endif // EFI_VVT_PID
 	case BENCH_MAIN_RELAY:
 		return &mainRelay;
 	case BENCH_HPFP_VALVE:
