@@ -41,7 +41,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->rpmHardLimitHyst = 50;
 	engineConfiguration->cutFuelOnHardLimit = true;
-	engineConfiguration->cutSparkOnHardLimit = true;
+	engineConfiguration->cutSparkOnHardLimit = false;
 
 	engineConfiguration->ALSMinRPM = 400;
 	engineConfiguration->ALSMaxRPM = 3200;
