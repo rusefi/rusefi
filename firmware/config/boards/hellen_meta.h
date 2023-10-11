@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "hellen_mm64_meta.h"
 #include "hellen_mm100_meta.h"
 #include "../../board_id/boards_id.h"
 
@@ -24,18 +25,7 @@ void setHellen64Can();
 int detectHellenBoardId();
 void detectHellenBoardType();
 
-#define H64_LED1_RED Gpio::B0
-#define H64_LED2_BLUE Gpio::B1
-
-#define H64_IO1 C13
 #define H64_SPI1_CS1 D2
-
-#define H64_OUT_PWM1 B7
-#define H64_OUT_PWM2 C8
-#define H64_OUT_PWM3 C9
-#define H64_OUT_PWM4 A8
-#define H64_OUT_PWM5 A9
-#define H64_OUT_PWM6 A15
 
 // stm32 UART8
 #define H144_UART1_RX Gpio::E0

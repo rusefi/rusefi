@@ -16,10 +16,10 @@ void setBoardConfigOverrides() {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 
 	// Force I/O for Lua - so no TS is required
-	engineConfiguration->luaOutputPins[0] = Gpio::H64_OUT_PWM1;
-	engineConfiguration->luaOutputPins[1] = Gpio::H64_OUT_PWM2;
-	engineConfiguration->luaOutputPins[2] = Gpio::H64_OUT_PWM3;
-	engineConfiguration->luaOutputPins[3] = Gpio::H64_OUT_PWM4;
+	engineConfiguration->luaOutputPins[0] = Gpio::MM64_OUT_PWM1;
+	engineConfiguration->luaOutputPins[1] = Gpio::MM64_OUT_PWM2;
+	engineConfiguration->luaOutputPins[2] = Gpio::MM64_OUT_PWM3;
+	engineConfiguration->luaOutputPins[3] = Gpio::MM64_OUT_PWM4;
 
 	engineConfiguration->auxAnalogInputs[0] = EFI_ADC_2;
 	engineConfiguration->auxAnalogInputs[1] = EFI_ADC_3;
