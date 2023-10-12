@@ -19,6 +19,7 @@ class ThreadController : public chibios_rt::BaseStaticThread<TStackSize>
 {
 private:
 	const tprio_t m_prio;
+	bool m_started = false;
 
 protected:
 	// Override this function to implement your controller's thread's behavior.
@@ -44,6 +45,10 @@ public:
 	 */
 	void start()
 	{
-		chibios_rt::BaseStaticThread<TStackSize>::start(m_prio);
+		if (!m_started)
+		{
+			m_started = true;
+			chibios_rt::BaseStaticThread<TStackSize>::start(m_prio);
+		}
 	}
 };

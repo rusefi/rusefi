@@ -31,6 +31,9 @@ Release template (copy/paste this for new release):
 ### Added
  - DAC with Lua #5601
 
+### Fixed
+ - Changing idle stepper settings causes kernel panic
+
 ## October 2023 "Day 591"
 
 ### Breaking Changes
