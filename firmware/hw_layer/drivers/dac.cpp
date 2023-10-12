@@ -32,10 +32,16 @@ float Dac::GetLastVoltage(int channel)
     return m_voltageFloat[channel];
 }
 
-static Dac dac(DACD1);
+static Dac dacs[] {
+    /** ChibiOS magic: if not dual mode DAC1 CH1 driver identifier.*/
+    Dac(DACD1),
+    /** ChibiOS magic: if not dual mode DAC1 CH2 driver identifier.*/
+    Dac(DACD2)
+};
 
 void initDac() {
-    dac.Start(dacConfig);
+    dacs[0].Start(dacConfig);
+    dacs[1].Start(dacConfig);
     for (size_t i = 0;i<DAC_OUTPUT_COUNT;i++) {
         Gpio pin = engineConfiguration->dacOutputPins[i];
         if (isBrainPinValid(pin)) {
@@ -46,7 +52,7 @@ void initDac() {
 }
 
 void setDacVoltage(int channel, float voltage) {
-    dac.SetVoltage(channel, voltage);
+    dacs[channel].SetVoltage(0, voltage);
 }
 
 #endif // EFI_DAC
