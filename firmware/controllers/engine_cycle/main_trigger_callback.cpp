@@ -128,21 +128,6 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 
 	floatus_t durationUs = MS2US(injectionDuration);
 
-
-	// we are ignoring low RPM in order not to handle "engine was stopped to engine now running" transition
-/*
- * Wall Wetting would totally skip fuel on sudden deceleration a
-	if (rpm > 2 * engineConfiguration->cranking.rpm) {
-		const char *outputName = outputs[0]->name;
-		if (engine->prevOutputName == outputName
-				&& engineConfiguration->injectionMode != IM_SIMULTANEOUS
-				&& engineConfiguration->injectionMode != IM_SINGLE_POINT) {
-			warning(ObdCode::CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event revCounter=%d %s", getRevolutionCounter(), outputName);
-		}
-		engine->prevOutputName = outputName;
-	}
-*/
-
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		InjectorOutputPin *output = outputs[0];
