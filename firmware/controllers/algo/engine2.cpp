@@ -91,7 +91,7 @@ void EngineState::updateSlowSensors() {
 void EngineState::periodicFastCallback() {
 	ScopePerf perf(PE::EngineStatePeriodicFastCallback);
 
-#if EFI_ENGINE_CONTROL
+#if EFI_SHAFT_POSITION_INPUT
 	if (!engine->slowCallBackWasInvoked) {
 		warning(ObdCode::CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
@@ -187,7 +187,7 @@ void EngineState::periodicFastCallback() {
 #if EFI_ANTILAG_SYSTEM
 	engine->antilagController.update();
 #endif //EFI_ANTILAG_SYSTEM
-#endif // EFI_ENGINE_CONTROL
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 void EngineState::updateTChargeK(int rpm, float tps) {

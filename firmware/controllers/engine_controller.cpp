@@ -177,7 +177,7 @@ static void resetAccel() {
 }
 
 static void doPeriodicSlowCallback() {
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 
 	slowStartStopButtonCallback();
@@ -209,7 +209,7 @@ static void doPeriodicSlowCallback() {
 	#if EFI_INTERNAL_FLASH
 		writeToFlashIfPending();
 	#endif /* EFI_INTERNAL_FLASH */
-#endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_TCU
 	if (engineConfiguration->tcuEnabled && engineConfiguration->gearControllerMode != GearControllerMode::None) {
@@ -220,7 +220,7 @@ static void doPeriodicSlowCallback() {
 		}
 		engine->gearController->update();
 	}
-#endif
+#endif // EFI_TCU
 
 }
 
