@@ -49,6 +49,7 @@ Release template (copy/paste this for new release):
  - Always operate in "two wire" mode for batch fuel, fixing batch firing order #23
  - Fix "Toyota 3 Tooth Cam" VVT mode (1JZ, 2JZ, 1G, etc) actually works now #237
  - Fix autotune while TS project is in AFR mode - corrections now made properly for target AFR table values
+ - Changing idle stepper settings causes kernel panic #265
 
 ## May 2023 Release
 
