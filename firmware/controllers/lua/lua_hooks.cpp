@@ -765,6 +765,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 #endif // EFI_PROD_CODE
 
+    // checksum stuff
 	lua_register(l, "crc8_j1850", [](lua_State* l) {
 		uint8_t data[8];
 		uint32_t length = getArray(l, 1, data, sizeof(data));
