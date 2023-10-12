@@ -161,6 +161,8 @@ void EngineState::periodicFastCallback() {
 		timingAdvance[i] = advance + getCylinderIgnitionTrim(i, rpm, ignitionLoad);
 	}
 
+	shouldUpdateInjectionTiming = getInjectorDutyCycle(rpm) < 90;
+
 	// TODO: calculate me from a table!
 	trailingSparkAngle = engineConfiguration->trailingSparkAngle;
 

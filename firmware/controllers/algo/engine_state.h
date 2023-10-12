@@ -81,6 +81,7 @@ public:
 
 	multispark_state multispark;
 
+	bool shouldUpdateInjectionTiming = true;
 };
 
 EngineState * getEngineState();

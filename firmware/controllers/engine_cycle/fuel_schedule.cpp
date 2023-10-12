@@ -104,7 +104,12 @@ bool InjectionEvent::updateInjectionAngle(int cylinderIndex) {
 	auto result = computeInjectionAngle(cylinderIndex);
 
 	if (result) {
-		injectionStartAngle = result.Value;
+		// If injector duty cycle is high, lock injection SOI so that we
+		// don't miss injections at or above 100% duty
+		if (getEngineState()->shouldUpdateInjectionTiming) {
+			injectionStartAngle = result.Value;
+		}
+
 		return true;
 	} else {
 		return false;

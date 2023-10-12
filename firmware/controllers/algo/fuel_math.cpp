@@ -274,10 +274,6 @@ float getInjectionModeDurationMultiplier() {
 	}
 }
 
-/**
- * This is more like MOSFET duty cycle since durations include injector lag
- * @see getCoilDutyCycle
- */
 percent_t getInjectorDutyCycle(int rpm) {
 	floatms_t totalInjectiorAmountPerCycle = engine->engineState.injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode);
 	floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
