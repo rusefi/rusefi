@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 21:39:45 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Oct 12 15:26:04 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2346,7 +2346,7 @@ struct engine_configuration_s {
 	offset 1316 bit 8 */
 	bool canReadEnabled : 1 {};
 	/**
-	 * enable can_write/disable can_write
+	 * enable can_write/disable can_write. See also can1ListenMode
 	offset 1316 bit 9 */
 	bool canWriteEnabled : 1 {};
 	/**
@@ -2997,6 +2997,7 @@ struct engine_configuration_s {
 	offset 1572 bit 5 */
 	bool kLineDoHondaSend : 1 {};
 	/**
+	 * ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
 	offset 1572 bit 6 */
 	bool can1ListenMode : 1 {};
 	/**
@@ -5350,4 +5351,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23668);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 09 21:39:45 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Oct 12 15:26:04 UTC 2023

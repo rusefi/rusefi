@@ -731,7 +731,7 @@ Sometimes we have a performance issue while printing error
 enable can_read/disable can_read
 
 ### canWriteEnabled
-enable can_write/disable can_write
+enable can_write/disable can_write. See also can1ListenMode
 
 ### useLinearIatSensor
 
@@ -1115,7 +1115,7 @@ Select whether to configure injector flow in volumetric flow (defualt, cc/min) o
 
 
 ### can1ListenMode
-
+ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
 
 ### can2ListenMode
 
