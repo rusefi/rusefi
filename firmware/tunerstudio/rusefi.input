@@ -286,6 +286,11 @@ enable2ndByteCanID = false
 	requiresPowerCycle = auxSerialRxPin
 	requiresPowerCycle = auxSerialTxPin
 
+	requiresPowerCycle = canWriteEnabled
+	requiresPowerCycle = canReadEnabled
+	requiresPowerCycle = can1ListenMode
+	requiresPowerCycle = can2ListenMode
+
 	requiresPowerCycle = startStopButtonPin
 	requiresPowerCycle = startStopButtonMode
 

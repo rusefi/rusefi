@@ -987,7 +987,7 @@ end_struct
 	bit silentTriggerError;Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
 	bit canReadEnabled;enable can_read/disable can_read
-	bit canWriteEnabled;enable can_write/disable can_write
+	bit canWriteEnabled;enable can_write/disable can_write. See also can1ListenMode
 	bit useLinearIatSensor
 	bit boardUse2stepPullDown,"With Pull Down","With Pull Up"
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
@@ -1181,7 +1181,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit injectorFlowAsMassFlow,"mass flow","volumetric flow";Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
 	bit boardUseCanTerminator
 	bit kLineDoHondaSend
-	bit can1ListenMode
+	bit can1ListenMode;ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
 	bit can2ListenMode
 	uint8_t camDecoder2jzPosition
 	uint16_t autoscale benchTestOnTime;Duration of each test pulse;"ms", 0.01, 0, 0, 500, 2
