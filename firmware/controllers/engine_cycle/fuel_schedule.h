@@ -27,6 +27,12 @@ public:
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
 	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
 
+	const WallFuel& getWallFuel() const;
+
+	void setIndex(uint8_t index) {
+		ownIndex = index;
+	}
+
 	/**
 	 * This is a performance optimization for IM_SIMULTANEOUS fuel strategy.
 	 * It's more efficient to handle all injectors together if that's the case

@@ -21,8 +21,12 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 
 FuelSchedule::FuelSchedule() {
 	for (int cylinderIndex = 0; cylinderIndex < MAX_CYLINDER_COUNT; cylinderIndex++) {
-		elements[cylinderIndex].ownIndex = cylinderIndex;
+		elements[cylinderIndex].setIndex(cylinderIndex);
 	}
+}
+
+const WallFuel& InjectionEvent::getWallFuel() const {
+	return wallFuel;
 }
 
 void FuelSchedule::invalidate() {
