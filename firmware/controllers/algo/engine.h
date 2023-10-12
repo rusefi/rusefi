@@ -314,10 +314,9 @@ public:
 	efitimeus_t timeToStopBlip = 0;
 	efitimeus_t timeToStopIdleTest = 0;
 
-
 	SensorsState sensors;
+    // todo: migrate to smarter getOutputOnTheBenchTest() approach?
 	Timer mainRelayBenchStart;
-
 
 	void preCalculate();
 

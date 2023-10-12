@@ -121,6 +121,7 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 	isRunningBench = false;
 }
 
+// todo: migrate to smarter getOutputOnTheBenchTest() approach?
 static volatile bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
 static float onTimeMs;
