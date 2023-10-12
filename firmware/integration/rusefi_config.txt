@@ -2013,6 +2013,9 @@ end_struct
 #define CMD_FAN_BENCH "fanbench"
 #define CMD_FAN2_BENCH "fan2bench"
 
+! TEST_CONTROL_MAGIC_WORD copy-paste while we are learning how to share between rusEFI and stim firmware
+#define CAN_BENCH_HEADER2 0x66
+
 #define BENCH_FUEL_PUMP_DURATION 3000
 #define BENCH_FAN_DURATION 2000
 #define BENCH_VVT_DURATION 300
