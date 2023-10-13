@@ -76,11 +76,11 @@ TEST(fuel, testWallWettingEnrichmentScheduling) {
 	int expectedInvocationCounter = 1;
 
 	for	(int i = 0; i < 4; i++) {
-		ASSERT_EQ(expectedInvocationCounter, engine->injectionEvents.elements[i].wallFuel.invocationCounter);
+		ASSERT_EQ(expectedInvocationCounter, engine->injectionEvents.elements[i].getWallFuel().invocationCounter);
 	}
 
 	// Cylinder 5 doesn't exist - shouldn't have been called!
-	ASSERT_EQ(0, engine->injectionEvents.elements[5].wallFuel.invocationCounter);
+	ASSERT_EQ(0, engine->injectionEvents.elements[5].getWallFuel().invocationCounter);
 
 	eth.engine.periodicFastCallback();
 	eth.engine.periodicFastCallback();
@@ -88,9 +88,9 @@ TEST(fuel, testWallWettingEnrichmentScheduling) {
 
 	// still same 1 per cylinder - wall wetting is NOT invoked from 'periodicFastCallback'
 	for	(int i = 0; i < 4; i++) {
-		ASSERT_EQ(expectedInvocationCounter, engine->injectionEvents.elements[i].wallFuel.invocationCounter);
+		ASSERT_EQ(expectedInvocationCounter, engine->injectionEvents.elements[i].getWallFuel().invocationCounter);
 	}
 
 	// Cylinder 5 doesn't exist - shouldn't have been called!
-	ASSERT_EQ(0, engine->injectionEvents.elements[5].wallFuel.invocationCounter);
+	ASSERT_EQ(0, engine->injectionEvents.elements[5].getWallFuel().invocationCounter);
 }

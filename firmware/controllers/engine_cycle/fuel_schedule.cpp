@@ -21,8 +21,12 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 
 FuelSchedule::FuelSchedule() {
 	for (int cylinderIndex = 0; cylinderIndex < MAX_CYLINDER_COUNT; cylinderIndex++) {
-		elements[cylinderIndex].ownIndex = cylinderIndex;
+		elements[cylinderIndex].setIndex(cylinderIndex);
 	}
+}
+
+WallFuel& InjectionEvent::getWallFuel() {
+	return wallFuel;
 }
 
 void FuelSchedule::invalidate() {
@@ -64,7 +68,7 @@ InjectionEvent::InjectionEvent() {
 
 // Returns the start angle of this injector in engine coordinates (0-720 for a 4 stroke),
 // or unexpected if unable to calculate the start angle due to missing information.
-expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
+expected<float> InjectionEvent::computeInjectionAngle() const {
 	floatus_t oneDegreeUs = getEngineRotationState()->getOneDegreeUs();
 	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
@@ -86,7 +90,7 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 	assertAngleRange(openingAngle, "openingAngle_r", ObdCode::CUSTOM_ERR_6554);
 
 	// Convert from cylinder-relative to cylinder-1-relative
-	openingAngle += getCylinderAngle(cylinderIndex, cylinderNumber);
+	openingAngle += getCylinderAngle(ownIndex, cylinderNumber);
 
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
 	assertAngleRange(openingAngle, "findAngle#a33", ObdCode::CUSTOM_ERR_6544);
@@ -100,8 +104,8 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 	return openingAngle;
 }
 
-bool InjectionEvent::updateInjectionAngle(int cylinderIndex) {
-	auto result = computeInjectionAngle(cylinderIndex);
+bool InjectionEvent::updateInjectionAngle() {
+	auto result = computeInjectionAngle();
 
 	if (result) {
 		// If injector duty cycle is high, lock injection SOI so that we
@@ -119,10 +123,8 @@ bool InjectionEvent::updateInjectionAngle(int cylinderIndex) {
 /**
  * @returns false in case of error, true if success
  */
-bool FuelSchedule::addFuelEventsForCylinder(int i) {
-	InjectionEvent *ev = &elements[i];
-
-	bool updatedAngle = ev->updateInjectionAngle(i);
+bool InjectionEvent::update() {
+	bool updatedAngle = updateInjectionAngle();
 
 	if (!updatedAngle) {
 		return false;
@@ -133,7 +135,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 
 	// Map order index -> cylinder index (firing order)
 	// Single point only uses injector 1 (index 0)
-	int injectorIndex = mode == IM_SINGLE_POINT ? 0 : ID2INDEX(getCylinderId(i));
+	int injectorIndex = mode == IM_SINGLE_POINT ? 0 : ID2INDEX(getCylinderId(ownIndex));
 
 	InjectorOutputPin *secondOutput = nullptr;
 
@@ -144,23 +146,23 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 		// Compute the position of this cylinder's twin in the firing order
 		// Each injector gets fired as a primary (the same as sequential), but also
 		// fires the injector 360 degrees later in the firing order.
-		int secondOrder = (i + (engineConfiguration->cylindersCount / 2)) % engineConfiguration->cylindersCount;
+		int secondOrder = (ownIndex + (engineConfiguration->cylindersCount / 2)) % engineConfiguration->cylindersCount;
 		int secondIndex = ID2INDEX(getCylinderId(secondOrder));
 		secondOutput = &enginePins.injectors[secondIndex];
 	}
 
-	ev->outputs[0] = &enginePins.injectors[injectorIndex];
-	ev->outputs[1] = secondOutput;
-	ev->isSimultaneous = mode == IM_SIMULTANEOUS;
+	outputs[0] = &enginePins.injectors[injectorIndex];
+	outputs[1] = secondOutput;
+	isSimultaneous = mode == IM_SIMULTANEOUS;
 	// Stash the cylinder number so we can select the correct fueling bank later
-	ev->cylinderNumber = injectorIndex;
+	cylinderNumber = injectorIndex;
 
 	return true;
 }
 
 void FuelSchedule::addFuelEvents() {
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
-		bool result = addFuelEventsForCylinder(cylinderIndex);
+		bool result = elements[cylinderIndex].update();
 
 		if (!result) {
 			invalidate();

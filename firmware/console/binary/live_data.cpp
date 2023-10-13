@@ -156,7 +156,7 @@ const trigger_state_primary_s* getLiveData(size_t) {
 
 template<>
 const wall_fuel_state_s* getLiveData(size_t) {
-	return &engine->injectionEvents.elements[0].wallFuel;
+	return &engine->injectionEvents.elements[0].getWallFuel();
 }
 
 template<>

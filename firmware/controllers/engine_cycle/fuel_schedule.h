@@ -18,26 +18,33 @@ class InjectionEvent {
 public:
 	InjectionEvent();
 
-	// Update the injection start angle
-	bool updateInjectionAngle(int cylinderIndex);
-
-	// Compute the injection start angle, compensating for injection duration and injection phase settings.
-	expected<float> computeInjectionAngle(int cylinderIndex) const;
+	bool update();
 
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
 	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
+
+	WallFuel& getWallFuel();
+
+	void setIndex(uint8_t index) {
+		ownIndex = index;
+	}
+
+private:
+	// Update the injection start angle
+	bool updateInjectionAngle();
+
+	// Compute the injection start angle, compensating for injection duration and injection phase settings.
+	expected<float> computeInjectionAngle() const;
 
 	/**
 	 * This is a performance optimization for IM_SIMULTANEOUS fuel strategy.
 	 * It's more efficient to handle all injectors together if that's the case
 	 */
 	bool isSimultaneous = false;
-	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	uint8_t ownIndex = 0;
 	uint8_t cylinderNumber = 0;
 
-	float injectionStartAngle = 0;
-
+public:
 	/**
 	 * we need atomic flag so that we do not schedule a new pair of up/down before previous down was executed.
 	 *
@@ -47,7 +54,13 @@ public:
 	 */
 	bool isScheduled = false;
 
+private:
 	WallFuel wallFuel;
+
+public:
+	// TODO: this should be private
+	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
+	float injectionStartAngle = 0;
 };
 
 void turnInjectionPinHigh(InjectionEvent *event);
@@ -66,11 +79,8 @@ public:
 	// Call this every trigger tooth.  It will schedule all required injector events.
 	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
 
-	/**
-	 * this method schedules all fuel events for an engine cycle
-	 */
+	// Calculate injector opening angle, pins, and mode for all injectors
 	void addFuelEvents();
-	bool addFuelEventsForCylinder(int cylinderIndex);
 
 	void resetOverlapping();
 

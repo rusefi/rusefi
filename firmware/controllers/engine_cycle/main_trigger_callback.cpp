@@ -49,7 +49,7 @@
 void endSimultaneousInjection(InjectionEvent *event) {
 	event->isScheduled = false;
 	endSimultaneousInjectionOnlyTogglePins();
-	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
+	event->update();
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {
@@ -62,7 +62,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 			output->close(nowNt);
 		}
 	}
-	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
+	event->update();
 }
 
 void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {

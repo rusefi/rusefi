@@ -541,7 +541,7 @@ static void updateFuelInfo() {
 	updateFuelCorrections();
 	updateFuelResults();
 
-	const auto& wallFuel = engine->injectionEvents.elements[0].wallFuel;
+	const auto& wallFuel = engine->injectionEvents.elements[0].getWallFuel();
 	engine->outputChannels.wallFuelAmount = wallFuel.getWallFuel() * 1000;			// Convert grams to mg
 	engine->outputChannels.wallFuelCorrectionValue = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
 
