@@ -19,10 +19,10 @@ public:
 	InjectionEvent();
 
 	// Update the injection start angle
-	bool updateInjectionAngle(int cylinderIndex);
+	bool updateInjectionAngle();
 
 	// Compute the injection start angle, compensating for injection duration and injection phase settings.
-	expected<float> computeInjectionAngle(int cylinderIndex) const;
+	expected<float> computeInjectionAngle() const;
 
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
 	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
@@ -38,11 +38,8 @@ public:
 	 * It's more efficient to handle all injectors together if that's the case
 	 */
 	bool isSimultaneous = false;
-	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	uint8_t ownIndex = 0;
 	uint8_t cylinderNumber = 0;
-
-	float injectionStartAngle = 0;
 
 	scheduling_s signalTimerUp;
 	scheduling_s endOfInjectionEvent;
@@ -57,6 +54,12 @@ public:
 	bool isScheduled = false;
 
 	WallFuel wallFuel;
+
+public:
+	// TODO: this should be private
+	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
+	float injectionStartAngle = 0;
+
 };
 
 void turnInjectionPinHigh(InjectionEvent *event);

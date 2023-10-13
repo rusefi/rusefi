@@ -161,7 +161,7 @@ const trigger_state_primary_s* getLiveData(size_t) {
 template<>
 const wall_fuel_state_s* getLiveData(size_t) {
 #if EFI_ENGINE_CONTROL
-	return &engine->injectionEvents.elements[0].wallFuel;
+	return &engine->injectionEvents.elements[0].getWallFuel();
 #else
 	return nullptr;
 #endif

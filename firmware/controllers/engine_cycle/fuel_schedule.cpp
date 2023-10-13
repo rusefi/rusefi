@@ -68,7 +68,7 @@ InjectionEvent::InjectionEvent() {
 
 // Returns the start angle of this injector in engine coordinates (0-720 for a 4 stroke),
 // or unexpected if unable to calculate the start angle due to missing information.
-expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
+expected<float> InjectionEvent::computeInjectionAngle() const {
 	floatus_t oneDegreeUs = getEngineRotationState()->getOneDegreeUs(); // local copy
 	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
@@ -91,7 +91,7 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 	assertAngleRange(openingAngle, "openingAngle_r", ObdCode::CUSTOM_ERR_6554);
 
 	// Convert from cylinder-relative to cylinder-1-relative
-	openingAngle += getPerCylinderFiringOrderOffset(cylinderIndex, cylinderNumber);
+	openingAngle += getPerCylinderFiringOrderOffset(ownIndex, cylinderNumber);
 
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
 	assertAngleRange(openingAngle, "findAngle#a33", ObdCode::CUSTOM_ERR_6544);
@@ -105,8 +105,8 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 	return openingAngle;
 }
 
-bool InjectionEvent::updateInjectionAngle(int cylinderIndex) {
-	auto result = computeInjectionAngle(cylinderIndex);
+bool InjectionEvent::updateInjectionAngle() {
+	auto result = computeInjectionAngle();
 
 	if (result) {
 		// If injector duty cycle is high, lock injection SOI so that we
@@ -127,7 +127,7 @@ bool InjectionEvent::updateInjectionAngle(int cylinderIndex) {
 bool FuelSchedule::addFuelEventsForCylinder(int i) {
 	InjectionEvent *ev = &elements[i];
 
-	bool updatedAngle = ev->updateInjectionAngle(i);
+	bool updatedAngle = ev->updateInjectionAngle();
 
 	if (!updatedAngle) {
 		return false;
