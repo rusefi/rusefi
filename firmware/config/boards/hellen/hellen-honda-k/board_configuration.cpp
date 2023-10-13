@@ -118,7 +118,7 @@ void setBoardDefaultConfiguration() {
     gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
     // vtsControl->pin = Gpio::H144_OUT_IO6;
 
-	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO13;;
+	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO13;
 	engineConfiguration->idle.solenoidPin = Gpio::H144_LS_6;
 	engineConfiguration->fanPin = Gpio::H144_OUT_IO12;
 	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;
@@ -172,13 +172,30 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_LS_7, // 7 intake runner
 	Gpio::H144_LS_8, // 8 Lockout Solenoid
 	Gpio::H144_OUT_IO12, // 9 Radiator Relay Output
-	Gpio::H144_OUT_PWM6, // 10 B21 EVAP
+	Gpio::H144_OUT_PWM6, // 10 B21 - EVAP
 	Gpio::H144_OUT_PWM5, // 11 B23 VTC VVT
-	Gpio::H144_OUT_IO3, // E7 12 main relay
+	Gpio::H144_OUT_IO3, // 12 E7 Main Relay Control
+	Gpio::H144_LS_5, // E18 - AC Relay
+	Gpio::H144_OUT_IO7, // E31 Check Engine
+	Gpio::H144_OUT_IO13, // E1 Fuel Relay
+	Gpio::H144_OUT_PWM8, // C11 Aux Low 3
+	Gpio::H144_LS_6, // A12 Idle Air Control
+	Gpio::H144_OUT_IO9, // B18 Alternator Control
+	// high side starts here
+	Gpio::H144_OUT_IO10, // E26 Tachometer
+	Gpio::H144_OUT_IO6, // B15 VTEC/VTS Output
+	Gpio::H144_IGN_1, // A30 - IGN1
+	Gpio::H144_IGN_2, // A29 - IGN2
+	Gpio::H144_IGN_3, // A28 - IGN3
+	Gpio::H144_IGN_4, // A27 - IGN4
 };
 
 int getBoardMetaOutputsCount() {
     return efi::size(OUTPUTS);
+}
+
+int getBoardMetaLowSideOutputsCount() {
+    return getBoardMetaOutputsCount() - 6;
 }
 
 Gpio* getBoardMetaOutputs() {
