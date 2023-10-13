@@ -334,6 +334,7 @@ pins:
     type: ls
     ts_name: ___ injector output 4
   - pin: 246
+    class: outputs
     meta: MM100_INJ8
     function: ___  low side 1.5A output
     type: ls
