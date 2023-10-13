@@ -213,6 +213,11 @@ void StepperMotor::initialize(StepperHw *hardware, int totalSteps) {
 }
 
 void StepDirectionStepper::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, brain_pin_e enablePin, pin_output_mode_e enablePinMode) {
+	// avoid double-init
+	this->directionPin.deInit();
+	this->stepPin.deInit();
+	this->enablePin.deInit();
+
 	if (!isBrainPinValid(stepPin) || !isBrainPinValid(directionPin)) {
 		return;
 	}
