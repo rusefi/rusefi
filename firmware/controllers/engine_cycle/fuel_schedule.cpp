@@ -124,10 +124,8 @@ bool InjectionEvent::updateInjectionAngle() {
 /**
  * @returns false in case of error, true if success
  */
-bool FuelSchedule::addFuelEventsForCylinder(int i) {
-	InjectionEvent *ev = &elements[i];
-
-	bool updatedAngle = ev->updateInjectionAngle();
+bool InjectionEvent::update() {
+	bool updatedAngle = updateInjectionAngle();
 
 	if (!updatedAngle) {
 		return false;
@@ -142,7 +140,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 		injectorIndex = 0;
 	} else if (mode == IM_SEQUENTIAL || mode == IM_BATCH) {
 		// Map order index -> cylinder index (firing order)
-		injectorIndex = getCylinderId(i) - 1;
+		injectorIndex = getCylinderId(ownIndex) - 1;
 	} else {
 		firmwareError(ObdCode::CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
 		injectorIndex = 0;
@@ -157,7 +155,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 		// Compute the position of this cylinder's twin in the firing order
 		// Each injector gets fired as a primary (the same as sequential), but also
 		// fires the injector 360 degrees later in the firing order.
-		int secondOrder = (i + (engineConfiguration->cylindersCount / 2)) % engineConfiguration->cylindersCount;
+		int secondOrder = (ownIndex + (engineConfiguration->cylindersCount / 2)) % engineConfiguration->cylindersCount;
 		int secondIndex = getCylinderId(secondOrder) - 1;
 		secondOutput = &enginePins.injectors[secondIndex];
 	} else {
@@ -167,11 +165,11 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
 	bool isSimultaneous = mode == IM_SIMULTANEOUS;
 
-	ev->outputs[0] = output;
-	ev->outputs[1] = secondOutput;
-	ev->isSimultaneous = isSimultaneous;
+	outputs[0] = output;
+	outputs[1] = secondOutput;
+	isSimultaneous = isSimultaneous;
 	// Stash the cylinder number so we can select the correct fueling bank later
-	ev->cylinderNumber = injectorIndex;
+	cylinderNumber = injectorIndex;
 
 	if (!isSimultaneous && !output->isInitialized()) {
 		// todo: extract method for this index math
@@ -183,7 +181,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 
 void FuelSchedule::addFuelEvents() {
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
-		bool result = addFuelEventsForCylinder(cylinderIndex);
+		bool result = elements[cylinderIndex].update();
 
 		if (!result) {
 			invalidate();

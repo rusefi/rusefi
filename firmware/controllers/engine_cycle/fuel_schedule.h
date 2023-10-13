@@ -18,11 +18,7 @@ class InjectionEvent {
 public:
 	InjectionEvent();
 
-	// Update the injection start angle
-	bool updateInjectionAngle();
-
-	// Compute the injection start angle, compensating for injection duration and injection phase settings.
-	expected<float> computeInjectionAngle() const;
+	bool update();
 
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
 	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
@@ -33,6 +29,13 @@ public:
 		ownIndex = index;
 	}
 
+private:
+	// Update the injection start angle
+	bool updateInjectionAngle();
+
+	// Compute the injection start angle, compensating for injection duration and injection phase settings.
+	expected<float> computeInjectionAngle() const;
+
 	/**
 	 * This is a performance optimization for IM_SIMULTANEOUS fuel strategy.
 	 * It's more efficient to handle all injectors together if that's the case
@@ -41,6 +44,7 @@ public:
 	uint8_t ownIndex = 0;
 	uint8_t cylinderNumber = 0;
 
+public:
 	scheduling_s signalTimerUp;
 	scheduling_s endOfInjectionEvent;
 
@@ -53,6 +57,7 @@ public:
 	 */
 	bool isScheduled = false;
 
+private:
 	WallFuel wallFuel;
 
 public:
