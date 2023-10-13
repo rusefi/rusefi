@@ -25,7 +25,7 @@ FuelSchedule::FuelSchedule() {
 	}
 }
 
-const WallFuel& InjectionEvent::getWallFuel() const {
+WallFuel& InjectionEvent::getWallFuel() {
 	return wallFuel;
 }
 

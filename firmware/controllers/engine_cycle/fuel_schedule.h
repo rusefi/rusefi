@@ -27,7 +27,7 @@ public:
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
 	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
 
-	const WallFuel& getWallFuel() const;
+	WallFuel& getWallFuel();
 
 	void setIndex(uint8_t index) {
 		ownIndex = index;

@@ -171,7 +171,7 @@ static void resetAccel() {
 #if EFI_ENGINE_CONTROL
 	for (size_t i = 0; i < efi::size(engine->injectionEvents.elements); i++)
 	{
-		engine->injectionEvents.elements[i].wallFuel.resetWF();
+		engine->injectionEvents.elements[i].getWallFuel().resetWF();
 	}
 #endif // EFI_ENGINE_CONTROL
 }
