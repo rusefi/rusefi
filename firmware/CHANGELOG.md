@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - DAC with Lua #5601
+ - TunerStudio cacerts fix script #5536
 
 ### Fixed
  - Changing idle stepper settings causes kernel panic
