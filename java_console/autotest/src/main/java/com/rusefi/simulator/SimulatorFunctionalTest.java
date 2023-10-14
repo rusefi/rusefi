@@ -1,6 +1,10 @@
 package com.rusefi.simulator;
 
+import com.rusefi.config.generated.Fields;
+import com.rusefi.enums.bench_mode_e;
+import com.rusefi.enums.bench_test_magic_numbers_e;
 import com.rusefi.enums.bench_test_packet_ids_e;
+import com.rusefi.enums.bench_test_io_control_e;
 import com.rusefi.io.LinkManager;
 import etch.util.CircularByteBuffer;
 
@@ -15,17 +19,57 @@ public class SimulatorFunctionalTest {
     private final LinkManager linkManager;
     private boolean gotCanPacketAnalog1 = false;
     private boolean gotCanPacketAnalog2 = false;
+    private int pinToggleCounter = 0;
+    private int [] durationsInStateMs = { 0, 0 };
 
     public SimulatorFunctionalTest(LinkManager linkManager) {
         this.linkManager = linkManager;
     }
 
     public void mainTestBody() throws InterruptedException {
-        CountDownLatch gotCan = new CountDownLatch(1);
+        assertRawAnalogPackets();
+    }
+
+    private int store8bit(byte [] buf, int offset, int int8) {
+        buf[offset++] = (byte)int8;
+        return offset;
+    }
+
+    private int store32bit(byte [] buf, int offset, int int32) {
+        buf[offset++] = (byte)(int32 >> 24);
+        buf[offset++] = (byte)(int32 >> 16);
+        buf[offset++] = (byte)(int32 >> 8);
+        buf[offset++] = (byte)(int32);
+        return offset;
+    }
+
+    private void exchangeCanPackets(CountDownLatch gotCan,
+                                    bench_test_packet_ids_e [] expectedEids,
+                                    byte[][] packets) throws InterruptedException {
         linkManager.submit(new Runnable() {
             @Override
             public void run() {
-                byte[] response = linkManager.getBinaryProtocol().executeCommand(TS_SIMULATE_CAN, "TS_SIMULATE_CAN");
+                // calc total number of bytes
+                int numBytes = 1 + (4 * expectedEids.length) + 1;
+                for (byte [] packet : packets) {
+                    numBytes += packet.length;
+                }
+                byte [] allData = new byte [numBytes];
+                // store EID list
+                int offset = store8bit(allData, 0, expectedEids.length);
+                for (bench_test_packet_ids_e eid  : expectedEids) {
+                    offset = store32bit(allData, offset, eid.get());
+                }
+                // store the number of packets
+                offset = store8bit(allData, offset, packets.length);
+
+                // copy the packet data
+                for (byte [] packet : packets) {
+                    System.arraycopy(packet, 0, allData, offset, packet.length);
+                    offset += packet.length;
+                }
+                // exchange data
+                byte[] response = linkManager.getBinaryProtocol().executeCommand(TS_SIMULATE_CAN, allData, "TS_SIMULATE_CAN");
 
                 if (response == null) {
                     return;
@@ -34,8 +78,8 @@ public class SimulatorFunctionalTest {
                 try {
                     int count = swap16(c.getShort());
 
+                    c.get();
                     for (int idx = 0; idx < count; idx++) {
-                        c.get();
                         int dataLength = c.get() & 0xf;
                         c.get();
                         c.get();
@@ -43,11 +87,12 @@ public class SimulatorFunctionalTest {
                         int eid = c.get();
                         eid |= c.get() << 8;
                         eid |= c.get() << 16;
+                        c.get();
                         byte[] data = new byte[dataLength];
                         c.get(data);
+                        System.out.println("-------- EID=" + eid);
                         processCanPacket(eid, data);
                     }
-
 
                     System.out.println("Got " + count + " packets");
                     gotCan.countDown();
@@ -55,25 +100,68 @@ public class SimulatorFunctionalTest {
                 } catch (EOFException e) {
                     throw new IllegalStateException(e);
                 }
-
-
             }
         });
+    }
+
+    private byte [] getCanFrameData(int eid, byte [] msg) {
+        byte [] packet  = {
+                0, 0, 0, 0,
+                8, // DLC
+                0, 0, 0,
+                (byte)(eid & 0xff),
+                (byte)((eid >> 8) & 0xff),
+                (byte)((eid >> 16) & 0xff),
+                0,
+                0, 0, 0, 0,
+                // data (reserve space for arraycopy)
+                0, 0, 0, 0, 0, 0, 0, 0
+        };
+
+        if (msg.length > 8) {
+            throw new RuntimeException("msg.length > 8");
+        }
+
+        System.arraycopy(msg, 0, packet, packet.length - 8, msg.length);
+        return packet;
+    }
+
+    private void executeIoControlCommand(bench_test_io_control_e command,
+                                         bench_test_packet_ids_e [] expectedEids,
+                                         byte subCommand) throws InterruptedException {
+        CountDownLatch gotCan = new CountDownLatch(1);
+        byte [][] packets = new byte [1][];
+        packets[0] = getCanFrameData(bench_test_packet_ids_e.IO_CONTROL.get(),
+                new byte [] {
+                        (byte)bench_test_magic_numbers_e.BENCH_HEADER.get(),
+                        (byte)command.get(),
+                        subCommand,
+                });
+        exchangeCanPackets(gotCan, expectedEids, packets);
         gotCan.await(1, TimeUnit.MINUTES);
+
+    }
+
+    private void assertRawAnalogPackets() throws InterruptedException {
+        CountDownLatch gotCan1 = new CountDownLatch(1);
+        exchangeCanPackets(gotCan1,
+                new bench_test_packet_ids_e[] { bench_test_packet_ids_e.RAW_ANALOG_1, bench_test_packet_ids_e.RAW_ANALOG_2 },
+                new byte [0][]);
+        gotCan1.await(1, TimeUnit.MINUTES);
 
         // assert RAW_ANALOG can packets have arrived
         if (!gotCanPacketAnalog1 || !gotCanPacketAnalog2) {
             throw new IllegalStateException("Didn't receive analog CAN packets! "
                     + gotCanPacketAnalog1 + " " + gotCanPacketAnalog2);
         }
+    }
 
-
-        // todo send new CAN command "request pin state for bench_mode_e pin BENCH_FUEL_PUMP
-
-        // todo ecu.send CAN Command(CAN_BENCH_EXECUTE_BENCH_TEST BENCH_FUEL_PUMP
-        // sleep BENCH_FUEL_PUMP_DURATION + extra second
-        // todo: assert some resemblance of BENCH_FUEL_PUMP_DURATION return via CAN_TEST_QUERY_PIN_STATE BENCH_FUEL_PUMP
-
+    private int readInt(byte[] data, int startIdx, int endIdx) {
+        int v = 0;
+        for (int i = startIdx; i <= endIdx; i++) {
+            v |= (data[i] & 0xff) << (8 * (endIdx - i));
+        }
+        return v;
     }
 
     private void processCanPacket(int eid, byte[] data) {
@@ -81,6 +169,14 @@ public class SimulatorFunctionalTest {
             gotCanPacketAnalog1 = true;
         } else if (eid == bench_test_packet_ids_e.RAW_ANALOG_2.get()) {
             gotCanPacketAnalog2 = true;
+        } else if (eid == bench_test_packet_ids_e.PIN_STATE.get()) {
+            pinToggleCounter = readInt(data, 0, 1);
+            durationsInStateMs[0] = readInt(data, 2, 4);
+            durationsInStateMs[1] = readInt(data, 5, 7);
         }
+    }
+
+    private boolean nearEq(int value1, int value2, int tolerance) {
+        return Math.abs(value1 - value2) <= tolerance;
     }
 }
