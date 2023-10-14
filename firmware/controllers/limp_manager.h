@@ -86,9 +86,13 @@ class Hysteresis {
 public:
 	// returns true if value > rising, false if value < falling, previous if falling < value < rising.
 	bool test(float value, float rising, float falling) {
-		if (value > rising) {
+		return test(value > rising, value < falling);
+	}
+
+	bool test (bool risingCondition, bool fallingCondition) {
+		if (risingCondition) {
 			m_state = true;
-		} else if (value < falling) {
+		} else if (fallingCondition) {
 			m_state = false;
 		}
 
@@ -160,6 +164,9 @@ private:
 
 	// Tracks how long since a cut (ignition or fuel) was active for any reason
 	Timer m_lastCutTime;
+
+	// Tracks how long injector duty has been over the sustained limit
+	Timer m_injectorDutySustainedTimer;
 };
 
 #if EFI_ENGINE_CONTROL

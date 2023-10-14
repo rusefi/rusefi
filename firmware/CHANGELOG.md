@@ -31,6 +31,9 @@ Release template (copy/paste this for new release):
 ### Breaking Changes
  - Trigger Edge settings renamed from "true"/"false" to "Falling"/"Rising"
 
+### Added
+ - Allow brief operation over 100% injector duty cycle and add configurable duty cycle limits #4798
+
 ### Removed
  - Narrow to Wideband approximation
 

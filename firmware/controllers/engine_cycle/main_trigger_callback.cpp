@@ -48,7 +48,6 @@
 #include "backup_ram.h"
 
 void endSimultaneousInjection(InjectionEvent *event) {
-	event->isScheduled = false;
 	endSimultaneousInjectionOnlyTogglePins();
 	event->update();
 }
@@ -56,7 +55,6 @@ void endSimultaneousInjection(InjectionEvent *event) {
 void turnInjectionPinLow(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
-	event->isScheduled = false;
 	for (size_t i = 0; i < efi::size(event->outputs); i++) {
 		InjectorOutputPin *output = event->outputs[i];
 		if (output) {
@@ -96,9 +94,6 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 	 * see also injectorDutyCycle
 	 */
 	int numberOfInjections = isCranking ? getNumberOfInjections(engineConfiguration->crankingInjectionMode) : getNumberOfInjections(engineConfiguration->injectionMode);
-	if (injectionDuration * numberOfInjections > getEngineCycleDuration(rpm)) {
-		warning(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection %.2fms", injectionDuration);
-	}
 
 #if EFI_VEHICLE_SPEED
 	engine->module<TripOdometer>()->consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
@@ -135,18 +130,6 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 				(int)MS2US(getCrankshaftRevolutionTimeMs(Sensor::getOrZero(SensorType::Rpm))) / 1000.0);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
-
-if (isScheduled) {
-#if EFI_PRINTF_FUEL_DETAILS
-		if (printFuelDebug) {
-			InjectorOutputPin *output = outputs[0];
-			printf("handleFuelInjectionEvent still used %s now=%.1fms\r\n", output->name, (int)getTimeNowUs() / 1000.0);
-		}
-#endif /*EFI_PRINTF_FUEL_DETAILS */
-		return; // this InjectionEvent is still needed for an extremely long injection scheduled previously
-	}
-
-	isScheduled = true;
 
 	action_s startAction, endAction;
 	// We use different callbacks based on whether we're running sequential mode or not - everything else is the same
@@ -195,10 +178,8 @@ static void handleFuel(int rpm, efitick_t nowNt, float currentPhase, float nextP
 		return;
 	}
 
-	/**
-	 * Injection events are defined by addFuelEvents() according to selected
-	 * fueling strategy
-	 */
+	// This is called in the fast callback already, but since we may have just achieved engine sync (and RPM)
+	// for the first time, force update the schedule so that we can inject immediately if necessary
 	FuelSchedule *fs = getFuelSchedule();
 	if (!fs->isReady) {
 		fs->addFuelEvents();
