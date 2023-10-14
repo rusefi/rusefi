@@ -28,6 +28,7 @@ public class SimulatorFunctionalTest {
 
     public void mainTestBody() throws InterruptedException {
         assertRawAnalogPackets();
+        testOutputPin(bench_mode_e.BENCH_FUEL_PUMP, Fields.BENCH_FUEL_PUMP_DURATION);
     }
 
     private int store8bit(byte [] buf, int offset, int int8) {
@@ -153,6 +154,48 @@ public class SimulatorFunctionalTest {
         if (!gotCanPacketAnalog1 || !gotCanPacketAnalog2) {
             throw new IllegalStateException("Didn't receive analog CAN packets! "
                     + gotCanPacketAnalog1 + " " + gotCanPacketAnalog2);
+        }
+    }
+
+    private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws InterruptedException {
+
+        // gain pin control and reset pin stats (otherwise pin can be randomly toggled before or during the test)
+        executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_START_PIN_TEST,
+                new bench_test_packet_ids_e[] { }, (byte)pinId.ordinal());
+
+        // request "default" pin state for the fuel pump
+        executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_QUERY_PIN_STATE,
+                new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE },
+                (byte)pinId.ordinal());
+
+        int defaultPinToggleCounter = pinToggleCounter;
+        int [] defaultDurationsInStateMs = { durationsInStateMs[0], durationsInStateMs[1] };
+
+        // execute the test (toggle the pin)
+        executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_EXECUTE_BENCH_TEST,
+                new bench_test_packet_ids_e[] { }, (byte)pinId.ordinal());
+
+        //  sleep BENCH_FUEL_PUMP_DURATION + extra second
+        Thread.sleep(stateToggleTimeMs + 1000);
+
+        // request current pin state for the fuel pump
+        executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_QUERY_PIN_STATE,
+                new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE },
+                (byte)pinId.ordinal());
+
+        // release pin control
+        executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_END_PIN_TEST,
+                new bench_test_packet_ids_e[] { }, (byte)pinId.ordinal());
+
+        if (pinToggleCounter != defaultPinToggleCounter + 2) {
+            throw new IllegalStateException("Unexpected pin toggle counter: before="
+                    + defaultPinToggleCounter + " after=" + pinToggleCounter);
+        }
+
+        if (!nearEq(durationsInStateMs[1], stateToggleTimeMs, 1)) {
+            throw new IllegalStateException("Unexpected pin state duration: [0]="
+                    + durationsInStateMs[0] + " [1]]=" + durationsInStateMs[1]
+                    + " toggleTimeMs=" + stateToggleTimeMs);
         }
     }
 
