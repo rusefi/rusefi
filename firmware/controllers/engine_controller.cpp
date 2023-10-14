@@ -661,9 +661,9 @@ void commonEarlyInit() {
 // one-time start-up
 void initRealHardwareEngineController() {
 
-#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
+#if ! EFI_UNIT_TEST && EFI_ENGINE_CONTROL
 	initBenchTest();
-#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+#endif /* ! EFI_UNIT_TEST && EFI_ENGINE_CONTROL */
 
 	commonInitEngineController();
 
