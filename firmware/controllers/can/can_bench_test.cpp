@@ -167,13 +167,14 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	if (frame.data8[0] != CAN_BENCH_HEADER) {
 		return;
 	}
-	qcDirectPinControlMode = true;
 	uint8_t command = frame.data8[1];
 	if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_COUNT) {
 	    sendOutBoardMeta();
 	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_SET) {
+		qcDirectPinControlMode = true;
 	    setPin(frame, 1);
 	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_CLEAR) {
+		qcDirectPinControlMode = true;
 	    setPin(frame, 0);
 	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_SET_ENGINE_TYPE) {
 		int eType = frame.data8[2];
