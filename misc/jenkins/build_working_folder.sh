@@ -23,10 +23,12 @@ mkdir $FOLDER
 CONSOLE_FOLDER="$FOLDER/console"
 DRIVERS_FOLDER="$FOLDER/drivers"
 OPENBLT_FOLDER="$CONSOLE_FOLDER/openblt"
+update_ts_cacerts_FOLDER="$FOLDER/update-ts-cacerts"
 
 mkdir $CONSOLE_FOLDER
 mkdir $DRIVERS_FOLDER
 mkdir $OPENBLT_FOLDER
+mkdir $update_ts_cacerts_FOLDER
 ls -l $FOLDER
 
 # this magic file is created manually using 'make_package2.bat'
@@ -53,6 +55,7 @@ cp simulator/build/rusefi_simulator.exe   $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_autoupdate.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_console.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_updater.exe     $FOLDER
+cp misc/console_launcher/update-ts-cacerts/* $update_ts_cacerts_FOLDER
 cp java_console/*.dll                     $CONSOLE_FOLDER
 cp java_console/rusefi.xml                $CONSOLE_FOLDER
 cp -r java_console/bin                    $FOLDER
