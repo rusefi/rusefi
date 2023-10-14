@@ -7,4 +7,4 @@
 
 #pragma once
 
-void initPwmTester(void);
+void initPwmTester();

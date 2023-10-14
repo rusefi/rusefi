@@ -67,7 +67,7 @@ static void testCallback(void *arg) {
 	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback);
 }
 
-void initPwmTester(void) {
+void initPwmTester() {
 	initLogging(&logger, "pwm test");
 	addConsoleActionI("pwmtest", startPwmTest);
 	startPwmTest(1000);
