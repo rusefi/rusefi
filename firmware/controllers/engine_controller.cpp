@@ -443,6 +443,22 @@ void commonInitEngineController() {
 	}
 #endif
 
+#if ! EFI_UNIT_TEST && EFI_ENGINE_CONTROL
+	initBenchTest();
+#endif /* ! EFI_UNIT_TEST && EFI_ENGINE_CONTROL */
+
+#if EFI_ALTERNATOR_CONTROL
+	initAlternatorCtrl();
+#endif /* EFI_ALTERNATOR_CONTROL */
+
+#if EFI_VVT_PID
+	initVvtActuators();
+#endif /* EFI_VVT_PID */
+
+#if EFI_MALFUNCTION_INDICATOR
+	initMalfunctionIndicator();
+#endif /* EFI_MALFUNCTION_INDICATOR */
+
 #if !EFI_UNIT_TEST
 	// This is tested independently - don't configure sensors for tests.
 	// This lets us selectively mock them for each test.
@@ -660,11 +676,6 @@ void commonEarlyInit() {
 
 // one-time start-up
 void initRealHardwareEngineController() {
-
-#if ! EFI_UNIT_TEST && EFI_ENGINE_CONTROL
-	initBenchTest();
-#endif /* ! EFI_UNIT_TEST && EFI_ENGINE_CONTROL */
-
 	commonInitEngineController();
 
 #if EFI_LOGIC_ANALYZER
@@ -684,18 +695,6 @@ void initRealHardwareEngineController() {
 #if EFI_PWM_TESTER
 	initPwmTester();
 #endif /* EFI_PWM_TESTER */
-
-#if EFI_ALTERNATOR_CONTROL
-	initAlternatorCtrl();
-#endif /* EFI_ALTERNATOR_CONTROL */
-
-#if EFI_VVT_PID
-	initVvtActuators();
-#endif /* EFI_VVT_PID */
-
-#if EFI_MALFUNCTION_INDICATOR
-	initMalfunctionIndicator();
-#endif /* EFI_MALFUNCTION_INDICATOR */
 
 	initEgoAveraging();
 }
