@@ -2144,11 +2144,8 @@ enum class ObdCode : uint16_t {
 	 * Should not happen
 	 */
 	CUSTOM_OBD_SKIPPED_SPARK = 9009,
-	/**
-	 * This is not engine miss detection - this is only internal scheduler state validation
-	 * Should not happen
-	 */
-	CUSTOM_OBD_SKIPPED_FUEL = 9010,
+
+	// not used CUSTOM_9010 = 9010,
 	CUSTOM_RE_ADDING_INTO_EXECUTION_QUEUE = 9011,
 	/**
 	 * This indicates an issue with coil control - pin was not high when we were trying to set it low.

@@ -41,6 +41,7 @@ Release template (copy/paste this for new release):
  - Option to compensate Alpha-N fueling with intake air temperature
  - Gasoline-scale AFR gauge: instead of showing true AFR, show "gasoline scale" where 14.7 means stoichiometric
  - Decode fuel temperature from flex fuel sensors #254
+ - Allow brief operation over 100% injector duty cycle and add configurable duty cycle limits #215
 
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)

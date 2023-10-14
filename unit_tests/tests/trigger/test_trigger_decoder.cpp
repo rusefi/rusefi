@@ -745,7 +745,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	eth.executeActions();
 	eth.fireRise(20);
-	ASSERT_EQ( 7,  engine->executor.size()) << "Queue.size#05";
+	ASSERT_EQ(9,  engine->executor.size()) << "Queue.size#05";
 	eth.executeActions();
 
 
@@ -764,7 +764,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertInjectionEventBatch("#30", &t->elements[3], 1, 2, 0, 45);
 
 	 // todo: what's what? a mix of new something and old something?
-	ASSERT_EQ( 4,  engine->executor.size()) << "qs#5";
+	ASSERT_EQ(6,  engine->executor.size()) << "qs#5";
 //	assertInjectorDownEvent("8@0", 0, MS2US(5.0), 1);
 //	assertInjectorUpEvent("8@1", 1, MS2US(7.5), 1);
 //	assertInjectorDownEvent("8@2", 2, MS2US(15.0), 0);
@@ -777,9 +777,6 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 ////	assertInjectorDownEvent("8@9", 9, MS2US(55), 0);
 
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
-/*
-	ASSERT_EQ(ObdCode::CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0).Code);
-*/
 }
 
 void setInjectionMode(int value) {
@@ -1015,9 +1012,6 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
-	/*
-	ASSERT_EQ(ObdCode::CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0).Code);
-*/
 }
 
 TEST(big, testSparkReverseOrderBug319) {

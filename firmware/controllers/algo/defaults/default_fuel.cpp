@@ -304,4 +304,10 @@ void setDefaultFuel() {
 	setDefaultLambdaProtection();
 
 	setDefaultPriming();
+
+	// Cut at 110% instantly
+	engineConfiguration->maxInjectorDutyInstant = 110;
+	// Cut at 96% after 0.5 second
+	engineConfiguration->maxInjectorDutySustained = 96;
+	engineConfiguration->maxInjectorDutySustainedTimeout = 0.5f;
 }
