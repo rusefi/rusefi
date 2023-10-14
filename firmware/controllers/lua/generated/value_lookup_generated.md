@@ -1585,3 +1585,12 @@ these values are in Celcius
 ### compressorDischargeTemperature.config.bias_resistor
 Pull-up resistor value on your board
 
+### maxInjectorDutyInstant
+If injector duty cycle hits this value, instantly cut fuel.
+
+### maxInjectorDutySustained
+If injector duty cycle hits this value for the specified delay time, cut fuel.
+
+### maxInjectorDutySustainedTimeout
+Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.
+

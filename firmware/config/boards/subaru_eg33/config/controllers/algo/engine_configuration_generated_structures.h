@@ -2372,9 +2372,21 @@ struct engine_configuration_s {
 	// Place the sensor after the turbocharger/supercharger, but before any intercoolers if fitted. Uses the same calibration as the MAP sensor.
 	// offset 3737
 	adc_channel_e compressorDischargePressureChannel;
-	// units
+	// If injector duty cycle hits this value, instantly cut fuel.
+	// %
 	// offset 3738
-	uint8_t mainUnusedEnd[254];
+	uint8_t maxInjectorDutyInstant;
+	// If injector duty cycle hits this value for the specified delay time, cut fuel.
+	// %
+	// offset 3739
+	uint8_t maxInjectorDutySustained;
+	// Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.
+	// sec
+	// offset 3740
+	scaled_channel<uint8_t, 10, 1> maxInjectorDutySustainedTimeout;
+	// units
+	// offset 3741
+	uint8_t mainUnusedEnd[251];
 };
 static_assert(sizeof(engine_configuration_s) == 3992);
 

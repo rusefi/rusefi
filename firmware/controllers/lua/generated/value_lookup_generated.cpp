@@ -1061,6 +1061,12 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->compressorDischargeTemperature.config.resistance_3;
 		case -1555883851:
 			return engineConfiguration->compressorDischargeTemperature.config.bias_resistor;
+		case 896753456:
+			return engineConfiguration->maxInjectorDutyInstant;
+		case 1651400031:
+			return engineConfiguration->maxInjectorDutySustained;
+		case 263235302:
+			return engineConfiguration->maxInjectorDutySustainedTimeout;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3710,6 +3716,21 @@ void setConfigValueByName(const char *name, float value) {
 		case -1555883851:
 	{
 		engineConfiguration->compressorDischargeTemperature.config.bias_resistor = (int)value;
+		return;
+	}
+		case 896753456:
+	{
+		engineConfiguration->maxInjectorDutyInstant = (int)value;
+		return;
+	}
+		case 1651400031:
+	{
+		engineConfiguration->maxInjectorDutySustained = (int)value;
+		return;
+	}
+		case 263235302:
+	{
+		engineConfiguration->maxInjectorDutySustainedTimeout = (int)value;
 		return;
 	}
 	}
