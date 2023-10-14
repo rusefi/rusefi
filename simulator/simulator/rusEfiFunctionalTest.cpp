@@ -28,6 +28,8 @@
 #include "flash_main.h"
 #include "can_msg_tx.h"
 #include "fifo_buffer.h"
+#include <vector>
+
 extern fifo_buffer<CANTxFrame, 1024> txCanBuffer;
 
 #define DEFAULT_SIM_RPM 1200
@@ -225,15 +227,42 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 }
 #endif // HAL_USE_CAN
 
-static uint8_t wrapOutBuffer[BLOCKING_FACTOR + 100];
+static uint8_t wrapOutBuffer[BLOCKING_FACTOR + 2];
+
+static uint8_t readInt8FromCan(char * & data, int & incomingPacketSize) {
+	incomingPacketSize--;
+	return (uint8_t)(*data++);
+}
+
+static int32_t readInt32FromCan(char * & data, int & incomingPacketSize) {
+	int32_t value = 0;
+	value |= ((*data++) & 0xff) << 24;
+	value |= ((*data++) & 0xff) << 16;
+	value |= ((*data++) & 0xff) << 8;
+	value |= (*data++) & 0xff;
+
+	incomingPacketSize -= 4;
+	return value;
+}
 
 void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
-	// process incoming CAN packets
-	if (incomingPacketSize > 0) {
-		int numPackets = *data++;
-		incomingPacketSize--;
+	std::vector<int> responseEids;
+	// process incoming CAN packets (at least 2 bytes are expected to store the number of EIDs and packets)
+	if (incomingPacketSize >= 2) {
+		responseEids.resize(readInt8FromCan(data, incomingPacketSize));
+		for (int& eid : responseEids) {
+			eid = readInt32FromCan(data, incomingPacketSize);
+		}
+		int numPackets = readInt8FromCan(data, incomingPacketSize);
 
-		for (int i = 0; i < numPackets && incomingPacketSize >= sizeof(CANRxFrame); i++) {
+		// if we received a packet, we treat it as a query, and then
+		// we want to see some packets as response to the query,
+		// so we need to clear the CAN buffer because it may be full already
+		if (numPackets > 0) {
+			txCanBuffer.clear();
+		}
+		
+		for (int i = 0; i < numPackets && incomingPacketSize >= (int)sizeof(CANRxFrame); i++) {
 			CANRxFrame rxFrame;
 			memcpy(&rxFrame, data, sizeof(rxFrame));
 
@@ -244,17 +273,23 @@ void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize)
 		}
 	}
 
-    int size = minI(txCanBuffer.getCount(), BLOCKING_FACTOR / sizeof(CANTxFrame));
-
-    memcpy(wrapOutBuffer, &size, 2);
+    uint16_t numPackets = 0;
     int outputSize = 2;
 
-    for (int i = 0;i < size;i++) {
+    while (txCanBuffer.getCount() > 0 && (outputSize + sizeof(CANTxFrame)) <= BLOCKING_FACTOR) {
     	CANTxFrame f = txCanBuffer.get();
-        void *frame = (void *)&f;
-        memcpy(((void*)wrapOutBuffer) + outputSize, frame, sizeof(CANTxFrame));
-        outputSize += sizeof(CANTxFrame);
-    }
-    tsChannel->sendResponse(TS_CRC, wrapOutBuffer, outputSize, true);
+    	// filter out CAN packets
+		for (int eid : responseEids) {
+    		if (f.EID == eid) { 
+		        void *frame = (void *)&f;
+		        memcpy((void*)(wrapOutBuffer + outputSize), frame, sizeof(CANTxFrame));
+		        outputSize += sizeof(CANTxFrame);
+		        numPackets++;
+		        break;
+		    }
+	    }
+	}
 
+    memcpy(wrapOutBuffer, &numPackets, 2);
+    tsChannel->sendResponse(TS_CRC, wrapOutBuffer, outputSize, true);
 }
