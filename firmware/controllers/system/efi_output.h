@@ -72,6 +72,8 @@ public:
 #if EFI_SIMULATOR
 	Timer pinToggleTimer;
 	uint32_t durationsInStateMs[2];
+
+	void resetPinForToggleStats();
 #endif
 
 	brain_pin_e brainPin = Gpio::Unassigned;

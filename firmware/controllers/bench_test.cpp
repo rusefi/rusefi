@@ -66,7 +66,7 @@ static scheduling_s benchSchedEnd;
 #define BENCH_MSG "bench"
 
 static void benchOn(OutputPin* output) {
-	output->setValue(BENCH_MSG, true);
+	output->setValue(BENCH_MSG, true, /*isForce*/ true);
 }
 
 static void benchOff(OutputPin* output) {
@@ -81,7 +81,7 @@ static void benchOff(OutputPin* output) {
 		efiPrintf("Diag says %s", pin_error);
 	}
 #endif // EFI_PROD_CODE
-	output->setValue(BENCH_MSG, false);
+	output->setValue(BENCH_MSG, false, /*isForce*/ true);
 }
 
 static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int count) {

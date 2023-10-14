@@ -536,6 +536,16 @@ void OutputPin::setValue(int logicValue, bool isForce) {
 
 extern bool qcDirectPinControlMode;
 
+#if EFI_SIMULATOR
+void OutputPin::resetPinForToggleStats() {
+	currentLogicValue = INITIAL_PIN_STATE;
+
+	durationsInStateMs[0] = durationsInStateMs[1] = 0;
+	pinToggleCounter = 0;
+}
+
+#endif // EFI_SIMULATOR
+
 void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
     if (qcDirectPinControlMode && !isForce) {
         return;

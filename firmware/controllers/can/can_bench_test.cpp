@@ -165,6 +165,17 @@ static void sendPinStatePackets(bench_mode_e benchModePinIdx) {
 #endif // EFI_SIMULATOR
 }
 
+static void resetPinStats(bench_mode_e benchModePinIdx) {
+    OutputPin *pin = enginePins.getOutputPinForBenchMode(benchModePinIdx);
+
+    if (pin == nullptr)
+    	return;
+
+#if EFI_SIMULATOR
+	pin->resetPinForToggleStats();
+#endif // EFI_SIMULATOR
+}
+
 void processCanBenchTest(const CANRxFrame& frame) {
 	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
 		return;
@@ -188,6 +199,15 @@ void processCanBenchTest(const CANRxFrame& frame) {
 #if EFI_PROD_CODE
 		scheduleReboot();
 #endif // EFI_PROD_CODE
+	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_START_PIN_TEST) {
+		bench_mode_e benchModePinIdx = (bench_mode_e)frame.data8[2];
+		// freeze pin control except for the forced bench test
+		qcDirectPinControlMode = true;
+		// ignore previous pin state and stats
+		resetPinStats(benchModePinIdx);
+	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_END_PIN_TEST) {
+		// release pin control
+		qcDirectPinControlMode = false;
 	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_EXECUTE_BENCH_TEST) {
 		int benchCommandIdx = frame.data8[2];
 		handleBenchCategory(benchCommandIdx);
