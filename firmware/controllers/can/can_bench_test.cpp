@@ -12,6 +12,11 @@
 // raw values are 0..5V, convert it to 8-bit (0..255)
 #define RAW_TO_BYTE(v) TRUNCATE_TO_BYTE((int)(v * 255.0 / 5.0))
 
+/**
+ * QC direct output control API is used by https://github.com/rusefi/stim test device
+ * quite different from bench testing user functionality: QC direct should never be engaged on a real vehicle
+ * Once QC direct control mode is activated the only way out is to reboot the unit!
+ */
 bool qcDirectPinControlMode = false;
 
 #if EFI_CAN_SUPPORT
@@ -113,7 +118,7 @@ void sendRawAnalogValues() {
 static void sendOutBoardMeta() {
 #if EFI_PROD_CODE
 	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::IO_META_INFO, 8, /*bus*/0, /*isExtended*/true);
-	msg[0] = CAN_BENCH_HEADER;
+	msg[0] = (int)bench_test_magic_numbers_e::BENCH_HEADER;
 	msg[1] = 0;
 	msg[2] = getBoardMetaOutputsCount();
 	msg[3] = getBoardMetaLowSideOutputsCount();
@@ -164,16 +169,16 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
 		return;
 	}
-	if (frame.data8[0] != CAN_BENCH_HEADER) {
+	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
 		return;
 	}
 	uint8_t command = frame.data8[1];
 	if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_COUNT) {
 	    sendOutBoardMeta();
-	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_SET) {
+	} else if (command == (uint8_t)bench_test_io_control_e::CAN_QC_OUTPUT_CONTROL_SET) {
 		qcDirectPinControlMode = true;
 	    setPin(frame, 1);
-	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_CLEAR) {
+	} else if (command == (uint8_t)bench_test_io_control_e::CAN_QC_OUTPUT_CONTROL_CLEAR) {
 		qcDirectPinControlMode = true;
 	    setPin(frame, 0);
 	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_SET_ENGINE_TYPE) {
