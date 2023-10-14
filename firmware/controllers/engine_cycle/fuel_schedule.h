@@ -52,7 +52,7 @@ public:
 	float injectionStartAngle = 0;
 };
 
-void turnInjectionPinHigh(InjectionEvent *event);
+void turnInjectionPinHigh(uintptr_t arg);
 
 
 /**

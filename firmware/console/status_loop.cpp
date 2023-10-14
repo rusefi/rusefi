@@ -627,6 +627,7 @@ void updateTunerStudioState() {
 
 #if EFI_ENGINE_CONTROL
 	tsOutputChannels->injectorDutyCycle = minF(/*let's avoid scaled "uint8_t, 2" overflow*/127, getInjectorDutyCycle(rpm));
+	tsOutputChannels->injectorDutyCycleStage2 = getInjectorDutyCycleStage2(rpm);
 #endif
 
 	efitimesec_t timeSeconds = getTimeNowS();

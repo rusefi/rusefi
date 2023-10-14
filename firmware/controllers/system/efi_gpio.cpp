@@ -343,12 +343,6 @@ void EnginePins::startInjectionPins() {
 			output->initPin(output->getName(), engineConfiguration->injectionPinsStage2[i],
 					engineConfiguration->injectionPinMode);
 		}
-
-		output = &enginePins.injectorsStage2[i];
-		if (isPinOrModeChanged(injectionPinsStage2[i], injectionPinMode)) {
-			output->initPin(output->getName(), engineConfiguration->injectionPinsStage2[i],
-					engineConfiguration->injectionPinMode);
-		}
 	}
 #endif /* EFI_PROD_CODE */
 }

@@ -8,13 +8,30 @@
 
 #if EFI_ENGINE_CONTROL
 
-void turnInjectionPinHigh(InjectionEvent *event) {
+void turnInjectionPinHigh(uintptr_t arg) {
 	efitick_t nowNt = getTimeNowNt();
+
+	// clear last bit to recover the pointer
+	InjectionEvent *event = reinterpret_cast<InjectionEvent*>(arg & ~(1UL));
+
+	// extract last bit
+	bool stage2Active = arg & 1;
+
 	for (size_t i = 0; i < efi::size(event->outputs); i++) {
 		InjectorOutputPin *output = event->outputs[i];
 
 		if (output) {
 			output->open(nowNt);
+		}
+	}
+
+	if (stage2Active) {
+		for (size_t i = 0; i < efi::size(event->outputsStage2); i++) {
+			InjectorOutputPin *output = event->outputsStage2[i];
+
+			if (output) {
+				output->open(nowNt);
+			}
 		}
 	}
 }
@@ -150,6 +167,7 @@ bool InjectionEvent::update() {
 	}
 
 	InjectorOutputPin *secondOutput;
+	InjectorOutputPin* secondOutputStage2;
 
 	if (mode == IM_BATCH) {
 		/**
@@ -161,8 +179,10 @@ bool InjectionEvent::update() {
 		int secondOrder = (ownIndex + (engineConfiguration->cylindersCount / 2)) % engineConfiguration->cylindersCount;
 		int secondIndex = ID2INDEX(getCylinderId(secondOrder));
 		secondOutput = &enginePins.injectors[secondIndex];
+		secondOutputStage2 = &enginePins.injectorsStage2[secondIndex];
 	} else {
 		secondOutput = nullptr;
+		secondOutputStage2 = nullptr;
 	}
 
 	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
@@ -172,6 +192,9 @@ bool InjectionEvent::update() {
 	isSimultaneous = mode == IM_SIMULTANEOUS;
 	// Stash the cylinder number so we can select the correct fueling bank later
 	cylinderNumber = injectorIndex;
+
+	outputsStage2[0] = &enginePins.injectorsStage2[injectorIndex];
+	outputsStage2[1] = secondOutputStage2;
 
 	if (!isSimultaneous && !output->isInitialized()) {
 		// todo: extract method for this index math

@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - Allow brief operation over 100% injector duty cycle and add configurable duty cycle limits #4798
+ - Staged injection support #5247
 
 ### Removed
  - Narrow to Wideband approximation
