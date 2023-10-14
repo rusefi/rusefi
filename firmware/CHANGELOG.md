@@ -31,6 +31,9 @@ Release template (copy/paste this for new release):
 ### Breaking Changes
  - Trigger Edge settings renamed from "true"/"false" to "Falling"/"Rising"
 
+### Added
+ - Allow brief operation over 100% injector duty cycle and add configurable duty cycle limits
+
 ### Removed
  - Narrow to Wideband approximation
 
@@ -70,24 +73,9 @@ Release template (copy/paste this for new release):
  - AEM WBO EGO preset
  - Mitsubishi 4G69 Cam pattern #5541
  - Preset for Mazdaspeed Miata (NB) IAT sensor
- - option to Suppress start button on start up #5578
-
-### Fixed
- - simulator: sensor mocking UI #5473
- - Custom Trigger Tooth with 1+0 causes endless loop #5471
- - nucleo-h7 bundle st-link flushing #5486
- - 2JZ cam trigger configuration is much easier to adjust #5557
- - lua reads stale output values #5579
- - High Pressure Fuel Pump scheduling goes into negative range #5596
-
-## July 2023 Release "Day 518"
-
-### Added
- - Dashpot for return-to-idle from coasting #5303
- - injector duty cycle limited at 50% for GDI engines #5416
- - STM32Cube v2.14 #5418
- - turning coils and injectors off in case of extremely unexpected errors #5429
- - Configurable ignition timing limits, adding safety particularly for engines running wasted spark with a large cam FOME#211
+ - Option to compensate Alpha-N fueling with intake air temperature
+ - Gasoline-scale AFR gauge: instead of showing true AFR, show "gasoline scale" where 14.7 means stoichiometric
+ - Decode fuel temperature from flex fuel sensors #254
 
 ### Fixed
  - fuel_pump_control is accessible as getOutput("isFuelPumpOn") in Lua #5239
