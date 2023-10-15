@@ -67,7 +67,7 @@ void configureHellenCanTerminator() {
 }
 
 // this should be called before setHellenXXXLedPins()
-void detectHellenMcuType() {
+static void detectHellenMcuType() {
 	// we test the red LED1 pin because the red LED used has the smallest voltage drop,
 	// and thus can be detected more accurately
 	static const brain_pin_e led1Pins[2] = {
@@ -101,11 +101,10 @@ void detectHellenMcuType() {
 	efiPrintf("Hellen board pin states = %d %d", padState[0], padState[1]);
 	if (padState[0] && !padState[1]) {
 		efiPrintf("* Hellen 176-pin mcu detected!");
-	}
-	else if (!padState[0] && padState[1]) {
+	} else if (!padState[0] && padState[1]) {
 		efiPrintf("* Hellen 144-pin mcu detected!");
 	} else {
-		efiPrintf("* Cannot detect Hellen mcu module!");
+		efiPrintf("* Cannot figure if legacy 144 or 176 Hellen mcu module!");
 	}
 }
 

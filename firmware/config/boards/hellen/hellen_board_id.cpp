@@ -256,6 +256,7 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimes(int i, float & Tc1_us, f
 	// 7. calculate the second charge time
 	Tc2_us = NT2USF(t4 - t3);
 
+	float Td_us = NT2USF(Td_nt);
 #ifdef HELLEN_BOARD_ID_DEBUG
 	efitick_t nowNt4 = getTimeNowNt();
 	efiPrintf("* dTime2-1 = %d", (int)(t2 - t1));
@@ -266,7 +267,6 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimes(int i, float & Tc1_us, f
 
     // sanity checks
     if (pinState != 0) {
-		float Td_us = NT2USF(Td_nt);
 		efiPrintf("* Board detection error! (Td=%f is too small)", Td_us);
 		return false;
     }
