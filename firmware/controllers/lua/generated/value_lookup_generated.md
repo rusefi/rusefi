@@ -1594,3 +1594,6 @@ If injector duty cycle hits this value for the specified delay time, cut fuel.
 ### maxInjectorDutySustainedTimeout
 Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.
 
+### speedometerPulsePerKm
+Number of speedometer pulses per kilometer travelled.
+

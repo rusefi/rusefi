@@ -1067,6 +1067,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->maxInjectorDutySustained;
 		case 263235302:
 			return engineConfiguration->maxInjectorDutySustainedTimeout;
+		case 1007396714:
+			return engineConfiguration->speedometerPulsePerKm;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3731,6 +3733,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 263235302:
 	{
 		engineConfiguration->maxInjectorDutySustainedTimeout = (int)value;
+		return;
+	}
+		case 1007396714:
+	{
+		engineConfiguration->speedometerPulsePerKm = (int)value;
 		return;
 	}
 	}

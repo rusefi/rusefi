@@ -2384,9 +2384,16 @@ struct engine_configuration_s {
 	// sec
 	// offset 3740
 	scaled_channel<uint8_t, 10, 1> maxInjectorDutySustainedTimeout;
-	// units
 	// offset 3741
-	uint8_t mainUnusedEnd[251];
+	uint8_t alignmentFill_at_3741[1];
+	// offset 3742
+	output_pin_e speedometerOutputPin;
+	// Number of speedometer pulses per kilometer travelled.
+	// offset 3744
+	uint16_t speedometerPulsePerKm;
+	// units
+	// offset 3746
+	uint8_t mainUnusedEnd[246];
 };
 static_assert(sizeof(engine_configuration_s) == 3992);
 
