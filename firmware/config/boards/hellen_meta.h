@@ -247,7 +247,12 @@ static void setHellenSdCardSpi1() {
 }
 
 static void setHellen64SdCardSpi() {
-    setHellenSdCardSpi3NoCS();
+    engineConfiguration->isSdCardEnabled = true;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->spi3mosiPin = Gpio::MM64_SPI3_MOSI;
+	engineConfiguration->spi3misoPin = Gpio::MM64_SPI3_MISO;
+	engineConfiguration->spi3sckPin = Gpio::MM64_SPI3_SCK;
+	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardCsPin = Gpio::MM64_SPI3_CS;
 }
 
