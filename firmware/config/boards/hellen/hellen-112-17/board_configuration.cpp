@@ -158,13 +158,13 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_INJ7, // 9 235 Low Side Output
 	Gpio::MM100_INJ5, // 101 low side 1.5A output
 	Gpio::MM100_INJ6, // 102 low side 1.5A output
-	Gpio::MM100_IGN8, // 115 Main Relay
+	Gpio::MM100_IGN8, // 12 115 Main Relay
 	Gpio::MM100_OUT_PWM3, // 131 Relay Output
 	Gpio::MM100_IGN7, // 140 Relay Output
 	Gpio::MM100_OUT_PWM4, // 141 Engine Radiator Fan
 	Gpio::MM100_OUT_PWM5, // 142 Fuel Pump Relay
 	Gpio::MM100_IGN5, // 151 relay output
-	Gpio::MM100_IGN6, // 152 relay output
+	Gpio::MM100_IGN6, // 18 152 relay output
 };
 
 int getBoardMetaOutputsCount() {
