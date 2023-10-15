@@ -1720,3 +1720,6 @@ these values are in Celcius
 ### compressorDischargeTemperature.config.bias_resistor
 Pull-up resistor value on your board
 
+### speedometerPulsePerKm
+Number of speedometer pulses per kilometer travelled.
+

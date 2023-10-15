@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Oct 14 23:03:07 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Oct 15 16:20:48 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1034,7 +1034,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 849813586;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1260,7 +1259,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.10.15.f407-discovery.849813586";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.10.15.f407-discovery.3687364662";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2621,7 +2620,9 @@ public class Fields {
 	public static final Field COMPRESSORDISCHARGEPRESSURECHANNEL = Field.create("COMPRESSORDISCHARGEPRESSURECHANNEL", 4109, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field DACOUTPUTPINS1 = Field.create("DACOUTPUTPINS1", 4110, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field DACOUTPUTPINS2 = Field.create("DACOUTPUTPINS2", 4112, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4114, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field SPEEDOMETEROUTPUTPIN = Field.create("SPEEDOMETEROUTPUTPIN", 4114, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
+	public static final Field SPEEDOMETERPULSEPERKM = Field.create("SPEEDOMETERPULSEPERKM", 4116, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4118, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4364, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4396, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4428, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -4171,6 +4172,8 @@ public class Fields {
 	COMPRESSORDISCHARGEPRESSURECHANNEL,
 	DACOUTPUTPINS1,
 	DACOUTPUTPINS2,
+	SPEEDOMETEROUTPUTPIN,
+	SPEEDOMETERPULSEPERKM,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

@@ -1726,6 +1726,9 @@ float getConfigValueByName(const char *name) {
 // compressorDischargeTemperature.config.bias_resistor
 		case -1555883851:
 			return engineConfiguration->compressorDischargeTemperature.config.bias_resistor;
+// speedometerPulsePerKm
+		case 1007396714:
+			return engineConfiguration->speedometerPulsePerKm;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -4600,6 +4603,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1555883851:
 	{
 		engineConfiguration->compressorDischargeTemperature.config.bias_resistor = value;
+		return 1;
+	}
+		case 1007396714:
+	{
+		engineConfiguration->speedometerPulsePerKm = (int)value;
 		return 1;
 	}
 	}
