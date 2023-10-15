@@ -129,7 +129,7 @@ void setBoardConfigOverrides() {
 	    // DIR pin
 		engineConfiguration->etbIo[1].directionPin1 = Gpio::H144_OUT_PWM5;
 	   	// Disable pin
-	   	engineConfiguration->etbIo[1].disablePin = Gpio::H144_OUT_IO13;;
+	   	engineConfiguration->etbIo[1].disablePin = Gpio::H144_OUT_IO13;
 	   	// Unused
 	 	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
     }

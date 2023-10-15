@@ -29,7 +29,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
 	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_3;
 	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
-	engineConfiguration->ignitionPins[4] = Gpio::H144_IGN_5;;
+	engineConfiguration->ignitionPins[4] = Gpio::H144_IGN_5;
 	engineConfiguration->ignitionPins[5] = Gpio::H144_IGN_6;
 }
 

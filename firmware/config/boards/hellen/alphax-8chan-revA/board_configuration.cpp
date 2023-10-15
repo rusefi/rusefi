@@ -170,7 +170,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO10;
 	engineConfiguration->fanPin = Gpio::H144_OUT_IO11;
 	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO12;
-    engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO13;;
+    engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO13;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
