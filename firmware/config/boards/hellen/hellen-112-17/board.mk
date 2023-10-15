@@ -19,4 +19,3 @@ DDEFS += -DSHORT_BOARD_NAME=hellen-112-17
 DDEFS += -DHW_HELLEN_K=TRUE
 
 include $(BOARDS_DIR)/hellen/hellen-common100.mk
-DDEFS += -DHW_HELLEN_HONDA=1

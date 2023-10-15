@@ -165,6 +165,7 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_OUT_PWM5, // 142 Fuel Pump Relay
 	Gpio::MM100_IGN5, // 151 relay output
 	Gpio::MM100_IGN6, // 18 152 relay output
+	Gpio::MM100_INJ8, // 246 low side 1.5A output
 };
 
 int getBoardMetaOutputsCount() {
