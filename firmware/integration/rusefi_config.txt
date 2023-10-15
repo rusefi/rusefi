@@ -1570,7 +1570,10 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 #define DAC_OUTPUT_COUNT 2
     Gpio[DAC_OUTPUT_COUNT iterate] dacOutputPins;
 
-uint8_t[250] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	output_pin_e speedometerOutputPin
+	uint16_t speedometerPulsePerKm;Number of speedometer pulses per kilometer travelled.;"", 1, 0, 0, 65000, 0
+
+uint8_t[246] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
