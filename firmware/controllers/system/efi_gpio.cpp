@@ -149,9 +149,9 @@ EnginePins::EnginePins() :
 		alternatorPin("Alternator control", CONFIG_PIN_OFFSETS(alternatorControl)),
 		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
 		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
-		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError))
+		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError)),
+		speedoOut("speedoOut", CONFIG_OFFSET(speedometerOutputPin))
 {
-	tachOut.name = PROTOCOL_TACH_NAME;
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
 
 	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");

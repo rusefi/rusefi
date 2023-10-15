@@ -8,4 +8,4 @@
 #pragma once
 
 void initTachometer();
-void tachSignalCallback();
+void tachUpdate();
