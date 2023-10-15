@@ -148,9 +148,9 @@ EnginePins::EnginePins() :
 		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
 		alternatorPin("Alternator control", CONFIG_PIN_OFFSETS(alternatorControl)),
 		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
-		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput))
+		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
+		speedoOut("speedoOut", CONFIG_OFFSET(speedometerOutputPin))
 {
-	tachOut.name = PROTOCOL_TACH_NAME;
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
 
 	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");

@@ -46,6 +46,7 @@
 #include "boost_control.h"
 #include "launch_control.h"
 #include "tachometer.h"
+#include "speedometer.h"
 #include "gppwm.h"
 #include "date_stamp.h"
 #include "buttonshift.h"
@@ -472,6 +473,7 @@ void commonInitEngineController() {
 #endif /* EFI_UNIT_TEST */
 
 	initTachometer();
+	initSpeedometer();
 }
 
 // Returns false if there's an obvious problem with the loaded configuration

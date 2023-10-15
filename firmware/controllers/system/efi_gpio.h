@@ -58,7 +58,7 @@ private:
 
 class RegisteredNamedOutputPin : public RegisteredOutputPin, public NamedOutputPin {
 public:
-		RegisteredNamedOutputPin(const char *name, size_t pinOffset, size_t pinModeOffset);
+	RegisteredNamedOutputPin(const char* name, size_t pinOffset, size_t pinModeOffset);
 };
 
 class EnginePins {
@@ -108,7 +108,8 @@ public:
 	 */
 	RegisteredOutputPin checkEnginePin;
 
-	RegisteredNamedOutputPin tachOut;
+	RegisteredOutputPin tachOut;
+	RegisteredOutputPin speedoOut;
 
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;

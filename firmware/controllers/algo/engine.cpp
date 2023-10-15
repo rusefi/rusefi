@@ -24,6 +24,7 @@
 #include "idle_hardware.h"
 #include "gppwm.h"
 #include "tachometer.h"
+#include "speedometer.h"
 #include "dynoview.h"
 #include "boost_control.h"
 #include "fan_control.h"
@@ -473,7 +474,8 @@ void Engine::periodicFastCallback() {
 
 	engineState.periodicFastCallback();
 
-	tachSignalCallback();
+	tachUpdate();
+	speedoUpdate();
 
 	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
 }
