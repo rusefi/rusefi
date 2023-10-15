@@ -117,11 +117,11 @@ pins:
 
   - pin: 125
 # jumper
-    function: 125 Analog Supply
+    function: ___ Analog +5V Supply
 
   - pin: 126
     # jumper
-    function: 126 Analog Supply
+    function: ___ Analog +5V Supply
     color: black
 
   - pin: 127
@@ -165,11 +165,11 @@ pins:
     ts_name: ___ Switch Input
   - pin: 137
     # jumper
-    function: ___ Analog Supply
+    function: ___ Analog +5V Supply
 
   - pin: 138
     # jumper
-    function: ___ Analog Supply
+    function: ___ Analog +5V Supply
     color: black
 
   - pin: 140
@@ -223,7 +223,7 @@ pins:
     ts_name: ___ Crank VR-
   - pin: 202
     # via
-    function: 203 Oxygen Sensor
+    function: ___ Oxygen Sensor
 
   - pin: 203
     meta: MM100_IN_TPS_ANALOG
@@ -269,7 +269,7 @@ pins:
   - pin: 220
     meta: MM100_IN_O2S_ANALOG
     class: analog_inputs
-    function: ___ TPS Throttle Position 2
+    ts_name: ___ TPS Throttle Position 2
 
   - pin: 223
 # jumper
@@ -549,7 +549,9 @@ info:
     - pin: 201
       x: 675
       y: 350
-
+    - pin: 202
+      x: 712
+      y: 350
     - pin: 203
       x: 750
       y: 350
@@ -609,10 +611,10 @@ info:
       x: 855
       y: 250
     - pin: 231
-      x: 885
+      x: 875
       y: 250
     - pin: 232
-      x: 915
+      x: 910
       y: 250
     - pin: 233
       x: 950

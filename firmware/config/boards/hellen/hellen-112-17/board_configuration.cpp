@@ -39,9 +39,12 @@ static void setupVbatt() {
 }
 
 static void setupDefaultSensorInputs() {
-  //  engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_VSS;
+    engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D2;
 
 	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
+	engineConfiguration->tps1_2AdcChannel = MM100_IN_O2S_ANALOG;
+
+	setPPSInputs(MM100_IN_PPS_ANALOG, MM100_IN_AUX2_ANALOG);
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
@@ -68,8 +71,8 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_RES1;
-	engineConfiguration->camInputs[0] = Gpio::H144_IN_RES3;
+	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_CRANK;
+	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D1;
 
     //ETB1
     // PWM pin
@@ -105,7 +108,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canTxPin = Gpio::MM100_CAN_TX;
 	engineConfiguration->canRxPin = Gpio::MM100_CAN_RX;
 
-	engineConfiguration->fuelPumpPin = Gpio::MM100_OUT_PWM5;;
+	engineConfiguration->fuelPumpPin = Gpio::MM100_OUT_PWM5;
 //	engineConfiguration->idle.solenoidPin = Gpio::H144_LS_6;
 //	engineConfiguration->fanPin = Gpio::H144_OUT_IO12;
 	engineConfiguration->mainRelayPin = Gpio::MM100_IGN8;
@@ -152,7 +155,7 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_IGN2, // 253 Coil 2
 	Gpio::MM100_IGN3, // 254 Coil 3
 	Gpio::MM100_IGN4, // 255 Coil 4
-	Gpio::MM100_INJ7, // 235 Low Side Output
+	Gpio::MM100_INJ7, // 9 235 Low Side Output
 	Gpio::MM100_INJ5, // 101 low side 1.5A output
 	Gpio::MM100_INJ6, // 102 low side 1.5A output
 	Gpio::MM100_IGN8, // 115 Main Relay
