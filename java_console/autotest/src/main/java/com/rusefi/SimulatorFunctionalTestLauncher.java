@@ -5,7 +5,6 @@ import com.rusefi.simulator.SimulatorFunctionalTest;
 
 /**
  * this class runs rusEFI functional tests against rusEFI simulator
- * As of Dec 2020 this seems very broken?
  */
 public class SimulatorFunctionalTestLauncher {
     static volatile boolean isHappy;
