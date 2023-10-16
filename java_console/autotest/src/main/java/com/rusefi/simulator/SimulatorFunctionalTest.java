@@ -29,6 +29,7 @@ public class SimulatorFunctionalTest {
     public void mainTestBody() throws InterruptedException {
         assertRawAnalogPackets();
         testOutputPin(bench_mode_e.BENCH_FUEL_PUMP, Fields.BENCH_FUEL_PUMP_DURATION);
+        testOutputPin(bench_mode_e.BENCH_FAN_RELAY, Fields.BENCH_FAN_DURATION);
     }
 
     private int store8bit(byte [] buf, int offset, int int8) {

@@ -253,7 +253,7 @@ void milBench() {
 }
 
 void starterRelayBench() {
-	pinbench(6000.0, 100.0, 1, &enginePins.starterControl);
+	pinbench(BENCH_STARTER_DURATION, 100.0, 1, &enginePins.starterControl);
 }
 
 static void fuelPumpBenchExt(float durationMs) {
@@ -262,7 +262,7 @@ static void fuelPumpBenchExt(float durationMs) {
 }
 
 void acRelayBench() {
-	pinbench(1000.0, 100.0, 1, &enginePins.acRelay);
+	pinbench(BENCH_AC_RELAY_DURATION, 100.0, 1, &enginePins.acRelay);
 }
 
 static void mainRelayBench() {
