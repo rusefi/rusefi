@@ -66,7 +66,7 @@ static scheduling_s benchSchedEnd;
 #define BENCH_MSG "bench"
 
 static void benchOn(OutputPin* output) {
-	output->setValue(BENCH_MSG, true);
+	output->setValue(BENCH_MSG, true, /*isForce*/ true);
 }
 
 static void benchOff(OutputPin* output) {
@@ -81,7 +81,7 @@ static void benchOff(OutputPin* output) {
 		efiPrintf("Diag says %s", pin_error);
 	}
 #endif // EFI_PROD_CODE
-	output->setValue(BENCH_MSG, false);
+	output->setValue(BENCH_MSG, false, /*isForce*/ true);
 }
 
 static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int count) {
@@ -98,6 +98,7 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 
 	isRunningBench = true;
 	outputOnTheBenchTest = output;
+	output->exclusivePinControlMode = true;
 
 	for (int i = 0; isRunningBench && i < count; i++) {
 		engine->outputChannels.testBenchIter = i;
@@ -119,6 +120,7 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 	efiPrintf("Done!");
 	outputOnTheBenchTest = nullptr;
 	isRunningBench = false;
+	output->exclusivePinControlMode = false;
 }
 
 // todo: migrate to smarter getOutputOnTheBenchTest() approach?
