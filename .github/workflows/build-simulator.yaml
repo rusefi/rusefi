@@ -51,8 +51,8 @@ jobs:
       run: ./compile.sh
 
     - name: Run Simulator Functional Test
-      working-directory: ./simulator/
-      run: java -cp ../java_console/autotest/build/libs/autotest-all.jar com.rusefi.SimulatorFunctionalTestLauncher start
+      working-directory: ./java_tools/
+      run: ./gradlew simulatorFunctionalTestLauncherWithSimulator
 
     - name: Run Linux Simulator for 10 seconds
       working-directory: ./simulator/

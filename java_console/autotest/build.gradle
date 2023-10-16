@@ -9,3 +9,11 @@ dependencies {
     api project(':ecu_io')
     implementation global_libs.junit
 }
+
+task simulatorFunctionalTestLauncherWithSimulator(type: Exec) {
+    dependsOn build
+    group = "Execution"
+    description = "Run the main class with ExecTask"
+    workingDir = rootProject.projectDir
+    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.rusefi.SimulatorFunctionalTestLauncher", "start"
+}
