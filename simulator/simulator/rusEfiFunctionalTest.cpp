@@ -35,6 +35,9 @@ extern fifo_buffer<CANTxFrame, 1024> txCanBuffer;
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
 
+//!!!
+#define DEBUG_BENCH TRUE
+
 extern WaveChart waveChart;
 
 int getRemainingStack(thread_t*) {
@@ -261,10 +264,18 @@ void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize)
 		if (numPackets > 0) {
 			txCanBuffer.clear();
 		}
+
+#ifdef DEBUG_BENCH
+		printf("------ numPackets=%d\n", numPackets);
+#endif
 		
 		for (int i = 0; i < numPackets && incomingPacketSize >= (int)sizeof(CANRxFrame); i++) {
 			CANRxFrame rxFrame;
 			memcpy(&rxFrame, data, sizeof(rxFrame));
+
+#ifdef DEBUG_BENCH
+			printf("  * EID=%08x\n", rxFrame.EID);
+#endif
 
 			processCanRxMessage(0, rxFrame, getTimeNowNt());
 
