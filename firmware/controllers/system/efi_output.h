@@ -72,9 +72,13 @@ public:
 #if EFI_SIMULATOR
 	Timer pinToggleTimer;
 	uint32_t durationsInStateMs[2];
+
+	void resetToggleStats();
 #endif
 
 	brain_pin_e brainPin = Gpio::Unassigned;
+
+	bool exclusivePinControlMode = false;
 
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
 	/* used for external pins */
