@@ -98,7 +98,6 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 
 	isRunningBench = true;
 	outputOnTheBenchTest = output;
-	output->exclusivePinControlMode = true;
 
 	for (int i = 0; isRunningBench && i < count; i++) {
 		engine->outputChannels.testBenchIter = i;
@@ -120,7 +119,6 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 	efiPrintf("Done!");
 	outputOnTheBenchTest = nullptr;
 	isRunningBench = false;
-	output->exclusivePinControlMode = false;
 }
 
 // todo: migrate to smarter getOutputOnTheBenchTest() approach?

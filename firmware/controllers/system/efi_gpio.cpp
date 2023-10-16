@@ -7,6 +7,7 @@
  */
 
 #include "pch.h"
+#include "bench_test.h"
 #include "engine_sniffer.h"
 
 #include "drivers/gpio/gpio_ext.h"
@@ -544,7 +545,7 @@ void OutputPin::resetToggleStats() {
 extern bool qcDirectPinControlMode;
 
 void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
-    if ((qcDirectPinControlMode || this->exclusivePinControlMode) && !isForce) {
+    if ((qcDirectPinControlMode || getOutputOnTheBenchTest() == this) && !isForce) {
         return;
     }
 

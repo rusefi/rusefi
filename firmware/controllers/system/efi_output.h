@@ -78,8 +78,6 @@ public:
 
 	brain_pin_e brainPin = Gpio::Unassigned;
 
-	bool exclusivePinControlMode = false;
-
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
 	/* used for external pins */
 	bool ext = false;
