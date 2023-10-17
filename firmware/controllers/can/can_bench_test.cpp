@@ -177,10 +177,6 @@ static void resetPinStats(bench_mode_e benchModePinIdx) {
 }
 
 void processCanBenchTest(const CANRxFrame& frame) {
-#if EFI_SIMULATOR
-	printf("^^^ processCanBenchTest EID=%08x 0=%d 1=%d 2=%d\n", CAN_EID(frame), frame.data8[0], frame.data8[1], frame.data8[2]);
-#endif // EFI_SIMULATOR
-
 	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
 		return;
 	}
