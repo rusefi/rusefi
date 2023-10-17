@@ -184,6 +184,8 @@ private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws Int
         executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_END_PIN_TEST,
                 new bench_test_packet_ids_e[] { }, (byte)pinId.ordinal());
 
+        // this check assumes that simulator makes 2 iterations for each pin
+        // (this magic is needed because we don't know the previous pin state before starting the test)
         if (pinToggleCounter < defaultPinToggleCounter + 3 || pinToggleCounter > defaultPinToggleCounter + 4) {
             throw new IllegalStateException("Unexpected pin toggle counter: before="
                     + defaultPinToggleCounter + " after=" + pinToggleCounter);
