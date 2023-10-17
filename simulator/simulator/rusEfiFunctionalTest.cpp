@@ -269,9 +269,15 @@ void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize)
 		printf("------ numPackets=%d\n", numPackets);
 #endif
 		
-		for (int i = 0; i < numPackets && incomingPacketSize >= (int)sizeof(CANRxFrame); i++) {
+		for (int i = 0; i < numPackets && incomingPacketSize >= 16; i++) {
 			CANRxFrame rxFrame;
-			memcpy(&rxFrame, data, sizeof(rxFrame));
+			rxFrame.FMI = data[0];
+			rxFrame.TIME = (data[1] << 8) | data[2];
+			rxFrame.DLC = data[3] & 0xf;
+			rxFrame.RTR = (data[3] >> 4) & 1;
+			rxFrame.IDE = (data[3] >> 5) & 1;
+			rxFrame.EID = (data[7] << 24) | (data[6] << 16) | (data[5] << 8) | (data[4]);
+			memcpy(rxFrame.data8, data + 8, sizeof(rxFrame.data8));
 
 #ifdef DEBUG_BENCH
 			printf("  * EID=%08x\n", rxFrame.EID);
