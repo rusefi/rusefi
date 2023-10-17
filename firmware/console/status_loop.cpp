@@ -575,10 +575,6 @@ static void updateIgnition(int rpm) {
 }
 
 static void updateFlags() {
-#if EFI_USB_SERIAL
-	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
-#endif // EFI_USB_SERIAL
-
 	engine->outputChannels.isMainRelayOn = enginePins.mainRelay.getLogicValue();
 	engine->outputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
 	engine->outputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();
@@ -604,6 +600,9 @@ static void updateFlags() {
 // As of 2022 it's preferred to leverage LiveData where all state is exposed
 void updateTunerStudioState() {
 	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
+#if EFI_USB_SERIAL
+	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
+#endif // EFI_USB_SERIAL
 #if EFI_SHAFT_POSITION_INPUT
 	int rpm = Sensor::get(SensorType::Rpm).value_or(0);
 #else /* EFI_SHAFT_POSITION_INPUT */
