@@ -193,6 +193,10 @@ void runRusEfi() {
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 #endif /* EFI_DFU_JUMP */
 
+#if EFI_USE_OPENBLT
+	addConsoleAction(CMD_REBOOT_OPENBLT, jump_to_openblt);
+#endif
+
 	/**
 	 * we need to initialize table objects before default configuration can set values
 	 */
