@@ -230,7 +230,7 @@ static void luaOutBench2(float humanIndex, float onTime, float offTimeMs, float 
 }
 
 static void fanBenchExt(float onTimeMs) {
-	pinbench(onTimeMs, 100.0, 2, &enginePins.fanRelay);
+	pinbench(onTimeMs, 100.0, 1, &enginePins.fanRelay);
 }
 
 void fanBench() {
@@ -238,7 +238,7 @@ void fanBench() {
 }
 
 void fan2Bench() {
-	pinbench(3000.0, 100.0, 2, &enginePins.fanRelay2);
+	pinbench(3000.0, 100.0, 1, &enginePins.fanRelay2);
 }
 
 /**
@@ -249,16 +249,16 @@ void milBench() {
 }
 
 void starterRelayBench() {
-	pinbench(6000.0, 100.0, 2, &enginePins.starterControl);
+	pinbench(6000.0, 100.0, 1, &enginePins.starterControl);
 }
 
 static void fuelPumpBenchExt(float durationMs) {
-	pinbench(durationMs, 100.0, 2,
+	pinbench(durationMs, 100.0, 1,
 		&enginePins.fuelPumpRelay);
 }
 
 void acRelayBench() {
-	pinbench(1000.0, 100.0, 2, &enginePins.acRelay);
+	pinbench(1000.0, 100.0, 1, &enginePins.acRelay);
 }
 
 static void mainRelayBench() {
