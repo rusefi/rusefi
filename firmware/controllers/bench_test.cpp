@@ -136,7 +136,7 @@ static void pinbench(float p_ontimeMs, float p_offtimeMs, int iterations,
 {
 	onTimeMs = p_ontimeMs;
 	offTimeMs = p_offtimeMs;
-	count = iterations;
+	count = maxI(2, iterations);
 	pinX = pinParam;
 	// let's signal bench thread to wake up
 	isBenchTestPending = true;
