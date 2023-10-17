@@ -3555,6 +3555,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Pulse duration",						tachPulseDuractionMs
 		field = "Pulse per Rev",						tachPulsePerRev
 
+	dialog = speedoSettings, "Speedometer output"
+		field = "Output",			speedometerOutputPin
+		field = "Pulse per km",		speedometerPulsePerKm, { speedometerOutputPin }
+
     dialog = outputsDialogLeft
 		panel = mainRelayDialog
 		panel = fuelPumpDialog
@@ -3563,6 +3567,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
     dialog = outputsDialogRight
 		panel = startStopDialog
 		panel = starterRelayDialog
+		panel = speedoSettings
 		panel = malfunctionDialog
 
     dialog = outputsDialog, "Outputs", border
