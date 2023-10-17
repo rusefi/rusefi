@@ -28,8 +28,12 @@ public class SimulatorFunctionalTest {
 
     public void mainTestBody() throws InterruptedException {
         assertRawAnalogPackets();
+// todo: fix me        testOutputPin(bench_mode_e.BENCH_MAIN_RELAY, Fields.BENCH_MAIN_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_FUEL_PUMP, Fields.BENCH_FUEL_PUMP_DURATION);
         testOutputPin(bench_mode_e.BENCH_FAN_RELAY, Fields.BENCH_FAN_DURATION);
+// todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
+// huh?        testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Fields.BENCH_AC_RELAY_DURATION);
+// :(        testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
     }
 
     private int store8bit(byte [] buf, int offset, int int8) {
@@ -167,7 +171,7 @@ private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws Int
                 (byte)pinId.ordinal());
 
         int defaultPinToggleCounter = pinToggleCounter;
-        int [] defaultDurationsInStateMs = { durationsInStateMs[0], durationsInStateMs[1] };
+// todo: unused variable?       int [] defaultDurationsInStateMs = { durationsInStateMs[0], durationsInStateMs[1] };
 
         // execute the test (toggle the pin)
         executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_EXECUTE_BENCH_TEST,
@@ -188,12 +192,12 @@ private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws Int
         // this check assumes that simulator makes 2 iterations for each pin
         // (this magic is needed because we don't know the previous pin state before starting the test)
         if (pinToggleCounter < defaultPinToggleCounter + 3 || pinToggleCounter > defaultPinToggleCounter + 4) {
-            throw new IllegalStateException("Unexpected pin toggle counter: before="
+            throw new IllegalStateException(pinId + ": Unexpected pin toggle counter: before="
                     + defaultPinToggleCounter + " after=" + pinToggleCounter);
         }
 
         if (!nearEq(durationsInStateMs[0], stateToggleTimeMs, 10)) {
-            throw new IllegalStateException("Unexpected pin state duration: [0]="
+            throw new IllegalStateException(pinId + ": Unexpected pin state duration: [0]="
                     + durationsInStateMs[0] + " [1]=" + durationsInStateMs[1]
                     + " toggleTimeMs=" + stateToggleTimeMs);
         }
