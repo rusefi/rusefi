@@ -13,7 +13,7 @@ SHORT_BOARDNAME=$4
 BOARD_SPECIFIC_URL=$5
 
 IMAGE=ramdisk.image
-ZIP=rusefi.ini.zip
+ZIP=fome.ini.zip
 
 # mkfs.fat and fatlabel are privileged on some systems
 PATH="$PATH:/usr/sbin"
