@@ -106,14 +106,13 @@ public class SimulatorFunctionalTest {
 
     private byte [] getCanFrameData(int eid, byte [] msg) {
         byte [] packet  = {
-                0, 0, 0, 0,
-                8, // DLC
-                0, 0, 0,
+                0, // FMI
+                0, 0, // TIME
+                (1 << 5) | 8, // bitfields: 0..3: DLC=8, 4: RTR=0, 5: IDE=1
                 (byte)(eid & 0xff),
                 (byte)((eid >> 8) & 0xff),
                 (byte)((eid >> 16) & 0xff),
-                0,
-                0, 0, 0, 0,
+                (byte)((eid >> 24) & 0xff),
                 // data (reserve space for arraycopy)
                 0, 0, 0, 0, 0, 0, 0, 0
         };
