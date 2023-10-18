@@ -91,13 +91,18 @@ startPwm(1, 10, 0)
 startPwm(2, 10, 0)
 startPwm(3, 10, 0)
 
+commTimer = Timer.new()
+commTimer : reset()
+
 canDelay = 1
 commDelay = 20
 
 function onTick()
-	if (canTimer : getElapsedSeconds() > canDelay) and (secondsSinceTsActivity() > commDelay) then
+	if getOutput("isUsbConnected") == 1 then
+		commTimer : reset()
+	end
+	if (canTimer : getElapsedSeconds() > canDelay) and (commTimer : getElapsedSeconds() > commDelay) then
 		mcu_standby()
 	end
-    handle()
+	handle()
 end
-

@@ -74,8 +74,17 @@ end
 canRxAdd(1, 0x17C, onPOWERTRAIN_DATA)
 canRxAdd(1, 0x309, onCAR_SPEED)
 
+commTimer = Timer.new()
+commTimer : reset()
+
+canDelay = 1
+commDelay = 20
+
 function onTick()
-	if (canTimer : getElapsedSeconds() > 20) and (secondsSinceTsActivity() > 20) then
+    if getOutput("isUsbConnected") == 1 then
+		commTimer : reset()
+	end
+	if (canTimer : getElapsedSeconds() > canDelay) and (commTimer : getElapsedSeconds() > commDelay) then
 		mcu_standby()
 	end
 end
