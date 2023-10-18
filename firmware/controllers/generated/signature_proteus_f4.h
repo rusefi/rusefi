@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH 748500899
-#define TS_SIGNATURE "rusEFI master.2023.10.17.proteus_f4.748500899"
+#define TS_SIGNATURE "rusEFI master.2023.10.18.proteus_f4.748500899"
