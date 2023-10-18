@@ -4,6 +4,7 @@ import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
