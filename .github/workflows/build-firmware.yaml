@@ -160,9 +160,9 @@ jobs:
           #   folder: config/boards/f429-discovery
           #   ini-file: fome_f429-discovery.ini
 
-          # - build-target: core8
-          #   folder: config/boards/core8
-          #   ini-file: fome_core8.ini
+          - build-target: core8
+            folder: config/boards/core8
+            ini-file: fome_core8.ini
 
           # - build-target: 48way
           #   folder: config/boards/48way
