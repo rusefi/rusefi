@@ -3,6 +3,7 @@ package com.rusefi.maintenance;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
