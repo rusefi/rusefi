@@ -77,7 +77,7 @@ public class ProgramSelector {
                         StatusWindow wnd = DfuFlasher.createStatusWindow();
                         Object selected = comboPorts.getSelectedItem();
                         String port = selected == null ? PortDetector.AUTO : selected.toString();
-                        DfuFlasher.rebootToDfu(comboPorts, port, wnd);
+                        DfuFlasher.rebootToDfu(comboPorts, port, wnd, Fields.CMD_REBOOT_DFU);
                         break;
                     case OPENBLT_CAN:
                         flashOpenBltCan();
