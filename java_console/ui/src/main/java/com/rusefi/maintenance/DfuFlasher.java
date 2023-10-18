@@ -6,6 +6,7 @@ import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.core.io.BundleUtil;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.BufferedSerialIoStream;
@@ -57,7 +58,7 @@ public class DfuFlasher {
             needsEraseFirst = true;
         }
 
-        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, wnd);
+        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, wnd, Fields.CMD_REBOOT_DFU);
         if (isSignatureValidated == null)
             return;
         if (isSignatureValidated.get()) {
@@ -82,7 +83,7 @@ public class DfuFlasher {
     }
 
     @Nullable
-    public static AtomicBoolean rebootToDfu(JComponent parent, String port, StatusWindow wnd) {
+    public static AtomicBoolean rebootToDfu(JComponent parent, String port, StatusWindow wnd, String command) {
         AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
         if (!PortDetector.isAutoPort(port)) {
             wnd.append("Using selected " + port + "\n");
@@ -101,7 +102,7 @@ public class DfuFlasher {
                 wnd.setErrorState();
                 return null;
             }
-            boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, wnd);
+            boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, wnd, command);
             isSignatureValidated.set(isSignatureValidatedLocal);
         } else {
             wnd.append("Auto-detecting port...\n");
@@ -109,7 +110,7 @@ public class DfuFlasher {
             // it's more reliable this way
             // ISSUE: that's blocking stuff on UI thread at the moment, TODO smarter threading!
             port = PortDetector.autoDetectSerial(callbackContext -> {
-                boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), wnd);
+                boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), wnd, command);
                 isSignatureValidated.set(isSignatureValidatedLocal);
                 return null;
             }).getSerialPort();

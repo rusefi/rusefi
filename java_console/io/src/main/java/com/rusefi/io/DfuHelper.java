@@ -5,7 +5,6 @@ import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.StatusConsumer;
 
 import javax.swing.*;
@@ -19,18 +18,18 @@ public class DfuHelper {
     private static final Logging log = getLogging(DfuHelper.class);
     private static final String PREFIX = "rusefi_bundle";
 
-    public static void sendDfuRebootCommand(IoStream stream, StatusConsumer messages) {
-        byte[] command = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT_DFU);
+    public static void sendDfuRebootCommand(IoStream stream, StatusConsumer messages, String cmd) {
+        byte[] command = BinaryProtocol.getTextCommandBytes(cmd);
         try {
             stream.sendPacket(command);
             stream.close();
-            messages.append(String.format("Reboot command [%s] sent into %s!\n", Fields.CMD_REBOOT_DFU, stream));
+            messages.append(String.format("Reboot command [%s] sent into %s!\n", cmd, stream));
         } catch (IOException e) {
             messages.append("Error " + e);
         }
     }
 
-    public static boolean sendDfuRebootCommand(JComponent parent, String signature, IoStream stream, StatusConsumer messages) {
+    public static boolean sendDfuRebootCommand(JComponent parent, String signature, IoStream stream, StatusConsumer messages, String command) {
         RusEfiSignature controllerSignature = SignatureHelper.parse(signature);
         String fileSystemBundleTarget = BundleUtil.getBundleTarget();
         if (fileSystemBundleTarget != null && controllerSignature != null) {
@@ -56,7 +55,7 @@ public class DfuHelper {
             }
         }
 
-        sendDfuRebootCommand(stream, messages);
+        sendDfuRebootCommand(stream, messages, command);
         return true;
     }
 }
