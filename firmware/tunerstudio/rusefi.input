@@ -4615,6 +4615,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = rethrowHardFault,                       rethrowHardFault
 		field = canGpioType,                            canGpioType
 		field = "I understand ECU Locking",				yesUnderstandLocking
+		field = "! Use console for unlocking"
 		field = "Tune read/write password",				tuneHidingKey, { yesUnderstandLocking == 1 }
 		field = verboseQuad,									verboseQuad
 ;		field = useEeprom,										useEeprom

@@ -237,7 +237,7 @@ bool isLockedFromUser() {
 	int lock = engineConfiguration->tuneHidingKey;
 	bool isLocked = lock > 0;
 	if (isLocked) {
-		criticalError("password protected");
+		criticalError("Tune is password protected. Please use console to unlock tune.");
 	}
 	return isLocked;
 }
