@@ -313,6 +313,10 @@ private:
 
 static BenchController instance;
 
+static void auxOutBench(int index) {
+    // todo!
+}
+
 void handleBenchCategory(uint16_t index) {
 	switch(index) {
 	case BENCH_VVT0_VALVE:
@@ -327,8 +331,29 @@ void handleBenchCategory(uint16_t index) {
 	case BENCH_VVT3_VALVE:
 	    vvtValveBench(3);
 		return;
-	case BENCH_MAIN_RELAY:
-		mainRelayBench();
+	case BENCH_AUXOUT0:
+	    auxOutBench(0);
+		return;
+	case BENCH_AUXOUT1:
+	    auxOutBench(1);
+		return;
+	case BENCH_AUXOUT2:
+	    auxOutBench(2);
+		return;
+	case BENCH_AUXOUT3:
+	    auxOutBench(3);
+		return;
+	case BENCH_AUXOUT4:
+	    auxOutBench(4);
+		return;
+	case BENCH_AUXOUT5:
+	    auxOutBench(5);
+		return;
+	case BENCH_AUXOUT6:
+	    auxOutBench(6);
+		return;
+	case BENCH_AUXOUT7:
+	    auxOutBench(7);
 		return;
 	case BENCH_HPFP_VALVE:
 		hpfpValveBench();
