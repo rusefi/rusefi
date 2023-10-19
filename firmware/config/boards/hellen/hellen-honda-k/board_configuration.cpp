@@ -167,19 +167,17 @@ static Gpio OUTPUTS[] = {
 		Gpio::H144_LS_2,
 		Gpio::H144_LS_3,
 		Gpio::H144_LS_4, // 4
-	Gpio::H144_LS_5, // 5 A/C relay
-	Gpio::H144_LS_6, // 6 idle air
+	Gpio::H144_LS_5, // 5 E18 - AC Relay
+	Gpio::H144_LS_6, // 6 A12 Idle Air Control
 	Gpio::H144_LS_7, // 7 intake runner
 	Gpio::H144_LS_8, // 8 Lockout Solenoid
 	Gpio::H144_OUT_IO12, // 9 Radiator Relay Output
 	Gpio::H144_OUT_PWM6, // 10 B21 - EVAP
 	Gpio::H144_OUT_PWM5, // 11 B23 VTC VVT
 	Gpio::H144_OUT_IO3, // 12 E7 Main Relay Control
-	Gpio::H144_LS_5, // E18 - AC Relay
 	Gpio::H144_OUT_IO7, // E31 Check Engine
 	Gpio::H144_OUT_IO13, // E1 Fuel Relay
 	Gpio::H144_OUT_PWM8, // C11 Aux Low 3
-	Gpio::H144_LS_6, // A12 Idle Air Control
 	Gpio::H144_OUT_IO9, // B18 Alternator Control
 	// high side starts here
 	Gpio::H144_OUT_IO10, // E26 Tachometer
