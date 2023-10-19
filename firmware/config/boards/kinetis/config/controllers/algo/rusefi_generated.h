@@ -40,6 +40,14 @@
 #define BENCH_FUEL_PUMP_DURATION 3000
 #define BENCH_MAIN_RELAY_DURATION 1000
 #define bench_mode_e_BENCH_AC_COMPRESSOR_RELAY 6
+#define bench_mode_e_BENCH_AUXOUT0 20
+#define bench_mode_e_BENCH_AUXOUT1 21
+#define bench_mode_e_BENCH_AUXOUT2 22
+#define bench_mode_e_BENCH_AUXOUT3 23
+#define bench_mode_e_BENCH_AUXOUT4 24
+#define bench_mode_e_BENCH_AUXOUT5 25
+#define bench_mode_e_BENCH_AUXOUT6 26
+#define bench_mode_e_BENCH_AUXOUT7 27
 #define bench_mode_e_BENCH_CANCEL 15
 #define bench_mode_e_BENCH_CHECK_ENGINE_LIGHT 7
 #define bench_mode_e_BENCH_FAN_RELAY 4
@@ -1099,7 +1107,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.10.18.kin.647609341"
+#define TS_SIGNATURE "rusEFI master.2023.10.19.kin.647609341"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

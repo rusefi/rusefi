@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Oct 18 14:34:29 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Oct 19 00:45:45 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -74,6 +74,14 @@ public class Fields {
 	public static final int BENCH_FUEL_PUMP_DURATION = 3000;
 	public static final int BENCH_MAIN_RELAY_DURATION = 1000;
 	public static final int bench_mode_e_BENCH_AC_COMPRESSOR_RELAY = 6;
+	public static final int bench_mode_e_BENCH_AUXOUT0 = 20;
+	public static final int bench_mode_e_BENCH_AUXOUT1 = 21;
+	public static final int bench_mode_e_BENCH_AUXOUT2 = 22;
+	public static final int bench_mode_e_BENCH_AUXOUT3 = 23;
+	public static final int bench_mode_e_BENCH_AUXOUT4 = 24;
+	public static final int bench_mode_e_BENCH_AUXOUT5 = 25;
+	public static final int bench_mode_e_BENCH_AUXOUT6 = 26;
+	public static final int bench_mode_e_BENCH_AUXOUT7 = 27;
 	public static final int bench_mode_e_BENCH_CANCEL = 15;
 	public static final int bench_mode_e_BENCH_CHECK_ENGINE_LIGHT = 7;
 	public static final int bench_mode_e_BENCH_FAN_RELAY = 4;
@@ -1261,7 +1269,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.10.18.f407-discovery.3343969896";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.10.19.f407-discovery.3343969896";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
