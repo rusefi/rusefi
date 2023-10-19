@@ -6,11 +6,8 @@ PROJECT_CPU=$2
 # fail on error
 set -e
 
-SCRIPT_NAME="common_make.sh"
+SCRIPT_NAME="common_script.sh"
 echo "Entering $SCRIPT_NAME with board [$1] and CPU [$2]"
-
-# todo: technical debt: https://github.com/rusefi/rusefi/issues/5284
-cd ../../..
 
 mkdir -p .dep
 # todo: start using env variable for number of threads or for '-r'
