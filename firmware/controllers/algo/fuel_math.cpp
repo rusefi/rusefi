@@ -226,7 +226,7 @@ angle_t getInjectionOffset(float rpm, float load) {
 	}
 
 	angle_t result = value;
-	fixAngle(result, "inj offset#2", ObdCode::CUSTOM_ERR_6553);
+	wrapAngle(result, "inj offset#2", ObdCode::CUSTOM_ERR_6553);
 	return result;
 }
 

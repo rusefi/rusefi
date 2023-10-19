@@ -218,7 +218,7 @@ static void reportWave(Logging *logging, int index) {
 
 		logging->appendPrintf("advance%d%s", index, LOG_DELIMITER);
 		float angle = (offsetUs / oneDegreeUs) - tdcPosition();
-		fixAngle(angle, "waveAn", ObdCode::CUSTOM_ERR_6564);
+		wrapAngle(angle, "waveAn", ObdCode::CUSTOM_ERR_6564);
 		logging->appendFloat(angle, 3);
 		logging->appendPrintf("%s", LOG_DELIMITER);
 	}

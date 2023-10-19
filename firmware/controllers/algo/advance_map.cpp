@@ -187,7 +187,7 @@ angle_t getAdvance(int rpm, float engineLoad) {
 	}
 
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
-	fixAngle(angle, "getAdvance", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
+	wrapAngle(angle, "getAdvance", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
 	return angle;
 #else
 	return 0;

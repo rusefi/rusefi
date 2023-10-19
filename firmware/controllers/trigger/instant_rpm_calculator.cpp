@@ -58,7 +58,7 @@ float InstantRpmCalculator::calculateInstantRpm(
 
 	// Hunt for a tooth ~90 degrees ago to compare to the current time
 	angle_t previousAngle = currentAngle - engineConfiguration->instantRpmRange;
-	fixAngle(previousAngle, "prevAngle", ObdCode::CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
+	wrapAngle(previousAngle, "prevAngle", ObdCode::CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
 	int prevIndex = triggerShape.findAngleIndex(triggerFormDetails, previousAngle);
 
 	// now let's get precise angle for that event
@@ -77,7 +77,7 @@ float InstantRpmCalculator::calculateInstantRpm(
 	angle_t angleDiff = currentAngle - prevIndexAngle;
 
 	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
-	fixAngle(angleDiff, "angleDiff", ObdCode::CUSTOM_ERR_6561);
+	wrapAngle(angleDiff, "angleDiff", ObdCode::CUSTOM_ERR_6561);
 
 	// just for safety, avoid divide-by-0
 	if (time == 0) {

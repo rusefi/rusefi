@@ -182,7 +182,7 @@ void refreshMapAveragingPreCalc() {
 			// move the loop into start-up calculation and not have this loop as part of periodic calculation
 			// todo: change the logic as described above in order to reduce periodic CPU usage?
 			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
-			fixAngle(cylinderStart, "cylinderStart", ObdCode::CUSTOM_ERR_6562);
+			wrapAngle(cylinderStart, "cylinderStart", ObdCode::CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
 		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
@@ -239,7 +239,7 @@ void mapAveragingTriggerCallback(
 		}
 
 		// todo: pre-calculate samplingEnd for each cylinder
-		fixAngle(samplingEnd, "samplingEnd", ObdCode::CUSTOM_ERR_6563);
+		wrapAngle(samplingEnd, "samplingEnd", ObdCode::CUSTOM_ERR_6563);
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
 

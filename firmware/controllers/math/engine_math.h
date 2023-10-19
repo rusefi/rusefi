@@ -15,11 +15,9 @@ void setFlatInjectorLag(float value);
 
 /**
  * See also wrapVvt
- * TODO: replace all usages of fixAngle with wrapAngle?
  * Should we make this a nice method instead of that off macro which changes parameter value?
  */
-#define fixAngle(angle, msg, code) wrapAngle2(angle, msg, code, getEngineState()->engineCycle)
-#define wrapAngle(angle, msg, code) fixAngle(angle, msg, code)
+#define wrapAngle(angle, msg, code) wrapAngle2(angle, msg, code, getEngineState()->engineCycle)
 
 // proper method avoids un-wrapped state of variables
 angle_t wrapAngleMethod(angle_t param, const char *msg, ObdCode code);
