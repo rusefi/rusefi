@@ -13,9 +13,6 @@ void setAlgorithm(engine_load_mode_e algo);
 
 void setFlatInjectorLag(float value);
 
-// proper method avoids un-wrapped state of variables
-angle_t wrapAngleMethod(angle_t param, const char *msg, ObdCode code);
-
 /**
  * @return time needed to rotate crankshaft by one degree, in milliseconds.
  * @deprecated use at least Us, maybe even Nt

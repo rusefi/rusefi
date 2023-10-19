@@ -30,11 +30,6 @@
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
-angle_t wrapAngleMethod(angle_t param, const char *msg, ObdCode code) {
-	wrapAngle(param, msg, code);
-	return param;
-}
-
 floatms_t getEngineCycleDuration(int rpm) {
 	return getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 }
