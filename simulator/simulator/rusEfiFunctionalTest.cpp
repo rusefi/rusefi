@@ -35,7 +35,9 @@ extern fifo_buffer<CANTxFrame, 1024> txCanBuffer;
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
 
+#if EFI_ENGINE_SNIFFER
 extern WaveChart waveChart;
+#endif
 
 int getRemainingStack(thread_t*) {
 	return 99999;
@@ -104,6 +106,7 @@ static void writeSimulatorTune() {
 }
 
 static void runToothLoggerTest() {
+#if EFI_TOOTH_LOGGER
 	EnableToothLoggerIfNotEnabled();
 
 	{
@@ -131,6 +134,7 @@ static void runToothLoggerTest() {
 		const uint8_t* ptr = reinterpret_cast<const uint8_t*>(toothBuffer->buffer);
 		criticalAssertVoid(ptr != nullptr, "Payload reference expected");
 	}
+#endif // EFI_TOOTH_LOGGER
 }
 
 void rusEfiFunctionalTest(void) {
@@ -155,7 +159,9 @@ void rusEfiFunctionalTest(void) {
 
     commonEarlyInit();
 
+#if EFI_EMULATE_POSITION_SENSORS
 	enableTriggerStimulator(false);
+#endif
 
 	initStatusLoop();
 
@@ -170,8 +176,9 @@ void rusEfiFunctionalTest(void) {
     /**
      * end of TESTS !
      */
-
+#if EFI_EMULATE_POSITION_SENSORS
 	setTriggerEmulatorRPM(DEFAULT_SIM_RPM);
+#endif
 	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
 
 	startSerialChannels();
@@ -187,7 +194,9 @@ void rusEfiFunctionalTest(void) {
 
 void printPendingMessages(void) {
 	updateDevConsoleState();
+#if EFI_ENGINE_SNIFFER
 	waveChart.publishIfFull();
+#endif
 }
 
 int isSerialOverTcpReady;
