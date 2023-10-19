@@ -293,7 +293,7 @@ int Engine::getGlobalConfigurationVersion(void) const {
 
 void Engine::reset() {
 	/**
-	 * it's important for fixAngle() that engineCycle field never has zero
+	 * it's important for wrapAngle() that engineCycle field never has zero
 	 */
 	engineState.engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	resetLua();

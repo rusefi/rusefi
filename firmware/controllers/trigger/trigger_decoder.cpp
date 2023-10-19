@@ -160,7 +160,7 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 
 			efiAssertVoid(ObdCode::CUSTOM_TRIGGER_CYCLE, !cisnan(angle), "trgSyncNaN");
 			// Wrap the angle back in to [0, 720)
-			fixAngle(angle, "trgSync", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE_RANGE);
+			wrapAngle(angle, "trgSync", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE_RANGE);
 
 			if (shape->useOnlyRisingEdges) {
 				criticalAssertVoid(triggerDefinitionIndex < triggerShapeLength, "trigger shape fail");

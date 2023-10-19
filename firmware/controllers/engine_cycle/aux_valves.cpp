@@ -41,7 +41,7 @@ void auxPlainPinTurnOn(AuxActor *current) {
 
 	angle_t duration = engine->engineState.auxValveEnd - engine->engineState.auxValveStart;
 
-	fixAngle(duration, "duration", ObdCode::CUSTOM_ERR_6557);
+	wrapAngle(duration, "duration", ObdCode::CUSTOM_ERR_6557);
 
 	engine->module<TriggerScheduler>()->schedule(
 			"aux-valve",
