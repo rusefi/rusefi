@@ -100,7 +100,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		+ getCylinderAngle(event->cylinderIndex, event->cylinderNumber);
 
 	efiAssertVoid(ObdCode::CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
-	wrapAngle2(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
+	wrapAngle(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550);
 	event->sparkAngle = sparkAngle;
 
 	auto ignitionMode = getCurrentIgnitionMode();
@@ -129,7 +129,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
 
 	assertAngleRange(dwellStartAngle, "findAngle dwellStartAngle", ObdCode::CUSTOM_ERR_6550);
-	wrapAngle2(dwellStartAngle, "findAngle#7", ObdCode::CUSTOM_ERR_6550, getEngineCycle(getEngineRotationState()->getOperationMode()));
+	wrapAngle(dwellStartAngle, "findAngle#7", ObdCode::CUSTOM_ERR_6550);
 	event->dwellAngle = dwellStartAngle;
 }
 

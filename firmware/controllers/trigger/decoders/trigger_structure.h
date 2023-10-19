@@ -30,21 +30,21 @@
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
  * I guess this implementation would be faster than 'angle % engineCycle'
  */
-#define wrapAngle2(angle, msg, code, engineCycle)			   	    	    \
+#define wrapAngle(angle, msg, code)			   	    	    \
 	{																		\
    	    if (cisnan(angle)) {                                                \
-		   firmwareError(ObdCode::CUSTOM_ERR_ANGLE, "a NaN %s", msg);                \
+		   firmwareError(ObdCode::CUSTOM_ERR_ANGLE, "a NaN %s", msg);       \
 		   angle = 0;                                                       \
 	    }                                                                   \
 		assertAngleRange(angle, msg, code);	   					            \
-		float engineCycleDurationLocalCopy = engineCycle;	                \
+		float engineCycle = getEngineState()->engineCycle;	                \
 		/* todo: split this method into 'fixAngleUp' and 'fixAngleDown'*/   \
 		/*       as a performance optimization?*/                           \
 		while (angle < 0)                       							\
-			angle += engineCycleDurationLocalCopy;   						\
+			angle += engineCycle;   										\
 			/* todo: would 'if' work as good as 'while'? */                 \
-		while (angle >= engineCycleDurationLocalCopy)						\
-			angle -= engineCycleDurationLocalCopy;   						\
+		while (angle >= engineCycle)										\
+			angle -= engineCycle;   										\
 	}
 
 class TriggerDecoderBase;
