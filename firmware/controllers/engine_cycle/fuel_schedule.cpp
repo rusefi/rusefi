@@ -87,11 +87,9 @@ expected<float> InjectionEvent::computeInjectionAngle() const {
 		return unexpected;
 	}
 
-	auto engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
-
 	angle_t openingAngle = injectionOffset - injectionDurationAngle;
 	assertAngleRange(openingAngle, "openingAngle_r", ObdCode::CUSTOM_ERR_6554);
-	wrapAngle2(openingAngle, "addFuel#1", ObdCode::CUSTOM_ERR_6555, engineCycle);
+	wrapAngle(openingAngle, "addFuel#1", ObdCode::CUSTOM_ERR_6555);
 	// TODO: should we log per-cylinder injection timing? #76
 	getTunerStudioOutputChannels()->injectionOffset = openingAngle;
 
@@ -101,7 +99,7 @@ expected<float> InjectionEvent::computeInjectionAngle() const {
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
 	assertAngleRange(openingAngle, "findAngle#a33", ObdCode::CUSTOM_ERR_6544);
 
-	wrapAngle2(openingAngle, "addFuel#2", ObdCode::CUSTOM_ERR_6555, engineCycle);
+	wrapAngle(openingAngle, "addFuel#2", ObdCode::CUSTOM_ERR_6555);
 
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent openingAngle=%.2f inj %d\r\n", openingAngle, cylinderNumber);
