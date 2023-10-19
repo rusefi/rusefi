@@ -51,6 +51,7 @@ Release template (copy/paste this for new release):
  - Fix "Toyota 3 Tooth Cam" VVT mode (1JZ, 2JZ, 1G, etc) actually works now #237
  - Fix autotune while TS project is in AFR mode - corrections now made properly for target AFR table values
  - Changing idle stepper settings causes kernel panic #265
+ - Data log channel "Fuel: Injection timing SOI" indicates correct values
 
 ## May 2023 Release
 

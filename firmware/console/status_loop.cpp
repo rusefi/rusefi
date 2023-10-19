@@ -544,8 +544,6 @@ static void updateFuelInfo() {
 	engine->outputChannels.wallFuelAmount = wallFuel.getWallFuel() * 1000;			// Convert grams to mg
 	engine->outputChannels.wallFuelCorrectionValue = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
 
-	engine->outputChannels.injectionOffset = engine->engineState.injectionOffset;
-
 	engine->outputChannels.veValue = engine->engineState.currentVe;
 }
 
