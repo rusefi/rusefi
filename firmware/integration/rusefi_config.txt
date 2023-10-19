@@ -2199,6 +2199,7 @@ end_struct
 #define ts_show_critical_led false
 #define ts_show_joystick true
 #define ts_show_egt true
+#define ts_show_engine_control false
 
 #define ts_show_analog_divider true
 #define ts_show_spi true
