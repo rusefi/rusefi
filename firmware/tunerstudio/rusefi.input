@@ -2028,6 +2028,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = std_separator
+		subMenu = kLineDialog,              "K-Line"
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = parkingLot2,				"Experimental 2"
 		subMenu = antiLagDialog,                "Anti-Lag ALS"
@@ -4599,14 +4600,16 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Disable after revolutions",	acrRevolutions
 		field = "Disable after engine phase",	acrDisablePhase
 
-	dialog = parkingLot, "Experimental/Broken"
-;	    field = uiMode,                                 uiMode
+	dialog = kLineDialog, "K Line"
 		field = kLineBaudRate,                          kLineBaudRate
 		field = verboseKLine,                           verboseKLine
-		field = auxiliarySetting1,                      auxiliarySetting1
+		field = hondaK,                                 hondaK
 		field = kLineDoHondaSend,                       kLineDoHondaSend
-		field = hondaK,                         hondaK
 		field = kLinePeriodUs,                          kLinePeriodUs
+
+	dialog = parkingLot, "Experimental/Broken"
+;	    field = uiMode,                                 uiMode
+		field = auxiliarySetting1,                      auxiliarySetting1
 		field = can1ListenMode,                         can1ListenMode
 		field = can2ListenMode,                         can2ListenMode
 		field = rethrowHardFault,                       rethrowHardFault
