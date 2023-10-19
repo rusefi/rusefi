@@ -239,7 +239,7 @@ void startBoostPin() {
 		&engine->executor,
 		&enginePins.boostPin,
 		engineConfiguration->boostPwmFrequency,
-		0
+		/*dutyCycle*/0
 	);
 #endif /* EFI_UNIT_TEST */
 }

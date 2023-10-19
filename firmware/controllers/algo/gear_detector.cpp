@@ -23,7 +23,7 @@ void GearDetector::initGearDetector() {
 		return;
 	}
 
-	if (gearCount > GEARS_COUNT) {
+	if (gearCount > TCU_GEAR_COUNT) {
 		criticalError("too many gears");
 		return;
 	}

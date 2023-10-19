@@ -158,7 +158,6 @@ struct_no_prefix engine_configuration_s
 #define IDLE_VE_SIZE 4
 
 #define TCU_SOLENOID_COUNT 6
-#define TCU_GEAR_COUNT 10
 
 #define RANGE_INPUT_COUNT 6
 
@@ -1141,7 +1140,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 #define AUX_SPEED_SENSOR_COUNT 2
     brain_input_pin_e[AUX_SPEED_SENSOR_COUNT iterate] auxSpeedSensorInputPin;
-	uint8_t totalGearsCount;;"", 1, 0, 1, @@GEARS_COUNT@@, 0
+	uint8_t totalGearsCount;;"", 1, 0, 1, @@TCU_GEAR_COUNT@@, 0
 
 	custom InjectionTimingMode 1 bits, U08, @OFFSET@, [0:1], "End of injection", "Start of injection", "Center of injection"
 	InjectionTimingMode injectionTimingMode;Sets what part of injection's is controlled by the injection phase table.
@@ -1454,7 +1453,7 @@ tChargeMode_e tChargeMode;
 
 	output_pin_e[4 iterate] stepper_raw_output;
 
-    uint16_t[GEARS_COUNT iterate] autoscale gearRatio;;"ratio", 0.01, 0, 0, 30, 2
+    uint16_t[TCU_GEAR_COUNT iterate] autoscale gearRatio;;"ratio", 0.01, 0, 0, 30, 2
 
 uint16_t vvtActivationDelayMs;We need to give engine time to build oil pressure without diverting it to VVT;"ms", 1, 0, 0, 65000, 0
 
@@ -1548,7 +1547,7 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	uint8_t autoscale rpmHardLimitHyst;Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached;"RPM", 10, 0, 0, 2500, 0
 	uint16_t autoscale benchTestOffTime;Time between bench test pulses;"ms", 0.1, 0, 0, 2000, 1
 	uint8_t autoscale boostCutPressureHyst;Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached;"kPa (absolute)", 0.5, 0, 0, 125, 1
-	uint8_t[GEARS_COUNT] autoscale gearBasedOpenLoopBoostAdder;Boost duty cycle added by gear;"%", 0.5, 0, 0, 100, 1
+	uint8_t[TCU_GEAR_COUNT] autoscale gearBasedOpenLoopBoostAdder;Boost duty cycle added by gear;"%", 0.5, 0, 0, 100, 1
 
 	uint32_t benchTestCount;How many test bench pulses do you want;"", 1, 0, 0, 10000000, 0
 	uint8_t autoscale iacByTpsHoldTime;How long initial IAC adder is held before starting to decay.;"seconds", 0.1, 0, 0, 25, 1

@@ -27,5 +27,5 @@ private:
 	float m_gearboxRatio = 0;
 	size_t m_currentGear = 0;
 
-	float m_gearThresholds[GEARS_COUNT - 1];
+	float m_gearThresholds[TCU_GEAR_COUNT - 1];
 };
