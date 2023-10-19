@@ -46,7 +46,7 @@ rawIdlePositionSensor("rawIdlePositionSensor", SensorCategory.SENSOR_INPUTS, Fie
 rawWastegatePosition("rawWastegatePosition", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 94, 0.001, 0.0, 5.0, "V"),
 accelerationX("Acceleration: X", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 96, 0.01, 0.0, 0.0, "G"),
 accelerationY("Acceleration: Y", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 98, 0.01, 0.0, 0.0, "G"),
-detectedGear("Detected Gear", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 100, 1.0, 0.0, 8.0, ""),
+detectedGear("Detected Gear", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 100, 1.0, 0.0, 10.0, ""),
 maxTriggerReentrant("maxTriggerReentrant", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 101, 1.0, 0.0, 100.0, ""),
 rawLowFuelPressure("rawLowFuelPressure", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 102, 0.001, 0.0, 5.0, "V"),
 rawHighFuelPressure("rawHighFuelPressure", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 104, 0.001, 0.0, 5.0, "V"),
