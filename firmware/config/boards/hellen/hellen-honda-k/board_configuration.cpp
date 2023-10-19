@@ -175,12 +175,12 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_OUT_PWM6, // 10 B21 - EVAP
 	Gpio::H144_OUT_PWM5, // 11 B23 VTC VVT
 	Gpio::H144_OUT_IO3, // 12 E7 Main Relay Control
-	Gpio::H144_OUT_IO7, // E31 Check Engine
+	Gpio::H144_OUT_IO7, // 13: E31 Check Engine
 	Gpio::H144_OUT_IO13, // E1 Fuel Relay
 	Gpio::H144_OUT_PWM8, // C11 Aux Low 3
 	Gpio::H144_OUT_IO9, // B18 Alternator Control
 	// high side starts here
-	Gpio::H144_OUT_IO10, // E26 Tachometer
+	Gpio::H144_OUT_IO10, // 17: E26 Tachometer
 	Gpio::H144_OUT_IO6, // B15 VTEC/VTS Output
 	Gpio::H144_IGN_1, // A30 - IGN1
 	Gpio::H144_IGN_2, // A29 - IGN2
