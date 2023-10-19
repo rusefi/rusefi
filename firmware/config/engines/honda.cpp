@@ -5,12 +5,12 @@
 void setHondaCivicBcm() {
     setBodyControlUnit();
     engineConfiguration->totalGearsCount = 6;
-    engineConfiguration->gearRatio[0] = 8;
-    engineConfiguration->gearRatio[1] = 5.2;
-    engineConfiguration->gearRatio[2] = 3.9;
-    engineConfiguration->gearRatio[3] = 2.8;
-    engineConfiguration->gearRatio[4] = 2.2;
-    engineConfiguration->gearRatio[5] = 1.8;
+    engineConfiguration->gearRatio[0] = 12;
+    engineConfiguration->gearRatio[1] = 9;
+    engineConfiguration->gearRatio[2] = 6.2;
+    engineConfiguration->gearRatio[3] = 4.8;
+    engineConfiguration->gearRatio[4] = 3.7;
+    engineConfiguration->gearRatio[5] = 2.8;
 
     engineConfiguration->isBoostControlEnabled = true;
 

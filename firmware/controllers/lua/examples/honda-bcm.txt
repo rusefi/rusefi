@@ -63,7 +63,7 @@ end
 
 function onCAR_SPEED(bus, id, dlc, data)
     canTimer : reset()
-    speedKph = getTwoBytesLSB(data, 1, 0.01)
+    speedKph = getTwoBytesLSB(data, 1, 0.006)
     print('onCAR_SPEED ' .. speedKph)
     speedSensor : set(speedKph)
 
