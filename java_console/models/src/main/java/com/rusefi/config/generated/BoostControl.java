@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/boost_control.txt Thu Oct 19 16:56:08 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/boost_control.txt Fri Oct 20 00:44:15 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -178,6 +178,7 @@ public class BoostControl {
 	public static final Field RPMTOOLOW = Field.create("RPMTOOLOW", 0, FieldType.BIT, 6).setBaseOffset(996);
 	public static final Field TPSTOOLOW = Field.create("TPSTOOLOW", 0, FieldType.BIT, 7).setBaseOffset(996);
 	public static final Field MAPTOOLOW = Field.create("MAPTOOLOW", 0, FieldType.BIT, 8).setBaseOffset(996);
+	public static final Field ISPLANTVALID = Field.create("ISPLANTVALID", 0, FieldType.BIT, 9).setBaseOffset(996);
 	public static final Field LUATARGETADD = Field.create("LUATARGETADD", 4, FieldType.INT16).setScale(0.5).setBaseOffset(996);
 	public static final Field BOOSTOUTPUT = Field.create("BOOSTOUTPUT", 6, FieldType.INT16).setScale(0.01).setBaseOffset(996);
 	public static final Field LUATARGETMULT = Field.create("LUATARGETMULT", 8, FieldType.FLOAT).setBaseOffset(996);
@@ -196,6 +197,7 @@ public class BoostControl {
 	RPMTOOLOW,
 	TPSTOOLOW,
 	MAPTOOLOW,
+	ISPLANTVALID,
 	LUATARGETADD,
 	BOOSTOUTPUT,
 	LUATARGETMULT,
