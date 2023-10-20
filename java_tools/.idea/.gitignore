@@ -2,5 +2,6 @@
 /shelf/
 /workspace.xml
 uiDesigner.xml
+compiler.xml
 gradle.xml
 *
