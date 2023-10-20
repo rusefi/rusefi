@@ -23,3 +23,4 @@ DDEFS += -DHW_HELLEN_K=TRUE
 
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 DDEFS += -DHW_HELLEN_HONDA=1
+DDEFS += -DHELLEN_BOARD_ID_DEBUG
