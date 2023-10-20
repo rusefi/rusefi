@@ -47,6 +47,10 @@ void BoostController::onConfigurationChange(engine_configuration_s const * previ
 
 expected<float> BoostController::observePlant() {
     expected<float> map = Sensor::get(SensorType::Map);
+    if (!map.Valid && engineConfiguration->boostType != CLOSED_LOOP) {
+        // if we're in open loop only let's somewhat operate even without valid Map sensor
+        map = 0;
+    }
     isPlantValid = map.Valid;
     return map;
 }

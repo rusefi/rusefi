@@ -33,6 +33,7 @@ TEST(BoostControl, Setpoint) {
 
 TEST(BoostControl, ObservePlant) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->boostType = CLOSED_LOOP;
 
 	BoostController bc;
 
