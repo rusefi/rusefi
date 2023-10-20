@@ -45,8 +45,10 @@ void BoostController::onConfigurationChange(engine_configuration_s const * previ
 	}
 }
 
-expected<float> BoostController::observePlant() const {
-	return Sensor::get(SensorType::Map);
+expected<float> BoostController::observePlant() {
+    expected<float> map = Sensor::get(SensorType::Map);
+    isPlantValid = map.Valid;
+    return map;
 }
 
 expected<float> BoostController::getSetpoint() {
@@ -245,6 +247,7 @@ void startBoostPin() {
 }
 
 void initBoostCtrl() {
+#if EFI_PROD_CODE
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
 	// 'initVvtActuators' is an example of a subsystem without explicit enable
 	if (!engineConfiguration->isBoostControlEnabled) {
@@ -261,6 +264,7 @@ void initBoostCtrl() {
 	if (!isBrainPinValid(engineConfiguration->boostControlPin) && !hasAnyEtbWastegate) {
 		return;
 	}
+#endif
 
 	// Set up open & closed loop tables
 	boostMapOpen.init(config->boostTableOpenLoop, config->boostTpsBins, config->boostRpmBins);

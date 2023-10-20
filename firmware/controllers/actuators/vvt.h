@@ -34,7 +34,7 @@ public:
 	void onConfigurationChange(engine_configuration_s const * previousConfig) override;
 
 	// ClosedLoopController implementation
-	expected<angle_t> observePlant() const override;
+	expected<angle_t> observePlant() override;
 
 	expected<angle_t> getSetpoint() override;
 	expected<percent_t> getOpenLoop(angle_t target) override;

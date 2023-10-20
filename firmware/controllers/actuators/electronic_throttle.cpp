@@ -244,7 +244,7 @@ void EtbController::showStatus() {
 	m_pid.showPidStatus("ETB");
 }
 
-expected<percent_t> EtbController::observePlant() const {
+expected<percent_t> EtbController::observePlant() {
 	return Sensor::get(m_positionSensor);
 }
 

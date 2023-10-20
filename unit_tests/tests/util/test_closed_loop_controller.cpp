@@ -10,7 +10,7 @@ using ::testing::Eq;
 class TestController : public ClosedLoopController<float, float> {
 public:
 	MOCK_METHOD(expected<float>, getSetpoint, (), (override));
-	MOCK_METHOD(expected<float>, observePlant, (), (const, override));
+	MOCK_METHOD(expected<float>, observePlant, (), (override));
 	MOCK_METHOD(expected<float>, getOpenLoop, (float setpoint), (override));
 	MOCK_METHOD(expected<float>, getClosedLoop, (float setpoint, float observation), (override));
 	MOCK_METHOD(void, setOutput, (expected<float> outputValue), (override));

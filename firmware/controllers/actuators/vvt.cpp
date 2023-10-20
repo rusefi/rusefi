@@ -48,7 +48,7 @@ void VvtController::onConfigurationChange(engine_configuration_s const * previou
 	}
 }
 
-expected<angle_t> VvtController::observePlant() const {
+expected<angle_t> VvtController::observePlant() {
 #if EFI_SHAFT_POSITION_INPUT
 	return engine->triggerCentral.getVVTPosition(m_bank, m_cam);
 #else

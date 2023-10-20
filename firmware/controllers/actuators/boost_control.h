@@ -25,7 +25,7 @@ public:
 	void onConfigurationChange(engine_configuration_s const * previousConfig) override;
 
 	// Helpers for individual parts of boost control
-	expected<float> observePlant() const override;
+	expected<float> observePlant() override;
 	expected<float> getSetpoint() override;
 
 	expected<percent_t> getOpenLoop(float target) override;

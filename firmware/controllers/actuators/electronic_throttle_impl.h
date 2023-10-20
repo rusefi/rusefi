@@ -43,7 +43,7 @@ public:
 	void showStatus();
 
 	// Helpers for individual parts of throttle control
-	expected<percent_t> observePlant() const override;
+	expected<percent_t> observePlant() override;
 
 	expected<percent_t> getSetpoint() override;
 	expected<percent_t> getSetpointEtb();

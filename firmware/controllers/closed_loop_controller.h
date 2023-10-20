@@ -49,7 +49,7 @@ private:
 	virtual expected<TInput> getSetpoint() = 0;
 
 	// Get the current observation: what is the current state of the world?
-	virtual expected<TInput> observePlant() const = 0;
+	virtual expected<TInput> observePlant() = 0;
 
 	// Get the open-loop output: output state based on only the setpoint
 	virtual expected<TOutput> getOpenLoop(TInput setpoint) = 0;
