@@ -29,6 +29,7 @@
 /**
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
  * I guess this implementation would be faster than 'angle % engineCycle'
+ * See also wrapVvt
  */
 #define wrapAngle(angle, msg, code)			   	    	    \
 	{																		\
