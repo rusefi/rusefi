@@ -2,6 +2,9 @@
 
 BUNDLE_NAME="$1"
 export INI_FILE_OVERRIDE="$2"
+REF_NAME=$3
+LTS=$4
+
 SCRIPT_NAME="prepare_bundle.sh"
 echo "Entering $SCRIPT_NAME with ${BUNDLE_NAME}"
 echo "RUSEFI_BUILD_FTP_USER=$RUSEFI_BUILD_FTP_USER"
@@ -16,7 +19,7 @@ fi
 
 export BUNDLE_FULL_NAME="rusefi_bundle_${BUNDLE_NAME}"
 
-bash misc/jenkins/build_working_folder.sh "$3" "$4"
+bash misc/jenkins/build_working_folder.sh "${REF_NAME}" "${LTS}"
 
 pwd
 echo "exiting $SCRIPT_NAME"
