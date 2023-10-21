@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Oct 19 00:42:56 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Oct 21 22:16:59 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -88,6 +88,8 @@ case DBG_20:
   return "DBG_20";
 case DBG_21:
   return "DBG_21";
+case DBG_22:
+  return "DBG_22";
 case DBG_24:
   return "DBG_24";
 case DBG_25:
@@ -112,6 +114,8 @@ case DBG_43:
   return "DBG_43";
 case DBG_46:
   return "DBG_46";
+case DBG_5:
+  return "DBG_5";
 case DBG_6:
   return "DBG_6";
 case DBG_7:
@@ -134,8 +138,6 @@ case DBG_ETB_AUTOTUNE:
   return "DBG_ETB_AUTOTUNE";
 case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
-case DBG_INSTANT_RPM:
-  return "DBG_INSTANT_RPM";
 case DBG_ION:
   return "DBG_ION";
 case DBG_KNOCK:
@@ -158,8 +160,6 @@ case DBG_TLE8888:
   return "DBG_TLE8888";
 case DBG_TPS_ACCEL:
   return "DBG_TPS_ACCEL";
-case DBG_TRIGGER_COUNTERS:
-  return "DBG_TRIGGER_COUNTERS";
 case DBG_UNUSED41:
   return "DBG_UNUSED41";
 case DBG_UNUSED_42:

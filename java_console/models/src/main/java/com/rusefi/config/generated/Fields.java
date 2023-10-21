@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Oct 21 14:43:37 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Oct 21 22:19:13 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -231,6 +231,7 @@ public class Fields {
 	public static final int debug_mode_e_DBG_2 = 2;
 	public static final int debug_mode_e_DBG_20 = 20;
 	public static final int debug_mode_e_DBG_21 = 21;
+	public static final int debug_mode_e_DBG_22 = 22;
 	public static final int debug_mode_e_DBG_24 = 24;
 	public static final int debug_mode_e_DBG_25 = 25;
 	public static final int debug_mode_e_DBG_26 = 26;
@@ -243,6 +244,7 @@ public class Fields {
 	public static final int debug_mode_e_DBG_38 = 38;
 	public static final int debug_mode_e_DBG_43 = 43;
 	public static final int debug_mode_e_DBG_46 = 46;
+	public static final int debug_mode_e_DBG_5 = 5;
 	public static final int debug_mode_e_DBG_6 = 6;
 	public static final int debug_mode_e_DBG_7 = 7;
 	public static final int debug_mode_e_DBG_8 = 8;
@@ -254,7 +256,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_ELECTRONIC_THROTTLE_PID = 17;
 	public static final int debug_mode_e_DBG_ETB_AUTOTUNE = 39;
 	public static final int debug_mode_e_DBG_EXECUTOR = 18;
-	public static final int debug_mode_e_DBG_INSTANT_RPM = 22;
 	public static final int debug_mode_e_DBG_ION = 30;
 	public static final int debug_mode_e_DBG_KNOCK = 15;
 	public static final int debug_mode_e_DBG_LOGIC_ANALYZER = 45;
@@ -266,7 +267,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_TCU = 47;
 	public static final int debug_mode_e_DBG_TLE8888 = 31;
 	public static final int debug_mode_e_DBG_TPS_ACCEL = 1;
-	public static final int debug_mode_e_DBG_TRIGGER_COUNTERS = 5;
 	public static final int debug_mode_e_DBG_UNUSED41 = 41;
 	public static final int debug_mode_e_DBG_UNUSED_42 = 42;
 	public static final int debug_mode_e_UNUSED23 = 23;
