@@ -7,8 +7,6 @@
  *
  *
  * enable trigger_details
- * DBG_TRIGGER_COUNTERS = 5
- * set debug_mode 5
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

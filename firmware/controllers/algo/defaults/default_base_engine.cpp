@@ -72,7 +72,7 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 	// let's have valid default while we still have the field
-	engineConfiguration->debugMode = DBG_INSTANT_RPM;
+	engineConfiguration->debugMode = DBG_MAP;
 
 	engineConfiguration->boostCutPressure = 300;
 	engineConfiguration->boostCutPressureHyst = 20;

@@ -240,7 +240,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_2 = 2,
 	DBG_STEPPER_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
-	DBG_TRIGGER_COUNTERS = 5,
+	DBG_5 = 5,
 	DBG_6 = 6,
 	DBG_7 = 7,
 	DBG_8 = 8,
@@ -262,7 +262,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_20 = 20,
 	DBG_21 = 21,
 
-	DBG_INSTANT_RPM = 22,
+	DBG_22 = 22,
 	UNUSED23 = 23,
 	DBG_24 = 24,
 	DBG_25 = 25,
