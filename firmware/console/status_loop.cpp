@@ -601,11 +601,8 @@ void updateTunerStudioState() {
 #if EFI_USB_SERIAL
 	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
 #endif // EFI_USB_SERIAL
-#if EFI_SHAFT_POSITION_INPUT
+
 	int rpm = Sensor::get(SensorType::Rpm).value_or(0);
-#else /* EFI_SHAFT_POSITION_INPUT */
-	int rpm = 0;
-#endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_PROD_CODE
 	executorStatistics();
@@ -621,34 +618,25 @@ DcHardware *getdcHardware();
     engine->dc_motors.dcOutput0 = dc->dcMotor.get();
     engine->dc_motors.isEnabled0_int = dc->msg() == nullptr;
 
-#if EFI_SHAFT_POSITION_INPUT
-
-	// offset 0
 	tsOutputChannels->RPMValue = rpm;
-	auto instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
-	tsOutputChannels->instantRpm = instantRpm;
+#if EFI_SHAFT_POSITION_INPUT
+	tsOutputChannels->instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
+	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
+	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
+
+	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	updateSensors();
 	updateFuelInfo();
 	updateIgnition(rpm);
 	updateFlags();
 
-	// 104
-	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
-
 	// Output both the estimated air flow, and measured air flow (if available)
 	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);
 	tsOutputChannels->mafMeasured2 = Sensor::getOrZero(SensorType::Maf2);
 	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;
 
-	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
-
-	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
-#endif // EFI_SHAFT_POSITION_INPUT
-
-
-	// 68
-	// 140
 #if EFI_ENGINE_CONTROL
 	tsOutputChannels->injectorDutyCycle = minF(/*let's avoid scaled "uint8_t, 2" overflow*/127, getInjectorDutyCycle(rpm));
 #endif
@@ -743,21 +731,6 @@ DcHardware *getdcHardware();
 	case DBG_TPS_ACCEL:
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
 		break;
-	case DBG_SR5_PROTOCOL: {
-		const int _10_6 = 100000;
-		tsOutputChannels->debugIntField1 = tsState.textCommandCounter * _10_6 +  tsState.totalCounter;
-		tsOutputChannels->debugIntField2 = tsState.outputChannelsCommandCounter * _10_6 + tsState.writeValueCommandCounter;
-		tsOutputChannels->debugIntField3 = tsState.readPageCommandsCounter * _10_6 + tsState.burnCommandCounter;
-		break;
-		}
-	case DBG_TRIGGER_COUNTERS:
-
-#if EFI_SHAFT_POSITION_INPUT
-		tsOutputChannels->debugIntField4 = engine->triggerCentral.triggerState.currentCycle.eventCount[0];
-		tsOutputChannels->debugIntField5 = engine->triggerCentral.triggerState.currentCycle.eventCount[1];
-#endif // EFI_SHAFT_POSITION_INPUT
-
-		break;
 #if EFI_HIP_9011_DEBUG
 	case DBG_KNOCK:
 		// todo: maybe extract hipPostState(tsOutputChannels);
@@ -770,14 +743,6 @@ DcHardware *getdcHardware();
 		postMapState(tsOutputChannels);
 		break;
 #endif /* EFI_MAP_AVERAGING */
-	case DBG_INSTANT_RPM:
-		{
-#if EFI_SHAFT_POSITION_INPUT
-			tsOutputChannels->debugFloatField2 = instantRpm / Sensor::getOrZero(SensorType::Rpm);
-#endif // EFI_SHAFT_POSITION_INPUT
-
-		}
-		break;
 	case DBG_ION:
 #if EFI_CDM_INTEGRATION
 		ionPostState(tsOutputChannels);
