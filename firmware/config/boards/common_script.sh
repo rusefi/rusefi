@@ -44,6 +44,9 @@ else
   cp build/rusefi.bin  deliver/
   cp build/rusefi.dfu  deliver/
   cp build/rusefi.hex  deliver/
+  if [ "$INCLUDE_ELF" = "yes" ]; then
+   cp build/rusefi.elf  deliver/
+  fi
 fi
 
 # bootloader and composite image

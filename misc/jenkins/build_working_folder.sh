@@ -7,6 +7,8 @@
 FULL_BUNDLE_FILE="${BUNDLE_FULL_NAME}.zip"
 UPDATE_BUNDLE_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
 
+LTS=$2
+
 echo "${BUNDLE_FULL_NAME}: Packaging temp/$FULL_BUNDLE_FILE file"
 
 rm -rf temp
@@ -81,10 +83,14 @@ cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 #cp firmware/deliver/rusefi_no_asserts.hex $FOLDER
 
 cp firmware/deliver/rusefi.bin $FOLDER
-# probably not needed cp firmware/build/rusefi.elf $FOLDER
+
 cp firmware/deliver/rusefi.dfu $FOLDER
 # just for now - DFU work in progress
 cp firmware/deliver/rusefi.hex $FOLDER
+if [ -e firmware/deliver/rusefi.elf ]; then
+ # ELF is useful for debug bundles
+ cp firmware/deliver/rusefi.elf $FOLDER
+fi
 
 # bootloader
 [ -e firmware/deliver/openblt.bin ] && { cp firmware/deliver/openblt.bin $FOLDER ; }
@@ -115,7 +121,7 @@ ls -l $FULL_BUNDLE_FILE
 if [ -n "$RUSEFI_SSH_USER" ]; then
  echo "$SCRIPT_NAME: Uploading full bundle"
  retVal=0
- if [ "$2" = "true" ]; then
+ if [ "${LTS}" = "true" ]; then
    tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/lts/$1; tar -xzf - -C build_server/lts/$1"
    retVal=$?
  else
@@ -149,7 +155,7 @@ cd ..
 ls -l $UPDATE_BUNDLE_FILE
 if [ -n "$RUSEFI_SSH_USER" ]; then
  retVal=0
- if [ "$2" = "true" ]; then
+ if [ "${LTS}" = "true" ]; then
    tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/lts/$1/autoupdate; tar -xzf - -C build_server/lts/$1/autoupdate"
    retVal=$?
  else

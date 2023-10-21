@@ -8,5 +8,5 @@ export EXTRA_PARAMS="\
  -DEFI_LUA=FALSE \
  -DRAMDISK_INVALID"
 export DEBUG_LEVEL_OPT="-O0 -ggdb -g"
-
+export INCLUDE_ELF=yes
 bash ../common_make.sh proteus ARCH_STM32F4
