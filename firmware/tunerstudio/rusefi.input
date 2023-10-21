@@ -423,7 +423,7 @@ enable2ndByteCanID = false
 
 	curve = tpsTspRpmCorrection, "Transient RPM correction"
 		columnLabel = "RPM", "Multiplier"
-		xAxis		=  6, 16, 11
+		xAxis		=  0, 8000, 9
 		yAxis		=  0, 3, 7
 		xBins		= tpsTspCorrValuesBins, RPMValue
 		yBins		= tpsTspCorrValues
