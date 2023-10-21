@@ -35,6 +35,9 @@ void checkLastBootError() {
 		efiPrintf("Last boot had firmware error: %s", sramState->ErrorString);
 		break;
 	case ErrorCookie::HardFault: {
+		efiPrintf("Last boot had raw: %s", sramState->rawMsg);
+		efiPrintf("Last boot had hardFile: %s", sramState->hardFile);
+		efiPrintf("Last boot had line: %d", sramState->hardLine);
 		efiPrintf("Last boot had error: %s", sramState->ErrorString);
 		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
 		if (engineConfiguration->rethrowHardFault) {
@@ -101,6 +104,15 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	// Attempt to break in to the debugger, if attached
 	__asm volatile("BKPT #0\n");
 #endif
+
+#if EFI_BACKUP_SRAM
+	auto sramState = getBackupSram();
+	if (sramState != nullptr) {
+		strncpy(sramState->hardFile, file, efi::size(sramState->hardFile));
+		sramState->hardLine = line;
+		strncpy(sramState->rawMsg, msg, efi::size(sramState->rawMsg));
+	}
+#endif // EFI_BACKUP_SRAM
 
 	if (hasOsPanicError())
 		return;
