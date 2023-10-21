@@ -38,6 +38,7 @@ void checkLastBootError() {
 		efiPrintf("Last boot had raw: %s", sramState->rawMsg);
 		efiPrintf("Last boot had hardFile: %s", sramState->hardFile);
 		efiPrintf("Last boot had line: %d", sramState->hardLine);
+		efiPrintf("Last boot had check: %d", sramState->check);
 		efiPrintf("Last boot had error: %s", sramState->ErrorString);
 		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
 		if (engineConfiguration->rethrowHardFault) {
@@ -88,6 +89,7 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint3
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
 	sramState->Cookie = ErrorCookie::HardFault;
+	sramState->check = 321;
 	sramState->FaultType = type;
 	sramState->FaultAddress = faultAddress;
 	sramState->Csfr = csfr;
@@ -110,6 +112,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	if (sramState != nullptr) {
 		strncpy(sramState->hardFile, file, efi::size(sramState->hardFile));
 		sramState->hardLine = line;
+		sramState->check = 123;
 		strncpy(sramState->rawMsg, msg, efi::size(sramState->rawMsg));
 	}
 #endif // EFI_BACKUP_SRAM
