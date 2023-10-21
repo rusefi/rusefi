@@ -243,6 +243,10 @@ jobs:
             folder: config/boards/hellen/hellen-honda-k
             ini-file: rusefi_hellen-honda-k.ini
 
+          - build-target: hellen-honda-k_debug
+            folder: config/boards/hellen/hellen-honda-k
+            ini-file: rusefi_hellen-honda-k.ini
+
           - build-target: hellen154hyundai
             folder: config/boards/hellen/hellen154hyundai
             ini-file: rusefi_hellen154hyundai.ini
