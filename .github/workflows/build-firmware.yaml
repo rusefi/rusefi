@@ -180,6 +180,11 @@ jobs:
             ini-file: rusefi_small-can-board.ini
             skip-rate: 50
 
+          - build-target: small-can-board_debug
+            folder: config/boards/hellen/small-can-board
+            ini-file: rusefi_small-can-board.ini
+            skip-rate: 00
+
           - build-target: hellen88bmw
             folder: config/boards/hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
