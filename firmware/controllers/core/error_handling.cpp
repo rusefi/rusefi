@@ -35,6 +35,7 @@ void checkLastBootError() {
 		efiPrintf("Last boot had firmware error: %s", sramState->ErrorString);
 		break;
 	case ErrorCookie::HardFault: {
+		efiPrintf("Last boot had error: %s", sramState->ErrorString);
 		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
 		if (engineConfiguration->rethrowHardFault) {
 		    criticalError("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
