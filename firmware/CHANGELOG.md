@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Breaking Changes
+ - "acIdleRpmBump" renamed to "acIdleRpmTarget", and changed the way of RPM rise needed for proper A/C operation from added to absolute target #5628
+
 ### Added
  - DAC with Lua #5601
  - TunerStudio cacerts fix script #5536
