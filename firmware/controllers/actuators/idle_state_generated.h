@@ -163,7 +163,7 @@ struct idle_state_s {
 	 * Idle: Target A/C RPM
 	 * offset 36
 	 */
-	int targetRpmAcTarget = (int)0;
+	int targetRpmAc = (int)0;
 	/**
 	 * idle: iacByRpmTaper portion
 	 * offset 40
