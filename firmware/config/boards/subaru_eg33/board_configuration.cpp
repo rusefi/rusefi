@@ -210,7 +210,7 @@ void setBoardDefaultConfiguration() {
 	/* This board also has AC clutch output: */
 	engineConfiguration->acRelayPin = Gpio::TLE6240_PIN_15;
 	engineConfiguration->maxAcRpm = 3000;
-	engineConfiguration->acIdleRpmBump = 200;
+	engineConfiguration->acIdleRpmTarget = 900;
 
 	/* CAN */
 	engineConfiguration->canTxPin = Gpio::D1;

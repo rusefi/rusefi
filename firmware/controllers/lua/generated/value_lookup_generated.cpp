@@ -907,9 +907,9 @@ float getConfigValueByName(const char *name) {
 // turboSpeedSensorMultiplier
 		case -1056007485:
 			return engineConfiguration->turboSpeedSensorMultiplier;
-// acIdleRpmBump
+// acIdleRpmTarget
 		case 1683471850:
-			return engineConfiguration->acIdleRpmBump;
+			return engineConfiguration->acIdleRpmTarget;
 // warningPeriod
 		case 1322924702:
 			return engineConfiguration->warningPeriod;
@@ -3242,7 +3242,7 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case 1683471850:
 	{
-		engineConfiguration->acIdleRpmBump = (int)value;
+		engineConfiguration->acIdleRpmTarget = (int)value;
 		return 1;
 	}
 		case 1322924702:

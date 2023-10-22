@@ -3421,7 +3421,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = idleOpenLoop, "Open Loop Idle"
 		slider = "Open loop base position",				manIdlePosition, horizontal
 		field = "A/C adder",							acIdleExtraOffset
-		field = "A/C target adder",						acIdleRpmBump
+		field = "A/C RPM target",						acIdleRpmTarget
 		field = "Fan #1 adder",							fan1ExtraIdle
 		field = "Fan #2 adder",							fan2ExtraIdle
 		field = "Dashpot/Taper Initial IAC Adder",	    iacByTpsTaper
@@ -3504,7 +3504,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Max CLT",						maxAcClt
 		field = "Max TPS",						maxAcTps
 		field = "A/C Idle adder",				acIdleExtraOffset
-		field = "A/C Idle RPM",					acIdleRpmBump
+		field = "A/C Idle RPM",					acIdleRpmTarget
 
 	dialog = acSettings, "", border
 		panel = acSettingsWest, West

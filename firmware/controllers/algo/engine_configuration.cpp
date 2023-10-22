@@ -593,7 +593,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 
-	engineConfiguration->acIdleRpmBump = 50;
+	engineConfiguration->acIdleRpmTarget = 900;
 	engineConfiguration->acDelay = 0.5;
 	engineConfiguration->acIdleExtraOffset = 15;
 

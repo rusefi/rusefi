@@ -2598,11 +2598,11 @@ struct engine_configuration_s {
 	 */
 	Gpio camInputsDebug[CAM_INPUTS_COUNT];
 	/**
-	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
+	 * Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
 	 * offset 1348
 	 */
-	int16_t acIdleRpmBump;
+	int16_t acIdleRpmTarget;
 	/**
 	 * set warningPeriod X
 	seconds

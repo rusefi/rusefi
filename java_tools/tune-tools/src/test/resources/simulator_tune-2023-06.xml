@@ -7,7 +7,7 @@
         <constant name="acFanPin">"NONE"</constant>
         <constant name="acFanPinMode">"default"</constant>
         <constant digits="0" name="acIdleExtraOffset" units="%">0.0</constant>
-        <constant digits="0" name="acIdleRpmBump" units="RPM">200.0</constant>
+        <constant digits="0" name="acIdleRpmTarget" units="RPM">900.0</constant>
         <constant digits="0" name="acRelayAlternatorDutyAdder" units="">0.0</constant>
         <constant name="acRelayPin">"NONE"</constant>
         <constant name="acRelayPinMode">"default"</constant>

@@ -694,7 +694,7 @@
         <constant name="camInputsDebug2">"NONE"</constant>
         <constant name="camInputsDebug3">"NONE"</constant>
         <constant name="camInputsDebug4">"NONE"</constant>
-        <constant digits="0" name="acIdleRpmBump" units="RPM">50.0</constant>
+        <constant digits="0" name="acIdleRpmTarget" units="RPM">900.0</constant>
         <constant digits="0" name="warningPeriod" units="seconds">0.0</constant>
         <constant digits="2" name="knockDetectionWindowStart" units="angle">20.0</constant>
         <constant digits="2" name="knockDetectionWindowEnd" units="angle">60.0</constant>

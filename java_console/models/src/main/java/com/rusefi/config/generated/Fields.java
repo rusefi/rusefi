@@ -1953,7 +1953,7 @@ public class Fields {
 	public static final Field CAMINPUTSDEBUG2 = Field.create("CAMINPUTSDEBUG2", 1342, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CAMINPUTSDEBUG3 = Field.create("CAMINPUTSDEBUG3", 1344, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CAMINPUTSDEBUG4 = Field.create("CAMINPUTSDEBUG4", 1346, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field ACIDLERPMBUMP = Field.create("ACIDLERPMBUMP", 1348, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ACIDLERPMTARGET = Field.create("ACIDLERPMTARGET", 1348, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field WARNINGPERIOD = Field.create("WARNINGPERIOD", 1350, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field KNOCKDETECTIONWINDOWSTART = Field.create("KNOCKDETECTIONWINDOWSTART", 1352, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field KNOCKDETECTIONWINDOWEND = Field.create("KNOCKDETECTIONWINDOWEND", 1356, FieldType.FLOAT).setBaseOffset(0);
@@ -3521,7 +3521,7 @@ public class Fields {
 	CAMINPUTSDEBUG2,
 	CAMINPUTSDEBUG3,
 	CAMINPUTSDEBUG4,
-	ACIDLERPMBUMP,
+	ACIDLERPMTARGET,
 	WARNINGPERIOD,
 	KNOCKDETECTIONWINDOWSTART,
 	KNOCKDETECTIONWINDOWEND,

@@ -1060,7 +1060,7 @@ bit tempBooleanForVerySpecialLogic
 	float turboSpeedSensorMultiplier;;"mult", 1, 0, 0, 7000, 3
 
 	Gpio[CAM_INPUTS_COUNT iterate] camInputsDebug;
-	int16_t acIdleRpmBump;Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 2000, 0
+	int16_t acIdleRpmTarget;Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 2000, 0
 
 	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
 

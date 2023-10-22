@@ -5,7 +5,7 @@ public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2730;
 	public static final int acCutoffHighRpm_offset = 1494;
 	public static final int acCutoffLowRpm_offset = 1492;
-	public static final int acIdleRpmBump_offset = 1496;
+	public static final int acIdleRpmTarget_offset = 1496;
 	public static final int acRelayPin_offset = 824;
 	public static final int acRelayPin_offset_hex = 338;
 	public static final int acRelayPinMode_offset = 825;
@@ -1659,7 +1659,7 @@ public class Fields {
 	public static final Field IGNMATHCALCULATEATINDEX = Field.create("IGNMATHCALCULATEATINDEX", 1488, FieldType.INT);
 	public static final Field ACCUTOFFLOWRPM = Field.create("ACCUTOFFLOWRPM", 1492, FieldType.INT16);
 	public static final Field ACCUTOFFHIGHRPM = Field.create("ACCUTOFFHIGHRPM", 1494, FieldType.INT16);
-	public static final Field ACIDLERPMBUMP = Field.create("ACIDLERPMBUMP", 1496, FieldType.INT16);
+	public static final Field ACIDLERPMTARGET = Field.create("ACIDLERPMTARGET", 1496, FieldType.INT16);
 	public static final Field WARNINGPERIOD = Field.create("WARNINGPERIOD", 1498, FieldType.INT16);
 	public static final Field VREFADCCHANNEL = Field.create("VREFADCCHANNEL", 1500, FieldType.INT8, adc_channel_e);
 	public static final Field KNOCKDETECTIONWINDOWSTART = Field.create("KNOCKDETECTIONWINDOWSTART", 1504, FieldType.FLOAT);
