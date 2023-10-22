@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Oct 19 16:56:19 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Oct 22 22:35:52 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2598,11 +2598,11 @@ struct engine_configuration_s {
 	 */
 	Gpio camInputsDebug[CAM_INPUTS_COUNT];
 	/**
-	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
+	 * Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
 	 * offset 1348
 	 */
-	int16_t acIdleRpmBump;
+	int16_t acIdleRpmTarget;
 	/**
 	 * set warningPeriod X
 	seconds
@@ -5360,4 +5360,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23672);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Oct 19 16:56:19 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Oct 22 22:35:52 UTC 2023

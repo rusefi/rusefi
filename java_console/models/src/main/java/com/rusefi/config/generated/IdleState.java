@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Thu Oct 19 16:56:08 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Oct 22 22:35:39 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -194,7 +194,7 @@ public class IdleState {
 	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 24, FieldType.BIT, 16).setBaseOffset(1296);
 	public static final Field IDLETARGET = Field.create("IDLETARGET", 28, FieldType.INT).setScale(1.0).setBaseOffset(1296);
 	public static final Field TARGETRPMBYCLT = Field.create("TARGETRPMBYCLT", 32, FieldType.INT).setScale(1.0).setBaseOffset(1296);
-	public static final Field TARGETRPMACBUMP = Field.create("TARGETRPMACBUMP", 36, FieldType.INT).setScale(1.0).setBaseOffset(1296);
+	public static final Field TARGETRPMAC = Field.create("TARGETRPMAC", 36, FieldType.INT).setScale(1.0).setBaseOffset(1296);
 	public static final Field IACBYRPMTAPER = Field.create("IACBYRPMTAPER", 40, FieldType.FLOAT).setBaseOffset(1296);
 	public static final Field LUAADD = Field.create("LUAADD", 44, FieldType.FLOAT).setBaseOffset(1296);
 	public static final Field[] VALUES = {
@@ -223,7 +223,7 @@ public class IdleState {
 	ISIDLECLOSEDLOOP,
 	IDLETARGET,
 	TARGETRPMBYCLT,
-	TARGETRPMACBUMP,
+	TARGETRPMAC,
 	IACBYRPMTAPER,
 	LUAADD,
 	};

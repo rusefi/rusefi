@@ -522,7 +522,7 @@ iacByTpsTaper("idle: iacByTpsTaper portion", SensorCategory.SENSOR_INPUTS, Field
 throttlePedalUpState("idle: throttlePedalUpState\ntrue in IDLE throttle pedal state, false if driver is touching the pedal\ntodo: better name for this field?", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1316, 1.0, -1.0, -1.0, ""),
 idleTarget("Idle: Target RPM", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1324, 1.0, -1.0, -1.0, ""),
 targetRpmByClt("Idle: Target RPM base", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1328, 1.0, -1.0, -1.0, ""),
-targetRpmAcBump("Idle: Target A/C bump", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1332, 1.0, -1.0, -1.0, ""),
+targetRpmAc("Idle: Target A/C RPM", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1332, 1.0, -1.0, -1.0, ""),
 iacByRpmTaper("idle: iacByRpmTaper portion", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1336, 1.0, -1.0, -1.0, ""),
 luaAdd("idle: Lua Adder", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1340, 1.0, -1.0, -1.0, ""),
 idlePosition("ETB: idlePosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1344, 1.0, 0.0, 10.0, "per"),

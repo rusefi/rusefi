@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Thu Sep 28 13:44:07 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Oct 22 22:35:39 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -160,10 +160,10 @@ struct idle_state_s {
 	 */
 	int targetRpmByClt = (int)0;
 	/**
-	 * Idle: Target A/C bump
+	 * Idle: Target A/C RPM
 	 * offset 36
 	 */
-	int targetRpmAcBump = (int)0;
+	int targetRpmAc = (int)0;
 	/**
 	 * idle: iacByRpmTaper portion
 	 * offset 40
@@ -178,4 +178,4 @@ struct idle_state_s {
 static_assert(sizeof(idle_state_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Thu Sep 28 13:44:07 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Oct 22 22:35:39 UTC 2023

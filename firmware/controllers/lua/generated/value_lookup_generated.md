@@ -901,8 +901,8 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 ### turboSpeedSensorMultiplier
 
 
-### acIdleRpmBump
-Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
+### acIdleRpmTarget
+Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 
 ### warningPeriod
 set warningPeriod X

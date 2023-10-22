@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Oct 22 21:00:27 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Oct 22 22:38:20 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1043,7 +1043,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 120823520;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1269,7 +1268,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.10.22.f407-discovery.120823520";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.10.22.f407-discovery.3693103841";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1953,7 +1952,7 @@ public class Fields {
 	public static final Field CAMINPUTSDEBUG2 = Field.create("CAMINPUTSDEBUG2", 1342, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CAMINPUTSDEBUG3 = Field.create("CAMINPUTSDEBUG3", 1344, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CAMINPUTSDEBUG4 = Field.create("CAMINPUTSDEBUG4", 1346, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field ACIDLERPMBUMP = Field.create("ACIDLERPMBUMP", 1348, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ACIDLERPMTARGET = Field.create("ACIDLERPMTARGET", 1348, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field WARNINGPERIOD = Field.create("WARNINGPERIOD", 1350, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field KNOCKDETECTIONWINDOWSTART = Field.create("KNOCKDETECTIONWINDOWSTART", 1352, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field KNOCKDETECTIONWINDOWEND = Field.create("KNOCKDETECTIONWINDOWEND", 1356, FieldType.FLOAT).setBaseOffset(0);
@@ -3521,7 +3520,7 @@ public class Fields {
 	CAMINPUTSDEBUG2,
 	CAMINPUTSDEBUG3,
 	CAMINPUTSDEBUG4,
-	ACIDLERPMBUMP,
+	ACIDLERPMTARGET,
 	WARNINGPERIOD,
 	KNOCKDETECTIONWINDOWSTART,
 	KNOCKDETECTIONWINDOWEND,
