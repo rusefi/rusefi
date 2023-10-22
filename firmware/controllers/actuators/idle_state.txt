@@ -32,7 +32,7 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
 
 	int idleTarget;Idle: Target RPM
 	int targetRpmByClt;Idle: Target RPM base
-	int targetRpmAcBump;Idle: Target A/C bump
+	int targetRpmAc;Idle: Target A/C RPM
 
     percent_t iacByRpmTaper;idle: iacByRpmTaper portion
 
