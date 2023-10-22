@@ -3504,7 +3504,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Max CLT",						maxAcClt
 		field = "Max TPS",						maxAcTps
 		field = "A/C Idle adder",				acIdleExtraOffset
-		field = "A/C RPM adder",				acIdleRpmBump
+		field = "A/C Idle RPM",					acIdleRpmBump
 
 	dialog = acSettings, "", border
 		panel = acSettingsWest, West
