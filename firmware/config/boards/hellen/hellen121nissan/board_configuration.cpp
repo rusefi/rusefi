@@ -139,7 +139,6 @@ void setBoardDefaultConfiguration() {
 	setPPSCalibration(0.75, 4.45, 0.43, 2.20);
 
 	engineConfiguration->startUpFuelPumpDuration = 4;
-	engineConfiguration->postCrankingFactor = 1.05;
 
     setEtbPID(6.1350, 87.7182, 0.0702);
 
