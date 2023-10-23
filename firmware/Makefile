@@ -87,9 +87,12 @@ ifeq ($(USE_LDOPT),)
 endif
 
 # Enable this if you want link time optimizations (LTO)
-ifeq ($(USE_LTO),)
-  USE_LTO = yes
-endif
+#ifeq ($(USE_LTO),)
+#  USE_LTO = yes
+#endif
+# Fix GCC 12 "note: see the '-flto' option documentation for more information"
+USE_LTO = no
+USE_OPT += -flto=auto
 
 # If enabled, this option allows to compile the application in THUMB mode.
 ifeq ($(USE_THUMB),)
