@@ -6,6 +6,7 @@
  */
 
 #include "honda_k_dbc.h"
+#include "table_helper.h"
 
 #if HW_PROTEUS & EFI_PROD_CODE
 #include "proteus_meta.h"
@@ -42,7 +43,11 @@ void setHondaK() {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	engineConfiguration->crankingIACposition = 70;
-    
+	static const uint16_t defaultPostCrankinDurationBins[] = {
+		0, 2, 4, 6, 8, 10, 12, 15
+	};
+	copyArray(engineConfiguration->postCrankingDurationBins, defaultPostCrankinDurationBins);
+	setTable(engineConfiguration->postCrankingFactor, 1.25f);
     engineConfiguration->useRunningMathForCranking = true;
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_HONDA);

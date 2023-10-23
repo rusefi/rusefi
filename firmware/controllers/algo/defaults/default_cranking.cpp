@@ -27,11 +27,11 @@ void setDefaultCranking() {
 		-20.0f, 0.0f, 30.0f, 60.0f
 	};
 	static const uint16_t defaultPostCrankinDurationBins[] = {
-		0, 2, 4, 6, 8, 10, 12, 15
+		0, 1, 2, 3, 4, 6, 8, 10
 	};
 	copyArray(engineConfiguration->postCrankingCLTBins, defaultPostCrankingCLTBins);
 	copyArray(engineConfiguration->postCrankingDurationBins, defaultPostCrankinDurationBins);
-	setTable(engineConfiguration->postCrankingFactor, 1.0f);
+	setTable(engineConfiguration->postCrankingFactor, 1.2f);
 #endif
 
 	setLinearCurve(config->crankingTpsCoef, /*from*/1, /*to*/1, 1);
