@@ -24,6 +24,7 @@ enum class ClearReason : uint8_t {
 	Lua, // 15
 	ACR, // 16 - Harley Automatic Compression Release
 	LambdaProtection, // 17
+	GdiComms,
 
 	// Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
 	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in rusefi.input
@@ -124,6 +125,7 @@ public:
 	// Other subsystems call these APIs to indicate a problem has occurred
 	void reportEtbProblem();
 	void fatalError();
+	Timer gdiComms;
 
 private:
 	void setFaultRevLimit(int limit);
