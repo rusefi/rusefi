@@ -1246,8 +1246,11 @@ tle8888_mode_e tle8888mode;
 
 	pin_output_mode_e fan2PinMode;
 	float fuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 50, 700000, 0
-	float postCrankingFactor;Fuel multiplier (enrichment) immediately after engine start;"mult", 1, 0, 1, 3, 2
-	float postCrankingDurationSec;Time over which to taper out after start enrichment;"seconds", 1, 0, 0, 30, 0
+
+	float[CRANKING_ADVANCE_CURVE_SIZE x DWELL_CURVE_SIZE] postCrankingFactor;;"mult", 1, 0, 1, 3, 2
+	float[CRANKING_ADVANCE_CURVE_SIZE] postCrankingCLTBins;;"C", 1, 0, -100, 100, 0
+	float[DWELL_CURVE_SIZE] postCrankingDurationBins;;"sec", 1, 0, 0, 1000, 0
+
 	ThermistorConf auxTempSensor1
 	ThermistorConf auxTempSensor2
 	int16_t knockSamplingDuration;;"Deg", 1, 0, 0, 720, 0

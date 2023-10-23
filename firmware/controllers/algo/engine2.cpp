@@ -119,14 +119,16 @@ void EngineState::periodicFastCallback() {
 	getLimpManager()->updateRevLimit(rpm);
 
 	// post-cranking fuel enrichment.
+	float m_postCrankingFactor = interpolate3d(
+		engineConfiguration->postCrankingFactor,
+		engineConfiguration->postCrankingCLTBins, Sensor::getOrZero(SensorType::Clt),
+		engineConfiguration->postCrankingDurationBins, engine->fuelComputer.running.timeSinceCrankingInSecs
+	);
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
-	if (engineConfiguration->postCrankingFactor > 1.0f) {
-		// use interpolation for correction taper
-		engine->fuelComputer.running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
-			engineConfiguration->postCrankingDurationSec, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs);
-	} else {
-		engine->fuelComputer.running.postCrankingFuelCorrection = 1.0f;
+	if (m_postCrankingFactor < 1.0f) {
+		m_postCrankingFactor = 1.0f;
 	}
+	engine->fuelComputer.running.postCrankingFuelCorrection = m_postCrankingFactor;
 
 	engine->ignitionState.cltTimingCorrection = getCltTimingCorrection();
 

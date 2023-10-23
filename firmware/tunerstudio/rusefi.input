@@ -1304,6 +1304,11 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 		yBins	= hpfpCompensationLoadBins, running_fuel
 		zBins	= hpfpCompensation
 
+	table = postCrankingEnrichmentTbl, postCrankingEnrichmentMap, "After start enrichment", 1
+		xBins	= postCrankingCLTBins, coolant
+		yBins	= postCrankingDurationBins, seconds
+		zBins	= postCrankingFactor
+
 
 [GaugeConfigurations]
 @@LIVE_DATA_GAUGES_FROM_FILE@@
@@ -3964,10 +3969,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Timing Advance mode",	useSeparateAdvanceForCranking
 		field = "Fixed cranking advance",	crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
 		field = "Fixed Cranking Dwell",						ignitionDwellForCrankingMs
-
-	dialog = postCrankingEnrichment, "After start enrichment"
-		field = "Post-Cranking factor",				postCrankingFactor
-		field = "Duration",				postCrankingDurationSec
 
 	dialog = primingFuelPulsePanel, "Priming fuel pulse"
 		field = "Priming delay",	primingDelay
