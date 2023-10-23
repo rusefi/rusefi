@@ -889,17 +889,6 @@ void detectBoardType() {
 void fuelBenchMode() {
     engineConfiguration->cranking.rpm = 12000;
     setFlatInjectorLag(0);
-
-	static const float defaultPostCrankingCLTBins[] = {
-		-20.0f, 0.0f, 30.0f, 60.0f
-	};
-	static const uint16_t defaultPostCrankinDurationBins[] = {
-		0, 2, 4, 6, 8, 10, 12, 15
-	};
-	copyArray(engineConfiguration->postCrankingCLTBins, defaultPostCrankingCLTBins);
-	copyArray(engineConfiguration->postCrankingDurationBins, defaultPostCrankinDurationBins);
-	setTable(engineConfiguration->postCrankingFactor, 1.0f);
-
 	setArrayValues(config->crankingFuelCoef, 1.0f);
 	setArrayValues(config->crankingCycleCoef, 1.0f);
     setBodyControlUnit();

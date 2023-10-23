@@ -139,16 +139,6 @@ void setBoardDefaultConfiguration() {
 	setPPSCalibration(0.75, 4.45, 0.43, 2.20);
 
 	engineConfiguration->startUpFuelPumpDuration = 4;
-	
-	static const float defaultPostCrankingCLTBins[] = {
-		-20.0f, 0.0f, 30.0f, 60.0f
-	};
-	static const uint16_t defaultPostCrankinDurationBins[] = {
-		0, 2, 4, 6, 8, 10, 12, 15
-	};
-	copyArray(engineConfiguration->postCrankingCLTBins, defaultPostCrankingCLTBins);
-	copyArray(engineConfiguration->postCrankingDurationBins, defaultPostCrankinDurationBins);
-	setTable(engineConfiguration->postCrankingFactor, 1.0f);
 
     setEtbPID(6.1350, 87.7182, 0.0702);
 
