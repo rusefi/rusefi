@@ -198,7 +198,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	}
 
 	if (CAN_EID(frame) == GDI4_BASE_ADDRESS && frame.data8[7] == GDI4_MAGIC) {
-	    efiPrintf("CAN GDI4 says hi");
+//	    efiPrintf("CAN GDI4 says hi");
 	    getLimpManager()->gdiComms.reset();
 	}
 
