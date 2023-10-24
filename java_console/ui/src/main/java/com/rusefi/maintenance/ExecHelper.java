@@ -1,7 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.util.TimeUtil;
-import com.rusefi.ui.StatusConsumer;
+import com.rusefi.io.UpdateOperationCallbacks;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -25,7 +25,7 @@ public class ExecHelper {
      * This method listens to a data stream from the process, appends messages to UI
      * and accumulates output in a buffer
      */
-    private static void startStreamThread(final Process p, final InputStream stream, final StringBuffer buffer, final StatusConsumer wnd) {
+    private static void startStreamThread(final Process p, final InputStream stream, final StringBuffer buffer, final UpdateOperationCallbacks callbacks) {
         final Thread t = new Thread(() -> {
             try {
                 BufferedReader bis = new BufferedReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
@@ -38,12 +38,13 @@ public class ExecHelper {
                     String line = bis.readLine();
                     if (line == null)
                         break;
-                    wnd.append(line);
+                    callbacks.log(line);
                     buffer.append(line);
                     wasRunningTime = System.currentTimeMillis();
                 }
             } catch (IOException e) {
-                wnd.append("Stream " + e);
+                callbacks.log("Stream " + e);
+                callbacks.error();
             }
         });
         t.setDaemon(true);
@@ -51,8 +52,8 @@ public class ExecHelper {
     }
 
     @NotNull
-    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, StatusConsumer wnd) {
-        return executeCommand(workingDirPath, command, binaryRelativeName, wnd, new StringBuffer());
+    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, UpdateOperationCallbacks callbacks) {
+        return executeCommand(workingDirPath, command, binaryRelativeName, callbacks, new StringBuffer());
     }
 
         /**
@@ -60,32 +61,35 @@ public class ExecHelper {
          * @return stderr of invoked command
          */
     @NotNull
-    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, StatusConsumer wnd, StringBuffer output) {
+    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, UpdateOperationCallbacks callbacks, StringBuffer output) {
         StringBuffer error = new StringBuffer();
         String binaryFullName = workingDirPath + File.separator + binaryRelativeName;
         if (!new File(binaryFullName).exists()) {
-            wnd.append(binaryFullName + " not found :(");
+            callbacks.log(binaryFullName + " not found :(");
             return error.toString();
         }
 
         File workingDir = new File(workingDirPath);
-        return executeCommand(command, wnd, output, error, workingDir);
+        return executeCommand(command, callbacks, output, error, workingDir);
     }
 
     @NotNull
-    public static String executeCommand(String command, StatusConsumer wnd, StringBuffer output, StringBuffer error, File workingDir) {
-        wnd.append("Executing " + command);
+    public static String executeCommand(String command, UpdateOperationCallbacks callbacks, StringBuffer output, StringBuffer error, File workingDir) {
+        callbacks.log("Executing " + command);
         try {
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
-            startStreamThread(p, p.getInputStream(), output, wnd);
-            startStreamThread(p, p.getErrorStream(), error, wnd);
+            startStreamThread(p, p.getInputStream(), output, callbacks);
+            startStreamThread(p, p.getErrorStream(), error, callbacks);
             p.waitFor(3, TimeUnit.MINUTES);
         } catch (IOException e) {
-            wnd.append("IOError: " + e);
+            callbacks.log("IOError: " + e);
+            callbacks.error();
         } catch (InterruptedException e) {
-            wnd.append("WaitError: " + e);
+            callbacks.log("WaitError: " + e);
+            callbacks.error();
         }
-        wnd.append("Done!");
+
+        callbacks.done();
         return error.toString();
     }
 

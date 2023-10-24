@@ -4,6 +4,7 @@ import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -26,6 +27,7 @@ public class ProgramSelector {
     private static final String AUTO_DFU = "Auto Update";
     private static final String MANUAL_DFU = "Manual DFU Update";
     private static final String DFU_SWITCH = "Switch to DFU Mode";
+    private static final String OPENBLT_SWITCH = "Switch to OpenBLT Mode";
     private static final String DFU_ERASE = "Full Chip Erase";
     private static final String OPENBLT_CAN = "OpenBLT via CAN";
 
@@ -48,7 +50,7 @@ public class ProgramSelector {
         controls.add(mode);
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
-        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, OPENBLT_CAN , DFU_ERASE, DFU_SWITCH).contains(persistedMode))
+        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, OPENBLT_CAN, OPENBLT_SWITCH, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
             mode.setSelectedItem(persistedMode);
 
         JButton updateFirmware = new JButton("Update Firmware",
@@ -59,45 +61,59 @@ public class ProgramSelector {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedMode = (String) mode.getSelectedItem();
+                String selectedPort = (String) comboPorts.getSelectedItem();
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
 
                 Objects.requireNonNull(selectedMode);
                 switch (selectedMode) {
                     case AUTO_DFU:
-                        DfuFlasher.doAutoDfu(comboPorts.getSelectedItem(), comboPorts);
+                        DfuFlasher.doAutoDfu(comboPorts, selectedPort, createStatusWindow("DFU update"));
                         break;
                     case MANUAL_DFU:
-                        DfuFlasher.runDfuProgramming();
+                        DfuFlasher.runDfuProgramming(createStatusWindow("DFU update"));
                         break;
                     case DFU_SWITCH:
-                        StatusWindow wnd = DfuFlasher.createStatusWindow();
-                        Object selected = comboPorts.getSelectedItem();
-                        String port = selected == null ? PortDetector.AUTO : selected.toString();
-                        DfuFlasher.rebootToDfu(comboPorts, port, wnd, Fields.CMD_REBOOT_DFU);
+                        rebootToDfu(comboPorts, selectedPort);
+                        break;
+                    case OPENBLT_SWITCH:
+                        rebootToOpenblt(comboPorts, selectedPort);
                         break;
                     case OPENBLT_CAN:
                         flashOpenBltCan();
                         break;
                     case DFU_ERASE:
-                        DfuFlasher.runDfuErase();
+                        DfuFlasher.runDfuEraseAsync(createStatusWindow("DFU erase"));
                         break;
                     default:
                         throw new IllegalArgumentException("How did you " + selectedMode);
                 }
             }
         });
+    }
 
+    @NotNull
+    protected static UpdateOperationCallbacks createStatusWindow(String message) {
+        return new UpdateStatusWindow(appendBundleName(message + " " + Launcher.CONSOLE_VERSION));
+    }
+
+    private static void rebootToDfu(JComponent parent, String selectedPort) {
+        String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
+        DfuFlasher.rebootToDfu(parent, port, createStatusWindow("DFU switch"), Fields.CMD_REBOOT_DFU);
+    }
+
+    private static void rebootToOpenblt(JComponent parent, String selectedPort) {
+        String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
+        DfuFlasher.rebootToDfu(parent, port, createStatusWindow("OpenBLT switch"), Fields.CMD_REBOOT_OPENBLT);
     }
 
     private void flashOpenBltCan() {
-        StatusWindow wnd = new StatusWindow();
-        wnd.showFrame(appendBundleName("OpenBLT via CAN " + Launcher.CONSOLE_VERSION));
+        UpdateOperationCallbacks callbacks = createStatusWindow("OpenBLT via CAN");
         ExecHelper.submitAction(() -> {
             ExecHelper.executeCommand(OPENBLT_BINARY_LOCATION,
                     OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER_EXE +
                             " -s=xcp -t=xcp_can -d=peak_pcanusb -t1=1000 -t3=2000 -t4=10000 -t5=1000 -t7=2000 ../../rusefi_update.srec",
-                    BOOT_COMMANDER_EXE, wnd, new StringBuffer());
+                    BOOT_COMMANDER_EXE, callbacks, new StringBuffer());
             // it's a lengthy operation let's signal end
             Toolkit.getDefaultToolkit().beep();
         }, "OpenBLT via CAN");
@@ -116,18 +132,30 @@ public class ProgramSelector {
         noHardware.setVisible(currentHardware.isEmpty());
         controls.setVisible(!currentHardware.isEmpty());
 
+        boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
+        boolean hasDfuDevice = currentHardware.isDfuFound();
+
         mode.removeAllItems();
         if (IS_WIN) {
-            if (!currentHardware.getKnownPorts().isEmpty())
+            if (hasSerialPorts) {
                 mode.addItem(AUTO_DFU);
-            if (currentHardware.isDfuFound()) {
+            }
+
+            if (hasDfuDevice) {
                 mode.addItem(MANUAL_DFU);
                 mode.addItem(DFU_ERASE);
             }
         }
-        if (!currentHardware.getKnownPorts().isEmpty())
+
+        // If any serial port is detected, offer the option to switch to DFU
+        if (hasSerialPorts) {
+            // mode.addItem(AUTO_OPENBLT);
             mode.addItem(DFU_SWITCH);
+            mode.addItem(OPENBLT_SWITCH);
+            // mode.addItem(MANUAL_OPENBLT);
+        }
+
         trueLayout(mode);
-        UiUtils.trueLayout(content);
+        trueLayout(content);
     }
 }

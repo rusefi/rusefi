@@ -18,18 +18,18 @@ public class DfuHelper {
     private static final Logging log = getLogging(DfuHelper.class);
     private static final String PREFIX = "rusefi_bundle";
 
-    public static void sendDfuRebootCommand(IoStream stream, StatusConsumer messages, String cmd) {
+    public static void sendDfuRebootCommand(IoStream stream, UpdateOperationCallbacks callbacks, String cmd) {
         byte[] command = BinaryProtocol.getTextCommandBytes(cmd);
         try {
             stream.sendPacket(command);
             stream.close();
-            messages.append(String.format("Reboot command [%s] sent into %s!\n", cmd, stream));
+            callbacks.log(String.format("Reboot command [%s] sent into %s!\n", cmd, stream));
         } catch (IOException e) {
-            messages.append("Error " + e);
+            callbacks.log("Error " + e);
         }
     }
 
-    public static boolean sendDfuRebootCommand(JComponent parent, String signature, IoStream stream, StatusConsumer messages, String command) {
+    public static boolean sendDfuRebootCommand(JComponent parent, String signature, IoStream stream, UpdateOperationCallbacks callbacks, String command) {
         RusEfiSignature controllerSignature = SignatureHelper.parse(signature);
         String fileSystemBundleTarget = BundleUtil.getBundleTarget();
         if (fileSystemBundleTarget != null && controllerSignature != null) {
@@ -55,7 +55,7 @@ public class DfuHelper {
             }
         }
 
-        sendDfuRebootCommand(stream, messages, command);
+        sendDfuRebootCommand(stream, callbacks, command);
         return true;
     }
 }
