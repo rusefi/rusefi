@@ -26,6 +26,7 @@ TEST(idle_v2, timingPid) {
 	engineConfiguration->idleTimingPid.pFactor = 0.1;
 	engineConfiguration->idleTimingPid.minValue = -10;
 	engineConfiguration->idleTimingPid.maxValue = 10;
+	engineConfiguration->idleTimingSoftEntryTime = 0.0f;
 	dut.init();
 
 	// Check that out of idle mode it doesn't do anything
