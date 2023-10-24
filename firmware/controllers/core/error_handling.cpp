@@ -169,7 +169,7 @@ bool warning(ObdCode code, const char *fmt, ...) {
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 	// we just had this same warning, let's not spam
-	if (engine->engineState.warnings.isWarningNow(code) || !warningEnabled) {
+	if (engine->engineState.warnings.isWarningNow(code)) {
 		return true;
 	}
 

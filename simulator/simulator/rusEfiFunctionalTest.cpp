@@ -163,8 +163,6 @@ void rusEfiFunctionalTest(void) {
 	enableTriggerStimulator(false);
 #endif
 
-	initStatusLoop();
-
 	writeSimulatorTune();
 
     /**
