@@ -165,6 +165,7 @@ public class DfuFlasher {
             callbacks.error();
             return;
         }
+
         if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             callbacks.log("SUCCESS!");
