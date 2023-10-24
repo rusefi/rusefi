@@ -132,7 +132,7 @@ public class DfuFlasher {
     private static void runDfuErase(UpdateOperationCallbacks callbacks) {
         ExecHelper.executeCommand(DFU_BINARY_LOCATION,
             getDfuEraseCommand(),
-            DFU_BINARY, callbacks, new StringBuffer());
+            DFU_BINARY, callbacks);
     }
 
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks) {
