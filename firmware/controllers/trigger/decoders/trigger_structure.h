@@ -47,7 +47,7 @@ static inline void wrapAngle(angle_t& angle, const char* msg, ObdCode code) {
 }
 
 // proper method avoids un-wrapped state of variables
-static inline angle_t wrapAngleMethod(angle_t param, const char *msg, ObdCode code) {
+static inline angle_t wrapAngleMethod(angle_t param, const char *msg = "", ObdCode code = ObdCode::OBD_PCM_Processor_Fault) {
 	wrapAngle(param, msg, code);
 	return param;
 }
