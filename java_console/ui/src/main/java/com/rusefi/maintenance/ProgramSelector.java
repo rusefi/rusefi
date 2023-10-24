@@ -132,7 +132,7 @@ public class ProgramSelector {
             ExecHelper.executeCommand(OPENBLT_BINARY_LOCATION,
                     OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER_EXE +
                             " -s=xcp -t=xcp_can -d=peak_pcanusb -t1=1000 -t3=2000 -t4=10000 -t5=1000 -t7=2000 ../../rusefi_update.srec",
-                    BOOT_COMMANDER_EXE, callbacks, new StringBuffer());
+                    BOOT_COMMANDER_EXE, callbacks);
 
             callbacks.done();
             // it's a lengthy operation let's signal end
@@ -197,7 +197,7 @@ public class ProgramSelector {
             ExecHelper.executeCommand(OPENBLT_BINARY_LOCATION,
                     OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER_EXE +
                             " -s=xcp -t=xcp_rs232 -d" + port + " ../../rusefi_update.srec",
-                    BOOT_COMMANDER_EXE, callbacks, new StringBuffer());
+                    BOOT_COMMANDER_EXE, callbacks);
 
             callbacks.done();
 
