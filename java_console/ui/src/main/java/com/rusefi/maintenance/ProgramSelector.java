@@ -4,6 +4,7 @@ import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
@@ -15,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -107,8 +109,12 @@ public class ProgramSelector {
     }
 
     private static void rebootToOpenblt(JComponent parent, String selectedPort) {
+        rebootToOpenblt(parent, selectedPort, createStatusWindow("OpenBLT switch"));
+    }
+
+    private static void rebootToOpenblt(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
         String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
-        DfuFlasher.rebootToDfu(parent, port, createStatusWindow("OpenBLT switch"), Fields.CMD_REBOOT_OPENBLT);
+        DfuFlasher.rebootToDfu(parent, port, callbacks, Fields.CMD_REBOOT_OPENBLT);
     }
 
     private void flashOpenBltCan() {
@@ -125,9 +131,52 @@ public class ProgramSelector {
         }, "OpenBLT via CAN");
     }
 
-    private void flashOpenbltSerial(String port) {
-        UpdateOperationCallbacks callbacks = createStatusWindow("OpenBLT via CAN");
+    private void flashOpenbltSerialAutomatic(JComponent parent, String fomePort) {
+        UpdateOperationCallbacks callbacks = createStatusWindow("OpenBLT via Serial");
 
+        String[] portsBefore = LinkManager.getCommPorts();
+        rebootToOpenblt(parent, fomePort, callbacks);
+        String[] portsAfter = LinkManager.getCommPorts();
+
+        // Check that the ECU disappeared from the "before" list
+        if (!PortDetector.AUTO.equals(fomePort) && Arrays.stream(portsBefore).anyMatch(fomePort::equals)) {
+            callbacks.log("Looks like your ECU didn't reboot to OpenBLT");
+            callbacks.error();
+            return;
+        }
+
+        // Check that exactly one thing appeared in the "after" list
+        ArrayList<String> newItems = new ArrayList<>();
+        for (String s : portsAfter) {
+            if (!Arrays.stream(portsBefore).anyMatch(s::equals)) {
+                // This item is in the after list but not before list
+                newItems.add(s);
+            }
+        }
+
+        if (newItems.size() == 0) {
+            callbacks.log("Looks like your ECU disappeared during the update process. Please try again.");
+            callbacks.error();
+            return;
+        }
+
+        if (newItems.size() > 1) {
+            // More than one port appeared? whattt?
+            callbacks.log("Unable to find ECU after reboot as multiple serial ports appeared. Before: " + portsBefore.length + " After: " + portsAfter.length);
+            callbacks.error();
+            return;
+        }
+
+        String openbltPort = newItems.get(0);
+
+        flashOpenbltSerial(openbltPort, callbacks);
+    }
+
+    private void flashOpenbltSerial(String port) {
+        flashOpenbltSerial(port, createStatusWindow("OpenBLT via Serial"));
+    }
+
+    private void flashOpenbltSerial(String port, UpdateOperationCallbacks callbacks) {
         // We can't auto detect OpenBLT port yet
         if (port == null || PortDetector.AUTO.equals(port)) {
             callbacks.log("Invalid serial port for OpenBLT: " + port);
@@ -145,7 +194,7 @@ public class ProgramSelector {
 
             // it's a lengthy operation let's signal end
             Toolkit.getDefaultToolkit().beep();
-        }, "OpenBLT via serial");
+        }, "OpenBLT via Serial");
     }
 
     @NotNull
