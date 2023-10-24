@@ -27,7 +27,7 @@ void setDefaultCranking() {
 		-20.0f, 0.0f, 30.0f, 60.0f
 	};
 	static const uint16_t defaultPostCrankinDurationBins[] = {
-		0, 1, 2, 3, 4, 6, 8, 10
+		0, 15, 35, 50, 65, 100, 125, 150
 	};
 	copyArray(engineConfiguration->postCrankingCLTBins, defaultPostCrankingCLTBins);
 	copyArray(engineConfiguration->postCrankingDurationBins, defaultPostCrankinDurationBins);

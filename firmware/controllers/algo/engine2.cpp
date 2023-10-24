@@ -122,7 +122,7 @@ void EngineState::periodicFastCallback() {
 	float m_postCrankingFactor = interpolate3d(
 		engineConfiguration->postCrankingFactor,
 		engineConfiguration->postCrankingCLTBins, Sensor::getOrZero(SensorType::Clt),
-		engineConfiguration->postCrankingDurationBins, engine->fuelComputer.running.timeSinceCrankingInSecs
+		engineConfiguration->postCrankingDurationBins, engine->rpmCalculator.getRevolutionCounterSinceStart()
 	);
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
 	// if the engine run time is past the last bin, disable ASE in case the table is filled with values more than 1.0, helps with compatibility
