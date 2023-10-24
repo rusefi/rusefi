@@ -15,8 +15,8 @@ public:
 
 	float getRpmInGear(size_t gear) const;
 
-	SensorResult get() const;
-	void showInfo(const char* sensorName) const;
+	SensorResult get() const override;
+	void showInfo(const char* sensorName) const override;
 
 private:
 	float computeGearboxRatio() const;
