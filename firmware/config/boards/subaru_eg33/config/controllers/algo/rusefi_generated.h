@@ -74,6 +74,10 @@
 #define bench_mode_e_BENCH_SECOND_IDLE_VALVE 13
 #define bench_mode_e_BENCH_STARTER_DISABLE_RELAY 2
 #define bench_mode_e_BENCH_STARTER_ENABLE_RELAY 1
+#define bench_mode_e_BENCH_VVT_1_TARGET_BUMP 17
+#define bench_mode_e_BENCH_VVT_2_TARGET_BUMP 18
+#define bench_mode_e_BENCH_VVT_3_TARGET_BUMP 19
+#define bench_mode_e_BENCH_VVT_4_TARGET_BUMP 20
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 750
 #define BOOST_BLEND_COUNT 2
@@ -980,7 +984,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 4170676786
+#define SIGNATURE_HASH 1966803795
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1245,7 +1249,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.10.21.subaru_eg33_f7.4170676786"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.10.24.subaru_eg33_f7.1966803795"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

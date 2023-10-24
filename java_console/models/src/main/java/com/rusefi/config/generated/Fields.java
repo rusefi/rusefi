@@ -81,6 +81,10 @@ public class Fields {
 	public static final int bench_mode_e_BENCH_SECOND_IDLE_VALVE = 13;
 	public static final int bench_mode_e_BENCH_STARTER_DISABLE_RELAY = 2;
 	public static final int bench_mode_e_BENCH_STARTER_ENABLE_RELAY = 1;
+	public static final int bench_mode_e_BENCH_VVT_1_TARGET_BUMP = 17;
+	public static final int bench_mode_e_BENCH_VVT_2_TARGET_BUMP = 18;
+	public static final int bench_mode_e_BENCH_VVT_3_TARGET_BUMP = 19;
+	public static final int bench_mode_e_BENCH_VVT_4_TARGET_BUMP = 20;
 	public static final int blend_table_s_size = 188;
 	public static final int BLOCKING_FACTOR = 750;
 	public static final int BOOST_BLEND_COUNT = 2;
@@ -978,7 +982,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 564039752;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1180,7 +1183,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.10.21.f407-discovery.564039752";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.10.24.f407-discovery.2889015593";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;
@@ -1323,7 +1326,7 @@ public class Fields {
 	public static final Field TRIGGERSIMULATORRPM = Field.create("TRIGGERSIMULATORRPM", 330, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field CYLINDERSCOUNT = Field.create("CYLINDERSCOUNT", 332, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field FIRINGORDER = Field.create("FIRINGORDER", 336, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDOLDBENCHTEST = Field.create("UNUSEDOLDBENCHTEST", 337, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field VVTBUMPAMOUNT = Field.create("VVTBUMPAMOUNT", 337, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 338, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 340, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] engine_load_mode_e = {"Speed Density", "MAF Air Charge", "Alpha-N", "Lua"};
@@ -2745,7 +2748,7 @@ public class Fields {
 	TRIGGERSIMULATORRPM,
 	CYLINDERSCOUNT,
 	FIRINGORDER,
-	UNUSEDOLDBENCHTEST,
+	VVTBUMPAMOUNT,
 	BENCHTESTONTIME,
 	CYLINDERBORE,
 	FUELALGORITHM,

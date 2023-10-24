@@ -137,6 +137,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->triggerSimulatorRpm;
 		case -1578655365:
 			return engineConfiguration->cylindersCount;
+		case -107085459:
+			return engineConfiguration->vvtBumpAmount;
 		case -1992436143:
 			return engineConfiguration->benchTestOnTime;
 		case 1425664391:
@@ -1408,6 +1410,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -1578655365:
 	{
 		engineConfiguration->cylindersCount = (int)value;
+		return;
+	}
+		case -107085459:
+	{
+		engineConfiguration->vvtBumpAmount = (int)value;
 		return;
 	}
 		case -1992436143:

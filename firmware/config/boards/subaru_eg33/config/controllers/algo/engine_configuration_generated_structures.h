@@ -521,8 +521,9 @@ struct engine_configuration_s {
 	uint32_t cylindersCount;
 	// offset 336
 	firing_order_e firingOrder;
+	// deg
 	// offset 337
-	uint8_t unusedOldBenchTest;
+	uint8_t vvtBumpAmount;
 	// Duration of each test pulse
 	// ms
 	// offset 338
