@@ -109,6 +109,7 @@ void rusEfiFunctionalTest(void) {
 
 	initTriggerCentral();
 	initTriggerEmulator();
+	initVvtActuators();
 
 	startStatusThreads();
 
