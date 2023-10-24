@@ -431,3 +431,24 @@ TEST(util, isInRange) {
 	EXPECT_TRUE(isInRange(5, 10, 10));
 	EXPECT_FALSE(isInRange(5, 11, 10));
 }
+
+TEST(util, wrapAngle) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Test within range
+	EXPECT_EQ(0, wrapAngleMethod(0));
+	EXPECT_EQ(20, wrapAngleMethod(20));
+	EXPECT_EQ(710, wrapAngleMethod(710));
+
+	// Test off the top of the range
+	EXPECT_EQ(1, wrapAngleMethod(721));
+	EXPECT_EQ(20, wrapAngleMethod(740));
+	EXPECT_EQ(719, wrapAngleMethod(720 + 719));
+	EXPECT_EQ(0, wrapAngleMethod(720 + 720));
+	EXPECT_EQ(5, wrapAngleMethod(10 * 720 + 5));
+
+	// Test off the bottom of the range
+	EXPECT_EQ(719, wrapAngleMethod(-1));
+	EXPECT_EQ(360, wrapAngleMethod(-360));
+	EXPECT_EQ(1, wrapAngleMethod(-719));
+}
