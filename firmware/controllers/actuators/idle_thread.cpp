@@ -193,8 +193,10 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 			m_crankTaperEndTime = engine->fuelComputer.running.timeSinceCrankingInSecs;
 			m_idleTimingSoftEntryEndTime = m_crankTaperEndTime + engineConfiguration->idleTimingSoftEntryTime;
 		}
-		// Use interpolation for correction taper
-		m_timingPid.setErrorAmplification(interpolateClamped(m_crankTaperEndTime, 0.0f, m_idleTimingSoftEntryEndTime, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs));
+		if (engineConfiguration->idleTimingSoftEntryTime > 0.0f) {
+			// Use interpolation for correction taper
+			m_timingPid.setErrorAmplification(interpolateClamped(m_crankTaperEndTime, 0.0f, m_idleTimingSoftEntryEndTime, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs));
+		}
 	}
 
 
