@@ -199,6 +199,9 @@ Engine displacement in litres
 ### cylindersCount
 Number of cylinder the engine has.
 
+### vvtBumpAmount
+
+
 ### benchTestOnTime
 Duration of each test pulse
 
