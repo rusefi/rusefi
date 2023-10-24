@@ -187,7 +187,18 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 	if (phase != Phase::Idling) {
 		m_timingPid.reset();
 		return 0;
+	} else {
+		// If we are entering idle, and the PID settings are aggressive, it's good to make a soft entry upon entering closed loop
+		if (m_lastPhase == Phase::CrankToIdleTaper) {
+			m_crankTaperEndTime = engine->fuelComputer.running.timeSinceCrankingInSecs;
+			m_idleTimingSoftEntryEndTime = m_crankTaperEndTime + engineConfiguration->idleTimingSoftEntryTime;
+		}
+		if (engineConfiguration->idleTimingSoftEntryTime > 0.0f) {
+			// Use interpolation for correction taper
+			m_timingPid.setErrorAmplification(interpolateClamped(m_crankTaperEndTime, 0.0f, m_idleTimingSoftEntryEndTime, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs));
+		}
 	}
+
 
 	// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
 	return m_timingPid.getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);

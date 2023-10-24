@@ -1355,6 +1355,7 @@ tChargeMode_e tChargeMode;
 	int16_t etb_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
 
 	pid_s idleTimingPid;See useIdleTimingPidControl
+	float idleTimingSoftEntryTime
 
 	int16_t etbRocExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
 

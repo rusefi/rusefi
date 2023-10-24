@@ -3465,10 +3465,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#Gain is in degrees advance per rpm away from target"
 		field = "#A good starting point is 0.1 = 10 deg per 100 rpm"
 		field = "Proportional gain",									idleTimingPid_pFactor, {useIdleTimingPidControl == 1}
+		field = "Integral gain",									idleTimingPid_iFactor, {useIdleTimingPidControl == 1}
 		field = "Derivative gain",									idleTimingPid_dFactor, {useIdleTimingPidControl == 1}
 		field = ""
 		field = "Min adjustment (retard)",								idleTimingPid_minValue, {useIdleTimingPidControl == 1}
 		field = "Max adjustment (advance)",								idleTimingPid_maxValue, {useIdleTimingPidControl == 1}
+		field = ""
+		field = "Soft entry time",								idleTimingSoftEntryTime, {useIdleTimingPidControl == 1}
 		field = ""
 		field = "#Use debug mode 'Timing' to view idle timing adjustment"
 

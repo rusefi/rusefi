@@ -34,7 +34,9 @@ Release template (copy/paste this for new release):
 
 ### Added
  - DAC with Lua #5601
- - TunerStudio cacerts fix script #5536
+ - TunerStudio cacerts fix script #5536 
+ - Idle Timing Control - Soft Entry mechanism, in case of aggresive PID tuning this can help when engine enters close loop idle
+ - Idle Timing Control - I factor configurable now
 
 ### Fixed
  - Changing idle stepper settings causes kernel panic
