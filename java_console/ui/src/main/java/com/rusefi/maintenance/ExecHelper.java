@@ -89,7 +89,6 @@ public class ExecHelper {
             callbacks.error();
         }
 
-        callbacks.done();
         return error.toString();
     }
 
