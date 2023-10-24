@@ -1381,6 +1381,9 @@ Output Min Duty Cycle
 ### idleTimingPid.maxValue
 Output Max Duty Cycle
 
+### idleTimingSoftEntryTime
+null
+
 ### etbRocExpAverageLength
 By the way ETB PID runs at 500hz, length in 1/500 of second here.
 

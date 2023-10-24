@@ -1387,6 +1387,9 @@ float getConfigValueByName(const char *name) {
 // idleTimingPid.maxValue
 		case 402026201:
 			return engineConfiguration->idleTimingPid.maxValue;
+// idleTimingSoftEntryTime
+		case 1881137064:
+			return engineConfiguration->idleTimingSoftEntryTime;
 // etbRocExpAverageLength
 		case 481957934:
 			return engineConfiguration->etbRocExpAverageLength;
@@ -4032,6 +4035,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 402026201:
 	{
 		engineConfiguration->idleTimingPid.maxValue = (int)value;
+		return 1;
+	}
+		case 1881137064:
+	{
+		engineConfiguration->idleTimingSoftEntryTime = value;
 		return 1;
 	}
 		case 481957934:
