@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 23 19:45:57 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Oct 24 16:56:31 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3315,7 +3315,7 @@ struct engine_configuration_s {
 	 */
 	float postCrankingCLTBins[CRANKING_ADVANCE_CURVE_SIZE];
 	/**
-	sec
+	count
 	 * offset 1876
 	 */
 	float postCrankingDurationBins[DWELL_CURVE_SIZE];
@@ -5363,4 +5363,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23840);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Oct 23 19:45:57 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Oct 24 16:56:31 UTC 2023
