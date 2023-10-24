@@ -3,13 +3,11 @@ package com.rusefi;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.DfuFlasher;
-import com.rusefi.ui.StatusConsumer;
+import com.rusefi.io.UpdateOperationCallbacks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import static com.rusefi.FileLog.isLinux;
 
 /**
  * @author Andrey Belomutskiy
@@ -60,7 +58,7 @@ public enum SerialPortScanner {
 
         if (includeSlowLookup) {
             ports.addAll(TcpConnector.getAvailablePorts());
-            dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(StatusConsumer.VOID);
+          createStatusWindow("DFU update")
             stLinkConnected = DfuFlasher.detectStLink(StatusConsumer.VOID);
             PCANConnected = DfuFlasher.detectPcan(StatusConsumer.VOID);
         } else {
