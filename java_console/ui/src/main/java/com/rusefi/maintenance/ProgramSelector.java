@@ -28,6 +28,7 @@ public class ProgramSelector {
     private static final String MANUAL_DFU = "Manual DFU Update";
     private static final String DFU_SWITCH = "Switch to DFU Mode";
     private static final String OPENBLT_SWITCH = "Switch to OpenBLT Mode";
+    private static final String OPENBLT_MANUAL = "Manual OpenBLT Update";
     private static final String DFU_ERASE = "Full Chip Erase";
     private static final String OPENBLT_CAN = "OpenBLT via CAN";
 
@@ -50,7 +51,7 @@ public class ProgramSelector {
         controls.add(mode);
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
-        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, OPENBLT_CAN, OPENBLT_SWITCH, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
+        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, OPENBLT_CAN, OPENBLT_SWITCH, OPENBLT_MANUAL, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
             mode.setSelectedItem(persistedMode);
 
         JButton updateFirmware = new JButton("Update Firmware",
@@ -81,6 +82,9 @@ public class ProgramSelector {
                         break;
                     case OPENBLT_CAN:
                         flashOpenBltCan();
+                        break;
+                    case OPENBLT_MANUAL:
+                        flashOpenbltSerial(selectedPort);
                         break;
                     case DFU_ERASE:
                         DfuFlasher.runDfuEraseAsync(createStatusWindow("DFU erase"));
@@ -114,9 +118,34 @@ public class ProgramSelector {
                     OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER_EXE +
                             " -s=xcp -t=xcp_can -d=peak_pcanusb -t1=1000 -t3=2000 -t4=10000 -t5=1000 -t7=2000 ../../rusefi_update.srec",
                     BOOT_COMMANDER_EXE, callbacks, new StringBuffer());
+
+            callbacks.done();
             // it's a lengthy operation let's signal end
             Toolkit.getDefaultToolkit().beep();
         }, "OpenBLT via CAN");
+    }
+
+    private void flashOpenbltSerial(String port) {
+        UpdateOperationCallbacks callbacks = createStatusWindow("OpenBLT via CAN");
+
+        // We can't auto detect OpenBLT port yet
+        if (port == null || PortDetector.AUTO.equals(port)) {
+            callbacks.log("Invalid serial port for OpenBLT: " + port);
+            callbacks.error();
+            return;
+        }
+
+        ExecHelper.submitAction(() -> {
+            ExecHelper.executeCommand(OPENBLT_BINARY_LOCATION,
+                    OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER_EXE +
+                            " -s=xcp -t=xcp_rs232 -d" + port + " ../../rusefi_update.srec",
+                    BOOT_COMMANDER_EXE, callbacks, new StringBuffer());
+
+            callbacks.done();
+
+            // it's a lengthy operation let's signal end
+            Toolkit.getDefaultToolkit().beep();
+        }, "OpenBLT via serial");
     }
 
     @NotNull
@@ -148,11 +177,11 @@ public class ProgramSelector {
         }
 
         // If any serial port is detected, offer the option to switch to DFU
-        if (hasSerialPorts) {
+        if (true) {
             // mode.addItem(AUTO_OPENBLT);
             mode.addItem(DFU_SWITCH);
             mode.addItem(OPENBLT_SWITCH);
-            // mode.addItem(MANUAL_OPENBLT);
+            mode.addItem(OPENBLT_MANUAL);
         }
 
         trueLayout(mode);
