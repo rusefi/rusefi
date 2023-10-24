@@ -44,7 +44,7 @@ void setHondaK() {
 
 	engineConfiguration->crankingIACposition = 70;
 	static const uint16_t defaultPostCrankinDurationBins[] = {
-		0, 2, 4, 6, 8, 10, 12, 15
+		0, 35, 65, 100, 125, 150, 200, 250
 	};
 	copyArray(engineConfiguration->postCrankingDurationBins, defaultPostCrankinDurationBins);
 	setTable(engineConfiguration->postCrankingFactor, 1.25f);

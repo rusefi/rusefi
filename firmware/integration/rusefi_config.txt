@@ -1249,7 +1249,7 @@ tle8888_mode_e tle8888mode;
 
 	float[CRANKING_ADVANCE_CURVE_SIZE x DWELL_CURVE_SIZE] postCrankingFactor;;"mult", 1, 0, 1, 3, 2
 	float[CRANKING_ADVANCE_CURVE_SIZE] postCrankingCLTBins;;"C", 1, 0, -100, 100, 0
-	float[DWELL_CURVE_SIZE] postCrankingDurationBins;;"sec", 1, 0, 0, 1000, 0
+	float[DWELL_CURVE_SIZE] postCrankingDurationBins;;"count", 1, 0, 0, 1000, 0
 
 	ThermistorConf auxTempSensor1
 	ThermistorConf auxTempSensor2
