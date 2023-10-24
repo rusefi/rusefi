@@ -94,7 +94,6 @@ void rusEfiFunctionalTest(void) {
 
 	initializeConsole();
 
-	initStatusLoop();
 	initDataStructures();
 
 

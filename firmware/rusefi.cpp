@@ -272,7 +272,6 @@ void runRusEfiWithConfig() {
 
 	// Config could be completely bogus - don't start anything else!
 	if (validateConfig()) {
-		initStatusLoop();
 		/**
 		 * Now let's initialize actual engine control logic
 		 * todo: should we initialize some? most? controllers before hardware?

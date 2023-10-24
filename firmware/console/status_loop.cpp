@@ -85,14 +85,8 @@ extern WaveChart waveChart;
 
 #include "sensor_chart.h"
 
-int warningEnabled = true;
-
 extern int maxTriggerReentrant;
 extern uint32_t maxLockedDuration;
-
-static void setWarningEnabled(int value) {
-	warningEnabled = value;
-}
 
 /**
  * This is useful if we are changing engine mode dynamically
@@ -213,7 +207,6 @@ void updateDevConsoleState() {
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
 		efiPrintf("%s error: %s", CRITICAL_PREFIX, getCriticalErrorMessage());
-		warningEnabled = false;
 		return;
 	}
 #endif /* EFI_PROD_CODE */
@@ -758,10 +751,6 @@ DcHardware *getdcHardware();
 }
 
 #endif /* EFI_TUNER_STUDIO */
-
-void initStatusLoop() {
-	addConsoleActionI("warn", setWarningEnabled);
-}
 
 void startStatusThreads() {
 	// todo: refactoring needed, this file should probably be split into pieces
