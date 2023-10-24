@@ -69,6 +69,12 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 #endif
 
+    if (isGdiEngine()) {
+        if (gdiComms.getElapsedSeconds() > 1) {
+            allowFuel.clear(ClearReason::GdiComms);
+        }
+    }
+
 	if (engine->engineState.lua.luaIgnCut) {
 		allowSpark.clear(ClearReason::Lua);
 	}

@@ -1186,12 +1186,6 @@ float getConfigValueByName(const char *name) {
 // fuelReferencePressure
 		case -395416807:
 			return engineConfiguration->fuelReferencePressure;
-// postCrankingFactor
-		case -1297058729:
-			return engineConfiguration->postCrankingFactor;
-// postCrankingDurationSec
-		case 1183263609:
-			return engineConfiguration->postCrankingDurationSec;
 // auxTempSensor1.config.tempC_1
 		case -1104834801:
 			return engineConfiguration->auxTempSensor1.config.tempC_1;
@@ -3703,16 +3697,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -395416807:
 	{
 		engineConfiguration->fuelReferencePressure = value;
-		return 1;
-	}
-		case -1297058729:
-	{
-		engineConfiguration->postCrankingFactor = value;
-		return 1;
-	}
-		case 1183263609:
-	{
-		engineConfiguration->postCrankingDurationSec = value;
 		return 1;
 	}
 		case -1104834801:

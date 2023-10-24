@@ -1180,12 +1180,6 @@ Delay to allow fuel pressure to build before firing the priming pulse.
 ### fuelReferencePressure
 This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
 
-### postCrankingFactor
-Fuel multiplier (enrichment) immediately after engine start
-
-### postCrankingDurationSec
-Time over which to taper out after start enrichment
-
 ### auxTempSensor1.config.tempC_1
 these values are in Celcius
 

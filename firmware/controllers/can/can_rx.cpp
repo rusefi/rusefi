@@ -12,6 +12,7 @@
 
 #include "rusefi_lua.h"
 #include "can_bench_test.h"
+#include "can_common.h"
 
 // todo: consume from fresh wideband_can.h https://github.com/rusefi/rusefi/issues/5208
 #define WB_ACK 0x727573
@@ -195,6 +196,12 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	{
 		obdOnCanPacketRx(frame, busIndex);
 	}
+
+	if (CAN_EID(frame) == GDI4_BASE_ADDRESS && frame.data8[7] == GDI4_MAGIC) {
+//	    efiPrintf("CAN GDI4 says hi");
+	    getLimpManager()->gdiComms.reset();
+	}
+
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 	// Bootloader acks with address 0x727573 aka ascii "rus"
