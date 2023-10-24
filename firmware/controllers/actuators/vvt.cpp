@@ -60,6 +60,10 @@ expected<angle_t> VvtController::getSetpoint() {
 	float load = getFuelingLoad();
 	float target = m_targetMap->getValue(rpm, load);
 
+	if (!m_targetOffsetTimer.hasElapsedSec(2)) {
+		target += m_targetOffset;
+	}
+
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.vvtTargets[index] = target;
 #endif
@@ -68,6 +72,12 @@ expected<angle_t> VvtController::getSetpoint() {
 
 	return target;
 }
+
+void VvtController::setTargetOffset(float targetOffset) {
+	m_targetOffset = targetOffset;
+	m_targetOffsetTimer.reset();
+}
+
 
 expected<percent_t> VvtController::getOpenLoop(angle_t target) {
 	// TODO: could we do VVT open loop?

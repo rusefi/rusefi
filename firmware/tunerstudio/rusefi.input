@@ -2006,6 +2006,11 @@ cmd_test_cancel = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_1
 cmd_fuel_pump_on  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_FUEL_PUMP_ON_16_hex@@"
 cmd_fuel_pump_off = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_FUEL_PUMP_OFF_16_hex@@"
 
+cmd_bump_vvt_target_1 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT_1_TARGET_BUMP_16_hex@@"
+cmd_bump_vvt_target_2 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT_2_TARGET_BUMP_16_hex@@"
+cmd_bump_vvt_target_3 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT_3_TARGET_BUMP_16_hex@@"
+cmd_bump_vvt_target_4 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT_4_TARGET_BUMP_16_hex@@"
+
 cmd_test_sol1 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x01"
 cmd_test_sol2 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x02"
 cmd_test_sol3 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SOLENOID_CATEGORY_16_hex@@\x00\x03"
@@ -3526,6 +3531,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = lambdaProtectionLeft, West
 		panel = lambdaProtectionRight, East
 
+	dialog = vvtTargetBumping, "VVT Testing"
+		field = "Pressing the below buttons will move the respective cam's"
+		field = "target position for 2 seconds for testing and PID tuning"
+		field = ""
+		field = "Target bump amount", vvtBumpAmount
+		commandButton = "VVT target bump bank 1 intake", cmd_bump_vvt_target_1
+		commandButton = "VVT target bump bank 1 exhaust", cmd_bump_vvt_target_2
+		commandButton = "VVT target bump bank 2 intake", cmd_bump_vvt_target_3
+		commandButton = "VVT target bump bank 2 exhaust", cmd_bump_vvt_target_4
+
 	dialog = vvtPidDialog0, "Configuration"
 		field = "Activation Delay",						vvtActivationDelayMs
 		field = "Do not control below RPM",				vvtControlMinRpm
@@ -3536,6 +3551,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "PWM frequency",						vvtOutputFrequency, {vvtPins1 != 0 || vvtPins2 != 0}
 		field = "VVT solenoid intake cams control direction", invertVvtControlIntake, { vvtPins1 != 0 || vvtPins3 != 0 }
 		field = "VVT solenoid exhaust cams control direction", invertVvtControlExhaust, { vvtPins2 != 0 || vvtPins4 != 0 }
+		panel = vvtTargetBumping
 
 	dialog = vvtPidDialog1, "Intake PID"
 		field = "offset",										auxPid1_offset, {vvtPins1 != 0}
