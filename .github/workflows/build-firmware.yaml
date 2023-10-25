@@ -15,7 +15,7 @@ on:
         type: string
 
 jobs:
-  build-openblt-tools:
+  build-openblt-tools-linux:
     runs-on: ubuntu-latest-selfhost
 
     steps:
@@ -47,7 +47,7 @@ jobs:
           ./firmware/ext/openblt/Host/BootCommander
 
   build-firmware:
-    needs: build-openblt-tools
+    needs: build-openblt-tools-linux
     runs-on: ubuntu-latest-selfhost
 
     strategy:
