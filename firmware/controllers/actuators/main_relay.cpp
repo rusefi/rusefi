@@ -3,8 +3,6 @@
 #include "main_relay.h"
 
 void MainRelayController::onSlowCallback() {
-	isBenchTest = engine->isInMainRelayBench();
-
 #if EFI_MAIN_RELAY_CONTROL
 	hasIgnitionVoltage = Sensor::getOrZero(SensorType::BatteryVoltage) > 5;
 
@@ -17,9 +15,9 @@ void MainRelayController::onSlowCallback() {
 
 	// TODO: delayed shutoff timeout?
 
-	mainRelayState = isBenchTest | hasIgnitionVoltage | delayedShutoffRequested;
+	mainRelayState = hasIgnitionVoltage | delayedShutoffRequested;
 #else // not EFI_MAIN_RELAY_CONTROL
-	mainRelayState = !isBenchTest;
+	mainRelayState = true;
 #endif
 
 	enginePins.mainRelay.setValue("mr", mainRelayState);

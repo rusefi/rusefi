@@ -63,6 +63,12 @@ const OutputPin *getOutputOnTheBenchTest() {
 static scheduling_s benchSchedStart;
 static scheduling_s benchSchedEnd;
 
+#if EFI_SIMULATOR
+static int savedPinToggleCounter = 0;
+static uint32_t savedDurationsInStateMs[2] = { 0, 0 };
+#endif // EFI_SIMULATOR
+
+
 #define BENCH_MSG "bench"
 
 static void benchOn(OutputPin* output) {
@@ -84,7 +90,7 @@ static void benchOff(OutputPin* output) {
 	output->setValue(BENCH_MSG, false, /*isForce*/ true);
 }
 
-static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int count) {
+static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int count, bool swapOnOff) {
 	int onTimeUs = MS2US(maxF(0.1, onTimeMs));
 	int offTimeUs = MS2US(maxF(0.1, offTimeMs));
 
@@ -107,14 +113,21 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 		efitick_t endTime = startTime + US2NT(onTimeUs);
 
 		// Schedule both events
-		engine->executor.scheduleByTimestampNt("bstart", &benchSchedStart, startTime, {benchOn, output});
-		engine->executor.scheduleByTimestampNt("bend", &benchSchedEnd, endTime, {benchOff, output});
+		engine->executor.scheduleByTimestampNt("bstart", &benchSchedStart, startTime, {(swapOnOff ? benchOff : benchOn), output});
+		engine->executor.scheduleByTimestampNt("bend", &benchSchedEnd, endTime, {(swapOnOff ? benchOn : benchOff), output});
 
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
 	}
 	/* last */
 	engine->outputChannels.testBenchIter++;
+
+#if EFI_SIMULATOR
+    // save the current counters and durations after the test while the pin is still controlled
+	savedPinToggleCounter = output->pinToggleCounter;
+	savedDurationsInStateMs[0] = output->durationsInStateMs[0];
+	savedDurationsInStateMs[1] = output->durationsInStateMs[1];
+#endif // EFI_SIMULATOR
 
 	efiPrintf("Done!");
 	outputOnTheBenchTest = nullptr;
@@ -128,11 +141,12 @@ static float onTimeMs;
 static float offTimeMs;
 static int count;
 static OutputPin* pinX;
+static bool swapOnOff = false;
 
 static chibios_rt::CounterSemaphore benchSemaphore(0);
 
 static void pinbench(float p_ontimeMs, float p_offtimeMs, int iterations,
-	OutputPin* pinParam)
+	OutputPin* pinParam, bool p_swapOnOff = false)
 {
 	onTimeMs = p_ontimeMs;
 	offTimeMs = p_offtimeMs;
@@ -142,6 +156,7 @@ static void pinbench(float p_ontimeMs, float p_offtimeMs, int iterations,
 	count = iterations;
 #endif // EFI_SIMULATOR
 	pinX = pinParam;
+	swapOnOff = p_swapOnOff;
 	// let's signal bench thread to wake up
 	isBenchTestPending = true;
 	benchSemaphore.signal();
@@ -267,7 +282,7 @@ void acRelayBench() {
 
 static void mainRelayBench() {
 	// main relay is usually "ON" via FSIO thus bench testing that one is pretty unusual
-	engine->mainRelayBenchStart.reset();
+	pinbench(BENCH_MAIN_RELAY_DURATION, 100.0, 1, &enginePins.mainRelay, true);
 }
 
 static void hpfpValveBench() {
@@ -298,7 +313,7 @@ private:
 
 			if (isBenchTestPending) {
 				isBenchTestPending = false;
-				runBench(pinX, onTimeMs, offTimeMs, count);
+				runBench(pinX, onTimeMs, offTimeMs, count, swapOnOff);
 			}
 
 			if (widebandUpdatePending) {
@@ -362,6 +377,9 @@ void handleBenchCategory(uint16_t index) {
 		// cmd_test_fuel_pump
 		fuelPumpBench();
 		return;
+	case BENCH_MAIN_RELAY:
+		mainRelayBench();
+		return;
 	case BENCH_STARTER_ENABLE_RELAY:
 		starterRelayBench();
 		return;
@@ -390,6 +408,16 @@ void handleBenchCategory(uint16_t index) {
 	default:
 		criticalError("Unexpected bench function %d", index);
 	}
+}
+
+int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]) {
+#if EFI_SIMULATOR
+	durationsInStateMs[0] = savedDurationsInStateMs[0];
+	durationsInStateMs[1] = savedDurationsInStateMs[1];
+	return savedPinToggleCounter;
+#else
+	return 0;
+#endif // EFI_SIMULATOR
 }
 
 static void handleCommandX14(uint16_t index) {
