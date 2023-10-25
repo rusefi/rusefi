@@ -24,10 +24,10 @@ void setDefaultCranking() {
 #if !EFI_UNIT_TEST
 	// don't set this for unit tests, as it makes things more complicated to test
 	static const float defaultPostCrankingCLTBins[] = {
-		-20.0f, 0.0f, 30.0f, 60.0f
+		-20.0f, 0.0f, 20.0f, 40.0f, 60.0f, 80.0f
 	};
 	static const uint16_t defaultPostCrankinDurationBins[] = {
-		0, 15, 35, 50, 65, 100, 125, 150
+		0, 15, 35, 65, 100, 150
 	};
 	copyArray(engineConfiguration->postCrankingCLTBins, defaultPostCrankingCLTBins);
 	copyArray(engineConfiguration->postCrankingDurationBins, defaultPostCrankinDurationBins);
