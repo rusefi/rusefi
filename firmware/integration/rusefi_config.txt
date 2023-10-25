@@ -1577,7 +1577,9 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	output_pin_e speedometerOutputPin
 	uint16_t speedometerPulsePerKm;Number of speedometer pulses per kilometer travelled.;"", 1, 0, 0, 65000, 0
 
-uint8_t[246] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint8_t[CAM_INPUTS_COUNT iterate] simulatorCamPosition;
+
+uint8_t[242] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

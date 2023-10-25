@@ -171,7 +171,7 @@ static void startSimulatedTriggerSignal() {
 			&engine->executor,
 			&s->wave,
 			updateTriggerWaveformIfNeeded, emulatorApplyPinState);
-
+    // todo: simulate at least one cam sensor as well
 	hasInitTriggerEmulator = true;
 }
 
