@@ -108,6 +108,10 @@ void setDefaultBaseEngine() {
 	// Trigger
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 
+#if EFI_SIMULATOR
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+#endif // EFI_SIMULATOR
+
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
 	// Default this to on - if you want to diagnose, turn it off.
