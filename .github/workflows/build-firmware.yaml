@@ -81,7 +81,7 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        name: bootcomander-linux
+        name: bootcommander-linux
         path: |
           ./firmware/ext/openblt/Host/libopenblt.so
           ./firmware/ext/openblt/Host/BootCommander
