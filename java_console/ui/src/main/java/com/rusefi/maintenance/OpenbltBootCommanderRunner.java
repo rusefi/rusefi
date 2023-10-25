@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public final class OpenbltBootCommanderRunner {
-    private static final String BOOT_COMMANDER_EXE = "BootCommander.exe";
+    public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().contains("win");
+
+    private static final String BOOT_COMMANDER = "BootCommander" + (IS_WIN ? ".exe" : "");
     private static final String OPENBLT_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "openblt";
 
     public static void flashSerial(String port, String file, UpdateOperationCallbacks callbacks) {
@@ -27,11 +29,11 @@ public final class OpenbltBootCommanderRunner {
         }
 
         try {
-            String cmd = OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER_EXE + " " + args + " " + updateFile.getAbsolutePath();
+            String cmd = OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER + " " + args + " " + updateFile.getAbsolutePath();
 
             callbacks.log("Running BootCommander like: " + cmd);
 
-            ExecHelper.executeCommand(OPENBLT_BINARY_LOCATION, cmd, BOOT_COMMANDER_EXE, callbacks);
+            ExecHelper.executeCommand(OPENBLT_BINARY_LOCATION, cmd, BOOT_COMMANDER, callbacks);
 
             // TODO: check result
 
