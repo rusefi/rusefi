@@ -554,7 +554,19 @@ jobs:
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
-    # Build the firmware!
+    - name: check openblt
+      run: ls -l ./firmware/ext/openblt/Host/
+
+    - name: Download OpenBLT BootCommander Tool
+      uses: actions/download-artifact@v3
+      with:
+        name: bootcomander-linux
+        path: ./firmware/ext/openblt/Host/
+
+    - name: check openblt
+      run: ls -l ./firmware/ext/openblt/Host/
+
+      # Build the firmware!
     - name: Build Firmware
       if: ${{ env.skip != 'true' }}
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
