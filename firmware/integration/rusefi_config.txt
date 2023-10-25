@@ -342,7 +342,7 @@ struct gppwm_channel
 
 	int16_t[GPPWM_LOAD_COUNT] autoscale loadBins;;"load", 0.1, 0, -1000, 1000, 1
 	int16_t[GPPWM_RPM_COUNT] rpmBins;;"RPM", 1, 0, -30000, 30000, 0
-	uint8_t[GPPWM_RPM_COUNT x GPPWM_LOAD_COUNT] autoscale table;;"duty", 0.5, 0, 0, 100, 1
+	uint8_t[GPPWM_LOAD_COUNT x GPPWM_RPM_COUNT] autoscale table;;"duty", 0.5, 0, 0, 100, 1
 end_struct
 
 custom air_pressure_sensor_type_e 1 bits, U08, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "GM 3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "MPXH6400", "MPXH6300"
@@ -1635,10 +1635,10 @@ float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds", 1, 0, 0, 100, 1
 float[AFTERSTART_ENRICH_CURVE_SIZE] afterstartEnrich;;"%", 1, 0, 0, 600, 1
 float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds", 1, 0, 0, 100, 1
 
-uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
+uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
 uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
-uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableClosedLoop;;"", 2, 0, 0, 3000, 0
+uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableClosedLoop;;"", 2, 0, 0, 3000, 0
 uint8_t[BOOST_LOAD_COUNT] boostTpsBins;;"%", 1, 0, 0, 100, 0
 
 uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0

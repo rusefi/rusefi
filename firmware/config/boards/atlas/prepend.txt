@@ -1,1 +1,6 @@
 #define ts_show_etb_pins false
+
+#define IGN_RPM_COUNT 8
+#define GPPWM_RPM_COUNT 4
+#define BOOST_RPM_COUNT 4
+
