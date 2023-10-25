@@ -130,9 +130,14 @@ public class DfuFlasher {
     }
 
     private static void runDfuErase(UpdateOperationCallbacks callbacks) {
-        ExecHelper.executeCommand(DFU_BINARY_LOCATION,
-            getDfuEraseCommand(),
-            DFU_BINARY, callbacks);
+        try {
+            ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                    getDfuEraseCommand(),
+                    DFU_BINARY, callbacks);
+        } catch (FileNotFoundException e) {
+            callbacks.log(e.toString());
+            callbacks.error();
+        }
     }
 
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks) {
