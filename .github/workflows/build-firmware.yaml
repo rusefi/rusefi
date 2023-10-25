@@ -12,6 +12,30 @@ on:
         required: false
         type: boolean
 jobs:
+  build-openblt-tools:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: cmake configure libopenblt
+        working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
+        run: cmake ..
+
+      - name: make libopenblt
+        working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
+        run: make -j8
+
+      - name: cmake configure BootCommander
+        working-directory: ./firmware/ext/openblt/Host/Source/BootCommander/build
+        run: cmake ..
+
+      - name: make BootCommander
+        working-directory: ./firmware/ext/openblt/Host/Source/BootCommander/build
+        run: make -j8
+
   release:
     runs-on: ubuntu-latest
     steps:
@@ -57,6 +81,7 @@ jobs:
 
   build-firmware:
     runs-on: ubuntu-latest
+    needs: build-openblt-tools
     needs: release
 
     strategy:
