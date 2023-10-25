@@ -145,24 +145,32 @@ void sendBoardStatus() {
 #endif // EFI_PROD_CODE
 }
 
+static void sendPinStatePackets(int pinToggleCounter, uint32_t durationsInStateMs[2]) {
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::PIN_STATE, 8, /*bus*/0, /*isExtended*/true);
+	msg[0] = TRUNCATE_TO_BYTE(pinToggleCounter >> 8);
+	msg[1] = TRUNCATE_TO_BYTE(pinToggleCounter);
+
+	for (int i = 0, mIdx = 2; i < 2; i++) {
+		msg[mIdx++] = TRUNCATE_TO_BYTE(durationsInStateMs[i] >> 16);
+		msg[mIdx++] = TRUNCATE_TO_BYTE(durationsInStateMs[i] >> 8);
+		msg[mIdx++] = TRUNCATE_TO_BYTE(durationsInStateMs[i]);
+	}
+}
+
 // bench test fuel pump pin #5603
 static void sendPinStatePackets(bench_mode_e benchModePinIdx) {
     OutputPin *pin = enginePins.getOutputPinForBenchMode(benchModePinIdx);
-	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::PIN_STATE, 8, /*bus*/0, /*isExtended*/true);
     if (pin == nullptr)
     	return;
-#if EFI_UNIT_TEST || EFI_SIMULATOR
-	msg[0] = TRUNCATE_TO_BYTE(pin->pinToggleCounter >> 8);
-	msg[1] = TRUNCATE_TO_BYTE(pin->pinToggleCounter);
-#endif // EFI_UNIT_TEST || EFI_SIMULATOR
-
 #if EFI_SIMULATOR
-	for (int i = 0, mIdx = 2; i < 2; i++) {
-		msg[mIdx++] = TRUNCATE_TO_BYTE(pin->durationsInStateMs[i] >> 16);
-		msg[mIdx++] = TRUNCATE_TO_BYTE(pin->durationsInStateMs[i] >> 8);
-		msg[mIdx++] = TRUNCATE_TO_BYTE(pin->durationsInStateMs[i]);
-	}
+	sendPinStatePackets(pin->pinToggleCounter, pin->durationsInStateMs);
 #endif // EFI_SIMULATOR
+}
+
+static void sendSavedBenchStatePackets() {
+	uint32_t savedDurationsInStateMs[2];
+	int savedPinToggleCounter = getSavedBenchTestPinStates(savedDurationsInStateMs);
+	sendPinStatePackets(savedPinToggleCounter, savedDurationsInStateMs);
 }
 
 static void resetPinStats(bench_mode_e benchModePinIdx) {
@@ -204,6 +212,7 @@ void processCanBenchTest(const CANRxFrame& frame) {
 		// ignore previous pin state and stats
 		resetPinStats(benchModePinIdx);
 	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_END_PIN_TEST) {
+		sendSavedBenchStatePackets();
 	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_EXECUTE_BENCH_TEST) {
 		int benchCommandIdx = frame.data8[2];
 		handleBenchCategory(benchCommandIdx);

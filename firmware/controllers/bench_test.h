@@ -25,3 +25,4 @@ void starterRelayBench();
 
 void executeTSCommand(uint16_t subsystem, uint16_t index);
 void handleBenchCategory(uint16_t index);
+int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]);

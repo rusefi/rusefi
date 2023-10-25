@@ -177,17 +177,12 @@ private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws Int
         executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_EXECUTE_BENCH_TEST,
                 new bench_test_packet_ids_e[] { }, (byte)pinId.ordinal());
 
-        //  sleep 2 cycles of BENCH_FUEL_PUMP_DURATION + extra half second
+        // sleep 2 cycles of BENCH_FUEL_PUMP_DURATION + extra half second
         Thread.sleep(stateToggleTimeMs * 2 + 500);
 
-        // request current pin state for the fuel pump
-        executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_QUERY_PIN_STATE,
-                new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE },
-                (byte)pinId.ordinal());
-
-        // release pin control
+        // request the pin state saved right after the test
         executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_END_PIN_TEST,
-                new bench_test_packet_ids_e[] { }, (byte)pinId.ordinal());
+                new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE }, (byte)pinId.ordinal());
 
         // this check assumes that simulator makes 2 iterations for each pin
         // (this magic is needed because we don't know the previous pin state before starting the test)
@@ -196,7 +191,7 @@ private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws Int
                     + defaultPinToggleCounter + " after=" + pinToggleCounter);
         }
 
-        if (!nearEq(durationsInStateMs[0], stateToggleTimeMs, 10)) {
+        if (!nearEq(durationsInStateMs[1], stateToggleTimeMs, 10)) {
             throw new IllegalStateException(pinId + ": Unexpected pin state duration: [0]="
                     + durationsInStateMs[0] + " [1]=" + durationsInStateMs[1]
                     + " toggleTimeMs=" + stateToggleTimeMs);

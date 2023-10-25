@@ -63,6 +63,12 @@ const OutputPin *getOutputOnTheBenchTest() {
 static scheduling_s benchSchedStart;
 static scheduling_s benchSchedEnd;
 
+#if EFI_SIMULATOR
+static int savedPinToggleCounter = 0;
+static uint32_t savedDurationsInStateMs[2] = { 0, 0 };
+#endif // EFI_SIMULATOR
+
+
 #define BENCH_MSG "bench"
 
 static void benchOn(OutputPin* output) {
@@ -115,6 +121,13 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 	}
 	/* last */
 	engine->outputChannels.testBenchIter++;
+
+#if EFI_SIMULATOR
+    // save the current counters and durations after the test while the pin is still controlled
+	savedPinToggleCounter = output->pinToggleCounter;
+	savedDurationsInStateMs[0] = output->durationsInStateMs[0];
+	savedDurationsInStateMs[1] = output->durationsInStateMs[1];
+#endif // EFI_SIMULATOR
 
 	efiPrintf("Done!");
 	outputOnTheBenchTest = nullptr;
@@ -395,6 +408,12 @@ void handleBenchCategory(uint16_t index) {
 	default:
 		criticalError("Unexpected bench function %d", index);
 	}
+}
+
+int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]) {
+	durationsInStateMs[0] = savedDurationsInStateMs[0];
+	durationsInStateMs[1] = savedDurationsInStateMs[1];
+	return savedPinToggleCounter;
 }
 
 static void handleCommandX14(uint16_t index) {
