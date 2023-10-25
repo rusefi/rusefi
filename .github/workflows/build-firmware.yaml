@@ -41,7 +41,7 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        name: bootcomander-linux
+        name: bootcommander-linux
         path: |
           ./firmware/ext/openblt/Host/libopenblt.so
           ./firmware/ext/openblt/Host/BootCommander
@@ -282,20 +282,6 @@ jobs:
     #     echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
     #     echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
 
-
-    - name: check openblt
-      run: ls -l ./firmware/ext/openblt/Host/
-
-    - name: Download OpenBLT BootCommander Tool
-      uses: actions/download-artifact@v3
-      with:
-        name: bootcomander-linux
-        path: ./firmware/ext/openblt/Host/
-
-    - name: check openblt
-      run: ls -l ./firmware/ext/openblt/Host/
-
-
     # Build the firmware!
     - name: Build Firmware
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
@@ -310,6 +296,12 @@ jobs:
       if: ${{ env.full == 'true' }}
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
+
+    - name: Download OpenBLT BootCommander Tool
+      uses: actions/download-artifact@v3
+      with:
+        name: bootcommander-linux
+        path: ./firmware/ext/openblt/Host/
 
     - name: Package Bundle
       if: ${{ env.full == 'true' }}

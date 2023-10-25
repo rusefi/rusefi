@@ -53,6 +53,8 @@ cp java_console/rusefi.xml                $CONSOLE_FOLDER
 cp -r java_console/bin                    $FOLDER
 cp firmware/ext/openblt/Host/BootCommander.exe $OPENBLT_FOLDER
 cp firmware/ext/openblt/Host/libopenblt.dll    $OPENBLT_FOLDER
+cp firmware/ext/openblt/Host/BootCommander     $OPENBLT_FOLDER
+cp firmware/ext/openblt/Host/libopenblt.so     $OPENBLT_FOLDER
 
 cp misc/console_launcher/readme.html      $FOLDER
 
