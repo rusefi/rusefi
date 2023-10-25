@@ -196,6 +196,10 @@ jobs:
             folder: config/boards/core8
             ini-file: fome_core8.ini
 
+          - build-target: core48
+            folder: config/boards/core48
+            ini-file: fome_core48.ini
+
           # - build-target: 48way
           #   folder: config/boards/48way
           #   ini-file: fome_48way.ini

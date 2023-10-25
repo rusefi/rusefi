@@ -1,4 +1,9 @@
+#define ts_show_hip9011 false
+#define ts_show_cj125 false
 
+#define ts_show_lcd false
+#define ts_show_joystick false
+#define ts_show_gps false
 #define ts_show_software_knock true
 
 #define show_test_presets true

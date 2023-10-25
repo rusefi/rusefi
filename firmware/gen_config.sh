@@ -39,6 +39,7 @@ for BOARD in \
    "config/boards/microrusefi mre_f7" \
    "config/boards/microrusefi mre_f4" \
    "config/boards/core8 core8" \
+   "config/boards/core48 core48" \
    "config/boards/48way 48way" \
    "config/boards/frankenso frankenso_na6" \
    "config/boards/prometheus prometheus_469" \

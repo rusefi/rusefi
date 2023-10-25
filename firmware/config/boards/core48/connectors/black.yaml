@@ -1,0 +1,251 @@
+pins:
+  - pin: A1
+    function: FUEL PUMP
+    type: out_low
+    ts_name: Low Side 12 (G3)
+    pin_name: PG3
+    
+  - pin: A2
+    function: FAN RELAY
+    type: out_low
+    ts_name: Low Side 13 (G4)
+    pin_name: PG4
+
+  - pin: A3
+    function: BOOST
+    type: out_low
+    ts_name: Low Side 14 (G5)
+    pin_name: PG5
+    
+  - pin: A4
+    function: IDLE
+    type: out_low
+    ts_name: Low Side 15 (G6)
+    pin_name: PG6
+
+  - pin: A5
+    function: LSU HEATER-
+    alternative1: LSU 4.9 CONNECTOR PIN 3
+    alternative2: WHITE WIRE
+    type: lsu_heater-
+    
+  - pin: A6
+    function: LSU IA
+    alternative1: LSU 4.9 CONNECTOR PIN 5
+    alternative2: GREEN WIRE
+    type: lsu_ia
+
+  - pin: A7
+    function: LSU VGND
+    alternative1: LSU 4.9 CONNECTOR PIN 2
+    alternative2: YELLOW WIRE
+    type: lsu_vgnd
+
+  - pin: A8
+    function: LSU HEATER+
+    alternative1: LSU 4.9 CONNECTOR PIN 4
+    alternative2: GREY WIRE
+    type: lsu_heater+
+    
+  - pin: B1
+    function: DBW+
+    alternative1: Low Side 11 (G2)
+    type: switch
+    ts_name: Switch SW5
+    
+  - pin: B2
+    function: CAN LOW
+    alternative1: Digital Input 1 (D5)
+    alternative2: USB D+
+    type: switch
+    ts_name: Switch SW4
+    
+  - pin: B3
+    function: CAN HIGH
+    alternative1: Digital Input 2 (D4)
+    alternative2: USB D-
+    type: switch
+    ts_name: Switch SW3
+            
+  - pin: B4
+    function: Digital Input 4 (D2)
+    alternative1: Analogue Input 8 (A4)
+    alternative2: Knock 1 (C0)
+    type: switch
+    ts_name: Switch SW2
+
+  - pin: B5
+    function: Digital Input 3 (D3)
+    alternative1: Analogue Input 9 (A1)
+    alternative2: Knock 2 (C1)
+    type: switch
+    ts_name: Switch SW1
+    
+  - pin: B6
+    function: LSU NERMEST
+    alternative1: LSU 4.9 CONNECTOR PIN 6
+    alternative2: BLACK WIRE
+    type: lsu_nermest
+    
+  - pin: B7
+    function: LSU IP
+    alternative1: LSU 4.9 CONNECTOR PIN 1
+    alternative2: RED WIRE
+    type: lsu_ip
+    
+  - pin: B8
+    function: +12V Battery
+    type: 12v
+    ts_name: +12V from Battery
+    
+  - pin: C1
+    function: DBW-
+    alternative1: Low Side 10 (D15)
+    type: switch
+    ts_name: Switch SW6
+    
+  - pin: C2
+    function: VR1+
+    alternative1: HALL 1 (PG1)
+    type: in_trigger
+    ts_name: VR1+
+    pin_name: PE2
+    
+  - pin: C3
+    function: VR1-
+    alternative1: HALL 2 (PE7)
+    type: in_trigger
+    ts_name: VR1-
+        
+    
+  - pin: C4
+    function: VR2-
+    alternative1: HALL 4 (PE8)
+    type: in_trigger
+    ts_name: VR2-
+        
+    
+  - pin: C5
+    function: VR2+
+    alternative1: HALL 3 (PE9)
+    type: in_trigger
+    ts_name: VR2+
+    pin_name: PE3
+
+  - pin: C6
+    function: VVTI
+    type: out_low
+    ts_name: Low Side 16 (G7)
+    pin_name: PG7
+
+  - pin: C7
+    function: Sensor +5v
+    type: 5v
+    ts_name: Sensor +5v Supply
+        
+  - pin: C8
+    function: Ground
+    type: gnd
+    ts_name: Ground
+
+info:
+  title: pinout
+  name: BLACK CONNECTOR
+  image:
+    file: main.jpg
+  pins:
+    - pin: A1
+      x: 560
+      y: 182
+
+    - pin: A2
+      x: 584
+      y: 182
+
+    - pin: A3
+      x: 608
+      y: 182
+
+    - pin: A4
+      x: 632
+      y: 182
+
+    - pin: A5
+      x: 656
+      y: 182
+
+    - pin: A6
+      x: 680
+      y: 182
+
+    - pin: A7
+      x: 704
+      y: 182
+
+    - pin: A8
+      x: 728
+      y: 182
+
+    - pin: B1
+      x: 560
+      y: 146
+
+    - pin: B2
+      x: 584
+      y: 146
+
+    - pin: B3
+      x: 608
+      y: 146
+
+    - pin: B4
+      x: 632
+      y: 146
+
+    - pin: B5
+      x: 656
+      y: 146
+
+    - pin: B6
+      x: 680
+      y: 146
+
+    - pin: B7
+      x: 704
+      y: 146
+
+    - pin: B8
+      x: 728
+      y: 146
+
+    - pin: C1
+      x: 560
+      y: 110
+
+    - pin: C2
+      x: 584
+      y: 110
+
+    - pin: C3
+      x: 608
+      y: 110
+
+    - pin: C4
+      x: 632
+      y: 110
+
+    - pin: C5
+      x: 656
+      y: 110
+
+    - pin: C6
+      x: 680
+      y: 110
+
+    - pin: C7
+      x: 704
+      y: 110
+
+    - pin: C8
+      x: 728
+      y: 110

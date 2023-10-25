@@ -1,0 +1,360 @@
+pins:
+  - function: Power Ground
+    type: gnd
+    color: black
+
+  - function: +12V
+    type: 12v
+    color: red
+
+  - id: D6
+    class: outputs
+    ts_name: Low Side 1 (D6)
+    
+  - id: D7
+    class: outputs
+    ts_name: Low Side 2 (D7)
+
+  - id: D8
+    class: outputs
+    ts_name: Low Side 3 (D8)
+    
+  - id: D9
+    class: outputs
+    ts_name: Low Side 4 (D9)
+    
+  - id: D10
+    class: outputs
+    ts_name: Low Side 5 (D10)
+    
+  - id: D11
+    class: outputs
+    ts_name: Low Side 6 (D11)
+    
+  - id: D12
+    class: outputs
+    ts_name: Low Side 7 (D12)
+    
+  - id: D13
+    class: outputs
+    ts_name: Low Side 8 (D13)
+    
+  - id: D14
+    class: outputs
+    function: Tachometer Output
+    ts_name: Low Side 9 (D14)
+    
+  - id: D15
+    class: outputs
+    ts_name: Low Side 10 (D15)
+    
+  - id: G2
+    class: outputs
+    ts_name: Low Side 11 (G2)
+    
+  - id: G3
+    class: outputs
+    ts_name: Low Side 12 (G3)
+    
+  - id: G4
+    class: outputs
+    ts_name: Low Side 13 (G4)
+    
+  - id: G5
+    class: outputs
+    ts_name: Low Side 14 (G5)
+    
+  - id: G6
+    class: outputs
+    ts_name: Low Side 15 (G6)
+    
+  - id: G7
+    class: outputs
+    ts_name: Low Side 16 (G7)
+    
+  - id: E15
+    class: outputs
+    type: ign
+    ts_name: High Side 1 (E15)
+        
+  - id: E14
+    class: outputs
+    type: ign
+    ts_name: High Side 2 (E14)
+        
+  - id: E13
+    class: outputs
+    type: ign
+    ts_name: High Side 3 (E13)
+        
+  - id: E12
+    class: outputs
+    type: ign
+    ts_name: High Side 4 (E12)
+        
+  - id: E11
+    class: outputs
+    type: ign
+    ts_name: High Side 5 (E11)
+        
+  - id: E10
+    class: outputs
+    type: ign
+    ts_name: High Side 6 (E10)
+        
+  - id: G8
+    class: outputs
+    type: ign
+    ts_name: High Side 7 (G8)
+        
+  - id: G15
+    class: outputs
+    type: ign
+    ts_name: High Side 8 (G15)
+        
+  - id: A8
+    class: outputs
+    ts_name: Stepper Direction (A8)
+        
+  - id: C6
+    class: outputs
+    ts_name: Stepper Control (C6)
+        
+  - id: C7
+    class: outputs
+    ts_name: Stepper Disable (C7)
+        
+  - id: B7
+    class: outputs
+    ts_name: DBW Disable (B7)
+        
+  - id: B8
+    class: outputs
+    ts_name: DBW Control (B8)
+        
+  - id: B9
+    class: outputs
+    ts_name: DBW Direction (B9)
+    
+  - id: EFI_ADC_9
+    class: analog_inputs
+    ts_name: On-board Battery Sense (B1)
+    
+  - id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: Analog Inputs 1 (C5)
+    
+  - id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: Analog Inputs 2 (B0)
+    
+  - id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: Analog Inputs 3 (A7)
+    
+  - id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: Analog Inputs 4 (C4)
+    
+  - id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: Analog Inputs 5 (A5)
+    
+  - id: EFI_ADC_6
+    class: analog_inputs
+    ts_name: Analog Inputs 6 (A6)
+    
+  - id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: Analog Inputs 7 (A3)
+    
+  - id: EFI_ADC_2
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: On-board MAP (A2) 
+        
+  - id: EFI_ADC_13
+    class: analog_inputs
+    function: O2 Sensor Input
+    ts_name: Primary On-board O2 (C3)
+    
+  - id: EFI_ADC_0
+    class: analog_inputs
+    function: O2 Sensor Input
+    ts_name: Secondary On-board O2 (A0)    
+        
+  - id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: Analog Inputs 8 (A4)
+    
+  - id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: Analog Inputs 9 (A1)   
+
+  - id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: Analog Inputs Knock 1 (C0)  
+
+  - id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: Analog Inputs Knock 2 (C1)    
+
+  - id: [E2, E2]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR1 (E2)
+
+  - id: [E3, E3]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR2 (E3)
+
+  - id: [E4, E4]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR3 (E4)
+
+  - id: [E5, E5]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR4 (E5)
+    
+  - id: [G1, G1]
+    class: [switch_inputs, event_inputs]
+    ts_name: Hall1 (G1)
+
+  - id: [E7, E7]
+    class: [switch_inputs, event_inputs]
+    ts_name: Hall2 (E7)
+
+  - id: [E9, E9]
+    class: [switch_inputs, event_inputs]
+    ts_name: Hall3 (E9)
+
+  - id: [E8, E8]
+    class: [switch_inputs, event_inputs]
+    ts_name: Hall4 (E8)
+    
+  - id: [F13, F13]
+    class: [switch_inputs, event_inputs]
+    ts_name: Hall5 (F13)
+
+  - id: [F14, F14]
+    class: [switch_inputs, event_inputs]
+    ts_name: Hall6 (F14)
+
+  - id: [G0, G0]
+    class: [switch_inputs, event_inputs]
+    ts_name: Hall7 (G0)
+
+  - id: [F15, F15]
+    class: [switch_inputs, event_inputs]
+    ts_name: Hall8 (F15)
+
+  - id: [D4, D4]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 1 (D4)
+
+  - id: [D5, D5]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 2 (D5)
+
+  - id: [D2, D2]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 3 (D2)
+
+  - id: [D3, D3]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 4 (D3)
+
+  - id: G10
+    class: outputs
+    ts_name: Running LED (G10)
+
+  - id: G11
+    class: outputs
+    ts_name: Warning LED (G11)
+
+  - id: G12
+    class: outputs
+    ts_name: Error LED (G12)
+
+  - id: G13
+    class: outputs
+    ts_name: Communication LED (G13)
+    
+  - id: C8
+    class: outputs
+    ts_name: EGT1 CS (C8)
+
+  - id: C9
+    class: outputs
+    ts_name: EGT2 CS (C9)
+
+  - id: C10
+    class: outputs
+    ts_name: SPI3 SCK (C10)
+
+  - id: C11
+    class: outputs
+    ts_name: SPI3 MISO (C11)
+
+  - id: C12
+    class: outputs
+    ts_name: SPI3 MOSI (C12)
+
+  - id: B13
+    class: outputs
+    ts_name: SPI2 SCK (B13)
+
+  - id: B14
+    class: outputs
+    ts_name: SPI2 MISO (B14)
+
+  - id: B15
+    class: outputs
+    ts_name: SPI2 MOSI (B15)
+
+  - id: B10
+    class: outputs
+    ts_name: BARO SCL (B10)
+
+  - id: B11
+    class: outputs
+    ts_name: BARO SDA (B11)
+
+  - id: B3
+    class: outputs
+    ts_name: SD CS1 (B3)
+
+  - id: B4
+    class: outputs
+    ts_name: SD CS2 (B4)
+
+  - id: A9
+    class: outputs
+    ts_name: USART1 TX (A9)
+
+  - id: A10
+    class: outputs
+    ts_name: USART1 RX (A10)
+
+  - id: G9
+    class: outputs
+    ts_name: USART6 RX (G9)
+
+  - id: G14
+    class: outputs
+    ts_name: USART6 TX (G14)
+    
+  - id: D0
+    class: outputs
+    ts_name: CAN 1 RX (D0)
+    
+  - id: D1
+    class: outputs
+    ts_name: CAN 1 TX (D1)
+    
+  - id: B5
+    class: outputs
+    ts_name: CAN 2 RX (B5)
+    
+  - id: B6
+    class: outputs
+    ts_name: CAN 2 TX (B6)

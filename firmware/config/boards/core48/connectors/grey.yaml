@@ -1,0 +1,257 @@
+pins:
+  - pin: A1
+    function: INJECTOR 1
+    type: out_low
+    ts_name: Low Side 1 (D6)
+    pin_name: PD6
+    
+  - pin: A2
+    function: INJECTOR 2
+    type: out_low
+    ts_name: Low Side 2 (D7)
+    pin_name: PD7
+
+  - pin: A3
+    function: INJECTOR 3
+    type: out_low
+    ts_name: Low Side 3 (D8)
+    pin_name: PD8
+    
+  - pin: A4
+    function: INJECTOR 4
+    type: out_low
+    ts_name: Low Side 4 (D9)
+    pin_name: PD9
+
+  - pin: A5
+    function: INJECTOR 5
+    type: out_low
+    ts_name: Low Side 5 (D10)
+    pin_name: PD10
+    
+  - pin: A6
+    function: INJECTOR 6
+    type: out_low
+    ts_name: Low Side 6 (D11)
+    pin_name: PD11
+
+  - pin: A7
+    function: INJECTOR 7
+    type: out_low
+    ts_name: Low Side 7 (D12)
+    pin_name: PD12
+
+  - pin: A8
+    function: INJECTOR 8
+    type: out_low
+    ts_name: Low Side 8 (D13)
+    pin_name: PD13
+    
+  - pin: B1
+    function: COIL 1
+    alternative1: +5v or +12v signal depends on selection
+    type: out_high
+    ts_name: High Side 1 (G15)
+    pin_name: PG15
+    
+  - pin: B2
+    function: COIL 2
+    alternative1: +5v or +12v signal depends on selection
+    type: out_high
+    ts_name: High Side 2 (G8)
+    pin_name: PG8
+    
+  - pin: B3
+    function: COIL 3
+    alternative1: +5v or +12v signal depends on selection
+    type: out_high
+    ts_name: High Side 3 (E10)
+    pin_name: PE10
+    
+  - pin: B4
+    function: COIL 4
+    alternative1: +5v or +12v signal depends on selection
+    type: out_high
+    ts_name: High Side 4 (E11)
+    pin_name: PE11
+    
+  - pin: B5
+    function: COIL 5
+    alternative1: +5v or +12v signal depends on selection
+    type: out_high
+    ts_name: High Side 5 (E12)
+    pin_name: PE12
+    
+  - pin: B6
+    function: COIL 6
+    alternative1: +5v or +12v signal depends on selection
+    type: out_high
+    ts_name: High Side 6 (E13)
+    pin_name: PE13
+    
+  - pin: B7
+    function: COIL 7
+    alternative1: +5v or +12v signal depends on selection
+    type: out_high
+    ts_name: High Side 7 (E14)
+    pin_name: PE14
+    
+  - pin: B8
+    function: COIL 8
+    alternative1: +5v or +12v signal depends on selection
+    type: out_high
+    ts_name: High Side 8 (E15)
+    pin_name: PE15
+    
+  - pin: C1
+    function: TPS
+    type: in_adc
+    ts_name: Analog Inputs 1 (C5)
+    pin_name: PC5
+    
+  - pin: C2
+    function: CLT
+    alternative1: turn SW10 B0 ON to enable 2.49k PULL UP
+    type: in_adc
+    ts_name: Analog Inputs 2 (B0)
+    pin_name: PB0
+    
+  - pin: C3
+    function: IAT
+    alternative1: turn SW10 A7 ON to enable 2.49k PULL UP
+    type: in_adc
+    ts_name: Analog Inputs 3 (A7)
+    pin_name: PA7
+        
+  - pin: C4
+    function: OIL PRESSURE
+    type: in_adc
+    ts_name: Analog Inputs 4 (C4)
+    pin_name: PC4
+        
+  - pin: C5
+    function: FUEL PRESSURE
+    type: in_adc
+    ts_name: Analog Inputs 5 (A5)
+    pin_name: PA5
+        
+  - pin: C6
+    function: SPARE ANALOG INPUT
+    type: in_adc
+    ts_name: Analog Inputs 6 (A6)
+    pin_name: PA6
+        
+  - pin: C7
+    function: SPARE ANALOG INPUT
+    type: in_adc
+    ts_name: Analog Inputs 7 (A3)
+    pin_name: PA3
+        
+  - pin: C8
+    function: TACHO 
+    alternative1: PULL UP to +5v or +12v depends on selection
+    type: out_low
+    ts_name: High Side 9 (D14)
+    pin_name: PD14
+
+info:
+  title: pinout
+  name: GREY CONNECTOR
+  image:
+    file: main.jpg
+  pins:
+    - pin: A1
+      x: 192
+      y: 182
+
+    - pin: A2
+      x: 216
+      y: 182
+
+    - pin: A3
+      x: 240
+      y: 182
+
+    - pin: A4
+      x: 264
+      y: 182
+
+    - pin: A5
+      x: 288
+      y: 182
+
+    - pin: A6
+      x: 312
+      y: 182
+
+    - pin: A7
+      x: 336
+      y: 182
+
+    - pin: A8
+      x: 360
+      y: 182
+
+    - pin: B1
+      x: 192
+      y: 146
+
+    - pin: B2
+      x: 216
+      y: 146
+
+    - pin: B3
+      x: 240
+      y: 146
+
+    - pin: B4
+      x: 264
+      y: 146
+
+    - pin: B5
+      x: 288
+      y: 146
+
+    - pin: B6
+      x: 312
+      y: 146
+
+    - pin: B7
+      x: 336
+      y: 146
+
+    - pin: B8
+      x: 360
+      y: 146
+
+    - pin: C1
+      x: 192
+      y: 110
+
+    - pin: C2
+      x: 216
+      y: 110
+
+    - pin: C3
+      x: 240
+      y: 110
+
+    - pin: C4
+      x: 264
+      y: 110
+
+    - pin: C5
+      x: 288
+      y: 110
+
+    - pin: C6
+      x: 312
+      y: 110
+
+    - pin: C7
+      x: 336
+      y: 110
+
+    - pin: C8
+      x: 360
+      y: 110
