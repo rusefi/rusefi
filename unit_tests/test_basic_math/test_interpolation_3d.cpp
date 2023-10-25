@@ -11,21 +11,24 @@
 
 #include "efi_interpolation.h"
 
-float rpmBins[5] = { 100, 200, 300, 400, 500 };
+#define RPM_COUNT 5
+#define VALUE_COUNT 4
+
+float rpmBins[RPM_COUNT] = { 100, 200, 300, 400, 500 };
 scaled_channel<uint8_t, 1, 50> rpmBinsScaledByte[5] = { 100, 200, 300, 400, 500};
 
-float mafBins[4] = { 1, 2, 3, 4 };
-scaled_channel<int, 10> mafBinsScaledInt[4] = { 1, 2, 3, 4 };
-scaled_channel<uint8_t, 10> mafBinsScaledByte[4] = { 1, 2, 3, 4 };
+float mafBins[VALUE_COUNT] = { 1, 2, 3, 4 };
+scaled_channel<int, 10> mafBinsScaledInt[VALUE_COUNT] = { 1, 2, 3, 4 };
+scaled_channel<uint8_t, 10> mafBinsScaledByte[VALUE_COUNT] = { 1, 2, 3, 4 };
 
-scaled_channel<uint32_t, 10000, 3> mapScaledChannel[4][5] = {
+scaled_channel<uint32_t, 10000, 3> mapScaledChannel[VALUE_COUNT][RPM_COUNT] = {
 	{ 1, 2, 3, 4, 4},
 	{ 2, 3, 4, 200, 200 },
 	{ 3, 4, 200, 500, 500 },
 	{ 4, 5, 300, 600, 600 },
 };
 
-float map[4][5] = {
+float map[VALUE_COUNT][RPM_COUNT] = {
 	{ 1, 2, 3, 4, 4},
 	{ 2, 3, 4, 200, 200 },
 	{ 3, 4, 200, 500, 500 },
@@ -33,25 +36,25 @@ float map[4][5] = {
 };
 
 static float getValue(float rpm, float maf) {
-	Map3D<5, 4, float, float, float> x1;
+	Map3D<RPM_COUNT, VALUE_COUNT, float, float, float> x1;
 	// note "5, 4" above
 	// note "map[4][5], Bins[4], rpm[5] below
 	x1.init(map, mafBins, rpmBins);
 	float result1 = x1.getValue(rpm, maf);
 
 
-	Map3D<5, 4, float, float, int> x2;
+	Map3D<RPM_COUNT, VALUE_COUNT, float, float, int> x2;
 	x2.init(map, mafBinsScaledInt, rpmBins);
 	float result2 = x2.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result2);
 
 
-	Map3D<5, 4, float, float, uint8_t> x3;
+	Map3D<RPM_COUNT, VALUE_COUNT, float, float, uint8_t> x3;
 	x3.init(map, mafBinsScaledByte, rpmBins);
 	float result3 = x3.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result3);
 
-	Map3D<5, 4, float, uint8_t, float> x4;
+	Map3D<RPM_COUNT, VALUE_COUNT, float, uint8_t, float> x4;
 	x4.init(map, mafBins, rpmBinsScaledByte);
 	float result4 = x4.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result4);
@@ -64,7 +67,7 @@ static float getValue(float rpm, float maf) {
 	EXPECT_NEAR_M4(result1, result5);
 
 	// Test with values stored in scaled bytes
-	Map3D<5, 4, uint32_t, float, float> x6;
+	Map3D<RPM_COUNT, VALUE_COUNT, uint32_t, float, float> x6;
 	x6.init(mapScaledChannel, mafBins, rpmBins);
 	float result6 = x6.getValue(rpm, maf);
 	EXPECT_NEAR(result1, result6, 1e-3);
