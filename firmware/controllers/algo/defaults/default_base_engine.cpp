@@ -114,25 +114,40 @@ void setDefaultBaseEngine() {
 
 #if EFI_SIMULATOR
 	// R
-	config->tcuSolenoidTable[0][0] = 1;
+	config->tcuSolenoidTable[0][0] = 99;
 	config->tcuSolenoidTable[0][1] = 1;
+	config->tcuSolenoidTable[0][2] = 2;
+	config->tcuSolenoidTable[0][3] = 3;
+	config->tcuSolenoidTable[0][4] = 4;
+	config->tcuSolenoidTable[0][5] = 5;
 	// P/N
-	config->tcuSolenoidTable[1][0] = 2;
-	config->tcuSolenoidTable[1][1] = 3;
+	config->tcuSolenoidTable[1][0] = 10;
+	config->tcuSolenoidTable[1][1] = 11;
+	config->tcuSolenoidTable[1][2] = 12;
+	config->tcuSolenoidTable[1][3] = 13;
+	config->tcuSolenoidTable[1][4] = 14;
+	config->tcuSolenoidTable[1][5] = 15;
+	config->tcuSolenoidTable[1][6] = 16;
+	config->tcuSolenoidTable[1][7] = 17;
+	config->tcuSolenoidTable[1][8] = 18;
+	config->tcuSolenoidTable[1][9] = 19;
 	// 1
-	config->tcuSolenoidTable[2][0] = 4;
-	config->tcuSolenoidTable[2][1] = 5;
+	config->tcuSolenoidTable[2][0] = 20;
+	config->tcuSolenoidTable[2][1] = 21;
+	config->tcuSolenoidTable[2][2] = 22;
 	// 2
-	config->tcuSolenoidTable[3][0] = 6;
-	config->tcuSolenoidTable[3][1] = 7;
+	config->tcuSolenoidTable[3][0] = 30;
+	config->tcuSolenoidTable[3][1] = 31;
+	config->tcuSolenoidTable[3][3] = 33;
 	// 3
-	config->tcuSolenoidTable[4][0] = 8;
-	config->tcuSolenoidTable[4][1] = 9;
+	config->tcuSolenoidTable[4][0] = 40;
+	config->tcuSolenoidTable[4][1] = 41;
+	config->tcuSolenoidTable[4][4] = 44;
 	// 4
-	config->tcuSolenoidTable[5][0] = 10;
-	config->tcuSolenoidTable[5][1] = 10;
+	config->tcuSolenoidTable[5][0] = 50;
+	config->tcuSolenoidTable[5][1] = 50;
+	config->tcuSolenoidTable[5][5] = 55;
 
-	config->tcuSolenoidTable[0][5] = 11;
 #endif // EFI_SIMULATOR
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
