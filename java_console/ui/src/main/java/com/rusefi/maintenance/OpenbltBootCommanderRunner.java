@@ -11,7 +11,7 @@ public final class OpenbltBootCommanderRunner {
     private static final String OPENBLT_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "openblt";
 
     public static void flashSerial(String port, String file, UpdateOperationCallbacks callbacks) {
-        runOpenblt(file, callbacks, "-s=xcp -t=xcp_rs232 -d" + port);
+        runOpenblt(file, callbacks, "-s=xcp -t=xcp_rs232 -d=" + port);
     }
 
     public static void flashCan(String file, UpdateOperationCallbacks callbacks) {
