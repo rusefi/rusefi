@@ -108,6 +108,33 @@ void setDefaultBaseEngine() {
 	// Trigger
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 
+#if EFI_SIMULATOR
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+#endif // EFI_SIMULATOR
+
+#if EFI_SIMULATOR
+	// R
+	config->tcuSolenoidTable[0][0] = 1;
+	config->tcuSolenoidTable[0][1] = 1;
+	// P/N
+	config->tcuSolenoidTable[1][0] = 2;
+	config->tcuSolenoidTable[1][1] = 3;
+	// 1
+	config->tcuSolenoidTable[2][0] = 4;
+	config->tcuSolenoidTable[2][1] = 5;
+	// 2
+	config->tcuSolenoidTable[3][0] = 6;
+	config->tcuSolenoidTable[3][1] = 7;
+	// 3
+	config->tcuSolenoidTable[4][0] = 8;
+	config->tcuSolenoidTable[4][1] = 9;
+	// 4
+	config->tcuSolenoidTable[5][0] = 10;
+	config->tcuSolenoidTable[5][1] = 10;
+
+	config->tcuSolenoidTable[0][5] = 11;
+#endif // EFI_SIMULATOR
+
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
 	// Default this to on - if you want to diagnose, turn it off.
