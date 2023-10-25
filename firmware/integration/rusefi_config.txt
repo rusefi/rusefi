@@ -2036,6 +2036,8 @@ end_struct
 
 #define CMD_PINS "pins"
 #define CMD_ETB_DUTY "set_etb_duty"
+#define DEFAULT_SELT_STIM_RPM 1200
+#define DEFAULT_SELT_STIM_VVT0 23
 #define CMD_SELF_STIMULATION "self_stimulation"
 #define CMD_EXTERNAL_STIMULATION "ext_stimulation"
 #define CMD_RPM "rpm"

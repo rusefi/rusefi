@@ -603,8 +603,8 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->knockDetectionWindowStart = 15.0 + 5.0;
 	engineConfiguration->knockDetectionWindowEnd = 15.0 + 45.0;
 
-	engineConfiguration->triggerSimulatorRpm = 1200;
-	engineConfiguration->simulatorCamPosition[0] = 23;
+	engineConfiguration->triggerSimulatorRpm = DEFAULT_SELT_STIM_RPM;
+	engineConfiguration->simulatorCamPosition[0] = DEFAULT_SELT_STIM_VVT0;
 
 	engineConfiguration->alternatorPwmFrequency = 300;
 

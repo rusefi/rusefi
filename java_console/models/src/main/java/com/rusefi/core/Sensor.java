@@ -152,6 +152,7 @@ public enum Sensor implements BinaryLogEntry {
 //    airFuelRatio(GAUGE_NAME_AFR, SensorCategory.OPERATIONS, FieldType.INT16, 282, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
 //    airFuelRatio2(GAUGE_NAME_AFR2, SensorCategory.OPERATIONS, FieldType.INT16, 288, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
 
+    vvtPositionB1I(GAUGE_NAME_VVT_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.VVTPOSITIONB1I, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
     vvtPositionB1E(GAUGE_NAME_VVT_B1E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.VVTPOSITIONB1E, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
     vvtPositionB2I(GAUGE_NAME_VVT_B2I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.VVTPOSITIONB2I, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
     vvtPositionB2E(GAUGE_NAME_VVT_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.VVTPOSITIONB2E, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
