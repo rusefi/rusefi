@@ -1305,7 +1305,7 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 		zBins	= hpfpCompensation
 
 	table = postCrankingEnrichmentTbl, postCrankingEnrichmentMap, "After start enrichment", 1
-		xBins	= postCrankingDurationBins, engineCycles
+		xBins	= postCrankingDurationBins, seconds ; TODO "engineCycles" should be there
 		yBins	= postCrankingCLTBins, coolant
 		zBins	= postCrankingFactor
 
