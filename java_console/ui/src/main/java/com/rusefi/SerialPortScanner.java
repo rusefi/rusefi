@@ -15,13 +15,29 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public enum SerialPortScanner {
     INSTANCE;
 
+    public enum SerialPortType {
+        FomeEcu,
+        OpenBlt,
+        Unknown,
+    }
+
+    public static class PortResult {
+        public final String port;
+        public final SerialPortType type;
+
+        public PortResult(String port, SerialPortType type) {
+            this.port = port;
+            this.type = type;
+        }
+    }
+
     private volatile boolean isRunning = true;
 
     static final String AUTO_SERIAL = "Auto Serial";
 
     private final Object lock = new Object();
     @NotNull
-    private AvailableHardware knownHardware = new AvailableHardware(Collections.emptyList(), false);
+    private AvailableHardware knownHardware = new AvailableHardware(Collections.emptyList(), false, false, false);
 
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
@@ -36,23 +52,52 @@ public enum SerialPortScanner {
      * Find all available serial ports and checks if simulator local TCP port is available
      */
     private void findAllAvailablePorts(boolean includeSlowLookup) {
-        List<String> ports = new ArrayList<>();
+        List<PortResult> ports = new ArrayList<>();
         boolean dfuConnected;
 
         String[] serialPorts = LinkManager.getCommPorts();
         if (serialPorts.length > 0)
-            ports.add(AUTO_SERIAL);
-        ports.addAll(Arrays.asList(serialPorts));
+            ports.add(new PortResult(AUTO_SERIAL, SerialPortType.FomeEcu));
+
+        boolean hasAnyEcu = false;
+        boolean hasAnyOpenblt = false;
+
+        for (String serialPort : serialPorts) {
+            // TODO: removeme once we can query each port's type
+            hasAnyEcu = true;
+            hasAnyOpenblt = true;
+
+
+            // See if this looks like an ECU
+            boolean isEcu = true;   // TODO
+            if (isEcu) {
+                ports.add(new PortResult(serialPort, SerialPortType.FomeEcu));
+                hasAnyEcu = true;
+            } else {
+                boolean isOpenblt = true;   // TODO
+                if (isOpenblt) {
+                    ports.add(new PortResult(serialPort, SerialPortType.OpenBlt));
+                    hasAnyOpenblt = true;
+                } else {
+                    // Dunno what this is, leave it in the list anyway
+                    ports.add(new PortResult(serialPort, SerialPortType.Unknown));
+                }
+            }
+        }
 
         if (includeSlowLookup) {
-            ports.addAll(TcpConnector.getAvailablePorts());
+            for (String tcpPort : TcpConnector.getAvailablePorts()) {
+                ports.add(new PortResult(tcpPort, SerialPortType.FomeEcu));
+                hasAnyEcu = true;
+            }
+
             dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
         } else {
             dfuConnected = false;
         }
 
         boolean isListUpdated;
-        AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected);
+        AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected, hasAnyEcu, hasAnyOpenblt);
         synchronized (lock) {
             isListUpdated = !knownHardware.equals(currentHardware);
             knownHardware = currentHardware;
@@ -90,21 +135,20 @@ public enum SerialPortScanner {
     }
 
     public static class AvailableHardware {
+        private final List<PortResult> ports;
+        public final boolean dfuFound;
+        public final boolean hasAnyEcu;
+        public final boolean hasAnyOpenblt;
 
-        private final List<String> ports;
-        private final boolean dfuFound;
-
-        public <T> AvailableHardware(List<String> ports, boolean dfuFound) {
+        public <T> AvailableHardware(List<PortResult> ports, boolean dfuFound, boolean hasAnyEcu, boolean hasAnyOpenblt) {
             this.ports = ports;
             this.dfuFound = dfuFound;
+            this.hasAnyEcu = hasAnyEcu;
+            this.hasAnyOpenblt = hasAnyOpenblt;
         }
 
         @NotNull
-        public List<String> getKnownPorts() {return new ArrayList<>(ports);}
-
-        public boolean isDfuFound() {
-            return dfuFound;
-        }
+        public List<PortResult> getKnownPorts() {return new ArrayList<>(ports);}
 
         @Override
         public boolean equals(Object o) {

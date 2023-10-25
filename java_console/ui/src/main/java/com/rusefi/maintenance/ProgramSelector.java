@@ -207,7 +207,9 @@ public class ProgramSelector {
         controls.setVisible(!currentHardware.isEmpty());
 
         boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
-        boolean hasDfuDevice = currentHardware.isDfuFound();
+        boolean hasDfuDevice = currentHardware.dfuFound;
+        boolean hasEcu = currentHardware.hasAnyEcu;
+        boolean hasOpenblt = currentHardware.hasAnyOpenblt;
 
         mode.removeAllItems();
         if (IS_WIN) {
@@ -221,10 +223,13 @@ public class ProgramSelector {
             }
         }
 
-        if (hasSerialPorts) {
-            mode.addItem(OPENBLT_AUTO);
+        if (hasEcu) {
             mode.addItem(DFU_SWITCH);
+            mode.addItem(OPENBLT_AUTO);
             mode.addItem(OPENBLT_SWITCH);
+        }
+
+        if (hasOpenblt) {
             mode.addItem(OPENBLT_MANUAL);
         }
 

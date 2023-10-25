@@ -194,7 +194,7 @@ public class StartupFrame {
     }
 
     private void applyKnownPorts(SerialPortScanner.AvailableHardware currentHardware) {
-        List<String> ports = currentHardware.getKnownPorts();
+        List<SerialPortScanner.PortResult> ports = currentHardware.getKnownPorts();
             log.info("Rendering available ports: " + ports);
             connectPanel.setVisible(!ports.isEmpty());
             noPortsMessage.setVisible(ports.isEmpty());
@@ -283,10 +283,13 @@ public class StartupFrame {
         SerialPortScanner.INSTANCE.stopTimer();
     }
 
-    private void applyPortSelectionToUIcontrol(List<String> ports) {
+    private void applyPortSelectionToUIcontrol(List<SerialPortScanner.PortResult> ports) {
         comboPorts.removeAllItems();
-        for (final String port : ports)
-            comboPorts.addItem(port);
+        for (final SerialPortScanner.PortResult port : ports) {
+            // TODO: distinguish type of port in UI
+            comboPorts.addItem(port.port);
+        }
+
         String defaultPort = getConfig().getRoot().getProperty(ConsoleUI.PORT_KEY);
         comboPorts.setSelectedItem(defaultPort);
         trueLayout(comboPorts);
