@@ -39,6 +39,13 @@ jobs:
       working-directory: ./firmware/ext/openblt/Host/Source/BootCommander/build
       run: make -j8
 
+    - uses: actions/upload-artifact@v3
+      with:
+        name: bootcomander-linux
+        path: |
+          ./firmware/ext/openblt/Host/libopenblt.so
+          ./firmware/ext/openblt/Host/BootCommander
+
   build-firmware:
     needs: build-openblt-tools
     runs-on: ubuntu-latest-selfhost
