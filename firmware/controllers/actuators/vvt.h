@@ -22,6 +22,7 @@ OutputPin* getVvtOutputPin(int index);
 
 #define BANK_BY_INDEX(index) (index / CAMS_PER_BANK)
 #define CAM_BY_INDEX(index) (index % CAMS_PER_BANK)
+#define INDEX_BY_BANK_CAM(bank, cam) ((bank) * CAMS_PER_BANK + (cam))
 
 class VvtController : public EngineModule, public ClosedLoopController<angle_t, percent_t>, public vvt_s {
 public:
