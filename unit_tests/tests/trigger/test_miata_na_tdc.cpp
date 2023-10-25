@@ -21,7 +21,7 @@ TEST(miata, miata_na_tdc) {
 		int time = getSimulatedEventTime(shape, i);
 		eth.setTimeAndInvokeEventsUs(time);
 
-		emulatorHelper.handleEmulatorCallback(
+		emulatorHelper.handleEmulatorCallback(0,
 				shape.wave,
 				i  % shape.getSize());
 	}
