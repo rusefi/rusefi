@@ -7,7 +7,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.*;
 import com.rusefi.io.tcp.BinaryProtocolServer;
-import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
@@ -107,7 +106,6 @@ public class MainFrame {
             public void onUpdate(String firmwareVersion) {
                 Launcher.firmwareVersion.set(firmwareVersion);
                 setTitle();
-                VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
         });
     }

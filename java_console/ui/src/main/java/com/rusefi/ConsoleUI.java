@@ -6,7 +6,6 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
-import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
@@ -138,7 +137,6 @@ public class ConsoleUI {
 
         getConfig().load();
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
-        VersionChecker.start();
         SwingUtilities.invokeAndWait(() -> awtCode(args));
     }
 
