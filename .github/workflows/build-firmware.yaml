@@ -79,6 +79,13 @@ jobs:
         allowUpdates: true
         prerelease: true
 
+    - uses: actions/upload-artifact@v3
+      with:
+        name: bootcomander-linux
+        path: |
+          ./firmware/ext/openblt/Host/libopenblt.so
+          ./firmware/ext/openblt/Host/BootCommander
+
   build-firmware:
     runs-on: ubuntu-latest
     needs: build-openblt-tools
