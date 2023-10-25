@@ -84,7 +84,7 @@ static void benchOff(OutputPin* output) {
 	output->setValue(BENCH_MSG, false, /*isForce*/ true);
 }
 
-static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int count) {
+static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int count, bool swapOnOff) {
 	int onTimeUs = MS2US(maxF(0.1, onTimeMs));
 	int offTimeUs = MS2US(maxF(0.1, offTimeMs));
 
@@ -107,8 +107,8 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 		efitick_t endTime = startTime + US2NT(onTimeUs);
 
 		// Schedule both events
-		engine->executor.scheduleByTimestampNt("bstart", &benchSchedStart, startTime, {benchOn, output});
-		engine->executor.scheduleByTimestampNt("bend", &benchSchedEnd, endTime, {benchOff, output});
+		engine->executor.scheduleByTimestampNt("bstart", &benchSchedStart, startTime, {(swapOnOff ? benchOff : benchOn), output});
+		engine->executor.scheduleByTimestampNt("bend", &benchSchedEnd, endTime, {(swapOnOff ? benchOn : benchOff), output});
 
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
@@ -128,11 +128,12 @@ static float onTimeMs;
 static float offTimeMs;
 static int count;
 static OutputPin* pinX;
+static bool swapOnOff = false;
 
 static chibios_rt::CounterSemaphore benchSemaphore(0);
 
 static void pinbench(float p_ontimeMs, float p_offtimeMs, int iterations,
-	OutputPin* pinParam)
+	OutputPin* pinParam, bool p_swapOnOff = false)
 {
 	onTimeMs = p_ontimeMs;
 	offTimeMs = p_offtimeMs;
@@ -142,6 +143,7 @@ static void pinbench(float p_ontimeMs, float p_offtimeMs, int iterations,
 	count = iterations;
 #endif // EFI_SIMULATOR
 	pinX = pinParam;
+	swapOnOff = p_swapOnOff;
 	// let's signal bench thread to wake up
 	isBenchTestPending = true;
 	benchSemaphore.signal();
@@ -267,7 +269,7 @@ void acRelayBench() {
 
 static void mainRelayBench() {
 	// main relay is usually "ON" via FSIO thus bench testing that one is pretty unusual
-	engine->mainRelayBenchStart.reset();
+	pinbench(BENCH_MAIN_RELAY_DURATION, 100.0, 1, &enginePins.mainRelay, true);
 }
 
 static void hpfpValveBench() {
@@ -298,7 +300,7 @@ private:
 
 			if (isBenchTestPending) {
 				isBenchTestPending = false;
-				runBench(pinX, onTimeMs, offTimeMs, count);
+				runBench(pinX, onTimeMs, offTimeMs, count, swapOnOff);
 			}
 
 			if (widebandUpdatePending) {
@@ -361,6 +363,9 @@ void handleBenchCategory(uint16_t index) {
 	case BENCH_FUEL_PUMP:
 		// cmd_test_fuel_pump
 		fuelPumpBench();
+		return;
+	case BENCH_MAIN_RELAY:
+		mainRelayBench();
 		return;
 	case BENCH_STARTER_ENABLE_RELAY:
 		starterRelayBench();
