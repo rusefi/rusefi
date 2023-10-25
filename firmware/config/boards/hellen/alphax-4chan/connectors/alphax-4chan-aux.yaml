@@ -1,12 +1,24 @@
 meta: config/boards/hellen_meta.h
 
 pins:
+  - pin: X1
+    meta: H144_IN_TPS2
+    function: Analog Input 1
+    class: analog_inputs
+    ts_name: ___ - AIN1 and D5 on older boards
+
   - pin: X2
     meta: H144_LS_5
     function: Inj 5
     class: outputs
     type: ls
     ts_name: Aux2 - Inj 5
+
+  - pin: X3
+    meta: H144_IN_PPS2
+    function: Analog Input 2
+    class: analog_inputs
+    ts_name: ___ - AIN2
 
   - pin: X4
     meta: H144_LS_6
@@ -19,7 +31,7 @@ pins:
     meta: H144_IN_MAP1
     function: Analog Input 3
     class: analog_inputs
-    ts_name: X5 - AIN3
+    ts_name: ___ - AIN3
 
   - pin: X6
     meta: H144_IGN_5
@@ -31,7 +43,7 @@ pins:
     meta: H144_IN_AUX3
     function: Analog Input 4
     class: analog_inputs
-    ts_name: X5 - AIN4
+    ts_name: ___ - AIN4
 
   - pin: X8
     meta: H144_IGN_6

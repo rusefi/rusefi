@@ -225,13 +225,6 @@ pins:
     ts_name: D5 - PPS
     color: orange
 
-  - pin: D5g
-    meta: H144_IN_TPS2
-    class: analog_inputs
-    function: PPS Sensor Input rev G
-    ts_name: D5 - PPS rev G
-    color: orange
-
   - pin: D6
     meta: H144_IGN_3
     class: outputs
