@@ -33,6 +33,7 @@ public class ProgramSelector {
     private static final String DFU_SWITCH = "Switch to DFU Mode";
     private static final String OPENBLT_SWITCH = "Switch to OpenBLT Mode";
     private static final String OPENBLT_MANUAL = "Manual OpenBLT Update";
+    private static final String OPENBLT_AUTO = "Auto OpenBLT Update";
     private static final String DFU_ERASE = "Full Chip Erase";
     private static final String ST_LINK = "ST-LINK Update";
     private static final String OPENBLT_CAN = "OpenBLT via CAN";
@@ -54,7 +55,7 @@ public class ProgramSelector {
         controls.add(mode);
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
-        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, OPENBLT_CAN, OPENBLT_SWITCH, OPENBLT_MANUAL, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
+        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, OPENBLT_CAN, OPENBLT_SWITCH, OPENBLT_MANUAL, OPENBLT_AUTO, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
             mode.setSelectedItem(persistedMode);
 
         JButton updateFirmware = createUpdateFirmwareButton();
@@ -91,6 +92,9 @@ public class ProgramSelector {
                         break;
                     case OPENBLT_MANUAL:
                         flashOpenbltSerial(selectedPort);
+                        break;
+                    case OPENBLT_AUTO:
+                        flashOpenbltSerialAutomatic(comboPorts, selectedPort);
                         break;
                     case DFU_ERASE:
                         DfuFlasher.runDfuEraseAsync(createStatusWindow("DFU erase"));
@@ -147,8 +151,8 @@ public class ProgramSelector {
         rebootToOpenblt(parent, fomePort, callbacks);
         String[] portsAfter = LinkManager.getCommPorts();
 
-        // Check that the ECU disappeared from the "before" list
-        if (!PortDetector.AUTO.equals(fomePort) && Arrays.stream(portsBefore).anyMatch(fomePort::equals)) {
+        // Check that the ECU disappeared from the "after" list
+        if (!PortDetector.AUTO.equals(fomePort) && Arrays.stream(portsAfter).anyMatch(fomePort::equals)) {
             callbacks.log("Looks like your ECU didn't reboot to OpenBLT");
             callbacks.error();
             return;
@@ -177,6 +181,8 @@ public class ProgramSelector {
         }
 
         String openbltPort = newItems.get(0);
+
+        callbacks.log("Serial port " + openbltPort + " appeared, programming firmware...");
 
         flashOpenbltSerial(openbltPort, callbacks);
     }
@@ -241,7 +247,7 @@ public class ProgramSelector {
 
         // If any serial port is detected, offer the option to switch to DFU
         if (true) {
-            // mode.addItem(AUTO_OPENBLT);
+            mode.addItem(OPENBLT_AUTO);
             mode.addItem(DFU_SWITCH);
             mode.addItem(OPENBLT_SWITCH);
             mode.addItem(OPENBLT_MANUAL);
