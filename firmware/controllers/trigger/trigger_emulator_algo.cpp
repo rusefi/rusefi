@@ -263,7 +263,7 @@ void stopTriggerEmulatorPins() {
 			continue;
 		for (size_t i = 0; i < efi::size(emulatorOutputs[ch]); i++) {
 			if (isConfigurationChanged(triggerSimulatorPins[i])) {
-				triggerEmulatorSignal.outputPins[i]->deInit();
+				triggerEmulatorSignals[ch].outputPins[i]->deInit();
 			}
 		}
 	}
