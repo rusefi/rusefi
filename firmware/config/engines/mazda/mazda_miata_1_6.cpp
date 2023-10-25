@@ -111,7 +111,7 @@ void miataNAcommonEngineSettings() {
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT && IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT
 	copyTable(config->ignitionTable, mapBased16IgnitionTable);
 #endif
 

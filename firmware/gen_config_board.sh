@@ -3,6 +3,7 @@
 # file gen_config_board.sh
 #        for example ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini
 #                 or ./gen_config_board.sh config/boards/hellen/hellen128 hellen128
+#                 or ./gen_config_board.sh config/boards/atlas atlas
 # which is short for ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128.ini
 
 set -e

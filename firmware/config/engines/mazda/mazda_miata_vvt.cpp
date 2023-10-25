@@ -103,7 +103,7 @@ const float mazda_miata_nb2_LoadBins[FUEL_LOAD_COUNT] = {20.0, 25.0, 30.0, 35.0,
 ;
 #endif
 
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
+#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 static const  float ignition18vvtRpmBins[IGN_RPM_COUNT] = {
 		700.0, 		         850.0 ,		         943.0 ,
 		         1112.0 ,		         1310.0 ,		         1545.0 ,
@@ -306,7 +306,7 @@ static void setCommonMazdaNB() {
 	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
 #endif
 
-#if (IGN_RPM_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
 	copyArray(config->ignitionRpmBins, ignition18vvtRpmBins);
 	copyArray(config->ignitionLoadBins, ignition18vvtLoadBins);
