@@ -184,6 +184,7 @@
 #define CRANKING_ADVANCE_CURVE_SIZE 4
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CRANKING_CURVE_SIZE 8
+#define CRANKING_ENRICH_COUNT 6
 #define cranking_parameters_s_size 8
 #define CRITICAL_BUFFER_SIZE 120
 #define CRITICAL_PREFIX "CRITICAL"
@@ -263,7 +264,7 @@
 #define ego_sensor_e_ES_NarrowBand 3
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
-#define engine_configuration_s_size 4540
+#define engine_configuration_s_size 4556
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_LM_ALPHA_N 2
@@ -727,7 +728,7 @@
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PEDAL_TO_TPS_SIZE 8
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 22468
+#define persistent_config_s_size 22484
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -813,7 +814,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 1210635801
+#define SIGNATURE_HASH 2475064451
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -860,7 +861,7 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
-#define TOTAL_CONFIG_SIZE 22468
+#define TOTAL_CONFIG_SIZE 22484
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 #define TPS_TPS_ACCEL_TABLE 8
@@ -1108,7 +1109,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.10.25.kin.1210635801"
+#define TS_SIGNATURE "rusEFI master.2023.10.25.kin.2475064451"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

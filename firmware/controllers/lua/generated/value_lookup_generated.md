@@ -1382,7 +1382,7 @@ Output Min Duty Cycle
 Output Max Duty Cycle
 
 ### idleTimingSoftEntryTime
-null
+When entering idle, and the PID settings are aggressive, it's good to make a soft entry upon entering closed loop
 
 ### etbRocExpAverageLength
 By the way ETB PID runs at 500hz, length in 1/500 of second here.
