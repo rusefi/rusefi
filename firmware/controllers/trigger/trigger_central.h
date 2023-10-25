@@ -215,6 +215,7 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t timestamp, int index);
 void hwHandleVvtCamSignal(bool isRising, efitick_t timestamp, int index);
+void handleVvtCamSignal(TriggerValue front, efitick_t timestamp, int index);
 
 void validateTriggerInputs();
 
