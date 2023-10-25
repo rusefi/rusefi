@@ -1292,7 +1292,8 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 
 	pid_s[CAMS_PER_BANK iterate] auxPid;VVT output PID\nTODO: rename to vvtPid
 	float[8 iterate] injectorCorrectionPolynomial;;"", 1, 0, -1000, 1000, 4
-	int8_t[8] primeBins;;"C", 1, 0, -40, 120, 0
+#define PRIME_CURVE_COUNT 8
+	int8_t[PRIME_CURVE_COUNT] primeBins;;"C", 1, 0, -40, 120, 0
 
 	linear_sensor_s oilPressure;
 
@@ -1376,7 +1377,7 @@ tChargeMode_e tChargeMode;
 
 	uint8_t[MAX_CYLINDER_COUNT iterate] cylinderBankSelect;Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor;"", 1, 1, 1, 2, 0
 
-	uint8_t[8] autoscale primeValues;;"mg", 5, 0, 0, 1250, 0
+	uint8_t[PRIME_CURVE_COUNT] autoscale primeValues;;"mg", 5, 0, 0, 1250, 0
 
 	uint8_t autoscale triggerCompCenterVolt;Trigger comparator center point voltage;"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
 	uint8_t autoscale triggerCompHystMin;Trigger comparator hysteresis voltage (Min);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
