@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Oct 25 16:25:58 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Oct 25 17:00:48 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3452,7 +3452,7 @@ struct engine_configuration_s {
 	C
 	 * offset 2144
 	 */
-	int8_t primeBins[8];
+	int8_t primeBins[PRIME_CURVE_COUNT];
 	/**
 	 * offset 2152
 	 */
@@ -3741,7 +3741,7 @@ struct engine_configuration_s {
 	mg
 	 * offset 2644
 	 */
-	scaled_channel<uint8_t, 1, 5> primeValues[8];
+	scaled_channel<uint8_t, 1, 5> primeValues[PRIME_CURVE_COUNT];
 	/**
 	 * Trigger comparator center point voltage
 	V
@@ -4452,10 +4452,14 @@ struct engine_configuration_s {
 	 */
 	uint16_t speedometerPulsePerKm;
 	/**
-	units
 	 * offset 4294
 	 */
-	uint8_t mainUnusedEnd[246];
+	uint8_t simulatorCamPosition[CAM_INPUTS_COUNT];
+	/**
+	units
+	 * offset 4298
+	 */
+	uint8_t mainUnusedEnd[242];
 };
 static_assert(sizeof(engine_configuration_s) == 4540);
 
@@ -5367,4 +5371,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22468);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Oct 25 16:25:58 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Oct 25 17:00:48 UTC 2023
