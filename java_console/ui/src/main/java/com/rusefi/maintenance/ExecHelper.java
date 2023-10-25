@@ -52,7 +52,7 @@ public class ExecHelper {
     }
 
     @NotNull
-    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, UpdateOperationCallbacks callbacks) {
+    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, UpdateOperationCallbacks callbacks) throws FileNotFoundException {
         return executeCommand(workingDirPath, command, binaryRelativeName, callbacks, new StringBuffer());
     }
 
@@ -61,12 +61,12 @@ public class ExecHelper {
          * @return stderr of invoked command
          */
     @NotNull
-    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, UpdateOperationCallbacks callbacks, StringBuffer output) {
+    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, UpdateOperationCallbacks callbacks, StringBuffer output) throws FileNotFoundException {
         StringBuffer error = new StringBuffer();
         String binaryFullName = workingDirPath + File.separator + binaryRelativeName;
         if (!new File(binaryFullName).exists()) {
             callbacks.log(binaryFullName + " not found :(");
-            return error.toString();
+            throw new FileNotFoundException(binaryFullName);
         }
 
         File workingDir = new File(workingDirPath);
