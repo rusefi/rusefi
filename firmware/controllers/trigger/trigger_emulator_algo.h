@@ -7,6 +7,9 @@
 
 #pragma once
 
+// 1 crank and CAMS_PER_BANK cam channels
+#define NUM_EMULATOR_CHANNELS (1 + CAMS_PER_BANK)
+
 class PwmConfig;
 class MultiChannelStateSequence;
 
@@ -24,7 +27,7 @@ void disableTriggerStimulator();
 class TriggerEmulatorHelper {
 public:
     TriggerEmulatorHelper();
-	void handleEmulatorCallback(const MultiChannelStateSequence& mcss, int stateIndex);
+	void handleEmulatorCallback(int ch, const MultiChannelStateSequence& mcss, int stateIndex);
 };
 
 int getPreviousIndex(const int currentIndex, const int size);
