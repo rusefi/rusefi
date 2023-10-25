@@ -411,9 +411,13 @@ void handleBenchCategory(uint16_t index) {
 }
 
 int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]) {
+#if EFI_SIMULATOR
 	durationsInStateMs[0] = savedDurationsInStateMs[0];
 	durationsInStateMs[1] = savedDurationsInStateMs[1];
 	return savedPinToggleCounter;
+#else
+	return 0;
+#endif // EFI_SIMULATOR
 }
 
 static void handleCommandX14(uint16_t index) {
