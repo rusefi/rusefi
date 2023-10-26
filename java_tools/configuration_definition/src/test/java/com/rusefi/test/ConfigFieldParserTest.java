@@ -64,7 +64,7 @@ public class ConfigFieldParserTest {
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
-        assertEquals("afr_type = array, S32, 0, [3x1], \"ms\", 1, 0, 0, 3000, 0, noMsqSave\n" +
+        assertEquals("afr_type = array, S32, 0, [1x3], \"ms\", 1, 0, 0, 3000, 0, noMsqSave\n" +
                 "; total TS size = 12\n", tsProjectConsumer.getContent());
     }
 

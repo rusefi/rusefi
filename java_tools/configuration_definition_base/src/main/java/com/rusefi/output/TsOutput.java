@@ -7,7 +7,11 @@ import com.rusefi.ReaderState;
 import com.rusefi.parse.Type;
 import com.rusefi.parse.TypesHelper;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
@@ -122,7 +126,9 @@ public class TsOutput {
                     tsHeader.append(" " + tsPosition + ",");
                     tsHeader.append(" [");
                     boolean first = true;
-                    for (int size : configField.getArraySizes()) {
+                    List<Integer> list = Arrays.stream(configField.getArraySizes()).boxed().collect(Collectors.toList());
+                    Collections.reverse(list);
+                    for (int size : list) {
                         if (first) {
                             first = false;
                         } else {
