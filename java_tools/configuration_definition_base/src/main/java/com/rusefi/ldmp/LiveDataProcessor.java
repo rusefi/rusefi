@@ -81,7 +81,7 @@ public class LiveDataProcessor {
     }
 
     public static void wrapContent(LazyFile output, String content) {
-        output.write("static constexpr LogField fields[] = {\r\n" +
+        output.write("static const LogField fields[] = {\r\n" +
                 "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n");
         output.write(content);
         output.write("};\r\n");
