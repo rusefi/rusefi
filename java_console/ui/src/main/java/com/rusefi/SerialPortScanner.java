@@ -48,7 +48,15 @@ public enum SerialPortScanner {
         String[] serialPorts = LinkManager.getCommPorts();
         if (serialPorts.length > 0)
             ports.add(AUTO_SERIAL);
-        ports.addAll(Arrays.asList(serialPorts));
+        for (String serialPort : serialPorts) {
+            // Filter out some macOS trash
+            if (serialPort.contains("wlan-debug") ||
+                    serialPort.contains("Bluetooth-Incoming-Port") ||
+                    serialPort.startsWith("cu.")) {
+                continue;
+            }
+            ports.add(serialPort);
+        }
 
         if (includeSlowLookup) {
             ports.addAll(TcpConnector.getAvailablePorts());
