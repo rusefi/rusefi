@@ -95,7 +95,6 @@ void initCanVssSupport() {
 
 void setCanVss(int type) {
 	engineConfiguration->canVssNbcType = (can_vss_nbc_e)type;
-	canVssInfo();
 }
 
 #endif // EFI_CAN_SUPPORT
