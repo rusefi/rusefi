@@ -80,8 +80,6 @@ public enum SerialPortScanner {
         boolean dfuConnected;
 
         String[] serialPorts = LinkManager.getCommPorts();
-        if (serialPorts.length > 0)
-            ports.add(new PortResult(AUTO_SERIAL, SerialPortType.FomeEcu));
 
         boolean hasAnyEcu = false;
         boolean hasAnyOpenblt = false;
@@ -115,6 +113,11 @@ public enum SerialPortScanner {
                 }
             }
         }
+
+        if (!ports.isEmpty()) {
+            ports.add(0, new PortResult(AUTO_SERIAL, SerialPortType.FomeEcu));
+        }
+
 
         if (includeSlowLookup) {
             for (String tcpPort : TcpConnector.getAvailablePorts()) {
