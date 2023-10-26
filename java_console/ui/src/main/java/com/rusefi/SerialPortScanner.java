@@ -29,6 +29,11 @@ public enum SerialPortScanner {
             this.port = port;
             this.type = type;
         }
+
+        @Override
+        String toString() {
+            return this.port;
+        }
     }
 
     private volatile boolean isRunning = true;
