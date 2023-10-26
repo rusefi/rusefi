@@ -235,18 +235,6 @@ void updateDevConsoleState() {
 #endif /* EFI_LOGIC_ANALYZER */
 }
 
-__attribute__((weak)) Gpio getCommsLedPin() {
-	return Gpio::Unassigned;
-}
-
-__attribute__((weak)) Gpio getWarningLedPin() {
-	return Gpio::Unassigned;
-}
-
-__attribute__((weak)) Gpio getRunningLedPin() {
-	return Gpio::Unassigned;
-}
-
 static OutputPin* leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
