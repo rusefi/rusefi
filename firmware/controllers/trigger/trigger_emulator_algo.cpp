@@ -58,7 +58,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(int ch, const MultiChannelSta
 			if (ch == 0) {
 				handleShaftSignal(i, isRise, stamp);
 			} else {
-				handleVvtCamSignal(isRise ? TriggerValue::RISE : TriggerValue::FALL, stamp, INDEX_BY_BANK_CAM(ch - 1, i));
+//				handleVvtCamSignal(isRise ? TriggerValue::RISE : TriggerValue::FALL, stamp, INDEX_BY_BANK_CAM(ch - 1, i));
 			}
 		}
 	}
