@@ -163,7 +163,7 @@ static void startSimulatedTriggerSignal() {
 
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
 
-	for (int ch = 0; ch < 1; ch++) {
+	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
 		TriggerWaveform *s = triggerEmulatorWaveforms[ch];
 		if (s->getSize() == 0)
 			continue;
