@@ -41,7 +41,7 @@ bool needEvent(const int currentIndex, const MultiChannelStateSequence & mcss, i
 TriggerEmulatorHelper::TriggerEmulatorHelper() {
 }
 
-static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
+static OutputPin emulatorOutputs[NUM_EMULATOR_CHANNELS][PWM_PHASE_MAX_WAVE_PER_PWM];
 
 void TriggerEmulatorHelper::handleEmulatorCallback(int ch, const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex) {
 	efitick_t stamp = getTimeNowNt();
@@ -55,16 +55,21 @@ void TriggerEmulatorHelper::handleEmulatorCallback(int ch, const MultiChannelSta
 			isRise ^= (i == 0 && engineConfiguration->invertPrimaryTriggerSignal);
 			isRise ^= (i == 1 && engineConfiguration->invertSecondaryTriggerSignal);
 
-			handleShaftSignal(i, isRise, stamp);
+			if (ch == 0) {
+				handleShaftSignal(i, isRise, stamp);
+			} else {
+				handleVvtCamSignal(isRise ? TriggerValue::RISE : TriggerValue::FALL, stamp, INDEX_BY_BANK_CAM(ch - 1, i));
+			}
 		}
 	}
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
 // same is used for either self or external trigger simulation
-PwmConfig triggerEmulatorSignal;
+PwmConfig triggerEmulatorSignals[NUM_EMULATOR_CHANNELS];
+TriggerWaveform *triggerEmulatorWaveforms[NUM_EMULATOR_CHANNELS];
 
-static int atTriggerVersion = 0;
+static int atTriggerVersions[NUM_EMULATOR_CHANNELS] = { 0 };
 
 /**
  * todo: why is this method NOT reciprocal to getCrankDivider?!
@@ -94,11 +99,11 @@ void setTriggerEmulatorRPM(int rpm) {
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
 	 */
 	if (rpm == 0) {
-		triggerEmulatorSignal.setFrequency(NAN);
+		triggerEmulatorSignals[0].setFrequency(NAN);
 	} else {
 		float rpmM = getRpmMultiplier(getEngineRotationState()->getOperationMode());
 		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
-		triggerEmulatorSignal.setFrequency(rPerSecond);
+		triggerEmulatorSignals[0].setFrequency(rPerSecond);
 	}
 	engine->resetEngineSnifferIfInTestMode();
 
@@ -106,15 +111,15 @@ void setTriggerEmulatorRPM(int rpm) {
 }
 
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
-	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
-		atTriggerVersion = engine->triggerCentral.triggerShape.version;
-		efiPrintf("Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
+	for (int ch = 0; ch < 1; ch++) {
+		if (atTriggerVersions[ch] < triggerEmulatorWaveforms[ch]->version) {
+			atTriggerVersions[ch] = triggerEmulatorWaveforms[ch]->version;
+			efiPrintf("Stimulator: updating trigger shape for ch%d: %d/%d %d", ch, atTriggerVersions[ch],
 				engine->getGlobalConfigurationVersion(), getTimeNowMs());
 
-
-		TriggerWaveform *s = &engine->triggerCentral.triggerShape;
-		copyPwmParameters(state, &s->wave);
-		state->safe.periodNt = -1; // this would cause loop re-initialization
+			copyPwmParameters(state, &triggerEmulatorWaveforms[ch]->wave);
+			state->safe.periodNt = -1; // this would cause loop re-initialization
+		}
 	}
 }
 
@@ -150,13 +155,23 @@ static void startSimulatedTriggerSignal() {
 		return;
 	}
 
-	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
+	// store the crank+cam waveforms
+	triggerEmulatorWaveforms[0] = &engine->triggerCentral.triggerShape;
+	for (int cami = 0; cami < CAMS_PER_BANK; cami++) {
+		triggerEmulatorWaveforms[1 + cami] = &engine->triggerCentral.vvtShape[cami];
+	}
+
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
-	triggerEmulatorSignal.weComplexInit(
+
+	for (int ch = 0; ch < 1; ch++) {
+		TriggerWaveform *s = triggerEmulatorWaveforms[ch];
+		if (s->getSize() == 0)
+			continue;
+		triggerEmulatorSignals[ch].weComplexInit(
 			&engine->executor,
 			&s->wave,
 			updateTriggerWaveformIfNeeded, emulatorApplyPinState);
-    // todo: simulate at least one cam sensor as well
+	}
 	hasInitTriggerEmulator = true;
 }
 
@@ -181,7 +196,9 @@ void enableExternalTriggerStimulator() {
 
 void disableTriggerStimulator() {
 	engine->triggerCentral.directSelfStimulation = false;
-	triggerEmulatorSignal.stop();
+	for (int ch = 0; ch < 1; ch++) {
+		triggerEmulatorSignals[ch].stop();
+	}
 	hasInitTriggerEmulator = false;
     incrementGlobalConfigurationVersion("disTrg");
 }
@@ -206,30 +223,40 @@ void initTriggerEmulator() {
 
 void startTriggerEmulatorPins() {
 	hasStimPins = false;
-	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
-		triggerEmulatorSignal.outputPins[i] = &emulatorOutputs[i];
+	for (int ch = 0; ch < 1; ch++) {
+		for (size_t i = 0; i < efi::size(emulatorOutputs[ch]); i++) {
+			triggerEmulatorSignals[ch].outputPins[i] = &emulatorOutputs[ch][i];
 
-		brain_pin_e pin = engineConfiguration->triggerSimulatorPins[i];
+			// todo: add pin configs for cam simulator channels
+			if (ch != 0)
+				continue;
+			brain_pin_e pin = engineConfiguration->triggerSimulatorPins[i];
 
-		// Only bother trying to set output pins if they're configured
-		if (isBrainPinValid(pin)) {
-			hasStimPins = true;
-		}
+			// Only bother trying to set output pins if they're configured
+			if (isBrainPinValid(pin)) {
+				hasStimPins = true;
+			}
 
 #if EFI_PROD_CODE
-		if (isConfigurationChanged(triggerSimulatorPins[i])) {
-			triggerEmulatorSignal.outputPins[i]->initPin("Trigger emulator", pin,
+			if (isConfigurationChanged(triggerSimulatorPins[i])) {
+				triggerEmulatorSignals[ch].outputPins[i]->initPin("Trigger emulator", pin,
 					engineConfiguration->triggerSimulatorPinModes[i]);
-		}
+			}
 #endif // EFI_PROD_CODE
+		}
 	}
 }
 
 void stopTriggerEmulatorPins() {
 #if EFI_PROD_CODE
-	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
-		if (isConfigurationChanged(triggerSimulatorPins[i])) {
-			triggerEmulatorSignal.outputPins[i]->deInit();
+	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
+		// todo: add pin configs for cam simulator channels
+		if (ch != 0)
+			continue;
+		for (size_t i = 0; i < efi::size(emulatorOutputs[ch]); i++) {
+			if (isConfigurationChanged(triggerSimulatorPins[i])) {
+				triggerEmulatorSignals[ch].outputPins[i]->deInit();
+			}
 		}
 	}
 #endif // EFI_PROD_CODE
