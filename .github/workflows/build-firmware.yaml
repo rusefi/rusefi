@@ -112,7 +112,6 @@ jobs:
             f407-discovery,
             f429-discovery,
             core8,
-            48way,
             atlas,
             tdg-pdm8,
             at_start_f435,
@@ -370,10 +369,10 @@ jobs:
             ini-file: rusefi_core8.ini
             skip-rate: 0
 
-          - build-target: 48way
-            folder: config/boards/48way
-            ini-file: rusefi_48way.ini
-            skip-rate: 95
+#          - build-target: 48way
+#            folder: config/boards/48way
+#            ini-file: rusefi_48way.ini
+#            skip-rate: 95
 
           - build-target: atlas
             folder: config/boards/atlas

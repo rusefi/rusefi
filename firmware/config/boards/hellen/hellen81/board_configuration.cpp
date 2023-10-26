@@ -27,6 +27,10 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[3] = Gpio::E3;
 }
 
+Gpio getRunningLedPin() {
+	return Gpio::Unassigned;
+}
+
 Gpio getCommsLedPin() {
 	return Gpio::H10;
 }

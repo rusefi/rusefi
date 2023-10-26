@@ -2,6 +2,21 @@
 
 #include "protected_gpio.h"
 
+Gpio getCommsLedPin() {
+	// this board has no comms led
+	return Gpio::Unassigned;
+}
+
+Gpio getWarningLedPin() {
+	// this board has no warning led
+	return Gpio::Unassigned;
+}
+
+Gpio getRunningLedPin() {
+	// this board has no running led
+	return Gpio::Unassigned;
+}
+
 void setBoardConfigOverrides() {
 	// No divider, just direct connected analog inputs (they're all internal, so why divide?)
 	engineConfiguration->analogInputDividerCoefficient = 1;

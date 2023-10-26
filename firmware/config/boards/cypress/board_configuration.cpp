@@ -10,6 +10,20 @@
 #include "pch.h"
 #include "trigger_input.h"
 
+Gpio getWarningLedPin() {
+	// this board has no warning led
+	return Gpio::Unassigned;
+}
+
+Gpio getRunningLedPin() {
+	return Gpio::Unassigned;
+}
+
+Gpio getCommsLedPin() {
+	// this board has no comms led
+	return Gpio::Unassigned;
+}
+
 void setBoardDefaultConfiguration() {
 	setCrankOperationMode();
 

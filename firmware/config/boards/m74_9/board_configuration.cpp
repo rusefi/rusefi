@@ -8,6 +8,11 @@ Gpio getCommsLedPin() {
 	return Gpio::B7;
 }
 
+Gpio getWarningLedPin() {
+	// this board has no warning led
+	return Gpio::Unassigned;
+}
+
 Gpio getRunningLedPin() {
 	return Gpio::B0;
 }
