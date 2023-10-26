@@ -34,6 +34,25 @@ public enum SerialPortScanner {
         public String toString() {
             return this.port;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == this) {
+                return true;
+            }
+
+            if (o == null) {
+                return false;
+            }
+
+            if (getClass() != o.getClass()) {
+                return false;
+            }
+
+            PortResult other = (PortResult) o;
+
+            return this.port.equals(other.port) && this.type.equals(other.type);
+        }
     }
 
     private volatile boolean isRunning = true;
