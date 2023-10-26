@@ -256,7 +256,11 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		// sensor noise + self-stim = loss of trigger sync
 		return;
 	}
+	handleVvtCamSignal(front, nowNt, index);
+}
 
+void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
+	TriggerCentral *tc = getTriggerCentral();
 	if (index == 0) {
 	    engine->outputChannels.vvtChannel1 = front == TriggerValue::RISE;
 	} else if (index == 1) {
