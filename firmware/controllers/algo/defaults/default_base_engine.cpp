@@ -114,25 +114,68 @@ void setDefaultBaseEngine() {
 
 #if EFI_SIMULATOR
 	// R
-	config->tcuSolenoidTable[0][0] = 1;
+	config->tcuSolenoidTable[0][0] = 99;
 	config->tcuSolenoidTable[0][1] = 1;
+	config->tcuSolenoidTable[0][2] = 2;
+	config->tcuSolenoidTable[0][3] = 3;
+	config->tcuSolenoidTable[0][4] = 4;
+	config->tcuSolenoidTable[0][5] = 5;
 	// P/N
-	config->tcuSolenoidTable[1][0] = 2;
-	config->tcuSolenoidTable[1][1] = 3;
+	config->tcuSolenoidTable[1][0] = 10;
+	config->tcuSolenoidTable[1][1] = 11;
+	config->tcuSolenoidTable[1][2] = 12;
+	config->tcuSolenoidTable[1][3] = 13;
+	config->tcuSolenoidTable[1][4] = 14;
+	config->tcuSolenoidTable[1][5] = 15;
+	config->tcuSolenoidTable[1][6] = 16;
+	config->tcuSolenoidTable[1][7] = 17;
+	config->tcuSolenoidTable[1][8] = 18;
+	config->tcuSolenoidTable[1][9] = 19;
 	// 1
-	config->tcuSolenoidTable[2][0] = 4;
-	config->tcuSolenoidTable[2][1] = 5;
+	config->tcuSolenoidTable[2][0] = 20;
+	config->tcuSolenoidTable[2][1] = 21;
+	config->tcuSolenoidTable[2][2] = 22;
 	// 2
-	config->tcuSolenoidTable[3][0] = 6;
-	config->tcuSolenoidTable[3][1] = 7;
+	config->tcuSolenoidTable[3][0] = 30;
+	config->tcuSolenoidTable[3][1] = 31;
+	config->tcuSolenoidTable[3][3] = 33;
 	// 3
-	config->tcuSolenoidTable[4][0] = 8;
-	config->tcuSolenoidTable[4][1] = 9;
+	config->tcuSolenoidTable[4][0] = 40;
+	config->tcuSolenoidTable[4][1] = 41;
+	config->tcuSolenoidTable[4][4] = 44;
 	// 4
-	config->tcuSolenoidTable[5][0] = 10;
-	config->tcuSolenoidTable[5][1] = 10;
+	config->tcuSolenoidTable[5][0] = 50;
+	config->tcuSolenoidTable[5][1] = 51;
+	config->tcuSolenoidTable[5][5] = 55;
 
-	config->tcuSolenoidTable[0][5] = 11;
+	config->scriptTable4[0][0] = 140;
+	config->scriptTable4[0][1] = 141;
+	config->scriptTable4[0][2] = 142;
+	config->scriptTable4[0][3] = 143;
+	config->scriptTable4[0][4] = 144;
+	config->scriptTable4[0][5] = 145;
+
+	config->scriptTable4[1][0] = 240;
+   	config->scriptTable4[1][1] = 241;
+   	config->scriptTable4[1][2] = 242;
+   	config->scriptTable4[1][3] = 243;
+   	config->scriptTable4[1][4] = 244;
+   	config->scriptTable4[1][5] = 245;
+
+	config->scriptTable4[4][0] = 40;
+	config->scriptTable4[4][2] = 41;
+	config->scriptTable4[4][3] = 42;
+	config->scriptTable4[4][4] = 43;
+	config->scriptTable4[4][5] = 44;
+	config->scriptTable4[4][5] = 45;
+
+	config->scriptTable4[5][0] = 50;
+	config->scriptTable4[5][1] = 51;
+	config->scriptTable4[5][2] = 52;
+	config->scriptTable4[5][3] = 53;
+	config->scriptTable4[5][4] = 54;
+	config->scriptTable4[5][5] = 55;
+
 #endif // EFI_SIMULATOR
 
 	engineConfiguration->globalTriggerAngleOffset = 0;

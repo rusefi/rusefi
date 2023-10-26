@@ -55,6 +55,19 @@ public class ConfigFieldParserTest {
                 "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 
+    @Test
+    public void testArray2D() {
+        String test = "struct pid_s\n" +
+                "int[3 x 1] afr_type;PID dTime;\"ms\",      1.0,      0,       0, 3000,      0, noMsqSave\n" +
+                "end_struct\n";
+        ReaderStateImpl state = new ReaderStateImpl();
+
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        state.readBufferedReader(test, tsProjectConsumer);
+        assertEquals("afr_type = array, S32, 0, [1x3], \"ms\", 1, 0, 0, 3000, 0, noMsqSave\n" +
+                "; total TS size = 12\n", tsProjectConsumer.getContent());
+    }
+
     @Test(expected = IllegalStateException.class)
     public void testSameFieldTwice() {
         String test = "struct pid_s\n" +

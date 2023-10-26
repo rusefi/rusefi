@@ -1289,8 +1289,8 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 		zBins = gppwm4_table
 
 	table = tcuSolenoidTableTbl,  tcuSolenoidTableMap,  "Solenoids Active By Gear",	1
-		xBins		= solenoidCountArray, tcuCurrentGear
-		yBins		= gearCountArray, tcuCurrentGear
+		xBins		= gearCountArray, tcuCurrentGear
+		yBins		= solenoidCountArray, tcuCurrentGear
 		zBins		= tcuSolenoidTable
 		xyLabels	= "Solenoid", "Gear"
 

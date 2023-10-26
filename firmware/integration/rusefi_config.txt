@@ -1741,9 +1741,11 @@ uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable3;;"value", 1, 0, 0, 255, 0
 int16_t[SCRIPT_TABLE_8] scriptTable3LoadBins;;"L", 1, 0, -32000, 32000, 0
 int16_t[SCRIPT_TABLE_8] scriptTable3RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
-uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable4;;"value", 1, 0, 0, 255, 0
+#define TABLE_4_RPM 10
+
+uint8_t[SCRIPT_TABLE_8 x TABLE_4_RPM] scriptTable4;;"value", 1, 0, 0, 255, 0
 int16_t[SCRIPT_TABLE_8] scriptTable4LoadBins;;"L", 1, 0, -32000, 32000, 0
-int16_t[SCRIPT_TABLE_8] scriptTable4RpmBins;;"RPM", 1, 0, -32000, 32000, 0
+int16_t[TABLE_4_RPM] scriptTable4RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
 #define TRIM_SIZE 4
 
@@ -2036,6 +2038,8 @@ end_struct
 
 #define CMD_PINS "pins"
 #define CMD_ETB_DUTY "set_etb_duty"
+#define DEFAULT_SELT_STIM_RPM 1200
+#define DEFAULT_SELT_STIM_VVT0 23
 #define CMD_SELF_STIMULATION "self_stimulation"
 #define CMD_EXTERNAL_STIMULATION "ext_stimulation"
 #define CMD_RPM "rpm"

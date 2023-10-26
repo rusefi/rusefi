@@ -74,7 +74,7 @@ public class EnumConfigField extends BaseConfigField {
             item = "unexpected_" + ordinal;
             view.addItem(item);
         } else {
-            if (ordinal >= options.length)
+            if (ordinal < 0 || ordinal >= options.length)
                 throw new UnexpectedEnumOridnalException(ordinal + " unexpected on " + field);
             item = options[ordinal];
         }

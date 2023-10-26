@@ -41,6 +41,7 @@ for BOARD in \
    "config/boards/hellen/hellen-honda-k hellen-honda-k" \
    "config/boards/hellen/hellen154hyundai hellen154hyundai" \
    "config/boards/hellen/hellen88bmw hellen88bmw" \
+   "config/boards/hellen/uaefi uaefi" \
    "config/boards/hellen/hellen-112-17 hellen-112-17" \
    "config/boards/hellen/hellen72 hellen72" \
    "config/boards/hellen/hellen81 hellen81" \
