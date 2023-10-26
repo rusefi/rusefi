@@ -636,10 +636,6 @@ void initEngineController() {
 #if EFI_PWM_TESTER
 	initPwmTester();
 #endif /* EFI_PWM_TESTER */
-
-#if EFI_PROD_CODE
-	addConsoleAction("reset_accel", resetAccel);
-#endif /* EFI_PROD_CODE *
 }
 
 /**
