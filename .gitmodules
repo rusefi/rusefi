@@ -26,8 +26,8 @@
 	branch = rusefi_prod_2021_11_12
 [submodule "firmware/ext/openblt"]
 	path = firmware/ext/openblt
-	url = https://github.com/rusefi/openblt
-	branch = rusefi_prod
+	url = https://github.com/fome-tech/openblt
+	branch = master
 [submodule "misc/hex2dfu"]
 	path = misc/hex2dfu
 	url = https://github.com/rusefi/hex2dfu
