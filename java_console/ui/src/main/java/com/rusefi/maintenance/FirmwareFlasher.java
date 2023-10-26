@@ -93,7 +93,9 @@ public class FirmwareFlasher {
         String bundle = BundleUtil.readBundleFullNameNotNull();
         if (bundle.contains("h7"))
             return HwPlatform.H7;
-        // how does this "hardware" key even work? does it work? shall we rely on bunbdle name like above?
+        if (bundle.contains("f7"))
+            return HwPlatform.F7;
+        // how does this "hardware" key even work? does it work? shall we rely on bundle name like above?
         String value = getConfig().getRoot().getProperty("hardware", HwPlatform.F4.name());
         return HwPlatform.resolve(value);
     }
