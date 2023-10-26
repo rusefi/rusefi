@@ -157,8 +157,8 @@ static void startSimulatedTriggerSignal() {
 
 	// store the crank+cam waveforms
 	triggerEmulatorWaveforms[0] = &engine->triggerCentral.triggerShape;
-	for (int cami = 0; cami < CAMS_PER_BANK; cami++) {
-		triggerEmulatorWaveforms[1 + cami] = &engine->triggerCentral.vvtShape[cami];
+	for (int cami = 0; cami < CAM_INPUTS_COUNT; cami++) {
+		triggerEmulatorWaveforms[1 + cami] = &engine->triggerCentral.vvtShape[CAM_BY_INDEX(cami)];
 	}
 
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
