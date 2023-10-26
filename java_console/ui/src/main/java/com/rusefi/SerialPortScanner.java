@@ -87,6 +87,13 @@ public enum SerialPortScanner {
         boolean hasAnyOpenblt = false;
 
         for (String serialPort : serialPorts) {
+            // Filter out some macOS trash
+            if (serialPort.contains("wlan-debug") ||
+                    serialPort.contains("Bluetooth-Incoming-Port") ||
+                    serialPort.startsWith("cu.")) {
+                continue;
+            }
+
             // TODO: removeme once we can query each port's type
             hasAnyEcu = true;
             hasAnyOpenblt = true;
