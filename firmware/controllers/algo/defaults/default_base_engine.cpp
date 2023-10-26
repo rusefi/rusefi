@@ -145,8 +145,36 @@ void setDefaultBaseEngine() {
 	config->tcuSolenoidTable[4][4] = 44;
 	// 4
 	config->tcuSolenoidTable[5][0] = 50;
-	config->tcuSolenoidTable[5][1] = 50;
+	config->tcuSolenoidTable[5][1] = 51;
 	config->tcuSolenoidTable[5][5] = 55;
+
+	config->scriptTable4[0][0] = 140;
+	config->scriptTable4[0][1] = 141;
+	config->scriptTable4[0][1] = 142;
+	config->scriptTable4[0][1] = 143;
+	config->scriptTable4[0][1] = 144;
+	config->scriptTable4[0][5] = 145;
+
+	config->scriptTable4[1][0] = 240;
+   	config->scriptTable4[1][1] = 241;
+   	config->scriptTable4[1][1] = 242;
+   	config->scriptTable4[1][1] = 243;
+   	config->scriptTable4[1][1] = 244;
+   	config->scriptTable4[1][5] = 245;
+
+	config->scriptTable4[4][0] = 40;
+	config->scriptTable4[4][1] = 41;
+	config->scriptTable4[4][1] = 42;
+	config->scriptTable4[4][1] = 43;
+	config->scriptTable4[4][1] = 44;
+	config->scriptTable4[4][5] = 45;
+
+	config->scriptTable4[5][0] = 50;
+	config->scriptTable4[5][1] = 51;
+	config->scriptTable4[5][1] = 52;
+	config->scriptTable4[5][1] = 53;
+	config->scriptTable4[5][1] = 54;
+	config->scriptTable4[5][5] = 55;
 
 #endif // EFI_SIMULATOR
 

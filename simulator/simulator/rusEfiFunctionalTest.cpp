@@ -28,6 +28,7 @@
 #include "flash_main.h"
 #include "can_msg_tx.h"
 #include "fifo_buffer.h"
+#include "script_impl.h"
 #include <vector>
 
 extern fifo_buffer<CANTxFrame, 1024> txCanBuffer;
@@ -137,6 +138,19 @@ static void runToothLoggerTest() {
 #endif // EFI_TOOTH_LOGGER
 }
 
+static void assertNear(float actual, float expected) {
+    float delta = absF(actual - expected);
+    if (delta > 0.01)
+        throw std::runtime_error("assertNear actual=" + std::to_string(actual) + " expected=" + std::to_string(expected));
+}
+
+static void	runNotSquareTest() {
+    assertNear(getscriptTable(3)->getValue(0, 20), 140);
+    assertNear(getscriptTable(3)->getValue(0, 30), 240);
+
+    assertNear(getscriptTable(3)->getValue(3000, 20), 55.769);
+}
+
 void rusEfiFunctionalTest(void) {
 	printToConsole("Running rusEFI simulator version:");
 	static char versionBuffer[20];
@@ -171,6 +185,7 @@ void rusEfiFunctionalTest(void) {
 	runChprintfTest();
 	runToothLoggerTest();
 	runCanGpioTest();
+	runNotSquareTest();
     /**
      * end of TESTS !
      */

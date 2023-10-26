@@ -15,7 +15,7 @@
 static fsio8_Map3D_f32t scriptTable1;
 static fsio8_Map3D_u8t scriptTable2;
 static fsio8_Map3D_u8t scriptTable3;
-static fsio8_Map3D_u8t scriptTable4;
+static script4_Map3D_u8t scriptTable4;
 
 ValueProvider3D *getscriptTable(int index) {
 	switch (index) {
