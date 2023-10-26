@@ -881,7 +881,7 @@ static void triggerShapeInfo() {
 }
 
 #if EFI_PROD_CODE
-extern PwmConfig triggerEmulatorSignal;
+extern PwmConfig triggerEmulatorSignals[NUM_EMULATOR_CHANNELS];
 #endif /* #if EFI_PROD_CODE */
 
 void triggerInfo(void) {
@@ -950,7 +950,7 @@ void triggerInfo(void) {
 #if EFI_EMULATE_POSITION_SENSORS
 		efiPrintf("secondary trigger simulator: %s %s phase=%d",
 				hwPortname(engineConfiguration->triggerSimulatorPins[1]),
-				getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[1]), triggerEmulatorSignal.safe.phaseIndex);
+				getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[1]), triggerEmulatorSignals[0].safe.phaseIndex);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
 
