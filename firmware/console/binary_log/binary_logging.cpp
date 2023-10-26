@@ -20,7 +20,7 @@ static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 // The list of logged fields lives in a separate file so it can eventually be tool-generated
 #include "log_fields_generated.h"
 
-static const uint16_t computeFieldsRecordLength() {
+static constexpr uint16_t computeFieldsRecordLength() {
 	uint16_t recLength = 0;
 	for (size_t i = 0; i < efi::size(fields); i++) {
 		recLength += fields[i].getSize();
@@ -47,7 +47,7 @@ void writeSdLogLine(Writer& bufferedWriter) {
 	binaryLogCount++;
 }
 
-static constexpr uint16_t recordLength = computeFieldsRecordLength();
+static const uint16_t recordLength = computeFieldsRecordLength();
 
 void writeFileHeader(Writer& outBuffer) {
 	char buffer[MLQ_HEADER_SIZE];
