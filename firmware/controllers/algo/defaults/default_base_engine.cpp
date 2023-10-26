@@ -150,30 +150,30 @@ void setDefaultBaseEngine() {
 
 	config->scriptTable4[0][0] = 140;
 	config->scriptTable4[0][1] = 141;
-	config->scriptTable4[0][1] = 142;
-	config->scriptTable4[0][1] = 143;
-	config->scriptTable4[0][1] = 144;
+	config->scriptTable4[0][2] = 142;
+	config->scriptTable4[0][3] = 143;
+	config->scriptTable4[0][4] = 144;
 	config->scriptTable4[0][5] = 145;
 
 	config->scriptTable4[1][0] = 240;
    	config->scriptTable4[1][1] = 241;
-   	config->scriptTable4[1][1] = 242;
-   	config->scriptTable4[1][1] = 243;
-   	config->scriptTable4[1][1] = 244;
+   	config->scriptTable4[1][2] = 242;
+   	config->scriptTable4[1][3] = 243;
+   	config->scriptTable4[1][4] = 244;
    	config->scriptTable4[1][5] = 245;
 
 	config->scriptTable4[4][0] = 40;
-	config->scriptTable4[4][1] = 41;
-	config->scriptTable4[4][1] = 42;
-	config->scriptTable4[4][1] = 43;
-	config->scriptTable4[4][1] = 44;
+	config->scriptTable4[4][2] = 41;
+	config->scriptTable4[4][3] = 42;
+	config->scriptTable4[4][4] = 43;
+	config->scriptTable4[4][5] = 44;
 	config->scriptTable4[4][5] = 45;
 
 	config->scriptTable4[5][0] = 50;
 	config->scriptTable4[5][1] = 51;
-	config->scriptTable4[5][1] = 52;
-	config->scriptTable4[5][1] = 53;
-	config->scriptTable4[5][1] = 54;
+	config->scriptTable4[5][2] = 52;
+	config->scriptTable4[5][3] = 53;
+	config->scriptTable4[5][4] = 54;
 	config->scriptTable4[5][5] = 55;
 
 #endif // EFI_SIMULATOR

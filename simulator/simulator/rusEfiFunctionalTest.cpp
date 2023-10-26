@@ -148,7 +148,7 @@ static void	runNotSquareTest() {
     assertNear(getscriptTable(3)->getValue(0, 20), 140);
     assertNear(getscriptTable(3)->getValue(0, 30), 240);
 
-    assertNear(getscriptTable(3)->getValue(3000, 20), 55.769);
+    assertNear(getscriptTable(3)->getValue(3000, 20), 144.384);
 }
 
 void rusEfiFunctionalTest(void) {
