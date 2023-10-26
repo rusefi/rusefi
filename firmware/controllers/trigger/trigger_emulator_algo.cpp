@@ -163,7 +163,7 @@ static void startSimulatedTriggerSignal() {
 
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
 
-	for (int channel = 0; channel < 1; channel++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		TriggerWaveform *s = triggerEmulatorWaveforms[channel];
 		if (s->getSize() == 0)
 			continue;
@@ -196,7 +196,7 @@ void enableExternalTriggerStimulator() {
 
 void disableTriggerStimulator() {
 	engine->triggerCentral.directSelfStimulation = false;
-	for (int channel = 0; channel < 1; channel++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		triggerEmulatorSignals[channel].stop();
 	}
 	hasInitTriggerEmulator = false;
@@ -223,7 +223,7 @@ void initTriggerEmulator() {
 
 void startTriggerEmulatorPins() {
 	hasStimPins = false;
-	for (int channel = 0; channel < 1; channel++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		for (size_t i = 0; i < efi::size(emulatorOutputs[channel]); i++) {
 			triggerEmulatorSignals[channel].outputPins[i] = &emulatorOutputs[channel][i];
 
