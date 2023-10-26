@@ -31,7 +31,7 @@ public enum SerialPortScanner {
         }
 
         @Override
-        String toString() {
+        public String toString() {
             return this.port;
         }
     }
