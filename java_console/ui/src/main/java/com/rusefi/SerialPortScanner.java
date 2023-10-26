@@ -16,9 +16,16 @@ public enum SerialPortScanner {
     INSTANCE;
 
     public enum SerialPortType {
-        FomeEcu,
-        OpenBlt,
-        Unknown,
+        None(null),
+        FomeEcu("FOME ECU"),
+        OpenBlt("OpenBLT Bootloader"),
+        Unknown("Unknown"),
+        ;
+
+        public final String friendlyString;
+        SerialPortType(String friendlyString) {
+            this.friendlyString = friendlyString;
+        }
     }
 
     public static class PortResult {
@@ -32,7 +39,11 @@ public enum SerialPortScanner {
 
         @Override
         public String toString() {
-            return this.port;
+            if (type.friendlyString == null) {
+                return this.port;
+            } else {
+                return this.port + " (" + type.friendlyString + ")";
+            }
         }
 
         @Override
@@ -115,7 +126,7 @@ public enum SerialPortScanner {
         }
 
         if (!ports.isEmpty()) {
-            ports.add(0, new PortResult(AUTO_SERIAL, SerialPortType.FomeEcu));
+            ports.add(0, new PortResult(AUTO_SERIAL, SerialPortType.None));
         }
 
 

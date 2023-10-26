@@ -49,7 +49,7 @@ public class StartupFrame {
     private final JFrame frame;
     private final JPanel connectPanel = new JPanel(new FlowLayout());
     // todo: move this line to the connectPanel
-    private final JComboBox<String> comboPorts = new JComboBox<>();
+    private final JComboBox<SerialPortScanner.PortResult> comboPorts = new JComboBox<>();
     private final JPanel leftPanel = new JPanel(new VerticalFlowLayout());
 
     private final JPanel realHardwarePanel = new JPanel(new MigLayout());
@@ -235,7 +235,7 @@ public class StartupFrame {
 
     private void connectButtonAction(JComboBox<String> comboSpeeds) {
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
-        String selectedPort = comboPorts.getSelectedItem().toString();
+        String selectedPort = ((SerialPortScanner.PortResult)comboPorts.getSelectedItem()).port;
         if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
             SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectPort(StartupFrame.this.frame);
             String autoDetectedPort = detectResult == null ? null : detectResult.getSerialPort();
@@ -286,8 +286,7 @@ public class StartupFrame {
     private void applyPortSelectionToUIcontrol(List<SerialPortScanner.PortResult> ports) {
         comboPorts.removeAllItems();
         for (final SerialPortScanner.PortResult port : ports) {
-            // TODO: distinguish type of port in UI
-            comboPorts.addItem(port.port);
+            comboPorts.addItem(port);
         }
 
         String defaultPort = getConfig().getRoot().getProperty(ConsoleUI.PORT_KEY);

@@ -47,7 +47,7 @@ public class ProgramSelector {
     private final JPanel controls = new JPanel(new FlowLayout());
     private final JComboBox<String> mode = new JComboBox<>();
 
-    public ProgramSelector(JComboBox<String> comboPorts) {
+    public ProgramSelector(JComboBox<SerialPortScanner.PortResult> comboPorts) {
         content.add(controls, BorderLayout.NORTH);
         content.add(noHardware, BorderLayout.SOUTH);
         controls.setVisible(false);
@@ -65,7 +65,7 @@ public class ProgramSelector {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final String selectedMode = (String) mode.getSelectedItem();
-                final String selectedPort = (String) comboPorts.getSelectedItem();
+                final String selectedPort = ((SerialPortScanner.PortResult) comboPorts.getSelectedItem()).port;
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
 
