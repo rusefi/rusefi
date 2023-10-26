@@ -43,7 +43,7 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 
 static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex) {
+void TriggerEmulatorHelper::handleEmulatorCallback(int ch, const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex) {
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
@@ -131,7 +131,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
-		helper.handleEmulatorCallback(
+		helper.handleEmulatorCallback(0,
 				*state->multiChannelStateSequence,
 				stateIndex);
 	}
