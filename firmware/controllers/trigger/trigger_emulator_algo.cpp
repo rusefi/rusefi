@@ -98,20 +98,22 @@ void setTriggerEmulatorRPM(int rpm) {
 	 * All we need to do here is to change the periodMs
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
 	 */
-	if (rpm == 0) {
-		triggerEmulatorSignals[0].setFrequency(NAN);
-	} else {
+	float rPerSecond = NAN;
+	if (rpm != 0) {
 		float rpmM = getRpmMultiplier(getEngineRotationState()->getOperationMode());
-		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
-		triggerEmulatorSignals[0].setFrequency(rPerSecond);
+		rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
 	}
+	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
+		triggerEmulatorSignals[ch].setFrequency(rPerSecond);
+	}
+
 	engine->resetEngineSnifferIfInTestMode();
 
 	efiPrintf("Emulating position sensor(s). RPM=%d", rpm);
 }
 
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
-	for (int channel = 0; channel < 1; channel++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		if (atTriggerVersions[channel] < triggerEmulatorWaveforms[channel]->version) {
 			atTriggerVersions[channel] = triggerEmulatorWaveforms[channel]->version;
 			efiPrintf("Stimulator: updating trigger shape for ch%d: %d/%d %d", channel, atTriggerVersions[channel],
@@ -136,9 +138,13 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
-		helper.handleEmulatorCallback(0,
+		for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
+			if (state != &triggerEmulatorSignals[ch])
+				continue;
+			helper.handleEmulatorCallback(ch,
 				*state->multiChannelStateSequence,
 				stateIndex);
+		}
 	}
 
 #if EFI_PROD_CODE
@@ -163,7 +169,7 @@ static void startSimulatedTriggerSignal() {
 
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
 
-	for (int channel = 0; channel < 1; channel++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		TriggerWaveform *s = triggerEmulatorWaveforms[channel];
 		if (s->getSize() == 0)
 			continue;
@@ -196,8 +202,10 @@ void enableExternalTriggerStimulator() {
 
 void disableTriggerStimulator() {
 	engine->triggerCentral.directSelfStimulation = false;
-	for (int channel = 0; channel < 1; channel++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		triggerEmulatorSignals[channel].stop();
+	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
+		triggerEmulatorSignals[ch].stop();
 	}
 	hasInitTriggerEmulator = false;
     incrementGlobalConfigurationVersion("disTrg");
@@ -223,7 +231,7 @@ void initTriggerEmulator() {
 
 void startTriggerEmulatorPins() {
 	hasStimPins = false;
-	for (int channel = 0; channel < 1; channel++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		for (size_t i = 0; i < efi::size(emulatorOutputs[channel]); i++) {
 			triggerEmulatorSignals[channel].outputPins[i] = &emulatorOutputs[channel][i];
 
