@@ -745,27 +745,6 @@ const command_f_s commandsF[] = {
 #endif // EFI_ENGINE_CONTROL
 		{"script_curve_1_value", setScriptCurve1Value},
 		{"script_curve_2_value", setScriptCurve2Value},
-#if EFI_PROD_CODE
-#if EFI_IDLE_CONTROL
-		{"idle_p", setIdlePFactor},
-		{"idle_i", setIdleIFactor},
-		{"idle_d", setIdleDFactor},
-#endif // EFI_IDLE_CONTROL
-#endif // EFI_PROD_CODE
-
-#if EFI_ELECTRONIC_THROTTLE_BODY
-		{"etb_p", setEtbPFactor},
-		{"etb_i", setEtbIFactor},
-		{"etb_d", setEtbDFactor},
-		{"etb", setThrottleDutyCycle},
-#endif // EFI_ELECTRONIC_THROTTLE_BODY
-
-		//		{"", },
-//		{"", },
-//		{"", },
-		//		{"", },
-		//		{"", },
-		//		{"", },
 };
 
 static void setTpsErrorDetectionTooLow(int v) {
@@ -817,13 +796,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 #endif // EFI_IDLE_CONTROL
 #endif // EFI_PROD_CODE
 
-#if EFI_ELECTRONIC_THROTTLE_BODY
-		{"etb_o", setEtbOffset},
-#endif // EFI_ELECTRONIC_THROTTLE_BODY
-
-		//		{"", },
-		//		{"", },
-		//		{"", },
 		//		{"", },
 		//		{"", },
 };

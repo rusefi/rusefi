@@ -878,42 +878,6 @@ static void etbReset() {
 }
 #endif /* EFI_PROD_CODE */
 
-/**
- * set etb_p X
- */
-void setEtbPFactor(float value) {
-	engineConfiguration->etb.pFactor = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
-/**
- * set etb_i X
- */
-void setEtbIFactor(float value) {
-	engineConfiguration->etb.iFactor = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
-/**
- * set etb_d X
- */
-void setEtbDFactor(float value) {
-	engineConfiguration->etb.dFactor = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
-/**
- * set etb_o X
- */
-void setEtbOffset(int value) {
-	engineConfiguration->etb.offset = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
 void etbAutocal(size_t throttleIndex) {
 	if (throttleIndex >= ETB_COUNT) {
 		return;
