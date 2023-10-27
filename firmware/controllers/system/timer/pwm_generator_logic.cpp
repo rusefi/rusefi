@@ -294,6 +294,7 @@ void PwmConfig::weComplexInit(ExecutorInterface *executor,
 	this->executor = executor;
 	isStopRequested = false;
 
+    // NaN is 'not initialized' but zero is not expected
 	criticalAssertVoid(periodNt != 0, "period is not initialized");
 	criticalAssertVoid(seq->phaseCount != 0, "signal length cannot be zero");
 	criticalAssertVoid(seq->phaseCount <= PWM_PHASE_MAX_COUNT, "too many phases in PWM");
