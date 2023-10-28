@@ -212,14 +212,13 @@ public class ProgramSelector {
         noHardware.setVisible(currentHardware.isEmpty());
         controls.setVisible(!currentHardware.isEmpty());
 
-        boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
         boolean hasDfuDevice = currentHardware.dfuFound;
         boolean hasEcu = currentHardware.hasAnyEcu;
         boolean hasOpenblt = currentHardware.hasAnyOpenblt;
 
         mode.removeAllItems();
         if (IS_WIN) {
-            if (hasSerialPorts) {
+            if (hasEcu) {
                 mode.addItem(AUTO_DFU);
             }
 
