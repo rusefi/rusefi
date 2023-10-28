@@ -140,13 +140,19 @@ public enum SerialPortScanner {
             }
         }
 
-        // Clean the port cache of any entries that no longer exist
-        // If the same port appears later, we want to re-probe it at that time
-        // In any other scenario, auto could have unexpected behavior for the user
-        for (String x : portCache.keySet()) {
-            if (Arrays.stream(serialPorts).noneMatch(x::equals)) {
-                portCache.remove(x);
+        {
+            // Clean the port cache of any entries that no longer exist
+            // If the same port appears later, we want to re-probe it at that time
+            // In any other scenario, auto could have unexpected behavior for the user
+            List<String> toRemove = new ArrayList<>();
+            for (String x : portCache.keySet()) {
+                if (Arrays.stream(serialPorts).noneMatch(x::equals)) {
+                    toRemove.add(x);
+                }
             }
+
+            // two steps to avoid ConcurrentModificationException
+            toRemove.stream().forEach(r -> portCache.remove(r));
         }
 
         boolean hasAnyEcu = ecuCount > 0;
