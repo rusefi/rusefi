@@ -144,7 +144,7 @@ public class ProgramSelector {
         String[] portsAfter = LinkManager.getCommPorts();
 
         // Check that the ECU disappeared from the "after" list
-        if (!PortDetector.AUTO.equals(fomePort) && Arrays.stream(portsAfter).anyMatch(fomePort::equals)) {
+        if (!PortDetector.AUTO.equals(fomePort) && Arrays.asList(portsAfter).contains(fomePort)) {
             callbacks.log("Looks like your ECU didn't reboot to OpenBLT");
             callbacks.error();
             return;
@@ -153,7 +153,7 @@ public class ProgramSelector {
         // Check that exactly one thing appeared in the "after" list
         ArrayList<String> newItems = new ArrayList<>();
         for (String s : portsAfter) {
-            if (!Arrays.stream(portsBefore).anyMatch(s::equals)) {
+            if (Arrays.stream(portsBefore).noneMatch(s::equals)) {
                 // This item is in the after list but not before list
                 newItems.add(s);
             }

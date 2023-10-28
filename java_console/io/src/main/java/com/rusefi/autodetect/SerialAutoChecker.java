@@ -32,7 +32,7 @@ public class SerialAutoChecker {
     /**
      * @return ECU signature from specified stream
      */
-    public String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
+    public static String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
         if (stream == null)
             return null;
 
@@ -46,7 +46,6 @@ public class SerialAutoChecker {
             if (!signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
                 return null;
             }
-            log.info("Got signature=" + signature + " from " + serialPort);
             if (callback != null) {
                 callback.apply(new CallbackContext(stream, signature));
             }
@@ -61,6 +60,7 @@ public class SerialAutoChecker {
         // java 101: just a reminder that try-with syntax would take care of closing stream and that's important here!
         try (IoStream stream = getStreamByMode(mode)) {
             signature = checkResponse(stream, callback);
+            log.info("Got signature=" + signature + " from " + serialPort);
         }
         if (signature != null) {
             /**
