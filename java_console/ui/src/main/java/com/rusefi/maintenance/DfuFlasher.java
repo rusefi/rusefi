@@ -5,8 +5,8 @@ import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
-import com.rusefi.core.io.BundleUtil;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -24,8 +24,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-
-import static com.rusefi.StartupFrame.appendBundleName;
 
 /**
  * @see FirmwareFlasher

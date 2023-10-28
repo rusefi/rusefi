@@ -34,7 +34,7 @@ public class ExecHelper {
                  * TODO: are we supposed to just NOT check process status and just wait for 'null' from readLine?
                  */
                 long wasRunningTime = System.currentTimeMillis();
-                while (isRunning(p) || (System.currentTimeMillis() - wasRunningTime) < 0.5 * TimeUtil.SECOND) {
+                while (isRunning(p) || (System.currentTimeMillis() - wasRunningTime) < 0.1 * TimeUtil.SECOND) {
                     String line = bis.readLine();
                     if (line == null)
                         break;

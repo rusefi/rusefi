@@ -43,6 +43,7 @@ Release template (copy/paste this for new release):
  - Decode fuel temperature from flex fuel sensors #254
  - Allow brief operation over 100% injector duty cycle and add configurable duty cycle limits #215
  - Buttons to bump VVT targets for testing/PID tuning
+ - Improved serial port selection for FOME console and firmware update
 
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)

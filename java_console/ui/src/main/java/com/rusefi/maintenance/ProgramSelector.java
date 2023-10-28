@@ -7,7 +7,6 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -16,8 +15,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -174,7 +171,16 @@ public class ProgramSelector {
 
         String openbltPort = newItems.get(0);
 
-        callbacks.log("Serial port " + openbltPort + " appeared, programming firmware...");
+        // Check that the one that appeared is indeed OpenBLT
+        boolean isOpenBlt = SerialPortScanner.isPortOpenblt(openbltPort);
+
+        if (!isOpenBlt) {
+            callbacks.log("A serial port appeared as it should, but OpenBLT didn't respond.");
+            callbacks.error();
+            return;
+        }
+
+        callbacks.log("Serial port " + openbltPort + " appeared and looks like OpenBLT, programming firmware...");
 
         flashOpenbltSerial(openbltPort, callbacks);
     }

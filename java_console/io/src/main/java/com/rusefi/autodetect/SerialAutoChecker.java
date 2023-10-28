@@ -39,7 +39,7 @@ public class SerialAutoChecker {
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
             HelloCommand.send(stream);
-            byte[] response = incomingData.getPacket("auto detect");
+            byte[] response = incomingData.getPacket(500, "auto detect");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK))
                 return null;
             String signature = new String(response, 1, response.length - 1);

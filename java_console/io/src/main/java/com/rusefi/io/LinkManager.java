@@ -113,8 +113,18 @@ public class LinkManager implements Closeable {
         SerialPort[] ports = SerialPort.getCommPorts();
         // wow sometimes driver returns same port name more than once?!
         TreeSet<String> names = new TreeSet<>();
-        for (SerialPort port : ports)
-            names.add(port.getSystemPortName());
+        for (SerialPort port : ports) {
+            String portName = port.getSystemPortName();
+
+            // Filter out some macOS trash
+            if (portName.contains("wlan-debug") ||
+                    portName.contains("Bluetooth-Incoming-Port") ||
+                    portName.startsWith("cu.")) {
+                continue;
+            }
+
+            names.add(portName);
+        }
         return names.toArray(new String[0]);
     }
 
