@@ -29,6 +29,10 @@ public class SerialAutoChecker {
         this.portFound = portFound;
     }
 
+    public static String checkResponse(IoStream stream) {
+        return checkResponse(stream, null);
+    }
+
     /**
      * @return ECU signature from specified stream
      */

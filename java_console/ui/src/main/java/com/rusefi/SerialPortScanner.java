@@ -242,7 +242,7 @@ public enum SerialPortScanner {
 
     public static boolean isPortFomeEcu(String port) {
         try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
-            String signature = SerialAutoChecker.checkResponse(stream, null);
+            String signature = SerialAutoChecker.checkResponse(stream);
 
             if (signature == null) {
                 return false;

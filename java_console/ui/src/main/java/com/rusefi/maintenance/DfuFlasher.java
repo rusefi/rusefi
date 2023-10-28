@@ -82,10 +82,7 @@ public class DfuFlasher {
             callbacks.log("Using selected " + port + "\n");
             IoStream stream = BufferedSerialIoStream.openPort(port);
             AtomicReference<String> signature = new AtomicReference<>();
-            new SerialAutoChecker(PortDetector.DetectorMode.DETECT_TS, port, new CountDownLatch(1)).checkResponse(stream, callbackContext -> {
-                signature.set(callbackContext.getSignature());
-                return null;
-            });
+            signature.set(SerialAutoChecker.checkResponse(stream));
             if (signature.get() == null) {
                 callbacks.log("*** ERROR *** FOME has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
