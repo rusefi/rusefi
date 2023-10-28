@@ -763,7 +763,7 @@ int Tle8888::wd_get_status() {
 }
 
 int Tle8888::wd_feed() {
-	bool update_status;
+	bool update_status = false;
 
 	if (wwd_ts <= chVTGetSystemTimeX()) {
 		update_status = true;
