@@ -28,8 +28,7 @@ public class BitConfigField extends BaseConfigField {
                             Fields.CONSOLE_DATA_PROTOCOL_TAG + field.getOffset() + "/" + field.getBitOffset() + " is ";
                     if (message.startsWith(expectedPrefix) && message.length() == expectedPrefix.length() + 1) {
                         message = message.substring(expectedPrefix.length());
-                        Boolean value = message.equals("1");
-                        setValue(value);
+                        setValue(message.equals("1"));
                     }
                 }
             }

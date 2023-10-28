@@ -32,7 +32,6 @@ public class DfuFlasher {
     private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
     private static final String WMIC_DFU_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
-    private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
 
     public static void doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
         if (port == null) {
@@ -83,12 +82,9 @@ public class DfuFlasher {
             callbacks.log("Using selected " + port + "\n");
             IoStream stream = BufferedSerialIoStream.openPort(port);
             AtomicReference<String> signature = new AtomicReference<>();
-            new SerialAutoChecker(PortDetector.DetectorMode.DETECT_TS, port, new CountDownLatch(1)).checkResponse(stream, new Function<SerialAutoChecker.CallbackContext, Void>() {
-                @Override
-                public Void apply(SerialAutoChecker.CallbackContext callbackContext) {
-                    signature.set(callbackContext.getSignature());
-                    return null;
-                }
+            new SerialAutoChecker(PortDetector.DetectorMode.DETECT_TS, port, new CountDownLatch(1)).checkResponse(stream, callbackContext -> {
+                signature.set(callbackContext.getSignature());
+                return null;
             });
             if (signature.get() == null) {
                 callbacks.log("*** ERROR *** FOME has not responded on selected " + port + "\n" +

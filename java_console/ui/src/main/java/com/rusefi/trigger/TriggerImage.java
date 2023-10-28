@@ -131,9 +131,7 @@ public class TriggerImage {
             UiUtils.trueRepaint(content);
         });
 
-        SwingUtilities.invokeAndWait(() -> {
-            TriggerWheelInfo.readWheels(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
-        });
+        SwingUtilities.invokeAndWait(() -> TriggerWheelInfo.readWheels(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo)));
         Thread.sleep(1000L * sleepAtEnd);
         System.exit(-1);
     }

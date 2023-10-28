@@ -76,8 +76,7 @@ public enum SerialPortScanner {
     static final String AUTO_SERIAL = "Auto Serial";
 
     private final Object lock = new Object();
-    @NotNull
-    private AvailableHardware knownHardware = new AvailableHardware(Collections.emptyList(), false, false, false);
+    private AvailableHardware knownHardware = null;
 
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
@@ -88,7 +87,7 @@ public enum SerialPortScanner {
             startTimer();
     }
 
-    private static Map<String, PortResult> portCache = new HashMap<>();
+    private final static Map<String, PortResult> portCache = new HashMap<>();
 
     /**
      * Find all available serial ports and checks if simulator local TCP port is available
@@ -152,7 +151,7 @@ public enum SerialPortScanner {
             }
 
             // two steps to avoid ConcurrentModificationException
-            toRemove.stream().forEach(r -> portCache.remove(r));
+            toRemove.stream().forEach(portCache::remove);
         }
 
         boolean hasAnyEcu = ecuCount > 0;
@@ -176,7 +175,7 @@ public enum SerialPortScanner {
         boolean isListUpdated;
         AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected, hasAnyEcu, hasAnyOpenblt);
         synchronized (lock) {
-            isListUpdated = !knownHardware.equals(currentHardware);
+            isListUpdated = !currentHardware.equals(knownHardware);
             knownHardware = currentHardware;
         }
         if (isListUpdated) {
@@ -192,6 +191,7 @@ public enum SerialPortScanner {
                 findAllAvailablePorts(!isFirstTime);
                 isFirstTime = false;
                 try {
+                    //noinspection BusyWait
                     Thread.sleep(300);
                 } catch (InterruptedException e) {
                     throw new IllegalStateException(e);

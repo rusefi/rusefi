@@ -6,7 +6,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.MessagesPanel;
-import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
@@ -15,7 +14,6 @@ import neoe.formatter.lua.LuaFormatter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -54,16 +52,13 @@ public class LuaScriptPanel {
         });
         resetButton.addActionListener(e -> resetLua());
 
-        formatButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String sourceCode = scriptText.getText();
-                try {
-                    String formatted = new LuaFormatter().format(sourceCode, new LuaFormatter.Env());
-                    scriptText.setText(formatted);
-                } catch (Exception ignored) {
-                    // todo: fix luaformatter no reason for exception
-                }
+        formatButton.addActionListener(e -> {
+            String sourceCode = scriptText.getText();
+            try {
+                String formatted = new LuaFormatter().format(sourceCode, new LuaFormatter.Env());
+                scriptText.setText(formatted);
+            } catch (Exception ignored) {
+                // todo: fix luaformatter no reason for exception
             }
         });
 
@@ -92,18 +87,13 @@ public class LuaScriptPanel {
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        readFromECU();
-                    } catch (Throwable e) {
-                        System.out.println(e);
-                    }
-                }
-            });
-        });
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
+            try {
+                readFromECU();
+            } catch (Throwable e) {
+                System.out.println(e);
+            }
+        }));
 
         JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel);
 

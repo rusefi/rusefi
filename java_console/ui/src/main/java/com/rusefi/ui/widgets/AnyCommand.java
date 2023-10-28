@@ -147,7 +147,7 @@ public class AnyCommand {
     private static void handleStimulationSelfCheck(String rawCommand, LinkManager linkManager) {
         String[] parts = rawCommand.split(" ", 4);
         if (parts.length != 4) {
-            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Invalid command length " + parts);
+            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Invalid command length " + parts.length);
             return; // let's ignore invalid command
         }
         int rpm = Integer.parseInt(parts[1]);

@@ -66,8 +66,8 @@ public class ProgramSelector {
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
 
-                String jobName = null;
-                Consumer<UpdateOperationCallbacks> job = null;
+                String jobName;
+                Consumer<UpdateOperationCallbacks> job;
 
                 Objects.requireNonNull(selectedMode);
                 switch (selectedMode) {
@@ -156,7 +156,7 @@ public class ProgramSelector {
             }
         }
 
-        if (newItems.size() == 0) {
+        if (newItems.isEmpty()) {
             callbacks.log("Looks like your ECU disappeared during the update process. Please try again.");
             callbacks.error();
             return;

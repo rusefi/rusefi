@@ -114,7 +114,7 @@ public class EngineSnifferPanel {
 
         upperPanel.add(zoomControl);
 
-        scrollControl = ChartRepository.getInstance().createControls(chart -> displayChart(chart));
+        scrollControl = ChartRepository.getInstance().createControls(this::displayChart);
         upperPanel.add(scrollControl.getContent());
 
         upperPanel.add(new URLLabel(HELP_TEXT, HELP_URL));
