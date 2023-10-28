@@ -233,8 +233,7 @@ public class StartupFrame {
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
         String selectedPort = ((SerialPortScanner.PortResult)comboPorts.getSelectedItem()).port;
         if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
-            SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectPort(StartupFrame.this.frame);
-            String autoDetectedPort = detectResult == null ? null : detectResult.getSerialPort();
+            String autoDetectedPort = PortDetector.autoDetectPort(StartupFrame.this.frame);
             if (autoDetectedPort == null)
                 return;
             selectedPort = autoDetectedPort;
