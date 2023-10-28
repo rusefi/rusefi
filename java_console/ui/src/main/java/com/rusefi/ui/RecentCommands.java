@@ -35,14 +35,11 @@ public class RecentCommands {
     private static final String STOPENGINE = "stopengine";
     private static final String HELP = "help";
     private static final String SENSORINFO = "sensorinfo";
-    private static final String IDLEINFO = "idleinfo";
     private static final String MAPINFO = "mapinfo";
     private static final String CANINFO = "caninfo";
     private static final String TSINFO = "tsinfo";
-    private static final String SPEEDINFO = "speedinfo";
     private static final String FUELINFO = "fuelinfo";
     private static final String SDINFO = "sdinfo";
-    private static final String FSIOINFO = "fsioinfo";
     private static final String PINS = "pins";
 
     private final static Map<String, Icon> COMMAND_ICONS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -53,16 +50,13 @@ public class RecentCommands {
         COMMAND_ICONS.put(HELP, UiUtils.loadIcon("help.jpg"));
         COMMAND_ICONS.put(SENSORINFO, infoIcon);
         COMMAND_ICONS.put(CMD_TRIGGERINFO, UiUtils.loadIcon("trigger.jpg"));
-        COMMAND_ICONS.put(IDLEINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
         COMMAND_ICONS.put(MAPINFO, infoIcon);
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
         COMMAND_ICONS.put(SDINFO, UiUtils.loadIcon("sdinfo.jpg"));
-        COMMAND_ICONS.put(FSIOINFO, infoIcon);
         COMMAND_ICONS.put(PINS, infoIcon);
         COMMAND_ICONS.put(Fields.CMD_WRITECONFIG, UiUtils.loadIcon("writeconfig.jpg"));
-        COMMAND_ICONS.put(SPEEDINFO, UiUtils.loadIcon("speedinfo.jpg"));
     }
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
@@ -108,7 +102,6 @@ public class RecentCommands {
         add(SENSORINFO);
         add(CMD_TRIGGERINFO);
         add(TSINFO);
-        add(SPEEDINFO);
         add(CANINFO);
         add(Fields.CMD_WRITECONFIG);
         add("rewriteconfig");
@@ -126,11 +119,9 @@ public class RecentCommands {
         add("set_idle_position 50");
         add("sparkbench 5 400 2");
         add("fuelbench 5 400 2");
-        add(IDLEINFO);
         add(MAPINFO);
         add(FUELINFO);
         add(SDINFO);
-        add(FSIOINFO);
         add(PINS);
     }
 

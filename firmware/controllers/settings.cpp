@@ -457,7 +457,7 @@ static void disable(const char *param) {
 /**
  * See 'LimpManager::isEngineStop' for code which actually stops engine
  */
-void scheduleStopEngine(void) {
+void scheduleStopEngine() {
 	doScheduleStopEngine();
 }
 
@@ -601,7 +601,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	engine->resetEngineSnifferIfInTestMode();
 }
 
-void initSettings(void) {
+void initSettings() {
 #if EFI_SIMULATOR
 	printf("initSettings\n");
 #endif // EFI_SIMULATOR

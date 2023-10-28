@@ -28,66 +28,14 @@
 #include "dc_motors.h"
 #include "idle_hardware.h"
 
-static void showIdleInfo() {
-	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
-	efiPrintf("useStepperIdle=%s useHbridges=%s useRawOutput=%s",
-			boolToString(engineConfiguration->useStepperIdle),
-			boolToString(engineConfiguration->useHbridgesToDriveIdleStepper),
-			boolToString(engineConfiguration->useRawOutputToDriveIdleStepper));
-	efiPrintf("idleMode=%s position=%.2f",
-			idleModeStr, getIdlePosition());
-
-	if (engineConfiguration->useStepperIdle) {
-		if (engineConfiguration->useRawOutputToDriveIdleStepper) {
-			efiPrintf(" A+=%s", hwPortname(engineConfiguration->stepper_raw_output[0]));
-			efiPrintf(" A-=%s", hwPortname(engineConfiguration->stepper_raw_output[1]));
-			efiPrintf(" B+=%s", hwPortname(engineConfiguration->stepper_raw_output[2]));
-			efiPrintf(" B-=%s", hwPortname(engineConfiguration->stepper_raw_output[3]));
-		} else if (engineConfiguration->useHbridgesToDriveIdleStepper) {
-			efiPrintf("Coil A:");
-			efiPrintf(" pin1=%s", hwPortname(engineConfiguration->stepperDcIo[0].directionPin1));
-			efiPrintf(" pin2=%s", hwPortname(engineConfiguration->stepperDcIo[0].directionPin2));
-			showDcMotorInfo(2);
-			efiPrintf("Coil B:");
-			efiPrintf(" pin1=%s", hwPortname(engineConfiguration->stepperDcIo[1].directionPin1));
-			efiPrintf(" pin2=%s", hwPortname(engineConfiguration->stepperDcIo[1].directionPin2));
-			showDcMotorInfo(3);
-		} else {
-			efiPrintf("directionPin=%s reactionTime=%.2f", hwPortname(engineConfiguration->idle.stepperDirectionPin),
-					engineConfiguration->idleStepperReactionTime);
-			efiPrintf("stepPin=%s steps=%d", hwPortname(engineConfiguration->idle.stepperStepPin),
-					engineConfiguration->idleStepperTotalSteps);
-			efiPrintf("enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
-					engineConfiguration->stepperEnablePinMode);
-		}
-	} else {
-		if (!engineConfiguration->isDoubleSolenoidIdle) {
-			efiPrintf("idle valve freq=%d on %s", engineConfiguration->idle.solenoidFrequency,
-					hwPortname(engineConfiguration->idle.solenoidPin));
-		} else {
-			efiPrintf("idle valve freq=%d on %s", engineConfiguration->idle.solenoidFrequency,
-					hwPortname(engineConfiguration->idle.solenoidPin));
-			efiPrintf(" and %s", hwPortname(engineConfiguration->secondSolenoidPin));
-		}
-	}
-
-#if EFI_IDLE_CONTROL
-	if (engineConfiguration->idleMode == IM_AUTO) {
-		engine->module<IdleController>().unmock().getIdlePid()->showPidStatus("idle");
-	}
-#endif // EFI_IDLE_CONTROL
-}
-
 void setIdleMode(idle_mode_e value) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
-	showIdleInfo();
 }
 
 void setManualIdleValvePosition(int positionPercent) {
 	if (positionPercent < 1 || positionPercent > 99)
 		return;
 	efiPrintf("setting idle valve position %d", positionPercent);
-	showIdleInfo();
 	// todo: this is not great that we have to write into configuration here
 	engineConfiguration->manIdlePosition = positionPercent;
 }
@@ -143,7 +91,6 @@ static void applyPidSettings() {
 void setTargetIdleRpm(int value) {
 	setTargetRpmCurve(value);
 	efiPrintf("target idle RPM %d", value);
-	showIdleInfo();
 }
 
 /**
@@ -152,7 +99,6 @@ void setTargetIdleRpm(int value) {
 void startIdleBench(void) {
 	engine->timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
 	efiPrintf("idle valve bench test");
-	showIdleInfo();
 }
 
 #endif /* EFI_UNIT_TEST */
@@ -215,8 +161,6 @@ void startIdleThread() {
 	controller->currentIdlePosition = -100.0f;
 
 #if ! EFI_UNIT_TEST
-
-	addConsoleAction("idleinfo", showIdleInfo);
 
 	addConsoleActionII("blipidle", blipIdle);
 
