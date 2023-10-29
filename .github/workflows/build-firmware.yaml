@@ -117,6 +117,7 @@ jobs:
             48way,
             atlas,
             tdg-pdm8,
+            at_start_f435,
         ]
 
         include:
@@ -394,6 +395,11 @@ jobs:
             folder: config/boards/tdg-pdm8
             ini-file: rusefi_tdg-pdm8.ini
             skip-rate: 95
+
+          - build-target: at_start_f435
+            folder: config/boards/at_start_f435
+            ini-file: rusefi_at_start_f435.ini
+            skip-rate: 80
 
     steps:
     - name: Check branch name
