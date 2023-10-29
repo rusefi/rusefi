@@ -828,7 +828,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		auto nextToothIndex = triggerIndexForListeners;
 		angle_t nextPhase = 0;
 
-		int loopAllowance = 2 * engineCycleEventCount;
+		int loopAllowance = 2 * engineCycleEventCount + 1000;
 		do {
 			// I don't love this.
 			nextToothIndex = (nextToothIndex + 1) % engineCycleEventCount;
