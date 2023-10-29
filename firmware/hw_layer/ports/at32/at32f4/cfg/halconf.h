@@ -33,17 +33,11 @@
 #include "../../cfg/halconf_community.h"
 
 /* Override settings from rusefi_halconf.h */
-//#undef HAL_USE_CAN
-//#define HAL_USE_CAN FALSE
-
+/* TODO: Artery */
+/* i2c driver is not (yet) used on any AT32 board,
+ * also STM32 i2c driver is enabled for AT32 and never been tested on AT32 */
 #undef HAL_USE_I2C
 #define HAL_USE_I2C FALSE
-
-//#undef HAL_USE_SERIAL
-//#define HAL_USE_SERIAL FALSE
-
-//#undef HAL_USE_SPI
-//#define HAL_USE_SPI FALSE
 
 /**
  * @brief   Enables the FLASH subsystem.
