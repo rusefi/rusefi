@@ -1,0 +1,72 @@
+pins:
+  - pin: BD2
+    function: CAN bus low
+    type: can
+
+
+  - pin: BF1
+    function: CAN bus high
+    type: can
+
+  - pin: BF2
+    function: +12V from Main Relay
+    type: 12v
+
+  - pin: BG2
+    function: Power Ground
+    type: GND
+
+  - pin: BG3
+    function: Power Ground
+    type: GND
+
+  - pin: BG4
+    function: Power Ground
+    type: GND
+
+  - pin: BH1
+    function: Constant Battery Power
+    type: 12v
+  - pin: BH2
+    function: Constant Battery Power
+    type: 12v
+
+info:
+  title: m74.9
+  board_url: https://github.com/rusefi/m74.9/
+  directory: m74.9
+  name: m74.9
+  image:
+    file: m74_9.jpg
+  pins:
+    - pin: BD2
+      x: 858
+      y: 456
+
+    - pin: BF1
+      x: 742
+      y: 557
+
+    - pin: BF2
+      x: 742
+      y: 456
+
+    - pin: BG2
+      x: 684
+      y: 456
+
+    - pin: BG3
+      x: 684
+      y: 359
+
+    - pin: BG4
+      x: 684
+      y: 267
+
+    - pin: BH1
+      x: 627
+      y: 557
+
+    - pin: BH2
+      x: 627
+      y: 456
