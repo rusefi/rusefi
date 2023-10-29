@@ -6,6 +6,8 @@ IS_AT32F435 = yes
 
 # Stock board.c from ChibiOS
 BOARD_C = $(CHIBIOS)/os/hal/boards/AT_START_F435/board.c
+# Stock board.h from ChibiOS
+BOARDINC = $(CHIBIOS)/os/hal/boards/AT_START_F435/
 
 # Configuration directorys
 CONFDIR = $(PROJECT_DIR)/hw_layer/ports/at32/at32f4/cfg
