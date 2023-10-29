@@ -8,6 +8,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case Gpio::A8: return "235 Low Side Output";
 		case Gpio::A9: return "242 injector output 2";
+		case Gpio::B1: return "213 Crank VR+";
 		case Gpio::B12: return "135 Switch Input";
 		case Gpio::B13: return "134 Switch Input";
 		case Gpio::B8: return "152 relay output";
