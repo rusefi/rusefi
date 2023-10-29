@@ -12,6 +12,7 @@ endif
 
 #LED
 DDEFS +=  -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::G7
+DDEFS += -DLED_PIN_MODE=OM_INVERTED
 
 # We are running on Subaru EG33 hardware!
 DDEFS += -DHW_SUBARU_EG33=1
