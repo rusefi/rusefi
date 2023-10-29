@@ -3,6 +3,11 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::D13
 DDEFS += -DLED_PIN_MODE=OM_INVERTED
 
+# USB OTG1 connector:
+DDEFS += -DEFI_USB_SERIAL_DM=Gpio::A11
+DDEFS += -DEFI_USB_SERIAL_DP=Gpio::A12
+DDEFS += -DEFI_USB_AF=10
+
 IS_AT32F435 = yes
 
 # Stock board.c from ChibiOS
