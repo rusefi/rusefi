@@ -253,6 +253,8 @@ pins:
     function: Pedal +5V Supply
   - pin: 213
     # jumper
+    meta: MM100_IN_CRANK
+    class: event_inputs
     function: Crank Sensor VR+ Positive Input
     ts_name: ___ Crank VR+
   - pin: 215
