@@ -95,7 +95,6 @@ public class DfuFlasher {
             callbacks.log("Auto-detecting port...\n");
             // instead of opening the just-detected port we execute the command using the same stream we used to discover port
             // it's more reliable this way
-            // ISSUE: that's blocking stuff on UI thread at the moment, TODO smarter threading!
             port = PortDetector.autoDetectSerial(callbackContext -> {
                 boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), callbacks, command);
                 isSignatureValidated.set(isSignatureValidatedLocal);

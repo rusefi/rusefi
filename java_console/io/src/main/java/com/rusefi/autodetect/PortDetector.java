@@ -25,20 +25,16 @@ public class PortDetector {
     private static final NamedThreadFactory AUTO_DETECT_PORT = new NamedThreadFactory("ECU AutoDetectPort", true);
     public static final String AUTO = "auto";
 
-    public enum DetectorMode {
-        DETECT_TS,
-    }
-
     /**
      * Connect to all serial ports and find out which one respond first
      * @param callback
      * @return port name on which rusEFI was detected or null if none
      */
     @NotNull
-    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback, PortDetector.DetectorMode mode) {
+    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
         String rusEfiAddress = System.getProperty("rusefi.address");
         if (rusEfiAddress != null) {
-            return getSignatureFromPorts(mode, callback, new String[] {rusEfiAddress});
+            return getSignatureFromPorts(callback, new String[] {rusEfiAddress});
         }
         String[] serialPorts = getPortNames();
         if (serialPorts.length == 0) {
@@ -46,11 +42,11 @@ public class PortDetector {
             return new SerialAutoChecker.AutoDetectResult(null, null);
         }
         log.info("Trying " + Arrays.toString(serialPorts));
-        return getSignatureFromPorts(mode, callback, serialPorts);
+        return getSignatureFromPorts(callback, serialPorts);
     }
 
     @NotNull
-    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(DetectorMode mode, Function<SerialAutoChecker.CallbackContext, Void> callback, String[] serialPorts) {
+    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(Function<SerialAutoChecker.CallbackContext, Void> callback, String[] serialPorts) {
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<SerialAutoChecker.AutoDetectResult> result = new AtomicReference<>();
@@ -58,7 +54,12 @@ public class PortDetector {
             Thread thread = AUTO_DETECT_PORT.newThread(new Runnable() {
                 @Override
                 public void run() {
-                    new SerialAutoChecker(mode, serialPort, portFound).openAndCheckResponse(mode, result, callback);
+                    SerialAutoChecker.AutoDetectResult checkResult = SerialAutoChecker.openAndCheckResponse(serialPort, callback);
+
+                    if (checkResult != null) {
+                        result.set(checkResult);
+                        portFound.countDown();
+                    }
                 }
 
                 @Override
@@ -91,10 +92,6 @@ public class PortDetector {
         log.debug("Found " + autoDetectResult + " now stopping threads");
 //        log.info("Returning " + result.get());
         return autoDetectResult;
-    }
-
-    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
-        return autoDetectSerial(callback, PortDetector.DetectorMode.DETECT_TS);
     }
 
     private static String[] getPortNames() {

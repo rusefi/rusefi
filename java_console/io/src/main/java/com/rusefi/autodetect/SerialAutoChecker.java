@@ -17,17 +17,11 @@ import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
-public class SerialAutoChecker {
+public final class SerialAutoChecker {
     private final static Logging log = Logging.getLogging(SerialAutoChecker.class);
-    private final PortDetector.DetectorMode mode;
-    private final String serialPort;
-    private final CountDownLatch portFound;
 
-    public SerialAutoChecker(PortDetector.DetectorMode mode, String serialPort, CountDownLatch portFound) {
-        this.mode = mode;
-        this.serialPort = serialPort;
-        this.portFound = portFound;
-    }
+    // static class - no instances
+    private SerialAutoChecker() { }
 
     public static String checkResponse(IoStream stream) {
         return checkResponse(stream, null);
@@ -59,27 +53,19 @@ public class SerialAutoChecker {
         }
     }
 
-    public void openAndCheckResponse(PortDetector.DetectorMode mode, AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
+    public static AutoDetectResult openAndCheckResponse(String serialPort, Function<CallbackContext, Void> callback) {
         String signature;
         // java 101: just a reminder that try-with syntax would take care of closing stream and that's important here!
-        try (IoStream stream = getStreamByMode(mode)) {
+        try (IoStream stream = BufferedSerialIoStream.openPort(serialPort)) {
             signature = checkResponse(stream, callback);
             log.info("Got signature=" + signature + " from " + serialPort);
         }
-        if (signature != null) {
-            /**
-             * propagating result after closing the port so that it could be used right away
-             */
-            AutoDetectResult value = new AutoDetectResult(serialPort, signature);
-            log.info("Propagating " + value);
-            result.set(value);
-            portFound.countDown();
-        }
-    }
 
-    @Nullable
-    private IoStream getStreamByMode(PortDetector.DetectorMode mode) {
-        return BufferedSerialIoStream.openPort(serialPort);
+        if (signature != null) {
+            return new AutoDetectResult(serialPort, signature);
+        }
+
+        return null;
     }
 
     public static class CallbackContext {
