@@ -51,7 +51,7 @@
 				pinDir1,
 				&m_pinDir1,
 				clampedFrequency,
-				0
+				/*dutyCycle*/0
 			);
 
 			startSimplePwmHard(&m_pwm2, "ETB Dir 2",
@@ -59,7 +59,7 @@
 				pinDir2,
 				&m_pinDir2,
 				clampedFrequency,
-				0
+				/*dutyCycle*/0
 			);
 #endif // EFI_UNIT_TEST
 
@@ -75,7 +75,7 @@
 				pinEnable,
 				&m_pinEnable,
 				clampedFrequency,
-				0
+				/*dutyCycle*/0
 			);
 #endif // EFI_UNIT_TEST
 
