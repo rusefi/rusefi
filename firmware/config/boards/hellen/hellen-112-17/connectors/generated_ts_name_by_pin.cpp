@@ -6,7 +6,7 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case Gpio::A8: return "102 low side 1.5A output";
+		case Gpio::A8: return "235 Low Side Output";
 		case Gpio::A9: return "242 injector output 2";
 		case Gpio::B12: return "135 Switch Input";
 		case Gpio::B13: return "134 Switch Input";
@@ -24,7 +24,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D11: return "243 injector output 3";
 		case Gpio::D12: return "246 low side 1.5A output";
 		case Gpio::D13: return "128 Tach Output";
-		case Gpio::D15: return "235 Low Side Output";
+		case Gpio::D15: return "102 low side 1.5A output";
 		case Gpio::D2: return "101 low side 1.5A output";
 		case Gpio::D3: return "244 injector output 1";
 		case Gpio::E11: return "233 MAF frequency";
