@@ -24,10 +24,10 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
     }
 
     public static void wrapContent(LazyFile output, String content) {
-        output.write("static constexpr LogField fields[] = {\r\n" +
+        output.write("static constexpr LogField fields[] = {\n" +
                 "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n");
         output.write(content);
-        output.write("};\r\n");
+        output.write("};\n");
     }
 
     @Override
