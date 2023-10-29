@@ -13,6 +13,7 @@ public enum bench_test_io_control_e {
 	CAN_BENCH_QUERY_PIN_STATE(5),
 	CAN_BENCH_START_PIN_TEST(6),
 	CAN_BENCH_END_PIN_TEST(7),
+	CAN_QC_ETB(8),
 	;
 
 
