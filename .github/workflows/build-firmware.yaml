@@ -117,6 +117,7 @@ jobs:
             48way,
             atlas,
             tdg-pdm8,
+            at_start_f435,
         ]
 
         include:
