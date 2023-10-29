@@ -21,6 +21,13 @@ bool qcDirectPinControlMode = false;
 
 #if EFI_CAN_SUPPORT
 
+static void directWritePad(Gpio pin, int value) {
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
+	palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
+	// todo: add smart chip support support
+#endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
+}
+
 static void setPin(const CANRxFrame& frame, int value) {
 		int outputIndex = frame.data8[2];
 		if (outputIndex >= getBoardMetaOutputsCount())
@@ -34,8 +41,7 @@ static void setPin(const CANRxFrame& frame, int value) {
             efiSetPadModeWithoutOwnershipAcquisition("QC_SET", pin, PAL_MODE_OUTPUT_PUSHPULL);
         }
 
-		palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
-		// todo: add smart chip support support
+        directWritePad(pin, value);
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }
 
@@ -200,6 +206,13 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	} else if (command == bench_test_io_control_e::CAN_QC_OUTPUT_CONTROL_CLEAR) {
 		qcDirectPinControlMode = true;
 	    setPin(frame, 0);
+	} else if (command == bench_test_io_control_e::CAN_QC_ETB) {
+		qcDirectPinControlMode = true;
+		uint8_t dcIndex = frame.data8[2];
+		uint8_t direction = frame.data8[3];
+		const dc_io *io = &engineConfiguration->etbIo[dcIndex];
+		directWritePad(io->controlPin, 1);
+		directWritePad(io->directionPin1, direction);
 	} else if (command == bench_test_io_control_e::CAN_BENCH_SET_ENGINE_TYPE) {
 		int eType = frame.data8[2];
 		// todo: fix firmware for 'false' to be possible - i.e. more of properties should be applied on the fly
