@@ -1,6 +1,7 @@
 # List of all the board related files.
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::D13
+DDEFS += -DLED_PIN_MODE=OM_INVERTED
 
 IS_AT32F435 = yes
 
