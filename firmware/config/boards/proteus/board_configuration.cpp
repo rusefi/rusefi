@@ -229,6 +229,10 @@ int getBoardMetaOutputsCount() {
     return efi::size(PROTEUS_OUTPUTS);
 }
 
+int getBoardMetaDcOutputsCount() {
+    return 1;
+}
+
 Gpio* getBoardMetaOutputs() {
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
         return PROTEUS_CANAM_OUTPUTS;
