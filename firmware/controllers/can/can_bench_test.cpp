@@ -212,7 +212,9 @@ void processCanBenchTest(const CANRxFrame& frame) {
 		uint8_t dcIndex = frame.data8[2];
 		uint8_t direction = frame.data8[3];
 		const dc_io *io = &engineConfiguration->etbIo[dcIndex];
-		directWritePad(io->controlPin, 1);
+		Gpio controlPin = io->controlPin;
+		directWritePad(controlPin, 1);
+		efiSetPadModeWithoutOwnershipAcquisition("QC_ETB", controlPin, PAL_MODE_OUTPUT_PUSHPULL);
 		directWritePad(io->directionPin1, direction);
 		directWritePad(io->disablePin, 0); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
 	} else if (command == bench_test_io_control_e::CAN_BENCH_SET_ENGINE_TYPE) {
