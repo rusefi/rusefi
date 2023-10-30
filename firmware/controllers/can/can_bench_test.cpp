@@ -214,6 +214,7 @@ void processCanBenchTest(const CANRxFrame& frame) {
 		const dc_io *io = &engineConfiguration->etbIo[dcIndex];
 		directWritePad(io->controlPin, 1);
 		directWritePad(io->directionPin1, direction);
+		directWritePad(io->disablePin, 0); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
 	} else if (command == bench_test_io_control_e::CAN_BENCH_SET_ENGINE_TYPE) {
 		int eType = frame.data8[2];
 		// todo: fix firmware for 'false' to be possible - i.e. more of properties should be applied on the fly

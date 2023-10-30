@@ -551,7 +551,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
 		// Otherwise disable the motor.
-		m_motor->disable("setOutput");
+		m_motor->disable("no-ETB");
 	}
 }
 
