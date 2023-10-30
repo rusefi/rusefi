@@ -39,34 +39,66 @@ info:
   image:
     file: m74_9.jpg
   pins:
-    - pin: BD2
+    - pin: AD2
       x: 858
       y: 456
 
-    - pin: BF1
+    - pin: AF1
       x: 742
       y: 557
 
-    - pin: BF2
+    - pin: AF2
       x: 742
       y: 456
 
-    - pin: BG2
+    - pin: AG2
       x: 684
       y: 456
 
-    - pin: BG3
+    - pin: AG3
       x: 684
       y: 359
 
-    - pin: BG4
+    - pin: AG4
       x: 684
       y: 267
 
-    - pin: BH1
+    - pin: AH1
       x: 627
       y: 557
 
-    - pin: BH2
+    - pin: AH2
       x: 627
+      y: 456
+
+    - pin: BD2
+      x: 1591
+      y: 456
+
+    - pin: BF1
+      x: 1710
+      y: 557
+
+    - pin: BF2
+      x: 1710
+      y: 456
+
+    - pin: BG2
+      x: 1790
+      y: 456
+
+    - pin: BG3
+      x: 1790
+      y: 359
+
+    - pin: BG4
+      x: 1790
+      y: 267
+
+    - pin: BH1
+      x: 1873
+      y: 557
+
+    - pin: BH2
+      x: 1873
       y: 456
