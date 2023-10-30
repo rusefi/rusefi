@@ -84,9 +84,8 @@ static void sayHello() {
 	efiPrintf("MCU rev=%x flashSize=%d", mcuRevision, flashSize);
 #endif
 
-
-#ifdef CH_FREQUENCY
-	efiPrintf("CH_FREQUENCY=%d", CH_FREQUENCY);
+#ifdef CH_CFG_ST_FREQUENCY
+	efiPrintf("CH_CFG_ST_FREQUENCY=%d", CH_CFG_ST_FREQUENCY);
 #endif
 
 #ifdef CORTEX_MAX_KERNEL_PRIORITY
