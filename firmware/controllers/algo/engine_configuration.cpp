@@ -1079,3 +1079,4 @@ BOARD_WEAK int getBoardMetaOutputsCount() { return 0; }
 // default implementation: treat all outputs as low side
 BOARD_WEAK int getBoardMetaLowSideOutputsCount() { return getBoardMetaOutputsCount(); }
 BOARD_WEAK Gpio* getBoardMetaOutputs() { return nullptr; }
+BOARD_WEAK int getBoardMetaDcOutputsCount() { return 0; }

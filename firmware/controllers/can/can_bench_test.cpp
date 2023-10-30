@@ -128,6 +128,7 @@ static void sendOutBoardMeta() {
 	msg[1] = 0;
 	msg[2] = getBoardMetaOutputsCount();
 	msg[3] = getBoardMetaLowSideOutputsCount();
+	msg[4] = getBoardMetaDcOutputsCount();
 #endif // EFI_PROD_CODE
 }
 

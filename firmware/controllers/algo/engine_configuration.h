@@ -107,3 +107,4 @@ extern bool isActiveConfigurationVoid;
 int getBoardMetaOutputsCount();
 int getBoardMetaLowSideOutputsCount();
 Gpio* getBoardMetaOutputs();
+int getBoardMetaDcOutputsCount();
