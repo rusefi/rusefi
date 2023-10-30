@@ -37,5 +37,10 @@ endif
 # Now add common stm32 stuff
 include $(PROJECT_DIR)/hw_layer/ports/stm32/stm32_common.mk
 
+# Add Artery AT32 common stuff
+ifeq ($(IS_AT32F435),yes)
+	include $(PROJECT_DIR)/hw_layer/ports/at32/at32_common.mk
+endif
+
 # TODO: remove, for efifeatures.h
 ALLINC += $(PROJECT_DIR)/config/stm32f4ems
