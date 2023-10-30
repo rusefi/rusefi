@@ -67,9 +67,6 @@ static void sayHello() {
 #endif // STM32F4
 
 #define 	TM_ID_GetFlashSize()    (*(__IO uint16_t *) (FLASHSIZE_BASE))
-#define MCU_REVISION_MASK  0xfff
-
-	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
 
 #ifndef MIN_FLASH_SIZE
 #define MIN_FLASH_SIZE 1024
@@ -77,11 +74,31 @@ static void sayHello() {
 
 	int flashSize = TM_ID_GetFlashSize();
 	if (flashSize < MIN_FLASH_SIZE) {
+		// todo: bug, at the moment we report 1MB on dual-bank F7
 		criticalError("rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
 	}
 
-	// todo: bug, at the moment we report 1MB on dual-bank F7
+#ifdef AT32F4XX
+	int mcuRevision = DBGMCU->SERID & 0x07;
+	int mcuSerId = (DBGMCU->SERID >> 8) & 0xff;
+	const char *partNumber, *package;
+	uint32_t pnFlashSize;
+	int ret = at32GetMcuType(DBGMCU->IDCODE, &partNumber, &package, &pnFlashSize);
+	if (ret == 0) {
+		efiPrintf("MCU IDCODE %s in %s with %d KB flash",
+			partNumber, package, pnFlashSize);
+	} else {
+		efiPrintf("MCU IDCODE unknown 0x%x", DBGMCU->IDCODE);
+	}
+	efiPrintf("MCU SER_ID %s rev %c",
+		(mcuSerId == 0x0d) ? "AT32F435" : ((mcuSerId == 0x0e) ? "AT32F437" : "UNKNOWN"),
+		'A' + mcuRevision);
+	efiPrintf("MCU F_SEZE %d KB", flashSize);
+#else
+#define MCU_REVISION_MASK  0xfff
+	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
 	efiPrintf("MCU rev=%x flashSize=%d", mcuRevision, flashSize);
+#endif
 #endif
 
 #ifdef CH_CFG_ST_FREQUENCY
