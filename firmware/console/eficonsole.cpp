@@ -58,11 +58,11 @@ static void sayHello() {
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);
 
+#if defined(STM32F4) && !defined(AT32F4XX)
 	efiPrintf("can read 0x20000010 %d", ramReadProbe((const char *)0x20000010));
 	efiPrintf("can read 0x20020010 %d", ramReadProbe((const char *)0x20020010));
 	efiPrintf("can read 0x20070010 %d", ramReadProbe((const char *)0x20070010));
 
-#if defined(STM32F4)
 	efiPrintf("isStm32F42x %s", boolToString(isStm32F42x()));
 #endif // STM32F4
 
