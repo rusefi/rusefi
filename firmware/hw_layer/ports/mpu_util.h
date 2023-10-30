@@ -76,6 +76,10 @@ typedef enum {
 BOR_Level_t BOR_Get(void);
 BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 
+#ifdef AT32F4XX
+int at32GetMcuType(uint32_t id, const char **pn, const char **package, uint32_t *flashSize);
+#endif
+
 extern "C"
 {
 #endif /* __cplusplus */

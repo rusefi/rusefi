@@ -58,18 +58,15 @@ static void sayHello() {
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);
 
+#if defined(STM32F4) && !defined(AT32F4XX)
 	efiPrintf("can read 0x20000010 %d", ramReadProbe((const char *)0x20000010));
 	efiPrintf("can read 0x20020010 %d", ramReadProbe((const char *)0x20020010));
 	efiPrintf("can read 0x20070010 %d", ramReadProbe((const char *)0x20070010));
 
-#if defined(STM32F4)
 	efiPrintf("isStm32F42x %s", boolToString(isStm32F42x()));
 #endif // STM32F4
 
 #define 	TM_ID_GetFlashSize()    (*(__IO uint16_t *) (FLASHSIZE_BASE))
-#define MCU_REVISION_MASK  0xfff
-
-	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
 
 #ifndef MIN_FLASH_SIZE
 #define MIN_FLASH_SIZE 1024
@@ -77,16 +74,35 @@ static void sayHello() {
 
 	int flashSize = TM_ID_GetFlashSize();
 	if (flashSize < MIN_FLASH_SIZE) {
+		// todo: bug, at the moment we report 1MB on dual-bank F7
 		criticalError("rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
 	}
 
-	// todo: bug, at the moment we report 1MB on dual-bank F7
+#ifdef AT32F4XX
+	int mcuRevision = DBGMCU->SERID & 0x07;
+	int mcuSerId = (DBGMCU->SERID >> 8) & 0xff;
+	const char *partNumber, *package;
+	uint32_t pnFlashSize;
+	int ret = at32GetMcuType(DBGMCU->IDCODE, &partNumber, &package, &pnFlashSize);
+	if (ret == 0) {
+		efiPrintf("MCU IDCODE %s in %s with %d KB flash",
+			partNumber, package, pnFlashSize);
+	} else {
+		efiPrintf("MCU IDCODE unknown 0x%x", DBGMCU->IDCODE);
+	}
+	efiPrintf("MCU SER_ID %s rev %c",
+		(mcuSerId == 0x0d) ? "AT32F435" : ((mcuSerId == 0x0e) ? "AT32F437" : "UNKNOWN"),
+		'A' + mcuRevision);
+	efiPrintf("MCU F_SIZE %d KB", flashSize);
+#else
+#define MCU_REVISION_MASK  0xfff
+	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
 	efiPrintf("MCU rev=%x flashSize=%d", mcuRevision, flashSize);
 #endif
+#endif
 
-
-#ifdef CH_FREQUENCY
-	efiPrintf("CH_FREQUENCY=%d", CH_FREQUENCY);
+#ifdef CH_CFG_ST_FREQUENCY
+	efiPrintf("CH_CFG_ST_FREQUENCY=%d", CH_CFG_ST_FREQUENCY);
 #endif
 
 #ifdef CORTEX_MAX_KERNEL_PRIORITY
