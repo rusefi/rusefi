@@ -1,7 +1,6 @@
 package com.rusefi.ui.util;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.FileLog;
 
 import javax.swing.*;
 import java.awt.*;

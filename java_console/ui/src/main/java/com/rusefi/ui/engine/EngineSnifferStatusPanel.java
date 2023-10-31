@@ -2,7 +2,6 @@ package com.rusefi.ui.engine;
 
 import com.rusefi.waves.TimeAxisTranslator;
 import com.rusefi.waves.EngineReport;
-import com.rusefi.waves.ZoomProvider;
 import com.rusefi.waves.RevolutionLog;
 
 import javax.swing.*;

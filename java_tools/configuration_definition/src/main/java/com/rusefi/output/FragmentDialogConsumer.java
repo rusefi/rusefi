@@ -1,7 +1,6 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import org.jetbrains.annotations.NotNull;
 

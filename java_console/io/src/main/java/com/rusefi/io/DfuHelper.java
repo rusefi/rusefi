@@ -1,18 +1,12 @@
 package com.rusefi.io;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.core.RusEfiSignature;
-import com.rusefi.core.SignatureHelper;
-import com.rusefi.core.io.BundleUtil;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.ui.StatusConsumer;
 
 import javax.swing.*;
 import java.io.IOException;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.Timeouts.SECOND;
-import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 public class DfuHelper {
     private static final Logging log = getLogging(DfuHelper.class);

@@ -1,7 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.newparse.DefinitionsState;
-import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 

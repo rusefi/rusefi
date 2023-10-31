@@ -1,6 +1,5 @@
 package com.rusefi.logic.test;
 
-import com.rusefi.logic.IgnitionMapBuilder;
 import org.junit.Test;
 
 import static com.rusefi.logic.IgnitionMapBuilder.*;

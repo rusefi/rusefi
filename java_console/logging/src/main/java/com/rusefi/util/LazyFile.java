@@ -1,9 +1,6 @@
 package com.rusefi.util;
 
 import java.io.*;
-import java.nio.file.Paths;
-import java.util.Scanner;
-import java.util.regex.Pattern;
 
 /**
  * This file would override file content only of content has changed, disregarding the magic tag line.

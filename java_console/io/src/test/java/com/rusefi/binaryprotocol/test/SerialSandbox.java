@@ -6,7 +6,6 @@ import com.rusefi.io.HeartBeatListeners;
 import com.rusefi.io.LinkManager;
 
 import java.util.Date;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class SerialSandbox {

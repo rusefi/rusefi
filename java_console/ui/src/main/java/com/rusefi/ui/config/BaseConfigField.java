@@ -2,13 +2,9 @@ package com.rusefi.ui.config;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.io.ConnectionStatusLogic;
-import com.rusefi.io.DfuHelper;
-import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
 import org.jetbrains.annotations.NotNull;
 

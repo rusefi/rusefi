@@ -6,7 +6,6 @@ import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
@@ -28,7 +27,6 @@ import static com.rusefi.config.generated.Fields.TS_FILE_VERSION;
 import static com.rusefi.config.generated.Fields.TS_FILE_VERSION_OFFSET;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 import org.junit.Assert;
-import static org.junit.Assert.assertTrue;
 
 public class TestHelper extends MockitoTestHelper {
     private static final Logging log = getLogging(TestHelper.class);

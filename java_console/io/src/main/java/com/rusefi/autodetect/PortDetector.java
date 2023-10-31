@@ -3,7 +3,6 @@ package com.rusefi.autodetect;
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.serial.BaudRateHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

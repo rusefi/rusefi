@@ -1,9 +1,6 @@
 package com.rusefi.pinout;
 
-import com.rusefi.EnumsReader;
-import com.rusefi.ReaderState;
 import com.rusefi.ReaderStateImpl;
-import com.rusefi.VariableRegistry;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.newparse.ParseState;
 import org.junit.Test;

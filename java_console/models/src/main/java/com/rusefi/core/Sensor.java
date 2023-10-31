@@ -2,7 +2,6 @@ package com.rusefi.core;
 
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.TsOutputs;
 import org.jetbrains.annotations.Nullable;
 

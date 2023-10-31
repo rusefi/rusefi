@@ -5,7 +5,6 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.MsqFactory;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.Before;

@@ -1,9 +1,6 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.util.LazyFile;
-
-import java.net.URISyntaxException;
 
 import static com.devexperts.logging.Logging.getLogging;
 

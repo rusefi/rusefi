@@ -1,7 +1,6 @@
 package com.rusefi.ui.lua;
 
 import com.rusefi.config.generated.Fields;
-import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 

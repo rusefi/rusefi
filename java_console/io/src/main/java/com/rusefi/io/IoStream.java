@@ -1,6 +1,5 @@
 package com.rusefi.io;
 
-import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.opensr5.io.WriteStream;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -14,8 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Closeable;
 import java.io.EOFException;
 import java.io.IOException;
-
-import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * Physical bi-directional controller communication level

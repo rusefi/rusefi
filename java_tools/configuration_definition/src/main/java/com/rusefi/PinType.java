@@ -1,7 +1,5 @@
 package com.rusefi;
 
-import static com.rusefi.VariableRegistry.ENUM_SUFFIX;
-
 public enum PinType {
     OUTPUTS("output_pin_e", "Gpio", "Unassigned"),
     ANALOG_INPUTS("adc_channel_e", "adc_channel_e", "EFI_ADC_NONE"),

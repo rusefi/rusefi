@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.rusefi.util.SystemOut;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

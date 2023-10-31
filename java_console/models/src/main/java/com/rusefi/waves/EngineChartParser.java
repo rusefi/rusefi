@@ -1,7 +1,5 @@
 package com.rusefi.waves;
 
-import com.opensr5.Logger;
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -10,8 +10,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.tune.xml.Constant;
 
-import java.io.File;
-
 /**
  * Starts a fake device with TCP connector at {@link BinaryProtocolServer#DEFAULT_PROXY_PORT} port
  * @see TcpServerSandbox what's the difference?
