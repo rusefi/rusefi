@@ -77,30 +77,17 @@ public class EngineSnifferPanel {
         statusPanel.setTimeAxisTranslator(crank.createTranslator());
 
         final JButton pauseButton = UiUtils.createPauseButton();
-        pauseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setPaused(pauseButton, !isPaused);
-            }
-        });
+        pauseButton.addActionListener(e -> setPaused(pauseButton, !isPaused));
 
         JButton clearButton = UiUtils.createClearButton();
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (UpDownImage image : images.values())
-                    image.setWaveReport(EngineReport.MOCK, null);
-                setPaused(pauseButton, false);
-            }
+        clearButton.addActionListener(e -> {
+            for (UpDownImage image : images.values())
+                image.setWaveReport(EngineReport.MOCK, null);
+            setPaused(pauseButton, false);
         });
 
         JButton saveImageButton = UiUtils.createSaveImageButton();
-        saveImageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveImage();
-            }
-        });
+        saveImageButton.addActionListener(e -> saveImage());
 
 
         JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
@@ -148,13 +135,10 @@ public class EngineSnifferPanel {
 
         resetImagePanel();
 
-        uiContext.getLinkManager().getEngineState().registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
-            @Override
-            public void onUpdate(String value) {
-                if (isPaused)
-                    return;
-                displayChart(value);
-            }
+        uiContext.getLinkManager().getEngineState().registerStringValueAction(EngineReport.ENGINE_CHART, value -> {
+            if (isPaused)
+                return;
+            displayChart(value);
         });
 
         mainPanel.add(chartPanel, BorderLayout.CENTER);
@@ -167,19 +151,16 @@ public class EngineSnifferPanel {
     }
 
     public void setOutpinListener(EngineState engineState) {
-        engineState.registerStringValueAction(Fields.PROTOCOL_OUTPIN, new EngineState.ValueCallback<String>() {
-            @Override
-            public void onUpdate(String value) {
-                String[] pinInfo = value.split("@");
-                if (pinInfo.length != 2)
-                    return;
-                String channel = pinInfo[0];
-                String pin = pinInfo[1];
-                UpDownImage image = images.get(channel);
-                ChannelNaming.INSTANCE.channelName2PhysicalPin.put(channel, pin);
-                if (image != null)
-                    image.setPhysicalPin(pin);
-            }
+        engineState.registerStringValueAction(Fields.PROTOCOL_OUTPIN, value -> {
+            String[] pinInfo = value.split("@");
+            if (pinInfo.length != 2)
+                return;
+            String channel = pinInfo[0];
+            String pin = pinInfo[1];
+            UpDownImage image = images.get(channel);
+            ChannelNaming.INSTANCE.channelName2PhysicalPin.put(channel, pin);
+            if (image != null)
+                image.setPhysicalPin(pin);
         });
     }
 
@@ -313,12 +294,9 @@ public class EngineSnifferPanel {
     }
 
     public ActionListener getTabSelectedListener() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (command != null)
-                    command.requestFocus();
-            }
+        return e -> {
+            if (command != null)
+                command.requestFocus();
         };
     }
 

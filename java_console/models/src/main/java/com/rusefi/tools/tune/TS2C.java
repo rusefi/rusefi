@@ -47,7 +47,7 @@ public class TS2C {
         IniFileModel model = IniFileModel.getInstance();
 
         String methodName = tableName.equalsIgnoreCase("none") ? loadSectionName : tableName;
-        methodName = methodName.toUpperCase().substring(0, 1) + methodName.substring(1);
+        methodName = methodName.toUpperCase().charAt(0) + methodName.substring(1);
 
         BufferedWriter w = new BufferedWriter(new FileWriter("generated_" + methodName + ".cpp"));
 

@@ -98,7 +98,7 @@ public class Logging {
 	 * need to print their debugging information in production environment.
 	 */
 	public final void configureDebugEnabled(boolean defaultDebugEnabled) {
-		IMPL.setDebugEnabled(peer, Boolean.valueOf(DefaultLogging.getProperty(getName() + ".debug",
+		IMPL.setDebugEnabled(peer, Boolean.parseBoolean(DefaultLogging.getProperty(getName() + ".debug",
 			String.valueOf(defaultDebugEnabled))));
 	}
 

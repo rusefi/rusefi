@@ -173,9 +173,9 @@ public class LiveDataProcessor {
         };
 
 
-        ArrayList<LinkedHashMap> liveDocs = (ArrayList<LinkedHashMap>) data.get("Usages");
+        ArrayList<LinkedHashMap<String, Object>> liveDocs = (ArrayList<LinkedHashMap<String, Object>>) data.get("Usages");
 
-        for (LinkedHashMap entry : liveDocs) {
+        for (LinkedHashMap<String, Object> entry : liveDocs) {
             String name = (String) entry.get("name");
             String java = (String) entry.get("java");
             String folder = (String) entry.get("folder");

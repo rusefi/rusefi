@@ -23,6 +23,7 @@ public class MiscTest extends RusefiTestBase {
         double mcuTemp = Double.NaN;
         long start = System.currentTimeMillis();
         while (Double.isNaN(mcuTemp) && (System.currentTimeMillis() - start) < 5 * SECOND) {
+            //noinspection BusyWait
             Thread.sleep(100);
             mcuTemp = SensorCentral.getInstance().getValue(Sensor.INT_TEMP);
         }

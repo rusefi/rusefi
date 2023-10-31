@@ -50,22 +50,19 @@ public class EngineState {
     private final Set<String> keys = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
     public EngineState(@NotNull final EngineStateListener listener) {
-        buffer = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
-            public void onResponse(String response) {
-                if (response != null) {
-                    // let's remove timestamp if we get content from a log file not controller
-                    int i = response.indexOf(Logger.END_OF_TIMESTAND_TAG);
-                    if (i != -1)
-                        response = response.substring(i + Logger.END_OF_TIMESTAND_TAG.length());
-                    String copy = response;
-                    listener.beforeLine(response);
-                    while (!response.isEmpty())
-                        response = handleResponse(response, listener);
-                    listener.afterLine(copy);
-                }
+        buffer = new ResponseBuffer(response -> {
+            if (response != null) {
+                // let's remove timestamp if we get content from a log file not controller
+                int i = response.indexOf(Logger.END_OF_TIMESTAND_TAG);
+                if (i != -1)
+                    response = response.substring(i + Logger.END_OF_TIMESTAND_TAG.length());
+                String copy = response;
+                listener.beforeLine(response);
+                while (!response.isEmpty())
+                    response = handleResponse(response, listener);
+                listener.afterLine(copy);
             }
-        }
-        );
+        });
 
         registerStringValueAction(Fields.PROTOCOL_MSG, value -> MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value));
     }

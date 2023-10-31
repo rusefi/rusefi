@@ -217,8 +217,7 @@ public class RecentCommands {
 
             Entry entry = (Entry) o;
 
-            return !(command != null ? !command.equals(entry.command) : entry.command != null);
-
+            return Objects.equals(command, entry.command);
         }
 
         @Override
