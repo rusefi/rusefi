@@ -28,7 +28,7 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(uint32_t eid, uint8_t dlc = 8, size_t bus = 0, bool isExtended = false);
+	explicit CanTxMessage(uint32_t eid, uint8_t dlc, size_t bus = 0, bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
@@ -91,7 +91,7 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(uint32_t id, bool isExtended, bool canChannel) : CanTxMessage(id, sizeof(TData), canChannel, isExtended) { }
+	explicit CanTxTyped(uint32_t id, bool isExtended, size_t canChannel) : CanTxMessage(id, sizeof(TData), canChannel, isExtended) { }
 
 #if EFI_CAN_SUPPORT
 	/**
@@ -112,7 +112,7 @@ public:
 };
 
 template <typename TData>
-void transmitStruct(uint32_t id, bool isExtended, bool canChannel)
+void transmitStruct(uint32_t id, bool isExtended, size_t canChannel)
 {
 	CanTxTyped<TData> frame(id, isExtended, canChannel);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.

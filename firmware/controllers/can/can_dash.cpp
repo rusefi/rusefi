@@ -181,17 +181,17 @@ void canDashboardBMW(CanCycle cycle) {
 	
 	if (cycle.isInterval(CI::_50ms)) {
 		{
-			CanTxMessage msg(CAN_BMW_E46_SPEED);
+			CanTxMessage msg(CAN_BMW_E46_SPEED, 8);
 			msg.setShortValue(10 * 8, 1);
 		}
 
 		{
-			CanTxMessage msg(CAN_BMW_E46_RPM);
+			CanTxMessage msg(CAN_BMW_E46_RPM, 8);
 			msg.setShortValue((int) (Sensor::getOrZero(SensorType::Rpm) * 6.4), 2);
 		}
 
 		{
-			CanTxMessage msg(CAN_BMW_E46_DME2);
+			CanTxMessage msg(CAN_BMW_E46_DME2, 8);
 			msg.setShortValue((int) ((Sensor::getOrZero(SensorType::Clt) + 48.373) / 0.75), 1);
 		}
 	}
@@ -201,12 +201,12 @@ void canDashboardBMW(CanCycle cycle) {
 void canMazdaRX8(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
 		{
-			CanTxMessage msg(CAN_MAZDA_RX_STEERING_WARNING);
+			CanTxMessage msg(CAN_MAZDA_RX_STEERING_WARNING, 8);
 			// todo: something needs to be set here? see http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Rx8_2004
 		}
 
 		{
-			CanTxMessage msg(CAN_MAZDA_RX_RPM_SPEED);
+			CanTxMessage msg(CAN_MAZDA_RX_RPM_SPEED, 8);
 
 			float kph = Sensor::getOrZero(SensorType::VehicleSpeed);
 
@@ -217,7 +217,7 @@ void canMazdaRX8(CanCycle cycle) {
 		}
 
 		{
-			CanTxMessage msg(CAN_MAZDA_RX_STATUS_1);
+			CanTxMessage msg(CAN_MAZDA_RX_STATUS_1, 8);
 			msg[0] = 0xFE; //Unknown
 			msg[1] = 0xFE; //Unknown
 			msg[2] = 0xFE; //Unknown
@@ -229,7 +229,7 @@ void canMazdaRX8(CanCycle cycle) {
 		}
 
 		{
-			CanTxMessage msg(CAN_MAZDA_RX_STATUS_2);
+			CanTxMessage msg(CAN_MAZDA_RX_STATUS_2, 8);
 			auto clt = Sensor::get(SensorType::Clt);
 			msg[0] = (uint8_t)(clt.value_or(0) + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
 			// TODO: fixme!
@@ -258,7 +258,7 @@ void canDashboardFiat(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
 		{
 			//Fiat Dashboard
-			CanTxMessage msg(CAN_FIAT_MOTOR_INFO);
+			CanTxMessage msg(CAN_FIAT_MOTOR_INFO, 8);
 			msg.setShortValue((int) (Sensor::getOrZero(SensorType::Clt) - 40), 3); //Coolant Temp
 			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) / 32, 6); //RPM
 		}
@@ -270,24 +270,24 @@ void canDashboardVAG(CanCycle cycle) {
 		{
 			// https://github.com/commaai/opendbc/blob/57c8340a180dd8c75139b18050eb17c72c9cb6e4/vw_golf_mk4.dbc#L394
 			//VAG Dashboard
-			CanTxMessage msg(CAN_VAG_Motor_1);
+			CanTxMessage msg(CAN_VAG_Motor_1, 8);
 			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) * 4, 2); //RPM
 		}
 
 		float clt = Sensor::getOrZero(SensorType::Clt);
 
 		{
-			CanTxMessage msg(CAN_VAG_Motor_2);
+			CanTxMessage msg(CAN_VAG_Motor_2, 8);
 			msg.setShortValue((int) ((clt + 48.373) / 0.75), 1); //Coolant Temp
 		}
 
 		{
-			CanTxMessage msg(CAN_VAG_CLT_V2);
+			CanTxMessage msg(CAN_VAG_CLT_V2, 8);
 			msg.setShortValue((int) ((clt + 48.373) / 0.75), 4); //Coolant Temp
 		}
 
 		{
-			CanTxMessage msg(CAN_VAG_IMMO);
+			CanTxMessage msg(CAN_VAG_IMMO, 8);
 			msg.setShortValue(0x80, 1);
 		}
 	}
@@ -296,7 +296,7 @@ void canDashboardVAG(CanCycle cycle) {
 void canDashboardW202(CanCycle cycle) {
 	if (cycle.isInterval(CI::_20ms)) {
 		{
-			CanTxMessage msg(W202_STAT_1);
+			CanTxMessage msg(W202_STAT_1, 8);
 			uint16_t tmp = Sensor::getOrZero(SensorType::Rpm);
 			msg[0] = 0x08; // Unknown
 			msg[1] = (tmp >> 8); //RPM
@@ -311,7 +311,7 @@ void canDashboardW202(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_100ms)) {
 		{
-			CanTxMessage msg(W202_STAT_2); //dlc 7
+			CanTxMessage msg(W202_STAT_2, 8); //dlc 7
 			msg[0] = (int)(Sensor::getOrZero(SensorType::Clt) + 40); // CLT -40 offset
 			msg[1] = 0x3D; // TBD
 			msg[2] = 0x63; // Const
@@ -325,7 +325,7 @@ void canDashboardW202(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_200ms)) {
 		{
-			CanTxMessage msg(W202_ALIVE);
+			CanTxMessage msg(W202_ALIVE, 8);
 			msg[0] = 0x0A; // Const
 			msg[1] = 0x18; // Const
 			msg[2] = 0x00; // Const
@@ -337,7 +337,7 @@ void canDashboardW202(CanCycle cycle) {
 		}	
 
 		{
-			CanTxMessage msg(W202_STAT_3);
+			CanTxMessage msg(W202_STAT_3, 8);
 			msg[0] = 0x00; // Const
 			msg[1] = 0x00; // Const
 			msg[2] = 0x6D; // TBD
@@ -1293,7 +1293,7 @@ void canDashboardAim(CanCycle cycle) {
 		return;
 	}
 
-	auto canChannel = engineConfiguration->canBroadcastUseChannelTwo;
+	size_t canChannel = engineConfiguration->canBroadcastUseChannelTwo ? 1 : 0;
 
 	transmitStruct<Aim5f0>(0x5f0, false, canChannel);
 	transmitStruct<Aim5f1>(0x5f1, false, canChannel);
