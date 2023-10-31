@@ -18,11 +18,7 @@ public class ResponseBufferTest {
     public void testSingleLine() {
         final AtomicReference<String> currentReference = new AtomicReference<>();
 
-        ResponseBuffer rb = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
-            public void onResponse(String response) {
-                currentReference.set(response);
-            }
-        });
+        ResponseBuffer rb = new ResponseBuffer(currentReference::set);
         rb.append("\r", LinkDecoder.VOID);
         assertNull(currentReference.get());
         rb.append("\n", LinkDecoder.VOID);

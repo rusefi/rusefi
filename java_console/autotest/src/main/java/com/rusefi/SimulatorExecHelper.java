@@ -96,11 +96,6 @@ public class SimulatorExecHelper {
         if (!new File(SIMULATOR_BINARY).exists())
             throw new IllegalStateException(SIMULATOR_BINARY + " not found");
         FileLog.MAIN.logLine("startSimulator...");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runSimulator();
-            }
-        }, "simulator process").start();
+        new Thread(SimulatorExecHelper::runSimulator, "simulator process").start();
     }
 }

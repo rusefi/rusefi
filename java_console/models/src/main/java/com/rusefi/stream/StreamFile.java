@@ -10,12 +10,7 @@ public abstract class StreamFile {
     protected Writer writer;
 
     public StreamFile() {
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                close();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }
 
     public abstract void append(List<CompositeEvent> events);

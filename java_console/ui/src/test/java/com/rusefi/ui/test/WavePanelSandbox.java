@@ -57,6 +57,6 @@ public class WavePanelSandbox {
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
-        SwingUtilities.invokeAndWait(() -> new WavePanelSandbox());
+        SwingUtilities.invokeAndWait(WavePanelSandbox::new);
     }
 }

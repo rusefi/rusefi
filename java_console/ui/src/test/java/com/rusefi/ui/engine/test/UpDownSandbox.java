@@ -32,11 +32,6 @@ public class UpDownSandbox {
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                new UpDownSandbox();
-            }
-        });
+        SwingUtilities.invokeAndWait(UpDownSandbox::new);
     }
 }
