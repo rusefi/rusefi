@@ -34,6 +34,8 @@ public class SimulatorFunctionalTest {
         testOutputPin(bench_mode_e.BENCH_MAIN_RELAY, Fields.BENCH_MAIN_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_FUEL_PUMP, Fields.BENCH_FUEL_PUMP_DURATION);
         testOutputPin(bench_mode_e.BENCH_FAN_RELAY, Fields.BENCH_FAN_DURATION);
+        testOutputPin(bench_mode_e.HD_ACR, Fields.BENCH_AC_RELAY_DURATION);
+        testOutputPin(bench_mode_e.HD_ACR2, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
 // todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
