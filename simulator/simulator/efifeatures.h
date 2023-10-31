@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <rusefi/true_false.h>
+
 // see SIM_SD1_PORT and SIM_SD2_PORT
 #define TS_PRIMARY_UxART_PORT SD1
 #define EFI_TS_PRIMARY_IS_SERIAL TRUE
@@ -168,3 +170,7 @@
 
 #define EFI_LUA TRUE
 #define LUA_USER_HEAP 100000
+
+#ifndef TRUE
+ fail("Truth not found");
+#endif

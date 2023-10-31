@@ -13,6 +13,7 @@
 
 #pragma once
 
+#include <rusefi/true_false.h>
 #include "efifeatures.h"
 #include "obd_error_codes.h"
 #include "live_data_ids.h"

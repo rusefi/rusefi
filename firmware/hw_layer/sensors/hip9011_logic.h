@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "efifeatures.h"
 #include "rusefi_enums.h"
 
 /* enable debug by default */
