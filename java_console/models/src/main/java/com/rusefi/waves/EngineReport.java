@@ -25,7 +25,7 @@ public class EngineReport {
     /**
      * number of Engine Sniffer ticks per ms
      */
-    public static final double ENGINE_SNIFFER_TICKS_PER_MS = 1000 / Fields.ENGINE_SNIFFER_UNIT_US;
+    public static final double ENGINE_SNIFFER_TICKS_PER_MS = 1000.0 / Fields.ENGINE_SNIFFER_UNIT_US;
     public static final double RATIO = 0.05;
 
     private final List<UpDown> list;
@@ -83,7 +83,7 @@ public class EngineReport {
         public int timeToScreen(double time, int width) {
             // 0 = left side
             // 1 = right side
-            double fraction = (time - minTime) * 1.0 / getDuration();
+            double fraction = (time - minTime) / getDuration();
 
             // Space to leave on the left side to avoid overlap
             int offset = 150;
