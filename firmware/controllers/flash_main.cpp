@@ -219,6 +219,14 @@ enum class FlashState {
 	BlankChip,
 };
 
+static FlashState validatePersistentState() {
+    if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState)) {
+		return FlashState::IncompatibleVersion;
+	} else {
+        return FlashState::Ok;
+    }
+}
+
 /**
  * Read single copy of rusEFI configuration from flash
  */
@@ -241,10 +249,8 @@ static FlashState readOneConfigurationCopy(flashaddr_t address) {
 		} else {
 			return FlashState::CrcFailed;
 		}
-	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState)) {
-		return FlashState::IncompatibleVersion;
 	} else {
-		return FlashState::Ok;
+		return validatePersistentState();
 	}
 }
 
