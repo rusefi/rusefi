@@ -56,11 +56,9 @@ static const int16_t supportedPids4160[] = {
 	-1
 };
 
-static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue, size_t busIndex) {
-	CanTxMessage resp(OBD_TEST_RESPONSE, 8);
-
+static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue, CanBusIndex busIndex) {
 	// Respond on the same bus we got the request from
-	resp.busIndex = busIndex;
+	CanTxMessage resp(OBD_TEST_RESPONSE, 8, busIndex, false);
 
 	// write number of bytes
 	resp[0] = (uint8_t)(2 + numBytes);
@@ -75,7 +73,7 @@ static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue, size
 
 #define _1_MODE 1
 
-static void obdSendValue(int mode, int PID, int numBytes, float value, size_t busIndex) {
+static void obdSendValue(int mode, int PID, int numBytes, float value, CanBusIndex busIndex) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6662, numBytes <= 2, "invalid numBytes");
 	int iValue = (int)efiRound(value, 1.0f);
 	// clamp to uint8_t (0..255) or uint16_t (0..65535)
@@ -86,7 +84,7 @@ static void obdSendValue(int mode, int PID, int numBytes, float value, size_t bu
 
 //#define MOCK_SUPPORTED_PIDS 0xffffffff
 
-static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *supportedPids, size_t busIndex) {
+static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *supportedPids, CanBusIndex busIndex) {
 	uint32_t value = 0;
 	// gather all 32 bit fields
 	for (int i = 0; i < 32 && supportedPids[i] > 0; i++)
@@ -100,7 +98,7 @@ static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *support
 	obdSendPacket(1, PID, 4, value, busIndex);
 }
 
-static void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex) {
+static void handleGetDataRequest(const CANRxFrame& rx, CanBusIndex busIndex) {
 	int pid = rx.data8[2];
 	switch (pid) {
 	case PID_SUPPORTED_PIDS_REQUEST_01_20:
@@ -189,7 +187,7 @@ static void handleDtcRequest(int numCodes, ObdCode* dtcCode) {
 }
 
 #if HAL_USE_CAN
-void obdOnCanPacketRx(const CANRxFrame& rx, size_t busIndex) {
+void obdOnCanPacketRx(const CANRxFrame& rx, CanBusIndex busIndex) {
 	if (CAN_SID(rx) != OBD_TEST_REQUEST) {
 		return;
 	}

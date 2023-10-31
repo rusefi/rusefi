@@ -62,7 +62,7 @@ bool acceptCanRx(int /*sid*/) {
 /**
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
-static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
+static void printPacket(CanBusIndex busIndex, const CANRxFrame &rx) {
 //	bool accept = acceptCanRx(CAN_SID(rx));
 //	if (!accept) {
 //		return;
@@ -74,7 +74,7 @@ static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
 
 	// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
 	efiPrintf("CAN RX bus %d ID %x(%d) DLC %d: %02x %02x %02x %02x %02x %02x %02x %02x",
-			busIndex,
+			static_cast<size_t>(busIndex),
 			id,	id, // once in hex, once in dec
 			rx.DLC,
 			rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
@@ -192,13 +192,12 @@ static void processCanRxImu(const CANRxFrame& frame) {
 	}
 }
 
-void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) {
-	if (engineConfiguration->verboseCan && busIndex == 0) {
+void processCanRxMessage(CanBusIndex busIndex, const CANRxFrame &frame, efitick_t nowNt) {
+	if (engineConfiguration->verboseCan && busIndex == CanBusIndex::Bus0) {
 		printPacket(busIndex, frame);
-	} else if (engineConfiguration->verboseCan2 && busIndex == 1) {
+	} else if (engineConfiguration->verboseCan2 && busIndex == CanBusIndex::Bus1) {
 		printPacket(busIndex, frame);
 	}
-
 
 	serviceCanSubscribers(frame, nowNt);
 

@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "can.h"
+
 #define OBD_TEST_REQUEST 0x7DF
 
 #define OBD_TEST_RESPONSE 0x7E8
@@ -46,7 +48,7 @@
 //todo#define PID_TURBO_RPM 0x74
 
 #if HAL_USE_CAN
-void obdOnCanPacketRx(const CANRxFrame& rx, size_t busIndex);
+void obdOnCanPacketRx(const CANRxFrame& rx, CanBusIndex busIndex);
 #endif /* HAL_USE_CAN */
 
 #define ODB_RPM_MULT 4

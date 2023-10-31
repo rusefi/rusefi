@@ -153,11 +153,11 @@ static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t s
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 
-static int validateCanChannelAndConvertFromHumanIntoZeroIndex(lua_State* l) {
+static CanBusIndex validateCanChannelAndConvertFromHumanIntoZeroIndex(lua_State* l) {
 	lua_Integer channel = luaL_checkinteger(l, 1);
 	// TODO: support multiple channels
 	luaL_argcheck(l, channel == 1 || channel == 2, 1, "only buses 1 and 2 currently supported");
-	return channel - HUMAN_OFFSET;
+	return static_cast<CanBusIndex>(channel - HUMAN_OFFSET);
 }
 
 static int lua_txCan(lua_State* l) {
@@ -174,8 +174,7 @@ static int lua_txCan(lua_State* l) {
 	}
 
 	// conform ext parameter to true/false
-	CanTxMessage msg(id, 8, 0, ext == 0 ? false : true);
-	msg.busIndex = bus;
+	CanTxMessage msg(id, 8, bus, ext == 0 ? false : true);
 
 	// Unfortunately there is no way to inspect the length of a table,
 	// so we have to just iterate until we run out of numbers
@@ -507,7 +506,7 @@ int lua_canRxAdd(lua_State* l) {
 	uint32_t eid;
 
 	// defaults if not passed
-	int bus = ANY_BUS;
+	CanBusIndex bus = CanBusIndex::Any;
 	int callback = NO_CALLBACK;
 
 	switch (lua_gettop(l)) {
@@ -551,7 +550,7 @@ int lua_canRxAddMask(lua_State* l) {
 	uint32_t mask;
 
 	// defaults if not passed
-	int bus = ANY_BUS;
+	CanBusIndex bus = CanBusIndex::Any;
 	int callback = NO_CALLBACK;
 
 	switch (lua_gettop(l)) {

@@ -26,12 +26,12 @@ bool waitAck() {
 	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(1000)) != 0;
 }
 
-static size_t getWidebandBus() {
-	return engineConfiguration->widebandOnSecondBus ? 1 : 0;
+static CanBusIndex getWidebandBus() {
+	return engineConfiguration->widebandOnSecondBus ? CanBusIndex::Bus1 : CanBusIndex::Bus0;
 }
 
 void updateWidebandFirmware() {
-	size_t bus = getWidebandBus();
+	CanBusIndex bus = getWidebandBus();
 
 	// Clear any pending acks for this thread
 	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);

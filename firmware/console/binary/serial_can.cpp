@@ -39,7 +39,7 @@ static CanTsListener listener;
 
 int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout) {
 	int dlc = 8; // standard 8 bytes
-	CanTxMessage txmsg(CAN_ECU_SERIAL_TX_ID, dlc, 0, false);
+	CanTxMessage txmsg(CAN_ECU_SERIAL_TX_ID, dlc, CanBusIndex::Bus0, false);
 	
 	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)
 	txmsg[0] = (uint8_t)((header.frameType & 0xf) << 4);

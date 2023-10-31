@@ -9,7 +9,7 @@
 
 // Stores information about one received CAN frame: which bus, plus the actual frame
 struct CanFrameData {
-	uint8_t BusIndex;
+	CanBusIndex BusIndex;
 	int Callback;
 	CANRxFrame Frame;
 };
@@ -21,7 +21,7 @@ chibios_rt::Mailbox<CanFrameData*, canFrameCount> freeBuffers;
 // CAN frame buffers that are waiting to be processed by the lua thread
 chibios_rt::Mailbox<CanFrameData*, canFrameCount> filledBuffers;
 
-void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
+void processLuaCan(CanBusIndex busIndex, const CANRxFrame& frame) {
 	auto filter = getFilterForId(busIndex, CAN_ID(frame));
 
 	// Filter the frame if we aren't listening for it
@@ -75,7 +75,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	auto dlc = data->Frame.DLC;
 
 	// Push bus, ID and DLC
-	lua_pushinteger(ls, data->BusIndex);	// TODO: support multiple busses!
+	lua_pushinteger(ls, static_cast<int>(data->BusIndex));
 	lua_pushinteger(ls, CAN_ID(data->Frame));
 	lua_pushinteger(ls, dlc);
 

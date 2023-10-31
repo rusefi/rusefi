@@ -26,7 +26,7 @@ static bool isCanEnabled = false;
 
 class CanRead final : protected ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
-	CanRead(size_t index)
+	CanRead(CanBusIndex index)
 		: ThreadController("CAN RX", PRIO_CAN_RX)
 		, m_index(index)
 	{
@@ -57,13 +57,13 @@ public:
 	}
 
 private:
-	const size_t m_index;
+	const CanBusIndex m_index;
 	CANRxFrame m_buffer;
 	CANDriver* m_device;
 };
 
-CCM_OPTIONAL static CanRead canRead1(0);
-CCM_OPTIONAL static CanRead canRead2(1);
+CCM_OPTIONAL static CanRead canRead1(CanBusIndex::Bus0);
+CCM_OPTIONAL static CanRead canRead2(CanBusIndex::Bus1);
 static CanWrite canWrite CCM_OPTIONAL;
 
 static void canInfo() {

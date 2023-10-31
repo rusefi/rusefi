@@ -28,7 +28,7 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(uint32_t eid, uint8_t dlc, size_t bus = 0, bool isExtended = false);
+	explicit CanTxMessage(uint32_t eid, uint8_t dlc, CanBusIndex bus = CanBusIndex::Bus0, bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
@@ -41,8 +41,6 @@ public:
 	 */
 	static void setDevice(CANDriver* device1, CANDriver* device2);
 #endif // EFI_CAN_SUPPORT
-
-	size_t busIndex = 0;
 
 	/**
 	 * @brief Read & write the raw underlying 8-byte buffer.
@@ -61,8 +59,6 @@ public:
 
 	void setDlc(uint8_t dlc);
 
-	void setBus(size_t bus);
-
 #if HAL_USE_CAN || EFI_UNIT_TEST
 	const CANTxFrame *getFrame() const {
 		return &m_frame;
@@ -78,6 +74,8 @@ private:
 #if EFI_CAN_SUPPORT
 	static CANDriver* s_devices[2];
 #endif // EFI_CAN_SUPPORT
+
+	const CanBusIndex m_busIndex;
 };
 
 /**
@@ -91,7 +89,7 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(uint32_t id, bool isExtended, size_t canChannel) : CanTxMessage(id, sizeof(TData), canChannel, isExtended) { }
+	explicit CanTxTyped(uint32_t id, bool isExtended, CanBusIndex canChannel) : CanTxMessage(id, sizeof(TData), canChannel, isExtended) { }
 
 #if EFI_CAN_SUPPORT
 	/**
@@ -112,7 +110,7 @@ public:
 };
 
 template <typename TData>
-void transmitStruct(uint32_t id, bool isExtended, size_t canChannel)
+void transmitStruct(uint32_t id, bool isExtended, CanBusIndex canChannel)
 {
 	CanTxTyped<TData> frame(id, isExtended, canChannel);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.

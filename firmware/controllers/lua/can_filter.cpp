@@ -7,12 +7,12 @@ static constexpr size_t maxFilterCount = 48;
 static size_t filterCount = 0;
 static CanFilter filters[maxFilterCount];
 
-CanFilter* getFilterForId(size_t busIndex, int Id) {
+CanFilter* getFilterForId(CanBusIndex busIndex, int Id) {
 	for (size_t i = 0; i < filterCount; i++) {
 		auto& filter = filters[i];
 
 		if (filter.accept(Id)) {
-			if (filter.Bus == ANY_BUS || filter.Bus == (int)busIndex) {
+			if (filter.Bus == CanBusIndex::Any || filter.Bus == busIndex) {
 				return &filter;
 			}
 		}
@@ -26,7 +26,7 @@ void resetLuaCanRx() {
 	filterCount = 0;
 }
 
-void addLuaCanRxFilter(int32_t eid, uint32_t mask, int bus, int callback) {
+void addLuaCanRxFilter(int32_t eid, uint32_t mask, CanBusIndex bus, int callback) {
 	if (filterCount >= maxFilterCount) {
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Too many Lua CAN RX filters");
 	}

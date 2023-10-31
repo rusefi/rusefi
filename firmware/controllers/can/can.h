@@ -44,8 +44,15 @@ enum class CanInterval : uint16_t {
 class CanListener;
 class CanSensorBase;
 
+enum class CanBusIndex : int {
+	Bus0 = 0,
+	Bus1 = 1,
+
+	Any = -1,
+};
+
 #if EFI_CAN_SUPPORT
-void processCanRxMessage(const size_t busIndex, const CANRxFrame& msg, efitick_t nowNt);
+void processCanRxMessage(CanBusIndex busIndex, const CANRxFrame& msg, efitick_t nowNt);
 #endif // EFI_CAN_SUPPORT
 
 void registerCanListener(CanListener& listener);

@@ -216,7 +216,10 @@ static void populateFrame(Odometry& msg) {
 void sendCanVerbose() {
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
-	size_t canChannel = engineConfiguration->canBroadcastUseChannelTwo ? 1 : 0;
+	CanBusIndex canChannel =
+		engineConfiguration->canBroadcastUseChannelTwo
+			? CanBusIndex::Bus1
+			: CanBusIndex::Bus0;
 
 	transmitStruct<Status>		(base + 0, isExt, canChannel);
 	transmitStruct<Speeds>		(base + 1, isExt, canChannel);

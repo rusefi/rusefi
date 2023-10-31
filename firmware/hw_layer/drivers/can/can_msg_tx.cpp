@@ -22,7 +22,9 @@
 }
 #endif // EFI_CAN_SUPPORT
 
-CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, size_t bus, bool isExtended) {
+CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, CanBusIndex bus, bool isExtended)
+	: m_busIndex(bus)
+{
 #if HAL_USE_CAN || EFI_UNIT_TEST
 #ifndef STM32H7XX
 	// ST bxCAN device
@@ -42,14 +44,13 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, size_t bus, bool isExtende
 
 	setDlc(dlc);
 
-	setBus(bus);
-
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
 #endif // HAL_USE_CAN || EFI_UNIT_TEST
 }
 
 CanTxMessage::~CanTxMessage() {
 #if EFI_CAN_SUPPORT
+	size_t busIndex = static_cast<size_t>(m_busIndex);
 	auto device = s_devices[busIndex];
 
 	if (!device) {
@@ -91,10 +92,6 @@ CanTxMessage::~CanTxMessage() {
 #if HAL_USE_CAN || EFI_UNIT_TEST
 void CanTxMessage::setDlc(uint8_t dlc) {
 	m_frame.DLC = dlc;
-}
-
-void CanTxMessage::setBus(size_t bus) {
-	busIndex = bus;
 }
 
 void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
