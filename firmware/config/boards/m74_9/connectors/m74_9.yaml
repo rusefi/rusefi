@@ -1,35 +1,301 @@
 pins:
+    # Connector A
+  - pin: AA1
+    function: Crank position sensor (pin A) 
+    type: vr
+    
+  - pin: AA2
+    function: Intake manifold geometry control valve
+    type: gp_low
+
+  - pin: AA3
+    function: Knock sensor +  
+    type:
+    
+  - pin: AA4
+    function: Programming enable  
+    type: gp_low
+    
+  - pin: AB1
+    function: Crank position sensor (pin B)
+    type: vr
+    
+  - pin: AB3
+    function: Knock sensor ground 
+    type:
+    
+  - pin: AB4
+    function: Main relay 
+    type: gp_low
+    
+  - pin: AC2
+    function: IAT sensor signal
+    type: 
+    
+  - pin: AC3
+    function: MAF/MAP sensor signal
+    type:
+    
+  - pin: AC4
+    function: Oxygen sensor 1 heater
+    type: gp_low
+    
+  - pin: AD1
+    function: Oxygen sensor 2 ground
+    type: sgnd
+    
+  - pin: AD2
+    function: Air conditioner control input
+    type:
+    
+  - pin: AD3
+    function: Coolant temperature sensor signal
+    type:  
+    
+  - pin: AD4
+    function: Oil pressure sensor signal
+    type:  
+    
+  - pin: AE1
+    function: ETB position sensors ground
+    type: etb
+    
+  - pin: AE2
+    function: optional CAN L
+    type: can
+    
+  - pin: AE3
+    function: optional CAN H
+    type: can
+
+  - pin: AE4
+    function: EVAP solenoid control
+    type: gp_low
+    
+  - pin: AF1
+    function:  MAF/MAP, IAT sensors ground
+    type: sqnd
+    
+  - pin: AF2
+    function: Vehicle speed sensor input
+    type:
+    
+  - pin: AF3
+    function: Alternator DFM signal
+    type:
+    
+  - pin: AF4
+    function: Injector 1
+    type: inj
+    
+  - pin: AG1
+    function: Coolant temperature sensor ground 
+    type: sgnd 
+    
+  - pin: AG2
+    function: Camshaft position sensor signal
+    type: hall
+    
+  - pin: AG4
+    function: Injector 2 
+    type: inj
+    
+  - pin: AH1
+    function: Discrete sensors ground 
+    type: sgnd 
+    
+  - pin: AH2
+    function: Oxygen sensor 2 ground 
+    type: sgnd 
+    
+  - pin: AH3
+    function: Alternator LT signal
+    type:
+    
+  - pin: AH4 
+    function: Injector 3
+    type: inj 
+    
+  - pin: AJ1
+    function: Ignition 
+    type: ign 
+    
+  - pin: AJ2
+    function: ETB position sensor 2 signal
+    type: etb  
+    
+  - pin: AJ3
+    function: Oxygen sensor 2 signal
+    type: sgnd 
+    
+  - pin: AJ4
+    function: Injector 4
+    type: inj 
+    
+  - pin: AK1
+    function: MAF/MAP, ETB position sensors +5v
+    type: etb 
+    
+  - pin: AK2
+    function: ETB position sensor 1 signal
+    type: etb 
+    
+  - pin: AK3
+    function: Oxygen sensor 1 signal
+    type:  
+    
+  - pin: AK4
+    function: Oxygen sensor 2 heater
+    type:  
+    
+  - pin: AL1
+    function: Coil 1 (< +2.5v) / Coils 1,4
+    type:  
+    
+  - pin: AL4
+    function: ETB motor ground (pin 4)
+    type: etb 
+    
+  - pin: AM1 
+    function: Coil 3  (< +2.5v) / Coils 2,4
+    type:  
+    
+  - pin: AM2
+    function: Coil 2  (< +2.5v)  
+    type:  
+    
+  - pin: AM3 
+    function: Coil 4  (< +2.5v)  
+    type:  
+    
+  - pin: AM4
+    function: ETB motor +
+    type: etb 
+    
+    # Connector B    
+  - pin: BA1
+    function: Air compressor control 
+    type:  
+    
+  - pin: BA2
+    function: Pedal position sensor 2 signal
+    type:  
+    
+  - pin: BA3
+    function: Pedal position sensor 1 signal
+    type:  
+    
+  - pin: BA4
+    function: Pedal position sensor 1 + (+5v)
+    type:  
+    
+  - pin: BB1
+    function: Secondary starter relay 
+    type:  
+    
+  - pin: BB2
+    function: Air conditioner pressure sensor (1,3 levels)
+    type:  
+    
+  - pin: BB3
+    function: Clutch sensor signal
+    type:  
+    
+  - pin: BB4
+    function: Pedal position sensor 2 + (+5v) 
+    type:  
+    
+  - pin: BC1
+    function: FAN 1 relay
+    type:  
+    
+  - pin: BC2
+    function: Brake pedal sensor 2
+    type:  
+    
+  - pin: BC3
+    function: Brake pedal sensor 1 
+    type:  
+    
+  - pin: BC4
+    function: Pedal position sensor 1 ground 
+    type: sgnd 
+    
+  - pin: BD1
+    function: FAN 2 relay 
+    type:  
+    
   - pin: BD2
-    function: CAN bus low
-    type: can
-
-
+    function: K-line / CAN L 
+    type: can 
+    
+  - pin: BD3
+    function: Air conditioner control input
+    type:  
+    
+  - pin: BD4
+    function: Pedal position sensor 2 ground 
+    type: sgnd 
+    
+  - pin: BE1
+    function: Main relay 
+    type: gp_low 
+    
+  - pin: BE2
+    function: Fuel consumption signal / Inhibitor position solenoid
+    type:  
+    
+  - pin: BE3
+    function: Vehicle speed sensor
+    type:  
+    
+  - pin: BE4 
+    function: Power ground
+    type: pgnd 
+    
   - pin: BF1
-    function: CAN bus high
-    type: can
-
+    function: Check engine / CAN H
+    type: can 
+    
   - pin: BF2
-    function: +12V from Main Relay
-    type: 12v
-
+    function: Ignition 
+    type: ign 
+    
+  - pin: BF3
+    function: Air conditioner pressure sensor (2 level)
+    type:  
+    
+  - pin: BF4
+    function: RPM signal 
+    type:  
+    
+  - pin: BG1
+    function: Fuel pump relay
+    type:  
+    
   - pin: BG2
-    function: Power Ground
-    type: GND
-
+    function: Power ground 
+    type: pgnd 
+    
   - pin: BG3
-    function: Power Ground
-    type: GND
-
+    function: Power ground  
+    type: pgnd 
+    
   - pin: BG4
-    function: Power Ground
-    type: GND
-
+    function: Ignition ground  
+    type: ign 
+    
   - pin: BH1
-    function: Constant Battery Power
-    type: 12v
+    function: +12v after main relay 
+    type: 12v 
+    
   - pin: BH2
-    function: Constant Battery Power
-    type: 12v
+    function: +12v after main relay   
+    type: 12v 
+    
+  - pin: BH4
+    function: FAN diagnostic input
+    type:  
 
 info:
   title: m74.9
@@ -39,66 +305,325 @@ info:
   image:
     file: m74_9.jpg
   pins:
+    # Connector A
+    - pin: AA1
+      x: 1032
+      y: 556
+      
+    - pin: AA2
+      x: 1034
+      y: 458
+      
+    - pin: AA3
+      x: 1036
+      y: 359
+      
+    - pin: AA4
+      x: 1040
+      y: 265
+      
+    - pin: AB1
+      x: 972
+      y: 555
+      
+    - pin: AB2
+      x: 975
+      y: 456
+      
+    - pin: AB3
+      x: 978
+      y: 360
+      
+    - pin: AB4
+      x: 982
+      y: 265
+      
+    - pin: AC1
+      x: 912
+      y: 555
+      
+    - pin: AC2
+      x: 915
+      y: 458
+      
+    - pin: AC3
+      x: 919
+      y: 360
+      
+    - pin: AC4
+      x: 923
+      y: 265
+      
+    - pin: AD1
+      x: 852
+      y: 556
+      
     - pin: AD2
-      x: 858
-      y: 456
-
+      x: 856
+      y: 457
+      
+    - pin: AD3
+      x: 860
+      y: 359
+      
+    - pin: AD4
+      x: 864
+      y: 265
+      
+    - pin: AE1
+      x: 792
+      y: 557
+      
+    - pin: AE2
+      x: 796
+      y: 457
+      
+    - pin: AE3
+      x: 800
+      y: 359
+      
+    - pin: AE4
+      x: 804
+      y: 265
+      
     - pin: AF1
-      x: 742
+      x: 732
       y: 557
-
+      
     - pin: AF2
-      x: 742
-      y: 456
-
+      x: 735
+      y: 458
+      
+    - pin: AF3
+      x: 740
+      y: 358
+      
+    - pin: AF4
+      x: 746
+      y: 262
+      
+    - pin: AG1
+      x: 671
+      y: 557
+      
     - pin: AG2
-      x: 684
+      x: 675
       y: 456
-
+      
     - pin: AG3
-      x: 684
+      x: 680
       y: 359
-
+      
     - pin: AG4
-      x: 684
-      y: 267
-
+      x: 686
+      y: 262
+      
     - pin: AH1
-      x: 627
-      y: 557
-
+      x: 611
+      y: 556
+      
     - pin: AH2
+      x: 615
+      y: 457
+      
+    - pin: AH3
+      x: 620
+      y: 357
+      
+    - pin: AH4
       x: 627
-      y: 456
-
+      y: 261
+      
+    - pin: AJ1
+      x: 551
+      y: 556
+      
+    - pin: AJ2
+      x: 556
+      y: 457
+      
+    - pin: AJ3
+      x: 560
+      y: 358
+      
+    - pin: AJ4
+      x: 568
+      y: 260
+      
+    - pin: AK1
+      x: 491
+      y: 557
+      
+    - pin: AK2
+      x: 495
+      y: 455
+      
+    - pin: AK3
+      x: 502
+      y: 356
+      
+    - pin: AK4
+      x: 507
+      y: 260
+      
+    - pin: AL1
+      x: 396
+      y: 554
+      
+    - pin: AL2
+      x: 412
+      y: 455
+      
+    - pin: AL3
+      x: 419
+      y: 355
+      
+    - pin: AL4
+      x: 424
+      y: 258
+      
+    - pin: AM1
+      x: 309
+      y: 555
+      
+    - pin: AM2
+      x: 321
+      y: 455
+      
+    - pin: AM3
+      x: 329
+      y: 355
+      
+    - pin: AM4
+      x: 335
+      y: 256
+      
+    # Connector B
+    - pin: BA1
+      x: 1422
+      y: 268
+      
+    - pin: BA2
+      x: 1425
+      y: 363
+      
+    - pin: BA3
+      x: 1424
+      y: 459
+      
+    - pin: BA4
+      x: 1427
+      y: 557 
+      
+    - pin: BB1
+      x: 1479
+      y: 268
+      
+    - pin: BB2
+      x: 1481
+      y: 369 
+      
+    - pin: BB3
+      x: 1483
+      y: 459 
+      
+    - pin: BB4
+      x: 1485
+      y: 557
+      
+    - pin: BC1
+      x: 1538
+      y: 268
+      
+    - pin: BC2
+      x: 1539
+      y: 364 
+      
+    - pin: BC3
+      x: 1542
+      y: 460
+      
+    - pin: BC4
+      x: 1542
+      y: 460
+      
+    - pin: BD1
+      x: 1595
+      y: 268
+      
     - pin: BD2
-      x: 1591
-      y: 456
-
+      x: 1599
+      y: 365
+      
+    - pin: BD3
+      x: 1601
+      y: 460
+      
+    - pin: BD4
+      x: 1604
+      y: 557
+      
+    - pin: BE1
+      x: 1654
+      y: 269
+      
+    - pin: BE2
+      x: 1658
+      y: 366
+      
+    - pin: BE3
+      x: 1661
+      y: 460
+      
+    - pin: BE4
+      x: 1663
+      y: 558
+      
     - pin: BF1
-      x: 1710
-      y: 557
-
+      x: 1712
+      y: 270 
+      
     - pin: BF2
-      x: 1710
-      y: 456
-
+      x: 1715
+      y: 365
+      
+    - pin: BF3
+      x: 1719
+      y: 461 
+      
+    - pin: BF4
+      x: 1722
+      y: 559
+      
+    - pin: BG1
+      x: 1794
+      y: 271
+      
     - pin: BG2
-      x: 1790
-      y: 456
-
+      x: 1798
+      y: 365
+      
     - pin: BG3
-      x: 1790
-      y: 359
-
+      x: 1803
+      y: 461
+      
     - pin: BG4
-      x: 1790
-      y: 267
-
+      x: 1812
+      y: 555
+      
     - pin: BH1
-      x: 1873
-      y: 557
-
+      x: 1879
+      y: 272
+      
     - pin: BH2
-      x: 1873
-      y: 456
+      x: 1884
+      y: 367
+      
+    - pin: BH3
+      x: 1889
+      y: 462
+      
+    - pin: BH4
+      x: 1900
+      y: 556
+      
