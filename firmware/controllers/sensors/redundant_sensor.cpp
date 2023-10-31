@@ -9,7 +9,7 @@ RedundantSensor::RedundantSensor(SensorType outputType, SensorType first, Sensor
 {
 }
 
-void RedundantSensor::configure(float maxDifference, bool ignoreSecondSensor) {
+void RedundantSensor::configure(float /*split threshold*/maxDifference, bool ignoreSecondSensor) {
 	m_maxDifference = maxDifference;
 	m_ignoreSecond = ignoreSecondSensor;
 }

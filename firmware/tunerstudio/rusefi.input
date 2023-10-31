@@ -297,6 +297,7 @@ enable2ndByteCanID = false
 	requiresPowerCycle = enableAemXSeries
 
 	requiresPowerCycle = etb_use_two_wires
+	requiresPowerCycle = etbSplit
 	requiresPowerCycle = etbFreq
 	requiresPowerCycle = etbFunctions1
 	requiresPowerCycle = etbFunctions2
@@ -2849,6 +2850,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Accelerator position 2nd sensor",		throttlePedalPositionSecondAdcChannel
 		field = "Up voltage",							throttlePedalSecondaryUpVoltage
 		field = "Down (WOT) voltage",					throttlePedalSecondaryWOTVoltage
+		field = "Error Detection Threshold",            etbSplit
 
 	dialog = pedalGauges
 		gauge = pedalPositionGauge

@@ -188,6 +188,8 @@ void setDefaultBaseEngine() {
 	engineConfiguration->stepperForceParkingEveryRestart = true;
 	engineConfiguration->iacByTpsTaper = 2;
 
+    engineConfiguration->etbSplit = MAX_TPS_PPS_DISCREPANCY;
+
 	// Advanced Trigger
 
 	// Battery and alternator

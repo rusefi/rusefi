@@ -86,7 +86,7 @@ constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
 
 //static bool startupPositionError = false;
 
-#define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
+//#define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
 
 static const float hardCodedetbHitachiBiasBins[8] = {0.0, 19.0, 21.0, 22.0, 23.0, 25.0, 30.0, 100.0};
 

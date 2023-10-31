@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
  - TunerStudio cacerts fix script #5536 
  - Idle Timing Control - Soft Entry mechanism, in case of aggressive PID tuning this can help when engine enters close loop idle
  - Idle Timing Control - I factor configurable now #5635
+ - Make TPS/PPS split threshold configurable #5620
 
 ### Fixed
  - Changing idle stepper settings causes kernel panic

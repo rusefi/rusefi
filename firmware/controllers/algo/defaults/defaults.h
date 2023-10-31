@@ -20,3 +20,8 @@ void setTPS1Calibration(uint16_t tpsMin, uint16_t tpsMax);
 void setTPS1Calibration(uint16_t tpsMin, uint16_t tpsMax, uint16_t tps1SecondaryMin, uint16_t tps1SecondaryMax);
 
 void setEtbPID(float p, float i, float d);
+
+// split threshold
+#ifndef MAX_TPS_PPS_DISCREPANCY
+#define MAX_TPS_PPS_DISCREPANCY 5.0f
+#endif

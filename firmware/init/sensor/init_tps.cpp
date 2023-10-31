@@ -8,10 +8,7 @@
 #include "linear_func.h"
 #include "tps.h"
 #include "auto_generated_sensor.h"
-
-#ifndef MAX_TPS_PPS_DISCREPANCY
-#define MAX_TPS_PPS_DISCREPANCY 5.0f
-#endif
+#include "defaults.h"
 
 struct TpsConfig {
 	adc_channel_e channel;
@@ -123,13 +120,17 @@ public:
 
 		bool hasSecond = m_sec.init(secondary);
 
+        if (engineConfiguration->etbSplit <= 0 || engineConfiguration->etbSplit > MAX_TPS_PPS_DISCREPANCY) {
+            engineConfiguration->etbSplit = MAX_TPS_PPS_DISCREPANCY;
+        }
+
 		if (isFordTps && fordTps) {
 			// we have a secondary
-			fordTps->configure(MAX_TPS_PPS_DISCREPANCY, secondaryMaximum);
+			fordTps->configure(engineConfiguration->etbSplit, secondaryMaximum);
 			fordTps->Register();
 		} else {
 			// not ford TPS
-			m_redund.configure(MAX_TPS_PPS_DISCREPANCY, !hasSecond);
+			m_redund.configure(engineConfiguration->etbSplit, !hasSecond);
 #if EFI_UNIT_TEST
 printf("init m_redund.Register() %s\n", getSensorType(m_redund.type()));
 #endif
