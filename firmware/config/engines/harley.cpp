@@ -16,12 +16,12 @@ void proteusHarley() {
 
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
 	engineConfiguration->mapCamDetectionAnglePosition = 50;
-
+#if HW_PROTEUS
     engineConfiguration->acrPin = Gpio::PROTEUS_IGN_8;
     engineConfiguration->acrPin2 = Gpio::PROTEUS_IGN_9;
 
 	engineConfiguration->luaOutputPins[0] = Gpio::PROTEUS_LS_12;
-#if HW_PROTEUS
+
 	strncpy(config->luaScript, R"(
 --outputIndex = 0
 --startPwm(outputIndex, 100, 0)
