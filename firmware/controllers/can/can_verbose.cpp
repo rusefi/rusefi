@@ -216,17 +216,18 @@ static void populateFrame(Odometry& msg) {
 void sendCanVerbose() {
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
+	auto canChannel = engineConfiguration->canBroadcastUseChannelTwo;
 
-	transmitStruct<Status>	    (CanCategory::VERBOSE, base + 0, isExt);
-	transmitStruct<Speeds>	    (CanCategory::VERBOSE, base + 1, isExt);
-	transmitStruct<PedalAndTps> (CanCategory::VERBOSE, base + CAN_PEDAL_TPS_OFFSET, isExt);
-	transmitStruct<Sensors1>	(CanCategory::VERBOSE, base + CAN_SENSOR_1_OFFSET, isExt);
-	transmitStruct<Sensors2>	(CanCategory::VERBOSE, base + 4, isExt);
-	transmitStruct<Fueling>	    (CanCategory::VERBOSE, base + 5, isExt);
-	transmitStruct<Fueling2>	(CanCategory::VERBOSE, base + 6, isExt);
-	transmitStruct<Fueling3>	(CanCategory::VERBOSE, base + 7, isExt);
-	transmitStruct<Cams>		(CanCategory::VERBOSE, base + 8, isExt);
-	transmitStruct<Odometry>	(CanCategory::VERBOSE, base + 9, isExt);
+	transmitStruct<Status>		(CanCategory::VERBOSE, base + 0, isExt, canChannel);
+	transmitStruct<Speeds>		(CanCategory::VERBOSE, base + 1, isExt, canChannel);
+	transmitStruct<PedalAndTps>	(CanCategory::VERBOSE, base + CAN_PEDAL_TPS_OFFSET, isExt, canChannel);
+	transmitStruct<Sensors1>	(CanCategory::VERBOSE, base + CAN_SENSOR_1_OFFSET, isExt, canChannel);
+	transmitStruct<Sensors2>	(CanCategory::VERBOSE, base + 4, isExt, canChannel);
+	transmitStruct<Fueling>		(CanCategory::VERBOSE, base + 5, isExt, canChannel);
+	transmitStruct<Fueling2>	(CanCategory::VERBOSE, base + 6, isExt, canChannel);
+	transmitStruct<Fueling3>	(CanCategory::VERBOSE, base + 7, isExt, canChannel);
+	transmitStruct<Cams>		(CanCategory::VERBOSE, base + 8, isExt, canChannel);
+	transmitStruct<Odometry>	(CanCategory::VERBOSE, base + 9, isExt, canChannel);
 }
 
 #endif // EFI_CAN_SUPPORT
