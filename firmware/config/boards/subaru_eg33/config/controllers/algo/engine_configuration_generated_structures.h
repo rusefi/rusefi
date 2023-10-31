@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Oct 26 02:46:40 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Oct 31 02:27:56 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1137,11 +1137,11 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
 	/**
-	 * need 4 byte alignment
-	units
+	 * TPS/PPS error threshold
+	%
 	 * offset 521
 	 */
-	uint8_t alignmentFill_at_521[1];
+	scaled_channel<uint8_t, 10, 1> etbSplit;
 	/**
 	 * offset 522
 	 */
@@ -5372,4 +5372,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23880);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Oct 26 02:46:40 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Oct 31 02:27:56 UTC 2023
