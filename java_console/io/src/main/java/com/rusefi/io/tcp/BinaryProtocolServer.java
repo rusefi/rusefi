@@ -60,13 +60,13 @@ public class BinaryProtocolServer {
 
     public void start(LinkManager linkManager) {
         try {
-            start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
+            start(linkManager, DEFAULT_PROXY_PORT, new Context());
         } catch (IOException e) {
             log.warn("Error starting local proxy: " + e);
         }
     }
 
-    public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback, Context context) throws IOException {
+    public void start(LinkManager linkManager, int port, Context context) throws IOException {
         log.info("BinaryProtocolServer on " + port);
 
         CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
@@ -77,7 +77,7 @@ public class BinaryProtocolServer {
             }
         };
 
-        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, serverSocketCreationCallback, StatusConsumer.ANONYMOUS);
+        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, StatusConsumer.ANONYMOUS);
     }
 
     /**
@@ -90,23 +90,21 @@ public class BinaryProtocolServer {
      * @param statusConsumer
      * @return
      */
-    public static ServerSocketReference tcpServerSocket(int port, String threadName, CompatibleFunction<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback, StatusConsumer statusConsumer) throws IOException {
-        return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, p -> {
+    public static ServerSocketReference tcpServerSocket(int port, String threadName, CompatibleFunction<Socket, Runnable> socketRunnableFactory, StatusConsumer statusConsumer) throws IOException {
+        return tcpServerSocket(socketRunnableFactory, port, threadName, p -> {
             ServerSocket serverSocket = new ServerSocket(p);
             statusConsumer.append("ServerSocket " + p + " created. Feel free to point TS at IP Address 'localhost' port " + p);
             return serverSocket;
         });
     }
 
-    public static ServerSocketReference tcpServerSocket(CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, ServerSocketFunction nonSecureSocketFunction) throws IOException {
+    public static ServerSocketReference tcpServerSocket(CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, ServerSocketFunction nonSecureSocketFunction) throws IOException {
         ThreadFactory threadFactory = getThreadFactory(threadName);
 
-        Objects.requireNonNull(serverSocketCreationCallback, "serverSocketCreationCallback");
         ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
 
         ServerSocketReference holder = new ServerSocketReference(serverSocket);
 
-        serverSocketCreationCallback.onResult(null);
         Runnable runnable = () -> {
             while (!holder.isClosed()) {
                 // Wait for a connection

@@ -34,7 +34,6 @@ public class TcpServerSandbox {
     private final static byte[] TOTALLY_EMPTY_CONFIGURATION = new byte[Fields.TOTAL_CONFIG_SIZE];
 
     public static void main(String[] args) throws IOException {
-        Listener serverSocketCreationCallback = parameter -> System.out.println("serverSocketCreationCallback");
         CompatibleFunction<Socket, Runnable> socketRunnableFactory = new CompatibleFunction<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket socket) {
@@ -67,8 +66,7 @@ public class TcpServerSandbox {
                 };
             }
         };
-        BinaryProtocolServer.tcpServerSocket(29001, "server", socketRunnableFactory,
-                serverSocketCreationCallback, StatusConsumer.ANONYMOUS);
+        BinaryProtocolServer.tcpServerSocket(29001, "server", socketRunnableFactory, StatusConsumer.ANONYMOUS);
     }
 
     static class EcuState {
