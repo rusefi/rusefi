@@ -332,6 +332,13 @@ static void auxOutBench(int index) {
     // todo!
 }
 
+#if EFI_HD_ACR
+static void hdAcrBench(int index) {
+    OutputPin*  pin = index == 0 ? &enginePins.harleyAcr : &enginePins.harleyAcr2;
+    pinbench(BENCH_AC_RELAY_DURATION, 100.0, 1, pin);
+}
+#endif // EFI_HD_ACR
+
 void handleBenchCategory(uint16_t index) {
 	switch(index) {
 	case BENCH_VVT0_VALVE:
@@ -370,6 +377,14 @@ void handleBenchCategory(uint16_t index) {
 	case BENCH_AUXOUT7:
 	    auxOutBench(7);
 		return;
+#if EFI_HD_ACR
+	case HD_ACR:
+		hdAcrBench(0);
+		return;
+	case HD_ACR2:
+		hdAcrBench(1);
+		return;
+#endif // EFI_HD_ACR
 	case BENCH_HPFP_VALVE:
 		hpfpValveBench();
 		return;
