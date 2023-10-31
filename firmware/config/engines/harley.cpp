@@ -14,13 +14,17 @@ void proteusHarley() {
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
 
+	engineConfiguration->mainRelayPin = Gpio::Unassigned;
 	engineConfiguration->mapCamDetectionAnglePosition = 50;
+
+    engineConfiguration->acrPin = Gpio::PROTEUS_IGN_8;
+    engineConfiguration->acrPin2 = Gpio::PROTEUS_IGN_9;
 
 	engineConfiguration->luaOutputPins[0] = Gpio::PROTEUS_LS_12;
 #if HW_PROTEUS
 	strncpy(config->luaScript, R"(
-outputIndex = 0
-startPwm(outputIndex, 100, 0)
+--outputIndex = 0
+--startPwm(outputIndex, 100, 0)
 
 rpmLimitSetting = findSetting("compReleaseRpm", 300)
 compReleaseDulationLimit = findSetting("compReleaseDur", 6000)
@@ -118,8 +122,8 @@ function onTick()
 	--print('getTimeSinceTriggerEventMs ' .. getTimeSinceTriggerEventMs())
 	enableCompressionReleaseSolenoid = getTimeSinceTriggerEventMs() < compReleaseDulationLimit and rpm < rpmLimitSetting
     duty = enableCompressionReleaseSolenoid and 1 or 0
-    print("Compression release solenoid " .. duty)
-	setPwmDuty(outputIndex, duty)
+--    print("Compression release solenoid " .. duty)
+--	setPwmDuty(outputIndex, duty)
   else
     if offCounter == 0 then --goodbye sweet love
       txCan(1, 0x502, 0, packet502) --goodbye
