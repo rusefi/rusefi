@@ -207,7 +207,7 @@ public class LinkManager implements Closeable {
     public void startAndConnect(String port, ConnectionStateListener stateListener) {
         Objects.requireNonNull(port, "port");
         start(port, stateListener);
-        connector.connectAndReadConfiguration(new BinaryProtocol.Arguments(true), stateListener);
+        connector.connectAndReadConfiguration(stateListener);
     }
 
     @NotNull

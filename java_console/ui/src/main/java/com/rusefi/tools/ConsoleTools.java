@@ -20,7 +20,6 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
-import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,10 +58,7 @@ public class ConsoleTools {
         registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
 
         registerTool("get_image_tune_crc", ConsoleTools::calcBinaryImageTuneCrc, "Calculate tune CRC for given binary tune");
-        registerTool("get_xml_tune_crc", ConsoleTools::calcXmlImageTuneCrc, "Calculate tune CRC for given XML tune");
 
-        registerTool("read_tune", args -> readTune(), "Read tune from controller");
-        registerTool("write_tune", ConsoleTools::writeTune, "Write specified XML tune into controller");
         registerTool("get_performance_trace", args -> PerformanceTraceHelper.getPerformanceTune(), "DEV TOOL: Get performance trace from ECU");
 
         registerTool("version", ConsoleTools::version, "Only print version");
@@ -95,14 +91,6 @@ public class ConsoleTools {
         System.setProperty("ini_file_path", "../firmware/tunerstudio");
 //        calcBinaryImageTuneCrc(null, "current_configuration.rusefi_binary");
 
-        calcXmlImageTuneCrc(null, "CurrentTune.msq");
-    }
-
-    private static void calcXmlImageTuneCrc(String... args) throws Exception {
-        String fileName = args[1];
-        Msq msq = Msq.readTune(fileName);
-        ConfigurationImage image = msq.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
-        printCrc(image);
     }
 
     private static void calcBinaryImageTuneCrc(String... args) throws IOException {
@@ -195,33 +183,6 @@ public class ConsoleTools {
 
             }
         });
-    }
-
-    private static void readTune() {
-        startAndConnect(linkManager -> {
-            System.out.println("Loaded! Exiting");
-            System.exit(0);
-            return null;
-        });
-    }
-
-    private static void writeTune(String[] args) throws Exception {
-        if (args.length < 2) {
-            System.out.println("No tune file name specified");
-            return;
-        }
-
-        String fileName = args[1];
-        Msq msq = Msq.readTune(fileName);
-
-        startAndConnect(linkManager -> {
-            ConfigurationImage ci = msq.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
-            linkManager.getConnector().getBinaryProtocol().uploadChanges(ci);
-
-            //System.exit(0);
-            return null;
-        });
-
     }
 
     private static void invokeCallback(String callback) {

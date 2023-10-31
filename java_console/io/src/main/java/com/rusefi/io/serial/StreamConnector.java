@@ -27,13 +27,13 @@ public class StreamConnector implements LinkConnector {
     }
 
     @Override
-    public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener) {
+    public void connectAndReadConfiguration(ConnectionStateListener listener) {
         log.info("StreamConnector: connecting");
         portHolder.listener = listener;
         log.info("scheduleOpening");
         linkManager.execute(() -> {
             log.info("scheduleOpening>openPort");
-            portHolder.connectAndReadConfiguration(arguments);
+            portHolder.connectAndReadConfiguration();
         });
     }
 

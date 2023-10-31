@@ -43,7 +43,7 @@ public class PortHolder {
     /**
      * @return true if OK, false if error
      */
-    void connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
+    void connectAndReadConfiguration() {
         IoStream stream = ioStreamFactory.call();
         if (stream == null) {
             // error already reported
@@ -54,7 +54,7 @@ public class PortHolder {
             portLock.notifyAll();
         }
 
-        String errorMessage = bp.connectAndReadConfiguration(arguments, dataListener);
+        String errorMessage = bp.connectAndReadConfiguration(dataListener);
         if (listener != null) {
             if (errorMessage == null) {
                 listener.onConnectionEstablished();
