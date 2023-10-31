@@ -206,13 +206,6 @@ static void populateFrame(Cams& msg) {
 	msg.Bank2ExhaustTarget = engine->outputChannels.vvtTargets[3];
 }
 
-struct Odometry {
-};
-
-static void populateFrame(Odometry& msg) {
-
-}
-
 void sendCanVerbose() {
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
@@ -230,7 +223,6 @@ void sendCanVerbose() {
 	transmitStruct<Fueling2>	(base + 6, isExt, canChannel);
 	transmitStruct<Fueling3>	(base + 7, isExt, canChannel);
 	transmitStruct<Cams>		(base + 8, isExt, canChannel);
-	transmitStruct<Odometry>	(base + 9, isExt, canChannel);
 }
 
 #endif // EFI_CAN_SUPPORT
