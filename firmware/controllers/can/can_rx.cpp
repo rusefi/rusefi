@@ -231,8 +231,8 @@ void processCanRxMessage(CanBusIndex busIndex, const CANRxFrame &frame, efitick_
 #if EFI_USE_OPENBLT
 	if ((CAN_SID(frame) == 0x667) && (frame.DLC == 2)) {
 		// TODO: gracefull shutdown?
-		if (((busIndex == CanBusIdx::Bus0) && (engineConfiguration->canOpenBLT)) ||
-			((busIndex == CanBusIdx::Bus1) && (engineConfiguration->can2OpenBLT))) {
+		if (((busIndex == CanBusIndex::Bus0) && (engineConfiguration->canOpenBLT)) ||
+			((busIndex == CanBusIndex::Bus1) && (engineConfiguration->can2OpenBLT))) {
 			jump_to_openblt();
 		}
 	}
