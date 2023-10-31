@@ -49,6 +49,11 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Install mtools
+      run: |
+        sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
+        sudo apt-get install mtools dosfstools zip
+
     - uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
