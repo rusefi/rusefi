@@ -212,8 +212,18 @@ static Gpio PROTEUS_CANAM_OUTPUTS[] = {
     Gpio::PROTEUS_LS_14,
 };
 
+static Gpio PROTEUS_HARLEY_OUTPUTS[] = {
+    Gpio::PROTEUS_LS_1,
+    Gpio::PROTEUS_LS_2,
+	Gpio::PROTEUS_IGN_1,
+	Gpio::PROTEUS_IGN_2,
+};
+
 int getBoardMetaLowSideOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
+        return getBoardMetaOutputsCount();
+    }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
         return getBoardMetaOutputsCount();
     }
     return 16;
@@ -226,16 +236,25 @@ int getBoardMetaOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::ME17_9_MISC) {
         return efi::size(PROTEUS_ME17_ADAPTER_OUTPUTS);
     }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
+        return efi::size(PROTEUS_HARLEY_OUTPUTS);
+    }
     return efi::size(PROTEUS_OUTPUTS);
 }
 
 int getBoardMetaDcOutputsCount() {
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
+        return 1;
+    }
     return 1;
 }
 
 Gpio* getBoardMetaOutputs() {
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
         return PROTEUS_CANAM_OUTPUTS;
+    }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
+        return PROTEUS_HARLEY_OUTPUTS;
     }
     return PROTEUS_OUTPUTS;
 }
