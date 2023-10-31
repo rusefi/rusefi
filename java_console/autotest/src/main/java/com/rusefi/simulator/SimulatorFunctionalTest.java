@@ -1,5 +1,7 @@
 package com.rusefi.simulator;
 
+import com.devexperts.logging.Logging;
+import com.rusefi.AverageAnglesUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -18,6 +20,8 @@ import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.TS_SIMULATE_CAN;
 
 public class SimulatorFunctionalTest {
+    private final static Logging log = Logging.getLogging(SimulatorFunctionalTest.class);
+
     private final LinkManager linkManager;
     private boolean gotCanPacketAnalog1 = false;
     private boolean gotCanPacketAnalog2 = false;
@@ -112,7 +116,7 @@ public class SimulatorFunctionalTest {
                         processCanPacket(eid, data);
                     }
 
-                    System.out.println("Got " + count + " packets");
+                    log.debug("Got " + count + " CAN packet(s)");
                     gotCan.countDown();
 
                 } catch (EOFException e) {
