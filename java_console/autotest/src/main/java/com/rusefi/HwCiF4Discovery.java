@@ -7,9 +7,12 @@ import com.rusefi.io.CommandQueue;
 /**
  * dead?
  * <p>
- * The following jumper wires are used to test some subsystems as realistically as possible:
+ * The following jumper wires are used to test some digital subsystems.
  * PD1 (output) <=> PC6 (PAL/ICU input)
  * PD2 (output) <=> PA5 (PAL/ICU input)
+ *
+ * Proteus has more advanced jumpers allowing for some analog domain coverage see ProteusAnalogTest
+ *
  * <p>
  * <p>
  * <p>
