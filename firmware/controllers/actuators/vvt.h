@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "periodic_task.h"
 #include "closed_loop_controller.h"
 #include "pwm_generator_logic.h"
 #include "efi_pid.h"
