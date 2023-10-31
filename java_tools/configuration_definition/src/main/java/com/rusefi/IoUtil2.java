@@ -18,8 +18,7 @@ public class IoUtil2 {
         try {
 
             try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-                while (true) {
-                    if (!((line = reader.readLine()) != null)) break;
+                while ((line = reader.readLine()) != null) {
                     stringBuilder.append(line);
                     stringBuilder.append(ls);
                 }

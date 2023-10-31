@@ -79,8 +79,8 @@ public class RawIniFile {
      * Immutable representation of since ini file line
      */
     public static class Line {
-        private String rawText;
-        private String[] tokens;
+        private final String rawText;
+        private final String[] tokens;
 
         private static final String namePattern = "[[\\w\\d\\s_]]+";
         private static final Pattern DIRECTIVE = Pattern.compile("#(if\\s" + namePattern + "|else|elif\\s\" + namePattern + \"|endif)");

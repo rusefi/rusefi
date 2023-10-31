@@ -130,12 +130,12 @@ public class LiveDataProcessor {
                 if (constexpr != null) {
                     sdCardFieldsConsumer.home = constexpr;
                     sdCardFieldsConsumer.isPtr = isPtr;
-                    state.addDestination((state1, structure) -> sdCardFieldsConsumer.handleEndStruct(state1, structure));
+                    state.addDestination(sdCardFieldsConsumer::handleEndStruct);
 
                     outputValueConsumer.currentSectionPrefix = constexpr;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
-                    state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
+                    state.addDestination(outputValueConsumer::handleEndStruct);
 
                 }
 

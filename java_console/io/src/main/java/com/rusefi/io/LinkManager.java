@@ -240,12 +240,7 @@ public class LinkManager implements Closeable {
                 @Override
                 public IoStream call() {
                     messageListener.postMessage(getClass(), "Opening port: " + port);
-                    IoStream stream = BufferedSerialIoStream.openPort(port);
-                    if (stream == null) {
-                        // error already reported
-                        return null;
-                    }
-                    return stream;
+                    return BufferedSerialIoStream.openPort(port);
                 }
             };
             setConnector(new StreamConnector(this, ioStreamCallable));

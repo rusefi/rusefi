@@ -17,7 +17,7 @@ public class ChartScrollControl {
     private final JPanel content = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
     private final AtomicInteger index = new AtomicInteger();
     private static final JLabel info = new JLabel();
-    private ChartRepository.ChartRepositoryListener listener;
+    private final ChartRepository.ChartRepositoryListener listener;
 
     public ChartScrollControl(final ChartRepository.ChartRepositoryListener listener) {
 

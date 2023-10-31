@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class SoftLimiterSandbox {
-    private Random r = new Random();
+    private final Random r = new Random();
 
     public static void main(String[] args) {
         new SoftLimiterSandbox().testSoftLimit();
