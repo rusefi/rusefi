@@ -14,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
  * Configuration consumer which writes C header file
  */
 public class CHeaderConsumer extends BaseCHeaderConsumer {
-    @NotNull
-    private final ReaderStateImpl state;
     /**
      * looks like sometimes we want to not include "define XXX value" into generated C headers
      * TODO: document the use-case better
@@ -26,7 +24,6 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
 
     public CHeaderConsumer(ReaderStateImpl state, String destCHeader, boolean withC_Defines) {
         this.variableRegistry = state.getVariableRegistry();
-        this.state = state;
         this.withC_Defines = withC_Defines;
         SystemOut.println("Writing C header to " + destCHeader);
         cHeader = new LazyFile(destCHeader);

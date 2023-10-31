@@ -12,7 +12,6 @@ public class StructLayout extends Layout {
 
     public final String typeName;
     private final String name;
-    private final String comment;
     private final Boolean noPrefix;
     private final int size;
 
@@ -46,7 +45,9 @@ public class StructLayout extends Layout {
 
         this.typeName = parsedStruct.name;
         this.name = name;
-        this.comment = parsedStruct.comment;
+
+        // TODO: should comment be used?
+        String comment = parsedStruct.comment;
         this.noPrefix = parsedStruct.noPrefix;
 
         int initialOffest = offset;

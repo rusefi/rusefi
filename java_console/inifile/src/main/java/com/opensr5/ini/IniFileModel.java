@@ -34,7 +34,6 @@ public class IniFileModel {
     public Map<String, String> tooltips = new TreeMap<>();
     public Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
-    private String currentSection;
 
     public static void main(String[] args) {
         log.info("Dialogs: " + IniFileModel.getInstance().dialogs);
@@ -143,7 +142,6 @@ public class IniFileModel {
 
             if (first.startsWith("[") && first.endsWith("]")) {
                 log.info("Section " + first);
-                currentSection = first;
                 isConstantsSection = first.equals("[Constants]");
             }
 

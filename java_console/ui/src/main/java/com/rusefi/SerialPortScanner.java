@@ -151,7 +151,7 @@ public enum SerialPortScanner {
             }
 
             // two steps to avoid ConcurrentModificationException
-            toRemove.stream().forEach(portCache::remove);
+            toRemove.forEach(portCache::remove);
         }
 
         boolean hasAnyEcu = ecuCount > 0;

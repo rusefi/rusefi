@@ -215,10 +215,11 @@ public class BinaryProtocol {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
                         linkManager.submit(new Runnable() {
-                            private final boolean verbose = false; // todo: programmatically detect run under gradle?
                             @Override
                             public void run() {
                                 isGoodOutputChannels = requestOutputChannels();
+                                // todo: programmatically detect run under gradle?
+                                boolean verbose = false;
                                 if (verbose)
                                     System.out.println("requestOutputChannels " + isGoodOutputChannels);
                                 if (isGoodOutputChannels)

@@ -32,7 +32,6 @@ public class PerfJsonOutputTest {
                 ",{\"name\":\"hello2\",\"ph\":\"B\",\"tid\":0,\"pid\":0,\"ts\":0.2}\n" +
                 ",{\"name\":\"hello2\",\"ph\":\"E\",\"tid\":0,\"pid\":0,\"ts\":0.3}\n" +
                 ",{\"name\":\"hello\",\"ph\":\"E\",\"tid\":0,\"pid\":0,\"ts\":0.4}\n" +
-                "]}", new String(baos.toByteArray()));
-
+                "]}", baos.toString());
     }
 }
