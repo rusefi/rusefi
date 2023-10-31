@@ -8,8 +8,8 @@ import com.rusefi.io.CommandQueue;
  * dead?
  * <p>
  * The following jumper wires are used to test some subsystems as realistically as possible:
- * PD1 <=> PC6
- * PD2 <=> PA5
+ * PD1 (output) <=> PC6 (PAL/ICU input)
+ * PD2 (output) <=> PA5 (PAL/ICU input)
  * <p>
  * <p>
  * <p>
