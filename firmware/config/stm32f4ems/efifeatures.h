@@ -67,6 +67,10 @@
 #define EFI_HPFP TRUE
 #endif
 
+#ifndef EFI_HD_ACR
+#define EFI_HD_ACR FALSE
+#endif
+
 #ifndef SC_BUFFER_SIZE
 #define SC_BUFFER_SIZE 4000
 #endif

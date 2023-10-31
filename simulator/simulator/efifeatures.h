@@ -18,6 +18,8 @@
 
 #define EFI_TS_TUNNEL_CAN TRUE
 
+#define EFI_HD_ACR TRUE
+
 #define EFI_TCU FALSE
 
 #define EFI_ENGINE_EMULATOR TRUE
