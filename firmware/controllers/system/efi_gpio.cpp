@@ -61,6 +61,10 @@ RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *name, size_t pinO
 		size_t pinModeOffset) : RegisteredOutputPin(name, pinOffset, pinModeOffset) {
 }
 
+RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *name, size_t pinOffset) :
+    RegisteredOutputPin(name, pinOffset) {
+}
+
 RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, size_t pinOffset,
 		size_t pinModeOffset)
 	: next(registeredOutputHead)
@@ -142,8 +146,10 @@ EnginePins::EnginePins() :
 		fanRelay2("Fan Relay 2", CONFIG_PIN_OFFSETS(fan2)),
 		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
-		harleyAcr("Harley ACR", CONFIG_OFFSET(acrPin)),
+#if EFI_HD_ACR
+		harleyAcr("Harley ACR", CONFIG_PIN_OFFSET(acrPin)),
 		harleyAcr2("Harley ACR 2", CONFIG_OFFSET(acrPin2)),
+#endif // EFI_HD_ACR
 		boostPin("Boost", CONFIG_PIN_OFFSETS(boostControl)),
 		idleSolenoidPin("Idle Valve", CONFIG_OFFSET2(idle, solenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
 		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
@@ -154,6 +160,9 @@ EnginePins::EnginePins() :
 		speedoOut("speedoOut", CONFIG_OFFSET(speedometerOutputPin))
 {
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
+#if EFI_HD_ACR
+	harleyAcr.name = PROTOCOL_HPFP_NAME;
+#endif // EFI_HD_ACR
 
 	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
 	static_assert(efi::size(trailNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
