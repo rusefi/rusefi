@@ -355,6 +355,12 @@ OutputPin *EnginePins::getOutputPinForBenchMode(bench_mode_e index) {
 		return &acRelay;
 	case BENCH_FAN_RELAY:
 		return &fanRelay;
+#if EFI_HD_ACR
+	case HD_ACR:
+		return &harleyAcr;
+	case HD_ACR2:
+		return &harleyAcr2;
+#endif
 	case BENCH_IDLE_VALVE:
 		return &idleSolenoidPin;
 	case BENCH_FAN_RELAY_2:
