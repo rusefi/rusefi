@@ -8,7 +8,7 @@ import java.awt.*;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class JTextFieldWithWidth extends JTextField {
-    private int width;
+    private final int width;
 
     public JTextFieldWithWidth(int width) {
         this("", width);

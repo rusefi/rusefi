@@ -14,8 +14,6 @@ public class XYDataReader {
             throw new IllegalArgumentException("No file: " + fileName);
         try {
             return doReadFile(fileName);
-        } catch (FileNotFoundException e) {
-            throw new IllegalStateException(e);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

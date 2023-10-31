@@ -72,7 +72,7 @@ public class ConnectionAndMeta {
 
     public ConnectionAndMeta invoke(String baseUrl) throws IOException {
         // user can have java with expired certificates or funny proxy, we shall accept any certificate :(
-        SSLContext ctx = null;
+        SSLContext ctx;
         try {
             ctx = SSLContext.getInstance("TLS");
             ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());

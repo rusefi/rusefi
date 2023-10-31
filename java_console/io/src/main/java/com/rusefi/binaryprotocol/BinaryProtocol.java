@@ -568,7 +568,7 @@ public class BinaryProtocol {
                 log.error("ERROR: TS_GET_TEXT failed");
                 return null;
             }
-            if (response != null && response.length == 1) {
+            if (response.length == 1) {
                 // todo: what is this sleep doing exactly?
                 Thread.sleep(100);
             }

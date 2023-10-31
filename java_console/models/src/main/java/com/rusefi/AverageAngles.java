@@ -25,7 +25,7 @@ public class AverageAngles {
         SHAFT_SECONDARY_FALLING(SECONDARY),
         SHAFT_SECONDARY_RISING(SECONDARY);
 
-        private String channel;
+        private final String channel;
 
         trigger_event_e(String channel) {
             this.channel = channel;
@@ -71,7 +71,7 @@ public class AverageAngles {
         List<AngleEvent> current = new ArrayList<>();
 
         for (int i = 0; i < v.length / 2; i++) {
-            Double angle = Double.parseDouble(v[2 * i]);
+            double angle = Double.parseDouble(v[2 * i]);
             int signal = (int) Double.parseDouble(v[2 * i + 1]);
             if (Double.isNaN(angle)) {
                 System.out.println("Skipping due to NaN");
@@ -120,7 +120,7 @@ public class AverageAngles {
         }
         if (angleData.isEmpty())
             return;
-        Double lastValue = angles.get(angles.size() - 1).angle;
+        double lastValue = angles.get(angles.size() - 1).angle;
         stream.append("Last value = " + lastValue + ", using it to offset...\r\n");
         double delta = 720 - lastValue;
         stream.append("And the " + angles.size() + " angles are:\r\n");

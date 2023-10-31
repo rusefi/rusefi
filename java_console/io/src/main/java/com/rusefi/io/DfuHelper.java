@@ -5,7 +5,6 @@ import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.ui.StatusConsumer;
 
 import javax.swing.*;
 import java.io.IOException;

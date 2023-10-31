@@ -99,7 +99,7 @@ public class ReaderStateImpl implements ReaderState {
          * the destinations/writers
          */
         SystemOut.println("Reading definition from " + definitionInputFile);
-        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET));
         readBufferedReader(definitionReader, destinations);
     }
 

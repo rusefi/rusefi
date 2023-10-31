@@ -95,7 +95,7 @@ public class ConfigFieldImpl implements ConfigField {
             String[] tokens = getTokens();
             if (tokens.length > 1) {
                 String scale = tokens[1].trim();
-                Double scaleDouble;
+                double scaleDouble;
                 try {
                     scaleDouble = Double.parseDouble(scale);
                 } catch (NumberFormatException ignore) {

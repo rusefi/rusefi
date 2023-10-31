@@ -57,7 +57,7 @@ class DefaultLogging {
 
 	Map<String, Exception> configureLogFile(String log_file) {
 		Logger root = getRootLogger();
-		Map<String, Exception> errors = new LinkedHashMap<String, Exception>();
+		Map<String, Exception> errors = new LinkedHashMap<>();
 
 		try {
 			// Don't reset configuration. Retain all manually configured loggers, but
@@ -153,7 +153,7 @@ class DefaultLogging {
 			value = value.substring(0, value.length() - 1);
 		}
 		try {
-			return Integer.valueOf(value) * multiplier;
+			return Integer.parseInt(value) * multiplier;
 		} catch (NumberFormatException e) {
 			errors.put(key, e);
 			return 0;

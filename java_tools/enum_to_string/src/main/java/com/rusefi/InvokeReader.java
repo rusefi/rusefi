@@ -15,7 +15,7 @@ public class InvokeReader {
 
     private String[] args;
     private String outputPath;
-    private List<String> definitionInputFiles = new ArrayList<>();
+    private final List<String> definitionInputFiles = new ArrayList<>();
     private List<String> inputFiles = new ArrayList<>();
     private String inputPath = ".";
 

@@ -19,7 +19,7 @@ import java.util.TreeMap;
  */
 public class XYData {
     @NotNull
-    private final TreeMap<Double, YAxisData> yDatas = new TreeMap<Double, YAxisData>();
+    private final TreeMap<Double, YAxisData> yDatas = new TreeMap<>();
     private double maxXValue;
     private double minXValue;
 

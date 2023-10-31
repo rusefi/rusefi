@@ -18,7 +18,7 @@ public class RpmValue {
     }
 
     public static RpmValue valueOf(String value) {
-        return new RpmValue(Integer.valueOf(value));
+        return new RpmValue(Integer.parseInt(value));
     }
 
     @Override

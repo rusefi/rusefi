@@ -99,7 +99,7 @@ public class EnumsReader {
                 if (isInsideEnum) {
                     if (isKeyValueLine(line)) {
                         line = line.replace(",", "");
-                        String value = "";
+                        String value;
                         int index = line.indexOf('=');
                         if (index != -1) {
                             value = line.substring(index + 1);

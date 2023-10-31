@@ -52,11 +52,13 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
             return "";
         if (comment.trim().isEmpty())
             return "";
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (String line : comment.split("\\\\n")) {
-            result += linePrefix + line + EOL;
+            result.append(linePrefix);
+            result.append(line);
+            result.append(EOL);
         }
-        return result;
+        return result.toString();
     }
 
     @Override

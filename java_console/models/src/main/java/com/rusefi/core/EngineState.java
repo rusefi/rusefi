@@ -245,12 +245,7 @@ public class EngineState {
     }
 
     public interface ValueCallback<V> {
-        static final ValueCallback<?> VOID = new ValueCallback() {
-            @Override
-            public void onUpdate(Object value) {
-
-            }
-        };
+        ValueCallback<?> VOID = (ValueCallback) value -> { };
 
         void onUpdate(V value);
     }

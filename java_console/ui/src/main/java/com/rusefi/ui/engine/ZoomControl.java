@@ -18,7 +18,7 @@ class ZoomControl extends JPanel {
     public ZoomControlListener listener = null;
     private final JButton resetZoom = new JButton("*");
 
-    private ZoomProvider zoomProvider = new ZoomProvider() {
+    private final ZoomProvider zoomProvider = new ZoomProvider() {
         @Override
         public double getZoomValue() {
             return value;

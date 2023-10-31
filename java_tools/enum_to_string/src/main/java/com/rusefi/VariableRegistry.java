@@ -149,9 +149,9 @@ public class VariableRegistry {
         TreeMap<Integer, String> humanDropDownSorted = new TreeMap<>((o1, o2) -> {
             if (o1.intValue() == o2)
                 return 0;
-            if (o1.intValue() == 0)
+            if (o1 == 0)
                 return -1; // "None" always go first
-            if (o2.intValue()==0)
+            if (o2 ==0)
                 return 1;
             return valueNameById.get(o1).compareTo(valueNameById.get(o2));
         });
@@ -160,7 +160,9 @@ public class VariableRegistry {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<Integer, String> e : humanDropDownSorted.entrySet()) {
             appendCommaIfNeeded(sb);
-            sb.append(e.getKey() + "=" + quote(e.getValue()));
+            sb.append(e.getKey());
+            sb.append('=');
+            sb.append(quote(e.getValue()));
         }
         return sb.toString();
     }

@@ -7,7 +7,7 @@ import com.rusefi.config.Field;
  *         7/14/2015
  */
 public class Array1D {
-    private double[] values;
+    private final double[] values;
 
     public Array1D(double[] values) {
         this.values = values;

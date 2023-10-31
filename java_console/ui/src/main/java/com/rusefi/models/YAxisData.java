@@ -15,7 +15,7 @@ import java.util.TreeMap;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class YAxisData {
-    private final TreeMap<Double, ValuesHolder> values = new TreeMap<Double, ValuesHolder>();
+    private final TreeMap<Double, ValuesHolder> values = new TreeMap<>();
     private double maxYValue = Double.MIN_VALUE;
     private double minYValue = Double.MAX_VALUE;
     private final double x;

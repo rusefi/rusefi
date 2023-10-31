@@ -69,7 +69,7 @@ public class EngineSnifferPanel {
     private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel();
     private final UpDownImage crank = createImage(Fields.PROTOCOL_CRANK1);
     private final ChartScrollControl scrollControl;
-    private AnyCommand command;
+    private final AnyCommand command;
 
     private boolean isPaused;
 

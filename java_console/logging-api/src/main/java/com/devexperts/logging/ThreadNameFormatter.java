@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -67,13 +68,13 @@ class ThreadNameFormatter implements Comparable<ThreadNameFormatter> {
 				return;
 
 			BufferedReader reader = new BufferedReader(
-				new InputStreamReader(config_input_stream, Charset.forName("ISO-8859-1")));
+				new InputStreamReader(config_input_stream, StandardCharsets.ISO_8859_1));
 
 			Pattern config_line_pattern = Pattern.compile("((?:[^=]|(?:\\\\=))*[^\\\\=])=(.*)");
 			Pattern whitespace_line_pattern = Pattern.compile("\\s*");
 			Pattern comment_line_pattern = Pattern.compile("#.*|!.*");
 			String line;
-			Set<String> patterns_set = new HashSet<String>();
+			Set<String> patterns_set = new HashSet<>();
 			while ((line = reader.readLine()) != null) {
 				Matcher config_line_matcher = config_line_pattern.matcher(line);
 				// If it is whitespace or comment line

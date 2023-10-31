@@ -19,5 +19,5 @@ public interface UpdateOperationCallbacks {
         }
     }
 
-    public static UpdateOperationCallbacks DUMMY = new UpdateOperationDummy();
+    UpdateOperationCallbacks DUMMY = new UpdateOperationDummy();
 }

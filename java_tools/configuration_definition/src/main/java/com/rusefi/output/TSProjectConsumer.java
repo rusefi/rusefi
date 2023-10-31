@@ -69,7 +69,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
      */
     private TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {
         String fileName = getTsFileInputName(tsPath);
-        BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), CHARSET.name()));
+        BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), CHARSET));
 
         StringBuilder prefix = new StringBuilder();
         StringBuilder postfix = new StringBuilder();
@@ -98,11 +98,15 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
             line = state.getVariableRegistry().applyVariables(line);
 
-            if (isBeforeStartTag)
-                prefix.append(line + ToolUtil.EOL);
+            if (isBeforeStartTag) {
+                prefix.append(line);
+                prefix.append(ToolUtil.EOL);
+            }
 
-            if (isAfterEndTag)
-                postfix.append(state.getVariableRegistry().applyVariables(line) + ToolUtil.EOL);
+            if (isAfterEndTag) {
+                postfix.append(state.getVariableRegistry().applyVariables(line));
+                postfix.append(ToolUtil.EOL);
+            }
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
@@ -120,12 +124,12 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     public static String getToken(String line) {
         int index = line.indexOf(TS_CONDITION) + TS_CONDITION.length();
-        String token = "";
+        StringBuilder token = new StringBuilder();
         while (index < line.length() && !Character.isWhitespace(line.charAt(index))) {
-            token += line.charAt(index);
+            token.append(line.charAt(index));
             index++;
         }
-        return token;
+        return token.toString();
     }
 
     private String getTsFileOutputName(String tsPath) {

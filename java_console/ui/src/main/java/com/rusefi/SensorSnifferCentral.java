@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SensorSnifferCentral {
-    private List<AnalogChartListener> listeners = new CopyOnWriteArrayList<>();
+    private final List<AnalogChartListener> listeners = new CopyOnWriteArrayList<>();
 
     public SensorSnifferCentral(LinkManager linkManager) {
         linkManager.getEngineState().registerStringValueAction(AverageAnglesUtil.KEY, new EngineState.ValueCallback<String>() {
