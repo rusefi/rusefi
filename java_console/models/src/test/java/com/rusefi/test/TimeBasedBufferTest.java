@@ -7,8 +7,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TimeBasedBufferTest {
     @Test
@@ -41,7 +40,7 @@ public class TimeBasedBufferTest {
         b.add(3);
         assertEquals(2, b.getSize()); // value for same timestamp is overriden
         double[] v = b.getValues();
-        assertTrue(Arrays.equals(new double[]{2, 3}, v));
+        assertArrayEquals(new double[]{2, 3}, v, 0.0);
 
         assertEquals(0.707106, DataBuffer.getStandardDeviation(b.getValues()), 0.001);
 

@@ -110,7 +110,7 @@ public class ParseDefinitionsTest {
 
         // Should get back the new definition, not the old one
         Definition def2 = state.findDefinition("val");
-        Assert.assertTrue(def != def2);
+        Assert.assertNotSame(def, def2);
         Assert.assertEquals(40, def2.asDouble(), 1e-5);
     }
 

@@ -336,7 +336,7 @@ public class VariableRegistry {
     }
 
     @Nullable
-    public String get(Object key) {
+    public String get(String key) {
         return data.get(key);
     }
 }

@@ -14,8 +14,7 @@ import java.util.Arrays;
 
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.assertNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * rusEFI firmware simulator functional test suite
@@ -333,7 +332,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
         sendComplexCommand("set " + "trigger_type" + " " + com.rusefi.enums.trigger_type_e.TT_FORD_ASPIRE.ordinal());
         chart = nextChart();
-        assertTrue(chart.get(EngineChart.TRIGGER_2) != null);
+        assertNotNull(chart.get(EngineChart.TRIGGER_2));
     }
 
     @Test
@@ -475,7 +474,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
     }
 
     private static void assertWaveNotNull(String msg, EngineChart chart, String key) {
-        assertTrue(msg, chart.get(key) != null);
+        assertNotNull(msg, chart.get(key));
     }
 
     private static void assertWaveNotNull(EngineChart chart, String... keys) {

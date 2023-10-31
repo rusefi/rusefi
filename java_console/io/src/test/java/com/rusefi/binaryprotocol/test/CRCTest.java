@@ -5,8 +5,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -30,7 +29,6 @@ public class CRCTest {
         byte[] command = {'S'};
         byte[] expected = {0, 1, 0x53, 0x20, 0x60, -17, -61};
         byte[] actual = IoHelper.makeCrc32Packet(command);
-        assertTrue(Arrays.toString(expected) + " vs " + Arrays.toString(actual),
-                Arrays.equals(expected, actual));
+        assertArrayEquals(Arrays.toString(expected) + " vs " + Arrays.toString(actual), expected, actual);
     }
 }

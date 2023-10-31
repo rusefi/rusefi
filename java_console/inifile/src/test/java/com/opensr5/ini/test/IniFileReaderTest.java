@@ -141,7 +141,7 @@ public class IniFileReaderTest {
 
         byte[] expected = {'k', 0, 0, 0, 0, 0, 0};
 
-        assertTrue(Arrays.equals(expected, ProtocolCommand.parse(crcProtocol).getBytes()));
+        assertArrayEquals(expected, ProtocolCommand.parse(crcProtocol).getBytes());
     }
 
     @Test
@@ -177,9 +177,9 @@ public class IniFileReaderTest {
         assertEquals(0, EnumIniField.getBitRange(4, 0, 2));
         assertEquals(3, EnumIniField.getBitRange(7, 0, 2));
 
-        assertEquals(true, EnumIniField.getBit(0xff, 0));
+        assertTrue(EnumIniField.getBit(0xff, 0));
 
-        assertEquals(true, EnumIniField.getBit(0xf0, 4));
+        assertTrue(EnumIniField.getBit(0xf0, 4));
         assertEquals(2, EnumIniField.getBitRange(0xf0, 3, 2));
     }
 
