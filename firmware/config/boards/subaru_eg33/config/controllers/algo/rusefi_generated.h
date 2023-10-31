@@ -95,6 +95,8 @@
 #define bench_mode_e_BENCH_VVT1_VALVE 17
 #define bench_mode_e_BENCH_VVT2_VALVE 18
 #define bench_mode_e_BENCH_VVT3_VALVE 19
+#define bench_mode_e_HD_ACR 28
+#define bench_mode_e_HD_ACR2 29
 #define BENCH_STARTER_DURATION 4000
 #define BENCH_VVT_DURATION 300
 #define blend_table_s_size 188
