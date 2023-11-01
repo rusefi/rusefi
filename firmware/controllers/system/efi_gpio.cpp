@@ -165,9 +165,9 @@ EnginePins::EnginePins() :
 		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError)),
 		speedoOut("speedoOut", CONFIG_OFFSET(speedometerOutputPin))
 {
-	hpfpValve.name = PROTOCOL_HPFP_NAME;
+	hpfpValve.setName(PROTOCOL_HPFP_NAME);
 #if EFI_HD_ACR
-	harleyAcr.name = PROTOCOL_HPFP_NAME;
+	harleyAcr.setName(PROTOCOL_ACR_NAME);
 #endif // EFI_HD_ACR
 
 	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
@@ -175,14 +175,14 @@ EnginePins::EnginePins() :
 	static_assert(efi::size(injectorNames) >= MAX_CYLINDER_COUNT, "Too many injection pins");
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		enginePins.coils[i].coilIndex = i;
-		enginePins.coils[i].name = sparkNames[i];
+		enginePins.coils[i].setName(sparkNames[i]);
 		enginePins.coils[i].shortName = sparkShortNames[i];
 
-		enginePins.trailingCoils[i].name = trailNames[i];
+		enginePins.trailingCoils[i].setName(trailNames[i]);
 		enginePins.trailingCoils[i].shortName = trailShortNames[i];
 
 		enginePins.injectors[i].injectorIndex = i;
-		enginePins.injectors[i].name = injectorNames[i];
+		enginePins.injectors[i].setName(injectorNames[i]);
 		enginePins.injectors[i].shortName = injectorShortNames[i];
 
 		enginePins.injectorsStage2[i].injectorIndex = i;
@@ -192,7 +192,7 @@ EnginePins::EnginePins() :
 
 	static_assert(efi::size(auxValveShortNames) >= AUX_DIGITAL_VALVE_COUNT, "Too many aux valve pins");
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
-		enginePins.auxValve[i].name = auxValveShortNames[i];
+		enginePins.auxValve[i].setName(auxValveShortNames[i]);
 	}
 }
 
@@ -249,7 +249,7 @@ void EnginePins::unregisterPins() {
 void EnginePins::debug() {
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
-		efiPrintf("%s %d", pin->registrationName, pin->currentLogicValue);
+		efiPrintf("%s %d", pin->getRegistrationName(), pin->currentLogicValue);
 		pin = pin->next;
 	}
 }
@@ -306,7 +306,7 @@ void EnginePins::startAuxValves() {
 		NamedOutputPin *output = &enginePins.auxValve[i];
 		// todo: do we need auxValveMode and reuse code?
 		if (isConfigurationChanged(auxValves[i])) {
-			output->initPin(output->name, engineConfiguration->auxValves[i]);
+			output->initPin(output->getName(), engineConfiguration->auxValves[i]);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -317,12 +317,12 @@ void EnginePins::startIgnitionPins() {
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		NamedOutputPin *trailingOutput = &enginePins.trailingCoils[i];
 		if (isPinOrModeChanged(trailingCoilPins[i], ignitionPinMode)) {
-			trailingOutput->initPin(trailingOutput->name, engineConfiguration->trailingCoilPins[i], engineConfiguration->ignitionPinMode);
+			trailingOutput->initPin(trailingOutput->getName(), engineConfiguration->trailingCoilPins[i], engineConfiguration->ignitionPinMode);
 		}
 
 		NamedOutputPin *output = &enginePins.coils[i];
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
-			output->initPin(output->name, engineConfiguration->ignitionPins[i], engineConfiguration->ignitionPinMode);
+			output->initPin(output->getName(), engineConfiguration->ignitionPins[i], engineConfiguration->ignitionPinMode);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -334,7 +334,7 @@ void EnginePins::startInjectionPins() {
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		if (isPinOrModeChanged(injectionPins[i], injectionPinMode)) {
-			output->initPin(output->name, engineConfiguration->injectionPins[i],
+			output->initPin(output->getName(), engineConfiguration->injectionPins[i],
 					engineConfiguration->injectionPinMode);
 		}
 
@@ -398,6 +398,10 @@ NamedOutputPin::NamedOutputPin(const char *p_name) : OutputPin() {
 
 const char *NamedOutputPin::getName() const {
 	return name;
+}
+
+void NamedOutputPin::setName(const char* p_name) {
+	name = p_name;
 }
 
 const char *NamedOutputPin::getShortName() const {
@@ -530,7 +534,7 @@ void IgnitionOutputPin::reset() {
 	signalFallSparkId = 0;
 }
 
-bool OutputPin::isInitialized() {
+bool OutputPin::isInitialized() const {
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	if (ext)

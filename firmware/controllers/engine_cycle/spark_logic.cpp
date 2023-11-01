@@ -28,7 +28,7 @@ static const char *prevSparkName = nullptr;
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
+	efiPrintf("spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);
 #endif /* SPARK_EXTREME_LOGGING */
 
@@ -149,7 +149,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
-		printf("addIgnitionEvent %s angle=%.1f\n", output->name, dwellStartAngle);
+		printf("addIgnitionEvent %s angle=%.1f\n", output->getName(), dwellStartAngle);
 	}
 	//	efiPrintf("addIgnitionEvent %s ind=%d", output->name, event->dwellPosition->eventIndex);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -157,21 +157,21 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 static void chargeTrailingSpark(IgnitionOutputPin* pin) {
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("chargeTrailingSpark %s", pin->name);
+	efiPrintf("chargeTrailingSpark %s", pin->getName());
 #endif /* SPARK_EXTREME_LOGGING */
 	pin->setHigh();
 }
 
 static void fireTrailingSpark(IgnitionOutputPin* pin) {
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("fireTrailingSpark %s", pin->name);
+	efiPrintf("fireTrailingSpark %s", pin->getName());
 #endif /* SPARK_EXTREME_LOGGING */
 	pin->setLow();
 }
 
 static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("overFireSparkAndPrepareNextSchedule %s", event->outputs[0]->name);
+	efiPrintf("overFireSparkAndPrepareNextSchedule %s", event->outputs[0]->getName());
 #endif /* SPARK_EXTREME_LOGGING */
 	fireSparkAndPrepareNextSchedule(event);
 }
@@ -276,7 +276,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 
 
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("spark goes high %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
+	efiPrintf("spark goes high %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);
 #endif /* SPARK_EXTREME_LOGGING */
 
@@ -349,7 +349,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	 */
 	if (!limitedSpark) {
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("scheduling sparkUp %d %s now=%d %d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)angleOffset,
+		efiPrintf("scheduling sparkUp %d %s now=%d %d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), (int)angleOffset,
 				event->sparkId);
 #endif /* SPARK_EXTREME_LOGGING */
 
@@ -382,11 +382,11 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 
 	if (scheduled) {
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("scheduling sparkDown %d %s now=%d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), event->sparkId);
+		efiPrintf("scheduling sparkDown %d %s now=%d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("to queue sparkDown %d %s now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), event->sparkId, sparkAngle);
+		efiPrintf("to queue sparkDown %d %s now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkId, sparkAngle);
 #endif /* SPARK_EXTREME_LOGGING */
 
 		if (!limitedSpark && engine->enableOverdwellProtection) {
@@ -426,7 +426,7 @@ void initializeIgnitionActions() {
 
 static void prepareIgnitionSchedule() {
 	ScopePerf perf(PE::PrepareIgnitionSchedule);
-	
+
 	/**
 	 * TODO: warning. there is a bit of a hack here, todo: improve.
 	 * currently output signals/times dwellStartTimer from the previous revolutions could be

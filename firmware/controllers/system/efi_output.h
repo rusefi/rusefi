@@ -58,7 +58,7 @@ public:
 	// dissociates pin from this output and un-registers it in pin repository
 	void deInit();
 
-	bool isInitialized();
+	bool isInitialized() const;
 
 	bool getAndSet(int logicValue);
 	void setValue(const char *msg, int logicValue, bool isForce = false);
@@ -117,15 +117,18 @@ public:
 	virtual void setHigh();
 	virtual void setLow();
 	const char *getName() const;
+	void setName(const char*);
 	const char *getShortName() const;
 	/**
 	 * @return true if pin was stopped
 	 */
 	bool stop();
-	// todo: char pointer is a bit of a memory waste here, we can reduce RAM usage by software-based getName() method
-	const char *name = nullptr;
 	/**
 	 * rusEfi Engine Sniffer protocol uses these short names to reduce bytes usage
 	 */
 	const char *shortName = nullptr;
+
+private:
+	// todo: char pointer is a bit of a memory waste here, we can reduce RAM usage by software-based getName() method
+	const char *name = nullptr;
 };

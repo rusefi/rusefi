@@ -175,7 +175,7 @@ bool InjectionEvent::update() {
 
 	if (!isSimultaneous && !output->isInitialized()) {
 		// todo: extract method for this index math
-		warning(ObdCode::CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
+		warning(ObdCode::CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->getName());
 	}
 
 	return true;
