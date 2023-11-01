@@ -76,6 +76,12 @@ jobs:
     - name: OpenOCD wipe & flash STM32
       run: .github/workflows/hw-ci/openocd_wipe_and_flash.sh ${{matrix.openocd-script}}
 
+    - name: Upload build bin artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rusefi_hw-ci-${{matrix.build-target}}.bin
+        path: ./firmware/deliver/rusefi*.bin
+
     - name: Set EXTRA env
       run: |
         echo "HARDWARE_CI_SERIAL_DEVICE=${{matrix.serial-device}}" >> $GITHUB_ENV
