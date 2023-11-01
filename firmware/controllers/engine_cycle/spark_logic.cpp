@@ -37,7 +37,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 
 	output->signalFallSparkId = event->sparkId;
 
-	if (!output->currentLogicValue && !event->wasSparkLimited) {
+	if (!output->m_currentLogicValue && !event->wasSparkLimited) {
 		warning(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
 		output->outOfOrder = true;
 	}
