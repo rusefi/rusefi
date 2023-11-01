@@ -3,10 +3,10 @@
 #include "hardware.h"
 
 /*
- * We need only a small portion of code from rusEFI codebase in the bootloader.
- * Mostly it's tunerstudio_io.cpp. And other files like efi_gpio.cpp etc. needed only to make it work.
+ * We need only a small portion of code from FOME codebase in the bootloader.
+ * Mostly it's efi_gpio.cpp, flash_main.cpp, etc. needed only to make it work.
  * And stubs needed just to settle down compiler errors.
- * The whole idea of bootloader is to make it as small as possible. And reasonably independent.
+ * The whole idea of bootloader is to make it as small as possible and reasonably independent.
 */
 
 void chDbgPanic3(const char* /*msg*/, const char* /*file*/, int /*line*/) {
