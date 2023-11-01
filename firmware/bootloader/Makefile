@@ -190,8 +190,8 @@ CPPSRC = $(ALLCPPSRC) \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/openblt_chibios.cpp \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/openblt_flash.cpp \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/openblt_usb.cpp \
-	src/rusefi_stubs.cpp \
-	src/main.cpp
+	bootloader_stubs.cpp \
+	bootloader_main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
 # NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler

@@ -6,11 +6,8 @@ extern "C" {
 	#include "flash.h"
 }
 
-void FlashInit() { }
-
-blt_bool FlashVerifyChecksum() {
-	// Naive check: if the first block is blank, there's no code there
-	return intFlashIsErased(FlashGetUserProgBaseAddress(), 4) ? BLT_FALSE : BLT_TRUE;
+void FlashInit() {
+	// Flash already init by ChibiOS
 }
 
 blt_addr FlashGetUserProgBaseAddress() {
@@ -41,4 +38,9 @@ blt_bool FlashDone() {
 
 blt_bool FlashWriteChecksum() {
 	return BLT_TRUE;
+}
+
+blt_bool FlashVerifyChecksum() {
+	// Naive check: if the first block is blank, there's no code there
+	return intFlashIsErased(FlashGetUserProgBaseAddress(), 4) ? BLT_FALSE : BLT_TRUE;
 }
