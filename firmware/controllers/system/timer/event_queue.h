@@ -68,8 +68,8 @@ private:
 	/**
 	 * this list is sorted
 	 */
-	scheduling_s *head = nullptr;
-	const efitick_t lateDelay;
+	scheduling_s *m_head = nullptr;
+	const efitick_t m_lateDelay;
 
 	scheduling_s* m_freelist = nullptr; 
 	scheduling_s m_pool[64];
