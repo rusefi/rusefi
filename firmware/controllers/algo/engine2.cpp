@@ -126,7 +126,7 @@ void EngineState::periodicFastCallback() {
 	);
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
 	// if the engine run time is past the last bin, disable ASE in case the table is filled with values more than 1.0, helps with compatibility
-	if ((m_postCrankingFactor < 1.0f) || (engine->fuelComputer.running.timeSinceCrankingInSecs > engineConfiguration->postCrankingDurationBins[efi::size(engineConfiguration->postCrankingDurationBins)-1])) {
+	if ((m_postCrankingFactor < 1.0f) || (engine->rpmCalculator.getRevolutionCounterSinceStart() > engineConfiguration->postCrankingDurationBins[efi::size(engineConfiguration->postCrankingDurationBins)-1])) {
 		m_postCrankingFactor = 1.0f;
 	}
 	engine->fuelComputer.running.postCrankingFuelCorrection = m_postCrankingFactor;
