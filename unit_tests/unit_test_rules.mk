@@ -73,6 +73,8 @@ ifeq ($(USE_CPPOPT),)
   USE_CPPOPT = -std=gnu++2a -fno-rtti -fno-use-cxa-atexit
 endif
 
+USE_CPPOPT += $(RUSEFI_CPPOPT)
+
 # Enable address sanitizer for C++ files, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
 # only c++ because lua does some things asan doesn't like, but don't actually cause overruns.
 ifeq ($(SANITIZE),yes)
