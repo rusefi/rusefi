@@ -40,12 +40,12 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 		const TriggerConfiguration& triggerConfiguration,
 		TriggerDecoderBase& state,
 		const TriggerWaveform& shape,
-		int i
+		int index
 		) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6593, shape.getSize() > 0, "size not zero");
-	int stateIndex = i % shape.getSize();
+	int stateIndex = index % shape.getSize();
 
-	int time = getSimulatedEventTime(shape, i);
+	int time = getSimulatedEventTime(shape, index);
 
 	const auto & multiChannelStateSequence = shape.wave;
 

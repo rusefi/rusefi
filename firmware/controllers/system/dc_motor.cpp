@@ -30,11 +30,11 @@ void TwoPinDcMotor::enable() {
 	msg = nullptr;
 }
 
-void TwoPinDcMotor::disable(const char *msg) {
+void TwoPinDcMotor::disable(const char *p_msg) {
+	msg = p_msg;
 	if (m_disable) {
 		m_disable->setValue(true);
 	}
-	this->msg = msg;
 	// Also set the duty to zero
 	set(0);
 }

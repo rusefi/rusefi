@@ -130,13 +130,13 @@ void Logging::reset() {
 	*linePointer = 0;
 }
 
-Logging::Logging(char const *name, char *buffer, int bufferSize)
-	: name(name)
-	, buffer(buffer)
-	, bufferSize(bufferSize)
+Logging::Logging(char const *p_name, char *p_buffer, int p_bufferSize)
+	: name(p_name)
+	, buffer(p_buffer)
+	, bufferSize(p_bufferSize)
 {
 	reset();
 }
 
-LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {
+LoggingWithStorage::LoggingWithStorage(const char *p_name) : Logging(p_name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {
 }
