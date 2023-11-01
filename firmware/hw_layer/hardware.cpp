@@ -78,7 +78,7 @@ void unlockSpi(spi_device_e device) {
 	spiReleaseBus(getSpiDevice(device));
 }
 
-static void initSpiModules(engine_configuration_s *engineConfiguration) {
+static void initSpiModules() {
 	UNUSED(engineConfiguration);
 	if (engineConfiguration->is_enabled_spi_1) {
 		 turnOnSpi(SPI_DEVICE_1);
@@ -189,12 +189,6 @@ static void calcFastAdcIndexes() {
 #endif /* HAL_TRIGGER_USE_ADC */
 
 #endif/* HAL_USE_ADC */
-}
-
-static void adcConfigListener(Engine *engine) {
-	UNUSED(engine);
-	// todo: something is not right here - looks like should be a callback for each configuration change?
-	calcFastAdcIndexes();
 }
 
 void stopSpi(spi_device_e device) {
@@ -336,7 +330,7 @@ void applyNewHardwareSettings() {
 	startSent();
 #endif
 
-	adcConfigListener(engine);
+	calcFastAdcIndexes();
 }
 
 // This function initializes hardware that can do so before configuration is loaded
@@ -457,7 +451,7 @@ void initHardware() {
 #endif // TRIGGER_SCOPE
 
 #if HAL_USE_SPI
-	initSpiModules(engineConfiguration);
+	initSpiModules();
 #endif /* HAL_USE_SPI */
 
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)

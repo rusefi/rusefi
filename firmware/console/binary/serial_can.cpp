@@ -194,52 +194,56 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 
 	// multiple frames
 
-	// send the first header frame (FF)
-	IsoTpFrameHeader header;
-	header.frameType = ISO_TP_FRAME_FIRST;
-	header.numBytes = numBytes;
-	int numSent = sendFrame(header, txbuf + offset, numBytes, timeout);
-	offset += numSent;
-	numBytes -= numSent;
-	int totalNumSent = numSent;
+	int totalNumSent = 0;
 
-	// get a flow control (FC) frame
+	{
+		// send the first header frame (FF)
+		IsoTpFrameHeader header;
+		header.frameType = ISO_TP_FRAME_FIRST;
+		header.numBytes = numBytes;
+		int numSent = sendFrame(header, txbuf + offset, numBytes, timeout);
+		offset += numSent;
+		numBytes -= numSent;
+		totalNumSent += numSent;
+
+		// get a flow control (FC) frame
 #if !EFI_UNIT_TEST // todo: add FC to unit-tests?
-	CANRxFrame rxmsg;
-	for (int numFcReceived = 0; ; numFcReceived++) {
-		if (streamer->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) != CAN_MSG_OK) {
+		CANRxFrame rxmsg;
+		for (int numFcReceived = 0; ; numFcReceived++) {
+			if (streamer->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
-			PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
+				PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
-			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
-			return 0;
-		}
-		receiveFrame(&rxmsg, nullptr, 0, timeout);
-		int flowStatus = rxmsg.data8[0] & 0xf;
-		// if something is not ok
-		if (flowStatus != CAN_FLOW_STATUS_OK) {
-			// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
-			if (flowStatus == CAN_FLOW_STATUS_WAIT_MORE && numFcReceived < 3) {
-				continue;
+				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
+				return 0;
 			}
+			receiveFrame(&rxmsg, nullptr, 0, timeout);
+			int flowStatus = rxmsg.data8[0] & 0xf;
+			// if something is not ok
+			if (flowStatus != CAN_FLOW_STATUS_OK) {
+				// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
+				if (flowStatus == CAN_FLOW_STATUS_WAIT_MORE && numFcReceived < 3) {
+					continue;
+				}
 #ifdef SERIAL_CAN_DEBUG
-			efiPrintf("*** ERROR: CAN Flow Control mode not supported");
+				efiPrintf("*** ERROR: CAN Flow Control mode not supported");
 #endif /* SERIAL_CAN_DEBUG */
-			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control mode not supported");
-			return 0;
-		}
-		int blockSize = rxmsg.data8[1];
-		int minSeparationTime = rxmsg.data8[2];
-		if (blockSize != 0 || minSeparationTime != 0) {
-			// todo: process other Flow Control fields (see ISO 15765-2)
+				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control mode not supported");
+				return 0;
+			}
+			int blockSize = rxmsg.data8[1];
+			int minSeparationTime = rxmsg.data8[2];
+			if (blockSize != 0 || minSeparationTime != 0) {
+				// todo: process other Flow Control fields (see ISO 15765-2)
 #ifdef SERIAL_CAN_DEBUG
-			efiPrintf("*** ERROR: CAN Flow Control fields not supported");
+				efiPrintf("*** ERROR: CAN Flow Control fields not supported");
 #endif /* SERIAL_CAN_DEBUG */
-			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control fields not supported");
+				//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control fields not supported");
+			}
+			break;
 		}
-		break;
-	}
 #endif /* EFI_UNIT_TEST */
+	}
 
 	// send the rest of the data
 	int idx = 1;
