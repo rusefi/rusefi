@@ -260,10 +260,12 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	getLimpManager()->fatalError();
 	engine->engineState.warnings.addWarningCode(code);
 #ifdef EFI_PRINT_ERRORS_AS_WARNINGS
-	va_list ap;
-	va_start(ap, fmt);
-	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
-	va_end(ap);
+	{
+	    va_list ap;
+	    va_start(ap, fmt);
+	    chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
+	    va_end(ap);
+	}
 #endif
     criticalShutdown();
 	enginePins.communicationLedPin.setValue(1, /*force*/true);
