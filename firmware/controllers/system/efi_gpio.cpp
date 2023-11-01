@@ -134,7 +134,7 @@ void RegisteredOutputPin::unregister() {
 
 EnginePins::EnginePins() :
 		mainRelay("Main Relay", CONFIG_PIN_OFFSETS(mainRelay)),
-		hpfpValve(PROTOCOL_HPFP_NAME, CONFIG_PIN_OFFSETS(hpfpValve)),
+		hpfpValve("HPFP Valve", CONFIG_PIN_OFFSETS(hpfpValve)),
 		starterControl("Starter Relay", CONFIG_PIN_OFFSETS(starterControl)),
 		starterRelayDisable("Starter Disable Relay", CONFIG_PIN_OFFSETS(starterRelayDisable)),
 		fanRelay("Fan Relay", CONFIG_PIN_OFFSETS(fan)),
@@ -151,6 +151,8 @@ EnginePins::EnginePins() :
 		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
 		speedoOut("speedoOut", CONFIG_OFFSET(speedometerOutputPin))
 {
+	hpfpValve.setName(PROTOCOL_HPFP_NAME);
+
 	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
 	static_assert(efi::size(trailNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
 	static_assert(efi::size(injectorNames) >= MAX_CYLINDER_COUNT, "Too many injection pins");
