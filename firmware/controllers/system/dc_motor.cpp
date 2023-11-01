@@ -27,14 +27,16 @@ void TwoPinDcMotor::enable() {
 	if (m_disable) {
 		m_disable->setValue(false);
 	}
-	msg = nullptr;
+
+	m_msg = nullptr;
 }
 
-void TwoPinDcMotor::disable(const char *p_msg) {
-	msg = p_msg;
+void TwoPinDcMotor::disable(const char *msg) {
+	m_msg = msg;
 	if (m_disable) {
 		m_disable->setValue(true);
 	}
+
 	// Also set the duty to zero
 	set(0);
 }
