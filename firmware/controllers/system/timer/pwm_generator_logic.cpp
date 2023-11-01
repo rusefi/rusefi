@@ -27,7 +27,7 @@ SimplePwm::SimplePwm()
 }
 
 SimplePwm::SimplePwm(const char *name) : SimplePwm()  {
-	this->name = name;
+	m_name = name;
 }
 
 PwmConfig::PwmConfig() {
@@ -37,10 +37,7 @@ PwmConfig::PwmConfig() {
 	periodNt = NAN;
 	mode = PM_NORMAL;
 	memset(&outputPins, 0, sizeof(outputPins));
-	pwmCycleCallback = nullptr;
-	stateChangeCallback = nullptr;
-	executor = nullptr;
-	name = "[noname]";
+	m_name = "[noname]";
 }
 
 /**
@@ -54,13 +51,13 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		return;
 	}
 	if (cisnan(dutyCycle)) {
-		warning(ObdCode::CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", name, dutyCycle);
+		warning(ObdCode::CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", m_name, dutyCycle);
 		return;
 	} else if (dutyCycle < 0) {
-		warning(ObdCode::CUSTOM_DUTY_TOO_LOW, "%s dutyCycle too low %.2f", name, dutyCycle);
+		warning(ObdCode::CUSTOM_DUTY_TOO_LOW, "%s dutyCycle too low %.2f", m_name, dutyCycle);
 		dutyCycle = 0;
 	} else if (dutyCycle > 1) {
-		warning(ObdCode::CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty too high %.2f", name, dutyCycle);
+		warning(ObdCode::CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty too high %.2f", m_name, dutyCycle);
 		dutyCycle = 1;
 	}
 
@@ -75,16 +72,16 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
 		mode = PM_ZERO;
 
-		if (stateChangeCallback) {
+		if (m_stateChangeCallback) {
 			// Manually fire falling edge
-			stateChangeCallback(0, this);
+			m_stateChangeCallback(0, this);
 		}
 	} else if (dutyCycle > FULL_PWM_THRESHOLD) {
 		mode = PM_FULL;
 
-		if (stateChangeCallback) {
+		if (m_stateChangeCallback) {
 			// Manually fire rising edge
-			stateChangeCallback(1, this);
+			m_stateChangeCallback(1, this);
 		}
 	} else {
 		mode = PM_NORMAL;
@@ -141,8 +138,8 @@ void PwmConfig::handleCycleStart() {
 		return;
 	}
 
-	if (pwmCycleCallback) {
-		pwmCycleCallback(this);
+	if (m_pwmCycleCallback) {
+		m_pwmCycleCallback(this);
 	}
 
 	// Compute the maximum number of iterations without overflowing a uint32_t worth of timestamp
@@ -187,8 +184,8 @@ efitick_t PwmConfig::togglePwmState() {
 
 	if (cisnan(periodNt)) {
 		// NaN period means PWM is paused, we also set the pin low
-		if (stateChangeCallback) {
-			stateChangeCallback(0, this);
+		if (m_stateChangeCallback) {
+			m_stateChangeCallback(0, this);
 		}
 
 		return getTimeNowNt() + MS2NT(NAN_FREQUENCY_SLEEP_PERIOD_MS);
@@ -217,14 +214,14 @@ efitick_t PwmConfig::togglePwmState() {
 
 	{
 		ScopePerf perf(PE::PwmConfigStateChangeCallback);
-		if (stateChangeCallback) {
-			stateChangeCallback(cbStateIndex, this);
+		if (m_stateChangeCallback) {
+			m_stateChangeCallback(cbStateIndex, this);
 		}
 	}
 
 	efitick_t nextSwitchTimeNt = getNextSwitchTimeNt(this);
 #if DEBUG_PWM
-	efiPrintf("%s: nextSwitchTime %d", state->name, nextSwitchTime);
+	efiPrintf("%s: nextSwitchTime %d", state->m_name, nextSwitchTime);
 #endif /* DEBUG_PWM */
 
 	// If we're very far behind schedule, restart the cycle fresh to avoid scheduling a huge pile of events all at once
@@ -264,12 +261,12 @@ static void timerCallback(PwmConfig *state) {
 		// we are here when PWM gets stopped
 		return;
 	}
-	if (state->executor == nullptr) {
-		firmwareError(ObdCode::CUSTOM_NULL_EXECUTOR, "exec on %s", state->name);
+	if (state->m_executor == nullptr) {
+		firmwareError(ObdCode::CUSTOM_NULL_EXECUTOR, "exec on %s", state->m_name);
 		return;
 	}
 
-	state->executor->scheduleByTimestampNt(state->name, &state->scheduling, switchTimeNt, { timerCallback, state });
+	state->m_executor->scheduleByTimestampNt(state->m_name, &state->scheduling, switchTimeNt, { timerCallback, state });
 	state->dbgNestingLevel--;
 }
 
@@ -291,7 +288,7 @@ void copyPwmParameters(PwmConfig *state, MultiChannelStateSequence const * seq) 
 void PwmConfig::weComplexInit(ExecutorInterface *executor,
 		MultiChannelStateSequence const * seq,
 		pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
-	this->executor = executor;
+	m_executor = executor;
 	isStopRequested = false;
 
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
@@ -305,8 +302,8 @@ void PwmConfig::weComplexInit(ExecutorInterface *executor,
 	}
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6583, seq->waveCount > 0, "waveCount should be positive");
 
-	this->pwmCycleCallback = pwmCycleCallback;
-	this->stateChangeCallback = stateChangeCallback;
+	m_pwmCycleCallback = pwmCycleCallback;
+	m_stateChangeCallback = stateChangeCallback;
 
 	copyPwmParameters(this, seq);
 

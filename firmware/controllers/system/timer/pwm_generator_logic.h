@@ -57,7 +57,7 @@ public:
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
 
-	ExecutorInterface *executor;
+	ExecutorInterface *m_executor = nullptr;
 
 	/**
 	 * We need to handle zero duty cycle and 100% duty cycle in a special way
@@ -71,7 +71,7 @@ public:
 	void setFrequency(float frequency);
 
 	void handleCycleStart();
-	const char *name;
+	const char *m_name;
 
 	// todo: 'outputPins' should be extracted away from here since technically one can want PWM scheduler without actual pin output
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
@@ -88,12 +88,12 @@ public:
 	/**
 	 * this callback is invoked before each wave generation cycle
 	 */
-	pwm_cycle_callback *pwmCycleCallback;
+	pwm_cycle_callback *m_pwmCycleCallback = nullptr;
 
 	/**
 	 * this main callback is invoked when it's time to switch level on any of the output channels
 	 */
-	pwm_gen_callback *stateChangeCallback = nullptr;
+	pwm_gen_callback *m_stateChangeCallback = nullptr;
 private:
 	/**
 	 * float value of PWM period
