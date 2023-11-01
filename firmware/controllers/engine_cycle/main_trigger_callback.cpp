@@ -123,7 +123,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		InjectorOutputPin *output = outputs[0];
-		printf("handleFuelInjectionEvent fuelout %s injection_duration %dus engineCycleDuration=%.1fms\t\n", output->name, (int)durationUs,
+		printf("handleFuelInjectionEvent fuelout %s injection_duration %dus engineCycleDuration=%.1fms\t\n", output->getName(), (int)durationUs,
 				(int)MS2US(getCrankshaftRevolutionTimeMs(Sensor::getOrZero(SensorType::Rpm))) / 1000.0);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */

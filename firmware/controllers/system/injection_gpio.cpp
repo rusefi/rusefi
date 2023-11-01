@@ -34,7 +34,7 @@ void InjectorOutputPin::open(efitick_t nowNt) {
 
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
-		printf("InjectorOutputPin::open %s %d now=%0.1fms\r\n", name, overlappingCounter, (int)getTimeNowUs() / 1000.0);
+		printf("InjectorOutputPin::open %s %d now=%0.1fms\r\n", getName(), m_overlappingCounter, (int)getTimeNowUs() / 1000.0);
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -45,7 +45,7 @@ void InjectorOutputPin::open(efitick_t nowNt) {
 //		 */
 #if FUEL_MATH_EXTREME_LOGGING
 		if (printFuelDebug) {
-			printf("overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
+			printf("overlapping, no need to touch pin %s %d\r\n", getName(), (int)getTimeNowUs());
 		}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
@@ -59,7 +59,7 @@ void InjectorOutputPin::open(efitick_t nowNt) {
 void InjectorOutputPin::close(efitick_t nowNt) {
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
-		printf("InjectorOutputPin::close %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
+		printf("InjectorOutputPin::close %s %d %d\r\n", getName(), m_overlappingCounter, (int)getTimeNowUs());
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -67,7 +67,7 @@ void InjectorOutputPin::close(efitick_t nowNt) {
 	if (m_overlappingCounter > 0) {
 #if FUEL_MATH_EXTREME_LOGGING
 		if (printFuelDebug) {
-			printf("was overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
+			printf("was overlapping, no need to touch pin %s %d\r\n", getName(), (int)getTimeNowUs());
 		}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {

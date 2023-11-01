@@ -343,7 +343,7 @@ extern bool verboseMode;
 void NamedOutputPin::setHigh() {
 #if EFI_UNIT_TEST
 	if (verboseMode) {
-		efiPrintf("pin %s goes high", name);
+		efiPrintf("pin %s goes high", m_name);
 	}
 #endif // EFI_UNIT_TEST
 #if EFI_DEFAILED_LOGGING
@@ -361,7 +361,7 @@ void NamedOutputPin::setHigh() {
 void NamedOutputPin::setLow() {
 #if EFI_UNIT_TEST
 	if (verboseMode) {
-		efiPrintf("pin %s goes low", name);
+		efiPrintf("pin %s goes low", m_name);
 	}
 #endif // EFI_UNIT_TEST
 
@@ -507,7 +507,7 @@ void OutputPin::setValue(int logicValue) {
 		setOnchipValue(electricalValue);
 	#endif
 #else /* EFI_PROD_CODE */
-	setMockState(brainPin, electricalValue);
+	setMockState(m_brainPin, electricalValue);
 #endif /* EFI_PROD_CODE */
 }
 

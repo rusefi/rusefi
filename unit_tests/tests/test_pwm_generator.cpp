@@ -24,7 +24,7 @@ static void assertNextEvent(const char *msg, int expectedPinState, TestExecutor 
 
 	// execute pending actions and assert that only one action was executed
 	ASSERT_NEAR(1, executor->executeAll(timeNowUs), 0) << msg << " executed";
-	ASSERT_NEAR(expectedPinState, pin.currentLogicValue, 0) << msg << " pin state";
+	ASSERT_NEAR(expectedPinState, pin.m_currentLogicValue, 0) << msg << " pin state";
 
 	// assert that we have one new action in queue
 	ASSERT_EQ( 1,  executor->size()) << "PWM_test: queue.size";
