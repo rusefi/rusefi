@@ -101,6 +101,7 @@
 #define GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH "Fuel pressure raw (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS "bar"
+#define GAUGE_NAME_FUEL_TEMPERATURE "Fuel Temperature"
 #define GAUGE_NAME_FLEX "Flex Ethanol %"
 
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"

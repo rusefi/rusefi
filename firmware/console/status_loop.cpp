@@ -386,6 +386,7 @@ static void updateTempSensors() {
 	SensorResult oilTemp = Sensor::get(SensorType::OilTemperature);
 	engine->outputChannels.oilTemp = oilTemp.value_or(0);
 
+    // see also updateFuelSensors()
 	SensorResult fuelTemp = Sensor::get(SensorType::FuelTemperature);
 	engine->outputChannels.fuelTemp = fuelTemp.value_or(0);
 

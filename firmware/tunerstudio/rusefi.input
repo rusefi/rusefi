@@ -1444,6 +1444,7 @@ gaugeCategory = Sensors - Extra 1
 	AuxT2Gauge		= auxTemp2,	@@GAUGE_NAME_AUX_TEMP2@@,		"C",		-40,	140,	-15,		1,		95,	110,	1,	1
 	lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0
 	flexPercentGauge = flexPercent, @@GAUGE_NAME_FLEX@@, "%", 0, 100, 0, 0, 100, 100, 0, 0
+	fuelTempGauge = fuelTemp, @@GAUGE_NAME_FUEL_TEMPERATURE@@, "C",	0,	100,	0,	0,	75,  100,	0,	0
 	fuelTankLevelGauge	= fuelTankLevel,"Fuel level",			"%",		0,		100,		10,	20,	100,	100,	1,	1
 	AuxL1Gauge		= auxLinear1,	@@GAUGE_NAME_AUX_LINEAR_1@@, "", -100, 100, -100, -100, 100, 100, 2, 2
 	AuxL2Gauge		= auxLinear2,	@@GAUGE_NAME_AUX_LINEAR_2@@, "", -100, 100, -100, -100, 100, 100, 2, 2

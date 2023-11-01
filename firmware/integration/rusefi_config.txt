@@ -1911,15 +1911,6 @@ end_struct
 #define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
 #define GAUGE_NAME_FW_VERSION "ECU Software Version"
 
-#define GAUGE_NAME_RAW_FUEL_PRESSURE_LOW "Fuel pressure raw (low)"
-#define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
-#define GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS "kPa"
-
-#define GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH "Fuel pressure raw (high)"
-#define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
-#define GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS "bar"
-#define GAUGE_NAME_FLEX "Flex Ethanol %"
-
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
