@@ -9,7 +9,6 @@
 #if EFI_BOOST_CONTROL
 
 #include "boost_control.h"
-#include "pid_auto_tune.h"
 #include "electronic_throttle.h"
 
 #define NO_PIN_PERIOD 500

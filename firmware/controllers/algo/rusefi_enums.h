@@ -478,24 +478,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 } tChargeMode_e;
 
-// peak type
-typedef enum {
-  MINIMUM = -1,
-  NOT_A_PEAK = 0,
-  MAXIMUM = 1
-} PidAutoTune_Peak;
-
-// auto tuner state
-typedef enum {
-  AUTOTUNER_OFF = 0,
-  STEADY_STATE_AT_BASELINE = 1,
-  STEADY_STATE_AFTER_STEP_UP = 2,
-  RELAY_STEP_UP = 4,
-  RELAY_STEP_DOWN = 8,
-  CONVERGED = 16,
-  FAILED = 128
-} PidAutoTune_AutoTunerState;
-
 typedef enum __attribute__ ((__packed__)) {
 	INIT = 0,
 	TPS_THRESHOLD = 1,

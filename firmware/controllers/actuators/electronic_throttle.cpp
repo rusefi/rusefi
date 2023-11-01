@@ -59,7 +59,6 @@
 
 #include "dc_motor.h"
 #include "dc_motors.h"
-#include "pid_auto_tune.h"
 #include "defaults.h"
 
 #if defined(HAS_OS_ACCESS)
