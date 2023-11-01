@@ -39,7 +39,7 @@ private:
 
 	bool m_currentDirection = false;
 
-	OutputPin directionPin, stepPin, enablePin;
+	OutputPin m_directionPin, m_stepPin, m_enablePin;
 };
 
 class DcMotor;
