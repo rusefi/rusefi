@@ -33,36 +33,6 @@ case INJ_PolynomialAdder:
   }
  return NULL;
 }
-const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value){
-switch(value) {
-case AUTOTUNER_OFF:
-  return "AUTOTUNER_OFF";
-case CONVERGED:
-  return "CONVERGED";
-case FAILED:
-  return "FAILED";
-case RELAY_STEP_DOWN:
-  return "RELAY_STEP_DOWN";
-case RELAY_STEP_UP:
-  return "RELAY_STEP_UP";
-case STEADY_STATE_AFTER_STEP_UP:
-  return "STEADY_STATE_AFTER_STEP_UP";
-case STEADY_STATE_AT_BASELINE:
-  return "STEADY_STATE_AT_BASELINE";
-  }
- return NULL;
-}
-const char *getPidAutoTune_Peak(PidAutoTune_Peak value){
-switch(value) {
-case MAXIMUM:
-  return "MAXIMUM";
-case MINIMUM:
-  return "MINIMUM";
-case NOT_A_PEAK:
-  return "NOT_A_PEAK";
-  }
- return NULL;
-}
 const char *getSelectedGear(SelectedGear value){
 switch(value) {
 case SelectedGear::Drive:

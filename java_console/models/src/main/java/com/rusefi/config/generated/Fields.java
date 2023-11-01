@@ -911,16 +911,6 @@ public class Fields {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final int persistent_config_s_size = 22996;
 	public static final int pid_s_size = 20;
-	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
-	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
-	public static final int PidAutoTune_AutoTunerState_FAILED = 128;
-	public static final int PidAutoTune_AutoTunerState_RELAY_STEP_DOWN = 8;
-	public static final int PidAutoTune_AutoTunerState_RELAY_STEP_UP = 4;
-	public static final int PidAutoTune_AutoTunerState_STEADY_STATE_AFTER_STEP_UP = 2;
-	public static final int PidAutoTune_AutoTunerState_STEADY_STATE_AT_BASELINE = 1;
-	public static final int PidAutoTune_Peak_MAXIMUM = 1;
-	public static final int PidAutoTune_Peak_MINIMUM = -1;
-	public static final int PidAutoTune_Peak_NOT_A_PEAK = 0;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
 	public static final int pin_input_mode_e_PI_PULLUP = 1;

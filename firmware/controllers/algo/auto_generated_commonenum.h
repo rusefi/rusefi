@@ -7,8 +7,6 @@ const char *getGearControllerMode(GearControllerMode value);
 const char *getInjectionTimingMode(InjectionTimingMode value);
 #endif //__cplusplus
 const char *getInjectorNonlinearMode(InjectorNonlinearMode value);
-const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
-const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 #if __cplusplus
 const char *getSelectedGear(SelectedGear value);
 #endif //__cplusplus
