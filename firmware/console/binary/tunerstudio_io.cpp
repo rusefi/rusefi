@@ -86,8 +86,9 @@ void TsChannelBase::writeCrcPacketLarge(const uint8_t responseCode, const uint8_
 	flush();
 }
 
-TsChannelBase::TsChannelBase(const char *name) {
-	this->name = name;
+TsChannelBase::TsChannelBase(const char *name)
+	: m_name(name)
+{
 }
 
 void TsChannelBase::assertPacketSize(size_t size, bool allowLongPackets) {

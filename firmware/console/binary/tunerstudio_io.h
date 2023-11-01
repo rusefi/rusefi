@@ -46,7 +46,10 @@ public:
 	 * See 'blockingFactor' in rusefi.ini
 	 */
 	char scratchBuffer[BLOCKING_FACTOR + 30];
-	const char *name;
+
+	const char* getName() const {
+		return m_name;
+	}
 
 	void assertPacketSize(size_t size, bool allowLongPackets);
 	uint32_t writePacketHeader(const uint8_t responseCode, const size_t size);
@@ -64,6 +67,9 @@ public:
 	 * by one read. Instead after getting packet size it will try to receive one byte of
 	 * command and check if it is supported. */
 	bool in_sync = false;
+
+protected:
+	const char * const m_name;
 
 private:
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);

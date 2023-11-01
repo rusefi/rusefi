@@ -114,7 +114,7 @@ static void resetTs() {
 
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
-	efiPrintf("%s: %s", tsChannel->name, msg);
+	efiPrintf("%s: %s", tsChannel->getName(), msg);
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
@@ -436,7 +436,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 
 	if (incomingPacketSize == 0 || expectedSize > sizeof(tsChannel->scratchBuffer)) {
 		if (tsChannel->in_sync) {
-			efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
+			efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->getName(), incomingPacketSize);
 			tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
 			/* send error only if previously we were in sync */
 			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
