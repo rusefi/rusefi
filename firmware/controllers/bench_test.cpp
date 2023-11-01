@@ -89,7 +89,7 @@ static void runBench(BenchParams& params) {
 	}
 
 	efiPrintf("Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, params.Count);
-	efiPrintf("output on %s", hwPortname(params.Pin->brainPin));
+	efiPrintf("output on %s", hwPortname(params.Pin->m_brainPin));
 
 	isRunningBench = true;
 
