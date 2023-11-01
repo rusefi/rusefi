@@ -31,7 +31,7 @@ static SPIConfig spiConfig[EGT_CHANNEL_COUNT];
 
 static void showEgtInfo() {
 #if EFI_PROD_CODE
-	printSpiState(engineConfiguration);
+	printSpiState();
 
 	efiPrintf("EGT spi: %d", engineConfiguration->max31855spiDevice);
 

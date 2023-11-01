@@ -487,9 +487,9 @@ static void updateRawSensors() {
 	engine->outputChannels.luaGauges[1] = Sensor::getOrZero(SensorType::LuaGauge2);
 
 	for (int i = 0; i < LUA_ANALOG_INPUT_COUNT; i++) {
-		adc_channel_e ch = engineConfiguration->auxAnalogInputs[i];
-		if (isAdcChannelValid(ch)) {
-			engine->outputChannels.rawAnalogInput[i] = getVoltageDivided("raw aux", ch);
+		adc_channel_e channel = engineConfiguration->auxAnalogInputs[i];
+		if (isAdcChannelValid(channel)) {
+			engine->outputChannels.rawAnalogInput[i] = getVoltageDivided("raw aux", channel);
 		}
 	}
 

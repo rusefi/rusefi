@@ -137,23 +137,23 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 // todo: migrate to smarter getOutputOnTheBenchTest() approach?
 static volatile bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
-static float onTimeMs;
-static float offTimeMs;
-static int count;
+static float globalOnTimeMs;
+static float globalOffTimeMs;
+static int globalCount;
 static OutputPin* pinX;
 static bool swapOnOff = false;
 
 static chibios_rt::CounterSemaphore benchSemaphore(0);
 
-static void pinbench(float p_ontimeMs, float p_offtimeMs, int iterations,
+static void pinbench(float ontimeMs, float offtimeMs, int iterations,
 	OutputPin* pinParam, bool p_swapOnOff = false)
 {
-	onTimeMs = p_ontimeMs;
-	offTimeMs = p_offtimeMs;
+	globalOnTimeMs = ontimeMs;
+	globalOffTimeMs = offtimeMs;
 #if EFI_SIMULATOR
-	count = maxI(2, iterations);
+	globalCount = maxI(2, iterations);
 #else
-	count = iterations;
+	globalCount = iterations;
 #endif // EFI_SIMULATOR
 	pinX = pinParam;
 	swapOnOff = p_swapOnOff;
@@ -313,7 +313,7 @@ private:
 
 			if (isBenchTestPending) {
 				isBenchTestPending = false;
-				runBench(pinX, onTimeMs, offTimeMs, count, swapOnOff);
+				runBench(pinX, globalOnTimeMs, globalOffTimeMs, globalCount, swapOnOff);
 			}
 
 			if (widebandUpdatePending) {

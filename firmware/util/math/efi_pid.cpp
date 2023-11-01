@@ -17,43 +17,43 @@ Pid::Pid() {
 	initPidClass(nullptr);
 }
 
-Pid::Pid(pid_s *parameters) {
-	initPidClass(parameters);
+Pid::Pid(pid_s *p_parameters) {
+	initPidClass(p_parameters);
 }
 
-void Pid::initPidClass(pid_s *parameters) {
-	this->parameters = parameters;
+void Pid::initPidClass(pid_s *p_parameters) {
+	parameters = p_parameters;
 	resetCounter = 0;
 
 	Pid::reset();
 }
 
-bool Pid::isSame(const pid_s *parameters) const {
-	if (!this->parameters) {
+bool Pid::isSame(const pid_s *p_parameters) const {
+	if (!parameters) {
 		// this 'null' could happen on first execution during initialization
 		return false;
 	}
-	efiAssert(ObdCode::OBD_PCM_Processor_Fault, parameters != NULL, "PID::isSame NULL", false);
-	return this->parameters->pFactor == parameters->pFactor
-			&& this->parameters->iFactor == parameters->iFactor
-			&& this->parameters->dFactor == parameters->dFactor
-			&& this->parameters->offset == parameters->offset
-			&& this->parameters->periodMs == parameters->periodMs;
+	efiAssert(ObdCode::OBD_PCM_Processor_Fault, p_parameters != NULL, "PID::isSame NULL", false);
+	return parameters->pFactor == p_parameters->pFactor
+			&& parameters->iFactor == p_parameters->iFactor
+			&& parameters->dFactor == p_parameters->dFactor
+			&& parameters->offset == p_parameters->offset
+			&& parameters->periodMs == p_parameters->periodMs;
 }
 
 /**
  * @param Controller input / process output
  * @returns Output from the PID controller / the input to the process
  */
-float Pid::getOutput(float target, float input) {
+float Pid::getOutput(float p_target, float p_input) {
 	float dTime = MS2SEC(GET_PERIOD_LIMITED(parameters));
-	return getOutput(target, input, dTime);
+	return getOutput(p_target, p_input, dTime);
 }
 
-float Pid::getUnclampedOutput(float target, float input, float dTime) {
+float Pid::getUnclampedOutput(float p_target, float p_input, float dTime) {
+	target = p_target;
+	input = p_input;
 	float error = (target - input) * errorAmplificationCoef;
-	this->target = target;
-	this->input = input;
 
 	float pTerm = parameters->pFactor * error;
 	updateITerm(parameters->iFactor * dTime * error);
@@ -72,15 +72,15 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 /**
  * @param dTime seconds probably? :)
  */
-float Pid::getOutput(float target, float input, float dTime) {
-	float output = getUnclampedOutput(target, input, dTime);
+float Pid::getOutput(float p_target, float p_input, float dTime) {
+	float l_output = getUnclampedOutput(p_target, p_input, dTime);
 
-	if (output > parameters->maxValue) {
-		output = parameters->maxValue;
-	} else if (output < getMinValue()) {
-		output = getMinValue();
+	if (l_output > parameters->maxValue) {
+		l_output = parameters->maxValue;
+	} else if (l_output < getMinValue()) {
+		l_output = getMinValue();
 	}
-	this->output = output;
+	output = l_output;
 	return output;
 }
 
@@ -193,7 +193,7 @@ PidCic::PidCic() {
 	PidCic::reset();
 }
 
-PidCic::PidCic(pid_s *parameters) : Pid(parameters) {
+PidCic::PidCic(pid_s *p_parameters) : Pid(p_parameters) {
 	// call our derived reset()
 	PidCic::reset();
 }
@@ -207,8 +207,8 @@ void PidCic::reset(void) {
 	iTermInvNum = 1.0f / (float)PID_AVG_BUF_SIZE;
 }
 
-float PidCic::getOutput(float target, float input, float dTime) {
-	return getUnclampedOutput(target, input, dTime);
+float PidCic::getOutput(float p_target, float p_input, float dTime) {
+	return getUnclampedOutput(p_target, p_input, dTime);
 }
 
 void PidCic::updateITerm(float value) {
@@ -234,12 +234,12 @@ void PidCic::updateITerm(float value) {
 PidIndustrial::PidIndustrial() : Pid() {
 }
 
-PidIndustrial::PidIndustrial(pid_s *parameters) : Pid(parameters) {
+PidIndustrial::PidIndustrial(pid_s *p_parameters) : Pid(p_parameters) {
 }
 
-float PidIndustrial::getOutput(float target, float input, float dTime) {
+float PidIndustrial::getOutput(float p_target, float p_input, float dTime) {
 	float ad, bd;
-	float error = (target - input) * errorAmplificationCoef;
+	float error = (p_target - p_input) * errorAmplificationCoef;
 	float pTerm = parameters->pFactor * error;
 
 	// calculate dTerm coefficients
@@ -263,12 +263,12 @@ float PidIndustrial::getOutput(float target, float input, float dTime) {
 	updateITerm(parameters->iFactor * dTime * error);
 
 	// calculate output and apply the limits
-	float output = pTerm + iTerm + dTerm + getOffset();
-	float limitedOutput = limitOutput(output);
+	float l_output = pTerm + iTerm + dTerm + getOffset();
+	float limitedOutput = limitOutput(l_output);
 
 	// apply the integrator anti-windup on top of the "normal" iTerm change above
 	// If p.antiwindupFreq = 0, then iTerm is equal to PidParallelController's
-	iTerm += dTime * antiwindupFreq * (limitedOutput - output);
+	iTerm += dTime * antiwindupFreq * (limitedOutput - l_output);
 	
 	// update the state
 	previousError = error;
