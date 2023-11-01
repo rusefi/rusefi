@@ -139,8 +139,9 @@ static uint8_t cylinderNumberCopy;
 
 // Called when its time to start listening for knock
 // Does some math, then hands off to the driver to start any sampling hardware
-static void startKnockSampling(Engine* engine) {
-	if (!engine->rpmCalculator.isRunning()) {
+static void startKnockSampling(Engine* p_engine) {
+	// todo: why do we pass engine as parameter? is that for unit tests?
+	if (!p_engine->rpmCalculator.isRunning()) {
 		return;
 	}
 

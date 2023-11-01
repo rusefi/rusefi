@@ -26,8 +26,8 @@ SimplePwm::SimplePwm()
 	seq.phaseCount = 2;
 }
 
-SimplePwm::SimplePwm(const char *name) : SimplePwm()  {
-	this->name = name;
+SimplePwm::SimplePwm(const char *p_name) : SimplePwm()  {
+	name = p_name;
 }
 
 PwmConfig::PwmConfig() {
@@ -288,10 +288,12 @@ void copyPwmParameters(PwmConfig *state, MultiChannelStateSequence const * seq) 
  * this method also starts the timer cycle
  * See also startSimplePwm
  */
-void PwmConfig::weComplexInit(ExecutorInterface *executor,
+void PwmConfig::weComplexInit(ExecutorInterface *p_executor,
 		MultiChannelStateSequence const * seq,
-		pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
-	this->executor = executor;
+		pwm_cycle_callback *p_pwmCycleCallback, pwm_gen_callback *p_stateChangeCallback) {
+	executor = p_executor;
+	pwmCycleCallback = p_pwmCycleCallback;
+	stateChangeCallback = p_stateChangeCallback;
 	isStopRequested = false;
 
     // NaN is 'not initialized' but zero is not expected
@@ -300,8 +302,6 @@ void PwmConfig::weComplexInit(ExecutorInterface *executor,
 	criticalAssertVoid(seq->phaseCount <= PWM_PHASE_MAX_COUNT, "too many phases in PWM");
 	criticalAssertVoid(seq->waveCount > 0, "waveCount should be positive");
 
-	this->pwmCycleCallback = pwmCycleCallback;
-	this->stateChangeCallback = stateChangeCallback;
 
 	copyPwmParameters(this, seq);
 

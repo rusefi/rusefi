@@ -58,32 +58,32 @@ static SensorConverter& configureTempSensorFunction(const char *msg,
 static void configTherm(const char *msg,
 		FunctionalSensor &sensor,
 					FuncPair &p,
-					ThermistorConf &config,
+					ThermistorConf &p_config,
 					bool isLinear,
 					bool isPulldown) {
 	// nothing to do if no channel
-	if (!isAdcChannelValid(config.adcChannel)) {
+	if (!isAdcChannelValid(p_config.adcChannel)) {
 		return;
 	}
 
 	// Configure the conversion function for this sensor
-	sensor.setFunction(configureTempSensorFunction(msg, config.config, p, isLinear, isPulldown));
+	sensor.setFunction(configureTempSensorFunction(msg, p_config.config, p, isLinear, isPulldown));
 }
 
 static void configureTempSensor(const char *msg,
 								FunctionalSensor &sensor,
 								FuncPair &p,
-								ThermistorConf &config,
+								ThermistorConf &p_config,
 								bool isLinear,
 								bool isPulldown = false) {
-	auto channel = config.adcChannel;
+	auto channel = p_config.adcChannel;
 
 	// Only register if we have a sensor
 	if (!isAdcChannelValid(channel)) {
 		return;
 	}
 
-	configTherm(msg, sensor, p, config, isLinear, isPulldown);
+	configTherm(msg, sensor, p, p_config, isLinear, isPulldown);
 
 	// Register & subscribe
 	AdcSubscription::SubscribeSensor(sensor, channel, 2);

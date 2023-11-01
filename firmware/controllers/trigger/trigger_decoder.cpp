@@ -49,8 +49,8 @@
 #define NOISE_RATIO_THRESHOLD 3000
 #endif
 
-TriggerDecoderBase::TriggerDecoderBase(const char* name)
-	: name(name)
+TriggerDecoderBase::TriggerDecoderBase(const char* p_name)
+	: name(p_name)
 {
 	TriggerDecoderBase::resetState();
 }
@@ -104,8 +104,8 @@ void TriggerDecoderBase::resetCurrentCycleState() {
 
 #if EFI_SHAFT_POSITION_INPUT
 
-PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* name)
-	: TriggerDecoderBase(name)
+PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* p_name)
+	: TriggerDecoderBase(p_name)
 {
 }
 
