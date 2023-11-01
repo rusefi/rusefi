@@ -171,8 +171,8 @@ struct L9779 : public GpioChip {
 	int							spi_err_parity;		/* parity errors in rx data */
 	int							spi_err_frame;		/* rx messages with bit 15 set */
 	int							spi_err;			/* rx messages with incorrect ADDR or WR fields */
-	uint16_t					tx;
-	uint16_t					rx;
+	uint16_t					recentTx;
+	uint16_t					recentRx;
 };
 
 static L9779 chips[BOARD_L9779_COUNT];
@@ -272,8 +272,8 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	spiReleaseBus(spi);
 
 	/* statisctic and debug */
-	this->tx = tx;
-	this->rx = rx;
+	recentTx = tx;
+	recentRx = rx;
 	this->spi_cnt++;
 
 	if (rx_ptr)
@@ -282,9 +282,9 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	/* validate reply */
 	ret = spi_validate(rx);
 	/* save last accessed register */
-	last_addr = MSG_GET_ADDR(this->tx);
+	last_addr = MSG_GET_ADDR(recentTx);
 	if (last_addr == MSG_READ_ADDR)
-		last_subaddr = MSG_GET_SUBADDR(this->tx);
+		last_subaddr = MSG_GET_SUBADDR(recentTx);
 	else
 		last_subaddr = REG_INVALID;
 
@@ -319,16 +319,16 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		spiUnselect(spi);
 
 		/* statistic and debug */
-		this->tx = tx[i];
-		this->rx = rxdata;
+		recentTx = tx[i];
+		recentRx = rxdata;
 		this->spi_cnt++;
 
 		/* validate reply  */
 		ret = spi_validate(rxdata);
 		/* save last accessed register */
-		last_addr = MSG_GET_ADDR(this->tx);
+		last_addr = MSG_GET_ADDR(recentTx);
 		if (last_addr == MSG_READ_ADDR)
-			last_subaddr = MSG_GET_SUBADDR(this->tx);
+			last_subaddr = MSG_GET_SUBADDR(recentTx);
 		else
 			last_subaddr = REG_INVALID;
 
@@ -657,9 +657,9 @@ int L9779::chip_init_data(void)
 
 err_gpios:
 	/* unmark pins */
-	for (int i = 0; i < L9779_DIRECT_OUTPUTS; i++) {
-		if (cfg->direct_gpio[i].port) {
-			gpio_pin_markUnused(cfg->direct_gpio[i].port, cfg->direct_gpio[i].pad);
+	for (int j = 0; j < L9779_DIRECT_OUTPUTS; j++) {
+		if (cfg->direct_gpio[j].port) {
+			gpio_pin_markUnused(cfg->direct_gpio[j].port, cfg->direct_gpio[j].pad);
 		}
 	}
 

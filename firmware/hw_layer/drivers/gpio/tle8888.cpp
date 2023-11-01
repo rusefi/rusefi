@@ -261,8 +261,8 @@ struct Tle8888 : public GpioChip {
 	int							init_cnt;
 	int							init_req_cnt;
 	int							spi_cnt;
-	uint16_t					tx;
-	uint16_t					rx;
+	uint16_t					recentTx;
+	uint16_t					recentRx;
 };
 
 static Tle8888 chips[BOARD_TLE8888_COUNT];
@@ -368,8 +368,8 @@ int Tle8888::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	spiReleaseBus(spi);
 
 	/* statisctic and debug */
-	this->tx = tx;
-	this->rx = rx;
+	recentTx = tx;
+	recentRx = rx;
 	this->spi_cnt++;
 
 	if (rx_ptr)
@@ -420,8 +420,8 @@ int Tle8888::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		spiUnselect(spi);
 
 		/* statistic and debug */
-		this->tx = tx[i];
-		this->rx = rxdata;
+		recentTx = tx[i];
+		recentRx = rxdata;
 		this->spi_cnt++;
 
 		/* validate reply and save last accessed register */
@@ -1172,9 +1172,9 @@ err_gpios:
 		gpio_pin_markUnused(cfg->ign_en.port, cfg->ign_en.pad);
 	if (cfg->reset.port != NULL)
 		gpio_pin_markUnused(cfg->reset.port, cfg->reset.pad);
-	for (int i = 0; i < TLE8888_DIRECT_OUTPUTS; i++) {
-		if (cfg->direct_gpio[i].port) {
-			gpio_pin_markUnused(cfg->direct_gpio[i].port, cfg->direct_gpio[i].pad);
+	for (int j = 0; j < TLE8888_DIRECT_OUTPUTS; j++) {
+		if (cfg->direct_gpio[j].port) {
+			gpio_pin_markUnused(cfg->direct_gpio[j].port, cfg->direct_gpio[j].pad);
 		}
 	}
 
