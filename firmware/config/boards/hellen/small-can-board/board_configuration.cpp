@@ -14,19 +14,17 @@ void setBoardConfigOverrides() {
 	// 33k / 6.8k = 5.835
 	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
+}
 
-	// Force I/O for Lua - so no TS is required
+void setBoardDefaultConfiguration() {
 	engineConfiguration->luaOutputPins[0] = Gpio::MM64_OUT_PWM1;
 	engineConfiguration->luaOutputPins[1] = Gpio::MM64_OUT_PWM2;
 	engineConfiguration->luaOutputPins[2] = Gpio::MM64_OUT_PWM3;
 	engineConfiguration->luaOutputPins[3] = Gpio::MM64_OUT_PWM4;
 
-	engineConfiguration->auxAnalogInputs[0] = EFI_ADC_2;
-	engineConfiguration->auxAnalogInputs[1] = EFI_ADC_3;
-	engineConfiguration->auxAnalogInputs[2] = EFI_ADC_4;
-	engineConfiguration->auxAnalogInputs[3] = EFI_ADC_5;
-	engineConfiguration->auxAnalogInputs[4] = EFI_ADC_6;
-	engineConfiguration->auxAnalogInputs[5] = EFI_ADC_7;
-	engineConfiguration->auxAnalogInputs[6] = EFI_ADC_14;
-	engineConfiguration->auxAnalogInputs[7] = EFI_ADC_15;
+	engineConfiguration->auxAnalogInputs[0] = MM64_IN_ADC2_ANALOG;
+	engineConfiguration->auxAnalogInputs[1] = MM64_IN_ADC3_ANALOG;
+	engineConfiguration->auxAnalogInputs[2] = MM64_IN_ADC4_ANALOG;
+	engineConfiguration->auxAnalogInputs[3] = MM64_IN_ADC5_ANALOG;
+	engineConfiguration->auxAnalogInputs[4] = MM64_IN_ADC6_ANALOG;
 }
