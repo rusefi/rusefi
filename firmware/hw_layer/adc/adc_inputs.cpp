@@ -54,17 +54,17 @@ float getVoltage(const char *msg, adc_channel_e hwChannel) {
 }
 
 #if EFI_USE_FAST_ADC
-AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len) {
-	this->hwConfig = hwConfig;
-	this->samples = buf;
-	this->buf_len = buf_len;
-
-	hwConfig->sqr1 = 0;
-	hwConfig->sqr2 = 0;
-	hwConfig->sqr3 = 0;
+AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len)
+	: m_samples(buf)
+	, m_hwConfig(hwConfig)
+	, m_buf_len(buf_len)
+{
+	m_hwConfig->sqr1 = 0;
+	m_hwConfig->sqr2 = 0;
+	m_hwConfig->sqr3 = 0;
 #if ADC_MAX_CHANNELS_COUNT > 16
-	hwConfig->sqr4 = 0;
-	hwConfig->sqr5 = 0;
+	m_hwConfig->sqr4 = 0;
+	m_hwConfig->sqr5 = 0;
 #endif /* ADC_MAX_CHANNELS_COUNT */
 	memset(hardwareIndexByIndernalAdcIndex, EFI_ADC_NONE, sizeof(hardwareIndexByIndernalAdcIndex));
 	memset(internalAdcIndexByHardwareIndex, 0xFF, sizeof(internalAdcIndexByHardwareIndex));
@@ -170,7 +170,7 @@ static void fast_adc_callback(GPTDriver*) {
 		return;
 	}
 
-	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
+	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.m_samples, ADC_BUF_DEPTH_FAST);
 	chSysUnlockFromISR()
 	;
 	fastAdc.conversionCount++;
@@ -195,7 +195,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 // todo if ADC_BUF_DEPTH_FAST EQ 1
 //		return fastAdc.samples[internalIndex];
-		int value = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
+		int value = getAvgAdcValue(internalIndex, fastAdc.m_samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
 		return value;
 	}
 #endif // EFI_USE_FAST_ADC
@@ -236,8 +236,8 @@ int AdcDevice::getAdcValueByIndex(int internalIndex) const {
 	return values.adc_data[internalIndex];
 }
 
-void AdcDevice::init(void) {
-	hwConfig->num_channels = size();
+void AdcDevice::init() {
+	m_hwConfig->num_channels = size();
 	/* driver does this internally */
 	//hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
 }
@@ -267,18 +267,18 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
 	if (logicChannel < 6) {
-		hwConfig->sqr3 |= channelAdcIndex << (5 * logicChannel);
+		m_hwConfig->sqr3 |= channelAdcIndex << (5 * logicChannel);
 	} else if (logicChannel < 12) {
-		hwConfig->sqr2 |= channelAdcIndex << (5 * (logicChannel - 6));
+		m_hwConfig->sqr2 |= channelAdcIndex << (5 * (logicChannel - 6));
 	} else if (logicChannel < 18) {
-		hwConfig->sqr1 |= channelAdcIndex << (5 * (logicChannel - 12));
+		m_hwConfig->sqr1 |= channelAdcIndex << (5 * (logicChannel - 12));
 	}
 #if ADC_MAX_CHANNELS_COUNT > 16
 	else if (logicChannel < 24) {
-		hwConfig->sqr4 |= channelAdcIndex << (5 * (logicChannel - 18));
+		m_hwConfig->sqr4 |= channelAdcIndex << (5 * (logicChannel - 18));
 	}
 	else if (logicChannel < 30) {
-		hwConfig->sqr5 |= channelAdcIndex << (5 * (logicChannel - 24));
+		m_hwConfig->sqr5 |= channelAdcIndex << (5 * (logicChannel - 24));
 	}
 #endif /* ADC_MAX_CHANNELS_COUNT */
 }
@@ -308,7 +308,7 @@ void printFullAdcReport(void) {
 		if (isAdcChannelValid(hwIndex)) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
-			int adcValue = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
+			int adcValue = getAvgAdcValue(internalIndex, fastAdc.m_samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
 			float volts = adcToVolts(adcValue);
 			/* Human index starts from 1 */
 			efiPrintf(" F ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",

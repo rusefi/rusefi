@@ -34,19 +34,20 @@ public:
 	uint8_t internalAdcIndexByHardwareIndex[EFI_ADC_LAST_CHANNEL];
 	bool isHwUsed(adc_channel_e hwChannel) const;
 	int size() const;
-	void init(void);
+	void init();
 	uint32_t conversionCount = 0;
 	uint32_t errorsCount = 0;
 	int getAdcValueByIndex(int internalIndex) const;
 
-	adcsample_t *samples;
-	size_t buf_len;
+	adcsample_t* const m_samples;
 
 	int getAdcValueByHwChannel(adc_channel_e hwChannel) const;
 
 	adc_state values;
 private:
-	ADCConversionGroup* hwConfig;
+	ADCConversionGroup* const m_hwConfig;
+	const size_t m_buf_len;
+
 	/**
 	 * Number of ADC channels in use
 	 */
