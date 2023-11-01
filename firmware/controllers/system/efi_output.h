@@ -12,8 +12,8 @@
 // This class acts as a boolean, but has a switch counter inside
 class SwitchedState {
 public:
-    SwitchedState(int8_t *state) {
-        this->state = state;
+    SwitchedState(int8_t *p_state) {
+        state = p_state;
     }
 
     // returns true if the state has been changed

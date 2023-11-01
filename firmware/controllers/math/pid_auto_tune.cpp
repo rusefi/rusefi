@@ -97,11 +97,11 @@ double inline PID_AutoTune::fastArcTan(double x)
   return x / (1.0 + 0.28125 * pow(x, 2));
 }
 
-double PID_AutoTune::calculatePhaseLag(double inducedAmplitude)
+double PID_AutoTune::calculatePhaseLag(double p_inducedAmplitude)
 {
   // calculate phase lag
   // NB hysteresis = 2 * noiseBand;
-  double ratio = 2.0 * workingNoiseBand / inducedAmplitude;
+  double ratio = 2.0 * workingNoiseBand / p_inducedAmplitude;
   if (ratio > 1.0)
   {
     return CONST_PI / 2.0;
@@ -113,8 +113,8 @@ double PID_AutoTune::calculatePhaseLag(double inducedAmplitude)
   }
 }
 
-void PID_AutoTune::setState(PidAutoTune_AutoTunerState state) {
-	this->state = state;
+void PID_AutoTune::setState(PidAutoTune_AutoTunerState p_state) {
+	this->state = p_state;
 	efiPrintf("setState %s", getPidAutoTune_AutoTunerState(state));
 #if EFI_UNIT_TEST
 	if (verboseMode)
@@ -122,8 +122,8 @@ void PID_AutoTune::setState(PidAutoTune_AutoTunerState state) {
 #endif /* EFI_UNIT_TEST */
 }
 
-void PID_AutoTune::setPeakType(PidAutoTune_Peak peakType) {
-	this->peakType = peakType;
+void PID_AutoTune::setPeakType(PidAutoTune_Peak p_peakType) {
+	this->peakType = p_peakType;
 	efiPrintf("setPeakType %s", getPidAutoTune_Peak(peakType));
 #if EFI_UNIT_TEST
 	if (verboseMode)
@@ -134,10 +134,10 @@ void PID_AutoTune::setPeakType(PidAutoTune_Peak peakType) {
 /**
  * returns true when done, otherwise returns false
  */
-bool PID_AutoTune::Runtime(Logging *logger)
+bool PID_AutoTune::Runtime(Logging *p_logger)
 {
 
-	this->logger = logger; // a bit lazy but good enough
+	this->logger = p_logger; // a bit lazy but good enough
   // check ready for new input
   unsigned long now = getTimeNowMs();
 
@@ -821,8 +821,8 @@ float PID_AutoTune::GetKd() const
   return Kp * Td;
 }
 
-void PID_AutoTune::setOutput(float output) {
-	this->output = output;
+void PID_AutoTune::setOutput(float p_output) {
+	this->output = p_output;
 
 	efiPrintf("setOutput %f %s", output, getPidAutoTune_AutoTunerState(state));
 

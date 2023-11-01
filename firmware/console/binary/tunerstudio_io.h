@@ -80,7 +80,7 @@ private:
 // This class represents a channel for a physical async serial poart
 class SerialTsChannelBase : public TsChannelBase {
 public:
-	SerialTsChannelBase(const char *name) : TsChannelBase(name) {};
+	SerialTsChannelBase(const char *p_name) : TsChannelBase(p_name) {};
 	// Open the serial port with the specified baud rate
 	virtual void start(uint32_t baud) = 0;
 };

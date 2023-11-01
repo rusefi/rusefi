@@ -171,7 +171,7 @@ private:
   byte inputCount;
   float workingNoiseBand;
   float workingOutputstep;
-  float inducedAmplitude;
+//  float inducedAmplitude;
   float Kp, Ti, Td;
 
   // used by AMIGOf tuning rule

@@ -250,13 +250,13 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 	}
 }
 
-void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
-	criticalAssertVoid(engineConfiguration != NULL, "ec NULL");
-	efi::clear(engineConfiguration);
+void prepareVoidConfiguration(engine_configuration_s *p_engineConfiguration) {
+	criticalAssertVoid(p_engineConfiguration != NULL, "ec NULL");
+	efi::clear(p_engineConfiguration);
 
-	engineConfiguration->clutchDownPinMode = PI_PULLUP;
-	engineConfiguration->clutchUpPinMode = PI_PULLUP;
-	engineConfiguration->brakePedalPinMode = PI_PULLUP;
+	p_engineConfiguration->clutchDownPinMode = PI_PULLUP;
+	p_engineConfiguration->clutchUpPinMode = PI_PULLUP;
+	p_engineConfiguration->brakePedalPinMode = PI_PULLUP;
 }
 
 void setDefaultBasePins() {
@@ -1024,8 +1024,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	applyNonPersistentConfiguration();
 }
 
-void emptyCallbackWithConfiguration(engine_configuration_s * engineConfiguration) {
-	UNUSED(engineConfiguration);
+void emptyCallbackWithConfiguration(engine_configuration_s * p_engineConfiguration) {
+	UNUSED(p_engineConfiguration);
 }
 
 void resetConfigurationExt(engine_type_e engineType) {
