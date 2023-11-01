@@ -36,7 +36,7 @@ void setHellen121nissanVQ() {
 
 	engineConfiguration->trigger.type = trigger_type_e::TT_NISSAN_VQ35;
 
-	setNissanMAF0031(config);
+	setNissanMAF0031();
 
 	engineConfiguration->cylindersCount = 6;
 	engineConfiguration->firingOrder = FO_1_2_3_4_5_6;

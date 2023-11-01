@@ -11,14 +11,9 @@
 
 #pragma once
 
-
-void setBosch0280218037(persistent_config_s *engineConfiguration);
-void setBosch0280218004(persistent_config_s *engineConfiguration);
-
-void setDensoTODO(persistent_config_s *engineConfiguration);
-void setMazdaMiataNAMaf(persistent_config_s *e);
+void setBosch0280218037();
 
 /**
  * 22680-7S000
  */
-void setNissanMAF0031(persistent_config_s *engineConfiguration);
+void setNissanMAF0031();
