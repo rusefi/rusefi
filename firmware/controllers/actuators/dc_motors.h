@@ -74,5 +74,6 @@ public:
 	void stop() {
 		// todo: replace 'isStarted' with 'stop'
 	}
-
 };
+
+DcHardware *getdcHardware();

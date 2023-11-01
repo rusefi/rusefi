@@ -606,11 +606,9 @@ void updateTunerStudioState() {
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 	static_assert(offsetof (TunerStudioOutputChannels, tsConfigVersion) == TS_FILE_VERSION_OFFSET);
 
-DcHardware *getdcHardware();
-
-    DcHardware *dc = getdcHardware();
-    engine->dc_motors.dcOutput0 = dc->dcMotor.get();
-    engine->dc_motors.isEnabled0_int = dc->msg() == nullptr;
+	DcHardware *dc = getdcHardware();
+	engine->dc_motors.dcOutput0 = dc->dcMotor.get();
+	engine->dc_motors.isEnabled0_int = dc->msg() == nullptr;
 
 	tsOutputChannels->RPMValue = rpm;
 #if EFI_SHAFT_POSITION_INPUT
