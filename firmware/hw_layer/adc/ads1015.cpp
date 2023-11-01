@@ -31,10 +31,10 @@ void Ads1015::readChannels(float (&result)[4]) {
 	}
 }
 
-float Ads1015::readChannel(uint8_t ch) {
+float Ads1015::readChannel(uint8_t channel) {
 	// set the channel
 	// set to +-6.144v full scale, fastest sampling, manual conversion start
-	writeReg(ADS1015_CONFIG, 0xC1E0 | ch << 12);
+	writeReg(ADS1015_CONFIG, 0xC1E0 | channel << 12);
 
 	// Wait for conversion to complete
 	// Bit is cleared while conversion is ongoing, set when done
