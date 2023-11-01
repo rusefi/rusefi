@@ -219,6 +219,23 @@ enum class FlashState {
 	BlankChip,
 };
 
+static FlashState validatePersistentState() {
+	auto flashCrc = flashStateCrc(persistentState);
+
+	if (flashCrc != persistentState.crc) {
+		// If the stored crc is all 1s, that probably means the flash is actually blank, not that the crc failed.
+		if (persistentState.crc == ((decltype(persistentState.crc))-1)) {
+			return FlashState::BlankChip;
+		} else {
+			return FlashState::CrcFailed;
+		}
+	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState)) {
+		return FlashState::IncompatibleVersion;
+	} else {
+        return FlashState::Ok;
+    }
+}
+
 /**
  * Read single copy of rusEFI configuration from flash
  */
@@ -232,20 +249,7 @@ static FlashState readOneConfigurationCopy(flashaddr_t address) {
 
 	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
 
-	auto flashCrc = flashStateCrc(persistentState);
-
-	if (flashCrc != persistentState.crc) {
-		// If the stored crc is all 1s, that probably means the flash is actually blank, not that the crc failed.
-		if (persistentState.crc == ((decltype(persistentState.crc))-1)) {
-			return FlashState::BlankChip;
-		} else {
-			return FlashState::CrcFailed;
-		}
-	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState)) {
-		return FlashState::IncompatibleVersion;
-	} else {
-		return FlashState::Ok;
-	}
+	return validatePersistentState();
 }
 
 /**
@@ -264,22 +268,7 @@ static FlashState readConfiguration() {
 		// readed size is not exactly the same
 		if (settings_size != sizeof(persistentState))
 			return FlashState::IncompatibleVersion;
-		// claimed size or version is not the same
-		if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState))
-			return FlashState::IncompatibleVersion;
-
-		// now crc
-		auto flashCrc = flashStateCrc(persistentState);
-
-		if (flashCrc != persistentState.crc) {
-			// If the stored crc is all 1s, that probably means the flash is actually blank, not that the crc failed.
-			if (persistentState.crc == ((decltype(persistentState.crc))-1)) {
-				return FlashState::BlankChip;
-			} else {
-				return FlashState::CrcFailed;
-			}
-		}
-		return FlashState::Ok;
+		return validatePersistentState();
 	} else {
 		return FlashState::BlankChip;
 	}
