@@ -85,7 +85,7 @@
 static DcHardware dcHardware[ETB_COUNT + DC_PER_STEPPER];
 
 DcHardware *getdcHardware() {
-    return &dcHardware[0];
+	return &dcHardware[0];
 }
 
 DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
