@@ -43,13 +43,13 @@ void LogField::writeHeader(Writer& outBuffer) const {
 	buffer[54] = m_digits;
 
 	// Offset 55, (optional) category string
-	memset(&buffer[55], 0, 34);
 	if (m_category) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-truncation"
-		// strncpy's exclusion of null terminator is correct and appropriate behavior for this field
-		strncpy(&buffer[55], m_category, 34);
-#pragma GCC diagnostic pop
+		size_t categoryLength = strlen(m_category);
+		size_t lengthAfterCategory = 34 - categoryLength;
+		memcpy(&buffer[55], m_category, categoryLength);
+		memset(&buffer[55] + categoryLength, 0, lengthAfterCategory);
+	} else {
+		memset(&buffer[55], 0, 34);
 	}
 
 	// Total size = 89
