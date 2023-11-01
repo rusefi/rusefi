@@ -218,7 +218,7 @@ adcsample_t getFastAdc(FastAdcToken token) {
 		return 0;
 	}
 
-	return fastAdc.samples[token];
+	return fastAdc.m_samples[token];
 }
 
 #endif
