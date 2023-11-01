@@ -61,7 +61,7 @@ static void flexExtiCallback(void*, efitick_t nowNt) {
 // https://rusefi.com/forum/viewtopic.php?p=37452#p37452
 
 void initFlexSensor() {
-	auto flexPin = engineConfiguration->flexSensorPin;
+	flexPin = engineConfiguration->flexSensorPin;
 	if (!isBrainPinValid(flexPin)) {
 		return;
 	}
