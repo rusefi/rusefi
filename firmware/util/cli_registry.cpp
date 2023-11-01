@@ -41,8 +41,8 @@ void resetConsoleActions(void) {
 static void doAddAction(const char *token, action_type_e type, Void callback, void *param) {
 #if !defined(EFI_DISABLE_CONSOLE_ACTIONS)
 	for (uint32_t i = 0; i < efiStrlen(token);i++) {
-		char ch = token[i];
-		if (isupper(ch)) {
+		char c = token[i];
+		if (isupper(c)) {
 			firmwareError(ObdCode::CUSTOM_ERR_COMMAND_LOWER_CASE_EXPECTED, "lowerCase expected [%s]", token);
 		}
 	}
