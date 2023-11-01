@@ -138,19 +138,19 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 }
 
 void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {
-	this->targetSkipRatio = targetSkipRatio;
+	m_targetSkipRatio = targetSkipRatio;
 }
 
 static tinymt32_t tinymt;
 
 bool SoftSparkLimiter::shouldSkip()  {
-	if (targetSkipRatio == 0 || wasJustSkipped) {
+	if (m_targetSkipRatio == 0 || wasJustSkipped) {
 		wasJustSkipped = false;
 		return false;
 	}
 
 	float r = tinymt32_generate_float(&tinymt);
-	wasJustSkipped = r < 2 * targetSkipRatio;
+	wasJustSkipped = r < 2 * m_targetSkipRatio;
 	return wasJustSkipped;
 }
 

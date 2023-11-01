@@ -233,13 +233,13 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 	}
 }
 
-void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
-	efi::clear(engineConfiguration);
+void prepareVoidConfiguration(engine_configuration_s *cfg) {
+	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, cfg != NULL, "ec NULL");
+	efi::clear(cfg);
 
-	engineConfiguration->clutchDownPinMode = PI_PULLUP;
-	engineConfiguration->clutchUpPinMode = PI_PULLUP;
-	engineConfiguration->brakePedalPinMode = PI_PULLUP;
+	cfg->clutchDownPinMode = PI_PULLUP;
+	cfg->clutchUpPinMode = PI_PULLUP;
+	cfg->brakePedalPinMode = PI_PULLUP;
 }
 
 void setDefaultBasePins() {
@@ -403,7 +403,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->can2BaudRate = B500KBPS;
 
 	engineConfiguration->mafSensorType = Bosch0280218037;
-	setBosch0280218037(config);
+	setBosch0280218037();
 
 	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canReadEnabled = true;
@@ -927,9 +927,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	applyNonPersistentConfiguration();
 }
 
-void emptyCallbackWithConfiguration(engine_configuration_s * engineConfiguration) {
-	UNUSED(engineConfiguration);
-}
+void emptyCallbackWithConfiguration(engine_configuration_s*) { }
 
 void resetConfigurationExt(engine_type_e engineType) {
 	resetConfigurationExt(&emptyCallbackWithConfiguration, engineType);

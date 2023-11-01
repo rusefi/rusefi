@@ -47,5 +47,5 @@ public:
 	bool shouldSkip();
 private:
 	bool wasJustSkipped = false;
-	float targetSkipRatio = 0;
+	float m_targetSkipRatio = 0;
 };
