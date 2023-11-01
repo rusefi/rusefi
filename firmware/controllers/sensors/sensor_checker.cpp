@@ -186,7 +186,7 @@ void SensorChecker::onSlowCallback() {
 		InjectorOutputPin& pin = enginePins.injectors[i];
 
 		// Skip not-configured pins
-		if (!isBrainPinValid(pin.brainPin)) {
+		if (!pin.isInitialized()) {
 			continue;
 		}
 
@@ -208,7 +208,7 @@ void SensorChecker::onSlowCallback() {
 		IgnitionOutputPin& pin = enginePins.coils[i];
 
 		// Skip not-configured pins
-		if (!isBrainPinValid(pin.brainPin)) {
+		if (!pin.isInitialized()) {
 			continue;
 		}
 

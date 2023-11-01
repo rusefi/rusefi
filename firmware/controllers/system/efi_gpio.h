@@ -48,8 +48,11 @@ public:
 	void init();
 	void unregister();
 	RegisteredOutputPin* const next;
-	const char *registrationName;
+	const char* getRegistrationName() const {
+		return m_registrationName;
+	}
 private:
+	const char* const m_registrationName;
 	const uint16_t m_pinOffset;
 	const bool m_hasPinMode;
 	const uint16_t m_pinModeOffset;
