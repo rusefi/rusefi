@@ -78,6 +78,8 @@ ifeq ($(USE_CPPOPT),)
   USE_CPPOPT = -std=c++2a -Wno-register -fno-rtti
 endif
 
+USE_CPPOPT += $(RUSEFI_CPPOPT)
+
 # Enable this if you want the linker to remove unused code and data.
 ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
