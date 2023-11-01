@@ -67,8 +67,8 @@ void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEd
 	shapeDefinitionError = false;
 	useOnlyPrimaryForSync = false;
 
-	this->operationMode = operationMode;
-	this->syncEdge = syncEdge;
+	m_operationMode = operationMode;
+	m_syncEdge = syncEdge;
 	triggerShapeSynchPointIndex = 0;
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
@@ -97,7 +97,7 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
  * @see getCrankDivider
  */
 angle_t TriggerWaveform::getCycleDuration() const {
-	switch (operationMode) {
+	switch (m_operationMode) {
 	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
 		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
@@ -142,7 +142,7 @@ size_t TriggerWaveform::getLength() const {
 	 * 2 for FOUR_STROKE_CRANK_SENSOR
 	 * 1 otherwise
 	 */
-	int multiplier = getEngineCycle(operationMode) / getCycleDuration();
+	int multiplier = getEngineCycle(m_operationMode) / getCycleDuration();
 	return multiplier * getSize();
 }
 
@@ -165,7 +165,7 @@ angle_t TriggerWaveform::getAngle(int index) const {
 
 void TriggerWaveform::addEventClamped(angle_t angle, bool stateParam, TriggerWheel const channelIndex, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight) {
-		addEvent(angle / getEngineCycle(operationMode), stateParam, channelIndex);
+		addEvent(angle / getEngineCycle(m_operationMode), stateParam, channelIndex);
 	}
 }
 
@@ -174,7 +174,7 @@ void TriggerWaveform::addEventClamped(angle_t angle, bool stateParam, TriggerWhe
  * needed to resolve precise mode for vague wheels
  */
 operation_mode_e TriggerWaveform::getWheelOperationMode() const {
-	return operationMode;
+	return m_operationMode;
 }
 
 #if EFI_UNIT_TEST
@@ -213,7 +213,7 @@ void TriggerWaveform::addEvent720(angle_t angle, bool state, TriggerWheel const 
 }
 
 void TriggerWaveform::addEvent360(angle_t angle, bool state, TriggerWheel const channelIndex) {
-	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
+	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, m_operationMode == FOUR_STROKE_CAM_SENSOR || m_operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
 	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
 
@@ -222,7 +222,7 @@ void TriggerWaveform::addEventAngle(angle_t angle, bool state, TriggerWheel cons
 }
 
 void TriggerWaveform::addEvent(angle_t angle, bool state, TriggerWheel const channelIndex) {
-	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
+	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, m_operationMode != OM_NONE, "operationMode not set");
 
 	if (channelIndex == TriggerWheel:: T_SECONDARY) {
 		needSecondTriggerInput = true;

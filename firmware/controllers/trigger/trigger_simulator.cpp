@@ -70,10 +70,10 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 	constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING };
 	constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING };
 
-	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
-			bool currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
-			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
+	for (size_t j = 0; j < PWM_PHASE_MAX_WAVE_PER_PWM; j++) {
+		if (needEvent(stateIndex, multiChannelStateSequence, j)) {
+			bool currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/j, stateIndex);
+			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[j];
 			if (isUsefulSignal(event, shape)) {
 				state.decodeTriggerEvent(
 					"sim",

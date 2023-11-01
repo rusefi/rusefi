@@ -143,7 +143,7 @@ public:
 	bool useOnlyPrimaryForSync;
 
 	// Which edge(s) to consider for finding the sync point: rise, fall, or both
-	SyncEdge syncEdge;
+	SyncEdge m_syncEdge;
 
 	// If true, falling edges should be fully ignored on this trigger shape.
 	bool useOnlyRisingEdges;
@@ -264,7 +264,7 @@ private:
 	/**
 	 * this is part of performance optimization
 	 */
-	operation_mode_e operationMode;
+	operation_mode_e m_operationMode;
 };
 
 /**

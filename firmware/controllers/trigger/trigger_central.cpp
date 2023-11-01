@@ -676,7 +676,7 @@ static void triggerShapeInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	TriggerWaveform *shape = &getTriggerCentral()->triggerShape;
 	TriggerFormDetails *triggerFormDetails = &getTriggerCentral()->triggerFormDetails;
-	efiPrintf("syncEdge=%s", getSyncEdge(TRIGGER_WAVEFORM(syncEdge)));
+	efiPrintf("syncEdge=%s", getSyncEdge(TRIGGER_WAVEFORM(m_syncEdge)));
 	efiPrintf("gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
 
 	for (size_t i = 0; i < shape->getSize(); i++) {
@@ -705,7 +705,7 @@ void triggerInfo(void) {
 	efiPrintf("Template %s (%d) trigger %s (%d) syncEdge=%s tdcOffset=%.2f",
 			getEngine_type_e(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
-			getSyncEdge(TRIGGER_WAVEFORM(syncEdge)), TRIGGER_WAVEFORM(tdcPosition));
+			getSyncEdge(TRIGGER_WAVEFORM(m_syncEdge)), TRIGGER_WAVEFORM(tdcPosition));
 
 	if (engineConfiguration->trigger.type == trigger_type_e::TT_TOOTHED_WHEEL) {
 		efiPrintf("total %d/skipped %d", engineConfiguration->trigger.customTotalToothCount,
@@ -834,9 +834,9 @@ void onConfigurationChangeTriggerCallback() {
 	getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange = getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange || changed;
 }
 
-static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
-	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
-	shape.initializeSyncPoint(initState, config);
+static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& triggerConfig, TriggerDecoderBase &initState) {
+	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, triggerConfig);
+	shape.initializeSyncPoint(initState, triggerConfig);
 }
 
 void TriggerCentral::validateCamVvtCounters() {

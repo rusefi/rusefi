@@ -350,7 +350,7 @@ static bool shouldConsiderEdge(const TriggerWaveform& triggerShape, TriggerWheel
 		return false;
 	}
 
-	switch (triggerShape.syncEdge) {
+	switch (triggerShape.m_syncEdge) {
 		case SyncEdge::Both: return true;
 		case SyncEdge::RiseOnly:
 		case SyncEdge::Rise: return isRising;
