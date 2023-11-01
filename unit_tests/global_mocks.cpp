@@ -8,6 +8,12 @@
 
 bool verboseMode = false;
 
+efitimems_t mockTimeMs = 0;
+
+efitimems_t getTimeNowMs(void) {
+	return mockTimeMs;
+}
+
 void initLogging(LoggingWithStorage *logging, const char *name) {
 }
 
