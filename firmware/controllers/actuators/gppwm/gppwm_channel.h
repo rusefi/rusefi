@@ -17,7 +17,7 @@ struct GppwmResult {
 
 class GppwmChannel {
 public:
-	void init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config);
+	void init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* cfg);
 	GppwmResult update();
 	GppwmResult getOutput() const;
 

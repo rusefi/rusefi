@@ -223,8 +223,8 @@ int findEndOfToken(const char *line) {
 int tokenLength(const char *msgp) {
 	int result = 0;
 	while (*msgp) {
-		char ch = *msgp++;
-		if (ch == SPACE_CHAR) {
+		char c = *msgp++;
+		if (c == SPACE_CHAR) {
 			break;
 		}
 		result++;

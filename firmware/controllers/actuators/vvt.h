@@ -38,11 +38,11 @@ public:
 	void setOutput(expected<percent_t> outputValue) override;
 
 private:
-	const int index = 0;
+	const int m_index;
 	// Bank index, 0 or 1
-	const uint8_t m_bank = 0;
+	const uint8_t m_bank;
 	// Cam index, 0 = intake, 1 = exhaust
-	const uint8_t m_cam = 0;
+	const uint8_t m_cam;
 
 	Pid m_pid;
 

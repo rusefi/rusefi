@@ -35,8 +35,8 @@ void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {
 }
 
 template <size_t TBufferSize>
-void LogBuffer<TBufferSize>:: writeLogger(Logging* logging) {
-	writeInternal(logging->buffer);
+void LogBuffer<TBufferSize>::writeLogger(Logging* logging) {
+	writeInternal(logging->m_buffer);
 }
 
 template <size_t TBufferSize>

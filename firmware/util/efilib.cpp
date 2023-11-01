@@ -91,16 +91,16 @@ int atoi(const char *string) {
 	int result = 0;
 
 	for (int i = 0; i < len; i++) {
-		char ch = string[i];
-		if (ch < '0' || ch > '9') {
+		char c = string[i];
+		if (c < '0' || c > '9') {
 			if (i > 0) {
 				break;
 			} else {
 				return ATOI_ERROR_CODE;
 			}
 		}
-		int c = ch - '0';
-		result = result * 10 + c;
+		int num = c - '0';
+		result = result * 10 + num;
 	}
 
 	return result;

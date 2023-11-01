@@ -18,7 +18,7 @@ static vvt_map_t vvtTable1;
 static vvt_map_t vvtTable2;
 
 VvtController::VvtController(int index, int bankIndex, int camIndex)
-	: index(index)
+	: m_index(index)
 	, m_bank(bankIndex)
 	, m_cam(camIndex)
 {
@@ -65,7 +65,7 @@ expected<angle_t> VvtController::getSetpoint() {
 	}
 
 #if EFI_TUNER_STUDIO
-	engine->outputChannels.vvtTargets[index] = target;
+	engine->outputChannels.vvtTargets[m_index] = target;
 #endif
 
 	vvtTarget = target;
@@ -105,7 +105,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	float retVal = m_pid.getOutput(target, observation);
 
 #if EFI_TUNER_STUDIO
-	m_pid.postState(engine->outputChannels.vvtStatus[index]);
+	m_pid.postState(engine->outputChannels.vvtStatus[m_index]);
 #endif /* EFI_TUNER_STUDIO */
 
 	return retVal;

@@ -45,7 +45,7 @@
 bool Logging::validateBuffer(uint32_t extraLen) {
 	if (remainingSize() < extraLen + 1) {
 #if EFI_PROD_CODE
-		warning(ObdCode::CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d", name, extraLen);
+		warning(ObdCode::CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d", m_name, extraLen);
 #endif /* EFI_PROD_CODE */
 		return true;
 	}
@@ -60,21 +60,21 @@ void Logging::append(const char *text) {
 	if (isCapacityProblem) {
 		return;
 	}
-	strcpy(linePointer, text);
+	strcpy(m_linePointer, text);
 	/**
 	 * And now we are pointing at the zero char at the end of the buffer again
 	 */
-	linePointer += extraLen;
+	m_linePointer += extraLen;
 }
 
 /**
  * @note This method if fast because it does not validate much, be sure what you are doing
  */
 void Logging::appendFast(const char *text) {
-	char *s = linePointer;
+	char *s = m_linePointer;
 	while ((*s++ = *text++) != 0)
 		;
-	linePointer = s - 1;
+	m_linePointer = s - 1;
 }
 
 void Logging::appendPrintf(const char *fmt, ...) {
@@ -84,14 +84,14 @@ void Logging::appendPrintf(const char *fmt, ...) {
 
 	va_list ap;
 	va_start(ap, fmt);
-	size_t written = chvsnprintf(linePointer, available, fmt, ap);
+	size_t written = chvsnprintf(m_linePointer, available, fmt, ap);
 	va_end(ap);
 
 	// chvnsprintf returns how many bytes WOULD HAVE been written if it fit,
 	// so clip it to the available space if necessary
-	linePointer += (written > available) ? available : written;
+	m_linePointer += (written > available) ? available : written;
 	// ensure buffer is always null terminated
-	buffer[bufferSize - 1] = '\0';
+	m_buffer[m_bufferSize - 1] = '\0';
 }
 
 void Logging::appendFloat(float value, int precision) {
@@ -126,17 +126,17 @@ void Logging::appendFloat(float value, int precision) {
 }
 
 void Logging::reset() {
-	linePointer = buffer;
-	*linePointer = 0;
+	m_linePointer = m_buffer;
+	*m_linePointer = 0;
 }
 
 Logging::Logging(char const *name, char *buffer, int bufferSize)
-	: name(name)
-	, buffer(buffer)
-	, bufferSize(bufferSize)
+	: m_name(name)
+	, m_buffer(buffer)
+	, m_bufferSize(bufferSize)
 {
 	reset();
 }
 
-LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {
+LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER)) {
 }

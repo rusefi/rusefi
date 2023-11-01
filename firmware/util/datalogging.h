@@ -25,43 +25,43 @@ public:
 	void appendFloat(float value, int precision);
 
 	void terminate() {
-		linePointer[0] = '\0';
+		m_linePointer[0] = '\0';
 	}
 
 	/**
 	 * This macro breaks the normal zero=termination constraint, please take care of this outside of this function
 	 */
 	void appendChar(char c) {
-		*linePointer = c;
-		linePointer++;
+		*m_linePointer = c;
+		m_linePointer++;
 	}
 
 	size_t loggingSize() const {
-		return (uintptr_t)linePointer - (uintptr_t)buffer;
+		return (uintptr_t)m_linePointer - (uintptr_t)m_buffer;
 	}
 
 	size_t remainingSize() const {
-		return bufferSize - loggingSize();
+		return m_bufferSize - loggingSize();
 	}
 
 //private:
 	bool validateBuffer(uint32_t extraLen);
 
-	const char* const name = nullptr;
+	const char* const m_name;
 
 	/**
 	 * Zero-terminated buffer of pending debug message
 	 *
 	 * Unless a larger external buffer is specified, this is just a pointer to DEFAULT_BUFFER
 	 */
-	char* const buffer = nullptr;
-	const int bufferSize = 0;
+	char* const m_buffer;
+	const int m_bufferSize;
 
 	/**
 	 * This pointer is always pointing at the position within the buffer into which next
 	 * write operation would append additional data
 	 */
-	char *linePointer = nullptr;
+	char* m_linePointer = nullptr;
 };
 
 class LoggingWithStorage : public Logging {
