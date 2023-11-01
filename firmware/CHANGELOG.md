@@ -42,6 +42,7 @@ Release template (copy/paste this for new release):
 ### Fixed
  - Changing idle stepper settings causes kernel panic
  - Data log channel "Fuel: Injection timing SOI" indicates correct values
+ - Flex sensor input
 
 ## October 2023 "Day 591"
 
