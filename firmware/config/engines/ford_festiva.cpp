@@ -68,8 +68,6 @@ void setFordEscortGt() {
 
 	engineConfiguration->trigger.type = trigger_type_e::TT_MAZDA_DOHC_1_4;
 
-	setDensoTODO(config);
-
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY);

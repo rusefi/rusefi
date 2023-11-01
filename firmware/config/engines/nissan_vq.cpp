@@ -32,7 +32,7 @@ void setHellen121nissanQR() {
 }
 
 static void setNissanVqEngineConfig() {
-	setNissanMAF0031(config);
+	setNissanMAF0031();
 	engineConfiguration->trigger.type = trigger_type_e::TT_NISSAN_VQ35;
 
 	engineConfiguration->cylindersCount = 6;
