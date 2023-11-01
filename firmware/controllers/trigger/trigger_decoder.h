@@ -47,14 +47,18 @@ protected:
 
 class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
-	const int index;
-
-	VvtTriggerConfiguration(const char * prefix, const int index) : TriggerConfiguration(prefix), index(index) {
+	VvtTriggerConfiguration(const char * prefix, const int index)
+		: TriggerConfiguration(prefix)
+		, m_index(index)
+	{
 	}
 
 protected:
 	bool isVerboseTriggerSynchDetails() const override;
 	trigger_config_s getType() const override;
+
+private:
+	const int m_index;
 };
 
 typedef struct {
@@ -133,7 +137,6 @@ public:
 	efitick_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
-	const char* const name;
 
 	/**
 	 * how many times since ECU reboot we had unexpected number of teeth in trigger cycle
@@ -169,6 +172,8 @@ protected:
 
 	virtual void onNotEnoughTeeth(int, int) { }
 	virtual void onTooManyTeeth(int, int) { }
+
+	const char* const m_name;
 
 private:
 	void resetCurrentCycleState();

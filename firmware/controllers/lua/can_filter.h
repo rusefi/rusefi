@@ -14,8 +14,8 @@ struct CanFilter {
 	CanBusIndex Bus;
 	int Callback;
 
-	bool accept(int Id) {
-		return (Id & this->Mask) == this->Id;
+	bool accept(int id) {
+		return (id & this->Mask) == this->Id;
 	}
 };
 

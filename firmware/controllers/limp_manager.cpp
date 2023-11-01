@@ -249,20 +249,20 @@ bool LimpManager::allowTriggerInput() const {
 
 LimpState LimpManager::allowInjection() const {
 	if (!m_allowInjection) {
-		return {false, m_allowInjection.clearReason};
+		return {false, m_allowInjection.why()};
 	}
 	if (!m_transientAllowInjection) {
-		return {false, m_transientAllowInjection.clearReason};
+		return {false, m_transientAllowInjection.why()};
 	}
 	return {true, ClearReason::None};
 }
 
 LimpState LimpManager::allowIgnition() const {
 	if (!m_allowIgnition) {
-		return {false, m_allowIgnition.clearReason};
+		return {false, m_allowIgnition.why()};
 	}
 	if (!m_transientAllowIgnition) {
-		return {false, m_transientAllowIgnition.clearReason};
+		return {false, m_transientAllowIgnition.why()};
 	}
 	return {true, ClearReason::None};
 }

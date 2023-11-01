@@ -208,7 +208,7 @@ bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
 
 trigger_config_s VvtTriggerConfiguration::getType() const {
 	// Convert from VVT type to trigger_config_s
-	return { getVvtTriggerType(engineConfiguration->vvtMode[index]), 0, 0 };
+	return { getVvtTriggerType(engineConfiguration->vvtMode[m_index]), 0, 0 };
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {

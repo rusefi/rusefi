@@ -25,7 +25,7 @@ class fifo_buffer : public cyclic_buffer<T, maxSize> {
 	using cyclic_buffer<T, maxSize>::add;
 	using cyclic_buffer<T, maxSize>::getSize;
 	using cyclic_buffer<T, maxSize>::elements;
-	using cyclic_buffer<T, maxSize>::size, cyclic_buffer<T, maxSize>::count;
+	using cyclic_buffer<T, maxSize>::m_size, cyclic_buffer<T, maxSize>::count;
 
 public:
 	fifo_buffer() : currentIndexRead(0) {
@@ -84,7 +84,7 @@ template<typename T, size_t maxSize>
 T fifo_buffer<T, maxSize>::get() {
 	T &ret = (T &)elements[currentIndexRead];
 	if (!isEmpty()) {
-		currentIndexRead = (currentIndexRead + 1) % size;
+		currentIndexRead = (currentIndexRead + 1) % m_size;
 		count--;
 	}
 	return ret;

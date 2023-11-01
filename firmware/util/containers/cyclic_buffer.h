@@ -40,7 +40,7 @@ class cyclic_buffer
     uint16_t currentIndex;
 
   protected:
-    uint16_t size;
+    size_t m_size;
     /**
      * number of elements added into this buffer, would be eventually bigger then size
      */
@@ -64,7 +64,7 @@ void cyclic_buffer<T, maxSize>::add(T value) {
 
 	((T &)elements[idx]) = value;
 
-	if (++idx == size) {
+	if (++idx == m_size) {
 		idx = 0;
 	}
 	currentIndex = idx;
@@ -85,12 +85,12 @@ bool cyclic_buffer<T, maxSize>::contains(T value) const {
 template<typename T, size_t maxSize>
 void cyclic_buffer<T, maxSize>::setSize(size_t size) {
 	clear();
-	this->size = size < maxSize ? size : maxSize;
+	m_size = size < maxSize ? size : maxSize;
 }
 
 template<typename T, size_t maxSize>
 int cyclic_buffer<T, maxSize>::getSize() const {
-	return size;
+	return m_size;
 }
 
 template<typename T, size_t maxSize>
@@ -101,10 +101,10 @@ int cyclic_buffer<T, maxSize>::getCount() const {
 template<typename T, size_t maxSize>
 T cyclic_buffer<T, maxSize>::get(int index) const {
 	while (index < 0) {
-		index += size;
+		index += m_size;
 	}
-	while (index >= size) {
-		index -= size;
+	while (index >= m_size) {
+		index -= m_size;
 	}
 	return elements[index];
 }
@@ -120,7 +120,7 @@ T cyclic_buffer<T, maxSize>::maxValue(size_t length) const {
 	for (size_t i = 0; i < length; ++i) {
 		int index = ci - i - 1;
 		while (index < 0) {
-			index += size;
+			index += m_size;
 		}
 
 		if (elements[index] > result) {
@@ -140,7 +140,7 @@ T cyclic_buffer<T, maxSize>::minValue(size_t length) const {
 	for (size_t i = 0; i < length; ++i) {
 		int index = ci - i - 1;
 		while (index < 0) {
-			index += size;
+			index += m_size;
 		}
 
 		if (elements[index] < result) {
@@ -162,7 +162,7 @@ T cyclic_buffer<T, maxSize>::sum(size_t length) const {
 	for (size_t i = 0; i < length; ++i) {
 		int index = ci - i - 1;
 		while (index < 0) {
-			index += size;
+			index += m_size;
 		}
 
 		result += elements[index];

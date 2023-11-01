@@ -50,14 +50,14 @@ public:
 	Clearable() : m_value(true) {}
 	Clearable(bool value) : m_value(value) {
 		if (!m_value) {
-			clearReason = ClearReason::Settings;
+			m_clearReason = ClearReason::Settings;
 		}
 	}
 
 	void clear(ClearReason clearReason) {
 		if (m_value) {
 			m_value = false;
-			this->clearReason = clearReason;
+			m_clearReason = clearReason;
 		}
 	}
 
@@ -65,9 +65,13 @@ public:
 		return m_value;
 	}
 
-	ClearReason clearReason = ClearReason::None;
+	ClearReason why() const {
+		return m_clearReason;
+	}
+
 private:
 	bool m_value = true;
+	ClearReason m_clearReason = ClearReason::None;
 };
 
 struct LimpState {

@@ -48,7 +48,7 @@
 #include "trigger_simulator.h"
 
 TriggerDecoderBase::TriggerDecoderBase(const char* name)
-	: name(name)
+	: m_name(name)
 {
 	resetState();
 }
@@ -293,11 +293,11 @@ case SHAFT_SECONDARY_RISING:
 }
 
 void VvtTriggerDecoder::onNotEnoughTeeth(int actual, int expected) {
-	warning(ObdCode::CUSTOM_CAM_NOT_ENOUGH_TEETH, "cam %s trigger error: not enough teeth between sync points: actual %d expected %d", name, actual, expected);
+	warning(ObdCode::CUSTOM_CAM_NOT_ENOUGH_TEETH, "cam %s trigger error: not enough teeth between sync points: actual %d expected %d", m_name, actual, expected);
 }
 
 void VvtTriggerDecoder::onTooManyTeeth(int actual, int expected) {
-	warning(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, "cam %s trigger error: too many teeth between sync points: %d > %d", name, actual, expected);
+	warning(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, "cam %s trigger error: too many teeth between sync points: %d > %d", m_name, actual, expected);
 }
 
 bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerShape) const {
