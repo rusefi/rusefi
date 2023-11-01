@@ -156,9 +156,9 @@ adc_channel_e getAdcChannelForTrigger(void) {
 }
 
 void addAdcChannelForTrigger(void) {
-	adc_channel_e ch = getAdcChannelForTrigger();
+	adc_channel_e channel = getAdcChannelForTrigger();
 	if (isAdcChannelValid(ch)) {
-		addChannel("TRIG", ch, ADC_FAST);
+		addChannel("TRIG", channel, ADC_FAST);
 	}
 }
 
