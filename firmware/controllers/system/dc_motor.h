@@ -37,7 +37,12 @@ public:
 
 	virtual bool isOpenDirection() const = 0;
 
-    const char *msg = nullptr;
+	const char* msg() const {
+		return m_msg;
+	}
+
+protected:
+	const char* m_msg = nullptr;
 };
 
 struct IPwm;
