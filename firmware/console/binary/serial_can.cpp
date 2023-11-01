@@ -246,11 +246,10 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	while (numBytes > 0) {
 		int len = minI(numBytes, 7);
 		// send the consecutive frames
-		IsoTpFrameHeader header;
 		header.frameType = ISO_TP_FRAME_CONSECUTIVE;
 		header.index = ((idx++) & 0x0f);
 		header.numBytes = len;
-		int numSent = sendFrame(header, txbuf + offset, len, timeout);
+		numSent = sendFrame(header, txbuf + offset, len, timeout);
 		if (numSent < 1)
 			break;
 		totalNumSent += numSent;
