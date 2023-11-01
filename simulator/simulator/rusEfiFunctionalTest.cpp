@@ -67,19 +67,19 @@ static void runChprintfTest() {
 		LoggingWithStorage testLogging("test");
 		testLogging.appendFloat(1.23, 5);
 		testLogging.appendFloat(1.234, 2);
-		assertString(testLogging.buffer, "1.230001.23");
+		assertString(testLogging.m_buffer, "1.230001.23");
 
 	}
 
 	{
 		LoggingWithStorage testLogging("test");
 		testLogging.appendFloat(-1.23, 5);
-		assertString(testLogging.buffer, "-1.23000");
+		assertString(testLogging.m_buffer, "-1.23000");
 	}
 	{
 		LoggingWithStorage testLogging("test");
 		testLogging.appendPrintf( "a%.2fb%fc", -1.2, -3.4);
-		assertString(testLogging.buffer, "a-1.20b-3.400000095c");
+		assertString(testLogging.m_buffer, "a-1.20b-3.400000095c");
 	}
 
 }
