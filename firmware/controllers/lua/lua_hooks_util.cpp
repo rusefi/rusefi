@@ -40,42 +40,42 @@ void configureRusefiLuaUtilHooks(lua_State* l) {
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "interpolate", lua_interpolate);
 
-	lua_register(l, "findCurveIndex", [](lua_State* l) {
-		auto name = luaL_checklstring(l, 1, nullptr);
+	lua_register(l, "findCurveIndex", [](lua_State* l2) {
+		auto name = luaL_checklstring(l2, 1, nullptr);
 		auto result = getCurveIndexByName(name);
 		if (!result) {
-			lua_pushnil(l);
+			lua_pushnil(l2);
 		} else {
 			// TS counts curve from 1 so convert indexing here
-			lua_pushnumber(l, result.Value + HUMAN_OFFSET);
+			lua_pushnumber(l2, result.Value + HUMAN_OFFSET);
 		}
 		return 1;
 	});
 
 	lua_register(l, "findTableIndex",
-			[](lua_State* l) {
-			auto name = luaL_checklstring(l, 1, nullptr);
+			[](lua_State* l2) {
+			auto name = luaL_checklstring(l2, 1, nullptr);
 			auto index = getTableIndexByName(name);
 			if (!index) {
-				lua_pushnil(l);
+				lua_pushnil(l2);
 			} else {
 				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, index.Value + HUMAN_OFFSET);
+				lua_pushnumber(l2, index.Value + HUMAN_OFFSET);
 			}
 			return 1;
 	});
 
 	lua_register(l, "findSetting",
-			[](lua_State* l) {
-			auto name = luaL_checklstring(l, 1, nullptr);
-			auto defaultValue = luaL_checknumber(l, 2);
+			[](lua_State* l2) {
+			auto name = luaL_checklstring(l2, 1, nullptr);
+			auto defaultValue = luaL_checknumber(l2, 2);
 
 			auto index = getSettingIndexByName(name);
 			if (!index) {
-				lua_pushnumber(l, defaultValue);
+				lua_pushnumber(l2, defaultValue);
 			} else {
 				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, engineConfiguration->scriptSetting[index.Value]);
+				lua_pushnumber(l2, engineConfiguration->scriptSetting[index.Value]);
 			}
 			return 1;
 	});
