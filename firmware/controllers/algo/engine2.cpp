@@ -138,18 +138,18 @@ void EngineState::periodicFastCallback() {
 	auto tps = Sensor::get(SensorType::Tps1);
 	updateTChargeK(rpm, tps.value_or(0));
 
-	float injectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
+	float l_injectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
 	auto clResult = fuelClosedLoopCorrection();
 
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
-	engine->engineState.injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMass);
+	engine->engineState.injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(l_injectionMass);
 
 	float fuelLoad = getFuelingLoad();
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 	engine->lambdaMonitor.update(rpm, fuelLoad);
 
-	float ignitionLoad = getIgnitionLoad();
-	float baseAdvance = getAdvance(rpm, ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
+	float l_ignitionLoad = getIgnitionLoad();
+	float baseAdvance = getAdvance(rpm, l_ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
 	float correctedIgnitionAdvance = baseAdvance
 			// Pull any extra timing for knock retard
 			- engine->module<KnockController>()->getKnockRetard()
@@ -173,9 +173,9 @@ void EngineState::periodicFastCallback() {
 		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
 
 		// Apply both per-bank and per-cylinder trims
-		engine->engineState.injectionMass[i] = injectionMass * bankTrim * cylinderTrim;
+		engine->engineState.injectionMass[i] = l_injectionMass * bankTrim * cylinderTrim;
 
-		timingAdvance[i] = correctedIgnitionAdvance + getCombinedCylinderIgnitionTrim(i, rpm, ignitionLoad);
+		timingAdvance[i] = correctedIgnitionAdvance + getCombinedCylinderIgnitionTrim(i, rpm, l_ignitionLoad);
 	}
 
 	shouldUpdateInjectionTiming = getInjectorDutyCycle(rpm) < 90;
