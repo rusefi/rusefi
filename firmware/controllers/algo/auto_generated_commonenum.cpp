@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu Sep 14 21:43:52 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Nov 01 21:34:20 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -46,36 +46,6 @@ case INJ_None:
   return "INJ_None";
 case INJ_PolynomialAdder:
   return "INJ_PolynomialAdder";
-  }
- return NULL;
-}
-const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value){
-switch(value) {
-case AUTOTUNER_OFF:
-  return "AUTOTUNER_OFF";
-case CONVERGED:
-  return "CONVERGED";
-case FAILED:
-  return "FAILED";
-case RELAY_STEP_DOWN:
-  return "RELAY_STEP_DOWN";
-case RELAY_STEP_UP:
-  return "RELAY_STEP_UP";
-case STEADY_STATE_AFTER_STEP_UP:
-  return "STEADY_STATE_AFTER_STEP_UP";
-case STEADY_STATE_AT_BASELINE:
-  return "STEADY_STATE_AT_BASELINE";
-  }
- return NULL;
-}
-const char *getPidAutoTune_Peak(PidAutoTune_Peak value){
-switch(value) {
-case MAXIMUM:
-  return "MAXIMUM";
-case MINIMUM:
-  return "MINIMUM";
-case NOT_A_PEAK:
-  return "NOT_A_PEAK";
   }
  return NULL;
 }

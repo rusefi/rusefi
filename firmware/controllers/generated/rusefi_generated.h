@@ -1027,16 +1027,6 @@
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
 #define persistent_config_s_size 23880
 #define pid_s_size 20
-#define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
-#define PidAutoTune_AutoTunerState_CONVERGED 16
-#define PidAutoTune_AutoTunerState_FAILED 128
-#define PidAutoTune_AutoTunerState_RELAY_STEP_DOWN 8
-#define PidAutoTune_AutoTunerState_RELAY_STEP_UP 4
-#define PidAutoTune_AutoTunerState_STEADY_STATE_AFTER_STEP_UP 2
-#define PidAutoTune_AutoTunerState_STEADY_STATE_AT_BASELINE 1
-#define PidAutoTune_Peak_MAXIMUM 1
-#define PidAutoTune_Peak_MINIMUM -1
-#define PidAutoTune_Peak_NOT_A_PEAK 0
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
 #define pin_input_mode_e_PI_DEFAULT 0
