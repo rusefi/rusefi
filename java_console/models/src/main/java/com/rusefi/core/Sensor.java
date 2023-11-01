@@ -37,6 +37,7 @@ public enum Sensor implements BinaryLogEntry {
     INT_TEMP(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, TsOutputs.INTERNALMCUTEMPERATURE, 1, 0, 5, "C"),
     CLT(GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.COOLANT, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
     IAT(GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.INTAKE, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
+    FUEL_TEMP(GAUGE_NAME_FUEL_TEMPERATURE, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.INTAKE, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
     AuxFreq1("AuxFreq1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.AUXSPEED1, 1, -40, 150, "Hz"),
     AuxFreq2("AuxFreq2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.AUXSPEED2, 1, -40, 150, "Hz"),
 //    AuxT1("AuxT1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
@@ -140,7 +141,7 @@ public enum Sensor implements BinaryLogEntry {
     rawIat("raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.RAWIAT, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
 
 //    tcuDesiredGear(GAUGE_NAME_DESIRED_GEAR, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 262, 1.0, 0, 100, "gear"),
-//    flexPercent(GAUGE_NAME_FLEX, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 263, 1.0 / 2, 0, 100, "%"),
+    flexPercent(GAUGE_NAME_FLEX, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.FLEXPERCENT, 1.0 / PACK_MULT_FLEX, 0, 100, "%"),
 
     wastegatePosition(GAUGE_NAME_WG_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.WASTEGATEPOSITIONSENSOR, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
     idlePositionSensor(GAUGE_NAME_IDLE_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.IDLEPOSITIONSENSOR, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
