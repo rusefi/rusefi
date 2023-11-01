@@ -50,7 +50,7 @@ class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
 	const int index;
 
-	VvtTriggerConfiguration(const char * prefix, const int index) : TriggerConfiguration(prefix), index(index) {
+	VvtTriggerConfiguration(const char * prefix, const int p_index) : TriggerConfiguration(prefix), index(p_index) {
 	}
 
 protected:
@@ -224,7 +224,7 @@ private:
 
 class VvtTriggerDecoder : public TriggerDecoderBase {
 public:
-	VvtTriggerDecoder(const char* name) : TriggerDecoderBase(name) { }
+	VvtTriggerDecoder(const char* p_name) : TriggerDecoderBase(p_name) { }
 
 	void onNotEnoughTeeth(int actual, int expected) override;
 	void onTooManyTeeth(int actual, int expected) override;

@@ -55,10 +55,10 @@ public:
 		}
 	}
 
-	void clear(ClearReason clearReason) {
+	void clear(ClearReason p_clearReason) {
 		if (m_value) {
 			m_value = false;
-			this->clearReason = clearReason;
+			clearReason = p_clearReason;
 		}
 	}
 
