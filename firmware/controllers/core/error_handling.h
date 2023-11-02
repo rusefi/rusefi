@@ -51,7 +51,7 @@ int getRusEfiVersion(void);
   #define efiAssertVoid(code, condition, message) { if (!(condition)) { firmwareError(code, message); return; } }
 #else /* EFI_ENABLE_ASSERTS */
   #define efiAssert(code, condition, message, result) { }
-  #define efiAssertVoid(code, condition, message) { }
+  #define efiAssertVoid(code, condition, message) { UNUSED(condition);}
 #endif /* EFI_ENABLE_ASSERTS */
 
 #define criticalAssertVoid(condition, message) efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, condition, message)
