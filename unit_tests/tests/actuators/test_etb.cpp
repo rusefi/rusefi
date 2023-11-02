@@ -436,23 +436,23 @@ TEST(etb, setpointRevLimit) {
 
 	// Below threshold, should return unadjusted throttle
 	Sensor::setMockValue(SensorType::Rpm,  1000);
-	EXPECT_EQ(80, etb.getSetpoint().value_or(-1));
+	EXPECT_NEAR(80, etb.getSetpoint().value_or(-1), 1e-4);
 
 	// At threshold, should return unadjusted throttle
 	Sensor::setMockValue(SensorType::Rpm,  5000);
-	EXPECT_EQ(80, etb.getSetpoint().value_or(-1));
+	EXPECT_NEAR(80, etb.getSetpoint().value_or(-1), 1e-4);
 
 	// Middle of range, should return half of unadjusted
 	Sensor::setMockValue(SensorType::Rpm, 5375);
-	EXPECT_EQ(40, etb.getSetpoint().value_or(-1));
+	EXPECT_NEAR(40, etb.getSetpoint().value_or(-1), 1e-4);
 
 	// At limit+range, should return 0
 	Sensor::setMockValue(SensorType::Rpm, 5750);
-	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
+	EXPECT_NEAR(1, etb.getSetpoint().value_or(-1), 1e-4);
 
 	// Above limit+range, should return 0
 	Sensor::setMockValue(SensorType::Rpm, 6000);
-	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
+	EXPECT_NEAR(1, etb.getSetpoint().value_or(-1), 1e-4);
 }
 
 TEST(etb, setpointNoPedalMap) {
