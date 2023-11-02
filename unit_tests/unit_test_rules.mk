@@ -59,13 +59,6 @@ USE_OPT += -DHW_HELLEN_NB1=1 -DHW_HELLEN_NB2=1
 
 DDEFS += -DSHORT_BOARD_NAME=f407-discovery
 
-ifeq ($(CCACHE_DIR),)
- $(info No CCACHE_DIR)
-else
- $(info CCACHE_DIR is ${CCACHE_DIR})
- CCPREFIX=ccache
-endif
-
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
   USE_COPT = -std=gnu99 -fgnu89-inline
@@ -129,8 +122,8 @@ else
   TRGT = 
 endif
 
-CC   = $(CCPREFIX) $(TRGT)gcc
-CPPC = $(CCPREFIX) $(TRGT)g++
+CC   = $(TRGT)gcc
+CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
