@@ -114,7 +114,7 @@ public enum SerialPortScanner {
                 // We've already probed this port - don't re-probe it again
                 PortResult cached = portCache.get(serialPort);
 
-                if (cached.type == SerialPortType.FomeEcu) {
+                if (cached.type == SerialPortType.FomeEcu || cached.type == SerialPortType.FomeEcuWithOpenblt) {
                     ecuCount++;
                 } else if (cached.type == SerialPortType.OpenBlt) {
                     hasAnyOpenblt = true;
