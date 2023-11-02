@@ -1,7 +1,7 @@
 package com.rusefi.simulator;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.AverageAnglesUtil;
+import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.TS_SIMULATE_CAN;
+import static org.junit.Assert.assertTrue;
 
 public class SimulatorFunctionalTest {
     private final static Logging log = Logging.getLogging(SimulatorFunctionalTest.class);
@@ -26,13 +27,14 @@ public class SimulatorFunctionalTest {
     private boolean gotCanPacketAnalog1 = false;
     private boolean gotCanPacketAnalog2 = false;
     private int pinToggleCounter = 0;
-    private int [] durationsInStateMs = { 0, 0 };
+    private final int [] durationsInStateMs = { 0, 0 };
 
     public SimulatorFunctionalTest(LinkManager linkManager) {
         this.linkManager = linkManager;
     }
 
     public void mainTestBody() throws InterruptedException {
+        assertHappyTriggerSimulator();
         assertVvtPosition();
         assertRawAnalogPackets();
         testOutputPin(bench_mode_e.BENCH_MAIN_RELAY, Fields.BENCH_MAIN_RELAY_DURATION);
@@ -43,6 +45,13 @@ public class SimulatorFunctionalTest {
         testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
 // todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
+    }
+
+    private void assertHappyTriggerSimulator() throws InterruptedException {
+        // todo: do we need a way to reset totalTriggerErrorCounter prior to five second sleep? looks like 'set engine_type' would update trigger which would reset counter?
+        Thread.sleep(5 * Timeouts.SECOND);
+        double triggerErrors = SensorCentral.getInstance().getValue(Sensor.totalTriggerErrorCounter);
+        assertTrue("triggerErrors " + triggerErrors, triggerErrors < 5);
     }
 
     private void assertVvtPosition() {
@@ -70,7 +79,7 @@ public class SimulatorFunctionalTest {
 
     private void exchangeCanPackets(CountDownLatch gotCan,
                                     bench_test_packet_ids_e [] expectedEids,
-                                    byte[][] packets) throws InterruptedException {
+                                    byte[][] packets) {
         linkManager.submit(new Runnable() {
             @Override
             public void run() {
