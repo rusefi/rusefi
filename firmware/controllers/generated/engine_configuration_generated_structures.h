@@ -1051,7 +1051,7 @@ struct engine_configuration_s {
 	// offset 752
 	output_pin_e acRelayPin;
 	// offset 754
-	maf_sensor_type_e mafSensorType;
+	uint8_t unused754;
 	// offset 755
 	spi_device_e drv8860spiDevice;
 	// offset 756

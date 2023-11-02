@@ -873,10 +873,6 @@ public class Fields {
 	public static final int LUA_PWM_COUNT = 8;
 	public static final int LUA_SCRIPT_SIZE = 8000;
 	public static final int MAF_DECODING_COUNT = 256;
-	public static final int maf_sensor_type_e_Bosch0280218004 = 2;
-	public static final int maf_sensor_type_e_Bosch0280218037 = 1;
-	public static final int maf_sensor_type_e_CUSTOM = 0;
-	public static final int maf_sensor_type_e_DensoTODO = 3;
 	public static final String MAIN_HELP_URL = "https://wiki.fome.tech/";
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_sensor_config_s_size = 140;
@@ -1173,7 +1169,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.11.02.f407-discovery.2889015593";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.11.02.f407-discovery.3581085034";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;
@@ -1554,8 +1550,7 @@ public class Fields {
 	public static final Field LAMBDAPROTECTIONRESTORERPM = Field.create("LAMBDAPROTECTIONRESTORERPM", 750, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field ACRELAYPINMODE = Field.create("ACRELAYPINMODE", 751, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 752, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
-	public static final String[] maf_sensor_type_e = {"v0", "v1", "v2", "v3"};
-	public static final Field MAFSENSORTYPE = Field.create("MAFSENSORTYPE", 754, FieldType.INT8, maf_sensor_type_e).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSED754 = Field.create("UNUSED754", 754, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field DRV8860SPIDEVICE = Field.create("DRV8860SPIDEVICE", 755, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SCRIPTSETTING1 = Field.create("SCRIPTSETTING1", 756, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field SCRIPTSETTING2 = Field.create("SCRIPTSETTING2", 760, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -2967,7 +2962,7 @@ public class Fields {
 	LAMBDAPROTECTIONRESTORERPM,
 	ACRELAYPINMODE,
 	ACRELAYPIN,
-	MAFSENSORTYPE,
+	UNUSED754,
 	DRV8860SPIDEVICE,
 	SCRIPTSETTING1,
 	SCRIPTSETTING2,

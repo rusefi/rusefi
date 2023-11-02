@@ -43,7 +43,6 @@ const char *getInjector_compensation_mode_e(injector_compensation_mode_e value);
 const char *getInjector_pressure_type_e(injector_pressure_type_e value);
 const char *getLaunchActivationMode_e(launchActivationMode_e value);
 const char *getLoad_override_e(load_override_e value);
-const char *getMaf_sensor_type_e(maf_sensor_type_e value);
 const char *getOperation_mode_e(operation_mode_e value);
 const char *getPin_input_mode_e(pin_input_mode_e value);
 const char *getPin_output_mode_e(pin_output_mode_e value);

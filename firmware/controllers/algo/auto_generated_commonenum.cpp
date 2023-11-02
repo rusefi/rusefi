@@ -519,19 +519,6 @@ case AFR_Tps:
   }
  return NULL;
 }
-const char *getMaf_sensor_type_e(maf_sensor_type_e value){
-switch(value) {
-case Bosch0280218004:
-  return "Bosch0280218004";
-case Bosch0280218037:
-  return "Bosch0280218037";
-case CUSTOM:
-  return "CUSTOM";
-case DensoTODO:
-  return "DensoTODO";
-  }
- return NULL;
-}
 const char *getOperation_mode_e(operation_mode_e value){
 switch(value) {
 case FOUR_STROKE_CAM_SENSOR:
