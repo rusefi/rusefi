@@ -1,10 +1,14 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.DfuFlasher;
@@ -20,9 +24,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public enum SerialPortScanner {
     INSTANCE;
 
+    private final static Logging log = Logging.getLogging(SerialPortScanner.class);
+
     public enum SerialPortType {
         None(null),
         FomeEcu("FOME ECU"),
+        FomeEcuWithOpenblt("FOME ECU w/ BL"),
         OpenBlt("OpenBLT Bootloader"),
         Unknown("Unknown"),
         ;
@@ -118,21 +125,29 @@ public enum SerialPortScanner {
                 // This one isn't in the cache, probe it to determine what it is
                 PortResult result;
 
+                log.info("Determining type of serial port: " + serialPort);
+
                 boolean isOpenblt = isPortOpenblt(serialPort);
+                log.info("Port " + serialPort + (isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
                 if (isOpenblt) {
                     result = new PortResult(serialPort, SerialPortType.OpenBlt);
                     hasAnyOpenblt = true;
                 } else {
                     // See if this looks like an ECU
                     boolean isEcu = isPortFomeEcu(serialPort);
+                    log.info("Port " + serialPort + (isEcu ? " looks like" : " does not look like") + " a FOME ECU");
                     if (isEcu) {
-                        result = new PortResult(serialPort, SerialPortType.FomeEcu);
+                        boolean ecuHasOpenblt = fomeEcuHasOpenblt(serialPort);
+                        log.info("FOME ECU at " + serialPort + (ecuHasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
+                        result = new PortResult(serialPort, ecuHasOpenblt ? SerialPortType.FomeEcuWithOpenblt : SerialPortType.FomeEcu);
                         ecuCount++;
                     } else {
                         // Dunno what this is, leave it in the list anyway
                         result = new PortResult(serialPort, SerialPortType.Unknown);
                     }
                 }
+
+                log.info("Port " + serialPort + " detected as: " + result.type.friendlyString);
 
                 ports.add(result);
                 portCache.put(serialPort, result);
@@ -254,6 +269,28 @@ public enum SerialPortScanner {
         }
     }
 
+    public static boolean fomeEcuHasOpenblt(String port) {
+        try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
+            if (stream == null) {
+                return false;
+            }
+
+            IncomingDataBuffer idb = stream.getDataBuffer();
+            stream.sendPacket(new byte[]{(byte) Fields.TS_QUERY_BOOTLOADER});
+
+            byte[] response = stream.getDataBuffer().getPacket(500, "fomeEcuHasOpenblt");
+            if (!IoHelper.checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK)) {
+                // ECU didn't understand request, bootloader certainly not supported
+                return false;
+            }
+
+            // Data byte indicates bootloader type
+            return response[1] == Fields.TS_QUERY_BOOTLOADER_OPENBLT;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static boolean isPortOpenblt(String port) {
         try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
             if (stream == null) {
@@ -269,7 +306,7 @@ public enum SerialPortScanner {
 
             IncomingDataBuffer idb = stream.getDataBuffer();
 
-            byte responseLength = idb.readByte(50);
+            byte responseLength = idb.readByte(250);
 
             // Invalid length, ignore
             if (responseLength != 8) {
@@ -278,7 +315,7 @@ public enum SerialPortScanner {
 
             // Read length worth of bytes
             byte[] response = new byte[responseLength];
-            idb.waitForBytes(100, "openblt detect", System.currentTimeMillis(), responseLength);
+            idb.waitForBytes(100, "isPortOpenblt", System.currentTimeMillis(), responseLength);
             idb.read(response);
 
             // Response packet should start with FF
