@@ -54,8 +54,12 @@
  * Memory attributes settings.
  */
 #define STM32_NOCACHE_MPU_REGION            MPU_REGION_6
+#ifndef STM32_NOCACHE_SRAM1_SRAM2
 #define STM32_NOCACHE_SRAM1_SRAM2           FALSE
+#endif // STM32_NOCACHE_SRAM1_SRAM2
+#ifndef STM32_NOCACHE_SRAM3
 #define STM32_NOCACHE_SRAM3                 TRUE
+#endif // STM32_NOCACHE_SRAM3
 
 /*
  * PWR system settings.
