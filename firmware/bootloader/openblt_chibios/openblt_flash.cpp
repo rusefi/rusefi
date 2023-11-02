@@ -14,9 +14,9 @@ void FlashInit() {
 
 blt_addr FlashGetUserProgBaseAddress() {
 #ifdef STM32H7XX
-	return 0x08020000;
+	return FLASH_BASE + 128 * 1024;
 #else // not STM32H7
-	return 0x08008000;
+	return FLASH_BASE + 32 * 1024;
 #endif
 }
 
