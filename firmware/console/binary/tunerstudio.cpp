@@ -357,7 +357,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
-			|| command == TS_GET_CONFIG_ERROR;
+			|| command == TS_GET_CONFIG_ERROR
+			|| command == TS_QUERY_BOOTLOADER;
 }
 
 /**
@@ -814,6 +815,15 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		}
 #endif // HW_CHECK_MODE
 		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
+		break;
+	}
+	case TS_QUERY_BOOTLOADER: {
+		uint8_t bldata = TS_QUERY_BOOTLOADER_NONE;
+#if EFI_USE_OPENBLT
+		bldata = TS_QUERY_BOOTLOADER_OPENBLT;
+#endif
+
+		tsChannel->sendResponse(TS_CRC, &bldata, 1, false);
 		break;
 	}
 	default:
