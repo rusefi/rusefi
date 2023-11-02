@@ -56,13 +56,6 @@ USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
 # Pretend we are all different hardware so that all canned engine configs are included
 USE_OPT += -DHW_MICRO_RUSEFI=1 -DHW_PROTEUS=1 -DHW_FRANKENSO=1 -DHW_HELLEN=1
 
-ifeq ($(CCACHE_DIR),)
- $(info No CCACHE_DIR)
-else
- $(info CCACHE_DIR is ${CCACHE_DIR})
- CCPREFIX=ccache
-endif
-
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
   USE_COPT = -std=gnu99 -fgnu89-inline
@@ -126,8 +119,8 @@ else
   TRGT = 
 endif
 
-CC   = $(CCPREFIX) $(TRGT)gcc
-CPPC = $(CCPREFIX) $(TRGT)g++
+CC   = $(TRGT)gcc
+CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.

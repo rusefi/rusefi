@@ -281,8 +281,8 @@ ifeq ($(CROSS_COMPILE),)
 else
   TRGT = $(CROSS_COMPILE)
 endif
-CC   = $(CCPREFIX) $(TRGT)gcc
-CPPC = $(CCPREFIX) $(TRGT)g++
+CC   = $(TRGT)gcc
+CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
