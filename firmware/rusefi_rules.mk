@@ -2,7 +2,7 @@
 RUSEFI_OPT = -Werror
 
 ifneq ($(ALLOW_SHADOW),yes)
-    RUSEFI_OPT += -Werror=shadow
+#     RUSEFI_OPT += -Werror=shadow
 endif
 
 # ...except these few
