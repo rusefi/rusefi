@@ -14,6 +14,13 @@ void TimerReset() { }
 void CopService() { }
 void TimerUpdate() { }
 
+extern "C" void __core_init() {
+	// This overrides the built-in __core_init() function
+	// We do this to avoid enabling the D/I caches, which
+	// we'll immediately have to turn back off when jumping
+	// to the main firmware (which will then enable them itself)
+}
+
 blt_int32u TimerGet() {
 	return 0;
 }
