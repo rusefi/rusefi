@@ -193,7 +193,7 @@ public class ProgramSelector {
             return;
         }
 
-        OpenbltBootCommanderRunner.flashSerial(port, "../../fome_update.srec", callbacks);
+        OpenbltBootCommanderRunner.flashSerial(port, "../fome_update.srec", callbacks);
 
         // it's a lengthy operation let's signal end
         Toolkit.getDefaultToolkit().beep();
