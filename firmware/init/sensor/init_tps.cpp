@@ -253,7 +253,7 @@ void deinitTps() {
 
 	analogTps1.deinit(isFordTps, &fordTps1);
 	tps2.deinit(isFordTps, &fordTps2);
-	pedal.deinit(isFordTps, &fordPps);
+	pedal.deinit(isFordPps, &fordPps);
 
 	sentTps.unregister();
 
