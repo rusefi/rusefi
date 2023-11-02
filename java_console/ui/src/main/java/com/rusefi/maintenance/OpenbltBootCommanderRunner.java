@@ -48,7 +48,7 @@ public final class OpenbltBootCommanderRunner {
         }
 
         try {
-            String cmd = OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER + " " + args + " " + updateFile.getAbsolutePath();
+            String cmd = OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER + " " + args + " \"" + updateFile.getAbsolutePath() + '\"';
 
             callbacks.log("Running BootCommander like: " + cmd);
 
