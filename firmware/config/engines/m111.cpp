@@ -51,14 +51,14 @@ void setM111EngineConfiguration() {
 	engineConfiguration->etb.dFactor = 0.088;
 	engineConfiguration->etb.offset = 0;
 
-	gppwm_channel *scBypass = &engineConfiguration->gppwm[0];
     strcpy(engineConfiguration->gpPwmNote[0], "SC Bypass");
 #if HW_MICRO_RUSEFI && EFI_PROD_CODE
+	gppwm_channel *scBypass = &engineConfiguration->gppwm[0];
     scBypass->pin = MRE_GPOUT_3;
 #endif // HW_MICRO_RUSEFI
 
-	gppwm_channel *scClutch = &engineConfiguration->gppwm[1];
 #if HW_MICRO_RUSEFI
+	gppwm_channel *scClutch = &engineConfiguration->gppwm[1];
     scClutch->pin = MRE_LS_2;
     engineConfiguration->vvtPins[0] = MRE_LS_1;
 #endif // HW_MICRO_RUSEFI
