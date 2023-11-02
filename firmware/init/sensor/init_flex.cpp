@@ -57,6 +57,7 @@ void initFlexSensor() {
 
 	// 0.01 means filter bandwidth of ~1hz with ~100hz sensor
 	flexTempFilter.configureLowpass(1, 0.01f);
+	flexSensor.setFunction(converter);
 
 #if EFI_PROD_CODE
 	efiExtiEnablePin("flex", flexPin,
