@@ -31,8 +31,25 @@ chmod u+x $HEX2DFU
 mkdir -p deliver
 rm -f deliver/*
 
-echo "$SCRIPT_NAME: invoking hex2dfu for incremental rusEFI image"
-$HEX2DFU -i build/fome.hex -C 0x1C -o build/fome.dfu
+# delete everything we're going to regenerate
+rm build/fome.bin build/fome.srec
+
+# Extract the firmware's base address from the elf - it may be different depending on exact CPU
+firmwareBaseAddress="$(objdump -h -j .vectors build/fome.elf | awk '/.vectors/ {print $5 }')"
+checksumAddress="$(printf "%X\n" $((0x$firmwareBaseAddress+0x1c)))"
+
+echo "Base address is 0x$firmwareBaseAddress"
+echo "Checksum address is 0x$checksumAddress"
+
+echo "$SCRIPT_NAME: invoking hex2dfu to place image checksum"
+$HEX2DFU -i build/fome.hex -c $checksumAddress -b build/fome.bin
+rm build/fome.hex
+# re-make hex, srec with the checksum in place
+objcopy -I binary -O ihex --change-addresses=0x$firmwareBaseAddress build/fome.bin build/fome.hex
+objcopy -I binary -O srec --change-addresses=0x$firmwareBaseAddress build/fome.bin build/fome.srec
+
+# make DFU
+$HEX2DFU -i build/fome.hex -o build/fome.dfu
 
 if [ "$USE_OPENBLT" = "yes" ]; then
   # this image is suitable for update through bootloader only
@@ -45,9 +62,8 @@ else
   # cp build/fome.hex  deliver/
 fi
 
-# bootloader and composite image
+# bootloader and combined image
 if [ "$USE_OPENBLT" = "yes" ]; then
-  rm -f deliver/fome_bl.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
   $HEX2DFU -i bootloader/blbuild/fome_bl.hex -o bootloader/blbuild/fome_bl.dfu
 
@@ -56,10 +72,8 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   cp bootloader/blbuild/fome_bl.dfu  deliver/fome_bl.dfu
   #cp bootloader/blbuild/fome_bl.hex  deliver/fome_bl.hex
 
-  rm -f deliver/fome_openblt.dfu
-  echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"
-  $HEX2DFU -i bootloader/blbuild/fome_bl.hex -i build/fome.hex -C 0x1C -o deliver/fome.dfu -b deliver/fome.bin
-  #todo: how to create 'signed' hex and srec? Do we need?
+  echo "$SCRIPT_NAME: invoking hex2dfu for combined OpenBLT+FOME image"
+  $HEX2DFU -i bootloader/blbuild/fome_bl.hex -i build/fome.hex -o deliver/fome.dfu -b deliver/fome.bin
 fi
 
 echo "$SCRIPT_NAME: build folder content:"
