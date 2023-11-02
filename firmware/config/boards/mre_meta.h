@@ -74,13 +74,3 @@
 
 // 35
 #define MRE_GPOUT_1 Gpio::TLE8888_PIN_21
-
-#if HW_MICRO_RUSEFI
-static Gpio MRE_OUTPUTS[] = {
-MRE_INJ_1,
-MRE_INJ_2,
-MRE_INJ_3,
-MRE_INJ_4,
-MRE_LS_1,
-};
-#endif // HW_MICRO_RUSEFI

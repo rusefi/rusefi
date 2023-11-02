@@ -207,6 +207,14 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 }
 
+static Gpio MRE_OUTPUTS[] = {
+MRE_INJ_1,
+MRE_INJ_2,
+MRE_INJ_3,
+MRE_INJ_4,
+MRE_LS_1,
+};
+
 int getBoardMetaOutputsCount() {
     return efi::size(MRE_OUTPUTS);
 }

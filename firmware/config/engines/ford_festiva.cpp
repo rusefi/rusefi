@@ -72,7 +72,8 @@ void setFordEscortGt() {
 	engineConfiguration->displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	static const uint16_t veRpmBins[] = 
+#if (IGN_RPM_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+	static const uint16_t veRpmBins[] =
 	{
 		800,
 		1200,
@@ -92,7 +93,6 @@ void setFordEscortGt() {
 		7000
 	};
 
-#if (IGN_RPM_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	copyArray(config->veRpmBins, veRpmBins);
 	copyTable(config->veTable, racingFestivaVeTable);
 #endif
@@ -199,6 +199,7 @@ void setFordEscortGt() {
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
+#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	// VICS solenoid
 	static const uint16_t ignitionRpmBins[] =
 	{
@@ -220,7 +221,6 @@ void setFordEscortGt() {
 		7000
 	};
 
-#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	copyArray(config->ignitionRpmBins, ignitionRpmBins);
 
 	copyTable(config->ignitionTable, racingFestivaIgnitionTable);

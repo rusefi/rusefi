@@ -138,7 +138,6 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-    int16_t hellenBoardId = engine->engineState.hellenBoardId;
 	if (isMegaModuleRevision()) {
 	    setHellenMMbaro();
 	    engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3; // On-board MAP

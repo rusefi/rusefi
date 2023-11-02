@@ -22,12 +22,9 @@ typedef struct {
 
 static usb_buf_s usbBuf;
 
-
 static bool isUsbSerialInitialized = false;
 
 static bool isUsbSerialInitStarted = false;
-
-static thread_reference_t threadrx = NULL;
 
 // called from the USB IRQ handler
 static void onUsbDataReceived(uint8_t* pu8Data, uint32_t u32ReceviedSize) {
