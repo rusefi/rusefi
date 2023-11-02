@@ -62,11 +62,9 @@ extern "C"
 #endif /* __cplusplus */
 
 #if EFI_PROD_CODE
-#include <hal.h>
 
 // If there was an error on the last boot, print out information about it now and reset state.
 void checkLastBootError();
-void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr);
 #endif // EFI_PROD_CODE
 
 #ifdef __cplusplus

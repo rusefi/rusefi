@@ -10,6 +10,7 @@
 
 #include "backup_ram.h"
 #include "error_handling_led.h"
+#include "log_hard_fault.h"
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
