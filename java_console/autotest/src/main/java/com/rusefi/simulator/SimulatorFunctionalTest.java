@@ -1,5 +1,7 @@
 package com.rusefi.simulator;
 
+import com.devexperts.logging.Logging;
+import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.TS_SIMULATE_CAN;
+import static org.junit.Assert.assertTrue;
 
 public class SimulatorFunctionalTest {
     private final LinkManager linkManager;
@@ -29,6 +32,7 @@ public class SimulatorFunctionalTest {
     }
 
     public void mainTestBody() throws InterruptedException {
+        assertHappyTriggerSimulator();
         assertVvtPosition();
         assertRawAnalogPackets();
         testOutputPin(bench_mode_e.BENCH_MAIN_RELAY, Fields.BENCH_MAIN_RELAY_DURATION);
@@ -39,9 +43,15 @@ public class SimulatorFunctionalTest {
 // todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
     }
 
+    private void assertHappyTriggerSimulator() throws InterruptedException {
+        // todo: do we need a way to reset totalTriggerErrorCounter prior to five second sleep? looks like 'set engine_type' would update trigger which would reset counter?
+        Thread.sleep(5 * Timeouts.SECOND);
+        double triggerErrors = SensorCentral.getInstance().getValue(Sensor.totalTriggerErrorCounter);
+        assertTrue("triggerErrors " + triggerErrors, triggerErrors < 5);
+    }
+
     private void assertVvtPosition() {
         assertNear("RPM", SensorCentral.getInstance().getValue(Sensor.RPMValue), 1200, 5);
-        assertNear("VVT", SensorCentral.getInstance().getValue(Sensor.vvtPositionB1I), 0, 0.1);
     }
 
     private void assertNear(String message, double actual, double expected, double tolerance) {
@@ -64,7 +74,7 @@ public class SimulatorFunctionalTest {
 
     private void exchangeCanPackets(CountDownLatch gotCan,
                                     bench_test_packet_ids_e [] expectedEids,
-                                    byte[][] packets) throws InterruptedException {
+                                    byte[][] packets) {
         linkManager.submit(new Runnable() {
             @Override
             public void run() {

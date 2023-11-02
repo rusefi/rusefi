@@ -43,7 +43,7 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 
 static OutputPin emulatorOutputs[NUM_EMULATOR_CHANNELS][PWM_PHASE_MAX_WAVE_PER_PWM];
 
-void TriggerEmulatorHelper::handleEmulatorCallback(int ch, const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex) {
+void TriggerEmulatorHelper::handleEmulatorCallback(int channel, const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex) {
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
@@ -55,10 +55,10 @@ void TriggerEmulatorHelper::handleEmulatorCallback(int ch, const MultiChannelSta
 			isRise ^= (i == 0 && engineConfiguration->invertPrimaryTriggerSignal);
 			isRise ^= (i == 1 && engineConfiguration->invertSecondaryTriggerSignal);
 
-			if (ch == 0) {
+			if (channel == 0) {
 				handleShaftSignal(i, isRise, stamp);
 			} else {
-				handleVvtCamSignal(isRise ? TriggerValue::RISE : TriggerValue::FALL, stamp, INDEX_BY_BANK_CAM(ch - 1, i));
+				handleVvtCamSignal(isRise ? TriggerValue::RISE : TriggerValue::FALL, stamp, INDEX_BY_BANK_CAM(channel - 1, i));
 			}
 		}
 	}
@@ -103,8 +103,8 @@ void setTriggerEmulatorRPM(int rpm) {
 		float rpmM = getRpmMultiplier(getEngineRotationState()->getOperationMode());
 		rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
 	}
-	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
-		triggerEmulatorSignals[ch].setFrequency(rPerSecond);
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+		triggerEmulatorSignals[channel].setFrequency(rPerSecond);
 	}
 
 	engine->resetEngineSnifferIfInTestMode();
@@ -113,15 +113,15 @@ void setTriggerEmulatorRPM(int rpm) {
 }
 
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
-	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
-		if (state != &triggerEmulatorSignals[ch])
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+		if (state != &triggerEmulatorSignals[channel])
 			continue;
-		if (atTriggerVersions[ch] < triggerEmulatorWaveforms[ch]->version) {
-			atTriggerVersions[ch] = triggerEmulatorWaveforms[ch]->version;
-			efiPrintf("Stimulator: updating trigger shape for ch%d: %d/%d %d", ch, atTriggerVersions[ch],
+		if (atTriggerVersions[channel] < triggerEmulatorWaveforms[channel]->version) {
+			atTriggerVersions[channel] = triggerEmulatorWaveforms[channel]->version;
+			efiPrintf("Stimulator: updating trigger shape for ch%d: %d/%d %d", channel, atTriggerVersions[channel],
 				engine->getGlobalConfigurationVersion(), getTimeNowMs());
 
-			copyPwmParameters(state, &triggerEmulatorWaveforms[ch]->wave);
+			copyPwmParameters(state, &triggerEmulatorWaveforms[channel]->wave);
 			state->safe.periodNt = -1; // this would cause loop re-initialization
 		}
 	}
@@ -140,10 +140,10 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
-		for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
-			if (state != &triggerEmulatorSignals[ch])
+		for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+			if (state != &triggerEmulatorSignals[channel])
 				continue;
-			helper.handleEmulatorCallback(ch,
+			helper.handleEmulatorCallback(channel,
 				*state->multiChannelStateSequence,
 				stateIndex);
 		}
@@ -171,11 +171,11 @@ static void startSimulatedTriggerSignal() {
 
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
 	
-	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
-		TriggerWaveform *s = triggerEmulatorWaveforms[ch];
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+		TriggerWaveform *s = triggerEmulatorWaveforms[channel];
 		if (s->getSize() == 0)
 			continue;
-		triggerEmulatorSignals[ch].weComplexInit(
+		triggerEmulatorSignals[channel].weComplexInit(
 			&engine->executor,
 			&s->wave,
 			updateTriggerWaveformIfNeeded, emulatorApplyPinState);
@@ -204,8 +204,8 @@ void enableExternalTriggerStimulator() {
 
 void disableTriggerStimulator() {
 	engine->triggerCentral.directSelfStimulation = false;
-	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
-		triggerEmulatorSignals[ch].stop();
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+		triggerEmulatorSignals[channel].stop();
 	}
 	hasInitTriggerEmulator = false;
     incrementGlobalConfigurationVersion("disTrg");
@@ -231,12 +231,12 @@ void initTriggerEmulator() {
 
 void startTriggerEmulatorPins() {
 	hasStimPins = false;
-	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
-		for (size_t i = 0; i < efi::size(emulatorOutputs[ch]); i++) {
-			triggerEmulatorSignals[ch].outputPins[i] = &emulatorOutputs[ch][i];
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+		for (size_t i = 0; i < efi::size(emulatorOutputs[channel]); i++) {
+			triggerEmulatorSignals[channel].outputPins[i] = &emulatorOutputs[channel][i];
 
 			// todo: add pin configs for cam simulator channels
-			if (ch != 0)
+			if (channel != 0)
 				continue;
 			brain_pin_e pin = engineConfiguration->triggerSimulatorPins[i];
 
@@ -247,7 +247,7 @@ void startTriggerEmulatorPins() {
 
 #if EFI_PROD_CODE
 			if (isConfigurationChanged(triggerSimulatorPins[i])) {
-				triggerEmulatorSignals[ch].outputPins[i]->initPin("Trigger emulator", pin,
+				triggerEmulatorSignals[channel].outputPins[i]->initPin("Trigger emulator", pin,
 					engineConfiguration->triggerSimulatorPinModes[i]);
 			}
 #endif // EFI_PROD_CODE
@@ -257,13 +257,13 @@ void startTriggerEmulatorPins() {
 
 void stopTriggerEmulatorPins() {
 #if EFI_PROD_CODE
-	for (int ch = 0; ch < NUM_EMULATOR_CHANNELS; ch++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		// todo: add pin configs for cam simulator channels
-		if (ch != 0)
+		if (channel != 0)
 			continue;
-		for (size_t i = 0; i < efi::size(emulatorOutputs[ch]); i++) {
+		for (size_t i = 0; i < efi::size(emulatorOutputs[channel]); i++) {
 			if (isConfigurationChanged(triggerSimulatorPins[i])) {
-				triggerEmulatorSignals[ch].outputPins[i]->deInit();
+				triggerEmulatorSignals[channel].outputPins[i]->deInit();
 			}
 		}
 	}

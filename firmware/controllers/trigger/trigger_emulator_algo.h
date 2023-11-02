@@ -27,7 +27,7 @@ void disableTriggerStimulator();
 class TriggerEmulatorHelper {
 public:
     TriggerEmulatorHelper();
-	void handleEmulatorCallback(int ch, const MultiChannelStateSequence& mcss, int stateIndex);
+	void handleEmulatorCallback(int channel, const MultiChannelStateSequence& mcss, int stateIndex);
 };
 
 int getPreviousIndex(const int currentIndex, const int size);
