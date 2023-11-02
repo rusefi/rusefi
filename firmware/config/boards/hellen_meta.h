@@ -8,6 +8,7 @@
 #pragma once
 #include "hellen_mm64_meta.h"
 #include "hellen_mm100_meta.h"
+#include "hellen_mm176_meta.h"
 #include "../../board_id/boards_id.h"
 
 void hellenWbo();
