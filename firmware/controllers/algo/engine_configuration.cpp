@@ -402,7 +402,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->canBaudRate = B500KBPS;
 	engineConfiguration->can2BaudRate = B500KBPS;
 
-	engineConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037();
 
 	engineConfiguration->canSleepPeriodMs = 50;
