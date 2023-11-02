@@ -110,7 +110,6 @@ void setDefaultBaseEngine() {
 
 #if EFI_SIMULATOR
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
-	engineConfiguration->engineSyncCam = SC_Exhaust_First;
 #endif // EFI_SIMULATOR
 
 #if EFI_SIMULATOR
