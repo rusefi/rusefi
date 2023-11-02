@@ -34,7 +34,7 @@ private:
 	// current read position for the DMA buffer
 	volatile int readPos;
 	// secondary FIFO buffer for async. transfer
-	uint8_t buffer[TS_FIFO_BUFFER_SIZE];
+	uint8_t rxFifoBuffer[TS_FIFO_BUFFER_SIZE];
 	// input FIFO Rx queue
 	input_queue_t fifoRxQueue;
 };

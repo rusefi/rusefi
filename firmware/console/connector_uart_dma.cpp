@@ -48,7 +48,7 @@ UartDmaTsChannel::UartDmaTsChannel(UARTDriver& driver)
 	// Store a pointer to this instance so we can get it back later in the DMA callback
 	driver.dmaAdapterInstance = this;
 
-	iqObjectInit(&fifoRxQueue, buffer, sizeof(buffer), nullptr, nullptr);
+	iqObjectInit(&fifoRxQueue, rxFifoBuffer, sizeof(rxFifoBuffer), nullptr, nullptr);
 }
 
 void UartDmaTsChannel::start(uint32_t baud) {
