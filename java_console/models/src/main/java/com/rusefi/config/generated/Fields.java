@@ -1158,6 +1158,9 @@ public class Fields {
 	public static final char TS_PERF_TRACE_BEGIN = '_';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
 	public static final String TS_PROTOCOL = "001";
+	public static final char TS_QUERY_BOOTLOADER = 'L';
+	public static final int TS_QUERY_BOOTLOADER_NONE = 0;
+	public static final int TS_QUERY_BOOTLOADER_OPENBLT = 1;
 	public static final char TS_QUERY_COMMAND = 'Q';
 	public static final char TS_READ_COMMAND = 'R';
 	public static final int TS_RESPONSE_BURN_OK = 4;
@@ -1169,7 +1172,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.11.02.f407-discovery.3581085034";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.11.02.f407-discovery.4291159966";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;

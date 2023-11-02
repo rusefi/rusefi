@@ -1018,7 +1018,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 3581085034
+#define SIGNATURE_HASH 4291159966
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1240,6 +1240,10 @@
 #define TS_PERF_TRACE_GET_BUFFER 'b'
 #define TS_PERF_TRACE_GET_BUFFER_char b
 #define TS_PROTOCOL "001"
+#define TS_QUERY_BOOTLOADER 'L'
+#define TS_QUERY_BOOTLOADER_char L
+#define TS_QUERY_BOOTLOADER_NONE 0
+#define TS_QUERY_BOOTLOADER_OPENBLT 1
 #define TS_QUERY_COMMAND 'Q'
 #define TS_QUERY_COMMAND_char Q
 #define TS_READ_COMMAND 'R'
@@ -1282,7 +1286,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.11.02.f407-discovery.3581085034"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.11.02.f407-discovery.4291159966"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
