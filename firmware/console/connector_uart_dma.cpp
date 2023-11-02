@@ -73,9 +73,9 @@ void UartDmaTsChannel::start(uint32_t baud) {
 	uartStartReceive(m_driver, sizeof(dmaBuffer), dmaBuffer);
 }
 
-size_t UartDmaTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
+size_t UartDmaTsChannel::readTimeout(uint8_t* p_buffer, size_t size, int timeout) {
 	// Instead of reading from the device, read from our custom RX queue
-	size_t transferred = iqReadTimeout(&fifoRxQueue, buffer, size, timeout);
+	size_t transferred = iqReadTimeout(&fifoRxQueue, p_buffer, size, timeout);
 	bytesIn += transferred;
     return transferred;
 }

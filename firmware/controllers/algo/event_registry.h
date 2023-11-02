@@ -23,8 +23,8 @@ struct AngleBasedEvent {
 
 	angle_t enginePhase;
 
-	void setAngle(angle_t enginePhase) {
-    	this->enginePhase = enginePhase;
+	void setAngle(angle_t p_enginePhase) {
+    	enginePhase = p_enginePhase;
     }
 
 	bool shouldSchedule(float currentPhase, float nextPhase) const;

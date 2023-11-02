@@ -15,9 +15,9 @@ Dac::Dac(DACDriver& driver)
 {
 }
 
-void Dac::Start(DACConfig& config)
+void Dac::Start(DACConfig& p_config)
 {
-    dacStart(m_driver, &config);
+    dacStart(m_driver, &p_config);
 }
 
 void Dac::SetVoltage(int channel, float voltage) {

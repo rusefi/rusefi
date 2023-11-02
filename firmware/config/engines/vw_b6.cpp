@@ -190,7 +190,7 @@ void setMreVwPassatB6() {
 #if HW_MICRO_RUSEFI
 	commonPassatB6();
 
-	engineConfiguration->afr.hwChannel = MRE_IN_ANALOG_VOLT_10;
+//	engineConfiguration->afr.hwChannel = MRE_IN_ANALOG_VOLT_10;
 
 	engineConfiguration->tps1_2AdcChannel = MRE_IN_ANALOG_VOLT_9;
 

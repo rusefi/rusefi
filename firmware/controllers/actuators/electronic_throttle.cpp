@@ -64,7 +64,6 @@
 
 #include "dc_motor.h"
 #include "dc_motors.h"
-#include "pid_auto_tune.h"
 #include "defaults.h"
 
 #if defined(HAS_OS_ACCESS)
@@ -86,7 +85,7 @@ constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
 
 //static bool startupPositionError = false;
 
-#define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
+//#define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
 
 static const float hardCodedetbHitachiBiasBins[8] = {0.0, 19.0, 21.0, 22.0, 23.0, 25.0, 30.0, 100.0};
 
@@ -551,7 +550,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
 		// Otherwise disable the motor.
-		m_motor->disable("setOutput");
+		m_motor->disable("no-ETB");
 	}
 }
 
@@ -877,42 +876,6 @@ static void etbReset() {
 	etbPidReset();
 }
 #endif /* EFI_PROD_CODE */
-
-/**
- * set etb_p X
- */
-void setEtbPFactor(float value) {
-	engineConfiguration->etb.pFactor = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
-/**
- * set etb_i X
- */
-void setEtbIFactor(float value) {
-	engineConfiguration->etb.iFactor = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
-/**
- * set etb_d X
- */
-void setEtbDFactor(float value) {
-	engineConfiguration->etb.dFactor = value;
-	etbPidReset();
-	showEtbInfo();
-}
-
-/**
- * set etb_o X
- */
-void setEtbOffset(int value) {
-	engineConfiguration->etb.offset = value;
-	etbPidReset();
-	showEtbInfo();
-}
 
 void etbAutocal(size_t throttleIndex) {
 	if (throttleIndex >= ETB_COUNT) {

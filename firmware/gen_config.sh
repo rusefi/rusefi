@@ -43,6 +43,7 @@ for BOARD in \
    "config/boards/hellen/hellen88bmw hellen88bmw" \
    "config/boards/hellen/uaefi uaefi" \
    "config/boards/hellen/hellen-112-17 hellen-112-17" \
+   "config/boards/hellen/hellen-112-mg1 hellen-112-mg1" \
    "config/boards/hellen/hellen72 hellen72" \
    "config/boards/hellen/hellen81 hellen81" \
    "config/boards/hellen/hellen-nb1 hellen-nb1" \
@@ -70,6 +71,7 @@ for BOARD in \
    "config/boards/atlas atlas"\
    "config/boards/tdg-pdm8 tdg-pdm8"\
    "config/boards/f407-discovery f407-discovery" \
+   "config/boards/at_start_f435 at_start_f435" \
    ; do
  BOARD_DIR=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)

@@ -49,13 +49,6 @@ float processW202(const CANRxFrame& frame) {
 
 /* End of specific processing functions */
 
-void canVssInfo(void) {
-	efiPrintf("vss using can option selected %x", engineConfiguration->canVssNbcType);
-	efiPrintf("vss filter for %x canID", filterCanID);
-	efiPrintf("Vss module is %d", isInit);
-	efiPrintf("CONFIG_enableCanVss is %d", engineConfiguration->enableCanVss);
-}
-
 expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
 	switch (engineConfiguration->canVssNbcType){
 		case BMW_e46:
@@ -91,8 +84,6 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 }
 
 void initCanVssSupport() {
-	addConsoleAction("canvssinfo", canVssInfo);
-
 	if (engineConfiguration->enableCanVss) {
 		if (auto canId = look_up_can_id(engineConfiguration->canVssNbcType)) {
 			filterCanID = canId.Value;
@@ -106,7 +97,6 @@ void initCanVssSupport() {
 
 void setCanVss(int type) {
 	engineConfiguration->canVssNbcType = (can_vss_nbc_e)type;
-	canVssInfo();
 }
 
 #endif // EFI_CAN_SUPPORT

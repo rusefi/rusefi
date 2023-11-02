@@ -21,6 +21,13 @@ bool qcDirectPinControlMode = false;
 
 #if EFI_CAN_SUPPORT
 
+static void directWritePad(Gpio pin, int value) {
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
+	palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
+	// todo: add smart chip support support
+#endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
+}
+
 static void setPin(const CANRxFrame& frame, int value) {
 		int outputIndex = frame.data8[2];
 		if (outputIndex >= getBoardMetaOutputsCount())
@@ -34,8 +41,7 @@ static void setPin(const CANRxFrame& frame, int value) {
             efiSetPadModeWithoutOwnershipAcquisition("QC_SET", pin, PAL_MODE_OUTPUT_PUSHPULL);
         }
 
-		palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
-		// todo: add smart chip support support
+        directWritePad(pin, value);
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }
 
@@ -103,13 +109,13 @@ void sendRawAnalogValues() {
 	// send the first packet
 	{
 		CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::RAW_ANALOG_1, 8, /*bus*/0, /*isExtended*/true);
-		for (int valueIdx = 0; valueIdx < efi::size(values_1); valueIdx++) {
+		for (size_t valueIdx = 0; valueIdx < efi::size(values_1); valueIdx++) {
 			msg[valueIdx] = RAW_TO_BYTE(values_1[valueIdx]);
 		}
 	}
 	{
 		CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::RAW_ANALOG_2, 8, /*bus*/0, /*isExtended*/true);
-		for (int valueIdx = 0; valueIdx < efi::size(values_2); valueIdx++) {
+		for (size_t valueIdx = 0; valueIdx < efi::size(values_2); valueIdx++) {
 			msg[valueIdx] = RAW_TO_BYTE(values_2[valueIdx]);
 		}
 	}
@@ -122,6 +128,7 @@ static void sendOutBoardMeta() {
 	msg[1] = 0;
 	msg[2] = getBoardMetaOutputsCount();
 	msg[3] = getBoardMetaLowSideOutputsCount();
+	msg[4] = getBoardMetaDcOutputsCount();
 #endif // EFI_PROD_CODE
 }
 
@@ -191,35 +198,44 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
 		return;
 	}
-	uint8_t command = frame.data8[1];
-	if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_GET_COUNT) {
+	bench_test_io_control_e command = (bench_test_io_control_e)frame.data8[1];
+	if (command == bench_test_io_control_e::CAN_BENCH_GET_COUNT) {
 	    sendOutBoardMeta();
-	} else if (command == (uint8_t)bench_test_io_control_e::CAN_QC_OUTPUT_CONTROL_SET) {
+	} else if (command == bench_test_io_control_e::CAN_QC_OUTPUT_CONTROL_SET) {
 		qcDirectPinControlMode = true;
 	    setPin(frame, 1);
-	} else if (command == (uint8_t)bench_test_io_control_e::CAN_QC_OUTPUT_CONTROL_CLEAR) {
+	} else if (command == bench_test_io_control_e::CAN_QC_OUTPUT_CONTROL_CLEAR) {
 		qcDirectPinControlMode = true;
 	    setPin(frame, 0);
-	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_SET_ENGINE_TYPE) {
+	} else if (command == bench_test_io_control_e::CAN_QC_ETB) {
+		qcDirectPinControlMode = true;
+		uint8_t dcIndex = frame.data8[2];
+		uint8_t direction = frame.data8[3];
+		const dc_io *io = &engineConfiguration->etbIo[dcIndex];
+		Gpio controlPin = io->controlPin;
+		directWritePad(controlPin, 1);
+		efiSetPadModeWithoutOwnershipAcquisition("QC_ETB", controlPin, PAL_MODE_OUTPUT_PUSHPULL);
+		directWritePad(io->directionPin1, direction);
+		directWritePad(io->disablePin, 0); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
+	} else if (command == bench_test_io_control_e::CAN_BENCH_SET_ENGINE_TYPE) {
 		int eType = frame.data8[2];
 		// todo: fix firmware for 'false' to be possible - i.e. more of properties should be applied on the fly
 		setEngineType(eType, true);
 #if EFI_PROD_CODE
 		scheduleReboot();
 #endif // EFI_PROD_CODE
-} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_START_PIN_TEST) {
+} else if (command == bench_test_io_control_e::CAN_BENCH_START_PIN_TEST) {
 		bench_mode_e benchModePinIdx = (bench_mode_e)frame.data8[2];
 		// ignore previous pin state and stats
 		resetPinStats(benchModePinIdx);
-	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_END_PIN_TEST) {
+	} else if (command == bench_test_io_control_e::CAN_BENCH_END_PIN_TEST) {
 		sendSavedBenchStatePackets();
-	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_EXECUTE_BENCH_TEST) {
+	} else if (command == bench_test_io_control_e::CAN_BENCH_EXECUTE_BENCH_TEST) {
 		int benchCommandIdx = frame.data8[2];
 		handleBenchCategory(benchCommandIdx);
-	} else if (command == (uint8_t)bench_test_io_control_e::CAN_BENCH_QUERY_PIN_STATE) {
+	} else if (command == bench_test_io_control_e::CAN_BENCH_QUERY_PIN_STATE) {
 		bench_mode_e benchModePinIdx = (bench_mode_e)frame.data8[2];
 		sendPinStatePackets(benchModePinIdx);
 	}
 }
-
 #endif // EFI_CAN_SUPPORT

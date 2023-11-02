@@ -104,8 +104,6 @@ static void printErrorCounters() {
 /* 10mS when receiving byte by byte */
 #define TS_COMMUNICATION_TIMEOUT_SHORT	TIME_MS2I(10)
 
-static efitimems_t previousWriteReportMs = 0;
-
 static void resetTs() {
 	memset(&tsState, 0, sizeof(tsState));
 }
@@ -272,12 +270,6 @@ void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_
 
 	if (validateOffsetCount(offset, 1, tsChannel)) {
 		return;
-	}
-
-	efitimems_t nowMs = getTimeNowMs();
-	if (nowMs - previousWriteReportMs > 5) {
-		previousWriteReportMs = nowMs;
-		efiPrintf("offset %d: value=%d", offset, value);
 	}
 
 	// Skip the write if a preset was just loaded - we don't want to overwrite it

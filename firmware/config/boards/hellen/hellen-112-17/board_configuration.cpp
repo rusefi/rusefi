@@ -155,9 +155,9 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_IGN2, // 253 Coil 2
 	Gpio::MM100_IGN3, // 254 Coil 3
 	Gpio::MM100_IGN4, // 255 Coil 4
-	Gpio::MM100_INJ7, // 9 235 Low Side Output
+	Gpio::MM100_INJ6, // 9 235 Low Side Output
 	Gpio::MM100_INJ5, // 101 low side 1.5A output
-	Gpio::MM100_INJ6, // 102 low side 1.5A output
+	Gpio::MM100_INJ7, // 102 low side 1.5A output
 	Gpio::MM100_IGN8, // 12 115 Main Relay
 	Gpio::MM100_OUT_PWM3, // 131 Relay Output
 	Gpio::MM100_IGN7, // 140 Relay Output
@@ -174,4 +174,8 @@ int getBoardMetaOutputsCount() {
 
 Gpio* getBoardMetaOutputs() {
     return OUTPUTS;
+}
+
+int getBoardMetaDcOutputsCount() {
+    return 1;
 }

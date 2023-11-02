@@ -95,6 +95,8 @@
 #define bench_mode_e_BENCH_VVT1_VALVE 17
 #define bench_mode_e_BENCH_VVT2_VALVE 18
 #define bench_mode_e_BENCH_VVT3_VALVE 19
+#define bench_mode_e_HD_ACR 28
+#define bench_mode_e_HD_ACR2 29
 #define BENCH_STARTER_DURATION 4000
 #define BENCH_VVT_DURATION 300
 #define blend_table_s_size 188
@@ -509,6 +511,7 @@
 #define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
 #define GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS "kPa"
 #define GAUGE_NAME_FUEL_RUNNING "Fuel: running"
+#define GAUGE_NAME_FUEL_TEMPERATURE "Fuel Temperature"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS AE add fuel ms"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
 #define GAUGE_NAME_FUEL_TRIM "Fuel: fuel trim"
@@ -952,6 +955,7 @@
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_ANGLE 50
+#define PACK_MULT_FLEX 2
 #define PACK_MULT_FUEL_FLOW 200
 #define PACK_MULT_FUEL_MASS 100
 #define PACK_MULT_HIGH_PRESSURE 10
@@ -969,16 +973,6 @@
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
 #define persistent_config_s_size 23880
 #define pid_s_size 20
-#define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
-#define PidAutoTune_AutoTunerState_CONVERGED 16
-#define PidAutoTune_AutoTunerState_FAILED 128
-#define PidAutoTune_AutoTunerState_RELAY_STEP_DOWN 8
-#define PidAutoTune_AutoTunerState_RELAY_STEP_UP 4
-#define PidAutoTune_AutoTunerState_STEADY_STATE_AFTER_STEP_UP 2
-#define PidAutoTune_AutoTunerState_STEADY_STATE_AT_BASELINE 1
-#define PidAutoTune_Peak_MAXIMUM 1
-#define PidAutoTune_Peak_MINIMUM -1
-#define PidAutoTune_Peak_NOT_A_PEAK 0
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
 #define pin_input_mode_e_PI_DEFAULT 0
@@ -992,6 +986,7 @@
 #define pin_output_mode_e_OM_OPENDRAIN 2
 #define pin_output_mode_e_OM_OPENDRAIN_INVERTED 3
 #define PRIME_CURVE_COUNT 8
+#define PROTOCOL_ACR_NAME "acr"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_CRANK1 "t1"
@@ -1054,7 +1049,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1007528525
+#define SIGNATURE_HASH 1368370529
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1350,7 +1345,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.10.26.subaru_eg33_f7.1007528525"
+#define TS_SIGNATURE "rusEFI master.2023.11.02.subaru_eg33_f7.1368370529"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

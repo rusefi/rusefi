@@ -47,7 +47,10 @@ TriggerWaveform::TriggerWaveform() {
 	initialize(OM_NONE, SyncEdge::Rise);
 }
 
-void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEdge) {
+void TriggerWaveform::initialize(operation_mode_e p_operationMode, SyncEdge p_syncEdge) {
+	operationMode = p_operationMode;
+	syncEdge = p_syncEdge;
+
 	isSynchronizationNeeded = true; // that's default value
 	isSecondWheelCam = false;
 	needSecondTriggerInput = false;
@@ -67,8 +70,6 @@ void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEd
 	shapeDefinitionError = false;
 	useOnlyPrimaryForSync = false;
 
-	this->operationMode = operationMode;
-	this->syncEdge = syncEdge;
 	triggerShapeSynchPointIndex = 0;
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();

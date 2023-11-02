@@ -212,26 +212,26 @@ void StepperMotor::initialize(StepperHw *hardware, int totalSteps) {
 	start();
 }
 
-void StepDirectionStepper::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, brain_pin_e enablePin, pin_output_mode_e enablePinMode) {
-	if (!isBrainPinValid(stepPin) || !isBrainPinValid(directionPin)) {
+void StepDirectionStepper::initialize(brain_pin_e p_stepPin, brain_pin_e p_directionPin, pin_output_mode_e p_directionPinMode, float reactionTime, brain_pin_e p_enablePin, pin_output_mode_e p_enablePinMode) {
+	if (!isBrainPinValid(p_stepPin) || !isBrainPinValid(p_directionPin)) {
 		return;
 	}
 
 	setReactionTime(reactionTime);
 
-	this->directionPinMode = directionPinMode;
-	this->directionPin.initPin("Stepper DIR", directionPin, this->directionPinMode);
+	directionPinMode = p_directionPinMode;
+	directionPin.initPin("Stepper DIR", p_directionPin, directionPinMode);
 
-	this->stepPinMode = OM_DEFAULT;	// todo: do we need configurable stepPinMode?
-	this->stepPin.initPin("Stepper step", stepPin, this->stepPinMode);
+	stepPinMode = OM_DEFAULT;	// todo: do we need configurable stepPinMode?
+	stepPin.initPin("Stepper step", p_stepPin, stepPinMode);
 
-	this->enablePinMode = enablePinMode;
-	this->enablePin.initPin("Stepper EN", enablePin, this->enablePinMode);
+	enablePinMode = p_enablePinMode;
+	enablePin.initPin("Stepper EN", p_enablePin, enablePinMode);
 
 	// All pins must be 0 for correct hardware startup (e.g. stepper auto-disabling circuit etc.).
-	this->enablePin.setValue(true); // disable stepper
-	this->stepPin.setValue(false);
-	this->directionPin.setValue(false);
+	enablePin.setValue(true); // disable stepper
+	stepPin.setValue(false);
+	directionPin.setValue(false);
 	m_currentDirection = false;
 }
 

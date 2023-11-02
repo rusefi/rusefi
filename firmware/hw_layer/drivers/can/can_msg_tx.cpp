@@ -28,8 +28,8 @@ fifo_buffer<CANTxFrame, 1024> txCanBuffer;
 }
 #endif // EFI_CAN_SUPPORT
 
-CanTxMessage::CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, size_t bus, bool isExtended) {
-    this->category = category;
+CanTxMessage::CanTxMessage(CanCategory p_category, uint32_t eid, uint8_t dlc, size_t bus, bool isExtended) {
+    category = p_category;
 #if HAS_CAN_FRAME
 #ifndef STM32H7XX
 	// ST bxCAN device

@@ -17,6 +17,10 @@ board_id_t getBoardId() {
         // a way to test harness patch cord
         return STATIC_BOARD_ID_PROTEUS_CANAM;
     }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
+        // a way to test harness patch cord
+        return STATIC_BOARD_ID_PROTEUS_HARLEY;
+    }
 #endif
 
 #if HW_HELLEN

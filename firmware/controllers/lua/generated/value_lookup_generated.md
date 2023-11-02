@@ -313,6 +313,9 @@ Duty cycle to use in case of a sensor failure. This duty cycle should produce th
 ### afr.value2
 
 
+### etbSplit
+TPS/PPS error threshold
+
 ### baroSensor.lowValue
 kPa value at low volts
 

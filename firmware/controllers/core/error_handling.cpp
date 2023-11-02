@@ -10,6 +10,7 @@
 
 #include "backup_ram.h"
 #include "error_handling_led.h"
+#include "log_hard_fault.h"
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
@@ -109,12 +110,10 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
-	if (sramState != nullptr) {
-		strncpy(sramState->hardFile, file, efi::size(sramState->hardFile));
-		sramState->hardLine = line;
-		sramState->check = 123;
-		strncpy(sramState->rawMsg, msg, efi::size(sramState->rawMsg));
-	}
+	strncpy(sramState->hardFile, file, efi::size(sramState->hardFile));
+	sramState->hardLine = line;
+	sramState->check = 123;
+	strncpy(sramState->rawMsg, msg, efi::size(sramState->rawMsg));
 #endif // EFI_BACKUP_SRAM
 
 	if (hasOsPanicError())
@@ -262,10 +261,12 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	getLimpManager()->fatalError();
 	engine->engineState.warnings.addWarningCode(code);
 #ifdef EFI_PRINT_ERRORS_AS_WARNINGS
-	va_list ap;
-	va_start(ap, fmt);
-	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
-	va_end(ap);
+	{
+	    va_list ap;
+	    va_start(ap, fmt);
+	    chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
+	    va_end(ap);
+	}
 #endif
     criticalShutdown();
 	enginePins.communicationLedPin.setValue(1, /*force*/true);
@@ -295,10 +296,8 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
-	if (sramState != nullptr) {
-		strncpy(sramState->ErrorString, criticalErrorMessageBuffer, efi::size(sramState->ErrorString));
-		sramState->Cookie = ErrorCookie::FirmwareError;
-	}
+	strncpy(sramState->ErrorString, criticalErrorMessageBuffer, efi::size(sramState->ErrorString));
+	sramState->Cookie = ErrorCookie::FirmwareError;
 #endif // EFI_BACKUP_SRAM
 #else
 

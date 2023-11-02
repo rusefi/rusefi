@@ -319,6 +319,9 @@ float getConfigValueByName(const char *name) {
 // afr.value2
 		case 1273287931:
 			return engineConfiguration->afr.value2;
+// etbSplit
+		case -2146852436:
+			return engineConfiguration->etbSplit;
 // baroSensor.lowValue
 		case 1474689568:
 			return engineConfiguration->baroSensor.lowValue;
@@ -2255,6 +2258,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1273287931:
 	{
 		engineConfiguration->afr.value2 = value;
+		return 1;
+	}
+		case -2146852436:
+	{
+		engineConfiguration->etbSplit = (int)value;
 		return 1;
 	}
 		case 1474689568:

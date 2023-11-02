@@ -275,7 +275,8 @@ pins:
 
 # 63-81 segment
   - pin: 63a
-    function: +12V in (MR)
+    function: +12V from Main Relay
+    type: 12v
 # See 44a
 #    id: EFI_ADC_9
 #    class: analog_inputs

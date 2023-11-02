@@ -250,13 +250,13 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 	}
 }
 
-void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
-	criticalAssertVoid(engineConfiguration != NULL, "ec NULL");
-	efi::clear(engineConfiguration);
+void prepareVoidConfiguration(engine_configuration_s *p_engineConfiguration) {
+	criticalAssertVoid(p_engineConfiguration != NULL, "ec NULL");
+	efi::clear(p_engineConfiguration);
 
-	engineConfiguration->clutchDownPinMode = PI_PULLUP;
-	engineConfiguration->clutchUpPinMode = PI_PULLUP;
-	engineConfiguration->brakePedalPinMode = PI_PULLUP;
+	p_engineConfiguration->clutchDownPinMode = PI_PULLUP;
+	p_engineConfiguration->clutchUpPinMode = PI_PULLUP;
+	p_engineConfiguration->brakePedalPinMode = PI_PULLUP;
 }
 
 void setDefaultBasePins() {
@@ -421,7 +421,7 @@ static void setDefaultEngineConfiguration() {
     engineConfiguration->can2BaudRate = B500KBPS;
 
 	engineConfiguration->mafSensorType = Bosch0280218037;
-	setBosch0280218037(config);
+	setBosch0280218037();
 
 	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canReadEnabled = true;
@@ -878,6 +878,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif
 
 #if HW_HELLEN
+	case engine_type_e::TOYOTA_1NZ_FE:
+	    setToyota1NZFE();
+	    break;
 	case engine_type_e::HELLEN_NA8_96:
 		setHellenMiata96();
 		break;
@@ -952,9 +955,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::MITSUBISHI_3A92:
 	    setMitsubishi3A92();
 	    break;
-	case engine_type_e::TOYOTA_1NZ_FE:
-	    setToyota1NZFE();
-	    break;
 	case engine_type_e::MITSUBISHI_4G93:
 	    setMitsubishi4G93();
 	    break;
@@ -1024,8 +1024,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	applyNonPersistentConfiguration();
 }
 
-void emptyCallbackWithConfiguration(engine_configuration_s * engineConfiguration) {
-	UNUSED(engineConfiguration);
+void emptyCallbackWithConfiguration(engine_configuration_s * p_engineConfiguration) {
+	UNUSED(p_engineConfiguration);
 }
 
 void resetConfigurationExt(engine_type_e engineType) {
@@ -1079,3 +1079,4 @@ BOARD_WEAK int getBoardMetaOutputsCount() { return 0; }
 // default implementation: treat all outputs as low side
 BOARD_WEAK int getBoardMetaLowSideOutputsCount() { return getBoardMetaOutputsCount(); }
 BOARD_WEAK Gpio* getBoardMetaOutputs() { return nullptr; }
+BOARD_WEAK int getBoardMetaDcOutputsCount() { return 0; }

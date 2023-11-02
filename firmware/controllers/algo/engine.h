@@ -153,7 +153,9 @@ public:
 		FanControl2,
 		PrimeController,
 		DfcoController,
+#if EFI_HD_ACR
 		HarleyAcr,
+#endif // EFI_HD_ACR
 		Mockable<WallFuelController>,
 #if EFI_VEHICLE_SPEED
 		GearDetector,

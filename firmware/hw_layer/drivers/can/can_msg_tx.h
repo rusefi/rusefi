@@ -94,7 +94,8 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(CanCategory category, uint32_t id, bool isExtended) : CanTxMessage(category, id, sizeof(TData), isExtended) { }
+// todo: unused 'canChannel'? BUG? https://github.com/rusefi/rusefi/issues/5675
+	explicit CanTxTyped(CanCategory p_category, uint32_t p_id, bool p_isExtended, bool canChannel) : CanTxMessage(p_category, p_id, sizeof(TData), p_isExtended) { }
 
 #if EFI_CAN_SUPPORT
 	/**
@@ -115,9 +116,9 @@ public:
 };
 
 template <typename TData>
-void transmitStruct(CanCategory category, uint32_t id, bool isExtended)
+void transmitStruct(CanCategory category, uint32_t id, bool isExtended, bool canChannel)
 {
-	CanTxTyped<TData> frame(category, id, isExtended);
+	CanTxTyped<TData> frame(category, id, isExtended, canChannel);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());

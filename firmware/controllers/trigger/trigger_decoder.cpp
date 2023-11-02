@@ -49,8 +49,8 @@
 #define NOISE_RATIO_THRESHOLD 3000
 #endif
 
-TriggerDecoderBase::TriggerDecoderBase(const char* name)
-	: name(name)
+TriggerDecoderBase::TriggerDecoderBase(const char* p_name)
+	: name(p_name)
 {
 	TriggerDecoderBase::resetState();
 }
@@ -104,8 +104,8 @@ void TriggerDecoderBase::resetCurrentCycleState() {
 
 #if EFI_SHAFT_POSITION_INPUT
 
-PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* name)
-	: TriggerDecoderBase(name)
+PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* p_name)
+	: TriggerDecoderBase(p_name)
 {
 }
 
@@ -507,7 +507,6 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			}
 #else
 			if (printTriggerTrace) {
-				float gap = 1.0 * toothDurations[0] / toothDurations[1];
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					printf("%sindex=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",

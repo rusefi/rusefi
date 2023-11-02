@@ -828,7 +828,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		auto nextToothIndex = triggerIndexForListeners;
 		angle_t nextPhase = 0;
 
-		int loopAllowance = 2 * engineCycleEventCount;
+		int loopAllowance = 2 * engineCycleEventCount + 1000;
 		do {
 			// I don't love this.
 			nextToothIndex = (nextToothIndex + 1) % engineCycleEventCount;
@@ -1032,9 +1032,9 @@ void onConfigurationChangeTriggerCallback() {
 	getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange = getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange || changed;
 }
 
-static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
-	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config.TriggerType);
-	shape.initializeSyncPoint(initState, config);
+static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& p_config, TriggerDecoderBase &initState) {
+	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, p_config.TriggerType);
+	shape.initializeSyncPoint(initState, p_config);
 }
 
 void TriggerCentral::validateCamVvtCounters() {

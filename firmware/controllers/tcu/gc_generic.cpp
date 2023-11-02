@@ -9,7 +9,7 @@ GenericGearController::GenericGearController() {
 }
 
 void GenericGearController::init() {
-	for (int i = 0; i < efi::size(engineConfiguration->tcu_rangeInput); i++) {
+	for (size_t i = 0; i < efi::size(engineConfiguration->tcu_rangeInput); i++) {
 		if (isBrainPinValid(engineConfiguration->tcu_rangeInput[i])) {
 			efiSetPadMode("Range Input", engineConfiguration->tcu_rangeInput[i], getInputMode(engineConfiguration->tcu_rangeInputMode[i]));
 		}
@@ -25,7 +25,7 @@ void GenericGearController::update() {
 	for (int i = 1; i <= 9; i++) {
 		uint8_t *rangeStates = getRangeStateArray(i);
 		// Loop through inputs
-		for (int p = 0; p < efi::size(engineConfiguration->tcu_rangeInput); p++) {
+		for (size_t p = 0; p < efi::size(engineConfiguration->tcu_rangeInput); p++) {
 			int cellState = rangeStates[p];
 			// If the pin isn't configured and it matters, or if we've locked out this range with 3 in a cell
 			if ((!isBrainPinValid(engineConfiguration->tcu_rangeInput[p]) && cellState != 2) || cellState == 3) {

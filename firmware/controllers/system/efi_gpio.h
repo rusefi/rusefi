@@ -55,6 +55,7 @@ private:
 class RegisteredNamedOutputPin : public RegisteredOutputPin, public NamedOutputPin {
 public:
 	RegisteredNamedOutputPin(const char* name, size_t pinOffset, size_t pinModeOffset);
+	RegisteredNamedOutputPin(const char* name, size_t pinOffset);
 };
 
 class EnginePins {
@@ -83,8 +84,10 @@ public:
 	// see acRelayPin
 	RegisteredOutputPin acRelay;
 	RegisteredOutputPin fuelPumpRelay;
-	RegisteredOutputPin harleyAcr;
+#if EFI_HD_ACR
+	RegisteredNamedOutputPin harleyAcr;
 	RegisteredOutputPin harleyAcr2;
+#endif // EFI_HD_ACR
 	OutputPin o2heater;
 	OutputPin luaOutputPins[LUA_PWM_COUNT];
 

@@ -10,10 +10,10 @@
 
 #include "engine_configuration_generated_structures.h"
 
-void initSettings(void);
-void printSpiState(const engine_configuration_s *engineConfiguration);
-void printConfiguration(const engine_configuration_s *engineConfiguration);
-void scheduleStopEngine(void);
+void initSettings();
+void printSpiState();
+void printConfiguration();
+void scheduleStopEngine();
 
 void printTPSInfo(void);
 void setEngineTypeAndSave(int value);

@@ -20,11 +20,6 @@ jobs:
         git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
         git submodule update --init --depth=1 java_console/luaformatter
 
-    - uses: actions/setup-java@v3
-      with:
-        distribution: 'zulu'
-        java-version: '11'
-
     - name: Print GCC version
       working-directory: .
       run: gcc -v
@@ -33,6 +28,11 @@ jobs:
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
+
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '11'
 
     - name: Code generation tools
       working-directory: ./java_tools

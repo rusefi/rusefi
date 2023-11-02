@@ -51,7 +51,7 @@ int getRusEfiVersion(void);
   #define efiAssertVoid(code, condition, message) { if (!(condition)) { firmwareError(code, message); return; } }
 #else /* EFI_ENABLE_ASSERTS */
   #define efiAssert(code, condition, message, result) { }
-  #define efiAssertVoid(code, condition, message) { }
+  #define efiAssertVoid(code, condition, message) { UNUSED(condition);}
 #endif /* EFI_ENABLE_ASSERTS */
 
 #define criticalAssertVoid(condition, message) efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, condition, message)
@@ -62,11 +62,9 @@ extern "C"
 #endif /* __cplusplus */
 
 #if EFI_PROD_CODE
-#include <hal.h>
 
 // If there was an error on the last boot, print out information about it now and reset state.
 void checkLastBootError();
-void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr);
 #endif // EFI_PROD_CODE
 
 #ifdef __cplusplus

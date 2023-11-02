@@ -1246,14 +1246,16 @@ void canDashboardAim(CanCycle cycle) {
 		return;
 	}
 
-	transmitStruct<Aim5f0>(CanCategory::NBC, 0x5f0, false);
-	transmitStruct<Aim5f1>(CanCategory::NBC, 0x5f1, false);
-	transmitStruct<Aim5f2>(CanCategory::NBC, 0x5f2, false);
-	transmitStruct<Aim5f3>(CanCategory::NBC, 0x5f3, false);
-	transmitStruct<Aim5f4>(CanCategory::NBC, 0x5f4, false);
-	transmitStruct<Aim5f5>(CanCategory::NBC, 0x5f5, false);
-	transmitStruct<Aim5f6>(CanCategory::NBC, 0x5f6, false);
-	transmitStruct<Aim5f7>(CanCategory::NBC, 0x5f7, false);
+	auto canChannel = engineConfiguration->canBroadcastUseChannelTwo;
+
+	transmitStruct<Aim5f0>(CanCategory::NBC, 0x5f0, false, canChannel);
+	transmitStruct<Aim5f1>(CanCategory::NBC, 0x5f1, false, canChannel);
+	transmitStruct<Aim5f2>(CanCategory::NBC, 0x5f2, false, canChannel);
+	transmitStruct<Aim5f3>(CanCategory::NBC, 0x5f3, false, canChannel);
+	transmitStruct<Aim5f4>(CanCategory::NBC, 0x5f4, false, canChannel);
+	transmitStruct<Aim5f5>(CanCategory::NBC, 0x5f5, false, canChannel);
+	transmitStruct<Aim5f6>(CanCategory::NBC, 0x5f6, false, canChannel);
+	transmitStruct<Aim5f7>(CanCategory::NBC, 0x5f7, false, canChannel);
 
 	// there are more, but less important for us
 	// transmitStruct<Aim5f8>(0x5f8, false);

@@ -151,10 +151,8 @@ void setBoardDefaultConfiguration() {
 
     engineConfiguration->boardUseTempPullUp = true;
 
-	engineConfiguration->acSwitch = Gpio::Unassigned;
 	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_PWM2;
 	engineConfiguration->fanPin = Gpio::H144_OUT_PWM4;
-	engineConfiguration->mainRelayPin = Gpio::Unassigned;
     engineConfiguration->tachOutputPin = Gpio::H144_OUT_PWM3;
 
 	// "required" hardware is done - set some reasonable defaults

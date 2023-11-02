@@ -137,23 +137,23 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 // todo: migrate to smarter getOutputOnTheBenchTest() approach?
 static volatile bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
-static float onTimeMs;
-static float offTimeMs;
-static int count;
+static float globalOnTimeMs;
+static float globalOffTimeMs;
+static int globalCount;
 static OutputPin* pinX;
 static bool swapOnOff = false;
 
 static chibios_rt::CounterSemaphore benchSemaphore(0);
 
-static void pinbench(float p_ontimeMs, float p_offtimeMs, int iterations,
+static void pinbench(float ontimeMs, float offtimeMs, int iterations,
 	OutputPin* pinParam, bool p_swapOnOff = false)
 {
-	onTimeMs = p_ontimeMs;
-	offTimeMs = p_offtimeMs;
+	globalOnTimeMs = ontimeMs;
+	globalOffTimeMs = offtimeMs;
 #if EFI_SIMULATOR
-	count = maxI(2, iterations);
+	globalCount = maxI(2, iterations);
 #else
-	count = iterations;
+	globalCount = iterations;
 #endif // EFI_SIMULATOR
 	pinX = pinParam;
 	swapOnOff = p_swapOnOff;
@@ -313,7 +313,7 @@ private:
 
 			if (isBenchTestPending) {
 				isBenchTestPending = false;
-				runBench(pinX, onTimeMs, offTimeMs, count, swapOnOff);
+				runBench(pinX, globalOnTimeMs, globalOffTimeMs, globalCount, swapOnOff);
 			}
 
 			if (widebandUpdatePending) {
@@ -331,6 +331,13 @@ static BenchController instance;
 static void auxOutBench(int index) {
     // todo!
 }
+
+#if EFI_HD_ACR
+static void hdAcrBench(int index) {
+    OutputPin*  pin = index == 0 ? &enginePins.harleyAcr : &enginePins.harleyAcr2;
+    pinbench(BENCH_AC_RELAY_DURATION, 100.0, 1, pin);
+}
+#endif // EFI_HD_ACR
 
 void handleBenchCategory(uint16_t index) {
 	switch(index) {
@@ -370,6 +377,14 @@ void handleBenchCategory(uint16_t index) {
 	case BENCH_AUXOUT7:
 	    auxOutBench(7);
 		return;
+#if EFI_HD_ACR
+	case HD_ACR:
+		hdAcrBench(0);
+		return;
+	case HD_ACR2:
+		hdAcrBench(1);
+		return;
+#endif // EFI_HD_ACR
 	case BENCH_HPFP_VALVE:
 		hpfpValveBench();
 		return;

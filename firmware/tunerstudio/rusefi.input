@@ -297,6 +297,7 @@ enable2ndByteCanID = false
 	requiresPowerCycle = enableAemXSeries
 
 	requiresPowerCycle = etb_use_two_wires
+	requiresPowerCycle = etbSplit
 	requiresPowerCycle = etbFreq
 	requiresPowerCycle = etbFunctions1
 	requiresPowerCycle = etbFunctions2
@@ -1443,6 +1444,7 @@ gaugeCategory = Sensors - Extra 1
 	AuxT2Gauge		= auxTemp2,	@@GAUGE_NAME_AUX_TEMP2@@,		"C",		-40,	140,	-15,		1,		95,	110,	1,	1
 	lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0
 	flexPercentGauge = flexPercent, @@GAUGE_NAME_FLEX@@, "%", 0, 100, 0, 0, 100, 100, 0, 0
+	fuelTempGauge = fuelTemp, @@GAUGE_NAME_FUEL_TEMPERATURE@@, "C",	0,	100,	0,	0,	75,  100,	0,	0
 	fuelTankLevelGauge	= fuelTankLevel,"Fuel level",			"%",		0,		100,		10,	20,	100,	100,	1,	1
 	AuxL1Gauge		= auxLinear1,	@@GAUGE_NAME_AUX_LINEAR_1@@, "", -100, 100, -100, -100, 100, 100, 2, 2
 	AuxL2Gauge		= auxLinear2,	@@GAUGE_NAME_AUX_LINEAR_2@@, "", -100, 100, -100, -100, 100, 100, 2, 2
@@ -2849,6 +2851,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Accelerator position 2nd sensor",		throttlePedalPositionSecondAdcChannel
 		field = "Up voltage",							throttlePedalSecondaryUpVoltage
 		field = "Down (WOT) voltage",					throttlePedalSecondaryWOTVoltage
+		field = "Error Detection Threshold",            etbSplit
 
 	dialog = pedalGauges
 		gauge = pedalPositionGauge
@@ -4407,9 +4410,9 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",	cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
-		commandButton = "Mitsubishi 3A92",             cmd_set_engine_type_MITSUBISHI_3A92
-		commandButton = "Mitsubishi 4G93",             cmd_set_engine_type_MITSUBISHI_4G93
-		commandButton = "Toyota 1NZ-FE",                cmd_set_engine_type_TOYOTA_1NZ_FE
+;		commandButton = "Mitsubishi 3A92",             cmd_set_engine_type_MITSUBISHI_3A92
+;		commandButton = "Mitsubishi 4G93",             cmd_set_engine_type_MITSUBISHI_4G93
+		commandButton = "Toyota 1NZ-FE",                cmd_set_engine_type_TOYOTA_1NZ_FE@@if_show_4chan_presets
 
 		commandButton = "microRusEFI M111",             cmd_set_engine_type_MRE_M111@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI GDI VAG B6 test", cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets

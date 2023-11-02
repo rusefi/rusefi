@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Oct 21 22:16:59 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Oct 31 06:12:38 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -63,6 +63,10 @@ case BENCH_VVT2_VALVE:
   return "BENCH_VVT2_VALVE";
 case BENCH_VVT3_VALVE:
   return "BENCH_VVT3_VALVE";
+case HD_ACR:
+  return "HD_ACR";
+case HD_ACR2:
+  return "HD_ACR2";
   }
  return NULL;
 }

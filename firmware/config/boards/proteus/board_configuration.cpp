@@ -212,12 +212,59 @@ static Gpio PROTEUS_CANAM_OUTPUTS[] = {
     Gpio::PROTEUS_LS_14,
 };
 
+static Gpio PROTEUS_HARLEY_OUTPUTS[] = {
+    Gpio::PROTEUS_LS_1,
+    Gpio::PROTEUS_LS_2,
+	Gpio::PROTEUS_IGN_1,
+	Gpio::PROTEUS_IGN_2,
+};
+
 int getBoardMetaLowSideOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
         return getBoardMetaOutputsCount();
     }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
+        return getBoardMetaOutputsCount();
+    }
     return 16;
 }
+
+#if HW_PROTEUS
+static Gpio PROTEUS_OUTPUTS[] = {
+Gpio::PROTEUS_LS_1,
+Gpio::PROTEUS_LS_2,
+Gpio::PROTEUS_LS_3,
+Gpio::PROTEUS_LS_4,
+Gpio::PROTEUS_LS_5,
+Gpio::PROTEUS_LS_6,
+Gpio::PROTEUS_LS_7,
+Gpio::PROTEUS_LS_8,
+Gpio::PROTEUS_LS_9,
+Gpio::PROTEUS_LS_10,
+Gpio::PROTEUS_LS_11,
+Gpio::PROTEUS_LS_12,
+Gpio::PROTEUS_LS_13,
+Gpio::PROTEUS_LS_14,
+Gpio::PROTEUS_LS_15,
+Gpio::PROTEUS_LS_16,
+	Gpio::PROTEUS_IGN_1,
+	Gpio::PROTEUS_IGN_2,
+	Gpio::PROTEUS_IGN_3,
+	Gpio::PROTEUS_IGN_4,
+	Gpio::PROTEUS_IGN_5,
+	Gpio::PROTEUS_IGN_6,
+	Gpio::PROTEUS_IGN_7,
+	Gpio::PROTEUS_IGN_8,
+	Gpio::PROTEUS_IGN_9,
+	Gpio::PROTEUS_IGN_10,
+	Gpio::PROTEUS_IGN_11,
+	Gpio::PROTEUS_IGN_12,
+	Gpio::PROTEUS_HS_1,
+	Gpio::PROTEUS_HS_2,
+	Gpio::PROTEUS_HS_3,
+	Gpio::PROTEUS_HS_4
+};
+#endif // HW_PROTEUS
 
 int getBoardMetaOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
@@ -226,12 +273,25 @@ int getBoardMetaOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::ME17_9_MISC) {
         return efi::size(PROTEUS_ME17_ADAPTER_OUTPUTS);
     }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
+        return efi::size(PROTEUS_HARLEY_OUTPUTS);
+    }
     return efi::size(PROTEUS_OUTPUTS);
+}
+
+int getBoardMetaDcOutputsCount() {
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
+        return 1;
+    }
+    return 1;
 }
 
 Gpio* getBoardMetaOutputs() {
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
         return PROTEUS_CANAM_OUTPUTS;
+    }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
+        return PROTEUS_HARLEY_OUTPUTS;
     }
     return PROTEUS_OUTPUTS;
 }

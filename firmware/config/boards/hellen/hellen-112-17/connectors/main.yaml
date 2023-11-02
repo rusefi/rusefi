@@ -13,7 +13,7 @@ pins:
     class: outputs
     type: ls
   - pin: 102
-    meta: MM100_INJ6
+    meta: MM100_INJ7
 # RZR fuel pump driver PWM
     ts_name: ___ low side 1.5A output
     class: outputs
@@ -253,6 +253,8 @@ pins:
     function: Pedal +5V Supply
   - pin: 213
     # jumper
+    meta: MM100_IN_CRANK
+    class: event_inputs
     function: Crank Sensor VR+ Positive Input
     ts_name: ___ Crank VR+
   - pin: 215
@@ -301,7 +303,7 @@ pins:
     ts_name: ___ MAF frequency
 
   - pin: 235
-    meta: MM100_INJ7
+    meta: MM100_INJ6
     ts_name: ___ Low Side Output
     class: outputs
     type: ls

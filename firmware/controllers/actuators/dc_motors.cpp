@@ -51,7 +51,7 @@
 				pinDir1,
 				&m_pinDir1,
 				clampedFrequency,
-				0
+				/*dutyCycle*/0
 			);
 
 			startSimplePwmHard(&m_pwm2, "ETB Dir 2",
@@ -59,7 +59,7 @@
 				pinDir2,
 				&m_pinDir2,
 				clampedFrequency,
-				0
+				/*dutyCycle*/0
 			);
 #endif // EFI_UNIT_TEST
 
@@ -75,7 +75,7 @@
 				pinEnable,
 				&m_pinEnable,
 				clampedFrequency,
-				0
+				/*dutyCycle*/0
 			);
 #endif // EFI_UNIT_TEST
 
@@ -86,7 +86,7 @@
 static DcHardware dcHardware[ETB_COUNT + DC_PER_STEPPER];
 
 DcHardware *getdcHardware() {
-    return &dcHardware[0];
+	return &dcHardware[0];
 }
 
 DcMotor* initDcMotor(const char *disPinMsg,const dc_io& io, size_t index, bool useTwoWires) {

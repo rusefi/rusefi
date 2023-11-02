@@ -120,11 +120,12 @@ void canDashboardTS(CanCycle cycle) {
 		return;
 	}
 
-	transmitStruct<ms1512>(CanCategory::NBC, baseId + 0, false);
-	transmitStruct<ms1513>(CanCategory::NBC, baseId + 1, false);
-	transmitStruct<ms1514>(CanCategory::NBC, baseId + 2, false);
-	transmitStruct<ms1515>(CanCategory::NBC, baseId + 3, false);
-	transmitStruct<ms1516>(CanCategory::NBC, baseId + 4, false);
+	bool busIndex = 0;
+	transmitStruct<ms1512>(CanCategory::NBC, baseId + 0, false, busIndex);
+	transmitStruct<ms1513>(CanCategory::NBC, baseId + 1, false, busIndex);
+	transmitStruct<ms1514>(CanCategory::NBC, baseId + 2, false, busIndex);
+	transmitStruct<ms1515>(CanCategory::NBC, baseId + 3, false, busIndex);
+	transmitStruct<ms1516>(CanCategory::NBC, baseId + 4, false, busIndex);
 }
 
 #endif /* EFI_CAN_SUPPORT */

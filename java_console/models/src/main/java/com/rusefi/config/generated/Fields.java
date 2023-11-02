@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Oct 26 02:49:16 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Nov 02 05:00:43 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -101,6 +101,8 @@ public class Fields {
 	public static final int bench_mode_e_BENCH_VVT1_VALVE = 17;
 	public static final int bench_mode_e_BENCH_VVT2_VALVE = 18;
 	public static final int bench_mode_e_BENCH_VVT3_VALVE = 19;
+	public static final int bench_mode_e_HD_ACR = 28;
+	public static final int bench_mode_e_HD_ACR2 = 29;
 	public static final int BENCH_STARTER_DURATION = 4000;
 	public static final int BENCH_VVT_DURATION = 300;
 	public static final int blend_table_s_size = 188;
@@ -495,6 +497,7 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS = "kPa";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "Fuel: running";
+	public static final String GAUGE_NAME_FUEL_TEMPERATURE = "Fuel Temperature";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS AE add fuel ms";
 	public static final String GAUGE_NAME_FUEL_TPS_ROC = "fuel: TPS change";
 	public static final String GAUGE_NAME_FUEL_TRIM = "Fuel: fuel trim";
@@ -960,6 +963,7 @@ public class Fields {
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_AFR_CFG = 10;
 	public static final int PACK_MULT_ANGLE = 50;
+	public static final int PACK_MULT_FLEX = 2;
 	public static final int PACK_MULT_FUEL_FLOW = 200;
 	public static final int PACK_MULT_FUEL_MASS = 100;
 	public static final int PACK_MULT_HIGH_PRESSURE = 10;
@@ -975,16 +979,6 @@ public class Fields {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final int persistent_config_s_size = 23880;
 	public static final int pid_s_size = 20;
-	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
-	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
-	public static final int PidAutoTune_AutoTunerState_FAILED = 128;
-	public static final int PidAutoTune_AutoTunerState_RELAY_STEP_DOWN = 8;
-	public static final int PidAutoTune_AutoTunerState_RELAY_STEP_UP = 4;
-	public static final int PidAutoTune_AutoTunerState_STEADY_STATE_AFTER_STEP_UP = 2;
-	public static final int PidAutoTune_AutoTunerState_STEADY_STATE_AT_BASELINE = 1;
-	public static final int PidAutoTune_Peak_MAXIMUM = 1;
-	public static final int PidAutoTune_Peak_MINIMUM = -1;
-	public static final int PidAutoTune_Peak_NOT_A_PEAK = 0;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
 	public static final int pin_input_mode_e_PI_PULLUP = 1;
@@ -993,6 +987,7 @@ public class Fields {
 	public static final int pin_output_mode_e_OM_OPENDRAIN = 2;
 	public static final int pin_output_mode_e_OM_OPENDRAIN_INVERTED = 3;
 	public static final int PRIME_CURVE_COUNT = 8;
+	public static final String PROTOCOL_ACR_NAME = "acr";
 	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
 	public static final String PROTOCOL_COIL1_SHORT_NAME = "c1";
 	public static final String PROTOCOL_CRANK1 = "t1";
@@ -1273,7 +1268,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.10.26.f407-discovery.2560163681";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.11.02.f407-discovery.4112185421";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1494,7 +1489,7 @@ public class Fields {
 	public static final Field AFR_V2 = Field.create("AFR_V2", 512, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field AFR_VALUE2 = Field.create("AFR_VALUE2", 516, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field THROTTLEPEDALPOSITIONADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONADCCHANNEL", 520, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_521 = Field.create("ALIGNMENTFILL_AT_521", 521, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ETBSPLIT = Field.create("ETBSPLIT", 521, FieldType.INT8).setScale(0.1).setBaseOffset(0);
 	public static final String[] Gpio = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15"};
 	public static final Field TLE6240_CS = Field.create("TLE6240_CS", 522, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final String[] pin_output_mode_e = {"default", "default inverted", "open collector", "open collector inverted"};
@@ -3078,7 +3073,7 @@ public class Fields {
 	AFR_V2,
 	AFR_VALUE2,
 	THROTTLEPEDALPOSITIONADCCHANNEL,
-	ALIGNMENTFILL_AT_521,
+	ETBSPLIT,
 	TLE6240_CS,
 	TLE6240_CSPINMODE,
 	ALIGNMENTFILL_AT_525,

@@ -44,7 +44,7 @@ public:
 	// See comment in EventQueue::executeAll for info about lateDelay - it sets the 
 	// time gap between events for which we will wait instead of rescheduling the next
 	// event in a group of events near one another.
-	EventQueue(efitick_t lateDelay = 0) : lateDelay(lateDelay) {}
+	EventQueue(efitick_t p_lateDelay = 0) : lateDelay(p_lateDelay) {}
 
 	/**
 	 * O(size) - linear search in sorted linked list

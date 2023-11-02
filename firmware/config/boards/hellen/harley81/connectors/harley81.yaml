@@ -44,15 +44,15 @@ pins:
     # H144_LS_1
     id: G7
     class: outputs
-    function: Front Injector
-    ts_name: 6 Front Injector
+    function: Front Injector 1
+    ts_name: 6 Front Injector 1
 
   - pin: 7
     # H144_LS_2
     id: G8
     class: outputs
-    function: Rear Injector
-    ts_name: 7 Rear Injector
+    function: Rear Injector 2
+    ts_name: 7 Rear Injector 2
 
   - pin: 8
     # H144_OUT_IO6
@@ -90,8 +90,8 @@ pins:
     # H144_IGN_1
     id: C13
     class: outputs
-    ts_name: 24 Front Coil
-    function: Front Coil
+    ts_name: 24 Front Coil 1
+    function: Front Coil 1
     type: ign
 
   - pin: 25
@@ -148,10 +148,12 @@ pins:
   - pin: 38
     function: CAN bus low
     type: can
+    color: blue
 
   - pin: 39
     function: CAN bus high
     type: can
+    color: green
 
   - pin: 41
 # H144_IN_PPS
@@ -171,8 +173,8 @@ pins:
     # H144_IGN_2
     id: E5
     class: outputs
-    ts_name: 43 Rear Coil
-    function: Rear Coil
+    ts_name: 43 Rear Coil 2
+    function: Rear Coil 2
     type: ign
 
   - pin: 44

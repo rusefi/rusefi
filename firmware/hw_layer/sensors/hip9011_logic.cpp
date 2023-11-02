@@ -106,7 +106,7 @@ int HIP9011::getGainIndex(DEFINE_HIP_PARAMS) {
  * 'TC is typically TINT/(2*Pi*VOUT)'
  * Knock Sensor Training TPIC8101, page 24
  */
-float HIP9011::getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth) {
+float HIP9011::getRpmByAngleWindowAndTimeUs(int timeUs, float p_angleWindowWidth) {
 	/**
 	 * TINT = TC * 2 * PI * VOUT
 	 */
@@ -115,7 +115,7 @@ float HIP9011::getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth) 
 	 * rpm = 60 seconds / time
 	 * '60000000' because revolutions per MINUTE in uS conversion
 	 */
-	float windowWidthMult = angleWindowWidth / 360.0f;
+	float windowWidthMult = p_angleWindowWidth / 360.0f;
 	return 60000000.0f / integrationTimeUs * windowWidthMult;
 }
 

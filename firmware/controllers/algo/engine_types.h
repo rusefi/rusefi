@@ -513,4 +513,6 @@ typedef enum {
 	BENCH_AUXOUT5,
 	BENCH_AUXOUT6,
 	BENCH_AUXOUT7,
+	HD_ACR,
+	HD_ACR2,
 } bench_mode_e;

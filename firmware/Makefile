@@ -47,15 +47,6 @@ ifeq ($(DEBUG_LEVEL_OPT),)
   # DEBUG_LEVEL_OPT += -DEFI_LUA=FALSE
 endif
 
-
-ifeq ($(CCACHE_DIR),)
-  $(info No CCACHE_DIR)
-else
-  $(info CCACHE_DIR is ${CCACHE_DIR})
-  CCPREFIX=ccache
-endif
-
-
 # Compiler options here.
 # yes we have two kinds of EXTRA_*PARAMS so that we can define those in two different places independently
 #
@@ -82,6 +73,8 @@ endif
 
 # Hellen is one of the boards which cares
 USE_CPPOPT += -Wno-error=tautological-compare
+
+USE_CPPOPT += $(RUSEFI_CPPOPT)
 
 # Enable this if you want the linker to remove unused code and data
 ifeq ($(USE_LINK_GC),)
@@ -319,8 +312,8 @@ ifeq ($(CROSS_COMPILE),)
 else
   TRGT = $(CROSS_COMPILE)
 endif
-CC   = $(CCPREFIX) $(TRGT)gcc
-CPPC = $(CCPREFIX) $(TRGT)g++
+CC   = $(TRGT)gcc
+CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.

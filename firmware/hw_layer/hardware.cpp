@@ -89,8 +89,7 @@ void unlockSpi(spi_device_e device) {
 	spiReleaseBus(getSpiDevice(device));
 }
 
-static void initSpiModules(engine_configuration_s *engineConfiguration) {
-	UNUSED(engineConfiguration);
+static void initSpiModules() {
 	if (engineConfiguration->is_enabled_spi_1) {
 		 turnOnSpi(SPI_DEVICE_1);
 	}
@@ -209,8 +208,7 @@ static void calcFastAdcIndexes() {
 #endif/* HAL_USE_ADC */
 }
 
-static void adcConfigListener(Engine *engine) {
-	UNUSED(engine);
+static void adcConfigListener() {
 	// todo: something is not right here - looks like should be a callback for each configuration change?
 	calcFastAdcIndexes();
 }
@@ -359,7 +357,7 @@ void applyNewHardwareSettings() {
 	startSent();
 #endif
 
-	adcConfigListener(engine);
+	adcConfigListener();
 }
 
 #if EFI_BOR_LEVEL
@@ -508,7 +506,7 @@ void initHardware() {
 #endif // TRIGGER_SCOPE
 
 #if HAL_USE_SPI
-	initSpiModules(engineConfiguration);
+	initSpiModules();
 #endif /* HAL_USE_SPI */
 
 #if (EFI_PROD_CODE && BOARD_EXT_GPIOCHIPS > 0) || EFI_SIMULATOR

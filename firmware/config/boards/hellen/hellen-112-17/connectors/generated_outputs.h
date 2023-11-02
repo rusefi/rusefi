@@ -5,7 +5,7 @@
 
 Gpio GENERATED_OUTPUTS = {
 	Gpio::MM100_INJ5, // 101 low side 1.5A output
-	Gpio::MM100_INJ6, // 102 low side 1.5A output
+	Gpio::MM100_INJ7, // 102 low side 1.5A output
 	Gpio::MM100_IGN8, // 115 Main Relay
 	Gpio::MM100_OUT_PWM2, // 129 Fuel Consumption Output
 	Gpio::MM100_OUT_PWM3, // 131 Relay Output
@@ -14,7 +14,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM100_OUT_PWM5, // 142 Fuel Pump Relay
 	Gpio::MM100_IGN5, // 151 relay output
 	Gpio::MM100_IGN6, // 152 relay output
-	Gpio::MM100_INJ7, // 235 Low Side Output
+	Gpio::MM100_INJ6, // 235 Low Side Output
 	Gpio::MM100_INJ2, // 242 injector output 2
 	Gpio::MM100_INJ3, // 243 injector output 3
 	Gpio::MM100_INJ1, // 244 injector output 1

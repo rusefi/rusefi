@@ -13,8 +13,8 @@ struct CanFilter {
 	int Bus;
 	int Callback;
 
-	bool accept(int Id) {
-	    return (Id & this->Mask) == this->Id;
+	bool accept(int p_Id) {
+	    return (p_Id & this->Mask) == Id;
 	}
 };
 

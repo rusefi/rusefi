@@ -132,7 +132,7 @@ void kLineThread(void*) {
                     kvalues[3] = positiveCltWithHighishValueInCaseOfSensorIssue;
 
                     chnWrite(klDriver, (const uint8_t *)kvalues, OUT_SIZE);
-                    uint8_t crc = crc_hondak_calc(kvalues, OUT_SIZE);
+                    crc = crc_hondak_calc(kvalues, OUT_SIZE);
                     chnWrite(klDriver, (const uint8_t *)&crc, 1);
                     ignoreRecentTransmit = true;
                 } else {

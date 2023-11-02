@@ -9,13 +9,7 @@
 
 #pragma once
 
-#ifndef FALSE
-#define FALSE (0)
-#endif /* FALSE */
-
-#ifndef TRUE
-#define TRUE (!(FALSE))
-#endif /* TRUE */
+#include <rusefi/true_false.h>
 
 #ifdef __cplusplus
 #define EXTERNC extern "C"

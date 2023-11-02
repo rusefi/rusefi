@@ -36,11 +36,11 @@ static int lua_interpolate(lua_State* l) {
 }
 
 
-void configureRusefiLuaUtilHooks(lua_State* l) {
-	lua_register(l, "print", lua_efi_print);
-	lua_register(l, "interpolate", lua_interpolate);
+void configureRusefiLuaUtilHooks(lua_State* lState) {
+	lua_register(lState, "print", lua_efi_print);
+	lua_register(lState, "interpolate", lua_interpolate);
 
-	lua_register(l, "findCurveIndex", [](lua_State* l) {
+	lua_register(lState, "findCurveIndex", [](lua_State* l) {
 		auto name = luaL_checklstring(l, 1, nullptr);
 		auto result = getCurveIndexByName(name);
 		if (!result) {
@@ -52,7 +52,7 @@ void configureRusefiLuaUtilHooks(lua_State* l) {
 		return 1;
 	});
 
-	lua_register(l, "findTableIndex",
+	lua_register(lState, "findTableIndex",
 			[](lua_State* l) {
 			auto name = luaL_checklstring(l, 1, nullptr);
 			auto index = getTableIndexByName(name);
@@ -65,7 +65,7 @@ void configureRusefiLuaUtilHooks(lua_State* l) {
 			return 1;
 	});
 
-	lua_register(l, "findSetting",
+	lua_register(lState, "findSetting",
 			[](lua_State* l) {
 			auto name = luaL_checklstring(l, 1, nullptr);
 			auto defaultValue = luaL_checknumber(l, 2);
@@ -81,7 +81,7 @@ void configureRusefiLuaUtilHooks(lua_State* l) {
 	});
 
 #if defined(STM32F4) || defined(STM32F7)
-	lua_register(l, "mcu_standby", [](lua_State*) {
+	lua_register(lState, "mcu_standby", [](lua_State*) {
 	    onBoardStandBy();
 		stm32_standby();
 		return 0;

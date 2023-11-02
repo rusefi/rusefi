@@ -33,4 +33,6 @@ public enum bench_mode_e {
 	BENCH_AUXOUT5,
 	BENCH_AUXOUT6,
 	BENCH_AUXOUT7,
+	HD_ACR,
+	HD_ACR2,
 }

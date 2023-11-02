@@ -58,10 +58,10 @@ private:
 template <int Size, int Offset>
 class ObdCanSensor: public CanSensorBase {
 public:
-	ObdCanSensor(int PID, float Scale, SensorType type) :
+	ObdCanSensor(int p_PID, float p_Scale, SensorType type) :
 			CanSensorBase(OBD_TEST_RESPONSE, type, /* timeout, never expire */ 0) {
-		this->PID = PID;
-		this->Scale = Scale;
+		this->PID = p_PID;
+		this->Scale = p_Scale;
 	}
 
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override {

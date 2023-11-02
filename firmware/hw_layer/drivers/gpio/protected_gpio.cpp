@@ -22,8 +22,8 @@ private:
 	const ProtectedGpioConfig* m_config;
 };
 
-void ProtectedGpio::configure(const ProtectedGpioConfig& config) {
-	m_config = &config;
+void ProtectedGpio::configure(const ProtectedGpioConfig& p_config) {
+	m_config = &p_config;
 }
 
 int ProtectedGpio::setPadMode(iomode_t mode) {

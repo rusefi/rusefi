@@ -54,10 +54,10 @@ float getVoltage(const char *msg, adc_channel_e hwChannel) {
 }
 
 #if EFI_USE_FAST_ADC
-AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len) {
-	this->hwConfig = hwConfig;
-	this->samples = buf;
-	this->buf_len = buf_len;
+AdcDevice::AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf, size_t p_buf_len) {
+	this->hwConfig = p_hwConfig;
+	this->samples = p_buf;
+	this->buf_len = p_buf_len;
 
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;

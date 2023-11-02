@@ -49,16 +49,7 @@ void backupRamSave(backup_ram_e idx, uint32_t value) {
 #endif /* HAL_USE_RTC */
 }
 
-#if defined(AT32F4XX)
-
-void backupRamFlush(void) {
-}
-
-BackupSramData* getBackupSram() {
-	return NULL;
-}
-
-#else
+#if !defined(AT32F4XX)
 
 void backupRamFlush(void) {
 	// nothing to do here, in STM32 all data is saved instantaneously

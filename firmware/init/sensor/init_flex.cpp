@@ -14,21 +14,32 @@ static Biquad flexTempFilter;
 
 static Timer flexFreq, flexPulse;
 
+static int flexCallbackCounter = 0;
+static int lowFlexCallbackCounter = 0;
+static float frequency;
+static float pulseWidthUs;
+static efitick_t latestCallbackTime;
+
 static void flexCallback(efitick_t nowNt, bool value) {
+    latestCallbackTime = nowNt;
+    flexCallbackCounter++;
 	if (value) {
-		float frequency = 1 / flexFreq.getElapsedSecondsAndReset(nowNt);
+		frequency = 1 / flexFreq.getElapsedSecondsAndReset(nowNt);
 		flexSensor.postRawValue(frequency, nowNt);
 
 		// Start timing pulse width on rising edge
 		flexPulse.reset(nowNt);
 	} else {
+	    lowFlexCallbackCounter++;
 		// End pulse timing on falling edge
-		float pulseWidthUs = flexPulse.getElapsedUs(nowNt);
+		pulseWidthUs = flexPulse.getElapsedUs(nowNt);
 
 		if (pulseWidthUs < 900) {
 			flexFuelTemp.invalidate(UnexpectedCode::Low);
+			warning(ObdCode::CUSTOM_OBD_6003, "flex low %f", pulseWidthUs);
 		} else if (pulseWidthUs > 5100) {
 			flexFuelTemp.invalidate(UnexpectedCode::High);
+			warning(ObdCode::CUSTOM_OBD_6004, "flex high %f", pulseWidthUs);
 		} else {
 			// -40C = 1000us
 			// 125C = 5000us
@@ -41,7 +52,7 @@ static void flexCallback(efitick_t nowNt, bool value) {
 
 static Gpio flexPin = Gpio::Unassigned;
 
-static void flexCallback(void*, efitick_t nowNt) {
+static void flexExtiCallback(void*, efitick_t nowNt) {
 #if EFI_PROD_CODE
 	flexCallback(nowNt, efiReadPin(flexPin));
 #endif
@@ -50,18 +61,28 @@ static void flexCallback(void*, efitick_t nowNt) {
 // https://rusefi.com/forum/viewtopic.php?p=37452#p37452
 
 void initFlexSensor() {
-	auto flexPin = engineConfiguration->flexSensorPin;
+	flexPin = engineConfiguration->flexSensorPin;
 	if (!isBrainPinValid(flexPin)) {
 		return;
 	}
 
 	// 0.01 means filter bandwidth of ~1hz with ~100hz sensor
 	flexTempFilter.configureLowpass(1, 0.01f);
+	flexSensor.setFunction(converter);
 
 #if EFI_PROD_CODE
 	efiExtiEnablePin("flex", flexPin,
 		PAL_EVENT_MODE_BOTH_EDGES,
-		flexCallback, nullptr);
+		flexExtiCallback, nullptr);
+
+	addConsoleAction("flexinfo", []() {
+	    efiPrintf("flex counter %d", flexCallbackCounter);
+	    efiPrintf("lowFlexCallbackCounter counter %d", lowFlexCallbackCounter);
+	    efiPrintf("flex freq %f", frequency);
+	    efiPrintf("pulseWidthUs %f", pulseWidthUs);
+	    efiPrintf("latestCallbackTime %d", latestCallbackTime);
+	});
+
 #endif // EFI_PROD_CODE
 
 	flexSensor.Register();

@@ -138,15 +138,15 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
 }
 
-SoftSparkLimiter::SoftSparkLimiter(bool allowHardCut) {
-    this->allowHardCut = allowHardCut;
+SoftSparkLimiter::SoftSparkLimiter(bool p_allowHardCut) {
+    this->allowHardCut = p_allowHardCut;
 #if EFI_UNIT_TEST
     initLaunchControl();
 #endif // EFI_UNIT_TEST
 }
 
-void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {
-	this->targetSkipRatio = targetSkipRatio;
+void SoftSparkLimiter::setTargetSkipRatio(float p_targetSkipRatio) {
+	this->targetSkipRatio = p_targetSkipRatio;
 }
 
 static tinymt32_t tinymt;

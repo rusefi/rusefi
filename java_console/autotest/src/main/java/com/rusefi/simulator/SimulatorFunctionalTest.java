@@ -21,11 +21,13 @@ import static com.rusefi.config.generated.Fields.TS_SIMULATE_CAN;
 import static org.junit.Assert.assertTrue;
 
 public class SimulatorFunctionalTest {
+    private final static Logging log = Logging.getLogging(SimulatorFunctionalTest.class);
+
     private final LinkManager linkManager;
     private boolean gotCanPacketAnalog1 = false;
     private boolean gotCanPacketAnalog2 = false;
     private int pinToggleCounter = 0;
-    private int [] durationsInStateMs = { 0, 0 };
+    private final int [] durationsInStateMs = { 0, 0 };
 
     public SimulatorFunctionalTest(LinkManager linkManager) {
         this.linkManager = linkManager;
@@ -38,6 +40,8 @@ public class SimulatorFunctionalTest {
         testOutputPin(bench_mode_e.BENCH_MAIN_RELAY, Fields.BENCH_MAIN_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_FUEL_PUMP, Fields.BENCH_FUEL_PUMP_DURATION);
         testOutputPin(bench_mode_e.BENCH_FAN_RELAY, Fields.BENCH_FAN_DURATION);
+        testOutputPin(bench_mode_e.HD_ACR, Fields.BENCH_AC_RELAY_DURATION);
+        testOutputPin(bench_mode_e.HD_ACR2, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
 // todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
@@ -122,7 +126,7 @@ public class SimulatorFunctionalTest {
                         processCanPacket(eid, data);
                     }
 
-                    System.out.println("Got " + count + " packets");
+                    log.debug("Got " + count + " CAN packet(s)");
                     gotCan.countDown();
 
                 } catch (EOFException e) {

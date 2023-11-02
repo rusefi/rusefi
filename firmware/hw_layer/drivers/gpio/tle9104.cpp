@@ -65,7 +65,7 @@ uint16_t Tle9104::readWrite(uint8_t addr, uint8_t data) {
 	uint16_t rx = spiPolledExchange(spi, tx);
 	spiUnselect(spi);
 
-	bool parityOk = parityBit(rx);
+	/*bool parityOk = */parityBit(rx);
 
 	// return data
 	return rx;

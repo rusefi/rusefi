@@ -41,7 +41,7 @@ extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif // EFI_ENGINE_SNIFFER
 
-void printSpiState(const engine_configuration_s *engineConfiguration) {
+void printSpiState() {
 	efiPrintf("spi 1=%s/2=%s/3=%s/4=%s",
 		boolToString(engineConfiguration->is_enabled_spi_1),
 		boolToString(engineConfiguration->is_enabled_spi_2),
@@ -49,7 +49,7 @@ void printSpiState(const engine_configuration_s *engineConfiguration) {
 		boolToString(engineConfiguration->is_enabled_spi_4));
 }
 
-static void printOutputs(const engine_configuration_s *engineConfiguration) {
+static void printOutputs() {
 	efiPrintf("injectionPins: mode %s", getPin_output_mode_e(engineConfiguration->injectionPinMode));
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		brain_pin_e brainPin = engineConfiguration->injectionPins[i];
@@ -87,7 +87,7 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 /**
  * @brief	Prints current engine configuration to human-readable console.
  */
-void printConfiguration(const engine_configuration_s *engineConfiguration) {
+void printConfiguration() {
 
 	efiPrintf("Template %s/%d trigger %s/%s/%d", getEngine_type_e(engineConfiguration->engineType),
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
@@ -120,7 +120,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("injection %s enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
 			boolToString(engineConfiguration->isInjectionEnabled));
 
-	printOutputs(engineConfiguration);
+	printOutputs();
 
 	efiPrintf("map_avg=%s/wa=%s",
 			boolToString(engineConfiguration->isMapAveragingEnabled),
@@ -143,12 +143,12 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	}
 
 #if EFI_PROD_CODE
-	printSpiState(engineConfiguration);
+	printSpiState();
 #endif // EFI_PROD_CODE
 }
 
 static void doPrintConfiguration() {
-	printConfiguration(engineConfiguration);
+	printConfiguration();
 }
 
 static void setFixedModeTiming(int value) {
@@ -566,7 +566,7 @@ static void setSpiMode(int index, bool mode) {
 		efiPrintf("invalid spi index %d", index);
 		return;
 	}
-	printSpiState(engineConfiguration);
+	printSpiState();
 }
 
 bool verboseRxCan = false;
@@ -673,7 +673,7 @@ static void disableSpi(int index) {
 /**
  * See 'LimpManager::isEngineStop' for code which actually stops engine
  */
-void scheduleStopEngine(void) {
+void scheduleStopEngine() {
 	doScheduleStopEngine();
 }
 
@@ -745,27 +745,6 @@ const command_f_s commandsF[] = {
 #endif // EFI_ENGINE_CONTROL
 		{"script_curve_1_value", setScriptCurve1Value},
 		{"script_curve_2_value", setScriptCurve2Value},
-#if EFI_PROD_CODE
-#if EFI_IDLE_CONTROL
-		{"idle_p", setIdlePFactor},
-		{"idle_i", setIdleIFactor},
-		{"idle_d", setIdleDFactor},
-#endif // EFI_IDLE_CONTROL
-#endif // EFI_PROD_CODE
-
-#if EFI_ELECTRONIC_THROTTLE_BODY
-		{"etb_p", setEtbPFactor},
-		{"etb_i", setEtbIFactor},
-		{"etb_d", setEtbDFactor},
-		{"etb", setThrottleDutyCycle},
-#endif // EFI_ELECTRONIC_THROTTLE_BODY
-
-		//		{"", },
-//		{"", },
-//		{"", },
-		//		{"", },
-		//		{"", },
-		//		{"", },
 };
 
 static void setTpsErrorDetectionTooLow(int v) {
@@ -817,13 +796,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 #endif // EFI_IDLE_CONTROL
 #endif // EFI_PROD_CODE
 
-#if EFI_ELECTRONIC_THROTTLE_BODY
-		{"etb_o", setEtbOffset},
-#endif // EFI_ELECTRONIC_THROTTLE_BODY
-
-		//		{"", },
-		//		{"", },
-		//		{"", },
 		//		{"", },
 		//		{"", },
 };
@@ -924,7 +896,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	engine->resetEngineSnifferIfInTestMode();
 }
 
-void initSettings(void) {
+void initSettings() {
 #if EFI_SIMULATOR
 	printf("initSettings\n");
 #endif // EFI_SIMULATOR

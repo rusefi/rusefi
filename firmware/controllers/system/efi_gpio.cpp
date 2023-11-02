@@ -57,14 +57,18 @@ static const char* const auxValveShortNames[] = { "a1", "a2"};
 
 static RegisteredOutputPin * registeredOutputHead = nullptr;
 
-RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *name, size_t pinOffset,
-		size_t pinModeOffset) : RegisteredOutputPin(name, pinOffset, pinModeOffset) {
+RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *p_name, size_t pinOffset,
+		size_t pinModeOffset) : RegisteredOutputPin(p_name, pinOffset, pinModeOffset) {
 }
 
-RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, size_t pinOffset,
+RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *p_name, size_t pinOffset) :
+    RegisteredOutputPin(p_name, pinOffset) {
+}
+
+RegisteredOutputPin::RegisteredOutputPin(const char *p_registrationName, size_t pinOffset,
 		size_t pinModeOffset)
 	: next(registeredOutputHead)
-	, registrationName(registrationName)
+	, registrationName(p_registrationName)
 	, m_pinOffset(static_cast<uint16_t>(pinOffset))
 	, m_hasPinMode(true)
 	, m_pinModeOffset(static_cast<uint16_t>(pinModeOffset))
@@ -73,9 +77,9 @@ RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, size_t pi
 	registeredOutputHead = this;
 }
 
-RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, size_t pinOffset)
+RegisteredOutputPin::RegisteredOutputPin(const char *p_registrationName, size_t pinOffset)
 	: next(registeredOutputHead)
-	, registrationName(registrationName)
+	, registrationName(p_registrationName)
 	, m_pinOffset(static_cast<uint16_t>(pinOffset))
 	, m_hasPinMode(false)
 	, m_pinModeOffset(-1)
@@ -142,8 +146,10 @@ EnginePins::EnginePins() :
 		fanRelay2("Fan Relay 2", CONFIG_PIN_OFFSETS(fan2)),
 		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
+#if EFI_HD_ACR
 		harleyAcr("Harley ACR", CONFIG_OFFSET(acrPin)),
 		harleyAcr2("Harley ACR 2", CONFIG_OFFSET(acrPin2)),
+#endif // EFI_HD_ACR
 		boostPin("Boost", CONFIG_PIN_OFFSETS(boostControl)),
 		idleSolenoidPin("Idle Valve", CONFIG_OFFSET2(idle, solenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
 		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
@@ -154,6 +160,9 @@ EnginePins::EnginePins() :
 		speedoOut("speedoOut", CONFIG_OFFSET(speedometerOutputPin))
 {
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
+#if EFI_HD_ACR
+	harleyAcr.name = PROTOCOL_HPFP_NAME;
+#endif // EFI_HD_ACR
 
 	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
 	static_assert(efi::size(trailNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
@@ -346,6 +355,12 @@ OutputPin *EnginePins::getOutputPinForBenchMode(bench_mode_e index) {
 		return &acRelay;
 	case BENCH_FAN_RELAY:
 		return &fanRelay;
+#if EFI_HD_ACR
+	case HD_ACR:
+		return &harleyAcr;
+	case HD_ACR2:
+		return &harleyAcr2;
+#endif
 	case BENCH_IDLE_VALVE:
 		return &idleSolenoidPin;
 	case BENCH_FAN_RELAY_2:
@@ -359,8 +374,8 @@ OutputPin *EnginePins::getOutputPinForBenchMode(bench_mode_e index) {
 NamedOutputPin::NamedOutputPin() : OutputPin() {
 }
 
-NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
-	this->name = name;
+NamedOutputPin::NamedOutputPin(const char *p_name) : OutputPin() {
+	name = p_name;
 }
 
 const char *NamedOutputPin::getName() const {
@@ -545,6 +560,7 @@ void OutputPin::resetToggleStats() {
 extern bool qcDirectPinControlMode;
 
 void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
+    UNUSED(msg);
     if ((qcDirectPinControlMode || getOutputOnTheBenchTest() == this) && !isForce) {
         return;
     }
@@ -642,16 +658,16 @@ void initOutputPins() {
 #endif /* EFI_GPIO_HARDWARE */
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
-	initPin(msg, brainPin, OM_DEFAULT);
+void OutputPin::initPin(const char *p_msg, brain_pin_e p_brainPin) {
+	initPin(p_msg, p_brainPin, OM_DEFAULT);
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e outputMode, bool forceInitWithFatalError) {
+void OutputPin::initPin(const char *msg, brain_pin_e p_brainPin, pin_output_mode_e outputMode, bool forceInitWithFatalError) {
 #if EFI_UNIT_TEST
 	pinToggleCounter = 0;
 #endif
 
-	if (!isBrainPinValid(brainPin)) {
+	if (!isBrainPinValid(p_brainPin)) {
 		return;
 	}
 
@@ -666,7 +682,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e
 
 	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
 	// To avoid this error, call deInit() first
-	if (isBrainPinValid(this->brainPin) && this->brainPin != brainPin) {
+	if (isBrainPinValid(brainPin) && brainPin != p_brainPin) {
 		firmwareError(ObdCode::CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned, cannot reassign without unregister first", msg);
 		return;
 	}
@@ -675,30 +691,27 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e
 		firmwareError(ObdCode::CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e %d %s",
 				msg,
 				outputMode,
-				hwPortname(brainPin)
+				hwPortname(p_brainPin)
 				);
 		return;
 	}
 
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-	iomode_t mode = (outputMode == OM_DEFAULT || outputMode == OM_INVERTED) ?
+	iomode_t l_mode = (outputMode == OM_DEFAULT || outputMode == OM_INVERTED) ?
 		PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		this->ext = false;
 	#endif
-	if (brain_pin_is_onchip(brainPin)) {
-		ioportid_t port = getHwPort(msg, brainPin);
-		int pin = getHwPin(msg, brainPin);
+	if (brain_pin_is_onchip(p_brainPin)) {
+		port = getHwPort(msg, p_brainPin);
+		pin = getHwPin(msg, p_brainPin);
 
 		// Validate port
 		if (port == GPIO_NULL) {
-			criticalError("OutputPin::initPin got invalid port for pin idx %d", static_cast<int>(brainPin));
+			criticalError("OutputPin::initPin got invalid port for pin idx %d", static_cast<int>(p_brainPin));
 			return;
 		}
-
-		this->port = port;
-		this->pin = pin;
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
@@ -707,7 +720,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e
 	#endif
 #endif // briefly leave the include guard because we need to set default state in tests
 
-	this->brainPin = brainPin;
+	brainPin = p_brainPin;
 
 	// The order of the next two calls may look strange, which is a good observation.
 	// We call them in this order so that the pin is set to a known state BEFORE
@@ -716,19 +729,19 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e
 	setDefaultPinState(outputMode);
 
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-	efiSetPadMode(msg, brainPin, mode);
+	efiSetPadMode(msg, brainPin, l_mode);
 	if (brain_pin_is_onchip(brainPin)) {
-		int actualValue = palReadPad(port, pin);
-		// we had enough drama with pin configuration in board.h and else that we shall self-check
-
 		// todo: handle OM_OPENDRAIN and OM_OPENDRAIN_INVERTED as well
 		if (outputMode == OM_DEFAULT || outputMode == OM_INVERTED) {
-			const int logicalValue = 
+#ifndef DISABLE_PIN_STATE_VALIDATION
+		    int actualValue = palReadPad(port, pin);
+		    // we had enough drama with pin configuration in board.h and else that we shall self-check
+
+			const int logicalValue =
 				(outputMode == OM_INVERTED)
 				? !actualValue 
 				: actualValue;
 
-#ifndef DISABLE_PIN_STATE_VALIDATION
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
 			if (logicalValue) {
 				criticalError("HARDWARE VALIDATION FAILED %s: unexpected startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(outputMode));

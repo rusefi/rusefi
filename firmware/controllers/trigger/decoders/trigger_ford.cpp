@@ -14,8 +14,6 @@ void configureFordCoyote(TriggerWaveform *s) {
     s->setTriggerSynchronizationGap(3);
     s->setSecondTriggerSynchronizationGap(0.5);
 
-    int narrowGap = 30;
-
 	s->addToothRiseFall(45);
 	s->addToothRiseFall(90);
 

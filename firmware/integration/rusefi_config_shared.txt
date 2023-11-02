@@ -3,6 +3,7 @@
 #define PACK_MULT_PRESSURE 30
 #define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_PERCENT 100
+#define PACK_MULT_FLEX 2
 #define PACK_MULT_TEMPERATURE 100
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_MS 300
@@ -101,6 +102,7 @@
 #define GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH "Fuel pressure raw (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS "bar"
+#define GAUGE_NAME_FUEL_TEMPERATURE "Fuel Temperature"
 #define GAUGE_NAME_FLEX "Flex Ethanol %"
 
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
