@@ -1,6 +1,10 @@
 package com.rusefi.simulator;
 
+import com.devexperts.logging.Logging;
+import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.bench_mode_e;
 import com.rusefi.enums.bench_test_magic_numbers_e;
 import com.rusefi.enums.bench_test_packet_ids_e;
@@ -14,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.TS_SIMULATE_CAN;
+import static org.junit.Assert.assertTrue;
 
 public class SimulatorFunctionalTest {
     private final LinkManager linkManager;
@@ -27,6 +32,8 @@ public class SimulatorFunctionalTest {
     }
 
     public void mainTestBody() throws InterruptedException {
+        assertHappyTriggerSimulator();
+        assertVvtPosition();
         assertRawAnalogPackets();
         testOutputPin(bench_mode_e.BENCH_MAIN_RELAY, Fields.BENCH_MAIN_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_FUEL_PUMP, Fields.BENCH_FUEL_PUMP_DURATION);
@@ -34,6 +41,22 @@ public class SimulatorFunctionalTest {
         testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
 // todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
+    }
+
+    private void assertHappyTriggerSimulator() throws InterruptedException {
+        // todo: do we need a way to reset totalTriggerErrorCounter prior to five second sleep? looks like 'set engine_type' would update trigger which would reset counter?
+        Thread.sleep(5 * Timeouts.SECOND);
+        double triggerErrors = SensorCentral.getInstance().getValue(Sensor.totalTriggerErrorCounter);
+        assertTrue("triggerErrors " + triggerErrors, triggerErrors < 5);
+    }
+
+    private void assertVvtPosition() {
+        assertNear("RPM", SensorCentral.getInstance().getValue(Sensor.RPMValue), 1200, 5);
+    }
+
+    private void assertNear(String message, double actual, double expected, double tolerance) {
+        if (!nearEq(actual, expected, tolerance))
+            throw new IllegalStateException(message + " actual=" + actual + " expected=" + expected);
     }
 
     private int store8bit(byte [] buf, int offset, int int8) {
@@ -51,7 +74,7 @@ public class SimulatorFunctionalTest {
 
     private void exchangeCanPackets(CountDownLatch gotCan,
                                     bench_test_packet_ids_e [] expectedEids,
-                                    byte[][] packets) throws InterruptedException {
+                                    byte[][] packets) {
         linkManager.submit(new Runnable() {
             @Override
             public void run() {
@@ -197,7 +220,7 @@ private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws Int
                     + " toggleTimeMs=" + stateToggleTimeMs);
         }
     }
-    
+
     private int readInt(byte[] data, int startIdx, int endIdx) {
         int v = 0;
         for (int i = startIdx; i <= endIdx; i++) {
@@ -218,7 +241,11 @@ private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws Int
         }
     }
 
-    private boolean nearEq(int value1, int value2, int tolerance) {
-        return Math.abs(value1 - value2) <= tolerance;
+    private boolean nearEq(double actual, double expected, double tolerance) {
+        return Math.abs(actual - expected) <= tolerance;
+    }
+
+    private boolean nearEq(int actual, int expected, int tolerance) {
+        return Math.abs(actual - expected) <= tolerance;
     }
 }
