@@ -106,11 +106,6 @@ efitick_t getTimeNowNt();
 efitimeus_t getTimeNowUs();
 
 /**
- * @brief   Returns the number of milliseconds since the board initialization.
- */
-efitimems_t getTimeNowMs();
-
-/**
  * @brief   Current system time in seconds.
  */
 efitimesec_t getTimeNowS();

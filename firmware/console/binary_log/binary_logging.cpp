@@ -119,7 +119,7 @@ void writeSdBlock(Writer& outBuffer) {
 	// todo: add a log field for SD card period
 //	prevSdCardLineTime = nowUs;
 
-	packedTime = getTimeNowMs() * 1.0 / TIME_PRECISION;
+	packedTime = getTimeNowUs() * 1e-3 / TIME_PRECISION;
 
 	uint8_t sum = 0;
 	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields); fieldIndex++) {

@@ -20,13 +20,6 @@ efitimeus_t getTimeNowUs() {
 }
 
 /**
- * 32 bit return type overflows in 23(or46?) days. tag#4554. I think we do not expect rusEFI to run for 23 days straight days any time soon?
- */
-efitimems_t getTimeNowMs(void) {
-	return US2MS(getTimeNowUs());
-}
-
-/**
  * Integer number of seconds since ECU boot.
  * 31,710 years - would not overflow during our life span.
  */
