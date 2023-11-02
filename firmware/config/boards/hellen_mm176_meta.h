@@ -140,6 +140,7 @@
 #define MM176_GP7 F15
 //GP8 = PWR_EN
 #define MM176_GP8 E10
+#define MM176_EN_PIN MM176_GP8
 //GP9 = MUX
 #define MM176_GP9 F2
 #define MM176_GP10 I3
