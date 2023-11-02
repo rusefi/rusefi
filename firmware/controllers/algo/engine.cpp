@@ -456,9 +456,9 @@ todo: move to shutdown_controller.cpp
 */
 
 	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
+/* this needs work or tests
 	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
 	// in shutdown mode, we need a small cooldown time between the ignition off and on
-/* this needs work or tests
 todo: move to shutdown_controller.cpp
 	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
 		// if the ignition key is turned on again,
