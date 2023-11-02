@@ -112,30 +112,30 @@ static void setupDefaultSensorInputs() {
 void boardInitHardware() {
 	setHellenEnPin(Gpio::H144_OUT_IO3);
 
-	alphaTempPullUp.initPin("a-temp", Gpio::H144_OUT_IO4);
-	alphaCrankPPullUp.initPin("a-crank-p", Gpio::H144_OUT_IO5);
-	alphaTachPullUp.initPin("a-tach", Gpio::H144_OUT_IO6);
-	alpha2stepPullDown.initPin("a-2step", Gpio::H144_OUT_IO7);
-	alphaCamPullDown.initPin("a-cam", Gpio::H144_OUT_IO8);
-	//alphaCamVrPullUp.initPin("a-cam-vr", Gpio::H144_OUT_IO9);
-	alphaD2PullDown.initPin("a-d2", H_SPI3_SCK);
-	alphaD3PullDown.initPin("a-d3", H_SPI3_MISO);
-	alphaD4PullDown.initPin("a-d4", H_SPI3_MOSI);
-	//alphaD5PullDown.initPin("a-d5", Gpio::H144_LS_8);
+//	alphaTempPullUp.initPin("a-temp", Gpio::H144_OUT_IO4);
+//	alphaCrankPPullUp.initPin("a-crank-p", Gpio::H144_OUT_IO5);
+//	alphaTachPullUp.initPin("a-tach", Gpio::H144_OUT_IO6);
+//	alpha2stepPullDown.initPin("a-2step", Gpio::H144_OUT_IO7);
+//	alphaCamPullDown.initPin("a-cam", Gpio::H144_OUT_IO8);
+//	//alphaCamVrPullUp.initPin("a-cam-vr", Gpio::H144_OUT_IO9);
+//	alphaD2PullDown.initPin("a-d2", H_SPI3_SCK);
+//	alphaD3PullDown.initPin("a-d3", H_SPI3_MISO);
+//	alphaD4PullDown.initPin("a-d4", H_SPI3_MOSI);
+//	//alphaD5PullDown.initPin("a-d5", Gpio::H144_LS_8);
 	boardOnConfigurationChange(nullptr);
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
-	alphaTachPullUp.setValue(engineConfiguration->boardUseTachPullUp);
-	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
-	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
-	alpha2stepPullDown.setValue(engineConfiguration->boardUse2stepPullDown);
-	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
-	//alphaCamVrPullUp.setValue(engineConfiguration->boardUseCamVrPullUp);
-
-	alphaD2PullDown.setValue(engineConfiguration->boardUseD2PullDown);
-	alphaD3PullDown.setValue(engineConfiguration->boardUseD3PullDown);
-	alphaD4PullDown.setValue(engineConfiguration->boardUseD4PullDown);
+//	alphaTachPullUp.setValue(engineConfiguration->boardUseTachPullUp);
+//	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
+//	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
+//	alpha2stepPullDown.setValue(engineConfiguration->boardUse2stepPullDown);
+//	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
+//	//alphaCamVrPullUp.setValue(engineConfiguration->boardUseCamVrPullUp);
+//
+//	alphaD2PullDown.setValue(engineConfiguration->boardUseD2PullDown);
+//	alphaD3PullDown.setValue(engineConfiguration->boardUseD3PullDown);
+//	alphaD4PullDown.setValue(engineConfiguration->boardUseD4PullDown);
 	//alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
 
@@ -144,7 +144,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 void setBoardConfigOverrides() {
 	setupVbatt();
 
-	setHellenSdCardSpi2();
+	setHellenSdCardSpi1();
 
     setDefaultHellenAtPullUps();
 
