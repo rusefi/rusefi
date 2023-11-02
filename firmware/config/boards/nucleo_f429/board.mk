@@ -4,6 +4,7 @@ DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
 # Enable ethernet
 LWIP = yes
+ALLOW_SHADOW = yes
 DDEFS += -DEFI_ETHERNET=TRUE
 
 # This is an F429!
