@@ -878,6 +878,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif
 
 #if HW_HELLEN
+	case engine_type_e::TOYOTA_1NZ_FE:
+	    setToyota1NZFE();
+	    break;
 	case engine_type_e::HELLEN_NA8_96:
 		setHellenMiata96();
 		break;
@@ -951,9 +954,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::MITSUBISHI_3A92:
 	    setMitsubishi3A92();
-	    break;
-	case engine_type_e::TOYOTA_1NZ_FE:
-	    setToyota1NZFE();
 	    break;
 	case engine_type_e::MITSUBISHI_4G93:
 	    setMitsubishi4G93();

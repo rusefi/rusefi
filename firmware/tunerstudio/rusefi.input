@@ -4410,9 +4410,9 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",	cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
-		commandButton = "Mitsubishi 3A92",             cmd_set_engine_type_MITSUBISHI_3A92
-		commandButton = "Mitsubishi 4G93",             cmd_set_engine_type_MITSUBISHI_4G93
-		commandButton = "Toyota 1NZ-FE",                cmd_set_engine_type_TOYOTA_1NZ_FE
+;		commandButton = "Mitsubishi 3A92",             cmd_set_engine_type_MITSUBISHI_3A92
+;		commandButton = "Mitsubishi 4G93",             cmd_set_engine_type_MITSUBISHI_4G93
+		commandButton = "Toyota 1NZ-FE",                cmd_set_engine_type_TOYOTA_1NZ_FE@@if_show_4chan_presets
 
 		commandButton = "microRusEFI M111",             cmd_set_engine_type_MRE_M111@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI GDI VAG B6 test", cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets
