@@ -1,9 +1,9 @@
 struct_no_prefix pid_state_s
 	float iTerm;
 	float dTerm;we are remembering this only for debugging purposes
-	float target;only used for logging
-	float input;only used for logging
-	float output;only used for logging
+	float lastTarget;only used for logging
+	float lastInput;only used for logging
+	float lastOutput;only used for logging
 	float errorAmplificationCoef;
 	float previousError
 

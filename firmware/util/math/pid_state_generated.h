@@ -18,17 +18,17 @@ struct pid_state_s {
 	 * only used for logging
 	 * offset 8
 	 */
-	float target = (float)0;
+	float lastTarget = (float)0;
 	/**
 	 * only used for logging
 	 * offset 12
 	 */
-	float input = (float)0;
+	float lastInput = (float)0;
 	/**
 	 * only used for logging
 	 * offset 16
 	 */
-	float output = (float)0;
+	float lastOutput = (float)0;
 	/**
 	 * offset 20
 	 */

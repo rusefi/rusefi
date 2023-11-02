@@ -52,8 +52,8 @@ float Pid::getOutput(float target, float input) {
 
 float Pid::getUnclampedOutput(float target, float input, float dTime) {
 	float error = (target - input) * errorAmplificationCoef;
-	this->target = target;
-	this->input = input;
+	lastTarget = target;
+	lastInput = input;
 
 	float pTerm = m_parameters->pFactor * error;
 	updateITerm(m_parameters->iFactor * dTime * error);
@@ -80,7 +80,9 @@ float Pid::getOutput(float target, float input, float dTime) {
 	} else if (output < getMinValue()) {
 		output = getMinValue();
 	}
-	this->output = output;
+
+	lastOutput = output;
+
 	return output;
 }
 
@@ -93,7 +95,7 @@ void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
 
 void Pid::reset() {
 	dTerm = iTerm = 0;
-	output = input = target = previousError = 0;
+	lastOutput = lastInput = lastTarget = previousError = 0;
 	errorAmplificationCoef = 1.0f;
 	resetCounter++;
 }
@@ -133,7 +135,7 @@ void Pid::setErrorAmplification(float coef) {
 #if EFI_TUNER_STUDIO
 
 void Pid::postState(pid_status_s& pidStatus) const {
-	pidStatus.output = output;
+	pidStatus.output = lastOutput;
 	pidStatus.error = previousError;
 	pidStatus.pTerm = m_parameters == nullptr ? 0 : m_parameters->pFactor * previousError;
 	pidStatus.iTerm = iTerm;
@@ -159,9 +161,9 @@ void Pid::showPidStatus(const char*msg) const {
 
 	efiPrintf("%s status: value=%.2f input=%.2f/target=%.2f iTerm=%.5f dTerm=%.5f",
 			msg,
-			output,
-			input,
-			target,
+			lastOutput,
+			lastInput,
+			lastTarget,
 			iTerm, dTerm);
 
 }
