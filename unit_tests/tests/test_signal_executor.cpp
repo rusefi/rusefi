@@ -18,12 +18,14 @@ static void callback(void *a) {
 static int complexTestNow;
 
 struct TestPwm {
-	TestPwm(EventQueue *eventQueue) {
-		this->eventQueue = eventQueue;
+	TestPwm(EventQueue *eq)
+		: eventQueue(eq)
+	{
 	}
+
 	scheduling_s s;
 	int period;
-	EventQueue *eventQueue;
+	EventQueue* const eventQueue;
 };
 
 static void complexCallback(TestPwm *testPwm) {

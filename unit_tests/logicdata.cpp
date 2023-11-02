@@ -144,10 +144,10 @@ static void writeDouble(double value) {
 		writeByte(0);
 	} else {
 		writeByte(8);
-		char *ptr = (char*) (void*) &value;
+		char* c = (char*) (void*) &value;
 
 		for (int i = 0; i < 8; i++) {
-			writeByte(ptr[i]);
+			writeByte(c[i]);
 		}
 	}
 }

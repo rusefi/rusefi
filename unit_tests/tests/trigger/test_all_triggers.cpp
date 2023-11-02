@@ -60,8 +60,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	persistent_config_s pc;
 	efi::clear(pc);
 	Engine e;
-	Engine* engine = &e;
-	EngineTestHelperBase base(engine, &pc.engineConfiguration, &pc);
+	EngineTestHelperBase base(&e, &pc.engineConfiguration, &pc);
 
 #if EFI_UNIT_TEST
 extern TriggerDecoderBase initState;
@@ -71,7 +70,7 @@ extern TriggerDecoderBase initState;
 #endif // EFI_UNIT_TEST
 
 	engineConfiguration->trigger.type = tt;
-    setCamOperationMode();
+	setCamOperationMode();
 
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;

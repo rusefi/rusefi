@@ -47,7 +47,7 @@ private:
 
 	int m_lineIndex = -1;
 
-	const int* triggerColumnIndeces;
-	const int* vvtColumnIndeces;
+	const int* m_triggerColumnIndeces;
+	const int* m_vvtColumnIndeces;
 };
 

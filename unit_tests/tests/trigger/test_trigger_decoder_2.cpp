@@ -31,9 +31,9 @@ struct MockTriggerDecoder : public TriggerDecoderBase {
 	MOCK_METHOD(void, onTooManyTeeth, (int actual, int expected), (override));
 };
 
-static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& config) {
+static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& cfg) {
 	TriggerWaveform shape;
-	shape.initializeTriggerWaveform(mode, config);
+	shape.initializeTriggerWaveform(mode, cfg);
 
 	return shape;
 }

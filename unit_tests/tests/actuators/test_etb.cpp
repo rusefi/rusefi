@@ -37,7 +37,7 @@ TEST(etb, initializationNoPedal) {
 TEST(etb, initializationMissingThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
 		engineConfiguration->etbFunctions[0] = DC_None;
 		engineConfiguration->etbFunctions[1] = DC_None;
 	});
@@ -63,7 +63,7 @@ TEST(etb, initializationSingleThrottle) {
 	EXPECT_CALL(mocks[0], isEtbMode())
 	      .WillOnce(Return(TRUE));
 
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
 		engineConfiguration->etbFunctions[0] = DC_Throttle1;
 		engineConfiguration->etbFunctions[1] = DC_None;
 	});
@@ -91,7 +91,7 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 	EXPECT_CALL(mocks[1], isEtbMode())
 	      .WillOnce(Return(TRUE));
 
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
 		engineConfiguration->etbFunctions[0] = DC_None;
 		engineConfiguration->etbFunctions[1] = DC_Throttle1;
 	});
@@ -152,7 +152,7 @@ TEST(etb, initializationWastegate) {
 	EXPECT_CALL(mocks[0], isEtbMode())
 	      .WillOnce(Return(false));
 
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
 		engineConfiguration->etbFunctions[0] = DC_Wastegate;
 		engineConfiguration->etbFunctions[1] = DC_None;
 	});

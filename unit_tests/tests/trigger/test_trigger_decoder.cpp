@@ -425,9 +425,6 @@ static void setTestBug299(EngineTestHelper *eth) {
 	EXPECT_CALL(*eth->mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008001f, 50.0f}));
 
-	Engine *engine = &eth->engine;
-
-
 	eth->assertRpm(0, "RPM=0");
 
 	eth->fireTriggerEventsWithDuration(20);

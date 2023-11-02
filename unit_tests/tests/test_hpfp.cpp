@@ -207,8 +207,8 @@ TEST(HPFP, Angle) {
 }
 
 TEST(HPFP, Schedule) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-		engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+		cfg->hpfpValvePin = Gpio::A2; // arbitrary
 	});
 
 	engineConfiguration->cylindersCount = 4;
