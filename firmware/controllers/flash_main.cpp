@@ -22,7 +22,6 @@
 #endif
 
 #if EFI_STORAGE_MFS == TRUE
-#include "hal_serial_nor.h"
 #include "hal_mfs.h"
 #endif
 
@@ -33,35 +32,13 @@ static bool needToWriteConfiguration = false;
 /* if we use ChibiOS MFS for settings */
 #if EFI_STORAGE_MFS == TRUE
 
-/* Some fields in following struct is used for DMA transfers, so do no cache */
-NO_CACHE SNORDriver snor1;
-
-const WSPIConfig WSPIcfg1 = {
-	.end_cb			= NULL,
-	.error_cb		= NULL,
-	.dcr			= STM32_DCR_FSIZE(23U) |	/* 8MB device.          */
-					  STM32_DCR_CSHT(1U)		/* NCS 2 cycles delay.  */
-};
-
-const SNORConfig snorcfg1 = {
-	.busp			= &WSPID1,
-	.buscfg			= &WSPIcfg1
-};
-
-/* Managed Flash Storage stuff */
+/* Managed Flash Storage driver */
 MFSDriver mfsd;
 
-const MFSConfig mfsd_nor_config = {
-	.flashp			= (BaseFlash *)&snor1,
-	.erased			= 0xFFFFFFFFU,
-	.bank_size		= 64 * 1024U,
-	.bank0_start	= 0U,
-	.bank0_sectors	= 128U,	/* 128 * 4 K = 0.5 Mb */
-	.bank1_start	= 128U,
-	.bank1_sectors	= 128U
-};
-
 #define EFI_MFS_SETTINGS_RECORD_ID		1
+
+extern void boardInitMfs(void);
+extern const MFSConfig *boardGetMfsConfig(void);
 
 #endif
 
@@ -348,19 +325,12 @@ static void rewriteConfig() {
 
 void initFlash() {
 #if EFI_STORAGE_MFS == TRUE
-	mfs_error_t err;
-
-#if SNOR_SHARED_BUS == FALSE
-	wspiStart(&WSPID1, &WSPIcfg1);
-#endif
-
-	/* Initializing and starting snor1 driver.*/
-	snorObjectInit(&snor1);
-	snorStart(&snor1, &snorcfg1);
+	boardInitMfs();
+	const MFSConfig *config = boardGetMfsConfig();
 
 	/* MFS */
 	mfsObjectInit(&mfsd);
-	err = mfsStart(&mfsd, &mfsd_nor_config);
+	mfs_error_t err = mfsStart(&mfsd, config);
 	if (err < MFS_NO_ERROR) {
 		/* hm...? */
 	}
