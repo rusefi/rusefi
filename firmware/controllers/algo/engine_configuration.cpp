@@ -644,7 +644,8 @@ void loadConfiguration() {
 	prepareVoidConfiguration(&activeConfiguration);
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
-#if EFI_INTERNAL_FLASH
+	/* If board have any storage */
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 	if (IGNORE_FLASH_CONFIGURATION) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 		resetConfigurationExt(engineConfiguration->engineType);
@@ -654,11 +655,11 @@ void loadConfiguration() {
 		// if flash state does not look right.
 		readFromFlash();
 	}
-#else // not EFI_INTERNAL_FLASH
+#else
 	// This board doesn't load configuration, initialize the default
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 	resetConfigurationExt(engineConfiguration->engineType);
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 
 	// Force any board configuration options that humans shouldn't be able to change
 	setBoardConfigOverrides();

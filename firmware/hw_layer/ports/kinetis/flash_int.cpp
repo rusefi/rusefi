@@ -7,7 +7,7 @@
 
 #include "pch.h"
 
-#if EFI_INTERNAL_FLASH
+#if EFI_STORAGE_INT_FLASH
 
 #include "flash_int.h"
 #include "fsl_ftfx_flexnvm.h"
@@ -202,4 +202,4 @@ int intFlashRead(flashaddr_t source, char* destination, size_t size) {
 	return FLASH_RETURN_SUCCESS;
 }
 
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* EFI_STORAGE_INT_FLASH */

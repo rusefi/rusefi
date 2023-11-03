@@ -1,5 +1,7 @@
 # List of all the board related files.
-BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
+  $(BOARD_DIR)/board_storage.cpp
+
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::D13
 DDEFS += -DLED_PIN_MODE=OM_INVERTED
 
@@ -17,6 +19,11 @@ BOARDINC = $(CHIBIOS)/os/hal/boards/AT_START_F435/
 
 # Configuration directorys
 CONFDIR = $(PROJECT_DIR)/hw_layer/ports/at32/at32f4/cfg
+
+# This board uses ChibiOS MFS driver on internal flash
+DDEFS += -DEFI_STORAGE_INT_FLASH=FLASE -DHAL_USE_EFL=TRUE -DEFI_STORAGE_MFS=TRUE
+# This board has chip with dual-bank flash, bank 2 can be flashed in background
+DDEFS += -DEFI_FLASH_WRITE_THREAD=TRUE
 
 DDEFS += -DFIRMWARE_ID=\"at_start_f435\"
 DDEFS += -DDEFAULT_ENGINE_TYPE=engine_type_e::MINIMAL_PINS

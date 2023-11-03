@@ -62,7 +62,7 @@
 #include "map_averaging.h"
 #endif
 
-#if EFI_INTERNAL_FLASH
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 #include "flash_main.h"
 #endif
 
@@ -400,7 +400,7 @@ void initHardwareNoConfig() {
 	initRtc();
 #endif // EFI_PROD_CODE && EFI_RTC
 
-#if EFI_INTERNAL_FLASH
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 	initFlash();
 #endif
 

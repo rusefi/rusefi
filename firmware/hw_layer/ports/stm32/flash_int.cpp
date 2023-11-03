@@ -9,7 +9,7 @@
 
 #include "pch.h"
 
-#if EFI_INTERNAL_FLASH
+#if EFI_STORAGE_INT_FLASH
 
 #include "flash_int.h"
 #include <string.h>
@@ -434,4 +434,4 @@ exit:
 }
 #endif
 
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* EFI_STORAGE_INT_FLASH */

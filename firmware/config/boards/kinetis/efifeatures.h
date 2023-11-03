@@ -90,7 +90,7 @@
 
 #define TRIGGER_EXTREME_LOGGING FALSE
 
-#define EFI_INTERNAL_FLASH TRUE
+#define EFI_STORAGE_INT_FLASH TRUE
 
 /**
  * Usually you need shaft position input, but maybe you do not need it?

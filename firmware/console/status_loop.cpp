@@ -66,7 +66,7 @@
 #include "periodic_task.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_INTERNAL_FLASH
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 #include "flash_main.h"
 #endif
 
@@ -307,10 +307,10 @@ extern int totalLoggedBytes;
 			} else if (consoleByteArrived) {
 				offTimeMs = 100;
 				onTimeMs = 33;
-#if EFI_INTERNAL_FLASH
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 			} else if (getNeedToWriteConfiguration()) {
 				offTimeMs = onTimeMs = 500;
-#endif // EFI_INTERNAL_FLASH
+#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 			} else {
 				onTimeMs =
 #if EFI_USB_SERIAL
@@ -567,9 +567,9 @@ static void updateFlags() {
 	engine->outputChannels.isTriggerError = isTriggerErrorNow();
 #endif // EFI_PROD_CODE
 
-#if EFI_INTERNAL_FLASH
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 	engine->outputChannels.needBurn = getNeedToWriteConfiguration();
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 }
 
 // sensor state for EFI Analytics Tuner Studio

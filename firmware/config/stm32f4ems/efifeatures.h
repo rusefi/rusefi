@@ -158,9 +158,14 @@
 
 #define TRIGGER_EXTREME_LOGGING FALSE
 
-#ifndef EFI_INTERNAL_FLASH
-#define EFI_INTERNAL_FLASH TRUE
+#ifndef EFI_STORAGE_INT_FLASH
+#define EFI_STORAGE_INT_FLASH   TRUE
 #endif
+
+#ifndef EFI_STORAGE_MFS
+#define EFI_STORAGE_MFS         FALSE
+#endif
+
 
 /**
  * Usually you need shaft position input, but maybe you do not need it?
@@ -448,14 +453,6 @@
 // For GPS we have USART1. We can start with PB7 USART1_RX and PB6 USART1_TX
 #define GPS_SERIAL_DEVICE &SD1
 #define GPS_SERIAL_SPEED 38400
-
-#ifndef EFI_STORAGE_INT_FLASH
-#define EFI_STORAGE_INT_FLASH   TRUE
-#endif
-
-#ifndef EFI_STORAGE_MFS
-#define EFI_STORAGE_MFS         FALSE
-#endif
 
 #ifndef EFI_SENT_SUPPORT
 #define EFI_SENT_SUPPORT        FALSE

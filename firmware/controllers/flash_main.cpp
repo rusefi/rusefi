@@ -9,7 +9,8 @@
 
 #include "pch.h"
 
-#if EFI_INTERNAL_FLASH
+/* If any setting storage is exist */
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 
 #include "mpu_util.h"
 #include "flash_main.h"
@@ -213,8 +214,9 @@ static FlashState validatePersistentState() {
     }
 }
 
+#if EFI_STORAGE_INT_FLASH == TRUE
 /**
- * Read single copy of rusEFI configuration from flash
+ * Read single copy of rusEFI configuration from interan flash using custom driver
  */
 static FlashState readOneConfigurationCopy(flashaddr_t address) {
 	efiPrintf("readFromFlash %x", address);
@@ -228,6 +230,7 @@ static FlashState readOneConfigurationCopy(flashaddr_t address) {
 
 	return validatePersistentState();
 }
+#endif
 
 /**
  * this method could and should be executed before we have any
@@ -357,4 +360,4 @@ void initFlash() {
 #endif
 }
 
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */

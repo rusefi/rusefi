@@ -26,8 +26,7 @@ else ifeq ($(IS_AT32F435),yes)
 	DDEFS += -DAT32F4XX
 	HW_LAYER_PORT =
 	# TODO: Artery
-	HW_LAYER_PORT_CPP = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/mpu_util.cpp \
-						$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_adc_v2.cpp
+	HW_LAYER_PORT_CPP = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32_adc_v2.cpp
 	# TODO: Arterys
 	LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/at32/at32f4/AT32F435ZMxx.ld
 else
