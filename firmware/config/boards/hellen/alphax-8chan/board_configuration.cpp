@@ -89,9 +89,9 @@ static void setupDefaultSensorInputs() {
 //	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_CAM;
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
-//	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
-//
-//	setPPSInputs(H144_IN_PPS, H144_IN_AUX2);
+	setTPS1Inputs(MM176_IN_TPS_ANALOG, MM176_IN_TPS2_ANALOG);
+
+	setPPSInputs(MM176_IN_PPS1_ANALOG, MM176_IN_PPS2_ANALOG);
 
 	// random values to have valid config
 	engineConfiguration->tps1SecondaryMin = 1000;
@@ -104,9 +104,9 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 
-//	engineConfiguration->clt.adcChannel = H144_IN_CLT;
-//
-//	engineConfiguration->iat.adcChannel = H144_IN_IAT;
+	engineConfiguration->clt.adcChannel = MM176_IN_CLT_ANALOG;
+
+	engineConfiguration->iat.adcChannel = MM176_IN_IAT_ANALOG;
 }
 
 void boardInitHardware() {
