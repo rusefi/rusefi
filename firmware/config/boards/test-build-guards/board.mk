@@ -1,3 +1,5 @@
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
+
 DDEFS += -DFIRMWARE_ID=\"t-b-g\"
 DDEFS += -DSHORT_BOARD_NAME=t-b-g -DSTATIC_BOARD_ID=STATIC_BOARD_ID_TBG
 

@@ -15,6 +15,15 @@ static bool is469 = true;
 static bool is469 = false;
 #endif
 
+Gpio getCommsLedPin() {
+	// this board has no comms led
+	return Gpio::Unassigned;
+}
+
+Gpio getWarningLedPin() {
+	// this board has no warning led
+	return Gpio::Unassigned;
+}
 
 static void setPrometheusDefaults() {
 	engineConfiguration->useCicPidForIdle = true;
@@ -194,7 +203,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->sdCardCsPin = Gpio::A2;
 	engineConfiguration->isSdCardEnabled = true;
 }
-
 
 Gpio getRunningLedPin() {
 	return Gpio::A13; //Gpio::A13; // yellow LED

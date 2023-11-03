@@ -18,6 +18,20 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPinMode = OM_OPENDRAIN;
 }
 
+Gpio getWarningLedPin() {
+	// this board has no warning led
+	return Gpio::Unassigned;
+}
+
+Gpio getCommsLedPin() {
+	// this board has no comms led
+	return Gpio::Unassigned;
+}
+
+Gpio getRunningLedPin() {
+	return Gpio::Unassigned;
+}
+
 static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[0] = Gpio::D13;
 	engineConfiguration->ignitionPins[1] = Gpio::D12;

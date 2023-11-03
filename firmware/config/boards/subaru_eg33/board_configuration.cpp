@@ -19,6 +19,11 @@ Gpio getRunningLedPin() {
 	return Gpio::G8; /* LD3 - yellow */
 }
 
+Gpio getWarningLedPin() {
+	// this board has no warning led
+	return Gpio::Unassigned;
+}
+
 static void setSerialConfigurationOverrides() {
 	engineConfiguration->binarySerialTxPin = Gpio::E1;
 	engineConfiguration->binarySerialRxPin = Gpio::E0;

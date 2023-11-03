@@ -14,6 +14,20 @@ char __debugBuffer[80];
 int __debugEnabled = 0;
 #endif
 
+Gpio getWarningLedPin() {
+	// this board has no warning led
+	return Gpio::Unassigned;
+}
+
+Gpio getRunningLedPin() {
+	return Gpio::Unassigned;
+}
+
+Gpio getCommsLedPin() {
+	// this board has no comms led
+	return Gpio::Unassigned;
+}
+
 void setBoardOverrides() {
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
