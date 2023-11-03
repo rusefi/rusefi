@@ -7,28 +7,73 @@
 
 #include <cstring>
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_loadFirmware(JNIEnv* env, jobject, jstring jFilename) {
+class Callbacks {
+public:
+	Callbacks(JNIEnv* env, jobject jCallbacks)
+		: m_env(env)
+		, m_obj(jCallbacks)
+		, m_class(env->FindClass("OpenbltJni.Callbacks"))
+		, m_log(env->GetMethodID(m_class, "log", "(java/lang/String)V"))
+		, m_updateProgress(env->GetMethodID(m_class, "updateProgress", "(I)V"))
+		, m_error(env->GetMethodID(m_class, "error", "(java/lang/String)V"))
+	{
+	}
+
+	void log(const char* line) {
+		jstring jLine = m_env->NewStringUTF(line);
+		m_env->CallObjectMethod(m_obj, m_error, jLine);
+		m_env->DeleteLocalRef(jLine);
+	}
+
+	void updateProgress(int percent) {
+		m_env->CallIntMethod(m_obj, m_updateProgress, percent);
+	}
+
+	void error(const char* err) {
+		jstring jErr = m_env->NewStringUTF(err);
+		m_env->CallObjectMethod(m_obj, m_error, jErr);
+		m_env->DeleteLocalRef(jErr);
+	}
+
+private:
+	JNIEnv* const m_env;
+	jobject const m_obj;
+
+	jclass const m_class;
+
+	jmethodID const m_log;
+	jmethodID const m_updateProgress;
+	jmethodID const m_error;
+};
+
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_loadFirmware(JNIEnv* env, jobject, jstring jFilename, jobject jCallbacks) {
+	Callbacks cb(env, jCallbacks);
+
 	const char* filename = env->GetStringUTFChars(jFilename, 0);
 
 	BltFirmwareInit(BLT_FIRMWARE_PARSER_SRECORD);
 
 	if (BltFirmwareLoadFromFile(filename, 0) != BLT_RESULT_OK) {
-		// todo: error handling
-	}
-
-	// Check that the file isn't empty
-	if (BltFirmwareGetSegmentCount() == 0) {
-		// todo: error handling
+		cb.error("BltFirmwareLoadFromFile() not OK, failed to load firmware file.");
+		return;
 	}
 
 	env->ReleaseStringUTFChars(jFilename, filename);
+
+	// Check that the file isn't empty
+	if (BltFirmwareGetSegmentCount() == 0) {
+		cb.error("BltFirmwareGetSegmentCount() returned 0");
+		return;
+	}
 }
 
 static tBltSessionSettingsXcpV10 xcpSettings;
 static tBltTransportSettingsXcpV10Rs232 transportSettings;
 static char s_portName[256];
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_sessionStart(JNIEnv* env, jobject, jstring jSerialPort) {
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_sessionStart(JNIEnv* env, jobject, jstring jSerialPort, jobject jCallbacks) {
+	Callbacks cb(env, jCallbacks);
+
 	xcpSettings.timeoutT1 = 1000;
 	xcpSettings.timeoutT3 = 2000;
 	xcpSettings.timeoutT4 = 10000;
@@ -48,11 +93,13 @@ JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_sessionStart(JNIEnv* en
 	BltSessionInit(BLT_SESSION_XCP_V10, &xcpSettings, BLT_TRANSPORT_XCP_V10_RS232, &transportSettings);
 
 	if (BltSessionStart() != BLT_RESULT_OK) {
-		// todo: error handling
+		cb.error("BltSessionStart() failed");
 	}
 }
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_erase(JNIEnv*, jobject) {
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_erase(JNIEnv* env, jobject, jobject jCallbacks) {
+	Callbacks cb(env, jCallbacks);
+
 	int result = 0;
 
 	uint32_t segmentIdx;
@@ -109,12 +156,14 @@ JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_erase(JNIEnv*, jobject)
 			stillToEraseCnt -= currentEraseCnt;
 
 			uint8_t progressPct = (uint8_t)(((segmentLen - stillToEraseCnt) * 100ul) / segmentLen);
-			// TODO: report progress
+			cb.updateProgress(progressPct);
 		}
 	}
 }
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_program(JNIEnv*, jobject) {
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_program(JNIEnv* env, jobject, jobject jCallbacks) {
+	Callbacks cb(env, jCallbacks);
+
 	uint32_t segmentIdx;
 	uint32_t segmentLen;
 	uint32_t segmentBase;
@@ -169,12 +218,12 @@ JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_program(JNIEnv*, jobjec
 			stillToWriteCnt -= currentWriteCnt;
 
 			uint8_t progressPct = (uint8_t)(((segmentLen - stillToWriteCnt) * 100ul) / segmentLen);
-			// TODO: report progress
+			cb.updateProgress(progressPct);
 		}
 	}
 }
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_stop(JNIEnv*, jobject) {
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_stop(JNIEnv*, jobject, jobject jCallbacks) {
 	BltSessionStop();
 	BltSessionTerminate();
 	BltFirmwareTerminate();
