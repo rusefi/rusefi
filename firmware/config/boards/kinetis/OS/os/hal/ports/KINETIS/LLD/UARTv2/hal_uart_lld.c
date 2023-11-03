@@ -302,7 +302,7 @@ void uart_lld_start_send(UARTDriver *uartp, size_t n, const void *txbuf) {
     xfer.data = (uint8_t *)txbuf;
     xfer.dataSize = n;
     
-    status_t status = LPUART_SendEDMA(uartp->lpuart, &uartp->dmaHandle, &xfer);
+    /*status_t status = */LPUART_SendEDMA(uartp->lpuart, &uartp->dmaHandle, &xfer);
     // todo: check status
 }
 
@@ -342,10 +342,10 @@ void uart_lld_start_receive(UARTDriver *uartp, size_t n, void *rxbuf) {
    
 #ifdef UART_USE_RING_BUFFER
 	size_t receivedBytes = 0U;
-	status_t status = LPUART_TransferReceiveNonBlocking(uartp->lpuart, &uartp->rxHandle, &xfer, &receivedBytes);
+	/*status_t status = */LPUART_TransferReceiveNonBlocking(uartp->lpuart, &uartp->rxHandle, &xfer, &receivedBytes);
 	// todo: check receivedBytes?
 #else
-    status_t status = LPUART_ReceiveEDMA(uartp->lpuart, &uartp->dmaHandle, &xfer);
+    /*status_t status = */LPUART_ReceiveEDMA(uartp->lpuart, &uartp->dmaHandle, &xfer);
 	// This is needed for UART error handling
 	LPUART_EnableInterrupts(uartp->lpuart, kLPUART_RxDataRegFullInterruptEnable | kLPUART_RxOverrunInterruptEnable);
 #endif /* UART_USE_RING_BUFFER */   
