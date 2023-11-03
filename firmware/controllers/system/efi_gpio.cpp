@@ -624,6 +624,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e
 		PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 
 	efiSetPadMode(msg, m_brainPin, ioMode);
+#ifndef DISABLE_PIN_STATE_VALIDATION
 	if (brain_pin_is_onchip(m_brainPin)) {
 		int actualValue = palReadPad(m_port, m_pin);
 		// we had enough drama with pin configuration in board.h and else that we shall self-check
@@ -635,15 +636,14 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e
 				? !actualValue 
 				: actualValue;
 
-#ifndef DISABLE_PIN_STATE_VALIDATION
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
 			if (logicalValue) {
 				firmwareError(ObdCode::OBD_PCM_Processor_Fault, "HARDWARE VALIDATION FAILED %s: unexpected startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(m_brainPin), actualValue, logicalValue, getPin_output_mode_e(outputMode));
 				OutputPin::deInit();
 			}
-#endif
 		}
 	}
+#endif // DISABLE_PIN_STATE_VALIDATION
 #endif /* EFI_GPIO_HARDWARE */
 }
 
