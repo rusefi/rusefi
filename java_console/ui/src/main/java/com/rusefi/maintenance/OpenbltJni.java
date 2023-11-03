@@ -1,0 +1,16 @@
+package com.rusefi.maintenance;
+
+public final class OpenbltJni {
+    interface OpenbltCallbacks
+    {
+        void log(String line);
+        void updateProgress(int percent);
+        void error(String line);
+    }
+
+    public static native void loadFirmware(String filename, OpenbltCallbacks callbacks);
+    public static native void sessionStart(String serialPort, OpenbltCallbacks callbacks);
+    public static native void erase(OpenbltCallbacks callbacks);
+    public static native void program(OpenbltCallbacks callbacks);
+    public static native void stop(OpenbltCallbacks callbacks);
+}
