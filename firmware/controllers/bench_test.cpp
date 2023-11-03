@@ -502,8 +502,10 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case 0x15:
 #if EFI_PROD_CODE
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 		extern bool burnWithoutFlash;
 		burnWithoutFlash = true;
+#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 #endif // EFI_PROD_CODE
 		return;
 	default:
