@@ -53,13 +53,3 @@
 
 // 28 - AN volt 10
 #define MRE_IN_ANALOG_VOLT_10 EFI_ADC_4
-
-#if HW_MICRO_RUSEFI
-static Gpio MRE_OUTPUTS[] = {
-MRE_INJ_1,
-MRE_INJ_2,
-MRE_INJ_3,
-MRE_INJ_4,
-MRE_LS_1,
-};
-#endif // HW_MICRO_RUSEFI

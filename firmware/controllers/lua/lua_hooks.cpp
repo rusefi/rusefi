@@ -664,7 +664,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 			uint16_t sig0;
 			uint16_t sig1;
 			auto humanIndex = luaL_checkinteger(l2, 1);
-			auto ret = getSentValues(humanIndex - 1, &sig0, &sig1);
+			getSentValues(humanIndex - 1, &sig0, &sig1);
 			lua_pushnumber(l2, sig0);
 			lua_pushnumber(l2, sig1);
 			return 2;
