@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -26,7 +27,7 @@ import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
 
-    private static final String AUTO_DFU = "Auto Update";
+    private static final String AUTO_DFU = "Auto DFU Update";
     private static final String MANUAL_DFU = "Manual DFU Update";
     private static final String DFU_SWITCH = "Switch to DFU Mode";
     private static final String OPENBLT_SWITCH = "Switch to OpenBLT Mode";
@@ -57,6 +58,8 @@ public class ProgramSelector {
         JButton updateFirmware = new JButton("Update Firmware",
                 UiUtils.loadIcon("upload48.png"));
         controls.add(updateFirmware);
+
+        comboPorts.addItemListener(this::selectedPortChanged);
 
         updateFirmware.addActionListener(new ActionListener() {
             @Override
@@ -208,35 +211,49 @@ public class ProgramSelector {
         return content;
     }
 
-    public void apply(SerialPortScanner.AvailableHardware currentHardware) {
-        noHardware.setVisible(currentHardware.isEmpty());
-        controls.setVisible(!currentHardware.isEmpty());
+    private SerialPortScanner.AvailableHardware currentHardware = new SerialPortScanner.AvailableHardware(new ArrayList<>(), false, false, false);
 
-        boolean hasDfuDevice = currentHardware.dfuFound;
-        boolean hasEcu = currentHardware.hasAnyEcu;
-        boolean hasOpenblt = currentHardware.hasAnyOpenblt;
+    private void selectedPortChanged(ItemEvent e) {
+        SerialPortScanner.PortResult pr = (SerialPortScanner.PortResult) e.getItem();
 
         mode.removeAllItems();
+
+        // Prefer OpenBLT so put that option first
+        if (pr.type == SerialPortScanner.SerialPortType.FomeEcuWithOpenblt) {
+            mode.addItem(OPENBLT_AUTO);
+            mode.addItem(OPENBLT_SWITCH);
+        }
+
         if (IS_WIN) {
-            if (hasEcu) {
+            if (pr.isEcu()) {
                 mode.addItem(AUTO_DFU);
             }
 
-            if (hasDfuDevice) {
+            if (currentHardware.dfuFound) {
                 mode.addItem(MANUAL_DFU);
                 mode.addItem(DFU_ERASE);
             }
         }
 
-        if (hasEcu) {
+        if (pr.isEcu()) {
             mode.addItem(DFU_SWITCH);
-            mode.addItem(OPENBLT_AUTO);
-            mode.addItem(OPENBLT_SWITCH);
         }
 
-        if (hasOpenblt) {
+        if (pr.type == SerialPortScanner.SerialPortType.OpenBlt) {
             mode.addItem(OPENBLT_MANUAL);
         }
+
+        // Show update controls if there are any options
+        controls.setVisible(0 != mode.getItemCount());
+
+        trueLayout(mode);
+        trueLayout(content);
+    }
+
+    public void apply(SerialPortScanner.AvailableHardware currentHardware) {
+        this.currentHardware = currentHardware;
+
+        noHardware.setVisible(currentHardware.isEmpty());
 
         trueLayout(mode);
         trueLayout(content);

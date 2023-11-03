@@ -27,16 +27,18 @@ public enum SerialPortScanner {
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
 
     public enum SerialPortType {
-        None(null),
-        FomeEcu("FOME ECU"),
-        FomeEcuWithOpenblt("FOME ECU w/ BL"),
-        OpenBlt("OpenBLT Bootloader"),
-        Unknown("Unknown"),
+        None(null, 100),
+        FomeEcu("FOME ECU", 20),
+        FomeEcuWithOpenblt("FOME ECU w/ BL", 20),
+        OpenBlt("OpenBLT Bootloader", 10),
+        Unknown("Unknown", 100),
         ;
 
         public final String friendlyString;
-        SerialPortType(String friendlyString) {
+        public final int sortOrder;
+        SerialPortType(String friendlyString, int sortOrder) {
             this.friendlyString = friendlyString;
+            this.sortOrder = sortOrder;
         }
     }
 
@@ -76,11 +78,13 @@ public enum SerialPortScanner {
 
             return this.port.equals(other.port) && this.type.equals(other.type);
         }
+
+        public boolean isEcu() {
+            return type == SerialPortType.FomeEcu || type == SerialPortType.FomeEcuWithOpenblt;
+        }
     }
 
     private volatile boolean isRunning = true;
-
-    static final String AUTO_SERIAL = "Auto Serial";
 
     private final Object lock = new Object();
     private AvailableHardware knownHardware = null;
@@ -114,7 +118,7 @@ public enum SerialPortScanner {
                 // We've already probed this port - don't re-probe it again
                 PortResult cached = portCache.get(serialPort);
 
-                if (cached.type == SerialPortType.FomeEcu || cached.type == SerialPortType.FomeEcuWithOpenblt) {
+                if (cached.isEcu()) {
                     ecuCount++;
                 } else if (cached.type == SerialPortType.OpenBlt) {
                     hasAnyOpenblt = true;
@@ -166,15 +170,16 @@ public enum SerialPortScanner {
             }
 
             // two steps to avoid ConcurrentModificationException
-            toRemove.forEach(portCache::remove);
+            toRemove.forEach(p -> {
+                portCache.remove(p);
+                log.info("Removing port " + p);
+            });
         }
 
         boolean hasAnyEcu = ecuCount > 0;
 
-        // Only offer auto if there is more than one option to pick from, AND exactly one option is an ECU
-        if (ports.size() > 1 && ecuCount == 1) {
-            ports.add(0, new PortResult(AUTO_SERIAL, SerialPortType.None));
-        }
+        // Sort ports by their type to put your ECU at the top
+        ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
 
         if (includeSlowLookup) {
             for (String tcpPort : TcpConnector.getAvailablePorts()) {
