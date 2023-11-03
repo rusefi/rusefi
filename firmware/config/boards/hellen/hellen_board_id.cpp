@@ -258,7 +258,6 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimes(int i, float & Tc1_us, f
 
 	float Td_us = NT2USF(Td_nt);
 #ifdef HELLEN_BOARD_ID_DEBUG
-	efitick_t nowNt4 = getTimeNowNt();
 	efiPrintf("* dTime2-1 = %d", (int)(t2 - t1));
 	efiPrintf("* dTime3-2 = %d", (int)(t3 - t2));
 	efiPrintf("* dTime4-3 = %d", (int)(t4 - t3));

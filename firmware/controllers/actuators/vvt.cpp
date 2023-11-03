@@ -103,8 +103,8 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 }
 
 void VvtController::setOutput(expected<percent_t> outputValue) {
-	float rpm = Sensor::getOrZero(SensorType::Rpm);
 #if EFI_SHAFT_POSITION_INPUT
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	bool enabled = rpm > engineConfiguration->vvtControlMinRpm
 			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
 			 ;

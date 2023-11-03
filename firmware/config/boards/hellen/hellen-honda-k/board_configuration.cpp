@@ -115,7 +115,7 @@ void setBoardDefaultConfiguration() {
 
     engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM4;
 
-    gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
+    // gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
     // vtsControl->pin = Gpio::H144_OUT_IO6;
 
 	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO13;

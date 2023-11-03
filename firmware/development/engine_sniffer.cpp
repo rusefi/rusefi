@@ -34,7 +34,7 @@ static char shaft_signal_msg_index[15];
 #if EFI_ENGINE_SNIFFER
 #define addEngineSnifferEvent(name, msg) { if (getTriggerCentral()->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
  #else
-#define addEngineSnifferEvent(n, msg) {}
+#define addEngineSnifferEvent(name, msg) { UNUSED(name); }
 #endif /* EFI_ENGINE_SNIFFER */
 
 #if EFI_ENGINE_SNIFFER
