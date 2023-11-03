@@ -28,9 +28,6 @@
 
 #include "engine_sniffer.h"
 
-// a bit weird because of conditional compilation
-static char shaft_signal_msg_index[15];
-
 #if EFI_ENGINE_SNIFFER
 #define addEngineSnifferEvent(name, msg) { if (getTriggerCentral()->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
  #else
@@ -44,6 +41,8 @@ static char shaft_signal_msg_index[15];
 
 #define CHART_DELIMETER	'!'
 extern WaveChart waveChart;
+
+static char shaft_signal_msg_index[15];
 
 /**
  * This is the number of events in the digital chart which would be displayed
@@ -242,8 +241,6 @@ void initWaveChart(WaveChart *chart) {
 #endif // EFI_UNIT_TEST
 }
 
-#endif /* EFI_ENGINE_SNIFFER */
-
 void addEngineSnifferOutputPinEvent(NamedOutputPin *pin, bool isRise) {
 	if (!engineConfiguration->engineSnifferFocusOnInputs) {
 		addEngineSnifferEvent(pin->getShortName(), isRise ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
@@ -253,9 +250,9 @@ void addEngineSnifferOutputPinEvent(NamedOutputPin *pin, bool isRise) {
 void addEngineSnifferTdcEvent(int rpm) {
 	static char rpmBuffer[_MAX_FILLER];
 	itoa10(rpmBuffer, rpm);
-#if EFI_ENGINE_SNIFFER
+
 	waveChart.startDataCollection();
-#endif
+
 	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 }
 
@@ -282,3 +279,6 @@ void addEngineSnifferVvtEvent(int vvtIndex, bool isRise) {
 
 	addEngineSnifferEvent(vvtName, isRise ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 }
+
+#endif /* EFI_ENGINE_SNIFFER */
+
