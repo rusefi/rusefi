@@ -9,13 +9,13 @@
 
 #include "pch.h"
 
-/* if we store settings externally */
+/* This board stores settings in external QSPI flash */
 #if EFI_STORAGE_MFS == TRUE
 
 #include "hal_serial_nor.h"
 #include "hal_mfs.h"
 
-/* Some fields in following struct is used for DMA transfers, so do no cache */
+/* Some fields in following struct are used for DMA transfers, so do not cache */
 NO_CACHE SNORDriver snor1;
 
 const WSPIConfig WSPIcfg1 = {
