@@ -98,8 +98,6 @@ static int packEngineMode() {
 			engineConfiguration->ignitionMode;
 }
 
-static int prevCkpEventCounter = -1;
-
 /**
  * Time when the firmware version was last reported
  * TODO: implement a request/response instead of just constantly sending this out
@@ -186,8 +184,6 @@ void printOverallStatus() {
 	}
 }
 
-static systime_t timeOfPreviousReport = (systime_t) -1;
-
 #if !defined(LOGIC_ANALYZER_BUFFER_SIZE)
 // TODO: how small can this be?
 #define LOGIC_ANALYZER_BUFFER_SIZE 1000
@@ -217,10 +213,11 @@ void updateDevConsoleState() {
 	printFullAdcReportIfNeeded();
 #endif /* HAL_USE_ADC */
 
-	systime_t nowSeconds = getTimeNowS();
-
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	int currentCkpEventCounter = engine->triggerCentral.triggerState.getTotalEventCounter();
+	systime_t nowSeconds = getTimeNowS();
+static int prevCkpEventCounter = -1;
+static systime_t timeOfPreviousReport = (systime_t) -1;
 	if (prevCkpEventCounter == currentCkpEventCounter && timeOfPreviousReport == nowSeconds) {
 		return;
 	}
