@@ -1,12 +1,15 @@
 
 
+#include <jni.h>
+
 // OpenBLT host library
 #include "openblt.h"
 
 #include <cstring>
 
-extern "C" void loadFirmware(const char* filename)
-{
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_loadFirmware(JNIEnv* env, jobject, jstring jFilename) {
+	const char* filename = env->GetStringUTFChars(jFilename, 0);
+
 	BltFirmwareInit(BLT_FIRMWARE_PARSER_SRECORD);
 
 	if (BltFirmwareLoadFromFile(filename, 0) != BLT_RESULT_OK) {
@@ -17,13 +20,15 @@ extern "C" void loadFirmware(const char* filename)
 	if (BltFirmwareGetSegmentCount() == 0) {
 		// todo: error handling
 	}
+
+	env->ReleaseStringUTFChars(jFilename, filename);
 }
 
-tBltSessionSettingsXcpV10 xcpSettings;
-tBltTransportSettingsXcpV10Rs232 transportSettings;
-char s_portName[256];
+static tBltSessionSettingsXcpV10 xcpSettings;
+static tBltTransportSettingsXcpV10Rs232 transportSettings;
+static char s_portName[256];
 
-extern "C" void sessionStart(const char* portName) {
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_sessionStart(JNIEnv* env, jobject, jstring jSerialPort) {
 	xcpSettings.timeoutT1 = 1000;
 	xcpSettings.timeoutT3 = 2000;
 	xcpSettings.timeoutT4 = 10000;
@@ -33,7 +38,10 @@ extern "C" void sessionStart(const char* portName) {
 	xcpSettings.seedKeyFile = nullptr;
 	xcpSettings.connectMode = 0;
 
+	const char* portName = env->GetStringUTFChars(jSerialPort, 0);
 	strncpy(s_portName, portName, sizeof(s_portName));
+	env->ReleaseStringUTFChars(jSerialPort, portName);
+
 	transportSettings.portName = s_portName;
 	transportSettings.baudrate = 115200;
 
@@ -44,7 +52,7 @@ extern "C" void sessionStart(const char* portName) {
 	}
 }
 
-extern "C" void erase() {
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_erase(JNIEnv*, jobject) {
 	int result = 0;
 
 	uint32_t segmentIdx;
@@ -106,7 +114,7 @@ extern "C" void erase() {
 	}
 }
 
-extern "C" void program() {
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_program(JNIEnv*, jobject) {
 	uint32_t segmentIdx;
 	uint32_t segmentLen;
 	uint32_t segmentBase;
@@ -166,16 +174,8 @@ extern "C" void program() {
 	}
 }
 
-extern "C" void stop() {
+JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_stop(JNIEnv*, jobject) {
 	BltSessionStop();
 	BltSessionTerminate();
 	BltFirmwareTerminate();
-}
-
-int main() {
-	loadFirmware("fome_update.srec");
-	sessionStart("COM8");
-	erase();
-	program();
-	stop();
 }
