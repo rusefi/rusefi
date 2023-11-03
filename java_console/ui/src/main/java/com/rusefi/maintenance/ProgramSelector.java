@@ -112,7 +112,11 @@ public class ProgramSelector {
 
                 final UpdateOperationCallbacks callbacks = new UpdateStatusWindow(appendBundleName(jobName + " " + Launcher.CONSOLE_VERSION));
                 final Consumer<UpdateOperationCallbacks> job2 = job;
-                ExecHelper.submitAction(() -> job2.accept(callbacks), "mx");
+                ExecHelper.submitAction(() -> {
+                    SerialPortScanner.INSTANCE.stopTimer();
+                    job2.accept(callbacks);
+                    SerialPortScanner.INSTANCE.startTimer();
+                }, "mx");
             }
         });
     }

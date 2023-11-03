@@ -84,7 +84,7 @@ public enum SerialPortScanner {
         }
     }
 
-    private volatile boolean isRunning = true;
+    private volatile boolean isRunning = false;
 
     private final Object lock = new Object();
     private AvailableHardware knownHardware = null;
@@ -204,7 +204,8 @@ public enum SerialPortScanner {
         }
     }
 
-    private void startTimer() {
+    public void startTimer() {
+        isRunning = true;
         Thread portsScanner = new Thread(() -> {
             boolean isFirstTime = true;
             while (isRunning) {
