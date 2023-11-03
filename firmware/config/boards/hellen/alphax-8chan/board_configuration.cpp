@@ -167,6 +167,8 @@ void setBoardDefaultConfiguration() {
 
     engineConfiguration->boardUseTempPullUp = true;
 
+    setHellenMMbaro();
+
 //	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO10;
 //	engineConfiguration->fanPin = Gpio::H144_OUT_IO11;
 //	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO12;
