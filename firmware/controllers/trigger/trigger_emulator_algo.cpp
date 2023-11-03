@@ -58,7 +58,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(int channel, const MultiChann
 			if (channel == 0) {
 				handleShaftSignal(i, isRise, stamp);
 			} else {
-//				handleVvtCamSignal(isRise ? TriggerValue::RISE : TriggerValue::FALL, stamp, INDEX_BY_BANK_CAM(channel - 1, i));
+				handleVvtCamSignal(isRise ? TriggerValue::RISE : TriggerValue::FALL, stamp, INDEX_BY_BANK_CAM(channel - 1, i));
 			}
 		}
 	}
@@ -98,21 +98,27 @@ void setTriggerEmulatorRPM(int rpm) {
 	 * All we need to do here is to change the periodMs
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
 	 */
-	if (rpm == 0) {
-		triggerEmulatorSignals[0].setFrequency(NAN);
-	} else {
-		float rpmM = getRpmMultiplier(getEngineRotationState()->getOperationMode());
-		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
-		triggerEmulatorSignals[0].setFrequency(rPerSecond);
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+		float rPerSecond = NAN;
+		if (rpm != 0) {
+			// use 0.5 multiplier for cam
+			float rpmM = (channel == 0) ? getRpmMultiplier(getEngineRotationState()->getOperationMode()) : 0.5f;
+			rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
+		}
+		triggerEmulatorSignals[channel].setFrequency(rPerSecond);
 	}
+
 	engine->resetEngineSnifferIfInTestMode();
 
 	efiPrintf("Emulating position sensor(s). RPM=%d", rpm);
 }
 
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
-	for (int channel = 0; channel < 1; channel++) {
-		if (atTriggerVersions[channel] < triggerEmulatorWaveforms[channel]->version) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+		if (state != &triggerEmulatorSignals[channel])
+			continue;
+
+    if (atTriggerVersions[channel] < triggerEmulatorWaveforms[channel]->version) {
 			atTriggerVersions[channel] = triggerEmulatorWaveforms[channel]->version;
 			efiPrintf("Stimulator: updating trigger shape for ch%d: %d/%d %d", channel, atTriggerVersions[channel],
 				engine->getGlobalConfigurationVersion(), getTimeNowMs());
@@ -136,9 +142,13 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
-		helper.handleEmulatorCallback(0,
+		for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+			if (state != &triggerEmulatorSignals[channel])
+				continue;
+			helper.handleEmulatorCallback(channel,
 				*state->multiChannelStateSequence,
 				stateIndex);
+		}
 	}
 
 #if EFI_PROD_CODE
@@ -162,8 +172,8 @@ static void startSimulatedTriggerSignal() {
 	}
 
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
-
-	for (int channel = 0; channel < 1; channel++) {
+	
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		TriggerWaveform *s = triggerEmulatorWaveforms[channel];
 		if (s->getSize() == 0)
 			continue;
@@ -196,7 +206,7 @@ void enableExternalTriggerStimulator() {
 
 void disableTriggerStimulator() {
 	engine->triggerCentral.directSelfStimulation = false;
-	for (int channel = 0; channel < 1; channel++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		triggerEmulatorSignals[channel].stop();
 	}
 	hasInitTriggerEmulator = false;
@@ -223,7 +233,7 @@ void initTriggerEmulator() {
 
 void startTriggerEmulatorPins() {
 	hasStimPins = false;
-	for (int channel = 0; channel < 1; channel++) {
+	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		for (size_t i = 0; i < efi::size(emulatorOutputs[channel]); i++) {
 			triggerEmulatorSignals[channel].outputPins[i] = &emulatorOutputs[channel][i];
 

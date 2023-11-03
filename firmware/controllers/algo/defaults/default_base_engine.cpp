@@ -110,6 +110,7 @@ void setDefaultBaseEngine() {
 
 #if EFI_SIMULATOR
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->vvtOffsets[0] = 450;
 #endif // EFI_SIMULATOR
 
 #if EFI_SIMULATOR

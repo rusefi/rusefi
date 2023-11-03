@@ -56,7 +56,7 @@ public class SimulatorFunctionalTest {
 
     private void assertVvtPosition() {
         assertNear("RPM", SensorCentral.getInstance().getValue(Sensor.RPMValue), 1200, 5);
-        assertNear("VVT", SensorCentral.getInstance().getValue(Sensor.vvtPositionB1I), 0, 0.1);
+        assertNear("VVT", SensorCentral.getInstance().getValue(Sensor.vvtPositionB1I), 90, 15);
     }
 
     private void assertNear(String message, double actual, double expected, double tolerance) {
@@ -188,7 +188,7 @@ public class SimulatorFunctionalTest {
         }
     }
 
-private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws InterruptedException {
+    private void testOutputPin(bench_mode_e pinId, int stateToggleTimeMs) throws InterruptedException {
         // gain pin control and reset pin stats (otherwise pin can be randomly toggled before or during the test)
         executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_START_PIN_TEST,
                 new bench_test_packet_ids_e[] { }, (byte)pinId.ordinal());
