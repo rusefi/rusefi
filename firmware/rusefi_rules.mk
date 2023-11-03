@@ -7,6 +7,5 @@ endif
 
 # ...except these few
 RUSEFI_OPT += -Wno-error=unused-function
-RUSEFI_OPT += -Wno-error=unused-variable
 RUSEFI_OPT += -Wno-error=sign-compare
 RUSEFI_OPT += -Wno-error=unused-parameter
