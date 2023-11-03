@@ -65,3 +65,31 @@ int at32GetMcuType(uint32_t id, const char **pn, const char **package, uint32_t 
     /* unknown */
     return -1;
 }
+
+int at32GetRamSizeKb(void)
+{
+    uint8_t EOPB0 = *(__IO uint16_t *) (0x1FFFC010);
+    /* TODO: check inverted value */
+
+    switch ((*(__IO uint16_t *) (FLASHSIZE_BASE))) {
+    case 256:
+        EOPB0 &= 0x03;
+        if (EOPB0 == 3)
+            EOPB0 = 2;
+        return 512 - (64 * EOPB0);
+    case 448:
+        EOPB0 &= 0x07;
+        if (EOPB0 > 5)
+            EOPB0 = 5;
+        return 512 - (64 * EOPB0);
+    case 1024:
+    case 4032:
+        EOPB0 &= 0x07;
+        if (EOPB0 > 6)
+            EOPB0 = 6;
+        return 512 - (64 * EOPB0);
+    default:
+        return 0;
+    }
+    return 0;
+}

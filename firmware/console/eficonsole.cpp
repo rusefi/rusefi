@@ -94,6 +94,7 @@ static void sayHello() {
 		(mcuSerId == 0x0d) ? "AT32F435" : ((mcuSerId == 0x0e) ? "AT32F437" : "UNKNOWN"),
 		'A' + mcuRevision);
 	efiPrintf("MCU F_SIZE %d KB", flashSize);
+	efiPrintf("MCU RAM %d KB", at32GetRamSizeKb());
 #else
 #define MCU_REVISION_MASK  0xfff
 	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
