@@ -459,9 +459,9 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case TS_WRITE_FLASH:
 		// cmd_write_config
-#if EFI_INTERNAL_FLASH
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 		writeToFlashNow();
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 		return;
 #if EFI_EMULATE_POSITION_SENSORS
 	case 0xD:

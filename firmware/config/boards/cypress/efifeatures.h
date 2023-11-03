@@ -83,7 +83,7 @@
 
 #define TRIGGER_EXTREME_LOGGING FALSE
 
-#define EFI_INTERNAL_FLASH TRUE
+#define EFI_STORAGE_INT_FLASH TRUE
 
 /**
  * Flex Non Volatile Memory is faster than flash

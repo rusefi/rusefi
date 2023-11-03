@@ -31,9 +31,9 @@
 #include "electronic_throttle.h"
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
-#if EFI_INTERNAL_FLASH
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 #include "flash_main.h"
-#endif // EFI_INTERNAL_FLASH
+#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -1008,11 +1008,11 @@ void setEngineType(int value, bool isWriteToFlash) {
 		resetConfigurationExt((engine_type_e)value);
 		engine->resetEngineSnifferIfInTestMode();
 
-#if EFI_INTERNAL_FLASH
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 		if (isWriteToFlash) {
 			writeToFlashNow();
 		}
-#endif // EFI_INTERNAL_FLASH
+#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 	}
 	incrementGlobalConfigurationVersion("engineType");
 #if ! EFI_UNIT_TEST

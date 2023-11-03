@@ -192,9 +192,9 @@ static void doPeriodicSlowCallback() {
 		 *
 		 * todo: allow writing if 2nd bank of flash is used
 		 */
-#if EFI_INTERNAL_FLASH
+#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 		writeToFlashIfPending();
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 	}
 
 	if (engine->rpmCalculator.isStopped()) {
@@ -207,9 +207,9 @@ static void doPeriodicSlowCallback() {
 
 	engine->periodicSlowCallback();
 #else /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
-	#if EFI_INTERNAL_FLASH
+	#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 		writeToFlashIfPending();
-	#endif /* EFI_INTERNAL_FLASH */
+	#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_TCU
