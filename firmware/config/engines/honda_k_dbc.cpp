@@ -66,9 +66,6 @@ void setProteusHondaElement2003() {
 
 	strcpy(engineConfiguration->vehicleName, "test");
 
-	gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
-
-
 #if HW_PROTEUS & EFI_PROD_CODE
 //	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_2; // crank
 //	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_4; // intake
@@ -85,6 +82,7 @@ void setProteusHondaElement2003() {
 	engineConfiguration->injectionPins[2] = PROTEUS_LS_6;
 	engineConfiguration->injectionPins[3] = PROTEUS_LS_5;
 
+	gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
 	vtsControl->pin = PROTEUS_HS_1;
 	engineConfiguration->vvtPins[0] = PROTEUS_HS_2;
 

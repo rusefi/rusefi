@@ -316,8 +316,6 @@ float IdleController::getIdlePosition(float rpm) {
 		auto phase = determinePhase(rpm, targetRpm, tps, vehicleSpeed, crankingTaper);
 		m_lastPhase = phase;
 
-		bool isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
-
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 

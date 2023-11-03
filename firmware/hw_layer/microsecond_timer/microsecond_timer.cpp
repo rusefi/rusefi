@@ -137,7 +137,6 @@ static void watchDogBuddyCallback(void*) {
 
 static volatile bool testSchedulingHappened = false;
 static Timer testScheduling;
-static efitimems_t testSchedulingStart;
 
 static void timerValidationCallback(void*) {
 	testSchedulingHappened = true;

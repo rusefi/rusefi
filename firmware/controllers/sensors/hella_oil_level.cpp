@@ -88,7 +88,7 @@ void HellaOilLevelSensor::onEdge(efitick_t nowNt, bool value) {
 				// Defective
 				// invalidate(UnexpectedCode::High);
 			} else {
-				float tempC = interpolateClamped(23, -40, 87, 160, lastPulseMs);
+				// float tempC = interpolateClamped(23, -40, 87, 160, lastPulseMs);
 				// setValidValue(tempC, nowNt);
 			}
 		} else if (m_nextPulse == NextPulse::Level) {
