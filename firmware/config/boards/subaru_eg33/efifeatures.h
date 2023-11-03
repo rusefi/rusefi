@@ -103,8 +103,8 @@
 #define EFI_NARROW_EGO_AVERAGING		TRUE
 
 /* this board has external QSPI NOR flash */
-#undef EFI_STORAGE_EXT_SNOR
-#define EFI_STORAGE_EXT_SNOR		TRUE
+#undef EFI_STORAGE_MFS
+#define EFI_STORAGE_MFS				TRUE
 
 #undef EFI_STORAGE_INT_FLASH
 #define EFI_STORAGE_INT_FLASH   	FALSE

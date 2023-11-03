@@ -453,8 +453,8 @@
 #define EFI_STORAGE_INT_FLASH   TRUE
 #endif
 
-#ifndef EFI_STORAGE_EXT_SNOR
-#define EFI_STORAGE_EXT_SNOR    FALSE
+#ifndef EFI_STORAGE_MFS
+#define EFI_STORAGE_MFS         FALSE
 #endif
 
 #ifndef EFI_SENT_SUPPORT

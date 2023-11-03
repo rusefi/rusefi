@@ -1,5 +1,6 @@
 # List of all the board related files.
-BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
+  $(BOARD_DIR)/board_storage.cpp
 
 # Required include directories
 BOARDINC += $(BOARD_DIR)/config/controllers/algo
