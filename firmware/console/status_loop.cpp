@@ -235,9 +235,6 @@ void updateDevConsoleState() {
 #endif /* EFI_LOGIC_ANALYZER */
 }
 
-static OutputPin* leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
-		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
-
 static void initStatusLeds() {
 	enginePins.communicationLedPin.initPin("led: comm status", getCommsLedPin(), LED_PIN_MODE, true);
 	// checkEnginePin is already initialized by the time we get here
@@ -247,6 +244,9 @@ static void initStatusLeds() {
 }
 
 #if EFI_PROD_CODE
+
+static OutputPin* leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
+		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static bool isTriggerErrorNow() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT

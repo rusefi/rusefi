@@ -23,12 +23,13 @@
 static bool fs_ready = false;
 
 int totalLoggedBytes = 0;
+
+#if EFI_PROD_CODE
+
 static int fileCreatedCounter = 0;
 static int writeCounter = 0;
 static int totalWritesCounter = 0;
 static int totalSyncCounter = 0;
-
-#if EFI_PROD_CODE
 
 #include <stdio.h>
 #include <string.h>

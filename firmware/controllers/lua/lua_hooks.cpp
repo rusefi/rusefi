@@ -43,8 +43,8 @@ static int lua_vin(lua_State* l) {
 }
 
 static int lua_readpin(lua_State* l) {
-	auto msg = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
+	auto msg = luaL_checkstring(l, 1);
 	brain_pin_e pin = parseBrainPin(msg);
 	if (!isBrainPinValid(pin)) {
 		lua_pushnil(l);
