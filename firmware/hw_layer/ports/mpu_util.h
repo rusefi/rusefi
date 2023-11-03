@@ -78,6 +78,7 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 
 #ifdef AT32F4XX
 int at32GetMcuType(uint32_t id, const char **pn, const char **package, uint32_t *flashSize);
+int at32GetRamSizeKb(void);
 #endif
 
 extern "C"
