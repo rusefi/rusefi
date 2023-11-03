@@ -52,7 +52,6 @@ static void comp_shaft_callback(COMPDriver *comp) {
 	uint32_t status = comp_lld_get_status(comp);
 	int isPrimary = (comp == EFI_COMP_PRIMARY_DEVICE);
 
-	trigger_event_e signal;
 	if (status & COMP_IRQ_RISING) {
 		hwHandleShaftSignal(isPrimary ? 0 : 1, true, stamp);
 		// shift the threshold down a little bit to avoid false-triggering (threshold hysteresis)
