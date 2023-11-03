@@ -88,7 +88,9 @@ endif
 
 # Enable this if you want link time optimizations (LTO)
 ifeq ($(USE_LTO),)
-  USE_LTO = yes
+  # ChibiOS has not yet migrated to gcc12 syntax of '-flto' thus some weird code here
+  USE_LTO = no
+  USE_OPT += -flto=auto
 endif
 
 # If enabled, this option allows to compile the application in THUMB mode.
