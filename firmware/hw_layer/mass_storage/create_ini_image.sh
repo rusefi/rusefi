@@ -6,7 +6,7 @@
 # fail on error
 set -e
 
-if [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" || "$(expr substr $(uname -s) 1 5)" == "MINGW"]; then
+if [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ] || [ "$(expr substr $(uname -s) 1 5)" == "MINGW" ]; then
   echo No image on $(uname -s)
   exit 0
 fi
