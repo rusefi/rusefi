@@ -43,12 +43,11 @@ jobs:
         cp ./misc/libopenblt_jni/build/libopenblt_jni.so deliver/
 
     - uses: actions/upload-artifact@v3
-      working-directory: deliver
       with:
         name: libopenblt-linux
         path: |
-          libopenblt.so
-          libopenblt_jni.so
+          ./deliver/libopenblt.so
+          ./deliver/libopenblt_jni.so
 
 
   release:
@@ -101,12 +100,11 @@ jobs:
         cp ./misc/libopenblt_jni/build/libopenblt_jni.dylib deliver/
 
     - uses: actions/upload-artifact@v3
-      working-directory: deliver
       with:
         name: bootcommander-linux
         path: |
-          libopenblt.dylib
-          libopenblt_jni.dylib
+          ./deliver/libopenblt.dylib
+          ./deliver/libopenblt_jni.dylib
 
   build-firmware:
     runs-on: ubuntu-latest
