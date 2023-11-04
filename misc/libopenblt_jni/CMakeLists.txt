@@ -12,6 +12,8 @@ if(APPLE)
   set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 endif(APPLE)
 
+set(CXX_STANDARD 20)
+
 # Set OpenBLT library related directory locations
 set(LIBOPENBLT_LIB ${PROJECT_SOURCE_DIR}/../../firmware/ext/openblt/Host/)
 set(LIBOPENBLT_INC ${LIBOPENBLT_LIB}/Source/LibOpenBLT)
