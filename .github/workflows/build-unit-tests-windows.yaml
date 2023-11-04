@@ -23,8 +23,10 @@ jobs:
 
     - name: Set up MinGW
       uses: egor-tensin/setup-mingw@v2
+      # 12 has pch https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105858
+      # 13 has x86 issue https://github.com/egor-tensin/setup-mingw/issues/14
       with:
-        version: 12.2.0 # https://github.com/egor-tensin/setup-mingw/issues/14
+        version: 11.4.0
 
     - name: Print GCC version
       working-directory: .
