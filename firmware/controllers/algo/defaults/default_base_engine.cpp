@@ -7,6 +7,7 @@
 #include "proteus_meta.h"
 #endif // HW_PROTEUS
 
+#if EFI_ALTERNATOR_CONTROL
 static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorOffAboveTps = 120;
 
@@ -16,6 +17,7 @@ static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorControl.pFactor = 30;
 	engineConfiguration->alternatorControl.periodMs = 100;
 }
+#endif // EFI_ALTERNATOR_CONTROL
 
 void setGDIFueling() {
 	// Use high pressure sensor
