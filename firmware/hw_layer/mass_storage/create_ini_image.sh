@@ -6,7 +6,9 @@
 # fail on error
 set -e
 
-if [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ]; then
+KERNEL_NAME="$(expr substr $(uname -s) 1 6)"
+echo $KERNEL_NAME
+if [ $KERNEL_NAME == "CYGWIN" ]; then
   echo No image on CYGWIN
   exit 0
 fi
