@@ -218,8 +218,12 @@ public class ProgramSelector {
 
             @Override
             public void error(String line) {
-                callbacks.log(line);
-                callbacks.error();
+                throw new RuntimeException(line);
+            }
+
+            @Override
+            public void setPhase(String title, boolean hasProgress) {
+                callbacks.log("Begin phase: " + title);
             }
         };
 
