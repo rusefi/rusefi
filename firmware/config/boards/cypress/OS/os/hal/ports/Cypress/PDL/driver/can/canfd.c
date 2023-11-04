@@ -269,7 +269,7 @@ static void CanfdDeInitInterrupt( volatile stc_canfdn_t* pstcCanfd );
 
 static en_result_t CanfdCheckAndNotifyRxMsg( volatile stc_canfdn_t* pstcCanfd, en_canfd_confirmation_method_t enMethod, uint32_t* pu32Accepted );
 static stc_canfd_stdid_filter_t* CanfdCalcStdIdFilterAddress( volatile stc_canfdn_t* pstcCanfd, uint8_t u8Index );
-static stc_canfd_extid_filter_t* CanfdCalcExtIdFilterAddress( volatile stc_canfdn_t* pstcCanfd, uint8_t u8Index );
+//static stc_canfd_extid_filter_t* CanfdCalcExtIdFilterAddress( volatile stc_canfdn_t* pstcCanfd, uint8_t u8Index );
 static stc_canfd_rx_buffer_t* CanfdCalcRxBufferAddress( volatile stc_canfdn_t* pstcCanfd, uint8_t u8Index );
 static en_result_t CanfdGetRxFIFO( volatile stc_canfdn_t* pstcCanfd, en_canfd_rxfifo_number_t enNumber, stc_canfd_rx_buffer_t* pstcRxMsg );
 static en_result_t CanfdConvRxBuffer( stc_canfd_rx_buffer_t* pstcRxBuffer, stc_canfd_msg_t* pstcRxMsg );
