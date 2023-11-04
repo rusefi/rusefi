@@ -47,7 +47,7 @@ jobs:
           ./misc/libopenblt_jni/build/libopenblt_jni.so
 
   build-libopenblt-macos:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
     - uses: actions/checkout@v4
