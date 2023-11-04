@@ -46,7 +46,7 @@ private:
 	jmethodID const m_error;
 };
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_loadFirmware(JNIEnv* env, jobject, jstring jFilename, jobject jCallbacks) {
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_loadFirmware(JNIEnv* env, jobject, jstring jFilename, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks);
 
 	const char* filename = env->GetStringUTFChars(jFilename, 0);
@@ -71,7 +71,7 @@ static tBltSessionSettingsXcpV10 xcpSettings;
 static tBltTransportSettingsXcpV10Rs232 transportSettings;
 static char s_portName[256];
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_sessionStart(JNIEnv* env, jobject, jstring jSerialPort, jobject jCallbacks) {
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_sessionStart(JNIEnv* env, jobject, jstring jSerialPort, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks);
 
 	xcpSettings.timeoutT1 = 1000;
@@ -97,7 +97,7 @@ JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_sessionStart(JNIEnv* en
 	}
 }
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_erase(JNIEnv* env, jobject, jobject jCallbacks) {
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_erase(JNIEnv* env, jobject, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks);
 
 	int result = 0;
@@ -161,7 +161,7 @@ JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_erase(JNIEnv* env, jobj
 	}
 }
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_program(JNIEnv* env, jobject, jobject jCallbacks) {
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program(JNIEnv* env, jobject, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks);
 
 	uint32_t segmentIdx;
@@ -223,7 +223,7 @@ JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_program(JNIEnv* env, jo
 	}
 }
 
-JNIEXPORT void JNICALL com_rusefi_maintenance_OpenbltJni_stop(JNIEnv*, jobject, jobject jCallbacks) {
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_stop(JNIEnv*, jobject, jobject jCallbacks) {
 	BltSessionStop();
 	BltSessionTerminate();
 	BltFirmwareTerminate();
