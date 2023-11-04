@@ -107,6 +107,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	return advanceAngle;
 }
 
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 static angle_t getAdvanceCorrections(float engineLoad) {
 	auto iat = Sensor::get(SensorType::Iat);
 
@@ -120,11 +121,11 @@ static angle_t getAdvanceCorrections(float engineLoad) {
 		);
 	}
 
-#if EFI_SHAFT_POSITION_INPUT && EFI_IDLE_CONTROL
+#if EFI_IDLE_CONTROL
 	float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
 
 	engine->ignitionState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(instantRpm);
-#endif // EFI_SHAFT_POSITION_INPUT && EFI_IDLE_CONTROL
+#endif // EFI_IDLE_CONTROL
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
@@ -151,7 +152,7 @@ static angle_t getCrankingAdvance(int rpm, float engineLoad) {
 		minCrankingRpm = rpm;
 	return interpolateClamped(minCrankingRpm, engineConfiguration->crankingTimingAngle, engineConfiguration->cranking.rpm, crankingToRunningTransitionAngle, rpm);
 }
-
+#endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 angle_t getAdvance(int rpm, float engineLoad) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
