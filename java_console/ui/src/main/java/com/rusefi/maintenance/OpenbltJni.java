@@ -25,7 +25,7 @@ public final class OpenbltJni {
         if (IS_MAC) {
             // MacOS won't run load a dylib from the current directory, it has
             // to be copied to the user's library first
-            String targetDir = "~/Library/Java/Extensions";
+            String targetDir = System.getProperty("user.home") + "/Library/Java/Extensions";
             new File(targetDir).mkdirs();
 
             String[] libs = { "libopenblt.dylib", "libopenblt_jni.dylib" };
@@ -37,8 +37,13 @@ public final class OpenbltJni {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+            // Sometimes macOS has difficulty finding libopenblt.dylib
+            // Force it to load it first
+            System.loadLibrary("openblt");
         }
 
+        // Load our OpenBLT JNI lib we actually want to use
         System.loadLibrary("openblt_jni");
     }
 
