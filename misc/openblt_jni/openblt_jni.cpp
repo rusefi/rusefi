@@ -125,7 +125,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_erase(J
 		// Only continue if sanity check passed.
 		if ((segmentData == nullptr) || (segmentLen == 0))
 		{
-			// TODO: error handling
+			cb.error("BltFirmwareGetSegment not OK");
 			return;
 		}
 
@@ -157,7 +157,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_erase(J
 			currentEraseResult = BltSessionClearMemory(currentEraseBase, currentEraseCnt);
 			if (currentEraseResult != BLT_RESULT_OK)
 			{
-				// TODO: error handling
+				cb.error("BltSessionClearMemory not OK");
 				return;
 			}
 			/* Update loop variables. */
@@ -177,6 +177,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program
 	uint32_t segmentLen;
 	uint32_t segmentBase;
 	uint8_t const * segmentData;
+
+	int lastPercent = -1;
 
 	/* Program the memory segments on the target with the firmware data. */
 	for (segmentIdx = 0; segmentIdx < BltFirmwareGetSegmentCount(); segmentIdx++) 
@@ -226,8 +228,11 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program
 			currentWriteDataPtr += currentWriteCnt;
 			stillToWriteCnt -= currentWriteCnt;
 
-			uint8_t progressPct = (uint8_t)(((segmentLen - stillToWriteCnt) * 100ul) / segmentLen);
-			cb.updateProgress(progressPct);
+			int progressPct = (int)(((segmentLen - stillToWriteCnt) * 100ul) / segmentLen);
+			if (progressPct != lastPercent) {
+				cb.updateProgress(progressPct);
+			}
+			lastPercent = progressPct;
 		}
 	}
 }
