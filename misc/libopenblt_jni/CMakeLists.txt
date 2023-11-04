@@ -30,8 +30,6 @@ endif()
 
 add_library(openblt_jni SHARED)
 
-add_compile_options("-std=c++11")
-
 target_include_directories(openblt_jni PRIVATE ${LIBOPENBLT_INC})
 target_include_directories(openblt_jni PRIVATE ${JNI_INCLUDE_DIRS})
 target_link_directories(openblt_jni PRIVATE ${LIBOPENBLT_LIB})
