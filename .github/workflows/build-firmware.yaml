@@ -352,9 +352,6 @@ jobs:
         name: libopenblt-macos
         path: ./firmware/ext/openblt/Host/
 
-    - name: inspect
-      run: ls ./firmware/ext/openblt/Host/
-
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ toJSON(inputs.build_name) }}
