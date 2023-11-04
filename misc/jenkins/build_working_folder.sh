@@ -52,7 +52,7 @@ cp -r java_console/bin                    $FOLDER
 cp firmware/ext/openblt/Host/libopenblt.dll        $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/libopenblt.so         $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/libopenblt.dylib      $CONSOLE_FOLDER
-cp firmware/ext/openblt/Host/libopenblt_jni.dll    $CONSOLE_FOLDER
+cp firmware/ext/openblt/Host/openblt_jni.dll    $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/libopenblt_jni.so     $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/libopenblt_jni.dylib  $CONSOLE_FOLDER
 
