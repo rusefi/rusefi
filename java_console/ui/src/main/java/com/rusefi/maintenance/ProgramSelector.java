@@ -96,8 +96,7 @@ public class ProgramSelector {
                         break;
                     case OPENBLT_MANUAL:
                         jobName = "OpenBLT via Serial";
-                        job = (callbacks) -> flashOpenbltSerial(selectedPort, callbacks);
-                        //job = (callbacks) -> flashOpenbltSerialJni(selectedPort, callbacks);
+                        job = (callbacks) -> flashOpenbltSerialJni(selectedPort, callbacks);
                         break;
                     case OPENBLT_AUTO:
                         jobName = "OpenBLT via Serial";
@@ -133,10 +132,19 @@ public class ProgramSelector {
     }
 
     private void flashOpenBltCan(UpdateOperationCallbacks callbacks) {
-        OpenbltBootCommanderRunner.flashCan("../../rusefi_update.srec", callbacks);
+        OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
-        // it's a lengthy operation let's signal end
-        Toolkit.getDefaultToolkit().beep();
+        try {
+            OpenbltJni.flashCan("../fome_update.srec", cb);
+
+            callbacks.log("Update completed successfully!");
+            callbacks.done();
+        } catch (Throwable e) {
+            callbacks.log("Error: " + e.toString());
+            callbacks.error();
+        } finally {
+            OpenbltJni.stop(cb);
+        }
     }
 
     private void flashOpenbltSerialAutomatic(JComponent parent, String fomePort, UpdateOperationCallbacks callbacks) {
@@ -190,25 +198,11 @@ public class ProgramSelector {
 
         callbacks.log("Serial port " + openbltPort + " appeared and looks like OpenBLT, programming firmware...");
 
-        flashOpenbltSerial(openbltPort, callbacks);
+        flashOpenbltSerialJni(openbltPort, callbacks);
     }
 
-    private void flashOpenbltSerial(String port, UpdateOperationCallbacks callbacks) {
-        // We can't auto detect OpenBLT port yet
-        if (port == null || PortDetector.AUTO.equals(port)) {
-            callbacks.log("Invalid serial port for OpenBLT: " + port);
-            callbacks.error();
-            return;
-        }
-
-        OpenbltBootCommanderRunner.flashSerial(port, "../fome_update.srec", callbacks);
-
-        // it's a lengthy operation let's signal end
-        Toolkit.getDefaultToolkit().beep();
-    }
-
-    private void flashOpenbltSerialJni(String port, UpdateOperationCallbacks callbacks) {
-        OpenbltJni.OpenbltCallbacks cb = new OpenbltJni.OpenbltCallbacks() {
+    private OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
+        return new OpenbltJni.OpenbltCallbacks() {
             @Override
             public void log(String line) {
                 callbacks.log(line);
@@ -229,6 +223,10 @@ public class ProgramSelector {
                 callbacks.log("Begin phase: " + title);
             }
         };
+    }
+
+    private void flashOpenbltSerialJni(String port, UpdateOperationCallbacks callbacks) {
+        OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {
             OpenbltJni.flashSerial("../fome_update.srec", port, cb);

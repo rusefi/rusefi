@@ -15,5 +15,6 @@ public final class OpenbltJni {
     }
 
     public static native void flashSerial(String filename, String serialPort, OpenbltCallbacks callbacks);
+    public static native void flashCan(String filename, OpenbltCallbacks callbacks);
     public static native void stop(OpenbltCallbacks callbacks);
 }
