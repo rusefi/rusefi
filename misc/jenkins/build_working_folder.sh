@@ -26,12 +26,12 @@ mkdir $FOLDER
 
 CONSOLE_FOLDER="$FOLDER/console"
 DRIVERS_FOLDER="$FOLDER/drivers"
-OPENBLT_FOLDER="$CONSOLE_FOLDER/openblt"
+
 update_ts_cacerts_FOLDER="$FOLDER/update-ts-cacerts"
 
 mkdir $CONSOLE_FOLDER
 mkdir $DRIVERS_FOLDER
-mkdir $OPENBLT_FOLDER
+
 mkdir $update_ts_cacerts_FOLDER
 ls -l $FOLDER
 
@@ -69,11 +69,12 @@ cp misc/console_launcher/rusefi_updater.exe     $FOLDER
 cp misc/console_launcher/update-ts-cacerts/* $update_ts_cacerts_FOLDER
 cp java_console/*.dll                     $CONSOLE_FOLDER
 cp -r java_console/bin                    $FOLDER
-cp firmware/ext/openblt/Host/BootCommander.exe $OPENBLT_FOLDER
-cp firmware/ext/openblt/Host/libopenblt.dll    $OPENBLT_FOLDER
-# todo: fix build-openblt-tools-linux job first!
-#cp firmware/ext/openblt/Host/BootCommander     $OPENBLT_FOLDER
-#cp firmware/ext/openblt/Host/libopenblt.so     $OPENBLT_FOLDER
+cp firmware/ext/openblt/Host/libopenblt.dll        $CONSOLE_FOLDER
+#cp firmware/ext/openblt/Host/libopenblt.so         $CONSOLE_FOLDER
+#cp firmware/ext/openblt/Host/libopenblt.dylib      $CONSOLE_FOLDER
+#cp firmware/ext/openblt/Host/libopenblt_jni.dll    $CONSOLE_FOLDER
+#cp firmware/ext/openblt/Host/libopenblt_jni.so     $CONSOLE_FOLDER
+#cp firmware/ext/openblt/Host/libopenblt_jni.dylib  $CONSOLE_FOLDER
 
 cp misc/console_launcher/readme.html      $FOLDER
 
