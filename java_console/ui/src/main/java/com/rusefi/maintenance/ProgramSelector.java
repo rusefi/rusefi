@@ -97,6 +97,7 @@ public class ProgramSelector {
                     case OPENBLT_MANUAL:
                         jobName = "OpenBLT via Serial";
                         job = (callbacks) -> flashOpenbltSerial(selectedPort, callbacks);
+                        //job = (callbacks) -> flashOpenbltSerialJni(selectedPort, callbacks);
                         break;
                     case OPENBLT_AUTO:
                         jobName = "OpenBLT via Serial";
@@ -204,6 +205,40 @@ public class ProgramSelector {
 
         // it's a lengthy operation let's signal end
         Toolkit.getDefaultToolkit().beep();
+    }
+
+    private void flashOpenbltSerialJni(String port, UpdateOperationCallbacks callbacks) {
+        OpenbltJni.OpenbltCallbacks cb = new OpenbltJni.OpenbltCallbacks() {
+            @Override
+            public void log(String line) {
+                callbacks.log(line);
+            }
+
+            @Override
+            public void updateProgress(int percent) {
+                callbacks.log("Progress: " + percent + "%");
+            }
+
+            @Override
+            public void error(String line) {
+                callbacks.log(line);
+                callbacks.error();
+            }
+        };
+
+        try {
+            OpenbltJni.loadFirmware("../fome_update.srec", cb);
+            OpenbltJni.sessionStart(port, cb);
+            OpenbltJni.erase(cb);
+            OpenbltJni.program(cb);
+
+            callbacks.done();
+        } catch (Throwable e) {
+            callbacks.log("Error: " + e.toString());
+            callbacks.error();
+        } finally {
+            OpenbltJni.stop(cb);
+        }
     }
 
     @NotNull
