@@ -582,6 +582,9 @@ jobs:
       if: ${{ env.skip != 'true' }}
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
 
+    - name: inspect
+      run: ls ./firmware/ext/openblt/Host/
+
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "firmware/tunerstudio/generated/rusefi_${{matrix.short-board-name}}.ini" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
