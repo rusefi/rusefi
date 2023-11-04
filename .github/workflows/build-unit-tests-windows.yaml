@@ -28,6 +28,10 @@ jobs:
       with:
         version: 8.1.0
 
+    - name: Print bash version
+      working-directory: .
+      run: bash --version
+
     - name: Print GCC version
       working-directory: .
       run: gcc -v
