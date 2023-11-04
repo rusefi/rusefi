@@ -12,9 +12,19 @@ find_package(JNI REQUIRED)
 set(LIBOPENBLT_LIB ${PROJECT_SOURCE_DIR}/../../firmware/ext/openblt/Host/)
 set(LIBOPENBLT_INC ${LIBOPENBLT_LIB}/Source/LibOpenBLT)
 
+# Set library name of the OpenBLT Host Library
+if(CMAKE_C_COMPILER_ID MATCHES MSVC)
+  # When building LibOpenBLT with Microsoft Visual Studio, "lib" was added to the name
+  # of the DLL. This needs to be done as well when linking the library.
+  set (LIBOPENBLT_LIBNAME libopenblt)
+else()
+  set (LIBOPENBLT_LIBNAME openblt)
+endif()
+
 add_library(openblt_jni SHARED)
 
 target_include_directories(openblt_jni PRIVATE ${LIBOPENBLT_INC})
 target_include_directories(openblt_jni PRIVATE ${JNI_INCLUDE_DIRS})
+target_link_directories(openblt_jni PRIVATE ${LIBOPENBLT_LIB})
 target_link_libraries(openblt_jni ${LIBOPENBLT_LIBNAME})
 target_sources(openblt_jni PRIVATE openblt_jni.cpp)
