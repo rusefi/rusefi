@@ -55,7 +55,7 @@ private:
 	}
 };
 
-extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_loadFirmware(JNIEnv* env, jobject, jstring jFilename, jobject jCallbacks) {
+static bool loadFirmware(JNIEnv* env, jstring jFilename, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks, "Load firmware file", false);
 
 	const char* filename = env->GetStringUTFChars(jFilename, 0);
@@ -64,7 +64,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_loadFir
 
 	if (BltFirmwareLoadFromFile(filename, 0) != BLT_RESULT_OK) {
 		cb.error("BltFirmwareLoadFromFile() not OK, failed to load firmware file.");
-		return;
+		return false;
 	}
 
 	env->ReleaseStringUTFChars(jFilename, filename);
@@ -72,15 +72,17 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_loadFir
 	// Check that the file isn't empty
 	if (BltFirmwareGetSegmentCount() == 0) {
 		cb.error("BltFirmwareGetSegmentCount() returned 0");
-		return;
+		return false;
 	}
+
+	return true;
 }
 
 static tBltSessionSettingsXcpV10 xcpSettings;
 static tBltTransportSettingsXcpV10Rs232 transportSettings;
 static char s_portName[256];
 
-extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_sessionStart(JNIEnv* env, jobject, jstring jSerialPort, jobject jCallbacks) {
+static bool setupSerial(JNIEnv* env, jstring jSerialPort, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks, "Start session", false);
 
 	xcpSettings.timeoutT1 = 1000;
@@ -103,10 +105,13 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_session
 
 	if (BltSessionStart() != BLT_RESULT_OK) {
 		cb.error("BltSessionStart() failed");
+		return false;
 	}
+
+	return true;
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_erase(JNIEnv* env, jobject, jobject jCallbacks) {
+static bool erase(JNIEnv* env, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks, "Erase", true);
 
 	int result = 0;
@@ -126,7 +131,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_erase(J
 		if ((segmentData == nullptr) || (segmentLen == 0))
 		{
 			cb.error("BltFirmwareGetSegment not OK");
-			return;
+			return false;
 		}
 
 		/* Perform erase operation. */
@@ -158,7 +163,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_erase(J
 			if (currentEraseResult != BLT_RESULT_OK)
 			{
 				cb.error("BltSessionClearMemory not OK");
-				return;
+				return false;
 			}
 			/* Update loop variables. */
 			currentEraseBase += currentEraseCnt;
@@ -168,9 +173,11 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_erase(J
 			cb.updateProgress(progressPct);
 		}
 	}
+
+	return true;
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program(JNIEnv* env, jobject, jobject jCallbacks) {
+static bool program(JNIEnv* env, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks, "Program", true);
 
 	uint32_t segmentIdx;
@@ -189,7 +196,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program
 		// Only continue if sanity check passed.
 		if ((segmentData == nullptr) || (segmentLen == 0)) {
 			cb.error("BltFirmwareGetSegment not OK");
-			return;
+			return false;
 		}
 
 		/* Perform write operation in chunks, so that a progress update can be shown. */
@@ -220,7 +227,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program
 			if (currentWriteResult != BLT_RESULT_OK)
 			{
 				cb.error("BltSessionWriteData not OK");
-				return;
+				return false;
 			}
 
 			/* Update loop variables. */
@@ -234,6 +241,26 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program
 			}
 			lastPercent = progressPct;
 		}
+	}
+
+	return true;
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_flashSerial(JNIEnv* env, jobject, jstring jFirmwareFile, jstring jSerialPort, jobject jCallbacks) {
+	if (!loadFirmware(env, jFirmwareFile, jCallbacks)) {
+		return;
+	}
+
+	if (!setupSerial(env, jSerialPort, jCallbacks)) {
+		return;
+	}
+
+	if (!erase(env, jCallbacks)) {
+		return;
+	}
+
+	if (!program(env, jCallbacks)) {
+		return;
 	}
 }
 

@@ -231,11 +231,9 @@ public class ProgramSelector {
         };
 
         try {
-            OpenbltJni.loadFirmware("../fome_update.srec", cb);
-            OpenbltJni.sessionStart(port, cb);
-            OpenbltJni.erase(cb);
-            OpenbltJni.program(cb);
+            OpenbltJni.flashSerial("../fome_update.srec", port, cb);
 
+            callbacks.log("Update completed successfully!");
             callbacks.done();
         } catch (Throwable e) {
             callbacks.log("Error: " + e.toString());

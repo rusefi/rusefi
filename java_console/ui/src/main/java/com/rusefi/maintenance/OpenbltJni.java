@@ -14,9 +14,6 @@ public final class OpenbltJni {
         System.loadLibrary("openblt_jni");
     }
 
-    public static native void loadFirmware(String filename, OpenbltCallbacks callbacks);
-    public static native void sessionStart(String serialPort, OpenbltCallbacks callbacks);
-    public static native void erase(OpenbltCallbacks callbacks);
-    public static native void program(OpenbltCallbacks callbacks);
+    public static native void flashSerial(String filename, String serialPort, OpenbltCallbacks callbacks);
     public static native void stop(OpenbltCallbacks callbacks);
 }
