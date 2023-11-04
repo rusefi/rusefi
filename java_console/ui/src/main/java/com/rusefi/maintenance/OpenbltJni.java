@@ -53,7 +53,7 @@ public final class OpenbltJni {
             serialPort = "/dev/" + serialPort;
         }
 
-        flashSerialImpl(filename, serialPort, callbacks);
+        flashSerialNative(filename, serialPort, callbacks);
     }
 
     public static void flashCan(String filename, OpenbltCallbacks callbacks) {
@@ -64,7 +64,7 @@ public final class OpenbltJni {
         stopNative(callbacks);
     }
 
-    private static native void flashSerialImpl(String filename, String serialPort, OpenbltCallbacks callbacks);
+    private static native void flashSerialNative(String filename, String serialPort, OpenbltCallbacks callbacks);
     private static native void flashCanNative(String filename, OpenbltCallbacks callbacks);
     private static native void stopNative(OpenbltCallbacks callbacks);
 }
