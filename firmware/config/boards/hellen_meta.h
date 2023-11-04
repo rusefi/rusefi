@@ -244,6 +244,8 @@ static void setHellenSdCardSpi3NoCS() {
 	engineConfiguration->spi3sckPin = H_SPI3_SCK;
 	engineConfiguration->is_enabled_spi_3 = true;
 }
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 
 static void setHellenSdCardSpi1() {
     setHellenSdCardSpi1NoCS();
@@ -287,3 +289,4 @@ static void setHellenMMbaro() {
 	engineConfiguration->lps25BaroSensorScl = Gpio::B10;
 	engineConfiguration->lps25BaroSensorSda = Gpio::B11;
 }
+#pragma GCC diagnostic pop

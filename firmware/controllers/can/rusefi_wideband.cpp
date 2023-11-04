@@ -8,7 +8,10 @@
 #include "ch.h"
 #include "can_msg_tx.h"
 #include "rusefi_wideband.h"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 #include "wideband_firmware/for_rusefi/wideband_can.h"
+#pragma GCC diagnostic pop
 
 // This file contains an array called build_wideband_noboot_bin
 // This array contains the firmware image for the wideband contoller
