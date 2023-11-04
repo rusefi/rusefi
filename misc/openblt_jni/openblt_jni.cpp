@@ -12,10 +12,10 @@ public:
 	Callbacks(JNIEnv* env, jobject jCallbacks)
 		: m_env(env)
 		, m_obj(jCallbacks)
-		, m_class(env->FindClass("OpenbltJni.Callbacks"))
-		, m_log(env->GetMethodID(m_class, "log", "(java/lang/String)V"))
+		, m_class(env->FindClass("com/rusefi/maintenance/OpenbltJni$OpenbltCallbacks"))
+		, m_log(env->GetMethodID(m_class, "log", "(Ljava/lang/String;)V"))
 		, m_updateProgress(env->GetMethodID(m_class, "updateProgress", "(I)V"))
-		, m_error(env->GetMethodID(m_class, "error", "(java/lang/String)V"))
+		, m_error(env->GetMethodID(m_class, "error", "(Ljava/lang/String;)V"))
 	{
 	}
 
