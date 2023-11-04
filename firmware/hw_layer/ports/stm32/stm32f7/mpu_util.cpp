@@ -139,6 +139,7 @@ static void flash_wait_complete()
 	do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
 }
 
+/*
 static void stm32f7_flash_mass_erase_dual_block()
 {
     FLASH_CR |= FLASH_CR_MER1 | FLASH_CR_MER2;
@@ -146,7 +147,7 @@ static void stm32f7_flash_mass_erase_dual_block()
     flash_wait_complete();
     FLASH_CR &= ~(FLASH_CR_MER1 | FLASH_CR_MER2);
 }
-
+*/
 /*
 STOP mode for F7 is needed for wakeup from multiple EXTI pins. For example PD0, which is CAN rx.
 However, for F40X & F42X this may be useless. STOP in itself eats more current than standby. 
