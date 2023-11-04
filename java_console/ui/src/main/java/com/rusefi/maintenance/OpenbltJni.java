@@ -1,11 +1,15 @@
 package com.rusefi.maintenance;
 
 public final class OpenbltJni {
-    interface OpenbltCallbacks
+    public interface OpenbltCallbacks
     {
         void log(String line);
         void updateProgress(int percent);
         void error(String line);
+    }
+
+    static {
+        System.loadLibrary("openblt_jni");
     }
 
     public static native void loadFirmware(String filename, OpenbltCallbacks callbacks);
