@@ -81,6 +81,7 @@ static uint32_t slowAdcCounter = 0;
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
 
+#if EFI_USE_FAST_ADC
 static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
 	uint32_t result = 0;
 	for (int i = 0; i < bufDepth; i++) {
@@ -96,7 +97,6 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 // See https://github.com/rusefi/rusefi/issues/976 for discussion on this value
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 
-#if EFI_USE_FAST_ADC
 static void adc_callback_fast(ADCDriver *adcp) {
 	// State may not be complete if we get a callback for "half done"
 	if (adcp->state == ADC_COMPLETE) {
