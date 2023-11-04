@@ -351,23 +351,6 @@ static void setCommonMazdaNB() {
 	engineConfiguration->vssToothCount = 4;
 }
 
-static void setMazdaMiataEngineNB1Defaults() {
-	setCommonMazdaNB();
-	strcpy(engineConfiguration->engineCode, "NB1");
-
-	// Vehicle speed/gears
-	engineConfiguration->totalGearsCount = 5;
-	engineConfiguration->gearRatio[0] = 3.136;
-	engineConfiguration->gearRatio[1] = 1.888;
-	engineConfiguration->gearRatio[2] = 1.330;
-	engineConfiguration->gearRatio[3] = 1.000;
-	engineConfiguration->gearRatio[4] = 0.814;
-
-	// These may need to change based on your real car
-	engineConfiguration->driveWheelRevPerKm = 551;
-	engineConfiguration->finalGearRatio = 4.3;
-}
-
 static void setMazdaMiataEngineNB2Defaults() {
 	strcpy(engineConfiguration->engineCode, "NB2");
 
@@ -567,72 +550,6 @@ void setMazdaMiata2003EngineConfigurationBoardTest() {
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4 - W47 top <>W47
 }
 
-static void setMiataNB2_MRE_common() {
-	setMazdaMiataEngineNB2Defaults();
-#if (BOARD_TLE8888_COUNT > 0)
-
-	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
-	//
-	// fuelPumpPin output is inherited from boards/microrusefi/board_configuration.cpp
-	// fanPin output is inherited from boards/microrusefi/board_configuration.cpp
-	//
-	// crank trigger input is inherited from boards/microrusefi/board_configuration.cpp
-	// map.sensor.hwChannel input is inherited from boards/microrusefi/board_configuration.cpp
-	// tps1_1AdcChannel input is inherited from boards/microrusefi/board_configuration.cpp
-	// afr.hwChannel input is inherited from boards/microrusefi/board_configuration.cpp
-
-	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-
-	engineConfiguration->camInputs[0] = Gpio::A5;
-	/**
-	 * By default "auto detection mode for VR sensor signals" is used
-	 * We know that for short & strange Hall (?) signals like Miata NB2 crank sensor this does not work well above certain RPM.
-	 */
-	engineConfiguration->tle8888mode = TL_MANUAL;
-
-	// Gpio::D6: "13 - GP Out 6" - selected to +12v
-	engineConfiguration->alternatorControlPin = Gpio::D6;
-	// Gpio::D7: "14 - GP Out 5" - selected to +12v
-	engineConfiguration->tachOutputPin = Gpio::D7; // tachometer
-	engineConfiguration->tachPulsePerRev = 2;
-
-	engineConfiguration->isSdCardEnabled = true;
-
-	engineConfiguration->ignitionDwellForCrankingMs = 8;
-
-	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
-	// Gpio::TLE8888_PIN_6:  "7 - Lowside 1"
-	engineConfiguration->vvtPins[0] = Gpio::TLE8888_PIN_6; // VVT solenoid control
-
-	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = MRE_GPOUT_3;
-
-
-	// todo: alternator warn
-	// ?
-
-	// todo: AC fan
-	// Gpio::TLE8888_PIN_24: "43 - GP Out 4"
-
-	// set_analog_input_pin pps PA7
-	// EFI_ADC_7: "31 - AN volt 3" - PA7
-// disabled for now since only allowed with ETB
-//	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
-
-	// set tps_min 90
-	engineConfiguration->tpsMin = 90;
-
-	// set tps_max 540
-	engineConfiguration->tpsMax = 870;
-
-	// 0.3#4 has wrong R139? TODO: fix that custom board to match proper value!!!
-	// set vbatt_divider 10.956
-	// 56k high side/10k low side multiplied by analogInputDividerCoefficient
-	// vbattDividerCoeff = 10.956 (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
-#endif /* BOARD_TLE8888_COUNT */
-}
-
 /**
  * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
  */
@@ -757,6 +674,23 @@ void setMiataNB2_Proteus() {
 #endif // HW_PROTEUS
 
 #if HW_HELLEN
+static void setMazdaMiataEngineNB1Defaults() {
+	setCommonMazdaNB();
+	strcpy(engineConfiguration->engineCode, "NB1");
+
+	// Vehicle speed/gears
+	engineConfiguration->totalGearsCount = 5;
+	engineConfiguration->gearRatio[0] = 3.136;
+	engineConfiguration->gearRatio[1] = 1.888;
+	engineConfiguration->gearRatio[2] = 1.330;
+	engineConfiguration->gearRatio[3] = 1.000;
+	engineConfiguration->gearRatio[4] = 0.814;
+
+	// These may need to change based on your real car
+	engineConfiguration->driveWheelRevPerKm = 551;
+	engineConfiguration->finalGearRatio = 4.3;
+}
+
 void setHellenNB1() {
 	setMazdaMiataEngineNB1Defaults();
 

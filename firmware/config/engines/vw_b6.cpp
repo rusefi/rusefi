@@ -14,6 +14,7 @@
 #include "defaults.h"
 #include "proteus_meta.h"
 
+#if HW_MICRO_RUSEFI || HW_PROTEUS
 static void commonPassatB6() {
 	setCrankOperationMode();
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
@@ -110,6 +111,7 @@ static void commonPassatB6() {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 }
+#endif // HW_MICRO_RUSEFI || HW_PROTEUS
 
 
 // MAF signal frequency after hardware divider x16, Hz
