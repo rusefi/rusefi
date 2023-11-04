@@ -111,6 +111,13 @@ static bool setupSerial(JNIEnv* env, jstring jSerialPort, jobject jCallbacks) {
 	return true;
 }
 
+static bool setupCan(JNIEnv* env, jobject jCallbacks) {
+	Callbacks cb(env, jCallbacks, "Setup CAN", false);
+
+	cb.error("CAN not supported yet!");
+	return false;
+}
+
 static bool erase(JNIEnv* env, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks, "Erase", true);
 
@@ -252,6 +259,24 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_flashSe
 	}
 
 	if (!setupSerial(env, jSerialPort, jCallbacks)) {
+		return;
+	}
+
+	if (!erase(env, jCallbacks)) {
+		return;
+	}
+
+	if (!program(env, jCallbacks)) {
+		return;
+	}
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_flashCan(JNIEnv * env, jobject, jstring jFirmwareFile, jobject jCallbacks) {
+	if (!loadFirmware(env, jFirmwareFile, jCallbacks)) {
+		return;
+	}
+
+	if (!setupCan(env, jCallbacks)) {
 		return;
 	}
 
