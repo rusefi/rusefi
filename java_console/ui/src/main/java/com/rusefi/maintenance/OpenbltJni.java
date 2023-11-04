@@ -22,8 +22,6 @@ public final class OpenbltJni {
     private static final boolean IS_MAC = OS_NAME.contains("mac") || OS_NAME.contains("darwin");
 
     static {
-        System.loadLibrary("openblt_jni");
-
         if (IS_MAC) {
             // MacOS won't run load a dylib from the current directory, it has
             // to be copied to the user's library first
@@ -40,6 +38,8 @@ public final class OpenbltJni {
                 throw new RuntimeException(e);
             }
         }
+
+        System.loadLibrary("openblt_jni");
     }
 
     public static native void flashSerial(String filename, String serialPort, OpenbltCallbacks callbacks);
