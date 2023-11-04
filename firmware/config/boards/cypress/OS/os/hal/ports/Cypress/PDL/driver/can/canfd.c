@@ -1585,6 +1585,7 @@ static stc_canfd_stdid_filter_t* CanfdCalcStdIdFilterAddress( volatile stc_canfd
  ** \retval NULL					Invalid parameter(s).
  ** \retval not NULL				Address of specified filter element
  *****************************************************************************/
+/*
 static stc_canfd_extid_filter_t* CanfdCalcExtIdFilterAddress( volatile stc_canfdn_t* pstcCanfd,
 															  uint8_t u8Index )
 {
@@ -1606,6 +1607,7 @@ static stc_canfd_extid_filter_t* CanfdCalcExtIdFilterAddress( volatile stc_canfd
 	// Return result
 	return pstcFilter;
 } // CanfdCalcExtIdFilterAddress
+*/
 
 /**
  *****************************************************************************
