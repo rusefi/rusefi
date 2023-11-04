@@ -36,12 +36,16 @@ jobs:
       run: |
         brew install mtools zip dosfstools
 
+    - name: Print bash version
+      working-directory: .
+      run: bash --version
+
     - name: Test Java Compiler
       run: javac -version
 
     - name: Generate Configs, Enums & Live Documentation
       working-directory: ./firmware/
-      run: ./gen_default_everything.sh
+      run: bash gen_default_everything.sh
 
     - name: Print Compiler version
       # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both

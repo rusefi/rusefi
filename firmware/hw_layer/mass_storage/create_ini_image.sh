@@ -6,10 +6,8 @@
 # fail on error
 set -e
 
-KERNEL_NAME="$(expr substr $(uname -s) 1 6)"
-echo $KERNEL_NAME
-if [ $KERNEL_NAME == "CYGWIN" ]; then
-  echo No image on CYGWIN
+if [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" || "$(expr substr $(uname -s) 1 5)" == "MINGW"]; then
+  echo No image on $(uname -s)
   exit 0
 fi
 
