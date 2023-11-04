@@ -237,6 +237,7 @@ static systime_t timeOfPreviousReport = (systime_t) -1;
 static OutputPin* leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
+#if EFI_PROD_CODE
 static void initStatusLeds() {
 	enginePins.communicationLedPin.initPin("led: comm status", getCommsLedPin(), LED_PIN_MODE, true);
 	// checkEnginePin is already initialized by the time we get here
@@ -244,8 +245,6 @@ static void initStatusLeds() {
 	enginePins.warningLedPin.initPin("led: warning status", getWarningLedPin(), LED_PIN_MODE, true);
 	enginePins.runningLedPin.initPin("led: running status", getRunningLedPin(), LED_PIN_MODE, true);
 }
-
-#if EFI_PROD_CODE
 
 static bool isTriggerErrorNow() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT

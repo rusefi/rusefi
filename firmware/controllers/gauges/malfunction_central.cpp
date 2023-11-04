@@ -14,6 +14,12 @@
 
 static error_codes_set_s error_codes_set;
 
+void clearWarnings(void) {
+	error_codes_set.count = 0;
+}
+
+// TODO: wow this is not used by real firmware?!
+#if EFI_UNIT_TEST
 /**
  * Search if code is present
  * @return -1 if code not found
@@ -26,12 +32,6 @@ static int find_position(ObdCode e_code) {
 	return -1;														// -1 if code not found
 }
 
-void clearWarnings(void) {
-	error_codes_set.count = 0;
-}
-
-// TODO: wow this is not used by real firmware?!
-#if EFI_UNIT_TEST
 void addError(ObdCode errorCode) {
 	if (error_codes_set.count < MAX_ERROR_CODES_COUNT && find_position(errorCode) == -1) {
 		error_codes_set.error_codes[error_codes_set.count] = errorCode;
