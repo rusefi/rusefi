@@ -1,0 +1,43 @@
+name: Unit Tests on Windows
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+
+
+
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Checkout Submodules
+      run: |
+        git submodule update --init --depth=1 unit_tests/googletest
+        git submodule update --init --depth=1 firmware/libfirmware
+        git submodule update --init --depth=1 firmware/ext/lua
+        git submodule update --init --depth=1 firmware/controllers/lua/luaaa
+        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware    
+
+    - name: Set up MinGW
+      uses: egor-tensin/setup-mingw@v2
+      with:
+        version: 12.2.0 # https://github.com/egor-tensin/setup-mingw/issues/14
+
+    - name: Print GCC version
+      working-directory: .
+      run: gcc -v
+
+    - name: Print make version
+      working-directory: .
+      run: make -v
+
+    - name: Compile
+      working-directory: unit_tests
+      run: make -j4
+
+    - name: Run Tests on Windows
+      working-directory: unit_tests
+      run: build/unit_tests.exe
