@@ -9,14 +9,16 @@
 
 class Callbacks {
 public:
-	Callbacks(JNIEnv* env, jobject jCallbacks)
+	Callbacks(JNIEnv* env, jobject jCallbacks, const char* phaseName, bool hasProgress)
 		: m_env(env)
 		, m_obj(jCallbacks)
 		, m_class(env->FindClass("com/rusefi/maintenance/OpenbltJni$OpenbltCallbacks"))
 		, m_log(env->GetMethodID(m_class, "log", "(Ljava/lang/String;)V"))
+		, m_phase(env->GetMethodID(m_class, "setPhase", "(Ljava/lang/String;Z)V"))
 		, m_updateProgress(env->GetMethodID(m_class, "updateProgress", "(I)V"))
 		, m_error(env->GetMethodID(m_class, "error", "(Ljava/lang/String;)V"))
 	{
+		phase(phaseName, hasProgress);
 	}
 
 	void log(const char* line) {
@@ -42,12 +44,19 @@ private:
 	jclass const m_class;
 
 	jmethodID const m_log;
+	jmethodID const m_phase;
 	jmethodID const m_updateProgress;
 	jmethodID const m_error;
+
+	void phase(const char* name, bool hasProgress) {
+		jstring jName = m_env->NewStringUTF(name);
+		m_env->CallObjectMethod(m_obj, m_phase, jName, hasProgress);
+		m_env->DeleteLocalRef(jName);
+	}
 };
 
 extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_loadFirmware(JNIEnv* env, jobject, jstring jFilename, jobject jCallbacks) {
-	Callbacks cb(env, jCallbacks);
+	Callbacks cb(env, jCallbacks, "Load firmware file", false);
 
 	const char* filename = env->GetStringUTFChars(jFilename, 0);
 
@@ -72,7 +81,7 @@ static tBltTransportSettingsXcpV10Rs232 transportSettings;
 static char s_portName[256];
 
 extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_sessionStart(JNIEnv* env, jobject, jstring jSerialPort, jobject jCallbacks) {
-	Callbacks cb(env, jCallbacks);
+	Callbacks cb(env, jCallbacks, "Start session", false);
 
 	xcpSettings.timeoutT1 = 1000;
 	xcpSettings.timeoutT3 = 2000;
@@ -98,7 +107,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_session
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_erase(JNIEnv* env, jobject, jobject jCallbacks) {
-	Callbacks cb(env, jCallbacks);
+	Callbacks cb(env, jCallbacks, "Erase", true);
 
 	int result = 0;
 
@@ -162,7 +171,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_erase(J
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program(JNIEnv* env, jobject, jobject jCallbacks) {
-	Callbacks cb(env, jCallbacks);
+	Callbacks cb(env, jCallbacks, "Program", true);
 
 	uint32_t segmentIdx;
 	uint32_t segmentLen;
@@ -177,7 +186,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program
 
 		// Only continue if sanity check passed.
 		if ((segmentData == nullptr) || (segmentLen == 0)) {
-			// TODO: error handling
+			cb.error("BltFirmwareGetSegment not OK");
 			return;
 		}
 
@@ -208,7 +217,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program
 				currentWriteDataPtr);
 			if (currentWriteResult != BLT_RESULT_OK)
 			{
-				// TODO: error handling
+				cb.error("BltSessionWriteData not OK");
 				return;
 			}
 
@@ -223,7 +232,9 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_program
 	}
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_stop(JNIEnv*, jobject, jobject jCallbacks) {
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_stop(JNIEnv* env, jobject, jobject jCallbacks) {
+	Callbacks cb(env, jCallbacks, "Cleanup", false);
+
 	BltSessionStop();
 	BltSessionTerminate();
 	BltFirmwareTerminate();
