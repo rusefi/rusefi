@@ -46,12 +46,11 @@ jobs:
         cp ./misc/libopenblt_jni/build/libopenblt_jni.so deliver/
 
     - uses: actions/upload-artifact@v3
-      working-directory: deliver
       with:
         name: libopenblt-linux
         path: |
-          libopenblt.so
-          libopenblt_jni.so
+          ./deliver/libopenblt.so
+          ./deliver/libopenblt_jni.so
 
   build-libopenblt-macos:
     runs-on: macos-13
@@ -84,12 +83,11 @@ jobs:
         cp ./misc/libopenblt_jni/build/libopenblt_jni.dylib deliver/
 
     - uses: actions/upload-artifact@v3
-      working-directory: deliver
       with:
         name: libopenblt-macos
         path: |
-          libopenblt.dylib
-          libopenblt_jni.dylib
+          ./deliver/libopenblt.dylib
+          ./deliver/libopenblt_jni.dylib
 
   build-firmware:
     needs: [build-libopenblt-linux, build-libopenblt-macos]
