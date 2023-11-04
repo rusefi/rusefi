@@ -253,7 +253,7 @@ static bool program(JNIEnv* env, jobject jCallbacks) {
 	return true;
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_flashSerial(JNIEnv* env, jobject, jstring jFirmwareFile, jstring jSerialPort, jobject jCallbacks) {
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_flashSerialNative(JNIEnv* env, jobject, jstring jFirmwareFile, jstring jSerialPort, jobject jCallbacks) {
 	if (!loadFirmware(env, jFirmwareFile, jCallbacks)) {
 		return;
 	}
@@ -271,7 +271,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_flashSe
 	}
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_flashCan(JNIEnv * env, jobject, jstring jFirmwareFile, jobject jCallbacks) {
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_flashCanNative(JNIEnv * env, jobject, jstring jFirmwareFile, jobject jCallbacks) {
 	if (!loadFirmware(env, jFirmwareFile, jCallbacks)) {
 		return;
 	}
@@ -289,7 +289,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_flashCa
 	}
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_stop(JNIEnv* env, jobject, jobject jCallbacks) {
+extern "C" JNIEXPORT void JNICALL Java_com_rusefi_maintenance_OpenbltJni_stopNative(JNIEnv* env, jobject, jobject jCallbacks) {
 	Callbacks cb(env, jCallbacks, "Cleanup", false);
 
 	BltSessionStop();
