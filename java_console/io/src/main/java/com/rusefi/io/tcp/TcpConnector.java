@@ -3,6 +3,7 @@ package com.rusefi.io.tcp;
 import com.devexperts.logging.Logging;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.Collections;
@@ -73,7 +74,8 @@ public class TcpConnector {
     public static boolean isTcpPortOpened() {
         long now = System.currentTimeMillis();
         try {
-            Socket s = new Socket(LOCALHOST, DEFAULT_PORT);
+            Socket s = new Socket();
+            s.connect(new InetSocketAddress(LOCALHOST, DEFAULT_PORT), 500);
             s.close();
             return true;
         } catch (IOException e) {
