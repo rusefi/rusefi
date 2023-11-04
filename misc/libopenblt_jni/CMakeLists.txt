@@ -9,7 +9,8 @@ set(JAVA_AWT_INCLUDE_PATH NotNeeded)
 find_package(JNI REQUIRED)
 
 if(APPLE)
-  set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+	# Build both arm64 and Intel
+	set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 endif(APPLE)
 
 set(CXX_STANDARD 20)
@@ -28,6 +29,8 @@ else()
 endif()
 
 add_library(openblt_jni SHARED)
+
+add_compile_options("-std=c++11")
 
 target_include_directories(openblt_jni PRIVATE ${LIBOPENBLT_INC})
 target_include_directories(openblt_jni PRIVATE ${JNI_INCLUDE_DIRS})
