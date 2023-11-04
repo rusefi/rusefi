@@ -11,6 +11,11 @@ jobs:
 
 
     steps:
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+
     - uses: actions/checkout@v4
 
     - name: Checkout Submodules
@@ -31,6 +36,13 @@ jobs:
     - name: Print bash version
       working-directory: .
       run: bash --version
+
+    - name: Test Java Compiler
+      run: javac -version
+
+    - name: Generate Configs, Enums & Live Documentation
+      working-directory: ./firmware/
+      run: bash gen_default_everything.sh
 
     - name: Print GCC version
       working-directory: .

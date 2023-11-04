@@ -31,7 +31,7 @@ jobs:
         working-directory: ./firmware/
         run: ./gen_default_everything.sh
 
-      - name: Test Compiler
+      - name: Test Java Compiler
         run: javac -version
 
       - name: Print GCC version
