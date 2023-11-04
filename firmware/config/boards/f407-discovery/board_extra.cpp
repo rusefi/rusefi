@@ -37,6 +37,7 @@ Gpio getRunningLedPin() {
 	return Gpio::D12; // green LED on discovery
 }
 
+#if EFI_HIP_9011
 static void setHip9011FrankensoPinout() {
 	/**
 	 * SPI on PB13/14/15
@@ -69,7 +70,9 @@ static void setHip9011FrankensoPinout() {
 	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
 	}
 }
+#endif
 
+#if EFI_MEMS
 static void configureAccelerometerPins() {
 //	engineConfiguration->LIS302DLCsPin = Gpio::E3; // we have a conflict with VVT output on Miata
 // 	engineConfiguration->is_enabled_spi_1 = true; // we have a conflict with PA5 input pin
@@ -79,6 +82,7 @@ static void configureAccelerometerPins() {
 	engineConfiguration->spi1misoPin = Gpio::A6;
 	engineConfiguration->spi1sckPin = Gpio::A5;
 }
+#endif // EFI_MEMS
 
 /**
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
