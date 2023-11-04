@@ -36,12 +36,19 @@ jobs:
 #      working-directory: ./misc/libopenblt_jni/build
 #      run: make -j8
 
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: libopenblt-linux
-#          path: |
-#            ./firmware/ext/openblt/Host/libopenblt.so
-#            ./misc/libopenblt_jni/build/libopenblt_jni.so
+    - name: coalesce
+      run: |
+        mkdir deliver
+        cp ./firmware/ext/openblt/Host/libopenblt.so deliver/
+        cp ./misc/libopenblt_jni/build/libopenblt_jni.so deliver/
+
+    - uses: actions/upload-artifact@v3
+      working-directory: deliver
+      with:
+        name: libopenblt-linux
+        path: |
+          libopenblt.so
+          libopenblt_jni.so
 
 
   release:
@@ -87,12 +94,19 @@ jobs:
         allowUpdates: true
         prerelease: true
 
+    - name: coalesce
+      run: |
+        mkdir deliver
+        cp ./firmware/ext/openblt/Host/libopenblt.dylib deliver/
+        cp ./misc/libopenblt_jni/build/libopenblt_jni.dylib deliver/
+
     - uses: actions/upload-artifact@v3
+      working-directory: deliver
       with:
         name: bootcommander-linux
         path: |
-          ./firmware/ext/openblt/Host/libopenblt.so
-          ./firmware/ext/openblt/Host/BootCommander
+          libopenblt.dylib
+          libopenblt_jni.dylib
 
   build-firmware:
     runs-on: ubuntu-latest
