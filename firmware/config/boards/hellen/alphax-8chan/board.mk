@@ -14,7 +14,7 @@ DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 # MM176_GP9
 DDEFS += -DADC_MUX_PIN=Gpio::F2
 
-include $(BOARDS_DIR)/hellen/hellen-common144.mk
+include $(BOARDS_DIR)/hellen/hellen-common176.mk
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	# TODO: why do I struggle to fit into flash? compare with Proteus
