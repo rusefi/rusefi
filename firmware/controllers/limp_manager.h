@@ -161,6 +161,8 @@ private:
 	Timer m_lastCutTime;
 };
 
+#if EFI_SHAFT_POSITION_INPUT
 LimpManager * getLimpManager();
+#endif // EFI_SHAFT_POSITION_INPUT
 
 

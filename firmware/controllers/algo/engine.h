@@ -163,7 +163,9 @@ public:
 #endif // EFI_VEHICLE_SPEED
 		KnockController,
 		SensorChecker,
+#if EFI_SHAFT_POSITION_INPUT
 		LimpManager,
+#endif // EFI_SHAFT_POSITION_INPUT
 #if EFI_VVT_PID
 		VvtController1,
 		VvtController2,
@@ -207,7 +209,9 @@ public:
 	SoftSparkLimiter ALSsoftSparkLimiter;
 #endif /* EFI_ANTILAG_SYSTEM */
 
+#if EFI_SHAFT_POSITION_INPUT
 	LambdaMonitor lambdaMonitor;
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	IgnitionState ignitionState;
 	void resetLua();

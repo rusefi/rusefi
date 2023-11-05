@@ -4,7 +4,7 @@
 #include "closed_loop_fuel_cell.h"
 #include "deadband.h"
 
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 struct FuelingBank {
 	ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];
@@ -48,7 +48,6 @@ size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 }
 
 static bool shouldCorrect() {
-#if EFI_SHAFT_POSITION_INPUT
 	const auto& cfg = engineConfiguration->stft;
 
 	// User disable bit
@@ -74,9 +73,6 @@ static bool shouldCorrect() {
 
 	// If all was well, then we're enabled!
 	return true;
-#else
-	return false;
-#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 bool shouldUpdateCorrection(SensorType sensor) {
@@ -136,4 +132,4 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 	return result;
 }
 
-#endif // EFI_ENGINE_CONTROL
+#endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT

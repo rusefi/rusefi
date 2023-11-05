@@ -568,11 +568,11 @@ ExecutorInterface *getExecutorInterface() {
 TriggerCentral * getTriggerCentral() {
 	return &engine->triggerCentral;
 }
-#endif // EFI_SHAFT_POSITION_INPUT
 
 LimpManager * getLimpManager() {
 	return &engine->module<LimpManager>().unmock();
 }
+#endif // EFI_SHAFT_POSITION_INPUT
 
 #if EFI_ENGINE_CONTROL
 FuelSchedule *getFuelSchedule() {

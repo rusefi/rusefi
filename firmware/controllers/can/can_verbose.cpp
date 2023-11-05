@@ -46,7 +46,9 @@ static void populateFrame(Status& msg) {
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
+#if EFI_SHAFT_POSITION_INPUT
 	msg.lambdaProtectActive = engine->lambdaMonitor.isCut();
+#endif // EFI_SHAFT_POSITION_INPUT
 	msg.fan = enginePins.fanRelay.getLogicValue();
 	msg.fan2 = enginePins.fanRelay2.getLogicValue();
 
