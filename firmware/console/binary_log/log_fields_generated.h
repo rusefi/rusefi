@@ -446,5 +446,7 @@ static constexpr LogField fields[] = {
 #if EFI_VVT_PID
 	{___engine.module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
 #endif
+#if EFI_ENGINE_CONTROL
 	{___engine.lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
+#endif
 };
