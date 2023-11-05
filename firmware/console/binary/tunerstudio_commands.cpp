@@ -10,8 +10,6 @@
 
 #if EFI_TUNER_STUDIO
 
-void sendErrorCode(TsChannelBase *tsChannel, uint8_t code);
-
 static constexpr size_t getTunerStudioPageSize() {
 	return TOTAL_CONFIG_SIZE;
 }

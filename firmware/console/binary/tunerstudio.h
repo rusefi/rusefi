@@ -28,6 +28,7 @@ extern tunerstudio_counters_s tsState;
 
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
 void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
+void sendErrorCode(TsChannelBase *tsChannel, uint8_t code);
 
 uint8_t* getWorkingPageAddr();
 
