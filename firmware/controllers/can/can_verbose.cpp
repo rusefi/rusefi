@@ -46,7 +46,9 @@ static void populateFrame(Status& msg) {
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
+#if EFI_ENGINE_CONTROL
 	msg.lambdaProtectActive = engine->lambdaMonitor.isCut();
+#endif // EFI_ENGINE_CONTROL
 	msg.fan = enginePins.fanRelay.getLogicValue();
 	msg.fan2 = enginePins.fanRelay2.getLogicValue();
 
@@ -71,10 +73,10 @@ static void populateFrame(Speeds& msg) {
 
 	auto timing = engine->engineState.timingAdvance[0];
 	msg.timing = timing > 360 ? timing - 720 : timing;
-
+#if EFI_ENGINE_CONTROL
 	msg.injDuty = getInjectorDutyCycle(rpm);
 	msg.coilDuty = getCoilDutyCycle(rpm);
-
+#endif // EFI_ENGINE_CONTROL
 	msg.vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
 
 	msg.EthanolPercent = Sensor::getOrZero(SensorType::FuelEthanolPercent);
@@ -145,10 +147,12 @@ struct Fueling {
 };
 
 static void populateFrame(Fueling& msg) {
+#if EFI_ENGINE_CONTROL
 	msg.cylAirmass = engine->fuelComputer.sdAirMassInOneCylinder;
 	msg.estAirflow = engine->engineState.airflowEstimate;
 	msg.fuel_pulse = (float)engine->outputChannels.actualLastInjection;
 	msg.knockCount = engine->module<KnockController>()->getKnockCount();
+#endif // EFI_ENGINE_CONTROL
 }
 
 struct Fueling2 {

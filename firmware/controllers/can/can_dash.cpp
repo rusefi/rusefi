@@ -578,6 +578,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[7] = 0;			
 		}
 
+#if EFI_ENGINE_CONTROL
 		/* 0x362 - 50Hz rate */
 		{ 
 			CanTxMessage msg(CanCategory::NBC, 0x362, 6);
@@ -595,6 +596,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[4] = (ignAngle >> 8);			
 			msg[5] = (ignAngle & 0x00ff);
 		}
+#endif // EFI_ENGINE_CONTROL
 
 		/* todo: 0x3E5 = 50Hz rate */
 		{ 
@@ -1233,12 +1235,14 @@ struct Aim5f7 {
 };
 
 static void populateFrame(Aim5f7& msg) {
+#if EFI_ENGINE_CONTROL
 	// We don't handle wheel speed, just set to 0?
 	msg.LambdaErr1 = 0;
 	msg.LambdaErr2 = 0;
 	// both targets are the same for now
 	msg.LambdaTarget1 = (float)engine->fuelComputer.targetLambda;
 	msg.LambdaTarget2 = (float)engine->fuelComputer.targetLambda;
+#endif // EFI_ENGINE_CONTROL
 }
 
 void canDashboardAim(CanCycle cycle) {

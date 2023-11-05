@@ -68,6 +68,7 @@ struct ms1514 {
 
 static void populateFrame(ms1514& msg)
 {
+#if EFI_ENGINE_CONTROL
 	msg.afrtgt1 = (float)engine->fuelComputer.targetLambda * STOICH_RATIO;
 	msg.AFR1 = Sensor::getOrZero(SensorType::Lambda1) * STOICH_RATIO;
 	/* TODO: banks? */
@@ -75,6 +76,7 @@ static void populateFrame(ms1514& msg)
 	/* TODO */
 	msg.egt1 = 0;
 	msg.pwseq1 = engine->engineState.injectionDuration;
+#endif // EFI_ENGINE_CONTROL
 }
 
 struct ms1515 {

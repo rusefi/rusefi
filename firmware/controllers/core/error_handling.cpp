@@ -258,7 +258,9 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 #if EFI_PROD_CODE
 	if (hasFirmwareErrorFlag)
 		return;
+#if EFI_ENGINE_CONTROL
 	getLimpManager()->fatalError();
+#endif // EFI_ENGINE_CONTROL
 	engine->engineState.warnings.addWarningCode(code);
 #ifdef EFI_PRINT_ERRORS_AS_WARNINGS
 	{

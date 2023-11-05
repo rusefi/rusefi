@@ -197,11 +197,12 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		obdOnCanPacketRx(frame, busIndex);
 	}
 
+#if EFI_ENGINE_CONTROL
 	if (CAN_EID(frame) == GDI4_BASE_ADDRESS && frame.data8[7] == GDI4_MAGIC) {
 //	    efiPrintf("CAN GDI4 says hi");
 	    getLimpManager()->gdiComms.reset();
 	}
-
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 	// Bootloader acks with address 0x727573 aka ascii "rus"
