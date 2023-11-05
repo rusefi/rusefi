@@ -368,6 +368,7 @@ static int lua_setDebug(lua_State* l) {
 	return 0;
 }
 
+#if EFI_ENGINE_CONTROL
 static auto lua_getAirmassResolveMode(lua_State* l) {
 	if (lua_gettop(l) == 0) {
 		// zero args, return configured mode
@@ -403,6 +404,7 @@ static int lua_setAirmass(lua_State* l) {
 
 	return 0;
 }
+#endif // EFI_ENGINE_CONTROL
 
 #endif // EFI_UNIT_TEST
 
@@ -756,14 +758,14 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 0;
 	});
 
-#if EFI_PROD_CODE
+#if EFI_ELECTRONIC_THROTTLE_BODY && EFI_PROD_CODE
 	lua_register(lState, "restartEtb", [](lua_State* l) {
 		// this is about Lua sensor acting in place of real analog PPS sensor
 		// todo: smarter implementation
 		doInitElectronicThrottle();
 		return 0;
 	});
-#endif // EFI_PROD_CODE
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
     // checksum stuff
 	lua_register(lState, "crc8_j1850", [](lua_State* l) {
@@ -812,7 +814,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		engine->engineState.lua.fuelMult = luaL_checknumber(l, 1);
 		return 0;
 	});
-#if EFI_PROD_CODE
+#if EFI_ELECTRONIC_THROTTLE_BODY && EFI_PROD_CODE
 	lua_register(lState, "setEtbAdd", [](lua_State* l) {
 		auto luaAdjustment = luaL_checknumber(l, 1);
 
@@ -820,6 +822,8 @@ void configureRusefiLuaHooks(lua_State* lState) {
 
 		return 0;
 	});
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE
 	lua_register(lState, "setEtbDisabled", [](lua_State* l) {
 		engine->engineState.lua.luaDisableEtb = lua_toboolean(l, 1);
 		return 0;
@@ -934,8 +938,10 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	lua_register(lState, "getDigital", lua_getDigital);
 	lua_register(lState, "getAuxDigital", lua_getAuxDigital);
 	lua_register(lState, "setDebug", lua_setDebug);
+#if EFI_ENGINE_CONTROL
 	lua_register(lState, "getAirmass", lua_getAirmass);
 	lua_register(lState, "setAirmass", lua_setAirmass);
+#endif // EFI_ENGINE_CONTROL
 
 	lua_register(lState, "stopEngine", [](lua_State*) {
 		doScheduleStopEngine();

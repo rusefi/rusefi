@@ -75,7 +75,7 @@ expected<float> BoostController::getSetpoint() {
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_closedLoopTargetMap != nullptr, "boost closed loop target", unexpected);
 
 	float target = m_closedLoopTargetMap->getValue(rpm, driverIntent.Value);
-
+#if EFI_ENGINE_CONTROL
 	// Add any blends if configured
 	for (size_t i = 0; i < efi::size(config->boostClosedLoopBlends); i++) {
 		auto result = calculateBlend(config->boostClosedLoopBlends[i], rpm, driverIntent.Value);
@@ -86,6 +86,7 @@ expected<float> BoostController::getSetpoint() {
 
 		target += result.Value;
 	}
+#endif //EFI_ENGINE_CONTROL
 
 	return target * luaTargetMult + luaTargetAdd;
 }
@@ -107,6 +108,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 	float openLoop = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, driverIntent.Value);
 
+#if EFI_ENGINE_CONTROL
 	// Add any blends if configured
 	for (size_t i = 0; i < efi::size(config->boostOpenLoopBlends); i++) {
 		auto result = calculateBlend(config->boostOpenLoopBlends[i], rpm, driverIntent.Value);
@@ -117,6 +119,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 		openLoop += result.Value;
 	}
+#endif // EFI_ENGINE_CONTROL
 
 	// Add gear-based adder
 	auto gear = Sensor::getOrZero(SensorType::DetectedGear);
@@ -181,9 +184,11 @@ void BoostController::setOutput(expected<float> output) {
 		m_pwm->setSimplePwmDutyCycle(duty);
 	}
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	// inject wastegate position into DC controllers, pretty weird workflow to be honest
 	// todo: should it be DC controller pulling?
 	setEtbWastegatePosition(boostOutput);
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 }
 
 void BoostController::onFastCallback() {
@@ -281,4 +286,4 @@ void initBoostCtrl() {
 #endif
 }
 
-#endif
+#endif // EFI_BOOST_CONTROL

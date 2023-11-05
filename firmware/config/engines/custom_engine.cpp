@@ -888,7 +888,9 @@ void detectBoardType() {
 
 void fuelBenchMode() {
     engineConfiguration->cranking.rpm = 12000;
+#if EFI_ENGINE_CONTROL
     setFlatInjectorLag(0);
+#endif // EFI_ENGINE_CONTROL
 	setTable(engineConfiguration->postCrankingFactor, 1.0f);
 	setArrayValues(config->crankingFuelCoef, 1.0f);
 	setArrayValues(config->crankingCycleCoef, 1.0f);
