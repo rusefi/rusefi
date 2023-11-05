@@ -31,6 +31,8 @@
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;
 
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+
 /**
  * @return ignition timing angle advance before TDC
  */
@@ -107,7 +109,6 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	return advanceAngle;
 }
 
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 static angle_t getAdvanceCorrections(float engineLoad) {
 	auto iat = Sensor::get(SensorType::Iat);
 
