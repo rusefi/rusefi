@@ -56,6 +56,7 @@ SPIDriver SPID2;
 /*===========================================================================*/
 /* Driver local functions.                                                   */
 /*===========================================================================*/
+/*
 static en_cs_pin_sel_t spi_detectPCS(bool isMaster, ioportid_t ssport, uint16_t sspad, int *alt) {
 	(void)isMaster;
 	*alt = PAL_MODE_ALTERNATIVE_SPI;
@@ -70,6 +71,7 @@ static en_cs_pin_sel_t spi_detectPCS(bool isMaster, ioportid_t ssport, uint16_t 
 	*alt = 0;
 	return -1;
 }
+*/
 
 static int32_t spi_detectBaudRate(SPIDriver *spip) {
 	static const int baudRates[] = { 21000000, 10500000, 5250000, 2626000, 1312500, 656250, 328125, 164060 };
