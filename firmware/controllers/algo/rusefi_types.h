@@ -49,7 +49,7 @@ using efitimems_t = uint32_t;
 
 // date-time struct a la ctime struct tm
 typedef struct {
-	uint32_t year;
+	uint32_t year = 0;
 	uint8_t month;
 	uint8_t day;
 	uint8_t hour;
