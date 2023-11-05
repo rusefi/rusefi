@@ -74,6 +74,7 @@ jobs:
             alphax-4chan,
             alphax-4chan_f7,
             alphax-8chan,
+            alphax-8chan_debug,
             m74_9,
             s105,
             t-b-g,
@@ -147,6 +148,11 @@ jobs:
             folder: config/boards/hellen/alphax-8chan
             ini-file: rusefi_alphax-8chan.ini
             skip-rate: 0
+
+          - build-target: alphax-8chan_debug
+            folder: config/boards/hellen/alphax-8chan
+            ini-file: rusefi_alphax-8chan.ini
+            skip-rate: 95
 
           - build-target: alphax-8chan_f7
             folder: config/boards/hellen/alphax-8chan
