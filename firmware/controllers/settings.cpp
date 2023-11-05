@@ -147,6 +147,7 @@ void printConfiguration() {
 #endif // EFI_PROD_CODE
 }
 
+#if EFI_ENGINE_CONTROL
 static void doPrintConfiguration() {
 	printConfiguration();
 }
@@ -168,35 +169,11 @@ static void setIdleSolenoidFrequency(int value) {
 	incrementGlobalConfigurationVersion();
 }
 
-static void setInjectionPinMode(int value) {
-	engineConfiguration->injectionPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration();
-}
-
-static void setIgnitionPinMode(int value) {
-	engineConfiguration->ignitionPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration();
-}
-
-static void setIdlePinMode(int value) {
-	engineConfiguration->idle.solenoidPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration();
-}
-
-static void setFuelPumpPinMode(int value) {
-	engineConfiguration->fuelPumpPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration();
-}
-
-static void setMalfunctionIndicatorPinMode(int value) {
-	engineConfiguration->malfunctionIndicatorPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration();
-}
-
 static void setSensorChartMode(int value) {
 	engineConfiguration->sensorChartMode = (sensor_chart_e) value;
 	doPrintConfiguration();
 }
+#endif // EFI_ENGINE_CONTROL
 
 static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
 	auto tps = Sensor::get(sensor);
@@ -230,6 +207,7 @@ void printTPSInfo(void) {
 	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
 }
 
+#if EFI_ENGINE_CONTROL
 static void setCrankingRpm(int value) {
 	engineConfiguration->cranking.rpm = value;
 	doPrintConfiguration();
@@ -339,6 +317,7 @@ static void setWholeVeCmd(float value) {
 	setTable(config->veTable, value);
 	engine->resetEngineSnifferIfInTestMode();
 }
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_PROD_CODE
 
@@ -747,16 +726,9 @@ const command_f_s commandsF[] = {
 		{"script_curve_2_value", setScriptCurve2Value},
 };
 
-static void setTpsErrorDetectionTooLow(int v) {
-	engineConfiguration->tpsErrorDetectionTooLow = v;
-}
-
-static void setTpsErrorDetectionTooHigh(int v) {
-	engineConfiguration->tpsErrorDetectionTooHigh = v;
-}
-
-const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
+const command_i_s commandsI[] = {
 #if EFI_ENGINE_CONTROL
+        {"ignition_mode", setIgnitionMode},
         {"driveWheelRevPerKm", [](int value) {
             engineConfiguration->driveWheelRevPerKm = value;
         }},
@@ -764,19 +736,12 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"cranking_injection_mode", setCrankingInjectionMode},
 		{"injection_mode", setInjectionMode},
 		{"sensor_chart_mode", setSensorChartMode},
-		{"tpsErrorDetectionTooLow", setTpsErrorDetectionTooLow},
-		{"tpsErrorDetectionTooHigh", setTpsErrorDetectionTooHigh},
 		{"fixed_mode_timing", setFixedModeTiming},
 		{"timing_mode", setTimingMode},
 		{CMD_ENGINE_TYPE, setEngineTypeAndSave},
 		{"rpm_hard_limit", setRpmHardLimit},
 		{"firing_order", setFiringOrder},
 		{"algorithm", setAlgorithmInt},
-		{"injection_pin_mode", setInjectionPinMode},
-		{"ignition_pin_mode", setIgnitionPinMode},
-		{"idle_pin_mode", setIdlePinMode},
-		{"fuel_pump_pin_mode", setFuelPumpPinMode},
-		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
 		{"debug_mode", setDebugMode},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
@@ -903,18 +868,20 @@ void initSettings() {
 
 	// todo: start saving values into flash right away?
 
-	addConsoleAction("showconfig", doPrintConfiguration);
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
 
+
+#if EFI_ENGINE_CONTROL
     // used by HW CI
 	addConsoleAction(CMD_INDIVIDUAL_INJECTION, setIndividualCoilsIgnition);
-
+	addConsoleAction("showconfig", doPrintConfiguration);
 	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
 	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
+#endif // EFI_ENGINE_CONTROL
 
 	addConsoleAction("stopengine", (Void) scheduleStopEngine);
 
@@ -1015,7 +982,7 @@ void setEngineType(int value, bool isWriteToFlash) {
 #endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 	}
 	incrementGlobalConfigurationVersion("engineType");
-#if ! EFI_UNIT_TEST
+#if EFI_ENGINE_CONTROL && ! EFI_UNIT_TEST
 	doPrintConfiguration();
 #endif // ! EFI_UNIT_TEST
 }
