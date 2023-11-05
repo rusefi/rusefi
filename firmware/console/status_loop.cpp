@@ -89,16 +89,6 @@ extern int maxTriggerReentrant;
 extern uint32_t maxLockedDuration;
 
 /**
- * This is useful if we are changing engine mode dynamically
- * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085
- */
-static int packEngineMode() {
-	return (engineConfiguration->fuelAlgorithm << 4) +
-			(engineConfiguration->injectionMode << 2) +
-			engineConfiguration->ignitionMode;
-}
-
-/**
  * Time when the firmware version was last reported
  * TODO: implement a request/response instead of just constantly sending this out
  */
@@ -351,6 +341,16 @@ extern HIP9011 instance;
 
 
 #if EFI_TUNER_STUDIO
+
+/**
+ * This is useful if we are changing engine mode dynamically
+ * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085
+ */
+static int packEngineMode() {
+	return (engineConfiguration->fuelAlgorithm << 4) +
+			(engineConfiguration->injectionMode << 2) +
+			engineConfiguration->ignitionMode;
+}
 
 static void updateTempSensors() {
 	SensorResult clt = Sensor::get(SensorType::Clt);
@@ -617,18 +617,13 @@ void updateTunerStudioState() {
 	tsOutputChannels->injectorDutyCycle = minF(/*let's avoid scaled "uint8_t, 2" overflow*/127, getInjectorDutyCycle(rpm));
 #endif
 
-	// 224
 	efitimesec_t timeSeconds = getTimeNowS();
 	tsOutputChannels->seconds = timeSeconds;
 
-	// 252
 	tsOutputChannels->engineMode = packEngineMode();
-	// 120
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
-	// 276
 	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
-	// 278
 	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
 	tsOutputChannels->accelerationZ = engine->sensors.accelerometer.z;
 	tsOutputChannels->accelerationRoll = engine->sensors.accelerometer.roll;

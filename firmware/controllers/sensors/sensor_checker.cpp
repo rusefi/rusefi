@@ -132,7 +132,6 @@ static ObdCode getCodeForInjector(int idx, brain_pin_diag_e diag) {
 
 	return (ObdCode)((int)ObdCode::OBD_Injector_Circuit_1 + idx);
 }
-#endif // BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
 
 static ObdCode getCodeForIgnition(int idx, brain_pin_diag_e diag) {
 	if (idx < 0 || idx >= 12) {
@@ -144,6 +143,7 @@ static ObdCode getCodeForIgnition(int idx, brain_pin_diag_e diag) {
 
 	return (ObdCode)((int)ObdCode::OBD_Ignition_Circuit_1 + idx);
 }
+#endif // BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
 
 void SensorChecker::onSlowCallback() {
 	// Don't check when the ignition is off, or when it was just turned on (let things stabilize)
