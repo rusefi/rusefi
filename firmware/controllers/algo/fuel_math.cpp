@@ -168,6 +168,8 @@ float getMaxAirflowAtMap(float map) {
 	return sdAirmass.getAirflow(Sensor::getOrZero(SensorType::Rpm), map, false);
 }
 
+#if EFI_ENGINE_CONTROL
+
 // Per-cylinder base fuel mass
 static float getBaseFuelMass(int rpm) {
 	ScopePerf perf(PE::GetBaseFuel);
@@ -297,7 +299,6 @@ static float getCycleFuelMass(bool isCranking, float baseFuelMass) {
 float getInjectionMass(int rpm) {
 	ScopePerf perf(PE::GetInjectionDuration);
 
-#if EFI_SHAFT_POSITION_INPUT
 	// Always update base fuel - some cranking modes use it
 	float baseFuelMass = getBaseFuelMass(rpm);
 
@@ -326,10 +327,8 @@ float getInjectionMass(int rpm) {
 	float tpsFuelMass = engine->module<InjectorModel>()->getFuelMassForDuration(tpsAccelPerInjection);
 
 	return injectionFuelMass + tpsFuelMass;
-#else
-	return 0;
-#endif
 }
+#endif
 
 /**
  * @brief	Initialize fuel map data structure
