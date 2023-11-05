@@ -188,10 +188,10 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	result &= readBatch(convertedSamples, 0);
 
 #ifdef ADC_MUX_PIN
-	muxControl.setValue(1);
+	muxControl.setValue(1, /*force*/true);
 	// read the second batch, starting where we left off
 	result &= readBatch(convertedSamples, adcChannelCount);
-	muxControl.setValue(0);
+	muxControl.setValue(0, /*force*/true);
 #endif
 
 	return result;
