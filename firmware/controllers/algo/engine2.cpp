@@ -195,8 +195,8 @@ void EngineState::periodicFastCallback() {
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
-void EngineState::updateTChargeK(int rpm, float tps) {
 #if EFI_ENGINE_CONTROL
+void EngineState::updateTChargeK(int rpm, float tps) {
 	float newTCharge = engine->fuelComputer.getTCharge(rpm, tps);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
@@ -207,8 +207,8 @@ void EngineState::updateTChargeK(int rpm, float tps) {
 		sd.tChargeK = convertCelsiusToKelvin(sd.tCharge);
 		timeSinceLastTChargeK = curTime;
 	}
-#endif
 }
+#endif
 
 #if EFI_SIMULATOR
 #define VCS_VERSION "123"

@@ -178,7 +178,9 @@
  * Maybe we are just sniffing what's going on?
  * EFI_ENGINE_CONTROL is covering injectors and spark control
  */
+#ifndef EFI_ENGINE_CONTROL
 #define EFI_ENGINE_CONTROL TRUE
+#endif
 
 /**
  * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
