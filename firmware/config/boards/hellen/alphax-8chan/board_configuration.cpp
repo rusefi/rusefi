@@ -196,21 +196,21 @@ void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
 
-static Gpio OUTPUTS[] = {
-		Gpio::H144_LS_1,
-		Gpio::H144_LS_2,
-		Gpio::H144_LS_3,
-		Gpio::H144_LS_4,
-};
-
-int getBoardMetaOutputsCount() {
-    return efi::size(OUTPUTS);
-}
-
-Gpio* getBoardMetaOutputs() {
-    return OUTPUTS;
-}
-
-int getBoardMetaDcOutputsCount() {
-    return 1;
-}
+//static Gpio OUTPUTS[] = {
+//		Gpio::MM176_INJ1,
+//		Gpio::H144_LS_2,
+//		Gpio::H144_LS_3,
+//		Gpio::H144_LS_4,
+//};
+//
+//int getBoardMetaOutputsCount() {
+//    return efi::size(OUTPUTS);
+//}
+//
+//Gpio* getBoardMetaOutputs() {
+//    return OUTPUTS;
+//}
+//
+//int getBoardMetaDcOutputsCount() {
+//    return 1;
+//}
