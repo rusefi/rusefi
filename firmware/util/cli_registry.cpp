@@ -470,11 +470,8 @@ void initConsoleLogic() {
 
 static char handleBuffer[MAX_CMD_LINE_LENGTH + 1];
 
-static int handleConsoleLineInternal(const char *commandLine, int lineLength) {
-	int len = minI(lineLength, sizeof(handleBuffer) - 1);
-
-	strncpy(handleBuffer, commandLine, len);
-	handleBuffer[len] = 0; // we want this to be null-terminated for sure
+static int handleConsoleLineInternal(const char *commandLine) {
+	strncpy(handleBuffer, commandLine, sizeof(handleBuffer) - 1);
 
 	char *argv[10];
 	int argc = setargs(handleBuffer, argv, 10);
@@ -516,7 +513,7 @@ void handleConsoleLine(char *line) {
 		return;
 	}
 
-	int ret = handleConsoleLineInternal(line, lineLength);
+	int ret = handleConsoleLineInternal(line);
 
 	if (ret < 0) {
 		efiPrintf("failed to handle command [%s]", line);
