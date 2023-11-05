@@ -35,6 +35,14 @@
 #define EFI_BACKUP_SRAM TRUE
 #endif
 
+#ifndef EFI_USE_OPENBLT
+#define EFI_USE_OPENBLT FALSE
+#endif
+
+#ifndef EFI_ETHERNET
+#define EFI_ETHERNET FALSE
+#endif
+
 #ifndef EFI_DFU_JUMP
 #define EFI_DFU_JUMP TRUE
 #endif
@@ -353,7 +361,9 @@
 #define EFI_SENSOR_CHART TRUE
 #endif
 
+#ifndef EFI_PERF_METRICS
 #define EFI_PERF_METRICS FALSE
+#endif
 
 #ifndef DL_OUTPUT_BUFFER
 #define DL_OUTPUT_BUFFER 6500
