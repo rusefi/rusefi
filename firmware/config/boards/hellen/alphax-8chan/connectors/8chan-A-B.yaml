@@ -215,17 +215,17 @@ pins:
     ts_name: 31A - TPS Sensor Input
 
   - pin: 32A
-    meta: MM176_IN_TPS2_ANALOG
-    class: analog_inputs
-    function: TPS2 Sensor Input
-    ts_name: 32A - TPS2 Sensor Input
-
-  - pin: 33A
     meta: MM176_IN_PPS1_ANALOG
     class: analog_inputs
     function: PPS Sensor Input
-    ts_name: 33A - PPS Sensor Input
+    ts_name: ___ - PPS Sensor Input
     color: orange
+
+  - pin: 33A
+    meta: MM176_IN_TPS2_ANALOG
+    class: analog_inputs
+    function: TPS2 Sensor Input
+    ts_name: ___ - TPS2 Sensor Input
 
   - pin: 34A
     meta: MM176_IN_PPS2_ANALOG
