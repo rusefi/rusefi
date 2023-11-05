@@ -410,6 +410,7 @@ static void updateThrottles() {
 static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	engine->outputChannels.lambdaValue = lambdaValue;
+#if EFI_ENGINE_CONTROL
 	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer.stoichiometricRatio;
 	engine->outputChannels.afrGasolineScale = lambdaValue * STOICH_RATIO;
 
@@ -417,6 +418,7 @@ static void updateLambda() {
 	engine->outputChannels.lambdaValue2 = lambda2Value;
 	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer.stoichiometricRatio;
 	engine->outputChannels.afr2GasolineScale = lambda2Value * STOICH_RATIO;
+#endif // EFI_ENGINE_CONTROL
 }
 
 static void updateFuelSensors() {
@@ -538,16 +540,19 @@ static void updateFuelResults() {
 static void updateFuelInfo() {
 	updateFuelCorrections();
 	updateFuelResults();
-
+#if EFI_ENGINE_CONTROL
 	const auto& wallFuel = engine->injectionEvents.elements[0].getWallFuel();
 	engine->outputChannels.wallFuelAmount = wallFuel.getWallFuel() * 1000;			// Convert grams to mg
 	engine->outputChannels.wallFuelCorrectionValue = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
 
 	engine->outputChannels.veValue = engine->engineState.currentVe;
+#endif // EFI_ENGINE_CONTROL
 }
 
 static void updateIgnition(int rpm) {
+#if EFI_ENGINE_CONTROL
 	engine->outputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
+#endif // EFI_ENGINE_CONTROL
 }
 
 static void updateFlags() {

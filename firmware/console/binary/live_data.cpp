@@ -197,7 +197,11 @@ const throttle_model_s* getLiveData(size_t) {
 
 template<>
 const lambda_monitor_s* getLiveData(size_t) {
+#if EFI_SHAFT_POSITION_INPUT
 	return &engine->lambdaMonitor;
+#else
+	return nullptr;
+#endif
 }
 
 static const FragmentEntry fragments[] = {

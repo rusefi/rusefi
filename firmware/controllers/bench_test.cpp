@@ -33,7 +33,6 @@ const OutputPin *getOutputOnTheBenchTest() {
     return outputOnTheBenchTest;
 }
 
-#if EFI_ENGINE_CONTROL
 #if !EFI_UNIT_TEST
 
 #include "flash_main.h"
@@ -666,4 +665,3 @@ void initBenchTest() {
 }
 
 #endif /* EFI_UNIT_TEST */
-#endif
