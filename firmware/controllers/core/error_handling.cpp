@@ -110,10 +110,10 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
-	strncpy(sramState->hardFile, file, efi::size(sramState->hardFile));
+	strncpy(sramState->hardFile, file, efi::size(sramState->hardFile) - 1);
 	sramState->hardLine = line;
 	sramState->check = 123;
-	strncpy(sramState->rawMsg, msg, efi::size(sramState->rawMsg));
+	strncpy(sramState->rawMsg, msg, efi::size(sramState->rawMsg) - 1);
 #endif // EFI_BACKUP_SRAM
 
 	if (hasOsPanicError())
@@ -267,7 +267,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	    chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
 	    va_end(ap);
 	}
-#endif
+#endif // EFI_PRINT_ERRORS_AS_WARNINGS
     criticalShutdown();
 	enginePins.communicationLedPin.setValue(1, /*force*/true);
 
