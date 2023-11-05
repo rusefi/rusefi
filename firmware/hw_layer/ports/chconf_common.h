@@ -111,6 +111,10 @@ extern "C" {
   irqExitHook();                                                            \
 }
 
+#ifndef CH_DBG_SYSTEM_STATE_CHECK
+#define CH_DBG_SYSTEM_STATE_CHECK FALSE
+#endif
+
 /**
  * declared as a macro so that this code does not use stack
  * so that it would not crash the error handler in case of stack issues
