@@ -21,7 +21,7 @@
 
 #define MOCK_UNDEFINED -1
 
-#if !EFI_SIM_IS_WINDOWS
+#if !defined(EFI_SIM_IS_WINDOWS) || !EFI_SIM_IS_WINDOWS
 #define BOARD_WEAK __attribute__((weak))
 #else
 #define BOARD_WEAK
