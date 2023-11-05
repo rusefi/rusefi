@@ -570,11 +570,11 @@ TriggerCentral * getTriggerCentral() {
 }
 #endif // EFI_SHAFT_POSITION_INPUT
 
+#if EFI_ENGINE_CONTROL
 LimpManager * getLimpManager() {
 	return &engine->module<LimpManager>().unmock();
 }
 
-#if EFI_ENGINE_CONTROL
 FuelSchedule *getFuelSchedule() {
 	return &engine->injectionEvents;
 }
