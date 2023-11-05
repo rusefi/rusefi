@@ -22,8 +22,7 @@
  * @{
  */
 
-#ifndef _TEST_H_
-#define _TEST_H_
+#pragma once
 
 /**
  * @brief   Delay inserted between test cases.
@@ -167,7 +166,5 @@ extern union test_buffers test;
 extern void * ROMCONST wa[];
 extern bool test_timer_done;
 #endif
-
-#endif /* _TEST_H_ */
 
 /** @} */
