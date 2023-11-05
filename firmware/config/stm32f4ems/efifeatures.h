@@ -176,6 +176,7 @@
 
 /**
  * Maybe we are just sniffing what's going on?
+ * EFI_ENGINE_CONTROL is covering injectors and spark control
  */
 #define EFI_ENGINE_CONTROL TRUE
 
