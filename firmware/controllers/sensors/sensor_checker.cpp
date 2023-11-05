@@ -122,6 +122,7 @@ static void check(SensorType type) {
 }
 
 #if BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
+#if EFI_ENGINE_CONTROL
 static ObdCode getCodeForInjector(int idx, brain_pin_diag_e diag) {
 	if (idx < 0 || idx >= 12) {
 		return ObdCode::None;
@@ -132,6 +133,7 @@ static ObdCode getCodeForInjector(int idx, brain_pin_diag_e diag) {
 
 	return (ObdCode)((int)ObdCode::OBD_Injector_Circuit_1 + idx);
 }
+#endif // EFI_ENGINE_CONTROL
 
 static ObdCode getCodeForIgnition(int idx, brain_pin_diag_e diag) {
 	if (idx < 0 || idx >= 12) {

@@ -66,6 +66,7 @@ operation_mode_e lookupOperationMode() {
 	}
 }
 
+#if EFI_SHAFT_POSITION_INPUT
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
 // this is related to 'knownOperationMode' flag
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
@@ -82,6 +83,7 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 			return true;
 	}
 }
+#endif // EFI_SHAFT_POSITION_INPUT
 
 // todo: move to triggerCentral/triggerShape since has nothing to do with rotation state!
 operation_mode_e RpmCalculator::getOperationMode() const {

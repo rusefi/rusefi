@@ -243,12 +243,14 @@ void setWholeTimingTable_d(angle_t value) {
 	setTable(config->ignitionTable, value);
 }
 
+#if EFI_ENGINE_CONTROL
 static void initTemperatureCurve(float *bins, float *values, int size, float defaultValue) {
 	for (int i = 0; i < size; i++) {
 		bins[i] = -40 + i * 10;
 		values[i] = defaultValue; // this correction is a multiplier
 	}
 }
+#endif // EFI_ENGINE_CONTROL
 
 void prepareVoidConfiguration(engine_configuration_s *p_engineConfiguration) {
 	criticalAssertVoid(p_engineConfiguration != NULL, "ec NULL");
@@ -283,6 +285,7 @@ void setDefaultSdCardParameters() {
 	engineConfiguration->isSdCardEnabled = true;
 }
 
+#if EFI_ENGINE_CONTROL
 static void setDefaultWarmupIdleCorrection() {
 	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, 1.0);
 
@@ -309,6 +312,7 @@ static void setDefaultIdleSpeedTarget() {
 	copyArray(config->cltIdleRpmBins, {  -30, - 20,  -10,    0,   10,   20,   30,   40,   50,  60,  70,  80,  90, 100 , 110,  120 });
 	copyArray(config->cltIdleRpm,     { 1350, 1350, 1300, 1200, 1150, 1100, 1050, 1000, 1000, 950, 950, 930, 900, 900, 1000, 1100 });
 }
+#endif // EFI_ENGINE_CONTROL
 
 /**
  * see also setDefaultIdleSpeedTarget()
@@ -351,6 +355,7 @@ void setDefaultGppwmParameters() {
 	}
 }
 
+#if EFI_ENGINE_CONTROL
 static void setDefaultEngineNoiseTable() {
 	setRpmTableBin(engineConfiguration->knockNoiseRpmBins);
 
@@ -358,6 +363,7 @@ static void setDefaultEngineNoiseTable() {
 
 	setArrayValues(engineConfiguration->knockBaseNoise, -20);
 }
+#endif // EFI_ENGINE_CONTROL
 
 /**
  * @brief	Global default engine configuration
