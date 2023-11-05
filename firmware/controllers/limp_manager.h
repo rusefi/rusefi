@@ -161,6 +161,8 @@ private:
 	Timer m_lastCutTime;
 };
 
+#if EFI_ENGINE_CONTROL
 LimpManager * getLimpManager();
+#endif // EFI_ENGINE_CONTROL
 
 

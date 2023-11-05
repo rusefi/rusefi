@@ -2,6 +2,8 @@
 
 #include "lambda_monitor.h"
 
+#if EFI_SHAFT_POSITION_INPUT
+
 float LambdaMonitor::getMaxAllowedLambda(float rpm, float load) const {
 	return
 		engine->fuelComputer.targetLambda
@@ -109,3 +111,4 @@ bool LambdaMonitorBase::restoreConditionsMet(float rpm, float load) const {
 
 	return true;
 }
+#endif // EFI_SHAFT_POSITION_INPUT

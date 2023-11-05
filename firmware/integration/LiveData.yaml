@@ -191,3 +191,4 @@ Usages:
     java: LambdaMonitor.java
     folder: controllers/math
     constexpr: "___engine.lambdaMonitor"
+    conditional_compilation: "EFI_ENGINE_CONTROL"

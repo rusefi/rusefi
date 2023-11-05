@@ -4,6 +4,8 @@
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
 
+#if EFI_ENGINE_CONTROL
+
 #define CLEANUP_MODE_TPS 90
 
 static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
@@ -101,7 +103,6 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::LambdaProtection);
 	}
 
-#if EFI_SHAFT_POSITION_INPUT
 	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0])
 			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
@@ -111,7 +112,6 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::EnginePhase);
 		allowSpark.clear(ClearReason::EnginePhase);
 	}
-#endif // EFI_SHAFT_POSITION_INPUT
 
 	// Force fuel limiting on the fault rev limit
 	if (rpm > m_faultRevLimit) {
@@ -126,7 +126,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			allowFuel.clear(ClearReason::BoostCut);
 		}
 	}
-#if EFI_SHAFT_POSITION_INPUT
+
 	if (engine->rpmCalculator.isRunning()) {
 		uint16_t minOilPressure = engineConfiguration->minOilPressureAfterStart;
 
@@ -188,8 +188,6 @@ todo AndreiKA this change breaks 22 unit tests?
 */
 	}
 	
-#endif // EFI_SHAFT_POSITION_INPUT
-
 #if EFI_LAUNCH_CONTROL
 	// Fuel cut if launch control engaged
 	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {
@@ -278,3 +276,4 @@ float LimpManager::getLimitingFuelCorrection() const {
 float LimpManager::getTimeSinceAnyCut() const {
 	return m_lastCutTime.getElapsedSeconds();
 }
+#endif // EFI_ENGINE_CONTROL
