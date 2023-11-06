@@ -37,6 +37,10 @@ public class SimulatorFunctionalTest {
         assertHappyTriggerSimulator();
         assertVvtPosition();
         assertRawAnalogPackets();
+
+        int vvtOutputFrequency = 300; // todo: move the constant to Fields
+        testPwmPin(bench_mode_e.BENCH_VVT0_VALVE, vvtOutputFrequency);
+
         testOutputPin(bench_mode_e.BENCH_MAIN_RELAY, Fields.BENCH_MAIN_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_FUEL_PUMP, Fields.BENCH_FUEL_PUMP_DURATION);
         testOutputPin(bench_mode_e.BENCH_FAN_RELAY, Fields.BENCH_FAN_DURATION);
@@ -185,6 +189,47 @@ public class SimulatorFunctionalTest {
         if (!gotCanPacketAnalog1 || !gotCanPacketAnalog2) {
             throw new IllegalStateException("Didn't receive analog CAN packets! "
                     + gotCanPacketAnalog1 + " " + gotCanPacketAnalog2);
+        }
+    }
+
+    private void testPwmPin(bench_mode_e pinId, int freq) throws InterruptedException {
+        long startMs = System.currentTimeMillis();
+        // request "default" pin state for the PWM pin
+        executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_QUERY_PIN_STATE,
+                new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE },
+                (byte)pinId.ordinal());
+        int defaultPinToggleCounter = pinToggleCounter;
+        // sleep 1 second assuming PWM freq is high enough
+        int numSleepMs = 1000;
+        Thread.sleep(numSleepMs);
+        // request changed pin state for the PWM pin
+        executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_QUERY_PIN_STATE,
+                new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE },
+                (byte)pinId.ordinal());
+
+        long endMs = System.currentTimeMillis();
+        // we need more accurate time than just 'numSeconds'
+        // we take an average to eliminate CAN transfer delays
+        double timeElapsedSec = 0.5 * ((endMs - startMs) + numSleepMs) / 1000.0;
+
+        double pulses = pinToggleCounter - defaultPinToggleCounter;
+        double expectedPulses = 2.0 * timeElapsedSec * freq;    // each period has 2 pulses
+        double tolerance = expectedPulses * 0.20; // 20%
+
+        if (!nearEq(pulses, expectedPulses, tolerance)) {
+            throw new IllegalStateException(pinId + ": Unexpected PWM pin coutner: was="
+                    + defaultPinToggleCounter + " now=" + pinToggleCounter
+                    + " freq=" + freq);
+        }
+
+        // last two pin toggle durations should make a period!
+        double periodMs = durationsInStateMs[0] + durationsInStateMs[1];
+        double expectedPeriodMs = 1000.0 / freq;
+
+        if (!nearEq(periodMs, expectedPeriodMs, 1.0)) {
+            throw new IllegalStateException(pinId + ": Unexpected PWM period: dur[0]="
+                    + durationsInStateMs[0] + " dur[1]=" + durationsInStateMs[1]
+                    + " period=" + expectedPeriodMs);
         }
     }
 
