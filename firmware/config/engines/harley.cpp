@@ -1,10 +1,26 @@
 #include "pch.h"
 #include "proteus_meta.h"
 
+static void harleyEngine() {
+    engineConfiguration->cylindersCount = 2;
+    engineConfiguration->firingOrder = FO_1_2;
+    strcpy(engineConfiguration->engineMake, "Harley");
+}
+
+
 /**
+ * PROTEUS_HARLEY
  * set engine_type 6
  */
 void proteusHarley() {
+    harleyEngine();
+    engineConfiguration->displacement = 0.9;
+    engineConfiguration->injectionMode = IM_SEQUENTIAL;
+    for (size_t i = engineConfiguration->cylindersCount;i < MAX_CYLINDER_COUNT;i++) {
+        engineConfiguration->injectionPins[i] = Gpio::Unassigned;
+        engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
+    }
+
 	strcpy(engineConfiguration->scriptSettingName[0], "compReleaseRpm");
 	engineConfiguration->scriptSetting[0] = 300;
 	strcpy(engineConfiguration->scriptSettingName[1], "compReleaseDur");
@@ -19,6 +35,8 @@ void proteusHarley() {
 #if HW_PROTEUS
     engineConfiguration->acrPin = Gpio::PROTEUS_IGN_8;
     engineConfiguration->acrPin2 = Gpio::PROTEUS_IGN_9;
+
+    engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_3;
 
 	engineConfiguration->luaOutputPins[0] = Gpio::PROTEUS_LS_12;
 

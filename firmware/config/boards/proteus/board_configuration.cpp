@@ -217,6 +217,8 @@ static Gpio PROTEUS_HARLEY_OUTPUTS[] = {
     Gpio::PROTEUS_LS_2,
 	Gpio::PROTEUS_IGN_1,
 	Gpio::PROTEUS_IGN_2,
+	Gpio::PROTEUS_IGN_8, // ACR
+	Gpio::PROTEUS_IGN_9, // ACR2
 };
 
 int getBoardMetaLowSideOutputsCount() {
@@ -280,10 +282,13 @@ int getBoardMetaOutputsCount() {
 }
 
 int getBoardMetaDcOutputsCount() {
-    if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
+    if (engineConfiguration->engineType == engine_type_e::ME17_9_MISC ||
+        engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY ||
+        engineConfiguration->engineType == engine_type_e::MAVERICK_X3
+        ) {
         return 1;
     }
-    return 1;
+    return 2;
 }
 
 Gpio* getBoardMetaOutputs() {
