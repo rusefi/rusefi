@@ -401,7 +401,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->auxPid[0].minValue = 10;
 	engineConfiguration->auxPid[0].maxValue = 90;
 
-	engineConfiguration->vvtOutputFrequency = 300; // VVT solenoid control
+	engineConfiguration->vvtOutputFrequency = DEFAULT_SOLENOID_FREQUENCY; // VVT solenoid control
 
 	engineConfiguration->isCylinderCleanupEnabled = true;
 
@@ -529,7 +529,7 @@ static void setDefaultEngineConfiguration() {
 	 */
 	engineConfiguration->idlePidDeactivationTpsThreshold = 5;
 
-	engineConfiguration->idle.solenoidFrequency = 200;
+	engineConfiguration->idle.solenoidFrequency = DEFAULT_SOLENOID_FREQUENCY;
 	// set idle_position 50
 	engineConfiguration->manIdlePosition = 50;
 //	engineConfiguration->idleMode = IM_AUTO;
@@ -612,7 +612,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->triggerSimulatorRpm = DEFAULT_SELT_STIM_RPM;
 	engineConfiguration->simulatorCamPosition[0] = DEFAULT_SELT_STIM_VVT0;
 
-	engineConfiguration->alternatorPwmFrequency = 300;
+	engineConfiguration->alternatorPwmFrequency = DEFAULT_SOLENOID_FREQUENCY;
 
 	engineConfiguration->isAlternatorControlEnabled = false;
 

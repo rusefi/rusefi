@@ -166,6 +166,7 @@ struct_no_prefix engine_configuration_s
 #define ETB_HW_MAX_FREQUENCY 3000
 #define ETB_COUNT 2
 #define DC_PER_STEPPER 2
+#define DEFAULT_SOLENOID_FREQUENCY 300
 
 #define AUX_DIGITAL_VALVE_COUNT 2
 
