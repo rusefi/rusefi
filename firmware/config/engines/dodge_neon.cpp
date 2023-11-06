@@ -174,7 +174,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->mainRelayPin = Gpio::E6;
 
 	engineConfiguration->idle.solenoidPin = Gpio::C13;
-	engineConfiguration->idle.solenoidFrequency = 300;
 	engineConfiguration->manIdlePosition = 36;
 
 	engineConfiguration->fuelPumpPin = Gpio::E3;

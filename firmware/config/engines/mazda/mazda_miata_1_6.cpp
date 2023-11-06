@@ -124,7 +124,6 @@ void miataNAcommonEngineSettings() {
 	setMafDecodingBins();
 	miataNA_setIgnitionTable();
 
-	engineConfiguration->idle.solenoidFrequency = 500;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	setMapVeTable();

@@ -265,7 +265,6 @@ static void setCommonMazdaNB() {
 	engineConfiguration->afterCrankingIACtaperDuration = 250;
 
 	// Idle
-	engineConfiguration->idle.solenoidFrequency = 500;
 	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->manIdlePosition = 20;
 	engineConfiguration->iacByTpsTaper = 6;

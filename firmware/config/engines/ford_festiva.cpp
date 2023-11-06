@@ -175,7 +175,6 @@ void setFordEscortGt() {
 
 
 	// 40% idle is good default
-	engineConfiguration->idle.solenoidFrequency = 300;
 	engineConfiguration->idle.solenoidPin = Gpio::B9;
 
 	engineConfiguration->malfunctionIndicatorPin = Gpio::E5;

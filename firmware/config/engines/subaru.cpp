@@ -106,7 +106,6 @@ void setSubaruEG33Defaults() {
 
 	/* idle configuration */
 	engineConfiguration->manIdlePosition = 30;
-	engineConfiguration->idle.solenoidFrequency = 250;
 
 	engineConfiguration->maxAcRpm = 3000;
 
