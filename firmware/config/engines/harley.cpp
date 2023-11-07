@@ -25,6 +25,8 @@ void proteusHarley() {
 	engineConfiguration->scriptSetting[0] = 300;
 	strcpy(engineConfiguration->scriptSettingName[1], "compReleaseDur");
 	engineConfiguration->scriptSetting[1] = 5000;
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->enableAemXSeries = true;
 
 	// for now we need non wired camInput to keep TS field enable/disable logic happy
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
