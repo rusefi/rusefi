@@ -30,17 +30,32 @@ static void pidReset() {
 	alternatorPid.reset();
 }
 
-void AlternatorController::onFastCallback() {
-	if (!isBrainPinValid(engineConfiguration->alternatorControlPin)) {
-		return;
+expected<float> AlternatorController::observePlant() {
+	auto vBatt = Sensor::get(SensorType::BatteryVoltage);
+	// if somehow battery voltage isn't valid
+	if (!vBatt)
+		return unexpected;
+	return vBatt.Value;
+}
+
+expected<float> AlternatorController::getSetpoint() {
+	// check if the engine is not running
+	bool alternatorShouldBeEnabledAtCurrentRpm = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->cranking.rpm;
+
+	if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {
+		return unexpected;
 	}
 
-#if ! EFI_UNIT_TEST
-	if (shouldResetPid) {
-		pidReset();
-		shouldResetPid = false;
-	}
-#endif
+	return engineConfiguration->targetVBatt;
+}
+
+expected<percent_t> AlternatorController::getOpenLoop(float target) {
+	UNUSED(target);
+	return 0;
+}
+
+expected<percent_t> AlternatorController::getClosedLoop(float targetVoltage, float vBattVoltage) {
+	percent_t altDuty = alternatorPid.getOutput(targetVoltage, vBattVoltage, FAST_CALLBACK_PERIOD_MS / 1000.0f);
 
 	// this block could be executed even in on/off alternator control mode
 	// but at least we would reflect latest state
@@ -48,38 +63,46 @@ void AlternatorController::onFastCallback() {
 	alternatorPid.postState(engine->outputChannels.alternatorStatus);
 #endif /* EFI_TUNER_STUDIO */
 
-	bool alternatorShouldBeEnabledAtCurrentRpm = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->cranking.rpm;
+   	// see "idle air Bump for AC" comment
+	int acDutyBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acRelayAlternatorDutyAdder : 0;
+	altDuty += acDutyBump;
+	if (engineConfiguration->isVerboseAlternator) {
+		efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", altDuty, vBattVoltage,
+				alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
+	}
+	return altDuty;
+}
 
-	if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {
-		// we need to avoid accumulating iTerm while engine is not running
-		pidReset();
-
+void AlternatorController::setOutput(expected<percent_t> outputValue) {
+	if (outputValue) {
+		currentAltDuty = outputValue.Value;
+		alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
+	} else {
 		// Shut off output if not needed
 		alternatorControl.setSimplePwmDutyCycle(0);
-
-		return;
-	}
-
-	auto vBatt = Sensor::get(SensorType::BatteryVoltage);
-	float targetVoltage = engineConfiguration->targetVBatt;
-
-	if (!vBatt) {
-		// Somehow battery voltage isn't valid, disable alternator control
-		alternatorPid.reset();
-		alternatorControl.setSimplePwmDutyCycle(0);
-	} else {
-		currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt.Value, FAST_CALLBACK_PERIOD_MS / 1000.0f);
-    	// see "idle air Bump for AC" comment
-		int acDutyBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acRelayAlternatorDutyAdder : 0;
-		currentAltDuty += acDutyBump;
-		if (engineConfiguration->isVerboseAlternator) {
-			efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
-					alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
-		}
-
-		alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
+		// we need to avoid accumulating iTerm while the alternator is not working
+		pidReset();
 	}
 }
+
+void AlternatorController::onFastCallback() {
+	if (!isBrainPinValid(engineConfiguration->alternatorControlPin)) {
+		return;
+	}
+#if ! EFI_UNIT_TEST
+	if (shouldResetPid) {
+		pidReset();
+		shouldResetPid = false;
+	}
+#endif
+
+	ClosedLoopController::update();
+}
+
+void AlternatorController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
+	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
+}
+
 
 void showAltInfo(void) {
 	efiPrintf("alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
@@ -96,10 +119,6 @@ void setAltPFactor(float p) {
 	efiPrintf("setAltPid: %.2f", p);
 	pidReset();
 	showAltInfo();
-}
-
-void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
 void initAlternatorCtrl() {
