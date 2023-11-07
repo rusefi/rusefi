@@ -12,4 +12,4 @@ DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 
-DDEFS += -DSHORT_BOARD_NAME=hellen-gm-e67
+SHORT_BOARD_NAME = hellen-gm-e67

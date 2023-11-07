@@ -14,7 +14,7 @@ DDEFS += -DFIRMWARE_ID=\"hellenNB1\" $(VAR_DEF_ENGINE_TYPE)
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
-DDEFS += -DSHORT_BOARD_NAME=hellenNA8_96
+SHORT_BOARD_NAME = hellenNA8_96
 
 # Enable serial pins on expansion header
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)

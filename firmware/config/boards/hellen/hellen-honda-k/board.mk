@@ -18,6 +18,6 @@ DDEFS += -DADC_MUX_PIN=Gpio::F2
 DDEFS += -DFIRMWARE_ID=\"hellen-honda-k\" $(VAR_DEF_ENGINE_TYPE)
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 
-DDEFS += -DSHORT_BOARD_NAME=hellen-honda-k
+SHORT_BOARD_NAME = hellen-honda-k
 
 include $(BOARDS_DIR)/hellen/hellen-common144.mk

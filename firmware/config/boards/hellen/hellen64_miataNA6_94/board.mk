@@ -16,6 +16,6 @@ DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 # https://github.com/rusefi/hellenNA6_issues/issues/35 hack :(
 DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
 
-DDEFS += -DSHORT_BOARD_NAME=hellenNA6
+SHORT_BOARD_NAME = hellenNA6
 
 include $(BOARDS_DIR)/hellen/hellen-common176.mk

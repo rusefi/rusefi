@@ -15,4 +15,4 @@ include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 
-DDEFS += -DSHORT_BOARD_NAME=alphax-4chan
+SHORT_BOARD_NAME = alphax-4chan
