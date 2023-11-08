@@ -406,6 +406,7 @@ enum class trigger_type_e : uint32_t {
 	TT_NISSAN_MR18_CRANK = 68,
 	TT_TOOTHED_WHEEL_32_2 = 69,
 	// Mitsubishi 4B11 would be this with half moon camshaft
+	// 4G69 would use it with different cam
 	TT_36_2_1 = 70,
 	// Mitsubishi 3 cyl and 6 cyl
     TT_36_2_1_1 = 71,
@@ -419,6 +420,7 @@ enum class trigger_type_e : uint32_t {
 	/* pull-up'ed(inverted in): pull down 2x 30 deg before tdc on cam, till tdc.
 	   e.g. Sovek, Saruman ignition blind type */
 	TT_60DEG_TOOTH = 77,
+	// trigger setup matches 4G15T
 	TT_VVT_MITSUBISHI_4G69 = 78,
 
 	TT_MITSU_6G72_CAM = 79,
