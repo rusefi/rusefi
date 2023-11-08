@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Nov 08 20:04:03 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Nov 08 20:21:37 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1178,10 +1178,10 @@ public class Fields {
 	public static final int trigger_type_e_TT_VVT_MITSU_6G72 = 79;
 	public static final int trigger_type_e_TT_VVT_MITSUBISHI_3A92 = 62;
 	public static final int trigger_type_e_TT_VVT_MITSUBISHI_4G69 = 78;
-	public static final int trigger_type_e_TT_VVT_MITSUBISHI_6G75 = 72;
 	public static final int trigger_type_e_TT_VVT_NISSAN_VQ35 = 59;
 	public static final int trigger_type_e_TT_VVT_TOYOTA_3_TOOTH = 17;
 	public static final int trigger_type_e_TT_VVT_TOYOTA_4_1 = 73;
+	public static final int trigger_type_e_UNUSED72 = 72;
 	public static final String TRIGGER_WITH_SYNC = "isSynchronizationNeeded";
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TriggerWheel_T_PRIMARY = 0;

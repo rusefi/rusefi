@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Nov 08 20:01:20 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Nov 08 20:19:44 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -542,8 +542,6 @@ case trigger_type_e::TT_VVT_MITSUBISHI_3A92:
   return "TT_VVT_MITSUBISHI_3A92";
 case trigger_type_e::TT_VVT_MITSUBISHI_4G69:
   return "TT_VVT_MITSUBISHI_4G69";
-case trigger_type_e::TT_VVT_MITSUBISHI_6G75:
-  return "TT_VVT_MITSUBISHI_6G75";
 case trigger_type_e::TT_VVT_MITSU_6G72:
   return "TT_VVT_MITSU_6G72";
 case trigger_type_e::TT_VVT_NISSAN_VQ35:
@@ -552,6 +550,8 @@ case trigger_type_e::TT_VVT_TOYOTA_3_TOOTH:
   return "TT_VVT_TOYOTA_3_TOOTH";
 case trigger_type_e::TT_VVT_TOYOTA_4_1:
   return "TT_VVT_TOYOTA_4_1";
+case trigger_type_e::UNUSED72:
+  return "UNUSED72";
   }
  return NULL;
 }

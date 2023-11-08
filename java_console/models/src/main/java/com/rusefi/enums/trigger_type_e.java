@@ -77,7 +77,7 @@ public enum trigger_type_e {
 	TT_TOOTHED_WHEEL_32_2,
 	TT_36_2_1,
 	TT_36_2_1_1,
-	TT_VVT_MITSUBISHI_6G75,
+	UNUSED72,
 	TT_VVT_TOYOTA_4_1,
 	TT_GM_24x_2,
 	TT_60_2_2_F3R,
