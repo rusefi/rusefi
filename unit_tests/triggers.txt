@@ -5647,7 +5647,7 @@ event 8 0 1 360.00 0.285714
 event 9 0 0 360.00 nan
 event 10 0 1 540.00 4.500000
 event 11 0 0 540.00 nan
-TRIGGERTYPE 79 16 TT_MITSU_6G72_CAM 0.00
+TRIGGERTYPE 79 16 TT_VVT_MITSU_6G72 0.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
