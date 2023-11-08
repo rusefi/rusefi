@@ -38,12 +38,7 @@ void setM111EngineConfiguration() {
     // todo: i wonder if these custom IAT and CLT curves are effectively same?
     setAtSensor(&engineConfiguration->clt, /*temp low*/0, 5750, /*temp mid*/30, 1750, /*temp high*/ 50, 750);
 
-	engineConfiguration->map.sensor.type = MT_CUSTOM;
-	// GM TMAP is recommended
-	engineConfiguration->map.sensor.lowValue = 20;
-   	engineConfiguration->mapLowValueVoltage = 0.3;
-  	engineConfiguration->map.sensor.highValue = 250;
-   	engineConfiguration->mapHighValueVoltage = 4.65;
+	setCustomMap(/*lowValue*/ 20, 0.3, 250, 4.65);
 
 	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
 	engineConfiguration->etb.pFactor = 5.12;

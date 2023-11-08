@@ -63,11 +63,7 @@ void setHyundaiPb() {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
    	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
-	engineConfiguration->map.sensor.type = MT_CUSTOM;
-	engineConfiguration->map.sensor.lowValue = 20;
-	engineConfiguration->mapLowValueVoltage = 0.79;
-	engineConfiguration->map.sensor.highValue = 101.3;
-	engineConfiguration->mapHighValueVoltage = 4;
+	setCustomMap(/*lowValue*/ 20, /*mapLowValueVoltage*/ 0.79, /*highValue*/ 101.3, /*mapHighValueVoltage*/ 4);
 
     engineConfiguration->mc33_hpfp_i_peak = 10;
     engineConfiguration->mc33_hpfp_i_hold = 4;
