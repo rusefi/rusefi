@@ -39,6 +39,22 @@ void initializeMitsubishi4gSymmetricalCrank(TriggerWaveform *s) {
 #endif
 }
 
+// https://github.com/rusefi/rusefi/issues/5593
+void initializeVvt6G72(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
+
+    s->setTriggerSynchronizationGap(0.29);
+    s->setSecondTriggerSynchronizationGap(1.65);
+    int narrowWidth = 40 / 2;
+
+    // special wider tooth
+    s->addToothRiseFall(90 * 1, 85.0 / 2);
+
+    s->addToothRiseFall(90 * 2, narrowWidth);
+    s->addToothRiseFall(90 * 3, narrowWidth);
+    s->addToothRiseFall(90 * 4, narrowWidth);
+}
+
 void initializeMitsubishi4g9xCam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 

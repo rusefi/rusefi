@@ -490,6 +490,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
     case trigger_type_e::TT_VVT_MITSU_6G72:
+		initializeVvt6G72(this);
+		break;
+
     case trigger_type_e::TT_VVT_MITSUBISHI_3A92:
 		initializeVvt3A92(this);
 		break;
