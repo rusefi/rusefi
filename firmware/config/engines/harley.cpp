@@ -14,7 +14,7 @@ static void harleyEngine() {
  */
 void proteusHarley() {
     harleyEngine();
-    engineConfiguration->displacement = 0.9;
+    engineConfiguration->displacement = 1.9;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
     for (size_t i = engineConfiguration->cylindersCount;i < MAX_CYLINDER_COUNT;i++) {
         engineConfiguration->injectionPins[i] = Gpio::Unassigned;
@@ -34,6 +34,9 @@ void proteusHarley() {
 
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
 	engineConfiguration->mapCamDetectionAnglePosition = 50;
+
+	setCustomMap(/*lowValue*/ 20, /*mapLowValueVoltage*/ 0.79, /*highValue*/ 101.3, /*mapHighValueVoltage*/ 4);
+
 #if HW_PROTEUS
     engineConfiguration->acrPin = Gpio::PROTEUS_IGN_8;
     engineConfiguration->acrPin2 = Gpio::PROTEUS_IGN_9;
@@ -41,6 +44,11 @@ void proteusHarley() {
     engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_3;
 
 	engineConfiguration->luaOutputPins[0] = Gpio::PROTEUS_LS_12;
+
+	setTPS1Inputs(PROTEUS_IN_TPS, PROTEUS_IN_TPS1_2);
+
+	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_4, PROTEUS_IN_ANALOG_VOLT_5);
+
 
 	strncpy(config->luaScript, R"(
 --outputIndex = 0
