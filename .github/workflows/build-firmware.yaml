@@ -375,11 +375,6 @@ jobs:
             ini-file: rusefi_core8.ini
             skip-rate: 0
 
-#          - build-target: 48way
-#            folder: config/boards/48way
-#            ini-file: rusefi_48way.ini
-#            skip-rate: 95
-
           - build-target: atlas
             folder: config/boards/atlas
             ini-file: rusefi_atlas.ini
