@@ -5063,7 +5063,7 @@ event 124 0 1 680.00 nan
 event 125 0 0 680.00 nan
 event 126 0 1 690.00 nan
 event 127 0 0 690.00 nan
-TRIGGERTYPE 72 128 TT_VVT_MITSUBISHI_6G75 585.00
+TRIGGERTYPE 72 128 UNUSED72 585.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
