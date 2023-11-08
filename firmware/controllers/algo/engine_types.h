@@ -423,7 +423,7 @@ enum class trigger_type_e : uint32_t {
 	// trigger setup matches 4G15T
 	TT_VVT_MITSUBISHI_4G69 = 78,
 
-	TT_MITSU_6G72_CAM = 79,
+	TT_VVT_MITSU_6G72 = 79,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
