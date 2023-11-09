@@ -1,7 +1,7 @@
 VERSION ""
 
 
-NS_ : 
+NS_ :
 	NS_DESC_
 	CM_
 	BA_DEF_
@@ -154,8 +154,8 @@ CM_ SG_ 515 MCUTemp "Current MCU Temperature";
 CM_ SG_ 515 FuelLevel "Current Fuel Level";
 CM_ SG_ 516 OilPress "Current Oil Pressure Reading";
 CM_ SG_ 516 BattVolt "Current Battery Voltage Reading";
-CM_ SG_ 517 CylAM "Current Estmated Cylinder Airmass";
-CM_ SG_ 517 EstMAF "Currrent Estimated Total Airflow
+CM_ SG_ 517 CylAM "Current Estimated Cylinder Airmass";
+CM_ SG_ 517 EstMAF "Current Estimated Total Airflow
 ";
 CM_ SG_ 517 InjPW "Current Commanded Injector Pulsewidth";
 CM_ SG_ 517 KnockCt "Knock detection counter";

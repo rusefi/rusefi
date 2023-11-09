@@ -3,9 +3,9 @@
  *
  * TODO: change 'verbose' into 'broadcast'?
  *
- * If you edit this file, please update rusEFI_CAN_verbose.dbc!
+ * If you edit this file, please update FOME_CAN_verbose.dbc!
  * Kvaser Database Editor works well for this task, and is free.
- * 
+ *
  * @author Matthew Kennedy, (c) 2020
  */
 
