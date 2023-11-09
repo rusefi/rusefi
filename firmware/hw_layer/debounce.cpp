@@ -108,9 +108,11 @@ bool ButtonDebounce::readPinState() {
     //  but when a method is implemented to actually get the pin's state,
     //  for example to implement long button presses, it will be needed.
     storedValue = getPhysicalState();
+    efiPrintf("%s getPhysicalState %d", m_name, storedValue);
     // Invert
     if (active_mode == PI_PULLUP) {
         storedValue = !storedValue;
+        efiPrintf("%s inverted %d", m_name, storedValue);
     }
     if (storedValue) {
         timeLast.reset();
