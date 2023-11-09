@@ -67,6 +67,8 @@ static void deInitAuxDigital() {
 	}
 }
 
+// one-time start-up
+// see also 'reconfigureSensors'
 void initNewSensors() {
 #if EFI_PROD_CODE && EFI_CAN_SUPPORT
 	initCanSensors();
@@ -78,7 +80,7 @@ void initNewSensors() {
 	initFluidPressure();
 	initThermistors();
 	initLambda();
-	initFlexSensor();
+	initFlexSensor(true);
 	initBaro();
 	initAuxSensors();
 	initVehicleSpeedSensor();
@@ -134,7 +136,7 @@ void reconfigureSensors() {
 	initFluidPressure();
 	initVbatt();
 	initThermistors();
-	initFlexSensor();
+	initFlexSensor(false);
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
 	initInputShaftSpeedSensor();
