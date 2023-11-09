@@ -632,6 +632,18 @@ int lua_canRxAddMask(lua_State* l) {
 }
 #endif // EFI_CAN_SUPPORT
 
+static int lua_vincpy(lua_State* l) {
+    luaL_checktype(l, 1, LUA_TTABLE);
+	size_t sourceIndex = luaL_checknumber(l, 2);
+	size_t destinationIndex = luaL_checknumber(l, 3);
+	size_t size = luaL_checknumber(l, 4);
+	for (int i = 0;i<size;i++) {
+	    lua_pushnumber(l, engineConfiguration->vinNumber[sourceIndex + i]);
+	    lua_rawseti(l, 1, destinationIndex + i);
+	}
+	return 0;
+}
+
 void configureRusefiLuaHooks(lua_State* lState) {
 	LuaClass<Timer> luaTimer(lState, "Timer");
 	luaTimer
@@ -658,6 +670,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 
 	lua_register(lState, "readPin", lua_readpin);
 	lua_register(lState, "vin", lua_vin);
+	lua_register(lState, "vincpy", lua_vincpy);
 	lua_register(lState, "getAuxAnalog", lua_getAuxAnalog);
 	lua_register(lState, "getSensorByIndex", lua_getSensorByIndex);
 	lua_register(lState, "getSensor", lua_getSensorByName);

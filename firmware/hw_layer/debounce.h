@@ -20,6 +20,7 @@ public:
     void startConfiguration();
     bool readPinEvent();
     bool readPinState();
+    bool readPinState2(bool valueWithinThreshold);
     static void stopConfigurationList();
     static void startConfigurationList();
     static void debug();

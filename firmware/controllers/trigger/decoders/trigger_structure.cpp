@@ -489,7 +489,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeNissanVQvvt(this);
 		break;
 
-    case trigger_type_e::TT_MITSU_6G72_CAM:
+    case trigger_type_e::TT_VVT_MITSU_6G72:
+		initializeVvt6G72(this);
+		break;
+
     case trigger_type_e::TT_VVT_MITSUBISHI_3A92:
 		initializeVvt3A92(this);
 		break;
@@ -500,7 +503,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.75, 1.25);
 		break;
 
-    case trigger_type_e::TT_VVT_MITSUBISHI_6G75:
+    case trigger_type_e::UNUSED72:
 	case trigger_type_e::TT_NISSAN_QR25:
 		initializeNissanQR25crank(this);
 		break;

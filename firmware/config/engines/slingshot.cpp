@@ -21,13 +21,9 @@ void setSlingshot() {
     engineConfiguration->twoWireBatchIgnition = true;
     engineConfiguration->globalTriggerAngleOffset = 110;
 
-	//engineConfiguration->map.sensor.type = MT_GM_1_BAR;
-	engineConfiguration->map.sensor.type = MT_CUSTOM;
 	// GM TMAP is recommended
-	engineConfiguration->map.sensor.lowValue = 20;
-   	engineConfiguration->mapLowValueVoltage = 0.3;
-  	engineConfiguration->map.sensor.highValue = 250;
-   	engineConfiguration->mapHighValueVoltage = 4.65;
+	setCustomMap(/*lowValue*/ 20, 0.3, 250, 4.65);
+
 #if HW_PROTEUS
 	setProteusEtbIO();
 	engineConfiguration->invertCamVVTSignal = true;

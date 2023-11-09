@@ -164,6 +164,10 @@ MAKEFLAGS += ${NUMJOBS}
 BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
 BOARDCPPSRC += $(BOARDS_DIR)/board_id.cpp
+ifeq ($(SHORT_BOARD_NAME),)
+$(error SHORT_BOARD_NAME not set, something wrong with your board.mk file)
+endif
+DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 
 # Include various ChibiOS mk files
 # Licensing files.
@@ -221,6 +225,7 @@ endif
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
 $(info BOARD_DIR:     $(BOARD_DIR))
 $(info PROJECT_CPU:   $(PROJECT_CPU))
+$(info SHORT_BOARD_NAME: $(SHORT_BOARD_NAME))
 $(info CPU_HWLAYER:   $(CPU_HWLAYER))
 $(info CONFDIR:       $(CONFDIR))
 $(info LDSCRIPT:      $(LDSCRIPT))

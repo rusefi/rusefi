@@ -406,10 +406,11 @@ enum class trigger_type_e : uint32_t {
 	TT_NISSAN_MR18_CRANK = 68,
 	TT_TOOTHED_WHEEL_32_2 = 69,
 	// Mitsubishi 4B11 would be this with half moon camshaft
+	// 4G69 would use it with different cam
 	TT_36_2_1 = 70,
 	// Mitsubishi 3 cyl and 6 cyl
     TT_36_2_1_1 = 71,
-    TT_VVT_MITSUBISHI_6G75 = 72,
+    UNUSED72 = 72,
 	TT_VVT_TOYOTA_4_1 = 73,
 	// GM 24x with 3/12 degree gaps
 	TT_GM_24x_2 = 74,
@@ -419,9 +420,10 @@ enum class trigger_type_e : uint32_t {
 	/* pull-up'ed(inverted in): pull down 2x 30 deg before tdc on cam, till tdc.
 	   e.g. Sovek, Saruman ignition blind type */
 	TT_60DEG_TOOTH = 77,
+	// trigger setup matches 4G15T
 	TT_VVT_MITSUBISHI_4G69 = 78,
 
-	TT_MITSU_6G72_CAM = 79,
+	TT_VVT_MITSU_6G72 = 79,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt

@@ -19,6 +19,8 @@ void setTPS1Calibration(uint16_t tpsMin, uint16_t tpsMax);
 // Most ETB require redundant dual channel TPS
 void setTPS1Calibration(uint16_t tpsMin, uint16_t tpsMax, uint16_t tps1SecondaryMin, uint16_t tps1SecondaryMax);
 
+void setCustomMap(float lowValue, float mapLowValueVoltage, float highValue, float mapHighValueVoltage);
+
 void setEtbPID(float p, float i, float d);
 
 // split threshold

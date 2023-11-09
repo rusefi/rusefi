@@ -22,8 +22,8 @@ DDEFS += -DSTM32_PWM_USE_TIM3=FALSE
 # for analog VR we want to access un-averaged most raw data
 # DDEFS += -DADC_BUF_DEPTH_FAST=1
 # DDEFS += -DADC_BUF_NUM_AVG=1
+DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_HELLEN_81
 
-
-DDEFS += -DSHORT_BOARD_NAME=hellen81 -DSTATIC_BOARD_ID=STATIC_BOARD_ID_HELLEN_81
+SHORT_BOARD_NAME = hellen81
 
 include $(BOARDS_DIR)/hellen/hellen-common176.mk

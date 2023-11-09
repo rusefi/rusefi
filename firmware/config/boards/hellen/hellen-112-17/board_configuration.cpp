@@ -115,11 +115,7 @@ void setBoardDefaultConfiguration() {
 //	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_IO7;
 
 	// how come this is not denso 183?!
-	engineConfiguration->map.sensor.type = MT_CUSTOM;
-	engineConfiguration->map.sensor.lowValue = 11.4;
-	engineConfiguration->mapLowValueVoltage = 0.5;
-	engineConfiguration->map.sensor.highValue = 170.7;
-	engineConfiguration->mapHighValueVoltage = 4.8;
+	setCustomMap(/*lowValue*/ 11.4, /*mapLowValueVoltage*/ 0.5, /*highValue*/ 170.7, 4.8);
 
 //	engineConfiguration->brakePedalPin = Gpio::H144_IN_CAM;
 //	engineConfiguration->acRelayPin = Gpio::H144_LS_5;

@@ -264,6 +264,14 @@ void setTPS1Calibration(uint16_t tpsMin, uint16_t tpsMax, uint16_t tps1Secondary
 	engineConfiguration->tps1SecondaryMax = tps1SecondaryMax;
 }
 
+void setCustomMap(float lowValue, float mapLowValueVoltage, float highValue, float mapHighValueVoltage) {
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->map.sensor.lowValue = lowValue;
+	engineConfiguration->mapLowValueVoltage = mapLowValueVoltage;
+	engineConfiguration->map.sensor.highValue = highValue;
+	engineConfiguration->mapHighValueVoltage = mapHighValueVoltage;
+}
+
 void setPPSCalibration(float primaryUp, float primaryDown, float secondaryUp, float secondaryDown) {
 	engineConfiguration->throttlePedalUpVoltage = primaryUp;
 	engineConfiguration->throttlePedalWOTVoltage = primaryDown;

@@ -385,6 +385,7 @@ static constexpr LogField fields[] = {
 	{engine->engineState.brakePedalState, "Brake switch", "", 0},
 	{engine->engineState.startStopState, "startStopState", "", 0},
 	{engine->engineState.startStopStateToggleCounter, "startStopStateToggleCounter", "", 0},
+	{engine->engineState.startStopStateTempPhysicalCounter, "startStopStateTempPhysicalCounter", "", 0},
 	{engine->engineState.egtValue1, "egtValue1", "", 0},
 	{engine->engineState.egtValue2, "egtValue2", "", 0},
 	{engine->engineState.desiredRpmLimit, "User-defined RPM hard limit", "rpm", 0},
