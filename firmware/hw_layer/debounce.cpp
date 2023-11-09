@@ -124,6 +124,7 @@ void ButtonDebounce::debug() {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
         efiPrintf("%s timeLast %d", listItem->m_name, listItem->timeLast);
         efiPrintf("physical state %d value %d", listItem->getPhysicalState(), listItem->storedValue);
+        efiPrintf("mode %d", listItem->active_mode);
 #endif
 
         listItem = listItem->nextDebounce;
