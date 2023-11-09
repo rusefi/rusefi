@@ -80,9 +80,8 @@ void ButtonDebounce::startConfiguration() {
 @returns true if the button is pressed, and will not return true again within the set timeout
 */
 bool ButtonDebounce::readPinEvent() {
-    // TRICKY: depending on which API you use (readPinEvent vs readPinState) same variable holds different kind of state
-    storedValue = false;
-    return readPinState();
+    storedValue = readPinState2(false);
+    return storedValue;
 }
 
 bool ButtonDebounce::getPhysicalState() {
@@ -93,30 +92,35 @@ bool ButtonDebounce::getPhysicalState() {
 #endif
 }
 
-bool ButtonDebounce::readPinState() {
+bool ButtonDebounce::readPinState2(bool valueWithinThreshold) {
     if (!isBrainPinValid(*m_pin)) {
         return false;
     }
     efitick_t timeNowNt = getTimeNowNt();
     // If it's been less than the threshold since we were last called
     if (timeLast.getElapsedNt(timeNowNt) < m_threshold) {
-        // see 'TRICKY' comment in readPinEvent()
-        return storedValue;
+        return valueWithinThreshold;
     }
+    bool value = getPhysicalState();
+    efiPrintf("%s value %d", m_name, value);
+    // Invert
+    if (active_mode == PI_PULLUP) {
+        value = !value;
+        efiPrintf("%s inverted %d", m_name, value);
+    }
+    if (value) {
+        timeLast.reset();
+    }
+    return value;
+}
+
+bool ButtonDebounce::readPinState() {
+    // code comment could be out of date:
     // storedValue is a class variable, so it needs to be reset.
     // We don't actually need it to be a class variable in this method,
     //  but when a method is implemented to actually get the pin's state,
     //  for example to implement long button presses, it will be needed.
-    storedValue = getPhysicalState();
-    efiPrintf("%s getPhysicalState %d", m_name, storedValue);
-    // Invert
-    if (active_mode == PI_PULLUP) {
-        storedValue = !storedValue;
-        efiPrintf("%s inverted %d", m_name, storedValue);
-    }
-    if (storedValue) {
-        timeLast.reset();
-    }
+    storedValue = readPinState2(storedValue);
     return storedValue;
 }
 
@@ -125,7 +129,8 @@ void ButtonDebounce::debug() {
     while (listItem != nullptr) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
         efiPrintf("%s timeLast %d", listItem->m_name, listItem->timeLast);
-        efiPrintf("physical state %d value %d", listItem->getPhysicalState(), listItem->storedValue);
+        efiPrintf("physical pin state %d", listItem->getPhysicalState());
+        efiPrintf("state %d", listItem->storedValue);
         efiPrintf("mode %d", listItem->active_mode);
 #endif
 
