@@ -206,7 +206,7 @@ static void doPeriodicSlowCallback() {
 	}
 
 	engine->periodicSlowCallback();
-#else /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
+#else /* if EFI_SHAFT_POSITION_INPUT */
 	#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 		writeToFlashIfPending();
 	#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
