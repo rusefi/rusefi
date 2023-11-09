@@ -47,9 +47,6 @@ static void disengageStarterIfNeeded() {
     }
 }
 
-static int prevPhysicalState = 0;
-static int currentPhysicalState = 0;
-
 void slowStartStopButtonCallback() {
     if (getTimeNowMs() < engineConfiguration->startButtonSuppressOnStartUpMs) {
         // where are odd cases of start button combined with ECU power source button we do not want to crank right on start
@@ -65,11 +62,6 @@ void slowStartStopButtonCallback() {
 	}
 	engine->engineState.startStopState = startStopState;
 	engine->engineState.startStopPhysicalState = startStopButtonDebounce.getPhysicalState();
-	currentPhysicalState = startStopButtonDebounce.getPhysicalState();
-	if (currentPhysicalState != prevPhysicalState) {
-    	engine->engineState.startStopStateTempPhysicalCounter++;
-    }
-    prevPhysicalState = currentPhysicalState;
 
     bool isStarterEngaged = enginePins.starterControl.getLogicValue();
 
