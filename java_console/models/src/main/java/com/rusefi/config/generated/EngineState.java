@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Wed Nov 01 16:52:27 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 09 02:06:25 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -195,16 +195,17 @@ public class EngineState {
 	public static final Field ALIGNMENTFILL_AT_46 = Field.create("ALIGNMENTFILL_AT_46", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
 	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 48, FieldType.BIT, 0).setBaseOffset(1048);
 	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 52, FieldType.INT).setScale(1.0).setBaseOffset(1048);
-	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 56, FieldType.FLOAT).setBaseOffset(1048);
-	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 60, FieldType.FLOAT).setBaseOffset(1048);
-	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 64, FieldType.INT16).setScale(1.0).setBaseOffset(1048);
-	public static final Field ALIGNMENTFILL_AT_66 = Field.create("ALIGNMENTFILL_AT_66", 66, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
-	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 68, FieldType.INT).setScale(1.0).setBaseOffset(1048);
-	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1048);
-	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 76, FieldType.FLOAT).setBaseOffset(1048);
-	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 80, FieldType.FLOAT).setBaseOffset(1048);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 84, FieldType.INT16).setScale(0.01).setBaseOffset(1048);
-	public static final Field ALIGNMENTFILL_AT_86 = Field.create("ALIGNMENTFILL_AT_86", 86, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field STARTSTOPSTATETEMPPHYSICALCOUNTER = Field.create("STARTSTOPSTATETEMPPHYSICALCOUNTER", 56, FieldType.INT).setScale(1.0).setBaseOffset(1048);
+	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 60, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 64, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 68, FieldType.INT16).setScale(1.0).setBaseOffset(1048);
+	public static final Field ALIGNMENTFILL_AT_70 = Field.create("ALIGNMENTFILL_AT_70", 70, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1048);
+	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 76, FieldType.INT).setScale(1.0).setBaseOffset(1048);
+	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 80, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 84, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 88, FieldType.INT16).setScale(0.01).setBaseOffset(1048);
+	public static final Field ALIGNMENTFILL_AT_90 = Field.create("ALIGNMENTFILL_AT_90", 90, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -230,15 +231,16 @@ public class EngineState {
 	ALIGNMENTFILL_AT_46,
 	STARTSTOPPHYSICALSTATE,
 	STARTSTOPSTATETOGGLECOUNTER,
+	STARTSTOPSTATETEMPPHYSICALCOUNTER,
 	EGTVALUE1,
 	EGTVALUE2,
 	DESIREDRPMLIMIT,
-	ALIGNMENTFILL_AT_66,
+	ALIGNMENTFILL_AT_70,
 	FUELINJECTIONCOUNTER,
 	SPARKCOUNTER,
 	FUELINGLOAD,
 	IGNITIONLOAD,
 	VETABLEYAXIS,
-	ALIGNMENTFILL_AT_86,
+	ALIGNMENTFILL_AT_90,
 	};
 }

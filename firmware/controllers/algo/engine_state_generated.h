@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Sep 25 18:12:01 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 09 02:06:25 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -322,56 +322,60 @@ struct engine_state_s {
 	/**
 	 * offset 56
 	 */
-	float egtValue1 = (float)0;
+	uint32_t startStopStateTempPhysicalCounter = (uint32_t)0;
 	/**
 	 * offset 60
+	 */
+	float egtValue1 = (float)0;
+	/**
+	 * offset 64
 	 */
 	float egtValue2 = (float)0;
 	/**
 	 * User-defined RPM hard limit
 	rpm
-	 * offset 64
+	 * offset 68
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 66
+	 * offset 70
 	 */
-	uint8_t alignmentFill_at_66[2];
+	uint8_t alignmentFill_at_70[2];
 	/**
 	 * Fuel: Injection counter
-	 * offset 68
+	 * offset 72
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * Ign: Spark counter
-	 * offset 72
+	 * offset 76
 	 */
 	uint32_t sparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 76
+	 * offset 80
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 80
+	 * offset 84
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	%
-	 * offset 84
+	 * offset 88
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 86
+	 * offset 90
 	 */
-	uint8_t alignmentFill_at_86[2];
+	uint8_t alignmentFill_at_90[2];
 };
-static_assert(sizeof(engine_state_s) == 88);
+static_assert(sizeof(engine_state_s) == 92);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Sep 25 18:12:01 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 09 02:06:25 UTC 2023
