@@ -17,6 +17,7 @@ void initRealHardwareEngineController();
 void commonEarlyInit();
 void commonInitEngineController();
 void initStartStopButton();
+void initWarningRunningPins();
 
 void initDataStructures();
 

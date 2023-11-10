@@ -26,7 +26,8 @@ static void setCanFrankensoDefaults() {
 }
 
 Gpio getWarningLedPin() {
-	return Gpio::D13; // orange LED on discovery
+    // open question if we need those LEDs at all? shall those be configurable?
+	return Gpio::Unassigned;
 }
 
 Gpio getCommsLedPin() {
@@ -34,7 +35,8 @@ Gpio getCommsLedPin() {
 }
 
 Gpio getRunningLedPin() {
-	return Gpio::D12; // green LED on discovery
+    // open question if we need those LEDs at all? shall those be configurable?
+	return Gpio::Unassigned;
 }
 
 #if EFI_HIP_9011

@@ -679,6 +679,7 @@ void commonEarlyInit() {
 // one-time start-up
 void initRealHardwareEngineController() {
 	commonInitEngineController();
+	initWarningRunningPins();
 
 #if EFI_LOGIC_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
