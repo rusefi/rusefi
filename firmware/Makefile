@@ -91,7 +91,7 @@ ifeq ($(USE_LTO),)
   # ChibiOS has not yet migrated to gcc12 syntax of '-flto' thus some weird code here
   #
   # drama: in case of 'syntax error near unexpected token' on Windows either comment out the two lines below
-  # or just more your GCC into a folder without spaced in the path like 'C:\stuff\arm-gcc-12.2'
+  # or just more your GCC into a folder without spaces in the path like 'C:\stuff\arm-gcc-12.2'
   #
   USE_LTO = no
   USE_OPT += -flto=auto
