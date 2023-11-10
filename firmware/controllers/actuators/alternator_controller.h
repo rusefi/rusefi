@@ -22,4 +22,3 @@ public:
 	void onFastCallback() override;
 };
 
-void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration);
