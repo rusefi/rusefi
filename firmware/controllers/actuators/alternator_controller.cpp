@@ -25,7 +25,7 @@ static percent_t currentAltDuty;
 
 static bool shouldResetPid = false;
 
-void AlternatorController::AlternatorController() {
+AlternatorController::AlternatorController() {
 	alternatorPid.initPidClass(&engineConfiguration->alternatorControl);
 }
 
