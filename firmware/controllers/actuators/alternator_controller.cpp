@@ -98,7 +98,7 @@ void setAltPFactor(float p) {
 	showAltInfo();
 }
 
-void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
+void AlternatorController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
 	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
