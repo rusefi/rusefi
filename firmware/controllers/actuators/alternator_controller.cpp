@@ -20,14 +20,17 @@
 #endif /* HAS_OS_ACCESS */
 
 static SimplePwm alternatorControl("alt");
-static Pid alternatorPid(&persistentState.persistentConfiguration.engineConfiguration.alternatorControl);
 
 static percent_t currentAltDuty;
 
 static bool shouldResetPid = false;
 
-static void pidReset() {
+void AlternatorController::pidReset() {
 	alternatorPid.reset();
+}
+
+void AlternatorController::AlternatorController() {
+	alternatorPid.initPidClass(&engineConfiguration->alternatorControl);
 }
 
 expected<float> AlternatorController::observePlant() {
@@ -117,7 +120,7 @@ void showAltInfo(void) {
 void setAltPFactor(float p) {
 	engineConfiguration->alternatorControl.pFactor = p;
 	efiPrintf("setAltPid: %.2f", p);
-	pidReset();
+	engine->module<AlternatorController>()->pidReset();
 	showAltInfo();
 }
 
