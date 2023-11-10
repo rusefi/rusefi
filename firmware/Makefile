@@ -89,6 +89,10 @@ endif
 # Enable this if you want link time optimizations (LTO)
 ifeq ($(USE_LTO),)
   # ChibiOS has not yet migrated to gcc12 syntax of '-flto' thus some weird code here
+  #
+  # drama: in case of 'syntax error near unexpected token' on Windows either comment out the two lines below
+  # or just more your GCC into a folder without spaces in the path like 'C:\stuff\arm-gcc-12.2'
+  #
   USE_LTO = no
   USE_OPT += -flto=auto
 endif
@@ -105,7 +109,7 @@ endif
 
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
-# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
+# without USE_SMART_BUILD all ChibiOS (including all drivers) are built. And all drivers includes get included.
 ifeq ($(USE_SMART_BUILD),)
   USE_SMART_BUILD = no
 endif

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 09 02:06:25 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 09 15:38:41 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -322,60 +322,56 @@ struct engine_state_s {
 	/**
 	 * offset 56
 	 */
-	uint32_t startStopStateTempPhysicalCounter = (uint32_t)0;
-	/**
-	 * offset 60
-	 */
 	float egtValue1 = (float)0;
 	/**
-	 * offset 64
+	 * offset 60
 	 */
 	float egtValue2 = (float)0;
 	/**
 	 * User-defined RPM hard limit
 	rpm
-	 * offset 68
+	 * offset 64
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 70
+	 * offset 66
 	 */
-	uint8_t alignmentFill_at_70[2];
+	uint8_t alignmentFill_at_66[2];
 	/**
 	 * Fuel: Injection counter
-	 * offset 72
+	 * offset 68
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * Ign: Spark counter
-	 * offset 76
+	 * offset 72
 	 */
 	uint32_t sparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 80
+	 * offset 76
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 84
+	 * offset 80
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	%
-	 * offset 88
+	 * offset 84
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 90
+	 * offset 86
 	 */
-	uint8_t alignmentFill_at_90[2];
+	uint8_t alignmentFill_at_86[2];
 };
-static_assert(sizeof(engine_state_s) == 92);
+static_assert(sizeof(engine_state_s) == 88);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 09 02:06:25 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 09 15:38:41 UTC 2023

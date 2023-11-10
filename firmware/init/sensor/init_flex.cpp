@@ -60,7 +60,7 @@ static void flexExtiCallback(void*, efitick_t nowNt) {
 
 // https://rusefi.com/forum/viewtopic.php?p=37452#p37452
 
-void initFlexSensor() {
+void initFlexSensor(bool isFirstTime) {
 	flexPin = engineConfiguration->flexSensorPin;
 	if (!isBrainPinValid(flexPin)) {
 		return;
@@ -75,13 +75,15 @@ void initFlexSensor() {
 		PAL_EVENT_MODE_BOTH_EDGES,
 		flexExtiCallback, nullptr);
 
-	addConsoleAction("flexinfo", []() {
-	    efiPrintf("flex counter %d", flexCallbackCounter);
-	    efiPrintf("lowFlexCallbackCounter counter %d", lowFlexCallbackCounter);
-	    efiPrintf("flex freq %f", frequency);
-	    efiPrintf("pulseWidthUs %f", pulseWidthUs);
-	    efiPrintf("latestCallbackTime %d", latestCallbackTime);
-	});
+    if (isFirstTime) {
+	    addConsoleAction("flexinfo", []() {
+	        efiPrintf("flex counter %d", flexCallbackCounter);
+	        efiPrintf("lowFlexCallbackCounter counter %d", lowFlexCallbackCounter);
+	        efiPrintf("flex freq %f", frequency);
+	        efiPrintf("pulseWidthUs %f", pulseWidthUs);
+	        efiPrintf("latestCallbackTime %d", latestCallbackTime);
+	    });
+	}
 
 #endif // EFI_PROD_CODE
 

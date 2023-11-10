@@ -40,7 +40,6 @@ struct_no_prefix engine_state_s
 	int8_t startStopState
 	bit startStopPhysicalState
 	uint32_t startStopStateToggleCounter
-	uint32_t startStopStateTempPhysicalCounter
 
 	float egtValue1
 	float egtValue2

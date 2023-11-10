@@ -26,7 +26,7 @@ void initFluidPressure();
 void initThermistors();
 void initCanSensors();
 void initLambda();
-void initFlexSensor();
+void initFlexSensor(bool isFirstTime);
 void initFuelLevel();
 void initBaro();
 void initAuxSensors();

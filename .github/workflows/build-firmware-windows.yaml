@@ -1,0 +1,68 @@
+name: Firmware on Windows
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: windows-2019
+
+
+
+
+
+    steps:
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: '12.2.Rel1' # 13 fails overloaded-virtual
+
+      - uses: actions/checkout@v4
+
+      - name: Checkout Submodules
+        run: |
+          git submodule update --init --depth=1 firmware/ChibiOS
+          git submodule update --init --depth=1 firmware/ChibiOS-Contrib
+          git submodule update --init --depth=1 firmware/libfirmware
+          git submodule update --init --depth=1 firmware/ext/lua
+          git submodule update --init --depth=1 firmware/ext/uzlib
+          git submodule update --init --depth=1 firmware/ext/openblt
+          git submodule update --init --depth=1 firmware/controllers/lua/luaaa
+          git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
+          git submodule update --init --depth=1 java_console/luaformatter
+
+      - name: Set up MinGW
+        uses: egor-tensin/setup-mingw@v2
+        # 12 has pch https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105858
+        # 13 has x86 issue https://github.com/egor-tensin/setup-mingw/issues/14
+        with:
+          version: 8.1.0
+
+
+
+
+      - name: Print bash version
+        working-directory: .
+        run: bash --version
+
+      - name: Test Java Compiler
+        run: javac -version
+
+      - name: Generate Configs, Enums & Live Documentation
+        working-directory: ./firmware/
+        run: bash gen_default_everything.sh
+
+      - name: Print arm GCC version
+        working-directory: .
+        run: arm-none-eabi-gcc -v
+
+      - name: Print make version
+        working-directory: .
+        run: make -v
+
+      - name: Compile
+        working-directory: firmware
+        run: make -j4

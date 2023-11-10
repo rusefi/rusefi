@@ -1080,9 +1080,6 @@ float getOutputValueByName(const char *name) {
 // startStopStateToggleCounter
 		case -960645892:
 			return engine->engineState.startStopStateToggleCounter;
-// startStopStateTempPhysicalCounter
-		case 755349965:
-			return engine->engineState.startStopStateTempPhysicalCounter;
 // egtValue1
 		case -244414221:
 			return engine->engineState.egtValue1;
