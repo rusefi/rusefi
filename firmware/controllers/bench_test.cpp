@@ -295,8 +295,7 @@ void fuelPumpBench() {
 
 static void vvtValveBench(int vvtIndex) {
 #if EFI_VVT_PID
-	pinbench(engineConfiguration->benchTestOnTime, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
-		getVvtOutputPin(vvtIndex));
+	pinbench(BENCH_VVT_DURATION, 100.0, 1, getVvtOutputPin(vvtIndex));
 #endif // EFI_VVT_PID
 }
 
