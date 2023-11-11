@@ -2119,6 +2119,8 @@ cmd_test_check_engine_light	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENC
 cmd_test_idle_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_IDLE_VALVE_16_hex@@"
 cmd_test_second_idle_valve		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_SECOND_IDLE_VALVE_16_hex@@"
 cmd_test_hpfp_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_HPFP_VALVE_16_hex@@"
+cmd_test_acr_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_HD_ACR_16_hex@@"
+cmd_test_acr2_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_HD_ACR2_16_hex@@"
 cmd_test_vvt0_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT0_VALVE_16_hex@@"
 cmd_test_vvt1_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT1_VALVE_16_hex@@"
 cmd_test_vvt2_valve				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_VVT2_VALVE_16_hex@@"
@@ -4607,6 +4609,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "#of revolutions, plus degrees of engine phase"
 		field = "Disable after revolutions",	acrRevolutions
 		field = "Disable after engine phase",	acrDisablePhase
+		commandButton = "ACR #1",	cmd_test_acr_valve
+		commandButton = "ACR #2",	cmd_test_acr2_valve
 
 	dialog = kLineDialog, "K Line"
 		field = kLineBaudRate,                          kLineBaudRate
