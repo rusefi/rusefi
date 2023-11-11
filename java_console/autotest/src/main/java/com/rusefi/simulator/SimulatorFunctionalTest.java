@@ -1,6 +1,7 @@
 package com.rusefi.simulator;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
@@ -48,7 +49,11 @@ public class SimulatorFunctionalTest {
         testOutputPin(bench_mode_e.HD_ACR2, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
-// todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
+        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
+
+        // check if VVT stops when rpm == 0
+        IoUtil.changeRpm(linkManager.getCommandQueue(), 0);
+        testPwmPin(bench_mode_e.BENCH_VVT0_VALVE, 0);
     }
 
     private void assertHappyTriggerSimulator() throws InterruptedException {
@@ -222,14 +227,16 @@ public class SimulatorFunctionalTest {
                     + " freq=" + freq);
         }
 
-        // last two pin toggle durations should make a period!
-        double periodMs = durationsInStateMs[0] + durationsInStateMs[1];
-        double expectedPeriodMs = 1000.0 / freq;
+        if (freq > 0) {
+            // last two pin toggle durations should make a period!
+            double periodMs = durationsInStateMs[0] + durationsInStateMs[1];
+            double expectedPeriodMs = 1000.0 / freq;
 
-        if (!nearEq(periodMs, expectedPeriodMs, 1.0)) {
-            throw new IllegalStateException(pinId + ": Unexpected PWM period: dur[0]="
-                    + durationsInStateMs[0] + " dur[1]=" + durationsInStateMs[1]
-                    + " period=" + expectedPeriodMs);
+            if (!nearEq(periodMs, expectedPeriodMs, 1.0)) {
+                throw new IllegalStateException(pinId + ": Unexpected PWM period: dur[0]="
+                        + durationsInStateMs[0] + " dur[1]=" + durationsInStateMs[1]
+                        + " period=" + expectedPeriodMs);
+            }
         }
     }
 

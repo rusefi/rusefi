@@ -64,6 +64,7 @@ public:
 	 */
 	pwm_mode_e mode;
 	bool isStopRequested = false;
+	bool isPinSetLowRequested = false;
 
 	/**
 	 * @param use NAN frequency to pause PWM
