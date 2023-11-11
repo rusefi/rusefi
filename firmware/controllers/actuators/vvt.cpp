@@ -61,8 +61,9 @@ expected<angle_t> VvtController::getSetpoint() {
 	bool enabled = rpm > engineConfiguration->vvtControlMinRpm
 			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
 			 ;
-	if (!enabled)
+	if (!enabled) {
 		return unexpected;
+    }
 
 	float load = getFuelingLoad();
 	float target = m_targetMap->getValue(rpm, load);
