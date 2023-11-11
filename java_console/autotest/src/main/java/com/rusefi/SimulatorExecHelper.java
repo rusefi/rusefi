@@ -72,7 +72,8 @@ public class SimulatorExecHelper {
         AtomicInteger counter = new AtomicInteger();
         String prefix = "from console: ";
         Consumer<String> PRINT_AND_LOG = string -> {
-            countDownLatch.countDown();
+            if (countDownLatch != null)
+                countDownLatch.countDown();
 // looks like this is a performance issue since so many lines are printed? looks like it's helping to not write this?
             if (counter.incrementAndGet() < 1000)
                 System.out.println(prefix + string);
