@@ -1,6 +1,7 @@
 package com.rusefi.simulator;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
@@ -48,7 +49,11 @@ public class SimulatorFunctionalTest {
         testOutputPin(bench_mode_e.HD_ACR2, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
-// todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
+        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
+
+        // check if VVT stops when rpm == 0
+        IoUtil.changeRpm(linkManager.getCommandQueue(), 0);
+        testPwmPin(bench_mode_e.BENCH_VVT0_VALVE, 0);
     }
 
     private void assertHappyTriggerSimulator() throws InterruptedException {
