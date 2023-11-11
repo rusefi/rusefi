@@ -55,7 +55,8 @@ public class SimulatorFunctionalTest {
 
         ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         IoUtil.awaitRpm(0);
-// todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
+
+        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
     }
 
     private void assertHappyTriggerSimulator() throws InterruptedException {
