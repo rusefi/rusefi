@@ -41,6 +41,7 @@ void proteusHarley() {
     engineConfiguration->acrPin = Gpio::PROTEUS_IGN_8;
     engineConfiguration->acrPin2 = Gpio::PROTEUS_IGN_9;
 
+    engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
     engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_3;
 
 	engineConfiguration->luaOutputPins[0] = Gpio::PROTEUS_LS_12;

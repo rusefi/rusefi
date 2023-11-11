@@ -44,15 +44,15 @@ pins:
     # H144_LS_1
     id: G7
     class: outputs
-    function: Front Injector 1
-    ts_name: 6 Front Injector 1
+    function: Front Injector 2
+    ts_name: 6 Front Injector 2
 
   - pin: 7
     # H144_LS_2
     id: G8
     class: outputs
-    function: Rear Injector 2
-    ts_name: 7 Rear Injector 2
+    function: Rear Injector 1
+    ts_name: 7 Rear Injector 1
 
   - pin: 8
     # H144_OUT_IO6
@@ -90,8 +90,8 @@ pins:
     # H144_IGN_1
     id: C13
     class: outputs
-    ts_name: 24 Front Coil 1
-    function: Front Coil 1
+    ts_name: 24 Front Coil 2
+    function: Front Coil 2
     type: ign
 
   - pin: 25
@@ -173,8 +173,8 @@ pins:
     # H144_IGN_2
     id: E5
     class: outputs
-    ts_name: 43 Rear Coil 2
-    function: Rear Coil 2
+    ts_name: 43 Rear Coil 1
+    function: Rear Coil 1
     type: ign
 
   - pin: 44
