@@ -1,6 +1,7 @@
 package com.rusefi.simulator;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
@@ -9,6 +10,7 @@ import com.rusefi.enums.bench_mode_e;
 import com.rusefi.enums.bench_test_magic_numbers_e;
 import com.rusefi.enums.bench_test_packet_ids_e;
 import com.rusefi.enums.bench_test_io_control_e;
+import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.LinkManager;
 import etch.util.CircularByteBuffer;
 
@@ -16,6 +18,7 @@ import java.io.EOFException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.TS_SIMULATE_CAN;
 import static org.junit.Assert.assertTrue;
@@ -48,6 +51,10 @@ public class SimulatorFunctionalTest {
         testOutputPin(bench_mode_e.HD_ACR2, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_AC_COMPRESSOR_RELAY, Fields.BENCH_AC_RELAY_DURATION);
         testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
+        EcuTestHelper ecu = new EcuTestHelper(linkManager);
+
+        ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
+        IoUtil.awaitRpm(0);
 // todo: fix me as well!        testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
     }
 

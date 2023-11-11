@@ -79,6 +79,17 @@ public class IoUtil {
         sendBlockingCommand(CMD_RPM + " " + rpm, commandQueue);
         long time = System.currentTimeMillis();
 
+        awaitRpm(rpm);
+
+        double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
+
+        if (!isCloseEnough(rpm, actualRpm))
+            throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
+//        sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
+        log.info("AUTOTEST RPM change [" + rpm + "] executed in " + (System.currentTimeMillis() - time));
+    }
+
+    public static void awaitRpm(int rpm) {
         final CountDownLatch rpmLatch = new CountDownLatch(1);
 
         SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(Sensor.RPMValue, actualRpm -> {
@@ -95,13 +106,6 @@ public class IoUtil {
 
         // We don't need to listen to RPM anymore
         listenerToken.remove();
-
-        double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
-
-        if (!isCloseEnough(rpm, actualRpm))
-            throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
-//        sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
-        log.info("AUTOTEST RPM change [" + rpm + "] executed in " + (System.currentTimeMillis() - time));
     }
 
     private static void waitForFirstResponse() throws InterruptedException {
