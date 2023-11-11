@@ -97,12 +97,7 @@
  * @brief   Enables the UART subsystem.
  */
 #if !defined(HAL_USE_UART) || defined(__DOXYGEN__)
-/* Configured in efifeatures.h */
-#if defined(TS_PRIMARY_UxART_PORT)
-#define HAL_USE_UART                TRUE
-#else
 #define HAL_USE_UART                FALSE
-#endif
 #endif
 
 /*===========================================================================*/
