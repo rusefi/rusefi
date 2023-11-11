@@ -70,6 +70,8 @@ void setDefaultBaseEngine() {
 
     setDefaultHPFP();
 
+    engineConfiguration->acrRevolutions = 5;
+
 	engineConfiguration->turbochargerFilter = 0.01f;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
