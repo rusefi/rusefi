@@ -35,6 +35,7 @@ PwmConfig::PwmConfig() {
 	memset((void*)&safe, 0, sizeof(safe));
 	dbgNestingLevel = 0;
 	periodNt = NAN;
+	isPinSetLowRequested = true;
 	mode = PM_NORMAL;
 	memset(&outputPins, 0, sizeof(outputPins));
 	m_name = "[noname]";
@@ -118,6 +119,7 @@ void PwmConfig::setFrequency(float frequency) {
 	if (cisnan(frequency)) {
 		// explicit code just to be sure
 		periodNt = NAN;
+		isPinSetLowRequested = true;
 		return;
 	}
 	/**
@@ -125,6 +127,7 @@ void PwmConfig::setFrequency(float frequency) {
 	 * 'periodNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	 */
 	periodNt = USF2NT(frequency2periodUs(frequency));
+	isPinSetLowRequested = false;
 }
 
 void PwmConfig::stop() {
@@ -184,8 +187,9 @@ efitick_t PwmConfig::togglePwmState() {
 
 	if (cisnan(periodNt)) {
 		// NaN period means PWM is paused, we also set the pin low
-		if (m_stateChangeCallback) {
+		if (m_stateChangeCallback && isPinSetLowRequested) {
 			m_stateChangeCallback(0, this);
+			isPinSetLowRequested = false;
 		}
 
 		return getTimeNowNt() + MS2NT(NAN_FREQUENCY_SLEEP_PERIOD_MS);

@@ -222,14 +222,16 @@ public class SimulatorFunctionalTest {
                     + " freq=" + freq);
         }
 
-        // last two pin toggle durations should make a period!
-        double periodMs = durationsInStateMs[0] + durationsInStateMs[1];
-        double expectedPeriodMs = 1000.0 / freq;
+        if (freq > 0) {
+            // last two pin toggle durations should make a period!
+            double periodMs = durationsInStateMs[0] + durationsInStateMs[1];
+            double expectedPeriodMs = 1000.0 / freq;
 
-        if (!nearEq(periodMs, expectedPeriodMs, 1.0)) {
-            throw new IllegalStateException(pinId + ": Unexpected PWM period: dur[0]="
-                    + durationsInStateMs[0] + " dur[1]=" + durationsInStateMs[1]
-                    + " period=" + expectedPeriodMs);
+            if (!nearEq(periodMs, expectedPeriodMs, 1.0)) {
+                throw new IllegalStateException(pinId + ": Unexpected PWM period: dur[0]="
+                        + durationsInStateMs[0] + " dur[1]=" + durationsInStateMs[1]
+                        + " period=" + expectedPeriodMs);
+            }
         }
     }
 
