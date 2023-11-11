@@ -12,3 +12,7 @@
 #define EFI_FILE_LOGGING FALSE
 
 #include "../../stm32f4ems/efifeatures.h"
+
+/* This board has no USB wired out */
+#undef EFI_USB_SERIAL
+#define EFI_USB_SERIAL              FALSE
