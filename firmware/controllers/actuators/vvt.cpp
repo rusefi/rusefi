@@ -58,6 +58,12 @@ expected<angle_t> VvtController::observePlant() {
 
 expected<angle_t> VvtController::getSetpoint() {
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	bool enabled = rpm > engineConfiguration->vvtControlMinRpm
+			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
+			 ;
+	if (!enabled)
+		return unexpected;
+
 	float load = getFuelingLoad();
 	float target = m_targetMap->getValue(rpm, load);
 
@@ -104,14 +110,9 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 
 void VvtController::setOutput(expected<percent_t> outputValue) {
 #if EFI_SHAFT_POSITION_INPUT
-	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	bool enabled = rpm > engineConfiguration->vvtControlMinRpm
-			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
-			 ;
-
 	vvtOutput = outputValue.value_or(0);
 
-	if (outputValue && enabled) {
+	if (outputValue) {
 		m_pwm->setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
 	} else {
 		m_pwm->setSimplePwmDutyCycle(0);
