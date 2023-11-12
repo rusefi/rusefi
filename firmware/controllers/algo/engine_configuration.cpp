@@ -676,7 +676,7 @@ void loadConfiguration() {
 	setBoardConfigOverrides();
 }
 
-void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType) {
+void resetConfigurationExt(engine_type_e engineType) {
 	enginePins.reset(); // that's mostly important for functional tests
 	/**
 	 * Let's apply global defaults first
@@ -685,10 +685,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 
 	// set initial pin groups
 	setDefaultBasePins();
-
-	if (boardCallback != nullptr) {
-		boardCallback(engineConfiguration);
-	}
 
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
@@ -1040,14 +1036,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration();
-}
-
-void emptyCallbackWithConfiguration(engine_configuration_s * p_engineConfiguration) {
-	UNUSED(p_engineConfiguration);
-}
-
-void resetConfigurationExt(engine_type_e engineType) {
-	resetConfigurationExt(&emptyCallbackWithConfiguration, engineType);
 }
 
 void validateConfiguration() {

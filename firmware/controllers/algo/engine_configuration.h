@@ -57,10 +57,6 @@ typedef void (*configuration_callback_t)(engine_configuration_s*);
 #ifdef __cplusplus
 // because of 'Logging' class parameter these functions are visible only to C++ code but C code
 void loadConfiguration();
-/**
- * boardCallback is invoked after configuration reset but before specific engineType configuration
- */
-void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType);
 void resetConfigurationExt(engine_type_e engineType);
 
 void rememberCurrentConfiguration();
