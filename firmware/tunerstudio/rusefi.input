@@ -4611,6 +4611,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Disable after engine phase",	acrDisablePhase
 		commandButton = "ACR #1",	cmd_test_acr_valve
 		commandButton = "ACR #2",	cmd_test_acr2_valve
+		indicator = { acrActive }, "ACR off", "ACR on", white, black, green, black
 
 	dialog = kLineDialog, "K Line"
 		field = kLineBaudRate,                          kLineBaudRate

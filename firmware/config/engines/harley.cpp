@@ -28,6 +28,9 @@ void proteusHarley() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->enableAemXSeries = true;
 
+	engineConfiguration->timing_offset_cylinder[0] = 45.0 / 2;
+	engineConfiguration->timing_offset_cylinder[1] = -45.0 / 2;
+
 	// for now we need non wired camInput to keep TS field enable/disable logic happy
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
