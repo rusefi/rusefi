@@ -34,14 +34,14 @@ void StepperMotorBase::initialize(StepperHw *hardware, int totalSteps) {
 
 void StepperMotorBase::saveStepperPos(int pos) {
 	// use backup-power RTC registers to store the data
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_BACKUP_SRAM
 	backupRamSave(BACKUP_STEPPER_POS, pos + 1);
 #endif
 	postCurrentPosition();
 }
 
 int StepperMotorBase::loadStepperPos() {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_BACKUP_SRAM
 	return (int)backupRamLoad(BACKUP_STEPPER_POS) - 1;
 #else
 	return 0;
