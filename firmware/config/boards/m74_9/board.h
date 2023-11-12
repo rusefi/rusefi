@@ -701,10 +701,10 @@
  * PE9  - PIN9                      (input pullup).
  * PE10 - PIN10                     (input pullup).
  * PE11 - PIN11                     (input pullup).
- * PE12 - PIN12                     (input pullup).
- * PE13 - PIN13                     (input pullup).
- * PE14 - PIN14                     (input pullup).
- * PE15 - PIN15                     (input pullup).
+ * PE12 - SPI1_CS   - L9779 - GPIO mode
+ * PE13 - SPI1_SCK  - L9779 - AF4
+ * PE14 - SPI1_MISO - L9779 - AF4
+ * PE15 - SPI1_MOSI - L9779 - AF4
  */
 #define VAL_GPIOE_MODER             (PIN_MODE_INPUT(0) |           \
                                      PIN_MODE_INPUT(1) |           \
@@ -718,10 +718,10 @@
                                      PIN_MODE_INPUT(9) |           \
                                      PIN_MODE_INPUT(10) |          \
                                      PIN_MODE_INPUT(11) |          \
-                                     PIN_MODE_INPUT(12) |          \
-                                     PIN_MODE_INPUT(13) |          \
+                                     PIN_MODE_OUTPUT(12) |         \
+                                     PIN_MODE_OUTPUT(13) |         \
                                      PIN_MODE_INPUT(14) |          \
-                                     PIN_MODE_INPUT(15))
+                                     PIN_MODE_OUTPUT(15))
 #define VAL_GPIOE_OTYPER            (PIN_OTYPE_PUSHPULL(0) |       \
                                      PIN_OTYPE_PUSHPULL(1) |       \
                                      PIN_OTYPE_PUSHPULL(2) |       \
@@ -799,9 +799,9 @@
                                      PIN_AFIO_AF(10, 0U) |         \
                                      PIN_AFIO_AF(11, 0U) |         \
                                      PIN_AFIO_AF(12, 0U) |         \
-                                     PIN_AFIO_AF(13, 0U) |         \
-                                     PIN_AFIO_AF(14, 0U) |         \
-                                     PIN_AFIO_AF(15, 0U))
+                                     PIN_AFIO_AF(13, 4U) |         \
+                                     PIN_AFIO_AF(14, 4U) |         \
+                                     PIN_AFIO_AF(15, 4U))
 
 /*
  * GPIOF setup:
