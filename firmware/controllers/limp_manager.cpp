@@ -65,7 +65,9 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
 
 #if !EFI_UNIT_TEST
-	if (!m_ignitionOn) {
+	if (!m_ignitionOn
+	&& !engine->triggerCentral.directSelfStimulation // useful to try things on real ECU even without ignition voltage
+	) {
 		allowFuel.clear(ClearReason::IgnitionOff);
 		allowSpark.clear(ClearReason::IgnitionOff);
 	}
