@@ -138,6 +138,13 @@ void baseMCUInit(void) {
     BOR_Set(BOR_Level_1); // one step above default value
 }
 
+/* used to detect additional RAM available for LUA
+ * TODO: find RAM on AT32
+ * TODO: better name */
+bool isStm32F42x(void) {
+    return false;
+}
+
 extern uint32_t __main_stack_base__;
 
 typedef struct port_intctx intctx_t;
