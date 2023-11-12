@@ -50,7 +50,7 @@ int at32GetMcuType(uint32_t id, const char **pn, const char **package, uint32_t 
         { 0x70083257, "AT32F437RCT7",  256,  "LQFP64" },
     };
 
-    for (int i = 0; i < efi::size(at32f43x_types); i++) {
+    for (size_t i = 0; i < efi::size(at32f43x_types); i++) {
         if (id == at32f43x_types[i].uid) {
             if (pn)
                 *pn = at32f43x_types[i].pn;
@@ -93,3 +93,78 @@ int at32GetRamSizeKb(void)
     }
     return 0;
 }
+
+#if EFI_PROD_CODE
+
+static void reset_and_jump(void) {
+    // and now reboot
+    NVIC_SystemReset();
+}
+
+void jump_to_bootloader() {
+    // leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
+
+    *((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
+
+    reset_and_jump();
+}
+
+void jump_to_openblt() {
+#if EFI_USE_OPENBLT
+    /* safe to call on already inited shares area */
+    SharedParamsInit();
+    /* Store sing to stay in OpenBLT */
+    SharedParamsWriteByIndex(0, 0x01);
+
+    reset_and_jump();
+#endif
+}
+
+BOR_Level_t BOR_Get(void) {
+    /* TODO: Artery */
+    /* Fake */
+    return BOR_Level_None;
+}
+
+BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
+    /* NOP */
+    return BOR_Result_Ok;
+}
+
+void baseMCUInit(void) {
+    // looks like this holds a random value on start? Let's set a nice clean zero
+    DWT->CYCCNT = 0;
+
+    BOR_Set(BOR_Level_1); // one step above default value
+}
+
+extern uint32_t __main_stack_base__;
+
+typedef struct port_intctx intctx_t;
+
+EXTERNC int getRemainingStack(thread_t *otp) {
+#if CH_DBG_ENABLE_STACK_CHECK
+    // this would dismiss coverity warning - see http://rusefi.com/forum/viewtopic.php?f=5&t=655
+    // coverity[uninit_use]
+    register intctx_t *r13 asm ("r13");
+    otp->activeStack = r13;
+
+    int remainingStack;
+    if (ch.dbg.isr_cnt > 0) {
+        // ISR context
+        remainingStack = (int)(r13 - 1) - (int)&__main_stack_base__;
+    } else {
+        remainingStack = (int)(r13 - 1) - (int)otp->wabase;
+    }
+    otp->remainingStack = remainingStack;
+    return remainingStack;
+#else
+    UNUSED(otp);
+    return 99999;
+#endif /* CH_DBG_ENABLE_STACK_CHECK */
+}
+
+__attribute__((weak)) void boardPrepareForStandby() {
+}
+
+#endif /* EFI_PROD_CODE */
