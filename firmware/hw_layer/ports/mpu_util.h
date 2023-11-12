@@ -21,6 +21,15 @@ bool isStm32F42x();
 
 // ADC
 #if HAL_USE_ADC
+
+adc_channel_e getAdcChannel(brain_pin_e pin);
+brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
+
+// deprecated - migrate to 'getAdcChannelBrainPin'
+ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel);
+// deprecated - migrate to 'getAdcChannelBrainPin'
+int getAdcChannelPin(adc_channel_e hwChannel);
+
 void portInitAdc();
 float getMcuTemperature();
 // Convert all slow ADC inputs.  Returns true if the conversion succeeded, false if a failure occured.
@@ -34,8 +43,11 @@ bool isValidCanRxPin(brain_pin_e pin);
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
 #endif // HAL_USE_CAN
 
+// Serial
+#if EFI_AUX_SERIAL
 bool isValidSerialTxPin(brain_pin_e pin);
 bool isValidSerialRxPin(brain_pin_e pin);
+#endif //EFI_AUX_SERIAL
 
 // SPI
 #if HAL_USE_SPI

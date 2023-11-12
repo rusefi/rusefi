@@ -4,11 +4,11 @@ HW_LAYER_PORT_CPP += \
     $(HW_STM32_PORT_DIR)/serial_over_usb/usbconsole.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_pins.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_common.cpp \
-	$(HW_STM32_PORT_DIR)/stm32_common_adc.cpp \
-	$(HW_STM32_PORT_DIR)/stm32_common_can.cpp \
-	$(HW_STM32_PORT_DIR)/stm32_common_pwm.cpp \
-	$(HW_STM32_PORT_DIR)/stm32_common_serial.cpp \
-	$(HW_STM32_PORT_DIR)/stm32_common_spi.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_adc.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_can.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_pwm.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_serial.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_spi.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_icu.cpp \
 	$(HW_STM32_PORT_DIR)/backup_ram.cpp \
 	$(HW_STM32_PORT_DIR)/microsecond_timer_stm32.cpp \

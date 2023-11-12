@@ -33,12 +33,12 @@ else
 	DDEFS += -DSTM32F407xx
 endif
 
-# Now add common stm32 stuff
-include $(PROJECT_DIR)/hw_layer/ports/stm32/stm32_common.mk
-
-# Add Artery AT32 common stuff
 ifeq ($(IS_AT32F435),yes)
+	# Add Artery AT32 common stuff
 	include $(PROJECT_DIR)/hw_layer/ports/at32/at32_common.mk
+else
+	# Or STM32 common stuff
+	include $(PROJECT_DIR)/hw_layer/ports/stm32/stm32_common.mk
 endif
 
 # TODO: remove, for efifeatures.h

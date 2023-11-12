@@ -54,15 +54,6 @@ typedef enum {
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
-// deprecated - migrate to 'getAdcChannelBrainPin'
-int getAdcChannelPin(adc_channel_e hwChannel);
-
-// deprecated - migrate to 'getAdcChannelBrainPin'
-ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel);
-
-adc_channel_e getAdcChannel(brain_pin_e pin);
-brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
-
 // wait until at least 1 slowADC sampling is complete
 void waitForSlowAdc(uint32_t lastAdcCounter = 0);
 // get a number of completed slowADC samples
