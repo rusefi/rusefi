@@ -761,7 +761,14 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 	isSpinningJustForWatchdog = true;
 
+    bool firstEventInAWhile = m_lastEventTimer.hasElapsedSec(1);
 	m_lastEventTimer.reset(timestamp);
+	if (firstEventInAWhile) {
+#if EFI_HD_ACR
+        // let's open that valve on first sign of movement
+        engine->module<HarleyAcr>()->onSlowCallback();
+#endif // EFI_HD_ACR
+	}
 
 	int eventIndex = (int) signal;
 	efiAssertVoid(ObdCode::CUSTOM_TRIGGER_EVENT_TYPE, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
