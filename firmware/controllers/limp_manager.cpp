@@ -85,7 +85,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 
 #if EFI_HD_ACR
 	// Don't inject fuel during Harley compression release - it sprays fuel everywhere
-	if (engine->module<HarleyAcr>()->isActive()) {
+	if (engine->module<HarleyAcr>()->isActive() && engineConfiguration->cutFuelInAcr) {
 		allowFuel.clear(ClearReason::ACR);
 	}
 #endif // EFI_HD_ACR
