@@ -237,6 +237,8 @@ void setDefaultFuel() {
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
+	setRpmTableBin(config->fuelTrimRpmBins);
+
 	/**
 	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data
 	 */
