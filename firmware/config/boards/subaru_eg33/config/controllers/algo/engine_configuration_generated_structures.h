@@ -864,7 +864,7 @@ struct engine_configuration_s {
 	// offset 644 bit 4
 	bool rusefiVerbose29b : 1 {};
 	// offset 644 bit 5
-	bool isVerboseAlternator : 1 {};
+	bool unused644b5 : 1 {};
 	// This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	// offset 644 bit 6
 	bool useStepperIdle : 1 {};

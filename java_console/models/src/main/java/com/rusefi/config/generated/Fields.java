@@ -1172,7 +1172,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.11.09.f407-discovery.4291159966";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.11.13.f407-discovery.3207612528";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;
@@ -1482,7 +1482,6 @@ public class Fields {
 	public static final Field IS_ENABLED_SPI_3 = Field.create("IS_ENABLED_SPI_3", 644, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field ISSDCARDENABLED = Field.create("ISSDCARDENABLED", 644, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field RUSEFIVERBOSE29B = Field.create("RUSEFIVERBOSE29B", 644, FieldType.BIT, 4).setBaseOffset(0);
-	public static final Field ISVERBOSEALTERNATOR = Field.create("ISVERBOSEALTERNATOR", 644, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field USESTEPPERIDLE = Field.create("USESTEPPERIDLE", 644, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 644, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 644, FieldType.BIT, 8).setBaseOffset(0);
@@ -2894,7 +2893,6 @@ public class Fields {
 	IS_ENABLED_SPI_3,
 	ISSDCARDENABLED,
 	RUSEFIVERBOSE29B,
-	ISVERBOSEALTERNATOR,
 	USESTEPPERIDLE,
 	ENABLEDSTEP1LIMITER,
 	VERBOSETLE8888,
