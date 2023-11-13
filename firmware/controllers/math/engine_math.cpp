@@ -382,7 +382,7 @@ ignition_mode_e getCurrentIgnitionMode() {
 		bool missingPhaseInfoForSequential = 
 			!engine->triggerCentral.triggerState.hasSynchronizedPhase();
 
-		if (engine->rpmCalculator.isSpinningUp() || missingPhaseInfoForSequential) {
+		if (!engineConfiguration->oddFireEngine && (engine->rpmCalculator.isSpinningUp() || missingPhaseInfoForSequential)) {
 			ignitionMode = IM_WASTED_SPARK;
 		}
 	}

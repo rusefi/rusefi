@@ -4607,6 +4607,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Pin",	acrPin
 		field = "Pin 2", acrPin2
 		field = "cutFuelInAcr",   cutFuelInAcr
+		field = "oddFireEngine",       oddFireEngine
 		field = "#ACR is disabled after the specified number"
 		field = "#of revolutions, plus degrees of engine phase"
 		field = "Disable after revolutions",	acrRevolutions

@@ -988,7 +988,7 @@ end_struct
 
 	bit widebandOnSecondBus,"2","1";Select which bus the wideband controller is attached to.
 	bit fuelClosedLoopCorrectionEnabled;Enables lambda sensor closed loop feedback for fuelling.
-	bit unused1192b2
+	bit oddFireEngine
 	bit boardUseTachPullUp,"12v","5v"
 	bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
 	bit yesUnderstandLocking,"yes","no"
