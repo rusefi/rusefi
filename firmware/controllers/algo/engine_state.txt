@@ -39,6 +39,7 @@ struct_no_prefix engine_state_s
 	int8_t brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
 	int8_t startStopState
 	bit startStopPhysicalState
+	bit acrStateDup
 	uint32_t startStopStateToggleCounter
 
 	float egtValue1
