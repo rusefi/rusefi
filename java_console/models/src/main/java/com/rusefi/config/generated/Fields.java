@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 03:47:02 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 04:19:35 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1043,7 +1043,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1538711534;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1270,7 +1269,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.11.13.f407-discovery.1538711534";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.11.13.f407-discovery.4142098683";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1930,6 +1929,7 @@ public class Fields {
 	public static final Field USESEPARATEVEFORIDLE = Field.create("USESEPARATEVEFORIDLE", 1328, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1328, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1328, FieldType.BIT, 11).setBaseOffset(0);
+	public static final Field CUTFUELINACR = Field.create("CUTFUELINACR", 1328, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field HONDAK = Field.create("HONDAK", 1328, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1328, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1328, FieldType.BIT, 15).setBaseOffset(0);
@@ -3504,6 +3504,7 @@ public class Fields {
 	USESEPARATEVEFORIDLE,
 	VERBOSETRIGGERSYNCHDETAILS,
 	ISMANUALSPINNINGMODE,
+	CUTFUELINACR,
 	HONDAK,
 	TWOWIREBATCHIGNITION,
 	USEFIXEDBAROCORRFROMMAP,

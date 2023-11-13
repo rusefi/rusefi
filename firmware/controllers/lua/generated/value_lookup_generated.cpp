@@ -847,6 +847,9 @@ float getConfigValueByName(const char *name) {
 // isManualSpinningMode
 		case -795241238:
 			return engineConfiguration->isManualSpinningMode;
+// cutFuelInAcr
+		case -723193750:
+			return engineConfiguration->cutFuelInAcr;
 // hondaK
 		case 42872346:
 			return engineConfiguration->hondaK;
@@ -3138,6 +3141,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -795241238:
 	{
 		engineConfiguration->isManualSpinningMode = (int)value;
+		return 1;
+	}
+		case -723193750:
+	{
+		engineConfiguration->cutFuelInAcr = (int)value;
 		return 1;
 	}
 		case 42872346:

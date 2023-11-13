@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Oct 31 02:27:54 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 04:17:45 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2511,7 +2511,7 @@ struct engine_configuration_s {
 	bool isManualSpinningMode : 1 {};
 	/**
 	offset 1328 bit 12 */
-	bool unused1200b12 : 1 {};
+	bool cutFuelInAcr : 1 {};
 	/**
 	offset 1328 bit 13 */
 	bool hondaK : 1 {};
@@ -5372,4 +5372,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22504);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Oct 31 02:27:54 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 04:17:45 UTC 2023
