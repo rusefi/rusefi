@@ -19,8 +19,7 @@ void showAltInfo(void);
 
 class AlternatorController : public EngineModule, public ClosedLoopController<float, percent_t> {
 public:
-	AlternatorController();
-
+	void init();
 	void pidReset();
 
 	// EngineModule implementation
