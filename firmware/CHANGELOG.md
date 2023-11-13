@@ -44,6 +44,7 @@ Release template (copy/paste this for new release):
  - Changing idle stepper settings causes kernel panic
  - Data log channel "Fuel: Injection timing SOI" indicates correct values
  - Flex sensor input
+ - odd fire engines do not appreciate wasted mode on spinning #5715
 
 ## October 2023 "Day 591"
 
