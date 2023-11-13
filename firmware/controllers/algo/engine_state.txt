@@ -40,6 +40,7 @@ struct_no_prefix engine_state_s
 	int8_t startStopState
 	bit startStopPhysicalState
 	bit acrStateDup
+	bit acrEngineMovedRecently
 	uint32_t startStopStateToggleCounter
 
 	float egtValue1

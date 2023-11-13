@@ -2,6 +2,7 @@
 
 class HarleyAcr : public EngineModule {
 public:
+    void updateAcr();
 	void onSlowCallback() override;
 
 	bool isActive() const;
