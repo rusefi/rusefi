@@ -1077,6 +1077,9 @@ float getOutputValueByName(const char *name) {
 // startStopPhysicalState
 		case -1943724937:
 			return engine->engineState.startStopPhysicalState;
+// acrStateDup
+		case -793662747:
+			return engine->engineState.acrStateDup;
 // startStopStateToggleCounter
 		case -960645892:
 			return engine->engineState.startStopStateToggleCounter;

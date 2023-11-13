@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 09 15:38:41 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Nov 13 03:45:02 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -194,6 +194,7 @@ public class EngineState {
 	public static final Field STARTSTOPSTATE = Field.create("STARTSTOPSTATE", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
 	public static final Field ALIGNMENTFILL_AT_46 = Field.create("ALIGNMENTFILL_AT_46", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
 	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 48, FieldType.BIT, 0).setBaseOffset(1048);
+	public static final Field ACRSTATEDUP = Field.create("ACRSTATEDUP", 48, FieldType.BIT, 1).setBaseOffset(1048);
 	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 52, FieldType.INT).setScale(1.0).setBaseOffset(1048);
 	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 56, FieldType.FLOAT).setBaseOffset(1048);
 	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 60, FieldType.FLOAT).setBaseOffset(1048);
@@ -229,6 +230,7 @@ public class EngineState {
 	STARTSTOPSTATE,
 	ALIGNMENTFILL_AT_46,
 	STARTSTOPPHYSICALSTATE,
+	ACRSTATEDUP,
 	STARTSTOPSTATETOGGLECOUNTER,
 	EGTVALUE1,
 	EGTVALUE2,
