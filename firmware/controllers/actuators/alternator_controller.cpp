@@ -25,7 +25,7 @@ static percent_t currentAltDuty;
 
 static bool shouldResetPid = false;
 
-AlternatorController::AlternatorController() {
+void AlternatorController::init() {
 	alternatorPid.initPidClass(&engineConfiguration->alternatorControl);
 }
 
@@ -122,6 +122,9 @@ void AlternatorController::onConfigurationChange(engine_configuration_s const * 
 
 void initAlternatorCtrl() {
 	addConsoleAction("altinfo", showAltInfo);
+	
+	engine->module<AlternatorController>()->init();
+
 	if (!isBrainPinValid(engineConfiguration->alternatorControlPin))
 		return;
 
