@@ -81,7 +81,7 @@ void AlternatorController::onFastCallback() {
 	}
 }
 
-void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
+void AlternatorController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
 	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 

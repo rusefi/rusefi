@@ -15,6 +15,5 @@ void initAlternatorCtrl();
 class AlternatorController : public EngineModule {
 public:
 	void onFastCallback() override;
+	void onConfigurationChange(engine_configuration_s const* previousConfiguration) override;
 };
-
-void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration);

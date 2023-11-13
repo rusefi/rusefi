@@ -169,9 +169,6 @@ void incrementGlobalConfigurationVersion() {
 	boardOnConfigurationChange(&activeConfiguration);
 
 	engine->preCalculate();
-#if EFI_ALTERNATOR_CONTROL
-	onConfigurationChangeAlternatorCallback(&activeConfiguration);
-#endif /* EFI_ALTERNATOR_CONTROL */
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
