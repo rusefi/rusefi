@@ -8,8 +8,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case Gpio::C13: return "24 Front Coil 2";
 		case Gpio::C7: return "auxWastegate";
-		case Gpio::D14: return "4 Left Oil Fan";
-		case Gpio::D15: return "1 Right Oil Cooling";
+		case Gpio::D14: return "4 Left Oil Fan / Coolant Pump";
+		case Gpio::D15: return "1 Right Oil Cooling / Coolant Fan";
 		case Gpio::D2: return "25 Front ACR";
 		case Gpio::E5: return "43 Rear Coil 1";
 		case Gpio::F11: return "51 - VSS";

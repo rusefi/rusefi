@@ -6,8 +6,8 @@
 Gpio GENERATED_OUTPUTS = {
 	Gpio::G3, // auxMain
 	Gpio::C7, // auxWastegate
-	Gpio::D15, // 1 Right Oil Cooling
-	Gpio::D14, // 4 Left Oil Fan
+	Gpio::D15, // 1 Right Oil Cooling / Coolant Fan
+	Gpio::D14, // 4 Left Oil Fan / Coolant Pump
 	Gpio::G7, // 6 Front Injector 2
 	Gpio::G8, // 7 Rear Injector 1
 	Gpio::G11, // 8 Rear ACR
