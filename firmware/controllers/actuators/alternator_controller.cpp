@@ -22,25 +22,10 @@
 static SimplePwm alternatorControl("alt");
 static Pid alternatorPid(&persistentState.persistentConfiguration.engineConfiguration.alternatorControl);
 
-static percent_t currentAltDuty;
-
-static bool shouldResetPid = false;
-
-static void pidReset() {
-	alternatorPid.reset();
-}
-
 void AlternatorController::onFastCallback() {
 	if (!isBrainPinValid(engineConfiguration->alternatorControlPin)) {
 		return;
 	}
-
-#if ! EFI_UNIT_TEST
-	if (shouldResetPid) {
-		pidReset();
-		shouldResetPid = false;
-	}
-#endif
 
 	// this block could be executed even in on/off alternator control mode
 	// but at least we would reflect latest state
@@ -85,7 +70,9 @@ void AlternatorController::setOutput(expected<percent_t> outputValue) {
 }
 
 void AlternatorController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
-	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
+	if(!alternatorPid.isSame(&previousConfiguration->alternatorControl)) {
+		alternatorPid.reset();
+	}
 }
 
 void initAlternatorCtrl() {
