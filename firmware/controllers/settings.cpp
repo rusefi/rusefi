@@ -785,29 +785,13 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		currentI++;
 	}
 
-#if EFI_ALTERNATOR_CONTROL
-	if (strEqualCaseInsensitive(paramStr, "alt_t")) {
-		if (valueI > 10) {
-			engineConfiguration->alternatorControl.periodMs = valueI;
-		}
-		showAltInfo();
-	} else if (strEqualCaseInsensitive(paramStr, "alt_offset")) {
-		engineConfiguration->alternatorControl.offset = valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
-		setAltPFactor(valueF);
-	} else
-#endif // EFI_ALTERNATOR_CONTROL
+
 	if (strEqualCaseInsensitive(paramStr, "warning_period")) {
 		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_ENGINESNIFFERRPMTHRESHOLD)) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
-// migrate to new laucnh fields?
-		//	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
-//		engineConfiguration->step1rpm = valueI;
-		//	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
-		//		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		engineConfiguration->tpsMax = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
