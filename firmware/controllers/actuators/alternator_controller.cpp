@@ -48,36 +48,39 @@ void AlternatorController::onFastCallback() {
 	alternatorPid.postState(engine->outputChannels.alternatorStatus);
 #endif /* EFI_TUNER_STUDIO */
 
+	update();
+}
+
+expected<float> AlternatorController::getSetpoint() {
 	bool alternatorShouldBeEnabledAtCurrentRpm = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->cranking.rpm;
 
 	if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {
-		// we need to avoid accumulating iTerm while engine is not running
-		pidReset();
-
-		// Shut off output if not needed
-		alternatorControl.setSimplePwmDutyCycle(0);
-
-		return;
+		return unexpected;
 	}
 
-	auto vBatt = Sensor::get(SensorType::BatteryVoltage);
-	float targetVoltage = engineConfiguration->targetVBatt;
+	return engineConfiguration->targetVBatt;
+}
 
-	if (!vBatt) {
-		// Somehow battery voltage isn't valid, disable alternator control
+expected<float> AlternatorController::observePlant() const {
+	return Sensor::get(SensorType::BatteryVoltage);
+}
+
+expected<percent_t> AlternatorController::getOpenLoop(float /*target*/) {
+	// see "idle air Bump for AC" comment
+	return engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acRelayAlternatorDutyAdder : 0;
+}
+
+expected<percent_t> AlternatorController::getClosedLoop(float setpoint, float observation) {
+	return alternatorPid.getOutput(setpoint, observation, FAST_CALLBACK_PERIOD_MS / 1000.0f);
+}
+
+void AlternatorController::setOutput(expected<percent_t> outputValue) {
+	if (outputValue) {
+		alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
+	} else {
+		// turn off in case of fault and reset
 		alternatorPid.reset();
 		alternatorControl.setSimplePwmDutyCycle(0);
-	} else {
-		currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt.Value, FAST_CALLBACK_PERIOD_MS / 1000.0f);
-    	// see "idle air Bump for AC" comment
-		int acDutyBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acRelayAlternatorDutyAdder : 0;
-		currentAltDuty += acDutyBump;
-		if (engineConfiguration->isVerboseAlternator) {
-			efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
-					alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
-		}
-
-		alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
 	}
 }
 
