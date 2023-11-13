@@ -658,11 +658,11 @@ void setBoschHDEV_5_injectors() {
 	copyArray(engineConfiguration->hpfpLobeProfileAngle, hardCodedHpfpLobeProfileAngle);
 	setLinearCurve(engineConfiguration->hpfpDeadtimeVoltsBins, 8, 16, 0.5);
 
-	setLinearCurve(engineConfiguration->hpfpTargetRpmBins, 0, 8000, 1);
+	setRpmTableBin(engineConfiguration->hpfpTargetRpmBins);
 	setLinearCurve(engineConfiguration->hpfpTargetLoadBins, 0, 180, 1);
 	setTable(engineConfiguration->hpfpTarget, 5000);
 
-	setLinearCurve(engineConfiguration->hpfpCompensationRpmBins, 0, 8000, 1);
+	setRpmTableBin(engineConfiguration->hpfpCompensationRpmBins);
 	setLinearCurve(engineConfiguration->hpfpCompensationLoadBins, 0.005, 0.120, 0.001);
 
 	// This is the configuration for bosch HDEV 5 injectors

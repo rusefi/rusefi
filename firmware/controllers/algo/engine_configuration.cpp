@@ -472,9 +472,9 @@ static void setDefaultEngineConfiguration() {
 
 	setDefaultWarmupIdleCorrection();
 
-	setLinearCurve(engineConfiguration->map.samplingAngleBins, 800, 7000, 1);
+	setRpmTableBin(engineConfiguration->map.samplingAngleBins);
 	setLinearCurve(engineConfiguration->map.samplingAngle, 100, 130, 1);
-	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
+	setRpmTableBin(engineConfiguration->map.samplingWindowBins);
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);

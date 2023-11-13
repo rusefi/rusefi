@@ -220,7 +220,7 @@ void setDefaultBoostParameters() {
 	engineConfiguration->boostPid.minValue = -20;
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
-	setLinearCurve(config->boostRpmBins, 0, 8000, 1);
+	setRpmTableBin(config->boostRpmBins);
 	setLinearCurve(config->boostTpsBins, 0, 100, 1);
 
 	for (int loadIndex = 0; loadIndex < BOOST_LOAD_COUNT; loadIndex++) {

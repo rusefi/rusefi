@@ -75,5 +75,5 @@ void setSachs() {
 	// todo: extract a method? figure out something smarter
 	setTimingRpmBin(800, 15000);
 	setLinearCurve(config->veRpmBins, 7000, 15000, 1);
-	setLinearCurve(config->lambdaRpmBins, 500, 7000, 1);
+	setRpmTableBin(config->lambdaRpmBins);
 }
