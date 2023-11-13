@@ -114,7 +114,9 @@ void MapAverager::stop() {
 
 		setValidValue(minPressure, getTimeNowNt());
 	} else {
+#if EFI_PROD_CODE
 		warning(ObdCode::CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
+#endif
 	}
 }
 
