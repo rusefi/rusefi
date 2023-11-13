@@ -715,6 +715,9 @@ Select which bus the wideband controller is attached to.
 ### fuelClosedLoopCorrectionEnabled
 Enables lambda sensor closed loop feedback for fuelling.
 
+### oddFireEngine
+
+
 ### boardUseTachPullUp
 
 

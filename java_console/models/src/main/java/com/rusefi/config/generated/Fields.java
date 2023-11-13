@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 04:19:35 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 07:03:09 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1043,6 +1043,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1498805372;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1269,7 +1270,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.11.13.f407-discovery.4142098683";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.11.13.f407-discovery.1498805372";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1881,6 +1882,7 @@ public class Fields {
 	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1314, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field WIDEBANDONSECONDBUS = Field.create("WIDEBANDONSECONDBUS", 1316, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1316, FieldType.BIT, 1).setBaseOffset(0);
+	public static final Field ODDFIREENGINE = Field.create("ODDFIREENGINE", 1316, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field BOARDUSETACHPULLUP = Field.create("BOARDUSETACHPULLUP", 1316, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field BOARDUSETEMPPULLUP = Field.create("BOARDUSETEMPPULLUP", 1316, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field YESUNDERSTANDLOCKING = Field.create("YESUNDERSTANDLOCKING", 1316, FieldType.BIT, 5).setBaseOffset(0);
@@ -3456,6 +3458,7 @@ public class Fields {
 	TPS2SECONDARYMAX,
 	WIDEBANDONSECONDBUS,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
+	ODDFIREENGINE,
 	BOARDUSETACHPULLUP,
 	BOARDUSETEMPPULLUP,
 	YESUNDERSTANDLOCKING,

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 04:17:47 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 07:01:22 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2324,7 +2324,7 @@ struct engine_configuration_s {
 	bool fuelClosedLoopCorrectionEnabled : 1 {};
 	/**
 	offset 1316 bit 2 */
-	bool unused1192b2 : 1 {};
+	bool oddFireEngine : 1 {};
 	/**
 	offset 1316 bit 3 */
 	bool boardUseTachPullUp : 1 {};
@@ -5372,4 +5372,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23880);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 04:17:47 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 07:01:22 UTC 2023
