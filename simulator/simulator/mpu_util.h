@@ -7,3 +7,4 @@ static bool isValidCanRxPin(brain_pin_e) { return true; }
 #endif // HAL_USE_CAN
 
 static bool allowFlashWhileRunning() { return true; }
+static void causeHardFault() { }
