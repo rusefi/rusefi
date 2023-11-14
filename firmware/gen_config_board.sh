@@ -4,7 +4,7 @@
 #        for example ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini
 #                 or ./gen_config_board.sh config/boards/hellen/hellen128 hellen128
 #                 or ./gen_config_board.sh config/boards/atlas atlas
-#                    ./gen_config_board.sh config/boards/proteus proteus
+#                    ./gen_config_board.sh config/boards/proteus proteus_f7
 # which is short for ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128.ini
 
 set -e
