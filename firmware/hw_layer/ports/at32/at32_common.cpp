@@ -138,13 +138,6 @@ void baseMCUInit(void) {
     BOR_Set(BOR_Level_1); // one step above default value
 }
 
-void causeHardFault() {
-	// Set the function pointer to an invalid address
-	void (*invalidFunction)() = (void(*)())0xDEADBEEF;
-	// Calling the invalid function will trigger a hard fault
-	invalidFunction();
-}
-
 /* used to detect additional RAM available for LUA
  * TODO: find RAM on AT32
  * TODO: better name */
