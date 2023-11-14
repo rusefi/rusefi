@@ -110,6 +110,13 @@ void baseMCUInit(void) {
 	BOR_Set(BOR_Level_1); // one step above default value
 }
 
+void causeHardFault() {
+	// Set the function pointer to an invalid address
+	void (*invalidFunction)() = (void(*)())0xDEADBEEF;
+	// Calling the invalid function will trigger a hard fault
+	invalidFunction();
+}
+
 extern uint32_t __main_stack_base__;
 
 typedef struct port_intctx intctx_t;
