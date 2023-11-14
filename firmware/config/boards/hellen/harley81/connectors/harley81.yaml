@@ -202,7 +202,7 @@ pins:
     id: F11
     class: event_inputs
     ts_name: 51 - VSS
-    function: VSS in
+    function: VSS in (not really? on either 2021 or 2023)
 
   - pin: 52
     # H144_IN_TPS AIN17 PA4
