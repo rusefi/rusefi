@@ -586,8 +586,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion();
-	} else if (strEqualCaseInsensitive(param, "altdebug")) {
-		engineConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
 		engineConfiguration->useTpicAdvancedMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altcontrol")) {

@@ -93,6 +93,9 @@ void setDefaultIgnition() {
 	setTimingRpmBin(800, 7000);
 	buildTimingMap(35);
 
+	setRpmTableBin(config->ignTrimLoadBins);
+
+
 	engineConfiguration->trailingSparkAngle = 10;
 
 	// CLT correction

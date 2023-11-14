@@ -16,7 +16,7 @@ pins:
     id: D15
     class: outputs
     function: Right Oil Cooling Fan
-    ts_name: 1 Right Oil Cooling
+    ts_name: ___ Right Oil Cooling / Coolant Fan
 
   - pin: 2
     type: gnd
@@ -31,7 +31,7 @@ pins:
     id: D14
     class: outputs
     function: Left Oil Cooling Fan
-    ts_name: 4 Left Oil Fan
+    ts_name: ___ Left Oil Fan / Coolant Pump
 
   - pin: 5
     id: EFI_ADC_5
@@ -135,7 +135,7 @@ pins:
     id: EFI_ADC_15
     class: analog_inputs
     ts_name: 34 Kickstand Position Sensor
-    function: Kickstand Position Sensor
+    function: JSS Kickstand Position Sensor
 
   - pin: 36
     ts_name: Front Knock +
@@ -195,7 +195,7 @@ pins:
     id: EFI_ADC_12
     class: analog_inputs
     ts_name: 49 CLT
-    function: CLT sensor
+    function: CLT sensor modern
 
   - pin: 51
     # H144_IN_VSS
@@ -222,8 +222,8 @@ pins:
   #H144_IN_MAP2
     id: EFI_ADC_11
     class: analog_inputs
-    ts_name: 55 Engine Temperature
-    function: Engine Temperature
+    ts_name: 55 Engine Head Temperature
+    function: Engine Temperature legacy
 
   - pin: 60
     function: shift sensor
@@ -255,12 +255,16 @@ pins:
   - pin: 70
     function: Sensor +5V
 
+  - pin: 71
+    function: AAT Ambient Air Temperature mandatory
+    class: analog_inputs
+
   - pin: 72
     # H144_IN_IAT
     id: EFI_ADC_13
     class: analog_inputs
     ts_name: 72 IAT
-    function: Intake Air Temperature
+    function: Intake Air Temperature mandatory
 
   - pin: 74
     type: gnd

@@ -173,7 +173,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		printPacket(busIndex, frame);
 	}
 
-
+    // see AemXSeriesWideband as an example of CanSensorBase/CanListener
 	serviceCanSubscribers(frame, nowNt);
 
 	// todo: convert to CanListener or not?

@@ -1080,6 +1080,9 @@ float getOutputValueByName(const char *name) {
 // acrStateDup
 		case -793662747:
 			return engine->engineState.acrStateDup;
+// acrEngineMovedRecently
+		case -791147982:
+			return engine->engineState.acrEngineMovedRecently;
 // startStopStateToggleCounter
 		case -960645892:
 			return engine->engineState.startStopStateToggleCounter;

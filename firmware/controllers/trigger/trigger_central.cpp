@@ -766,7 +766,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	if (firstEventInAWhile) {
 #if EFI_HD_ACR
         // let's open that valve on first sign of movement
-        engine->module<HarleyAcr>()->onSlowCallback();
+        engine->module<HarleyAcr>()->updateAcr();
 #endif // EFI_HD_ACR
 	}
 
@@ -1012,6 +1012,9 @@ void onConfigurationChangeTriggerCallback() {
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->triggerInputPins); i++) {
 		changed |= isConfigurationChanged(triggerInputPins[i]);
+		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN && isBrainPinValid(engineConfiguration->camInputs[i])) {
+		    criticalError("Please no physical sensors in CAM by MAP mode");
+		}
 	}
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->vvtMode); i++) {

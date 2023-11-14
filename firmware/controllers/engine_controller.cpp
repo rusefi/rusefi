@@ -538,6 +538,8 @@ bool validateConfig() {
 		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
 
 		ensureArrayIsAscendingOrDefault("Fuel Level Sensor", engineConfiguration->fuelLevelBins);
+		ensureArrayIsAscendingOrDefault("Fuel Trim Rpm", config->fuelTrimRpmBins);
+		ensureArrayIsAscendingOrDefault("Fuel Trim Load", config->fuelTrimLoadBins);
 
 		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
 		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
@@ -551,6 +553,8 @@ bool validateConfig() {
 
 		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
 		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
+		ensureArrayIsAscendingOrDefault("Ign Trim Rpm", config->ignTrimRpmBins);
+   		ensureArrayIsAscendingOrDefault("Ign Trim Load", config->ignTrimLoadBins);
 
 		ensureArrayIsAscending("Ignition CLT corr", config->cltTimingBins);
 

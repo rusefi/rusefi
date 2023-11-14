@@ -13,13 +13,15 @@
 #if EFI_HD_ACR
 
 static bool getAcrState() {
+    bool engineMovedRecently = getTriggerCentral()->engineMovedRecently();
+    engine->engineState.acrEngineMovedRecently = engineMovedRecently;
 	auto currentPhase = getTriggerCentral()->getCurrentEnginePhase(getTimeNowNt());
 	if (!currentPhase) {
-		return false;
+		return engineMovedRecently;
 	}
 
 	// Turn off the valve if the engine isn't moving - no sense wasting power on a stopped engine
-	if (!getTriggerCentral()->engineMovedRecently()) {
+	if (!engineMovedRecently) {
 		return false;
 	}
 
@@ -56,6 +58,10 @@ void HarleyAcr::onSlowCallback() {
 	enginePins.harleyAcr.setValue(acrState);
 	enginePins.harleyAcr2.setValue(acrState);
 	m_active = acrState;
+}
+
+void HarleyAcr::updateAcr() {
+    onSlowCallback();
 }
 
 bool HarleyAcr::isActive() const {
