@@ -16,13 +16,6 @@
 void baseMCUInit(void) {
 }
 
-void causeHardFault() {
-	// Set the function pointer to an invalid address
-	void (*invalidFunction)() = (void(*)())0xDEADBEEF;
-	// Calling the invalid function will trigger a hard fault
-	invalidFunction();
-}
-
 void _unhandled_exception(void) {
 /*lint -restore*/
 
