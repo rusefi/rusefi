@@ -111,10 +111,12 @@ void baseMCUInit(void) {
 }
 
 void causeHardFault() {
+#if EFI_PROD_CODE
 	// Set the function pointer to an invalid address
 	void (*invalidFunction)() = (void(*)())0xDEADBEEF;
 	// Calling the invalid function will trigger a hard fault
 	invalidFunction();
+#endif  /* EFI_PROD_CODE */
 }
 
 extern uint32_t __main_stack_base__;

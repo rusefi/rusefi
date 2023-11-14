@@ -26,6 +26,7 @@
 
 #include "eficonsole.h"
 #include "console_io.h"
+#include "mpu_util.h"
 #include "svnversion.h"
 
 static void testCritical() {
@@ -34,6 +35,10 @@ static void testCritical() {
 
 static void myerror() {
 	firmwareError(ObdCode::CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
+}
+
+static void testHardFault() {
+	causeHardFault();
 }
 
 static void sayHello() {
@@ -244,5 +249,6 @@ void initializeConsole() {
 
 	addConsoleAction("critical", testCritical);
 	addConsoleAction("error", myerror);
+	addConsoleAction("hard_fault", testHardFault);
 	addConsoleAction("threadsinfo", cmd_threads);
 }
