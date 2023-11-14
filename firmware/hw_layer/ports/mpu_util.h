@@ -12,6 +12,7 @@ void jump_to_bootloader();
 #if EFI_USE_OPENBLT
 void jump_to_openblt();
 #endif
+void causeHardFault();
 bool allowFlashWhileRunning();
 
 bool ramReadProbe(volatile const char *read_address);
