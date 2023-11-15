@@ -114,6 +114,13 @@ void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
 	// no conversion, just ohms
 	esr = data->Esr;
 
+// todo: suggest values 1 and 2 into the official WB source fault enum?
+#define HACK_CRANKING_VALUE 2
+
+    if (!engine->engineState.heaterControlEnabled) {
+        faultCode = HACK_CRANKING_VALUE;
+        return;
+    }
 	faultCode = static_cast<uint8_t>(data->Status);
 
 	if (data->Status != wbo::Fault::None) {

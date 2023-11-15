@@ -142,7 +142,7 @@ void sendWidebandInfo() {
 	m[0] = vbatt;
 
 	// Offset 1 bit 0 = heater enable
-	m[1] = enginePins.o2heater.getLogicValue() ? 0x01 : 0x00;
+	m[1] = engine->engineState.heaterControlEnabled ? 0x01 : 0x00;
 }
 
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN
