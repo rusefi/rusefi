@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Nov 14 06:06:21 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Nov 15 05:15:34 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1269,7 +1269,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.11.14.f407-discovery.2271352237";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.11.15.f407-discovery.3499919882";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1621,7 +1621,6 @@ public class Fields {
 	public static final Field RUSEFIVERBOSE29B = Field.create("RUSEFIVERBOSE29B", 728, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field RETHROWHARDFAULT = Field.create("RETHROWHARDFAULT", 728, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field ISHIP9011ENABLED = Field.create("ISHIP9011ENABLED", 728, FieldType.BIT, 6).setBaseOffset(0);
-	public static final Field ISVERBOSEALTERNATOR = Field.create("ISVERBOSEALTERNATOR", 728, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field VERBOSEQUAD = Field.create("VERBOSEQUAD", 728, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field USESTEPPERIDLE = Field.create("USESTEPPERIDLE", 728, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 728, FieldType.BIT, 10).setBaseOffset(0);
@@ -3201,7 +3200,6 @@ public class Fields {
 	RUSEFIVERBOSE29B,
 	RETHROWHARDFAULT,
 	ISHIP9011ENABLED,
-	ISVERBOSEALTERNATOR,
 	VERBOSEQUAD,
 	USESTEPPERIDLE,
 	ENABLEDSTEP1LIMITER,

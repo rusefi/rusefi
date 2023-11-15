@@ -412,9 +412,6 @@ float getConfigValueByName(const char *name) {
 // isHip9011Enabled
 		case -2119647784:
 			return engineConfiguration->isHip9011Enabled;
-// isVerboseAlternator
-		case -956913549:
-			return engineConfiguration->isVerboseAlternator;
 // verboseQuad
 		case -1055678778:
 			return engineConfiguration->verboseQuad;
@@ -2419,11 +2416,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -2119647784:
 	{
 		engineConfiguration->isHip9011Enabled = (int)value;
-		return 1;
-	}
-		case -956913549:
-	{
-		engineConfiguration->isVerboseAlternator = (int)value;
 		return 1;
 	}
 		case -1055678778:

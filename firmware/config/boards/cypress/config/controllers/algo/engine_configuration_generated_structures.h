@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 07:01:22 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Nov 15 05:13:45 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1563,7 +1563,7 @@ struct engine_configuration_s {
 	bool isHip9011Enabled : 1 {};
 	/**
 	offset 728 bit 7 */
-	bool isVerboseAlternator : 1 {};
+	bool unused644b5 : 1 {};
 	/**
 	offset 728 bit 8 */
 	bool verboseQuad : 1 {};
@@ -5372,4 +5372,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23880);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 13 07:01:22 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Nov 15 05:13:45 UTC 2023
