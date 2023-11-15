@@ -108,6 +108,19 @@ function getBitRange(data, bitIndex, bitWidth) \n\
 end \n\
 "
 
+#define GET_BIT_RANGE_MSB " \
+function getBitRangeMsb(data, bitIndex, bitWidth) \n\
+	byteIndex = bitIndex >> 3 \n\
+	shift = bitIndex - byteIndex * 8 \n\
+	value = data[1 + byteIndex] \n\
+	if (shift + bitWidth > 8) then \n\
+		value = value + data[0 + byteIndex] * 256 \
+	end \n\
+	mask = (1 << bitWidth) - 1 \n\
+	return (value >> shift) & mask \n\
+end \n\
+"
+
 #define SET_BIT_RANGE_LSB " \
 function setBitRange(data, totalBitIndex, bitWidth, value) \
 	local byteIndex = totalBitIndex >> 3 \

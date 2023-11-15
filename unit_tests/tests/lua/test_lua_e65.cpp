@@ -92,7 +92,18 @@ TEST(LuaE65, gearTorque) {
 		return getBitRange(data, 12, 12)
 	end)";
 
-	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 800);
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x320);
+}
+
+TEST(LuaE65, offtopicTestGetBitRangeMsb) {
+	const char* realdata = GET_BIT_RANGE_MSB R"(
+
+	function testFunc()
+		data = {0x9F, 0x01, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
+		return getBitRangeMsb(data, 12, 12)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x9F0);
 }
 
 TEST(LuaE65, gearTorque2) {
