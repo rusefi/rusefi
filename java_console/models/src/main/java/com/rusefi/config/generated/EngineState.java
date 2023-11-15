@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Nov 13 22:26:37 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Wed Nov 15 21:36:17 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -196,6 +196,7 @@ public class EngineState {
 	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 48, FieldType.BIT, 0).setBaseOffset(1048);
 	public static final Field ACRSTATEDUP = Field.create("ACRSTATEDUP", 48, FieldType.BIT, 1).setBaseOffset(1048);
 	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 48, FieldType.BIT, 2).setBaseOffset(1048);
+	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 48, FieldType.BIT, 3).setBaseOffset(1048);
 	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 52, FieldType.INT).setScale(1.0).setBaseOffset(1048);
 	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 56, FieldType.FLOAT).setBaseOffset(1048);
 	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 60, FieldType.FLOAT).setBaseOffset(1048);
@@ -233,6 +234,7 @@ public class EngineState {
 	STARTSTOPPHYSICALSTATE,
 	ACRSTATEDUP,
 	ACRENGINEMOVEDRECENTLY,
+	HEATERCONTROLENABLED,
 	STARTSTOPSTATETOGGLECOUNTER,
 	EGTVALUE1,
 	EGTVALUE2,

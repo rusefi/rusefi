@@ -1083,6 +1083,9 @@ float getOutputValueByName(const char *name) {
 // acrEngineMovedRecently
 		case -791147982:
 			return engine->engineState.acrEngineMovedRecently;
+// heaterControlEnabled
+		case -818268726:
+			return engine->engineState.heaterControlEnabled;
 // startStopStateToggleCounter
 		case -960645892:
 			return engine->engineState.startStopStateToggleCounter;
