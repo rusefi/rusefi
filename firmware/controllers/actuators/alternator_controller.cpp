@@ -65,10 +65,6 @@ expected<percent_t> AlternatorController::getClosedLoop(float targetVoltage, flo
    	// see "idle air Bump for AC" comment
 	int acDutyBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acRelayAlternatorDutyAdder : 0;
 	altDuty += acDutyBump;
-	if (engineConfiguration->isVerboseAlternator) {
-		efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", altDuty, vBattVoltage,
-				alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
-	}
 	return altDuty;
 }
 

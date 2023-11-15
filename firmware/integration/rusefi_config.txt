@@ -734,7 +734,7 @@ bit is_enabled_spi_2
 	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit rethrowHardFault
 	bit isHip9011Enabled
-	bit isVerboseAlternator
+	bit unused644b5
 	bit verboseQuad
 	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	
