@@ -88,6 +88,7 @@ public:
 	RegisteredNamedOutputPin harleyAcr;
 	RegisteredOutputPin harleyAcr2;
 #endif // EFI_HD_ACR
+	// todo: shall we rename this to narrowBandO2heater or even remove the whole questionable feature?
 	OutputPin o2heater;
 	OutputPin luaOutputPins[LUA_PWM_COUNT];
 

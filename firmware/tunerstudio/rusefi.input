@@ -2996,7 +2996,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = allPins1_2
 		field = "Tachometer output",					tachOutputPin
-		field = "O2 heater output",					o2heaterPin
+		field = "Narrowband O2 heater output",					o2heaterPin
 		field = "Idle Solenoid Primary output",	idle_solenoidPin
 		field = "Idle Solenoid Secondary output",secondSolenoidPin
 		field = "Idle Stepper Dir",						idle_stepperDirectionPin
@@ -3302,7 +3302,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = egoSettings_IO1,	"EGO Sensor 1 I/O"
 		field = "Input channel",						afr_hwChannel,{afr_hwChannel != @@ADC_CHANNEL_NONE@@ || enableAemXSeries == 0 }
-		field = "Heater output",						o2heaterPin,  {  o2heaterPin != 0 || enableAemXSeries == 0 }
+		field = "Narrowband Heater output",				o2heaterPin,  {  o2heaterPin != 0 || enableAemXSeries == 0 }
 
 	dialog = egoSettings_IO2,	"EGO Sensor 2 I/O"
 		field = "Input channel",						afr_hwChannel2
