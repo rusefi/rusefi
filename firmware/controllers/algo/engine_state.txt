@@ -41,6 +41,8 @@ struct_no_prefix engine_state_s
 	bit startStopPhysicalState
 	bit acrStateDup
 	bit acrEngineMovedRecently
+	! same field is used for narrow band heater enable and wide band enable via CAN
+	bit heaterControlEnabled
 	uint32_t startStopStateToggleCounter
 
 	float egtValue1

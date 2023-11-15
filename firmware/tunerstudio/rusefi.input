@@ -231,7 +231,7 @@ enable2ndByteCanID = false
 	debugFieldI4List = bits,	U08,	[0:7], "Alt: Period",				"",						"",			"Idle: State",						"Idle di4",				"Cycle Cnt 1",					"",			"",								"",						"",							"",						"",		"",			"",			"",				"",			"",						"ETB di4",					"executor",			"",			"di4",			"di4",			"22di4",			"",		"24:di4",		"",				"",			"",				"",		"",	"",	"Init Count",	"",							"",	"",		"",		"",""					"",			"",					"",				"",			"",				"",										"",			"",					"",						"Solenoid 4 State",  "",					"",							"",							""
 	debugFieldI5List = bits,	U08,	[0:7], "",								"",						"",			"",										"Idle di5",				"Cycle Cnt 2",					"",			"",								"",						"",							"",						"",		"",			"",			"",				"di5",		"di5",					"ETB di5",					"max executor",		"di5",		"di5",			"di5",			"22di5",			"di5",	"di5",		"di5",				"di5",		"di5",			"",		"di5",  "di5",  "di5",				"",							"di5", "di5",	"di5",	"",""					"",			"",					"",				"",			"",				"",										"",			"",					"",						"Solenoid 5 State",  "",					"",							"",							""
 
-	wboFaultCodeList = bits, U08, [0:3], "OK", "silent", "Unk", "failed to heat", "overheat", "underheat", "no supply", "legacy"
+	wboFaultCodeList = bits, U08, [0:3], "OK", "silent", "cranking", "failed to heat", "overheat", "underheat", "no supply", "legacy"
 
 	injModeList = bits, U08, [0:3], "Simultaneous", "Sequential", "Batch", "Single Point"
 	ignModeList = bits, U08, [0:3], "Single Coil", "Sequential", "Wasted", "Two Coils"
