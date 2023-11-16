@@ -11,6 +11,7 @@ void Timer::reset() {
 }
 
 void Timer::init() {
+	// Use not-quite-minimum value to avoid overflow
 	m_lastReset = INT64_MIN / 8;
 }
 

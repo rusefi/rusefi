@@ -38,6 +38,5 @@ public:
 	float getElapsedSecondsAndReset(efitick_t nowNt);
 
 private:
-	// Use not-quite-minimum value to avoid overflow
 	efitick_t m_lastReset;
 };
