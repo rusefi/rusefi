@@ -325,6 +325,7 @@ public:
 	void preCalculate();
 
 	void efiWatchdog();
+	void onEngineHasStopped();
 
 	/**
 	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.

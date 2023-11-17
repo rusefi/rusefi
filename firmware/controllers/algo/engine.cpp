@@ -429,7 +429,7 @@ void Engine::efiWatchdog() {
 		return;
 	}
 
-	if (!getTriggerCentral()->isSpinningJustForWatchdog) {
+	if (!triggerCentral.isSpinningJustForWatchdog) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
 			// todo: make this a firmwareError assuming functional tests would run
 			warning(ObdCode::CUSTOM_ERR_2ND_WATCHDOG, "Some pins were turned off by 2nd pass watchdog");
@@ -441,14 +441,22 @@ void Engine::efiWatchdog() {
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 */
-	getTriggerCentral()->isSpinningJustForWatchdog = false;
+	triggerCentral.isSpinningJustForWatchdog = false;
+    onEngineHasStopped();
+#endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+}
+
+void Engine::onEngineHasStopped() {
+#if EFI_ENGINE_CONTROL
 	ignitionEvents.isReady = false;
+#endif // EFI_ENGINE_CONTROL
+
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	efiPrintf("Engine has stopped spinning.");
 #endif
 
+    // this invocation should be the last layer of defence in terms of making sure injectors/coils are not active
 	enginePins.stopPins();
-#endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 }
 
 void Engine::checkShutdown() {
