@@ -419,7 +419,7 @@ static void assertTimeIsLinear() {
 }
 
 void Engine::efiWatchdog() {
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+    assertTimeIsLinear();
 	if (isRunningPwmTest)
 		return;
 
@@ -427,7 +427,7 @@ void Engine::efiWatchdog() {
 		return;
 	}
 
-    assertTimeIsLinear();
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 	if (!getTriggerCentral()->isSpinningJustForWatchdog) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
