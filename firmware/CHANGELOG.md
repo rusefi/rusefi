@@ -44,6 +44,7 @@ Release template (copy/paste this for new release):
  - Allow brief operation over 100% injector duty cycle and add configurable duty cycle limits #215
  - Buttons to bump VVT targets for testing/PID tuning
  - Improved serial port selection for FOME console and firmware update
+ - Better default configuration values for some advanced features
 
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)

@@ -100,4 +100,18 @@ void setDefaultIgnition() {
 
 	// IAT correction
 	setDefaultIatTimingCorrection();
+
+	// Give default axes for cylinder trim tables
+	copyArray(config->ignTrimRpmBins, { 1000, 3000, 5000, 7000 });
+	copyArray(config->ignTrimLoadBins, { 20, 50, 80, 100 });
+
+	// Default axes for VE blends
+	for (int i = 0; i < efi::size(config->ignBlends); i++) {
+		auto& blend = config->ignBlends[i];
+		setLinearCurve(blend.loadBins, 0, 100, 10);
+		setLinearCurve(blend.rpmBins, 0, 7000);
+
+		setLinearCurve(blend.blendBins, 0, 100);
+		setLinearCurve(blend.blendValues, 0, 100);
+	}
 }

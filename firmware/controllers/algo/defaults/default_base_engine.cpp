@@ -40,6 +40,10 @@ void setDefaultBaseEngine() {
 	engineConfiguration->rpmHardLimitHyst = 50;
 	engineConfiguration->cutFuelOnHardLimit = true;
 	engineConfiguration->cutSparkOnHardLimit = false;
+	engineConfiguration->etbRevLimitRange = 250;
+
+	// CLT RPM limit table - just the X axis
+	copyArray(engineConfiguration->cltRevLimitRpmBins, { -20, 0, 40, 80 });
 
 	engineConfiguration->ALSMinRPM = 400;
 	engineConfiguration->ALSMaxRPM = 3200;
