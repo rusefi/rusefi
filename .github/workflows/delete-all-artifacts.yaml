@@ -7,7 +7,7 @@ jobs:
     name: Delete Old Artifacts
     runs-on: ubuntu-latest-selfhost
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         id: artifact
         with:
           # Delete all artifacts
