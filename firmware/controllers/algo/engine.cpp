@@ -423,11 +423,11 @@ void Engine::efiWatchdog() {
 	if (isRunningPwmTest)
 		return;
 
-	if (module<PrimeController>()->isPriming()) {
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+	if (module<PrimeController>()->isPriming() || triggerCentral.engineMovedRecently()) {
+        // do not invoke check in priming or if engine moved recently, no need to assert safe pin state.
 		return;
 	}
-
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 	if (!getTriggerCentral()->isSpinningJustForWatchdog) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
@@ -441,10 +441,6 @@ void Engine::efiWatchdog() {
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 */
-	if (engine->triggerCentral.engineMovedRecently()) {
-		// Engine moved recently, no need to safe pins.
-		return;
-	}
 	getTriggerCentral()->isSpinningJustForWatchdog = false;
 	ignitionEvents.isReady = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
