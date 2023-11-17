@@ -1,5 +1,6 @@
 /*
- * mc33972.c
+ * mc33972.cpp
+ * looks like chip is not very available these days TODO https://github.com/rusefi/rusefi/issues/5733
  *
  * Multiple Switch Detection Interface with Suppressed Wake-up
  *
