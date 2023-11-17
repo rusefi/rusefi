@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 17 03:25:05 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 17 20:25:57 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1043,6 +1043,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 881045169;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
@@ -1269,7 +1270,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.11.17.f407-discovery.3007273754";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.11.17.f407-discovery.881045169";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1948,7 +1949,7 @@ public class Fields {
 	public static final Field SDTRIGGERLOG = Field.create("SDTRIGGERLOG", 1328, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field ALSACTIVATEINVERTED = Field.create("ALSACTIVATEINVERTED", 1328, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field STEPPER_DC_USE_TWO_WIRES = Field.create("STEPPER_DC_USE_TWO_WIRES", 1328, FieldType.BIT, 30).setBaseOffset(0);
-	public static final Field TEMPBOOLEANFORVERYSPECIALLOGIC = Field.create("TEMPBOOLEANFORVERYSPECIALLOGIC", 1328, FieldType.BIT, 31).setBaseOffset(0);
+	public static final Field WATCHOUTFORLINEARTIME = Field.create("WATCHOUTFORLINEARTIME", 1328, FieldType.BIT, 31).setBaseOffset(0);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1332, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TURBOSPEEDSENSORMULTIPLIER = Field.create("TURBOSPEEDSENSORMULTIPLIER", 1336, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field CAMINPUTSDEBUG1 = Field.create("CAMINPUTSDEBUG1", 1340, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -3523,7 +3524,7 @@ public class Fields {
 	SDTRIGGERLOG,
 	ALSACTIVATEINVERTED,
 	STEPPER_DC_USE_TWO_WIRES,
-	TEMPBOOLEANFORVERYSPECIALLOGIC,
+	WATCHOUTFORLINEARTIME,
 	ENGINECHARTSIZE,
 	TURBOSPEEDSENSORMULTIPLIER,
 	CAMINPUTSDEBUG1,

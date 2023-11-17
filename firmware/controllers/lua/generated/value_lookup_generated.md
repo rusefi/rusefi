@@ -898,7 +898,7 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 ### stepper_dc_use_two_wires
 
 
-### tempBooleanForVerySpecialLogic
+### watchOutForLinearTime
 
 
 ### engineChartSize

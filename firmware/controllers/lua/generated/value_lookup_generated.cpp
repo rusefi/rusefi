@@ -904,9 +904,9 @@ float getConfigValueByName(const char *name) {
 // stepper_dc_use_two_wires
 		case 2136379132:
 			return engineConfiguration->stepper_dc_use_two_wires;
-// tempBooleanForVerySpecialLogic
-		case -153724425:
-			return engineConfiguration->tempBooleanForVerySpecialLogic;
+// watchOutForLinearTime
+		case -1896516795:
+			return engineConfiguration->watchOutForLinearTime;
 // engineChartSize
 		case -1492464952:
 			return engineConfiguration->engineChartSize;
@@ -3238,9 +3238,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->stepper_dc_use_two_wires = (int)value;
 		return 1;
 	}
-		case -153724425:
+		case -1896516795:
 	{
-		engineConfiguration->tempBooleanForVerySpecialLogic = (int)value;
+		engineConfiguration->watchOutForLinearTime = (int)value;
 		return 1;
 	}
 		case -1492464952:
