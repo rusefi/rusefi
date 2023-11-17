@@ -175,14 +175,7 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->cylindersCount = 8;
-	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
-
 	engineConfiguration->enableSoftwareKnock = true;
-
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
 #if HW_PROTEUS & EFI_PROD_CODE
 	engineConfiguration->mainRelayPin = Gpio::PROTEUS_LS_12;
