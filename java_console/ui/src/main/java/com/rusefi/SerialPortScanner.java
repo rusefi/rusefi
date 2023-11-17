@@ -5,6 +5,8 @@ import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -45,12 +47,12 @@ public enum SerialPortScanner {
     public static class PortResult {
         public final String port;
         public final SerialPortType type;
-        public final String signature;
+        public final RusEfiSignature signature;
 
         public PortResult(String port, SerialPortType type, String signature) {
             this.port = port;
             this.type = type;
-            this.signature = signature;
+            this.signature = SignatureHelper.parse(signature);
         }
 
         public PortResult(String port, SerialPortType type) {

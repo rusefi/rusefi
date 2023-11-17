@@ -3,8 +3,6 @@ package com.rusefi.maintenance;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
-import com.rusefi.autodetect.PortDetector;
-import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.io.DfuHelper;
@@ -12,7 +10,6 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,23 +17,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * @see FirmwareFlasher
- */
 public class DfuFlasher {
     private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
     private static final String WMIC_DFU_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
 
-    public static void doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
-        if (port == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
-            return;
-        }
-
+    public static void doAutoDfu(JComponent parent, @NotNull String port, UpdateOperationCallbacks callbacks) {
         boolean needsEraseFirst = false;
         if (BundleUtil.getBundleTarget().contains("f7")) {
             int result = JOptionPane.showConfirmDialog(parent, "Firmware update requires a full erase of the ECU. If your tune is not saved in TunerStudio, it will be lost.\nEnsure that TunerStudio has your current tune saved!\n\nAfter updating, re-connect TunerStudio to restore your tune.\n\nPress OK to continue with the update, or Cancel to abort so you can save your tune.", "WARNING", JOptionPane.OK_CANCEL_OPTION);
@@ -49,64 +36,30 @@ public class DfuFlasher {
             needsEraseFirst = true;
         }
 
-        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Fields.CMD_REBOOT_DFU);
-        if (isSignatureValidated == null)
-            return;
-        if (isSignatureValidated.get()) {
-            if (!ProgramSelector.IS_WIN) {
-                callbacks.log("Switched to DFU mode!");
-                callbacks.log("FOME console can only program on Windows");
-                return;
-            }
+        rebootToDfu(port, callbacks, Fields.CMD_REBOOT_DFU);
 
-            boolean finalNeedsEraseFirst = needsEraseFirst;
-            submitAction(() -> {
-                timeForDfuSwitch(callbacks);
-                executeDFU(callbacks, finalNeedsEraseFirst);
-            });
-        } else {
-            callbacks.log("Please use manual DFU to change bundle type.");
+        if (!ProgramSelector.IS_WIN) {
+            callbacks.log("Switched to DFU mode!");
+            callbacks.log("FOME console can only program on Windows");
+            return;
         }
+
+        boolean finalNeedsEraseFirst = needsEraseFirst;
+        submitAction(() -> {
+            timeForDfuSwitch(callbacks);
+            executeDFU(callbacks, finalNeedsEraseFirst);
+        });
     }
 
     private static void submitAction(Runnable r) {
         ExecHelper.submitAction(r, DfuFlasher.class + " thread");
     }
 
-    @Nullable
-    public static AtomicBoolean rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks, String command) {
-        AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
-        if (!PortDetector.isAutoPort(port)) {
-            callbacks.log("Using selected " + port + "\n");
-            IoStream stream = BufferedSerialIoStream.openPort(port);
-            AtomicReference<String> signature = new AtomicReference<>();
-            signature.set(SerialAutoChecker.checkResponse(stream));
-            if (signature.get() == null) {
-                callbacks.log("*** ERROR *** FOME has not responded on selected " + port + "\n" +
-                        "Maybe try automatic serial port detection?");
-                callbacks.error();
-                return null;
-            }
-            boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, callbacks, command);
-            isSignatureValidated.set(isSignatureValidatedLocal);
-        } else {
-            callbacks.log("Auto-detecting port...\n");
-            // instead of opening the just-detected port we execute the command using the same stream we used to discover port
-            // it's more reliable this way
-            port = PortDetector.autoDetectSerial(callbackContext -> {
-                boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), callbacks, command);
-                isSignatureValidated.set(isSignatureValidatedLocal);
-                return null;
-            }).getSerialPort();
-            if (port == null) {
-                callbacks.log("*** ERROR *** FOME serial port not detected");
-                callbacks.error();
-                return null;
-            } else {
-                callbacks.log("Detected FOME on " + port + "\n");
-            }
-        }
-        return isSignatureValidated;
+    public static void rebootToDfu(String port, UpdateOperationCallbacks callbacks, String command) {
+        callbacks.log("Using selected " + port + "\n");
+        IoStream stream = BufferedSerialIoStream.openPort(port);
+
+        DfuHelper.sendDfuRebootCommand(stream, callbacks, command);
     }
 
     public static void runDfuEraseAsync(UpdateOperationCallbacks callbacks) {

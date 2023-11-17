@@ -1,5 +1,7 @@
 package com.rusefi.core;
 
+import com.rusefi.core.io.BundleUtil;
+
 public class RusEfiSignature {
     private final String branch;
     private final String year;
@@ -39,5 +41,16 @@ public class RusEfiSignature {
 
     public String getHash() {
         return hash;
+    }
+
+    public boolean matchesBundle() {
+        String bundleSignature = BundleUtil.getBundleTarget();
+
+        if (bundleSignature == null || this.bundleTarget == null) {
+            // If the bundle signature isn't valid, return that it matches (renamed folder?)
+            return true;
+        }
+
+        return bundleSignature.equalsIgnoreCase(this.bundleTarget);
     }
 }

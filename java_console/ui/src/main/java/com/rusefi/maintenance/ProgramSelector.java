@@ -2,9 +2,9 @@ package com.rusefi.maintenance;
 
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
-import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.util.URLLabel;
@@ -65,7 +65,17 @@ public class ProgramSelector {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final String selectedMode = (String) mode.getSelectedItem();
-                final String selectedPort = ((SerialPortScanner.PortResult) comboPorts.getSelectedItem()).port;
+                final SerialPortScanner.PortResult selectedPort = ((SerialPortScanner.PortResult) comboPorts.getSelectedItem());
+
+                if (selectedPort != null && selectedPort.signature != null && !selectedPort.signature.matchesBundle()) {
+                    String target = BundleUtil.getBundleTarget();
+                    String message = String.format("Looks like you're trying to update your ECU with the wrong firmware.\n\nYour controller says it's a %s, but this bundle is for a %s.\n\nYou can attempt to proceed, but unexpected behavior may result.\nContinue at your own risk.", selectedPort.signature.getBundleTarget(), target);
+                    int result = JOptionPane.showConfirmDialog(comboPorts, message, "WARNING", JOptionPane.OK_CANCEL_OPTION);
+
+                    if (result != JOptionPane.OK_OPTION) {
+                        return;
+                    }
+                }
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
 
@@ -76,7 +86,7 @@ public class ProgramSelector {
                 switch (selectedMode) {
                     case AUTO_DFU:
                         jobName = "DFU update";
-                        job = (callbacks) -> DfuFlasher.doAutoDfu(comboPorts, selectedPort, callbacks);
+                        job = (callbacks) -> DfuFlasher.doAutoDfu(comboPorts, selectedPort.port, callbacks);
                         break;
                     case MANUAL_DFU:
                         jobName = "DFU update";
@@ -84,11 +94,11 @@ public class ProgramSelector {
                         break;
                     case DFU_SWITCH:
                         jobName = "DFU switch";
-                        job = (callbacks) -> rebootToDfu(comboPorts, selectedPort, callbacks);
+                        job = (callbacks) -> rebootToDfu(selectedPort.port, callbacks);
                         break;
                     case OPENBLT_SWITCH:
                         jobName = "OpenBLT switch";
-                        job = (callbacks) -> rebootToOpenblt(comboPorts, selectedPort, callbacks);
+                        job = (callbacks) -> rebootToOpenblt(selectedPort.port, callbacks);
                         break;
                     case OPENBLT_CAN:
                         jobName = "OpenBLT via CAN";
@@ -96,11 +106,11 @@ public class ProgramSelector {
                         break;
                     case OPENBLT_MANUAL:
                         jobName = "OpenBLT via Serial";
-                        job = (callbacks) -> flashOpenbltSerialJni(selectedPort, callbacks);
+                        job = (callbacks) -> flashOpenbltSerialJni(selectedPort.port, callbacks);
                         break;
                     case OPENBLT_AUTO:
                         jobName = "OpenBLT via Serial";
-                        job = (callbacks) -> flashOpenbltSerialAutomatic(comboPorts, selectedPort, callbacks);
+                        job = (callbacks) -> flashOpenbltSerialAutomatic(selectedPort.port, callbacks);
                         break;
                     case DFU_ERASE:
                         jobName = "DFU erase";
@@ -121,14 +131,12 @@ public class ProgramSelector {
         });
     }
 
-    private static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
-        String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
-        DfuFlasher.rebootToDfu(parent, port, callbacks, Fields.CMD_REBOOT_DFU);
+    private static void rebootToDfu(String selectedPort, UpdateOperationCallbacks callbacks) {
+        DfuFlasher.rebootToDfu(selectedPort, callbacks, Fields.CMD_REBOOT_DFU);
     }
 
-    private static void rebootToOpenblt(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
-        String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
-        DfuFlasher.rebootToDfu(parent, port, callbacks, Fields.CMD_REBOOT_OPENBLT);
+    private static void rebootToOpenblt(String selectedPort, UpdateOperationCallbacks callbacks) {
+        DfuFlasher.rebootToDfu(selectedPort, callbacks, Fields.CMD_REBOOT_OPENBLT);
     }
 
     private void flashOpenBltCan(UpdateOperationCallbacks callbacks) {
@@ -140,16 +148,16 @@ public class ProgramSelector {
             callbacks.log("Update completed successfully!");
             callbacks.done();
         } catch (Throwable e) {
-            callbacks.log("Error: " + e.toString());
+            callbacks.log("Error: " + e);
             callbacks.error();
         } finally {
             OpenbltJni.stop(cb);
         }
     }
 
-    private void flashOpenbltSerialAutomatic(JComponent parent, String fomePort, UpdateOperationCallbacks callbacks) {
+    private void flashOpenbltSerialAutomatic(String fomePort, UpdateOperationCallbacks callbacks) {
         String[] portsBefore = LinkManager.getCommPorts();
-        rebootToOpenblt(parent, fomePort, callbacks);
+        rebootToOpenblt(fomePort, callbacks);
 
         // Give the bootloader a sec to enumerate
         BinaryProtocol.sleep(3000);
@@ -157,7 +165,7 @@ public class ProgramSelector {
         String[] portsAfter = LinkManager.getCommPorts();
 
         // Check that the ECU disappeared from the "after" list
-        if (!PortDetector.AUTO.equals(fomePort) && Arrays.asList(portsAfter).contains(fomePort)) {
+        if (Arrays.asList(portsAfter).contains(fomePort)) {
             callbacks.log("Looks like your ECU didn't reboot to OpenBLT");
             callbacks.error();
             return;
@@ -234,7 +242,7 @@ public class ProgramSelector {
             callbacks.log("Update completed successfully!");
             callbacks.done();
         } catch (Throwable e) {
-            callbacks.log("Error: " + e.toString());
+            callbacks.log("Error: " + e);
             callbacks.error();
         } finally {
             OpenbltJni.stop(cb);
