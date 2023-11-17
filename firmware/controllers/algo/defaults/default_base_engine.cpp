@@ -4,8 +4,6 @@
 #include "vr_pwm.h"
 
 static void setDefaultAlternatorParameters() {
-	engineConfiguration->alternatorOffAboveTps = 120;
-
 	engineConfiguration->targetVBatt = 14;
 
 	engineConfiguration->alternatorControl.offset = 0;
