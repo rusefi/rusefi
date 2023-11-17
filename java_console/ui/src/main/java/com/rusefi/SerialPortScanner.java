@@ -45,10 +45,16 @@ public enum SerialPortScanner {
     public static class PortResult {
         public final String port;
         public final SerialPortType type;
+        public final String signature;
 
-        public PortResult(String port, SerialPortType type) {
+        public PortResult(String port, SerialPortType type, String signature) {
             this.port = port;
             this.type = type;
+            this.signature = signature;
+        }
+
+        public PortResult(String port, SerialPortType type) {
+            this(port, type, null);
         }
 
         @Override
@@ -138,12 +144,13 @@ public enum SerialPortScanner {
                     hasAnyOpenblt = true;
                 } else {
                     // See if this looks like an ECU
-                    boolean isEcu = isPortFomeEcu(serialPort);
+                    String signature = getEcuSignature(serialPort);
+                    boolean isEcu = signature != null && signature.contains("FOME");
                     log.info("Port " + serialPort + (isEcu ? " looks like" : " does not look like") + " a FOME ECU");
                     if (isEcu) {
                         boolean ecuHasOpenblt = fomeEcuHasOpenblt(serialPort);
                         log.info("FOME ECU at " + serialPort + (ecuHasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
-                        result = new PortResult(serialPort, ecuHasOpenblt ? SerialPortType.FomeEcuWithOpenblt : SerialPortType.FomeEcu);
+                        result = new PortResult(serialPort, ecuHasOpenblt ? SerialPortType.FomeEcuWithOpenblt : SerialPortType.FomeEcu, signature);
                         ecuCount++;
                     } else {
                         // Dunno what this is, leave it in the list anyway
@@ -261,17 +268,11 @@ public enum SerialPortScanner {
         }
     }
 
-    public static boolean isPortFomeEcu(String port) {
+    public static String getEcuSignature(String port) {
         try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
-            String signature = SerialAutoChecker.checkResponse(stream);
-
-            if (signature == null) {
-                return false;
-            }
-
-            return signature.contains("FOME");
+            return SerialAutoChecker.checkResponse(stream);
         } catch (Exception e) {
-            return false;
+            return null;
         }
     }
 
