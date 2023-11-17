@@ -404,7 +404,7 @@ void Engine::setConfig() {
 static void assertTimeIsLinear() {
 	static efitimems_t mostRecentMs = 0;
 	efitimems_t msNow = getTimeNowMs();
-	if (engineConfiguration->tempBooleanForVerySpecialLogic && engine->configBurnTimer.hasElapsedSec(5)) {
+	if (engineConfiguration->watchOutForLinearTime && engine->configBurnTimer.hasElapsedSec(5)) {
 
 		if (mostRecentMs != 0) {
 			efitimems_t gapInMs = msNow - mostRecentMs;

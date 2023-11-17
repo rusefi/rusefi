@@ -1060,7 +1060,7 @@ bit useBiQuadOnAuxSpeedSensors
 bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 bit ALSActivateInverted
 bit stepper_dc_use_two_wires
-bit tempBooleanForVerySpecialLogic
+bit watchOutForLinearTime
 
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
 
