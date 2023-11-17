@@ -448,8 +448,7 @@ void Engine::efiWatchdog() {
 	getTriggerCentral()->isSpinningJustForWatchdog = false;
 	ignitionEvents.isReady = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	efiPrintf("engine has STOPPED");
-	triggerInfo();
+	efiPrintf("Engine has stopped spinning.");
 #endif
 
 	enginePins.stopPins();
