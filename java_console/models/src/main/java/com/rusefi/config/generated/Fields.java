@@ -1172,7 +1172,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.11.17.f407-discovery.3207612528";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2023.11.17.f407-discovery.3410460573";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1380;
@@ -1828,7 +1828,7 @@ public class Fields {
 	public static final Field STARTUPFUELPUMPDURATION = Field.create("STARTUPFUELPUMPDURATION", 1364, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLEPIDRPMDEADZONE = Field.create("IDLEPIDRPMDEADZONE", 1366, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TARGETVBATT = Field.create("TARGETVBATT", 1368, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field ALTERNATOROFFABOVETPS = Field.create("ALTERNATOROFFABOVETPS", 1372, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field UNUSED1372 = Field.create("UNUSED1372", 1372, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 1376, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 1378, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXSERIALTXPIN = Field.create("AUXSERIALTXPIN", 1380, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -3236,7 +3236,7 @@ public class Fields {
 	STARTUPFUELPUMPDURATION,
 	IDLEPIDRPMDEADZONE,
 	TARGETVBATT,
-	ALTERNATOROFFABOVETPS,
+	UNUSED1372,
 	AFTERCRANKINGIACTAPERDURATION,
 	IACBYTPSTAPER,
 	AUXSERIALTXPIN,

@@ -653,8 +653,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->idlePidRpmDeadZone;
 		case 1160967565:
 			return engineConfiguration->targetVBatt;
-		case -1166743424:
-			return engineConfiguration->alternatorOffAboveTps;
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
 		case -2065814304:
@@ -2698,11 +2696,6 @@ void setConfigValueByName(const char *name, float value) {
 		case 1160967565:
 	{
 		engineConfiguration->targetVBatt = value;
-		return;
-	}
-		case -1166743424:
-	{
-		engineConfiguration->alternatorOffAboveTps = value;
 		return;
 	}
 		case 671504531:

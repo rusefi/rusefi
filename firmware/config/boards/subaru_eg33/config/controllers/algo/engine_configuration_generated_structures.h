@@ -1534,10 +1534,8 @@ struct engine_configuration_s {
 	// Volts
 	// offset 1368
 	float targetVBatt;
-	// Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.
-	// %
 	// offset 1372
-	float alternatorOffAboveTps;
+	uint32_t unused1372;
 	// This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 	// cycles
 	// offset 1376
