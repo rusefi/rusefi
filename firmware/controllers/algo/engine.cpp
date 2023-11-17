@@ -398,6 +398,26 @@ void Engine::setConfig() {
 	injectEngineReferences();
 }
 
+/**
+ * This code asserts that we do not have unexpected gaps in time flow with the exception of internal flash burn.
+ */
+static void assertTimeIsLinear() {
+	static efitimems_t mostRecentMs = 0;
+	efitimems_t msNow = getTimeNowMs();
+	if (engineConfiguration->tempBooleanForVerySpecialLogic && engine->configBurnTimer.hasElapsedSec(5)) {
+
+		if (mostRecentMs != 0) {
+			efitimems_t gapInMs = msNow - mostRecentMs;
+			// todo: lower gapInMs threshold!
+			if (gapInMs > 500) {
+				firmwareError(ObdCode::WATCH_DOG_SECONDS, "gap in time: now=%d mS, was %d mS, gap=%dmS",
+					msNow, mostRecentMs, gapInMs);
+			}
+		}
+	}
+	mostRecentMs = msNow;
+}
+
 void Engine::efiWatchdog() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (isRunningPwmTest)
@@ -407,19 +427,7 @@ void Engine::efiWatchdog() {
 		return;
 	}
 
-	static efitimems_t mostRecentMs = 0;
-	efitimems_t msNow = getTimeNowMs();
-	if (engineConfiguration->tempBooleanForVerySpecialLogic && engine->configBurnTimer.hasElapsedSec(5)) {
-
-		if (mostRecentMs != 0) {
-			efitimems_t gapInMs = msNow - mostRecentMs;
-			if (gapInMs > 500) {
-				firmwareError(ObdCode::WATCH_DOG_SECONDS, "gap in time: now=%d mS, was %d mS, gap=%dmS",
-					msNow, mostRecentMs, gapInMs);
-			}
-		}
-	}
-	mostRecentMs = msNow;
+    assertTimeIsLinear();
 
 	if (!getTriggerCentral()->isSpinningJustForWatchdog) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
