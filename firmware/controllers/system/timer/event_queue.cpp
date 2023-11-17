@@ -221,14 +221,14 @@ int EventQueue::size(void) const {
 }
 
 void EventQueue::assertListIsSorted() const {
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || EFI_SIMULATOR
 	// (tests only) Ensure we didn't break anything
 	scheduling_s *current = head;
 	while (current != NULL && current->nextScheduling_s != NULL) {
 		efiAssertVoid(ObdCode::CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
 		current = current->nextScheduling_s;
 	}
-#endif
+#endif // EFI_UNIT_TEST || EFI_SIMULATOR
 }
 
 scheduling_s * EventQueue::getHead() {
