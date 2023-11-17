@@ -60,8 +60,8 @@ public:
 	int size(void) const;
 	scheduling_s *getElementAtIndexForUnitText(int index);
 	scheduling_s * getHead();
-	void assertListIsSorted() const;
 private:
+	void assertListIsSorted() const;
 	/**
 	 * this list is sorted
 	 */
