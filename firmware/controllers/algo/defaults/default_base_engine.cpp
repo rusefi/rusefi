@@ -72,6 +72,8 @@ void setDefaultBaseEngine() {
 
     engineConfiguration->acrRevolutions = 5;
 
+    engineConfiguration->watchOutForLinearTime = true;
+
 	engineConfiguration->turbochargerFilter = 0.01f;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
