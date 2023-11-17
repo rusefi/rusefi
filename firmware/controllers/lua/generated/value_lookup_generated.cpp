@@ -1048,9 +1048,6 @@ float getConfigValueByName(const char *name) {
 // targetVBatt
 		case 1160967565:
 			return engineConfiguration->targetVBatt;
-// alternatorOffAboveTps
-		case -1166743424:
-			return engineConfiguration->alternatorOffAboveTps;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -3476,11 +3473,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1160967565:
 	{
 		engineConfiguration->targetVBatt = value;
-		return 1;
-	}
-		case -1166743424:
-	{
-		engineConfiguration->alternatorOffAboveTps = value;
 		return 1;
 	}
 		case 671504531:

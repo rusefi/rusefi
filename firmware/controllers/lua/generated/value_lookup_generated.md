@@ -1042,9 +1042,6 @@ If the RPM closer to target than this value, disable closed loop idle correction
 ### targetVBatt
 This is the target battery voltage the alternator PID control will attempt to maintain
 
-### alternatorOffAboveTps
-Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.
-
 ### afterCrankingIACtaperDuration
 This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 

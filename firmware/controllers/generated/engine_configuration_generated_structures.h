@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 17 20:25:57 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 17 22:26:16 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2806,11 +2806,9 @@ struct engine_configuration_s {
 	 */
 	float targetVBatt;
 	/**
-	 * Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.
-	%
 	 * offset 1508
 	 */
-	float alternatorOffAboveTps;
+	uint32_t unused1372;
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 	cycles
@@ -5372,4 +5370,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23880);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 17 20:25:57 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 17 22:26:16 UTC 2023
