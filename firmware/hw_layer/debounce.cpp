@@ -102,11 +102,11 @@ bool ButtonDebounce::readPinState2(bool valueWithinThreshold) {
         return valueWithinThreshold;
     }
     bool value = getPhysicalState();
-    efiPrintf("%s value %d", m_name, value);
+//    efiPrintf("[debounce] %s value %d", m_name, value);
     // Invert
     if (active_mode == PI_PULLUP) {
         value = !value;
-        efiPrintf("%s inverted %d", m_name, value);
+//        efiPrintf("[debounce] %s inverted %d", m_name, value);
     }
     if (value) {
         timeLast.reset();
