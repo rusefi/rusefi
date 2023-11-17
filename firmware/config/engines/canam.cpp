@@ -17,6 +17,7 @@ void setMaverickX3() {
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 #if HW_PROTEUS
+    engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
    	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_DIGITAL_5;
 	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_4;
 	setPPSCalibration(0.25, 0.5, 1.5, 3);
