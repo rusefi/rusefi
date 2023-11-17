@@ -1,13 +1,10 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.autodetect.PortDetector;
-import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.ui.util.HorizontalLine;
-import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.util.IoUtils;
 import net.miginfocom.swing.MigLayout;
@@ -150,21 +147,6 @@ public class StartupFrame {
         miscPanel.add(SimulatorHelper.createSimulatorComponent(this));
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
-
-        if (BundleUtil.readBundleFullNameNotNull().contains("proteus_f7")) {
-            String text = "WARNING: Proteus F7";
-            URLLabel urlLabel = new URLLabel(text, "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
-            Color originalColor = urlLabel.getForeground();
-            new Timer(500, new ActionListener() {
-                int counter;
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // URL color is hard-coded, let's blink isUnderlined attribute as second best option
-                    urlLabel.setText(text, counter++ % 2 == 0);
-                }
-            }).start();
-            rightPanel.add(urlLabel);
-        }
 
         JLabel logo = createLogoLabel();
         if (logo != null)
