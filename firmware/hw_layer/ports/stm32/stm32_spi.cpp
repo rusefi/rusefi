@@ -31,6 +31,7 @@ static int getSpiAf(SPIDriver *driver) {
 	return -1;
 }
 
+/* these are common adapters for engineConfiguration access, move to some common file? */
 brain_pin_e getMisoPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
