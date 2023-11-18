@@ -1,6 +1,11 @@
 /*
  * native_impl.cpp
  *
+# TODO: add validation to assert that we do not have Windows slash in JAVA_HOME variable
+# for instance "C:/Progra~1/Zulu/zulu-11" would be good "C:\Progra~1\Zulu\zulu-11" would be bad
+ *
+ * see -I$(JAVA_HOME)
+ *
  * @date Feb 26, 2022
  * @author Andrey Belomutskiy, (c) 2012-2022
  */
