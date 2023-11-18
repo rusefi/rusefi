@@ -23,6 +23,7 @@ static void doTest(const char* testFile, int expectedRpm) {
 }
 
 TEST(realk24, crankingNoPlugs1) {
+	engineConfiguration->cutSparkOnHardLimit = true;
 	doTest("tests/trigger/resources/cranking_honda_k24a2_no_plugs.csv", 188);
 }
 
