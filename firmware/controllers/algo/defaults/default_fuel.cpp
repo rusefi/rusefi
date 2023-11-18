@@ -86,6 +86,20 @@ static void setDefaultVETable() {
 
 	// Default baro table is all 1.0, we can't recommend a reasonable default here
 	setTable(config->baroCorrTable, 1);
+
+	// Give default axes for cylinder trim tables
+	copyArray(config->fuelTrimRpmBins, { 1000, 3000, 5000, 7000 });
+	copyArray(config->fuelTrimLoadBins, { 20, 50, 80, 100 });
+
+	// Default axes for VE blends
+	for (int i = 0; i < efi::size(config->veBlends); i++) {
+		auto& blend = config->veBlends[i];
+		setLinearCurve(blend.loadBins, 0, 100, 10);
+		setLinearCurve(blend.rpmBins, 0, 7000);
+
+		setLinearCurve(blend.blendBins, 0, 100);
+		setLinearCurve(blend.blendValues, 0, 100);
+	}
 }
 
 static void setDefaultFuelCutParameters() {
@@ -236,8 +250,6 @@ void setDefaultFuel() {
 	// Base injection configuration
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-
-	setRpmTableBin(config->fuelTrimRpmBins);
 
 	/**
 	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data
