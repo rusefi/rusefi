@@ -103,6 +103,7 @@ TEST(limp, revHardLimitHyst) {
 
 	engineConfiguration->rpmHardLimit = 2500;
 	engineConfiguration->rpmHardLimitHyst = 200;
+	engineConfiguration->cutSparkOnHardLimit = true;
 
 	LimpManager dut;
 
@@ -134,6 +135,7 @@ TEST(limp, revSoftLimit) {
 	engineConfiguration->rpmHardLimitHyst = 200;
 	engineConfiguration->rpmSoftLimitTimingRetard = 10; // 10 deg
 	engineConfiguration->rpmSoftLimitFuelAdded = 20;	// 20%
+	engineConfiguration->cutSparkOnHardLimit = true;
 
 	eth.engine.updateSlowSensors();
 	Sensor::setMockValue(SensorType::Clt, 36.605f);
