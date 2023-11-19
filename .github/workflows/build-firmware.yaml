@@ -172,7 +172,7 @@ jobs:
           - build-target: m74_9
             folder: config/boards/m74_9
             ini-file: rusefi_m74_9.ini
-            skip-rate: 80
+            skip-rate: 50
 
           - build-target: harley81
             folder: config/boards/hellen/harley81
@@ -388,7 +388,7 @@ jobs:
           - build-target: at_start_f435
             folder: config/boards/at_start_f435
             ini-file: rusefi_at_start_f435.ini
-            skip-rate: 80
+            skip-rate: 0
 
     steps:
     - name: Check branch name
