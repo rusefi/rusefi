@@ -41,7 +41,7 @@ static struct l9779_config l9779_cfg = {
 		.circular = false,
 		.end_cb = NULL,
 		.ssport = GPIOE,
-		.sspad = 11,
+		.sspad = 12,
 		.cr1 =
 			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
