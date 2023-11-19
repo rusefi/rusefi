@@ -449,6 +449,9 @@ int L9779::wake_driver()
 int L9779::chip_reset() {
 	int ret;
 
+	last_addr = REG_INVALID;
+	last_subaddr = REG_INVALID;
+
 	ret = spi_rw(CMD_CLOCK_UNLOCK_SW_RST(BIT(1)), NULL);
 	/**
 	 * ???
@@ -747,7 +750,7 @@ int l9779_add(brain_pin_e base, unsigned int index, const l9779_config *cfg) {
 	/* config */
 	chip->cfg = cfg;
 	/* reset to defaults */
-
+	chip->drv_state = L9779_WAIT_INIT;
 
 	/* register */
 	int ret = gpiochip_register(base, DRIVER_NAME, *chip, L9779_SIGNALS);
