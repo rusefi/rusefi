@@ -55,18 +55,18 @@ static struct l9779_config l9779_cfg = {
 	},
 	.direct_gpio = {
 		/* ignition pre-dirvers */
-		[0] = {.port = NULL, .pad = 0},
-		[1] = {.port = NULL, .pad = 0},
-		[2] = {.port = NULL, .pad = 0},
-		[3] = {.port = NULL, .pad = 0},
+		[0] = {.port = GPIOF, .pad = 12},
+		[1] = {.port = GPIOF, .pad = 13},
+		[2] = {.port = GPIOF, .pad = 14},
+		[3] = {.port = GPIOF, .pad = 15},
 		/* IN1 .. IN7 */
-		[4] = {.port = NULL, .pad = 0},
-		[5] = {.port = NULL, .pad = 0},
-		[6] = {.port = NULL, .pad = 0},
-		[7] = {.port = NULL, .pad = 0},
-		[8] = {.port = NULL, .pad = 0},
-		[9] = {.port = NULL, .pad = 0},
-		[10] = {.port = NULL, .pad = 0},
+		[4] = {.port = GPIOE, .pad = 8},
+		[5] = {.port = GPIOE, .pad = 9},
+		[6] = {.port = GPIOE, .pad = 10},
+		[7] = {.port = GPIOE, .pad = 11},
+		[8] = {.port = GPIOG, .pad = 5},
+		[9] = {.port = GPIOG, .pad = 6},
+		[10] = {.port = GPIOG, .pad = 7},
 	},
 	/* PWM signal */
 	.pwm_gpio = {.port = NULL, .pad = 0}
