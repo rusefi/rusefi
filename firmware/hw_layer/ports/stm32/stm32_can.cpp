@@ -35,7 +35,7 @@ bool isValidCanRxPin(brain_pin_e pin) {
 }
 
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
-	if (pinRx == Gpio::Unassigned && pinTx == Gpio::Unassigned) {
+	if (pinRx == Gpio::Unassigned || pinTx == Gpio::Unassigned) {
 		return nullptr;
 	}
 #if STM32_CAN_USE_CAN1 || STM32_CAN_USE_FDCAN1
