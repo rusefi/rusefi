@@ -22,7 +22,10 @@ dependencies {
     api project(':logging')
 
     implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.10.3'
-    implementation group: 'tel.schich', name: 'javacan-core', version: '3.2.0'
+    // a bit of a mess: javacan-core comes from maven (we keep a file in lib folder just in case)
+    api group: 'tel.schich', name: 'javacan-core', version: '3.2.0'
+    // where did this file originally come from?! did someone figure out compile-native.sh arguments or is there a source?
+    api files('lib/javacan-core-x86_64.jar')
     implementation global_libs.json
     implementation ts_plugin_libs.httpclient
 
