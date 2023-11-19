@@ -19,11 +19,40 @@ Gpio getRunningLedPin() {
 	return Gpio::Unassigned;
 }
 
+static void setInjectorPins() {
+	engineConfiguration->injectionPins[0] = Gpio::L9779_OUT_1;
+	engineConfiguration->injectionPins[1] = Gpio::L9779_OUT_2;
+	engineConfiguration->injectionPins[2] = Gpio::L9779_OUT_3;
+	engineConfiguration->injectionPins[3] = Gpio::L9779_OUT_4;
+
+	engineConfiguration->injectionPinMode = OM_DEFAULT;
+}
+
+static void setIgnitionPins() {
+	engineConfiguration->ignitionPins[0] = Gpio::L9779_IGN_1;
+	engineConfiguration->ignitionPins[1] = Gpio::L9779_IGN_2;
+	/* Two following has no IGBT populated, wasted spark is used */
+	engineConfiguration->ignitionPins[2] = Gpio::L9779_IGN_3;
+	engineConfiguration->ignitionPins[3] = Gpio::L9779_IGN_4;
+
+	engineConfiguration->ignitionPinMode = OM_DEFAULT;
+}
+
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
  */
 void setBoardDefaultConfiguration() {
+	setInjectorPins();
+	setIgnitionPins();
+
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
+
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
 	/* SPI1 is used for communication with L9779 */
 	engineConfiguration->is_enabled_spi_1 = true;
 
@@ -33,6 +62,12 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi1MisoMode = PO_DEFAULT;
 	engineConfiguration->spi1sckPin = Gpio::E13;
 	engineConfiguration->spi1SckMode = PO_DEFAULT;
+}
+
+void setBoardConfigOverrides() {
+	//CAN 1 bus overwrites
+	engineConfiguration->canRxPin = Gpio::G0;
+	engineConfiguration->canTxPin = Gpio::G1;
 }
 
 static struct l9779_config l9779_cfg = {
