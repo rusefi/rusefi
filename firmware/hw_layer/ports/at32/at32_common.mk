@@ -2,6 +2,7 @@ HW_AT32_PORT_DIR = $(PROJECT_DIR)/hw_layer/ports/at32
 
 HW_LAYER_PORT_CPP += \
 	$(HW_AT32_PORT_DIR)/at32_common.cpp \
+	$(HW_AT32_PORT_DIR)/at32_can.cpp \
 	$(HW_AT32_PORT_DIR)/at32_spi.cpp \
 	$(HW_AT32_PORT_DIR)/at32f4/mpu_util.cpp
 
@@ -19,7 +20,6 @@ HW_LAYER_PORT_CPP += \
 	$(HW_STM32_PORT_DIR)/serial_over_usb/usbcfg.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_pins.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_adc.cpp \
-	$(HW_STM32_PORT_DIR)/stm32_can.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_pwm.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_serial.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_icu.cpp \
