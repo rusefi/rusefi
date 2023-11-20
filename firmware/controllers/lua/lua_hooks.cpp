@@ -687,7 +687,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		lua_pushnumber(l, result);
 		return 1;
 	});
-
+    // time since console or TunerStudio
 	lua_register(lState, "secondsSinceTsActivity", [](lua_State* l) {
 		lua_pushnumber(l, getSecondsSinceChannelsRequest());
 		return 1;
