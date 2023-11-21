@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Wed Nov 15 21:36:17 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 21 17:00:41 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -197,6 +197,10 @@ public class EngineState {
 	public static final Field ACRSTATEDUP = Field.create("ACRSTATEDUP", 48, FieldType.BIT, 1).setBaseOffset(1048);
 	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 48, FieldType.BIT, 2).setBaseOffset(1048);
 	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 48, FieldType.BIT, 3).setBaseOffset(1048);
+	public static final Field LUADIGITALSTATE0 = Field.create("LUADIGITALSTATE0", 48, FieldType.BIT, 4).setBaseOffset(1048);
+	public static final Field LUADIGITALSTATE1 = Field.create("LUADIGITALSTATE1", 48, FieldType.BIT, 5).setBaseOffset(1048);
+	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 48, FieldType.BIT, 6).setBaseOffset(1048);
+	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 48, FieldType.BIT, 7).setBaseOffset(1048);
 	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 52, FieldType.INT).setScale(1.0).setBaseOffset(1048);
 	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 56, FieldType.FLOAT).setBaseOffset(1048);
 	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 60, FieldType.FLOAT).setBaseOffset(1048);
@@ -235,6 +239,10 @@ public class EngineState {
 	ACRSTATEDUP,
 	ACRENGINEMOVEDRECENTLY,
 	HEATERCONTROLENABLED,
+	LUADIGITALSTATE0,
+	LUADIGITALSTATE1,
+	LUADIGITALSTATE2,
+	LUADIGITALSTATE3,
 	STARTSTOPSTATETOGGLECOUNTER,
 	EGTVALUE1,
 	EGTVALUE2,

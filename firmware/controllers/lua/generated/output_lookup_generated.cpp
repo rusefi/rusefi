@@ -1086,6 +1086,18 @@ float getOutputValueByName(const char *name) {
 // heaterControlEnabled
 		case -818268726:
 			return engine->engineState.heaterControlEnabled;
+// luaDigitalState0
+		case 945288534:
+			return engine->engineState.luaDigitalState0;
+// luaDigitalState1
+		case 945288535:
+			return engine->engineState.luaDigitalState1;
+// luaDigitalState2
+		case 945288536:
+			return engine->engineState.luaDigitalState2;
+// luaDigitalState3
+		case 945288537:
+			return engine->engineState.luaDigitalState3;
 // startStopStateToggleCounter
 		case -960645892:
 			return engine->engineState.startStopStateToggleCounter;

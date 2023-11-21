@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Wed Nov 15 21:36:17 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 21 17:00:41 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -233,88 +233,88 @@ struct engine_state_s {
 	bool heaterControlEnabled : 1 {};
 	/**
 	offset 48 bit 4 */
-	bool unusedBit_14_4 : 1 {};
+	bool luaDigitalState0 : 1 {};
 	/**
 	offset 48 bit 5 */
-	bool unusedBit_14_5 : 1 {};
+	bool luaDigitalState1 : 1 {};
 	/**
 	offset 48 bit 6 */
-	bool unusedBit_14_6 : 1 {};
+	bool luaDigitalState2 : 1 {};
 	/**
 	offset 48 bit 7 */
-	bool unusedBit_14_7 : 1 {};
+	bool luaDigitalState3 : 1 {};
 	/**
 	offset 48 bit 8 */
-	bool unusedBit_14_8 : 1 {};
+	bool unusedBit_18_8 : 1 {};
 	/**
 	offset 48 bit 9 */
-	bool unusedBit_14_9 : 1 {};
+	bool unusedBit_18_9 : 1 {};
 	/**
 	offset 48 bit 10 */
-	bool unusedBit_14_10 : 1 {};
+	bool unusedBit_18_10 : 1 {};
 	/**
 	offset 48 bit 11 */
-	bool unusedBit_14_11 : 1 {};
+	bool unusedBit_18_11 : 1 {};
 	/**
 	offset 48 bit 12 */
-	bool unusedBit_14_12 : 1 {};
+	bool unusedBit_18_12 : 1 {};
 	/**
 	offset 48 bit 13 */
-	bool unusedBit_14_13 : 1 {};
+	bool unusedBit_18_13 : 1 {};
 	/**
 	offset 48 bit 14 */
-	bool unusedBit_14_14 : 1 {};
+	bool unusedBit_18_14 : 1 {};
 	/**
 	offset 48 bit 15 */
-	bool unusedBit_14_15 : 1 {};
+	bool unusedBit_18_15 : 1 {};
 	/**
 	offset 48 bit 16 */
-	bool unusedBit_14_16 : 1 {};
+	bool unusedBit_18_16 : 1 {};
 	/**
 	offset 48 bit 17 */
-	bool unusedBit_14_17 : 1 {};
+	bool unusedBit_18_17 : 1 {};
 	/**
 	offset 48 bit 18 */
-	bool unusedBit_14_18 : 1 {};
+	bool unusedBit_18_18 : 1 {};
 	/**
 	offset 48 bit 19 */
-	bool unusedBit_14_19 : 1 {};
+	bool unusedBit_18_19 : 1 {};
 	/**
 	offset 48 bit 20 */
-	bool unusedBit_14_20 : 1 {};
+	bool unusedBit_18_20 : 1 {};
 	/**
 	offset 48 bit 21 */
-	bool unusedBit_14_21 : 1 {};
+	bool unusedBit_18_21 : 1 {};
 	/**
 	offset 48 bit 22 */
-	bool unusedBit_14_22 : 1 {};
+	bool unusedBit_18_22 : 1 {};
 	/**
 	offset 48 bit 23 */
-	bool unusedBit_14_23 : 1 {};
+	bool unusedBit_18_23 : 1 {};
 	/**
 	offset 48 bit 24 */
-	bool unusedBit_14_24 : 1 {};
+	bool unusedBit_18_24 : 1 {};
 	/**
 	offset 48 bit 25 */
-	bool unusedBit_14_25 : 1 {};
+	bool unusedBit_18_25 : 1 {};
 	/**
 	offset 48 bit 26 */
-	bool unusedBit_14_26 : 1 {};
+	bool unusedBit_18_26 : 1 {};
 	/**
 	offset 48 bit 27 */
-	bool unusedBit_14_27 : 1 {};
+	bool unusedBit_18_27 : 1 {};
 	/**
 	offset 48 bit 28 */
-	bool unusedBit_14_28 : 1 {};
+	bool unusedBit_18_28 : 1 {};
 	/**
 	offset 48 bit 29 */
-	bool unusedBit_14_29 : 1 {};
+	bool unusedBit_18_29 : 1 {};
 	/**
 	offset 48 bit 30 */
-	bool unusedBit_14_30 : 1 {};
+	bool unusedBit_18_30 : 1 {};
 	/**
 	offset 48 bit 31 */
-	bool unusedBit_14_31 : 1 {};
+	bool unusedBit_18_31 : 1 {};
 	/**
 	 * offset 52
 	 */
@@ -374,4 +374,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 88);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Wed Nov 15 21:36:17 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 21 17:00:41 UTC 2023
