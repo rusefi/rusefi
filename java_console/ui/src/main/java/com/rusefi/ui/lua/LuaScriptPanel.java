@@ -15,8 +15,9 @@ import neoe.formatter.lua.LuaFormatter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -37,8 +38,6 @@ public class LuaScriptPanel {
         JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
         JButton writeButton = new JButton("Write to ECU");
-        JButton resetButton = new JButton("Reset/Reload Lua");
-        JButton formatButton = new JButton("Format");
         JButton burnButton = new JButton("Burn to ECU");
 
         MessagesPanel mp = new MessagesPanel(null, config);
@@ -53,20 +52,6 @@ public class LuaScriptPanel {
             // resume messages on 'write new script to ECU'
             mp.setPaused(false);
         });
-        resetButton.addActionListener(e -> resetLua());
-
-        formatButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String sourceCode = scriptText.getText();
-                try {
-                    String formatted = new LuaFormatter().format(sourceCode, new LuaFormatter.Env());
-                    scriptText.setText(formatted);
-                } catch (Exception ignored) {
-                    // todo: fix luaformatter no reason for exception
-                }
-            }
-        });
 
         burnButton.addActionListener(e -> {
             LinkManager linkManager = context.getLinkManager();
@@ -77,10 +62,26 @@ public class LuaScriptPanel {
             });
         });
 
-        upperPanel.add(formatButton);
+        JButton moreButton = new JButton("More...");
+        moreButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                JPopupMenu menu = new JPopupMenu();
+                JMenuItem format = new JMenuItem("Format Script");
+                format.addActionListener(e -> formatScript());
+                JMenuItem reset = new JMenuItem("Reset/Reload Lua");
+                reset.addActionListener(e -> resetLua());
+
+                menu.add(format);
+                menu.add(reset);
+                menu.show(moreButton, me.getX(), me.getY());
+            }
+        });
+
+
         upperPanel.add(writeButton);
-        upperPanel.add(resetButton);
         upperPanel.add(burnButton);
+        upperPanel.add(moreButton);
         upperPanel.add(command.getContent());
         upperPanel.add(new URLLabel("Lua Wiki", "https://github.com/rusefi/rusefi/wiki/Lua-Scripting"));
 
@@ -113,6 +114,16 @@ public class LuaScriptPanel {
 
         trueLayout(mainPanel);
         SwingUtilities.invokeLater(() -> centerPanel.setDividerLocation(centerPanel.getSize().width / 2));
+    }
+
+    private void formatScript() {
+        String sourceCode = scriptText.getText();
+        try {
+            String formatted = new LuaFormatter().format(sourceCode, new LuaFormatter.Env());
+            scriptText.setText(formatted);
+        } catch (Exception ignored) {
+            // todo: fix luaformatter no reason for exception
+        }
     }
 
     public JPanel getPanel() {
