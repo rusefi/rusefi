@@ -34,6 +34,7 @@ public class LuaScriptPanel {
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
     private final TextEditor scriptText = new TextEditor();
+    private final MessagesPanel mp;
 
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
@@ -47,7 +48,7 @@ public class LuaScriptPanel {
         JButton writeButton = new JButton("Write to ECU");
         JButton burnButton = new JButton("Burn to ECU");
 
-        MessagesPanel mp = new MessagesPanel(null, config);
+        mp = new MessagesPanel(null, config);
 
         mp.getMessagesView().listener = message -> {
             if (message.contains("BEEP"))
@@ -55,9 +56,7 @@ public class LuaScriptPanel {
         };
 
         writeButton.addActionListener(e -> {
-            write();
-            // resume messages on 'write new script to ECU'
-            mp.setPaused(false);
+            writeScriptToEcu();
         });
 
         burnButton.addActionListener(e -> {
@@ -162,7 +161,8 @@ public class LuaScriptPanel {
             });
 
             setText(newLua);
-
+            // and send to ECU (without burn!)
+            writeScriptToEcu();
         } catch (IOException e) {
             System.err.println("Error " + e);
         }
@@ -243,7 +243,7 @@ public class LuaScriptPanel {
         return i;
     }
 
-    void write() {
+    private void writeScriptToEcu() {
         String script = getScript();
 
         LinkManager linkManager = context.getLinkManager();
@@ -277,6 +277,8 @@ public class LuaScriptPanel {
             // Burning doesn't reload lua script, so we have to do it manually
             resetLua();
         });
+        // resume messages on 'write new script to ECU'
+        mp.setPaused(false);
     }
 
     private String getScript() {
