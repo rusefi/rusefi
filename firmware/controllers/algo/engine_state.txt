@@ -43,6 +43,10 @@ struct_no_prefix engine_state_s
 	bit acrEngineMovedRecently
 	! same field is used for narrow band heater enable and wide band enable via CAN
 	bit heaterControlEnabled
+	bit luaDigitalState0
+	bit luaDigitalState1
+	bit luaDigitalState2
+	bit luaDigitalState3
 	uint32_t startStopStateToggleCounter
 
 	float egtValue1

@@ -6,3 +6,4 @@ void luaDeInitPins();
 
 struct AirmassModelBase;
 AirmassModelBase& getLuaAirmassModel();
+bool getAuxDigital(int index);

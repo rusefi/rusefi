@@ -335,6 +335,11 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 		chThdSleep(TIME_US2I(luaTickPeriodUs));
 		engine->outputChannels.luaLastCycleDuration = (getTimeNowNt() - beforeNt);
 		engine->outputChannels.luaInvocationCounter++;
+
+		engine->engineState.luaDigitalState0 = getAuxDigital(0);
+		engine->engineState.luaDigitalState1 = getAuxDigital(1);
+		engine->engineState.luaDigitalState2 = getAuxDigital(2);
+		engine->engineState.luaDigitalState3 = getAuxDigital(3);
 	}
 
 	resetLua();
