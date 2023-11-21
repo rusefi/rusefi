@@ -4,6 +4,8 @@
  *
  * Multiple Switch Detection Interface with Suppressed Wake-up
  *
+ * TODO: add analog muxing part of the driver
+ *
  * The 33972 Multiple Switch Detection Interface with suppressed
  * wake-up is designed to detect the closing and opening of up to 22
  * switch contacts: 14 switch to ground detection and 8 switch to 
