@@ -84,6 +84,9 @@ public class LuaScriptPanel {
                 if (scriptName == null) {
                     loadFromDisc = new JMenuItem("Script name not specified");
                     loadFromDisc.setEnabled(false);
+                } else if (!new File(getScriptFullFileName()).exists()) {
+                    loadFromDisc = new JMenuItem(scriptName + " not found in " + getWorkingFolder());
+                    loadFromDisc.setEnabled(false);
                 } else {
                     loadFromDisc = new JMenuItem("Reload " + scriptName);
                     loadFromDisc.addActionListener(e -> reloadFromDisc());
@@ -141,11 +144,17 @@ public class LuaScriptPanel {
         SwingUtilities.invokeLater(() -> centerPanel.setDividerLocation(centerPanel.getSize().width / 2));
     }
 
-    private void reloadFromDisc() {
+    private String getScriptFullFileName() {
         String scriptName = LuaIncludeSyntax.getScriptName(getScript());
         if (scriptName == null)
+            return null;
+        return getWorkingFolder() + File.separator + scriptName;
+    }
+
+    private void reloadFromDisc() {
+        String fullFileName = getScriptFullFileName();
+        if (fullFileName == null)
             return;
-        String fullFileName = getWorkingFolder() + File.separator + scriptName;
         System.out.println("Reading " + fullFileName);
 
         try {
