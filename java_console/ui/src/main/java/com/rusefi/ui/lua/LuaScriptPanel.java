@@ -12,25 +12,32 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.AnyCommand;
 import neoe.formatter.lua.LuaFormatter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class LuaScriptPanel {
+    private static final String SCRIPT_FOLDER_CONFIG_KEY = "SCRIPT_FOLDER";
     private final UIContext context;
+    private final Node config;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
     private final TextEditor scriptText = new TextEditor();
 
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
+        this.config = config;
         ConnectionTab.installConnectAndDisconnect(context, mainPanel);
         command = AnyCommand.createField(context, config, true, true);
 
@@ -69,11 +76,30 @@ public class LuaScriptPanel {
                 JPopupMenu menu = new JPopupMenu();
                 JMenuItem format = new JMenuItem("Format Script");
                 format.addActionListener(e -> formatScript());
-                JMenuItem reset = new JMenuItem("Reset/Reload Lua");
+                JMenuItem reset = new JMenuItem("Reset Lua");
                 reset.addActionListener(e -> resetLua());
+
+
+                String scriptName = LuaIncludeSyntax.getScriptName(getScript());
+                JMenuItem loadFromDisc;
+                if (scriptName == null) {
+                    loadFromDisc = new JMenuItem("Script name not specified");
+                    loadFromDisc.setEnabled(false);
+                } else {
+                    loadFromDisc = new JMenuItem("Reload " + scriptName);
+                    loadFromDisc.addActionListener(e -> reloadFromDisc());
+                }
+
+                JMenuItem selectFolder = createSelectFolderMenuItem();
+
 
                 menu.add(format);
                 menu.add(reset);
+                menu.add(new JSeparator());
+                menu.add(loadFromDisc);
+                menu.add(selectFolder);
+
+
                 menu.show(moreButton, me.getX(), me.getY());
             }
         });
@@ -116,14 +142,65 @@ public class LuaScriptPanel {
         SwingUtilities.invokeLater(() -> centerPanel.setDividerLocation(centerPanel.getSize().width / 2));
     }
 
+    private void reloadFromDisc() {
+        String scriptName = LuaIncludeSyntax.getScriptName(getScript());
+        if (scriptName == null)
+            return;
+        String fullFileName = getWorkingFolder() + File.separator + scriptName;
+        System.out.println("Reading " + fullFileName);
+
+        try {
+            String discContent = Files.readString(new File(fullFileName).toPath());
+
+            String newLua = LuaIncludeSyntax.reloadScript(discContent, name -> {
+                String includeFullName = getWorkingFolder() + File.separator + name;
+                try {
+                    return Files.readString(new File(includeFullName).toPath());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            setText(newLua);
+
+        } catch (IOException e) {
+            System.err.println("Error " + e);
+        }
+    }
+
+    @NotNull
+    private JMenuItem createSelectFolderMenuItem() {
+        JMenuItem selectFolder = new JMenuItem("Select Working Folder");
+        selectFolder.addActionListener(e -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setCurrentDirectory(new File(getWorkingFolder()));
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int returnVal = fc.showSaveDialog(selectFolder);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                String newWorkingFolder = fc.getSelectedFile().getPath();
+                config.setProperty(SCRIPT_FOLDER_CONFIG_KEY, newWorkingFolder);
+            }
+
+        });
+        return selectFolder;
+    }
+
     private void formatScript() {
-        String sourceCode = scriptText.getText();
+        String sourceCode = getScript();
         try {
             String formatted = new LuaFormatter().format(sourceCode, new LuaFormatter.Env());
-            scriptText.setText(formatted);
+            setText(formatted);
         } catch (Exception ignored) {
             // todo: fix luaformatter no reason for exception
         }
+    }
+
+    private void setText(String luaScript) {
+        scriptText.setText(luaScript);
+    }
+
+    private String getWorkingFolder() {
+        return config.getProperty(SCRIPT_FOLDER_CONFIG_KEY, System.getProperty("user.home"));
     }
 
     public JPanel getPanel() {
@@ -141,13 +218,13 @@ public class LuaScriptPanel {
         BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
 
         if (bp == null) {
-            scriptText.setText("No ECU located");
+            setText("No ECU located");
             return;
         }
 
         ConfigurationImage image = bp.getControllerConfiguration();
         if (image == null) {
-            scriptText.setText("No configuration image");
+            setText("No configuration image");
             return;
         }
         ByteBuffer luaScriptBuffer = image.getByteBuffer(Fields.LUASCRIPT.getOffset(), Fields.LUA_SCRIPT_SIZE);
@@ -156,7 +233,7 @@ public class LuaScriptPanel {
         luaScriptBuffer.get(scriptArr);
 
         int i = findNullTerminator(scriptArr);
-        scriptText.setText(new String(scriptArr, 0, i, StandardCharsets.US_ASCII));
+        setText(new String(scriptArr, 0, i, StandardCharsets.US_ASCII));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -167,7 +244,7 @@ public class LuaScriptPanel {
     }
 
     void write() {
-        String script = scriptText.getText();
+        String script = getScript();
 
         LinkManager linkManager = context.getLinkManager();
 
@@ -200,6 +277,11 @@ public class LuaScriptPanel {
             // Burning doesn't reload lua script, so we have to do it manually
             resetLua();
         });
+    }
+
+    private String getScript() {
+        String script = scriptText.getText();
+        return script;
     }
 
     void resetLua() {

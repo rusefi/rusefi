@@ -132,6 +132,7 @@ public class TextEditor {
     }
 
     public void setText(String text) {
+        // note that text would be silently not-changed if it's too large to fit into control - see DocumentSizeFilter
         textArea.setText(text);
     }
 
