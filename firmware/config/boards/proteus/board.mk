@@ -13,9 +13,6 @@ DDEFS += $(VAR_DEF_ENGINE_TYPE)
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 DDEFS += -DEFI_HD_ACR=TRUE
 
-# Turn off stuff proteus doesn't have/need
-DDEFS += -DEFI_MAX_31855=FALSE -DBOARD_L9779_COUNT=0 -DBOARD_TLE8888_COUNT=0
-
 # Any Proteus-based adapter boards with discrete-VR decoder are controlled via a 5v ignition output
 DDEFS += -DVR_SUPPLY_VOLTAGE=5
 
