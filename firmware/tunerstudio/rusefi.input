@@ -2986,7 +2986,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = flag0,									mc33816_flag0
 		field = mc33816_driven,							mc33816_driven
 		field = mc33816spiDevice,						mc33816spiDevice
-		field = hpfpValcePin,							hpfpValvePin
+		field = hpfpValvePin,							hpfpValvePin
 
 	dialog = allPins1_1
 		field = "trigger stimulator output #1",			triggerSimulatorPins1
@@ -4366,7 +4366,6 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "A/C Relay", cmd_test_ac_relay
 		commandButton = "Idle Air Valve", cmd_test_idle_valve
 		commandButton = "Idle Second Air Valve", cmd_test_second_idle_valve
-		commandButton = "HPFP Valve", cmd_test_hpfp_valve
 		commandButton = "Stop Engine", cmd_stop_engine
 		commandButton = "Write Config", cmd_write_config
 		commandButton = "Reset ECU", cmd_reset_controller
@@ -4776,6 +4775,7 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = hpfpPumpDialog, "HPFP Pump Configuration"
 		field = "Valve Pin", hpfpValvePin, {hpfpCamLobes != 0}
 		field = "Valve Pin Mode", hpfpValvePinMode, {hpfpCamLobes != 0}
+		commandButton = "HPFP Valve", cmd_test_hpfp_valve
 	field = "Valve peak current", mc33_hpfp_i_peak, {hpfpCamLobes != 0}
 	field = "Valve hold current", mc33_hpfp_i_hold, {hpfpCamLobes != 0}
 	field = "Valve hold off time", mc33_hpfp_i_hold_off, {hpfpCamLobes != 0}
