@@ -25,8 +25,6 @@ SHORT_BOARD_NAME = subaru_eg33_f7
 # Override DEFAULT_ENGINE_TYPE
 DDEFS += -DDEFAULT_ENGINE_TYPE=engine_type_e::SUBARUEG33_DEFAULTS
 
-# HW options
-DDEFS += -DBOARD_L9779_COUNT=0
 
 #Some options override
 DDEFS += -DHAL_USE_UART=FALSE

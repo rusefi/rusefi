@@ -205,11 +205,11 @@
 #endif
 
 #ifndef BOARD_TLE8888_COUNT
-#define BOARD_TLE8888_COUNT 	1
+#define BOARD_TLE8888_COUNT 	0
 #endif
 
 #ifndef BOARD_L9779_COUNT
-#define BOARD_L9779_COUNT 	1
+#define BOARD_L9779_COUNT 	0
 #endif
 
 #ifndef BOARD_DRV8860_COUNT
@@ -227,7 +227,7 @@
 #define EFI_ANALOG_SENSORS TRUE
 
 #ifndef EFI_MAX_31855
-#define EFI_MAX_31855 TRUE
+#define EFI_MAX_31855 FALSE
 #endif
 
 #define EFI_MCP_3208 FALSE
