@@ -34,6 +34,9 @@ void setMaverickX3() {
 
 	gppwm_channel *accRelayPwm = &engineConfiguration->gppwm[1];
 	accRelayPwm->pin = Gpio::PROTEUS_LS_4;
+
+	engineConfiguration->luaDigitalInputPins[2] = PROTEUS_IN_AV_10_DIGITAL;
+	engineConfiguration->luaDigitalInputPins[3] = PROTEUS_IN_AV_8_DIGITAL;
 #endif // HW_PROTEUS
 
 	strcpy(engineConfiguration->gpPwmNote[0], "IC Fan");
