@@ -26,5 +26,6 @@ struct_no_prefix fuel_computer_s
 	float sdAirMassInOneCylinder;@@GAUGE_NAME_AIR_MASS@@;"g",1, 0, 0, 0, 3
 	float normalizedCylinderFilling;Air: Normalized cyl filling;"%", 1, 0, 0, 100, 1
 
+    uint8_t brokenInjector
     bit injectorHwIssue
 end_struct

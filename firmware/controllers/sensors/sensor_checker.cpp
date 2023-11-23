@@ -124,7 +124,7 @@ static void check(SensorType type) {
 #if BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
 #if EFI_ENGINE_CONTROL
 static ObdCode getCodeForInjector(int idx, brain_pin_diag_e diag) {
-	if (idx < 0 || idx >= 12) {
+	if (idx < 0 || idx >= MAX_CYLINDER_COUNT) {
 		return ObdCode::None;
 	}
 
@@ -136,7 +136,7 @@ static ObdCode getCodeForInjector(int idx, brain_pin_diag_e diag) {
 #endif // EFI_ENGINE_CONTROL
 
 static ObdCode getCodeForIgnition(int idx, brain_pin_diag_e diag) {
-	if (idx < 0 || idx >= 12) {
+	if (idx < 0 || idx >= MAX_CYLINDER_COUNT) {
 		return ObdCode::None;
 	}
 
@@ -180,7 +180,7 @@ void SensorChecker::onSlowCallback() {
 #if BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
 	// Check injectors
 #if EFI_ENGINE_CONTROL
-	bool withInjectorIssues = false;
+	int unhappyInjector = 0;
 	for (size_t i = 0; i < efi::size(enginePins.injectors); i++) {
 		InjectorOutputPin& pin = enginePins.injectors[i];
 
@@ -191,7 +191,7 @@ void SensorChecker::onSlowCallback() {
 
 		auto diag = pin.getDiag();
 		if (diag != PIN_OK && diag != PIN_INVALID) {
-		    withInjectorIssues = true;
+		    unhappyInjector = 1 + i;
 			auto code = getCodeForInjector(i, diag);
 
 			char description[32];
@@ -199,7 +199,8 @@ void SensorChecker::onSlowCallback() {
 			warning(code, "Injector %d fault: %s", i + 1, description);
 		}
 	}
-	engine->fuelComputer.injectorHwIssue = withInjectorIssues;
+	engine->fuelComputer.brokenInjector = unhappyInjector;
+	engine->fuelComputer.injectorHwIssue = (unhappyInjector != 0);
 #endif // EFI_ENGINE_CONTROL
 
 	// Check ignition
