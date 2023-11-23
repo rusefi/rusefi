@@ -189,7 +189,7 @@ static const struct mc33810_config mc33810 = {
 
     if (engineConfiguration->engineType == engine_type_e::FRANKENSO_TEST_33810) {
 	    int ret = mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
-	    efiPrintf("****************** mc33810_add %d ********************", ret);
+	    efiPrintf("*****************+ mc33810_add %d +*******************", ret);
 
 
 	    // todo: add to more appropriate location?

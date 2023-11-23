@@ -538,10 +538,7 @@ int Mc33810::init()
  * @details Checks for valid config
  */
 
-int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
-{
-	int i;
-	int ret;
+int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg) {
 
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_MC33810_COUNT))
@@ -563,7 +560,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 	chip.o_state_cached = 0;
 	chip.o_direct_mask = 0;
 	chip.drv_state = MC33810_WAIT_INIT;
-	for (i = 0; i < MC33810_DIRECT_OUTPUTS; i++) {
+	for (int i = 0; i < MC33810_DIRECT_OUTPUTS; i++) {
 		if (cfg->direct_io[i].port != 0)
 			chip.o_direct_mask |= BIT(i);
 	}
@@ -574,7 +571,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 		return -4;
 
 	/* register, return gpio chip base */
-	ret = gpiochip_register(base, DRIVER_NAME, chip, MC33810_OUTPUTS);
+	int ret = gpiochip_register(base, DRIVER_NAME, chip, MC33810_OUTPUTS);
 	if (ret < 0)
 		return ret;
 
