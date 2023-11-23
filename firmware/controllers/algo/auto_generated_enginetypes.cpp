@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Nov 08 20:19:44 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Nov 23 01:25:14 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -219,6 +219,8 @@ case engine_type_e::FRANKENSO_MIATA_NA6_MAP:
   return "FRANKENSO_MIATA_NA6_MAP";
 case engine_type_e::FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
+case engine_type_e::FRANKENSO_TEST_33810:
+  return "FRANKENSO_TEST_33810";
 case engine_type_e::FUEL_BENCH:
   return "FUEL_BENCH";
 case engine_type_e::GY6_139QMB:
@@ -379,8 +381,6 @@ case engine_type_e::TOYOTA_1NZ_FE:
   return "TOYOTA_1NZ_FE";
 case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case engine_type_e::UNUSED_59:
-  return "UNUSED_59";
 case engine_type_e::VW_ABA:
   return "VW_ABA";
 case engine_type_e::WASTEGATE_PROTEUS_TEST:
