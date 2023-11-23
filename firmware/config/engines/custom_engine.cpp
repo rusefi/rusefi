@@ -79,6 +79,12 @@ void setDiscoveryPdm() {
  * set engine_type 59
  */
 void setDiscovery33810Test() {
+//	spi3mosiPin = Gpio::B5 grey
+//	spi3misoPin = Gpio::B4; vio
+//	spi3sckPin = Gpio::B3; blue
+//  CS PC5 white
+//  EN PA6 yellow
+
 	engineConfiguration->injectionPins[0] = Gpio::MC33810_0_OUT_0;
 	engineConfiguration->injectionPins[1] = Gpio::MC33810_0_OUT_1;
 	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
