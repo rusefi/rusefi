@@ -155,8 +155,8 @@ static const struct mc33810_config mc33810 = {
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
-		.ssport = GPIOF,
-		.sspad = 1,
+		.ssport = GPIOC,
+		.sspad = 5,
 		.cr1 =
 			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
@@ -171,17 +171,17 @@ static const struct mc33810_config mc33810 = {
 	},
 	.direct_io = {
 		/* injector drivers */
-		[0] = {.port = GPIOI, .pad = 6},	/* INJ 1 */
-		[1] = {.port = GPIOI, .pad = 5},	/* INJ 3 */
-		[2] = {.port = GPIOI, .pad = 4},	/* INJ 5 */
-		[3] = {.port = GPIOB, .pad = 9},	/* INJ 7 */
+		[0] = {.port = GPIOA, .pad = 3},
+		[1] = {.port = GPIOA, .pad = 4},
+		[2] = {.port = nullptr, .pad = 0},
+		[3] = {.port = nullptr, .pad = 0},
 		/* ignition pre-drivers */
-		[4] = {.port = GPIOB, .pad = 3},	/* IGN 4 */
-		[5] = {.port = GPIOB, .pad = 4},	/* IGN 3 */
-		[6] = {.port = GPIOB, .pad = 5},	/* IGN 7 */
-		[7] = {.port = GPIOB, .pad = 8},	/* IGN 5 */
+		[4] = {.port = GPIOA, .pad = 0},
+		[5] = {.port = GPIOA, .pad = 1},
+		[6] = {.port = nullptr, .pad = 0},
+		[7] = {.port = nullptr, .pad = 0},
 	},
-	.en = {.port = GPIOI, .pad = 7}
+	.en = {.port = GPIOA, .pad = 6}
 };
 
     if (engineConfiguration->engineType == engine_type_e::FRANKENSO_TEST_33810) {

@@ -268,7 +268,7 @@ int Mc33810::update_output_and_diag()
 
 /**
  * @brief MC33810 chip init.
- * @details Checks communication. Check chip presense.
+ * @details Checks communication. Check chip presence.
  */
 
 int Mc33810::chip_init()

@@ -75,19 +75,24 @@ void setDiscoveryPdm() {
 
 #if HW_FRANKENSO
 
+/**
+ * set engine_type 59
+ */
 void setDiscovery33810Test() {
 	engineConfiguration->injectionPins[0] = Gpio::MC33810_0_OUT_0;
-	engineConfiguration->injectionPins[1] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[1] = Gpio::MC33810_0_OUT_1;
 	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 
 	engineConfiguration->ignitionPins[0] = Gpio::MC33810_0_GD_0;
-	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[1] = Gpio::MC33810_0_GD_1;
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
+
+	engineConfiguration->cylindersCount = 2;
+	engineConfiguration->firingOrder = FO_1_2;
 }
 #endif // HW_FRANKENSO
-
 
 // todo: should this be part of more default configurations?
 void setFrankensoConfiguration() {
