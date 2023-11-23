@@ -70,6 +70,12 @@ void runSchedulingPrecisionTestIfNeeded(void) {
 void setDiscoveryPdm() {
 }
 
+#if HW_FRANKENSO
+void setDiscovery33810Test() {
+}
+#endif // HW_FRANKENSO
+
+
 // todo: should this be part of more default configurations?
 void setFrankensoConfiguration() {
 #if HW_FRANKENSO

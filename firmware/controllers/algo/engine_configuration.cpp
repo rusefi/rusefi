@@ -914,6 +914,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
 		break;
+	case engine_type_e::FRANKENSO_TEST_33810:
+		setDiscovery33810Test();
+		break;
 	case engine_type_e::DISCOVERY_PDM:
 	case engine_type_e::TEST_ENGINE:
 		setTestCamEngineConfiguration();

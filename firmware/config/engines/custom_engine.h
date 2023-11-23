@@ -12,6 +12,7 @@ void setFrankensoConfiguration();
 void runSchedulingPrecisionTestIfNeeded(void);
 void setDiscoveryPdm();
 void setFrankensoBoardTestConfiguration();
+void setDiscovery33810Test();
 void setEtbTestConfiguration();
 void setL9779TestConfiguration();
 
