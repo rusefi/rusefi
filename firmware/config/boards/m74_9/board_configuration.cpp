@@ -89,7 +89,7 @@ static struct l9779_config l9779_cfg = {
 		.cr2 = SPI_CR2_16BIT_MODE
 	},
 	.direct_gpio = {
-		/* ignition pre-dirvers */
+		/* ignition pre-drivers */
 		[0] = {.port = GPIOF, .pad = 12},
 		[1] = {.port = GPIOF, .pad = 13},
 		[2] = {.port = GPIOF, .pad = 14},

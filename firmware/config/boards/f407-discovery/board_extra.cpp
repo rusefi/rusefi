@@ -147,3 +147,45 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->is_enabled_spi_2 = false;
 	engineConfiguration->is_enabled_spi_3 = true;
 }
+
+void boardInitHardware() {
+#if HW_FRANKENSO
+static const struct mc33810_config mc33810 = {
+	.spi_bus = &SPID3,
+	.spi_config = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = GPIOF,
+		.sspad = 1,
+		.cr1 =
+			//SPI_CR1_16BIT_MODE |
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
+			SPI_CR1_MSTR |
+			/* SPI_CR1_CPOL | */ // = 0
+			SPI_CR1_CPHA | // = 1
+			0,
+		.cr2 = //SPI_CR2_16BIT_MODE |
+			0//SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+	},
+	.direct_io = {
+		/* injector drivers */
+		[0] = {.port = GPIOI, .pad = 6},	/* INJ 1 */
+		[1] = {.port = GPIOI, .pad = 5},	/* INJ 3 */
+		[2] = {.port = GPIOI, .pad = 4},	/* INJ 5 */
+		[3] = {.port = GPIOB, .pad = 9},	/* INJ 7 */
+		/* ignition pre-drivers */
+		[4] = {.port = GPIOB, .pad = 3},	/* IGN 4 */
+		[5] = {.port = GPIOB, .pad = 4},	/* IGN 3 */
+		[6] = {.port = GPIOB, .pad = 5},	/* IGN 7 */
+		[7] = {.port = GPIOB, .pad = 8},	/* IGN 5 */
+	},
+	.en = {.port = GPIOI, .pad = 7}
+};
+
+    if (engineConfiguration->engineType == engine_type_e::FRANKENSO_TEST_33810) {
+	    mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
+	}
+#endif // HW_FRANKENSO
+}

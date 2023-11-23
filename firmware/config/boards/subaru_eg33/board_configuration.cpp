@@ -255,7 +255,7 @@ static const struct mc33810_config mc33810_odd = {
 		[1] = {.port = GPIOI, .pad = 5},	/* INJ 3 */
 		[2] = {.port = GPIOI, .pad = 4},	/* INJ 5 */
 		[3] = {.port = GPIOB, .pad = 9},	/* INJ 7 */
-		/* ignition pre-dirvers */
+		/* ignition pre-drivers */
 		[4] = {.port = GPIOB, .pad = 3},	/* IGN 4 */
 		[5] = {.port = GPIOB, .pad = 4},	/* IGN 3 */
 		[6] = {.port = GPIOB, .pad = 5},	/* IGN 7 */
@@ -291,7 +291,7 @@ static const struct mc33810_config mc33810_even = {
 		[1] = {.port = GPIOE, .pad = 4},	/* INJ 4 */
 		[2] = {.port = GPIOE, .pad = 5},	/* INJ 6 */
 		[3] = {.port = GPIOE, .pad = 6},	/* INJ 8 */
-		/* ignition pre-dirvers */
+		/* ignition pre-drivers */
 		[4] = {.port = GPIOI, .pad = 9},	/* IGN 8 */
 		[5] = {.port = GPIOC, .pad = 15},	/* IGN 6 */
 		[6] = {.port = GPIOC, .pad = 14},	/* IGN 2 */
