@@ -85,7 +85,7 @@
 
 static DcHardware dcHardware[ETB_COUNT + DC_PER_STEPPER];
 
-DcHardware *getdcHardware() {
+DcHardware *getPrimaryDCHardwareForLogging() {
 	return &dcHardware[0];
 }
 

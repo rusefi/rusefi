@@ -76,4 +76,4 @@ public:
 	}
 };
 
-DcHardware *getdcHardware();
+DcHardware *getPrimaryDCHardwareForLogging();
