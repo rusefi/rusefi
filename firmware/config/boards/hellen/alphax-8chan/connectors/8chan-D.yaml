@@ -137,7 +137,7 @@ pins:
     function: Injector 9
     class: outputs
     type: inj
-    ts_name: 19D - Injector 9
+    ts_name: ___ - Injector 9
     color: purple
 
 
@@ -170,10 +170,10 @@ pins:
 
   - pin: 24D
     meta: MM176_GP20
-    function: Injector 9
+    function: Injector 12
     class: outputs
     type: inj
-    ts_name: 24D - Injector 12
+    ts_name: ___ - Injector 12
     
   - pin: 25D
     meta: MM176_GP19
