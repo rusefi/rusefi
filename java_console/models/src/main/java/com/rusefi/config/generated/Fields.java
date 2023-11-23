@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Nov 23 01:27:03 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Nov 23 01:59:41 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -766,9 +766,44 @@ public class Fields {
 	public static final int Gpio_L9779_OUT_D = 242;
 	public static final int Gpio_L9779_OUT_MRD = 247;
 	public static final int Gpio_L9779_PIN_KEY = 248;
+	public static final int Gpio_MC33810_0_GD_0 = 284;
+	public static final int Gpio_MC33810_0_GD_1 = 285;
+	public static final int Gpio_MC33810_0_GD_2 = 286;
+	public static final int Gpio_MC33810_0_GD_3 = 287;
+	public static final int Gpio_MC33810_0_OUT_0 = 280;
+	public static final int Gpio_MC33810_0_OUT_1 = 281;
+	public static final int Gpio_MC33810_0_OUT_2 = 282;
+	public static final int Gpio_MC33810_0_OUT_3 = 283;
+	public static final int Gpio_MC33810_1_GD_0 = 295;
+	public static final int Gpio_MC33810_1_GD_1 = 296;
+	public static final int Gpio_MC33810_1_GD_2 = 297;
+	public static final int Gpio_MC33810_1_GD_3 = 298;
+	public static final int Gpio_MC33810_1_OUT_0 = 291;
+	public static final int Gpio_MC33810_1_OUT_1 = 292;
+	public static final int Gpio_MC33810_1_OUT_2 = 293;
+	public static final int Gpio_MC33810_1_OUT_3 = 294;
 	public static final int Gpio_MC33972_PIN_1 = 146;
+	public static final int Gpio_MC33972_PIN_10 = 155;
+	public static final int Gpio_MC33972_PIN_11 = 156;
+	public static final int Gpio_MC33972_PIN_12 = 157;
+	public static final int Gpio_MC33972_PIN_13 = 158;
+	public static final int Gpio_MC33972_PIN_14 = 159;
+	public static final int Gpio_MC33972_PIN_15 = 160;
+	public static final int Gpio_MC33972_PIN_16 = 161;
+	public static final int Gpio_MC33972_PIN_17 = 162;
+	public static final int Gpio_MC33972_PIN_18 = 163;
+	public static final int Gpio_MC33972_PIN_19 = 164;
+	public static final int Gpio_MC33972_PIN_2 = 147;
+	public static final int Gpio_MC33972_PIN_20 = 165;
 	public static final int Gpio_MC33972_PIN_21 = 166;
 	public static final int Gpio_MC33972_PIN_22 = 167;
+	public static final int Gpio_MC33972_PIN_3 = 148;
+	public static final int Gpio_MC33972_PIN_4 = 149;
+	public static final int Gpio_MC33972_PIN_5 = 150;
+	public static final int Gpio_MC33972_PIN_6 = 151;
+	public static final int Gpio_MC33972_PIN_7 = 152;
+	public static final int Gpio_MC33972_PIN_8 = 153;
+	public static final int Gpio_MC33972_PIN_9 = 154;
 	public static final int Gpio_PROTECTED_PIN_0 = 257;
 	public static final int Gpio_PROTECTED_PIN_1 = 258;
 	public static final int Gpio_PROTECTED_PIN_10 = 267;
