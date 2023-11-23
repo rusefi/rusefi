@@ -291,7 +291,7 @@ int Mc33810::chip_init()
 	}
 
 	if (ret) {
-		ret = -1;
+		ret = -6;
 		goto err_gpios;
 	}
 
@@ -301,7 +301,7 @@ int Mc33810::chip_init()
 	/* 1. check loopback */
 	ret |= spi_rw(MC_CMD_READ_REG(REG_REV), &rx);
 	if (ret) {
-		ret = -1;
+		ret = -7;
 		goto err_gpios;
 	}
 	if (rx != SPI_CHECK_ACK) {
@@ -313,7 +313,7 @@ int Mc33810::chip_init()
 	/* 2. read revision */
 	ret  = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &rx);
 	if (ret) {
-		ret = -1;
+		ret = -8;
 		goto err_gpios;
 	}
 	if (rx & BIT(14)) {
@@ -444,8 +444,8 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 int Mc33810::writePad(size_t pin, int value)
 {
-	if (pin >= MC33810_OUTPUTS){
-		return -1;
+	if (pin >= MC33810_OUTPUTS) {
+		return -12;
 	}
 
 	{
@@ -545,7 +545,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_MC33810_COUNT))
-		return -1;
+		return -16;
 
 	/* check for valid cs.
 	 * TODO: remove this check? CS can be driven by SPI */
@@ -556,7 +556,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 
 	/* already initted? */
 	if (chip.cfg != NULL)
-		return -1;
+		return -13;
 
 	chip.cfg = cfg;
 	chip.o_state = 0;
@@ -571,7 +571,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 	/* GPGD mode is not supported yet, ignition mode does not support spi on/off commands
 	 * so ignition signals should be directly driven */
 	if ((chip.o_direct_mask & 0xf0) != 0xf0)
-		return -1;
+		return -4;
 
 	/* register, return gpio chip base */
 	ret = gpiochip_register(base, DRIVER_NAME, chip, MC33810_OUTPUTS);
@@ -592,7 +592,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 {
 	(void)base; (void)index; (void)cfg;
 
-	return -1;
+	return -5;
 }
 
 #endif /* BOARD_MC33810_COUNT */
