@@ -9,7 +9,9 @@
 
 #include "electronic_throttle_impl.h"
 #include "dc_motor.h"
+#include "dc_motors.h"
 #include "idle_thread.h"
+#include "live_data.h"
 
 #include "mocks.h"
 
@@ -17,6 +19,28 @@ using ::testing::_;
 using ::testing::Ne;
 using ::testing::Return;
 using ::testing::StrictMock;
+
+// #10348: four-slot builds must provide distinct controllers for all bridges.
+TEST(etb, additionalDcControllerSlots) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	EXPECT_NE(nullptr, getLiveData<electronic_throttle_s>(0));
+	EXPECT_NE(nullptr, getLiveData<electronic_throttle_s>(1));
+#if ETB_COUNT > 2
+	const auto* third = getLiveData<electronic_throttle_s>(2);
+	const auto* fourth = getLiveData<electronic_throttle_s>(3);
+	ASSERT_NE(nullptr, third);
+	ASSERT_NE(nullptr, fourth);
+	EXPECT_NE(third, fourth);
+	EXPECT_NE(getLiveData<electronic_throttle_s>(1), third);
+	EXPECT_EQ(third, (getLiveDataConstexpr<electronic_throttle_s, 2>()));
+	EXPECT_EQ(fourth, (getLiveDataConstexpr<electronic_throttle_s, 3>()));
+#else
+	EXPECT_EQ(nullptr, getLiveData<electronic_throttle_s>(2));
+	EXPECT_EQ(nullptr, getLiveData<electronic_throttle_s>(3));
+#endif
+	EXPECT_EQ(nullptr, getLiveData<electronic_throttle_s>(ETB_COUNT));
+}
 
 TEST(etb, initializationNoPedal) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
@@ -228,7 +252,7 @@ TEST(etb, initializationNoSensor) {
 
 TEST(etb, initializationNoThrottles) {
 	// This tests the case where you don't want an ETB, and expect everything to go fine
-	EtbController duts[2];
+	EtbController duts[ETB_COUNT];
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -345,10 +369,15 @@ TEST(etb, setpointSecondThrottleTrim) {
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
-	EtbController2 etb(throttleTrimTable);
+	EtbControllerWithTrim etb(throttleTrimTable);
 	etb.init(DC_Throttle1, nullptr, nullptr, &pedalMap);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 47, true);
+	// Throttle 1 must not inherit bank-2 trim from its hardware slot.
+	EXPECT_EQ(47, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::Tps2Primary, 0);
+	Sensor::setMockValue(SensorType::Tps2, 0.0f, true);
+	etb.init(DC_Throttle2, nullptr, nullptr, &pedalMap);
 	EXPECT_EQ(51, etb.getSetpoint().value_or(-1));
 }
 
@@ -891,7 +920,7 @@ TEST(etb, tractionControlEtbDrop) {
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
-	EtbController1 etb;
+	EtbController etb;
 	etb.init(DC_Throttle1, nullptr, nullptr, &pedalMap);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 47, true);
@@ -919,3 +948,80 @@ TEST(etb, tractionControlEtbDrop) {
 
 	EXPECT_EQ(62, etb.getSetpoint().value_or(-1));
 }
+
+#if ETB_COUNT > 2
+TEST(etb, dualThrottleWastegateAndIdle) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	resetDcHardwareForUnitTest();
+
+	Sensor::setMockValue(SensorType::Tps1, 10, true);
+	Sensor::setMockValue(SensorType::Tps2, 20, true);
+	Sensor::setMockValue(SensorType::WastegatePosition, 30);
+	Sensor::setMockValue(SensorType::IdlePosition, 40);
+
+	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+	engineConfiguration->etbFunctions[1] = DC_Throttle2;
+	engineConfiguration->etbFunctions[2] = DC_Wastegate;
+	engineConfiguration->etbFunctions[3] = DC_IdleValve;
+	doInitElectronicThrottle(true);
+
+	setEtbWastegatePosition(35);
+	setEtbIdlePosition(45);
+	EXPECT_FLOAT_EQ(35, etb3.getSetpoint().value_or(-1));
+	EXPECT_FLOAT_EQ(45, etb4.getSetpoint().value_or(-1));
+	setEwgLuaAdjustment(5);
+	EXPECT_FLOAT_EQ(40, etb3.getSetpoint().value_or(-1));
+	EXPECT_FLOAT_EQ(45, etb4.getSetpoint().value_or(-1));
+
+	EtbController* controllers[] = { &etb1, &etb2, &etb3, &etb4 };
+	for (size_t i = 0; i < ETB_COUNT; i++) {
+		EXPECT_EQ(controllers[i], engine->etbControllers[i]);
+		EXPECT_FLOAT_EQ(10 * (i + 1), controllers[i]->observePlant().value_or(-1));
+	}
+
+	// Exercise the real controller -> motor connection, including reverse duty.
+	etb3.setOutput(30);
+	etb4.setOutput(-40);
+	EXPECT_FLOAT_EQ(0, getDcMotorForUnitTest(0)->get());
+	EXPECT_FLOAT_EQ(0, getDcMotorForUnitTest(1)->get());
+	EXPECT_NEAR(0.3f, getDcMotorForUnitTest(2)->get(), EPS4D);
+	EXPECT_NEAR(-0.4f, getDcMotorForUnitTest(3)->get(), EPS4D);
+	EXPECT_FLOAT_EQ(0, getDcMotorForUnitTest(ETB_COUNT)->get());
+	EXPECT_FLOAT_EQ(0, getDcMotorForUnitTest(ETB_COUNT + 1)->get());
+}
+
+TEST(etb, additionalDcDefaultsAreDisabled) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_EQ(DC_None, engineConfiguration->etbFunctions[2]);
+	EXPECT_EQ(DC_None, engineConfiguration->etbFunctions[3]);
+
+	// A typical dual-throttle + EWG setup leaves the last bridge untouched.
+	StrictMock<MockEtb> mocks[ETB_COUNT];
+	for (size_t i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &mocks[i];
+	}
+	engineConfiguration->etbFunctions[0] = DC_Throttle1;
+	engineConfiguration->etbFunctions[1] = DC_Throttle2;
+	engineConfiguration->etbFunctions[2] = DC_Wastegate;
+	EXPECT_CALL(mocks[0], init(DC_Throttle1, _, &engineConfiguration->etb, _)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[1], init(DC_Throttle2, _, &engineConfiguration->etb, _)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[2], init(DC_Wastegate, _, &engineConfiguration->etbWastegatePid, _)).WillOnce(Return(true));
+	for (size_t i = 0; i < 3; i++) {
+		EXPECT_CALL(mocks[i], reset(_));
+		EXPECT_CALL(mocks[i], isEtbMode()).WillOnce(Return(i < 2));
+	}
+	// StrictMock rejects any call to the unassigned fourth controller.
+	doInitElectronicThrottle(true);
+}
+
+TEST(etb, fourthDcRetainsStepperConflictGuard) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	for (auto& function : engineConfiguration->etbFunctions) {
+		function = DC_None;
+	}
+	engineConfiguration->useHbridgesToDriveIdleStepper = true;
+	EXPECT_NO_FATAL_ERROR(pickEtbOrStepper());
+	engineConfiguration->etbFunctions[3] = DC_Wastegate;
+	EXPECT_FATAL_ERROR(pickEtbOrStepper());
+}
+#endif
