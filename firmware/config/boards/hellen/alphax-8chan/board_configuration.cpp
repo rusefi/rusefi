@@ -42,23 +42,20 @@ static void setupEtb() {
 	// PWM - pwm control (enable high, coast low)
 	// DIS - disables motor (enable low)
 
-//	// PWM pin
-//	engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2;
-//	// DIR pin
-//	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
-//	// Disable pin
-//	engineConfiguration->etbIo[0].disablePin = H144_GP5;
-//	// Unused
-//	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
-//
-//	// PWM pin
-//	engineConfiguration->etbIo[1].controlPin = H144_GP4;
-//	// DIR pin
-//	engineConfiguration->etbIo[1].directionPin1 = Gpio::H144_GP3;
-//	// Disable pin
-//	engineConfiguration->etbIo[1].disablePin = Gpio::Unassigned;
-//	// Unused
-//	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
+	// PWM pin
+	engineConfiguration->etbIo[0].controlPin = Gpio::MM176_OUT_PWM9;
+	// DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::MM176_GP6;
+	// Disable pin
+	engineConfiguration->etbIo[0].disablePin = Gpio::MM176_GP7;
+
+	// PWM pin
+	engineConfiguration->etbIo[1].controlPin = Gpio::MM176_OUT_PWM18;
+	// DIR pin
+	engineConfiguration->etbIo[1].directionPin1 = Gpio::MM176_GP10;
+	// Disable pin
+	engineConfiguration->etbIo[1].disablePin = Gpio::MM176_GP11;
+
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 }
@@ -182,11 +179,11 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 
-
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-// ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
-	engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM6;
-	engineConfiguration->vrThreshold[1].pin = Gpio::H144_OUT_PWM4;
+
+	engineConfiguration->vrThreshold[0].pin = Gpio::MM176_OUT_PWM11;
+	engineConfiguration->vrThreshold[1].pin = Gpio::MM176_OUT_PWM12;
+	//engineConfiguration->vrThreshold[2].pin = Gpio::MM176_OUT_PWM13;
 
 	hellenWbo();
 }
@@ -196,21 +193,21 @@ void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
 
-//static Gpio OUTPUTS[] = {
-//		Gpio::MM176_INJ1,
-//		Gpio::H144_LS_2,
-//		Gpio::H144_LS_3,
-//		Gpio::H144_LS_4,
-//};
-//
-//int getBoardMetaOutputsCount() {
-//    return efi::size(OUTPUTS);
-//}
-//
-//Gpio* getBoardMetaOutputs() {
-//    return OUTPUTS;
-//}
-//
-//int getBoardMetaDcOutputsCount() {
-//    return 1;
-//}
+static Gpio OUTPUTS[] = {
+		Gpio::MM176_INJ1,
+		Gpio::MM176_INJ2,
+//		Gpio::MM176_INJ3,
+//		Gpio::MM176_INJ4,
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return OUTPUTS;
+}
+
+int getBoardMetaDcOutputsCount() {
+    return 2;
+}
