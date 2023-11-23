@@ -578,8 +578,6 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 	/* set default pin names, board init code can rewrite */
 	gpiochips_setPinNames(static_cast<brain_pin_e>(ret), mc33810_pin_names);
 
-	chip.drv_state = MC33810_WAIT_INIT;
-
 	return ret;
 }
 
