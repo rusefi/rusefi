@@ -418,7 +418,7 @@ int mc33972_add(brain_pin_e base, unsigned int index, const struct mc33972_confi
 		return -1;
 
 	/* check for valid cs.
-	 * DOTO: remove this check? CS can be driven by SPI */
+	 * TODO: remove this check? CS can be driven by SPI */
 	if (!cfg->spi_config.ssport) {
 		return -1;
 	}

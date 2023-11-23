@@ -14,7 +14,7 @@
 
 #define MC33972_INPUTS				22
 
-/* DOTO: add irq support */
+/* TODO: add irq support */
 #define MC33972_POLL_INTERVAL_MS	100
 
 struct mc33972_config {

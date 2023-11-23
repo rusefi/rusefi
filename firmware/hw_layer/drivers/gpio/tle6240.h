@@ -15,7 +15,7 @@
 #define TLE6240_OUTPUTS				16
 #define TLE6240_DIRECT_OUTPUTS		8
 
-/* DOTO: add irq support */
+/* TODO: add irq support */
 #define TLE6240_POLL_INTERVAL_MS	100
 
 struct tle6240_config {
