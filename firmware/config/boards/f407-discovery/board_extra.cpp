@@ -158,7 +158,7 @@ static const struct mc33810_config mc33810 = {
 		.ssport = GPIOF,
 		.sspad = 1,
 		.cr1 =
-			//SPI_CR1_16BIT_MODE |
+			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
 			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
@@ -166,8 +166,8 @@ static const struct mc33810_config mc33810 = {
 			/* SPI_CR1_CPOL | */ // = 0
 			SPI_CR1_CPHA | // = 1
 			0,
-		.cr2 = //SPI_CR2_16BIT_MODE |
-			0//SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+		.cr2 = SPI_CR2_16BIT_MODE |
+			0
 	},
 	.direct_io = {
 		/* injector drivers */
