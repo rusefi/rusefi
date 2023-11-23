@@ -92,8 +92,8 @@ void setDiscovery33810Test() {
 
 	engineConfiguration->ignitionPins[0] = Gpio::MC33810_0_GD_0;
 	engineConfiguration->ignitionPins[1] = Gpio::MC33810_0_GD_1;
-	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::MC33810_0_GD_2;
+	engineConfiguration->ignitionPins[3] = Gpio::MC33810_0_GD_3;
 
 	engineConfiguration->cylindersCount = 2;
 	engineConfiguration->firingOrder = FO_1_2;

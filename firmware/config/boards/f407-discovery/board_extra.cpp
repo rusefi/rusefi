@@ -178,8 +178,11 @@ static const struct mc33810_config mc33810 = {
 		/* ignition pre-drivers */
 		[4] = {.port = GPIOA, .pad = 0},
 		[5] = {.port = GPIOA, .pad = 1},
-		[6] = {.port = nullptr, .pad = 0},
-		[7] = {.port = nullptr, .pad = 0},
+//GPGD mode is not supported yet, ignition mode does not support spi on/off commands
+//	  so ignition signals should be directly driven
+		[6] = {.port = GPIOD, .pad = 0},
+// meaning even if we do not use it we need a pin for now
+		[7] = {.port = GPIOD, .pad = 1},
 	},
 	.en = {.port = GPIOA, .pad = 6}
 };
