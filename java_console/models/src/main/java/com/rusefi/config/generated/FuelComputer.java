@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Wed Nov 01 16:52:27 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Thu Nov 23 14:52:31 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -185,7 +185,9 @@ public class FuelComputer {
 	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 32, FieldType.FLOAT).setBaseOffset(804);
 	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 36, FieldType.FLOAT).setBaseOffset(804);
 	public static final Field NORMALIZEDCYLINDERFILLING = Field.create("NORMALIZEDCYLINDERFILLING", 40, FieldType.FLOAT).setBaseOffset(804);
-	public static final Field INJECTORHWISSUE = Field.create("INJECTORHWISSUE", 44, FieldType.BIT, 0).setBaseOffset(804);
+	public static final Field BROKENINJECTOR = Field.create("BROKENINJECTOR", 44, FieldType.INT8).setScale(1.0).setBaseOffset(804);
+	public static final Field ALIGNMENTFILL_AT_45 = Field.create("ALIGNMENTFILL_AT_45", 45, FieldType.INT8).setScale(1.0).setBaseOffset(804);
+	public static final Field INJECTORHWISSUE = Field.create("INJECTORHWISSUE", 48, FieldType.BIT, 0).setBaseOffset(804);
 	public static final Field[] VALUES = {
 	TOTALFUELCORRECTION,
 	RUNNING_POSTCRANKINGFUELCORRECTION,
@@ -201,6 +203,8 @@ public class FuelComputer {
 	SDTCHARGE_COFF,
 	SDAIRMASSINONECYLINDER,
 	NORMALIZEDCYLINDERFILLING,
+	BROKENINJECTOR,
+	ALIGNMENTFILL_AT_45,
 	INJECTORHWISSUE,
 	};
 }
