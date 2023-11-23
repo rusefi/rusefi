@@ -121,24 +121,23 @@ const char *gpiochips_getPinName(brain_pin_e pin)
  * else returns chip base
  */
 
-int gpiochip_register(brain_pin_e base, const char *name, GpioChip& gpioChip, size_t size)
-{
+int gpiochip_register(brain_pin_e base, const char *name, GpioChip& gpioChip, size_t size) {
 	/* zero size? */
 	if (!size)
-		return -1;
+		return -100;
 
 	/* outside? */
 	if ((base + size - 1 > BRAIN_PIN_LAST) || (base <= BRAIN_PIN_ONCHIP_LAST))
-		return -1;
+		return -101;
 
 	/* check for overlap with other chips */
 	for (int i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
 		if (chips[i].base != Gpio::Unassigned) {
 			#define in_range(a, b, c)	(((a) > (b)) && ((a) < (c)))
 			if (in_range(base, chips[i].base, chips[i].base + chips[i].size))
-				return -1;
+				return -102;
 			if (in_range(base + size, chips[i].base, chips[i].base + chips[i].size))
-				return -1;
+				return -103;
 		}
 	}
 
@@ -154,7 +153,7 @@ int gpiochip_register(brain_pin_e base, const char *name, GpioChip& gpioChip, si
 
 	/* no free chips left */
 	if (!chip) {
-		return -1;
+		return -104;
 	}
 
 	/* register chip */
@@ -180,11 +179,11 @@ int gpiochip_unregister(brain_pin_e base)
 	gpiochip *chip = gpiochip_find(base);
 
 	if (!chip)
-		return -1;
+		return -105;
 
 	/* gpiochip_find - returns chip if base within its range, but we need it to be base */
 	if (chip->base != base)
-		return -1;
+		return -106;
 
 	/* unregister chip */
 	chip->name = nullptr;
@@ -207,7 +206,7 @@ int gpiochips_setPinNames(brain_pin_e base, const char **names)
 	gpiochip *chip = gpiochip_find(base);
 
 	if (!chip)
-		return -1;
+		return -113;
 
 	chip->gpio_names = names;
 
@@ -254,7 +253,7 @@ int gpiochips_setPadMode(brain_pin_e pin, iomode_t mode)
 	gpiochip *chip = gpiochip_find(pin);
 
 	if (!chip)
-		return -1;
+		return -107;
 
 	return chip->chip->setPadMode(pin - chip->base, mode);
 }
@@ -273,7 +272,7 @@ int gpiochips_writePad(brain_pin_e pin, int value)
 	gpiochip *chip = gpiochip_find(pin);
 
 	if (!chip)
-		return -1;
+		return -108;
 
 	return chip->chip->writePad(pin - chip->base, value);
 }
@@ -291,7 +290,7 @@ int gpiochips_readPad(brain_pin_e pin)
 	gpiochip *chip = gpiochip_find(pin);
 
 	if (!chip)
-		return -1;
+		return -109;
 
 	return chip->chip->readPad(pin - chip->base);
 }
@@ -341,7 +340,7 @@ int gpiochips_get_total_pins(void)
 int gpiochips_getPinOffset(brain_pin_e pin) {
 	(void)pin;
 
-	return -1;
+	return -111;
 }
 
 const char *gpiochips_getChipName(brain_pin_e pin) {
