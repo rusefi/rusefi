@@ -564,7 +564,6 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 	chip.o_state = 0;
 	chip.o_state_cached = 0;
 	chip.o_direct_mask = 0;
-	chip.drv_state = MC33810_WAIT_INIT;
 	for (int i = 0; i < MC33810_DIRECT_OUTPUTS; i++) {
 		if (cfg->direct_io[i].port != 0)
 			chip.o_direct_mask |= BIT(i);
