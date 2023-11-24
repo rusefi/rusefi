@@ -24,8 +24,6 @@ public enum Sensor {
 
     // RPM, vss
     RPMValue(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.RPMVALUE, 1, 0, 8000, "RPM"),
-//    rpmAcceleration("dRPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, "RPM/s"),
-//    speedToRpmRatio("Gearbox Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, "value"),
     vehicleSpeedKph("Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.UINT8, TsOutputs.VEHICLESPEEDKPH, 1.0, 0.0, 0.0, "kph"),
 
     // Temperatures
@@ -43,10 +41,9 @@ public enum Sensor {
 
     // Errors
     totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, TsOutputs.TOTALTRIGGERERRORCOUNTER, 0, 5),
-    lastErrorCode(GAUGE_NAME_WARNING_LAST, SensorCategory.STATUS, FieldType.INT, TsOutputs.LASTERRORCODE, 0, 5),
 
-	// Debug
-	debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, TsOutputs.DEBUGINTFIELD1, 0, 5),
+    // Debug
+    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, TsOutputs.DEBUGINTFIELD1, 0, 5),
 
     // Raw sensors
     rawClt("raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.RAWCLT, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
