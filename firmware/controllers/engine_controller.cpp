@@ -88,6 +88,7 @@
 
 #if ! EFI_UNIT_TEST
 #include "init.h"
+#include "mpu_util.h"
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE
