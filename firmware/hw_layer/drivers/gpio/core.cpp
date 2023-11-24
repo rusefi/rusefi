@@ -229,9 +229,7 @@ int gpiochips_init(void) {
 			continue;
 
 		if (chip->chip->init() < 0) {
-			/* remove chip if it fails to init */
-			/* TODO: we will have a gap, is it ok? */
-			chip->base = Gpio::Unassigned;
+			criticalError("Failed to init chip %d", i);
 		} else {
 			pins_added += chip->size;
 		}
