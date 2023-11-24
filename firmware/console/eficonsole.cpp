@@ -251,4 +251,7 @@ void initializeConsole() {
 	addConsoleAction("error", myerror);
 	addConsoleAction("hard_fault", testHardFault);
 	addConsoleAction("threadsinfo", cmd_threads);
+
+	addConsoleActionI("set_watchdog_timeout", startWatchdog);
+	addConsoleActionI("set_watchdog_reset", setWatchdogResetPeriod);
 }
