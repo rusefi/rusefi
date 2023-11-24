@@ -192,6 +192,12 @@ static const struct mc33810_config mc33810 = {
         // copy-paste with driver struct, TODO dynamically assign into driver
         efiSetPadModeWithoutOwnershipAcquisition("mc33810 EN", Gpio::A6, PAL_MODE_OUTPUT_PUSHPULL);
 
+        for (size_t i = 0;i<8;i++) {
+            if (mc33810.direct_io[i].port != nullptr) {
+                palSetPadMode(mc33810.direct_io[i].port, mc33810.direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
+            }
+        }
+
 	    int ret = mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
 	    efiPrintf("*****************+ mc33810_add %d +*******************", ret);
 
