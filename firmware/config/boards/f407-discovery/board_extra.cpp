@@ -185,10 +185,13 @@ static const struct mc33810_config mc33810 = {
 // meaning even if we do not use it we need a pin for now
 		[7] = {.port = GPIOD, .pad = 1},
 	},
-	.en = {.port = GPIOA, .pad = 6}
+	.en = {.port = GPIOA, .pad = 6} // copy-paste with setMode code!
 };
 
     if (engineConfiguration->engineType == engine_type_e::FRANKENSO_TEST_33810) {
+        // copy-paste with driver struct, TODO dynamically assign into driver
+        efiSetPadModeWithoutOwnershipAcquisition("mc33810 EN", Gpio::A6, PAL_MODE_OUTPUT_PUSHPULL);
+
 	    int ret = mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
 	    efiPrintf("*****************+ mc33810_add %d +*******************", ret);
 
