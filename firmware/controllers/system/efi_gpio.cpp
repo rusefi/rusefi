@@ -641,7 +641,7 @@ brain_pin_diag_e OutputPin::getDiag() const {
 #endif
 }
 
-void initOutputPins() {
+void initMiscOutputPins() {
 #if EFI_GPIO_HARDWARE
 
 #if HAL_USE_SPI

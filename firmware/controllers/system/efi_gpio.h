@@ -15,7 +15,7 @@
 #include "injection_gpio.h"
 
 void initPrimaryPins();
-void initOutputPins();
+void initMiscOutputPins();
 
 #if EFI_GPIO_HARDWARE
 void turnAllPinsOff(void);

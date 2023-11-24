@@ -515,7 +515,7 @@ void initHardware() {
 #endif
 
 	// output pins potentially depend on 'initSmartGpio'
-	initOutputPins();
+	initMiscOutputPins();
 
 #if EFI_MC33816
 	initMc33816();
