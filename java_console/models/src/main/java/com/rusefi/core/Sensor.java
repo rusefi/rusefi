@@ -13,15 +13,7 @@ import java.util.TreeSet;
 
 import static com.rusefi.config.generated.Fields.*;
 
-/**
- * @author Andrey Belomutskiy
- * 2/11/13
- */
 public enum Sensor {
-    /**
-     * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
-     */
-
     // RPM, vss
     RPMValue(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.RPMVALUE, 1, 0, 8000, "RPM"),
     vehicleSpeedKph("Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.UINT8, TsOutputs.VEHICLESPEEDKPH, 1.0, 0.0, 0.0, "kph"),
