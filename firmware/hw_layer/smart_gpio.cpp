@@ -188,6 +188,10 @@ struct tle8888_config tle8888_cfg = {
 };
 #endif
 
+#if (BOARD_MC33810_COUNT > 0)
+static OutputPin mc33810Cs[C_MC33810_COUNT];
+#endif /* (BOARD_MC33810_COUNT > 0) */
+
 #if (BOARD_DRV8860_COUNT > 0)
 static OutputPin drv8860Cs;
 struct drv8860_config drv8860 = {
@@ -322,10 +326,12 @@ void stopSmartCsPins() {
 	efiSetPadUnused(activeConfiguration.mc33972_cs);
 #endif /* BOARD_MC33972_COUNT */
 #if (BOARD_DRV8860_COUNT > 0)
-	efiSetPadUnused(activeConfiguration.drv8860_cs);
+
 #endif /* BOARD_DRV8860_COUNT */
 #if (BOARD_MC33810_COUNT > 0)
-	/* none of official boards has this IC */
+    for (size_t i = 0;i<C_MC33810_COUNT;i++) {
+        efiSetPadUnused(engineConfiguration->mc33810_cs[i]);
+	}
 #endif /* (BOARD_MC33810_COUNT > 0) */
 #if (BOARD_TLE9104_COUNT > 0)
 	// No official boards have this IC
@@ -357,12 +363,17 @@ void startSmartCsPins() {
 	drv8860Cs.setValue(true);
 #endif /* BOARD_DRV8860_COUNT */
 #if (BOARD_MC33810_COUNT > 0)
-    // todo: no official boards have this IC yet
+    for (size_t i = 0;i<C_MC33810_COUNT;i++) {
+	    mc33810Cs[i].initPin("mc33810 CS", engineConfiguration->mc33810_cs[i],
+				engineConfiguration->mc33810_csPinMode);
+	    mc33810Cs[i].setValue(true);
+    }
 #endif /* (BOARD_MC33810_COUNT > 0) */
 #if (BOARD_TLE9104_COUNT > 0)
     // todo: no official boards have this IC yet
 #endif
 #if (BOARD_L9779_COUNT > 0)
+    // todo: use existing l9779_cs and l9779_csPinMode settings
     // todo: no official boards have this IC yet
 #endif
 }

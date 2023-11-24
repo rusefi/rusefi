@@ -85,6 +85,11 @@ void setDiscovery33810Test() {
 //  CS PC5 white
 //  EN PA6 yellow
 
+	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned;
+	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
+
+    engineConfiguration->mc33810_cs[0] = Gpio::C5;
+
 	engineConfiguration->injectionPins[0] = Gpio::MC33810_0_OUT_0;
 	engineConfiguration->injectionPins[1] = Gpio::MC33810_0_OUT_1;
 	engineConfiguration->injectionPins[2] = Gpio::Unassigned;

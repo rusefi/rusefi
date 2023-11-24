@@ -2992,6 +2992,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "trigger stimulator output #1",			triggerSimulatorPins1
 		field = "trigger stimulator output #2",			triggerSimulatorPins2
 		field = "tle6240_cs",							tle6240_cs
+		field = "mc33810_cs",							mc33810_cs0
+		field = "mc33810_csPinMode",					mc33810_csPinMode
 		field = "tle6240 SPI",							tle6240spiDevice
 
 	dialog = allPins1_2

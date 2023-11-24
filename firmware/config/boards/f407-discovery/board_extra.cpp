@@ -155,6 +155,7 @@ static const struct mc33810_config mc33810 = {
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
+		// todo: use engineConfiguration->mc33810_cs
 		.ssport = GPIOC,
 		.sspad = 5,
 		.cr1 =

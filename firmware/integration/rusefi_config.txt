@@ -599,7 +599,7 @@ adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position
     uint8_t autoscale etbSplit;TPS/PPS error threshold;"%", 0.1, 0, 0, 20, 1
 	Gpio tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
-	!unused 1
+	pin_output_mode_e mc33810_csPinMode;
 
 switch_input_pin_e throttlePedalUpPin;Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
 
@@ -683,7 +683,8 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	uint8_t[FUEL_LEVEL_TABLE_COUNT] fuelLevelValues;;"%", 1, 0, 0, 100, 0
 
 	ego_sensor_e afr_type;AFR, WBO, EGO - whatever you like to call it;
-	! unused 2
+#define C_MC33810_COUNT 1
+	Gpio[C_MC33810_COUNT iterate] mc33810_cs;
 	float idle_antiwindupFreq;0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
 
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
