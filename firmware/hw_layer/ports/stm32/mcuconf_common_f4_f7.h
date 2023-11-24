@@ -412,7 +412,7 @@
  * WDG driver system settings.
  */
 #ifndef STM32_WDG_USE_IWDG
-#define STM32_WDG_USE_IWDG                  FALSE
+#define STM32_WDG_USE_IWDG                  TRUE
 #endif
 
 /* Some boards need to know clock early on boot.
