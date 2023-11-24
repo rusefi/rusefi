@@ -273,7 +273,6 @@ int Mc33810::update_output_and_diag()
 
 int Mc33810::chip_init()
 {
-	int n;
 	int ret;
 	uint16_t rx;
 
@@ -284,7 +283,7 @@ int Mc33810::chip_init()
 		ret |= gpio_pin_markUsed(cfg->en.port, cfg->en.pad, DRIVER_NAME " EN");
 	}
 
-	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
+	for (int n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
 		if (cfg->direct_io[n].port) {
 			ret |= gpio_pin_markUsed(cfg->direct_io[n].port, cfg->direct_io[n].pad, DRIVER_NAME " DIRECT IO");
 		}
@@ -292,6 +291,7 @@ int Mc33810::chip_init()
 
 	if (ret) {
 		ret = -6;
+		efiPrintf(DRIVER_NAME " error binding pin(s)");
 		goto err_gpios;
 	}
 
@@ -302,10 +302,11 @@ int Mc33810::chip_init()
 	ret |= spi_rw(MC_CMD_READ_REG(REG_REV), &rx);
 	if (ret) {
 		ret = -7;
+		efiPrintf(DRIVER_NAME " first SPI RX failed");
 		goto err_gpios;
 	}
 	if (rx != SPI_CHECK_ACK) {
-		//print(DRIVER_NAME " spi loopback test failed\n");
+		efiPrintf(DRIVER_NAME " spi loopback test failed");
 		ret = -2;
 		goto err_gpios;
 	}
@@ -314,10 +315,11 @@ int Mc33810::chip_init()
 	ret  = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &rx);
 	if (ret) {
 		ret = -8;
+		efiPrintf(DRIVER_NAME " revision failed");
 		goto err_gpios;
 	}
 	if (rx & BIT(14)) {
-		//print(DRIVER_NAME " spi COR status\n");
+		efiPrintf(DRIVER_NAME " spi COR status");
 		ret = -3;
 		goto err_gpios;
 	}
@@ -338,6 +340,7 @@ int Mc33810::chip_init()
 			0;
 		ret = spi_rw(MC_CMD_SPARK(spark_settings), NULL);
 		if (ret) {
+		    efiPrintf(DRIVER_NAME " cmd spark");
 			goto err_gpios;
 		}
 
@@ -345,6 +348,7 @@ int Mc33810::chip_init()
 		 * disable retry after recovering from under/overvoltage */
 		ret = spi_rw(MC_CMD_MODE_SELECT((0xf << 8) | (1 << 6)) , NULL);
 		if (ret) {
+		    efiPrintf(DRIVER_NAME " cmd mode select");
 			goto err_gpios;
 		}
 	}
@@ -367,7 +371,7 @@ err_gpios:
 		gpio_pin_markUnused(cfg->en.port, cfg->en.pad);
 	}
 
-	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
+	for (int n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
 		if (cfg->direct_io[n].port) {
 			gpio_pin_markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
 		}
@@ -423,7 +427,7 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 				(chip->drv_state == MC33810_FAILED))
 				continue;
 
-			/* TODO: implemet indirect driven gpios */
+			/* TODO: implement indirect driven gpios */
 			int ret = chip->update_output_and_diag();
 			if (ret) {
 				/* set state to MC33810_FAILED? */
@@ -516,9 +520,7 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 
 int Mc33810::init()
 {
-	int ret;
-
-	ret = chip_init();
+	int ret = chip_init();
 	if (ret)
 		return ret;
 
