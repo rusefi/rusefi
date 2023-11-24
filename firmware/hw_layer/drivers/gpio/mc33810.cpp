@@ -284,12 +284,16 @@ int Mc33810::chip_init()
 	ret = 0;
 	if (cfg->en.port) {
 		ret |= gpio_pin_markUsed(cfg->en.port, cfg->en.pad, DRIVER_NAME " EN");
+		palSetPadMode(cfg->en.port, cfg->en.pad, PAL_MODE_OUTPUT_PUSHPULL);
+		palSetPort(cfg->en.port, PAL_PORT_BIT(cfg->en.pad));
 	}
 
 	for (int n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
 		if (cfg->direct_io[n].port) {
 			ret |= gpio_pin_markUsed(cfg->direct_io[n].port, cfg->direct_io[n].pad, DRIVER_NAME " DIRECT IO");
 		}
+		palSetPadMode(cfg->direct_io[n].port, cfg->direct_io[n].pad, PAL_MODE_OUTPUT_PUSHPULL);
+		palClearPort(cfg->direct_io[n].port, PAL_PORT_BIT(cfg->direct_io[n].pad));
 	}
 
 	if (ret) {
