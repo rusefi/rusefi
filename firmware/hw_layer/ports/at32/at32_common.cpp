@@ -131,7 +131,13 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
     return BOR_Result_Ok;
 }
 
-void resetWatchdog() {
+void startWatchdog(int) {
+}
+
+void tryResetWatchdog() {
+}
+
+void setWatchdogResetPeriod(int) {
 }
 
 void baseMCUInit(void) {
