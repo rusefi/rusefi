@@ -103,7 +103,7 @@ public class BenchTestPane {
         CommandControl panel = new CommandControl(uiContext,"Spark #", "spark.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
-                return "sparkbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
+                return "sparkbench2 " + indexes.getSelectedItem() + " 5 333 3";
             }
         };
         return panel.getContent();
@@ -114,7 +114,7 @@ public class BenchTestPane {
         CommandControl panel = new CommandControl(uiContext,"Injector #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {
-                return "fuelbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
+                return "fuelbench2 " + indexes.getSelectedItem() + " 5 333 3";
             }
         };
         return panel.getContent();
@@ -125,7 +125,7 @@ public class BenchTestPane {
         CommandControl panel = new CommandControl(uiContext,"TCU Solenoid #", "solenoid.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
-                return "tcusolbench 1000 " + indexes.getSelectedItem() + " 1000 1000 3";
+                return "tcusolbench " + indexes.getSelectedItem() + " 1000 1000 3";
             }
         };
         return panel.getContent();
