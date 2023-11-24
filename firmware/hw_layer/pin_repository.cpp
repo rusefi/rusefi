@@ -57,12 +57,12 @@ bool brain_pin_markUsed(Gpio brainPin, const char *msg) {
 	if (index < 0)
 		return true;
 
-	if (engine->pinRepository.getBrainUsedPin(index) != NULL) {
+	if (engine->pinRepository.getBrainUsedPin(index) != nullptr) {
 		// hwPortname and share a buffer behind the scenes, even while they probably never use it for different
 		// values here let's have an explicit second buffer to make this more reliable
 		char physicalPinName[32];
 		strncpy(physicalPinName, hwPhysicalPinName(brainPin), sizeof(physicalPinName) - 1);
-		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" (%s) required by \"%s\" but is used by \"%s\"",
+		criticalError("Pin \"%s\" (%s) required by \"%s\" but is used by \"%s\"",
 				hwPortname(brainPin),
 				physicalPinName,
 				msg,
