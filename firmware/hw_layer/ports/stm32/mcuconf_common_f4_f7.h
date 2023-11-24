@@ -411,7 +411,7 @@
 /*
  * WDG driver system settings.
  */
-#define STM32_WDG_USE_IWDG                  FALSE
+#define STM32_WDG_USE_IWDG                  TRUE
 
 /* Some boards need to know clock early on boot.
  * F429-Discovery board configures clock and then SDRAM early on boot */
