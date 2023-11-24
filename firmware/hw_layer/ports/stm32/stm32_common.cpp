@@ -103,11 +103,44 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
 	return BOR_Result_Ok;
 }
 
+void startWatchdog(int timeoutMs) {
+#if HAL_USE_WDG
+	// RL is a 12-bit value so we use a "2 ms" prescaler to support long timeouts (> 4.095 sec)
+	static WDGConfig wdgcfg;
+	wdgcfg.pr = STM32_IWDG_PR_64;	// t = (1/32768) * 64 = ~2 ms
+	wdgcfg.rlr = STM32_IWDG_RL((uint32_t)((32.768f / 64.0f) * timeoutMs));
+	wdgStart(&WDGD1, &wdgcfg);
+#endif // HAL_USE_WDG
+}
+
+static efitimems_t watchdogResetPeriodMs = 0;
+
+void setWatchdogResetPeriod(int resetMs) {
+	watchdogResetPeriodMs = (efitimems_t)resetMs;
+}
+
+void tryResetWatchdog() {
+#if HAL_USE_WDG
+	static efitimems_t lastTimeWasResetMs = 0;
+	// check if it's time to reset the watchdog
+	efitimems_t curTimeResetMs = getTimeNowMs();
+	if (curTimeResetMs >= lastTimeWasResetMs + watchdogResetPeriodMs) {
+		// we assume tryResetWatchdog() is called from a timer callback
+		wdgResetI(&WDGD1);
+		lastTimeWasResetMs = curTimeResetMs;
+	}
+#endif // HAL_USE_WDG
+}
+
 void baseMCUInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
+
+	// 200 ms is our default period for runMainLoop
+	setWatchdogResetPeriod(200);
+	startWatchdog();
 }
 
 extern uint32_t __main_stack_base__;

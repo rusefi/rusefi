@@ -224,6 +224,7 @@ static void doPeriodicSlowCallback() {
 	}
 #endif // EFI_TCU
 
+	tryResetWatchdog();
 }
 
 void initPeriodicEvents() {

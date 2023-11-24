@@ -147,6 +147,10 @@ void writeToFlashNow() {
 	persistentState.version = FLASH_DATA_VERSION;
 	persistentState.crc = flashStateCrc(persistentState);
 
+	// there's no wdgStop() for STM32, so we cannot disable it.
+	// we just set a long timeout of 5 secs to wait until flash is done.
+	startWatchdog(5000);
+
 #if EFI_STORAGE_MFS == TRUE
 	mfs_error_t err;
 	/* In case of MFS:
@@ -172,6 +176,9 @@ void writeToFlashNow() {
 	// handle success/failure
 	isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
 #endif
+
+	// restart the watchdog with the default timeout
+	startWatchdog();
 
 	if (isSuccess) {
 		efiPrintf("FLASH_SUCCESS");

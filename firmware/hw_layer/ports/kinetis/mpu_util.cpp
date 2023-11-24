@@ -13,6 +13,9 @@
 #include "mpu_util.h"
 #include "flash_int.h"
 
+void resetWatchdog() {
+}
+
 void baseMCUInit(void) {
 }
 

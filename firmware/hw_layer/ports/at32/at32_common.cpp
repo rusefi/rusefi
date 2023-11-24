@@ -131,6 +131,9 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
     return BOR_Result_Ok;
 }
 
+void resetWatchdog() {
+}
+
 void baseMCUInit(void) {
     // looks like this holds a random value on start? Let's set a nice clean zero
     DWT->CYCCNT = 0;

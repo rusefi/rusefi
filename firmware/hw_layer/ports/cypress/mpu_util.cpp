@@ -21,6 +21,9 @@ extern "C" {
 	void HardFaultVector(void);
 }
 
+void resetWatchdog() {
+}
+
 void baseMCUInit(void) {
 }
 
