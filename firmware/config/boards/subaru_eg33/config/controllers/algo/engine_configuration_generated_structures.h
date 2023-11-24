@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Nov 21 23:17:39 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 24 16:37:38 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1151,11 +1151,9 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e tle6240_csPinMode;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 525
 	 */
-	uint8_t alignmentFill_at_525[1];
+	pin_output_mode_e mc33810_csPinMode;
 	/**
 	 * Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
 	 * offset 526
@@ -1353,11 +1351,9 @@ struct engine_configuration_s {
 	 */
 	ego_sensor_e afr_type;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 662
 	 */
-	uint8_t alignmentFill_at_662[2];
+	Gpio mc33810_cs[C_MC33810_COUNT];
 	/**
 	 * 0.1 is a good default value
 	x
@@ -5370,4 +5366,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23880);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Nov 21 23:17:39 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 24 16:37:38 UTC 2023
