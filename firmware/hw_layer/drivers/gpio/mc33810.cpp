@@ -306,7 +306,7 @@ int Mc33810::chip_init()
 		goto err_gpios;
 	}
 	if (rx != SPI_CHECK_ACK) {
-		efiPrintf(DRIVER_NAME " spi loopback test failed");
+		efiPrintf(DRIVER_NAME " spi loopback test failed [%d]", rx);
 		ret = -2;
 		goto err_gpios;
 	}
