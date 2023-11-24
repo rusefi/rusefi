@@ -180,6 +180,9 @@ int Mc33810::spi_rw(uint16_t tx, uint16_t *rx)
 		(((TX_GET_CMD(tx) >= 0x1) && (TX_GET_CMD(tx) <= 0xa)) ||
 		 (tx == MC_CMD_READ_REG(REG_ALL_STAT)));
 
+#if 0
+    efiPrintf(DRIVER_NAME "SPI [%x][%x]", tx, rxb);
+#endif
 	/* no errors for now */
 	return 0;
 }

@@ -85,6 +85,8 @@ void setDiscovery33810Test() {
 //  CS PC5 white
 //  EN PA6 yellow
 
+    engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
 
