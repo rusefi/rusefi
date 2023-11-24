@@ -9,7 +9,6 @@ import java.io.IOException;
 import static com.devexperts.logging.Logging.getLogging;
 
 /**
- * TODO: We have to move either forward or backwards with newparse #4441
  * [OutputChannels]
  */
 public class OutputsSectionConsumer implements ConfigurationConsumer {

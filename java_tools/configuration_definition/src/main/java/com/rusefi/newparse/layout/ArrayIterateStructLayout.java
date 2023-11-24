@@ -29,5 +29,15 @@ public class ArrayIterateStructLayout extends ArrayLayout {
         }
     }
 
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
+        for (int i = 0; i < this.length[0]; i++) {
+            // Put a 1-based index on the end of the name to distinguish in TS
+            prefixer.setIndex(i);
+            this.prototypeLayout.writeOutputChannelLayout(ps, psDatalog, prefixer, this.offset + offsetAdd + this.prototypeLayout.getSize() * i);
+            prefixer.clearIndex();
+        }
+    }
+
     // C layout is the same if iterated or not, use default implementation
 }

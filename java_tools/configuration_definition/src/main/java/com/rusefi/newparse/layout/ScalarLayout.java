@@ -159,8 +159,11 @@ public class ScalarLayout extends Layout {
         ps.println(");");
     }
 
-    private void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, String name) {
-        ps.print(prefixer.get(name));
+    private void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, int idx) {
+        String nameWithoutSpace = prefixer.get(idx > 0 ? (this.name + idx) : this.name);
+        String nameWithSpace = prefixer.get(idx > 0 ? (this.name + " " + idx) : this.name);
+
+        ps.print(nameWithoutSpace);
         //ps.print(" = " + fieldType + ", ");
         ps.print(" = scalar, ");
         ps.print(this.type.tsType);
@@ -172,17 +175,37 @@ public class ScalarLayout extends Layout {
         ps.print(FieldOptions.tryRound(this.options.scale));
         ps.print(", ");
         ps.print(FieldOptions.tryRound(this.options.offset));
-
         ps.println();
+
+        if (this.name.startsWith("unused")) {
+            return;
+        }
+
+        psDatalog.print("entry = ");
+        psDatalog.print(nameWithoutSpace);
+        psDatalog.print(", \"");
+
+        String commentWithIndex = (idx <= 0 || options.comment.isEmpty()) ? options.comment : options.comment + " " + idx;
+
+        writeDatalogName(psDatalog, nameWithSpace, commentWithIndex);
+        psDatalog.print("\", ");
+
+        if (this.type.tsType.equals("F32") || this.options.scale != 1) {
+            psDatalog.print("float,  \"%.3f\"");
+        } else {
+            psDatalog.print("int,    \"%d\"");
+        }
+
+        psDatalog.println();
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
-        writeOutputChannelLayout(ps, prefixer, offsetAdd, this.name);
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
+        writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd, -1);
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
         if (arrayLength.length != 1) {
             throw new IllegalStateException("Output channels don't support multi dimension arrays");
         }
@@ -190,7 +213,7 @@ public class ScalarLayout extends Layout {
         int elementOffset = offsetAdd;
 
         for (int i = 0; i < arrayLength[0]; i++) {
-            writeOutputChannelLayout(ps, prefixer, elementOffset, this.name + (i + 1));
+            writeOutputChannelLayout(ps, psDatalog, prefixer, elementOffset, i + 1);
             elementOffset += type.size;
         }
     }

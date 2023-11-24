@@ -358,9 +358,9 @@ float mapFast
 	uint16_t autoscale compressorDischargePressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 1
 	uint16_t autoscale throttleInletPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 1
 
-	uint16_t ignitionOnTime;;"sec",1,0,0,0,1
-	uint16_t engineRunTime;;"sec",1,0,0,0,1
-	uint16_t autoscale distanceTraveled;;"km",0.1,0,0,0,1
+	uint16_t ignitionOnTime;;"sec", 1, 0, 0, 0, 1
+	uint16_t engineRunTime;;"sec", 1, 0, 0, 0, 1
+	uint16_t autoscale distanceTraveled;;"km", 0.1, 0, 0, 0, 1
 
 	uint16_t autoscale afrGasolineScale;@@GAUGE_NAME_AFR_GAS_SCALE@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 	uint16_t autoscale afr2GasolineScale;@@GAUGE_NAME_AFR2_GAS_SCALE@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2

@@ -1,4 +1,4 @@
-struct sent_state_s
+struct_no_prefix sent_state_s
 	uint16_t value0;"ETB: SENT value0";"value", 1, 0, 0, 3, 0
 	uint16_t value1;"ETB: SENT value1";"value", 1, 0, 0, 3, 0
 	float errorRate;"ETB: SENT error rate";"ratio", 1, 0, 0, 3, 2

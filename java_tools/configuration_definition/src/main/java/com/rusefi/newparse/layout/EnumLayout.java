@@ -74,7 +74,7 @@ public class EnumLayout extends Layout {
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
         // Output an enum as a scalar, since there's no TS support for enum output channels
         ps.print(prefixer.get(name));
         ps.print(" = scalar, ");
@@ -82,5 +82,13 @@ public class EnumLayout extends Layout {
         ps.print(", ");
         ps.print(this.offset + offsetAdd);
         ps.println(", \"\", 1, 0");
+
+        // Write the datalog entry as an integer, since there's no support for enums.
+        psDatalog.print("entry = ");
+        psDatalog.print(name);
+        psDatalog.print(", \"");
+        writeDatalogName(psDatalog, name, options.comment);
+        psDatalog.print("\", int,    \"%d\"");
+        psDatalog.println();
     }
 }

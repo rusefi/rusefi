@@ -67,19 +67,28 @@ public abstract class Layout {
 
     public void writeCOffsetCheck(PrintStream ps, String parentTypeName) { }
 
-    public void writeOutputChannelLayout(PrintStream ps, String prefix, int offsetAdd) {
+    public void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, String prefix, int offsetAdd) {
         StructNamePrefixer prefixer = new StructNamePrefixer();
 
         if (prefix != null) {
             prefixer.push(prefix);
         }
 
-        writeOutputChannelLayout(ps, prefixer, offsetAdd);
+        writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd);
     }
 
-    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) { }
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) { }
 
-    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
         throw new IllegalStateException("This type can't be in an array!");
+    }
+
+    protected static void writeDatalogName(PrintStream ps, String name, String comment) {
+        String text = (comment == null || comment.isEmpty()) ? name : comment;
+
+        // Delete anything after a newline
+        text = text.split("\\\\n")[0];
+
+        ps.print(text);
     }
 }
