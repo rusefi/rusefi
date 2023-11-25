@@ -158,6 +158,23 @@ public class IniFileReaderTest {
     }
 
     @Test
+    public void testEnumListFields() {
+        String string = "#define gpio_list=\"NONE\", \"INVALID\", \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\"\n" +
+                "page = 1\n" +
+                "[Constants]\n" +
+                "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
+                "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] $gpio_list\n";
+
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+        assertEquals(1, model.defines.size());
+
+        EnumIniField field = (EnumIniField) model.allIniFields.get("iat_adcChannel");
+        assertEquals(6, field.getEnums().size());
+        assertEquals(2, model.allIniFields.size());
+    }
+
+    @Test
     public void testSetBits() {
         assertEquals(0xFE, EnumIniField.setBitRange(0xFF, 0, 0, 1));
         assertEquals(0xF0, EnumIniField.setBitRange(0xFF, 0, 0, 4));

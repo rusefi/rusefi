@@ -22,6 +22,8 @@ public class IniFileModel {
     private static final String FIELD_TYPE_ARRAY = "array";
     private static final String FIELD_TYPE_BITS = "bits";
 
+    public Map<String, List<String>> defines = new TreeMap<>();
+
     private static IniFileModel INSTANCE;
     private String dialogId;
     private String dialogUiName;
@@ -112,6 +114,10 @@ public class IniFileModel {
         String rawText = line.getRawText();
         try {
             LinkedList<String> list = new LinkedList<>(Arrays.asList(line.getTokens()));
+            if (!list.isEmpty() && list.get(0).equals("#define")) {
+                defines.put(list.get(1), list.subList(2, list.size() - 1));
+                return;
+            }
 
             if (!list.isEmpty() && list.get(0).equals(SECTION_PAGE)) {
                 isInsidePageDefinition = true;
@@ -236,7 +242,7 @@ public class IniFileModel {
                 registerField(ArrayIniField.parse(list));
                 break;
             case FIELD_TYPE_BITS:
-                registerField(EnumIniField.parse(list, line));
+                registerField(EnumIniField.parse(list, line, this));
                 break;
             default:
                 throw new IllegalStateException("Unexpected " + list);
