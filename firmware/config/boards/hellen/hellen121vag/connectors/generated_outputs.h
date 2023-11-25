@@ -22,6 +22,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::I6, // 8 - IGN_7
 	Gpio::C9, // 18 - VVT2 B1
 	Gpio::I0, // 22 - VVT1 1
+	Gpio::D15, // OUT_FUEL_CONSUMPTION
 	Gpio::E3, // 94 - IGN_4
 	Gpio::I7, // 95 - IGN_8
 	Gpio::C1, // 101 - MAP2

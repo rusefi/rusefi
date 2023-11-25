@@ -13,6 +13,8 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_OUT_PWM6, // B21 - EVAP
 	Gpio::H144_LS_7, // B22 Intake Runner
 	Gpio::H144_OUT_PWM8, // C11 Aux Low 3
+	Gpio::H144_OUT_PWM7, // C12 Aux Low 2
+	Gpio::H144_OUT_PWM3, // C13 Aux Low 1
 	Gpio::H144_OUT_IO13, // E1 Fuel Relay
 	Gpio::H144_OUT_IO3, // E7 Main Relay Control
 	Gpio::H144_LS_5, // E18 - AC Relay
