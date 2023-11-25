@@ -196,10 +196,10 @@ void boardPrepareForStop() {
 static Gpio OUTPUTS[] = {
 	Gpio::MM176_INJ1, // 1D - Injector 1
 	Gpio::MM176_INJ2, // 2D - Injector 2
-//	Gpio::MM176_INJ3, // 3D - Injector 3
-//	Gpio::MM176_INJ4, // 4D - Injector 4
-//	Gpio::MM176_INJ5, // 5D - Injector 5
-//	Gpio::MM176_INJ6, // 6D - Injector 6
+	Gpio::MM176_INJ3, // 3D - Injector 3
+	Gpio::MM176_INJ4, // 4D - Injector 4
+	Gpio::MM176_INJ5, // 5D - Injector 5
+	Gpio::MM176_INJ6, // 6D - Injector 6
 //	Gpio::MM176_INJ7, // 7D - Injector 7
 //	Gpio::MM176_OUT_PWM1, // 8D - VVT 1
 //	Gpio::MM176_GP3, // 9D - Fuel Pump
