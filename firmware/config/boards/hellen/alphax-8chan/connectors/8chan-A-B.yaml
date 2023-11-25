@@ -357,7 +357,7 @@ pins:
     type: gnd
 
   - pin: 26B
-    function: +12V
+    function: +12V ETB/DC power source
     type: 12v
 
 info:
