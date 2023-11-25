@@ -41,14 +41,6 @@ public class ConsoleTools {
 
     private static final Map<String, String> toolsHelp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    private static final StatusConsumer statusListener = new StatusConsumer() {
-        final Logging log = getLogging(ConsoleTools.class);
-        @Override
-        public void append(String message) {
-            log.info(message);
-        }
-    };
-
     static {
         registerTool("help", args -> printTools(), "Print this help.");
         registerTool("headless", ConsoleTools::runHeadless, "Connect to rusEFI controller and start saving logs.");

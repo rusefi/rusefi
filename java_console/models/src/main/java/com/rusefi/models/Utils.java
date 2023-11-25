@@ -9,7 +9,7 @@ import java.util.TreeMap;
  *         1/29/13
  */
 public class Utils {
-    // i do not want to deal with overflow so no MAX_VALUE for me
+    // I do not want to deal with overflow so no MAX_VALUE for me
     private static final int LARGE_VALUE = 10000000;
 
     /**
@@ -27,18 +27,6 @@ public class Utils {
         int headDiff = Math.abs(value - fromHead);
         int tailDiff = Math.abs(value - fromTail);
         return headDiff < tailDiff ? fromHead : fromTail;
-    }
-
-    /**
-     * gets an element from the map. if no such element - new one is created using the factory
-     */
-    public static <K, V> V getOrCreate(Map<K, V> map, K key, Factory<K, V> factory) {
-        V result = map.get(key);
-        if (result != null)
-            return result;
-        result = factory.create(key);
-        map.put(key, result);
-        return result;
     }
 
     public static int parseIntWithReason(String number, String reason) {

@@ -3,11 +3,9 @@ package com.rusefi.core;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.config.generated.TsOutputs;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,38 +13,37 @@ import static com.rusefi.config.generated.Fields.*;
 
 public enum Sensor {
     // RPM, vss
-    RPMValue(GAUGE_NAME_RPM, FieldType.UINT16, TsOutputs.RPMVALUE, 1, 0, 8000, "RPM"),
-    vehicleSpeedKph("Vehicle Speed", FieldType.UINT8, TsOutputs.VEHICLESPEEDKPH, 1.0, 0.0, 0.0, "kph"),
+    RPMValue(GAUGE_NAME_RPM, FieldType.UINT16, TsOutputs.RPMVALUE, 1, "RPM"),
+    vehicleSpeedKph("Vehicle Speed", FieldType.UINT8, TsOutputs.VEHICLESPEEDKPH, 1, "kph"),
 
     // Temperatures
-    INT_TEMP(GAUGE_NAME_ECU_TEMPERATURE, FieldType.INT8, TsOutputs.INTERNALMCUTEMPERATURE, 1, 0, 5, "C"),
+    INT_TEMP(GAUGE_NAME_ECU_TEMPERATURE, FieldType.INT8, TsOutputs.INTERNALMCUTEMPERATURE, 1, "C"),
     // throttle, pedal
-    TPS(GAUGE_NAME_TPS, FieldType.INT16, TsOutputs.TPSVALUE, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // throttle position sensor
+    TPS(GAUGE_NAME_TPS, FieldType.INT16, TsOutputs.TPSVALUE, 1.0 / PACK_MULT_PERCENT, "%"), // throttle position sensor
 
     // air flow/mass measurement
-    MAF(GAUGE_NAME_MAF, FieldType.UINT16, TsOutputs.MAFMEASURED, 1.0 / PACK_MULT_MASS_FLOW, 0, 5, "Volts"),
-    MAP(GAUGE_NAME_MAP, FieldType.UINT16, TsOutputs.MAPVALUE, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
+    MAF(GAUGE_NAME_MAF, FieldType.UINT16, TsOutputs.MAFMEASURED, 1.0 / PACK_MULT_MASS_FLOW, "Volts"),
+    MAP(GAUGE_NAME_MAP, FieldType.UINT16, TsOutputs.MAPVALUE, 1.0 / PACK_MULT_PRESSURE, "kPa"),
 
-    VBATT(GAUGE_NAME_VBAT, FieldType.UINT16, TsOutputs.VBATT, 1.0 / PACK_MULT_VOLTAGE, 4, 18, "Volts"),
+    VBATT(GAUGE_NAME_VBAT, FieldType.UINT16, TsOutputs.VBATT, 1.0 / PACK_MULT_VOLTAGE, "Volts"),
     // Mode, firmware, protocol, run time
-    TIME_SECONDS(GAUGE_NAME_TIME, FieldType.INT, TsOutputs.SECONDS, 1, 0, 5, ""),
+    TIME_SECONDS(GAUGE_NAME_TIME, FieldType.INT, TsOutputs.SECONDS, 1, ""),
 
     // Errors
-    totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, FieldType.INT, TsOutputs.TOTALTRIGGERERRORCOUNTER, 0, 5),
+    totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, FieldType.INT, TsOutputs.TOTALTRIGGERERRORCOUNTER),
 
     // Debug
-    debugIntField1(GAUGE_NAME_DEBUG_I1, FieldType.INT, TsOutputs.DEBUGINTFIELD1, 0, 5),
+    debugIntField1(GAUGE_NAME_DEBUG_I1, FieldType.INT, TsOutputs.DEBUGINTFIELD1),
 
     // Raw sensors
-    rawClt("raw CLT", FieldType.INT16, TsOutputs.RAWCLT, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
-    rawIat("raw IAT", FieldType.INT16, TsOutputs.RAWIAT, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
+    rawClt("raw CLT", FieldType.INT16, TsOutputs.RAWCLT, 1.0 / PACK_MULT_VOLTAGE, "volts"),
+    rawIat("raw IAT", FieldType.INT16, TsOutputs.RAWIAT, 1.0 / PACK_MULT_VOLTAGE, "volts"),
     ;
 
     private final String name;
     private final String units;
-    private final double minValue;
-    private final double maxValue;
-    @Nullable
+
+    @NotNull
     private final FieldType type;
     private final int offset;
     private final double scale;
@@ -60,18 +57,16 @@ public enum Sensor {
         }
     }
 
-    Sensor(String name, FieldType type, Field field, double scale, double minValue, double maxValue, String units) {
+    Sensor(String name, FieldType type, Field field, double scale, String units) {
         this.name = name == null ? name() : name;
         this.type = type;
         this.offset = field.getTotalOffset();
         this.scale = scale;
         this.units = units;
-        this.minValue = minValue;
-        this.maxValue = maxValue;
     }
 
-    Sensor(String name, FieldType type, Field field, double minValue, double maxValue) {
-        this(name, type, field, 1.0, minValue, maxValue, "n/a");
+    Sensor(String name, FieldType type, Field field) {
+        this(name, type, field, 1.0, "n/a");
     }
 
     public static Sensor lookup(String gaugeName, Sensor defaultValue) {

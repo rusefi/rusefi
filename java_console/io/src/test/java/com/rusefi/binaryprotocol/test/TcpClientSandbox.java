@@ -15,8 +15,6 @@ import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
  */
 public class TcpClientSandbox {
     public static void main(String[] args) throws IOException {
-        BinaryProtocol.DISABLE_LOCAL_CONFIGURATION_CACHE = true;
-
         Socket s = new Socket(LOCALHOST, DEFAULT_PORT);
         TcpIoStream tsStream = new TcpIoStream("sandbox", s);
 

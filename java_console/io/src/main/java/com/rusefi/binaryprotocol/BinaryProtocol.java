@@ -62,8 +62,6 @@ public class BinaryProtocol {
     // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();
 
-    public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
-
     public static String findCommand(byte command) {
         switch (command) {
             case Fields.TS_PAGE_COMMAND:
