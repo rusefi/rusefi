@@ -153,4 +153,11 @@ public class ConfigStructureImpl implements ConfigStructure {
     public String getComment() {
         return comment;
     }
+
+    @Override
+    public String toString() {
+        return "ConfigStructureImpl{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }
