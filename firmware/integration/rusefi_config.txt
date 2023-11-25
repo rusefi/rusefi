@@ -2196,6 +2196,8 @@ end_struct
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 
+#define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
+#define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 
 ! some board files override this value using prepend file
