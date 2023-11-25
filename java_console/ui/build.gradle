@@ -10,10 +10,8 @@ configurations {
 
 dependencies {
     implementation project(':shared_ui')
-    implementation project(':autotest')
     implementation project(':luaformatter')
     implementation project(':config_definition')
-    implementation global_libs.antlr
     implementation 'com.miglayout:miglayout-swing:4.1'
     implementation files('../lib/dfu/dfu_java.jar')
     implementation files('../lib/trident-6.2.jar')
