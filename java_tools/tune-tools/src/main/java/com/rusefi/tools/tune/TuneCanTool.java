@@ -1,10 +1,12 @@
 package com.rusefi.tools.tune;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.output.ConfigStructure;
+import com.rusefi.pinout.PinoutLogic;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
@@ -21,11 +23,14 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigFieldImpl.unquote;
 import static com.rusefi.config.Field.niceToString;
 import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR;
 
 public class TuneCanTool {
+    private static final Logging log = getLogging(TuneCanTool.class);
+
     public static final String SRC_TEST_RESOURCES = "src/test/resources/";
     private static final String FOLDER = "generated";
     public static final String SIMULATED_PREFIX = FOLDER + File.separator + "simulator_tune";
@@ -45,12 +50,13 @@ public class TuneCanTool {
 
         RootHolder.ROOT = "../firmware/";
 
-        handle("PB", 1502);
-        handle("Mitsubicha", 1258);
-        handle("Scion-1NZ-FE", 1448);
-        handle("4g93", 1425);
-        handle("BMW-mtmotorsport", 1479);
-        handle("m111-alex", 1490);
+        handle("BK2", 1507);
+//        handle("PB", 1502);
+//        handle("Mitsubicha", 1258);
+//        handle("Scion-1NZ-FE", 1448);
+//        handle("4g93", 1425);
+//        handle("BMW-mtmotorsport", 1479);
+//        handle("m111-alex", 1490);
     }
 
     private static void handle(String vehicleName, int tuneId) throws JAXBException, IOException {
@@ -121,18 +127,19 @@ public class TuneCanTool {
             }
             Objects.requireNonNull(defaultValue.getValue(), "d value");
             if (customValue == null) {
-                System.out.println("Skipping " + name + " TODO");
+                log.info("Skipping " + name + " TODO");
                 continue;
             }
             Objects.requireNonNull(customValue.getValue(), "c value");
 
             boolean isSameValue = simplerSpaces(defaultValue.getValue()).equals(simplerSpaces(customValue.getValue()));
             if (!isSameValue) {
+                // todo: what about stuff outside of engine_configuration_s?
                 ConfigStructure s = state.getStructures().get("engine_configuration_s");
-                System.out.println(s);
+//                log.info("We have a custom value " + name);
                 ConfigField cf = s.getTsFieldByName(name);
                 if (cf == null) {
-                    System.out.println("Not found " + name);
+                    log.info("Not found " + name);
                     continue;
                 }
                 String cName = cf.getOriginalArrayName();
@@ -152,7 +159,7 @@ public class TuneCanTool {
                     }
                     EnumsReader.EnumState sourceCodeEnum = state.getEnumsReader().getEnums().get(type);
                     if (sourceCodeEnum == null) {
-                        System.out.println("No info for " + type);
+                        log.info("No info for " + type);
                         continue;
                     }
                     String customEnum = state.getTsCustomLine().get(type);
@@ -161,11 +168,11 @@ public class TuneCanTool {
                     try {
                         ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()));
                     } catch (IllegalStateException e) {
-                        System.out.println("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
+                        log.info("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
                         continue;
                     }
 
-                    System.out.println(cf + " " + sourceCodeEnum + " " + customEnum + " " + ordinal);
+                    log.info(cf + " " + sourceCodeEnum + " " + customEnum + " " + ordinal);
 
                     String sourceCodeValue = sourceCodeEnum.findByValue(ordinal);
                     sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), sourceCodeValue));
