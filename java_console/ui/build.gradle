@@ -11,7 +11,8 @@ configurations {
 dependencies {
     implementation project(':ecu_io')
     implementation project(':luaformatter')
-    implementation project(':config_definition')
+    implementation project(':config_definition_base')
+    implementation project(':logging')
     implementation 'com.miglayout:miglayout-swing:4.1'
     implementation files('../lib/dfu/dfu_java.jar')
     implementation files('../lib/trident-6.2.jar')
