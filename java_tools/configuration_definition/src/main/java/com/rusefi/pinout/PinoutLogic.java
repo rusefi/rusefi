@@ -20,7 +20,6 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
 public class PinoutLogic {
     private static final Logging log = getLogging(PinoutLogic.class);
 
-    static final String CONNECTORS = "/connectors";
     private static final String NONE = "NONE";
     private static final String QUOTED_NONE = quote(NONE);
     private static final String INVALID = "INVALID";
@@ -169,9 +168,12 @@ public class PinoutLogic {
             Object pinClass = pin.get("class");
             Object pinName = pin.get("pin");
             Object pinTsName = pin.get("ts_name");
+            Object pinFunction = pin.get("function");
+            if (pinTsName == null && pinFunction != null)
+                pinTsName = pinFunction;
             Object pinType = pin.get("type");
             if (pinId == null || pinClass == null || pinTsName == null) {
-                log.info("Skipping " + pinId + "/" + pinClass + "/" + pinTsName);
+                log.info("Skipping incomplete section " + pinId + "/" + pinClass + "/" + pinTsName);
                 continue;
             }
             if (pinName != null) {
