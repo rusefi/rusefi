@@ -160,8 +160,6 @@ public class IoUtil {
 
     public static void realHardwareConnect(LinkManager linkManager, String port) {
         linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_OUTPIN, (s) -> { });
-
-        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_OUTPIN, (s) -> { });
         linkManager.getEngineState().registerStringValueAction(AverageAnglesUtil.KEY, (s) -> { });
 
         try {
