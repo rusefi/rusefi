@@ -80,6 +80,11 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi1MisoMode = PO_DEFAULT;
 	engineConfiguration->spi1sckPin = Gpio::E13;
 	engineConfiguration->spi1SckMode = PO_DEFAULT;
+
+// todo	engineConfiguration->triggerInputPins[0] =
+//todo setTPS1Inputs(, );
+
+//todo setPPSInputs(, );
 }
 
 void setBoardConfigOverrides() {
