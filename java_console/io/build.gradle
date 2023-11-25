@@ -14,13 +14,13 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    api global_libs.jcip
     api project(':models')
     api project(':core_io')
-    api project(':logging')
 
     implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.9.2'
     implementation global_libs.json
+    implementation global_libs.jcip
+    implementation project(':logging')
 
     // junit 4.13 does not mix well with httpclient :(
     testImplementation group: 'junit', name: 'junit', version: '4.8.2'
