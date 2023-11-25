@@ -42,6 +42,7 @@
 #include "speed_density.h"
 #include "local_version_holder.h"
 #include "alternator_controller.h"
+#include "can_bench_test.h"
 #include "engine_emulator.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
@@ -655,6 +656,8 @@ void commonEarlyInit() {
 	 * Initialize hardware drivers
 	 */
 	initHardware();
+
+	initQcControls();
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
