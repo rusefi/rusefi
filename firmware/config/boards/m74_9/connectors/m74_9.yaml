@@ -29,6 +29,8 @@ pins:
     type: gp_low
     
   - pin: AC2
+    id: [A1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
     function: IAT sensor signal
     type: 
     
@@ -131,6 +133,8 @@ pins:
     type: ign 
     
   - pin: AJ2
+    id: [C3, EFI_ADC_13]
+    class: [switch_inputs, analog_inputs]
     function: ETB position sensor 2 signal
     type: etb  
     
@@ -149,6 +153,8 @@ pins:
     type: etb 
     
   - pin: AK2
+    id: [C2, EFI_ADC_12]
+    class: [switch_inputs, analog_inputs]
     function: ETB position sensor 1 signal
     type: etb 
     
@@ -293,6 +299,10 @@ pins:
     type: ign 
     
   - pin: BF3
+#    id: [F10, EFI_ADC3_8]
+#    class: [switch_inputs, analog_inputs]
+    id: F10
+    class: switch_inputs
     function: Air conditioner pressure sensor (2 level)
     type:  
     
