@@ -5,6 +5,11 @@ import java.util.Stack;
 public class StructNamePrefixer {
     private final Stack<String> stack = new Stack<>();
     private int idx = -1;
+    private final char prefixChar;
+
+    public StructNamePrefixer(char prefixChar) {
+        this.prefixChar = prefixChar;
+    }
 
     public void pop() {
         stack.pop();
@@ -18,7 +23,7 @@ public class StructNamePrefixer {
             this.idx = -1;
         }
 
-        stack.push(name + "_");
+        stack.push(name + this.prefixChar);
     }
 
     void setIndex(int idx) {

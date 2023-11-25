@@ -226,4 +226,33 @@ public class StructLayout extends Layout {
             elementOffset += this.size;
         }
     }
+
+    private void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName, String name) {
+        if (!this.noPrefix) {
+            prefixer.push(name);
+        }
+
+        this.children.forEach(c -> c.writeSdLogLayout(ps, prefixer, sourceName));
+
+        if (!this.noPrefix) {
+            prefixer.pop();
+        }
+    }
+
+    @Override
+    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName) {
+        writeSdLogLayout(ps, prefixer, sourceName, this.name);
+    }
+
+    @Override
+    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName, int[] arrayLength) {
+        if (arrayLength.length != 1) {
+            throw new IllegalStateException("Output channels don't support multi dimension arrays");
+        }
+
+        // TODO: This doesn't quite work, as it's unclear how to make automatic naming work properly
+        // for (int i = 0; i < arrayLength[0]; i++) {
+        //     writeSdLogLayout(ps, prefixer, sourceName, this.name + "[" + i + "]");
+        // }
+    }
 }

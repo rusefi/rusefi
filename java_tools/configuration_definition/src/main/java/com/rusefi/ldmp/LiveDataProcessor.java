@@ -97,6 +97,8 @@ public class LiveDataProcessor {
         //     tsOutputsDestination + File.separator + "/data_logs.ini"
         // );
 
+        // SdLogWriter sdLogWriter = new SdLogWriter("console/binary_log/log_fields_generated.h");
+
         EntryHandler handler = new EntryHandler() {
             @Override
             public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, Boolean isPtr) throws IOException {
@@ -162,6 +164,10 @@ public class LiveDataProcessor {
                     //     for (int i = 0; i < outputNames.length; i++) {
                     //         outputChannelWriter.writeOutputChannels(parseState, outputNames[i]);
                     //     }
+                    // }
+
+                    // if (constexpr != null) {
+                    //     sdLogWriter.writeSdLogs(parseState, constexpr + (isPtr ? "->" : "."));
                     // }
                 }
 
@@ -241,6 +247,7 @@ public class LiveDataProcessor {
         lazyFile.close();
 
         outputValueConsumer.endFile();
+        // sdLogWriter.endFile();
 
         // return outputChannelWriter.getSize();
         return outputsSections.sensorTsPosition;

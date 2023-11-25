@@ -83,4 +83,9 @@ public class ArrayLayout extends Layout {
     protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
         this.prototypeLayout.writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd, this.length);
     }
+
+    @Override
+    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName) {
+        this.prototypeLayout.writeSdLogLayout(ps, prefixer, sourceName, this.length);
+    }
 }
