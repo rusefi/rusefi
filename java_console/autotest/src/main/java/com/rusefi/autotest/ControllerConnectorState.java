@@ -22,11 +22,8 @@ public class ControllerConnectorState {
             return linkManager;
 
         LinkManager linkManager = new LinkManager();
-        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
-            @Override
-            public void onUpdate(String firmwareVersion1) {
+        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (String firmwareVersion1) -> {
                 firmwareVersion = firmwareVersion1;
-            }
         });
 
         /**

@@ -130,18 +130,15 @@ public class TestingUtils {
         final AtomicReference<String> result = new AtomicReference<>();
 
         // FileLog.MAIN.logLine("waiting for next chart");
-        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
-            @Override
-            public void onUpdate(String value) {
-                engineChartLatch.countDown();
-                result.set(value);
-            }
+        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, (String value) -> {
+            engineChartLatch.countDown();
+            result.set(value);
         });
         int timeoutMs = 60 * Timeouts.SECOND;
         long waitStartTime = System.currentTimeMillis();
         IoUtil.wait(engineChartLatch, timeoutMs);
         log.info("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + EcuTestHelper.currentEngineType);
-        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, (s) -> { });
         if (result.get() == null)
             throw new IllegalStateException("Chart timeout: " + timeoutMs);
         return result.get();

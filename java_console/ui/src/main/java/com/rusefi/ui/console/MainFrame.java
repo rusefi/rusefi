@@ -101,12 +101,9 @@ public class MainFrame {
             }
         });
 
-        consoleUI.uiContext.getLinkManager().getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
-            @Override
-            public void onUpdate(String firmwareVersion) {
+        consoleUI.uiContext.getLinkManager().getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (String firmwareVersion) -> {
                 Launcher.firmwareVersion.set(firmwareVersion);
                 setTitle();
-            }
         });
     }
 

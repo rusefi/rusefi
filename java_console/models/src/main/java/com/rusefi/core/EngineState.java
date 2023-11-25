@@ -7,6 +7,7 @@ import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -23,7 +24,7 @@ public class EngineState {
     public static final Class<EngineState> ENGINE_STATE_CLASS = EngineState.class;
     private final Object lock = new Object();
 
-    public void replaceStringValueAction(String key, ValueCallback<String> callback) {
+    public void replaceStringValueAction(String key, Consumer<String> callback) {
         removeAction(key);
         registerStringValueAction(key, callback);
     }
@@ -31,10 +32,10 @@ public class EngineState {
     /**
      * text protocol key and callback associated with this key
      */
-    public static class StringActionPair extends Pair<String, ValueCallback<String>> {
+    public static class StringActionPair extends Pair<String, Consumer<String>> {
         public final String prefix;
 
-        public StringActionPair(String key, ValueCallback<String> second) {
+        public StringActionPair(String key, Consumer<String> second) {
             super(key, second);
             prefix = key.toLowerCase() + Fields.LOG_DELIMITER;
         }
@@ -171,7 +172,7 @@ public class EngineState {
                 endIndex = response.length();
 
             String strValue = response.substring(beginIndex, endIndex);
-            pair.second.onUpdate(strValue);
+            pair.second.accept(strValue);
             if (listener != null)
                 listener.onKeyValue(key, strValue);
 
@@ -216,7 +217,7 @@ public class EngineState {
 //        return Character.toLowerCase(c) - 'a' + 10;
 //    }
 
-    public void registerStringValueAction(String key, ValueCallback<String> callback) {
+    public void registerStringValueAction(String key, Consumer<String> callback) {
         synchronized (lock) {
             if (keys.contains(key))
                 throw new IllegalStateException("Already registered: " + key);
@@ -239,12 +240,6 @@ public class EngineState {
 
     public void processNewData(String append, LinkDecoder decoder) {
         buffer.append(append, decoder);
-    }
-
-    public interface ValueCallback<V> {
-        ValueCallback<?> VOID = (ValueCallback) value -> { };
-
-        void onUpdate(V value);
     }
 
     public interface EngineStateListener {

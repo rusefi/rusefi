@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -246,13 +247,10 @@ public class ConsoleTools {
         StringBuilder messages = new StringBuilder();
 
         ResponseBuffer responseBuffer = new ResponseBuffer(unpack -> {
-            EngineState.ValueCallback<String> callback = new EngineState.ValueCallback<String>() {
-                @Override
-                public void onUpdate(String value) {
-                    if (value.startsWith(Fields.PROTOCOL_HELLO_PREFIX)) {
-                        messages.append(value);
-                        messages.append("\n");
-                    }
+            Consumer<String> callback = (String value) -> {
+                if (value.startsWith(Fields.PROTOCOL_HELLO_PREFIX)) {
+                    messages.append(value);
+                    messages.append("\n");
                 }
             };
             while (!unpack.isEmpty()) {

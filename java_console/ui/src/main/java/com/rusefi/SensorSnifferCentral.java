@@ -10,14 +10,10 @@ public class SensorSnifferCentral {
     private final List<AnalogChartListener> listeners = new CopyOnWriteArrayList<>();
 
     public SensorSnifferCentral(LinkManager linkManager) {
-        linkManager.getEngineState().registerStringValueAction(AverageAnglesUtil.KEY, new EngineState.ValueCallback<String>() {
-                    @Override
-                    public void onUpdate(String message) {
-                        for (AnalogChartListener listener : listeners)
-                            listener.onAnalogChart(message);
-                    }
-                }
-        );
+        linkManager.getEngineState().registerStringValueAction(AverageAnglesUtil.KEY, (String message) -> {
+            for (AnalogChartListener listener : listeners)
+                listener.onAnalogChart(message);
+        });
     }
 
     public void addListener(AnalogChartListener listener) {
