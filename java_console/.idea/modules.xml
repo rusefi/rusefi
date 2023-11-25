@@ -13,7 +13,6 @@
       <module fileurl="file://$PROJECT_DIR$/luaformatter_module/luaformatter.iml" filepath="$PROJECT_DIR$/luaformatter_module/luaformatter.iml" />
       <module fileurl="file://$PROJECT_DIR$/models/models.iml" filepath="$PROJECT_DIR$/models/models.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared_io/shared_io.iml" filepath="$PROJECT_DIR$/shared_io/shared_io.iml" />
-      <module fileurl="file://$PROJECT_DIR$/shared_ui/shared_ui.iml" filepath="$PROJECT_DIR$/shared_ui/shared_ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/tools/tools.iml" filepath="$PROJECT_DIR$/tools/tools.iml" />
       <module fileurl="file://$PROJECT_DIR$/ui/ui.iml" filepath="$PROJECT_DIR$/ui/ui.iml" />
     </modules>

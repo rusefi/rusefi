@@ -9,7 +9,8 @@ configurations {
 }
 
 dependencies {
-    implementation project(':shared_ui')
+    implementation project(':ecu_io')
+    implementation global_libs.json
     implementation project(':luaformatter')
     implementation project(':config_definition')
     implementation 'com.miglayout:miglayout-swing:4.1'
