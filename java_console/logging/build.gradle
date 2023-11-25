@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-  api project(':logging-api')
+    api project(':logging-api')
 }

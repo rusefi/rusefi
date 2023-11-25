@@ -6,7 +6,7 @@ plugins {
 apply from: '../../java_tools/dependencies.gradle'
 
 dependencies {
-    api project(':ecu_io')
+    implementation project(':ecu_io')
     implementation project(':logging')
     implementation global_libs.junit
 }

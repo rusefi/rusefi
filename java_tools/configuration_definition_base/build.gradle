@@ -7,4 +7,6 @@ apply from: '../../java_tools/dependencies.gradle'
 dependencies {
     api project(':inifile')
     api project(':enum_to_string')
+
+    api project(':core_io')
 }

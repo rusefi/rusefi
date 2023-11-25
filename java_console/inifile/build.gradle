@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     api project(':logging-api')
-    api project(':core_io')
+    implementation project(':core_io')
 }

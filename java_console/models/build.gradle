@@ -5,6 +5,9 @@ plugins {
 apply from: '../../java_tools/dependencies.gradle'
 
 dependencies {
+    implementation project(':logging-api')
     api project(':inifile')
     api 'org.apache.commons:commons-math3:3.6.1'
+
+    implementation project(':core_io')
 }
