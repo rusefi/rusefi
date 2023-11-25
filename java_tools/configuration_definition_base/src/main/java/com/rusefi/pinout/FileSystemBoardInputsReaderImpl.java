@@ -13,14 +13,14 @@ import java.util.List;
 import static com.devexperts.logging.Logging.getLogging;
 
 public abstract class FileSystemBoardInputsReaderImpl implements BoardInputs {
-    private static final Logging log = getLogging(FileSystemBoardInputsImpl.class);
+    private static final Logging log = getLogging(FileSystemBoardInputsReaderImpl.class);
     protected final String boardName;
     private final List<File> boardYamlFiles;
     public static String PREFIX = "";
 
     public FileSystemBoardInputsReaderImpl(String boardName) {
         this.boardName = boardName;
-        String dirPath = boardName + PinoutLogic.CONNECTORS;
+        String dirPath = boardName + PinoutLogicConstants.CONNECTORS;
         File dirName = new File(dirPath);
         FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
         File[] boardYamlFilesArray = dirName.listFiles(filter);
@@ -53,7 +53,7 @@ public abstract class FileSystemBoardInputsReaderImpl implements BoardInputs {
     public List<String> getInputFiles() {
         List<String> result = new ArrayList<>();
         for (File yamlFile : boardYamlFiles) {
-            result.add(boardName + PinoutLogic.CONNECTORS + File.separator + yamlFile.getName());
+            result.add(boardName + PinoutLogicConstants.CONNECTORS + File.separator + yamlFile.getName());
         }
         return result;
     }
