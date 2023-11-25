@@ -1,7 +1,5 @@
 include ':core_io'
 project(':core_io').projectDir = new File('../java_console/shared_io')
-include ':core_ui'
-project(':core_ui').projectDir = new File('../java_console/core_ui')
 include ':logging-api'
 project(':logging-api').projectDir = new File('../java_console/logging-api')
 include ':enum_to_string'
