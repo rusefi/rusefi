@@ -37,6 +37,8 @@ pins:
     type:
     
   - pin: AC4
+    id: L9779_OUT_6
+    class: outputs
     function: Oxygen sensor 1 heater
     type: gp_low
     
@@ -69,6 +71,8 @@ pins:
     type: can
 
   - pin: AE4
+    id: L9779_OUT_5
+    class: outputs
     function: EVAP solenoid control
     type: gp_low
     
@@ -85,6 +89,8 @@ pins:
     type:
     
   - pin: AF4
+    id: L9779_OUT_4
+    class: outputs
     function: Injector 1
     type: inj
     
@@ -97,6 +103,8 @@ pins:
     type: hall
     
   - pin: AG4
+    id: L9779_OUT_3
+    class: outputs
     function: Injector 2 
     type: inj
     
@@ -113,6 +121,8 @@ pins:
     type:
     
   - pin: AH4 
+    id: L9779_OUT_2
+    class: outputs
     function: Injector 3
     type: inj 
     
@@ -129,6 +139,8 @@ pins:
     type: sgnd 
     
   - pin: AJ4
+    id: L9779_OUT_1
+    class: outputs
     function: Injector 4
     type: inj 
     
@@ -145,10 +157,14 @@ pins:
     type:  
     
   - pin: AK4
+    id: L9779_OUT_7
+    class: outputs
     function: Oxygen sensor 2 heater
     type:  
     
   - pin: AL1
+    id: L9779_IGN_1
+    class: outputs
     function: Coil 1 (< +2.5v) / Coils 1,4
     type:  
     
@@ -157,23 +173,32 @@ pins:
     type: etb 
     
   - pin: AM1 
+    id: L9779_IGN_3
+    class: outputs
     function: Coil 3  (< +2.5v) / Coils 2,4
     type:  
     
   - pin: AM2
-    function: Coil 2  (< +2.5v)  
+    id: L9779_IGN_2
+    class: outputs
+    function: Coil 2  (< +2.5v) (not populated)
     type:  
     
   - pin: AM3 
-    function: Coil 4  (< +2.5v)  
+    id: L9779_IGN_4
+    class: outputs
+    function: Coil 4  (< +2.5v) (not populated)
     type:  
     
   - pin: AM4
+
     function: ETB motor +
     type: etb 
     
     # Connector B    
   - pin: BA1
+    id: L9779_OUT_17
+    class: outputs
     function: Air compressor control 
     type:  
     
@@ -190,6 +215,8 @@ pins:
     type:  
     
   - pin: BB1
+    id: L9779_OUT_14
+    class: outputs
     function: Secondary starter relay 
     type:  
     
@@ -206,6 +233,8 @@ pins:
     type:  
     
   - pin: BC1
+    id: L9779_OUT_15
+    class: outputs
     function: FAN 1 relay
     type:  
     
@@ -222,6 +251,8 @@ pins:
     type: sgnd 
     
   - pin: BD1
+    id: L9779_OUT_16
+    class: outputs
     function: FAN 2 relay 
     type:  
     
@@ -270,6 +301,8 @@ pins:
     type:  
     
   - pin: BG1
+    id: L9779_OUT_13
+    class: outputs
     function: Fuel pump relay
     type:  
     
