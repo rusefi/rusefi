@@ -97,8 +97,8 @@ static void runCanGpioTest() {
 }
 
 // todo: reuse intFlashWrite method?
-static void writeSimulatorTune() {
-	FILE *ptr = fopen(SIMULATOR_TUNE_BIN_FILE_NAME, "wb");
+static void writeSimulatorTune(const char *fileName) {
+	FILE *ptr = fopen(fileName, "wb");
 	if (ptr == nullptr) {
 		printf("ERROR creating file: [%s]\n", SIMULATOR_TUNE_BIN_FILE_NAME);
 		printf("Please check folder exists and is writeable.");
@@ -169,6 +169,17 @@ void rusEfiFunctionalTest(void) {
 	// todo: reduce code duplication with initRealHardwareEngineController
 
 	initFlash();
+	engineConfiguration->engineType = engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2;
+	resetConfigurationExt(engineConfiguration->engineType);
+	char fileName[3000];
+	sprintf(fileName, "%s_%d%s",
+	    SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX,
+	    (int)engineConfiguration->engineType,
+	    SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX
+	);
+	writeSimulatorTune(fileName);
+
+	// this here is really 'reset to default configuration'
 	loadConfiguration();
 
 	commonInitEngineController();
@@ -179,7 +190,7 @@ void rusEfiFunctionalTest(void) {
 	enableTriggerStimulator(false);
 #endif
 
-	writeSimulatorTune();
+	writeSimulatorTune(SIMULATOR_TUNE_BIN_FILE_NAME);
 
     /**
      * !!!! TESTS !
