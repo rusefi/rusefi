@@ -38,6 +38,24 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
+static void setupEtb() {
+	// TLE9201 driver
+	// This chip has three control pins:
+	// DIR - sets direction of the motor
+	// PWM - pwm control (enable high, coast low)
+	// DIS - disables motor (enable low)
+
+//	// PWM pin
+//	engineConfiguration->etbIo[0].controlPin = Gpio::C7;
+//	// DIR pin
+//	engineConfiguration->etbIo[0].directionPin1 = Gpio::A8;
+//	// Disable pin
+//	engineConfiguration->etbIo[0].disablePin = Gpio::C8;
+
+	// we only have pwm/dir, no dira/dirb
+	engineConfiguration->etb_use_two_wires = false;
+}
+
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
@@ -68,6 +86,7 @@ void setBoardConfigOverrides() {
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;
 	engineConfiguration->canTxPin = Gpio::G1;
+	setupEtb();
 }
 
 static struct l9779_config l9779_cfg = {
@@ -124,4 +143,8 @@ static void board_init_ext_gpios()
 void boardInit(void)
 {
 	board_init_ext_gpios();
+}
+
+int getBoardMetaDcOutputsCount() {
+    return 1;
 }
