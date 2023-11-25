@@ -23,7 +23,6 @@
             <option value="$PROJECT_DIR$/../java_console/shared_ui" />
             <option value="$PROJECT_DIR$/../java_console/ui" />
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/bin2header" />
             <option value="$PROJECT_DIR$/configuration_definition" />
             <option value="$PROJECT_DIR$/configuration_definition_base" />
             <option value="$PROJECT_DIR$/enum_to_string" />

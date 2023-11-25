@@ -6,8 +6,6 @@ include ':logging-api'
 project(':logging-api').projectDir = new File('../java_console/logging-api')
 include ':enum_to_string'
 project(':enum_to_string').projectDir = new File('enum_to_string')
-include ':bin2header'
-project(':bin2header').projectDir = new File('bin2header')
 include ':config_definition_base'
 project(':config_definition_base').projectDir = new File('configuration_definition_base')
 include ':config_definition'
