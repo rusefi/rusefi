@@ -163,12 +163,6 @@ public class StartupFrame {
         setFrameIcon(frame);
         frame.setVisible(true);
         UiUtils.centerWindow(frame);
-
-        KeyListener hwTestEasterEgg = functionalTestEasterEgg();
-
-        for (Component component : getAllComponents(frame)) {
-            component.addKeyListener(hwTestEasterEgg);
-        }
     }
 
     private void applyKnownPorts(SerialPortScanner.AvailableHardware currentHardware) {
@@ -230,36 +224,6 @@ public class StartupFrame {
 
         disposeFrameAndProceed();
         new ConsoleUI(selectedPort.port);
-    }
-
-    /**
-     * Here we listen to keystrokes while console start-up frame is being displayed and if magic "test" word is typed
-     * we launch a functional test on real hardware, same as Jenkins runs within continuous integration
-     */
-    @NotNull
-    private KeyListener functionalTestEasterEgg() {
-        return new KeyAdapter() {
-            private final static String TEST = "test";
-            private String recentKeyStrokes = "";
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                recentKeyStrokes = recentKeyStrokes + e.getKeyChar();
-                if (recentKeyStrokes.toLowerCase().endsWith(TEST) && showTestConfirmation()) {
-                    runFunctionalHardwareTest();
-                }
-            }
-
-            private boolean showTestConfirmation() {
-                return JOptionPane.showConfirmDialog(StartupFrame.this.frame, "Want to run functional test? This would freeze UI for the duration of the test",
-                        "Better do not run while connected to vehicle!!!", YES_NO_OPTION) == JOptionPane.YES_OPTION;
-            }
-
-            private void runFunctionalHardwareTest() {
-                boolean isSuccess = HwCiF4Discovery.runHardwareTest();
-                JOptionPane.showMessageDialog(null, "Function test passed: " + isSuccess + "\nSee log folder for details.");
-            }
-        };
     }
 
     public void disposeFrameAndProceed() {
