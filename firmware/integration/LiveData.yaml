@@ -154,6 +154,7 @@ Usages:
     java: IdleState.java
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
+    constexpr: "___engine.module<IdleController>().unmock()"
     output_name: idle
 
   - name: electronic_throttle
