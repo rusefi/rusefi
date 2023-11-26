@@ -31,7 +31,7 @@ public class AverageAnglesUtil {
         runUtil(fileName);
     }
 
-    public static String runUtil(String fileName) throws IOException {
+    public static void runUtil(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         String line;
@@ -65,8 +65,6 @@ public class AverageAnglesUtil {
             log.info("Got " + line);
         }
 
-        String report = aa.getReport();
-        System.out.println(report);
-        return report;
+        System.out.println(aa.getReport());
     }
 }

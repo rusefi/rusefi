@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static com.rusefi.IoUtil.getEnableCommand;
-import static com.rusefi.TestingUtils.assertNull;
 import static org.junit.Assert.*;
 
 /**

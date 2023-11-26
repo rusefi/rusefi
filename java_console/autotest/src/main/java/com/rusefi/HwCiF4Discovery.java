@@ -34,8 +34,4 @@ public class HwCiF4Discovery {
         CommandQueue.DEFAULT_TIMEOUT = 4950;
         CmdJUnitRunner.runHardwareTestAndExit(tests);
     }
-
-    static boolean runHardwareTest() {
-        return CmdJUnitRunner.runHardwareTest(tests);
-    }
 }

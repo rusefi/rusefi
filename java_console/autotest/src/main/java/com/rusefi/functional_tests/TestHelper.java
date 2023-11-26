@@ -3,7 +3,7 @@ package com.rusefi.functional_tests;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 
-import static com.rusefi.TestingUtils.assertNull;
+import static org.junit.Assert.assertNull;
 
 public enum TestHelper {
     INSTANCE;
