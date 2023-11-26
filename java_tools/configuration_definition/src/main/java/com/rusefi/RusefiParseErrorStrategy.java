@@ -10,6 +10,8 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
     private boolean hadError = false;
@@ -17,7 +19,7 @@ public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
     public static void parseDefinitionFile(ParseTreeListener listener, String filePath) throws IOException {
         SystemOut.println("Parsing file (Antlr) " + filePath);
 
-        CharStream in = new ANTLRInputStream(new FileInputStream(filePath));
+        CharStream in = new ANTLRInputStream(Files.newInputStream(Paths.get(filePath)));
 
         long start = System.nanoTime();
         parse(listener, in);

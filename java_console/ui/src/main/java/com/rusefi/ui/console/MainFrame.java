@@ -8,7 +8,7 @@ import com.rusefi.core.EngineState;
 import com.rusefi.io.*;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.core.preferences.storage.Node;
-import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;

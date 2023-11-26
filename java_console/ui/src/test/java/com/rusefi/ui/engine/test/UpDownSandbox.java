@@ -5,7 +5,7 @@ import com.rusefi.ui.test.WavePanelSandbox;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineChartParser;
 import com.rusefi.waves.EngineReport;
-import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.ui.FrameHelper;
 import com.rusefi.ui.engine.UpDownImage;
 
 import javax.swing.*;
