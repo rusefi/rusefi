@@ -80,7 +80,7 @@ public class CurveData {
         return "static const float " +
                 getCannedName() + "[" + rawData.length + "] = " +
                 toString(rawData) +
-                ";\n\n";
+                ";\n";
     }
 
     @NotNull
