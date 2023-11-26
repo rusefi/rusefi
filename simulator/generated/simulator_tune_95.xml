@@ -352,7 +352,7 @@
         <constant name="coastingFuelCutEnabled">"false"</constant>
         <constant name="useIacTableForCoasting">"false"</constant>
         <constant name="useNoiselessTriggerDecoder">"false"</constant>
-        <constant name="useIdleTimingPidControl">"false"</constant>
+        <constant name="useIdleTimingPidControl">"true"</constant>
         <constant name="disableEtbWhenEngineStopped">"false"</constant>
         <constant name="is_enabled_spi_4">"false"</constant>
         <constant name="pauseEtbControl">"false"</constant>
@@ -671,7 +671,7 @@
         <constant name="alwaysInstantRpm">"false"</constant>
         <constant name="isMapAveragingEnabled">"true"</constant>
         <constant name="overrideCrankingIacSetting">"true"</constant>
-        <constant name="useSeparateAdvanceForIdle">"false"</constant>
+        <constant name="useSeparateAdvanceForIdle">"true"</constant>
         <constant name="isWaveAnalyzerEnabled">"true"</constant>
         <constant name="useSeparateVeForIdle">"false"</constant>
         <constant name="verboseTriggerSynchDetails">"false"</constant>
@@ -690,7 +690,7 @@
         <constant name="useCltBasedRpmLimit">"no"</constant>
         <constant name="forceO2Heating">"no"</constant>
         <constant name="invertVvtControlIntake">"advance"</constant>
-        <constant name="invertVvtControlExhaust">"advance"</constant>
+        <constant name="invertVvtControlExhaust">"retard"</constant>
         <constant name="useBiQuadOnAuxSpeedSensors">"false"</constant>
         <constant name="sdTriggerLog">"normal"</constant>
         <constant name="ALSActivateInverted">"false"</constant>
@@ -976,16 +976,16 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="4" name="auxPid1_pFactor" units="">2.0</constant>
-        <constant digits="4" name="auxPid1_iFactor" units="">0.005</constant>
-        <constant digits="4" name="auxPid1_dFactor" units="">0.0</constant>
-        <constant digits="0" name="auxPid1_offset" units="">33.0</constant>
+        <constant digits="4" name="auxPid1_iFactor" units="">25.4</constant>
+        <constant digits="4" name="auxPid1_dFactor" units="">0.1</constant>
+        <constant digits="0" name="auxPid1_offset" units="">38.0</constant>
         <constant digits="0" name="auxPid1_periodMs" units="ms">0.0</constant>
         <constant digits="0" name="auxPid1_minValue" units="">10.0</constant>
         <constant digits="0" name="auxPid1_maxValue" units="">90.0</constant>
-        <constant digits="4" name="auxPid2_pFactor" units="">0.0</constant>
-        <constant digits="4" name="auxPid2_iFactor" units="">0.0</constant>
-        <constant digits="4" name="auxPid2_dFactor" units="">0.0</constant>
-        <constant digits="0" name="auxPid2_offset" units="">0.0</constant>
+        <constant digits="4" name="auxPid2_pFactor" units="">2.0</constant>
+        <constant digits="4" name="auxPid2_iFactor" units="">25.4</constant>
+        <constant digits="4" name="auxPid2_dFactor" units="">0.2</constant>
+        <constant digits="0" name="auxPid2_offset" units="">38.0</constant>
         <constant digits="0" name="auxPid2_periodMs" units="ms">0.0</constant>
         <constant digits="0" name="auxPid2_minValue" units="">10.0</constant>
         <constant digits="0" name="auxPid2_maxValue" units="">90.0</constant>
@@ -1711,8 +1711,8 @@
          0.0
 </constant>
         <constant digits="0" name="benchTestCount" units="">3.0</constant>
-        <constant digits="1" name="iacByTpsHoldTime" units="seconds">0.0</constant>
-        <constant digits="1" name="iacByTpsDecayTime" units="seconds">0.0</constant>
+        <constant digits="1" name="iacByTpsHoldTime" units="seconds">2.0</constant>
+        <constant digits="1" name="iacByTpsDecayTime" units="seconds">3.0</constant>
         <constant name="tcu_rangeInput1">"NONE"</constant>
         <constant name="tcu_rangeInput2">"NONE"</constant>
         <constant name="tcu_rangeInput3">"NONE"</constant>
