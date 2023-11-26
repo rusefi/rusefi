@@ -53,14 +53,14 @@
          0.797
          0.726
 </constant>
-        <constant name="isForcedInduction">"false"</constant>
+        <constant name="isForcedInduction">"true"</constant>
         <constant name="useFordRedundantTps">"false"</constant>
         <constant name="enableKline">"false"</constant>
         <constant name="overrideTriggerGaps">"false"</constant>
         <constant name="enableFan1WithAc">"false"</constant>
         <constant name="enableFan2WithAc">"false"</constant>
-        <constant name="disableFan1WhenStopped">"false"</constant>
-        <constant name="disableFan2WhenStopped">"false"</constant>
+        <constant name="disableFan1WhenStopped">"true"</constant>
+        <constant name="disableFan2WhenStopped">"true"</constant>
         <constant name="enableTrailingSparks">"false"</constant>
         <constant name="etb_use_two_wires">"false"</constant>
         <constant name="isDoubleSolenoidIdle">"false"</constant>
@@ -173,14 +173,14 @@
         <constant digits="0" name="minOilPressureAfterStart" units="kPa">0.0</constant>
         <constant name="timingMode">"dynamic"</constant>
         <constant digits="0" name="fixedModeTiming" units="RPM">50.0</constant>
-        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">90.0</constant>
+        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">475.0</constant>
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
-        <constant digits="0" name="fanOnTemperature" units="deg C">95.0</constant>
-        <constant digits="0" name="fanOffTemperature" units="deg C">91.0</constant>
+        <constant digits="0" name="fanOnTemperature" units="deg C">80.0</constant>
+        <constant digits="0" name="fanOffTemperature" units="deg C">75.0</constant>
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
-        <constant name="canNbcType">"Genesis Coupe"</constant>
+        <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
@@ -560,7 +560,7 @@
         <constant name="tcu_solenoid5">"NONE"</constant>
         <constant name="tcu_solenoid6">"NONE"</constant>
         <constant name="etbFunctions1">"Throttle 1"</constant>
-        <constant name="etbFunctions2">"Throttle 2"</constant>
+        <constant name="etbFunctions2">"Wastegate"</constant>
         <constant name="drv8860spiDevice">"Off"</constant>
         <constant name="drv8860_cs">"NONE"</constant>
         <constant name="drv8860_csPinMode">"default"</constant>
@@ -583,8 +583,8 @@
         <constant name="luaOutputPins6">"NONE"</constant>
         <constant name="luaOutputPins7">"NONE"</constant>
         <constant name="luaOutputPins8">"NONE"</constant>
-        <constant digits="1" name="vvtOffsets1" units="value">450.0</constant>
-        <constant digits="1" name="vvtOffsets2" units="value">0.0</constant>
+        <constant digits="1" name="vvtOffsets1" units="value">-154.0</constant>
+        <constant digits="1" name="vvtOffsets2" units="value">335.0</constant>
         <constant digits="1" name="vvtOffsets3" units="value">0.0</constant>
         <constant digits="1" name="vvtOffsets4" units="value">0.0</constant>
         <constant cols="1" digits="0" name="vrThreshold1_rpmBins" rows="6">
@@ -670,7 +670,7 @@
         <constant name="complexWallModel">"Basic (constants)"</constant>
         <constant name="alwaysInstantRpm">"false"</constant>
         <constant name="isMapAveragingEnabled">"true"</constant>
-        <constant name="overrideCrankingIacSetting">"false"</constant>
+        <constant name="overrideCrankingIacSetting">"true"</constant>
         <constant name="useSeparateAdvanceForIdle">"false"</constant>
         <constant name="isWaveAnalyzerEnabled">"true"</constant>
         <constant name="useSeparateVeForIdle">"false"</constant>
@@ -760,24 +760,24 @@
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
         <constant digits="1" name="targetVBatt" units="Volts">14.0</constant>
         <constant digits="0" name="unused1372" units="">0.0</constant>
-        <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
+        <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">100.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
         <constant name="auxSerialTxPin">"NONE"</constant>
         <constant name="auxSerialRxPin">"NONE"</constant>
         <constant name="LIS302DLCsPin">"NONE"</constant>
-        <constant digits="2" name="tpsAccelLookback" units="sec">0.0</constant>
+        <constant digits="2" name="tpsAccelLookback" units="sec">0.3</constant>
         <constant digits="0" name="coastingFuelCutVssLow" units="kph">0.0</constant>
         <constant digits="0" name="coastingFuelCutVssHigh" units="kph">0.0</constant>
         <constant digits="1" name="noFuelTrimAfterDfcoTime" units="sec">0.0</constant>
-        <constant digits="1" name="tpsAccelEnrichmentThreshold" units="roc">40.0</constant>
+        <constant digits="1" name="tpsAccelEnrichmentThreshold" units="roc">12.0</constant>
         <constant name="auxSpeedSensorInputPin1">"NONE"</constant>
         <constant name="auxSpeedSensorInputPin2">"NONE"</constant>
         <constant digits="0" name="totalGearsCount" units="">0.0</constant>
         <constant name="injectionTimingMode">"End of injection"</constant>
         <constant name="debugMode">"MAP"</constant>
-        <constant digits="0" name="fan1ExtraIdle" units="%">0.0</constant>
+        <constant digits="0" name="fan1ExtraIdle" units="%">2.0</constant>
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
-        <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
+        <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">7.0</constant>
         <constant digits="2" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
         <constant digits="0" name="auxSerialSpeed" units="BPs">0.0</constant>
         <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">0.74</constant>
@@ -857,7 +857,7 @@
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>
         <constant name="sdCardCsPinMode">"default"</constant>
-        <constant digits="0" name="crankingIACposition" units="percent">50.0</constant>
+        <constant digits="0" name="crankingIACposition" units="percent">70.0</constant>
         <constant digits="4" name="tChargeMinRpmMinTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMinRpmMaxTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMaxRpmMinTps" units="">0.25</constant>
@@ -868,7 +868,7 @@
         <constant digits="0" name="alternatorPwmFrequency" units="Hz">300.0</constant>
         <constant name="vvtMode1">"Single Tooth"</constant>
         <constant name="vvtMode2">"Inactive"</constant>
-        <constant digits="0" name="fan2ExtraIdle" units="%">0.0</constant>
+        <constant digits="0" name="fan2ExtraIdle" units="%">2.0</constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
         <constant name="auxAnalogInputs1">"Disabled"</constant>
         <constant name="auxAnalogInputs2">"Disabled"</constant>
@@ -1014,8 +1014,8 @@
         <constant digits="2" name="oilPressure_value2" units="">689.476</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
         <constant name="fan2Pin">"NONE"</constant>
-        <constant digits="0" name="fan2OnTemperature" units="deg C">95.0</constant>
-        <constant digits="0" name="fan2OffTemperature" units="deg C">91.0</constant>
+        <constant digits="0" name="fan2OnTemperature" units="deg C">87.0</constant>
+        <constant digits="0" name="fan2OffTemperature" units="deg C">82.0</constant>
         <constant name="stepperEnablePin">"NONE"</constant>
         <constant name="tle8888_cs">"NONE"</constant>
         <constant name="tle8888_csPinMode">"default"</constant>
@@ -1073,8 +1073,8 @@
         <constant digits="0" name="idleTimingPid_maxValue" units="">10.0</constant>
         <constant digits="1" name="idleTimingSoftEntryTime" units="">0.0</constant>
         <constant digits="0" name="etbRocExpAverageLength" units="">50.0</constant>
-        <constant digits="0" name="tpsAccelFractionPeriod" units="cycles">0.0</constant>
-        <constant digits="2" name="tpsAccelFractionDivisor" units="coef">0.0</constant>
+        <constant digits="0" name="tpsAccelFractionPeriod" units="cycles">3.0</constant>
+        <constant digits="2" name="tpsAccelFractionDivisor" units="coef">3.0</constant>
         <constant name="tle8888spiDevice">"Off"</constant>
         <constant name="mc33816spiDevice">"Off"</constant>
         <constant digits="0" name="idlerpmpid_iTermMin" units="">-20.0</constant>
@@ -5037,7 +5037,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.11.25.f407-discovery.3659812123" version="5.0"/>
+    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.11.26.f407-discovery.3659812123" version="5.0"/>
     <bibliography author="rusEFI 20231120" writeDate="date"/>
     <settings/>
     <userComments/>
