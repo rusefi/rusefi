@@ -248,7 +248,7 @@ pins:
     function: Sensor +5V
 
   - pin: 67
-    function: Constant Battery Power
+    function: +12v Constant Battery Power
     ts_name: 67 Constant Battery Power
     type: 12v
 
