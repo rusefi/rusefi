@@ -170,7 +170,7 @@ public class IniFileReaderTest {
         assertEquals(1, model.defines.size());
 
         EnumIniField field = (EnumIniField) model.allIniFields.get("iat_adcChannel");
-        assertEquals(6, field.getEnums().size());
+        assertEquals(7, field.getEnums().size());
         assertEquals(2, model.allIniFields.size());
     }
 

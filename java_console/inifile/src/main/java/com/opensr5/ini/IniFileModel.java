@@ -115,7 +115,7 @@ public class IniFileModel {
         try {
             LinkedList<String> list = new LinkedList<>(Arrays.asList(line.getTokens()));
             if (!list.isEmpty() && list.get(0).equals("#define")) {
-                defines.put(list.get(1), list.subList(2, list.size() - 1));
+                defines.put(list.get(1), list.subList(2, list.size()));
                 return;
             }
 
