@@ -746,6 +746,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
+#if HW_PROTEUS || HW_HELLEN_HONDA
+	case engine_type_e::HONDA_K:
+		setHondaK();
+		break;
+#endif
+
 #if HW_PROTEUS
 	case engine_type_e::MAVERICK_X3:
 	    setMaverickX3();
@@ -782,9 +788,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU();
-		break;
-	case engine_type_e::PROTEUS_HONDA_K:
-		setProteusHondaElement2003();
 		break;
 	case engine_type_e::PROTEUS_HONDA_OBD2A:
 		setProteusHondaOBD2A();

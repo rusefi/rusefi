@@ -198,7 +198,7 @@ enum class engine_type_e : uint16_t {
 
 	HELLEN_128_MERCEDES_8_CYL = 89,
 
-	PROTEUS_HONDA_K = 90,
+	HONDA_K = 90,
 
 	PROTEUS_HONDA_OBD2A = 91,
 
