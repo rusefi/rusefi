@@ -26,9 +26,15 @@ public class WriteSimulatorConfiguration {
         System.out.printf("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
             writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
-            String engine = "_" + 95;
-            writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + engine + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX,
-                    TuneCanTool.SIMULATED_PREFIX + engine + TuneCanTool.SIMULATED_SUFFIX);
+            for (int type : new int[]{
+                    Fields.engine_type_e_MRE_M111,
+                    Fields.engine_type_e_HONDA_K,
+                    Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1,
+                    Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2,
+                    Fields.engine_type_e_HYUNDAI_PB,
+            }) {
+                writeSpecificEngineType(type);
+            }
         } catch (Throwable e) {
             log.error("Unfortunately", e);
             System.exit(-1);
@@ -36,6 +42,12 @@ public class WriteSimulatorConfiguration {
             // No way to set Process.exec to be a daemon, we need explicit exit
             System.exit(0);
         }
+    }
+
+    private static void writeSpecificEngineType(int engineType) throws JAXBException, IOException {
+        String engine = "_" + engineType;
+        writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + engine + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX,
+                TuneCanTool.SIMULATED_PREFIX + engine + TuneCanTool.SIMULATED_SUFFIX);
     }
 
     private static void writeTune(String tuneBinFileName, String outputXmlFileName) throws JAXBException, IOException {

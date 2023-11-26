@@ -153,6 +153,18 @@ static void	runNotSquareTest() {
     assertNear(getscriptTable(3)->getValue(3000, 20), 144.384);
 }
 
+static void writeEngineTypeDefaultConfig(engine_type_e type) {
+	engineConfiguration->engineType = type;
+	resetConfigurationExt(engineConfiguration->engineType);
+	char fileName[3000];
+	sprintf(fileName, "%s_%d%s",
+	    SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX,
+	    (int)engineConfiguration->engineType,
+	    SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX
+	);
+	writeSimulatorTune(fileName);
+}
+
 void rusEfiFunctionalTest(void) {
 	printToConsole("Running rusEFI simulator version:");
 	static char versionBuffer[20];
@@ -169,15 +181,17 @@ void rusEfiFunctionalTest(void) {
 	// todo: reduce code duplication with initRealHardwareEngineController
 
 	initFlash();
-	engineConfiguration->engineType = engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2;
-	resetConfigurationExt(engineConfiguration->engineType);
-	char fileName[3000];
-	sprintf(fileName, "%s_%d%s",
-	    SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX,
-	    (int)engineConfiguration->engineType,
-	    SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX
-	);
-	writeSimulatorTune(fileName);
+
+	for (auto const type : {
+			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1,
+			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2,
+			engine_type_e::MRE_M111,
+			engine_type_e::HYUNDAI_PB,
+			engine_type_e::HONDA_K,
+
+	} ) {
+		writeEngineTypeDefaultConfig(type);
+	}
 
 	// this here is really 'reset to default configuration'
 	loadConfiguration();
