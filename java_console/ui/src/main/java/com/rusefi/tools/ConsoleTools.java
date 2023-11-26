@@ -1,8 +1,6 @@
 package com.rusefi.tools;
 
-import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
@@ -20,7 +18,6 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
-import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
@@ -32,7 +29,6 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
 

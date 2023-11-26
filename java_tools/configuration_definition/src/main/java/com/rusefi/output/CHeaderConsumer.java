@@ -8,8 +8,6 @@ import java.io.IOException;
 
 import static com.rusefi.ToolUtil.EOL;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Configuration consumer which writes C header file
  */

@@ -10,7 +10,6 @@ import com.rusefi.core.SignatureHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.DfuFlasher;

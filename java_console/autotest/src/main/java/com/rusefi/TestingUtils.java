@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.EngineState;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.waves.EngineChart;

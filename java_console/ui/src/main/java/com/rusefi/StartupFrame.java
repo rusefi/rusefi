@@ -21,7 +21,6 @@ import java.util.List;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.*;
-import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 /**
  * This frame is used on startup to select the port we would be using

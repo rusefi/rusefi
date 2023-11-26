@@ -2,7 +2,6 @@ package com.rusefi.binaryprotocol.test;
 
 import com.macfaq.io.LittleEndianOutputStream;
 import com.rusefi.CompatibleFunction;
-import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;

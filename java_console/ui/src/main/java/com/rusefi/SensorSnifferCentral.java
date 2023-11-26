@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.core.EngineState;
 import com.rusefi.io.LinkManager;
 
 import java.util.List;

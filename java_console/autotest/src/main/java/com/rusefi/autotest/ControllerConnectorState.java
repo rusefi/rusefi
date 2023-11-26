@@ -5,7 +5,6 @@ import com.rusefi.IoUtil;
 import com.rusefi.TestingUtils;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.EngineState;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
 

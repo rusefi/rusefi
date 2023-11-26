@@ -3,7 +3,6 @@ package com.rusefi.io.tcp;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.CompatibleFunction;
-import com.rusefi.Listener;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;

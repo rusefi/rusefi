@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 

@@ -4,7 +4,6 @@ import com.rusefi.DataBuffer;
 import com.rusefi.TimeBasedBuffer;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.*;

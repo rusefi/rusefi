@@ -1,10 +1,7 @@
 package com.rusefi.ui.widgets;
 
-import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
@@ -21,7 +18,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 /**
  * Date: 3/20/13
