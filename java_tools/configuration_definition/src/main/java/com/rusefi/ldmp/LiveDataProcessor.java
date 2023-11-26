@@ -99,86 +99,81 @@ public class LiveDataProcessor {
 
         // SdLogWriter sdLogWriter = new SdLogWriter("console/binary_log/log_fields_generated.h");
 
-        EntryHandler handler = new EntryHandler() {
-            @Override
-            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, Boolean isPtr) throws IOException {
-                // TODO: use outputNames
+        EntryHandler handler = (name, javaName, folder, prepend, withCDefines, outputNames, constexpr, conditional, isPtr) -> {
+            int startingPosition = outputsSections.sensorTsPosition;
+            log.info("Starting " + name + " at " + startingPosition + " with [" + conditional + "]");
 
-                int startingPosition = outputsSections.sensorTsPosition;
-                log.info("Starting " + name + " at " + startingPosition + " with [" + conditional + "]");
+            baseAddressCHeader.append("#define " + name.toUpperCase() + "_BASE_ADDRESS " + startingPosition + "\n");
 
-                baseAddressCHeader.append("#define " + name.toUpperCase() + "_BASE_ADDRESS " + startingPosition + "\n");
+            ReaderStateImpl state = new ReaderStateImpl();
+            state.setDefinitionInputFile(folder + File.separator + name + ".txt");
+            state.setWithC_Defines(withCDefines);
 
-                ReaderStateImpl state = new ReaderStateImpl();
-                state.setDefinitionInputFile(folder + File.separator + name + ".txt");
-                state.setWithC_Defines(withCDefines);
+            state.addDestination(
+                    outputsSections,
+                    dataLogConsumer
+            );
+            FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
+            state.addDestination(fragmentDialogConsumer);
 
-                state.addDestination(
-                        outputsSections,
-                        dataLogConsumer
-                );
-                FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
-                state.addDestination(fragmentDialogConsumer);
+            if (extraPrepend != null)
+                state.addPrepend(extraPrepend);
+            state.addPrepend(prepend);
+            String cHeaderDestination = folder + File.separator + name + "_generated.h";
+            state.addCHeaderDestination(cHeaderDestination);
 
-                if (extraPrepend != null)
-                    state.addPrepend(extraPrepend);
-                state.addPrepend(prepend);
-                String cHeaderDestination = folder + File.separator + name + "_generated.h";
-                state.addCHeaderDestination(cHeaderDestination);
+            int baseOffset = outputsSections.getBaseOffset();
 
-                int baseOffset = outputsSections.getBaseOffset();
-
-                if (javaName != null) {
-                    state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
-                }
-
-                if (constexpr != null) {
-                    sdCardFieldsConsumer.home = constexpr;
-                    sdCardFieldsConsumer.isPtr = isPtr;
-                    state.addDestination(sdCardFieldsConsumer::handleEndStruct);
-
-                    outputValueConsumer.currentSectionPrefix = constexpr;
-                    outputValueConsumer.conditional = conditional;
-                    outputValueConsumer.isPtr = isPtr;
-                    state.addDestination(outputValueConsumer::handleEndStruct);
-
-                }
-
-                {
-                    ParseState parseState = new ParseState(state.getEnumsReader());
-
-                    parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
-
-                    if (prepend != null && !prepend.isEmpty()) {
-                        RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prepend);
-                    }
-
-                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.getDefinitionInputFile());
-
-                    // CStructWriter cStructs = new CStructWriter();
-                    // cStructs.writeCStructs(parseState, cHeaderDestination);
-
-                    // if (outputNames.length == 0) {
-                    //     outputChannelWriter.writeOutputChannels(parseState, null);
-                    // } else {
-                    //     for (int i = 0; i < outputNames.length; i++) {
-                    //         outputChannelWriter.writeOutputChannels(parseState, outputNames[i]);
-                    //     }
-                    // }
-
-                    // if (constexpr != null) {
-                    //     sdLogWriter.writeSdLogs(parseState, constexpr + (isPtr ? "->" : "."));
-                    // }
-                }
-
-                state.doJob();
-
-                fancyNewStuff.append(fragmentDialogConsumer.getContent());
-
-                fancyNewMenu.append(fragmentDialogConsumer.menuLine());
-
-                log.info("Done with " + name + " at " + outputsSections.sensorTsPosition);
+            if (javaName != null) {
+                state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
             }
+
+            if (constexpr != null) {
+                sdCardFieldsConsumer.home = constexpr;
+                sdCardFieldsConsumer.isPtr = isPtr;
+                state.addDestination(sdCardFieldsConsumer::handleEndStruct);
+
+                outputValueConsumer.currentSectionPrefix = constexpr;
+                outputValueConsumer.conditional = conditional;
+                outputValueConsumer.isPtr = isPtr;
+                state.addDestination(outputValueConsumer::handleEndStruct);
+
+            }
+
+            {
+                ParseState parseState = new ParseState(state.getEnumsReader());
+
+                parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
+
+                if (prepend != null && !prepend.isEmpty()) {
+                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prepend);
+                }
+
+                RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.getDefinitionInputFile());
+
+                // CStructWriter cStructs = new CStructWriter();
+                // cStructs.writeCStructs(parseState, cHeaderDestination);
+
+                // if (outputNames.length == 0) {
+                //     outputChannelWriter.writeOutputChannels(parseState, null);
+                // } else {
+                //     for (int i = 0; i < outputNames.length; i++) {
+                //         outputChannelWriter.writeOutputChannels(parseState, outputNames[i]);
+                //     }
+                // }
+
+                // if (constexpr != null) {
+                //     sdLogWriter.writeSdLogs(parseState, constexpr + (isPtr ? "->" : "."));
+                // }
+            }
+
+            state.doJob();
+
+            fancyNewStuff.append(fragmentDialogConsumer.getContent());
+
+            fancyNewMenu.append(fragmentDialogConsumer.menuLine());
+
+            log.info("Done with " + name + " at " + outputsSections.sensorTsPosition);
         };
 
 
