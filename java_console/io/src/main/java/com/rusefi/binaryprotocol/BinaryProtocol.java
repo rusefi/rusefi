@@ -357,31 +357,6 @@ public class BinaryProtocol {
         return response[0] & 0xff;
     }
 
-    public int getCrcFromController(int configSize) {
-        byte[] packet = createCrcCommand(configSize);
-        byte[] response = executeCommand(Fields.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
-
-        if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
-            ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
-            // that's unusual - most of the protocol is LITTLE_ENDIAN
-            bb.order(ByteOrder.BIG_ENDIAN);
-            int crc32FromController = bb.getInt();
-            short crc16FromController = (short) crc32FromController;
-
-            log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crc32FromController, crc32FromController));
-            log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
-            return crc32FromController;
-        } else {
-            return  -1;
-        }
-    }
-
-    public static byte[] createCrcCommand(int size) {
-        byte[] packet = new byte[4];
-        ByteRange.packOffsetAndSize(0, size, packet);
-        return packet;
-    }
-
     public byte[] executeCommand(char opcode, String msg) {
         return executeCommand(opcode, null, msg);
     }

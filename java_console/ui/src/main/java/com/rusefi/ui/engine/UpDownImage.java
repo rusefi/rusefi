@@ -85,9 +85,8 @@ public class UpDownImage extends JPanel {
         translator = createTranslator();
     }
 
-    public UpDownImage setTranslator(TimeAxisTranslator translator) {
+    public void setTranslator(TimeAxisTranslator translator) {
         this.translator = translator;
-        return this;
     }
 
     private final TimeAxisTranslator _translator = new TimeAxisTranslator() {

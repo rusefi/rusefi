@@ -59,19 +59,6 @@ public class SandboxCommon {
         return ci;
     }
 
-    static void verifyCrcNoPending(IoStream tsStream, LinkManager linkManager) {
-        BinaryProtocol bp = new BinaryProtocol(linkManager, tsStream);
-        linkManager.COMMUNICATION_EXECUTOR.submit(() -> {
-            if (tsStream.getDataBuffer().dropPending() != 0)
-                log.info("ERROR Extra data before CRC");
-            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
-//            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
-//            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
-            if (tsStream.getDataBuffer().dropPending() != 0)
-                throw new IllegalStateException("ERROR Extra data after CRC");
-        });
-    }
-
     static void verifySignature(IoStream tsStream, String prefix, String suffix) throws IOException {
         String signature = BinaryProtocol.getSignature(tsStream);
         log.info(prefix + "Got " + signature + " signature via " + suffix);
