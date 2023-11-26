@@ -244,19 +244,61 @@ static void commonGenesisCoupe() {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
 	engineConfiguration->enableSoftwareKnock = true;
-	engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
-	engineConfiguration->displacement = 1.998;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Theta II");
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
+// canned tune https://rusefi.com/online/view.php?msq=1507
+    // default "Single Coil"
+    engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+    // default 2.0
+    engineConfiguration->displacement = 1.998;
+    // default "false"
+    engineConfiguration->isForcedInduction = true;
+    // default 0.0
+    engineConfiguration->globalTriggerAngleOffset = 475;
+    // default 0.0
+    engineConfiguration->vvtOffsets[0] = -154;
+    // default 0.0
+    engineConfiguration->vvtOffsets[1] = 335;
+    // default "None"
+    engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
+
+    // default 95.0
+    engineConfiguration->fanOnTemperature = 80;
+    // default 91.0
+    engineConfiguration->fanOffTemperature = 75;
+    // default "false"
+    engineConfiguration->disableFan1WhenStopped = true;
+    // default 95.0
+    engineConfiguration->fan2OnTemperature = 87;
+    // default 91.0
+    engineConfiguration->fan2OffTemperature = 82;
+    // default "false"
+    engineConfiguration->disableFan2WhenStopped = true;
+    // default 50.0
+    engineConfiguration->crankingIACposition = 70;
+    // default 200.0
+    engineConfiguration->afterCrankingIACtaperDuration = 100;
+    // default "false"
+    engineConfiguration->overrideCrankingIacSetting = true;
+    // default 0.0
+    engineConfiguration->tpsAccelLookback = 0.3;
+    // default 40.0
+    engineConfiguration->tpsAccelEnrichmentThreshold = 12;
+    // default 0.0
+    engineConfiguration->tpsDecelEnleanmentThreshold = 7;
+    // default 0.0
+    engineConfiguration->tpsAccelFractionPeriod = 3;
+    // default 0.0
+    engineConfiguration->tpsAccelFractionDivisor = 3;
+    // default "Throttle 2"
+    engineConfiguration->etbFunctions[1] = DC_Wastegate;
+// end of canned tune
 
 	strncpy(config->luaScript, R"(
 

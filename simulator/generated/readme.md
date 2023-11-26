@@ -1,6 +1,6 @@
 # TL,DR
 
-we have a snapshot of default tune here!
+We have a snapshot of default tune here!
 
 # Technical Details
 
