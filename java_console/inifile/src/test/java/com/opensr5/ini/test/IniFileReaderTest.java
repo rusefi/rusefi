@@ -110,6 +110,27 @@ public class IniFileReaderTest {
     }
 
     @Test
+    public void testCurve() {
+        String string = "page = 1\n" +
+                "[Constants]\n" +
+                "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
+                "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n " +
+                "[CurveEditor]\n" +
+                "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
+                "\t\tcolumnLabel = \"X\", \"Y\"\n" +
+                "\t\txAxis\t\t=  0, 128, 10\n" +
+                "\t\tyAxis\t\t= -155,  150, 10\n" +
+                "\t\txBins\t\t= scriptCurve1Bins\n" +
+                "\t\tyBins\t\t= scriptCurve1\n" +
+                "\t\tshowTextValues = true\n";
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+        assertEquals(2, model.allIniFields.size());
+        assertEquals(1, model.fieldsInUiOrder.size());
+    }
+
+
+    @Test
     public void testConditional() {
         String string = "page = 1\n" +
                 "[Constants]\n" +
@@ -122,6 +143,7 @@ public class IniFileReaderTest {
         IniFileModel model = new IniFileModel().readIniFile(lines);
 
         assertEquals(1, model.allIniFields.size());
+        assertEquals(0, model.fieldsInUiOrder.size()); // no UI for the field
     }
 
     @Test

@@ -224,6 +224,8 @@ public class IniFileModel {
     private void handleXBins(LinkedList<String> list) {
         list.removeFirst();
         currentXBins = list.removeFirst();
+        DialogModel.Field field = new DialogModel.Field(currentXBins, currentXBins);
+        fieldsInUiOrder.put(currentXBins, field);
     }
 
     private void handleTable(LinkedList<String> list) {
@@ -262,13 +264,17 @@ public class IniFileModel {
 
         String key = list.isEmpty() ? null : list.removeFirst();
 
+        registerUiField(key, uiFieldName);
+        log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
+    }
+
+    private void registerUiField(String key, String uiFieldName) {
         DialogModel.Field field = new DialogModel.Field(key, uiFieldName);
 
         if (key != null) {
             fieldsOfCurrentDialog.add(field);
             fieldsInUiOrder.put(key, field);
         }
-        log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
     private void handleDialog(LinkedList<String> list) {
