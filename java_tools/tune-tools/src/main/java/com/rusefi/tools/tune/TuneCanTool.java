@@ -28,7 +28,9 @@ import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIM
 public class TuneCanTool {
     public static final String SRC_TEST_RESOURCES = "src/test/resources/";
     private static final String FOLDER = "generated";
-    public static final String DEFAULT_TUNE = FOLDER + File.separator + "simulator_tune.xml";
+    public static final String SIMULATED_PREFIX = FOLDER + File.separator + "simulator_tune";
+    public static final String SIMULATED_SUFFIX = ".xml";
+    public static final String DEFAULT_TUNE = SIMULATED_PREFIX + SIMULATED_SUFFIX;
     private static final String workingFolder = "downloaded_tunes";
 
     private static Msq simulatorDefaultTune;
