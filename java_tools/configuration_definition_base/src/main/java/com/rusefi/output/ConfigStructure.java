@@ -7,6 +7,8 @@ import java.util.List;
 public interface ConfigStructure {
     String UNUSED_ANYTHING_PREFIX = "unused";
 
+    ConfigStructure getParent();
+
     String getName();
 
     ConfigField getTsFieldByName(String name);
