@@ -77,12 +77,25 @@ public class CurveData {
 
     @NotNull
     public String getCsourceCode() {
-        return "static const float hardCoded" + curveName + "[" + rawData.length + "] = " +
-                    toString(rawData) +
-                    ";\n\n";
+        return "static const float " +
+                getCannedName() + "[" + rawData.length + "] = " +
+                toString(rawData) +
+                ";\n\n";
+    }
+
+    @NotNull
+    private String getCannedName() {
+        return "hardCoded" + curveName;
     }
 
     public float[] getRawData() {
         return rawData;
+    }
+
+    public String getCsourceMethod(String reference) {
+        return "static void canned" + curveName + "() {\n"
+                + "\t" + getCsourceCode() +
+                "\tcopyArray(" + reference + curveName + ", " + getCannedName() + ");\n" +
+                "}\n\n";
     }
 }

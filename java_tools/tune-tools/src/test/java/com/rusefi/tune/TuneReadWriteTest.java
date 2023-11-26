@@ -48,6 +48,13 @@ public class TuneReadWriteTest {
                 "{880.0, 1260.0, 1640.0, 2020.0, 2400.0, 2780.0, 3000.0, 3380.0, 3760.0, 4140.0, 4520.0, 5000.0, 5700.0, 6500.0, 7200.0, 8000.0};\n" +
                 "\n", xRpmCurve.getCsourceCode());
 
+        Assert.assertEquals("static void cannedignitionIatCorrRpmBins() {\n" +
+                "\tstatic const float hardCodedignitionIatCorrRpmBins[16] = {880.0, 1260.0, 1640.0, 2020.0, 2400.0, 2780.0, 3000.0, 3380.0, 3760.0, 4140.0, 4520.0, 5000.0, 5700.0, 6500.0, 7200.0, 8000.0};\n" +
+                "\n" +
+                "\tcopyArray(config->ignitionIatCorrRpmBins, hardCodedignitionIatCorrRpmBins);\n" +
+                "}\n" +
+                "\n", xRpmCurve.getCsourceMethod("config->"));
+
         TS2C.FINGER_PRINT = "/*unittest*/\n";
         String tableSource = TS2C.getTableCSourceCode2(TUNE_NAME, tableName, model);
         assertEquals("static const float hardCodedignitionIatCorrTable[16][16] = {\n" +
