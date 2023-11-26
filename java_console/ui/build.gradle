@@ -14,9 +14,6 @@ dependencies {
     implementation project(':config_definition_base')
     implementation project(':logging')
     implementation 'com.miglayout:miglayout-swing:4.1'
-    implementation files('../lib/dfu/dfu_java.jar')
-    implementation files('../lib/trident-6.2.jar')
-    implementation files('../lib/dfu/IntelHexParser.jar')
     implementation global_libs.junit
 
     testImplementation global_libs.mockito
