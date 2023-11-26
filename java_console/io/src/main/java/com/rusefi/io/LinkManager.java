@@ -48,7 +48,6 @@ public class LinkManager implements Closeable {
 
     private LinkConnector connector = LinkConnector.VOID;
     private boolean isStarted;
-    private boolean needPullData = true;
     private boolean needPullText = true;
     public final MessagesListener messageListener = (source, message) -> System.out.println(source + ": " + message);
     private Thread communicationThread;
@@ -145,17 +144,8 @@ public class LinkManager implements Closeable {
         return commandQueue;
     }
 
-    public boolean getNeedPullData() {
-        return needPullData;
-    }
-
     public boolean isNeedPullText() {
         return needPullText;
-    }
-
-    public LinkManager setNeedPullData(boolean needPullData) {
-        this.needPullData = needPullData;
-        return this;
     }
 
     public LinkManager setNeedPullText(boolean needPullText) {
@@ -284,22 +274,6 @@ public class LinkManager implements Closeable {
         if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
             return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
         return null;
-    }
-
-    /**
-     * @return null if no port located
-     */
-    public static String getDefaultPort() {
-        String[] ports = getCommPorts();
-        if (ports.length == 0) {
-            System.out.println("Port not specified and no ports found");
-            return null;
-        }
-        String port = ports[ports.length - 1];
-        // todo: reuse 'PortDetector.autoDetectPort' here?
-        System.out.println("Using last of " + ports.length + " port(s)");
-        System.out.println("All ports: " + Arrays.toString(ports));
-        return port;
     }
 
     public interface MessagesListener {

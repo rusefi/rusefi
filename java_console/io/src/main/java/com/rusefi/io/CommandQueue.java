@@ -176,12 +176,6 @@ public class CommandQueue {
         pendingCommands.add(new MethodInvocation(command, timeoutMs, listener, fireEvent));
     }
 
-    public void addIfNotPresent(IMethodInvocation commandSender) {
-        // technically this should be a critical locked section but for our use-case we do not care
-        if (!pendingCommands.contains(commandSender))
-            pendingCommands.add(commandSender);
-    }
-
     static class MethodInvocation implements IMethodInvocation {
         private final String command;
         private final int timeoutMs;

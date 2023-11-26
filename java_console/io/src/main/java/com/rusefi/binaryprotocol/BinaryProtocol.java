@@ -90,10 +90,6 @@ public class BinaryProtocol {
         }
     }
 
-    public IoStream getStream() {
-        return stream;
-    }
-
     public boolean isClosed;
 
     public final CommunicationLoggingListener communicationLoggingListener;
@@ -208,7 +204,7 @@ public class BinaryProtocol {
             public void run() {
                 while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
-                    if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
+                    if (linkManager.COMMUNICATION_QUEUE.isEmpty()) {
                         linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
@@ -245,31 +241,6 @@ public class BinaryProtocol {
                 return;
             incomingData.dropPending();
         }
-    }
-
-    public void uploadChanges(ConfigurationImage newVersion) {
-        ConfigurationImage current = getControllerConfiguration();
-        // let's have our own copy which no one would be able to change
-        newVersion = newVersion.clone();
-        int offset = 0;
-        while (offset < current.getSize()) {
-            Pair<Integer, Integer> range = ConfigurationImageDiff.findDifferences(current, newVersion, offset);
-            if (range == null)
-                break;
-            int size = range.second - range.first;
-            log.info("Need to patch: " + range + ", size=" + size);
-            byte[] oldBytes = current.getRange(range.first, size);
-            log.info("old " + Arrays.toString(oldBytes));
-
-            byte[] newBytes = newVersion.getRange(range.first, size);
-            log.info("new " + Arrays.toString(newBytes));
-
-            writeData(newVersion.getContent(), 0, range.first, size);
-
-            offset = range.second;
-        }
-        burn();
-        setController(newVersion);
     }
 
     private byte[] receivePacket(String msg) throws IOException {

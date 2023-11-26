@@ -235,10 +235,6 @@ public class BinaryProtocolServer {
         return length;
     }
 
-    public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler) throws IOException {
-        return getPacketLength(in, protocolCommandHandler, Timeouts.BINARY_IO_TIMEOUT);
-    }
-
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler, int ioTimeout) throws IOException {
         byte first = in.readByte(ioTimeout);
         if (first == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
@@ -247,19 +243,6 @@ public class BinaryProtocolServer {
         }
         byte secondByte = in.readByte(ioTimeout);
         return IoHelper.getInt(first, secondByte);
-    }
-
-    public static Packet readPromisedBytes(DataInputStream in, int length) throws IOException {
-        if (length < 0)
-            throw new IllegalArgumentException(String.format("Negative %d %x", length, length));
-        byte[] packet = new byte[length];
-        int size = in.read(packet);
-        if (size != packet.length)
-            throw new IOException(size + " promised but " + packet.length + " arrived");
-        int crc = in.readInt();
-        if (crc != IoHelper.getCrc32(packet))
-            throw new IOException("CRC mismatch");
-        return new Packet(packet, crc);
     }
 
     public static Packet readPromisedBytes(IncomingDataBuffer in, int length) throws IOException {

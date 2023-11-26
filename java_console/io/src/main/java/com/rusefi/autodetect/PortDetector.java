@@ -30,10 +30,10 @@ public class PortDetector {
      * @return port name on which rusEFI was detected or null if none
      */
     @NotNull
-    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
+    public static SerialAutoChecker.AutoDetectResult autoDetectSerial() {
         String rusEfiAddress = System.getProperty("rusefi.address");
         if (rusEfiAddress != null) {
-            return getSignatureFromPorts(callback, new String[] {rusEfiAddress});
+            return getSignatureFromPorts(new String[] {rusEfiAddress});
         }
         String[] serialPorts = LinkManager.getCommPorts();
         if (serialPorts.length == 0) {
@@ -41,11 +41,11 @@ public class PortDetector {
             return new SerialAutoChecker.AutoDetectResult(null, null);
         }
         log.info("Trying " + Arrays.toString(serialPorts));
-        return getSignatureFromPorts(callback, serialPorts);
+        return getSignatureFromPorts(serialPorts);
     }
 
     @NotNull
-    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(Function<SerialAutoChecker.CallbackContext, Void> callback, String[] serialPorts) {
+    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(String[] serialPorts) {
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<SerialAutoChecker.AutoDetectResult> result = new AtomicReference<>();
@@ -53,7 +53,7 @@ public class PortDetector {
             Thread thread = AUTO_DETECT_PORT.newThread(new Runnable() {
                 @Override
                 public void run() {
-                    SerialAutoChecker.AutoDetectResult checkResult = SerialAutoChecker.openAndCheckResponse(serialPort, callback);
+                    SerialAutoChecker.AutoDetectResult checkResult = SerialAutoChecker.openAndCheckResponse(serialPort);
 
                     if (checkResult != null) {
                         result.set(checkResult);
@@ -95,7 +95,7 @@ public class PortDetector {
 
     @Nullable
     public static SerialAutoChecker.AutoDetectResult autoDetectPort(JFrame parent) {
-        SerialAutoChecker.AutoDetectResult autoDetectedPort = autoDetectSerial(null);
+        SerialAutoChecker.AutoDetectResult autoDetectedPort = autoDetectSerial();
         if (autoDetectedPort.getSerialPort() == null) {
             JOptionPane.showMessageDialog(parent, "Failed to locate rusEFI");
             return null;

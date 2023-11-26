@@ -11,8 +11,6 @@ public interface StatusConsumer {
     Logging log = getLogging(StatusConsumer.class);
 
     StatusConsumer ANONYMOUS = log::info;
-    StatusConsumer VOID = s -> {
-    };
 
     void append(String status);
 }

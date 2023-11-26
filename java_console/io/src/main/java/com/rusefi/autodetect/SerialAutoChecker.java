@@ -19,14 +19,10 @@ public final class SerialAutoChecker {
     // static class - no instances
     private SerialAutoChecker() { }
 
-    public static String checkResponse(IoStream stream) {
-        return checkResponse(stream, null);
-    }
-
     /**
      * @return ECU signature from specified stream
      */
-    public static String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
+    public static String checkResponse(IoStream stream) {
         if (stream == null)
             return null;
 
@@ -40,20 +36,18 @@ public final class SerialAutoChecker {
             if (!signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
                 return null;
             }
-            if (callback != null) {
-                callback.apply(new CallbackContext(stream, signature));
-            }
+
             return signature;
         } catch (IOException ignore) {
             return null;
         }
     }
 
-    public static AutoDetectResult openAndCheckResponse(String serialPort, Function<CallbackContext, Void> callback) {
+    public static AutoDetectResult openAndCheckResponse(String serialPort) {
         String signature;
         // java 101: just a reminder that try-with syntax would take care of closing stream and that's important here!
         try (IoStream stream = BufferedSerialIoStream.openPort(serialPort)) {
-            signature = checkResponse(stream, callback);
+            signature = checkResponse(stream);
             log.info("Got signature=" + signature + " from " + serialPort);
         }
 
@@ -62,24 +56,6 @@ public final class SerialAutoChecker {
         }
 
         return null;
-    }
-
-    public static class CallbackContext {
-        private final IoStream stream;
-        private final String signature;
-
-        public CallbackContext(IoStream stream, String signature) {
-            this.stream = stream;
-            this.signature = signature;
-        }
-
-        public String getSignature() {
-            return signature;
-        }
-
-        public IoStream getStream() {
-            return stream;
-        }
     }
 
     public static class AutoDetectResult {

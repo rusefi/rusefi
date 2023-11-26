@@ -146,7 +146,7 @@ public class ConsoleTools {
 
     public static void startAndConnect(final Function<LinkManager, Void> onConnectionEstablished) {
 
-        String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
+        String autoDetectedPort = PortDetector.autoDetectSerial().getSerialPort();
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return;
@@ -195,7 +195,7 @@ public class ConsoleTools {
 
     @Nullable
     private static String autoDetectPort() {
-        String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
+        String autoDetectedPort = PortDetector.autoDetectSerial().getSerialPort();
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return null;
@@ -214,7 +214,7 @@ public class ConsoleTools {
     }
 
     static void detect(String[] strings) throws IOException {
-        SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectSerial(null);
+        SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectSerial();
         String autoDetectedPort = detectResult.getSerialPort();
         if (autoDetectedPort == null) {
             System.out.println(RUS_EFI_NOT_DETECTED);

@@ -13,7 +13,7 @@ public class SerialSandbox {
         boolean textPull = false;
         long startTime = System.currentTimeMillis();
 
-        SerialAutoChecker.AutoDetectResult autoDetectResult = PortDetector.autoDetectSerial(callbackContext -> null);
+        SerialAutoChecker.AutoDetectResult autoDetectResult = PortDetector.autoDetectSerial();
         String port = autoDetectResult.getSerialPort();
         System.out.println("Serial detected on " + port);
 
