@@ -11,7 +11,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class NewParseHelper {
-    public static ParseState parse(String input) throws IOException {
+    public static ParseState parse(String input) {
         ParseState parseState = new ParseState();
         RusefiParseErrorStrategy.parseDefinitionString(parseState.getListener(), input);
         return parseState;

@@ -97,7 +97,7 @@ public class ParseDefinitionsTest {
     }
 
     @Test
-    public void definitionOverwritePolicyReplace() throws IOException {
+    public void definitionOverwritePolicyReplace() {
         ParseState state = new ParseState();
         state.setDefinitionPolicy(Definition.OverwritePolicy.Replace);
         RusefiParseErrorStrategy.parseDefinitionString(state.getListener(), "#define val 20");
@@ -115,7 +115,7 @@ public class ParseDefinitionsTest {
     }
 
     @Test
-    public void definitionOverwritePolicyIgnoreNew() throws IOException {
+    public void definitionOverwritePolicyIgnoreNew() {
         ParseState state = new ParseState();
         state.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
         RusefiParseErrorStrategy.parseDefinitionString(state.getListener(), "#define val 20");
@@ -133,7 +133,7 @@ public class ParseDefinitionsTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void definitionOverwritePolicyNotAllowed() throws IOException {
+    public void definitionOverwritePolicyNotAllowed() {
         ParseState state = new ParseState();
         state.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
         RusefiParseErrorStrategy.parseDefinitionString(state.getListener(), "#define val 20");
