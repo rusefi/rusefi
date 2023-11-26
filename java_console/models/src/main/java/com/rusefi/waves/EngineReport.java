@@ -125,8 +125,8 @@ public class EngineReport {
                 continue;
             }
 
-            String upString[] = array[index].split("_");
-            String downString[] = array[index + 2].split("_");
+            String[] upString = array[index].split("_");
+            String[] downString = array[index + 2].split("_");
             try {
                 int upTime = Integer.parseInt(array[index + 1]);
                 int downTime = Integer.parseInt(array[index + 3]);

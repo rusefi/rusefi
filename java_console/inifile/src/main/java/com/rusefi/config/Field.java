@@ -97,10 +97,9 @@ public class Field {
 
     public static String niceToString(Number value, int precision) {
         // not enum field
-        Number number = value;
-        if (number instanceof Float)
-            return niceToString(number.floatValue(), precision);
-        return number.toString();
+        if (value instanceof Float)
+            return niceToString(value.floatValue(), precision);
+        return value.toString();
     }
 
     public static String niceToString(double value, int precision) {

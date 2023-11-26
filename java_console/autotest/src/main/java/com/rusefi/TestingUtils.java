@@ -105,17 +105,12 @@ public class TestingUtils {
     }
 
     public static EngineChart nextChart(CommandQueue commandQueue) {
-        long start = System.currentTimeMillis();
-        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue));
-        // FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
-        return chart;
+        return EngineChartParser.unpackToMap(getNextWaveChart(commandQueue));
     }
 
     static String getNextWaveChart(CommandQueue commandQueue) {
         IoUtil.sendBlockingCommand(Fields.CMD_RESET_ENGINE_SNIFFER, commandQueue);
-        String result = getEngineChart(commandQueue);
-        // FileLog.MAIN.logLine("current chart: " + result);
-        return result;
+        return getEngineChart(commandQueue);
     }
 
     /**

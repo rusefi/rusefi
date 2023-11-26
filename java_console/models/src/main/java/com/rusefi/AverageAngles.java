@@ -65,7 +65,7 @@ public class AverageAngles {
         count ++;
         rpmAtPrevChart = rpm;
 
-        String v[] = line.split("\\|");
+        String[] v = line.split("\\|");
         System.out.println("rpm " + rpm + ": " + v.length + " values");
 
         List<AngleEvent> current = new ArrayList<>();
@@ -102,7 +102,7 @@ public class AverageAngles {
         for (Map.Entry<Integer, List<AngleEvent>> e : angleData.entrySet()) {
             int k = e.getKey();
             List<AngleEvent> v = e.getValue();
-            double values[] = new double[v.size()];
+            double[] values = new double[v.size()];
             for (int i = 0; i < v.size(); i++)
                 values[i] = v.get(i).getAngle();
 

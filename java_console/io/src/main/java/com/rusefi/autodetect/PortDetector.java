@@ -35,7 +35,7 @@ public class PortDetector {
         if (rusEfiAddress != null) {
             return getSignatureFromPorts(callback, new String[] {rusEfiAddress});
         }
-        String[] serialPorts = getPortNames();
+        String[] serialPorts = LinkManager.getCommPorts();
         if (serialPorts.length == 0) {
             log.error("No serial ports detected");
             return new SerialAutoChecker.AutoDetectResult(null, null);
@@ -91,13 +91,6 @@ public class PortDetector {
         log.debug("Found " + autoDetectResult + " now stopping threads");
 //        log.info("Returning " + result.get());
         return autoDetectResult;
-    }
-
-    private static String[] getPortNames() {
-//        long now = System.currentTimeMillis();
-        String[] portNames = LinkManager.getCommPorts();
-//        log.info("Took " + (System.currentTimeMillis() - now));
-        return portNames;
     }
 
     @Nullable

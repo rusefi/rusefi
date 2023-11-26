@@ -284,7 +284,6 @@ public enum SerialPortScanner {
                 return false;
             }
 
-            IncomingDataBuffer idb = stream.getDataBuffer();
             stream.sendPacket(new byte[]{(byte) Fields.TS_QUERY_BOOTLOADER});
 
             byte[] response = stream.getDataBuffer().getPacket(500, "fomeEcuHasOpenblt");

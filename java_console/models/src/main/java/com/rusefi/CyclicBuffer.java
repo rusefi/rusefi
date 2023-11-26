@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Fixed-size array backed buffer
  */
 public class CyclicBuffer implements DataBuffer {
-    private final double values[];
+    private final double[] values;
 
     private int size = 0;
     private int pointer = 0;

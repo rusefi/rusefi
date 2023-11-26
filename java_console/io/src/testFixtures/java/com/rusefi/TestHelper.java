@@ -76,7 +76,6 @@ public class TestHelper extends MockitoTestHelper {
     }
 
     public static BinaryProtocolServer createVirtualController(int controllerPort, ConfigurationImage controllerImage, BinaryProtocolServer.Context context) throws InterruptedException {
-        CountDownLatch controllerCreated = new CountDownLatch(1);
         try {
             return createVirtualController(controllerImage, controllerPort, context);
         } catch (IOException e) {

@@ -58,7 +58,7 @@ public class AverageAnglesUtil {
                 continue;
             line = line.substring(ANALOG_CHART.length());
 
-            String p[] = line.split(",");
+            String[] p = line.split(",");
             line = p[0];
 
             aa.add(currentRpm, line);

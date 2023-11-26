@@ -54,7 +54,7 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
         content.add(scrollPane, BorderLayout.CENTER);
 
         JOptionPane.showConfirmDialog(findActiveFrame(), content, CONSOLE_VERSION + ": Exception Occurred", JOptionPane.DEFAULT_OPTION);
-        log.info("handleException: " + baos.toString());
+        log.info("handleException: " + baos);
     }
 
     private static Frame findActiveFrame() {

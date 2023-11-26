@@ -85,11 +85,10 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
     @NotNull
     static String wrapSwitchStatement(StringBuilder switchBody) {
-        String fullSwitch = switchBody.length() == 0 ? "" :
+        return switchBody.length() == 0 ? "" :
                 ("\tint hash = djb2lowerCase(name);\n" +
 
                         "\tswitch(hash) {\n" + switchBody + "\t}\n");
-        return fullSwitch;
     }
 
     @NotNull
