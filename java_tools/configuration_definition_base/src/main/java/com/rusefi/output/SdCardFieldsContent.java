@@ -50,17 +50,22 @@ public class SdCardFieldsContent {
     private String getLine(ConfigField configField, String prefix, String name) {
         String categoryStr = configField.getCategory();
 
-        if(categoryStr == null) {
+        if (categoryStr == null) {
             categoryStr = "";
         } else {
             categoryStr = ", " + categoryStr;
         }
 
+        boolean isEnum = configField.getType().contains("_e");
+        if (isEnum)
+            return "";
+
         String before = conditional == null ? "" : "#if " + conditional + "\n";
         String after = conditional == null ? "" : "#endif\n";
 
         return before
-                + "\t{" + home + (isPtr ? "->" : ".") + name +
+                + "\t{" +
+                home + (isPtr ? "->" : ".") + name +
                 ", "
                 + DataLogConsumer.getHumanGaugeName(prefix, configField) +
                 ", " +

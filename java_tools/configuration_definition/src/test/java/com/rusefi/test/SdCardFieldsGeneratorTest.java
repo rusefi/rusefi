@@ -74,6 +74,19 @@ public class SdCardFieldsGeneratorTest {
                 }, true);
     }
 
+    @Test
+    public void enumField() {
+        processAndAssert("struct_no_prefix output_channels_s\n" +
+                        "    custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], \"not important\"\n" +
+                        "    idle_state_e idleState\n" +
+                        "end_struct",
+                "",
+                readerState -> {
+
+                }, true);
+    }
+
+
     interface Actor {
         void act(ReaderStateImpl readerState);
     }
