@@ -560,7 +560,7 @@
         <constant name="tcu_solenoid5">"NONE"</constant>
         <constant name="tcu_solenoid6">"NONE"</constant>
         <constant name="etbFunctions1">"Throttle 1"</constant>
-        <constant name="etbFunctions2">"Wastegate"</constant>
+        <constant name="etbFunctions2">"Throttle 2"</constant>
         <constant name="drv8860spiDevice">"Off"</constant>
         <constant name="drv8860_cs">"NONE"</constant>
         <constant name="drv8860_csPinMode">"default"</constant>
