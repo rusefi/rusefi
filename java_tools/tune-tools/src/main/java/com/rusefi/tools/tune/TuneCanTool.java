@@ -6,7 +6,6 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.output.ConfigStructure;
-import com.rusefi.pinout.PinoutLogic;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +49,8 @@ public class TuneCanTool {
 
         RootHolder.ROOT = "../firmware/";
 
-        handle("BK2", 1507);
+//        handle("BK2", 1507, simulatorDefaultTune);
+        handle("BK2-diff", 1507, Msq.readTune(SIMULATED_PREFIX + "_95" + SIMULATED_SUFFIX));
 //        handle("PB", 1502);
 //        handle("Mitsubicha", 1258);
 //        handle("Scion-1NZ-FE", 1448);
@@ -59,7 +59,7 @@ public class TuneCanTool {
 //        handle("m111-alex", 1490);
     }
 
-    private static void handle(String vehicleName, int tuneId) throws JAXBException, IOException {
+    private static void handle(String vehicleName, int tuneId, Msq currentTune) throws JAXBException, IOException {
         String localFileName = workingFolder + File.separator + tuneId + ".msq";
         String url = "https://rusefi.com/online/view.php?msq=" + tuneId;
 
@@ -69,11 +69,14 @@ public class TuneCanTool {
         new File(reportsOutputFolder).mkdir();
 
         Msq custom = Msq.readTune(localFileName);
-        StringBuilder sb = TuneCanTool.getTunePatch(simulatorDefaultTune, custom, ini);
+        StringBuilder sb = TuneCanTool.getTunePatch(currentTune, custom, ini);
 
-        FileWriter w = new FileWriter(reportsOutputFolder + "/" + vehicleName + ".md");
+        String fileName = reportsOutputFolder + "/" + vehicleName + ".md";
+        log.info("Writing to " + fileName);
+
+        FileWriter w = new FileWriter(fileName);
         w.append("# " + vehicleName + "\n\n");
-        w.append("Tune " + url + "\n\n");
+        w.append("// canned tune " + url + "\n\n");
 
         w.append("```\n");
         w.append(sb);
@@ -135,14 +138,14 @@ public class TuneCanTool {
             boolean isSameValue = simplerSpaces(defaultValue.getValue()).equals(simplerSpaces(customValue.getValue()));
             if (!isSameValue) {
                 // todo: what about stuff outside of engine_configuration_s?
-                ConfigStructure s = state.getStructures().get("engine_configuration_s");
-//                log.info("We have a custom value " + name);
-                ConfigField cf = s.getTsFieldByName(name);
+                StringBuffer context = new StringBuffer();
+
+                ConfigField cf = findField(state, name, context);
                 if (cf == null) {
                     log.info("Not found " + name);
                     continue;
                 }
-                String cName = cf.getOriginalArrayName();
+                String cName = context + cf.getOriginalArrayName();
 
                 if (cf.getType().equals("boolean")) {
                     sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), unquote(customValue.getValue())));
@@ -175,7 +178,7 @@ public class TuneCanTool {
                     log.info(cf + " " + sourceCodeEnum + " " + customEnum + " " + ordinal);
 
                     String sourceCodeValue = sourceCodeEnum.findByValue(ordinal);
-                    sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), sourceCodeValue));
+                    sb.append(TuneTools.getAssignmentCode(defaultValue, cName, sourceCodeValue));
 
                     continue;
                 }
@@ -190,5 +193,39 @@ public class TuneCanTool {
             }
         }
         return sb;
+    }
+
+    private static ConfigField findField(ReaderStateImpl state, String name, StringBuffer context) {
+        ConfigStructure s = state.getStructures().get("engine_configuration_s");
+//                log.info("We have a custom value " + name);
+        ConfigField cf = s.getTsFieldByName(name);
+        if (cf != null) {
+            return cf; // it was easy!
+        }
+        int fromIndex = 0;
+        while (true) {
+            fromIndex = name.indexOf('_', fromIndex);
+            if (fromIndex == -1) {
+                // no struct names
+                return null;
+            }
+            String parentName = name.substring(0, fromIndex);
+            cf = s.getTsFieldByName(parentName);
+            String type = cf.getType();
+            s = state.getStructures().get(type);
+
+            if (s != null) {
+                String substring = name.substring(fromIndex + 1);
+                ConfigField tsFieldByName = s.getTsFieldByName(substring);
+                if (tsFieldByName == null) {
+                    log.info("Not located " + substring + " in " + s);
+                } else {
+                    context.append(cf.getOriginalArrayName()).append(".");
+                    log.info("Located " + tsFieldByName + " in " + s);
+                }
+                return tsFieldByName;
+            }
+            fromIndex++; // skip underscore
+        }
     }
 }

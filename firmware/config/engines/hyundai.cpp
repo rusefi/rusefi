@@ -298,6 +298,30 @@ static void commonGenesisCoupe() {
     engineConfiguration->tpsAccelFractionDivisor = 3;
     // default "Throttle 2"
     engineConfiguration->etbFunctions[1] = DC_Wastegate;
+    // default "false"
+    engineConfiguration->useSeparateAdvanceForIdle = true;
+    // default 0.0
+    engineConfiguration->iacByTpsHoldTime = 2;
+    // default 0.0
+    engineConfiguration->iacByTpsDecayTime = 3;
+    // default "false"
+    engineConfiguration->useIdleTimingPidControl = true;
+    // default "false"
+    engineConfiguration->invertVvtControlExhaust = true;
+    // default 33.0
+    engineConfiguration->auxPid[0].offset = 38;
+    // default 0.005
+    engineConfiguration->auxPid[0].iFactor = 25.4;
+    // default 0.0
+    engineConfiguration->auxPid[0].dFactor = 0.1;
+    // default 0.0
+    engineConfiguration->auxPid[1].offset = 38;
+    // default 0.0
+    engineConfiguration->auxPid[1].pFactor = 2;
+    // default 0.0
+    engineConfiguration->auxPid[1].iFactor = 25.4;
+    // default 0.0
+    engineConfiguration->auxPid[1].dFactor = 0.2;
 // end of canned tune
 
 	strncpy(config->luaScript, R"(
