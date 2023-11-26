@@ -54,7 +54,7 @@ public class BinaryProtocolServer {
         log.configureDebugEnabled(false);
     }
 
-    public AtomicInteger unknownCommands = new AtomicInteger();
+    public final AtomicInteger unknownCommands = new AtomicInteger();
 
     private final static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
 

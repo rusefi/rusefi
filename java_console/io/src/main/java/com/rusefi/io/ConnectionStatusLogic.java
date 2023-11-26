@@ -27,7 +27,7 @@ public class ConnectionStatusLogic {
         }
     }
 
-    public static ConnectionStatusLogic INSTANCE = new ConnectionStatusLogic();
+    public static final ConnectionStatusLogic INSTANCE = new ConnectionStatusLogic();
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
     private ConnectionStatusLogic() {

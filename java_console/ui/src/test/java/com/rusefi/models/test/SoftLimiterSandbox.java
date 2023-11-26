@@ -29,7 +29,7 @@ public class SoftLimiterSandbox {
     class State {
         private final int windowSize;
 
-        ArrayList<Boolean> states = new ArrayList<>();
+        final ArrayList<Boolean> states = new ArrayList<>();
 
 
         public State(int windowSize) {

@@ -35,7 +35,7 @@ public class TriggerImage {
     /**
      * number of extra frames
      */
-    public static int EXTRA_COUNT = 1;
+    public static final int EXTRA_COUNT = 1;
     private static int sleepAtEnd;
     private static trigger_type_e onlyOneTrigger = null;
 

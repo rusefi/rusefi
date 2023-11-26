@@ -234,8 +234,8 @@ public class TriggerWheelInfo {
     }
 
     static class TriggerGaps {
-        public double[] gapFrom;
-        public double[] gapTo;
+        public final double[] gapFrom;
+        public final double[] gapTo;
 
         public TriggerGaps(int gapTrackingLength) {
             gapFrom = new double[gapTrackingLength];

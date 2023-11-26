@@ -41,7 +41,7 @@ public class VariableRegistry {
     private final Pattern VAR = Pattern.compile("(@@(.*?)@@)");
     private final Pattern VAR_REMOVE_QUOTE = Pattern.compile("(@#(.*?)#@)");
 
-    public Map<String, Integer> intValues = new HashMap<>();
+    public final Map<String, Integer> intValues = new HashMap<>();
 
     private final Map<String, String> cAllDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     // todo: move thid logic to JavaFieldsConsumer since that's the consumer?

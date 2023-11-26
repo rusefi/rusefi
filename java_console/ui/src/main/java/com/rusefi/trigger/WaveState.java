@@ -14,7 +14,7 @@ public class WaveState {
     double prevUp = Double.NaN;
     double prevGap = Double.NaN;
 
-    public List<EngineReport.UpDown> list = new ArrayList<>();
+    public final List<EngineReport.UpDown> list = new ArrayList<>();
 
     private static int angleToTime(double prevUp) {
         return (int) (prevUp);

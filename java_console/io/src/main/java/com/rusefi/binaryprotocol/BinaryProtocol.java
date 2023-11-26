@@ -48,7 +48,7 @@ public class BinaryProtocol {
      * This properly allows to switch to non-CRC32 mode
      * todo: finish this feature, assuming we even need it.
      */
-    public static boolean PLAIN_PROTOCOL = Boolean.getBoolean(USE_PLAIN_PROTOCOL_PROPERTY);
+    public static final boolean PLAIN_PROTOCOL = Boolean.getBoolean(USE_PLAIN_PROTOCOL_PROPERTY);
 
     private final LinkManager linkManager;
     private final IoStream stream;
@@ -97,7 +97,7 @@ public class BinaryProtocol {
 
     public boolean isClosed;
 
-    public CommunicationLoggingListener communicationLoggingListener;
+    public final CommunicationLoggingListener communicationLoggingListener;
 
     public BinaryProtocol(LinkManager linkManager, IoStream stream) {
         this.linkManager = linkManager;

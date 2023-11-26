@@ -17,7 +17,7 @@ import java.io.IOException;
 import static com.devexperts.logging.Logging.getLogging;
 
 public class SerialIoStream extends AbstractIoStream {
-    static Logging log = getLogging(SerialIoStream.class);
+    static final Logging log = getLogging(SerialIoStream.class);
 
     @Nullable // null in case of port open error, for instance lack of permissions on Unix
     protected final SerialPort sp;

@@ -6,7 +6,7 @@ import java.io.*;
  * This file would override file content only of content has changed, disregarding the magic tag line.
  */
 public class LazyFile implements Output {
-    public static String TEST = "test_file_name";
+    public static final String TEST = "test_file_name";
 
     private Writer fw = null;
 

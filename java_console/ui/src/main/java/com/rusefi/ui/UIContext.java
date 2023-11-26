@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class UIContext {
     private final LinkManager linkManager = new LinkManager();
 
-    public SensorSnifferCentral sensorSnifferCentral = new SensorSnifferCentral(linkManager);
+    public final SensorSnifferCentral sensorSnifferCentral = new SensorSnifferCentral(linkManager);
 
     @NotNull
     public LinkManager getLinkManager() {
