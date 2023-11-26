@@ -23,7 +23,7 @@ public class WriteSimulatorConfiguration {
     public static String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "");
 
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
-        System.out.printf("ROOT_FOLDER=" + ROOT_FOLDER);
+        System.out.println("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
             writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
             for (int type : new int[]{
