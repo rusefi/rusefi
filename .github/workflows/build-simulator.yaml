@@ -79,7 +79,7 @@ jobs:
         git config --local user.name "GitHub gen-default-tune Action"
         echo See https://github.com/rusefi/rusefi/issues/2446
         git pull https://github.com/rusefi/rusefi master
-        git add 'simulator/generated/*'
+        git add 'simulator/generated/*xml'
         # get the original ramdisk images back in order to not overwrite the default placeholder
         git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
         # not out place to update live data etc
