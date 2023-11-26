@@ -59,7 +59,7 @@ public class ConsoleUI {
         });
 
         log.info("init...");
-        tabbedPane = new TabbedPanel(uiContext);
+        tabbedPane = new TabbedPanel();
         this.port = port;
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
         setFrameIcon(mainFrame.getFrame().getFrame());

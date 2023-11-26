@@ -89,7 +89,7 @@ public class SensorSnifferPane {
         );
 
         upperPanel.add(pauseButton);
-        upperPanel.add(new RpmLabel(uiContext,2).getContent());
+        upperPanel.add(new RpmLabel(2).getContent());
 
         command = AnyCommand.createField(uiContext, config, true, false);
         upperPanel.add(command.getContent());

@@ -38,7 +38,7 @@ public class MessagesPane {
 
         content.add(middlePanel, BorderLayout.CENTER);
 
-        upperPanel.getButtonPanel().add(new RpmLabel(uiContext, 2).getContent());
+        upperPanel.getButtonPanel().add(new RpmLabel(2).getContent());
         topPanel.add(upperPanel.getButtonPanel());
 //        JButton fontButton = new JButton("Font");
 //        topPanel.add(fontButton);
@@ -47,8 +47,8 @@ public class MessagesPane {
 
         JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        statsPanel.add(new RpmLabel(uiContext).getContent());
-        statsPanel.add(new WarningPanel(config).getPanel(config));
+        statsPanel.add(new RpmLabel().getContent());
+        statsPanel.add(new WarningPanel(config).getPanel());
 
         content.add(statsPanel, BorderLayout.SOUTH);
 

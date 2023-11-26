@@ -25,12 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @see com.rusefi.CommandControl for hard-coded commands
  */
 public class AnyCommand {
-    private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("AnyCommand");
     public static final String KEY = "last_value";
 
     private final UIContext uiContext;
     private final JTextComponent text;
-    private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    private final JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
     private boolean reentrant;
     private Listener listener;
 
@@ -138,10 +137,6 @@ public class AnyCommand {
 
     public JComponent getContent() {
         return content;
-    }
-
-    public void setContent(JPanel content) {
-        this.content = content;
     }
 
     public void requestFocus() {

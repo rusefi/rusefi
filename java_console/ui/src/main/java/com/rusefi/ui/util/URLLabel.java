@@ -11,14 +11,6 @@ import java.net.URISyntaxException;
 public class URLLabel extends JLabel {
     private String text;
 
-    public URLLabel(String text, URI uri) {
-        setup(text, uri);
-    }
-
-    public URLLabel(String uri) {
-        this(uri, uri);
-    }
-
     public URLLabel(String text, String uri) {
         setup(text, createUri(uri));
     }
@@ -35,14 +27,6 @@ public class URLLabel extends JLabel {
             throw new RuntimeException(e);
         }
         return oURI;
-    }
-
-    public static void open(String url) {
-        try {
-            open(new URI(url));
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
     }
 
     public void setup(String t, final URI u) {

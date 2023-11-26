@@ -248,26 +248,4 @@ public class RecentCommands {
             return elements.get(0).command;
         return elements.get(elements.size() - 1 - index).command;
     }
-
-
-    public static JButton createButton(UIContext uiContext) {
-        JButton button = new JButton("Read trigger log");
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                JFileChooser fc = UiUtils.getFileChooser(new FileNameExtensionFilter("CSV files", "csv"));
-                if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    String fileName = fc.getSelectedFile().getAbsolutePath();
-                    String report;
-                    try {
-                        report = AverageAnglesUtil.runUtil(fileName);
-                    } catch (IOException e) {
-                        throw new IllegalStateException(e);
-                    }
-                    MessagesCentral.getInstance().postMessage(AverageAnglesUtil.class, report);
-                }
-            }
-        });
-        return button;
-    }
 }

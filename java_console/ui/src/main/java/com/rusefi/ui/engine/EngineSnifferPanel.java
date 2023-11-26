@@ -92,7 +92,7 @@ public class EngineSnifferPanel {
         upperPanel.add(clearButton);
         upperPanel.add(saveImageButton);
         upperPanel.add(pauseButton);
-        upperPanel.add(new RpmLabel(uiContext,2).getContent());
+        upperPanel.add(new RpmLabel(2).getContent());
 
         command = AnyCommand.createField(uiContext, config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true);
         upperPanel.add(command.getContent());
@@ -137,7 +137,7 @@ public class EngineSnifferPanel {
         });
 
         mainPanel.add(chartPanel, BorderLayout.CENTER);
-        mainPanel.add(new WarningPanel(config).getPanel(config), BorderLayout.SOUTH);
+        mainPanel.add(new WarningPanel(config).getPanel(), BorderLayout.SOUTH);
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {

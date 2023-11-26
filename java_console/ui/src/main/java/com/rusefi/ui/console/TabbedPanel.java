@@ -45,7 +45,7 @@ public class TabbedPanel {
         }
     };
 
-    public TabbedPanel(UIContext uiContext) {
+    public TabbedPanel() {
         MessagesCentral.getInstance().addListener((clazz, message) -> {
             if (message.startsWith(Fields.CRITICAL_PREFIX))
                 criticalError = message;

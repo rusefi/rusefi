@@ -69,23 +69,6 @@ public enum Sensor {
         this(name, type, field, 1.0, "n/a");
     }
 
-    public static Sensor lookup(String gaugeName, Sensor defaultValue) {
-        Sensor sensor;
-        try {
-            sensor = valueOf(Sensor.class, gaugeName);
-        } catch (IllegalArgumentException e) {
-            sensor = defaultValue;
-        }
-        return sensor;
-    }
-
-    public static Sensor find(String value) {
-        for (Sensor s : values())
-            if (s.name.equals(value) || s.name().equals(value))
-                return s;
-        throw new IllegalStateException("Sensor not found: " + value);
-    }
-
     public double getValueForChannel(ByteBuffer bb) {
         switch (getType()) {
             case FLOAT:
@@ -107,37 +90,6 @@ public enum Sensor {
             default:
                 throw new UnsupportedOperationException("type " + getType());
         }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUnit() {
-        return units;
-    }
-
-    public int getByteSize() {
-        switch (getType()) {
-            case UINT8:
-                return 0;
-            case INT8:
-                return 1;
-            case UINT16:
-                return 2;
-            case INT16:
-                return 3;
-            case INT:
-                return 4;
-            case FLOAT:
-                return 7;
-            default:
-                throw new UnsupportedOperationException("" + getType());
-        }
-    }
-
-    public String getUnits() {
-        return units;
     }
 
     public int getOffset() {

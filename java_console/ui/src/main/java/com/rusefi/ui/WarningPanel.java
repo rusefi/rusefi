@@ -71,7 +71,7 @@ public class WarningPanel {
         reset.setEnabled(false);
     }
 
-    public JPanel getPanel(Node config) {
+    public JPanel getPanel() {
         return panel;
     }
 }

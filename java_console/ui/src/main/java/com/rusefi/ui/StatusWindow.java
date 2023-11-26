@@ -25,7 +25,6 @@ public class StatusWindow implements StatusConsumer {
     // todo: extract driver from console bundle? find a separate driver bundle?
     private final JTextArea logTextArea = new JTextArea();
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JLabel bottomStatusLabel = new JLabel();
     @NotNull
     protected final FrameHelper frameHelper = new FrameHelper();
 
@@ -38,22 +37,11 @@ public class StatusWindow implements StatusConsumer {
             }
         };
         content.add(messagesScroll, BorderLayout.CENTER);
-        content.add(bottomStatusLabel, BorderLayout.SOUTH);
 
         append("Console version " + rusEFIVersion.CONSOLE_VERSION);
         append("Windows " + System.getProperty("os.version"));
         append("Bundle " + BundleUtil.readBundleFullNameNotNull());
     }
-
-    @NotNull
-    public FrameHelper getFrameHelper() {
-        return frameHelper;
-    }
-
-    public JPanel getContent() {
-        return content;
-    }
-
 
     public void setErrorState() {
         logTextArea.setBackground(LIGHT_RED);
@@ -62,10 +50,6 @@ public class StatusWindow implements StatusConsumer {
 
     public void setSuccessState() {
         logTextArea.setBackground(LIGHT_GREEN);
-    }
-
-    public JFrame getFrame() {
-        return frameHelper.getFrame();
     }
 
     public void showFrame(String title) {
@@ -93,9 +77,5 @@ public class StatusWindow implements StatusConsumer {
                 .setContents(new StringSelection(logTextArea.getText()), null));
 
         append("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
-    }
-
-    public void setStatus(String status) {
-        bottomStatusLabel.setText(status);
     }
 }
