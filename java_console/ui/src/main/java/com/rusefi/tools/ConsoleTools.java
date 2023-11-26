@@ -55,8 +55,6 @@ public class ConsoleTools {
 
         registerTool("version", ConsoleTools::version, "Only print version");
 
-        registerTool("dfu", DfuTool::run, "Program specified file into ECU via DFU");
-
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("send_command", args -> {
             String command = args[1];
