@@ -67,7 +67,6 @@ public class EngineSnifferPanel {
     private final ZoomControl zoomControl = new ZoomControl();
     private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel();
     private final UpDownImage crank = createImage(Fields.PROTOCOL_CRANK1);
-    private final ChartScrollControl scrollControl;
     private final AnyCommand command;
 
     private boolean isPaused;
@@ -99,9 +98,6 @@ public class EngineSnifferPanel {
         upperPanel.add(command.getContent());
 
         upperPanel.add(zoomControl);
-
-        scrollControl = ChartRepository.getInstance().createControls(this::displayChart);
-        upperPanel.add(scrollControl.getContent());
 
         upperPanel.add(new URLLabel(HELP_TEXT, HELP_URL));
 
@@ -285,11 +281,6 @@ public class EngineSnifferPanel {
         image.setSignalBorder(signalBorder);
         image.addMouseMotionListener(statusPanel.motionAdapter);
         return image;
-    }
-
-    public void reloadFile() {
-        displayChart(ChartRepository.getInstance().getChart(0));
-        scrollControl.reset();
     }
 
     public ActionListener getTabSelectedListener() {

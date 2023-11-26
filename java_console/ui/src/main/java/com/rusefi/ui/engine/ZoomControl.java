@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
 class ZoomControl extends JPanel {
     private double value;
     public ZoomControlListener listener = null;
-    private final JButton resetZoom = new JButton("*");
+    private final JButton resetZoom = new JButton("reset");
 
     private final ZoomProvider zoomProvider = new ZoomProvider() {
         @Override
