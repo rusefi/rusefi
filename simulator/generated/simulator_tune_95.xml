@@ -2,7 +2,7 @@
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
     <page number="0" size="23880">
-        <constant name="engineType">"MINIMAL_PINS"</constant>
+        <constant name="engineType">"HELLEN_154_HYUNDAI_COUPE_BK2"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000.0</constant>
@@ -32,7 +32,7 @@
 </constant>
         <constant digits="0" name="multisparkMaxSparkingAngle" units="deg">30.0</constant>
         <constant digits="0" name="multisparkMaxExtraSparkCount" units="count">2.0</constant>
-        <constant digits="2" name="injector_flow" units="cm3/min">200.0</constant>
+        <constant digits="2" name="injector_flow" units="cm3/min">629.03</constant>
         <constant cols="1" digits="2" name="injector_battLagCorrBins" rows="8">
          6.0
          8.0
@@ -73,7 +73,7 @@
         <constant name="doNotFilterTriggerEdgeNoise">"with filter"</constant>
         <constant name="antiLagEnabled">"false"</constant>
         <constant name="useRunningMathForCranking">"Fixed"</constant>
-        <constant name="displayLogicLevelsInEngineSniffer">"false"</constant>
+        <constant name="displayLogicLevelsInEngineSniffer">"true"</constant>
         <constant name="useTLE8888_stepper">"false"</constant>
         <constant name="usescriptTableForCanSniffingFiltering">"false"</constant>
         <constant name="verboseCan">"Do not print"</constant>
@@ -82,8 +82,8 @@
         <constant name="cltSensorPulldown">"false"</constant>
         <constant name="iatSensorPulldown">"false"</constant>
         <constant name="allowIdenticalPps">"false"</constant>
-        <constant digits="0" name="tpsMin" units="ADC">0.0</constant>
-        <constant digits="0" name="tpsMax" units="ADC">1000.0</constant>
+        <constant digits="0" name="tpsMin" units="ADC">98.0</constant>
+        <constant digits="0" name="tpsMax" units="ADC">926.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110.0</constant>
         <constant digits="1" name="cranking_baseFuel" units="mg">27.0</constant>
@@ -154,7 +154,7 @@
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="hip9011PrescalerAndSDO" units="integer">0.0</constant>
         <constant digits="2" name="knockBandCustom" units="kHz">0.0</constant>
-        <constant digits="3" name="displacement" units="L">2.0</constant>
+        <constant digits="3" name="displacement" units="L">1.998</constant>
         <constant digits="0" name="triggerSimulatorRpm" units="RPM">1200.0</constant>
         <constant digits="0" name="cylindersCount" units="">4.0</constant>
         <constant name="firingOrder">"1-3-4-2"</constant>
@@ -167,23 +167,23 @@
         <constant digits="0" name="boostControlMinTps" units="">0.0</constant>
         <constant digits="0" name="boostControlMinMap" units="">0.0</constant>
         <constant digits="0" name="crankingTimingAngle" units="deg">6.0</constant>
-        <constant name="ignitionMode">"Single Coil"</constant>
+        <constant name="ignitionMode">"Individual Coils"</constant>
         <constant digits="0" name="gapTrackingLengthOverride" units="count">0.0</constant>
         <constant digits="0" name="maxIdleVss" units="kph">0.0</constant>
         <constant digits="0" name="minOilPressureAfterStart" units="kPa">0.0</constant>
         <constant name="timingMode">"dynamic"</constant>
         <constant digits="0" name="fixedModeTiming" units="RPM">50.0</constant>
-        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">0.0</constant>
+        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">90.0</constant>
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
         <constant digits="0" name="fanOnTemperature" units="deg C">95.0</constant>
         <constant digits="0" name="fanOffTemperature" units="deg C">91.0</constant>
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
-        <constant name="canNbcType">"None"</constant>
+        <constant name="canNbcType">"Genesis Coupe"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0231125E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -428,8 +428,8 @@
         <constant digits="0" name="mapMinBufferLength" units="count">1.0</constant>
         <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">5.0</constant>
         <constant digits="0" name="stepperParkingExtraSteps" units="%">0.0</constant>
-        <constant digits="0" name="tps1SecondaryMin" units="ADC">1000.0</constant>
-        <constant digits="0" name="tps1SecondaryMax" units="ADC">0.0</constant>
+        <constant digits="0" name="tps1SecondaryMin" units="ADC">891.0</constant>
+        <constant digits="0" name="tps1SecondaryMax" units="ADC">69.0</constant>
         <constant digits="0" name="antiLagRpmTreshold" units="rpm">0.0</constant>
         <constant digits="0" name="startCrankingDuration" units="Seconds">3.0</constant>
         <constant name="triggerErrorPin">"NONE"</constant>
@@ -472,7 +472,7 @@
         <constant name="showHumanReadableWarning">"false"</constant>
         <constant name="stftIgnoreErrorMagnitude">"false"</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
-        <constant name="enableSoftwareKnock">"false"</constant>
+        <constant name="enableSoftwareKnock">"true"</constant>
         <constant name="verboseVVTDecoding">"false"</constant>
         <constant name="invertCamVVTSignal">"false"</constant>
         <constant name="alphaNUseIat">"false"</constant>
@@ -551,6 +551,8 @@
         <constant name="stepperDcIo2_directionPin2">"NONE"</constant>
         <constant name="stepperDcIo2_controlPin">"NONE"</constant>
         <constant name="stepperDcIo2_disablePin">"NONE"</constant>
+        <constant name="engineMake">Hyundai</constant>
+        <constant name="engineCode">Theta II</constant>
         <constant name="tcu_solenoid1">"NONE"</constant>
         <constant name="tcu_solenoid2">"NONE"</constant>
         <constant name="tcu_solenoid3">"NONE"</constant>
@@ -717,9 +719,9 @@
         <constant digits="0" name="alternatorControl_periodMs" units="ms">100.0</constant>
         <constant digits="0" name="alternatorControl_minValue" units="">0.0</constant>
         <constant digits="0" name="alternatorControl_maxValue" units="">90.0</constant>
-        <constant digits="4" name="etb_pFactor" units="">1.0</constant>
-        <constant digits="4" name="etb_iFactor" units="">10.0</constant>
-        <constant digits="4" name="etb_dFactor" units="">0.05</constant>
+        <constant digits="4" name="etb_pFactor" units="">8.8944</constant>
+        <constant digits="4" name="etb_iFactor" units="">70.2307</constant>
+        <constant digits="4" name="etb_dFactor" units="">0.1855</constant>
         <constant digits="0" name="etb_offset" units="">0.0</constant>
         <constant digits="0" name="etb_periodMs" units="ms">0.0</constant>
         <constant digits="0" name="etb_minValue" units="">-100.0</constant>
@@ -752,8 +754,8 @@
         <constant name="auxValves2">"NONE"</constant>
         <constant name="tcuUpshiftButtonPin">"NONE"</constant>
         <constant name="tcuDownshiftButtonPin">"NONE"</constant>
-        <constant digits="2" name="throttlePedalUpVoltage" units="voltage">0.0</constant>
-        <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">5.0</constant>
+        <constant digits="2" name="throttlePedalUpVoltage" units="voltage">0.73</constant>
+        <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">4.0</constant>
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
         <constant digits="1" name="targetVBatt" units="Volts">14.0</constant>
@@ -778,8 +780,8 @@
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
         <constant digits="2" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
         <constant digits="0" name="auxSerialSpeed" units="BPs">0.0</constant>
-        <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">5.0</constant>
-        <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">0.0</constant>
+        <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">0.74</constant>
+        <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">2.28</constant>
         <constant name="canBaudRate">"500kbps"</constant>
         <constant name="veOverrideMode">"None"</constant>
         <constant name="can2BaudRate">"500kbps"</constant>
@@ -890,9 +892,9 @@
         <constant name="trailingCoilPins12">"NONE"</constant>
         <constant name="tle8888mode">"Auto"</constant>
         <constant name="LIS302DLCsPinMode">"default"</constant>
-        <constant name="injectorCompensationMode">"None"</constant>
+        <constant name="injectorCompensationMode">"Fixed rail pressure"</constant>
         <constant name="fan2PinMode">"default"</constant>
-        <constant digits="0" name="fuelReferencePressure" units="kPa">300.0</constant>
+        <constant digits="0" name="fuelReferencePressure" units="kPa">586.0544</constant>
         <constant cols="6" digits="2" name="postCrankingFactor" rows="6">
          1.2 1.2 1.2 1.2 1.2 1.2
          1.2 1.2 1.2 1.2 1.2 1.2
@@ -1019,7 +1021,7 @@
         <constant name="tle8888_csPinMode">"default"</constant>
         <constant name="mc33816_cs">"NONE"</constant>
         <constant digits="1" name="auxFrequencyFilter" units="hz">0.0</constant>
-        <constant digits="0" name="vvtControlMinRpm" units="RPM">550.0</constant>
+        <constant digits="0" name="vvtControlMinRpm" units="RPM">500.0</constant>
         <constant name="sentInputPins1">"NONE"</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
         <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
@@ -2562,37 +2564,87 @@
          0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0
 </constant>
-        <constant name="luaScript">hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+        <constant name="luaScript">setTickRate(100)
+t = Timer.new()
+t : reset()
 
-function toHexString(num)
-	if num == 0 then
-		return '0'
-	end
+local data_0x329 = { 0x2C, 0x96, 0x80, 0x0E, 0x11, 0x2E, 0x00, 0x14 }
+local slowCounter = 0
+local slowRoll = 0
 
-	local result = ""
-	while num &gt; 0 do
-		local n = num % 16
-		result = hexstr[n + 1] ..result
-		num = math.floor(num / 16)
-	end
-	return result
-end
+local slowRollTable = { 0x0C, 0x4F, 0x80, 0xE3 }
 
-function arrayToString(arr)
-	local str = ""
-	local index = 1
-	while arr[index] ~= nil do
-		str = str.." "..toHexString(arr[index])
-		index = index + 1
-	end
-	return str
-end
-
-function printPacket(bus, id, dlc, data)
-    print('Received ' .. arrayToString(data))
-end
+-- wakeup CAN messages
+local data_0x382 = { 0x00, 0x3A, 0X44, 0x24, 0x00, 0x00, 0x00, 0x00 }
+local data_0x0a0 = { 0x00, 0x68, 0x00, 0x00, 0x00, 0xFF, 0x01, 0x00 }
+local data_0x0a1 = { 0x80, 0x80, 0x00, 0x00, 0xEC, 0x00, 0x00, 0x00 }
+local data_0x18f = { 0xFA , 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+local data_0x545 = { 0xEC, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00 }
+local data_0xA1 = { 0x80, 0x80, 0x00, 0x00, 0xEC, 0x00, 0x00, 0x00 }
+local data_0xA0 = { 0x00, 0x68, 0x00, 0x00, 0x00, 0xFF, 0x01, 0x00 }
+local data_0x260 = { 0x01, 0x1A, 0x1A, 0x10, 0x00, 0xAB, 0x93, 0x00 }
+local data_0x2A0 = { 0x00, 0x00, 0x04, 0x00, 0x78, 0x05, 0x0D, 0x01 }
 
 function onTick()
+
+	-- keep alives
+	txCan(1, 0x18f, 0, data_0x18f)
+	txCan(1, 0x545, 0, data_0x545)
+	-- more random can sends
+	txCan(1, 0x545, 0, data_0x545)
+	txCan(1, 0x382, 0, data_0x382)
+	txCan(1, 0xA0, 0, data_0xA0)
+	txCan(1, 0xA1, 0, data_0xA1)
+	txCan(1, 0x260, 0, data_0x260)
+	txCan(1, 0x2A0, 0, data_0x2A0)
+
+	local RPMread = math.floor(getSensor("RPM") + 0.5) * 4
+
+	local RPMhi = RPMread &gt;&gt; 8
+	local RPMlo = RPMread &amp; 0xff
+
+	local CLTread = 50
+	if getSensor("CLT") then
+		CLTread = math.floor(getSensor("CLT") + 0.5)
+	else
+		CLTread = 50
+	end
+
+	local CLThi = CLTread
+	local CLTlo = CLTread * 256
+
+	canCLTpayloadNo = { 0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+	canCLTpayloadLo = { 0x00, 0x4C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+	canCLTpayloadHi = { 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+	canCLTpayloadHi2 = { 0x00, 0x78, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
+	if slowCounter == 0 then
+		-- cycle through 0, 40, 80, c0
+		slowRoll = (slowRoll + 1) &amp; 3
+		data_0x329[1] = slowRollTable[slowRoll + 1]
+
+		txCan(1, 0x329, 0, data_0x329)
+		slowCounter = 30
+	end
+	slowCounter = slowCounter -1
+
+	-- rpm fun stuff
+	if t : getElapsedSeconds() &lt; 1.5 then
+		canRPMpayload = { 0x05, 0x1C, 0xFC, 0x7B, 0x1C, 0x2F, 0x00, 0x80 }
+	else
+		canRPMpayload = { 0x05, RPMlo, RPMhi, RPMhi, RPMlo, 0x2F, 0x00, 0x80 }
+	end
+
+	txCan(1, 0x316, 0, canRPMpayload)
+	if CLTread &lt; 60 then
+		txCan(1, 0x608, 0, canCLTpayloadNo)
+	elseif CLTread &gt;= 60 and CLTread &lt; 85 then
+		txCan(1, 0x608, 0, canCLTpayloadLo)
+	elseif CLTread &gt;= 85 and CLTread &lt; 110 then
+		txCan(1, 0x608, 0, canCLTpayloadHi)
+	else
+		txCan(1, 0x608, 0, canCLTpayloadHi2)
+	end
 end</constant>
         <constant cols="1" digits="2" name="cltFuelCorrBins" rows="16">
          -40.0
