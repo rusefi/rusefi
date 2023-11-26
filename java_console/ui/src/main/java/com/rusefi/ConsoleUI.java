@@ -160,7 +160,6 @@ public class ConsoleUI {
                 port = args[0];
 
             if (isPortDefined) {
-                port = PortDetector.autoDetectSerialIfNeeded(port);
                 if (port == null) {
                     isPortDefined = false;
                 }

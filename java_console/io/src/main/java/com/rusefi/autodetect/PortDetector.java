@@ -102,14 +102,4 @@ public class PortDetector {
         }
         return autoDetectedPort;
     }
-
-    public static String autoDetectSerialIfNeeded(String port) {
-        if (!isAutoPort(port))
-            return port;
-        return autoDetectSerial(null).getSerialPort();
-    }
-
-    public static boolean isAutoPort(String port) {
-        return port.toLowerCase().startsWith(AUTO);
-    }
 }
