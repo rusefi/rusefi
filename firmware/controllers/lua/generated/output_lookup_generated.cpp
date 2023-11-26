@@ -1180,6 +1180,90 @@ float getOutputValueByName(const char *name) {
 		case 756216589:
 			return engine->triggerCentral.isDecodingMapCam;
 #endif
+// idleState
+		case 1886060228:
+			return ___engine.module<IdleController>().unmock().idleState;
+// currentIdlePosition
+		case -1149240133:
+			return ___engine.module<IdleController>().unmock().currentIdlePosition;
+// baseIdlePosition
+		case -580955469:
+			return ___engine.module<IdleController>().unmock().baseIdlePosition;
+// idleClosedLoop
+		case 1267620087:
+			return ___engine.module<IdleController>().unmock().idleClosedLoop;
+// iacByTpsTaper
+		case -2065814304:
+			return ___engine.module<IdleController>().unmock().iacByTpsTaper;
+// throttlePedalUpState
+		case 767668487:
+			return ___engine.module<IdleController>().unmock().throttlePedalUpState;
+// mightResetPid
+		case 149945022:
+			return ___engine.module<IdleController>().unmock().mightResetPid;
+// shouldResetPid
+		case -226320012:
+			return ___engine.module<IdleController>().unmock().shouldResetPid;
+// wasResetPid
+		case 1830486000:
+			return ___engine.module<IdleController>().unmock().wasResetPid;
+// mustResetPid
+		case 1685322158:
+			return ___engine.module<IdleController>().unmock().mustResetPid;
+// isCranking
+		case -1055526802:
+			return ___engine.module<IdleController>().unmock().isCranking;
+// isIacTableForCoasting
+		case 705044501:
+			return ___engine.module<IdleController>().unmock().isIacTableForCoasting;
+// notIdling
+		case 1304441005:
+			return ___engine.module<IdleController>().unmock().notIdling;
+// needReset
+		case -2049691836:
+			return ___engine.module<IdleController>().unmock().needReset;
+// isInDeadZone
+		case -1661765918:
+			return ___engine.module<IdleController>().unmock().isInDeadZone;
+// isBlipping
+		case 432464630:
+			return ___engine.module<IdleController>().unmock().isBlipping;
+// useClosedLoop
+		case -87867258:
+			return ___engine.module<IdleController>().unmock().useClosedLoop;
+// badTps
+		case -208884349:
+			return ___engine.module<IdleController>().unmock().badTps;
+// looksLikeRunning
+		case -1126009613:
+			return ___engine.module<IdleController>().unmock().looksLikeRunning;
+// looksLikeCoasting
+		case -1786409942:
+			return ___engine.module<IdleController>().unmock().looksLikeCoasting;
+// looksLikeCrankToIdle
+		case -2079775742:
+			return ___engine.module<IdleController>().unmock().looksLikeCrankToIdle;
+// isIdleCoasting
+		case 2141275671:
+			return ___engine.module<IdleController>().unmock().isIdleCoasting;
+// isIdleClosedLoop
+		case 1473688883:
+			return ___engine.module<IdleController>().unmock().isIdleClosedLoop;
+// idleTarget
+		case 2127645162:
+			return ___engine.module<IdleController>().unmock().idleTarget;
+// targetRpmByClt
+		case -1241725607:
+			return ___engine.module<IdleController>().unmock().targetRpmByClt;
+// targetRpmAc
+		case 1156739423:
+			return ___engine.module<IdleController>().unmock().targetRpmAc;
+// iacByRpmTaper
+		case -1638166696:
+			return ___engine.module<IdleController>().unmock().iacByRpmTaper;
+// luaAdd
+		case 206059088:
+			return ___engine.module<IdleController>().unmock().luaAdd;
 // dcOutput0
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;
