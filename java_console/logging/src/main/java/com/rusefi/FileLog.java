@@ -27,7 +27,6 @@ public enum FileLog {
 
     @Nullable
     private OutputStream fileLog; // null if not opened yet or already closed
-    public static boolean suspendLogging;
 
     FileLog() {
     }
@@ -93,8 +92,7 @@ public enum FileLog {
     public synchronized void logLine(String fullLine) {
         String withDate = getDate() + Logger.END_OF_TIMESTAND_TAG + fullLine;
         System.out.println(withDate);
-        if (suspendLogging)
-            return;
+
         if (fileLog == null)
             return;
         try {

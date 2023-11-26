@@ -17,7 +17,6 @@ import java.awt.event.ActionListener;
  */
 abstract class CommandControl {
     public static final String TEST = "Test";
-    public static final String SET = "Set";
     protected final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
     private final UIContext uiContext;
 

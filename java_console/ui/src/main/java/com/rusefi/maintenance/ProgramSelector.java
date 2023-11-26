@@ -258,7 +258,7 @@ public class ProgramSelector {
         return content;
     }
 
-    private SerialPortScanner.AvailableHardware currentHardware = new SerialPortScanner.AvailableHardware(new ArrayList<>(), false, false, false);
+    private SerialPortScanner.AvailableHardware currentHardware = new SerialPortScanner.AvailableHardware(new ArrayList<>(), false);
 
     private void selectedPortChanged(ItemEvent e) {
         SerialPortScanner.PortResult pr = (SerialPortScanner.PortResult) e.getItem();

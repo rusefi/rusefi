@@ -22,7 +22,6 @@ public class PortDetector {
     private final static Logging log = Logging.getLogging(PortDetector.class);
 
     private static final NamedThreadFactory AUTO_DETECT_PORT = new NamedThreadFactory("ECU AutoDetectPort", true);
-    public static final String AUTO = "auto";
 
     /**
      * Connect to all serial ports and find out which one respond first
@@ -91,15 +90,5 @@ public class PortDetector {
         log.debug("Found " + autoDetectResult + " now stopping threads");
 //        log.info("Returning " + result.get());
         return autoDetectResult;
-    }
-
-    @Nullable
-    public static SerialAutoChecker.AutoDetectResult autoDetectPort(JFrame parent) {
-        SerialAutoChecker.AutoDetectResult autoDetectedPort = autoDetectSerial();
-        if (autoDetectedPort.getSerialPort() == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to locate rusEFI");
-            return null;
-        }
-        return autoDetectedPort;
     }
 }

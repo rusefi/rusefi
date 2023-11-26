@@ -28,7 +28,6 @@ public enum SerialPortScanner {
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
 
     public enum SerialPortType {
-        None(null, 100),
         FomeEcu("FOME ECU", 20),
         FomeEcuWithOpenblt("FOME ECU w/ BL", 20),
         OpenBlt("OpenBLT Bootloader", 10),
@@ -116,20 +115,11 @@ public enum SerialPortScanner {
 
         String[] serialPorts = LinkManager.getCommPorts();
 
-        int ecuCount = 0;
-        boolean hasAnyOpenblt = false;
-
         for (String serialPort : serialPorts) {
             // First, check the port cache
             if (portCache.containsKey(serialPort)) {
                 // We've already probed this port - don't re-probe it again
                 PortResult cached = portCache.get(serialPort);
-
-                if (cached.isEcu()) {
-                    ecuCount++;
-                } else if (cached.type == SerialPortType.OpenBlt) {
-                    hasAnyOpenblt = true;
-                }
 
                 ports.add(cached);
             } else {
@@ -142,7 +132,6 @@ public enum SerialPortScanner {
                 log.info("Port " + serialPort + (isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
                 if (isOpenblt) {
                     result = new PortResult(serialPort, SerialPortType.OpenBlt);
-                    hasAnyOpenblt = true;
                 } else {
                     // See if this looks like an ECU
                     String signature = getEcuSignature(serialPort);
@@ -152,7 +141,6 @@ public enum SerialPortScanner {
                         boolean ecuHasOpenblt = fomeEcuHasOpenblt(serialPort);
                         log.info("FOME ECU at " + serialPort + (ecuHasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
                         result = new PortResult(serialPort, ecuHasOpenblt ? SerialPortType.FomeEcuWithOpenblt : SerialPortType.FomeEcu, signature);
-                        ecuCount++;
                     } else {
                         // Dunno what this is, leave it in the list anyway
                         result = new PortResult(serialPort, SerialPortType.Unknown);
@@ -184,15 +172,12 @@ public enum SerialPortScanner {
             });
         }
 
-        boolean hasAnyEcu = ecuCount > 0;
-
         // Sort ports by their type to put your ECU at the top
         ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
 
         if (includeSlowLookup) {
             for (String tcpPort : TcpConnector.getAvailablePorts()) {
                 ports.add(new PortResult(tcpPort, SerialPortType.FomeEcu));
-                hasAnyEcu = true;
             }
 
             dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
@@ -201,7 +186,7 @@ public enum SerialPortScanner {
         }
 
         boolean isListUpdated;
-        AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected, hasAnyEcu, hasAnyOpenblt);
+        AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected);
         synchronized (lock) {
             isListUpdated = !currentHardware.equals(knownHardware);
             knownHardware = currentHardware;
@@ -243,14 +228,10 @@ public enum SerialPortScanner {
     public static class AvailableHardware {
         private final List<PortResult> ports;
         public final boolean dfuFound;
-        public final boolean hasAnyEcu;
-        public final boolean hasAnyOpenblt;
 
-        public <T> AvailableHardware(List<PortResult> ports, boolean dfuFound, boolean hasAnyEcu, boolean hasAnyOpenblt) {
+        public <T> AvailableHardware(List<PortResult> ports, boolean dfuFound) {
             this.ports = ports;
             this.dfuFound = dfuFound;
-            this.hasAnyEcu = hasAnyEcu;
-            this.hasAnyOpenblt = hasAnyOpenblt;
         }
 
         @NotNull

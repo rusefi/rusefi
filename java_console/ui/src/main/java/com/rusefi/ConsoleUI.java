@@ -46,6 +46,8 @@ public class ConsoleUI {
 
     public final UIContext uiContext = new UIContext();
 
+    public boolean showTriggerShapePane = false;
+
     /**
      * We can listen to tab activation event if we so desire
      */
@@ -93,7 +95,8 @@ public class ConsoleUI {
 //            tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
 //        }
 
-        if (tabbedPane.paneSettings.showTriggerShapePane)
+        // TODO: always false?
+        if (showTriggerShapePane)
             tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
 
         int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);

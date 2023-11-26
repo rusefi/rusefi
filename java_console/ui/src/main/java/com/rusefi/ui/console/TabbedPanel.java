@@ -1,6 +1,5 @@
 package com.rusefi.ui.console;
 
-import com.rusefi.PaneSettings;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStatusLogic;
@@ -14,8 +13,6 @@ import static com.rusefi.core.preferences.storage.PersistentConfiguration.getCon
 public class TabbedPanel {
     // todo: the logic around 'criticalError' could be implemented nicer
     private String criticalError;
-
-    public final PaneSettings paneSettings = new PaneSettings(getConfig().getRoot().getChild("panes"));
 
     public final JTabbedPane tabbedPane = new JTabbedPane() {
         @Override
