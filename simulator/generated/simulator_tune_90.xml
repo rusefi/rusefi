@@ -2,7 +2,7 @@
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
     <page number="0" size="23880">
-        <constant name="engineType">"MINIMAL_PINS"</constant>
+        <constant name="engineType">"HONDA_K"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000.0</constant>
@@ -32,7 +32,7 @@
 </constant>
         <constant digits="0" name="multisparkMaxSparkingAngle" units="deg">30.0</constant>
         <constant digits="0" name="multisparkMaxExtraSparkCount" units="count">2.0</constant>
-        <constant digits="2" name="injector_flow" units="cm3/min">200.0</constant>
+        <constant digits="2" name="injector_flow" units="cm3/min">310.0</constant>
         <constant cols="1" digits="2" name="injector_battLagCorrBins" rows="8">
          6.0
          8.0
@@ -72,8 +72,8 @@
         <constant name="launchControlEnabled">"false"</constant>
         <constant name="doNotFilterTriggerEdgeNoise">"with filter"</constant>
         <constant name="antiLagEnabled">"false"</constant>
-        <constant name="useRunningMathForCranking">"Fixed"</constant>
-        <constant name="displayLogicLevelsInEngineSniffer">"false"</constant>
+        <constant name="useRunningMathForCranking">"Fuel Map"</constant>
+        <constant name="displayLogicLevelsInEngineSniffer">"true"</constant>
         <constant name="useTLE8888_stepper">"false"</constant>
         <constant name="usescriptTableForCanSniffingFiltering">"false"</constant>
         <constant name="verboseCan">"Do not print"</constant>
@@ -82,11 +82,11 @@
         <constant name="cltSensorPulldown">"false"</constant>
         <constant name="iatSensorPulldown">"false"</constant>
         <constant name="allowIdenticalPps">"false"</constant>
-        <constant digits="0" name="tpsMin" units="ADC">0.0</constant>
-        <constant digits="0" name="tpsMax" units="ADC">1000.0</constant>
+        <constant digits="0" name="tpsMin" units="ADC">100.0</constant>
+        <constant digits="0" name="tpsMax" units="ADC">830.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110.0</constant>
-        <constant digits="1" name="cranking_baseFuel" units="mg">27.0</constant>
+        <constant digits="1" name="cranking_baseFuel" units="mg">75.0</constant>
         <constant digits="0" name="cranking_rpm" units="RPM">550.0</constant>
         <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">6.0</constant>
         <constant digits="0" name="etbRevLimitStart" units="rpm">0.0</constant>
@@ -133,7 +133,7 @@
 </constant>
         <constant digits="2" name="map_sensor_lowValue" units="kpa">0.0</constant>
         <constant digits="2" name="map_sensor_highValue" units="kpa">0.0</constant>
-        <constant name="map_sensor_type">"MPX4250"</constant>
+        <constant name="map_sensor_type">"DENSO183"</constant>
         <constant name="map_sensor_hwChannel">"Disabled"</constant>
         <constant digits="1" name="clt_tempC_1" units="*C">0.0</constant>
         <constant digits="1" name="clt_tempC_2" units="*C">23.8889</constant>
@@ -154,7 +154,7 @@
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="hip9011PrescalerAndSDO" units="integer">0.0</constant>
         <constant digits="2" name="knockBandCustom" units="kHz">0.0</constant>
-        <constant digits="3" name="displacement" units="L">2.0</constant>
+        <constant digits="3" name="displacement" units="L">2.4</constant>
         <constant digits="0" name="triggerSimulatorRpm" units="RPM">1200.0</constant>
         <constant digits="0" name="cylindersCount" units="">4.0</constant>
         <constant name="firingOrder">"1-3-4-2"</constant>
@@ -167,13 +167,13 @@
         <constant digits="0" name="boostControlMinTps" units="">0.0</constant>
         <constant digits="0" name="boostControlMinMap" units="">0.0</constant>
         <constant digits="0" name="crankingTimingAngle" units="deg">6.0</constant>
-        <constant name="ignitionMode">"Single Coil"</constant>
+        <constant name="ignitionMode">"Individual Coils"</constant>
         <constant digits="0" name="gapTrackingLengthOverride" units="count">0.0</constant>
         <constant digits="0" name="maxIdleVss" units="kph">0.0</constant>
         <constant digits="0" name="minOilPressureAfterStart" units="kPa">0.0</constant>
         <constant name="timingMode">"dynamic"</constant>
         <constant digits="0" name="fixedModeTiming" units="RPM">50.0</constant>
-        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">0.0</constant>
+        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">663.0</constant>
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
         <constant digits="0" name="fanOnTemperature" units="deg C">95.0</constant>
@@ -183,14 +183,14 @@
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0231125E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
         <constant digits="4" name="idle_derivativeFilterLoss" units="x">0.0</constant>
         <constant digits="0" name="trailingSparkAngle" units="angle">10.0</constant>
-        <constant name="trigger_type">"60/2"</constant>
+        <constant name="trigger_type">"Honda K 12+1"</constant>
         <constant digits="0" name="trigger_customTotalToothCount" units="number">0.0</constant>
         <constant digits="0" name="trigger_customSkippedToothCount" units="number">0.0</constant>
         <constant digits="1" name="airByRpmTaper" units="%">0.0</constant>
@@ -229,7 +229,7 @@
         <constant digits="0" name="manIdlePosition" units="%">50.0</constant>
         <constant digits="1" name="knockRetardAggression" units="%">0.0</constant>
         <constant digits="1" name="knockRetardReapplyRate" units="deg/s">0.0</constant>
-        <constant name="engineSyncCam">"Intake First Bank"</constant>
+        <constant name="engineSyncCam">"Exhaust First Bank"</constant>
         <constant digits="0" name="vssFilterReciprocal" units="">3.0</constant>
         <constant digits="3" name="vssGearRatio" units="ratio">3.73</constant>
         <constant digits="0" name="vssToothCount" units="count">21.0</constant>
@@ -551,6 +551,8 @@
         <constant name="stepperDcIo2_directionPin2">"NONE"</constant>
         <constant name="stepperDcIo2_controlPin">"NONE"</constant>
         <constant name="stepperDcIo2_disablePin">"NONE"</constant>
+        <constant name="engineMake">Honda</constant>
+        <constant name="engineCode">K24</constant>
         <constant name="tcu_solenoid1">"NONE"</constant>
         <constant name="tcu_solenoid2">"NONE"</constant>
         <constant name="tcu_solenoid3">"NONE"</constant>
@@ -581,8 +583,8 @@
         <constant name="luaOutputPins6">"NONE"</constant>
         <constant name="luaOutputPins7">"NONE"</constant>
         <constant name="luaOutputPins8">"NONE"</constant>
-        <constant digits="1" name="vvtOffsets1" units="value">450.0</constant>
-        <constant digits="1" name="vvtOffsets2" units="value">0.0</constant>
+        <constant digits="1" name="vvtOffsets1" units="value">-21.0</constant>
+        <constant digits="1" name="vvtOffsets2" units="value">183.0</constant>
         <constant digits="1" name="vvtOffsets3" units="value">0.0</constant>
         <constant digits="1" name="vvtOffsets4" units="value">0.0</constant>
         <constant cols="1" digits="0" name="vrThreshold1_rpmBins" rows="6">
@@ -619,7 +621,7 @@
          1.2
 </constant>
         <constant name="vrThreshold2_pin">"NONE"</constant>
-        <constant name="gpPwmNote1">GPPWM0</constant>
+        <constant name="gpPwmNote1">VTS</constant>
         <constant name="gpPwmNote2">GPPWM1</constant>
         <constant name="gpPwmNote3">GPPWM2</constant>
         <constant name="gpPwmNote4">GPPWM3</constant>
@@ -855,7 +857,7 @@
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>
         <constant name="sdCardCsPinMode">"default"</constant>
-        <constant digits="0" name="crankingIACposition" units="percent">50.0</constant>
+        <constant digits="0" name="crankingIACposition" units="percent">70.0</constant>
         <constant digits="4" name="tChargeMinRpmMinTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMinRpmMaxTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMaxRpmMinTps" units="">0.25</constant>
@@ -864,8 +866,8 @@
         <constant digits="0" name="minimumIgnitionTiming" units="deg BTDC">-10.0</constant>
         <constant digits="0" name="maximumIgnitionTiming" units="deg BTDC">60.0</constant>
         <constant digits="0" name="alternatorPwmFrequency" units="Hz">300.0</constant>
-        <constant name="vvtMode1">"Single Tooth"</constant>
-        <constant name="vvtMode2">"Inactive"</constant>
+        <constant name="vvtMode1">"Honda K Intake"</constant>
+        <constant name="vvtMode2">"Honda K Exhaust"</constant>
         <constant digits="0" name="fan2ExtraIdle" units="%">2.0</constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
         <constant name="auxAnalogInputs1">"Disabled"</constant>
@@ -890,24 +892,24 @@
         <constant name="trailingCoilPins12">"NONE"</constant>
         <constant name="tle8888mode">"Auto"</constant>
         <constant name="LIS302DLCsPinMode">"default"</constant>
-        <constant name="injectorCompensationMode">"None"</constant>
+        <constant name="injectorCompensationMode">"Fixed rail pressure"</constant>
         <constant name="fan2PinMode">"default"</constant>
-        <constant digits="0" name="fuelReferencePressure" units="kPa">300.0</constant>
+        <constant digits="0" name="fuelReferencePressure" units="kPa">350.0</constant>
         <constant cols="6" digits="2" name="postCrankingFactor" rows="6">
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
+         1.25 1.25 1.25 1.25 1.25 1.25
+         1.25 1.25 1.25 1.25 1.25 1.25
+         1.25 1.25 1.25 1.25 1.25 1.25
+         1.25 1.25 1.25 1.25 1.25 1.25
+         1.25 1.25 1.25 1.25 1.25 1.25
+         1.25 1.25 1.25 1.25 1.25 1.25
 </constant>
         <constant cols="1" digits="0" name="postCrankingDurationBins" rows="6">
          0.0
-         15.0
-         35.0
          65.0
          100.0
+         125.0
          150.0
+         250.0
 </constant>
         <constant cols="1" digits="0" name="postCrankingCLTBins" rows="6">
          -20.0
@@ -1019,7 +1021,7 @@
         <constant name="tle8888_csPinMode">"default"</constant>
         <constant name="mc33816_cs">"NONE"</constant>
         <constant digits="1" name="auxFrequencyFilter" units="hz">0.0</constant>
-        <constant digits="0" name="vvtControlMinRpm" units="RPM">550.0</constant>
+        <constant digits="0" name="vvtControlMinRpm" units="RPM">500.0</constant>
         <constant name="sentInputPins1">"NONE"</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
         <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
@@ -1116,7 +1118,7 @@
         <constant name="canVssNbcType">"BMW_e46"</constant>
         <constant name="gppwm1_pin">"NONE"</constant>
         <constant digits="0" name="gppwm1_dutyIfError" units="%">0.0</constant>
-        <constant digits="0" name="gppwm1_pwmFrequency" units="hz">250.0</constant>
+        <constant digits="0" name="gppwm1_pwmFrequency" units="hz">0.0</constant>
         <constant digits="0" name="gppwm1_onAboveDuty" units="%">60.0</constant>
         <constant digits="0" name="gppwm1_offBelowDuty" units="%">50.0</constant>
         <constant name="gppwm1_loadAxis">"Zero"</constant>

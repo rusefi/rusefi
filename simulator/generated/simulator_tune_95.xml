@@ -780,8 +780,8 @@
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">7.0</constant>
         <constant digits="2" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
         <constant digits="0" name="auxSerialSpeed" units="BPs">0.0</constant>
-        <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">0.74</constant>
-        <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">2.28</constant>
+        <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">0.34</constant>
+        <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">1.86</constant>
         <constant name="canBaudRate">"500kbps"</constant>
         <constant name="veOverrideMode">"None"</constant>
         <constant name="can2BaudRate">"500kbps"</constant>
@@ -5037,7 +5037,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.11.26.f407-discovery.3659812123" version="5.0"/>
+    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.11.26.f407-discovery.643298232" version="5.0"/>
     <bibliography author="rusEFI 20231120" writeDate="date"/>
     <settings/>
     <userComments/>

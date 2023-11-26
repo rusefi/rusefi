@@ -2,7 +2,7 @@
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
     <page number="0" size="23880">
-        <constant name="engineType">"MINIMAL_PINS"</constant>
+        <constant name="engineType">"MRE_M111"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000.0</constant>
@@ -82,8 +82,8 @@
         <constant name="cltSensorPulldown">"false"</constant>
         <constant name="iatSensorPulldown">"false"</constant>
         <constant name="allowIdenticalPps">"false"</constant>
-        <constant digits="0" name="tpsMin" units="ADC">0.0</constant>
-        <constant digits="0" name="tpsMax" units="ADC">1000.0</constant>
+        <constant digits="0" name="tpsMin" units="ADC">891.0</constant>
+        <constant digits="0" name="tpsMax" units="ADC">69.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110.0</constant>
         <constant digits="1" name="cranking_baseFuel" units="mg">27.0</constant>
@@ -131,49 +131,49 @@
          50.0
          50.0
 </constant>
-        <constant digits="2" name="map_sensor_lowValue" units="kpa">0.0</constant>
-        <constant digits="2" name="map_sensor_highValue" units="kpa">0.0</constant>
-        <constant name="map_sensor_type">"MPX4250"</constant>
+        <constant digits="2" name="map_sensor_lowValue" units="kpa">20.0</constant>
+        <constant digits="2" name="map_sensor_highValue" units="kpa">250.0</constant>
+        <constant name="map_sensor_type">"Custom"</constant>
         <constant name="map_sensor_hwChannel">"Disabled"</constant>
         <constant digits="1" name="clt_tempC_1" units="*C">0.0</constant>
-        <constant digits="1" name="clt_tempC_2" units="*C">23.8889</constant>
-        <constant digits="1" name="clt_tempC_3" units="*C">48.8889</constant>
-        <constant digits="1" name="clt_resistance_1" units="Ohm">9500.0</constant>
-        <constant digits="1" name="clt_resistance_2" units="Ohm">2100.0</constant>
-        <constant digits="1" name="clt_resistance_3" units="Ohm">1000.0</constant>
+        <constant digits="1" name="clt_tempC_2" units="*C">30.0</constant>
+        <constant digits="1" name="clt_tempC_3" units="*C">50.0</constant>
+        <constant digits="1" name="clt_resistance_1" units="Ohm">5750.0</constant>
+        <constant digits="1" name="clt_resistance_2" units="Ohm">1750.0</constant>
+        <constant digits="1" name="clt_resistance_3" units="Ohm">750.0</constant>
         <constant digits="1" name="clt_bias_resistor" units="Ohm">1500.0</constant>
         <constant name="clt_adcChannel">"Disabled"</constant>
-        <constant digits="1" name="iat_tempC_1" units="*C">-20.0</constant>
-        <constant digits="1" name="iat_tempC_2" units="*C">23.8889</constant>
-        <constant digits="1" name="iat_tempC_3" units="*C">120.0</constant>
-        <constant digits="1" name="iat_resistance_1" units="Ohm">18000.0</constant>
-        <constant digits="1" name="iat_resistance_2" units="Ohm">2100.0</constant>
-        <constant digits="1" name="iat_resistance_3" units="Ohm">100.0</constant>
+        <constant digits="1" name="iat_tempC_1" units="*C">0.0</constant>
+        <constant digits="1" name="iat_tempC_2" units="*C">22.0</constant>
+        <constant digits="1" name="iat_tempC_3" units="*C">100.0</constant>
+        <constant digits="1" name="iat_resistance_1" units="Ohm">7400.0</constant>
+        <constant digits="1" name="iat_resistance_2" units="Ohm">2180.0</constant>
+        <constant digits="1" name="iat_resistance_3" units="Ohm">180.0</constant>
         <constant digits="1" name="iat_bias_resistor" units="Ohm">2700.0</constant>
         <constant name="iat_adcChannel">"Disabled"</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="hip9011PrescalerAndSDO" units="integer">0.0</constant>
         <constant digits="2" name="knockBandCustom" units="kHz">0.0</constant>
-        <constant digits="3" name="displacement" units="L">2.0</constant>
+        <constant digits="3" name="displacement" units="L">2.295</constant>
         <constant digits="0" name="triggerSimulatorRpm" units="RPM">1200.0</constant>
         <constant digits="0" name="cylindersCount" units="">4.0</constant>
         <constant name="firingOrder">"1-3-4-2"</constant>
         <constant digits="2" name="cylinderBore" units="mm">87.5</constant>
         <constant name="fuelAlgorithm">"Speed Density"</constant>
         <constant digits="0" name="ALSMaxTPS" units="%">5.0</constant>
-        <constant name="crankingInjectionMode">"Simultaneous"</constant>
+        <constant name="crankingInjectionMode">"Sequential"</constant>
         <constant name="injectionMode">"Sequential"</constant>
         <constant digits="0" name="boostControlMinRpm" units="">0.0</constant>
         <constant digits="0" name="boostControlMinTps" units="">0.0</constant>
         <constant digits="0" name="boostControlMinMap" units="">0.0</constant>
         <constant digits="0" name="crankingTimingAngle" units="deg">6.0</constant>
-        <constant name="ignitionMode">"Single Coil"</constant>
+        <constant name="ignitionMode">"Individual Coils"</constant>
         <constant digits="0" name="gapTrackingLengthOverride" units="count">0.0</constant>
         <constant digits="0" name="maxIdleVss" units="kph">0.0</constant>
         <constant digits="0" name="minOilPressureAfterStart" units="kPa">0.0</constant>
         <constant name="timingMode">"dynamic"</constant>
         <constant digits="0" name="fixedModeTiming" units="RPM">50.0</constant>
-        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">0.0</constant>
+        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">469.0</constant>
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
         <constant digits="0" name="fanOnTemperature" units="deg C">95.0</constant>
@@ -183,8 +183,8 @@
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0231125E7</constant>
-        <constant name="tps1_1AdcChannel">"Disabled"</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
+        <constant name="tps1_1AdcChannel">"PC3"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
@@ -211,7 +211,7 @@
         <constant digits="2" name="afr_value1" units="AFR">9.996</constant>
         <constant digits="2" name="afr_v2" units="volts">5.0</constant>
         <constant digits="2" name="afr_value2" units="AFR">19.992</constant>
-        <constant name="throttlePedalPositionAdcChannel">"Disabled"</constant>
+        <constant name="throttlePedalPositionAdcChannel">"PA7"</constant>
         <constant digits="1" name="etbSplit" units="%">5.0</constant>
         <constant name="tle6240_cs">"NONE"</constant>
         <constant name="tle6240_csPinMode">"default"</constant>
@@ -261,12 +261,12 @@
         <constant name="ignitionPins12">"NONE"</constant>
         <constant name="injectionPinMode">"default"</constant>
         <constant name="ignitionPinMode">"default"</constant>
-        <constant name="fuelPumpPin">"NONE"</constant>
+        <constant name="fuelPumpPin">"TLE8888_21"</constant>
         <constant name="fuelPumpPinMode">"default"</constant>
         <constant name="malfunctionIndicatorPin">"NONE"</constant>
         <constant name="malfunctionIndicatorPinMode">"default"</constant>
         <constant name="fanPinMode">"default"</constant>
-        <constant name="fanPin">"NONE"</constant>
+        <constant name="fanPin">"TLE8888_22"</constant>
         <constant name="clutchDownPin">"NONE"</constant>
         <constant name="alternatorControlPin">"NONE"</constant>
         <constant name="alternatorControlPinMode">"default"</constant>
@@ -282,9 +282,9 @@
         <constant name="mc33972_cs">"NONE"</constant>
         <constant name="mc33972_csPinMode">"default"</constant>
         <constant name="auxFastSensor1_adcChannel">"Disabled"</constant>
-        <constant name="tps1_2AdcChannel">"Disabled"</constant>
+        <constant name="tps1_2AdcChannel">"PA6"</constant>
         <constant name="tps2_2AdcChannel">"Disabled"</constant>
-        <constant name="throttlePedalPositionSecondAdcChannel">"Disabled"</constant>
+        <constant name="throttlePedalPositionSecondAdcChannel">"PC5"</constant>
         <constant cols="1" digits="0" name="fuelLevelValues" rows="8">
          0.0
          0.0
@@ -428,8 +428,8 @@
         <constant digits="0" name="mapMinBufferLength" units="count">1.0</constant>
         <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">5.0</constant>
         <constant digits="0" name="stepperParkingExtraSteps" units="%">0.0</constant>
-        <constant digits="0" name="tps1SecondaryMin" units="ADC">1000.0</constant>
-        <constant digits="0" name="tps1SecondaryMax" units="ADC">0.0</constant>
+        <constant digits="0" name="tps1SecondaryMin" units="ADC">98.0</constant>
+        <constant digits="0" name="tps1SecondaryMax" units="ADC">926.0</constant>
         <constant digits="0" name="antiLagRpmTreshold" units="rpm">0.0</constant>
         <constant digits="0" name="startCrankingDuration" units="Seconds">3.0</constant>
         <constant name="triggerErrorPin">"NONE"</constant>
@@ -500,7 +500,7 @@
         <constant name="etbIo2_directionPin2">"NONE"</constant>
         <constant name="etbIo2_controlPin">"NONE"</constant>
         <constant name="etbIo2_disablePin">"NONE"</constant>
-        <constant name="boostControlPin">"NONE"</constant>
+        <constant name="boostControlPin">"PB1"</constant>
         <constant name="boostControlPinMode">"default"</constant>
         <constant name="ALSActivatePin">"NONE"</constant>
         <constant name="launchActivatePin">"NONE"</constant>
@@ -551,6 +551,8 @@
         <constant name="stepperDcIo2_directionPin2">"NONE"</constant>
         <constant name="stepperDcIo2_controlPin">"NONE"</constant>
         <constant name="stepperDcIo2_disablePin">"NONE"</constant>
+        <constant name="engineMake">Mercedes</constant>
+        <constant name="engineCode">M111</constant>
         <constant name="tcu_solenoid1">"NONE"</constant>
         <constant name="tcu_solenoid2">"NONE"</constant>
         <constant name="tcu_solenoid3">"NONE"</constant>
@@ -619,8 +621,8 @@
          1.2
 </constant>
         <constant name="vrThreshold2_pin">"NONE"</constant>
-        <constant name="gpPwmNote1">GPPWM0</constant>
-        <constant name="gpPwmNote2">GPPWM1</constant>
+        <constant name="gpPwmNote1">SC Bypass</constant>
+        <constant name="gpPwmNote2">SC Clutch</constant>
         <constant name="gpPwmNote3">GPPWM2</constant>
         <constant name="gpPwmNote4">GPPWM3</constant>
         <constant digits="0" name="tps2SecondaryMin" units="ADC">1000.0</constant>
@@ -717,9 +719,9 @@
         <constant digits="0" name="alternatorControl_periodMs" units="ms">100.0</constant>
         <constant digits="0" name="alternatorControl_minValue" units="">0.0</constant>
         <constant digits="0" name="alternatorControl_maxValue" units="">90.0</constant>
-        <constant digits="4" name="etb_pFactor" units="">1.0</constant>
-        <constant digits="4" name="etb_iFactor" units="">10.0</constant>
-        <constant digits="4" name="etb_dFactor" units="">0.05</constant>
+        <constant digits="4" name="etb_pFactor" units="">5.12</constant>
+        <constant digits="4" name="etb_iFactor" units="">47.0</constant>
+        <constant digits="4" name="etb_dFactor" units="">0.088</constant>
         <constant digits="0" name="etb_offset" units="">0.0</constant>
         <constant digits="0" name="etb_periodMs" units="ms">0.0</constant>
         <constant digits="0" name="etb_minValue" units="">-100.0</constant>
@@ -752,8 +754,8 @@
         <constant name="auxValves2">"NONE"</constant>
         <constant name="tcuUpshiftButtonPin">"NONE"</constant>
         <constant name="tcuDownshiftButtonPin">"NONE"</constant>
-        <constant digits="2" name="throttlePedalUpVoltage" units="voltage">0.0</constant>
-        <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">5.0</constant>
+        <constant digits="2" name="throttlePedalUpVoltage" units="voltage">0.38</constant>
+        <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">4.77</constant>
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
         <constant digits="1" name="targetVBatt" units="Volts">14.0</constant>
@@ -778,8 +780,8 @@
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
         <constant digits="2" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
         <constant digits="0" name="auxSerialSpeed" units="BPs">0.0</constant>
-        <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">5.0</constant>
-        <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">0.0</constant>
+        <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">4.64</constant>
+        <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">2.47</constant>
         <constant name="canBaudRate">"500kbps"</constant>
         <constant name="veOverrideMode">"None"</constant>
         <constant name="can2BaudRate">"500kbps"</constant>
@@ -847,10 +849,10 @@
          0.0
 </constant>
         <constant digits="2" name="fixedTiming" units="deg">0.0</constant>
-        <constant digits="2" name="mapLowValueVoltage" units="v">0.0</constant>
-        <constant digits="2" name="mapHighValueVoltage" units="v">5.0</constant>
+        <constant digits="2" name="mapLowValueVoltage" units="v">0.3</constant>
+        <constant digits="2" name="mapHighValueVoltage" units="v">4.65</constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
-        <constant name="vvtPins1">"PI0"</constant>
+        <constant name="vvtPins1">"TLE8888_6"</constant>
         <constant name="vvtPins2">"NONE"</constant>
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>
@@ -1005,7 +1007,7 @@
          80.0
          100.0
 </constant>
-        <constant name="oilPressure_hwChannel">"Disabled"</constant>
+        <constant name="oilPressure_hwChannel">"PC2"</constant>
         <constant digits="2" name="oilPressure_v1" units="volts">0.5</constant>
         <constant digits="2" name="oilPressure_value1" units="">0.0</constant>
         <constant digits="2" name="oilPressure_v2" units="volts">4.5</constant>
@@ -1019,7 +1021,7 @@
         <constant name="tle8888_csPinMode">"default"</constant>
         <constant name="mc33816_cs">"NONE"</constant>
         <constant digits="1" name="auxFrequencyFilter" units="hz">0.0</constant>
-        <constant digits="0" name="vvtControlMinRpm" units="RPM">550.0</constant>
+        <constant digits="0" name="vvtControlMinRpm" units="RPM">500.0</constant>
         <constant name="sentInputPins1">"NONE"</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
         <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
@@ -1151,7 +1153,7 @@
          85.0 85.0 85.0 85.0 85.0 85.0 85.0 85.0
          100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0
 </constant>
-        <constant name="gppwm2_pin">"NONE"</constant>
+        <constant name="gppwm2_pin">"TLE8888_5"</constant>
         <constant digits="0" name="gppwm2_dutyIfError" units="%">0.0</constant>
         <constant digits="0" name="gppwm2_pwmFrequency" units="hz">250.0</constant>
         <constant digits="0" name="gppwm2_onAboveDuty" units="%">60.0</constant>
