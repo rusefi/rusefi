@@ -324,8 +324,6 @@ static void commonGenesisCoupe() {
     engineConfiguration->tpsAccelFractionPeriod = 3;
     // default 0.0
     engineConfiguration->tpsAccelFractionDivisor = 3;
-    // default "Throttle 2"
-    engineConfiguration->etbFunctions[1] = DC_Wastegate;
     // default "false"
     engineConfiguration->useSeparateAdvanceForIdle = true;
     // default 0.0
@@ -457,5 +455,7 @@ void setGenesisCoupeBK2() {
 	// flow rate P2 = flow rate P1 * sqrt(P2/P1)
 	engineConfiguration->injector.flow = 629.03; // https://www.google.com/search?q=450*sqrt%2885%2F43.5%29
 	engineConfiguration->fuelReferencePressure = PSI2KPA(85);
+    // default "Throttle 2"
+    engineConfiguration->etbFunctions[1] = DC_Wastegate;
 
 }
