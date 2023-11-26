@@ -156,6 +156,8 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     constexpr: "___engine.module<IdleController>().unmock()"
     output_name: idle
+# working around unmock() in simulator
+    conditional_compilation: "EFI_PROD_CODE"
 
   - name: electronic_throttle
     java: ElectronicThrottle.java
