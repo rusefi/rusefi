@@ -1,6 +1,5 @@
 package com.rusefi.ui.widgets;
 
-import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.UIContext;
@@ -16,7 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

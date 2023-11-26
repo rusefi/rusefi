@@ -4,16 +4,13 @@ import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020

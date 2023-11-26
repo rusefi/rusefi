@@ -9,7 +9,6 @@ import com.rusefi.io.serial.BufferedSerialIoStream;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 

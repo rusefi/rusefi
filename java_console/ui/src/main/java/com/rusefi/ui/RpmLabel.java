@@ -66,12 +66,11 @@ public class RpmLabel {
         return content;
     }
 
-    public RpmLabel setSize(int size) {
+    public void setSize(int size) {
         Font f = rpmCaption.getFont();
         int fontSize = size * f.getSize();
         Font font = new Font(f.getName(), f.getStyle(), fontSize);
         setFont(font);
-        return this;
     }
 
     private void setFont(Font font) {

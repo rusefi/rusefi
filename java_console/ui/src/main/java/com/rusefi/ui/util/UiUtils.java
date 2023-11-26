@@ -15,13 +15,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.URLStreamHandlerFactory;
 
 import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
 import static com.rusefi.ui.util.LocalizedMessages.PAUSE;

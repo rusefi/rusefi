@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.autodetect.PortDetector;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;

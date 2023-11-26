@@ -35,13 +35,6 @@ public class SerialIoStream extends AbstractIoStream {
         this.port = port;
     }
 
-    public static IoStream openPort(String port) {
-        log.info("[SerialIoStream] openPort " + port);
-        SerialPort serialPort = openSerial(port);
-//        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
-        return new SerialIoStream(serialPort, port);
-    }
-
     @Nullable
     protected static SerialPort openSerial(String port) {
         SerialPort serialPort = SerialPort.getCommPort(port);

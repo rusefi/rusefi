@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
-public class HelloCommand implements Command {
+public class HelloCommand {
     private final String tsSignature;
 
     public HelloCommand(String tsSignature) {
@@ -35,12 +35,10 @@ public class HelloCommand implements Command {
         return new String(response, 1, response.length - 1);
     }
 
-    @Override
     public byte getCommand() {
         return Fields.TS_HELLO_COMMAND;
     }
 
-    @Override
     public void handle(IoStream stream) throws IOException {
         stream.sendPacket((BinaryProtocolServer.TS_OK + tsSignature).getBytes());
     }
