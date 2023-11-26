@@ -60,6 +60,10 @@ void setHondaK() {
 
 	gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
 	vtsControl->pwmFrequency = 0;
+#if EFI_SIMULATOR
+    // simulator canned config XML toolset cares to see perfect empty memory region
+	memset(engineConfiguration->gpPwmNote[0], 0, sizeof(gppwm_note_t));
+#endif
 	strcpy(engineConfiguration->gpPwmNote[0], "VTS");
 
 /**
