@@ -2,6 +2,7 @@ package com.rusefi.tools.tune;
 
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
+import com.opensr5.ini.field.IniField;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -37,7 +38,10 @@ public class CurveData {
 
     @NotNull
     public static CurveData valueOf(String msqFileName, String curveName, IniFileModel model) throws IOException {
-        ArrayIniField field = (ArrayIniField) model.allIniFields.get(curveName);
+        IniField iniField = model.allIniFields.get(curveName);
+        if (!(iniField instanceof ArrayIniField))
+            return null;
+        ArrayIniField field = (ArrayIniField) iniField;
         int curveSize = field.getRows();
         BufferedReader r = TS2C.readAndScroll(msqFileName, curveName + "\"");
         float[] curveValues = new float[curveSize];
@@ -93,9 +97,18 @@ public class CurveData {
     }
 
     public String getCsourceMethod(String reference) {
-        return "static void canned" + curveName + "() {\n"
+        return "static void " + getCannedMethod() + " {\n"
                 + "\t" + getCsourceCode() +
                 "\tcopyArray(" + reference + curveName + ", " + getCannedName() + ");\n" +
                 "}\n\n";
+    }
+
+    @NotNull
+    private String getCannedMethod() {
+        return "canned" + curveName + "()";
+    }
+
+    public String getCinvokeMethod() {
+        return "\t" + getCannedMethod() + ";\n";
     }
 }

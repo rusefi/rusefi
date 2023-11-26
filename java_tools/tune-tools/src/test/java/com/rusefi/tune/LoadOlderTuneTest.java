@@ -26,7 +26,7 @@ public class LoadOlderTuneTest {
 
         RootHolder.ROOT = "../../firmware/";
 
-        StringBuilder sb = TuneCanTool.getTunePatch(lessOldDefaultTune, customOldTune, ini);
+        StringBuilder sb = TuneCanTool.getTunePatch(lessOldDefaultTune, customOldTune, ini, TuneReadWriteTest.TUNE_NAME, new StringBuilder());
 
         assertEquals("    // default \"Single Coil\"\n" +
                 "    engineConfiguration->ignitionMode = IM_ONE_COIL;\n" +

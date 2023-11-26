@@ -219,17 +219,24 @@ public class IniFileModel {
     private void handleYBins(LinkedList<String> list) {
         list.removeFirst();
         currentYBins = list.removeFirst();
+        addField(currentYBins);
     }
 
     private void handleXBins(LinkedList<String> list) {
         list.removeFirst();
         currentXBins = list.removeFirst();
-        DialogModel.Field field = new DialogModel.Field(currentXBins, currentXBins);
-        fieldsInUiOrder.put(currentXBins, field);
+        addField(currentXBins);
+    }
+
+    private void addField(String key) {
+        DialogModel.Field field = new DialogModel.Field(key, key);
+        fieldsInUiOrder.put(key, field);
     }
 
     private void handleTable(LinkedList<String> list) {
         list.removeFirst();
+        String tableName = list.removeFirst();
+        addField(tableName);
     }
 
     private void handleFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {

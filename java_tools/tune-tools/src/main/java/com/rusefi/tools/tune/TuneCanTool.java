@@ -4,11 +4,13 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -37,29 +39,32 @@ public class TuneCanTool {
     public static final String DEFAULT_TUNE = SIMULATED_PREFIX + SIMULATED_SUFFIX;
     private static final String workingFolder = "downloaded_tunes";
 
-    private static Msq simulatorDefaultTune;
     private static IniFileModel ini;
 
 
     public static void main(String[] args) throws Exception {
-        simulatorDefaultTune = Msq.readTune(TuneCanTool.DEFAULT_TUNE);
         ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
         if (ini == null)
             throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
 
         RootHolder.ROOT = "../firmware/";
 
-//        handle("BK2", 1507, simulatorDefaultTune);
-        handle("BK2-diff", 1507, Msq.readTune(SIMULATED_PREFIX + "_95" + SIMULATED_SUFFIX));
-//        handle("PB", 1502);
+        process(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "BK2");
+//        process(1502, Fields.engine_type_e_HYUNDAI_PB, "PB");
+//        process(1490, Fields.engine_type_e_MRE_M111, "m111-alex");
 //        handle("Mitsubicha", 1258);
 //        handle("Scion-1NZ-FE", 1448);
 //        handle("4g93", 1425);
 //        handle("BMW-mtmotorsport", 1479);
-//        handle("m111-alex", 1490);
     }
 
-    private static void handle(String vehicleName, int tuneId, Msq currentTune) throws JAXBException, IOException {
+    private static void process(int tuneId, int engineType, String key) throws JAXBException, IOException {
+        handle(key, tuneId, TuneCanTool.DEFAULT_TUNE);
+        handle(key + "-diff", tuneId, SIMULATED_PREFIX + "_" + engineType + SIMULATED_SUFFIX);
+    }
+
+    private static void handle(String vehicleName, int tuneId, String currentTuneFileName) throws JAXBException, IOException {
+        Msq currentTune = Msq.readTune(currentTuneFileName);
         String localFileName = workingFolder + File.separator + tuneId + ".msq";
         String url = "https://rusefi.com/online/view.php?msq=" + tuneId;
 
@@ -69,19 +74,27 @@ public class TuneCanTool {
         new File(reportsOutputFolder).mkdir();
 
         Msq custom = Msq.readTune(localFileName);
-        StringBuilder sb = TuneCanTool.getTunePatch(currentTune, custom, ini);
+
+        StringBuilder methods = new StringBuilder();
+
+        StringBuilder sb = TuneCanTool.getTunePatch(currentTune, custom, ini, currentTuneFileName, methods);
+
+        String fileNameMethods = reportsOutputFolder + "/" + vehicleName + "_methods.md";
+        try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
+            methodsWriter.append(methods);
+        }
 
         String fileName = reportsOutputFolder + "/" + vehicleName + ".md";
         log.info("Writing to " + fileName);
 
-        FileWriter w = new FileWriter(fileName);
-        w.append("# " + vehicleName + "\n\n");
-        w.append("// canned tune " + url + "\n\n");
+        try (FileWriter w = new FileWriter(fileName)) {
+            w.append("# " + vehicleName + "\n\n");
+            w.append("// canned tune " + url + "\n\n");
 
-        w.append("```\n");
-        w.append(sb);
-        w.append("```\n");
-        w.close();
+            w.append("```\n");
+            w.append(sb);
+            w.append("```\n");
+        }
     }
 
     private static void downloadTune(int tuneId, String localFileName) throws IOException {
@@ -112,9 +125,11 @@ public class TuneCanTool {
     }
 
     @NotNull
-    public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini) throws IOException {
+    public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini, String currentTuneFileName, StringBuilder methods) throws IOException {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
         String[] totalArgs = options.toArray(new String[0]);
+
+        StringBuilder invokeMethods = new StringBuilder();
 
         ReaderStateImpl state = new ReaderStateImpl();
         ConfigDefinition.doJob(totalArgs, state);
@@ -130,7 +145,7 @@ public class TuneCanTool {
             }
             Objects.requireNonNull(defaultValue.getValue(), "d value");
             if (customValue == null) {
-                log.info("Skipping " + name + " TODO");
+                log.info("Skipping " + name + " not present in tune");
                 continue;
             }
             Objects.requireNonNull(customValue.getValue(), "c value");
@@ -148,7 +163,19 @@ public class TuneCanTool {
                 String cName = context + cf.getOriginalArrayName();
 
                 if (cf.getType().equals("boolean")) {
-                    sb.append(TuneTools.getAssignmentCode(defaultValue, customValue.getName(), unquote(customValue.getValue())));
+                    sb.append(TuneTools.getAssignmentCode(defaultValue, cName, unquote(customValue.getValue())));
+                    continue;
+                }
+
+                if (cf.isArray()) {
+
+                    CurveData data = CurveData.valueOf(currentTuneFileName, name, ini);
+                    if (data == null)
+                        continue;
+
+                    methods.append(data.getCsourceMethod("engineConfiguration"));
+                    invokeMethods.append(data.getCinvokeMethod());
+
                     continue;
                 }
 
@@ -192,15 +219,22 @@ public class TuneCanTool {
                 }
             }
         }
+        sb.append("\n\n").append(invokeMethods);
+
         return sb;
     }
 
     private static ConfigField findField(ReaderStateImpl state, String name, StringBuffer context) {
+        return doLook(state, name, context);
+    }
+
+    @Nullable
+    private static ConfigField doLook(ReaderStateImpl state, String name, StringBuffer context) {
         ConfigStructure s = state.getStructures().get("engine_configuration_s");
 //                log.info("We have a custom value " + name);
         ConfigField cf = s.getTsFieldByName(name);
         if (cf != null) {
-            return cf; // it was easy!
+            return cf;
         }
         int fromIndex = 0;
         while (true) {
@@ -211,11 +245,14 @@ public class TuneCanTool {
             }
             String parentName = name.substring(0, fromIndex);
             cf = s.getTsFieldByName(parentName);
+            fromIndex++; // skip underscore
+            if (cf == null)
+                continue;
             String type = cf.getType();
             s = state.getStructures().get(type);
 
             if (s != null) {
-                String substring = name.substring(fromIndex + 1);
+                String substring = name.substring(fromIndex);
                 ConfigField tsFieldByName = s.getTsFieldByName(substring);
                 if (tsFieldByName == null) {
                     log.info("Not located " + substring + " in " + s);
@@ -225,7 +262,6 @@ public class TuneCanTool {
                 }
                 return tsFieldByName;
             }
-            fromIndex++; // skip underscore
         }
     }
 }

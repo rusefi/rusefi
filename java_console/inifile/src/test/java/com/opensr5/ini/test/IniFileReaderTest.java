@@ -126,9 +126,27 @@ public class IniFileReaderTest {
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = new IniFileModel().readIniFile(lines);
         assertEquals(2, model.allIniFields.size());
-        assertEquals(1, model.fieldsInUiOrder.size());
+        assertEquals(2, model.fieldsInUiOrder.size());
     }
 
+    @Test
+    public void testTable() {
+        String string = "page = 1\n" +
+                "[Constants]\n" +
+                "tpsTpsAccelTable = array, F32, 19744, [8x8], \"value\", 1, 0, 0, 30000, 2\n" +
+                "tpsTpsAccelFromRpmBins = array, F32, 20000, [8], \"from\", 1, 0, 0, 30000, 2\n" +
+                "tpsTpsAccelToRpmBins = array, F32, 20032, [8], \"to\", 1, 0, 0, 25500, 2\n\n " +
+                "[TableEditor]\n" +
+                "\ttable = tpsTpsAccelTbl,  tpsTpsAccelMap,  \"TPS/TPS Acceleration Extra Fuel(ms)\",\t1\n" +
+                "\ttopicHelp = \"tpstpsHelp\"\n" +
+                "\t\txBins\t\t= tpsTpsAccelFromRpmBins,  TPSValue\n" +
+                "\t\tyBins\t\t= tpsTpsAccelToRpmBins,  TPSValue\n" +
+                "\t\tzBins\t\t= tpsTpsAccelTable";
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+        assertEquals(3, model.allIniFields.size());
+        assertEquals(3, model.fieldsInUiOrder.size());
+    }
 
     @Test
     public void testConditional() {
