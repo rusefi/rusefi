@@ -44,10 +44,14 @@ public class WriteSimulatorConfiguration {
         }
     }
 
-    private static void writeSpecificEngineType(int engineType) throws JAXBException, IOException {
+    private static void writeSpecificEngineType(int engineType) {
         String engine = "_" + engineType;
-        writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + engine + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX,
-                TuneCanTool.SIMULATED_PREFIX + engine + TuneCanTool.SIMULATED_SUFFIX);
+        try {
+            writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + engine + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX,
+                    TuneCanTool.SIMULATED_PREFIX + engine + TuneCanTool.SIMULATED_SUFFIX);
+        } catch (Throwable e) {
+            throw new IllegalStateException("With " + engineType, e);
+        }
     }
 
     private static void writeTune(String tuneBinFileName, String outputXmlFileName) throws JAXBException, IOException {
