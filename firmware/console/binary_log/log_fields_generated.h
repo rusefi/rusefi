@@ -441,16 +441,36 @@ static constexpr LogField fields[] = {
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
 #endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
+#endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().baseIdlePosition, "idle: base value", "", 0},
+#endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().idleClosedLoop, "Idle: Closed loop", "", 0},
+#endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
+#endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().throttlePedalUpState, "idle: throttlePedalUpState", "", 0},
+#endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
+#endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().targetRpmByClt, "Idle: Target RPM base", "", 0},
+#endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().targetRpmAc, "Idle: Target A/C RPM", "", 0},
+#endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().iacByRpmTaper, "idle: iacByRpmTaper portion", "", 0},
+#endif
+#if EFI_PROD_CODE
 	{___engine.module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
+#endif
 	{engine->dc_motors.dcOutput0, "DC: output0", "per", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "per", 2, "ETB more"},
 #if EFI_VVT_PID
