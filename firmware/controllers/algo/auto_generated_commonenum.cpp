@@ -245,6 +245,8 @@ const char *getCan_vss_nbc_e(can_vss_nbc_e value){
 switch(value) {
 case BMW_e46:
   return "BMW_e46";
+case BMW_e90:
+  return "BMW_e90";
 case W202:
   return "W202";
   }
