@@ -24,7 +24,7 @@ expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
 		case W202:
 			return 0x0200; /* W202 C180 ABS signal */
 		case LUA:
-		    return 0; // a bit of a hack
+		    return 0; // a bit of a hack to be able to inject VSS using a Lua script
 		default:
 			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
 			return unexpected;
