@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 24 16:39:26 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 27 04:27:06 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1559,7 +1559,7 @@ struct engine_configuration_s {
 	bool isHip9011Enabled : 1 {};
 	/**
 	offset 728 bit 7 */
-	bool unused644b5 : 1 {};
+	bool requireFootOnBrakeToCrank : 1 {};
 	/**
 	offset 728 bit 8 */
 	bool verboseQuad : 1 {};
@@ -3766,16 +3766,15 @@ struct engine_configuration_s {
 	 */
 	pid_s idleRpmPid2;
 	/**
-	 * set can_vss X
 	 * offset 2692
 	 */
 	can_vss_nbc_e canVssNbcType;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 2693
+	 * offset 2694
 	 */
-	uint8_t alignmentFill_at_2693[3];
+	uint8_t alignmentFill_at_2694[2];
 	/**
 	 * offset 2696
 	 */
@@ -5366,4 +5365,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23880);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Nov 24 16:39:26 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 27 04:27:06 UTC 2023

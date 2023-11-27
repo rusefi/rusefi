@@ -121,8 +121,9 @@
 #define can_nbc_e_CAN_BUS_NISSAN_VQ 9
 #define can_nbc_e_CAN_BUS_W202_C180 5
 #define CAN_RX_PREFIX "CAN_rx"
-#define can_vss_nbc_e_auto_enum 0="BMW_e46",2="LUA",1="W202"
+#define can_vss_nbc_e_auto_enum 0="BMW_e46",3="BMW_e90",2="LUA",1="W202"
 #define can_vss_nbc_e_BMW_e46 0
+#define can_vss_nbc_e_BMW_e90 3
 #define can_vss_nbc_e_LUA 2
 #define can_vss_nbc_e_W202 1
 #define CanGpioType_auto_enum 0="NONE",1="DRT",2="MS"
@@ -813,7 +814,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 2955829611
+#define SIGNATURE_HASH 1717659580
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1111,7 +1112,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.11.27.cypress.2955829611"
+#define TS_SIGNATURE "rusEFI master.2023.11.27.cypress.1717659580"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

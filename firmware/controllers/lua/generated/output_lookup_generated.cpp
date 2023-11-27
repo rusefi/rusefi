@@ -1181,142 +1181,142 @@ float getOutputValueByName(const char *name) {
 			return engine->triggerCentral.isDecodingMapCam;
 #endif
 // idleState
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1886060228:
 			return ___engine.module<IdleController>().unmock().idleState;
 #endif
 // currentIdlePosition
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1149240133:
 			return ___engine.module<IdleController>().unmock().currentIdlePosition;
 #endif
 // baseIdlePosition
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -580955469:
 			return ___engine.module<IdleController>().unmock().baseIdlePosition;
 #endif
 // idleClosedLoop
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1267620087:
 			return ___engine.module<IdleController>().unmock().idleClosedLoop;
 #endif
 // iacByTpsTaper
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -2065814304:
 			return ___engine.module<IdleController>().unmock().iacByTpsTaper;
 #endif
 // throttlePedalUpState
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 767668487:
 			return ___engine.module<IdleController>().unmock().throttlePedalUpState;
 #endif
 // mightResetPid
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 149945022:
 			return ___engine.module<IdleController>().unmock().mightResetPid;
 #endif
 // shouldResetPid
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -226320012:
 			return ___engine.module<IdleController>().unmock().shouldResetPid;
 #endif
 // wasResetPid
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1830486000:
 			return ___engine.module<IdleController>().unmock().wasResetPid;
 #endif
 // mustResetPid
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1685322158:
 			return ___engine.module<IdleController>().unmock().mustResetPid;
 #endif
 // isCranking
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1055526802:
 			return ___engine.module<IdleController>().unmock().isCranking;
 #endif
 // isIacTableForCoasting
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 705044501:
 			return ___engine.module<IdleController>().unmock().isIacTableForCoasting;
 #endif
 // notIdling
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1304441005:
 			return ___engine.module<IdleController>().unmock().notIdling;
 #endif
 // needReset
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -2049691836:
 			return ___engine.module<IdleController>().unmock().needReset;
 #endif
 // isInDeadZone
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1661765918:
 			return ___engine.module<IdleController>().unmock().isInDeadZone;
 #endif
 // isBlipping
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 432464630:
 			return ___engine.module<IdleController>().unmock().isBlipping;
 #endif
 // useClosedLoop
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -87867258:
 			return ___engine.module<IdleController>().unmock().useClosedLoop;
 #endif
 // badTps
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -208884349:
 			return ___engine.module<IdleController>().unmock().badTps;
 #endif
 // looksLikeRunning
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1126009613:
 			return ___engine.module<IdleController>().unmock().looksLikeRunning;
 #endif
 // looksLikeCoasting
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1786409942:
 			return ___engine.module<IdleController>().unmock().looksLikeCoasting;
 #endif
 // looksLikeCrankToIdle
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -2079775742:
 			return ___engine.module<IdleController>().unmock().looksLikeCrankToIdle;
 #endif
 // isIdleCoasting
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 2141275671:
 			return ___engine.module<IdleController>().unmock().isIdleCoasting;
 #endif
 // isIdleClosedLoop
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1473688883:
 			return ___engine.module<IdleController>().unmock().isIdleClosedLoop;
 #endif
 // idleTarget
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 2127645162:
 			return ___engine.module<IdleController>().unmock().idleTarget;
 #endif
 // targetRpmByClt
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1241725607:
 			return ___engine.module<IdleController>().unmock().targetRpmByClt;
 #endif
 // targetRpmAc
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1156739423:
 			return ___engine.module<IdleController>().unmock().targetRpmAc;
 #endif
 // iacByRpmTaper
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1638166696:
 			return ___engine.module<IdleController>().unmock().iacByRpmTaper;
 #endif
 // luaAdd
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 206059088:
 			return ___engine.module<IdleController>().unmock().luaAdd;
 #endif

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 27 00:33:59 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 27 04:27:06 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -150,6 +150,7 @@ public class Fields {
 	public static final int can_nbc_e_CAN_BUS_W202_C180 = 5;
 	public static final String CAN_RX_PREFIX = "CAN_rx";
 	public static final int can_vss_nbc_e_BMW_e46 = 0;
+	public static final int can_vss_nbc_e_BMW_e90 = 3;
 	public static final int can_vss_nbc_e_LUA = 2;
 	public static final int can_vss_nbc_e_W202 = 1;
 	public static final int CanGpioType_DRT = 1;
@@ -1079,7 +1080,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 609618477;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1308,7 +1308,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.11.27.f407-discovery.609618477";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.11.27.f407-discovery.4061727994";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1660,6 +1660,7 @@ public class Fields {
 	public static final Field RUSEFIVERBOSE29B = Field.create("RUSEFIVERBOSE29B", 728, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field RETHROWHARDFAULT = Field.create("RETHROWHARDFAULT", 728, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field ISHIP9011ENABLED = Field.create("ISHIP9011ENABLED", 728, FieldType.BIT, 6).setBaseOffset(0);
+	public static final Field REQUIREFOOTONBRAKETOCRANK = Field.create("REQUIREFOOTONBRAKETOCRANK", 728, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field VERBOSEQUAD = Field.create("VERBOSEQUAD", 728, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field USESTEPPERIDLE = Field.create("USESTEPPERIDLE", 728, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 728, FieldType.BIT, 10).setBaseOffset(0);
@@ -2367,8 +2368,8 @@ public class Fields {
 	public static final Field IDLERPMPID2_PERIODMS = Field.create("IDLERPMPID2_PERIODMS", 2686, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLERPMPID2_MINVALUE = Field.create("IDLERPMPID2_MINVALUE", 2688, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 2690, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field CANVSSNBCTYPE = Field.create("CANVSSNBCTYPE", 2692, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_2693 = Field.create("ALIGNMENTFILL_AT_2693", 2693, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field CANVSSNBCTYPE = Field.create("CANVSSNBCTYPE", 2692, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_2694 = Field.create("ALIGNMENTFILL_AT_2694", 2694, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_PIN = Field.create("GPPWM1_PIN", 2696, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_DUTYIFERROR = Field.create("GPPWM1_DUTYIFERROR", 2698, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_ALIGNMENTFILL_AT_3 = Field.create("GPPWM1_ALIGNMENTFILL_AT_3", 2699, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3239,6 +3240,7 @@ public class Fields {
 	RUSEFIVERBOSE29B,
 	RETHROWHARDFAULT,
 	ISHIP9011ENABLED,
+	REQUIREFOOTONBRAKETOCRANK,
 	VERBOSEQUAD,
 	USESTEPPERIDLE,
 	ENABLEDSTEP1LIMITER,
@@ -3935,7 +3937,7 @@ public class Fields {
 	IDLERPMPID2_MINVALUE,
 	IDLERPMPID2_MAXVALUE,
 	CANVSSNBCTYPE,
-	ALIGNMENTFILL_AT_2693,
+	ALIGNMENTFILL_AT_2694,
 	GPPWM1_PIN,
 	GPPWM1_DUTYIFERROR,
 	GPPWM1_ALIGNMENTFILL_AT_3,

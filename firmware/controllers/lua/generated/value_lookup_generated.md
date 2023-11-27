@@ -406,6 +406,9 @@ Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 ### isHip9011Enabled
 
 
+### requireFootOnBrakeToCrank
+
+
 ### verboseQuad
 
 

@@ -412,6 +412,9 @@ float getConfigValueByName(const char *name) {
 // isHip9011Enabled
 		case -2119647784:
 			return engineConfiguration->isHip9011Enabled;
+// requireFootOnBrakeToCrank
+		case -703903346:
+			return engineConfiguration->requireFootOnBrakeToCrank;
 // verboseQuad
 		case -1055678778:
 			return engineConfiguration->verboseQuad;
@@ -2413,6 +2416,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -2119647784:
 	{
 		engineConfiguration->isHip9011Enabled = (int)value;
+		return 1;
+	}
+		case -703903346:
+	{
+		engineConfiguration->requireFootOnBrakeToCrank = (int)value;
 		return 1;
 	}
 		case -1055678778:
