@@ -336,7 +336,7 @@
         <constant name="rusefiVerbose29b">"11 bit"</constant>
         <constant name="rethrowHardFault">"false"</constant>
         <constant name="isHip9011Enabled">"false"</constant>
-        <constant name="unused644b5">"false"</constant>
+        <constant name="requireFootOnBrakeToCrank">"false"</constant>
         <constant name="verboseQuad">"false"</constant>
         <constant name="useStepperIdle">"false"</constant>
         <constant name="enabledStep1Limiter">"false"</constant>
@@ -4985,7 +4985,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.11.27.f407-discovery.609618477" version="5.0"/>
+    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.11.27.f407-discovery.4061727994" version="5.0"/>
     <bibliography author="rusEFI 20231120" writeDate="date"/>
     <settings/>
     <userComments/>
