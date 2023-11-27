@@ -113,9 +113,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	int16_t autoscale rawWastegatePosition;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-! todo: reimplement { LIS302DLCsPin != 0 || imuType != 0  }
-	int16_t autoscale accelerationX;@@GAUGE_NAME_ACCEL_X@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
-	int16_t autoscale accelerationY;@@GAUGE_NAME_ACCEL_Y@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	int16_t autoscale accelerationLat;@@GAUGE_NAME_ACCEL_LAT@@;"G",{1/1000}, 0, 0, 0, 0
+	int16_t autoscale accelerationLon;@@GAUGE_NAME_ACCEL_LON@@;"G",{1/1000}, 0, 0, 0, 0
 
 	uint8_t detectedGear;@@GAUGE_NAME_DETECTED_GEAR@@;"", 1, 0, 0, @@GEARS_COUNT@@, 0
 	uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
@@ -203,9 +202,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	int16_t autoscale rawTps2Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-	int16_t autoscale accelerationZ;@@GAUGE_NAME_ACCEL_Z@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale accelerationRoll;@@GAUGE_NAME_ACCEL_ROLL@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale accelerationYaw;@@GAUGE_NAME_ACCEL_YAW@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t autoscale accelerationVert;@@GAUGE_NAME_ACCEL_VERT@@;"G",{1/1000}, 0, 0, 0, 0
+	int16_t autoscale gyroYaw;@@GAUGE_NAME_GYRO_YAW@@;"deg/sec",{1/1000}, 0, 0, 0, 0
 
 	int8_t[4 iterate] vvtTargets;;"deg",1, 0, 0, 0, 0
 	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0

@@ -8,13 +8,3 @@
 #pragma once
 
 void initAccelerometer();
-
-/**
- * Acceleration/braking
- */
-float getLongitudinalAcceleration();
-/**
- * Turns
- */
-float getTransverseAcceleration();
-

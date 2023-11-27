@@ -620,13 +620,10 @@ void updateTunerStudioState() {
 	// 120
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
-	// 276
-	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
-	// 278
-	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
-	tsOutputChannels->accelerationZ = engine->sensors.accelerometer.z;
-	tsOutputChannels->accelerationRoll = engine->sensors.accelerometer.roll;
-	tsOutputChannels->accelerationYaw = engine->sensors.accelerometer.yaw;
+	tsOutputChannels->accelerationLat = engine->sensors.accelerometer.lat;
+	tsOutputChannels->accelerationLon = engine->sensors.accelerometer.lon;
+	tsOutputChannels->accelerationVert = engine->sensors.accelerometer.vert;
+	tsOutputChannels->gyroYaw = engine->sensors.accelerometer.yawRate;
 
 #if EFI_DYNO_VIEW
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration();

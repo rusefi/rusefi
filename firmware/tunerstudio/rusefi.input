@@ -1357,11 +1357,10 @@ gaugeCategory = Sensors - Extra 1
 	AuxL2Gauge		= auxLinear2,	@@GAUGE_NAME_AUX_LINEAR_2@@, "", -100, 100, -100, -100, 100, 100, 2, 2
 
 gaugeCategory = Sensors - Extra 2
-	accelerationXGauge = accelerationX,		@@GAUGE_NAME_ACCEL_X@@,		"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
-	accelerationYGauge = accelerationY,		@@GAUGE_NAME_ACCEL_Y@@,		"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
-	accelerationZGauge = accelerationZ,		@@GAUGE_NAME_ACCEL_Z@@,		"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
-	accelerationRollGauge=accelerationRoll,	@@GAUGE_NAME_ACCEL_ROLL@@,	"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
-	accelerationYawGauge=accelerationYaw,	@@GAUGE_NAME_ACCEL_YAW@@,	"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
+	accelerationLatGauge = accelerationLat,		@@GAUGE_NAME_ACCEL_LAT@@,		"acc",		-2,	2,	-2,	-1,		1,	2,	3, 1
+	accelerationLonGauge = accelerationLon,		@@GAUGE_NAME_ACCEL_LON@@,		"acc",		-2,	2,	-2,	-1,		1,	2,	3, 1
+	accelerationVertGauge = accelerationVert,	@@GAUGE_NAME_ACCEL_VERT@@,		"acc",		0,	1.5,	0.5,	0.6,		1.4,	1.5,	3, 1
+	gyroYawGauge 		  = gyroYaw,			@@GAUGE_NAME_GYRO_YAW@@,		"acc",		-100,	100, -100, -100, 100, 100, 3, 1
 	egt1Gauge			= egt1, "EGT#1", "C", 0, 2000
 	egt2Gauge			= egt2, "EGT#2", "C", 0, 2000
 	rpmAccelerationGa = rpmAcceleration,	"rpm delta",		"RPM/s",		-2000,		2000,		-2000,		2000,		-2000,	2000,	0,	0

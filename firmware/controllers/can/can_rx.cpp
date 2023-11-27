@@ -139,23 +139,21 @@ static void processCanRxImu_BoschM5_10_YawY(const CANRxFrame& frame) {
 	float accY = getShiftedLSB_intel(frame, 4);
 
 	efiPrintf("CAN_rx MM5_10_YAW_Y %f %f", yaw, accY);
-	engine->sensors.accelerometer.yaw = yaw * MM5_10_RATE_QUANT;
-	engine->sensors.accelerometer.y = accY * MM5_10_ACC_QUANT;
+	engine->sensors.accelerometer.yawRate = yaw * MM5_10_RATE_QUANT;
+	engine->sensors.accelerometer.lat = accY * MM5_10_ACC_QUANT;
 }
 
 static void processCanRxImu_BoschM5_10_RollX(const CANRxFrame& frame) {
-	float roll = getShiftedLSB_intel(frame, 0);
 	float accX = getShiftedLSB_intel(frame, 4);
-	efiPrintf("CAN_rx MM5_10_ROLL_X %f %f", roll, accX);
+	efiPrintf("CAN_rx MM5_10_ROLL_X %f", accX);
 
-	engine->sensors.accelerometer.roll = roll * MM5_10_RATE_QUANT;
-	engine->sensors.accelerometer.x = accX * MM5_10_ACC_QUANT;
+	engine->sensors.accelerometer.lon = accX * MM5_10_ACC_QUANT;
 }
 
 static void processCanRxImu_BoschM5_10_Z(const CANRxFrame& frame) {
 	float accZ = getShiftedLSB_intel(frame, 4);
 	efiPrintf("CAN_rx MM5_10_Z %f", accZ);
-	engine->sensors.accelerometer.z = accZ * MM5_10_ACC_QUANT;
+	engine->sensors.accelerometer.vert = accZ * MM5_10_ACC_QUANT;
 }
 
 static void processCanRxImu(const CANRxFrame& frame) {
