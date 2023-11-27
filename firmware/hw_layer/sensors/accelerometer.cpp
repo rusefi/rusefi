@@ -94,12 +94,3 @@ void initAccelerometer() {
 }
 
 #endif /* EFI_MEMS */
-
-
-float getLongitudinalAcceleration() {
-	return engine->sensors.accelerometer.x;
-}
-
-float getTransverseAcceleration() {
-	return engine->sensors.accelerometer.y;
-}
