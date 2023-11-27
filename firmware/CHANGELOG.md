@@ -45,6 +45,7 @@ Release template (copy/paste this for new release):
  - Buttons to bump VVT targets for testing/PID tuning
  - Improved serial port selection for FOME console and firmware update
  - Better default configuration values for some advanced features
+ - Support BMW E8x/E9x CAN speed sensor input (works for standalone MK60e5 too)
 
 ### Fixed
  - Improved bench test resolution (more usable for testing injectors, dwell, etc)
