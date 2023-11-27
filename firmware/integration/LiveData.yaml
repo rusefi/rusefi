@@ -157,7 +157,7 @@ Usages:
     constexpr: "___engine.module<IdleController>().unmock()"
     output_name: idle
 # working around unmock() in simulator
-    conditional_compilation: "EFI_PROD_CODE"
+    conditional_compilation: "EFI_PROD_CODE && EFI_IDLE_CONTROL"
 
   - name: electronic_throttle
     java: ElectronicThrottle.java
