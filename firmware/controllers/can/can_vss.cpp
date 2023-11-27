@@ -21,6 +21,8 @@ static expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
 	switch (type) {
 		case BMW_e46:
 			return 0x01F0; /* BMW e46 ABS Message */
+		case BMW_e90:
+			return 0x10A;	// BMW E90 ABS speed frame (not wheel speeds, vehicle speed)
 		case W202:
 			return 0x0200; /* W202 C180 ABS signal */
 		default:
@@ -39,6 +41,13 @@ float processBMW_e46(const CANRxFrame& frame) {
 	return (left + right) / (16 * 2);
 }
 
+float processBMW_e90(const CANRxFrame& frame) {
+	uint8_t low = frame.data8[0];
+	uint8_t high = frame.data8[1] & 0x0F;
+
+	return (low | high << 8);
+}
+
 float processW202(const CANRxFrame& frame) {
 	uint16_t tmp = (frame.data8[2] << 8);
 	tmp |= frame.data8[3];
@@ -51,6 +60,8 @@ expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
 	switch (engineConfiguration->canVssNbcType){
 		case BMW_e46:
 			return processBMW_e46(frame);
+		case BMW_e90:
+			return processBMW_e90(frame);
 		case W202:
 			return processW202(frame);
 		default:

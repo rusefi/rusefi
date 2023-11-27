@@ -1252,7 +1252,7 @@ tChargeMode_e tChargeMode;
 	Gpio tle8888_cs;
 	pin_output_mode_e tle8888_csPinMode;
 
-	custom can_vss_nbc_e 1 bits, U08, @OFFSET@, [0:0], "BMW_e46", "W202"
+	custom can_vss_nbc_e 2 bits, U08, @OFFSET@, [0:1], "BMW_e46", "W202", "BMW E8x/E9x MK60e5"
 	can_vss_nbc_e canVssNbcType
 
 	Gpio mc33816_cs;
