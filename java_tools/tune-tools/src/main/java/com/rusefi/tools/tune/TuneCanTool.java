@@ -173,7 +173,19 @@ public class TuneCanTool {
                     if (data == null)
                         continue;
 
-                    methods.append(data.getCsourceMethod("engineConfiguration"));
+                    String parentReference;
+                    if (cf.getParent().getName().equals("engine_configuration_s")) {
+                        parentReference = "engineConfiguration->";
+                    } else if (cf.getParent().getName().equals("persistent_config_s")) {
+                        parentReference = "config->";
+                    } else {
+                        // todo: for instance map.samplingAngle
+                        //throw new IllegalStateException("Unexpected " + cf.getParent());
+                        System.out.println(" " + cf);
+                        continue;
+                    }
+
+                    methods.append(data.getCsourceMethod(parentReference));
                     invokeMethods.append(data.getCinvokeMethod());
 
                     continue;
@@ -225,12 +237,15 @@ public class TuneCanTool {
     }
 
     private static ConfigField findField(ReaderStateImpl state, String name, StringBuffer context) {
-        return doLook(state, name, context);
+        ConfigField field = doLook(state, name, context, "engine_configuration_s");
+        if (field != null)
+            return field;
+        return doLook(state, name, context, "persistent_config_s");
     }
 
     @Nullable
-    private static ConfigField doLook(ReaderStateImpl state, String name, StringBuffer context) {
-        ConfigStructure s = state.getStructures().get("engine_configuration_s");
+    private static ConfigField doLook(ReaderStateImpl state, String name, StringBuffer context, String parentStructName) {
+        ConfigStructure s = state.getStructures().get(parentStructName);
 //                log.info("We have a custom value " + name);
         ConfigField cf = s.getTsFieldByName(name);
         if (cf != null) {
