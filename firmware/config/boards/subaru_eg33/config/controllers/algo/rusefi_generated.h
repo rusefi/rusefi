@@ -446,7 +446,10 @@
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_TIMING "Timing"
 #define GAUGE_COIL_DWELL_TIME "Ignition: coil charge time"
+#define GAUGE_NAME_ACCEL_LAT "Accel: Lateral"
+#define GAUGE_NAME_ACCEL_LON "Accel: Longitudinal"
 #define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
+#define GAUGE_NAME_ACCEL_VERT "Accel: Vertical"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_YAW "Acceleration: Yaw"
@@ -524,6 +527,7 @@
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "Fuel: wall correction"
 #define GAUGE_NAME_FW_VERSION "ECU Software Version"
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
+#define GAUGE_NAME_GYRO_YAW "Gyro: Yaw rate"
 #define GAUGE_NAME_IAC "Idle: Position"
 #define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_IDLE_POSITION "Idle: Position sensor"
@@ -1052,7 +1056,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1642827880
+#define SIGNATURE_HASH 1048317737
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1350,14 +1354,14 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.11.27.subaru_eg33_f7.1642827880"
+#define TS_SIGNATURE "rusEFI master.2023.11.27.subaru_eg33_f7.1048317737"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1444
+#define TS_TOTAL_OUTPUT_SIZE 1440
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

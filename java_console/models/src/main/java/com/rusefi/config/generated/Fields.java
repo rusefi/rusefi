@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 27 06:04:19 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 27 20:22:47 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -432,7 +432,10 @@ public class Fields {
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
+	public static final String GAUGE_NAME_ACCEL_LAT = "Accel: Lateral";
+	public static final String GAUGE_NAME_ACCEL_LON = "Accel: Longitudinal";
 	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
+	public static final String GAUGE_NAME_ACCEL_VERT = "Accel: Vertical";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
 	public static final String GAUGE_NAME_ACCEL_YAW = "Acceleration: Yaw";
@@ -510,6 +513,7 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel: wall correction";
 	public static final String GAUGE_NAME_FW_VERSION = "ECU Software Version";
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
+	public static final String GAUGE_NAME_GYRO_YAW = "Gyro: Yaw rate";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
@@ -1308,11 +1312,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.11.27.f407-discovery.4062067769";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.11.27.f407-discovery.2911478648";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1444;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1440;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;

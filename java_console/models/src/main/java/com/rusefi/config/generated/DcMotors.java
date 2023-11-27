@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/dc_motors.txt Thu Nov 23 14:52:31 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/dc_motors.txt Mon Nov 27 20:20:54 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -17,11 +17,9 @@ public class DcMotors {
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
-	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
-	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
-	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
-	public static final String GAUGE_NAME_ACCEL_YAW = "Acceleration: Yaw";
-	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
+	public static final String GAUGE_NAME_ACCEL_LAT = "Accel: Lateral";
+	public static final String GAUGE_NAME_ACCEL_LON = "Accel: Longitudinal";
+	public static final String GAUGE_NAME_ACCEL_VERT = "Accel: Vertical";
 	public static final String GAUGE_NAME_ADJUSTED_TIMING = "Timing: ignition";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
@@ -94,6 +92,7 @@ public class DcMotors {
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel: wall correction";
 	public static final String GAUGE_NAME_FW_VERSION = "ECU Software Version";
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
+	public static final String GAUGE_NAME_GYRO_YAW = "Gyro: Yaw rate";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
@@ -171,10 +170,10 @@ public class DcMotors {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field DCOUTPUT0 = Field.create("DCOUTPUT0", 0, FieldType.FLOAT).setBaseOffset(1412);
-	public static final Field ISENABLED0_INT = Field.create("ISENABLED0_INT", 4, FieldType.INT8).setScale(1.0).setBaseOffset(1412);
-	public static final Field ALIGNMENTFILL_AT_5 = Field.create("ALIGNMENTFILL_AT_5", 5, FieldType.INT8).setScale(1.0).setBaseOffset(1412);
-	public static final Field ISENABLED0 = Field.create("ISENABLED0", 8, FieldType.BIT, 0).setBaseOffset(1412);
+	public static final Field DCOUTPUT0 = Field.create("DCOUTPUT0", 0, FieldType.FLOAT).setBaseOffset(1408);
+	public static final Field ISENABLED0_INT = Field.create("ISENABLED0_INT", 4, FieldType.INT8).setScale(1.0).setBaseOffset(1408);
+	public static final Field ALIGNMENTFILL_AT_5 = Field.create("ALIGNMENTFILL_AT_5", 5, FieldType.INT8).setScale(1.0).setBaseOffset(1408);
+	public static final Field ISENABLED0 = Field.create("ISENABLED0", 8, FieldType.BIT, 0).setBaseOffset(1408);
 	public static final Field[] VALUES = {
 	DCOUTPUT0,
 	ISENABLED0_INT,

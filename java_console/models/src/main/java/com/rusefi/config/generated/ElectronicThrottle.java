@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Thu Nov 23 14:52:31 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Mon Nov 27 20:20:54 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -17,11 +17,9 @@ public class ElectronicThrottle {
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
-	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
-	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
-	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
-	public static final String GAUGE_NAME_ACCEL_YAW = "Acceleration: Yaw";
-	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
+	public static final String GAUGE_NAME_ACCEL_LAT = "Accel: Lateral";
+	public static final String GAUGE_NAME_ACCEL_LON = "Accel: Longitudinal";
+	public static final String GAUGE_NAME_ACCEL_VERT = "Accel: Vertical";
 	public static final String GAUGE_NAME_ADJUSTED_TIMING = "Timing: ignition";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
@@ -94,6 +92,7 @@ public class ElectronicThrottle {
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel: wall correction";
 	public static final String GAUGE_NAME_FW_VERSION = "ECU Software Version";
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
+	public static final String GAUGE_NAME_GYRO_YAW = "Gyro: Yaw rate";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
@@ -171,23 +170,23 @@ public class ElectronicThrottle {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field IDLEPOSITION = Field.create("IDLEPOSITION", 0, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field TRIM = Field.create("TRIM", 4, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field LUAADJUSTMENT = Field.create("LUAADJUSTMENT", 8, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field M_WASTEGATEPOSITION = Field.create("M_WASTEGATEPOSITION", 12, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 16, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field ETBINTEGRALERROR = Field.create("ETBINTEGRALERROR", 20, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field ETBCURRENTTARGET = Field.create("ETBCURRENTTARGET", 24, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 28, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1348);
-	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1348);
-	public static final Field ETBDUTYRATEOFCHANGE = Field.create("ETBDUTYRATEOFCHANGE", 36, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field ETBDUTYAVERAGE = Field.create("ETBDUTYAVERAGE", 40, FieldType.FLOAT).setBaseOffset(1348);
-	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 44, FieldType.INT16).setScale(1.0).setBaseOffset(1348);
-	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 46, FieldType.INT16).setScale(1.0).setBaseOffset(1348);
-	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1348);
-	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1348);
-	public static final Field JAMTIMER = Field.create("JAMTIMER", 50, FieldType.INT16).setScale(0.01).setBaseOffset(1348);
+	public static final Field IDLEPOSITION = Field.create("IDLEPOSITION", 0, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field TRIM = Field.create("TRIM", 4, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field LUAADJUSTMENT = Field.create("LUAADJUSTMENT", 8, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field M_WASTEGATEPOSITION = Field.create("M_WASTEGATEPOSITION", 12, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 16, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field ETBINTEGRALERROR = Field.create("ETBINTEGRALERROR", 20, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field ETBCURRENTTARGET = Field.create("ETBCURRENTTARGET", 24, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 28, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1344);
+	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1344);
+	public static final Field ETBDUTYRATEOFCHANGE = Field.create("ETBDUTYRATEOFCHANGE", 36, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field ETBDUTYAVERAGE = Field.create("ETBDUTYAVERAGE", 40, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 44, FieldType.INT16).setScale(1.0).setBaseOffset(1344);
+	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 46, FieldType.INT16).setScale(1.0).setBaseOffset(1344);
+	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1344);
+	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1344);
+	public static final Field JAMTIMER = Field.create("JAMTIMER", 50, FieldType.INT16).setScale(0.01).setBaseOffset(1344);
 	public static final Field[] VALUES = {
 	IDLEPOSITION,
 	TRIM,

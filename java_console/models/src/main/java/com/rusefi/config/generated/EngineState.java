@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 23 14:52:31 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Nov 27 20:20:53 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -17,11 +17,9 @@ public class EngineState {
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
-	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
-	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
-	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
-	public static final String GAUGE_NAME_ACCEL_YAW = "Acceleration: Yaw";
-	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
+	public static final String GAUGE_NAME_ACCEL_LAT = "Accel: Lateral";
+	public static final String GAUGE_NAME_ACCEL_LON = "Accel: Longitudinal";
+	public static final String GAUGE_NAME_ACCEL_VERT = "Accel: Vertical";
 	public static final String GAUGE_NAME_ADJUSTED_TIMING = "Timing: ignition";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
@@ -94,6 +92,7 @@ public class EngineState {
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel: wall correction";
 	public static final String GAUGE_NAME_FW_VERSION = "ECU Software Version";
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
+	public static final String GAUGE_NAME_GYRO_YAW = "Gyro: Yaw rate";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
@@ -171,47 +170,47 @@ public class EngineState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field LUA_FUELADD = Field.create("LUA_FUELADD", 0, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field LUA_FUELMULT = Field.create("LUA_FUELMULT", 4, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field LUA_CLUTCHUPSTATE = Field.create("LUA_CLUTCHUPSTATE", 8, FieldType.BIT, 0).setBaseOffset(1052);
-	public static final Field LUA_BRAKEPEDALSTATE = Field.create("LUA_BRAKEPEDALSTATE", 8, FieldType.BIT, 1).setBaseOffset(1052);
-	public static final Field LUA_ACREQUESTSTATE = Field.create("LUA_ACREQUESTSTATE", 8, FieldType.BIT, 2).setBaseOffset(1052);
-	public static final Field LUA_LUADISABLEETB = Field.create("LUA_LUADISABLEETB", 8, FieldType.BIT, 3).setBaseOffset(1052);
-	public static final Field LUA_LUAIGNCUT = Field.create("LUA_LUAIGNCUT", 8, FieldType.BIT, 4).setBaseOffset(1052);
-	public static final Field SD_TCHARGE = Field.create("SD_TCHARGE", 12, FieldType.INT16).setScale(0.01).setBaseOffset(1052);
-	public static final Field SD_ALIGNMENTFILL_AT_2 = Field.create("SD_ALIGNMENTFILL_AT_2", 14, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field SD_TCHARGEK = Field.create("SD_TCHARGEK", 16, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT", 20, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field CRANKINGFUEL_TPSCOEFFICIENT = Field.create("CRANKINGFUEL_TPSCOEFFICIENT", 24, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field CRANKINGFUEL_DURATIONCOEFFICIENT = Field.create("CRANKINGFUEL_DURATIONCOEFFICIENT", 28, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field CRANKINGFUEL_FUEL = Field.create("CRANKINGFUEL_FUEL", 32, FieldType.INT16).setScale(0.01).setBaseOffset(1052);
-	public static final Field CRANKINGFUEL_ALIGNMENTFILL_AT_14 = Field.create("CRANKINGFUEL_ALIGNMENTFILL_AT_14", 34, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 36, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field HELLENBOARDID = Field.create("HELLENBOARDID", 40, FieldType.INT16).setScale(1.0).setBaseOffset(1052);
-	public static final Field CLUTCHUPSTATE = Field.create("CLUTCHUPSTATE", 42, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 44, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field STARTSTOPSTATE = Field.create("STARTSTOPSTATE", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field ALIGNMENTFILL_AT_46 = Field.create("ALIGNMENTFILL_AT_46", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 48, FieldType.BIT, 0).setBaseOffset(1052);
-	public static final Field ACRSTATEDUP = Field.create("ACRSTATEDUP", 48, FieldType.BIT, 1).setBaseOffset(1052);
-	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 48, FieldType.BIT, 2).setBaseOffset(1052);
-	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 48, FieldType.BIT, 3).setBaseOffset(1052);
-	public static final Field LUADIGITALSTATE0 = Field.create("LUADIGITALSTATE0", 48, FieldType.BIT, 4).setBaseOffset(1052);
-	public static final Field LUADIGITALSTATE1 = Field.create("LUADIGITALSTATE1", 48, FieldType.BIT, 5).setBaseOffset(1052);
-	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 48, FieldType.BIT, 6).setBaseOffset(1052);
-	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 48, FieldType.BIT, 7).setBaseOffset(1052);
-	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 52, FieldType.INT).setScale(1.0).setBaseOffset(1052);
-	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 56, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 60, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 64, FieldType.INT16).setScale(1.0).setBaseOffset(1052);
-	public static final Field ALIGNMENTFILL_AT_66 = Field.create("ALIGNMENTFILL_AT_66", 66, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
-	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 68, FieldType.INT).setScale(1.0).setBaseOffset(1052);
-	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1052);
-	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 76, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 80, FieldType.FLOAT).setBaseOffset(1052);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 84, FieldType.INT16).setScale(0.01).setBaseOffset(1052);
-	public static final Field ALIGNMENTFILL_AT_86 = Field.create("ALIGNMENTFILL_AT_86", 86, FieldType.INT8).setScale(1.0).setBaseOffset(1052);
+	public static final Field LUA_FUELADD = Field.create("LUA_FUELADD", 0, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field LUA_FUELMULT = Field.create("LUA_FUELMULT", 4, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field LUA_CLUTCHUPSTATE = Field.create("LUA_CLUTCHUPSTATE", 8, FieldType.BIT, 0).setBaseOffset(1048);
+	public static final Field LUA_BRAKEPEDALSTATE = Field.create("LUA_BRAKEPEDALSTATE", 8, FieldType.BIT, 1).setBaseOffset(1048);
+	public static final Field LUA_ACREQUESTSTATE = Field.create("LUA_ACREQUESTSTATE", 8, FieldType.BIT, 2).setBaseOffset(1048);
+	public static final Field LUA_LUADISABLEETB = Field.create("LUA_LUADISABLEETB", 8, FieldType.BIT, 3).setBaseOffset(1048);
+	public static final Field LUA_LUAIGNCUT = Field.create("LUA_LUAIGNCUT", 8, FieldType.BIT, 4).setBaseOffset(1048);
+	public static final Field SD_TCHARGE = Field.create("SD_TCHARGE", 12, FieldType.INT16).setScale(0.01).setBaseOffset(1048);
+	public static final Field SD_ALIGNMENTFILL_AT_2 = Field.create("SD_ALIGNMENTFILL_AT_2", 14, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field SD_TCHARGEK = Field.create("SD_TCHARGEK", 16, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT", 20, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field CRANKINGFUEL_TPSCOEFFICIENT = Field.create("CRANKINGFUEL_TPSCOEFFICIENT", 24, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field CRANKINGFUEL_DURATIONCOEFFICIENT = Field.create("CRANKINGFUEL_DURATIONCOEFFICIENT", 28, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field CRANKINGFUEL_FUEL = Field.create("CRANKINGFUEL_FUEL", 32, FieldType.INT16).setScale(0.01).setBaseOffset(1048);
+	public static final Field CRANKINGFUEL_ALIGNMENTFILL_AT_14 = Field.create("CRANKINGFUEL_ALIGNMENTFILL_AT_14", 34, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 36, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field HELLENBOARDID = Field.create("HELLENBOARDID", 40, FieldType.INT16).setScale(1.0).setBaseOffset(1048);
+	public static final Field CLUTCHUPSTATE = Field.create("CLUTCHUPSTATE", 42, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 44, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field STARTSTOPSTATE = Field.create("STARTSTOPSTATE", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field ALIGNMENTFILL_AT_46 = Field.create("ALIGNMENTFILL_AT_46", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 48, FieldType.BIT, 0).setBaseOffset(1048);
+	public static final Field ACRSTATEDUP = Field.create("ACRSTATEDUP", 48, FieldType.BIT, 1).setBaseOffset(1048);
+	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 48, FieldType.BIT, 2).setBaseOffset(1048);
+	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 48, FieldType.BIT, 3).setBaseOffset(1048);
+	public static final Field LUADIGITALSTATE0 = Field.create("LUADIGITALSTATE0", 48, FieldType.BIT, 4).setBaseOffset(1048);
+	public static final Field LUADIGITALSTATE1 = Field.create("LUADIGITALSTATE1", 48, FieldType.BIT, 5).setBaseOffset(1048);
+	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 48, FieldType.BIT, 6).setBaseOffset(1048);
+	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 48, FieldType.BIT, 7).setBaseOffset(1048);
+	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 52, FieldType.INT).setScale(1.0).setBaseOffset(1048);
+	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 56, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 60, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 64, FieldType.INT16).setScale(1.0).setBaseOffset(1048);
+	public static final Field ALIGNMENTFILL_AT_66 = Field.create("ALIGNMENTFILL_AT_66", 66, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 68, FieldType.INT).setScale(1.0).setBaseOffset(1048);
+	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1048);
+	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 76, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 80, FieldType.FLOAT).setBaseOffset(1048);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 84, FieldType.INT16).setScale(0.01).setBaseOffset(1048);
+	public static final Field ALIGNMENTFILL_AT_86 = Field.create("ALIGNMENTFILL_AT_86", 86, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
