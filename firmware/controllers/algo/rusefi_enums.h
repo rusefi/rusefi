@@ -331,7 +331,7 @@ typedef enum __attribute__ ((__packed__)) {
 	BMW_e46 = 0,
 	W202 = 1,
 	LUA = 2,
-
+	BMW_e90 = 3,
 } can_vss_nbc_e;
 
 /**
