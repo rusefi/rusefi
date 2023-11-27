@@ -15,8 +15,8 @@ import java.util.TreeMap;
  * 2/15/2015
  */
 public class AverageAngles {
-    static String PRIMARY = "T_PRIMARY";
-    static String SECONDARY = "T_SECONDARY";
+    static final String PRIMARY = "T_PRIMARY";
+    static final String SECONDARY = "T_SECONDARY";
     private int count;
 
     enum trigger_event_e {
@@ -34,7 +34,7 @@ public class AverageAngles {
 
     private static final int MAX_RPM_CHANGE = 20;
     private int rpmAtPrevChart;
-    Map<Integer, List<AngleEvent>> angleData = new TreeMap<>();
+    final Map<Integer, List<AngleEvent>> angleData = new TreeMap<>();
 
     public AverageAngles() {
         clear();
