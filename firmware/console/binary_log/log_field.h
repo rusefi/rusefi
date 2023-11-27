@@ -1,6 +1,7 @@
 #pragma once
 
 #include "efi_scaled_channel.h"
+#include "rusefi_types.h"
 #include <cstdint>
 #include <cstddef>
 
