@@ -400,11 +400,9 @@
 #define GAP_TRACKING_LENGTH 18
 #define GAUGE_CATEGORY_ETB "ETB more"
 #define GAUGE_COIL_DWELL_TIME "Ign: Dwell"
-#define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
-#define GAUGE_NAME_ACCEL_X "Acceleration: X"
-#define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
-#define GAUGE_NAME_ACCEL_YAW "Acceleration: Yaw"
-#define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
+#define GAUGE_NAME_ACCEL_LAT "Accel: Lateral"
+#define GAUGE_NAME_ACCEL_LON "Accel: Longitudinal"
+#define GAUGE_NAME_ACCEL_VERT "Accel: Vertical"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
 #define GAUGE_NAME_AFR2_GAS_SCALE "Air/Fuel Ratio 2 (Gas Scale)"
@@ -471,6 +469,7 @@
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "Fuel: wall correction"
 #define GAUGE_NAME_FW_VERSION "ECU Software Version"
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
+#define GAUGE_NAME_GYRO_YAW "Gyro: Yaw rate"
 #define GAUGE_NAME_IAC "Idle: Position"
 #define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_IDLE_POSITION "Idle: Position sensor"
@@ -1019,7 +1018,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 3410021686
+#define SIGNATURE_HASH 437478771
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1287,12 +1286,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2023.11.27.f407-discovery.3410021686"
+#define TS_SIGNATURE "rusEFI (FOME) master.2023.11.27.f407-discovery.437478771"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1380
+#define TS_TOTAL_OUTPUT_SIZE 1376
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

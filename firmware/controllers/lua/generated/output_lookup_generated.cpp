@@ -148,10 +148,10 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.firmwareVersion;
 		case 2039421097:
 			return engine->outputChannels.rawWastegatePosition;
-		case 633018087:
-			return engine->outputChannels.accelerationX;
-		case 633018088:
-			return engine->outputChannels.accelerationY;
+		case -2133047664:
+			return engine->outputChannels.accelerationLat;
+		case -2133047208:
+			return engine->outputChannels.accelerationLon;
 		case 283558758:
 			return engine->outputChannels.detectedGear;
 		case -1595441102:
@@ -246,12 +246,10 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.rawTps2Primary;
 		case 70357120:
 			return engine->outputChannels.rawTps2Secondary;
-		case 633018089:
-			return engine->outputChannels.accelerationZ;
-		case -1670865464:
-			return engine->outputChannels.accelerationRoll;
-		case -2133033504:
-			return engine->outputChannels.accelerationYaw;
+		case -1670732400:
+			return engine->outputChannels.accelerationVert;
+		case 519838295:
+			return engine->outputChannels.gyroYaw;
 		case -4187390:
 			return engine->outputChannels.turboSpeed;
 		case 644036825:
