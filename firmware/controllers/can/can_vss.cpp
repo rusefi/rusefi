@@ -47,7 +47,7 @@ float processBMW_e90(const CANRxFrame& frame) {
 	uint8_t low = frame.data8[0];
 	uint8_t high = frame.data8[1] & 0x0F;
 
-	return (low | high << 8);
+	return 0.1f * (low | (high << 8));
 }
 
 float processW202(const CANRxFrame& frame) {
