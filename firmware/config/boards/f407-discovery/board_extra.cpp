@@ -148,6 +148,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->is_enabled_spi_3 = true;
 }
 
+// weak linkage
 void boardInitHardware() {
 #if HW_FRANKENSO
 static const struct mc33810_config mc33810 = {
