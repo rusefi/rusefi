@@ -121,13 +121,12 @@ void setWatchdogResetPeriod(int resetMs) {
 
 void tryResetWatchdog() {
 #if HAL_USE_WDG
-	static efitimems_t lastTimeWasResetMs = 0;
+	static Timer lastTimeWasReset;
 	// check if it's time to reset the watchdog
-	efitimems_t curTimeResetMs = getTimeNowMs();
-	if (curTimeResetMs >= lastTimeWasResetMs + watchdogResetPeriodMs) {
+	if (lastTimeWasReset.hasElapsedMs(watchdogResetPeriodMs)) {
 		// we assume tryResetWatchdog() is called from a timer callback
 		wdgResetI(&WDGD1);
-		lastTimeWasResetMs = curTimeResetMs;
+		lastTimeWasReset.reset();
 	}
 #endif // HAL_USE_WDG
 }
