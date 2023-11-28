@@ -3556,7 +3556,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Start/Stop Button input mode",				startStopButtonMode
 		field = "Starter Control",						starterControlPin, { starterControlPin != 0 || startStopButtonPin != 0}
 		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
-		field = "Suppress On Start Up (Ms)"",         startButtonSuppressOnStartUpMs, {startStopButtonPin != 0}
+		field = "Suppress On Start Up (Ms)",         startButtonSuppressOnStartUpMs, {startStopButtonPin != 0}
 		commandButton = "Test Starter Relay", cmd_test_starter_relay
 
 ;			Engine->MIL Settings
