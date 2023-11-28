@@ -14,3 +14,5 @@ HW_LAYER_PORT_CPP += $(PROJECT_DIR)/hw_layer/ports/kinetis/mpu_util.cpp \
 	$(PROJECT_DIR)/hw_layer/ports/kinetis/flash_int.cpp
 
 MCU = cortex-m4
+
+DDEFS += -DHAL_USE_WDG=FALSE
