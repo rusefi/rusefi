@@ -1,0 +1,62 @@
+
+
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local loop = 0
+	local result = ""
+	while num ~= 0 do
+		loop = loop + 1
+		if loop > 8 then
+			-- this is about U32 being handled as negative
+			return result
+		end
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
+function printPacket(bus, id, dlc, data)
+	print('Received ' ..arrayToString(data))
+end
+
+UDS_OUT = 0x7E0
+UDS_IN = 0x7E8
+
+-- request programming
+txCan(1, UDS_OUT, 0, { 0x02, 0x10, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00 })
+
+function onUDS(bus, id, dlc, data)
+	print("UDS " ..arrayToString(data))
+	if data[1] == 0x06 and data[2] == 0x50 and data[3] == 0x02 then
+		print ("Programming ACK")
+		txCan(1, UDS_OUT, 0, { 0x03, 0x27, 0x01, 0xA1, 0x00, 0x00, 0x00, 0x00 })
+	elseif data[1] == 0x06 and data[2] == 0x67 and data[3] == 0x01 then
+		seed = (data[7] << 24) + (data[6] << 16) + (data[5] << 8) + data[4]
+		print ("Got seed [" ..toHexString(seed) .."]")
+	end
+
+
+end
+
+canRxAdd(1, UDS_IN, onUDS)
+
+function onTick()
+end
+
