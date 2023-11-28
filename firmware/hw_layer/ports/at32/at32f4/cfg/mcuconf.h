@@ -420,6 +420,6 @@
 /*
  * WDG driver system settings.
  */
-#define STM32_WDG_USE_IWDG                  TRUE
+#define STM32_WDG_USE_IWDG                  FALSE
 
 #endif /* MCUCONF_H */
