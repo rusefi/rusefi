@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH 878834738
-#define TS_SIGNATURE "rusEFI master.2023.11.27.small-can-board.878834738"
+#define TS_SIGNATURE "rusEFI master.2023.11.28.small-can-board.878834738"
