@@ -14,3 +14,5 @@ HW_LAYER_PORT_CPP += $(PROJECT_DIR)/hw_layer/ports/cypress/mpu_util.cpp \
 HW_INC += $(PROJECT_DIR)/hw_layer/ports/cypress/serial_over_usb
 
 MCU = cortex-m4
+
+DDEFS += -DHAL_USE_WDG=FALSE
