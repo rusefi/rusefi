@@ -1,5 +1,5 @@
 /**
- * @file board_extra.cpp
+ * @file board_configuration.cpp
  */
 
 #include "pch.h"

@@ -1,5 +1,5 @@
 # List of all the board related files.
-BOARDCPPSRC = $(BOARD_DIR)/board_extra.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # MCU defines
 DDEFS += -DSTM32F407xx
