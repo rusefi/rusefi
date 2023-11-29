@@ -1,6 +1,7 @@
 package com.rusefi.uds;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.io.can.SocketCanConnector;
 import com.rusefi.util.HexBinary;
 
 import java.nio.ByteBuffer;
@@ -8,14 +9,21 @@ import java.nio.ByteOrder;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public class PCanUdsSandbox {
+public class UdsSandbox {
     public static final byte RND = (byte) 0xA1;
-    private static final Logging log = getLogging(PCanUdsSandbox.class);
+    private static final Logging log = getLogging(UdsSandbox.class);
 
     private static final int UDS_OUT = 0x7E0;
 
     public static void main(String[] args) {
-        CanConnector connector = PCanConnector.createPCanConnector();
+        boolean useSocketCan = args.length > 0 && args[0].toLowerCase().contains("socket");
+
+        CanConnector connector;
+        if (useSocketCan) {
+            connector = SocketCanConnector.create();
+        } else {
+            connector = PCanConnector.createPCanConnector();
+        }
         startThread(connector);
         // hello
         connector.send(UDS_OUT, new byte[]{0x02, 0x10, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00});
@@ -37,6 +45,7 @@ public class PCanUdsSandbox {
                     byte[] data = packet.payload();
                     if (isProgramAck(data)) {
                         log.info("Program Request ACK");
+                        // technically this is IsoTP
                         connector.send(UDS_OUT, new byte[]{0x03, 0x27, 0x01, RND, 0x00, 0x00, 0x00, 0x00});
 
 
@@ -47,8 +56,9 @@ public class PCanUdsSandbox {
                         int seed = byteBuffer.getInt();
                         log.info(String.format("SECURITY_ACCESS REQUEST_SEED %x from %s", seed, HexBinary.printByteArray(data)));
 
-                        int key = SeedKeyTest.Uds_Security_CalcKey(SeedKeyTest.BOOTLOADER_SECRET, seed, RND);
+                        int key = SeedKeyCalculator.Uds_Security_CalcKey(SeedKeyCalculator.BOOTLOADER_SECRET, seed, RND);
 
+                        // technically this is IsoTP
                         byte[] keyResponse = new byte[]{0x06, 0x27, 0x02, 0, 0, 0, 0, 0x00};
                         ByteBuffer responseBuffer = ByteBuffer.wrap(keyResponse, 3, 4);
                         responseBuffer.putInt(key);
