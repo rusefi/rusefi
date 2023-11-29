@@ -110,13 +110,13 @@ public class PCanIoStream extends AbstractIoStream {
 //                if (log.debugEnabled())
                 logSkipRate ++;
                 if (logSkipRate % INFO_SKIP_RATE == 0) {
-                    debugPacket(rx);
+                    PCanHelper.debugPacket(rx);
                     log.info("Skipping non " + String.format("%X", CAN_ECU_SERIAL_TX_ID) + " packet: " + String.format("%X", rx.getID()));
                     log.info("Total rate " + totalCounter.getCurrentRate() + ", isotp rate " + isoTpCounter.getCurrentRate());
                 }
                 return;
             }
-            debugPacket(rx);
+            PCanHelper.debugPacket(rx);
             isoTpCounter.add();
             byte[] decode = canDecoder.decodePacket(rx.getData());
             listener.onDataArrived(decode);
@@ -125,11 +125,6 @@ public class PCanIoStream extends AbstractIoStream {
         } else {
 //                   log.info("Receive " + status);
         }
-    }
-
-    private void debugPacket(TPCANMsg rx) {
-        if (log.debugEnabled())
-            log.debug("Got [" + rx + "] id=" + String.format("%X", rx.getID()) + " len=" + rx.getLength() + ": " + HexBinary.printByteArray(rx.getData()));
     }
 
     @Override
