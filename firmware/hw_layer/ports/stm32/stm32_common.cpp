@@ -137,8 +137,7 @@ void baseMCUInit(void) {
 
 	BOR_Set(BOR_Level_1); // one step above default value
 
-	// 100 ms is our empiric choice based on 2 * SLOW_CALLBACK_PERIOD_MS
-	setWatchdogResetPeriod(100);
+	setWatchdogResetPeriod(WATCHDOG_RESET_MS);
 	startWatchdog();
 }
 

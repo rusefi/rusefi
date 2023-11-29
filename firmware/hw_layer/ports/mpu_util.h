@@ -3,6 +3,7 @@
 #include "rusefi_types.h"
 
 #include "port_mpu_util.h"
+#include "mpu_watchdog.h"
 
 #ifdef __cplusplus
 
@@ -14,11 +15,6 @@ void jump_to_openblt();
 #endif
 void causeHardFault();
 bool allowFlashWhileRunning();
-
-// 300 ms is our default timeout (we use 'int' for compatibility with addConsoleActionI())
-void startWatchdog(int timeoutMs = 300);
-void setWatchdogResetPeriod(int resetMs);
-void tryResetWatchdog();
 
 bool ramReadProbe(volatile const char *read_address);
 #if defined(STM32F4)
