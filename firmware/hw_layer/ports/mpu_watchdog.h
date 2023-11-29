@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "engine_controller.h"
+
 // 100 ms is our empiric choice based on 2 * SLOW_CALLBACK_PERIOD_MS
 #define WATCHDOG_RESET_MS (2 * SLOW_CALLBACK_PERIOD_MS)
 // 300 ms is our default timeout
