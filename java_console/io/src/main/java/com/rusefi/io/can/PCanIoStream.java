@@ -20,13 +20,11 @@ import java.util.concurrent.Executors;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.config.generated.Fields.CAN_ECU_SERIAL_TX_ID;
-import static peak.can.basic.TPCANMessageType.PCAN_MESSAGE_STANDARD;
 
 public class PCanIoStream extends AbstractIoStream {
     private static final int INFO_SKIP_RATE = 3-00;
     static Logging log = getLogging(PCanIoStream.class);
 
-    public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
     private final IncomingDataBuffer dataBuffer;
     private final PCANBasic can;
     private final StatusConsumer statusListener;
@@ -54,9 +52,8 @@ public class PCanIoStream extends AbstractIoStream {
     }
 
     public static PCanIoStream createStream(StatusConsumer statusListener) {
-        PCANBasic can = new PCANBasic();
-        can.initializeAPI();
-        TPCANStatus status = can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
+        PCANBasic can = PCanHelper.create();
+        TPCANStatus status = PCanHelper.init(can);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
             statusListener.append("Error initializing PCAN: " + status);
             return null;
@@ -72,9 +69,7 @@ public class PCanIoStream extends AbstractIoStream {
         if (log.debugEnabled())
             log.debug("Sending " + HexBinary.printHexBinary(payLoad));
 
-        TPCANMsg msg = new TPCANMsg(Fields.CAN_ECU_SERIAL_RX_ID, PCAN_MESSAGE_STANDARD.getValue(),
-                (byte) payLoad.length, payLoad);
-        TPCANStatus status = can.Write(CHANNEL, msg);
+        TPCANStatus status = PCanHelper.send(can, Fields.CAN_ECU_SERIAL_RX_ID, payLoad);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
             statusListener.append("Unable to write the CAN message: " + status);
             System.exit(0);
@@ -108,7 +103,7 @@ public class PCanIoStream extends AbstractIoStream {
         // todo: should be? TPCANMsg rx = new TPCANMsg();
         // https://github.com/rusefi/rusefi/issues/4370 nasty work-around
         TPCANMsg rx = new TPCANMsg(Byte.MAX_VALUE);
-        TPCANStatus status = can.Read(CHANNEL, rx, null);
+        TPCANStatus status = can.Read(PCanHelper.CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
             totalCounter.add();
             if (rx.getID() != CAN_ECU_SERIAL_TX_ID) {
