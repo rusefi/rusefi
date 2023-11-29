@@ -8,6 +8,10 @@
 
 #pragma once
 
+#define FAST_CALLBACK_PERIOD_MS 5
+#define SLOW_CALLBACK_PERIOD_MS 50
+
+
 // todo: huh we also have validateConfiguration()?!
 bool validateConfig();
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer);
