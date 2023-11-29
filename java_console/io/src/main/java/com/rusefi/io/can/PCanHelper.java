@@ -25,6 +25,7 @@ public class PCanHelper {
     }
 
     public static TPCANStatus send(PCANBasic can, int id, byte[] payLoad) {
+        log.info(String.format("Sending id=%x %s", id, HexBinary.printByteArray(payLoad)));
         TPCANMsg msg = new TPCANMsg(id, PCAN_MESSAGE_STANDARD.getValue(),
                 (byte) payLoad.length, payLoad);
         return can.Write(CHANNEL, msg);

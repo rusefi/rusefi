@@ -1,15 +1,20 @@
 package com.rusefi.uds;
 
+import com.devexperts.logging.Logging;
 import org.junit.Test;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static org.junit.Assert.assertEquals;
 
 public class SeedKeyTest {
+    private static Logging log = getLogging(SeedKeyTest.class);
 
     public static final int BOOTLOADER_SECRET = 0xB24F5249;
     public static final int SECRET = 0x57649392;
 
     public static int Uds_Security_CalcKey(int secret, int seed, int rnd) {
+        rnd = rnd & 0xFF;
+        int originalSeed = seed;
         if (rnd < 220)
             rnd += 35;
         else
@@ -21,6 +26,7 @@ public class SeedKeyTest {
             else
                 seed <<= 1;
         }
+        log.info(String.format("seed %x secret %x rnd %x makes %x", originalSeed, secret, rnd, seed));
         return seed;
     }
 
