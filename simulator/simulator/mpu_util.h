@@ -8,6 +8,5 @@ static bool isValidCanRxPin(brain_pin_e) { return true; }
 
 static bool allowFlashWhileRunning() { return true; }
 static void causeHardFault() { }
-static void startWatchdog(int = 300) { }
-static void setWatchdogResetPeriod(int) { }
-static void tryResetWatchdog() { }
+
+#include "sim_watchdog.h"
