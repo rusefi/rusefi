@@ -21,10 +21,10 @@
 
 // we use 'int' for compatibility with addConsoleActionI()
 // can be called multiple times to change the timeout
-void startWatchdog(int = WATCHDOG_TIMEOUT_MS) { }
+static void startWatchdog(int = WATCHDOG_TIMEOUT_MS) { }
 
 // Can be called for debug reasons to test the watchdog
-void setWatchdogResetPeriod(int resetMs) { }
+static void setWatchdogResetPeriod(int resetMs) { }
 
 // A reset is done only if enough time has passed since the last reset.
-void tryResetWatchdog() { }
+static void tryResetWatchdog() { }
