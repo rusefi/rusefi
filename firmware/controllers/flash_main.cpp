@@ -149,7 +149,7 @@ void writeToFlashNow() {
 
 	// there's no wdgStop() for STM32, so we cannot disable it.
 	// we just set a long timeout of 5 secs to wait until flash is done.
-	startWatchdog(5000);
+	startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
 
 #if EFI_STORAGE_MFS == TRUE
 	mfs_error_t err;
