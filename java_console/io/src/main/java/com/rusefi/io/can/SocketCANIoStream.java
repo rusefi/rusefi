@@ -33,7 +33,7 @@ public class SocketCANIoStream extends AbstractIoStream {
         }
     };
 
-    private final IsoTpConnector isoTpConnector = new IsoTpConnector() {
+    private final IsoTpConnector isoTpConnector = new IsoTpConnector(Fields.CAN_ECU_SERIAL_RX_ID) {
         @Override
         public void sendCanData(byte[] total) {
             sendCanPacket(total);
@@ -47,7 +47,7 @@ public class SocketCANIoStream extends AbstractIoStream {
         if (log.debugEnabled())
             log.debug("Sending " + HexBinary.printHexBinary(total));
 
-        SocketCANHelper.send(Fields.CAN_ECU_SERIAL_RX_ID, total, socket);
+        SocketCANHelper.send(isoTpConnector.canId(), total, socket);
     }
 
     public SocketCANIoStream() {

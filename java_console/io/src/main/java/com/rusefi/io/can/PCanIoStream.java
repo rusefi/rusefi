@@ -38,7 +38,7 @@ public class PCanIoStream extends AbstractIoStream {
         }
     };
 
-    private final IsoTpConnector isoTpConnector = new IsoTpConnector() {
+    private final IsoTpConnector isoTpConnector = new IsoTpConnector(Fields.CAN_ECU_SERIAL_RX_ID) {
         @Override
         public void sendCanData(byte[] total) {
             sendCanPacket(total);
@@ -69,7 +69,7 @@ public class PCanIoStream extends AbstractIoStream {
         if (log.debugEnabled())
             log.debug("Sending " + HexBinary.printHexBinary(payLoad));
 
-        TPCANStatus status = PCanHelper.send(can, Fields.CAN_ECU_SERIAL_RX_ID, payLoad);
+        TPCANStatus status = PCanHelper.send(can, isoTpConnector.canId(), payLoad);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
             statusListener.append("Unable to write the CAN message: " + status);
             System.exit(0);

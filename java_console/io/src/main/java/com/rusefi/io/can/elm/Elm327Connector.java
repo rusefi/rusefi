@@ -150,7 +150,7 @@ public class Elm327Connector implements Closeable {
 		}
 	};
 
-	private final IsoTpConnector connector = new IsoTpConnector() {
+	private final IsoTpConnector connector = new IsoTpConnector(Fields.CAN_ECU_SERIAL_RX_ID) {
 		@Override
 		public void sendCanData(byte[] total) {
 			Elm327Connector.this.sendCanData(total);
