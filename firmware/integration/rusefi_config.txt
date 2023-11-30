@@ -126,6 +126,7 @@ struct_no_prefix engine_configuration_s
 
 ! https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
 #define GAP_TRACKING_LENGTH 18
+#define VVT_TRACKING_LENGTH 4
 
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define MAIN_HELP_URL "http://www.rusefi.com/"
@@ -457,6 +458,9 @@ bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensor
 bit cltSensorPulldown
 bit iatSensorPulldown
 bit allowIdenticalPps
+bit overrideVvtTriggerGaps
+bit unused30
+bit unused31
 
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X;"ADC", 1, 0, 0, 1023, 0
@@ -655,7 +659,7 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 
 	output_pin_e fuelPumpPin;
 	pin_output_mode_e fuelPumpPinMode;
-	!unused 1
+	int8_t gapVvtTrackingLengthOverride;How many consecutive VVT gap rations have to match expected ranges for sync to happen;"count", 1, 0, 1, @@VVT_TRACKING_LENGTH@@, 0
 
 	output_pin_e malfunctionIndicatorPin;Check engine light, also malfunction indicator light. Always blinks once on boot.
 	pin_output_mode_e malfunctionIndicatorPinMode;
@@ -1590,7 +1594,12 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 
 uint8_t[CAM_INPUTS_COUNT iterate] simulatorCamPosition;
 
-uint8_t[242] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint16_t unusedExplicitFilling2
+
+	float[VVT_TRACKING_LENGTH iterate] triggerVVTGapOverrideFrom;;"ratio", 1, 0, 0, 20, 3
+	float[VVT_TRACKING_LENGTH iterate] triggerVVTGapOverrideTo;;"ratio", 1, 0, 0, 20, 3
+
+uint8_t[208] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
