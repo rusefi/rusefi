@@ -19,8 +19,8 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM176_GP19, // 25D - Injector 11
 	Gpio::MM176_GP18, // 26D - Injector 10
 	Gpio::MM176_OUT_PWM8, // 5C - High Side 1
-	Gpio::MM176_OUT_IO1, // 6C - High Side 2
-	Gpio::MM176_OUT_IO2, // 7C - High Side 3
+	Gpio::MM176_OUT_IO2, // 6C - High Side 2
+	Gpio::MM176_OUT_IO1, // 7C - High Side 3
 	Gpio::MM176_OUT_IO3, // 8C - Low Side 3
 	Gpio::MM176_OUT_IO4, // 9C - Low Side 4
 	Gpio::MM176_IGN1, // 11C - Ignition 1
