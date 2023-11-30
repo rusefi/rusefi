@@ -120,9 +120,9 @@ void boardInitHardware() {
 //	alpha2stepPullDown.initPin("a-2step", Gpio::H144_OUT_IO7);
 //	alphaCamPullDown.initPin("a-cam", Gpio::H144_OUT_IO8);
 //	//alphaCamVrPullUp.initPin("a-cam-vr", Gpio::H144_OUT_IO9);
-//	alphaD2PullDown.initPin("a-d2", H_SPI3_SCK);
-//	alphaD3PullDown.initPin("a-d3", H_SPI3_MISO);
-//	alphaD4PullDown.initPin("a-d4", H_SPI3_MOSI);
+	alphaD2PullDown.initPin("a-d2", Gpio::MM176_GP21);
+	alphaD3PullDown.initPin("a-d3", Gpio::MM176_GP22);
+	alphaD4PullDown.initPin("a-d4", Gpio::MM176_GP23);
 //	//alphaD5PullDown.initPin("a-d5", Gpio::H144_LS_8);
 	boardOnConfigurationChange(nullptr);
 }
