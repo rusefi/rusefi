@@ -450,7 +450,7 @@ jobs:
         git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
         git submodule update --init --depth=1 java_console/luaformatter
 
-    - uses: actions/setup-java@v3
+    - uses: actions/setup-java@v4
       if: ${{ env.skip != 'true' }}
       with:
         distribution: 'zulu'
