@@ -818,7 +818,7 @@
 #define SentEtbType_NONE 0
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 1978399601
+#define SIGNATURE_HASH 2644964685
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1116,7 +1116,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.11.30.kin.1978399601"
+#define TS_SIGNATURE "rusEFI master.2023.11.30.kin.2644964685"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
@@ -1191,5 +1191,6 @@
 #define vvt_mode_e_VVT_SINGLE_TOOTH 1
 #define vvt_mode_e_VVT_TOYOTA_3_TOOTH 2
 #define vvt_mode_e_VVT_TOYOTA_4_1 6
+#define VVT_TRACKING_LENGTH 4
 #define WARNING_BUFFER_SIZE 120
 #define WWAE_TABLE_SIZE 8

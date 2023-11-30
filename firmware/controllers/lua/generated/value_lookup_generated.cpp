@@ -127,6 +127,9 @@ float getConfigValueByName(const char *name) {
 // allowIdenticalPps
 		case 445194564:
 			return engineConfiguration->allowIdenticalPps;
+// overrideVvtTriggerGaps
+		case 840966724:
+			return engineConfiguration->overrideVvtTriggerGaps;
 // tpsMin
 		case 513872736:
 			return engineConfiguration->tpsMin;
@@ -349,6 +352,9 @@ float getConfigValueByName(const char *name) {
 // vssToothCount
 		case -1958312328:
 			return engineConfiguration->vssToothCount;
+// gapVvtTrackingLengthOverride
+		case -188591438:
+			return engineConfiguration->gapVvtTrackingLengthOverride;
 // idle_antiwindupFreq
 		case -524949197:
 			return engineConfiguration->idle_antiwindupFreq;
@@ -1943,6 +1949,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->allowIdenticalPps = (int)value;
 		return 1;
 	}
+		case 840966724:
+	{
+		engineConfiguration->overrideVvtTriggerGaps = (int)value;
+		return 1;
+	}
 		case 513872736:
 	{
 		engineConfiguration->tpsMin = (int)value;
@@ -2311,6 +2322,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1958312328:
 	{
 		engineConfiguration->vssToothCount = (int)value;
+		return 1;
+	}
+		case -188591438:
+	{
+		engineConfiguration->gapVvtTrackingLengthOverride = (int)value;
 		return 1;
 	}
 		case -524949197:

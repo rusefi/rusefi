@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Nov 30 00:34:47 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Nov 30 23:24:13 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1084,6 +1084,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1259297189;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1312,7 +1313,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.11.30.f407-discovery.2739034009";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.11.30.f407-discovery.1259297189";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1376,6 +1377,7 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_SINGLE_TOOTH = 1;
 	public static final int vvt_mode_e_VVT_TOYOTA_3_TOOTH = 2;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
+	public static final int VVT_TRACKING_LENGTH = 4;
 	public static final int WARNING_BUFFER_SIZE = 120;
 	public static final int WWAE_TABLE_SIZE = 8;
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1424,6 +1426,7 @@ public class Fields {
 	public static final Field CLTSENSORPULLDOWN = Field.create("CLTSENSORPULLDOWN", 120, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field IATSENSORPULLDOWN = Field.create("IATSENSORPULLDOWN", 120, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field ALLOWIDENTICALPPS = Field.create("ALLOWIDENTICALPPS", 120, FieldType.BIT, 28).setBaseOffset(0);
+	public static final Field OVERRIDEVVTTRIGGERGAPS = Field.create("OVERRIDEVVTTRIGGERGAPS", 120, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field TPSMIN = Field.create("TPSMIN", 124, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSMAX = Field.create("TPSMAX", 126, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSERRORDETECTIONTOOLOW = Field.create("TPSERRORDETECTIONTOOLOW", 128, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1591,7 +1594,7 @@ public class Fields {
 	public static final Field IGNITIONPINMODE = Field.create("IGNITIONPINMODE", 615, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FUELPUMPPIN = Field.create("FUELPUMPPIN", 616, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FUELPUMPPINMODE = Field.create("FUELPUMPPINMODE", 618, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_619 = Field.create("ALIGNMENTFILL_AT_619", 619, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field GAPVVTTRACKINGLENGTHOVERRIDE = Field.create("GAPVVTTRACKINGLENGTHOVERRIDE", 619, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MALFUNCTIONINDICATORPIN = Field.create("MALFUNCTIONINDICATORPIN", 620, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field MALFUNCTIONINDICATORPINMODE = Field.create("MALFUNCTIONINDICATORPINMODE", 622, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FANPINMODE = Field.create("FANPINMODE", 623, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
@@ -2686,7 +2689,16 @@ public class Fields {
 	public static final Field SIMULATORCAMPOSITION2 = Field.create("SIMULATORCAMPOSITION2", 4311, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SIMULATORCAMPOSITION3 = Field.create("SIMULATORCAMPOSITION3", 4312, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SIMULATORCAMPOSITION4 = Field.create("SIMULATORCAMPOSITION4", 4313, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4314, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDEXPLICITFILLING2 = Field.create("UNUSEDEXPLICITFILLING2", 4314, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field TRIGGERVVTGAPOVERRIDEFROM1 = Field.create("TRIGGERVVTGAPOVERRIDEFROM1", 4316, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TRIGGERVVTGAPOVERRIDEFROM2 = Field.create("TRIGGERVVTGAPOVERRIDEFROM2", 4320, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TRIGGERVVTGAPOVERRIDEFROM3 = Field.create("TRIGGERVVTGAPOVERRIDEFROM3", 4324, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TRIGGERVVTGAPOVERRIDEFROM4 = Field.create("TRIGGERVVTGAPOVERRIDEFROM4", 4328, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TRIGGERVVTGAPOVERRIDETO1 = Field.create("TRIGGERVVTGAPOVERRIDETO1", 4332, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TRIGGERVVTGAPOVERRIDETO2 = Field.create("TRIGGERVVTGAPOVERRIDETO2", 4336, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TRIGGERVVTGAPOVERRIDETO3 = Field.create("TRIGGERVVTGAPOVERRIDETO3", 4340, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TRIGGERVVTGAPOVERRIDETO4 = Field.create("TRIGGERVVTGAPOVERRIDETO4", 4344, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4348, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4556, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4588, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4620, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3015,6 +3027,7 @@ public class Fields {
 	CLTSENSORPULLDOWN,
 	IATSENSORPULLDOWN,
 	ALLOWIDENTICALPPS,
+	OVERRIDEVVTTRIGGERGAPS,
 	TPSMIN,
 	TPSMAX,
 	TPSERRORDETECTIONTOOLOW,
@@ -3173,7 +3186,7 @@ public class Fields {
 	IGNITIONPINMODE,
 	FUELPUMPPIN,
 	FUELPUMPPINMODE,
-	ALIGNMENTFILL_AT_619,
+	GAPVVTTRACKINGLENGTHOVERRIDE,
 	MALFUNCTIONINDICATORPIN,
 	MALFUNCTIONINDICATORPINMODE,
 	FANPINMODE,
@@ -4248,6 +4261,15 @@ public class Fields {
 	SIMULATORCAMPOSITION2,
 	SIMULATORCAMPOSITION3,
 	SIMULATORCAMPOSITION4,
+	UNUSEDEXPLICITFILLING2,
+	TRIGGERVVTGAPOVERRIDEFROM1,
+	TRIGGERVVTGAPOVERRIDEFROM2,
+	TRIGGERVVTGAPOVERRIDEFROM3,
+	TRIGGERVVTGAPOVERRIDEFROM4,
+	TRIGGERVVTGAPOVERRIDETO1,
+	TRIGGERVVTGAPOVERRIDETO2,
+	TRIGGERVVTGAPOVERRIDETO3,
+	TRIGGERVVTGAPOVERRIDETO4,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

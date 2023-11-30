@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 27 04:27:06 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Nov 30 23:24:13 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -738,13 +738,13 @@ struct engine_configuration_s {
 	bool allowIdenticalPps : 1 {};
 	/**
 	offset 120 bit 29 */
-	bool unusedBit_44_29 : 1 {};
+	bool overrideVvtTriggerGaps : 1 {};
 	/**
 	offset 120 bit 30 */
-	bool unusedBit_44_30 : 1 {};
+	bool unused30 : 1 {};
 	/**
 	offset 120 bit 31 */
-	bool unusedBit_44_31 : 1 {};
+	bool unused31 : 1 {};
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
@@ -1243,11 +1243,11 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e fuelPumpPinMode;
 	/**
-	 * need 4 byte alignment
-	units
+	 * How many consecutive VVT gap rations have to match expected ranges for sync to happen
+	count
 	 * offset 619
 	 */
-	uint8_t alignmentFill_at_619[1];
+	int8_t gapVvtTrackingLengthOverride;
 	/**
 	 * Check engine light, also malfunction indicator light. Always blinks once on boot.
 	 * offset 620
@@ -4450,10 +4450,24 @@ struct engine_configuration_s {
 	 */
 	uint8_t simulatorCamPosition[CAM_INPUTS_COUNT];
 	/**
-	units
 	 * offset 4314
 	 */
-	uint8_t mainUnusedEnd[242];
+	uint16_t unusedExplicitFilling2;
+	/**
+	ratio
+	 * offset 4316
+	 */
+	float triggerVVTGapOverrideFrom[VVT_TRACKING_LENGTH];
+	/**
+	ratio
+	 * offset 4332
+	 */
+	float triggerVVTGapOverrideTo[VVT_TRACKING_LENGTH];
+	/**
+	units
+	 * offset 4348
+	 */
+	uint8_t mainUnusedEnd[208];
 };
 static_assert(sizeof(engine_configuration_s) == 4556);
 
@@ -5365,4 +5379,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23880);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Nov 27 04:27:06 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Nov 30 23:24:13 UTC 2023
