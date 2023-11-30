@@ -235,8 +235,8 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM176_OUT_IO7, // 34C - Low Side 7
 	Gpio::MM176_OUT_PWM8, // 5C - High Side 1
 
-	Gpio::MM176_OUT_IO1, // 6C - High Side 2
-	Gpio::MM176_OUT_IO2, // 7C - High Side 3
+	Gpio::MM176_OUT_IO2, // 6C - High Side 2
+	Gpio::MM176_OUT_IO1, // 7C - High Side 3
 	Gpio::MM176_IGN1, // 11C - Ignition 1
 	Gpio::MM176_IGN3, // 13C - Ignition 3
 	Gpio::MM176_IGN5, // 14C - Ignition 5
