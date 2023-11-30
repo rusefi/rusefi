@@ -184,6 +184,10 @@ jobs:
             ini-file: rusefi_small-can-board.ini
             skip-rate: 50
 
+          - build-target: uaefi
+            folder: config/boards/hellen/uaefi
+            ini-file: rusefi_uaefi.ini
+
           - build-target: small-can-board_debug
             folder: config/boards/hellen/small-can-board
             ini-file: rusefi_small-can-board.ini
