@@ -82,6 +82,9 @@
         <constant name="cltSensorPulldown">"false"</constant>
         <constant name="iatSensorPulldown">"false"</constant>
         <constant name="allowIdenticalPps">"false"</constant>
+        <constant name="overrideVvtTriggerGaps">"false"</constant>
+        <constant name="unused30">"false"</constant>
+        <constant name="unused31">"false"</constant>
         <constant digits="0" name="tpsMin" units="ADC">0.0</constant>
         <constant digits="0" name="tpsMax" units="ADC">1000.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
@@ -263,6 +266,7 @@
         <constant name="ignitionPinMode">"default"</constant>
         <constant name="fuelPumpPin">"NONE"</constant>
         <constant name="fuelPumpPinMode">"default"</constant>
+        <constant digits="0" name="gapVvtTrackingLengthOverride" units="count">0.0</constant>
         <constant name="malfunctionIndicatorPin">"NONE"</constant>
         <constant name="malfunctionIndicatorPinMode">"default"</constant>
         <constant name="fanPinMode">"default"</constant>
@@ -1766,41 +1770,16 @@
         <constant digits="0" name="simulatorCamPosition2" units="">0.0</constant>
         <constant digits="0" name="simulatorCamPosition3" units="">0.0</constant>
         <constant digits="0" name="simulatorCamPosition4" units="">0.0</constant>
-        <constant cols="1" digits="0" name="mainUnusedEnd" rows="242">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="0" name="unusedExplicitFilling2" units="">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideFrom1" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideFrom2" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideFrom3" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideFrom4" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideTo1" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideTo2" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideTo3" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideTo4" units="ratio">0.0</constant>
+        <constant cols="1" digits="0" name="mainUnusedEnd" rows="208">
          0.0
          0.0
          0.0
@@ -4985,7 +4964,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.11.30.f407-discovery.2739034009" version="5.0"/>
+    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.11.30.f407-discovery.1259297189" version="5.0"/>
     <bibliography author="rusEFI 20231120" writeDate="date"/>
     <settings/>
     <userComments/>
