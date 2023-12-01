@@ -220,13 +220,14 @@ void boardPrepareForStop() {
 }
 
 static Gpio OUTPUTS[] = {
-	    Gpio::H144_LS_1, // A8 - Injector 1
-	    Gpio::H144_LS_2, // B8 - Injector 2
-	    Gpio::H144_LS_3, // D1 - Injector 3
-	    Gpio::H144_LS_4, // E1 - Injector 4
-	    Gpio::H144_IGN_7, // F2 - VVT#1 rev G
-	    Gpio::H144_IGN_8, // F4 - VVT#2 rev G
-	    Gpio::H144_OUT_PWM5, // F1 - Idle2
+    Gpio::H144_LS_1, // A8 - Injector 1
+    Gpio::H144_LS_2, // B8 - Injector 2
+    Gpio::H144_LS_3, // D1 - Injector 3
+    Gpio::H144_LS_4, // E1 - Injector 4
+    Gpio::H144_IGN_7, // F2 - VVT#1 rev G
+    Gpio::H144_IGN_8, // F4 - VVT#2 rev G
+    Gpio::H144_OUT_PWM5, // F1 - Idle2
+	Gpio::H144_OUT_PWM1, // C8 - Idle
 };
 
 int getBoardMetaOutputsCount() {
