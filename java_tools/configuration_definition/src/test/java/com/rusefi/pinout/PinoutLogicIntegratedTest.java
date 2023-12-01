@@ -109,6 +109,8 @@ public class PinoutLogicIntegratedTest {
                         "Gpio GENERATED_OUTPUTS = {\n" +
                         "\tGpio::H144_LS_2, // 2 - Digital 1\n" +
                         "\tGpio::A9, // 3 - Digital 1\n" +
+                        "// \"2 - Digital 1\",\n" +
+                        "// \"3 - Digital 1\",\n" +
                         "}\n");
 
     }

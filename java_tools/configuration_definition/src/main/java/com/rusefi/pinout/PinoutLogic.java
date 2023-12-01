@@ -299,6 +299,8 @@ public class PinoutLogic {
             getTsNameByIdFile.append("\treturn nullptr;\n}\n");
         }
 
+        StringBuilder pinNamesForSimulator = new StringBuilder();
+
         try (Writer outputs = boardInputs.getOutputsWriter()) {
             outputs.append(header);
             outputs.write("#pragma once\n\n");
@@ -308,12 +310,15 @@ public class PinoutLogic {
             for (String output : lowSideOutputs) {
                 String tsName = tsNameByMeta.get(output);
                 outputs.write("\tGpio::" + output + ", // " + tsName + "\n");
+                pinNamesForSimulator.append("// " + quote(tsName) + ",\n");
             }
             for (String output : highSideOutputs) {
                 String tsName = tsNameByMeta.get(output);
                 outputs.write("\tGpio::" + output + ", // " + tsName + "\n");
+                pinNamesForSimulator.append("// " + quote(tsName) + ",\n");
             }
 
+            outputs.write(pinNamesForSimulator.toString());
             outputs.write("}\n");
 
         }
