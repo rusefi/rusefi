@@ -34,7 +34,6 @@ for BOARD in \
    "config/boards/hellen/alphax-8chan alphax-8chan" \
    "config/boards/hellen/alphax-8chan alphax-8chan_f7" \
    "config/boards/hellen/alphax-8chan-revA alphax-8chan-revA" \
-   "config/boards/hellen/harley81 harley81" \
    "config/boards/hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
    "config/boards/hellen/hellen121vag hellen121vag" \
    "config/boards/hellen/hellen121nissan hellen121nissan" \
@@ -43,7 +42,6 @@ for BOARD in \
    "config/boards/hellen/hellen88bmw hellen88bmw" \
    "config/boards/hellen/uaefi uaefi" \
    "config/boards/hellen/hellen-112-17 hellen-112-17" \
-   "config/boards/hellen/hellen-112-mg1 hellen-112-mg1" \
    "config/boards/hellen/hellen72 hellen72" \
    "config/boards/hellen/hellen81 hellen81" \
    "config/boards/hellen/hellen-nb1 hellen-nb1" \

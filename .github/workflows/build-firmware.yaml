@@ -78,7 +78,6 @@ jobs:
             m74_9,
             s105,
             t-b-g,
-            harley81,
             hellen72,
             hellen81,
             hellen88bmw,
@@ -98,7 +97,6 @@ jobs:
             mre_f4_no_openblt,
             mre_f4_debug,
             mre_f4_recovery,
-            mre_f4_hardware_QC_special_build,
             mre_f7,
             prometheus_405,
             prometheus_469,
@@ -173,11 +171,6 @@ jobs:
             folder: config/boards/m74_9
             ini-file: rusefi_m74_9.ini
             skip-rate: 50
-
-          - build-target: harley81
-            folder: config/boards/hellen/harley81
-            ini-file: rusefi_harley81.ini
-            skip-rate: 99
 
           - build-target: small-can-board
             folder: config/boards/hellen/small-can-board
@@ -291,11 +284,6 @@ jobs:
             folder: config/boards/microrusefi
             ini-file: rusefi_mre_f4.ini
             skip-rate: 95
-
-          - build-target: mre_f4_hardware_QC_special_build
-            folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
-            skip-rate: 90
 
           - build-target: mre_f7
             folder: config/boards/microrusefi
