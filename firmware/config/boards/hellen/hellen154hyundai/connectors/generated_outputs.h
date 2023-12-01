@@ -29,4 +29,28 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_IGN_2, // Coil 2
 	Gpio::H144_IGN_1, // Coil 1
 	Gpio::H144_IGN_3, // Coil 3
+// "INJ_1 k25",
+// "INJ_2 k26",
+// "INJ_3 k27",
+// "INJ_4 k28",
+// "Main Relay K64",
+// "Fuel Pump K70",
+// "K87 AC Relay",
+// "X2 AuxLS3",
+// "X3 AuxLS2",
+// "X8 AuxLS1",
+// "Aux P66",
+// "Aux P67",
+// "Aux P68",
+// "K47 BK1 Wastegate Solenoid",
+// "Fan Relay Low",
+// "VVT1",
+// "VVT2",
+// "Tacho",
+// "Fan Relay HI",
+// "MIL",
+// "Coil 4",
+// "Coil 2",
+// "Coil 1",
+// "Coil 3",
 }

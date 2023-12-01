@@ -27,4 +27,27 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::D6, // opt 58 - Fan Relay 1
 	Gpio::E10, // opt 69 - AC Relay
 	Gpio::D2, // 70 - Fuel Pump Relay
+// "na 1 - IGN_3",
+// "2 - IGN_2_3",
+// "na 4 - IGN_4",
+// "5 - IGN_1_4",
+// "6 - INJ_2",
+// "7 - INJ_3",
+// "na 8 - TACH",
+// "9 - Unk Out 1",
+// "10 - ECO/CLT Out",
+// "na 25 - R Diff Lock",
+// "27 - INJ_1",
+// "28 - Idle valve close",
+// "29 - Idle valve open",
+// "opt 20 - Fan relay 2 / Unk Out 2",
+// "31 - CEL",
+// "46 - Absorber",
+// "47 - INJ_4",
+// "48 - AFR 1 Heater",
+// "na 49 - AFR 2 Heater",
+// "50 - Starter Disable Relay",
+// "opt 58 - Fan Relay 1",
+// "opt 69 - AC Relay",
+// "70 - Fuel Pump Relay",
 }

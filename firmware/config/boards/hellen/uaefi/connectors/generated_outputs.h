@@ -17,4 +17,17 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM100_IGN2, // 12 Coil 2
 	Gpio::MM100_IGN3, // 13 Coil 3
 	Gpio::MM100_IGN4, // 14 Coil 4
+// "5 injector output 1",
+// "6 injector output 2",
+// "7 injector output 3",
+// "8 injector output 4",
+// "19 Main Relay",
+// "20 Fuel Pump Relay",
+// "21 Relay Output",
+// "22 Relay Output",
+// "23 Engine Radiator Fan",
+// "11 Coil 1",
+// "12 Coil 2",
+// "13 Coil 3",
+// "14 Coil 4",
 }

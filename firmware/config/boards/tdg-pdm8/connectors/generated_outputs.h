@@ -13,4 +13,12 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::PROTECTED_PIN_2, // Out 3
 	Gpio::PROTECTED_PIN_1, // Out 2
 	Gpio::PROTECTED_PIN_0, // Out 1
+// "Out 8",
+// "Out 7",
+// "Out 6",
+// "Out 5",
+// "Out 4",
+// "Out 3",
+// "Out 2",
+// "Out 1",
 }

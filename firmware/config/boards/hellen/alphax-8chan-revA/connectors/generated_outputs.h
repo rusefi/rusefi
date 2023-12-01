@@ -30,4 +30,28 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::B9, // 19C - Ignition 7
 	Gpio::B8, // 20C - Ignition 6
 	Gpio::E2, // 21C - Ignition 5
+// "1A - Injector 4",
+// "2A - Injector 3",
+// "3A - Injector 2",
+// "4A - Injector 1",
+// "8B - Main Relay LS",
+// "26C - Injector 8",
+// "27C - Injector 7",
+// "28C - Injector 6",
+// "29C - Injector 5",
+// "8D - Fuel Pump",
+// "9D - Fan Relay",
+// "10D - LS 7",
+// "11D - LS 8",
+// "12D - NOS",
+// "13D - Boost",
+// "21D - Tachometer",
+// "10A - Ignition 4",
+// "11A - Ignition 3",
+// "12A - Ignition 2",
+// "13A - Ignition 1",
+// "18C - Ignition 8",
+// "19C - Ignition 7",
+// "20C - Ignition 6",
+// "21C - Ignition 5",
 }

@@ -17,4 +17,16 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_OUT_PWM3, // A4 - Tachometer
 	Gpio::H144_IGN_1, // A6 - Ignition A
 	Gpio::H144_IGN_2, // A7 - Ignition B
+// "Aux2 - Inj 3",
+// "Aux4 - Inj 4",
+// "Aux6 - Ign 4",
+// "Aux8 - Ign 3",
+// "A3 - Fuel Pump",
+// "A8 - Injector A",
+// "B8 - Injector B",
+// "C1 - Fan Relay",
+// "C8 - Idle",
+// "A4 - Tachometer",
+// "A6 - Ignition A",
+// "A7 - Ignition B",
 }

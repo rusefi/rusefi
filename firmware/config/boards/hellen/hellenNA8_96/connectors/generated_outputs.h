@@ -24,4 +24,24 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::C7, // ETB +
 	Gpio::C8, // ETB -
 	Gpio::C6, // ETB EN
+// "1A - ECF",
+// "1E - Check Engine Light",
+// "1G - AC Relay",
+// "1U - Fuel Pump",
+// "3L - TACH",
+// "3Q - IDLE",
+// "3U - INJ_1",
+// "3V - INJ_2",
+// "3W - INJ_3",
+// "3X - INJ_4",
+// "3Z - O2H2",
+// "4D - BOOST OUT",
+// "4E - VVT",
+// "P18/P22",
+// "1B - AC Fan Relay",
+// "3N - IGN_1 (1&4)",
+// "3R - IGN_2 (2&3)",
+// "ETB +",
+// "ETB -",
+// "ETB EN",
 }

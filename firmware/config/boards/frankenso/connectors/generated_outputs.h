@@ -25,4 +25,24 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::D5, // Injector 3X
 	Gpio::B8, // Injector 3Y
 	Gpio::B7, // Injector 3Z
+// "Coil 1F",
+// "Coil 1G",
+// "Coil 1H",
+// "Coil 1I",
+// "Coil 1L",
+// "Coil 1M",
+// "Coil 1O",
+// "Coil 1P",
+// "Injector 2M",
+// "Injector 2N",
+// "Injector 2O",
+// "Injector 2P",
+// "Injector 3S",
+// "Injector 3T",
+// "Injector 3U",
+// "Injector 3V",
+// "Injector 3W",
+// "Injector 3X",
+// "Injector 3Y",
+// "Injector 3Z",
 }

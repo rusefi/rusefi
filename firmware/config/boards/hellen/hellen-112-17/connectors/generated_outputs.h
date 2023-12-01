@@ -25,4 +25,25 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM100_IGN3, // 254 Coil 3
 	Gpio::MM100_IGN4, // 255 Coil 4
 	Gpio::MM100_IGN1, // 256 Coil 1
+// "101 low side 1.5A output",
+// "102 low side 1.5A output",
+// "115 Main Relay",
+// "129 Fuel Consumption Output",
+// "131 Relay Output",
+// "140 Relay Output",
+// "141 Engine Radiator Fan",
+// "142 Fuel Pump Relay",
+// "151 relay output",
+// "152 relay output",
+// "235 Low Side Output",
+// "242 injector output 2",
+// "243 injector output 3",
+// "244 injector output 1",
+// "245 injector output 4",
+// "246 low side 1.5A output",
+// "128 Tach Output",
+// "253 Coil 2",
+// "254 Coil 3",
+// "255 Coil 4",
+// "256 Coil 1",
 }

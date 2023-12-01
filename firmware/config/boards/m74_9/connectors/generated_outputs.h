@@ -20,4 +20,20 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::L9779_OUT_15, // FAN 1 relay
 	Gpio::L9779_OUT_16, // FAN 2 relay
 	Gpio::L9779_OUT_13, // Fuel pump relay
+// "Injector 1",
+// "Injector 2",
+// "Injector 3",
+// "Injector 4",
+// "Oxygen sensor 1 heater",
+// "EVAP solenoid control",
+// "Oxygen sensor 2 heater",
+// "Coil 1 (< +2.5v) / Coils 1,4",
+// "Coil 3  (< +2.5v) / Coils 2,4",
+// "Coil 2  (< +2.5v) (not populated)",
+// "Coil 4  (< +2.5v) (not populated)",
+// "Air compressor control",
+// "Secondary starter relay",
+// "FAN 1 relay",
+// "FAN 2 relay",
+// "Fuel pump relay",
 }

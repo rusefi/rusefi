@@ -23,4 +23,23 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::C13, // 50 - Coil 1
 	Gpio::E5, // 51 - Coil 2
 	Gpio::E4, // 52 - Coil 3
+// "3 - INJ_5",
+// "4 - INJ_6",
+// "5 - INJ_4",
+// "7 - INJ_7/VVT",
+// "27 - MAIN",
+// "31 - INJ_3",
+// "32 - INJ_2",
+// "33 - INJ_1",
+// "35 - INJ_8",
+// "1 - OUT_PUMP",
+// "2 - IdleC",
+// "23 - Coil 4",
+// "24 - Coil 6",
+// "25 - Coil 5",
+// "29 - Idle",
+// "47 - Tach",
+// "50 - Coil 1",
+// "51 - Coil 2",
+// "52 - Coil 3",
 }
