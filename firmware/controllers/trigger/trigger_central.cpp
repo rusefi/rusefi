@@ -1028,6 +1028,9 @@ void onConfigurationChangeTriggerCallback() {
 	changed |= isConfigurationChanged(trigger.customTotalToothCount);
 	changed |= isConfigurationChanged(trigger.customSkippedToothCount);
 	changed |= isConfigurationChanged(overrideTriggerGaps);
+	changed |= isConfigurationChanged(gapTrackingLengthOverride);
+	changed |= isConfigurationChanged(overrideVvtTriggerGaps);
+	changed |= isConfigurationChanged(gapVvtTrackingLengthOverride);
 
 	if (changed) {
 	#if EFI_ENGINE_CONTROL
