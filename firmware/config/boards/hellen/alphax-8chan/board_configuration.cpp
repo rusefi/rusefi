@@ -12,6 +12,9 @@
 #include "hellen_meta.h"
 #include "defaults.h"
 
+// mm176 matches mm144 in terms of LED pinout
+#include "hellen_leds_144.cpp"
+
 static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
@@ -127,8 +130,6 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 //	alphaD4PullDown.setValue(engineConfiguration->boardUseD4PullDown);
 	//alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
-
-#include "hellen_leds_144.cpp"
 
 void setBoardConfigOverrides() {
 	setHellenVbatt();
