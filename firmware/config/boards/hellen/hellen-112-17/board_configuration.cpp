@@ -81,8 +81,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::MM100_SPI2_MISO;
    	// Disable pin
    	engineConfiguration->etbIo[0].disablePin = Gpio::MM100_SPI2_MOSI;
-   	// Unused
- 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 }
 
 /**

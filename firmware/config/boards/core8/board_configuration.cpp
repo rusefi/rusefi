@@ -44,8 +44,6 @@ static void setEtbConfig() {
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::B9;
 	// Disable pin
 	engineConfiguration->etbIo[0].disablePin = Gpio::B7;
-	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
 	// Throttle #2
 	// PWM pin
@@ -54,8 +52,6 @@ static void setEtbConfig() {
 	engineConfiguration->etbIo[1].directionPin1 = Gpio::Unassigned;
 	// Disable pin
 	engineConfiguration->etbIo[1].disablePin = Gpio::Unassigned;
-	// Unused
-	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;

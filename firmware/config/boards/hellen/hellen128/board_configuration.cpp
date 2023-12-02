@@ -101,8 +101,6 @@ static void setHellen128ETBConfig() {
 		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
 		// Disable pin
 		engineConfiguration->etbIo[0].disablePin = H176_OUT_PWM1;
-		// Unused
-		engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
 		//ETB2
 		// PWM pin
@@ -111,8 +109,6 @@ static void setHellen128ETBConfig() {
 		engineConfiguration->etbIo[1].directionPin1 = Gpio::H13;
 		// Disable pin
 		engineConfiguration->etbIo[1].disablePin = Gpio::B7;
-		// Unused
-		engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
 
 		// we only have pwm/dir, no dira/dirb
 		engineConfiguration->etb_use_two_wires = false;
