@@ -15,9 +15,6 @@ else
   DDEFS += -D$(FW_ID_ENV)
 endif
 
-# See also ts_show_critical_led
-DDEFS += -DFLEXIBLE_CRITICAL_LED=1
-
 DDEFS += -DEFI_SENT_SUPPORT=TRUE
 
 # User can configure LIN/K-line interface
