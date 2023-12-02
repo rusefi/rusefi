@@ -429,6 +429,7 @@ int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]) {
 	durationsInStateMs[1] = savedDurationsInStateMs[1];
 	return savedPinToggleCounter;
 #else
+    UNUSED(durationsInStateMs);
 	return 0;
 #endif // EFI_SIMULATOR
 }
