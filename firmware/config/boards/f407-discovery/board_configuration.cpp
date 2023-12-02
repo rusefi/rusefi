@@ -168,8 +168,7 @@ static const struct mc33810_config mc33810 = {
 			/* SPI_CR1_CPOL | */ // = 0
 			SPI_CR1_CPHA | // = 1
 			0,
-		.cr2 = SPI_CR2_16BIT_MODE |
-			0
+		.cr2 = SPI_CR2_16BIT_MODE
 	},
 	.direct_io = {
 		/* injector drivers */
