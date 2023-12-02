@@ -16,7 +16,7 @@ if [ ! "$2" ] || [ ! "$3" ] || [ ! "$4" ]; then
 fi
 
 pwd
-echo -e "\nUploading .ini files"
+echo -e "\nUploading all .ini files"
 ls -l .
 
 if [ "$fileName" == "no" ]; then
