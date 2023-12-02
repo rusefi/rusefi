@@ -39,3 +39,12 @@ struct mc33810_config {
 };
 
 int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg);
+
+#define MC33810_SPI_CR1_F7 SPI_CR1_SSM | \
+                             			SPI_CR1_SSI | \
+                             			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */ \
+                             			SPI_CR1_MSTR | \
+                             			SPI_CR1_CPHA | \
+                             			0
+
+#define MC33810_SPI_CR2_F7 SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
