@@ -58,9 +58,21 @@ jobs:
         run: |
           bash gen_config_board.sh ../../.. ${{inputs.shortBoardName}}
 
-      - name: Gen Config Status
+      - name: Config Status
         working-directory: ext/rusefi
         run: |
+          git status
+
+      - name: Push Config
+        run: |
+          mkdir -p generated
+          cp ext/rusefi/firmware/controllers/generated/rusefi_generated.h   generated
+          cp ext/rusefi/firmware/controllers/generated/signature_${{inputs.shortBoardName}}.h generated
+          cp ext/rusefi/firmware/tunerstudio/generated/rusefi_${{inputs.shortBoardName}}.ini  generated
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub git update Action"
+          git add generated/*
+          git commit -am "GHA Automation Snapshot just for reference"
           git status
 
       - name: Upload .ini files to server
