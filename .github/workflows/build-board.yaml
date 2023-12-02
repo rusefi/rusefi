@@ -1,0 +1,17 @@
+name: Build Custom Board Firmware
+
+on:
+  workflow_call:
+    inputs:
+      shortBoardName:
+        required: true
+        type: string
+
+jobs:
+  create-board:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Echo
+        run: |
+          echo "${{ inputs.shortBoardName }}"
