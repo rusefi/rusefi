@@ -1,5 +1,5 @@
 /**
- * @file	device_mpu_util.h
+ * @file	device_mpu_util.h for F7
  *
  * @date Jul 27, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
