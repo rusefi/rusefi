@@ -109,7 +109,7 @@ struct Mc33810 : public GpioChip {
 	const mc33810_config	*cfg;
 	/* cached output state - state last send to chip */
 	uint8_t					o_state_cached;
-	/* state to be sended to chip */
+	/* state to be sent to chip */
 	uint8_t					o_state;
 	/* direct driven output mask */
 	uint8_t					o_direct_mask;
@@ -236,7 +236,7 @@ int Mc33810::update_output_and_diag()
 		ret = spi_rw(MC_CMD_READ_REG(REG_OUT32_FAULT), &out_fault[0]);
 		if (ret)
 			return ret;
-		/* get diagnostic for OUT2 and OUT2 and requset ALL STATUS */
+		/* get diagnostic for OUT2 and OUT2 and request ALL STATUS */
 		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &out_fault[1]);
 		if (ret)
 			return ret;
@@ -247,7 +247,7 @@ int Mc33810::update_output_and_diag()
 		ret = spi_rw(MC_CMD_READ_REG(REG_GPGD_FAULT), NULL);
 		if (ret)
 			return ret;
-		/* get diagnostic for GPGD and requset ALL STATUS */
+		/* get diagnostic for GPGD and request ALL STATUS */
 		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &gpgd_fault);
 		if (ret)
 			return ret;
@@ -258,7 +258,7 @@ int Mc33810::update_output_and_diag()
 		ret = spi_rw(MC_CMD_READ_REG(REG_IGN_FAULT), NULL);
 		if (ret)
 			return ret;
-		/* get diagnostic for IGN and requset ALL STATUS */
+		/* get diagnostic for IGN and request ALL STATUS */
 		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &ign_fault);
 		if (ret)
 			return ret;
@@ -343,7 +343,7 @@ int Mc33810::chip_init()
 			(2 << 9) |	/* max dwell is 8 mS */
 			BIT(8) |	/* enable max dwell control */
 			(3 << 2) |	/* Open Secondary OSFLT = 100 uS, default */
-			(1 << 0) |	/* End Spark THreshold: VPWR +5.5V, defaul */
+			(1 << 0) |	/* End Spark THreshold: VPWR +5.5V, default */
 			0;
 		ret = spi_rw(MC_CMD_SPARK(spark_settings), NULL);
 		if (ret) {
