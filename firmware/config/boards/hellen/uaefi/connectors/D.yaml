@@ -28,7 +28,7 @@ pins:
     function: Flex input
     
   - pin: D6
-    meta: MM100_IN_PPS
+    meta: MM100_IN_PPS_ANALOG
     class: analog_inputs
     ts_name: ___ PPS1
     function: PPS input 1
@@ -42,7 +42,7 @@ pins:
     type: can
     
   - pin: D9
-    meta: MM100_IN_MAP_ANALOG
+    meta: MM100_IN_MAP1_ANALOG
     class: analog_inputs
     ts_name: ___ MAP
     function: MAP input
@@ -60,7 +60,7 @@ pins:
     function: Sensor ground  
 
   - pin: D13
-    meta: MM100_IN_TPS
+    meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
     ts_name: ___ TPS1
     function: TPS input 1    
@@ -69,19 +69,19 @@ pins:
     function: Knock Input
     
   - pin: D15
-    meta: MM100_IN_IAT
+    meta: MM100_IN_IAT_ANALOG
     class: analog_inputs
     ts_name: ___ IAT
     function: IAT input 
     
   - pin: D16
-    meta: MM100_IN_CLT
+    meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
     ts_name: ___ CLT
     function: CLT input 
     
 info:
-  cid: uaefi
+  cid: d
   title: uaefi
   directory: hellen/uaefi
   board_url: https://github.com/rusefi/rusefi/wiki/uaefi

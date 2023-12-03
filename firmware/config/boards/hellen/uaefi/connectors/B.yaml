@@ -110,7 +110,7 @@ pins:
     ts_name: ___ Low Side output 2       
     
 info:
-  cid: uaefi
+  cid: b
   title: uaefi
   directory: hellen/uaefi
   board_url: https://github.com/rusefi/rusefi/wiki/uaefi

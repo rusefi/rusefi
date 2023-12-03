@@ -35,7 +35,7 @@ pins:
     function: +12V From Main Relay
 
 info:
-  cid: uaefi
+  cid: a
   title: uaefi
   directory: hellen/uaefi
   board_url: https://github.com/rusefi/rusefi/wiki/uaefi

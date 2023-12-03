@@ -252,7 +252,7 @@ public class PinoutLogic {
                               String pinTsName, String pinClass) {
         String existingTsName = tsNameById.get(id);
         if (existingTsName != null && !existingTsName.equals(pinTsName))
-            throw new IllegalStateException("ID used multiple times with different ts_name: " + id);
+            throw new IllegalStateException("ID [" + id + "] used multiple times with different ts_name " + existingTsName + "/" + pinTsName);
         tsNameById.put(id, pinTsName);
         tsNameByMeta.put(headerValue, pinTsName);
         if ("outputs".equalsIgnoreCase(pinClass)) {

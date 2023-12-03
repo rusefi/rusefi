@@ -20,7 +20,7 @@ pins:
     function: WBO VS black 6
     
 info:
-  cid: uaefi
+  cid: e
   title: uaefi
   directory: hellen/uaefi
   board_url: https://github.com/rusefi/rusefi/wiki/uaefi

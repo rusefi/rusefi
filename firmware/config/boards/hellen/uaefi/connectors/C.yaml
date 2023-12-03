@@ -83,12 +83,12 @@ pins:
     ts_name: ___ VR2-/HALL
     function: VR2-/HALL
 
-  - pin: C16C17
-    meta: MM100_UART8_TX
-    class: event_inputs
-    function: VR2 Sensor
-    type: hall
-    ts_name: C15/C16 VR2 Sensor
+#  - pin: C16C17
+#    meta: MM100_UART8_TX
+#    class: event_inputs
+#    function: VR2 Sensor
+#    type: hall
+#    ts_name: C15/C16 VR2 Sensor
 
   - pin: C18
     function: VR1+
@@ -108,7 +108,7 @@ pins:
     function: EGT negative input  
     
 info:
-  cid: uaefi
+  cid: c
   title: uaefi
   directory: hellen/uaefi
   board_url: https://github.com/rusefi/rusefi/wiki/uaefi
