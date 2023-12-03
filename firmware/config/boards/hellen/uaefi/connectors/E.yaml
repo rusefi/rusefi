@@ -1,0 +1,26 @@
+meta: config/boards/hellen_mm100_meta.h
+
+pins:
+  - pin: E1
+    function: 12V output
+  
+  - pin: E3
+    function: WBO heater white 3
+
+  - pin: E6
+    function: WBO VM yellow 2
+    
+  - pin: E5
+    function: WBO IP red 1
+
+  - pin: E2
+    function: WBO cal R green 5
+
+  - pin: E4
+    function: WBO VS black 6
+    
+info:
+  cid: uaefi
+  title: uaefi
+  directory: hellen/uaefi
+  board_url: https://github.com/rusefi/rusefi/wiki/uaefi
