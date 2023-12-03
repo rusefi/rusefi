@@ -34,6 +34,7 @@ public class PinoutLogic {
     private final List<String> highSideOutputs = new ArrayList<>();
 
     public PinoutLogic(BoardInputs boardInputs) {
+        log.info("init " + boardInputs.getBoardYamlKeys().size() + " file(s)");
         this.boardInputs = boardInputs;
     }
 
