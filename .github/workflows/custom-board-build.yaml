@@ -75,6 +75,20 @@ jobs:
           git commit -am "GHA Automation Snapshot just for reference"
           git status
 
+      - name: Connectors Status
+        run: |
+          git status
+
+      - name: Push Connectors
+        run: |
+          git add connectors/*
+          git commit -am "GHA Connectors Generated"
+
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}
+
       - name: Upload .ini files to server
         working-directory: ext/rusefi/firmware/tunerstudio/generated
         run: ../upload_ini.sh ${{inputs.iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
