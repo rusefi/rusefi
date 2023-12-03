@@ -199,7 +199,13 @@ static Gpio PROTEUS_CANAM_OUTPUTS[] = {
     Gpio::PROTEUS_LS_1,
     Gpio::PROTEUS_LS_2,
     Gpio::PROTEUS_LS_3,
-    Gpio::PROTEUS_LS_14,
+    Gpio::PROTEUS_LS_12, // main relay
+    Gpio::PROTEUS_LS_14, // starter
+    Gpio::PROTEUS_LS_15, // intercooler fan
+    Gpio::PROTEUS_LS_4, // accessories relay
+	Gpio::PROTEUS_IGN_1,
+	Gpio::PROTEUS_IGN_2,
+	Gpio::PROTEUS_IGN_3,
 };
 
 static Gpio PROTEUS_HARLEY_OUTPUTS[] = {
