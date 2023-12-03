@@ -75,7 +75,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1SecondaryMin = 1000;
 	engineConfiguration->tps1SecondaryMax = 0;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 

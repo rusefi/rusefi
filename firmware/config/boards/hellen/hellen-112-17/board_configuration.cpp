@@ -32,10 +32,8 @@ static void setupDefaultSensorInputs() {
 
 	setPPSInputs(MM100_IN_PPS_ANALOG, MM100_IN_AUX2_ANALOG);
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
-//	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
 	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
 
@@ -108,7 +106,6 @@ void setBoardDefaultConfiguration() {
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
-	engineConfiguration->enableVerboseCanTx = true;
 
 	engineConfiguration->etbFunctions[0] = DC_Throttle1;
 

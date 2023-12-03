@@ -46,7 +46,7 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 

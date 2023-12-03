@@ -30,7 +30,7 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
@@ -129,7 +129,6 @@ void setBoardDefaultConfiguration() {
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
-	engineConfiguration->enableVerboseCanTx = true;
 
 	engineConfiguration->etbFunctions[0] = DC_None;
 	engineConfiguration->etbFunctions[1] = DC_Wastegate;

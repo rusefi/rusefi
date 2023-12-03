@@ -48,7 +48,7 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_0;	// ADC1_16

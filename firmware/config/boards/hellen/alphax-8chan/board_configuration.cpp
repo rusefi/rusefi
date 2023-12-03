@@ -89,7 +89,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1SecondaryMin = 1000;
 	engineConfiguration->tps1SecondaryMax = 0;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 //	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 	engineConfiguration->baroSensor.type = MT_MPXH6400;
 //	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
