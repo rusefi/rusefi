@@ -1,0 +1,87 @@
+meta: config/boards/hellen_mm100_meta.h
+
+pins:
+  - pin: D1
+    meta: MM100_IN_O2S_ANALOG
+    class: analog_inputs
+    ts_name: ___ AUX1
+    function: Auxiliary analog input 1
+    
+  - pin: D2
+    meta: MM100_IN_CRANK
+    class: switch_inputs
+    ts_name: ___ BUTTON1
+    function: Button input 1
+
+  - pin: D3
+    function: Sensor +5v Power Feed
+    type: 5v
+    
+  - pin: D4
+    function: Sensor +5v Power Feed
+    type: 5v
+    
+  - pin: D5
+    meta: MM100_IN_VSS
+    class: event_inputs
+    ts_name: ___ FLEX
+    function: Flex input
+    
+  - pin: D6
+    meta: MM100_IN_PPS
+    class: analog_inputs
+    ts_name: ___ PPS1
+    function: PPS input 1
+    
+  - pin: D7
+    function: CAN1 bus high
+    type: can
+
+  - pin: D8
+    function: CAN1 bus low
+    type: can
+    
+  - pin: D9
+    meta: MM100_IN_MAP_ANALOG
+    class: analog_inputs
+    ts_name: ___ MAP
+    function: MAP input
+    
+  - pin: D10
+    meta: MM100_IN_CAM
+    class: switch_inputs
+    ts_name: ___ BUTTON2
+    function: Button input 2
+    
+  - pin: D11
+    function: Sensor ground
+  
+  - pin: D12
+    function: Sensor ground  
+
+  - pin: D13
+    meta: MM100_IN_TPS
+    class: analog_inputs
+    ts_name: ___ TPS1
+    function: TPS input 1    
+
+  - pin: D14
+    function: Knock Input
+    
+  - pin: D15
+    meta: MM100_IN_IAT
+    class: analog_inputs
+    ts_name: ___ IAT
+    function: IAT input 
+    
+  - pin: D16
+    meta: MM100_IN_CLT
+    class: analog_inputs
+    ts_name: ___ CLT
+    function: CLT input 
+    
+info:
+  cid: uaefi
+  title: uaefi
+  directory: hellen/uaefi
+  board_url: https://github.com/rusefi/rusefi/wiki/uaefi
