@@ -87,6 +87,7 @@ jobs:
             echo "Connectors: looks like nothing to commit"
             exit 0
           fi
+          echo "[$OUT]"
 
       - name: Push
         uses: ad-m/github-push-action@master
