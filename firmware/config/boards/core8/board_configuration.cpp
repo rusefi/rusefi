@@ -111,11 +111,4 @@ void setBoardDefaultConfiguration(void) {
 	setIgnitionPins();
 
 	engineConfiguration->isSdCardEnabled = true;
-
-	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canSleepPeriodMs = 50;
-
-	engineConfiguration->canBaudRate = B500KBPS;
-	engineConfiguration->can2BaudRate = B500KBPS;
 }
