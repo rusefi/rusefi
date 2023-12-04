@@ -110,7 +110,6 @@ jobs:
             subaru_eg33_f7_no_bl,
             f407-discovery,
             f429-discovery,
-            core8,
             atlas,
             tdg-pdm8,
             at_start_f435,
@@ -361,11 +360,6 @@ jobs:
             folder: config/boards/f429-discovery
             ini-file: rusefi_f429-discovery.ini
             skip-rate: 95
-
-          - build-target: core8
-            folder: config/boards/core8
-            ini-file: rusefi_core8.ini
-            skip-rate: 0
 
           - build-target: atlas
             folder: config/boards/atlas
