@@ -24,7 +24,7 @@ jobs:
         echo "DELIM" >> $GITHUB_ENV
 
     - name: Generate Pinouts
-      uses: chuckwagoncomputing/interactive-pinout@2.10
+      uses: chuckwagoncomputing/interactive-pinout@2.11
       with:
         mapping-path: ${{ env.CHANGED }}
         warnings: "false"
