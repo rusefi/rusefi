@@ -33,6 +33,8 @@ DDEFS += -DBOARD_MC33810_COUNT=1
 # reduced lua heap while we temporary use BOARD_MC33810_COUNT
 DDEFS += -DLUA_USER_HEAP=24000
 
+DDEFS += -DRAM_UNUSED_SIZE=200
+
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1
 DDEFS += $(DEFAULT_ENGINE_TYPE)

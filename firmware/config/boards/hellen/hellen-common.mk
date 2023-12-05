@@ -12,3 +12,7 @@ DDEFS += -DLED_PIN_MODE=OM_INVERTED
 
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
+
+ifeq ($(RAM_UNUSED_SIZE),)
+    DDEFS += -DRAM_UNUSED_SIZE=100
+endif
