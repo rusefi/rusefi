@@ -12,6 +12,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_OUT_IO3, // Main Relay K64
 	Gpio::H144_OUT_IO9, // Fuel Pump K70
 	Gpio::H144_OUT_IO10, // K87 AC Relay
+	Gpio::H144_OUT_PWM8, // MIL
 	Gpio::B7, // X2 AuxLS3
 	Gpio::D14, // X3 AuxLS2
 	Gpio::F14, // X8 AuxLS1
@@ -24,7 +25,6 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_LS_6, // VVT2
 	Gpio::H144_OUT_PWM7, // Tacho
 	Gpio::H144_OUT_IO8, // Fan Relay HI
-	Gpio::H144_OUT_PWM8, // MIL
 	Gpio::H144_IGN_4, // Coil 4
 	Gpio::H144_IGN_2, // Coil 2
 	Gpio::H144_IGN_1, // Coil 1
@@ -36,6 +36,7 @@ Gpio GENERATED_OUTPUTS = {
 // "Main Relay K64",
 // "Fuel Pump K70",
 // "K87 AC Relay",
+// "MIL",
 // "X2 AuxLS3",
 // "X3 AuxLS2",
 // "X8 AuxLS1",
@@ -48,7 +49,6 @@ Gpio GENERATED_OUTPUTS = {
 // "VVT2",
 // "Tacho",
 // "Fan Relay HI",
-// "MIL",
 // "Coil 4",
 // "Coil 2",
 // "Coil 1",
