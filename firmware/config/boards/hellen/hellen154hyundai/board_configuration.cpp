@@ -163,7 +163,7 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_IGN_3, // Coil 3
 	Gpio::H144_IGN_4, // Coil 4
 	Gpio::H144_OUT_PWM8, // MIL
-	Gpio::H144_OUT_PWM7, // Tacho
+	Gpio::H144_OUT_PWM7, // low side? Tacho unused CAN tachometer right?
 };
 
 int getBoardMetaOutputsCount() {
@@ -171,7 +171,7 @@ int getBoardMetaOutputsCount() {
 }
 
 int getBoardMetaLowSideOutputsCount() {
-    return getBoardMetaOutputsCount() - 1;
+    return getBoardMetaOutputsCount();
 }
 
 int getBoardMetaDcOutputsCount() {
