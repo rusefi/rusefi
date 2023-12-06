@@ -10,7 +10,7 @@ endif
 
 # here we use different names for env variable and macro name in order to reduce confusion. overall this is about Frankenso builds defining FIRMWARE_ID
 ifeq ($(FW_ID_ENV),)
-  DDEFS += -DFIRMWARE_ID=\"stm32f407vg\"
+  DDEFS += -DFIRMWARE_ID=\"community\"
 else
   DDEFS += -D$(FW_ID_ENV)
 endif
