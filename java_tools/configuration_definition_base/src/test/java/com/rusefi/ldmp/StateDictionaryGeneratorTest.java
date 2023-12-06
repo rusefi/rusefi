@@ -31,17 +31,10 @@ public class StateDictionaryGeneratorTest {
 
         Map<String, Object> data = LiveDataProcessor.getStringObjectMap(new StringReader(testYaml));
 
-        Map<String, StringBufferLazyFile> fileCapture = new HashMap<>();
-        LiveDataProcessor liveDataProcessor = new LiveDataProcessor("test", fileName -> new StringReader(""), new LazyFile.LazyFileFactory() {
-            @Override
-            public LazyFile create(String fileName) {
-                StringBufferLazyFile file = new StringBufferLazyFile();
-                fileCapture.put(fileName, file);
-                return file;
-            }
-        });
+        TestFileCaptor captor = new TestFileCaptor();
+        LiveDataProcessor liveDataProcessor = new LiveDataProcessor("test", fileName -> new StringReader(""), captor);
         liveDataProcessor.handleYaml(data);
-        assertEquals(7, fileCapture.size());
+        assertEquals(7, captor.fileCapture.size());
 
 
         assertEquals("        stateDictionary.register(live_data_e.LDS_output_channels, TsOutputs.VALUES, \"status_loop\");\n" +
