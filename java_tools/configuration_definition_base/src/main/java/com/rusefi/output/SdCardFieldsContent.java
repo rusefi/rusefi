@@ -67,7 +67,7 @@ public class SdCardFieldsContent {
                 + "\t{" +
                 home + (isPtr ? "->" : ".") + name +
                 ", "
-                + DataLogConsumer.getHumanGaugeName(prefix, configField) +
+                + DataLogConsumer.getHumanGaugeName(prefix, configField, "") +
                 ", " +
                 quote(configField.getUnits()) +
                 ", " +
