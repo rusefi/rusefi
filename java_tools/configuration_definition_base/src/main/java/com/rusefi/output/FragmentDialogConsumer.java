@@ -1,7 +1,6 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,23 +13,16 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
     private final StringBuilder indicatorPanel = new StringBuilder();
     private final String fragmentName;
+    private final String variableNameSuffix;
     private boolean hasIndicators;
     private int graphLinesCounter;
     private int linesInCurrentGraph;
     private int currentGraphIndex;
 
-    public FragmentDialogConsumer(String fragmentName) {
+    public FragmentDialogConsumer(String fragmentName, String variableNameSuffix) {
         this.fragmentName = fragmentName;
+        this.variableNameSuffix = variableNameSuffix;
     }
-
-    @Override
-    public void startFile() {
-    }
-
-    @Override
-    public void endFile() throws IOException {
-    }
-
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
@@ -56,7 +48,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                         hasIndicators = true;
                         indicatorPanel.append("indicatorPanel = " + getPanelName() + ", 2\n");
                     }
-                    indicatorPanel.append("\tindicator = {" + prefix + configField.getName() + "}, " +
+                    indicatorPanel.append("\tindicator = {" + prefix + configField.getName() + variableNameSuffix + "}, " +
                             "\"" + configField.getName() + " No\", " +
                             "\"" + configField.getName() + " Yes\"" +
                             "\n");
@@ -72,7 +64,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                     startNewGraph();
                 }
 
-                graphList.append("\t\tgraphLine = " + prefix + configField.getName() + "\n");
+                graphList.append("\t\tgraphLine = " + prefix + configField.getName() + variableNameSuffix + "\n");
                 linesInCurrentGraph++;
 
 
@@ -122,11 +114,11 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
     @NotNull
     private String getDialogName() {
-        return fragmentName + "Dialog";
+        return fragmentName + variableNameSuffix + "Dialog";
     }
 
     @NotNull
     private String getGraphControlName() {
-        return fragmentName + "_" + currentGraphIndex + "_Graph";
+        return fragmentName + variableNameSuffix + "_" + currentGraphIndex + "_Graph";
     }
 }

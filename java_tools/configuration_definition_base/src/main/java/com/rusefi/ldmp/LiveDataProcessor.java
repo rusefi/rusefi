@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LiveDataProcessor {
@@ -23,6 +24,7 @@ public class LiveDataProcessor {
     public static final String OUTPUTS_SECTION_FILE_NAME = tsOutputsDestination + File.separator + "generated/output_channels.ini";
     public static final String DATA_FRAGMENTS_H = "console/binary/generated/live_data_fragments.h";
     public static final String STATE_DICTIONARY_FACTORY_JAVA = "../java_console/io/src/main/java/com/rusefi/enums/StateDictionaryFactory.java";
+    public static final String FANCY_CONTENT_INI = "console/binary/generated/fancy_content.ini";
 
     private final ReaderProvider readerProvider;
     private final LazyFile.LazyFileFactory fileFactory;
@@ -65,27 +67,9 @@ public class LiveDataProcessor {
 
 
         LiveDataProcessor liveDataProcessor = new LiveDataProcessor(yamlFileName, ReaderProvider.REAL, LazyFile.REAL);
-
         int sensorTsPosition = liveDataProcessor.handleYaml(data);
 
-        log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
-        try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
-            fw.write(header);
-            fw.write("#define TS_TOTAL_OUTPUT_SIZE " + sensorTsPosition);
-        }
-
-        try (FileWriter fw = new FileWriter("console/binary/generated/sensors.java")) {
-            fw.write(liveDataProcessor.totalSensors.toString());
-        }
-
-        try (FileWriter fw = new FileWriter("console/binary/generated/fancy_content.ini")) {
-            fw.write(liveDataProcessor.fancyNewStuff.toString());
-        }
-
-        try (FileWriter fw = new FileWriter("console/binary/generated/fancy_menu.ini")) {
-            fw.write(liveDataProcessor.fancyNewMenu.toString());
-        }
-        liveDataProcessor.end();
+        liveDataProcessor.end(sensorTsPosition);
     }
 
     public static Map<String, Object> getStringObjectMap(Reader reader) {
@@ -100,7 +84,13 @@ public class LiveDataProcessor {
         output.write("};\r\n");
     }
 
-    private void end() throws IOException {
+    private void end(int sensorTsPosition) throws IOException {
+
+        log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
+        try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
+            fw.write(header);
+            fw.write("#define TS_TOTAL_OUTPUT_SIZE " + sensorTsPosition);
+        }
         gaugeConsumer.endFile();
     }
 
@@ -114,7 +104,7 @@ public class LiveDataProcessor {
         OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(OUTPUTS_SECTION_FILE_NAME,
                 fileFactory);
 
-        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(DATA_LOG_FILE_NAME, fileFactory);
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(DATA_LOG_FILE_NAME, fileFactory);
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
@@ -136,12 +126,23 @@ public class LiveDataProcessor {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.setWithC_Defines(withCDefines);
 
+                outputsSections.outputNames = outputNames;
+                dataLogConsumer.outputNames = outputNames;
+
                 state.addDestination(javaSensorsConsumer,
                         outputsSections,
                         dataLogConsumer
                 );
-                FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
-                state.addDestination(fragmentDialogConsumer);
+
+                List<FragmentDialogConsumer> fragmentConsumers = new ArrayList<>();
+
+                for (int i = 0; i < tempLimit(outputNames); i++) {
+
+                    String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
+                    FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name, variableNameSuffix);
+                    fragmentConsumers.add(fragmentDialogConsumer);
+                    state.addDestination(fragmentDialogConsumer);
+                }
 
                 if (extraPrepend != null)
                     state.addPrepend(extraPrepend);
@@ -179,9 +180,10 @@ public class LiveDataProcessor {
 
                 state.doJob();
 
-                fancyNewStuff.append(fragmentDialogConsumer.getContent());
-
-                fancyNewMenu.append(fragmentDialogConsumer.menuLine());
+                for (FragmentDialogConsumer fragmentDialogConsumer : fragmentConsumers) {
+                    fancyNewStuff.append(fragmentDialogConsumer.getContent());
+                    fancyNewMenu.append(fragmentDialogConsumer.menuLine());
+                }
 
                 log.info("Done with " + name + " at " + javaSensorsConsumer.sensorTsPosition);
             }
@@ -211,10 +213,9 @@ public class LiveDataProcessor {
 
             String[] outputNamesArr;
             if (outputNames == null) {
-                outputNamesArr = new String[0];
+                outputNamesArr = new String[]{""};
             } else if (outputNames instanceof String) {
-                outputNamesArr = new String[1];
-                outputNamesArr[0] = (String) outputNames;
+                outputNamesArr = new String[]{(String) outputNames};
             } else {
                 ArrayList<String> nameList = (ArrayList<String>) outputNames;
                 outputNamesArr = new String[nameList.size()];
@@ -258,6 +259,17 @@ public class LiveDataProcessor {
 
         dataLogConsumer.endFile();
         outputValueConsumer.endFile();
+        try (LazyFile fw = fileFactory.create("console/binary/generated/sensors.java")) {
+            fw.write(totalSensors.toString());
+        }
+
+        try (LazyFile fw = fileFactory.create(FANCY_CONTENT_INI)) {
+            fw.write(fancyNewStuff.toString());
+        }
+
+        try (LazyFile fw = fileFactory.create("console/binary/generated/fancy_menu.ini")) {
+            fw.write(fancyNewMenu.toString());
+        }
 
         GetConfigValueConsumer.writeStringToFile(STATE_DICTIONARY_FACTORY_JAVA, stateDictionaryGenerator.getCompleteClass(), fileFactory);
 
@@ -277,5 +289,9 @@ public class LiveDataProcessor {
         try (LazyFile fw = fileFactory.create(DATA_FRAGMENTS_H)) {
             fw.write(fragmentsContent.toString());
         }
+    }
+
+    public static int tempLimit(String[] outputs) {
+        return 1;
     }
 }
