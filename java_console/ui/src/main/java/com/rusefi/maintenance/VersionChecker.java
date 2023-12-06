@@ -27,7 +27,7 @@ import static com.rusefi.core.preferences.storage.PersistentConfiguration.getCon
  * 8/10/14
  */
 public class VersionChecker {
-    private static final Logging log = getLogging(ConsoleUI.class);
+    private static final Logging log = getLogging(VersionChecker.class);
     private static final String JAVA_CONSOLE_TAG = "java_console";
     private static final String FIRMWARE_TAG = "firmware";
     private static final String VERSIONS_URL = "https://rusefi.com/console/versions.txt";
