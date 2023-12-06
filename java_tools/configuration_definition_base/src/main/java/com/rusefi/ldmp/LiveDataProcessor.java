@@ -21,6 +21,8 @@ public class LiveDataProcessor {
     private final static String tsOutputsDestination = "console/binary/";
     public static final String DATA_LOG_FILE_NAME = tsOutputsDestination + File.separator + "generated/data_logs.ini";
     public static final String OUTPUTS_SECTION_FILE_NAME = tsOutputsDestination + File.separator + "generated/output_channels.ini";
+    public static final String DATA_FRAGMENTS_H = "console/binary/generated/live_data_fragments.h";
+    public static final String STATE_DICTIONARY_FACTORY_JAVA = "../java_console/io/src/main/java/com/rusefi/enums/StateDictionaryFactory.java";
 
     private final ReaderProvider readerProvider;
     private final LazyFile.LazyFileFactory fileFactory;
@@ -65,7 +67,6 @@ public class LiveDataProcessor {
         LiveDataProcessor liveDataProcessor = new LiveDataProcessor(yamlFileName, ReaderProvider.REAL, LazyFile.REAL);
 
         int sensorTsPosition = liveDataProcessor.handleYaml(data);
-        liveDataProcessor.writeFiles();
 
         log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
         try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
@@ -257,20 +258,22 @@ public class LiveDataProcessor {
 
         outputValueConsumer.endFile();
 
-        GetConfigValueConsumer.writeStringToFile("../java_console/io/src/main/java/com/rusefi/enums/StateDictionaryFactory.java", stateDictionaryGenerator.getCompleteClass(), fileFactory);
+        GetConfigValueConsumer.writeStringToFile(STATE_DICTIONARY_FACTORY_JAVA, stateDictionaryGenerator.getCompleteClass(), fileFactory);
 
         totalSensors.append(javaSensorsConsumer.getContent());
+
+        writeFiles();
 
         return javaSensorsConsumer.sensorTsPosition;
     }
 
     private void writeFiles() throws IOException {
-        try (FileWriter fw = new FileWriter(enumContentFileName)) {
+        try (LazyFile fw = fileFactory.create(enumContentFileName)) {
             fw.write(enumContent.toString());
             fw.write(baseAddressCHeader.toString());
         }
 
-        try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.h")) {
+        try (LazyFile fw = fileFactory.create(DATA_FRAGMENTS_H)) {
             fw.write(fragmentsContent.toString());
         }
     }

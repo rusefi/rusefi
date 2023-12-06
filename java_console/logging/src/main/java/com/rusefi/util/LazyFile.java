@@ -15,7 +15,4 @@ public interface LazyFile extends Output {
 
     @Override
     void write(String line);
-
-    @Override
-    void close() throws IOException;
 }
