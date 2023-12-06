@@ -256,6 +256,7 @@ public class LiveDataProcessor {
         wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
         lazyFile.close();
 
+        dataLogConsumer.endFile();
         outputValueConsumer.endFile();
 
         GetConfigValueConsumer.writeStringToFile(STATE_DICTIONARY_FACTORY_JAVA, stateDictionaryGenerator.getCompleteClass(), fileFactory);

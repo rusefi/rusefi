@@ -54,7 +54,10 @@ public class DataLogConsumer implements ConfigurationConsumer {
             String content = iterator.getContent();
             tsWriter.append(content);
         }
+    }
 
+    @Override
+    public void endFile() throws IOException {
         writeStringToFile(fileName, tsWriter);
     }
 
