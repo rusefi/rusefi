@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Mon Nov 27 20:20:53 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Dec 06 19:47:30 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -180,9 +180,8 @@ public class TriggerState {
 	public static final Field VVTTOOTHPOSITION4 = Field.create("VVTTOOTHPOSITION4", 28, FieldType.FLOAT).setBaseOffset(1244);
 	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 32, FieldType.FLOAT).setBaseOffset(1244);
 	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 36, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
-	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 37, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
-	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
-	public static final Field ALIGNMENTFILL_AT_39 = Field.create("ALIGNMENTFILL_AT_39", 39, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
+	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 37, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
+	public static final Field ALIGNMENTFILL_AT_38 = Field.create("ALIGNMENTFILL_AT_38", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1244);
 	public static final Field[] VALUES = {
 	CRANKSYNCHRONIZATIONCOUNTER,
 	VVTSYNCGAPRATIO,
@@ -194,8 +193,7 @@ public class TriggerState {
 	VVTTOOTHPOSITION4,
 	TRIGGERSYNCGAPRATIO,
 	TRIGGERSTATEINDEX,
-	CAMRESYNCCOUNTER,
 	VVTSTATEINDEX,
-	ALIGNMENTFILL_AT_39,
+	ALIGNMENTFILL_AT_38,
 	};
 }
