@@ -1,7 +1,6 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 
 import java.util.List;
@@ -12,21 +11,21 @@ import java.util.List;
  */
 class PerFieldWithStructuresIterator extends FieldIterator {
     private final ReaderState state;
-    private final String prefix;
+    private final String variableNamePrefix;
     private final Strategy strategy;
     private final String prefixSeparator;
     private final StringBuilder sb = new StringBuilder();
 
-    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigField> fields, String prefix, Strategy strategy, String prefixSeparator) {
+    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigField> fields, String variableNamePrefix, Strategy strategy, String prefixSeparator) {
         super(fields);
         this.state = state;
-        this.prefix = prefix;
+        this.variableNamePrefix = variableNamePrefix;
         this.strategy = strategy;
         this.prefixSeparator = prefixSeparator;
     }
 
-    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigField> fields, String prefix, Strategy strategy) {
-        this(state, fields, prefix, strategy, "_");
+    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigField> fields, String variableNamePrefix, Strategy strategy) {
+        this(state, fields, variableNamePrefix, strategy, "_");
     }
 
     @Override
@@ -39,13 +38,13 @@ class PerFieldWithStructuresIterator extends FieldIterator {
                 content = "";
             } else {
                 // java side of things does not care for 'cs.withPrefix'
-                String extraPrefix = prefix + strategy.getArrayElementName(cf) + prefixSeparator;
+                String extraPrefix = variableNamePrefix + strategy.getArrayElementName(cf) + prefixSeparator;
                 PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.getTsFields(), extraPrefix, strategy, prefixSeparator);
                 fieldIterator.loop();
                 content = fieldIterator.sb.toString();
             }
         } else {
-            content = strategy.process(state, cf, prefix);
+            content = strategy.process(state, cf, variableNamePrefix);
         }
         sb.append(content);
         super.end();
