@@ -2,6 +2,7 @@ package com.rusefi.output;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.ReaderState;
+import com.rusefi.util.LazyFile;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,11 +17,13 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
     private static final Logging log = getLogging(OutputsSectionConsumer.class);
 
     private final String tsOutputsSectionFileName;
+    private final LazyFile.LazyFileFactory fileFactory;
     private final TsOutput tsOutput;
     private int sensorTsPosition;
 
-    public OutputsSectionConsumer(String tsOutputsSectionFileName) {
+    public OutputsSectionConsumer(String tsOutputsSectionFileName, LazyFile.LazyFileFactory fileFactory) {
         this.tsOutputsSectionFileName = tsOutputsSectionFileName;
+        this.fileFactory = fileFactory;
         tsOutput = new TsOutput(false);
     }
 
@@ -40,7 +43,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
 
         if (readerState.isStackEmpty()) {
             if (tsOutputsSectionFileName != null) {
-                FileWriter fos = new FileWriter(tsOutputsSectionFileName);
+                LazyFile fos = fileFactory.create(tsOutputsSectionFileName);
                 fos.write(tsOutput.getContent());
                 fos.close();
             }

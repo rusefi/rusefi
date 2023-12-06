@@ -108,9 +108,10 @@ public class LiveDataProcessor {
     public int handleYaml(Map<String, Object> data) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
 
-        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini",
+                fileFactory);
 
-        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
+        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini", fileFactory);
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 

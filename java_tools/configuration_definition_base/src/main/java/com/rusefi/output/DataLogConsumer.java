@@ -5,10 +5,10 @@ import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.VariableRegistry;
 import com.rusefi.parse.TypesHelper;
+import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.TreeSet;
 
@@ -25,11 +25,13 @@ public class DataLogConsumer implements ConfigurationConsumer {
 
     public static final String UNUSED = ConfigStructure.UNUSED_ANYTHING_PREFIX;
     private final String fileName;
+    private final LazyFile.LazyFileFactory fileFactory;
     private final StringBuilder tsWriter = new StringBuilder();
     private final TreeSet<String> comments = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
-    public DataLogConsumer(String fileName) {
+    public DataLogConsumer(String fileName, LazyFile.LazyFileFactory fileFactory) {
         this.fileName = fileName;
+        this.fileFactory = fileFactory;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
 
     private void writeStringToFile(@Nullable String fileName, StringBuilder writer) throws IOException {
         if (fileName != null) {
-            FileWriter fw = new FileWriter(fileName);
+            LazyFile fw = fileFactory.create(fileName);
             fw.write(writer.toString());
             fw.close();
         }

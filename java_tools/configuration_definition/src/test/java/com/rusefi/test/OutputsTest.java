@@ -2,6 +2,7 @@ package com.rusefi.test;
 
 import com.rusefi.BitState;
 import com.rusefi.ReaderStateImpl;
+import com.rusefi.ldmp.TestFileCaptor;
 import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
@@ -53,7 +54,7 @@ public class OutputsTest {
 
     @NotNull
     private static OutputsSectionConsumer runOriginalImplementation(String test, ReaderStateImpl state) {
-        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
+        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, new TestFileCaptor());
         state.readBufferedReader(test, tsProjectConsumer);
         return tsProjectConsumer;
     }
@@ -70,7 +71,7 @@ public class OutputsTest {
                 "\n" +
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
         state.readBufferedReader(test, dataLogConsumer);
         assertEquals(
                 "entry = vvtStatus1_pTerm, \"vvtStatus1_pTerm\", float,  \"%.3f\"\n" +
@@ -103,7 +104,7 @@ public class OutputsTest {
         state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
         state.getVariableRegistry().register("GAUGE_NAME_FUEL_BASE", "hello");
 
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
         state.readBufferedReader(test, dataLogConsumer);
         assertEquals(
                 "entry = issue_294_31, \"issue_294_31\", int,    \"%d\"\n" +
@@ -133,7 +134,7 @@ public class OutputsTest {
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
         state.readBufferedReader(test, dataLogConsumer);
 
         assertEquals("\"fuel: base mass\"", state.getVariableRegistry().get("GAUGE_NAME_FUEL_BASE"));
@@ -157,7 +158,7 @@ public class OutputsTest {
 
         ReaderStateImpl state = new ReaderStateImpl();
         state.getVariableRegistry().register("GAUGE_CATEGORY", "Alternator");
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
         GaugeConsumer gaugeConsumer = new GaugeConsumer(null);
         state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
         assertEquals(
