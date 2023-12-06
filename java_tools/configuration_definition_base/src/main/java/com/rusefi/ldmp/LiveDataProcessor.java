@@ -19,6 +19,8 @@ public class LiveDataProcessor {
     private final static String enumContentFileName = "console/binary/generated/live_data_ids.h";
 
     private final static String tsOutputsDestination = "console/binary/";
+    public static final String DATA_LOG_FILE_NAME = tsOutputsDestination + File.separator + "generated/data_logs.ini";
+    public static final String OUTPUTS_SECTION_FILE_NAME = tsOutputsDestination + File.separator + "generated/output_channels.ini";
 
     private final ReaderProvider readerProvider;
     private final LazyFile.LazyFileFactory fileFactory;
@@ -108,10 +110,10 @@ public class LiveDataProcessor {
     public int handleYaml(Map<String, Object> data) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
 
-        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini",
+        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(OUTPUTS_SECTION_FILE_NAME,
                 fileFactory);
 
-        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini", fileFactory);
+        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(DATA_LOG_FILE_NAME, fileFactory);
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
