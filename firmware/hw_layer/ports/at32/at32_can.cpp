@@ -126,4 +126,10 @@ const CANConfig * findCanConfig(can_baudrate_e rate) {
    }
 }
 
+void canHwInfo(CANDriver* cand)
+{
+   /* TODO: */
+   (void)cand;
+}
+
 #endif /* EFI_CAN_SUPPORT */

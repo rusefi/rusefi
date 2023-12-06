@@ -240,6 +240,12 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
    return NULL;
 }
 
+void canHwInfo(CANDriver* cand)
+{
+	/* TODO: */
+	(void)cand;
+}
+
 #endif /* EFI_CAN_SUPPORT */
 
 bool allowFlashWhileRunning() {
