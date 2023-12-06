@@ -245,6 +245,7 @@ void canHwInfo(CANDriver* cand)
       efiPrintf("No device assigned!");
    }
 
+#if STM32_CAN_USE_CAN1 || STM32_CAN_USE_CAN2
    uint32_t esr = cand->can->ESR;
    efiPrintf("Receive error counter %d", (esr >> 24) & 0xff);
    efiPrintf("Transmit error counter %d", (esr >> 16) & 0xff);
@@ -253,6 +254,7 @@ void canHwInfo(CANDriver* cand)
       (esr & 0x4) ? "BOFF" : "",
       (esr & 0x2) ? "EPVF" : "",
       (esr & 0x1) ? "EWGF" : "");
+#endif
 }
 
 #endif /* EFI_CAN_SUPPORT */
