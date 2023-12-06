@@ -4,42 +4,51 @@ import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.VariableRegistry;
+import com.rusefi.util.LazyFile;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.rusefi.ldmp.LiveDataProcessor.tempLimit;
 import static com.rusefi.output.DataLogConsumer.getHumanGaugeName;
 
 public class GaugeConsumer implements ConfigurationConsumer {
     private final String fileName;
+    private final LazyFile.LazyFileFactory fileFactory;
     private final LinkedHashMap<String, StringBuilder> byCategory = new LinkedHashMap<>();
+    public String[] outputNames;
 
-    public GaugeConsumer(String fileName) {
+    public GaugeConsumer(String fileName, LazyFile.LazyFileFactory fileFactory) {
         this.fileName = fileName;
+        this.fileFactory = fileFactory;
     }
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (readerState.isStackEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
-                    (state, configField, prefix) -> handle(configField, prefix));
-            iterator.loop();
+            for (int i = 0; i < tempLimit(outputNames); i++) {
+
+                String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
+
+                PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
+                        (state, configField, prefix) -> handle(configField, prefix, variableNameSuffix));
+                iterator.loop();
+            }
         }
     }
 
     @Override
     public void endFile() throws IOException {
         if (fileName != null) {
-            FileWriter fw = new FileWriter(fileName);
+            LazyFile fw = fileFactory.create(fileName);
             fw.write(getContent());
             fw.close();
         }
     }
 
-    private String handle(ConfigField configField, String prefix) {
-        String comment = getHumanGaugeName("", configField);
+    private String handle(ConfigField configField, String prefix, String variableNameSuffix) {
+        String comment = getHumanGaugeName("", configField, "");
         comment = ConfigFieldImpl.unquote(comment);
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;
@@ -57,7 +66,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
         StringBuilder sb = byCategory.computeIfAbsent(category, s -> new StringBuilder());
 
         String fullName = prefix + configField.getName();
-        String gaugeEntry = fullName + "Gauge = " + fullName + "," + comment +
+        String gaugeEntry = fullName + variableNameSuffix + "Gauge = " + fullName + variableNameSuffix + "," + comment +
                 ", " + VariableRegistry.quote(configField.getUnits()) +
                 ", " + min + "," + max +
                 ", " + min + "," + max +

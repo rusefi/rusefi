@@ -199,7 +199,7 @@ enable2ndByteCanID = false
 
 	egoCorrectionForVeAnalyze = { 100 + fuelPidCorrection1 }
 
-	wbo0_hasFault = { enableAemXSeries && (faultCode >= 3) }
+	wbo0_hasFault = { enableAemXSeries && (faultCode0 >= 3) }
 
 [PcVariables]
 	tuneCrcPcVariable = continuousChannelValue, tuneCrc16
@@ -1658,7 +1658,7 @@ gaugeCategory = GPPWM Outputs
 	indicator =					{ isTriggerError},			"Trigger OK",		"Trigger ERR",  white,  black,	red,  black
 	indicator = { fuelCutReason  != 0 }, "Injection OK", { Fuel cut: bitStringValue(fuelIgnCutCodeList, fuelCutReason)}, white, black, yellow, black
 	indicator = { sparkCutReason != 0 }, "Ignition OK",  { Ign cut: bitStringValue(fuelIgnCutCodeList, sparkCutReason)}, white, black, yellow, black
-	indicator = { etbErrorCode != 0 }, "ETB OK",  { ETB: bitStringValue(etbCutCodeList, etbErrorCode)}, white, black, yellow, black
+	indicator = { etbErrorCode0 != 0 }, "ETB OK",  { ETB: bitStringValue(etbCutCodeList, etbErrorCode0)}, white, black, yellow, black
 
 	; minor info
 	indicator =						{ isFanOn },				"Fan off",				"Fan on",  white,  black,  green,  black
@@ -1690,9 +1690,9 @@ gaugeCategory = GPPWM Outputs
 	indicator =					{ sd_present },			"No SD card",	"SD card present",  white,  black,  green,  black
 	indicator =		{ sd_logging_internal },		"No SD logging",		"SD logging",  white,  black,  green,  black
 	indicator =							{ sd_msd },			"No SD USB",				"SD USB",  white,  black,  green,  black
-	indicator =			{ etbRevLimitActive },	"No ETB RPM Limit",	"ETB RPM Limit",  white,  black, yellow,  black
+	indicator =			{ etbRevLimitActive0 },	"No ETB RPM Limit",	"ETB RPM Limit",  white,  black, yellow,  black
 
-	indicator = { wbo0_hasFault }, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
+	indicator = { wbo0_hasFault }, { WBO0: bitStringValue(wboFaultCodeList, faultCode0)}, { WBO0: bitStringValue(wboFaultCodeList, faultCode0)}, white, black, red, black
 	indicator = {injectorHwIssue}, "inj", "INJ", white, black, red, black@@if_ts_show_inj_diag
 
 	; indicator = { isInjectionEnabled && fuelCutReason == 0 }, { Inj: bitStringValue(injModeList, currentInjectionMode) }, { Inj: bitStringValue(injModeList, currentInjectionMode) }, white, black, white, black

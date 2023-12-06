@@ -1,7 +1,5 @@
 package com.rusefi.util;
 
-import java.io.IOException;
-
 public interface LazyFile extends Output {
     interface LazyFileFactory {
         LazyFile create(String fileName);

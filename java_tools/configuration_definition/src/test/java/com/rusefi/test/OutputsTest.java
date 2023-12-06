@@ -159,7 +159,7 @@ public class OutputsTest {
         ReaderStateImpl state = new ReaderStateImpl();
         state.getVariableRegistry().register("GAUGE_CATEGORY", "Alternator");
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
-        GaugeConsumer gaugeConsumer = new GaugeConsumer(null);
+        GaugeConsumer gaugeConsumer = new GaugeConsumer(null, new TestFileCaptor());
         state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
         assertEquals(
                 "entry = alternatorStatus_iTerm, \"alternatorStatus_iTerm\", float,  \"%.3f\"\n" +

@@ -39,14 +39,14 @@ public class TsOutput {
         return settingContextHelp.toString();
     }
 
-    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {
+    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition, String temporaryLineComment, String variableNameSuffix) {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
                 ConfigField configField = it.cf;
                 ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
-                String nameWithPrefix = prefix + configField.getName();
+                String nameWithPrefix = prefix + configField.getName() + variableNameSuffix;
 
                 /**
                  * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
@@ -74,7 +74,7 @@ public class TsOutput {
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
                     String commentContent = configField.getCommentTemplated();
                     commentContent = ConfigFieldImpl.unquote(commentContent);
-                    settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
+                    settingContextHelp.append(temporaryLineComment + "\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
                 }
 
                 if (cs != null) {
@@ -84,7 +84,7 @@ public class TsOutput {
 
                 if (configField.isBit()) {
                     if (!configField.getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
-                        tsHeader.append(nameWithPrefix + " = bits, U32,");
+                        tsHeader.append(temporaryLineComment + nameWithPrefix + " = bits, U32,");
                         tsHeader.append(" " + tsPosition + ", [");
                         tsHeader.append(bitIndex + ":" + bitIndex);
                         tsHeader.append("]");
@@ -111,7 +111,7 @@ public class TsOutput {
                     if (!configField.getName().equals(next.getName()))
                         tsPosition += configField.getState().getTsCustomSize().get(configField.getType());
                 } else if (configField.getArraySizes().length == 0) {
-                    tsHeader.append(nameWithPrefix + " = scalar, ");
+                    tsHeader.append(temporaryLineComment + nameWithPrefix + " = scalar, ");
                     tsHeader.append(TypesHelper.convertToTs(configField.getType()) + ",");
                     tsHeader.append(" " + tsPosition + ",");
                     tsHeader.append(" " + handleTsInfo(configField, configField.getTsInfo(), 1));
