@@ -13,7 +13,8 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
 		0,	// ID passed here doesn't matter since we override acceptFrame
 		type,
-		MS2NT(21)	// sensor transmits at 100hz, allow a frame to be missed
+		MS2NT(400)	// blind attempt to fix https://github.com/rusefi/rusefi/issues/5773
+		//MS2NT(21)	// sensor transmits at 100hz, allow a frame to be missed
 	)
 	, m_sensorIndex(sensorIndex)
 {
