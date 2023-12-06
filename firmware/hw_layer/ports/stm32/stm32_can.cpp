@@ -231,4 +231,28 @@ const CANConfig * findCanConfig(can_baudrate_e rate) {
    }
 }
 
+void canHwInfo(CANDriver* cand)
+{
+   if (cand == NULL)
+      return;
+
+   if (cand->state != CAN_READY) {
+      efiPrintf("Interface is not ready");
+      return;
+   }
+
+   if (cand->can == NULL) {
+      efiPrintf("No device assigned!");
+   }
+
+   uint32_t esr = cand->can->ESR;
+   efiPrintf("Receive error counter %d", (esr >> 24) & 0xff);
+   efiPrintf("Transmit error counter %d", (esr >> 16) & 0xff);
+   efiPrintf("Last error %d", (esr >> 4) & 0x7);
+   efiPrintf("Flags: %s %s %s",
+      (esr & 0x4) ? "BOFF" : "",
+      (esr & 0x2) ? "EPVF" : "",
+      (esr & 0x1) ? "EWGF" : "");
+}
+
 #endif /* EFI_CAN_SUPPORT */
