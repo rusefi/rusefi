@@ -241,11 +241,11 @@ void canHwInfo(CANDriver* cand)
       return;
    }
 
+#if STM32_CAN_USE_CAN1 || STM32_CAN_USE_CAN2
    if (cand->can == NULL) {
       efiPrintf("No device assigned!");
    }
 
-#if STM32_CAN_USE_CAN1 || STM32_CAN_USE_CAN2
    uint32_t esr = cand->can->ESR;
    efiPrintf("Receive error counter %d", (esr >> 24) & 0xff);
    efiPrintf("Transmit error counter %d", (esr >> 16) & 0xff);
