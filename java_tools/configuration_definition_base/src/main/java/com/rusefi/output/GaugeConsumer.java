@@ -17,7 +17,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
     private final String fileName;
     private final LazyFile.LazyFileFactory fileFactory;
     private final LinkedHashMap<String, StringBuilder> byCategory = new LinkedHashMap<>();
-    public String[] outputNames;
+    public String[] outputNames = new String[]{""};
 
     public GaugeConsumer(String fileName, LazyFile.LazyFileFactory fileFactory) {
         this.fileName = fileName;

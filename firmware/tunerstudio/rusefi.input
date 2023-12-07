@@ -1317,10 +1317,10 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 
 gaugeCategory = Trigger
 	triggerErrorsCounterGauge = totalTriggerErrorCounter, "Trigger error count", "count",	0,	15000,	0,	0,	6000,  6000,	0,	0
-	triggerSyncGapRatioGauge = triggerSyncGapRatio,"triggerSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	triggerStateIndexGauge = triggerStateIndex,"triggerStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	vvtSyncGapRatioGauge = vvtSyncGapRatio,"vvtSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	vvtStateIndexGauge = vvtStateIndex,"vvtStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	triggerSyncGapRatioGauge = triggerSyncGapRatio0,"triggerSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	triggerStateIndexGauge = triggerStateIndex0,"triggerStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	vvtSyncGapRatioGauge = vvtSyncGapRatio0,"vvtSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	vvtStateIndexGauge = vvtStateIndex0,"vvtStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	triggerPrimaryFallGauge = triggerPrimaryFall,"triggerPrimaryFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	triggerPrimaryRiseGauge = triggerPrimaryRise,"triggerPrimaryRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	triggerSecondaryFallGauge = triggerSecondaryFall,"triggerSecondaryFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
