@@ -76,7 +76,11 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 
 	for (size_t i = 0;i<m_vvtCount;i++) {
 		char *vvtToken = trim(strtok(nullptr, s));
-		newVvtState[vvtColumnIndeces[i]] = vvtToken[0] == '1';
+		if (vvtToken == nullptr) {
+			criticalError("Null token in [%s]", buffer);
+		}
+		bool state = vvtToken[0] == '1';
+		newVvtState[vvtColumnIndeces[i]] = state;
 	}
 
 	if (timeStampstr == nullptr) {
@@ -97,9 +101,9 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		efitick_t nowNt = getTimeNowNt();
         bool state;
 		if (index == 0) {
-		    state = newTriggerState[index] ^ engineConfiguration->invertPrimaryTriggerSignal;
+		    state = newTriggerState[index] ^ flipOnRead ^ engineConfiguration->invertPrimaryTriggerSignal;
 		} else {
-		    state = newTriggerState[index] ^ engineConfiguration->invertSecondaryTriggerSignal;
+		    state = newTriggerState[index] ^ flipOnRead ^ engineConfiguration->invertSecondaryTriggerSignal;
 		}
 		hwHandleShaftSignal(index, state, nowNt);
 
