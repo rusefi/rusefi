@@ -19,8 +19,8 @@ pins:
 
   - pin: X4
     # H144_IN_D_3
-    id: E14
-    class: switch_inputs
+    id: [E14, E14]
+    class: [event_inputs, switch_inputs]
     ts_name: X4 Digital3
 
 #  - pin: X5
@@ -35,8 +35,8 @@ pins:
 
   - pin: X7
     # H144_IN_D_2
-    id: E13
-    class: switch_inputs
+    id: [E13, E13]
+    class: [event_inputs, switch_inputs]
     ts_name: X7 Digital2
 
   - pin: X8
@@ -48,8 +48,8 @@ pins:
 
   - pin: X9
     # H144_IN_D_1
-    id: E12
-    class: switch_inputs
+    id: [E12, E12]
+    class: [event_inputs, switch_inputs]
     ts_name: X9 Digital1
 
   - pin: X10
