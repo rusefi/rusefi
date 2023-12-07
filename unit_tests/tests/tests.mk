@@ -13,6 +13,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
 	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_real_cranking_nissan_vq40.cpp \
+	tests/trigger/test_real_6g72_3000gt.cpp \
 	tests/trigger/test_real_cas_24_plus_1.cpp \
 	tests/trigger/test_trigger_skipped_wheel.cpp \
 	tests/trigger/test_real_4b11.cpp \
