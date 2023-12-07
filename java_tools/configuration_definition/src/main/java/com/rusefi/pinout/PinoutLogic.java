@@ -59,7 +59,7 @@ public class PinoutLogic {
             String className = listPin.getPinClass();
             ArrayList<String> classList = names.get(className);
             if (classList == null) {
-                throw new IllegalStateException("Class not found:  " + className);
+                throw new IllegalStateException(boardName + ": Class not found:  " + className + " for " + id);
             }
             PinType listPinType = PinType.find(className);
             String pinType = listPinType.getPinType();
@@ -67,6 +67,8 @@ public class PinoutLogic {
             Objects.requireNonNull(enumList, "Enum for " + pinType);
             Map.Entry<String, Value> kv = find(enumList, id);
             if (kv == null) {
+                if (id.toLowerCase().contains("gpio"))
+                    throw new IllegalStateException(boardName + ": Not found looks like legacy 'Gpio::' notation " + id + " in " + className);
                 throw new IllegalStateException(boardName + ": Not found " + id + " in " + className);
             }
 

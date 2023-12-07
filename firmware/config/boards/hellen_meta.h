@@ -214,9 +214,9 @@ void detectHellenBoardType();
 
 #define H_SPI1_MOSI Gpio::B5
 #define H_SPI1_MISO Gpio::B4
-#define H_SPI1_SCK Gpio::B3
+#define H_SPI1_SCK B3
 #define H_SPI1_CS1 Gpio::B6
-#define H_SPI1_CS2 Gpio::B7
+#define H_SPI1_CS2 B7
 
 // looks like same pins 144 and 176
 #define H_SPI2_MOSI Gpio::B15
@@ -234,7 +234,7 @@ static void setHellenSdCardSpi1NoCS() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->spi1mosiPin = H_SPI1_MOSI;
 	engineConfiguration->spi1misoPin = H_SPI1_MISO;
-	engineConfiguration->spi1sckPin = H_SPI1_SCK;
+	engineConfiguration->spi1sckPin = Gpio::H_SPI1_SCK;
 	engineConfiguration->is_enabled_spi_1 = true;
 }
 
