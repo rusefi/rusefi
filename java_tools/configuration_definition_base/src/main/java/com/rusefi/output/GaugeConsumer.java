@@ -48,7 +48,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
     }
 
     private String handle(ConfigField configField, String prefix, String variableNameSuffix) {
-        String comment = getHumanGaugeName("", configField, "");
+        String comment = getHumanGaugeName("", configField, variableNameSuffix);
         comment = ConfigFieldImpl.unquote(comment);
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;

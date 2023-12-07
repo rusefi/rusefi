@@ -95,6 +95,6 @@ public class LiveDataProcessorTest {
                 "\t\t\tsubMenu = output_channelsDialog, \"output_channels\"\n", LiveDataProcessor.FANCY_MENU_INI);
 
         captor.assertOutput("\tgaugeCategory = \"cate\"\n" +
-                "tempC0Gauge = tempC0,\"WBO: Temperature\", \"C\", 500.0,1000.0, 500.0,1000.0, 500.0,1000.0, 0,0\n", LiveDataProcessor.GAUGES);
+                "tempC0Gauge = tempC0,\"WBO: Temperature0\", \"C\", 500.0,1000.0, 500.0,1000.0, 500.0,1000.0, 0,0\n", LiveDataProcessor.GAUGES);
     }
 }
