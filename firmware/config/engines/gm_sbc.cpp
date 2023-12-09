@@ -54,7 +54,7 @@ void setStepperHw() {
 #endif // HW_PROTEUS
 }
 
-void setSbc() {
+void setGmSbc() {
 	engineConfiguration->cylindersCount = 8;
 	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
 	engineConfiguration->displacement = 5.2;
@@ -103,12 +103,4 @@ void setSbc() {
 	// Proteus Digital 1 is Tach input "HEI R", plug pin C
 
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
-}
-
-void set8chanSbc() {
-    setSbc();
-}
-
-void setProteusSbc() {
-    setSbc();
 }

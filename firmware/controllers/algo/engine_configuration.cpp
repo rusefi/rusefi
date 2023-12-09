@@ -803,7 +803,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMiataNB2_Proteus();
 		break;
 	case engine_type_e::PROTEUS_SBC:
-	    setProteusSbc();
+	    setGmSbc();
         break;
 #ifdef HARDWARE_CI
 	case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
@@ -850,7 +850,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 
 #if HW_HELLEN_8CHAN
 	case engine_type_e::ALPHAX_8CHAN_SBC:
-	    set8chanSbc();
+	    setGmSbc();
         break;
 #endif
 

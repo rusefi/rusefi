@@ -191,14 +191,28 @@ void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
 
+#if HW_PROTEUS
 static Gpio PROTEUS_ME17_ADAPTER_OUTPUTS[] = {
     Gpio::PROTEUS_LS_1,
 };
 
+static Gpio PROTEUS_SBC_OUTPUTS[] = {
+    Gpio::PROTEUS_LS_14, // inj 1 four times
+    Gpio::PROTEUS_LS_14, // inj 1 four times
+    Gpio::PROTEUS_LS_14, // inj 1 four times
+    Gpio::PROTEUS_LS_14, // inj 1 four times
+
+    Gpio::PROTEUS_LS_15, // inj 4 four times
+    Gpio::PROTEUS_LS_15, // inj 4 four times
+    Gpio::PROTEUS_LS_15, // inj 4 four times
+    Gpio::PROTEUS_LS_15, // inj 4 four times
+
+};
+
 static Gpio PROTEUS_CANAM_OUTPUTS[] = {
-    Gpio::PROTEUS_LS_1,
-    Gpio::PROTEUS_LS_2,
-    Gpio::PROTEUS_LS_3,
+    Gpio::PROTEUS_LS_1, // inj 1
+    Gpio::PROTEUS_LS_2, // inj 2
+    Gpio::PROTEUS_LS_3, // inj 3
     Gpio::PROTEUS_LS_12, // main relay
     Gpio::PROTEUS_LS_14, // starter
     Gpio::PROTEUS_LS_15, // intercooler fan
@@ -224,10 +238,12 @@ int getBoardMetaLowSideOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
         return getBoardMetaOutputsCount();
     }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_SBC) {
+        return getBoardMetaOutputsCount();
+    }
     return 16;
 }
 
-#if HW_PROTEUS
 static Gpio PROTEUS_OUTPUTS[] = {
 Gpio::PROTEUS_LS_1,
 Gpio::PROTEUS_LS_2,
@@ -262,7 +278,6 @@ Gpio::PROTEUS_LS_16,
 	Gpio::PROTEUS_HS_3,
 	Gpio::PROTEUS_HS_4
 };
-#endif // HW_PROTEUS
 
 int getBoardMetaOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
@@ -273,6 +288,9 @@ int getBoardMetaOutputsCount() {
     }
     if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
         return efi::size(PROTEUS_HARLEY_OUTPUTS);
+    }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_SBC) {
+        return efi::size(PROTEUS_SBC_OUTPUTS);
     }
     return efi::size(PROTEUS_OUTPUTS);
 }
@@ -294,5 +312,9 @@ Gpio* getBoardMetaOutputs() {
     if (engineConfiguration->engineType == engine_type_e::PROTEUS_HARLEY) {
         return PROTEUS_HARLEY_OUTPUTS;
     }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_SBC) {
+        return PROTEUS_SBC_OUTPUTS;
+    }
     return PROTEUS_OUTPUTS;
 }
+#endif // HW_PROTEUS
