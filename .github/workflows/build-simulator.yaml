@@ -19,7 +19,7 @@ jobs:
         git submodule update --init --depth=1 firmware/controllers/lua/luaaa
         git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
 
-    - uses: actions/setup-java@v3
+    - uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
         java-version: '8'
