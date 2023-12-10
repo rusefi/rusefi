@@ -29,12 +29,16 @@ pins:
     type: gp_low
     
   - pin: AC2
-    id: [A1, EFI_ADC_1]
-    class: [switch_inputs, analog_inputs]
+#    id: [F6, EFI_ADC3_4]
+#    class: [switch_inputs, analog_inputs]
+    id: F6
+    class: switch_inputs
     function: IAT sensor signal
     type: 
     
   - pin: AC3
+    id: [A1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
     function: MAF/MAP sensor signal
     type:
     
@@ -49,10 +53,16 @@ pins:
     type: sgnd
     
   - pin: AD2
+    id: E1
+    class: switch_inputs
     function: Air conditioner control input
     type:
     
   - pin: AD3
+#    id: [F5, EFI_ADC3_15]
+#    class: [switch_inputs, analog_inputs]
+    id: F5
+    class: switch_inputs
     function: Coolant temperature sensor signal
     type:  
     
@@ -83,6 +93,8 @@ pins:
     type: sqnd
     
   - pin: AF2
+    id: B12
+    class: event_inputs
     function: Vehicle speed sensor input
     type:
     
@@ -159,6 +171,10 @@ pins:
     type: etb 
     
   - pin: AK3
+#    id: [F3, EFI_ADC3_9]
+#    class: [switch_inputs, analog_inputs]
+    id: F3
+    class: switch_inputs
     function: Oxygen sensor 1 signal
     type:  
     
@@ -209,10 +225,14 @@ pins:
     type:  
     
   - pin: BA2
+    id: [C1, EFI_ADC_11]
+    class: [switch_inputs, analog_inputs]
     function: Pedal position sensor 2 signal
     type:  
     
   - pin: BA3
+    id: [C0, EFI_ADC_10]
+    class: [switch_inputs, analog_inputs]
     function: Pedal position sensor 1 signal
     type:  
     
@@ -287,7 +307,9 @@ pins:
     type:  
     
   - pin: BE4 
-    function: Power ground
+    id: L9779_OUT_18
+    class: outputs
+    function: Unknown out (OUT18)
     type: pgnd 
     
   - pin: BF1
