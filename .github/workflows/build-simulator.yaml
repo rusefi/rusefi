@@ -58,9 +58,10 @@ jobs:
       working-directory: ./simulator/
       run: ./build/rusefi_simulator 10
 
-    - name: Reset git
+    - name: Git Status and Simulator generated folder Status
       run: |
-        git reset --hard
+        git status
+        ls -l simulator/generated/
 
     - name: Gradle tune-tools
       working-directory: ./java_tools
