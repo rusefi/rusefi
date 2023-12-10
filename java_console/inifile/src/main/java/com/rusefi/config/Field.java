@@ -215,7 +215,12 @@ public class Field {
     public Double getValue(ConfigurationImage ci, double multiplier) {
         Objects.requireNonNull(ci, "ConfigurationImage");
         Number value;
-        ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
+        ByteBuffer wrapped;
+        try {
+          wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
+        } catch (IndexOutOfBoundsException e) {
+            throw new RuntimeException("while " + name + " at " + getOffset() + " from " + ci.getSize(), e);
+        }
         if (bitOffset != NO_BIT_OFFSET) {
             int packed = wrapped.getInt();
             value = (packed >> bitOffset) & 1;
