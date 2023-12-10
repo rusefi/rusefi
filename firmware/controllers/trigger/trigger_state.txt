@@ -5,6 +5,5 @@ struct_no_prefix trigger_state_s
 
     uint8_t triggerStateIndex
     uint8_t vvtCounter
-	uint8_t camResyncCounter
 	uint8_t vvtStateIndex
 end_struct
