@@ -19,6 +19,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::L9779_OUT_14, // Secondary starter relay
 	Gpio::L9779_OUT_15, // FAN 1 relay
 	Gpio::L9779_OUT_16, // FAN 2 relay
+	Gpio::L9779_OUT_18, // Unknown out (OUT18)
 	Gpio::L9779_OUT_13, // Fuel pump relay
 // "Injector 1",
 // "Injector 2",
@@ -35,5 +36,6 @@ Gpio GENERATED_OUTPUTS = {
 // "Secondary starter relay",
 // "FAN 1 relay",
 // "FAN 2 relay",
+// "Unknown out (OUT18)",
 // "Fuel pump relay",
 }
