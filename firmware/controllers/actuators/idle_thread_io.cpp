@@ -56,7 +56,7 @@ percent_t getIdlePosition() {
 #endif
 }
 
-void startPedalPins() {
+void startSwitchPins() {
 #if EFI_PROD_CODE
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
@@ -73,7 +73,7 @@ void startPedalPins() {
 #endif /* EFI_PROD_CODE */
 }
 
-void stopPedalPins() {
+void stopSwitchPins() {
 	brain_pin_markUnused(activeConfiguration.clutchUpPin);
 	brain_pin_markUnused(activeConfiguration.clutchDownPin);
 	brain_pin_markUnused(activeConfiguration.throttlePedalUpPin);

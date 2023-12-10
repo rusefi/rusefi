@@ -286,7 +286,7 @@ void applyNewHardwareSettings() {
 	}
 
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
-		// bug? duplication with stopPedalPins?
+		// bug? duplication with stopSwitchPins?
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
@@ -415,7 +415,7 @@ void initHardwareNoConfig() {
 }
 
 void stopHardware() {
-	stopPedalPins();
+	stopSwitchPins();
 
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
@@ -457,7 +457,7 @@ void startHardware() {
 
 #endif // EFI_SHAFT_POSITION_INPUT
 
-	startPedalPins();
+	startSwitchPins();
 
 #if EFI_CAN_SUPPORT
 	startCanPins();

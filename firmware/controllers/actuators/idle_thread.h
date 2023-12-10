@@ -115,5 +115,5 @@ void setDefaultIdleParameters();
 void startIdleBench(void);
 void setIdleMode(idle_mode_e value);
 void setTargetIdleRpm(int value);
-void startPedalPins();
-void stopPedalPins();
+void startSwitchPins();
+void stopSwitchPins();
