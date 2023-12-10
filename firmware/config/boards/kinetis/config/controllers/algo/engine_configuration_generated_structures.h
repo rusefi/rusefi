@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Nov 30 23:22:27 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 10 16:36:48 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2141,11 +2141,13 @@ struct engine_configuration_s {
 	 */
 	boostType_e boostType;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 965
 	 */
-	uint8_t alignmentFill_at_965[3];
+	pin_input_mode_e ignitionKeyDigitalPinMode;
+	/**
+	 * offset 966
+	 */
+	Gpio ignitionKeyDigitalPin;
 	/**
 	Hz
 	 * offset 968
@@ -2999,76 +3001,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1572 bit 8 */
-	bool unusedBit_527_8 : 1 {};
+	bool unusedBit_528_8 : 1 {};
 	/**
 	offset 1572 bit 9 */
-	bool unusedBit_527_9 : 1 {};
+	bool unusedBit_528_9 : 1 {};
 	/**
 	offset 1572 bit 10 */
-	bool unusedBit_527_10 : 1 {};
+	bool unusedBit_528_10 : 1 {};
 	/**
 	offset 1572 bit 11 */
-	bool unusedBit_527_11 : 1 {};
+	bool unusedBit_528_11 : 1 {};
 	/**
 	offset 1572 bit 12 */
-	bool unusedBit_527_12 : 1 {};
+	bool unusedBit_528_12 : 1 {};
 	/**
 	offset 1572 bit 13 */
-	bool unusedBit_527_13 : 1 {};
+	bool unusedBit_528_13 : 1 {};
 	/**
 	offset 1572 bit 14 */
-	bool unusedBit_527_14 : 1 {};
+	bool unusedBit_528_14 : 1 {};
 	/**
 	offset 1572 bit 15 */
-	bool unusedBit_527_15 : 1 {};
+	bool unusedBit_528_15 : 1 {};
 	/**
 	offset 1572 bit 16 */
-	bool unusedBit_527_16 : 1 {};
+	bool unusedBit_528_16 : 1 {};
 	/**
 	offset 1572 bit 17 */
-	bool unusedBit_527_17 : 1 {};
+	bool unusedBit_528_17 : 1 {};
 	/**
 	offset 1572 bit 18 */
-	bool unusedBit_527_18 : 1 {};
+	bool unusedBit_528_18 : 1 {};
 	/**
 	offset 1572 bit 19 */
-	bool unusedBit_527_19 : 1 {};
+	bool unusedBit_528_19 : 1 {};
 	/**
 	offset 1572 bit 20 */
-	bool unusedBit_527_20 : 1 {};
+	bool unusedBit_528_20 : 1 {};
 	/**
 	offset 1572 bit 21 */
-	bool unusedBit_527_21 : 1 {};
+	bool unusedBit_528_21 : 1 {};
 	/**
 	offset 1572 bit 22 */
-	bool unusedBit_527_22 : 1 {};
+	bool unusedBit_528_22 : 1 {};
 	/**
 	offset 1572 bit 23 */
-	bool unusedBit_527_23 : 1 {};
+	bool unusedBit_528_23 : 1 {};
 	/**
 	offset 1572 bit 24 */
-	bool unusedBit_527_24 : 1 {};
+	bool unusedBit_528_24 : 1 {};
 	/**
 	offset 1572 bit 25 */
-	bool unusedBit_527_25 : 1 {};
+	bool unusedBit_528_25 : 1 {};
 	/**
 	offset 1572 bit 26 */
-	bool unusedBit_527_26 : 1 {};
+	bool unusedBit_528_26 : 1 {};
 	/**
 	offset 1572 bit 27 */
-	bool unusedBit_527_27 : 1 {};
+	bool unusedBit_528_27 : 1 {};
 	/**
 	offset 1572 bit 28 */
-	bool unusedBit_527_28 : 1 {};
+	bool unusedBit_528_28 : 1 {};
 	/**
 	offset 1572 bit 29 */
-	bool unusedBit_527_29 : 1 {};
+	bool unusedBit_528_29 : 1 {};
 	/**
 	offset 1572 bit 30 */
-	bool unusedBit_527_30 : 1 {};
+	bool unusedBit_528_30 : 1 {};
 	/**
 	offset 1572 bit 31 */
-	bool unusedBit_527_31 : 1 {};
+	bool unusedBit_528_31 : 1 {};
 	/**
 	 * offset 1576
 	 */
@@ -5379,4 +5381,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22504);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Nov 30 23:22:27 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 10 16:36:48 UTC 2023
