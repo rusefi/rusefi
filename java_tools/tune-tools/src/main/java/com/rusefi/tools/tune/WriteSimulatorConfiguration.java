@@ -58,7 +58,7 @@ public class WriteSimulatorConfiguration {
         byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + tuneBinFileName).toPath());
         System.out.println("Got " + fileContent.length + " from " + tuneBinFileName + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         if (fileContent.length != Fields.TOTAL_CONFIG_SIZE)
-            throw new IllegalStateException("Unexpected image size " + fileContent.length);
+            throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         ConfigurationImage configuration = new ConfigurationImage(fileContent);
         System.out.println("Got " + Objects.requireNonNull(configuration, "configuration"));
         IniFileModel ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
