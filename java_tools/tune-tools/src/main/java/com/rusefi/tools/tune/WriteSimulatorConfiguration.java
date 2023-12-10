@@ -17,8 +17,8 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public class WriteSimulatorConfiguration {
     private static final Logging log = getLogging(WriteSimulatorConfiguration.class);
-    // f407-discovery is historically the most inclusive .ini file
-    public static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini";
+    // f407-discovery is historically the most inclusive .ini file but default script produces rusefi.ini a bit of a mess?!
+    public static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi.ini";
 
     public static String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "");
 
