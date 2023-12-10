@@ -15,9 +15,9 @@ struct trigger_state_s {
 	// offset 13
 	uint8_t vvtCounter = (uint8_t)0;
 	// offset 14
-	uint8_t camResyncCounter = (uint8_t)0;
-	// offset 15
 	uint8_t vvtStateIndex = (uint8_t)0;
+	// offset 15
+	uint8_t alignmentFill_at_15[1];
 };
 static_assert(sizeof(trigger_state_s) == 16);
 
