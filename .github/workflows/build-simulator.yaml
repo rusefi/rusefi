@@ -79,14 +79,16 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-default-tune Action"
         echo See https://github.com/rusefi/rusefi/issues/2446
-        git pull https://github.com/rusefi/rusefi master
-        git add 'simulator/generated/*xml'
-        # get the original ramdisk images back in order to not overwrite the default placeholder
-        git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
+        git status
         # not out place to update live data etc
         git checkout -- **/*.java
         git checkout -- **/*.ini
         git checkout -- **/*.h
+        git status
+        git pull https://github.com/rusefi/rusefi master
+        git add 'simulator/generated/*xml'
+        # get the original ramdisk images back in order to not overwrite the default placeholder
+        git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
         git status
         OUT=$(git commit -am "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
