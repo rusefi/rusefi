@@ -69,6 +69,7 @@ void startPedalPins() {
 	startInputPinIfValid("brake pedal switch", engineConfiguration->brakePedalPin, engineConfiguration->brakePedalPinMode);
 	startInputPinIfValid("Launch Button", engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
 	startInputPinIfValid("Antilag Button", engineConfiguration->ALSActivatePin, engineConfiguration->ALSActivatePinMode);
+	startInputPinIfValid("Ignition Switch", engineConfiguration->ignitionKeyDigitalPin, engineConfiguration->ignitionKeyDigitalPinMode);
 #endif /* EFI_PROD_CODE */
 }
 
@@ -79,6 +80,7 @@ void stopPedalPins() {
 	brain_pin_markUnused(activeConfiguration.brakePedalPin);
 	brain_pin_markUnused(activeConfiguration.launchActivatePin);
 	brain_pin_markUnused(activeConfiguration.ALSActivatePin);
+	brain_pin_markUnused(activeConfiguration.ignitionKeyDigitalPin);
 }
 
 #if ! EFI_UNIT_TEST

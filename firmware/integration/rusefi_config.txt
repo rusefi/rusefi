@@ -933,7 +933,8 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     pid_s boostPid;
 	custom boostType_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop", "Open + Closed Loop"
     boostType_e boostType;
-    ! unused 3
+    pin_input_mode_e ignitionKeyDigitalPinMode
+    Gpio ignitionKeyDigitalPin
     int boostPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
 	#define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)"
