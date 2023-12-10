@@ -52,7 +52,7 @@ public class ArrayIniField extends IniField {
         for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
             sb.append("\n        ");
             for (int colIndex = 0; colIndex < cols; colIndex++) {
-                Field f = new Field("", getOffset(rowIndex, colIndex), getType());
+              Field f = new Field(getName() + "_" + colIndex, getOffset(rowIndex, colIndex), getType());
                 sb.append(' ');
                 sb.append(f.getAnyValue(image, multiplier));
             }
