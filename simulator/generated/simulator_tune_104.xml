@@ -516,6 +516,8 @@
         <constant digits="0" name="boostPid_minValue" units="">-20.0</constant>
         <constant digits="0" name="boostPid_maxValue" units="">20.0</constant>
         <constant name="boostType">"Open Loop"</constant>
+        <constant name="ignitionKeyDigitalPinMode">"DEFAULT"</constant>
+        <constant name="ignitionKeyDigitalPin">"NONE"</constant>
         <constant digits="0" name="boostPwmFrequency" units="Hz">33.0</constant>
         <constant name="launchActivationMode">"Launch Button"</constant>
         <constant name="antiLagActivationMode">"Switch Input"</constant>
@@ -5059,7 +5061,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.12.10.f407-discovery.543073412" version="5.0"/>
+    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.12.10.f407-discovery.2928985953" version="5.0"/>
     <bibliography author="rusEFI 20231120" writeDate="date"/>
     <settings/>
     <userComments/>
