@@ -49,7 +49,9 @@ public class Field {
     }
 
     public Field(String name, int offset, int stringSize, FieldType type, int bitOffset, String... options) {
-        this.name = name;
+      this.name = Objects.requireNonNull(name);
+      if (name.trim().isEmpty())
+        throw new IllegalStateException("Empty field name");
         this.offset = offset;
         this.stringSize = stringSize;
         this.type = type;
