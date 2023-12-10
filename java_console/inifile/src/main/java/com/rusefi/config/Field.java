@@ -57,13 +57,6 @@ public class Field {
         this.options = options;
     }
 
-    public static Field findField(Field[] values, String instancePrefix, String fieldName) {
-        Field field = findFieldOrNull(values, instancePrefix, fieldName);
-        if (field == null)
-            throw new IllegalStateException("No field: " + fieldName);
-        return field;
-    }
-
     /**
      * Finds field by name, ignoring case
      */
