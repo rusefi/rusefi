@@ -50,6 +50,14 @@ void setBoardConfigOverrides() {
 	configureHellenCanTerminator();
 	setHellenCan();
 
+  engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
+ 	engineConfiguration->fanPin = Gpio::MM100_IGN8;
+
+	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
+	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
+	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
+	engineConfiguration->map.sensor.hwChannel = MM100_IN_MAP1_ANALOG;
+
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
