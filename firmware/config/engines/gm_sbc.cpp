@@ -87,8 +87,10 @@ void setGmSbc() {
    	// reminder about D104
    	engineConfiguration->injectionPins[3] = Gpio::PROTEUS_LS_15; // #4
 
-    // wow high side relay control
+    // wow high side relay control on MEFI1 ELECTRONIC-FUEL-INJECTION-MEFI-1-2-5.7L-350CID-8.2L-502CID.pdf page 46
     engineConfiguration->fuelPumpPin = Gpio::PROTEUS_HS_1;
+    // low side on MEFI3 ELECTRONIC-FUEL-INJECTION-MEFI-3-5.7L-350CID-8.2L-502CID.pdf page 487
+
     setGmCltSensor(&engineConfiguration->clt, PROTEUS_DEFAULT_AT_PULLUP);
 #endif // HW_PROTEUS
 	engineConfiguration->mainRelayPin = Gpio::Unassigned; // vehicle controls main relay
