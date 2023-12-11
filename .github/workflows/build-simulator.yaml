@@ -79,11 +79,18 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-default-tune Action"
         echo See https://github.com/rusefi/rusefi/issues/2446
+        echo "Status 1/3"
         git status
         # not out place to update live data etc
         git checkout -- **/*.java
         git checkout -- **/*.ini
         git checkout -- **/*.h
+        echo "Status 2/3"
+        git status
+        git restore **/*.java
+        git restore **/*.ini
+        git restore **/*.h
+        echo "Status 3/3"
         git status
         git pull https://github.com/rusefi/rusefi master
         git add 'simulator/generated/*xml'
