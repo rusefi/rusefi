@@ -1595,7 +1595,9 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 
 uint8_t[CAM_INPUTS_COUNT iterate] simulatorCamPosition;
 
-uint16_t unusedExplicitFilling2
+adc_channel_e ignKeyAdcChannel
+
+uint8_t unusedExplicitFilling2
 
 	float[VVT_TRACKING_LENGTH iterate] triggerVVTGapOverrideFrom;;"ratio", 1, 0, 0, 20, 3
 	float[VVT_TRACKING_LENGTH iterate] triggerVVTGapOverrideTo;;"ratio", 1, 0, 0, 20, 3
