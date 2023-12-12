@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 22:53:15 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 22:58:55 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1086,7 +1086,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1689415263;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1315,7 +1314,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.12.12.f407-discovery.1689415263";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.12.12.f407-discovery.4036483294";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2389,7 +2388,7 @@ public class Fields {
 	public static final String[] gppwm_channel_e = {"Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2", "RPM", "Gear (detected)"};
 	public static final Field GPPWM1_LOADAXIS = Field.create("GPPWM1_LOADAXIS", 2704, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_RPMAXIS = Field.create("GPPWM1_RPMAXIS", 2705, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field GPPWM1_LOADBINS = Field.create("GPPWM1_LOADBINS", 2706, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field GPPWM1_LOADBINS = Field.create("GPPWM1_LOADBINS", 2706, FieldType.INT16).setScale(0.5).setBaseOffset(0);
 	public static final Field GPPWM1_RPMBINS = Field.create("GPPWM1_RPMBINS", 2722, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_TABLE = Field.create("GPPWM1_TABLE", 2738, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field GPPWM1_ALIGNMENTFILL_AT_106 = Field.create("GPPWM1_ALIGNMENTFILL_AT_106", 2802, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2401,7 +2400,7 @@ public class Fields {
 	public static final Field GPPWM2_OFFBELOWDUTY = Field.create("GPPWM2_OFFBELOWDUTY", 2811, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM2_LOADAXIS = Field.create("GPPWM2_LOADAXIS", 2812, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM2_RPMAXIS = Field.create("GPPWM2_RPMAXIS", 2813, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field GPPWM2_LOADBINS = Field.create("GPPWM2_LOADBINS", 2814, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field GPPWM2_LOADBINS = Field.create("GPPWM2_LOADBINS", 2814, FieldType.INT16).setScale(0.5).setBaseOffset(0);
 	public static final Field GPPWM2_RPMBINS = Field.create("GPPWM2_RPMBINS", 2830, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM2_TABLE = Field.create("GPPWM2_TABLE", 2846, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field GPPWM2_ALIGNMENTFILL_AT_106 = Field.create("GPPWM2_ALIGNMENTFILL_AT_106", 2910, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2413,7 +2412,7 @@ public class Fields {
 	public static final Field GPPWM3_OFFBELOWDUTY = Field.create("GPPWM3_OFFBELOWDUTY", 2919, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM3_LOADAXIS = Field.create("GPPWM3_LOADAXIS", 2920, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM3_RPMAXIS = Field.create("GPPWM3_RPMAXIS", 2921, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field GPPWM3_LOADBINS = Field.create("GPPWM3_LOADBINS", 2922, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field GPPWM3_LOADBINS = Field.create("GPPWM3_LOADBINS", 2922, FieldType.INT16).setScale(0.5).setBaseOffset(0);
 	public static final Field GPPWM3_RPMBINS = Field.create("GPPWM3_RPMBINS", 2938, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM3_TABLE = Field.create("GPPWM3_TABLE", 2954, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field GPPWM3_ALIGNMENTFILL_AT_106 = Field.create("GPPWM3_ALIGNMENTFILL_AT_106", 3018, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2425,7 +2424,7 @@ public class Fields {
 	public static final Field GPPWM4_OFFBELOWDUTY = Field.create("GPPWM4_OFFBELOWDUTY", 3027, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM4_LOADAXIS = Field.create("GPPWM4_LOADAXIS", 3028, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM4_RPMAXIS = Field.create("GPPWM4_RPMAXIS", 3029, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field GPPWM4_LOADBINS = Field.create("GPPWM4_LOADBINS", 3030, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field GPPWM4_LOADBINS = Field.create("GPPWM4_LOADBINS", 3030, FieldType.INT16).setScale(0.5).setBaseOffset(0);
 	public static final Field GPPWM4_RPMBINS = Field.create("GPPWM4_RPMBINS", 3046, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM4_TABLE = Field.create("GPPWM4_TABLE", 3062, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field GPPWM4_ALIGNMENTFILL_AT_106 = Field.create("GPPWM4_ALIGNMENTFILL_AT_106", 3126, FieldType.INT8).setScale(1.0).setBaseOffset(0);

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 22:51:30 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 22:57:10 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -198,7 +198,7 @@ struct gppwm_channel {
 	load
 	 * offset 10
 	 */
-	scaled_channel<int16_t, 10, 1> loadBins[GPPWM_LOAD_COUNT];
+	scaled_channel<int16_t, 2, 1> loadBins[GPPWM_LOAD_COUNT];
 	/**
 	RPM
 	 * offset 26
@@ -5385,4 +5385,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22088);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 22:51:30 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 22:57:10 UTC 2023
