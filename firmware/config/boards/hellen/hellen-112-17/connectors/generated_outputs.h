@@ -4,46 +4,46 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::MM100_INJ5, // 101 low side 1.5A output
-	Gpio::MM100_INJ7, // 102 low side 1.5A output
-	Gpio::MM100_IGN8, // 115 Main Relay
-	Gpio::MM100_OUT_PWM2, // 129 Fuel Consumption Output
-	Gpio::MM100_OUT_PWM3, // 131 Relay Output
-	Gpio::MM100_IGN7, // 140 Relay Output
-	Gpio::MM100_OUT_PWM4, // 141 Engine Radiator Fan
-	Gpio::MM100_OUT_PWM5, // 142 Fuel Pump Relay
-	Gpio::MM100_IGN5, // 151 relay output
-	Gpio::MM100_IGN6, // 152 relay output
-	Gpio::MM100_INJ6, // 235 Low Side Output
-	Gpio::MM100_INJ2, // 242 injector output 2
-	Gpio::MM100_INJ3, // 243 injector output 3
-	Gpio::MM100_INJ1, // 244 injector output 1
-	Gpio::MM100_INJ4, // 245 injector output 4
-	Gpio::MM100_INJ8, // 246 low side 1.5A output
-	Gpio::MM100_OUT_PWM1, // 128 Tach Output
-	Gpio::MM100_IGN2, // 253 Coil 2
-	Gpio::MM100_IGN3, // 254 Coil 3
-	Gpio::MM100_IGN4, // 255 Coil 4
-	Gpio::MM100_IGN1, // 256 Coil 1
-// "101 low side 1.5A output",
-// "102 low side 1.5A output",
-// "115 Main Relay",
-// "129 Fuel Consumption Output",
-// "131 Relay Output",
-// "140 Relay Output",
-// "141 Engine Radiator Fan",
-// "142 Fuel Pump Relay",
-// "151 relay output",
-// "152 relay output",
-// "235 Low Side Output",
-// "242 injector output 2",
-// "243 injector output 3",
-// "244 injector output 1",
-// "245 injector output 4",
-// "246 low side 1.5A output",
-// "128 Tach Output",
-// "253 Coil 2",
-// "254 Coil 3",
-// "255 Coil 4",
-// "256 Coil 1",
+	Gpio::MM100_INJ5, // A01 low side 1.5A output
+	Gpio::MM100_INJ7, // A02 low side 1.5A output
+	Gpio::MM100_IGN8, // A15 Main Relay
+	Gpio::MM100_OUT_PWM2, // A29 Fuel Consumption Output
+	Gpio::MM100_OUT_PWM3, // A31 Relay Output
+	Gpio::MM100_IGN7, // A40 Relay Output
+	Gpio::MM100_OUT_PWM4, // A41 Engine Radiator Fan
+	Gpio::MM100_OUT_PWM5, // A42 Fuel Pump Relay
+	Gpio::MM100_IGN5, // A51 relay output
+	Gpio::MM100_IGN6, // A52 relay output
+	Gpio::MM100_INJ6, // B35 Low Side Output
+	Gpio::MM100_INJ2, // B42 injector output 2
+	Gpio::MM100_INJ3, // B43 injector output 3
+	Gpio::MM100_INJ1, // B44 injector output 1
+	Gpio::MM100_INJ4, // B45 injector output 4
+	Gpio::MM100_INJ8, // B46 low side 1.5A output
+	Gpio::MM100_OUT_PWM1, // A28 Tach Output
+	Gpio::MM100_IGN2, // B53 Coil 2
+	Gpio::MM100_IGN3, // B54 Coil 3
+	Gpio::MM100_IGN4, // B55 Coil 4
+	Gpio::MM100_IGN1, // B56 Coil 1
+// "A01 low side 1.5A output",
+// "A02 low side 1.5A output",
+// "A15 Main Relay",
+// "A29 Fuel Consumption Output",
+// "A31 Relay Output",
+// "A40 Relay Output",
+// "A41 Engine Radiator Fan",
+// "A42 Fuel Pump Relay",
+// "A51 relay output",
+// "A52 relay output",
+// "B35 Low Side Output",
+// "B42 injector output 2",
+// "B43 injector output 3",
+// "B44 injector output 1",
+// "B45 injector output 4",
+// "B46 low side 1.5A output",
+// "A28 Tach Output",
+// "B53 Coil 2",
+// "B54 Coil 3",
+// "B55 Coil 4",
+// "B56 Coil 1",
 }
