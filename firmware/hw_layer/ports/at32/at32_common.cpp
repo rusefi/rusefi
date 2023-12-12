@@ -183,4 +183,12 @@ EXTERNC int getRemainingStack(thread_t *otp) {
 __attribute__((weak)) void boardPrepareForStandby() {
 }
 
+Reset_Cause_t getMCUResetCause() {
+	return Reset_Cause_Unknown;
+}
+
+const char *getMCUResetCause(Reset_Cause_t) {
+	return "Unknown";
+}
+
 #endif /* EFI_PROD_CODE */

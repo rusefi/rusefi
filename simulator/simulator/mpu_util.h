@@ -10,4 +10,12 @@ static void canHwInfo(CANDriver*) { return; }
 static bool allowFlashWhileRunning() { return true; }
 static void causeHardFault() { }
 
+static Reset_Cause_t getMCUResetCause() {
+	return Reset_Cause_Unknown;
+}
+
+static const char *getMCUResetCause(Reset_Cause_t) {
+	return "Unknown";
+}
+
 #include "sim_watchdog.h"
