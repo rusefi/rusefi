@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 06:59:48 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 18:28:54 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1312,7 +1312,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.12.12.f407-discovery.3698992265";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.12.12.f407-discovery.2875798603";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2689,7 +2689,8 @@ public class Fields {
 	public static final Field SIMULATORCAMPOSITION2 = Field.create("SIMULATORCAMPOSITION2", 4311, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SIMULATORCAMPOSITION3 = Field.create("SIMULATORCAMPOSITION3", 4312, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SIMULATORCAMPOSITION4 = Field.create("SIMULATORCAMPOSITION4", 4313, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDEXPLICITFILLING2 = Field.create("UNUSEDEXPLICITFILLING2", 4314, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field IGNKEYADCCHANNEL = Field.create("IGNKEYADCCHANNEL", 4314, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDEXPLICITFILLING2 = Field.create("UNUSEDEXPLICITFILLING2", 4315, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGERVVTGAPOVERRIDEFROM1 = Field.create("TRIGGERVVTGAPOVERRIDEFROM1", 4316, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TRIGGERVVTGAPOVERRIDEFROM2 = Field.create("TRIGGERVVTGAPOVERRIDEFROM2", 4320, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TRIGGERVVTGAPOVERRIDEFROM3 = Field.create("TRIGGERVVTGAPOVERRIDEFROM3", 4324, FieldType.FLOAT).setBaseOffset(0);
@@ -4262,6 +4263,7 @@ public class Fields {
 	SIMULATORCAMPOSITION2,
 	SIMULATORCAMPOSITION3,
 	SIMULATORCAMPOSITION4,
+	IGNKEYADCCHANNEL,
 	UNUSEDEXPLICITFILLING2,
 	TRIGGERVVTGAPOVERRIDEFROM1,
 	TRIGGERVVTGAPOVERRIDEFROM2,

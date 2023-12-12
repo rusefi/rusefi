@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 10 21:46:02 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 18:28:54 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4454,7 +4454,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 4314
 	 */
-	uint16_t unusedExplicitFilling2;
+	adc_channel_e ignKeyAdcChannel;
+	/**
+	 * offset 4315
+	 */
+	uint8_t unusedExplicitFilling2;
 	/**
 	ratio
 	 * offset 4316
@@ -5381,4 +5385,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22088);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 10 21:46:02 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 18:28:54 UTC 2023
