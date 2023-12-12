@@ -309,4 +309,12 @@ adcsample_t getFastAdc(FastAdcToken token) {
 	return 0;
 }
 
+Reset_Cause_t getMCUResetCause() {
+	return Reset_Cause_Unknown;
+}
+
+const char *getMCUResetCause(Reset_Cause_t) {
+	return "Unknown";
+}
+
 #endif /* EFI_PROD_CODE */
