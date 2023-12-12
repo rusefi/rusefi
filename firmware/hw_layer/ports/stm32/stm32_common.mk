@@ -10,6 +10,7 @@ HW_LAYER_PORT_CPP += \
 	$(HW_STM32_PORT_DIR)/stm32_serial.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_spi.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_icu.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_reset_cause.cpp \
 	$(HW_STM32_PORT_DIR)/backup_ram.cpp \
 	$(HW_STM32_PORT_DIR)/microsecond_timer_stm32.cpp \
 	$(HW_STM32_PORT_DIR)/osc_detector.cpp \

@@ -610,3 +610,14 @@ int getSpiPrescaler(spi_speed_e speed, spi_device_e device) {
 }
 
 #endif /* HAL_USE_SPI */
+
+void checkLastResetCause() {
+	Reset_Cause_t cause = getMCUResetCause();
+	const char *causeStr = getMCUResetCause(cause);
+	efiPrintf("Last Reset Cause: %s", causeStr);
+
+	// if reset by watchdog, signal a fatal error
+	if (cause == Reset_Cause_IWatchdog || cause == Reset_Cause_WWatchdog) {
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset");
+	}
+}
