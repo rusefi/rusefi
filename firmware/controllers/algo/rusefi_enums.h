@@ -330,8 +330,7 @@ typedef enum __attribute__ ((__packed__)) {
 typedef enum __attribute__ ((__packed__)) {
 	BMW_e46 = 0,
 	W202 = 1,
-	LUA = 2,
-	BMW_e90 = 3,
+	BMW_e90 = 2,
 } can_vss_nbc_e;
 
 /**
@@ -414,8 +413,8 @@ typedef enum __attribute__ ((__packed__)) {
 	 * For an old Freescale MPX4250D use "MT_MPX4250".
 	 * See https://www.nxp.com/docs/en/data-sheet/MPX4250A.pdf
 	 */
-	MT_MPX4250A = 9, 
-	
+	MT_MPX4250A = 9,
+
 
 	/**
 	 * Bosch 2.5 Bar TMap Map Sensor with IAT
