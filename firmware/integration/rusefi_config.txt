@@ -893,7 +893,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit useHbridgesToDriveIdleStepper;If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
 	bit enableLaunchRetard
-	bit unfinishedenableLaunchBoost
+	bit canInputBCM
 	bit consumeObdSensors;This property is useful if using rusEFI as TCM or BCM only
 	bit enableCanVss;Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	bit enableInnovateLC2
