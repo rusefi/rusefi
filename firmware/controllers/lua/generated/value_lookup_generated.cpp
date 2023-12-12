@@ -562,9 +562,9 @@ float getConfigValueByName(const char *name) {
 // enableLaunchRetard
 		case -1583589783:
 			return engineConfiguration->enableLaunchRetard;
-// unfinishedenableLaunchBoost
-		case -246028069:
-			return engineConfiguration->unfinishedenableLaunchBoost;
+// canInputBCM
+		case 470555289:
+			return engineConfiguration->canInputBCM;
 // consumeObdSensors
 		case 950993889:
 			return engineConfiguration->consumeObdSensors;
@@ -2674,9 +2674,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enableLaunchRetard = (int)value;
 		return 1;
 	}
-		case -246028069:
+		case 470555289:
 	{
-		engineConfiguration->unfinishedenableLaunchBoost = (int)value;
+		engineConfiguration->canInputBCM = (int)value;
 		return 1;
 	}
 		case 950993889:

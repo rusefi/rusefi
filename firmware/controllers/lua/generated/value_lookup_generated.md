@@ -556,7 +556,7 @@ If enabled we use two H-bridges to drive stepper idle air valve
 ### enableLaunchRetard
 
 
-### unfinishedenableLaunchBoost
+### canInputBCM
 
 
 ### consumeObdSensors

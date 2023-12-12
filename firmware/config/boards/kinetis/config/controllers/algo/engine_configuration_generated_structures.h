@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 18:27:06 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 22:51:28 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2017,7 +2017,7 @@ struct engine_configuration_s {
 	bool enableLaunchRetard : 1 {};
 	/**
 	offset 916 bit 5 */
-	bool unfinishedenableLaunchBoost : 1 {};
+	bool canInputBCM : 1 {};
 	/**
 	 * This property is useful if using rusEFI as TCM or BCM only
 	offset 916 bit 6 */
@@ -5385,4 +5385,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 20712);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 18:27:06 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 22:51:28 UTC 2023

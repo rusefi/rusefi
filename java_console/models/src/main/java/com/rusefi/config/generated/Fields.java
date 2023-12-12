@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 20:56:02 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 12 22:53:15 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -150,8 +150,10 @@ public class Fields {
 	public static final int can_nbc_e_CAN_BUS_W202_C180 = 5;
 	public static final String CAN_RX_PREFIX = "CAN_rx";
 	public static final int can_vss_nbc_e_BMW_e46 = 0;
-	public static final int can_vss_nbc_e_BMW_e90 = 3;
-	public static final int can_vss_nbc_e_LUA = 2;
+	public static final int can_vss_nbc_e_BMW_e90 = 2;
+	public static final int can_vss_nbc_e_HONDA_CIVIC9 = 5;
+	public static final int can_vss_nbc_e_HYUNDAI_PB = 4;
+	public static final int can_vss_nbc_e_NISSAN_350 = 3;
 	public static final int can_vss_nbc_e_W202 = 1;
 	public static final int CanGpioType_DRT = 1;
 	public static final int CanGpioType_MS = 2;
@@ -1084,6 +1086,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1689415263;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1312,7 +1315,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.12.12.f407-discovery.3001121854";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.12.12.f407-discovery.1689415263";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1788,7 +1791,7 @@ public class Fields {
 	public static final Field USEHBRIDGESTODRIVEIDLESTEPPER = Field.create("USEHBRIDGESTODRIVEIDLESTEPPER", 916, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field MULTISPARKENABLE = Field.create("MULTISPARKENABLE", 916, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field ENABLELAUNCHRETARD = Field.create("ENABLELAUNCHRETARD", 916, FieldType.BIT, 4).setBaseOffset(0);
-	public static final Field UNFINISHEDENABLELAUNCHBOOST = Field.create("UNFINISHEDENABLELAUNCHBOOST", 916, FieldType.BIT, 5).setBaseOffset(0);
+	public static final Field CANINPUTBCM = Field.create("CANINPUTBCM", 916, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field CONSUMEOBDSENSORS = Field.create("CONSUMEOBDSENSORS", 916, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field ENABLECANVSS = Field.create("ENABLECANVSS", 916, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 916, FieldType.BIT, 8).setBaseOffset(0);
@@ -3378,7 +3381,7 @@ public class Fields {
 	USEHBRIDGESTODRIVEIDLESTEPPER,
 	MULTISPARKENABLE,
 	ENABLELAUNCHRETARD,
-	UNFINISHEDENABLELAUNCHBOOST,
+	CANINPUTBCM,
 	CONSUMEOBDSENSORS,
 	ENABLECANVSS,
 	ENABLEINNOVATELC2,
