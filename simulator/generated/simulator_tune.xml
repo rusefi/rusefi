@@ -469,7 +469,7 @@
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
         <constant name="multisparkEnable">"false"</constant>
         <constant name="enableLaunchRetard">"false"</constant>
-        <constant name="unfinishedenableLaunchBoost">"false"</constant>
+        <constant name="canInputBCM">"false"</constant>
         <constant name="consumeObdSensors">"false"</constant>
         <constant name="enableCanVss">"false"</constant>
         <constant name="enableInnovateLC2">"false"</constant>
@@ -4519,7 +4519,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.12.12.f407-discovery.3001121854" version="5.0"/>
+    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.12.12.f407-discovery.4036483294" version="5.0"/>
     <bibliography author="rusEFI 20231120" writeDate="date"/>
     <settings/>
     <userComments/>
