@@ -4,6 +4,11 @@
 
 void MainRelayController::onSlowCallback() {
 #if EFI_MAIN_RELAY_CONTROL
+#if defined(IGN_KEY_DIVIDER)
+    if (isAdcChannelValid(engineConfiguration->ignKeyAdcChannel)) {
+      hasIgnitionVoltage = Sensor::getOrZero(SensorType::IgnKeyVoltage) > 5;
+    } else
+#endif // IGN_KEY_DIVIDER
     if (engineConfiguration->ignitionKeyDigitalPin != Gpio::Unassigned) {
         // separate digital input pin just for main relay logic since it's preferred to read voltage from main relay
         // key-on is usually a bit smaller voltage than main relay but sometimes even 1v off!

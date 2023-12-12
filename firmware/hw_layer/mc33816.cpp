@@ -1,6 +1,8 @@
 /*
  * @file mc33816.cpp
  *
+ * TL,DR: GDI
+ *
  * The NXP MC33816 is a programmable gate driver IC for precision solenoid control applications.
  *
  *
