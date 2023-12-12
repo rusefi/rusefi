@@ -220,6 +220,8 @@ void runRusEfi() {
 	 */
 	initializeConsole();
 
+	checkLastResetCause();
+
 	// Read configuration from flash memory
 	loadConfiguration();
 
