@@ -1056,7 +1056,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 710568399
+#define SIGNATURE_HASH 610015160
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1335,6 +1335,8 @@
 #define ts_show_full_pinout true
 #define ts_show_hardware_simulator true
 #define ts_show_hip9011 true
+#define ts_show_ign_key_analog_input false
+#define ts_show_ign_key_switch false
 #define ts_show_ignitionPinMode true
 #define ts_show_inj_diag false
 #define ts_show_injectionPinMode false
@@ -1353,7 +1355,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.12.12.subaru_eg33_f7.710568399"
+#define TS_SIGNATURE "rusEFI master.2023.12.12.subaru_eg33_f7.610015160"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
