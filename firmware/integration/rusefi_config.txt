@@ -1403,7 +1403,7 @@ tChargeMode_e tChargeMode;
 	pid_s idleRpmPid2
 
 
-	custom can_vss_nbc_e 2 bits, U08, @OFFSET@, [0:1], "BMW_e46", "W202", "BMW E8x/E9x MK60e5"
+	custom can_vss_nbc_e 2 bits, U08, @OFFSET@, [0:1], "BMW_e46", "W202", "BMW E8x/E9x MK60e5", "Nissan 350", "Hyundai PB", "Honda Civic9"
 	can_vss_nbc_e canVssNbcType
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;

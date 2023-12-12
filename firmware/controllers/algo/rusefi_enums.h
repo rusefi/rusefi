@@ -331,6 +331,9 @@ typedef enum __attribute__ ((__packed__)) {
 	BMW_e46 = 0,
 	W202 = 1,
 	BMW_e90 = 2,
+	NISSAN_350 = 3,
+	HYUNDAI_PB = 4,
+  HONDA_CIVIC9 = 5,
 } can_vss_nbc_e;
 
 /**

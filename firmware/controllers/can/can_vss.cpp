@@ -23,6 +23,9 @@ expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
 			return 0x01F0; /* BMW e46 ABS Message */
 		case BMW_e90:
 			return 0x1A0;	// BMW E90 ABS speed frame (not wheel speeds, vehicle speed)
+		case NISSAN_350:
+		case HYUNDAI_PB:
+		case HONDA_CIVIC9:
 		case W202:
 			return 0x0200; /* W202 C180 ABS signal */
 		default:
