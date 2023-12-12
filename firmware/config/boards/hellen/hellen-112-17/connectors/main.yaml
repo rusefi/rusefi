@@ -6,56 +6,56 @@ meta: config/boards/hellen_mm100_meta.h
 #
 
 pins:
-  - pin: 101
+  - pin: A01
     meta: MM100_INJ5
 # RZR wastegate
     ts_name: ___ low side 1.5A output
     class: outputs
     type: ls
-  - pin: 102
+  - pin: A02
     meta: MM100_INJ7
 # RZR fuel pump driver PWM
     ts_name: ___ low side 1.5A output
     class: outputs
     type: ls
 
-  - pin: 103
+  - pin: A03
     function: Analog GND
     type: GND
-  - pin: 104
+  - pin: A04
     function: Analog GND
     type: GND
-  - pin: 105
+  - pin: A05
     function: Analog GND
     type: GND
-  - pin: 106
+  - pin: A06
     function: Analog GND
     type: GND
 
-  - pin: 107
+  - pin: A07
     meta: MM100_IN_CAM_ANALOG
     class: analog_inputs
 # RZR start command
 # VAZ mentions A/C pressure maybe switch? maybe AV?
 # jumper
     ts_name: ___ TODO
-  - pin: 108
+  - pin: A08
 # jumper
     function: Sometimes GND
     type: GND
 
-  - pin: 109
+  - pin: A09
     meta: MM100_IN_MAP2_ANALOG
 # RZR Boost MAP
     class: analog_inputs
     ts_name: ___ Analog Input
-  - pin: 110
+  - pin: A10
     meta: MM100_IN_AUX1_ANALOG
 # RZR Ambient Pressure
     class: analog_inputs
     ts_name: ___ Analog Input
 
-  - pin: 111
+  - pin: A11
     meta: MM100_IN_AUX2_ANALOG
 # jumper
 # RZR & Polaris PPS2
@@ -63,238 +63,238 @@ pins:
     function: PPS2
     ts_name: ___ Analog Input
 
-  - pin: 112
+  - pin: A12
     meta: MM100_IN_AUX3_ANALOG
 # RZR Fuel Level
     class: analog_inputs
     ts_name: ___ Analog Input
 
-  - pin: 113
+  - pin: A13
     meta: MM100_IN_D3
     ts_name: ___ Brake Input
 
-  - pin: 114
+  - pin: A14
     meta: MM100_IN_O2S2_ANALOG
 # jumper
 # I cannot find where have I seen 114 as PPS2?
     ts_name: ___ Analog Input
     class: analog_inputs
 
-  - pin: 115
+  - pin: A15
     meta: MM100_IGN8
     class: outputs
     type: ls
     ts_name: ___ Main Relay
     function: Main Relay Control
 
-  - pin: 116
+  - pin: A16
     meta: MM100_IN_VBATT
     function: +12v Ignition Switch KL15 / Battery Voltage Analog Input
     ts_name: ___ Voltage From Key
     color: white
 
-  - pin: 119
+  - pin: A19
     meta: MM100_IN_AUX4_ANALOG
     class: analog_inputs
     ts_name: ___ Analog Input
 
-  - pin: 120
+  - pin: A20
     meta: MM100_IN_D4
     class: switch_inputs
     ts_name: ___ Switch Input
 
-  - pin: 121
+  - pin: A21
     meta: MM100_IN_PPS_ANALOG
 # jumper
 # RZR Polaris VAZ PPS1
     ts_name: ___ PPS1
     class: analog_inputs
 
-  - pin: 123
+  - pin: A23
     meta: MM100_SPI3_MOSI
     class: switch_inputs
     ts_name: ___ Switch Input
 
-  - pin: 125
+  - pin: A25
 # jumper
     function: ___ Analog +5V Supply
 
-  - pin: 126
+  - pin: A26
     # jumper
     function: ___ Analog +5V Supply
     color: black
 
-  - pin: 127
+  - pin: A27
     function: K-Line
 
-  - pin: 128
+  - pin: A28
     meta: MM100_OUT_PWM1
     class: outputs
     ts_name: ___ Tach Output
 
-  - pin: 129
+  - pin: A29
     meta: MM100_OUT_PWM2
     class: outputs
     type: ls
     ts_name: ___ Fuel Consumption Output
 
-  - pin: 131
+  - pin: A31
     meta: MM100_OUT_PWM3
 # Polaris Radiator Relay
     ts_name: ___ Relay Output
     class: outputs
     type: ls
 
-  - pin: 132
+  - pin: A32
     function: CAN bus high
     type: can
 
-  - pin: 134
+  - pin: A34
     meta: MM100_SPI2_SCK
     class: switch_inputs
     ts_name: ___ Switch Input
-  - pin: 135
+  - pin: A35
     meta: MM100_SPI2_CS
     class: switch_inputs
 # VAZ brake pedal
     ts_name: ___ Switch Input
-  - pin: 136
+  - pin: A36
     meta: MM100_SPI3_SCK
 # VAZ clutch pedal
     class: switch_inputs
     ts_name: ___ Switch Input
-  - pin: 137
+  - pin: A37
     # jumper
     function: ___ Analog +5V Supply
 
-  - pin: 138
+  - pin: A38
     # jumper
     function: ___ Analog +5V Supply
     color: black
 
-  - pin: 140
+  - pin: A40
     meta: MM100_IGN7
     class: outputs
     type: ls
     ts_name: ___ Relay Output
     color: orange
-  - pin: 141
+  - pin: A41
     meta: MM100_OUT_PWM4
     class: outputs
     type: ls
     ts_name: ___ Engine Radiator Fan
     color: orange
-  - pin: 142
+  - pin: A42
     meta: MM100_OUT_PWM5
     class: outputs
     type: ls
     ts_name: ___ Fuel Pump Relay
-  - pin: 144
+  - pin: A44
     function: CAN bus low
     type: can
-  - pin: 147
+  - pin: A47
     class: switch_inputs
     meta: MM100_SPI3_MISO
     ts_name: ___ Switch Input
-  - pin: 151
+  - pin: A51
     meta: MM100_IGN5
     class: outputs
     type: ls
     ts_name: ___ relay output
-  - pin: 152
+  - pin: A52
     meta: MM100_IGN6
     class: outputs
     type: ls
     ts_name: ___ relay output
-  - pin: 153
+  - pin: A53
     function: Power GND
     type: GND
-  - pin: 154
+  - pin: A54
     function: Power GND
     type: GND
-  - pin: 155
+  - pin: A55
     function: +12V From Main Relay
-  - pin: 156
+  - pin: A56
     function: +12V From Main Relay
 
-  - pin: 201
+  - pin: B01
     # jumper
     function: Crank Sensor VR- Negative Input
     ts_name: ___ Crank VR-
-  - pin: 202
+  - pin: B02
     # via
     function: ___ Oxygen Sensor
 
-  - pin: 203
+  - pin: B03
     meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
     ts_name: ___ TPS Throttle Position 1
 
-  - pin: 204
+  - pin: B04
     function: Analog GND
     type: GND
 
-  - pin: 205
+  - pin: B05
     function: Analog GND
     type: GND
 
-  - pin: 206
+  - pin: B06
     function: Analog GND
     type: GND
-  - pin: 207
+  - pin: B07
     function: Analog GND
     type: GND
 # Polaris CLT GND
-  - pin: 208
+  - pin: B08
     function: Analog GND
     type: GND
 
-  - pin: 210
+  - pin: B10
     function: Pedal +5V Supply
-  - pin: 213
+  - pin: B13
     # jumper
     meta: MM100_IN_CRANK
     class: event_inputs
     function: Crank Sensor VR+ Positive Input
     ts_name: ___ Crank VR+
-  - pin: 215
+  - pin: B15
     meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
     ts_name: ___ CLT
     function: CLT sensor
-  - pin: 219
+  - pin: B19
     meta: MM100_IN_MAP1_ANALOG
     class: analog_inputs
     ts_name: ___ MAP
     function: Manifold Pressure Sensor
 
-  - pin: 220
+  - pin: B20
     meta: MM100_IN_O2S_ANALOG
     class: analog_inputs
     ts_name: ___ TPS Throttle Position 2
 
-  - pin: 223
+  - pin: B23
 # jumper
     function: ___ Analog Supply
     color: red
 
-  - pin: 227
+  - pin: B27
     class: analog_inputs
     meta: MM100_IN_IAT_ANALOG
     ts_name: ___ IAT
     function: ___ Intake Air Temperature
-  - pin: 231
+  - pin: B31
     meta: MM100_IN_D1
     class: event_inputs
     ts_name: ___ Cam
     function: Cam Sensor
-  - pin: 232
+  - pin: B32
     meta: MM100_IN_D2
     class: event_inputs
     ts_name: ___ VSS
     function: VSS in
 
-  - pin: 233
+  - pin: B33
     meta: MM100_IN_VSS
 # jumper
 # 1KHz-12KHz
@@ -302,74 +302,74 @@ pins:
     class: event_inputs
     ts_name: ___ MAF frequency
 
-  - pin: 235
+  - pin: B35
     meta: MM100_INJ6
     ts_name: ___ Low Side Output
     class: outputs
     type: ls
-  - pin: 237
+  - pin: B37
     # jumper
     function: Knock Signal
-  - pin: 238
+  - pin: B38
     # jumper
     function: Analog GND for Knock
     type: GND
 
-  - pin: 242
+  - pin: B42
     meta: MM100_INJ2
     class: outputs
     type: ls
     ts_name: ___ injector output 2
-  - pin: 243
+  - pin: B43
     meta: MM100_INJ3
     class: outputs
     type: ls
     ts_name: ___ injector output 3
-  - pin: 244
+  - pin: B44
     meta: MM100_INJ1
     class: outputs
     type: ls
     ts_name: ___ injector output 1
-  - pin: 245
+  - pin: B45
     meta: MM100_INJ4
     class: outputs
     type: ls
     ts_name: ___ injector output 4
-  - pin: 246
+  - pin: B46
     class: outputs
     meta: MM100_INJ8
     ts_name: ___ low side 1.5A output
     type: ls
-  - pin: 247
+  - pin: B47
     function: Analog GND
     type: GND
 
-  - pin: 250
+  - pin: B50
     function: Power GND
     type: GND
-  - pin: 251
+  - pin: B51
     # jumper
     function: ETB positive DC Motor
     type: etb
     color: purple
-  - pin: 252
+  - pin: B52
     # jumper
     function: ETB negative DC Motor
     type: etb
     color: purple
-  - pin: 253
+  - pin: B53
     meta: MM100_IGN2
     class: outputs
     ts_name: ___ Coil 2
-  - pin: 254
+  - pin: B54
     meta: MM100_IGN3
     class: outputs
     ts_name: ___ Coil 3
-  - pin: 255
+  - pin: B55
     meta: MM100_IGN4
     class: outputs
     ts_name: ___ Coil 4
-  - pin: 256
+  - pin: B56
     meta: MM100_IGN1
     class: outputs
     ts_name: ___ Coil 1
@@ -384,287 +384,287 @@ info:
   image:
     file: main.jpg
   pins:
-    - pin: 101
+    - pin: A01
       x: 117
       y: 345
-    - pin: 102
+    - pin: A02
       x: 153
       y: 345
-    - pin: 103
+    - pin: A03
       x: 195
       y: 345
-    - pin: 104
+    - pin: A04
       x: 225
       y: 345
-    - pin: 105
+    - pin: A05
       x: 260
       y: 345
-    - pin: 106
+    - pin: A06
       x: 295
       y: 345
-    - pin: 107
+    - pin: A07
       x: 324
       y: 345
-    - pin: 108
+    - pin: A08
       x: 360
       y: 345
-    - pin: 109
+    - pin: A09
       x: 394
       y: 345
-    - pin: 110
+    - pin: A10
       x: 428
       y: 345
-    - pin: 111
+    - pin: A11
       x: 465
       y: 345
-    - pin: 112
+    - pin: A12
       x: 500
       y: 345
-    - pin: 113
+    - pin: A13
       x: 130
       y: 280
-    - pin: 114
+    - pin: A14
       x: 160
       y: 280
-    - pin: 115
+    - pin: A15
       x: 195
       y: 280
-    - pin: 116
+    - pin: A16
       x: 230
       y: 280
-    - pin: 117
+    - pin: A17
       x: 261
       y: 280
-    - pin: 118
+    - pin: A18
       x: 295
       y: 280
 
-    - pin: 119
+    - pin: A19
       x: 323
       y: 280
-    - pin: 120
+    - pin: A20
       x: 365
       y: 280
-    - pin: 121
+    - pin: A21
       x: 400
       y: 280
-    - pin: 122
+    - pin: A22
       x: 429
       y: 280
-    - pin: 123
+    - pin: A23
       x: 465
       y: 280
 
-    - pin: 125
+    - pin: A25
       x: 116
       y: 251
-    - pin: 126
+    - pin: A26
       x: 152
       y: 251
-    - pin: 127
+    - pin: A27
       x: 192
       y: 251
-    - pin: 128
+    - pin: A28
       x: 226
       y: 251
-    - pin: 129
+    - pin: A29
       x: 261
       y: 251
-    - pin: 130
+    - pin: A30
       x: 290
       y: 251
-    - pin: 131
+    - pin: A31
       x: 325
       y: 251
-    - pin: 132
+    - pin: A32
       x: 365
       y: 251
-    - pin: 133
+    - pin: A33
       x: 393
       y: 251
-    - pin: 134
+    - pin: A34
       x: 429
       y: 251
-    - pin: 135
+    - pin: A35
       x: 462
       y: 251
-    - pin: 136
+    - pin: A36
       x: 497
       y: 251
-    - pin: 137
+    - pin: A37
       x: 117
       y: 184
-    - pin: 138
+    - pin: A38
       x: 152
       y: 184
-    - pin: 139
+    - pin: A39
       x: 189
       y: 184
-    - pin: 140
+    - pin: A40
       x: 225
       y: 184
-    - pin: 141
+    - pin: A41
       x: 265
       y: 184
-    - pin: 142
+    - pin: A42
       x: 300
       y: 184
-    - pin: 144
+    - pin: A44
       x: 360
       y: 184
-    - pin: 145
+    - pin: A45
       x: 393
       y: 184
 
-    - pin: 147
+    - pin: A47
       x: 462
       y: 184
-    - pin: 148
+    - pin: A48
       x: 498
       y: 184
-    - pin: 149
+    - pin: A49
       x: 126
       y: 125
-    - pin: 150
+    - pin: A50
       x: 180
       y: 125
-    - pin: 151
+    - pin: A51
       x: 231
       y: 125
-    - pin: 152
+    - pin: A52
       x: 282
       y: 125
-    - pin: 153
+    - pin: A53
       x: 335
       y: 125
-    - pin: 154
+    - pin: A54
       x: 385
       y: 125
-    - pin: 155
+    - pin: A55
       x: 435
       y: 125
-    - pin: 156
+    - pin: A56
       x: 485
       y: 125
 
 
-    - pin: 201
+    - pin: B01
       x: 675
       y: 350
-    - pin: 202
+    - pin: B02
       x: 712
       y: 350
-    - pin: 203
+    - pin: B03
       x: 750
       y: 350
-    - pin: 204
+    - pin: B04
       x: 775
       y: 350
-    - pin: 205
+    - pin: B05
       x: 820
       y: 350
-    - pin: 206
+    - pin: B06
       x: 854
       y: 350
-    - pin: 207
+    - pin: B07
       x: 889
       y: 350
-    - pin: 208
+    - pin: B08
       x: 928
       y: 350
 
-    - pin: 210
+    - pin: B10
       x: 975
       y: 350
 
-    - pin: 213
+    - pin: B13
       x: 675
       y: 285
 
-    - pin: 215
+    - pin: B15
       x: 745
       y: 285
-    - pin: 217
+    - pin: B17
       x: 807
       y: 285
 
-    - pin: 219
+    - pin: B19
       x: 875
       y: 285
-    - pin: 220
+    - pin: B20
       x: 910
       y: 285
 
-    - pin: 223
+    - pin: B23
       x: 1015
       y: 285
 
-    - pin: 225
+    - pin: B25
       x: 671
       y: 250
 
-    - pin: 227
+    - pin: B27
       x: 745
       y: 250
-    - pin: 228
+    - pin: B28
       x: 776
       y: 250
-    - pin: 230
+    - pin: B30
       x: 855
       y: 250
-    - pin: 231
+    - pin: B31
       x: 875
       y: 250
-    - pin: 232
+    - pin: B32
       x: 910
       y: 250
-    - pin: 233
+    - pin: B33
       x: 950
       y: 250
-    - pin: 235
+    - pin: B35
       x: 1015
       y: 250
 
-    - pin: 241
+    - pin: B41
       x: 815
       y: 185
-    - pin: 242
+    - pin: B42
       x: 845
       y: 185
-    - pin: 243
+    - pin: B43
       x: 885
       y: 185
-    - pin: 244
+    - pin: B44
       x: 915
       y: 185
-    - pin: 245
+    - pin: B45
       x: 950
       y: 185
-    - pin: 246
+    - pin: B46
       x: 985
       y: 185
-    - pin: 247
+    - pin: B47
       x: 1015
       y: 185
 
-    - pin: 250
+    - pin: B50
       x: 745
       y: 125
-    - pin: 251
+    - pin: B51
       x: 800
       y: 125
-    - pin: 252
+    - pin: B52
       x: 845
       y: 125
-    - pin: 253
+    - pin: B53
       x: 900
       y: 125
-    - pin: 254
+    - pin: B54
       x: 945
       y: 125
-    - pin: 255
+    - pin: B55
       x: 1000
       y: 125
-    - pin: 256
+    - pin: B56
       x: 1045
       y: 125
