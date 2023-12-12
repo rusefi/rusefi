@@ -82,9 +82,9 @@ jobs:
         echo "Status 1/3"
         git status
         # not out place to update live data etc
-        git checkout -- **/*.java
-        git checkout -- **/*.ini
-        git checkout -- **/*.h
+        git restore */*.java
+        git restore */*.ini
+        git restore */*.h
         echo "Status 2/3"
         git status
         git restore **/*.java
