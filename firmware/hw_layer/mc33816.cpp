@@ -204,6 +204,9 @@ void Pt2001::initIfNeeded() {
 	} else {
 		if (!isInitialized) {
 			isInitialized = restart();
+			if (isInitialized) {
+			  efiPrintf("happy mc33/PT2001!");
+			}
 		}
 	}
 }
