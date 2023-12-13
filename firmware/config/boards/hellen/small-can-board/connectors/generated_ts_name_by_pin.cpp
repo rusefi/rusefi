@@ -6,7 +6,7 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case Gpio::A1: return "C3 - Digital Input 2";
+		case Gpio::A1: return "C3 - Digital Input with 2.7K pull up";
 		case Gpio::A2: return "B2 - Analog/Digital Input";
 		case Gpio::A3: return "B3 - Analog/Digital Input";
 		case Gpio::A4: return "B4 - Analog/Digital Input";
