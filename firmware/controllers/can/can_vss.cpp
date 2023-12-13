@@ -15,17 +15,33 @@
 #include "stored_value_sensor.h"
 
 static bool isInit = false;
-static uint16_t filterCanID = 0;
+static uint16_t filterVssCanID = 0;
+static uint16_t filterRpmCanID = 0;
 
-expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
+static expected<uint16_t> look_up_rpm_can_id(can_vss_nbc_e type) {
+	switch (type) {
+		case HONDA_CIVIC9:
+		  return 0x17C;
+//		case HYUNDAI_PB:
+//		case NISSAN_350:
+		default:
+			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
+			return unexpected;
+	}
+}
+
+static expected<uint16_t> look_up_vss_can_id(can_vss_nbc_e type) {
 	switch (type) {
 		case BMW_e46:
 			return 0x01F0; /* BMW e46 ABS Message */
 		case BMW_e90:
 			return 0x1A0;	// BMW E90 ABS speed frame (not wheel speeds, vehicle speed)
 		case NISSAN_350:
+		  return 0x280;
 		case HYUNDAI_PB:
+		  return 1264; // decimal 1264
 		case HONDA_CIVIC9:
+		  return 0x309;
 		case W202:
 			return 0x0200; /* W202 C180 ABS signal */
 		default:
@@ -82,28 +98,38 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 	}
 
 	//filter it we need to process the can message or not
-	if (CAN_SID(frame) != filterCanID ) {
-		return;
-	}
-
-	if (auto speed = processCanRxVssImpl(frame)) {
-		canSpeed.setValidValue(speed.Value * engineConfiguration->canVssScaling, nowNt);
+	if (CAN_SID(frame) == filterVssCanID) {
+	  if (auto speed = processCanRxVssImpl(frame)) {
+		  canSpeed.setValidValue(speed.Value * engineConfiguration->canVssScaling, nowNt);
 
 #if EFI_DYNO_VIEW
-		updateDynoViewCan();
+	  	updateDynoViewCan();
 #endif
+  	}
 	}
+
+	if (CAN_SID(frame) == filterRpmCanID) {
+  }
+
 }
 
 void initCanVssSupport() {
 	if (engineConfiguration->enableCanVss) {
-		if (auto canId = look_up_can_id(engineConfiguration->canVssNbcType)) {
-			filterCanID = canId.Value;
+		if (auto canId = look_up_vss_can_id(engineConfiguration->canVssNbcType)) {
+			filterVssCanID = canId.Value;
 			canSpeed.Register();
 			isInit = true;
 		} else {
 			isInit = false;
 		}
+
+
+		// todo: how do we handle 'isInit' for case with only RPM without VSS for instance?
+		if (engineConfiguration->canInputBCM) {
+			if (auto canId = look_up_rpm_can_id(engineConfiguration->canVssNbcType))
+			filterRpmCanID = canId.Value;
+		}
+
 	}
 }
 
