@@ -23,7 +23,8 @@ static expected<uint16_t> look_up_rpm_can_id(can_vss_nbc_e type) {
 		case HONDA_CIVIC9:
 		  return 0x17C;
 //		case HYUNDAI_PB:
-//		case NISSAN_350:
+		case NISSAN_350:
+		  return 0x23D;
 		default:
 			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
 			return unexpected;
@@ -50,21 +51,24 @@ static expected<uint16_t> look_up_vss_can_id(can_vss_nbc_e type) {
 	}
 }
 
-/* Module specitifc processing functions */
+static int getTwoBytesLsb(const CANRxFrame& frame, int index) {
+	uint8_t low = frame.data8[index];
+	uint8_t high = frame.data8[index + 1] & 0x0F;
+	return low | (high << 8);
+}
+
+/* Module specific processing functions */
 /* source: http://z4evconversion.blogspot.com/2016/07/completely-forgot-but-it-does-live-on.html */
 float processBMW_e46(const CANRxFrame& frame) {
 	// average the rear wheels since those are the driven ones (more accurate gear detection!)
-	uint16_t left =  (((frame.data8[5] & 0x0f) << 8) | frame.data8[4]);
-	uint16_t right = (((frame.data8[7] & 0x0f) << 8) | frame.data8[6]);
+	uint16_t left =  getTwoBytesLsb(frame, 4);
+	uint16_t right = getTwoBytesLsb(frame, 6);
 
 	return (left + right) / (16 * 2);
 }
 
 float processBMW_e90(const CANRxFrame& frame) {
-	uint8_t low = frame.data8[0];
-	uint8_t high = frame.data8[1] & 0x0F;
-
-	return 0.1f * (low | (high << 8));
+	return 0.1f * getTwoBytesLsb(frame, 0);
 }
 
 float processW202(const CANRxFrame& frame) {
@@ -83,6 +87,7 @@ expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
 			return processBMW_e90(frame);
 		case W202:
 			return processW202(frame);
+//		case NISSAN_350:
 		default:
 			efiPrintf("vss unsupported can option selected %x", engineConfiguration->canVssNbcType );
 	}
