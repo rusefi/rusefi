@@ -64,7 +64,7 @@ private:
 static BenchController instance;
 
 void initAccelerometer() {
-	if (!isBrainPinValid(engineConfiguration->LIS302DLCsPin))
+	if (!isBrainPinValid(engineConfiguration->accelerometerCsPin))
 		return; // not used
 
 #if HAL_USE_SPI
@@ -77,9 +77,9 @@ void initAccelerometer() {
 	// todo: we have centralized SPI management see other usages of 'turnOnSpi'
     //turnOnSpi(engineConfiguration->accelerometerSpiDevice);
 	spiStart(driver, &accelerometerCfg);
-	initSpiCs((SPIConfig *)driver->config, engineConfiguration->LIS302DLCsPin);
+	initSpiCs((SPIConfig *)driver->config, engineConfiguration->accelerometerCsPin);
 
-//	memsCs.initPin("LIS302 CS", engineConfiguration->LIS302DLCsPin);
+//	memsCs.initPin("LIS302 CS", engineConfiguration->accelerometerCsPin);
 //	memsCfg.ssport = getHwPort("mmc", engineConfiguration->sdCardCsPin);
 //	memsCfg.sspad = getHwPin("mmc", engineConfiguration->sdCardCsPin);
 

@@ -1145,7 +1145,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	Gpio auxSerialTxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial;
 	Gpio auxSerialRxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial;
-	Gpio LIS302DLCsPin;
+	Gpio accelerometerCsPin;
 
 
 	uint8_t autoscale tpsAccelLookback;How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.;"sec", 0.05, 0, 0, 5, 2
@@ -1255,7 +1255,7 @@ custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
 tle8888_mode_e tle8888mode;
 
-	pin_output_mode_e LIS302DLCsPinMode;
+	pin_output_mode_e accelerometerCsPinMode;
 
 	custom injector_compensation_mode_e 1 bits, U08, @OFFSET@, [0:1], "None", "Fixed rail pressure", "Sensed Rail Pressure"
 	injector_compensation_mode_e injectorCompensationMode;None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor;
