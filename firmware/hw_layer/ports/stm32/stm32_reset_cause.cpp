@@ -59,7 +59,7 @@ static Reset_Cause_t readMCUResetCause() {
 }
 
 // we need to read the reset cause on the early stage, before we setup the rest of MCU hardware
-static Reset_Cause_t resetCause = readMCUResetCause();
+static const volatile Reset_Cause_t resetCause = readMCUResetCause();
 
 Reset_Cause_t getMCUResetCause() {
 	return resetCause;
