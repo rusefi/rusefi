@@ -110,6 +110,45 @@ public class IniFileReaderTest {
     }
 
     @Test
+    public void testCurve() {
+        String string = "page = 1\n" +
+                "[Constants]\n" +
+                "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
+                "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n " +
+                "[CurveEditor]\n" +
+                "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
+                "\t\tcolumnLabel = \"X\", \"Y\"\n" +
+                "\t\txAxis\t\t=  0, 128, 10\n" +
+                "\t\tyAxis\t\t= -155,  150, 10\n" +
+                "\t\txBins\t\t= scriptCurve1Bins\n" +
+                "\t\tyBins\t\t= scriptCurve1\n" +
+                "\t\tshowTextValues = true\n";
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+        assertEquals(2, model.allIniFields.size());
+        assertEquals(2, model.fieldsInUiOrder.size());
+    }
+
+    @Test
+    public void testTable() {
+        String string = "page = 1\n" +
+                "[Constants]\n" +
+                "tpsTpsAccelTable = array, F32, 19744, [8x8], \"value\", 1, 0, 0, 30000, 2\n" +
+                "tpsTpsAccelFromRpmBins = array, F32, 20000, [8], \"from\", 1, 0, 0, 30000, 2\n" +
+                "tpsTpsAccelToRpmBins = array, F32, 20032, [8], \"to\", 1, 0, 0, 25500, 2\n\n " +
+                "[TableEditor]\n" +
+                "\ttable = tpsTpsAccelTbl,  tpsTpsAccelMap,  \"TPS/TPS Acceleration Extra Fuel(ms)\",\t1\n" +
+                "\ttopicHelp = \"tpstpsHelp\"\n" +
+                "\t\txBins\t\t= tpsTpsAccelFromRpmBins,  TPSValue\n" +
+                "\t\tyBins\t\t= tpsTpsAccelToRpmBins,  TPSValue\n" +
+                "\t\tzBins\t\t= tpsTpsAccelTable";
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+        assertEquals(3, model.allIniFields.size());
+        assertEquals(3, model.fieldsInUiOrder.size());
+    }
+
+    @Test
     public void testConditional() {
         String string = "page = 1\n" +
                 "[Constants]\n" +
@@ -122,6 +161,7 @@ public class IniFileReaderTest {
         IniFileModel model = new IniFileModel().readIniFile(lines);
 
         assertEquals(1, model.allIniFields.size());
+        assertEquals(0, model.fieldsInUiOrder.size()); // no UI for the field
     }
 
     @Test
@@ -154,6 +194,23 @@ public class IniFileReaderTest {
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = new IniFileModel().readIniFile(lines);
 
+        assertEquals(2, model.allIniFields.size());
+    }
+
+    @Test
+    public void testEnumListFields() {
+        String string = "#define gpio_list=\"NONE\", \"INVALID\", \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\"\n" +
+                "page = 1\n" +
+                "[Constants]\n" +
+                "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
+                "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] $gpio_list\n";
+
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+        assertEquals(1, model.defines.size());
+
+        EnumIniField field = (EnumIniField) model.allIniFields.get("iat_adcChannel");
+        assertEquals(7, field.getEnums().size());
         assertEquals(2, model.allIniFields.size());
     }
 

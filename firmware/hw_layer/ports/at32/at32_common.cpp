@@ -131,6 +131,15 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
     return BOR_Result_Ok;
 }
 
+void startWatchdog(int) {
+}
+
+void tryResetWatchdog() {
+}
+
+void setWatchdogResetPeriod(int) {
+}
+
 void baseMCUInit(void) {
     // looks like this holds a random value on start? Let's set a nice clean zero
     DWT->CYCCNT = 0;
@@ -172,6 +181,14 @@ EXTERNC int getRemainingStack(thread_t *otp) {
 }
 
 __attribute__((weak)) void boardPrepareForStandby() {
+}
+
+Reset_Cause_t getMCUResetCause() {
+	return Reset_Cause_Unknown;
+}
+
+const char *getMCUResetCause(Reset_Cause_t) {
+	return "Unknown";
 }
 
 #endif /* EFI_PROD_CODE */

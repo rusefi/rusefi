@@ -20,7 +20,6 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
 public class PinoutLogic {
     private static final Logging log = getLogging(PinoutLogic.class);
 
-    static final String CONNECTORS = "/connectors";
     private static final String NONE = "NONE";
     private static final String QUOTED_NONE = quote(NONE);
     private static final String INVALID = "INVALID";
@@ -35,6 +34,7 @@ public class PinoutLogic {
     private final List<String> highSideOutputs = new ArrayList<>();
 
     public PinoutLogic(BoardInputs boardInputs) {
+        log.info("init " + boardInputs.getBoardYamlKeys().size() + " file(s)");
         this.boardInputs = boardInputs;
     }
 
@@ -59,7 +59,7 @@ public class PinoutLogic {
             String className = listPin.getPinClass();
             ArrayList<String> classList = names.get(className);
             if (classList == null) {
-                throw new IllegalStateException("Class not found:  " + className);
+                throw new IllegalStateException(boardName + ": Class not found:  " + className + " for " + id);
             }
             PinType listPinType = PinType.find(className);
             String pinType = listPinType.getPinType();
@@ -67,6 +67,8 @@ public class PinoutLogic {
             Objects.requireNonNull(enumList, "Enum for " + pinType);
             Map.Entry<String, Value> kv = find(enumList, id);
             if (kv == null) {
+                if (id.toLowerCase().contains("gpio"))
+                    throw new IllegalStateException(boardName + ": Not found looks like legacy 'Gpio::' notation " + id + " in " + className);
                 throw new IllegalStateException(boardName + ": Not found " + id + " in " + className);
             }
 
@@ -169,9 +171,12 @@ public class PinoutLogic {
             Object pinClass = pin.get("class");
             Object pinName = pin.get("pin");
             Object pinTsName = pin.get("ts_name");
+            Object pinFunction = pin.get("function");
+            if (pinTsName == null && pinFunction != null)
+                pinTsName = pinFunction;
             Object pinType = pin.get("type");
             if (pinId == null || pinClass == null || pinTsName == null) {
-                log.info("Skipping " + pinId + "/" + pinClass + "/" + pinTsName);
+                log.info("Skipping incomplete section " + pinId + "/" + pinClass + "/" + pinTsName);
                 continue;
             }
             if (pinName != null) {
@@ -250,7 +255,7 @@ public class PinoutLogic {
                               String pinTsName, String pinClass) {
         String existingTsName = tsNameById.get(id);
         if (existingTsName != null && !existingTsName.equals(pinTsName))
-            throw new IllegalStateException("ID used multiple times with different ts_name: " + id);
+            throw new IllegalStateException("ID [" + id + "] used multiple times with different ts_name " + existingTsName + "/" + pinTsName);
         tsNameById.put(id, pinTsName);
         tsNameByMeta.put(headerValue, pinTsName);
         if ("outputs".equalsIgnoreCase(pinClass)) {
@@ -297,6 +302,8 @@ public class PinoutLogic {
             getTsNameByIdFile.append("\treturn nullptr;\n}\n");
         }
 
+        StringBuilder pinNamesForSimulator = new StringBuilder();
+
         try (Writer outputs = boardInputs.getOutputsWriter()) {
             outputs.append(header);
             outputs.write("#pragma once\n\n");
@@ -306,12 +313,15 @@ public class PinoutLogic {
             for (String output : lowSideOutputs) {
                 String tsName = tsNameByMeta.get(output);
                 outputs.write("\tGpio::" + output + ", // " + tsName + "\n");
+                pinNamesForSimulator.append("// " + quote(tsName) + ",\n");
             }
             for (String output : highSideOutputs) {
                 String tsName = tsNameByMeta.get(output);
                 outputs.write("\tGpio::" + output + ", // " + tsName + "\n");
+                pinNamesForSimulator.append("// " + quote(tsName) + ",\n");
             }
 
+            outputs.write(pinNamesForSimulator.toString());
             outputs.write("}\n");
 
         }

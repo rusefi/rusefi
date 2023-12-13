@@ -49,8 +49,6 @@ static void setupEtb() {
 	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
 	// Disable pin
 	engineConfiguration->etbIo[0].disablePin = H144_GP2;
-	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
@@ -61,19 +59,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
 	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_3;
 	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
-}
-
-static void setupVbatt() {
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// set vbatt_divider 5.835
-	// 33k / 6.8k
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
-
-	engineConfiguration->adcVcc = 3.29f;
 }
 
 static void setupDefaultSensorInputs() {
@@ -90,7 +75,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1SecondaryMin = 1000;
 	engineConfiguration->tps1SecondaryMax = 0;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -141,10 +126,10 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
 
-#include "hellen_leds_144.cpp"
+
 
 void setBoardConfigOverrides() {
-	setupVbatt();
+	setHellenVbatt();
 
     if (is_F_OrOlder()) {
         setHellenEnPin(Gpio::H144_OUT_IO3);
@@ -220,14 +205,14 @@ void boardPrepareForStop() {
 }
 
 static Gpio OUTPUTS[] = {
-		Gpio::H144_LS_1,
-		Gpio::H144_LS_2,
-		Gpio::H144_LS_3,
-		Gpio::H144_LS_4,
-		// vvt1
-		Gpio::H144_IGN_7,
-		// vvt2
-		Gpio::H144_IGN_8,
+    Gpio::H144_LS_1, // A8 - Injector 1
+    Gpio::H144_LS_2, // B8 - Injector 2
+    Gpio::H144_LS_3, // D1 - Injector 3
+    Gpio::H144_LS_4, // E1 - Injector 4
+    Gpio::H144_IGN_7, // F2 - VVT#1 rev G
+    Gpio::H144_IGN_8, // F4 - VVT#2 rev G
+    Gpio::H144_OUT_PWM5, // F1 - Idle2
+	Gpio::H144_OUT_PWM1, // C8 - Idle
 };
 
 int getBoardMetaOutputsCount() {

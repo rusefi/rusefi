@@ -4,4 +4,38 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
+	Gpio::L9779_OUT_4, // Injector 1
+	Gpio::L9779_OUT_3, // Injector 2
+	Gpio::L9779_OUT_2, // Injector 3
+	Gpio::L9779_OUT_1, // Injector 4
+	Gpio::L9779_OUT_6, // Oxygen sensor 1 heater
+	Gpio::L9779_OUT_5, // EVAP solenoid control
+	Gpio::L9779_OUT_7, // Oxygen sensor 2 heater
+	Gpio::L9779_IGN_1, // Coil 1 (< +2.5v) / Coils 1,4
+	Gpio::L9779_IGN_3, // Coil 3  (< +2.5v) / Coils 2,4
+	Gpio::L9779_IGN_2, // Coil 2  (< +2.5v) (not populated)
+	Gpio::L9779_IGN_4, // Coil 4  (< +2.5v) (not populated)
+	Gpio::L9779_OUT_17, // Air compressor control
+	Gpio::L9779_OUT_14, // Secondary starter relay
+	Gpio::L9779_OUT_15, // FAN 1 relay
+	Gpio::L9779_OUT_16, // FAN 2 relay
+	Gpio::L9779_OUT_18, // Unknown out (OUT18)
+	Gpio::L9779_OUT_13, // Fuel pump relay
+// "Injector 1",
+// "Injector 2",
+// "Injector 3",
+// "Injector 4",
+// "Oxygen sensor 1 heater",
+// "EVAP solenoid control",
+// "Oxygen sensor 2 heater",
+// "Coil 1 (< +2.5v) / Coils 1,4",
+// "Coil 3  (< +2.5v) / Coils 2,4",
+// "Coil 2  (< +2.5v) (not populated)",
+// "Coil 4  (< +2.5v) (not populated)",
+// "Air compressor control",
+// "Secondary starter relay",
+// "FAN 1 relay",
+// "FAN 2 relay",
+// "Unknown out (OUT18)",
+// "Fuel pump relay",
 }

@@ -16,13 +16,14 @@ void setMaverickX3() {
     engineConfiguration->displacement = 0.9;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
+	  setPPSCalibration(0.25, 0.5, 1.5, 3);
+	  // todo: matches Hyundai TODO extract method?
+	  setTPS1Calibration(98, 926, 891, 69);
+
 #if HW_PROTEUS
     engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
    	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_DIGITAL_5;
 	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_4;
-	setPPSCalibration(0.25, 0.5, 1.5, 3);
-	// todo: matches Hyundai TODO extract method?
-	setTPS1Calibration(98, 926, 891, 69);
 	setProteusEtbIO();
 	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
 	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;

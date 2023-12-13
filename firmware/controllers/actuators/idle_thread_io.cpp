@@ -56,7 +56,7 @@ percent_t getIdlePosition() {
 #endif
 }
 
-void startPedalPins() {
+void startSwitchPins() {
 #if EFI_PROD_CODE
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
@@ -69,16 +69,18 @@ void startPedalPins() {
 	startInputPinIfValid("brake pedal switch", engineConfiguration->brakePedalPin, engineConfiguration->brakePedalPinMode);
 	startInputPinIfValid("Launch Button", engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
 	startInputPinIfValid("Antilag Button", engineConfiguration->ALSActivatePin, engineConfiguration->ALSActivatePinMode);
+	startInputPinIfValid("Ignition Switch", engineConfiguration->ignitionKeyDigitalPin, engineConfiguration->ignitionKeyDigitalPinMode);
 #endif /* EFI_PROD_CODE */
 }
 
-void stopPedalPins() {
+void stopSwitchPins() {
 	brain_pin_markUnused(activeConfiguration.clutchUpPin);
 	brain_pin_markUnused(activeConfiguration.clutchDownPin);
 	brain_pin_markUnused(activeConfiguration.throttlePedalUpPin);
 	brain_pin_markUnused(activeConfiguration.brakePedalPin);
 	brain_pin_markUnused(activeConfiguration.launchActivatePin);
 	brain_pin_markUnused(activeConfiguration.ALSActivatePin);
+	brain_pin_markUnused(activeConfiguration.ignitionKeyDigitalPin);
 }
 
 #if ! EFI_UNIT_TEST
@@ -105,7 +107,6 @@ void startIdleBench(void) {
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_IDLE_CONTROL
-
 
 void setDefaultIdleParameters() {
 	engineConfiguration->idleRpmPid.pFactor = 0.01f;

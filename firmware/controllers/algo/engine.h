@@ -78,9 +78,6 @@
 #include "global_execution_queue.h"
 #endif /* EFI_UNIT_TEST */
 
-#define FAST_CALLBACK_PERIOD_MS 5
-#define SLOW_CALLBACK_PERIOD_MS 50
-
 struct AirmassModelBase;
 
 #define MAF_DECODING_CACHE_SIZE 256
@@ -209,7 +206,7 @@ public:
 	SoftSparkLimiter ALSsoftSparkLimiter;
 #endif /* EFI_ANTILAG_SYSTEM */
 
-#if EFI_ENGINE_CONTROL
+#if EFI_SHAFT_POSITION_INPUT
 	LambdaMonitor lambdaMonitor;
 #endif // EFI_ENGINE_CONTROL
 

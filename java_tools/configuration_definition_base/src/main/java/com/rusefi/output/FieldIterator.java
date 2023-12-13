@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class FieldIterator {
     private final List<ConfigField> fields;
-    BitState bitState = new BitState();
+    final BitState bitState = new BitState();
     private ConfigField prev = ConfigField.VOID;
     ConfigField next;
     ConfigField cf;

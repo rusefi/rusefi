@@ -1,6 +1,7 @@
 package com.opensr5.ini.field;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.RawIniFile;
 import com.rusefi.config.FieldType;
@@ -57,7 +58,7 @@ public class EnumIniField extends IniField {
         ordinal = getBitRange(ordinal, bitPosition, bitSize0 + 1);
 
         if (ordinal >= enums.size())
-            throw new IllegalStateException(ordinal + " in " + getName());
+            throw new IllegalStateException("Ordinal out of range " + ordinal + " in " + getName());
         return "\"" + enums.get(ordinal) + "\"";
     }
 
@@ -112,7 +113,7 @@ public class EnumIniField extends IniField {
         return ordinal;
     }
 
-    public static EnumIniField parse(LinkedList<String> list, RawIniFile.Line line) {
+    public static EnumIniField parse(LinkedList<String> list, RawIniFile.Line line, IniFileModel iniFileModel) {
         String name = list.get(0);
         FieldType type = FieldType.parseTs(list.get(2));
         int offset = Integer.parseInt(list.get(3));
@@ -122,7 +123,7 @@ public class EnumIniField extends IniField {
         int bitPosition = parseBitRange.getBitPosition();
         int bitSize0 = parseBitRange.getBitSize0();
 
-        EnumKeyValueMap enums = EnumKeyValueMap.valueOf(line.getRawText());
+        EnumKeyValueMap enums = EnumKeyValueMap.valueOf(line.getRawText(), iniFileModel);
         return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0);
     }
 
@@ -166,7 +167,7 @@ public class EnumIniField extends IniField {
             this.keyValues = keyValues;
         }
 
-        public static EnumKeyValueMap valueOf(String rawText) {
+        public static EnumKeyValueMap valueOf(String rawText, IniFileModel iniFileModel) {
             Map<Integer, String> keyValues = new TreeMap<>();
 
             int interestingIndex = EnumIniField.ordinalIndexOf(rawText, ",", 4);
@@ -183,8 +184,16 @@ public class EnumIniField extends IniField {
 
 
             } else {
-                for (int i = 0; i < tokens.length - offset; i++) {
-                    keyValues.put(i, tokens[i + offset]);
+                String firstValue = tokens[offset];
+                if (firstValue.trim().startsWith("$")) {
+                    List<String> elements = iniFileModel.defines.get(firstValue.substring(1));
+                    for (int i = 0; i < elements.size(); i++) {
+                        keyValues.put(i, elements.get(i));
+                    }
+                } else {
+                    for (int i = 0; i < tokens.length - offset; i++) {
+                        keyValues.put(i, tokens[i + offset]);
+                    }
                 }
             }
 

@@ -1028,6 +1028,9 @@ void onConfigurationChangeTriggerCallback() {
 	changed |= isConfigurationChanged(trigger.customTotalToothCount);
 	changed |= isConfigurationChanged(trigger.customSkippedToothCount);
 	changed |= isConfigurationChanged(overrideTriggerGaps);
+	changed |= isConfigurationChanged(gapTrackingLengthOverride);
+	changed |= isConfigurationChanged(overrideVvtTriggerGaps);
+	changed |= isConfigurationChanged(gapVvtTrackingLengthOverride);
 
 	if (changed) {
 	#if EFI_ENGINE_CONTROL
@@ -1132,6 +1135,24 @@ void TriggerCentral::updateWaveform() {
 				triggerShape,
 				initState);
 	}
+
+    if (engineConfiguration->overrideVvtTriggerGaps) {
+        int gapIndex = 0;
+
+        TriggerWaveform *shape = &vvtShape[0];
+
+		for (; gapIndex < engineConfiguration->gapVvtTrackingLengthOverride; gapIndex++) {
+			float gapOverrideFrom = engineConfiguration->triggerVVTGapOverrideFrom[gapIndex];
+			float gapOverrideTo = engineConfiguration->triggerVVTGapOverrideTo[gapIndex];
+			shape->synchronizationRatioFrom[gapIndex] = gapOverrideFrom;
+			shape->synchronizationRatioTo[gapIndex] = gapOverrideTo;
+		}
+		// fill the remainder with the default gaps
+		for (; gapIndex < VVT_TRACKING_LENGTH; gapIndex++) {
+			shape->synchronizationRatioFrom[gapIndex] = NAN;
+			shape->synchronizationRatioTo[gapIndex] = NAN;
+		}
+    }
 
 	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
 		// todo: should 'vvtWithRealDecoder' be used here?

@@ -28,4 +28,28 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::E5, // F16 - IGN 2
 	Gpio::I5, // F17 - IGN 6
 	Gpio::I8, // F20 - IGN 1
+// "P19_OUT_LOW11",
+// "P35_OUT_LOW9",
+// "P33_PWM5",
+// "P18_OUT_PP2",
+// "A6 - Fan Control",
+// "C21 - Evap Purge Control",
+// "C29 - Fuel Pump",
+// "E1 - LS1",
+// "E2- LS2",
+// "E3 - LS3",
+// "E4 - LS4/VVT",
+// "E13 - INJ 4",
+// "E14 - INJ 2",
+// "E25 - INJ 1",
+// "E26 - INJ 3",
+// "P34_OUT_LOW8",
+// "F4 - IGN 5",
+// "F6 - IGN 3",
+// "F9 - IGN 7",
+// "F11 - IGN 8",
+// "F13 - IGN 4",
+// "F16 - IGN 2",
+// "F17 - IGN 6",
+// "F20 - IGN 1",
 }

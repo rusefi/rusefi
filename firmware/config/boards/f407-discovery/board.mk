@@ -1,5 +1,5 @@
 # List of all the board related files.
-BOARDCPPSRC = $(BOARD_DIR)/board_extra.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # MCU defines
 DDEFS += -DSTM32F407xx
@@ -10,13 +10,10 @@ endif
 
 # here we use different names for env variable and macro name in order to reduce confusion. overall this is about Frankenso builds defining FIRMWARE_ID
 ifeq ($(FW_ID_ENV),)
-  DDEFS += -DFIRMWARE_ID=\"stm32f407vg\"
+  DDEFS += -DFIRMWARE_ID=\"community\"
 else
   DDEFS += -D$(FW_ID_ENV)
 endif
-
-# See also ts_show_critical_led
-DDEFS += -DFLEXIBLE_CRITICAL_LED=1
 
 DDEFS += -DEFI_SENT_SUPPORT=TRUE
 
@@ -35,6 +32,8 @@ DDEFS += -DEFI_MAX_31855=TRUE
 DDEFS += -DBOARD_MC33810_COUNT=1
 # reduced lua heap while we temporary use BOARD_MC33810_COUNT
 DDEFS += -DLUA_USER_HEAP=24000
+
+DDEFS += -DRAM_UNUSED_SIZE=200
 
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1

@@ -11,6 +11,11 @@ public interface ConfigField {
         }
 
         @Override
+        public ConfigStructure getParent() {
+            return null;
+        }
+
+        @Override
         public boolean isArray() {
             return false;
         }
@@ -157,6 +162,8 @@ public interface ConfigField {
             return getName();
         }
     }
+
+    ConfigStructure getParent();
 
     ConfigStructure getStructureType();
 

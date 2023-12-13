@@ -23,6 +23,8 @@ void configureHellenCanTerminator();
 void setHellenCan();
 void setHellen64Can();
 
+void setHellenVbatt();
+
 int detectHellenBoardId();
 void detectHellenBoardType();
 
@@ -136,7 +138,7 @@ void detectHellenBoardType();
 #define H144_IN_MAP2 EFI_ADC_11
 // AIN15 A15 PA2
 #define H144_IN_MAP3 EFI_ADC_2
-#define H144_IN_MAP3_DIGITAL Gpio::A2
+#define H144_IN_MAP3_DIGITAL A2
 
 // AIN7
 #define H144_IN_RES1 F9
@@ -212,9 +214,9 @@ void detectHellenBoardType();
 
 #define H_SPI1_MOSI Gpio::B5
 #define H_SPI1_MISO Gpio::B4
-#define H_SPI1_SCK Gpio::B3
+#define H_SPI1_SCK B3
 #define H_SPI1_CS1 Gpio::B6
-#define H_SPI1_CS2 Gpio::B7
+#define H_SPI1_CS2 B7
 
 // looks like same pins 144 and 176
 #define H_SPI2_MOSI Gpio::B15
@@ -232,7 +234,7 @@ static void setHellenSdCardSpi1NoCS() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->spi1mosiPin = H_SPI1_MOSI;
 	engineConfiguration->spi1misoPin = H_SPI1_MISO;
-	engineConfiguration->spi1sckPin = H_SPI1_SCK;
+	engineConfiguration->spi1sckPin = Gpio::H_SPI1_SCK;
 	engineConfiguration->is_enabled_spi_1 = true;
 }
 

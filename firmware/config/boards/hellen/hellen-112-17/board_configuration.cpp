@@ -24,20 +24,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[3] = Gpio::MM100_IGN4;
 }
 
-static void setupVbatt() {
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// set vbatt_divider 5.835
-	// 33k / 6.8k
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-	// pin input +12 from Main Relay
-	engineConfiguration->vbattAdcChannel = MM100_IN_VBATT;
-
-	engineConfiguration->adcVcc = 3.29f;
-}
-
 static void setupDefaultSensorInputs() {
     engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D2;
 
@@ -46,10 +32,8 @@ static void setupDefaultSensorInputs() {
 
 	setPPSInputs(MM100_IN_PPS_ANALOG, MM100_IN_AUX2_ANALOG);
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
-//	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
 	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
 
@@ -61,7 +45,7 @@ static void setupDefaultSensorInputs() {
 void setBoardConfigOverrides() {
 	// rev A needs EN pin but newer revisions would potentially not use it
 	setHellenMegaEnPin();
-	setupVbatt();
+	setHellenVbatt();
 
 	setHellenSdCardSpi1();
 	configureHellenMegaAccCS2Pin();
@@ -81,8 +65,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::MM100_SPI2_MISO;
    	// Disable pin
    	engineConfiguration->etbIo[0].disablePin = Gpio::MM100_SPI2_MOSI;
-   	// Unused
- 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 }
 
 /**
@@ -124,7 +106,6 @@ void setBoardDefaultConfiguration() {
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
-	engineConfiguration->enableVerboseCanTx = true;
 
 	engineConfiguration->etbFunctions[0] = DC_Throttle1;
 

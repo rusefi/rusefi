@@ -41,7 +41,7 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 
 public class DocumentSizeFilter extends DocumentFilter {
-    int maxCharacters;
+    final int maxCharacters;
 
     public DocumentSizeFilter(int maxChars) {
         maxCharacters = maxChars;

@@ -286,7 +286,7 @@ void applyNewHardwareSettings() {
 	}
 
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
-		// bug? duplication with stopPedalPins?
+		// bug? duplication with stopSwitchPins?
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
@@ -415,7 +415,7 @@ void initHardwareNoConfig() {
 }
 
 void stopHardware() {
-	stopPedalPins();
+	stopSwitchPins();
 
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
@@ -457,7 +457,7 @@ void startHardware() {
 
 #endif // EFI_SHAFT_POSITION_INPUT
 
-	startPedalPins();
+	startSwitchPins();
 
 #if EFI_CAN_SUPPORT
 	startCanPins();
@@ -610,3 +610,16 @@ int getSpiPrescaler(spi_speed_e speed, spi_device_e device) {
 }
 
 #endif /* HAL_USE_SPI */
+
+void checkLastResetCause() {
+#if EFI_PROD_CODE
+	Reset_Cause_t cause = getMCUResetCause();
+	const char *causeStr = getMCUResetCause(cause);
+	efiPrintf("Last Reset Cause: %s", causeStr);
+
+	// if reset by watchdog, signal a fatal error
+	if (cause == Reset_Cause_IWatchdog || cause == Reset_Cause_WWatchdog) {
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset");
+	}
+#endif // EFI_PROD_CODE
+}

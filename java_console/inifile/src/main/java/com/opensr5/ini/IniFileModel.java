@@ -22,6 +22,8 @@ public class IniFileModel {
     private static final String FIELD_TYPE_ARRAY = "array";
     private static final String FIELD_TYPE_BITS = "bits";
 
+    public Map<String, List<String>> defines = new TreeMap<>();
+
     private static IniFileModel INSTANCE;
     private String dialogId;
     private String dialogUiName;
@@ -112,6 +114,10 @@ public class IniFileModel {
         String rawText = line.getRawText();
         try {
             LinkedList<String> list = new LinkedList<>(Arrays.asList(line.getTokens()));
+            if (!list.isEmpty() && list.get(0).equals("#define")) {
+                defines.put(list.get(1), list.subList(2, list.size()));
+                return;
+            }
 
             if (!list.isEmpty() && list.get(0).equals(SECTION_PAGE)) {
                 isInsidePageDefinition = true;
@@ -213,15 +219,24 @@ public class IniFileModel {
     private void handleYBins(LinkedList<String> list) {
         list.removeFirst();
         currentYBins = list.removeFirst();
+        addField(currentYBins);
     }
 
     private void handleXBins(LinkedList<String> list) {
         list.removeFirst();
         currentXBins = list.removeFirst();
+        addField(currentXBins);
+    }
+
+    private void addField(String key) {
+        DialogModel.Field field = new DialogModel.Field(key, key);
+        fieldsInUiOrder.put(key, field);
     }
 
     private void handleTable(LinkedList<String> list) {
         list.removeFirst();
+        String tableName = list.removeFirst();
+        addField(tableName);
     }
 
     private void handleFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
@@ -236,7 +251,7 @@ public class IniFileModel {
                 registerField(ArrayIniField.parse(list));
                 break;
             case FIELD_TYPE_BITS:
-                registerField(EnumIniField.parse(list, line));
+                registerField(EnumIniField.parse(list, line, this));
                 break;
             default:
                 throw new IllegalStateException("Unexpected " + list);
@@ -256,13 +271,17 @@ public class IniFileModel {
 
         String key = list.isEmpty() ? null : list.removeFirst();
 
+        registerUiField(key, uiFieldName);
+        log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
+    }
+
+    private void registerUiField(String key, String uiFieldName) {
         DialogModel.Field field = new DialogModel.Field(key, uiFieldName);
 
         if (key != null) {
             fieldsOfCurrentDialog.add(field);
             fieldsInUiOrder.put(key, field);
         }
-        log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
     private void handleDialog(LinkedList<String> list) {

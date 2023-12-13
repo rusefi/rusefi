@@ -22,6 +22,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::I6, // 8 - IGN_7
 	Gpio::C9, // 18 - VVT2 B1
 	Gpio::I0, // 22 - VVT1 1
+	Gpio::D15, // OUT_FUEL_CONSUMPTION
 	Gpio::E3, // 94 - IGN_4
 	Gpio::I7, // 95 - IGN_8
 	Gpio::C1, // 101 - MAP2
@@ -34,4 +35,35 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::C6, // 117 ETB_OUT+
 	Gpio::C7, // 118 ETB_OUT-
 	Gpio::C8, // 120 - VVT2 B2
+// "Main Relay",
+// "19 - INJ 7",
+// "24 - INJ 8",
+// "37 - TACH",
+// "47 - CEL",
+// "65 - Fuel Pump",
+// "88 - INJ_4",
+// "89 - INJ_2",
+// "96 - INJ_1",
+// "97 - INJ_3",
+// "105 - IDLE rev A,B",
+// "105 - IDLE rev C+",
+// "112 INJ 6",
+// "113 INJ 5",
+// "7 - IGN_2",
+// "8 - IGN_7",
+// "18 - VVT2 B1",
+// "22 - VVT1 1",
+// "OUT_FUEL_CONSUMPTION",
+// "94 - IGN_4",
+// "95 - IGN_8",
+// "101 - MAP2",
+// "102 - IGN_1",
+// "103 - IGN_5",
+// "104 Wastegate",
+// "110 - IGN_6",
+// "111 - IGN_3",
+// "115 - VVT1_2",
+// "117 ETB_OUT+",
+// "118 ETB_OUT-",
+// "120 - VVT2 B2",
 }

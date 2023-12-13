@@ -54,7 +54,7 @@ void setStepperHw() {
 #endif // HW_PROTEUS
 }
 
-void setSbc() {
+void setGmSbc() {
 	engineConfiguration->cylindersCount = 8;
 	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
 	engineConfiguration->displacement = 5.2;
@@ -87,8 +87,10 @@ void setSbc() {
    	// reminder about D104
    	engineConfiguration->injectionPins[3] = Gpio::PROTEUS_LS_15; // #4
 
-    // wow high side relay control
+    // wow high side relay control on MEFI1 ELECTRONIC-FUEL-INJECTION-MEFI-1-2-5.7L-350CID-8.2L-502CID.pdf page 46
     engineConfiguration->fuelPumpPin = Gpio::PROTEUS_HS_1;
+    // low side on MEFI3 ELECTRONIC-FUEL-INJECTION-MEFI-3-5.7L-350CID-8.2L-502CID.pdf page 487
+
     setGmCltSensor(&engineConfiguration->clt, PROTEUS_DEFAULT_AT_PULLUP);
 #endif // HW_PROTEUS
 	engineConfiguration->mainRelayPin = Gpio::Unassigned; // vehicle controls main relay
@@ -103,12 +105,4 @@ void setSbc() {
 	// Proteus Digital 1 is Tach input "HEI R", plug pin C
 
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
-}
-
-void set8chanSbc() {
-    setSbc();
-}
-
-void setProteusSbc() {
-    setSbc();
 }

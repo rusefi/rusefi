@@ -97,8 +97,8 @@ static void runCanGpioTest() {
 }
 
 // todo: reuse intFlashWrite method?
-static void writeSimulatorTune() {
-	FILE *ptr = fopen(SIMULATOR_TUNE_BIN_FILE_NAME, "wb");
+static void writeSimulatorTune(const char *fileName) {
+	FILE *ptr = fopen(fileName, "wb");
 	if (ptr == nullptr) {
 		printf("ERROR creating file: [%s]\n", SIMULATOR_TUNE_BIN_FILE_NAME);
 		printf("Please check folder exists and is writeable.");
@@ -153,6 +153,18 @@ static void	runNotSquareTest() {
     assertNear(getscriptTable(3)->getValue(3000, 20), 144.384);
 }
 
+static void writeEngineTypeDefaultConfig(engine_type_e type) {
+	engineConfiguration->engineType = type;
+	resetConfigurationExt(engineConfiguration->engineType);
+	char fileName[3000];
+	sprintf(fileName, "%s_%d%s",
+	    SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX,
+	    (int)engineConfiguration->engineType,
+	    SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX
+	);
+	writeSimulatorTune(fileName);
+}
+
 void rusEfiFunctionalTest(void) {
 	printToConsole("Running rusEFI simulator version:");
 	static char versionBuffer[20];
@@ -169,6 +181,19 @@ void rusEfiFunctionalTest(void) {
 	// todo: reduce code duplication with initRealHardwareEngineController
 
 	initFlash();
+
+	for (auto const type : {
+			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1,
+			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2,
+			engine_type_e::MRE_M111,
+			engine_type_e::HYUNDAI_PB,
+			engine_type_e::HONDA_K,
+
+	} ) {
+		writeEngineTypeDefaultConfig(type);
+	}
+
+	// this here is really 'reset to default configuration'
 	loadConfiguration();
 
 	commonInitEngineController();
@@ -179,7 +204,7 @@ void rusEfiFunctionalTest(void) {
 	enableTriggerStimulator(false);
 #endif
 
-	writeSimulatorTune();
+	writeSimulatorTune(SIMULATOR_TUNE_BIN_FILE_NAME);
 
     /**
      * !!!! TESTS !

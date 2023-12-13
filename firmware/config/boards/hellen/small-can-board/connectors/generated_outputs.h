@@ -8,4 +8,8 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM64_OUT_PWM2, // A8 - Low Side
 	Gpio::MM64_OUT_PWM3, // B8 - Low Side
 	Gpio::MM64_OUT_PWM4, // C8 - Low Side
+// "A7 - Low Side",
+// "A8 - Low Side",
+// "B8 - Low Side",
+// "C8 - Low Side",
 }

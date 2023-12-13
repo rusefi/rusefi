@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LiveDataProcessor {
@@ -19,11 +20,18 @@ public class LiveDataProcessor {
     private final static String enumContentFileName = "console/binary/generated/live_data_ids.h";
 
     private final static String tsOutputsDestination = "console/binary/";
+    public static final String GAUGES = tsOutputsDestination + File.separator + "generated/gauges.ini";
+    public static final String DATA_LOG_FILE_NAME = tsOutputsDestination + File.separator + "generated/data_logs.ini";
+    public static final String OUTPUTS_SECTION_FILE_NAME = tsOutputsDestination + File.separator + "generated/output_channels.ini";
+    public static final String DATA_FRAGMENTS_H = "console/binary/generated/live_data_fragments.h";
+    public static final String STATE_DICTIONARY_FACTORY_JAVA = "../java_console/io/src/main/java/com/rusefi/enums/StateDictionaryFactory.java";
+    public static final String FANCY_CONTENT_INI = "console/binary/generated/fancy_content.ini";
+    public static final String FANCY_MENU_INI = "console/binary/generated/fancy_menu.ini";
 
     private final ReaderProvider readerProvider;
     private final LazyFile.LazyFileFactory fileFactory;
 
-    private final GaugeConsumer gaugeConsumer = new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini");
+    private final GaugeConsumer gaugeConsumer;
 
     private final StringBuilder enumContent = new StringBuilder(header +
             "#pragma once\n" +
@@ -48,6 +56,7 @@ public class LiveDataProcessor {
         this.readerProvider = readerProvider;
         this.fileFactory = fileFactory;
         stateDictionaryGenerator = new StateDictionaryGenerator(yamlFileName);
+        gaugeConsumer = new GaugeConsumer(GAUGES, fileFactory);
     }
 
     public static void main(String[] args) throws IOException {
@@ -61,28 +70,9 @@ public class LiveDataProcessor {
 
 
         LiveDataProcessor liveDataProcessor = new LiveDataProcessor(yamlFileName, ReaderProvider.REAL, LazyFile.REAL);
-
         int sensorTsPosition = liveDataProcessor.handleYaml(data);
-        liveDataProcessor.writeFiles();
 
-        log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
-        try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
-            fw.write(header);
-            fw.write("#define TS_TOTAL_OUTPUT_SIZE " + sensorTsPosition);
-        }
-
-        try (FileWriter fw = new FileWriter("console/binary/generated/sensors.java")) {
-            fw.write(liveDataProcessor.totalSensors.toString());
-        }
-
-        try (FileWriter fw = new FileWriter("console/binary/generated/fancy_content.ini")) {
-            fw.write(liveDataProcessor.fancyNewStuff.toString());
-        }
-
-        try (FileWriter fw = new FileWriter("console/binary/generated/fancy_menu.ini")) {
-            fw.write(liveDataProcessor.fancyNewMenu.toString());
-        }
-        liveDataProcessor.end();
+        liveDataProcessor.end(sensorTsPosition);
     }
 
     public static Map<String, Object> getStringObjectMap(Reader reader) {
@@ -97,8 +87,13 @@ public class LiveDataProcessor {
         output.write("};\r\n");
     }
 
-    private void end() throws IOException {
-        gaugeConsumer.endFile();
+    private void end(int sensorTsPosition) throws IOException {
+
+        log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
+        try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
+            fw.write(header);
+            fw.write("#define TS_TOTAL_OUTPUT_SIZE " + sensorTsPosition);
+        }
     }
 
     interface EntryHandler {
@@ -108,9 +103,10 @@ public class LiveDataProcessor {
     public int handleYaml(Map<String, Object> data) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
 
-        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(OUTPUTS_SECTION_FILE_NAME,
+                fileFactory);
 
-        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(DATA_LOG_FILE_NAME, fileFactory);
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
@@ -132,12 +128,24 @@ public class LiveDataProcessor {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.setWithC_Defines(withCDefines);
 
+                outputsSections.outputNames = outputNames;
+                dataLogConsumer.outputNames = outputNames;
+                gaugeConsumer.outputNames = outputNames;
+
                 state.addDestination(javaSensorsConsumer,
                         outputsSections,
                         dataLogConsumer
                 );
-                FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
-                state.addDestination(fragmentDialogConsumer);
+
+                List<FragmentDialogConsumer> fragmentConsumers = new ArrayList<>();
+
+                for (int i = 0; i < tempLimit(outputNames); i++) {
+
+                    String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
+                    FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name, variableNameSuffix);
+                    fragmentConsumers.add(fragmentDialogConsumer);
+                    state.addDestination(fragmentDialogConsumer);
+                }
 
                 if (extraPrepend != null)
                     state.addPrepend(extraPrepend);
@@ -175,9 +183,10 @@ public class LiveDataProcessor {
 
                 state.doJob();
 
-                fancyNewStuff.append(fragmentDialogConsumer.getContent());
-
-                fancyNewMenu.append(fragmentDialogConsumer.menuLine());
+                for (FragmentDialogConsumer fragmentDialogConsumer : fragmentConsumers) {
+                    fancyNewStuff.append(fragmentDialogConsumer.getContent());
+                    fancyNewMenu.append(fragmentDialogConsumer.menuLine());
+                }
 
                 log.info("Done with " + name + " at " + javaSensorsConsumer.sensorTsPosition);
             }
@@ -207,10 +216,9 @@ public class LiveDataProcessor {
 
             String[] outputNamesArr;
             if (outputNames == null) {
-                outputNamesArr = new String[0];
+                outputNamesArr = new String[]{""};
             } else if (outputNames instanceof String) {
-                outputNamesArr = new String[1];
-                outputNamesArr[0] = (String) outputNames;
+                outputNamesArr = new String[]{(String) outputNames};
             } else {
                 ArrayList<String> nameList = (ArrayList<String>) outputNames;
                 outputNamesArr = new String[nameList.size()];
@@ -230,7 +238,7 @@ public class LiveDataProcessor {
                         .append(">{},\n");
             } else {
                 for (int i = 0; i < outputNamesArr.length; i++) {
-                    if (i != 0) {
+                    if (needComment(i)) {
                         // TODO: remove once the rest of the handling for multiple copies of one struct is in place.
                         fragmentsContent.append("// ");
                     }
@@ -252,23 +260,46 @@ public class LiveDataProcessor {
         wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
         lazyFile.close();
 
+        dataLogConsumer.endFile();
         outputValueConsumer.endFile();
+        try (LazyFile fw = fileFactory.create("console/binary/generated/sensors.java")) {
+            fw.write(totalSensors.toString());
+        }
 
-        GetConfigValueConsumer.writeStringToFile("../java_console/io/src/main/java/com/rusefi/enums/StateDictionaryFactory.java", stateDictionaryGenerator.getCompleteClass(), fileFactory);
+        try (LazyFile fw = fileFactory.create(FANCY_CONTENT_INI)) {
+            fw.write(fancyNewStuff.toString());
+        }
+
+        try (LazyFile fw = fileFactory.create(FANCY_MENU_INI)) {
+            fw.write(fancyNewMenu.toString());
+        }
+
+        GetConfigValueConsumer.writeStringToFile(STATE_DICTIONARY_FACTORY_JAVA, stateDictionaryGenerator.getCompleteClass(), fileFactory);
 
         totalSensors.append(javaSensorsConsumer.getContent());
+
+        writeFiles();
 
         return javaSensorsConsumer.sensorTsPosition;
     }
 
     private void writeFiles() throws IOException {
-        try (FileWriter fw = new FileWriter(enumContentFileName)) {
+        gaugeConsumer.endFile();
+        try (LazyFile fw = fileFactory.create(enumContentFileName)) {
             fw.write(enumContent.toString());
             fw.write(baseAddressCHeader.toString());
         }
 
-        try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.h")) {
+        try (LazyFile fw = fileFactory.create(DATA_FRAGMENTS_H)) {
             fw.write(fragmentsContent.toString());
         }
+    }
+
+    public static int tempLimit(String[] outputs) {
+        return 1;
+    }
+
+    public static boolean needComment(int index) {
+        return index > 0;
     }
 }

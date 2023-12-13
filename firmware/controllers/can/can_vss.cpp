@@ -15,30 +15,60 @@
 #include "stored_value_sensor.h"
 
 static bool isInit = false;
-static uint16_t filterCanID = 0;
+static uint16_t filterVssCanID = 0;
+static uint16_t filterRpmCanID = 0;
 
-expected<uint16_t> look_up_can_id(can_vss_nbc_e type) {
+static expected<uint16_t> look_up_rpm_can_id(can_vss_nbc_e type) {
 	switch (type) {
-		case BMW_e46:
-			return 0x01F0; /* BMW e46 ABS Message */
-		case W202:
-			return 0x0200; /* W202 C180 ABS signal */
-		case LUA:
-		    return 0; // a bit of a hack
+		case HONDA_CIVIC9:
+		  return 0x17C;
+//		case HYUNDAI_PB:
+		case NISSAN_350:
+		  return 0x23D;
 		default:
 			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
 			return unexpected;
 	}
 }
 
-/* Module specitifc processing functions */
+static expected<uint16_t> look_up_vss_can_id(can_vss_nbc_e type) {
+	switch (type) {
+		case BMW_e46:
+			return 0x01F0; /* BMW e46 ABS Message */
+		case BMW_e90:
+			return 0x1A0;	// BMW E90 ABS speed frame (not wheel speeds, vehicle speed)
+		case NISSAN_350:
+		  return 0x280;
+		case HYUNDAI_PB:
+		  return 1264; // decimal 1264
+		case HONDA_CIVIC9:
+		  return 0x309;
+		case W202:
+			return 0x0200; /* W202 C180 ABS signal */
+		default:
+			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
+			return unexpected;
+	}
+}
+
+static int getTwoBytesLsb(const CANRxFrame& frame, int index) {
+	uint8_t low = frame.data8[index];
+	uint8_t high = frame.data8[index + 1] & 0x0F;
+	return low | (high << 8);
+}
+
+/* Module specific processing functions */
 /* source: http://z4evconversion.blogspot.com/2016/07/completely-forgot-but-it-does-live-on.html */
 float processBMW_e46(const CANRxFrame& frame) {
 	// average the rear wheels since those are the driven ones (more accurate gear detection!)
-	uint16_t left =  (((frame.data8[5] & 0x0f) << 8) | frame.data8[4]);
-	uint16_t right = (((frame.data8[7] & 0x0f) << 8) | frame.data8[6]);
+	uint16_t left =  getTwoBytesLsb(frame, 4);
+	uint16_t right = getTwoBytesLsb(frame, 6);
 
 	return (left + right) / (16 * 2);
+}
+
+float processBMW_e90(const CANRxFrame& frame) {
+	return 0.1f * getTwoBytesLsb(frame, 0);
 }
 
 float processW202(const CANRxFrame& frame) {
@@ -53,8 +83,11 @@ expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
 	switch (engineConfiguration->canVssNbcType){
 		case BMW_e46:
 			return processBMW_e46(frame);
+		case BMW_e90:
+			return processBMW_e90(frame);
 		case W202:
 			return processW202(frame);
+//		case NISSAN_350:
 		default:
 			efiPrintf("vss unsupported can option selected %x", engineConfiguration->canVssNbcType );
 	}
@@ -70,28 +103,38 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 	}
 
 	//filter it we need to process the can message or not
-	if (CAN_SID(frame) != filterCanID ) {
-		return;
-	}
-
-	if (auto speed = processCanRxVssImpl(frame)) {
-		canSpeed.setValidValue(speed.Value * engineConfiguration->canVssScaling, nowNt);
+	if (CAN_SID(frame) == filterVssCanID) {
+	  if (auto speed = processCanRxVssImpl(frame)) {
+		  canSpeed.setValidValue(speed.Value * engineConfiguration->canVssScaling, nowNt);
 
 #if EFI_DYNO_VIEW
-		updateDynoViewCan();
+	  	updateDynoViewCan();
 #endif
+  	}
 	}
+
+	if (CAN_SID(frame) == filterRpmCanID) {
+  }
+
 }
 
 void initCanVssSupport() {
 	if (engineConfiguration->enableCanVss) {
-		if (auto canId = look_up_can_id(engineConfiguration->canVssNbcType)) {
-			filterCanID = canId.Value;
+		if (auto canId = look_up_vss_can_id(engineConfiguration->canVssNbcType)) {
+			filterVssCanID = canId.Value;
 			canSpeed.Register();
 			isInit = true;
 		} else {
 			isInit = false;
 		}
+
+
+		// todo: how do we handle 'isInit' for case with only RPM without VSS for instance?
+		if (engineConfiguration->canInputBCM) {
+			if (auto canId = look_up_rpm_can_id(engineConfiguration->canVssNbcType))
+			filterRpmCanID = canId.Value;
+		}
+
 	}
 }
 

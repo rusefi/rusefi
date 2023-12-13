@@ -8,6 +8,7 @@
 
 #define CLEANUP_MODE_TPS 90
 
+#if EFI_SHAFT_POSITION_INPUT
 static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	auto operationMode = getEngineRotationState()->getOperationMode();
 
@@ -40,6 +41,7 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 		operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
 }
+#endif // EFI_SHAFT_POSITION_INPUT
 
 void LimpManager::onFastCallback() {
 	updateState(Sensor::getOrZero(SensorType::Rpm), getTimeNowNt());
@@ -64,7 +66,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
 
-#if !EFI_UNIT_TEST
+#if EFI_SHAFT_POSITION_INPUT && !EFI_UNIT_TEST
 	if (!m_ignitionOn
 	&& !engine->triggerCentral.directSelfStimulation // useful to try things on real ECU even without ignition voltage
 	) {
@@ -101,6 +103,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		}
 	}
 
+#if EFI_SHAFT_POSITION_INPUT
 	if (engine->lambdaMonitor.isCut()) {
 		allowFuel.clear(ClearReason::LambdaProtection);
 	}
@@ -181,6 +184,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		Sensor::getOrZero(SensorType::DriverThrottleIntent) > CLEANUP_MODE_TPS) {
 		allowFuel.clear(ClearReason::FloodClear);
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	if (!engine->isMainRelayEnabled()) {
 /*
@@ -189,7 +193,7 @@ todo AndreiKA this change breaks 22 unit tests?
 		allowSpark.clear();
 */
 	}
-	
+
 #if EFI_LAUNCH_CONTROL
 	// Fuel cut if launch control engaged
 	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {

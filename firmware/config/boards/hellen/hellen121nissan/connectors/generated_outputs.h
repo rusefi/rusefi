@@ -26,4 +26,25 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::B8, // 79 - Coil 6
 	Gpio::E3, // 80 - Coil 4
 	Gpio::E5, // 81 - Coil 2
+// "21 - INJ_5",
+// "22 - INJ_3",
+// "23 - INJ_1",
+// "40 - INJ_6",
+// "41 - INJ_4",
+// "42 - INJ_2",
+// "104 ETB Relay",
+// "111 Main Relay",
+// "113 Fuel Pump Relay",
+// "2 Aux Low 3",
+// "3 Aux Low 2",
+// "8 Aux Low 1",
+// "10 - VTC Left",
+// "11 - VTC Right",
+// "29 - VIAS",
+// "60 - Coil 5",
+// "61 - Coil 3",
+// "62 - Coil 1",
+// "79 - Coil 6",
+// "80 - Coil 4",
+// "81 - Coil 2",
 }

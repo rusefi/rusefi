@@ -127,6 +127,9 @@ float getConfigValueByName(const char *name) {
 // allowIdenticalPps
 		case 445194564:
 			return engineConfiguration->allowIdenticalPps;
+// overrideVvtTriggerGaps
+		case 840966724:
+			return engineConfiguration->overrideVvtTriggerGaps;
 // tpsMin
 		case 513872736:
 			return engineConfiguration->tpsMin;
@@ -349,6 +352,9 @@ float getConfigValueByName(const char *name) {
 // vssToothCount
 		case -1958312328:
 			return engineConfiguration->vssToothCount;
+// gapVvtTrackingLengthOverride
+		case -188591438:
+			return engineConfiguration->gapVvtTrackingLengthOverride;
 // idle_antiwindupFreq
 		case -524949197:
 			return engineConfiguration->idle_antiwindupFreq;
@@ -412,6 +418,9 @@ float getConfigValueByName(const char *name) {
 // isHip9011Enabled
 		case -2119647784:
 			return engineConfiguration->isHip9011Enabled;
+// requireFootOnBrakeToCrank
+		case -703903346:
+			return engineConfiguration->requireFootOnBrakeToCrank;
 // verboseQuad
 		case -1055678778:
 			return engineConfiguration->verboseQuad;
@@ -553,9 +562,9 @@ float getConfigValueByName(const char *name) {
 // enableLaunchRetard
 		case -1583589783:
 			return engineConfiguration->enableLaunchRetard;
-// unfinishedenableLaunchBoost
-		case -246028069:
-			return engineConfiguration->unfinishedenableLaunchBoost;
+// canInputBCM
+		case 470555289:
+			return engineConfiguration->canInputBCM;
 // consumeObdSensors
 		case 950993889:
 			return engineConfiguration->consumeObdSensors;
@@ -1940,6 +1949,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->allowIdenticalPps = (int)value;
 		return 1;
 	}
+		case 840966724:
+	{
+		engineConfiguration->overrideVvtTriggerGaps = (int)value;
+		return 1;
+	}
 		case 513872736:
 	{
 		engineConfiguration->tpsMin = (int)value;
@@ -2310,6 +2324,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->vssToothCount = (int)value;
 		return 1;
 	}
+		case -188591438:
+	{
+		engineConfiguration->gapVvtTrackingLengthOverride = (int)value;
+		return 1;
+	}
 		case -524949197:
 	{
 		engineConfiguration->idle_antiwindupFreq = value;
@@ -2413,6 +2432,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -2119647784:
 	{
 		engineConfiguration->isHip9011Enabled = (int)value;
+		return 1;
+	}
+		case -703903346:
+	{
+		engineConfiguration->requireFootOnBrakeToCrank = (int)value;
 		return 1;
 	}
 		case -1055678778:
@@ -2650,9 +2674,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enableLaunchRetard = (int)value;
 		return 1;
 	}
-		case -246028069:
+		case 470555289:
 	{
-		engineConfiguration->unfinishedenableLaunchBoost = (int)value;
+		engineConfiguration->canInputBCM = (int)value;
 		return 1;
 	}
 		case 950993889:

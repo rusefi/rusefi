@@ -38,6 +38,24 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
+static void setupEtb() {
+	// TLE9201 driver
+	// This chip has three control pins:
+	// DIR - sets direction of the motor
+	// PWM - pwm control (enable high, coast low)
+	// DIS - disables motor (enable low)
+
+//	// PWM pin
+//	engineConfiguration->etbIo[0].controlPin = Gpio::C7;
+//	// DIR pin
+//	engineConfiguration->etbIo[0].directionPin1 = Gpio::A8;
+//	// Disable pin
+//	engineConfiguration->etbIo[0].disablePin = Gpio::C8;
+
+	// we only have pwm/dir, no dira/dirb
+	engineConfiguration->etb_use_two_wires = false;
+}
+
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
@@ -62,12 +80,18 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi1MisoMode = PO_DEFAULT;
 	engineConfiguration->spi1sckPin = Gpio::E13;
 	engineConfiguration->spi1SckMode = PO_DEFAULT;
+
+// todo	engineConfiguration->triggerInputPins[0] =
+//todo setTPS1Inputs(, );
+
+//todo setPPSInputs(, );
 }
 
 void setBoardConfigOverrides() {
 	//CAN 1 bus overwrites
 	engineConfiguration->canRxPin = Gpio::G0;
 	engineConfiguration->canTxPin = Gpio::G1;
+	setupEtb();
 }
 
 static struct l9779_config l9779_cfg = {
@@ -124,4 +148,29 @@ static void board_init_ext_gpios()
 void boardInit(void)
 {
 	board_init_ext_gpios();
+}
+
+static Gpio PROTEUS_OUTPUTS[] = {
+	Gpio::L9779_OUT_4, // Injector 1
+	Gpio::L9779_OUT_3, // Injector 2
+	Gpio::L9779_OUT_2, // Injector 3
+	Gpio::L9779_OUT_1, // Injector 4
+	Gpio::L9779_OUT_6, // Oxygen sensor 1 heater
+	Gpio::L9779_OUT_5, // EVAP solenoid control
+	Gpio::L9779_OUT_7, // Oxygen sensor 2 heater
+	Gpio::L9779_IGN_1, // Coil 1 (< +2.5v) / Coils 1,4
+	Gpio::L9779_IGN_3, // Coil 3  (< +2.5v) / Coils 2,4
+	Gpio::L9779_OUT_17, // Air compressor control
+	Gpio::L9779_OUT_14, // Secondary starter relay
+	Gpio::L9779_OUT_15, // FAN 1 relay
+	Gpio::L9779_OUT_16, // FAN 2 relay
+	Gpio::L9779_OUT_13, // Fuel pump relay
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(PROTEUS_OUTPUTS);
+}
+
+int getBoardMetaDcOutputsCount() {
+    return 1;
 }

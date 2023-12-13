@@ -6,6 +6,34 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::A1: return "MAF/MAP sensor signal";
+		case Gpio::B12: return "Vehicle speed sensor input";
+		case Gpio::C0: return "Pedal position sensor 1 signal";
+		case Gpio::C1: return "Pedal position sensor 2 signal";
+		case Gpio::C2: return "ETB position sensor 1 signal";
+		case Gpio::C3: return "ETB position sensor 2 signal";
+		case Gpio::E1: return "Air conditioner control input";
+		case Gpio::F10: return "Air conditioner pressure sensor (2 level)";
+		case Gpio::F3: return "Oxygen sensor 1 signal";
+		case Gpio::F5: return "Coolant temperature sensor signal";
+		case Gpio::F6: return "IAT sensor signal";
+		case Gpio::L9779_IGN_1: return "Coil 1 (< +2.5v) / Coils 1,4";
+		case Gpio::L9779_IGN_2: return "Coil 2  (< +2.5v) (not populated)";
+		case Gpio::L9779_IGN_3: return "Coil 3  (< +2.5v) / Coils 2,4";
+		case Gpio::L9779_IGN_4: return "Coil 4  (< +2.5v) (not populated)";
+		case Gpio::L9779_OUT_1: return "Injector 4";
+		case Gpio::L9779_OUT_13: return "Fuel pump relay";
+		case Gpio::L9779_OUT_14: return "Secondary starter relay";
+		case Gpio::L9779_OUT_15: return "FAN 1 relay";
+		case Gpio::L9779_OUT_16: return "FAN 2 relay";
+		case Gpio::L9779_OUT_17: return "Air compressor control";
+		case Gpio::L9779_OUT_18: return "Unknown out (OUT18)";
+		case Gpio::L9779_OUT_2: return "Injector 3";
+		case Gpio::L9779_OUT_3: return "Injector 2";
+		case Gpio::L9779_OUT_4: return "Injector 1";
+		case Gpio::L9779_OUT_5: return "EVAP solenoid control";
+		case Gpio::L9779_OUT_6: return "Oxygen sensor 1 heater";
+		case Gpio::L9779_OUT_7: return "Oxygen sensor 2 heater";
 		default: return nullptr;
 	}
 	return nullptr;

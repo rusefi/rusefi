@@ -83,13 +83,13 @@ end
 canRxAdd(ID_413_19D, onMqbHeadlight)
 canRxAdd(ID_981_3D5, onMqbHeadlight)
 
-canTimer = Timer.new()
-canTimer : reset()
-
 startPwm(0, 10, 0)
 startPwm(1, 10, 0)
 startPwm(2, 10, 0)
 startPwm(3, 10, 0)
+
+canTimer = Timer.new()
+canTimer : reset()
 
 commTimer = Timer.new()
 commTimer : reset()

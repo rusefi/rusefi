@@ -19,6 +19,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D11: return "97 - INJ_3";
 		case Gpio::D13: return "37 - TACH";
 		case Gpio::D14: return "105 - IDLE rev A,B";
+		case Gpio::D15: return "OUT_FUEL_CONSUMPTION";
 		case Gpio::D9: return "113 INJ 5";
 		case Gpio::E12: return "In D1";
 		case Gpio::E13: return "In D2";

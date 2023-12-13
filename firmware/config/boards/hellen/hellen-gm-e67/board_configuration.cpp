@@ -40,20 +40,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[7] = Gpio::H144_IGN_8;
 }
 
-static void setupVbatt() {
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// set vbatt_divider 5.835
-	// 33k / 6.8k
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-	// pin input +12 from Main Relay
-	engineConfiguration->vbattAdcChannel = EFI_ADC_5; // 4T
-
-	engineConfiguration->adcVcc = 3.29f;
-}
-
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_SENS2;
@@ -74,10 +60,10 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
-#include "hellen_leds_144.cpp"
+
 
 void setBoardConfigOverrides() {
-	setupVbatt();
+	setHellenVbatt();
 
 	setHellenSdCardSpi2();
     setDefaultHellenAtPullUps();
@@ -97,10 +83,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_IO13;
    	// Disable pin
    	engineConfiguration->etbIo[0].disablePin = Gpio::H144_OUT_IO4;
-   	// Unused
- 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
-
-
 }
 
 /**

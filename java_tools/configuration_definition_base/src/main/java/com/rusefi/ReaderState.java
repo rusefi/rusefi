@@ -39,4 +39,6 @@ public interface ReaderState {
     List<String> getPrependFiles();
 
     boolean isStackEmpty();
+
+    ConfigStructure peek();
 }

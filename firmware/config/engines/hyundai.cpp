@@ -237,26 +237,118 @@ end
 
 }
 
+#if HW_HELLEN_HYUNDAI
+static void cannedprimeBins() {
+	static const float hardCodedprimeBins[8] = {-40.0, -20.0, 0.0, 20.0, 40.0, 60.0, 80.0, 100.0};
+	copyArray(engineConfiguration->primeBins, hardCodedprimeBins);
+}
+
+static void cannedprimeValues() {
+	static const float hardCodedprimeValues[8] = {755.0, 605.0, 265.0, 140.0, 75.0, 50.0, 45.0, 40.0};
+	copyArray(engineConfiguration->primeValues, hardCodedprimeValues);
+}
+
+static void cannedcltIdleCorrBins() {
+	static const float hardCodedcltIdleCorrBins[16] = {-40.0, -30.0, -20.0, -10.0, 0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0};
+	copyArray(config->cltIdleCorrBins, hardCodedcltIdleCorrBins);
+}
+
+static void cannedcltIdleCorr() {
+	static const float hardCodedcltIdleCorr[16] = {1.5, 1.5, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.233333, 1.166667, 1.1, 1.0, 1.0, 1.0, 1.0};
+	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
+}
+#endif // HW_HELLEN_HYUNDAI
+
 static void commonGenesisCoupe() {
 	set201xHyundai();
 
+#if HW_HELLEN_HYUNDAI
+	cannedprimeBins();
+	cannedprimeValues();
+	cannedcltIdleCorrBins();
+	cannedcltIdleCorr();
+#endif // HW_HELLEN_HYUNDAI
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
 	engineConfiguration->enableSoftwareKnock = true;
-	engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
-	engineConfiguration->displacement = 1.998;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Theta II");
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
+// canned tune https://rusefi.com/online/view.php?msq=1507
+    // default "Single Coil"
+    engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+    // default 2.0
+    engineConfiguration->displacement = 1.998;
+    // default "false"
+    engineConfiguration->isForcedInduction = true;
+    // default 0.0
+    engineConfiguration->globalTriggerAngleOffset = 475;
+    // default 0.0
+    engineConfiguration->vvtOffsets[0] = -154;
+    // default 0.0
+    engineConfiguration->vvtOffsets[1] = 335;
+    // default "None"
+    engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
+
+    // default 95.0
+    engineConfiguration->fanOnTemperature = 80;
+    // default 91.0
+    engineConfiguration->fanOffTemperature = 75;
+    // default "false"
+    engineConfiguration->disableFan1WhenStopped = true;
+    // default 95.0
+    engineConfiguration->fan2OnTemperature = 87;
+    // default 91.0
+    engineConfiguration->fan2OffTemperature = 82;
+    // default "false"
+    engineConfiguration->disableFan2WhenStopped = true;
+    // default 50.0
+    engineConfiguration->crankingIACposition = 70;
+    // default 200.0
+    engineConfiguration->afterCrankingIACtaperDuration = 100;
+    // default "false"
+    engineConfiguration->overrideCrankingIacSetting = true;
+    // default 0.0
+    engineConfiguration->tpsAccelLookback = 0.3;
+    // default 40.0
+    engineConfiguration->tpsAccelEnrichmentThreshold = 12;
+    // default 0.0
+    engineConfiguration->tpsDecelEnleanmentThreshold = 7;
+    // default 0.0
+    engineConfiguration->tpsAccelFractionPeriod = 3;
+    // default 0.0
+    engineConfiguration->tpsAccelFractionDivisor = 3;
+    // default "false"
+    engineConfiguration->useSeparateAdvanceForIdle = true;
+    // default 0.0
+    engineConfiguration->iacByTpsHoldTime = 2;
+    // default 0.0
+    engineConfiguration->iacByTpsDecayTime = 3;
+    // default "false"
+    engineConfiguration->useIdleTimingPidControl = true;
+    // default "false"
+    engineConfiguration->invertVvtControlExhaust = true;
+    // default 33.0
+    engineConfiguration->auxPid[0].offset = 38;
+    // default 0.005
+    engineConfiguration->auxPid[0].iFactor = 25.4;
+    // default 0.0
+    engineConfiguration->auxPid[0].dFactor = 0.1;
+    // default 0.0
+    engineConfiguration->auxPid[1].offset = 38;
+    // default 0.0
+    engineConfiguration->auxPid[1].pFactor = 2;
+    // default 0.0
+    engineConfiguration->auxPid[1].iFactor = 25.4;
+    // default 0.0
+    engineConfiguration->auxPid[1].dFactor = 0.2;
+// end of canned tune
 
 	strncpy(config->luaScript, R"(
 
@@ -363,5 +455,7 @@ void setGenesisCoupeBK2() {
 	// flow rate P2 = flow rate P1 * sqrt(P2/P1)
 	engineConfiguration->injector.flow = 629.03; // https://www.google.com/search?q=450*sqrt%2885%2F43.5%29
 	engineConfiguration->fuelReferencePressure = PSI2KPA(85);
+    // default "Throttle 2"
+    engineConfiguration->etbFunctions[1] = DC_Wastegate;
 
 }

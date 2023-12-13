@@ -1,6 +1,7 @@
 #pragma once
 
 #include "efi_scaled_channel.h"
+#include "rusefi_types.h"
 #include <cstdint>
 #include <cstddef>
 
@@ -112,6 +113,15 @@ template<>
 constexpr LogField::Type LogField::resolveType<uint32_t>() {
 	return Type::U32;
 }
+
+#if EFI_PROD_CODE
+// we allow both 'int' and 'int32_t' just to allow extra flexibility in headers
+// https://stackoverflow.com/questions/55782246/why-is-uint32-t-typedeffed-to-unsigned-long-on-arm-none-eabi-gcc-and-how-to
+template<>
+constexpr LogField::Type LogField::resolveType<int>() {
+	return Type::S32;
+}
+#endif
 
 template<>
 constexpr LogField::Type LogField::resolveType<int32_t>() {

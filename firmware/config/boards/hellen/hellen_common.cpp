@@ -11,6 +11,19 @@ void setHellenCan() {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
+void setHellenVbatt() {
+	// 4.7k high side/4.7k low side = 2.0 ratio divider
+	engineConfiguration->analogInputDividerCoefficient = 2.0f;
+
+	// set vbatt_divider 5.835
+	// 33k / 6.8k
+	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
+
+	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
+
+	engineConfiguration->adcVcc = 3.29f;
+}
+
 void setHellen64Can() {
 	engineConfiguration->canTxPin = Gpio::B9;
 	engineConfiguration->canRxPin = Gpio::B8;
@@ -51,7 +64,7 @@ void configureHellenMegaAccCS2Pin() {
     static OutputPin cs2pin;
     if (!initialized) {
         initialized = true;
-	    cs2pin.initPin("mm-CS2", H_SPI1_CS2);
+	    cs2pin.initPin("mm-CS2", Gpio::H_SPI1_CS2);
 	    cs2pin.setValue(1);
 	}
 }

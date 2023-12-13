@@ -165,14 +165,12 @@ static void fast_adc_callback(GPTDriver*) {
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
 		fastAdc.errorsCount++;
 		// todo: when? why? criticalError("ADC fast not ready?");
-		chSysUnlockFromISR()
-		;
+		chSysUnlockFromISR();
 		return;
 	}
 
 	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
-	chSysUnlockFromISR()
-	;
+	chSysUnlockFromISR();
 	fastAdc.conversionCount++;
 #endif /* EFI_INTERNAL_ADC */
 }

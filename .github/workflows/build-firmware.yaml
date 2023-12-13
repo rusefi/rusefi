@@ -78,7 +78,6 @@ jobs:
             m74_9,
             s105,
             t-b-g,
-            harley81,
             hellen72,
             hellen81,
             hellen88bmw,
@@ -98,7 +97,6 @@ jobs:
             mre_f4_no_openblt,
             mre_f4_debug,
             mre_f4_recovery,
-            mre_f4_hardware_QC_special_build,
             mre_f7,
             prometheus_405,
             prometheus_469,
@@ -112,7 +110,6 @@ jobs:
             subaru_eg33_f7_no_bl,
             f407-discovery,
             f429-discovery,
-            core8,
             atlas,
             tdg-pdm8,
             at_start_f435,
@@ -174,15 +171,14 @@ jobs:
             ini-file: rusefi_m74_9.ini
             skip-rate: 50
 
-          - build-target: harley81
-            folder: config/boards/hellen/harley81
-            ini-file: rusefi_harley81.ini
-            skip-rate: 99
-
           - build-target: small-can-board
             folder: config/boards/hellen/small-can-board
             ini-file: rusefi_small-can-board.ini
             skip-rate: 50
+
+          - build-target: uaefi
+            folder: config/boards/hellen/uaefi
+            ini-file: rusefi_uaefi.ini
 
           - build-target: small-can-board_debug
             folder: config/boards/hellen/small-can-board
@@ -288,11 +284,6 @@ jobs:
             ini-file: rusefi_mre_f4.ini
             skip-rate: 95
 
-          - build-target: mre_f4_hardware_QC_special_build
-            folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
-            skip-rate: 90
-
           - build-target: mre_f7
             folder: config/boards/microrusefi
             ini-file: rusefi_mre_f7.ini
@@ -370,11 +361,6 @@ jobs:
             ini-file: rusefi_f429-discovery.ini
             skip-rate: 95
 
-          - build-target: core8
-            folder: config/boards/core8
-            ini-file: rusefi_core8.ini
-            skip-rate: 0
-
           - build-target: atlas
             folder: config/boards/atlas
             ini-file: rusefi_atlas.ini
@@ -450,7 +436,7 @@ jobs:
         git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
         git submodule update --init --depth=1 java_console/luaformatter
 
-    - uses: actions/setup-java@v3
+    - uses: actions/setup-java@v4
       if: ${{ env.skip != 'true' }}
       with:
         distribution: 'zulu'

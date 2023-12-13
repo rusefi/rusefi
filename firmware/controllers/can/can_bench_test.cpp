@@ -19,14 +19,24 @@
  */
 bool qcDirectPinControlMode = false;
 
-#if EFI_CAN_SUPPORT
-
 static void directWritePad(Gpio pin, int value) {
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
 	// todo: add smart chip support support
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }
+
+static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
+	qcDirectPinControlMode = true;
+	const dc_io *io = &engineConfiguration->etbIo[dcIndex];
+	Gpio controlPin = io->controlPin;
+	directWritePad(controlPin, 1);
+	efiSetPadModeWithoutOwnershipAcquisition("QC_ETB", controlPin, PAL_MODE_OUTPUT_PUSHPULL);
+	directWritePad(io->directionPin1, direction);
+	directWritePad(io->disablePin, 0); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
+}
+
+#if EFI_CAN_SUPPORT
 
 static void setPin(const CANRxFrame& frame, int value) {
 		int outputIndex = frame.data8[2];
@@ -208,15 +218,9 @@ void processCanBenchTest(const CANRxFrame& frame) {
 		qcDirectPinControlMode = true;
 	    setPin(frame, 0);
 	} else if (command == bench_test_io_control_e::CAN_QC_ETB) {
-		qcDirectPinControlMode = true;
 		uint8_t dcIndex = frame.data8[2];
 		uint8_t direction = frame.data8[3];
-		const dc_io *io = &engineConfiguration->etbIo[dcIndex];
-		Gpio controlPin = io->controlPin;
-		directWritePad(controlPin, 1);
-		efiSetPadModeWithoutOwnershipAcquisition("QC_ETB", controlPin, PAL_MODE_OUTPUT_PUSHPULL);
-		directWritePad(io->directionPin1, direction);
-		directWritePad(io->disablePin, 0); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
+		qcSetEtbState(dcIndex, direction);
 	} else if (command == bench_test_io_control_e::CAN_BENCH_SET_ENGINE_TYPE) {
 		int eType = frame.data8[2];
 		// todo: fix firmware for 'false' to be possible - i.e. more of properties should be applied on the fly
@@ -239,3 +243,9 @@ void processCanBenchTest(const CANRxFrame& frame) {
 	}
 }
 #endif // EFI_CAN_SUPPORT
+
+void initQcControls() {
+    addConsoleActionII("qc_etb", [](int index, int direction) {
+        qcSetEtbState(index, direction);
+    });
+}

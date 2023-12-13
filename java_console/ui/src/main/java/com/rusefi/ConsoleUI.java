@@ -150,7 +150,7 @@ public class ConsoleUI {
         tabbedPane.addTab("Connection", new ConnectionTab(uiContext).getContent());
 
         if (false) {
-            // this feature is not totally happy safer to disabke to reduce user confusion
+            // this feature is not totally happy safer to disable to reduce user confusion
             // https://github.com/rusefi/rusefi/issues/5292
             uiContext.sensorLogger.init();
         }

@@ -47,6 +47,7 @@ TEST(Alternator, ClosedLoop) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	AlternatorController dut;
+	dut.init();
 
 	engineConfiguration->alternatorControl.pFactor = 1.5f;
 	engineConfiguration->alternatorControl.iFactor = 0;

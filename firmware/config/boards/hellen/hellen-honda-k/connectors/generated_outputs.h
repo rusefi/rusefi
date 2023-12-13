@@ -13,6 +13,8 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_OUT_PWM6, // B21 - EVAP
 	Gpio::H144_LS_7, // B22 Intake Runner
 	Gpio::H144_OUT_PWM8, // C11 Aux Low 3
+	Gpio::H144_OUT_PWM7, // C12 Aux Low 2
+	Gpio::H144_OUT_PWM3, // C13 Aux Low 1
 	Gpio::H144_OUT_IO13, // E1 Fuel Relay
 	Gpio::H144_OUT_IO3, // E7 Main Relay Control
 	Gpio::H144_LS_5, // E18 - AC Relay
@@ -28,4 +30,30 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_OUT_PWM5, // B23 VTC VVT
 	Gpio::H144_OUT_IO10, // E26 Tachometer
 	Gpio::H144_OUT_IO7, // E31 Check Engine
+// "A12 Idle Air Control",
+// "B2 - Injector 4",
+// "B3 - Injector 3",
+// "B4 - Injector 2",
+// "B6 Radiator Relay",
+// "B7 Lockout Solenoid",
+// "B21 - EVAP",
+// "B22 Intake Runner",
+// "C11 Aux Low 3",
+// "C12 Aux Low 2",
+// "C13 Aux Low 1",
+// "E1 Fuel Relay",
+// "E7 Main Relay Control",
+// "E18 - AC Relay",
+// "AuxHigh1",
+// "AuxPP1",
+// "A27 - IGN4",
+// "A28 - IGN3",
+// "A29 - IGN2",
+// "A30 - IGN1",
+// "B5 - Injector 1",
+// "B15 VTEC/VTS Output",
+// "B18 Alternator Control",
+// "B23 VTC VVT",
+// "E26 Tachometer",
+// "E31 Check Engine",
 }

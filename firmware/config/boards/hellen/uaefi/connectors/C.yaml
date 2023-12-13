@@ -1,0 +1,114 @@
+meta: config/boards/hellen_mm100_meta.h
+
+pins:
+  - pin: C1
+    function: Sensor +5v Power Feed
+    type: 5v
+    
+  - pin: C2
+    function: Sensor +5v Power Feed
+    type: 5v
+    
+  - pin: C3
+    meta: MM100_IN_O2S2_ANALOG
+    class: analog_inputs
+    ts_name: ___ AUX2
+    function: Auxiliary analog input 2
+    
+  - pin: C4
+    meta: MM100_IN_AUX2_ANALOG
+    class: analog_inputs
+    ts_name: ___ PPS2
+    function: PPS input 2
+    
+  - pin: C5
+    meta: MM100_IN_D1
+    class: event_inputs
+    ts_name: ___ HALL1
+    function: HALL input 1
+    
+  - pin: C6
+    meta: MM100_IN_D2
+    class: event_inputs
+    ts_name: ___ HALL2
+    function: HALL input 2
+    
+  - pin: C7
+    meta: MM100_IN_D3
+    class: event_inputs
+    ts_name: ___ HALL3
+    function: HALL input 3
+    
+  - pin: C8
+    function: Power Ground / VR Shield
+    type: gnd
+    
+  - pin: C9
+    meta: MM100_IN_D4
+    class: switch_inputs
+    ts_name: ___ BUTTON3
+    function: Button input 3 
+
+  - pin: C10
+    ts_name: ___ EGT+
+    function: EGT positive input  
+
+  - pin: C11
+    function: Sensor ground
+  
+  - pin: C12
+    function: Sensor ground   
+    
+  - pin: C13
+    function: Sensor ground   
+    
+  - pin: C14
+    meta: MM100_IN_AUX1_ANALOG
+    class: analog_inputs
+    ts_name: ___ TPS2
+    function: TPS input 2
+    
+  - pin: C15
+    meta: MM100_IN_AUX3_ANALOG
+    class: analog_inputs
+    ts_name: ___ AUX3
+    function: Auxiliary analog input 3
+    
+  - pin: C16
+    function: VR2+
+
+  - pin: C17
+    meta: MM100_UART8_TX
+    class: event_inputs
+    ts_name: ___ VR2-/HALL
+    function: VR2-/HALL
+
+#  - pin: C16C17
+#    meta: MM100_UART8_TX
+#    class: event_inputs
+#    function: VR2 Sensor
+#    type: hall
+#    ts_name: C15/C16 VR2 Sensor
+
+  - pin: C18
+    function: VR1+
+
+  - pin: C19
+    function: VR1-
+
+  - pin: C18C19
+    meta: MM100_UART8_RX
+    class: event_inputs
+    function: VR1 Sensor
+    type: hall
+    ts_name: C18/C19 VR2 Sensor
+    
+  - pin: C20
+    ts_name: ___ EGT-
+    function: EGT negative input  
+    
+info:
+  cid: c
+  title: uaefi
+  directory: hellen/uaefi
+  board_url: https://github.com/rusefi/rusefi/wiki/uaefi

@@ -1,6 +1,8 @@
 /*
  * @file mc33816.cpp
  *
+ * TL,DR: GDI
+ *
  * The NXP MC33816 is a programmable gate driver IC for precision solenoid control applications.
  *
  *
@@ -199,9 +201,15 @@ static bool isInitialized = false;
 void Pt2001::initIfNeeded() {
 	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
 		isInitialized = false;
+	  efiPrintf("unhappy mc33 due to battery voltage");
 	} else {
 		if (!isInitialized) {
 			isInitialized = restart();
+			if (isInitialized) {
+			  efiPrintf("happy mc33/PT2001!");
+			} else {
+			  efiPrintf("unhappy mc33 fault=%d", (int)fault);
+			}
 		}
 	}
 }

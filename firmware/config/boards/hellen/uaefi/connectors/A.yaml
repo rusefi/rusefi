@@ -1,0 +1,41 @@
+meta: config/boards/hellen_mm100_meta.h
+
+pins:
+  - pin: A1
+    function: DC1-
+    type: etb
+    
+  - pin: A2
+    function: DC2-
+    type: etb
+
+  - pin: A3
+    function: Power Ground
+    type: gnd
+    
+  - pin: A4
+    function: Power Ground
+    type: gnd
+    
+  - pin: A5
+    function: DC1+
+    type: etb
+    
+  - pin: A6
+    function: DC2+
+    type: etb
+
+  - pin: A7
+    meta: MM100_IN_VBATT
+    class: analog_inputs
+    function: Ignition Switch / Battery Voltage Analog Input
+    ts_name: ___ Voltage From Key
+      
+  - pin: A8
+    function: +12V From Main Relay
+
+info:
+  cid: a
+  title: uaefi
+  directory: hellen/uaefi
+  board_url: https://github.com/rusefi/rusefi/wiki/uaefi

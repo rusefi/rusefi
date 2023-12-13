@@ -55,7 +55,7 @@ public class BinaryProtocolServer {
         log.configureDebugEnabled(false);
     }
 
-    public AtomicInteger unknownCommands = new AtomicInteger();
+    public final AtomicInteger unknownCommands = new AtomicInteger();
 
     public static final ServerSocketFunction SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
 

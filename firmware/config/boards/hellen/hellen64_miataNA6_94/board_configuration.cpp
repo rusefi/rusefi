@@ -32,20 +32,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned; // Gpio::E3
 }
 
-static void setupVbatt() {
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// set vbatt_divider 5.835
-	// 33k / 6.8k
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-	// pin input +12 from Main Relay
-	engineConfiguration->vbattAdcChannel = EFI_ADC_5; // 4T
-
-	engineConfiguration->adcVcc = 3.29f;
-}
-
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
 	engineConfiguration->triggerInputPins[0] = Gpio::A6;
@@ -67,7 +53,7 @@ static void setupDefaultSensorInputs() {
 #include "hellen_leds_176.cpp"
 
 void setBoardConfigOverrides() {
-	setupVbatt();
+	setHellenVbatt();
 
 	setHellenSdCardSpi2();
 

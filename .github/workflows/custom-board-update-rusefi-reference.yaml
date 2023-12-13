@@ -1,0 +1,38 @@
+#
+#
+#
+
+name: Update rusEFI Reference
+
+on:
+  workflow_call:
+
+jobs:
+  update-git:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Git Checkout Submodules
+        run: |
+          git submodule update --init --depth=1 ext/rusefi
+
+      - name: Git Update Submodules
+        run: |
+          git submodule update --remote
+
+      - name: Commit fresh submodules
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub git update Action"
+          git add ext/rusefi
+          git commit -am "GHA says update submodule"
+          git status
+
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}

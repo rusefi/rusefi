@@ -5,7 +5,7 @@
  *
  * If you edit this file, please update rusEFI_CAN_verbose.dbc!
  * Kvaser Database Editor works well for this task, and is free.
- * 
+ *
  * @author Matthew Kennedy, (c) 2020
  */
 
@@ -46,9 +46,9 @@ static void populateFrame(Status& msg) {
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
 	msg.o2Heater = enginePins.o2heater.getLogicValue();
-#if EFI_ENGINE_CONTROL
+#if EFI_SHAFT_POSITION_INPUT
 	msg.lambdaProtectActive = engine->lambdaMonitor.isCut();
-#endif // EFI_ENGINE_CONTROL
+#endif // EFI_SHAFT_POSITION_INPUT
 	msg.fan = enginePins.fanRelay.getLogicValue();
 	msg.fan2 = enginePins.fanRelay2.getLogicValue();
 

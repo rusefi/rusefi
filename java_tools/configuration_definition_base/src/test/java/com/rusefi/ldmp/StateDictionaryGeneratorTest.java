@@ -1,11 +1,9 @@
 package com.rusefi.ldmp;
 
-import com.rusefi.util.LazyFile;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -31,18 +29,10 @@ public class StateDictionaryGeneratorTest {
 
         Map<String, Object> data = LiveDataProcessor.getStringObjectMap(new StringReader(testYaml));
 
-        Map<String, StringBufferLazyFile> fileCapture = new HashMap<>();
-        LiveDataProcessor liveDataProcessor = new LiveDataProcessor("test", fileName -> new StringReader(""), new LazyFile.LazyFileFactory() {
-            @Override
-            public LazyFile create(String fileName) {
-                StringBufferLazyFile file = new StringBufferLazyFile();
-                fileCapture.put(fileName, file);
-                return file;
-            }
-        });
+        TestFileCaptor captor = new TestFileCaptor();
+        LiveDataProcessor liveDataProcessor = new LiveDataProcessor("test", fileName -> new StringReader(""), captor);
         liveDataProcessor.handleYaml(data);
-        assertEquals(7, fileCapture.size());
-
+        assertEquals("number of outputs", 14, captor.fileCapture.size());
 
         assertEquals("        stateDictionary.register(live_data_e.LDS_output_channels, TsOutputs.VALUES, \"status_loop\");\n" +
                 "        stateDictionary.register(live_data_e.LDS_fuel_computer, FuelComputer.VALUES, \"fuel_computer\");\n", liveDataProcessor.stateDictionaryGenerator.content.toString());

@@ -20,6 +20,7 @@ public class ConfigStructureImpl implements ConfigStructure {
     private final String name;
     private final String comment;
     private final boolean withPrefix;
+    private final ConfigStructure parent;
     private final List<ConfigField> cFields = new ArrayList<>();
     private final List<ConfigField> tsFields = new ArrayList<>();
 
@@ -32,15 +33,21 @@ public class ConfigStructureImpl implements ConfigStructure {
     private ConfigField cPrevField = ConfigFieldImpl.VOID;
     private final Set<String> names = new HashSet<>();
 
-    public ConfigStructureImpl(String name, String comment, boolean withPrefix) {
+    public ConfigStructureImpl(String name, String comment, boolean withPrefix, ConfigStructure parent) {
         this.name = name;
         this.comment = comment;
         this.withPrefix = withPrefix;
+        this.parent = parent;
     }
 
     public void addBitField(ConfigFieldImpl bitField) {
         addBoth(bitField);
         this.readingBitState.incrementBitIndex(bitField);
+    }
+
+    @Override
+    public ConfigStructure getParent() {
+        return parent;
     }
 
     @Override
@@ -152,5 +159,12 @@ public class ConfigStructureImpl implements ConfigStructure {
     @Override
     public String getComment() {
         return comment;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfigStructureImpl{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

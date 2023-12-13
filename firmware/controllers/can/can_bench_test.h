@@ -10,3 +10,4 @@ void sendEventCounters();
 void sendButtonCounters();
 void sendRawAnalogValues();
 void sendBoardStatus();
+void initQcControls();

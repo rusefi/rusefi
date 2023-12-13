@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/tps_accel_state.txt Thu Nov 23 14:52:31 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/tps_accel_state.txt Mon Nov 27 20:20:53 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -17,11 +17,9 @@ public class TpsAccelState {
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
-	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
-	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
-	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
-	public static final String GAUGE_NAME_ACCEL_YAW = "Acceleration: Yaw";
-	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
+	public static final String GAUGE_NAME_ACCEL_LAT = "Accel: Lateral";
+	public static final String GAUGE_NAME_ACCEL_LON = "Accel: Longitudinal";
+	public static final String GAUGE_NAME_ACCEL_VERT = "Accel: Vertical";
 	public static final String GAUGE_NAME_ADJUSTED_TIMING = "Timing: ignition";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
@@ -94,6 +92,7 @@ public class TpsAccelState {
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel: wall correction";
 	public static final String GAUGE_NAME_FW_VERSION = "ECU Software Version";
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
+	public static final String GAUGE_NAME_GYRO_YAW = "Gyro: Yaw rate";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
@@ -171,23 +170,23 @@ public class TpsAccelState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field TPSFROM = Field.create("TPSFROM", 0, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field TPSTO = Field.create("TPSTO", 4, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field DELTATPS = Field.create("DELTATPS", 8, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field EXTRAFUEL = Field.create("EXTRAFUEL", 12, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field VALUEFROMTABLE = Field.create("VALUEFROMTABLE", 16, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field ISABOVEACCELTHRESHOLD = Field.create("ISABOVEACCELTHRESHOLD", 20, FieldType.BIT, 0).setBaseOffset(1140);
-	public static final Field ISBELOWDECELTHRESHOLD = Field.create("ISBELOWDECELTHRESHOLD", 20, FieldType.BIT, 1).setBaseOffset(1140);
-	public static final Field ISTIMETORESETACCUMULATOR = Field.create("ISTIMETORESETACCUMULATOR", 20, FieldType.BIT, 2).setBaseOffset(1140);
-	public static final Field ISFRACTIONALENRICHMENT = Field.create("ISFRACTIONALENRICHMENT", 20, FieldType.BIT, 3).setBaseOffset(1140);
-	public static final Field BELOWEPSILON = Field.create("BELOWEPSILON", 20, FieldType.BIT, 4).setBaseOffset(1140);
-	public static final Field TOOSHORT = Field.create("TOOSHORT", 20, FieldType.BIT, 5).setBaseOffset(1140);
-	public static final Field FRACTIONALINJFUEL = Field.create("FRACTIONALINJFUEL", 24, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field ACCUMULATEDVALUE = Field.create("ACCUMULATEDVALUE", 28, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field MAXEXTRAPERCYCLE = Field.create("MAXEXTRAPERCYCLE", 32, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field MAXEXTRAPERPERIOD = Field.create("MAXEXTRAPERPERIOD", 36, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field MAXINJECTEDPERPERIOD = Field.create("MAXINJECTEDPERPERIOD", 40, FieldType.FLOAT).setBaseOffset(1140);
-	public static final Field CYCLECNT = Field.create("CYCLECNT", 44, FieldType.INT).setScale(1.0).setBaseOffset(1140);
+	public static final Field TPSFROM = Field.create("TPSFROM", 0, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field TPSTO = Field.create("TPSTO", 4, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field DELTATPS = Field.create("DELTATPS", 8, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field EXTRAFUEL = Field.create("EXTRAFUEL", 12, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field VALUEFROMTABLE = Field.create("VALUEFROMTABLE", 16, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field ISABOVEACCELTHRESHOLD = Field.create("ISABOVEACCELTHRESHOLD", 20, FieldType.BIT, 0).setBaseOffset(1136);
+	public static final Field ISBELOWDECELTHRESHOLD = Field.create("ISBELOWDECELTHRESHOLD", 20, FieldType.BIT, 1).setBaseOffset(1136);
+	public static final Field ISTIMETORESETACCUMULATOR = Field.create("ISTIMETORESETACCUMULATOR", 20, FieldType.BIT, 2).setBaseOffset(1136);
+	public static final Field ISFRACTIONALENRICHMENT = Field.create("ISFRACTIONALENRICHMENT", 20, FieldType.BIT, 3).setBaseOffset(1136);
+	public static final Field BELOWEPSILON = Field.create("BELOWEPSILON", 20, FieldType.BIT, 4).setBaseOffset(1136);
+	public static final Field TOOSHORT = Field.create("TOOSHORT", 20, FieldType.BIT, 5).setBaseOffset(1136);
+	public static final Field FRACTIONALINJFUEL = Field.create("FRACTIONALINJFUEL", 24, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field ACCUMULATEDVALUE = Field.create("ACCUMULATEDVALUE", 28, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field MAXEXTRAPERCYCLE = Field.create("MAXEXTRAPERCYCLE", 32, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field MAXEXTRAPERPERIOD = Field.create("MAXEXTRAPERPERIOD", 36, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field MAXINJECTEDPERPERIOD = Field.create("MAXINJECTEDPERPERIOD", 40, FieldType.FLOAT).setBaseOffset(1136);
+	public static final Field CYCLECNT = Field.create("CYCLECNT", 44, FieldType.INT).setScale(1.0).setBaseOffset(1136);
 	public static final Field[] VALUES = {
 	TPSFROM,
 	TPSTO,

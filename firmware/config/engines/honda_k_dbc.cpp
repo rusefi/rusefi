@@ -60,19 +60,19 @@ void setHondaK() {
 
 	gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
 	vtsControl->pwmFrequency = 0;
+#if EFI_SIMULATOR
+    // simulator canned config XML toolset cares to see perfect empty memory region
+	memset(engineConfiguration->gpPwmNote[0], 0, sizeof(gppwm_note_t));
+#endif
 	strcpy(engineConfiguration->gpPwmNote[0], "VTS");
-}
 
 /**
  * K24A4 engine
- * PROTEUS_HONDA_K
+ * HONDA_K
  */
-void setProteusHondaElement2003() {
-    setHondaK();
-
-	strcpy(engineConfiguration->vehicleName, "test");
 
 #if HW_PROTEUS & EFI_PROD_CODE
+	strcpy(engineConfiguration->vehicleName, "test");
 //	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_2; // crank
 //	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_4; // intake
 //	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = PROTEUS_DIGITAL_1; // exhaust
@@ -88,7 +88,6 @@ void setProteusHondaElement2003() {
 	engineConfiguration->injectionPins[2] = Gpio::PROTEUS_LS_6;
 	engineConfiguration->injectionPins[3] = Gpio::PROTEUS_LS_5;
 
-	gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
 	vtsControl->pin = Gpio::PROTEUS_HS_1;
 	engineConfiguration->vvtPins[0] = Gpio::PROTEUS_HS_2;
 

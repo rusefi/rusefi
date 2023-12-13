@@ -38,19 +38,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 }
 
-static void setupVbatt() {
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// set vbatt_divider 5.835
-	// 33k / 6.8k
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
-
-	engineConfiguration->adcVcc = 3.29f;
-}
-
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CRANK;
@@ -59,7 +46,7 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -88,7 +75,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
 }
 
-#include "hellen_leds_144.cpp"
+
 
 static bool isMegaModuleRevision() {
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
@@ -96,7 +83,7 @@ static bool isMegaModuleRevision() {
 }
 
 void setBoardConfigOverrides() {
-	setupVbatt();
+	setHellenVbatt();
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 
 	// rev.D uses SPI1 pins for CAN2, but rev.E and later uses mega-module meaning SPI1 for SD-card

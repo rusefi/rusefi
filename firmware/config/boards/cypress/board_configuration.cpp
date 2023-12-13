@@ -91,7 +91,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->tps2_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_NONE;
 	
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
 	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;

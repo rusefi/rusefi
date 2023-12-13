@@ -29,14 +29,16 @@ pins:
 
   - pin: 6C
     function: High Side 2
-    meta: MM176_OUT_IO1
+    # we have weird HS2<>HS3 and HS3<>HS2 on the schematics, let's just accept it
+    meta: MM176_OUT_IO2
     class: outputs
     ts_name: 6C - High Side 2
     color: orange
     
   - pin: 7C
     function: High Side 3
-    meta: MM176_OUT_IO2
+# we have weird HS2<>HS3 and HS3<>HS2 on the schematics, let's just accept it
+    meta: MM176_OUT_IO1
     class: outputs
     ts_name: 7C - High Side 3
     color: purple

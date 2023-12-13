@@ -1,12 +1,15 @@
+meta: config/boards/hellen_meta.h
+
 pins:
   - pin: X1
     function: GND
     type: gnd
 
   - pin: X2
-    # H_SPI1_CS2
-    id: B7
+    # H_SPI1_CS2 rev C, else on rev D
+    meta: H_SPI1_CS2
     class: outputs
+    type: ls
     ts_name: X2 AuxLS3
     function: AuxLS3
 
@@ -14,13 +17,14 @@ pins:
     # H144_OUT_PWM6
     id: D14
     class: outputs
+    type: ls
     ts_name: X3 AuxLS2
     function: AuxLS2
 
   - pin: X4
     # H144_IN_D_3
-    id: E14
-    class: switch_inputs
+    id: [E14, E14]
+    class: [event_inputs, switch_inputs]
     ts_name: X4 Digital3
 
 #  - pin: X5
@@ -35,21 +39,22 @@ pins:
 
   - pin: X7
     # H144_IN_D_2
-    id: E13
-    class: switch_inputs
+    id: [E13, E13]
+    class: [event_inputs, switch_inputs]
     ts_name: X7 Digital2
 
   - pin: X8
-    # H144_LS_8
-    id: F14
+    # H_SPI1_SCK on rev C and XXX on rev D?
+    meta: H_SPI1_SCK
     class: outputs
+    type: ls
     ts_name: X8 AuxLS1
     function: AuxLS1, also K48 on main connector
 
   - pin: X9
     # H144_IN_D_1
-    id: E12
-    class: switch_inputs
+    id: [E12, E12]
+    class: [event_inputs, switch_inputs]
     ts_name: X9 Digital1
 
   - pin: X10

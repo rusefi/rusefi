@@ -44,7 +44,7 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
+  USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing -Werror=nonnull
 
   ifeq ($(OS),Windows_NT)
     USE_OPT += -DEFI_SIM_IS_WINDOWS=1
@@ -52,6 +52,11 @@ ifeq ($(USE_OPT),)
     USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0
   endif
 endif
+
+# Pretend we are all different hardware so that all canned engine configs are included
+USE_OPT += -DHW_HELLEN_HYUNDAI=1
+USE_OPT += -DHW_PROTEUS=1
+USE_OPT += -DHW_MICRO_RUSEFI=1
 
 # See explanation in main firmware Makefile for these three defines
 USE_OPT += $(SIMULATOR_DEBUG_LEVEL_OPT) $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=1

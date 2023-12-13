@@ -10,6 +10,16 @@ import org.jetbrains.annotations.NotNull;
 public abstract class IsoTpConnector {
     private final static Logging log = Logging.getLogging(IsoTpConnector.class);
 
+    private final int canId;
+
+    protected IsoTpConnector(int canId) {
+        this.canId = canId;
+    }
+
+    public int canId() {
+        return canId;
+    }
+
     public static void sendStrategy(byte[] bytes, IsoTpConnector connector) {
         log.info("-------sendBytesToCan " + bytes.length + " byte(s):");
 
@@ -56,7 +66,7 @@ public abstract class IsoTpConnector {
         sendCanData(new byte[]{(byte) hdr0, (byte) hdr1}, data, dataOffset, dataLength);
     }
 
-    public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
+    private void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
         byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
         sendCanData(total);
     }

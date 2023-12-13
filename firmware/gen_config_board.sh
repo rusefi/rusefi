@@ -5,6 +5,8 @@
 #                 or ./gen_config_board.sh config/boards/hellen/hellen128 hellen128
 #                 or ./gen_config_board.sh config/boards/atlas atlas
 #                    ./gen_config_board.sh config/boards/proteus proteus_f7
+#                    ./gen_config_board.sh config/boards/hellen/uaefi uaefi
+#                    ./gen_config_board.sh config/boards/f407-discovery f407-discovery
 # which is short for ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128.ini
 
 set -e
@@ -16,13 +18,19 @@ cd ../firmware
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
 echo "the storage section of rusefiXXX.ini is updated as well"
 
-if [ -z "$1" ]; then
+BOARD_DIR=$1
+SHORT_BOARDNAME=$2
+
+if [ -z "$BOARD_DIR" ]; then
 	echo "Board name parameter expected"
 	exit 1
 fi
 
-BOARD_DIR=$1
-SHORT_BOARDNAME=$2
+if [ -z "$SHORT_BOARDNAME" ]; then
+	echo "ShortBoard name parameter expected"
+	exit 1
+fi
+
 if [ -n "$3" ]; then
   INI="$3"
 else
@@ -46,7 +54,6 @@ echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL]"
 source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
-# work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
 # in rare cases order of arguments is important - '-tool' should be specified before '-definition'
 java \
  $COMMON_GEN_CONFIG_PREFIX \

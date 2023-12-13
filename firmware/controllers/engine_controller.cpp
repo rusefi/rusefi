@@ -42,6 +42,7 @@
 #include "speed_density.h"
 #include "local_version_holder.h"
 #include "alternator_controller.h"
+#include "can_bench_test.h"
 #include "engine_emulator.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
@@ -88,6 +89,7 @@
 
 #if ! EFI_UNIT_TEST
 #include "init.h"
+#include "mpu_util.h"
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE
@@ -223,6 +225,7 @@ static void doPeriodicSlowCallback() {
 	}
 #endif // EFI_TCU
 
+	tryResetWatchdog();
 }
 
 void initPeriodicEvents() {
@@ -523,6 +526,7 @@ bool validateConfig() {
 
 	ensureArrayIsAscending("Batt Lag", engineConfiguration->injector.battLagCorrBins);
 
+#if EFI_ENGINE_CONTROL
 	// Fueling
 	{
 		ensureArrayIsAscending("VE load", config->veLoadBins);
@@ -564,6 +568,7 @@ bool validateConfig() {
 
 	ensureArrayIsAscendingOrDefault("Map estimate TPS", config->mapEstimateTpsBins);
 	ensureArrayIsAscendingOrDefault("Map estimate RPM", config->mapEstimateRpmBins);
+#endif // EFI_ENGINE_CONTROL
 
 	ensureArrayIsAscendingOrDefault("Script Curve 1", config->scriptCurve1Bins);
 	ensureArrayIsAscendingOrDefault("Script Curve 2", config->scriptCurve2Bins);
@@ -612,9 +617,11 @@ bool validateConfig() {
 	ensureArrayIsAscendingOrDefault("fuel ALS RPM", config->alsFuelAdjustmentrpmBins);
 #endif // EFI_ANTILAG_SYSTEM
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	// ETB
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 	if (isGdiEngine()) {
 		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
@@ -655,6 +662,8 @@ void commonEarlyInit() {
 	 * Initialize hardware drivers
 	 */
 	initHardware();
+
+	initQcControls();
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
@@ -720,8 +729,8 @@ void initRealHardwareEngineController() {
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 512
 #endif
-static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
-static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
+static volatile char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
+static volatile char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
 
 /**
  * See also VCS_VERSION

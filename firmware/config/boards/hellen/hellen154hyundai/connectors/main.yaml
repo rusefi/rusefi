@@ -314,6 +314,7 @@ pins:
   - pin: K92
     meta: H144_OUT_PWM8
     class: outputs
+    type: ls
     ts_name: MIL
     function: Check Engine Light
 

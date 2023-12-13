@@ -37,9 +37,9 @@ public class LinkManager implements Closeable {
     public static final String SOCKET_CAN = "SocketCAN";
 
     @NotNull
-    public static LogLevel LOG_LEVEL = LogLevel.INFO;
+    public static final LogLevel LOG_LEVEL = LogLevel.INFO;
 
-    public static LinkDecoder ENCODER = new LinkDecoder() {
+    public static final LinkDecoder ENCODER = new LinkDecoder() {
         @Override
         public String unpack(String packedLine) {
             return packedLine;

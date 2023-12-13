@@ -90,9 +90,11 @@ static void canInfo() {
 
 	efiPrintf("CAN1 TX %s %s", hwPortname(engineConfiguration->canTxPin), getCan_baudrate_e(engineConfiguration->canBaudRate));
 	efiPrintf("CAN1 RX %s", hwPortname(engineConfiguration->canRxPin));
+	canHwInfo(detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin));
 
 	efiPrintf("CAN2 TX %s %s", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate));
 	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
+	canHwInfo(detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin));
 
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),

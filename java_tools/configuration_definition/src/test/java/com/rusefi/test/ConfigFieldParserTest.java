@@ -273,6 +273,59 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void alignmentTestJava() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        String test = "struct pid_s\n" +
+                "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "\tint8_t periodByte;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "\tfloat periodFloat;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n" +
+                "";
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        BaseCHeaderConsumer cConsumer = new BaseCHeaderConsumer();
+
+        state.readBufferedReader(test, javaFieldsConsumer, cConsumer);
+
+        assertEquals("\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 0, FieldType.INT16).setScale(1.0).setBaseOffset(0);\n" +
+                        "\tpublic static final Field PERIODBYTE = Field.create(\"PERIODBYTE\", 2, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n" +
+                        "\tpublic static final Field ALIGNMENTFILL_AT_3 = Field.create(\"ALIGNMENTFILL_AT_3\", 3, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n" +
+                        "\tpublic static final Field PERIODFLOAT = Field.create(\"PERIODFLOAT\", 4, FieldType.FLOAT).setBaseOffset(0);\n",
+                javaFieldsConsumer.getContent());
+
+        assertEquals("// start of pid_s\n" +
+                        "struct pid_s {\n" +
+                        "\t/**\n" +
+                        "\t * PID dTime\n" +
+                        "\tms\n" +
+                        "\t * offset 0\n" +
+                        "\t */\n" +
+                        "\tint16_t periodMs = (int16_t)0;\n" +
+                        "\t/**\n" +
+                        "\t * PID dTime\n" +
+                        "\tms\n" +
+                        "\t * offset 2\n" +
+                        "\t */\n" +
+                        "\tint8_t periodByte = (int8_t)0;\n" +
+                        "\t/**\n" +
+                        "\t * need 4 byte alignment\n" +
+                        "\tunits\n" +
+                        "\t * offset 3\n" +
+                        "\t */\n" +
+                        "\tuint8_t alignmentFill_at_3[1];\n" +
+                        "\t/**\n" +
+                        "\t * PID dTime\n" +
+                        "\tms\n" +
+                        "\t * offset 4\n" +
+                        "\t */\n" +
+                        "\tfloat periodFloat = (float)0;\n" +
+                        "};\n" +
+                        "static_assert(sizeof(pid_s) == 8);\n" +
+                        "\n",
+                cConsumer.getContent());
+    }
+
+    @Test
     public void testDefineChar() {
         ReaderStateImpl state = new ReaderStateImpl();
         String test =

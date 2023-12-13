@@ -92,7 +92,7 @@ static void setDefaultVETable() {
 	copyArray(config->fuelTrimLoadBins, { 20, 50, 80, 100 });
 
 	// Default axes for VE blends
-	for (int i = 0; i < efi::size(config->veBlends); i++) {
+	for (size_t i = 0; i < efi::size(config->veBlends); i++) {
 		auto& blend = config->veBlends[i];
 		setLinearCurve(blend.loadBins, 0, 100, 10);
 		setLinearCurve(blend.rpmBins, 0, 7000);

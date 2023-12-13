@@ -121,6 +121,9 @@ On some Ford and Toyota vehicles one of the pedal sensors is not linear on the f
 ### allowIdenticalPps
 
 
+### overrideVvtTriggerGaps
+
+
 ### tpsMin
 Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X
 
@@ -343,6 +346,9 @@ Number of turns of your vehicle speed sensor per turn of the wheels. For example
 ### vssToothCount
 Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.
 
+### gapVvtTrackingLengthOverride
+How many consecutive VVT gap rations have to match expected ranges for sync to happen
+
 ### idle_antiwindupFreq
 0.1 is a good default value
 
@@ -404,6 +410,9 @@ Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 
 
 ### isHip9011Enabled
+
+
+### requireFootOnBrakeToCrank
 
 
 ### verboseQuad
@@ -547,7 +556,7 @@ If enabled we use two H-bridges to drive stepper idle air valve
 ### enableLaunchRetard
 
 
-### unfinishedenableLaunchBoost
+### canInputBCM
 
 
 ### consumeObdSensors

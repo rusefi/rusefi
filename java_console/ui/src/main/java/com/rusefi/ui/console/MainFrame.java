@@ -54,7 +54,7 @@ public class MainFrame {
         }
     };
 
-    public ConnectionFailedListener listener;
+    public final ConnectionFailedListener listener;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = Objects.requireNonNull(consoleUI);

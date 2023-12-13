@@ -29,14 +29,22 @@ pins:
     type: gp_low
     
   - pin: AC2
+#    id: [F6, EFI_ADC3_4]
+#    class: [switch_inputs, analog_inputs]
+    id: F6
+    class: switch_inputs
     function: IAT sensor signal
     type: 
     
   - pin: AC3
+    id: [A1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
     function: MAF/MAP sensor signal
     type:
     
   - pin: AC4
+    id: L9779_OUT_6
+    class: outputs
     function: Oxygen sensor 1 heater
     type: gp_low
     
@@ -45,10 +53,16 @@ pins:
     type: sgnd
     
   - pin: AD2
+    id: E1
+    class: switch_inputs
     function: Air conditioner control input
     type:
     
   - pin: AD3
+#    id: [F5, EFI_ADC3_15]
+#    class: [switch_inputs, analog_inputs]
+    id: F5
+    class: switch_inputs
     function: Coolant temperature sensor signal
     type:  
     
@@ -69,6 +83,8 @@ pins:
     type: can
 
   - pin: AE4
+    id: L9779_OUT_5
+    class: outputs
     function: EVAP solenoid control
     type: gp_low
     
@@ -77,6 +93,8 @@ pins:
     type: sqnd
     
   - pin: AF2
+    id: B12
+    class: event_inputs
     function: Vehicle speed sensor input
     type:
     
@@ -85,6 +103,8 @@ pins:
     type:
     
   - pin: AF4
+    id: L9779_OUT_4
+    class: outputs
     function: Injector 1
     type: inj
     
@@ -97,6 +117,8 @@ pins:
     type: hall
     
   - pin: AG4
+    id: L9779_OUT_3
+    class: outputs
     function: Injector 2 
     type: inj
     
@@ -113,6 +135,8 @@ pins:
     type:
     
   - pin: AH4 
+    id: L9779_OUT_2
+    class: outputs
     function: Injector 3
     type: inj 
     
@@ -121,6 +145,8 @@ pins:
     type: ign 
     
   - pin: AJ2
+    id: [C3, EFI_ADC_13]
+    class: [switch_inputs, analog_inputs]
     function: ETB position sensor 2 signal
     type: etb  
     
@@ -129,6 +155,8 @@ pins:
     type: sgnd 
     
   - pin: AJ4
+    id: L9779_OUT_1
+    class: outputs
     function: Injector 4
     type: inj 
     
@@ -137,18 +165,28 @@ pins:
     type: etb 
     
   - pin: AK2
+    id: [C2, EFI_ADC_12]
+    class: [switch_inputs, analog_inputs]
     function: ETB position sensor 1 signal
     type: etb 
     
   - pin: AK3
+#    id: [F3, EFI_ADC3_9]
+#    class: [switch_inputs, analog_inputs]
+    id: F3
+    class: switch_inputs
     function: Oxygen sensor 1 signal
     type:  
     
   - pin: AK4
+    id: L9779_OUT_7
+    class: outputs
     function: Oxygen sensor 2 heater
     type:  
     
   - pin: AL1
+    id: L9779_IGN_1
+    class: outputs
     function: Coil 1 (< +2.5v) / Coils 1,4
     type:  
     
@@ -157,31 +195,44 @@ pins:
     type: etb 
     
   - pin: AM1 
+    id: L9779_IGN_3
+    class: outputs
     function: Coil 3  (< +2.5v) / Coils 2,4
     type:  
     
   - pin: AM2
-    function: Coil 2  (< +2.5v)  
+    id: L9779_IGN_2
+    class: outputs
+    function: Coil 2  (< +2.5v) (not populated)
     type:  
     
   - pin: AM3 
-    function: Coil 4  (< +2.5v)  
+    id: L9779_IGN_4
+    class: outputs
+    function: Coil 4  (< +2.5v) (not populated)
     type:  
     
   - pin: AM4
+
     function: ETB motor +
     type: etb 
     
     # Connector B    
   - pin: BA1
+    id: L9779_OUT_17
+    class: outputs
     function: Air compressor control 
     type:  
     
   - pin: BA2
+    id: [C1, EFI_ADC_11]
+    class: [switch_inputs, analog_inputs]
     function: Pedal position sensor 2 signal
     type:  
     
   - pin: BA3
+    id: [C0, EFI_ADC_10]
+    class: [switch_inputs, analog_inputs]
     function: Pedal position sensor 1 signal
     type:  
     
@@ -190,6 +241,8 @@ pins:
     type:  
     
   - pin: BB1
+    id: L9779_OUT_14
+    class: outputs
     function: Secondary starter relay 
     type:  
     
@@ -206,6 +259,8 @@ pins:
     type:  
     
   - pin: BC1
+    id: L9779_OUT_15
+    class: outputs
     function: FAN 1 relay
     type:  
     
@@ -222,6 +277,8 @@ pins:
     type: sgnd 
     
   - pin: BD1
+    id: L9779_OUT_16
+    class: outputs
     function: FAN 2 relay 
     type:  
     
@@ -250,7 +307,9 @@ pins:
     type:  
     
   - pin: BE4 
-    function: Power ground
+    id: L9779_OUT_18
+    class: outputs
+    function: Unknown out (OUT18)
     type: pgnd 
     
   - pin: BF1
@@ -262,6 +321,10 @@ pins:
     type: ign 
     
   - pin: BF3
+#    id: [F10, EFI_ADC3_8]
+#    class: [switch_inputs, analog_inputs]
+    id: F10
+    class: switch_inputs
     function: Air conditioner pressure sensor (2 level)
     type:  
     
@@ -270,6 +333,8 @@ pins:
     type:  
     
   - pin: BG1
+    id: L9779_OUT_13
+    class: outputs
     function: Fuel pump relay
     type:  
     

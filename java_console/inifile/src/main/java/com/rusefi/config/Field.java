@@ -49,19 +49,14 @@ public class Field {
     }
 
     public Field(String name, int offset, int stringSize, FieldType type, int bitOffset, String... options) {
-        this.name = name;
+      this.name = Objects.requireNonNull(name);
+      if (name.trim().isEmpty())
+        throw new IllegalStateException("Empty field name");
         this.offset = offset;
         this.stringSize = stringSize;
         this.type = type;
         this.bitOffset = bitOffset;
         this.options = options;
-    }
-
-    public static Field findField(Field[] values, String instancePrefix, String fieldName) {
-        Field field = findFieldOrNull(values, instancePrefix, fieldName);
-        if (field == null)
-            throw new IllegalStateException("No field: " + fieldName);
-        return field;
     }
 
     /**
@@ -220,7 +215,12 @@ public class Field {
     public Double getValue(ConfigurationImage ci, double multiplier) {
         Objects.requireNonNull(ci, "ConfigurationImage");
         Number value;
-        ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
+        ByteBuffer wrapped;
+        try {
+          wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
+        } catch (IndexOutOfBoundsException e) {
+            throw new RuntimeException("while " + name + " at " + getOffset() + " from " + ci.getSize(), e);
+        }
         if (bitOffset != NO_BIT_OFFSET) {
             int packed = wrapped.getInt();
             value = (packed >> bitOffset) & 1;

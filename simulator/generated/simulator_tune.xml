@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23468">
+    <page number="0" size="22088">
         <constant name="engineType">"MINIMAL_PINS"</constant>
+        <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000.0</constant>
         <constant digits="0" name="rpmHardLimit" units="rpm">7000.0</constant>
@@ -81,6 +82,9 @@
         <constant name="cltSensorPulldown">"false"</constant>
         <constant name="iatSensorPulldown">"false"</constant>
         <constant name="allowIdenticalPps">"false"</constant>
+        <constant name="overrideVvtTriggerGaps">"false"</constant>
+        <constant name="unused30">"false"</constant>
+        <constant name="unused31">"false"</constant>
         <constant digits="0" name="tpsMin" units="ADC">0.0</constant>
         <constant digits="0" name="tpsMax" units="ADC">1000.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
@@ -89,15 +93,15 @@
         <constant digits="0" name="cranking_rpm" units="RPM">550.0</constant>
         <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">6.0</constant>
         <constant digits="0" name="etbRevLimitStart" units="rpm">0.0</constant>
-        <constant digits="0" name="etbRevLimitRange" units="rpm">0.0</constant>
+        <constant digits="0" name="etbRevLimitRange" units="rpm">250.0</constant>
         <constant cols="1" digits="2" name="map_samplingAngleBins" rows="8">
+         650.0
          800.0
-         1686.0
-         2571.0
-         3457.0
-         4343.0
-         5229.0
-         6114.0
+         1700.0
+         2600.0
+         3500.0
+         4400.0
+         5300.0
          7000.0
 </constant>
         <constant cols="1" digits="2" name="map_samplingAngle" rows="8">
@@ -111,13 +115,13 @@
          130.0
 </constant>
         <constant cols="1" digits="2" name="map_samplingWindowBins" rows="8">
+         650.0
          800.0
-         1686.0
-         2571.0
-         3457.0
-         4343.0
-         5229.0
-         6114.0
+         1700.0
+         2600.0
+         3500.0
+         4400.0
+         5300.0
          7000.0
 </constant>
         <constant cols="1" digits="2" name="map_samplingWindow" rows="8">
@@ -177,11 +181,12 @@
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
         <constant digits="0" name="fanOnTemperature" units="deg C">95.0</constant>
         <constant digits="0" name="fanOffTemperature" units="deg C">91.0</constant>
+        <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
-        <constant digits="0" name="unused440" units="">0.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0230702E7</constant>
+        <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0231213E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -195,6 +200,7 @@
         <constant name="hip9011SpiDevice">"Off"</constant>
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
+        <constant digits="0" name="acrRevolutions" units="">5.0</constant>
         <constant digits="2" name="globalFuelCorrection" units="coef">1.0</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
@@ -209,14 +215,16 @@
         <constant digits="2" name="afr_v2" units="volts">5.0</constant>
         <constant digits="2" name="afr_value2" units="AFR">19.992</constant>
         <constant name="throttlePedalPositionAdcChannel">"Disabled"</constant>
+        <constant digits="1" name="etbSplit" units="%">5.0</constant>
         <constant name="tle6240_cs">"NONE"</constant>
         <constant name="tle6240_csPinMode">"default"</constant>
+        <constant name="mc33810_csPinMode">"default"</constant>
         <constant name="throttlePedalUpPin">"NONE"</constant>
         <constant digits="2" name="baroSensor_lowValue" units="kpa">0.0</constant>
         <constant digits="2" name="baroSensor_highValue" units="kpa">500.0</constant>
         <constant name="baroSensor_type">"Custom"</constant>
         <constant name="baroSensor_hwChannel">"Disabled"</constant>
-        <constant digits="0" name="idle_solenoidFrequency" units="Hz">200.0</constant>
+        <constant digits="0" name="idle_solenoidFrequency" units="Hz">300.0</constant>
         <constant name="idle_solenoidPin">"NONE"</constant>
         <constant name="idle_stepperDirectionPin">"NONE"</constant>
         <constant name="idle_stepperStepPin">"NONE"</constant>
@@ -258,6 +266,7 @@
         <constant name="ignitionPinMode">"default"</constant>
         <constant name="fuelPumpPin">"NONE"</constant>
         <constant name="fuelPumpPinMode">"default"</constant>
+        <constant digits="0" name="gapVvtTrackingLengthOverride" units="count">0.0</constant>
         <constant name="malfunctionIndicatorPin">"NONE"</constant>
         <constant name="malfunctionIndicatorPinMode">"default"</constant>
         <constant name="fanPinMode">"default"</constant>
@@ -291,6 +300,7 @@
          0.0
 </constant>
         <constant name="afr_type">"14Point7"</constant>
+        <constant name="mc33810_cs1">"NONE"</constant>
         <constant digits="4" name="idle_antiwindupFreq" units="x">0.0</constant>
         <constant name="triggerInputPins1">"NONE"</constant>
         <constant name="triggerInputPins2">"NONE"</constant>
@@ -330,7 +340,7 @@
         <constant name="rusefiVerbose29b">"11 bit"</constant>
         <constant name="rethrowHardFault">"false"</constant>
         <constant name="isHip9011Enabled">"false"</constant>
-        <constant name="isVerboseAlternator">"false"</constant>
+        <constant name="requireFootOnBrakeToCrank">"false"</constant>
         <constant name="verboseQuad">"false"</constant>
         <constant name="useStepperIdle">"false"</constant>
         <constant name="enabledStep1Limiter">"false"</constant>
@@ -413,7 +423,7 @@
         <constant digits="1" name="stoichRatioSecondary" units=":1">9.0</constant>
         <constant digits="0" name="etbMaximumPosition" units="%">100.0</constant>
         <constant digits="0" name="sdCardLogFrequency" units="hz">50.0</constant>
-        <constant name="idlePositionSensor">"Disabled"</constant>
+        <constant name="idlePositionChannel">"Disabled"</constant>
         <constant name="debugMapAveraging">"NONE"</constant>
         <constant name="starterRelayDisablePin">"NONE"</constant>
         <constant name="starterRelayDisablePinMode">"default"</constant>
@@ -459,8 +469,8 @@
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
         <constant name="multisparkEnable">"false"</constant>
         <constant name="enableLaunchRetard">"false"</constant>
-        <constant name="unfinishedenableLaunchBoost">"false"</constant>
-        <constant name="unfinishedlaunchDisableBySpeed">"false"</constant>
+        <constant name="canInputBCM">"false"</constant>
+        <constant name="consumeObdSensors">"false"</constant>
         <constant name="enableCanVss">"false"</constant>
         <constant name="enableInnovateLC2">"false"</constant>
         <constant name="showHumanReadableWarning">"false"</constant>
@@ -469,7 +479,7 @@
         <constant name="enableSoftwareKnock">"false"</constant>
         <constant name="verboseVVTDecoding">"false"</constant>
         <constant name="invertCamVVTSignal">"false"</constant>
-        <constant name="consumeObdSensors">"false"</constant>
+        <constant name="alphaNUseIat">"false"</constant>
         <constant name="knockBankCyl1">"Channel 1"</constant>
         <constant name="knockBankCyl2">"Channel 1"</constant>
         <constant name="knockBankCyl3">"Channel 1"</constant>
@@ -506,6 +516,8 @@
         <constant digits="0" name="boostPid_minValue" units="">-20.0</constant>
         <constant digits="0" name="boostPid_maxValue" units="">20.0</constant>
         <constant name="boostType">"Open Loop"</constant>
+        <constant name="ignitionKeyDigitalPinMode">"DEFAULT"</constant>
+        <constant name="ignitionKeyDigitalPin">"NONE"</constant>
         <constant digits="0" name="boostPwmFrequency" units="Hz">33.0</constant>
         <constant name="launchActivationMode">"Launch Button"</constant>
         <constant name="antiLagActivationMode">"Switch Input"</constant>
@@ -575,16 +587,16 @@
         <constant name="luaOutputPins6">"NONE"</constant>
         <constant name="luaOutputPins7">"NONE"</constant>
         <constant name="luaOutputPins8">"NONE"</constant>
-        <constant digits="1" name="vvtOffsets1" units="value">0.0</constant>
+        <constant digits="1" name="vvtOffsets1" units="value">450.0</constant>
         <constant digits="1" name="vvtOffsets2" units="value">0.0</constant>
         <constant digits="1" name="vvtOffsets3" units="value">0.0</constant>
         <constant digits="1" name="vvtOffsets4" units="value">0.0</constant>
         <constant cols="1" digits="0" name="vrThreshold1_rpmBins" rows="6">
-         600.0
-         1900.0
-         3200.0
-         4400.0
-         5700.0
+         650.0
+         800.0
+         2200.0
+         3600.0
+         5000.0
          7000.0
 </constant>
         <constant cols="1" digits="2" name="vrThreshold1_values" rows="6">
@@ -597,11 +609,11 @@
 </constant>
         <constant name="vrThreshold1_pin">"NONE"</constant>
         <constant cols="1" digits="0" name="vrThreshold2_rpmBins" rows="6">
-         600.0
-         1900.0
-         3200.0
-         4400.0
-         5700.0
+         650.0
+         800.0
+         2200.0
+         3600.0
+         5000.0
          7000.0
 </constant>
         <constant cols="1" digits="2" name="vrThreshold2_values" rows="6">
@@ -621,7 +633,7 @@
         <constant digits="0" name="tps2SecondaryMax" units="ADC">0.0</constant>
         <constant name="widebandOnSecondBus">"1"</constant>
         <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
-        <constant name="isVerboseIAC">"false"</constant>
+        <constant name="oddFireEngine">"false"</constant>
         <constant name="boardUseTachPullUp">"5v"</constant>
         <constant name="boardUseTempPullUp">"Piggyback Mode"</constant>
         <constant name="yesUnderstandLocking">"no"</constant>
@@ -668,7 +680,7 @@
         <constant name="useSeparateVeForIdle">"false"</constant>
         <constant name="verboseTriggerSynchDetails">"false"</constant>
         <constant name="isManualSpinningMode">"false"</constant>
-        <constant name="unused1200b12">"false"</constant>
+        <constant name="cutFuelInAcr">"false"</constant>
         <constant name="hondaK">"false"</constant>
         <constant name="twoWireBatchIgnition">"false"</constant>
         <constant name="useFixedBaroCorrFromMap">"false"</constant>
@@ -687,14 +699,14 @@
         <constant name="sdTriggerLog">"normal"</constant>
         <constant name="ALSActivateInverted">"false"</constant>
         <constant name="stepper_dc_use_two_wires">"false"</constant>
-        <constant name="tempBooleanForVerySpecialLogic">"false"</constant>
+        <constant name="watchOutForLinearTime">"true"</constant>
         <constant digits="0" name="engineChartSize" units="count">400.0</constant>
         <constant digits="3" name="turboSpeedSensorMultiplier" units="mult">1.0</constant>
         <constant name="camInputsDebug1">"NONE"</constant>
         <constant name="camInputsDebug2">"NONE"</constant>
         <constant name="camInputsDebug3">"NONE"</constant>
         <constant name="camInputsDebug4">"NONE"</constant>
-        <constant digits="0" name="acIdleRpmBump" units="RPM">50.0</constant>
+        <constant digits="0" name="acIdleRpmTarget" units="RPM">900.0</constant>
         <constant digits="0" name="warningPeriod" units="seconds">0.0</constant>
         <constant digits="2" name="knockDetectionWindowStart" units="angle">20.0</constant>
         <constant digits="2" name="knockDetectionWindowEnd" units="angle">60.0</constant>
@@ -720,7 +732,7 @@
         <constant digits="0" name="etb_maxValue" units="">100.0</constant>
         <constant name="triggerInputDebugPins1">"NONE"</constant>
         <constant name="triggerInputDebugPins2">"NONE"</constant>
-        <constant digits="0" name="airTaperRpmRange" units="">0.0</constant>
+        <constant digits="0" name="airTaperRpmRange" units="RPM">0.0</constant>
         <constant name="turboSpeedSensorInputPin">"NONE"</constant>
         <constant digits="0" name="tps2Min" units="ADC">0.0</constant>
         <constant digits="0" name="tps2Max" units="ADC">1000.0</constant>
@@ -751,7 +763,7 @@
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
         <constant digits="1" name="targetVBatt" units="Volts">14.0</constant>
-        <constant digits="2" name="alternatorOffAboveTps" units="%">120.0</constant>
+        <constant digits="0" name="unused1372" units="">0.0</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
         <constant name="auxSerialTxPin">"NONE"</constant>
@@ -766,8 +778,8 @@
         <constant name="auxSpeedSensorInputPin2">"NONE"</constant>
         <constant digits="0" name="totalGearsCount" units="">0.0</constant>
         <constant name="injectionTimingMode">"End of injection"</constant>
-        <constant name="debugMode">"INSTANT_RPM"</constant>
-        <constant digits="0" name="fan1ExtraIdle" units="%">0.0</constant>
+        <constant name="debugMode">"MAP"</constant>
+        <constant digits="0" name="fan1ExtraIdle" units="%">2.0</constant>
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
         <constant digits="2" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
@@ -788,9 +800,9 @@
         <constant name="injectorFlowAsMassFlow">"volumetric flow"</constant>
         <constant name="boardUseCanTerminator">"true"</constant>
         <constant name="kLineDoHondaSend">"false"</constant>
-        <constant name="unused1129">"false"</constant>
-        <constant name="unused1130">"false"</constant>
-        <constant digits="0" name="unusedHere" units="">0.0</constant>
+        <constant name="can1ListenMode">"false"</constant>
+        <constant name="can2ListenMode">"false"</constant>
+        <constant digits="0" name="camDecoder2jzPosition" units="">95.0</constant>
         <constant digits="2" name="benchTestOnTime" units="ms">4.0</constant>
         <constant digits="0" name="lambdaProtectionRestoreTps" units="%">20.0</constant>
         <constant digits="0" name="lambdaProtectionRestoreLoad" units="%">30.0</constant>
@@ -844,7 +856,7 @@
         <constant digits="2" name="mapLowValueVoltage" units="v">0.0</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">5.0</constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
-        <constant name="vvtPins1">"NONE"</constant>
+        <constant name="vvtPins1">"PI0"</constant>
         <constant name="vvtPins2">"NONE"</constant>
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>
@@ -854,12 +866,13 @@
         <constant digits="4" name="tChargeMinRpmMaxTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMaxRpmMinTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMaxRpmMaxTps" units="">0.9</constant>
-        <constant digits="0" name="vvtOutputFrequency1" units="Hz">300.0</constant>
-        <constant digits="0" name="vvtOutputFrequency2" units="Hz">0.0</constant>
+        <constant digits="0" name="vvtOutputFrequency" units="Hz">300.0</constant>
+        <constant digits="0" name="minimumIgnitionTiming" units="deg BTDC">-10.0</constant>
+        <constant digits="0" name="maximumIgnitionTiming" units="deg BTDC">60.0</constant>
         <constant digits="0" name="alternatorPwmFrequency" units="Hz">300.0</constant>
-        <constant name="vvtMode1">"Inactive"</constant>
+        <constant name="vvtMode1">"Single Tooth"</constant>
         <constant name="vvtMode2">"Inactive"</constant>
-        <constant digits="0" name="fan2ExtraIdle" units="%">0.0</constant>
+        <constant digits="0" name="fan2ExtraIdle" units="%">2.0</constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
         <constant name="auxAnalogInputs1">"Disabled"</constant>
         <constant name="auxAnalogInputs2">"Disabled"</constant>
@@ -886,8 +899,30 @@
         <constant name="injectorCompensationMode">"None"</constant>
         <constant name="fan2PinMode">"default"</constant>
         <constant digits="0" name="fuelReferencePressure" units="kPa">300.0</constant>
-        <constant digits="2" name="postCrankingFactor" units="mult">1.2</constant>
-        <constant digits="0" name="postCrankingDurationSec" units="seconds">10.0</constant>
+        <constant cols="6" digits="2" name="postCrankingFactor" rows="6">
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+</constant>
+        <constant cols="1" digits="0" name="postCrankingDurationBins" rows="6">
+         0.0
+         15.0
+         35.0
+         65.0
+         100.0
+         150.0
+</constant>
+        <constant cols="1" digits="0" name="postCrankingCLTBins" rows="6">
+         -20.0
+         0.0
+         20.0
+         40.0
+         60.0
+         80.0
+</constant>
         <constant digits="1" name="auxTempSensor1_tempC_1" units="*C">0.0</constant>
         <constant digits="1" name="auxTempSensor1_tempC_2" units="*C">0.0</constant>
         <constant digits="1" name="auxTempSensor1_tempC_3" units="*C">0.0</constant>
@@ -967,20 +1002,20 @@
         <constant digits="4" name="injectorCorrectionPolynomial7" units="">0.0</constant>
         <constant digits="4" name="injectorCorrectionPolynomial8" units="">0.0</constant>
         <constant cols="1" digits="0" name="primeBins" rows="8">
+         -40.0
+         -20.0
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         20.0
+         40.0
+         60.0
+         80.0
+         100.0
 </constant>
         <constant name="oilPressure_hwChannel">"Disabled"</constant>
         <constant digits="2" name="oilPressure_v1" units="volts">0.5</constant>
-        <constant digits="2" name="oilPressure_value1" units="kPa">0.0</constant>
+        <constant digits="2" name="oilPressure_value1" units="">0.0</constant>
         <constant digits="2" name="oilPressure_v2" units="volts">4.5</constant>
-        <constant digits="2" name="oilPressure_value2" units="kPa">689.476</constant>
+        <constant digits="2" name="oilPressure_value2" units="">689.476</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
         <constant name="fan2Pin">"NONE"</constant>
         <constant digits="0" name="fan2OnTemperature" units="deg C">95.0</constant>
@@ -989,10 +1024,10 @@
         <constant name="tle8888_cs">"NONE"</constant>
         <constant name="tle8888_csPinMode">"default"</constant>
         <constant name="mc33816_cs">"NONE"</constant>
-        <constant digits="0" name="auxFrequencyFilter" units="">0.0</constant>
-        <constant digits="0" name="vvtControlMinRpm" units="RPM">500.0</constant>
+        <constant digits="1" name="auxFrequencyFilter" units="hz">0.0</constant>
+        <constant digits="0" name="vvtControlMinRpm" units="RPM">550.0</constant>
         <constant name="sentInputPins1">"NONE"</constant>
-        <constant digits="0" name="launchFuelAdderPercent" units="">0.0</constant>
+        <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
         <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
         <constant digits="0" name="etbExpAverageLength" units="">50.0</constant>
         <constant digits="0" name="etbDutyThreshold" units="">0.0</constant>
@@ -1004,19 +1039,19 @@
         <constant digits="0" name="coastingFuelCutMap" units="kPa">30.0</constant>
         <constant name="highPressureFuel_hwChannel">"Disabled"</constant>
         <constant digits="2" name="highPressureFuel_v1" units="volts">0.0</constant>
-        <constant digits="2" name="highPressureFuel_value1" units="kPa">0.0</constant>
+        <constant digits="2" name="highPressureFuel_value1" units="">0.0</constant>
         <constant digits="2" name="highPressureFuel_v2" units="volts">0.0</constant>
-        <constant digits="2" name="highPressureFuel_value2" units="kPa">0.0</constant>
+        <constant digits="2" name="highPressureFuel_value2" units="">0.0</constant>
         <constant name="lowPressureFuel_hwChannel">"Disabled"</constant>
         <constant digits="2" name="lowPressureFuel_v1" units="volts">0.0</constant>
-        <constant digits="2" name="lowPressureFuel_value1" units="kPa">0.0</constant>
+        <constant digits="2" name="lowPressureFuel_value1" units="">0.0</constant>
         <constant digits="2" name="lowPressureFuel_v2" units="volts">0.0</constant>
-        <constant digits="2" name="lowPressureFuel_value2" units="kPa">0.0</constant>
+        <constant digits="2" name="lowPressureFuel_value2" units="">0.0</constant>
         <constant cols="1" digits="0" name="cltRevLimitRpmBins" rows="4">
+         -20.0
          0.0
-         0.0
-         0.0
-         0.0
+         40.0
+         80.0
 </constant>
         <constant cols="1" digits="0" name="cltRevLimitRpm" rows="4">
          0.0
@@ -1040,6 +1075,7 @@
         <constant digits="0" name="idleTimingPid_periodMs" units="ms">0.0</constant>
         <constant digits="0" name="idleTimingPid_minValue" units="">-10.0</constant>
         <constant digits="0" name="idleTimingPid_maxValue" units="">10.0</constant>
+        <constant digits="1" name="idleTimingSoftEntryTime" units="">0.0</constant>
         <constant digits="0" name="etbRocExpAverageLength" units="">50.0</constant>
         <constant digits="0" name="tpsAccelFractionPeriod" units="cycles">0.0</constant>
         <constant digits="2" name="tpsAccelFractionDivisor" units="coef">0.0</constant>
@@ -1063,14 +1099,14 @@
         <constant digits="0" name="cylinderBankSelect11" units="">0.0</constant>
         <constant digits="0" name="cylinderBankSelect12" units="">0.0</constant>
         <constant cols="1" digits="0" name="primeValues" rows="8">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         755.0
+         605.0
+         265.0
+         140.0
+         75.0
+         50.0
+         45.0
+         40.0
 </constant>
         <constant digits="2" name="triggerCompCenterVolt" units="V">0.0</constant>
         <constant digits="2" name="triggerCompHystMin" units="V">0.0</constant>
@@ -1315,16 +1351,16 @@
          1.0
 </constant>
         <constant digits="0" name="etbJamIntegratorLimit" units="%">0.0</constant>
-        <constant digits="0" name="hpfpCamLobes" units="lobes/cam">0.0</constant>
+        <constant digits="0" name="hpfpCamLobes" units="lobes/cam">3.0</constant>
         <constant name="hpfpCam">"NONE"</constant>
         <constant digits="0" name="auxiliarySetting1" units="">0.0</constant>
-        <constant digits="0" name="hpfpMinAngle" units="deg">0.0</constant>
+        <constant digits="0" name="hpfpMinAngle" units="deg">10.0</constant>
         <constant digits="3" name="hpfpPumpVolume" units="cc">0.0</constant>
-        <constant digits="0" name="hpfpActivationAngle" units="deg">0.0</constant>
+        <constant digits="0" name="hpfpActivationAngle" units="deg">30.0</constant>
         <constant digits="0" name="issFilterReciprocal" units="">2.0</constant>
-        <constant digits="3" name="hpfpPidP" units="%/kPa">0.0</constant>
-        <constant digits="5" name="hpfpPidI" units="%/kPa/lobe">0.0</constant>
-        <constant digits="0" name="hpfpTargetDecay" units="kPa/s">0.0</constant>
+        <constant digits="3" name="hpfpPidP" units="%/kPa">0.01</constant>
+        <constant digits="5" name="hpfpPidI" units="%/kPa/lobe">3.0E-4</constant>
+        <constant digits="0" name="hpfpTargetDecay" units="kPa/s">2000.0</constant>
         <constant cols="1" digits="1" name="hpfpLobeProfileQuantityBins" rows="16">
          0.0
          1.0
@@ -1406,16 +1442,16 @@
          180.0
 </constant>
         <constant cols="1" digits="0" name="hpfpTargetRpmBins" rows="10">
-         0.0
-         900.0
-         1800.0
-         2650.0
-         3550.0
-         4450.0
+         650.0
+         800.0
+         1450.0
+         2100.0
+         2750.0
+         3400.0
+         4050.0
+         4700.0
          5350.0
-         6200.0
-         7100.0
-         8000.0
+         7000.0
 </constant>
         <constant cols="10" digits="0" name="hpfpCompensation" rows="10">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -1442,16 +1478,16 @@
          0.12
 </constant>
         <constant cols="1" digits="0" name="hpfpCompensationRpmBins" rows="10">
-         0.0
-         900.0
-         1800.0
-         2650.0
-         3550.0
-         4450.0
+         650.0
+         800.0
+         1450.0
+         2100.0
+         2750.0
+         3400.0
+         4050.0
+         4700.0
          5350.0
-         6200.0
-         7100.0
-         8000.0
+         7000.0
 </constant>
         <constant name="stepper_raw_output1">"NONE"</constant>
         <constant name="stepper_raw_output2">"NONE"</constant>
@@ -1465,6 +1501,8 @@
         <constant digits="2" name="gearRatio6" units="ratio">0.0</constant>
         <constant digits="2" name="gearRatio7" units="ratio">0.0</constant>
         <constant digits="2" name="gearRatio8" units="ratio">0.0</constant>
+        <constant digits="2" name="gearRatio9" units="ratio">0.0</constant>
+        <constant digits="2" name="gearRatio10" units="ratio">0.0</constant>
         <constant digits="0" name="vvtActivationDelayMs" units="ms">6000.0</constant>
         <constant cols="1" digits="0" name="wwCltBins" rows="8">
          -40.0
@@ -1552,16 +1590,17 @@
 </constant>
         <constant name="gearControllerMode">"None"</constant>
         <constant name="transmissionControllerMode">"None"</constant>
+        <constant digits="0" name="acrDisablePhase" units="deg">0.0</constant>
         <constant name="auxLinear1_hwChannel">"Disabled"</constant>
         <constant digits="2" name="auxLinear1_v1" units="volts">0.0</constant>
-        <constant digits="2" name="auxLinear1_value1" units="kPa">0.0</constant>
+        <constant digits="2" name="auxLinear1_value1" units="">0.0</constant>
         <constant digits="2" name="auxLinear1_v2" units="volts">0.0</constant>
-        <constant digits="2" name="auxLinear1_value2" units="kPa">0.0</constant>
+        <constant digits="2" name="auxLinear1_value2" units="">0.0</constant>
         <constant name="auxLinear2_hwChannel">"Disabled"</constant>
         <constant digits="2" name="auxLinear2_v1" units="volts">0.0</constant>
-        <constant digits="2" name="auxLinear2_value1" units="kPa">0.0</constant>
+        <constant digits="2" name="auxLinear2_value1" units="">0.0</constant>
         <constant digits="2" name="auxLinear2_v2" units="volts">0.0</constant>
-        <constant digits="2" name="auxLinear2_value2" units="kPa">0.0</constant>
+        <constant digits="2" name="auxLinear2_value2" units="">0.0</constant>
         <constant name="tcu_tcc_onoff_solenoid">"NONE"</constant>
         <constant name="tcu_tcc_onoff_solenoid_mode">"default"</constant>
         <constant name="tcu_tcc_pwm_solenoid">"NONE"</constant>
@@ -1573,6 +1612,7 @@
         <constant name="tcu_32_solenoid_pin">"NONE"</constant>
         <constant name="tcu_32_solenoid_pin_mode">"default"</constant>
         <constant digits="0" name="tcu_32_solenoid_freq" units="Hz">0.0</constant>
+        <constant name="acrPin2">"NONE"</constant>
         <constant digits="2" name="etbMinimumPosition" units="%">1.0</constant>
         <constant digits="0" name="tuneHidingKey" units="">0.0</constant>
         <constant cols="1" digits="0" name="highSpeedOffsets" rows="32">
@@ -1632,7 +1672,7 @@
         <constant digits="0" name="ALSMaxCLT" units="C">105.0</constant>
         <constant digits="0" name="alsMinTimeBetween" units="">5.0</constant>
         <constant digits="0" name="alsEtbPosition" units="">30.0</constant>
-        <constant digits="0" name="acRelayAlternatorDutyAdder" units="">0.0</constant>
+        <constant digits="0" name="acRelayAlternatorDutyAdder" units="%">0.0</constant>
         <constant name="sentEtbType">"None"</constant>
         <constant digits="0" name="customSentTpsMin" units="">0.0</constant>
         <constant digits="2" name="ALSIdleAdd" units="%">0.0</constant>
@@ -1654,7 +1694,7 @@
         <constant digits="0" name="kLineBaudRate" units="">10400.0</constant>
         <constant name="canGpioType">"None"</constant>
         <constant name="uiMode">"Full"</constant>
-        <constant digits="0" name="hpfpPeakPos" units="deg">0.0</constant>
+        <constant digits="0" name="hpfpPeakPos" units="deg">10.0</constant>
         <constant digits="0" name="kLinePeriodUs" units="us">0.0</constant>
         <constant digits="0" name="rpmSoftLimitWindowSize" units="RPM">0.0</constant>
         <constant digits="1" name="rpmSoftLimitTimingRetard" units="deg">0.0</constant>
@@ -1662,7 +1702,9 @@
         <constant digits="0" name="rpmHardLimitHyst" units="RPM">50.0</constant>
         <constant digits="1" name="benchTestOffTime" units="ms">500.0</constant>
         <constant digits="1" name="boostCutPressureHyst" units="kPa (absolute)">20.0</constant>
-        <constant cols="1" digits="1" name="gearBasedOpenLoopBoostAdder" rows="8">
+        <constant cols="1" digits="1" name="gearBasedOpenLoopBoostAdder" rows="10">
+         0.0
+         0.0
          0.0
          0.0
          0.0
@@ -1687,7 +1729,78 @@
         <constant name="tcu_rangeInputMode4">"DEFAULT"</constant>
         <constant name="tcu_rangeInputMode5">"DEFAULT"</constant>
         <constant name="tcu_rangeInputMode6">"DEFAULT"</constant>
-        <constant cols="1" digits="0" name="mainUnusedEnd" rows="190">
+        <constant digits="4" name="canVssScaling" units="ratio">1.0</constant>
+        <constant digits="1" name="oilTempSensor_tempC_1" units="*C">0.0</constant>
+        <constant digits="1" name="oilTempSensor_tempC_2" units="*C">0.0</constant>
+        <constant digits="1" name="oilTempSensor_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="oilTempSensor_resistance_1" units="Ohm">0.0</constant>
+        <constant digits="1" name="oilTempSensor_resistance_2" units="Ohm">0.0</constant>
+        <constant digits="1" name="oilTempSensor_resistance_3" units="Ohm">0.0</constant>
+        <constant digits="1" name="oilTempSensor_bias_resistor" units="Ohm">0.0</constant>
+        <constant name="oilTempSensor_adcChannel">"Disabled"</constant>
+        <constant digits="1" name="fuelTempSensor_tempC_1" units="*C">0.0</constant>
+        <constant digits="1" name="fuelTempSensor_tempC_2" units="*C">0.0</constant>
+        <constant digits="1" name="fuelTempSensor_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="fuelTempSensor_resistance_1" units="Ohm">0.0</constant>
+        <constant digits="1" name="fuelTempSensor_resistance_2" units="Ohm">0.0</constant>
+        <constant digits="1" name="fuelTempSensor_resistance_3" units="Ohm">0.0</constant>
+        <constant digits="1" name="fuelTempSensor_bias_resistor" units="Ohm">0.0</constant>
+        <constant name="fuelTempSensor_adcChannel">"Disabled"</constant>
+        <constant digits="1" name="ambientTempSensor_tempC_1" units="*C">0.0</constant>
+        <constant digits="1" name="ambientTempSensor_tempC_2" units="*C">0.0</constant>
+        <constant digits="1" name="ambientTempSensor_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="ambientTempSensor_resistance_1" units="Ohm">0.0</constant>
+        <constant digits="1" name="ambientTempSensor_resistance_2" units="Ohm">0.0</constant>
+        <constant digits="1" name="ambientTempSensor_resistance_3" units="Ohm">0.0</constant>
+        <constant digits="1" name="ambientTempSensor_bias_resistor" units="Ohm">0.0</constant>
+        <constant name="ambientTempSensor_adcChannel">"Disabled"</constant>
+        <constant digits="1" name="compressorDischargeTemperature_tempC_1" units="*C">0.0</constant>
+        <constant digits="1" name="compressorDischargeTemperature_tempC_2" units="*C">0.0</constant>
+        <constant digits="1" name="compressorDischargeTemperature_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="compressorDischargeTemperature_resistance_1" units="Ohm">0.0</constant>
+        <constant digits="1" name="compressorDischargeTemperature_resistance_2" units="Ohm">0.0</constant>
+        <constant digits="1" name="compressorDischargeTemperature_resistance_3" units="Ohm">0.0</constant>
+        <constant digits="1" name="compressorDischargeTemperature_bias_resistor" units="Ohm">0.0</constant>
+        <constant name="compressorDischargeTemperature_adcChannel">"Disabled"</constant>
+        <constant name="throttleInletPressureChannel">"Disabled"</constant>
+        <constant name="compressorDischargePressureChannel">"Disabled"</constant>
+        <constant name="dacOutputPins1">"NONE"</constant>
+        <constant name="dacOutputPins2">"NONE"</constant>
+        <constant name="speedometerOutputPin">"NONE"</constant>
+        <constant digits="0" name="speedometerPulsePerKm" units="">0.0</constant>
+        <constant digits="0" name="simulatorCamPosition1" units="">23.0</constant>
+        <constant digits="0" name="simulatorCamPosition2" units="">0.0</constant>
+        <constant digits="0" name="simulatorCamPosition3" units="">0.0</constant>
+        <constant digits="0" name="simulatorCamPosition4" units="">0.0</constant>
+        <constant name="ignKeyAdcChannel">"Disabled"</constant>
+        <constant digits="0" name="unusedExplicitFilling2" units="">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideFrom1" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideFrom2" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideFrom3" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideFrom4" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideTo1" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideTo2" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideTo3" units="ratio">0.0</constant>
+        <constant digits="3" name="triggerVVTGapOverrideTo4" units="ratio">0.0</constant>
+        <constant cols="1" digits="0" name="mainUnusedEnd" rows="208">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
          0.0
          0.0
          0.0
@@ -2314,14 +2427,14 @@
          100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0
 </constant>
         <constant cols="1" digits="0" name="boostRpmBins" rows="8">
-         0.0
-         1100.0
-         2300.0
-         3400.0
-         4600.0
-         5700.0
-         6900.0
-         8000.0
+         700.0
+         800.0
+         1700.0
+         2600.0
+         3500.0
+         4400.0
+         5300.0
+         7000.0
 </constant>
         <constant cols="8" digits="0" name="boostTableClosedLoop" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -2364,14 +2477,14 @@
          100.0
 </constant>
         <constant cols="1" digits="0" name="pedalToTpsRpmBins" rows="8">
-         0.0
-         1100.0
-         2300.0
-         3400.0
-         4600.0
-         5700.0
-         6900.0
-         8000.0
+         700.0
+         800.0
+         1700.0
+         2600.0
+         3500.0
+         4400.0
+         5300.0
+         7000.0
 </constant>
         <constant cols="1" digits="2" name="cltCrankingCorrBins" rows="8">
          -40.0
@@ -2611,7 +2724,7 @@ end</constant>
          1.0
          1.0
 </constant>
-        <constant cols="1" digits="2" name="mafDecoding" rows="256">
+        <constant cols="1" digits="2" name="mafDecoding" rows="32">
          -34.5
          -6.0
          10.5
@@ -2644,232 +2757,8 @@ end</constant>
          3000.0
          3000.0
          3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
 </constant>
-        <constant cols="1" digits="2" name="mafDecodingBins" rows="256">
+        <constant cols="1" digits="2" name="mafDecodingBins" rows="32">
          0.0
          0.78125
          1.386719
@@ -2902,230 +2791,6 @@ end</constant>
          2039.0
          2040.0
          2041.0
-         2042.0
-         2043.0
-         2044.0
-         2045.0
-         2046.0
-         2047.0
-         2048.0
-         2049.0
-         2050.0
-         2051.0
-         2052.0
-         2053.0
-         2054.0
-         2055.0
-         2056.0
-         2057.0
-         2058.0
-         2059.0
-         2060.0
-         2061.0
-         2062.0
-         2063.0
-         2064.0
-         2065.0
-         2066.0
-         2067.0
-         2068.0
-         2069.0
-         2070.0
-         2071.0
-         2072.0
-         2073.0
-         2074.0
-         2075.0
-         2076.0
-         2077.0
-         2078.0
-         2079.0
-         2080.0
-         2081.0
-         2082.0
-         2083.0
-         2084.0
-         2085.0
-         2086.0
-         2087.0
-         2088.0
-         2089.0
-         2090.0
-         2091.0
-         2092.0
-         2093.0
-         2094.0
-         2095.0
-         2096.0
-         2097.0
-         2098.0
-         2099.0
-         2100.0
-         2101.0
-         2102.0
-         2103.0
-         2104.0
-         2105.0
-         2106.0
-         2107.0
-         2108.0
-         2109.0
-         2110.0
-         2111.0
-         2112.0
-         2113.0
-         2114.0
-         2115.0
-         2116.0
-         2117.0
-         2118.0
-         2119.0
-         2120.0
-         2121.0
-         2122.0
-         2123.0
-         2124.0
-         2125.0
-         2126.0
-         2127.0
-         2128.0
-         2129.0
-         2130.0
-         2131.0
-         2132.0
-         2133.0
-         2134.0
-         2135.0
-         2136.0
-         2137.0
-         2138.0
-         2139.0
-         2140.0
-         2141.0
-         2142.0
-         2143.0
-         2144.0
-         2145.0
-         2146.0
-         2147.0
-         2148.0
-         2149.0
-         2150.0
-         2151.0
-         2152.0
-         2153.0
-         2154.0
-         2155.0
-         2156.0
-         2157.0
-         2158.0
-         2159.0
-         2160.0
-         2161.0
-         2162.0
-         2163.0
-         2164.0
-         2165.0
-         2166.0
-         2167.0
-         2168.0
-         2169.0
-         2170.0
-         2171.0
-         2172.0
-         2173.0
-         2174.0
-         2175.0
-         2176.0
-         2177.0
-         2178.0
-         2179.0
-         2180.0
-         2181.0
-         2182.0
-         2183.0
-         2184.0
-         2185.0
-         2186.0
-         2187.0
-         2188.0
-         2189.0
-         2190.0
-         2191.0
-         2192.0
-         2193.0
-         2194.0
-         2195.0
-         2196.0
-         2197.0
-         2198.0
-         2199.0
-         2200.0
-         2201.0
-         2202.0
-         2203.0
-         2204.0
-         2205.0
-         2206.0
-         2207.0
-         2208.0
-         2209.0
-         2210.0
-         2211.0
-         2212.0
-         2213.0
-         2214.0
-         2215.0
-         2216.0
-         2217.0
-         2218.0
-         2219.0
-         2220.0
-         2221.0
-         2222.0
-         2223.0
-         2224.0
-         2225.0
-         2226.0
-         2227.0
-         2228.0
-         2229.0
-         2230.0
-         2231.0
-         2232.0
-         2233.0
-         2234.0
-         2235.0
-         2236.0
-         2237.0
-         2238.0
-         2239.0
-         2240.0
-         2241.0
-         2242.0
-         2243.0
-         2244.0
-         2245.0
-         2246.0
-         2247.0
-         2248.0
-         2249.0
-         2250.0
-         2251.0
-         2252.0
-         2253.0
-         2254.0
-         2255.0
-         2256.0
-         2257.0
-         2258.0
-         2259.0
-         2260.0
-         2261.0
-         2262.0
-         2263.0
-         2264.0
-         2265.0
 </constant>
         <constant cols="8" digits="1" name="ignitionIatCorrTable" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -3211,17 +2876,13 @@ end</constant>
          4700.0
          7000.0
 </constant>
-        <constant cols="6" digits="0" name="tcuSolenoidTable" rows="10">
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
+        <constant cols="10" digits="0" name="tcuSolenoidTable" rows="6">
+         99.0 1.0 2.0 3.0 4.0 5.0 0.0 0.0 0.0 0.0
+         10.0 11.0 12.0 13.0 14.0 15.0 16.0 17.0 18.0 19.0
+         20.0 21.0 22.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         30.0 31.0 0.0 33.0 0.0 0.0 0.0 0.0 0.0 0.0
+         40.0 41.0 0.0 0.0 44.0 0.0 0.0 0.0 0.0 0.0
+         50.0 51.0 0.0 0.0 0.0 55.0 0.0 0.0 0.0 0.0
 </constant>
         <constant cols="16" digits="2" name="mapEstimateTable" rows="16">
          60.0 60.0 60.0 60.0 60.0 60.0 60.0 60.0 60.0 60.0 60.0 60.0 60.0 60.0 60.0 60.0
@@ -3619,15 +3280,15 @@ end</constant>
          5300.0
          7000.0
 </constant>
-        <constant cols="8" digits="0" name="scriptTable4" rows="8">
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+        <constant cols="10" digits="0" name="scriptTable4" rows="8">
+         140.0 141.0 142.0 143.0 144.0 145.0 0.0 0.0 0.0 0.0
+         240.0 241.0 242.0 243.0 244.0 245.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         40.0 0.0 41.0 42.0 43.0 45.0 0.0 0.0 0.0 0.0
+         50.0 51.0 52.0 53.0 54.0 55.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant cols="1" digits="0" name="scriptTable4LoadBins" rows="8">
          20.0
@@ -3639,27 +3300,29 @@ end</constant>
          110.0
          120.0
 </constant>
-        <constant cols="1" digits="0" name="scriptTable4RpmBins" rows="8">
+        <constant cols="1" digits="0" name="scriptTable4RpmBins" rows="10">
          650.0
          800.0
-         1700.0
-         2600.0
-         3500.0
-         4400.0
-         5300.0
+         1450.0
+         2100.0
+         2750.0
+         3400.0
+         4050.0
+         4700.0
+         5350.0
          7000.0
 </constant>
         <constant cols="1" digits="0" name="ignTrimLoadBins" rows="4">
-         0.0
-         0.0
-         0.0
-         0.0
+         20.0
+         50.0
+         80.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="ignTrimRpmBins" rows="4">
-         0.0
-         0.0
-         0.0
-         0.0
+         1000.0
+         3000.0
+         5000.0
+         7000.0
 </constant>
         <constant cols="4" digits="1" name="ignTrims1_table" rows="4">
          0.0 0.0 0.0 0.0
@@ -3734,16 +3397,16 @@ end</constant>
          0.0 0.0 0.0 0.0
 </constant>
         <constant cols="1" digits="0" name="fuelTrimLoadBins" rows="4">
-         0.0
-         0.0
-         0.0
-         0.0
+         20.0
+         50.0
+         80.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="fuelTrimRpmBins" rows="4">
-         0.0
-         0.0
-         0.0
-         0.0
+         1000.0
+         3000.0
+         5000.0
+         7000.0
 </constant>
         <constant cols="4" digits="1" name="fuelTrims1_table" rows="4">
          0.0 0.0 0.0 0.0
@@ -4121,44 +3784,44 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="ignBlends1_loadBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         10.0
+         30.0
+         40.0
+         60.0
+         70.0
+         90.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="ignBlends1_rpmBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         999.0
+         1999.0
+         2999.0
+         3999.0
+         4999.0
+         5999.0
+         6999.0
 </constant>
         <constant name="ignBlends1_blendParameter">"Zero"</constant>
         <constant cols="1" digits="1" name="ignBlends1_blendBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.3
+         28.6
+         42.9
+         57.1
+         71.4
+         85.7
+         100.0
 </constant>
         <constant cols="1" digits="1" name="ignBlends1_blendValues" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.5
+         28.5
+         43.0
+         57.0
+         71.5
+         85.5
+         100.0
 </constant>
         <constant cols="8" digits="1" name="ignBlends2_table" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -4172,44 +3835,44 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="ignBlends2_loadBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         10.0
+         30.0
+         40.0
+         60.0
+         70.0
+         90.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="ignBlends2_rpmBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         999.0
+         1999.0
+         2999.0
+         3999.0
+         4999.0
+         5999.0
+         6999.0
 </constant>
         <constant name="ignBlends2_blendParameter">"Zero"</constant>
         <constant cols="1" digits="1" name="ignBlends2_blendBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.3
+         28.6
+         42.9
+         57.1
+         71.4
+         85.7
+         100.0
 </constant>
         <constant cols="1" digits="1" name="ignBlends2_blendValues" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.5
+         28.5
+         43.0
+         57.0
+         71.5
+         85.5
+         100.0
 </constant>
         <constant cols="8" digits="1" name="ignBlends3_table" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -4223,44 +3886,44 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="ignBlends3_loadBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         10.0
+         30.0
+         40.0
+         60.0
+         70.0
+         90.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="ignBlends3_rpmBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         999.0
+         1999.0
+         2999.0
+         3999.0
+         4999.0
+         5999.0
+         6999.0
 </constant>
         <constant name="ignBlends3_blendParameter">"Zero"</constant>
         <constant cols="1" digits="1" name="ignBlends3_blendBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.3
+         28.6
+         42.9
+         57.1
+         71.4
+         85.7
+         100.0
 </constant>
         <constant cols="1" digits="1" name="ignBlends3_blendValues" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.5
+         28.5
+         43.0
+         57.0
+         71.5
+         85.5
+         100.0
 </constant>
         <constant cols="8" digits="1" name="ignBlends4_table" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -4274,44 +3937,44 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="ignBlends4_loadBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         10.0
+         30.0
+         40.0
+         60.0
+         70.0
+         90.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="ignBlends4_rpmBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         999.0
+         1999.0
+         2999.0
+         3999.0
+         4999.0
+         5999.0
+         6999.0
 </constant>
         <constant name="ignBlends4_blendParameter">"Zero"</constant>
         <constant cols="1" digits="1" name="ignBlends4_blendBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.3
+         28.6
+         42.9
+         57.1
+         71.4
+         85.7
+         100.0
 </constant>
         <constant cols="1" digits="1" name="ignBlends4_blendValues" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.5
+         28.5
+         43.0
+         57.0
+         71.5
+         85.5
+         100.0
 </constant>
         <constant cols="8" digits="1" name="veBlends1_table" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -4325,44 +3988,44 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="veBlends1_loadBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         10.0
+         30.0
+         40.0
+         60.0
+         70.0
+         90.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="veBlends1_rpmBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         999.0
+         1999.0
+         2999.0
+         3999.0
+         4999.0
+         5999.0
+         6999.0
 </constant>
         <constant name="veBlends1_blendParameter">"Zero"</constant>
         <constant cols="1" digits="1" name="veBlends1_blendBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.3
+         28.6
+         42.9
+         57.1
+         71.4
+         85.7
+         100.0
 </constant>
         <constant cols="1" digits="1" name="veBlends1_blendValues" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.5
+         28.5
+         43.0
+         57.0
+         71.5
+         85.5
+         100.0
 </constant>
         <constant cols="8" digits="1" name="veBlends2_table" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -4376,44 +4039,44 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="veBlends2_loadBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         10.0
+         30.0
+         40.0
+         60.0
+         70.0
+         90.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="veBlends2_rpmBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         999.0
+         1999.0
+         2999.0
+         3999.0
+         4999.0
+         5999.0
+         6999.0
 </constant>
         <constant name="veBlends2_blendParameter">"Zero"</constant>
         <constant cols="1" digits="1" name="veBlends2_blendBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.3
+         28.6
+         42.9
+         57.1
+         71.4
+         85.7
+         100.0
 </constant>
         <constant cols="1" digits="1" name="veBlends2_blendValues" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.5
+         28.5
+         43.0
+         57.0
+         71.5
+         85.5
+         100.0
 </constant>
         <constant cols="8" digits="1" name="veBlends3_table" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -4427,44 +4090,44 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="veBlends3_loadBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         10.0
+         30.0
+         40.0
+         60.0
+         70.0
+         90.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="veBlends3_rpmBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         999.0
+         1999.0
+         2999.0
+         3999.0
+         4999.0
+         5999.0
+         6999.0
 </constant>
         <constant name="veBlends3_blendParameter">"Zero"</constant>
         <constant cols="1" digits="1" name="veBlends3_blendBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.3
+         28.6
+         42.9
+         57.1
+         71.4
+         85.7
+         100.0
 </constant>
         <constant cols="1" digits="1" name="veBlends3_blendValues" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.5
+         28.5
+         43.0
+         57.0
+         71.5
+         85.5
+         100.0
 </constant>
         <constant cols="8" digits="1" name="veBlends4_table" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -4478,44 +4141,44 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="veBlends4_loadBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         10.0
+         30.0
+         40.0
+         60.0
+         70.0
+         90.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="veBlends4_rpmBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         999.0
+         1999.0
+         2999.0
+         3999.0
+         4999.0
+         5999.0
+         6999.0
 </constant>
         <constant name="veBlends4_blendParameter">"Zero"</constant>
         <constant cols="1" digits="1" name="veBlends4_blendBins" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.3
+         28.6
+         42.9
+         57.1
+         71.4
+         85.7
+         100.0
 </constant>
         <constant cols="1" digits="1" name="veBlends4_blendValues" rows="8">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         14.5
+         28.5
+         43.0
+         57.0
+         71.5
+         85.5
+         100.0
 </constant>
         <constant cols="1" digits="1" name="throttleEstimateEffectiveAreaBins" rows="12">
          0.0
@@ -4856,8 +4519,8 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20230701" nPages="1" signature="rusEFI master.2023.07.03.f407-discovery.2789782402" version="5.0"/>
-    <bibliography author="rusEFI 20230701" writeDate="date"/>
+    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.12.13.f407-discovery.3089859362" version="5.0"/>
+    <bibliography author="rusEFI 20231120" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>

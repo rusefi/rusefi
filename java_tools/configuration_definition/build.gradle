@@ -10,6 +10,8 @@ defaultTasks 'shadowJar'
 dependencies {
     api project(':config_definition_base')
     api project(':trigger-image')
+
+    testImplementation testFixtures(project(':config_definition_base'))
 }
 
 shadowJar {

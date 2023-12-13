@@ -297,7 +297,8 @@ public class ReaderStateImpl implements ReaderState {
             name = line;
             comment = null;
         }
-        ConfigStructureImpl structure = new ConfigStructureImpl(name, comment, withPrefix);
+        ConfigStructure parent = state.stack.isEmpty() ? null : state.stack.peek();
+        ConfigStructureImpl structure = new ConfigStructureImpl(name, comment, withPrefix, parent);
         state.stack.push(structure);
         if (log.debugEnabled())
             log.debug("Starting structure " + structure.getName());
@@ -442,5 +443,10 @@ public class ReaderStateImpl implements ReaderState {
     @Override
     public boolean isStackEmpty() {
         return stack.isEmpty();
+    }
+
+    @Override
+    public ConfigStructure peek() {
+        return stack.peek();
     }
 }

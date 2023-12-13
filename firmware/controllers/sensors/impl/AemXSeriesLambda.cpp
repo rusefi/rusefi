@@ -13,7 +13,7 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
 		0,	// ID passed here doesn't matter since we override acceptFrame
 		type,
-		MS2NT(21)	// sensor transmits at 100hz, allow a frame to be missed
+		MS2NT(3 * WBO_TX_PERIOD_MS)	// sensor transmits at 100hz, allow a frame to be missed
 	)
 	, m_sensorIndex(sensorIndex)
 {

@@ -39,20 +39,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[7] = Gpio::I7;
 }
 
-static void setupVbatt() {
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// set vbatt_divider 5.835
-	// 33k / 6.8k
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-	// pin input +12 from Main Relay
-	engineConfiguration->vbattAdcChannel = EFI_ADC_5; // 4T
-
-	engineConfiguration->adcVcc = 3.29f;
-}
-
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = Gpio::B1;
@@ -101,8 +87,6 @@ static void setHellen128ETBConfig() {
 		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
 		// Disable pin
 		engineConfiguration->etbIo[0].disablePin = H176_OUT_PWM1;
-		// Unused
-		engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
 		//ETB2
 		// PWM pin
@@ -111,8 +95,6 @@ static void setHellen128ETBConfig() {
 		engineConfiguration->etbIo[1].directionPin1 = Gpio::H13;
 		// Disable pin
 		engineConfiguration->etbIo[1].disablePin = Gpio::B7;
-		// Unused
-		engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
 
 		// we only have pwm/dir, no dira/dirb
 		engineConfiguration->etb_use_two_wires = false;
@@ -129,7 +111,7 @@ static void setHellen128ETBConfig() {
 #include "hellen_leds_176.cpp"
 
 void setBoardConfigOverrides() {
-	setupVbatt();
+	setHellenVbatt();
 
 	setHellenSdCardSpi2();
 

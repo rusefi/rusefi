@@ -44,8 +44,8 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.firmwareVersion, "firmware", "version_f", 0},
 	{engine->outputChannels.rawIdlePositionSensor, "rawIdlePositionSensor", "V", 3},
 	{engine->outputChannels.rawWastegatePosition, "rawWastegatePosition", "V", 3},
-	{engine->outputChannels.accelerationX, "Acceleration: X", "G", 2},
-	{engine->outputChannels.accelerationY, "Acceleration: Y", "G", 2},
+	{engine->outputChannels.accelerationLat, "Accel: Lateral", "G", 0},
+	{engine->outputChannels.accelerationLon, "Accel: Longitudinal", "G", 0},
 	{engine->outputChannels.detectedGear, "Detected Gear", "", 0},
 	{engine->outputChannels.maxTriggerReentrant, "maxTriggerReentrant", "", 0},
 	{engine->outputChannels.rawLowFuelPressure, "rawLowFuelPressure", "V", 3},
@@ -112,9 +112,8 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.rawTps1Secondary, "rawTps1Secondary", "V", 3},
 	{engine->outputChannels.rawTps2Primary, "rawTps2Primary", "V", 3},
 	{engine->outputChannels.rawTps2Secondary, "rawTps2Secondary", "V", 3},
-	{engine->outputChannels.accelerationZ, "Acceleration: Z", "G", 0},
-	{engine->outputChannels.accelerationRoll, "Acceleration: Roll", "G", 0},
-	{engine->outputChannels.accelerationYaw, "Acceleration: Yaw", "G", 0},
+	{engine->outputChannels.accelerationVert, "Accel: Vertical", "G", 0},
+	{engine->outputChannels.gyroYaw, "Gyro: Yaw rate", "deg/sec", 0},
 	{engine->outputChannels.vvtTargets[0], "vvtTargets 1", "deg", 0},
 	{engine->outputChannels.vvtTargets[1], "vvtTargets 2", "deg", 0},
 	{engine->outputChannels.vvtTargets[2], "vvtTargets 3", "deg", 0},
@@ -441,6 +440,36 @@ static constexpr LogField fields[] = {
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
 #endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().baseIdlePosition, "idle: base value", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().idleClosedLoop, "Idle: Closed loop", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().throttlePedalUpState, "idle: throttlePedalUpState", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().targetRpmByClt, "Idle: Target RPM base", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().targetRpmAc, "Idle: Target A/C RPM", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().iacByRpmTaper, "idle: iacByRpmTaper portion", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
+#endif
 	{engine->dc_motors.dcOutput0, "DC: output0", "per", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "per", 2, "ETB more"},
 #if EFI_VVT_PID
@@ -449,7 +478,7 @@ static constexpr LogField fields[] = {
 #if EFI_VVT_PID
 	{___engine.module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
 #endif
-#if EFI_ENGINE_CONTROL
+#if EFI_SHAFT_POSITION_INPUT
 	{___engine.lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
 #endif
 };

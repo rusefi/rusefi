@@ -28,20 +28,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
 }
 
-static void setupVbatt() {
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// set vbatt_divider 5.835
-	// 33k / 6.8k
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-	// pin input +12 from Main Relay
-	engineConfiguration->vbattAdcChannel = EFI_ADC_5; // 4T
-
-	engineConfiguration->adcVcc = 3.29f;
-}
-
 static void setupDefaultSensorInputs() {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
@@ -51,7 +37,7 @@ static void setupDefaultSensorInputs() {
 	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
 	setPPSInputs(EFI_ADC_3, EFI_ADC_14);
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
@@ -61,12 +47,12 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
-#include "hellen_leds_144.cpp"
+
 
 static bool isFirstInvocation = true;
 
 void setBoardConfigOverrides() {
-	setupVbatt();
+	setHellenVbatt();
 
 	setHellenSdCardSpi2();
 
@@ -119,8 +105,6 @@ void setBoardConfigOverrides() {
 		engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3;
 	   	// Disable pin
 	   	engineConfiguration->etbIo[0].disablePin = Gpio::H144_OUT_IO12;
-	   	// Unused
-	 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
 		// wastegate DC motor
 	    //ETB2
@@ -130,8 +114,6 @@ void setBoardConfigOverrides() {
 		engineConfiguration->etbIo[1].directionPin1 = Gpio::H144_OUT_PWM5;
 	   	// Disable pin
 	   	engineConfiguration->etbIo[1].disablePin = Gpio::H144_OUT_IO13;
-	   	// Unused
-	 	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
     }
 }
 
@@ -181,7 +163,8 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_IGN_3, // Coil 3
 	Gpio::H144_IGN_4, // Coil 4
 	Gpio::H144_OUT_PWM8, // MIL
-	Gpio::H144_OUT_PWM7, // Tacho
+	Gpio::H144_OUT_PWM7, // low side? Tacho unused CAN tachometer right?
+	Gpio::H_SPI1_SCK, // X8 AuxLS1
 };
 
 int getBoardMetaOutputsCount() {
@@ -189,7 +172,7 @@ int getBoardMetaOutputsCount() {
 }
 
 int getBoardMetaLowSideOutputsCount() {
-    return getBoardMetaOutputsCount() - 1;
+    return getBoardMetaOutputsCount();
 }
 
 int getBoardMetaDcOutputsCount() {

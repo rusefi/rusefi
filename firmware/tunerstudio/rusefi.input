@@ -199,7 +199,7 @@ enable2ndByteCanID = false
 
 	egoCorrectionForVeAnalyze = { 100 + fuelPidCorrection1 }
 
-	wbo0_hasFault = { enableAemXSeries && (faultCode >= 3) }
+	wbo0_hasFault = { enableAemXSeries && (faultCode0 >= 3) }
 
 [PcVariables]
 	tuneCrcPcVariable = continuousChannelValue, tuneCrc16
@@ -237,7 +237,7 @@ enable2ndByteCanID = false
 	ignModeList = bits, U08, [0:3], "Single Coil", "Sequential", "Wasted", "Two Coils"
 
 ; ClearReason
-	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off", "Lua", "ACR", "Lambda Prot", "GDI Comms"
+	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off", "Lua", "ACR", "Lambda Prot", "GDI Comms", "Brake"
 
 ; TpsState
 	etbCutCodeList = bits, U08, [0:7], "None", "engine stopped", "TPS error", "PPS error", "TPS noise", "PID noise", "Lua", "Manual", "N/A", "Redundancy", "PPS noise"
@@ -1317,10 +1317,10 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 
 gaugeCategory = Trigger
 	triggerErrorsCounterGauge = totalTriggerErrorCounter, "Trigger error count", "count",	0,	15000,	0,	0,	6000,  6000,	0,	0
-	triggerSyncGapRatioGauge = triggerSyncGapRatio,"triggerSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	triggerStateIndexGauge = triggerStateIndex,"triggerStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	vvtSyncGapRatioGauge = vvtSyncGapRatio,"vvtSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-	vvtStateIndexGauge = vvtStateIndex,"vvtStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	triggerSyncGapRatioGauge = triggerSyncGapRatio0,"triggerSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	triggerStateIndexGauge = triggerStateIndex0,"triggerStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	vvtSyncGapRatioGauge = vvtSyncGapRatio0,"vvtSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+	vvtStateIndexGauge = vvtStateIndex0,"vvtStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	triggerPrimaryFallGauge = triggerPrimaryFall,"triggerPrimaryFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	triggerPrimaryRiseGauge = triggerPrimaryRise,"triggerPrimaryRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	triggerSecondaryFallGauge = triggerSecondaryFall,"triggerSecondaryFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1451,11 +1451,10 @@ gaugeCategory = Sensors - Extra 1
 	AuxL2Gauge		= auxLinear2,	@@GAUGE_NAME_AUX_LINEAR_2@@, "", -100, 100, -100, -100, 100, 100, 2, 2
 
 gaugeCategory = Sensors - Extra 2
-	accelerationXGauge = accelerationX,		@@GAUGE_NAME_ACCEL_X@@,		"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
-	accelerationYGauge = accelerationY,		@@GAUGE_NAME_ACCEL_Y@@,		"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
-	accelerationZGauge = accelerationZ,		@@GAUGE_NAME_ACCEL_Z@@,		"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
-	accelerationRollGauge=accelerationRoll,	@@GAUGE_NAME_ACCEL_ROLL@@,	"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
-	accelerationYawGauge=accelerationYaw,	@@GAUGE_NAME_ACCEL_YAW@@,	"acc",		-11,	11,	1.0,	1.2,		100,	100,	3, 1
+	accelerationLatGauge = accelerationLat,		@@GAUGE_NAME_ACCEL_LAT@@,		"acc",		-2,	2,	-2,	-1,		1,	2,	3, 1
+	accelerationLonGauge = accelerationLon,		@@GAUGE_NAME_ACCEL_LON@@,		"acc",		-2,	2,	-2,	-1,		1,	2,	3, 1
+	accelerationVertGauge = accelerationVert,	@@GAUGE_NAME_ACCEL_VERT@@,		"acc",		0,	1.5,	0.5,	0.6,		1.4,	1.5,	3, 1
+	gyroYawGauge 		  = gyroYaw,			@@GAUGE_NAME_GYRO_YAW@@,		"acc",		-100,	100, -100, -100, 100, 100, 3, 1
 	egt1Gauge			= egt1, "EGT#1", "C", 0, 2000
 	egt2Gauge			= egt2, "EGT#2", "C", 0, 2000
 	rpmAccelerationGa = rpmAcceleration,	"rpm delta",		"RPM/s",		-2000,		2000,		-2000,		2000,		-2000,	2000,	0,	0
@@ -1659,7 +1658,7 @@ gaugeCategory = GPPWM Outputs
 	indicator =					{ isTriggerError},			"Trigger OK",		"Trigger ERR",  white,  black,	red,  black
 	indicator = { fuelCutReason  != 0 }, "Injection OK", { Fuel cut: bitStringValue(fuelIgnCutCodeList, fuelCutReason)}, white, black, yellow, black
 	indicator = { sparkCutReason != 0 }, "Ignition OK",  { Ign cut: bitStringValue(fuelIgnCutCodeList, sparkCutReason)}, white, black, yellow, black
-	indicator = { etbErrorCode != 0 }, "ETB OK",  { ETB: bitStringValue(etbCutCodeList, etbErrorCode)}, white, black, yellow, black
+	indicator = { etbErrorCode0 != 0 }, "ETB OK",  { ETB: bitStringValue(etbCutCodeList, etbErrorCode0)}, white, black, yellow, black
 
 	; minor info
 	indicator =						{ isFanOn },				"Fan off",				"Fan on",  white,  black,  green,  black
@@ -1691,9 +1690,9 @@ gaugeCategory = GPPWM Outputs
 	indicator =					{ sd_present },			"No SD card",	"SD card present",  white,  black,  green,  black
 	indicator =		{ sd_logging_internal },		"No SD logging",		"SD logging",  white,  black,  green,  black
 	indicator =							{ sd_msd },			"No SD USB",				"SD USB",  white,  black,  green,  black
-	indicator =			{ etbRevLimitActive },	"No ETB RPM Limit",	"ETB RPM Limit",  white,  black, yellow,  black
+	indicator =			{ etbRevLimitActive0 },	"No ETB RPM Limit",	"ETB RPM Limit",  white,  black, yellow,  black
 
-	indicator = { wbo0_hasFault }, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
+	indicator = { wbo0_hasFault }, { WBO0: bitStringValue(wboFaultCodeList, faultCode0)}, { WBO0: bitStringValue(wboFaultCodeList, faultCode0)}, white, black, red, black
 	indicator = {injectorHwIssue}, "inj", "INJ", white, black, red, black@@if_ts_show_inj_diag
 
 	; indicator = { isInjectionEnabled && fuelCutReason == 0 }, { Inj: bitStringValue(injModeList, currentInjectionMode) }, { Inj: bitStringValue(injModeList, currentInjectionMode) }, white, black, white, black
@@ -2198,8 +2197,8 @@ cmd_set_engine_type_hellen_128_merc_4				= "@@TS_IO_TEST_COMMAND_char@@@@ts_comm
 cmd_set_engine_type_hellen_128_merc_6				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_128_MERCEDES_6_CYL_16_hex@@"
 cmd_set_engine_type_hellen_128_merc_8				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_128_MERCEDES_8_CYL_16_hex@@"
 
-cmd_set_engine_type_hellen_couple_bk1					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1_16_hex@@"
-cmd_set_engine_type_hellen_couple_bk2					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2_16_hex@@"
+cmd_set_engine_type_hellen_coupe_bk1					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1_16_hex@@"
+cmd_set_engine_type_hellen_coupe_bk2					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2_16_hex@@"
 
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MIATA_NA6_MAP_16_hex@@"
@@ -2211,7 +2210,7 @@ cmd_set_engine_type_FUEL_BENCH						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e
 cmd_set_engine_type_Proteus_M73						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_VW_B6					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_VW_B6_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_GM_LS_4				    = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_GM_LS_4_16_hex@@"@@if_show_Proteus_presets
-cmd_set_engine_type_PROTEUS_HONDA_K					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_K_16_hex@@"@@if_show_Proteus_presets
+cmd_set_engine_type_PROTEUS_HONDA_K					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HONDA_K_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_HONDA_OBD2A				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_MIATA_NB2				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_Proteus_Miata_TCU				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"@@if_show_Proteus_presets
@@ -2417,6 +2416,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Gap #4 to",		triggerGapOverrideTo4,		{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 4 }
 		field = "Gap #5 from",		triggerGapOverrideFrom5,	{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 5 }
 		field = "Gap #5 to",		triggerGapOverrideTo5,		{ overrideTriggerGaps == 1 && gapTrackingLengthOverride >= 5 }
+		field = "Override well known VVT gaps",	overrideVvtTriggerGaps
+		field = gapVvtTrackingLengthOverride,				gapVvtTrackingLengthOverride, { overrideVvtTriggerGaps == 1 }
+		field = "First VVT gap from",	triggerVVTGapOverrideFrom1
+		field = "First VVT gap to",		triggerVVTGapOverrideTo1
+		field = "Second VVT gap from",	triggerVVTGapOverrideFrom2
+		field = "Second VVT gap to",	triggerVVTGapOverrideTo2
+		field = "VVT gap #3 from",	triggerVVTGapOverrideFrom3
+		field = "VVT gap #3 to",	triggerVVTGapOverrideTo3
+		field = "VVT gap #4 from",	triggerVVTGapOverrideFrom4
+		field = "VVT gap #4 to",	triggerVVTGapOverrideTo4
 
 	dialog = trigger_advanced,	"Advanced Trigger"
 		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
@@ -2905,6 +2914,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI Device",							mc33816spiDevice
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
+		field = "MC33816 Driven",							mc33816_driven
 
 		field = "Boost voltage",						mc33_hvolt
 		field = "Boost current target",					mc33_i_boost
@@ -3552,11 +3562,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		commandButton = "Test Starter Disable", cmd_test_starter_disable_relay
 
 	dialog = startStopDialog, "Starter Control"
+        field = "Require Foot On Brake To Crank",        requireFootOnBrakeToCrank
 		field = "Start/Stop Button input",		startStopButtonPin
 		field = "Start/Stop Button input mode",				startStopButtonMode
 		field = "Starter Control",						starterControlPin, { starterControlPin != 0 || startStopButtonPin != 0}
 		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
-		field = startButtonSuppressOnStartUpMs,         startButtonSuppressOnStartUpMs, {startStopButtonPin != 0}
+		field = "Suppress On Start Up (Ms)",         startButtonSuppressOnStartUpMs, {startStopButtonPin != 0}
 		commandButton = "Test Starter Relay", cmd_test_starter_relay
 
 ;			Engine->MIL Settings
@@ -3674,6 +3685,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
 		field = "SPI3sck mode",							spi3SckMode, {is_enabled_spi_3 == 1}
 		field = "LIS302DLCsPin",						LIS302DLCsPin
+		field = "SPI4 enable",							is_enabled_spi_4
 
 	dialog = stftPartitioning, "Region Configuration"
 		field = "Idle region RPM",						stft_maxIdleRegionRpm
@@ -3773,6 +3785,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 ;			Engine->Battery & Alternator
 	dialog = batteryDialog, "Battery Settings",	yAxis
 		field = "vBatt ADC input",						vbattAdcChannel
+		field = "Ignition Key ADC input",               ignKeyAdcChannel@@if_ts_show_ign_key_analog_input
+		field = "Ignition Key Switch",                  ignitionKeyDigitalPin@@if_ts_show_ign_key_switch
+		field = "Ignition Key Switch Mode",             ignitionKeyDigitalPinMode@@if_ts_show_ign_key_switch
 		field = "Battery Input Divider Coefficient",	vbattDividerCoeff
 	dialog = alternator, "Alternator Settings",	yAxis
 		field = "Enabled",								isAlternatorControlEnabled
@@ -4415,29 +4430,29 @@ dialog = tcuControls, "Transmission Settings"
 
 ;		commandButton = "Mitsubishi 3A92",             cmd_set_engine_type_MITSUBISHI_3A92
 ;		commandButton = "Mitsubishi 4G93",             cmd_set_engine_type_MITSUBISHI_4G93
-		commandButton = "Toyota 1NZ-FE",                cmd_set_engine_type_TOYOTA_1NZ_FE@@if_show_4chan_presets
+;		commandButton = "Toyota 1NZ-FE",                cmd_set_engine_type_TOYOTA_1NZ_FE@@if_show_4chan_presets
 
 		commandButton = "microRusEFI M111",             cmd_set_engine_type_MRE_M111@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI GDI VAG B6 test", cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets
 ;		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
-		commandButton = "microRusEFI Subaru EJ18",		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
+;		commandButton = "microRusEFI Subaru EJ18",		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
 		commandButton = "Hyundai PB",		        cmd_set_engine_type_HYUNDAI_PB@@if_show_Proteus_presets
 		commandButton = "Hyundai PB",		        cmd_set_engine_type_HYUNDAI_PB@@if_show_4chan_presets
 		commandButton = "Hyundai PB",		        cmd_set_engine_type_HYUNDAI_PB@@if_show_8chan_presets
 
-		commandButton = "Proteus Nissan VQ",		cmd_set_engine_type_PROTEUS_NISSAN_VQ35@@if_show_Proteus_presets
+;		commandButton = "Proteus Nissan VQ",		cmd_set_engine_type_PROTEUS_NISSAN_VQ35@@if_show_Proteus_presets
 		commandButton = "Proteus M111",		        cmd_set_engine_type_PROTEUS_M111@@if_show_Proteus_presets
 		commandButton = "Proteus M73 v12",			cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus GDI VAG B6 test",  cmd_set_engine_type_PROTEUS_VW_B6@@if_show_Proteus_presets
 		commandButton = "Proteus GM Gen4",			cmd_set_engine_type_PROTEUS_GM_LS_4@@if_show_Proteus_presets
 		commandButton = "Proteus SBC",		        cmd_set_engine_type_PROTEUS_SBC@@if_show_Proteus_presets
-		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
+;		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Lua Demo",			cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
 		commandButton = "Proteus Honda K",			cmd_set_engine_type_PROTEUS_HONDA_K@@if_show_Proteus_presets
-		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets
+;		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets
 		commandButton = "Proteus Harley",			cmd_set_engine_type_PROTEUS_HARLEY@@if_show_Proteus_presets
 		commandButton = "Fuel Bench",               cmd_set_engine_type_FUEL_BENCH
 
@@ -4464,8 +4479,8 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Hellen 128 Merc 6 cyl",		cmd_set_engine_type_hellen_128_merc_6@@if_show_Hellen128merc_presets
 		commandButton = "Hellen 128 Merc v8",			cmd_set_engine_type_hellen_128_merc_8@@if_show_Hellen128merc_presets
 
-		commandButton = "Hellen Genesis Couple BK1",	cmd_set_engine_type_hellen_couple_bk1@@if_show_Hellen_hyundai_154
-		commandButton = "Hellen Genesis Couple BK2",	cmd_set_engine_type_hellen_couple_bk2@@if_show_Hellen_hyundai_154
+		commandButton = "Hellen Genesis Coupe BK1",	cmd_set_engine_type_hellen_coupe_bk1@@if_show_Hellen_hyundai_154
+		commandButton = "Hellen Genesis Coupe BK2",	cmd_set_engine_type_hellen_coupe_bk2@@if_show_Hellen_hyundai_154
 
 		commandButton = "ETB test bench", cmd_set_engine_type_etb_test@@if_show_test_presets
 		commandButton = "TLE8888 test bench", cmd_set_engine_type_8888_test@@if_show_test_presets
@@ -4601,6 +4616,7 @@ dialog = tcuControls, "Transmission Settings"
     dialog = parkingLot2, "Experimental 2"
         field = dacOutputPins1,         dacOutputPins1
         field = dacOutputPins2,         dacOutputPins2
+        field = "Read RPM matching VSS profile",    canInputBCM
 
 	dialog = harleyAcr, "Harley Automatic Compression Release"
 		field = "Pin",	acrPin

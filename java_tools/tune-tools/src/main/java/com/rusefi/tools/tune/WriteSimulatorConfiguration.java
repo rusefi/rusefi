@@ -1,5 +1,6 @@
 package com.rusefi.tools.tune;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.MsqFactory;
@@ -12,35 +13,61 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class WriteSimulatorConfiguration {
-    // f407-discovery is historically the most inclusive .ini file
-    public static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini";
+    private static final Logging log = getLogging(WriteSimulatorConfiguration.class);
+    // f407-discovery is historically the most inclusive .ini file but default script produces rusefi.ini a bit of a mess?!
+    public static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi.ini";
+
+    public static String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "");
 
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
+        System.out.println("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
-            writeTune();
+            writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
+            for (int type : new int[]{
+                    Fields.engine_type_e_MRE_M111,
+                    Fields.engine_type_e_HONDA_K,
+                    Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1,
+                    Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2,
+                    Fields.engine_type_e_HYUNDAI_PB,
+            }) {
+                writeSpecificEngineType(type);
+            }
         } catch (Throwable e) {
-            System.err.println("Unfortunately " + e);
+            log.error("Unfortunately", e);
+            System.exit(-1);
         } finally {
             // No way to set Process.exec to be a daemon, we need explicit exit
             System.exit(0);
         }
     }
 
-    private static void writeTune() throws JAXBException, IOException {
-        byte[] fileContent = Files.readAllBytes(new File(Fields.SIMULATOR_TUNE_BIN_FILE_NAME).toPath());
-        System.out.println("Got " + fileContent.length + " from " + Fields.SIMULATOR_TUNE_BIN_FILE_NAME + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
+    private static void writeSpecificEngineType(int engineType) {
+        String engine = "_" + engineType;
+        try {
+            writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + engine + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX,
+                    TuneCanTool.SIMULATED_PREFIX + engine + TuneCanTool.SIMULATED_SUFFIX);
+        } catch (Throwable e) {
+            throw new IllegalStateException("With " + engineType, e);
+        }
+    }
+
+    private static void writeTune(String tuneBinFileName, String outputXmlFileName) throws JAXBException, IOException {
+        byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + tuneBinFileName).toPath());
+        System.out.println("Got " + fileContent.length + " from " + tuneBinFileName + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         if (fileContent.length != Fields.TOTAL_CONFIG_SIZE)
-            throw new IllegalStateException("Unexpected image size " + fileContent.length);
+            throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         ConfigurationImage configuration = new ConfigurationImage(fileContent);
         System.out.println("Got " + Objects.requireNonNull(configuration, "configuration"));
         IniFileModel ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
         if (ini == null)
             throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
         Msq m = MsqFactory.valueOf(configuration, ini);
-        m.writeXmlFile(TuneCanTool.DEFAULT_TUNE);
+        m.writeXmlFile(ROOT_FOLDER + outputXmlFileName);
 
-        Msq newTuneJustToValidate = Msq.readTune(TuneCanTool.DEFAULT_TUNE);
+        Msq newTuneJustToValidate = Msq.readTune(ROOT_FOLDER + outputXmlFileName);
         System.out.println("Looks valid " + newTuneJustToValidate);
     }
 }

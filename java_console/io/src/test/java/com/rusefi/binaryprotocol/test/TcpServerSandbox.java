@@ -74,7 +74,7 @@ public class TcpServerSandbox {
     static class EcuState {
         private final byte[] outputs = new byte[Fields.TS_TOTAL_OUTPUT_SIZE];
 
-        long startUpTime = System.currentTimeMillis();
+        final long startUpTime = System.currentTimeMillis();
 
         public void onCommand() {
             int seconds = (int) ((System.currentTimeMillis() - startUpTime) / 1000);

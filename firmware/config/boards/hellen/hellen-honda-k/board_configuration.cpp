@@ -25,26 +25,12 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
 }
 
-static void setupVbatt() {
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// set vbatt_divider 5.835
-	// 33k / 6.8k
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-	// pin input +12 from Main Relay
-	engineConfiguration->vbattAdcChannel = EFI_ADC_5; // 4T
-
-	engineConfiguration->adcVcc = 3.29f;
-}
-
 static void setupDefaultSensorInputs() {
     engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_VSS;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
@@ -59,11 +45,11 @@ void onBoardStandBy() {
     hellenBoardStandBy();
 }
 
-#include "hellen_leds_144.cpp"
+
 
 void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
-	setupVbatt();
+	setHellenVbatt();
 
 	setHellenSdCardSpi1();
 	configureHellenMegaAccCS2Pin();
@@ -143,7 +129,6 @@ void setBoardDefaultConfiguration() {
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
-	engineConfiguration->enableVerboseCanTx = true;
 
 	engineConfiguration->etbFunctions[0] = DC_None;
 	engineConfiguration->etbFunctions[1] = DC_Wastegate;

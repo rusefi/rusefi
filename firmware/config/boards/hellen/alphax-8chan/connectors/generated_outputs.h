@@ -19,8 +19,8 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM176_GP19, // 25D - Injector 11
 	Gpio::MM176_GP18, // 26D - Injector 10
 	Gpio::MM176_OUT_PWM8, // 5C - High Side 1
-	Gpio::MM176_OUT_IO1, // 6C - High Side 2
-	Gpio::MM176_OUT_IO2, // 7C - High Side 3
+	Gpio::MM176_OUT_IO2, // 6C - High Side 2
+	Gpio::MM176_OUT_IO1, // 7C - High Side 3
 	Gpio::MM176_OUT_IO3, // 8C - Low Side 3
 	Gpio::MM176_OUT_IO4, // 9C - Low Side 4
 	Gpio::MM176_IGN1, // 11C - Ignition 1
@@ -50,4 +50,48 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM176_OUT_PWM4, // 21D - VVT 4
 	Gpio::MM176_OUT_PWM5, // 22C - Boost
 	Gpio::MM176_OUT_PWM7, // 23C - Low Side 2
+// "1D - Injector 1",
+// "2D - Injector 2",
+// "3D - Injector 3",
+// "4D - Injector 4",
+// "5D - Injector 5",
+// "6D - Injector 6",
+// "7D - Injector 7",
+// "13D - Injector 8",
+// "19D - Injector 9",
+// "24D - Injector 12",
+// "25D - Injector 11",
+// "26D - Injector 10",
+// "5C - High Side 1",
+// "6C - High Side 2",
+// "7C - High Side 3",
+// "8C - Low Side 3",
+// "9C - Low Side 4",
+// "11C - Ignition 1",
+// "13C - Ignition 3",
+// "14C - Ignition 5",
+// "15C - Ignition 8",
+// "17C - Low Side 5",
+// "19C - Ignition 2",
+// "20C - Ignition 4",
+// "21C - Ignition 7",
+// "23C - Ignition 10",
+// "25C - Low Side 6",
+// "28C - Ignition 6",
+// "29C - Ignition 9",
+// "30C - Ignition 11",
+// "31C - Ignition 12",
+// "34C - Low Side 7",
+// "8D - VVT 1",
+// "9D - Fuel Pump",
+// "10D - Fan",
+// "11D - Main Relay",
+// "12D - NOS",
+// "14D - VVT 2",
+// "15D - Tachometer",
+// "16C - Low Side 1",
+// "20D - VVT 3",
+// "21D - VVT 4",
+// "22C - Boost",
+// "23C - Low Side 2",
 }

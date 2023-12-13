@@ -1,7 +1,5 @@
 package com.rusefi.util;
 
-import java.io.IOException;
-
 public interface LazyFile extends Output {
     interface LazyFileFactory {
         LazyFile create(String fileName);
@@ -15,7 +13,4 @@ public interface LazyFile extends Output {
 
     @Override
     void write(String line);
-
-    @Override
-    void close() throws IOException;
 }

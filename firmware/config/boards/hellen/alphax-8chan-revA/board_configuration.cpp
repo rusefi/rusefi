@@ -12,6 +12,9 @@
 #include "hellen_meta.h"
 #include "defaults.h"
 
+// mm176 matches mm144 in terms of LED pinout
+#include "hellen_leds_144.cpp"
+
 static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
@@ -48,8 +51,6 @@ static void setupEtb() {
 	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
 	// Disable pin
 	engineConfiguration->etbIo[0].disablePin = H144_GP5;
-	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
 	// PWM pin
 	engineConfiguration->etbIo[1].controlPin = H144_GP4;
@@ -57,8 +58,6 @@ static void setupEtb() {
 	engineConfiguration->etbIo[1].directionPin1 = Gpio::H144_GP3;
 	// Disable pin
 	engineConfiguration->etbIo[1].disablePin = Gpio::Unassigned;
-	// Unused
-	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 }
@@ -68,19 +67,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
 	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_3;
 	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
-}
-
-static void setupVbatt() {
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// set vbatt_divider 5.835
-	// 33k / 6.8k
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
-
-	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
-
-	engineConfiguration->adcVcc = 3.29f;
 }
 
 static void setupDefaultSensorInputs() {
@@ -97,7 +83,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1SecondaryMin = 1000;
 	engineConfiguration->tps1SecondaryMax = 0;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 	engineConfiguration->baroSensor.type = MT_MPXH6400;
 //	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
@@ -139,10 +125,8 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	//alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
 
-#include "hellen_leds_144.cpp"
-
 void setBoardConfigOverrides() {
-	setupVbatt();
+	setHellenVbatt();
 
 	setHellenSdCardSpi2();
 

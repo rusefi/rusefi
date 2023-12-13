@@ -13,6 +13,16 @@
 #include "mpu_util.h"
 #include "flash_int.h"
 
+
+void startWatchdog(int) {
+}
+
+void tryResetWatchdog() {
+}
+
+void setWatchdogResetPeriod(int) {
+}
+
 void baseMCUInit(void) {
 }
 
@@ -223,6 +233,12 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
    return NULL;
 }
 
+void canHwInfo(CANDriver* cand)
+{
+	/* TODO: */
+	(void)cand;
+}
+
 #endif /* EFI_CAN_SUPPORT */
 
 bool allowFlashWhileRunning() {
@@ -297,6 +313,14 @@ adcsample_t getFastAdc(FastAdcToken token) {
 
 	// TODO: implement me!
 	return 0;
+}
+
+Reset_Cause_t getMCUResetCause() {
+	return Reset_Cause_Unknown;
+}
+
+const char *getMCUResetCause(Reset_Cause_t) {
+	return "Unknown";
 }
 
 #endif /* EFI_PROD_CODE */

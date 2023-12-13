@@ -319,7 +319,7 @@ void setTargetRpmCurve(int rpm) {
 	setLinearCurve(config->cltIdleRpm, rpm, rpm, 10);
 }
 
-void setDefaultGppwmParameters() {
+static void setDefaultGppwmParameters() {
 	// Same config for all channels
 	for (size_t i = 0; i < efi::size(engineConfiguration->gppwm); i++) {
 		auto& cfg = engineConfiguration->gppwm[i];
@@ -362,6 +362,31 @@ static void setDefaultEngineNoiseTable() {
 }
 #endif // EFI_ENGINE_CONTROL
 
+static void setDefaultCanSettings() {
+  // OBD-II default rate is 500kbps
+  engineConfiguration->canBaudRate = B500KBPS;
+  engineConfiguration->can2BaudRate = B500KBPS;
+
+	engineConfiguration->canSleepPeriodMs = 50;
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = true;
+	engineConfiguration->canVssScaling = 1.0f;
+
+	// Don't enable, but set default address
+	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
+}
+
+static void setDefaultScriptParameters() {
+	setLinearCurve(config->scriptTable1LoadBins, 20, 120, 10);
+	setRpmTableBin(config->scriptTable1RpmBins);
+	setLinearCurve(config->scriptTable2LoadBins, 20, 120, 10);
+	setRpmTableBin(config->scriptTable2RpmBins);
+	setLinearCurve(config->scriptTable3LoadBins, 20, 120, 10);
+	setRpmTableBin(config->scriptTable3RpmBins);
+	setLinearCurve(config->scriptTable4LoadBins, 20, 120, 10);
+	setRpmTableBin(config->scriptTable4RpmBins);
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -379,12 +404,23 @@ static void setDefaultEngineNoiseTable() {
  * This method should NOT be setting any default pinout
  */
 static void setDefaultEngineConfiguration() {
-#if EFI_ENGINE_CONTROL
 #if (! EFI_UNIT_TEST)
 	efi::clear(persistentState.persistentConfiguration);
 #endif
 	prepareVoidConfiguration(engineConfiguration);
 
+#if EFI_BOOST_CONTROL
+    setDefaultBoostParameters();
+#endif
+
+  setDefaultCanSettings();
+
+	engineConfiguration->sdCardLogFrequency = 50;
+
+	setDefaultGppwmParameters();
+	setDefaultScriptParameters();
+
+#if EFI_ENGINE_CONTROL
 	setDefaultBaseEngine();
 	setDefaultFuel();
 	setDefaultIgnition();
@@ -402,6 +438,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->isCylinderCleanupEnabled = true;
 
+	engineConfiguration->auxPid[0].minValue = 10;
+	engineConfiguration->auxPid[0].maxValue = 90;
 	engineConfiguration->auxPid[1].minValue = 10;
 	engineConfiguration->auxPid[1].maxValue = 90;
 
@@ -415,30 +453,13 @@ static void setDefaultEngineConfiguration() {
 	setDefaultEtbParameters();
 	setDefaultEtbBiasCurve();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_BOOST_CONTROL
-    setDefaultBoostParameters();
-#endif
-
-    // OBD-II default rate is 500kbps
-    engineConfiguration->canBaudRate = B500KBPS;
-    engineConfiguration->can2BaudRate = B500KBPS;
 
 	engineConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037();
 
-	engineConfiguration->canSleepPeriodMs = 50;
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canVssScaling = 1.0f;
-
-	// Don't enable, but set default address
-	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
-
-	engineConfiguration->sdCardLogFrequency = 50;
-
 	engineConfiguration->mapMinBufferLength = 1;
 	engineConfiguration->vvtActivationDelayMs = 6000;
-	
+
 	engineConfiguration->startCrankingDuration = 3;
 
 	engineConfiguration->maxAcRpm = 5000;
@@ -446,9 +467,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->maxAcTps = 75;
 
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
-
-	engineConfiguration->auxPid[0].minValue = 10;
-	engineConfiguration->auxPid[0].maxValue = 90;
 
 	engineConfiguration->alternatorControl.minValue = 0;
 	engineConfiguration->alternatorControl.maxValue = 90;
@@ -481,14 +499,6 @@ static void setDefaultEngineConfiguration() {
 	setRpmTableBin(config->vvtTable1RpmBins);
 	setLinearCurve(config->vvtTable2LoadBins, 20, 120, 10);
 	setRpmTableBin(config->vvtTable2RpmBins);
-	setLinearCurve(config->scriptTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable1RpmBins);
-	setLinearCurve(config->scriptTable2LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable2RpmBins);
-	setLinearCurve(config->scriptTable3LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable3RpmBins);
-	setLinearCurve(config->scriptTable4LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable4RpmBins);
 
 	setDefaultEngineNoiseTable();
 
@@ -535,8 +545,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->useStepperIdle = false;
 
 	setLinearCurve(config->iacCoastingRpmBins, 0, 8000, 1);
-
-	setDefaultGppwmParameters();
 
 #if !EFI_UNIT_TEST
 	engineConfiguration->analogInputDividerCoefficient = 2;
@@ -746,6 +754,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
+#if HW_PROTEUS || HW_HELLEN_HONDA
+	case engine_type_e::HONDA_K:
+		setHondaK();
+		break;
+#endif
+
 #if HW_PROTEUS
 	case engine_type_e::MAVERICK_X3:
 	    setMaverickX3();
@@ -783,9 +797,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU();
 		break;
-	case engine_type_e::PROTEUS_HONDA_K:
-		setProteusHondaElement2003();
-		break;
 	case engine_type_e::PROTEUS_HONDA_OBD2A:
 		setProteusHondaOBD2A();
 		break;
@@ -800,7 +811,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMiataNB2_Proteus();
 		break;
 	case engine_type_e::PROTEUS_SBC:
-	    setProteusSbc();
+	    setGmSbc();
         break;
 #ifdef HARDWARE_CI
 	case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
@@ -847,7 +858,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 
 #if HW_HELLEN_8CHAN
 	case engine_type_e::ALPHAX_8CHAN_SBC:
-	    set8chanSbc();
+	    setGmSbc();
         break;
 #endif
 
