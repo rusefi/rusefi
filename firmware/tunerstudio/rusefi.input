@@ -3685,6 +3685,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
 		field = "SPI3sck mode",							spi3SckMode, {is_enabled_spi_3 == 1}
 		field = "LIS302DLCsPin",						LIS302DLCsPin
+		field = "SPI4 enable",							is_enabled_spi_4
 
 	dialog = stftPartitioning, "Region Configuration"
 		field = "Idle region RPM",						stft_maxIdleRegionRpm

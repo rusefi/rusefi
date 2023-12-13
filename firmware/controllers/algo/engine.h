@@ -206,7 +206,7 @@ public:
 	SoftSparkLimiter ALSsoftSparkLimiter;
 #endif /* EFI_ANTILAG_SYSTEM */
 
-#if EFI_ENGINE_CONTROL
+#if EFI_SHAFT_POSITION_INPUT
 	LambdaMonitor lambdaMonitor;
 #endif // EFI_ENGINE_CONTROL
 

@@ -124,9 +124,6 @@ void adc_in_out(McpAdcState *state) {
 }
 
 void init_adc_mcp3208(McpAdcState *state, SPIDriver *driver) {
-
-//	initSpiModules();
-
 	state->driver = driver;
 	state->tx_buff[2] = 0;
 

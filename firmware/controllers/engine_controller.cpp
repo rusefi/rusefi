@@ -526,6 +526,7 @@ bool validateConfig() {
 
 	ensureArrayIsAscending("Batt Lag", engineConfiguration->injector.battLagCorrBins);
 
+#if EFI_ENGINE_CONTROL
 	// Fueling
 	{
 		ensureArrayIsAscending("VE load", config->veLoadBins);
@@ -567,6 +568,7 @@ bool validateConfig() {
 
 	ensureArrayIsAscendingOrDefault("Map estimate TPS", config->mapEstimateTpsBins);
 	ensureArrayIsAscendingOrDefault("Map estimate RPM", config->mapEstimateRpmBins);
+#endif // EFI_ENGINE_CONTROL
 
 	ensureArrayIsAscendingOrDefault("Script Curve 1", config->scriptCurve1Bins);
 	ensureArrayIsAscendingOrDefault("Script Curve 2", config->scriptCurve2Bins);
@@ -615,9 +617,11 @@ bool validateConfig() {
 	ensureArrayIsAscendingOrDefault("fuel ALS RPM", config->alsFuelAdjustmentrpmBins);
 #endif // EFI_ANTILAG_SYSTEM
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	// ETB
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 	if (isGdiEngine()) {
 		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
