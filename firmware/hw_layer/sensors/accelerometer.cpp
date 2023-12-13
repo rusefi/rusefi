@@ -21,7 +21,7 @@
 #include "accelerometer.h"
 #include "hardware.h"
 
-#if EFI_MEMS
+#if EFI_ONBOARD_MEMS
 #include "mpu_util.h"
 #include "lis302dl.h"
 #include "periodic_thread_controller.h"
@@ -42,9 +42,6 @@ static const SPIConfig accelerometerCfg = {
 		SPI_CR1_8BIT_MODE,
 	.cr2 = SPI_CR2_8BIT_MODE
 };
-#endif /* EFI_MEMS */
-
-#if EFI_MEMS
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -93,4 +90,4 @@ void initAccelerometer() {
 #endif /* HAL_USE_SPI */
 }
 
-#endif /* EFI_MEMS */
+#endif /* EFI_ONBOARD_MEMS */

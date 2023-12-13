@@ -237,8 +237,8 @@
 #define EFI_HIP_9011 FALSE
 #endif
 
-#if !defined(EFI_MEMS)
- #define EFI_MEMS FALSE
+#if !defined(EFI_ONBOARD_MEMS)
+ #define EFI_ONBOARD_MEMS FALSE
 #endif
 
 #ifndef EFI_INTERNAL_ADC

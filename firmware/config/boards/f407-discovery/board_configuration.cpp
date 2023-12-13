@@ -74,7 +74,7 @@ static void setHip9011FrankensoPinout() {
 }
 #endif
 
-#if EFI_MEMS
+#if EFI_ONBOARD_MEMS
 static void configureAccelerometerPins() {
 //	engineConfiguration->accelerometerCsPin = Gpio::E3; // we have a conflict with VVT output on Miata
 // 	engineConfiguration->is_enabled_spi_1 = true; // we have a conflict with PA5 input pin
@@ -84,7 +84,7 @@ static void configureAccelerometerPins() {
 	engineConfiguration->spi1misoPin = Gpio::A6;
 	engineConfiguration->spi1sckPin = Gpio::A5;
 }
-#endif // EFI_MEMS
+#endif // EFI_ONBOARD_MEMS
 
 /**
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
@@ -98,10 +98,10 @@ void setBoardDefaultConfiguration() {
 #endif /* EFI_HIP_9011 */
 
 	// set optional subsystem configs
-#if EFI_MEMS
+#if EFI_ONBOARD_MEMS
 	// this would override some values from above
 	configureAccelerometerPins();
-#endif /* EFI_MEMS */
+#endif /* EFI_ONBOARD_MEMS */
 
 
 
