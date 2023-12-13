@@ -36,13 +36,13 @@ pins:
     function: LIN bus
     ts_name: ___ - Lin Bus
     color: yellow
-    
+
   - pin: A7
     meta: MM64_OUT_PWM1
     function: Low Side Output 1 5A
     class: outputs
     ts_name: ___ - Low Side
-    color: green    
+    color: green
 
   - pin: A8
     meta: MM64_OUT_PWM2
@@ -50,7 +50,7 @@ pins:
     class: outputs
     ts_name: ___ - Low Side
     color: green
-    
+
   - pin: B1
     function: Power Ground
     type: gnd
@@ -83,7 +83,7 @@ pins:
     function: Analog/Digital Input 4
     ts_name: ___ - Analog/Digital Input
     color: orange
-    
+
   - pin: B6
     function: Sensor +5v Power Feed
     type: 5v
@@ -120,9 +120,9 @@ pins:
   - pin: C3
     id: [MM64_IN_ADC1, MM64_IN_ADC1]
     class: [event_inputs, switch_inputs]
-    function: Digital Input 2 / SENT
+    function: Digital Input / SENT Input
     type: hall
-    ts_name: ___ - Digital Input 2
+    ts_name: ___ - Digital Input with 2.7K pull up
 
   - pin: C4
     id: [MM64_IN_ADC15, MM64_IN_ADC15, MM64_IN_ADC15_ANALOG]
@@ -140,7 +140,7 @@ pins:
     function: CAN bus low (CANL)
     type: can
     color: blue
-    
+
   - pin: C8
     meta: MM64_OUT_PWM4
     function: Low Side Output 4 5A
