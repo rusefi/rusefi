@@ -548,7 +548,7 @@ void initHardware() {
 	initWS2812();
 #endif /* EFI_LED_WS2812 */
 
-#if EFI_MEMS
+#if EFI_ONBOARD_MEMS
 	initAccelerometer();
 #endif
 

@@ -141,8 +141,8 @@
 #define EFI_CJ125 FALSE
 #endif
 
-#if !defined(EFI_MEMS) || defined(__DOXYGEN__)
- #define EFI_MEMS FALSE
+#if !defined(EFI_ONBOARD_MEMS) || defined(__DOXYGEN__)
+ #define EFI_ONBOARD_MEMS FALSE
 #endif
 
 #define EFI_INTERNAL_ADC TRUE

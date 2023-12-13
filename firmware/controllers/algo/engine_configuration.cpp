@@ -29,7 +29,7 @@
 
 #include "bench_test.h"
 
-#if EFI_MEMS
+#if EFI_ONBOARD_MEMS
 #include "accelerometer.h"
 #endif
 
