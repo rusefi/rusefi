@@ -21,6 +21,15 @@ DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_HELLEN_HONDA_K
 
 SHORT_BOARD_NAME=hellen-honda-k
 
+# Same spi is used for SD and Accelerometer
+DDEFS += -DMMC_USE_MUTUAL_EXCLUSION=TRUE
+
+# This board has some Accelerometer onboard
+DDEFS += -DEFI_ONBOARD_MEMS=TRUE
+
+# May be it is LIS2DW12
+DDEFS += -DEFI_ONBOARD_MEMS_LIS2DW12=TRUE
+DDEFS += -DLIS2DW12_USE_SPI=TRUE -DLIS2DW12_SHARED_SPI=TRUE
 
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 DDEFS += -DHW_HELLEN_HONDA=1
