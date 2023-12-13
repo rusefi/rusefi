@@ -189,6 +189,7 @@ include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 ifneq ($(USE_LIS302),no)
   include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
 endif
+include $(CHIBIOS)/os/ex/devices/ST/lis2dw12.mk
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
