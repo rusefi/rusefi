@@ -76,7 +76,7 @@ static void setHip9011FrankensoPinout() {
 
 #if EFI_MEMS
 static void configureAccelerometerPins() {
-//	engineConfiguration->LIS302DLCsPin = Gpio::E3; // we have a conflict with VVT output on Miata
+//	engineConfiguration->accelerometerCsPin = Gpio::E3; // we have a conflict with VVT output on Miata
 // 	engineConfiguration->is_enabled_spi_1 = true; // we have a conflict with PA5 input pin
 
 	// stm32f4discovery defaults
