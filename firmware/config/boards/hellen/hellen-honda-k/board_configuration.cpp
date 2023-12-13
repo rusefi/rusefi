@@ -145,6 +145,10 @@ void setBoardDefaultConfiguration() {
 
     setTPS1Calibration(100, 650);
 	hellenWbo();
+
+	/* accel SPI is shared with SD card SPI */
+	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
+	engineConfiguration->accelerometerCsPin = H_SPI1_CS2;
 }
 
 static Gpio OUTPUTS[] = {

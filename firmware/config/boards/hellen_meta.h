@@ -216,7 +216,7 @@ void detectHellenBoardType();
 #define H_SPI1_MISO Gpio::B4
 #define H_SPI1_SCK B3
 #define H_SPI1_CS1 Gpio::B6
-#define H_SPI1_CS2 B7
+#define H_SPI1_CS2 Gpio::B7
 
 // looks like same pins 144 and 176
 #define H_SPI2_MOSI Gpio::B15
