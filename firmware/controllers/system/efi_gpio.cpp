@@ -226,7 +226,7 @@ void EnginePins::unregisterPins() {
 
 	// todo: add pinMode
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
-	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
+	unregisterOutputIfPinChanged(accelerometerCs, accelerometerCsPin);
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
@@ -739,7 +739,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e p_brainPin, pin_output_mode
 
 			const int logicalValue =
 				(outputMode == OM_INVERTED)
-				? !actualValue 
+				? !actualValue
 				: actualValue;
 
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
