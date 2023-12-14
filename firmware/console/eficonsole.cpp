@@ -252,6 +252,8 @@ void initializeConsole() {
 	addConsoleAction("hard_fault", testHardFault);
 	addConsoleAction("threadsinfo", cmd_threads);
 
+#if HAL_USE_WDG
 	addConsoleActionI("set_watchdog_timeout", startWatchdog);
 	addConsoleActionI("set_watchdog_reset", setWatchdogResetPeriod);
+#endif
 }
