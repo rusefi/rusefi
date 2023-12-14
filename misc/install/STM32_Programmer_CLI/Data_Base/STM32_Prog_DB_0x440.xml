@@ -187,7 +187,7 @@
 							<Parameters address="0x1FFFF808" name="WRP" size="0x4"/>
 							<AssignedBits>
 								<Bit>
-									<Name>nWRP0</Name>
+									<Name>WRP bit0</Name>
 									<Description/>
 									<BitOffset>0x0</BitOffset>
 									<BitWidth>0x8</BitWidth>
@@ -198,7 +198,7 @@
 									</Values>
 								</Bit>
 								<Bit>
-									<Name>nWRP8</Name>
+									<Name>nWRP bit8</Name>
 									<Description/>
 									<BitOffset>0x10</BitOffset>
 									<BitWidth>0x8</BitWidth>

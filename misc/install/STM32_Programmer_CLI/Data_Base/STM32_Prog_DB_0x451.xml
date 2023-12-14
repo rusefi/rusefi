@@ -381,7 +381,7 @@
 										<Val value="0x1">Flash in single bank with 256 bits read access</Val>
 									</Values>
 								</Bit>
-								<Bit config="1,4">
+								<Bit config="1,3">
 									<Name>nDBOOT</Name>
 									<Description/>
 									<BitOffset>0x1C</BitOffset>
@@ -586,7 +586,7 @@
 										<Val value="0x1">Flash in single bank with 256 bits read access</Val>
 									</Values>
 								</Bit>
-								<Bit config="1">
+								<Bit config="1,3">
 									<Name>nDBOOT</Name>
 									<Description/>
 									<BitOffset>0xC</BitOffset>

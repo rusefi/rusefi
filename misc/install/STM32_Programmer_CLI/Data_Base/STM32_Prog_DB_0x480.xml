@@ -774,6 +774,35 @@
 						</Field>
 					</Category>
 					<Category>
+					<Name>FLASH OTP</Name>
+						<Field>
+							<Parameters address="0x52002068" name="FOTPBL_CUR" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>LOCKBL</Name>
+									<Description/>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x10</BitWidth>
+									<Access>R</Access>
+									<Equation multiplier="0" offset="0x00000000"/>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x5200206C" name="FOTPBL_PRG" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>LOCKBL</Name>
+									<Description>OTP Block Lock</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x10</BitWidth>
+									<Access>W</Access>
+									<Equation multiplier="0" offset="0x00000000"/>
+								</Bit>
+							</AssignedBits>
+						</Field>
+					</Category>
+					<Category>
 						<Name>Write Protection</Name>
 						<Field>
 							<Parameters address="0x52002038" name="FWPSN_CUR_A" size="0x4"/>

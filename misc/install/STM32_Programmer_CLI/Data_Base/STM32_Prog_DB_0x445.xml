@@ -204,13 +204,13 @@
 						</Field>
 					</Category>
 					<Category>
-						<Name>Write Protection</Name>
+						<Name>Write Protection WRP0</Name>
 						<Field>
 							<Parameters address="0x1FFFF808" name="WRP_0_1" size="0x4"/>
 							<AssignedBits>
 								<Bit>
-									<Name>nWRP0</Name>
-									<Description/>
+									<Name>WRP_bit0</Name>
+									<Description>The following option byte protect the flash memory by sector of 4 kB (each bit protect 4kB).</Description>
 									<BitOffset>0x0</BitOffset>
 									<BitWidth>0x8</BitWidth>
 									<Access>RW</Access>
