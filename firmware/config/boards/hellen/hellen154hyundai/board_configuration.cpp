@@ -65,6 +65,11 @@ void setBoardConfigOverrides() {
 	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_AUX4;
 
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
+    if (hellenBoardId == BOARD_ID_VAG121_D) {
+      // wow something bad has happened to that batch of boards?!
+      hellenBoardId = BOARD_ID_154HYUNDAI_C;
+    }
+
     if (hellenBoardId == -1) {
 	    engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CRANK;
 	    engineConfiguration->camInputs[0] = Gpio::H144_IN_CAM;
