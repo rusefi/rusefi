@@ -770,7 +770,7 @@
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
         <constant name="auxSerialTxPin">"NONE"</constant>
         <constant name="auxSerialRxPin">"NONE"</constant>
-        <constant name="LIS302DLCsPin">"NONE"</constant>
+        <constant name="accelerometerCsPin">"NONE"</constant>
         <constant digits="2" name="tpsAccelLookback" units="sec">0.0</constant>
         <constant digits="0" name="coastingFuelCutVssLow" units="kph">0.0</constant>
         <constant digits="0" name="coastingFuelCutVssHigh" units="kph">0.0</constant>
@@ -897,7 +897,7 @@
         <constant name="trailingCoilPins11">"NONE"</constant>
         <constant name="trailingCoilPins12">"NONE"</constant>
         <constant name="tle8888mode">"Auto"</constant>
-        <constant name="LIS302DLCsPinMode">"default"</constant>
+        <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="injectorCompensationMode">"None"</constant>
         <constant name="fan2PinMode">"default"</constant>
         <constant digits="0" name="fuelReferencePressure" units="kPa">300.0</constant>
@@ -4521,7 +4521,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.12.14.f407-discovery.314685429" version="5.0"/>
+    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.12.14.f407-discovery.1982463902" version="5.0"/>
     <bibliography author="rusEFI 20231120" writeDate="date"/>
     <settings/>
     <userComments/>
