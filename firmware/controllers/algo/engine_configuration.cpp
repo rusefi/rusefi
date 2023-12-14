@@ -1091,6 +1091,8 @@ void commonFrankensoAnalogInputs() {
 BOARD_WEAK void setBoardDefaultConfiguration() { }
 BOARD_WEAK void setBoardConfigOverrides() { }
 
+BOARD_WEAK int hackHellenBoardId(int detectedId) { return detectedId; }
+
 BOARD_WEAK void onBoardStandBy() { }
 
 BOARD_WEAK int getBoardMetaOutputsCount() { return 0; }

@@ -80,5 +80,5 @@ void configureHellenCanTerminator() {
 }
 
 void detectHellenBoardType() {
-	engine->engineState.hellenBoardId = detectHellenBoardId();
+	engine->engineState.hellenBoardId = hackHellenBoardId(detectHellenBoardId());
 }

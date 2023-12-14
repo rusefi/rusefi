@@ -74,6 +74,8 @@ Gpio getCommsLedPin();
 Gpio getWarningLedPin();
 Gpio getRunningLedPin();
 
+int hackHellenBoardId(int detectedId);
+
 #if !EFI_UNIT_TEST
 extern persistent_config_container_s persistentState;
 static engine_configuration_s * const engineConfiguration =
