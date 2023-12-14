@@ -61,6 +61,7 @@ for BOARD in \
    "config/boards/proteus proteus_f4" \
    "config/boards/proteus proteus_h7" \
    "config/boards/f429-discovery f429-discovery" \
+   "config/boards/f469-discovery f469-discovery" \
    "config/boards/nucleo_f429 nucleo_f429" \
    "config/boards/nucleo_f767 nucleo_f767" \
    "config/boards/nucleo_h743 nucleo_h743" \
