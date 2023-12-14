@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Dec 14 04:48:26 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Dec 14 05:35:28 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1086,7 +1086,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 314685429;
+	public static final int SIGNATURE_HASH = 1982463902;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1315,7 +1315,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.12.14.f407-discovery.314685429";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.12.14.f407-discovery.1982463902";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2069,7 +2069,7 @@ public class Fields {
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 1514, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXSERIALTXPIN = Field.create("AUXSERIALTXPIN", 1516, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXSERIALRXPIN = Field.create("AUXSERIALRXPIN", 1518, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field LIS302DLCSPIN = Field.create("LIS302DLCSPIN", 1520, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field ACCELEROMETERCSPIN = Field.create("ACCELEROMETERCSPIN", 1520, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELLOOKBACK = Field.create("TPSACCELLOOKBACK", 1522, FieldType.INT8).setScale(0.05).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTVSSLOW = Field.create("COASTINGFUELCUTVSSLOW", 1523, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTVSSHIGH = Field.create("COASTINGFUELCUTVSSHIGH", 1524, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2171,7 +2171,7 @@ public class Fields {
 	public static final Field TRAILINGCOILPINS11 = Field.create("TRAILINGCOILPINS11", 1720, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TRAILINGCOILPINS12 = Field.create("TRAILINGCOILPINS12", 1722, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 1724, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field LIS302DLCSPINMODE = Field.create("LIS302DLCSPINMODE", 1725, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field ACCELEROMETERCSPINMODE = Field.create("ACCELEROMETERCSPINMODE", 1725, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTORCOMPENSATIONMODE = Field.create("INJECTORCOMPENSATIONMODE", 1726, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field FAN2PINMODE = Field.create("FAN2PINMODE", 1727, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FUELREFERENCEPRESSURE = Field.create("FUELREFERENCEPRESSURE", 1728, FieldType.FLOAT).setBaseOffset(0);
@@ -3657,7 +3657,7 @@ public class Fields {
 	IACBYTPSTAPER,
 	AUXSERIALTXPIN,
 	AUXSERIALRXPIN,
-	LIS302DLCSPIN,
+	ACCELEROMETERCSPIN,
 	TPSACCELLOOKBACK,
 	COASTINGFUELCUTVSSLOW,
 	COASTINGFUELCUTVSSHIGH,
@@ -3755,7 +3755,7 @@ public class Fields {
 	TRAILINGCOILPINS11,
 	TRAILINGCOILPINS12,
 	TLE8888MODE,
-	LIS302DLCSPINMODE,
+	ACCELEROMETERCSPINMODE,
 	INJECTORCOMPENSATIONMODE,
 	FAN2PINMODE,
 	FUELREFERENCEPRESSURE,
