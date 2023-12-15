@@ -1,7 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.FiringOrderTSLogic;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FiringOrderTSLogicTest {
     @Test

@@ -4,7 +4,7 @@ import com.rusefi.ReaderStateImpl;
 import com.rusefi.TsFileContent;
 import com.rusefi.output.TSProjectConsumer;
 import com.rusefi.util.Output;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 

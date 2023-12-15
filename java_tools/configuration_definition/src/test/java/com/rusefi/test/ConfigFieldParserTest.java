@@ -3,9 +3,9 @@ package com.rusefi.test;
 import com.rusefi.*;
 import com.rusefi.output.*;
 import com.rusefi.parse.TypesHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -22,7 +22,7 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getArraySizes().length, 1);
             assertEquals(cf.getArraySizes()[0], 8);
             assertEquals(cf.getSize(null), 8);
-            assertFalse("isIterate", cf.isIterate());
+            assertFalse(cf.isIterate(), "isIterate");
         }
     }
 
@@ -36,7 +36,7 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getArraySizes()[0], 8);
             assertEquals(cf.getArraySizes()[1], 16);
             assertEquals(cf.getSize(null), 128);
-            assertFalse("isIterate", cf.isIterate());
+            assertFalse(cf.isIterate(), "isIterate");
         }
     }
 
@@ -68,17 +68,19 @@ public class ConfigFieldParserTest {
                 "; total TS size = 12\n", tsProjectConsumer.getContent());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testSameFieldTwice() {
+      assertThrows(IllegalStateException.class, () -> {
         String test = "struct pid_s\n" +
-                "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "int afr_type2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "end_struct\n";
+          "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+          "int afr_type2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+          "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+          "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
         state.readBufferedReader(test, consumer);
+      });
     }
 
     @Test
@@ -205,13 +207,15 @@ public class ConfigFieldParserTest {
         new ReaderStateImpl().readBufferedReader(test);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void invalidDefine() {
+      assertThrows(IllegalStateException.class, () -> {
         String test = "struct pid_s\n" +
-                VariableRegistry.DEFINE + " show show_Hellen121vag_presets true\n" +
-                "end_struct\n" +
-                "";
+          VariableRegistry.DEFINE + " show show_Hellen121vag_presets true\n" +
+          "end_struct\n" +
+          "";
         new ReaderStateImpl().readBufferedReader(test);
+      });
     }
 
     @Test
@@ -364,7 +368,7 @@ public class ConfigFieldParserTest {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int field");
             assertEquals(cf.getType(), "int");
 
-            assertEquals("Name", cf.getName(), "field");
+            assertEquals(cf.getName(), "field", "Unexpected Field Name");
         }
 
         {
@@ -671,7 +675,7 @@ public class ConfigFieldParserTest {
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int field");
             assertEquals(cf.getType(), "int");
-            assertEquals("Name", cf.getName(), "field");
+            assertEquals(cf.getName(), "field", "Name");
         }
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int_4 fie4_ld");
@@ -682,7 +686,7 @@ public class ConfigFieldParserTest {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int_8 fi_eld;comm_;ts,1,1");
             assertEquals(cf.getType(), "int_8");
             assertEquals(cf.getName(), "fi_eld");
-            assertEquals("Comment", cf.getComment(), "comm_");
+            assertEquals(cf.getComment(), "comm_", "Comment");
             assertEquals(cf.getTsInfo(), "ts,1,1");
         }
         {
@@ -690,7 +694,7 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getType(), "int");
             assertEquals(cf.getArraySizes().length, 1);
             assertEquals(cf.getArraySizes()[0], 3);
-            assertTrue("isIterate", cf.isIterate());
+            assertTrue(cf.isIterate(), "isIterate");
         }
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int16_t crankingRpm;This,. value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')\\nAnything above 'crankingRpm' would be 'running'");

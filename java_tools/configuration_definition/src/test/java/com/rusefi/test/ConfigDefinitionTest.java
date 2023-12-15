@@ -3,7 +3,7 @@ package com.rusefi.test;
 import com.rusefi.EnumsReader;
 import com.rusefi.VariableRegistry;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileReader;

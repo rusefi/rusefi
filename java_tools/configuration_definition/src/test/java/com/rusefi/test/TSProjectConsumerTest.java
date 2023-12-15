@@ -4,7 +4,7 @@ import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.BaseCHeaderConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 

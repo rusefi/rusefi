@@ -7,9 +7,11 @@ import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 public class OutputsTest {
     @Test
@@ -35,15 +37,17 @@ public class OutputsTest {
         assertEquals(expectedLegacy, runOriginalImplementation(test, state).getContent());
     }
 
-    @Test(expected = BitState.TooManyBitsInARow.class)
+    @Test
     public void tooManyBits() {
+      assertThrows(BitState.TooManyBitsInARow.class, () -> {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 40; i++)
-            sb.append("bit b" + i + "\n");
+          sb.append("bit b" + i + "\n");
         String test = "struct total\n" +
-                sb +
-                "end_struct\n";
+          sb +
+          "end_struct\n";
         runOriginalImplementation(test);
+      });
     }
 
     private static OutputsSectionConsumer runOriginalImplementation(String test) {
@@ -191,18 +195,21 @@ public class OutputsTest {
         "\ttriggerSimulatorPins3 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different. 3\"\n", tsProjectConsumer.getSettingContextHelpForUnitTest());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void nameDuplicate() {
+      assertThrows(IllegalStateException.class, () -> {
+        System.out.println("run");
         String test = "struct total\n" +
-                "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "uint8_t afr_type;123;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "end_struct\n";
+          "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+          "uint8_t afr_type;123;\"ms\",      1,      0,       0, 3000,      0\n" +
+          "end_struct\n";
 
 
         String expectedLegacy = "afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
-                "afr_type = scalar, U08, 0, \"ms\", 1, 0\n" +
-                "; total TS size = 1\n";
+          "afr_type = scalar, U08, 0, \"ms\", 1, 0\n" +
+          "; total TS size = 1\n";
         assertEquals(expectedLegacy, runOriginalImplementation(test).getContent());
+      });
     }
 
     @Test

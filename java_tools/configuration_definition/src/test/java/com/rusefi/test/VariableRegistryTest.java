@@ -1,7 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.VariableRegistry;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringReader;

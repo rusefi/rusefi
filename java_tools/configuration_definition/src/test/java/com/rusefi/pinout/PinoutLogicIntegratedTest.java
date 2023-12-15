@@ -3,7 +3,7 @@ package com.rusefi.pinout;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.newparse.DefinitionsState;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.util.Arrays;

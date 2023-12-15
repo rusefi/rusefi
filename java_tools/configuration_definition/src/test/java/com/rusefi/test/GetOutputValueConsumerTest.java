@@ -3,7 +3,7 @@ package com.rusefi.test;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.GetOutputValueConsumer;
 import com.rusefi.util.LazyFile;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 
