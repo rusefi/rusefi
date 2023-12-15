@@ -77,7 +77,7 @@ jobs:
       run: .github/workflows/hw-ci/openocd_wipe_and_flash.sh ${{matrix.openocd-script}}
 
     - name: Upload build bin artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rusefi_hw-ci-${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
