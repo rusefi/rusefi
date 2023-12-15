@@ -81,7 +81,9 @@ jobs:
 
       - name: Push Connectors
         run: |
-          git add connectors/*
+          if [ -d connectors ]; then
+            git add connectors/*
+          fi
           OUT=$(git commit -am "GHA Connectors Generated" 2>&1) || echo "commit failed, finding out why"
           if echo "$OUT" | grep 'nothing to commit'; then
             echo "Connectors: looks like nothing to commit"
