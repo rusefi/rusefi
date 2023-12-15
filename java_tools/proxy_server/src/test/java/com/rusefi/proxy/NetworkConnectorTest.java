@@ -10,8 +10,8 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.server.Backend;
 import com.rusefi.server.ControllerConnectionState;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.util.concurrent.CountDownLatch;
@@ -23,7 +23,7 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 public class NetworkConnectorTest {
     private static final Logging log = getLogging(NetworkConnectorTest.class);
 
-    @Before
+    @BeforeEach
     public void setup() throws MalformedURLException {
         BackendTestHelper.commonServerTest();
     }

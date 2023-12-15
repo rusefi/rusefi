@@ -5,12 +5,12 @@ import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020

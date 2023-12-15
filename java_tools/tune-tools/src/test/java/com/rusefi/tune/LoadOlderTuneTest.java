@@ -7,10 +7,10 @@ import com.rusefi.tools.tune.TuneTools;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class LoadOlderTuneTest {
     @Test
@@ -127,11 +127,13 @@ public class LoadOlderTuneTest {
                 "    // defa", sb.substring(0, 3500));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testLegacyCustomEnumOrdinal() {
+      assertThrows(IllegalStateException.class, () -> {
         String tsCustomLine = "bits, U08, @OFFSET@, [0:1], \"Single Coil\", \"Individual Coils\", \"Wasted Spark\", \"Two Distributors\"";
 
         Assert.assertEquals(0, TuneTools.resolveEnumByName(tsCustomLine, "One coil"));
+      });
     }
 
     @Test

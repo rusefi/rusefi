@@ -2,7 +2,7 @@ package com.rusefi.tune;
 
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.tools.tune.WriteSimulatorConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertNotNull;
 

@@ -14,8 +14,8 @@ import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tools.online.PublicSession;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
  * https://github.com/rusefi/web_backend/blob/master/documentation/rusEFI%20remote.png
  */
 public class ServerTest {
-    @Before
+    @BeforeEach
     public void setup() throws MalformedURLException {
         BackendTestHelper.commonServerTest();
     }

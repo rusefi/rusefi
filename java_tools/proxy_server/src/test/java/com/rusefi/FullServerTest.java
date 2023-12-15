@@ -19,8 +19,8 @@ import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import org.apache.http.HttpResponse;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 public class FullServerTest {
     private static final Logging log = getLogging(FullServerTest.class);
 
-    @Before
+    @BeforeEach
     public void setup() throws MalformedURLException {
         BackendTestHelper.commonServerTest();
     }

@@ -15,8 +15,8 @@ import com.rusefi.server.SessionDetails;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -25,7 +25,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.rusefi.BackendTestHelper.createTestUserResolver;
 import static com.rusefi.TestHelper.*;
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.findCommand;
@@ -34,12 +33,12 @@ import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 import static com.rusefi.core.FileUtil.close;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LocalApplicationProxyTest {
     private static final AtomicInteger portNumber = new AtomicInteger(4000);
 
-    @Before
+    @BeforeEach
     public void setup() throws MalformedURLException {
         BackendTestHelper.commonServerTest();
     }

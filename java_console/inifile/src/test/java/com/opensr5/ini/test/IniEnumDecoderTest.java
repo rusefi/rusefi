@@ -1,9 +1,9 @@
 package com.opensr5.ini.test;
 
 import com.opensr5.ini.field.EnumIniField;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IniEnumDecoderTest {
     @Test
