@@ -83,7 +83,7 @@
         <constant name="iatSensorPulldown">"false"</constant>
         <constant name="allowIdenticalPps">"false"</constant>
         <constant name="overrideVvtTriggerGaps">"false"</constant>
-        <constant name="unused30">"false"</constant>
+        <constant name="useSpiImu">"false"</constant>
         <constant name="unused31">"false"</constant>
         <constant digits="0" name="tpsMin" units="ADC">98.0</constant>
         <constant digits="0" name="tpsMax" units="ADC">926.0</constant>
@@ -4571,7 +4571,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.12.15.f407-discovery.1982463902" version="5.0"/>
+    <versionInfo firmwareInfo="20231120" nPages="1" signature="rusEFI master.2023.12.15.f407-discovery.393948730" version="5.0"/>
     <bibliography author="rusEFI 20231120" writeDate="date"/>
     <settings/>
     <userComments/>
