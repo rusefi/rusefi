@@ -459,7 +459,7 @@ bit cltSensorPulldown
 bit iatSensorPulldown
 bit allowIdenticalPps
 bit overrideVvtTriggerGaps
-bit unused30
+bit useSpiImu
 bit unused31
 
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0
@@ -1926,9 +1926,6 @@ end_struct
 #define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
 #define GAUGE_NAME_FW_VERSION "ECU Software Version"
 
-#define GAUGE_NAME_ACCEL_X "Acceleration: X"
-#define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
-#define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
 #define GAUGE_NAME_ACCEL_YAW "Acceleration: Yaw"
 

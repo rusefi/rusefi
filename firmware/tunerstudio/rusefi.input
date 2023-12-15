@@ -3885,7 +3885,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "CAN read enabled",						canReadEnabled
 		field = "CAN write enabled",					canWriteEnabled
 		field = "CAN dash type",						canNbcType
-		field = "inertia measurement unit",				imuType
+		field = "Inertia Measurement Unit",				imuType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
 		field = "rusEFI CAN data bus",	canBroadcastUseChannelTwo
 		field = "rusEFI CAN data base address",			verboseCanBaseAddress
@@ -4619,6 +4619,7 @@ dialog = tcuControls, "Transmission Settings"
         field = dacOutputPins1,         dacOutputPins1
         field = dacOutputPins2,         dacOutputPins2
         field = "Read RPM matching VSS profile",    canInputBCM
+        field = useSpiImu,              useSpiImu
 
 	dialog = harleyAcr, "Harley Automatic Compression Release"
 		field = "Pin",	acrPin
