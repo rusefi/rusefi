@@ -13,6 +13,11 @@ allprojects {
             testImplementation global_libs.junit5
             testImplementation global_libs.junit5engine
         }
+
+      test {
+        // Enable JUnit 5
+        useJUnitPlatform()
+      }
     }
 
     gradle.projectsEvaluated {

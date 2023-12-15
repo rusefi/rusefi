@@ -19,9 +19,3 @@ shadowJar {
     dependsOn(':enum_to_string:shadowJar')
     archiveClassifier = ''
 }
-
-test {
-  // todo: move into global once junit5 migration is over!
-  // Enable JUnit 5
-  useJUnitPlatform()
-}
