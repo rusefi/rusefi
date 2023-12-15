@@ -118,7 +118,7 @@ jobs:
         branch: ${{ steps.extract_branch.outputs.branch }}
 
     - name: Upload Linux built simulator
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rusefi_simulator_linux
         path: ./simulator/build/rusefi_simulator

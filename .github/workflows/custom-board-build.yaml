@@ -103,19 +103,19 @@ jobs:
         run: bash misc/jenkins/compile_other_versions/compile.sh ../../.. ${{inputs.shortBoardName}}
 
       - name: Upload build bin artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rusefi.bin
           path: ext/rusefi/firmware/deliver/rusefi*.bin
 
       - name: Upload build hex artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rusefi.hex
           path: ext/rusefi/firmware/deliver/rusefi*.hex
 
       - name: Upload build map artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rusefi.map
           path: ext/rusefi/firmware/deliver/rusefi*.map
@@ -142,7 +142,7 @@ jobs:
         run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{inputs.shortBoardName}} ${{inputs.iniFileName}} master
 
       - name: Upload bundle artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rusefi_bundle_${{inputs.shortBoardName}}.zip
           path: ext/rusefi/artifacts/rusefi_bundle*.zip

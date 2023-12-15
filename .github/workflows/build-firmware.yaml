@@ -544,28 +544,28 @@ jobs:
 
     - name: Upload build elf artifact
       if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload build map artifact
       if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.map
         path: ./firmware/build/rusefi.map
 
     - name: Upload build bin artifact
       if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload build hex artifact
       if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.hex
 # we have a bit of a mess - this file from 'build' folder is only legit for not-BLT builds
@@ -574,21 +574,21 @@ jobs:
 
     - name: Upload build dfu artifact
       if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.dfu
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle artifact
       if: ${{ env.full == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle*.zip
 
     - name: Upload autoupdate bundle artifact
       if: ${{ env.full == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip

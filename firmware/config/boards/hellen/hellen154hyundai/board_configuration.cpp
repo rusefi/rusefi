@@ -51,6 +51,14 @@ static void setupDefaultSensorInputs() {
 
 static bool isFirstInvocation = true;
 
+int hackHellenBoardId(int detectedId) {
+  if (detectedId == BOARD_ID_VAG121_D) {
+    // wow something bad has happened to that batch of boards?!
+    return BOARD_ID_154HYUNDAI_C;
+  }
+  return detectedId;
+}
+
 void setBoardConfigOverrides() {
 	setHellenVbatt();
 
@@ -65,10 +73,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_AUX4;
 
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
-    if (hellenBoardId == BOARD_ID_VAG121_D) {
-      // wow something bad has happened to that batch of boards?!
-      hellenBoardId = BOARD_ID_154HYUNDAI_C;
-    }
 
     if (hellenBoardId == -1) {
 	    engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CRANK;
