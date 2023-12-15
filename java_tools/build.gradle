@@ -10,6 +10,8 @@ allprojects {
         dependencies {
             implementation global_libs.annotations
             testImplementation global_libs.junit
+            testImplementation global_libs.junit5
+            testImplementation global_libs.junit5engine
         }
     }
 
@@ -31,7 +33,7 @@ tasks.named('wrapper') {
     distributionType = Wrapper.DistributionType.ALL
 }
 
-// gradlew allDeps 
+// gradlew allDeps
 subprojects {
     task allDeps(type: DependencyReportTask) {}
 }
