@@ -31,7 +31,7 @@ shadowJar {
     dependsOn(':config_definition_base:shadowJar')
     dependsOn(':config_definition:shadowJar')
     base {
-        archivesBaseName = "${rootDir}/../java_console_binary/rusefi_console"
+        archivesName = "${rootDir}/../java_console_binary/rusefi_console"
         archiveClassifier = ''
     }
 

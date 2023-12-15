@@ -30,7 +30,7 @@ evaluationDependsOn(':core_io')
 
 jar {
     base {
-        archivesBaseName = 'rusefi_autoupdate'
+        archivesName = 'rusefi_autoupdate'
     }
     destinationDirectory = file("$rootDir/../java_console_binary")
 
