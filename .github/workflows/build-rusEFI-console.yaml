@@ -58,7 +58,7 @@ jobs:
 
       - name: Attach Gradle junit results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gradle junit
           path: '**/build/test-results/test/TEST-*.xml'
@@ -69,7 +69,7 @@ jobs:
 
       - name: Attach Ant console junit results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: console junit
           path: ./java_console/build/*.txt
