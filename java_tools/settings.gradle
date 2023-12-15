@@ -7,6 +7,8 @@ include ':core_io'
 project(':core_io').projectDir = new File('../java_console/shared_io')
 include ':core_ui'
 project(':core_ui').projectDir = new File('../java_console/core_ui')
+include ':peak-can-basic'
+project(':peak-can-basic').projectDir = new File('../java_console/peak-can-basic')
 include ':trigger-ui'
 project(':trigger-ui').projectDir = new File('../java_console/trigger-ui')
 include ':logging-api'
