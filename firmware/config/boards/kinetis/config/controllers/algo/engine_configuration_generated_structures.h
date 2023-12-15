@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Dec 14 05:33:40 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Dec 15 21:22:53 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -741,7 +741,7 @@ struct engine_configuration_s {
 	bool overrideVvtTriggerGaps : 1 {};
 	/**
 	offset 120 bit 30 */
-	bool unused30 : 1 {};
+	bool useSpiImu : 1 {};
 	/**
 	offset 120 bit 31 */
 	bool unused31 : 1 {};
@@ -5385,4 +5385,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 20712);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Thu Dec 14 05:33:40 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Dec 15 21:22:53 UTC 2023

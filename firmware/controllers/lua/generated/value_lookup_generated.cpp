@@ -130,6 +130,9 @@ float getConfigValueByName(const char *name) {
 // overrideVvtTriggerGaps
 		case 840966724:
 			return engineConfiguration->overrideVvtTriggerGaps;
+// useSpiImu
+		case -1011866871:
+			return engineConfiguration->useSpiImu;
 // tpsMin
 		case 513872736:
 			return engineConfiguration->tpsMin;
@@ -1952,6 +1955,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 840966724:
 	{
 		engineConfiguration->overrideVvtTriggerGaps = (int)value;
+		return 1;
+	}
+		case -1011866871:
+	{
+		engineConfiguration->useSpiImu = (int)value;
 		return 1;
 	}
 		case 513872736:

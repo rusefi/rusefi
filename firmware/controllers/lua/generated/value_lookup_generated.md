@@ -124,6 +124,9 @@ On some Ford and Toyota vehicles one of the pedal sensors is not linear on the f
 ### overrideVvtTriggerGaps
 
 
+### useSpiImu
+
+
 ### tpsMin
 Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X
 
