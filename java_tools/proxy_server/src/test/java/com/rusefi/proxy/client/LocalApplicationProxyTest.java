@@ -16,7 +16,7 @@ import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -34,7 +34,7 @@ import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 import static com.rusefi.core.FileUtil.close;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LocalApplicationProxyTest {
     private static final AtomicInteger portNumber = new AtomicInteger(4000);

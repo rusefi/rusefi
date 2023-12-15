@@ -15,7 +15,7 @@ import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tools.online.PublicSession;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

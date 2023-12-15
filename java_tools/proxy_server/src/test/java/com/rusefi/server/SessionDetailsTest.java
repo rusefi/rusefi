@@ -3,7 +3,7 @@ package com.rusefi.server;
 import com.rusefi.TestHelper;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.core.rusEFIVersion;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 

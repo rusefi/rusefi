@@ -20,7 +20,7 @@ import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import org.apache.http.HttpResponse;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

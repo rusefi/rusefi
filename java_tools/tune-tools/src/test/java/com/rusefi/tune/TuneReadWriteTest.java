@@ -12,13 +12,13 @@ import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TuneReadWriteTest {
     private static final String PATH = TuneCanTool.SRC_TEST_RESOURCES + "frankenso/";
@@ -200,7 +200,7 @@ public class TuneReadWriteTest {
          * Looks like I am not getting something right around Field#FIELD_PRECISION
          * See also TuneWriterTest :(
          */
-        assertEquals("Binary match expected", 66, compareImages(binaryDataFromXml, fileBinaryData, model));
+        assertEquals(66, compareImages(binaryDataFromXml, fileBinaryData, model), "Binary match expected");
         // todo: looks like this is not removing the temporary file?
         Files.delete(path);
     }

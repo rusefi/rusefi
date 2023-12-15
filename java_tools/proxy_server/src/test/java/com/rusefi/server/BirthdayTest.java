@@ -1,6 +1,6 @@
 package com.rusefi.server;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.rusefi.Timeouts.MINUTE;
 import static com.rusefi.Timeouts.SECOND;
