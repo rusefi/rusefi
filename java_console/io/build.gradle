@@ -18,6 +18,7 @@ dependencies {
     implementation global_libs.javaxJson
     api global_libs.jcip
     api project(':models')
+    api project(':peak-can-basic')
     api project(':core_io')
     api project(':logging')
 

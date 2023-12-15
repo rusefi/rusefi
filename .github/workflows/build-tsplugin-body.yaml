@@ -9,6 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Checkout Submodules
+        run: |
+          git submodule update --init --depth=1 java_console/peak-can-basic
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'

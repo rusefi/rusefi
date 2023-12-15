@@ -33,6 +33,7 @@ jobs:
           git submodule update --init --depth=1 firmware/controllers/lua/luaaa
           git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
           git submodule update --init --depth=1 java_console/luaformatter
+          git submodule update --init --depth=1 java_console/peak-can-basic
 
       - name: Set up MinGW
         uses: egor-tensin/setup-mingw@v2
