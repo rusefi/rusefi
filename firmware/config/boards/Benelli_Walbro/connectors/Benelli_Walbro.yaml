@@ -8,14 +8,14 @@ pins:
     color: black
 
   - pin: A2
-    function: 'Fuel pump relay output / main 12V ignition on Socket "Under Lock" (Pin20), Engine STOP Switch (Pin1)'
-    class: outputs   
+    function: 'Anti theft Switch'
+    class: inputs   
     type: [gp_low, gp_pp]
     color: brown/red 
 
   - pin: A3
-    function: 'Injection Relay (Pin87) and Security Relay (Pin30) Note: color yellow and "Output (low)" needs to be confirmed!'
-    class: outputs
+    function: 'Power 12 Volts from injection relay'
+    class: inputs
     type: ls
     # todo: '?? color yellow and "Output (low)" needs to be confirmed!''
     color: red/yellow
@@ -64,26 +64,25 @@ pins:
     color: gray/green
 
   - pin: B2
-    # note: duplicate usage of B2 for IAT and switch map!
-    function: 'Intake Air Temp (IAT) sensor !! Note: WS manual: duplicate usage of B2 for IAT and switch map button??!'
-    class: analog_inputs
-    type: at
+    function: 'Sensors common ground (IAT, ECT, Map change Switch)'
+    class: gnd
+    type: gnd
     color: violet/black
 
   - pin: B3
-    function: 'Throttle position sensor (TPS) Sensor Input'
-    class: analog_inputs
-    type: TPS
+    function: 'Throttle position sensor (TPS) Sensor ground / Lambda O2 Sensor ground'
+    class: gnd
+    type: gnd
     color: violet/black
 
   - pin: B4
-    function: Engine Temp Sensor Input
+    function: 'Crank Sensor - Phonic Wheel Shield'
     class: analog_inputs
     type: at
     color: black
 
   - pin: B5
-    function: 'Throttle position sensor (TPS) Sensor Input'
+    function: 'Throttle position sensor (TPS) +5  Volts (link between C5-C6-B5)'
     class: analog_inputs
     type: TPS
     color: blue
@@ -93,7 +92,7 @@ pins:
     function: not used
 
   - pin: B7
-    function: 'Throttle position sensor (TPS) Sensor Input'
+    function: 'Throttle position sensor (TPS) Sensor signal output'
     class: analog_inputs
     type: TPS
     color: yellow/blue
@@ -111,16 +110,11 @@ pins:
     color: gray
 
   - pin: C2
-    function: 'Unsure, could potentially be oil pressure ??'
-    class: analog_inputs
+    function: 'RPM/Tachometer Output to dashboard'
+    class: analog_outputs
     type: av
     color: gray/red
 
-  # - pin: C3
-  #   class: [event_inputs, switch_inputs]
-  #   function: Crank Sensor +
-  #   type: vr
-  #   color: gray
 
   - pin: C3
     function: 'Crank Sensor - Phonic Wheel (VR) NOTE!! ToDo: correct  + and - side assignment required!!'
@@ -135,20 +129,19 @@ pins:
     color: white or black
 
   - pin: C5
-    function: 'Intake Air Temp (IAT) sensor'
+    function: 'Intake Air Temp (IAT) Sensor +5 Volts (link between C5-C6-B5)'
     class: analog_inputs
     type: at
     color: green
 
   - pin: C6
-    function: Engine Temp Sensor Input
+    function: 'Engine Coolant Temp  (ECT) Sensor +5 Volts (link between C5-C6-B5)'
     class: analog_inputs
     type: at
     color: white/violet
 
   - pin: C7
-    # not used
-    function: not used
+    function: 'Lambda sensor'
 
   - pin: C8
     function: Power Ground
@@ -164,19 +157,19 @@ pins:
 
   - pin: D2
     class: outputs
-    function: 'fuel pump relay??'
-    type: gp_low
+    function: 'fuel pump relay exit (grounding through ecu)'
+    type: gnd
     color: blue/green
 
   - pin: D3
-    function: 'Injection Relay "Output (low)" ??'
-    class: outputs
+    function: 'Injection Relay exit (grounding through ecu)'
+    class: gnd
     type: ls
     color: violet/brown
 
   - pin: D4
-    function: Neutral Gear Sensor
-    class: analog_inputs
+    function: 'Cooling fan relay exit (grounding through ecu)'
+    class: gnd
     type: ??
     color: orange/black
 
@@ -186,13 +179,15 @@ pins:
 
   - pin: D6
     #class: outputs
-    function: 'unknown purpose ??'
+    function: 'Water temp output to dashboard'
     #type: ign
     color: brown/violet
 
   - pin: D7
-    # not used (enable ECU programming?)
-    function: 'not required by rusEFI?? (Walbro: enable ECU programming)'
+    # not required by rusEFI??
+    function: 'OBD2 - DIAG GROUND)'
+    class: gnd
+    type: gnd
 
   - pin: D8
     function: Power Ground
@@ -201,31 +196,28 @@ pins:
     color: black
 
   - pin: E1
-    # not used (OBD2?)
-    function: 'not required by rusEFI?? (Walbro: OBD2)'
+    # not used
+    function: not used
 
   - pin: E2
-    # not used
-    function: not used
+    # not required by rusEFI??
+    function: 'OBD2 - DIAG RS232 Tx/Rx'
 
   - pin: E3
-    # not used (enable ECU programming?)
-    function: 'not required by rusEFI?? (Walbro: enable ECU programming)'
+    # not required by rusEFI?? (enable ECU programming?)
+    function: 'not required by rusEFI?? (Walbro: enable ECU programming when grounded)'
 
   - pin: E4
-    # not used
-    function: not used
+    function: 'Neutral switch'
 
   - pin: E5
-    # not used
-    function: not used
+    function: 'MAP CHANGE switch'
 
   - pin: E6
-    # not used
-    function: not used
+    function: 'Lambda O2 Sensor'
 
   - pin: E7
-    function: engine check alarm light??
+    function: 'LIGHTS Hi/Low Beam Relay exit (grounding through ecu)'
     class: outputs
     type: ??
     color: yellow/green
@@ -243,34 +235,33 @@ pins:
     color: black
 
   - pin: F2
-    # not used (OBD2?)
-    function: 'not required by rusEFI?? (Walbro: OBD2)'
+    # not required by rusEFI??
+    function: 'OBD2 - DIAG RS232 Tx/Rx'
 
   - pin: F3
-    # not used (OBD2?)
-    function: 'not required by rusEFI?? (Walbro: OBD2)'
+    # not required by rusEFI?? (OBD2?)
+    function: 'OBD2 - K line)'
 
   - pin: F4
-    # not used (OBD2?)
-    function: 'not required by rusEFI?? (Walbro: OBD2)'
+    # not required by rusEFI?? (OBD2?)
+    function: 'OBD2- L Line)'
 
   - pin: F5
-    # not used
-    function: not used
+    function: 'Tilt Sensor (Grounded or Open circuit)'
 
   - pin: F6
-    function: side stand Sensor Input
+    function: side stand Sensor Input  (grounded or open circuit)
     class: analog_inputs
     color: white
 
   - pin: F7
-    function: '+12V engine ECU power source, run/start ??'
+    function: 'Injection warning light (MIL)'
     class: analog_inputs
     type: ??
     color: red/black
 
   - pin: F8
-    function: 'Solenoid (starter relay) ??'
+    function: 'Solenoid Exhaust & Airbox Flaps  (grounding through ecu)'
     class: analog_inputs
     type: ??
     color: green
@@ -279,7 +270,7 @@ info:
 # todo:  trigger build after PR
   title: Benelli_Walbro
   directory: Benelli_Walbro
-  name: 'Benelli_Walbro  !! NOTE: status is DRAFT !! - there a unknown and potential wrong pin assignments, these are flagged with "??" and "ToDo:"!!'
+  name: 'Benelli_Walbro  !! NOTE: status is DRAFT, last change by Papysoupape !! - there are potential wrong pin assignments'
   board_url: https://rusefi.com/s/Benelli_Walbro
   image:
     file: Benelli_Walbro.jpg
