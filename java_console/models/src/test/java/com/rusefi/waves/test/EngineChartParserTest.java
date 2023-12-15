@@ -5,12 +5,12 @@ import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.EngineChartParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static com.rusefi.waves.EngineReport.isCloseEnough;
-import static junit.framework.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 1/26/14
@@ -53,7 +53,7 @@ public class EngineChartParserTest {
         for (EngineReport.UpDown ud : wr.getList()) {
             assertTrue(isCloseEnough(238.75, rl.getCrankAngleByTime(ud.upTime)));
 
-            assertTrue(ud.getDutyCycle(rl) + "", isCloseEnough(0.0307, ud.getDutyCycle(rl)));
+            assertTrue(isCloseEnough(0.0307, ud.getDutyCycle(rl)), ud.getDutyCycle(rl) + "");
         }
     }
 

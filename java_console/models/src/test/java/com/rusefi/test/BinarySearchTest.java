@@ -1,15 +1,17 @@
 package com.rusefi.test;
 
 import com.rusefi.BinarySearch;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class BinarySearchTest extends TestCase {
+public class BinarySearchTest {
     public static void main(String[] args) {
         new BinarySearchTest().testBinary();
     }
 
+    @Test
     public void testBinary() {
 
         double[] angles = new double[] {0, 56, 126, 180, 236, 279, 306, 416, 486, 540, 596, 666};

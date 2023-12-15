@@ -5,7 +5,7 @@ import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.commands.GetOutputsCommand;
 //import org.apache.commons.codec.binary.Hex;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

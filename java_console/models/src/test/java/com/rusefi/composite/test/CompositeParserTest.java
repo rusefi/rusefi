@@ -3,7 +3,7 @@ package com.rusefi.composite.test;
 import com.rusefi.stream.VcdStreamFile;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;

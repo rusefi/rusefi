@@ -1,7 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.Histograms;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 

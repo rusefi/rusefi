@@ -1,7 +1,7 @@
 package com.rusefi.ui.livedata;
 
 import com.rusefi.livedata.LiveDataParserPanel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.URISyntaxException;

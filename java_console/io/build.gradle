@@ -27,11 +27,9 @@ dependencies {
     implementation global_libs.json
     implementation ts_plugin_libs.httpclient
 
-    // junit 4.13 does not mix well with httpclient :(
-    testImplementation group: 'junit', name: 'junit', version: '4.8.2'
     testFixturesImplementation global_libs.mockito
     testFixturesApi global_libs.annotations
-    testFixturesApi global_libs.junit
+    testFixturesApi global_libs.junit5api
 }
 
 tasks.register('copyJniHeader', Copy) {

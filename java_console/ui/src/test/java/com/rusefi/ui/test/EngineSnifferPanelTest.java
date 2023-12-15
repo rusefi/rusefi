@@ -3,7 +3,7 @@ package com.rusefi.ui.test;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.engine.NameUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 import java.util.TreeSet;

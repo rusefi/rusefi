@@ -2,11 +2,11 @@ package com.rusefi.core.test;
 
 import com.rusefi.core.ResponseBuffer;
 import com.rusefi.io.LinkDecoder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Andrey Belomutskiy

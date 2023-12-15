@@ -3,7 +3,7 @@ package com.rusefi.autotune.test;
 import com.rusefi.autotune.FuelAutoTune2;
 import com.rusefi.autotune.Result;
 import com.rusefi.autotune.AfrDataPoint;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;

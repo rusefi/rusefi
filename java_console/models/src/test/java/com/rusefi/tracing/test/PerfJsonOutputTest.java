@@ -3,14 +3,14 @@ package com.rusefi.tracing.test;
 import com.rusefi.tracing.Entry;
 import com.rusefi.tracing.JsonOutput;
 import com.rusefi.tracing.Phase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PerfJsonOutputTest {
     @Test

@@ -1,9 +1,9 @@
 package com.rusefi.waves.test;
 
 import com.rusefi.waves.EngineReport;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Date: 6/23/13

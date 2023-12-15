@@ -2,7 +2,7 @@ package com.rusefi.test;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.core.Pair;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.rusefi.ConfigurationImageDiff.findDifferences;
 import static org.junit.Assert.assertEquals;

@@ -1,7 +1,7 @@
 package com.rusefi.binaryprotocol.test;
 
 import com.rusefi.binaryprotocol.IoHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

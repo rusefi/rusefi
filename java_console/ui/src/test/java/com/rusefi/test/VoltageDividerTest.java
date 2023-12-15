@@ -2,7 +2,7 @@ package com.rusefi.test;
 
 //import com.rusefi.ui.widgets.PotCommand;
 import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class VoltageDividerTest extends TestCase {
 

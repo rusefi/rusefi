@@ -2,12 +2,12 @@ package com.rusefi.autotune.test;
 
 import com.rusefi.autotune.*;
 import com.rusefi.config.generated.Fields;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 1/5/2016

@@ -1,9 +1,9 @@
 package com.rusefi.io.can;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HexUtilTest {
     @Test
@@ -25,9 +25,10 @@ public class HexUtilTest {
         assertArrayEquals(new byte[]{0, 0, 1, (byte) 0xab, (byte) 0xcd, 0, 0}, destination);
     }
 
-    @Test(expected = NumberFormatException.class)
+    @Test
     public void unexpected() {
-        HexUtil.hexToBytes("0xff");
+      assertThrows(NumberFormatException.class, () -> {
+        HexUtil.hexToBytes("0xff");});
     }
 
     @Test

@@ -2,9 +2,9 @@ package com.rusefi.test;
 
 import com.rusefi.CyclicBuffer;
 import com.rusefi.DataBuffer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CyclicBufferTest {
     @Test

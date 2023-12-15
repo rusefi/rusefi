@@ -5,9 +5,9 @@ import com.rusefi.config.Field;
 import com.rusefi.config.FieldCommandResponse;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FieldTest {
     @Test

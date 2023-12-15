@@ -1,7 +1,7 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.Timeouts;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 

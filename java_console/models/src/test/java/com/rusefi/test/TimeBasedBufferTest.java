@@ -2,13 +2,12 @@ package com.rusefi.test;
 
 import com.rusefi.DataBuffer;
 import com.rusefi.TimeBasedBuffer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TimeBasedBufferTest {
     @Test

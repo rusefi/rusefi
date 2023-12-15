@@ -2,7 +2,7 @@ package com.rusefi.ui.test;
 
 import com.rusefi.ui.RpmModel;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Date: 12/27/12
