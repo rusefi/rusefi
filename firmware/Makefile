@@ -186,8 +186,14 @@ include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # EX files (optional).
-include $(CHIBIOS)/os/ex/devices/ST/lis2dw12.mk
-include $(CHIBIOS)/os/ex/devices/ST/lsm303agr.mk
+ifeq ($(EFI_ONBOARD_MEMS_LIS2DW12),yes)
+  DDEFS += -DEFI_ONBOARD_MEMS_LIS2DW12=TRUE
+  include $(CHIBIOS)/os/ex/devices/ST/lis2dw12.mk
+endif
+ifeq ($(EFI_ONBOARD_MEMS_LIS2DH12),yes)
+  DDEFS += -DEFI_ONBOARD_MEMS_LIS2DH12=TRUE
+  include $(CHIBIOS)/os/ex/devices/ST/lsm303agr.mk
+endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
