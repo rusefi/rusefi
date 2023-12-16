@@ -173,6 +173,9 @@ pins:
     function: CAN bus high
     type: can
 
+  - pin: 63a
+    function: oxygen sensor unused
+
   - pin: 65a
     id: H14
     class: outputs
