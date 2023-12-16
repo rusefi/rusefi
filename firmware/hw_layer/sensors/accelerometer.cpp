@@ -128,11 +128,6 @@ private:
 		engine->sensors.accelerometer.lat  = acccooked[0] / 1000.0;
 		engine->sensors.accelerometer.lon  = acccooked[1] / 1000.0;
 		engine->sensors.accelerometer.vert = acccooked[2] / 1000.0;
-
-		efiPrintf("Acc: %1.3f, %1.3f, %1.3f",
-			engine->sensors.accelerometer.lat,
-			engine->sensors.accelerometer.lon,
-			engine->sensors.accelerometer.vert);
 	}
 };
 
