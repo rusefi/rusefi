@@ -111,8 +111,8 @@ pins:
 
   - pin: C2
     function: 'RPM/Tachometer Output to dashboard'
-    class: analog_outputs
-    type: av
+    class: ??
+    type: ??
     color: gray/red
 
 
