@@ -148,7 +148,7 @@ void setBoardDefaultConfiguration() {
 
 	/* accel SPI is shared with SD card SPI */
 	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->accelerometerCsPin = H_SPI1_CS2;
+	engineConfiguration->accelerometerCsPin = Gpio::H_SPI1_CS2;
 }
 
 static Gpio OUTPUTS[] = {

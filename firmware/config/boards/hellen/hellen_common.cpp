@@ -64,7 +64,7 @@ void configureHellenMegaAccCS2Pin() {
     static OutputPin cs2pin;
     if (!initialized) {
         initialized = true;
-	    cs2pin.initPin("mm-CS2", H_SPI1_CS2);
+	    cs2pin.initPin("mm-CS2", Gpio::H_SPI1_CS2);
 	    cs2pin.setValue(1);
 	}
 }
