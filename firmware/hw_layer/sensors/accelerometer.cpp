@@ -50,7 +50,10 @@ static SPIConfig accelerometerSpiCfg = {
 	.cr2 = SPI_CR2_8BIT_MODE
 };
 
-//static OutputPin chipSelect;
+
+#if 0
+	static OutputPin chipSelect;
+#endif
 
 #if (EFI_ONBOARD_MEMS_LIS2DW12 == TRUE)
 
@@ -107,8 +110,6 @@ static LSM303AGRDriver LIS2DH12;
 
 #endif //EFI_ONBOARD_MEMS_LIS2DH12 == TRUE
 
-//static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
-
 class AccelController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	AccelController() : PeriodicController("Acc SPI") { }
@@ -152,7 +153,9 @@ void initAccelerometer() {
 	}
 
 	/* Commented until we have configureHellenMegaAccCS2Pin() */
-	//chipSelect.initPin("SPI Acc", engineConfiguration->accelerometerCsPin);
+	#if 0
+		chipSelect.initPin("SPI Acc", engineConfiguration->accelerometerCsPin);
+	#endif
 	accelerometerSpiCfg.ssport = getHwPort("SPI Acc", engineConfiguration->accelerometerCsPin);
 	accelerometerSpiCfg.sspad = getHwPin("SPI Acc", engineConfiguration->accelerometerCsPin);
 
