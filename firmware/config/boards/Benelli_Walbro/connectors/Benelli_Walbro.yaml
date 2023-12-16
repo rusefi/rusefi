@@ -9,7 +9,7 @@ pins:
 
   - pin: A2
     function: 'Anti theft Switch'
-    class: inputs   
+    class: input_ON_OFF   
     type: [gp_low, gp_pp]
     color: brown/red 
 
@@ -65,20 +65,20 @@ pins:
 
   - pin: B2
     function: 'Sensors common ground (IAT, ECT, Map change Switch)'
-    class: gnd
-    type: gnd
+    class: sgnd
+    type: sgnd
     color: violet/black
 
   - pin: B3
     function: 'Throttle position sensor (TPS) Sensor ground / Lambda O2 Sensor ground'
-    class: gnd
-    type: gnd
+    class: sgnd
+    type: sgnd
     color: violet/black
 
   - pin: B4
     function: 'Crank Sensor - Phonic Wheel Shield'
-    class: analog_inputs
-    type: at
+    class: ??
+    type: VR
     color: black
 
   - pin: B5
@@ -131,13 +131,13 @@ pins:
   - pin: C5
     function: 'Intake Air Temp (IAT) Sensor +5 Volts (link between C5-C6-B5)'
     class: analog_inputs
-    type: at
+    type: 5V
     color: green
 
   - pin: C6
     function: 'Engine Coolant Temp  (ECT) Sensor +5 Volts (link between C5-C6-B5)'
     class: analog_inputs
-    type: at
+    type: 5V
     color: white/violet
 
   - pin: C7
@@ -145,8 +145,8 @@ pins:
 
   - pin: C8
     function: Power Ground
-    class: gnd
-    type: gnd
+    class: pgnd
+    type: pgnd
     color: black
 
   - pin: D1
@@ -164,7 +164,7 @@ pins:
   - pin: D3
     function: 'Injection Relay exit (grounding through ecu)'
     class: gnd
-    type: ls
+    type: ??
     color: violet/brown
 
   - pin: D4
@@ -178,21 +178,21 @@ pins:
     function: not used
 
   - pin: D6
-    #class: outputs
+    class: outputs
     function: 'Water temp output to dashboard'
-    #type: ign
+    type: at
     color: brown/violet
 
   - pin: D7
     # not required by rusEFI??
     function: 'OBD2 - DIAG GROUND)'
-    class: gnd
+    class: OBD2
     type: gnd
 
   - pin: D8
     function: Power Ground
-    class: gnd
-    type: gnd
+    class: pgnd
+    type: pgnd
     color: black
 
   - pin: E1
@@ -202,16 +202,19 @@ pins:
   - pin: E2
     # not required by rusEFI??
     function: 'OBD2 - DIAG RS232 Tx/Rx'
+    class: OBD2
 
   - pin: E3
     # not required by rusEFI?? (enable ECU programming?)
-    function: 'not required by rusEFI?? (Walbro: enable ECU programming when grounded)'
+    function: 'enable ECU programming when grounded'
 
   - pin: E4
     function: 'Neutral switch'
+    class: input_ON_OFF
 
   - pin: E5
     function: 'MAP CHANGE switch'
+    class: input_ON_OFF
 
   - pin: E6
     function: 'Lambda O2 Sensor'
@@ -230,34 +233,38 @@ pins:
 
   - pin: F1
     function: Power Ground
-    class: gnd
-    type: gnd
+    class: pgnd
+    type: pgnd
     color: black
 
   - pin: F2
     # not required by rusEFI??
     function: 'OBD2 - DIAG RS232 Tx/Rx'
+    class: OBD2
 
   - pin: F3
     # not required by rusEFI?? (OBD2?)
-    function: 'OBD2 - K line)'
+    function: 'OBD2 - K-line'
+    class: OBD2
 
   - pin: F4
     # not required by rusEFI?? (OBD2?)
-    function: 'OBD2- L Line)'
+    function: 'OBD2- L-Line'
+    class: OBD2
 
   - pin: F5
     function: 'Tilt Sensor (Grounded or Open circuit)'
+    class: input_ON_OFF
 
   - pin: F6
-    function: side stand Sensor Input  (grounded or open circuit)
-    class: analog_inputs
+    function: 'side stand Sensor Input  (grounded or open circuit)'
+    class: input_ON_OFF
     color: white
 
   - pin: F7
     function: 'Injection warning light (MIL)'
-    class: analog_inputs
-    type: ??
+    class: analog_outputs
+    type: MIL
     color: red/black
 
   - pin: F8
@@ -267,7 +274,7 @@ pins:
     color: green
 
 info:
-# todo:  trigger build after PR
+  cid: B3W
   title: Benelli_Walbro
   directory: Benelli_Walbro
   name: 'Benelli_Walbro  !! NOTE: status is DRAFT, last change by Papysoupape !! - there are potential wrong pin assignments'
