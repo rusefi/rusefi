@@ -302,12 +302,12 @@ static void mmcUnMount() {
 	f_sync(&FDLogFile);							// sync ALL
 
 #if HAL_USE_MMC_SPI
-	mmcDisconnect(&MMCD1);						// Brings the driver in a state safe for card removal.
+	blkDisconnect(&MMCD1);						// Brings the driver in a state safe for card removal.
 	mmcStop(&MMCD1);							// Disables the MMC peripheral.
 	UNLOCK_SD_SPI();
 #endif
 #ifdef EFI_SDC_DEVICE
-	sdcDisconnect(&EFI_SDC_DEVICE);
+	blkDisconnect(&EFI_SDC_DEVICE);
 	sdcStop(&EFI_SDC_DEVICE);
 #endif
 	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
@@ -363,7 +363,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	// Performs the initialization procedure on the inserted card.
 	LOCK_SD_SPI();
 	sdStatus = SD_STATE_CONNECTING;
-	if (mmcConnect(&MMCD1) != HAL_SUCCESS) {
+	if (blkConnect(&MMCD1) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_MMC_FAILED;
 		UNLOCK_SD_SPI();
 		return nullptr;
@@ -391,7 +391,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 
 	sdcStart(&EFI_SDC_DEVICE, &sdcConfig);
 	sdStatus = SD_STATE_CONNECTING;
-	if (sdcConnect(&EFI_SDC_DEVICE) != HAL_SUCCESS) {
+	if (blkConnect(&EFI_SDC_DEVICE) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_NOT_CONNECTED;
 		return nullptr;
 	}
