@@ -79,8 +79,13 @@ MMCDriver MMCD1;
 /* MMC/SD over SPI driver configuration.*/
 static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
 
-#define LOCK_SD_SPI lockSpi(mmcSpiDevice)
-#define UNLOCK_SD_SPI unlockSpi(mmcSpiDevice)
+#if MMC_USE_MUTUAL_EXCLUSION == TRUE
+#define LOCK_SD_SPI()
+#define UNLOCK_SD_SPI()
+#else
+#define LOCK_SD_SPI() lockSpi(mmcSpiDevice)
+#define UNLOCK_SD_SPI() unlockSpi(mmcSpiDevice)
+#endif
 
 #endif /* HAL_USE_MMC_SPI */
 
@@ -299,7 +304,7 @@ static void mmcUnMount() {
 #if HAL_USE_MMC_SPI
 	mmcDisconnect(&MMCD1);						// Brings the driver in a state safe for card removal.
 	mmcStop(&MMCD1);							// Disables the MMC peripheral.
-	UNLOCK_SD_SPI;
+	UNLOCK_SD_SPI();
 #endif
 #ifdef EFI_SDC_DEVICE
 	sdcDisconnect(&EFI_SDC_DEVICE);
@@ -332,7 +337,9 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		return nullptr;
 	}
 	
-	if (!engineConfiguration->isSdCardEnabled || engineConfiguration->sdCardSpiDevice == SPI_NONE) {
+	if (!engineConfiguration->isSdCardEnabled ||
+		engineConfiguration->sdCardSpiDevice == SPI_NONE ||
+		!isBrainPinValid(engineConfiguration->sdCardCsPin)) {
 		return nullptr;
 	}
 
@@ -354,11 +361,11 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	mmcStart(&MMCD1, &mmccfg);
 
 	// Performs the initialization procedure on the inserted card.
-	LOCK_SD_SPI;
+	LOCK_SD_SPI();
 	sdStatus = SD_STATE_CONNECTING;
 	if (mmcConnect(&MMCD1) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_MMC_FAILED;
-		UNLOCK_SD_SPI;
+		UNLOCK_SD_SPI();
 		return nullptr;
 	}
 	// We intentionally never unlock in case of success, we take exclusive access of that spi device for SD use
