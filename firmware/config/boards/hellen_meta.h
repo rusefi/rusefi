@@ -249,6 +249,12 @@ static void setHellenSdCardSpi3NoCS() {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
 
+static void setAccelerometerSpi() {
+	/* accelerometer SPI is shared with SD card SPI on mm144 */
+	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
+	engineConfiguration->accelerometerCsPin = Gpio::H_SPI1_CS2;
+}
+
 static void setHellenSdCardSpi1() {
     setHellenSdCardSpi1NoCS();
     engineConfiguration->sdCardCsPin = Gpio::H_SPI1_CS1;
