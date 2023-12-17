@@ -107,14 +107,14 @@ pins:
     id: [MM64_IN_ADC7, MM64_IN_ADC7, MM64_IN_ADC7_ANALOG]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Analog/Digital Input 6
-    ts_name: ___ - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input 6
     color: purple
 
   - pin: C2
     id: [MM64_IN_ADC14, MM64_IN_ADC14, MM64_IN_ADC14_ANALOG]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Analog/Digital Input 7
-    ts_name: ___ - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input 7
     color: purple
 
   - pin: C3
@@ -128,7 +128,7 @@ pins:
     id: [MM64_IN_ADC15, MM64_IN_ADC15, MM64_IN_ADC15_ANALOG]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Analog/Digital Input 8
-    ts_name: ___ - Analog/Digital Input
+    ts_name: ___ - Analog/Digital Input 8
     color: gray
 
   - pin: C5
