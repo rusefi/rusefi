@@ -13,6 +13,8 @@ DDEFS += -DADC_MUX_PIN=Gpio::F2
 # pretty temporary
 DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
 
+ONBOARD_MEMS_TYPE=LIS2DH12
+
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 # This board has trigger scope hardware!
@@ -36,4 +38,3 @@ $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
 
 DDEFS += -DHW_HELLEN_4CHAN=1
-ONBOARD_MEMS_TYPE=LIS2DH12
