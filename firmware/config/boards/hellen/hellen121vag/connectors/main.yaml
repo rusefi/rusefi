@@ -176,6 +176,9 @@ pins:
   - pin: 63a
     function: oxygen sensor unused
 
+  - pin: 64a
+    function: EVAP unused
+
   - pin: 65a
     id: H14
     class: outputs
