@@ -17,7 +17,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM100_INJ7, // B7 Low Side output 1
 	Gpio::MM100_IGN8, // B8 Fan Relay Weak Low Side output 2
 	Gpio::MM100_IGN7, // B9 Main Relay Weak Low Side output 1
-	Gpio::MM100_OUT_PWM2, // B16 Low Side output 4
+	Gpio::MM100_OUT_PWM2, // B16 Low Side output 4 / Fuel Pump
 	Gpio::MM100_OUT_PWM1, // B17 Low Side output 3
 	Gpio::MM100_INJ8, // B18 Low Side output 2
 	Gpio::MM100_IGN6, // B10 Coil 6
@@ -35,7 +35,7 @@ Gpio GENERATED_OUTPUTS = {
 // "B7 Low Side output 1",
 // "B8 Fan Relay Weak Low Side output 2",
 // "B9 Main Relay Weak Low Side output 1",
-// "B16 Low Side output 4",
+// "B16 Low Side output 4 / Fuel Pump",
 // "B17 Low Side output 3",
 // "B18 Low Side output 2",
 // "B10 Coil 6",

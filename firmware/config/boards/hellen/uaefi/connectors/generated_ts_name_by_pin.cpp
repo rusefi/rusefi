@@ -17,7 +17,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::B8: return "B10 Coil 6";
 		case Gpio::B9: return "B9 Main Relay Weak Low Side output 1";
 		case Gpio::C13: return "B15 Coil 1";
-		case Gpio::C6: return "B16 Low Side output 4";
+		case Gpio::C6: return "B16 Low Side output 4 / Fuel Pump";
 		case Gpio::D10: return "B3 injector output 4";
 		case Gpio::D11: return "B4 injector output 3";
 		case Gpio::D12: return "B18 Low Side output 2";
