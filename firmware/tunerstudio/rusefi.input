@@ -2029,12 +2029,8 @@ menuDialog = main
 		; TODO: move lambdaProtection to the fuel menu once ready
 		; https://github.com/FOME-Tech/fome-fw/issues/75
 		subMenu = lambdaProtection,			"Lambda Protection", 0, { isInjectionEnabled }
-
 		subMenu = std_separator
 
-		subMenu = std_separator
-
-		subMenu = std_separator
 		subMenu = kLineDialog,              "K-Line"
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = parkingLot2,				"Experimental 2"
