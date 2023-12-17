@@ -248,6 +248,10 @@ static P luaL_checkPwmIndex(lua_State* l, int pos) {
 	return { pwms[channel], channel };
 }
 
+#ifndef PWM_FREQ_PWM
+#define PWM_FREQ_PWM 1000
+#endif
+
 static int lua_startPwm(lua_State* l) {
 	auto p = luaL_checkPwmIndex(l, 1);
 	auto freq = luaL_checknumber(l, 2);
@@ -259,7 +263,7 @@ static int lua_startPwm(lua_State* l) {
     }
 
 	// clamp to 1..1000 hz
-	freq = clampF(1, freq, 1000);
+//	freq = clampF(1, freq, 1000);
 
 	startSimplePwmExt(
 		&p.pwm, "lua", &engine->executor,
