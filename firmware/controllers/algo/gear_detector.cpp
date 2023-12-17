@@ -100,7 +100,7 @@ size_t GearDetector::determineGearFromRatio(float ratio) const {
 float GearDetector::getDriveshaftRpm() const {
 	auto vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
 
-	if (vssKph < 5) {
+	if (vssKph < 3) {
 		// Vehicle too slow to determine gearbox ratio, avoid div/0
 		return 0;
 	}
