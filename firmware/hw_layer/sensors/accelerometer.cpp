@@ -142,7 +142,7 @@ void initAccelerometer() {
 		return; // not used
 
 	bus = getSpiDevice(engineConfiguration->accelerometerSpiDevice);
-	if (bus == NULL) {
+	if (bus == nullptr) {
 		// error already reported
 		return;
 	}
@@ -162,9 +162,7 @@ void initAccelerometer() {
 
 	/* Activates the LIS302DL driver.*/
 	ret = lis2dw12Start(&LIS2DW12, &lis2dw12cfg);
-#endif /* EFI_ONBOARD_MEMS_LIS2DW12 == TRUE */
-
-#if (EFI_ONBOARD_MEMS_LIS2DH12 == TRUE)
+#elif (EFI_ONBOARD_MEMS_LIS2DH12 == TRUE)
 	lis2dh12cfg.spip = bus;
 
 	/* LIS302DL Object Initialization.*/
@@ -172,6 +170,8 @@ void initAccelerometer() {
 
 	/* Activates the LIS302DL driver.*/
 	ret = lsm303agrStart(&LIS2DH12, &lis2dh12cfg);
+#else
+ fail("no MEMS type");
 #endif /* EFI_ONBOARD_MEMS_LIS2DW12 == TRUE */
 
 	/* TODO: add support for LIS302 on discovery board */
@@ -180,6 +180,9 @@ void initAccelerometer() {
 		/* 50 Hz */
 		instance.setPeriod(20 /*ms*/);
 		instance.start();
+		efiPrintf("accelerometer init OK");
+	} else {
+		efiPrintf("accelerometer init failed %d", ret);
 	}
 #endif /* HAL_USE_SPI */
 }
