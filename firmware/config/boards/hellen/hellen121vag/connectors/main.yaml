@@ -186,6 +186,12 @@ pins:
     function: Fuel Pump Relay
     type: ls
 
+  - pin: 66a
+    function: Extra Fan Relay Output
+
+  - pin: 67a
+    function: 'inertia switch input (unused)'
+
   - pin: 70a
     function: LSU_SENSOR_U
 
