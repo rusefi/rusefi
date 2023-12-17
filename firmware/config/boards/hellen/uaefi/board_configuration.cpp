@@ -25,18 +25,20 @@ static void setIgnitionPins() {
 }
 
 static void setupDefaultSensorInputs() {
-    engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D2;
+  engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D2;
 
 	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
 	engineConfiguration->tps1_2AdcChannel = MM100_IN_AUX1_ANALOG;
+	engineConfiguration->map.sensor.hwChannel = MM100_IN_MAP1_ANALOG;
 
 	setPPSInputs(MM100_IN_PPS_ANALOG, MM100_IN_AUX2_ANALOG);
-
-	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
 	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
 
 	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
+
+	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_CRANK;
+	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D1;
 }
 
 #include "hellen_leds_100.cpp"
@@ -51,19 +53,8 @@ void setBoardConfigOverrides() {
 	configureHellenCanTerminator();
 	setHellenCan();
 
-  engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
- 	engineConfiguration->fanPin = Gpio::MM100_IGN8;
-
-	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
-	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
-	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
-	engineConfiguration->map.sensor.hwChannel = MM100_IN_MAP1_ANALOG;
-
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
-
-	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_CRANK;
-	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D1;
 
     // PWM pin
     engineConfiguration->etbIo[0].controlPin = Gpio::MM100_OUT_PWM3;
@@ -84,14 +75,12 @@ void setBoardConfigOverrides() {
  *
  * See also setDefaultEngineConfiguration
  *
- * @todo    Add your board-specific code, if any.
  */
 void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-    // not override since sometimes we have issues?
-//	setHellenMMbaro();
+  setHellenMMbaro();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
@@ -102,15 +91,10 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canTxPin = Gpio::MM100_CAN_TX;
 	engineConfiguration->canRxPin = Gpio::MM100_CAN_RX;
 
-//	engineConfiguration->fuelPumpPin = Gpio::MM100_OUT_PWM5;
-//	engineConfiguration->idle.solenoidPin = Gpio::H144_LS_6;
-//	engineConfiguration->fanPin = Gpio::H144_OUT_IO12;
-//	engineConfiguration->mainRelayPin = Gpio::MM100_IGN8;
-//	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_IO7;
+  engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
+ 	engineConfiguration->fanPin = Gpio::MM100_IGN8;
+	engineConfiguration->fuelPumpPin = Gpio::MM100_OUT_PWM2;
 
-//	engineConfiguration->brakePedalPin = Gpio::H144_IN_CAM;
-//	engineConfiguration->acRelayPin = Gpio::H144_LS_5;
-//    engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO10;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

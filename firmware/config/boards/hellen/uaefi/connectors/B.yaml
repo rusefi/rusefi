@@ -95,7 +95,7 @@ pins:
     meta: MM100_OUT_PWM2
     class: outputs
     type: ls
-    ts_name: ___ Low Side output 4
+    ts_name: ___ Low Side output 4 / Fuel Pump
 
   - pin: B17
     meta: MM100_OUT_PWM1
