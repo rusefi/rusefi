@@ -61,3 +61,6 @@ DDEFS += -DEFI_WS2812=TRUE
 ifndef IS_RE_BOOTLOADER
 DDEFS += -DHAL_USE_EEPROM=TRUE
 endif
+
+# DDEFS += -DEFI_ONBOARD_MEMS=TRUE
+# todo re-enable lis302dl.mk
