@@ -79,7 +79,7 @@ static void setHellen128ETBConfig() {
 		// DIR - sets direction of the motor
 		// PWM - pwm control (enable high, coast low)
 		// DIS - disables motor (enable low)
-		
+
 		//ETB1
 		// PWM pin
 		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM3;
@@ -105,7 +105,7 @@ static void setHellen128ETBConfig() {
 		engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
 		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
 		engineConfiguration->etb_use_two_wires = true;
-	}	
+	}
 }
 
 #include "hellen_leds_176.cpp"
@@ -129,7 +129,7 @@ void setBoardConfigOverrides() {
  *
  * See also setDefaultEngineConfiguration
  *
- * @todo    Add your board-specific code, if any.
+
  */
 void setBoardDefaultConfiguration() {
 	setInjectorPins();

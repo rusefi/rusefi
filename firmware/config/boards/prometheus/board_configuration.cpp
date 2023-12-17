@@ -39,12 +39,12 @@ static void setPrometheusDefaults() {
 
 	engineConfiguration->displacement = 1.645;
 	engineConfiguration->injector.flow = 200;
-	
+
 	engineConfiguration->cranking.baseFuel = 25;
 	engineConfiguration->cranking.rpm = 600;
 
 	engineConfiguration->rpmHardLimit = 8500;
-	
+
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
 	engineConfiguration->idleStepperReactionTime = 10;
@@ -70,7 +70,7 @@ void setPinConfigurationOverrides() {
 	engineConfiguration->injectionPins[1] = is469 ? Gpio::D15 : Gpio::C7;  // #2
 	engineConfiguration->injectionPins[2] = is469 ? Gpio::D10 : Gpio::B15; // #3
 	engineConfiguration->injectionPins[3] = is469 ? Gpio::D14 : Gpio::C6;  // #4
-	
+
 	engineConfiguration->ignitionPins[0] = Gpio::A10;
 	engineConfiguration->ignitionPins[1] = Gpio::A9;
 	engineConfiguration->ignitionPins[2] = Gpio::A8;
@@ -107,7 +107,7 @@ void setPinConfigurationOverrides() {
 
 /**
  * @brief   Board-specific configuration defaults.
- * @todo    Add your board-specific code, if any.
+
  */
 void setBoardDefaultConfiguration() {
 	// give a chance to trigger SWD programmer... Wait for 2 secs (=2000 ms).
@@ -134,7 +134,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionPins[1] = is469 ? Gpio::D15 : Gpio::C7;  // #2
 	engineConfiguration->injectionPins[2] = is469 ? Gpio::D10 : Gpio::B15; // #3
 	engineConfiguration->injectionPins[3] = is469 ? Gpio::D14 : Gpio::C6;  // #4
-	
+
 	engineConfiguration->ignitionPins[0] = Gpio::A10;
 	engineConfiguration->ignitionPins[1] = Gpio::A9;
 	engineConfiguration->ignitionPins[2] = Gpio::A8;
@@ -144,7 +144,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->vbattDividerCoeff = ((float) (2 + 10)) / 2;
 	engineConfiguration->clt.config.bias_resistor = 2700;
 	engineConfiguration->iat.config.bias_resistor = 2700;
-	
+
 	engineConfiguration->useStepperIdle = true;
 	engineConfiguration->idle.stepperDirectionPin = is469 ? Gpio::B14 : Gpio::B12;
 	engineConfiguration->idle.stepperStepPin = is469 ? Gpio::B15 : Gpio::B13;
@@ -153,14 +153,14 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->triggerInputPins[0] = Gpio::A5;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	engineConfiguration->camInputs[0] = is469 ? Gpio::E9 : Gpio::A6;
-	
+
 	engineConfiguration->tachOutputPin = Gpio::C8;
 	engineConfiguration->fuelPumpPin = is469 ? Gpio::D6 : Gpio::B7;
 	engineConfiguration->mainRelayPin = is469 ? Gpio::B11 : Gpio::B2;
 	engineConfiguration->fanPin = Gpio::C9;
 	engineConfiguration->malfunctionIndicatorPin = Gpio::C1;
 
-	
+
 	// debug pad
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::D8;
 
@@ -170,7 +170,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->is_enabled_spi_2 = false;
 	engineConfiguration->is_enabled_spi_3 = true;
-	
+
 	engineConfiguration->spi1mosiPin = Gpio::B5;
 	engineConfiguration->spi1MosiMode = PO_DEFAULT;
 	engineConfiguration->spi1misoPin = Gpio::B4;
@@ -195,7 +195,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->canTxPin = Gpio::B9;
 	engineConfiguration->canRxPin = Gpio::B8;
-	
+
 	setPrometheusDefaults();
 
 	engineConfiguration->is_enabled_spi_1 = true;

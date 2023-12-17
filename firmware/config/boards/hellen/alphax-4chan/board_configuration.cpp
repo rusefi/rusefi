@@ -105,7 +105,7 @@ void boardInitHardware() {
 		alphaCamPullDown.initPin("a-cam", H144_GP4);
 		alphaD3PullDown.initPin("a-d3", Gpio::H144_OUT_IO8);
 	}
-	
+
 	alphaD4PullDown.initPin("a-d4", Gpio::H144_LS_7);
 	alphaD5PullDown.initPin("a-d5", Gpio::H144_LS_8);
 	boardOnConfigurationChange(nullptr);
@@ -151,7 +151,7 @@ void setBoardConfigOverrides() {
  *
  * See also setDefaultEngineConfiguration
  *
- * @todo    Add your board-specific code, if any.
+
  */
 void setBoardDefaultConfiguration() {
 	setInjectorPins();

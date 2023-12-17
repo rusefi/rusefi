@@ -37,7 +37,7 @@ static void setSerialConfigurationOverrides() {
 
 /**
  * @brief   Board-specific configuration defaults.
- * @todo    Add your board-specific code, if any.
+
  */
 void setBoardDefaultConfiguration() {
 	setSerialConfigurationOverrides();
