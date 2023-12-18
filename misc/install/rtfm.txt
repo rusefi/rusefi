@@ -1,0 +1,4 @@
+
+gcc 12.2 toolchain has Python nightmare on fresh linux
+https://github.com/rusefi/rusefi/issues/5312
+
