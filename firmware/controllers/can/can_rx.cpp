@@ -178,8 +178,10 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	//Vss is configurable, should we handle it here:
 	processCanRxVss(frame, nowNt);
 
-	// todo: convert to CanListener or not?
-	processCanRxImu(frame);
+	if (!engineConfiguration->useSpiImu) {
+		// todo: convert to CanListener or not?
+		processCanRxImu(frame);
+	}
 
 	processCanBenchTest(frame);
 

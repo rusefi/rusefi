@@ -124,10 +124,12 @@ private:
 			lsm303agrAccelerometerReadCooked(&LIS2DH12, acccooked);
 		#endif
 
-		/* milli-G to G */
-		engine->sensors.accelerometer.lat  = acccooked[0] / 1000.0;
-		engine->sensors.accelerometer.lon  = acccooked[1] / 1000.0;
-		engine->sensors.accelerometer.vert = acccooked[2] / 1000.0;
+		if (engineConfiguration->useSpiImu) {
+			/* milli-G to G */
+			engine->sensors.accelerometer.lat  = acccooked[0] / 1000.0;
+			engine->sensors.accelerometer.lon  = acccooked[1] / 1000.0;
+			engine->sensors.accelerometer.vert = acccooked[2] / 1000.0;
+		}
 	}
 };
 
