@@ -186,7 +186,18 @@ static void doPeriodicSlowCallback() {
 	slowStartStopButtonCallback();
 
 	engine->rpmCalculator.onSlowCallback();
+	if (engine->rpmCalculator.isStopped()) {
+		resetAccel();
+	}
 
+	if (engine->versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
+		updateAccelParameters();
+	}
+#endif /* EFI_SHAFT_POSITION_INPUT */
+
+	engine->periodicSlowCallback();
+
+#if EFI_SHAFT_POSITION_INPUT
 	if (engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped()) {
 		/**
 		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
@@ -198,16 +209,6 @@ static void doPeriodicSlowCallback() {
 		writeToFlashIfPending();
 #endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 	}
-
-	if (engine->rpmCalculator.isStopped()) {
-		resetAccel();
-	}
-
-	if (engine->versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
-		updateAccelParameters();
-	}
-
-	engine->periodicSlowCallback();
 #else /* if EFI_SHAFT_POSITION_INPUT */
 	#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 		writeToFlashIfPending();
