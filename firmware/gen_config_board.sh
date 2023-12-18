@@ -9,6 +9,7 @@
 #                    ./gen_config_board.sh config/boards/hellen/uaefi uaefi
 #                    ./gen_config_board.sh config/boards/hellen/small-can-board small-can-board
 #                    ./gen_config_board.sh config/boards/f407-discovery f407-discovery
+#                    ./gen_config_board.sh config/boards/nucleo_f767 nucleo_f767
 # which is short for ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128.ini
 
 set -e
