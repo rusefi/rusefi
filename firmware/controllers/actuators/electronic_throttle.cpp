@@ -959,9 +959,13 @@ void doInitElectronicThrottle() {
 				engineConfiguration->etbIo[i], i, engineConfiguration->etb_use_two_wires);
 
 		auto controller = engine->etbControllers[i];
+#if EFI_UNIT_TEST
 		if (!controller) {
 			continue;
 		}
+#else
+    criticalAssertVoid(controller != nullptr, "null ETB");
+#endif
 
 		auto pid = getPidForDcFunction(func);
 
