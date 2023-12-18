@@ -304,7 +304,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// This is safer than disabling throttle control - we can at least push the throttle closed
 	// and let the engine idle.
 	float sanitizedPedal = clampF(0, pedalPosition.value_or(0), 100);
-	
+
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	etbCurrentTarget = m_pedalMap->getValue(rpm, sanitizedPedal);
 
@@ -319,7 +319,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 
 	percent_t targetPosition = idlePosition + getLuaAdjustment();
 
-#if EFI_ANTILAG_SYSTEM 
+#if EFI_ANTILAG_SYSTEM
 	if (engine->antilagController.isAntilagCondition) {
 		targetPosition += engineConfiguration->ALSEtbAdd;
 	}
@@ -444,7 +444,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		// Ultimate gain per A-H relay tuning rule
 		float ku = 4 * b / (CONST_PI * m_a);
 
-		// The multipliers below are somewhere near the "no overshoot" 
+		// The multipliers below are somewhere near the "no overshoot"
 		// and "some overshoot" flavors of the Ziegler-Nichols method
 		// Kp
 		float kp = 0.35f * ku;
@@ -520,7 +520,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 
 		// Allow up to 10 percent-seconds of error
 		if (etbIntegralError > 10.0f) {
-			// TODO: figure out how to handle uncalibrated ETB 
+			// TODO: figure out how to handle uncalibrated ETB
 			//getLimpManager()->reportEtbProblem();
 		}
 
@@ -800,32 +800,7 @@ struct DcThread final : public PeriodicController<512> {
 
 static DcThread dcThread CCM_OPTIONAL;
 
-#endif // EFI_UNIT_TEST
-
-static void showEtbInfo() {
-#if EFI_PROD_CODE
-	efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
-
-	efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
-
-	efiPrintf("ETB1 duty=%.2f freq=%d",
-			engine->outputChannels.etb1DutyCycle,
-			engineConfiguration->etbFreq);
-
-	efiPrintf("ETB freq=%d",
-			engineConfiguration->etbFreq);
-
-	for (int i = 0; i < ETB_COUNT; i++) {
-		efiPrintf("ETB%d", i);
-		efiPrintf(" dir1=%s", hwPortname(engineConfiguration->etbIo[i].directionPin1));
-		efiPrintf(" dir2=%s", hwPortname(engineConfiguration->etbIo[i].directionPin2));
-		efiPrintf(" control=%s", hwPortname(engineConfiguration->etbIo[i].controlPin));
-		efiPrintf(" disable=%s", hwPortname(engineConfiguration->etbIo[i].disablePin));
-		showDcMotorInfo(i);
-	}
-
-#endif /* EFI_PROD_CODE */
-}
+#endif // !EFI_UNIT_TEST
 
 void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
@@ -858,23 +833,6 @@ void setThrottleDutyCycle(percent_t level) {
 	efiPrintf("duty ETB duty=%f", dc);
 }
 
-static void setEtbFrequency(int frequency) {
-	engineConfiguration->etbFreq = frequency;
-
-	for (int i = 0 ; i < ETB_COUNT; i++) {
-		setDcMotorFrequency(i, frequency);
-	}
-}
-
-static void etbReset() {
-	efiPrintf("etbReset");
-	
-	for (int i = 0 ; i < ETB_COUNT; i++) {
-		setDcMotorDuty(i, 0);
-	}
-
-	etbPidReset();
-}
 #endif /* EFI_PROD_CODE */
 
 void etbAutocal(size_t throttleIndex) {
@@ -1060,13 +1018,25 @@ void initElectronicThrottle() {
 	}
 
 #if EFI_PROD_CODE
-	addConsoleAction("etbinfo", showEtbInfo);
-	addConsoleAction("etbreset", etbReset);
-	addConsoleActionI("etb_freq", setEtbFrequency);
+	addConsoleAction("etbinfo", [](){
+	  efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
+	  efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
-	// this command is useful for real hardware test with known cheap hardware
-	addConsoleAction("etb_test_hw", [](){
-		set18919_AM810_pedal_position_sensor();
+	  efiPrintf("ETB1 duty=%.2f freq=%d",
+			engine->outputChannels.etb1DutyCycle,
+			engineConfiguration->etbFreq);
+
+	  efiPrintf("ETB freq=%d",
+			engineConfiguration->etbFreq);
+
+	  for (int i = 0; i < ETB_COUNT; i++) {
+		  efiPrintf("ETB%d", i);
+		  efiPrintf(" dir1=%s", hwPortname(engineConfiguration->etbIo[i].directionPin1));
+		  efiPrintf(" dir2=%s", hwPortname(engineConfiguration->etbIo[i].directionPin2));
+		  efiPrintf(" control=%s", hwPortname(engineConfiguration->etbIo[i].controlPin));
+		  efiPrintf(" disable=%s", hwPortname(engineConfiguration->etbIo[i].disablePin));
+		  showDcMotorInfo(i);
+	  }
 	});
 
 #endif /* EFI_PROD_CODE */
