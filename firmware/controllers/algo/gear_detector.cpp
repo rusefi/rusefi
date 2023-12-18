@@ -49,8 +49,6 @@ void GearDetector::initGearDetector() {
 	}
 
 	Register();
-	// temp nasty?
-	isInitialized = true;
 }
 
 void GearDetector::onConfigurationChange(engine_configuration_s const * /*previousConfig*/) {
@@ -60,7 +58,7 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 void GearDetector::onSlowCallback() {
     if (!isInitialized) {
         initGearDetector();
-// temp nasty        isInitialized = true;
+        isInitialized = true;
     }
 
 	float ratio = computeGearboxRatio();

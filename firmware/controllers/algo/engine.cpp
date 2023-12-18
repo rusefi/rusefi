@@ -144,6 +144,10 @@ void Engine::periodicSlowCallback() {
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
+
+  getEngineState()->heaterControlEnabled = engineConfiguration->forceO2Heating || engine->rpmCalculator.isRunning();
+	enginePins.o2heater.setValue(getEngineState()->heaterControlEnabled);
+	enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
 #endif // EFI_SHAFT_POSITION_INPUT
 
 	efiWatchdog();
@@ -153,10 +157,6 @@ void Engine::periodicSlowCallback() {
 	tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
 
 	updateVrThresholdPwm();
-
-    getEngineState()->heaterControlEnabled = engineConfiguration->forceO2Heating || engine->rpmCalculator.isRunning();
-	enginePins.o2heater.setValue(getEngineState()->heaterControlEnabled);
-	enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
 
 	updateGppwm();
 
