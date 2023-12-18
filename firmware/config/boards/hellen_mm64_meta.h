@@ -1,8 +1,12 @@
 #pragma once
 
+// TIM4
 #define MM64_OUT_PWM1 B7
+// TIM8
 #define MM64_OUT_PWM2 C8
+// TIM8
 #define MM64_OUT_PWM3 C9
+// TIM1
 #define MM64_OUT_PWM4 A8
 #define MM64_OUT_PWM5 A9
 #define MM64_OUT_PWM6 A15
