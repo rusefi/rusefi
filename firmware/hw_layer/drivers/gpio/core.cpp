@@ -228,13 +228,14 @@ int gpiochips_init(void) {
 		if (chip->base == Gpio::Unassigned)
 			continue;
 
-		if (chip->chip->init() < 0) {
+    int ret = chip->chip->init();
+		if (ret < 0) {
 			#if EFI_PROD_CODE
 			    // todo: adjust unit tests to validate this fatal
-			    criticalError("Failed to init chip %d", i);
+			    criticalError("Failed to init chip %d: %d", i, ret);
 			#else
     			chip->base = Gpio::Unassigned;
-            #endif
+      #endif
 		} else {
 			pins_added += chip->size;
 		}
