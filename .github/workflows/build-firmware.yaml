@@ -105,6 +105,7 @@ jobs:
             proteus_h7,
             stm32f429_nucleo,
             stm32f767_nucleo,
+            stm32f767_nucleo_debug,
             stm32h743_nucleo,
             subaru_eg33_f7,
             subaru_eg33_f7_no_bl,
@@ -334,7 +335,12 @@ jobs:
           - build-target: stm32f767_nucleo
             folder: config/boards/nucleo_f767
             ini-file: rusefi_stm32f767_nucleo.ini
-            skip-rate: 95
+            skip-rate: 0
+
+          - build-target: stm32f767_nucleo_debug
+            folder: config/boards/nucleo_f767
+            ini-file: rusefi_stm32f767_nucleo.ini
+            skip-rate: 0
 
           - build-target: stm32h743_nucleo
             folder: config/boards/nucleo_h743
