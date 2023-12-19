@@ -158,14 +158,11 @@ struct L9779 : public GpioChip {
 	/* last requested subaddr in case of read */
 	uint8_t						last_subaddr;
 
-	/* chip needs reintialization due to some critical issue */
-	bool						need_init;
 
 	/* statistic */
 	//int						por_cnt;
 	//int						wdr_cnt;
 	//int						comfe_cnt;
-	int							init_cnt;
 	//int						init_req_cnt;
 	int							spi_cnt;
 	int							spi_err_parity;		/* parity errors in rx data */
@@ -548,7 +545,7 @@ static THD_FUNCTION(l9779_driver_thread, p) {
 
 			chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_PERIOD_MS));
 		}
-		poll_interval = chip->calc_sleep_interval();	
+		poll_interval = chip->calc_sleep_interval();
 #endif
 		/* default poll_interval */
 	}

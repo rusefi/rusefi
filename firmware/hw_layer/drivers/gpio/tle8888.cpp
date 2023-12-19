@@ -248,9 +248,6 @@ struct Tle8888 : public GpioChip {
 	systime_t					wwd_ts;
 	systime_t					fwd_ts;
 
-	/* chip needs reintialization due to some critical issue */
-	bool						need_init;
-
 	/* main relay output */
 	bool						mr_manual;
 
@@ -258,7 +255,6 @@ struct Tle8888 : public GpioChip {
 	int							por_cnt;
 	int							wdr_cnt;
 	int							comfe_cnt;
-	int							init_cnt;
 	int							init_req_cnt;
 	int							spi_cnt;
 	uint16_t					recentTx;
@@ -660,7 +656,7 @@ int Tle8888::chip_init()
 		 * not to affect analog inputs.
 		 * Disable open load detection and set short to bat
 		 * thresholt to 125 mV (default) for OUTPUT8..13 */
-		CMD_OUTCONFIG(2, (0x0 << 6) | 0x00),	
+		CMD_OUTCONFIG(2, (0x0 << 6) | 0x00),
 #else
 		/* Enable open load detection and set short to bat
 		 * thresholt to 125 mV (default) for OUTPUT8..13 */

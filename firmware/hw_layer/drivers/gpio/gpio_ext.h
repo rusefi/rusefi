@@ -29,6 +29,11 @@ struct GpioChip {
 	virtual int readPad(size_t /*pin*/) { return -1; }
 	virtual brain_pin_diag_e getDiag(size_t /*pin*/) { return PIN_OK; }
 	virtual int deinit() { return 0; }
+
+	/* chip needs reinitialization due to some critical issue */
+	bool						need_init;
+	int							init_cnt;
+
 };
 
 int gpiochips_getPinOffset(brain_pin_e pin);

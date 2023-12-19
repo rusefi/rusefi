@@ -880,7 +880,7 @@ end
 
 function onTick()
   local targetVoltage = getAuxAnalog(0)
-  
+
 --  local target = interpolate(1, 0, 3.5, 100, targetVoltage)
   local target = interpolate(1, 0, 3.5, 100, voltageFromCan)
 -- clamp 0 to 100
