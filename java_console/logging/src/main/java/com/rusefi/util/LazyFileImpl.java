@@ -1,6 +1,7 @@
 package com.rusefi.util;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -56,6 +57,7 @@ public class LazyFileImpl implements LazyFile {
                 break;
             }
         }
+        Files.createDirectories(Paths.get(new File(filename).getParent()));
         Writer fw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), IoUtils.CHARSET));
         fw.write(content.toString());
         fw.close();
