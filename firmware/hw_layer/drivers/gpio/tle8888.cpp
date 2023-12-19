@@ -973,7 +973,7 @@ int Tle8888::readPad(size_t pin) {
 
 brain_pin_diag_e Tle8888::getOutputDiag(size_t pin) {
 	if (diagResponse.hasElapsedMs(500)) {
-		// has been to long since we've recieved diagnostics
+		// has been too long since we've received diagnostics
 		return PIN_DRIVER_OFF;
 	}
 	/* OUT1..OUT4, indexes 0..3 */
