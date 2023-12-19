@@ -12,7 +12,7 @@
 #pragma once
 
 #include <rusefi/scaled_channel.h>
-#include "rusefi_generated.h"
+#include "generated_lookup_meta.h"
 
 // Common scaling options - use these if you can!
 using scaled_temperature = scaled_channel<int16_t, PACK_MULT_TEMPERATURE>;	// +-327 deg C at 0.01 deg resolution

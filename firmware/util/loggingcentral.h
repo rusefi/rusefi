@@ -7,7 +7,7 @@
 #pragma once
 
 #include <cstddef>
-#include "rusefi_generated.h"
+#include "generated_lookup_meta.h"
 
 class Logging;
 

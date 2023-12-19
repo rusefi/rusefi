@@ -8,6 +8,7 @@
 #pragma once
 
 #include "unused.h"
+#include "efi_quote.h"
 #include <stdint.h>
 
 #include <rusefi/arrays.h>
@@ -41,9 +42,6 @@ static inline uint32_t SWAP_UINT32(uint32_t x)
 
 // number of microseconds in one period of given frequency (per second)
 #define frequency2periodUs(freq) ((1000000.0f) / (freq))
-
-#define Q(x) #x
-#define QUOTE(x) Q(x)
 
 const char * boolToString(bool value);
 

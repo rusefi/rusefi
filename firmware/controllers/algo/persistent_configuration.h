@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "engine_configuration_generated_structures.h"
+#include "generated_lookup_engine_configuration.h"
 
 typedef struct {
 	int version;
