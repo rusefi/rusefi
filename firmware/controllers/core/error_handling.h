@@ -8,7 +8,7 @@
 #pragma once
 
 #include "obd_error_codes.h"
-#include "rusefi_generated.h"
+#include "generated_lookup_meta.h"
 #include <cstdint>
 
 /**

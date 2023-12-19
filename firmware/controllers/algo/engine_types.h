@@ -10,8 +10,7 @@
 
 #pragma once
 
-#include "rusefi_generated.h"
-
+#include "generated_lookup_meta.h"
 
 /**
  * https://github.com/rusefi/rusefi/wiki/Engine-Types

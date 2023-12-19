@@ -14,7 +14,7 @@
 #include <sys/types.h>
 
 #include <rusefi/rusefi_time_types.h>
-#include "rusefi_generated.h"
+#include "generated_lookup_meta.h"
 #include "rusefi_enums.h"
 #include "firing_order.h"
 
