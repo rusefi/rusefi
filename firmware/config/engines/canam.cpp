@@ -15,6 +15,8 @@ void setMaverickX3() {
     engineConfiguration->firingOrder = FO_1_2_3;
     engineConfiguration->displacement = 0.9;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
+// ?	  engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	  engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
 	  setPPSCalibration(0.25, 0.5, 1.5, 3);
 	  // todo: matches Hyundai TODO extract method?
