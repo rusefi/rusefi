@@ -1,13 +1,13 @@
 /**
  * @author Matthew Kennedy, (c) 2019
- * 
+ *
  * A function to convert resistance to thermistor temperature (NTC). Uses the
  * Steinhart-Hart equation to avoid having to compute many logarithms at runtime.
  */
 
 #pragma once
 
-#include "engine_configuration_generated_structures.h"
+#include "generated_lookup_engine_configuration.h"
 #include "sensor_converter_func.h"
 
 class ThermistorFunc final : public SensorConverter {
