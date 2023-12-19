@@ -371,6 +371,7 @@ int Mc33810::chip_init()
 err_gpios:
 	/* unmark pins */
 	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
+#if SMART_CHIPS_UNMARK_ON_FAIL
 	if (cfg->en.port) {
 		/* disable and mark unused */
 		palSetPort(cfg->en.port,
@@ -383,6 +384,7 @@ err_gpios:
 			gpio_pin_markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
 		}
 	}
+#endif
 
 	return ret;
 }
@@ -468,7 +470,7 @@ int Mc33810::writePad(size_t pin, int value)
 		else
 			o_state &= ~BIT(pin);
 	}
-	
+
 	/* direct driven? */
 	if (o_direct_mask & BIT(pin)) {
 		/* TODO: ensure that output driver enabled */
