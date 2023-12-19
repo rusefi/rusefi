@@ -34,6 +34,7 @@ struct GpioChip {
 	bool						need_init;
 	int							init_cnt;
 
+	int statusCode;
 };
 
 int gpiochips_getPinOffset(brain_pin_e pin);
