@@ -11,7 +11,7 @@
 #pragma once
 
 #include "state_sequence.h"
-#include "engine_configuration_generated_structures.h"
+#include "generated_lookup_engine_configuration.h"
 #include <rusefi/isnan.h>
 #include "engine_state.h"
 
