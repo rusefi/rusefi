@@ -32,6 +32,6 @@ public class SignatureConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-        CHeaderConsumer.writeDefinesToFile(registry, destHeader, "by SignatureConsumer");
+      CHeaderConsumer.writeDefinesToFile(registry, ConfigDefinitionRootOutputFolder.getValue() + destHeader, "by SignatureConsumer");
     }
 }
