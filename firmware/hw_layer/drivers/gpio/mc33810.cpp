@@ -30,7 +30,7 @@
 
 #define DRIVER_NAME				"mc33810"
 
-static bool drv_task_ready = false;
+static bool isDriverThreadStarted = false;
 
 typedef enum {
 	MC33810_DISABLED = 0,
@@ -87,7 +87,7 @@ typedef enum {
 
 /* OS */
 SEMAPHORE_DECL(mc33810_wake, 10 /* or BOARD_MC33810_COUNT ? */);
-static THD_WORKING_AREA(mc33810_thread_1_wa, 256);
+static THD_WORKING_AREA(mc33810_thread_wa, 256);
 
 /* Driver */
 struct Mc33810 : public GpioChip {
@@ -535,10 +535,10 @@ int Mc33810::init()
 
 	drv_state = MC33810_READY;
 
-	if (!drv_task_ready) {
-		chThdCreateStatic(mc33810_thread_1_wa, sizeof(mc33810_thread_1_wa),
+	if (!isDriverThreadStarted) {
+		chThdCreateStatic(mc33810_thread_wa, sizeof(mc33810_thread_wa),
 						  PRIO_GPIOCHIP, mc33810_driver_thread, nullptr);
-		drv_task_ready = true;
+		isDriverThreadStarted = true;
 	}
 
 	return 0;
