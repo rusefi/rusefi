@@ -53,27 +53,37 @@ jobs:
         working-directory: ext/rusefi/
         run: rm -rf firmware/tunerstudio/generated/*.ini
 
+      - name: Set Output Env
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: |
+          echo "META_OUTPUT_ROOT_FOLDER=../../../generated/" >> $GITHUB_ENV
+
       - name: Gen Config
         working-directory: ext/rusefi/firmware
         run: |
           bash gen_config_board.sh ../../.. ${{inputs.shortBoardName}}
 
-      - name: Config Status
+      - name: Repo Status
+        run: |
+          git status
+
+      - name: ext/rusefi Status
         working-directory: ext/rusefi
         run: |
           git status
 
-#      - name: Push Config
-#        run: |
-#          mkdir -p generated
-#          cp ext/rusefi/firmware/controllers/generated/rusefi_generated.h   generated
-#          cp ext/rusefi/firmware/controllers/generated/signature_${{inputs.shortBoardName}}.h generated
-#          cp ext/rusefi/firmware/tunerstudio/generated/rusefi_${{inputs.shortBoardName}}.ini  generated
-#          git config --local user.email "action@github.com"
-#          git config --local user.name "GitHub git update Action"
-#          git add generated/*
-#          git commit -am "GHA Automation Snapshot just for reference"
-#          git status
+      - name: Push Config
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub git update Action"
+          git add generated/*
+          OUT=$(git commit -am "GHA Automation" 2>&1) || echo "commit failed, finding out why"
+          if echo "$OUT" | grep 'nothing to commit'; then
+            echo "Configs: looks like nothing to commit"
+            exit 0
+          fi
+          git status
 
       - name: Connectors Status
         run: |
