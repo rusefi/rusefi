@@ -23,9 +23,12 @@ board_id_t getBoardId() {
     }
 #endif
 
-#if HW_HELLEN
+#if defined(HW_HELLEN_SKIP_BOARD_TYPE)
+	return (board_id_t)STATIC_BOARD_ID;
+#elif HW_HELLEN
 	return (board_id_t)engine->engineState.hellenBoardId;
 #elif STATIC_BOARD_ID
+// should STATIC_BOARD_ID simply have priority over hellen board id? what's the use-case of HW_HELLEN with STATIC_BOARD_ID?
 	return (board_id_t)STATIC_BOARD_ID;
 #else
 	return 0;

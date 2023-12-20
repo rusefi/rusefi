@@ -96,8 +96,8 @@
  *
  * @section config Persistent Configuration
  *
- * Definition of configuration data structure:  
- * integration/rusefi_config.txt  
+ * Definition of configuration data structure:
+ * integration/rusefi_config.txt
  * This file has a lot of information and instructions in its comment header.
  * Please note that due to TunerStudio protocol it's important to have the total structure size in sync between the firmware and TS .ini file -
  * just to make sure that this is not forgotten the size of the structure is hard-coded as PAGE_0_SIZE constant. There is always some 'unused' fields added in advance so that
@@ -201,6 +201,7 @@ void runRusEfi() {
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig();
 
+  // at the moment that's always hellen board ID
 	detectBoardType();
 
 #if EFI_ETHERNET

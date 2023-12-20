@@ -915,12 +915,13 @@ end
 }
 
 void detectBoardType() {
-#if HW_HELLEN && !defined(HW_HELLEN_SKIP_BOARD_TYPE)
+#if HW_HELLEN
 #if !EFI_UNIT_TEST
 	detectHellenBoardType();
 #endif /* EFI_UNIT_TEST */
 #endif //HW_HELLEN
 	// todo: add board ID detection?
+	// see hellen128 which has/had alternative i2c board id?
 }
 
 void fuelBenchMode() {

@@ -53,14 +53,17 @@
 #include "hellen_board_id.h"
 
 /* We use known standard E24 series resistor values (1%) to find the closest match.
-   The 16 major values should have a guarateed spacing of 15% in a row (1% R tolerance + 10% C tolerance)
+   The 16 major values should have a guaranteed spacing of 15% in a row (1% R tolerance + 10% C tolerance)
    These should match the values in the gen_board_id script!
 */
 #include "hellen_board_id_resistors.h"
 
 //#define HELLEN_BOARD_ID_DEBUG
 
-#if EFI_PROD_CODE
+// todo: error: this use of "defined" may not be portable [-Werror=expansion-to-defined ?!
+// huh? #define HELLEN_BOARD_ID_CODE_NEEDED (defined( HELLEN_BOARD_ID_PIN_1) && !defined(HW_HELLEN_SKIP_BOARD_TYPE))
+
+#if EFI_PROD_CODE && defined( HELLEN_BOARD_ID_PIN_1) && !defined(HW_HELLEN_SKIP_BOARD_TYPE)
 
 static void hellenBoardIdInputCallback(void *arg, efitick_t nowNt) {
 	UNUSED(arg);
@@ -74,7 +77,7 @@ static void hellenBoardIdInputCallback(void *arg, efitick_t nowNt) {
 	chSemSignalI(&state->boardId_wake);  // no need to call chSchRescheduleS() because we're inside the ISR
 }
 
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_PROD_CODE && HELLEN_BOARD_ID_CODE_NEEDED */
 
 // Newton's numerical method (x is R and y is C, or vice-versa)
 float HellenBoardIdSolver::solve(float Tc1, float Tc2, float x0, float y, float deltaX) {
@@ -173,7 +176,7 @@ float HellenBoardIdFinderBase::calc(float Tc1_us, float Tc2_us, float Rest, floa
 
 template <size_t NumPins>
 bool HellenBoardIdFinder<NumPins>::measureChargingTimes(int i, float & Tc1_us, float & Tc2_us) {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && defined( HELLEN_BOARD_ID_PIN_1) && !defined(HW_HELLEN_SKIP_BOARD_TYPE)
 	chSemReset(&state.boardId_wake, 0);
 
 	// full charge/discharge time, and also 'timeout' time
@@ -305,7 +308,7 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimesAveraged(int i, float & T
 
 int detectHellenBoardId() {
 	int boardId = -1;
-#ifdef HELLEN_BOARD_ID_PIN_1
+#if defined( HELLEN_BOARD_ID_PIN_1) && !defined(HW_HELLEN_SKIP_BOARD_TYPE)
 	efiPrintf("Starting Hellen Board ID detection...");
 	efitick_t beginNt = getTimeNowNt();
 
