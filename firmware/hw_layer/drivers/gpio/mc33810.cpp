@@ -431,6 +431,14 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 		for (i = 0; i < BOARD_MC33810_COUNT; i++) {
 			auto chip = &chips[i];
 
+      if (chip->need_init) {
+  	    int ret = chip->chip_init();
+	      if (ret == 0) {
+  	      chip->drv_state = MC33810_READY;
+  	      chip->need_init = false;
+	      }
+      }
+
 			if ((chip->cfg == NULL) ||
 				(chip->drv_state == MC33810_DISABLED) ||
 				(chip->drv_state == MC33810_FAILED))
@@ -527,13 +535,8 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 	return static_cast<brain_pin_diag_e>(diag);
 }
 
-int Mc33810::init()
-{
-	int ret = chip_init();
-	if (ret)
-		return ret;
-
-	drv_state = MC33810_READY;
+int Mc33810::init() {
+  need_init = true;
 
 	if (!isDriverThreadStarted) {
 		chThdCreateStatic(mc33810_thread_wa, sizeof(mc33810_thread_wa),
