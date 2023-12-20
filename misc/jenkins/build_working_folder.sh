@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 #
 # file build_working_folder.sh
 #
@@ -58,20 +60,21 @@ fi
 cp java_console_binary/rusefi_autoupdate.jar $CONSOLE_FOLDER
 cp java_console_binary/rusefi_console.jar $CONSOLE_FOLDER
 cp java_tools/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar $FOLDER
-cp simulator/build/rusefi_simulator.exe   $CONSOLE_FOLDER
+if [ -f simulator/build/rusefi_simulator.exe ]; then
+     cp simulator/build/rusefi_simulator.exe   $CONSOLE_FOLDER
+fi
 cp misc/console_launcher/rusefi_autoupdate.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_console.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_updater.exe     $FOLDER
 cp misc/console_launcher/update-ts-cacerts/* $update_ts_cacerts_FOLDER
 cp java_console/*.dll                     $CONSOLE_FOLDER
-cp java_console/rusefi.xml                $CONSOLE_FOLDER
 cp -r java_console/bin                    $FOLDER
 cp firmware/ext/openblt/Host/BootCommander.exe $OPENBLT_FOLDER
 cp firmware/ext/openblt/Host/libopenblt.dll    $OPENBLT_FOLDER
 
 cp misc/console_launcher/readme.html      $FOLDER
 
-cp firmware/tunerstudio/generated/$INI_FILE_OVERRIDE $FOLDER
+cp $INI_FILE_OVERRIDE $FOLDER
 # Unsetting since would not be used anywhere else
 INI_FILE_OVERRIDE=""
 RUSEFI_CONSOLE_SETTINGS=""

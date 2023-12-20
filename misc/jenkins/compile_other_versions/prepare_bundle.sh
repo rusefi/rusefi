@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 BUNDLE_NAME="$1"
 export INI_FILE_OVERRIDE="$2"
 REF_NAME=$3
@@ -7,6 +9,7 @@ LTS=$4
 
 SCRIPT_NAME="prepare_bundle.sh"
 echo "Entering $SCRIPT_NAME with ${BUNDLE_NAME}"
+pwd
 echo "RUSEFI_BUILD_FTP_USER=$RUSEFI_BUILD_FTP_USER"
 
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
