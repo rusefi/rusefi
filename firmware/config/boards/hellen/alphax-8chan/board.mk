@@ -14,11 +14,13 @@ DDEFS += -DADC_MUX_PIN=Gpio::F2
 include $(BOARDS_DIR)/hellen/hellen-common176.mk
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
+  SHORT_BOARD_NAME=alphax-8chan
 	# TODO: why do I struggle to fit into flash? compare with Proteus
 	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
 	DDEFS += -DENABLE_PERF_TRACE=FALSE
     USE_OPT += -Wl,--defsym=FLASH_SIZE=768k
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
+  SHORT_BOARD_NAME=alphax-8chan
     # This board has trigger scope hardware!
     DDEFS += -DTRIGGER_SCOPE
     # serial ports only on F4
@@ -28,7 +30,6 @@ $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_ALPHAX_8CHAN
 
-SHORT_BOARD_NAME=alphax-8chan
 DDEFS += -DHW_HELLEN_8CHAN=1
 
 ONBOARD_MEMS_TYPE=LIS2DH12
