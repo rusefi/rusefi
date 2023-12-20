@@ -42,7 +42,7 @@
  *    Td, Tc1 and Tc2 are known.
  * - Solve the power function for X and get the desired R or C.
  *
- *   We use Newton's method (a fast-converging numerical solver when the 1st derivative is known) 
+ *   We use Newton's method (a fast-converging numerical solver when the 1st derivative is known)
  *   with estimated initial values.
  */
 
@@ -101,12 +101,12 @@ float HellenBoardIdSolver::solve(float Tc1, float Tc2, float x0, float y, float 
 
 float HellenBoardIdFinderBase::findClosestResistor(float R, bool testOnlyMajorSeries, int *rIdx) {
 	// the first "major" resistor uses less values (with more spacing between them) so that even less precise method cannot fail.
-	static const float rOnlyMajorValues[] = { 
+	static const float rOnlyMajorValues[] = {
 		HELLEN_BOARD_ID_MAJOR_RESISTORS
 	};
 	// the minor resistor is always measured after the major one, when the exact capacitance is already knows,
 	// so we can use more values and detect them with better precision.
-	static const float rAllValues[] = { 
+	static const float rAllValues[] = {
 		// these are equal to the major values and should be used first
 		HELLEN_BOARD_ID_MAJOR_RESISTORS
 		// these are extended series if 256 board IDs aren't enough (16*16).
@@ -125,7 +125,7 @@ float HellenBoardIdFinderBase::findClosestResistor(float R, bool testOnlyMajorSe
 			*rIdx = i;
 #ifdef HELLEN_BOARD_ID_DEBUG
 			efiPrintf("* [%d] R = %.0f, delta = %f", i, rAllValues[i], delta);
-#endif /* HELLEN_BOARD_ID_DEBUG */		
+#endif /* HELLEN_BOARD_ID_DEBUG */
 		}
 	}
 	return rAllValues[*rIdx];
@@ -162,7 +162,7 @@ float HellenBoardIdFinderBase::calc(float Tc1_us, float Tc2_us, float Rest, floa
 	constexpr float capacitorPrecision = 0.1f;
 	constexpr float Cmin = Cest * (1.0f - capacitorPrecision);
 	constexpr float Cmax = Cest * (1.0f + capacitorPrecision);
-	
+
 	// solve the equation for C (1% precision)
     *newC = cSolver.solve(Tc1_us, Tc2_us, Cmin, R + Rinternal, 0.01f);
     // in case something went wrong, we must be in the allowed range
@@ -199,7 +199,7 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimes(int i, float & Tc1_us, f
 	// set only high-Z input mode, no pull-ups/pull-downs allowed!
 	palSetPadMode(state.rInputPinPort, state.rInputPinIdx, PAL_MODE_INPUT);
 	efiExtiEnablePin("boardId", rPins[inputIdx], PAL_EVENT_MODE_RISING_EDGE, hellenBoardIdInputCallback, (void *)&state);
-    
+
     int pinState = palReadPad(state.rInputPinPort, state.rInputPinIdx);
     if (pinState != 0) {
     	// the input pin state should be low when the capacitor is fully discharged
@@ -308,10 +308,10 @@ int detectHellenBoardId() {
 #ifdef HELLEN_BOARD_ID_PIN_1
 	efiPrintf("Starting Hellen Board ID detection...");
 	efitick_t beginNt = getTimeNowNt();
-	
+
 	const int numPins = 2;
 	Gpio rPins[numPins] = { HELLEN_BOARD_ID_PIN_1, HELLEN_BOARD_ID_PIN_2};
-	
+
 	// We start from the estimated capacitance, but the real one can be +-10%
 	float C = HELLEN_BOARD_ID_CAPACITOR;
 
@@ -328,10 +328,10 @@ int detectHellenBoardId() {
 	for (int i = 0; i < numPins; i++) {
 #ifdef HELLEN_BOARD_ID_DEBUG
 		efiPrintf("*** Resistor R%d...", i + 1);
-#endif /* HELLEN_BOARD_ID_DEBUG */		
+#endif /* HELLEN_BOARD_ID_DEBUG */
 
 		float Tc1_us = 0, Tc2_us = 0;
-		// We need several measurements for each resistor to increase the presision.
+		// We need several measurements for each resistor to increase the precision.
 		// But if any of the measurements fails, then abort!
 		if (!finder.measureChargingTimesAveraged(i, Tc1_us, Tc2_us))
 			break;
