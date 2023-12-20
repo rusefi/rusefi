@@ -53,13 +53,13 @@ pins:
 
   - pin: X9
     meta: H144_OUT_PWM7
-    function: HighSide 1
+    function: HighSide 1 2A-ish
     class: outputs
     ts_name: Aux9 - High1 legacy F2
 
   - pin: X10
     meta: H144_OUT_PWM8
-    function: HighSide 2
+    function: HighSide 2 2A-ish
     class: outputs
     ts_name: Aux10 - High2 legacy F4
 
