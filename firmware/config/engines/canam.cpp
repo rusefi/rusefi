@@ -18,7 +18,7 @@ void setMaverickX3() {
 // ?	  engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	  engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	  setPPSCalibration(0.25, 0.5, 1.5, 3);
+	  setPPSCalibration(0.25, 1.49, 0.49, 2.98);
 	  // todo: matches Hyundai TODO extract method?
 	  setTPS1Calibration(98, 926, 891, 69);
 
