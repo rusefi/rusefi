@@ -23,6 +23,14 @@ jobs:
         run: |
           echo "shortBoardName=${{inputs.shortBoardName}} iniFileName=${{inputs.iniFileName}}"
 
+      - name: Set Env Variables
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: |
+          echo "META_OUTPUT_ROOT_FOLDER=../../../generated/" >> $GITHUB_ENV
+          echo "gha_shortBoardName=${{inputs.shortBoardName}}" >> $GITHUB_ENV
+          echo "gha_iniFileName=rusefi_${{inputs.shortBoardName}}.ini" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -62,7 +70,7 @@ jobs:
       - name: Gen Config
         working-directory: ext/rusefi/firmware
         run: |
-          bash gen_config_board.sh ../../.. ${{inputs.shortBoardName}}
+          bash gen_config_board.sh ../../.. ${{env.gha_shortBoardName}}
 
       - name: Repo Status
         run: |
@@ -108,11 +116,11 @@ jobs:
 
       - name: Upload .ini files to server
         working-directory: ext/rusefi/firmware/tunerstudio/generated
-        run: ../upload_ini.sh ${{inputs.iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        run: ../upload_ini.sh ${{env.gha_iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
       - name: Build Firmware
         working-directory: ext/rusefi
-        run: bash misc/jenkins/compile_other_versions/compile.sh ../../.. ${{inputs.shortBoardName}}
+        run: bash misc/jenkins/compile_other_versions/compile.sh ../../.. ${{env.gha_shortBoardName}}
 
       - name: Upload build bin artifact
         uses: actions/upload-artifact@v4
@@ -151,10 +159,10 @@ jobs:
 
       - name: Package and Upload Bundle
         working-directory: ext/rusefi/
-        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{inputs.shortBoardName}} ${{inputs.iniFileName}} master
+        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{env.gha_shortBoardName}} ${{env.gha_iniFileName}} master
 
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rusefi_bundle_${{inputs.shortBoardName}}.zip
+          name: rusefi_bundle_${{env.gha_shortBoardName}}.zip
           path: ext/rusefi/artifacts/rusefi_bundle*.zip
