@@ -121,270 +121,270 @@ jobs:
           # 'target' should match corresponding SHORT_BOARD_NAME
           - build-target: hellen72
             folder: config/boards/hellen/hellen72
-            ini-file: rusefi_hellen72.ini
+            short-board-name: hellen72
             skip-rate: 90
 
           - build-target: hellen81
             folder: config/boards/hellen/hellen81
-            ini-file: rusefi_hellen81.ini
+            short-board-name: hellen81
             skip-rate: 90
 
           - build-target: alphax-2chan
             folder: config/boards/hellen/alphax-2chan
-            ini-file: rusefi_alphax-2chan.ini
+            short-board-name: alphax-2chan
             skip-rate: 0
 
           - build-target: alphax-4chan
             folder: config/boards/hellen/alphax-4chan
-            ini-file: rusefi_alphax-4chan.ini
+            short-board-name: alphax-4chan
 
           - build-target: alphax-4chan_f7
             folder: config/boards/hellen/alphax-4chan
-            ini-file: rusefi_alphax-4chan_f7.ini
+            short-board-name: alphax-4chan_f7
 
           - build-target: alphax-8chan
             folder: config/boards/hellen/alphax-8chan
-            ini-file: rusefi_alphax-8chan.ini
+            short-board-name: alphax-8chan
             skip-rate: 0
 
           - build-target: alphax-8chan_debug
             folder: config/boards/hellen/alphax-8chan
-            ini-file: rusefi_alphax-8chan.ini
+            short-board-name: alphax-8chan
             skip-rate: 95
 
           - build-target: alphax-8chan_f7
             folder: config/boards/hellen/alphax-8chan
-            ini-file: rusefi_alphax-8chan_f7.ini
+            short-board-name: alphax-8chan_f7
             skip-rate: 0
 
           - build-target: s105
             folder: config/boards/s105
-            ini-file: rusefi_s105.ini
+            short-board-name: s105
             skip-rate: 90
 
           - build-target: t-b-g
             folder: config/boards/test-build-guards
-            ini-file: rusefi_t-b-g.ini
+            short-board-name: t-b-g
             skip-rate: 90
 
           - build-target: m74_9
             folder: config/boards/m74_9
-            ini-file: rusefi_m74_9.ini
+            short-board-name: m74_9
             skip-rate: 50
 
           - build-target: small-can-board
             folder: config/boards/hellen/small-can-board
-            ini-file: rusefi_small-can-board.ini
+            short-board-name: small-can-board
             skip-rate: 50
 
           - build-target: uaefi
             folder: config/boards/hellen/uaefi
-            ini-file: rusefi_uaefi.ini
+            short-board-name: uaefi
 
           - build-target: small-can-board_debug
             folder: config/boards/hellen/small-can-board
-            ini-file: rusefi_small-can-board.ini
+            short-board-name: small-can-board
             skip-rate: 00
 
           - build-target: hellen88bmw
             folder: config/boards/hellen/hellen88bmw
-            ini-file: rusefi_hellen88bmw.ini
+            short-board-name: hellen88bmw
             skip-rate: 99
 
           - build-target: hellen88bmw_avr
             folder: config/boards/hellen/hellen88bmw
-            ini-file: rusefi_hellen88bmw.ini
+            short-board-name: hellen88bmw
             skip-rate: 99
 
           - build-target: hellen-nb1
             folder: config/boards/hellen/hellen-nb1
-            ini-file: rusefi_hellen-nb1.ini
+            short-board-name: hellen-nb1
             skip-rate: 99
 
           - build-target: hellen-112-17
             folder: config/boards/hellen/hellen-112-17
-            ini-file: rusefi_hellen-112-17.ini
+            short-board-name: hellen-112-17
             skip-rate: 0
 
           - build-target: hellen-112-17_debug
             folder: config/boards/hellen/hellen-112-17
-            ini-file: rusefi_hellen-112-17.ini
+            short-board-name: hellen-112-17
             skip-rate: 0
 
           - build-target: hellen-gm-e67
             folder: config/boards/hellen/hellen-gm-e67
-            ini-file: rusefi_hellen-gm-e67.ini
+            short-board-name: hellen-gm-e67
             skip-rate: 99
 
           - build-target: hellenNA8_96
             folder: config/boards/hellen/hellenNA8_96
-            ini-file: rusefi_hellenNA8_96.ini
+            short-board-name: hellenNA8_96
             skip-rate: 99
 
           - build-target: hellenNA6
             folder: config/boards/hellen/hellen64_miataNA6_94
-            ini-file: rusefi_hellenNA6.ini
+            short-board-name: hellenNA6
             skip-rate: 90
 
           - build-target: hellen128
             folder: config/boards/hellen/hellen128
-            ini-file: rusefi_hellen128mercedes.ini
+            short-board-name: hellen128mercedes
             skip-rate: 50
 
           - build-target: hellen121vag
             folder: config/boards/hellen/hellen121vag
-            ini-file: rusefi_hellen121vag.ini
+            short-board-name: hellen121vag
             skip-rate: 99
 
           - build-target: hellen121nissan
             folder: config/boards/hellen/hellen121nissan
-            ini-file: rusefi_hellen121nissan.ini
+            short-board-name: hellen121nissan
 
           - build-target: hellen-honda-k
             folder: config/boards/hellen/hellen-honda-k
-            ini-file: rusefi_hellen-honda-k.ini
+            short-board-name: hellen-honda-k
 
           - build-target: hellen-honda-k_debug
             folder: config/boards/hellen/hellen-honda-k
-            ini-file: rusefi_hellen-honda-k.ini
+            short-board-name: hellen-honda-k
 
           - build-target: hellen154hyundai
             folder: config/boards/hellen/hellen154hyundai
-            ini-file: rusefi_hellen154hyundai.ini
+            short-board-name: hellen154hyundai
             skip-rate: 0
 
           - build-target: hellen154hyundai_f7
             folder: config/boards/hellen/hellen154hyundai
-            ini-file: rusefi_hellen154hyundai.ini
+            short-board-name: hellen154hyundai
             skip-rate: 0
 
           - build-target: cypress
             folder: config/boards/cypress
-            ini-file: rusefi_cypress.ini
+            short-board-name: cypress
 
           - build-target: frankenso_na6
             folder: config/boards/frankenso
-            ini-file: rusefi_frankenso_na6.ini
+            short-board-name: frankenso_na6
             skip-rate: 90
 
           - build-target: kinetis
             folder: config/boards/kinetis
-            ini-file: rusefi_kin.ini
+            short-board-name: kin
             skip-rate: 0
 
           - build-target: mre_f4
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
+            short-board-name: mre_f4
 
           - build-target: mre_f4_no_openblt
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
+            short-board-name: mre_f4
 
           - build-target: mre_f4_debug
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
+            short-board-name: mre_f4
             skip-rate: 80
 
           - build-target: mre_f4_recovery
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f4.ini
+            short-board-name: mre_f4
             skip-rate: 95
 
           - build-target: mre_f7
             folder: config/boards/microrusefi
-            ini-file: rusefi_mre_f7.ini
+            short-board-name: mre_f7
             skip-rate: 90
 
           - build-target: prometheus_405
             folder: config/boards/prometheus
-            ini-file: rusefi_prometheus_405.ini
+            short-board-name: prometheus_405
             skip-rate: 90
 
           - build-target: prometheus_469
             folder: config/boards/prometheus
-            ini-file: rusefi_prometheus_469.ini
+            short-board-name: prometheus_469
             skip-rate: 90
 
           - build-target: proteus_f4
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_f4.ini
+            short-board-name: proteus_f4
 
           - build-target: proteus_f4_debug
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_f4.ini
+            short-board-name: proteus_f4
             skip-rate: 80
 
           - build-target: proteus_f7
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_f7.ini
+            short-board-name: proteus_f7
 
 #          - build-target: proteus_f7_debug
 #            folder: config/boards/proteus
-#            ini-file: rusefi_proteus_f7.ini
+#            short-board-name: proteus_f7
 #            skip-rate: 80
 
           - build-target: proteus_h7
             folder: config/boards/proteus
-            ini-file: rusefi_proteus_h7.ini
+            short-board-name: proteus_h7
             skip-rate: 90
 
           - build-target: stm32f429_nucleo
             folder: config/boards/nucleo_f429
-            ini-file: rusefi_stm32f429_nucleo.ini
+            short-board-name: stm32f429_nucleo
 
           - build-target: stm32f767_nucleo
             folder: config/boards/nucleo_f767
-            ini-file: rusefi_stm32f767_nucleo.ini
+            short-board-name: stm32f767_nucleo
             skip-rate: 0
 
           - build-target: stm32f767_nucleo_debug
             folder: config/boards/nucleo_f767
-            ini-file: rusefi_stm32f767_nucleo.ini
+            short-board-name: stm32f767_nucleo
             skip-rate: 0
 
           - build-target: stm32h743_nucleo
             folder: config/boards/nucleo_h743
-            ini-file: rusefi_stm32h743_nucleo.ini
+            short-board-name: stm32h743_nucleo
             skip-rate: 95
 
           - build-target: subaru_eg33_f7
             folder: config/boards/subaru_eg33
-            ini-file: rusefi_subaru_eg33_f7.ini
+            short-board-name: subaru_eg33_f7
             skip-rate: 50
 
           - build-target: subaru_eg33_f7_no_bl
             folder: config/boards/subaru_eg33
-            ini-file: rusefi_subaru_eg33_f7.ini
+            short-board-name: subaru_eg33_f7
             skip-rate: 50
 
           - build-target: f407-discovery
             folder: config/boards/f407-discovery
-            ini-file: rusefi_f407-discovery.ini
+            short-board-name: f407-discovery
             skip-rate: 0
 
           - build-target: f407-discovery_debug
             folder: config/boards/f407-discovery
-            ini-file: rusefi_f407-discovery.ini
+            short-board-name: f407-discovery
             skip-rate: 0
 
           - build-target: f429-discovery
             folder: config/boards/f429-discovery
-            ini-file: rusefi_f429-discovery.ini
+            short-board-name: f429-discovery
             skip-rate: 95
 
           - build-target: atlas
             folder: config/boards/atlas
-            ini-file: rusefi_atlas.ini
+            short-board-name: atlas
             skip-rate: 95
 
           - build-target: tdg-pdm8
             folder: config/boards/tdg-pdm8
-            ini-file: rusefi_tdg-pdm8.ini
+            short-board-name: tdg-pdm8
             skip-rate: 95
 
           - build-target: at_start_f435
             folder: config/boards/at_start_f435
-            ini-file: rusefi_at_start_f435.ini
+            short-board-name: at_start_f435
             skip-rate: 0
 
     steps:
@@ -482,11 +482,11 @@ jobs:
         elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7_no_bl" ]; then
           bash config/boards/subaru_eg33/config/gen_subaru_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7_no_bl"; exit 1; }
-        elif [ "${{ matrix.ini-file }}" = "" ]; then
-          echo "ERROR: ${{ matrix.build-target }} is missing ini-file attribute"
+        elif [ "${{ matrix.short-board-name }}" = "" ]; then
+          echo "ERROR: ${{ matrix.build-target }} is missing short-board-name attribute"
           exit -1
         else
-          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
+          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} "rusefi_${{matrix.short-board-name}}.ini"
         fi
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
@@ -530,7 +530,7 @@ jobs:
 
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
-      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "rusefi_${{matrix.short-board-name}}.ini" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
     - name: Add Bundles to Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
@@ -547,7 +547,7 @@ jobs:
     - name: Upload .ini files to server
       if: ${{ env.full == 'true' }}
       working-directory: ./firmware/tunerstudio/generated
-      run: ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+      run: ../upload_ini.sh "rusefi_${{matrix.short-board-name}}.ini" ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload build elf artifact
       if: ${{ env.partial == 'true' }}
