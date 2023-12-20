@@ -615,9 +615,7 @@ static brain_pin_diag_e tle8888_2b_to_diag_with_temp(unsigned int bits)
 }
 
 int Tle8888::chip_reset() {
-	int ret;
-
-	ret = spi_rw(CMD_SR, NULL);
+	int ret = spi_rw(CMD_SR, NULL);
 	/**
 	 * Table 8. Reset Times. All reset times not more than 20uS
 	 */
