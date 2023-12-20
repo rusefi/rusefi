@@ -247,8 +247,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint32_t vssEdgeCounter
 	uint32_t issEdgeCounter
 
-	int16_t autoscale auxLinear1;@@GAUGE_NAME_AUX_LINEAR_1@@;"", 0.01, 0, 0, 0, 2
-	int16_t autoscale auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 0.01, 0, 0, 0, 2
+	float auxLinear1;@@GAUGE_NAME_AUX_LINEAR_1@@;"", 1, 0, 0, 0, 2
+	float auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 1, 0, 0, 0, 2
 
 
 	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1
