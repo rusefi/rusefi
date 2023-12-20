@@ -228,7 +228,7 @@ jobs:
 
           - build-target: hellen128
             folder: config/boards/hellen/hellen128
-            short-board-name: hellen128mercedes
+            short-board-name: hellen128
             skip-rate: 50
 
           - build-target: hellen121vag

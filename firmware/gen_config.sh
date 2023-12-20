@@ -34,7 +34,7 @@ for BOARD in \
    "config/boards/hellen/alphax-8chan alphax-8chan" \
    "config/boards/hellen/alphax-8chan alphax-8chan_f7" \
    "config/boards/hellen/alphax-8chan-revA alphax-8chan-revA" \
-   "config/boards/hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
+   "config/boards/hellen/hellen128 hellen128" \
    "config/boards/hellen/hellen121vag hellen121vag" \
    "config/boards/hellen/hellen121nissan hellen121nissan" \
    "config/boards/hellen/hellen-honda-k hellen-honda-k" \
@@ -73,9 +73,8 @@ for BOARD in \
    ; do
  BOARD_DIR=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
- INI=$(echo "$BOARD" | cut -d " " -f 3)
- ./gen_config_board.sh $BOARD_DIR $BOARD_SHORT_NAME $INI
- [ $? -eq 0 ] || { echo "ERROR generating board dir=[$BOARD_DIR] short=[$BOARD_SHORT_NAME] ini=[$INI]"; exit 1; }
+ ./gen_config_board.sh $BOARD_DIR $BOARD_SHORT_NAME
+ [ $? -eq 0 ] || { echo "ERROR generating board dir=[$BOARD_DIR] short=[$BOARD_SHORT_NAME]"; exit 1; }
 done
 
 exit 0
