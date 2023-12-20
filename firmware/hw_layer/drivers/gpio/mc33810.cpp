@@ -441,8 +441,10 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 			if ((chip->cfg == NULL) ||
 				(chip->drv_state == MC33810_DISABLED) ||
-				(chip->drv_state == MC33810_FAILED))
+				(chip->drv_state == MC33810_FAILED)) {
+				chip->need_init = true;
 				continue;
+			}
 
 			/* TODO: implement indirect driven gpios */
 			int ret = chip->update_output_and_diag();
