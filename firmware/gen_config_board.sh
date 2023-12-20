@@ -63,14 +63,18 @@ java \
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARD_DIR}"; exit 1; }
 
+if [ -z "META_OUTPUT_ROOT_FOLDER" ]; then
+	META_OUTPUT_ROOT_FOLDER=""
+fi
+
 # we generate both versions of the header but only one would be actually included due to conditional compilation see EFI_USE_COMPRESSED_INI_MSD
 # todo: make things consistent by
 # 0) having generated content not in the same folder with the tool generating content?
 # 1) using unique file name for each configuration?
 # 2) leverage consistent caching mechanism so that image is generated only in case of fresh .ini. Laziest approach would be to return exit code from java process above
 #
-hw_layer/mass_storage/create_ini_image.sh            ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h             128 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
-hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h 1088 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
+hw_layer/mass_storage/create_ini_image.sh            ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h             128 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
+hw_layer/mass_storage/create_ini_image_compressed.sh ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h 1088 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
 
 echo "Happy ${SHORT_BOARDNAME}!"
 exit 0
