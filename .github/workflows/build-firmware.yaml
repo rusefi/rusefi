@@ -486,7 +486,7 @@ jobs:
           echo "ERROR: ${{ matrix.build-target }} is missing short-board-name attribute"
           exit -1
         else
-          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} "rusefi_${{matrix.short-board-name}}.ini"
+          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.short-board-name}}
         fi
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path

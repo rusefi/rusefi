@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # file gen_config_board.sh
-#        for example ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini
-#                 or ./gen_config_board.sh config/boards/hellen/hellen128 hellen128
+#        for example ./gen_config_board.sh config/boards/hellen/hellen128 hellen128
 #                    ./gen_config_board.sh config/boards/hellen/hellen-honda-k hellen-honda-k
 #                 or ./gen_config_board.sh config/boards/atlas atlas
 #                    ./gen_config_board.sh config/boards/proteus proteus_f7
@@ -10,7 +9,6 @@
 #                    ./gen_config_board.sh config/boards/hellen/small-can-board small-can-board
 #                    ./gen_config_board.sh config/boards/f407-discovery f407-discovery
 #                    ./gen_config_board.sh config/boards/nucleo_f767 nucleo_f767
-# which is short for ./gen_config_board.sh config/boards/hellen/hellen128 hellen128 rusefi_hellen128.ini
 
 set -e
 
@@ -34,11 +32,7 @@ if [ -z "$SHORT_BOARDNAME" ]; then
 	exit 1
 fi
 
-if [ -n "$3" ]; then
-  INI="$3"
-else
-  INI="rusefi_${SHORT_BOARDNAME}.ini"
-fi
+INI="rusefi_${SHORT_BOARDNAME}.ini"
 
 echo "BOARD_DIR=${BOARD_DIR} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
 
