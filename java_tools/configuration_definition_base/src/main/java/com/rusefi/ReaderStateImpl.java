@@ -373,8 +373,8 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     @Override
-    public void addCHeaderDestination(String cHeader) {
-        destinations.add(new CHeaderConsumer(this, cHeader, withC_Defines, fileFactory));
+    public void addCHeaderDestination(String cHeaderFileName) {
+        destinations.add(new CHeaderConsumer(this, ConfigDefinitionRootOutputFolder.getValue() + cHeaderFileName, withC_Defines, fileFactory));
     }
 
     public void addJavaDestination(String fileName) {

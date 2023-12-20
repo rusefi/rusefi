@@ -41,7 +41,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         SystemOut.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
         // File.getPath() would eliminate potential separator at the end of the path
-        String fileName = getTsFileOutputName(new File(tsPath).getPath());
+        String fileName = getTsFileOutputName(new File(ConfigDefinitionRootOutputFolder.getValue() + tsPath).getPath());
         Output tsHeader = new LazyFileImpl(fileName);
         writeContent(fieldsSection, tsContent, tsHeader);
     }
