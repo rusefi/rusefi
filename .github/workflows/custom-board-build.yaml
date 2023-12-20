@@ -10,9 +10,6 @@ on:
       shortBoardName:
         required: true
         type: string
-      iniFileName:
-        required: true
-        type: string
 
 jobs:
   create-board:
@@ -21,7 +18,7 @@ jobs:
     steps:
       - name: Echo
         run: |
-          echo "shortBoardName=${{inputs.shortBoardName}} iniFileName=${{inputs.iniFileName}}"
+          echo "shortBoardName=${{inputs.shortBoardName}}"
 
       - name: Set Env Variables
         env:
@@ -56,16 +53,6 @@ jobs:
         run: |
           sudo bash ext/rusefi/misc/actions/add-ubuntu-latest-apt-mirrors.sh
           sudo apt-get install sshpass sshpass mtools
-
-      - name: Removing other .ini files since we will be uploading
-        working-directory: ext/rusefi/
-        run: rm -rf firmware/tunerstudio/generated/*.ini
-
-      - name: Set Output Env
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-        run: |
-          echo "META_OUTPUT_ROOT_FOLDER=../../../generated/" >> $GITHUB_ENV
 
       - name: Gen Config
         working-directory: ext/rusefi/firmware
@@ -115,8 +102,8 @@ jobs:
           github_token: ${{ github.token }}
 
       - name: Upload .ini files to server
-        working-directory: ext/rusefi/firmware/tunerstudio/generated
-        run: ../upload_ini.sh ${{env.gha_iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        working-directory: generated/tunerstudio/generated
+        run: ../../../ext/rusefi/firmware/tunerstudio/upload_ini.sh ${{env.gha_iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
       - name: Build Firmware
         working-directory: ext/rusefi
@@ -159,7 +146,7 @@ jobs:
 
       - name: Package and Upload Bundle
         working-directory: ext/rusefi/
-        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{env.gha_shortBoardName}} ${{env.gha_iniFileName}} master
+        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{env.gha_shortBoardName}} "generated/tunerstudio/generated/${{env.gha_iniFileName}}" master
 
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
