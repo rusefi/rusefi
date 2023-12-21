@@ -38,6 +38,8 @@ struct_no_prefix engine_state_s
 	int8_t clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
 	int8_t brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
 	int8_t startStopState
+	int8_t smartChipState
+	int8_t smartChipRestartCounter
 	bit startStopPhysicalState
 	bit acrStateDup
 	bit acrEngineMovedRecently
