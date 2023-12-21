@@ -279,6 +279,8 @@ int Mc33810::chip_init()
 	int ret;
 	uint16_t rx;
 
+	init_cnt++;
+
 	/* mark pins used */
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	ret = 0;
@@ -430,6 +432,10 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 		for (i = 0; i < BOARD_MC33810_COUNT; i++) {
 			auto chip = &chips[i];
+
+			if (i == 0) {
+			  engine->engineState.smartChipRestartCounter = chip->init_cnt;
+			}
 
       if (chip->need_init) {
   	    int ret = chip->chip_init();
