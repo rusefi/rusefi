@@ -1076,6 +1076,12 @@ float getOutputValueByName(const char *name) {
 // startStopState
 		case 897099930:
 			return engine->engineState.startStopState;
+// smartChipState
+		case -517673231:
+			return engine->engineState.smartChipState;
+// smartChipRestartCounter
+		case 1192769173:
+			return engine->engineState.smartChipRestartCounter;
 // startStopPhysicalState
 		case -1943724937:
 			return engine->engineState.startStopPhysicalState;

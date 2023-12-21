@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Mon Nov 27 20:20:53 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Dec 21 05:28:46 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -191,7 +191,8 @@ public class EngineState {
 	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
 	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 44, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
 	public static final Field STARTSTOPSTATE = Field.create("STARTSTOPSTATE", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
-	public static final Field ALIGNMENTFILL_AT_46 = Field.create("ALIGNMENTFILL_AT_46", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field SMARTCHIPSTATE = Field.create("SMARTCHIPSTATE", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
+	public static final Field SMARTCHIPRESTARTCOUNTER = Field.create("SMARTCHIPRESTARTCOUNTER", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1048);
 	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 48, FieldType.BIT, 0).setBaseOffset(1048);
 	public static final Field ACRSTATEDUP = Field.create("ACRSTATEDUP", 48, FieldType.BIT, 1).setBaseOffset(1048);
 	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 48, FieldType.BIT, 2).setBaseOffset(1048);
@@ -233,7 +234,8 @@ public class EngineState {
 	CLUTCHDOWNSTATE,
 	BRAKEPEDALSTATE,
 	STARTSTOPSTATE,
-	ALIGNMENTFILL_AT_46,
+	SMARTCHIPSTATE,
+	SMARTCHIPRESTARTCOUNTER,
 	STARTSTOPPHYSICALSTATE,
 	ACRSTATEDUP,
 	ACRENGINEMOVEDRECENTLY,
