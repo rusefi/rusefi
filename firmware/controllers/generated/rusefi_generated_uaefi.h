@@ -38,8 +38,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum 0="NONE",6="A7 Voltage From Key",9="C14 TPS2",16="C15 AUX3",2="C3 AUX2",15="C4 PPS2",1="D1 AUX1",5="D13 TPS1",14="D15 IAT",13="D16 CLT",4="D6 PPS1",11="D9 MAP"
-#define adc_channel_e_fullenum "NONE","D1 AUX1","C3 AUX2","INVALID","D6 PPS1","D13 TPS1","A7 Voltage From Key","INVALID","INVALID","C14 TPS2","INVALID","D9 MAP","INVALID","D16 CLT","D15 IAT","C4 PPS2","C15 AUX3"
+#define adc_channel_e_enum 0="NONE",6="A7 Voltage From Key",9="C14 TPS2",16="C15 AUX3",2="C3 AUX2",15="C4 PPS2",1="D1 AUX1",5="D13 TPS1",14="D15 IAT",13="D16 CLT Coolant",4="D6 PPS1",11="D9 MAP"
+#define adc_channel_e_fullenum "NONE","D1 AUX1","C3 AUX2","INVALID","D6 PPS1","D13 TPS1","A7 Voltage From Key","INVALID","INVALID","C14 TPS2","INVALID","D9 MAP","INVALID","D16 CLT Coolant","D15 IAT","C4 PPS2","C15 AUX3"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define AFTERSTART_DECAY_CURVE_SIZE 8
@@ -1044,8 +1044,8 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
-#define output_pin_e_enum 0="NONE",10="B1 injector output 6",26="B10 Coil 6",69="B11 Coil 4",70="B12 Coil 3",68="B13 Coil 5",71="B14 Coil 2",47="B15 Coil 1",40="B16 Low Side output 4 / Fuel Pump",63="B17 Low Side output 3",62="B18 Low Side output 2",52="B2 injector output 5",60="B3 injector output 4",61="B4 injector output 3",11="B5 injector output 2",53="B6 injector output 1",65="B7 Low Side output 1",72="B8 Fan Relay Weak Low Side output 2",27="B9 Main Relay Weak Low Side output 1"
-#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B1 injector output 6","B5 injector output 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B10 Coil 6","B9 Main Relay Weak Low Side output 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B16 Low Side output 4 / Fuel Pump","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B15 Coil 1","INVALID","INVALID","INVALID","INVALID","B2 injector output 5","B6 injector output 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B3 injector output 4","B4 injector output 3","B18 Low Side output 2","B17 Low Side output 3","INVALID","B7 Low Side output 1","INVALID","INVALID","B13 Coil 5","B11 Coil 4","B12 Coil 3","B14 Coil 2","B8 Fan Relay Weak Low Side output 2"
+#define output_pin_e_enum 0="NONE",10="B1 injector output 6",26="B10 Coil 6",69="B11 Coil 4",70="B12 Coil 3",68="B13 Coil 5",71="B14 Coil 2",47="B15 Coil 1",40="B16 Low Side output 4 / Fuel Pump",63="B17 Low Side output 3",62="B18 VVT or Idle or Low Side output 2",52="B2 injector output 5",60="B3 injector output 4",61="B4 injector output 3",11="B5 injector output 2",53="B6 injector output 1",65="B7 VVT or Low Side output 1",72="B8 Fan Relay Weak Low Side output 2",27="B9 Main Relay Weak Low Side output 1"
+#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B1 injector output 6","B5 injector output 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B10 Coil 6","B9 Main Relay Weak Low Side output 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B16 Low Side output 4 / Fuel Pump","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B15 Coil 1","INVALID","INVALID","INVALID","INVALID","B2 injector output 5","B6 injector output 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B3 injector output 4","B4 injector output 3","B18 VVT or Idle or Low Side output 2","B17 Low Side output 3","INVALID","B7 VVT or Low Side output 1","INVALID","INVALID","B13 Coil 5","B11 Coil 4","B12 Coil 3","B14 Coil 2","B8 Fan Relay Weak Low Side output 2"
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1147,7 +1147,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1213926229
+#define SIGNATURE_HASH 1764283509
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1446,7 +1446,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.12.21.uaefi.1213926229"
+#define TS_SIGNATURE "rusEFI master.2023.12.21.uaefi.1764283509"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
