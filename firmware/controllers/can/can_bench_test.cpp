@@ -21,8 +21,12 @@ bool qcDirectPinControlMode = false;
 
 static void directWritePad(Gpio pin, int value) {
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-	palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
-	// todo: add smart chip support support
+	if (brain_pin_is_onchip(pin)) {
+	  palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
+	} else {
+  	// todo: add smart chip support support
+	  criticalError("unsupported direct control %d", (int)pin);
+	}
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }
 
@@ -149,7 +153,7 @@ void sendBoardStatus() {
 	int boardId = getBoardId();
 	msg[0] = TRUNCATE_TO_BYTE(boardId >> 8);
 	msg[1] = TRUNCATE_TO_BYTE(boardId);
-	
+
 	int numSecondsSinceReset = getTimeNowS();
 	msg[2] = TRUNCATE_TO_BYTE(numSecondsSinceReset >> 16);
 	msg[3] = TRUNCATE_TO_BYTE(numSecondsSinceReset >> 8);
