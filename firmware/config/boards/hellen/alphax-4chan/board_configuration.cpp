@@ -86,7 +86,7 @@ static void setupDefaultSensorInputs() {
 
 static bool is_F_OrOlder() {
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
-    return hellenBoardId == BOARD_ID_ALPHA4CH_D || hellenBoardId == BOARD_ID_ALPHA4CH_E || hellenBoardId == BOARD_ID_ALPHA4CH_F;
+    return hellenBoardId == BOARD_ID_ALPHA4CH_B || hellenBoardId == BOARD_ID_ALPHA4CH_D || hellenBoardId == BOARD_ID_ALPHA4CH_E || hellenBoardId == BOARD_ID_ALPHA4CH_F;
 }
 
 void boardInitHardware() {
@@ -97,13 +97,13 @@ void boardInitHardware() {
 	alpha2stepPullDown.initPin("a-2step", Gpio::H144_OUT_IO7);
 	alphaCamVrPullUp.initPin("a-cam-vr", Gpio::H144_OUT_IO9);
 	if (is_F_OrOlder()) {
-	    alphaD2PullDown.initPin("a-d2", Gpio::H144_LS_5);
-		alphaCamPullDown.initPin("a-cam", Gpio::H144_OUT_IO8);
-		alphaD3PullDown.initPin("a-d3", Gpio::H144_LS_6);
+	    alphaD2PullDown.initPin("a-d2-legacy", Gpio::H144_LS_5);
+		alphaCamPullDown.initPin("a-cam-legacy", Gpio::H144_OUT_IO8);
+		alphaD3PullDown.initPin("a-d3-legacy", Gpio::H144_LS_6);
 	} else {
-	    alphaD2PullDown.initPin("a-d2", Gpio::H144_OUT_IO13);
-		alphaCamPullDown.initPin("a-cam", H144_GP4);
-		alphaD3PullDown.initPin("a-d3", Gpio::H144_OUT_IO8);
+	    alphaD2PullDown.initPin("a_d2", Gpio::H144_OUT_IO13);
+		alphaCamPullDown.initPin("a_cam", H144_GP4);
+		alphaD3PullDown.initPin("a_d3", Gpio::H144_OUT_IO8);
 	}
 
 	alphaD4PullDown.initPin("a-d4", Gpio::H144_LS_7);
