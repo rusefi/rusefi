@@ -11,10 +11,10 @@ percent_t deltaTps;Fuel: TPS AE change
 
 bit isAboveAccelThreshold;Fuel: TPS AE Active
 bit isBelowDecelThreshold;
-bit isTimeToResetAccumulator;Accel: reset time
+bit isTimeToResetAccumulator;Fuel: TPS AE: reset time
 bit isFractionalEnrichment
-bit belowEpsilon;Accel: below threshold
-bit tooShort;Accel: too short
+bit belowEpsilon;Fuel: TPS AE: below threshold
+bit tooShort;Fuel: TPS AE: too short
 
 float fractionalInjFuel
 
