@@ -146,7 +146,7 @@ jobs:
 
       - name: Package and Upload Bundle
         working-directory: ext/rusefi/
-        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{env.gha_shortBoardName}} "generated/tunerstudio/generated/${{env.gha_iniFileName}}" master
+        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{env.gha_shortBoardName}} "../../generated/tunerstudio/generated/${{env.gha_iniFileName}}" master
 
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
