@@ -16,6 +16,7 @@ dependencies {
 }
 
 shadowJar {
+    dependsOn(':enum_to_string:shadowJar')
     /*
      to exclude suffix '-all'
      in resulting archive file name

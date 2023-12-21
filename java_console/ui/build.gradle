@@ -21,9 +21,12 @@ dependencies {
 }
 
 shadowJar {
-    archivesBaseName = 'fome_console'
-    destinationDir = file("$rootDir/../java_console_binary")
-    archiveClassifier = ''
+    dependsOn(':enum_to_string:shadowJar')
+    dependsOn(':config_definition:shadowJar')
+    base {
+        archivesBaseName = "${rootDir}/../java_console_binary/fome_console"
+        archiveClassifier = ''
+    }
 
     manifest {
         attributes(
