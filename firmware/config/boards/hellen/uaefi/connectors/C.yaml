@@ -22,6 +22,8 @@ pins:
     class: analog_inputs
     ts_name: ___ PPS2
     function: PPS input 2
+    type: av
+    color: orange/brown
 
   - pin: C5
     meta: MM100_IN_D1
@@ -73,6 +75,8 @@ pins:
     class: analog_inputs
     ts_name: ___ TPS2
     function: TPS input 2
+    type: av
+    color: blue
 
   - pin: C15
     meta: MM100_IN_AUX3_ANALOG
@@ -82,12 +86,14 @@ pins:
 
   - pin: C16
     function: VR2+
+    color: blue
 
   - pin: C17
     meta: MM100_UART8_TX
     class: event_inputs
     ts_name: ___ VR2-/HALL
     function: VR2-/HALL
+    color: white
 
 #  - pin: C16C17
 #    meta: MM100_UART8_TX
@@ -98,9 +104,11 @@ pins:
 
   - pin: C18
     function: VR1+
+    color: blue
 
   - pin: C19
     function: VR1-
+    color: white
 
   - pin: C18C19
     meta: MM100_UART8_RX

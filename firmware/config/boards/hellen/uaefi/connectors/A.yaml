@@ -4,33 +4,37 @@ pins:
   - pin: A1
     function: DC1-
     type: etb
-    
+    color: white
+
   - pin: A2
     function: DC2-
     type: etb
+    color: white
 
   - pin: A3
     function: Power Ground
     type: gnd
-    
+
   - pin: A4
     function: Power Ground
     type: gnd
-    
+
   - pin: A5
     function: DC1+
     type: etb
-    
+    color: blue
+
   - pin: A6
     function: DC2+
     type: etb
+    color: blue
 
   - pin: A7
     meta: MM100_IN_VBATT
     class: analog_inputs
     function: Ignition Switch / Battery Voltage Analog Input
     ts_name: ___ Voltage From Key
-      
+
   - pin: A8
     function: +12V From Main Relay
 
@@ -39,3 +43,30 @@ info:
   title: uaefi
   directory: hellen/uaefi
   board_url: https://github.com/rusefi/rusefi/wiki/uaefi
+  image:
+    file: uaefi-A.jpg
+  pins:
+    - pin: A1
+      x: 420
+      y: 221
+    - pin: A2
+      x: 306
+      y: 221
+    - pin: A3
+      x: 207
+      y: 221
+    - pin: A4
+      x: 97
+      y: 221
+    - pin: A5
+      x: 420
+      y: 115
+    - pin: A6
+      x: 306
+      y: 115
+    - pin: A7
+      x: 207
+      y: 115
+    - pin: A8
+      x: 97
+      y: 115

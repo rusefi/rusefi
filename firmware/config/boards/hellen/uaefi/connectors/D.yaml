@@ -32,13 +32,17 @@ pins:
     class: analog_inputs
     ts_name: ___ PPS1
     function: PPS input 1
+    type: av
+    color: white
 
   - pin: D7
     function: CAN1 bus high
+    color: green
     type: can
 
   - pin: D8
     function: CAN1 bus low
+    color: blue
     type: can
 
   - pin: D9
@@ -46,6 +50,8 @@ pins:
     class: analog_inputs
     ts_name: ___ MAP
     function: MAP input
+    type: av
+    color: yellow
 
   - pin: D10
     meta: MM100_IN_CAM
@@ -64,6 +70,8 @@ pins:
     class: analog_inputs
     ts_name: ___ TPS1
     function: TPS input 1
+    type: av
+    color: green
 
   - pin: D14
     function: Knock Input
@@ -73,12 +81,16 @@ pins:
     class: analog_inputs
     ts_name: ___ IAT
     function: IAT input
+    type: at
+    color: blue
 
   - pin: D16
     meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
-    ts_name: ___ CLT
+    ts_name: ___ CLT Coolant
     function: CLT input
+    type: at
+    color: grey
 
 info:
   cid: d
