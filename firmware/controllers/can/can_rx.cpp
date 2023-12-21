@@ -14,9 +14,6 @@
 #include "can_bench_test.h"
 #include "can_common.h"
 
-// todo: consume from fresh wideband_can.h https://github.com/rusefi/rusefi/issues/5208
-#define WB_ACK 0x727573
-
 typedef float SCRIPT_TABLE_8x8_f32t_linear[SCRIPT_TABLE_8 * SCRIPT_TABLE_8];
 
 #if EFI_CAN_SUPPORT
@@ -26,6 +23,8 @@ typedef float SCRIPT_TABLE_8x8_f32t_linear[SCRIPT_TABLE_8 * SCRIPT_TABLE_8];
 #include "can_sensor.h"
 #include "can_vss.h"
 #include "rusefi_wideband.h"
+#include "wideband_firmware/for_rusefi/wideband_can.h"
+
 
 /**
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
