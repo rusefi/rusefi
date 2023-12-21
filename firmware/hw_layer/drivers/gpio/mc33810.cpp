@@ -96,8 +96,6 @@ struct Mc33810 : public GpioChip {
 	int writePad(size_t pin, int value) override;
 	brain_pin_diag_e getDiag(size_t pin) override;
 
-
-
 	// internal functions
 	int spi_rw(uint16_t tx, uint16_t* rx);
 	int update_output_and_diag();
@@ -110,6 +108,7 @@ struct Mc33810 : public GpioChip {
 	bool hasBindedPins = false;
 
 	const mc33810_config	*cfg;
+
 	/* cached output state - state last send to chip */
 	uint8_t					o_state_cached;
 	/* state to be sent to chip */
@@ -184,7 +183,7 @@ int Mc33810::spi_rw(uint16_t tx, uint16_t *rx)
 		 (tx == MC_CMD_READ_REG(REG_ALL_STAT)));
 
 #if 0
-    efiPrintf(DRIVER_NAME "SPI [%x][%x]", tx, rxb);
+	efiPrintf(DRIVER_NAME "SPI [%x][%x]", tx, rxb);
 #endif
 	/* no errors for now */
 	return 0;
@@ -280,9 +279,9 @@ int Mc33810::update_output_and_diag()
 }
 
 int Mc33810::bind_io() {
-  if (hasBindedPins) {
-    return 0;
-  }
+	if (hasBindedPins) {
+		return 0;
+	}
 	hasBindedPins = true;
 
 	/* mark pins used */
@@ -379,7 +378,7 @@ int Mc33810::chip_init()
 			0;
 		ret = spi_rw(MC_CMD_SPARK(spark_settings), NULL);
 		if (ret) {
-		    efiPrintf(DRIVER_NAME " cmd spark");
+			efiPrintf(DRIVER_NAME " cmd spark");
 			goto err_gpios;
 		}
 
@@ -387,7 +386,7 @@ int Mc33810::chip_init()
 		 * disable retry after recovering from under/overvoltage */
 		ret = spi_rw(MC_CMD_MODE_SELECT((0xf << 8) | (1 << 6)) , NULL);
 		if (ret) {
-		    efiPrintf(DRIVER_NAME " cmd mode select");
+			efiPrintf(DRIVER_NAME " cmd mode select");
 			goto err_gpios;
 		}
 	}
@@ -395,7 +394,7 @@ int Mc33810::chip_init()
 	/* n. set EN pin low - active */
 	if (cfg->en.port) {
 		palClearPort(cfg->en.port,
-				   PAL_PORT_BIT(cfg->en.pad));
+					 PAL_PORT_BIT(cfg->en.pad));
 	}
 
 	return 0;
@@ -468,13 +467,13 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 			  engine->engineState.smartChipAliveCounter = chip->alive_cnt;
 			}
 
-      if (chip->need_init) {
-  	    int ret = chip->chip_init();
-	      if (ret == 0) {
-  	      chip->drv_state = MC33810_READY;
-  	      chip->need_init = false;
-	      }
-      }
+			if (chip->need_init) {
+				int ret = chip->chip_init();
+				if (ret == 0) {
+					chip->drv_state = MC33810_READY;
+					chip->need_init = false;
+				}
+			}
 
 			if ((chip->cfg == NULL) ||
 				(chip->drv_state == MC33810_DISABLED) ||
@@ -526,14 +525,16 @@ int Mc33810::writePad(size_t pin, int value)
 	/* direct driven? */
 	if (o_direct_mask & BIT(pin)) {
 		/* TODO: ensure that output driver enabled */
-		int pad = PAL_PORT_BIT(cfg->direct_io[pin].pad);
 #if MC33810_VERBOSE
-  efiPrintf(DRIVER_NAME "writePad pad %d", pad);
+		int pad = PAL_PORT_BIT(cfg->direct_io[pin].pad);
+		efiPrintf(DRIVER_NAME "writePad pad %d", pad);
 #endif
 		if (value) {
-			palSetPort(cfg->direct_io[pin].port, pad);
+			palSetPort(cfg->direct_io[pin].port,
+					   PAL_PORT_BIT(cfg->direct_io[pin].pad));
 		} else {
-			palClearPort(cfg->direct_io[pin].port, pad);
+			palClearPort(cfg->direct_io[pin].port,
+						 PAL_PORT_BIT(cfg->direct_io[pin].pad));
 		}
 	} else {
 #if MC33810_VERBOSE
@@ -555,7 +556,7 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 
 	if (pin < 4) {
 		/* OUT drivers */
-		val = out_fault[pin < 2 ? 0 : 1] >> (4 * (pin & 0x01));
+		val = out_fault[(pin < 2) ? 0 : 1] >> (4 * (pin & 0x01));
 
 		/* ON open fault */
 		if (val & BIT(0))
@@ -586,7 +587,7 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 }
 
 int Mc33810::init() {
-  need_init = true;
+	need_init = true;
 
 	if (!isDriverThreadStarted) {
 		chThdCreateStatic(mc33810_thread_wa, sizeof(mc33810_thread_wa),
