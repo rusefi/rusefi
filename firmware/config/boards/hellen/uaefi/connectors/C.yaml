@@ -4,76 +4,82 @@ pins:
   - pin: C1
     function: Sensor +5v Power Feed
     type: 5v
-    
+    color: red
+
   - pin: C2
     function: Sensor +5v Power Feed
     type: 5v
-    
+    color: red
+
   - pin: C3
     meta: MM100_IN_O2S2_ANALOG
     class: analog_inputs
     ts_name: ___ AUX2
     function: Auxiliary analog input 2
-    
+
   - pin: C4
     meta: MM100_IN_AUX2_ANALOG
     class: analog_inputs
     ts_name: ___ PPS2
     function: PPS input 2
-    
+
   - pin: C5
     meta: MM100_IN_D1
     class: event_inputs
     ts_name: ___ HALL1
     function: HALL input 1
-    
+
   - pin: C6
     meta: MM100_IN_D2
     class: event_inputs
     ts_name: ___ HALL2
     function: HALL input 2
-    
+
   - pin: C7
     meta: MM100_IN_D3
     class: event_inputs
     ts_name: ___ HALL3
     function: HALL input 3
-    
+
   - pin: C8
     function: Power Ground / VR Shield
     type: gnd
-    
+    color: black
+
   - pin: C9
     meta: MM100_IN_D4
     class: switch_inputs
     ts_name: ___ BUTTON3
-    function: Button input 3 
+    function: Button input 3
 
   - pin: C10
     ts_name: ___ EGT+
-    function: EGT positive input  
+    function: EGT positive input
 
   - pin: C11
     function: Sensor ground
-  
+    color: black
+
   - pin: C12
-    function: Sensor ground   
-    
+    function: Sensor ground
+    color: black
+
   - pin: C13
-    function: Sensor ground   
-    
+    function: Sensor ground
+    color: black
+
   - pin: C14
     meta: MM100_IN_AUX1_ANALOG
     class: analog_inputs
     ts_name: ___ TPS2
     function: TPS input 2
-    
+
   - pin: C15
     meta: MM100_IN_AUX3_ANALOG
     class: analog_inputs
     ts_name: ___ AUX3
     function: Auxiliary analog input 3
-    
+
   - pin: C16
     function: VR2+
 
@@ -102,13 +108,76 @@ pins:
     function: VR1 Sensor
     type: hall
     ts_name: C18/C19 VR2 Sensor
-    
+
   - pin: C20
     ts_name: ___ EGT-
-    function: EGT negative input  
-    
+    function: EGT negative input
+
 info:
   cid: c
   title: uaefi
   directory: hellen/uaefi
   board_url: https://github.com/rusefi/rusefi/wiki/uaefi
+  image:
+    file: uaefi-C.jpg
+  pins:
+    - pin: C1
+      x: 1655
+      y: 400
+    - pin: C2
+      x: 1500
+      y: 400
+    - pin: C3
+      x: 1341
+      y: 400
+    - pin: C4
+      x: 1185
+      y: 400
+    - pin: C5
+      x: 1031
+      y: 400
+    - pin: C6
+      x: 876
+      y: 400
+    - pin: C7
+      x: 716
+      y: 400
+    - pin: C8
+      x: 561
+      y: 400
+    - pin: C9
+      x: 405
+      y: 400
+    - pin: C10
+      x: 246
+      y: 400
+    - pin: C11
+      x: 1655
+      y: 245
+    - pin: C12
+      x: 1500
+      y: 245
+    - pin: C13
+      x: 1341
+      y: 245
+    - pin: C14
+      x: 1185
+      y: 245
+    - pin: C15
+      x: 1031
+      y: 245
+    - pin: C16
+      x: 876
+      y: 245
+    - pin: C17
+      x: 716
+      y: 245
+    - pin: C18
+      x: 561
+      y: 245
+    - pin: C19
+      x: 405
+      y: 245
+    - pin: C20
+      x: 246
+      y: 245
