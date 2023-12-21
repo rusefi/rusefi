@@ -6,7 +6,7 @@ pins:
     class: analog_inputs
     ts_name: ___ AUX1
     function: Auxiliary analog input 1
-    
+
   - pin: D2
     meta: MM100_IN_CRANK
     class: switch_inputs
@@ -16,23 +16,23 @@ pins:
   - pin: D3
     function: Sensor +5v Power Feed
     type: 5v
-    
+
   - pin: D4
     function: Sensor +5v Power Feed
     type: 5v
-    
+
   - pin: D5
     meta: MM100_IN_VSS
     class: event_inputs
     ts_name: ___ FLEX
     function: Flex input
-    
+
   - pin: D6
     meta: MM100_IN_PPS_ANALOG
     class: analog_inputs
     ts_name: ___ PPS1
     function: PPS input 1
-    
+
   - pin: D7
     function: CAN1 bus high
     type: can
@@ -40,48 +40,99 @@ pins:
   - pin: D8
     function: CAN1 bus low
     type: can
-    
+
   - pin: D9
     meta: MM100_IN_MAP1_ANALOG
     class: analog_inputs
     ts_name: ___ MAP
     function: MAP input
-    
+
   - pin: D10
     meta: MM100_IN_CAM
     class: switch_inputs
     ts_name: ___ BUTTON2
     function: Button input 2
-    
+
   - pin: D11
     function: Sensor ground
-  
+
   - pin: D12
-    function: Sensor ground  
+    function: Sensor ground
 
   - pin: D13
     meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
     ts_name: ___ TPS1
-    function: TPS input 1    
+    function: TPS input 1
 
   - pin: D14
     function: Knock Input
-    
+
   - pin: D15
     meta: MM100_IN_IAT_ANALOG
     class: analog_inputs
     ts_name: ___ IAT
-    function: IAT input 
-    
+    function: IAT input
+
   - pin: D16
     meta: MM100_IN_CLT_ANALOG
     class: analog_inputs
     ts_name: ___ CLT
-    function: CLT input 
-    
+    function: CLT input
+
 info:
   cid: d
   title: uaefi
   directory: hellen/uaefi
   board_url: https://github.com/rusefi/rusefi/wiki/uaefi
+  image:
+    file: uaefi-D.jpg
+  pins:
+    - pin: D1
+      x: 977
+      y: 250
+    - pin: D2
+      x: 862
+      y: 250
+    - pin: D3
+      x: 743
+      y: 250
+    - pin: D4
+      x: 626
+      y: 250
+    - pin: D5
+      x: 511
+      y: 250
+    - pin: D6
+      x: 393
+      y: 250
+    - pin: D7
+      x: 276
+      y: 250
+    - pin: D8
+      x: 160
+      y: 250
+    - pin: D9
+      x: 977
+      y: 134
+    - pin: D10
+      x: 862
+      y: 134
+    - pin: D11
+      x: 743
+      y: 134
+    - pin: D12
+      x: 626
+      y: 134
+    - pin: D13
+      x: 511
+      y: 134
+    - pin: D14
+      x: 393
+      y: 134
+    - pin: D15
+      x: 276
+      y: 134
+    - pin: D16
+      x: 160
+      y: 134
