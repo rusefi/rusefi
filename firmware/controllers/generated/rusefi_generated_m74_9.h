@@ -526,7 +526,7 @@
 #define GAUGE_NAME_FUEL_RUNNING "Fuel: running"
 #define GAUGE_NAME_FUEL_TEMPERATURE "Fuel Temperature"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS AE add fuel ms"
-#define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
+#define GAUGE_NAME_FUEL_TPS_ROC "Fuel: TPS change"
 #define GAUGE_NAME_FUEL_TRIM "Fuel: fuel trim"
 #define GAUGE_NAME_FUEL_TRIM_2 "Fuel: fuel trim 2"
 #define GAUGE_NAME_FUEL_VE "Fuel: VE"
@@ -1146,7 +1146,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1905657542
+#define SIGNATURE_HASH 631548255
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1446,7 +1446,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.12.21.m74_9.1905657542"
+#define TS_SIGNATURE "rusEFI master.2023.12.21.m74_9.631548255"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
