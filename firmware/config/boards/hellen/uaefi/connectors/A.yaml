@@ -13,10 +13,12 @@ pins:
 
   - pin: A3
     function: Power Ground
+    color: black
     type: gnd
 
   - pin: A4
     function: Power Ground
+    color: black
     type: gnd
 
   - pin: A5
@@ -32,10 +34,12 @@ pins:
   - pin: A7
     meta: MM100_IN_VBATT
     class: analog_inputs
+    color: red
     function: Ignition Switch / Battery Voltage Analog Input
     ts_name: ___ Voltage From Key
 
   - pin: A8
+    color: red
     function: +12V From Main Relay
 
 info:

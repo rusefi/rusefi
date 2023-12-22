@@ -15,10 +15,12 @@ pins:
 
   - pin: D3
     function: Sensor +5v Power Feed
+    color: red
     type: 5v
 
   - pin: D4
     function: Sensor +5v Power Feed
+    color: red
     type: 5v
 
   - pin: D5
@@ -60,9 +62,11 @@ pins:
     function: Button input 2
 
   - pin: D11
+    color: black
     function: Sensor ground
 
   - pin: D12
+    color: black
     function: Sensor ground
 
   - pin: D13

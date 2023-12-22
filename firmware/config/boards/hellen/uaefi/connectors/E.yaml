@@ -2,10 +2,11 @@ meta: config/boards/hellen_mm100_meta.h
 
 pins:
   - pin: E1
-    function: 12V output
+    function: WBO Heater Power
+    color: grey
 
   - pin: E3
-    function: WBO heater sensor pin 3
+    function: WBO Heater Control sensor pin 3
     color: white
 
   - pin: E6
