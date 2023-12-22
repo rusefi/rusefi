@@ -29,13 +29,12 @@ static void setIgnitionPins() {
 }
 
 static void setupDefaultSensorInputs() {
-  engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D2;
-
 	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
 	engineConfiguration->tps1_2AdcChannel = MM100_IN_AUX1_ANALOG;
 	engineConfiguration->map.sensor.hwChannel = MM100_IN_MAP1_ANALOG;
 
 	setPPSInputs(MM100_IN_PPS_ANALOG, MM100_IN_AUX2_ANALOG);
+	engineConfiguration->enableAemXSeries = true;
 
 	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
 
@@ -43,7 +42,7 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->triggerInputPins[0] = Gpio::MM100_UART8_TX; // VR2 max9924 is the safer default
 	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D1;
-	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D2;
+	engineConfiguration->camInputs[1] = Gpio::MM100_IN_D2;
 
   engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D3;
 }
