@@ -41,8 +41,11 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
 
-	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_CRANK;
+	engineConfiguration->triggerInputPins[0] = Gpio::MM100_UART8_TX; // VR2 max9924 is the safer default
 	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D1;
+	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D2;
+
+  engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D3;
 }
 
 #include "hellen_leds_100.cpp"

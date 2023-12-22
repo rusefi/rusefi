@@ -28,20 +28,23 @@ pins:
   - pin: C5
     meta: MM100_IN_D1
     class: event_inputs
+    color: green
     ts_name: ___ HALL1
     function: HALL input 1
 
   - pin: C6
     meta: MM100_IN_D2
     class: event_inputs
+    color: blue
     ts_name: ___ HALL2
     function: HALL input 2
 
   - pin: C7
     meta: MM100_IN_D3
     class: event_inputs
+    color: white
     ts_name: ___ HALL3
-    function: HALL input 3
+    function: VSS or HALL input 3
 
   - pin: C8
     function: Power Ground / VR Shield
@@ -85,13 +88,13 @@ pins:
     function: Auxiliary analog input 3
 
   - pin: C16
-    function: VR2+
+    function: VR2+ max9924
     color: blue
 
   - pin: C17
     meta: MM100_UART8_TX
     class: event_inputs
-    ts_name: ___ VR2-/HALL
+    ts_name: ___ VR2-/HALL max9924
     function: VR2-/HALL
     color: white
 
@@ -103,19 +106,16 @@ pins:
 #    ts_name: C15/C16 VR2 Sensor
 
   - pin: C18
+    meta: MM100_UART8_RX
+    type: hall
+    class: event_inputs
     function: VR1+
+    ts_name: ___ VR1+ Discrete
     color: blue
 
   - pin: C19
-    function: VR1-
+    function: VR1- Discrete
     color: white
-
-  - pin: C18C19
-    meta: MM100_UART8_RX
-    class: event_inputs
-    function: VR1 Sensor
-    type: hall
-    ts_name: C18/C19 VR2 Sensor
 
   - pin: C20
     ts_name: ___ EGT-
