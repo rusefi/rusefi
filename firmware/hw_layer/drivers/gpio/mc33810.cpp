@@ -30,8 +30,6 @@
 
 #define DRIVER_NAME				"mc33810"
 
-static bool isDriverThreadStarted = false;
-
 typedef enum {
 	MC33810_DISABLED = 0,
 	MC33810_WAIT_INIT,
@@ -86,6 +84,7 @@ typedef enum {
 /*==========================================================================*/
 
 /* OS */
+static thread_t *mc33810_thread = NULL;
 SEMAPHORE_DECL(mc33810_wake, 10 /* or BOARD_MC33810_COUNT ? */);
 static THD_WORKING_AREA(mc33810_thread_wa, 256);
 
@@ -101,11 +100,9 @@ struct Mc33810 : public GpioChip {
 	int update_output_and_diag();
 
 	int chip_init();
-	int check_comm();
 	void wake_driver();
 
-	int bind_io();
-	bool hasBindedPins = false;
+	int chip_init_data();
 
 	const mc33810_config	*cfg;
 
@@ -200,13 +197,7 @@ int Mc33810::update_output_and_diag()
 
 	/* TODO: lock? */
 
-	ret = check_comm();
- 	if (ret) {
- 	  // do we still have comms?!
- 		return ret;
- 	}
-
-	/* we need to get updates status */
+	/* we need to get updated status */
 	all_status_updated = false;
 
 	/* if any pin is driven over SPI */
@@ -272,21 +263,19 @@ int Mc33810::update_output_and_diag()
 			return ret;
 	}
 
-  alive_cnt++;
+	alive_cnt++;
 	/* TODO: unlock? */
 
 	return ret;
 }
 
-int Mc33810::bind_io() {
-	if (hasBindedPins) {
-		return 0;
-	}
-	hasBindedPins = true;
+int Mc33810::chip_init_data()
+{
+	int ret;
 
 	/* mark pins used */
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
-	int ret = 0;
+	ret = 0;
 	if (cfg->en.port) {
 		ret |= gpio_pin_markUsed(cfg->en.port, cfg->en.pad, DRIVER_NAME " EN");
 		palSetPadMode(cfg->en.port, cfg->en.pad, PAL_MODE_OUTPUT_PUSHPULL);
@@ -300,23 +289,33 @@ int Mc33810::bind_io() {
 		palSetPadMode(cfg->direct_io[n].port, cfg->direct_io[n].pad, PAL_MODE_OUTPUT_PUSHPULL);
 		palClearPort(cfg->direct_io[n].port, PAL_PORT_BIT(cfg->direct_io[n].pad));
 	}
-	return ret;
-}
 
-int Mc33810::check_comm() {
-	/* check SPI communication */
-	/* 0. set echo mode, chip number - don't care */
-	int ret = spi_rw(MC_CMD_SPI_CHECK, NULL);
-	/* 1. check loopback */
-	uint16_t rx;
-	ret |= spi_rw(MC_CMD_READ_REG(REG_REV), &rx);
 	if (ret) {
-		efiPrintf(DRIVER_NAME " first SPI RX failed");
-		return -7;
+		ret = -6;
+		efiPrintf(DRIVER_NAME " error binding pin(s)");
+		goto err_gpios;
 	}
-	if (rx != SPI_CHECK_ACK) {
-		return -2;
+
+	return 0;
+
+err_gpios:
+	/* unmark pins */
+	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
+#if SMART_CHIPS_UNMARK_ON_FAIL
+	if (cfg->en.port) {
+		/* disable and mark unused */
+		palSetPort(cfg->en.port,
+				   PAL_PORT_BIT(cfg->en.pad));
+		gpio_pin_markUnused(cfg->en.port, cfg->en.pad);
 	}
+
+	for (int n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
+		if (cfg->direct_io[n].port) {
+			gpio_pin_markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
+		}
+	}
+#endif
+
 	return ret;
 }
 
@@ -332,17 +331,20 @@ int Mc33810::chip_init()
 
 	init_cnt++;
 
-  ret = bind_io();
-
+	/* check SPI communication */
+	/* 0. set echo mode, chip number - don't care */
+	ret  = spi_rw(MC_CMD_SPI_CHECK, NULL);
+	/* 1. check loopback */
+	ret |= spi_rw(MC_CMD_READ_REG(REG_REV), &rx);
 	if (ret) {
-		ret = -6;
-		efiPrintf(DRIVER_NAME " error binding pin(s)");
-		goto err_gpios;
+		ret = -7;
+		efiPrintf(DRIVER_NAME " first SPI RX failed");
+		goto err_exit;
 	}
-
-	ret = check_comm();
-	if (ret) {
-		goto err_gpios;
+	if (rx != SPI_CHECK_ACK) {
+		efiPrintf(DRIVER_NAME " spi loopback test failed [%d]", rx);
+		ret = -2;
+		goto err_exit;
 	}
 
 	/* 2. read revision */
@@ -350,12 +352,12 @@ int Mc33810::chip_init()
 	if (ret) {
 		ret = -8;
 		efiPrintf(DRIVER_NAME " revision failed");
-		goto err_gpios;
+		goto err_exit;
 	}
 	if (rx & BIT(14)) {
 		efiPrintf(DRIVER_NAME " spi COR status");
 		ret = -3;
-		goto err_gpios;
+		goto err_exit;
 	}
 
 	/* TODO:
@@ -379,7 +381,7 @@ int Mc33810::chip_init()
 		ret = spi_rw(MC_CMD_SPARK(spark_settings), NULL);
 		if (ret) {
 			efiPrintf(DRIVER_NAME " cmd spark");
-			goto err_gpios;
+			goto err_exit;
 		}
 
 		/* set IGN/GP outputs to GP mode - to be fixed!
@@ -387,7 +389,7 @@ int Mc33810::chip_init()
 		ret = spi_rw(MC_CMD_MODE_SELECT((0xf << 8) | (1 << 6)) , NULL);
 		if (ret) {
 			efiPrintf(DRIVER_NAME " cmd mode select");
-			goto err_gpios;
+			goto err_exit;
 		}
 	}
 
@@ -399,24 +401,7 @@ int Mc33810::chip_init()
 
 	return 0;
 
-err_gpios:
-	/* unmark pins */
-	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
-#if SMART_CHIPS_UNMARK_ON_FAIL
-	if (cfg->en.port) {
-		/* disable and mark unused */
-		palSetPort(cfg->en.port,
-				   PAL_PORT_BIT(cfg->en.pad));
-		gpio_pin_markUnused(cfg->en.port, cfg->en.pad);
-	}
-
-	for (int n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
-		if (cfg->direct_io[n].port) {
-			gpio_pin_markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
-		}
-	}
-#endif
-
+err_exit:
 	return ret;
 }
 
@@ -463,8 +448,8 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 			auto chip = &chips[i];
 
 			if (i == 0) {
-			  engine->engineState.smartChipRestartCounter = chip->init_cnt;
-			  engine->engineState.smartChipAliveCounter = chip->alive_cnt;
+					engine->engineState.smartChipRestartCounter = chip->init_cnt;
+					engine->engineState.smartChipAliveCounter = chip->alive_cnt;
 			}
 
 			if (chip->need_init) {
@@ -485,7 +470,7 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 			/* TODO: implement indirect driven gpios */
 			int ret = chip->update_output_and_diag();
 			if (ret) {
-				chip->drv_state = MC33810_FAILED;
+				/* set state to MC33810_FAILED? */
 			}
 		}
 	}
@@ -503,10 +488,6 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 int Mc33810::writePad(size_t pin, int value)
 {
-#if MC33810_VERBOSE
-  efiPrintf(DRIVER_NAME "writePad [%x][%x]", pin, value);
-#endif
-
 	if (pin >= MC33810_OUTPUTS) {
 		return -12;
 	}
@@ -537,9 +518,6 @@ int Mc33810::writePad(size_t pin, int value)
 						 PAL_PORT_BIT(cfg->direct_io[pin].pad));
 		}
 	} else {
-#if MC33810_VERBOSE
-  efiPrintf(DRIVER_NAME "writePad wake");
-#endif
 		wake_driver();
 	}
 
@@ -587,12 +565,25 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 }
 
 int Mc33810::init() {
+	int ret;
+
+	/* check for multiple init */
+	if (drv_state != MC33810_WAIT_INIT)
+		return -1;
+
+	ret = chip_init_data();
+	if (ret)
+		return ret;
+
+	/* force init from driver thread */
 	need_init = true;
 
-	if (!isDriverThreadStarted) {
-		chThdCreateStatic(mc33810_thread_wa, sizeof(mc33810_thread_wa),
-						  PRIO_GPIOCHIP, mc33810_driver_thread, nullptr);
-		isDriverThreadStarted = true;
+	/* instance is ready */
+	drv_state = MC33810_READY;
+
+	if (!mc33810_thread) {
+		mc33810_thread = chThdCreateStatic(mc33810_thread_wa, sizeof(mc33810_thread_wa),
+										   PRIO_GPIOCHIP, mc33810_driver_thread, nullptr);
 	}
 
 	return 0;
