@@ -52,14 +52,19 @@ InjectorNonlinearMode InjectorModel::getNonlinearMode() const {
 
 expected<float> InjectorModel::getFuelDifferentialPressure() const {
 	auto map = Sensor::get(SensorType::Map);
-	float baro = Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
+	auto baro = Sensor::get(SensorType::BarometricPressure);
+
+	float baroKpa = baro.Value;
+	if (!baro || baro.Value > 120 || baro.Value < 50) {
+		baroKpa = 101.325f;
+	}
 
 	switch (engineConfiguration->injectorCompensationMode) {
 		case ICM_FixedRailPressure:
 			// Add barometric pressure, as "fixed" really means "fixed pressure above atmosphere"
 			return
 				  engineConfiguration->fuelReferencePressure
-				+ baro
+				+ baroKpa
 				- map.value_or(101.325);
 		case ICM_SensedRailPressure: {
 			if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
@@ -83,7 +88,7 @@ expected<float> InjectorModel::getFuelDifferentialPressure() const {
 						return unexpected;
 					}
 
-					return fps.Value + baro - map.Value;
+					return fps.Value + baroKpa - map.Value;
 				case FPM_Absolute:
 				default:
 					if (!map) {
