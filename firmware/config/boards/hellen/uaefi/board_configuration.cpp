@@ -50,7 +50,7 @@ static void setupDefaultSensorInputs() {
 #include "hellen_leds_100.cpp"
 
 void setBoardConfigOverrides() {
-  chThdSleepMilliseconds(5); // experiment for https://github.com/andreika-git/hellen-one/issues/353
+//  chThdSleepMilliseconds(5); // experiment for https://github.com/andreika-git/hellen-one/issues/353
 	setHellenMegaEnPin();
 	setHellenVbatt();
 
