@@ -17,7 +17,7 @@ dependencies {
     api project(':models')
     api project(':core_io')
 
-    implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.9.2'
+    implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.10.3'
     implementation global_libs.jcip
     implementation project(':logging')
 
