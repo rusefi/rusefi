@@ -4,12 +4,14 @@ pins:
   - pin: D1
     meta: MM100_IN_O2S_ANALOG
     class: analog_inputs
+    color: orange
     ts_name: ___ AUX1
     function: Auxiliary analog input 1
 
   - pin: D2
     meta: MM100_IN_CRANK
     class: switch_inputs
+    color: yellow
     ts_name: ___ BUTTON1
     function: Button input 1
 
@@ -27,6 +29,7 @@ pins:
     meta: MM100_IN_VSS
     class: event_inputs
     ts_name: ___ FLEX
+    color: orange
     function: Flex input
 
   - pin: D6
@@ -58,6 +61,7 @@ pins:
   - pin: D10
     meta: MM100_IN_CAM
     class: switch_inputs
+    color: green
     ts_name: ___ BUTTON2
     function: Button input 2
 
@@ -78,6 +82,7 @@ pins:
     color: green
 
   - pin: D14
+    color: yellow
     function: Knock Input
 
   - pin: D15

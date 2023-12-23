@@ -14,6 +14,7 @@ pins:
   - pin: C3
     meta: MM100_IN_O2S2_ANALOG
     class: analog_inputs
+    color: yellow
     ts_name: ___ AUX2
     function: Auxiliary analog input 2
 
@@ -54,6 +55,7 @@ pins:
   - pin: C9
     meta: MM100_IN_D4
     class: switch_inputs
+    color: grey
     ts_name: ___ BUTTON3
     function: Button input 3
 
@@ -83,6 +85,7 @@ pins:
 
   - pin: C15
     meta: MM100_IN_AUX3_ANALOG
+    color: grey
     class: analog_inputs
     ts_name: ___ AUX3
     function: Auxiliary analog input 3
