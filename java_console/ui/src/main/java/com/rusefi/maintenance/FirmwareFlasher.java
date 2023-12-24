@@ -2,6 +2,7 @@ package com.rusefi.maintenance;
 
 import com.rusefi.Launcher;
 import com.rusefi.core.io.BundleUtil;
+import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +58,7 @@ public class FirmwareFlasher {
         return OPENOCD_EXE + " -f openocd/" + cfg;
     }
 
-    protected static String executeOpenOCDCommand(String command, StatusWindow wnd) {
+    protected static String executeOpenOCDCommand(String command, UpdateOperationCallbacks wnd) {
         return ExecHelper.executeCommand(OPENOCD_BINARY_LOCATION,
                 OPENOCD_BINARY_LOCATION + File.separator + command,
                 OPENOCD_EXE, wnd);

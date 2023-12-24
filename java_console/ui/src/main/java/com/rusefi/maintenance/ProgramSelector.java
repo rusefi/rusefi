@@ -145,7 +145,7 @@ public class ProgramSelector {
         boolean hasDfuDevice = currentHardware.isDfuFound();
 
         mode.removeAllItems();
-        if (IS_WIN) {
+        if (FileLog.isWindows()) {
             if (hasSerialPorts) {
                 mode.addItem(AUTO_DFU);
             }

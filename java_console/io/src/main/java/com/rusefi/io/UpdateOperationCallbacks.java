@@ -2,6 +2,11 @@ package com.rusefi.io;
 
 public interface UpdateOperationCallbacks {
     void log(String message);
+
+    default void append(String message) {
+      log(message);
+    }
+
     void done();
     void error();
 

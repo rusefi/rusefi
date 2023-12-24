@@ -96,7 +96,7 @@ public class DfuFlasher {
                 }
             });
             if (signature.get() == null) {
-                wnd.append("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
+              callbacks.append("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
                 callbacks.error();
                 return null;
@@ -114,11 +114,11 @@ public class DfuFlasher {
                 return null;
             }).getSerialPort();
             if (port == null) {
-                wnd.append("*** ERROR *** rusEFI serial port not detected");
-                wnd.setErrorState();
+                callbacks.append("*** ERROR *** rusEFI serial port not detected");
+                callbacks.error();
                 return null;
             } else {
-                wnd.append("Detected rusEFI on " + port + "\n");
+                callbacks.append("Detected rusEFI on " + port + "\n");
             }
         }
         return isSignatureValidated;
@@ -146,7 +146,7 @@ public class DfuFlasher {
         boolean driverIsHappy = detectSTM32BootloaderDriverState(callbacks);
         if (!driverIsHappy) {
             callbacks.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
-            callbacks.setErrorState();
+            callbacks.error();
             return;
         }
 
@@ -172,11 +172,11 @@ public class DfuFlasher {
             callbacks.done();
         } else if (stdout.toString().contains("Target device not found")) {
             callbacks.append("ERROR: Device not connected or STM32 Bootloader driver not installed?");
-            appendWindowsVersion(wnd);
+            appendWindowsVersion(callbacks);
             callbacks.append("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
             callbacks.append("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
-            appendDeviceReport(wnd);
-            wnd.setErrorState();
+            appendDeviceReport(callbacks);
+            callbacks.error();
         } else {
             appendWindowsVersion(callbacks);
             appendDeviceReport(callbacks);
@@ -189,10 +189,10 @@ public class DfuFlasher {
         return detectDevice(callbacks, WMIC_DFU_QUERY_COMMAND, "ConfigManagerErrorCode=0");
     }
 
-    public static boolean detectStLink(StatusConsumer wnd) {
+    public static boolean detectStLink(UpdateOperationCallbacks wnd) {
         return detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink");
     }
-    public static boolean detectPcan(StatusConsumer wnd) {
+    public static boolean detectPcan(UpdateOperationCallbacks wnd) {
         return detectDevice(wnd, WMIC_PCAN_QUERY_COMMAND, "PCAN");
     }
 

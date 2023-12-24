@@ -17,7 +17,7 @@ public enum SerialPortScanner {
 
     private volatile boolean isRunning = true;
 
-    private static final boolean SHOW_SOCKETCAN = isLinux();
+    private static final boolean SHOW_SOCKETCAN = FileLog.isLinux();
 
     static final String AUTO_SERIAL = "Auto Serial";
 
@@ -58,9 +58,9 @@ public enum SerialPortScanner {
 
         if (includeSlowLookup) {
             ports.addAll(TcpConnector.getAvailablePorts());
-          createStatusWindow("DFU update")
-            stLinkConnected = DfuFlasher.detectStLink(StatusConsumer.VOID);
-            PCANConnected = DfuFlasher.detectPcan(StatusConsumer.VOID);
+            dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
+            stLinkConnected = DfuFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
+            PCANConnected = DfuFlasher.detectPcan(UpdateOperationCallbacks.DUMMY);
         } else {
             dfuConnected = false;
             stLinkConnected = false;

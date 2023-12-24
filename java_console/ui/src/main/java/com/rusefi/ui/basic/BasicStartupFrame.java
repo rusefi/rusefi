@@ -5,6 +5,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.maintenance.UpdateStatusWindow;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.UiUtils;
@@ -33,7 +34,7 @@ public class BasicStartupFrame {
             panel.add(ToolButtons.createShowDeviceManagerButton());
 
             JButton update = ProgramSelector.createUpdateFirmwareButton();
-            update.addActionListener(e -> DfuFlasher.doAutoDfu(PortDetector.AUTO, update));
+            update.addActionListener(e -> DfuFlasher.doAutoDfu(update, PortDetector.AUTO, new UpdateStatusWindow("Update")));
             panel.add(update);
         } else {
             panel.add(new JLabel("Sorry only works on Windows"));

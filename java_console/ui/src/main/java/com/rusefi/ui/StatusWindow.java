@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +18,7 @@ import static com.devexperts.logging.Logging.getLogging;
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/7/2015
  */
-public class StatusWindow implements StatusConsumer {
+public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
     private static final Logging log = getLogging(StatusWindow.class);
 
     private static final Color LIGHT_RED = new Color(255, 102, 102);
@@ -60,7 +61,24 @@ public class StatusWindow implements StatusConsumer {
         copyContentToClipboard();
     }
 
-    public void setSuccessState() {
+  @Override
+  public void log(String message) {
+    append(message);
+
+  }
+
+  @Override
+  public void done() {
+    setSuccessState();
+
+  }
+
+  @Override
+  public void error() {
+    setErrorState();
+  }
+
+  public void setSuccessState() {
         logTextArea.setBackground(LIGHT_GREEN);
     }
 
