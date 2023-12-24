@@ -25,9 +25,12 @@ jobs:
           if ! [[ -z "${{ inputs.token }}" ]]; then
             echo "Got token input"
             echo "TOKEN=${{ inputs.token }}" >> "$GITHUB_ENV"
-          else
+          elif ! [[ -z "${{ secrets.MY_REPO_PAT }}" ]]; then
             echo "Using current secret"
             echo "TOKEN=${{ secrets.MY_REPO_PAT }}" >> "$GITHUB_ENV"
+          else
+            echo "Using current token"
+            echo "TOKEN=${{ github.token }}" >> "$GITHUB_ENV"
           fi
 
       - name: Echo
