@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * @author Andrey Belomutskiy
@@ -128,6 +129,65 @@ public enum SerialPortScanner {
         }
     }
 
+    private static List<PortResult> inspectPorts(final List<String> ports) {
+        final Object resultsLock = new Object();
+        final Map<String, PortResult> results = new HashMap<>();
+
+        // When the last port is found, we need to cancel the timeout
+        final Thread callingThread = Thread.currentThread();
+
+        // One thread per port to check
+        final List<Thread> threads = ports.stream().map(p -> {
+            Thread t = new Thread(() -> {
+                PortResult r = inspectPort(p);
+
+                // Record the result under lock
+                synchronized (resultsLock) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        // If interrupted, don't try to write our result
+                        return;
+                    }
+
+                    results.put(p, r);
+
+                    if (results.size() == ports.size()) {
+                        // We now have all the results - interrupt the calling thread
+                        callingThread.interrupt();
+                    }
+                }
+            });
+
+            t.setDaemon(true);
+            t.start();
+
+            return t;
+        }).collect(Collectors.toList());
+
+        // Give everyone a chance to finish
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // We got interrupted because the last port got found, nothing to do
+        }
+
+        // Interrupt all threads under lock to ensure no more objects are added to results
+        synchronized (resultsLock) {
+            for (Thread t : threads) {
+                t.interrupt();
+            }
+        }
+
+        // Now check that we got everything - if any timed out, register them as unknown
+        for (String port : ports) {
+            if (!results.containsKey(port)) {
+                log.info("Port " + port + " timed out, adding as Unknown.");
+                results.put(port, new PortResult(port, SerialPortType.Unknown));
+            }
+        }
+
+        return new ArrayList<>(results.values());
+    }
+
     private final static Map<String, PortResult> portCache = new HashMap<>();
 
     /**
@@ -139,6 +199,8 @@ public enum SerialPortScanner {
 
         String[] serialPorts = LinkManager.getCommPorts();
 
+        List<String> portsToInspect = new ArrayList<>();
+
         for (String serialPort : serialPorts) {
             // First, check the port cache
             if (portCache.containsKey(serialPort)) {
@@ -147,14 +209,15 @@ public enum SerialPortScanner {
 
                 ports.add(cached);
             } else {
-                // This one isn't in the cache, probe it to determine what it is
-                PortResult result = inspectPort(serialPort);
-
-                log.info("Port " + serialPort + " detected as: " + result.type.friendlyString);
-
-                ports.add(result);
-                portCache.put(serialPort, result);
+                portsToInspect.add(serialPort);
             }
+        }
+
+        for (PortResult p : inspectPorts(portsToInspect)) {
+            log.info("Port " + p.port + " detected as: " + p.type.friendlyString);
+
+            ports.add(p);
+            portCache.put(p.port, p);
         }
 
         {
