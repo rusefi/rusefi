@@ -105,6 +105,8 @@ struct Mc33810 : public GpioChip {
 	int chip_init();
 	void wake_driver();
 
+	int bind_io();
+	bool hasBindedPins = false;
 
 	const mc33810_config	*cfg;
 	/* cached output state - state last send to chip */
@@ -269,21 +271,15 @@ int Mc33810::update_output_and_diag()
 	return ret;
 }
 
-/**
- * @brief MC33810 chip init.
- * @details Checks communication. Check chip presence.
- */
-
-int Mc33810::chip_init()
-{
-	int ret;
-	uint16_t rx;
-
-	init_cnt++;
+int Mc33810::bind_io() {
+  if (hasBindedPins) {
+    return 0;
+  }
+	hasBindedPins = true;
 
 	/* mark pins used */
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
-	ret = 0;
+	int ret = 0;
 	if (cfg->en.port) {
 		ret |= gpio_pin_markUsed(cfg->en.port, cfg->en.pad, DRIVER_NAME " EN");
 		palSetPadMode(cfg->en.port, cfg->en.pad, PAL_MODE_OUTPUT_PUSHPULL);
@@ -297,6 +293,22 @@ int Mc33810::chip_init()
 		palSetPadMode(cfg->direct_io[n].port, cfg->direct_io[n].pad, PAL_MODE_OUTPUT_PUSHPULL);
 		palClearPort(cfg->direct_io[n].port, PAL_PORT_BIT(cfg->direct_io[n].pad));
 	}
+	return ret;
+}
+
+/**
+ * @brief MC33810 chip init.
+ * @details Checks communication. Check chip presence.
+ */
+
+int Mc33810::chip_init()
+{
+	int ret;
+	uint16_t rx;
+
+	init_cnt++;
+
+  ret = bind_io();
 
 	if (ret) {
 		ret = -6;
