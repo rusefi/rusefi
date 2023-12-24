@@ -93,8 +93,12 @@ cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 cp firmware/deliver/rusefi.bin $FOLDER
 
 cp firmware/deliver/rusefi.dfu $FOLDER
-# just for now - DFU work in progress
-cp firmware/deliver/rusefi.hex $FOLDER
+
+if [ -e firmware/deliver/rusefi.hex ]; then
+ # just for now - DFU work in progress
+ cp firmware/deliver/rusefi.hex $FOLDER
+fi
+
 if [ -e firmware/deliver/rusefi.elf ]; then
  # ELF is useful for debug bundles
  cp firmware/deliver/rusefi.elf $FOLDER
