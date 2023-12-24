@@ -100,8 +100,9 @@ public enum SerialPortScanner {
     public void addListener(Listener listener) {
         boolean shouldStart = listeners.isEmpty();
         listeners.add(listener);
-        if (shouldStart)
+        if (shouldStart) {
             startTimer();
+        }
     }
 
     private final static Map<String, PortResult> portCache = new HashMap<>();
@@ -187,13 +188,16 @@ public enum SerialPortScanner {
 
         boolean isListUpdated;
         AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected);
+
         synchronized (lock) {
             isListUpdated = !currentHardware.equals(knownHardware);
             knownHardware = currentHardware;
         }
+
         if (isListUpdated) {
-            for (Listener listener : listeners)
+            for (Listener listener : listeners) {
                 listener.onChange(currentHardware);
+            }
         }
     }
 
