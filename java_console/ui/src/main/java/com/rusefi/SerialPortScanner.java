@@ -157,6 +157,7 @@ public enum SerialPortScanner {
                 }
             });
 
+            t.setName("SerialPortScanner inspectPort " + p);
             t.setDaemon(true);
             t.start();
 
