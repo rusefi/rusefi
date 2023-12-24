@@ -105,6 +105,29 @@ public enum SerialPortScanner {
         }
     }
 
+    private static PortResult inspectPort(String serialPort) {
+        log.info("Determining type of serial port: " + serialPort);
+
+        boolean isOpenblt = isPortOpenblt(serialPort);
+        log.info("Port " + serialPort + (isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
+        if (isOpenblt) {
+            return new PortResult(serialPort, SerialPortType.OpenBlt);
+        } else {
+            // See if this looks like an ECU
+            String signature = getEcuSignature(serialPort);
+            boolean isEcu = signature != null && signature.contains("FOME");
+            log.info("Port " + serialPort + (isEcu ? " looks like" : " does not look like") + " a FOME ECU");
+            if (isEcu) {
+                boolean ecuHasOpenblt = fomeEcuHasOpenblt(serialPort);
+                log.info("FOME ECU at " + serialPort + (ecuHasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
+                return new PortResult(serialPort, ecuHasOpenblt ? SerialPortType.FomeEcuWithOpenblt : SerialPortType.FomeEcu, signature);
+            } else {
+                // Dunno what this is, leave it in the list anyway
+                return new PortResult(serialPort, SerialPortType.Unknown);
+            }
+        }
+    }
+
     private final static Map<String, PortResult> portCache = new HashMap<>();
 
     /**
@@ -125,28 +148,7 @@ public enum SerialPortScanner {
                 ports.add(cached);
             } else {
                 // This one isn't in the cache, probe it to determine what it is
-                PortResult result;
-
-                log.info("Determining type of serial port: " + serialPort);
-
-                boolean isOpenblt = isPortOpenblt(serialPort);
-                log.info("Port " + serialPort + (isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
-                if (isOpenblt) {
-                    result = new PortResult(serialPort, SerialPortType.OpenBlt);
-                } else {
-                    // See if this looks like an ECU
-                    String signature = getEcuSignature(serialPort);
-                    boolean isEcu = signature != null && signature.contains("FOME");
-                    log.info("Port " + serialPort + (isEcu ? " looks like" : " does not look like") + " a FOME ECU");
-                    if (isEcu) {
-                        boolean ecuHasOpenblt = fomeEcuHasOpenblt(serialPort);
-                        log.info("FOME ECU at " + serialPort + (ecuHasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
-                        result = new PortResult(serialPort, ecuHasOpenblt ? SerialPortType.FomeEcuWithOpenblt : SerialPortType.FomeEcu, signature);
-                    } else {
-                        // Dunno what this is, leave it in the list anyway
-                        result = new PortResult(serialPort, SerialPortType.Unknown);
-                    }
-                }
+                PortResult result = inspectPort(serialPort);
 
                 log.info("Port " + serialPort + " detected as: " + result.type.friendlyString);
 
