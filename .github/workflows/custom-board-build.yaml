@@ -10,12 +10,26 @@ on:
       shortBoardName:
         required: true
         type: string
+      token:
+        description: 'Token for accessing private repos'
+        required: false
+        type: string
 
 jobs:
   create-board:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Token
+        run: |
+          if ! [[ -z "${{ inputs.token }}" ]]; then
+            echo "Got token input"
+            echo "TOKEN=${{ inputs.token }}" >> "$GITHUB_ENV"
+          else
+            echo "Using current secret"
+            echo "TOKEN=${{ secrets.MY_REPO_PAT }}" >> "$GITHUB_ENV"
+          fi
+
       - name: Echo
         run: |
           echo "shortBoardName=${{inputs.shortBoardName}}"
@@ -30,7 +44,14 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          token: ${{ env.TOKEN }}
           submodules: recursive
+
+      - name: Invoking Post-Checkout Action
+        run: |
+          if [ -f .github/workflows/actions/post-checkout.sh ]; then
+            bash .github/workflows/actions/post-checkout.sh
+          fi
 
       # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
       - name: Download & Install GCC
@@ -66,7 +87,11 @@ jobs:
       - name: ext/rusefi Status
         working-directory: ext/rusefi
         run: |
-          git status
+          if [ -d .git ]; then
+            git status
+          else
+            echo Not a repository
+          fi
 
       - name: Push Config
         run: |
