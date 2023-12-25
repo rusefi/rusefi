@@ -46,9 +46,13 @@ static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
 
 static void setPin(const CANRxFrame& frame, int value) {
 		int outputIndex = frame.data8[2];
-		if (outputIndex >= getBoardMetaOutputsCount())
+		if (outputIndex >= getBoardMetaOutputsCount()) {
+		  criticalError("QC pin index %d", outputIndex);
 			return;
-		Gpio pin = getBoardMetaOutputs()[outputIndex];
+	  }
+	  Gpio* boardOutputs = getBoardMetaOutputs();
+	  criticalAssertVoid(boardOutputs != nullptr, "outputs not defined");
+		Gpio pin = boardOutputs[outputIndex];
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 
         int hwIndex = brainPin_to_index(pin);
