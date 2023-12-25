@@ -49,27 +49,34 @@ public class TuneCanTool {
 
         RootHolder.ROOT = "../firmware/";
 
-        process(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "BK2");
-//        process(1502, Fields.engine_type_e_HYUNDAI_PB, "PB");
-//        process(1490, Fields.engine_type_e_MRE_M111, "m111-alex");
+        processREOtune(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "BK2");
+//        processREOtune(1502, Fields.engine_type_e_HYUNDAI_PB, "PB");
+//        processREOtune(1490, Fields.engine_type_e_MRE_M111, "m111-alex");
 //        handle("Mitsubicha", 1258);
 //        handle("Scion-1NZ-FE", 1448);
 //        handle("4g93", 1425);
 //        handle("BMW-mtmotorsport", 1479);
     }
 
-    private static void process(int tuneId, int engineType, String key) throws JAXBException, IOException {
+  /**
+   * @see WriteSimulatorConfiguration
+   */
+    private static void processREOtune(int tuneId, int engineType, String key) throws JAXBException, IOException {
+        // compare specific internet tune to total global default
         handle(key, tuneId, TuneCanTool.DEFAULT_TUNE);
+        // compare same internet tune to default tune of specified engine type
         handle(key + "-diff", tuneId, SIMULATED_PREFIX + "_" + engineType + SIMULATED_SUFFIX);
     }
 
     private static void handle(String vehicleName, int tuneId, String currentTuneFileName) throws JAXBException, IOException {
-        Msq currentTune = Msq.readTune(currentTuneFileName);
         String localFileName = workingFolder + File.separator + tuneId + ".msq";
         String url = "https://rusefi.com/online/view.php?msq=" + tuneId;
 
         downloadTune(tuneId, localFileName);
 
+      writeDiffBetweenLocalTuneFileAndDefaultTune(vehicleName, currentTuneFileName, localFileName, url);
+    }
+    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String currentTuneFileName, String localFileName, String cannedComment) throws JAXBException, IOException {
         String reportsOutputFolder = "tune_reports";
         new File(reportsOutputFolder).mkdir();
 
@@ -77,6 +84,7 @@ public class TuneCanTool {
 
         StringBuilder methods = new StringBuilder();
 
+        Msq currentTune = Msq.readTune(currentTuneFileName);
         StringBuilder sb = TuneCanTool.getTunePatch(currentTune, custom, ini, currentTuneFileName, methods);
 
         String fileNameMethods = reportsOutputFolder + "/" + vehicleName + "_methods.md";
@@ -89,7 +97,7 @@ public class TuneCanTool {
 
         try (FileWriter w = new FileWriter(fileName)) {
             w.append("# " + vehicleName + "\n\n");
-            w.append("// canned tune " + url + "\n\n");
+            w.append("// canned tune " + cannedComment + "\n\n");
 
             w.append("```\n");
             w.append(sb);
@@ -97,7 +105,7 @@ public class TuneCanTool {
         }
     }
 
-    private static void downloadTune(int tuneId, String localFileName) throws IOException {
+  private static void downloadTune(int tuneId, String localFileName) throws IOException {
         new File(workingFolder).mkdirs();
         String downloadUrl = "https://rusefi.com/online/download.php?msq=" + tuneId;
         InputStream in = new URL(downloadUrl).openStream();
