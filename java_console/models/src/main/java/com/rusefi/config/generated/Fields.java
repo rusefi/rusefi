@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Dec 25 00:31:15 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Dec 25 06:51:03 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -337,6 +337,7 @@ public class Fields {
 	public static final int engine_type_e_FRANKENSO_TEST_33810 = 59;
 	public static final int engine_type_e_FUEL_BENCH = 15;
 	public static final int engine_type_e_GY6_139QMB = 8;
+	public static final int engine_type_e_HARLEY = 6;
 	public static final int engine_type_e_HELLEN_121_NISSAN_4_CYL = 84;
 	public static final int engine_type_e_HELLEN_121_NISSAN_6_CYL = 72;
 	public static final int engine_type_e_HELLEN_121_NISSAN_8_CYL = 85;
@@ -387,7 +388,6 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
 	public static final int engine_type_e_PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9;
 	public static final int engine_type_e_PROTEUS_GM_LS_4 = 27;
-	public static final int engine_type_e_PROTEUS_HARLEY = 6;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
 	public static final int engine_type_e_PROTEUS_M111 = 17;
@@ -1083,7 +1083,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 722765286;
+	public static final int SIGNATURE_HASH = 554101673;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1312,7 +1312,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.12.25.f407-discovery.722765286";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.12.25.f407-discovery.554101673";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
