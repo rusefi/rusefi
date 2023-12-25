@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "proteus_meta.h"
+#include "harley_canned.cpp"
 
 static void harleyEngine() {
     engineConfiguration->cylindersCount = 2;
     engineConfiguration->firingOrder = FO_1_2;
     strcpy(engineConfiguration->engineMake, "Harley");
 }
-
 
 /**
  * HARLEY

@@ -36,6 +36,11 @@ void setMaverickX3() {
     engineConfiguration->fanOffTemperature = 82;
     engineConfiguration->disableFan1WhenStopped = true;
     engineConfiguration->disableFan2WhenStopped = true;
+    engineConfiguration->fan2ExtraIdle = 0;
+    engineConfiguration->idlePidDeactivationTpsThreshold = 2;
+    engineConfiguration->useSeparateAdvanceForIdle = true;
+    engineConfiguration->vvtControlMinRpm = 2000;
+    engineConfiguration->overrideCrankingIacSetting = true;
 
     engineConfiguration->startButtonSuppressOnStartUpMs = 1000;
     engineConfiguration->vssToothCount = 10;
@@ -53,6 +58,11 @@ void setMaverickX3() {
 	cannedidleAdvance();
 	cannedveRpmBins();
 	cannedveLoadBins();
+	cannedboostRpmBins();
+	cannedpedalToTpsRpmBins();
+		cannedcltIdleCorr();
+  	cannedcltCrankingCorr();
+
 
 
 

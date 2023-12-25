@@ -38,3 +38,23 @@ static void cannedveLoadBins() {
 	static const float hardCodedveLoadBins[16] = {15.0, 27.0, 33.0, 45.0, 57.0, 69.0, 81.0, 93.0, 105.0, 129.0, 157.0, 186.0, 214.0, 243.0, 271.0, 300.0};
 	copyArray(config->veLoadBins, hardCodedveLoadBins);
 }
+
+static void cannedboostRpmBins() {
+	static const float hardCodedboostRpmBins[8] = {0.0, 1100.0, 2300.0, 3400.0, 4600.0, 5700.0, 6900.0, 8000.0};
+	copyArray(config->boostRpmBins, hardCodedboostRpmBins);
+}
+
+static void cannedpedalToTpsRpmBins() {
+	static const float hardCodedpedalToTpsRpmBins[8] = {0.0, 1100.0, 2300.0, 3400.0, 4600.0, 5700.0, 6900.0, 8000.0};
+	copyArray(config->pedalToTpsRpmBins, hardCodedpedalToTpsRpmBins);
+}
+
+static void cannedcltIdleCorr() {
+	static const float hardCodedcltIdleCorr[16] = {1.1, 1.1, 0.9333, 0.9333, 0.9333, 0.9333, 0.9333, 0.9333, 0.9333, 0.8333, 0.7667, 0.65, 0.6, 0.6, 0.6, 0.6};
+	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
+}
+
+static void cannedcltCrankingCorr() {
+	static const float hardCodedcltCrankingCorr[8] = {1.0, 1.0, 1.0, 0.7, 0.7, 0.7, 0.7, 0.7};
+	copyArray(config->cltCrankingCorr, hardCodedcltCrankingCorr);
+}
