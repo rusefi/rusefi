@@ -30,7 +30,7 @@
 					<Organization>Single</Organization>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x20000000" name="SRAM" occurence="0x1" size="0x1FF8"/>
+							<Parameters address="0x20000000" name="SRAM" occurrence="0x1" size="0x1FF8"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -49,10 +49,10 @@
 					<Parameters address="0x08000000" name=" 64 Kbytes Embedded Flash" size="0x10000"/>
 					<Description/>
 					<Organization>Single</Organization>
-					<Allignement>0x4</Allignement>
+					<Alignment>0x4</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x40" size="0x400"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x40" size="0x400"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -187,7 +187,7 @@
 							<Parameters address="0x1FFFF808" name="WRP" size="0x4"/>
 							<AssignedBits>
 								<Bit>
-									<Name>nWRP0</Name>
+									<Name>WRP bit0</Name>
 									<Description/>
 									<BitOffset>0x0</BitOffset>
 									<BitWidth>0x8</BitWidth>
@@ -198,7 +198,7 @@
 									</Values>
 								</Bit>
 								<Bit>
-									<Name>nWRP8</Name>
+									<Name>nWRP bit8</Name>
 									<Description/>
 									<BitOffset>0x10</BitOffset>
 									<BitWidth>0x8</BitWidth>

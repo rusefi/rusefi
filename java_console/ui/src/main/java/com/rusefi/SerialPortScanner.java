@@ -130,6 +130,10 @@ public enum SerialPortScanner {
     }
 
     private static List<PortResult> inspectPorts(final List<String> ports) {
+        if (ports.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         final Object resultsLock = new Object();
         final Map<String, PortResult> results = new HashMap<>();
 
@@ -196,7 +200,6 @@ public enum SerialPortScanner {
      */
     private void findAllAvailablePorts(boolean includeSlowLookup) {
         List<PortResult> ports = new ArrayList<>();
-        boolean dfuConnected;
 
         String[] serialPorts = LinkManager.getCommPorts();
 
@@ -246,11 +249,9 @@ public enum SerialPortScanner {
             for (String tcpPort : TcpConnector.getAvailablePorts()) {
                 ports.add(new PortResult(tcpPort, SerialPortType.FomeEcu));
             }
-
-            dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
-        } else {
-            dfuConnected = false;
         }
+
+        boolean dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
 
         boolean isListUpdated;
         AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected);

@@ -63,7 +63,7 @@
 					<Organization>Single</Organization>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x24000000" name="SRAM" occurence="0x1" size="0x100000"/>
+							<Parameters address="0x24000000" name="SRAM" occurrence="0x1" size="0x100000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -82,15 +82,15 @@
 					<Parameters address="0x08000000" name="2 MBytes Dual Bank Embedded Flash" size="0x200000"/>
 					<Description/>
 					<Organization>Dual</Organization>
-					<Allignement>0x20</Allignement>
+					<Alignment>0x20</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x80" size="0x2000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x80" size="0x2000"/>
 						</Field>
 					</Bank>
 					<Bank name="Bank 2">
 						<Field>
-							<Parameters address="0x08100000" name="sector128" occurence="0x80" size="0x2000"/>
+							<Parameters address="0x08100000" name="sector128" occurrence="0x80" size="0x2000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -99,15 +99,15 @@
 					<Parameters address="0x08000000" name="1 MBytes Dual Bank Embedded Flash" size="0x200000"/>
 					<Description/>
 					<Organization>Dual</Organization>
-					<Allignement>0x20</Allignement>
+					<Alignment>0x20</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x80" size="0x2000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x80" size="0x2000"/>
 						</Field>
 					</Bank>
 					<Bank name="Bank 2">
 						<Field>
-							<Parameters address="0x08080000" name="sector64" occurence="0x80" size="0x2000"/>
+							<Parameters address="0x08080000" name="sector64" occurrence="0x80" size="0x2000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -124,10 +124,10 @@
 					<Parameters address="0x08FFF000" name=" 1 KBytes Data OTP" size="0x400"/>
 					<Description/>
 					<Organization>Single</Organization>
-					<Allignement>0x20</Allignement>
+					<Alignment>0x20</Alignment>
 					<Bank name="OTP">
 						<Field>
-							<Parameters address="0x08FFF000" name="OTP" occurence="0x1" size="0x400"/>
+							<Parameters address="0x08FFF000" name="OTP" occurrence="0x1" size="0x400"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -769,6 +769,35 @@
 										<Val value="0x2">8 KB</Val>
 										<Val value="0x3">16 KB</Val>
 									</Values>
+								</Bit>
+							</AssignedBits>
+						</Field>
+					</Category>
+					<Category>
+					<Name>FLASH OTP</Name>
+						<Field>
+							<Parameters address="0x52002068" name="FOTPBL_CUR" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>LOCKBL</Name>
+									<Description/>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x10</BitWidth>
+									<Access>R</Access>
+									<Equation multiplier="0" offset="0x00000000"/>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x5200206C" name="FOTPBL_PRG" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>LOCKBL</Name>
+									<Description>OTP Block Lock</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x10</BitWidth>
+									<Access>W</Access>
+									<Equation multiplier="0" offset="0x00000000"/>
 								</Bit>
 							</AssignedBits>
 						</Field>

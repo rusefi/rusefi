@@ -166,12 +166,12 @@ public class StartupFrame {
 
     private void applyKnownPorts(SerialPortScanner.AvailableHardware currentHardware) {
         List<SerialPortScanner.PortResult> ports = currentHardware.getKnownPorts();
-            log.info("Rendering available ports: " + ports);
-            connectPanel.setVisible(!ports.isEmpty());
-            noPortsMessage.setVisible(ports.isEmpty());
+        log.info("Rendering available ports: " + ports);
+        connectPanel.setVisible(!ports.isEmpty());
+        noPortsMessage.setVisible(ports.isEmpty());
 
-            applyPortSelectionToUIcontrol(ports);
-            UiUtils.trueLayout(connectPanel);
+        applyPortSelectionToUIcontrol(ports);
+        UiUtils.trueLayout(connectPanel);
     }
 
     public static void setFrameIcon(Frame frame) {

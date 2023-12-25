@@ -34,7 +34,7 @@
 					<Organization>Single</Organization>
 					<Bank>
 						<Field>
-							<Parameters address="0x10000000" name="SRAM" occurence="0x1" size="0x20000"/>
+							<Parameters address="0x10000000" name="SRAM" occurrence="0x1" size="0x20000"/>
 						</Field>
 					</Bank>
 				</Configuration>
