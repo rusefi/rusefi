@@ -88,7 +88,9 @@ jobs:
 
   build-firmware:
     runs-on: ubuntu-latest
-    needs: [build-openblt-tools-linux, release]
+    needs: [
+      #build-openblt-tools-linux,
+            release]
 
     strategy:
       # Let all builds finish even if one fails early
