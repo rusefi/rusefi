@@ -275,7 +275,8 @@ int gpiochips_writePad(brain_pin_e pin, int value) {
 	gpiochip *chip = gpiochip_find(pin);
 
 	if (!chip) {
-	  criticalError("gpiochip not found %x", pin);
+  // todo: make readPad fail in a similar way?
+	  criticalError("gpiochip not found for pin %d", pin);
 		return -108;
 	}
 
