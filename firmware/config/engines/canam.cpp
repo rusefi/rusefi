@@ -3,6 +3,7 @@
 #include "defaults.h"
 #include "proteus_meta.h"
 #include "canam.h"
+#include "canam_canned.cpp"
 #include "lua_lib.h"
 
 // set engine_type 54
@@ -17,6 +18,43 @@ void setMaverickX3() {
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 // ?	  engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	  engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+
+
+    engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_36_2;
+    engineConfiguration->isForcedInduction = true;
+    engineConfiguration->vvtOffsets[0] = 116;
+    engineConfiguration->injector.flow = 550;
+
+    engineConfiguration->iacByTpsHoldTime = 2;
+    engineConfiguration->iacByTpsDecayTime = 2;
+    engineConfiguration->useIdleTimingPidControl = true;
+
+    engineConfiguration->idleTimingPid.dFactor = 0.0005;
+    engineConfiguration->idleTimingPid.minValue = -5;
+    engineConfiguration->idleTimingPid.maxValue = 5;
+    engineConfiguration->fanOnTemperature = 87;
+    engineConfiguration->fanOffTemperature = 82;
+    engineConfiguration->disableFan1WhenStopped = true;
+    engineConfiguration->disableFan2WhenStopped = true;
+
+    engineConfiguration->startButtonSuppressOnStartUpMs = 1000;
+    engineConfiguration->vssToothCount = 10;
+
+    engineConfiguration->etb.pFactor = 12.0794;
+    engineConfiguration->etb.iFactor = 213.349;
+    engineConfiguration->etb.dFactor = 0.113607;
+    engineConfiguration->disableEtbWhenEngineStopped = true;
+
+	  cannedsparkDwellValues();
+	  canneddwellVoltageCorrValues();
+	cannedignitionRpmBins();
+	cannedignitionLoadBins();
+	cannedidleAdvanceBins();
+	cannedidleAdvance();
+	cannedveRpmBins();
+	cannedveLoadBins();
+
+
 
 	  setPPSCalibration(0.25, 1.49, 0.49, 2.98);
 	  // todo: matches Hyundai TODO extract method?
