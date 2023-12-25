@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * This code automates drivers unpacking and installation
@@ -50,13 +51,18 @@ public class DriverInstall {
             FileLog.MAIN.logLine(message);
             return;
         }
+      try {
         ExecHelper.executeCommand(FOLDER,
                 FOLDER + File.separator + SELF_UNCOMPRESSING_ARCHIVE + YES,
                 SELF_UNCOMPRESSING_ARCHIVE,
                 wnd);
 
-        String batch = isWindows7orBelow() ? WINDOWS7_BATCH : WINDOWS8_BATCH;
+      String batch = isWindows7orBelow() ? WINDOWS7_BATCH : WINDOWS8_BATCH;
         ExecHelper.executeCommand(UNPACKED_FOLDER, ExecHelper.getBatchCommand(batch), batch, wnd);
+      } catch (FileNotFoundException e) {
+        wnd.append(e.toString());
+        wnd.error();
+      }
     }
 
     private static boolean isWindows7orBelow() {

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import static com.rusefi.Launcher.INPUT_FILES_PATH;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
@@ -58,7 +59,7 @@ public class FirmwareFlasher {
         return OPENOCD_EXE + " -f openocd/" + cfg;
     }
 
-    protected static String executeOpenOCDCommand(String command, UpdateOperationCallbacks wnd) {
+    protected static String executeOpenOCDCommand(String command, UpdateOperationCallbacks wnd) throws FileNotFoundException {
         return ExecHelper.executeCommand(OPENOCD_BINARY_LOCATION,
                 OPENOCD_BINARY_LOCATION + File.separator + command,
                 OPENOCD_EXE, wnd);
@@ -71,10 +72,17 @@ public class FirmwareFlasher {
             return;
         }
         StatusAnimation sa = new StatusAnimation(wnd);
-        String error = executeOpenOCDCommand(getOpenocdCommand() + " -c \"program " +
+      String error = null;
+      try {
+        error = executeOpenOCDCommand(getOpenocdCommand() + " -c \"program " +
                 fileName +
                 " verify reset exit 0x08000000\"", wnd);
-        if (error.contains(SUCCESS_MESSAGE_TAG) && !error.toLowerCase().contains(FAILED_MESSAGE_TAG)) {
+      } catch (FileNotFoundException e) {
+        wnd.append(e.toString());
+        wnd.error();
+        return;
+      }
+      if (error.contains(SUCCESS_MESSAGE_TAG) && !error.toLowerCase().contains(FAILED_MESSAGE_TAG)) {
             wnd.append("Flashing looks good!");
             sa.stop();
             wnd.setStatus(DONE);

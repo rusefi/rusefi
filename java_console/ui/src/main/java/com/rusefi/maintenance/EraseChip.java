@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
 
 import static com.rusefi.maintenance.FirmwareFlasher.TITLE;
 
@@ -30,8 +31,13 @@ public class EraseChip {
                 wnd.showFrame(TITLE);
                 StatusAnimation sa = new StatusAnimation(wnd);
                 ExecHelper.submitAction(() -> {
+                  try {
                     FirmwareFlasher.executeOpenOCDCommand(getEraseCommand(), wnd);
-                    sa.stop();
+                  } catch (FileNotFoundException ex) {
+                    wnd.append(ex.toString());
+                    wnd.error();
+                  }
+                  sa.stop();
                     wnd.setStatus(FirmwareFlasher.DONE);
                 },  EraseChip.this.getClass() + " extProcessThread");
             }

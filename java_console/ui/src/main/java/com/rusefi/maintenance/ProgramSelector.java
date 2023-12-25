@@ -131,7 +131,13 @@ public class ProgramSelector {
         DfuFlasher.rebootToDfu(parent, port, callbacks, Fields.CMD_REBOOT_OPENBLT);
     }
 
-    private void flashOpenBltCan(UpdateOperationCallbacks callbacks) {
+
+  @NotNull
+  public static JButton createUpdateFirmwareButton() {
+    return new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
+  }
+
+  private void flashOpenBltCan(UpdateOperationCallbacks callbacks) {
         OpenbltBootCommanderRunner.flashCan("../../rusefi_update.srec", callbacks);
 
         // it's a lengthy operation let's signal end
