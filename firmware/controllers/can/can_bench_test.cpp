@@ -7,6 +7,7 @@
 #include "can_common.h"
 #include "frequency_sensor.h"
 #include "settings.h"
+#include "gpio/gpio_ext.h"
 
 #define TRUNCATE_TO_BYTE(i) ((i) & 0xff)
 // raw values are 0..5V, convert it to 8-bit (0..255)
@@ -24,8 +25,7 @@ static void directWritePad(Gpio pin, int value) {
 	if (brain_pin_is_onchip(pin)) {
 	  palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
 	} else {
-  	// todo: add smart chip support support
-	  criticalError("unsupported direct control %d", (int)pin);
+  	gpiochips_writePad(pin, value);
 	}
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }

@@ -11,7 +11,7 @@
 
 #if EFI_PROD_CODE
 
-#include "drivers/gpio/gpio_ext.h"
+#include "gpio/gpio_ext.h"
 
 #include "status_loop.h"
 #include "console_io.h"
