@@ -274,8 +274,10 @@ int gpiochips_setPadMode(brain_pin_e pin, iomode_t mode)
 int gpiochips_writePad(brain_pin_e pin, int value) {
 	gpiochip *chip = gpiochip_find(pin);
 
-	if (!chip)
+	if (!chip) {
+	  criticalError("gpiochip not found %x", pin);
 		return -108;
+	}
 
 	return chip->chip->writePad(pin - chip->base, value);
 }
