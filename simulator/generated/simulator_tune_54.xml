@@ -430,7 +430,7 @@
         <constant name="secondSolenoidPin">"NONE"</constant>
         <constant name="startStopButtonPin">"PA1"</constant>
         <constant digits="0" name="mapMinBufferLength" units="count">1.0</constant>
-        <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">5.0</constant>
+        <constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">2.0</constant>
         <constant digits="0" name="stepperParkingExtraSteps" units="%">0.0</constant>
         <constant digits="0" name="tps1SecondaryMin" units="ADC">891.0</constant>
         <constant digits="0" name="tps1SecondaryMax" units="ADC">69.0</constant>
@@ -676,8 +676,8 @@
         <constant name="complexWallModel">"Basic (constants)"</constant>
         <constant name="alwaysInstantRpm">"false"</constant>
         <constant name="isMapAveragingEnabled">"true"</constant>
-        <constant name="overrideCrankingIacSetting">"false"</constant>
-        <constant name="useSeparateAdvanceForIdle">"false"</constant>
+        <constant name="overrideCrankingIacSetting">"true"</constant>
+        <constant name="useSeparateAdvanceForIdle">"true"</constant>
         <constant name="isWaveAnalyzerEnabled">"true"</constant>
         <constant name="useSeparateVeForIdle">"false"</constant>
         <constant name="verboseTriggerSynchDetails">"false"</constant>
@@ -874,7 +874,7 @@
         <constant digits="0" name="alternatorPwmFrequency" units="Hz">300.0</constant>
         <constant name="vvtMode1">"Single Tooth"</constant>
         <constant name="vvtMode2">"Inactive"</constant>
-        <constant digits="0" name="fan2ExtraIdle" units="%">2.0</constant>
+        <constant digits="0" name="fan2ExtraIdle" units="%">0.0</constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
         <constant name="auxAnalogInputs1">"PC3"</constant>
         <constant name="auxAnalogInputs2">"Disabled"</constant>
@@ -1027,7 +1027,7 @@
         <constant name="tle8888_csPinMode">"default"</constant>
         <constant name="mc33816_cs">"NONE"</constant>
         <constant digits="1" name="auxFrequencyFilter" units="hz">0.0</constant>
-        <constant digits="0" name="vvtControlMinRpm" units="RPM">500.0</constant>
+        <constant digits="0" name="vvtControlMinRpm" units="RPM">2000.0</constant>
         <constant name="sentInputPins1">"NONE"</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
         <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
@@ -2429,14 +2429,14 @@
          100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0
 </constant>
         <constant cols="1" digits="0" name="boostRpmBins" rows="8">
-         700.0
-         800.0
-         1700.0
-         2600.0
-         3500.0
-         4400.0
-         5300.0
-         7000.0
+         0.0
+         1100.0
+         2300.0
+         3400.0
+         4600.0
+         5700.0
+         6900.0
+         8000.0
 </constant>
         <constant cols="8" digits="0" name="boostTableClosedLoop" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -2479,14 +2479,14 @@
          100.0
 </constant>
         <constant cols="1" digits="0" name="pedalToTpsRpmBins" rows="8">
-         700.0
-         800.0
-         1700.0
-         2600.0
-         3500.0
-         4400.0
-         5300.0
-         7000.0
+         0.0
+         1100.0
+         2300.0
+         3400.0
+         4600.0
+         5700.0
+         6900.0
+         8000.0
 </constant>
         <constant cols="1" digits="2" name="cltCrankingCorrBins" rows="8">
          -40.0
@@ -2502,11 +2502,11 @@
          1.0
          1.0
          1.0
-         1.0
-         1.0
-         1.0
-         1.0
-         1.0
+         0.7
+         0.7
+         0.7
+         0.7
+         0.7
 </constant>
         <constant cols="1" digits="0" name="idleAdvanceBins" rows="8">
          600.0
@@ -2709,22 +2709,22 @@ end</constant>
          110.0
 </constant>
         <constant cols="1" digits="2" name="cltIdleCorr" rows="16">
-         1.5
-         1.5
-         1.333333
-         1.333333
-         1.333333
-         1.333333
-         1.333333
-         1.333333
-         1.333333
-         1.233333
-         1.166667
          1.1
-         1.0
-         1.0
-         1.0
-         1.0
+         1.1
+         0.9333
+         0.9333
+         0.9333
+         0.9333
+         0.9333
+         0.9333
+         0.9333
+         0.8333
+         0.7667
+         0.65
+         0.6
+         0.6
+         0.6
+         0.6
 </constant>
         <constant cols="1" digits="2" name="mafDecoding" rows="32">
          -34.5
