@@ -788,8 +788,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::PROTEUS_LUA_DEMO:
 		proteusLuaDemo();
 		break;
-	case engine_type_e::PROTEUS_HARLEY:
-		proteusHarley();
+	case engine_type_e::HARLEY:
+		setHarley();
 		break;
 	case engine_type_e::PROTEUS_BMW_M73:
 		setEngineBMW_M73_Proteus();

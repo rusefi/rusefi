@@ -9,10 +9,10 @@ static void harleyEngine() {
 
 
 /**
- * PROTEUS_HARLEY
+ * HARLEY
  * set engine_type 6
  */
-void proteusHarley() {
+void setHarley() {
     harleyEngine();
     engineConfiguration->displacement = 1.9;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -112,22 +112,22 @@ end
 
 
 function onTick()
- 
+
   if packet502[1] == 01 then
     offCounter = 0
     counter543 = (counter543 + 1) % 64
     packet543[7] = 64 + counter543
     packet543[8] = crc8_j1850(packet543, 7)
-    APP = getSensor("AcceleratorPedal") 
+    APP = getSensor("AcceleratorPedal")
     if APP == nil then
       packet543[5] = 0
     else
       packet543[5] = APP *2
     end
- 
+
     txCan(1, 0x543, 0, packet543)
 	txCan(1, 0x541, 0, packet541)
-   
+
     if every200msTimer:getElapsedSeconds() > 0.2 then
        every200msTimer:reset();
        txCan(1, 0x540, 0, packet540)
@@ -137,7 +137,7 @@ function onTick()
        every50msTimer:reset();
 	   txCan(1, 0x542, 0, packet542)
     end
-	
+
     if everySecondTimer:getElapsedSeconds() > 1 then
        everySecondTimer:reset();
        txCan(1, 0x502, 0, packet502)
@@ -159,7 +159,7 @@ function onTick()
   else
     if offCounter == 0 then --goodbye sweet love
       txCan(1, 0x502, 0, packet502) --goodbye
-      offCounter = 1 --One shot 
+      offCounter = 1 --One shot
     end
   end
 end

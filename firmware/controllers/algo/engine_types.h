@@ -36,7 +36,7 @@ enum class engine_type_e : uint16_t {
 	MRE_SECONDARY_CAN = 4,
 
 	NISSAN_PRIMERA = 5,
-	PROTEUS_HARLEY = 6,
+	HARLEY = 6,
 	FORD_INLINE_6_1995 = 7,
 	/**
 	 * one cylinder engine
