@@ -171,19 +171,13 @@ public class DfuFlasher {
     }
 
     private static String getDfuWriteCommand() throws FileNotFoundException {
-        String prefix = "fome";
-        String suffix = ".bin";
-        String fileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, prefix, suffix);
+        String fileName = Launcher.INPUT_FILES_PATH + File.separator + "fome.bin";
         if (fileName == null)
-            throw new FileNotFoundException("File not found " + prefix + "*" + suffix);
+            throw new FileNotFoundException("File not found: fome.bin");
         // we need quotes in case if absolute path contains spaces
-        String hexAbsolutePath = quote(new File(fileName).getAbsolutePath());
+        String quotedAbsolutePath = "\"" + (new File(fileName).getAbsolutePath()) + "\"";
 
-        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " 0x08000000 -v -s";
-    }
-
-    private static String quote(String absolutePath) {
-        return "\"" + absolutePath + "\"";
+        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + quotedAbsolutePath + " 0x08000000 -v -s";
     }
 
     private static String getDfuEraseCommand() {

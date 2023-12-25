@@ -44,7 +44,7 @@
 					<Organization>Single</Organization>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x20000000" name="SRAM" occurence="0x1" size="0x40000"/>
+							<Parameters address="0x20000000" name="SRAM" occurrence="0x1" size="0x40000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -63,16 +63,16 @@
 					<Parameters address="0x08000000" name=" 1 Mbytes Embedded Flash" size="0x100000"/>
 					<Description/>
 					<Organization>Single</Organization>
-					<Allignement>0x4</Allignement>
+					<Alignment>0x4</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurence="0x4" size="0x4000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x4" size="0x4000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08010000" name="sector4" occurence="0x1" size="0x10000"/>
+							<Parameters address="0x08010000" name="sector4" occurrence="0x1" size="0x10000"/>
 						</Field>
 						<Field>
-							<Parameters address="0x08020000" name="sector5" occurence="0x7" size="0x20000"/>
+							<Parameters address="0x08020000" name="sector5" occurrence="0x7" size="0x20000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -89,10 +89,10 @@
 					<Parameters address="0x1FFF7800" name=" 512 Bytes Data OTP" size="0x210"/>
 					<Description/>
 					<Organization>Single</Organization>
-					<Allignement>0x4</Allignement>
+					<Alignment>0x4</Alignment>
 					<Bank name="OTP">
 						<Field>
-							<Parameters address="0x1FFF7800" name="OTP" occurence="0x1" size="0x210"/>
+							<Parameters address="0x1FFF7800" name="OTP" occurrence="0x1" size="0x210"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -109,10 +109,10 @@
 					<Parameters address="0x1FFFC000" name=" 16 Bytes Data MirrorOptionBytes" size="0x10"/>
 					<Description/>
 					<Organization>Single</Organization>
-					<Allignement>0x4</Allignement>
+					<Alignment>0x4</Alignment>
 					<Bank name="MirrorOptionBytes">
 						<Field>
-							<Parameters address="0x1FFFC000" name="MirrorOptionBytes" occurence="0x1" size="0x10"/>
+							<Parameters address="0x1FFFC000" name="MirrorOptionBytes" occurrence="0x1" size="0x10"/>
 						</Field>
 					</Bank>
 				</Configuration>

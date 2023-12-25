@@ -260,34 +260,47 @@ public class ProgramSelector {
 
     private SerialPortScanner.AvailableHardware currentHardware = new SerialPortScanner.AvailableHardware(new ArrayList<>(), false);
 
-    private void selectedPortChanged(ItemEvent e) {
-        SerialPortScanner.PortResult pr = (SerialPortScanner.PortResult) e.getItem();
+    private void addDfuItems() {
+        if (currentHardware.dfuFound) {
+            mode.addItem(MANUAL_DFU);
+            mode.addItem(DFU_ERASE);
+        }
+    }
 
+    private void selectedPortChanged(ItemEvent e) {
         mode.removeAllItems();
 
-        // Prefer OpenBLT so put that option first
-        if (pr.type == SerialPortScanner.SerialPortType.FomeEcuWithOpenblt) {
-            mode.addItem(OPENBLT_AUTO);
-            mode.addItem(OPENBLT_SWITCH);
-        }
+        if (e != null) {
+            SerialPortScanner.PortResult pr = (SerialPortScanner.PortResult) e.getItem();
 
-        if (IS_WIN) {
+            // Prefer OpenBLT so put that option first
+            if (pr.type == SerialPortScanner.SerialPortType.FomeEcuWithOpenblt) {
+                mode.addItem(OPENBLT_AUTO);
+                mode.addItem(OPENBLT_SWITCH);
+            }
+
+            if (IS_WIN) {
+                if (pr.isEcu()) {
+                    mode.addItem(AUTO_DFU);
+                }
+
+                addDfuItems();
+            }
+
             if (pr.isEcu()) {
-                mode.addItem(AUTO_DFU);
+                mode.addItem(DFU_SWITCH);
             }
 
-            if (currentHardware.dfuFound) {
-                mode.addItem(MANUAL_DFU);
-                mode.addItem(DFU_ERASE);
+            if (pr.type == SerialPortScanner.SerialPortType.OpenBlt) {
+                mode.addItem(OPENBLT_MANUAL);
             }
         }
-
-        if (pr.isEcu()) {
-            mode.addItem(DFU_SWITCH);
-        }
-
-        if (pr.type == SerialPortScanner.SerialPortType.OpenBlt) {
-            mode.addItem(OPENBLT_MANUAL);
+        else
+        {
+            // No ports, just show DFU items (if present)
+            if (IS_WIN) {
+                addDfuItems();
+            }
         }
 
         // Show update controls if there are any options
@@ -299,6 +312,11 @@ public class ProgramSelector {
 
     public void apply(SerialPortScanner.AvailableHardware currentHardware) {
         this.currentHardware = currentHardware;
+
+        // If no ports, force an update with nothing selected
+        if (currentHardware.getKnownPorts().isEmpty()) {
+            selectedPortChanged(null);
+        }
 
         noHardware.setVisible(currentHardware.isEmpty());
 
