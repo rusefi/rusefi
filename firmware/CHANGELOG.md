@@ -9,6 +9,8 @@ How to use this file:
 Release template (copy/paste this for new release):
 
 ## Month 202x Release - "Release Name"
+or
+## Unreleased
 
 ### Breaking Changes
  - 
@@ -26,7 +28,7 @@ Release template (copy/paste this for new release):
 
 # Changelog
 
-## Unreleased
+## December 2023 Release
 
 ### Breaking Changes
  - Simplified VVT single tooth cam modes. "Single tooth second half" and "single tooth first half" have been replaced by simply "single tooth". This may require re-setting your trigger and VVT timing offsets if you used "single tooth first half" prior to this change. #178
