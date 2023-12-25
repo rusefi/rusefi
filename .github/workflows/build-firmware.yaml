@@ -20,35 +20,35 @@ jobs:
         with:
           submodules: true
 
-    - name: cmake configure libopenblt
-      working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
-      run: cmake -DCMAKE_BUILD_TYPE=Release ..
+      - name: cmake configure libopenblt
+        working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
+        run: cmake -DCMAKE_BUILD_TYPE=Release ..
 
-#    - name: make libopenblt
-#      working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
-#      run: make -j8
+#      - name: make libopenblt
+#        working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
+#        run: make -j8
 
-    - name: cmake configure libopenblt_jni
-      working-directory: ./misc/libopenblt_jni/build
-      run: cmake -DCMAKE_BUILD_TYPE=Release ..
+      - name: cmake configure libopenblt_jni
+        working-directory: ./misc/libopenblt_jni/build
+        run: cmake -DCMAKE_BUILD_TYPE=Release ..
 
 #    - name: make libopenblt_jni
 #      working-directory: ./misc/libopenblt_jni/build
 #      run: make -j8
 
-    - name: coalesce
-      run: |
-        mkdir deliver
-        cp ./firmware/ext/openblt/Host/libopenblt.so deliver/
-        cp ./misc/libopenblt_jni/build/libopenblt_jni.so deliver/
+      - name: coalesce
+        if: 0
+        run: |
+          mkdir deliver
+          cp ./firmware/ext/openblt/Host/libopenblt.so deliver/
+          cp ./misc/libopenblt_jni/build/libopenblt_jni.so deliver/
 
-    - uses: actions/upload-artifact@v3
-      with:
-        name: libopenblt-linux
-        path: |
-          ./deliver/libopenblt.so
-          ./deliver/libopenblt_jni.so
-
+#      - uses: actions/upload-artifact@v3
+#        if: 0
+#        name: libopenblt-linux
+#        path: |
+#          ./deliver/libopenblt.so
+#          ./deliver/libopenblt_jni.so
 
   release:
     runs-on: ubuntu-latest
@@ -94,6 +94,7 @@ jobs:
         prerelease: true
 
     - name: coalesce
+      if: 0
       run: |
         mkdir deliver
         cp ./firmware/ext/openblt/Host/libopenblt.dylib deliver/
