@@ -88,7 +88,9 @@ jobs:
 
   build-firmware:
     runs-on: ubuntu-latest
-    needs: [build-openblt-tools-linux, release]
+    needs: [
+      #build-openblt-tools-linux,
+            release]
 
     strategy:
       # Let all builds finish even if one fails early
@@ -554,17 +556,17 @@ jobs:
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
-    - name: check openblt
-      run: ls -l ./firmware/ext/openblt/Host/
+#    - name: check openblt
+#      run: ls -l ./firmware/ext/openblt/Host/
 
-    - name: Download OpenBLT BootCommander Tool
-      uses: actions/download-artifact@v3
-      with:
-        name: bootcomander-linux
-        path: ./firmware/ext/openblt/Host/
+#    - name: Download OpenBLT BootCommander Tool
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: bootcomander-linux
+#        path: ./firmware/ext/openblt/Host/
 
-    - name: check openblt
-      run: ls -l ./firmware/ext/openblt/Host/
+#    - name: check openblt
+#      run: ls -l ./firmware/ext/openblt/Host/
 
       # Build the firmware!
     - name: Build Firmware
