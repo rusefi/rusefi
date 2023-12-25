@@ -25,13 +25,16 @@ public class WriteSimulatorConfiguration {
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
         System.out.println("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
-            writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
+            readBinaryWriteXmlTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
             for (int type : new int[]{
+                    // see 'rusEfiFunctionalTest.cpp' which exports default tunes into binary files for us
                     Fields.engine_type_e_MRE_M111,
                     Fields.engine_type_e_HONDA_K,
                     Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1,
                     Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2,
                     Fields.engine_type_e_HYUNDAI_PB,
+                    Fields.engine_type_e_MAVERICK_X3,
+                    Fields.engine_type_e_HARLEY,
             }) {
                 writeSpecificEngineType(type);
             }
@@ -47,14 +50,14 @@ public class WriteSimulatorConfiguration {
     private static void writeSpecificEngineType(int engineType) {
         String engine = "_" + engineType;
         try {
-            writeTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + engine + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX,
+            readBinaryWriteXmlTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + engine + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX,
                     TuneCanTool.SIMULATED_PREFIX + engine + TuneCanTool.SIMULATED_SUFFIX);
         } catch (Throwable e) {
             throw new IllegalStateException("With " + engineType, e);
         }
     }
 
-    private static void writeTune(String tuneBinFileName, String outputXmlFileName) throws JAXBException, IOException {
+    private static void readBinaryWriteXmlTune(String tuneBinFileName, String outputXmlFileName) throws JAXBException, IOException {
         byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + tuneBinFileName).toPath());
         System.out.println("Got " + fileContent.length + " from " + tuneBinFileName + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         if (fileContent.length != Fields.TOTAL_CONFIG_SIZE)

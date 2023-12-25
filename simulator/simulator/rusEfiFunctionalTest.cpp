@@ -183,12 +183,13 @@ void rusEfiFunctionalTest(void) {
 	initFlash();
 
 	for (auto const type : {
+			engine_type_e::MRE_M111,
+			engine_type_e::HONDA_K,
 			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1,
 			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2,
-			engine_type_e::MRE_M111,
 			engine_type_e::HYUNDAI_PB,
-			engine_type_e::HONDA_K,
-
+			engine_type_e::MAVERICK_X3,
+			engine_type_e::HARLEY,
 	} ) {
 		writeEngineTypeDefaultConfig(type);
 	}
@@ -335,7 +336,7 @@ void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize)
     	CANTxFrame f = txCanBuffer.get();
     	// filter out CAN packets
 		for (int eid : responseEids) {
-    		if (f.EID == eid) { 
+    		if (f.EID == eid) {
 		        void *frame = (void *)&f;
 		        memcpy((void*)(wrapOutBuffer + outputSize), frame, sizeof(CANTxFrame));
 		        outputSize += sizeof(CANTxFrame);
