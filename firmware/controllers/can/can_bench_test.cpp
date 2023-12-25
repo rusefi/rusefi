@@ -25,7 +25,9 @@ static void directWritePad(Gpio pin, int value) {
 	if (brain_pin_is_onchip(pin)) {
 	  palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
 	} else {
+#if (BOARD_EXT_GPIOCHIPS > 0)
   	gpiochips_writePad(pin, value);
+#endif
 	}
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }

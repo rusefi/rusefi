@@ -271,8 +271,7 @@ int gpiochips_setPadMode(brain_pin_e pin, iomode_t mode)
  * else return value from gpiochip driver;
  */
 
-int gpiochips_writePad(brain_pin_e pin, int value)
-{
+int gpiochips_writePad(brain_pin_e pin, int value) {
 	gpiochip *chip = gpiochip_find(pin);
 
 	if (!chip)
