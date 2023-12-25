@@ -218,7 +218,9 @@ TCPPSRC =
 
 # List ASM source files here
 # List ASM source files here
-ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) $(PROJECT_DIR)/hw_layer/main_hardfault_asm.S
+ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
+	$(RUSEFIASM) \
+	$(PROJECT_DIR)/hw_layer/main_hardfault_asm.S
 
 INCDIR = $(ALLINC) \
 	$(PCH_DIR) \
