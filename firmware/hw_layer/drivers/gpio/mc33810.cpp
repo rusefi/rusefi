@@ -485,6 +485,10 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 int Mc33810::writePad(size_t pin, int value)
 {
+#if MC33810_VERBOSE
+  efiPrintf(DRIVER_NAME "writePad [%x][%x]", pin, value);
+#endif
+
 	if (pin >= MC33810_OUTPUTS) {
 		return -12;
 	}
@@ -493,22 +497,29 @@ int Mc33810::writePad(size_t pin, int value)
 		// mutate driver state under lock
 		chibios_rt::CriticalSectionLocker csl;
 
-		if (value)
+		if (value) {
 			o_state |=  BIT(pin);
-		else
+		} else {
 			o_state &= ~BIT(pin);
+		}
 	}
 
 	/* direct driven? */
 	if (o_direct_mask & BIT(pin)) {
 		/* TODO: ensure that output driver enabled */
-		if (value)
-			palSetPort(cfg->direct_io[pin].port,
-					   PAL_PORT_BIT(cfg->direct_io[pin].pad));
-		else
-			palClearPort(cfg->direct_io[pin].port,
-					   PAL_PORT_BIT(cfg->direct_io[pin].pad));
+		int pad = PAL_PORT_BIT(cfg->direct_io[pin].pad);
+#if MC33810_VERBOSE
+  efiPrintf(DRIVER_NAME "writePad pad %d", pad);
+#endif
+		if (value) {
+			palSetPort(cfg->direct_io[pin].port, pad);
+		} else {
+			palClearPort(cfg->direct_io[pin].port, pad);
+		}
 	} else {
+#if MC33810_VERBOSE
+  efiPrintf(DRIVER_NAME "writePad wake");
+#endif
 		wake_driver();
 	}
 
