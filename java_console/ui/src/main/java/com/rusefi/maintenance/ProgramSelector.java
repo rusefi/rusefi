@@ -275,4 +275,9 @@ public class ProgramSelector {
         trueLayout(mode);
         trueLayout(content);
     }
+
+  @NotNull
+  public static JButton createUpdateFirmwareButton() {
+    return new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
+  }
 }
