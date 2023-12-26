@@ -503,7 +503,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.75, 1.25);
 		break;
 
-    case trigger_type_e::UNUSED72:
 	case trigger_type_e::TT_NISSAN_QR25:
 		initializeNissanQR25crank(this);
 		break;
@@ -650,9 +649,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
         break;
 	case trigger_type_e::TT_60DEG_TOOTH:
 		/** @note
-		 * Have a something like TT_ONE_PHASED trigger with 
-		 * externally setuped blind width will be a good 
-		 * approach to utilize ::Rise(and::Both in future) 
+		 * Have a something like TT_ONE_PHASED trigger with
+		 * externally setuped blind width will be a good
+		 * approach to utilize ::Rise(and::Both in future)
 		 * with both edges phase-sync, but to stay simple I suggest
 		 * just to use another enum for each trigger type. */
 		configure60degSingleTooth(this);
@@ -704,6 +703,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case trigger_type_e::TT_2JZ_3_34_SIMULATION_ONLY:
 		initialize2jzGE3_34_simulation_shape(this);
+		break;
+
+	case trigger_type_e::TT_3_TOOTH_CRANK:
+		configure3ToothCrank(this);
 		break;
 
 	case trigger_type_e::TT_12_TOOTH_CRANK:

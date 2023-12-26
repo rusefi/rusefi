@@ -409,7 +409,7 @@ enum class trigger_type_e : uint32_t {
 	TT_36_2_1 = 70,
 	// Mitsubishi 3 cyl and 6 cyl
     TT_36_2_1_1 = 71,
-    UNUSED72 = 72,
+  TT_3_TOOTH_CRANK = 72,
 	TT_VVT_TOYOTA_4_1 = 73,
 	// GM 24x with 3/12 degree gaps
 	TT_GM_24x_2 = 74,

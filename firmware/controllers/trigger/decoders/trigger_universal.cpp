@@ -176,3 +176,8 @@ void configure12ToothCrank(TriggerWaveform* s) {
 	// 2JZ would be global trigger offset 65 but same wheel could be Honda, not hard coding for now
   commonSymmetrical(s, 12);
 }
+
+void configure3ToothCrank(TriggerWaveform* s) {
+	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
+  commonSymmetrical(s, 3);
+}

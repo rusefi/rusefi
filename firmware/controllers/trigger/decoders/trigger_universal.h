@@ -30,5 +30,8 @@ void configureQuickStartSenderWheel(TriggerWaveform *s);
 // TT_KAWA_KX450F
 void configureKawaKX450F(TriggerWaveform *s);
 
+// TT_3_TOOTH_CRANK
+void configure3ToothCrank(TriggerWaveform*);
+
 // TT_12_TOOTH_CRANK
 void configure12ToothCrank(TriggerWaveform*);
