@@ -48,8 +48,10 @@ static void cannedveLoadBins() {
 }
 
 static void cannedboostRpmBins() {
+#if (BOOST_LOAD_COUNT == 8) && (BOOST_RPM_COUNT == 8)
 	static const float hardCodedboostRpmBins[8] = {0.0, 1100.0, 2300.0, 3400.0, 4600.0, 5700.0, 6900.0, 8000.0};
 	copyArray(config->boostRpmBins, hardCodedboostRpmBins);
+#endif
 }
 
 static void cannedpedalToTpsRpmBins() {
