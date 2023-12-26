@@ -146,6 +146,9 @@ public class IniFileReaderTest {
         IniFileModel model = new IniFileModel().readIniFile(lines);
         assertEquals(3, model.allIniFields.size());
         assertEquals(3, model.fieldsInUiOrder.size());
+        assertTrue(model.fieldsInUiOrder.containsKey("tpsTpsAccelToRpmBins"));
+        assertFalse(model.fieldsInUiOrder.containsKey("tpsTpsAccelTbl"));
+        assertTrue(model.fieldsInUiOrder.containsKey("tpsTpsAccelTable"));
     }
 
     @Test

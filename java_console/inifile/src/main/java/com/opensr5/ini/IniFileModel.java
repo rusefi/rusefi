@@ -198,6 +198,7 @@ public class IniFileModel {
     private void handleZBins(LinkedList<String> list) {
         list.removeFirst();
         String zBins = list.removeFirst();
+        addField(zBins);
         if (currentXBins == null || currentYBins == null)
             throw new IllegalStateException("X or Y missing for " + zBins);
         xBinsByZBins.put(zBins, currentXBins);
@@ -236,7 +237,6 @@ public class IniFileModel {
     private void handleTable(LinkedList<String> list) {
         list.removeFirst();
         String tableName = list.removeFirst();
-        addField(tableName);
     }
 
     private void handleFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
