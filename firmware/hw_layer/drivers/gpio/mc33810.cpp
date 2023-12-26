@@ -214,7 +214,7 @@ int Mc33810::update_output_and_diag()
 		o_state_cached = o_state;
 	}
 
-	/* this comlicated logic to save few spi transfers in case we will receive status as reply on other command */
+	/* this complicated logic to save few spi transfers in case we will receive status as reply on other command */
 	if (!all_status_requested) {
 		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), NULL);
 		if (ret)
@@ -266,6 +266,7 @@ int Mc33810::update_output_and_diag()
 			return ret;
 	}
 
+  alive_cnt++;
 	/* TODO: unlock? */
 
 	return ret;
@@ -446,6 +447,7 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 			if (i == 0) {
 			  engine->engineState.smartChipRestartCounter = chip->init_cnt;
+			  engine->engineState.smartChipAliveCounter = chip->alive_cnt;
 			}
 
       if (chip->need_init) {
@@ -466,7 +468,7 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 			/* TODO: implement indirect driven gpios */
 			int ret = chip->update_output_and_diag();
 			if (ret) {
-				/* set state to MC33810_FAILED? */
+				chip->drv_state = MC33810_FAILED;
 			}
 		}
 	}

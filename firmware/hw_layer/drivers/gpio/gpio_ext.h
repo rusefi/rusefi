@@ -33,6 +33,7 @@ struct GpioChip {
 	/* chip needs reinitialization due to some critical issue */
 	bool						need_init;
 	int							init_cnt;
+	int             alive_cnt;
 
 	int statusCode;
 };

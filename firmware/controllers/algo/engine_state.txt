@@ -40,6 +40,7 @@ struct_no_prefix engine_state_s
 	int8_t startStopState
 	int8_t smartChipState
 	int8_t smartChipRestartCounter
+	int8_t smartChipAliveCounter
 	bit startStopPhysicalState
 	bit acrStateDup
 	bit acrEngineMovedRecently
