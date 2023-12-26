@@ -388,6 +388,7 @@ static constexpr LogField fields[] = {
 	{engine->engineState.startStopState, "startStopState", "", 0},
 	{engine->engineState.smartChipState, "smartChipState", "", 0},
 	{engine->engineState.smartChipRestartCounter, "smartChipRestartCounter", "", 0},
+	{engine->engineState.smartChipAliveCounter, "smartChipAliveCounter", "", 0},
 	{engine->engineState.startStopStateToggleCounter, "startStopStateToggleCounter", "", 0},
 	{engine->engineState.egtValue1, "egtValue1", "", 0},
 	{engine->engineState.egtValue2, "egtValue2", "", 0},

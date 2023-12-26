@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Dec 21 05:28:46 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Tue Dec 26 22:46:57 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -222,158 +222,168 @@ struct engine_state_s {
 	 */
 	int8_t smartChipRestartCounter = (int8_t)0;
 	/**
-	offset 48 bit 0 */
+	 * offset 48
+	 */
+	int8_t smartChipAliveCounter = (int8_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 49
+	 */
+	uint8_t alignmentFill_at_49[3];
+	/**
+	offset 52 bit 0 */
 	bool startStopPhysicalState : 1 {};
 	/**
-	offset 48 bit 1 */
+	offset 52 bit 1 */
 	bool acrStateDup : 1 {};
 	/**
-	offset 48 bit 2 */
+	offset 52 bit 2 */
 	bool acrEngineMovedRecently : 1 {};
 	/**
-	offset 48 bit 3 */
+	offset 52 bit 3 */
 	bool heaterControlEnabled : 1 {};
 	/**
-	offset 48 bit 4 */
+	offset 52 bit 4 */
 	bool luaDigitalState0 : 1 {};
 	/**
-	offset 48 bit 5 */
+	offset 52 bit 5 */
 	bool luaDigitalState1 : 1 {};
 	/**
-	offset 48 bit 6 */
+	offset 52 bit 6 */
 	bool luaDigitalState2 : 1 {};
 	/**
-	offset 48 bit 7 */
+	offset 52 bit 7 */
 	bool luaDigitalState3 : 1 {};
 	/**
-	offset 48 bit 8 */
-	bool unusedBit_19_8 : 1 {};
+	offset 52 bit 8 */
+	bool unusedBit_21_8 : 1 {};
 	/**
-	offset 48 bit 9 */
-	bool unusedBit_19_9 : 1 {};
+	offset 52 bit 9 */
+	bool unusedBit_21_9 : 1 {};
 	/**
-	offset 48 bit 10 */
-	bool unusedBit_19_10 : 1 {};
+	offset 52 bit 10 */
+	bool unusedBit_21_10 : 1 {};
 	/**
-	offset 48 bit 11 */
-	bool unusedBit_19_11 : 1 {};
+	offset 52 bit 11 */
+	bool unusedBit_21_11 : 1 {};
 	/**
-	offset 48 bit 12 */
-	bool unusedBit_19_12 : 1 {};
+	offset 52 bit 12 */
+	bool unusedBit_21_12 : 1 {};
 	/**
-	offset 48 bit 13 */
-	bool unusedBit_19_13 : 1 {};
+	offset 52 bit 13 */
+	bool unusedBit_21_13 : 1 {};
 	/**
-	offset 48 bit 14 */
-	bool unusedBit_19_14 : 1 {};
+	offset 52 bit 14 */
+	bool unusedBit_21_14 : 1 {};
 	/**
-	offset 48 bit 15 */
-	bool unusedBit_19_15 : 1 {};
+	offset 52 bit 15 */
+	bool unusedBit_21_15 : 1 {};
 	/**
-	offset 48 bit 16 */
-	bool unusedBit_19_16 : 1 {};
+	offset 52 bit 16 */
+	bool unusedBit_21_16 : 1 {};
 	/**
-	offset 48 bit 17 */
-	bool unusedBit_19_17 : 1 {};
+	offset 52 bit 17 */
+	bool unusedBit_21_17 : 1 {};
 	/**
-	offset 48 bit 18 */
-	bool unusedBit_19_18 : 1 {};
+	offset 52 bit 18 */
+	bool unusedBit_21_18 : 1 {};
 	/**
-	offset 48 bit 19 */
-	bool unusedBit_19_19 : 1 {};
+	offset 52 bit 19 */
+	bool unusedBit_21_19 : 1 {};
 	/**
-	offset 48 bit 20 */
-	bool unusedBit_19_20 : 1 {};
+	offset 52 bit 20 */
+	bool unusedBit_21_20 : 1 {};
 	/**
-	offset 48 bit 21 */
-	bool unusedBit_19_21 : 1 {};
+	offset 52 bit 21 */
+	bool unusedBit_21_21 : 1 {};
 	/**
-	offset 48 bit 22 */
-	bool unusedBit_19_22 : 1 {};
+	offset 52 bit 22 */
+	bool unusedBit_21_22 : 1 {};
 	/**
-	offset 48 bit 23 */
-	bool unusedBit_19_23 : 1 {};
+	offset 52 bit 23 */
+	bool unusedBit_21_23 : 1 {};
 	/**
-	offset 48 bit 24 */
-	bool unusedBit_19_24 : 1 {};
+	offset 52 bit 24 */
+	bool unusedBit_21_24 : 1 {};
 	/**
-	offset 48 bit 25 */
-	bool unusedBit_19_25 : 1 {};
+	offset 52 bit 25 */
+	bool unusedBit_21_25 : 1 {};
 	/**
-	offset 48 bit 26 */
-	bool unusedBit_19_26 : 1 {};
+	offset 52 bit 26 */
+	bool unusedBit_21_26 : 1 {};
 	/**
-	offset 48 bit 27 */
-	bool unusedBit_19_27 : 1 {};
+	offset 52 bit 27 */
+	bool unusedBit_21_27 : 1 {};
 	/**
-	offset 48 bit 28 */
-	bool unusedBit_19_28 : 1 {};
+	offset 52 bit 28 */
+	bool unusedBit_21_28 : 1 {};
 	/**
-	offset 48 bit 29 */
-	bool unusedBit_19_29 : 1 {};
+	offset 52 bit 29 */
+	bool unusedBit_21_29 : 1 {};
 	/**
-	offset 48 bit 30 */
-	bool unusedBit_19_30 : 1 {};
+	offset 52 bit 30 */
+	bool unusedBit_21_30 : 1 {};
 	/**
-	offset 48 bit 31 */
-	bool unusedBit_19_31 : 1 {};
-	/**
-	 * offset 52
-	 */
-	uint32_t startStopStateToggleCounter = (uint32_t)0;
+	offset 52 bit 31 */
+	bool unusedBit_21_31 : 1 {};
 	/**
 	 * offset 56
 	 */
-	float egtValue1 = (float)0;
+	uint32_t startStopStateToggleCounter = (uint32_t)0;
 	/**
 	 * offset 60
+	 */
+	float egtValue1 = (float)0;
+	/**
+	 * offset 64
 	 */
 	float egtValue2 = (float)0;
 	/**
 	 * User-defined RPM hard limit
 	rpm
-	 * offset 64
+	 * offset 68
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 66
+	 * offset 70
 	 */
-	uint8_t alignmentFill_at_66[2];
+	uint8_t alignmentFill_at_70[2];
 	/**
 	 * Fuel: Injection counter
-	 * offset 68
+	 * offset 72
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * Ign: Spark counter
-	 * offset 72
+	 * offset 76
 	 */
 	uint32_t sparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 76
+	 * offset 80
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 80
+	 * offset 84
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	%
-	 * offset 84
+	 * offset 88
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 86
+	 * offset 90
 	 */
-	uint8_t alignmentFill_at_86[2];
+	uint8_t alignmentFill_at_90[2];
 };
-static_assert(sizeof(engine_state_s) == 88);
+static_assert(sizeof(engine_state_s) == 92);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Thu Dec 21 05:28:46 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Tue Dec 26 22:46:57 UTC 2023
