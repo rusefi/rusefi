@@ -323,21 +323,11 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	}
 
 	float minPosition = engineConfiguration->etbMinimumPosition;
-	if (minPosition < 0.01) {
-		// compatibility with legacy tunes, todo: remove in Nov of 2022
-		minPosition = 1;
-	}
 
 	// Keep the throttle just barely off the lower stop, and less than the user-configured maximum
 	float maxPosition = engineConfiguration->etbMaximumPosition;
-
-	if (maxPosition < 70) {
-		// compatibility with legacy tunes, todo: remove in Aug of 2022
-		maxPosition = 100;
-	} else {
-		// Don't allow max position over 100
-		maxPosition = minF(maxPosition, 100);
-	}
+	// Don't allow max position over 100
+	maxPosition = minF(maxPosition, 100);
 
 	targetPosition = clampF(minPosition, targetPosition, maxPosition);
 	etbCurrentAdjustedTarget = targetPosition;
