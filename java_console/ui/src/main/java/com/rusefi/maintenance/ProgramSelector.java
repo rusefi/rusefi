@@ -9,17 +9,13 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
-import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -70,7 +66,7 @@ public class ProgramSelector {
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
 
                 String jobName = null;
-                Consumer<UpdateOperationCallbacks> job = null;
+                Consumer<UpdateOperationCallbacks> job;
 
                 Objects.requireNonNull(selectedMode);
                 switch (selectedMode) {
@@ -83,8 +79,10 @@ public class ProgramSelector {
                       job = DfuFlasher::runDfuProgramming;
                         break;
                     case ST_LINK:
-                        // todo: add ST-LINK no-assert mode? or not?
-                        FirmwareFlasher.doUpdateFirmware(FirmwareFlasher.IMAGE_FILE, updateFirmware);
+                        job = updateOperationCallbacks -> {
+                            // todo: add ST-LINK no-assert mode? or not?
+                            FirmwareFlasher.doUpdateFirmware(FirmwareFlasher.IMAGE_FILE, updateFirmware);
+                        };
                         break;
                     case DFU_SWITCH:
                         jobName = "DFU switch";
