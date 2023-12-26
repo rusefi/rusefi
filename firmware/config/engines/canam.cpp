@@ -21,6 +21,7 @@ void setMaverickX3() {
 
 
     engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_36_2;
+    engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
     engineConfiguration->isForcedInduction = true;
     engineConfiguration->vvtOffsets[0] = 116;
     engineConfiguration->injector.flow = 550;
