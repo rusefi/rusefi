@@ -12,20 +12,7 @@
 void chDbgPanic3(const char* /*msg*/, const char* /*file*/, int /*line*/) {
 }
 
-namespace priv
-{
-void efiPrintfInternal(const char* /*fmt*/, ...) {
-}
-}
-
-void firmwareError(ObdCode /*code*/, const char* /*fmt*/, ...) {
-}
-
-Logging::Logging(char const* /*name*/, char* /*buffer*/, int /*bufferSize*/) {
-}
-
-LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {
-}
+void logHardFault(uint32_t type, uintptr_t faultAddress, struct port_extctx* ctx, uint32_t csfr) { }
 
 void setPinConfigurationOverrides() { }
 
