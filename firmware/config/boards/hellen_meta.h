@@ -172,8 +172,10 @@ void detectHellenBoardType();
 
 // IN_O2S AIN13 A13 PA0
 #define H144_IN_O2S EFI_ADC_0
+#define H144_IN_O2S_DIGITAL A0
 // IN_O2S2 AIN12 PA1
 #define H144_IN_O2S2 EFI_ADC_1
+#define H144_IN_O2S2_DIGITAL A1
 
 // IN_D1(old) or IN_DIG8(new/mega-module)
 #define H144_IN_D_1 E12
