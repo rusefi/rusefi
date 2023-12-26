@@ -156,10 +156,10 @@ void detectHellenBoardType();
 //
 #define H144_IN_AUX2 EFI_ADC_14
 
-// AIN22 PC5
-#define H144_IN_AUX3 EFI_ADC_15
 // AIN20 PA7
-#define H144_IN_AUX4 EFI_ADC_7
+#define H144_IN_AUX3 EFI_ADC_7
+// AIN22 PC5
+#define H144_IN_AUX4 EFI_ADC_15
 
 // A1 AIN1 no code to use ADC3 as analog
 #define H144_IN_SENS1 F3
