@@ -103,6 +103,7 @@ struct Mc33810 : public GpioChip {
 	int update_output_and_diag();
 
 	int chip_init();
+	int check_comm();
 	void wake_driver();
 
 	int bind_io();
@@ -297,6 +298,23 @@ int Mc33810::bind_io() {
 	return ret;
 }
 
+int Mc33810::check_comm() {
+	/* check SPI communication */
+	/* 0. set echo mode, chip number - don't care */
+	int ret = spi_rw(MC_CMD_SPI_CHECK, NULL);
+	/* 1. check loopback */
+	uint16_t rx;
+	ret |= spi_rw(MC_CMD_READ_REG(REG_REV), &rx);
+	if (ret) {
+		efiPrintf(DRIVER_NAME " first SPI RX failed");
+		return -7;
+	}
+	if (rx != SPI_CHECK_ACK) {
+		return -2;
+	}
+	return ret;
+}
+
 /**
  * @brief MC33810 chip init.
  * @details Checks communication. Check chip presence.
@@ -317,18 +335,8 @@ int Mc33810::chip_init()
 		goto err_gpios;
 	}
 
-	/* check SPI communication */
-	/* 0. set echo mode, chip number - don't care */
-	ret  = spi_rw(MC_CMD_SPI_CHECK, NULL);
-	/* 1. check loopback */
-	ret |= spi_rw(MC_CMD_READ_REG(REG_REV), &rx);
+	ret = check_comm();
 	if (ret) {
-		ret = -7;
-		efiPrintf(DRIVER_NAME " first SPI RX failed");
-		goto err_gpios;
-	}
-	if (rx != SPI_CHECK_ACK) {
-		ret = -2;
 		goto err_gpios;
 	}
 
