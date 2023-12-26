@@ -36,17 +36,6 @@
 
 // todo: get rid of the 'undef' patter just move all defaults above f4 include?
 
-#undef EFI_POTENTIOMETER
-#define EFI_POTENTIOMETER FALSE
-
-#undef EFI_MAX_31855
-#define EFI_MAX_31855 FALSE
-
-#undef BOARD_L9779_COUNT
-#define BOARD_L9779_COUNT FALSE
-
-#undef EFI_MCP_3208
-#define EFI_MCP_3208 FALSE
 
 #undef EFI_MC33816
 #define EFI_MC33816 FALSE
