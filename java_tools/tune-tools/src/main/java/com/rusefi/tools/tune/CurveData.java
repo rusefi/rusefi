@@ -10,7 +10,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class CurveData {
+public class CurveData implements HoHo {
     private final String curveName;
     private final float[] rawData;
 
@@ -96,6 +96,7 @@ public class CurveData {
         return rawData;
     }
 
+    @Override
     public String getCsourceMethod(String reference) {
         return "static void " + getCannedMethod() + " {\n"
                 + "\t" + getCsourceCode() +
@@ -108,6 +109,7 @@ public class CurveData {
         return "canned" + curveName + "()";
     }
 
+    @Override
     public String getCinvokeMethod() {
         return "\t" + getCannedMethod() + ";\n";
     }

@@ -176,6 +176,11 @@ public class TuneCanTool {
                 }
 
                 if (cf.isArray()) {
+                    if (cf.getArraySizes().length == 2) {
+                        //float[][] tableData = TableData.readTable(currentTuneFileName, name, ini);
+                        //System.out.printf(" " + name);
+                        continue;
+                    }
 
                     CurveData data = CurveData.valueOf(currentTuneFileName, name, ini);
                     if (data == null)

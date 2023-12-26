@@ -1,11 +1,9 @@
 package com.rusefi.tools.tune;
 
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.field.ArrayIniField;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -92,7 +90,7 @@ public class TS2C {
 
     @NotNull
     public static String getTableCSourceCode2(String msqFileName, String tableName, IniFileModel model, CurveData xRpmCurve, CurveData yLoadBins) throws IOException {
-        float[][] table = readTable(msqFileName, tableName, model);
+        float[][] table = TableData.readTable(msqFileName, tableName, model);
 
         return getTableCSourceCode(tableName, yLoadBins, xRpmCurve, table);
     }
@@ -105,25 +103,6 @@ public class TS2C {
         writeTable(loadBins, rpmBins, sb, (loadIndex, rpmIndex) -> table[loadIndex][rpmIndex]);
         sb.append("};\n\n");
         return sb.toString();
-    }
-
-    @NotNull
-    private static float[][] readTable(String msqFileName, String tableName, IniFileModel model) throws IOException {
-        ArrayIniField field = (ArrayIniField) model.allIniFields.get(tableName);
-
-        if (field.getRows() != field.getCols())
-            throw new UnsupportedOperationException("Not square table not supported yet");
-        // todo: replace with loadCount & rpmCount
-        int size = field.getRows();
-
-        float[][] table = new float[size][];
-        for (int i = 0; i < size; i++) {
-            table[i] = new float[size];
-        }
-
-        BufferedReader reader = readAndScroll(msqFileName, tableName);
-        readTable(table, reader, size);
-        return table;
     }
 
     @NotNull
@@ -175,41 +154,13 @@ public class TS2C {
         String yLoadBinsName = model.getYBin(tableName);
 
         String x = "\tcopyArray(" + tableReference + "LoadBins, hardCoded" + xRpmBinsName + ");\n" +
-                "\tcopyArray(" + tableReference + "RpmBins, hardCoded" + yLoadBinsName + ");\n" +
-                "\tcopyTable(" + tableReference + "Table, hardCoded" + tableName + ");\n";
+            "\tcopyArray(" + tableReference + "RpmBins, hardCoded" + yLoadBinsName + ");\n" +
+            "\tcopyTable(" + tableReference + "Table, hardCoded" + tableName + ");\n";
         return x;
     }
 
     interface ValueSource {
         float getValue(int loadIndex, int rpmIndex);
-    }
-
-    private static void readTable(float[][] table, BufferedReader r, int size) throws IOException {
-        int index = 0;
-
-        while (index < size) {
-            String line = r.readLine();
-            if (line == null)
-                throw new IOException("End of file?");
-            line = line.trim();
-            if (line.isEmpty())
-                continue;
-
-            String[] values = line.split("\\s");
-            if (values.length != size)
-                throw new IllegalStateException("Expected " + size + " but got " + Arrays.toString(values) + ". Unexpected line: " + line);
-
-            for (int i = 0; i < size; i++) {
-                String str = values[i];
-                try {
-                    table[index][i] = Float.parseFloat(str);
-                } catch (NumberFormatException e) {
-                    throw new IllegalStateException("While reading " + str, e);
-                }
-            }
-            System.out.println("Got line " + index + ": " + Arrays.toString(table[index]));
-            index++;
-        }
     }
 
 }
