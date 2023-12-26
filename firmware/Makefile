@@ -3,8 +3,6 @@
 # see setup_linux_environment.sh but Windows is also totally fine
 #
 
-.PHONY: openblt
-
 CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
@@ -114,10 +112,6 @@ ifeq ($(USE_SMART_BUILD),)
   USE_SMART_BUILD = no
 endif
 
-ifeq ($(USE_BOOTLOADER),)
-  USE_BOOTLOADER = no
-endif
-
 ifeq ($(USE_OPENBLT),)
   USE_OPENBLT = no
 endif
@@ -216,18 +210,9 @@ endif
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 include $(PROJECT_DIR)/common.mk
 
-ifeq ($(BOOTLOADERINC),)
-  # include default bootloader code
-  BOOTLOADERINC= $(PROJECT_DIR)/bootloader/
-endif
-
-ifeq ($(USE_BOOTLOADER),yes)
-  include $(PROJECT_DIR)/bootloader/bootloader.mk
-endif
-
 ifeq ($(USE_OPENBLT),yes)
   # Reserve start of flash for OpenBLT
-  USE_OPT += -Wl,--defsym=BOOTLOADER=1
+  USE_OPT += -Wl,--defsym=HAS_BOOTLOADER=1
   DDEFS += -DEFI_USE_OPENBLT=TRUE
 endif
 
@@ -255,7 +240,7 @@ CSRC =  gcc_version_check.c \
   $(HW_LAYER_DRIVERS_CORE) \
   $(HW_LAYER_DRIVERS) \
   $(RUSEFI_LIB_C) \
-  main_hardfault.c
+  $(PROJECT_DIR)/hw_layer/main_hardfault.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -293,7 +278,7 @@ TCPPSRC =
 # List ASM source files here
 ASMXSRC = $(ALLXASMSRC) \
   $(RUSEFIASM) \
-  main_hardfault_asm.S
+  $(PROJECT_DIR)/hw_layer/main_hardfault_asm.S
 
 #
 # WARNING! order of variables is important here - for instance cypress own folders should go before default folders
@@ -303,7 +288,6 @@ INCDIR = \
   $(BOARDINC) \
   $(ALLINC) \
   $(TESTINC) \
-  $(BOOTLOADERINC) \
   $(CHIBIOS)/os/various \
   $(RUSEFI_LIB_INC) \
   $(CONFDIR) \
@@ -385,12 +369,6 @@ ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 ##############################################################################
 
 include $(RULESFILE)
-
-openblt:
-	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk BOARD_DIR=$(BOARD_DIR) PROJECT_BOARD=$(PROJECT_BOARD) PROJECT_CPU=$(PROJECT_CPU)
-
-openblt_clean:
-	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk clean BOARD_DIR=$(BOARD_DIR) PROJECT_BOARD=$(PROJECT_BOARD) PROJECT_CPU=$(PROJECT_CPU)
 
 # Enable precompiled header
 include rusefi_pch.mk
