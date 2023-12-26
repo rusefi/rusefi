@@ -201,6 +201,12 @@ int Mc33810::update_output_and_diag()
 
 	/* TODO: lock? */
 
+	ret = check_comm();
+ 	if (ret) {
+ 	  // do we still have comms?!
+ 		return ret;
+ 	}
+
 	/* we need to get updates status */
 	all_status_updated = false;
 
