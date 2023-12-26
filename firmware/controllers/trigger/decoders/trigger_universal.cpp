@@ -147,13 +147,7 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->addToothRiseFall(360, /* width*/ 70);
 }
 
-// Useful for:
-// - Honda 24+1 (set this on crank primary, single tooth cam)
-// - AEM 24+1 CAS wheel (same config as Honda)
-void configure12ToothCrank(TriggerWaveform* s) {
-	s->initialize(FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
-
-	// 2JZ would be global trigger offset 65 but same wheel could be Honda, not hard coding for now
+static void commonSymmetrical(TriggerWaveform* s, int count) {
 	s->shapeWithoutTdc = true;
 
 	// Sync after 2 good teeth
@@ -166,9 +160,19 @@ void configure12ToothCrank(TriggerWaveform* s) {
 		s->setTriggerSynchronizationGap3(i, 0.2f, 3.4f);
 	}
 
-    float width = 360 / 12;
+    float width = 360 / count;
 
 	// Just a single tooth with 50% duty cycle
 	s->addEventAngle(width / 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	s->addEventAngle(width, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+}
+
+// Useful for:
+// - Honda 24+1 (set this on crank primary, single tooth cam)
+// - AEM 24+1 CAS wheel (same config as Honda)
+void configure12ToothCrank(TriggerWaveform* s) {
+	s->initialize(FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
+
+	// 2JZ would be global trigger offset 65 but same wheel could be Honda, not hard coding for now
+  commonSymmetrical(s, 12);
 }
