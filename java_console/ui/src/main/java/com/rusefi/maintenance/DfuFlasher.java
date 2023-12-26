@@ -246,9 +246,9 @@ public class DfuFlasher {
         if (fileName == null)
             throw new FileNotFoundException("File not found " + prefix + "*" + suffix);
         // we need quotes in case if absolute path contains spaces
-        String hexAbsolutePath = quote(new File(fileName).getAbsolutePath());
+        String quotedAbsolutePath = quote(new File(fileName).getAbsolutePath());
 
-        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " 0x08000000 -v -s";
+        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + quotedAbsolutePath + " 0x08000000 -v -s";
     }
 
     private static String quote(String absolutePath) {
