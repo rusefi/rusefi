@@ -38,8 +38,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum 0="NONE",12="B2 - MAP",14="B3 - IAT",2="B4 - O2",5="B5 - TPS",13="B7 - CLT",7="C7 - CAM Hall/Digital",9="D4 - TPS2",4="D5 - PPS",15="F6 - PPS2",6="F7 - Ignition Key Voltage",3="On-board MAP",21="X1 - AIN1 and D5 on older boards",20="X3 - AIN2",11="X5 - AIN3",16="X7 - AIN4"
-#define adc_channel_e_fullenum "NONE","INVALID","B4 - O2","On-board MAP","D5 - PPS","B5 - TPS","F7 - Ignition Key Voltage","C7 - CAM Hall/Digital","INVALID","D4 - TPS2","INVALID","X5 - AIN3","B2 - MAP","B7 - CLT","B3 - IAT","F6 - PPS2","X7 - AIN4","INVALID","INVALID","INVALID","X3 - AIN2","X1 - AIN1 and D5 on older boards"
+#define adc_channel_e_enum 0="NONE",12="B2 - MAP",14="B3 - IAT",2="B4 - O2",5="B5 - TPS",13="B7 - CLT",7="C7 - CAM Hall/Digital",9="D4 - TPS2",4="D5 - PPS",15="F6 - PPS2",6="F7 - Ignition Key Voltage",3="On-board MAP",21="X1 - AIN1 and D5 on older boards",20="X3 - AIN2",11="X5 - AIN3",8="X7 - AIN4"
+#define adc_channel_e_fullenum "NONE","INVALID","B4 - O2","On-board MAP","D5 - PPS","B5 - TPS","F7 - Ignition Key Voltage","C7 - CAM Hall/Digital","X7 - AIN4","D4 - TPS2","INVALID","X5 - AIN3","B2 - MAP","B7 - CLT","B3 - IAT","F6 - PPS2","INVALID","INVALID","INVALID","INVALID","X3 - AIN2","X1 - AIN1 and D5 on older boards"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define AFTERSTART_DECAY_CURVE_SIZE 8

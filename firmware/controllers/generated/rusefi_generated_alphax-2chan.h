@@ -38,8 +38,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum 0="NONE",6="A2 Battery Sense",12="B2 - MAP",14="B3 - IAT",2="B4 - O2",5="B5 - TPS",13="B7 - CLT",7="C7 - CAM Hall/Digital",3="On-board MAP",9="X1 - AIN1",15="X3 - AIN2",8="X7 - AIN4"
-#define adc_channel_e_fullenum "NONE","INVALID","B4 - O2","On-board MAP","INVALID","B5 - TPS","A2 Battery Sense","C7 - CAM Hall/Digital","X7 - AIN4","X1 - AIN1","INVALID","INVALID","B2 - MAP","B7 - CLT","B3 - IAT","X3 - AIN2"
+#define adc_channel_e_enum 0="NONE",6="A2 Battery Sense",12="B2 - MAP",14="B3 - IAT",2="B4 - O2",5="B5 - TPS",13="B7 - CLT",7="C7 - CAM Hall/Digital",3="On-board MAP",9="X1 - AIN1",15="X3 - AIN2",16="X7 - AIN4"
+#define adc_channel_e_fullenum "NONE","INVALID","B4 - O2","On-board MAP","INVALID","B5 - TPS","A2 Battery Sense","C7 - CAM Hall/Digital","INVALID","X1 - AIN1","INVALID","INVALID","B2 - MAP","B7 - CLT","B3 - IAT","X3 - AIN2","X7 - AIN4"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define AFTERSTART_DECAY_CURVE_SIZE 8

@@ -38,8 +38,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum 0="NONE",5="A15 TPS",11="A19 - MAP",9="Aux Analog 1",15="Aux Analog 2",16="Aux Analog 3",14="B17 IAT",13="B8 - CLT",6="E9 Ignition Key Voltage"
-#define adc_channel_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","A15 TPS","E9 Ignition Key Voltage","INVALID","INVALID","Aux Analog 1","INVALID","A19 - MAP","INVALID","B8 - CLT","B17 IAT","Aux Analog 2","Aux Analog 3"
+#define adc_channel_e_enum 0="NONE",5="A15 TPS",11="A19 - MAP",9="Aux Analog 1",15="Aux Analog 2",8="Aux Analog 3",14="B17 IAT",13="B8 - CLT",6="E9 Ignition Key Voltage"
+#define adc_channel_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","A15 TPS","E9 Ignition Key Voltage","INVALID","Aux Analog 3","Aux Analog 1","INVALID","A19 - MAP","INVALID","B8 - CLT","B17 IAT","Aux Analog 2"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define AFTERSTART_DECAY_CURVE_SIZE 8

@@ -38,8 +38,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum 0="NONE",7="A07 TODO",12="A09 Analog Input",9="A10 Analog Input",15="A11 Analog Input",16="A12 Analog Input",2="A14 Analog Input",8="A19 Analog Input",4="A21 PPS1",5="B03 TPS Throttle Position 1",13="B15 CLT",11="B19 MAP",1="B20 TPS Throttle Position 2",14="B27 IAT"
-#define adc_channel_e_fullenum "NONE","B20 TPS Throttle Position 2","A14 Analog Input","INVALID","A21 PPS1","B03 TPS Throttle Position 1","INVALID","A07 TODO","A19 Analog Input","A10 Analog Input","INVALID","B19 MAP","A09 Analog Input","B15 CLT","B27 IAT","A11 Analog Input","A12 Analog Input"
+#define adc_channel_e_enum 0="NONE",7="A07 TODO",12="A09 Analog Input",9="A10 Analog Input",15="A11 Analog Input",8="A12 Analog Input",2="A14 Analog Input",16="A19 Analog Input",4="A21 PPS1",5="B03 TPS Throttle Position 1",13="B15 CLT",11="B19 MAP",1="B20 TPS Throttle Position 2",14="B27 IAT"
+#define adc_channel_e_fullenum "NONE","B20 TPS Throttle Position 2","A14 Analog Input","INVALID","A21 PPS1","B03 TPS Throttle Position 1","INVALID","A07 TODO","A12 Analog Input","A10 Analog Input","INVALID","B19 MAP","A09 Analog Input","B15 CLT","B27 IAT","A11 Analog Input","A19 Analog Input"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define AFTERSTART_DECAY_CURVE_SIZE 8

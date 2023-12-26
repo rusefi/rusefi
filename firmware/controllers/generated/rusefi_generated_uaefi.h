@@ -38,8 +38,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum 0="NONE",6="A7 Voltage From Key",9="C14 TPS2",16="C15 AUX3",2="C3 AUX2",15="C4 PPS2",1="D1 AUX1",5="D13 TPS1",14="D15 IAT",13="D16 CLT Coolant",4="D6 PPS1",11="D9 MAP"
-#define adc_channel_e_fullenum "NONE","D1 AUX1","C3 AUX2","INVALID","D6 PPS1","D13 TPS1","A7 Voltage From Key","INVALID","INVALID","C14 TPS2","INVALID","D9 MAP","INVALID","D16 CLT Coolant","D15 IAT","C4 PPS2","C15 AUX3"
+#define adc_channel_e_enum 0="NONE",6="A7 Voltage From Key",9="C14 TPS2",8="C15 AUX3",2="C3 AUX2",15="C4 PPS2",1="D1 AUX1",5="D13 TPS1",14="D15 IAT",13="D16 CLT Coolant",4="D6 PPS1",11="D9 MAP"
+#define adc_channel_e_fullenum "NONE","D1 AUX1","C3 AUX2","INVALID","D6 PPS1","D13 TPS1","A7 Voltage From Key","INVALID","C15 AUX3","C14 TPS2","INVALID","D9 MAP","INVALID","D16 CLT Coolant","D15 IAT","C4 PPS2"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define AFTERSTART_DECAY_CURVE_SIZE 8
