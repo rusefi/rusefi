@@ -4617,6 +4617,7 @@ dialog = tcuControls, "Transmission Settings"
         field = dacOutputPins2,         dacOutputPins2
         field = "Read RPM matching VSS profile",    canInputBCM
         field = useSpiImu,              useSpiImu
+        field = mc33810maxDwellTimer,     mc33810maxDwellTimer
 
 	dialog = harleyAcr, "Harley Automatic Compression Release"
 		field = "Pin",	acrPin

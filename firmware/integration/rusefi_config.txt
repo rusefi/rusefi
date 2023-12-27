@@ -1199,6 +1199,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit can1ListenMode;ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
 	bit can2ListenMode
 	uint8_t camDecoder2jzPosition
+	uint8_t mc33810maxDwellTimer
 	uint16_t autoscale benchTestOnTime;Duration of each test pulse;"ms", 0.01, 0, 0, 500, 2
 
 	uint8_t lambdaProtectionRestoreTps;;"%", 1, 0, 0, 100, 0
