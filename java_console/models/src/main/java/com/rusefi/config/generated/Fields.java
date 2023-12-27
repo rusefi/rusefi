@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Dec 26 22:48:59 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Dec 27 00:57:40 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1083,6 +1083,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1907538107;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1311,7 +1312,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.12.26.f407-discovery.3052789960";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.12.27.f407-discovery.1907538107";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2105,7 +2106,7 @@ public class Fields {
 	public static final Field CAN1LISTENMODE = Field.create("CAN1LISTENMODE", 1572, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field CAN2LISTENMODE = Field.create("CAN2LISTENMODE", 1572, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field CAMDECODER2JZPOSITION = Field.create("CAMDECODER2JZPOSITION", 1576, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_1577 = Field.create("ALIGNMENTFILL_AT_1577", 1577, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MC33810MAXDWELLTIMER = Field.create("MC33810MAXDWELLTIMER", 1577, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1578, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field LAMBDAPROTECTIONRESTORETPS = Field.create("LAMBDAPROTECTIONRESTORETPS", 1580, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field LAMBDAPROTECTIONRESTORELOAD = Field.create("LAMBDAPROTECTIONRESTORELOAD", 1581, FieldType.INT8).setScale(10.0).setBaseOffset(0);
@@ -3691,7 +3692,7 @@ public class Fields {
 	CAN1LISTENMODE,
 	CAN2LISTENMODE,
 	CAMDECODER2JZPOSITION,
-	ALIGNMENTFILL_AT_1577,
+	MC33810MAXDWELLTIMER,
 	BENCHTESTONTIME,
 	LAMBDAPROTECTIONRESTORETPS,
 	LAMBDAPROTECTIONRESTORELOAD,

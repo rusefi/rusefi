@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Dec 20 05:01:44 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Dec 27 00:56:10 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3076,11 +3076,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t camDecoder2jzPosition;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 1577
 	 */
-	uint8_t alignmentFill_at_1577[1];
+	uint8_t mc33810maxDwellTimer;
 	/**
 	 * Duration of each test pulse
 	ms
@@ -5385,4 +5383,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22088);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Dec 20 05:01:44 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Dec 27 00:56:10 UTC 2023
