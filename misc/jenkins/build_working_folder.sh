@@ -95,6 +95,9 @@ cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 #cp firmware/deliver/rusefi_no_asserts.hex $FOLDER
 
 pwd
+echo "Exploring build content"
+ls -l firmware/build
+echo "Exploring deliver content"
 ls -l firmware/deliver
 
 cp firmware/deliver/rusefi.bin $FOLDER
