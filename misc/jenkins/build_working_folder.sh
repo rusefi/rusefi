@@ -94,6 +94,9 @@ cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 # just for now - DFU work in progress
 #cp firmware/deliver/rusefi_no_asserts.hex $FOLDER
 
+pwd
+ls -l firmware/deliver
+
 cp firmware/deliver/rusefi.bin $FOLDER
 
 cp firmware/deliver/rusefi.dfu $FOLDER
