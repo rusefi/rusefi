@@ -159,6 +159,12 @@ include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 
 BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
+
+ifeq ($(SHORT_BOARD_NAME),)
+$(error SHORT_BOARD_NAME not set, something wrong with your board.mk file)
+endif
+DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
+
 include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
 
