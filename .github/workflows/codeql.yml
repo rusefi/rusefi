@@ -67,6 +67,15 @@ jobs:
       working-directory: ./firmware/
       run: ./gen_default_everything.sh
 
+    - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
+      uses: carlosperate/arm-none-eabi-gcc-action@v1
+      with:
+        release: '12.2.Rel1'
+
+      # Make sure the compiler we just downloaded works - just print out the version
+    - name: Test arm-none-eabi-gcc Compiler
+      run: arm-none-eabi-gcc -v
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
