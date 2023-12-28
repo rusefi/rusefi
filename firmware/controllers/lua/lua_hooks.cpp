@@ -168,10 +168,21 @@ static int validateCanChannelAndConvertFromHumanIntoZeroIndex(lua_State* l) {
 }
 
 static int lua_txCan(lua_State* l) {
-	auto bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
-
-	auto id = luaL_checkinteger(l, 2);
-	auto ext = luaL_checkinteger(l, 3);
+  int bus;
+  int id;
+  int ext;
+  int dataIndex;
+  if (lua_gettop(l) == 2) {
+    bus = 0;
+    id = luaL_checkinteger(l, 1);
+    ext = 0;
+    dataIndex = 2;
+  } else {
+    bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
+    id = luaL_checkinteger(l, 2);
+	  ext = luaL_checkinteger(l, 3);
+    dataIndex = 4;
+  }
 
 	// Check that ID is valid based on std vs. ext
 	if (ext == 0) {
@@ -188,10 +199,10 @@ static int lua_txCan(lua_State* l) {
 	uint8_t dlc = 0;
 
 	// todo: reduce code duplication with getArray
-	luaL_checktype(l, 4, LUA_TTABLE);
+	luaL_checktype(l, dataIndex, LUA_TTABLE);
 	while (true) {
 		lua_pushnumber(l, dlc + 1);
-		auto elementType = lua_gettable(l, 4);
+		auto elementType = lua_gettable(l, dataIndex);
 		auto val = lua_tonumber(l, -1);
 		lua_pop(l, 1);
 
