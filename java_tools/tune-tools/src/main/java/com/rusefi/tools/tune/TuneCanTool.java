@@ -49,7 +49,11 @@ public class TuneCanTool {
 
         RootHolder.ROOT = "../firmware/";
 
-        processREOtune(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "BK2");
+        writeDiffBetweenLocalTuneFileAndDefaultTune("x", TuneCanTool.DEFAULT_TUNE,
+            "C:\\stuff\\i\\canam-2022-short\\canam-progress-nov-26.msq",  "x");
+
+
+//        processREOtune(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "BK2");
 //        processREOtune(1502, Fields.engine_type_e_HYUNDAI_PB, "PB");
 //        processREOtune(1490, Fields.engine_type_e_MRE_M111, "m111-alex");
 //        handle("Mitsubicha", 1258);
@@ -76,7 +80,7 @@ public class TuneCanTool {
 
       writeDiffBetweenLocalTuneFileAndDefaultTune(vehicleName, currentTuneFileName, localFileName, url);
     }
-    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String currentTuneFileName, String localFileName, String cannedComment) throws JAXBException, IOException {
+    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String defaultTuneFileName, String localFileName, String cannedComment) throws JAXBException, IOException {
         String reportsOutputFolder = "tune_reports";
         new File(reportsOutputFolder).mkdir();
 
@@ -84,8 +88,8 @@ public class TuneCanTool {
 
         StringBuilder methods = new StringBuilder();
 
-        Msq currentTune = Msq.readTune(currentTuneFileName);
-        StringBuilder sb = TuneCanTool.getTunePatch(currentTune, custom, ini, currentTuneFileName, methods);
+        Msq defaultTune = Msq.readTune(defaultTuneFileName);
+        StringBuilder sb = TuneCanTool.getTunePatch(defaultTune, custom, ini, defaultTuneFileName, methods);
 
         String fileNameMethods = reportsOutputFolder + "/" + vehicleName + "_methods.md";
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
@@ -177,8 +181,8 @@ public class TuneCanTool {
 
                 if (cf.isArray()) {
                     if (cf.getArraySizes().length == 2) {
-                        //float[][] tableData = TableData.readTable(currentTuneFileName, name, ini);
-                        //System.out.printf(" " + name);
+                        float[][] tableData = TableData.readTable(currentTuneFileName, name, ini);
+                        System.out.printf(" " + name);
                         continue;
                     }
 

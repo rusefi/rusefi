@@ -7,7 +7,6 @@ import com.rusefi.tools.tune.TuneTools;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
 import org.junit.Assert;
-import org.junit.function.ThrowingRunnable;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;

@@ -43,7 +43,7 @@ public class CurveData implements HoHo {
             return null;
         ArrayIniField field = (ArrayIniField) iniField;
         int curveSize = field.getRows();
-        BufferedReader r = TS2C.readAndScroll(msqFileName, curveName + "\"");
+        BufferedReader r = TS2C.readAndScroll(msqFileName, curveName + "\"", TS2C.fileFactory);
         float[] curveValues = new float[curveSize];
         readAxle(curveValues, r);
 

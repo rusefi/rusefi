@@ -6,7 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public class TableData {
     @NotNull
@@ -16,22 +18,27 @@ public class TableData {
         if (field.getRows() != field.getCols())
             throw new UnsupportedOperationException("Not square table not supported yet");
         // todo: replace with loadCount & rpmCount
-        int size = field.getRows();
+        int rows = field.getRows();
 
-        float[][] table = new float[size][];
-        for (int i = 0; i < size; i++) {
-            table[i] = new float[size];
+        return readTable(msqFileName, tableName, rows, TS2C.fileFactory, field.getCols());
+    }
+
+    @NotNull
+    public static float[][] readTable(String msqFileName, String tableName, int rows, Function<String, Reader> factory, int columns) throws IOException {
+        float[][] table = new float[rows][];
+        for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
+            table[rowIndex] = new float[columns];
         }
 
-        BufferedReader reader = TS2C.readAndScroll(msqFileName, tableName);
-        readTable(table, reader, size);
+        BufferedReader reader = TS2C.readAndScroll(msqFileName, tableName, factory);
+        readTable(table, reader, rows, columns);
         return table;
     }
 
-    private static void readTable(float[][] table, BufferedReader r, int size) throws IOException {
-        int index = 0;
+    private static void readTable(float[][] table, BufferedReader r, int rows, int columns) throws IOException {
+        int rowIndex = 0;
 
-        while (index < size) {
+        while (rowIndex < rows) {
             String line = r.readLine();
             if (line == null)
                 throw new IOException("End of file?");
@@ -40,19 +47,19 @@ public class TableData {
                 continue;
 
             String[] values = line.split("\\s");
-            if (values.length != size)
-                throw new IllegalStateException("Expected " + size + " but got " + Arrays.toString(values) + ". Unexpected line: " + line);
+            if (values.length != columns)
+                throw new IllegalStateException("Expected " + columns + " but got " + values.length + " content = " + Arrays.toString(values) + ". Unexpected line: " + line);
 
-            for (int i = 0; i < size; i++) {
-                String str = values[i];
+            for (int column = 0; column < columns; column++) {
+                String str = values[column];
                 try {
-                    table[index][i] = Float.parseFloat(str);
+                    table[rowIndex][column] = Float.parseFloat(str);
                 } catch (NumberFormatException e) {
                     throw new IllegalStateException("While reading " + str, e);
                 }
             }
-            System.out.println("Got line " + index + ": " + Arrays.toString(table[index]));
-            index++;
+            System.out.println("Got line " + rowIndex + ": " + Arrays.toString(table[rowIndex]));
+            rowIndex++;
         }
     }
 }
