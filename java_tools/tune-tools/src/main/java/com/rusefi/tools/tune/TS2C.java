@@ -103,9 +103,9 @@ public class TS2C {
 
     @NotNull
     public static String getTableCSourceCode2(String msqFileName, String tableName, IniFileModel model, CurveData xRpmCurve, CurveData yLoadBins) throws IOException {
-        float[][] table = TableData.readTable(msqFileName, tableName, model);
+        TableData table = TableData.readTable(msqFileName, tableName, model);
 
-        return getTableCSourceCode(tableName, yLoadBins, xRpmCurve, table);
+        return getTableCSourceCode(tableName, yLoadBins, xRpmCurve, table.floats);
     }
 
     private static String getTableCSourceCode(String tableName, CurveData loadBins, CurveData rpmBins, float[][] table) {
@@ -131,6 +131,13 @@ public class TS2C {
         }
     }
 
+    public static void writePlainTable(int rows, int columns, StringBuilder sb, ValueSource valueSource) {
+        for (int row = 0; row < rows; row++) {
+            String line = writePlainTableLine(valueSource, row, columns);
+            sb.append(line);
+        }
+    }
+
     /**
      * @param fileName       text file to open
      * @param magicStringKey magic string content to scroll to
@@ -150,6 +157,17 @@ public class TS2C {
             }
         }
         return br;
+    }
+
+    private static String writePlainTableLine(ValueSource valueSource, int loadIndex, int loadSize) {
+        StringBuilder sb = new StringBuilder("{");
+
+        for (int rpmIndex = 0; rpmIndex < loadSize; rpmIndex++) {
+            sb.append(String.format("%3.3f", valueSource.getValue(loadIndex, rpmIndex)) + ",\t");
+        }
+        sb.append("},\n");
+
+        return sb.toString();
     }
 
     private static String writeTableLine(CurveData loadBins, CurveData rpmBins, ValueSource valueSource, int loadIndex) {
@@ -175,8 +193,8 @@ public class TS2C {
         return x;
     }
 
-    interface ValueSource {
-        float getValue(int loadIndex, int rpmIndex);
+    public interface ValueSource {
+        float getValue(int rowIndex, int columnIndex);
     }
 
 }

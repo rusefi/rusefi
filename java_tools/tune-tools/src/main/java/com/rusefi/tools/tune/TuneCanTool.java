@@ -180,16 +180,6 @@ public class TuneCanTool {
                 }
 
                 if (cf.isArray()) {
-                    if (cf.getArraySizes().length == 2) {
-                        float[][] tableData = TableData.readTable(currentTuneFileName, name, ini);
-                        System.out.printf(" " + name);
-                        continue;
-                    }
-
-                    CurveData data = CurveData.valueOf(currentTuneFileName, name, ini);
-                    if (data == null)
-                        continue;
-
                     String parentReference;
                     if (cf.getParent().getName().equals("engine_configuration_s")) {
                         parentReference = "engineConfiguration->";
@@ -201,6 +191,21 @@ public class TuneCanTool {
                         System.out.println(" " + cf);
                         continue;
                     }
+
+
+                    if (cf.getArraySizes().length == 2) {
+                        TableData tableData = TableData.readTable(currentTuneFileName, name, ini);
+                        System.out.printf(" " + name);
+
+                        methods.append(tableData.getCsourceMethod(parentReference));
+                        invokeMethods.append(tableData.getCinvokeMethod());
+                        continue;
+                    }
+
+                    CurveData data = CurveData.valueOf(currentTuneFileName, name, ini);
+                    if (data == null)
+                        continue;
+
 
                     methods.append(data.getCsourceMethod(parentReference));
                     invokeMethods.append(data.getCinvokeMethod());

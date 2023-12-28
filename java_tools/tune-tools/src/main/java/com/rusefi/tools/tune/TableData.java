@@ -10,21 +10,31 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.function.Function;
 
-public class TableData {
-    @NotNull
-    public static float[][] readTable(String msqFileName, String tableName, IniFileModel model) throws IOException {
-        ArrayIniField field = (ArrayIniField) model.allIniFields.get(tableName);
+public class TableData implements HoHo {
+    private final int rows;
+    private final int columns;
+    public final float[][] floats;
+    private final String tableName;
 
-        if (field.getRows() != field.getCols())
-            throw new UnsupportedOperationException("Not square table not supported yet");
-        // todo: replace with loadCount & rpmCount
-        int rows = field.getRows();
-
-        return readTable(msqFileName, tableName, rows, TS2C.fileFactory, field.getCols());
+    public TableData(int rows, int columns, float[][] floats, String tableName) {
+        this.rows = rows;
+        this.columns = columns;
+        this.floats = floats;
+        this.tableName = tableName;
     }
 
     @NotNull
-    public static float[][] readTable(String msqFileName, String tableName, int rows, Function<String, Reader> factory, int columns) throws IOException {
+    public static TableData readTable(String msqFileName, String tableName, IniFileModel model) throws IOException {
+        ArrayIniField field = (ArrayIniField) model.allIniFields.get(tableName);
+
+        int rows = field.getRows();
+
+        int columns = field.getCols();
+        return readTable(msqFileName, tableName, rows, TS2C.fileFactory, columns);
+
+    }
+
+    public static TableData readTable(String msqFileName, String tableName, int rows, Function<String, Reader> factory, int columns) throws IOException {
         float[][] table = new float[rows][];
         for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
             table[rowIndex] = new float[columns];
@@ -32,7 +42,7 @@ public class TableData {
 
         BufferedReader reader = TS2C.readAndScroll(msqFileName, tableName, factory);
         readTable(table, reader, rows, columns);
-        return table;
+        return new TableData(rows, columns, table, tableName);
     }
 
     private static void readTable(float[][] table, BufferedReader r, int rows, int columns) throws IOException {
@@ -61,5 +71,40 @@ public class TableData {
             System.out.println("Got line " + rowIndex + ": " + Arrays.toString(table[rowIndex]));
             rowIndex++;
         }
+    }
+
+    public String getCTable() {
+        StringBuilder output = new StringBuilder();
+        TS2C.writePlainTable(rows, columns, output, (loadIndex, rpmIndex) -> floats[loadIndex][rpmIndex]);
+        return output.toString();
+    }
+
+    private String getCannedMethod() {
+        return "canned" + tableName + "()";
+    }
+
+    private String getCannedName() {
+        return "hardCoded" + tableName;
+    }
+
+    @NotNull
+    public String getCsourceCode() {
+        return "static const float " +
+            getCannedName() + "[" + rows + "][" + columns + "] = {\n" +
+            getCTable() +
+            "};\n";
+    }
+
+    @Override
+    public String getCsourceMethod(String reference) {
+        return "static void " + getCannedMethod() + " {\n"
+            + "\t" + getCsourceCode() +
+            "\tcopyTable(" + reference + tableName + ", " + getCannedName() + ");\n" +
+            "}\n\n";
+    }
+
+    @Override
+    public String getCinvokeMethod() {
+        return "\t" + getCannedMethod() + ";\n";
     }
 }
