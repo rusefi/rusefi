@@ -3,7 +3,7 @@
 #include "hardware.h"
 
 /*
- * We need only a small portion of code from FOME codebase in the bootloader.
+ * We need only a small portion of code in the bootloader.
  * Mostly it's efi_gpio.cpp, flash_main.cpp, etc. needed only to make it work.
  * And stubs needed just to settle down compiler errors.
  * The whole idea of bootloader is to make it as small as possible and reasonably independent.
