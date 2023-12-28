@@ -89,7 +89,7 @@ public class TuneCanTool {
         StringBuilder methods = new StringBuilder();
 
         Msq defaultTune = Msq.readTune(defaultTuneFileName);
-        StringBuilder sb = TuneCanTool.getTunePatch(defaultTune, custom, ini, defaultTuneFileName, methods);
+        StringBuilder sb = TuneCanTool.getTunePatch(defaultTune, custom, ini, localFileName, methods);
 
         String fileNameMethods = reportsOutputFolder + "/" + vehicleName + "_methods.md";
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
@@ -195,6 +195,8 @@ public class TuneCanTool {
 
                     if (cf.getArraySizes().length == 2) {
                         TableData tableData = TableData.readTable(currentTuneFileName, name, ini);
+                        if (tableData == null)
+                            continue;
                         System.out.printf(" " + name);
 
                         methods.append(tableData.getCsourceMethod(parentReference));
