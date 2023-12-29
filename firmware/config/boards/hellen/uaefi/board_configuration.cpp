@@ -55,7 +55,7 @@ void setBoardConfigOverrides() {
 
 	setHellenSdCardSpi1();
 	configureHellenMegaAccCS2Pin();
-	configureHellenCanTerminator();
+
 	setHellenCan();
 
 	setDefaultHellenAtPullUps();
