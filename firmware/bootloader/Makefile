@@ -113,7 +113,7 @@ endif
 #
 
 # Define project name here
-PROJECT = fome_bl
+PROJECT = openblt_$(PROJECT_BOARD)
 PROJECT_DIR = ..
 
 # Configure precompiled header
@@ -170,7 +170,7 @@ include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 
 OPENBLT_TRGT_DIR = $(PROJECT_DIR)/ext/openblt/Target
--include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/openblt/port.mk
+include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/openblt/port.mk
 
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
@@ -189,6 +189,7 @@ CSRC =  $(ALLCSRC) \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/xcp.c \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/nvm.c \
 	$(PROJECT_DIR)/hw_layer/openblt/hooks.c \
+	$(OPENBLT_PORT_FILES) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # todo: reduce code duplication with primary Makefile!!!
