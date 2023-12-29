@@ -2245,9 +2245,10 @@ end_struct
 #define ts_show_ignitionPinMode true
 #define ts_show_vr_threshold_pins true
 
-! we need to improve this further - at the moment we need too many boards to prepend 'false'
-#define show_test_presets true
-#define show_Frankenso_presets true
+#define show_test_presets false
+#define show_Frankenso_presets false
+#define show_microRusEFI_presets false
+#define show_Proteus_presets false
 
 #define CAN_ECU_SERIAL_RX_ID 0x100
 #define CAN_ECU_SERIAL_TX_ID 0x102

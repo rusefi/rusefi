@@ -1,3 +1,2 @@
-#define show_microRusEFI_presets false
-#define show_microRusEFI_presets false
-
+#define show_test_presets true
+#define show_Frankenso_presets true
