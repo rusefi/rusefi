@@ -169,6 +169,10 @@ include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 
+OPENBLT_TRGT_DIR = $(PROJECT_DIR)/ext/openblt/Target
+-include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/openblt/port.mk
+
+
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
