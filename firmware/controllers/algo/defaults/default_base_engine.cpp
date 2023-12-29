@@ -83,6 +83,9 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->boostCutPressure = 300;
 	engineConfiguration->boostCutPressureHyst = 20;
+  engineConfiguration->boostControlMinRpm = 2000;
+  engineConfiguration->boostControlMinTps = 30;
+  engineConfiguration->boostControlMinMap = 110;
 
 	engineConfiguration->primingDelay = 0.5;
 	engineConfiguration->vvtControlMinRpm = 500.0;
