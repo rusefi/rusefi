@@ -55,16 +55,16 @@ fi
 if [ "$USE_OPENBLT" = "yes" ]; then
   rm -f deliver/openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
-  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -o build-openblt/openblt_$PROJECT_BOARD.dfu
+  $HEX2DFU -i blbuild/openblt_$PROJECT_BOARD.hex -o blbuild/openblt_$PROJECT_BOARD.dfu
 
   # do we need all these formats?
-  cp build-openblt/openblt_$PROJECT_BOARD.bin  deliver/openblt.bin
-  cp build-openblt/openblt_$PROJECT_BOARD.dfu  deliver/openblt.dfu
-  #cp build-openblt/openblt_$PROJECT_BOARD.hex  deliver/openblt.hex
+  cp blbuild/openblt_$PROJECT_BOARD.bin  deliver/openblt.bin
+  cp blbuild/openblt_$PROJECT_BOARD.dfu  deliver/openblt.dfu
+  #cp blbuild/openblt_$PROJECT_BOARD.hex  deliver/openblt.hex
 
   rm -f deliver/rusefi_openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"
-  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu -b deliver/rusefi.bin
+  $HEX2DFU -i blbuild/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu -b deliver/rusefi.bin
   #todo: how to create 'signed' hex and srec? Do we need?
 fi
 
