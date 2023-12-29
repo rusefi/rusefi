@@ -14,6 +14,11 @@ static void cannedidleAdvanceBins() {
 	copyArray(config->idleAdvanceBins, hardCodedidleAdvanceBins);
 }
 
+static void cannedcltIdleRpm() {
+	static const float hardCodedcltIdleRpm[16] = {1860.0, 1860.0, 1800.0, 1700.0, 1660.0, 1600.0, 1560.0, 1500.0, 1500.0, 1460.0, 1460.0, 1440.0, 1400.0, 1400.0, 1500.0, 1600.0};
+	copyArray(config->cltIdleRpm, hardCodedcltIdleRpm);
+}
+
 static void cannedidleAdvance() {
 	static const float hardCodedidleAdvance[8] = {10.0, 10.571428, 11.142858, 11.714286, 12.285714, 12.857142, 13.428572, 14.0};
 	copyArray(config->idleAdvance, hardCodedidleAdvance);
@@ -60,11 +65,11 @@ static void cannedpedalToTpsRpmBins() {
 }
 
 static void cannedcltIdleCorr() {
-	static const float hardCodedcltIdleCorr[16] = {1.1, 1.1, 0.9333, 0.9333, 0.9333, 0.9333, 0.9333, 0.9333, 0.9333, 0.8333, 0.7667, 0.65, 0.6, 0.6, 0.6, 0.6};
+	static const float hardCodedcltIdleCorr[16] = {1.1, 1.1, 0.9333, 0.9333, 0.9333, 0.8333, 0.6333, 0.6333, 0.5, 0.5, 0.4667, 0.3, 0.3, 0.3, 0.3, 0.3};
 	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
 }
 
 static void cannedcltCrankingCorr() {
-	static const float hardCodedcltCrankingCorr[8] = {1.0, 1.0, 1.0, 0.7, 0.7, 0.7, 0.7, 0.7};
+	static const float hardCodedcltCrankingCorr[8] = {1.0, 1.0, 1.0, 0.8, 0.8, 0.8, 0.8, 0.8};
 	copyArray(config->cltCrankingCorr, hardCodedcltCrankingCorr);
 }
