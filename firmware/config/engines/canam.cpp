@@ -24,11 +24,22 @@ void setMaverickX3() {
     engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
     engineConfiguration->isForcedInduction = true;
     engineConfiguration->vvtOffsets[0] = 116;
-    engineConfiguration->injector.flow = 550;
+    engineConfiguration->injector.flow = 320;
+    engineConfiguration->etbIdleThrottleRange = 10;
 
     engineConfiguration->iacByTpsHoldTime = 2;
     engineConfiguration->iacByTpsDecayTime = 2;
+    engineConfiguration->iacByTpsTaper = 5;
     engineConfiguration->useIdleTimingPidControl = true;
+    engineConfiguration->idleTimingSoftEntryTime = 1;
+
+    engineConfiguration->tpsAccelLookback = 0.3;
+    engineConfiguration->tpsAccelEnrichmentThreshold = 12;
+    engineConfiguration->tpsDecelEnleanmentThreshold = 7;
+    engineConfiguration->tpsAccelFractionPeriod = 3;
+    engineConfiguration->tpsAccelFractionDivisor = 0.3;
+
+    engineConfiguration->isBoostControlEnabled = true;
 
     engineConfiguration->idleTimingPid.dFactor = 0.0005;
     engineConfiguration->idleTimingPid.minValue = -5;
@@ -91,6 +102,10 @@ void setMaverickX3() {
 	engineConfiguration->luaDigitalInputPins[3] = PROTEUS_IN_AV_8_DIGITAL;
 #endif // HW_PROTEUS
 
+    engineConfiguration->gppwm[0].pwmFrequency = 0;
+    engineConfiguration->gppwm[0].dutyIfError = 100;
+    engineConfiguration->gppwm[0].rpmAxis = GPPWM_Iat;
+    engineConfiguration->gppwm[0].loadAxis = GPPWM_Map;
 	strcpy(engineConfiguration->gpPwmNote[0], "IC Fan");
 	strcpy(engineConfiguration->gpPwmNote[1], "Acc Relay");
 
