@@ -52,8 +52,7 @@ void setBoardConfigOverrides() {
 	configureHellenCanTerminator();
 	setHellenCan();
 
-	engineConfiguration->clt.config.bias_resistor = 4700;
-	engineConfiguration->iat.config.bias_resistor = 4700;
+	setDefaultHellenAtPullUps();
 
 	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_CRANK;
 	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D1;

@@ -58,8 +58,7 @@ void setBoardConfigOverrides() {
 	configureHellenCanTerminator();
 	setHellenCan();
 
-	engineConfiguration->clt.config.bias_resistor = 4700;
-	engineConfiguration->iat.config.bias_resistor = 4700;
+	setDefaultHellenAtPullUps();
 
     // PWM pin
     engineConfiguration->etbIo[0].controlPin = Gpio::MM100_OUT_PWM3;
