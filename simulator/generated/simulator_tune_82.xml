@@ -166,9 +166,9 @@
         <constant digits="0" name="ALSMaxTPS" units="%">5.0</constant>
         <constant name="crankingInjectionMode">"Simultaneous"</constant>
         <constant name="injectionMode">"Sequential"</constant>
-        <constant digits="0" name="boostControlMinRpm" units="">0.0</constant>
-        <constant digits="0" name="boostControlMinTps" units="">0.0</constant>
-        <constant digits="0" name="boostControlMinMap" units="">0.0</constant>
+        <constant digits="0" name="boostControlMinRpm" units="">2000.0</constant>
+        <constant digits="0" name="boostControlMinTps" units="">30.0</constant>
+        <constant digits="0" name="boostControlMinMap" units="">110.0</constant>
         <constant digits="0" name="crankingTimingAngle" units="deg">6.0</constant>
         <constant name="ignitionMode">"Individual Coils"</constant>
         <constant digits="0" name="gapTrackingLengthOverride" units="count">0.0</constant>
