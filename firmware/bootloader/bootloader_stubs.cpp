@@ -12,7 +12,9 @@
 void chDbgPanic3(const char* /*msg*/, const char* /*file*/, int /*line*/) {
 }
 
+extern "C" {
 void logHardFault(uint32_t type, uintptr_t faultAddress, struct port_extctx* ctx, uint32_t csfr) { }
+}
 
 void setPinConfigurationOverrides() { }
 
