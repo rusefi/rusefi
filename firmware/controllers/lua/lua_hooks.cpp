@@ -273,8 +273,8 @@ static int lua_startPwm(lua_State* l) {
         return 0;
     }
 
-	// clamp to 1..1000 hz
-//	freq = clampF(1, freq, 1000);
+	// clamp to 1..1000 hz, this line would turn 0hz on/off PWM into 1hz behind the scenes
+	freq = clampF(1, freq, 1000);
 
 	startSimplePwmExt(
 		&p.pwm, "lua", &engine->executor,
