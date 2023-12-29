@@ -49,8 +49,8 @@ public class TuneCanTool {
 
         RootHolder.ROOT = "../firmware/";
 
-        writeDiffBetweenLocalTuneFileAndDefaultTune("x", TuneCanTool.DEFAULT_TUNE,
-            "C:\\stuff\\i\\canam-2022-short\\canam-progress-nov-26.msq",  "x");
+        writeDiffBetweenLocalTuneFileAndDefaultTune("x", getDefaultTuneName(Fields.engine_type_e_MAVERICK_X3),
+            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq",  "x");
 
 
 //        processREOtune(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "BK2");
@@ -69,7 +69,12 @@ public class TuneCanTool {
         // compare specific internet tune to total global default
         handle(key, tuneId, TuneCanTool.DEFAULT_TUNE);
         // compare same internet tune to default tune of specified engine type
-        handle(key + "-diff", tuneId, SIMULATED_PREFIX + "_" + engineType + SIMULATED_SUFFIX);
+        handle(key + "-diff", tuneId, getDefaultTuneName(engineType));
+    }
+
+    @NotNull
+    private static String getDefaultTuneName(int engineType) {
+        return SIMULATED_PREFIX + "_" + engineType + SIMULATED_SUFFIX;
     }
 
     private static void handle(String vehicleName, int tuneId, String currentTuneFileName) throws JAXBException, IOException {
