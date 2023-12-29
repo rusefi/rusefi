@@ -109,7 +109,9 @@ void startWatchdog(int timeoutMs) {
 	static WDGConfig wdgcfg;
 	wdgcfg.pr = STM32_IWDG_PR_64;	// t = (1/32768) * 64 = ~2 ms
 	wdgcfg.rlr = STM32_IWDG_RL((uint32_t)((32.768f / 64.0f) * timeoutMs));
+#if 0
   efiPrintf("[wdgStart]");
+#endif
 	wdgStart(&WDGD1, &wdgcfg);
 #endif // HAL_USE_WDG
 }
@@ -117,7 +119,9 @@ void startWatchdog(int timeoutMs) {
 static efitimems_t watchdogResetPeriodMs = 0;
 
 void setWatchdogResetPeriod(int resetMs) {
+#if 0
   efiPrintf("[dev] wd %d", resetMs);
+#endif
 	watchdogResetPeriodMs = (efitimems_t)resetMs;
 }
 
