@@ -5,8 +5,10 @@
 # exclude flash-layout.c as this one is directly included in a source file, when used.
 #PROJ_FILES += $(filter-out $(OPENBLT_PORT_DIR)/flash_layout.c, $(call rwildcard, $(OPENBLT_PORT_DIR), *.c *.h *.s))
 # reuse ST32F7xx HAL and CMSIS from one of OpenBLT examples to avoid having copy in rusEFI git
-OPENBLT_PORT_FILES += $(filter-out uip, $(call rwildcard, $(OPENBLT_TRGT_DIR)/Source/ARMCM4_STM32F7/, *.c *.h *.s))
-OPENBLT_PORT_FILES += $(filter-out uip, $(call rwildcard, $(OPENBLT_TRGT_DIR)/Source/ARMCM4_STM32F7/GCC/, *.c *.h *.s))
+OPENBLT_PORT_DIR = $(OPENBLT_TRGT_DIR)/Source/ARMCM7_STM32F7
+OPENBLT_PORT_CSRC += $(filter-out uip, $(call wildcard, $(OPENBLT_PORT_DIR)/*.c))
+OPENBLT_PORT_DIR_GCC = $(OPENBLT_PORT_DIR)/GCC
+OPENBLT_PORT_CSRC += $(filter-out uip, $(call wildcard, $(OPENBLT_PORT_DIR_GCC)/*.c))
 # stm32f767xx.h
 #PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Demo/ARMCM7_STM32F7_Nucleo_F767ZI_GCC/Boot/lib/CMSIS/Device/ST/STM32F7xx/Include/*.h)
 #|--------------------------------------------------------------------------------------|
