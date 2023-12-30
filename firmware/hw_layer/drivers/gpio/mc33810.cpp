@@ -51,6 +51,8 @@ typedef enum {
 #define MC_CMD_PWM(pwm)					(0xa000 | ((pwm) & 0x0fff))
 #define MC_CMD_CLK_CALIB				(0xe000)
 
+#define MC_CMD_INVALID					(0xf000)
+
 /* get command code from TX value */
 #define TX_GET_CMD(v)				(((v) >> 12) & 0x000f)
 
@@ -74,6 +76,18 @@ typedef enum {
 
 /* 0000.1101.0000.1010b */
 #define SPI_CHECK_ACK				(0x0d0a)
+
+#define REP_FLAG_RESET				BIT(15)
+/* Command Out of Range */
+#define REP_FLAG_COR				BIT(14)
+/* Supply Out of Range */
+#define REP_FLAG_SOR				BIT(13)
+/* Over Voltage (Vpwr > 39V) */
+#define REP_FLAG_OV					BIT(13)
+/* Low Voltage (Vpwr < 5.3 .. 8.99V) */
+#define REP_FLAG_LV					BIT(12)
+/* Some V10-specific Fault */
+#define REP_FLAG_NMF				BIT(12)
 
 /*==========================================================================*/
 /* Driver exported variables.												*/
@@ -114,7 +128,6 @@ struct Mc33810 : public GpioChip {
 	uint8_t					o_direct_mask;
 
 	/* ALL STATUS RESPONSE value and flags */
-	bool					all_status_requested;
 	bool					all_status_updated;
 	uint16_t				all_status_value;
 
@@ -124,6 +137,15 @@ struct Mc33810 : public GpioChip {
 	uint16_t				gpgd_fault;
 	/* IGN mode fault register */
 	uint16_t				ign_fault;
+
+	uint16_t				recentTx;
+
+	/* statistic */
+	int						rst_cnt;
+	int						cor_cnt;
+	int 					sor_cnt;
+	int 					ov_cnt;
+	int 					lv_cnt;
 
 	mc33810_drv_state		drv_state;
 };
@@ -145,9 +167,9 @@ static const char* mc33810_pin_names[MC33810_OUTPUTS] = {
  * after transaction.
  */
 
-int Mc33810::spi_rw(uint16_t tx, uint16_t *rx)
+int Mc33810::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 {
-	uint16_t rxb;
+	uint16_t rx;
 	SPIDriver *spi = cfg->spi_bus;
 
 	/* Acquire ownership of the bus. */
@@ -159,28 +181,44 @@ int Mc33810::spi_rw(uint16_t tx, uint16_t *rx)
 	/* Atomic transfer operations. */
 	/* TODO: check why spiExchange transfers invalid data on STM32F7xx, DMA issue? */
 	//spiExchange(spi, 2, &tx, &rxb);
-	rxb = spiPolledExchange(spi, tx);
+	rx = spiPolledExchange(spi, tx);
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
-	if (rx)
-		*rx = rxb;
+	if (rx_ptr)
+		*rx_ptr = rx;
 
-	/* if reply on previous command is ALL STATUS RESPONSE */
-	if (all_status_requested) {
-		all_status_value = rxb;
-		all_status_updated = true;
+	if (recentTx != MC_CMD_INVALID) {
+		/* update statistic counters - common flags */
+		if (rx & REP_FLAG_RESET)
+			rst_cnt++;
+		if (rx & REP_FLAG_COR)
+			cor_cnt++;
+
+		if (((TX_GET_CMD(recentTx) >= 0x1) && (TX_GET_CMD(recentTx) <= 0xa)) ||
+			 (recentTx == MC_CMD_READ_REG(REG_ALL_STAT))) {
+			/* if reply on previous command is ALL STATUS RESPONSE */
+			all_status_value = rx;
+			all_status_updated = true;
+			/* update statistic counters - ALL STATUS flags */
+			if (rx & REP_FLAG_SOR)
+				sor_cnt++;
+			/* ignore NFM */
+		} else {
+			/* Some READ REGISTER reply with address != REG_ALL_STAT */
+			if (rx & REP_FLAG_OV)
+				ov_cnt++;
+			if (rx & REP_FLAG_LV)
+				lv_cnt++;
+		}
 	}
 
-	/* if next reply will be ALL STATUS RESPONSE */
-	all_status_requested =
-		(((TX_GET_CMD(tx) >= 0x1) && (TX_GET_CMD(tx) <= 0xa)) ||
-		 (tx == MC_CMD_READ_REG(REG_ALL_STAT)));
-
+	/* store currently tx'ed value to know what to expect on next rx */
+	recentTx = tx;
 #if 0
-	efiPrintf(DRIVER_NAME "SPI [%x][%x]", tx, rxb);
+	efiPrintf(DRIVER_NAME "SPI [%x][%x]", tx, rx);
 #endif
 	/* no errors for now */
 	return 0;
@@ -212,7 +250,7 @@ int Mc33810::update_output_and_diag()
 	}
 
 	/* this complicated logic to save few spi transfers in case we will receive status as reply on other command */
-	if (!all_status_requested) {
+	if (!all_status_updated) {
 		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), NULL);
 		if (ret)
 			return ret;
@@ -331,6 +369,9 @@ int Mc33810::chip_init()
 
 	init_cnt++;
 
+	/* we do not know last issue CMD (if was) */
+	recentTx = MC_CMD_INVALID;
+
 	/* check SPI communication */
 	/* 0. set echo mode, chip number - don't care */
 	ret  = spi_rw(MC_CMD_SPI_CHECK, NULL);
@@ -354,7 +395,7 @@ int Mc33810::chip_init()
 		efiPrintf(DRIVER_NAME " revision failed");
 		goto err_exit;
 	}
-	if (rx & BIT(14)) {
+	if (rx & REP_FLAG_COR) {
 		efiPrintf(DRIVER_NAME " spi COR status");
 		ret = -3;
 		goto err_exit;
