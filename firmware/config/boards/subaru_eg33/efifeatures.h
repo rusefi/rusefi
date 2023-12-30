@@ -102,9 +102,11 @@
 
 #define EFI_NARROW_EGO_AVERAGING		TRUE
 
+#ifndef EFI_BOOTLOADER // bootloader needs INT_FLASH and doesn't have MFS
 /* this board has external QSPI NOR flash */
 #undef EFI_STORAGE_MFS
 #define EFI_STORAGE_MFS				TRUE
 
 #undef EFI_STORAGE_INT_FLASH
 #define EFI_STORAGE_INT_FLASH   	FALSE
+#endif // EFI_BOOTLOADER
