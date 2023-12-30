@@ -2,6 +2,8 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
   $(BOARD_DIR)/board_storage.cpp
 
+# board.c from this directory
+BOARD_C = $(BOARD_DIR)/board.c
 # Required include directories
 BOARDINC += $(BOARD_DIR)/config/controllers/algo
 
