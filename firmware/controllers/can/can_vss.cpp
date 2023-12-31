@@ -16,6 +16,7 @@
 
 static bool isInit = false;
 static uint16_t filterVssCanID = 0;
+static uint16_t filterSecondVssCanID = 0;
 static uint16_t filterRpmCanID = 0;
 
 static expected<uint16_t> look_up_rpm_can_id(can_vss_nbc_e type) {
@@ -38,9 +39,11 @@ static expected<uint16_t> look_up_vss_can_id(can_vss_nbc_e type) {
 		case BMW_e90:
 			return 0x1A0;	// BMW E90 ABS speed frame (not wheel speeds, vehicle speed)
 		case NISSAN_350:
-		  return 0x280;
+		  // decimal 640 0x280 has cluster speed but we use wheel speeds
+		  return /*0x284*/644;
 		case HYUNDAI_PB:
-		  return 1264; // decimal 1264
+		  // decimal 1264 0x4F0 CLU1 has cluster speed but we use wheel speeds
+		  return /*0x1F1*/497;
 		case HONDA_CIVIC9:
 		  return 0x309;
 		case W202:
@@ -51,9 +54,26 @@ static expected<uint16_t> look_up_vss_can_id(can_vss_nbc_e type) {
 	}
 }
 
+static uint16_t look_up_second_vss_can_id(can_vss_nbc_e type) {
+	switch (type) {
+		case NISSAN_350:
+		  // decimal 640 0x280 has cluster speed but we use wheel speeds
+		  return /*0x285*/645;
+		default:
+		  // it's OK not to require second packet
+			return 0;
+	}
+}
+
 static int getTwoBytesLsb(const CANRxFrame& frame, int index) {
 	uint8_t low = frame.data8[index];
 	uint8_t high = frame.data8[index + 1] & 0xFF;
+	return low | (high << 8);
+}
+
+static int getTwoBytesMsb(const CANRxFrame& frame, int index) {
+	uint8_t low = frame.data8[index + 1];
+	uint8_t high = frame.data8[index] & 0x0FF;
 	return low | (high << 8);
 }
 
@@ -65,6 +85,19 @@ float processBMW_e46(const CANRxFrame& frame) {
 	uint16_t right = getTwoBytesLsb(frame, 6);
 
 	return (left + right) / (16 * 2);
+}
+
+// open question if that's front axle or rear axle?
+static int nissanFrontAxle = 0;
+
+float processNissan(const CANRxFrame& frame) {
+	// todo: open question which one is left which one is right
+	int left =  getTwoBytesMsb(frame, 0);
+	int right = getTwoBytesMsb(frame, 2);
+
+	nissanFrontAxle = left + right;
+
+	return nissanFrontAxle / (100 * 2);
 }
 
 float processBMW_e90(const CANRxFrame& frame) {
@@ -87,7 +120,8 @@ expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
 			return processBMW_e90(frame);
 		case W202:
 			return processW202(frame);
-//		case NISSAN_350:
+		case NISSAN_350:
+			return processNissan(frame);
 		default:
 			efiPrintf("vss unsupported can option selected %x", engineConfiguration->canVssNbcType );
 	}
@@ -96,6 +130,27 @@ expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
 }
 
 static StoredValueSensor canSpeed(SensorType::VehicleSpeed, MS2NT(500));
+static StoredValueSensor wheelSlipRatio(SensorType::WheelSlipRatio, MS2NT(1000));
+
+static void processNissanSecondVss(const CANRxFrame& frame, efitick_t nowNt) {
+	// todo: open question which one is left which one is right
+  int left =  getTwoBytesMsb(frame, 0);
+	int right = getTwoBytesMsb(frame, 2);
+
+	int rearAxle = left + right;
+
+	wheelSlipRatio.setValidValue(1.0 * nissanFrontAxle / rearAxle, nowNt);
+}
+
+void processCanRxSecondVss(const CANRxFrame& frame, efitick_t nowNt) {
+	switch (engineConfiguration->canVssNbcType) {
+		case NISSAN_350:
+		  processNissanSecondVss(frame, nowNt);
+		  return;
+		default:
+		  criticalError("Unexpected processCanRxSecondVss %d", (int)engineConfiguration->canVssNbcType);
+	}
+}
 
 void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 	if ((!engineConfiguration->enableCanVss) || (!isInit)) {
@@ -113,6 +168,11 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
   	}
 	}
 
+	if (CAN_SID(frame) == filterSecondVssCanID) {
+	  processCanRxSecondVss(frame, nowNt);
+	}
+
+
 	if (CAN_SID(frame) == filterRpmCanID) {
   }
 
@@ -122,7 +182,9 @@ void initCanVssSupport() {
 	if (engineConfiguration->enableCanVss) {
 		if (auto canId = look_up_vss_can_id(engineConfiguration->canVssNbcType)) {
 			filterVssCanID = canId.Value;
+			filterSecondVssCanID = look_up_second_vss_can_id(engineConfiguration->canVssNbcType);
 			canSpeed.Register();
+			wheelSlipRatio.Register();
 			isInit = true;
 		} else {
 			isInit = false;

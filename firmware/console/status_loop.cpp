@@ -450,6 +450,7 @@ static void updateVvtSensors() {
 static void updateVehicleSpeed() {
 #if EFI_VEHICLE_SPEED
 	engine->outputChannels.vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
+	engine->outputChannels.wheelSlipRatio = Sensor::getOrZero(SensorType::WheelSlipRatio);
 	engine->outputChannels.speedToRpmRatio = engine->module<GearDetector>()->getGearboxRatio();
 	engine->outputChannels.detectedGear = Sensor::getOrZero(SensorType::DetectedGear);
 #endif /* EFI_VEHICLE_SPEED */
@@ -733,10 +734,10 @@ void updateTunerStudioState() {
 		tle8888PostState();
 #endif /* BOARD_TLE8888_COUNT */
 		break;
-	case DBG_LOGIC_ANALYZER: 
-#if EFI_LOGIC_ANALYZER	
+	case DBG_LOGIC_ANALYZER:
+#if EFI_LOGIC_ANALYZER
 		reportLogicAnalyzerToTS();
-#endif /* EFI_LOGIC_ANALYZER */		
+#endif /* EFI_LOGIC_ANALYZER */
 		break;
 	default:
 		;
