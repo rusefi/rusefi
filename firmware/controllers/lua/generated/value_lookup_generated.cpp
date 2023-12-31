@@ -1441,27 +1441,6 @@ float getConfigValueByName(const char *name) {
 // triggerCompSensorSatRpm
 		case -953183719:
 			return engineConfiguration->triggerCompSensorSatRpm;
-// idleRpmPid2.pFactor
-		case 2018252734:
-			return engineConfiguration->idleRpmPid2.pFactor;
-// idleRpmPid2.iFactor
-		case 1567911543:
-			return engineConfiguration->idleRpmPid2.iFactor;
-// idleRpmPid2.dFactor
-		case -594461006:
-			return engineConfiguration->idleRpmPid2.dFactor;
-// idleRpmPid2.offset
-		case 1844327734:
-			return engineConfiguration->idleRpmPid2.offset;
-// idleRpmPid2.periodMs
-		case 1558588306:
-			return engineConfiguration->idleRpmPid2.periodMs;
-// idleRpmPid2.minValue
-		case -1013403216:
-			return engineConfiguration->idleRpmPid2.minValue;
-// idleRpmPid2.maxValue
-		case 1931108850:
-			return engineConfiguration->idleRpmPid2.maxValue;
 // mc33_i_boost
 		case -371707639:
 			return engineConfiguration->mc33_i_boost;
@@ -4143,41 +4122,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -953183719:
 	{
 		engineConfiguration->triggerCompSensorSatRpm = (int)value;
-		return 1;
-	}
-		case 2018252734:
-	{
-		engineConfiguration->idleRpmPid2.pFactor = value;
-		return 1;
-	}
-		case 1567911543:
-	{
-		engineConfiguration->idleRpmPid2.iFactor = value;
-		return 1;
-	}
-		case -594461006:
-	{
-		engineConfiguration->idleRpmPid2.dFactor = value;
-		return 1;
-	}
-		case 1844327734:
-	{
-		engineConfiguration->idleRpmPid2.offset = (int)value;
-		return 1;
-	}
-		case 1558588306:
-	{
-		engineConfiguration->idleRpmPid2.periodMs = (int)value;
-		return 1;
-	}
-		case -1013403216:
-	{
-		engineConfiguration->idleRpmPid2.minValue = (int)value;
-		return 1;
-	}
-		case 1931108850:
-	{
-		engineConfiguration->idleRpmPid2.maxValue = (int)value;
 		return 1;
 	}
 		case -371707639:

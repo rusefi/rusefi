@@ -1435,27 +1435,6 @@ Trigger comparator hysteresis voltage (Max)
 ### triggerCompSensorSatRpm
 VR-sensor saturation RPM
 
-### idleRpmPid2.pFactor
-
-
-### idleRpmPid2.iFactor
-
-
-### idleRpmPid2.dFactor
-
-
-### idleRpmPid2.offset
-Linear addition to PID logic
-
-### idleRpmPid2.periodMs
-PID dTime
-
-### idleRpmPid2.minValue
-Output Min Duty Cycle
-
-### idleRpmPid2.maxValue
-Output Max Duty Cycle
-
 ### mc33_i_boost
 Boost Current
 

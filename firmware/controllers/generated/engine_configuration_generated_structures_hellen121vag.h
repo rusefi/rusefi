@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Dec 27 00:56:10 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 15:18:59 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3764,7 +3764,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2672
 	 */
-	pid_s idleRpmPid2;
+	int8_t unusedHere[20];
 	/**
 	 * offset 2692
 	 */
@@ -5383,4 +5383,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22088);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Dec 27 00:56:10 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 15:18:59 UTC 2023

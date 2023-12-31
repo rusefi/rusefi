@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 04:29:15 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 15:20:29 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1083,7 +1083,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 618130865;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1312,7 +1311,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2023.12.31.f407-discovery.618130865";
+	public static final String TS_SIGNATURE = "rusEFI master.2023.12.31.f407-discovery.2470149857";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2369,13 +2368,7 @@ public class Fields {
 	public static final Field TRIGGERCOMPHYSTMIN = Field.create("TRIGGERCOMPHYSTMIN", 2669, FieldType.INT8).setScale(0.02).setBaseOffset(0);
 	public static final Field TRIGGERCOMPHYSTMAX = Field.create("TRIGGERCOMPHYSTMAX", 2670, FieldType.INT8).setScale(0.02).setBaseOffset(0);
 	public static final Field TRIGGERCOMPSENSORSATRPM = Field.create("TRIGGERCOMPSENSORSATRPM", 2671, FieldType.INT8).setScale(50.0).setBaseOffset(0);
-	public static final Field IDLERPMPID2_PFACTOR = Field.create("IDLERPMPID2_PFACTOR", 2672, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IDLERPMPID2_IFACTOR = Field.create("IDLERPMPID2_IFACTOR", 2676, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IDLERPMPID2_DFACTOR = Field.create("IDLERPMPID2_DFACTOR", 2680, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IDLERPMPID2_OFFSET = Field.create("IDLERPMPID2_OFFSET", 2684, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field IDLERPMPID2_PERIODMS = Field.create("IDLERPMPID2_PERIODMS", 2686, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field IDLERPMPID2_MINVALUE = Field.create("IDLERPMPID2_MINVALUE", 2688, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 2690, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 2672, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CANVSSNBCTYPE = Field.create("CANVSSNBCTYPE", 2692, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_2694 = Field.create("ALIGNMENTFILL_AT_2694", 2694, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_PIN = Field.create("GPPWM1_PIN", 2696, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
@@ -3950,13 +3943,7 @@ public class Fields {
 	TRIGGERCOMPHYSTMIN,
 	TRIGGERCOMPHYSTMAX,
 	TRIGGERCOMPSENSORSATRPM,
-	IDLERPMPID2_PFACTOR,
-	IDLERPMPID2_IFACTOR,
-	IDLERPMPID2_DFACTOR,
-	IDLERPMPID2_OFFSET,
-	IDLERPMPID2_PERIODMS,
-	IDLERPMPID2_MINVALUE,
-	IDLERPMPID2_MAXVALUE,
+	UNUSEDHERE,
 	CANVSSNBCTYPE,
 	ALIGNMENTFILL_AT_2694,
 	GPPWM1_PIN,
