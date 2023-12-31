@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 15:18:51 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 20:17:48 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3762,9 +3762,19 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> triggerCompSensorSatRpm;
 	/**
+	ratio
 	 * offset 2688
 	 */
-	int8_t unusedHere[20];
+	scaled_channel<uint16_t, 10, 1> tractionControlSlipBins[TRACTION_CONTROL_ETB_DROP_SIZE];
+	/**
+	RPM
+	 * offset 2700
+	 */
+	uint8_t tractionControlSpeedBins[TRACTION_CONTROL_ETB_DROP_SIZE];
+	/**
+	 * offset 2706
+	 */
+	int8_t unusedHere[2];
 	/**
 	 * offset 2708
 	 */
@@ -4468,10 +4478,15 @@ struct engine_configuration_s {
 	 */
 	float triggerVVTGapOverrideTo[VVT_TRACKING_LENGTH];
 	/**
-	units
+	%
 	 * offset 4364
 	 */
-	uint8_t mainUnusedEnd[208];
+	int8_t tractionControlEtbDrop[TRACTION_CONTROL_ETB_DROP_SIZE][TRACTION_CONTROL_ETB_DROP_SIZE];
+	/**
+	units
+	 * offset 4400
+	 */
+	uint8_t mainUnusedEnd[172];
 };
 static_assert(sizeof(engine_configuration_s) == 4572);
 
@@ -5206,17 +5221,17 @@ struct persistent_config_s {
 	%
 	 * offset 19460
 	 */
-	scaled_channel<int8_t, 10, 1> throttle2TrimTable[6][6];
+	scaled_channel<int8_t, 10, 1> throttle2TrimTable[ETB2_TRIM_SIZE][ETB2_TRIM_SIZE];
 	/**
 	%
 	 * offset 19496
 	 */
-	uint8_t throttle2TrimTpsBins[6];
+	uint8_t throttle2TrimTpsBins[ETB2_TRIM_SIZE];
 	/**
 	RPM
 	 * offset 19502
 	 */
-	scaled_channel<uint8_t, 1, 100> throttle2TrimRpmBins[6];
+	scaled_channel<uint8_t, 1, 100> throttle2TrimRpmBins[ETB2_TRIM_SIZE];
 	/**
 	deg
 	 * offset 19508
@@ -5383,4 +5398,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22104);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 15:18:51 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 20:17:48 UTC 2023

@@ -437,6 +437,7 @@
 #define engine_type_e_VW_ABA 32
 #define engine_type_e_WASTEGATE_PROTEUS_TEST 96
 #define engineSyncCam_enum "Intake First Bank", "Exhaust First Bank", "Intake Second Bank", "Exhaust Second Bank"
+#define ETB2_TRIM_SIZE 6
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
@@ -1145,7 +1146,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets true
-#define SIGNATURE_HASH 2470149857
+#define SIGNATURE_HASH 1870000711
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1199,6 +1200,7 @@
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 #define TPS_TPS_ACCEL_TABLE 8
+#define TRACTION_CONTROL_ETB_DROP_SIZE 6
 #define transmission_controller_e_enum "None", "Simple Transmission", "GM 4L6X"
 #define TransmissionControllerMode_auto_enum 0="None",2="Gm4l6x",1="SimpleTransmissionController"
 #define TransmissionControllerMode_Gm4l6x 2
@@ -1444,7 +1446,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2023.12.31.f407-discovery.2470149857"
+#define TS_SIGNATURE "rusEFI master.2023.12.31.f407-discovery.1870000711"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

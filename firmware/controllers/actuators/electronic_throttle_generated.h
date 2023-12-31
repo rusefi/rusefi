@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sat Feb 18 03:20:18 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Dec 31 20:17:24 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -171,11 +171,9 @@ struct electronic_throttle_s {
 	 */
 	int8_t etbErrorCode = (int8_t)0;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 49
 	 */
-	uint8_t alignmentFill_at_49[1];
+	int8_t tcEtbDrop = (int8_t)0;
 	/**
 	 * ETB jam timer
 	sec
@@ -186,4 +184,4 @@ struct electronic_throttle_s {
 static_assert(sizeof(electronic_throttle_s) == 52);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sat Feb 18 03:20:18 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Dec 31 20:17:24 UTC 2023

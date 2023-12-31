@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Tue Dec 26 22:46:57 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Dec 31 20:17:24 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -185,7 +185,7 @@ public class ElectronicThrottle {
 	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 44, FieldType.INT16).setScale(1.0).setBaseOffset(1352);
 	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 46, FieldType.INT16).setScale(1.0).setBaseOffset(1352);
 	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1352);
-	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1352);
+	public static final Field TCETBDROP = Field.create("TCETBDROP", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1352);
 	public static final Field JAMTIMER = Field.create("JAMTIMER", 50, FieldType.INT16).setScale(0.01).setBaseOffset(1352);
 	public static final Field[] VALUES = {
 	IDLEPOSITION,
@@ -203,7 +203,7 @@ public class ElectronicThrottle {
 	ETBTPSERRORCOUNTER,
 	ETBPPSERRORCOUNTER,
 	ETBERRORCODE,
-	ALIGNMENTFILL_AT_49,
+	TCETBDROP,
 	JAMTIMER,
 	};
 }
