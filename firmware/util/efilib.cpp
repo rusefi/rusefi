@@ -63,7 +63,7 @@ bool startsWith(const char *line, const char *prefix) {
 
 static char *ltoa_internal(char *p, uint32_t num, unsigned radix) {
 	constexpr int bufferLength = 10;
-	
+
 	char buffer[bufferLength];
 
 	size_t idx = bufferLength - 1;
@@ -84,7 +84,7 @@ static char *ltoa_internal(char *p, uint32_t num, unsigned radix) {
 		buffer[idx] = c;
 		idx--;
 	} while ((num /= radix) != 0);
-	
+
 	idx++;
 
 	// Now, we copy characters in to place in the final buffer
@@ -182,7 +182,7 @@ void printHistogram(Logging *logging, histogram_s *histogram) {
 #else
 	UNUSED(logging);
 	UNUSED(histogram);
-	
+
 #endif /* EFI_HISTOGRAMS */
 }
 
@@ -209,4 +209,16 @@ bool isPhaseInRange(float test, float current, float next) {
 		// or if test if before next (ie, between start of cycle and next tooth)
 		return afterCurrent || beforeNext;
 	}
+}
+
+// see also getBitRange in lua_lib.h
+int getBitRangeLsb(uint8_t data[], int bitIndex, int bitWidth) {
+	int byteIndex = bitIndex >> 3;
+	int shift = bitIndex - byteIndex * 8;
+	int value = data[byteIndex];
+	if (shift + bitWidth > 8) {
+		value = value + data[1 + byteIndex] * 256;
+	}
+	int mask = (1 << bitWidth) - 1;
+	return (value >> shift) & mask;
 }

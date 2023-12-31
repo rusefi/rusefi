@@ -231,6 +231,12 @@ TEST(LuaVag, unpackMotor3_iat) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 25.5);
 }
 
+TEST(Vag, unpackMotor3_desired_wheel_torque) {
+  uint8_t data[] = { 0x00, 0x62, 0xFA, 0xDA, 0x22, 0x00, 0x00, 0xFA};
+
+  EXPECT_NEAR_M3(getBitRangeLsb(data, 24, 12) * 0.39, 284.7);
+}
+
 TEST(LuaVag, unpackMotor3_desired_wheel_torque) {
 	const char* script = 	GET_BIT_RANGE_LSB	realMotor3Packet	R"(
 	function testFunc()
