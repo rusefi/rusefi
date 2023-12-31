@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Tue Dec 12 18:27:03 UTC 2023
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Sun Dec 31 04:03:39 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -135,6 +135,8 @@ case SensorType::VehicleSpeed:
   return "VehicleSpeed";
 case SensorType::WastegatePosition:
   return "WastegatePosition";
+case SensorType::WheelSlipRatio:
+  return "WheelSlipRatio";
   }
  return NULL;
 }

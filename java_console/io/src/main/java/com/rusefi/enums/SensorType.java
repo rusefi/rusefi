@@ -39,6 +39,7 @@ public enum SensorType {
 	BarometricPressure,
 	FuelLevel,
 	VehicleSpeed,
+	WheelSlipRatio,
 	TurbochargerSpeed,
 	MapFast,
 	MapSlow,
