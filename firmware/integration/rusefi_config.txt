@@ -1816,9 +1816,11 @@ uint8_t[8] tcu_tccUnlockSpeed;;"MPH", 1, 0, 0, 255, 0
 uint8_t[8] tcu_32SpeedBins;;"KPH", 1, 0, 0, 255, 0
 uint8_t[8] tcu_32Vals;;"%", 1, 0, 0, 255, 0
 
-int8_t[6 x 6] autoscale throttle2TrimTable;;"%", 0.1, 0, -10, 10, 1
-uint8_t[6] throttle2TrimTpsBins;;"%", 1, 0, 0, 120, 0
-uint8_t[6] autoscale throttle2TrimRpmBins;;"RPM", 100, 0, 0, 25000, 0
+#define ETB2_TRIM_SIZE 6
+
+int8_t[ETB2_TRIM_SIZE x ETB2_TRIM_SIZE] autoscale throttle2TrimTable;;"%", 0.1, 0, -10, 10, 1
+uint8_t[ETB2_TRIM_SIZE] throttle2TrimTpsBins;;"%", 1, 0, 0, 120, 0
+uint8_t[ETB2_TRIM_SIZE] autoscale throttle2TrimRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
 uint8_t[6 x 6] autoscale maxKnockRetardTable;;"deg", 0.25, 0, 0, 30, 2
 uint8_t[6] maxKnockRetardLoadBins;;"%", 1, 0, 0, 250, 0
