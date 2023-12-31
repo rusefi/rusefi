@@ -544,6 +544,11 @@ jobs:
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.short-board-name}}
         fi
 
+    - name: Git Status
+      if: ${{ env.skip != 'true' }}
+      run: |
+        git status
+
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
       if: ${{ env.skip != 'true' }}
       uses: carlosperate/arm-none-eabi-gcc-action@v1
