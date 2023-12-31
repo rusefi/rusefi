@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 27 20:20:53 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sun Dec 31 04:27:14 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1254,9 +1254,13 @@ struct output_channels_s {
 	/**
 	 * offset 680
 	 */
-	uint8_t unusedAtTheEnd[120];
+	float wheelSlipRatio = (float)0;
+	/**
+	 * offset 684
+	 */
+	uint8_t unusedAtTheEnd[116];
 };
 static_assert(sizeof(output_channels_s) == 800);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 27 20:20:53 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sun Dec 31 04:27:14 UTC 2023

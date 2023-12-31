@@ -278,6 +278,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.distanceTraveled, "distanceTraveled", "km", 1},
 	{engine->outputChannels.afrGasolineScale, "Air/Fuel Ratio (Gas Scale)", "AFR", 2},
 	{engine->outputChannels.afr2GasolineScale, "Air/Fuel Ratio 2 (Gas Scale)", "AFR", 2},
+	{engine->outputChannels.wheelSlipRatio, "wheelSlipRatio", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif
