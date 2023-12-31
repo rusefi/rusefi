@@ -99,7 +99,7 @@ float processNissan(const CANRxFrame& frame) {
 
 	nissanFrontAxle = left + right;
 
-	return nissanFrontAxle / (100 * 2);
+	return nissanFrontAxle / (100.0 * 2);
 }
 
 float processBMW_e90(const CANRxFrame& frame) {
@@ -112,20 +112,22 @@ float processW202(const CANRxFrame& frame) {
 	return tmp * 0.0625;
 }
 
+#define SLIP_RATIO(frontAxle, rearAxle) (((frontAxle) == 0 || (rearAxle) == 0) ? 1 : 1.0 * (frontAxle) / (rearAxle))
+
 float processHyundai(const CANRxFrame& frame, efitick_t nowNt) {
   int frontL = getBitRangeLsb(frame.data8, 16, 12);
   int frontR = getBitRangeLsb(frame.data8, 28, 12);
   int rearL = getBitRangeLsb(frame.data8, 40, 12);
   int rearR = getBitRangeLsb(frame.data8, 52, 12);
 
-  int frontAxle = (frontL + frontR) / 2;
-  int rearAxle = (rearL + rearR) / 2;
+  int frontAxle = (frontL + frontR);
+  int rearAxle = (rearL + rearR);
 
-  efiPrintf("frontL %d rearL %d", frontL, rearL);
+  efiPrintf("processHyundai: frontL %d rearL %d", frontL, rearL);
 
-  wheelSlipRatio.setValidValue(1.0 * frontAxle / rearAxle, nowNt);
+  wheelSlipRatio.setValidValue(SLIP_RATIO(frontAxle, rearAxle), nowNt);
 
-  return frontAxle;
+  return frontAxle / /*average*/2 / /* scale */8;
 }
 
 /* End of specific processing functions */
@@ -158,7 +160,9 @@ static void processNissanSecondVss(const CANRxFrame& frame, efitick_t nowNt) {
 
 	int rearAxle = left + right;
 
-	wheelSlipRatio.setValidValue(1.0 * nissanFrontAxle / rearAxle, nowNt);
+	efiPrintf("processHyundai: front %d rear %d", nissanFrontAxle, rearAxle);
+
+	wheelSlipRatio.setValidValue(SLIP_RATIO(nissanFrontAxle, rearAxle), nowNt);
 }
 
 void processCanRxSecondVss(const CANRxFrame& frame, efitick_t nowNt) {
