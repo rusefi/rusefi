@@ -53,7 +53,7 @@ static expected<uint16_t> look_up_vss_can_id(can_vss_nbc_e type) {
 
 static int getTwoBytesLsb(const CANRxFrame& frame, int index) {
 	uint8_t low = frame.data8[index];
-	uint8_t high = frame.data8[index + 1] & 0x0F;
+	uint8_t high = frame.data8[index + 1] & 0xFF;
 	return low | (high << 8);
 }
 
