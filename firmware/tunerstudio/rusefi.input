@@ -2028,7 +2028,7 @@ menuDialog = main
 		subMenu = hpfpCompensationTable,					"HPFP Pump Compensation", {hpfpCamLobes != 0}
 		subMenu = std_separator
 		subMenu = fancyHardwareDialog,		"Fancy Hardware"
-		subMenu = tractionEtbTableTbl
+		subMenu = tractionEtbTableTbl,    "Traction Control ETB Drop"
 		subMenu = std_separator
 
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
