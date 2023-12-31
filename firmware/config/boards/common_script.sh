@@ -7,16 +7,26 @@ PROJECT_CPU=$2
 set -e
 
 SCRIPT_NAME="common_script.sh"
-echo "Entering $SCRIPT_NAME with board [$1] and CPU [$2]"
+
+# check if board dir is set
+if [ ! -z "$3" ]; then
+  echo "Entering $SCRIPT_NAME with board [$1] at [$3] and CPU [$2]"
+  OPTIONAL_BOARD_DIR="BOARD_DIR=$3"
+  OPTIONAL_BOARD_DIR_BL="BOARD_DIR=../$3"
+else
+  echo "Entering $SCRIPT_NAME with board [$1] and CPU [$2]"
+  OPTIONAL_BOARD_DIR=""
+  OPTIONAL_BOARD_DIR_BL=""
+fi
 
 mkdir -p .dep
 # todo: start using env variable for number of threads or for '-r'
-make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
+make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU $OPTIONAL_BOARD_DIR
 [ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 if [ "$USE_OPENBLT" = "yes" ]; then
   # TODO: why is this rm necessary?
   rm -f pch/pch.h.gch/*
-  cd bootloader; make PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU -j12; cd ..
+  cd bootloader; make PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU $OPTIONAL_BOARD_DIR_BL -j12; cd ..
   [ -e bootloader/blbuild/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
 
