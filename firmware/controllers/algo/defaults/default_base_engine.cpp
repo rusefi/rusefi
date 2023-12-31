@@ -75,6 +75,9 @@ void setDefaultBaseEngine() {
 
     engineConfiguration->watchOutForLinearTime = true;
 
+  setLinearCurve(engineConfiguration->tractionControlSlipBins, /*from*/0.8, /*to*/1.2, 0.1);
+	setLinearCurve(engineConfiguration->tractionControlSpeedBins, /*from*/10, /*to*/120, 5);
+
 	engineConfiguration->turbochargerFilter = 0.01f;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;

@@ -546,6 +546,9 @@ bool validateConfig() {
 		ensureArrayIsAscendingOrDefault("Fuel Trim Rpm", config->fuelTrimRpmBins);
 		ensureArrayIsAscendingOrDefault("Fuel Trim Load", config->fuelTrimLoadBins);
 
+//todo		ensureArrayIsAscendingOrDefault("TC slip", engineConfiguration->tractionControlSlipBins);
+		ensureArrayIsAscendingOrDefault("TC speed", engineConfiguration->tractionControlSpeedBins);
+
 		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
 		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
 

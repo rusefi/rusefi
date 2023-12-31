@@ -118,6 +118,8 @@ struct_no_prefix engine_configuration_s
 
 #define SENT_INPUT_COUNT 1
 
+#define TRACTION_CONTROL_ETB_DROP_SIZE 6
+
 #define LUA_PWM_COUNT 8
 #define LUA_DIGITAL_INPUT_COUNT 8
 
@@ -1401,7 +1403,9 @@ tChargeMode_e tChargeMode;
 	uint8_t autoscale triggerCompHystMax;Trigger comparator hysteresis voltage (Max);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
 	uint8_t autoscale triggerCompSensorSatRpm;VR-sensor saturation RPM;"RPM", 50, 0, 0, 12000, 0
 
-	int8_t[20] unusedHere
+uint16_t[TRACTION_CONTROL_ETB_DROP_SIZE] autoscale tractionControlSlipBins;;"ratio", 0.1, 0, 0, 999, 1
+uint8_t[TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0, 250, 0
+	int8_t[2] unusedHere
 
 
 	custom can_vss_nbc_e 2 bits, U08, @OFFSET@, [0:2], "BMW_e46", "W202", "BMW E8x/E9x MK60e5", "Nissan 350", "Hyundai PB", "Honda Civic9"
@@ -1603,7 +1607,9 @@ uint8_t unusedExplicitFilling2
 	float[VVT_TRACKING_LENGTH iterate] triggerVVTGapOverrideFrom;;"ratio", 1, 0, 0, 20, 3
 	float[VVT_TRACKING_LENGTH iterate] triggerVVTGapOverrideTo;;"ratio", 1, 0, 0, 20, 3
 
-uint8_t[208] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+int8_t[TRACTION_CONTROL_ETB_DROP_SIZE x TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlEtbDrop;;"%", 1, 0, -100, 0, 0
+
+uint8_t[172] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
