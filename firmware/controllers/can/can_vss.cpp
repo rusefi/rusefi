@@ -19,6 +19,8 @@ static uint16_t filterVssCanID = 0;
 static uint16_t filterSecondVssCanID = 0;
 static uint16_t filterRpmCanID = 0;
 
+static StoredValueSensor wheelSlipRatio(SensorType::WheelSlipRatio, MS2NT(1000));
+
 static expected<uint16_t> look_up_rpm_can_id(can_vss_nbc_e type) {
 	switch (type) {
 		case HONDA_CIVIC9:
@@ -110,16 +112,34 @@ float processW202(const CANRxFrame& frame) {
 	return tmp * 0.0625;
 }
 
+float processHyundai(const CANRxFrame& frame, efitick_t nowNt) {
+  int frontL = getBitRangeLsb(frame.data8, 16, 12);
+  int frontR = getBitRangeLsb(frame.data8, 28, 12);
+  int rearL = getBitRangeLsb(frame.data8, 40, 12);
+  int rearR = getBitRangeLsb(frame.data8, 52, 12);
+
+  int frontAxle = (frontL + frontR) / 2;
+  int rearAxle = (rearL + rearR) / 2;
+
+  efiPrintf("frontL %d rearL %d", frontL, rearL);
+
+  wheelSlipRatio.setValidValue(1.0 * frontAxle / rearAxle, nowNt);
+
+  return frontAxle;
+}
+
 /* End of specific processing functions */
 
-expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
-	switch (engineConfiguration->canVssNbcType){
+expected<float> processCanRxVssImpl(const CANRxFrame& frame, efitick_t nowNt) {
+	switch (engineConfiguration->canVssNbcType) {
 		case BMW_e46:
 			return processBMW_e46(frame);
 		case BMW_e90:
 			return processBMW_e90(frame);
 		case W202:
 			return processW202(frame);
+		case HYUNDAI_PB:
+			return processHyundai(frame, nowNt);
 		case NISSAN_350:
 			return processNissan(frame);
 		default:
@@ -130,7 +150,6 @@ expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
 }
 
 static StoredValueSensor canSpeed(SensorType::VehicleSpeed, MS2NT(500));
-static StoredValueSensor wheelSlipRatio(SensorType::WheelSlipRatio, MS2NT(1000));
 
 static void processNissanSecondVss(const CANRxFrame& frame, efitick_t nowNt) {
 	// todo: open question which one is left which one is right
@@ -159,7 +178,7 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 
 	//filter it we need to process the can message or not
 	if (CAN_SID(frame) == filterVssCanID) {
-	  if (auto speed = processCanRxVssImpl(frame)) {
+	  if (auto speed = processCanRxVssImpl(frame, nowNt)) {
 		  canSpeed.setValidValue(speed.Value * engineConfiguration->canVssScaling, nowNt);
 
 #if EFI_DYNO_VIEW

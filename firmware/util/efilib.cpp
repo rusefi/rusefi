@@ -212,7 +212,7 @@ bool isPhaseInRange(float test, float current, float next) {
 }
 
 // see also getBitRange in lua_lib.h
-int getBitRangeLsb(uint8_t data[], int bitIndex, int bitWidth) {
+int getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth) {
 	int byteIndex = bitIndex >> 3;
 	int shift = bitIndex - byteIndex * 8;
 	int value = data[byteIndex];
