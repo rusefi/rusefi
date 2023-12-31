@@ -282,6 +282,8 @@ void setEngineBMW_M73_Proteus() {
     engineConfiguration->map.sensor.type = MT_MPX4250A;
 
 	// tps and pps
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	setProteusHitachiEtbDefaults();
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 }
 #endif // HW_PROTEUS

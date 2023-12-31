@@ -97,7 +97,9 @@ static void commonPassatB6() {
 */
 
 	setTable(config->veTable, 55);
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	setBoschVAGETB();
+#endif //EFI_ELECTRONIC_THROTTLE_BODY
 
 	// random number just to take position away from zero
 	engineConfiguration->vvtOffsets[0] = 180;

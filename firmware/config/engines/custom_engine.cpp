@@ -494,7 +494,9 @@ void proteusBoardTest() {
 
 #endif // EFI_PROD_CODE
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	setProteusHitachiEtbDefaults();
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 }
 #endif // HW_PROTEUS
 
