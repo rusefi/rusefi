@@ -230,6 +230,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
 INCDIR = $(ALLINC) \
 	$(PCH_DIR) \
 	.. \
+	$(BOARDINC) \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
 	$(CONFIG)/engines \
