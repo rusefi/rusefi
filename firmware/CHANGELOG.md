@@ -40,6 +40,7 @@ Release template (copy/paste this for new release):
  - Make TPS/PPS split threshold configurable #5620
  - Mitsubishi 6G72 CAM Trigger Pattern #5593
  - 3/0 trigger #5788
+ - CANbus front to rear axle speed slip rate gauge on Nissan 350z and modern Hyundai/Kia #5842
 
 ### Fixed
  - Changing idle stepper settings causes kernel panic

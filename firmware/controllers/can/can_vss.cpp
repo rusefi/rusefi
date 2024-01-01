@@ -123,7 +123,9 @@ float processHyundai(const CANRxFrame& frame, efitick_t nowNt) {
   int frontAxle = (frontL + frontR);
   int rearAxle = (rearL + rearR);
 
-  efiPrintf("processHyundai: frontL %d rearL %d", frontL, rearL);
+  if (engineConfiguration->verboseCan) {
+    efiPrintf("processHyundai: frontL %d rearL %d", frontL, rearL);
+  }
 
   wheelSlipRatio.setValidValue(SLIP_RATIO(frontAxle, rearAxle), nowNt);
 
@@ -160,7 +162,9 @@ static void processNissanSecondVss(const CANRxFrame& frame, efitick_t nowNt) {
 
 	int rearAxle = left + right;
 
-	efiPrintf("processHyundai: front %d rear %d", nissanFrontAxle, rearAxle);
+  if (engineConfiguration->verboseCan) {
+	  efiPrintf("processNissan: front %d rear %d", nissanFrontAxle, rearAxle);
+	}
 
 	wheelSlipRatio.setValidValue(SLIP_RATIO(nissanFrontAxle, rearAxle), nowNt);
 }
