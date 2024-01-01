@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class LogoHelper {
     public static final String LOGO_PATH = "/com/rusefi/";
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2023";
+    public static final String LINK_TEXT = "rusEFI (c) 2012-2024";
     private static final String LOGO = LOGO_PATH + "logo.png";
     public static final String URI = "http://rusefi.com/?java_console";
 
