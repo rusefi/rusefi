@@ -935,6 +935,10 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		}
 		return 0;
 	});
+	lua_register(lState, CMD_BURNCONFIG, [](lua_State* l) {
+	  requestBurn();
+		return 0;
+	});
 
 	lua_register(lState, "getGlobalConfigurationVersion", [](lua_State* l) {
 		lua_pushnumber(l, engine->getGlobalConfigurationVersion());
