@@ -28,6 +28,8 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## December 2023 "Day 677"
+
 ### Breaking Changes
  - "acIdleRpmBump" renamed to "acIdleRpmTarget", and changed the way of RPM rise needed for proper A/C operation from added to absolute target #5628
  - After Cranking Enrichment changed from fixed value to table, it can help with some engines that want lots of fuel on cold, but don't run too well with big enrichment on hot #5632
