@@ -1403,7 +1403,7 @@ tChargeMode_e tChargeMode;
 	uint8_t autoscale triggerCompHystMax;Trigger comparator hysteresis voltage (Max);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
 	uint8_t autoscale triggerCompSensorSatRpm;VR-sensor saturation RPM;"RPM", 50, 0, 0, 12000, 0
 
-uint16_t[TRACTION_CONTROL_ETB_DROP_SIZE] autoscale tractionControlSlipBins;;"ratio", 0.01, 0, 0, 999, 1
+uint16_t[TRACTION_CONTROL_ETB_DROP_SIZE] autoscale tractionControlSlipBins;;"ratio", 0.01, 0, 0, 999, 2
 uint8_t[TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0, 250, 0
 	int8_t[2] unusedHere
 
