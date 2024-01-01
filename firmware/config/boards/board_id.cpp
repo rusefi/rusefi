@@ -23,6 +23,12 @@ board_id_t getBoardId() {
     }
 #endif
 
+#if HW_MICRO_RUSEFI
+    if (engineConfiguration->engineType == engine_type_e::MRE_M111) {
+        return STATIC_BOARD_ID_MRE_M111;
+    }
+#endif
+
 #if defined(HW_HELLEN_SKIP_BOARD_TYPE)
 	return (board_id_t)STATIC_BOARD_ID;
 #elif HW_HELLEN
