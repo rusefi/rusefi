@@ -904,7 +904,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit vvtBooleanForVerySpecialCases
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
-	bit invertCamVVTSignal;get invertCamVVTSignal
+	bit invertCamVVTSignal,"Falling","Rising";get invertCamVVTSignal
 	bit alphaNUseIat;In Alpha-N mode, compensate for air temperature.
 	bit knockBankCyl1,"Channel 2","Channel 1"
 	bit knockBankCyl2,"Channel 2","Channel 1"
@@ -1009,8 +1009,8 @@ end_struct
 	bit boardUse2stepPullDown,"With Pull Down","With Pull Up"
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;This enables smart alternator control and activates the extra alternator settings.
-	bit invertPrimaryTriggerSignal;https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the primary engine speed sensor.
-	bit invertSecondaryTriggerSignal;https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the secondary engine speed sensor.
+	bit invertPrimaryTriggerSignal,"Falling","Rising";https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the primary engine speed sensor.
+	bit invertSecondaryTriggerSignal,"Falling","Rising";https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the secondary engine speed sensor.
 
 bit cutFuelOnHardLimit,"yes","no"
 bit cutSparkOnHardLimit,"yes","no";Be careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
