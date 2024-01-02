@@ -805,6 +805,7 @@
         <constant name="can1ListenMode">"false"</constant>
         <constant name="can2ListenMode">"false"</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="">95.0</constant>
+        <constant digits="0" name="mc33810maxDwellTimer" units="">0.0</constant>
         <constant digits="2" name="benchTestOnTime" units="ms">4.0</constant>
         <constant digits="0" name="lambdaProtectionRestoreTps" units="%">20.0</constant>
         <constant digits="0" name="lambdaProtectionRestoreLoad" units="%">30.0</constant>
@@ -1114,13 +1115,26 @@
         <constant digits="2" name="triggerCompHystMin" units="V">0.0</constant>
         <constant digits="2" name="triggerCompHystMax" units="V">0.0</constant>
         <constant digits="0" name="triggerCompSensorSatRpm" units="RPM">0.0</constant>
-        <constant digits="4" name="idleRpmPid2_pFactor" units="">8.265309999999999E-39</constant>
-        <constant digits="4" name="idleRpmPid2_iFactor" units="">9.642859999999999E-39</constant>
-        <constant digits="4" name="idleRpmPid2_dFactor" units="">1.10204E-38</constant>
-        <constant digits="0" name="idleRpmPid2_offset" units="">7690.0</constant>
-        <constant digits="0" name="idleRpmPid2_periodMs" units="ms">19255.0</constant>
-        <constant digits="0" name="idleRpmPid2_minValue" units="">30820.0</constant>
-        <constant digits="0" name="idleRpmPid2_maxValue" units="">0.0</constant>
+        <constant cols="1" digits="2" name="tractionControlSlipBins" rows="6">
+         0.8
+         0.9
+         0.95
+         1.05
+         1.1
+         1.2
+</constant>
+        <constant cols="1" digits="0" name="tractionControlSpeedBins" rows="6">
+         10.0
+         30.0
+         55.0
+         75.0
+         100.0
+         120.0
+</constant>
+        <constant cols="1" digits="0" name="unusedHere" rows="2">
+         0.0
+         0.0
+</constant>
         <constant name="canVssNbcType">"BMW_e46"</constant>
         <constant name="gppwm1_pin">"PE1"</constant>
         <constant digits="0" name="gppwm1_dutyIfError" units="%">100.0</constant>
@@ -1784,43 +1798,15 @@
         <constant digits="3" name="triggerVVTGapOverrideTo2" units="ratio">0.0</constant>
         <constant digits="3" name="triggerVVTGapOverrideTo3" units="ratio">0.0</constant>
         <constant digits="3" name="triggerVVTGapOverrideTo4" units="ratio">0.0</constant>
-        <constant cols="1" digits="0" name="mainUnusedEnd" rows="208">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant cols="6" digits="0" name="tractionControlEtbDrop" rows="6">
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="1" digits="0" name="mainUnusedEnd" rows="172">
          0.0
          0.0
          0.0
