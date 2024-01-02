@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Breaking Changes
+ - Trigger Edge settings renamed from "true"/"false" to "Falling"/"Rising"
+
 ## December 2023 "Day 677"
 
 ### Breaking Changes
