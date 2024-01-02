@@ -212,10 +212,11 @@ jobs:
 #
 # Note to humans: on personal devices we have firmware/provide_gcc.sh and setup_linux_environment.sh
 #
-    - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
+      # TODO: address `Acquire GCC` version copy paste, maybe a tiny action to acquire specific version?
+    - name: Acquire Arm GNU Toolchain (arm-none-eabi-gcc)
       uses: carlosperate/arm-none-eabi-gcc-action@v1
       with:
-        release: '12.3.Rel1'
+        release: '13.3.Rel1'
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test arm-none-eabi-gcc Compiler
