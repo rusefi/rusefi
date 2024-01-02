@@ -41,7 +41,7 @@ public class ReaderStateImpl implements ReaderState {
     private final LazyFile.LazyFileFactory fileFactory;
     private String headerMessage;
     // well, technically those should be a builder for state, not this state class itself
-    private String tsFileOutputName = "rusefi.ini";
+    private String tsFileOutputName = null;
     private String definitionInputFile = null;
     String destCDefinesFileName = null;
     private boolean withC_Defines = true;
