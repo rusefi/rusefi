@@ -1013,7 +1013,7 @@
          80.0
          100.0
 </constant>
-        <constant name="oilPressure_hwChannel">"PC2"</constant>
+        <constant name="oilPressure_hwChannel">"Disabled"</constant>
         <constant digits="2" name="oilPressure_v1" units="volts">0.5</constant>
         <constant digits="2" name="oilPressure_value1" units="">0.0</constant>
         <constant digits="2" name="oilPressure_v2" units="volts">4.5</constant>
@@ -1044,7 +1044,7 @@
         <constant digits="2" name="highPressureFuel_value1" units="">0.0</constant>
         <constant digits="2" name="highPressureFuel_v2" units="volts">0.0</constant>
         <constant digits="2" name="highPressureFuel_value2" units="">0.0</constant>
-        <constant name="lowPressureFuel_hwChannel">"Disabled"</constant>
+        <constant name="lowPressureFuel_hwChannel">"PC2"</constant>
         <constant digits="2" name="lowPressureFuel_v1" units="volts">0.0</constant>
         <constant digits="2" name="lowPressureFuel_value1" units="">0.0</constant>
         <constant digits="2" name="lowPressureFuel_v2" units="volts">0.0</constant>
