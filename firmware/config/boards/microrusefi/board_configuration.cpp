@@ -213,10 +213,27 @@ MRE_INJ_4,
 MRE_LS_1,
 };
 
+static Gpio M111_OUTPUTS[] = {
+MRE_INJ_1, // green
+MRE_INJ_2, // white
+MRE_INJ_3, // blue
+MRE_INJ_4, //
+};
+
 int getBoardMetaOutputsCount() {
+    if (engineConfiguration->engineType == engine_type_e::MRE_M111) {
+        return efi::size(M111_OUTPUTS);
+    }
     return efi::size(MRE_OUTPUTS);
 }
 
 Gpio* getBoardMetaOutputs() {
+    if (engineConfiguration->engineType == engine_type_e::MRE_M111) {
+        return M111_OUTPUTS;
+    }
     return MRE_OUTPUTS;
+}
+
+int getBoardMetaDcOutputsCount() {
+    return 1;
 }
