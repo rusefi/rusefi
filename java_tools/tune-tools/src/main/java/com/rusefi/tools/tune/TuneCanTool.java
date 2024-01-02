@@ -37,6 +37,7 @@ import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIM
  */
 public class TuneCanTool {
     private static final Logging log = getLogging(TuneCanTool.class);
+    private static final String REPORTS_OUTPUT_FOLDER = "tune_reports";
 
     public static final String SRC_TEST_RESOURCES = "src/test/resources/";
     private static final String FOLDER = "generated";
@@ -105,8 +106,7 @@ public class TuneCanTool {
     }
 
     private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String defaultTuneFileName, String localFileName, String cannedComment) throws JAXBException, IOException {
-        String reportsOutputFolder = "tune_reports";
-        new File(reportsOutputFolder).mkdir();
+        new File(REPORTS_OUTPUT_FOLDER).mkdir();
 
         Msq custom = Msq.readTune(localFileName);
 
@@ -115,12 +115,12 @@ public class TuneCanTool {
         Msq defaultTune = Msq.readTune(defaultTuneFileName);
         StringBuilder sb = TuneCanTool.getTunePatch(defaultTune, custom, ini, localFileName, methods);
 
-        String fileNameMethods = reportsOutputFolder + "/" + vehicleName + "_methods.md";
+        String fileNameMethods = REPORTS_OUTPUT_FOLDER + "/" + vehicleName + "_methods.md";
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
             methodsWriter.append(methods);
         }
 
-        String fileName = reportsOutputFolder + "/" + vehicleName + ".md";
+        String fileName = REPORTS_OUTPUT_FOLDER + "/" + vehicleName + ".md";
         log.info("Writing to " + fileName);
 
         try (FileWriter w = new FileWriter(fileName)) {
