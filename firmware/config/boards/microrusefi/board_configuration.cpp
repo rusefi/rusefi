@@ -218,6 +218,9 @@ MRE_INJ_1, // green
 MRE_INJ_2, // white
 MRE_INJ_3, // blue
 MRE_INJ_4, //
+#if HW_MICRO_RUSEFI
+MRE_AV9_REUSE, // brown boost control
+#endif // HW_MICRO_RUSEFI
 };
 
 int getBoardMetaOutputsCount() {
