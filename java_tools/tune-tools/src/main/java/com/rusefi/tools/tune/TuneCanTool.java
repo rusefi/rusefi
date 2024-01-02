@@ -49,8 +49,10 @@ public class TuneCanTool {
 
         RootHolder.ROOT = "../firmware/";
 
-        writeDiffBetweenLocalTuneFileAndDefaultTune("x", getDefaultTuneName(Fields.engine_type_e_MAVERICK_X3),
-            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq",  "x");
+        writeDiffBetweenLocalTuneFileAndDefaultTune("example.msq");
+
+        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(Fields.engine_type_e_MAVERICK_X3),
+            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq",  "comment");
 
 
 //        processREOtune(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "BK2");
@@ -85,6 +87,17 @@ public class TuneCanTool {
 
       writeDiffBetweenLocalTuneFileAndDefaultTune(vehicleName, currentTuneFileName, localFileName, url);
     }
+
+    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String localFileName) throws JAXBException, IOException {
+        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", DEFAULT_TUNE,
+            localFileName,  "comment");
+    }
+
+    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(int engineCode, String localFileName, String cannedComment) throws JAXBException, IOException {
+        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engineCode),
+            localFileName,  cannedComment);
+    }
+
     private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String defaultTuneFileName, String localFileName, String cannedComment) throws JAXBException, IOException {
         String reportsOutputFolder = "tune_reports";
         new File(reportsOutputFolder).mkdir();
