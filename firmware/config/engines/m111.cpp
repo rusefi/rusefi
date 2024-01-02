@@ -70,7 +70,7 @@ void setMreM111EngineConfiguration() {
     setPPSInputs(MRE_IN_PPS, MRE_IN_PPS2);
     setTPS1Inputs(MRE_IN_TPS, MRE_IN_TPS2);
 
-    engineConfiguration->oilPressure.hwChannel = MRE_IN_ANALOG_VOLT_4;
+    engineConfiguration->lowPressureFuel.hwChannel = MRE_IN_ANALOG_VOLT_4;
     // assumes R30 is populated
     engineConfiguration->boostControlPin = MRE_AV9_REUSE;
 #endif // HW_MICRO_RUSEFI
