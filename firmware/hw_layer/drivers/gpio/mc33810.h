@@ -39,3 +39,6 @@ struct mc33810_config {
 };
 
 int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg);
+
+/* debug */
+void mc33810_req_init();

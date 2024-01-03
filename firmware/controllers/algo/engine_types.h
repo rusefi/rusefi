@@ -446,6 +446,7 @@ typedef enum {
     TS_14_9 = 9,
 	TS_WRITE_FLASH = 0x0A,
 	TS_ETB_RESET = 0x0B,
+	TS_RESET_MC33810 = 33810
 } ts_14_command;
 
 typedef enum {

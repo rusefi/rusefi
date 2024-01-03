@@ -682,6 +682,19 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 	return ret;
 }
 
+/*==========================================================================*/
+/* Driver exported debug functions.												*/
+/*==========================================================================*/
+void mc33810_req_init() {
+	size_t i;
+
+	for (i = 0; i < BOARD_MC33810_COUNT; i++) {
+		auto& chip = chips[0];
+
+		chip.need_init = true;
+	}
+}
+
 #else /* BOARD_MC33810_COUNT > 0 */
 
 int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
