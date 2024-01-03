@@ -945,6 +945,12 @@
 #define MAP_sensor_config_s_size 140
 #define MAP_WINDOW_SIZE 8
 #define MAX_CYLINDER_COUNT 12
+#define mc33810maxDwellTimer_e_DWELL_16MS 3
+#define mc33810maxDwellTimer_e_DWELL_2MS 0
+#define mc33810maxDwellTimer_e_DWELL_32MS 4
+#define mc33810maxDwellTimer_e_DWELL_4MS 1
+#define mc33810maxDwellTimer_e_DWELL_64MS 5
+#define mc33810maxDwellTimer_e_DWELL_8MS 2
 #define MLQ_FIELD_HEADER_SIZE 89
 #define MLQ_HEADER_SIZE 24
 #define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2

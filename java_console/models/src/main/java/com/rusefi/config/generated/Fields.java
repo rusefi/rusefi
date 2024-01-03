@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 16:41:21 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 19:49:43 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -990,6 +990,12 @@ public class Fields {
 	public static final int MAP_sensor_config_s_size = 140;
 	public static final int MAP_WINDOW_SIZE = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
+	public static final int mc33810maxDwellTimer_e_DWELL_16MS = 3;
+	public static final int mc33810maxDwellTimer_e_DWELL_2MS = 0;
+	public static final int mc33810maxDwellTimer_e_DWELL_32MS = 4;
+	public static final int mc33810maxDwellTimer_e_DWELL_4MS = 1;
+	public static final int mc33810maxDwellTimer_e_DWELL_64MS = 5;
+	public static final int mc33810maxDwellTimer_e_DWELL_8MS = 2;
 	public static final int MLQ_FIELD_HEADER_SIZE = 89;
 	public static final int MLQ_HEADER_SIZE = 24;
 	public static final int operation_mode_e_FOUR_STROKE_CAM_SENSOR = 2;

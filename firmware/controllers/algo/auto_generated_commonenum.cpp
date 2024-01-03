@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Jan 03 16:18:15 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Jan 03 19:47:48 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -592,6 +592,23 @@ case CUSTOM:
   return "CUSTOM";
 case DensoTODO:
   return "DensoTODO";
+  }
+ return NULL;
+}
+const char *getMc33810maxDwellTimer_e(mc33810maxDwellTimer_e value){
+switch(value) {
+case DWELL_16MS:
+  return "DWELL_16MS";
+case DWELL_2MS:
+  return "DWELL_2MS";
+case DWELL_32MS:
+  return "DWELL_32MS";
+case DWELL_4MS:
+  return "DWELL_4MS";
+case DWELL_64MS:
+  return "DWELL_64MS";
+case DWELL_8MS:
+  return "DWELL_8MS";
   }
  return NULL;
 }
