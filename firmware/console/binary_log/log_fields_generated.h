@@ -1,4 +1,4 @@
-static constexpr LogField fields[] = {
+static const LogField fields[] = {
 {packedTime, GAUGE_NAME_TIME, "sec", 0},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration", 2},
