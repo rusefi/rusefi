@@ -765,7 +765,11 @@
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
         <constant digits="1" name="targetVBatt" units="Volts">14.0</constant>
-        <constant digits="0" name="unused1372" units="">0.0</constant>
+        <constant name="mc33810DisableRecoveryMode">"false"</constant>
+        <constant name="mc33810Gpgd0Mode">"false"</constant>
+        <constant name="mc33810Gpgd1Mode">"false"</constant>
+        <constant name="mc33810Gpgd2Mode">"false"</constant>
+        <constant name="mc33810Gpgd3Mode">"false"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
         <constant name="auxSerialTxPin">"NONE"</constant>
@@ -2296,7 +2300,7 @@
          86.0
          100.0
 </constant>
-        <constant cols="1" digits="3" name="narrowToWideOxygenBins" rows="8">
+        <constant cols="1" digits="0" name="unusedSpaceHere" rows="16">
          0.0
          0.0
          0.0
@@ -2305,8 +2309,6 @@
          0.0
          0.0
          0.0
-</constant>
-        <constant cols="1" digits="2" name="narrowToWideOxygen" rows="8">
          0.0
          0.0
          0.0
@@ -4600,7 +4602,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.03.f407-discovery.1633175426" version="5.0"/>
+    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.03.f407-discovery.914004100" version="5.0"/>
     <bibliography author="rusEFI 20240101" writeDate="date"/>
     <settings/>
     <userComments/>
