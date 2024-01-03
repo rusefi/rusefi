@@ -408,18 +408,14 @@ int Mc33810::chip_init()
 	 */
 
 	{
-		uint16_t spark_settings =
-			//(3 << 9) |	/* max dwell is 16 mS */
-			//(2 << 9) |	/* max dwell is 8 mS */
+		uint16_t spark_cmd =
 			// Table 11. Maximum Dwell Timer
-			// 4: 32ms
-			// 5,6 and 7 all represent 64ms
 			(engineConfiguration->mc33810maxDwellTimer << 9) |
 			BIT(8) |	/* enable max dwell control */
 			(3 << 2) |	/* Open Secondary OSFLT = 100 uS, default */
 			(1 << 0) |	/* End Spark THreshold: VPWR +5.5V, default */
 			0;
-		ret = spi_rw(MC_CMD_SPARK(spark_settings), NULL);
+		ret = spi_rw(MC_CMD_SPARK(spark_cmd), NULL);
 		if (ret) {
 			efiPrintf(DRIVER_NAME " cmd spark");
 			goto err_exit;
