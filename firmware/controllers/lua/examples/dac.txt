@@ -1,0 +1,8 @@
+function onTick()
+  -- see stm32 reference manual to see which pins have DAC peripheral
+  -- 1.5 volts on channel 0 which is always PA4 on stm32f407
+  -- channel 1 would always be PA5 on stm32f407
+  -- make sure that your firmware is compiled with EFI_DAC=TRUE
+  setDacVoltage(0, 1.5)
+  setDacVoltage(1, 2.2)
+end
