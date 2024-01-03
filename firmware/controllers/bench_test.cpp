@@ -452,65 +452,77 @@ static void handleCommandX14(uint16_t index) {
 		grabPedalIsWideOpen();
 		return;
 	case TS_RESET_TLE8888:
-#if (BOARD_TLE8888_COUNT > 0)
-		tle8888_req_init();
-#endif
+		#if (BOARD_TLE8888_COUNT > 0)
+			tle8888_req_init();
+		#endif
 		return;
 	case TS_RESET_MC33810:
-#if (BOARD_MC33810_COUNT > 0)
-		mc33810_req_init();
-#endif
+		#if (BOARD_MC33810_COUNT > 0)
+			mc33810_req_init();
+		#endif
 		return;
 	case TS_WRITE_FLASH:
 		// cmd_write_config
-#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
-		writeToFlashNow();
-#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
+		#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
+			writeToFlashNow();
+		#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 		return;
-#if EFI_EMULATE_POSITION_SENSORS
-	case 0xD:
-		enableTriggerStimulator();
+	case TS_TRIGGER_STIMULATOR_ENABLE:
+		#if EFI_EMULATE_POSITION_SENSORS == TRUE
+			enableTriggerStimulator();
+		#endif /* EFI_EMULATE_POSITION_SENSORS == TRUE */
 		return;
-	case 0xF:
-		disableTriggerStimulator();
+	case TS_TRIGGER_STIMULATOR_DISABLE:
+		#if EFI_EMULATE_POSITION_SENSORS == TRUE
+			disableTriggerStimulator();
+		#endif /* EFI_EMULATE_POSITION_SENSORS == TRUE */
 		return;
-	case 0x13:
-		enableExternalTriggerStimulator();
+	case TS_EXTERNAL_TRIGGER_STIMULATOR_ENABLE:
+		#if EFI_EMULATE_POSITION_SENSORS == TRUE
+			enableExternalTriggerStimulator();
+		#endif /* EFI_EMULATE_POSITION_SENSORS == TRUE */
 		return;
-#endif // EFI_EMULATE_POSITION_SENSORS
-#if EFI_ELECTRONIC_THROTTLE_BODY
     case TS_ETB_RESET:
-#if EFI_PROD_CODE
-        etbPidReset();
-#endif
+		#if EFI_ELECTRONIC_THROTTLE_BODY == TRUE
+		#if EFI_PROD_CODE
+			etbPidReset();
+		#endif
+		#endif /* EFI_ELECTRONIC_THROTTLE_BODY == TRUE */
 		return;
-	case 0xE:
-		etbAutocal(0);
+	case TS_ETB_AUTOCAL_0:
+		#if EFI_ELECTRONIC_THROTTLE_BODY == TRUE
+			etbAutocal(0);
+		#endif /* EFI_ELECTRONIC_THROTTLE_BODY == TRUE */
 		return;
-	case 0x11:
-		etbAutocal(1);
+	case TS_ETB_AUTOCAL_1:
+		#if EFI_ELECTRONIC_THROTTLE_BODY == TRUE
+			etbAutocal(1);
+		#endif /* EFI_ELECTRONIC_THROTTLE_BODY == TRUE */
 		return;
-	case 0xC:
-		engine->etbAutoTune = true;
+	case TS_ETB_START_AUTOTUNE:
+		#if EFI_ELECTRONIC_THROTTLE_BODY == TRUE
+			engine->etbAutoTune = true;
+		#endif /* EFI_ELECTRONIC_THROTTLE_BODY == TRUE */
 		return;
-	case 0x10:
-		engine->etbAutoTune = false;
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
-#endif // EFI_TUNER_STUDIO
+	case TS_ETB_STOP_AUTOTUNE:
+		#if EFI_ELECTRONIC_THROTTLE_BODY == TRUE
+			engine->etbAutoTune = false;
+			#if EFI_TUNER_STUDIO
+				engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+			#endif // EFI_TUNER_STUDIO
+		#endif /* EFI_ELECTRONIC_THROTTLE_BODY == TRUE */
 		return;
-#endif
-	case 0x12:
+	case TS_WIDEBAND_UPDATE:
 		widebandUpdatePending = true;
 		benchSemaphore.signal();
 		return;
-	case 0x15:
-#if EFI_PROD_CODE
-#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
-		extern bool burnWithoutFlash;
-		burnWithoutFlash = true;
-#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
-#endif // EFI_PROD_CODE
+	case TS_BURN_WITHOUT_FLASH:
+		#if EFI_PROD_CODE
+		#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
+			extern bool burnWithoutFlash;
+			burnWithoutFlash = true;
+		#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
+		#endif // EFI_PROD_CODE
 		return;
 	default:
 		criticalError("Unexpected bench x14 %d", index);
