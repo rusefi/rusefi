@@ -116,8 +116,9 @@ const char *gpiochips_getPinName(brain_pin_e pin)
  * @brief Register gpiochip
  * @details should be called from board file. Can be called before os ready.
  * All chips should be registered before gpiochips_init() called.
- * returns -1 in case of no free chips left
- * returns -1 in case of no ops provided, incorrect chip size
+ * returns -101 in case of no free chips left
+ * returns -100 in case of no ops provided, incorrect chip size
+ * returns -102 or -103 in case chip overlaps already registered chip(s)
  * else returns chip base
  */
 
@@ -247,7 +248,7 @@ int gpiochips_init(void) {
 /**
  * @brief Set pin mode of gpiochip
  * @details set pad mode for given pin.
- * return -1 if driver does not implemet setPadMode ops
+ * return -107 if driver does not implemet setPadMode ops
  * else return value from gpiochip driver.
  */
 /* this fuction uses iomode_t that is related to STM32 (or other MCU)
@@ -304,7 +305,7 @@ int gpiochips_readPad(brain_pin_e pin)
 /**
  * @brief Get diagnostic for given gpio
  * @details actual output value depend on gpiochip capabilities
- * returns -1 in case of pin not belong to any gpio chip
+ * returns PIN_INVALID in case of pin not belong to any gpio chip
  * returns PIN_OK in case of chip does not support getting diagnostic
  * else return brain_pin_diag_e from gpiochip driver;
  */
