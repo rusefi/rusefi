@@ -809,7 +809,7 @@
         <constant name="can1ListenMode">"false"</constant>
         <constant name="can2ListenMode">"false"</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="">95.0</constant>
-        <constant digits="0" name="mc33810maxDwellTimer" units="">0.0</constant>
+        <constant name="mc33810maxDwellTimer">"2 mS"</constant>
         <constant digits="2" name="benchTestOnTime" units="ms">4.0</constant>
         <constant digits="0" name="lambdaProtectionRestoreTps" units="%">20.0</constant>
         <constant digits="0" name="lambdaProtectionRestoreLoad" units="%">30.0</constant>
@@ -4559,7 +4559,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.03.f407-discovery.914004100" version="5.0"/>
+    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.03.f407-discovery.897040396" version="5.0"/>
     <bibliography author="rusEFI 20240101" writeDate="date"/>
     <settings/>
     <userComments/>
