@@ -1060,6 +1060,21 @@ float getConfigValueByName(const char *name) {
 // targetVBatt
 		case 1160967565:
 			return engineConfiguration->targetVBatt;
+// mc33810DisableRecoveryMode
+		case -464979268:
+			return engineConfiguration->mc33810DisableRecoveryMode;
+// mc33810Gpgd0Mode
+		case -785386645:
+			return engineConfiguration->mc33810Gpgd0Mode;
+// mc33810Gpgd1Mode
+		case -784200724:
+			return engineConfiguration->mc33810Gpgd1Mode;
+// mc33810Gpgd2Mode
+		case -783014803:
+			return engineConfiguration->mc33810Gpgd2Mode;
+// mc33810Gpgd3Mode
+		case -781828882:
+			return engineConfiguration->mc33810Gpgd3Mode;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -3487,6 +3502,31 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1160967565:
 	{
 		engineConfiguration->targetVBatt = value;
+		return 1;
+	}
+		case -464979268:
+	{
+		engineConfiguration->mc33810DisableRecoveryMode = (int)value;
+		return 1;
+	}
+		case -785386645:
+	{
+		engineConfiguration->mc33810Gpgd0Mode = (int)value;
+		return 1;
+	}
+		case -784200724:
+	{
+		engineConfiguration->mc33810Gpgd1Mode = (int)value;
+		return 1;
+	}
+		case -783014803:
+	{
+		engineConfiguration->mc33810Gpgd2Mode = (int)value;
+		return 1;
+	}
+		case -781828882:
+	{
+		engineConfiguration->mc33810Gpgd3Mode = (int)value;
 		return 1;
 	}
 		case 671504531:

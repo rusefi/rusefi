@@ -1054,6 +1054,21 @@ If the RPM closer to target than this value, disable closed loop idle correction
 ### targetVBatt
 This is the target battery voltage the alternator PID control will attempt to maintain
 
+### mc33810DisableRecoveryMode
+See Over/Undervoltage Shutdown/Retry bit in documentation
+
+### mc33810Gpgd0Mode
+
+
+### mc33810Gpgd1Mode
+
+
+### mc33810Gpgd2Mode
+
+
+### mc33810Gpgd3Mode
+
+
 ### afterCrankingIACtaperDuration
 This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 

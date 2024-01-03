@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 16:19:54 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 16:40:56 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2804,9 +2804,102 @@ struct engine_configuration_s {
 	 */
 	float targetVBatt;
 	/**
-	 * offset 1508
-	 */
-	uint32_t unused1372;
+	 * See Over/Undervoltage Shutdown/Retry bit in documentation
+	offset 1508 bit 0 */
+	bool mc33810DisableRecoveryMode : 1 {};
+	/**
+	offset 1508 bit 1 */
+	bool mc33810Gpgd0Mode : 1 {};
+	/**
+	offset 1508 bit 2 */
+	bool mc33810Gpgd1Mode : 1 {};
+	/**
+	offset 1508 bit 3 */
+	bool mc33810Gpgd2Mode : 1 {};
+	/**
+	offset 1508 bit 4 */
+	bool mc33810Gpgd3Mode : 1 {};
+	/**
+	offset 1508 bit 5 */
+	bool unusedBit_494_5 : 1 {};
+	/**
+	offset 1508 bit 6 */
+	bool unusedBit_494_6 : 1 {};
+	/**
+	offset 1508 bit 7 */
+	bool unusedBit_494_7 : 1 {};
+	/**
+	offset 1508 bit 8 */
+	bool unusedBit_494_8 : 1 {};
+	/**
+	offset 1508 bit 9 */
+	bool unusedBit_494_9 : 1 {};
+	/**
+	offset 1508 bit 10 */
+	bool unusedBit_494_10 : 1 {};
+	/**
+	offset 1508 bit 11 */
+	bool unusedBit_494_11 : 1 {};
+	/**
+	offset 1508 bit 12 */
+	bool unusedBit_494_12 : 1 {};
+	/**
+	offset 1508 bit 13 */
+	bool unusedBit_494_13 : 1 {};
+	/**
+	offset 1508 bit 14 */
+	bool unusedBit_494_14 : 1 {};
+	/**
+	offset 1508 bit 15 */
+	bool unusedBit_494_15 : 1 {};
+	/**
+	offset 1508 bit 16 */
+	bool unusedBit_494_16 : 1 {};
+	/**
+	offset 1508 bit 17 */
+	bool unusedBit_494_17 : 1 {};
+	/**
+	offset 1508 bit 18 */
+	bool unusedBit_494_18 : 1 {};
+	/**
+	offset 1508 bit 19 */
+	bool unusedBit_494_19 : 1 {};
+	/**
+	offset 1508 bit 20 */
+	bool unusedBit_494_20 : 1 {};
+	/**
+	offset 1508 bit 21 */
+	bool unusedBit_494_21 : 1 {};
+	/**
+	offset 1508 bit 22 */
+	bool unusedBit_494_22 : 1 {};
+	/**
+	offset 1508 bit 23 */
+	bool unusedBit_494_23 : 1 {};
+	/**
+	offset 1508 bit 24 */
+	bool unusedBit_494_24 : 1 {};
+	/**
+	offset 1508 bit 25 */
+	bool unusedBit_494_25 : 1 {};
+	/**
+	offset 1508 bit 26 */
+	bool unusedBit_494_26 : 1 {};
+	/**
+	offset 1508 bit 27 */
+	bool unusedBit_494_27 : 1 {};
+	/**
+	offset 1508 bit 28 */
+	bool unusedBit_494_28 : 1 {};
+	/**
+	offset 1508 bit 29 */
+	bool unusedBit_494_29 : 1 {};
+	/**
+	offset 1508 bit 30 */
+	bool unusedBit_494_30 : 1 {};
+	/**
+	offset 1508 bit 31 */
+	bool unusedBit_494_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 	cycles
@@ -3001,76 +3094,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1572 bit 8 */
-	bool unusedBit_528_8 : 1 {};
+	bool unusedBit_559_8 : 1 {};
 	/**
 	offset 1572 bit 9 */
-	bool unusedBit_528_9 : 1 {};
+	bool unusedBit_559_9 : 1 {};
 	/**
 	offset 1572 bit 10 */
-	bool unusedBit_528_10 : 1 {};
+	bool unusedBit_559_10 : 1 {};
 	/**
 	offset 1572 bit 11 */
-	bool unusedBit_528_11 : 1 {};
+	bool unusedBit_559_11 : 1 {};
 	/**
 	offset 1572 bit 12 */
-	bool unusedBit_528_12 : 1 {};
+	bool unusedBit_559_12 : 1 {};
 	/**
 	offset 1572 bit 13 */
-	bool unusedBit_528_13 : 1 {};
+	bool unusedBit_559_13 : 1 {};
 	/**
 	offset 1572 bit 14 */
-	bool unusedBit_528_14 : 1 {};
+	bool unusedBit_559_14 : 1 {};
 	/**
 	offset 1572 bit 15 */
-	bool unusedBit_528_15 : 1 {};
+	bool unusedBit_559_15 : 1 {};
 	/**
 	offset 1572 bit 16 */
-	bool unusedBit_528_16 : 1 {};
+	bool unusedBit_559_16 : 1 {};
 	/**
 	offset 1572 bit 17 */
-	bool unusedBit_528_17 : 1 {};
+	bool unusedBit_559_17 : 1 {};
 	/**
 	offset 1572 bit 18 */
-	bool unusedBit_528_18 : 1 {};
+	bool unusedBit_559_18 : 1 {};
 	/**
 	offset 1572 bit 19 */
-	bool unusedBit_528_19 : 1 {};
+	bool unusedBit_559_19 : 1 {};
 	/**
 	offset 1572 bit 20 */
-	bool unusedBit_528_20 : 1 {};
+	bool unusedBit_559_20 : 1 {};
 	/**
 	offset 1572 bit 21 */
-	bool unusedBit_528_21 : 1 {};
+	bool unusedBit_559_21 : 1 {};
 	/**
 	offset 1572 bit 22 */
-	bool unusedBit_528_22 : 1 {};
+	bool unusedBit_559_22 : 1 {};
 	/**
 	offset 1572 bit 23 */
-	bool unusedBit_528_23 : 1 {};
+	bool unusedBit_559_23 : 1 {};
 	/**
 	offset 1572 bit 24 */
-	bool unusedBit_528_24 : 1 {};
+	bool unusedBit_559_24 : 1 {};
 	/**
 	offset 1572 bit 25 */
-	bool unusedBit_528_25 : 1 {};
+	bool unusedBit_559_25 : 1 {};
 	/**
 	offset 1572 bit 26 */
-	bool unusedBit_528_26 : 1 {};
+	bool unusedBit_559_26 : 1 {};
 	/**
 	offset 1572 bit 27 */
-	bool unusedBit_528_27 : 1 {};
+	bool unusedBit_559_27 : 1 {};
 	/**
 	offset 1572 bit 28 */
-	bool unusedBit_528_28 : 1 {};
+	bool unusedBit_559_28 : 1 {};
 	/**
 	offset 1572 bit 29 */
-	bool unusedBit_528_29 : 1 {};
+	bool unusedBit_559_29 : 1 {};
 	/**
 	offset 1572 bit 30 */
-	bool unusedBit_528_30 : 1 {};
+	bool unusedBit_559_30 : 1 {};
 	/**
 	offset 1572 bit 31 */
-	bool unusedBit_528_31 : 1 {};
+	bool unusedBit_559_31 : 1 {};
 	/**
 	 * offset 1576
 	 */
@@ -5391,4 +5484,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22088);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 16:19:54 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 16:40:56 UTC 2024
