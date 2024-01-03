@@ -172,7 +172,7 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_IGN_3, // Coil 3
 	Gpio::H144_IGN_4, // Coil 4
 	Gpio::H144_OUT_PWM8, // MIL
-	Gpio::H144_OUT_PWM7, // low side? Tacho unused CAN tachometer right?
+//	QC procedure seems to not work for that one Gpio::H144_OUT_PWM7, // low side? Tacho unused CAN tachometer right?
 //	Gpio::H_SPI1_SCK, // X8 AuxLS1
 };
 
