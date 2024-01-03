@@ -6,6 +6,7 @@ LDS_output_channels,
 LDS_fuel_computer,
 LDS_ignition_state,
 LDS_knock_controller,
+LDS_tcu_controller,
 LDS_throttle_model,
 LDS_high_pressure_fuel_pump,
 LDS_injector_model,
@@ -31,9 +32,10 @@ LDS_vvt,
 LDS_lambda_monitor,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
-#define FUEL_COMPUTER_BASE_ADDRESS 800
-#define IGNITION_STATE_BASE_ADDRESS 852
-#define KNOCK_CONTROLLER_BASE_ADDRESS 892
+#define FUEL_COMPUTER_BASE_ADDRESS 792
+#define IGNITION_STATE_BASE_ADDRESS 844
+#define KNOCK_CONTROLLER_BASE_ADDRESS 884
+#define TCU_CONTROLLER_BASE_ADDRESS 916
 #define THROTTLE_MODEL_BASE_ADDRESS 924
 #define HIGH_PRESSURE_FUEL_PUMP_BASE_ADDRESS 936
 #define INJECTOR_MODEL_BASE_ADDRESS 964

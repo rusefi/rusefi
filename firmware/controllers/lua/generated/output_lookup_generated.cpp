@@ -332,9 +332,6 @@ float getOutputValueByName(const char *name) {
 // fuelClosedLoopBinIdx
 		case 1342844099:
 			return engine->outputChannels.fuelClosedLoopBinIdx;
-// tcuCurrentGear
-		case -559761101:
-			return engine->outputChannels.tcuCurrentGear;
 // rawPpsSecondary
 		case -1798336054:
 			return engine->outputChannels.rawPpsSecondary;
@@ -419,15 +416,6 @@ float getOutputValueByName(const char *name) {
 // luaLastCycleDuration
 		case 823476017:
 			return engine->outputChannels.luaLastCycleDuration;
-// tcu_currentRange
-		case -518694176:
-			return engine->outputChannels.tcu_currentRange;
-// tcRatio
-		case -732434245:
-			return engine->outputChannels.tcRatio;
-// lastShiftTime
-		case 174310950:
-			return engine->outputChannels.lastShiftTime;
 // vssEdgeCounter
 		case 385418550:
 			return engine->outputChannels.vssEdgeCounter;
