@@ -2000,6 +2000,7 @@ menuDialog = main
 		subMenu = sdCard,					"SD Card Logger" @@if_ts_show_sd_card
 		subMenu = connection,					"Connection"
 		subMenu = tle8888,					"TLE8888"
+		subMenu = mc33810Dialog				"MC33810 IGN/INJ driver"
 
 		subMenu = allPins1,					"Full pinout 1/3" @@if_ts_show_full_pinout
 		subMenu = allPins2,					"Full pinout 2/3" @@if_ts_show_full_pinout
@@ -4611,7 +4612,13 @@ dialog = tcuControls, "Transmission Settings"
         field = dacOutputPins2,         dacOutputPins2
         field = "Read RPM matching VSS profile",    canInputBCM
         field = useSpiImu,              useSpiImu
-        field = mc33810maxDwellTimer,     mc33810maxDwellTimer
+
+	dialog = mc33810Dialog, "MC33810 IGN/INJ driver"
+		field = "SPI settings"
+		field = "mc33810_cs",								mc33810_cs1
+		field = "mc33810_csPinMode",						mc33810_csPinMode
+		field = "Chip configuration"
+		field = "Maximum dwell (IGN pins mode only)",		mc33810maxDwellTimer
 
 	dialog = harleyAcr, "Harley Automatic Compression Release"
 		field = "Pin",	acrPin
