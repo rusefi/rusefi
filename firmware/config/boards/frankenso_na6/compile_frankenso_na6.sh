@@ -9,4 +9,4 @@ FW_ID_ENV=frankensoNA6
 # while humans want to use second cam input asap https://rusefi.com/forum/viewtopic.php?f=4&t=2343
 #
 
-bash ../common_make.sh f407-discovery ARCH_STM32F4
+bash ../common_make.sh frankenso_na6 ARCH_STM32F4
