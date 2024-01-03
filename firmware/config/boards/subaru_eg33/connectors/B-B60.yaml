@@ -34,11 +34,12 @@ pins:
     type: sgnd
 
   - pin: 7
-    id: Unassigned
-    class: switch_inputs
+#   TODO: fix in next HW
+#    id: Unassigned
+#    class: switch_inputs
     function: Power Steering Switch
-    ts_name: B07 - Power Steering Switch
-    type: av
+#    ts_name: B07 - Power Steering Switch
+#    type: av
 
   - pin: 8
     id: TLE6240_PIN_15
