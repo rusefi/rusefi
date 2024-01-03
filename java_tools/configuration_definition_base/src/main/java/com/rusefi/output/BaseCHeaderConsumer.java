@@ -51,7 +51,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
     private static String getComment(String comment, int currentOffset, String units) {
         String start = "\t/**";
         String packedComment = packComment(comment, "\t");
-        String unitsComment = units.isEmpty() ? "" : "\t" + units + EOL;
+        String unitsComment = units.isEmpty() ? "" : "\t * units: " + units + EOL;
         return start + EOL +
                 packedComment +
                 unitsComment +
