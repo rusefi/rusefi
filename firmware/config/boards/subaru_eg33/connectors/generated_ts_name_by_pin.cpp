@@ -53,7 +53,6 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::TLE6240_PIN_7: return "D19 - Check Engine indicator";
 		case Gpio::TLE6240_PIN_8: return "C15 - AUX1 OD out";
 		case Gpio::TLE6240_PIN_9: return "D18 - Auxillary air valve";
-		case Gpio::Unassigned: return "B07 - Power Steering Switch";
 		default: return nullptr;
 	}
 	return nullptr;
