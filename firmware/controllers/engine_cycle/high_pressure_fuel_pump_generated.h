@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Mon Mar 06 04:15:17 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -129,7 +129,7 @@ struct high_pressure_fuel_pump_s {
 	angle_t nextLobe = (angle_t)0;
 	/**
 	 * GDI: next start
-	v
+	 * units: v
 	 * offset 24
 	 */
 	float di_nextStart = (float)0;
@@ -137,4 +137,4 @@ struct high_pressure_fuel_pump_s {
 static_assert(sizeof(high_pressure_fuel_pump_s) == 28);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Mon Mar 06 04:15:17 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Wed Jan 03 20:30:10 UTC 2024

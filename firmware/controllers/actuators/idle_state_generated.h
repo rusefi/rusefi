@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Oct 22 22:35:39 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -11,7 +11,7 @@ struct idle_state_s {
 	idle_state_e idleState = (idle_state_e)0;
 	/**
 	 * @@GAUGE_NAME_IAC@@
-	%
+	 * units: %
 	 * offset 4
 	 */
 	percent_t currentIdlePosition = (percent_t)0;
@@ -178,4 +178,4 @@ struct idle_state_s {
 static_assert(sizeof(idle_state_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Oct 22 22:35:39 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Jan 03 20:30:10 UTC 2024

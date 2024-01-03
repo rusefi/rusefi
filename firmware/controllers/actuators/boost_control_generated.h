@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/boost_control.txt Fri Oct 20 00:44:15 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/boost_control.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -103,49 +103,49 @@ struct boost_control_s {
 	bool unusedBit_10_31 : 1 {};
 	/**
 	 * "Boost: Lua target add"
-	v
+	 * units: v
 	 * offset 4
 	 */
 	scaled_channel<int16_t, 2, 1> luaTargetAdd = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_BOOST_OUTPUT@@
-	percent
+	 * units: percent
 	 * offset 6
 	 */
 	scaled_channel<int16_t, 100, 1> boostOutput = (int16_t)0;
 	/**
 	 * "Boost: Lua target mult"
-	v
+	 * units: v
 	 * offset 8
 	 */
 	float luaTargetMult = (float)0;
 	/**
 	 * @@GAUGE_NAME_BOOST_OPEN_LOOP@@
-	v
+	 * units: v
 	 * offset 12
 	 */
 	float openLoopPart = (float)0;
 	/**
 	 * "Boost: Lua open loop add"
-	v
+	 * units: v
 	 * offset 16
 	 */
 	float luaOpenLoopAdd = (float)0;
 	/**
 	 * @@GAUGE_NAME_BOOST_CLOSED_LOOP@@
-	%
+	 * units: %
 	 * offset 20
 	 */
 	scaled_channel<int8_t, 2, 1> boostControllerClosedLoopPart = (int8_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 21
 	 */
 	uint8_t alignmentFill_at_21[1];
 	/**
 	 * @@GAUGE_NAME_BOOST_TARGET@@
-	kPa
+	 * units: kPa
 	 * offset 22
 	 */
 	scaled_channel<int16_t, 30, 1> boostControlTarget = (int16_t)0;
@@ -153,4 +153,4 @@ struct boost_control_s {
 static_assert(sizeof(boost_control_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/boost_control.txt Fri Oct 20 00:44:15 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/boost_control.txt Wed Jan 03 20:30:10 UTC 2024

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Thu Nov 23 14:52:31 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -21,21 +21,21 @@ struct running_fuel_s {
 	 */
 	float coolantTemperatureCoefficient = (float)0;
 	/**
-	secs
+	 * units: secs
 	 * offset 12
 	 */
 	float timeSinceCrankingInSecs = (float)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_BASE@@
 	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
-	mg
+	 * units: mg
 	 * offset 16
 	 */
 	scaled_channel<uint16_t, 100, 1> baseFuel = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_RUNNING@@
 	 * Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
-	mg
+	 * units: mg
 	 * offset 18
 	 */
 	scaled_channel<uint16_t, 100, 1> fuel = (uint16_t)0;
@@ -46,7 +46,7 @@ static_assert(sizeof(running_fuel_s) == 20);
 struct fuel_computer_s {
 	/**
 	 * Fuel: Total correction
-	mult
+	 * units: mult
 	 * offset 0
 	 */
 	float totalFuelCorrection = (float)0;
@@ -55,7 +55,7 @@ struct fuel_computer_s {
 	 */
 	running_fuel_s running;
 	/**
-	%
+	 * units: %
 	 * offset 24
 	 */
 	scaled_channel<uint16_t, 100, 1> afrTableYAxis = (uint16_t)0;
@@ -66,13 +66,13 @@ struct fuel_computer_s {
 	scaled_channel<uint16_t, 10000, 1> targetLambda = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_TARGET_AFR@@
-	ratio
+	 * units: ratio
 	 * offset 28
 	 */
 	scaled_channel<uint16_t, 1000, 1> targetAFR = (uint16_t)0;
 	/**
 	 * Fuel: Stoich ratio
-	ratio
+	 * units: ratio
 	 * offset 30
 	 */
 	scaled_channel<uint16_t, 1000, 1> stoichiometricRatio = (uint16_t)0;
@@ -82,13 +82,13 @@ struct fuel_computer_s {
 	float sdTcharge_coff = (float)0;
 	/**
 	 * @@GAUGE_NAME_AIR_MASS@@
-	g
+	 * units: g
 	 * offset 36
 	 */
 	float sdAirMassInOneCylinder = (float)0;
 	/**
 	 * Air: Normalized cyl filling
-	%
+	 * units: %
 	 * offset 40
 	 */
 	float normalizedCylinderFilling = (float)0;
@@ -98,7 +98,7 @@ struct fuel_computer_s {
 	uint8_t brokenInjector = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 45
 	 */
 	uint8_t alignmentFill_at_45[3];
@@ -202,4 +202,4 @@ struct fuel_computer_s {
 static_assert(sizeof(fuel_computer_s) == 52);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Thu Nov 23 14:52:31 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Wed Jan 03 20:30:10 UTC 2024

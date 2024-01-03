@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/math/lambda_monitor.txt Wed Jul 26 13:01:56 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/math/lambda_monitor.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -102,13 +102,13 @@ struct lambda_monitor_s {
 	offset 0 bit 31 */
 	bool unusedBit_2_31 : 1 {};
 	/**
-	sec
+	 * units: sec
 	 * offset 4
 	 */
 	scaled_channel<uint16_t, 100, 1> lambdaTimeSinceGood = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 6
 	 */
 	uint8_t alignmentFill_at_6[2];
@@ -116,4 +116,4 @@ struct lambda_monitor_s {
 static_assert(sizeof(lambda_monitor_s) == 8);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/math/lambda_monitor.txt Wed Jul 26 13:01:56 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/math/lambda_monitor.txt Wed Jan 03 20:30:10 UTC 2024

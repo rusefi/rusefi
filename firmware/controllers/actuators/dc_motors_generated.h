@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Mon Feb 13 23:29:03 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/dc_motors.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -7,19 +7,19 @@
 struct dc_motors_s {
 	/**
 	 * "DC: output0"
-	per
+	 * units: per
 	 * offset 0
 	 */
 	float dcOutput0 = (float)0;
 	/**
 	 * "DC: en0"
-	per
+	 * units: per
 	 * offset 4
 	 */
 	uint8_t isEnabled0_int = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 5
 	 */
 	uint8_t alignmentFill_at_5[3];
@@ -123,4 +123,4 @@ struct dc_motors_s {
 static_assert(sizeof(dc_motors_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/dc_motors.txt Mon Feb 13 23:29:03 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/dc_motors.txt Wed Jan 03 20:30:10 UTC 2024

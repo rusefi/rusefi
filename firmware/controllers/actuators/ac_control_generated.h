@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/ac_control.txt Tue Aug 22 18:19:47 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/ac_control.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -12,7 +12,7 @@ struct ac_control_s {
 	int8_t acButtonState = (int8_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 1
 	 */
 	uint8_t alignmentFill_at_1[3];
@@ -133,4 +133,4 @@ struct ac_control_s {
 static_assert(sizeof(ac_control_s) == 16);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/ac_control.txt Tue Aug 22 18:19:47 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/ac_control.txt Wed Jan 03 20:30:10 UTC 2024

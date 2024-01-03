@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Tue Dec 26 22:46:57 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -7,7 +7,7 @@
 struct LuaAdjustments {
 	/**
 	 * Lua: Fuel add
-	g
+	 * units: g
 	 * offset 0
 	 */
 	float fuelAdd = (float)0;
@@ -119,13 +119,13 @@ static_assert(sizeof(LuaAdjustments) == 12);
 struct speed_density_s {
 	/**
 	 * Air: Charge temperature estimate
-	deg C
+	 * units: deg C
 	 * offset 0
 	 */
 	scaled_channel<int16_t, 100, 1> tCharge = (int16_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 2
 	 */
 	uint8_t alignmentFill_at_2[2];
@@ -156,13 +156,13 @@ struct cranking_fuel_s {
 	float durationCoefficient = (float)0;
 	/**
 	 * Fuel: Cranking cycle mass
-	mg
+	 * units: mg
 	 * offset 12
 	 */
 	scaled_channel<uint16_t, 100, 1> fuel = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 14
 	 */
 	uint8_t alignmentFill_at_14[2];
@@ -190,7 +190,7 @@ struct engine_state_s {
 	float baroCorrection = (float)0;
 	/**
 	 * Detected Board ID
-	id
+	 * units: id
 	 * offset 40
 	 */
 	int16_t hellenBoardId = (int16_t)0;
@@ -227,7 +227,7 @@ struct engine_state_s {
 	int8_t smartChipAliveCounter = (int8_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 49
 	 */
 	uint8_t alignmentFill_at_49[3];
@@ -341,13 +341,13 @@ struct engine_state_s {
 	float egtValue2 = (float)0;
 	/**
 	 * User-defined RPM hard limit
-	rpm
+	 * units: rpm
 	 * offset 68
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 70
 	 */
 	uint8_t alignmentFill_at_70[2];
@@ -372,13 +372,13 @@ struct engine_state_s {
 	 */
 	float ignitionLoad = (float)0;
 	/**
-	%
+	 * units: %
 	 * offset 88
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 90
 	 */
 	uint8_t alignmentFill_at_90[2];
@@ -386,4 +386,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 92);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Tue Dec 26 22:46:57 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jan 03 20:30:10 UTC 2024

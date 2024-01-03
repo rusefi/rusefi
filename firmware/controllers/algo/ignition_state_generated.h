@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Wed May 31 21:17:03 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/ignition_state.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -7,13 +7,13 @@
 struct ignition_state_s {
 	/**
 	 * "Ignition: base dwell"
-	ms
+	 * units: ms
 	 * offset 0
 	 */
 	float baseDwell = (float)0;
 	/**
 	 * @@GAUGE_COIL_DWELL_TIME@@
-	ms
+	 * units: ms
 	 * offset 4
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
@@ -22,43 +22,43 @@ struct ignition_state_s {
 	 * as crankshaft angle
 	 * NAN if engine is stopped
 	 * See also sparkDwell
-	deg
+	 * units: deg
 	 * offset 8
 	 */
 	angle_t dwellAngle = (angle_t)0;
 	/**
 	 * Ign: CLT correction
-	deg
+	 * units: deg
 	 * offset 12
 	 */
 	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
 	/**
 	 * Ign: IAT correction
-	deg
+	 * units: deg
 	 * offset 14
 	 */
 	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
 	/**
 	 * Idle: Timing adjustment
-	deg
+	 * units: deg
 	 * offset 16
 	 */
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TIMING_ADVANCE@@
-	deg
+	 * units: deg
 	 * offset 18
 	 */
 	scaled_channel<int16_t, 50, 1> baseIgnitionAdvance = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ADJUSTED_TIMING@@
-	deg
+	 * units: deg
 	 * offset 20
 	 */
 	scaled_channel<int16_t, 50, 1> correctedIgnitionAdvance = (int16_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 22
 	 */
 	uint8_t alignmentFill_at_22[2];
@@ -69,13 +69,13 @@ struct ignition_state_s {
 	float dwellVoltageCorrection = (float)0;
 	/**
 	 * Ign: Lua timing add
-	deg
+	 * units: deg
 	 * offset 28
 	 */
 	float luaTimingAdd = (float)0;
 	/**
 	 * Ign: Lua timing mult
-	deg
+	 * units: deg
 	 * offset 32
 	 */
 	float luaTimingMult = (float)0;
@@ -180,4 +180,4 @@ struct ignition_state_s {
 static_assert(sizeof(ignition_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Wed May 31 21:17:03 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/ignition_state.txt Wed Jan 03 20:30:10 UTC 2024

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Thu Dec 21 21:47:23 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -7,13 +7,13 @@
 struct injector_model_s {
 	/**
 	 * @@GAUGE_NAME_INJECTOR_LAG@@
-	ms
+	 * units: ms
 	 * offset 0
 	 */
 	float m_deadtime = (float)0;
 	/**
 	 * Fuel: Injector pressure delta
-	kPa
+	 * units: kPa
 	 * offset 4
 	 */
 	float pressureDelta = (float)0;
@@ -26,4 +26,4 @@ struct injector_model_s {
 static_assert(sizeof(injector_model_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Thu Dec 21 21:47:23 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Wed Jan 03 20:30:10 UTC 2024

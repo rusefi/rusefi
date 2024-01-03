@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Aug 09 09:38:59 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -34,19 +34,19 @@ struct trigger_central_s {
 	uint8_t mapVvt_map_peak = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 38
 	 */
 	uint8_t alignmentFill_at_38[2];
 	/**
 	 * Sync: Engine Phase
-	deg
+	 * units: deg
 	 * offset 40
 	 */
 	float currentEngineDecodedPhase = (float)0;
 	/**
 	 * Sync: trigger angle error
-	deg
+	 * units: deg
 	 * offset 44
 	 */
 	float triggerToothAngleError = (float)0;
@@ -56,13 +56,13 @@ struct trigger_central_s {
 	uint8_t triggerIgnoredToothCount = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
-	units
+	 * units: units
 	 * offset 49
 	 */
 	uint8_t alignmentFill_at_49[3];
 	/**
 	 * Sync: MAP: prev angle
-	deg
+	 * units: deg
 	 * offset 52
 	 */
 	angle_t mapCamPrevToothAngle = (angle_t)0;
@@ -166,4 +166,4 @@ struct trigger_central_s {
 static_assert(sizeof(trigger_central_s) == 60);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Aug 09 09:38:59 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Jan 03 20:30:10 UTC 2024

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Dec 31 20:17:24 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Jan 03 20:30:10 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -7,7 +7,7 @@
 struct electronic_throttle_s {
 	/**
 	 * "ETB: idlePosition"
-	per
+	 * units: per
 	 * offset 0
 	 */
 	float idlePosition = (float)0;
@@ -18,13 +18,13 @@ struct electronic_throttle_s {
 	float trim = (float)0;
 	/**
 	 * "ETB: luaAdjustment"
-	per
+	 * units: per
 	 * offset 8
 	 */
 	float luaAdjustment = (float)0;
 	/**
 	 * "DC: wastegatePosition"
-	per
+	 * units: per
 	 * offset 12
 	 */
 	float m_wastegatePosition = (float)0;
@@ -37,12 +37,12 @@ struct electronic_throttle_s {
 	 */
 	float etbIntegralError = (float)0;
 	/**
-	%
+	 * units: %
 	 * offset 24
 	 */
 	float etbCurrentTarget = (float)0;
 	/**
-	%
+	 * units: %
 	 * offset 28
 	 */
 	float etbCurrentAdjustedTarget = (float)0;
@@ -144,25 +144,25 @@ struct electronic_throttle_s {
 	bool unusedBit_10_31 : 1 {};
 	/**
 	 * "ETB duty rate of change"
-	per
+	 * units: per
 	 * offset 36
 	 */
 	float etbDutyRateOfChange = (float)0;
 	/**
 	 * "ETB average duty"
-	per
+	 * units: per
 	 * offset 40
 	 */
 	float etbDutyAverage = (float)0;
 	/**
 	 * "ETB TPS error counter"
-	count
+	 * units: count
 	 * offset 44
 	 */
 	uint16_t etbTpsErrorCounter = (uint16_t)0;
 	/**
 	 * "ETB pedal error counter"
-	count
+	 * units: count
 	 * offset 46
 	 */
 	uint16_t etbPpsErrorCounter = (uint16_t)0;
@@ -176,7 +176,7 @@ struct electronic_throttle_s {
 	int8_t tcEtbDrop = (int8_t)0;
 	/**
 	 * ETB jam timer
-	sec
+	 * units: sec
 	 * offset 50
 	 */
 	scaled_channel<uint16_t, 100, 1> jamTimer = (uint16_t)0;
@@ -184,4 +184,4 @@ struct electronic_throttle_s {
 static_assert(sizeof(electronic_throttle_s) == 52);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Dec 31 20:17:24 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Jan 03 20:30:10 UTC 2024
