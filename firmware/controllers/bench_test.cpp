@@ -456,6 +456,11 @@ static void handleCommandX14(uint16_t index) {
 		tle8888_req_init();
 #endif
 		return;
+	case TS_RESET_MC33810:
+#if (BOARD_MC33810_COUNT > 0)
+		mc33810_req_init();
+#endif
+		return;
 	case TS_WRITE_FLASH:
 		// cmd_write_config
 #if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
