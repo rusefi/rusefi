@@ -6,6 +6,7 @@
 #include "wideband_state_generated.h"
 #include "electronic_throttle_impl.h"
 #include "knock_controller_generated.h"
+#include "tcu_controller_generated.h"
 #include "fuel_computer.h"
 #include "antilag_system_state_generated.h"
 #include "vvt_generated.h"
@@ -18,6 +19,16 @@ const output_channels_s* getLiveData(size_t) {
 template<>
 const knock_controller_s* getLiveData(size_t) {
 	return &engine->module<KnockController>().unmock();
+}
+
+template<>
+const tcu_controller_s* getLiveData(size_t) {
+#if EFI_TCU
+  fix me here
+	return &engine->
+#else
+		return nullptr;
+#endif // EFI_TCU
 }
 
 template<>

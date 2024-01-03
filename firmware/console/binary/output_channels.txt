@@ -183,7 +183,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int16_t autoscale rawOilPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	uint8_t fuelClosedLoopBinIdx;;"", 1, 0, 0, 0, 0
-	int8_t tcuCurrentGear;@@GAUGE_NAME_CURRENT_GEAR@@;"gear", 1, 0, -1, 10, 0
 
 	int16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
@@ -242,11 +241,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	uint32_t luaInvocationCounter;Lua: Tick counter;"count",1, 0, 0, 0, 0
 	uint32_t luaLastCycleDuration;Lua: Last tick duration;"nt",1, 0, 0, 0, 0
-
-	uint8_t tcu_currentRange;"TCU: Current Range";"", 1, 0, 0, 0, 0
-
-	uint16_t autoscale tcRatio;@@GAUGE_NAME_TC_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	float lastShiftTime
 
 	uint32_t vssEdgeCounter
 	uint32_t issEdgeCounter

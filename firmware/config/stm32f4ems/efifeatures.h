@@ -290,7 +290,7 @@
 #endif
 
 #ifndef EFI_TCU
-#define EFI_TCU TRUE
+#define EFI_TCU FALSE
 #endif
 
 #ifndef EFI_ENGINE_EMULATOR

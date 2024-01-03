@@ -33,9 +33,9 @@ void TransmissionControllerBase::postState() {
 	auto iss = Sensor::get(SensorType::InputShaftSpeed);
 	auto rpm = Sensor::get(SensorType::Rpm);
 	if (iss.Valid && rpm.Valid) {
-		engine->outputChannels.tcRatio = rpm.Value / iss.Value;
+		tcRatio = rpm.Value / iss.Value;
 	}
-	engine->outputChannels.tcuCurrentGear = getCurrentGear();
+  tcuCurrentGear = getCurrentGear();
 #endif
 }
 
