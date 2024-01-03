@@ -128,9 +128,13 @@ static ObdCode getCodeForInjector(int idx, brain_pin_diag_e diag) {
 		return ObdCode::None;
 	}
 
-	// TODO: do something more intelligent with `diag`?
-	UNUSED(diag);
+	if ((diag & PIN_OPEN) || (diag & PIN_SHORT_TO_GND)) {
+		return (ObdCode)((int)ObdCode::OBD_Injector_Circuit_1_Low + (idx * 3));
+	} else if ((diag & PIN_SHORT_TO_BAT) || (diag & PIN_OVERLOAD)) {
+		return (ObdCode)((int)ObdCode::OBD_Injector_Circuit_1_High + (idx * 3));
+	}
 
+	/* else common error code */
 	return (ObdCode)((int)ObdCode::OBD_Injector_Circuit_1 + idx);
 }
 #endif // EFI_ENGINE_CONTROL
