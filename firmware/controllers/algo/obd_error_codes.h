@@ -307,7 +307,9 @@ enum class ObdCode : uint16_t {
 	//P0259 Injection Pump Fuel Metering Control "B" High (Cam/R
 	//P0260 Injection Pump Fuel Metering Control "B" Intermittent Injector)
 	//P0261 Cylinder I Injector Circuit Low
+	OBD_Injector_Circuit_1_Low = 261,
 	//P0262 Cylinder I Injector Circuit High
+	OBD_Injector_Circuit_1_High = 262,
 	//P0263 Cylinder I Contribution/Balance Fault
 	//P0264 Cylinder 2 Injector Circuit Low
 	//P0265 Cylinder 2 Injector Circuit High
