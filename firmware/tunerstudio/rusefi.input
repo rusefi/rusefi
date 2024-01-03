@@ -4619,6 +4619,11 @@ dialog = tcuControls, "Transmission Settings"
 		field = "mc33810_csPinMode",						mc33810_csPinMode
 		field = "Chip configuration"
 		field = "Maximum dwell (IGN pins mode only)",		mc33810maxDwellTimer
+		field = "Disable auto recovery from OV/UV",			mc33810DisableRecoveryMode
+		field = "GD0 output disable IGN mode",				mc33810Gpgd0Mode
+		field = "GD1 output disable IGN mode",				mc33810Gpgd1Mode
+		field = "GD2 output disable IGN mode",				mc33810Gpgd2Mode
+		field = "GD3 output disable IGN mode",				mc33810Gpgd3Mode
 
 	dialog = harleyAcr, "Harley Automatic Compression Release"
 		field = "Pin",	acrPin
