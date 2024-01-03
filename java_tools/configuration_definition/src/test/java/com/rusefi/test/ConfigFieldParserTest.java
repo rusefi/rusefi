@@ -298,34 +298,34 @@ public class ConfigFieldParserTest {
                 javaFieldsConsumer.getContent());
 
         assertEquals("// start of pid_s\n" +
-                        "struct pid_s {\n" +
-                        "\t/**\n" +
-                        "\t * PID dTime\n" +
-                        "\tms\n" +
-                        "\t * offset 0\n" +
-                        "\t */\n" +
-                        "\tint16_t periodMs = (int16_t)0;\n" +
-                        "\t/**\n" +
-                        "\t * PID dTime\n" +
-                        "\tms\n" +
-                        "\t * offset 2\n" +
-                        "\t */\n" +
-                        "\tint8_t periodByte = (int8_t)0;\n" +
-                        "\t/**\n" +
-                        "\t * need 4 byte alignment\n" +
-                        "\tunits\n" +
-                        "\t * offset 3\n" +
-                        "\t */\n" +
-                        "\tuint8_t alignmentFill_at_3[1];\n" +
-                        "\t/**\n" +
-                        "\t * PID dTime\n" +
-                        "\tms\n" +
-                        "\t * offset 4\n" +
-                        "\t */\n" +
-                        "\tfloat periodFloat = (float)0;\n" +
-                        "};\n" +
-                        "static_assert(sizeof(pid_s) == 8);\n" +
-                        "\n",
+                "struct pid_s {\n" +
+                "\t/**\n" +
+                "\t * PID dTime\n" +
+                "\t * units: ms\n" +
+                "\t * offset 0\n" +
+                "\t */\n" +
+                "\tint16_t periodMs = (int16_t)0;\n" +
+                "\t/**\n" +
+                "\t * PID dTime\n" +
+                "\t * units: ms\n" +
+                "\t * offset 2\n" +
+                "\t */\n" +
+                "\tint8_t periodByte = (int8_t)0;\n" +
+                "\t/**\n" +
+                "\t * need 4 byte alignment\n" +
+                "\t * units: units\n" +
+                "\t * offset 3\n" +
+                "\t */\n" +
+                "\tuint8_t alignmentFill_at_3[1];\n" +
+                "\t/**\n" +
+                "\t * PID dTime\n" +
+                "\t * units: ms\n" +
+                "\t * offset 4\n" +
+                "\t */\n" +
+                "\tfloat periodFloat = (float)0;\n" +
+                "};\n" +
+                "static_assert(sizeof(pid_s) == 8);\n" +
+                "\n",
                 cConsumer.getContent());
     }
 
@@ -435,134 +435,134 @@ public class ConfigFieldParserTest {
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 12, FieldType.BIT, 0).setBaseOffset(0);\n",
                 javaFieldsConsumer.getContent());
         assertEquals("// start of pid_s\n" +
-                "struct pid_s {\n" +
-                "\t/**\n" +
-                "\t * offset 0\n" +
-                "\t */\n" +
-                "\tint8_t byte1 = (int8_t)0;\n" +
-                "\t/**\n" +
-                "\t * need 4 byte alignment\n" +
-                "\tunits\n" +
-                "\t * offset 1\n" +
-                "\t */\n" +
-                "\tuint8_t alignmentFill_at_1[1];\n" +
-                "\t/**\n" +
-                "\t * offset 2\n" +
-                "\t */\n" +
-                "\tint16_t short = (int16_t)0;\n" +
-                "\t/**\n" +
-                "\t * offset 4\n" +
-                "\t */\n" +
-                "\tint int2 = (int)0;\n" +
-                "\t/**\n" +
-                "\t * offset 8\n" +
-                "\t */\n" +
-                "\tint8_t byte2 = (int8_t)0;\n" +
-                "\t/**\n" +
-                "\t * need 4 byte alignment\n" +
-                "\tunits\n" +
-                "\t * offset 9\n" +
-                "\t */\n" +
-                "\tuint8_t alignmentFill_at_9[3];\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 0 */\n" +
-                "\tbool periodMs : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 1 */\n" +
-                "\tbool unusedBit_7_1 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 2 */\n" +
-                "\tbool unusedBit_7_2 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 3 */\n" +
-                "\tbool unusedBit_7_3 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 4 */\n" +
-                "\tbool unusedBit_7_4 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 5 */\n" +
-                "\tbool unusedBit_7_5 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 6 */\n" +
-                "\tbool unusedBit_7_6 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 7 */\n" +
-                "\tbool unusedBit_7_7 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 8 */\n" +
-                "\tbool unusedBit_7_8 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 9 */\n" +
-                "\tbool unusedBit_7_9 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 10 */\n" +
-                "\tbool unusedBit_7_10 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 11 */\n" +
-                "\tbool unusedBit_7_11 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 12 */\n" +
-                "\tbool unusedBit_7_12 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 13 */\n" +
-                "\tbool unusedBit_7_13 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 14 */\n" +
-                "\tbool unusedBit_7_14 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 15 */\n" +
-                "\tbool unusedBit_7_15 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 16 */\n" +
-                "\tbool unusedBit_7_16 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 17 */\n" +
-                "\tbool unusedBit_7_17 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 18 */\n" +
-                "\tbool unusedBit_7_18 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 19 */\n" +
-                "\tbool unusedBit_7_19 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 20 */\n" +
-                "\tbool unusedBit_7_20 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 21 */\n" +
-                "\tbool unusedBit_7_21 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 22 */\n" +
-                "\tbool unusedBit_7_22 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 23 */\n" +
-                "\tbool unusedBit_7_23 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 24 */\n" +
-                "\tbool unusedBit_7_24 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 25 */\n" +
-                "\tbool unusedBit_7_25 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 26 */\n" +
-                "\tbool unusedBit_7_26 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 27 */\n" +
-                "\tbool unusedBit_7_27 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 28 */\n" +
-                "\tbool unusedBit_7_28 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 29 */\n" +
-                "\tbool unusedBit_7_29 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 30 */\n" +
-                "\tbool unusedBit_7_30 : 1 {};\n" +
-                "\t/**\n" +
-                "\toffset 12 bit 31 */\n" +
-                "\tbool unusedBit_7_31 : 1 {};\n" +
-                "};\n" +
-                "static_assert(sizeof(pid_s) == 16);\n" +
-                "\n", consumer.getContent());
+            "struct pid_s {\n" +
+            "\t/**\n" +
+            "\t * offset 0\n" +
+            "\t */\n" +
+            "\tint8_t byte1 = (int8_t)0;\n" +
+            "\t/**\n" +
+            "\t * need 4 byte alignment\n" +
+            "\t * units: units\n" +
+            "\t * offset 1\n" +
+            "\t */\n" +
+            "\tuint8_t alignmentFill_at_1[1];\n" +
+            "\t/**\n" +
+            "\t * offset 2\n" +
+            "\t */\n" +
+            "\tint16_t short = (int16_t)0;\n" +
+            "\t/**\n" +
+            "\t * offset 4\n" +
+            "\t */\n" +
+            "\tint int2 = (int)0;\n" +
+            "\t/**\n" +
+            "\t * offset 8\n" +
+            "\t */\n" +
+            "\tint8_t byte2 = (int8_t)0;\n" +
+            "\t/**\n" +
+            "\t * need 4 byte alignment\n" +
+            "\t * units: units\n" +
+            "\t * offset 9\n" +
+            "\t */\n" +
+            "\tuint8_t alignmentFill_at_9[3];\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 0 */\n" +
+            "\tbool periodMs : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 1 */\n" +
+            "\tbool unusedBit_7_1 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 2 */\n" +
+            "\tbool unusedBit_7_2 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 3 */\n" +
+            "\tbool unusedBit_7_3 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 4 */\n" +
+            "\tbool unusedBit_7_4 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 5 */\n" +
+            "\tbool unusedBit_7_5 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 6 */\n" +
+            "\tbool unusedBit_7_6 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 7 */\n" +
+            "\tbool unusedBit_7_7 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 8 */\n" +
+            "\tbool unusedBit_7_8 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 9 */\n" +
+            "\tbool unusedBit_7_9 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 10 */\n" +
+            "\tbool unusedBit_7_10 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 11 */\n" +
+            "\tbool unusedBit_7_11 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 12 */\n" +
+            "\tbool unusedBit_7_12 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 13 */\n" +
+            "\tbool unusedBit_7_13 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 14 */\n" +
+            "\tbool unusedBit_7_14 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 15 */\n" +
+            "\tbool unusedBit_7_15 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 16 */\n" +
+            "\tbool unusedBit_7_16 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 17 */\n" +
+            "\tbool unusedBit_7_17 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 18 */\n" +
+            "\tbool unusedBit_7_18 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 19 */\n" +
+            "\tbool unusedBit_7_19 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 20 */\n" +
+            "\tbool unusedBit_7_20 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 21 */\n" +
+            "\tbool unusedBit_7_21 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 22 */\n" +
+            "\tbool unusedBit_7_22 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 23 */\n" +
+            "\tbool unusedBit_7_23 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 24 */\n" +
+            "\tbool unusedBit_7_24 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 25 */\n" +
+            "\tbool unusedBit_7_25 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 26 */\n" +
+            "\tbool unusedBit_7_26 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 27 */\n" +
+            "\tbool unusedBit_7_27 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 28 */\n" +
+            "\tbool unusedBit_7_28 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 29 */\n" +
+            "\tbool unusedBit_7_29 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 30 */\n" +
+            "\tbool unusedBit_7_30 : 1 {};\n" +
+            "\t/**\n" +
+            "\toffset 12 bit 31 */\n" +
+            "\tbool unusedBit_7_31 : 1 {};\n" +
+            "};\n" +
+            "static_assert(sizeof(pid_s) == 16);\n" +
+            "\n", consumer.getContent());
     }
 
     @Test
@@ -579,15 +579,15 @@ public class ConfigFieldParserTest {
         assertEquals("\tpublic static final Field FIELD1 = Field.create(\"FIELD1\", 0, FieldType.INT).setScale(0.01).setBaseOffset(0);\n",
                 javaFieldsConsumer.getContent());
         assertEquals("// start of pid_s\n" +
-                "struct pid_s {\n" +
-                "\t/**\n" +
-                "\tratio\n" +
-                "\t * offset 0\n" +
-                "\t */\n" +
-                "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE];\n" +
-                "};\n" +
-                "static_assert(sizeof(pid_s) == 4);\n" +
-                "\n", consumer.getContent());
+            "struct pid_s {\n" +
+            "\t/**\n" +
+            "\t * units: ratio\n" +
+            "\t * offset 0\n" +
+            "\t */\n" +
+            "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE];\n" +
+            "};\n" +
+            "static_assert(sizeof(pid_s) == 4);\n" +
+            "\n", consumer.getContent());
     }
 
     @Test
@@ -605,33 +605,33 @@ public class ConfigFieldParserTest {
         ReaderStateImpl state = new ReaderStateImpl();
         state.readBufferedReader(test, consumer);
         assertEquals("// start of struct_s\n" +
-                        "struct struct_s {\n" +
-                        "\t/**\n" +
-                        "\t * offset 0\n" +
-                        "\t */\n" +
-                        "\tint int2 = (int)0;\n" +
-                        "};\n" +
-                        "static_assert(sizeof(struct_s) == 4);\n" +
-                        "\n" +
-                        "// start of pid_s\n" +
-                        "struct pid_s {\n" +
-                        "\t/**\n" +
-                        "\t * offset 0\n" +
-                        "\t */\n" +
-                        "\tint8_t byte1 = (int8_t)0;\n" +
-                        "\t/**\n" +
-                        "\t * need 4 byte alignment\n" +
-                        "\tunits\n" +
-                        "\t * offset 1\n" +
-                        "\t */\n" +
-                        "\tuint8_t alignmentFill_at_1[3];\n" +
-                        "\t/**\n" +
-                        "\t * offset 4\n" +
-                        "\t */\n" +
-                        "\tstruct_s struct;\n" +
-                        "};\n" +
-                        "static_assert(sizeof(pid_s) == 8);\n" +
-                        "\n",
+                "struct struct_s {\n" +
+                "\t/**\n" +
+                "\t * offset 0\n" +
+                "\t */\n" +
+                "\tint int2 = (int)0;\n" +
+                "};\n" +
+                "static_assert(sizeof(struct_s) == 4);\n" +
+                "\n" +
+                "// start of pid_s\n" +
+                "struct pid_s {\n" +
+                "\t/**\n" +
+                "\t * offset 0\n" +
+                "\t */\n" +
+                "\tint8_t byte1 = (int8_t)0;\n" +
+                "\t/**\n" +
+                "\t * need 4 byte alignment\n" +
+                "\t * units: units\n" +
+                "\t * offset 1\n" +
+                "\t */\n" +
+                "\tuint8_t alignmentFill_at_1[3];\n" +
+                "\t/**\n" +
+                "\t * offset 4\n" +
+                "\t */\n" +
+                "\tstruct_s struct;\n" +
+                "};\n" +
+                "static_assert(sizeof(pid_s) == 8);\n" +
+                "\n",
                 consumer.getContent());
     }
 
@@ -647,24 +647,24 @@ public class ConfigFieldParserTest {
         ReaderStateImpl state = new ReaderStateImpl();
         state.readBufferedReader(test, consumer);
         assertEquals("// start of pid_s\n" +
-                        "struct pid_s {\n" +
-                        "\t/**\n" +
-                        "\t * offset 0\n" +
-                        "\t */\n" +
-                        "\tint8_t byte1 = (int8_t)0;\n" +
-                        "\t/**\n" +
-                        "\t * offset 1\n" +
-                        "\t */\n" +
-                        "\tint8_t byte2 = (int8_t)0;\n" +
-                        "\t/**\n" +
-                        "\t * need 4 byte alignment\n" +
-                        "\tunits\n" +
-                        "\t * offset 2\n" +
-                        "\t */\n" +
-                        "\tuint8_t alignmentFill_at_2[2];\n" +
-                        "};\n" +
-                        "static_assert(sizeof(pid_s) == 4);\n" +
-                        "\n",
+                "struct pid_s {\n" +
+                "\t/**\n" +
+                "\t * offset 0\n" +
+                "\t */\n" +
+                "\tint8_t byte1 = (int8_t)0;\n" +
+                "\t/**\n" +
+                "\t * offset 1\n" +
+                "\t */\n" +
+                "\tint8_t byte2 = (int8_t)0;\n" +
+                "\t/**\n" +
+                "\t * need 4 byte alignment\n" +
+                "\t * units: units\n" +
+                "\t * offset 2\n" +
+                "\t */\n" +
+                "\tuint8_t alignmentFill_at_2[2];\n" +
+                "};\n" +
+                "static_assert(sizeof(pid_s) == 4);\n" +
+                "\n",
                 consumer.getContent());
     }
 
