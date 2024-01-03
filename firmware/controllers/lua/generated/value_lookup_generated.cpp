@@ -1159,9 +1159,6 @@ float getConfigValueByName(const char *name) {
 // camDecoder2jzPosition
 		case 594789367:
 			return engineConfiguration->camDecoder2jzPosition;
-// mc33810maxDwellTimer
-		case -132408813:
-			return engineConfiguration->mc33810maxDwellTimer;
 // benchTestOnTime
 		case -1992436143:
 			return engineConfiguration->benchTestOnTime;
@@ -3667,11 +3664,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 594789367:
 	{
 		engineConfiguration->camDecoder2jzPosition = (int)value;
-		return 1;
-	}
-		case -132408813:
-	{
-		engineConfiguration->mc33810maxDwellTimer = (int)value;
 		return 1;
 	}
 		case -1992436143:

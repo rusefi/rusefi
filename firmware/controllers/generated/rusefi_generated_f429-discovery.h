@@ -1034,6 +1034,7 @@
 #define MAP_sensor_config_s_size 140
 #define MAP_WINDOW_SIZE 8
 #define MAX_CYLINDER_COUNT 12
+#define mc33810maxDwellTimer_e_auto_enum 0="DWELL_2MS",3="DWELL_16MS",4="DWELL_32MS",1="DWELL_4MS",5="DWELL_64MS",2="DWELL_8MS"
 #define mc33810maxDwellTimer_e_DWELL_16MS 3
 #define mc33810maxDwellTimer_e_DWELL_2MS 0
 #define mc33810maxDwellTimer_e_DWELL_32MS 4
@@ -1150,7 +1151,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 367801846
+#define SIGNATURE_HASH 383872382
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1319,12 +1320,22 @@
 #define ts_14_command_TS_14_4 4
 #define ts_14_command_TS_14_5 5
 #define ts_14_command_TS_14_9 9
+#define ts_14_command_TS_BURN_WITHOUT_FLASH 0x15
+#define ts_14_command_TS_ETB_AUTOCAL_0 0x0E
+#define ts_14_command_TS_ETB_AUTOCAL_1 0x11
 #define ts_14_command_TS_ETB_RESET 0x0B
+#define ts_14_command_TS_ETB_START_AUTOTUNE 0x0C
+#define ts_14_command_TS_ETB_STOP_AUTOTUNE 0x10
+#define ts_14_command_TS_EXTERNAL_TRIGGER_STIMULATOR_ENABLE 0x13
 #define ts_14_command_TS_GRAB_PEDAL_UP 6
 #define ts_14_command_TS_GRAB_PEDAL_WOT 7
 #define ts_14_command_TS_GRAB_TPS_CLOSED 2
 #define ts_14_command_TS_GRAB_TPS_WOT 3
+#define ts_14_command_TS_RESET_MC33810 0x14
 #define ts_14_command_TS_RESET_TLE8888 8
+#define ts_14_command_TS_TRIGGER_STIMULATOR_DISABLE 0x0F
+#define ts_14_command_TS_TRIGGER_STIMULATOR_ENABLE 0x0D
+#define ts_14_command_TS_WIDEBAND_UPDATE 0x12
 #define ts_14_command_TS_WRITE_FLASH 0x0A
 #define TS_BLOCK_READ_TIMEOUT 3000
 #define TS_BURN_COMMAND 'B'
@@ -1450,7 +1461,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.01.03.f429-discovery.367801846"
+#define TS_SIGNATURE "rusEFI master.2024.01.03.f429-discovery.383872382"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

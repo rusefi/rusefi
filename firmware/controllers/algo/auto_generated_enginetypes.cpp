@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Dec 26 01:36:31 UTC 2023
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Jan 03 21:42:05 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -567,8 +567,20 @@ case TS_14_5:
   return "TS_14_5";
 case TS_14_9:
   return "TS_14_9";
+case TS_BURN_WITHOUT_FLASH:
+  return "TS_BURN_WITHOUT_FLASH";
+case TS_ETB_AUTOCAL_0:
+  return "TS_ETB_AUTOCAL_0";
+case TS_ETB_AUTOCAL_1:
+  return "TS_ETB_AUTOCAL_1";
 case TS_ETB_RESET:
   return "TS_ETB_RESET";
+case TS_ETB_START_AUTOTUNE:
+  return "TS_ETB_START_AUTOTUNE";
+case TS_ETB_STOP_AUTOTUNE:
+  return "TS_ETB_STOP_AUTOTUNE";
+case TS_EXTERNAL_TRIGGER_STIMULATOR_ENABLE:
+  return "TS_EXTERNAL_TRIGGER_STIMULATOR_ENABLE";
 case TS_GRAB_PEDAL_UP:
   return "TS_GRAB_PEDAL_UP";
 case TS_GRAB_PEDAL_WOT:
@@ -577,8 +589,16 @@ case TS_GRAB_TPS_CLOSED:
   return "TS_GRAB_TPS_CLOSED";
 case TS_GRAB_TPS_WOT:
   return "TS_GRAB_TPS_WOT";
+case TS_RESET_MC33810:
+  return "TS_RESET_MC33810";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_TRIGGER_STIMULATOR_DISABLE:
+  return "TS_TRIGGER_STIMULATOR_DISABLE";
+case TS_TRIGGER_STIMULATOR_ENABLE:
+  return "TS_TRIGGER_STIMULATOR_ENABLE";
+case TS_WIDEBAND_UPDATE:
+  return "TS_WIDEBAND_UPDATE";
 case TS_WRITE_FLASH:
   return "TS_WRITE_FLASH";
   }

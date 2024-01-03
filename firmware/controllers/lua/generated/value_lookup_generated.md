@@ -1153,9 +1153,6 @@ ListenMode is about acknowledging CAN traffic on the protocol level. Different f
 ### camDecoder2jzPosition
 null
 
-### mc33810maxDwellTimer
-null
-
 ### benchTestOnTime
 Duration of each test pulse
 
