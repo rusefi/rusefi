@@ -4,9 +4,9 @@
 
 #if EFI_TCU
 Gm4l6xTransmissionController gm4l6xTransmissionController;
-static SimplePwm tccPwm("TCC Control"); 
-static SimplePwm pcPwm("Pressure Control"); 
-static SimplePwm shift32Pwm("3-2 Shift Control"); 
+static SimplePwm tccPwm("TCC Control");
+static SimplePwm pcPwm("Pressure Control");
+static SimplePwm shift32Pwm("3-2 Shift Control");
 
 void Gm4l6xTransmissionController::init() {
     for (size_t i = 0; i < efi::size(engineConfiguration->tcu_solenoid); i++) {
@@ -56,7 +56,7 @@ void Gm4l6xTransmissionController::update(gear_e gear) {
 
 	float time = isShiftCompleted();
 	if (time != 0) {
-		engine->outputChannels.lastShiftTime = time;
+		lastShiftTime = time;
 		isShifting = false;
 	}
 }
@@ -157,7 +157,7 @@ void Gm4l6xTransmissionController::set32State(gear_e gear) {
 		int pct = interpolate2d(vss.Value, config->tcu_32SpeedBins, config->tcu_32Vals);
 		shift32Pwm.setSimplePwmDutyCycle(pct*0.01);
 	} else {
-		shift32Pwm.setSimplePwmDutyCycle(0);		
+		shift32Pwm.setSimplePwmDutyCycle(0);
 	}
 }
 

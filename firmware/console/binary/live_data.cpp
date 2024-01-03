@@ -24,8 +24,7 @@ const knock_controller_s* getLiveData(size_t) {
 template<>
 const tcu_controller_s* getLiveData(size_t) {
 #if EFI_TCU
-  fix me here
-	return &engine->
+	return engine->gearController->transmissionController;
 #else
 		return nullptr;
 #endif // EFI_TCU

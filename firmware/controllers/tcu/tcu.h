@@ -15,7 +15,7 @@
 #include <rusefi/timer.h>
 
 #if EFI_TCU
-class TransmissionControllerBase, public tcu_controller_s {
+class TransmissionControllerBase: public tcu_controller_s {
 private:
 	Timer m_shiftTimer;
 	bool m_shiftTime;

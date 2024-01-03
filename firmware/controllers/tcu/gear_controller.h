@@ -16,10 +16,10 @@ public:
 	virtual GearControllerMode getMode() const {
 		return GearControllerMode::ButtonShift;
 	}
+	TransmissionControllerBase *transmissionController;
 protected:
 	virtual gear_e setDesiredGear(gear_e);
 	void initTransmissionController();
-	TransmissionControllerBase *transmissionController;
 	uint8_t* getRangeStateArray(int);
 private:
 	gear_e desiredGear = NEUTRAL;
