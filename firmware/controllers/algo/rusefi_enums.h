@@ -157,6 +157,16 @@ typedef enum  __attribute__ ((__packed__)) {
 } tle8888_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	DWELL_2MS = 0,
+	DWELL_4MS = 1,
+	DWELL_8MS = 2,
+	DWELL_16MS = 3,
+	DWELL_32MS = 4,
+	DWELL_64MS = 5,
+
+} mc33810maxDwellTimer_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * In auto mode we currently have some pid-like-but-not really PID logic which is trying
 	 * to get idle RPM to desired value by dynamically adjusting idle valve position.
