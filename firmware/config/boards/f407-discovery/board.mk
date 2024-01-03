@@ -30,10 +30,6 @@ DDEFS += -DBOARD_TLE9104_COUNT=2
 # EGT chip
 DDEFS += -DEFI_MAX_31855=TRUE
 
-DDEFS += -DBOARD_MC33810_COUNT=1
-# reduced lua heap while we temporary use BOARD_MC33810_COUNT
-DDEFS += -DLUA_USER_HEAP=24000
-
 DDEFS += -DRAM_UNUSED_SIZE=200
 
 # We are running on Frankenso hardware!
