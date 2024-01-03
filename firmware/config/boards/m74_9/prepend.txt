@@ -17,9 +17,8 @@
 #define ts_show_can2 false
 #define ts_show_software_knock true
 #define ts_show_hardware_simulator false
-
-
-
+#define ts_show_output_diag true
+#define ts_show_l9779 true
 
 
 #define show_Hellen_presets false

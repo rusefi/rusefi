@@ -371,8 +371,8 @@ float mapFast
 
 	float wheelSlipRatio
 
-	uint8_t[12 iterate] ignitorDiagnostic
-	uint8_t[12 iterate] injectorDiagnostic
+	uint8_t[MAX_CYLINDER_COUNT iterate] ignitorDiagnostic
+	uint8_t[MAX_CYLINDER_COUNT iterate] injectorDiagnostic
 
 	uint8_t[92 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
