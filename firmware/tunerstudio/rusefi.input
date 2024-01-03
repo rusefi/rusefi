@@ -1999,8 +1999,9 @@ menuDialog = main
 		subMenu = canBusMain,				"CAN Bus Communication"
 		subMenu = sdCard,					"SD Card Logger" @@if_ts_show_sd_card
 		subMenu = connection,					"Connection"
-		subMenu = tle8888,					"TLE8888"
-		subMenu = mc33810Dialog				"MC33810 IGN/INJ driver"
+		subMenu = tle8888Dialog,			"TLE8888"
+		subMenu = l9779Dialog,				"L9779"
+		subMenu = mc33810Dialog,			"MC33810 IGN/INJ driver"
 
 		subMenu = allPins1,					"Full pinout 1/3" @@if_ts_show_full_pinout
 		subMenu = allPins2,					"Full pinout 2/3" @@if_ts_show_full_pinout
@@ -3907,14 +3908,17 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SD logger rate",						sdCardLogFrequency
 		field = "SD logger mode",						sdTriggerLog
 
-	dialog = tle8888, "TLE8888", yAxis
-		field = "TLE8888 Chip Select",					tle8888_cs @@if_ts_show_spi
+	dialog = tle8888Dialog, "TLE8888", yAxis
 		field = "TLE8888 SPI",							tle8888spiDevice @@if_ts_show_spi
+		field = "TLE8888 Chip Select",					tle8888_cs @@if_ts_show_spi
 		field = "Mode",									tle8888mode
 		field = "useTLE8888 cranking reset hack",		useTLE8888_cranking_hack
 		field = "useTLE8888 stepper",					useTLE8888_stepper
-		commandButton = "Reinit",						cmd_tle8888_init
-		field = "L9779 SPI",									tle8888spiDevice @@if_ts_show_spi
+		commandButton = "Reinitialize",					cmd_tle8888_init
+
+	dialog = l9779Dialog, "L9779", yAxis
+		field = "L9779 SPI",							l9779spiDevice @@if_ts_show_spi
+		filed = "L9779 Chip Select",					l9779_cs @@if_ts_show_spi
 
 	dialog = connection, "",	yAxis
 		panel = tsPort							@@if_ts_show_tunerstudio_port
