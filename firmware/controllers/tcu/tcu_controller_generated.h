@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/tcu/tcu_controller.txt Wed Jan 03 03:26:04 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/tcu/tcu_controller.txt Wed Jan 03 03:40:23 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -27,8 +27,19 @@ struct tcu_controller_s {
 	 * offset 4
 	 */
 	float lastShiftTime = (float)0;
+	/**
+	 * "TCU: Current Range"
+	 * offset 8
+	 */
+	uint8_t tcu_currentRange = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 9
+	 */
+	uint8_t alignmentFill_at_9[3];
 };
-static_assert(sizeof(tcu_controller_s) == 8);
+static_assert(sizeof(tcu_controller_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/tcu/tcu_controller.txt Wed Jan 03 03:26:04 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/tcu/tcu_controller.txt Wed Jan 03 03:40:23 UTC 2024

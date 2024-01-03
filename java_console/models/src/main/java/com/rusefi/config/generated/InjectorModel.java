@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Mon Nov 27 20:20:53 UTC 2023
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Wed Jan 03 03:40:23 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -170,9 +170,9 @@ public class InjectorModel {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field M_DEADTIME = Field.create("M_DEADTIME", 0, FieldType.FLOAT).setBaseOffset(964);
-	public static final Field PRESSUREDELTA = Field.create("PRESSUREDELTA", 4, FieldType.FLOAT).setBaseOffset(964);
-	public static final Field PRESSURERATIO = Field.create("PRESSURERATIO", 8, FieldType.FLOAT).setBaseOffset(964);
+	public static final Field M_DEADTIME = Field.create("M_DEADTIME", 0, FieldType.FLOAT).setBaseOffset(968);
+	public static final Field PRESSUREDELTA = Field.create("PRESSUREDELTA", 4, FieldType.FLOAT).setBaseOffset(968);
+	public static final Field PRESSURERATIO = Field.create("PRESSURERATIO", 8, FieldType.FLOAT).setBaseOffset(968);
 	public static final Field[] VALUES = {
 	M_DEADTIME,
 	PRESSUREDELTA,

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/tcu/tcu_controller.txt Wed Jan 03 03:26:04 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/tcu/tcu_controller.txt Wed Jan 03 03:40:23 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -174,10 +174,14 @@ public class TcuController {
 	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(916);
 	public static final Field TCRATIO = Field.create("TCRATIO", 2, FieldType.INT16).setScale(0.01).setBaseOffset(916);
 	public static final Field LASTSHIFTTIME = Field.create("LASTSHIFTTIME", 4, FieldType.FLOAT).setBaseOffset(916);
+	public static final Field TCU_CURRENTRANGE = Field.create("TCU_CURRENTRANGE", 8, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field ALIGNMENTFILL_AT_9 = Field.create("ALIGNMENTFILL_AT_9", 9, FieldType.INT8).setScale(1.0).setBaseOffset(916);
 	public static final Field[] VALUES = {
 	TCUCURRENTGEAR,
 	ALIGNMENTFILL_AT_1,
 	TCRATIO,
 	LASTSHIFTTIME,
+	TCU_CURRENTRANGE,
+	ALIGNMENTFILL_AT_9,
 	};
 }
