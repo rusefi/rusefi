@@ -2657,7 +2657,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", veBlends1_blendParameter
-		panel = veBlend2Bias
+		panel = veBlend1Bias
 
 	dialog = veBlend2Cfg, "VE blend 2 config"
 		field = "#The bias table controls how much of the blend table"
