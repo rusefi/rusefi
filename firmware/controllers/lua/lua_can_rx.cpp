@@ -61,12 +61,12 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 	}
 }
 
-// From lapi.c:756, modified slightly
+// From lapi.c:762 lua_createtable, modified slightly
 static void lua_createtable_noGC(lua_State *L, int narray) {
 	Table *t;
 	lua_lock(L);
 	t = luaH_new(L);
-	sethvalue2s(L, L->top, t);
+	sethvalue2s(L, L->top.p, t);
 	api_incr_top(L);
 	luaH_resize(L, t, narray, 0);
 
