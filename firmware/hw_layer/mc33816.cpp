@@ -176,8 +176,8 @@ void Pt2001::init() {
 	// High Voltage via DRIVEN
 	driven.initPin("mc33 DRIVEN", engineConfiguration->mc33816_driven);
 
-	spiCfg.ssport = getHwPort("hip", engineConfiguration->mc33816_cs);
-	spiCfg.sspad = getHwPin("hip", engineConfiguration->mc33816_cs);
+	spiCfg.ssport = getHwPort("mc33816", engineConfiguration->mc33816_cs);
+	spiCfg.sspad = getHwPin("mc33816", engineConfiguration->mc33816_cs);
 
 	// hard-coded for now, just resolve the conflict with SD card!
 	engineConfiguration->mc33816spiDevice = SPI_DEVICE_3;
