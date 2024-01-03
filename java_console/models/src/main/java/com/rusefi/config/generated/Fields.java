@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 03:51:01 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 16:20:18 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -290,7 +290,6 @@ public class Fields {
 	public static final int ego_sensor_e_ES_BPSX_D1 = 0;
 	public static final int ego_sensor_e_ES_Custom = 5;
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
-	public static final int ego_sensor_e_ES_NarrowBand = 3;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
 	public static final int engine_configuration_s_size = 4556;
@@ -993,7 +992,6 @@ public class Fields {
 	public static final int MAX_CYLINDER_COUNT = 12;
 	public static final int MLQ_FIELD_HEADER_SIZE = 89;
 	public static final int MLQ_HEADER_SIZE = 24;
-	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int operation_mode_e_FOUR_STROKE_CAM_SENSOR = 2;
 	public static final int operation_mode_e_FOUR_STROKE_CRANK_SENSOR = 1;
 	public static final int operation_mode_e_FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4;
@@ -1084,7 +1082,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1633175426;
+	public static final int SIGNATURE_HASH = 33634172;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1314,7 +1312,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.01.03.f407-discovery.1633175426";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.01.03.f407-discovery.33634172";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1622,7 +1620,7 @@ public class Fields {
 	public static final Field TPS2_2ADCCHANNEL = Field.create("TPS2_2ADCCHANNEL", 651, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field THROTTLEPEDALPOSITIONSECONDADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONSECONDADCCHANNEL", 652, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FUELLEVELVALUES = Field.create("FUELLEVELVALUES", 653, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "AEM"};
+	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "INVALID", "PLX", "Custom", "AEM"};
 	public static final Field AFR_TYPE = Field.create("AFR_TYPE", 661, FieldType.INT8, ego_sensor_e).setScale(1.0).setBaseOffset(0);
 	public static final Field MC33810_CS1 = Field.create("MC33810_CS1", 662, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLE_ANTIWINDUPFREQ = Field.create("IDLE_ANTIWINDUPFREQ", 664, FieldType.FLOAT).setBaseOffset(0);
@@ -2728,8 +2726,7 @@ public class Fields {
 	public static final Field BAROCORRTABLE = Field.create("BAROCORRTABLE", 5372, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field CRANKINGTPSCOEF = Field.create("CRANKINGTPSCOEF", 5436, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field CRANKINGTPSBINS = Field.create("CRANKINGTPSBINS", 5468, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field NARROWTOWIDEOXYGENBINS = Field.create("NARROWTOWIDEOXYGENBINS", 5500, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field NARROWTOWIDEOXYGEN = Field.create("NARROWTOWIDEOXYGEN", 5532, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field UNUSEDSPACEHERE = Field.create("UNUSEDSPACEHERE", 5500, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field CRANKINGADVANCEBINS = Field.create("CRANKINGADVANCEBINS", 5564, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field CRANKINGADVANCE = Field.create("CRANKINGADVANCE", 5572, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field IACCOASTINGRPMBINS = Field.create("IACCOASTINGRPMBINS", 5580, FieldType.INT8).setScale(100.0).setBaseOffset(0);
@@ -4300,8 +4297,7 @@ public class Fields {
 	BAROCORRTABLE,
 	CRANKINGTPSCOEF,
 	CRANKINGTPSBINS,
-	NARROWTOWIDEOXYGENBINS,
-	NARROWTOWIDEOXYGEN,
+	UNUSEDSPACEHERE,
 	CRANKINGADVANCEBINS,
 	CRANKINGADVANCE,
 	IACCOASTINGRPMBINS,

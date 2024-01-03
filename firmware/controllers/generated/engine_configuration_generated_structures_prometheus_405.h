@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 22:07:01 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 16:19:41 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2033,7 +2033,7 @@ struct engine_configuration_s {
 	offset 916 bit 9 */
 	bool showHumanReadableWarning : 1 {};
 	/**
-	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
+	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 	offset 916 bit 10 */
 	bool stftIgnoreErrorMagnitude : 1 {};
 	/**
@@ -4698,16 +4698,9 @@ struct persistent_config_s {
 	 */
 	float crankingTpsBins[CRANKING_CURVE_SIZE];
 	/**
-	 * Narrow Band WBO Approximation
-	V
 	 * offset 5500
 	 */
-	float narrowToWideOxygenBins[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE];
-	/**
-	ratio
-	 * offset 5532
-	 */
-	float narrowToWideOxygen[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE];
+	float unusedSpaceHere[16];
 	/**
 	 * Optional timing advance table for Cranking (see useSeparateAdvanceForCranking)
 	RPM
@@ -5398,4 +5391,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22088);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Dec 31 22:07:01 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 16:19:41 UTC 2024

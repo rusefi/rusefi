@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Dec 12 22:51:24 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Jan 03 16:18:15 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -338,8 +338,6 @@ case ES_Custom:
   return "ES_Custom";
 case ES_Innovate_MTX_L:
   return "ES_Innovate_MTX_L";
-case ES_NarrowBand:
-  return "ES_NarrowBand";
 case ES_PLX:
   return "ES_PLX";
   }
