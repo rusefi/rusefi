@@ -421,9 +421,16 @@ int Mc33810::chip_init()
 			goto err_exit;
 		}
 
-		/* set IGN/GP outputs to GP mode - to be fixed!
-		 * disable retry after recovering from under/overvoltage */
-		ret = spi_rw(MC_CMD_MODE_SELECT((0xf << 8) | (1 << 6)) , NULL);
+		uint16_t mode_select_cmd =
+			/* set IGN/GP mode for GPx outputs */
+			(engineConfiguration->mc33810Gpgd0Mode << 8) |
+			(engineConfiguration->mc33810Gpgd1Mode << 8) |
+			(engineConfiguration->mc33810Gpgd2Mode << 8) |
+			(engineConfiguration->mc33810Gpgd3Mode << 8) |
+			/* disable/enable retry after recovering from under/overvoltage */
+			(engineConfiguration->mc33810DisableRecoveryMode << 6) |
+			0;
+		ret = spi_rw(MC_CMD_MODE_SELECT(mode_select_cmd) , NULL);
 		if (ret) {
 			efiPrintf(DRIVER_NAME " cmd mode select");
 			goto err_exit;
