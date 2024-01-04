@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Jan 04 14:33:50 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Jan 04 15:20:20 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1237,11 +1237,11 @@ struct output_channels_s {
 	/**
 	 * offset 676
 	 */
-	uint8_t ignitorDiagnostic[12];
+	uint8_t ignitorDiagnostic[MAX_CYLINDER_COUNT];
 	/**
 	 * offset 688
 	 */
-	uint8_t injectorDiagnostic[12];
+	uint8_t injectorDiagnostic[MAX_CYLINDER_COUNT];
 	/**
 	 * offset 700
 	 */
@@ -1250,4 +1250,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 792);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Jan 04 14:33:50 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Jan 04 15:20:20 UTC 2024

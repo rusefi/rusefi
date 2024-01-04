@@ -1153,7 +1153,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 530179614
+#define SIGNATURE_HASH 1540078013
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1449,13 +1449,17 @@
 #define ts_show_inj_diag false
 #define ts_show_injectionPinMode false
 #define ts_show_joystick true
+#define ts_show_l9779 false
 #define ts_show_lcd true
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
+#define ts_show_mc33810 false
+#define ts_show_output_diag false
 #define ts_show_sd_card true
 #define ts_show_sd_pins false
 #define ts_show_software_knock true
 #define ts_show_spi true
+#define ts_show_tle8888 false
 #define ts_show_tps_sent false
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
@@ -1463,7 +1467,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.01.04.hellenNA6.530179614"
+#define TS_SIGNATURE "rusEFI master.2024.01.04.hellenNA6.1540078013"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
