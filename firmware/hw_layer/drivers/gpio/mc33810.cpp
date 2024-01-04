@@ -11,6 +11,12 @@
  *
  * @date Jan 03, 2020
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2020
+ *
+ * Masks bits/inputs numbers:
+ * 0..3   - OUT1 .. 3 - Low-Side Injector drivers, 4.5A max
+ *						driven through DIN0 .. 3 or SPI (not supported)
+ * 4..7   -  GD0 .. 3 - Gate Driver outputs - IGBT of MOSFET pre-drivers,
+ *						driven throug GIN0 .. 3 or SPI in GPGD mode (not supported)
  */
 
 #include "pch.h"
@@ -126,6 +132,8 @@ struct Mc33810 : public GpioChip {
 	uint8_t					o_state;
 	/* direct driven output mask */
 	uint8_t					o_direct_mask;
+	/* IGN/GPGD mode bits: [7:4] - GP3..GP0 */
+	uint8_t 				o_gpgd_mask;
 
 	/* ALL STATUS RESPONSE value and flags */
 	bool					all_status_updated;
@@ -133,8 +141,9 @@ struct Mc33810 : public GpioChip {
 
 	/* OUTx fault registers */
 	uint16_t				out_fault[2];
-	/* GPGD mode fault register */
-	uint16_t				gpgd_fault;
+	/* GP mode fault register */
+	/* TODO: check documentation if these faults also applied to GPx outputs in IGN mode */
+	uint16_t				gp_fault;
 	/* IGN mode fault register */
 	uint16_t				ign_fault;
 
@@ -263,7 +272,7 @@ int Mc33810::update_output_and_diag()
 	}
 	/* now we have updated ALL STATUS register in chip data */
 
-	/* check OUT (injectors) first */
+	/* check OUTx (injectors) first */
 	if (all_status_value & 0x000f) {
 		/* request diagnostic of OUT0 and OUT1 */
 		ret = spi_rw(MC_CMD_READ_REG(REG_OUT10_FAULT), NULL);
@@ -277,17 +286,21 @@ int Mc33810::update_output_and_diag()
 		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &out_fault[1]);
 		if (ret)
 			return ret;
+	} else {
+		out_fault[0] = out_fault[1] = 0;
 	}
-	/* check GPGD - mode not supported yet */
+	/* check outputs in GPGD mode */
 	if (all_status_value & 0x00f0) {
 		/* request diagnostic of GPGD */
 		ret = spi_rw(MC_CMD_READ_REG(REG_GPGD_FAULT), NULL);
 		if (ret)
 			return ret;
 		/* get diagnostic for GPGD and request ALL STATUS */
-		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &gpgd_fault);
+		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &gp_fault);
 		if (ret)
 			return ret;
+	} else {
+		gp_fault = 0;
 	}
 	/* check IGN  */
 	if (all_status_value & 0x0f00) {
@@ -299,6 +312,8 @@ int Mc33810::update_output_and_diag()
 		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &ign_fault);
 		if (ret)
 			return ret;
+	} else {
+		ign_fault = 0;
 	}
 
 	alive_cnt++;
@@ -421,12 +436,16 @@ int Mc33810::chip_init()
 			goto err_exit;
 		}
 
+		/* update local configuration mask */
+		o_gpgd_mask =
+			(engineConfiguration->mc33810Gpgd0Mode << 4) |
+			(engineConfiguration->mc33810Gpgd1Mode << 5) |
+			(engineConfiguration->mc33810Gpgd2Mode << 6) |
+			(engineConfiguration->mc33810Gpgd3Mode << 7);
+
 		uint16_t mode_select_cmd =
-			/* set IGN/GP mode for GPx outputs */
-			(engineConfiguration->mc33810Gpgd0Mode <<  8) |
-			(engineConfiguration->mc33810Gpgd1Mode <<  9) |
-			(engineConfiguration->mc33810Gpgd2Mode << 10) |
-			(engineConfiguration->mc33810Gpgd3Mode << 11) |
+			/* set IGN/GP mode for GPx outputs: [7:4] to [11:8] */
+			((o_gpgd_mask & 0xf0) <<  4) |
 			/* disable/enable retry after recovering from under/overvoltage */
 			(engineConfiguration->mc33810DisableRecoveryMode << 6) |
 			0;
@@ -591,18 +610,28 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 		if (val & BIT(3))
 			diag |= PIN_DRIVER_OVERTEMP;
 	} else {
-		/* INJ drivers, GPGD mode is not supported */
-		val = ign_fault >> (3 * (pin - 4));
+		/* Commom GP faults */
+		val = gp_fault >> (2 * (pin - 4));
 
-		/* open load */
 		if (val & BIT(0))
 			diag |= PIN_OPEN;
-		/* max Dwell fault - too long coil charge time */
 		if (val & BIT(1))
-			diag |= PIN_OVERLOAD;
-		/* MAXI fault - too high coil current */
-		if (val & BIT(2))
-			diag |= PIN_OVERLOAD;
+			diag |= PIN_SHORT_TO_GND;
+
+		/* IGN mode faults, only if not in GPGD mode */
+		if ((o_gpgd_mask & BIT(pin)) == 0) {
+			val = ign_fault >> (3 * (pin - 4));
+
+			/* open load */
+			if (val & BIT(0))
+				diag |= PIN_OPEN;
+			/* max Dwell fault - too long coil charge time */
+			if (val & BIT(1))
+				diag |= PIN_OVERLOAD;
+			/* MAXI fault - too high coil current */
+			if (val & BIT(2))
+				diag |= PIN_OVERLOAD;
+		}
 	}
 	/* convert to some common enum? */
 	return static_cast<brain_pin_diag_e>(diag);
@@ -689,7 +718,7 @@ void mc33810_req_init() {
 	size_t i;
 
 	for (i = 0; i < BOARD_MC33810_COUNT; i++) {
-		auto& chip = chips[0];
+		auto& chip = chips[i];
 
 		chip.need_init = true;
 	}
