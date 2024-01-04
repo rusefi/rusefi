@@ -423,10 +423,10 @@ int Mc33810::chip_init()
 
 		uint16_t mode_select_cmd =
 			/* set IGN/GP mode for GPx outputs */
-			(engineConfiguration->mc33810Gpgd0Mode << 8) |
-			(engineConfiguration->mc33810Gpgd1Mode << 8) |
-			(engineConfiguration->mc33810Gpgd2Mode << 8) |
-			(engineConfiguration->mc33810Gpgd3Mode << 8) |
+			(engineConfiguration->mc33810Gpgd0Mode <<  8) |
+			(engineConfiguration->mc33810Gpgd1Mode <<  9) |
+			(engineConfiguration->mc33810Gpgd2Mode << 10) |
+			(engineConfiguration->mc33810Gpgd3Mode << 11) |
 			/* disable/enable retry after recovering from under/overvoltage */
 			(engineConfiguration->mc33810DisableRecoveryMode << 6) |
 			0;
