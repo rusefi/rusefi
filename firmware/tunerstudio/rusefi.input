@@ -242,6 +242,8 @@ enable2ndByteCanID = false
 ; TpsState
 	etbCutCodeList = bits, U08, [0:7], "None", "engine stopped", "TPS error", "PPS error", "TPS noise", "PID noise", "Lua", "Manual", "N/A", "Redundancy", "PPS noise"
 
+	outputDiagErrorList = bits, U08, [0:3], "Not used", "No error", "Open Load", "Short to Gnd", "Short to Battery", "Overload", "Driver Overtemp", "Driver disabled", "Invalid"
+
 [ConstantsExtensions]
 	; defaultValue is used to provide TunerStudio with a value to use in the case of
 	; the constant not yet being initialized. This is primarily important if the
@@ -1999,9 +2001,13 @@ menuDialog = main
 		subMenu = canBusMain,				"CAN Bus Communication"
 		subMenu = sdCard,					"SD Card Logger" @@if_ts_show_sd_card
 		subMenu = connection,					"Connection"
+		subMenu = std_separator
+
 		subMenu = tle8888Dialog,			"TLE8888"
 		subMenu = l9779Dialog,				"L9779"
 		subMenu = mc33810Dialog,			"MC33810 IGN/INJ driver"
+		subMenu = OutputDiagDialog,			"Outputs diagnostic"
+		subMenu = std_separator
 
 		subMenu = allPins1,					"Full pinout 1/3" @@if_ts_show_full_pinout
 		subMenu = allPins2,					"Full pinout 2/3" @@if_ts_show_full_pinout
@@ -4818,6 +4824,38 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Proportional gain", hpfpPidP, {hpfpCamLobes != 0}
 		field = "Integral gain", hpfpPidI, {hpfpCamLobes != 0}
 		panel = hpfpDeadtimeCurve, {hpfpCamLobes != 0}
+
+	indicatorPanel = IgnitionDiagPanel, 1, { 1 }
+		indicator = { ignitorDiagnostic1  > 1 }, { Ignition out 1: bitStringValue(outputDiagErrorList, ignitorDiagnostic1 )}, { Ignition out 1: bitStringValue(outputDiagErrorList, ignitorDiagnostic1 )}, green, black, red, black
+		indicator = { ignitorDiagnostic2  > 1 }, { Ignition out 2: bitStringValue(outputDiagErrorList, ignitorDiagnostic2 )}, { Ignition out 2: bitStringValue(outputDiagErrorList, ignitorDiagnostic2 )}, green, black, red, black
+		indicator = { ignitorDiagnostic3  > 1 }, { Ignition out 3: bitStringValue(outputDiagErrorList, ignitorDiagnostic3 )}, { Ignition out 3: bitStringValue(outputDiagErrorList, ignitorDiagnostic3 )}, green, black, red, black
+		indicator = { ignitorDiagnostic4  > 1 }, { Ignition out 4: bitStringValue(outputDiagErrorList, ignitorDiagnostic4 )}, { Ignition out 4: bitStringValue(outputDiagErrorList, ignitorDiagnostic4 )}, green, black, red, black
+		indicator = { ignitorDiagnostic5  > 1 }, { Ignition out 5: bitStringValue(outputDiagErrorList, ignitorDiagnostic5 )}, { Ignition out 5: bitStringValue(outputDiagErrorList, ignitorDiagnostic5 )}, green, black, red, black
+		indicator = { ignitorDiagnostic6  > 1 }, { Ignition out 6: bitStringValue(outputDiagErrorList, ignitorDiagnostic6 )}, { Ignition out 6: bitStringValue(outputDiagErrorList, ignitorDiagnostic6 )}, green, black, red, black
+		indicator = { ignitorDiagnostic7  > 1 }, { Ignition out 7: bitStringValue(outputDiagErrorList, ignitorDiagnostic7 )}, { Ignition out 7: bitStringValue(outputDiagErrorList, ignitorDiagnostic7 )}, green, black, red, black
+		indicator = { ignitorDiagnostic8  > 1 }, { Ignition out 8: bitStringValue(outputDiagErrorList, ignitorDiagnostic8 )}, { Ignition out 8: bitStringValue(outputDiagErrorList, ignitorDiagnostic8 )}, green, black, red, black
+		indicator = { ignitorDiagnostic9  > 1 }, { Ignition out 9: bitStringValue(outputDiagErrorList, ignitorDiagnostic9 )}, { Ignition out 9: bitStringValue(outputDiagErrorList, ignitorDiagnostic9 )}, green, black, red, black
+		indicator = { ignitorDiagnostic10 > 1 }, {Ignition out 10: bitStringValue(outputDiagErrorList, ignitorDiagnostic10)}, {Ignition out 10: bitStringValue(outputDiagErrorList, ignitorDiagnostic10)}, green, black, red, black
+		indicator = { ignitorDiagnostic11 > 1 }, {Ignition out 11: bitStringValue(outputDiagErrorList, ignitorDiagnostic11)}, {Ignition out 11: bitStringValue(outputDiagErrorList, ignitorDiagnostic11)}, green, black, red, black
+		indicator = { ignitorDiagnostic12 > 1 }, {Ignition out 12: bitStringValue(outputDiagErrorList, ignitorDiagnostic12)}, {Ignition out 12: bitStringValue(outputDiagErrorList, ignitorDiagnostic12)}, green, black, red, black
+
+	indicatorPanel = InjectionDiagPanel, 1, { 1 }
+		indicator = { injectorDiagnostic1  > 1 }, { Injector out 1: bitStringValue(outputDiagErrorList, injectorDiagnostic1 )}, { Injector out 1: bitStringValue(outputDiagErrorList, injectorDiagnostic1 )}, green, black, red, black
+		indicator = { injectorDiagnostic2  > 1 }, { Injector out 2: bitStringValue(outputDiagErrorList, injectorDiagnostic2 )}, { Injector out 2: bitStringValue(outputDiagErrorList, injectorDiagnostic2 )}, green, black, red, black
+		indicator = { injectorDiagnostic3  > 1 }, { Injector out 3: bitStringValue(outputDiagErrorList, injectorDiagnostic3 )}, { Injector out 3: bitStringValue(outputDiagErrorList, injectorDiagnostic3 )}, green, black, red, black
+		indicator = { injectorDiagnostic4  > 1 }, { Injector out 4: bitStringValue(outputDiagErrorList, injectorDiagnostic4 )}, { Injector out 4: bitStringValue(outputDiagErrorList, injectorDiagnostic4 )}, green, black, red, black
+		indicator = { injectorDiagnostic5  > 1 }, { Injector out 5: bitStringValue(outputDiagErrorList, injectorDiagnostic5 )}, { Injector out 5: bitStringValue(outputDiagErrorList, injectorDiagnostic5 )}, green, black, red, black
+		indicator = { injectorDiagnostic6  > 1 }, { Injector out 6: bitStringValue(outputDiagErrorList, injectorDiagnostic6 )}, { Injector out 6: bitStringValue(outputDiagErrorList, injectorDiagnostic6 )}, green, black, red, black
+		indicator = { injectorDiagnostic7  > 1 }, { Injector out 7: bitStringValue(outputDiagErrorList, injectorDiagnostic7 )}, { Injector out 7: bitStringValue(outputDiagErrorList, injectorDiagnostic7 )}, green, black, red, black
+		indicator = { injectorDiagnostic8  > 1 }, { Injector out 8: bitStringValue(outputDiagErrorList, injectorDiagnostic8 )}, { Injector out 8: bitStringValue(outputDiagErrorList, injectorDiagnostic8 )}, green, black, red, black
+		indicator = { injectorDiagnostic9  > 1 }, { Injector out 9: bitStringValue(outputDiagErrorList, injectorDiagnostic9 )}, { Injector out 9: bitStringValue(outputDiagErrorList, injectorDiagnostic9 )}, green, black, red, black
+		indicator = { injectorDiagnostic10 > 1 }, {Injector out 10: bitStringValue(outputDiagErrorList, injectorDiagnostic10)}, {Injector out 10: bitStringValue(outputDiagErrorList, injectorDiagnostic10)}, green, black, red, black
+		indicator = { injectorDiagnostic11 > 1 }, {Injector out 11: bitStringValue(outputDiagErrorList, injectorDiagnostic11)}, {Injector out 11: bitStringValue(outputDiagErrorList, injectorDiagnostic11)}, green, black, red, black
+		indicator = { injectorDiagnostic12 > 1 }, {Injector out 12: bitStringValue(outputDiagErrorList, injectorDiagnostic12)}, {Injector out 12: bitStringValue(outputDiagErrorList, injectorDiagnostic12)}, green, black, red, black
+
+	dialog = OutputDiagDialog, "Output diagnostic", xAxis
+		panel = IgnitionDiagPanel
+		panel = InjectionDiagPanel
 
 [Tools]
  ;addTool = toolName, PanelName
