@@ -149,6 +149,20 @@ static ObdCode getCodeForIgnition(int idx, brain_pin_diag_e diag) {
 
 	return (ObdCode)((int)ObdCode::OBD_Ignition_Circuit_1 + idx);
 }
+
+static uint8_t getTSErrorCode(brain_pin_diag_e diag)
+{
+	/* Error codes reported to TS:
+	 *  0 - output is not used
+	 *  1 - ok status/no diagnostic available (TODO: separate codes)
+	 * >1 - see brain_pin_diag_e, first least significant 1-bit position + 1 *
+	 * Keep in sync with outputDiagErrorList in rusefi.input
+	 * Note:
+	 * diag can be combination of few errors,
+	 * while we report only one error to simplify hadling on TS side
+	 * find position of least significant 1-bit */
+	return __builtin_ffs(diag) + 1;
+}
 #endif // BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
 
 void SensorChecker::onSlowCallback() {
@@ -182,6 +196,7 @@ void SensorChecker::onSlowCallback() {
 
 // only bother checking these if we have GPIO chips actually capable of reporting an error
 #if BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
+	TunerStudioOutputChannels *state = getTunerStudioOutputChannels();
 	// Check injectors
 #if EFI_ENGINE_CONTROL
 	int unhappyInjector = 0;
@@ -190,6 +205,7 @@ void SensorChecker::onSlowCallback() {
 
 		// Skip not-configured pins
 		if (!isBrainPinValid(pin.brainPin)) {
+			state->injectorDiagnostic[i] = 0;
 			continue;
 		}
 
@@ -202,6 +218,7 @@ void SensorChecker::onSlowCallback() {
 			pinDiag2string(description, efi::size(description), diag);
 			warning(code, "Injector %d fault: %s", i + 1, description);
 		}
+		state->injectorDiagnostic[i] = getTSErrorCode(diag);
 	}
 	engine->fuelComputer.brokenInjector = unhappyInjector;
 	engine->fuelComputer.injectorHwIssue = (unhappyInjector != 0);
@@ -213,6 +230,7 @@ void SensorChecker::onSlowCallback() {
 
 		// Skip not-configured pins
 		if (!isBrainPinValid(pin.brainPin)) {
+			state->ignitorDiagnostic[i] = 0;
 			continue;
 		}
 
@@ -224,6 +242,7 @@ void SensorChecker::onSlowCallback() {
 			pinDiag2string(description, efi::size(description), diag);
 			warning(code, "Ignition %d fault: %s", i + 1, description);
 		}
+		state->ignitorDiagnostic[i] = getTSErrorCode(diag);
 	}
 #endif // BOARD_EXT_GPIOCHIPS > 0
 }
