@@ -145,9 +145,9 @@ public class ProgramSelector {
         }
     }
 
-    private void flashOpenbltSerialAutomatic(JComponent parent, String fomePort, UpdateOperationCallbacks callbacks) {
+    private void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
         String[] portsBefore = LinkManager.getCommPorts();
-        rebootToOpenblt(parent, fomePort, callbacks);
+        rebootToOpenblt(parent, ecuPort, callbacks);
 
         // Give the bootloader a sec to enumerate
         BinaryProtocol.sleep(3000);
@@ -155,7 +155,7 @@ public class ProgramSelector {
         String[] portsAfter = LinkManager.getCommPorts();
 
         // Check that the ECU disappeared from the "after" list
-        if (!PortDetector.AUTO.equals(fomePort) && Arrays.stream(portsAfter).anyMatch(fomePort::equals)) {
+        if (!PortDetector.AUTO.equals(ecuPort) && Arrays.stream(portsAfter).anyMatch(ecuPort::equals)) {
             callbacks.log("Looks like your ECU didn't reboot to OpenBLT");
             callbacks.error();
             return;
@@ -218,7 +218,7 @@ public class ProgramSelector {
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {
-            OpenbltJni.flashSerial("../fome_update.srec", port, cb);
+            OpenbltJni.flashSerial("../rusefi_update.srec", port, cb);
 
             callbacks.log("Update completed successfully!");
             callbacks.done();
