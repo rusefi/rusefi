@@ -8,14 +8,14 @@
 #include "scheduler.h"
 
 void action_s::execute() {
-	efiAssertVoid(ObdCode::CUSTOM_ERR_ASSERT, callback != NULL, "callback==null1");
-	callback(param);
+	efiAssertVoid(ObdCode::CUSTOM_ERR_ASSERT, m_callback != NULL, "callback==null1");
+	m_callback(m_param);
 }
 
 schfunc_t action_s::getCallback() const {
-	return callback;
+	return m_callback;
 }
 
 void * action_s::getArgument() const {
-	return param;
+	return m_param;
 }
