@@ -909,6 +909,11 @@ float getOutputValueByName(const char *name) {
 		case -304796912:
 			return ___engine.module<BoostController>()->isPlantValid;
 #endif
+// isBoostControlled
+#if EFI_BOOST_CONTROL
+		case -1074908546:
+			return ___engine.module<BoostController>()->isBoostControlled;
+#endif
 // luaTargetAdd
 #if EFI_BOOST_CONTROL
 		case 119157463:
