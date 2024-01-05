@@ -20,6 +20,8 @@ public class NameUtil {
             return "Coil #" + name.substring(1);
         if (name.charAt(0) == Fields.PROTOCOL_INJ1_SHORT_NAME.charAt(0))
             return "Injector #" + name.substring(1);
+        if (name.charAt(0) == Fields.PROTOCOL_INJ1_STAGE2_SHORT_NAME.charAt(0))
+            return "Injector Second Stage #" + name.substring(1);
         return name;
     }
 }

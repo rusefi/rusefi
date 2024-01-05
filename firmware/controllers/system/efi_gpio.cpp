@@ -186,7 +186,7 @@ EnginePins::EnginePins() :
 		enginePins.injectors[i].shortName = injectorShortNames[i];
 
 		enginePins.injectorsStage2[i].injectorIndex = i;
-//		enginePins.injectorsStage2[i].setName(injectorStage2Names[i]);
+		enginePins.injectorsStage2[i].setName(injectorStage2Names[i]);
 		enginePins.injectorsStage2[i].shortName = injectorStage2ShortNames[i];
 	}
 
@@ -286,7 +286,7 @@ void EnginePins::stopIgnitionPins() {
 void EnginePins::stopInjectionPins() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.injectors[i], injectionPins[i], injectionPinMode);
-//		unregisterOutputIfPinOrModeChanged(enginePins.injectorsStage2[i], injectionPinsStage2[i], injectionPinMode);
+		unregisterOutputIfPinOrModeChanged(enginePins.injectorsStage2[i], injectionPinsStage2[i], injectionPinMode);
 	}
 }
 
@@ -335,6 +335,12 @@ void EnginePins::startInjectionPins() {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		if (isPinOrModeChanged(injectionPins[i], injectionPinMode)) {
 			output->initPin(output->getName(), engineConfiguration->injectionPins[i],
+					engineConfiguration->injectionPinMode);
+		}
+
+		output = &enginePins.injectorsStage2[i];
+		if (isPinOrModeChanged(injectionPinsStage2[i], injectionPinMode)) {
+			output->initPin(output->getName(), engineConfiguration->injectionPinsStage2[i],
 					engineConfiguration->injectionPinMode);
 		}
 
