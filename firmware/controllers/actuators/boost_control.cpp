@@ -203,7 +203,9 @@ void BoostController::onFastCallback() {
 	tpsTooLow = Sensor::getOrZero(SensorType::Tps1) < engineConfiguration->boostControlMinTps;
 	mapTooLow = Sensor::getOrZero(SensorType::Map) < engineConfiguration->boostControlMinMap;
 
-	if (rpmTooLow || tpsTooLow || mapTooLow) {
+  isBoostControlled = !(rpmTooLow || tpsTooLow || mapTooLow);
+
+	if (!isBoostControlled) {
 		// Passing unexpected will use the safe duty cycle configured by the user
 		setOutput(unexpected);
 	} else {

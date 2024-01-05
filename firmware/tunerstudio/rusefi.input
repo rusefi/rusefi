@@ -2695,6 +2695,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#in +5.0 added to the boost open loop %."
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
+		indicator = {isBoostControlled}, "No Boost Control", "Boost Control Active"
 		field = "Blend parameter", boostOpenLoopBlends1_blendParameter
 		panel = boostOpenLoopBlend1Bias
 
@@ -2705,6 +2706,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#in +5.0 added to the boost open loop %."
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
+		indicator = {isBoostControlled}, "No Boost Control", "Boost Control Active"
 		field = "Blend parameter", boostOpenLoopBlends2_blendParameter
 		panel = boostOpenLoopBlend2Bias
 
