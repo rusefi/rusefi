@@ -54,7 +54,7 @@ for BOARD in \
    "config/boards/m74_9 m74_9" \
    "config/boards/s105 s105" \
    "config/boards/test-build-guards t-b-g" \
-   "config/boards/frankenso frankenso_na6" \
+   "config/boards/frankenso_na6 frankenso_na6" \
    "config/boards/prometheus prometheus_469" \
    "config/boards/prometheus prometheus_405" \
    "config/boards/proteus proteus_f7" \
