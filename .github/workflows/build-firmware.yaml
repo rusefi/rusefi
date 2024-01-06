@@ -319,7 +319,7 @@ jobs:
             short-board-name: cypress
 
           - build-target: frankenso_na6
-            folder: config/boards/frankenso
+            folder: config/boards/frankenso_na6
             short-board-name: frankenso_na6
             skip-rate: 90
 
