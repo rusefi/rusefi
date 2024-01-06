@@ -29,6 +29,14 @@ private:
     uint16_t counter = 0;
 };
 
+class SimpleSwitchedState {
+public:
+  SimpleSwitchedState() : state(&value) {
+  }
+  int8_t value = 0;
+  SwitchedState state;
+};
+
 // Used if you want a function to be virtual only for unit testing purposes
 #if EFI_UNIT_TEST
 #define TEST_VIRTUAL virtual

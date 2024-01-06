@@ -190,6 +190,7 @@ public:
 	SwitchedState clutchUpSwitchedState;
    	SwitchedState brakePedalSwitchedState;
    	SwitchedState acButtonSwitchedState;
+  SimpleSwitchedState luaDigitalInputState[LUA_DIGITAL_INPUT_COUNT];
 
 #if EFI_LAUNCH_CONTROL
 	LaunchControlBase launchController;

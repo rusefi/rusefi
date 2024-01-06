@@ -100,6 +100,13 @@ void sendButtonCounters() {
 	// todo: start button
 }
 
+void sendAuxDigitalCounters() {
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::BUTTON_COUNTERS, 8, /*bus*/0, /*isExtended*/true);
+  for (int i =0;i<LUA_DIGITAL_INPUT_COUNT;i++) {
+	  msg[i] = TRUNCATE_TO_BYTE(engine->luaDigitalInputState[i].state.getCounter());
+  }
+}
+
 void sendRawAnalogValues() {
 	const float values_1[] = {
 		Sensor::getRaw(SensorType::Tps1Primary),

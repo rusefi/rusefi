@@ -46,3 +46,5 @@ void deinitTurbochargerSpeedSensor();
 void deinitMap();
 void deinitAuxSpeedSensors();
 void deinitInputShaftSpeedSensor();
+
+void pokeAuxDigital();

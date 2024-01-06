@@ -7,6 +7,7 @@
 #include "init.h"
 #include "cli_registry.h"
 #include "io_pins.h"
+#include "lua_hooks.h"
 
 static void initSensorCli();
 
@@ -57,6 +58,14 @@ static void initAuxDigital() {
 #if EFI_PROD_CODE
 	for (size_t i = 0;i<efi::size(engineConfiguration->luaDigitalInputPins);i++) {
 		efiSetPadMode("Lua Digital", engineConfiguration->luaDigitalInputPins[i], engineConfiguration->luaDigitalInputPinModes[i]);
+	}
+#endif // EFI_PROD_CODE
+}
+
+void pokeAuxDigital() {
+#if EFI_PROD_CODE
+	for (size_t i = 0;i<efi::size(engineConfiguration->luaDigitalInputPins);i++) {
+	  engine->luaDigitalInputState[i].state.update(getAuxDigital(i));
 	}
 #endif // EFI_PROD_CODE
 }

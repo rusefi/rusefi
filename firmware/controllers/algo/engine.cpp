@@ -16,6 +16,7 @@
 #include "advance_map.h"
 #include "speed_density.h"
 #include "advance_map.h"
+#include "init.h"
 
 #include "aux_valves.h"
 #include "map_averaging.h"
@@ -268,6 +269,7 @@ extern bool kAcRequestState;
 #endif // EFI_IDLE_CONTROL
 
 	engine->brakePedalSwitchedState.update(getBrakePedalState());
+	pokeAuxDigital();
 
 #endif // EFI_GPIO_HARDWARE
 }
