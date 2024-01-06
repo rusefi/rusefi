@@ -29,10 +29,22 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub git update Action"
           git add ext/rusefi
-          git commit -am "GHA says update submodule"
+          OUT=$(git commit -am "GHA says update submodule" 2>&1) || echo "commit failed, finding out why"
+          if echo "$OUT" | grep 'nothing to commit'; then
+            echo "submodule: looks like nothing to commit"
+            echo "NOCOMMIT=true" >> $GITHUB_ENV
+            exit 0
+          elif echo "$OUT" | grep 'changed'; then
+            echo "submodule: looks like something has changed"
+            exit 0
+          else
+            echo "submodule: looks like something unexpected"
+            exit 1
+          fi
           git status
 
       - name: Push
+        if: ${{ env.NOCOMMIT != 'true'}}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ github.token }}
