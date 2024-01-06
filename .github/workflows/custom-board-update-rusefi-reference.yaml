@@ -29,7 +29,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub git update Action"
           git add ext/rusefi
-          OUT=$(git commit -am "GHA says update submodule" 2>&1) || echo "commit failed, finding out why"
+          OUT=$(git commit -am "GHA says update ext/rusefi submodule" 2>&1) || echo "commit failed, finding out why"
           if echo "$OUT" | grep 'nothing to commit'; then
             echo "submodule: looks like nothing to commit"
             echo "NOCOMMIT=true" >> $GITHUB_ENV
