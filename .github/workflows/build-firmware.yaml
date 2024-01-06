@@ -110,6 +110,7 @@ jobs:
   build-firmware:
     runs-on: ubuntu-latest
     needs: [
+             # todo proper build of build-libopenblt #5866
       #build-libopenblt-linux,
       #build-libopenblt-macos,
             release]

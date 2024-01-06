@@ -70,11 +70,13 @@ cp misc/console_launcher/update-ts-cacerts/* $update_ts_cacerts_FOLDER
 cp java_console/*.dll                     $CONSOLE_FOLDER
 cp -r java_console/bin                    $FOLDER
 cp firmware/ext/openblt/Host/libopenblt.dll        $CONSOLE_FOLDER
-#cp firmware/ext/openblt/Host/libopenblt.so         $CONSOLE_FOLDER
-#cp firmware/ext/openblt/Host/libopenblt.dylib      $CONSOLE_FOLDER
+# todo: proper build of build-libopenblt #5866 instead of having magic pre-compiled artifacts?
+cp firmware/ext/openblt/Host/libopenblt.so         $CONSOLE_FOLDER
+# *.dylib are Mac OS dynamic library files
+cp firmware/ext/openblt/Host/libopenblt.dylib      $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/openblt_jni.dll    $CONSOLE_FOLDER
-#cp firmware/ext/openblt/Host/libopenblt_jni.so     $CONSOLE_FOLDER
-#cp firmware/ext/openblt/Host/libopenblt_jni.dylib  $CONSOLE_FOLDER
+cp firmware/ext/openblt/Host/libopenblt_jni.so     $CONSOLE_FOLDER
+cp firmware/ext/openblt/Host/libopenblt_jni.dylib  $CONSOLE_FOLDER
 
 cp misc/console_launcher/readme.html      $FOLDER
 
