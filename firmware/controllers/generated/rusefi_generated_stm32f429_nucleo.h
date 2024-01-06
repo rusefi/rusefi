@@ -1465,7 +1465,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.01.05.stm32f429_nucleo.3943888555"
+#define TS_SIGNATURE "rusEFI master.2024.01.06.stm32f429_nucleo.3943888555"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
