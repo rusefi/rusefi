@@ -213,7 +213,7 @@ public class StartupFrame {
         }
 
         // Ensure that the bundle matches between the controller and console
-        if (!selectedPort.signature.matchesBundle()) {
+        if (selectedPort.signature != null && !selectedPort.signature.matchesBundle()) {
             int result = JOptionPane.showConfirmDialog(this.frame, "Looks like you're using the wrong console bundle for your controller.\nYou can attempt to proceed, but unexpected behavior may result.\nContinue at your own risk.", "WARNING", JOptionPane.OK_CANCEL_OPTION);
 
             if (result != JOptionPane.OK_OPTION) {
