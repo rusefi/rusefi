@@ -220,6 +220,9 @@ MRE_INJ_3, // blue
 MRE_INJ_4, //
 #if HW_MICRO_RUSEFI
 MRE_AV9_REUSE, // brown boost control
+MRE_LS_1, // VVT
+MRE_LS_2, // SC clutch
+//MRE_GPOUT_3, // SC Bypass
 #endif // HW_MICRO_RUSEFI
 };
 
