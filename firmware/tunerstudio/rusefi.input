@@ -3929,7 +3929,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = l9779Dialog, "L9779", yAxis
 		field = "L9779 SPI",							l9779spiDevice @@if_ts_show_spi
-		filed = "L9779 Chip Select",					l9779_cs @@if_ts_show_spi
+		field = "L9779 Chip Select",					l9779_cs @@if_ts_show_spi
 
 	dialog = connection, "",	yAxis
 		panel = tsPort							@@if_ts_show_tunerstudio_port
