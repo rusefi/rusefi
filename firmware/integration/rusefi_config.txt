@@ -2240,6 +2240,9 @@ end_struct
 #define ts_show_lcd true
 #define ts_show_joystick true
 #define ts_show_egt true
+#define ts_show_spi2_enable true
+#define ts_show_spi2_pins true
+#define ts_show_spi3_pins true
 #define ts_show_engine_control false
 
 #define ts_show_analog_divider true

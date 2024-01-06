@@ -1,20 +1,16 @@
 # Boards Directory
 
 rusEFI supports quite a wide array of hardware:
- * most supported platforms are stm32f4 and stm32f4
+ * most supported platforms are stm32f4 and stm32f7
  * alpha version support stm32h7
- * experimental support [kinetis](https://www.nxp.com/products/processors-and-microcontrollers/arm-microcontrollers/general-purpose-mcus/k-series-cortex-m4:KINETIS_K_SERIES) 
+ * experimental support [kinetis](https://www.nxp.com/products/processors-and-microcontrollers/arm-microcontrollers/general-purpose-mcus/k-series-cortex-m4:KINETIS_K_SERIES)
  * experimental support cypress MCUs.
- 
-Looking for most default firmware for your own hardware? See f407-discovery 
+
+Looking for most default firmware for your own hardware? See f407-discovery
 
 We support on-board a number of smart GPIO chips, overall we support quite a wide array of hardware. With all those options our goal is to provide nice _user_ experience which means upfront investment by _board designer_.
 
 For best user experience we have more than a dozen of different _binaries_ which are all compiled from same _firmware_ files with different configuration. This folder is all about that process.
-
-
-See [misc/jenkins/compile_other_versions/run.bat](misc/jenkins/compile_other_versions/run.bat) which is executed by build server.
-
 
 See https://rusefi.com/build_server/
 
@@ -46,3 +42,6 @@ A: Primary UART, critical error LED pin and maybe a couple more of the most fund
 
 A: please remember about https://github.com/rusefi/rusefi/wiki/Hardware#q-this-is-all-very-cool-but-you-guys-do-not-have-a-plugplay-for-my-trabant-i-think-i-will-go-and-make-a-new-rusefi-board-just-for-my-trabant
 
+# Q: I insist on custom
+
+A: https://github.com/rusefi/rusefi/wiki/Custom-Firmware

@@ -3673,21 +3673,21 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
 		field = "SPI1sck mode",							spi1SckMode, {is_enabled_spi_1 == 1}
 
-		field = "SPI2 enable",							is_enabled_spi_2
-		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
-		field = "SPI2mosi mode",						spi2MosiMode, {is_enabled_spi_2 == 1}
-		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
-		field = "SPI2miso mode",						spi2MisoMode, {is_enabled_spi_2 == 1}
-		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
-		field = "SPI2sck mode",							spi2SckMode, {is_enabled_spi_2 == 1}
+		field = "SPI2 enable",							is_enabled_spi_2@@if_ts_show_spi2_enable
+		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}@@if_ts_show_spi2_pins
+		field = "SPI2mosi mode",						spi2MosiMode, {is_enabled_spi_2 == 1}@@if_ts_show_spi2_pins
+		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}@@if_ts_show_spi2_pins
+		field = "SPI2miso mode",						spi2MisoMode, {is_enabled_spi_2 == 1}@@if_ts_show_spi2_pins
+		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}@@if_ts_show_spi2_pins
+		field = "SPI2sck mode",							spi2SckMode, {is_enabled_spi_2 == 1}@@if_ts_show_spi2_pins
 
 		field = "SPI3 enable",							is_enabled_spi_3
-		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
-		field = "SPI3mosi mode",						spi3MosiMode, {is_enabled_spi_3 == 1}
-		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
-		field = "SPI3miso mode",						spi3MisoMode, {is_enabled_spi_3 == 1}
-		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
-		field = "SPI3sck mode",							spi3SckMode, {is_enabled_spi_3 == 1}
+		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}@@if_ts_show_spi3_pins
+		field = "SPI3mosi mode",						spi3MosiMode, {is_enabled_spi_3 == 1}@@if_ts_show_spi3_pins
+		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}@@if_ts_show_spi3_pins
+		field = "SPI3miso mode",						spi3MisoMode, {is_enabled_spi_3 == 1}@@if_ts_show_spi3_pins
+		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}@@if_ts_show_spi3_pins
+		field = "SPI3sck mode",							spi3SckMode, {is_enabled_spi_3 == 1}@@if_ts_show_spi3_pins
 
 		field = "SPI4 enable",							is_enabled_spi_4
 
