@@ -423,7 +423,7 @@ angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber) {
 
 	auto result = base + adjustment;
 
-	assertAngleRange(result, "getCylinderAngle", ObdCode::CUSTOM_ERR_6566);
+	assertAngleRange(result, "getCylinderAngle", ObdCode::CUSTOM_ERR_CYL_ANGLE);
 
 	return result;
 }
