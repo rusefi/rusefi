@@ -532,7 +532,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 do { \
 	EXPECT_EQ(value0, enginePins.injectors[0].m_currentLogicValue) << msg; \
 	EXPECT_EQ(value1, enginePins.injectors[1].m_currentLogicValue) << msg; \
-} while (false);
+} while (false)
 
 static void setArray(float* p, size_t count, float value) {
 	while (count--) {
