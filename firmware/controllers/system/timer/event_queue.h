@@ -44,7 +44,7 @@ public:
 	// See comment in EventQueue::executeAll for info about lateDelay - it sets the
 	// time gap between events for which we will wait instead of rescheduling the next
 	// event in a group of events near one another.
-	EventQueue(efitick_t p_lateDelay = 0) : lateDelay(p_lateDelay) {}
+	explicit EventQueue(efitick_t lateDelay = 0);
 
 	/**
 	 * O(size) - linear search in sorted linked list
@@ -60,12 +60,18 @@ public:
 	int size(void) const;
 	scheduling_s *getElementAtIndexForUnitText(int index);
 	scheduling_s * getHead();
+
+	scheduling_s* getFreeScheduling();
+	void tryReturnScheduling(scheduling_s* sched);
 private:
 	void assertListIsSorted() const;
 	/**
 	 * this list is sorted
 	 */
 	scheduling_s *m_head = nullptr;
-	const efitick_t lateDelay;
+	const efitick_t m_lateDelay;
+
+	scheduling_s* m_freelist = nullptr;
+	scheduling_s m_pool[64];
 };
 

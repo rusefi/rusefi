@@ -21,12 +21,61 @@ extern int timeNowUs;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
+EventQueue::EventQueue(efitick_t lateDelay)
+	: m_lateDelay(lateDelay)
+{
+	for (size_t i = 0; i < efi::size(m_pool); i++) {
+		tryReturnScheduling(&m_pool[i]);
+	}
+
+#if EFI_PROD_CODE
+	getTunerStudioOutputChannels()->schedulingUsedCount = 0;
+#endif
+}
+
+scheduling_s* EventQueue::getFreeScheduling() {
+	auto retVal = m_freelist;
+
+	if (retVal) {
+		m_freelist = retVal->nextScheduling_s;
+		retVal->nextScheduling_s = nullptr;
+
+#if EFI_PROD_CODE
+		getTunerStudioOutputChannels()->schedulingUsedCount++;
+#endif
+	}
+
+	return retVal;
+}
+
+void EventQueue::tryReturnScheduling(scheduling_s* sched) {
+	// Only return this scheduling to the free list if it's from the correct pool
+	if (sched >= &m_pool[0] && sched <= &m_pool[efi::size(m_pool) - 1]) {
+		sched->nextScheduling_s = m_freelist;
+		m_freelist = sched;
+
+#if EFI_PROD_CODE
+		getTunerStudioOutputChannels()->schedulingUsedCount--;
+#endif
+	}
+}
 
 /**
  * @return true if inserted into the head of the list
  */
 bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s action) {
 	ScopePerf perf(PE::EventQueueInsertTask);
+
+	if (!scheduling) {
+		scheduling = getFreeScheduling();
+
+		// If still null, the free list is empty and all schedulings in the pool have been expended.
+		if (!scheduling) {
+			// TODO: should we warn or error here?
+
+			return false;
+		}
+	}
 
 	assertListIsSorted();
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, action.getCallback() != NULL, "NULL callback", false);
@@ -46,7 +95,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 	scheduling->momentX = timeX;
 	scheduling->action = action;
 
-	if (m_head == NULL || timeX < m_head->momentX) {
+	if (!m_head || timeX < m_head->momentX) {
 		// here we insert into head of the linked list
 		LL_PREPEND2(m_head, scheduling, nextScheduling_s);
 		assertListIsSorted();
@@ -95,11 +144,11 @@ void EventQueue::remove(scheduling_s* scheduling) {
 
 		// Walked off the end, this is an error since this *should* have been scheduled
 		if (!current) {
-			criticalError("EventQueue::remove didn't find element");
+			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "EventQueue::remove didn't find element");
 			return;
 		}
 
-		criticalAssertVoid(current == scheduling, "current not equal to scheduling");
+		efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, current == scheduling, "current not equal to scheduling");
 
 		// Link around the removed item
 		prev->nextScheduling_s = current->nextScheduling_s;
@@ -119,7 +168,7 @@ void EventQueue::remove(scheduling_s* scheduling) {
  * @return Get the timestamp of the soonest pending action, skipping all the actions in the past
  */
 expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
-	if (m_head != NULL) {
+	if (m_head) {
 		if (m_head->momentX <= nowX) {
 			/**
 			 * We are here if action timestamp is in the past. We should rarely be here since this 'getNextEventTime()' is
@@ -129,7 +178,7 @@ expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
 			 */
-			return nowX + lateDelay;
+			return nowX + m_lateDelay;
 		} else {
 			return m_head->momentX;
 		}
@@ -179,7 +228,7 @@ bool EventQueue::executeOne(efitick_t now) {
 	// resetting the timer and scheduling an new interrupt is greater than just
 	// waiting for the time to arrive.  On current CPUs, this is reasonable to set
 	// around 10 microseconds.
-	if (current->momentX > now + lateDelay) {
+	if (current->momentX > now + m_lateDelay) {
 		return false;
 	}
 
@@ -198,6 +247,9 @@ bool EventQueue::executeOne(efitick_t now) {
 	auto action = current->action;
 	current->action = {};
 
+	tryReturnScheduling(current);
+	current = nullptr;
+
 #if EFI_UNIT_TEST
 	printf("QUEUE: execute current=%d param=%d\r\n", (uintptr_t)current, (uintptr_t)action.getArgument());
 #endif
@@ -209,7 +261,6 @@ bool EventQueue::executeOne(efitick_t now) {
 	}
 
 	assertListIsSorted();
-
 	return true;
 }
 
@@ -222,7 +273,6 @@ int EventQueue::size(void) const {
 
 void EventQueue::assertListIsSorted() const {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
-	// (tests only) Ensure we didn't break anything
 	scheduling_s *current = m_head;
 	while (current != NULL && current->nextScheduling_s != NULL) {
 		efiAssertVoid(ObdCode::CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
