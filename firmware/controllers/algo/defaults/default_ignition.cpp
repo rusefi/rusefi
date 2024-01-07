@@ -106,7 +106,7 @@ void setDefaultIgnition() {
 	copyArray(config->ignTrimLoadBins, { 20, 50, 80, 100 });
 
 	// Default axes for VE blends
-	for (int i = 0; i < efi::size(config->ignBlends); i++) {
+	for (size_t i = 0; i < efi::size(config->ignBlends); i++) {
 		auto& blend = config->ignBlends[i];
 		setLinearCurve(blend.loadBins, 0, 100, 10);
 		setLinearCurve(blend.rpmBins, 0, 7000);
