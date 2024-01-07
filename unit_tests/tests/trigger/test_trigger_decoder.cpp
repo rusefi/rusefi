@@ -521,9 +521,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
 }
 
-static void assertInjectors(const char *msg, int value0, int value1) {
-	EXPECT_EQ(value0, enginePins.injectors[0].currentLogicValue);
-	EXPECT_EQ(value1, enginePins.injectors[1].currentLogicValue);
+#define assertInjectors(msg, value0, value1) \
+{ \
+	EXPECT_EQ(value0, enginePins.injectors[0].currentLogicValue) << msg; \
+	EXPECT_EQ(value1, enginePins.injectors[1].currentLogicValue) << msg; \
 }
 
 static void setArray(float* p, size_t count, float value) {
