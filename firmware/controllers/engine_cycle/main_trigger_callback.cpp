@@ -54,7 +54,7 @@ void endSimultaneousInjection(InjectionEvent *event) {
 void turnInjectionPinLow(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
-	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
+	for (size_t i = 0; i < efi::size(event->outputs); i++) {
 		InjectorOutputPin *output = event->outputs[i];
 		if (output) {
 			output->close(nowNt);

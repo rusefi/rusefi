@@ -50,7 +50,7 @@ static const char* const injectorNames[] = { "Injector 1", "Injector 2", "Inject
 		"Injector 7", "Injector 8", "Injector 9", "Injector 10", "Injector 11", "Injector 12"};
 
 static const char* const injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3", "i4", "i5", "i6", "i7", "i8",
-		"j9", "iA", "iB", "iC"};
+		"i9", "iA", "iB", "iC"};
 
 static const char* const auxValveShortNames[] = { "a1", "a2"};
 
