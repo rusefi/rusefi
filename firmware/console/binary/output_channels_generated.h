@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Jan 04 15:20:20 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 07 19:53:43 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1158,96 +1158,106 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> mafMeasured2 = (uint16_t)0;
 	/**
+	 * offset 644
+	 */
+	uint16_t schedulingUsedCount = (uint16_t)0;
+	/**
 	 * @@GAUGE_NAME_VVS@@
 	 * units: kph
-	 * offset 644
+	 * offset 646
 	 */
 	scaled_channel<uint16_t, 100, 1> vehicleSpeedKph = (uint16_t)0;
 	/**
 	 * units: %
-	 * offset 646
+	 * offset 648
 	 */
 	scaled_channel<uint16_t, 100, 1> Gego = (uint16_t)0;
 	/**
 	 * units: count
-	 * offset 648
+	 * offset 650
 	 */
 	uint16_t testBenchIter = (uint16_t)0;
 	/**
 	 * units: deg C
-	 * offset 650
+	 * offset 652
 	 */
 	scaled_channel<int16_t, 100, 1> oilTemp = (int16_t)0;
 	/**
 	 * units: deg C
-	 * offset 652
+	 * offset 654
 	 */
 	scaled_channel<int16_t, 100, 1> fuelTemp = (int16_t)0;
 	/**
 	 * units: deg C
-	 * offset 654
+	 * offset 656
 	 */
 	scaled_channel<int16_t, 100, 1> ambientTemp = (int16_t)0;
 	/**
 	 * units: deg C
-	 * offset 656
+	 * offset 658
 	 */
 	scaled_channel<int16_t, 100, 1> compressorDischargeTemp = (int16_t)0;
 	/**
 	 * units: kPa
-	 * offset 658
+	 * offset 660
 	 */
 	scaled_channel<uint16_t, 30, 1> compressorDischargePressure = (uint16_t)0;
 	/**
 	 * units: kPa
-	 * offset 660
+	 * offset 662
 	 */
 	scaled_channel<uint16_t, 30, 1> throttleInletPressure = (uint16_t)0;
 	/**
 	 * units: sec
-	 * offset 662
+	 * offset 664
 	 */
 	uint16_t ignitionOnTime = (uint16_t)0;
 	/**
 	 * units: sec
-	 * offset 664
+	 * offset 666
 	 */
 	uint16_t engineRunTime = (uint16_t)0;
 	/**
 	 * units: km
-	 * offset 666
+	 * offset 668
 	 */
 	scaled_channel<uint16_t, 10, 1> distanceTraveled = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_AFR_GAS_SCALE@@
 	 * units: AFR
-	 * offset 668
+	 * offset 670
 	 */
 	scaled_channel<uint16_t, 1000, 1> afrGasolineScale = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_AFR2_GAS_SCALE@@
 	 * units: AFR
-	 * offset 670
+	 * offset 672
 	 */
 	scaled_channel<uint16_t, 1000, 1> afr2GasolineScale = (uint16_t)0;
 	/**
-	 * offset 672
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 674
 	 */
-	float wheelSlipRatio = (float)0;
+	uint8_t alignmentFill_at_674[2];
 	/**
 	 * offset 676
 	 */
+	float wheelSlipRatio = (float)0;
+	/**
+	 * offset 680
+	 */
 	uint8_t ignitorDiagnostic[MAX_CYLINDER_COUNT];
 	/**
-	 * offset 688
+	 * offset 692
 	 */
 	uint8_t injectorDiagnostic[MAX_CYLINDER_COUNT];
 	/**
-	 * offset 700
+	 * offset 704
 	 */
 	uint8_t unusedAtTheEnd[92];
 };
-static_assert(sizeof(output_channels_s) == 792);
+static_assert(sizeof(output_channels_s) == 796);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Thu Jan 04 15:20:20 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 07 19:53:43 UTC 2024

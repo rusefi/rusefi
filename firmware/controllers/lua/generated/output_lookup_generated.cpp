@@ -683,6 +683,9 @@ float getOutputValueByName(const char *name) {
 // mafMeasured2
 		case 1663359009:
 			return engine->outputChannels.mafMeasured2;
+// schedulingUsedCount
+		case 967311941:
+			return engine->outputChannels.schedulingUsedCount;
 // vehicleSpeedKph
 		case -1925174695:
 			return engine->outputChannels.vehicleSpeedKph;
