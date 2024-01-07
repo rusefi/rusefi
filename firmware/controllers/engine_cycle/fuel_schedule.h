@@ -13,7 +13,6 @@
 
 #define MAX_WIRES_COUNT 2
 
-
 class InjectionEvent {
 public:
 	InjectionEvent();
