@@ -60,11 +60,11 @@ public:
 	int size(void) const;
 	scheduling_s *getElementAtIndexForUnitText(int index);
 	scheduling_s * getHead();
-	void assertListIsSorted() const;
 
 	scheduling_s* getFreeScheduling();
 	void tryReturnScheduling(scheduling_s* sched);
 private:
+	void assertListIsSorted() const;
 	/**
 	 * this list is sorted
 	 */
