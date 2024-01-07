@@ -13,7 +13,7 @@
 #include "status_loop.h"
 
 #if EFI_TEXT_LOGGING
-static char LOGGING_BUFFER[SC_BUFFER_SIZE] CCM_OPTIONAL;
+static char LOGGING_BUFFER[SC_BUFFER_SIZE];
 static Logging scLogging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 #endif /* EFI_TEXT_LOGGING */
 

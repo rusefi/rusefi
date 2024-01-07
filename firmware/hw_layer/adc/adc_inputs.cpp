@@ -385,7 +385,7 @@ public:
 	}
 };
 
-void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
+void addChannel(const char* /*name*/, adc_channel_e setting, adc_channel_mode_e mode) {
 	if (!isAdcChannelValid(setting)) {
 		return;
 	}
@@ -431,7 +431,7 @@ static void configureInputs() {
 	setAdcChannelOverrides();
 }
 
-static SlowAdcController slowAdcController;
+static CCM_OPTIONAL SlowAdcController slowAdcController;
 
 void initAdcInputs() {
 	efiPrintf("initAdcInputs()");

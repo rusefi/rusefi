@@ -42,7 +42,7 @@
 static NO_CACHE uint8_t blkbuf0[MMCSD_BLOCK_SIZE];
 static NO_CACHE uint8_t blkbuf1[MMCSD_BLOCK_SIZE];
 
-static MassStorageController msd(usb_driver);
+static CCM_OPTIONAL MassStorageController msd(usb_driver);
 
 static const scsi_inquiry_response_t iniDriveInquiry = {
     0x00,           /* direct access block device     */

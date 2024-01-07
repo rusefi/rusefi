@@ -61,12 +61,12 @@ void DisableToothLogger() {
 
 #else // not EFI_UNIT_TEST
 
-static constexpr size_t totalEntryCount = BIG_BUFFER_SIZE / sizeof(composite_logger_s);
-static constexpr size_t bufferCount = totalEntryCount / toothLoggerEntriesPerBuffer;
+static constexpr size_t bufferCount = BIG_BUFFER_SIZE / sizeof(CompositeBuffer);
+static_assert(bufferCount >= 2);
 
 static CompositeBuffer* buffers = nullptr;
-static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers CCM_OPTIONAL;
-static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers CCM_OPTIONAL;
+static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers;
+static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers;
 
 static CompositeBuffer* currentBuffer = nullptr;
 

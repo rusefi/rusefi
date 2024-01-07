@@ -20,7 +20,7 @@
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 // todo: clean this mess, this should become 'static'/private
-EnginePins enginePins;
+CCM_OPTIONAL EnginePins enginePins;
 
 static const char* const sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
 		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};

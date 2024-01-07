@@ -63,7 +63,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	event->update();
 }
 
-void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
+void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase) {
 	auto eventAngle = injectionStartAngle;
 
 	// Determine whether our angle is going to happen before (or near) the next tooth
@@ -161,7 +161,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 #endif /* EFI_DEFAILED_LOGGING */
 }
 
-static void handleFuel(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
+static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::HandleFuel);
 	
 	efiAssertVoid(ObdCode::CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
@@ -188,7 +188,7 @@ static void handleFuel(int rpm, efitick_t nowNt, float currentPhase, float nextP
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	fs->onTriggerTooth(rpm, nowNt, currentPhase, nextPhase);
+	fs->onTriggerTooth(nowNt, currentPhase, nextPhase);
 }
 
 /**
@@ -201,7 +201,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
-		 * TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		 */
 		return;
 	}
@@ -211,12 +210,10 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		// this happens while we just start cranking
 
 		// todo: check for 'trigger->is_synchnonized?'
-		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
 	if (rpm == NOISY_RPM) {
 		warning(ObdCode::OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, "noisy trigger");
-		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
 
@@ -238,7 +235,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(rpm, edgeTimestamp, currentPhase, nextPhase);
+	handleFuel(edgeTimestamp, currentPhase, nextPhase);
 
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
 		rpm, edgeTimestamp, currentPhase, nextPhase);

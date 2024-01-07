@@ -713,7 +713,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 
 #if EFI_PROD_CODE
-	lua_register(l, "restartEtb", [](lua_State* l2) {
+	lua_register(l, "restartEtb", [](lua_State*) {
 		// this is about Lua sensor acting in place of real analog PPS sensor
 		// todo: smarter implementation
 		doInitElectronicThrottle();

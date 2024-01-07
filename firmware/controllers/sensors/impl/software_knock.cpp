@@ -139,7 +139,7 @@ public:
 	void ThreadTask() override;
 };
 
-static KnockThread kt;
+static CCM_OPTIONAL KnockThread kt;
 
 void initSoftwareKnock() {
 	if (engineConfiguration->enableSoftwareKnock) {
