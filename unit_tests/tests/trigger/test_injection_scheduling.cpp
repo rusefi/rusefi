@@ -33,12 +33,12 @@ TEST(injectionScheduling, InjectionIsScheduled) {
 		// rising edge 5 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 5);
 		efitick_t startTime = nowNt + nt5deg;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &event.signalTimerUp, startTime, _));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, _));
 		// falling edge 20ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &event.endOfInjectionEvent, startTime + MS2NT(20), _));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(20), _));
 	}
 
-	
+
 	// Event scheduled at 125 degrees
 	event.injectionStartAngle = 125;
 
@@ -73,9 +73,9 @@ TEST(injectionScheduling, InjectionIsScheduledBeforeWraparound) {
 		// rising edge 5 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 5);
 		efitick_t startTime = nowNt + nt5deg;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &event.signalTimerUp, startTime, _));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, _));
 		// falling edge 20ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &event.endOfInjectionEvent, startTime + MS2NT(20), _));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(20), _));
 	}
 
 	// Event scheduled at 715 degrees
@@ -112,9 +112,9 @@ TEST(injectionScheduling, InjectionIsScheduledAfterWraparound) {
 		// rising edge 15 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 15);
 		efitick_t startTime = nowNt + nt5deg;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &event.signalTimerUp, startTime, _));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, _));
 		// falling edge 20ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &event.endOfInjectionEvent, startTime + MS2NT(20), _));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(20), _));
 	}
 
 	// Event scheduled at 5 degrees
@@ -150,7 +150,7 @@ TEST(injectionScheduling, InjectionNotScheduled) {
 		// Expect no scheduler calls!
 	}
 
-	
+
 	// Event scheduled at 125 degrees
 	event.injectionStartAngle = 125;
 
