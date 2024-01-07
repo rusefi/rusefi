@@ -88,6 +88,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
+#if EFI_VEHICLE_SPEED
 	bool isCranking = getEngineRotationState()->isCranking();
 	/**
 	 * todo: pre-calculate 'numberOfInjections'
@@ -95,7 +96,6 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 	 */
 	int numberOfInjections = isCranking ? getNumberOfInjections(engineConfiguration->crankingInjectionMode) : getNumberOfInjections(engineConfiguration->injectionMode);
 
-#if EFI_VEHICLE_SPEED
 	engine->module<TripOdometer>()->consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 #endif // EFI_VEHICLE_SPEED
 
