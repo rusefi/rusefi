@@ -14,6 +14,8 @@
 
 #include "common_headers.h"
 
+#define EFU_UNIT_TESTS fail("typo please EFU_UNIT_TEST");
+
 typedef uint32_t iomode_t;
 typedef uint32_t ioportid_t;
 typedef uint32_t ioportmask_t;
