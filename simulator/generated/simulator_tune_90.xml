@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22088">
+    <page number="0" size="22108">
         <constant name="engineType">"HONDA_K"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -84,7 +84,7 @@
         <constant name="allowIdenticalPps">"false"</constant>
         <constant name="overrideVvtTriggerGaps">"false"</constant>
         <constant name="useSpiImu">"false"</constant>
-        <constant name="unused31">"false"</constant>
+        <constant name="enableStagedInjection">"false"</constant>
         <constant digits="0" name="tpsMin" units="ADC">100.0</constant>
         <constant digits="0" name="tpsMax" units="ADC">830.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
@@ -1810,9 +1810,21 @@
          0.0 0.0 0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
-        <constant digits="0" name="maxInjectorDutyInstant" units="%">0.0</constant>
-        <constant digits="0" name="maxInjectorDutySustained" units="%">0.0</constant>
-        <constant digits="1" name="maxInjectorDutySustainedTimeout" units="sec">0.0</constant>
+        <constant digits="0" name="maxInjectorDutyInstant" units="%">110.0</constant>
+        <constant digits="0" name="maxInjectorDutySustained" units="%">96.0</constant>
+        <constant digits="1" name="maxInjectorDutySustainedTimeout" units="sec">0.5</constant>
+        <constant name="injectionPinsStage21">"NONE"</constant>
+        <constant name="injectionPinsStage22">"NONE"</constant>
+        <constant name="injectionPinsStage23">"NONE"</constant>
+        <constant name="injectionPinsStage24">"NONE"</constant>
+        <constant name="injectionPinsStage25">"NONE"</constant>
+        <constant name="injectionPinsStage26">"NONE"</constant>
+        <constant name="injectionPinsStage27">"NONE"</constant>
+        <constant name="injectionPinsStage28">"NONE"</constant>
+        <constant name="injectionPinsStage29">"NONE"</constant>
+        <constant name="injectionPinsStage210">"NONE"</constant>
+        <constant name="injectionPinsStage211">"NONE"</constant>
+        <constant name="injectionPinsStage212">"NONE"</constant>
         <constant cols="1" digits="0" name="mainUnusedEnd" rows="168">
          0.0
          0.0
@@ -2298,24 +2310,6 @@
          71.0
          86.0
          100.0
-</constant>
-        <constant cols="1" digits="0" name="unusedSpaceHere" rows="16">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
 </constant>
         <constant cols="1" digits="0" name="crankingAdvanceBins" rows="4">
          0.0
@@ -4507,8 +4501,32 @@ end</constant>
          0.0
          0.0
 </constant>
+        <constant cols="6" digits="0" name="injectorStagingTable" rows="6">
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="1" digits="0" name="injectorStagingLoadBins" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="injectorStagingRpmBins" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
     </page>
-    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.07.f407-discovery.575634794" version="5.0"/>
+    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.07.f407-discovery.2774898872" version="5.0"/>
     <bibliography author="rusEFI 20240101" writeDate="date"/>
     <settings/>
     <userComments/>
