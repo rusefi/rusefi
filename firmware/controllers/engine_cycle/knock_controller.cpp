@@ -161,8 +161,7 @@ static void startKnockSampling(Engine* p_engine) {
 void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
 #if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
 	cylinderNumberCopy = cylinderNumber;
-static scheduling_s startSampling;
-	scheduleByAngle(&startSampling, nowNt,
+	scheduleByAngle(nullptr, nowNt,
 			/*angle*/engineConfiguration->knockDetectionWindowStart, { startKnockSampling, engine });
 #else
 	UNUSED(cylinderNumber);
