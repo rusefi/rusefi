@@ -3950,6 +3950,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
 
+	dialog = dutyCycleLimiting, "Injector Duty Cycle Limiter"
+		field = "Instantaneous injector duty cycle limit",	maxInjectorDutyInstant, {isInjectionEnabled}
+		field = "Sustained injector duty cycle limit",	maxInjectorDutySustained, {isInjectionEnabled}
+		field = "Sustained injector duty cycle delay",	maxInjectorDutySustainedTimeout, {isInjectionEnabled}
+
 	dialog = limitsSettings, "Limits"
 		field = "Cut fuel on RPM limit",				cutFuelOnHardLimit
 		field = "Cut spark on RPM limit",				cutSparkOnHardLimit
@@ -3959,6 +3964,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Boost cut pressure",					boostCutPressure
 		field = "Boost cut pressure hysteresis",		boostCutPressureHyst
 		field = "Minimum oil pressure after start",		minOilPressureAfterStart
+		panel = dutyCycleLimiting
 
 	dialog = softRpmLimitSettings, "Soft RPM Limit"
 		field = "Window size",							rpmSoftLimitWindowSize
