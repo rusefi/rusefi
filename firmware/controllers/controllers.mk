@@ -28,7 +28,6 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/gauges/tachometer.cpp \
 	$(CONTROLLERS_DIR)/gauges/speedometer.cpp \
 	$(CONTROLLERS_DIR)/gauges/malfunction_indicator.cpp \
-	$(CONTROLLERS_DIR)/system/timer/signal_executor_sleep.cpp \
 	$(CONTROLLERS_DIR)/system/timer/single_timer_executor.cpp \
 	$(CONTROLLERS_DIR)/system/timer/pwm_generator_logic.cpp \
 	$(CONTROLLERS_DIR)/system/timer/event_queue.cpp \

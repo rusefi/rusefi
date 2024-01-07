@@ -177,6 +177,7 @@ CPPSRC = $(ALLCPPSRC) \
   simulator/rusEfiFunctionalTest.cpp \
   simulator/can/hal_can_lld.cpp \
   simulator/framework.cpp \
+  simulator/system/signal_executor_sleep.cpp \
   simulator/boards.cpp \
   $(TEST_SRC_CPP) \
   $(RUSEFI_LIB_CPP) \
@@ -195,6 +196,7 @@ INCDIR = . \
   $(PROJECT_DIR)/development/hw_layer \
   $(CHIBIOS)/os/hal/lib/streams \
   $(RUSEFI_LIB_INC) \
+  simulator/system \
   simulator/can \
   simulator
 
