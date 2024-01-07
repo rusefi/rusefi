@@ -48,7 +48,7 @@ TEST(priming, duration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	MockInjectorModel2 injectorModel;
-	engine->module<InjectorModel>().set(&injectorModel);
+	engine->module<InjectorModelPrimary>().set(&injectorModel);
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->primeBins); i++) {
 		engineConfiguration->primeBins[i] = i * 10;

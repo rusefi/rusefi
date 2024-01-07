@@ -415,7 +415,7 @@ bit disableFan2WhenStopped;Inhibit operation of this fan while the engine is not
 bit enableTrailingSparks;Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 bit etb_use_two_wires;TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 bit isDoubleSolenoidIdle;Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
-bit unused88b11
+bit enableStagedInjection
 bit useTLE8888_cranking_hack;
 bit kickStartCranking
 bit useSeparateIdleTablesForCrankingTaper;This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
@@ -620,6 +620,7 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	output_pin_e o2heaterPin;On-off O2 sensor heater control. 'ON' if engine is running, 'OFF' if stopped or cranking.
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPins;
+	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPinsStage2;
 	output_pin_e[MAX_CYLINDER_COUNT iterate] ignitionPins;
 
 	pin_output_mode_e injectionPinMode;
@@ -1727,6 +1728,10 @@ uint8_t[4 x 4] autoscale lambdaMaxDeviationTable;;"lambda", 0.01, 0, 0, 1, 2
 uint16_t[4] lambdaMaxDeviationLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[4] lambdaMaxDeviationRpmBins;;"RPM",  1, 0, 0, 18000, 0
 
+uint8_t[6 x 6] injectorStagingTable;;"%", 1, 0, 0, 90, 0
+uint16_t[6] injectorStagingLoadBins;;"", 1, 0, 0, 1000, 0
+uint16_t[6] injectorStagingRpmBins;;"RPM",  1, 0, 0, 18000, 0
+
 end_struct
 
 ! Pedal Position Sensor
@@ -1911,6 +1916,7 @@ end_struct
 
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
+#define PROTOCOL_INJ1_STAGE2_SHORT_NAME "j1"
 
 ! some board files override this value using prepend file
 #define ts_show_vr_threshold_all true

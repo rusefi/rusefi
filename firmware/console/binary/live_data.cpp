@@ -49,7 +49,7 @@ const antilag_system_state_s* getLiveData(size_t) {
 
 template<>
 const injector_model_s* getLiveData(size_t) {
-	return &engine->module<InjectorModel>().unmock();
+	return &engine->module<InjectorModelPrimary>().unmock();
 }
 
 template<>

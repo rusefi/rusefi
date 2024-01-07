@@ -48,10 +48,11 @@ private:
 public:
 	// TODO: this should be private
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
+	InjectorOutputPin *outputsStage2[MAX_WIRES_COUNT];
 	float injectionStartAngle = 0;
 };
 
-void turnInjectionPinHigh(InjectionEvent *event);
+void turnInjectionPinHigh(uintptr_t arg);
 
 
 /**

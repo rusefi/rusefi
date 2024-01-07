@@ -28,6 +28,8 @@ float getCrankingFuel(float baseFuel);
 float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart);
 float getInjectionMass(int rpm);
 percent_t getInjectorDutyCycle(int rpm);
+percent_t getInjectorDutyCycleStage2(int rpm);
+float getStage2InjectionFraction(int rpm, float fuelLoad);
 
 float getStandardAirCharge();
 float getCylinderFuelTrim(size_t cylinderNumber, int rpm, float fuelLoad);

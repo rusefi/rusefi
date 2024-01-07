@@ -32,6 +32,8 @@ public:
 	// Per-injection fuel mass, including TPS accel enrich
 	float injectionMass[MAX_CYLINDER_COUNT] = {0};
 
+	float injectionStage2Fraction = 0;
+
 	Timer crankingTimer;
 
 	WarningCodeState warnings;
@@ -76,6 +78,7 @@ public:
 	 * @see getInjectionDuration()
 	 */
 	floatms_t injectionDuration = 0;
+	floatms_t injectionDurationStage2 = 0;
 
 	angle_t injectionOffset = 0;
 

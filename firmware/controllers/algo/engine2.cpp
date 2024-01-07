@@ -130,10 +130,19 @@ void EngineState::periodicFastCallback() {
 	float untrimmedInjectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
 	auto clResult = fuelClosedLoopCorrection();
 
-	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
-	engine->engineState.injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(untrimmedInjectionMass);
-
 	float fuelLoad = getFuelingLoad();
+
+	injectionStage2Fraction = getStage2InjectionFraction(rpm, fuelLoad);
+	float stage2InjectionMass = untrimmedInjectionMass * injectionStage2Fraction;
+	float stage1InjectionMass = untrimmedInjectionMass - stage2InjectionMass;
+
+	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
+	engine->engineState.injectionDuration = engine->module<InjectorModelPrimary>()->getInjectionDuration(stage1InjectionMass);
+	engine->engineState.injectionDurationStage2 =
+		engineConfiguration->enableStagedInjection
+		? engine->module<InjectorModelSecondary>()->getInjectionDuration(stage2InjectionMass)
+		: 0;
+
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 	engine->lambdaMonitor.update(rpm, fuelLoad);
 

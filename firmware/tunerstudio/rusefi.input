@@ -1180,6 +1180,12 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		yBins = gppwm4_loadBins, gppwmYAxis4
 		zBins = gppwm4_table
 
+	table = stagedInjectionTbl, stagedInjectionMap, "Staged Injection %", 1
+		xyLabels = "RPM", ""
+		xBins = injectorStagingRpmBins, RPMValue
+		yBins = injectorStagingLoadBins, fuelingLoad
+		zBins = injectorStagingTable
+
 	table = tcuSolenoidTableTbl,  tcuSolenoidTableMap,  "Solenoids Active By Gear",	1
 		xBins		= solenoidCountArray, tcuCurrentGear
 		yBins		= gearCountArray, tcuCurrentGear
@@ -1410,7 +1416,9 @@ gaugeCategory = Fueling
 	iatCorrectionGauge = running_intakeTemperatureCoefficient, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",	0,	3,	0,	0,	3,  3,	2,	2
 	cltCorrectionGauge = running_coolantTemperatureCoefficient, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",	0,	3,	0,	0,	3,  3,	2,	2
 	injectorDutyCycleGauge=injectorDutyCycle, @@GAUGE_NAME_FUEL_INJ_DUTY@@,"%",		0,	120,		10,	10,	100,	100,	1,	1
+	injectorDutyCycleStg2Gauge=injectorDutyCycleStage2, @@GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2@@,"%",		0,	120,		10,	10,	100,	100,	1,	1
 	actualLastInjectionGauge	= actualLastInjection,	@@GAUGE_NAME_FUEL_LAST_INJECTION@@, "mSec",		0,	25.5,	1.0,	1.2,		20,	25,	3, 1
+	actualLastInjectionStg2Gauge	= actualLastInjectionStage2,	@@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@, "mSec",		0,	25.5,	1.0,	1.2,		20,	25,	3, 1
 	veValueGauge		= veValue,					"fuel: VE",				"",		0,	120,		10,	10,	100,	100,	1,	1
 
 	injectorLagMsGauge = m_deadtime,		@@GAUGE_NAME_INJECTOR_LAG@@,		"mSec",		0,	10,	0,	0,		10,	10,	3, 1
@@ -1650,6 +1658,7 @@ menuDialog = main
 		subMenu = injTest,					"Injector test", 0, {isInjectionEnabled}
 		subMenu = cylinderBankSelect,		"Cylinder bank selection", 0, {isInjectionEnabled == 1}
 		subMenu = injectorNonlinear,		"Injector small-pulse correction", 0, {isInjectionEnabled == 1}
+		subMenu = stagedInjection,			"Staged injection", 0, {isInjectionEnabled}
 
 		groupMenu = "Cylinder fuel trims"
 		groupChildMenu = fuelTrimTbl1,		"Fuel trim cyl 1"
@@ -2439,6 +2448,26 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Offset cyl 10",							timing_offset_cylinder10, {cylindersCount > 9}
 		field = "Offset cyl 11",							timing_offset_cylinder11, {cylindersCount > 10}
 		field = "Offset cyl 12",							timing_offset_cylinder12, {cylindersCount > 11}
+
+	dialog = stagedInjectionLeft, "",	yAxis
+		field = "Enable", enableStagedInjection, {isInjectionEnabled}
+		field = ""
+		field = "Injection Stage 2 Output 1",					injectionPinsStage21, {isInjectionEnabled && enableStagedInjection}
+		field = "Injection Stage 2 Output 2",					injectionPinsStage22, {isInjectionEnabled && enableStagedInjection && injectionMode != 3 && cylindersCount > 1}
+		field = "Injection Stage 2 Output 3",					injectionPinsStage23, {isInjectionEnabled && enableStagedInjection && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 2}
+		field = "Injection Stage 2 Output 4",					injectionPinsStage24, {isInjectionEnabled && enableStagedInjection && injectionMode != 3 && cylindersCount > 3}
+		field = "Injection Stage 2 Output 5 ",					injectionPinsStage25, {isInjectionEnabled && enableStagedInjection && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 4}
+		field = "Injection Stage 2 Output 6 ",					injectionPinsStage26, {isInjectionEnabled && enableStagedInjection && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 5}
+		field = "Injection Stage 2 Output 7 ",					injectionPinsStage27, {isInjectionEnabled && enableStagedInjection && injectionMode != 3 && cylindersCount > 6}
+		field = "Injection Stage 2 Output 8 ",					injectionPinsStage28, {isInjectionEnabled && enableStagedInjection && injectionMode != 3 && cylindersCount > 7}
+		field = "Injection Stage 2 Output 9 ",					injectionPinsStage29, {isInjectionEnabled && enableStagedInjection && cylindersCount > 8}
+		field = "Injection Stage 2 Output 10 ",					injectionPinsStage210, {isInjectionEnabled && enableStagedInjection && cylindersCount > 9}
+		field = "Injection Stage 2 Output 11 ",					injectionPinsStage211, {isInjectionEnabled && enableStagedInjection && cylindersCount > 10}
+		field = "Injection Stage 2 Output 12 ",					injectionPinsStage212, {isInjectionEnabled && enableStagedInjection && cylindersCount > 11}
+
+	dialog = stagedInjection, "", xAxis
+		panel = stagedInjectionLeft
+		panel = stagedInjectionTbl, {isInjectionEnabled && enableStagedInjection}
 
 	dialog = multisparkDwellParams, "Delay & Dwell"
 		field = "Spark duration",						multisparkSparkDuration, {multisparkEnable}

@@ -280,6 +280,12 @@ percent_t getInjectorDutyCycle(int rpm) {
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
 
+percent_t getInjectorDutyCycleStage2(int rpm) {
+	floatms_t totalInjectiorAmountPerCycle = engine->engineState.injectionDurationStage2 * getNumberOfInjections(engineConfiguration->injectionMode);
+	floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
+	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
+}
+
 static float getCycleFuelMass(bool isCranking, float baseFuelMass) {
 	if (isCranking) {
 		return getCrankingFuel(baseFuelMass);
@@ -312,7 +318,11 @@ float getInjectionMass(int rpm) {
 	float injectionFuelMass = cycleFuelMass * durationMultiplier;
 
 	// Prepare injector flow rate & deadtime
-	engine->module<InjectorModel>()->prepare();
+	engine->module<InjectorModelPrimary>()->prepare();
+
+	if (engineConfiguration->enableStagedInjection) {
+		engine->module<InjectorModelSecondary>()->prepare();
+	}
 
 	floatms_t tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment();
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
@@ -321,7 +331,7 @@ float getInjectionMass(int rpm) {
 	// For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass
 	float tpsAccelPerInjection = durationMultiplier * tpsAccelEnrich;
 
-	float tpsFuelMass = engine->module<InjectorModel>()->getFuelMassForDuration(tpsAccelPerInjection);
+	float tpsFuelMass = engine->module<InjectorModelPrimary>()->getFuelMassForDuration(tpsAccelPerInjection);
 
 	return injectionFuelMass + tpsFuelMass;
 #else
@@ -439,6 +449,32 @@ float getCylinderFuelTrim(size_t cylinderNumber, int rpm, float fuelLoad) {
 	// Convert from percent +- to multiplier
 	// 5% -> 1.05
 	return (100 + trimPercent) / 100;
+}
+
+static Hysteresis stage2Hysteresis;
+
+float getStage2InjectionFraction(int rpm, float load) {
+	if (!engineConfiguration->enableStagedInjection) {
+		return 0;
+	}
+
+	float frac = 0.01f * interpolate3d(
+		config->injectorStagingTable,
+		config->injectorStagingLoadBins, load,
+		config->injectorStagingRpmBins, rpm
+	);
+
+	// don't allow very small fraction, with some hysteresis
+	if (!stage2Hysteresis.test(frac, 0.1, 0.03)) {
+		return 0;
+	}
+
+	// Clamp to 90%
+	if (frac > 0.9) {
+		frac = 0.9;
+	}
+
+	return frac;
 }
 
 #endif
