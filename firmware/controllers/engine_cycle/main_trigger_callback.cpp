@@ -201,7 +201,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
-		 * TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		 */
 		return;
 	}
@@ -211,12 +210,10 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		// this happens while we just start cranking
 
 		// todo: check for 'trigger->is_synchnonized?'
-		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
 	if (rpm == NOISY_RPM) {
 		warning(ObdCode::OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, "noisy trigger");
-		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
 
