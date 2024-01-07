@@ -431,7 +431,7 @@ static void configureInputs() {
 	setAdcChannelOverrides();
 }
 
-static CCM_OPTIONAL SlowAdcController slowAdcController;
+static SlowAdcController slowAdcController;
 
 void initAdcInputs() {
 	efiPrintf("initAdcInputs()");
