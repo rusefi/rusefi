@@ -26,7 +26,7 @@ static CCM_OPTIONAL FunctionalSensor fuelTempSensor(SensorType::FuelTemperature,
 static CCM_OPTIONAL FunctionalSensor ambientTempSensor(SensorType::AmbientTemperature, MS2NT(10));
 static CCM_OPTIONAL FunctionalSensor compressorDischargeTemp(SensorType::CompressorDischargeTemperature, MS2NT(10));
 
-static FuncPair fclt, fiat, faux1, faux2, foil, ffuel, fambient, fcdt;
+static CCM_OPTIONAL FuncPair fclt, fiat, faux1, faux2, foil, ffuel, fambient, fcdt;
 
 static void validateThermistorConfig(const char *msg, thermistor_conf_s& cfg) {
 	if (cfg.tempC_1 >= cfg.tempC_2 ||

@@ -51,8 +51,8 @@ static int averagedMapBufIdx = 0;
 /**
  * here we have averaging start and averaging end points for each cylinder
  */
-static scheduling_s startTimers[MAX_CYLINDER_COUNT][2];
-static scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
+static CCM_OPTIONAL scheduling_s startTimers[MAX_CYLINDER_COUNT][2];
+static CCM_OPTIONAL scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
 
 static void endAveraging(MapAverager* arg);
 
