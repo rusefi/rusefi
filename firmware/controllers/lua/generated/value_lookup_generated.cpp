@@ -47,6 +47,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->etb_use_two_wires;
 		case 1097520823:
 			return engineConfiguration->isDoubleSolenoidIdle;
+		case 1160459527:
+			return engineConfiguration->enableStagedInjection;
 		case -1279270887:
 			return engineConfiguration->useTLE8888_cranking_hack;
 		case 1156367906:
@@ -1181,6 +1183,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 1097520823:
 	{
 		engineConfiguration->isDoubleSolenoidIdle = (int)value;
+		return;
+	}
+		case 1160459527:
+	{
+		engineConfiguration->enableStagedInjection = (int)value;
 		return;
 	}
 		case -1279270887:

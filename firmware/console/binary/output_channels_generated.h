@@ -760,8 +760,16 @@ struct output_channels_s {
 	// AFR
 	// offset 678
 	scaled_channel<uint16_t, 1000, 1> afr2GasolineScale = (uint16_t)0;
+	// @@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@
+	// ms
 	// offset 680
-	uint8_t unusedAtTheEnd[120];
+	scaled_channel<uint16_t, 300, 1> actualLastInjectionStage2 = (uint16_t)0;
+	// @@GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2@@
+	// %
+	// offset 682
+	scaled_channel<uint8_t, 2, 1> injectorDutyCycleStage2 = (uint8_t)0;
+	// offset 683
+	uint8_t unusedAtTheEnd[117];
 };
 static_assert(sizeof(output_channels_s) == 800);
 

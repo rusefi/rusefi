@@ -474,6 +474,10 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.afrGasolineScale;
 		case 2029444810:
 			return engine->outputChannels.afr2GasolineScale;
+		case -1434098660:
+			return engine->outputChannels.actualLastInjectionStage2;
+		case -1337459841:
+			return engine->outputChannels.injectorDutyCycleStage2;
 		case -1779658835:
 			return engine->fuelComputer.totalFuelCorrection;
 		case -1288205717:

@@ -1,2 +1,2 @@
-#define SIGNATURE_HASH 575281785
-#define TS_SIGNATURE "rusEFI (FOME) master.2024.01.07.hellen154hyundai.575281785"
+#define SIGNATURE_HASH 1600983602
+#define TS_SIGNATURE "rusEFI (FOME) master.2024.01.07.hellen154hyundai.1600983602"

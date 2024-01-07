@@ -64,6 +64,9 @@ TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 ### isDoubleSolenoidIdle
 Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 
+### enableStagedInjection
+
+
 ### useTLE8888_cranking_hack
 
 
