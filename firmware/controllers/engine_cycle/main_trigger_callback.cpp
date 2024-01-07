@@ -50,7 +50,7 @@
 void endSimultaneousInjection(InjectionEvent *event) {
 	event->isScheduled = false;
 	endSimultaneousInjectionOnlyTogglePins();
-	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
+	event->update();
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {
@@ -63,7 +63,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 			output->close(nowNt);
 		}
 	}
-	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
+	event->update();
 }
 
 void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
@@ -183,7 +183,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 
 static void handleFuel(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::HandleFuel);
-	
+
 	efiAssertVoid(ObdCode::CUSTOM_STACK_6627, hasLotsOfRemainingStack(), "lowstck#3");
 
 	LimpState limitedFuelState = getLimpManager()->allowInjection();
@@ -244,7 +244,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		return;
 	}
 
-	
+
 	if (trgEventIndex == 0) {
 
 		if (getTriggerCentral()->checkIfTriggerConfigChanged()) {

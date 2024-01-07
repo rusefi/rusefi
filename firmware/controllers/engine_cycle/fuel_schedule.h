@@ -85,7 +85,6 @@ public:
 	 * Calculate injector opening angle, pins, and mode for all injectors
 	 */
 	void addFuelEvents();
-	bool addFuelEventsForCylinder(int cylinderIndex);
 
 	void resetOverlapping();
 

@@ -127,15 +127,6 @@ bool InjectionEvent::updateInjectionAngle() {
 /**
  * @returns false in case of error, true if success
  */
-bool FuelSchedule::addFuelEventsForCylinder(int i) {
-	InjectionEvent *ev = &elements[i];
-#if EFU_UNIT_TEST
-	if (ev->ownIndex != i)
-	  throw std::logic_error("index issue");
-#endif
-	return ev->update();
-}
-
 bool InjectionEvent::update() {
 	bool updatedAngle = updateInjectionAngle();
 
@@ -192,7 +183,7 @@ bool InjectionEvent::update() {
 
 void FuelSchedule::addFuelEvents() {
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
-		bool result = addFuelEventsForCylinder(cylinderIndex);
+		bool result = elements[cylinderIndex].update();
 
 		if (!result) {
 			invalidate();
