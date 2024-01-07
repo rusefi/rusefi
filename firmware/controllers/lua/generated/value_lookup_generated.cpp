@@ -133,6 +133,9 @@ float getConfigValueByName(const char *name) {
 // useSpiImu
 		case -1011866871:
 			return engineConfiguration->useSpiImu;
+// enableStagedInjection
+		case 1160459527:
+			return engineConfiguration->enableStagedInjection;
 // tpsMin
 		case 513872736:
 			return engineConfiguration->tpsMin;
@@ -1963,6 +1966,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1011866871:
 	{
 		engineConfiguration->useSpiImu = (int)value;
+		return 1;
+	}
+		case 1160459527:
+	{
+		engineConfiguration->enableStagedInjection = (int)value;
 		return 1;
 	}
 		case 513872736:
