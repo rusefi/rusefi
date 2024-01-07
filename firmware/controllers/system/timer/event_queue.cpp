@@ -77,9 +77,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 		}
 	}
 
-#if EFI_UNIT_TEST
 	assertListIsSorted();
-#endif /* EFI_UNIT_TEST */
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, action.getCallback() != NULL, "NULL callback", false);
 
 // please note that simulator does not use this code at all - simulator uses signal_executor_sleep
@@ -100,9 +98,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 	if (!m_head || timeX < m_head->momentX) {
 		// here we insert into head of the linked list
 		LL_PREPEND2(m_head, scheduling, nextScheduling_s);
-#if EFI_UNIT_TEST
 		assertListIsSorted();
-#endif /* EFI_UNIT_TEST */
 		return true;
 	} else {
 		// here we know we are not in the head of the list, let's find the position - linear search
@@ -113,17 +109,13 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 
 		scheduling->nextScheduling_s = insertPosition->nextScheduling_s;
 		insertPosition->nextScheduling_s = scheduling;
-#if EFI_UNIT_TEST
 		assertListIsSorted();
-#endif /* EFI_UNIT_TEST */
 		return false;
 	}
 }
 
 void EventQueue::remove(scheduling_s* scheduling) {
-#if EFI_UNIT_TEST
-		assertListIsSorted();
-#endif /* EFI_UNIT_TEST */
+	assertListIsSorted();
 
 	// Special case: event isn't scheduled, so don't cancel it
 	if (!scheduling->action) {
@@ -166,9 +158,7 @@ void EventQueue::remove(scheduling_s* scheduling) {
 		current->action = {};
 	}
 
-#if EFI_UNIT_TEST
 	assertListIsSorted();
-#endif /* EFI_UNIT_TEST */
 }
 
 /**
@@ -211,9 +201,7 @@ int EventQueue::executeAll(efitick_t now) {
 
 	int executionCounter = 0;
 
-#if EFI_UNIT_TEST
 	assertListIsSorted();
-#endif
 
 	bool didExecute;
 	do {
@@ -272,11 +260,7 @@ bool EventQueue::executeOne(efitick_t now) {
 		action.execute();
 	}
 
-#if EFI_UNIT_TEST
-	// (tests only) Ensure we didn't break anything
 	assertListIsSorted();
-#endif
-
 	return true;
 }
 
@@ -288,11 +272,13 @@ int EventQueue::size(void) const {
 }
 
 void EventQueue::assertListIsSorted() const {
+#if EFI_UNIT_TEST || EFI_SIMULATOR
 	scheduling_s *current = m_head;
 	while (current != NULL && current->nextScheduling_s != NULL) {
 		efiAssertVoid(ObdCode::CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
 		current = current->nextScheduling_s;
 	}
+#endif // EFI_UNIT_TEST || EFI_SIMULATOR
 }
 
 scheduling_s * EventQueue::getHead() {
