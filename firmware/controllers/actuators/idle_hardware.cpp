@@ -21,7 +21,7 @@
  * This need deep debuging. Until it is moved out of CMM. */
 static StepDirectionStepper iacStepperHw;
 static DualHBridgeStepper iacHbridgeHw;
-StepperMotor iacMotor;
+StepperMotor iacMotor CCM_OPTIONAL;
 #endif /* EFI_UNIT_TEST */
 
 static SimplePwm idleSolenoidOpen("idle open");
