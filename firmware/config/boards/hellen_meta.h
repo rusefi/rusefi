@@ -280,8 +280,8 @@ static void setHellen64SdCardSpi() {
 	engineConfiguration->sdCardCsPin = Gpio::MM64_SPI3_CS;
 }
 
-static void setHellenSdCardSpi2() {
-    engineConfiguration->isSdCardEnabled = true;
+static inline void setHellenSdCardSpi2() {
+	engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
 	engineConfiguration->spi2misoPin = H_SPI2_MISO;
@@ -298,12 +298,12 @@ static void setHellenSdCardSpi3() {
 // *pullups* files CLT R211 IAT R213
 #define HELLEN_DEFAULT_AT_PULLUP 4700
 
-static void setDefaultHellenAtPullUps() {
+static inline void setDefaultHellenAtPullUps() {
 	engineConfiguration->clt.config.bias_resistor = HELLEN_DEFAULT_AT_PULLUP;
 	engineConfiguration->iat.config.bias_resistor = HELLEN_DEFAULT_AT_PULLUP;
 }
 
-static void setHellenMMbaro() {
+static inline void setHellenMMbaro() {
 	engineConfiguration->lps25BaroSensorScl = Gpio::B10;
 	engineConfiguration->lps25BaroSensorSda = Gpio::B11;
 }
