@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 21:43:47 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 07 18:32:04 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4576,10 +4576,34 @@ struct engine_configuration_s {
 	 */
 	int8_t tractionControlEtbDrop[TRACTION_CONTROL_ETB_DROP_SIZE][TRACTION_CONTROL_ETB_DROP_SIZE];
 	/**
-	 * units: units
+	 * If injector duty cycle hits this value, instantly cut fuel.
+	 * units: %
 	 * offset 4384
 	 */
-	uint8_t mainUnusedEnd[172];
+	uint8_t maxInjectorDutyInstant;
+	/**
+	 * If injector duty cycle hits this value for the specified delay time, cut fuel.
+	 * units: %
+	 * offset 4385
+	 */
+	uint8_t maxInjectorDutySustained;
+	/**
+	 * Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.
+	 * units: sec
+	 * offset 4386
+	 */
+	scaled_channel<uint8_t, 10, 1> maxInjectorDutySustainedTimeout;
+	/**
+	 * units: units
+	 * offset 4387
+	 */
+	uint8_t mainUnusedEnd[168];
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 4555
+	 */
+	uint8_t alignmentFill_at_4555[1];
 };
 static_assert(sizeof(engine_configuration_s) == 4556);
 
@@ -5484,4 +5508,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22088);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 03 21:43:47 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 07 18:32:04 UTC 2024

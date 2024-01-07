@@ -1729,3 +1729,12 @@ Pull-up resistor value on your board
 ### speedometerPulsePerKm
 Number of speedometer pulses per kilometer travelled.
 
+### maxInjectorDutyInstant
+If injector duty cycle hits this value, instantly cut fuel.
+
+### maxInjectorDutySustained
+If injector duty cycle hits this value for the specified delay time, cut fuel.
+
+### maxInjectorDutySustainedTimeout
+Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.
+
