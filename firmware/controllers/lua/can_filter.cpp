@@ -5,7 +5,7 @@
 static constexpr size_t maxFilterCount = 48;
 
 static size_t filterCount = 0;
-static CanFilter filters[maxFilterCount];
+static CCM_OPTIONAL CanFilter filters[maxFilterCount];
 
 CanFilter* getFilterForId(CanBusIndex busIndex, int Id) {
 	for (size_t i = 0; i < filterCount; i++) {

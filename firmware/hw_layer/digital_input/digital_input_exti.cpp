@@ -159,7 +159,7 @@ private:
 	uint8_t m_write = 0;
 };
 
-static ExtiQueue<ExtiQueueEntry, 32> queue;
+static CCM_OPTIONAL ExtiQueue<ExtiQueueEntry, 32> queue;
 
 static uint8_t overflowCounter = 0;
 

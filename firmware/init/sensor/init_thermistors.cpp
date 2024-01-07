@@ -16,15 +16,15 @@ struct FuncPair {
 	FuncChain<resist, therm> thermistor;
 };
 
-static CCM_OPTIONAL FunctionalSensor clt(SensorType::Clt, MS2NT(10));
-static CCM_OPTIONAL FunctionalSensor iat(SensorType::Iat, MS2NT(10));
-static CCM_OPTIONAL FunctionalSensor aux1(SensorType::AuxTemp1, MS2NT(10));
-static CCM_OPTIONAL FunctionalSensor aux2(SensorType::AuxTemp2, MS2NT(10));
+static FunctionalSensor clt(SensorType::Clt, MS2NT(10));
+static FunctionalSensor iat(SensorType::Iat, MS2NT(10));
+static FunctionalSensor aux1(SensorType::AuxTemp1, MS2NT(10));
+static FunctionalSensor aux2(SensorType::AuxTemp2, MS2NT(10));
 
-static CCM_OPTIONAL FunctionalSensor oilTempSensor(SensorType::OilTemperature, MS2NT(10));
-static CCM_OPTIONAL FunctionalSensor fuelTempSensor(SensorType::FuelTemperature, MS2NT(10));
-static CCM_OPTIONAL FunctionalSensor ambientTempSensor(SensorType::AmbientTemperature, MS2NT(10));
-static CCM_OPTIONAL FunctionalSensor compressorDischargeTemp(SensorType::CompressorDischargeTemperature, MS2NT(10));
+static FunctionalSensor oilTempSensor(SensorType::OilTemperature, MS2NT(10));
+static FunctionalSensor fuelTempSensor(SensorType::FuelTemperature, MS2NT(10));
+static FunctionalSensor ambientTempSensor(SensorType::AmbientTemperature, MS2NT(10));
+static FunctionalSensor compressorDischargeTemp(SensorType::CompressorDischargeTemperature, MS2NT(10));
 
 static FuncPair fclt, fiat, faux1, faux2, foil, ffuel, fambient, fcdt;
 

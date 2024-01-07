@@ -65,8 +65,8 @@ static constexpr size_t totalEntryCount = BIG_BUFFER_SIZE / sizeof(composite_log
 static constexpr size_t bufferCount = totalEntryCount / toothLoggerEntriesPerBuffer;
 
 static CompositeBuffer* buffers = nullptr;
-static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers CCM_OPTIONAL;
-static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers CCM_OPTIONAL;
+static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers;
+static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers;
 
 static CompositeBuffer* currentBuffer = nullptr;
 

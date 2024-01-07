@@ -32,7 +32,7 @@
 #define CONSOLE_MAX_ACTIONS 150
 
 static int consoleActionCount = 0;
-static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS] CCM_OPTIONAL;
+static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS];
 
 void resetConsoleActions(void) {
 	consoleActionCount = 0;

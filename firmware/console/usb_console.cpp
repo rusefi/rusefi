@@ -48,7 +48,7 @@ struct UsbThread : public TunerstudioThread {
 	}
 };
 
-static UsbThread usbConsole;
+static CCM_OPTIONAL UsbThread usbConsole;
 
 void startUsbConsole() {
 	usbConsole.start();

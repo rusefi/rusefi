@@ -54,7 +54,7 @@ static char shaft_signal_msg_index[15];
 #define WAVE_LOGGING_SIZE 35000
 #endif
 
-static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
+static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE];
 
 int waveChartUsedSize;
 
