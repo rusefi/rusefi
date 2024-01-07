@@ -6,7 +6,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
- 
+
 #include "pch.h"
 #include "trigger_input_adc.h"
 
@@ -247,6 +247,8 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 		return;
 	}
 
+	UNUSED(isPrimary);
+
 	onTriggerChanged(stamp, isPrimary, rise);
 
 #if (HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || EFI_UNIT_TEST
@@ -319,16 +321,16 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 			// reset to the weak signal mode
 			reset();
 			return;
-		} 
+		}
 	}
 
 	// the threshold should always correspond to the averaged signal.
 	integralSum += delta;
 	// we need some limits for the integral sum
-	// we use a simple I-regulator to move the threshold 
+	// we use a simple I-regulator to move the threshold
 	adcThreshold += (float)integralSum * triggerAdcITerm;
 	// limit the threshold for safety
-	adcThreshold = maxF(minF(adcThreshold, adcMaxThreshold), adcMinThreshold);	
+	adcThreshold = maxF(minF(adcThreshold, adcMaxThreshold), adcMinThreshold);
 
 	// now to the transition part... First, we need a cooldown to pre-filter the transition noise
 	if (transitionCooldownCnt-- < 0)
@@ -398,7 +400,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 			switchingTeethCnt = 0;
 
 			setTriggerAdcMode(TRIGGER_ADC_EXTI);
-			
+
 			// we don't want to loose the signal on return
 			minDeltaThresholdCntPos = DELTA_THRESHOLD_CNT_HIGH;
 			minDeltaThresholdCntNeg = DELTA_THRESHOLD_CNT_HIGH;
@@ -412,11 +414,11 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 			return;
 		}
 	} else {
-		// we don't see "big teeth" anymore 
+		// we don't see "big teeth" anymore
 		switchingTeethCnt = 0;
 	}
 #endif // EFI_SHAFT_POSITION_INPUT
-	
+
 	prevStamp = stamp;
 #endif // ! EFI_SIMULATOR && ((HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || EFI_UNIT_TEST)
 }
