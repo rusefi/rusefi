@@ -460,7 +460,7 @@ bit iatSensorPulldown
 bit allowIdenticalPps
 bit overrideVvtTriggerGaps
 bit useSpiImu
-bit unused31
+bit enableStagedInjection
 
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X;"ADC", 1, 0, 0, 1023, 0
@@ -1616,6 +1616,8 @@ int8_t[TRACTION_CONTROL_ETB_DROP_SIZE x TRACTION_CONTROL_ETB_DROP_SIZE] traction
 	uint8_t maxInjectorDutySustained;If injector duty cycle hits this value for the specified delay time, cut fuel.;"%", 1, 0, 50, 120, 0
 	uint8_t autoscale maxInjectorDutySustainedTimeout;Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.;"sec", 0.1, 0, 0, 5, 1
 
+	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPinsStage2;
+
 
 uint8_t[168] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
@@ -1661,7 +1663,6 @@ engine_configuration_s engineConfiguration;
 
 	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio", 1, 0, 0, 700, 2
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%", 1, 0, 0, 100, 2
-	float[16] unusedSpaceHere
 
 uint16_t[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM", 1, 0, 0, 25000, 0
 int16_t[CRANKING_ADVANCE_CURVE_SIZE] autoscale crankingAdvance;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg", 0.01, 0, -20, 90, 2
@@ -1880,6 +1881,12 @@ uint8_t[6] tcu_rangeLow;;"level", 1, 0, 0, 3, 0
 uint8_t[4 x 4] autoscale lambdaMaxDeviationTable;;"lambda", 0.01, 0, 0, 1, 2
 uint16_t[4] lambdaMaxDeviationLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[4] lambdaMaxDeviationRpmBins;;"RPM",  1, 0, 0, 18000, 0
+
+#define INJ_STAGING_COUNT 6
+
+uint8_t[INJ_STAGING_COUNT x INJ_STAGING_COUNT] injectorStagingTable;;"%", 1, 0, 0, 90, 0
+uint16_t[INJ_STAGING_COUNT] injectorStagingLoadBins;;"", 1, 0, 0, 1000, 0
+uint16_t[INJ_STAGING_COUNT] injectorStagingRpmBins;;"RPM",  1, 0, 0, 18000, 0
 
 end_struct
 
@@ -2220,6 +2227,7 @@ end_struct
 
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
+#define PROTOCOL_INJ1_STAGE2_SHORT_NAME "j1"
 
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
