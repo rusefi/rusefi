@@ -240,6 +240,8 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 		return;
 	}
 
+	UNUSED(isPrimary);
+
 #if EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 	onTriggerChanged(stamp, isPrimary, rise);
 #endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC

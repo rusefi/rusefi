@@ -52,7 +52,7 @@ extern "C" {
 // ADC_CHANNEL_IN14 // PC4
 // ADC_CHANNEL_IN15 // PC5
 
-brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
+brain_pin_e getAdcChannelBrainPin(const char*, adc_channel_e hwChannel) {
 	static_assert(EFI_ADC_NONE == ADC_CHANNEL_NONE);
 
 	// todo: replace this with an array :)
