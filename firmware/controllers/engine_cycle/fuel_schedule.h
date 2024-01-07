@@ -18,6 +18,8 @@ class InjectionEvent {
 public:
 	InjectionEvent();
 
+	bool update();
+
 	// Update the injection start angle
 	bool updateInjectionAngle();
 
