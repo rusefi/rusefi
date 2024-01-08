@@ -20,7 +20,7 @@ public:
 	bool update();
 
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
-	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
+	void onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase);
 
 	WallFuel& getWallFuel();
 
@@ -66,7 +66,7 @@ public:
 	void invalidate();
 
 	// Call this every trigger tooth.  It will schedule all required injector events.
-	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
+	void onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase);
 
 	/**
 	 * this method schedules all fuel events for an engine cycle
