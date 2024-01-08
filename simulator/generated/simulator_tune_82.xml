@@ -4561,19 +4561,19 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="injectorStagingLoadBins" rows="6">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         20.0
+         40.0
+         60.0
+         80.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="injectorStagingRpmBins" rows="6">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         650.0
+         800.0
+         2200.0
+         3600.0
+         5000.0
+         7000.0
 </constant>
     </page>
     <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.08.f407-discovery.2909011660" version="5.0"/>
