@@ -23,6 +23,13 @@ mkdir -p .dep
 # todo: start using env variable for number of threads or for '-r'
 make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU $OPTIONAL_BOARD_DIR
 [ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
+
+if [ ! -z "$4" ]; then
+  POST_BUILD_SCRIPT=$4
+  echo "$SCRIPT_NAME: invoking post-build script"
+  source $POST_BUILD_SCRIPT
+fi
+
 if [ "$USE_OPENBLT" = "yes" ]; then
   # TODO: why is this rm necessary?
   rm -f pch/pch.h.gch/*
