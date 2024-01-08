@@ -126,6 +126,38 @@ info:
   image:
     file: ford-198-a.jpg
   pins:
+    - pin: A58
+      x: 210
+      y: 702
+    - pin: A59
+      x: 278
+      y: 702
+    - pin: A60
+      x: 345
+      y: 702
+    - pin: A61
+      x: 413
+      y: 702
+    - pin: A62
+      x: 477
+      y: 702
+    - pin: A63
+      x: 546
+      y: 702
+    - pin: A64
+      x: 614
+      y: 702
+    - pin: A65
+      x: 680
+      y: 702
+
+    - pin: A76
+      x: 1346
+      y: 702
+    - pin: A76
+      x: 1410
+      y: 702
+
     - pin: A102
       x: 1523
       y: 780
