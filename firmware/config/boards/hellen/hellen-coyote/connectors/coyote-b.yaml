@@ -1,0 +1,267 @@
+pins:
+
+  - pin: B1
+    function: Injector 1
+  - pin: B2
+    function: Injector 5
+  - pin: B3
+    function: Injector 4
+  - pin: B4
+    function: VVT12 Solenoid
+  - pin: B5
+    function: VVT11 Solenoid
+  - pin: B6
+    function: VVT22 Solenoid
+  - pin: B7
+    function: VVT21 Solenoid
+  - pin: B8
+    function: ETB Pos DC Motor
+  - pin: B9
+    function: TPS1
+  - pin: B10
+    function: TPS2
+  - pin: B11
+    function: Muffler Control Solenoid
+  - pin: B14
+    function: UNUSED TCU
+  - pin: B15
+    function: UNUSED TCU
+  - pin: B16
+    function: Injector 8
+
+  - pin: B17
+    function: Cam Sensors Power
+  - pin: B18
+    function: VPWR F
+  - pin: B23
+    function: ETB Neg DC Motor
+  - pin: B24
+    function: UNUSED TCU
+  - pin: B25
+    function: UNUSED TCU
+  - pin: B26
+    function: UNUSED TCU
+
+  - pin: B27
+    function: Intake Air Temperature
+  - pin: B30
+    function: UNUSED Oil Level Switch
+  - pin: B31
+    function: Injector 6
+  - pin: B34
+    function: Cam Sensor Power
+  - pin: B37
+    function: UNUSED TCU
+
+  - pin: B39
+    function: Crank Shield
+
+  - pin: B40
+    function: Cam22 VR Ground
+  - pin: B41
+    function: Cam22 VR Signal
+  - pin: B42
+    function: Cam21 Signal
+  - pin: B44
+    function: Intake Sensor
+  - pin: B45
+    function: Intake Sensor 2
+  - pin: B46
+    function: Injector 3
+  - pin: B47
+    function: Cylinder Head Temperature
+  - pin: B48
+    function: UNUSED Oil Pressure Switch
+  - pin: B49
+    function: Analog Ground
+  - pin: B52
+    function: Knock1 Neg
+  - pin: B53
+    function: Knock1 Pos
+  - pin: B54
+    function: Cam12 VR Ground
+  - pin: B55
+    function: Cam12 VR Signal
+  - pin: B56
+    function: Position 1 Ex Signal
+  - pin: B59
+    function: Manifold Header
+  - pin: B60
+    function: Intake Manifold Runner Control Solenoid
+  - pin: B61
+    function: Injector 7
+  - pin: B62
+    function: Injector 2
+
+  - pin: B67
+    function: Knock2 Neg
+  - pin: B68
+    function: Knock2 Pos
+  - pin: B69
+    function: Crank VR Negative
+  - pin: B70
+    function: Crank VR Positive
+  - pin: B71
+    function: UNUSED Canister Purge
+  - pin: B72
+    function: UNUSED TCU
+  - pin: B73
+    function: UNUSED TCU
+  - pin: B74
+    function: UNUSED TCU
+  - pin: B75
+    function: UNUSED TCU
+  - pin: B77
+    function: UNUSED TCU
+  - pin: B81
+    function: Throttle Actuator Neg
+  - pin: B82
+    function: Throttle Actuator Pos
+
+
+  - pin: B87
+    function: Coil 7
+  - pin: B88
+    function: Coil 6
+  - pin: B89
+    function: Coil 5
+  - pin: B90
+    function: Coil 8
+
+  - pin: B92
+    function: Coil 4
+  - pin: B93
+    function: Coil 1
+  - pin: B94
+    function: Coil 3
+  - pin: B95
+    function: Coil 2
+
+info:
+  title: coyote
+  name: B
+  directory: hellen/coyote
+  image:
+    file: ford-198-b.jpg
+  pins:
+    - pin: B1
+      x: 273
+      y: 345
+    - pin: B2
+      x: 347
+      y: 345
+    - pin: B3
+      x: 414
+      y: 345
+    - pin: B4
+      x: 485
+      y: 345
+    - pin: B5
+      x: 560
+      y: 345
+    - pin: B6
+      x: 627
+      y: 345
+    - pin: B7
+      x: 699
+      y: 345
+    - pin: B8
+      x: 770
+      y: 345
+    - pin: B9
+      x: 842
+      y: 345
+    - pin: B10
+      x: 909
+      y: 345
+    - pin: B11
+      x: 980
+      y: 345
+    - pin: B12
+      x: 1050
+      y: 345
+    - pin: B13
+      x: 1121
+      y: 345
+    - pin: B14
+      x: 1188
+      y: 345
+    - pin: B15
+      x: 1260
+      y: 345
+
+
+    - pin: B16
+      x: 273
+      y: 412
+    - pin: B17
+      x: 347
+      y: 412
+    - pin: B18
+      x: 414
+      y: 412
+    - pin: B19
+      x: 485
+      y: 412
+    - pin: B20
+      x: 560
+      y: 412
+    - pin: B21
+      x: 627
+      y: 412
+    - pin: B22
+      x: 699
+      y: 412
+    - pin: B23
+      x: 770
+      y: 412
+    - pin: B24
+      x: 842
+      y: 412
+    - pin: B25
+      x: 909
+      y: 412
+    - pin: B26
+      x: 980
+      y: 412
+    - pin: B27
+      x: 1050
+      y: 412
+    - pin: B28
+      x: 1121
+      y: 412
+    - pin: B29
+      x: 1188
+      y: 412
+    - pin: B30
+      x: 1260
+      y: 412
+
+
+
+
+    - pin: B87
+      x: 1470
+      y: 670
+    - pin: B88
+      x: 1568
+      y: 670
+    - pin: B89
+      x: 1664
+      y: 670
+    - pin: B90
+      x: 1758
+      y: 670
+
+    - pin: B92
+      x: 1470
+      y: 825
+    - pin: B93
+      x: 1568
+      y: 825
+    - pin: B94
+      x: 1664
+      y: 825
+    - pin: B95
+      x: 1758
+      y: 825
