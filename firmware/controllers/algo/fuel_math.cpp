@@ -186,7 +186,7 @@ static float getBaseFuelMass(int rpm) {
 	engine->fuelComputer.normalizedCylinderFilling = normalizedCylinderFilling;
 	engine->engineState.fuelingLoad = airmass.EngineLoadPercent;
 	engine->engineState.ignitionLoad = engine->fuelComputer.getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
-	
+
 	auto gramPerCycle = airmass.CylinderAirmass * engineConfiguration->cylindersCount;
 	auto gramPerMs = rpm == 0 ? 0 : gramPerCycle / getEngineCycleDuration(rpm);
 
@@ -200,7 +200,7 @@ static float getBaseFuelMass(int rpm) {
 	engine->engineState.baseFuel = baseFuelMass;
 
 	if (cisnan(baseFuelMass)) {
-		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690 
+		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690
 		return 0;
 	}
 
@@ -315,7 +315,7 @@ float getInjectionMass(int rpm) {
 	float injectionFuelMass = cycleFuelMass * durationMultiplier;
 
 	// Prepare injector flow rate & deadtime
-	engine->module<InjectorModel>()->prepare();
+	engine->module<InjectorModelPrimary>()->prepare();
 
 	floatms_t tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment();
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
@@ -324,7 +324,7 @@ float getInjectionMass(int rpm) {
 	// For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass
 	float tpsAccelPerInjection = durationMultiplier * tpsAccelEnrich;
 
-	float tpsFuelMass = engine->module<InjectorModel>()->getFuelMassForDuration(tpsAccelPerInjection);
+	float tpsFuelMass = engine->module<InjectorModelPrimary>()->getFuelMassForDuration(tpsAccelPerInjection);
 
 	return injectionFuelMass + tpsFuelMass;
 }
@@ -344,7 +344,7 @@ void initFuelMap() {
  */
 float getCltFuelCorrection() {
 	const auto clt = Sensor::get(SensorType::Clt);
-	
+
 	if (!clt)
 		return 1; // this error should be already reported somewhere else, let's just handle it
 
@@ -400,7 +400,7 @@ percent_t getFuelALSCorrection(int rpm) {
 			config->alsFuelAdjustmentLoadBins, throttleIntent,
 			config->alsFuelAdjustmentrpmBins, rpm
 		);
-		return AlsFuelAdd;	
+		return AlsFuelAdd;
 	} else
 #endif /* EFI_ANTILAG_SYSTEM */
 	{

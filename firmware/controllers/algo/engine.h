@@ -128,7 +128,8 @@ public:
 #endif // EFI_ENGINE_CONTROL
 
 	type_list<
-		Mockable<InjectorModel>,
+		Mockable<InjectorModelPrimary>,
+		Mockable<InjectorModelSecondary>,
 #if EFI_IDLE_CONTROL
 		Mockable<IdleController>,
 #endif // EFI_IDLE_CONTROL

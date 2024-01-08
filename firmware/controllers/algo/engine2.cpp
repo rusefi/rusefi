@@ -96,7 +96,7 @@ void EngineState::periodicFastCallback() {
 		warning(ObdCode::CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
 	efitick_t nowNt = getTimeNowNt();
-	
+
 	if (engine->rpmCalculator.isCranking()) {
 		crankingTimer.reset(nowNt);
 	}
@@ -142,7 +142,7 @@ void EngineState::periodicFastCallback() {
 	auto clResult = fuelClosedLoopCorrection();
 
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
-	engine->engineState.injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(untrimmedInjectionMass);
+	engine->engineState.injectionDuration = engine->module<InjectorModelPrimary>()->getInjectionDuration(untrimmedInjectionMass);
 
 	float fuelLoad = getFuelingLoad();
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
