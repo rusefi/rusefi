@@ -167,12 +167,15 @@ bool warning(ObdCode code, const char *fmt, ...) {
 		return true;
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
+	bool known = engine->engineState.warnings.isWarningNow(code);
+
+	// if known - just reset timer
+	engine->engineState.warnings.addWarningCode(code);
+
 	// we just had this same warning, let's not spam
-	if (engine->engineState.warnings.isWarningNow(code)) {
+	if (known) {
 		return true;
 	}
-
-	engine->engineState.warnings.addWarningCode(code);
 
 	va_list ap;
 	va_start(ap, fmt);
