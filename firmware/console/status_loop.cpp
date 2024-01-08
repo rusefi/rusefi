@@ -673,7 +673,7 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
-	for (int i = 0; i < 8;i++) {
+	for (size_t i = 0; i < efi::size(tsOutputChannels->recentErrorCode); i++) {
 		tsOutputChannels->recentErrorCode[i] = static_cast<uint16_t>(engine->engineState.warnings.recentWarnings.get(i).Code);
 	}
 

@@ -50,7 +50,7 @@ struct warning_t {
 	}
 };
 
-typedef static_vector<warning_t, 8> warningBuffer_t;
+typedef static_vector<warning_t, 24> warningBuffer_t;
 
 class WarningCodeState {
 public:
