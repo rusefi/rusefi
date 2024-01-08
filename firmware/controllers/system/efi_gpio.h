@@ -118,6 +118,7 @@ public:
 	OutputPin accelerometerCs;
 
 	InjectorOutputPin injectors[MAX_CYLINDER_COUNT];
+	InjectorOutputPin injectorsStage2[MAX_CYLINDER_COUNT];
 	IgnitionOutputPin coils[MAX_CYLINDER_COUNT];
 	IgnitionOutputPin trailingCoils[MAX_CYLINDER_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];

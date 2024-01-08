@@ -53,6 +53,12 @@ static const char* const injectorNames[] = { "Injector 1", "Injector 2", "Inject
 static const char* const injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"i9", "iA", "iB", "iC"};
 
+static const char* const injectorStage2Names[] = { "Injector Second Stage 1", "Injector Second Stage 2", "Injector Second Stage 3", "Injector Second Stage 4", "Injector Second Stage 5", "Injector Second Stage 6",
+		"Injector Second Stage 7", "Injector Second Stage 8", "Injector Second Stage 9", "Injector Second Stage 10", "Injector Second Stage 11", "Injector Second Stage 12"};
+
+static const char* const injectorStage2ShortNames[] = { PROTOCOL_INJ1_STAGE2_SHORT_NAME, "j2", "j3", "j4", "j5", "j6", "j7", "j8",
+		"j9", "jA", "jB", "jC"};
+
 static const char* const auxValveShortNames[] = { "a1", "a2"};
 
 static RegisteredOutputPin * registeredOutputHead = nullptr;
@@ -178,6 +184,10 @@ EnginePins::EnginePins() :
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 		enginePins.injectors[i].shortName = injectorShortNames[i];
+
+		enginePins.injectorsStage2[i].injectorIndex = i;
+//		enginePins.injectorsStage2[i].setName(injectorStage2Names[i]);
+		enginePins.injectorsStage2[i].shortName = injectorStage2ShortNames[i];
 	}
 
 	static_assert(efi::size(auxValveShortNames) >= AUX_DIGITAL_VALVE_COUNT, "Too many aux valve pins");
@@ -207,6 +217,7 @@ bool EnginePins::stopPins() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		result |= coils[i].stop();
 		result |= injectors[i].stop();
+		result |= injectorsStage2[i].stop();
 		result |= trailingCoils[i].stop();
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
@@ -275,6 +286,7 @@ void EnginePins::stopIgnitionPins() {
 void EnginePins::stopInjectionPins() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.injectors[i], injectionPins[i], injectionPinMode);
+//		unregisterOutputIfPinOrModeChanged(enginePins.injectorsStage2[i], injectionPinsStage2[i], injectionPinMode);
 	}
 }
 
@@ -323,6 +335,12 @@ void EnginePins::startInjectionPins() {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		if (isPinOrModeChanged(injectionPins[i], injectionPinMode)) {
 			output->initPin(output->name, engineConfiguration->injectionPins[i],
+					engineConfiguration->injectionPinMode);
+		}
+
+		output = &enginePins.injectorsStage2[i];
+		if (isPinOrModeChanged(injectionPinsStage2[i], injectionPinMode)) {
+			output->initPin(output->getName(), engineConfiguration->injectionPinsStage2[i],
 					engineConfiguration->injectionPinMode);
 		}
 	}
