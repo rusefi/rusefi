@@ -731,6 +731,12 @@ float getOutputValueByName(const char *name) {
 // wheelSlipRatio
 		case 398495089:
 			return engine->outputChannels.wheelSlipRatio;
+// actualLastInjectionStage2
+		case -1434098660:
+			return engine->outputChannels.actualLastInjectionStage2;
+// injectorDutyCycleStage2
+		case -1337459841:
+			return engine->outputChannels.injectorDutyCycleStage2;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

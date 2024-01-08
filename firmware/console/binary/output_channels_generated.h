@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 07 19:53:43 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 08 03:05:37 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1253,11 +1253,29 @@ struct output_channels_s {
 	 */
 	uint8_t injectorDiagnostic[MAX_CYLINDER_COUNT];
 	/**
+	 * @@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@
+	 * units: ms
 	 * offset 704
 	 */
-	uint8_t unusedAtTheEnd[92];
+	scaled_channel<uint16_t, 300, 1> actualLastInjectionStage2 = (uint16_t)0;
+	/**
+	 * @@GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2@@
+	 * units: %
+	 * offset 706
+	 */
+	scaled_channel<uint8_t, 2, 1> injectorDutyCycleStage2 = (uint8_t)0;
+	/**
+	 * offset 707
+	 */
+	uint8_t unusedAtTheEnd[88];
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 795
+	 */
+	uint8_t alignmentFill_at_795[1];
 };
 static_assert(sizeof(output_channels_s) == 796);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 07 19:53:43 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 08 03:05:37 UTC 2024
