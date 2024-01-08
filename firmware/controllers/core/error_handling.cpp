@@ -177,14 +177,19 @@ bool warning(ObdCode code, const char *fmt, ...) {
 		return true;
 	}
 
+	// print Pxxxx (for standard OBD) or Cxxxx (for custom) prefix
+	size_t size = snprintf(warningBuffer, sizeof(warningBuffer), "%s%04d: ",
+		code < ObdCode::CUSTOM_NAN_ENGINE_LOAD ? "P" : "C", (int) code);
+
 	va_list ap;
 	va_start(ap, fmt);
-	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
+	chvsnprintf(warningBuffer + size, sizeof(warningBuffer) - size, fmt, ap);
 	va_end(ap);
 
 	if (engineConfiguration->showHumanReadableWarning) {
 #if EFI_TUNER_STUDIO
-  memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
+	// TODO: does this work? Fix or remove
+	memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
 #endif /* EFI_TUNER_STUDIO */
 	}
 
