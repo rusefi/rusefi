@@ -62,3 +62,7 @@ public:
 
 	using interface_t = IInjectorModel; // Mock interface
 };
+
+// TODO: differentiate primary vs. secondary injector configuration
+struct InjectorModelPrimary : public InjectorModel { };
+struct InjectorModelSecondary : public InjectorModel { };
