@@ -4732,6 +4732,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Chip configuration"
 		field = "Maximum dwell (IGN pins mode only)",		mc33810maxDwellTimer
 		field = "Disable auto recovery from OV/UV",			mc33810DisableRecoveryMode
+		field = "Disable ING mode if you have no IGBT/MOSFETs on board and no feedback routed to IC"
 		field = "GD0 output disable IGN mode",				mc33810Gpgd0Mode
 		field = "GD1 output disable IGN mode",				mc33810Gpgd1Mode
 		field = "GD2 output disable IGN mode",				mc33810Gpgd2Mode
