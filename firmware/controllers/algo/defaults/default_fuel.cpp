@@ -272,6 +272,9 @@ void setDefaultFuel() {
 	setDefaultVETable();
 	setDefaultLambdaTable();
 
+	setLinearCurve(config->injectorStagingLoadBins, 0, 100, 10);
+	setRpmTableBin(config->injectorStagingRpmBins);
+
 	setRpmTableBin(config->mapEstimateRpmBins);
 	setLinearCurve(config->mapEstimateTpsBins, 0, 100);
 	setTable(config->mapEstimateTable, 60);
