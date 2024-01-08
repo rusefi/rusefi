@@ -583,6 +583,30 @@ static void updateFlags() {
 #endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
 }
 
+static void updateWarningCodes() {
+	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
+
+	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
+	tsOutputChannels->lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
+
+	size_t i = 0;
+	for (size_t j = 0; j < engine->engineState.warnings.recentWarnings.getCount(); j++) {
+		warning_t& warn = engine->engineState.warnings.recentWarnings.get(j);
+		// if still active
+		if ((warn.Code != ObdCode::None) &&
+			(!warn.LastTriggered.hasElapsedSec(maxI(3, engineConfiguration->warningPeriod)))) {
+			tsOutputChannels->recentErrorCode[i] = static_cast<uint16_t>(warn.Code);
+			i++;
+			if (i >= efi::size(tsOutputChannels->recentErrorCode))
+				break;
+		}
+	}
+	// reset rest
+	for ( ; i < efi::size(tsOutputChannels->recentErrorCode); i++) {
+		tsOutputChannels->recentErrorCode[i] = 0;
+	}
+}
+
 // sensor state for EFI Analytics Tuner Studio
 // todo: the 'let's copy internal state for external consumers' approach is DEPRECATED
 // As of 2022 it's preferred to leverage LiveData where all state is exposed
@@ -671,11 +695,7 @@ void updateTunerStudioState() {
 		tsOutputChannels->egt[i] = getMax31855EgtValue(i);
 #endif /* EFI_MAX_31855 */
 
-	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
-	tsOutputChannels->lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
-	for (size_t i = 0; i < efi::size(tsOutputChannels->recentErrorCode); i++) {
-		tsOutputChannels->recentErrorCode[i] = static_cast<uint16_t>(engine->engineState.warnings.recentWarnings.get(i).Code);
-	}
+	updateWarningCodes();
 
 	tsOutputChannels->starterState = enginePins.starterControl.getLogicValue();
 	tsOutputChannels->starterRelayDisable = enginePins.starterRelayDisable.getLogicValue();
