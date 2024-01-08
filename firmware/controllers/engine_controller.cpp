@@ -519,6 +519,9 @@ bool validateConfig() {
 		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
 
 		ensureArrayIsAscendingOrDefault("TPS TPS RPM correction", engineConfiguration->tpsTspCorrValuesBins);
+
+		ensureArrayIsAscendingOrDefault("Staging Load", config->injectorStagingLoadBins);
+		ensureArrayIsAscendingOrDefault("Staging RPM", config->injectorStagingRpmBins);
 	}
 
 	// Ignition
