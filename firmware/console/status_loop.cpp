@@ -692,6 +692,7 @@ void updateTunerStudioState() {
 
 #if EFI_MAX_31855
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
+	// todo: migrate to SensorType framework!
 		tsOutputChannels->egt[i] = getMax31855EgtValue(i);
 #endif /* EFI_MAX_31855 */
 
