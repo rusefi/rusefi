@@ -2158,7 +2158,9 @@ end_struct
 ! 0x53 queryCommand
 #define TS_HELLO_COMMAND 'S'
 ! todo: replace all usages of TS_HELLO_COMMAND with TS_QUERY_COMMAND
-! TS auto-detect depends on well-known queryCommand value 'Q'
+! todo#2: actually is above still the case?
+! TS auto-detect depends on well-known queryCommand value 'Q' which is not yet mentioned in https://www.tunerstudio.com/index.php/support/manuals/tsdevmanuals/137-ecu-definition-specification-aka-the-ini-document
+! that Q command is not mentioned in the .ini neither since it could happen during ECU auto-detection phase before any .ini is available
 #define TS_QUERY_COMMAND 'Q'
 ! 0x6B 107
 #define TS_CRC_CHECK_COMMAND 'k'
