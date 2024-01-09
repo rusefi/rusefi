@@ -44,8 +44,6 @@ public enum SensorType {
 	MapFast,
 	MapSlow,
 	InputShaftSpeed,
-	EGT1,
-	EGT2,
 	Maf2,
 	Map2,
 	MapSlow2,

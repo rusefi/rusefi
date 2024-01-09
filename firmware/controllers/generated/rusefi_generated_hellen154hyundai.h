@@ -1473,7 +1473,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.01.08.hellen154hyundai.3821748597"
+#define TS_SIGNATURE "rusEFI master.2024.01.09.hellen154hyundai.3821748597"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
