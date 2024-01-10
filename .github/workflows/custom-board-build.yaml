@@ -18,6 +18,10 @@ on:
         required: false
         type: string
         default: ext/rusefi
+      relative_board_dir:
+        required: false
+        type: string
+        default: ../..
 
 jobs:
   create-board:
@@ -41,12 +45,13 @@ jobs:
         run: |
           echo "shortBoardName=${{inputs.shortBoardName}}"
           echo "rusefi_dir=${{inputs.rusefi_dir}}"
+          echo "relative_board_dir=${{inputs.relative_board_dir}}"
 
       - name: Set Env Variables
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
-          echo "META_OUTPUT_ROOT_FOLDER=../../../generated/" >> $GITHUB_ENV
+          echo "META_OUTPUT_ROOT_FOLDER=../${{inputs.relative_board_dir}}/generated/" >> $GITHUB_ENV
           echo "gha_shortBoardName=${{inputs.shortBoardName}}" >> $GITHUB_ENV
           echo "gha_iniFileName=rusefi_${{inputs.shortBoardName}}.ini" >> $GITHUB_ENV
 
@@ -80,20 +85,20 @@ jobs:
 
       - name: Install Tools
         run: |
-          sudo bash ext/rusefi/misc/actions/add-ubuntu-latest-apt-mirrors.sh
+          sudo bash ${{inputs.rusefi_dir}}/misc/actions/add-ubuntu-latest-apt-mirrors.sh
           sudo apt-get install sshpass sshpass mtools
 
       - name: Gen Config
         working-directory: ${{inputs.rusefi_dir}}/firmware
         run: |
-          bash gen_config_board.sh ../../.. ${{env.gha_shortBoardName}}
+          bash gen_config_board.sh ../${{inputs.relative_board_dir}} ${{env.gha_shortBoardName}}
 
       - name: Repo Status
         run: |
           git status
 
-      - name: ext/rusefi Status
-        working-directory: ext/rusefi
+      - name: rusefi_dir Status
+        working-directory: ${{inputs.rusefi_dir}}
         run: |
           if [ -d .git ]; then
             git status
@@ -136,32 +141,32 @@ jobs:
 
       - name: Upload .ini files to server
         working-directory: generated/tunerstudio/generated
-        run: ../../../ext/rusefi/firmware/tunerstudio/upload_ini.sh ${{env.gha_iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{env.gha_iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
       - name: Build Firmware
-        working-directory: ext/rusefi
-        run: bash misc/jenkins/compile_other_versions/compile.sh ../../.. ${{env.gha_shortBoardName}}
+        working-directory: ${{inputs.rusefi_dir}}
+        run: bash misc/jenkins/compile_other_versions/compile.sh ../${{inputs.relative_board_dir}} ${{env.gha_shortBoardName}}
 
       - name: Upload build bin artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.bin
-          path: ext/rusefi/firmware/deliver/rusefi*.bin
+          path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.bin
 
       - name: Upload build hex artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.hex
-          path: ext/rusefi/firmware/deliver/rusefi*.hex
+          path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.hex
 
       - name: Upload build map artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.map
-          path: ext/rusefi/firmware/deliver/rusefi*.map
+          path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.map
 
       - name: Build console
-        working-directory: ext/rusefi/
+        working-directory: ${{inputs.rusefi_dir}}
         run: bash misc/jenkins/build_java_console.sh
 
       - name: Set SSH variables
@@ -178,11 +183,11 @@ jobs:
           fi
 
       - name: Package and Upload Bundle
-        working-directory: ext/rusefi/
-        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{env.gha_shortBoardName}} "../../generated/tunerstudio/generated/${{env.gha_iniFileName}}" master
+        working-directory: ${{inputs.rusefi_dir}}
+        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{env.gha_shortBoardName}} "${{inputs.relative_board_dir}}/generated/tunerstudio/generated/${{env.gha_iniFileName}}" master
 
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi_bundle_${{env.gha_shortBoardName}}.zip
-          path: ext/rusefi/artifacts/rusefi_bundle*.zip
+          path: ${{inputs.rusefi_dir}}/artifacts/rusefi_bundle*.zip
