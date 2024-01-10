@@ -10,7 +10,6 @@ DDEFS += -DTRIGGER_SCOPE
 export USE_OPENBLT=yes
 
 # Add them all together
-DDEFS += -DFIRMWARE_ID=\"AlphaX-2chan\"
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 
 # pretty temporary

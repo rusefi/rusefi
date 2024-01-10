@@ -19,6 +19,7 @@
 
 #include "efifeatures.h"
 #include "rusefi_types.h"
+#include "efi_quote.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -28,6 +29,11 @@
 #include "auto_generated_enginetypes.h"
 #include "efilib.h"
 #include "efitime.h"
+
+// FIRMWARE_ID is only used to display custom nicer board names to the user in console window and error message
+#ifndef FIRMWARE_ID
+#define FIRMWARE_ID QUOTE(SHORT_BOARD_NAME)
+#endif
 
 #ifdef __cplusplus
 #include "datalogging.h"
