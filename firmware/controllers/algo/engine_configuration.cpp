@@ -48,6 +48,7 @@
 
 #include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
+#include "f136.h"
 
 #include "honda_k_dbc.h"
 #include "honda_600.h"
@@ -891,6 +892,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	    setHellen121Vag_8_cyl();
         break;
 #endif
+
+	case engine_type_e::FERRARI_F136:
+	      setF136();
+        break;
 
 #if HW_HELLEN
 	case engine_type_e::TOYOTA_1NZ_FE:

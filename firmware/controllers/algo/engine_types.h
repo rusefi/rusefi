@@ -50,21 +50,19 @@ enum class engine_type_e : uint16_t {
 	FORD_COYOTE = 11,
 	MITSUBISHI_3A92 = 12,
 	TOYOTA_1NZ_FE = 13,
-	MRE_MIATA_NA6_MAP = 66,
+
+	FORD_ESCORT_GT = 14,
 	FUEL_BENCH = 15,
+	MITSUBISHI_4G93 = 16,
+	PROTEUS_M111 = 17,
+
+	TEST_33816 = 18,
 
 	TEST_ROTARY = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
 	MRE_MIATA_94_MAP = 20,
 	MIATA_1996 = 21,
-
-	FORD_ESCORT_GT = 14,
-
-	MITSUBISHI_4G93 = 16,
-
-	TEST_33816 = 18,
-
 
 	SUBARU_2003_WRX = 22,
 
@@ -136,30 +134,20 @@ enum class engine_type_e : uint16_t {
 
 	TEST_ISSUE_366_BOTH = 52,
 	TEST_ISSUE_366_RISE = 53,
-
 	MAVERICK_X3 = 54,
-
 	MAZDA_MIATA_2003_BOARD_TEST = 55,
-
 	FRANKENSO_MAZDA_MIATA_NA8 = 56,
-
 	HELLEN_HONDA_BCM = 57,
-
 	ETB_BENCH_ENGINE = 58,
-
 	FRANKENSO_TEST_33810 = 59,
 
 	L9779_BENCH_ENGINE = 60,
-
 	EEPROM_BENCH_ENGINE = 61,
-
 	MRE_VW_B6 = 62,
-
 	PROTEUS_BMW_M73 = 63,
-
 	DODGE_RAM = 64,
 	CITROEN_TU3JP = 65,
-
+	MRE_MIATA_NA6_MAP = 66,
 	PROTEUS_MIATA_NB2 = 67,
 	MRE_M111 = 68,
 
@@ -212,7 +200,6 @@ enum class engine_type_e : uint16_t {
     WASTEGATE_PROTEUS_TEST = 96,
     ALPHAX_8CHAN_SBC = 97,
     PROTEUS_SBC = 98,
-	PROTEUS_M111 = 17,
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -228,6 +215,7 @@ enum class engine_type_e : uint16_t {
 
     // both Proteus and 4chan/8chan
 	HYUNDAI_PB = 104,
+  FERRARI_F136 = 105,
 };
 
 /**

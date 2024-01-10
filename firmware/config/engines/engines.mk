@@ -4,6 +4,7 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/custom_engine.cpp \
 	$(PROJECT_DIR)/config/engines/bmw_m73.cpp \
 	$(PROJECT_DIR)/config/engines/bmw_m73_mre.cpp \
+	$(PROJECT_DIR)/config/engines/f136.cpp \
 	$(PROJECT_DIR)/config/engines/bmw_n73.cpp \
 	$(PROJECT_DIR)/config/engines/mazda/mazda_miata.cpp \
 	$(PROJECT_DIR)/config/engines/mazda/mazda_miata_base_maps.cpp \
@@ -40,5 +41,4 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/toyota_jzs147.cpp \
 	$(PROJECT_DIR)/config/engines/toyota_1NZ_FE.cpp \
 	$(PROJECT_DIR)/config/engines/ford_festiva.cpp \
-	
-	
+
