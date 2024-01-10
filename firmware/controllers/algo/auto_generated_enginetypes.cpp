@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Jan 03 21:42:05 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Jan 10 04:55:27 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -201,6 +201,8 @@ case engine_type_e::EEPROM_BENCH_ENGINE:
   return "EEPROM_BENCH_ENGINE";
 case engine_type_e::ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
+case engine_type_e::FERRARI_F136:
+  return "FERRARI_F136";
 case engine_type_e::FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case engine_type_e::FORD_COYOTE:
