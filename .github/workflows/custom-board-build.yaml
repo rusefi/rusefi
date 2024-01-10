@@ -40,6 +40,7 @@ jobs:
       - name: Echo
         run: |
           echo "shortBoardName=${{inputs.shortBoardName}}"
+          echo "rusefi_dir=${{inputs.rusefi_dir}}"
 
       - name: Set Env Variables
         env:
