@@ -13,12 +13,9 @@
 #include "signature.h"
 
 // We take these precautions to avoid redefinition of signature in generated .h files
+// todo: do not code generate SIGNATURE_HASH and TS_SIGNATURE so that we do not have to hack here
 #undef SIGNATURE_HASH
 #undef TS_SIGNATURE
-
-#ifndef SHORT_BOARD_NAME
-#define SHORT_BOARD_NAME all
-#endif /* SHORT_BOARD_NAME */
 
 #pragma message ("SHORT_BOARD_NAME: " QUOTE(SHORT_BOARD_NAME))
 
