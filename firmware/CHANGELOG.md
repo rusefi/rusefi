@@ -34,6 +34,7 @@ Release template (copy/paste this for new release):
 ### Added
  - Allow brief operation over 100% injector duty cycle and add configurable duty cycle limits #4798
  - Staged injection support #5247
+ - Ford Voodoo 1-5-4-8-3-7-2-6 firing order
 
 ### Removed
  - Narrow to Wideband approximation
