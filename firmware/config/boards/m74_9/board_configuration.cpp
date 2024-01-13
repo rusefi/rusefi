@@ -81,10 +81,24 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi1sckPin = Gpio::E13;
 	engineConfiguration->spi1SckMode = PO_DEFAULT;
 
-// todo	engineConfiguration->triggerInputPins[0] =
-//todo setTPS1Inputs(, );
+// todo	engineConfiguration->triggerInputPins[0] = ;
+// todo	engineConfiguration->camInputs[0] = ;
 
-//todo setPPSInputs(, );
+// todo	engineConfiguration->clt.adcChannel = EFI_ADC_;
+// todo	engineConfiguration->iat.adcChannel = EFI_ADC_;
+// todo	engineConfiguration->map.sensor.hwChannel = EFI_ADC_;
+
+	// ?k high side/?k low side = ? ratio divider todo is the value below right?
+  engineConfiguration->analogInputDividerCoefficient = 2.0f;
+
+//	todo engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
+
+//	engineConfiguration->vbattAdcChannel = EFI_ADC_;
+	engineConfiguration->adcVcc = 3.3f;
+
+  setTPS1Inputs(EFI_ADC_12, EFI_ADC_13);
+
+  setPPSInputs(EFI_ADC_10, EFI_ADC_11);
 }
 
 void setBoardConfigOverrides() {

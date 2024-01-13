@@ -226,13 +226,13 @@ pins:
   - pin: BA2
     id: [C1, EFI_ADC_11]
     class: [switch_inputs, analog_inputs]
-    function: Pedal position sensor 2 signal
+    function: Pedal position sensor 2 signal PPS2
     type:
 
   - pin: BA3
     id: [C0, EFI_ADC_10]
     class: [switch_inputs, analog_inputs]
-    function: Pedal position sensor 1 signal
+    function: Pedal position sensor 1 signal PPS1
     type:
 
   - pin: BA4
