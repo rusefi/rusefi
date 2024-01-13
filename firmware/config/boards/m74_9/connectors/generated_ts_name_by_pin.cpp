@@ -8,8 +8,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case Gpio::A1: return "MAF/MAP sensor signal";
 		case Gpio::B12: return "Vehicle speed sensor input";
-		case Gpio::C0: return "Pedal position sensor 1 signal";
-		case Gpio::C1: return "Pedal position sensor 2 signal";
+		case Gpio::C0: return "Pedal position sensor 1 signal PPS1";
+		case Gpio::C1: return "Pedal position sensor 2 signal PPS2";
 		case Gpio::C2: return "ETB TPS position sensor 1 signal";
 		case Gpio::C3: return "ETB TPS position sensor 2 signal";
 		case Gpio::E1: return "Air conditioner control input";

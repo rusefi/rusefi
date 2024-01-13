@@ -38,8 +38,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum 0="NONE",13="ETB TPS position sensor 1 signal",14="ETB TPS position sensor 2 signal",2="MAF/MAP sensor signal",11="Pedal position sensor 1 signal",12="Pedal position sensor 2 signal"
-#define adc_channel_e_fullenum "NONE","INVALID","MAF/MAP sensor signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Pedal position sensor 1 signal","Pedal position sensor 2 signal","ETB TPS position sensor 1 signal","ETB TPS position sensor 2 signal"
+#define adc_channel_e_enum 0="NONE",13="ETB TPS position sensor 1 signal",14="ETB TPS position sensor 2 signal",2="MAF/MAP sensor signal",11="Pedal position sensor 1 signal PPS1",12="Pedal position sensor 2 signal PPS2"
+#define adc_channel_e_fullenum "NONE","INVALID","MAF/MAP sensor signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Pedal position sensor 1 signal PPS1","Pedal position sensor 2 signal PPS2","ETB TPS position sensor 1 signal","ETB TPS position sensor 2 signal"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define AFTERSTART_DECAY_CURVE_SIZE 8
@@ -1157,7 +1157,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3920556966
+#define SIGNATURE_HASH 1327499640
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1181,8 +1181,8 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 24
-#define switch_input_pin_e_enum 0="NONE",67="Air conditioner control input",92="Air conditioner pressure sensor (2 level)",87="CLT Coolant temperature sensor signal",36="ETB TPS position sensor 1 signal",37="ETB TPS position sensor 2 signal",88="IAT intake sensor signal",3="MAF/MAP sensor signal",85="Oxygen sensor 1 signal",34="Pedal position sensor 1 signal",35="Pedal position sensor 2 signal"
-#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","MAF/MAP sensor signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Pedal position sensor 1 signal","Pedal position sensor 2 signal","ETB TPS position sensor 1 signal","ETB TPS position sensor 2 signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Air conditioner control input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Oxygen sensor 1 signal","INVALID","CLT Coolant temperature sensor signal","IAT intake sensor signal","INVALID","INVALID","INVALID","Air conditioner pressure sensor (2 level)"
+#define switch_input_pin_e_enum 0="NONE",67="Air conditioner control input",92="Air conditioner pressure sensor (2 level)",87="CLT Coolant temperature sensor signal",36="ETB TPS position sensor 1 signal",37="ETB TPS position sensor 2 signal",88="IAT intake sensor signal",3="MAF/MAP sensor signal",85="Oxygen sensor 1 signal",34="Pedal position sensor 1 signal PPS1",35="Pedal position sensor 2 signal PPS2"
+#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","MAF/MAP sensor signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Pedal position sensor 1 signal PPS1","Pedal position sensor 2 signal PPS2","ETB TPS position sensor 1 signal","ETB TPS position sensor 2 signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Air conditioner control input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Oxygen sensor 1 signal","INVALID","CLT Coolant temperature sensor signal","IAT intake sensor signal","INVALID","INVALID","INVALID","Air conditioner pressure sensor (2 level)"
 #define TABLE_4_RPM 10
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
@@ -1475,7 +1475,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.01.13.m74_9.3920556966"
+#define TS_SIGNATURE "rusEFI master.2024.01.13.m74_9.1327499640"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
