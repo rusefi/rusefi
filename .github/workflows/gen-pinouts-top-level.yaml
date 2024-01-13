@@ -1,0 +1,73 @@
+#
+# See https://github.com/rusefi/rusefi/wiki/Connector-Mapping
+#
+
+name: Generate Interactive Pinouts
+
+on:
+# this action is invoked by other repos
+  workflow_call:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Pinouts
+        uses: chuckwagoncomputing/interactive-pinout@2.11
+        with:
+          mapping-path: connectors/*.yaml
+          warnings: "false"
+          warning-dupe: "error"
+          columns: |
+            {
+            "pin":"Pin Number",
+            "ts_name":"TS Name",
+            "type":"Type",
+            "function":"Typical Function",
+            "color":"Pigtail Color"
+            }
+          print-columns: |
+            [
+            "function"
+            ]
+          info-column: "type"
+          colors: |
+            {
+            "12v":"yellow";
+            "12V":"yellow";
+            "5v":"red",
+            "5V":"red",
+            "at":"green",
+            "av":"brown",
+            "can":"blue",
+            "din":"lime",
+            "etb":"darkcyan",
+            "gnd":"darkgreen",
+            "gp_high":"aqua",
+            "gp_low":"aquamarine",
+            "gp_pp":"cyan",
+            "hall":"darkolivegreen",
+            "hl":"gold",
+            "hs":"indigo",
+            "ign":"magenta",
+            "inj":"maroon",
+            "wbo":"cyan",
+            "ls":"lightgreen",
+            "mr":"firebrick",
+            "pgnd":"coral",
+            "sgnd":"olive",
+            "usb":"lightseagreen",
+            "vr":"sienna"
+            }
+
+      - name: Showing Output Folder
+        run: ls -l pinouts
+
+      - name: Upload Pinouts
+        env:
+          pass: ${{ secrets.RUSEFI_SSH_PASS }}
+        if: ${{ env.pass != '' }}
+        run: tar -czf - pinouts | sshpass -p "${{ secrets.RUSEFI_SSH_PASS }}" ssh -o StrictHostKeyChecking=no "${{ secrets.RUSEFI_SSH_USER }}"@"${{ secrets.RUSEFI_SSH_SERVER }}" "tar -xzf - -C docs"
