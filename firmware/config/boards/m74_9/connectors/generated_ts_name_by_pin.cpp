@@ -10,13 +10,13 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::B12: return "Vehicle speed sensor input";
 		case Gpio::C0: return "Pedal position sensor 1 signal";
 		case Gpio::C1: return "Pedal position sensor 2 signal";
-		case Gpio::C2: return "ETB position sensor 1 signal";
-		case Gpio::C3: return "ETB position sensor 2 signal";
+		case Gpio::C2: return "ETB TPS position sensor 1 signal";
+		case Gpio::C3: return "ETB TPS position sensor 2 signal";
 		case Gpio::E1: return "Air conditioner control input";
 		case Gpio::F10: return "Air conditioner pressure sensor (2 level)";
 		case Gpio::F3: return "Oxygen sensor 1 signal";
-		case Gpio::F5: return "Coolant temperature sensor signal";
-		case Gpio::F6: return "IAT sensor signal";
+		case Gpio::F5: return "CLT Coolant temperature sensor signal";
+		case Gpio::F6: return "IAT intake sensor signal";
 		case Gpio::L9779_IGN_1: return "Coil 1 (< +2.5v) / Coils 1,4";
 		case Gpio::L9779_IGN_2: return "Coil 2  (< +2.5v) (not populated)";
 		case Gpio::L9779_IGN_3: return "Coil 3  (< +2.5v) / Coils 2,4";
