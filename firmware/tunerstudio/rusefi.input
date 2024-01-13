@@ -4678,6 +4678,9 @@ dialog = tcuControls, "Transmission Settings"
 		field = "GD3 output disable IGN mode",				mc33810Gpgd3Mode
 		commandButton = "Reinitialize",						cmd_mc33810_init
 
+	indicatorPanel = acrActiveDiagPanel, 1, { 1 }
+		indicator = { acrActive }, "ACR off", "ACR on", white, black, green, black
+
 	dialog = harleyAcr, "Harley Automatic Compression Release"
 		field = "Pin",	acrPin
 		field = "Pin 2", acrPin2
@@ -4689,7 +4692,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Disable after engine phase",	acrDisablePhase
 		commandButton = "ACR #1",	cmd_test_acr_valve
 		commandButton = "ACR #2",	cmd_test_acr2_valve
-		indicator = { acrActive }, "ACR off", "ACR on", white, black, green, black
+		panel = acrActiveDiagPanel
 
 	dialog = kLineDialog, "K Line"
 		field = kLineBaudRate,                          kLineBaudRate
