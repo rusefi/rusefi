@@ -15,4 +15,3 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 
 void endSimultaneousInjection(InjectionEvent *event);
 void turnInjectionPinLow(InjectionEvent *event);
-void turnInjectionPinLowStage2(InjectionEvent* event);
