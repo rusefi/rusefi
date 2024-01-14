@@ -1,5 +1,6 @@
 
 #include "pch.h"
+#include "defaults.h"
 #include "smart_gpio.h"
 #include "drivers/gpio/l9779.h"
 
