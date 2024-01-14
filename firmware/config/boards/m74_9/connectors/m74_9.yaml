@@ -2,6 +2,8 @@ pins:
     # Connector A
   - pin: AA1
     function: Crank position sensor (pin A)
+    id: F8
+    class: event_inputs
     type: vr
 
   - pin: AA2
@@ -114,6 +116,8 @@ pins:
   - pin: AG2
     function: Camshaft position sensor signal
     type: hall
+    id: [B9, B9]
+    class: [event_inputs, switch_inputs]
 
   - pin: AG4
     id: L9779_OUT_3

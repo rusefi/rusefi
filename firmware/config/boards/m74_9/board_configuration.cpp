@@ -46,11 +46,11 @@ static void setupEtb() {
 	// PWM - pwm control (enable high, coast low)
 	// DIS - disables motor (enable low)
 
-//	// PWM pin
-//	engineConfiguration->etbIo[0].controlPin = Gpio::C7;
-//	// DIR pin
-//	engineConfiguration->etbIo[0].directionPin1 = Gpio::A8;
-//	// Disable pin
+	// PWM pin
+	engineConfiguration->etbIo[0].controlPin = Gpio::B14;
+	// DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::B15;
+//	// Disable pin todo clarify if we have it?
 //	engineConfiguration->etbIo[0].disablePin = Gpio::C8;
 
 	// we only have pwm/dir, no dira/dirb
@@ -82,11 +82,11 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi1sckPin = Gpio::E13;
 	engineConfiguration->spi1SckMode = PO_DEFAULT;
 
-// todo	engineConfiguration->triggerInputPins[0] = ;
-// todo	engineConfiguration->camInputs[0] = ;
+  engineConfiguration->triggerInputPins[0] = Gpio::F8;
+  engineConfiguration->camInputs[0] = Gpio::B9;
 
-// todo	engineConfiguration->clt.adcChannel = EFI_ADC_;
-// todo	engineConfiguration->iat.adcChannel = EFI_ADC_;
+// todo	engineConfiguration->clt.adcChannel = EFI_ADC_; // ADC3 PF5
+// todo	engineConfiguration->iat.adcChannel = EFI_ADC_; // ADC3 PF6
 // todo	engineConfiguration->map.sensor.hwChannel = EFI_ADC_;
 
 	// ?k high side/?k low side = ? ratio divider todo is the value below right?
