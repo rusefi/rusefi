@@ -63,7 +63,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	event->update();
 }
 
-void turnInjectionPinLowStage2(InjectionEvent* event) {
+static void turnInjectionPinLowStage2(InjectionEvent* event) {
 	efitick_t nowNt = getTimeNowNt();
 
 	for (size_t i = 0; i < efi::size(event->outputsStage2); i++) {
