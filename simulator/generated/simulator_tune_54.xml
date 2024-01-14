@@ -1135,10 +1135,8 @@
          100.0
          120.0
 </constant>
-        <constant cols="1" digits="0" name="unusedHere" rows="2">
-         0.0
-         0.0
-</constant>
+        <constant digits="0" name="disableFan1AtSpeed" units="">0.0</constant>
+        <constant digits="0" name="disableFan2AtSpeed" units="">0.0</constant>
         <constant name="canVssNbcType">"BMW_e46"</constant>
         <constant name="gppwm1_pin">"PE1"</constant>
         <constant digits="0" name="gppwm1_dutyIfError" units="%">100.0</constant>
@@ -4526,7 +4524,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.13.f407-discovery.1472911110" version="5.0"/>
+    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.14.f407-discovery.3501173322" version="5.0"/>
     <bibliography author="rusEFI 20240101" writeDate="date"/>
     <settings/>
     <userComments/>
