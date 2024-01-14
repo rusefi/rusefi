@@ -115,8 +115,8 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
-#define brain_input_pin_e_enum 0="NONE",30="Vehicle speed sensor input"
-#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Vehicle speed sensor input"
+#define brain_input_pin_e_enum 0="NONE",27="Camshaft position sensor signal",90="Crank position sensor (pin A)",30="Vehicle speed sensor input"
+#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Camshaft position sensor signal","INVALID","INVALID","Vehicle speed sensor input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Crank position sensor (pin A)"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_INVALID 0x80
@@ -1157,7 +1157,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3359994932
+#define SIGNATURE_HASH 1480113505
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1181,8 +1181,8 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 24
-#define switch_input_pin_e_enum 0="NONE",67="Air conditioner control input",92="Air conditioner pressure sensor (2 level)",87="CLT Coolant temperature sensor signal",36="ETB TPS position sensor 1 signal",37="ETB TPS position sensor 2 signal",88="IAT intake sensor signal",3="MAF/MAP sensor signal",85="Oxygen sensor 1 signal",34="Pedal position sensor 1 signal PPS1",35="Pedal position sensor 2 signal PPS2"
-#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","MAF/MAP sensor signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Pedal position sensor 1 signal PPS1","Pedal position sensor 2 signal PPS2","ETB TPS position sensor 1 signal","ETB TPS position sensor 2 signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Air conditioner control input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Oxygen sensor 1 signal","INVALID","CLT Coolant temperature sensor signal","IAT intake sensor signal","INVALID","INVALID","INVALID","Air conditioner pressure sensor (2 level)"
+#define switch_input_pin_e_enum 0="NONE",67="Air conditioner control input",92="Air conditioner pressure sensor (2 level)",87="CLT Coolant temperature sensor signal",27="Camshaft position sensor signal",36="ETB TPS position sensor 1 signal",37="ETB TPS position sensor 2 signal",88="IAT intake sensor signal",3="MAF/MAP sensor signal",85="Oxygen sensor 1 signal",34="Pedal position sensor 1 signal PPS1",35="Pedal position sensor 2 signal PPS2"
+#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","MAF/MAP sensor signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Camshaft position sensor signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Pedal position sensor 1 signal PPS1","Pedal position sensor 2 signal PPS2","ETB TPS position sensor 1 signal","ETB TPS position sensor 2 signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Air conditioner control input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Oxygen sensor 1 signal","INVALID","CLT Coolant temperature sensor signal","IAT intake sensor signal","INVALID","INVALID","INVALID","Air conditioner pressure sensor (2 level)"
 #define TABLE_4_RPM 10
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
@@ -1475,7 +1475,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.01.14.m74_9.3359994932"
+#define TS_SIGNATURE "rusEFI master.2024.01.14.m74_9.1480113505"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
