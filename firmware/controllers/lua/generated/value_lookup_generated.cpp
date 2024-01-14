@@ -1456,6 +1456,12 @@ float getConfigValueByName(const char *name) {
 // triggerCompSensorSatRpm
 		case -953183719:
 			return engineConfiguration->triggerCompSensorSatRpm;
+// disableFan1AtSpeed
+		case -1575487611:
+			return engineConfiguration->disableFan1AtSpeed;
+// disableFan2AtSpeed
+		case -1906717594:
+			return engineConfiguration->disableFan2AtSpeed;
 // mc33_i_boost
 		case -371707639:
 			return engineConfiguration->mc33_i_boost;
@@ -4171,6 +4177,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -953183719:
 	{
 		engineConfiguration->triggerCompSensorSatRpm = (int)value;
+		return 1;
+	}
+		case -1575487611:
+	{
+		engineConfiguration->disableFan1AtSpeed = (int)value;
+		return 1;
+	}
+		case -1906717594:
+	{
+		engineConfiguration->disableFan2AtSpeed = (int)value;
 		return 1;
 	}
 		case -371707639:

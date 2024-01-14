@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 07 23:17:24 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 14 02:35:46 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3867,7 +3867,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2690
 	 */
-	int8_t unusedHere[2];
+	int8_t disableFan1AtSpeed;
+	/**
+	 * offset 2691
+	 */
+	int8_t disableFan2AtSpeed;
 	/**
 	 * offset 2692
 	 */
@@ -5522,4 +5526,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22108);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 07 23:17:24 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 14 02:35:46 UTC 2024

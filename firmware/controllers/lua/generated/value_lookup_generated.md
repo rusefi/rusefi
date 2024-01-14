@@ -1450,6 +1450,12 @@ Trigger comparator hysteresis voltage (Max)
 ### triggerCompSensorSatRpm
 VR-sensor saturation RPM
 
+### disableFan1AtSpeed
+null
+
+### disableFan2AtSpeed
+null
+
 ### mc33_i_boost
 Boost Current
 

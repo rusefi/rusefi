@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 14 01:00:38 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 14 02:36:37 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1332,7 +1332,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.01.14.f407-discovery.2989692231";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.01.14.f407-discovery.3501173322";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2396,7 +2396,8 @@ public class Fields {
 	public static final Field TRIGGERCOMPSENSORSATRPM = Field.create("TRIGGERCOMPSENSORSATRPM", 2671, FieldType.INT8).setScale(50.0).setBaseOffset(0);
 	public static final Field TRACTIONCONTROLSLIPBINS = Field.create("TRACTIONCONTROLSLIPBINS", 2672, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field TRACTIONCONTROLSPEEDBINS = Field.create("TRACTIONCONTROLSPEEDBINS", 2684, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 2690, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field DISABLEFAN1ATSPEED = Field.create("DISABLEFAN1ATSPEED", 2690, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field DISABLEFAN2ATSPEED = Field.create("DISABLEFAN2ATSPEED", 2691, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CANVSSNBCTYPE = Field.create("CANVSSNBCTYPE", 2692, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_2694 = Field.create("ALIGNMENTFILL_AT_2694", 2694, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_PIN = Field.create("GPPWM1_PIN", 2696, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
@@ -3996,7 +3997,8 @@ public class Fields {
 	TRIGGERCOMPSENSORSATRPM,
 	TRACTIONCONTROLSLIPBINS,
 	TRACTIONCONTROLSPEEDBINS,
-	UNUSEDHERE,
+	DISABLEFAN1ATSPEED,
+	DISABLEFAN2ATSPEED,
 	CANVSSNBCTYPE,
 	ALIGNMENTFILL_AT_2694,
 	GPPWM1_PIN,
