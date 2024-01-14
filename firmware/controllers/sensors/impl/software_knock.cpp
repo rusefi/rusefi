@@ -90,7 +90,7 @@ static const ADCConversionGroup adcConvGroupCh2 = { FALSE, 1, &completionCallbac
 };
 #endif // KNOCK_HAS_CH2
 
-const ADCConversionGroup* getConversionGroup(uint8_t channelIdx) {
+static const ADCConversionGroup* getConversionGroup(uint8_t channelIdx) {
 #if KNOCK_HAS_CH2
 	if (channelIdx == 1) {
 		return &adcConvGroupCh2;
@@ -154,7 +154,7 @@ void initSoftwareKnock() {
 	}
 }
 
-void processLastKnockEvent() {
+static void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
 		return;
 	}
