@@ -31,21 +31,21 @@ pins:
     class: event_inputs
     color: green
     ts_name: ___ HALL1
-    function: HALL input 1
+    function: HALL input 1 (4.7K PU)
 
   - pin: C6
     meta: MM100_IN_D2
     class: event_inputs
     color: blue
     ts_name: ___ HALL2
-    function: HALL input 2
+    function: HALL input 2 (4.7K PU)
 
   - pin: C7
     meta: MM100_IN_D3
     class: event_inputs
     color: white
     ts_name: ___ HALL3
-    function: VSS or HALL input 3
+    function: VSS or HALL input 3 (4.7K PU)
 
   - pin: C8
     function: Power Ground / VR Shield

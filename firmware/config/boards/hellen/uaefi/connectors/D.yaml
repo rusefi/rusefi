@@ -30,7 +30,7 @@ pins:
     class: event_inputs
     ts_name: ___ FLEX
     color: orange
-    function: Flex input
+    function: Flex input (10K PU)
 
   - pin: D6
     meta: MM100_IN_PPS_ANALOG
