@@ -84,10 +84,8 @@ static float getRpmMultiplier(operation_mode_e mode) {
 	  case FOUR_STROKE_CRANK_SENSOR:
 	  case FOUR_STROKE_CAM_SENSOR:
 	  case OM_NONE:
-  		return getCrankDivider(mode) / 2.0;
 	  case TWO_STROKE:
-		  // unit test coverage still runs if the value below is changed to '2' not a great sign!
-		  return 1;
+  		return getCrankDivider(mode) / 2.0;
 	};
 	criticalError("We should not have reach this line");
 	return 1;
