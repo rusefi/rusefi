@@ -83,6 +83,7 @@ enum class engine_type_e : uint16_t {
 
 	TEST_CRANK_ENGINE = 28,
 
+  // two stroke
 	SACHS = 29,
 
 	PROTEUS_ANALOG_PWM_TEST = 30,

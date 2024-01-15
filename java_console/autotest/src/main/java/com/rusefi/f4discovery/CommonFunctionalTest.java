@@ -189,18 +189,15 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testSachs() {
+        // two stroke
         ecu.setEngineType(engine_type_e.SACHS);
-//        String msg = "BMW";
         ecu.changeRpm(1200);
-        // todo: add more content
     }
-
     @Test
     public void testCitroenBerlingo() {
         ecu.setEngineType(engine_type_e.CITROEN_TU3JP);
         ecu.changeRpm(1200);
     }
-
     @Test
     public void test2003DodgeNeon() {
         ecu.setEngineType(engine_type_e.DODGE_NEON_2003_CRANK);
