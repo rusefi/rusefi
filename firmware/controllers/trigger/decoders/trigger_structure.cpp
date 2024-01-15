@@ -708,6 +708,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_3_TOOTH_CRANK:
+	case trigger_type_e::TT_6_TOOTH_CRANK:
 		configure3ToothCrank(this);
 		break;
 
