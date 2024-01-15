@@ -45,7 +45,7 @@ static OutputPin emulatorOutputs[NUM_EMULATOR_CHANNELS][PWM_PHASE_MAX_WAVE_PER_P
 
 void TriggerEmulatorHelper::handleEmulatorCallback(int channel, const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex) {
 	efitick_t stamp = getTimeNowNt();
-	
+
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 #if EFI_SHAFT_POSITION_INPUT
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
@@ -76,19 +76,25 @@ static int atTriggerVersions[NUM_EMULATOR_CHANNELS] = { 0 };
  * todo: oh this method has only one usage? there must me another very similar method!
  */
 static float getRpmMultiplier(operation_mode_e mode) {
-	if (mode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR) {
-		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER / 2;
-	} else if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
-		return SYMMETRICAL_CRANK_SENSOR_DIVIDER / 2;
-	} else if (mode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR) {
-		return SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER / 2;
-	} else if (mode == FOUR_STROKE_CAM_SENSOR) {
-		return 0.5;
-	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {
-		// unit test coverage still runs if the value below is changed to '2' not a great sign!
-		return 1;
-	}
-
+  switch (mode) {
+    case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+  		return SYMMETRICAL_CRANK_SENSOR_DIVIDER / 2;
+  	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+	  	return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER / 2;
+    case FOUR_STROKE_SIX_TIMES_CRANK_SENSOR:
+    // todo: c'mon too much code duplication! at least reuse getCrankDivider when it works?!
+		  return SYMMETRICAL_SIX_TIMES_CRANK_SENSOR_DIVIDER / 2;
+	  case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
+		  return SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER / 2;
+	  case FOUR_STROKE_CAM_SENSOR:
+		  return 0.5;
+	  case OM_NONE:
+	  case TWO_STROKE:
+	  case FOUR_STROKE_CRANK_SENSOR:
+		  // unit test coverage still runs if the value below is changed to '2' not a great sign!
+		  return 1;
+	};
+	criticalError("We should not have reach this line");
 	return 1;
 }
 
@@ -172,7 +178,7 @@ static void startSimulatedTriggerSignal() {
 	}
 
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorRpm);
-	
+
 	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		TriggerWaveform *s = triggerEmulatorWaveforms[channel];
 		if (s->getSize() == 0)
