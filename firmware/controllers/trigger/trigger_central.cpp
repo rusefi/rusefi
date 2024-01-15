@@ -96,7 +96,7 @@ expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 /**
  * todo: why is this method NOT reciprocal to getRpmMultiplier?!
  */
-static int getCrankDivider(operation_mode_e operationMode) {
+int getCrankDivider(operation_mode_e operationMode) {
 	switch (operationMode) {
 	case FOUR_STROKE_CRANK_SENSOR:
 		return 2;
