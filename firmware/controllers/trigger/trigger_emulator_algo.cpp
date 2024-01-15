@@ -84,7 +84,7 @@ static float getRpmMultiplier(operation_mode_e mode) {
 	  case FOUR_STROKE_CRANK_SENSOR:
   		return getCrankDivider(mode) / 2;
 	  case FOUR_STROKE_CAM_SENSOR:
-		  return 0.5;
+  		return getCrankDivider(mode) / 2;
 	  case OM_NONE:
 		  return 1;
 	  case TWO_STROKE:
