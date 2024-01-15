@@ -78,23 +78,16 @@ static int atTriggerVersions[NUM_EMULATOR_CHANNELS] = { 0 };
 static float getRpmMultiplier(operation_mode_e mode) {
   switch (mode) {
     case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
-  		return getCrankDivider(mode) / 2;
   	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
-  		return getCrankDivider(mode) / 2;
     case FOUR_STROKE_SIX_TIMES_CRANK_SENSOR:
-    // todo: c'mon too much code duplication! at least reuse getCrankDivider when it works?!
-		  return SYMMETRICAL_SIX_TIMES_CRANK_SENSOR_DIVIDER / 2;
 	  case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
-		  return SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER / 2;
 	  case FOUR_STROKE_CAM_SENSOR:
-		  return 0.5;
+	  case FOUR_STROKE_CRANK_SENSOR:
+	  	return getCrankDivider(mode) / 2;
 	  case OM_NONE:
-		  return 1;
 	  case TWO_STROKE:
 		  // unit test coverage still runs if the value below is changed to '2' not a great sign!
 		  return 1;
-	  case FOUR_STROKE_CRANK_SENSOR:
-  		return getCrankDivider(mode) / 2;
 	};
 	criticalError("We should not have reach this line");
 	return 1;
