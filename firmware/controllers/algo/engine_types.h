@@ -118,10 +118,7 @@ enum class engine_type_e : uint16_t {
 
 	DODGE_NEON_2003_CRANK = 46,
 
-	/**
-	 * proper NB2 setup, 2003 red test mule car
-	 */
-	FRANKENSO_MAZDA_MIATA_2003 = 47,
+	ET_UNUSED_47 = 47,
 
     // todo: add wastegate case into HW CI
 	TEST_DC_WASTEGATE_DISCOVERY = 48,

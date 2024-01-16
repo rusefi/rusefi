@@ -2204,8 +2204,6 @@ cmd_set_engine_type_hellen_coupe_bk2					= "@@TS_IO_TEST_COMMAND_char@@@@ts_comm
 
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MIATA_NA6_MAP_16_hex@@"
-; MAZDA_MIATA_2003 = 47
-cmd_set_engine_type_Frankenso_Miata_NB2			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
 cmd_set_engine_type_FUEL_BENCH						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FUEL_BENCH_16_hex@@"
 
@@ -4468,7 +4466,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"
 		field = "!Once you send the command, please reconnect to rusEFI controller in order to read fresh values"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
-		commandButton = "Frankenso Miata NB2 MAP",	cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
 ;		commandButton = "Mitsubishi 3A92",             cmd_set_engine_type_MITSUBISHI_3A92
 ;		commandButton = "Mitsubishi 4G93",             cmd_set_engine_type_MITSUBISHI_4G93
