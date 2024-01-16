@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Mon Jan 15 18:15:39 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jan 16 15:36:25 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -185,8 +185,6 @@ case engine_type_e::BMW_M73_MRE_SLAVE:
   return "BMW_M73_MRE_SLAVE";
 case engine_type_e::CAMARO_4:
   return "CAMARO_4";
-case engine_type_e::CITROEN_TU3JP:
-  return "CITROEN_TU3JP";
 case engine_type_e::DEFAULT_FRANKENSO:
   return "DEFAULT_FRANKENSO";
 case engine_type_e::DISCOVERY_PDM:
@@ -293,8 +291,6 @@ case engine_type_e::MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case engine_type_e::ME17_9_MISC:
   return "ME17_9_MISC";
-case engine_type_e::MIATA_1996:
-  return "MIATA_1996";
 case engine_type_e::MIATA_PROTEUS_TCU:
   return "MIATA_PROTEUS_TCU";
 case engine_type_e::MINIMAL_PINS:
@@ -309,8 +305,6 @@ case engine_type_e::MRE_BODY_CONTROL:
   return "MRE_BODY_CONTROL";
 case engine_type_e::MRE_M111:
   return "MRE_M111";
-case engine_type_e::MRE_MIATA_94_MAP:
-  return "MRE_MIATA_94_MAP";
 case engine_type_e::MRE_MIATA_NA6_MAP:
   return "MRE_MIATA_NA6_MAP";
 case engine_type_e::MRE_SECONDARY_CAN:
@@ -355,8 +349,6 @@ case engine_type_e::SIMULATOR_CONFIG:
   return "SIMULATOR_CONFIG";
 case engine_type_e::SUBARUEG33_DEFAULTS:
   return "SUBARUEG33_DEFAULTS";
-case engine_type_e::SUBARU_2003_WRX:
-  return "SUBARU_2003_WRX";
 case engine_type_e::TEST_100:
   return "TEST_100";
 case engine_type_e::TEST_101:
@@ -383,6 +375,14 @@ case engine_type_e::TOYOTA_1NZ_FE:
   return "TOYOTA_1NZ_FE";
 case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
+case engine_type_e::UNUSED_20:
+  return "UNUSED_20";
+case engine_type_e::UNUSED_21:
+  return "UNUSED_21";
+case engine_type_e::UNUSED_22:
+  return "UNUSED_22";
+case engine_type_e::UNUSED_65:
+  return "UNUSED_65";
 case engine_type_e::VW_ABA:
   return "VW_ABA";
 case engine_type_e::WASTEGATE_PROTEUS_TEST:
