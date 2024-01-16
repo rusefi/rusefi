@@ -17,7 +17,6 @@
  * set engine_type 47
  */
 void setMazdaMiata2003EngineConfiguration();
-void setMazdaMiata2003EngineConfigurationBoardTest();
 
 /**
  * https://github.com/rusefi/rusefi/wiki/Mazda-Miata-2001

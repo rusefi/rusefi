@@ -534,22 +534,6 @@ void setMazdaMiata2003EngineConfiguration() {
 }
 
 /**
- * red car setting with default 1991/1995 miata harness
- * board #70 - closer to default miata NA6 harness
- *
- */
-void setMazdaMiata2003EngineConfigurationBoardTest() {
-	setMazdaMiata2003EngineConfiguration();
-
-	engineConfiguration->ignitionPins[2] = Gpio::C7;
-
-	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM. Make sure 500K pull-down on Frankenso
-	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
-
-	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4 - W47 top <>W47
-}
-
-/**
  * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
  */
 #if HW_PROTEUS
