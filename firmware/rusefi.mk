@@ -1,6 +1,7 @@
 
-ifeq ("$(wildcard $(RULESFILE))","")
-$(info $(RULESFILE) not found. Chibios: Invoking "git submodule update --init")
+CHIBIOS_FILE=$(CHIBIOS)/os/readme.txt
+ifeq ("$(wildcard $(CHIBIOS_FILE))","")
+$(info $(CHIBIOS_FILE) not found. Chibios: Invoking "git submodule update --init")
 $(shell git submodule update --init)
 $(info Invoked "git submodule update --init")
 # make is not happy about newly checked out module for some reason but next invocation would work
