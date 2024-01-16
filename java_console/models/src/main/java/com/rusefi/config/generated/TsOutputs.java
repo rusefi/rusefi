@@ -99,6 +99,7 @@ public class TsOutputs {
 	public static final String GAUGE_NAME_MAF = "MAF";
 	public static final String GAUGE_NAME_MAP = "MAP";
 	public static final String GAUGE_NAME_OIL_PRESSURE = "Oil Pressure";
+	public static final String GAUGE_NAME_OIL_TEMPERATURE = "Oil Temperature";
 	public static final String GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH = "Fuel pressure raw (high)";
 	public static final String GAUGE_NAME_RAW_FUEL_PRESSURE_LOW = "Fuel pressure raw (low)";
 	public static final String GAUGE_NAME_RPM = "RPM";
