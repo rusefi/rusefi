@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jan 16 15:36:25 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jan 16 16:54:44 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -183,8 +183,6 @@ case engine_type_e::BMW_M73_MRE:
   return "BMW_M73_MRE";
 case engine_type_e::BMW_M73_MRE_SLAVE:
   return "BMW_M73_MRE_SLAVE";
-case engine_type_e::CAMARO_4:
-  return "CAMARO_4";
 case engine_type_e::DEFAULT_FRANKENSO:
   return "DEFAULT_FRANKENSO";
 case engine_type_e::DISCOVERY_PDM:
@@ -199,6 +197,8 @@ case engine_type_e::EEPROM_BENCH_ENGINE:
   return "EEPROM_BENCH_ENGINE";
 case engine_type_e::ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
+case engine_type_e::ET_UNUSED_35:
+  return "ET_UNUSED_35";
 case engine_type_e::FERRARI_F136:
   return "FERRARI_F136";
 case engine_type_e::FORD_ASPIRE_1996:
