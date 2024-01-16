@@ -110,9 +110,12 @@ angle_t TriggerWaveform::getCycleDuration() const {
 	case FOUR_STROKE_CRANK_SENSOR:
 	case TWO_STROKE:
 		return TWO_STROKE_CYCLE_DURATION;
-	default:
+	case OM_NONE:
+  case FOUR_STROKE_CAM_SENSOR:
 		return FOUR_STROKE_CYCLE_DURATION;
 	}
+	criticalError("unreachable getCycleDuration");
+	return 0;
 }
 
 bool TriggerWaveform::needsDisambiguation() const {
@@ -120,15 +123,17 @@ bool TriggerWaveform::needsDisambiguation() const {
 		case FOUR_STROKE_CRANK_SENSOR:
 		case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
 		case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		case FOUR_STROKE_SIX_TIMES_CRANK_SENSOR:
 		case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
 			return true;
 		case FOUR_STROKE_CAM_SENSOR:
 		case TWO_STROKE:
+		case OM_NONE:
 			return false;
-		default:
-			criticalError("bad operationMode() in needsDisambiguation");
-			return true;
+	/* let's NOT handle default in order to benefit from -Werror=switch	*/
 	}
+	criticalError("unreachable needsDisambiguation");
+	return true;
 }
 
 /**
@@ -712,7 +717,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_6_TOOTH_CRANK:
-		configure3ToothCrank(this);
+		configure6ToothCrank(this);
 		break;
 
 	case trigger_type_e::TT_12_TOOTH_CRANK:

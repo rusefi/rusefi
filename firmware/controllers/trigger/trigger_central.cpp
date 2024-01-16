@@ -108,12 +108,19 @@ int getCrankDivider(operation_mode_e operationMode) {
 		return SYMMETRICAL_SIX_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
 		return SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER;
-	default:
+	case OM_NONE:
 	case FOUR_STROKE_CAM_SENSOR:
 	case TWO_STROKE:
 		// That's easy - trigger cycle matches engine cycle
 		return 1;
+	/* let's NOT handle default in order to benefit from -Werror=switch	*/
 	}
+	/**
+	 wow even while we explicitly handle all enumerations in the switch above we still need a return statement due to
+	 https://stackoverflow.com/questions/34112483/gcc-how-best-to-handle-warning-about-unreachable-end-of-function-after-switch
+	 */
+	criticalError("unreachable getCrankDivider");
+	return 1;
 }
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
