@@ -212,16 +212,6 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->vssToothCount = 4;
 }
 
-static void miataNAcommon() {
-
-	engineConfiguration->idle.solenoidPin = Gpio::B9; // this W61 <> W61 jumper, pin 3W
-
-	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
-	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[2] = Gpio::C7; // Frankenso high side - pin 1H
-	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-}
-
 /**
  * MIATA_NA6_MAP
  */
@@ -269,7 +259,12 @@ void setMiataNA6_MAP_Frankenso() {
 	// W58 PE4 A/C fan relay out
 #endif /* EFI_UNIT_TEST */
 
-	miataNAcommon();
+	engineConfiguration->idle.solenoidPin = Gpio::B9; // this W61 <> W61 jumper, pin 3W
+
+	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::C7; // Frankenso high side - pin 1H
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 }
 
 
