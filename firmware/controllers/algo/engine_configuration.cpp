@@ -75,7 +75,6 @@
 #include "sachs.h"
 #include "vw.h"
 #include "vw_b6.h"
-#include "chevrolet_camaro_4.h"
 #include "toyota_jzs147.h"
 #include "toyota_1NZ_FE.h"
 #include "mitsubishi_3A92.h"
@@ -1011,9 +1010,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::SACHS:
 		setSachs();
 		break;
-	case engine_type_e::CAMARO_4:
-		setCamaro4();
-		break;
+	case engine_type_e::ET_UNUSED_35:
 	case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
 		setToyota_2jz_vics();
 		break;

@@ -366,8 +366,6 @@ TEST(trigger, testTriggerDecoder) {
 
 	testTriggerDecoder2("test1+1", engine_type_e::DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
-	testTriggerDecoder2("CAMARO_4", engine_type_e::CAMARO_4, 40, 0.5, 0);
-
 	testTriggerDecoder2("neon NGC4", engine_type_e::DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{

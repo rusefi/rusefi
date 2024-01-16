@@ -96,7 +96,7 @@ enum class engine_type_e : uint16_t {
 
 	HELLEN_NA6 = 34,
 
-	CAMARO_4 = 35,
+	ET_UNUSED_35 = 35,
 
 	HELLEN_128_MERCEDES_4_CYL = 36,
 
