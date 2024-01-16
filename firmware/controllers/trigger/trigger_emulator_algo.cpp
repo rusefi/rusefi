@@ -87,6 +87,7 @@ static float getRpmMultiplier(operation_mode_e mode) {
   		return getCrankDivider(mode) / 2.0;
 	  case TWO_STROKE:
 		  // unit test coverage still runs if the value below is changed to '2' not a great sign!
+		  // but HW CI insists that we have '1' here
 		  return 1;
 	};
 	criticalError("We should not have reach this line");
