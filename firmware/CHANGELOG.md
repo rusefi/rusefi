@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - Allow brief operation over 100% injector duty cycle and add configurable duty cycle limits #4798
  - Staged injection support #5247
  - Ford Voodoo 1-5-4-8-3-7-2-6 firing order
+ - 6/0 CKP trigger pattern for 1995 Lamborghini Diablo #5876
 
 ### Removed
  - Narrow to Wideband approximation
