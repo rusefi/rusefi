@@ -25,7 +25,7 @@ TEST(misc, changeEngineType) {
 	// above we have asserted that triggerInputDebugPins is in fact used
 	// now let's change into engine type without triggerInputDebugPins and assert shut down
 
-	setEngineType((int)engine_type_e::CITROEN_TU3JP);
+	setEngineType((int)engine_type_e::DODGE_NEON_1995);
 	ASSERT_TRUE(activeConfiguration.triggerInputDebugPins[0] == Gpio::Unassigned);
 
 	ASSERT_TRUE(engineConfiguration->triggerInputDebugPins[0] == Gpio::Unassigned);
