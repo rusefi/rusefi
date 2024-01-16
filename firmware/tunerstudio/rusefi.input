@@ -1218,6 +1218,7 @@ gaugeCategory = "Boost Control"
 	luaOpenLoopAddGauge = luaOpenLoopAdd,"Boost: Lua open loop add", "v", -100.0,100.0, -100.0,100.0, -100.0,100.0, 1,1
 	boostControllerClosedLoopPartGauge = boostControllerClosedLoopPart,"Boost: Closed loop", "%", -50.0,50.0, -50.0,50.0, -50.0,50.0, 1,1
 	boostControlTargetGauge = boostControlTarget,"Boost: Target", "kPa", 0.0,300.0, 0.0,300.0, 0.0,300.0, 1,1
+	boostStatus_pTermGauge = boostStatus_pTerm,"Boost PID pTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	boostStatus_iTermGauge = boostStatus_iTerm,"Boost PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	boostStatus_dTermGauge = boostStatus_dTerm,"Boost PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	boostStatus_outputGauge = boostStatus_output,"Boost PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1263,6 +1264,7 @@ gaugeCategory = LUA
 	luaGauges2gauge = luaGauges2, "Lua Gauge 2", "lua", 0, 30000, 0, 0, 30000, 30000, 0, 3
 
 gaugeCategory = Alternator Control
+	alternatorStatus_pTermGauge = alternatorStatus_pTerm,"Alternator PID pTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	alternatorStatus_iTermGauge = alternatorStatus_iTerm,"Alternator PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	alternatorStatus_dTermGauge = alternatorStatus_dTerm,"Alternator PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	alternatorStatus_outputGauge = alternatorStatus_output,"Alternator PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1271,6 +1273,7 @@ gaugeCategory = Alternator Control
 
 gaugeCategory = Idle
 	idleAirValvePositionGauge = currentIdlePosition, "Idle position", "%",	0,	100,	0,	0,	100,  100,	1,	1
+	idleStatus_pTermGauge = idleStatus_pTerm,"Idle PID pTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	idleStatus_iTermGauge = idleStatus_iTerm,"Idle PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	idleStatus_dTermGauge = idleStatus_dTerm,"Idle PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 	idleStatus_outputGauge = idleStatus_output,"Idle PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1278,12 +1281,14 @@ gaugeCategory = Idle
 	idleStatus_resetCounterGauge = idleStatus_resetCounter,"Idle PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
 
 gaugeCategory = ETB PID
+	etbStatus_pTermGauge = etbStatus_pTerm,"ETB 1 PID pTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	etbStatus_iTermGauge = etbStatus_iTerm,"ETB 1 PID iTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	etbStatus_dTermGauge = etbStatus_dTerm,"ETB 1 PID dTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	etbStatus_outputGauge = etbStatus_output,"ETB 1 PID output", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	etbStatus_errorGauge = etbStatus_error,"ETB 1 PID error", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	etbStatus_resetCounterGauge = etbStatus_resetCounter,"ETB 1 PID resetCounter", "", 0,100.0, 0,100.0, 0,100.0, 0,0
 
+	wgStatus_pTermGauge = wastegateDcStatus_pTerm,"WG PID pTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	wgStatus_iTermGauge = wastegateDcStatus_iTerm,"WG PID iTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	wgStatus_dTermGauge = wastegateDcStatus_dTerm,"WG PID dTerm", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
 	wgStatus_outputGauge = wastegateDcStatus_output,"WG PID output", "", -100.0,100.0, -100.0,100.0, -100.0,100.0, 3,3
@@ -1354,6 +1359,7 @@ gaugeCategory = Sensors - Extra 1
 	baroPressureGauge	= baroPressure,			@@GAUGE_NAME_BARO_PRESSURE@@,		"kPa",		0,	1024,		0,		0,		0,	0,	0,	0
 	internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",	0,	100,	0,	0,	75,  100,	0,	0
 	OilPressGauge		= oilPressure,	@@GAUGE_NAME_OIL_PRESSURE@@,		"kPa",		0,	750,		35,	75,	550,	700,	0,	0
+	OilTempGauge		= oilTemp,	@@GAUGE_NAME_OIL_TEMPERATURE@@,		"C",		-40,	140,	-15,		1,		95,	110,	1,	1
 	AuxT1Gauge		= auxTemp1,	@@GAUGE_NAME_AUX_TEMP1@@,		"C",		-40,	140,	-15,		1,		95,	110,	1,	1
 	AuxT2Gauge		= auxTemp2,	@@GAUGE_NAME_AUX_TEMP2@@,		"C",		-40,	140,	-15,		1,		95,	110,	1,	1
 	lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0

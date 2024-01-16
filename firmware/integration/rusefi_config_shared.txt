@@ -98,6 +98,7 @@
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
 
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
+#define GAUGE_NAME_OIL_TEMPERATURE "Oil Temperature"
 
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 
