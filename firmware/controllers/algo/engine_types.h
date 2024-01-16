@@ -154,7 +154,7 @@ enum class engine_type_e : uint16_t {
 
 	HELLEN_NB2 = 69,
 
-	SUBARUEG33_DEFAULTS = 70,
+	SUBARU_EG33 = 70,
 
 	HELLEN_121_VAG_4_CYL = 71,
 	HELLEN_121_NISSAN_6_CYL = 72,

@@ -1025,7 +1025,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // HW_FRANKENSO
 #ifdef HW_SUBARU_EG33
-	case engine_type_e::SUBARUEG33_DEFAULTS:
+	case engine_type_e::SUBARU_EG33:
 		setSubaruEG33Defaults();
 		break;
 #endif //HW_SUBARU_EG33
