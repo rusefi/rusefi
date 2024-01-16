@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jan 16 17:17:56 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jan 16 23:13:12 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -199,6 +199,8 @@ case engine_type_e::ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
 case engine_type_e::ET_UNUSED_35:
   return "ET_UNUSED_35";
+case engine_type_e::ET_UNUSED_55:
+  return "ET_UNUSED_55";
 case engine_type_e::FERRARI_F136:
   return "FERRARI_F136";
 case engine_type_e::FORD_ASPIRE_1996:
@@ -287,8 +289,6 @@ case engine_type_e::L9779_BENCH_ENGINE:
   return "L9779_BENCH_ENGINE";
 case engine_type_e::MAVERICK_X3:
   return "MAVERICK_X3";
-case engine_type_e::MAZDA_MIATA_2003_BOARD_TEST:
-  return "MAZDA_MIATA_2003_BOARD_TEST";
 case engine_type_e::ME17_9_MISC:
   return "ME17_9_MISC";
 case engine_type_e::MIATA_PROTEUS_TCU:
