@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jan 16 16:54:44 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jan 16 17:17:56 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -347,8 +347,8 @@ case engine_type_e::SACHS:
   return "SACHS";
 case engine_type_e::SIMULATOR_CONFIG:
   return "SIMULATOR_CONFIG";
-case engine_type_e::SUBARUEG33_DEFAULTS:
-  return "SUBARUEG33_DEFAULTS";
+case engine_type_e::SUBARU_EG33:
+  return "SUBARU_EG33";
 case engine_type_e::TEST_100:
   return "TEST_100";
 case engine_type_e::TEST_101:

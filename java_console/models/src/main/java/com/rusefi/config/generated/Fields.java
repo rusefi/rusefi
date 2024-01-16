@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Jan 16 16:56:41 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Jan 16 17:19:50 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -397,7 +397,7 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_VW_B6 = 39;
 	public static final int engine_type_e_SACHS = 29;
 	public static final int engine_type_e_SIMULATOR_CONFIG = 92;
-	public static final int engine_type_e_SUBARUEG33_DEFAULTS = 70;
+	public static final int engine_type_e_SUBARU_EG33 = 70;
 	public static final int engine_type_e_TEST_100 = 100;
 	public static final int engine_type_e_TEST_101 = 101;
 	public static final int engine_type_e_TEST_102 = 102;
