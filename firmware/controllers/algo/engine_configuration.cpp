@@ -38,7 +38,6 @@
 #include "bmw_m73.h"
 #include "bmw_n73.h"
 
-#include "citroenBerlingoTU3JP.h"
 #include "canam.h"
 #include "custom_engine.h"
 #include "dodge_neon.h"
@@ -735,9 +734,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi();
 		break;
-	case engine_type_e::MRE_MIATA_94_MAP:
-		setMiata94_MAP_MRE();
-		break;
+	case engine_type_e::UNUSED_20:
 	case engine_type_e::MRE_MIATA_NA6_MAP:
 		setMiataNA6_MAP_MRE();
 		break;
@@ -993,15 +990,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
-	case engine_type_e::MIATA_1996:
-		setFrankensteinMiata1996();
-		break;
-	case engine_type_e::CITROEN_TU3JP:
-		setCitroenBerlingoTU3JPConfiguration();
-		break;
-	case engine_type_e::SUBARU_2003_WRX:
-		setSubaru2003Wrx();
-		break;
+	case engine_type_e::UNUSED_21:
+	case engine_type_e::UNUSED_65:
+	case engine_type_e::UNUSED_22:
 	case engine_type_e::DODGE_RAM:
 		setDodgeRam1996();
 		break;

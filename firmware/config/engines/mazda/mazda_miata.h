@@ -14,4 +14,3 @@
 #include "engine_configuration.h"
 
 void common079721_2351();
-void setFrankensteinMiata1996();

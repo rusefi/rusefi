@@ -7,7 +7,6 @@
 
 #include "engine_configuration.h"
 
-void setSubaru2003Wrx();
 void setSubaruEJ20GDefaults();
 void setSubaruEJ18_MRE();
 void setSubaruEG33Defaults();

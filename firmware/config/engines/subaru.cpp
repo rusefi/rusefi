@@ -15,22 +15,6 @@
 #include "defaults.h"
 #include "mre_meta.h"
 
-void setSubaru2003Wrx() {
-	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
-	engineConfiguration->trigger.customTotalToothCount = 5;
-	engineConfiguration->trigger.customSkippedToothCount = 1;
-
-	engineConfiguration->useStepperIdle = true;
-
-	// See http://rusefi.com/forum/viewtopic.php?f=4&t=1161
-	engineConfiguration->idle.stepperDirectionPin = Gpio::D1; // top stepper drive pin, white wire recommended
-	engineConfiguration->idle.stepperStepPin = Gpio::D6; // yellow wire recommended
-	engineConfiguration->stepperEnablePin = Gpio::B1; // bottom stepper driver board pin, blue wire recommended
-
-	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned; // we want to avoid PD1 conflict
-	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
-}
-
 /**
  * MRE_SUBARU_EJ18
  * set engine_type 37

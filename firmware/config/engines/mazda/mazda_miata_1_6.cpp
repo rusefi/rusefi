@@ -338,23 +338,6 @@ void setMiataNA6_MAP_MRE() {
 #endif /* BOARD_TLE8888_COUNT */
 }
 
-void setMiata94_MAP_MRE() {
-	setMiataNA6_MAP_MRE();
-
-#if (BOARD_TLE8888_COUNT > 0)
-	// "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_21;
-#endif /* BOARD_TLE8888_COUNT */
-
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->displacement = 1.8;
-	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
-	strcpy(engineConfiguration->engineCode, "94");
-
-	engineConfiguration->map.sensor.type = MT_MPX4250;
-
-}
-
 void setHellenNA94() {
 	miataNAcommonEngineSettings();
 	strcpy(engineConfiguration->engineCode, "94");

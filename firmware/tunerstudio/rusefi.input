@@ -2172,12 +2172,6 @@ cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@@@ts_comman
 cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_BODY_CONTROL_16_hex@@"
 cmd_set_engine_type_MRE_SECONDARY_CAN				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_SECONDARY_CAN_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_NA6_MAP_16_hex@@"
-
-cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_94_MAP_16_hex@@"
-
-cmd_set_engine_type_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
-
 ; cmd_set_engine_type_						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_
 cmd_set_engine_type_MITSUBISHI_3A92						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MITSUBISHI_3A92_16_hex@@"
 cmd_set_engine_type_MITSUBISHI_4G93						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MITSUBISHI_4G93_16_hex@@"
@@ -4483,7 +4477,6 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "microRusEFI M111",             cmd_set_engine_type_MRE_M111@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI GDI VAG B6 test", cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets
 ;		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
-;		commandButton = "microRusEFI Subaru EJ18",		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
 		commandButton = "Hyundai PB",		        cmd_set_engine_type_HYUNDAI_PB@@if_show_Proteus_presets

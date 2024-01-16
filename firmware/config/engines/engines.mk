@@ -11,7 +11,6 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/mazda/mazda_miata_1_6.cpp \
 	$(PROJECT_DIR)/config/engines/mazda/mazda_miata_na8.cpp \
 	$(PROJECT_DIR)/config/engines/mazda/mazda_miata_vvt.cpp \
-	$(PROJECT_DIR)/config/engines/citroenBerlingoTU3JP.cpp \
 	$(PROJECT_DIR)/config/engines/dodge_neon.cpp \
 	$(PROJECT_DIR)/config/engines/ford_1995_inline_6.cpp \
 	$(PROJECT_DIR)/config/engines/gm_ls_4.cpp \

@@ -61,10 +61,10 @@ enum class engine_type_e : uint16_t {
 	TEST_ROTARY = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
-	MRE_MIATA_94_MAP = 20,
-	MIATA_1996 = 21,
+	UNUSED_20 = 20,
+	UNUSED_21 = 21,
 
-	SUBARU_2003_WRX = 22,
+	UNUSED_22 = 22,
 
 	/**
 	 * microRusEFI used as Body Control Module BCM BCU
@@ -147,7 +147,7 @@ enum class engine_type_e : uint16_t {
 	MRE_VW_B6 = 62,
 	PROTEUS_BMW_M73 = 63,
 	DODGE_RAM = 64,
-	CITROEN_TU3JP = 65,
+	UNUSED_65 = 65,
 	MRE_MIATA_NA6_MAP = 66,
 	PROTEUS_MIATA_NB2 = 67,
 	MRE_M111 = 68,
