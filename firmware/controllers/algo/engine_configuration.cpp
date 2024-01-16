@@ -968,9 +968,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setEepromTestConfiguration();
 #endif
 		break;
-	case engine_type_e::FRANKENSO_MAZDA_MIATA_NA8:
-		setFrankensoMazdaMiataNA8Configuration();
-		break;
+	case engine_type_e::ET_UNUSED_56:
 	case engine_type_e::MITSUBISHI_3A92:
 	    setMitsubishi3A92();
 	    break;
