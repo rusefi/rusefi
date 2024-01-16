@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Jan 16 23:38:10 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Jan 16 23:49:59 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -324,6 +324,7 @@ public class Fields {
 	public static final int engine_type_e_ET_UNUSED_35 = 35;
 	public static final int engine_type_e_ET_UNUSED_47 = 47;
 	public static final int engine_type_e_ET_UNUSED_55 = 55;
+	public static final int engine_type_e_ET_UNUSED_56 = 56;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
 	public static final int engine_type_e_FERRARI_F136 = 105;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
@@ -331,7 +332,6 @@ public class Fields {
 	public static final int engine_type_e_FORD_ESCORT_GT = 14;
 	public static final int engine_type_e_FORD_INLINE_6_1995 = 7;
 	public static final int engine_type_e_FRANKENSO_BMW_M73_F = 40;
-	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_NA8 = 56;
 	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_FRANKENSO_TEST_33810 = 59;
