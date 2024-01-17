@@ -107,7 +107,7 @@ TEST(InjectorModel, nonLinearFordMode) {
 
 TEST(InjectorModel, nonlinearPolynomial) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	InjectorModel dut;
+	InjectorModelPrimary dut;
 
 	engineConfiguration->applyNonlinearBelowPulse = 10;
 
@@ -138,7 +138,7 @@ TEST(InjectorModel, Deadtime) {
 		engineConfiguration->injector.battLagCorrBins[i] = i;
 	}
 
-	InjectorModel dut;
+	InjectorModelPrimary dut;
 
 	Sensor::setMockValue(SensorType::BatteryVoltage, 3);
 	EXPECT_EQ(dut.getDeadtime(), 6);
@@ -147,11 +147,11 @@ TEST(InjectorModel, Deadtime) {
 	EXPECT_EQ(dut.getDeadtime(), 14);
 }
 
-struct TesterGetFlowRate : public InjectorModel {
+struct TesterGetFlowRate : public InjectorModelPrimary {
 	MOCK_METHOD(float, getInjectorFlowRatio, (), (override));
 };
 
-struct TesterGetRailPressure : public InjectorModel {
+struct TesterGetRailPressure : public InjectorModelPrimary {
 	MOCK_METHOD(expected<float>, getFuelDifferentialPressure, (), (const, override));
 };
 
@@ -213,7 +213,7 @@ TEST(InjectorModel, VariableInjectorFlowModeNone) {
 }
 
 TEST(InjectorModel, RailPressureFixed) {
-	InjectorModel dut;
+	InjectorModelPrimary dut;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -232,7 +232,7 @@ TEST(InjectorModel, RailPressureFixed) {
 }
 
 TEST(InjectorModel, RailPressureSensedAbsolute) {
-	InjectorModel dut;
+	InjectorModelPrimary dut;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -252,7 +252,7 @@ TEST(InjectorModel, RailPressureSensedAbsolute) {
 }
 
 TEST(InjectorModel, RailPressureSensedGauge) {
-	InjectorModel dut;
+	InjectorModelPrimary dut;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -273,7 +273,7 @@ TEST(InjectorModel, RailPressureSensedGauge) {
 }
 
 TEST(InjectorModel, RailPressureSensedDifferential) {
-	InjectorModel dut;
+	InjectorModelPrimary dut;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -291,7 +291,7 @@ TEST(InjectorModel, RailPressureSensedDifferential) {
 }
 
 TEST(InjectorModel, FailedPressureSensor) {
-	InjectorModel dut;
+	InjectorModelPrimary dut;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -309,7 +309,7 @@ TEST(InjectorModel, FailedPressureSensor) {
 }
 
 TEST(InjectorModel, MissingPressureSensor) {
-	InjectorModel dut;
+	InjectorModelPrimary dut;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
