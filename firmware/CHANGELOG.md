@@ -30,8 +30,9 @@ or
 
 ## Unreleased
 
-###
- - Staged injection: a second set of fuel injectors that inject part of the fuel load when you run out of primary injector.
+### Added
+ - Staged injection: a second set of fuel injectors that inject part of the fuel load when you run out of primary injector
+ - VE/Ign/Boost blend tables can select a Y axis override for even more flexibility
 
 ## December 2023 Release
 

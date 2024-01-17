@@ -54,6 +54,7 @@ float AirmassVeModelBase::getVe(int rpm, float load, bool postState) const {
 			engine->outputChannels.veBlendOutput[i] = result.Value;
 		}
 
+		// Skip extra floating point math if we can...
 		if (result.Value == 0) {
 			continue;
 		}
