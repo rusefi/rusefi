@@ -2422,7 +2422,7 @@ struct blend_table_s {
 	// offset 160
 	gppwm_channel_e blendParameter;
 	// offset 161
-	uint8_t alignmentFill_at_161[1];
+	gppwm_channel_e yAxisOverride;
 	// offset 162
 	scaled_channel<int16_t, 10, 1> blendBins[8];
 	// %
