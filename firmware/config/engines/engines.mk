@@ -23,6 +23,7 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/mitsubishi_4G93.cpp \
 	$(PROJECT_DIR)/config/engines/honda.cpp \
 	$(PROJECT_DIR)/config/engines/honda_600.cpp \
+	$(PROJECT_DIR)/config/engines/honda_obd1.cpp \
 	$(PROJECT_DIR)/config/engines/honda_k_dbc.cpp \
 	$(PROJECT_DIR)/config/engines/hyundai.cpp \
 	$(PROJECT_DIR)/config/engines/subaru.cpp \

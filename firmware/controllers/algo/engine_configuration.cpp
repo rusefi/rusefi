@@ -52,6 +52,7 @@
 #include "honda_k_dbc.h"
 #include "honda_600.h"
 #include "honda.h"
+#include "honda_obd1.h"
 #include "hyundai.h"
 
 #include "GY6_139QMB.h"
