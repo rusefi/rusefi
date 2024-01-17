@@ -29,28 +29,43 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 	return ccPerMinute * (fuelDensity / 60.f);
 }
 
-float InjectorModel::getBaseFlowRate() const {
+float InjectorModelWithConfig::getBaseFlowRate() const {
 	if (engineConfiguration->injectorFlowAsMassFlow) {
-		return engineConfiguration->injector.flow;
+		return m_cfg->flow;
 	} else {
-		return convertToGramsPerSecond(engineConfiguration->injector.flow);
+		return convertToGramsPerSecond(m_cfg->flow);
 	}
 }
 
-float InjectorModel::getSmallPulseFlowRate() const {
+float InjectorModelPrimary::getSmallPulseFlowRate() const {
 	return engineConfiguration->fordInjectorSmallPulseSlope;
 }
 
-float InjectorModel::getSmallPulseBreakPoint() const {
+float InjectorModelPrimary::getSmallPulseBreakPoint() const {
 	// convert milligrams -> grams
 	return 0.001f * engineConfiguration->fordInjectorSmallPulseBreakPoint;
 }
 
-InjectorNonlinearMode InjectorModel::getNonlinearMode() const {
+InjectorNonlinearMode InjectorModelPrimary::getNonlinearMode() const {
 	return engineConfiguration->injectorNonlinearMode;
 }
 
-expected<float> InjectorModel::getFuelDifferentialPressure() const {
+float InjectorModelSecondary::getSmallPulseFlowRate() const {
+	// not supported on second bank
+	return 0;
+}
+
+float InjectorModelSecondary::getSmallPulseBreakPoint() const {
+	// not supported on second bank
+	return 0;
+}
+
+InjectorNonlinearMode InjectorModelSecondary::getNonlinearMode() const {
+	// nonlinear not supported on second bank
+	return InjectorNonlinearMode::INJ_None;
+}
+
+expected<float> InjectorModelWithConfig::getFuelDifferentialPressure() const {
 	auto map = Sensor::get(SensorType::Map);
 	auto baro = Sensor::get(SensorType::BarometricPressure);
 
@@ -101,7 +116,7 @@ expected<float> InjectorModel::getFuelDifferentialPressure() const {
 	}
 }
 
-float InjectorModel::getInjectorFlowRatio() {
+float InjectorModelWithConfig::getInjectorFlowRatio() {
 	// Compensation disabled, use reference flow.
 	if (engineConfiguration->injectorCompensationMode == ICM_None) {
 		return 1.0f;
@@ -138,11 +153,11 @@ float InjectorModel::getInjectorFlowRatio() {
 	return flowRatio;
 }
 
-float InjectorModel::getDeadtime() const {
+float InjectorModelWithConfig::getDeadtime() const {
 	return interpolate2d(
 		Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
-		engineConfiguration->injector.battLagCorrBins,
-		engineConfiguration->injector.battLagCorr
+		m_cfg->battLagCorrBins,
+		m_cfg->battLagCorr
 	);
 }
 
@@ -202,4 +217,20 @@ float InjectorModelBase::correctInjectionPolynomial(float baseDuration) const {
 	}
 
 	return baseDuration + adder;
+}
+
+InjectorModelWithConfig::InjectorModelWithConfig(const injector_s* const cfg)
+	: m_cfg(cfg)
+{
+}
+
+InjectorModelPrimary::InjectorModelPrimary()
+	: InjectorModelWithConfig(&engineConfiguration->injector)
+{
+}
+
+// TODO: actual separate config for second bank!
+InjectorModelSecondary::InjectorModelSecondary()
+	: InjectorModelWithConfig(&engineConfiguration->injector)
+{
 }
