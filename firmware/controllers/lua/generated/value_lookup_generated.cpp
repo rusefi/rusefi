@@ -40,6 +40,9 @@ float getConfigValueByName(const char *name) {
 // injector.flow
 		case 1542550121:
 			return engineConfiguration->injector.flow;
+// injectorSecondary.flow
+		case -289303407:
+			return engineConfiguration->injectorSecondary.flow;
 // isForcedInduction
 		case -617915487:
 			return engineConfiguration->isForcedInduction;
@@ -1817,6 +1820,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1542550121:
 	{
 		engineConfiguration->injector.flow = value;
+		return 1;
+	}
+		case -289303407:
+	{
+		engineConfiguration->injectorSecondary.flow = value;
 		return 1;
 	}
 		case -617915487:

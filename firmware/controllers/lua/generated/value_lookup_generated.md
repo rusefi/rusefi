@@ -34,6 +34,9 @@ Configures the maximum number of extra sparks to fire (does not include main spa
 ### injector.flow
 This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min
 
+### injectorSecondary.flow
+This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min
+
 ### isForcedInduction
 Does the vehicle have a turbo or supercharger?
 
