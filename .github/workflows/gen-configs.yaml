@@ -38,8 +38,8 @@ jobs:
     - name: Reset Default Config Files
       working-directory: ./firmware/
       run: |
-        git checkout -- ./controllers/generated/engine_configuration_generated_structures.h
-        git checkout -- ./controllers/generated/rusefi_generated.h
+        rm ./generated/engine_configuration_generated_structures.h
+        rm ./generated/rusefi_generated.h
         git checkout -- ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java
         ./gen_config_default.sh
 
