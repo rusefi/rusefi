@@ -72,6 +72,8 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 #else
     	return 0;
 #endif // EFI_VEHICLE_SPEED
+	case GPPWM_BaroPressure:
+		return Sensor::get(SensorType::BarometricPressure);
 	}
 
 	return unexpected;
