@@ -88,7 +88,7 @@ expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 /**
  * todo: why is this method NOT reciprocal to getRpmMultiplier?!
  */
-static int getCrankDivider(operation_mode_e operationMode) {
+int getCrankDivider(operation_mode_e operationMode) {
 	switch (operationMode) {
 	case FOUR_STROKE_CRANK_SENSOR:
 		return 2;
@@ -98,12 +98,16 @@ static int getCrankDivider(operation_mode_e operationMode) {
 		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
 		return SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER;
-	default:
+	case OM_NONE:
 	case FOUR_STROKE_CAM_SENSOR:
 	case TWO_STROKE:
 		// That's easy - trigger cycle matches engine cycle
 		return 1;
 	}
+
+	firmwareError(ObdCode::OBD_PCM_Processor_Fault, "unexpected operationMode in getCrankDivider");
+
+	return 1;
 }
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {

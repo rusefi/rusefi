@@ -66,18 +66,19 @@ static int atTriggerVersion = 0;
  * todo: oh this method has only one usage? there must me another very similar method!
  */
 static float getRpmMultiplier(operation_mode_e mode) {
-	if (mode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR) {
-		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER / 2;
-	} else if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
-		return SYMMETRICAL_CRANK_SENSOR_DIVIDER / 2;
-	} else if (mode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR) {
-		return SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER / 2;
-	} else if (mode == FOUR_STROKE_CAM_SENSOR) {
-		return 0.5;
-	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {
+	switch (mode) {
+	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+	case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
+	case FOUR_STROKE_CRANK_SENSOR:
+	case FOUR_STROKE_CAM_SENSOR:
+	case OM_NONE:
+		return getCrankDivider(mode) / 2.0;
+	case TWO_STROKE:
 		// unit test coverage still runs if the value below is changed to '2' not a great sign!
+		// but HW CI insists that we have '1' here
 		return 1;
-	}
+	};
 
 	return 1;
 }
