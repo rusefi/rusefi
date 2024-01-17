@@ -337,6 +337,8 @@ case GPPWM_AuxTemp1:
   return "GPPWM_AuxTemp1";
 case GPPWM_AuxTemp2:
   return "GPPWM_AuxTemp2";
+case GPPWM_BaroPressure:
+  return "GPPWM_BaroPressure";
 case GPPWM_Clt:
   return "GPPWM_Clt";
 case GPPWM_DetectedGear:
