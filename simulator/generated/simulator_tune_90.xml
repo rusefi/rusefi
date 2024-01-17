@@ -3805,6 +3805,7 @@ end</constant>
          6999.0
 </constant>
         <constant name="ignBlends1_blendParameter">"Zero"</constant>
+        <constant name="ignBlends1_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="ignBlends1_blendBins" rows="8">
          0.0
          14.3
@@ -3856,6 +3857,7 @@ end</constant>
          6999.0
 </constant>
         <constant name="ignBlends2_blendParameter">"Zero"</constant>
+        <constant name="ignBlends2_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="ignBlends2_blendBins" rows="8">
          0.0
          14.3
@@ -3907,6 +3909,7 @@ end</constant>
          6999.0
 </constant>
         <constant name="ignBlends3_blendParameter">"Zero"</constant>
+        <constant name="ignBlends3_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="ignBlends3_blendBins" rows="8">
          0.0
          14.3
@@ -3958,6 +3961,7 @@ end</constant>
          6999.0
 </constant>
         <constant name="ignBlends4_blendParameter">"Zero"</constant>
+        <constant name="ignBlends4_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="ignBlends4_blendBins" rows="8">
          0.0
          14.3
@@ -4009,6 +4013,7 @@ end</constant>
          6999.0
 </constant>
         <constant name="veBlends1_blendParameter">"Zero"</constant>
+        <constant name="veBlends1_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="veBlends1_blendBins" rows="8">
          0.0
          14.3
@@ -4060,6 +4065,7 @@ end</constant>
          6999.0
 </constant>
         <constant name="veBlends2_blendParameter">"Zero"</constant>
+        <constant name="veBlends2_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="veBlends2_blendBins" rows="8">
          0.0
          14.3
@@ -4111,6 +4117,7 @@ end</constant>
          6999.0
 </constant>
         <constant name="veBlends3_blendParameter">"Zero"</constant>
+        <constant name="veBlends3_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="veBlends3_blendBins" rows="8">
          0.0
          14.3
@@ -4162,6 +4169,7 @@ end</constant>
          6999.0
 </constant>
         <constant name="veBlends4_blendParameter">"Zero"</constant>
+        <constant name="veBlends4_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="veBlends4_blendBins" rows="8">
          0.0
          14.3
@@ -4241,6 +4249,7 @@ end</constant>
          0.0
 </constant>
         <constant name="boostOpenLoopBlends1_blendParameter">"Zero"</constant>
+        <constant name="boostOpenLoopBlends1_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="boostOpenLoopBlends1_blendBins" rows="8">
          0.0
          0.0
@@ -4292,6 +4301,7 @@ end</constant>
          0.0
 </constant>
         <constant name="boostOpenLoopBlends2_blendParameter">"Zero"</constant>
+        <constant name="boostOpenLoopBlends2_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="boostOpenLoopBlends2_blendBins" rows="8">
          0.0
          0.0
@@ -4343,6 +4353,7 @@ end</constant>
          0.0
 </constant>
         <constant name="boostClosedLoopBlends1_blendParameter">"Zero"</constant>
+        <constant name="boostClosedLoopBlends1_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="boostClosedLoopBlends1_blendBins" rows="8">
          0.0
          0.0
@@ -4394,6 +4405,7 @@ end</constant>
          0.0
 </constant>
         <constant name="boostClosedLoopBlends2_blendParameter">"Zero"</constant>
+        <constant name="boostClosedLoopBlends2_yAxisOverride">"Zero"</constant>
         <constant cols="1" digits="1" name="boostClosedLoopBlends2_blendBins" rows="8">
          0.0
          0.0
@@ -4545,7 +4557,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.17.f407-discovery.3431326988" version="5.0"/>
+    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.17.f407-discovery.1076535952" version="5.0"/>
     <bibliography author="rusEFI 20240101" writeDate="date"/>
     <settings/>
     <userComments/>
