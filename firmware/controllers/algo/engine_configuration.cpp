@@ -734,9 +734,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setEngineBMW_M73_microRusEfi();
 		break;
 	case engine_type_e::UNUSED_20:
-	case engine_type_e::MRE_MIATA_NA6_MAP:
-		setMiataNA6_MAP_MRE();
-		break;
+	case engine_type_e::ET_UNUSED_65:
 	case engine_type_e::MRE_BODY_CONTROL:
 		mreBCM();
 		break;
