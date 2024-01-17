@@ -148,7 +148,7 @@ enum class engine_type_e : uint16_t {
 	PROTEUS_BMW_M73 = 63,
 	DODGE_RAM = 64,
 	UNUSED_65 = 65,
-	ET_UNUSED_65 = 66,
+	HONDA_OBD1 = 66,
 	PROTEUS_MIATA_NB2 = 67,
 	MRE_M111 = 68,
 
@@ -188,7 +188,7 @@ enum class engine_type_e : uint16_t {
 
 	HONDA_K = 90,
 
-	PROTEUS_HONDA_OBD2A = 91,
+	HONDA_OBD2A = 91,
 
 	SIMULATOR_CONFIG = 92,
 

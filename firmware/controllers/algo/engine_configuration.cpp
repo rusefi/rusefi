@@ -735,13 +735,15 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setEngineBMW_M73_microRusEfi();
 		break;
 	case engine_type_e::UNUSED_20:
-	case engine_type_e::ET_UNUSED_65:
 	case engine_type_e::MRE_BODY_CONTROL:
 		mreBCM();
 		break;
 #endif // HW_MICRO_RUSEFI
+	case engine_type_e::HONDA_OBD1:
+		setHondaObd1();
+		break;
 	case engine_type_e::FUEL_BENCH:
-	    fuelBenchMode();
+	  fuelBenchMode();
 		break;
 
 #if HW_PROTEUS || HW_HELLEN_4CHAN || HW_HELLEN_8CHAN
@@ -793,7 +795,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU();
 		break;
-	case engine_type_e::PROTEUS_HONDA_OBD2A:
+	case engine_type_e::HONDA_OBD2A:
 		setProteusHondaOBD2A();
 		break;
 	case engine_type_e::PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
