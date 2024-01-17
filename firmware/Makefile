@@ -16,6 +16,7 @@ include rusefi_rules.mk
 # Define project name here
 PROJECT = fome
 PROJECT_DIR = .
+GENERATED_DIR = $(PROJECT_DIR)/generated
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
@@ -274,6 +275,7 @@ INCDIR = \
   $(CHIBIOS)/os/various \
   $(RUSEFI_LIB_INC) \
   $(CONFDIR) \
+  $(GENERATED_DIR) \
   ext/FatFS \
   $(PROJECT_DIR)/hw_layer/mass_storage \
   $(HW_INC) \

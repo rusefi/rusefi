@@ -19,6 +19,7 @@ RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
 PROJECT_CPU=simulator
+GENERATED_DIR = $(PROJECT_DIR)/generated
 
 include ../firmware/rusefi.mk
 include ../firmware/rusefi_rules.mk
@@ -189,6 +190,7 @@ INCDIR = . \
   $(PROJECT_DIR)/hw_layer/drivers/can \
   ${CHIBIOS}/os/various \
   $(CHIBIOS)/os/hal/lib/streams \
+  $(GENERATED_DIR) \
   $(RUSEFI_LIB_INC) \
   simulator/system \
   simulator/can \

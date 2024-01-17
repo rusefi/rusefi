@@ -43,5 +43,3 @@ ALLINC += \
 	$(UTIL_INC) \
 	$(CONTROLLERS_SENSORS_INC) \
 	$(CONTROLLERS_INC) \
-	$(PROJECT_DIR)/console/binary/generated \
-	

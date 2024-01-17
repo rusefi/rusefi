@@ -118,6 +118,7 @@ endif
 # Define project name here
 PROJECT = fome_bl
 PROJECT_DIR = ..
+GENERATED_DIR = $(PROJECT_DIR)/generated
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
@@ -234,6 +235,7 @@ INCDIR = $(ALLINC) \
 	$(CONFDIR) \
 	$(PROJECT_DIR)/ext \
 	$(PROJECT_DIR)/ext_algo \
+	$(GENERATED_DIR) \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/console_util \
 	$(PROJECT_DIR)/console \
@@ -251,7 +253,6 @@ INCDIR = $(ALLINC) \
 	$(PROJECT_DIR)/controllers/sensors/core \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/ports \
-	$(PROJECT_DIR)/console/binary/generated \
 	$(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER) \
 	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \

@@ -5,6 +5,7 @@
 
 PROJECT_DIR = ../firmware
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
+GENERATED_DIR = $(PROJECT_DIR)/generated
 
 # Imported source files and paths
 include $(PROJECT_DIR)/console/console.mk
@@ -47,6 +48,7 @@ INCDIR += \
 	$(PCH_DIR) \
 	$(UNIT_TESTS_DIR) \
 	$(ALLINC) \
+	$(GENERATED_DIR) \
 	$(PROJECT_DIR)/config/boards/hellen \
 	$(UNIT_TESTS_DIR)/test_data_structures \
 	$(UNIT_TESTS_DIR)/chibios-mock \

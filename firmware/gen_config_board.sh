@@ -45,8 +45,8 @@ java \
  $COMMON_GEN_CONFIG_PREFIX \
  $COMMON_GEN_CONFIG \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
-  -c_defines        controllers/generated/rusefi_generated.h \
-  -c_destination    controllers/generated/engine_configuration_generated_structures.h
+  -c_defines        generated/rusefi_generated.h \
+  -c_destination    generated/engine_configuration_generated_structures.h
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARD_DIR}"; exit 1; }
 
