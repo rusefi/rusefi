@@ -68,6 +68,8 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 		return (float)engine->outputChannels.gppwmOutput[3];
 	case GPPWM_DetectedGear:
 		return Sensor::get(SensorType::DetectedGear);
+	case GPPWM_BaroPressure:
+		return Sensor::get(SensorType::BarometricPressure);
 	}
 
 	return unexpected;
