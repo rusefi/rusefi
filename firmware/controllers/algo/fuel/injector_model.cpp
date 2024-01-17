@@ -231,6 +231,6 @@ InjectorModelPrimary::InjectorModelPrimary()
 
 // TODO: actual separate config for second bank!
 InjectorModelSecondary::InjectorModelSecondary()
-	: InjectorModelWithConfig(&engineConfiguration->injector)
+	: InjectorModelWithConfig(&engineConfiguration->injectorSecondary)
 {
 }
