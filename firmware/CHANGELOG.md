@@ -36,6 +36,7 @@ Release template (copy/paste this for new release):
  - Staged injection support #5247
  - Ford Voodoo 1-5-4-8-3-7-2-6 firing order
  - 6/0 CKP trigger pattern for 1995 Lamborghini Diablo #5876
+ - VE/Ign/Boost blend tables can select a Y axis override for even more flexibility
 
 ### Removed
  - Narrow to Wideband approximation

@@ -2647,7 +2647,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", ignBlends1_blendParameter
-		panel = ignAdder1Bias
+		field = "Y axis override (set Zero for no override)", ignBlends1_yAxisOverride, {ignBlends1_blendParameter}
+		panel = ignAdder1Bias, {ignBlends1_blendParameter}
 
 	dialog = ignAdder2Cfg, "Ignition adder 2 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2657,7 +2658,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", ignBlends2_blendParameter
-		panel = ignAdder2Bias
+		field = "Y axis override (set Zero for no override)", ignBlends2_yAxisOverride, {ignBlends2_blendParameter}
+		panel = ignAdder2Bias, {ignBlends2_blendParameter}
 
 	dialog = ignAdder3Cfg, "Ignition adder 3 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2667,7 +2669,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", ignBlends3_blendParameter
-		panel = ignAdder3Bias
+		field = "Y axis override (set Zero for no override)", ignBlends3_yAxisOverride, {ignBlends3_blendParameter}
+		panel = ignAdder3Bias, {ignBlends3_blendParameter}
 
 	dialog = ignAdder4Cfg, "Ignition adder 4 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2677,7 +2680,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", ignBlends4_blendParameter
-		panel = ignAdder4Bias
+		field = "Y axis override (set Zero for no override)", ignBlends4_yAxisOverride, {ignBlends4_blendParameter}
+		panel = ignAdder4Bias, {ignBlends4_blendParameter}
 
 	dialog = veBlend1Cfg, "VE blend 1 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2688,7 +2692,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", veBlends1_blendParameter
-		panel = veBlend1Bias
+		field = "Y axis override (set Zero for no override)", veBlends1_yAxisOverride, {veBlends1_blendParameter}
+		panel = veBlend1Bias, {veBlends1_blendParameter}
 
 	dialog = veBlend2Cfg, "VE blend 2 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2699,7 +2704,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", veBlends2_blendParameter
-		panel = veBlend2Bias
+		field = "Y axis override (set Zero for no override)", veBlends2_yAxisOverride, {veBlends2_blendParameter}
+		panel = veBlend2Bias, {veBlends2_blendParameter}
 
 	dialog = veBlend3Cfg, "VE blend 3 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2710,7 +2716,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", veBlends3_blendParameter
-		panel = veBlend3Bias
+		field = "Y axis override (set Zero for no override)", veBlends3_yAxisOverride, {veBlends3_blendParameter}
+		panel = veBlend3Bias, {veBlends3_blendParameter}
 
 	dialog = veBlend4Cfg, "VE blend 4 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2721,7 +2728,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", veBlends4_blendParameter
-		panel = veBlend4Bias
+		field = "Y axis override (set Zero for no override)", veBlends4_yAxisOverride, {veBlends4_blendParameter}
+		panel = veBlend4Bias, {veBlends4_blendParameter}
 
 	indicatorPanel = isBoostControlledPanel, 1
 		indicator = {isBoostControlled}, "No Boost Control", "Boost Control Active"
@@ -2735,7 +2743,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#parameter below."
 		panel = isBoostControlledPanel
 		field = "Blend parameter", boostOpenLoopBlends1_blendParameter
-		panel = boostOpenLoopBlend1Bias
+		field = "Y axis override (set Zero for no override)", boostOpenLoopBlends1_yAxisOverride, {boostOpenLoopBlends1_blendParameter}
+		panel = boostOpenLoopBlend1Bias, {boostOpenLoopBlends1_blendParameter}
 
 	dialog = boostOpenBlend2Cfg, "Boost open loop blend 2 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2746,7 +2755,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#parameter below."
 		panel = isBoostControlledPanel
 		field = "Blend parameter", boostOpenLoopBlends2_blendParameter
-		panel = boostOpenLoopBlend2Bias
+		field = "Y axis override (set Zero for no override)", boostOpenLoopBlends2_yAxisOverride, {boostOpenLoopBlends2_blendParameter}
+		panel = boostOpenLoopBlend2Bias, {boostOpenLoopBlends2_blendParameter}
 
 	dialog = boostClosedBlend1Cfg, "Boost closed loop blend 1 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2756,7 +2766,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", boostClosedLoopBlends1_blendParameter
-		panel = boostClosedLoopBlend1Bias
+		field = "Y axis override (set Zero for no override)", boostClosedLoopBlends1_yAxisOverride, {boostClosedLoopBlends1_blendParameter}
+		panel = boostClosedLoopBlend1Bias, {boostClosedLoopBlends1_blendParameter}
 
 	dialog = boostClosedBlend2Cfg, "Boost closed loop blend 2 config"
 		field = "#The bias table controls how much of the blend table"
@@ -2766,7 +2777,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "#The X axis of the bias table is controlled by the selected blend"
 		field = "#parameter below."
 		field = "Blend parameter", boostClosedLoopBlends2_blendParameter
-		panel = boostClosedLoopBlend2Bias
+		field = "Y axis override (set Zero for no override)", boostClosedLoopBlends2_yAxisOverride, {boostClosedLoopBlends2_blendParameter}
+		panel = boostClosedLoopBlend2Bias, {boostClosedLoopBlends2_blendParameter}
 
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection

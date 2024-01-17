@@ -453,6 +453,12 @@ BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {
 		return { 0, 0, 0 };
 	}
 
+	// Override Y axis value (if necessary)
+	if (cfg.yAxisOverride != GPPWM_Zero) {
+		// TODO: is this value_or(0) correct or even reasonable?
+		load = readGppwmChannel(cfg.yAxisOverride).value_or(0);
+	}
+
 	float tableValue = interpolate3d(
 		cfg.table,
 		cfg.loadBins, load,
