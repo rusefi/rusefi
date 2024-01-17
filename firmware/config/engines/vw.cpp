@@ -52,7 +52,7 @@ void setVwAba() {
 
 	setEgoSensor(ES_PLX);
 	setFuelTablesLoadBin(20, mapRange);
-	setTimingLoadBin(20, mapRange);
+	setLinearCurve(config->ignitionLoadBins, 20, mapRange);
 
 	engineConfiguration->isSdCardEnabled = false;
 	engineConfiguration->tpsMin = 740;
