@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Jan 17 01:34:01 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Jan 17 04:18:06 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -203,8 +203,6 @@ case engine_type_e::ET_UNUSED_55:
   return "ET_UNUSED_55";
 case engine_type_e::ET_UNUSED_56:
   return "ET_UNUSED_56";
-case engine_type_e::ET_UNUSED_65:
-  return "ET_UNUSED_65";
 case engine_type_e::FERRARI_F136:
   return "FERRARI_F136";
 case engine_type_e::FORD_ASPIRE_1996:
@@ -283,6 +281,10 @@ case engine_type_e::HONDA_600:
   return "HONDA_600";
 case engine_type_e::HONDA_K:
   return "HONDA_K";
+case engine_type_e::HONDA_OBD1:
+  return "HONDA_OBD1";
+case engine_type_e::HONDA_OBD2A:
+  return "HONDA_OBD2A";
 case engine_type_e::HYUNDAI_PB:
   return "HYUNDAI_PB";
 case engine_type_e::L9779_BENCH_ENGINE:
@@ -323,8 +325,6 @@ case engine_type_e::PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
   return "PROTEUS_E65_6H_MAN_IN_THE_MIDDLE";
 case engine_type_e::PROTEUS_GM_LS_4:
   return "PROTEUS_GM_LS_4";
-case engine_type_e::PROTEUS_HONDA_OBD2A:
-  return "PROTEUS_HONDA_OBD2A";
 case engine_type_e::PROTEUS_LUA_DEMO:
   return "PROTEUS_LUA_DEMO";
 case engine_type_e::PROTEUS_M111:
