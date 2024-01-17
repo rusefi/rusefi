@@ -79,22 +79,22 @@ static const ADCConversionGroup adcConvGroupCh1 = {
 #if KNOCK_HAS_CH2
 static const ADCConversionGroup adcConvGroupCh2 = {
 	.circular = FALSE,
-   	.num_channels = 1,
-   	.end_cb = &completionCallback,
-   	.error_cb = &errorCallback,
-   	.cr1 = 0,
-   	.cr2 = ADC_CR2_SWSTART,
-   	// sample times for channels 10...18
-   	.smpr1 = smpr1,
-  	// sample times for channels 0...9
-   	.smpr2 = smpr2,
+	.num_channels = 1,
+	.end_cb = &completionCallback,
+	.error_cb = &errorCallback,
+	.cr1 = 0,
+	.cr2 = ADC_CR2_SWSTART,
+	// sample times for channels 10...18
+	.smpr1 = smpr1,
+	// sample times for channels 0...9
+	.smpr2 = smpr2,
 
-    .htr = 0,
-    .ltr = 0,
+	.htr = 0,
+	.ltr = 0,
 
-    .sqr1 = 0,
-    .sqr2 = 0,
-    .sqr3 = ADC_SQR3_SQ1_N(KNOCK_ADC_CH2)
+	.sqr1 = 0,
+	.sqr2 = 0,
+	.sqr3 = ADC_SQR3_SQ1_N(KNOCK_ADC_CH2)
 };
 #endif // KNOCK_HAS_CH2
 
