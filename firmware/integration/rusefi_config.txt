@@ -1287,7 +1287,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	uint8_t stepperMaxDutyCycle;Use to limit the max.current through the stepper motor (100% = no limit);"%", 1, 0, 0, 100, 0
 	spi_device_e sdCardSpiDevice;
 
-	angle_t[MAX_CYLINDER_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction;"deg", 1, 0, -720, 720, 1
+	angle_t[MAX_CYLINDER_COUNT iterate] timing_offset_cylinder;per-cylinder ignition and fueling timing correction for uneven engines;"deg", 1, 0, -720, 720, 1
 
 
 	float idlePidActivationTime;;"seconds", 1, 0, 0, 60, 1
