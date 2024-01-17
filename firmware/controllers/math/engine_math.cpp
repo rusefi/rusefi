@@ -430,10 +430,6 @@ void setTimingRpmBin(float from, float to) {
 	setRpmBin(config->ignitionRpmBins, IGN_RPM_COUNT, from, to);
 }
 
-void setTimingLoadBin(float from, float to) {
-	setLinearCurve(config->ignitionLoadBins, from, to);
-}
-
 /**
  * this method sets algorithm and ignition table scale
  */
