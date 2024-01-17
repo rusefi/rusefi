@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Jan 17 01:26:41 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Jan 17 01:34:01 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -203,6 +203,8 @@ case engine_type_e::ET_UNUSED_55:
   return "ET_UNUSED_55";
 case engine_type_e::ET_UNUSED_56:
   return "ET_UNUSED_56";
+case engine_type_e::ET_UNUSED_65:
+  return "ET_UNUSED_65";
 case engine_type_e::FERRARI_F136:
   return "FERRARI_F136";
 case engine_type_e::FORD_ASPIRE_1996:
@@ -305,8 +307,6 @@ case engine_type_e::MRE_BODY_CONTROL:
   return "MRE_BODY_CONTROL";
 case engine_type_e::MRE_M111:
   return "MRE_M111";
-case engine_type_e::MRE_MIATA_NA6_MAP:
-  return "MRE_MIATA_NA6_MAP";
 case engine_type_e::MRE_SECONDARY_CAN:
   return "MRE_SECONDARY_CAN";
 case engine_type_e::MRE_SUBARU_EJ18:
