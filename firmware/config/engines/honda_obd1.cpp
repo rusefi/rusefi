@@ -9,6 +9,9 @@ void setHondaObd1() {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
+  // what's average displacement for Honda OBD1? :)
+  engineConfiguration->displacement = 1.645;
+
 	// Keihin 06164-P0A-A00
 	engineConfiguration->injector.flow = 248;
 }
