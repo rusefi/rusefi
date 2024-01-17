@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Jan 15 18:06:02 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Jan 17 15:32:19 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -398,6 +398,8 @@ case GPPWM_AuxTemp1:
   return "GPPWM_AuxTemp1";
 case GPPWM_AuxTemp2:
   return "GPPWM_AuxTemp2";
+case GPPWM_BaroPressure:
+  return "GPPWM_BaroPressure";
 case GPPWM_Clt:
   return "GPPWM_Clt";
 case GPPWM_DetectedGear:
