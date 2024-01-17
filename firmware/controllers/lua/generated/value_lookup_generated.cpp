@@ -25,6 +25,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->multisparkMaxExtraSparkCount;
 		case 1542550121:
 			return engineConfiguration->injector.flow;
+		case -289303407:
+			return engineConfiguration->injectorSecondary.flow;
 		case -617915487:
 			return engineConfiguration->isForcedInduction;
 		case -1284354759:
@@ -1128,6 +1130,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 1542550121:
 	{
 		engineConfiguration->injector.flow = value;
+		return;
+	}
+		case -289303407:
+	{
+		engineConfiguration->injectorSecondary.flow = value;
 		return;
 	}
 		case -617915487:
