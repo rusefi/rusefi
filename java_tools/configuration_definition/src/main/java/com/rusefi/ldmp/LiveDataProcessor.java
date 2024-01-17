@@ -29,7 +29,7 @@ public class LiveDataProcessor {
 
     private final static String enumContentFileName = "generated/live_data_ids.h";
 
-    private final static String tsOutputsDestination = "tunerstudio/generated/temp/";
+    private final static String tsOutputsDestination = "generated/";
 
     private final StringBuilder enumContent = new StringBuilder(header +
             "#pragma once\n" +

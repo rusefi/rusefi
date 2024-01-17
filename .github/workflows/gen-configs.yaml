@@ -51,7 +51,6 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-configs Action"
         git add firmware/tunerstudio/generated
-        git add firmware/controllers/generated
         git add 'firmware/*/auto_generated*.cpp'
         git add 'firmware/*/auto_generated*.h'
         git add 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
