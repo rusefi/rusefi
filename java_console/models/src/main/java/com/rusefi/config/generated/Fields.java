@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 00:45:55 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 01:28:37 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -357,7 +357,6 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_4CHAN_STIM_QC = 74;
 	public static final int engine_type_e_HELLEN_HONDA_BCM = 57;
 	public static final int engine_type_e_HELLEN_NA6 = 34;
-	public static final int engine_type_e_HELLEN_NA8_96 = 10;
 	public static final int engine_type_e_HELLEN_NA94 = 80;
 	public static final int engine_type_e_HELLEN_NB1 = 83;
 	public static final int engine_type_e_HELLEN_NB1_36 = 94;
@@ -368,6 +367,7 @@ public class Fields {
 	public static final int engine_type_e_HYUNDAI_PB = 104;
 	public static final int engine_type_e_L9779_BENCH_ENGINE = 60;
 	public static final int engine_type_e_MAVERICK_X3 = 54;
+	public static final int engine_type_e_MAZDA_NA8_96 = 10;
 	public static final int engine_type_e_ME17_9_MISC = 33;
 	public static final int engine_type_e_MIATA_PROTEUS_TCU = 1;
 	public static final int engine_type_e_MINIMAL_PINS = 99;
