@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 14:06:33 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 14:42:03 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4649,11 +4649,9 @@ struct blend_table_s {
 	 */
 	gppwm_channel_e blendParameter;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 161
 	 */
-	uint8_t alignmentFill_at_161[1];
+	gppwm_channel_e yAxisOverride;
 	/**
 	 * offset 162
 	 */
@@ -5530,4 +5528,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22176);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 14:06:33 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 14:42:03 UTC 2024
