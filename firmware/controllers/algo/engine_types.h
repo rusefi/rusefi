@@ -46,7 +46,7 @@ enum class engine_type_e : uint16_t {
 	GY6_139QMB = 8,
 
 	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
-	HELLEN_NA8_96 = 10,
+	MAZDA_NA8_96 = 10,
 	FORD_COYOTE = 11,
 	MITSUBISHI_3A92 = 12,
 	TOYOTA_1NZ_FE = 13,

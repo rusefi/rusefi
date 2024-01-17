@@ -13,7 +13,8 @@
 #include "custom_engine.h"
 #include "mazda_miata_1_6.h"
 
-static void commonNA8() {
+void setMazdaMiata96() {
+	miataNAcommonEngineSettings();
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
 	 * 94-97 (tan) - #195500-2180
@@ -55,10 +56,6 @@ static void commonNA8() {
 	strcpy(engineConfiguration->engineCode, "NA8");
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-}
 
-void setHellenMiata96() {
-	miataNAcommonEngineSettings();
-	commonNA8();
-    engineConfiguration->map.sensor.type = MT_MPXH6400;
+  engineConfiguration->map.sensor.type = MT_MPXH6400;
 }

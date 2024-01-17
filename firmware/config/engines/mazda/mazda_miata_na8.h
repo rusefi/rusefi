@@ -9,4 +9,4 @@
 
 #include "engine_configuration.h"
 
-void setHellenMiata96();
+void setMazdaMiata96();
