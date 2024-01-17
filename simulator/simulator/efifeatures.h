@@ -7,6 +7,14 @@
 
 #pragma once
 
+#ifndef FALSE
+#define FALSE (0)
+#endif /* FALSE */
+
+#ifndef TRUE
+#define TRUE (!(FALSE))
+#endif /* TRUE */
+
 // see SIM_SD1_PORT and SIM_SD2_PORT
 #define TS_PRIMARY_UxART_PORT SD1
 #define TS_SECONDARY_UxART_PORT SD2
@@ -137,3 +145,11 @@
 
 #define EFI_LUA TRUE
 #define LUA_USER_HEAP 100000
+
+#define EFI_DYNO_VIEW TRUE
+#define EFI_SENT_SUPPORT FALSE
+#define EFI_CAN_SERIAL FALSE
+#define EFI_USE_OPENBLT FALSE
+#define EFI_SOFTWARE_KNOCK FALSE
+#define ENABLE_AUTO_DETECT_HSE FALSE
+#define EFI_ETHERNET FALSE
