@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 14:42:20 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 16:24:06 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3454,7 +3454,7 @@ struct engine_configuration_s {
 	 */
 	spi_device_e sdCardSpiDevice;
 	/**
-	 * per-cylinder timing correction
+	 * per-cylinder ignition and fueling timing correction for uneven engines
 	 * units: deg
 	 * offset 2084
 	 */
@@ -5528,4 +5528,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22176);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 14:42:20 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 17 16:24:06 UTC 2024
