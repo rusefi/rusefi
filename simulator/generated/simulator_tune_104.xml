@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22108">
+    <page number="0" size="22176">
         <constant name="engineType">"HYUNDAI_PB"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -52,6 +52,27 @@
          0.2
          0.2
          0.2
+</constant>
+        <constant digits="2" name="injectorSecondary_flow" units="cm3/min">200.0</constant>
+        <constant cols="1" digits="2" name="injectorSecondary_battLagCorrBins" rows="8">
+         6.0
+         8.0
+         10.0
+         11.0
+         12.0
+         13.0
+         14.0
+         15.0
+</constant>
+        <constant cols="1" digits="2" name="injectorSecondary_battLagCorr" rows="8">
+         3.371
+         1.974
+         1.383
+         1.194
+         1.04
+         0.914
+         0.797
+         0.726
 </constant>
         <constant name="isForcedInduction">"false"</constant>
         <constant name="useFordRedundantTps">"false"</constant>
@@ -4617,7 +4638,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.17.f407-discovery.1562927191" version="5.0"/>
+    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.17.f407-discovery.3431326988" version="5.0"/>
     <bibliography author="rusEFI 20240101" writeDate="date"/>
     <settings/>
     <userComments/>
