@@ -126,6 +126,8 @@ else
 endif
 PROJECT_DIR = ../firmware
 
+DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
+
 # Imported source files and paths
 
 # Configure libfirmware Paths/Includes
