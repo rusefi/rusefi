@@ -416,6 +416,14 @@ enable2ndByteCanID = false
 		yBins		= injector_battLagCorr
 		gauge		= VBattGauge
 
+	curve = injectorsSecondaryDeadTime, "Secondary injector dead time"
+		columnLabel = "Battery", "Dead Time"
+		xAxis		= 6, 16, 11
+		yAxis		= 0, 8, 9
+		xBins		= injectorSecondary_battLagCorrBins, VBatt
+		yBins		= injectorSecondary_battLagCorr
+		gauge		= VBattGauge
+
 	curve = vrThresholdCurve1, "VR 1 Threshold"
 		columnLabel = "RPM", "Voltage"
 		xAxis		= 0, 8000, 9
@@ -1664,7 +1672,10 @@ menuDialog = main
 		subMenu = injTest,					"Injector test", 0, {isInjectionEnabled}
 		subMenu = cylinderBankSelect,		"Cylinder bank selection", 0, {isInjectionEnabled == 1}
 		subMenu = injectorNonlinear,		"Injector small-pulse correction", 0, {isInjectionEnabled == 1}
+
 		subMenu = stagedInjection,			"Staged injection", 0, {isInjectionEnabled}
+		subMenu = stagedInjectionOutputs,	"Staged injection outputs", 0, {isInjectionEnabled && enableStagedInjection}
+		subMenu = stagedInjectionTbl,		"Staged injection % table", 0, {isInjectionEnabled && enableStagedInjection}
 
 		groupMenu = "Cylinder fuel trims"
 		groupChildMenu = fuelTrimTbl1,		"Fuel trim cyl 1"
@@ -2436,7 +2447,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = baseInjection
 		panel = injChars
 		panel = fuelParams
-		panel = injectorsDeadTime
+		panel = injectorsDeadTime, {isInjectionEnabled}
 
 	dialog = ignitionCylExtra, "Cylinder offsets"
 		field = "Offset angle for each cylinder if you have an odd fire"
@@ -2455,9 +2466,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Offset cyl 11",							timing_offset_cylinder11, {cylindersCount > 10}
 		field = "Offset cyl 12",							timing_offset_cylinder12, {cylindersCount > 11}
 
-	dialog = stagedInjectionLeft, "",	yAxis
-		field = "Enable", enableStagedInjection, {isInjectionEnabled}
-		field = ""
+	dialog = stagedInjectionOutputs, "", yAxis
 		field = "Injection Stage 2 Output 1",					injectionPinsStage21, {isInjectionEnabled && enableStagedInjection}
 		field = "Injection Stage 2 Output 2",					injectionPinsStage22, {isInjectionEnabled && enableStagedInjection && injectionMode != 3 && cylindersCount > 1}
 		field = "Injection Stage 2 Output 3",					injectionPinsStage23, {isInjectionEnabled && enableStagedInjection && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 2}
@@ -2471,9 +2480,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Injection Stage 2 Output 11 ",					injectionPinsStage211, {isInjectionEnabled && enableStagedInjection && cylindersCount > 10}
 		field = "Injection Stage 2 Output 12 ",					injectionPinsStage212, {isInjectionEnabled && enableStagedInjection && cylindersCount > 11}
 
-	dialog = stagedInjection, "", xAxis
-		panel = stagedInjectionLeft
-		panel = stagedInjectionTbl, {isInjectionEnabled && enableStagedInjection}
+	dialog = stagedInjection, "",	yAxis
+		field = "Enable", enableStagedInjection, {isInjectionEnabled}
+		field = ""
+		field = "Secondary injector flow", injectorSecondary_flow {isInjectionEnabled && enableStagedInjection}
+		field = ""
+		panel = injectorsSecondaryDeadTime, {isInjectionEnabled && enableStagedInjection}
 
 	dialog = multisparkDwellParams, "Delay & Dwell"
 		field = "Spark duration",						multisparkSparkDuration, {multisparkEnable}

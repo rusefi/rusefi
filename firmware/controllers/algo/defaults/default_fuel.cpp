@@ -4,31 +4,31 @@
 #include "table_helper.h"
 #include "mazda_miata_vvt.h"
 
-static void setBosch02880155868() {
+static void setBosch02880155868(injector_s& cfg) {
 	// http://www.boschdealer.com/specsheets/0280155868cs.jpg
-	engineConfiguration->injector.battLagCorrBins[0] = 6;
-	engineConfiguration->injector.battLagCorr[0] = 3.371;
+	cfg.battLagCorrBins[0] = 6;
+	cfg.battLagCorr[0] = 3.371;
 
-	engineConfiguration->injector.battLagCorrBins[1] = 8;
-	engineConfiguration->injector.battLagCorr[1] = 1.974;
+	cfg.battLagCorrBins[1] = 8;
+	cfg.battLagCorr[1] = 1.974;
 
-	engineConfiguration->injector.battLagCorrBins[2] = 10;
-	engineConfiguration->injector.battLagCorr[2] = 1.383;
+	cfg.battLagCorrBins[2] = 10;
+	cfg.battLagCorr[2] = 1.383;
 
-	engineConfiguration->injector.battLagCorrBins[3] = 11;
-	engineConfiguration->injector.battLagCorr[3] = 1.194;
+	cfg.battLagCorrBins[3] = 11;
+	cfg.battLagCorr[3] = 1.194;
 
-	engineConfiguration->injector.battLagCorrBins[4] = 12;
-	engineConfiguration->injector.battLagCorr[4] = 1.04;
+	cfg.battLagCorrBins[4] = 12;
+	cfg.battLagCorr[4] = 1.04;
 
-	engineConfiguration->injector.battLagCorrBins[5] = 13;
-	engineConfiguration->injector.battLagCorr[5] = 0.914;
+	cfg.battLagCorrBins[5] = 13;
+	cfg.battLagCorr[5] = 0.914;
 
-	engineConfiguration->injector.battLagCorrBins[6] = 14;
-	engineConfiguration->injector.battLagCorr[6] = 0.797;
+	cfg.battLagCorrBins[6] = 14;
+	cfg.battLagCorr[6] = 0.797;
 
-	engineConfiguration->injector.battLagCorrBins[7] = 15;
-	engineConfiguration->injector.battLagCorr[7] = 0.726;
+	cfg.battLagCorrBins[7] = 15;
+	cfg.battLagCorr[7] = 0.726;
 }
 
 static void setDefaultWarmupFuelEnrichment() {
@@ -254,13 +254,15 @@ void setDefaultFuel() {
 	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data
 	 */
 	engineConfiguration->injector.flow = 200;
+	engineConfiguration->injectorSecondary.flow = 200;
 	engineConfiguration->stoichRatioPrimary = STOICH_RATIO;
 
 	// 9.0 = E100 pure ethanol
 	engineConfiguration->stoichRatioSecondary = 9.0f;
 
 	// Injector deadtime
-	setBosch02880155868();
+	setBosch02880155868(engineConfiguration->injector);
+	setBosch02880155868(engineConfiguration->injectorSecondary);
 
 	// Tables
 	setFuelTablesLoadBin(10, 160);

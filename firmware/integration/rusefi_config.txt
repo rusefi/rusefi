@@ -92,7 +92,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 20013
+#define FLASH_DATA_VERSION 20014
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -403,6 +403,7 @@ struct injector_s
 end_struct
 
 injector_s injector
+injector_s injectorSecondary
 
 bit isForcedInduction;Does the vehicle have a turbo or supercharger?
 bit useFordRedundantTps;On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
