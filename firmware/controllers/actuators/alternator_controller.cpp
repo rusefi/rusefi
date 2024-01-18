@@ -51,8 +51,15 @@ expected<float> AlternatorController::observePlant() const {
 }
 
 expected<percent_t> AlternatorController::getOpenLoop(float /*target*/) {
+	// TODO: table lookup base open loop value
+	float alternatorOpenLoop = 0;
+
 	// see "idle air Bump for AC" comment
-	return engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acRelayAlternatorDutyAdder : 0;
+	if (engine->module<AcController>().unmock().acButtonState) {
+		alternatorOpenLoop += engineConfiguration->acRelayAlternatorDutyAdder;
+	}
+
+	return alternatorOpenLoop + acBump;
 }
 
 expected<percent_t> AlternatorController::getClosedLoop(float setpoint, float observation) {
