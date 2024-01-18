@@ -40,7 +40,7 @@ jobs:
 
     - name: Compile Linux Simulator
       working-directory: ./simulator/
-      run: ./compile.sh
+      run: SHORT_BOARD_NAME=f407-discovery ./compile.sh
 
     - name: Run Linux Simulator for 10 seconds
       working-directory: ./simulator/
