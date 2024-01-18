@@ -59,7 +59,7 @@ expected<percent_t> AlternatorController::getOpenLoop(float /*target*/) {
 		alternatorOpenLoop += engineConfiguration->acRelayAlternatorDutyAdder;
 	}
 
-	return alternatorOpenLoop + acBump;
+	return alternatorOpenLoop;
 }
 
 expected<percent_t> AlternatorController::getClosedLoop(float setpoint, float observation) {
