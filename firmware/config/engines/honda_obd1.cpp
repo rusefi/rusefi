@@ -1,5 +1,9 @@
 #include "pch.h"
 
+#if HW_HELLEN_UAEFI
+#include "hellen_meta.h"
+#endif // HW_HELLEN_UAEFI
+
 void setHondaObd1() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_HONDA);
 
@@ -18,5 +22,5 @@ void setHondaObd1() {
 #if HW_HELLEN_UAEFI
 	engineConfiguration->camInputs[0] = Gpio::MM100_UART8_RX; // "C18 VR1+ Discrete"
 	engineConfiguration->camInputs[1] = Gpio::Unassigned;
-#endif
+#endif // HW_HELLEN_UAEFI
 }
