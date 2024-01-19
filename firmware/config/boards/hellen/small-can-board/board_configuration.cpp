@@ -8,6 +8,10 @@ void setBoardConfigOverrides() {
 	setHellen64MegaEnPin();
 	setHellen64SdCardSpi();
 
+  // not stm32 CAN DFU configuration :(
+	engineConfiguration->can2RxPin = Gpio::B5;
+ 	engineConfiguration->can2TxPin = Gpio::B6;
+
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
 
