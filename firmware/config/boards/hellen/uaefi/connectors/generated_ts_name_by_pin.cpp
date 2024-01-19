@@ -28,8 +28,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E0: return "C18 VR1+ Discrete";
 		case Gpio::E1: return "C17 VR2-/HALL max9924";
 		case Gpio::E11: return "D5 FLEX";
-		case Gpio::E12: return "C5 HALL1";
-		case Gpio::E13: return "C6 HALL2";
+		case Gpio::E12: return "C5 CAM 1 / HALL1";
+		case Gpio::E13: return "C6 CAM 2 / HALL2";
 		case Gpio::E14: return "C7 HALL3";
 		case Gpio::E15: return "C9 BUTTON3";
 		case Gpio::E2: return "B13 Coil 5";
