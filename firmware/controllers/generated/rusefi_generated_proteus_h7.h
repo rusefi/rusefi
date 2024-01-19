@@ -1158,7 +1158,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets true
 #define show_test_presets false
-#define SIGNATURE_HASH 2964173080
+#define SIGNATURE_HASH 3633653539
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1473,10 +1473,10 @@
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
 #define ts_show_vbatt false
-#define ts_show_vr_threshold_2 true
-#define ts_show_vr_threshold_all true
+#define ts_show_vr_threshold_2 false
+#define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.01.19.proteus_h7.2964173080"
+#define TS_SIGNATURE "rusEFI master.2024.01.19.proteus_h7.3633653539"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
