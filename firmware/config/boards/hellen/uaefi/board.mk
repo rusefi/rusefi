@@ -21,4 +21,6 @@ SHORT_BOARD_NAME=uaefi
 
 DDEFS += -DHELLEN_BOARD_ID_DEBUG
 
+DDEFS += -DHW_HELLEN_UAEFI=1
+
 include $(BOARDS_DIR)/hellen/hellen-common100.mk

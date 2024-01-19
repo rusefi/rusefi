@@ -14,4 +14,9 @@ void setHondaObd1() {
 
 	// Keihin 06164-P0A-A00
 	engineConfiguration->injector.flow = 248;
+
+#if HW_HELLEN_UAEFI
+	engineConfiguration->camInputs[0] = Gpio::MM100_UART8_RX: // "C18 VR1+ Discrete"
+	engineConfiguration->camInputs[1] = Gpio::Unassigned;
+#endif
 }
