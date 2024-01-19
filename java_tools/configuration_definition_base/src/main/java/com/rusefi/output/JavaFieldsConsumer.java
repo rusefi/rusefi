@@ -13,7 +13,6 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     protected final Set<String> existingJavaEnums = new HashSet<>();
 
     private final StringBuilder content = new StringBuilder();
-    protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
     protected final ReaderState state;
     private final int baseOffset;
 
@@ -27,8 +26,6 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     private void writeJavaFieldName(String nameWithPrefix, int tsPosition) {
-        allFields.append("\t" + nameWithPrefix.toUpperCase() + "," + EOL);
-
         content.append("\tpublic static final Field ");
         content.append(nameWithPrefix.toUpperCase());
         content.append(" = Field.create(\"" + nameWithPrefix.toUpperCase() + "\", "

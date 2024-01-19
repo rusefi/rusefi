@@ -37,9 +37,6 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
         javaFields.write(state.getVariableRegistry().getJavaConstants());
         javaFields.write(getContent());
 
-        allFields.append("\t};" + EOL);
-        javaFields.write(allFields.toString());
-
         javaFields.write("}" + ToolUtil.EOL);
         javaFields.close();
     }
