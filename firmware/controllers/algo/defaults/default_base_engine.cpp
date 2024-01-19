@@ -66,12 +66,14 @@ void setDefaultBaseEngine() {
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
 	engineConfiguration->boardUseCanTerminator = true;
 
-    setDefaultHPFP();
+  setDefaultHPFP();
 
-    engineConfiguration->fan1ExtraIdle = 2;
-    engineConfiguration->fan2ExtraIdle = 2;
+  engineConfiguration->enableExtendedCanBroadcast = true;
 
-    engineConfiguration->acrRevolutions = 5;
+  engineConfiguration->fan1ExtraIdle = 2;
+  engineConfiguration->fan2ExtraIdle = 2;
+
+  engineConfiguration->acrRevolutions = 5;
 
     engineConfiguration->watchOutForLinearTime = true;
 

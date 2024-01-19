@@ -3943,6 +3943,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "CAN dash type",						canNbcType
 		field = "Inertia Measurement Unit",				imuType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
+		field = "Enable extended rusEFI CAN broadcast",			enableExtendedCanBroadcast
 		field = "rusEFI CAN data bus",	canBroadcastUseChannelTwo
 		field = "rusEFI CAN data base address",			verboseCanBaseAddress
 		field = "rusEFI CAN data address type",			rusefiVerbose29b
