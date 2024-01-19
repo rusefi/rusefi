@@ -56,6 +56,8 @@ void setBoardConfigOverrides() {
 	setHellenSdCardSpi1();
 	configureHellenMegaAccCS2Pin();
 
+  engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM6;
+
 	setHellenCan();
 
 	setDefaultHellenAtPullUps();
@@ -98,8 +100,6 @@ void setBoardDefaultConfiguration() {
   engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
  	engineConfiguration->fanPin = Gpio::MM100_IGN8;
 	engineConfiguration->fuelPumpPin = Gpio::MM100_OUT_PWM2;
-
-  engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM6;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
