@@ -7,7 +7,7 @@ struct trigger_state_s {
 	uint32_t crankSynchronizationCounter = (uint32_t)0;
 	// offset 4
 	float vvtSyncGapRatio = (float)0;
-	// @@GAUGE_NAME_TRG_GAP@@
+	// Trigger Sync Latest Ratio
 	// offset 8
 	float triggerSyncGapRatio = (float)0;
 	// offset 12
@@ -20,4 +20,10 @@ struct trigger_state_s {
 	uint8_t alignmentFill_at_15[1];
 };
 static_assert(sizeof(trigger_state_s) == 16);
+static_assert(offsetof(trigger_state_s, crankSynchronizationCounter) == 0);
+static_assert(offsetof(trigger_state_s, vvtSyncGapRatio) == 4);
+static_assert(offsetof(trigger_state_s, triggerSyncGapRatio) == 8);
+static_assert(offsetof(trigger_state_s, triggerStateIndex) == 12);
+static_assert(offsetof(trigger_state_s, vvtCounter) == 13);
+static_assert(offsetof(trigger_state_s, vvtStateIndex) == 14);
 

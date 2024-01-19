@@ -8,7 +8,9 @@ struct wall_fuel_state_s {
 	// Fuel on the wall
 	// in ms of injector open time for each injector.
 	// offset 4
-	floatms_t wallFuel = (floatms_t)0;
+	float wallFuel = (float)0;
 };
 static_assert(sizeof(wall_fuel_state_s) == 8);
+static_assert(offsetof(wall_fuel_state_s, wallFuelCorrection) == 0);
+static_assert(offsetof(wall_fuel_state_s, wallFuel) == 4);
 

@@ -4,10 +4,10 @@ struct ignition_state_s {
 	// ms
 	// offset 0
 	float baseDwell = (float)0;
-	// @@GAUGE_COIL_DWELL_TIME@@
+	// Ign: Dwell
 	// ms
 	// offset 4
-	floatms_t sparkDwell = (floatms_t)0;
+	float sparkDwell = (float)0;
 	// ignition dwell duration
 	// as crankshaft angle
 	// NAN if engine is stopped
@@ -42,4 +42,13 @@ struct ignition_state_s {
 	float luaTimingMult = (float)0;
 };
 static_assert(sizeof(ignition_state_s) == 32);
+static_assert(offsetof(ignition_state_s, baseDwell) == 0);
+static_assert(offsetof(ignition_state_s, sparkDwell) == 4);
+static_assert(offsetof(ignition_state_s, dwellAngle) == 8);
+static_assert(offsetof(ignition_state_s, cltTimingCorrection) == 12);
+static_assert(offsetof(ignition_state_s, timingIatCorrection) == 14);
+static_assert(offsetof(ignition_state_s, timingPidCorrection) == 16);
+static_assert(offsetof(ignition_state_s, dwellVoltageCorrection) == 20);
+static_assert(offsetof(ignition_state_s, luaTimingAdd) == 24);
+static_assert(offsetof(ignition_state_s, luaTimingMult) == 28);
 

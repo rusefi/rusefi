@@ -1,7 +1,7 @@
 #pragma once
 #include "rusefi_types.h"
 struct injector_model_s {
-	// @@GAUGE_NAME_INJECTOR_LAG@@
+	// Fuel: injector lag
 	// ms
 	// offset 0
 	float m_deadtime = (float)0;
@@ -14,4 +14,7 @@ struct injector_model_s {
 	float pressureRatio = (float)0;
 };
 static_assert(sizeof(injector_model_s) == 12);
+static_assert(offsetof(injector_model_s, m_deadtime) == 0);
+static_assert(offsetof(injector_model_s, pressureDelta) == 4);
+static_assert(offsetof(injector_model_s, pressureRatio) == 8);
 

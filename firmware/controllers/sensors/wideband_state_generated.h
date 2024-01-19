@@ -30,4 +30,10 @@ struct wideband_state_s {
 	uint8_t alignmentFill_at_10[2];
 };
 static_assert(sizeof(wideband_state_s) == 12);
+static_assert(offsetof(wideband_state_s, faultCode) == 0);
+static_assert(offsetof(wideband_state_s, heaterDuty) == 1);
+static_assert(offsetof(wideband_state_s, pumpDuty) == 2);
+static_assert(offsetof(wideband_state_s, tempC) == 4);
+static_assert(offsetof(wideband_state_s, nernstVoltage) == 6);
+static_assert(offsetof(wideband_state_s, esr) == 8);
 

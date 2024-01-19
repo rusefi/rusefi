@@ -1,10 +1,9 @@
 #pragma once
 #include "rusefi_types.h"
-#define HW_EVENT_TYPES 6
 struct trigger_central_s {
 	// Hardware events since boot
 	// offset 0
-	uint32_t hwEventCounters[HW_EVENT_TYPES];
+	uint32_t hwEventCounters[6];
 	// offset 24
 	uint32_t vvtCamCounter = (uint32_t)0;
 	// offset 28
@@ -30,4 +29,13 @@ struct trigger_central_s {
 	uint8_t alignmentFill_at_49[3];
 };
 static_assert(sizeof(trigger_central_s) == 52);
+static_assert(offsetof(trigger_central_s, hwEventCounters) == 0);
+static_assert(offsetof(trigger_central_s, vvtCamCounter) == 24);
+static_assert(offsetof(trigger_central_s, mapVvt_MAP_AT_SPECIAL_POINT) == 28);
+static_assert(offsetof(trigger_central_s, mapVvt_MAP_AT_DIFF) == 32);
+static_assert(offsetof(trigger_central_s, mapVvt_MAP_AT_CYCLE_COUNT) == 36);
+static_assert(offsetof(trigger_central_s, mapVvt_map_peak) == 37);
+static_assert(offsetof(trigger_central_s, currentEngineDecodedPhase) == 40);
+static_assert(offsetof(trigger_central_s, triggerToothAngleError) == 44);
+static_assert(offsetof(trigger_central_s, triggerIgnoredToothCount) == 48);
 

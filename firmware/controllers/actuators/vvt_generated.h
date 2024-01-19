@@ -11,4 +11,6 @@ struct vvt_s {
 	uint8_t alignmentFill_at_3[1];
 };
 static_assert(sizeof(vvt_s) == 4);
+static_assert(offsetof(vvt_s, vvtTarget) == 0);
+static_assert(offsetof(vvt_s, vvtOutput) == 2);
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "rusefi_types.h"
 struct ac_control_s {
-	// @@INDICATOR_NAME_AC_SWITCH@@
+	// AC switch
 	// offset 0 bit 0
 	bool acButtonState : 1 {};
 	// AC enabled
@@ -29,51 +29,51 @@ struct ac_control_s {
 	// offset 0 bit 8
 	bool acCompressorState : 1 {};
 	// offset 0 bit 9
-	bool unusedBit_9_9 : 1 {};
+	bool unusedBit_0_9 : 1 {};
 	// offset 0 bit 10
-	bool unusedBit_9_10 : 1 {};
+	bool unusedBit_0_10 : 1 {};
 	// offset 0 bit 11
-	bool unusedBit_9_11 : 1 {};
+	bool unusedBit_0_11 : 1 {};
 	// offset 0 bit 12
-	bool unusedBit_9_12 : 1 {};
+	bool unusedBit_0_12 : 1 {};
 	// offset 0 bit 13
-	bool unusedBit_9_13 : 1 {};
+	bool unusedBit_0_13 : 1 {};
 	// offset 0 bit 14
-	bool unusedBit_9_14 : 1 {};
+	bool unusedBit_0_14 : 1 {};
 	// offset 0 bit 15
-	bool unusedBit_9_15 : 1 {};
+	bool unusedBit_0_15 : 1 {};
 	// offset 0 bit 16
-	bool unusedBit_9_16 : 1 {};
+	bool unusedBit_0_16 : 1 {};
 	// offset 0 bit 17
-	bool unusedBit_9_17 : 1 {};
+	bool unusedBit_0_17 : 1 {};
 	// offset 0 bit 18
-	bool unusedBit_9_18 : 1 {};
+	bool unusedBit_0_18 : 1 {};
 	// offset 0 bit 19
-	bool unusedBit_9_19 : 1 {};
+	bool unusedBit_0_19 : 1 {};
 	// offset 0 bit 20
-	bool unusedBit_9_20 : 1 {};
+	bool unusedBit_0_20 : 1 {};
 	// offset 0 bit 21
-	bool unusedBit_9_21 : 1 {};
+	bool unusedBit_0_21 : 1 {};
 	// offset 0 bit 22
-	bool unusedBit_9_22 : 1 {};
+	bool unusedBit_0_22 : 1 {};
 	// offset 0 bit 23
-	bool unusedBit_9_23 : 1 {};
+	bool unusedBit_0_23 : 1 {};
 	// offset 0 bit 24
-	bool unusedBit_9_24 : 1 {};
+	bool unusedBit_0_24 : 1 {};
 	// offset 0 bit 25
-	bool unusedBit_9_25 : 1 {};
+	bool unusedBit_0_25 : 1 {};
 	// offset 0 bit 26
-	bool unusedBit_9_26 : 1 {};
+	bool unusedBit_0_26 : 1 {};
 	// offset 0 bit 27
-	bool unusedBit_9_27 : 1 {};
+	bool unusedBit_0_27 : 1 {};
 	// offset 0 bit 28
-	bool unusedBit_9_28 : 1 {};
+	bool unusedBit_0_28 : 1 {};
 	// offset 0 bit 29
-	bool unusedBit_9_29 : 1 {};
+	bool unusedBit_0_29 : 1 {};
 	// offset 0 bit 30
-	bool unusedBit_9_30 : 1 {};
+	bool unusedBit_0_30 : 1 {};
 	// offset 0 bit 31
-	bool unusedBit_9_31 : 1 {};
+	bool unusedBit_0_31 : 1 {};
 	// AC latest activity
 	// offset 4
 	int latest_usage_ac_control = (int)0;
@@ -81,4 +81,6 @@ struct ac_control_s {
 	int acSwitchLastChangeTimeMs = (int)0;
 };
 static_assert(sizeof(ac_control_s) == 12);
+static_assert(offsetof(ac_control_s, latest_usage_ac_control) == 4);
+static_assert(offsetof(ac_control_s, acSwitchLastChangeTimeMs) == 8);
 
