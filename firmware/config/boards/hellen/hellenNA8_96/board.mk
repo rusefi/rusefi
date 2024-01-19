@@ -4,7 +4,7 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 # Set this if you want a default engine type other than normal hellen-nb1
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
-  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::HELLEN_NA8_96
+  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::MAZDA_NA8_96
 endif
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
