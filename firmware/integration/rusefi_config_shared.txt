@@ -33,6 +33,7 @@
 #define BOOST_BLEND_COUNT 2
 #define LUA_GAUGE_COUNT 2
 
+#define HW_EVENT_TYPES 6
 
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_UPTIME "Uptime"

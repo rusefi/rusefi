@@ -6,6 +6,7 @@ import com.rusefi.InvokeReader;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.RusefiParseErrorStrategy;
 import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.outputs.CStructWriter;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.util.LazyFile;
@@ -120,13 +121,12 @@ public class LiveDataProcessor {
                 state.addPrepend(extraPrepend);
             state.addPrepend(prepend);
             String cHeaderDestination = folder + File.separator + name + "_generated.h";
-            state.addCHeaderDestination(cHeaderDestination);
 
             int baseOffset = outputsSections.getBaseOffset();
 
-            if (javaName != null) {
-                state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
-            }
+           if (javaName != null) {
+               state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
+           }
 
             if (constexpr != null) {
                 sdCardFieldsConsumer.home = constexpr;
@@ -151,8 +151,8 @@ public class LiveDataProcessor {
 
                 RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.getDefinitionInputFile());
 
-                // CStructWriter cStructs = new CStructWriter();
-                // cStructs.writeCStructs(parseState, cHeaderDestination);
+                CStructWriter cStructs = new CStructWriter();
+                cStructs.writeCStructs(parseState, cHeaderDestination);
 
                 // if (outputNames.length == 0) {
                 //     outputChannelWriter.writeOutputChannels(parseState, null);

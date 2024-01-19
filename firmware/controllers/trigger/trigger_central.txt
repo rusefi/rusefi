@@ -1,4 +1,3 @@
-#define HW_EVENT_TYPES 6
 
 struct_no_prefix trigger_central_s
 

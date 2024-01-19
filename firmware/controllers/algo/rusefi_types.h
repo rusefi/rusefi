@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include <string.h>
+#include <cstring>
 #include <stdbool.h>
 #include <float.h>
-#include <stdint.h>
+#include <cstdint>
+#include <cstddef>
 #if defined __GNUC__
 // GCC
 #include <sys/types.h>

@@ -99,6 +99,7 @@ Usages:
     folder: controllers/trigger
     withCDefines: true
     constexpr: "engine->triggerCentral"
+    prepend: integration/rusefi_config_shared.txt
     conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
 
   - name: trigger_state
