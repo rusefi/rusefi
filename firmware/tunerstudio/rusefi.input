@@ -2178,6 +2178,7 @@ cmd_openblt				= "@@TS_IO_TEST_COMMAND_char@@\x00\xbc\x00\x00"
 
 ; See 'executeTSCommand' in firmware source code
 
+cmd_set_engine_type_HONDA_OBD1		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HONDA_OBD1_16_hex@@"
 
 cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_VW_B6_16_hex@@"
 cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_BODY_CONTROL_16_hex@@"
@@ -4493,6 +4494,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "!Once you send the command, please reconnect to rusEFI controller in order to read fresh values"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",	cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
+
+		commandButton = "Honda OBD1", cmd_set_engine_type_HONDA_OBD1
 
 ;		commandButton = "Mitsubishi 3A92",             cmd_set_engine_type_MITSUBISHI_3A92
 ;		commandButton = "Mitsubishi 4G93",             cmd_set_engine_type_MITSUBISHI_4G93
