@@ -30,14 +30,14 @@ pins:
     meta: MM100_IN_D1
     class: event_inputs
     color: green
-    ts_name: ___ HALL1
+    ts_name: ___ CAM 1 / HALL1
     function: HALL input 1 (4.7K PU)
 
   - pin: C6
     meta: MM100_IN_D2
     class: event_inputs
     color: blue
-    ts_name: ___ HALL2
+    ts_name: ___ CAM 2 / HALL2
     function: HALL input 2 (4.7K PU)
 
   - pin: C7
