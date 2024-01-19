@@ -2,7 +2,6 @@ package com.opensr5.ini.field;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.FieldType;
-import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 
 import javax.management.ObjectName;
@@ -64,17 +63,6 @@ public class EnumIniField extends IniField {
     public static boolean isQuoted(String q) {
         final int len = q.length();
         return (len >= 2 && q.charAt(0) == '"' && q.charAt(len - 1) == '"');
-    }
-
-    @Override
-    public void setValue(ConfigurationImage image, Constant constant) {
-        String v = constant.getValue();
-        int ordinal = enums.indexOf(isQuoted(v) ? ObjectName.unquote(v) : v);
-        if (ordinal == -1)
-            throw new IllegalArgumentException("Not found " + v);
-        int value = getByteBuffer(image).getInt();
-        value = setBitRange(value, ordinal, bitPosition, bitSize0 + 1);
-        getByteBuffer(image).putInt(value);
     }
 
     @Override

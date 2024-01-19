@@ -3,7 +3,6 @@ package com.opensr5.ini.field;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
-import com.rusefi.tune.xml.Constant;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
@@ -55,11 +54,10 @@ public class ScalarIniField extends IniField {
         }
     }
 
-    @Override
-    public void setValue(ConfigurationImage image, Constant constant) {
+    public void setValue(ConfigurationImage image, String value) {
         Field f = new Field(getName(), getOffset(), getType());
         ByteBuffer wrapped = image.getByteBuffer(getOffset(), type.getStorageSize());
-        setValue(wrapped, type, constant.getValue(), f.getBitOffset(), multiplier);
+        setValue(wrapped, type, value, f.getBitOffset(), multiplier);
     }
 
     public static void setValue(ByteBuffer wrapped, FieldType type, String value, int bitOffset, double multiplier) {

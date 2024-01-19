@@ -1,7 +1,6 @@
 package com.opensr5.ini.field;
 
 import com.opensr5.ConfigurationImage;
-import com.rusefi.tune.xml.Constant;
 
 public abstract class IniField {
     private final String name;
@@ -46,9 +45,5 @@ public abstract class IniField {
      */
     public String getValue(ConfigurationImage image) {
         return null;
-    }
-
-    public void setValue(ConfigurationImage image, Constant constant) {
-        throw new UnsupportedOperationException("On " + getClass());
     }
 }

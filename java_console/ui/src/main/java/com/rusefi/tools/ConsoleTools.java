@@ -20,7 +20,6 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -203,7 +202,7 @@ public class ConsoleTools {
         return autoDetectedPort;
     }
 
-    private static void convertBinaryToXml(String[] args) throws IOException, JAXBException {
+    private static void convertBinaryToXml(String[] args) throws IOException {
         if (args.length < 2) {
             System.err.println("Binary file input expected");
             System.exit(-1);

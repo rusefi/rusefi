@@ -12,7 +12,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.core.FileUtil;
-import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class TestHelper {
     public static ConfigurationImage prepareImage(int input, ScalarIniField scalarIniField) {
         ConfigurationImage ci = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
 
-        scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input), scalarIniField.getDigits()));
+        scalarIniField.setValue(ci, Integer.toString(input));
         return ci;
     }
 
