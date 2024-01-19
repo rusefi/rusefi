@@ -99,6 +99,7 @@ void setBoardDefaultConfiguration() {
  	engineConfiguration->fanPin = Gpio::MM100_IGN8;
 	engineConfiguration->fuelPumpPin = Gpio::MM100_OUT_PWM2;
 
+  engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM6;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

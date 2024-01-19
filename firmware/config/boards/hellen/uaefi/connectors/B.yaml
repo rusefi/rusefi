@@ -48,7 +48,7 @@ pins:
     class: outputs
     color: orange
     type: ls
-    ts_name: ___ VVT or Low Side output 1
+    ts_name: ___ VVT1 or Low Side output 1
 
   - pin: B8
     meta: MM100_IGN8
@@ -111,7 +111,7 @@ pins:
     class: outputs
     type: ls
     color: white
-    ts_name: ___ Low Side output 4 / Fuel Pump
+    ts_name: ___ Low Side output 4 / Fuel Pump Relay
 
   - pin: B17
     meta: MM100_OUT_PWM1
@@ -125,7 +125,7 @@ pins:
     class: outputs
     color: grey
     type: ls
-    ts_name: ___ VVT or Idle or Low Side output 2
+    ts_name: ___ VVT2 or Idle or Low Side output 2
 
 info:
   cid: b
