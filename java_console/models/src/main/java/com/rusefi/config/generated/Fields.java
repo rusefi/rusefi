@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 19 04:08:12 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 19 21:44:58 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1335,7 +1335,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.01.19.f407-discovery.4155731717";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.01.19.f407-discovery.3741506731";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2094,6 +2094,7 @@ public class Fields {
 	public static final Field MC33810GPGD1MODE = Field.create("MC33810GPGD1MODE", 1576, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field MC33810GPGD2MODE = Field.create("MC33810GPGD2MODE", 1576, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field MC33810GPGD3MODE = Field.create("MC33810GPGD3MODE", 1576, FieldType.BIT, 4).setBaseOffset(0);
+	public static final Field ENABLEEXTENDEDCANBROADCAST = Field.create("ENABLEEXTENDEDCANBROADCAST", 1576, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 1580, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 1582, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXSERIALTXPIN = Field.create("AUXSERIALTXPIN", 1584, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -3706,6 +3707,7 @@ public class Fields {
 	MC33810GPGD1MODE,
 	MC33810GPGD2MODE,
 	MC33810GPGD3MODE,
+	ENABLEEXTENDEDCANBROADCAST,
 	AFTERCRANKINGIACTAPERDURATION,
 	IACBYTPSTAPER,
 	AUXSERIALTXPIN,

@@ -1081,6 +1081,9 @@ float getConfigValueByName(const char *name) {
 // mc33810Gpgd3Mode
 		case -781828882:
 			return engineConfiguration->mc33810Gpgd3Mode;
+// enableExtendedCanBroadcast
+		case 923152418:
+			return engineConfiguration->enableExtendedCanBroadcast;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -3555,6 +3558,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -781828882:
 	{
 		engineConfiguration->mc33810Gpgd3Mode = (int)value;
+		return 1;
+	}
+		case 923152418:
+	{
+		engineConfiguration->enableExtendedCanBroadcast = (int)value;
 		return 1;
 	}
 		case 671504531:
