@@ -55,15 +55,17 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 
 	updateDash(cycle);
 
-	if (cycle.isInterval(CI::_100ms)) {
-		sendEventCounters();
-		sendRawAnalogValues();
-	}
+  if (engineConfiguration->enableExtendedCanBroadcast) {
+	  if (cycle.isInterval(CI::_100ms)) {
+  		sendQcBenchEventCounters();
+  		sendQcBenchRawAnalogValues();
+	  }
 
-	if (cycle.isInterval(CI::_250ms)) {
-		sendBoardStatus();
-		sendButtonCounters();
-		sendAuxDigitalCounters();
+	  if (cycle.isInterval(CI::_250ms)) {
+		  sendQcBenchBoardStatus();
+		  sendQcBenchButtonCounters();
+		  sendQcBenchAuxDigitalCounters();
+	  }
 	}
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE

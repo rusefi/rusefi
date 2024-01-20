@@ -65,7 +65,7 @@ static void setPin(const CANRxFrame& frame, int value) {
 #endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }
 
-void sendEventCounters() {
+void sendQcBenchEventCounters() {
 #if EFI_SHAFT_POSITION_INPUT
 	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::EVENT_COUNTERS, 8, /*bus*/0, /*isExtended*/true);
 
@@ -92,7 +92,7 @@ void sendEventCounters() {
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
-void sendButtonCounters() {
+void sendQcBenchButtonCounters() {
 	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::BUTTON_COUNTERS, 8, /*bus*/0, /*isExtended*/true);
 	msg[0] = TRUNCATE_TO_BYTE(engine->brakePedalSwitchedState.getCounter());
 	msg[1] = TRUNCATE_TO_BYTE(engine->clutchUpSwitchedState.getCounter());
@@ -100,14 +100,14 @@ void sendButtonCounters() {
 	// todo: start button
 }
 
-void sendAuxDigitalCounters() {
+void sendQcBenchAuxDigitalCounters() {
 	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::BUTTON_COUNTERS, 8, /*bus*/0, /*isExtended*/true);
   for (int i =0;i<LUA_DIGITAL_INPUT_COUNT;i++) {
 	  msg[i] = TRUNCATE_TO_BYTE(engine->luaDigitalInputState[i].state.getCounter());
   }
 }
 
-void sendRawAnalogValues() {
+void sendQcBenchRawAnalogValues() {
 	const float values_1[] = {
 		Sensor::getRaw(SensorType::Tps1Primary),
 		Sensor::getRaw(SensorType::Tps1Secondary),
@@ -159,7 +159,7 @@ static void sendOutBoardMeta() {
 #endif // EFI_PROD_CODE
 }
 
-void sendBoardStatus() {
+void sendQcBenchBoardStatus() {
 #if EFI_PROD_CODE
 	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::BOARD_STATUS, 8, /*bus*/0, /*isExtended*/true);
 
@@ -218,7 +218,7 @@ static void resetPinStats(bench_mode_e benchModePinIdx) {
 #endif // EFI_SIMULATOR
 }
 
-void processCanBenchTest(const CANRxFrame& frame) {
+void processCanQcBenchTest(const CANRxFrame& frame) {
 	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
 		return;
 	}
@@ -261,7 +261,7 @@ void processCanBenchTest(const CANRxFrame& frame) {
 }
 #endif // EFI_CAN_SUPPORT
 
-void initQcControls() {
+void initQcBenchControls() {
     addConsoleActionII("qc_etb", [](int index, int direction) {
         qcSetEtbState(index, direction);
     });

@@ -670,7 +670,7 @@ void commonEarlyInit() {
 	 */
 	initHardware();
 
-	initQcControls();
+	initQcBenchControls();
 
 #if EFI_FILE_LOGGING
 	initMmcCard();

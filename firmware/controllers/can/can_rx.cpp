@@ -182,7 +182,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		processCanRxImu(frame);
 	}
 
-	processCanBenchTest(frame);
+	processCanQcBenchTest(frame);
 
 	processLuaCan(busIndex, frame);
 
