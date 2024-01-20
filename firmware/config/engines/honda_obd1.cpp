@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "defaults.h"
 
 #if HW_HELLEN_UAEFI
 #include "hellen_meta.h"
@@ -29,7 +30,7 @@ void setHondaObd1() {
 #if HW_HELLEN_UAEFI
   // Honda ICM is weird it fires spark on RAISING edge and has internal pull-up
   // thus we use a low side output to drive OEM ignition
-  engineConfiguration->ignitionPins[0] = Gpio::Gpio::MM100_IGN7; // low side!
+  engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN7; // low side!
 
 	engineConfiguration->camInputs[0] = Gpio::MM100_UART8_RX; // "C18 VR1+ Discrete"
 	engineConfiguration->camInputs[1] = Gpio::Unassigned;
