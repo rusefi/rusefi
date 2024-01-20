@@ -62,8 +62,8 @@ pins:
     meta: MM100_IN_CAM
     class: switch_inputs
     color: green
-    ts_name: ___ BUTTON2
-    function: Button input 2
+    ts_name: ___ A/C Request / BUTTON2
+    function: A/C Request / Button input 2
 
   - pin: D11
     color: black
