@@ -14,6 +14,9 @@ void setHondaObd1() {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
+	// we expect end users to use timing light to validate specific vehicle!
+	engineConfiguration->globalTriggerAngleOffset = 80;
+
   // what's average displacement for Honda OBD1? :)
   engineConfiguration->displacement = 1.645;
 
