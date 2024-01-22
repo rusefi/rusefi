@@ -31,7 +31,7 @@ function arrayToString(arr)
 end
 
 function printPacket(bus, id, dlc, data)
-	print('Received status packet ' ..arrayToString(data))
+--	print('Received status packet ' ..arrayToString(data))
 end
 
 function getTwoBytesLSB(data, offset, factor)
@@ -102,9 +102,6 @@ packet_kinds = 5
 function onTick()
   counter = counter + 1
 
-	TpeakOff         = getCalibration("mc33_t_peak_off")
-	Tbypass          = getCalibration("mc33_t_bypass")
-
   if (counter % packet_kinds) == 0 then
     -- set mc33_hvolt 60
 	  boostVoltage     = getCalibration("mc33_hvolt")
@@ -133,6 +130,10 @@ function onTick()
   end
 
   if (counter % packet_kinds) == 2 then
+    -- set mc33_t_peak_off 14
+	  TpeakOff         = getCalibration("mc33_t_peak_off")
+    -- set mc33_t_bypass 13
+  	Tbypass          = getCalibration("mc33_t_bypass")
 	  holdCurrent = getCalibration("mc33_i_hold") / 1000.0
 	  print("To send 2: TpeakOff " .. TpeakOff .. " Tbypass " .. Tbypass .." holdCurrent " ..holdCurrent)
 	  setTwoBytesLsb(data_set_settings, 1, TpeakOff)
