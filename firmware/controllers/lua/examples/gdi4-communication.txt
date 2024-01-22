@@ -98,48 +98,48 @@ setTickRate(2)
 
 function onTick()
 
-    -- set mc33_hvolt 60
-	boostVoltage     = getCalibration("mc33_hvolt")
-	boostCurrent     = getCalibration("mc33_i_boost") / 1000.0
-	TBoostMin        = getCalibration("mc33_t_min_boost")
-	print("To send 0: boostVoltage " .. boostVoltage .." boostCurrent " ..boostCurrent .." TBoostMin " ..TBoostMin)
-	-- set mc33_t_max_boost 380
-	TBoostMax        = getCalibration("mc33_t_max_boost")
-
-    -- set mc33_i_peak 14500
-	peakCurrent      = getCalibration("mc33_i_peak") / 1000.0
-	TpeakDuration    = getCalibration("mc33_t_peak_tot")
-	print("To send 1: TBoostMax " .. TBoostMax .." peakCurrent " ..peakCurrent .." TpeakDuration " ..TpeakDuration)
 	TpeakOff         = getCalibration("mc33_t_peak_off")
 	Tbypass          = getCalibration("mc33_t_bypass")
 
 	holdCurrent = getCalibration("mc33_i_hold") / 1000.0
 	print("To send 2: TpeakOff " .. TpeakOff .. " Tbypass " .. Tbypass .." holdCurrent " ..holdCurrent)
-	TholdOff = getCalibration("mc33_t_hold_off")
-	THoldDuration = getCalibration("mc33_t_hold_tot")
-	print("To send 3: TholdOff " .. TholdOff .. " THoldDuration " .. THoldDuration)
 
-	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
-	pumpHoldCurrent      = getCalibration("mc33_hpfp_i_hold")
 
+    -- set mc33_hvolt 60
+	boostVoltage     = getCalibration("mc33_hvolt")
+	boostCurrent     = getCalibration("mc33_i_boost") / 1000.0
+	TBoostMin        = getCalibration("mc33_t_min_boost")
+	print("To send 0: boostVoltage " .. boostVoltage .." boostCurrent " ..boostCurrent .." TBoostMin " ..TBoostMin)
 	setTwoBytesLsb(data_set_settings, 1, boostVoltage)
 	setTwoBytesLsb(data_set_settings, 3, boostCurrent * FIXED_POINT)
 	setTwoBytesLsb(data_set_settings, 5, TBoostMin)
-	print('Will be sending ' ..arrayToString(data_set_settings))
+--	print('Will be sending ' ..arrayToString(data_set_settings))
 	txCan(1, GDI_CHANGE_ADDRESS, 1, data_set_settings)
 
+	-- set mc33_t_max_boost 380
+	TBoostMax        = getCalibration("mc33_t_max_boost")
+  -- set mc33_i_peak 14500
+	peakCurrent      = getCalibration("mc33_i_peak") / 1000.0
+	TpeakDuration    = getCalibration("mc33_t_peak_tot")
+	print("To send 1: TBoostMax " .. TBoostMax .." peakCurrent " ..peakCurrent .." TpeakDuration " ..TpeakDuration)
 	setTwoBytesLsb(data_set_settings, 1, TBoostMax)
 	setTwoBytesLsb(data_set_settings, 3, peakCurrent * FIXED_POINT)
 	setTwoBytesLsb(data_set_settings, 5, TpeakDuration)
-	print('Will be sending ' ..arrayToString(data_set_settings))
+--	print('Will be sending ' ..arrayToString(data_set_settings))
 --	txCan(1, GDI_CHANGE_ADDRESS + 1, 1, data_set_settings)
 
 	setTwoBytesLsb(data_set_settings, 1, TpeakOff)
 	setTwoBytesLsb(data_set_settings, 3, Tbypass)
 	setTwoBytesLsb(data_set_settings, 5, holdCurrent * FIXED_POINT)
-	print('Will be sending ' ..arrayToString(data_set_settings))
+--	print('Will be sending ' ..arrayToString(data_set_settings))
 --	txCan(1, GDI_CHANGE_ADDRESS + 2, 1, data_set_settings)
 
+
+	pumpPeakCurrent      = getCalibration("mc33_hpfp_i_peak")
+
+	TholdOff = getCalibration("mc33_t_hold_off")
+	THoldDuration = getCalibration("mc33_t_hold_tot")
+  print("To send 3: TholdOff " .. TholdOff .. " THoldDuration " .. THoldDuration)
 	setTwoBytesLsb(data_set_settings, 1, TholdOff)
 	setTwoBytesLsb(data_set_settings, 3, THoldDuration)
 -- set mc33_hpfp_i_peak 6
@@ -147,8 +147,8 @@ function onTick()
 	print('Will be sending ' ..arrayToString(data_set_settings))
 	txCan(1, GDI_CHANGE_ADDRESS + 3, 1, data_set_settings)
 
+	pumpHoldCurrent      = getCalibration("mc33_hpfp_i_hold")
 	setTwoBytesLsb(data_set_settings, 1, pumpHoldCurrent * FIXED_POINT)
-	outputCanID = 0
 	outputCanID = GDI4_BASE_ADDRESS
 	setTwoBytesLsb(data_set_settings, 3, outputCanID)
 	print('Will be sending ' ..arrayToString(data_set_settings))
