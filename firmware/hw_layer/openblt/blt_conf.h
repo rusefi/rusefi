@@ -183,6 +183,8 @@
  */
 #define BOOT_XCP_SEED_KEY_ENABLE        (0)
 
+#define BOOT_XCP_UPLOAD_ENABLE          (0)
+
 
 #endif /* BLT_CONF_H */
 /*********************************** end of blt_conf.h *********************************/
