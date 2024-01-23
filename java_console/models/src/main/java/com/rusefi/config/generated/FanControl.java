@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/fan_control.txt Sun Jan 07 19:53:44 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/fan_control.txt Tue Jan 23 15:53:04 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -13,6 +13,7 @@ public class FanControl {
 	public static final Field ENABLEDFORAC = Field.create("ENABLEDFORAC", 0, FieldType.BIT, 4).setBaseOffset(1044);
 	public static final Field HOT = Field.create("HOT", 0, FieldType.BIT, 5).setBaseOffset(1044);
 	public static final Field COLD = Field.create("COLD", 0, FieldType.BIT, 6).setBaseOffset(1044);
+	public static final Field DISABLEDBYSPEED = Field.create("DISABLEDBYSPEED", 0, FieldType.BIT, 7).setBaseOffset(1044);
 	public static final Field[] VALUES = {
 	CRANKING,
 	NOTRUNNING,
@@ -21,5 +22,6 @@ public class FanControl {
 	ENABLEDFORAC,
 	HOT,
 	COLD,
+	DISABLEDBYSPEED,
 	};
 }

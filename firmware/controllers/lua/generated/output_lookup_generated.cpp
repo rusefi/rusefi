@@ -1012,6 +1012,9 @@ float getOutputValueByName(const char *name) {
 // cold
 		case 2090155911:
 			return ___engine.module<FanControl1>()->cold;
+// disabledBySpeed
+		case 2105103113:
+			return ___engine.module<FanControl1>()->disabledBySpeed;
 // isPrime
 		case -1429286498:
 			return engine->module<FuelPumpController>()->isPrime;
