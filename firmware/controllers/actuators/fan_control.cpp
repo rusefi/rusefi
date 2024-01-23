@@ -6,6 +6,7 @@
 
 bool FanController::getState(bool acActive, bool lastState) {
 	auto clt = Sensor::get(SensorType::Clt);
+	auto vss = Sensor::get(SensorType::VehicleSpeed);
 
 #if EFI_SHAFT_POSITION_INPUT
 	cranking = engine->rpmCalculator.isCranking();
@@ -15,6 +16,7 @@ bool FanController::getState(bool acActive, bool lastState) {
 	notRunning = true;
 #endif
 
+	disabledBySpeed = disableAtSpeed() > 0 && vss.Valid && vss.Value > disableAtSpeed();
 	disabledWhileEngineStopped = notRunning && disableWhenStopped();
 	brokenClt = !clt;
 	enabledForAc = enableWithAc() && acActive;
@@ -26,6 +28,9 @@ bool FanController::getState(bool acActive, bool lastState) {
 		return false;
 	} else if (disabledWhileEngineStopped) {
 		// Inhibit while not running (if so configured)
+		return false;
+	} else if (disabledBySpeed) {
+		// Inhibit while driving fast
 		return false;
 	} else if (brokenClt) {
 		// If CLT is broken, turn the fan on
