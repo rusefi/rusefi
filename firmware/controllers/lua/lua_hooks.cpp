@@ -314,6 +314,14 @@ static int lua_getDigital(lua_State* l) {
 	return 1;
 }
 
+bool getAuxDigital(int index) {
+#if EFI_PROD_CODE
+	return efiReadPin(engineConfiguration->luaDigitalInputPins[index]);
+#else
+	return false;
+#endif
+}
+
 static int lua_getAuxDigital(lua_State* l) {
 	auto idx = luaL_checkinteger(l, 1);
 	if (idx < 0 || idx >= LUA_DIGITAL_INPUT_COUNT) {
@@ -328,8 +336,11 @@ static int lua_getAuxDigital(lua_State* l) {
 		return 1;
 	}
 
-	bool state = efiReadPin(engineConfiguration->luaDigitalInputPins[idx]);
+#if !EFI_SIMULATOR
+	bool state = getAuxDigital(idx);
 	lua_pushboolean(l, state);
+#endif // !EFI_SIMULATOR
+
 	return 1;
 }
 
