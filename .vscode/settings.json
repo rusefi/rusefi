@@ -1,5 +1,7 @@
 {
 	"editor.detectIndentation": false,
+	"editor.indentSize": 4,
+	"editor.tabSize": 4,
 	"editor.insertSpaces": false,
 	"[java]": {
 		"editor.insertSpaces": true
