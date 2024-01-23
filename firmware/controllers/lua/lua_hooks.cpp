@@ -653,7 +653,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "readPin", lua_readpin);
 	lua_register(l, "vin", lua_vin);
 	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
-	lua_register(l, "getAuxDigital", lua_getAuxDigital);
 	lua_register(l, "getSensorByIndex", lua_getSensorByIndex);
 	lua_register(l, "getSensor", lua_getSensorByName);
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
@@ -911,6 +910,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "getFan", lua_fan);
 	lua_register(l, "getDigital", lua_getDigital);
+	lua_register(l, "getAuxDigital", lua_getAuxDigital);
 	lua_register(l, "setDebug", lua_setDebug);
 	lua_register(l, "getAirmass", lua_getAirmass);
 	lua_register(l, "setAirmass", lua_setAirmass);
