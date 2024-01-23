@@ -2294,7 +2294,7 @@ struct engine_configuration_s {
 	// offset 3607
 	fuel_pressure_sensor_mode_e fuelPressureSensorMode;
 	// offset 3608
-	Gpio luaDigitalInputPins[LUA_DIGITAL_INPUT_COUNT];
+	switch_input_pin_e luaDigitalInputPins[LUA_DIGITAL_INPUT_COUNT];
 	// RPM
 	// offset 3624
 	scaled_channel<uint8_t, 1, 50> tpsTspCorrValuesBins[TPS_TPS_ACCEL_CLT_CORR_TABLE];
