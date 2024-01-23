@@ -14,6 +14,7 @@ protected:
 	virtual float getFanOffTemp() = 0;
 	virtual bool enableWithAc() = 0;
 	virtual bool disableWhenStopped() = 0;
+	virtual int disableAtSpeed() = 0;
 };
 
 struct FanControl1 : public FanController {
@@ -36,6 +37,10 @@ struct FanControl1 : public FanController {
 	bool disableWhenStopped() {
 		return engineConfiguration->disableFan1WhenStopped;
 	}
+
+	int disableAtSpeed() {
+		return engineConfiguration->disableFan1AtSpeed;
+	}
 };
 
 struct FanControl2 : public FanController {
@@ -57,5 +62,9 @@ struct FanControl2 : public FanController {
 
 	bool disableWhenStopped() {
 		return engineConfiguration->disableFan2WhenStopped;
+	}
+
+	int disableAtSpeed() {
+		return engineConfiguration->disableFan2AtSpeed;
 	}
 };
