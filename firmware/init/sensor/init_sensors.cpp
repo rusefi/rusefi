@@ -51,7 +51,7 @@ static void deInitOldAnalogInputs() {
 static void initAuxDigital() {
 #if EFI_PROD_CODE
 	for (size_t i = 0;i<efi::size(engineConfiguration->luaDigitalInputPins);i++) {
-		efiSetPadMode("Lua Digital", engineConfiguration->luaDigitalInputPins[i], getInputMode(PI_DEFAULT));
+		efiSetPadMode("Lua Digital", engineConfiguration->luaDigitalInputPins[i], engineConfiguration->luaDigitalInputPinModes[i]);
 	}
 #endif // EFI_PROD_CODE
 }

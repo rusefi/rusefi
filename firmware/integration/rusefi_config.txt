@@ -1445,7 +1445,7 @@ SentEtbType sentEtbType
 custom fuel_pressure_sensor_mode_e 1 bits, U08, @OFFSET@, [0:1], @@fuel_pressure_sensor_mode_e_enum@@
 fuel_pressure_sensor_mode_e fuelPressureSensorMode
 
-Gpio[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
+switch_input_pin_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
 	int16_t ALSMinRPM;;"rpm", 1, 0, 0, 20000, 0
 	int16_t ALSMaxRPM;;"rpm", 1, 0, 0, 20000, 0

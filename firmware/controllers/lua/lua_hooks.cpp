@@ -314,6 +314,25 @@ static int lua_getDigital(lua_State* l) {
 	return 1;
 }
 
+static int lua_getAuxDigital(lua_State* l) {
+	auto idx = luaL_checkinteger(l, 1);
+	if (idx < 0 || idx >= LUA_DIGITAL_INPUT_COUNT) {
+		// Return nil to indicate invalid parameter
+		lua_pushnil(l);
+		return 1;
+	}
+
+	if (!isBrainPinValid(engineConfiguration->luaDigitalInputPins[idx])) {
+		// Return nil to indicate invalid pin
+		lua_pushnil(l);
+		return 1;
+	}
+
+	bool state = efiReadPin(engineConfiguration->luaDigitalInputPins[idx]);
+	lua_pushboolean(l, state);
+	return 1;
+}
+
 static int lua_setDebug(lua_State* l) {
 	// wrong debug mode, ignore
 	if (engineConfiguration->debugMode != DBG_LUA) {
@@ -623,6 +642,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "readPin", lua_readpin);
 	lua_register(l, "vin", lua_vin);
 	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
+	lua_register(l, "getAuxDigital", lua_getAuxDigital);
 	lua_register(l, "getSensorByIndex", lua_getSensorByIndex);
 	lua_register(l, "getSensor", lua_getSensorByName);
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
