@@ -23,6 +23,11 @@ void CpuMemCopy(blt_addr dest, blt_addr src, blt_int16u len)
 	memcpy((void*)dest, (void*)src, len);
 }
 
+void CpuMemSet(blt_addr dest, blt_int8u value, blt_int16u len)
+{
+	memset((void*)dest, value, len);
+}
+
 /** \brief Pointer to the user program's reset vector. */
 #define CPU_USER_PROGRAM_STARTADDR_PTR    ((blt_addr)(NvmGetUserProgBaseAddress() + 0x00000004))
 /** \brief Pointer to the user program's vector table. */
