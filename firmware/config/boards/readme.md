@@ -1,5 +1,7 @@
 # Boards Directory
 
+TL,DR: for community edition see f407-discovery.
+
 rusEFI supports quite a wide array of hardware:
  * most supported platforms are stm32f4 and stm32f7
  * alpha version support stm32h7
@@ -36,7 +38,7 @@ See also https://github.com/rusefi/rusefi/wiki/Hardware
 
 # Q: how do I change Primary UART pins via TS?
 
-A: Primary UART, critical error LED pin and maybe a couple more of the most fundamental pins could NOT be chagned via TS. You would need another binary altogether - either another official binary or a custom binary.
+A: Primary UART, critical error LED pin and maybe a couple more of the most fundamental pins could NOT be changed via TS. You would need another binary altogether - either another official binary or a custom binary.
 
 # Q: I need more info!
 
