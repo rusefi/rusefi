@@ -28,7 +28,9 @@
 
 /* diagnostic for brain pins
  * can be combination of few bits
- * defined as bit mask */
+ * defined as bit mask
+ * PIN_UNKNOWN is reported for pins with no diagnostic support, like on-chip gpio
+ */
 typedef enum __attribute__ ((__packed__))
 {
 	PIN_OK = 0,
@@ -38,7 +40,7 @@ typedef enum __attribute__ ((__packed__))
 	PIN_OVERLOAD =	0x08,
 	PIN_DRIVER_OVERTEMP = 0x10,
 	PIN_DRIVER_OFF = 0x20,
-	PIN_INVALID = 0x80
+	PIN_UNKNOWN = 0x80
 } brain_pin_diag_e;
 
 // see also PWM_PHASE_MAX_WAVE_PER_PWM

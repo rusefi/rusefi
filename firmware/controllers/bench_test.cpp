@@ -79,7 +79,7 @@ static void benchOff(OutputPin* output) {
 	static char pin_error[64];
 
 	brain_pin_diag_e diag = output->getDiag();
-	if (diag == PIN_INVALID) {
+	if (diag == PIN_UNKNOWN) {
 		efiPrintf("No Diag on this pin");
 	} else {
 		pinDiag2string(pin_error, sizeof(pin_error), diag);

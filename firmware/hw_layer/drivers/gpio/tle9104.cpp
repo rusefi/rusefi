@@ -177,7 +177,7 @@ brain_pin_diag_e Tle9104::getDiag(size_t pin) {
 			off_diag = diag_off >> 6;
 			break;
 		default:
-			return PIN_INVALID;
+			return PIN_UNKNOWN;
 	}
 
 	// on diag has 3 bits

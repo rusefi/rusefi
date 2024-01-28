@@ -409,7 +409,7 @@ brain_pin_diag_e Tle6240::getDiag(size_t pin)
 	int diagVal;
 
 	if (pin >= TLE6240_OUTPUTS)
-		return PIN_INVALID;
+		return PIN_UNKNOWN;
 
 	val = (diag[(pin > 7) ? 1 : 0] >> ((pin % 8) * 2)) & 0x03;
 	if (val == 0x3)

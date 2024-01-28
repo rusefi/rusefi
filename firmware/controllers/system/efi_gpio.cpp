@@ -657,10 +657,12 @@ void OutputPin::setDefaultPinState(pin_output_mode_e outputMode) {
 
 brain_pin_diag_e OutputPin::getDiag() const {
 #if BOARD_EXT_GPIOCHIPS > 0
-	return gpiochips_getDiag(brainPin);
-#else
-	return PIN_OK;
+	if (!brain_pin_is_onchip(brainPin)) {
+		return gpiochips_getDiag(brainPin);
+	}
 #endif
+	// TODO: add hook to board code for custom diagnostic, like it is done on S105
+	return PIN_UNKNOWN;
 }
 
 void initMiscOutputPins() {

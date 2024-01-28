@@ -593,7 +593,7 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 	int diag = PIN_OK;
 
 	if (pin >= MC33810_DIRECT_OUTPUTS)
-		return PIN_INVALID;
+		return PIN_UNKNOWN;
 
 	if (pin < 4) {
 		/* OUT drivers */

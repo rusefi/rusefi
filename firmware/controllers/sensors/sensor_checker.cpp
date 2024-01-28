@@ -210,7 +210,7 @@ void SensorChecker::onSlowCallback() {
 		}
 
 		auto diag = pin.getDiag();
-		if (diag != PIN_OK && diag != PIN_INVALID) {
+		if (diag != PIN_OK && diag != PIN_UNKNOWN) {
 		    unhappyInjector = 1 + i;
 			auto code = getCodeForInjector(i, diag);
 
@@ -235,7 +235,7 @@ void SensorChecker::onSlowCallback() {
 		}
 
 		auto diag = pin.getDiag();
-		if (diag != PIN_OK && diag != PIN_INVALID) {
+		if (diag != PIN_OK && diag != PIN_UNKNOWN) {
 			auto code = getCodeForIgnition(i, diag);
 
 			char description[32];

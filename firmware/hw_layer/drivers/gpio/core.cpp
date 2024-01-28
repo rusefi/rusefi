@@ -305,7 +305,7 @@ int gpiochips_readPad(brain_pin_e pin)
 /**
  * @brief Get diagnostic for given gpio
  * @details actual output value depend on gpiochip capabilities
- * returns PIN_INVALID in case of pin not belong to any gpio chip
+ * returns PIN_UNKNOWN in case of pin not belong to any gpio chip
  * returns PIN_OK in case of chip does not support getting diagnostic
  * else return brain_pin_diag_e from gpiochip driver;
  */
@@ -314,7 +314,7 @@ brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin) {
 	gpiochip *chip = gpiochip_find(pin);
 
 	if (!chip)
-		return PIN_INVALID;
+		return PIN_UNKNOWN;
 
 	return chip->chip->getDiag(pin - chip->base);
 }

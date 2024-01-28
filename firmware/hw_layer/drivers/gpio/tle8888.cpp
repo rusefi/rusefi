@@ -1040,7 +1040,7 @@ brain_pin_diag_e Tle8888::getInputDiag(unsigned int pin)
 brain_pin_diag_e Tle8888::getDiag(size_t pin)
 {
 	if (pin >= TLE8888_SIGNALS)
-		return PIN_INVALID;
+		return PIN_UNKNOWN;
 
 	if (pin < TLE8888_OUTPUTS)
 		return getOutputDiag(pin);

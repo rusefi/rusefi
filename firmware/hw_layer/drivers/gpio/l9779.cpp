@@ -616,7 +616,7 @@ int L9779::readPad(size_t pin) {
 brain_pin_diag_e L9779::getDiag(size_t pin)
 {
 	if (pin >= L9779_SIGNALS)
-		return PIN_INVALID;
+		return PIN_UNKNOWN;
 
 	if (pin < L9779_OUTPUTS)
 		return getOutputDiag(pin);
