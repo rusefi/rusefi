@@ -114,7 +114,7 @@ void pinDiag2string(char *buffer, size_t size, brain_pin_diag_e pin_diag) {
 	/* use autogeneraged helpers here? */
 	if (pin_diag == PIN_OK) {
 		chsnprintf(buffer, size, "Ok");
-	} else if (pin_diag != PIN_INVALID) {
+	} else if (pin_diag != PIN_UNKNOWN) {
 		chsnprintf(buffer, size, "%s%s%s%s%s%s",
 			pin_diag & PIN_DRIVER_OFF ? "driver_off " : "",
 			pin_diag & PIN_OPEN ? "open_load " : "",

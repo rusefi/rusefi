@@ -112,7 +112,7 @@ int ProtectedGpios::readPad(size_t pin) {
 
 brain_pin_diag_e ProtectedGpios::getDiag(size_t pin) {
 	if (pin >= PROTECTED_CHANNEL_COUNT) {
-		return PIN_INVALID;
+		return PIN_UNKNOWN;
 	}
 
 	return m_channels[pin].getDiag();

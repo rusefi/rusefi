@@ -372,7 +372,7 @@ brain_pin_diag_e Mc33972::getDiag(size_t pin) {
 	brain_pin_diag_e diag = PIN_OK;
 
 	if (pin >= MC33972_INPUTS)
-		return PIN_INVALID;
+		return PIN_UNKNOWN;
 
 	/* one diag bit for all pins */
 	if (i_state & FLAG_THERM)
