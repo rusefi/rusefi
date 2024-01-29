@@ -15,6 +15,7 @@ static void harleyEngine() {
 void setHarley() {
     harleyEngine();
     engineConfiguration->displacement = 1.9;
+    engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
     for (size_t i = engineConfiguration->cylindersCount;i < MAX_CYLINDER_COUNT;i++) {
         engineConfiguration->injectionPins[i] = Gpio::Unassigned;
@@ -35,6 +36,7 @@ void setHarley() {
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
 
+  engineConfiguration->oddFireEngine = true;
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
 	engineConfiguration->mapCamDetectionAnglePosition = 50;
 
