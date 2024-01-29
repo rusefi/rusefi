@@ -149,7 +149,7 @@ pins:
     function: Ignition cylinder 3
     class: outputs
     ts_name: Ign 3
-    type: hl
+    type: high_logic
     color: blue
 
 
@@ -168,63 +168,63 @@ pins:
     function: Ignition cylinder 12
     class: outputs
     ts_name: Ign 12
-    type: hl
+    type: high_logic
 
   - pin: 26
     id: G3
     function: Ignition cylinder 11
     class: outputs
     ts_name: Ign 11
-    type: hl
+    type: high_logic
 
   - pin: 27
     id: G4
     function: Ignition cylinder 10
     class: outputs
     ts_name: Ign 10
-    type: hl
+    type: high_logic
 
   - pin: 28
     id: G5
     function: Ignition cylinder 9
     class: outputs
     ts_name: Ign 9
-    type: hl
+    type: high_logic
 
   - pin: 29
     id: G6
     function: Ignition cylinder 8
     class: outputs
     ts_name: Ign 8
-    type: hl
+    type: high_logic
 
   - pin: 30
     id: G7
     function: Ignition cylinder 7
     class: outputs
     ts_name: Ign 7
-    type: hl
+    type: high_logic
 
   - pin: 31
     id: G8
     function: Ignition cylinder 6
     class: outputs
     ts_name: Ign 6
-    type: hl
+    type: high_logic
 
   - pin: 32
     id: C7
     function: Ignition cylinder 5
     class: outputs
     ts_name: Ign 5
-    type: hl
+    type: high_logic
 
   - pin: 33
     id: C8
     function: Ignition cylinder 4
     class: outputs
     ts_name: Ign 4
-    type: hl
+    type: high_logic
     color: orange/brown
 
   - pin: 34
@@ -232,7 +232,7 @@ pins:
     function: Ignition cylinder 2
     class: outputs
     ts_name: Ign 2
-    type: hl
+    type: high_logic
     color: white
 
   - pin: 35
@@ -240,7 +240,7 @@ pins:
     function: Ignition cylinder 1
     class: outputs
     ts_name: Ign 1
-    type: hl
+    type: high_logic
     color: green
 
 info:
@@ -319,13 +319,13 @@ info:
     - pin: 23
       x: 1386
       y: 405
-    - pin: 24 
+    - pin: 24
       x: 294
       y: 510
     - pin: 25
       x: 398
       y: 510
-    - pin: 26 
+    - pin: 26
       x: 502
       y: 510
     - pin: 27
@@ -349,7 +349,7 @@ info:
     - pin: 33
       x: 1230
       y: 510
-    - pin: 34 
+    - pin: 34
       x: 1334
       y: 510
     - pin: 35

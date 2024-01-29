@@ -56,7 +56,7 @@ jobs:
           "gp_low":"aquamarine",
           "gp_pp":"cyan",
           "hall":"darkolivegreen",
-          "hl":"gold",
+          "high_logic":"gold",
           "hs":"indigo",
           "ign":"magenta",
           "inj":"maroon",
