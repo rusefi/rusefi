@@ -73,7 +73,6 @@ fi
 
 # bootloader and composite image
 if [ "$USE_OPENBLT" = "yes" ]; then
-  rm -f deliver/openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
   $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -o bootloader/blbuild/openblt_$PROJECT_BOARD.dfu
 
@@ -82,10 +81,8 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   cp bootloader/blbuild/openblt_$PROJECT_BOARD.dfu  deliver/openblt.dfu
   #cp bootloader/blbuild/openblt_$PROJECT_BOARD.hex  deliver/openblt.hex
 
-  rm -f deliver/rusefi_openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"
   $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu -b deliver/rusefi.bin
-  #todo: how to create 'signed' hex and srec? Do we need?
 fi
 
 echo "$SCRIPT_NAME: build folder content:"
