@@ -33,7 +33,9 @@ fi
 if [ "$USE_OPENBLT" = "yes" ]; then
   # TODO: why is this rm necessary?
   rm -f pch/pch.h.gch/*
-  cd bootloader; make PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU $OPTIONAL_BOARD_DIR_BL -j12; cd ..
+  cd bootloader
+  make PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU $OPTIONAL_BOARD_DIR_BL -j12
+  cd ..
   [ -e bootloader/blbuild/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
 
