@@ -191,7 +191,7 @@
         <constant digits="0" name="boostControlMinTps" units="">30.0</constant>
         <constant digits="0" name="boostControlMinMap" units="">110.0</constant>
         <constant digits="0" name="crankingTimingAngle" units="deg">6.0</constant>
-        <constant name="ignitionMode">"Single Coil"</constant>
+        <constant name="ignitionMode">"Individual Coils"</constant>
         <constant digits="0" name="gapTrackingLengthOverride" units="count">0.0</constant>
         <constant digits="0" name="maxIdleVss" units="kph">0.0</constant>
         <constant digits="0" name="minOilPressureAfterStart" units="kPa">0.0</constant>
@@ -655,7 +655,7 @@
         <constant digits="0" name="tps2SecondaryMax" units="ADC">0.0</constant>
         <constant name="widebandOnSecondBus">"1"</constant>
         <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
-        <constant name="oddFireEngine">"false"</constant>
+        <constant name="oddFireEngine">"true"</constant>
         <constant name="boardUseTachPullUp">"5v"</constant>
         <constant name="boardUseTempPullUp">"Piggyback Mode"</constant>
         <constant name="yesUnderstandLocking">"no"</constant>
@@ -4635,7 +4635,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.26.f407-discovery.3720514916" version="5.0"/>
+    <versionInfo firmwareInfo="20240101" nPages="1" signature="rusEFI master.2024.01.29.f407-discovery.3720514916" version="5.0"/>
     <bibliography author="rusEFI 20240101" writeDate="date"/>
     <settings/>
     <userComments/>
