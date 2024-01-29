@@ -50,8 +50,10 @@ chmod u+x $HEX2DFU
 mkdir -p deliver
 rm -f deliver/*
 
+CONTROL_SUM_OPTION="-C 0x1C"
+
 echo "$SCRIPT_NAME: invoking hex2dfu for incremental rusEFI image"
-$HEX2DFU -i build/rusefi.hex -C 0x1C -o build/rusefi.dfu
+$HEX2DFU -i build/rusefi.hex $CONTROL_SUM_OPTION -o build/rusefi.dfu
 
 if [ "$USE_OPENBLT" = "yes" ]; then
   # this image is suitable for update through bootloader only
@@ -83,7 +85,7 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   #cp bootloader/blbuild/openblt_$PROJECT_BOARD.hex  deliver/openblt.hex
 
   echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"
-  $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu -b deliver/rusefi.bin
+  $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex $CONTROL_SUM_OPTION -o deliver/rusefi.dfu -b deliver/rusefi.bin
 fi
 
 echo "$SCRIPT_NAME: build folder content:"
