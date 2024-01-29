@@ -32,6 +32,7 @@ fi
 
 if [ "$USE_OPENBLT" = "yes" ]; then
   # TODO: why is this rm necessary?
+  # TODO: probably make/gcc do not like two separate projects (primary firmware and bootloader) co-existing in same folder structure?
   rm -f pch/pch.h.gch/*
   cd bootloader
   make PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU $OPTIONAL_BOARD_DIR_BL -j12
