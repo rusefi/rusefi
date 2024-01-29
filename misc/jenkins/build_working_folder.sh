@@ -154,52 +154,14 @@ pwd
 zip -r ../$FULL_BUNDLE_FILE *
 [ $? -eq 0 ] || (echo "$SCRIPT_NAME: ERROR INVOKING zip"; exit 1)
 
-echo "$SCRIPT_FILE: Bundle $FULL_BUNDLE_FILE ready"
+echo "$SCRIPT_NAME: Bundle $FULL_BUNDLE_FILE ready"
 cd ..
 ls -l $FULL_BUNDLE_FILE
 
 [ -e $FULL_BUNDLE_FILE ] || { echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1; }
 ls -l $UPDATE_BUNDLE_FILE
 
-cd artifacts
-
-if [ -n "$RUSEFI_SSH_USER" ]; then
- echo "$SCRIPT_NAME: Uploading full bundle"
- retVal=0
- if [ "${LTS}" = "true" ]; then
-   REMOTE_DESTINATION=${LTS_FOLDER}
- else
-   REMOTE_DESTINATION=build_server
- fi
- tar -czf - $FULL_BUNDLE_SHORT_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p ${REMOTE_DESTINATION}; tar -xzf - -C ${REMOTE_DESTINATION}"
- retVal=$?
- if [ $retVal -ne 0 ]; then
-  echo "full bundle upload failed"
-  exit 1
- fi
-else
-  echo "Upload not configured"
-fi
-
-
-if [ -n "$RUSEFI_SSH_USER" ]; then
- retVal=0
- if [ "${LTS}" = "true" ]; then
-   REMOTE_DESTINATION=${LTS_FOLDER}/autoupdate
- else
-   REMOTE_DESTINATION=build_server/autoupdate
- fi
- tar -czf - $UPDATE_BUNDLE_SHORT_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p ${REMOTE_DESTINATION}; tar -xzf - -C ${REMOTE_DESTINATION}"
- retVal=$?
- if [ $retVal -ne 0 ]; then
-  echo "autoupdate upload failed"
-  exit 1
- fi
-else
-  echo "Upload not configured"
-fi
-
-cd ..
+echo "$SCRIPT_NAME: We are back in root directory"
 
 pwd
 ls -l artifacts
