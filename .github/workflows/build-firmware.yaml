@@ -602,6 +602,11 @@ jobs:
       if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "firmware/tunerstudio/generated/rusefi_${{matrix.short-board-name}}.ini" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
 
+    - name: Upload Bundle
+      if: ${{ env.full == 'true' }}
+      working-directory: ./artifacts
+      run: bash ../firmware/bin/upload_bundle.sh ${{matrix.build-target}}
+
     - name: Add Bundles to Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
       uses: ncipollo/release-action@v1.14.0
