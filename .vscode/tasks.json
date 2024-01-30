@@ -196,6 +196,22 @@
 			}
 		},
 		{
+			"label": "Build Firmware (F407 \"basic\")",
+			"type": "shell",
+			"command": "make -j12 PROJECT_BOARD=f407-discovery",
+			"windows": {
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=f407-discovery'"
+			},
+			"options": {
+				"cwd": "${workspaceRoot}/firmware"
+			},
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
 			"label": "Build Unit Tests",
 			"type": "shell",
 			"command": "make -j12",
