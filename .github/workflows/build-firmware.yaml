@@ -605,7 +605,7 @@ jobs:
     - name: Upload Bundle
       if: ${{ env.full == 'true' }}
       working-directory: ./artifacts
-      run: bash ../firmware/bin/upload_bundle.sh ${{matrix.build-target}}
+      run: bash ../firmware/bin/upload_bundle.sh ${{matrix.build-target}} ${{ toJSON(inputs.lts) }}
 
     - name: Add Bundles to Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
