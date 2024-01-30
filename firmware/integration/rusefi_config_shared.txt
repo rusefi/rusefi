@@ -77,6 +77,7 @@
 #define GAUGE_NAME_ETB_ERROR "ETB: position error"
 #define GAUGE_NAME_ETB_DUTY "ETB: Duty"
 #define GAUGE_NAME_IDLE_POSITION "Idle: Position sensor"
+#define GAUGE_NAME_IDLE_RPM_TARGET "Idle: RPM Target"
 #define GAUGE_NAME_LAST_ERROR "Last error"
 #define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
 #define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
