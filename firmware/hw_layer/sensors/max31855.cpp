@@ -101,7 +101,7 @@ static uint32_t readEgtPacket(int egtChannel) {
 
 #define GET_TEMPERATURE_C(x) (((x) >> 18) / 4)
 
-uint16_t getMax31855EgtValue(int egtChannel) {
+static uint16_t getMax31855EgtValue(int egtChannel) {
 	uint32_t packet = readEgtPacket(egtChannel);
 	max_32855_code code = getResultCode(packet);
 	if (code != MC_OK) {
@@ -155,6 +155,13 @@ void initMax31855(spi_device_e device, egt_cs_array_t max31855_cs) {
 
 			spiConfig[i].cr1 = getSpiPrescaler(_5MHz, device);
 		}
+	}
+}
+
+void grabEgtValues() {
+	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
+	// todo: migrate to SensorType framework!
+		engine->currentEgtValue[i] = getMax31855EgtValue(i);
 	}
 }
 

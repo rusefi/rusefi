@@ -32,6 +32,7 @@
 #include "fan_control.h"
 #include "ac_control.h"
 #include "vr_pwm.h"
+#include "max31855.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -160,6 +161,9 @@ void Engine::periodicSlowCallback() {
 	updateVrThresholdPwm();
 
 	updateGppwm();
+#if EFI_MAX_31855
+	grabEgtValues();
+#endif /* EFI_MAX_31855 */
 
 	engine->engineModules.apply_all([](auto & m) { m.onSlowCallback(); });
 
