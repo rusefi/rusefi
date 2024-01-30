@@ -168,7 +168,6 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	return getGpioPorts()[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
-#if ! EFI_BOOTLOADER
 /**
  * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
  */
@@ -179,10 +178,13 @@ ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
 	if (brain_pin_is_onchip(brainPin))
 		return getBrainPinIndex(brainPin);
 
+
+// huh why conditional on EFI_BOOTLOADER? some weird technical debt while does it fail only with debug options?
+#if ! EFI_BOOTLOADER
 	criticalError("%s: Invalid on-chip Gpio: %d", msg, brainPin);
+#endif // EFI_BOOTLOADER
 	return EFI_ERROR_CODE;
 }
-#endif // EFI_BOOTLOADER
 
 /**
  * Parse string representation of physical pin into Gpio ordinal.
