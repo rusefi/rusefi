@@ -30,7 +30,7 @@ const char* getCriticalErrorMessage(void) {
 void checkLastBootError() {
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
-	
+
 	switch (sramState->Cookie) {
 	case ErrorCookie::FirmwareError:
 		efiPrintf("Last boot had firmware error: %s", sramState->ErrorString);
@@ -311,7 +311,8 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 #endif // EFI_BACKUP_SRAM
 #else
 
-	char errorBuffer[200];
+  // large buffer on stack is risky we better use normal memory
+	static char errorBuffer[200];
 
 	va_list ap;
 	va_start(ap, fmt);
