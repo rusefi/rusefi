@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-// that git submodule uses non gralde folder structure so here we are hacking things
+// that git submodule uses non gradle folder structure so here we are hacking things
 sourceSets {
     main {
         java {
