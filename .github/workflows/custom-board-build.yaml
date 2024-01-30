@@ -165,6 +165,12 @@ jobs:
           name: rusefi.map
           path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.map
 
+      - name: Upload build elf artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rusefi.elf
+          path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.elf
+
       - name: Build console
         working-directory: ${{inputs.rusefi_dir}}
         run: bash misc/jenkins/build_java_console.sh
