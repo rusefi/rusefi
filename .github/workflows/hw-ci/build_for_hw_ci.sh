@@ -20,9 +20,8 @@ export BOARD_META_PATH=$(bash bin/find_meta_info.sh ${HW_FOLDER} ${HW_TARGET})
 
 echo "We aren't guaranteed a clean machine every time, so manually clean the output."
 make clean
-cd ..
 
 export EXTRA_2_PARAMS=-DHARDWARE_CI
 
 echo Build Firmware
-misc/jenkins/compile_other_versions/compile.sh
+bash config/boards/common_script.sh "${BOARD_META_PATH}"

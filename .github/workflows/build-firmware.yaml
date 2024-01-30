@@ -589,8 +589,10 @@ jobs:
       # Build the firmware!
     - name: Build Firmware
       if: ${{ env.skip != 'true' }}
+      working-directory: ./firmware/
       run: |
-        bash misc/jenkins/compile_other_versions/compile.sh
+        make clean
+        bash config/boards/common_script.sh ${{ env.BOARD_META_PATH }}
 
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
