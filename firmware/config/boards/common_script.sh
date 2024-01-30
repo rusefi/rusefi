@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# this script is supposed to be executed from within 'firmware' folder
+
 PROJECT_BOARD=$1
 PROJECT_CPU=$2
 
