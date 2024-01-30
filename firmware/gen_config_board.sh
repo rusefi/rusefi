@@ -19,8 +19,8 @@ cd ../firmware
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
 echo "the storage section of rusefiXXX.ini is updated as well"
 
-BOARD_DIR=$1
-SHORT_BOARD_NAME=$2
+BOARD_DIR=${1:-$BOARD_DIR}
+SHORT_BOARD_NAME=${2:-$SHORT_BOARD_NAME}
 
 if [ -z "$BOARD_DIR" ]; then
 	echo "Board name parameter expected"

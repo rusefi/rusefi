@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-HW_FOLDER=$1
-HW_TARGET=$2
+export BOARD_DIR=${1:-$BOARD_DIR}
+export SHORT_BOARD_NAME=${2:-$SHORT_BOARD_NAME}
 
 # for instance
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/f407-discovery f407-discovery
@@ -9,12 +9,12 @@ HW_TARGET=$2
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/proteus        proteus_f7_debug
 
 set -e
-echo "HW CI build [$HW_FOLDER][$HW_TARGET]"
+echo "HW CI build [$BOARD_DIR][$SHORT_BOARD_NAME]"
 
 cd firmware
 
 ./gen_live_documentation.sh
-./gen_config_board.sh $HW_FOLDER $HW_TARGET
+./gen_config_board.sh $BOARD_DIR $SHORT_BOARD_NAME
 
 echo "We aren't guaranteed a clean machine every time, so manually clean the output."
 make clean
@@ -23,4 +23,4 @@ cd ..
 export EXTRA_2_PARAMS=-DHARDWARE_CI
 
 echo Build Firmware
-misc/jenkins/compile_other_versions/compile.sh $HW_FOLDER $HW_TARGET
+make -j$(nproc) -r

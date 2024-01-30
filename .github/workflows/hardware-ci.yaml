@@ -67,7 +67,9 @@ jobs:
       run: arm-none-eabi-gcc -v
 
     - name: Build Firmware
-      run: .github/workflows/hw-ci/build_for_hw_ci.sh ${{matrix.folder}} ${{matrix.build-target}}
+      run: |
+        source ${{matrix.folder}}/compile_${{matrix.build-target}}.sh
+        .github/workflows/hw-ci/build_for_hw_ci.sh
 
     - name: Check for STLINK
       run: lsusb | grep 'ST-LINK\|STLINK'
