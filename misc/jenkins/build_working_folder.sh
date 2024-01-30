@@ -11,6 +11,8 @@ set -e
 FULL_BUNDLE_FILE="${BUNDLE_FULL_NAME}.zip"
 UPDATE_BUNDLE_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
 
+LTS_NAME=$1
+LTS_FOLDER="build_server/lts/${LTS_NAME}"
 LTS=$2
 
 echo "${BUNDLE_FULL_NAME}: Packaging temp/$FULL_BUNDLE_FILE file"
@@ -150,7 +152,7 @@ if [ -n "$RUSEFI_SSH_USER" ]; then
  echo "$SCRIPT_NAME: Uploading full bundle"
  retVal=0
  if [ "${LTS}" = "true" ]; then
-   tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/lts/$1; tar -xzf - -C build_server/lts/$1"
+   tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p ${LTS_FOLDER}; tar -xzf - -C ${LTS_FOLDER}"
    retVal=$?
  else
    tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "tar -xzf - -C build_server"
@@ -184,7 +186,7 @@ ls -l $UPDATE_BUNDLE_FILE
 if [ -n "$RUSEFI_SSH_USER" ]; then
  retVal=0
  if [ "${LTS}" = "true" ]; then
-   tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/lts/$1/autoupdate; tar -xzf - -C build_server/lts/$1/autoupdate"
+   tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p ${LTS_FOLDER}/autoupdate; tar -xzf - -C ${LTS_FOLDER}/autoupdate"
    retVal=$?
  else
    tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/autoupdate; tar -xzf - -C build_server/autoupdate"
