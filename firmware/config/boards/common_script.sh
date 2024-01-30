@@ -63,19 +63,8 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   #cp build/rusefi.hex  deliver/rusefi_update.hex
   # srec is the only format used by OpenBLT host tools
   cp build/rusefi.srec deliver/rusefi_update.srec
-else
-  # standalone images (for use with no bootloader)
-  cp build/rusefi.bin  deliver/
-  cp build/rusefi.dfu  deliver/
-  cp build/rusefi.hex  deliver/
-  if [ "$INCLUDE_ELF" = "yes" ]; then
-   # we definitely need .elf .map .list
-   cp build/rusefi.*  deliver/
-  fi
-fi
 
-# bootloader and composite image
-if [ "$USE_OPENBLT" = "yes" ]; then
+  # bootloader and composite image
   echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
   $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -o bootloader/blbuild/openblt_$PROJECT_BOARD.dfu
 
@@ -86,6 +75,16 @@ if [ "$USE_OPENBLT" = "yes" ]; then
 
   echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"
   $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex $CONTROL_SUM_OPTION -o deliver/rusefi.dfu -b deliver/rusefi.bin
+
+else
+  # standalone images (for use with no bootloader)
+  cp build/rusefi.bin  deliver/
+  cp build/rusefi.dfu  deliver/
+  cp build/rusefi.hex  deliver/
+  if [ "$INCLUDE_ELF" = "yes" ]; then
+   # we definitely need .elf .map .list
+   cp build/rusefi.*  deliver/
+  fi
 fi
 
 echo "$SCRIPT_NAME: build folder content:"
