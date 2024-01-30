@@ -85,6 +85,7 @@ public class TsOutputs {
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
 	public static final String GAUGE_NAME_IAT = "IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
+	public static final String GAUGE_NAME_IDLE_RPM_TARGET = "Idle: RPM Target";
 	public static final String GAUGE_NAME_IGNITION_LOAD = "Ign: Load";
 	public static final String GAUGE_NAME_IGNITION_MODE = "Ign: Mode";
 	public static final String GAUGE_NAME_INJECTION_MODE = "Fuel: Injection mode";
