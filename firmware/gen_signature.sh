@@ -2,11 +2,11 @@
 
 # file gen_signature.sh
 
-SHORT_BOARDNAME=$1
+SHORT_BOARD_NAME=$1
 
 
-SIGNATURE_FILE_NAME=tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt
-echo "Generating signature for ${SHORT_BOARDNAME}"
+SIGNATURE_FILE_NAME=tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt
+echo "Generating signature for ${SHORT_BOARD_NAME}"
 
 # generate a unique signature
 date=`TZ=Europe/London date +"%Y.%m.%d"`
@@ -24,6 +24,6 @@ else
  echo "! Current branch is: $branchname" >> ${SIGNATURE_FILE_NAME}
 fi
 
-echo "#define TS_SIGNATURE \"rusEFI $branchname.$date.${SHORT_BOARDNAME}.@@SIGNATURE_HASH@@\"" >> ${SIGNATURE_FILE_NAME}
+echo "#define TS_SIGNATURE \"rusEFI $branchname.$date.${SHORT_BOARD_NAME}.@@SIGNATURE_HASH@@\"" >> ${SIGNATURE_FILE_NAME}
 
 exit 0

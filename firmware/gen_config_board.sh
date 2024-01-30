@@ -20,29 +20,29 @@ echo "This script reads rusefi_config.txt and produces firmware persistent confi
 echo "the storage section of rusefiXXX.ini is updated as well"
 
 BOARD_DIR=$1
-SHORT_BOARDNAME=$2
+SHORT_BOARD_NAME=$2
 
 if [ -z "$BOARD_DIR" ]; then
 	echo "Board name parameter expected"
 	exit 1
 fi
 
-if [ -z "$SHORT_BOARDNAME" ]; then
+if [ -z "$SHORT_BOARD_NAME" ]; then
 	echo "ShortBoard name parameter expected"
 	exit 1
 fi
 
-INI="rusefi_${SHORT_BOARDNAME}.ini"
+INI="rusefi_${SHORT_BOARD_NAME}.ini"
 
-echo "BOARD_DIR=${BOARD_DIR} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
+echo "BOARD_DIR=${BOARD_DIR} SHORT_BOARD_NAME=${SHORT_BOARD_NAME}"
 
-bash gen_signature.sh ${SHORT_BOARDNAME}
+bash gen_signature.sh ${SHORT_BOARD_NAME}
 
 PREPEND_FILE=${BOARD_DIR}/prepend.txt
 
 BOARD_SPECIFIC_URL=$(cat $PREPEND_FILE | grep MAIN_HELP_URL | cut -d " " -f 3 | sed -e 's/^"//' -e 's/"$//')
 
-echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL] for [$SHORT_BOARDNAME] from [$BOARD_DIR]"
+echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL] for [$SHORT_BOARD_NAME] from [$BOARD_DIR]"
 if [ "" = "$BOARD_SPECIFIC_URL" ]; then
   BOARD_SPECIFIC_URL=https://rusefi.com/s/wiki
 fi
@@ -58,8 +58,8 @@ java \
  $COMMON_GEN_CONFIG \
 	-enumInputFile controllers/algo/rusefi_hw_stm32_enums.h \
 	-enumInputFile controllers/algo/rusefi_hw_adc_enums.h \
-  -c_defines        controllers/generated/rusefi_generated_${SHORT_BOARDNAME}.h \
-  -c_destination    controllers/generated/engine_configuration_generated_structures_${SHORT_BOARDNAME}.h
+  -c_defines        controllers/generated/rusefi_generated_${SHORT_BOARD_NAME}.h \
+  -c_destination    controllers/generated/engine_configuration_generated_structures_${SHORT_BOARD_NAME}.h
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARD_DIR}"; exit 1; }
 
@@ -73,8 +73,8 @@ fi
 # 1) using unique file name for each configuration?
 # 2) leverage consistent caching mechanism so that image is generated only in case of fresh .ini. Laziest approach would be to return exit code from java process above
 #
-hw_layer/mass_storage/create_ini_image.sh            ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h             128 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
-hw_layer/mass_storage/create_ini_image_compressed.sh ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h 1088 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
+hw_layer/mass_storage/create_ini_image.sh            ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h             128 ${SHORT_BOARD_NAME} ${BOARD_SPECIFIC_URL}
+hw_layer/mass_storage/create_ini_image_compressed.sh ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h 1088 ${SHORT_BOARD_NAME} ${BOARD_SPECIFIC_URL}
 
-echo "Happy ${SHORT_BOARDNAME}!"
+echo "Happy ${SHORT_BOARD_NAME}!"
 exit 0

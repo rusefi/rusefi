@@ -1,5 +1,5 @@
 
-COMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARDNAME} \
+COMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARD_NAME} \
  -jar ../java_tools/configuration_definition/build/libs/config_definition.jar"
 
 COMMON_GEN_CONFIG="
@@ -14,8 +14,8 @@ COMMON_GEN_CONFIG="
  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp controllers/lua/generated/value_lookup_generated.md \
  -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
  -initialize_to_zero false \
- -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
- -signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
+ -signature tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt \
+ -signature_destination controllers/generated/signature_${SHORT_BOARD_NAME}.h \
  -ts_output_name generated/${INI} \
  -prepend integration/rusefi_config_trigger.txt \
  -prepend ${BOARD_DIR}/prepend.txt \

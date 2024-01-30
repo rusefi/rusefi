@@ -3,7 +3,7 @@
 # the storage section of rusefi.ini is updated as well
 
 BOARDNAME=subaru_eg33
-SHORT_BOARDNAME=${BOARDNAME}_f7
+SHORT_BOARD_NAME=${BOARDNAME}_f7
 BOARD_DIR=config/boards/${BOARDNAME}
 
 
@@ -20,12 +20,12 @@ BOARD_DIR=config/boards/${BOARDNAME}
 
 
 
-  INI="rusefi_${SHORT_BOARDNAME}.ini"
+  INI="rusefi_${SHORT_BOARD_NAME}.ini"
 
 
 
 
-bash gen_signature.sh ${SHORT_BOARDNAME}
+bash gen_signature.sh ${SHORT_BOARD_NAME}
 
 source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
