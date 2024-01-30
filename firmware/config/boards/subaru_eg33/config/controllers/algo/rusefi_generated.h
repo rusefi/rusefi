@@ -469,7 +469,7 @@
 #define GAUGE_NAME_IAC "Idle: Position"
 #define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_IDLE_POSITION "Idle: Position sensor"
-#define GAUGE_NAME_IDLE_RPM_TARGET "Idle: RPM Target"
+#define GAUGE_NAME_IDLE_RPM_TARGET "Idle: Target RPM"
 #define GAUGE_NAME_IGNITION_LOAD "Ign: Load"
 #define GAUGE_NAME_IGNITION_MODE "Ign: Mode"
 #define GAUGE_NAME_INJECTION_MODE "Fuel: Injection mode"
@@ -975,7 +975,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3932957992
+#define SIGNATURE_HASH 1247938132
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1244,7 +1244,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2024.01.30.subaru_eg33_f7.3932957992"
+#define TS_SIGNATURE "rusEFI (FOME) master.2024.01.30.subaru_eg33_f7.1247938132"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
