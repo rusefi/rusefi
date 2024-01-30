@@ -52,9 +52,6 @@ rm -f deliver/*
 
 CONTROL_SUM_OPTION="-C 0x1C"
 
-echo "$SCRIPT_NAME: invoking hex2dfu for incremental rusEFI image"
-$HEX2DFU -i build/rusefi.hex $CONTROL_SUM_OPTION -o build/rusefi.dfu
-
 if [ "$USE_OPENBLT" = "yes" ]; then
   # this image is suitable for update through bootloader only
   # do not deliver update images in any format that can confuse users
@@ -77,6 +74,9 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex $CONTROL_SUM_OPTION -o deliver/rusefi.dfu -b deliver/rusefi.bin
 
 else
+  echo "$SCRIPT_NAME: invoking hex2dfu for incremental rusEFI image"
+  $HEX2DFU -i build/rusefi.hex $CONTROL_SUM_OPTION -o build/rusefi.dfu
+
   # standalone images (for use with no bootloader)
   cp build/rusefi.bin  deliver/
   cp build/rusefi.dfu  deliver/
