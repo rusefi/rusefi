@@ -1,21 +1,45 @@
 #!/bin/bash
 
-# LTS: at some we had a dream of Long-term support branches. As of Jan 2024 this is not being used
-
-set -e
-
 #
 # file build_working_folder.sh
 #
+# LTS: at some we had a dream of Long-term support branches. As of Jan 2024 this is not being used
+#
+# export FOLDER="temp/rusefi.999.hello" ; export BUNDLE_FULL_NAME=rusefi_test ; export INI_FILE_OVERRIDE=firmware/tunerstudio/generated/rusefi_uaefi.ini ; bash misc/jenkins/build_working_folder.sh
+#
 
-FULL_BUNDLE_FILE="${BUNDLE_FULL_NAME}.zip"
-UPDATE_BUNDLE_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
+set -e
+
+if [[ -z "$FOLDER" ]]; then
+    echo "FOLDER variable not defined"
+    exit -1
+fi
+
+if [[ -z "BUNDLE_FULL_NAME" ]]; then
+    echo "BUNDLE_FULL_NAME variable not defined"
+    exit -1
+fi
+
+if [ -z $INI_FILE_OVERRIDE ]; then
+    echo "$SCRIPT_NAME: No ini_file specified!"
+    exit -1
+fi
+
+echo "$SCRIPT_NAME: Will use $INI_FILE_OVERRIDE"
+
+if [ ! -f $INI_FILE_OVERRIDE ]; then
+   echo "$INI_FILE_OVERRIDE does not exist"
+   exit -1
+fi
+
+FULL_BUNDLE_FILE="artifacts/${BUNDLE_FULL_NAME}.zip"
+UPDATE_BUNDLE_FILE="artifacts/${BUNDLE_FULL_NAME}_autoupdate.zip"
 
 LTS_NAME=$1
 LTS_FOLDER="build_server/lts/${LTS_NAME}"
 LTS=$2
 
-echo "${BUNDLE_FULL_NAME}: Packaging temp/$FULL_BUNDLE_FILE file"
+echo "${BUNDLE_FULL_NAME}: Packaging $FULL_BUNDLE_FILE file"
 
 rm -rf temp
 mkdir temp
@@ -25,7 +49,7 @@ echo "Entering $SCRIPT_NAME"
 
 pwd
 # This working folder name starts with 'temp/'
-echo "$SCRIPT_NAME: Working folder: $FOLDER"
+echo "$SCRIPT_NAME: Working folder [$FOLDER]"
 mkdir $FOLDER
 
 CONSOLE_FOLDER="$FOLDER/console"
@@ -42,17 +66,6 @@ ls -l $FOLDER
 # this magic file is created manually using 'make_package2.bat'
 wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $DRIVERS_FOLDER
 [ -e $DRIVERS_FOLDER/silent_st_drivers2.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers2.exe"; exit 1; }
-
-if [ -z $INI_FILE_OVERRIDE ]; then
-    echo "$SCRIPT_NAME: No ini_file specified!"
-    exit -1
-fi
-echo "$SCRIPT_NAME: Will use $INI_FILE_OVERRIDE"
-
-if [ ! -f $INI_FILE_OVERRIDE ]; then
-   echo "$INI_FILE_OVERRIDE does not exist"
-   exit -1
-fi
 
 if [ -z $RUSEFI_CONSOLE_SETTINGS ]; then
   echo "$SCRIPT_NAME: No rusefi_console_settings"
@@ -135,16 +148,34 @@ fi
 
 [ -e firmware/deliver/rusefi.bin ] || { echo "$SCRIPT_NAME: rusefi.bin not found"; exit 1; }
 
+mkdir -p artifacts
+rm -rf artifacts/*
+
 cd temp
-
-
-echo "Building bundle"
+echo "Building bundle inside 'temp' folder"
 pwd
-zip -r $FULL_BUNDLE_FILE *
+zip -r ../$FULL_BUNDLE_FILE *
 [ $? -eq 0 ] || (echo "$SCRIPT_NAME: ERROR INVOKING zip"; exit 1)
 
 echo "$SCRIPT_FILE: Bundle $FULL_BUNDLE_FILE ready"
+cd ..
 ls -l $FULL_BUNDLE_FILE
+
+echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
+rm -rf $CONSOLE_FOLDER/rusefi_autoupdate.exe
+rm -rf $CONSOLE_FOLDER/rusefi_console.exe
+rm -rf $CONSOLE_FOLDER/DfuSe
+rm -rf $CONSOLE_FOLDER/openocd
+rm -rf $DRIVERS_FOLDER
+
+# for autoupdate we do not want the unique folder name with timestamp
+cd $FOLDER
+pwd
+zip -r ../../$UPDATE_BUNDLE_FILE *
+cd ../..
+
+echo "$SCRIPT_NAME: We are back in root directory"
+
 
 [ -e $FULL_BUNDLE_FILE ] || { echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1; }
 
@@ -166,22 +197,7 @@ else
   echo "Upload not configured"
 fi
 
-cd ..
 
-mkdir -p artifacts
-mv temp/$FULL_BUNDLE_FILE artifacts
-
-echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
-rm -rf $CONSOLE_FOLDER/rusefi_autoupdate.exe
-rm -rf $CONSOLE_FOLDER/rusefi_console.exe
-rm -rf $CONSOLE_FOLDER/DfuSe
-rm -rf $CONSOLE_FOLDER/openocd
-rm -rf $DRIVERS_FOLDER
-
-# for autoupdate we do not want the unique folder name with timestamp
-cd $FOLDER
-zip -r ../$UPDATE_BUNDLE_FILE *
-cd ..
 ls -l $UPDATE_BUNDLE_FILE
 if [ -n "$RUSEFI_SSH_USER" ]; then
  retVal=0
@@ -199,10 +215,7 @@ if [ -n "$RUSEFI_SSH_USER" ]; then
 else
   echo "Upload not configured"
 fi
-cd ..
-mv temp/$UPDATE_BUNDLE_FILE artifacts
-
-echo "$SCRIPT_NAME: We are back in root directory"
 
 pwd
+ls -l artifacts
 echo "Exiting $SCRIPT_NAME"
