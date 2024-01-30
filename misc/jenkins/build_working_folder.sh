@@ -47,6 +47,11 @@ mkdir temp
 SCRIPT_NAME=build_working_folder.sh
 echo "Entering $SCRIPT_NAME"
 
+echo "Exploring build content"
+ls -l firmware/build
+echo "Exploring deliver content"
+ls -l firmware/deliver
+
 pwd
 # This working folder name starts with 'temp/'
 echo "$SCRIPT_NAME: Working folder [$FOLDER]"
@@ -58,14 +63,12 @@ DRIVERS_FOLDER="$FOLDER/drivers"
 update_ts_cacerts_FOLDER="$FOLDER/update-ts-cacerts"
 
 mkdir $CONSOLE_FOLDER
-mkdir $DRIVERS_FOLDER
+
+mkdir -p artifacts
+rm -rf artifacts/*
 
 mkdir $update_ts_cacerts_FOLDER
 ls -l $FOLDER
-
-# this magic file is created manually using 'make_package2.bat'
-wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $DRIVERS_FOLDER
-[ -e $DRIVERS_FOLDER/silent_st_drivers2.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers2.exe"; exit 1; }
 
 if [ -z $RUSEFI_CONSOLE_SETTINGS ]; then
   echo "$SCRIPT_NAME: No rusefi_console_settings"
@@ -74,30 +77,14 @@ else
   cp $RUSEFI_CONSOLE_SETTINGS $CONSOLE_FOLDER
 fi
 
+cp $INI_FILE_OVERRIDE $FOLDER
+
 cp java_console_binary/rusefi_autoupdate.jar $CONSOLE_FOLDER
 cp java_console_binary/rusefi_console.jar $CONSOLE_FOLDER
-cp java_tools/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar $FOLDER
-if [ -f simulator/build/rusefi_simulator.exe ]; then
-     cp simulator/build/rusefi_simulator.exe   $CONSOLE_FOLDER
-fi
-cp misc/console_launcher/rusefi_autoupdate.exe     $CONSOLE_FOLDER
-cp misc/console_launcher/rusefi_console.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_updater.exe     $FOLDER
 cp misc/console_launcher/update-ts-cacerts/* $update_ts_cacerts_FOLDER
-cp java_console/*.dll                     $CONSOLE_FOLDER
-cp -r java_console/bin                    $FOLDER
-cp firmware/ext/openblt/Host/libopenblt.dll        $CONSOLE_FOLDER
-# todo: proper build of build-libopenblt #5866 instead of having magic pre-compiled artifacts?
-cp firmware/ext/openblt/Host/libopenblt.so         $CONSOLE_FOLDER
-# *.dylib are Mac OS dynamic library files
-cp firmware/ext/openblt/Host/libopenblt.dylib      $CONSOLE_FOLDER
-cp firmware/ext/openblt/Host/openblt_jni.dll    $CONSOLE_FOLDER
-cp firmware/ext/openblt/Host/libopenblt_jni.so     $CONSOLE_FOLDER
-cp firmware/ext/openblt/Host/libopenblt_jni.dylib  $CONSOLE_FOLDER
-
 cp misc/console_launcher/readme.html      $FOLDER
 
-cp $INI_FILE_OVERRIDE $FOLDER
 # Unsetting since would not be used anywhere else
 INI_FILE_OVERRIDE=""
 RUSEFI_CONSOLE_SETTINGS=""
@@ -105,8 +92,6 @@ RUSEFI_CONSOLE_SETTINGS=""
 # users probably do not really care for this file
 # cp firmware/svnversion.h $FOLDER
 
-cp -r misc/install/openocd $CONSOLE_FOLDER
-cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 # 407 has additional version of firmware
 #cp firmware/deliver/rusefi_no_asserts.bin $FOLDER
 #cp firmware/deliver/rusefi_no_asserts.dfu $FOLDER
@@ -114,10 +99,6 @@ cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 #cp firmware/deliver/rusefi_no_asserts.hex $FOLDER
 
 pwd
-echo "Exploring build content"
-ls -l firmware/build
-echo "Exploring deliver content"
-ls -l firmware/deliver
 
 cp firmware/deliver/rusefi.bin $FOLDER
 
@@ -148,8 +129,39 @@ fi
 
 [ -e firmware/deliver/rusefi.bin ] || { echo "$SCRIPT_NAME: rusefi.bin not found"; exit 1; }
 
-mkdir -p artifacts
-rm -rf artifacts/*
+
+# for autoupdate we do not want the unique folder name with timestamp
+cd $FOLDER
+pwd
+zip -r ../../$UPDATE_BUNDLE_FILE *
+cd ../..
+
+echo "$SCRIPT_NAME: We are back in root directory. Now let's add files to make full bundle!"
+
+mkdir $DRIVERS_FOLDER
+# this magic file is created manually using 'make_package2.bat'
+wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $DRIVERS_FOLDER
+[ -e $DRIVERS_FOLDER/silent_st_drivers2.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers2.exe"; exit 1; }
+
+if [ -f simulator/build/rusefi_simulator.exe ]; then
+     cp simulator/build/rusefi_simulator.exe   $CONSOLE_FOLDER
+fi
+cp misc/console_launcher/rusefi_autoupdate.exe     $CONSOLE_FOLDER
+cp misc/console_launcher/rusefi_console.exe     $CONSOLE_FOLDER
+cp -r misc/install/openocd $CONSOLE_FOLDER
+cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
+
+cp java_console/*.dll                     $CONSOLE_FOLDER
+cp -r java_console/bin                    $FOLDER
+cp firmware/ext/openblt/Host/libopenblt.dll        $CONSOLE_FOLDER
+# todo: proper build of build-libopenblt #5866 instead of having magic pre-compiled artifacts?
+cp firmware/ext/openblt/Host/libopenblt.so         $CONSOLE_FOLDER
+# *.dylib are Mac OS dynamic library files
+cp firmware/ext/openblt/Host/libopenblt.dylib      $CONSOLE_FOLDER
+cp firmware/ext/openblt/Host/openblt_jni.dll    $CONSOLE_FOLDER
+cp firmware/ext/openblt/Host/libopenblt_jni.so     $CONSOLE_FOLDER
+cp firmware/ext/openblt/Host/libopenblt_jni.dylib  $CONSOLE_FOLDER
+# this is a bit dead cp java_tools/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar $FOLDER
 
 cd temp
 echo "Building bundle inside 'temp' folder"
@@ -160,22 +172,6 @@ zip -r ../$FULL_BUNDLE_FILE *
 echo "$SCRIPT_FILE: Bundle $FULL_BUNDLE_FILE ready"
 cd ..
 ls -l $FULL_BUNDLE_FILE
-
-echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
-rm -rf $CONSOLE_FOLDER/rusefi_autoupdate.exe
-rm -rf $CONSOLE_FOLDER/rusefi_console.exe
-rm -rf $CONSOLE_FOLDER/DfuSe
-rm -rf $CONSOLE_FOLDER/openocd
-rm -rf $DRIVERS_FOLDER
-
-# for autoupdate we do not want the unique folder name with timestamp
-cd $FOLDER
-pwd
-zip -r ../../$UPDATE_BUNDLE_FILE *
-cd ../..
-
-echo "$SCRIPT_NAME: We are back in root directory"
-
 
 [ -e $FULL_BUNDLE_FILE ] || { echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1; }
 
