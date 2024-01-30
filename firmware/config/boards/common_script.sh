@@ -42,12 +42,7 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   [ -e bootloader/blbuild/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
 
-if uname | grep "NT"; then
-  HEX2DFU=../misc/encedo_hex2dfu/hex2dfu.exe
-else
-  HEX2DFU=../misc/encedo_hex2dfu/hex2dfu.bin
-fi
-chmod u+x $HEX2DFU
+. common_script_hex2dfu_init.inc
 
 mkdir -p deliver
 rm -f deliver/*
