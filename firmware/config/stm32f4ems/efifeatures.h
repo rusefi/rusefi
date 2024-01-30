@@ -51,7 +51,9 @@
 #define EFI_BOR_LEVEL TRUE
 #endif
 
+#ifndef EFI_DYNO_VIEW
 #define EFI_DYNO_VIEW TRUE
+#endif
 
 #ifndef EFI_CDM_INTEGRATION
 #define EFI_CDM_INTEGRATION FALSE
@@ -61,7 +63,9 @@
 #define EFI_TOOTH_LOGGER TRUE
 #endif
 
+#ifndef EFI_TEXT_LOGGING
 #define EFI_TEXT_LOGGING TRUE
+#endif
 
 #define EFI_PWM_TESTER FALSE
 
@@ -194,7 +198,9 @@
  * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
  * stock ECU
  */
+#ifndef EFI_POTENTIOMETER
 #define EFI_POTENTIOMETER FALSE
+#endif
 
 #ifndef BOARD_TLE6240_COUNT
 #define BOARD_TLE6240_COUNT         0
@@ -270,17 +276,15 @@
 #define EFI_IDLE_CONTROL TRUE
 #endif
 
+#ifndef EFI_IDLE_PID_CIC
 #define EFI_IDLE_PID_CIC TRUE
+#endif
 
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
  */
 #ifndef EFI_MAIN_RELAY_CONTROL
 #define EFI_MAIN_RELAY_CONTROL FALSE
-#endif
-
-#ifndef EFI_PWM
-#define EFI_PWM TRUE
 #endif
 
 #ifndef EFI_VEHICLE_SPEED
@@ -370,7 +374,9 @@
 /**
  * Do we need GPS logic?
  */
+#ifndef EFI_UART_GPS
 #define EFI_UART_GPS FALSE
+#endif
 
 #ifndef EFI_ELECTRONIC_THROTTLE_BODY
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
@@ -381,7 +387,6 @@
  */
 #ifndef EFI_MALFUNCTION_INDICATOR
 #define EFI_MALFUNCTION_INDICATOR TRUE
-//#define EFI_MALFUNCTION_INDICATOR FALSE
 #endif
 
 #ifndef CONSOLE_MAX_ACTIONS
