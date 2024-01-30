@@ -38,10 +38,6 @@ UPDATE_BUNDLE_SHORT_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
 FULL_BUNDLE_FILE="artifacts/${FULL_BUNDLE_SHORT_FILE}"
 UPDATE_BUNDLE_FILE="artifacts/${UPDATE_BUNDLE_SHORT_FILE}"
 
-LTS_NAME=$1
-LTS_FOLDER="build_server/lts/${LTS_NAME}"
-LTS=$2
-
 echo "${BUNDLE_FULL_NAME}: Packaging $FULL_BUNDLE_FILE file"
 
 rm -rf temp
