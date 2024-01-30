@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# LTS: at some we had a dream of Long-term support branches. As of Jan 2024 this is not being used
+
 set -e
 
 #
@@ -119,8 +121,10 @@ fi
 # bootloader
 [ -e firmware/deliver/openblt.bin ] && { cp firmware/deliver/openblt.bin $FOLDER ; }
 [ -e firmware/deliver/openblt.dfu ] && { cp firmware/deliver/openblt.dfu $FOLDER ; }
-# update srec
-[ -e firmware/deliver/rusefi_update.srec ] && { cp firmware/deliver/rusefi_update.srec $FOLDER ; }
+if [ "$USE_OPENBLT" = "yes" ]; then
+  # srec is the only format used by OpenBLT host tools
+  cp firmware/build/rusefi_update.srec $FOLDER
+fi
 
 if [ -n "$BUNDLE_NAME" ]; then
     mv $FOLDER/rusefi.dfu $FOLDER/rusefi_$BUNDLE_NAME.dfu

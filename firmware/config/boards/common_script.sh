@@ -42,12 +42,7 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   [ -e bootloader/blbuild/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
 
-. common_script_hex2dfu_init.inc
-
-mkdir -p deliver
-rm -f deliver/*
-
-CONTROL_SUM_OPTION="-C 0x1C"
+. config/boards/common_script_hex2dfu_init.inc
 
 if [ "$USE_OPENBLT" = "yes" ]; then
   # this image is suitable for update through bootloader only
@@ -55,8 +50,6 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   #cp build/rusefi.bin  deliver/rusefi_update.bin
   #cp build/rusefi.dfu  deliver/rusefi_update.dfu
   #cp build/rusefi.hex  deliver/rusefi_update.hex
-  # srec is the only format used by OpenBLT host tools
-  cp build/rusefi.srec deliver/rusefi_update.srec
 
   # bootloader and composite image
   echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
@@ -71,17 +64,7 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex $CONTROL_SUM_OPTION -o deliver/rusefi.dfu -b deliver/rusefi.bin
 
 else
-  echo "$SCRIPT_NAME: invoking hex2dfu for incremental rusEFI image"
-  $HEX2DFU -i build/rusefi.hex $CONTROL_SUM_OPTION -o build/rusefi.dfu
-
-  # standalone images (for use with no bootloader)
-  cp build/rusefi.bin  deliver/
-  cp build/rusefi.dfu  deliver/
-  cp build/rusefi.hex  deliver/
-  if [ "$INCLUDE_ELF" = "yes" ]; then
-   # we definitely need .elf .map .list
-   cp build/rusefi.*  deliver/
-  fi
+  . config/boards/common_script_post_build_without_blt.inc
 fi
 
 echo "$SCRIPT_NAME: build folder content:"
