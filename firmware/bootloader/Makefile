@@ -157,6 +157,7 @@ include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 # EX files (optional).
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 
+BOARD_DIR := ../$(BOARD_DIR)
 BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
 

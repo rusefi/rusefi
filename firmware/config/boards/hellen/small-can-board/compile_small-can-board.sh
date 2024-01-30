@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-cd ..
-bash ../common_make.sh hellen/small-can-board ARCH_STM32F4
+export PROJECT_BOARD="small-can-board"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=small-can-board

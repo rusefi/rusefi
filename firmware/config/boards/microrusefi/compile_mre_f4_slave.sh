@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-export EXTRA_PARAMS=-DDUMMY -DEFI_CANBUS_SLAVE=TRUE
+export EXTRA_PARAMS="-DDUMMY -DEFI_CANBUS_SLAVE=TRUE"
 
-export VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::BMW_M73_MRE_SLAVE
+export VAR_DEF_ENGINE_TYPE="-DDEFAULT_ENGINE_TYPE=engine_type_e::BMW_M73_MRE_SLAVE"
 
-bash ../common_make.sh microrusefi ARCH_STM32F4
-
-
+export PROJECT_BOARD="microrusefi"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=mre_f4

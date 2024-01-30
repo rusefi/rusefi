@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export EXTRA_PARAMS="-DVR_HW_CHECK_MODE=TRUE -DHW_CHECK_MODE=TRUE -DHW_CHECK_SD=TRUE -DHW_CHECK_ALWAYS_STIMULATE=TRUE"
 
@@ -6,4 +6,6 @@ export VAR_DEF_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=engine_type_e::PROTEUS_QC_TEST_
 
 export DEBUG_LEVEL_OPT="-Os -ggdb -g"
 
-bash ../common_make.sh proteus ARCH_STM32F7
+export PROJECT_BOARD="proteus"
+export PROJECT_CPU="ARCH_STM32F7"
+export SHORT_BOARD_NAME=proteus_f7

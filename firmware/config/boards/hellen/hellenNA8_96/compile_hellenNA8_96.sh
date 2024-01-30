@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-cd ..
-bash ../common_make.sh hellen/hellenNA8_96 ARCH_STM32F4
+export PROJECT_BOARD="hellenNA8_96"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=hellenNA8_96

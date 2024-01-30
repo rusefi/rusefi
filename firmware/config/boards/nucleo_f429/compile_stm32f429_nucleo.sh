@@ -1,8 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # STM32F4...
-
-SCRIPT_NAME="compile_nucleo_f429.sh"
-echo "Entering $SCRIPT_NAME"
-
-bash ../common_make.sh nucleo_f429 ARCH_STM32F4
+export PROJECT_BOARD="nucleo_f429"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=stm32f429_nucleo

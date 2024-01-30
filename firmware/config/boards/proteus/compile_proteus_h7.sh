@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # export USE_OPENBLT=yes
 
-bash ../common_make.sh proteus ARCH_STM32H7
+export PROJECT_BOARD="proteus"
+export PROJECT_CPU="ARCH_STM32H7"
+export SHORT_BOARD_NAME=proteus_h7

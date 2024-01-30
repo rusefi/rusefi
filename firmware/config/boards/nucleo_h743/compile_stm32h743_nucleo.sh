@@ -1,8 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # STM32H743 version of the firmware for Nucleo-H743 board
 
-SCRIPT_NAME="compile_nucleo_h743.sh"
-echo "Entering $SCRIPT_NAME"
-
-bash ../common_make.sh nucleo_h743 ARCH_STM32H7
+export PROJECT_BOARD="nucleo_h743"
+export PROJECT_CPU="ARCH_STM32H7"
+export SHORT_BOARD_NAME=stm32h743_nucleo

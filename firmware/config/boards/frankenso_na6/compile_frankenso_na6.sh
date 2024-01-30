@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 DEFAULT_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=FRANKENSO_MIATA_NA6_VAF
 FW_ID_ENV=frankensoNA6
@@ -9,4 +9,6 @@ FW_ID_ENV=frankensoNA6
 # while humans want to use second cam input asap https://rusefi.com/forum/viewtopic.php?f=4&t=2343
 #
 
-bash ../common_make.sh frankenso_na6 ARCH_STM32F4
+export PROJECT_BOARD="frankenso_na6"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=frankenso_na6

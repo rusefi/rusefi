@@ -1,3 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-bash ../common_make.sh microrusefi ARCH_STM32F7
+export SHORT_BOARD_NAME="mre_f7"
+export PROJECT_BOARD="microrusefi"
+export PROJECT_CPU="ARCH_STM32F7"

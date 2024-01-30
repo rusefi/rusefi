@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export EXTRA_PARAMS="\
  -DEFI_HPFP=FALSE \
@@ -9,4 +9,6 @@ export EXTRA_PARAMS="\
  -DRAMDISK_INVALID"
 export DEBUG_LEVEL_OPT="-O0 -ggdb -g"
 export INCLUDE_ELF=yes
-bash ../common_make.sh f407-discovery ARCH_STM32F4
+export PROJECT_BOARD="f407-discovery"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=f407-discovery

@@ -1,8 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # STM32F4...
-
-SCRIPT_NAME="compile_m74_9.sh"
-echo "Entering $SCRIPT_NAME"
-
-bash ../common_make.sh m74_9 ARCH_AT32F4
+export PROJECT_BOARD="m74_9"
+export PROJECT_CPU="ARCH_AT32F4"
+export SHORT_BOARD_NAME=m74_9
