@@ -159,6 +159,12 @@ jobs:
           name: rusefi.hex
           path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.hex
 
+      - name: Upload build list artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rusefi.list
+          path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.list
+
       - name: Upload build map artifact
         uses: actions/upload-artifact@v4
         with:
