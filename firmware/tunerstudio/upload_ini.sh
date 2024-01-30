@@ -1,16 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-fileName=$1
-# user=$2
-# pass=$3
-# host=$4
+fileName="rusefi_$SHORT_BOARD_NAME.ini"
+# user=$1
+# pass=$2
+# host=$3
 
-if [ ! "$fileName" ]; then
- echo "No $fileName"
+if [ ! "$SHORT_BOARD_NAME" ]; then
+ echo "No SHORT_BOARD_NAME"
  exit 1
 fi
 
-if [ ! "$2" ] || [ ! "$3" ] || [ ! "$4" ]; then
+if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
  echo "upload_ini.sh says No Secrets, exiting"
  exit 0
 fi
@@ -39,7 +39,7 @@ if [ ! -z "$sig" -a "$sig" != " " ]; then
     echo "* found path: $path"
     # we do not have ssh for this user
     # sftp does not support -p flag on mkdir :(
-    sshpass -p $3 sftp -o StrictHostKeyChecking=no $2@$4 <<SSHCMD
+    sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 <<SSHCMD
 cd rusefi
 mkdir $branch
 mkdir $branch/$year

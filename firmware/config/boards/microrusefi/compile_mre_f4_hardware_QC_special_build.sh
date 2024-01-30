@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export EXTRA_PARAMS="\
  -DHW_CHECK_MODE=TRUE \
@@ -23,4 +23,6 @@ export VAR_DEF_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=engine_type_e::MRE_BOARD_NEW_TE
 # this QC configuration is used to assert our status with debug info
 export DEBUG_LEVEL_OPT="-O0 -ggdb -g"
 
-bash ../common_make.sh microrusefi ARCH_STM32F4
+export PROJECT_BOARD="microrusefi"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=mre_f4

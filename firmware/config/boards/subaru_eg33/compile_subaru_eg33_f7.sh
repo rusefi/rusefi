@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #Build with no debug features
 #export EXTRA_PARAMS="-DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
@@ -9,4 +9,6 @@
 
 export USE_OPENBLT=yes
 
-bash ../common_make.sh subaru_eg33 ARCH_STM32F7
+export PROJECT_BOARD="subaru_eg33"
+export PROJECT_CPU="ARCH_STM32F7"
+export SHORT_BOARD_NAME=subaru_eg33_f7

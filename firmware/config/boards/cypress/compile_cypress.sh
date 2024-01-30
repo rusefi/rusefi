@@ -1,5 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Compiling for Cypress FM4 S6E2CxAH"
-
-bash ../common_make.sh cypress custom_platform
+export PROJECT_BOARD="cypress"
+export PROJECT_CPU="custom_platform"
+export SHORT_BOARD_NAME=cypress

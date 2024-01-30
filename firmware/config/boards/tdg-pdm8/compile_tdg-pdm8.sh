@@ -1,3 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-bash ../common_make.sh tdg-pdm8 ARCH_STM32F4
+export PROJECT_BOARD="tdg-pdm8"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=tdg-pdm8

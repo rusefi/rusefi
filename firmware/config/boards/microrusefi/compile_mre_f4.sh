@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # in order to get fresh .ini and ramdisk_image one still has to manually invoke
@@ -6,5 +6,6 @@
 #
 
 export USE_OPENBLT=yes
-
-bash ../common_make.sh microrusefi ARCH_STM32F4
+export SHORT_BOARD_NAME="mre_f4"
+export PROJECT_BOARD="microrusefi"
+export PROJECT_CPU="ARCH_STM32F4"

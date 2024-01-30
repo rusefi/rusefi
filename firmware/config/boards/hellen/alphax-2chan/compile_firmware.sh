@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export USE_OPENBLT=yes
-
-cd ..
-bash ../common_make.sh alphax-2chan ARCH_STM32F4 config/boards/hellen/alphax-2chan
+export PROJECT_BOARD="alphax-2chan"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=alphax-2chan

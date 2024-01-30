@@ -1,3 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-bash ../common_make.sh test-build-guards ARCH_STM32F4
+export PROJECT_BOARD="test-build-guards"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=t-b-g

@@ -159,6 +159,7 @@ MAKEFLAGS += ${NUMJOBS}
 # Project, sources and paths
 #
 
+BOARD_DIR := ./$(BOARD_DIR)
 BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
 BOARDCPPSRC += $(BOARDS_DIR)/board_id.cpp

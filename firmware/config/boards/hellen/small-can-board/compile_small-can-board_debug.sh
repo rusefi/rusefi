@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export EXTRA_PARAMS="\
  -DEFI_HPFP=FALSE \
@@ -9,5 +9,6 @@ export EXTRA_PARAMS="\
  -DRAMDISK_INVALID"
 export DEBUG_LEVEL_OPT="-O0 -ggdb -g"
 export INCLUDE_ELF=yes
-cd ..
-bash ../common_make.sh hellen/small-can-board ARCH_STM32F4
+export PROJECT_BOARD="small-can-board"
+export PROJECT_CPU="ARCH_STM32F4"
+export SHORT_BOARD_NAME=small-can-board
