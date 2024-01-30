@@ -600,7 +600,7 @@ jobs:
 
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
-      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "firmware/tunerstudio/generated/rusefi_${{matrix.short-board-name}}.ini" ${{ github.ref_name }} ${{ toJSON(inputs.lts) }}
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "firmware/tunerstudio/generated/rusefi_${{matrix.short-board-name}}.ini" ${{ github.ref_name }}
 
     - name: Upload Bundle
       if: ${{ env.full == 'true' }}
