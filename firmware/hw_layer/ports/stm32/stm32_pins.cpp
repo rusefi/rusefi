@@ -168,6 +168,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	return getGpioPorts()[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
+#if ! EFI_BOOTLOADER
 /**
  * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
  */
@@ -181,6 +182,7 @@ ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
 	criticalError("%s: Invalid on-chip Gpio: %d", msg, brainPin);
 	return EFI_ERROR_CODE;
 }
+#endif // EFI_BOOTLOADER
 
 /**
  * Parse string representation of physical pin into Gpio ordinal.
