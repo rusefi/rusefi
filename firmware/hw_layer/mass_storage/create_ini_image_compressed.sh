@@ -14,7 +14,7 @@ fi
 FULL_INI=$1
 H_OUTPUT=$2
 FS_SIZE=$3
-SHORT_BOARDNAME=$4
+SHORT_BOARD_NAME=$4
 BOARD_SPECIFIC_URL=$5
 
 IMAGE=ramdisk.image
@@ -22,7 +22,7 @@ IMAGE=ramdisk.image
 # mkfs.fat and fatlabel are privileged on some systems
 PATH="$PATH:/usr/sbin"
 
-echo "create_ini_image_compressed: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME [$BOARD_SPECIFIC_URL]"
+echo "create_ini_image_compressed: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARD_NAME [$BOARD_SPECIFIC_URL]"
 
 rm -f $IMAGE $IMAGE.gz
 
@@ -58,7 +58,7 @@ mcopy -i $IMAGE $FULL_INI ::
 mcopy -i $IMAGE hw_layer/mass_storage/readme.temp ::README-${current_date}.txt
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Quick\ Start.url ::
-mcopy -i $IMAGE hw_layer/mass_storage/wiki.temp ::rusEFI\ ${SHORT_BOARDNAME}\ Wiki.url
+mcopy -i $IMAGE hw_layer/mass_storage/wiki.temp ::rusEFI\ ${SHORT_BOARD_NAME}\ Wiki.url
 
 # Compress the image as DEFLATE with gzip
 gzip $IMAGE
