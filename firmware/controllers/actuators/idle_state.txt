@@ -28,7 +28,7 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
 	bit isIdleCoasting;Idle: coasting
 	bit isIdleClosedLoop;Idle: Closed loop active
 
-	int idleTarget;Idle: Target RPM
+	int idleTarget;@@GAUGE_NAME_IDLE_RPM_TARGET@@
 	int targetRpmByClt;Idle: Target RPM base
 	int targetRpmAcBump;Idle: Target A/C bump
 
