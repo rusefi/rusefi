@@ -3,6 +3,7 @@
 SCRIPT_NAME=$(basename "$0")
 FULL_BUNDLE_FILE="rusefi_bundle_$1.zip"
 UPDATE_BUNDLE_FILE="rusefi_bundle_$1_autoupdate.zip"
+LTS="$2"
 
 if [ -n "$RUSEFI_SSH_USER" ]; then
  echo "$SCRIPT_NAME: Uploading full bundle"
