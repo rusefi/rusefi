@@ -9,7 +9,7 @@ echo "Entering $SCRIPT_NAME with board [$PROJECT_BOARD] and CPU [$PROJECT_CPU]"
 
 mkdir -p .dep
 # todo: start using env variable for number of threads or for '-r'
-make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
+make -j$(nproc) -r
 [ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 
 if [ ! -z "$4" ]; then
@@ -23,7 +23,7 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   # TODO: probably make/gcc do not like two separate projects (primary firmware and bootloader) co-existing in same folder structure?
   rm -f pch/pch.h.gch/*
   cd bootloader
-  make PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU -j12
+  make -j12
   cd ..
   [ -e bootloader/blbuild/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
