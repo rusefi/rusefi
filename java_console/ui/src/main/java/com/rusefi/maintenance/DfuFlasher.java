@@ -1,6 +1,5 @@
 package com.rusefi.maintenance;
 
-import com.opensr5.ini.IniFileModel;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
@@ -33,8 +32,6 @@ public class DfuFlasher {
     private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
     private static final String WMIC_DFU_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
-    private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
-    private static final String WMIC_PCAN_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%PCAN-USB%'\" get Caption,ConfigManagerErrorCode /format:list";
 
     public static void doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
         if (port == null) {
@@ -190,26 +187,7 @@ public class DfuFlasher {
     }
 
     public static boolean detectSTM32BootloaderDriverState(UpdateOperationCallbacks callbacks) {
-        return detectDevice(callbacks, WMIC_DFU_QUERY_COMMAND, "ConfigManagerErrorCode=0");
-    }
-
-    public static boolean detectStLink(UpdateOperationCallbacks wnd) {
-        return detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink");
-    }
-    public static boolean detectPcan(UpdateOperationCallbacks wnd) {
-        return detectDevice(wnd, WMIC_PCAN_QUERY_COMMAND, "PCAN");
-    }
-
-    private static boolean detectDevice(UpdateOperationCallbacks callbacks, String queryCommand, String pattern) {
-        //        long now = System.currentTimeMillis();
-        StringBuffer output = new StringBuffer();
-        StringBuffer error = new StringBuffer();
-        ExecHelper.executeCommand(queryCommand, callbacks, output, error, null);
-        callbacks.log(output.toString());
-        callbacks.log(error.toString());
-//        long cost = System.currentTimeMillis() - now;
-//        System.out.println("DFU lookup cost " + cost + "ms");
-        return output.toString().contains(pattern);
+        return MaintenanceUtil.detectDevice(callbacks, WMIC_DFU_QUERY_COMMAND, "ConfigManagerErrorCode=0");
     }
 
     private static void appendWindowsVersion(UpdateOperationCallbacks callbacks) {
@@ -238,11 +216,7 @@ public class DfuFlasher {
     }
 
     private static String getDfuWriteCommand() throws FileNotFoundException {
-        String prefix = "rusefi";
-        String suffix = ".bin";
-        String fileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, prefix, suffix);
-        if (fileName == null)
-            throw new FileNotFoundException("File not found " + prefix + "*" + suffix);
+        String fileName = MaintenanceUtil.FIRMWARE_BIN_FILE;
         // we need quotes in case if absolute path contains spaces
         String quotedAbsolutePath = quote(new File(fileName).getAbsolutePath());
 

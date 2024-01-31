@@ -13,12 +13,13 @@ import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.MaintenanceUtil;
+import com.rusefi.maintenance.StLinkFlasher;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -266,8 +267,8 @@ public enum SerialPortScanner {
                 ports.add(new PortResult(tcpPort, SerialPortType.Ecu));
             }
             dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
-            stLinkConnected = DfuFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
-            PCANConnected = DfuFlasher.detectPcan(UpdateOperationCallbacks.DUMMY);
+            stLinkConnected = StLinkFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
+            PCANConnected = MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
         } else {
             dfuConnected = false;
             stLinkConnected = false;

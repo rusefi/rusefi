@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import static com.rusefi.Launcher.INPUT_FILES_PATH;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
@@ -21,10 +20,6 @@ import static com.rusefi.core.preferences.storage.PersistentConfiguration.getCon
  */
 public class StLinkFlasher {
     /**
-     * this file is used for ST-LINK flashing option, do we still need it at all?
-     */
-    public static final String IMAGE_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
-    /**
      * SWD ST-LINK/V2 mode
      */
     private static final String OPENOCD_EXE = Launcher.TOOLS_PATH + File.separator + "openocd/openocd.exe";
@@ -34,6 +29,7 @@ public class StLinkFlasher {
     private static final String FAILED_MESSAGE_TAG = "failed";
     public static final String TITLE = "rusEFI ST-LINK Firmware Flasher";
     public static final String DONE = "DONE!";
+    private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
 
     private final JButton button;
 
@@ -93,6 +89,10 @@ public class StLinkFlasher {
             wnd.setErrorState();
             wnd.append("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }
+    }
+
+    public static boolean detectStLink(UpdateOperationCallbacks wnd) {
+        return MaintenanceUtil.detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink");
     }
 
     public JButton getButton() {
