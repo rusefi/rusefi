@@ -622,6 +622,7 @@ jobs:
 
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
+
       run: |
         source firmware/${{ env.COMPILE_SCRIPT }}
         bash misc/jenkins/build_working_folder.sh
