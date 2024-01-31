@@ -89,25 +89,9 @@ cp misc/console_launcher/readme.html      $FOLDER
 INI_FILE_OVERRIDE=""
 RUSEFI_CONSOLE_SETTINGS=""
 
-# users probably do not really care for this file
-# cp firmware/svnversion.h $FOLDER
-
-# 407 has additional version of firmware
-#cp firmware/deliver/rusefi_no_asserts.bin $FOLDER
-#cp firmware/deliver/rusefi_no_asserts.dfu $FOLDER
-# just for now - DFU work in progress
-#cp firmware/deliver/rusefi_no_asserts.hex $FOLDER
-
 pwd
 
 cp firmware/deliver/rusefi.bin $FOLDER
-
-cp firmware/deliver/rusefi.dfu $FOLDER
-
-if [ -e firmware/deliver/rusefi.hex ]; then
- # just for now - DFU work in progress
- cp firmware/deliver/rusefi.hex $FOLDER
-fi
 
 if [ -e firmware/deliver/rusefi.elf ]; then
  # ELF is useful for debug bundles
@@ -116,16 +100,10 @@ fi
 
 # bootloader
 [ -e firmware/deliver/openblt.bin ] && { cp firmware/deliver/openblt.bin $FOLDER ; }
-[ -e firmware/deliver/openblt.dfu ] && { cp firmware/deliver/openblt.dfu $FOLDER ; }
 if [ "$USE_OPENBLT" = "yes" ]; then
   # srec is the only format used by OpenBLT host tools
   cp firmware/build/rusefi_update.srec $FOLDER
 fi
-
-if [ -n "$BUNDLE_NAME" ]; then
-    mv $FOLDER/rusefi.dfu $FOLDER/rusefi_$BUNDLE_NAME.dfu
-fi
-
 
 [ -e firmware/deliver/rusefi.bin ] || { echo "$SCRIPT_NAME: rusefi.bin not found"; exit 1; }
 
