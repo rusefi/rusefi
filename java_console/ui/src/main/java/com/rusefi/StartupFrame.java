@@ -51,7 +51,7 @@ public class StartupFrame {
     private final JFrame frame;
     private final JPanel connectPanel = new JPanel(new FlowLayout());
     // todo: move this line to the connectPanel
-    private final JComboBox<String> comboPorts = new JComboBox<>();
+    private final JComboBox<SerialPortScanner.PortResult> comboPorts = new JComboBox<>();
     private final JPanel leftPanel = new JPanel(new VerticalFlowLayout());
 
     private final JPanel realHardwarePanel = new JPanel(new MigLayout());
@@ -234,7 +234,7 @@ public class StartupFrame {
     }
 
     private void applyKnownPorts(SerialPortScanner.AvailableHardware currentHardware) {
-        List<String> ports = currentHardware.getKnownPorts();
+        List<SerialPortScanner.PortResult> ports = currentHardware.getKnownPorts();
         log.info("Rendering available ports: " + ports);
         connectPanel.setVisible(!ports.isEmpty());
         noPortsMessage.setVisible(ports.isEmpty());
@@ -299,10 +299,11 @@ public class StartupFrame {
         SerialPortScanner.INSTANCE.stopTimer();
     }
 
-    private void applyPortSelectionToUIcontrol(List<String> ports) {
+    private void applyPortSelectionToUIcontrol(List<SerialPortScanner.PortResult> ports) {
         comboPorts.removeAllItems();
-        for (final String port : ports)
+        for (final SerialPortScanner.PortResult port : ports) {
             comboPorts.addItem(port);
+        }
         String defaultPort = getConfig().getRoot().getProperty(ConsoleUI.PORT_KEY);
         if (!PersistentConfiguration.getBoolProperty(ALWAYS_AUTO_PORT)) {
             comboPorts.setSelectedItem(defaultPort);

@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Andrey Belomutskiy
@@ -111,30 +113,158 @@ public enum SerialPortScanner {
             startTimer();
     }
 
+    private static PortResult inspectPort(String serialPort) {
+        log.info("Determining type of serial port: " + serialPort);
+
+        boolean isOpenblt = isPortOpenblt(serialPort);
+        log.info("Port " + serialPort + (isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
+        if (isOpenblt) {
+            return new PortResult(serialPort, SerialPortType.OpenBlt);
+        } else {
+            // See if this looks like an ECU
+            String signature = getEcuSignature(serialPort);
+            boolean isEcu = signature != null;
+            log.info("Port " + serialPort + (isEcu ? " looks like" : " does not look like") + " an ECU");
+            if (isEcu) {
+                boolean ecuHasOpenblt = ecuHasOpenblt(serialPort);
+                log.info("ECU at " + serialPort + (ecuHasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
+                return new PortResult(serialPort, ecuHasOpenblt ? SerialPortType.EcuWithOpenblt : SerialPortType.Ecu, signature);
+            } else {
+                // Dunno what this is, leave it in the list anyway
+                return new PortResult(serialPort, SerialPortType.Unknown);
+            }
+        }
+    }
+
+    private static List<PortResult> inspectPorts(final List<String> ports) {
+        if (ports.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        final Object resultsLock = new Object();
+        final Map<String, PortResult> results = new HashMap<>();
+
+        // When the last port is found, we need to cancel the timeout
+        final Thread callingThread = Thread.currentThread();
+
+        // One thread per port to check
+        final List<Thread> threads = ports.stream().map(p -> {
+            Thread t = new Thread(() -> {
+                PortResult r = inspectPort(p);
+
+                // Record the result under lock
+                synchronized (resultsLock) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        // If interrupted, don't try to write our result
+                        return;
+                    }
+
+                    results.put(p, r);
+
+                    if (results.size() == ports.size()) {
+                        // We now have all the results - interrupt the calling thread
+                        callingThread.interrupt();
+                    }
+                }
+            });
+
+            t.setName("SerialPortScanner inspectPort " + p);
+            t.setDaemon(true);
+            t.start();
+
+            return t;
+        }).collect(Collectors.toList());
+
+        // Give everyone a chance to finish
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // We got interrupted because the last port got found, nothing to do
+        }
+
+        // Interrupt all threads under lock to ensure no more objects are added to results
+        synchronized (resultsLock) {
+            for (Thread t : threads) {
+                t.interrupt();
+            }
+        }
+
+        // Now check that we got everything - if any timed out, register them as unknown
+        for (String port : ports) {
+            if (!results.containsKey(port)) {
+                log.info("Port " + port + " timed out, adding as Unknown.");
+                results.put(port, new PortResult(port, SerialPortType.Unknown));
+            }
+        }
+
+        return new ArrayList<>(results.values());
+    }
+
+    private final static Map<String, PortResult> portCache = new HashMap<>();
+
     /**
      * Find all available serial ports and checks if simulator local TCP port is available
      */
     private void findAllAvailablePorts(boolean includeSlowLookup) {
-        List<String> ports = new ArrayList<>();
+        List<PortResult> ports = new ArrayList<>();
         boolean dfuConnected;
         boolean stLinkConnected;
         boolean PCANConnected;
 
         String[] serialPorts = LinkManager.getCommPorts();
-        if (serialPorts.length > 0)
-            ports.add(AUTO_SERIAL);
+
+        List<String> portsToInspect = new ArrayList<>();
+
         for (String serialPort : serialPorts) {
-            // Filter out some macOS trash
-            if (serialPort.contains("wlan-debug") ||
-                    serialPort.contains("Bluetooth-Incoming-Port") ||
-                    serialPort.startsWith("cu.")) {
-                continue;
+            // First, check the port cache
+            if (portCache.containsKey(serialPort)) {
+                // We've already probed this port - don't re-probe it again
+                PortResult cached = portCache.get(serialPort);
+
+                ports.add(cached);
+            } else {
+                portsToInspect.add(serialPort);
             }
-            ports.add(serialPort);
+        }
+
+        for (PortResult p : inspectPorts(portsToInspect)) {
+            log.info("Port " + p.port + " detected as: " + p.type.friendlyString);
+
+            ports.add(p);
+            portCache.put(p.port, p);
+        }
+
+        {
+            // Clean the port cache of any entries that no longer exist
+            // If the same port appears later, we want to re-probe it at that time
+            // In any other scenario, auto could have unexpected behavior for the user
+            List<String> toRemove = new ArrayList<>();
+            for (String x : portCache.keySet()) {
+                if (Arrays.stream(serialPorts).noneMatch(x::equals)) {
+                    toRemove.add(x);
+                }
+            }
+
+            // two steps to avoid ConcurrentModificationException
+            toRemove.forEach(p -> {
+                portCache.remove(p);
+                log.info("Removing port " + p);
+            });
+        }
+
+        // Sort ports by their type to put your ECU at the top
+        ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
+
+        if (includeSlowLookup) {
+            for (String tcpPort : TcpConnector.getAvailablePorts()) {
+                ports.add(new PortResult(tcpPort, SerialPortType.Ecu));
+            }
         }
 
         if (includeSlowLookup) {
-            ports.addAll(TcpConnector.getAvailablePorts());
+            for (String tcpPort : TcpConnector.getAvailablePorts()) {
+                ports.add(new PortResult(tcpPort, SerialPortType.Ecu));
+            }
             dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
             stLinkConnected = DfuFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
             PCANConnected = DfuFlasher.detectPcan(UpdateOperationCallbacks.DUMMY);
@@ -144,9 +274,9 @@ public enum SerialPortScanner {
             PCANConnected = false;
         }
         if (PCANConnected)
-            ports.add(LinkManager.PCAN);
+            ports.add(new PortResult(LinkManager.PCAN, SerialPortType.CAN));
         if (SHOW_SOCKETCAN)
-            ports.add(LinkManager.SOCKET_CAN);
+            ports.add(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN));
 
         boolean isListUpdated;
         AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected, stLinkConnected, PCANConnected);
@@ -188,12 +318,12 @@ public enum SerialPortScanner {
 
     public static class AvailableHardware {
 
-        private final List<String> ports;
+        private final List<PortResult> ports;
         private final boolean dfuFound;
         private final boolean stLinkConnected;
         private final boolean PCANConnected;
 
-        public <T> AvailableHardware(List<String> ports, boolean dfuFound, boolean stLinkConnected, boolean PCANConnected) {
+        public <T> AvailableHardware(List<PortResult> ports, boolean dfuFound, boolean stLinkConnected, boolean PCANConnected) {
             this.ports = ports;
             this.dfuFound = dfuFound;
             this.stLinkConnected = stLinkConnected;
@@ -201,7 +331,7 @@ public enum SerialPortScanner {
         }
 
         @NotNull
-        public List<String> getKnownPorts() {return new ArrayList<>(ports);}
+        public List<PortResult> getKnownPorts() {return new ArrayList<>(ports);}
 
         public boolean isDfuFound() {
             return dfuFound;

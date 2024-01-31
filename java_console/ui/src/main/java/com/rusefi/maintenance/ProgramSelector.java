@@ -44,7 +44,7 @@ public class ProgramSelector {
     private final JPanel controls = new JPanel(new FlowLayout());
     private final JComboBox<String> mode = new JComboBox<>();
 
-    public ProgramSelector(JComboBox<String> comboPorts) {
+    public ProgramSelector(JComboBox<SerialPortScanner.PortResult> comboPorts) {
         content.add(controls, BorderLayout.NORTH);
         content.add(noHardware, BorderLayout.SOUTH);
         controls.setVisible(false);
@@ -61,7 +61,7 @@ public class ProgramSelector {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final String selectedMode = (String) mode.getSelectedItem();
-                final String selectedPort = (String) comboPorts.getSelectedItem();
+                final SerialPortScanner.PortResult selectedPort = ((SerialPortScanner.PortResult) comboPorts.getSelectedItem());
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
 
@@ -72,7 +72,7 @@ public class ProgramSelector {
                 switch (selectedMode) {
                     case AUTO_DFU:
                         jobName = "DFU update";
-                        job = (callbacks) -> DfuFlasher.doAutoDfu(comboPorts, selectedPort, callbacks);
+                        job = (callbacks) -> DfuFlasher.doAutoDfu(comboPorts, selectedPort.port, callbacks);
                         break;
                     case MANUAL_DFU:
                       jobName = "DFU update";
@@ -86,11 +86,11 @@ public class ProgramSelector {
                         break;
                     case DFU_SWITCH:
                         jobName = "DFU switch";
-                        job = (callbacks) -> rebootToDfu(comboPorts, selectedPort, callbacks);
+                        job = (callbacks) -> rebootToDfu(comboPorts, selectedPort.port, callbacks);
                         break;
                     case OPENBLT_SWITCH:
                         jobName = "OpenBLT switch";
-                        job = (callbacks) -> rebootToOpenblt(comboPorts, selectedPort, callbacks);
+                        job = (callbacks) -> rebootToOpenblt(comboPorts, selectedPort.port, callbacks);
                         break;
                     case OPENBLT_CAN:
                         jobName = "OpenBLT via CAN";
@@ -98,11 +98,11 @@ public class ProgramSelector {
                         break;
                     case OPENBLT_MANUAL:
                         jobName = "OpenBLT via Serial";
-                        job = (callbacks) -> flashOpenbltSerialJni(selectedPort, callbacks);
+                        job = (callbacks) -> flashOpenbltSerialJni(selectedPort.port, callbacks);
                         break;
                     case OPENBLT_AUTO:
                         jobName = "OpenBLT via Serial";
-                        job = (callbacks) -> flashOpenbltSerialAutomatic(comboPorts, selectedPort, callbacks);
+                        job = (callbacks) -> flashOpenbltSerialAutomatic(comboPorts, selectedPort.port, callbacks);
                         break;
                     case DFU_ERASE:
                         jobName = "DFU erase";
