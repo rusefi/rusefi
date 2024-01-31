@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 19 21:44:26 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 31 23:24:27 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2325,6 +2325,7 @@ struct engine_configuration_s {
 	offset 1384 bit 1 */
 	bool fuelClosedLoopCorrectionEnabled : 1 {};
 	/**
+	 * On even fire engines with even number of cylinders we go wasted spark during cranking. Use this setting to disable wasted spark cranking on odd fire engines.
 	offset 1384 bit 2 */
 	bool oddFireEngine : 1 {};
 	/**
@@ -5528,4 +5529,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 26176);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 19 21:44:26 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 31 23:24:27 UTC 2024
