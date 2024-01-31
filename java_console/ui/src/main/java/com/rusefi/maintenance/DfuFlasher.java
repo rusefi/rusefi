@@ -25,13 +25,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
+import static com.rusefi.Launcher.INPUT_FILES_PATH;
+
 /**
  * @see StLinkFlasher
  */
 public class DfuFlasher {
-    private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
-    private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
+    public static final String BOOTLOADER_BIN_FILE = INPUT_FILES_PATH + "/" + "openblt.bin";
+    private static final String DFU_CMD_TOOL_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
+    private static final String DFU_CMD_TOOL = "STM32_Programmer_CLI.exe";
     private static final String WMIC_DFU_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
+
+    public static boolean haveBootloaderBinFile() {
+        return new File(BOOTLOADER_BIN_FILE).exists();
+    }
 
     public static void doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
         if (port == null) {
@@ -65,7 +72,7 @@ public class DfuFlasher {
             boolean finalNeedsEraseFirst = needsEraseFirst;
             submitAction(() -> {
                 timeForDfuSwitch(callbacks);
-                executeDFU(callbacks, finalNeedsEraseFirst);
+                executeDFU(callbacks, finalNeedsEraseFirst, MaintenanceUtil.FIRMWARE_BIN_FILE);
             });
         } else {
             callbacks.log("Please use manual DFU to change bundle type.");
@@ -129,9 +136,9 @@ public class DfuFlasher {
 
     private static void runDfuErase(UpdateOperationCallbacks callbacks) {
         try {
-            ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+            ExecHelper.executeCommand(DFU_CMD_TOOL_LOCATION,
                     getDfuEraseCommand(),
-                    DFU_BINARY, callbacks);
+                DFU_CMD_TOOL, callbacks);
         } catch (FileNotFoundException e) {
             callbacks.log(e.toString());
             callbacks.error();
@@ -139,10 +146,14 @@ public class DfuFlasher {
     }
 
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks) {
-        submitAction(() -> executeDFU(callbacks, false));
+        submitAction(() -> executeDFU(callbacks, false, MaintenanceUtil.FIRMWARE_BIN_FILE));
     }
 
-    private static void executeDFU(UpdateOperationCallbacks callbacks, boolean fullErase) {
+    public static void runOpenBltInitialProgramming(UpdateOperationCallbacks callbacks) {
+        submitAction(() -> executeDFU(callbacks, false, DfuFlasher.BOOTLOADER_BIN_FILE));
+    }
+
+    private static void executeDFU(UpdateOperationCallbacks callbacks, boolean fullErase, String firmwareBinFile) {
         boolean driverIsHappy = detectSTM32BootloaderDriverState(callbacks);
         if (!driverIsHappy) {
             callbacks.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
@@ -157,9 +168,9 @@ public class DfuFlasher {
         StringBuffer stdout = new StringBuffer();
         String errorResponse;
         try {
-            errorResponse = ExecHelper.executeCommand(DFU_BINARY_LOCATION,
-                    getDfuWriteCommand(),
-                    DFU_BINARY, callbacks, stdout);
+            errorResponse = ExecHelper.executeCommand(DFU_CMD_TOOL_LOCATION,
+                    getDfuWriteCommand(firmwareBinFile),
+                DFU_CMD_TOOL, callbacks, stdout);
         } catch (FileNotFoundException e) {
             callbacks.log("ERROR: " + e);
             callbacks.error();
@@ -215,12 +226,11 @@ public class DfuFlasher {
         }
     }
 
-    private static String getDfuWriteCommand() throws FileNotFoundException {
-        String fileName = MaintenanceUtil.FIRMWARE_BIN_FILE;
+    private static String getDfuWriteCommand(String fileName) throws FileNotFoundException {
         // we need quotes in case if absolute path contains spaces
         String quotedAbsolutePath = quote(new File(fileName).getAbsolutePath());
 
-        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + quotedAbsolutePath + " 0x08000000 -v -s";
+        return DFU_CMD_TOOL_LOCATION + "/" + DFU_CMD_TOOL + " -c port=usb1 -w " + quotedAbsolutePath + " 0x08000000 -v -s";
     }
 
     private static String quote(String absolutePath) {
@@ -228,7 +238,7 @@ public class DfuFlasher {
     }
 
     private static String getDfuEraseCommand() {
-        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -e all";
+        return DFU_CMD_TOOL_LOCATION + "/" + DFU_CMD_TOOL + " -c port=usb1 -e all";
     }
 
     @NotNull

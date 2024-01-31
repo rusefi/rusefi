@@ -34,6 +34,7 @@ public class ProgramSelector {
     private static final String OPENBLT_MANUAL = "Manual OpenBLT Update";
     private static final String OPENBLT_AUTO = "Auto OpenBLT Update";
     private static final String DFU_ERASE = "Full Chip Erase";
+    private static final String INSTALL_OPENBLT = "Install OpenBLT";
     private static final String ST_LINK = "ST-LINK Update";
     private static final String OPENBLT_CAN = "OpenBLT via CAN";
 
@@ -77,6 +78,10 @@ public class ProgramSelector {
                     case MANUAL_DFU:
                       jobName = "DFU update";
                       job = DfuFlasher::runDfuProgramming;
+                        break;
+                    case INSTALL_OPENBLT:
+                        jobName = "OpenBLT Initial Programming";
+                        job = DfuFlasher::runOpenBltInitialProgramming;
                         break;
                     case ST_LINK:
                         job = updateOperationCallbacks -> {
@@ -255,6 +260,9 @@ public class ProgramSelector {
             if (hasDfuDevice) {
                 mode.addItem(MANUAL_DFU);
                 mode.addItem(DFU_ERASE);
+                if (DfuFlasher.haveBootloaderBinFile()) {
+                    mode.addItem(INSTALL_OPENBLT);
+                }
             }
             if (currentHardware.isStLinkConnected())
                 mode.addItem(ST_LINK);
