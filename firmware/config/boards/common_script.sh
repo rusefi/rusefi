@@ -52,12 +52,13 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   #cp build/rusefi.hex  deliver/rusefi_update.hex
 
   # bootloader and composite image
-  echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
-  $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -o bootloader/blbuild/openblt_$PROJECT_BOARD.dfu
+#  echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
+#  $HEX2DFU -i bootloader/blbuild/openblt_$PROJECT_BOARD.hex -o bootloader/blbuild/openblt_$PROJECT_BOARD.dfu
 
+# todo: no need for complex `PROJECT = openblt_$(PROJECT_BOARD)` and complex binary name if we copy into static file name anyway!
   # do we need all these formats?
   cp bootloader/blbuild/openblt_$PROJECT_BOARD.bin  deliver/openblt.bin
-  cp bootloader/blbuild/openblt_$PROJECT_BOARD.dfu  deliver/openblt.dfu
+#  cp bootloader/blbuild/openblt_$PROJECT_BOARD.dfu  deliver/openblt.dfu
   #cp bootloader/blbuild/openblt_$PROJECT_BOARD.hex  deliver/openblt.hex
 
   echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"

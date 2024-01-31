@@ -71,7 +71,6 @@ mkdir -p artifacts
 rm -rf artifacts/*
 
 mkdir $update_ts_cacerts_FOLDER
-ls -l $FOLDER
 
 if [ -z $RUSEFI_CONSOLE_SETTINGS ]; then
   echo "$SCRIPT_NAME: No rusefi_console_settings"
@@ -103,10 +102,15 @@ fi
 
 # bootloader
 [ -e firmware/deliver/openblt.bin ] && { cp firmware/deliver/openblt.bin $FOLDER ; }
-if [ "$USE_OPENBLT" = "yes" ]; then
+# USE_OPENBLT is not available this script is invoked as a separate GHA step
+if [ -f firmware/deliver/openblt.bin ]; then
+  echo "Taking .srec under different name"
   # srec is the only format used by OpenBLT host tools
-  cp firmware/build/rusefi_update.srec $FOLDER
+  cp firmware/build/rusefi.srec $FOLDER/rusefi_update.srec
+else
+  echo "Do not need .srec"
 fi
+ls -l $FOLDER
 
 [ -e firmware/deliver/rusefi.bin ] || { echo "$SCRIPT_NAME: rusefi.bin not found"; exit 1; }
 
