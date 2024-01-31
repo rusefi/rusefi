@@ -300,7 +300,7 @@ public enum SerialPortScanner {
                 try {
                     Thread.sleep(300);
                 } catch (InterruptedException e) {
-                    throw new IllegalStateException(e);
+                    log.error("sleep interrupted", e);
                 }
             }
 
