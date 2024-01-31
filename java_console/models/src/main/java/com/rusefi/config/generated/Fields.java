@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Tue Jan 30 00:37:50 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 31 03:03:22 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1324,6 +1324,9 @@ public class Fields {
 	public static final char TS_PERF_TRACE_BEGIN = '_';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
 	public static final String TS_PROTOCOL = "001";
+	public static final char TS_QUERY_BOOTLOADER = 'L';
+	public static final int TS_QUERY_BOOTLOADER_NONE = 0;
+	public static final int TS_QUERY_BOOTLOADER_OPENBLT = 1;
 	public static final char TS_QUERY_COMMAND = 'Q';
 	public static final char TS_READ_COMMAND = 'R';
 	public static final int TS_RESPONSE_BURN_OK = 4;
@@ -1335,7 +1338,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.01.30.f407-discovery.3720514916";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.01.31.f407-discovery.2462638677";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
