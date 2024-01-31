@@ -10,6 +10,9 @@ import cz.jaybee.intelhex.IntelHexException;
 
 import java.io.IOException;
 
+/**
+ * prototype of our own DFU frontend, not used in real life
+ */
 public class DfuTool {
     public static void run(String[] args) throws IOException, IntelHexException {
         if (args.length < 2) {

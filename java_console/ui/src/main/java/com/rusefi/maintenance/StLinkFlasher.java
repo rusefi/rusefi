@@ -19,7 +19,10 @@ import static com.rusefi.core.preferences.storage.PersistentConfiguration.getCon
  * Andrey Belomutskiy, (c) 2013-2020
  * 2/4/15
  */
-public class FirmwareFlasher {
+public class StLinkFlasher {
+    /**
+     * this file is used for ST-LINK flashing option, do we still need it at all?
+     */
     public static final String IMAGE_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
     /**
      * SWD ST-LINK/V2 mode
@@ -34,7 +37,7 @@ public class FirmwareFlasher {
 
     private final JButton button;
 
-    public FirmwareFlasher(String fileName, String buttonTest, String tooltip) {
+    public StLinkFlasher(String fileName, String buttonTest, String tooltip) {
         button = new JButton(buttonTest);
         button.setToolTipText(tooltip);
         button.addActionListener(event -> doUpdateFirmware(fileName, button));
@@ -50,7 +53,7 @@ public class FirmwareFlasher {
         wnd.getFrame().setLocationRelativeTo(parent);
         wnd.showFrame(TITLE);
 
-        ExecHelper.submitAction(() -> doFlashFirmware(wnd, fileName), FirmwareFlasher.class + " extProcessThread");
+        ExecHelper.submitAction(() -> doFlashFirmware(wnd, fileName), StLinkFlasher.class + " extProcessThread");
     }
 
     public static String getOpenocdCommand() {

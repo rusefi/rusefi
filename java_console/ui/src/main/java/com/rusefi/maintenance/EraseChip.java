@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 
-import static com.rusefi.maintenance.FirmwareFlasher.TITLE;
+import static com.rusefi.maintenance.StLinkFlasher.TITLE;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -32,13 +32,13 @@ public class EraseChip {
                 StatusAnimation sa = new StatusAnimation(wnd);
                 ExecHelper.submitAction(() -> {
                   try {
-                    FirmwareFlasher.executeOpenOCDCommand(getEraseCommand(), wnd);
+                    StLinkFlasher.executeOpenOCDCommand(getEraseCommand(), wnd);
                   } catch (FileNotFoundException ex) {
                     wnd.append(ex.toString());
                     wnd.error();
                   }
                   sa.stop();
-                    wnd.setStatus(FirmwareFlasher.DONE);
+                    wnd.setStatus(StLinkFlasher.DONE);
                 },  EraseChip.this.getClass() + " extProcessThread");
             }
         });
@@ -46,7 +46,7 @@ public class EraseChip {
 
     @NotNull
     private String getEraseCommand() {
-        return FirmwareFlasher.getOpenocdCommand() + ERASE_COMMAND_SUFFIX;
+        return StLinkFlasher.getOpenocdCommand() + ERASE_COMMAND_SUFFIX;
     }
 
     public JButton getButton() {

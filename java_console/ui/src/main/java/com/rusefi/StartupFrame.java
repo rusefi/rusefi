@@ -9,7 +9,7 @@ import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.DriverInstall;
-import com.rusefi.maintenance.FirmwareFlasher;
+import com.rusefi.maintenance.StLinkFlasher;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
@@ -25,7 +25,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.List;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -40,7 +39,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  * <p/>
  * 2/14/14
  * @see SimulatorHelper
- * @see FirmwareFlasher
+ * @see StLinkFlasher
  */
 public class StartupFrame {
     private static final Logging log = getLogging(Launcher.class);

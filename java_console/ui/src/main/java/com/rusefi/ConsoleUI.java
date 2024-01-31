@@ -7,7 +7,7 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
-import com.rusefi.maintenance.FirmwareFlasher;
+import com.rusefi.maintenance.StLinkFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
 import com.rusefi.ui.console.MainFrame;
@@ -76,7 +76,7 @@ public class ConsoleUI {
         setFrameIcon(ConsoleUI.staticFrame);
         log.info("Console " + CONSOLE_VERSION);
 
-        log.info("Hardware: " + FirmwareFlasher.getHardwareKind());
+        log.info("Hardware: " + StLinkFlasher.getHardwareKind());
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);

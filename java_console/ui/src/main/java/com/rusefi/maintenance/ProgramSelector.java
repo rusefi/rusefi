@@ -81,7 +81,7 @@ public class ProgramSelector {
                     case ST_LINK:
                         job = updateOperationCallbacks -> {
                             // todo: add ST-LINK no-assert mode? or not?
-                            FirmwareFlasher.doUpdateFirmware(FirmwareFlasher.IMAGE_FILE, updateFirmware);
+                            StLinkFlasher.doUpdateFirmware(StLinkFlasher.IMAGE_FILE, updateFirmware);
                         };
                         break;
                     case DFU_SWITCH:

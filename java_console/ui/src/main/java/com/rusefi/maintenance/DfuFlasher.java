@@ -26,10 +26,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import static com.rusefi.core.ui.FrameHelper.appendBundleName;
-
 /**
- * @see FirmwareFlasher
+ * @see StLinkFlasher
  */
 public class DfuFlasher {
     private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
