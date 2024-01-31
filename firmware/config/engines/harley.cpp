@@ -29,8 +29,13 @@ void setHarley() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->enableAemXSeries = true;
 
+  // total 45 degree odd fire, split across two cylinders mostly for fun
 	engineConfiguration->timing_offset_cylinder[0] = 45.0 / 2;
 	engineConfiguration->timing_offset_cylinder[1] = -45.0 / 2;
+
+  // work-around for https://github.com/rusefi/rusefi/issues/5894 todo: fix it!
+	engineConfiguration->maximumIgnitionTiming = 90;
+  engineConfiguration->minimumIgnitionTiming = -90;
 
 	// for now we need non wired camInput to keep TS field enable/disable logic happy
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
