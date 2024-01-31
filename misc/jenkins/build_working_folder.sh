@@ -32,8 +32,11 @@ if [ ! -f $INI_FILE_OVERRIDE ]; then
    exit -1
 fi
 
-FULL_BUNDLE_FILE="artifacts/${BUNDLE_FULL_NAME}.zip"
-UPDATE_BUNDLE_FILE="artifacts/${BUNDLE_FULL_NAME}_autoupdate.zip"
+FULL_BUNDLE_SHORT_FILE="${BUNDLE_FULL_NAME}.zip"
+UPDATE_BUNDLE_SHORT_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
+
+FULL_BUNDLE_FILE="artifacts/${FULL_BUNDLE_SHORT_FILE}"
+UPDATE_BUNDLE_FILE="artifacts/${UPDATE_BUNDLE_SHORT_FILE}"
 
 LTS_NAME=$1
 LTS_FOLDER="build_server/lts/${LTS_NAME}"
@@ -152,17 +155,20 @@ cd ..
 ls -l $FULL_BUNDLE_FILE
 
 [ -e $FULL_BUNDLE_FILE ] || { echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1; }
+ls -l $UPDATE_BUNDLE_FILE
+
+cd artifacts
 
 if [ -n "$RUSEFI_SSH_USER" ]; then
  echo "$SCRIPT_NAME: Uploading full bundle"
  retVal=0
  if [ "${LTS}" = "true" ]; then
-   tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p ${LTS_FOLDER}; tar -xzf - -C ${LTS_FOLDER}"
-   retVal=$?
+   REMOTE_DESTINATION=${LTS_FOLDER}
  else
-   tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "tar -xzf - -C build_server"
-   retVal=$?
+   REMOTE_DESTINATION=build_server
  fi
+ tar -czf - $FULL_BUNDLE_SHORT_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p ${REMOTE_DESTINATION}; tar -xzf - -C ${REMOTE_DESTINATION}"
+ retVal=$?
  if [ $retVal -ne 0 ]; then
   echo "full bundle upload failed"
   exit 1
@@ -172,16 +178,15 @@ else
 fi
 
 
-ls -l $UPDATE_BUNDLE_FILE
 if [ -n "$RUSEFI_SSH_USER" ]; then
  retVal=0
  if [ "${LTS}" = "true" ]; then
-   tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p ${LTS_FOLDER}/autoupdate; tar -xzf - -C ${LTS_FOLDER}/autoupdate"
-   retVal=$?
+   REMOTE_DESTINATION=${LTS_FOLDER}/autoupdate
  else
-   tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/autoupdate; tar -xzf - -C build_server/autoupdate"
-   retVal=$?
+   REMOTE_DESTINATION=build_server/autoupdate
  fi
+ tar -czf - $UPDATE_BUNDLE_SHORT_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p ${REMOTE_DESTINATION}; tar -xzf - -C ${REMOTE_DESTINATION}"
+ retVal=$?
  if [ $retVal -ne 0 ]; then
   echo "autoupdate upload failed"
   exit 1
@@ -189,6 +194,8 @@ if [ -n "$RUSEFI_SSH_USER" ]; then
 else
   echo "Upload not configured"
 fi
+
+cd ..
 
 pwd
 ls -l artifacts
