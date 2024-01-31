@@ -895,8 +895,8 @@
         <constant digits="4" name="tChargeMaxRpmMinTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMaxRpmMaxTps" units="">0.9</constant>
         <constant digits="0" name="vvtOutputFrequency" units="Hz">300.0</constant>
-        <constant digits="0" name="minimumIgnitionTiming" units="deg BTDC">-10.0</constant>
-        <constant digits="0" name="maximumIgnitionTiming" units="deg BTDC">60.0</constant>
+        <constant digits="0" name="minimumIgnitionTiming" units="deg BTDC">-90.0</constant>
+        <constant digits="0" name="maximumIgnitionTiming" units="deg BTDC">90.0</constant>
         <constant digits="0" name="alternatorPwmFrequency" units="Hz">300.0</constant>
         <constant name="vvtMode1">"VTwin by MAP"</constant>
         <constant name="vvtMode2">"Inactive"</constant>
