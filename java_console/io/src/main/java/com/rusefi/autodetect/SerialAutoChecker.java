@@ -32,16 +32,16 @@ public class SerialAutoChecker {
     /**
      * @return ECU signature from specified stream
      */
-    public String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
+    public static String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
         if (stream == null)
             return null;
-        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
-            if (Elm327Connector.checkConnection(serialPort, stream)) {
-                // todo: this method is supposed to return signature not serial port!
-                return serialPort;
-            }
-            return null;
-        }
+//        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
+//            if (Elm327Connector.checkConnection(serialPort, stream)) {
+//                // todo: this method is supposed to return signature not serial port!
+//                return serialPort;
+//            }
+//            return null;
+//        }
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
             HelloCommand.send(stream);
@@ -52,7 +52,7 @@ public class SerialAutoChecker {
             if (!signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
                 return null;
             }
-            log.info("Got signature=" + signature + " from " + serialPort);
+            log.info("Got signature=" + signature + " from " + stream);
             if (callback != null) {
                 callback.apply(new CallbackContext(stream, signature));
             }

@@ -204,7 +204,7 @@ public class BinaryProtocol {
         }
         int actualVersion = FileUtil.littleEndianWrap(response, 1, requestSize).getInt();
         if (actualVersion != TS_FILE_VERSION) {
-			String errorMessage = 
+			String errorMessage =
 				"Incompatible firmware format=" + actualVersion + " while format " + TS_FILE_VERSION + " expected" + "\n"
 				+ "recommended fix: use a compatible console version  OR  flash new firmware";
             log.error(errorMessage);
@@ -296,7 +296,7 @@ public class BinaryProtocol {
     private byte[] receivePacket(String msg) throws IOException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
-            return incomingData.getPacket(msg, start);
+            return incomingData.getPacket(Timeouts.BINARY_IO_TIMEOUT, msg, start);
         }
     }
 
