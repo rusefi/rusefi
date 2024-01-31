@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import static com.rusefi.maintenance.StLinkFlasher.TITLE;
 
 /**
+ * DEAD?!
+ *
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class EraseChip {

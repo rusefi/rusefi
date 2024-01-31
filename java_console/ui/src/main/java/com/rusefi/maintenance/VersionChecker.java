@@ -1,7 +1,6 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.ConsoleUI;
 import com.rusefi.FileLog;
 import com.rusefi.models.Utils;
 import com.rusefi.ui.util.URLLabel;
@@ -12,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +19,9 @@ import static com.rusefi.Launcher.*;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
+ * DEAD?! This whole logic does not seem to provide much value?
+ * Problem: users normally do not even invoke console ever!
+ *
  * This class checks the recommended versions numbers and compares them with current versions
  * <p/>
  * Andrey Belomutskiy, (c) 2013-2020
