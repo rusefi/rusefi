@@ -159,11 +159,6 @@ public class StartupFrame {
 
             // for F7 builds we just build one file at the moment
 //            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
-            if (new File(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE).exists()) {
-                // 407 build
-                FirmwareFlasher firmwareFlasher = new FirmwareFlasher(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE, "ST-LINK Program Firmware/NoAsserts", "Please only use this version if you know that you need this version");
-                realHardwarePanel.add(firmwareFlasher.getButton(), "right, wrap");
-            }
             JComponent updateHelp = ProgramSelector.createHelpButton();
 
             realHardwarePanel.add(updateHelp, "right, wrap");

@@ -21,7 +21,6 @@ import static com.rusefi.core.preferences.storage.PersistentConfiguration.getCon
  */
 public class FirmwareFlasher {
     public static final String IMAGE_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
-    public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + "/" + "rusefi_no_asserts.bin";
     /**
      * SWD ST-LINK/V2 mode
      */
