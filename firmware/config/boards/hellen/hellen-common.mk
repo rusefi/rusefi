@@ -3,8 +3,10 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC += $(BOARDS_DIR)/hellen/hellen_common.cpp \
-    $(BOARDS_DIR)/hellen/hellen_board_id.cpp
+BOARDCPPSRC += $(BOARDS_DIR)/hellen/hellen_common.cpp
+ifneq ($(USE_OPENBLT),yes)
+BOARDCPPSRC += $(BOARDS_DIR)/hellen/hellen_board_id.cpp
+endif
 
 BOARDINC += $(BOARDS_DIR)/hellen
 

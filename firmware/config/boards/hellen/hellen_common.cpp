@@ -80,5 +80,7 @@ void configureHellenCanTerminator() {
 }
 
 void detectHellenBoardType() {
+#if ! EFI_USE_OPENBLT
 	engine->engineState.hellenBoardId = hackHellenBoardId(detectHellenBoardId());
+#endif /* EFI_USE_OPENBLT */
 }
