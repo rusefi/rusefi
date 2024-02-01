@@ -1078,6 +1078,9 @@ See Over/Undervoltage Shutdown/Retry bit in documentation
 ### enableExtendedCanBroadcast
 
 
+### useAuxSpeedForSlipRatio
+
+
 ### afterCrankingIACtaperDuration
 This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 
