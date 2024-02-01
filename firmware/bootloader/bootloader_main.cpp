@@ -8,11 +8,35 @@ extern "C" {
 	#include "shared_params.h"
 }
 
+class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
+protected:
+	void main(void) override {
+		Gpio yellow = getWarningLedPin();
+
+		efiSetPadMode("yellow", yellow, PAL_MODE_OUTPUT_PUSHPULL);
+
+		auto yellowPort = getBrainPinPort(yellow);
+		auto yellowPin = getBrainPinIndex(yellow);
+
+		palSetPad(yellowPort, yellowPin);
+
+		while (true) {
+			palTogglePad(yellowPort, yellowPin);
+			chThdSleepMilliseconds(250);
+		}
+	}
+};
+
+static BlinkyThread blinky;
+
 int main(void) {
 	halInit();
 	chSysInit();
 
 	baseMCUInit();
+
+	// start the blinky thread
+	blinky.start(NORMALPRIO + 10);
 
 	// Init openblt shared params
 	SharedParamsInit();
