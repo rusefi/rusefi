@@ -7,7 +7,8 @@
 
 PROJECT_BOARD=$1
 PROJECT_CPU=$2
+BOARD_DIR=$3
 
 cd ../../..
 
-bash config/boards/common_script.sh $PROJECT_BOARD $PROJECT_CPU
+bash config/boards/common_script.sh $PROJECT_BOARD $PROJECT_CPU $BOARD_DIR
