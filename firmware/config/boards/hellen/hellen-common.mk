@@ -4,7 +4,8 @@
 
 # Target ECU board design
 BOARDCPPSRC += $(BOARDS_DIR)/hellen/hellen_common.cpp
-ifneq ($(USE_OPENBLT),yes)
+
+ifeq (,$(findstring EFI_BOOTLOADER,$(DDEFS)))
 BOARDCPPSRC += $(BOARDS_DIR)/hellen/hellen_board_id.cpp
 endif
 
