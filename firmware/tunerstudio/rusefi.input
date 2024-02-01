@@ -4688,6 +4688,7 @@ dialog = tcuControls, "Transmission Settings"
         field = dacOutputPins2,         dacOutputPins2
         field = "Read RPM matching VSS profile",    canInputBCM
         field = useSpiImu,              useSpiImu
+        field = useAuxSpeedForSlipRatio, useAuxSpeedForSlipRatio
 
 	dialog = mc33810Dialog, "MC33810 IGN/INJ driver"
 		field = "SPI settings"
