@@ -17,14 +17,37 @@ public:
 	}
 } converter;
 
+class WheelSlipBasedOnAuxSpeedSensor : public Sensor {
+public:
+  WheelSlipBasedOnAuxSpeedSensor() : Sensor(SensorType::WheelSlipRatio)  {  }
+
+	SensorResult get() const final override {
+	  auto value1 = auxSpeed1.get();
+	  auto value2 = auxSpeed2.get();
+	  if (!value1.Valid || !value2.Valid) {
+	    return UnexpectedCode::Unknown;
+	  }
+	  float result = value1.Value / value2.Value;
+	  return result;
+	}
+
+	void showInfo(const char*) const override { }
+};
+
+static WheelSlipBasedOnAuxSpeedSensor wheelSlipSensor;
 
 void initAuxSpeedSensors() {
 	auxSpeed1.useBiQuad = engineConfiguration->useBiQuadOnAuxSpeedSensors;
 	auxSpeed1.initIfValid(engineConfiguration->auxSpeedSensorInputPin[0], converter, engineConfiguration->auxFrequencyFilter);
 	auxSpeed2.initIfValid(engineConfiguration->auxSpeedSensorInputPin[1], converter, 0.05f);
+
+  if (engineConfiguration->useAuxSpeedForSlipRatio) {
+	  wheelSlipSensor.Register();
+	}
 }
 
 void deinitAuxSpeedSensors() {
 	auxSpeed1.deInit();
 	auxSpeed2.deInit();
+	wheelSlipSensor.unregister();
 }
