@@ -38,6 +38,7 @@ Release template (copy/paste this for new release):
  - 6/0 CKP trigger pattern for 1995 Lamborghini Diablo #5876
  - VE/Ign/Boost blend tables can select a Y axis override for even more flexibility
  - Disable radiator fans after certain vehicle speed #5875
+ - LIS2DW12TR on-board Accelerometer support #4870
 
 ### Removed
  - Narrow to Wideband approximation
