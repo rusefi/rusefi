@@ -186,12 +186,17 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) /*| misoMode | PAL_STM32_OSPEED_HIGHEST*/);
 }
 
-void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
-	spiConfig->end_cb = NULL;
+void initSpiCsNoOccupy(SPIConfig *spiConfig, brain_pin_e csPin) {
 	ioportid_t port = getHwPort("spi", csPin);
 	ioportmask_t pin = getHwPin("spi", csPin);
 	spiConfig->ssport = port;
 	spiConfig->sspad = pin;
+}
+
+void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
+	/* TODO: why this is here? */
+	spiConfig->end_cb = nullptr;
+	initSpiCsNoOccupy(spiConfig, csPin);
 	// CS is controlled inside 'hal_spi_lld' driver using both software and hardware methods.
 	//efiSetPadMode("chip select", csPin, PAL_MODE_OUTPUT_OPENDRAIN);
 }
