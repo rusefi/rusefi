@@ -1087,6 +1087,9 @@ float getConfigValueByName(const char *name) {
 // useAuxSpeedForSlipRatio
 		case -723870257:
 			return engineConfiguration->useAuxSpeedForSlipRatio;
+// useVssAsSecondWheelSpeed
+		case -195378748:
+			return engineConfiguration->useVssAsSecondWheelSpeed;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -1762,6 +1765,9 @@ float getConfigValueByName(const char *name) {
 // maxInjectorDutySustainedTimeout
 		case 263235302:
 			return engineConfiguration->maxInjectorDutySustainedTimeout;
+// auxSpeed1Multiplier
+		case -1644887108:
+			return engineConfiguration->auxSpeed1Multiplier;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3573,6 +3579,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useAuxSpeedForSlipRatio = (int)value;
 		return 1;
 	}
+		case -195378748:
+	{
+		engineConfiguration->useVssAsSecondWheelSpeed = (int)value;
+		return 1;
+	}
 		case 671504531:
 	{
 		engineConfiguration->afterCrankingIACtaperDuration = (int)value;
@@ -4696,6 +4707,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 263235302:
 	{
 		engineConfiguration->maxInjectorDutySustainedTimeout = (int)value;
+		return 1;
+	}
+		case -1644887108:
+	{
+		engineConfiguration->auxSpeed1Multiplier = value;
 		return 1;
 	}
 	}

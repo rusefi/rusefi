@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 02 01:06:54 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 02 14:09:42 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2846,8 +2846,9 @@ struct engine_configuration_s {
 	offset 1576 bit 11 */
 	bool useAuxSpeedForSlipRatio : 1 {};
 	/**
+	 * VSS and auxSpeed1 or auxSpeed1 with auxSpeed2?
 	offset 1576 bit 12 */
-	bool unusedBit_495_12 : 1 {};
+	bool useVssAsSecondWheelSpeed : 1 {};
 	/**
 	offset 1576 bit 13 */
 	bool unusedBit_503_13 : 1 {};
@@ -4623,10 +4624,14 @@ struct engine_configuration_s {
 	 */
 	int8_t tractionControlIgnitionSkip[TRACTION_CONTROL_ETB_DROP_SIZE][TRACTION_CONTROL_ETB_DROP_SIZE];
 	/**
-	 * units: units
 	 * offset 4552
 	 */
-	uint8_t mainUnusedEnd[150];
+	float auxSpeed1Multiplier;
+	/**
+	 * units: units
+	 * offset 4556
+	 */
+	uint8_t mainUnusedEnd[146];
 	/**
 	 * need 4 byte alignment
 	 * units: units
@@ -5545,4 +5550,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22232);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 02 01:06:54 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 02 14:09:42 UTC 2024
