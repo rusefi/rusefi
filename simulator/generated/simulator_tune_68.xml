@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22176">
+    <page number="0" size="22232">
         <constant name="engineType">"MRE_M111"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -1846,25 +1846,23 @@
         <constant name="injectionPinsStage210">"NONE"</constant>
         <constant name="injectionPinsStage211">"NONE"</constant>
         <constant name="injectionPinsStage212">"NONE"</constant>
-        <constant cols="1" digits="0" name="mainUnusedEnd" rows="168">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant cols="6" digits="0" name="tractionControlTimingDrop" rows="6">
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="6" digits="0" name="tractionControlIgnitionSkip" rows="6">
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="1" digits="0" name="mainUnusedEnd" rows="150">
          0.0
          0.0
          0.0
@@ -4559,7 +4557,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240130" nPages="1" signature="rusEFI master.2024.02.01.f407-discovery.434324792" version="5.0"/>
+    <versionInfo firmwareInfo="20240130" nPages="1" signature="rusEFI master.2024.02.02.f407-discovery.2150807964" version="5.0"/>
     <bibliography author="rusEFI 20240130" writeDate="date"/>
     <settings/>
     <userComments/>
