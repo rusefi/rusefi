@@ -64,7 +64,6 @@
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_na8.h"
 #include "mazda_miata_vvt.h"
-#include "mazda_626.h"
 #include "m111.h"
 #include "mercedes.h"
 
