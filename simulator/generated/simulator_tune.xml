@@ -791,6 +791,7 @@
         <constant name="mc33810Gpgd3Mode">"false"</constant>
         <constant name="enableExtendedCanBroadcast">"true"</constant>
         <constant name="useAuxSpeedForSlipRatio">"false"</constant>
+        <constant name="useVssAsSecondWheelSpeed">"false"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
         <constant name="auxSerialTxPin">"NONE"</constant>
@@ -1860,11 +1861,8 @@
          0.0 0.0 0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
-        <constant cols="1" digits="0" name="mainUnusedEnd" rows="150">
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="0" name="auxSpeed1Multiplier" units="">1.0</constant>
+        <constant cols="1" digits="0" name="mainUnusedEnd" rows="146">
          0.0
          0.0
          0.0
@@ -4555,7 +4553,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240130" nPages="1" signature="rusEFI master.2024.02.02.f407-discovery.2150807964" version="5.0"/>
+    <versionInfo firmwareInfo="20240130" nPages="1" signature="rusEFI master.2024.02.02.f407-discovery.1959391057" version="5.0"/>
     <bibliography author="rusEFI 20240130" writeDate="date"/>
     <settings/>
     <userComments/>
