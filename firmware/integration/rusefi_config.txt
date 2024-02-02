@@ -1628,8 +1628,10 @@ int8_t[TRACTION_CONTROL_ETB_DROP_SIZE x TRACTION_CONTROL_ETB_DROP_SIZE] traction
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPinsStage2;
 
+int8_t[TRACTION_CONTROL_ETB_DROP_SIZE x TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlTimingDrop;;"Deg", 1, 0, -100, 100, 0
+int8_t[TRACTION_CONTROL_ETB_DROP_SIZE x TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlIgnitionSkip;;"%", 1, 0, 0, 100, 0
 
-uint8_t[168] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint8_t[150] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
