@@ -161,9 +161,6 @@ void Engine::periodicSlowCallback() {
 	updateVrThresholdPwm();
 
 	updateGppwm();
-#if EFI_MAX_31855
-	grabEgtValues();
-#endif /* EFI_MAX_31855 */
 
 	engine->engineModules.apply_all([](auto & m) { m.onSlowCallback(); });
 

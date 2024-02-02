@@ -23,25 +23,30 @@
 
 #if EFI_MAX_31855
 
+#include "thread_controller.h"
+
 #define EGT_ERROR_VALUE -1000
 
 static SPIDriver *driver;
+static egt_cs_array_t m_cs;
 
-static SPIConfig spiConfig[EGT_CHANNEL_COUNT];
-
-static void showEgtInfo() {
-#if EFI_PROD_CODE
-	printSpiState();
-
-	efiPrintf("EGT spi: %d", engineConfiguration->max31855spiDevice);
-
-	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		if (isBrainPinValid(engineConfiguration->max31855_cs[i])) {
-			efiPrintf("%d ETG @ %s", i, hwPortname(engineConfiguration->max31855_cs[i]));
-		}
-	}
-#endif
-}
+/* TODO: validate */
+static SPIConfig spiConfig = {
+	.circular = false,
+	.end_cb = NULL,
+	.ssport = NULL,
+	.sspad = 0,
+	.cr1 =
+		SPI_CR1_8BIT_MODE |
+		SPI_CR1_SSM |
+		SPI_CR1_SSI |
+		((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
+		SPI_CR1_MSTR |
+		/* SPI_CR1_CPOL | */ // = 0
+		SPI_CR1_CPHA | // = 1
+		0,
+	.cr2 = SPI_CR2_8BIT_MODE
+};
 
 // bits D17 and D3 are always expected to be zero
 #define MC_RESERVED_BITS 0x20008
@@ -69,7 +74,7 @@ static const char * getMcCode(max_32855_code code) {
 }
 
 static max_32855_code getResultCode(uint32_t egtPacket) {
-	if ((egtPacket & MC_RESERVED_BITS) != 0) {
+	if (((egtPacket & MC_RESERVED_BITS) != 0) || (egtPacket == 0x0)) {
 		return MC_INVALID;
 	} else if ((egtPacket & MC_OPEN_BIT) != 0) {
 		return MC_OPEN;
@@ -84,17 +89,23 @@ static max_32855_code getResultCode(uint32_t egtPacket) {
 
 static uint32_t readEgtPacket(int egtChannel) {
 	uint32_t egtPacket;
-	if (driver == NULL) {
+	brain_pin_e cs = m_cs[egtChannel];
+
+	if ((!isBrainPinValid(cs)) || (driver == NULL)) {
 		return 0xFFFFFFFF;
 	}
 
-	spiStart(driver, &spiConfig[egtChannel]);
+	/* Set proper CS gpio */
+	initSpiCsNoOccupy(&spiConfig, cs);
+
+	spiStart(driver, &spiConfig);
 	spiSelect(driver);
 
 	spiReceive(driver, sizeof(egtPacket), &egtPacket);
 
 	spiUnselect(driver);
 	spiStop(driver);
+
 	egtPacket = SWAP_UINT32(egtPacket);
 	return egtPacket;
 }
@@ -111,6 +122,20 @@ static uint16_t getMax31855EgtValue(int egtChannel) {
 	}
 }
 
+static void showEgtInfo() {
+#if EFI_PROD_CODE
+	printSpiState();
+
+	efiPrintf("EGT spi: %d", engineConfiguration->max31855spiDevice);
+
+	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
+		if (isBrainPinValid(engineConfiguration->max31855_cs[i])) {
+			efiPrintf("%d ETG @ %s", i, hwPortname(engineConfiguration->max31855_cs[i]));
+		}
+	}
+#endif
+}
+
 static void egtRead() {
 
 	if (driver == NULL) {
@@ -124,10 +149,10 @@ static void egtRead() {
 
 	max_32855_code code = getResultCode(egtPacket);
 
-	efiPrintf("egt %x code=%d %s", egtPacket, code, getMcCode(code));
+	efiPrintf("egt 0x%08x code=%d (%s)", egtPacket, code, getMcCode(code));
 
 	if (code != MC_INVALID) {
-		int refBits = ((egtPacket & 0xFFFF) / 16); // bits 15:4
+		int refBits = ((egtPacket & 0xFFF0) >> 4); // bits 15:4
 		float refTemp = refBits / 16.0;
 		efiPrintf("reference temperature %.2f", refTemp);
 
@@ -135,33 +160,56 @@ static void egtRead() {
 	}
 }
 
-void initMax31855(spi_device_e device, egt_cs_array_t max31855_cs) {
-	driver = getSpiDevice(device);
-	if (driver == NULL) {
-		// error already reported
-		return;
+/* TODO: move all stuff to Max31855Read class */
+class Max31855Read final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	Max31855Read()
+		: ThreadController("MAX31855", MAX31855_PRIO)
+	{
 	}
 
-	// todo:spi device is now enabled separately - should probably be enabled here
+	int start(spi_device_e device, egt_cs_array_t cs) {
+		driver = getSpiDevice(device);
 
-	addConsoleAction("egtinfo", (Void) showEgtInfo);
+		if (driver) {
+			/* WARN: this will clear all other bits in cr1 */
+			spiConfig.cr1 = getSpiPrescaler(_5MHz, device);
+			for (size_t i = 0; i < EGT_CHANNEL_COUNT; i++) {
+				/*  and mark used! */
+				if (isBrainPinValid(cs[i])) {
+					initSpiCs(&spiConfig, cs[i]);
+					m_cs[i] = cs[i];
+				} else {
+					m_cs[i] = Gpio::Invalid;
+				}
+			}
+			ThreadController::start();
+			return 0;
+		}
+		return -1;
+	}
 
-	addConsoleAction("egtread", (Void) egtRead);
+	void ThreadTask() override {
+		while (true) {
+			for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
+			// todo: migrate to SensorType framework!
+				engine->currentEgtValue[i] = getMax31855EgtValue(i);
+			}
 
-	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		if (isBrainPinValid(max31855_cs[i])) {
-
-			initSpiCs(&spiConfig[i], max31855_cs[i]);
-
-			spiConfig[i].cr1 = getSpiPrescaler(_5MHz, device);
+			chThdSleepMilliseconds(500);
 		}
 	}
-}
 
-void grabEgtValues() {
-	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-	// todo: migrate to SensorType framework!
-		engine->currentEgtValue[i] = getMax31855EgtValue(i);
+private:
+	//brain_pin_e m_cs[EGT_CHANNEL_COUNT];
+};
+
+static Max31855Read instance;
+
+void initMax31855(spi_device_e device, egt_cs_array_t max31855_cs) {
+	if (instance.start(device, max31855_cs) == 0) {
+		addConsoleAction("egtinfo", (Void) showEgtInfo);
+		addConsoleAction("egtread", (Void) egtRead);
 	}
 }
 
