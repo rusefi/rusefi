@@ -23,11 +23,13 @@ public:
 
 	SensorResult get() const final override {
 	  auto value1 = auxSpeed1.get();
-	  auto value2 = auxSpeed2.get();
+	  auto value2 = engineConfiguration->useVssAsSecondWheelSpeed ? Sensor::get(SensorType::VehicleSpeed) : auxSpeed2.get();
 	  if (!value1.Valid || !value2.Valid) {
 	    return UnexpectedCode::Unknown;
 	  }
-	  float result = value1.Value / value2.Value;
+	  // todo: remove handling of zero in July of 2024
+	  float correctedAuxSpeed1Multiplier = engineConfiguration->auxSpeed1Multiplier == 0 ? 1 : engineConfiguration->auxSpeed1Multiplier;
+	  float result = value1.Value * correctedAuxSpeed1Multiplier / value2.Value;
 	  return result;
 	}
 

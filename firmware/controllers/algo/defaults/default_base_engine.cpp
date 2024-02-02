@@ -73,6 +73,8 @@ void setDefaultBaseEngine() {
   engineConfiguration->fan1ExtraIdle = 2;
   engineConfiguration->fan2ExtraIdle = 2;
 
+  engineConfiguration->auxSpeed1Multiplier = 1;
+
   engineConfiguration->acrRevolutions = 5;
 
     engineConfiguration->watchOutForLinearTime = true;
