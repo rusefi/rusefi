@@ -2055,7 +2055,7 @@ menuDialog = main
 		subMenu = fancyHardwareDialog,		"Fancy Hardware"
 		subMenu = tractionEtbTableTbl,    "Traction Control ETB Drop"
 		subMenu = tractionTimingTableTbl,    "Traction Control Timing Adjustment"
-		subMenu = tractionControlSlipBins,    "Traction Control Skip Ignition"
+		subMenu = tractionIgnitionSkipTableTbl,    "Traction Control Skip Ignition"
 		subMenu = std_separator
 
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
