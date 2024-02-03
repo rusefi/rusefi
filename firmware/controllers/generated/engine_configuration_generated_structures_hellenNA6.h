@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 02 14:09:29 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 03 16:36:22 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4631,7 +4631,7 @@ struct engine_configuration_s {
 	 * units: units
 	 * offset 4556
 	 */
-	uint8_t mainUnusedEnd[146];
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[146];
 	/**
 	 * need 4 byte alignment
 	 * units: units
@@ -5550,4 +5550,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22232);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 02 14:09:29 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 03 16:36:22 UTC 2024
