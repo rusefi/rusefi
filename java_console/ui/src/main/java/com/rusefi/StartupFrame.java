@@ -245,16 +245,9 @@ public class StartupFrame {
 
     private void connectButtonAction(JComboBox<String> comboSpeeds) {
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
-        String selectedPort = comboPorts.getSelectedItem().toString();
-        if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
-            SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectPort(StartupFrame.this.frame);
-            String autoDetectedPort = detectResult == null ? null : detectResult.getSerialPort();
-            if (autoDetectedPort == null)
-                return;
-            selectedPort = autoDetectedPort;
-        }
+        SerialPortScanner.PortResult selectedPort = ((SerialPortScanner.PortResult)comboPorts.getSelectedItem());
         disposeFrameAndProceed();
-        new ConsoleUI(selectedPort);
+        new ConsoleUI(selectedPort.port);
     }
 
     /**

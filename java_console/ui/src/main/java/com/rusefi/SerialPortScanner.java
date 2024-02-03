@@ -99,8 +99,6 @@ public enum SerialPortScanner {
 
     private static final boolean SHOW_SOCKETCAN = FileLog.isLinux();
 
-    static final String AUTO_SERIAL = "Auto Serial";
-
     private final Object lock = new Object();
     @NotNull
     private AvailableHardware knownHardware = new AvailableHardware(Collections.emptyList(), false, false, false);
