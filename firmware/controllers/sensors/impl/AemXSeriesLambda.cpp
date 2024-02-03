@@ -5,8 +5,6 @@
 #include "wideband_firmware/for_rusefi/wideband_can.h"
 
 static constexpr uint32_t aem_base    = 0x180;
-// todo: consume WB_DATA_BASE_ADDR from fresh wideband_can.h https://github.com/rusefi/rusefi/issues/5208
-#define WB_DATA_BASE_ADDR 0x190
 static constexpr uint32_t rusefi_base = WB_DATA_BASE_ADDR;
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
