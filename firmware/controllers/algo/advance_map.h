@@ -17,6 +17,7 @@ angle_t getCombinedCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ig
 float getInitialAdvance(int rpm, float map, float advanceMax);
 
 size_t getMultiSparkCount(int rpm);
+void initIgnitionAdvanceControl();
 
 class IgnitionState : public ignition_state_s {
 public:

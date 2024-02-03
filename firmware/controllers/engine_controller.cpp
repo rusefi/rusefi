@@ -506,6 +506,8 @@ void commonInitEngineController() {
 	initLaunchControl();
 #endif
 
+  initIgnitionAdvanceControl();
+
 #if EFI_UNIT_TEST
 	engine->rpmCalculator.Register();
 #endif /* EFI_UNIT_TEST */
