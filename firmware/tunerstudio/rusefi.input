@@ -1480,6 +1480,7 @@ gaugeCategory = Sensors - Extra 2
 	rpmAccelerationGa = rpmAcceleration,	"rpm delta",		"RPM/s",		-2000,		2000,		-2000,		2000,		-2000,	2000,	0,	0
 	wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",		0,	100,		0,		0,	100,	100,	1,	1
 	auxSpeed1Gauge = auxSpeed1, "Aux Freq Input1", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
+	auxSpeed2Gauge = auxSpeed2, "Aux Freq Input2", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
 
 gaugeCategory = VVT
 	vvtPositionB1IGauge = vvtPositionB1I, @@GAUGE_NAME_VVT_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
