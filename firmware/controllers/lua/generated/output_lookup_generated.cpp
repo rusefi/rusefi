@@ -841,6 +841,9 @@ float getOutputValueByName(const char *name) {
 // correctedIgnitionAdvance
 		case 352421907:
 			return engine->ignitionState.correctedIgnitionAdvance;
+// tractionAdvanceDrop
+		case -899895696:
+			return engine->ignitionState.tractionAdvanceDrop;
 // dwellVoltageCorrection
 		case -80612537:
 			return engine->ignitionState.dwellVoltageCorrection;

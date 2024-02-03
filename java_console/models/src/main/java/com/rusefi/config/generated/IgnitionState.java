@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/ignition_state.txt Sun Jan 07 23:16:14 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/ignition_state.txt Sat Feb 03 21:42:28 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -180,7 +180,7 @@ public class IgnitionState {
 	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 16, FieldType.INT16).setScale(0.01).setBaseOffset(848);
 	public static final Field BASEIGNITIONADVANCE = Field.create("BASEIGNITIONADVANCE", 18, FieldType.INT16).setScale(0.02).setBaseOffset(848);
 	public static final Field CORRECTEDIGNITIONADVANCE = Field.create("CORRECTEDIGNITIONADVANCE", 20, FieldType.INT16).setScale(0.02).setBaseOffset(848);
-	public static final Field ALIGNMENTFILL_AT_22 = Field.create("ALIGNMENTFILL_AT_22", 22, FieldType.INT8).setScale(1.0).setBaseOffset(848);
+	public static final Field TRACTIONADVANCEDROP = Field.create("TRACTIONADVANCEDROP", 22, FieldType.INT16).setScale(0.02).setBaseOffset(848);
 	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 24, FieldType.FLOAT).setBaseOffset(848);
 	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 28, FieldType.FLOAT).setBaseOffset(848);
 	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 32, FieldType.FLOAT).setBaseOffset(848);
@@ -194,7 +194,7 @@ public class IgnitionState {
 	TIMINGPIDCORRECTION,
 	BASEIGNITIONADVANCE,
 	CORRECTEDIGNITIONADVANCE,
-	ALIGNMENTFILL_AT_22,
+	TRACTIONADVANCEDROP,
 	DWELLVOLTAGECORRECTION,
 	LUATIMINGADD,
 	LUATIMINGMULT,
