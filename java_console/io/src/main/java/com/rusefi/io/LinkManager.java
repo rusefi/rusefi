@@ -64,7 +64,7 @@ public class LinkManager implements Closeable {
     public LinkManager() {
         Future<?> future = submit(() -> {
             communicationThread = Thread.currentThread();
-            System.out.println("communicationThread lookup DONE");
+            log.info("communicationThread lookup DONE");
         });
         try {
             // let's wait for the above trivial task to finish

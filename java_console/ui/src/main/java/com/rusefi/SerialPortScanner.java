@@ -178,6 +178,8 @@ public enum SerialPortScanner {
 
         // Give everyone a chance to finish
         try {
+            // todo: see if everyone has already finished - make this sleep conditional!
+            // todo: lowe this timeout?
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             // We got interrupted because the last port got found, nothing to do

@@ -305,7 +305,6 @@ public class EngineSnifferPanel {
 
             @Override
             public boolean isSimulationMode() {
-                System.out.println("isSimulationMode");
                 return false;
             }
         }) {
