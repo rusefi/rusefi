@@ -12,6 +12,7 @@ BUNDLEFILES = \
   $(BOUTS)
 
 ifeq ($(USE_OPENBLT),yes)
+  BOOTLOADER_BIN = bootloader/blbuild/openblt_$(PROJECT_BOARD).bin
   BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
   BOUTS = deliver/openblt.bin
 else
@@ -20,6 +21,9 @@ ifeq ($(INCLUDE_ELF),yes)
   OUTS += deliver/$(PROJECT).elf deliver/$(PROJECT).map deliver/$(PROJECT).list
 endif
 endif
+
+$(BOOTLOADER_HEX) $(BOOTLOADER_BIN) &:
+	$(MAKE) -C bootloader -r
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
 
