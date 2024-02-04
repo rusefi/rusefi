@@ -153,6 +153,12 @@ jobs:
           name: rusefi.bin
           path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.bin
 
+      - name: Upload build srec artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rusefi_update.srec
+          path: ${{inputs.rusefi_dir}}/firmware/build/rusefi.srec
+
       - name: Upload build hex artifact
         uses: actions/upload-artifact@v4
         with:
@@ -163,19 +169,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.list
-          path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.list
+          path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.list
 
       - name: Upload build map artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.map
-          path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.map
+          path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.map
 
       - name: Upload build elf artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.elf
-          path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.elf
+          path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.elf
 
       - name: Build console
         working-directory: ${{inputs.rusefi_dir}}
