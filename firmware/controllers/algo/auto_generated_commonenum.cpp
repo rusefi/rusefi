@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Jan 17 15:32:19 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Feb 04 14:23:50 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -784,6 +784,8 @@ case VVT_FORD_COYOTE:
   return "VVT_FORD_COYOTE";
 case VVT_FORD_ST170:
   return "VVT_FORD_ST170";
+case VVT_HONDA_CBR_600:
+  return "VVT_HONDA_CBR_600";
 case VVT_HONDA_K_EXHAUST:
   return "VVT_HONDA_K_EXHAUST";
 case VVT_HONDA_K_INTAKE:
