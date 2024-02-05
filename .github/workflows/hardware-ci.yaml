@@ -79,7 +79,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_hw-ci-${{matrix.build-target}}.bin
-        path: ./firmware/deliver/rusefi*.bin
+        path: ./firmware/build/rusefi*.bin
 
     - name: Set EXTRA env
       run: |
