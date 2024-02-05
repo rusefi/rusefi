@@ -3,12 +3,12 @@
  * @brief   Board initialization header file.
  * @author  andreika <prometheus.pcb@gmail.com>
  */
- 
+
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
 /**
- * @brief	The board name 
+ * @brief	The board name
  */
 #define BOARD_NAME "Cypress"
 
@@ -24,7 +24,6 @@
 extern "C" {
 #endif
   void boardInit(void);
-  void setPinConfigurationOverrides(void);
   void setAdcChannelOverrides(void);
 
 /**
