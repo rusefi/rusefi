@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Feb 04 14:23:50 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Feb 05 12:58:17 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -216,8 +216,6 @@ case PIN_DRIVER_OFF:
   return "PIN_DRIVER_OFF";
 case PIN_DRIVER_OVERTEMP:
   return "PIN_DRIVER_OVERTEMP";
-case PIN_INVALID:
-  return "PIN_INVALID";
 case PIN_OK:
   return "PIN_OK";
 case PIN_OPEN:
@@ -228,6 +226,8 @@ case PIN_SHORT_TO_BAT:
   return "PIN_SHORT_TO_BAT";
 case PIN_SHORT_TO_GND:
   return "PIN_SHORT_TO_GND";
+case PIN_UNKNOWN:
+  return "PIN_UNKNOWN";
   }
  return NULL;
 }

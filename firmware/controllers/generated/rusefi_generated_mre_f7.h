@@ -119,12 +119,12 @@
 #define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","23 - AN temp 2","24 - AN temp 3 or Hall Input","22 - AN temp 4 or Hall Input","INVALID","25 - Hall Cam","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","45 - VR/Hall Crank"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
-#define brain_pin_diag_e_PIN_INVALID 0x80
 #define brain_pin_diag_e_PIN_OK 0
 #define brain_pin_diag_e_PIN_OPEN 0x01
 #define brain_pin_diag_e_PIN_OVERLOAD 0x08
 #define brain_pin_diag_e_PIN_SHORT_TO_BAT 0x04
 #define brain_pin_diag_e_PIN_SHORT_TO_GND 0x02
+#define brain_pin_diag_e_PIN_UNKNOWN 0x80
 #define C_MC33810_COUNT 1
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
@@ -1159,7 +1159,7 @@
 #define show_microRusEFI_presets true
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3757375690
+#define SIGNATURE_HASH 1513644160
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1481,7 +1481,7 @@
 #define ts_show_vr_threshold_2 false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.02.05.mre_f7.3757375690"
+#define TS_SIGNATURE "rusEFI master.2024.02.05.mre_f7.1513644160"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

@@ -119,12 +119,12 @@
 #define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B13 Crank VR+","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B33 MAF frequency","B31 Cam","B32 VSS"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
-#define brain_pin_diag_e_PIN_INVALID 0x80
 #define brain_pin_diag_e_PIN_OK 0
 #define brain_pin_diag_e_PIN_OPEN 0x01
 #define brain_pin_diag_e_PIN_OVERLOAD 0x08
 #define brain_pin_diag_e_PIN_SHORT_TO_BAT 0x04
 #define brain_pin_diag_e_PIN_SHORT_TO_GND 0x02
+#define brain_pin_diag_e_PIN_UNKNOWN 0x80
 #define C_MC33810_COUNT 1
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
@@ -1160,7 +1160,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1727427792
+#define SIGNATURE_HASH 3812299930
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1482,7 +1482,7 @@
 #define ts_show_vr_threshold_2 false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.02.05.hellen-112-17.1727427792"
+#define TS_SIGNATURE "rusEFI master.2024.02.05.hellen-112-17.3812299930"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

@@ -119,12 +119,12 @@
 #define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3B/4B - VR2","INVALID","INVALID","INVALID","1B - VR1-/Hall Input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","15A - Hall Input 1","23A - Hall Input 2","24A - Hall Input 3 / SENT","9A - Hall Input 4","INVALID","INVALID","INVALID","INVALID","13A - Hall Input 5","21B - Flex","INVALID","INVALID","INVALID","INVALID","INVALID","26A - VSS Hall","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","7B/13B - VR4","INVALID","INVALID","INVALID","INVALID","5B/6B - VR3"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
-#define brain_pin_diag_e_PIN_INVALID 0x80
 #define brain_pin_diag_e_PIN_OK 0
 #define brain_pin_diag_e_PIN_OPEN 0x01
 #define brain_pin_diag_e_PIN_OVERLOAD 0x08
 #define brain_pin_diag_e_PIN_SHORT_TO_BAT 0x04
 #define brain_pin_diag_e_PIN_SHORT_TO_GND 0x02
+#define brain_pin_diag_e_PIN_UNKNOWN 0x80
 #define C_MC33810_COUNT 1
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
@@ -1160,7 +1160,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3011152470
+#define SIGNATURE_HASH 918022684
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1482,7 +1482,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
-#define TS_SIGNATURE "rusEFI master.2024.02.05.alphax-8chan_f7.3011152470"
+#define TS_SIGNATURE "rusEFI master.2024.02.05.alphax-8chan_f7.918022684"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

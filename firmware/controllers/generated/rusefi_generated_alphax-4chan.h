@@ -119,12 +119,12 @@
 #define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C7 - CAM Hall/Digital","E7 - Flex","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C2/C3 Crank Sensor VR","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C3 - Crank+ (hall)","INVALID","C2 - Crank- (hall)","E6 - Cam+ (hall)","INVALID","INVALID","INVALID","INVALID","E3 - Digital In 3","E4 - Digital In 4","INVALID","INVALID","INVALID","E5/E6 Cam Sensor VR","INVALID","C4 - 2Step/Digital"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
-#define brain_pin_diag_e_PIN_INVALID 0x80
 #define brain_pin_diag_e_PIN_OK 0
 #define brain_pin_diag_e_PIN_OPEN 0x01
 #define brain_pin_diag_e_PIN_OVERLOAD 0x08
 #define brain_pin_diag_e_PIN_SHORT_TO_BAT 0x04
 #define brain_pin_diag_e_PIN_SHORT_TO_GND 0x02
+#define brain_pin_diag_e_PIN_UNKNOWN 0x80
 #define C_MC33810_COUNT 1
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
@@ -1161,7 +1161,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 461467548
+#define SIGNATURE_HASH 2655784918
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1483,7 +1483,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
-#define TS_SIGNATURE "rusEFI master.2024.02.05.alphax-4chan.461467548"
+#define TS_SIGNATURE "rusEFI master.2024.02.05.alphax-4chan.2655784918"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

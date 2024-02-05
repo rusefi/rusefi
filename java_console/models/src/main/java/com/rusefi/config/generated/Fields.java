@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 05 02:19:21 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 05 13:00:16 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -114,12 +114,12 @@ public class Fields {
 	public static final int boostType_e_OPEN_LOOP = 0;
 	public static final int brain_pin_diag_e_PIN_DRIVER_OFF = 0x20;
 	public static final int brain_pin_diag_e_PIN_DRIVER_OVERTEMP = 0x10;
-	public static final int brain_pin_diag_e_PIN_INVALID = 0x80;
 	public static final int brain_pin_diag_e_PIN_OK = 0;
 	public static final int brain_pin_diag_e_PIN_OPEN = 0x01;
 	public static final int brain_pin_diag_e_PIN_OVERLOAD = 0x08;
 	public static final int brain_pin_diag_e_PIN_SHORT_TO_BAT = 0x04;
 	public static final int brain_pin_diag_e_PIN_SHORT_TO_GND = 0x02;
+	public static final int brain_pin_diag_e_PIN_UNKNOWN = 0x80;
 	public static final int C_MC33810_COUNT = 1;
 	public static final int CAM_INPUTS_COUNT = 4;
 	public static final int CAMS_PER_BANK = 2;
@@ -1095,6 +1095,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1399145378;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1338,7 +1339,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.02.05.f407-discovery.3601343464";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.02.05.f407-discovery.1399145378";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
