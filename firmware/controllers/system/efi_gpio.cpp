@@ -656,11 +656,13 @@ void OutputPin::setDefaultPinState(pin_output_mode_e outputMode) {
 }
 
 brain_pin_diag_e OutputPin::getDiag() const {
+#if EFI_PROD_CODE
 #if BOARD_EXT_GPIOCHIPS > 0
 	if (!brain_pin_is_onchip(brainPin)) {
 		return gpiochips_getDiag(brainPin);
 	}
 #endif
+#endif /* EFI_PROD_CODE */
 	// TODO: add hook to board code for custom diagnostic, like it is done on S105
 	return PIN_UNKNOWN;
 }
