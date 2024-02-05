@@ -3,20 +3,11 @@
  * @brief   Board initialization file.
  * @author  andreika <prometheus.pcb@gmail.com>
  */
- 
+
 /* This is a template for board specific configuration created by MCUXpresso IDE Project Wizard.*/
 
 #include <stdint.h>
 #include "pdl_header.h"
-//#include "board.h"
-//#include "hal.h"
-
-/**
- * @brief Set up and initialize all required blocks and functions related to the board hardware.
- */
-void BOARD_InitDebugConsole(void) {
-	/* The user initialization should be placed here */
-}
 
 void delay(void)
 {
@@ -25,12 +16,6 @@ void delay(void)
     {
         __asm("NOP"); /* delay */
     }
-}
-
-/* Test LED blinker (Uses PD7). Should work in any conditions! */
-void __blink(int n) {
-#if 1
-#endif
 }
 
 void __early_init(void) {
