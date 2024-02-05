@@ -28,6 +28,15 @@ Gpio getCommsLedPin() {
 	return Gpio::Unassigned;
 }
 
+static void setSerialConfigurationOverrides() {
+	engineConfiguration->binarySerialTxPin = Gpio::C7;
+	engineConfiguration->binarySerialRxPin = Gpio::C6;
+//	engineConfiguration->consoleSerialTxPin = Gpio::A10;
+//	engineConfiguration->consoleSerialRxPin = Gpio::A11;
+	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
+	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
+}
+
 void setBoardOverrides() {
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
@@ -44,12 +53,12 @@ void setBoardOverrides() {
 
 	engineConfiguration->displacement = 1.645;
 	engineConfiguration->injector.flow = 200;
-	
+
 	engineConfiguration->cranking.baseFuel = 25;		// ???
 	engineConfiguration->cranking.rpm = 600;
 
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
-	
+
 	engineConfiguration->map.sensor.type = MT_MPX4250A;
 
 	engineConfiguration->idleStepperReactionTime = 10;
@@ -77,41 +86,29 @@ void setBoardOverrides() {
 
 	engineConfiguration->tle6240spiDevice = SPI_DEVICE_1;
 	engineConfiguration->tle6240_cs = Gpio::B0;
-	
+
 	// todo:
 	int i;
 	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
-	
+
 	engineConfiguration->adcVcc = 5.0f;
 	engineConfiguration->analogInputDividerCoefficient = 1;
 
 	//engineConfiguration->isFastAdcEnabled = false;
-		
+
 	// we call it here because setDefaultBoardConfiguration() is not called for DEFAULT_ENGINE_TYPE=MINIMAL_PINS
 	setSerialConfigurationOverrides();
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->binarySerialTxPin = Gpio::C7;
-	engineConfiguration->binarySerialRxPin = Gpio::C6;
-//	engineConfiguration->consoleSerialTxPin = Gpio::A10;
-//	engineConfiguration->consoleSerialRxPin = Gpio::A11;
-	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
-	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
-}
-
-void setSdCardConfigurationOverrides() {
-}
-
 void setAdcChannelOverrides() {
-	// on Kinetis, ADC_FAST & SLOW are not really "fast" or "slow", 
+	// on Kinetis, ADC_FAST & SLOW are not really "fast" or "slow",
 	// they are just different ADC numbers with different sets of channels
 	removeChannel("VBatt", engineConfiguration->vbattAdcChannel);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_FAST);
-	
+
 	removeChannel("TPS", engineConfiguration->tps1_1AdcChannel);
 	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
 }
