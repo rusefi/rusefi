@@ -5,13 +5,6 @@
 #include "pch.h"
 #include "hip9011_logic.h"
 
-/**
- * @brief   Board-specific pin configuration code overrides. Needed by bootloader code.
-
- */
-void setPinConfigurationOverrides() {
-}
-
 static void setDefaultFrankensoStepperIdleParameters() {
 	engineConfiguration->idle.stepperDirectionPin = Gpio::E10;
 	engineConfiguration->idle.stepperStepPin = Gpio::E12;
