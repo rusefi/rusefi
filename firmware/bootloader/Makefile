@@ -115,6 +115,14 @@ endif
 # Project, sources and paths
 #
 
+ifeq ($(PROJECT_BOARD),)
+ifneq ($(SHORT_BOARD_NAME),)
+  PROJECT_BOARD = $(SHORT_BOARD_NAME)
+else
+  PROJECT_BOARD = f407-discovery
+endif
+endif
+
 # Define project name here
 PROJECT = openblt_$(PROJECT_BOARD)
 PROJECT_DIR = ..
