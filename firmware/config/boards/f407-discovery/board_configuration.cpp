@@ -88,6 +88,12 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->communityCommsLedPid = Gpio::D15;  // blue LED on discovery
 
+	engineConfiguration->injectionPins[0] = Gpio::MC33810_0_OUT_0;
+	engineConfiguration->injectionPins[1] = Gpio::MC33810_0_OUT_1;
+
+	engineConfiguration->ignitionPins[0] = Gpio::MC33810_0_GD_0;
+	engineConfiguration->ignitionPins[1] = Gpio::MC33810_0_GD_1;
+
 #if EFI_HIP_9011
 	setHip9011FrankensoPinout();
 #endif /* EFI_HIP_9011 */
