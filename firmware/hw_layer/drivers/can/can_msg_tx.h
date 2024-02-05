@@ -94,8 +94,7 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-// todo: unused 'canChannel'? BUG? https://github.com/rusefi/rusefi/issues/5675
-	explicit CanTxTyped(CanCategory p_category, uint32_t p_id, bool p_isExtended, bool canChannel) : CanTxMessage(p_category, p_id, sizeof(TData), p_isExtended) { }
+	explicit CanTxTyped(CanCategory p_category, uint32_t p_id, bool p_isExtended, size_t canChannel) : CanTxMessage(p_category, p_id, sizeof(TData), canChannel, p_isExtended) { }
 
 #if EFI_CAN_SUPPORT
 	/**
