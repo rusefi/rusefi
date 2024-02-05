@@ -618,7 +618,7 @@ jobs:
       run: |
         source ${{ env.COMPILE_SCRIPT }}
         make clean
-        bash config/boards/common_script.sh
+        make bundle -j$(nproc) -r
 
     - name: Package Bundle
       if: ${{ env.full == 'true' }}
