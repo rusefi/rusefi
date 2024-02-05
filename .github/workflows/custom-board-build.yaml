@@ -22,6 +22,9 @@ on:
         required: false
         type: string
         default: ../..
+      additional_env:
+        required: false
+        type: string
 
 jobs:
   create-board:
@@ -54,6 +57,7 @@ jobs:
           echo "META_OUTPUT_ROOT_FOLDER=../${{inputs.relative_board_dir}}/generated/" >> $GITHUB_ENV
           echo "gha_shortBoardName=${{inputs.shortBoardName}}" >> $GITHUB_ENV
           echo "gha_iniFileName=rusefi_${{inputs.shortBoardName}}.ini" >> $GITHUB_ENV
+          echo "${{inputs.additional_env}}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
         with:
