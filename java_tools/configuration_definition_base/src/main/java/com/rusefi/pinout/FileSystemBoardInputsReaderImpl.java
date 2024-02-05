@@ -61,7 +61,9 @@ public abstract class FileSystemBoardInputsReaderImpl implements BoardInputs {
     @Override
     public List<String> getBoardMeta(String boardMetaFileName) {
         try {
-            return Files.readAllLines(Paths.get(PREFIX +  boardMetaFileName));
+            String fileName = PREFIX + boardMetaFileName;
+            System.out.printf("Reading from " + new File(fileName).getAbsolutePath());
+            return Files.readAllLines(Paths.get(fileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
