@@ -6,6 +6,11 @@ endif
 
 DFUS = deliver/$(PROJECT).dfu
 
+BUNDLEFILES = \
+  $(DFUS) \
+  $(OUTS) \
+  $(BOUTS)
+
 ifeq ($(USE_OPENBLT),yes)
   BOOTLOADER_BIN = bootloader/blbuild/openblt_$(PROJECT_BOARD).bin
   BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
@@ -19,9 +24,6 @@ endif
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN) &:
 	$(MAKE) -C bootloader -r
-
-deliver:
-	mkdir -p deliver
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
 
@@ -38,9 +40,7 @@ else
 	$(H2D) -i $< -C 0x1C -o $@
 endif
 
-BUNDLEFILES = \
-  $(DFUS) \
-  $(OUTS) \
-  $(BOUTS)
+deliver:
+	mkdir -p deliver
 
 bundle: $(BUNDLEFILES) all
