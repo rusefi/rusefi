@@ -132,6 +132,10 @@ $(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES)
 
 bundle: $(BUNDLE_FULL_NAME)_autoupdate.zip $(BUNDLE_FULL_NAME).zip
 
+CLEAN_BUNDLE_HOOK:
+	$(MAKE) -C bootloader clean
+	rm -rf $(FOLDER)
+
 PERCENT = %
 
 .SECONDEXPANSION:
