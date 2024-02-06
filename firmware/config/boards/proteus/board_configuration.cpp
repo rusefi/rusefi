@@ -302,7 +302,8 @@ int getBoardMetaDcOutputsCount() {
         ) {
         return 1;
     }
-    return 2;
+    return 1;
+/*    return 2; proteus has two h-b ridges but stim board is short on channels to test :( */
 }
 
 Gpio* getBoardMetaOutputs() {
