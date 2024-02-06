@@ -92,6 +92,7 @@ jobs:
           cd ..
           echo "META_OUTPUT_ROOT_FOLDER=$(realpath firmware/$BOARD_DIR/generated)/" >> $GITHUB_ENV
           echo "${{ secrets.ADDITIONAL_ENV }}" >> $GITHUB_ENV
+          echo "BUNDLE_SIMULATOR=no" >> $GITHUB_ENV
 
       # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
       - name: Download & Install GCC
@@ -169,9 +170,13 @@ jobs:
         working-directory: generated/tunerstudio/generated
         run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
+      - name: Build console
+        working-directory: ${{inputs.rusefi_dir}}
+        run: bash misc/jenkins/build_java_console.sh
+
       - name: Build Firmware
         working-directory: ${{inputs.rusefi_dir}}/firmware
-        run: bash bin/compile.sh -b ${{ env.BOARD_META_PATH }}
+        run: bash bin/compile.sh -b ${{ env.BOARD_META_PATH }} deliver/rusefi.bin
 
       - name: Upload build bin artifact
         uses: actions/upload-artifact@v4
@@ -189,7 +194,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.hex
-          path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.hex
+          path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.hex
 
       - name: Upload build list artifact
         uses: actions/upload-artifact@v4
@@ -209,10 +214,6 @@ jobs:
           name: rusefi.elf
           path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.elf
 
-      - name: Build console
-        working-directory: ${{inputs.rusefi_dir}}
-        run: bash misc/jenkins/build_java_console.sh
-
       - name: Set SSH variables
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
@@ -225,10 +226,6 @@ jobs:
           else
             echo "NOT setting credentials: ${{github.event_name}} ${{github.ref}}"
           fi
-
-      - name: Package and Upload Bundle
-        working-directory: ${{inputs.rusefi_dir}}
-        run: bash misc/jenkins/build_working_folder.sh
 
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
