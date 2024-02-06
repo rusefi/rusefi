@@ -9,9 +9,9 @@
 uint32_t backupRamLoad(backup_ram_e idx) {
 #if HAL_USE_RTC
 	switch (idx) {
-	case BACKUP_STEPPER_POS:
+	case backup_ram_e::StepperPosition:
 		return RTCD1.rtc->BKP0R & 0xffff;
-	case BACKUP_IGNITION_SWITCH_COUNTER:
+	case backup_ram_e::IgnCounter:
 		return (RTCD1.rtc->BKP0R >> 16) & 0xff;
 	default:
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid backup ram idx %d", idx);
@@ -25,10 +25,10 @@ uint32_t backupRamLoad(backup_ram_e idx) {
 void backupRamSave(backup_ram_e idx, uint32_t value) {
 #if HAL_USE_RTC
 	switch (idx) {
-	case BACKUP_STEPPER_POS:
+	case backup_ram_e::StepperPosition:
 		RTCD1.rtc->BKP0R = (RTCD1.rtc->BKP0R & ~0x0000ffff) | (value & 0xffff);
 		break;
-	case BACKUP_IGNITION_SWITCH_COUNTER:
+	case backup_ram_e::IgnCounter:
 		RTCD1.rtc->BKP0R = (RTCD1.rtc->BKP0R & ~0x00ff0000) | ((value & 0xff) << 16);
 		break;
 

@@ -71,11 +71,11 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 
 #if EFI_PROD_CODE
 uint32_t PrimeController::getKeyCycleCounter() const {
-	return backupRamLoad(BACKUP_IGNITION_SWITCH_COUNTER);
+	return backupRamLoad(backup_ram_e::IgnCounter);
 }
 
 void PrimeController::setKeyCycleCounter(uint32_t count) {
-	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, count);
+	backupRamSave(backup_ram_e::IgnCounter, count);
 }
 #else // not EFI_PROD_CODE
 uint32_t PrimeController::getKeyCycleCounter() const {
@@ -113,7 +113,7 @@ void PrimeController::onPrimeEnd() {
 void PrimeController::onSlowCallback() {
 	if (!getEngineRotationState()->isStopped()) {
 #if EFI_PROD_CODE
-		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
+		backupRamSave(backup_ram_e::IgnCounter, 0);
 #endif /* EFI_PROD_CODE */
 	}
 }

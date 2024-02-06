@@ -11,12 +11,12 @@
 
 #include "error_handling.h"
 
-typedef enum {
+enum class backup_ram_e {
 	/**
 	 * IAC Stepper motor position, 16-bit (stored in BKP0R 0..15)
 	 * Used in stepper.cpp
 	 */
-	BACKUP_STEPPER_POS,
+	StepperPosition,
 	/**
 	 * Ignition switch counter, 8-bit (stored in BKP0R 16..23)
 	 * The counter stores the number of times the ignition switch is turned on. Used for prime injection pulse.
@@ -24,11 +24,11 @@ typedef enum {
 	 * So we check and update the ignition switch counter in non-volatile backup-RAM.
 	 * See startPrimeInjectionPulse() in controllers/trigger/main_trigger_callback.cpp
 	 */
-	BACKUP_IGNITION_SWITCH_COUNTER,
+	IgnCounter,
 
 	/* The number of stored backup variables */
 	BACKUP_RAM_NUM,
-} backup_ram_e;
+};
 
 
 // load data from backup-power RTC registers (non-volatile memory)
