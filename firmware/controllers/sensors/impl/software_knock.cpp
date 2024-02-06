@@ -35,7 +35,7 @@ static void completionCallback(ADCDriver* adcp) {
 static void errorCallback(ADCDriver*, adcerror_t) {
 }
 
-static const uint32_t smpr1 = 
+static const uint32_t smpr1 =
 	ADC_SMPR1_SMP_AN10(KNOCK_SAMPLE_TIME) |
 	ADC_SMPR1_SMP_AN11(KNOCK_SAMPLE_TIME) |
 	ADC_SMPR1_SMP_AN12(KNOCK_SAMPLE_TIME) |
@@ -154,8 +154,9 @@ void initSoftwareKnock() {
 		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * engineConfiguration->knockBandCustom, 3);
 		adcStart(&KNOCK_ADC, nullptr);
 
+  // fun fact: we do not offer any ADC channel flexibility like we have for many other kinds of inputs
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
-#if KNOCK_HAS_CH2		
+#if KNOCK_HAS_CH2
 		efiSetPadMode("knock ch2", KNOCK_PIN_CH2, PAL_MODE_INPUT_ANALOG);
 #endif
 		kt.start();
