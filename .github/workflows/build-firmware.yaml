@@ -618,18 +618,16 @@ jobs:
       run: |
         source ${{ env.COMPILE_SCRIPT }}
         make clean
-        make bundle -j$(nproc) -r
-
-    - name: Package Bundle
-      if: ${{ env.full == 'true' }}
-      run: |
-        source firmware/${{ env.COMPILE_SCRIPT }}
-        bash misc/jenkins/build_working_folder.sh
+        if [ "$full" == "true" ]; then
+          make bundle -j$(nproc) -r
+        else
+          make -j$(nproc) -r
+        fi
 
     - name: Upload Bundle
       if: ${{ env.full == 'true' }}
-      working-directory: ./artifacts
-      run: bash ../firmware/bin/upload_bundle.sh
+      working-directory: ./firmware/
+      run: bash bin/upload_bundle.sh
 
     - name: Add Bundles to Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
