@@ -24,16 +24,16 @@ const char* getCriticalErrorMessage(void) {
 #if EFI_PROD_CODE
 void checkLastBootError() {
 	auto sramState = getBackupSram();
-	
-	switch (sramState->Cookie) {
+
+	switch (sramState->Err.Cookie) {
 	case ErrorCookie::FirmwareError:
-		efiPrintf("Last boot had firmware error: %s", sramState->ErrorString);
+		efiPrintf("Last boot had firmware error: %s", sramState->Err.ErrorString);
 		break;
 	case ErrorCookie::HardFault: {
-		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
+		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->Err.FaultType, sramState->Err.FaultAddress, sramState->Err.Csfr);
 
 		// Print out the context as a sequence of uintptr
-		uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->FaultCtx);
+		uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->Err.FaultCtx);
 		for (size_t i = 0; i < sizeof(port_extctx) / sizeof(uintptr_t); i++) {
 			efiPrintf("Fault ctx %d: %x", i, data[i]);
 		}
@@ -46,24 +46,24 @@ void checkLastBootError() {
 	}
 
 	// Reset cookie so we don't print it again.
-	sramState->Cookie = ErrorCookie::None;
+	sramState->Err.Cookie = ErrorCookie::None;
 
-	if (sramState->BootCountCookie != 0xdeadbeef) {
-		sramState->BootCountCookie = 0xdeadbeef;
-		sramState->BootCount = 0;
+	if (sramState->Err.BootCountCookie != 0xdeadbeef) {
+		sramState->Err.BootCountCookie = 0xdeadbeef;
+		sramState->Err.BootCount = 0;
 	}
 
-	efiPrintf("Power cycle count: %d", sramState->BootCount);
-	sramState->BootCount++;
+	efiPrintf("Power cycle count: %d", sramState->Err.BootCount);
+	sramState->Err.BootCount++;
 }
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
 	auto sramState = getBackupSram();
-	sramState->Cookie = ErrorCookie::HardFault;
-	sramState->FaultType = type;
-	sramState->FaultAddress = faultAddress;
-	sramState->Csfr = csfr;
-	memcpy(&sramState->FaultCtx, ctx, sizeof(port_extctx));
+	sramState->Err.Cookie = ErrorCookie::HardFault;
+	sramState->Err.FaultType = type;
+	sramState->Err.FaultAddress = faultAddress;
+	sramState->Err.Csfr = csfr;
+	memcpy(&sramState->Err.FaultCtx, ctx, sizeof(port_extctx));
 }
 
 extern ioportid_t criticalErrorLedPort;
@@ -252,8 +252,8 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 
 	auto sramState = getBackupSram();
 	if (sramState != nullptr) {
-		strncpy(sramState->ErrorString, criticalErrorMessageBuffer, efi::size(sramState->ErrorString));
-		sramState->Cookie = ErrorCookie::FirmwareError;
+		strncpy(sramState->Err.ErrorString, criticalErrorMessageBuffer, efi::size(sramState->Err.ErrorString));
+		sramState->Err.Cookie = ErrorCookie::FirmwareError;
 	}
 #else
 
