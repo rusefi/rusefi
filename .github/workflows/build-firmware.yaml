@@ -597,15 +597,12 @@ jobs:
       if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       run: |
-        source config/boards/common_script_read_meta_env.inc ${{ env.BOARD_META_PATH }}
         make clean
-        make bundle -j$(nproc) -r
-
-    - name: Package Bundle
-      if: ${{ env.full == 'true' }}
-      run: |
-        source firmware/config/boards/common_script_read_meta_env.inc firmware/${{ env.BOARD_META_PATH }}
-        bash misc/jenkins/build_working_folder.sh
+        if [ "$full" == "true" ]; then
+          bash bin/compile.sh -b ${{env.BOARD_META_PATH}}
+        else
+          bash bin/compile.sh ${{env.BOARD_META_PATH}} all deliver/rusefi.dfu deliver/rusefi.bin
+        fi
 
     - name: Upload Bundle
       if: ${{ env.full == 'true' }}
