@@ -71,13 +71,13 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 
 void PrimeController::setKeyCycleCounter(uint32_t count) {
 #if EFI_BACKUP_SRAM
-	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, count);
+	backupRamSave(backup_ram_e::IgnCounter, count);
 #endif // EFI_BACKUP_SRAM
 }
 
 uint32_t PrimeController::getKeyCycleCounter() const {
 #if EFI_BACKUP_SRAM
-	return backupRamLoad(BACKUP_IGNITION_SWITCH_COUNTER);
+	return backupRamLoad(backup_ram_e::IgnCounter);
 #else // not EFI_BACKUP_SRAM
 	return 0;
 #endif // EFI_BACKUP_SRAM
@@ -111,7 +111,7 @@ void PrimeController::onPrimeEnd() {
 void PrimeController::onSlowCallback() {
 	if (!getEngineRotationState()->isStopped()) {
 #if EFI_BACKUP_SRAM
-		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
+		backupRamSave(backup_ram_e::IgnCounter, 0);
 #endif /* EFI_BACKUP_SRAM */
 	}
 }
