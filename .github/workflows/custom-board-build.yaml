@@ -170,10 +170,6 @@ jobs:
         working-directory: generated/tunerstudio/generated
         run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
-      - name: Build console
-        working-directory: ${{inputs.rusefi_dir}}
-        run: bash misc/jenkins/build_java_console.sh
-
       - name: Build Firmware
         working-directory: ${{inputs.rusefi_dir}}/firmware
         run: bash bin/compile.sh -b ${{ env.BOARD_META_PATH }} deliver/rusefi.bin

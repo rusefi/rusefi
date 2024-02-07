@@ -108,7 +108,15 @@ BUNDLE_FILES = \
   $(FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
 
-$(SIMULATOR):
+FLOCK = flock /tmp/java.lock
+
+$(CONSOLE_OUT):
+	cd ../java_tools && $(FLOCK) ./gradlew :ui:shadowJar
+
+$(AUTOUPDATE_OUT):
+	cd ../java_tools && $(FLOCK) ./gradlew :autoupdate:jar
+
+$(SIMULATOR_OUT):
 	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Windows_NT"
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
