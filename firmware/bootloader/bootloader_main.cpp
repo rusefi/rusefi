@@ -22,7 +22,8 @@ protected:
 
 		while (true) {
 			palTogglePad(yellowPort, yellowPin);
-			chThdSleepMilliseconds(250);
+			// blink 3 times faster if Dual Bank is not enabled
+			chThdSleepMilliseconds(isFlashDualBank() ? 250 : 80);
 		}
 	}
 };
