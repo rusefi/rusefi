@@ -1,6 +1,8 @@
 name: TS Plugin
 
-on: [push,pull_request]
+on:
+  workflow_dispatch:
+# not really needed in 2024 [push,pull_request]
 
 jobs:
   build:
