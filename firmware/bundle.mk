@@ -22,8 +22,6 @@ else
   FOLDER = rusefi.snapshot.$(BUNDLE_NAME)
 endif
 
-INI_FILE = $(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/rusefi_$(SHORT_BOARD_NAME).ini
-
 DELIVER = deliver
 ARTIFACTS = ../artifacts
 
