@@ -96,7 +96,10 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// finalIgnitionTiming is deg BTDC
 	// minimumIgnitionTiming limits maximum retard
 	// maximumIgnitionTiming limits maximum advance
+	/*
+	https://github.com/rusefi/rusefi/issues/5894 disabling feature for now
 	finalIgnitionTiming = clampF(engineConfiguration->minimumIgnitionTiming, finalIgnitionTiming, engineConfiguration->maximumIgnitionTiming);
+	*/
 
     engine->outputChannels.ignitionAdvanceCyl[event->cylinderIndex] = finalIgnitionTiming;
 
