@@ -13,7 +13,7 @@ cd ..
 echo "java console looks good"
 
 cd java_tools
-./gradlew :rusefi_autoupdate:jar
+./gradlew :autoupdate:jar
 cd ..
 
 [ -e java_console_binary/rusefi_autoupdate.jar ] || { echo "AUTO-UPDATE COMPILATION FAILED"; exit 1; }
