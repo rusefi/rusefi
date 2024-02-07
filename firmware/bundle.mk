@@ -42,13 +42,16 @@ UPDATE_FOLDER_SOURCES = \
 FOLDER_SOURCES = \
   ../java_console/bin
 
-UPDATE_CONSOLE_FOLDER_SOURCES = \
-  ../java_console_binary/rusefi_autoupdate.jar \
-  ../java_console_binary/rusefi_console.jar
-
 ifneq ($(BUNDLE_SIMULATOR),no)
-  SIMULATOR = ../simulator/build/rusefi_simulator.exe
+  SIMULATOR_OUT = ../simulator/build/rusefi_simulator.exe
 endif
+
+CONSOLE_OUT = ../java_console_binary/rusefi_console.jar
+AUTOUPDATE_OUT = ../java_console_binary/rusefi_autoupdate.jar
+
+UPDATE_CONSOLE_FOLDER_SOURCES = \
+  $(CONSOLE_OUT) \
+  $(AUTOUPDATE_OUT)
 
 CONSOLE_FOLDER_SOURCES = \
   ../misc/console_launcher/rusefi_autoupdate.exe \
@@ -62,7 +65,7 @@ CONSOLE_FOLDER_SOURCES = \
   ../firmware/ext/openblt/Host/openblt_jni.dll \
   ../firmware/ext/openblt/Host/libopenblt_jni.so \
   ../firmware/ext/openblt/Host/libopenblt_jni.dylib \
-  $(SIMULATOR)
+  $(SIMULATOR_OUT)
 
 CACERTS_FOLDER_SOURCES = $(wildcard ../misc/console_launcher/update-ts-cacerts/*)
 
@@ -105,7 +108,15 @@ BUNDLE_FILES = \
   $(FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
 
-$(SIMULATOR):
+FLOCK = flock /tmp/java.lock
+
+$(CONSOLE_OUT):
+	cd ../java_tools && $(FLOCK) ./gradlew :ui:shadowJar
+
+$(AUTOUPDATE_OUT):
+	cd ../java_tools && $(FLOCK) ./gradlew :autoupdate:jar
+
+$(SIMULATOR_OUT):
 	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Windows_NT"
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
