@@ -39,7 +39,7 @@ blt_bool FlashWriteChecksum(void);
 blt_bool FlashVerifyChecksum(void);
 blt_bool FlashDone(void);
 blt_addr FlashGetUserProgBaseAddress(void);
-
+bool     isFlashDualBank(void);
 
 #endif /* FLASH_H */
 /*********************************** end of flash.h ************************************/
