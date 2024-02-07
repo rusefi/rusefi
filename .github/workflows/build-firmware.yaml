@@ -574,12 +574,6 @@ jobs:
       if: ${{ env.full == 'true' }}
       run: bash misc/jenkins/build_java_console.sh
 
-    # Build the simulator
-    - name: Build simulator
-      if: ${{ env.full == 'true' }}
-      # 'OS="Windows_NT"' allows us to build Windows executable on unix
-      run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
-
 #    - name: Download LibOpenBLT Tool (Linux)
 #      uses: actions/download-artifact@v3
 #      with:

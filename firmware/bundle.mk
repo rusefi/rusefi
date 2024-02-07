@@ -103,6 +103,9 @@ BUNDLE_FILES = \
   $(FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
 
+$(SIMULATOR):
+	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Windows_NT"
+
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN) &:
 	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) $(MAKE) -C bootloader -r
 
@@ -145,9 +148,11 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTI
 bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip all
 
 CLEAN_BUNDLE_HOOK:
-	@echo Cleaning bundle
+	@echo Cleaning Bundle
+	$(MAKE) -C ../simulator clean
 	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) $(MAKE) -C bootloader clean
 	rm -rf $(FOLDER)
+	@echo Done Cleaning Bundle
 
 PERCENT = %
 

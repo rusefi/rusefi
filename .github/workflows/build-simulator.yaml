@@ -50,7 +50,7 @@ jobs:
 
     - name: Compile Linux Simulator
       working-directory: ./simulator/
-      run: ./compile.sh
+      run: make -j$(nproc) -r
 
     - name: Run Simulator Functional Test
       working-directory: ./java_tools/
