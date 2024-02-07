@@ -2277,7 +2277,7 @@ end_struct
 #define ts_show_spi2_enable true
 #define ts_show_spi2_pins true
 #define ts_show_spi3_pins true
-#define ts_show_engine_control false
+#define ts_show_tps2 true
 
 #define ts_show_analog_divider true
 #define ts_show_spi true

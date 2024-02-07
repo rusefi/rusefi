@@ -2919,7 +2919,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = tpsLimits
 		panel = tpsNum1
 		panel = tpsSent1@@if_ts_show_tps_sent
-		panel = tpsNum2
+		panel = tpsNum2@@if_ts_show_tps2
 
 	dialog = pedalSensorLeft, "Accelerator pedal"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
@@ -2940,8 +2940,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = tpsGauges
 		gauge = rawTps1PrimaryGauge
 		gauge = rawTps1SecondaryGauge
-		gauge = rawTps2PrimaryGauge
-		gauge = rawTps2SecondaryGauge
+		gauge = rawTps2PrimaryGauge@@if_ts_show_tps2
+		gauge = rawTps2SecondaryGauge@@if_ts_show_tps2
 
 	dialog = pedalSensor, "Accelerator pedal", border
 		panel = pedalSensorLeft, West

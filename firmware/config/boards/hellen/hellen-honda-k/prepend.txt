@@ -18,9 +18,7 @@
 #define ts_show_hardware_simulator false
 #define ts_show_sd_pins false
 #define ts_show_ignitionPinMode false
-
-
-
+#define ts_show_tps2 false
 
 
 #define show_Hellen_hyundai_154 false
