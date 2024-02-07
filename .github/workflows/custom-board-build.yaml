@@ -22,9 +22,23 @@ on:
         required: false
         type: string
         default: ../..
-      additional_env:
+    secrets:
+      MY_REPO_PAT:
+        required: true
+      RUSEFI_ONLINE_FTP_USER:
         required: false
-        type: string
+      RUSEFI_ONLINE_FTP_PASS:
+        required: false
+      RUSEFI_FTP_SERVER:
+        required: false
+      RUSEFI_SSH_SERVER:
+        required: false
+      RUSEFI_SSH_USER:
+        required: false
+      RUSEFI_SSH_PASS:
+        required: false
+      ADDITIONAL_ENV:
+        required: false
 
 jobs:
   create-board:
@@ -57,7 +71,7 @@ jobs:
           echo "META_OUTPUT_ROOT_FOLDER=../${{inputs.relative_board_dir}}/generated/" >> $GITHUB_ENV
           echo "gha_shortBoardName=${{inputs.shortBoardName}}" >> $GITHUB_ENV
           echo "gha_iniFileName=rusefi_${{inputs.shortBoardName}}.ini" >> $GITHUB_ENV
-          echo "${{inputs.additional_env}}" >> $GITHUB_ENV
+          echo "${{ secrets.ADDITIONAL_ENV }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
         with:
