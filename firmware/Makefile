@@ -382,6 +382,8 @@ ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 
 include $(RULESFILE)
 
+include rusefi_config.mk
+
 # Enable precompiled header
 include rusefi_pch.mk
 

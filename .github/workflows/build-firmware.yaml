@@ -513,30 +513,6 @@ jobs:
       working-directory: ./firmware/
       run: ./gen_live_documentation.sh
 
-    - name: Generate Configs for build-target
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./firmware/
-      # todo: we have code duplication with gen_config.sh here :(
-      run: |
-        if [ "${{ matrix.build-target }}" = "kinetis" ]; then
-          config/boards/kinetis/config/gen_kinetis_config.sh
-          [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
-        elif [ "${{ matrix.build-target }}" = "cypress" ]; then
-          config/boards/cypress/config/gen_cypress_config.sh
-          [ $? -eq 0 ] || { echo "ERROR generating board cypress cypress"; exit 1; }
-        elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7" ]; then
-          bash config/boards/subaru_eg33/config/gen_subaru_config.sh
-          [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
-        elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7_no_bl" ]; then
-          bash config/boards/subaru_eg33/config/gen_subaru_config.sh
-          [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7_no_bl"; exit 1; }
-        elif [ "${{ matrix.short-board-name }}" = "" ]; then
-          echo "ERROR: ${{ matrix.build-target }} is missing short-board-name attribute"
-          exit -1
-        else
-          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.short-board-name}}
-        fi
-
     - name: Set Build Env Variables
       if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/

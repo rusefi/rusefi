@@ -1,12 +1,10 @@
-
-
 # Add the PCH dir to source path
 SRCPATHS += $(PCH_DIR)
 
 PCHOBJ = $(addprefix $(PCH_DIR)/, $(notdir $(PCHSRC:.h=.h.gch)))/$(PCHSUB)
 
 # Compile precompiled header file(s) as a cpp file, but output to .h.gch file
-$(PCHOBJ) : $(PCH_DIR)/%.h.gch/$(PCHSUB) : %.h Makefile
+$(PCHOBJ) : $(PCH_DIR)/%.h.gch/$(PCHSUB) : %.h Makefile $(CONFIG_FILES)
 	@mkdir -p $<.gch
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo

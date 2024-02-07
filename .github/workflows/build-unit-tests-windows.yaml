@@ -33,9 +33,9 @@ jobs:
     - name: Test Java Compiler
       run: javac -version
 
-    - name: Generate Configs, Enums & Live Documentation
+    - name: Generate Enums & Live Documentation
       working-directory: ./firmware/
-      run: bash gen_default_everything.sh
+      run: bash gen_live_documentation.sh
 
     - name: Print GCC version
       working-directory: .

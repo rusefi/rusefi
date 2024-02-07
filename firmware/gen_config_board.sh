@@ -13,7 +13,7 @@
 set -e
 
 cd ../java_tools
-./gradlew :config_definition:shadowJar
+flock /tmp/java.lock ./gradlew :config_definition:shadowJar
 cd ../firmware
 
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
