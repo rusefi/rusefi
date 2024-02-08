@@ -24,7 +24,7 @@ on:
         default: ../..
     secrets:
       MY_REPO_PAT:
-        required: true
+        required: false
       RUSEFI_ONLINE_FTP_USER:
         required: false
       RUSEFI_ONLINE_FTP_PASS:
