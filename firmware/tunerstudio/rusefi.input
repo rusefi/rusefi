@@ -51,7 +51,7 @@ enable2ndByteCanID = false
 	maxUnusedRuntimeRange = 1000;
 
 	; Set default IP/port to our IP/port
-	defaultIpAddress = 192.168.10.1;
+	defaultIpAddress = localhost
 	defaultIpPort = 29000;
 
 [Constants]
