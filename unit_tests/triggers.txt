@@ -167,7 +167,7 @@ event 24 0 1 650.00 nan
 event 25 0 0 650.00 nan
 event 26 0 1 660.00 nan
 event 27 0 0 660.00 nan
-TRIGGERTYPE 6 8 TT_DAIHATSU 0.00
+TRIGGERTYPE 6 8 TT_DAIHATSU_3_CYL 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
@@ -5543,3 +5543,23 @@ event 20 0 1 600.00 nan
 event 21 0 0 600.00 nan
 event 22 0 1 660.00 nan
 event 23 0 0 660.00 nan
+TRIGGERTYPE 81 8 TT_DAIHATSU_4_CYL 0.00
+knownOperationMode=true
+crankBased=false
+hasSecondChannel=false
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=1
+syncEdge=RiseOnly
+isSynchronizationNeeded=1
+gapFrom.0=0.093750
+gapTo.0=0.156250
+# end of meta section
+event 0 0 1 0.00 0.125000
+event 1 0 0 0.00 nan
+event 2 0 1 210.00 7.000000
+event 3 0 0 210.00 nan
+event 4 0 1 450.00 1.142857
+event 5 0 0 450.00 nan
+event 6 0 1 690.00 1.000000
+event 7 0 0 690.00 nan
