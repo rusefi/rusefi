@@ -23,7 +23,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_OUT_PWM7, // Aux9 - High1 legacy F2
 	Gpio::H144_OUT_PWM8, // Aux10 - High2 legacy F4
 	Gpio::H144_OUT_IO13, // A4 - Tachometer legacy up to rev F
-	Gpio::H144_GP3, // A4 - Tachometer
+	Gpio::H144_GP_IO3, // A4 - Tachometer
 	Gpio::H144_IGN_1, // A6 - Ignition 1
 	Gpio::H144_IGN_2, // A7 - Ignition 2
 	Gpio::H144_OUT_PWM3, // D2 - Out Boost

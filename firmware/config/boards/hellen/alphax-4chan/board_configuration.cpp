@@ -46,9 +46,9 @@ static void setupEtb() {
 	// PWM pin
 	engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_GP_IO1;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = H144_GP2;
+	engineConfiguration->etbIo[0].disablePin = Gpio::H144_GP_IO2;
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
@@ -102,7 +102,7 @@ void boardInitHardware() {
 		alphaD3PullDown.initPin("a-d3-legacy", Gpio::H144_LS_6);
 	} else {
 	    alphaD2PullDown.initPin("a_d2", Gpio::H144_OUT_IO13);
-		alphaCamPullDown.initPin("a_cam", H144_GP4);
+		alphaCamPullDown.initPin("a_cam", Gpio::H144_GP_IO4);
 		alphaD3PullDown.initPin("a_d3", Gpio::H144_OUT_IO8);
 	}
 
@@ -164,7 +164,7 @@ void setBoardDefaultConfiguration() {
 	} else {
     	engineConfiguration->vvtPins[0] = Gpio::H144_IGN_7;
 	    engineConfiguration->vvtPins[1] = Gpio::H144_IGN_8;
-        engineConfiguration->tachOutputPin = Gpio::H144_GP3;
+        engineConfiguration->tachOutputPin = Gpio::H144_GP_IO3;
 	}
 
 

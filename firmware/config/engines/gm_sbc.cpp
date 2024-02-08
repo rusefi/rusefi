@@ -20,15 +20,15 @@ void setStepperHw() {
 #if HW_HELLEN
     setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
 	// using 8chan pinout for DC1: A26 (OUT_DC1+ AH pin "D") and A27 (OUT_DC1- AL pin "C")
-	engineConfiguration->stepperDcIo[0].controlPin = H144_GP4; // DC1_PWM
-	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::H144_GP3; // DC1_DIR
+	engineConfiguration->stepperDcIo[0].controlPin = Gpio::H144_GP_IO4; // DC1_PWM
+	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::H144_GP_IO3; // DC1_DIR
 	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
-	engineConfiguration->stepperDcIo[0].disablePin = H144_GP5; // ETB_DIS
+	engineConfiguration->stepperDcIo[0].disablePin = Gpio::H144_GP_IO5; // ETB_DIS
 	// using 8chan pinout for DC2: A28 (OUT_DC2+ BL pin "A") and A29 (OUT_DC2- BH pin "B")
 	engineConfiguration->stepperDcIo[1].controlPin = H144_UART1_TX; // DC2_PWM
 	engineConfiguration->stepperDcIo[1].directionPin1 = H_SPI3_CS; // DC2_DIR
 	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
-// open question if we need custom logic to handle shared disable pin?	engineConfiguration->stepperDcIo[1].disablePin = H144_GP5; // ETB_DIS
+// open question if we need custom logic to handle shared disable pin?	engineConfiguration->stepperDcIo[1].disablePin = Gpio::H144_GP_IO5; // ETB_DIS
 #endif // HW_HELLEN
 
 #if HW_PROTEUS

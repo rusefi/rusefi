@@ -27,7 +27,7 @@ pins:
     color: purple
 
   - pin: A4
-    meta: H144_GP3
+    meta: H144_GP_IO3
     class: outputs
     function: Tachometer Output
     ts_name: A4 - Tachometer

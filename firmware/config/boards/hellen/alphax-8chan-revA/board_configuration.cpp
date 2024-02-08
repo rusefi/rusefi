@@ -48,14 +48,14 @@ static void setupEtb() {
 	// PWM pin
 	engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_GP_IO1;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = H144_GP5;
+	engineConfiguration->etbIo[0].disablePin = Gpio::H144_GP_IO5;
 
 	// PWM pin
-	engineConfiguration->etbIo[1].controlPin = H144_GP4;
+	engineConfiguration->etbIo[1].controlPin = Gpio::H144_GP_IO4;
 	// DIR pin
-	engineConfiguration->etbIo[1].directionPin1 = Gpio::H144_GP3;
+	engineConfiguration->etbIo[1].directionPin1 = Gpio::H144_GP_IO3;
 	// Disable pin
 	engineConfiguration->etbIo[1].disablePin = Gpio::Unassigned;
 	// we only have pwm/dir, no dira/dirb
