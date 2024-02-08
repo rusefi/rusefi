@@ -11,6 +11,7 @@ class TriggerWaveform;
 
 void configureFiatIAQ_P8(TriggerWaveform * s);
 void configureDaihatsu3cyl(TriggerWaveform * s);
+void configureDaihatsu4cyl(TriggerWaveform * s);
 void configureFordPip(TriggerWaveform * s);
 void configureFordST170(TriggerWaveform * s);
 void configureTriTach(TriggerWaveform * s);

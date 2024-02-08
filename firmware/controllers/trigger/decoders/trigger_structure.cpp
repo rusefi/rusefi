@@ -579,8 +579,11 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_DAIHATSU_3_CYL:
-	case trigger_type_e::TT_DAIHATSU_4_CYL:
 		configureDaihatsu3cyl(this);
+		break;
+
+	case trigger_type_e::TT_DAIHATSU_4_CYL:
+		configureDaihatsu4cyl(this);
 		break;
 
 	case trigger_type_e::TT_VVT_TOYOTA_3_TOOTH:

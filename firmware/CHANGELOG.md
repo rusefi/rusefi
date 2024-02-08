@@ -40,6 +40,7 @@ Release template (copy/paste this for new release):
  - Disable radiator fans after certain vehicle speed #5875
  - LIS2DW12TR on-board Accelerometer support #4870
  - Wheel slip ratio using aux speed inputs #5897
+ - 4 cylinder daihatsu cam sensor decoder #5925
 
 ### Fixed
  - Honda CBR 600 cam decoder #5909

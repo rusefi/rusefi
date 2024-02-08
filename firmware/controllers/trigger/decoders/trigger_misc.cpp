@@ -100,26 +100,29 @@ void configureFordST170(TriggerWaveform * s) {
 	s->addEventAngle(8 * total, TriggerValue::FALL);
 }
 
-void configureDaihatsu3cyl(TriggerWaveform * s) {
+static void daihatsu(TriggerWaveform * s, int count) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	int width = 10;
 
-	s->setTriggerSynchronizationGap(0.125);
-
 	s->addEventAngle(30 - width, TriggerValue::RISE);
 	s->addEventAngle(30, TriggerValue::FALL);
 
+	for (int i = 1;i<=count;i++) {
+		s->addEventAngle(s->getCycleDuration() / count * i - width, TriggerValue::RISE);
+		s->addEventAngle(s->getCycleDuration() / count * i, TriggerValue::FALL);
+	}
+}
 
-	s->addEventAngle(s->getCycleDuration() / 3 - width, TriggerValue::RISE);
-	s->addEventAngle(s->getCycleDuration() / 3, TriggerValue::FALL);
+void configureDaihatsu3cyl(TriggerWaveform * s) {
+	daihatsu(s, 3);
+	s->setTriggerSynchronizationGap(0.125);
+}
 
-	s->addEventAngle(s->getCycleDuration() / 3 * 2 - width, TriggerValue::RISE);
-	s->addEventAngle(s->getCycleDuration() / 3 * 2, TriggerValue::FALL);
 
-	s->addEventAngle(s->getCycleDuration() - width, TriggerValue::RISE);
-	s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL);
-
+void configureDaihatsu4cyl(TriggerWaveform * s) {
+	daihatsu(s, 4);
+	s->setTriggerSynchronizationGap(0.17);
 }
 
 void configureBarra3plus1cam(TriggerWaveform *s) {
