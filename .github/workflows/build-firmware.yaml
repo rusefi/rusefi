@@ -339,12 +339,12 @@ jobs:
           - build-target: mre_f4_debug
             folder: config/boards/microrusefi
             short-board-name: mre_f4
-            skip-rate: 80
+            skip-rate: 100
 
           - build-target: mre_f4_recovery
             folder: config/boards/microrusefi
             short-board-name: mre_f4
-            skip-rate: 95
+            skip-rate: 100
 
           - build-target: mre_f7
             folder: config/boards/microrusefi
