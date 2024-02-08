@@ -45,11 +45,11 @@ blt_bool FlashVerifyChecksum() {
 	return intFlashIsErased(FlashGetUserProgBaseAddress(), 4) ? BLT_FALSE : BLT_TRUE;
 }
 
-bool isFlashDualBank(void) {
+blt_bool isFlashDualBank(void) {
 #ifdef STM32F7XX
 	// cleared bit indicates dual bank
-	return (FLASH->OPTCR & FLASH_OPTCR_nDBANK) == 0;
+	return (FLASH->OPTCR & FLASH_OPTCR_nDBANK) == 0 ? BLT_TRUE : BLT_FALSE;
 #else
-	return true;
+	return BLT_TRUE;
 #endif
 }
