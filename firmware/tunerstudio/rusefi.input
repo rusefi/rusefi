@@ -2364,7 +2364,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = ignitionOutputs, { uiMode == @@UiMode_FULL@@ || uiMode == @@UiMode_INSTALLATION@@ }
 
 	dialog = baseEngineConfig, "Engine Configuration"
-;		field = "Engine preset",						engineType
 		field = "Number of cylinders",					cylindersCount
 		field = "Displacement",						displacement
 		field = "Firing order",							firingOrder
