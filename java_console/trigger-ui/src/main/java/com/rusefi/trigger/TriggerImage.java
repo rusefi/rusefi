@@ -167,6 +167,8 @@ public class TriggerImage {
         triggerPanel.tdcPosition = triggerWheelInfo.getTdcPosition();
         triggerPanel.gaps = triggerWheelInfo.getGaps();
         triggerPanel.syncEdge = triggerWheelInfo.getSyncEdge();
+        triggerPanel.isKnown = triggerWheelInfo.isKnownOperationMode();
+        triggerPanel.isCrankBased = triggerWheelInfo.isCrankBased();
 
         EngineReport re0 = new EngineReport(waves.get(0).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
@@ -333,6 +335,8 @@ public class TriggerImage {
         // angle
         public double tdcPosition;
         public String syncEdge;
+        public boolean isKnown;
+        public boolean isCrankBased;
         public UpDownImage image;
         public TriggerWheelInfo.TriggerGaps gaps;
 
@@ -379,6 +383,11 @@ public class TriggerImage {
             for (int i = 0; i < gaps.gapFrom.length; i++) {
                 String message = "Sync " + (i + 1) + ": From " + gaps.gapFrom[i] + " to " + gaps.gapTo[i];
                 g.drawString(prefix + "       " + message, 0, y);
+                y += tdcFontSize;
+            }
+
+            if (isKnown) {
+                g.drawString(prefix + (isCrankBased ? "On crankshaft" : "On camshaft"), 0, y);
                 y += tdcFontSize;
             }
 
