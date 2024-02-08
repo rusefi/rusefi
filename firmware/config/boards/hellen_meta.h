@@ -80,7 +80,7 @@ void detectHellenBoardType();
 
 
 // also IO1/IO5 on rev 0.6
-#define H144_GP_IO1 Gpio::D4
+#define H144_GP_IO1 D4
 // also IO2/IO5 on rev 0.6
 #define H144_GP_IO2 D7
 #define H144_GP_IO3 G10
