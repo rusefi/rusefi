@@ -30,6 +30,8 @@ enum class backup_ram_e {
 	BACKUP_RAM_NUM,
 };
 
+#define LAST_BACKUP_RAM_ENUM backup_ram_e::BACKUP_RAM_NUM
+
 
 // load data from backup-power RTC registers (non-volatile memory)
 uint32_t backupRamLoad(backup_ram_e idx);
