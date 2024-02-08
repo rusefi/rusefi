@@ -167,7 +167,7 @@ event 24 0 1 650.00 nan
 event 25 0 0 650.00 nan
 event 26 0 1 660.00 nan
 event 27 0 0 660.00 nan
-TRIGGERTYPE 6 8 TT_DAIHATSU_3_CYL 0.00
+TRIGGERTYPE 6 8 TT_DAIHATSU_3_CYL 690.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
@@ -5543,7 +5543,7 @@ event 20 0 1 600.00 nan
 event 21 0 0 600.00 nan
 event 22 0 1 660.00 nan
 event 23 0 0 660.00 nan
-TRIGGERTYPE 81 10 TT_DAIHATSU_4_CYL 0.00
+TRIGGERTYPE 81 10 TT_DAIHATSU_4_CYL 690.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
