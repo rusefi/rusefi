@@ -14,7 +14,7 @@ echo "HW CI build [$BOARD_DIR][$SHORT_BOARD_NAME]"
 cd firmware
 
 ./gen_live_documentation.sh
-./gen_config_board.sh $BOARD_DIR $SHORT_BOARD_NAME
+./gen_config_board.sh
 
 echo "We aren't guaranteed a clean machine every time, so manually clean the output."
 make clean

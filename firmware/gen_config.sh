@@ -71,9 +71,9 @@ for BOARD in \
    "config/boards/f407-discovery f407-discovery" \
    "config/boards/at_start_f435 at_start_f435" \
    ; do
- BOARD_DIR=$(echo "$BOARD" | cut -d " " -f 1)
- BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
- ./gen_config_board.sh $BOARD_DIR $BOARD_SHORT_NAME
+export  BOARD_DIR=$(echo "$BOARD" | cut -d " " -f 1)
+export  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
+ ./gen_config_board.sh
  [ $? -eq 0 ] || { echo "ERROR generating board dir=[$BOARD_DIR] short=[$BOARD_SHORT_NAME]"; exit 1; }
 done
 
