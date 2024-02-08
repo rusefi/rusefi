@@ -69,8 +69,8 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           echo "META_OUTPUT_ROOT_FOLDER=../${{inputs.relative_board_dir}}/generated/" >> $GITHUB_ENV
-          echo "gha_shortBoardName=${{inputs.shortBoardName}}" >> $GITHUB_ENV
-          echo "gha_iniFileName=rusefi_${{inputs.shortBoardName}}.ini" >> $GITHUB_ENV
+          echo "SHORT_BOARD_NAME=${{inputs.shortBoardName}}" >> $GITHUB_ENV
+          echo "BOARD_DIR=${{inputs.relative_board_dir}}" >> $GITHUB_ENV
           echo "${{ secrets.ADDITIONAL_ENV }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
@@ -124,6 +124,17 @@ jobs:
             echo Not a repository
           fi
 
+      - name: Build console
+        working-directory: ${{inputs.rusefi_dir}}
+        run: bash misc/jenkins/build_java_console.sh
+
+      - name: Build Firmware
+        working-directory: ${{inputs.rusefi_dir}}
+        run:
+          source ${{env.BOARD_DIR}}/compile_${{env.SHORT_BOARD_NAME}}.sh
+          cd firmware
+          make bundle -j$(nproc) -r
+
       - name: Push Config
         run: |
           git config --local user.email "action@github.com"
@@ -161,10 +172,6 @@ jobs:
         working-directory: generated/tunerstudio/generated
         run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{env.gha_iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
-      - name: Build Firmware
-        working-directory: ${{inputs.rusefi_dir}}
-        run: bash misc/jenkins/compile_other_versions/compile.sh ../${{inputs.relative_board_dir}} ${{env.gha_shortBoardName}}
-
       - name: Upload build bin artifact
         uses: actions/upload-artifact@v4
         with:
@@ -201,10 +208,6 @@ jobs:
           name: rusefi.elf
           path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.elf
 
-      - name: Build console
-        working-directory: ${{inputs.rusefi_dir}}
-        run: bash misc/jenkins/build_java_console.sh
-
       - name: Set SSH variables
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
@@ -218,12 +221,8 @@ jobs:
             echo "NOT setting credentials: ${{github.event_name}} ${{github.ref}}"
           fi
 
-      - name: Package and Upload Bundle
-        working-directory: ${{inputs.rusefi_dir}}
-        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{env.gha_shortBoardName}} "${{inputs.relative_board_dir}}/generated/tunerstudio/generated/${{env.gha_iniFileName}}" master
-
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rusefi_bundle_${{env.gha_shortBoardName}}.zip
+          name: rusefi_bundle_${{env.SHORT_BOARD_NAME}}.zip
           path: ${{inputs.rusefi_dir}}/artifacts/rusefi_bundle*.zip
