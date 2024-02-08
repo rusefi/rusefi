@@ -102,6 +102,7 @@ void configureFordST170(TriggerWaveform * s) {
 
 static void daihatsu(TriggerWaveform * s, int count) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+	s->tdcPosition = 720 - 30;
 
 	int width = 10;
 
