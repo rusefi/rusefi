@@ -5,6 +5,7 @@
 
 extern "C" {
 	#include "boot.h"
+	#include "flash.h"
 	#include "shared_params.h"
 }
 
