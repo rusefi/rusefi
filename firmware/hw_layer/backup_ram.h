@@ -26,8 +26,6 @@ typedef enum {
 	 */
 	BACKUP_IGNITION_SWITCH_COUNTER,
 
-	DFU_JUMP_REQUESTED,
-
 	/* The number of stored backup variables */
 	BACKUP_RAM_NUM,
 } backup_ram_e;
