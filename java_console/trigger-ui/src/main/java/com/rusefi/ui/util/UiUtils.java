@@ -48,9 +48,10 @@ public class UiUtils {
 
     public static void saveImage(String fileName, Component component) {
         BufferedImage img = getScreenShot(component);
-        System.out.println("Saving " + fileName);
         try {
-            ImageIO.write(img, "png", new File(fileName));
+            File output = new File(fileName);
+            System.out.println("Saving " + output.getAbsolutePath());
+            ImageIO.write(img, "png", output);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
