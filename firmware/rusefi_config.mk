@@ -1,3 +1,5 @@
+include ../java_tools/java_tools.mk
+
 INI_FILE = $(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/rusefi_$(SHORT_BOARD_NAME).ini
 SIG_FILE = $(PROJECT_DIR)/tunerstudio/generated/signature_$(SHORT_BOARD_NAME).txt
 
