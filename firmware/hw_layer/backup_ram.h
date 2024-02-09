@@ -49,20 +49,25 @@ enum class ErrorCookie : uint32_t {
 
 #if EFI_PROD_CODE
 struct BackupSramData {
-	ErrorCookie Cookie;
 
-	critical_msg_t ErrorString;
-	critical_msg_t hardFile;
-	int hardLine;
-	int check;
-	critical_msg_t rawMsg;
-	port_extctx FaultCtx;
-	uint32_t FaultType;
-	uint32_t FaultAddress;
-	uint32_t Csfr;
+	// Error handling/recovery/reporting information
+	struct {
+		ErrorCookie Cookie;
 
-	uint32_t BootCount;
-	uint32_t BootCountCookie;
+		critical_msg_t ErrorString;
+		critical_msg_t hardFile;
+	  int hardLine;
+	  int check;
+	  critical_msg_t rawMsg;
+		port_extctx FaultCtx;
+		uint32_t FaultType;
+		uint32_t FaultAddress;
+		uint32_t Csfr;
+
+		uint32_t BootCount;
+		uint32_t BootCountCookie;
+	} Err;
+
 };
 
 BackupSramData* getBackupSram();
