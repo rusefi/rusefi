@@ -298,7 +298,7 @@ pins:
 
 
   - pin: 7B13B
-    function: VR2
+    function: VR4
     meta: MM176_GP15
     class: event_inputs
     ts_name: 7B/13B - VR4
