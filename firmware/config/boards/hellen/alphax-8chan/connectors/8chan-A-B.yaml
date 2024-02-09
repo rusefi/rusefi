@@ -14,35 +14,35 @@ pins:
     class: analog_inputs
     ts_name: 1A - Aux Analog 1
     color: blue
-    
+
   - pin: 2A
     meta: MM176_IN_MAP1_ANALOG
     function: Aux Analog 4
     class: analog_inputs
     ts_name: 2A - Aux Analog 4
     color: blue
-    
+
   - pin: 3A
     meta: MM176_IN_O2S_ANALOG
     function: Aux Analog 2
     class: analog_inputs
     ts_name: 3A - Aux Analog 2
     color: blue
-    
+
   - pin: 4A
     meta: MM176_IN_AUX2_ANALOG
     function: Aux Analog 7
     class: analog_inputs
     ts_name: 4A - Aux Analog 7
     color: blue
-    
+
   - pin: 5A
     meta: MM176_IN_SENS1
     function: Switch 4
     class: switch_inputs
     ts_name: 5A - Switch 4
     color: red
-    
+
   - pin: 6A
     meta: MM176_IN_AUX5
     function: Switch 1
@@ -240,7 +240,7 @@ pins:
     class: event_inputs
     ts_name: 1B - VR1-/Hall Input
     color: red
-    
+
   - pin: 2B
     function: VR1+
 
@@ -261,7 +261,7 @@ pins:
     meta: MM176_IN_CAM
     class: event_inputs
     ts_name: 3B/4B - VR2
-    
+
   - pin: 5B
     function: VR3-
 
@@ -269,7 +269,7 @@ pins:
     function: VR3+
 
   - pin: 5B6B
-    function: VR2
+    function: VR3
     meta: MM176_GP14
     class: event_inputs
     ts_name: 5B/6B - VR3
@@ -283,7 +283,7 @@ pins:
 
   - pin: 9B
     function: WBO2 VM yellow 2
-    
+
   - pin: 10B
     function: WBO2 IP red 1
 
@@ -317,23 +317,23 @@ pins:
 
   - pin: 18B
     function: WBO2 VS black 6
-    
+
   - pin: 19B
     function: +12V
     type: 12v
-    
-    
+
+
   - pin: 20B
     function: Analog Ground
     type: gnd
-    
+
   - pin: 21B
     meta: MM176_IN_SENS4
     class: switch_inputs
     function: Knock2 Input
     ts_name: 21B - Knock2 Input
     color: white
-    
+
   - pin: 22B
     #meta: MM176_IN_KNOCK
     #class: switch_inputs
@@ -344,14 +344,14 @@ pins:
   - pin: 23B
     function: +5v sensors
     color: green
-    
+
   - pin: 24B
     meta: MM176_IN_VBATT
     class: analog_inputs
     ts_name: 24 - Ignition Key Voltage
     function: +12V engine ECU power source, run/start
     color: green
-    
+
   - pin: 25B
     function: Power GND
     type: gnd
