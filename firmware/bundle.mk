@@ -44,9 +44,6 @@ ifneq ($(BUNDLE_SIMULATOR),no)
   SIMULATOR_OUT = ../simulator/build/rusefi_simulator.exe
 endif
 
-CONSOLE_OUT = ../java_console_binary/rusefi_console.jar
-AUTOUPDATE_OUT = ../java_console_binary/rusefi_autoupdate.jar
-
 UPDATE_CONSOLE_FOLDER_SOURCES = \
   $(CONSOLE_OUT) \
   $(AUTOUPDATE_OUT)
@@ -105,19 +102,6 @@ BUNDLE_FILES = \
   $(ST_DRIVERS) \
   $(FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
-
-#
-# problem statement: 'make -j4' could easily attempt to run parallel gradle processes. gradle does not seem to like it
-# see notes at https://github.com/rusefi/rusefi/pull/6031
-#
-
-FLOCK = flock /tmp/java.lock
-
-$(CONSOLE_OUT):
-	cd ../java_tools && $(FLOCK) ./gradlew :ui:shadowJar
-
-$(AUTOUPDATE_OUT):
-	cd ../java_tools && $(FLOCK) ./gradlew :autoupdate:jar
 
 $(SIMULATOR_OUT):
 	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Windows_NT"
