@@ -451,7 +451,7 @@ jobs:
     - name: Execution throttle early exit
       # Don't skip any jobs if this workflow was run manually,
       # or if the commit contains `only:`, signifying that only one bundle should be built.
-      if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' && github.event_name != 'schedule' && github.event_name != 'pull_request' || contains(github.event.head_commit.message, 'only:') }}
+      if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' && github.event_name != 'schedule' && github.event_name != 'pull_request' && github.run_attempt == 1 || contains(github.event.head_commit.message, 'only:') }}
       run: |
         # if the commit message contains `only:`, get the part after the semicolon and check if it matches the build target.
         read -d '' MSG << EOM || true
