@@ -3160,7 +3160,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "hip9011CsPin",							hip9011CsPin
-		field = "Accelerometer CS pin",					accelerometerCsPin
+		field = "Accelerometer CS pin",					accelerometerCsPin@@if_ts_show_onboard_accelerometer
 		field = "Saab CDM knock",						cdmInputPin
 		field = "DRV8860 CS",							drv8860_cs
 		field = "DRV8860 CS Mode",						drv8860_csPinMode
@@ -3761,8 +3761,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 		field = "SPI4 enable",							is_enabled_spi_4
 
-		field = "Accelerometer CS pin",					accelerometerCsPin
-		field = "Accelerometer SPI",          accelerometerSpiDevice
+		field = "Accelerometer CS pin",					accelerometerCsPin@@if_ts_show_onboard_accelerometer
+		field = "Accelerometer SPI",          accelerometerSpiDevice@@if_ts_show_onboard_accelerometer
 
 	dialog = stftPartitioning, "Region Configuration"
 		field = "Idle region RPM",						stft_maxIdleRegionRpm

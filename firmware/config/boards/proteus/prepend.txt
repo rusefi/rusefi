@@ -18,8 +18,8 @@
 ! in case of direct Lua control we need UI to undo defaults
 #define ts_show_etb_pins true
 
-
-
+! just for a test does not mean EFI_ONBOARD_MEMS
+#define ts_show_onboard_accelerometer true
 
 #define show_Proteus_presets true
 
