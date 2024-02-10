@@ -1,17 +1,24 @@
+# Use SHORT_BOARD_NAME for BUNDLE_NAME if it's empty.
+# BUNDLE_NAME is usually more specific - it points to a variant of a board.
 ifeq (,$(BUNDLE_NAME))
   BUNDLE_NAME = $(SHORT_BOARD_NAME)
 endif
 
+# If we're running on Windows, we need to call the .exe of hex2dfu
 ifneq (,$(findstring NT,$(UNAME_S)))
 	H2D = ../misc/encedo_hex2dfu/hex2dfu.exe
 else
 	H2D = ../misc/encedo_hex2dfu/hex2dfu.bin
 endif
 
+# DFU and DBIN are uploaded as artifacts, so it's easier to have them in the deliver/ directory
+#  than to try uploading them from the rusefi.snapshot.<BUNDLE_NAME> directory
 DFU = $(DELIVER)/$(PROJECT).dfu
 DBIN = $(DELIVER)/$(PROJECT).bin
 OUTBIN = $(FOLDER)/$(PROJECT).bin
 
+# If provided with a git reference and the LTS flag, use a folder name including the ref
+# This weird if statement structure is because Make doesn't have &&
 ifeq ($(LTS),true)
 ifneq (,$(REF))
   FOLDER = rusefi.$(REF).$(BUNDLE_NAME)
@@ -36,10 +43,12 @@ UPDATE_FOLDER_SOURCES = \
   $(INI_FILE) \
   ../misc/console_launcher/readme.html
 #  ../misc/console_launcher/rusefi_updater.exe
+# Uncomment and put a backslash after readme.html to put rusefi_updater.exe in the bundle
 
 FOLDER_SOURCES = \
   ../java_console/bin
 
+# Custom board builds don't include the simulator
 ifneq ($(BUNDLE_SIMULATOR),no)
   SIMULATOR_OUT = ../simulator/build/rusefi_simulator.exe
 endif
@@ -67,6 +76,7 @@ CACERTS_FOLDER_SOURCES = $(wildcard ../misc/console_launcher/update-ts-cacerts/*
 BOOTLOADER_BIN = bootloader/blbuild/openblt_$(PROJECT_BOARD).bin
 BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
 
+# We need to put different things in the bundle depending on some meta-info flags
 ifeq ($(USE_OPENBLT),yes)
   BOOTLOADER_OUT = $(BOOTLOADER_HEX)
   BOUTS = $(FOLDER)/openblt.bin
@@ -81,6 +91,9 @@ endif
 
 ST_DRIVERS = $(DRIVERS_FOLDER)/silent_st_drivers2.exe
 
+# We're kinda doing things backwards from the normal Make way.
+# We're listing some files we want to get copied from the bundle,
+# and these commands turn them into their destination path within the bundle.
 UPDATE_FOLDER_TARGETS = $(addprefix $(FOLDER)/,$(notdir $(UPDATE_FOLDER_SOURCES)))
 UPDATE_CONSOLE_FOLDER_TARGETS = $(addprefix $(CONSOLE_FOLDER)/,$(notdir $(UPDATE_CONSOLE_FOLDER_SOURCES)))
 CACERTS_FOLDER_TARGETS = $(addprefix $(CACERTS_FOLDER)/,$(notdir $(CACERTS_FOLDER_SOURCES)))
@@ -108,6 +121,8 @@ $(SIMULATOR_OUT):
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 
+# We pass SUBMAKE=yes to the bootloader Make instance so it knows not to try to build configs,
+#  as that would result in two simultaneous config generations, which causes issues.
 .bootloader-sentinel: $(CONFIG_FILES)
 	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) $(MAKE) -C bootloader -r SUBMAKE=yes
 	@touch $@
@@ -126,6 +141,8 @@ $(BOUTS): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_BOARD)% | $(F
 $(OUTBIN) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
 	ln -rfs $< $@
 
+# The DFU is currenly not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
+# If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
 $(DFU) $(DBIN): .h2d-sentinel ;
 
 .h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_OUT) $(BINSRC) | $(DELIVER)
@@ -146,6 +163,7 @@ $(DELIVER) $(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER) $(CACERTS_
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
+# The autopdate zip doesn't have a folder with the bundle contents
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(UPDATE_BUNDLE_FILES))
 
@@ -160,6 +178,7 @@ CLEAN_BUNDLE_HOOK:
 	rm -rf $(FOLDER)
 	@echo Done Cleaning Bundle
 
+# We need to use secondary expansion on these rules to find the target file in the source file list.
 PERCENT = %
 
 .SECONDEXPANSION:
