@@ -15,6 +15,10 @@ else
 endif
 
 # Make all cpp objects explicitly depend on the PCH
+# This is necessary because the ChibiOS makefile builds a .o file and generates
+#  the deps for that .o file in the same GCC call, so if the .deps aren't already
+#  in the correct state, things can fail to build because Make doesn't know it needs
+#  to build the prerequisites (in this case PCHOBJ) for those files ahead of time.
 $(TCPPOBJS) : $(PCHOBJ)
 $(ACPPOBJS) : $(PCHOBJ)
 
