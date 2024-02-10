@@ -124,7 +124,7 @@ else
 	$(H2D) -i $< -C 0x1C -o $@
 endif
 
-$(ST_DRIVERS): $(DRIVERS_FOLDER)
+$(ST_DRIVERS): | $(DRIVERS_FOLDER)
 	wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $(dir $@)
 
 $(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER) $(CACERTS_FOLDER):
