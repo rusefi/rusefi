@@ -62,8 +62,10 @@ ifeq ($(USE_OPENBLT),yes)
   BOUTS = $(FOLDER)/openblt.bin
   SREC_TARGET = $(FOLDER)/rusefi_update.srec
   OUTBIN = $(FOLDER)/$(PROJECT).bin
+  OUTBIN_IN = .hex
 else
   OUTBIN = $(FOLDER)/$(PROJECT).bin
+  OUTBIN_IN = .bin
   OUTS = $(FOLDER)/$(PROJECT).hex
 ifeq ($(INCLUDE_ELF),yes)
   OUTS += $(FOLDER)/$(PROJECT).elf $(FOLDER)/$(PROJECT).map $(FOLDER)/$(PROJECT).list
@@ -102,7 +104,7 @@ $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
 $(SREC_TARGET): $(BUILDDIR)/rusefi.srec
 	ln -rfs $< $@
 
-$(OUTBIN): $(FOLDER)/%.bin: $(BUILDDIR)/%.hex $(BOOTLOADER_HEX) | $(FOLDER)
+$(OUTBIN): $(FOLDER)/%.bin: $(BUILDDIR)/%$(OUTBIN_IN) $(BOOTLOADER_HEX) | $(FOLDER)
 ifeq ($(USE_OPENBLT),yes)
 	$(H2D) -i $(BOOTLOADER_HEX) -i $< -C 0x1C -b $@
 else
