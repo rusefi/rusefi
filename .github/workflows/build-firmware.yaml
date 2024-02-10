@@ -663,13 +663,6 @@ jobs:
         name: rusefi_${{matrix.build-target}}.map
         path: ./firmware/build/rusefi.map
 
-    - name: Upload build bin artifact
-      if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: rusefi_${{matrix.build-target}}.bin
-        path: ./firmware/deliver/rusefi*.bin
-
     - name: Upload build hex artifact
       if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v4
@@ -678,13 +671,6 @@ jobs:
 # we have a bit of a mess - this file from 'build' folder is only legit for not-BLT builds
 # todo: we should produce .hex in both OpenBLT and non-OpenBLT case same as we do for .bin and .elf
         path: ./firmware/build/rusefi*.hex
-
-    - name: Upload build dfu artifact
-      if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: rusefi_${{matrix.build-target}}.dfu
-        path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle artifact
       if: ${{ env.full == 'true' }}

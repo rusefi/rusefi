@@ -17,6 +17,9 @@ else
 endif
 
 INI_FILE = tunerstudio/generated/rusefi_$(SHORT_BOARD_NAME).ini
+
+ARTIFACTS = ../artifacts
+
 BUNDLE_FULL_NAME = rusefi_bundle_$(BUNDLE_NAME)
 
 CONSOLE_FOLDER = $(FOLDER)/console
@@ -121,16 +124,18 @@ endif
 $(ST_DRIVERS): $(DRIVERS_FOLDER)
 	wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $(dir $@)
 
-artifacts $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER) $(CACERTS_FOLDER):
+$(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER) $(CACERTS_FOLDER):
 	mkdir -p $@
 
-$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) $(BUNDLE_FULL_NAME)_autoupdate.zip
+$(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
-$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES)
+$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(UPDATE_BUNDLE_FILES))
 
-bundle: $(BUNDLE_FULL_NAME)_autoupdate.zip $(BUNDLE_FULL_NAME).zip
+.PHONY: bundle
+
+bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip
 
 CLEAN_BUNDLE_HOOK:
 	$(MAKE) -C bootloader clean
