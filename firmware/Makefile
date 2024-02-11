@@ -188,6 +188,14 @@ ifeq ($(EFI_ONBOARD_MEMS_LIS2DH12),yes)
   DDEFS += -DEFI_ONBOARD_MEMS_LIS2DH12=TRUE
   include $(CHIBIOS)/os/ex/devices/ST/lsm303agr.mk
 endif
+ifeq ($(EFI_ONBOARD_MEMS_LIS302DL),yes)
+  DDEFS += -DEFI_ONBOARD_MEMS_LIS302DL=TRUE
+  include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
+endif
+ifeq ($(EFI_ONBOARD_MEMS_LIS3DSH),yes)
+  DDEFS += -DEFI_ONBOARD_MEMS_LIS3DSH=TRUE
+  include $(CHIBIOS)/os/ex/devices/ST/lis3dsh.mk
+endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 

@@ -32,6 +32,12 @@
 #if (EFI_ONBOARD_MEMS_LIS2DH12 == TRUE)
 #include "lsm303agr.h"
 #endif
+#if (EFI_ONBOARD_MEMS_LIS302DL == TRUE)
+#include "lis302dl.h"
+#endif
+#if (EFI_ONBOARD_MEMS_LIS3DSH == TRUE)
+#include "lis3dsh.h"
+#endif
 
 /*
  * SPI1 configuration structure.
@@ -51,7 +57,7 @@ static SPIConfig accelerometerSpiCfg = {
 };
 
 
-#if 0
+#ifndef HW_HELLEN
 	static OutputPin chipSelect;
 #endif
 
@@ -110,21 +116,89 @@ static LSM303AGRDriver LIS2DH12;
 
 #endif //EFI_ONBOARD_MEMS_LIS2DH12 == TRUE
 
+#if (EFI_ONBOARD_MEMS_LIS302DL == TRUE)
+static LIS302DLConfig lis302dlcfg ={
+#if LIS302DL_USE_SPI
+	.spip = NULL,
+	.spicfg = &accelerometerSpiCfg,
+#endif
+#if LIS302DL_USE_I2C
+	/* TODO: */
+#endif
+	.accsensitivity = NULL,
+	.accbias = NULL,
+	.accfullscale = LIS302DL_ACC_FS_8G,
+	.accoutputdatarate = LIS302DL_ACC_ODR_100HZ,
+#if LIS302DL_USE_ADVANCED
+	.acchighpass = LIS302DL_ACC_HP_0,
+#endif
+};
+
+static LIS302DLDriver LIS302DL;
+
+#endif //EFI_ONBOARD_MEMS_LIS302DL == TRUE
+
+#if (EFI_ONBOARD_MEMS_LIS3DSH == TRUE)
+
+static LIS3DSHConfig lis3dshcfg ={
+#if LIS3DSH_USE_SPI
+	.spip = NULL,
+	.spicfg = &accelerometerSpiCfg,
+#endif
+	.accsensitivity = NULL,
+	.accbias = NULL,
+	.accfullscale = LIS3DSH_ACC_FS_4G,
+	.accoutputdatarate = LIS3DSH_ACC_ODR_50HZ,
+#if LIS3DSH_USE_ADVANCED
+	.accantialiasing = LIS3DSH_ACC_BW_50HZ,
+	.accblockdataupdate = LIS3DSH_ACC_BDU_CONTINUOUS,
+#endif
+};
+
+static LIS3DSHDriver LIS3DSH;
+
+#endif //EFI_ONBOARD_MEMS_LIS3DSH == TRUE
+
+enum AccelType_t {
+	ACCEL_UNK = 0,
+	ACCEL_LIS2DW12,
+	ACCEL_LIS2DH12,	// Same as LSM303
+	ACCEL_LIS302DL, // STM32F4DISCOVERY (old?)
+	ACCEL_LIS3DSH,	// STM32F4DISCOVERY
+};
+
+static AccelType_t AccelType = ACCEL_UNK;
+
 class AccelController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	AccelController() : PeriodicController("Acc SPI") { }
 private:
 	void PeriodicTask(efitick_t nowNt) override	{
+		msg_t ret = MSG_RESET;
 		float acccooked[3];
 
 		#if (EFI_ONBOARD_MEMS_LIS2DW12 == TRUE)
-			lis2dw12AccelerometerReadCooked(&LIS2DW12, acccooked);
+		if (AccelType == ACCEL_LIS2DW12) {
+			ret = lis2dw12AccelerometerReadCooked(&LIS2DW12, acccooked);
+		}
 		#endif
 		#if (EFI_ONBOARD_MEMS_LIS2DH12 == TRUE)
-			lsm303agrAccelerometerReadCooked(&LIS2DH12, acccooked);
+		if (AccelType == ACCEL_LIS2DH12) {
+			ret = lsm303agrAccelerometerReadCooked(&LIS2DH12, acccooked);
+		}
+		#endif
+		#if (EFI_ONBOARD_MEMS_LIS302DL == TRUE)
+		if (AccelType == ACCEL_LIS302DL) {
+			ret = lis302dlAccelerometerReadCooked(&LIS302DL, acccooked);
+		}
+		#endif
+		#if (EFI_ONBOARD_MEMS_LIS3DSH == TRUE)
+		if (AccelType == ACCEL_LIS3DSH) {
+			ret = lis3dshAccelerometerReadCooked(&LIS3DSH, acccooked);
+		}
 		#endif
 
-		if (engineConfiguration->useSpiImu) {
+		if ((engineConfiguration->useSpiImu) && (ret == MSG_OK)) {
 			/* milli-G to G */
 			engine->sensors.accelerometer.lat  = acccooked[0] / 1000.0;
 			engine->sensors.accelerometer.lon  = acccooked[1] / 1000.0;
@@ -150,33 +224,70 @@ void initAccelerometer() {
 	}
 
 	/* Commented until we have configureHellenMegaAccCS2Pin() */
-	#if 0
+	#ifndef HW_HELLEN
 		chipSelect.initPin("SPI Acc", engineConfiguration->accelerometerCsPin);
 	#endif
 	accelerometerSpiCfg.ssport = getHwPort("SPI Acc", engineConfiguration->accelerometerCsPin);
 	accelerometerSpiCfg.sspad = getHwPin("SPI Acc", engineConfiguration->accelerometerCsPin);
 
+	/* Try to detect any of enabled accels */
+	/* Hope all device drivers know how to detect correct chip */
 #if (EFI_ONBOARD_MEMS_LIS2DW12 == TRUE)
-	lis2dw12cfg.spip = bus;
+	if (ret != MSG_OK) {
+		lis2dw12cfg.spip = bus;
 
-	/* LIS302DL Object Initialization.*/
-	lis2dw12ObjectInit(&LIS2DW12);
+		/* LIS2DW12 Object Initialization.*/
+		lis2dw12ObjectInit(&LIS2DW12);
 
-	/* Activates the LIS302DL driver.*/
-	ret = lis2dw12Start(&LIS2DW12, &lis2dw12cfg);
-#elif (EFI_ONBOARD_MEMS_LIS2DH12 == TRUE)
-	lis2dh12cfg.spip = bus;
+		/* Activates the LIS2DW12 driver.*/
+		ret = lis2dw12Start(&LIS2DW12, &lis2dw12cfg);
+		if (ret == MSG_OK) {
+			AccelType = ACCEL_LIS2DW12;
+		}
+	}
+#endif //EFI_ONBOARD_MEMS_LIS2DW12 == TRUE
+#if (EFI_ONBOARD_MEMS_LIS2DH12 == TRUE)
+	if (ret != MSG_OK) {
+		lis2dh12cfg.spip = bus;
 
-	/* LIS302DL Object Initialization.*/
-	lsm303agrObjectInit(&LIS2DH12);
+		/* LIS2DH12 Object Initialization.*/
+		lsm303agrObjectInit(&LIS2DH12);
 
-	/* Activates the LIS302DL driver.*/
-	ret = lsm303agrStart(&LIS2DH12, &lis2dh12cfg);
-#else /* EFI_ONBOARD_MEMS_LIS2DW12 == TRUE */
-	fail("no MEMS type");
-#endif
+		/* Activates the LIS2DH12 driver.*/
+		ret = lsm303agrStart(&LIS2DH12, &lis2dh12cfg);
+		if (ret == MSG_OK) {
+			AccelType = ACCEL_LIS2DH12;
+		}
+	}
+#endif //EFI_ONBOARD_MEMS_LIS2DH12 == TRUE
+#if (EFI_ONBOARD_MEMS_LIS302DL == TRUE)
+	if (ret != MSG_OK) {
+		lis302dlcfg.spip = bus;
 
-	/* TODO: add support for LIS302 on discovery board */
+		/* LIS302DL Object Initialization.*/
+		lis302dlObjectInit(&LIS302DL);
+
+		/* Activates the LIS302DL driver.*/
+		ret = lis302dlStart(&LIS302DL, &lis302dlcfg);
+		if (ret == MSG_OK) {
+			AccelType = ACCEL_LIS302DL;
+		}
+	}
+#endif //EFI_ONBOARD_MEMS_LIS302DL == TRUE
+#if (EFI_ONBOARD_MEMS_LIS3DSH == TRUE)
+	if (ret != MSG_OK) {
+		lis3dshcfg.spip = bus;
+
+		/* LIS3DSH Object Initialization.*/
+		lis3dshObjectInit(&LIS3DSH);
+
+		/* Activates the LIS3DSH driver.*/
+		ret = lis3dshStart(&LIS3DSH, &lis3dshcfg);
+		if (ret == MSG_OK) {
+			AccelType = ACCEL_LIS3DSH;
+		}
+	}
+#endif //EFI_ONBOARD_MEMS_LIS3DSH == TRUE
 
 	if (ret == MSG_OK) {
 		/* 50 Hz */
