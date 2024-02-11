@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd ..
-bash ../common_make.sh hellen/hellen-honda-k ARCH_STM32F4
+bash ../common_make.sh config/boards/hellen/hellen-honda-k/meta-info.env
