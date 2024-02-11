@@ -210,10 +210,10 @@ private:
 static AccelController instance;
 
 void initAccelerometer() {
+#if HAL_USE_SPI
 	static SPIDriver *bus;
 	msg_t ret = MSG_RESET;
 
-#if HAL_USE_SPI
 	if (!isBrainPinValid(engineConfiguration->accelerometerCsPin))
 		return; // not used
 
