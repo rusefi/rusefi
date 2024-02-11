@@ -107,304 +107,39 @@ jobs:
           ./deliver/libopenblt.dylib
           ./deliver/libopenblt_jni.dylib
 
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set matrix
+      id: set-matrix
+      run: |
+        export EVENT_NAME="${{github.event_name}}"
+        export RUN_ATTEMPT="${{github.run_attempt}}"
+        export COMMIT_MESSAGE="${{github.event.head_commit.message}}"
+        echo "matrix=$(bash firmware/bin/generate_matrix.sh)" >> $GITHUB_OUTPUT
+
   build-firmware:
     runs-on: ubuntu-latest
     needs: [
              # todo proper build of build-libopenblt #5866
       #build-libopenblt-linux,
       #build-libopenblt-macos,
-            release]
+            release,
+            generate-matrix]
 
     strategy:
       # Let all builds finish even if one fails early
       fail-fast: false
-      matrix:
-        # What boards should we build for? In the 'include' section below,
-        # set up what each of these boards needs to build.
-        #
-        # see also gen_config where we have a similar list for all boards!
-        # see also build-primary-bundle where default/primary bundle is build separately
-        #
-        build-target: [
-            alphax-2chan,
-            alphax-4chan,
-            alphax-4chan_f7,
-            alphax-8chan,
-            alphax-8chan_debug,
-# todo            alphax-8chan-revA,
-            m74_9,
-            s105,
-            t-b-g,
-            hellen81,
-            hellen88bmw,
-            hellen88bmw_avr,
-            hellenMiataNA6,
-            hellenMiataNA96,
-            hellenMiataNB1,
-            hellenMiataNB2,
-            hellen-gm-e67,
-            hellen128,
-            hellen121vag,
-            hellen-honda-k,
-            hellen121nissan,
-            cypress,
-            frankenso_na6,
-            kinetis,
-            mre_f4,
-            mre_f7,
-            prometheus_405,
-            prometheus_469,
-            proteus_f4,
-            proteus_f7,
-            proteus_h7,
-            stm32f429_nucleo,
-            stm32f767_nucleo,
-            stm32f767_nucleo_debug,
-            stm32h743_nucleo,
-            subaru_eg33_f7,
-            subaru_eg33_f7_no_bl,
-            f407-discovery,
-            f429-discovery,
-            atlas,
-            tdg-pdm8,
-            at_start_f435,
-        ]
-
-        include:
-          # Board configurations
-          # 'target' should match corresponding SHORT_BOARD_NAME
-          - build-target: hellen81
-            folder: config/boards/hellen/hellen81
-            skip-rate: 90
-
-          - build-target: alphax-2chan
-            folder: config/boards/hellen/alphax-2chan
-            skip-rate: 0
-
-          - build-target: alphax-4chan
-            folder: config/boards/hellen/alphax-4chan
-
-          - build-target: alphax-4chan_f7
-            folder: config/boards/hellen/alphax-4chan
-
-          - build-target: alphax-8chan
-            folder: config/boards/hellen/alphax-8chan
-            skip-rate: 0
-
-          - build-target: alphax-8chan_debug
-            folder: config/boards/hellen/alphax-8chan
-            skip-rate: 95
-
-          - build-target: alphax-8chan_f7
-            folder: config/boards/hellen/alphax-8chan
-            skip-rate: 0
-
-#          - build-target: alphax-8chan-revA
-#            folder: config/boards/hellen/alphax-8chan-revA
-#            skip-rate: 30
-
-          - build-target: s105
-            folder: config/boards/s105
-            skip-rate: 90
-
-          - build-target: t-b-g
-            folder: config/boards/test-build-guards
-            skip-rate: 90
-
-          - build-target: m74_9
-            folder: config/boards/m74_9
-            skip-rate: 50
-
-          - build-target: small-can-board
-            folder: config/boards/hellen/small-can-board
-            skip-rate: 50
-
-          - build-target: uaefi
-            folder: config/boards/hellen/uaefi
-
-          - build-target: small-can-board_debug
-            folder: config/boards/hellen/small-can-board
-            skip-rate: 00
-
-          - build-target: hellen88bmw
-            folder: config/boards/hellen/hellen88bmw
-            skip-rate: 99
-
-          - build-target: hellen88bmw_avr
-            folder: config/boards/hellen/hellen88bmw
-            skip-rate: 99
-
-          - build-target: hellen-112-17
-            folder: config/boards/hellen/hellen-112-17
-            skip-rate: 50
-
-          - build-target: hellen-112-17_debug
-            folder: config/boards/hellen/hellen-112-17
-            skip-rate: 50
-
-          - build-target: hellen-gm-e67
-            folder: config/boards/hellen/hellen-gm-e67
-            skip-rate: 99
-
-          - build-target: hellenMiataNA6
-            folder: config/boards/hellen/hellenMiataNA6
-            skip-rate: 99
-
-          - build-target: hellenMiataNA96
-            folder: config/boards/hellen/hellenMiataNA96
-            skip-rate: 99
-
-          - build-target: hellenMiataNB1
-            folder: config/boards/hellen/hellenMiataNB1
-            skip-rate: 99
-
-          - build-target: hellenMiataNB2
-            folder: config/boards/hellen/hellenMiataNB2
-            skip-rate: 99
-
-          - build-target: hellen128
-            folder: config/boards/hellen/hellen128
-            skip-rate: 50
-
-          - build-target: hellen121vag
-            folder: config/boards/hellen/hellen121vag
-            skip-rate: 99
-
-          - build-target: hellen121nissan
-            folder: config/boards/hellen/hellen121nissan
-            skip-rate: 50
-
-          - build-target: hellen-honda-k
-            folder: config/boards/hellen/hellen-honda-k
-
-          - build-target: hellen-honda-k_debug
-            folder: config/boards/hellen/hellen-honda-k
-            skip-rate: 50
-
-          - build-target: hellen154hyundai
-            folder: config/boards/hellen/hellen154hyundai
-            skip-rate: 0
-
-          - build-target: hellen154hyundai_f7
-            folder: config/boards/hellen/hellen154hyundai
-            skip-rate: 90
-
-          - build-target: cypress
-            folder: config/boards/cypress
-
-          - build-target: frankenso_na6
-            folder: config/boards/frankenso_na6
-            skip-rate: 90
-
-          - build-target: kinetis
-            folder: config/boards/kinetis
-            skip-rate: 0
-
-          - build-target: mre_f4
-            folder: config/boards/microrusefi
-
-          - build-target: mre_f7
-            folder: config/boards/microrusefi
-            skip-rate: 90
-
-          - build-target: prometheus_405
-            folder: config/boards/prometheus/f405
-            skip-rate: 90
-
-          - build-target: prometheus_469
-            folder: config/boards/prometheus/f469
-            skip-rate: 90
-
-          - build-target: proteus_f4
-            folder: config/boards/proteus
-
-          - build-target: proteus_f4_debug
-            folder: config/boards/proteus
-            skip-rate: 80
-
-          - build-target: proteus_f7
-            folder: config/boards/proteus
-
-#          - build-target: proteus_f7_debug
-#            folder: config/boards/proteus
-#            skip-rate: 80
-
-          - build-target: proteus_h7
-            folder: config/boards/proteus
-            skip-rate: 90
-
-          - build-target: stm32f429_nucleo
-            folder: config/boards/nucleo_f429
-            skip-rate: 50
-
-          - build-target: stm32f767_nucleo
-            folder: config/boards/nucleo_f767
-            skip-rate: 50
-
-          - build-target: stm32f767_nucleo_debug
-            folder: config/boards/nucleo_f767
-            skip-rate: 50
-
-          - build-target: stm32h743_nucleo
-            folder: config/boards/nucleo_h743
-            skip-rate: 95
-
-          - build-target: subaru_eg33_f7
-            folder: config/boards/subaru_eg33
-            skip-rate: 50
-
-          - build-target: subaru_eg33_f7_no_bl
-            folder: config/boards/subaru_eg33
-            skip-rate: 50
-
-          - build-target: f407-discovery
-            folder: config/boards/f407-discovery
-            skip-rate: 0
-
-          - build-target: f407-discovery_debug
-            folder: config/boards/f407-discovery
-            skip-rate: 0
-
-          - build-target: f429-discovery
-            folder: config/boards/f429-discovery
-            skip-rate: 95
-
-          - build-target: atlas
-            folder: config/boards/atlas
-            skip-rate: 95
-
-          - build-target: tdg-pdm8
-            folder: config/boards/tdg-pdm8
-            skip-rate: 95
-
-          - build-target: at_start_f435
-            folder: config/boards/at_start_f435
-            skip-rate: 0
+      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
 
     steps:
     - name: Check branch name
       if: ${{ contains(github.ref_name, '.') }}
       run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
-
-    - name: Execution throttle early exit
-      # Don't skip any jobs if this workflow was run manually,
-      # or if the commit contains `only:`, signifying that only one bundle should be built.
-      if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' && github.event_name != 'schedule' && github.event_name != 'pull_request' && github.run_attempt == 1 || contains(github.event.head_commit.message, 'only:') }}
-      run: |
-        # if the commit message contains `only:`, get the part after the semicolon and check if it matches the build target.
-        read -d '' MSG << EOM || true
-        ${{ github.event.head_commit.message }}
-        EOM
-        if echo $MSG | grep "only:"; then
-          if [ "$(echo $MSG | grep -Po '(?<=only:)[^\s]*')" = "${{ matrix.build-target }}" ]; then
-            exit 0
-          else
-            # if it doesn't match, skip this job.
-            echo "skip=true" >> $GITHUB_ENV
-            exit 0
-          fi
-        fi
-        if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
     - name: Set run condition variables
       run: |
@@ -415,21 +150,18 @@ jobs:
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         elif [ "${{github.event_name}}" = "push" ]\
         && [ "${{github.ref}}" = "refs/heads/master" ]\
-        && [ "${{env.skip}}" != "true" ]\
         || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
           echo "Full mode"
           echo "full=true" >> $GITHUB_ENV
           echo "upload=server" >> $GITHUB_ENV
-        elif [ "${{env.skip}}" != "true" ]; then
+        else
           echo "Partial mode"
           echo "partial=true" >> $GITHUB_ENV
         fi
 
     - uses: actions/checkout@v4
-      if: ${{ env.skip != 'true' }}
 
     - name: Checkout Submodules
-      if: ${{ env.skip != 'true' }}
       run: |
         git submodule update --init --depth=1 firmware/ChibiOS
         git submodule update --init --depth=1 firmware/ChibiOS-Contrib
@@ -443,29 +175,23 @@ jobs:
         git submodule update --init --depth=1 java_console/peak-can-basic
 
     - uses: actions/setup-java@v4
-      if: ${{ env.skip != 'true' }}
       with:
         distribution: 'zulu'
         java-version: '11'
 
     - name: Install multilib, mingw, sshpass and mtools
-      if: ${{ env.skip != 'true' }}
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools zip dosfstools
 
     - name: Set Build Env Variables
-      if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       run: |
         echo LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
         echo REF=${{github.ref_name}} >> $GITHUB_ENV
-        echo BUNDLE_NAME=${{matrix.build-target}} >> $GITHUB_ENV
-        echo BOARD_DIR=${{matrix.folder}} >> $GITHUB_ENV
-        echo BOARD_META_PATH=$(bash bin/find_meta_info.sh ${{matrix.folder}} ${{matrix.build-target}}) >> $GITHUB_ENV
+        echo BOARD_META_PATH=${{matrix.meta-info}} >> $GITHUB_ENV
 
     - name: Git Status
-      if: ${{ env.skip != 'true' }}
       run: |
         git status
 
@@ -473,14 +199,12 @@ jobs:
 # Note to humans: on personal devices we have firmware/provide_gcc.sh and setup_linux_environment.sh
 #
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
-      if: ${{ env.skip != 'true' }}
       uses: carlosperate/arm-none-eabi-gcc-action@v1
       with:
         release: '12.3.Rel1'
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test arm-none-eabi-gcc Compiler
-      if: ${{ env.skip != 'true' }}
       run: arm-none-eabi-gcc -v
 
     - name: Configs build_server upload SSH variables
@@ -506,7 +230,6 @@ jobs:
 
       # Build the firmware!
     - name: Build Firmware
-      if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       run: |
         make clean
