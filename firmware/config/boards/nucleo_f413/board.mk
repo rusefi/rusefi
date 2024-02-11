@@ -1,4 +1,3 @@
-SHORT_BOARD_NAME=nucleo_f413
 
 DDEFS += -DFIRMWARE_ID=\"nucleo_f413\"
 
