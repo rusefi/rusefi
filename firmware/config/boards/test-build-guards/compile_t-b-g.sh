@@ -1,3 +1,3 @@
 #!/bin/bash
 
-bash ../common_make.sh test-build-guards ARCH_STM32F4
+bash ../common_make.sh config/boards/test-build-guards/meta-info.env

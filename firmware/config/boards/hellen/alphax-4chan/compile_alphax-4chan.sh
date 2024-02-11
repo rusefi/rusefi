@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd ..
-bash ../common_make.sh hellen/alphax-4chan ARCH_STM32F4
+bash ../common_make.sh config/boards/hellen/alphax-4chan/meta-info_f4.env
