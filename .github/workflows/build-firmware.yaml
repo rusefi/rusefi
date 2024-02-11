@@ -549,15 +549,7 @@ jobs:
       if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       run: |
-        COMPILE_SCRIPT=${{matrix.folder}}/compile_${{matrix.build-target}}.sh
-        if [ -f "$COMPILE_SCRIPT" ]; then
-          # detailed compile script is useful for instance when same board has multiple MCU targets
-          echo "[$COMPILE_SCRIPT] found!"
-          echo COMPILE_SCRIPT=$COMPILE_SCRIPT >> $GITHUB_ENV
-        else
-          echo "Using default script name..."
-          echo COMPILE_SCRIPT="${{matrix.folder}}/compile_firmware.sh" >> $GITHUB_ENV
-        fi
+        echo COMPILE_SCRIPT=${{matrix.folder}}/compile_${{matrix.build-target}}.sh >> $GITHUB_ENV
         echo LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
         echo REF=${{github.ref_name}} >> $GITHUB_ENV
         echo BUNDLE_NAME=${{matrix.build-target}} >> $GITHUB_ENV
