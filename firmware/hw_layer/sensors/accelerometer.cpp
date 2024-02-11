@@ -172,9 +172,9 @@ void initAccelerometer() {
 
 	/* Activates the LIS302DL driver.*/
 	ret = lsm303agrStart(&LIS2DH12, &lis2dh12cfg);
-#else
- fail("no MEMS type");
-#endif /* EFI_ONBOARD_MEMS_LIS2DW12 == TRUE */
+#else /* EFI_ONBOARD_MEMS_LIS2DW12 == TRUE */
+	fail("no MEMS type");
+#endif
 
 	/* TODO: add support for LIS302 on discovery board */
 
