@@ -163,7 +163,7 @@ BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
 BOARDCPPSRC += $(BOARDS_DIR)/board_id.cpp
 ifeq ($(SHORT_BOARD_NAME),)
-$(error SHORT_BOARD_NAME not set, something wrong with your board.mk file)
+$(error SHORT_BOARD_NAME not set, something wrong with your meta-info.env file)
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 
