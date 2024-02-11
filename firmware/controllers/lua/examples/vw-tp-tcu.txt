@@ -7,6 +7,8 @@ setTickRate(tickRate)
 
 timeout = 3000
 
+withErrorsCounter = 0
+
 cuType = 0x02 -- TCU
 
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
@@ -116,6 +118,7 @@ function onCanTester(bus, id, dlc, data)
 		txCan(1, cuId, 0, { 0xA1, 0x0F, 0x8A, 0xFF, 0x4A, 0xFF })
 
 		if withErrorCodes > 0 then
+		  withErrorsCounter = withErrorsCounter + 1
 			requestEraseCodes()
 		else
 			keepAliveCounter = keepAliveCounter + 1
@@ -175,7 +178,7 @@ function onCanTester(bus, id, dlc, data)
 			end
 
       -- warning: random custom packet ID!
-			txCan(1, 0x999, 0, { withErrorCodes })
+			txCan(1, 0x699, 0, { withErrorCodes })
 		end
 
 		payLoadIndex = payLoadIndex + 1
@@ -193,7 +196,7 @@ function onCanTester(bus, id, dlc, data)
 			payLoadIndex = 0
 
 			if data[2] == 0 and data[3] == 2 and data[4] == 0x58 then
-				print("NO CODES")
+				print("****************** NO CODES had " .. withErrorsCounter)
 			end
 		end
 
