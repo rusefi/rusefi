@@ -23,6 +23,7 @@
 # If you wish to call make directly, here are the available commands:
 #
 # make docs-enums	Generate docs and enums
+# make config			Generate docs, enums, and configs
 # make						Generate docs, enums, configs, and build firmware
 # make bundle			Generate docs, enums, configs, built bootloader, build firmware, and package both full and autoupdate bundles
 #

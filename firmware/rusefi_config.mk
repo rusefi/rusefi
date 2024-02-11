@@ -65,3 +65,7 @@ else
 	bash $(PROJECT_DIR)/gen_config_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
 endif
 	@touch $@
+
+.PHONY: config
+
+config: .config-sentinel
