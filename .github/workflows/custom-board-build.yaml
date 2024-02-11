@@ -7,8 +7,8 @@ name: Build Custom Board Firmware
 on:
   workflow_call:
     inputs:
-      shortBoardName:
-        required: true
+      bundle_name:
+        required: false
         type: string
       token:
         description: 'Token for accessing private repos'
@@ -60,23 +60,25 @@ jobs:
 
       - name: Echo
         run: |
-          echo "shortBoardName=${{inputs.shortBoardName}}"
+          echo "bundle_name=${{inputs.bundle_name}}"
           echo "rusefi_dir=${{inputs.rusefi_dir}}"
           echo "relative_board_dir=${{inputs.relative_board_dir}}"
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ env.TOKEN }}
+          submodules: recursive
 
       - name: Set Env Variables
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           echo "META_OUTPUT_ROOT_FOLDER=../${{inputs.relative_board_dir}}/generated/" >> $GITHUB_ENV
-          echo "SHORT_BOARD_NAME=${{inputs.shortBoardName}}" >> $GITHUB_ENV
-          echo "BOARD_DIR=${{inputs.relative_board_dir}}" >> $GITHUB_ENV
+          echo "BUNDLE_NAME=${{inputs.bundle_name}}" >> $GITHUB_ENV
+          echo "BOARD_DIR=../${{inputs.relative_board_dir}}" >> $GITHUB_ENV
           echo "${{ secrets.ADDITIONAL_ENV }}" >> $GITHUB_ENV
-
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ env.TOKEN }}
-          submodules: recursive
+          cd "${{inputs.rusefi_dir}}/firmware"
+          echo "COMPILE_SCRIPT=$(bash bin/find_compile_script.sh ${{inputs.relative_board_dir}} ${{inputs.bundle_name}})" >> $GITHUB_ENV
 
       - name: Invoking Post-Checkout Action
         run: |
@@ -109,7 +111,8 @@ jobs:
       - name: Gen Config
         working-directory: ${{inputs.rusefi_dir}}/firmware
         run: |
-          bash gen_config_board.sh ../${{inputs.relative_board_dir}} ${{env.gha_shortBoardName}}
+          source "../${{env.COMPILE_SCRIPT}}"
+          bash gen_config_board.sh ../${{inputs.relative_board_dir}} ${SHORT_BOARD_NAME}
 
       - name: Repo Status
         run: |
@@ -129,10 +132,9 @@ jobs:
         run: bash misc/jenkins/build_java_console.sh
 
       - name: Build Firmware
-        working-directory: ${{inputs.rusefi_dir}}
-        run:
-          source ${{env.BOARD_DIR}}/compile_${{env.SHORT_BOARD_NAME}}.sh
-          cd firmware
+        working-directory: ${{inputs.rusefi_dir}}/firmware
+        run: |
+          source "../${{env.COMPILE_SCRIPT}}"
           make -j$(nproc) -r
 
       - name: Push Config

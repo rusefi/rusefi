@@ -68,7 +68,9 @@ jobs:
 
     - name: Build Firmware
       run: |
-        source ${{matrix.folder}}/compile_${{matrix.build-target}}.sh
+        cd firmware
+        source $(bash bin/find_compile_script.sh ${{matrix.folder}} ${{matrix.build-target}})
+        cd ..
         .github/workflows/hw-ci/build_for_hw_ci.sh
 
     - name: Check for STLINK
