@@ -1485,7 +1485,7 @@
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
-#define TS_SIGNATURE "rusEFI master.2024.02.10.alphax-4chan_f7.3131235549"
+#define TS_SIGNATURE "rusEFI master.2024.02.11.alphax-4chan_f7.3131235549"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
