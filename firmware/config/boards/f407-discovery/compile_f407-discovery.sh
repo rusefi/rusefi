@@ -1,3 +1,3 @@
 #!/bin/bash
 
-bash ../common_make.sh f407-discovery ARCH_STM32F4
+bash ../common_make.sh config/boards/f407-discovery/meta-info.env

@@ -2,8 +2,8 @@
 
 # this script is supposed to be executed from within 'firmware' folder
 
-PROJECT_BOARD=$1
-PROJECT_CPU=$2
+BOARD_META_PATH=$1
+. config/boards/common_script_read_meta_env.inc $BOARD_META_PATH
 
 # fail on error
 set -e
@@ -11,23 +11,14 @@ set -e
 SCRIPT_NAME="common_script.sh"
 
 # check if board dir is set
-if [ ! -z "$3" ]; then
-  echo "Entering $SCRIPT_NAME with board [$1] at [$3] and CPU [$2]"
-  OPTIONAL_BOARD_DIR="BOARD_DIR=$3"
-  OPTIONAL_BOARD_DIR_BL="BOARD_DIR=../$3"
-else
-  echo "Entering $SCRIPT_NAME with board [$1] and CPU [$2]"
-  OPTIONAL_BOARD_DIR=""
-  OPTIONAL_BOARD_DIR_BL=""
-fi
+echo "Entering $SCRIPT_NAME with board [$PROJECT_BOARD] and CPU [$PROJECT_CPU] at [$BOARD_DIR]"
 
 mkdir -p .dep
 # todo: start using env variable for number of threads or for '-r'
-make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU $OPTIONAL_BOARD_DIR
+make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU BOARD_DIR=$BOARD_DIR BOARD_META_PATH=$BOARD_META_PATH
 [ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 
-if [ ! -z "$4" ]; then
-  POST_BUILD_SCRIPT=$4
+if [ ! -z $POST_BUILD_SCRIPT ]; then
   echo "$SCRIPT_NAME: invoking post-build script"
   source $POST_BUILD_SCRIPT
 fi
@@ -37,7 +28,7 @@ if [ "$USE_OPENBLT" = "yes" ]; then
   # TODO: probably make/gcc do not like two separate projects (primary firmware and bootloader) co-existing in same folder structure?
   rm -f pch/pch.h.gch/*
   cd bootloader
-  make PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU $OPTIONAL_BOARD_DIR_BL -j12
+  make PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU BOARD_DIR=../$BOARD_DIR BOARD_META_PATH=../$BOARD_META_PATH -j12
   cd ..
   [ -e bootloader/blbuild/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
