@@ -309,10 +309,10 @@ jobs:
             short-board-name: hellen154hyundai
             skip-rate: 0
 
-          - build-target: hellen154hyundai_f7
-            folder: config/boards/hellen/hellen154hyundai
-            short-board-name: hellen154hyundai
-            skip-rate: 0
+#          - build-target: hellen154hyundai_f7
+#            folder: config/boards/hellen/hellen154hyundai
+#            short-board-name: hellen154hyundai
+#            skip-rate: 0
 
           - build-target: cypress
             folder: config/boards/cypress
