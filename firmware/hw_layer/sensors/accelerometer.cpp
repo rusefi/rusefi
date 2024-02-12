@@ -223,7 +223,7 @@ void initAccelerometer() {
 		return;
 	}
 
-	/* Commented until we have configureHellenMegaAccCS2Pin() */
+	/* Commented until we have hellenMegaAccelerometerPreInitCS2Pin() */
 	#ifndef HW_HELLEN
 		chipSelect.initPin("SPI Acc", engineConfiguration->accelerometerCsPin);
 	#endif

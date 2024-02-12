@@ -89,7 +89,7 @@ void setBoardConfigOverrides() {
 	// rev.D uses SPI1 pins for CAN2, but rev.E and later uses mega-module meaning SPI1 for SD-card
 	if (isMegaModuleRevision()) {
 		setHellenSdCardSpi1();
-		configureHellenMegaAccCS2Pin();
+		hellenMegaAccelerometerPreInitCS2Pin();
 	    setHellenMegaEnPin();
 	} else {
 	    setHellenEnPin(Gpio::H144_OUT_IO3);
