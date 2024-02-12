@@ -138,7 +138,7 @@ void setBoardConfigOverrides() {
 	    setHellenMegaEnPin();
 	    // rev G and newer uses hellen mega-module
 	    setHellenSdCardSpi1();
-	    configureHellenMegaAccCS2Pin();
+	    hellenMegaAccelerometerPreInitCS2Pin();
 	}
 
     setDefaultHellenAtPullUps();

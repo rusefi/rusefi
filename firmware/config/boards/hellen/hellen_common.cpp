@@ -57,15 +57,19 @@ void hellenBoardStandBy() {
 }
 
 /**
- * dirty hack
+ * We need to make sure that accelerometer device which physically exists does not conflict with SD card
+ * in case of shared SPI.
+ * We reply on specific order of execution here:
+ * 1) accelerometer pre-initialization into safe CS pin state
+ * 2) SD card initialization
+ * 3) accelerometer main initialization if accelerometer feature is desired
  */
-void configureHellenMegaAccCS2Pin() {
-    static bool initialized = false;
-    static OutputPin cs2pin;
-    if (!initialized) {
-        initialized = true;
-	    cs2pin.initPin("mm-CS2", Gpio::H_SPI1_CS2);
-	    cs2pin.setValue(1);
+extern OutputPin accelerometerChipSelect;
+
+void hellenMegaAccelerometerPreInitCS2Pin() {
+    if (!accelerometerChipSelect.isInitialized()) {
+	    accelerometerChipSelect.initPin("mm-CS2", Gpio::H_SPI1_CS2);
+	    accelerometerChipSelect.setValue(1);
 	}
 }
 
