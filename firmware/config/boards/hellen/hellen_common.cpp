@@ -64,13 +64,12 @@ void hellenBoardStandBy() {
  * 2) SD card initialization
  * 3) accelerometer main initialization if accelerometer feature is desired
  */
+extern OutputPin accelerometerChipSelect;
+
 void hellenMegaAccelerometerPreInitCS2Pin() {
-    static bool initialized = false;
-    static OutputPin cs2pin;
-    if (!initialized) {
-        initialized = true;
-	    cs2pin.initPin("mm-CS2", Gpio::H_SPI1_CS2);
-	    cs2pin.setValue(1);
+    if (!accelerometerChipSelect.isInitialized()) {
+	    accelerometerChipSelect.initPin("mm-CS2", Gpio::H_SPI1_CS2);
+	    accelerometerChipSelect.setValue(1);
 	}
 }
 

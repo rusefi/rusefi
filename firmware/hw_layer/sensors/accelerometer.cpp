@@ -56,10 +56,7 @@ static SPIConfig accelerometerSpiCfg = {
 	.cr2 = SPI_CR2_8BIT_MODE
 };
 
-
-#ifndef HW_HELLEN
-	static OutputPin chipSelect;
-#endif
+OutputPin accelerometerChipSelect;
 
 #if (EFI_ONBOARD_MEMS_LIS2DW12 == TRUE)
 
@@ -223,10 +220,11 @@ void initAccelerometer() {
 		return;
 	}
 
-	/* Commented until we have hellenMegaAccelerometerPreInitCS2Pin() */
-	#ifndef HW_HELLEN
-		chipSelect.initPin("SPI Acc", engineConfiguration->accelerometerCsPin);
-	#endif
+	/* so far only Hellen boards share SPI device for SD card and accelerometer
+	 * thus need to make sure CS pin is in a well known proper state */
+  if (!accelerometerChipSelect.isInitialized()) {
+		accelerometerChipSelect.initPin("SPI Acc", engineConfiguration->accelerometerCsPin);
+	}
 	accelerometerSpiCfg.ssport = getHwPort("SPI Acc", engineConfiguration->accelerometerCsPin);
 	accelerometerSpiCfg.sspad = getHwPin("SPI Acc", engineConfiguration->accelerometerCsPin);
 
