@@ -28,8 +28,14 @@ static expected<uint16_t> look_up_rpm_can_id(can_vss_nbc_e type) {
 //		case HYUNDAI_PB:
 		case NISSAN_350:
 		  return 0x23D;
+		case BMW_e46:
+		case W202:
+		case BMW_e90:
+		case HYUNDAI_PB:
+			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "RPM Can type not implemented yet: %d", type);
+			return unexpected;
 		default:
-			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
+			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong RPM Can type: %d", type);
 			return unexpected;
 	}
 }
@@ -51,7 +57,7 @@ static expected<uint16_t> look_up_vss_can_id(can_vss_nbc_e type) {
 		case W202:
 			return 0x0200; /* W202 C180 ABS signal */
 		default:
-			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
+			firmwareError(ObdCode::OBD_Vehicle_Speed_SensorB, "Wrong VSS Can type selected: %d", type);
 			return unexpected;
 	}
 }
