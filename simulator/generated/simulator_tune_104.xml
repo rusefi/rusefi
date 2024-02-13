@@ -2545,12 +2545,12 @@
          0.0 0.0 0.0 0.0
 </constant>
         <constant name="luaScript">function getBitRange(data, bitIndex, bitWidth) 
-	byteIndex = bitIndex &gt;&gt; 3 
-	shift = bitIndex - byteIndex * 8 
-	value = data[1 + byteIndex] 
+	local byteIndex = bitIndex &gt;&gt; 3 
+	local shift = bitIndex - byteIndex * 8 
+	local value = data[1 + byteIndex] 
 	if (shift + bitWidth &gt; 8) then 
 		value = value + data[2 + byteIndex] * 256 	end 
-	mask = (1 &lt;&lt; bitWidth) - 1 
+	local mask = (1 &lt;&lt; bitWidth) - 1 
 	return (value &gt;&gt; shift) &amp; mask 
 end 
 function getTwoBytesLSB(data, offset, factor)		return (data[offset + 2] * 256 + data[offset + 1]) * factor 
@@ -2559,7 +2559,7 @@ hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" } function
   local sum = seed 
   for i = 1, 7, 1 
   do 
-    b = data[i] 
+    local b = data[i] 
     sum =  sum +  (b % 16) + math.floor(b / 16)   end   return (16 - sum) % 16 end
 
 GDI4_BASE_ADDRESS = 0xBB20
