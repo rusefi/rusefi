@@ -1,3 +1,11 @@
+ifeq (,$(BUNDLE_NAME))
+  BUNDLE_NAME = $(SHORT_BOARD_NAME)
+endif
+
+ifeq (,$(PROJECT_BOARD))
+  PROJECT_BOARD = $(SHORT_BOARD_NAME)
+endif
+
 ifneq (,$(findstring NT,$(UNAME_S)))
 	H2D = ../misc/encedo_hex2dfu/hex2dfu.exe
 else
@@ -15,7 +23,6 @@ endif
 else
   FOLDER = rusefi.snapshot.$(BUNDLE_NAME)
 endif
-
 
 INI_FILE = $(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/rusefi_$(SHORT_BOARD_NAME).ini
 
