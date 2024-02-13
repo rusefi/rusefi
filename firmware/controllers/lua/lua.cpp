@@ -221,7 +221,7 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 static bool interactivePending = false;
 static char interactiveCmd[100];
 
-void doInteractive(LuaHandle& ls) {
+static void doInteractive(LuaHandle& ls) {
 	if (!interactivePending) {
 		// no cmd pending, return
 		return;
