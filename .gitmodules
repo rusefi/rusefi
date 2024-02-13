@@ -39,3 +39,7 @@
 [submodule "firmware/libfirmware"]
 	path = firmware/libfirmware
 	url = https://github.com/rusefi/libfirmware.git
+[submodule "firmware/ext/build-tools"]
+	path = firmware/ext/build-tools
+	url = https://github.com/FOME-Tech/build-tools.git
+	branch = main

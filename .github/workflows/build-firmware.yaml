@@ -312,10 +312,6 @@ jobs:
     #     ./firmware/provide_gcc.sh
     #     echo "::add-path::`pwd`/gcc-arm-none-eabi/bin"
 
-    # Make sure the compiler we just downloaded works - just print out the version
-    - name: Test Compiler
-      run: arm-none-eabi-gcc -v
-
     # - name: Configs Set SSH variables
     #   if: ${{ env.full == 'true' && env.upload == 'true' }}
     #   env:

@@ -281,12 +281,8 @@ BUILDDIR=blbuild
 
 MCU  = cortex-m4
 
-ifeq ($(CROSS_COMPILE),)
-  #TRGT = arm-elf-
-  TRGT = arm-none-eabi-
-else
-  TRGT = $(CROSS_COMPILE)
-endif
+include $(PROJECT_DIR)/use_arm_gcc.mk
+
 CC   = $(TRGT)gcc
 CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.

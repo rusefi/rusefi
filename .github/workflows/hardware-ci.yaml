@@ -43,10 +43,6 @@ jobs:
     - name: Add compiler to PATH
       run: echo "$HOME/.rusefi-tools/arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi/bin" >> $GITHUB_PATH
 
-    # Make sure the compiler works
-    - name: Test/Identify Compiler
-      run: arm-none-eabi-gcc -v
-
     - name: Set EXTRA env
       run: |
         echo "EXTRA_2_PARAMS=-DHARDWARE_CI" >> $GITHUB_ENV

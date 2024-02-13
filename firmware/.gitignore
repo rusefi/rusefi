@@ -4,6 +4,7 @@ gen_*.log
 deliver/
 rusefi_tool.log
 build*
+ramdisk.image
 
 # precompiled headers
 *.h.gch
