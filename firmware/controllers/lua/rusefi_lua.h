@@ -60,7 +60,7 @@ void testLuaExecString(const char* script);
 void initLuaCanRx();
 
 // Called from the Lua loop to process any pending CAN frames
-void doLuaCanRx(LuaHandle& ls);
+int doLuaCanRx(LuaHandle& ls);
 // Called from the CAN RX thread to queue a frame for Lua consumption
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame);
 #endif // not EFI_CAN_SUPPORT

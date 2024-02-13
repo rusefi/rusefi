@@ -128,9 +128,13 @@ bool doOneLuaCanRx(LuaHandle& ls) {
 	return true;
 }
 
-void doLuaCanRx(LuaHandle& ls) {
+int doLuaCanRx(LuaHandle& ls) {
+  int counter = 0;
 	// While it processed a frame, continue checking
-	while (doOneLuaCanRx(ls)) ;
+	while (doOneLuaCanRx(ls)) {
+	  counter++;
+	}
+	return counter;
 }
 
 void initLuaCanRx() {

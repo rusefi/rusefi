@@ -30,6 +30,10 @@ LUA_HEAD_RAM_SECTION
 #endif
 ;
 
+static int recentRxCount = 0;
+static int totalRxCount = 0;
+static int rxTime;
+
 class Heap {
 public:
 	memory_heap_t m_heap;
@@ -324,7 +328,9 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 		efitick_t beforeNt = getTimeNowNt();
 #if EFI_CAN_SUPPORT
 		// First, process any pending can RX messages
-		doLuaCanRx(ls);
+		totalRxCount += recentRxCount;
+		recentRxCount = doLuaCanRx(ls);
+		rxTime = getTimeNowNt() - beforeNt;
 #endif // EFI_CAN_SUPPORT
 
 		// Next, check if there is a pending interactive command entered by the user
@@ -411,7 +417,14 @@ void startLua() {
 		needsReset = true;
 	});
 
-	addConsoleAction("luamemory", printLuaMemoryInfo);
+	addConsoleAction("luamemory", [](){
+	  efiPrintf("rx total/recent %d %d", totalRxCount,
+	    recentRxCount);
+	  efiPrintf("luaCycle %dus including luaRxTime %dus", NT2US(engine->outputChannels.luaLastCycleDuration),
+	    NT2US(rxTime));
+
+     printLuaMemoryInfo();
+  });
 #endif
 }
 
