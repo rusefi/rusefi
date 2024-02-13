@@ -97,26 +97,26 @@ end  \
 // for when you want "I want bitWidth number of bits starting at bitIndex in data array
 #define GET_BIT_RANGE_LSB " \
 function getBitRange(data, bitIndex, bitWidth) \n\
-	byteIndex = bitIndex >> 3 \n\
-	shift = bitIndex - byteIndex * 8 \n\
-	value = data[1 + byteIndex] \n\
+	local byteIndex = bitIndex >> 3 \n\
+	local shift = bitIndex - byteIndex * 8 \n\
+	local value = data[1 + byteIndex] \n\
 	if (shift + bitWidth > 8) then \n\
 		value = value + data[2 + byteIndex] * 256 \
 	end \n\
-	mask = (1 << bitWidth) - 1 \n\
+	local mask = (1 << bitWidth) - 1 \n\
 	return (value >> shift) & mask \n\
 end \n\
 "
 
 #define GET_BIT_RANGE_MSB " \
 function getBitRangeMsb(data, bitIndex, bitWidth) \n\
-	byteIndex = bitIndex >> 3 \n\
-	shift = bitIndex - byteIndex * 8 \n\
-	value = data[1 + byteIndex] \n\
+	local byteIndex = bitIndex >> 3 \n\
+	local shift = bitIndex - byteIndex * 8 \n\
+	local value = data[1 + byteIndex] \n\
 	if (shift + bitWidth > 8) then \n\
 		value = value + data[0 + byteIndex] * 256 \
 	end \n\
-	mask = (1 << bitWidth) - 1 \n\
+	local mask = (1 << bitWidth) - 1 \n\
 	return (value >> shift) & mask \n\
 end \n\
 "
@@ -126,14 +126,14 @@ function setBitRange(data, totalBitIndex, bitWidth, value) \
 	local byteIndex = totalBitIndex >> 3 \
 	local bitInByteIndex = totalBitIndex - byteIndex * 8 \
 	if (bitInByteIndex + bitWidth > 8) then \
-		bitsToHandleNow = 8 - bitInByteIndex \
+		local bitsToHandleNow = 8 - bitInByteIndex \
 		setBitRange(data, totalBitIndex + bitsToHandleNow, bitWidth - bitsToHandleNow, value >> bitsToHandleNow) \
 		bitWidth = bitsToHandleNow \
 	end \
-	mask = (1 << bitWidth) - 1 \
+	local mask = (1 << bitWidth) - 1 \
 	data[1 + byteIndex] = data[1 + byteIndex] & (~(mask << bitInByteIndex)) \
-	maskedValue = value & mask \
-	shiftedValue = maskedValue << bitInByteIndex \
+	local maskedValue = value & mask \
+	local shiftedValue = maskedValue << bitInByteIndex \
 	data[1 + byteIndex] = data[1 + byteIndex] | shiftedValue \
 end \n\
 "
@@ -143,7 +143,7 @@ function hyundaiSumNibbles(data, seed) \n\
   local sum = seed \n\
   for i = 1, 7, 1 \n\
   do \n\
-    b = data[i] \n\
+    local b = data[i] \n\
     sum =  sum +  (b % 16) + math.floor(b / 16) \
   end \
   return (16 - sum) % 16 \
