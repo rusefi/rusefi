@@ -13,3 +13,5 @@ include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_HELLEN_GM_E67
 
+SHORT_BOARD_NAME=hellen-gm-e67
+

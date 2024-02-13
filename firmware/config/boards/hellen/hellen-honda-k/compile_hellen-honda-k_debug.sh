@@ -10,4 +10,4 @@ export EXTRA_PARAMS="\
 export DEBUG_LEVEL_OPT="-O0 -ggdb -g"
 export INCLUDE_ELF=yes
 cd ..
-bash ../common_make.sh config/boards/hellen/hellen-honda-k/meta-info.env
+bash ../common_make.sh hellen/hellen-honda-k ARCH_STM32F4

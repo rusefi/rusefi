@@ -10,4 +10,4 @@ export EXTRA_PARAMS="\
 export DEBUG_LEVEL_OPT="-O0 -ggdb -g"
 export INCLUDE_ELF=yes
 cd ..
-bash ../common_make.sh config/boards/hellen/small-can-board/meta-info.env
+bash ../common_make.sh hellen/small-can-board ARCH_STM32F4

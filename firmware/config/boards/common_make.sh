@@ -5,8 +5,10 @@
 # this script is just a facade for more flexible script which assume invocation from firmware directory
 #
 
-BOARD_META_PATH=$1
+PROJECT_BOARD=$1
+PROJECT_CPU=$2
+BOARD_DIR=$3
 
 cd ../../..
 
-bash config/boards/common_script.sh $BOARD_META_PATH
+bash config/boards/common_script.sh $PROJECT_BOARD $PROJECT_CPU $BOARD_DIR

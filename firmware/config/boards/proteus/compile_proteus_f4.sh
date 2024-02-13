@@ -2,4 +2,4 @@
 
 export USE_OPENBLT=yes
 
-bash ../common_make.sh config/boards/proteus/meta-info_f4.env
+bash ../common_make.sh proteus ARCH_STM32F4

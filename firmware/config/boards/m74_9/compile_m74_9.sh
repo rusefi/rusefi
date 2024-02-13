@@ -5,4 +5,4 @@
 SCRIPT_NAME="compile_m74_9.sh"
 echo "Entering $SCRIPT_NAME"
 
-bash ../common_make.sh config/boards/m74_9/meta-info.env
+bash ../common_make.sh m74_9 ARCH_AT32F4
