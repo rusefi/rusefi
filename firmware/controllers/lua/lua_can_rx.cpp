@@ -2,7 +2,6 @@
 
 #include "can_filter.h"
 
-
 #if EFI_CAN_SUPPORT
 
 #include "rusefi_lua.h"
@@ -14,12 +13,12 @@ struct CanFrameData {
 	CANRxFrame Frame;
 };
 
-constexpr size_t canFrameCount = 32;
+static constexpr size_t canFrameCount = 32;
 static CanFrameData canFrames[canFrameCount];
 // CAN frame buffers that are not in use
-chibios_rt::Mailbox<CanFrameData*, canFrameCount> freeBuffers;
+static chibios_rt::Mailbox<CanFrameData*, canFrameCount> freeBuffers;
 // CAN frame buffers that are waiting to be processed by the lua thread
-chibios_rt::Mailbox<CanFrameData*, canFrameCount> filledBuffers;
+static chibios_rt::Mailbox<CanFrameData*, canFrameCount> filledBuffers;
 
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 	auto filter = getFilterForId(busIndex, CAN_ID(frame));
@@ -75,7 +74,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	auto dlc = data->Frame.DLC;
 
 	// Push bus, ID and DLC
-	lua_pushinteger(ls, data->BusIndex);	// TODO: support multiple busses!
+	lua_pushinteger(ls, data->BusIndex);
 	lua_pushinteger(ls, CAN_ID(data->Frame));
 	lua_pushinteger(ls, dlc);
 
@@ -101,7 +100,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	lua_settop(ls, 0);
 }
 
-bool doOneLuaCanRx(LuaHandle& ls) {
+static bool doOneLuaCanRx(LuaHandle& ls) {
 	CanFrameData* data;
 
 	msg_t msg = filledBuffers.fetch(&data, TIME_IMMEDIATE);
