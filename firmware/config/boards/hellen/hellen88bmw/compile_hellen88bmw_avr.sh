@@ -8,4 +8,5 @@ export EXTRA_PARAMS="\
 -DSTM32_ADC_USE_ADC3=TRUE \
 "
 
-bash ../common_make.sh config/boards/hellen/hellen88bmw/meta-info.env
+
+bash ../common_make.sh hellen/hellen88bmw ARCH_STM32F4

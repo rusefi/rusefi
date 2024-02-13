@@ -2,4 +2,4 @@
 
 echo "Compiling for Cypress FM4 S6E2CxAH"
 
-bash ../common_make.sh config/boards/cypress/meta-info.env
+bash ../common_make.sh cypress custom_platform

@@ -6,4 +6,4 @@ export VAR_DEF_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=engine_type_e::PROTEUS_QC_TEST_
 
 # export DEBUG_LEVEL_OPT="-O0 -ggdb -g"
 
-bash ../common_make.sh config/boards/proteus/meta-info_f4.env
+bash ../common_make.sh proteus ARCH_STM32F4

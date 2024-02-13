@@ -5,6 +5,7 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # This is S105 board
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_S105
+SHORT_BOARD_NAME=s105
 
 # This board has no LSE and HSE oscillators
 DDEFS += -DSTM32_HSE_ENABLED=FALSE
