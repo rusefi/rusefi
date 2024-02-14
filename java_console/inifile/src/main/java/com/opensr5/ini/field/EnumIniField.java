@@ -159,7 +159,7 @@ public class EnumIniField extends IniField {
 
     public static class EnumKeyValueMap {
         private static final String STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS = "^\\d+\\s*=.*";
-        private static Pattern IS_KEY_VALUE_SYNTAX = Pattern.compile(STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS);
+        private static final Pattern IS_KEY_VALUE_SYNTAX = Pattern.compile(STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS);
 
         private final Map<Integer, String> keyValues;
 
@@ -198,7 +198,7 @@ public class EnumIniField extends IniField {
             return new EnumKeyValueMap(keyValues);
         }
 
-        private static boolean isKeyValueSyntax(String rawText) {
+        public static boolean isKeyValueSyntax(String rawText) {
             String interestingPart = getEnumValuesSection(rawText);
             return IS_KEY_VALUE_SYNTAX.matcher(interestingPart).matches();
         }
@@ -221,7 +221,7 @@ public class EnumIniField extends IniField {
     }
 
     @NotNull
-    private static String getEnumValuesSection(String rawText) {
+    public static String getEnumValuesSection(String rawText) {
         int interestingIndex = EnumIniField.ordinalIndexOf(rawText, ",", 4);
         // yes that could have been done with a regex as well
         return rawText.substring(interestingIndex + /*skipping comma*/1).trim();
