@@ -6,10 +6,6 @@ defaultTasks 'jar'
 
 apply from: '../../java_tools/dependencies.gradle'
 
-dependencies {
-    testImplementation global_libs.junit
-}
-
 jar {
     destinationDirectory = file( '$rootDir/../..' )
     manifest {
