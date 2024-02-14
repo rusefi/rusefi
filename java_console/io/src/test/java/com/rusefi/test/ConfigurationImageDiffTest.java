@@ -2,12 +2,11 @@ package com.rusefi.test;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.core.Pair;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static com.rusefi.ConfigurationImageDiff.findDifferences;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
