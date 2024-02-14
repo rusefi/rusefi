@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static com.rusefi.AssertCompatibility.assertEquals;
 
 public class StateDictionaryGeneratorTest {
     @Test

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static com.rusefi.AssertCompatibility.assertEquals;
 
 public class LiveDataProcessorTest {
     @Test
