@@ -13,6 +13,8 @@ echo "HW CI build [$HW_FOLDER][$HW_TARGET]"
 
 cd firmware
 
+export BOARD_META_PATH=$(bash bin/find_meta_info.sh ${HW_FOLDER} ${HW_TARGET})
+
 ./gen_live_documentation.sh
 ./gen_config_board.sh $HW_FOLDER $HW_TARGET
 
@@ -23,4 +25,4 @@ cd ..
 export EXTRA_2_PARAMS=-DHARDWARE_CI
 
 echo Build Firmware
-misc/jenkins/compile_other_versions/compile.sh $HW_FOLDER $HW_TARGET
+misc/jenkins/compile_other_versions/compile.sh
