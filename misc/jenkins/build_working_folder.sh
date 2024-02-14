@@ -5,25 +5,24 @@
 #
 # LTS: at some we had a dream of Long-term support branches. As of Jan 2024 this is not being used
 #
-# export FOLDER="temp/rusefi.999.hello" ; export BUNDLE_FULL_NAME=rusefi_test ; export INI_FILE_OVERRIDE=firmware/tunerstudio/generated/rusefi_uaefi.ini ; bash misc/jenkins/build_working_folder.sh
+# BUNDLE_NAME="uaefi" LTS="true" REF="ltsbranch"  bash misc/jenkins/build_working_folder.sh
 #
 
 set -e
 
-if [[ -z "$FOLDER" ]]; then
-    echo "FOLDER variable not defined"
+if [ -z "$BUNDLE_NAME" ]; then
+    echo "BUNDLE_NAME variable not defined"
     exit -1
 fi
 
-if [[ -z "BUNDLE_FULL_NAME" ]]; then
-    echo "BUNDLE_FULL_NAME variable not defined"
-    exit -1
+if [ "$LTS" = "true" -a -n "$REF" ]; then
+  FOLDER="temp/rusefi.${REF}.${BUNDLE_NAME}"
+else
+  FOLDER="temp/rusefi.snapshot.${BUNDLE_NAME}"
 fi
 
-if [ -z $INI_FILE_OVERRIDE ]; then
-    echo "$SCRIPT_NAME: No ini_file specified!"
-    exit -1
-fi
+INI_FILE_OVERRIDE="firmware/tunerstudio/generated/rusefi_$SHORT_BOARD_NAME.ini"
+BUNDLE_FULL_NAME="rusefi_bundle_${BUNDLE_NAME}"
 
 echo "$SCRIPT_NAME: Will use $INI_FILE_OVERRIDE"
 

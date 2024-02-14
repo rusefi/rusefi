@@ -2,7 +2,7 @@
 
 # this script is supposed to be executed from within 'firmware' folder
 
-BOARD_META_PATH=$1
+export BOARD_META_PATH=${1:-$BOARD_META_PATH}
 . config/boards/common_script_read_meta_env.inc $BOARD_META_PATH
 
 # fail on error
@@ -21,6 +21,7 @@ echo "Entering $SCRIPT_NAME with board [$PROJECT_BOARD] and CPU [$PROJECT_CPU] a
 mkdir -p .dep
 # todo: start using env variable for number of threads or for '-r'
 make -j$(nproc) -r
+
 [ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 
 if [ ! -z $POST_BUILD_SCRIPT ]; then
