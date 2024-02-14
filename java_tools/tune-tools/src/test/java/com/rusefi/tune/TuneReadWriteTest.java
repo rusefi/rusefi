@@ -11,7 +11,6 @@ import com.rusefi.tools.tune.TS2C;
 import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -32,9 +31,9 @@ public class TuneReadWriteTest {
     @Test
     public void testIniReader() throws IOException {
         assertTrue(model.getTables().contains("fueltable"));
-        Assert.assertEquals(21, model.getTables().size());
-        Assert.assertEquals("fuelRpmBins", model.getXBin("FUELTable"));
-        Assert.assertEquals("fuelLoadBins", model.getYBin("fuelTable"));
+        assertEquals(21, model.getTables().size());
+        assertEquals("fuelRpmBins", model.getXBin("FUELTable"));
+        assertEquals("fuelLoadBins", model.getYBin("fuelTable"));
 
         String tableName = "ignitionIatCorrTable";
         String xRpmBinsName = model.getXBin(tableName);
@@ -44,10 +43,10 @@ public class TuneReadWriteTest {
 
         CurveData xRpmCurve = CurveData.valueOf(TUNE_NAME, xRpmBinsName, model);
 
-        Assert.assertEquals("static const float hardCodedignitionIatCorrRpmBins[16] = " +
+        assertEquals("static const float hardCodedignitionIatCorrRpmBins[16] = " +
                 "{880.0, 1260.0, 1640.0, 2020.0, 2400.0, 2780.0, 3000.0, 3380.0, 3760.0, 4140.0, 4520.0, 5000.0, 5700.0, 6500.0, 7200.0, 8000.0};\n", xRpmCurve.getCsourceCode());
 
-        Assert.assertEquals("static void cannedignitionIatCorrRpmBins() {\n" +
+        assertEquals("static void cannedignitionIatCorrRpmBins() {\n" +
                 "\tstatic const float hardCodedignitionIatCorrRpmBins[16] = {880.0, 1260.0, 1640.0, 2020.0, 2400.0, 2780.0, 3000.0, 3380.0, 3760.0, 4140.0, 4520.0, 5000.0, 5700.0, 6500.0, 7200.0, 8000.0};\n" +
                 "\tcopyArray(config->ignitionIatCorrRpmBins, hardCodedignitionIatCorrRpmBins);\n" +
                 "}\n" +
@@ -147,7 +146,7 @@ public class TuneReadWriteTest {
 
         Constant flow = tsTune.findPage().findParameter("injector_flow");
         assertNotNull(flow);
-        Assert.assertEquals("2", flow.getDigits());
+        assertEquals("2", flow.getDigits());
 
         ConfigurationImage tsBinaryData = tsTune.asImage(model, LEGACY_TOTAL_CONFIG_SIZE);
 
@@ -171,11 +170,11 @@ public class TuneReadWriteTest {
 
         Constant batteryCorrection = tuneFromBinary.findPage().findParameter("injector_battLagCorrBins");
         assertNotNull(batteryCorrection);
-        Assert.assertEquals("2", batteryCorrection.getDigits());
+        assertEquals("2", batteryCorrection.getDigits());
 
         Constant flow = tuneFromBinary.findPage().findParameter("injector_flow");
         assertNotNull(flow);
-        Assert.assertEquals("2", flow.getDigits());
+        assertEquals("2", flow.getDigits());
 
         Constant nonEmptyFormula = tuneFromBinary.findPage().findParameter("fsioFormulas1");
         assertNotNull(nonEmptyFormula);
@@ -188,7 +187,7 @@ public class TuneReadWriteTest {
 
         Constant enumField = tuneFromBinary.findPage().findParameter("acRelayPin");
         // quotes are expected
-        Assert.assertEquals("\"NONE\"", enumField.getValue());
+        assertEquals("\"NONE\"", enumField.getValue());
 
         // and now reading that XML back
         Msq tuneFromFile = Msq.readTune(fileName);

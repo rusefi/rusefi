@@ -2,13 +2,14 @@ package com.rusefi.tune;
 
 import com.rusefi.tools.tune.TS2C;
 import com.rusefi.tools.tune.TableData;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TableDataTest {
     @Test
