@@ -4,4 +4,4 @@
 
 export PROTEUS_LEGACY=TRUE
 
-bash ../common_make.sh config/boards/proteus/meta-info_f7.env
+bash ../common_make.sh config/boards/proteus/meta-info-proteus_legacy.env

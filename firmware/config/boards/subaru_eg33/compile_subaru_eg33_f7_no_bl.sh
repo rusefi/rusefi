@@ -10,4 +10,4 @@
 # This is no-bootloader version
 #export USE_OPENBLT=yes
 
-bash ../common_make.sh config/boards/subaru_eg33/meta-info.env
+bash ../common_make.sh config/boards/subaru_eg33/meta-info-subaru_eg33_f7_no_bl.env
