@@ -150,9 +150,6 @@ jobs:
             frankenso_na6,
             kinetis,
             mre_f4,
-            mre_f4_no_openblt,
-            mre_f4_debug,
-            mre_f4_recovery,
             mre_f7,
             prometheus_405,
             prometheus_469,
@@ -331,20 +328,6 @@ jobs:
           - build-target: mre_f4
             folder: config/boards/microrusefi
             short-board-name: mre_f4
-
-          - build-target: mre_f4_no_openblt
-            folder: config/boards/microrusefi
-            short-board-name: mre_f4
-
-          - build-target: mre_f4_debug
-            folder: config/boards/microrusefi
-            short-board-name: mre_f4
-            skip-rate: 100
-
-          - build-target: mre_f4_recovery
-            folder: config/boards/microrusefi
-            short-board-name: mre_f4
-            skip-rate: 100
 
           - build-target: mre_f7
             folder: config/boards/microrusefi
