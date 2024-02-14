@@ -15,4 +15,4 @@ export EXTRA_PARAMS="-DSTM32F767xx \
  -DEFI_ENABLE_ASSERTS=FALSE \
  -DCH_DBG_ENABLE_CHECKS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
 
-bash ../common_make.sh config/boards/nucleo_f767/meta-info.env
+bash ../common_make.sh config/boards/nucleo_f767/meta-info-stm32f767_nucleo.env

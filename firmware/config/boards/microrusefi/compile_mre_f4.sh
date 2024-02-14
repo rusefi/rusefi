@@ -7,4 +7,4 @@
 
 export USE_OPENBLT=yes
 
-bash ../common_make.sh config/boards/microrusefi/meta-info_f4.env
+bash ../common_make.sh config/boards/microrusefi/meta-info-mre_f4.env
