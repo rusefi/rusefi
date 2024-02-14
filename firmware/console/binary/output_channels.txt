@@ -75,7 +75,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 
 	uint8_t autoscale injectorDutyCycle;@@GAUGE_NAME_FUEL_INJ_DUTY@@;"%",{1/2}, 0, 0, 0, 0
-	uint8_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/2}, 0, 0, 0, 1
 	int16_t injectionOffset;@@GAUGE_NAME_FUEL_INJECTION_TIMING@@;"deg", 1, 0, 0, 0, 0
 
 !  Corrections
@@ -105,6 +104,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	uint16_t tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
+	uint16_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/10}, 0, 0, 0, 1
 
 ! integration magic: TS requires exact 'seconds' name
 	uint32_t seconds;@@GAUGE_NAME_UPTIME@@;"sec", 1, 0, 0, 0, 0
