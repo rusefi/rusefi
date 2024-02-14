@@ -16,27 +16,23 @@ public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
     private boolean hadError = false;
 
     public static void parseDefinitionFile(ParseTreeListener listener, String filePath) throws IOException {
-        SystemOut.println("Parsing file (Antlr) " + filePath);
-
         CharStream in = new ANTLRInputStream(Files.newInputStream(Paths.get(filePath)));
 
         long start = System.nanoTime();
         parse(listener, in);
         double durationMs = (System.nanoTime() - start) / 1e6;
 
-        System.out.printf("Successfully parsed (Antlr) %s in %.2f ms\n", filePath, durationMs);
+        System.out.printf("Parsed %s in %.2f ms\n", filePath, durationMs);
     }
 
     public static void parseDefinitionString(ParseTreeListener listener, String content) {
-        SystemOut.println("Parsing string (Antlr)");
-
         CharStream in = new ANTLRInputStream(content);
 
         long start = System.nanoTime();
         parse(listener, in);
         double durationMs = (System.nanoTime() - start) / 1e6;
 
-        System.out.printf("Successfully parsed (Antlr) in %.2f ms\n", durationMs);
+        System.out.printf("Parsed input string in %.2f ms\n", durationMs);
     }
 
     private static void parse(ParseTreeListener listener, CharStream in) {
