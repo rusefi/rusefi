@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.rusefi.VariableRegistry.*;
-import static org.junit.Assert.assertEquals;
+import static com.rusefi.AssertCompatibility.assertEquals;
 
 /**
  * 3/30/2015

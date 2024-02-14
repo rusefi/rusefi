@@ -7,11 +7,10 @@ import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.jetbrains.annotations.NotNull;
-import org.junit.function.ThrowingRunnable;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static com.rusefi.AssertCompatibility.assertEquals;
+import static com.rusefi.AssertCompatibility.assertThrows;
 
 public class OutputsTest {
     @Test

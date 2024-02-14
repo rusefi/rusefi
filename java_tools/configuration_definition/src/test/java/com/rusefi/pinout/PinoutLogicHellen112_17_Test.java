@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 
 import static com.rusefi.test.ConfigDefinitionTest.FIRMWARE;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
+import static com.rusefi.AssertCompatibility.assertEquals;
+import static com.rusefi.AssertCompatibility.assertFalse;
 
 public class PinoutLogicHellen112_17_Test {
     @Test

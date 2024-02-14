@@ -9,8 +9,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static com.rusefi.AssertCompatibility.assertNotNull;
+import static com.rusefi.AssertCompatibility.assertTrue;
 
 public class ConfigDefinitionTest {
     public static final String FIRMWARE = "../../firmware";

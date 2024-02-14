@@ -1,6 +1,6 @@
 package com.rusefi.test;
 
-import static org.junit.Assert.assertEquals;
+import static com.rusefi.AssertCompatibility.assertEquals;
 
 import com.rusefi.ReaderStateImpl;
 

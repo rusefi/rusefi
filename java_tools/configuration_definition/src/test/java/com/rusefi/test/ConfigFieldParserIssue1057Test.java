@@ -4,7 +4,7 @@ import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.JavaFieldsConsumer;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static com.rusefi.AssertCompatibility.assertEquals;
 
 public class ConfigFieldParserIssue1057Test {
     @Test

@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static org.junit.Assert.assertEquals;
+import static com.rusefi.AssertCompatibility.assertEquals;
 
 public class PinoutLogicTest {
     @Test

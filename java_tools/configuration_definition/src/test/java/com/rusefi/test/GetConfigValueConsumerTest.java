@@ -3,11 +3,10 @@ package com.rusefi.test;
 import com.rusefi.MaybeSemicolonWasMissedException;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.GetConfigValueConsumer;
-import org.junit.function.ThrowingRunnable;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static com.rusefi.AssertCompatibility.assertEquals;
+import static com.rusefi.AssertCompatibility.assertThrows;
 
 public class GetConfigValueConsumerTest {
   @Test

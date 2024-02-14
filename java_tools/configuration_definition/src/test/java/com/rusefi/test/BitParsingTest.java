@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 
-import static org.junit.Assert.assertTrue;
+import static com.rusefi.AssertCompatibility.assertTrue;
 
 public class BitParsingTest {
     @Test

@@ -5,7 +5,7 @@ import com.rusefi.output.GetOutputValueConsumer;
 import com.rusefi.util.LazyFile;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static com.rusefi.AssertCompatibility.assertEquals;
 
 public class GetOutputValueConsumerTest {
     @Test
