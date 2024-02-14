@@ -19,8 +19,8 @@ import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import org.apache.http.HttpResponse;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,8 +30,7 @@ import java.util.concurrent.CountDownLatch;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.TestHelper.*;
 import static com.rusefi.Timeouts.SECOND;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FullServerTest {
     private static final Logging log = getLogging(FullServerTest.class);
@@ -113,7 +112,7 @@ public class FullServerTest {
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
             NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(NetworkConnector.Implementation.Unknown,
-                    TestHelper.TEST_TOKEN_1, TcpConnector.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
+                TestHelper.TEST_TOKEN_1, TcpConnector.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
             ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
             TestHelper.assertLatch("controllerRegistered. todo: this test should not depend on internet connection and having real .ini on rusEFI online", controllerRegistered);
@@ -127,8 +126,8 @@ public class FullServerTest {
 
             // start authenticator
             LocalApplicationProxy.startAndRun(localApplicationProxyContext, applicationRequest, httpPort,
-                    TcpIoStream.DisconnectListener.VOID,
-                    LocalApplicationProxy.ConnectionListener.VOID);
+                TcpIoStream.DisconnectListener.VOID,
+                LocalApplicationProxy.ConnectionListener.VOID);
 
 
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
@@ -162,7 +161,7 @@ public class FullServerTest {
             log.info("**************************************");
             assertLatch("applicationClosed", applicationClosed, 3 * applicationTimeout);
 
-            assertEquals("applications size", 0, backend.getApplications().size());
+            assertEquals(0, backend.getApplications().size(), "applications size");
         }
     }
 }
