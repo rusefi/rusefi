@@ -171,9 +171,18 @@ public class ReaderStateImpl implements ReaderState {
             EnumIniField.ParseBitRange bitRange = new EnumIniField.ParseBitRange().invoke(rawLine.getTokens()[3]);
             int totalCount = 1 << (bitRange.getBitSize0() + 1);
             List<String> enums = Arrays.asList(rawLine.getTokens()).subList(4, rawLine.getTokens().length);
-            int enumCount = EnumIniField.EnumKeyValueMap.isKeyValueSyntax(EnumIniField.getEnumValuesSection(tunerStudioLine)) ? enums.size() / 2 : enums.size();
+            boolean isKeyValueSyntax = EnumIniField.EnumKeyValueMap.isKeyValueSyntax(EnumIniField.getEnumValuesSection(tunerStudioLine));
+            int enumCount = isKeyValueSyntax ? enums.size() / 2 : enums.size();
             if (enumCount > totalCount)
                 throw new IllegalStateException(name + ": Too many options in " + tunerStudioLine + " capacity=" + totalCount + "/size=" + enums.size());
+            boolean looksLikeListVariableSyntax = enumCount == 1;
+            if (!isKeyValueSyntax && !looksLikeListVariableSyntax) {
+                StringBuilder sb = new StringBuilder(tunerStudioLine);
+                for (int i = enumCount; i < totalCount; i++) {
+                    sb.append(", ").append(InvalidConstant.QUOTED_INVALID);
+                }
+                tunerStudioLine = sb.toString();
+            }
 /*
     this does not work right now since smt32 and kinetis enum sizes could be different but same .txt file
     todo: identify relevant bitsizes and use variables for bitsizes?
