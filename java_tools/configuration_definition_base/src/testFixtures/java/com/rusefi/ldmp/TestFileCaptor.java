@@ -5,8 +5,8 @@ import com.rusefi.util.LazyFile;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static com.rusefi.AssertCompatibility.assertEquals;
+import static com.rusefi.AssertCompatibility.assertNotNull;
 
 public class TestFileCaptor implements LazyFile.LazyFileFactory {
     Map<String, StringBufferLazyFile> fileCapture = new HashMap<>();
