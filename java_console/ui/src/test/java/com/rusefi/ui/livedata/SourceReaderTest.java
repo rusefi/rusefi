@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class SourceReaderTest {
     @Test

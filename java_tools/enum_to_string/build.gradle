@@ -24,7 +24,6 @@ shadowJar {
 
     dependencies {
         exclude(dependency(global_libs.jsr305))
-        exclude(dependency(global_libs.junit))
         exclude(dependency(global_libs.annotations))
     }
 }

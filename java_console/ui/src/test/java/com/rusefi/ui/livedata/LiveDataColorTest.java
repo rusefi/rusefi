@@ -14,8 +14,8 @@ import java.net.URISyntaxException;
 
 import static com.rusefi.livedata.LiveDataParserPanel.getContentOrNull;
 import static com.rusefi.ui.LiveDataPane.CPP_SUFFIX;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Ignore // todo: https://github.com/rusefi/rusefi/issues/4669
 public class LiveDataColorTest {
@@ -40,7 +40,7 @@ public class LiveDataColorTest {
 
     private void testSpecificFile(String fileName) throws IOException {
         String sourceCode = getContentOrNull(getClass(), fileName);
-        assertNotNull("Not found: sourceCode for " + fileName, sourceCode);
+        assertNotNull(sourceCode, "Not found: sourceCode for " + fileName);
 
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
 

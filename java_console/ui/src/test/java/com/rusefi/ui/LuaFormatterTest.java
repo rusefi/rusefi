@@ -3,7 +3,7 @@ package com.rusefi.ui;
 import neoe.formatter.lua.LuaFormatter;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LuaFormatterTest {
     @Test

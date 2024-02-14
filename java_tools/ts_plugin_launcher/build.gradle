@@ -51,7 +51,6 @@ shadowJar {
    dependencies in resulting jar
   */
   dependencies {
-      exclude(dependency(global_libs.junit))
       exclude(dependency(global_libs.annotations))
       exclude(dependency(ts_plugin_libs.launcher_api))
   }
