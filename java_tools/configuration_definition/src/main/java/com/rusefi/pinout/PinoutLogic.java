@@ -22,8 +22,6 @@ public class PinoutLogic {
 
     private static final String NONE = "NONE";
     private static final String QUOTED_NONE = quote(NONE);
-    private static final String INVALID = "INVALID";
-    public static final String QUOTED_INVALID = quote(INVALID);
 
     private final ArrayList<PinState> globalList = new ArrayList<>();
     private final Map</*id*/String, /*tsName*/String> tsNameById = new TreeMap<>();
@@ -114,7 +112,7 @@ public class PinoutLogic {
             if (key.equals(nothingName)) {
                 arrayFormat.append(QUOTED_NONE);
             } else if (value == null) {
-                arrayFormat.append(QUOTED_INVALID);
+                arrayFormat.append(InvalidConstant.QUOTED_INVALID);
             } else {
                 String quotedValue = quote(value);
                 arrayFormat.append(quotedValue);
