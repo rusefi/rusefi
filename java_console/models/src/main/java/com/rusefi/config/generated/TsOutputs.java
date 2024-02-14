@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 08 03:05:37 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Feb 14 21:56:48 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -222,7 +222,7 @@ public class TsOutputs {
 	public static final Field VVTPOSITIONB1I = Field.create("VVTPOSITIONB1I", 40, FieldType.INT16).setScale(0.02).setBaseOffset(0);
 	public static final Field ACTUALLASTINJECTION = Field.create("ACTUALLASTINJECTION", 42, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
 	public static final Field INJECTORDUTYCYCLE = Field.create("INJECTORDUTYCYCLE", 44, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field VEVALUE = Field.create("VEVALUE", 45, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_45 = Field.create("ALIGNMENTFILL_AT_45", 45, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONOFFSET = Field.create("INJECTIONOFFSET", 46, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ENGINEMAKECODENAMECRC16 = Field.create("ENGINEMAKECODENAMECRC16", 48, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field WALLFUELAMOUNT = Field.create("WALLFUELAMOUNT", 50, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -240,7 +240,7 @@ public class TsOutputs {
 	public static final Field FUELFLOWRATE = Field.create("FUELFLOWRATE", 72, FieldType.INT16).setScale(0.005).setBaseOffset(0);
 	public static final Field TPS2VALUE = Field.create("TPS2VALUE", 74, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field TUNECRC16 = Field.create("TUNECRC16", 76, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_78 = Field.create("ALIGNMENTFILL_AT_78", 78, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field VEVALUE = Field.create("VEVALUE", 78, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field SECONDS = Field.create("SECONDS", 80, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ENGINEMODE = Field.create("ENGINEMODE", 84, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field FIRMWAREVERSION = Field.create("FIRMWAREVERSION", 88, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -704,7 +704,7 @@ public class TsOutputs {
 	VVTPOSITIONB1I,
 	ACTUALLASTINJECTION,
 	INJECTORDUTYCYCLE,
-	VEVALUE,
+	ALIGNMENTFILL_AT_45,
 	INJECTIONOFFSET,
 	ENGINEMAKECODENAMECRC16,
 	WALLFUELAMOUNT,
@@ -722,7 +722,7 @@ public class TsOutputs {
 	FUELFLOWRATE,
 	TPS2VALUE,
 	TUNECRC16,
-	ALIGNMENTFILL_AT_78,
+	VEVALUE,
 	SECONDS,
 	ENGINEMODE,
 	FIRMWAREVERSION,

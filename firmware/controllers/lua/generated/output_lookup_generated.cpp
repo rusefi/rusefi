@@ -152,9 +152,6 @@ float getOutputValueByName(const char *name) {
 // injectorDutyCycle
 		case -354325031:
 			return engine->outputChannels.injectorDutyCycle;
-// veValue
-		case 1933507837:
-			return engine->outputChannels.veValue;
 // injectionOffset
 		case -243031057:
 			return engine->outputChannels.injectionOffset;
@@ -206,6 +203,9 @@ float getOutputValueByName(const char *name) {
 // tuneCrc16
 		case -1158359776:
 			return engine->outputChannels.tuneCrc16;
+// veValue
+		case 1933507837:
+			return engine->outputChannels.veValue;
 // seconds
 		case -1962923820:
 			return engine->outputChannels.seconds;

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 08 03:05:37 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Feb 14 21:56:48 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -279,11 +279,11 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> injectorDutyCycle = (uint8_t)0;
 	/**
-	 * @@GAUGE_NAME_FUEL_VE@@
-	 * units: ratio
+	 * need 4 byte alignment
+	 * units: units
 	 * offset 45
 	 */
-	scaled_channel<uint8_t, 2, 1> veValue = (uint8_t)0;
+	uint8_t alignmentFill_at_45[1];
 	/**
 	 * @@GAUGE_NAME_FUEL_INJECTION_TIMING@@
 	 * units: deg
@@ -382,11 +382,11 @@ struct output_channels_s {
 	 */
 	uint16_t tuneCrc16 = (uint16_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * @@GAUGE_NAME_FUEL_VE@@
+	 * units: ratio
 	 * offset 78
 	 */
-	uint8_t alignmentFill_at_78[2];
+	scaled_channel<uint16_t, 10, 1> veValue = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_UPTIME@@
 	 * units: sec
@@ -1278,4 +1278,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 796);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 08 03:05:37 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Feb 14 21:56:48 UTC 2024
