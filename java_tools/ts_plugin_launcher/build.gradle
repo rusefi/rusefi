@@ -14,8 +14,6 @@ dependencies {
   implementation project(':autoupdate')
   implementation ts_plugin_libs.launcher_api
   implementation global_libs.commons_logging
-
-  testImplementation global_libs.junit
 }
 
 def jarName = 'rusefi_ts_plugin_launcher'
