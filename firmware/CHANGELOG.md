@@ -44,6 +44,8 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - Honda CBR 600 cam decoder #5909
+ - boosted applications to log VE above 127
+ - removing confusing numeric options from enumerable drop downs #5942
 
 ### Removed
  - Narrow to Wideband approximation
