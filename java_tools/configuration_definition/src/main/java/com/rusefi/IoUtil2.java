@@ -49,7 +49,7 @@ public class IoUtil2 {
         long crc32 = 0;
         for (String fileName : inputFileNames) {
             long c = getCrc32(fileName) & 0xffffffffL;
-            SystemOut.println("CRC32 from " + fileName + " = " + c);
+            // SystemOut.println("CRC32 from " + fileName + " = " + c);
             crc32 ^= c;
         }
         SystemOut.println("CRC32 from all input files = " + crc32);

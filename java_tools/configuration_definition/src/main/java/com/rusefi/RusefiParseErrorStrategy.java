@@ -24,7 +24,7 @@ public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
         parse(listener, in);
         double durationMs = (System.nanoTime() - start) / 1e6;
 
-        SystemOut.println("Successfully parsed (Antlr) " + filePath + " in " + durationMs + "ms");
+        System.out.printf("Successfully parsed (Antlr) %s in %.2f ms", filePath, durationMs);
     }
 
     public static void parseDefinitionString(ParseTreeListener listener, String content) {
@@ -36,7 +36,7 @@ public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
         parse(listener, in);
         double durationMs = (System.nanoTime() - start) / 1e6;
 
-        SystemOut.println("Successfully parsed (Antlr) in " + durationMs + "ms");
+        System.out.printf("Successfully parsed (Antlr) in %.2f ms", durationMs);
     }
 
     private static void parse(ParseTreeListener listener, CharStream in) {

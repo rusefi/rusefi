@@ -27,7 +27,7 @@ public class TriggerWheelTSLogic {
 
 
         TriggerWheelInfo.readWheels(folder, wheelInfo -> {
-            System.out.println("onWheel " + wheelInfo.getTriggerName());
+            // System.out.println("onWheel " + wheelInfo.getTriggerName());
 
             if (!wheelInfo.isHardcodedOperationMode()) {
                 appendOrIfNotEmpty(triggerTypesWithoutKnownLocation);
