@@ -3,8 +3,10 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.core.Pair;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.output.*;
+import com.rusefi.parse.TokenUtil;
 import com.rusefi.parse.TypesHelper;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
@@ -146,20 +148,20 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     private void handleCustomLine(String customLineWithPrefix) {
-        String line = customLineWithPrefix.substring(CUSTOM.length() + 1).trim();
-        int index = line.indexOf(' ');
-        String name = line.substring(0, index);
+        String withoutPrefix = customLineWithPrefix.substring(CUSTOM.length() + 1).trim();
+        Pair<String, String> nameAndRest = TokenUtil.grabFirstTokenAndTheRest(withoutPrefix);
+        String name = nameAndRest.first;
 
         String autoEnumOptions = variableRegistry.getEnumOptionsForTunerStudio(enumsReader, name);
         if (autoEnumOptions != null) {
             variableRegistry.register(name + VariableRegistry.AUTO_ENUM_SUFFIX, autoEnumOptions);
         }
 
-        line = line.substring(index).trim();
-        index = line.indexOf(' ');
-        String customSize = line.substring(0, index);
+        String line = nameAndRest.second;
+        Pair<String, String> sizeAndRest = TokenUtil.grabFirstTokenAndTheRest(line);
+        String customSize = sizeAndRest.first;
 
-        String tunerStudioLine = line.substring(index).trim();
+        String tunerStudioLine = sizeAndRest.second;
         tunerStudioLine = variableRegistry.applyVariables(tunerStudioLine);
         int size = parseSize(customSize, line);
         tsCustomSize.put(name, size);
