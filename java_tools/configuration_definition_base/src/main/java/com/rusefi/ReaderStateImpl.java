@@ -145,8 +145,8 @@ public class ReaderStateImpl implements ReaderState {
         enumsReader.enums.putAll(newEnums);
     }
 
-    private void handleCustomLine(String line) {
-        line = line.substring(CUSTOM.length() + 1).trim();
+    private void handleCustomLine(String customLineWithPrefix) {
+        String line = customLineWithPrefix.substring(CUSTOM.length() + 1).trim();
         int index = line.indexOf(' ');
         String name = line.substring(0, index);
 
