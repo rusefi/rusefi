@@ -55,8 +55,8 @@ for BOARD in \
    "config/boards/s105 s105" \
    "config/boards/test-build-guards t-b-g" \
    "config/boards/frankenso_na6 frankenso_na6" \
-   "config/boards/prometheus prometheus_469" \
-   "config/boards/prometheus prometheus_405" \
+   "config/boards/prometheus/f469 prometheus_469" \
+   "config/boards/prometheus/f405 prometheus_405" \
    "config/boards/proteus proteus_f7" \
    "config/boards/proteus proteus_f4" \
    "config/boards/proteus proteus_h7" \

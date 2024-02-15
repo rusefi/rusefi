@@ -335,12 +335,12 @@ jobs:
             skip-rate: 90
 
           - build-target: prometheus_405
-            folder: config/boards/prometheus
+            folder: config/boards/prometheus/f405
             short-board-name: prometheus_405
             skip-rate: 90
 
           - build-target: prometheus_469
-            folder: config/boards/prometheus
+            folder: config/boards/prometheus/f469
             short-board-name: prometheus_469
             skip-rate: 90
 
