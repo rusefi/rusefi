@@ -258,7 +258,7 @@ static void doInteractive(LuaHandle& ls) {
 	lua_settop(ls, 0);
 }
 
-void invokeTick(LuaHandle& ls) {
+static void invokeTick(LuaHandle& ls) {
 	ScopePerf perf(PE::LuaTickFunction);
 
 	// run the tick function

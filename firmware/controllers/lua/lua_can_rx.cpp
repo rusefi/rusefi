@@ -101,6 +101,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 }
 
 static bool doOneLuaCanRx(LuaHandle& ls) {
+	ScopePerf perf(PE::LuaOneCanRxFunction);
 	CanFrameData* data;
 
 	msg_t msg = filledBuffers.fetch(&data, TIME_IMMEDIATE);
@@ -128,6 +129,7 @@ static bool doOneLuaCanRx(LuaHandle& ls) {
 }
 
 int doLuaCanRx(LuaHandle& ls) {
+	ScopePerf perf(PE::LuaAllCanRxFunction);
   int counter = 0;
 	// While it processed a frame, continue checking
 	while (doOneLuaCanRx(ls)) {
