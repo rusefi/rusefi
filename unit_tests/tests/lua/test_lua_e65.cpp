@@ -117,7 +117,7 @@ TEST(LuaE65, gearTorque2) {
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x019F);
 }
 
-TEST(LuaE65, getBitRangeMsgTest) {
+TEST(LuaE65, getBitRangeMsbTest) {
 	const char* realdata = GET_BIT_RANGE_MSB R"(
 
 	function testFunc()
@@ -126,6 +126,21 @@ TEST(LuaE65, getBitRangeMsgTest) {
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x740);
+}
+
+TEST(LuaE65, setBitRangeMsbTest) {
+	const char* realdata = PRINT_ARRAY ARRAY_EQUALS SET_BIT_RANGE_MSB R"(
+
+	function testFunc()
+				data = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+		     setBitRangeMsb(data, 6 * 8, 13, 0x740)
+    		expected = {0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x40, 0x00}
+	--	     print(arrayToString(data))
+	--	     print(arrayToString(expected))
+    		return equals(data, expected)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0);
 }
 
 TEST(LuaE65, gearTorque3) {

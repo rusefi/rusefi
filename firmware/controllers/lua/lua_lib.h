@@ -144,7 +144,7 @@ function setBitRangeMsb(data, totalBitIndex, bitWidth, value) \
 	local bitInByteIndex = totalBitIndex - byteIndex * 8 \
 	if (bitInByteIndex + bitWidth > 8) then \
 		local bitsToHandleNow = 8 - bitInByteIndex \
-		setBitRange(data, totalBitIndex + bitsToHandleNow, bitWidth - bitsToHandleNow, value >> bitsToHandleNow) \
+		setBitRangeMsb(data, totalBitIndex - bitsToHandleNow, bitWidth - bitsToHandleNow, value >> bitsToHandleNow) \
 		bitWidth = bitsToHandleNow \
 	end \
 	local mask = (1 << bitWidth) - 1 \
