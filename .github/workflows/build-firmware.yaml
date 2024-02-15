@@ -147,9 +147,9 @@ jobs:
             folder: config/boards/hellen/hellen64_miataNA6_94
             ini-file: fome_hellenNA6.ini
 
-          # - build-target: hellen128
-          #   folder: config/boards/hellen/hellen128
-          #   ini-file: fome_hellen128mercedes.ini
+          - build-target: hellen128
+            folder: config/boards/hellen/hellen128
+            ini-file: fome_hellen128mercedes.ini
 
           # - build-target: hellen121vag
           #   folder: config/boards/hellen/hellen121vag
