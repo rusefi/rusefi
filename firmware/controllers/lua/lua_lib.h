@@ -107,7 +107,7 @@ function getBitRange(data, bitIndex, bitWidth) \n\
 	return (value >> shift) & mask \n\
 end \n\
 "
-// todo: do we have a defect with indexing here?!
+
 #define GET_BIT_RANGE_MSB " \
 function getBitRangeMsb(data, bitIndex, bitWidth) \n\
 	local byteIndex = bitIndex >> 3 \n\

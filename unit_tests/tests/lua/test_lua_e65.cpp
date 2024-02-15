@@ -99,11 +99,11 @@ TEST(LuaE65, offtopicTestGetBitRangeMsb) {
 	const char* realdata = GET_BIT_RANGE_MSB R"(
 
 	function testFunc()
-		data = {0x9F, 0x01, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
+		data = {0x9F, 0x41, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
 		return getBitRangeMsb(data, 12, 12)
 	end)";
 
-	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x9F0);
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x9F4);
 }
 
 TEST(LuaE65, gearTorque2) {
@@ -115,6 +115,17 @@ TEST(LuaE65, gearTorque2) {
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x019F);
+}
+
+TEST(LuaE65, getBitRangeMsgTest) {
+	const char* realdata = GET_BIT_RANGE_MSB R"(
+
+	function testFunc()
+		data = {0x9F, 0x01, 0x32, 0x20, 0x23, 0x67, 0x40, 0x00}
+		return getBitRangeMsb(data, 6 * 8, 13)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x740);
 }
 
 TEST(LuaE65, gearTorque3) {
@@ -140,7 +151,7 @@ TEST(LuaE65, sumChecksum) {
 	    canID = 0xA8
 		data = { 0xAD, 0x05, 0xA0, 0x05, 0x0F, 0x00, 0x02 }
 		checksum = bmwChecksum(canID, data, 1, 7)
-		return checksum; 
+		return checksum;
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x12);
