@@ -6,6 +6,7 @@ import com.rusefi.tracing.JsonOutput;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,7 +25,6 @@ import java.util.List;
 public class PerfTraceTool {
     private static final String ENUM_START_TAG = "enum_start_tag";
     private static final String ENUM_END_TAG = "enum_end_tag";
-    private static final String EOL = "\r\n";
 
     public static void readPerfTrace(String inputFileName, String outputFileName, String topClassLine, String stringType) throws IOException {
         List<String> enumNames = readEnums(inputFileName);
@@ -38,19 +38,19 @@ public class PerfTraceTool {
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
 
 
-        writer.write(topClassLine + EOL + EOL);
-
-        writer.write("public class EnumNames {" + EOL);
+        writer.write(topClassLine + "\n\n");
+        writer.write("// generated " + new Date() + " by " + PerfTraceTool.class + "\n");
+        writer.write("public class EnumNames {\n");
         writer.write("\t" +
                 stringType +
-                "[] TypeNames = {" + EOL);
+                "[] TypeNames = {" + "\n");
 
         for (String enumValue : enumNames)
-            writer.write("\t\"" + enumValue + "\"," + EOL);
+            writer.write("\t\"" + enumValue + "\",\n");
 
 
-        writer.write("\t};" + EOL);
-        writer.write("}" + EOL);
+        writer.write("\t};" + "\n");
+        writer.write("}" + "\n");
         writer.close();
 
         System.out.println("Done writing to " + outputFileName);
