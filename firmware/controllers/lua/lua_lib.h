@@ -107,7 +107,7 @@ function getBitRange(data, bitIndex, bitWidth) \n\
 	return (value >> shift) & mask \n\
 end \n\
 "
-
+// todo: do we have a defect with indexing here?!
 #define GET_BIT_RANGE_MSB " \
 function getBitRangeMsb(data, bitIndex, bitWidth) \n\
 	local byteIndex = bitIndex >> 3 \n\
@@ -123,6 +123,23 @@ end \n\
 
 #define SET_BIT_RANGE_LSB " \
 function setBitRange(data, totalBitIndex, bitWidth, value) \
+	local byteIndex = totalBitIndex >> 3 \
+	local bitInByteIndex = totalBitIndex - byteIndex * 8 \
+	if (bitInByteIndex + bitWidth > 8) then \
+		local bitsToHandleNow = 8 - bitInByteIndex \
+		setBitRange(data, totalBitIndex + bitsToHandleNow, bitWidth - bitsToHandleNow, value >> bitsToHandleNow) \
+		bitWidth = bitsToHandleNow \
+	end \
+	local mask = (1 << bitWidth) - 1 \
+	data[1 + byteIndex] = data[1 + byteIndex] & (~(mask << bitInByteIndex)) \
+	local maskedValue = value & mask \
+	local shiftedValue = maskedValue << bitInByteIndex \
+	data[1 + byteIndex] = data[1 + byteIndex] | shiftedValue \
+end \n\
+"
+
+#define SET_BIT_RANGE_MSB " \
+function setBitRangeMsb(data, totalBitIndex, bitWidth, value) \
 	local byteIndex = totalBitIndex >> 3 \
 	local bitInByteIndex = totalBitIndex - byteIndex * 8 \
 	if (bitInByteIndex + bitWidth > 8) then \
