@@ -1,6 +1,8 @@
 ifeq ($(TRGT),)
 	UNAME_S := $(shell uname -s)
 	UNAME_SP := $(shell uname -sp)
+$(info UNAME_SP:          $(UNAME_SP))
+
 	ifeq ($(UNAME_S),Darwin)
 		COMPILER_PLATFORM = arm-gnu-toolchain-11.3.rel1-darwin-x86_64-arm-none-eabi
 	else ifeq ($(UNAME_SP),"Linux x86_64")
