@@ -165,7 +165,7 @@ public class LuaScriptPanel {
                 try {
                     return Files.readString(new File(includeFullName).toPath());
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    return "ERROR reading " + name + ": " + e.getMessage();
                 }
             });
 
