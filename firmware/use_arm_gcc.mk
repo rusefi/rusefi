@@ -8,7 +8,7 @@ $(info UNAME_SP:          $(UNAME_SP))
 	else ifeq ($(UNAME_SP),Linux x86_64)
 		COMPILER_PLATFORM = arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi
 	else
-$(error Looks like your platform, $(shell uname -sp), doesn't have a supported compiler!)
+$(error Looks like your platform, $(UNAME_SP), doesn't have a supported compiler!)
 	endif
 
 	BUILD_TOOLS_DIR = $(PROJECT_DIR)/ext/build-tools/
