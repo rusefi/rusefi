@@ -17,7 +17,8 @@ import static com.rusefi.tools.ConsoleTools.startAndConnect;
 public class PerformanceTraceHelper {
     public static void grabPerformanceTrace(JComponent parent, BinaryProtocol bp) {
         if (bp == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
+            String msg = "Failed to locate serial ports";
+            JOptionPane.showMessageDialog(parent, msg, msg, JOptionPane.ERROR_MESSAGE);
             return;
         }
         bp.executeCommand(Fields.TS_PERF_TRACE_BEGIN, "begin trace");
@@ -30,10 +31,13 @@ public class PerformanceTraceHelper {
                 throw new IllegalStateException("Unexpected packet, length=" + (packet != null ? 0 : packet.length));
 
             List<Entry> data = Entry.parseBuffer(packet);
-
+            if (data.isEmpty()) {
+                String msg = "Empty PERF_TRACE response";
+                JOptionPane.showMessageDialog(parent, msg, msg, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             int rpm = RpmModel.getInstance().getValue();
             String fileName = FileLog.getDate() + "_rpm_" + rpm + "_rusEFI_trace" + ".json";
-
 
             JsonOutput.writeToStream(data, new FileOutputStream(fileName));
         } catch (IOException | InterruptedException e1) {
