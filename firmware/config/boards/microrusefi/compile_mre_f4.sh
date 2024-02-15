@@ -5,4 +5,4 @@
 # ./gen_config_board.sh config/boards/microrusefi mre_f4
 #
 
-bash ../common_make.sh config/boards/microrusefi/meta-info-mre_f4.env
+bash ../common_script.sh config/boards/microrusefi/meta-info-mre_f4.env

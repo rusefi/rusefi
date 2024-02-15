@@ -7,4 +7,4 @@ echo "Entering $SCRIPT_NAME"
 
 # Nucleo boards use MCO signal from St-Link and NOT oscillator - these need STM32_HSE_BYPASS
 
-bash ../common_make.sh config/boards/nucleo_f767/meta-info-stm32f767_nucleo.env
+bash ../common_script.sh config/boards/nucleo_f767/meta-info-stm32f767_nucleo.env

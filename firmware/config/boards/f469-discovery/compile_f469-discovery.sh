@@ -1,3 +1,3 @@
 #!/bin/bash
 
-bash ../common_make.sh config/boards/f469-discovery/meta-info.env
+bash ../common_script.sh config/boards/f469-discovery/meta-info.env

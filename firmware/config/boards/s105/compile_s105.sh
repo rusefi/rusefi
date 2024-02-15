@@ -1,3 +1,4 @@
 #!/bin/bash
 
-bash ../common_make.sh config/boards/s105/meta-info.env
+bash ../common_script.sh config/boards/s105/meta-info.env
+
