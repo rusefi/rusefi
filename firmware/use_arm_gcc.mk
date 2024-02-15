@@ -1,9 +1,12 @@
 ifeq ($(TRGT),)
 	UNAME_S := $(shell uname -s)
+	UNAME_SP := $(shell uname -sp)
 	ifeq ($(UNAME_S),Darwin)
 		COMPILER_PLATFORM = arm-gnu-toolchain-11.3.rel1-darwin-x86_64-arm-none-eabi
-	else
+	else ifeq ($(UNAME_SP),"Linux x86_64")
 		COMPILER_PLATFORM = arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi
+	else
+$(error Looks like your platform, $(shell uname -sp), doesn't have a supported compiler!)
 	endif
 
 	BUILD_TOOLS_DIR = $(PROJECT_DIR)/ext/build-tools/
