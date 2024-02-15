@@ -5,7 +5,7 @@ $(info UNAME_SP:          $(UNAME_SP))
 
 	ifeq ($(UNAME_S),Darwin)
 		COMPILER_PLATFORM = arm-gnu-toolchain-11.3.rel1-darwin-x86_64-arm-none-eabi
-	else ifeq ($(UNAME_SP),"Linux x86_64")
+	else ifeq ($(UNAME_SP),Linux x86_64)
 		COMPILER_PLATFORM = arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi
 	else
 $(error Looks like your platform, $(shell uname -sp), doesn't have a supported compiler!)
