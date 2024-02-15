@@ -2024,10 +2024,6 @@ menuDialog = main
 
 		subMenu = auxLinearSensors,			"Aux Sensors"
 
-  menu = "3D &Maps"
-    subMenu = veTableMap,    "Fuel Table", 0, {isInjectionEnabled}
-		subMenu = ignitionTableMap,			"Ignition advance", 0, {isIgnitionEnabled}
-
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
 		subMenu = ioTest,					"Bench test"
