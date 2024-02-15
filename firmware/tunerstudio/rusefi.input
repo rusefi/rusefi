@@ -1793,6 +1793,7 @@ menuDialog = main
 
 		# Air mass model
 		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1}
+    subMenu = veTableMap,    "VE Table", 0, {isInjectionEnabled}
 
 		groupMenu = "VE blend tables"
 		groupChildMenu = veBlend1Cfg,		"VE blend 1 bias", 0, {isInjectionEnabled}
@@ -1839,6 +1840,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled}
+		subMenu = ignitionTableMap,			"Ignition advance", 0, {isIgnitionEnabled}
 		subMenu = cltTimingCorrCurve,			"Ign CLT correction", 0, {isIgnitionEnabled == 1}
 		subMenu = ignitionIatCorrTableTbl,	"Ign IAT correction", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
