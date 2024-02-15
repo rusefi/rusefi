@@ -168,6 +168,7 @@ static int validateCanChannelAndConvertFromHumanIntoZeroIndex(lua_State* l) {
 }
 
 static int lua_txCan(lua_State* l) {
+	ScopePerf perf(PE::LuaOneCanTxFunction);
   int bus;
   int id;
   int ext;

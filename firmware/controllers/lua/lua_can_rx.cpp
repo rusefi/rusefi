@@ -56,6 +56,7 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 }
 
 static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
+	ScopePerf perf(PE::LuaOneCanRxCallback);
 	if (data->Callback == NO_CALLBACK) {
 		// No callback, use catch-all function
 		lua_getglobal(ls, "onCanRx");

@@ -1,5 +1,5 @@
 package com.rusefi.tracing;
-// generated Thu Feb 15 09:37:27 EST 2024 by class com.rusefi.PerfTraceEnumGenerator
+// generated Thu Feb 15 09:45:57 EST 2024 by class com.rusefi.PerfTraceEnumGenerator
 public class EnumNames {
 	public static final String[] TypeNames = {
 	"INVALID",
@@ -54,5 +54,8 @@ public class EnumNames {
 	"LogTriggerTooth",
 	"LuaTickFunction",
 	"LuaOneCanRxFunction",
+	"LuaAllCanRxFunction",
+	"LuaOneCanRxCallback",
+	"LuaOneCanTxFunction",
 	};
 }
