@@ -5,6 +5,4 @@
 # ./gen_config_board.sh config/boards/microrusefi mre_f4
 #
 
-export USE_OPENBLT=yes
-
 bash ../common_make.sh config/boards/microrusefi/meta-info-mre_f4.env
