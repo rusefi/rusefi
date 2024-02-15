@@ -8,7 +8,8 @@ if [ -z "$1" ]; then
 fi
 
 BOARD_META_PATH=./$1
-export BOARD_DIR=${BOARD_META_PATH%/*}
+BOARD_META_DIR=${BOARD_META_PATH%/*}
+export BOARD_DIR=${BOARD_DIR:-$BOARD_META_DIR}
 
 if [ ! -f ${BOARD_META_PATH} ]; then
   echo "Read meta.env: The file was not found!"
@@ -21,12 +22,16 @@ fi
 
 echo "[META] Reading meta env from ${BOARD_META_PATH}"
 
-export SHORT_BOARD_NAME="$(grep "SHORT_BOARD_NAME=" ${BOARD_META_PATH} | cut -d'=' -f2)"
-export PROJECT_CPU="$(grep "BOARD_CPU=" ${BOARD_META_PATH} | cut -d'=' -f2)"
-export POST_BUILD_SCRIPT="$(grep "POST_BUILD_SCRIPT=" ${BOARD_META_PATH} | cut -d'=' -f2)"
+VARS=$(grep "=" "$BOARD_META_PATH")
 
-# todo: is PROJECT_BOARD always the same as SHORT_BOARD_NAME?
-export PROJECT_BOARD=${SHORT_BOARD_NAME}
+while IFS= read -r L; do
+		# get the key and delete all spaces
+    K=$(echo "$L" | cut -d '=' -f "-1" | tr -d ' ')
+		# get the value and delete any leading space
+    V=$(echo "$L" | cut -d '=' -f "2-" | awk '{$1=$1};1')
+		# put them together, closing the value in quotes
+		export $K="$V"
+done <<< "$VARS"
 
 echo "[META] PROJECT_BOARD=${PROJECT_BOARD}"
 echo "[META] PROJECT_CPU=${PROJECT_CPU}"
