@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd ..
-bash ../common_make.sh config/boards/hellen/hellen-honda-k/meta-info-hellen-honda-k.env
+bash ../common_script.sh config/boards/hellen/hellen-honda-k/meta-info-hellen-honda-k.env

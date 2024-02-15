@@ -1,3 +1,3 @@
 #!/bin/bash
 
-bash ../common_make.sh config/boards/atlas/meta-info.env
+bash ../common_script.sh config/boards/atlas/meta-info.env
