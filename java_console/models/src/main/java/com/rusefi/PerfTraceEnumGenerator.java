@@ -11,39 +11,43 @@ import java.util.List;
 
 /**
  * This tool generates C# or Java class based on enum values from C/C++ header related to rusEfi own Perf Trace
- *
+ * <p>
  * This allows developers to only edit C/C++ header yet see proper names in chrome://tracing JSON file
- *
+ * <p>
  * This is not used in runtime while profiling actual firmware
+ *
  * @see JsonOutput
  * @see EnumNames
- *
  * @see EnumNames
  * @see Entry
- *
  */
-public class PerfTraceTool {
+public class PerfTraceEnumGenerator {
     private static final String ENUM_START_TAG = "enum_start_tag";
     private static final String ENUM_END_TAG = "enum_end_tag";
 
-    public static void readPerfTrace(String inputFileName, String outputFileName, String topClassLine, String stringType) throws IOException {
+    public static void main(String[] args) throws IOException {
+        if (args.length != 2) {
+            System.err.println("Input and output file names expected");
+            System.exit(-1);
+        }
+        String inputFileName = args[0];
+        String outputFileName = args[1];
         List<String> enumNames = readEnums(inputFileName);
         System.out.println("Got enums: " + enumNames);
 
 
-        writeClass(outputFileName, enumNames, topClassLine, stringType);
+        writeClass(outputFileName, enumNames);
     }
 
-    private static void writeClass(String outputFileName, List<String> enumNames, String topClassLine, String stringType) throws IOException {
+    private static void writeClass(String outputFileName, List<String> enumNames) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
 
-
-        writer.write(topClassLine + "\n\n");
-        writer.write("// generated " + new Date() + " by " + PerfTraceTool.class + "\n");
+        writer.write("package com.rusefi.tracing;\n");
+        writer.write("// generated " + new Date() + " by " + PerfTraceEnumGenerator.class + "\n");
         writer.write("public class EnumNames {\n");
         writer.write("\t" +
-                stringType +
-                "[] TypeNames = {" + "\n");
+            "public static final String" +
+            "[] TypeNames = {" + "\n");
 
         for (String enumValue : enumNames)
             writer.write("\t\"" + enumValue + "\",\n");

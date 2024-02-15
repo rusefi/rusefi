@@ -1,5 +1,5 @@
 package com.rusefi.tracing;
-
+// generated Thu Feb 15 09:37:27 EST 2024 by class com.rusefi.PerfTraceEnumGenerator
 public class EnumNames {
 	public static final String[] TypeNames = {
 	"INVALID",
@@ -33,13 +33,13 @@ public class EnumNames {
 	"GetSpeedDensityFuel",
 	"WallFuelAdjust",
 	"MapAveragingTriggerCallback",
-	"AdcCallbackFastComplete",
+	"Unused1",
 	"SingleTimerExecutorScheduleByTimestamp",
 	"GetTimeNowUs",
 	"EventQueueExecuteCallback",
 	"PwmGeneratorCallback",
 	"TunerStudioHandleCrcCommand",
-	"PwmConfigTogglePwmState",
+	"Unused",
 	"PwmConfigStateChangeCallback",
 	"Temporary1",
 	"Temporary2",
@@ -52,5 +52,7 @@ public class EnumNames {
 	"GlobalUnlock",
 	"SoftwareKnockProcess",
 	"LogTriggerTooth",
+	"LuaTickFunction",
+	"LuaOneCanRxFunction",
 	};
 }

@@ -1,6 +1,6 @@
 package com.rusefi.tracing;
 
-import com.rusefi.PerfTraceTool;
+import com.rusefi.PerfTraceEnumGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,7 +12,7 @@ import java.util.List;
  * This class helps to write JSON files readable by chrome://tracing/
  * <p>
  * See https://github.com/catapult-project/catapult/blob/master/tracing/README.md
- * @see PerfTraceTool code generator for EnumNames.java
+ * @see PerfTraceEnumGenerator code generator for EnumNames.java
  */
 public class JsonOutput {
 

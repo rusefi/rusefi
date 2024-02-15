@@ -66,7 +66,6 @@ public class ConsoleTools {
         registerTool("headless", ConsoleTools::runHeadless, "Connect to rusEFI controller and start saving logs.");
         registerTool("basic-ui", BasicStartupFrame::runTool, "Basic UI");
 
-        registerTool("ptrace_enums", ConsoleTools::runPerfTraceTool, "NOT A USER TOOL. Development tool to process performance trace enums");
         registerTool("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
         registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
 
@@ -206,11 +205,6 @@ public class ConsoleTools {
         IoStream stream = LinkManager.open(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes);
-    }
-
-
-    private static void runPerfTraceTool(String[] args) throws IOException {
-        PerfTraceTool.readPerfTrace(args[1], args[2], args[3], args[4]);
     }
 
     private static void setAuthToken(String[] args) {
