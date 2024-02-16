@@ -62,6 +62,11 @@ void setBoardConfigOverrides() {
 
 	setDefaultHellenAtPullUps();
 
+}
+
+static void setDefaultETBPins() {
+  // users would want to override those if using H-bridges for stepper idle control
+
     // PWM pin
     engineConfiguration->etbIo[0].controlPin = Gpio::MM100_OUT_PWM3;
     // DIR pin
@@ -85,6 +90,7 @@ void setBoardConfigOverrides() {
 void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
+	setDefaultETBPins();
 
   setHellenMMbaro();
 
