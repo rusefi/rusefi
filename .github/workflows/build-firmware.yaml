@@ -528,6 +528,23 @@ jobs:
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.short-board-name}}
         fi
 
+    - name: Set Build Env Variables
+      if: ${{ env.skip != 'true' }}
+      working-directory: ./firmware/
+      run: |
+        META_INFO=${{matrix.folder}}/meta-info-${{matrix.build-target}}.env
+        if [ -f "$META_INFO" ]; then
+          echo "[$META_INFO] found!"
+          echo META_INFO=$META_INFO >> $GITHUB_ENV
+        else
+          echo "Using default meta-info.env."
+          echo META_INFO="${{matrix.folder}}/meta-info.env" >> $GITHUB_ENV
+        fi
+        echo LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
+        echo REF=${{github.ref_name}} >> $GITHUB_ENV
+        echo BUNDLE_NAME=${{matrix.build-target}} >> $GITHUB_ENV
+        echo BOARD_DIR=${{matrix.folder}} >> $GITHUB_ENV
+
     - name: Git Status
       if: ${{ env.skip != 'true' }}
       run: |
