@@ -119,7 +119,7 @@ public class TuneUploadTab {
                 uploadView.uploadState.setText("Uploading...");
 
                 Msq tune = TuneUploder.writeCurrentTune(controllerAccessSupplier.get(), configurationName);
-                Online.uploadTune(tune, tokenPanel, content, new FutureCallback<UploadResult>() {
+                Online.uploadTune(tune, content, new FutureCallback<UploadResult>() {
                     @Override
                     public void completed(UploadResult array) {
                         SwingUtilities.invokeLater(new Runnable() {

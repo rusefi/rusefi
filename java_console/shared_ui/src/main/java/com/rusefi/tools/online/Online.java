@@ -76,11 +76,11 @@ public class Online {
     /**
      * we are here in case of individual tune upload
      */
-    public static BasicFuture<UploadResult> uploadTune(Msq tune, AuthTokenPanel authTokenPanel, JComponent parent, FutureCallback<UploadResult> callback) {
+    public static BasicFuture<UploadResult> uploadTune(Msq tune, JComponent parent, FutureCallback<UploadResult> callback) {
         try {
             tune.writeXmlFile(outputXmlFileName);
         } catch (JAXBException | IOException e) {
-            throw new IllegalStateException("While writing tune", e);
+            throw new IllegalStateException("writeXmlFile failed writing tune", e);
         }
 
         return uploadFile(parent, callback, outputXmlFileName);

@@ -1,6 +1,5 @@
 package com.rusefi.ui;
 
-import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
@@ -27,7 +26,7 @@ public class OnlineTab {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Msq tune = MsqFactory.valueOf(uiContext.getLinkManager().getCurrentStreamState().getControllerConfiguration(), uiContext.getIni());
-                Online.uploadTune(tune, authTokenPanel, content, null);
+                Online.uploadTune(tune, content, null);
             }
         });
         content.add(upload);
