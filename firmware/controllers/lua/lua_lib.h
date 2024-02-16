@@ -108,6 +108,7 @@ function getBitRange(data, bitIndex, bitWidth) \n\
 end \n\
 "
 
+// Motorola big-endian
 #define GET_BIT_RANGE_MSB " \
 function getBitRangeMsb(data, bitIndex, bitWidth) \n\
 	local byteIndex = bitIndex >> 3 \n\
