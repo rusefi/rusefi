@@ -733,11 +733,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi();
 		break;
-	case engine_type_e::UNUSED_20:
 	case engine_type_e::MRE_BODY_CONTROL:
 		mreBCM();
 		break;
 #endif // HW_MICRO_RUSEFI
+	case engine_type_e::MIATA_NC:
 	case engine_type_e::HONDA_OBD1:
 		setHondaObd1();
 		break;
