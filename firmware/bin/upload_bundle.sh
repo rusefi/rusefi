@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 SCRIPT_NAME=$(basename "$0")
-FULL_BUNDLE_FILE="rusefi_bundle_${BUNDLE_NAME}.zip"
-UPDATE_BUNDLE_FILE="rusefi_bundle_${BUNDLE_NAME}_autoupdate.zip"
+FULL_BUNDLE_FILE="rusefi.bundle.${BUNDLE_NAME}.zip"
+UPDATE_BUNDLE_FILE="rusefi.bundle.${BUNDLE_NAME}_autoupdate.zip"
 
 if [ -n "$RUSEFI_SSH_USER" ]; then
  echo "$SCRIPT_NAME: Uploading full bundle"
