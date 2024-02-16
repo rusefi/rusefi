@@ -9,6 +9,8 @@
 
 #if EFI_ENGINE_CONTROL
 
+extern bool printFuelDebug;
+
 void endSimultaneousInjection(InjectionEvent *event) {
 	endSimultaneousInjectionOnlyTogglePins();
 	event->update();
