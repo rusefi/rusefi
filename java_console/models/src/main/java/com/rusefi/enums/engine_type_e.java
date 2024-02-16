@@ -25,7 +25,7 @@ public enum engine_type_e {
 	PROTEUS_M111,
 	TEST_33816,
 	TEST_ROTARY,
-	UNUSED_20,
+	MIATA_NC,
 	UNUSED_21,
 	UNUSED_22,
 	MRE_BODY_CONTROL,

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 16 00:28:00 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 16 04:47:59 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -371,6 +371,7 @@ public class Fields {
 	public static final int engine_type_e_MAVERICK_X3 = 54;
 	public static final int engine_type_e_MAZDA_NA8_96 = 10;
 	public static final int engine_type_e_ME17_9_MISC = 33;
+	public static final int engine_type_e_MIATA_NC = 20;
 	public static final int engine_type_e_MIATA_PROTEUS_TCU = 1;
 	public static final int engine_type_e_MINIMAL_PINS = 99;
 	public static final int engine_type_e_MITSUBISHI_3A92 = 12;
@@ -411,7 +412,6 @@ public class Fields {
 	public static final int engine_type_e_TEST_ROTARY = 19;
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
-	public static final int engine_type_e_UNUSED_20 = 20;
 	public static final int engine_type_e_UNUSED_21 = 21;
 	public static final int engine_type_e_UNUSED_22 = 22;
 	public static final int engine_type_e_UNUSED_65 = 65;

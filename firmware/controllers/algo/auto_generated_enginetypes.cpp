@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Feb 08 15:05:01 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Feb 16 04:46:04 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -295,6 +295,8 @@ case engine_type_e::MAZDA_NA8_96:
   return "MAZDA_NA8_96";
 case engine_type_e::ME17_9_MISC:
   return "ME17_9_MISC";
+case engine_type_e::MIATA_NC:
+  return "MIATA_NC";
 case engine_type_e::MIATA_PROTEUS_TCU:
   return "MIATA_PROTEUS_TCU";
 case engine_type_e::MINIMAL_PINS:
@@ -375,8 +377,6 @@ case engine_type_e::TOYOTA_1NZ_FE:
   return "TOYOTA_1NZ_FE";
 case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case engine_type_e::UNUSED_20:
-  return "UNUSED_20";
 case engine_type_e::UNUSED_21:
   return "UNUSED_21";
 case engine_type_e::UNUSED_22:
