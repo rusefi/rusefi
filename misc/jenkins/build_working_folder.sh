@@ -22,7 +22,7 @@ else
 fi
 
 INI_FILE_OVERRIDE="firmware/tunerstudio/generated/rusefi_$SHORT_BOARD_NAME.ini"
-BUNDLE_FULL_NAME="rusefi_bundle_${BUNDLE_NAME}"
+BUNDLE_FULL_NAME="rusefi.bundle.${BUNDLE_NAME}"
 
 echo "$SCRIPT_NAME: Will use $INI_FILE_OVERRIDE"
 
