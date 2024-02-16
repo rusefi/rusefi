@@ -87,14 +87,6 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 		chVTResetI(&scheduling->timer);
 	}
 
-#if EFI_SIMULATOR
-	if (action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
-		//printf("setTime cb=turnInjectionPinLow p=%d\r\n", (int)action.getArgument());
-	} else {
-//		printf("setTime cb=%d p=%d\r\n", (int)callback, (int)param);
-	}
-#endif /* EFI_SIMULATOR */
-
 	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, ctx);
 }
 
