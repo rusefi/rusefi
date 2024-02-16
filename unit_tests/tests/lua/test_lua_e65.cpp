@@ -106,6 +106,47 @@ TEST(LuaE65, offtopicTestGetBitRangeMsb) {
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x9F4);
 }
 
+TEST(LuaE65, offtopicTestGetBitRangeMsb2) {
+	const char* realdata = GET_BIT_RANGE_MSB R"(
+
+	function testFunc()
+		data = {0x70, 0x04, 0x1F}
+		return getBitRangeMsb(data, 16, 16)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x41f);
+}
+
+TEST(LuaE65, offtopicTestSetBitRangeMsb2) {
+	const char* realdata = PRINT_ARRAY ARRAY_EQUALS SET_BIT_RANGE_MSB R"(
+
+	function testFunc()
+		data = {0x68, 0x07}
+		expected = {0x68, 0x07}
+		setBitRangeMsb(data, 8, 13, 0x807)
+		     print(arrayToString(data))
+		     print(arrayToString(expected))
+		return equals(data, expected)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0);
+}
+
+TEST(LuaE65, offtopicTestSetBitRangeMsb3) {
+	const char* realdata = PRINT_ARRAY ARRAY_EQUALS SET_BIT_RANGE_MSB R"(
+
+	function testFunc()
+		data = {0x68, 0x07}
+		expected = {0x63, 0x04}
+		setBitRangeMsb(data, 8, 13, 0x304)
+		     print(arrayToString(data))
+		     print(arrayToString(expected))
+		return equals(data, expected)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0);
+}
+
 TEST(LuaE65, gearTorque2) {
 	const char* realdata = GET_BIT_RANGE_LSB R"(
 
