@@ -16,6 +16,7 @@
 // *** IMPORTANT *** from painful experience we know that common_headers.h has to be included AFTER hal.h
 // *** https://github.com/rusefi/rusefi/issues/1007 ***
 #include "common_headers.h"
+#include "single_timer_executor.h"
 
 // for US_TO_NT_MULTIPLIER
 #include "mpu_util.h"

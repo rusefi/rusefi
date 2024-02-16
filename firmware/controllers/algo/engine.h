@@ -67,17 +67,6 @@
 #error EFI_PROD_CODE must be defined!
 #endif
 
-#if EFI_SIGNAL_EXECUTOR_ONE_TIMER
-// PROD real firmware uses this implementation
-#include "single_timer_executor.h"
-#endif /* EFI_SIGNAL_EXECUTOR_ONE_TIMER */
-#if EFI_SIGNAL_EXECUTOR_SLEEP
-#include "signal_executor_sleep.h"
-#endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
-#if EFI_UNIT_TEST
-#include "global_execution_queue.h"
-#endif /* EFI_UNIT_TEST */
-
 struct AirmassModelBase;
 
 #define MAF_DECODING_CACHE_SIZE 256
