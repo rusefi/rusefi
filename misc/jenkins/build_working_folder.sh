@@ -78,7 +78,8 @@ cp $INI_FILE_OVERRIDE $FOLDER
 
 cp java_console_binary/rusefi_autoupdate.jar $CONSOLE_FOLDER
 cp java_console_binary/rusefi_console.jar $CONSOLE_FOLDER
-cp misc/console_launcher/rusefi_updater.exe     $FOLDER
+# todo: uncomment line below once https://github.com/rusefi/rusefi/issues/5577
+# cp misc/console_launcher/rusefi_updater.exe     $FOLDER
 cp misc/console_launcher/update-ts-cacerts/* $update_ts_cacerts_FOLDER
 cp misc/console_launcher/readme.html      $FOLDER
 
