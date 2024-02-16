@@ -3,7 +3,7 @@
  * @brief   Idle Air Control valve hardware
  *
  * @date November 3, 2020
- * 
+ *
  * This is just the hardware interface - deciding where to put the valve happens in idle_thread.cpp
  */
 
@@ -101,6 +101,7 @@ void initIdleHardware() {
 		StepperHw* hw;
 
 		if (engineConfiguration->useRawOutputToDriveIdleStepper) {
+		  // four Push-Pull outputs to directly drive stepper idle air valve coils
 			auto motorA = initDcMotor(engineConfiguration->stepper_raw_output[0],
 				engineConfiguration->stepper_raw_output[1], ETB_COUNT + 0);
 			auto motorB = initDcMotor(engineConfiguration->stepper_raw_output[2],
@@ -127,6 +128,7 @@ void initIdleHardware() {
 
 			hw = &iacHbridgeHw;
 		} else {
+			// like DRV8825?
 			iacStepperHw.initialize(
 				engineConfiguration->idle.stepperStepPin,
 				engineConfiguration->idle.stepperDirectionPin,
