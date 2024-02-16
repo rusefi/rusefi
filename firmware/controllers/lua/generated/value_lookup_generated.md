@@ -641,7 +641,7 @@ In Alpha-N mode, compensate for air temperature.
 
 
 ### useRawOutputToDriveIdleStepper
-If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
+If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
 
 ### verboseCan2
 Print incoming and outgoing second bus CAN messages in rusEFI console

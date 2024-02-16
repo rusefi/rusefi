@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 03 16:36:40 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 16 20:24:40 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2102,7 +2102,7 @@ struct engine_configuration_s {
 	offset 984 bit 29 */
 	bool canBroadcastUseChannelTwo : 1 {};
 	/**
-	 * If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
+	 * If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
 	offset 984 bit 30 */
 	bool useRawOutputToDriveIdleStepper : 1 {};
 	/**
@@ -5550,4 +5550,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22232);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 03 16:36:40 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 16 20:24:40 UTC 2024
