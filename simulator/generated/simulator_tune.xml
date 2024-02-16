@@ -207,7 +207,7 @@
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0240215E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0240216E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -4553,7 +4553,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240215" nPages="1" signature="rusEFI master.2024.02.15.f407-discovery.369986144" version="5.0"/>
+    <versionInfo firmwareInfo="20240215" nPages="1" signature="rusEFI master.2024.02.16.f407-discovery.369986144" version="5.0"/>
     <bibliography author="rusEFI 20240215" writeDate="date"/>
     <settings/>
     <userComments/>
