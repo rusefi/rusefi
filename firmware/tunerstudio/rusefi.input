@@ -1592,6 +1592,7 @@ gaugeCategory = Transmission
 	ISSGauge = ISSValue, @@GAUGE_NAME_ISS@@, "RPM", 0, {rpmHardLimit + 2000}, 200, {cranking_rpm}, {rpmHardLimit - 500}, {rpmHardLimit}, 0, 0
 	tcRatioGauge = tcRatio, @@GAUGE_NAME_TC_RATIO@@, "",	0,	100,	0,	0,	100,  100,	4,	4
 	shiftTimeGauge = lastShiftTime, "Last Shift Time", "S", 0, 2, 0, 0, 2, 2, 4, 4
+	idealEngineTorqueGauge = idealEngineTorque, "idealEngineTorque", "",	0,	100,	0,	0,	100,  100,	4,	4
 
 gaugeCategory = Knock
 	knock1Gauge = m_knockCyl1, "Knock Cyl 1", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
@@ -4718,6 +4719,7 @@ dialog = tcuControls, "Transmission Settings"
         field = auxSpeed1Multiplier,    auxSpeed1Multiplier
         field = useAuxSpeedForSlipRatio, useAuxSpeedForSlipRatio
         field = useVssAsSecondWheelSpeed, useVssAsSecondWheelSpeed
+        field = brakeMeanEffectivePressureDifferential, brakeMeanEffectivePressureDifferential
 
 	dialog = mc33810Dialog, "MC33810 IGN/INJ driver"
 		field = "SPI settings"

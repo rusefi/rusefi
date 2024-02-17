@@ -27,5 +27,8 @@ struct_no_prefix fuel_computer_s
 	float normalizedCylinderFilling;Air: Normalized cyl filling;"%", 1, 0, 0, 100, 1
 
     uint8_t brokenInjector
+    uint8_t unused88
+    uint16_t idealEngineTorque
+
     bit injectorHwIssue
 end_struct

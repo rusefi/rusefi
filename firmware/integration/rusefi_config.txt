@@ -1632,6 +1632,7 @@ int8_t[TRACTION_CONTROL_ETB_DROP_SIZE x TRACTION_CONTROL_ETB_DROP_SIZE] traction
 int8_t[TRACTION_CONTROL_ETB_DROP_SIZE x TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlIgnitionSkip;;"%", 1, 0, 0, 100, 0
 
 float auxSpeed1Multiplier
+float brakeMeanEffectivePressureDifferential
 uint8_t[146] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
