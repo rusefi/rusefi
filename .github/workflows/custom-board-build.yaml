@@ -70,6 +70,7 @@ jobs:
       - name: Set Env Variables
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        working-directory: ${{inputs.rusefi_dir}}/firmware
         run: |
           echo "META_OUTPUT_ROOT_FOLDER=../${{inputs.relative_board_dir}}/generated/" >> $GITHUB_ENV
           echo "BOARD_META_PATH=$(bash bin/find_meta_info.sh ../${{inputs.relative_board_dir}} ${{inputs.build_target}})" >> $GITHUB_ENV
