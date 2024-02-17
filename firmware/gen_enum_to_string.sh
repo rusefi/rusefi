@@ -9,7 +9,7 @@ cd ../firmware
 
 rm gen_enum_to_string.log
 
-ENUM_JAR=../java_tools/enum_to_string/build/libs/enum_to_string.jar
+ENUM_JAR=../java_tools/enum_to_string/build/libs/enum_to_string-all.jar
 
 java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/sensors/sensor_type.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
