@@ -1,5 +1,2 @@
-#!/bin/bash
-
-#-DDUMMY -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
-
-bash ../common_script.sh config/boards/f429-discovery/meta-info.env
+#!/usr/bin/env bash
+cd ../../.. && bash bin/compile.sh config/boards/f429-discovery/meta-info.env

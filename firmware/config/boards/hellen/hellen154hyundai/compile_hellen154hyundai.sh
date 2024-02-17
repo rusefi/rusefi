@@ -1,4 +1,2 @@
-#!/bin/bash
-
-cd ..
-bash ../common_script.sh config/boards/hellen/hellen154hyundai/meta-info-hellen154hyundai.env
+#!/usr/bin/env bash
+cd ../../../.. && bash bin/compile.sh config/boards/hellen/hellen154hyundai/meta-info-hellen154hyundai.env
