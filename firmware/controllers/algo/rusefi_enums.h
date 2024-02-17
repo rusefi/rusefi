@@ -628,6 +628,8 @@ typedef enum __attribute__ ((__packed__)) {
 	DC_None = 0,
 	DC_Throttle1 = 1,
 	DC_Throttle2 = 2,
+	// this is about SINGLE DC-motor idle valve like 90s volkswagen/earlier M111 engines
+	// NOT to be used in dual H-bridge stepper control
 	DC_IdleValve = 3,
 	DC_Wastegate = 4,
 } dc_function_e;
