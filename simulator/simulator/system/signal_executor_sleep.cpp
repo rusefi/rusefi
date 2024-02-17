@@ -30,8 +30,6 @@
 bool printSchedulerDebug = true;
 #endif // EFI_PRINTF_FUEL_DETAILS
 
-#if EFI_SIGNAL_EXECUTOR_SLEEP
-
 struct CallbackContext
 {
 	scheduling_s* scheduling = nullptr;
@@ -119,5 +117,3 @@ void SleepExecutor::cancel(scheduling_s* s) {
 
 	s->action = {};
 }
-
-#endif /* EFI_SIGNAL_EXECUTOR_SLEEP */

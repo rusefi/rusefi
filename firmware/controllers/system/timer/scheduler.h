@@ -20,7 +20,7 @@ bit_cast(const From& src) noexcept
     static_assert(std::is_trivially_constructible_v<To>,
         "This implementation additionally requires "
         "destination type to be trivially constructible");
- 
+
     To dst;
     std::memcpy(&dst, &src, sizeof(To));
     return dst;
@@ -61,9 +61,10 @@ private:
  */
 #pragma pack(push, 4)
 struct scheduling_s {
-#if EFI_SIGNAL_EXECUTOR_SLEEP
+#if EFI_SIMULATOR
+  // used by signal_executor_sleep executor implementation
 	virtual_timer_t timer;
-#endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
+#endif /* EFI_SIMULATOR */
 
 	/**
 	 * timestamp represented as 64-bit value of ticks since MCU start
