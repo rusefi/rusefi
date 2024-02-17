@@ -12,7 +12,7 @@ BOARD_META_DIR=${BOARD_META_PATH%/*}
 export BOARD_DIR=${BOARD_DIR:-$BOARD_META_DIR}
 
 if [ ! -f ${BOARD_META_PATH} ]; then
-  echo "Read meta.env: The file was not found!"
+  echo "Read $BOARD_META_PATH: The file was not found!"
   exit -4
 fi
 
