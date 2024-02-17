@@ -1762,3 +1762,6 @@ Timeout period for duty cycle over the sustained limit to trigger duty cycle pro
 ### auxSpeed1Multiplier
 null
 
+### brakeMeanEffectivePressureDifferential
+null
+

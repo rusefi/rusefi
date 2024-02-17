@@ -812,6 +812,11 @@ float getOutputValueByName(const char *name) {
 		case -1453554940:
 			return engine->fuelComputer.brokenInjector;
 #endif
+// idealEngineTorque
+#if EFI_ENGINE_CONTROL
+		case -791713926:
+			return engine->fuelComputer.idealEngineTorque;
+#endif
 // injectorHwIssue
 #if EFI_ENGINE_CONTROL
 		case -1237512821:

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Feb 17 23:38:05 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -97,109 +97,111 @@ struct fuel_computer_s {
 	 */
 	uint8_t brokenInjector = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 45
 	 */
-	uint8_t alignmentFill_at_45[3];
+	uint8_t unused88 = (uint8_t)0;
+	/**
+	 * offset 46
+	 */
+	uint16_t idealEngineTorque = (uint16_t)0;
 	/**
 	offset 48 bit 0 */
 	bool injectorHwIssue : 1 {};
 	/**
 	offset 48 bit 1 */
-	bool unusedBit_12_1 : 1 {};
+	bool unusedBit_13_1 : 1 {};
 	/**
 	offset 48 bit 2 */
-	bool unusedBit_12_2 : 1 {};
+	bool unusedBit_13_2 : 1 {};
 	/**
 	offset 48 bit 3 */
-	bool unusedBit_12_3 : 1 {};
+	bool unusedBit_13_3 : 1 {};
 	/**
 	offset 48 bit 4 */
-	bool unusedBit_12_4 : 1 {};
+	bool unusedBit_13_4 : 1 {};
 	/**
 	offset 48 bit 5 */
-	bool unusedBit_12_5 : 1 {};
+	bool unusedBit_13_5 : 1 {};
 	/**
 	offset 48 bit 6 */
-	bool unusedBit_12_6 : 1 {};
+	bool unusedBit_13_6 : 1 {};
 	/**
 	offset 48 bit 7 */
-	bool unusedBit_12_7 : 1 {};
+	bool unusedBit_13_7 : 1 {};
 	/**
 	offset 48 bit 8 */
-	bool unusedBit_12_8 : 1 {};
+	bool unusedBit_13_8 : 1 {};
 	/**
 	offset 48 bit 9 */
-	bool unusedBit_12_9 : 1 {};
+	bool unusedBit_13_9 : 1 {};
 	/**
 	offset 48 bit 10 */
-	bool unusedBit_12_10 : 1 {};
+	bool unusedBit_13_10 : 1 {};
 	/**
 	offset 48 bit 11 */
-	bool unusedBit_12_11 : 1 {};
+	bool unusedBit_13_11 : 1 {};
 	/**
 	offset 48 bit 12 */
-	bool unusedBit_12_12 : 1 {};
+	bool unusedBit_13_12 : 1 {};
 	/**
 	offset 48 bit 13 */
-	bool unusedBit_12_13 : 1 {};
+	bool unusedBit_13_13 : 1 {};
 	/**
 	offset 48 bit 14 */
-	bool unusedBit_12_14 : 1 {};
+	bool unusedBit_13_14 : 1 {};
 	/**
 	offset 48 bit 15 */
-	bool unusedBit_12_15 : 1 {};
+	bool unusedBit_13_15 : 1 {};
 	/**
 	offset 48 bit 16 */
-	bool unusedBit_12_16 : 1 {};
+	bool unusedBit_13_16 : 1 {};
 	/**
 	offset 48 bit 17 */
-	bool unusedBit_12_17 : 1 {};
+	bool unusedBit_13_17 : 1 {};
 	/**
 	offset 48 bit 18 */
-	bool unusedBit_12_18 : 1 {};
+	bool unusedBit_13_18 : 1 {};
 	/**
 	offset 48 bit 19 */
-	bool unusedBit_12_19 : 1 {};
+	bool unusedBit_13_19 : 1 {};
 	/**
 	offset 48 bit 20 */
-	bool unusedBit_12_20 : 1 {};
+	bool unusedBit_13_20 : 1 {};
 	/**
 	offset 48 bit 21 */
-	bool unusedBit_12_21 : 1 {};
+	bool unusedBit_13_21 : 1 {};
 	/**
 	offset 48 bit 22 */
-	bool unusedBit_12_22 : 1 {};
+	bool unusedBit_13_22 : 1 {};
 	/**
 	offset 48 bit 23 */
-	bool unusedBit_12_23 : 1 {};
+	bool unusedBit_13_23 : 1 {};
 	/**
 	offset 48 bit 24 */
-	bool unusedBit_12_24 : 1 {};
+	bool unusedBit_13_24 : 1 {};
 	/**
 	offset 48 bit 25 */
-	bool unusedBit_12_25 : 1 {};
+	bool unusedBit_13_25 : 1 {};
 	/**
 	offset 48 bit 26 */
-	bool unusedBit_12_26 : 1 {};
+	bool unusedBit_13_26 : 1 {};
 	/**
 	offset 48 bit 27 */
-	bool unusedBit_12_27 : 1 {};
+	bool unusedBit_13_27 : 1 {};
 	/**
 	offset 48 bit 28 */
-	bool unusedBit_12_28 : 1 {};
+	bool unusedBit_13_28 : 1 {};
 	/**
 	offset 48 bit 29 */
-	bool unusedBit_12_29 : 1 {};
+	bool unusedBit_13_29 : 1 {};
 	/**
 	offset 48 bit 30 */
-	bool unusedBit_12_30 : 1 {};
+	bool unusedBit_13_30 : 1 {};
 	/**
 	offset 48 bit 31 */
-	bool unusedBit_12_31 : 1 {};
+	bool unusedBit_13_31 : 1 {};
 };
 static_assert(sizeof(fuel_computer_s) == 52);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Feb 17 23:38:05 UTC 2024

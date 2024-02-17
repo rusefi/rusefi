@@ -347,6 +347,9 @@ static const LogField fields[] = {
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.brokenInjector, "brokenInjector", "", 0},
 #endif
+#if EFI_ENGINE_CONTROL
+	{engine->fuelComputer.idealEngineTorque, "idealEngineTorque", "", 0},
+#endif
 	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.sparkDwell, "Ignition: coil charge time", "ms", 1, "Timing"},
 	{engine->ignitionState.dwellAngle, "Ignition: dwell duration", "deg", 1, "Timing"},
