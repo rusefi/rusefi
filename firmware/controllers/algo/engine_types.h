@@ -199,8 +199,8 @@ enum class engine_type_e : uint16_t {
 	HELLEN_154_HYUNDAI_COUPE_BK2 = 95,
 
     WASTEGATE_PROTEUS_TEST = 96,
-    ALPHAX_8CHAN_SBC = 97,
-    PROTEUS_SBC = 98,
+    UNUSED_97 = 97,
+    GM_SBC = 98,
 
 	/**
 	 * this configuration has as few pins configured as possible
