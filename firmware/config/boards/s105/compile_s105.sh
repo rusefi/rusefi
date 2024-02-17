@@ -1,4 +1,2 @@
-#!/bin/bash
-
-bash ../common_script.sh config/boards/s105/meta-info.env
-
+#!/usr/bin/env bash
+cd ../../.. && bash bin/compile.sh config/boards/s105/meta-info.env

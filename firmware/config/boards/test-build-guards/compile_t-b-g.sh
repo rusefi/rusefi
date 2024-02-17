@@ -1,3 +1,2 @@
-#!/bin/bash
-
-bash ../common_script.sh config/boards/test-build-guards/meta-info.env
+#!/usr/bin/env bash
+cd ../../.. && bash bin/compile.sh config/boards/test-build-guards/meta-info.env
