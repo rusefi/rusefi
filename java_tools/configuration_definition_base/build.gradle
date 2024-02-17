@@ -14,7 +14,3 @@ dependencies {
     api global_libs.snakeyaml
     testFixturesApi global_libs.junit5
 }
-
-shadowJar {
-    dependsOn(':enum_to_string:shadowJar')
-}
