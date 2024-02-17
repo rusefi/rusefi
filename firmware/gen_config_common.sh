@@ -1,6 +1,6 @@
 
 COMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARD_NAME} \
- -jar ../java_tools/configuration_definition/build/libs/config_definition.jar"
+ -jar ../java_tools/configuration_definition/build/libs/config_definition-all.jar"
 
 COMMON_GEN_CONFIG="
  -readfile OUTPUTS_SECTION_FROM_FILE console/binary/generated/output_channels.ini \
