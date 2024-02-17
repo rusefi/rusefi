@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 SCRIPT_NAME=$(basename "$0")
+# technical debt: more than one file uses magic 'rusefi_bundle_' constant, can we extract constant?
 FULL_BUNDLE_FILE="rusefi_bundle_${BUNDLE_NAME}.zip"
 UPDATE_BUNDLE_FILE="rusefi_bundle_${BUNDLE_NAME}_autoupdate.zip"
 
