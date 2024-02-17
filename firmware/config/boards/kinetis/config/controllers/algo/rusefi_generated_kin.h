@@ -1,5 +1,5 @@
 //
-// was generated automatically by rusEFI tool config_definition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt
+// was generated automatically by rusEFI tool config_definition-all.jar based on kinetis_gen_config.bat integration/rusefi_config.txt
 //
 
 #define adc_channel_e_enum "Disabled", "PA2", "PA3", "INVALID", "PD3", "INVALID", "INVALID", "INVALID", "PB12", "PB13", "INVALID", "PE2", "INVALID", "PC14", "PC15", "PC16", "PC17"
@@ -832,7 +832,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2881364575
+#define SIGNATURE_HASH 1786526348
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1156,7 +1156,7 @@
 #define ts_show_vr_threshold_2 false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.02.17.kin.2881364575"
+#define TS_SIGNATURE "rusEFI master.2024.02.17.kin.1786526348"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

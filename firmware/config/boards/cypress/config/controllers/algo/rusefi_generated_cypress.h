@@ -1,5 +1,5 @@
 //
-// was generated automatically by rusEFI tool config_definition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt
+// was generated automatically by rusEFI tool config_definition-all.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt
 //
 
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
@@ -832,7 +832,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3916424689
+#define SIGNATURE_HASH 682491170
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1156,7 +1156,7 @@
 #define ts_show_vr_threshold_2 false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
-#define TS_SIGNATURE "rusEFI master.2024.02.17.cypress.3916424689"
+#define TS_SIGNATURE "rusEFI master.2024.02.17.cypress.682491170"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
