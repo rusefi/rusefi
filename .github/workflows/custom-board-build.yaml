@@ -7,9 +7,6 @@ name: Build Custom Board Firmware
 on:
   workflow_call:
     inputs:
-      shortBoardName:
-        required: true
-        type: string
       token:
         description: 'Token for accessing private repos'
         required: false
@@ -18,10 +15,13 @@ on:
         required: false
         type: string
         default: ext/rusefi
-      relative_board_dir:
+      board_dir:
         required: false
         type: string
-        default: ../..
+        default: .
+      bundle_name:
+        required: false
+        type: string
     secrets:
       MY_REPO_PAT:
         required: false
@@ -60,18 +60,9 @@ jobs:
 
       - name: Echo
         run: |
-          echo "shortBoardName=${{inputs.shortBoardName}}"
+          echo "bundle_name=${{inputs.bundle_name}}"
           echo "rusefi_dir=${{inputs.rusefi_dir}}"
-          echo "relative_board_dir=${{inputs.relative_board_dir}}"
-
-      - name: Set Env Variables
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-        run: |
-          echo "META_OUTPUT_ROOT_FOLDER=../${{inputs.relative_board_dir}}/generated/" >> $GITHUB_ENV
-          echo "gha_shortBoardName=${{inputs.shortBoardName}}" >> $GITHUB_ENV
-          echo "gha_iniFileName=rusefi_${{inputs.shortBoardName}}.ini" >> $GITHUB_ENV
-          echo "${{ secrets.ADDITIONAL_ENV }}" >> $GITHUB_ENV
+          echo "board_dir=${{inputs.board_dir}}"
 
       - uses: actions/checkout@v4
         with:
@@ -83,6 +74,24 @@ jobs:
           if [ -f .github/workflows/actions/post-checkout.sh ]; then
             bash .github/workflows/actions/post-checkout.sh
           fi
+
+      - name: Set Env Variables
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: |
+          echo "REF=${{github.ref_name}}" >> $GITHUB_ENV
+          ROOT_DIR="../$(echo ${{inputs.rusefi_dir}} | sed -E 's/[^/]{2,}/../g')"
+          cd ${{inputs.rusefi_dir}}/firmware
+          BOARD_DIR=$(realpath --relative-to=. "$ROOT_DIR/${{inputs.board_dir}}")
+          BOARD_META_PATH=$(bash bin/find_meta_info.sh "$BOARD_DIR" "${{inputs.bundle_name}}")
+          source config/boards/common_script_read_meta_env.inc "$BOARD_META_PATH"
+          echo "BOARD_META_PATH=$BOARD_META_PATH" >> $GITHUB_ENV
+          echo "BOARD_DIR=$BOARD_DIR" >> $GITHUB_ENV
+          echo "SHORT_BOARD_NAME=$SHORT_BOARD_NAME" >> $GITHUB_ENV
+          echo "BUNDLE_NAME=$SHORT_BOARD_NAME" >> $GITHUB_ENV
+          cd ..
+          echo "META_OUTPUT_ROOT_FOLDER=$(realpath --relative-to=. firmware/$BOARD_DIR/generated)/" >> $GITHUB_ENV
+          echo "${{ secrets.ADDITIONAL_ENV }}" >> $GITHUB_ENV
 
       # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
       - name: Download & Install GCC
@@ -108,8 +117,7 @@ jobs:
 
       - name: Gen Config
         working-directory: ${{inputs.rusefi_dir}}/firmware
-        run: |
-          bash gen_config_board.sh ../${{inputs.relative_board_dir}} ${{env.gha_shortBoardName}}
+        run: bash gen_config_board.sh
 
       - name: Repo Status
         run: |
@@ -159,11 +167,11 @@ jobs:
 
       - name: Upload .ini files to server
         working-directory: generated/tunerstudio/generated
-        run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{env.gha_iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{env.SHORT_BOARD_NAME}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
       - name: Build Firmware
-        working-directory: ${{inputs.rusefi_dir}}
-        run: bash misc/jenkins/compile_other_versions/compile.sh ../${{inputs.relative_board_dir}} ${{env.gha_shortBoardName}}
+        working-directory: ${{inputs.rusefi_dir}}/firmware
+        run: bash bin/compile.sh -b ${{ env.BOARD_META_PATH }}
 
       - name: Upload build bin artifact
         uses: actions/upload-artifact@v4
@@ -220,10 +228,10 @@ jobs:
 
       - name: Package and Upload Bundle
         working-directory: ${{inputs.rusefi_dir}}
-        run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{env.gha_shortBoardName}} "${{inputs.relative_board_dir}}/generated/tunerstudio/generated/${{env.gha_iniFileName}}" master
+        run: bash misc/jenkins/build_working_folder.sh
 
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rusefi_bundle_${{env.gha_shortBoardName}}.zip
+          name: rusefi_bundle_${{env.SHORT_BOARD_NAME}}.zip
           path: ${{inputs.rusefi_dir}}/artifacts/rusefi_bundle*.zip

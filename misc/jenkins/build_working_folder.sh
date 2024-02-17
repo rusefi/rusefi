@@ -21,7 +21,11 @@ else
   FOLDER="temp/rusefi.snapshot.${BUNDLE_NAME}"
 fi
 
-INI_FILE_OVERRIDE="firmware/tunerstudio/generated/rusefi_$SHORT_BOARD_NAME.ini"
+if [ -z "$META_OUTPUT_ROOT_FOLDER" ]; then
+	META_OUTPUT_ROOT_FOLDER="firmware/"
+fi
+
+INI_FILE_OVERRIDE="${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/rusefi_$SHORT_BOARD_NAME.ini"
 # technical debt: more than one file uses magic 'rusefi_bundle_' constant, can we extract constant?
 BUNDLE_FULL_NAME="rusefi_bundle_${BUNDLE_NAME}"
 
