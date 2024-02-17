@@ -17,11 +17,6 @@ dependencies {
 shadowJar {
     dependsOn(':enum_to_string:shadowJar')
     dependsOn(':config_definition_base:shadowJar')
-    /*
-     to exclude suffix '-all'
-     in resulting archive file name
-    */
-    archiveClassifier = ''
 
     manifest {
         attributes(
