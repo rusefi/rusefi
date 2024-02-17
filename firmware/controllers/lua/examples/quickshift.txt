@@ -1,0 +1,39 @@
+-- THIS IS AN UNTESTED DRAFT PLEASE SHARE YOUR FEEDBACK IF YOU GIVE IT A TRY
+
+
+setTickRate(200) -- 200hz
+
+-- be careful with Lua boolean type, numeric zero is not false!
+local previousSwitchState = false
+
+local qsDelay = 0 -- no delay
+local qsDuration = 0.1 -- 0.1 second / 100ms
+
+local qsTimer = Timer.new()
+
+function onTick()
+	--  local switchState = getAuxAnalog(0) > 2.3 -- first aux analog input above 2.3 volts
+	local switchState = getAuxDigital(0) -- first aux digital input
+
+
+	-- TODO TEST ME CONSIDERING TRICKY LUA BOOLEAN TYPE
+	local isStartOfSequence = switchState and (not previousSwitchState)
+
+	if isStartOfSequence then
+		print("Starting Quick Shift procedure")
+		qsTimer : reset()
+	end
+
+	local timeSinceStartOfSequence = qsTimer : getElapsedSeconds()
+	if timeSinceStartOfSequence >= qsDelay and timeSinceStartOfSequence <= qsDelay + qsDuration then
+		-- we are within quick shift scenario
+		-- TODO confirm if that's 10 degrees MORE ADVANCE or 10 degrees MORE RETARD?
+		setTimingAdd(10)
+		setSparkHardSkipRatio(0.75)
+
+	else
+		setTimingAdd(0)
+		setSparkHardSkipRatio(0)
+	end
+end
+
