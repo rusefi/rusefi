@@ -3433,8 +3433,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
 		field = "Two-wire mode",						etb_use_two_wires
-		panel = etbHbridgeHardwareNo1, { etbFunctions1 != @@dc_function_e_DC_None@@ }
-		panel = etbHbridgeHardwareNo2, { etbFunctions2 != @@dc_function_e_DC_None@@ }
+		panel = etbHbridgeHardwareNo1
+		panel = etbHbridgeHardwareNo2
 
 	dialog = stepperHbridgeHardwareNo1, "H-Bridge Hardware No1"
 		field = "No1 Direction #1",						stepperDcIo1_directionPin1
