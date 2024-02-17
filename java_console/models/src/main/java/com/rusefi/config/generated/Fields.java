@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 17 19:06:33 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 17 20:27:16 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -311,7 +311,6 @@ public class Fields {
 	public static final String ENGINE_MAKE_VAG = "VAG";
 	public static final int ENGINE_NOISE_CURVE_SIZE = 16;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
-	public static final int engine_type_e_ALPHAX_8CHAN_SBC = 97;
 	public static final int engine_type_e_BMW_M73_M = 24;
 	public static final int engine_type_e_BMW_M73_MRE = 50;
 	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 51;
@@ -336,6 +335,7 @@ public class Fields {
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_FRANKENSO_TEST_33810 = 59;
 	public static final int engine_type_e_FUEL_BENCH = 15;
+	public static final int engine_type_e_GM_SBC = 98;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HARLEY = 6;
 	public static final int engine_type_e_HELLEN_121_NISSAN_4_CYL = 84;
@@ -393,7 +393,6 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_N73 = 93;
 	public static final int engine_type_e_PROTEUS_NISSAN_VQ35 = 103;
 	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
-	public static final int engine_type_e_PROTEUS_SBC = 98;
 	public static final int engine_type_e_PROTEUS_STIM_QC = 73;
 	public static final int engine_type_e_PROTEUS_VW_B6 = 39;
 	public static final int engine_type_e_SACHS = 29;
@@ -415,6 +414,7 @@ public class Fields {
 	public static final int engine_type_e_UNUSED_21 = 21;
 	public static final int engine_type_e_UNUSED_22 = 22;
 	public static final int engine_type_e_UNUSED_65 = 65;
+	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_WASTEGATE_PROTEUS_TEST = 96;
 	public static final int ETB2_TRIM_SIZE = 6;
@@ -1095,7 +1095,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1192493912;
+	public static final int SIGNATURE_HASH = 704350400;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1340,7 +1340,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.02.17.f407-discovery.1192493912";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.02.17.f407-discovery.704350400";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
