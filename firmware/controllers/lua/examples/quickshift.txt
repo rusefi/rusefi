@@ -1,5 +1,5 @@
 -- THIS IS AN UNTESTED DRAFT PLEASE SHARE YOUR FEEDBACK IF YOU GIVE IT A TRY
-
+-- see https://rusefi.com/forum/viewtopic.php?f=5&t=2670 for a different version
 
 setTickRate(200) -- 200hz
 
@@ -27,8 +27,7 @@ function onTick()
 	local timeSinceStartOfSequence = qsTimer : getElapsedSeconds()
 	if timeSinceStartOfSequence >= qsDelay and timeSinceStartOfSequence <= qsDelay + qsDuration then
 		-- we are within quick shift scenario
-		-- TODO confirm if that's 10 degrees MORE ADVANCE or 10 degrees MORE RETARD?
-		setTimingAdd(10)
+		setTimingAdd(-10)
 		setSparkHardSkipRatio(0.75)
 
 	else
