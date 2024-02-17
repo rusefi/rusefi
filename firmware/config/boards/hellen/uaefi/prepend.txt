@@ -23,4 +23,4 @@
 
 
 
-#define show_8chan_presets false
+#define show_uaefi_presets true

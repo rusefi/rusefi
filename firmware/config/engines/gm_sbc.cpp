@@ -16,9 +16,9 @@ void setStepperHw() {
 
     // for instance IWP069
 	engineConfiguration->injector.flow = 482.5;
+  setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
 
-#if HW_HELLEN
-    setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
+#if HW_HELLEN_8CHAN
 	// using 8chan pinout for DC1: A26 (OUT_DC1+ AH pin "D") and A27 (OUT_DC1- AL pin "C")
 	engineConfiguration->stepperDcIo[0].controlPin = Gpio::H144_GP_IO4; // DC1_PWM
 	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::H144_GP_IO3; // DC1_DIR
@@ -28,8 +28,18 @@ void setStepperHw() {
 	engineConfiguration->stepperDcIo[1].controlPin = H144_UART1_TX; // DC2_PWM
 	engineConfiguration->stepperDcIo[1].directionPin1 = H_SPI3_CS; // DC2_DIR
 	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
-// open question if we need custom logic to handle shared disable pin?	engineConfiguration->stepperDcIo[1].disablePin = Gpio::H144_GP_IO5; // ETB_DIS
 #endif // HW_HELLEN
+
+#if HW_HELLEN_UAEFI
+  // TODO: all the copy-pasting here begs the question: "shall we rename etbIo to hBridgeIo and reuse for stepper"?
+	engineConfiguration->stepperDcIo[0].controlPin = Gpio::MM100_OUT_PWM3;
+	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::MM100_OUT_PWM4;
+	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
+	engineConfiguration->stepperDcIo[0].disablePin = Gpio::MM100_SPI2_MISO;
+	engineConfiguration->stepperDcIo[1].controlPin = Gpio::MM100_OUT_PWM5;
+	engineConfiguration->stepperDcIo[1].directionPin1 = Gpio::MM100_SPI2_MOSI;
+	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::MM100_USB1ID;
+#endif // HW_HELLEN_UAEFI
 
 #if HW_PROTEUS
 	// coil #1 - proteus pin 7 to AH pin "D"

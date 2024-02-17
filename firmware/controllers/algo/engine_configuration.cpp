@@ -807,7 +807,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::PROTEUS_MIATA_NB2:
 		setMiataNB2_Proteus();
 		break;
-	case engine_type_e::PROTEUS_SBC:
+	case engine_type_e::GM_SBC:
 	    setGmSbc();
         break;
 #ifdef HARDWARE_CI
@@ -854,7 +854,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif // HW_HELLEN_4CHAN
 
 #if HW_HELLEN_8CHAN
-	case engine_type_e::ALPHAX_8CHAN_SBC:
+  case engine_type_e::UNUSED_97:
+	case engine_type_e::GM_SBC:
 	    setGmSbc();
         break;
 #endif
