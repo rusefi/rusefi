@@ -90,7 +90,7 @@ jobs:
           echo "SHORT_BOARD_NAME=$SHORT_BOARD_NAME" >> $GITHUB_ENV
           echo "BUNDLE_NAME=$SHORT_BOARD_NAME" >> $GITHUB_ENV
           cd ..
-          echo "META_OUTPUT_ROOT_FOLDER=$(realpath --relative-to=. firmware/$BOARD_DIR/generated)/" >> $GITHUB_ENV
+          echo "META_OUTPUT_ROOT_FOLDER=$(realpath firmware/$BOARD_DIR/generated)/" >> $GITHUB_ENV
           echo "${{ secrets.ADDITIONAL_ENV }}" >> $GITHUB_ENV
 
       # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
