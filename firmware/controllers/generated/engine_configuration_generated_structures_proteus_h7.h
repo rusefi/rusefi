@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 17 23:39:28 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Feb 18 12:29:32 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -744,6 +744,7 @@ struct engine_configuration_s {
 	offset 188 bit 29 */
 	bool overrideVvtTriggerGaps : 1 {};
 	/**
+	 * If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 	offset 188 bit 30 */
 	bool useSpiImu : 1 {};
 	/**
@@ -5554,4 +5555,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 26236);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 17 23:39:28 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Feb 18 12:29:32 UTC 2024

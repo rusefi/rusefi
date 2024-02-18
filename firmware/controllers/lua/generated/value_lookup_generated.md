@@ -128,7 +128,7 @@ On some Ford and Toyota vehicles one of the pedal sensors is not linear on the f
 
 
 ### useSpiImu
-
+If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 
 ### enableStagedInjection
 
