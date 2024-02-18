@@ -510,7 +510,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 
 		if (received != expectedSize) {
 			/* print and send error as we were in sync */
-			efiPrintf("Got only %d bytes while expecting %d for command %c", received,
+			efiPrintf("Got only %d bytes while expecting %d for command 0x%02x", received,
 					expectedSize, command);
 			tunerStudioError(tsChannel, "ERROR: not enough bytes in stream");
 			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
