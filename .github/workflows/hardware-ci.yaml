@@ -75,6 +75,9 @@ jobs:
     - name: OpenOCD wipe & flash STM32
       run: .github/workflows/hw-ci/openocd_wipe_and_flash.sh ${{matrix.openocd-script}}
 
+    - name: Show USB status
+      run: lsusb
+
     - name: Upload build bin artifact
       uses: actions/upload-artifact@v4
       with:
