@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22232">
+    <page number="0" size="22236">
         <constant name="engineType">"HONDA_K"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -1864,6 +1864,7 @@
          0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant digits="0" name="auxSpeed1Multiplier" units="">1.0</constant>
+        <constant digits="0" name="brakeMeanEffectivePressureDifferential" units="">0.0</constant>
         <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="146">
          0.0
          0.0
@@ -4555,7 +4556,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240216" nPages="1" signature="rusEFI master.2024.02.17.f407-discovery.704350400" version="5.0"/>
+    <versionInfo firmwareInfo="20240216" nPages="1" signature="rusEFI master.2024.02.18.f407-discovery.2156898068" version="5.0"/>
     <bibliography author="rusEFI 20240216" writeDate="date"/>
     <settings/>
     <userComments/>

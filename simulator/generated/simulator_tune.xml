@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22232">
+    <page number="0" size="22236">
         <constant name="engineType">"MINIMAL_PINS"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -207,7 +207,7 @@
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0240217E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0240218E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -1862,6 +1862,7 @@
          0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant digits="0" name="auxSpeed1Multiplier" units="">1.0</constant>
+        <constant digits="0" name="brakeMeanEffectivePressureDifferential" units="">0.0</constant>
         <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="146">
          0.0
          0.0
@@ -4553,7 +4554,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240216" nPages="1" signature="rusEFI master.2024.02.17.f407-discovery.704350400" version="5.0"/>
+    <versionInfo firmwareInfo="20240216" nPages="1" signature="rusEFI master.2024.02.18.f407-discovery.2156898068" version="5.0"/>
     <bibliography author="rusEFI 20240216" writeDate="date"/>
     <settings/>
     <userComments/>
