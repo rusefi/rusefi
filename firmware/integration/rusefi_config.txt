@@ -460,7 +460,7 @@ bit cltSensorPulldown
 bit iatSensorPulldown
 bit allowIdenticalPps
 bit overrideVvtTriggerGaps
-bit useSpiImu
+bit useSpiImu;If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 bit enableStagedInjection
 
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0

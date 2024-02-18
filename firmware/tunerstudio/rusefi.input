@@ -1731,7 +1731,7 @@ gaugeCategory = GPPWM Outputs
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
 [KeyActions]
-	showPanel = spi,  spiFunction
+	showPanel = spi,  spiBuses
 	showPanel = con,  connection
 
 ;
@@ -2034,7 +2034,8 @@ menuDialog = main
 		subMenu = engineTypeDialog,			"Popular vehicles"
 		subMenu = std_separator
 
-		subMenu = spiFunction,				"SPI"@@if_ts_show_spi
+		subMenu = spiBuses,						"SPI Buses"@@if_ts_show_spi
+		subMenu = spiDevices,					"SPI Devices"@@if_ts_show_spi
 		subMenu = monitoringSettings,		"rusEFI console"
 		subMenu = std_separator
 
@@ -3741,7 +3742,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI device",							hip9011SpiDevice, {isHip9011Enabled == 1}
 		panel = knockThresholdCurve
 
-	dialog = spiFunction, "SPI settings"
+	dialog = spiBuses, "SPI buses settings"
 		field = "!ECU reboot needed to apply these settings"
 		field = "SPI1 enable",							is_enabled_spi_1
 		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
@@ -3769,8 +3770,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 		field = "SPI4 enable",							is_enabled_spi_4
 
-		field = "Accelerometer CS pin",					accelerometerCsPin@@if_ts_show_onboard_accelerometer
-		field = "Accelerometer SPI",          accelerometerSpiDevice@@if_ts_show_onboard_accelerometer
+	dialog = spiDevices, "SPI devices settings"
+		field = "Use SPI accelerometer",		useSpiImu
+		field = "Accelerometer SPI",				accelerometerSpiDevice, {useSpiImu == 1}@@if_ts_show_onboard_accelerometer
+		field = "Accelerometer CS pin",			accelerometerCsPin, {useSpiImu == 1}@@if_ts_show_onboard_accelerometer
 
 	dialog = stftPartitioning, "Region Configuration"
 		field = "Idle region RPM",						stft_maxIdleRegionRpm
@@ -4715,7 +4718,6 @@ dialog = tcuControls, "Transmission Settings"
         field = dacOutputPins1,         dacOutputPins1
         field = dacOutputPins2,         dacOutputPins2
         field = "Read RPM matching VSS profile",    canInputBCM
-        field = useSpiImu,              useSpiImu
         field = auxSpeed1Multiplier,    auxSpeed1Multiplier
         field = useAuxSpeedForSlipRatio, useAuxSpeedForSlipRatio
         field = useVssAsSecondWheelSpeed, useVssAsSecondWheelSpeed
