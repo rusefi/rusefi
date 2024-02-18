@@ -167,7 +167,7 @@ jobs:
 
       - name: Upload .ini files to server
         working-directory: generated/tunerstudio/generated
-        run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{env.SHORT_BOARD_NAME}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
       - name: Build Firmware
         working-directory: ${{inputs.rusefi_dir}}/firmware
