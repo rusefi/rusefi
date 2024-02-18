@@ -22,9 +22,6 @@ on:
         required: false
         type: string
         default: ../..
-      build_target:
-        required: false
-        type: string
     secrets:
       MY_REPO_PAT:
         required: false
@@ -67,21 +64,19 @@ jobs:
           echo "rusefi_dir=${{inputs.rusefi_dir}}"
           echo "relative_board_dir=${{inputs.relative_board_dir}}"
 
+      - name: Set Env Variables
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: |
+          echo "META_OUTPUT_ROOT_FOLDER=../${{inputs.relative_board_dir}}/generated/" >> $GITHUB_ENV
+          echo "gha_shortBoardName=${{inputs.shortBoardName}}" >> $GITHUB_ENV
+          echo "gha_iniFileName=rusefi_${{inputs.shortBoardName}}.ini" >> $GITHUB_ENV
+          echo "${{ secrets.ADDITIONAL_ENV }}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
         with:
           token: ${{ env.TOKEN }}
           submodules: recursive
-
-      - name: Set Env Variables
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-        working-directory: ${{inputs.rusefi_dir}}/firmware
-        run: |
-          echo "META_OUTPUT_ROOT_FOLDER=../${{inputs.relative_board_dir}}/generated/" >> $GITHUB_ENV
-          echo "BOARD_META_PATH=$(bash bin/find_meta_info.sh ../${{inputs.relative_board_dir}} ${{inputs.build_target}})" >> $GITHUB_ENV
-          echo "gha_shortBoardName=${{inputs.shortBoardName}}" >> $GITHUB_ENV
-          echo "gha_iniFileName=rusefi_${{inputs.shortBoardName}}.ini" >> $GITHUB_ENV
-          echo "${{ secrets.ADDITIONAL_ENV }}" >> $GITHUB_ENV
 
       - name: Invoking Post-Checkout Action
         run: |
@@ -164,10 +159,7 @@ jobs:
 
       - name: Upload .ini files to server
         working-directory: generated/tunerstudio/generated
-        run: |
-          FIRMWARE_PATH=../../../${{ inputs.rusefi_dir }}/firmware
-          source $FIRMWARE_PATH/config/boards/common_script_read_meta_env.inc $FIRMWARE_PATH/${{ env.BOARD_META_PATH }}
-          $FIRMWARE_PATH/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{env.gha_iniFileName}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
       - name: Build Firmware
         working-directory: ${{inputs.rusefi_dir}}
