@@ -475,7 +475,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	}
 
 	if (tsInstance.handlePlainCommand(tsChannel, firstByte)) {
-		return -1;
+		return 0;
 	}
 
 	uint8_t secondByte;
