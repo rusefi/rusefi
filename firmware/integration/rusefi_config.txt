@@ -1,5 +1,8 @@
 ! This file defines the format of rusEFI persistent configuration structure
-! This file is processed by ../java_tools/config_definition.jar tool
+! This file is processed by ../java_tools/configuration_definition java toolset
+!
+! for runtime data points meta info see LiveData.yaml
+!
 ! Comments start with '!'
 !
 ! The format is unique to rusEFI but there is a guide to the format available in java_tools/config_definition/RusefiConfigGrammar.g4
