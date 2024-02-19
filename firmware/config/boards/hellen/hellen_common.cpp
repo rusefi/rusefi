@@ -13,7 +13,7 @@ void setHellenCan() {
 
 static void init5vpDiag() {
 #ifdef DIAG_5VP_PIN
-  startInputPinIfValid("5VP_STATE", DIAG_5VP_PIN, PI_DEFAULT);
+  efiSetPadMode("5VP_STATE", DIAG_5VP_PIN, PAL_MODE_INPUT);
 #endif // DIAG_5VP_PIN
 }
 
@@ -28,6 +28,8 @@ void setHellenVbatt() {
 	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
 
 	engineConfiguration->adcVcc = 3.29f;
+
+  init5vpDiag(); // piggy back on popular 'setHellenVbatt' method
 }
 
 void setHellen64Can() {
