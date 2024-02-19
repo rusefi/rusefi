@@ -11,6 +11,12 @@ void setHellenCan() {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
+static void init5vpDiag() {
+#ifdef DIAG_5VP_PIN
+  startInputPinIfValid("5VP_STATE", DIAG_5VP_PIN, PI_DEFAULT);
+#endif // DIAG_5VP_PIN
+}
+
 void setHellenVbatt() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
