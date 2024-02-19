@@ -131,6 +131,7 @@ jobs:
             alphax-4chan_f7,
             alphax-8chan,
             alphax-8chan_debug,
+# todo            alphax-8chan-revA,
             m74_9,
             s105,
             t-b-g,
@@ -209,6 +210,11 @@ jobs:
             folder: config/boards/hellen/alphax-8chan
             short-board-name: alphax-8chan_f7
             skip-rate: 0
+
+          - build-target: alphax-8chan-revA
+            folder: config/boards/hellen/alphax-8chan-revA
+            short-board-name: alphax-8chan-revA
+            skip-rate: 30
 
           - build-target: s105
             folder: config/boards/s105

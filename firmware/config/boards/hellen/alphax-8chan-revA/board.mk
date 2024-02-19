@@ -5,7 +5,6 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
 # Add them all together
-DDEFS += -DFIRMWARE_ID=\"AlphaX-8chan\"
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 
 DDEFS += -DADC_MUX_PIN=Gpio::B3
