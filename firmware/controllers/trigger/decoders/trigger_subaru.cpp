@@ -153,8 +153,9 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 	SUBARU76_CAM_PULSE(4, 0);
 
 	// why is this trigger gap wider than average?
-	s->setTriggerSynchronizationGap2(6.53 * TRIGGER_GAP_DEVIATION_LOW, 10.4 * TRIGGER_GAP_DEVIATION_HIGH);
-	s->setTriggerSynchronizationGap3(1, 0.8 * TRIGGER_GAP_DEVIATION_LOW, 1 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*index*/0, 6.53 * TRIGGER_GAP_DEVIATION_LOW, 10.4 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*index*/1, 0.3, 1 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*index*/2, 0.08, 0.3);
 
 	s->useOnlyPrimaryForSync = withCrankWheel;
 }
