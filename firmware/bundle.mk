@@ -44,3 +44,8 @@ deliver:
 	mkdir -p deliver
 
 bundle: $(BUNDLEFILES) all
+
+CLEAN_BUNDLE_HOOK:
+	@echo Cleaning bundle
+	$(MAKE) -C bootloader clean
+	rm -rf $(FOLDER)
