@@ -21,8 +21,6 @@ $(TCPPOBJS) : $(PCHOBJ)
 $(ACPPOBJS) : $(PCHOBJ)
 
 # Delete PCH output on clean
-CLEAN_RULE_HOOK:
+CLEAN_PCH_HOOK:
 	@echo Cleaning PCH
 	rm -f $(PCHOBJ)
-	@echo Cleaning-BLT
-	-rm -fR build-openblt

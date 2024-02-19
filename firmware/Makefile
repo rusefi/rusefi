@@ -387,6 +387,14 @@ include rusefi_pch.mk
 
 include bundle.mk
 
+.PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK CLEAN_BUNDLE_HOOK
+
+CLEAN_RULE_HOOK: CLEAN_PCH_HOOK CLEAN_BUNDLE_HOOK
+
+CLEAN_PCH_HOOK:
+
+CLEAN_BUNDLE_HOOK:
+
 POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf
 	@java -jar ../java_tools/gcc_map_reader.jar $(BUILDDIR)/$(PROJECT).map | grep Total || echo Unable to run gcc_map_reader
 	@$(TRGT)objdump -h $(BUILDDIR)/$(PROJECT).elf | grep -w ram4

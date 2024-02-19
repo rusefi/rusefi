@@ -23,7 +23,7 @@ endif
 endif
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN) &:
-	$(MAKE) -C bootloader -r
+	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) $(MAKE) -C bootloader -r
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
 
@@ -44,3 +44,8 @@ deliver:
 	mkdir -p deliver
 
 bundle: $(BUNDLEFILES) all
+
+CLEAN_BUNDLE_HOOK:
+	@echo Cleaning bundle
+	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) $(MAKE) -C bootloader clean
+	rm -rf $(FOLDER)
