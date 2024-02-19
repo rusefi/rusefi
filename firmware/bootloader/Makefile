@@ -153,7 +153,7 @@ CONFIG = $(PROJECT_DIR)/config
 # Licensing files.
 include $(CHIBIOS)/os/license/license.mk
 # Startup files.
-include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
+include $(CPU_STARTUP_DIR)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
 include $(CPU_PLATFORM)
@@ -165,13 +165,13 @@ include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 # EX files (optional).
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 
-BOARD_DIR := ../$(BOARD_DIR)
-BOARD_META_PATH := ../$(BOARD_META_PATH)
 BOARDINC = $(BOARD_DIR)
 include $(BOARD_DIR)/board.mk
 
+ifeq (,$(filter clean,$(MAKECMDGOALS)))
 ifeq ($(SHORT_BOARD_NAME),)
-$(error SHORT_BOARD_NAME not set, something wrong with your board.mk file)
+$(error SHORT_BOARD_NAME not set, something wrong with your meta-info.env file)
+endif
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 
@@ -357,3 +357,9 @@ ULIBS = -lm --specs=nano.specs
 
 include $(RULESFILE)
 include $(PROJECT_DIR)/rusefi_pch.mk
+
+.PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK
+
+CLEAN_RULE_HOOK: CLEAN_PCH_HOOK
+	@echo Cleaning-BLT
+	-rm -fR $(BUILDDIR)/*
