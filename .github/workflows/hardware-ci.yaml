@@ -76,7 +76,9 @@ jobs:
       run: .github/workflows/hw-ci/openocd_wipe_and_flash.sh ${{matrix.openocd-script}}
 
     - name: Show USB status
-      run: lsusb
+      run: |
+        lsusb
+        ls -l /dev/serial/by-id/
 
     - name: Upload build bin artifact
       uses: actions/upload-artifact@v4
