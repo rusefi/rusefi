@@ -16,6 +16,7 @@
 *.bat text eol=lf
 *.sh text eol=lf
 *.inc text eol=lf
+*.env text eol=lf
 *.iml text eol=lf
 *.txt text eol=lf
 *.yaml text eol=lf
