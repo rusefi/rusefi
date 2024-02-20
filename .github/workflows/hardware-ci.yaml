@@ -21,6 +21,7 @@ jobs:
             folder: config/boards/f407-discovery
             openocd-script: ../.github/workflows/openocd_ci_f4_discovery.cfg
             serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_2B003B000A51343033393930-if01
+            vbatt_supply: 12
 
           - build-target: proteus_f4
             runs-on: hw-ci-proteus
@@ -28,6 +29,7 @@ jobs:
             folder: config/boards/proteus
             openocd-script: ../.github/workflows/openocd_ci_proteus_f4.cfg
             serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_41003D000451383037343335-if01
+            vbatt_supply: 12
 
           - build-target: proteus_f7
             runs-on: hw-ci-proteus-f7
@@ -35,6 +37,8 @@ jobs:
             folder: config/boards/proteus
             openocd-script: ../.github/workflows/openocd_ci_proteus_f7.cfg
             serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_38002D0005504B4634303120-if01
+            # let's power Proteus from same DC adapter as Nuc PC
+            vbatt_supply: 12
 
     runs-on: ${{matrix.runs-on}}
 
@@ -92,6 +96,7 @@ jobs:
     # ls -l /dev/serial/by-id/
     - name: Set EXTRA env
       run: |
+        echo "HARDWARE_CI_VBATT=${{matrix.vbatt_supply}}" >> $GITHUB_ENV
         echo "HARDWARE_CI_SERIAL_DEVICE=${{matrix.serial-device}}" >> $GITHUB_ENV
 
     # This both compiles and runs HW CI tests
