@@ -9,7 +9,7 @@ HW_TARGET=$2
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/proteus        proteus_f7_debug
 
 set -e
-echo "HW CI build [$HW_FOLDER][$HW_TARGET]"
+echo "[build_for_hw_ci.sh] enter [$HW_FOLDER][$HW_TARGET]"
 
 cd firmware
 
@@ -19,10 +19,12 @@ source config/boards/common_script_read_meta_env.inc "${BOARD_META_PATH}"
 ./gen_live_documentation.sh
 ./gen_config_board.sh $HW_FOLDER $HW_TARGET
 
-echo "We aren't guaranteed a clean machine every time, so manually clean the output."
+echo "[build_for_hw_ci.sh] We aren't guaranteed a clean machine every time, so manually clean the output."
 make clean
 
 export EXTRA_2_PARAMS=-DHARDWARE_CI
 
-echo Build Firmware
+echo "[build_for_hw_ci.sh] Building Firmware"
 make -j$(nproc) -r
+
+echo "[build_for_hw_ci.sh] Done!"
