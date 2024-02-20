@@ -2283,6 +2283,7 @@ end_struct
 #define ts_show_spi3_pins true
 #define ts_show_tps2 true
 #define ts_show_onboard_accelerometer false
+#define ts_show_vvt_output true
 
 #define ts_show_analog_divider true
 #define ts_show_spi true

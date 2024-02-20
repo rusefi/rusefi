@@ -18,7 +18,7 @@
 #define ts_show_sd_pins false
 #define ts_show_ignitionPinMode false
 #define ts_show_vbatt false
-
+#define ts_show_vvt_output false
 
 
 
