@@ -9,14 +9,19 @@ DFUS = deliver/$(PROJECT).dfu
 BUNDLEFILES = \
   $(DFUS) \
   $(OUTS) \
-  $(BOUTS)
+  $(BOUTS) \
+  $(OUTBIN)
 
 ifeq ($(USE_OPENBLT),yes)
   BOOTLOADER_BIN = bootloader/blbuild/openblt_$(PROJECT_BOARD).bin
   BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
   BOUTS = deliver/openblt.bin
+  OUTBIN = deliver/$(PROJECT).bin
+  OUTBIN_IN = .hex
 else
-  OUTS = deliver/$(PROJECT).bin deliver/$(PROJECT).hex
+  OUTBIN = deliver/$(PROJECT).bin
+  OUTBIN_IN = .bin
+  OUTS = deliver/$(PROJECT).hex
 ifeq ($(INCLUDE_ELF),yes)
   OUTS += deliver/$(PROJECT).elf deliver/$(PROJECT).map deliver/$(PROJECT).list
 endif
@@ -26,6 +31,13 @@ $(BOOTLOADER_HEX) $(BOOTLOADER_BIN) &:
 	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) $(MAKE) -C bootloader -r
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
+
+$(OUTBIN): deliver/%.bin: $(BUILDDIR)/%$(OUTBIN_IN) $(BOOTLOADER_HEX) | deliver
+ifeq ($(USE_OPENBLT),yes)
+	$(H2D) -i $(BOOTLOADER_HEX) -i $< -C 0x1C -b $@
+else
+	ln -rfs $< $@
+endif
 
 $(OUTS): deliver/%: $(BUILDDIR)/%
 	cp $< $@
