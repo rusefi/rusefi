@@ -18,10 +18,13 @@ FDIR=$(realpath "$SDIR/..")
 # Check for -b flag
 if [ "$1" == "-b" ]; then
 	B="bundle"
-	MI="$2"
-else
-	MI="$1"
+	shift
 fi
+
+MI="$1"
+
+shift
+MAKE_ARGS=$*
 
 # If the user passed a meta-info file
 if [ ! -z "$MI" ]; then
@@ -68,4 +71,4 @@ cd "$FDIR"
 MI=$(realpath --relative-to="$FDIR" "$MI")
 
 source config/boards/common_script_read_meta_env.inc "$MI"
-make $B -j$(nproc) -r
+make $B -j$(nproc) -r $MAKE_ARGS
