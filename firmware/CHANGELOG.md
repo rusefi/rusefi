@@ -46,6 +46,7 @@ Release template (copy/paste this for new release):
  - Honda CBR 600 cam decoder #5909
  - boosted applications to log VE above 127
  - removing confusing numeric options from enumerable drop downs #5942
+ - Subaru 6/7 improvement for cranking
 
 ### Removed
  - Narrow to Wideband approximation
