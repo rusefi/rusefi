@@ -305,11 +305,11 @@ bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerSha
 		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.getExpectedEventCount((TriggerWheel)i));
 	}
 
-#if EFI_UNIT_TEST
+#if EFI_DEFAILED_LOGGING
 	printf("validateEventCounters: isDecodingError=%d\n", isDecodingError);
 	if (isDecodingError) {
 		for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-			printf("count: cur=%d exp=%d\n", currentCycle.eventCount[i],  triggerShape.getExpectedEventCount((TriggerWheel)i));
+			printf("  count: cur=%d exp=%d\n", currentCycle.eventCount[i],  triggerShape.getExpectedEventCount((TriggerWheel)i));
 		}
 	}
 #endif /* EFI_UNIT_TEST */
@@ -344,7 +344,7 @@ void TriggerDecoderBase::onShaftSynchronization(
 
 static bool shouldConsiderEdge(const TriggerWaveform& triggerShape, TriggerWheel triggerWheel, TriggerValue edge) {
 	if (triggerWheel != TriggerWheel::T_PRIMARY && triggerShape.useOnlyPrimaryForSync) {
-		// Non-primary events ignored 
+		// Non-primary events ignored
 		return false;
 	}
 
@@ -377,7 +377,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		const trigger_event_e signal,
 		const efitick_t nowNt) {
 	ScopePerf perf(PE::DecodeTriggerEvent);
-	
+
 	if (previousEventTimer.getElapsedSecondsAndReset(nowNt) > 1) {
 		/**
 		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not running.
@@ -634,7 +634,7 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 	// Miata NB needs a special decoder.
 	// The problem is that the crank wheel only has 4 teeth, also symmetrical, so the pattern
 	// is long-short-long-short for one crank rotation.
-	// A quick acceleration can result in two successive "short gaps", so we see 
+	// A quick acceleration can result in two successive "short gaps", so we see
 	// long-short-short-short-long instead of the correct long-short-long-short-long
 	// This logic expands the lower bound on a "long" tooth, then compares the last
 	// tooth to the current one.
@@ -670,7 +670,7 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 		// toothDurations[i] / toothDurations[i+1] > from
 		// is an equivalent comparison to
 		// toothDurations[i] > toothDurations[i+1] * from
-		bool isGapCondition = 
+		bool isGapCondition =
 			  (toothDurations[i] > toothDurations[i + 1] * from
 			&& toothDurations[i] < toothDurations[i + 1] * to);
 

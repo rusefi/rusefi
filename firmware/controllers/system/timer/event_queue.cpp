@@ -250,7 +250,7 @@ bool EventQueue::executeOne(efitick_t now) {
 	tryReturnScheduling(current);
 	current = nullptr;
 
-#if EFI_UNIT_TEST
+#if EFI_DEFAILED_LOGGING
 	printf("QUEUE: execute current=%d param=%d\r\n", (uintptr_t)current, (uintptr_t)action.getArgument());
 #endif
 
