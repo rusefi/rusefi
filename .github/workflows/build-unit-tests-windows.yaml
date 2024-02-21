@@ -35,7 +35,7 @@ jobs:
       # 12 has pch https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105858
       # 13 has x86 issue https://github.com/egor-tensin/setup-mingw/issues/14
       with:
-        version: 8.1.0
+        version: 9.4.0
 
 
 
@@ -61,7 +61,7 @@ jobs:
 
     - name: Compile
       working-directory: unit_tests
-      run: make -j4
+      run: make
 
     - name: Run Tests on Windows
       working-directory: unit_tests
