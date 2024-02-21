@@ -140,10 +140,10 @@ Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X
 Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X
 
 ### tpsErrorDetectionTooLow
-TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.
+TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equipped.
 
 ### tpsErrorDetectionTooHigh
-TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.
+TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equipped.
 
 ### cranking.baseFuel
 Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.
@@ -257,7 +257,7 @@ Expected oil pressure after starting the engine. If oil pressure does not reach 
 This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.
 
 ### globalTriggerAngleOffset
-Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchnization point before TDC and negative in case of synchnization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X
+Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchronization point before TDC and negative in case of synchronization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X
 
 ### analogInputDividerCoefficient
 Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.

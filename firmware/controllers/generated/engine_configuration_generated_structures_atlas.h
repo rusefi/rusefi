@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Feb 18 12:29:48 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 21 18:42:14 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,11 +6,13 @@
 // start of stft_cell_cfg_s
 struct stft_cell_cfg_s {
 	/**
+	 * Maximum % that the short term fuel trim can add
 	 * units: %
 	 * offset 0
 	 */
 	int8_t maxAdd;
 	/**
+	 * Maximum % that the short term fuel trim can remove
 	 * units: %
 	 * offset 1
 	 */
@@ -768,14 +770,14 @@ struct engine_configuration_s {
 	int16_t tpsMax;
 	/**
 	 * TPS error detection: what throttle % is unrealistically low?
-	 * Also used for accelerator pedal error detection if so equiped.
+	 * Also used for accelerator pedal error detection if so equipped.
 	 * units: %
 	 * offset 196
 	 */
 	int16_t tpsErrorDetectionTooLow;
 	/**
 	 * TPS error detection: what throttle % is unrealistically high?
-	 * Also used for accelerator pedal error detection if so equiped.
+	 * Also used for accelerator pedal error detection if so equipped.
 	 * units: %
 	 * offset 198
 	 */
@@ -968,7 +970,7 @@ struct engine_configuration_s {
 	angle_t fixedModeTiming;
 	/**
 	 * Angle between Top Dead Center (TDC) and the first trigger event.
-	 * Positive value in case of synchnization point before TDC and negative in case of synchnization point after TDC
+	 * Positive value in case of synchronization point before TDC and negative in case of synchronization point after TDC
 	 * .Knowing this angle allows us to control timing and other angles in reference to TDC.
 	 * set global_trigger_offset_angle X
 	 * units: deg btdc
@@ -5555,4 +5557,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21736);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Feb 18 12:29:48 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 21 18:42:14 UTC 2024
