@@ -469,8 +469,8 @@ bit enableStagedInjection
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X;"ADC", 1, 0, 0, 1023, 0
 
-int16_t tpsErrorDetectionTooLow;TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.;"%", 1, 0, -10, 0, 0
-int16_t tpsErrorDetectionTooHigh;TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.;"%", 1, 0, 100, 110, 0
+int16_t tpsErrorDetectionTooLow;TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equipped.;"%", 1, 0, -10, 0, 0
+int16_t tpsErrorDetectionTooHigh;TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equipped.;"%", 1, 0, 100, 110, 0
 
 cranking_parameters_s cranking
 	float ignitionDwellForCrankingMs;Dwell duration while cranking;"ms", 1, 0, 0, 200, 1
@@ -535,7 +535,7 @@ timing_mode_e timingMode;Dynamic uses the timing map to decide the ignition timi
 
 angle_t fixedModeTiming;This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM", 1, 0, 0, 3000, 0
 
-angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchnization point before TDC and negative in case of synchnization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X;"deg btdc", 1, 0, -720, 720, 0
+angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchronization point before TDC and negative in case of synchronization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X;"deg btdc", 1, 0, -720, 720, 0
 
 
 
