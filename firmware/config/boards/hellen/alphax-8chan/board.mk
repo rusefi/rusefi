@@ -10,9 +10,6 @@ DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 # MM176_GP9
 DDEFS += -DADC_MUX_PIN=Gpio::F2
 
-# one day when we are grown ups and can coordinate a real life test we shall revisit https://github.com/rusefi/rusefi/issues/6008
-DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
-
 LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=H176_MCU_MEGA_LED1_RED
 include $(BOARDS_DIR)/hellen/hellen-common176.mk
 
