@@ -50,6 +50,7 @@ public:
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	InjectorOutputPin *outputsStage2[MAX_WIRES_COUNT];
 	float injectionStartAngle = 0;
+	efitick_t splitInjectionDuration = 0;
 };
 
 void turnInjectionPinHigh(uintptr_t arg);

@@ -84,8 +84,8 @@ void InjectorOutputPin::close(efitick_t nowNt) {
 }
 
 void InjectorOutputPin::setHigh() {
-    NamedOutputPin::setHigh();
-    TunerStudioOutputChannels *state = getTunerStudioOutputChannels();
+	NamedOutputPin::setHigh();
+	TunerStudioOutputChannels *state = getTunerStudioOutputChannels();
 	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
 	switch (injectorIndex) {
 	case 0:
@@ -104,8 +104,8 @@ void InjectorOutputPin::setHigh() {
 }
 
 void InjectorOutputPin::setLow() {
-    NamedOutputPin::setLow();
-    TunerStudioOutputChannels *state = getTunerStudioOutputChannels();
+	NamedOutputPin::setLow();
+	TunerStudioOutputChannels *state = getTunerStudioOutputChannels();
 	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
 	switch (injectorIndex) {
 	case 0:

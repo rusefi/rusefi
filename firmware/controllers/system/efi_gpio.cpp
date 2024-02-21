@@ -103,7 +103,7 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 	pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
 	return pinChanged || curMode != newMode;
 #else
-    return true;
+	return true;
 #endif // EFI_PROD_CODE
 }
 
@@ -117,9 +117,9 @@ void RegisteredOutputPin::init() {
 		newMode = OM_DEFAULT;
 	}
 
-    if (isPinConfigurationChanged()) {
+	if (isPinConfigurationChanged()) {
 		initPin(m_registrationName, newPin, newMode);
-    }
+	}
 }
 
 void RegisteredOutputPin::unregister() {
@@ -374,7 +374,7 @@ void NamedOutputPin::setHigh() {
 	setValue(true);
 
 #if EFI_ENGINE_SNIFFER
-    addEngineSnifferOutputPinEvent(this, true);
+	addEngineSnifferOutputPinEvent(this, true);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
@@ -707,7 +707,7 @@ static void initErrorLed(Gpio led) {
 
 void initPrimaryPins() {
 #if EFI_PROD_CODE
-    initErrorLed(LED_CRITICAL_ERROR_BRAIN_PIN);
+	initErrorLed(LED_CRITICAL_ERROR_BRAIN_PIN);
 
 	addConsoleAction("gpio_pins", EnginePins::debug);
 #endif /* EFI_PROD_CODE */

@@ -93,7 +93,7 @@ TEST(injectionScheduling, InjectionIsScheduledDualStage) {
 		efitick_t startTime = nowNt + nt5deg;
 		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Truly(ActionArgumentHasLowBitSet)));
 		// falling edge (primary) 20ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(20), Truly(ActionArgumentHasLowBitSet)));
 		// falling edge (secondary) 10ms later
 		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(10), Property(&action_s::getArgument, Eq(&event))));
 	}
@@ -209,10 +209,46 @@ TEST(injectionScheduling, InjectionNotScheduled) {
 		// Expect no scheduler calls!
 	}
 
-	
+
 	// Event scheduled at 125 degrees
 	event.injectionStartAngle = 125;
 
 	// We are at 130 degrees now, next tooth 140
 	event.onTriggerTooth(nowNt, 130, 140);
+}
+
+TEST(injectionScheduling, SplitInjectionScheduled) {
+	StrictMock<MockExecutor> mockExec;
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engine->executor.setMockExecutor(&mockExec);
+
+	InjectionEvent event;
+	uintptr_t arg = reinterpret_cast<uintptr_t>(&event);
+	InjectorOutputPin pin;
+	pin.shortName = "test";
+	pin.injectorIndex = 0;
+	event.outputs[0] = &pin;
+
+	{
+		InSequence is;
+
+		// Should schedule second half of split injection:
+		// - starts 2ms from now
+		// - duration 10ms (ends 12ms from now)
+		efitick_t nowNt = getTimeNowNt();
+		efitick_t startTime = nowNt + MS2NT(2);
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Property(&action_s::getArgument, Eq(&event))));
+		efitick_t endTime = startTime + MS2NT(10);
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
+	}
+
+	// Split injection duration of 10ms
+	event.splitInjectionDuration = MS2NT(10);
+
+	// Close injector, should cause second half of split injection to be scheduled!
+	turnInjectionPinLow(arg);
+
+	// Expect it to get zeroed so we don't repeat ad infinitum
+	EXPECT_EQ(event.splitInjectionDuration, 0);
 }

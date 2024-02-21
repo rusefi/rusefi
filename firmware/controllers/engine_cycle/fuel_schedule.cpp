@@ -16,7 +16,13 @@ void endSimultaneousInjection(InjectionEvent *event) {
 	event->update();
 }
 
-void turnInjectionPinLow(InjectionEvent *event) {
+static InjectionEvent* argToEvent(uintptr_t arg) {
+	return reinterpret_cast<InjectionEvent*>(arg & ~(1UL));
+}
+
+void turnInjectionPinLow(uintptr_t arg) {
+	auto event = argToEvent(arg);
+
 	efitick_t nowNt = getTimeNowNt();
 
 	for (size_t i = 0; i < efi::size(event->outputs); i++) {
@@ -25,7 +31,19 @@ void turnInjectionPinLow(InjectionEvent *event) {
 			output->close(nowNt);
 		}
 	}
-	event->update();
+
+	efitick_t nextSplitDuration = event->splitInjectionDuration;
+	if (nextSplitDuration > 0) {
+		event->splitInjectionDuration = 0;
+
+		efitick_t openTime = getTimeNowNt() + MS2NT(2);
+		efitick_t closeTime = openTime + nextSplitDuration;
+
+		getExecutorInterface()->scheduleByTimestampNt("inj", nullptr, openTime, { &turnInjectionPinHigh, arg });
+		getExecutorInterface()->scheduleByTimestampNt("inj", nullptr, closeTime, { turnInjectionPinLow, arg });
+	} else {
+		event->update();
+	}
 }
 
 static void turnInjectionPinLowStage2(InjectionEvent* event) {
@@ -43,7 +61,7 @@ void turnInjectionPinHigh(uintptr_t arg) {
 	efitick_t nowNt = getTimeNowNt();
 
 	// clear last bit to recover the pointer
-	InjectionEvent *event = reinterpret_cast<InjectionEvent*>(arg & ~(1UL));
+	InjectionEvent* event = argToEvent(arg);
 
 	// extract last bit
 	bool stage2Active = arg & 1;
@@ -75,6 +93,10 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 		return;
 	}
 
+	// don't allow split inj in simultaneous mode
+	// TODO: #364 implement logic to actually enable split injections
+	bool doSplitInjection = false && !isSimultaneous;
+
 	// Select fuel mass from the correct cylinder
 	auto injectionMassGrams = getEngineState()->injectionMass[this->cylinderNumber];
 
@@ -83,8 +105,8 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	// TODO: is it correct to wall wet on both pulses?
 	injectionMassGrams = wallFuel.adjust(injectionMassGrams);
 
-	// Disable staging in simultaneous mode
-	float stage2Fraction = isSimultaneous ? 0 : getEngineState()->injectionStage2Fraction;
+	// Disable staging in simultaneous mode or split injection mode
+	float stage2Fraction = (isSimultaneous || doSplitInjection) ? 0 : getEngineState()->injectionStage2Fraction;
 
 	// Compute fraction of fuel on stage 2, remainder goes on stage 1
 	const float injectionMassStage2 = stage2Fraction * injectionMassGrams;
@@ -99,6 +121,11 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 		float actualInjectedMass = numberOfInjections * (injectionMassStage1 + injectionMassStage2);
 
 		engine->module<TripOdometer>()->consumeFuel(actualInjectedMass, nowNt);
+	}
+
+	if (doSplitInjection) {
+		// If in split mode, do the injection in two halves
+		injectionMassStage1 = injectionMassStage1 / 2;
 	}
 
 	const floatms_t injectionDurationStage1 = engine->module<InjectorModelPrimary>()->getInjectionDuration(injectionMassStage1);
@@ -164,7 +191,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 
 		// sequential or batch
 		startAction = { &turnInjectionPinHigh, startActionPtr };
-		endActionStage1 = { &turnInjectionPinLow, this };
+		endActionStage1 = { &turnInjectionPinLow, startActionPtr };
 		endActionStage2 = { &turnInjectionPinLowStage2, this };
 	}
 
@@ -178,7 +205,15 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	efitick_t startTime = scheduleByAngle(nullptr, nowNt, angleFromNow, startAction);
 
 	// Schedule closing stage 1
-	efitick_t turnOffTimeStage1 = startTime + US2NT((int)durationUsStage1);
+	efitick_t durationStage1Nt = US2NT((int)durationUsStage1);
+	efitick_t turnOffTimeStage1 = startTime + durationStage1Nt;
+
+	if (doSplitInjection) {
+		this->splitInjectionDuration = durationStage1Nt;
+	} else {
+		this->splitInjectionDuration = 0;
+	}
+
 	getExecutorInterface()->scheduleByTimestampNt("inj", nullptr, turnOffTimeStage1, endActionStage1);
 
 	// Schedule closing stage 2 (if applicable)
