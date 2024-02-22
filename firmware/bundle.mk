@@ -108,7 +108,7 @@ BUNDLE_FILES = \
 $(SIMULATOR):
 	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Windows_NT"
 
-$(BOOTLOADER_HEX) $(BOOTLOADER_BIN) &:
+bootloader/blbuild/openblt_$(PROJECT_BOARD).%:
 	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) $(MAKE) -C bootloader -r
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
@@ -125,13 +125,16 @@ $(BOUTS): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_BOARD)% | $(F
 $(OUTBIN) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
 	ln -rfs $< $@
 
-$(DFU) $(DBIN) &: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_OUT) $(BINSRC) | $(DELIVER)
+$(DFU) $(DBIN): .h2d-sentinel ;
+
+.h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_OUT) $(BINSRC) | $(DELIVER)
 ifeq ($(USE_OPENBLT),yes)
 	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -C 0x1C -o $(DFU) -b $(DBIN)
 else
 	$(H2D) -i $(BUILDDIR)/$(PROJECT).hex -C 0x1C -o $(DFU)
 	cp $(BUILDDIR)/$(PROJECT).bin $(DBIN)
 endif
+	@touch $@
 
 $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 	wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $(dir $@)
