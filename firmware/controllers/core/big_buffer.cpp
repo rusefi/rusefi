@@ -38,13 +38,17 @@ BigBufferHandle::BigBufferHandle(BigBufferHandle&& other) {
 }
 
 BigBufferHandle& BigBufferHandle::operator= (BigBufferHandle&& other) {
-	// swap contents of the two objects
-	m_bufferPtr = other.m_bufferPtr;
-	other.m_bufferPtr = nullptr;
+	if (this != &other) {
+		if (m_bufferPtr) {
+			releaseBuffer(m_bufferPtr, m_user);
+		}
+		// swap contents of the two objects
+		m_bufferPtr = other.m_bufferPtr;
+		other.m_bufferPtr = nullptr;
 
-	m_user = other.m_user;
-	other.m_user = BigBufferUser::None;
-
+		m_user = other.m_user;
+		other.m_user = BigBufferUser::None;
+	}
 	return *this;
 }
 
