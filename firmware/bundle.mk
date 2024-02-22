@@ -108,8 +108,11 @@ BUNDLE_FILES = \
 $(SIMULATOR):
 	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Windows_NT"
 
-bootloader/blbuild/openblt_$(PROJECT_BOARD).%:
+$(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
+
+.bootloader-sentinel:
 	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) $(MAKE) -C bootloader -r
+	@touch $@
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
 
