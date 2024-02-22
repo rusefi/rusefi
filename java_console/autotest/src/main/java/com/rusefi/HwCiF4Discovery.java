@@ -22,6 +22,7 @@ import com.rusefi.io.CommandQueue;
  */
 public class HwCiF4Discovery {
     private final static Class[] tests = {
+        PTraceTest.class,
             CompositeLoggerTest.class,
             MiscTest.class,
             CommonFunctionalTest.class,
