@@ -75,7 +75,7 @@
 #include "sachs.h"
 #include "vw.h"
 #include "vw_b6.h"
-#include "toyota_jzs147.h"
+#include "toyota_jz.h"
 #include "toyota_1NZ_FE.h"
 #include "mitsubishi_3A92.h"
 #include "mitsubishi_4G93.h"

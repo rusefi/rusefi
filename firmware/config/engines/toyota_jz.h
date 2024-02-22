@@ -1,5 +1,5 @@
 /*
- * @file toyota_jzs147.h
+ * @file toyota_jz.h
  *
  * @date Dec 30, 2015
  * @author Andrey Belomutskiy, (c) 2012-2020

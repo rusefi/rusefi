@@ -1,5 +1,5 @@
 /*
- * @file toyota_jzs147.cpp
+ * @file toyota_jz.cpp
  *
  * toyota aristo
  * https://en.wikipedia.org/wiki/Lexus_GS
@@ -19,7 +19,7 @@
 
 #include "pch.h"
 
-#include "toyota_jzs147.h"
+#include "toyota_jz.h"
 #include "custom_engine.h"
 #include "mazda_miata_vvt.h"
 
