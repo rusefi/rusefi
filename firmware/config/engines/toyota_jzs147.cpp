@@ -24,7 +24,9 @@
 #include "mazda_miata_vvt.h"
 
 static void common2jz() {
-	setFrankensoConfiguration(); // default pinout
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_TOYOTA);
+	strcpy(engineConfiguration->engineCode, "2JZ");
+	strcpy(engineConfiguration->vehicleName, "VVT example");
 
 	engineConfiguration->displacement = 3.0;
 	engineConfiguration->cylindersCount = 6;
@@ -32,6 +34,8 @@ static void common2jz() {
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
+#if HW_FRANKENSO
+	setFrankensoConfiguration(); // default pinout
 	engineConfiguration->ignitionPins[0] = Gpio::E14;
 	engineConfiguration->ignitionPins[1] = Gpio::C7;
 	engineConfiguration->ignitionPins[2] = Gpio::C9;
@@ -46,6 +50,7 @@ static void common2jz() {
 	engineConfiguration->injectionPins[3] = Gpio::B7; // #4
 	engineConfiguration->injectionPins[4] = Gpio::E3; // #5
 	engineConfiguration->injectionPins[5] = Gpio::E4; // #6
+#endif // HW_FRANKENSO
 
 	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
 
@@ -75,11 +80,14 @@ void setToyota_2jz_vics() {
 	setCrankOperationMode();
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_36_2;
 
+#if HW_FRANKENSO
 	engineConfiguration->triggerInputPins[0] = Gpio::A5; // crank sensor
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned; // cam sensor will he handled by custom vtti code
 
 	engineConfiguration->camInputs[0] = Gpio::C6;
 	engineConfiguration->vvtMode[0] = VVT_TOYOTA_3_TOOTH;
+	engineConfiguration->vvtPins[0] = Gpio::E3; // VVT solenoid control
+#endif // HW_FRANKENSO
 
 	// set global_trigger_offset_angle 155
 	engineConfiguration->globalTriggerAngleOffset = 155; // todo
@@ -88,13 +96,8 @@ void setToyota_2jz_vics() {
 	engineConfiguration->injectionMode = IM_BATCH; // just for now
 	engineConfiguration->twoWireBatchIgnition = true;
 
-	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_TOYOTA);
-	strcpy(engineConfiguration->engineCode, "2JZ");
-	strcpy(engineConfiguration->vehicleName, "VVT example");
-
 	// todo: these magic values would be hardcoded once we find out proper magic values!
 	//	engineConfiguration->scriptSetting[4] = 175 - 45;
 	//	engineConfiguration->scriptSetting[5] = 175 + 45;
 
-	engineConfiguration->vvtPins[0] = Gpio::E3; // VVT solenoid control
 }

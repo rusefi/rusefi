@@ -2257,8 +2257,9 @@ cmd_set_engine_type_PROTEUS_NISSAN_VQ35				= "@@TS_IO_TEST_COMMAND_char@@@@ts_co
 cmd_set_engine_type_PROTEUS_M111    				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_M111_16_hex@@"@@if_show_Proteus_presets
 
 cmd_set_engine_type_GM_SBC	        			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_GM_SBC_16_hex@@"@@if_show_Proteus_presets
-cmd_set_engine_type_GM_SBC       			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_GM_SBC_16_hex@@"@@if_show_8chan_presets
-cmd_set_engine_type_GM_SBC       			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_GM_SBC_16_hex@@"@@if_show_uaefi_presets
+cmd_set_engine_type_GM_SBC       			    = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_GM_SBC_16_hex@@"@@if_show_8chan_presets
+cmd_set_engine_type_GM_SBC       			    = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_GM_SBC_16_hex@@"@@if_show_uaefi_presets
+cmd_set_engine_type_TOYOTA_2JZ_GTE_VVTi   = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_TOYOTA_2JZ_GTE_VVTi_16_hex@@"@@if_show_uaefi_presets
 
 
 cmd_set_engine_type_HYUNDAI_PB				        = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HYUNDAI_PB_16_hex@@"@@if_show_Proteus_presets
@@ -4556,6 +4557,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Fuel Bench",               cmd_set_engine_type_FUEL_BENCH
 
 		commandButton = "Small Block Chevy",		        cmd_set_engine_type_GM_SBC@@if_show_uaefi_presets
+		commandButton = "2JZ",		                      cmd_set_engine_type_TOYOTA_2JZ_GTE_VVTi@@if_show_uaefi_presets
 
 		commandButton = "SBC",			            cmd_set_engine_type_GM_SBC@@if_show_8chan_presets
 		commandButton = "Honda BCM",	            cmd_set_engine_type_SMALL_CB_HONDA_BCM@@if_show_small_can_board_presets
