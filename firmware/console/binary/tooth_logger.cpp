@@ -127,6 +127,7 @@ void DisableToothLogger() {
 	setToothLogReady(false);
 
 	// Release the big buffer for another user
+	// C++ magic: here we are calling BigBufferHandle::operator=() with empty instance
 	bufferHandle = {};
 	buffers = nullptr;
 }

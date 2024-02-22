@@ -58,6 +58,7 @@ TESTS_SRC_CPP = \
 	tests/test_change_engine_type.cpp \
 	tests/util/test_scaled_channel.cpp \
 	tests/util/test_timer.cpp \
+	tests/test_big_buffer.cpp \
 	tests/system/test_periodic_thread_controller.cpp \
 	tests/test_util.cpp \
 	tests/test_start_stop.cpp \
