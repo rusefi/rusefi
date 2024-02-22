@@ -1,10 +1,11 @@
-Here we have some tiny dev utilities - average rusEFI user would not need to use any of these!
-
+Here we have some dev utilities - average rusEFI user would not need to use any of these!
 
 ```
-cd android
 ./gradlew :config_definition:shadowJar
 ```
+
+``configuration_definition`` is the most valuable subproject: that code reads
+
 
 gcc_map_reader reads the .map file produced by GCC and prints some details on what is RAM used for
 
