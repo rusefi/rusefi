@@ -117,6 +117,12 @@ void perfEventInstantGlobal(PE event) {
 }
 
 void perfTraceEnable() {
+	// force release of the buffer if occupied by the tooth logger
+	if (IsToothLoggerEnabled()) {
+		// don't worry, it will be automatically enabled 
+		// when the next TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY command arrives
+		DisableToothLogger();
+	}
 	s_traceBuffer = getBigBuffer(BigBufferUser::PerfTrace);
 	s_isTracing = true;
 }
