@@ -61,7 +61,7 @@ jobs:
 
     - name: Compile
       working-directory: unit_tests
-      run: make -j4
+      run: make
 
     - name: Run Tests on Windows
       working-directory: unit_tests
