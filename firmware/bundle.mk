@@ -66,9 +66,11 @@ CONSOLE_FOLDER_SOURCES = \
 
 CACERTS_FOLDER_SOURCES = $(wildcard ../misc/console_launcher/update-ts-cacerts/*)
 
+BOOTLOADER_BIN = bootloader/blbuild/openblt_$(PROJECT_BOARD).bin
+BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
+
 ifeq ($(USE_OPENBLT),yes)
-  BOOTLOADER_BIN = bootloader/blbuild/openblt_$(PROJECT_BOARD).bin
-  BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
+  BOOTLOADER_OUT = $(BOOTLOADER_HEX)
   BOUTS = $(FOLDER)/openblt.bin
   SREC_TARGET = $(FOLDER)/rusefi_update.srec
 else
@@ -123,7 +125,7 @@ $(BOUTS): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_BOARD)% | $(F
 $(OUTBIN) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
 	ln -rfs $< $@
 
-$(DFU) $(DBIN) &: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_HEX) $(BINSRC) | $(DELIVER)
+$(DFU) $(DBIN) &: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_OUT) $(BINSRC) | $(DELIVER)
 ifeq ($(USE_OPENBLT),yes)
 	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -C 0x1C -o $(DFU) -b $(DBIN)
 else
