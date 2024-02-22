@@ -34,10 +34,6 @@ jobs:
         sudo ./add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
 
-    - name: Generate Configs, Enums & Live Documentation
-      working-directory: ./firmware/
-      run: ./gen_default_everything.sh
-
     - name: Compile Linux Simulator
       working-directory: ./simulator/
       run: SHORT_BOARD_NAME=f407-discovery ./compile.sh

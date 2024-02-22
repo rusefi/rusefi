@@ -7,9 +7,9 @@
 # As of Sep 2019, this is known to compile on Linux
 # in my case I had to
 # sudo apt-get install gcc-multilib g++-multilib
-# 
+#
 # todo: automatically execute that command same as we automatically fetch submodules?
-# 
+#
 
 
 
@@ -83,7 +83,7 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT = 
+  USE_LDOPT =
 endif
 
 # Enable this if you want link time optimizations (LTO)
@@ -217,13 +217,13 @@ $(info OS is [${OS}])
 
 ifeq ($(OS),Windows_NT)
   # ChibiOS seem to require 32 bit compiler at least on Windows
-  # base 32-bit Cygwin is needed with mingw64 32-bit version 
+  # base 32-bit Cygwin is needed with mingw64 32-bit version
   # Cygwin64 would not debug if used with mingw64 32-bit version
   # 32 bit GDB available at http://www.equation.com/servlet/equation.cmd?fa=gdb
 
   TRGT = i686-w64-mingw32-
 else
-  TRGT = 
+  TRGT =
 endif
 
 CC   = $(TRGT)gcc
@@ -288,4 +288,5 @@ include $(RULESPATH)/rules.mk
 
 # Enable precompiled header
 include $(PROJECT_DIR)/rusefi_pch.mk
+include $(PROJECT_DIR)/fome_generated.mk
 include $(PROJECT_DIR)/gitversion.mk

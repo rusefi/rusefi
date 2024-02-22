@@ -1,4 +1,4 @@
-
+ifneq ($(SKIP_GIT_CHECK),yes)
 ifeq ("$(wildcard $(RULESFILE))","")
 $(info $(RULESFILE) not found. Chibios: Invoking "git submodule update --init")
 $(shell git submodule update --init)
@@ -15,6 +15,7 @@ $(info Invoked "git submodule update --init")
 # make is not happy about newly checked out module for some reason but next invocation would work
 $(error Please run 'make' again. Please make sure you have 'git' command in PATH)
 endif
+endif
 
 ifeq ($(PROJECT_BOARD),)
   PROJECT_BOARD = f407-discovery
@@ -28,8 +29,8 @@ ifeq ($(BOARD_DIR),)
 endif
 
 ifeq ($(PROJECT_CPU),)
-  # many boards all the way to Proteus use this F4 default
-  PROJECT_CPU = ARCH_STM32F4
+# many boards all the way to Proteus use this F4 default
+	PROJECT_CPU = ARCH_STM32F4
 endif
 
 -include $(BOARD_DIR)/config.mk
@@ -74,9 +75,9 @@ $(error Unexpected PROJECT_CPU [$(PROJECT_CPU)])
 endif
 
 ifeq ($(CPU_STARTUP_DIR),)
-CPU_STARTUP_DIR = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
+	CPU_STARTUP_DIR = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 endif
 
 ifeq ($(GENERATED_ENUMS_DIR),)
-GENERATED_ENUMS_DIR = $(PROJECT_DIR)/controllers/algo
+	GENERATED_ENUMS_DIR = $(PROJECT_DIR)/controllers/algo
 endif

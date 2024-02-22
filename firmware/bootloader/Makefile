@@ -339,4 +339,5 @@ ULIBS = -lm --specs=nano.specs
 
 include $(RULESFILE)
 include $(PROJECT_DIR)/rusefi_pch.mk
+include $(PROJECT_DIR)/fome_generated.mk
 include $(PROJECT_DIR)/gitversion.mk

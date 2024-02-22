@@ -12,9 +12,6 @@ echo "HW CI build [$HW_FOLDER][$HW_TARGET]"
 
 cd firmware
 
-./gen_live_documentation.sh
-./gen_config_board.sh $HW_FOLDER $HW_TARGET
-
 echo "We aren't guaranteed a clean machine every time, so manually clean the output."
 make clean
 cd ..

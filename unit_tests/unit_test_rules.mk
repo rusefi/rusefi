@@ -116,7 +116,7 @@ else
   TRGT = i686-w64-mingw32-
 endif
 else
-  TRGT = 
+  TRGT =
 endif
 
 CC   = $(TRGT)gcc
@@ -212,4 +212,5 @@ endif
 
 include $(UNIT_TESTS_DIR)/rules.mk
 include $(PROJECT_DIR)/rusefi_pch.mk
+include $(PROJECT_DIR)/fome_generated.mk
 include $(PROJECT_DIR)/gitversion.mk

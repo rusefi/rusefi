@@ -19,6 +19,10 @@ RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
 include $(RUSEFI_LIB)/util/util.mk
 include $(RUSEFI_LIB)/pt2001/pt2001.mk
 
+# make rusefi.mk happy...
+SKIP_GIT_CHECK = yes
+include $(PROJECT_DIR)/rusefi.mk
+
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC += $(ALLCSRC) \
