@@ -29,6 +29,9 @@ jobs:
 
     - name: Set up MinGW
       uses: egor-tensin/setup-mingw@v2
+      # 8.1.0 from 2018 works!
+      # available options see https://community.chocolatey.org/packages/mingw#versionhistory
+      # 10.3.0 internal error in mingw32_gt_pch_use_address
       # 12 has pch https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105858
       # 13 has x86 issue https://github.com/egor-tensin/setup-mingw/issues/14
       with:
