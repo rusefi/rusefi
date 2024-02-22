@@ -24,6 +24,7 @@ log.txt
 *.rusefi_binary
 *.msq
 *.kicad_prl
+.*-sentinel
 
 # Eclipse
 .metadata/
