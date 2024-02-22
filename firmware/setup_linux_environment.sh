@@ -2,7 +2,7 @@
 
 #
 # it's totally possible to develop on Windows. Also WSL is amazing!
-# TL,DR: use gcc 9.3
+# TL,DR: use same gcc version as GitHub Actions from .github/workflows
 #
 # by the way to uninstall package with old compiler version you might use
 # sudo apt remove binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi
