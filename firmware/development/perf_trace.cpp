@@ -51,7 +51,7 @@ static void perfEventImpl(PE event, EPhase phase) {
 	if constexpr (!ENABLE_PERF_TRACE) {
 		return;
 	}
-	
+
 	// Bail if we aren't tracing
 	if (!s_isTracing || !s_traceBuffer) {
 		return;
@@ -117,12 +117,14 @@ void perfEventInstantGlobal(PE event) {
 }
 
 void perfTraceEnable() {
+#if EFI_TOOTH_LOGGER
 	// force release of the buffer if occupied by the tooth logger
 	if (IsToothLoggerEnabled()) {
-		// don't worry, it will be automatically enabled 
+		// don't worry, it will be automatically enabled
 		// when the next TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY command arrives
 		DisableToothLogger();
 	}
+#endif // EFI_TOOTH_LOGGER
 	s_traceBuffer = getBigBuffer(BigBufferUser::PerfTrace);
 	s_isTracing = true;
 }
