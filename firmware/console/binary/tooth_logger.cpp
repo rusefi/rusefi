@@ -326,4 +326,8 @@ void EnableToothLoggerIfNotEnabled() {
 	}
 }
 
+bool IsToothLoggerEnabled() {
+	return ToothLoggerEnabled;
+}
+
 #endif /* EFI_TOOTH_LOGGER */
