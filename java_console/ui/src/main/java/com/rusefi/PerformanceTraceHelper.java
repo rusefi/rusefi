@@ -8,6 +8,7 @@ import com.rusefi.tracing.JsonOutput;
 import com.rusefi.ui.RpmModel;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -33,7 +34,10 @@ public class PerformanceTraceHelper {
             int rpm = RpmModel.getInstance().getValue();
             String fileName = FileLog.getDate() + "_rpm_" + rpm + "_rusEFI_trace" + ".json";
 
-            JsonOutput.writeToStream(data, new FileOutputStream(fileName));
+            File outputFile = new File(fileName);
+            JsonOutput.writeToStream(data, new FileOutputStream(outputFile));
+            MessagesCentral.getInstance().postMessage(PerformanceTraceHelper.class, "Saved to " + outputFile.getAbsolutePath());
+            MessagesCentral.getInstance().postMessage(PerformanceTraceHelper.class, "See https://github.com/rusefi/rusefi/wiki/Developer-Performance-Tracing");
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
