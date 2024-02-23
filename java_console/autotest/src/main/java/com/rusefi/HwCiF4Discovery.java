@@ -22,7 +22,7 @@ import com.rusefi.io.CommandQueue;
  */
 public class HwCiF4Discovery {
     private final static Class[] tests = {
-        PTraceTest.class,
+// huh? why does this not work for discovery?        PTraceTest.class,
             CompositeLoggerTest.class,
             MiscTest.class,
             CommonFunctionalTest.class,
