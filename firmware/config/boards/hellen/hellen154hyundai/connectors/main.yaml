@@ -81,6 +81,14 @@ pins:
     class: event_inputs
     ts_name: Crank - K17 rev C
 
+  - pin: K18
+    function: BK2 WBO IP
+  - pin: K19
+    function: BK2 WBO N
+  - pin: K20
+    function: BK2 WBO G
+
+
   - pin: K21
     meta: H144_IN_O2S
     class: analog_inputs
@@ -164,6 +172,9 @@ pins:
     class: event_inputs
     ts_name: K40 VSS
     function: Vehicle Speed Sensor
+
+  - pin: K42
+    function: BK2 WBO RC
 
   - pin: K43
     function: sensor +5v feed
@@ -317,6 +328,9 @@ pins:
     type: ls
     ts_name: MIL
     function: Check Engine Light
+
+  - pin: K93
+    function: BK2 WBO Heater
 
   - pin: A1
     meta: H144_IGN_4
