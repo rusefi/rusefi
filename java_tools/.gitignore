@@ -1,3 +1,5 @@
 .gradle
 **/rusefi_tool.log
 log
+# PTrace files
+*.json
