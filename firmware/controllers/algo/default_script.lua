@@ -30,6 +30,9 @@ function printPacket(bus, id, dlc, data)
     print('Received ' .. arrayToString(data))
 end
 
+function onCanRx(bus, id, dlc, data)
+end
+
 function onTick()
 end
 
