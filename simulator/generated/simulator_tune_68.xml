@@ -2575,6 +2575,9 @@ function printPacket(bus, id, dlc, data)
     print('Received ' .. arrayToString(data))
 end
 
+function onCanRx(bus, id, dlc, data)
+end
+
 function onTick()
 end</constant>
         <constant cols="1" digits="2" name="cltFuelCorrBins" rows="16">
