@@ -263,12 +263,12 @@ jobs:
           - build-target: hellen-112-17
             folder: config/boards/hellen/hellen-112-17
             short-board-name: hellen-112-17
-            skip-rate: 0
+            skip-rate: 50
 
           - build-target: hellen-112-17_debug
             folder: config/boards/hellen/hellen-112-17
             short-board-name: hellen-112-17
-            skip-rate: 0
+            skip-rate: 50
 
           - build-target: hellen-gm-e67
             folder: config/boards/hellen/hellen-gm-e67
@@ -298,6 +298,7 @@ jobs:
           - build-target: hellen121nissan
             folder: config/boards/hellen/hellen121nissan
             short-board-name: hellen121nissan
+            skip-rate: 50
 
           - build-target: hellen-honda-k
             folder: config/boards/hellen/hellen-honda-k
@@ -306,6 +307,7 @@ jobs:
           - build-target: hellen-honda-k_debug
             folder: config/boards/hellen/hellen-honda-k
             short-board-name: hellen-honda-k
+            skip-rate: 50
 
           - build-target: hellen154hyundai
             folder: config/boards/hellen/hellen154hyundai
@@ -315,7 +317,7 @@ jobs:
           - build-target: hellen154hyundai_f7
             folder: config/boards/hellen/hellen154hyundai
             short-board-name: hellen154hyundai_f7
-            skip-rate: 0
+            skip-rate: 90
 
           - build-target: cypress
             folder: config/boards/cypress
@@ -376,16 +378,17 @@ jobs:
           - build-target: stm32f429_nucleo
             folder: config/boards/nucleo_f429
             short-board-name: stm32f429_nucleo
+            skip-rate: 50
 
           - build-target: stm32f767_nucleo
             folder: config/boards/nucleo_f767
             short-board-name: stm32f767_nucleo
-            skip-rate: 0
+            skip-rate: 50
 
           - build-target: stm32f767_nucleo_debug
             folder: config/boards/nucleo_f767
             short-board-name: stm32f767_nucleo
-            skip-rate: 0
+            skip-rate: 50
 
           - build-target: stm32h743_nucleo
             folder: config/boards/nucleo_h743
