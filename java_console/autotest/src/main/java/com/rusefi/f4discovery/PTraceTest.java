@@ -32,6 +32,6 @@ public class PTraceTest extends RusefiTestBase {
 
         latch.await(30, TimeUnit.SECONDS);
         List<Entry> entries = result.get();
-        assertTrue(entries != null && !entries.isEmpty());
+        assertTrue("PTrace entries: " + entries, entries != null && !entries.isEmpty());
     }
 }
