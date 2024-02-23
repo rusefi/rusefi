@@ -26,7 +26,7 @@ public class PTraceHelper {
     private static List<Entry> executeGetPTraceCommand(BinaryProtocol bp) {
         byte[] packet = bp.executeCommand(Fields.TS_PERF_TRACE_GET_BUFFER, "get trace");
         if (!checkResponseCode(packet, (byte) Fields.TS_RESPONSE_OK) || ((packet.length - 1) % 8) != 0)
-            throw new IllegalStateException("Unexpected packet, length=" + (packet != null ? 0 : packet.length));
+            throw new IllegalStateException("Unsupported command or error? packet length=" + (packet != null ? 0 : packet.length));
 
         return Entry.parseBuffer(packet);
     }
