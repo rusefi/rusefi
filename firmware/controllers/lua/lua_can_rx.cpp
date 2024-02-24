@@ -79,8 +79,12 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	lua_pushinteger(ls, CAN_ID(data->Frame));
 	lua_pushinteger(ls, dlc);
 
-	// Build table for data
-	lua_newtable(ls);
+  if (engineConfiguration->luaCanRxWorkaround) {
+    lua_getglobal(ls, "global_can_data");
+  } else {
+  	// Build table for data, that's a HEAVY operation
+	  lua_newtable(ls);
+	}
 	for (size_t i = 0; i < dlc; i++) {
 		lua_pushinteger(ls, data->Frame.data8[i]);
 
