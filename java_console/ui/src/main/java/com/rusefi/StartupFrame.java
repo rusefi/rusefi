@@ -1,8 +1,6 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.autodetect.PortDetector;
-import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.FrameHelper;
@@ -44,8 +42,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
 public class StartupFrame {
     private static final Logging log = getLogging(Launcher.class);
     public static final String ALWAYS_AUTO_PORT = "always_auto_port";
-
-    // private static final int RUSEFI_ORANGE = 0xff7d03;
+    private static final String NO_PORTS_FOUND = "<html>No ports found!<br>Confirm blue LED is blinking</html>";
 
     private final JFrame frame;
     private final JPanel connectPanel = new JPanel(new FlowLayout());
@@ -67,10 +64,9 @@ public class StartupFrame {
      * closing the application.
      */
     private boolean isProceeding;
-    private final JLabel noPortsMessage = new JLabel("<html>No ports found!<br>Confirm blue LED is blinking</html>");
+    private final JLabel noPortsMessage = new JLabel("Scanning ports...");
 
     public StartupFrame() {
-//        AudioPlayback.start();
         String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
         log.info(title);
         frame = FrameHelper.createFrame(title).getFrame();
@@ -85,7 +81,7 @@ public class StartupFrame {
         });
     }
 
-    public void chooseSerialPort() {
+    public void showUi() {
         realHardwarePanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Real stm32"));
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
@@ -102,7 +98,6 @@ public class StartupFrame {
         connectPanel.add(comboSpeeds);
 
         final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
-        //connectButton.setBackground(new Color(RUSEFI_ORANGE)); // custom orange
         setToolTip(connectButton, "Connect to real hardware");
 
         JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Always auto-connect port");
@@ -231,6 +226,7 @@ public class StartupFrame {
         List<SerialPortScanner.PortResult> ports = currentHardware.getKnownPorts();
         log.info("Rendering available ports: " + ports);
         connectPanel.setVisible(!ports.isEmpty());
+        noPortsMessage.setText(NO_PORTS_FOUND);
         noPortsMessage.setVisible(ports.isEmpty());
 
         applyPortSelectionToUIcontrol(ports);
