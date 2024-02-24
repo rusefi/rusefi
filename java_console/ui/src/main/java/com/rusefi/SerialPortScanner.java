@@ -260,12 +260,6 @@ public enum SerialPortScanner {
             for (String tcpPort : TcpConnector.getAvailablePorts()) {
                 ports.add(new PortResult(tcpPort, SerialPortType.Ecu));
             }
-        }
-
-        if (includeSlowLookup) {
-            for (String tcpPort : TcpConnector.getAvailablePorts()) {
-                ports.add(new PortResult(tcpPort, SerialPortType.Ecu));
-            }
             dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
             stLinkConnected = StLinkFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
             PCANConnected = MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
