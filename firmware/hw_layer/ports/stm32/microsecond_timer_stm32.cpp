@@ -61,6 +61,12 @@ void portInitMicrosecondTimer() {
 	// (which would take 358 seconds at 12mhz timer speed), so we have to use normal upcounting
 	// output compare mode instead.
 	SCHEDULER_TIMER_DEVICE->CCMR1 = STM32_TIM_CCMR1_OC1M(1);
+
+	/* TODO: implement for all possible TIMs */
+	if (SCHEDULER_TIMER_DEVICE == TIM5) {
+		/* stop timers clock when core is halted */
+		DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM5_STOP;
+	}
 }
 
 uint32_t getTimeNowLowerNt() {
