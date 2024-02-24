@@ -21,6 +21,7 @@ echo "the storage section of rusefiXXX.ini is updated as well"
 
 BOARD_DIR=${1:-$BOARD_DIR}
 SHORT_BOARD_NAME=${2:-$SHORT_BOARD_NAME}
+INI=${3:-"rusefi_$SHORT_BOARD_NAME.ini"}
 
 if [ -z "$BOARD_DIR" ]; then
 	echo "Board name parameter expected"
@@ -31,8 +32,6 @@ if [ -z "$SHORT_BOARD_NAME" ]; then
 	echo "ShortBoard name parameter expected"
 	exit 1
 fi
-
-INI="rusefi_${SHORT_BOARD_NAME}.ini"
 
 echo "BOARD_DIR=${BOARD_DIR} SHORT_BOARD_NAME=${SHORT_BOARD_NAME}"
 
