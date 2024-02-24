@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.can.elm.Elm327Connector;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.serial.SerialIoStream;
