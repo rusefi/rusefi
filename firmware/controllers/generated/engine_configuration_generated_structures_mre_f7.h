@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 21 18:41:34 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 24 15:00:09 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2832,7 +2832,7 @@ struct engine_configuration_s {
 	bool enableExtendedCanBroadcast : 1 {};
 	/**
 	offset 1576 bit 6 */
-	bool unusedBit_495_6 : 1 {};
+	bool luaCanRxWorkaround : 1 {};
 	/**
 	offset 1576 bit 7 */
 	bool unusedBit_495_7 : 1 {};
@@ -5557,4 +5557,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22236);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 21 18:41:34 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 24 15:00:09 UTC 2024

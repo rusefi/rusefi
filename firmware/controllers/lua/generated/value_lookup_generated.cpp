@@ -1084,6 +1084,9 @@ float getConfigValueByName(const char *name) {
 // enableExtendedCanBroadcast
 		case 923152418:
 			return engineConfiguration->enableExtendedCanBroadcast;
+// luaCanRxWorkaround
+		case 1068374799:
+			return engineConfiguration->luaCanRxWorkaround;
 // useAuxSpeedForSlipRatio
 		case -723870257:
 			return engineConfiguration->useAuxSpeedForSlipRatio;
@@ -3575,6 +3578,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 923152418:
 	{
 		engineConfiguration->enableExtendedCanBroadcast = (int)value;
+		return 1;
+	}
+		case 1068374799:
+	{
+		engineConfiguration->luaCanRxWorkaround = (int)value;
 		return 1;
 	}
 		case -723870257:
