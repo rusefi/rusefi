@@ -124,7 +124,7 @@ void setBoardDefaultConfiguration() {
 	setCommonNTCSensor(&engineConfiguration->iat, HELLEN_DEFAULT_AT_PULLUP);
 
     setTPS1Calibration(100, 650);
-	//hellenWbo();
+	hellenWbo();
 }
 
 static Gpio OUTPUTS[] = {
