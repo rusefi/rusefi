@@ -132,7 +132,7 @@ void canDashboardHaltech(CanCycle cycle);
 //BMW Dashboard
 //todo: we use 50ms fixed cycle, trace is needed to check for correct period
 static void canDashboardBmwE46(CanCycle cycle) {
-	
+
 	if (cycle.isInterval(CI::_50ms)) {
 		{
 			CanTxMessage msg(CanCategory::NBC, CAN_BMW_E46_SPEED);
@@ -288,7 +288,7 @@ void canDashboardW202(CanCycle cycle) {
 			msg[5] = 0x00; // Const
 			msg[6] = 0x00; // Const
 			msg[7] = 0x00; // Const
-		}	
+		}
 
 		{
 			CanTxMessage msg(CanCategory::NBC, W202_STAT_3);
@@ -371,7 +371,7 @@ void canDashboardVagMqb(CanCycle cycle) {
 			// ignition ON
 			msg[2] = 3;
 		}
-	
+
 		{ //RPM
 			CanTxMessage msg(CanCategory::NBC, 0x107, 8);
 			msg[3] = ((int)(Sensor::getOrZero(SensorType::Rpm) / 3.5)) & 0xFF;
@@ -383,7 +383,7 @@ void canDashboardVagMqb(CanCycle cycle) {
 static void canDashboardBmwE90(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_50ms)) {
-		
+
 		{ //T15 'turn-on'
 			CanTxMessage msg(CanCategory::NBC, E90_T15, 5);
 			msg[0] = 0x45;
@@ -435,7 +435,7 @@ static void canDashboardBmwE90(CanCycle cycle) {
 			msg[0] = seatbeltcnt;
 			msg[1] = 0xFF;
 		}
-	
+
 		{
 			//Brake counter 100ms
 			brakecnt_1 += 16;
@@ -487,7 +487,7 @@ static void canDashboardBmwE90(CanCycle cycle) {
 		}
 
 		{ //E90_SPEED
-			auto vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed); 
+			auto vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
 			float mph = vehicleSpeed * 0.6213712;
 			mph_ctr = ((TIME_I2MS(chVTGetSystemTime()) - mph_timer) / 50);
 			mph_a = (mph_ctr * mph / 2);
@@ -533,8 +533,9 @@ static void canDashboardBmwE90(CanCycle cycle) {
 	}
 }
 
+// https://support.haltech.com/portal/en/kb/articles/haltech-can-ecu-broadcast-protocol
 void canDashboardHaltech(CanCycle cycle) {
-	
+
 	uint16_t tmp;
 
 	if (cycle.isInterval(CI::_20ms)) {
@@ -546,7 +547,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* MAP */
-			tmp = (((uint16_t)(Sensor::getOrZero(SensorType::Map))) * 10); 
+			tmp = (((uint16_t)(Sensor::getOrZero(SensorType::Map))) * 10);
 			msg[2] = (tmp >> 8);
 			msg[3] = (tmp & 0x00ff);
 			/* TPS  y = x/10 */
@@ -559,7 +560,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x361 - 50Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x361, 8);
 			/* Fuel pressure */
 			tmp =  (uint16_t)((Sensor::getOrZero(SensorType::FuelPressureLow) + 101.3) * 10);
@@ -575,12 +576,12 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[5] = (tmp & 0x00ff);
 			/* Wastegate Pressure */
 			msg[6] = 0;
-			msg[7] = 0;			
+			msg[7] = 0;
 		}
 
 #if EFI_ENGINE_CONTROL
 		/* 0x362 - 50Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x362, 6);
 			/* Injection Stage 1 Duty Cycle - y = x/10 */
 			uint16_t rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -593,15 +594,15 @@ void canDashboardHaltech(CanCycle cycle) {
 			/* Ignition Angle (Leading) - y = x/10 */
 			float timing = engine->engineState.timingAdvance[0];
 			int16_t ignAngle = ((timing > 360 ? timing - 720 : timing) * 10);
-			msg[4] = (ignAngle >> 8);			
+			msg[4] = (ignAngle >> 8);
 			msg[5] = (ignAngle & 0x00ff);
 		}
 #endif // EFI_ENGINE_CONTROL
 
 		/* todo: 0x3E5 = 50Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E5, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -612,9 +613,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3EA = 50Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EA, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -625,9 +626,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3EB = 50Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EB, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -638,9 +639,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3EC = 50Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EC, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -651,16 +652,16 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3ED = 50Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3ED, 2);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 		}
 
 		/* todo: 0x471 = 50Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x471, 2);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -668,9 +669,9 @@ void canDashboardHaltech(CanCycle cycle) {
 	}
 
 	if (cycle.isInterval(CI::_50ms)) {
-	
+
 		/* 0x363 - 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x363, 4);
 			/* Wheel Slip */
 			msg[0] = 0x00;
@@ -681,7 +682,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x368 - 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x368, 8);
 			/* Wideband Sensor 1 */
 			tmp = (uint16_t)(Sensor::getOrZero(SensorType::Lambda1) * 1000);
@@ -694,14 +695,14 @@ void canDashboardHaltech(CanCycle cycle) {
 			/* Wideband Sensor 3 */
 			msg[4] = 0x00;
 			msg[5] = 0x00;
-			/* Wideband Sensor 4 */			
+			/* Wideband Sensor 4 */
 			msg[6] = 0x00;
 			msg[7] = 0x00;
 		}
 
 #if EFI_SHAFT_POSITION_INPUT
 		/* 0x369 - 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x369, 8);
 			/* Trigger System Error Count */
 			tmp = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
@@ -715,14 +716,14 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[4] = 0x00;
 			msg[5] = 0x00;
 			/* Trigger Sync Level ?? */
-			msg[6] = 0x00;			
+			msg[6] = 0x00;
 			msg[7] = 0x00;
 		}
 #endif // EFI_SHAFT_POSITION_INPUT
 
 		/* 0x36A - 20Hz rate */
 		/* todo: one day we should split this */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x36A, 4);
 			/* Knock Level 1 */
 			tmp = (engine->module<KnockController>()->m_knockLevel * 100);
@@ -734,7 +735,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x36B - 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x36B, 8);
 			/* Break Pressure */
 			msg[0] = 0x00;
@@ -751,7 +752,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x36C = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x36C, 8);
 			/* Wheel Speed Front Left */
 			auto vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
@@ -770,7 +771,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x36D = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x36D, 8);
 			/* Unused */
 			msg[0] = 0x00;
@@ -783,10 +784,10 @@ void canDashboardHaltech(CanCycle cycle) {
 			/* Exhaust Cam Angle 2 */
 			msg[6] = 0x00;
 			msg[7] = 0x00;
-		}	
+		}
 
 		/* 0x36E = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x36E, 8);
 			/* Engine Limiting Active 0 = off/1=on*/
 			msg[0] = 0x00;
@@ -803,7 +804,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x36F = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x36F, 4);
 			/* Generic Output 1 Duty Cycle */
 			msg[0] = 0x00;
@@ -814,7 +815,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x370 = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x370, 8);
 			/* Vehicle Speed */
 			auto vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
@@ -833,9 +834,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3E6 = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E6, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -846,9 +847,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3E7 = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E7, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -857,11 +858,11 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[6] = 0x00;
 			msg[7] = 0x00;
 		}
-	
+
 		/* todo: 0x3E8 = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E8, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -872,9 +873,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3E9 = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E9, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -885,9 +886,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3EE = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EE, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -898,9 +899,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3EF = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EF, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -911,9 +912,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x470 = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x470, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -924,9 +925,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x472 = 20Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x472, 8);
-			msg[0] = 0x00; 
+			msg[0] = 0x00;
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -934,13 +935,13 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[5] = 0x00;
 			msg[6] = 0x00;
 			msg[7] = 0x00;
-		}		
+		}
 	}
 
 	if (cycle.isInterval(CI::_100ms)) {
-		
+
 		/* 0x371 = 10Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x371, 4);
 			/* Fuel Flow */
 			msg[0] = 0x00;
@@ -951,7 +952,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x372 = 10Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x372, 8);
 			/* Battery Voltage */
 			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::BatteryVoltage) * 10);
@@ -968,9 +969,9 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[6] = (tmp >> 8);
 			msg[7] = (tmp & 0x00ff);
 		}
-	
+
 		/* 0x373 = 10Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x373, 8);
 			/* EGT1 */
 			msg[0] = 0x00;
@@ -987,7 +988,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x374 = 10Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x374, 8);
 			/* EGT5 */
 			msg[0] = 0x00;
@@ -1004,7 +1005,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x375 = 10Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x375, 8);
 			/* EGT9 */
 			msg[0] = 0x00;
@@ -1021,7 +1022,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x376 = 10Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x376, 8);
 			/* Ambient Air Temperature */
 			msg[0] = 0x00;
@@ -1040,7 +1041,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_200ms)) {
 		/* 0x3E0 = 5Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E0, 8);
 			/* Coolant temperature in K y = x/10 */
 			tmp = ((Sensor::getOrZero(SensorType::Clt) + 273.15) * 10);
@@ -1059,7 +1060,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x3E1 = 5Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E1, 6);
 			/* Gearbox Oil Temperature */
 			msg[0] = 0x00;
@@ -1073,7 +1074,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x3E2 = 5Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E2, 2);
 			/* Fuel Level in Liters */
 			tmp = (Sensor::getOrZero(SensorType::FuelLevel)* 10);
@@ -1082,7 +1083,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* 0x3E3 = 5Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E3, 8);
 			/* Fuel Trim Short Term Bank 1*/
 			msg[0] = 0x00;
@@ -1099,7 +1100,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 		/* todo: 0x3E4 = 5Hz rate */
-		{ 
+		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E4, 8);
 			msg[0] = 0x00; //unused
 			/* Switch status */
@@ -1187,7 +1188,7 @@ struct Aim5f4 {
 };
 
 static void populateFrame(Aim5f4& msg) {
-	float deltaKpa = Sensor::getOrZero(SensorType::Map) 
+	float deltaKpa = Sensor::getOrZero(SensorType::Map)
 		- Sensor::get(SensorType::BarometricPressure).value_or(101.325);
 	float boostBar = deltaKpa / 100;
 
