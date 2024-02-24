@@ -101,6 +101,7 @@ void can_lld_start(CANDriver *canp) {
 
 	if (sock < 0) {
 		// TODO: handle
+		printf("can_lld_start error creating CAN socket\n");
 		return;
 	}
 
@@ -119,6 +120,7 @@ void can_lld_start(CANDriver *canp) {
 
 	if (bind(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
 		// TODO: handle
+		printf("can_lld_start error binding!\n");
 		return;
 	}
 
@@ -131,6 +133,7 @@ void can_lld_start(CANDriver *canp) {
 	instances.push_back(canp);
 
 	// TODO: can we even set bitrate from userspace?
+		printf("can_lld_start OK!\n");
 #endif /* !EFI_SIM_IS_WINDOWS */
 }
 
