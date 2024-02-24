@@ -57,6 +57,7 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 
 static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	ScopePerf perf(PE::LuaOneCanRxCallback);
+	data->Callback = NO_CALLBACK;
 	if (data->Callback == NO_CALLBACK) {
 		// No callback, use catch-all function
 		lua_getglobal(ls, "onCanRx");
@@ -103,27 +104,34 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 
 static bool doOneLuaCanRx(LuaHandle& ls) {
 	ScopePerf perf(PE::LuaOneCanRxFunction);
-	CanFrameData* data;
 
-	msg_t msg = filledBuffers.fetch(&data, TIME_IMMEDIATE);
+	CanFrameData x;
+	x.BusIndex = 1;
+	x.Frame.DLC = 8;
 
-	if (msg == MSG_TIMEOUT) {
-		// No new CAN messages rx'd, nothing more to do.
-		return false;
-	}
+	CanFrameData* data = &x;
 
-	if (msg != MSG_OK) {
-		// Message was otherwise not OK
-		// TODO: what do here?
-		return false;
-	}
+
+
+//	msg_t msg = filledBuffers.fetch(&data, TIME_IMMEDIATE);
+//
+//	if (msg == MSG_TIMEOUT) {
+//		// No new CAN messages rx'd, nothing more to do.
+//		return false;
+//	}
+//
+//	if (msg != MSG_OK) {
+//		// Message was otherwise not OK
+//		// TODO: what do here?
+//		return false;
+//	}
 
 	// We've accepted the frame, process it in Lua.
 	handleCanFrame(ls, data);
 
 	// We're done, return this frame to the free list
-	msg = freeBuffers.post(data, TIME_IMMEDIATE);
-	efiAssert(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "lua can post to free buffer fail", false);
+	//msg_t msg = freeBuffers.post(data, TIME_IMMEDIATE);
+	//efiAssert(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "lua can post to free buffer fail", false);
 
 	// We processed a frame so we should check again
 	return true;

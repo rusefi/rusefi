@@ -326,12 +326,12 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 
 	while (!needsReset && !chThdShouldTerminateX()) {
 		efitick_t beforeNt = getTimeNowNt();
-#if EFI_CAN_SUPPORT
+//#if EFI_CAN_SUPPORT
 		// First, process any pending can RX messages
 		totalRxCount += recentRxCount;
 		recentRxCount = doLuaCanRx(ls);
 		rxTime = getTimeNowNt() - beforeNt;
-#endif // EFI_CAN_SUPPORT
+//#endif // EFI_CAN_SUPPORT
 
 		// Next, check if there is a pending interactive command entered by the user
 		doInteractive(ls);

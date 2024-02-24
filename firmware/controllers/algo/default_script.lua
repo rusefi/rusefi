@@ -30,10 +30,36 @@ function printPacket(bus, id, dlc, data)
     print('Received ' .. arrayToString(data))
 end
 
-function onCanRx(bus, id, dlc, data)
+count = 0
+
+function onVehicleDetect(bus, id, dlc, data)
+		count = count + 1
+	if count < 10 then
+		print('onVehicleDetect ' ..id)
+
+	end
 end
 
+function onCanRx(bus, id, dlc, data)
+		count = count + 1
+	if count < 10 then
+		print('onVehicleDetect ' ..id)
+
+	end
+end
+
+
+canRxAddMask(0, 0xFFFFFF00, onVehicleDetect)
+
+everySecondTimer = Timer.new()
+keepAlive = 0
+
 function onTick()
+	if everySecondTimer : getElapsedSeconds() > 1 then
+		everySecondTimer : reset()
+		keepAlive = keepAlive + 1
+		print("Alive " ..keepAlive .. " counter " .. count)
+	end
 end
 
 )", efi::size(config->luaScript));
