@@ -31,3 +31,6 @@ flowchart TD
     
     
 ```
+
+
+See also https://github.com/ZHoob2004/rusefi-ci/
