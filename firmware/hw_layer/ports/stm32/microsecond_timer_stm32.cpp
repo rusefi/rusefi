@@ -65,7 +65,10 @@ void portInitMicrosecondTimer() {
 	/* TODO: implement for all possible TIMs */
 	if (SCHEDULER_TIMER_DEVICE == TIM5) {
 		/* stop timers clock when core is halted */
+	#if defined(STM32F4XX) || defined (STM32F7XX)
 		DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM5_STOP;
+	#endif
+		/* TODO: stm32h7? */
 	}
 }
 
