@@ -108,6 +108,11 @@ BUNDLE_FILES = \
   $(FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
 
+#
+# problem statement: 'make -j4' could easily attempt to run parallel gradle processes. gradle does not seem to like it
+# see notes at https://github.com/rusefi/rusefi/pull/6031
+#
+
 FLOCK = flock /tmp/java.lock
 
 $(CONSOLE_OUT):
