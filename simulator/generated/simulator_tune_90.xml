@@ -251,8 +251,8 @@
         <constant name="idle_stepperStepPin">"NONE"</constant>
         <constant name="idle_solenoidPinMode">"default"</constant>
         <constant digits="0" name="manIdlePosition" units="%">50.0</constant>
-        <constant digits="1" name="knockRetardAggression" units="%">0.0</constant>
-        <constant digits="1" name="knockRetardReapplyRate" units="deg/s">0.0</constant>
+        <constant digits="1" name="knockRetardAggression" units="%">20.0</constant>
+        <constant digits="1" name="knockRetardReapplyRate" units="deg/s">3.0</constant>
         <constant name="engineSyncCam">"Exhaust First Bank"</constant>
         <constant digits="0" name="vssFilterReciprocal" units="">3.0</constant>
         <constant digits="3" name="vssGearRatio" units="ratio">3.73</constant>
