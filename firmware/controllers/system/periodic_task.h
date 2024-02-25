@@ -12,6 +12,9 @@
 class PeriodicTimerController;
 
 void runAndScheduleNext(PeriodicTimerController *controller);
+void runAndScheduleNextIsr(PeriodicTimerController *controller);
+
+int startJobScheduler(void);
 
 /**
  * this is an intermediate implementation - we should probably move from using virtual_timer_t which works on interrupts
