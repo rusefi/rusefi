@@ -234,10 +234,10 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_
 void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 	int totalResponseSize = 0;
 	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
-		int packed = engineConfiguration->highSpeedOffsets[i];
-		int type = packed >> 13;
+		uint16_t packed = engineConfiguration->highSpeedOffsets[i];
+		uint16_t type = packed >> 13;
 
-		int size = type == 0 ? 0 : 1 << (type - 1);
+		size_t size = type == 0 ? 0 : 1 << (type - 1);
 #if EFI_SIMULATOR
 //		printf("handleScatteredReadCommand 0x%x %d %d\n", packed, size, offset);
 #endif /* EFI_SIMULATOR */
@@ -253,13 +253,13 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 	uint8_t dataBuffer[8];
 	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
-		int packed = engineConfiguration->highSpeedOffsets[i];
-		int type = packed >> 13;
-		int offset = packed & 0x1FFF;
+		uint16_t packed = engineConfiguration->highSpeedOffsets[i];
+		uint16_t type = packed >> 13;
+		uint16_t offset = packed & 0x1FFF;
 
 		if (type == 0)
 			continue;
-		int size = 1 << (type - 1);
+		size_t size = 1 << (type - 1);
 
 		// write each data point and CRC incrementally
 		copyRange(dataBuffer, getLiveDataFragments(), offset, size);
