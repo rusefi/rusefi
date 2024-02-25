@@ -172,6 +172,8 @@ void runRusEfiWithConfig();
 __NO_RETURN void runMainLoop();
 
 void runRusEfi() {
+	startJobScheduler();
+
 	engine->setConfig();
 
 #if EFI_TEXT_LOGGING
