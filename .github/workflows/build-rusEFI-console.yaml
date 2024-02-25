@@ -32,9 +32,9 @@ jobs:
           sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
           sudo apt-get install sshpass mtools
 
-      - name: Generate Configs, Enums & Live Documentation
+      - name: Generate Enums & Live Documentation
         working-directory: ./firmware/
-        run: ./gen_default_everything.sh
+        run: ./gen_live_documentation.sh
 
       - name: Print GCC version
         working-directory: .
