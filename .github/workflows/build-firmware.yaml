@@ -563,7 +563,7 @@ jobs:
       if: ${{ env.skip != 'true' }}
       run: arm-none-eabi-gcc -v
 
-    - name: Configs Set SSH variables
+    - name: Configs build_server upload SSH variables
       if: ${{ env.full == 'true' && env.upload == 'server' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
