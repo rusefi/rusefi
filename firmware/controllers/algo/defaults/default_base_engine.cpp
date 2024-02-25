@@ -119,6 +119,9 @@ void setDefaultBaseEngine() {
 	engineConfiguration->alsEtbPosition = 30;
 	engineConfiguration->ALSMaxTPS = 5;
 
+    engineConfiguration->knockRetardAggression = 20;
+    engineConfiguration->knockRetardReapplyRate = 3;
+
 	// Trigger
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 
