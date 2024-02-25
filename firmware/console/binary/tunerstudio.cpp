@@ -99,6 +99,21 @@ static void printErrorCounters() {
 			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
 }
 
+static void printScatterList() {
+	efiPrintf("Scatter list (global)");
+	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
+		uint16_t packed = engineConfiguration->highSpeedOffsets[i];
+		uint16_t type = packed >> 13;
+		uint16_t offset = packed & 0x1FFF;
+
+		if (type == 0)
+			continue;
+		size_t size = 1 << (type - 1);
+
+		efiPrintf("%02d offset 0x%04x size %d", i, offset, size);
+	}
+}
+
 /* 1S */
 #define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
 /* 10mS when receiving byte by byte */
@@ -119,6 +134,8 @@ static void printTsStats(void) {
 #endif // EFI_USB_SERIAL
 
 	printErrorCounters();
+
+	printScatterList();
 }
 
 static void setTsSpeed(int value) {
