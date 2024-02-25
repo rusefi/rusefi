@@ -23,7 +23,7 @@
 
 #if EFI_MAX_31855
 
-#include "thread_controller.h"
+#include "periodic_task.h"
 
 #define EGT_ERROR_VALUE -1000
 
@@ -161,13 +161,8 @@ static void egtRead() {
 }
 
 /* TODO: move all stuff to Max31855Read class */
-class Max31855Read final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
+class Max31855Read final : public PeriodicTimerController {
 public:
-	Max31855Read()
-		: ThreadController("MAX31855", MAX31855_PRIO)
-	{
-	}
-
 	int start(spi_device_e device, egt_cs_array_t cs) {
 		driver = getSpiDevice(device);
 
@@ -183,21 +178,21 @@ public:
 					m_cs[i] = Gpio::Invalid;
 				}
 			}
-			ThreadController::start();
+			PeriodicTimerController::start();
 			return 0;
 		}
 		return -1;
 	}
 
-	void ThreadTask() override {
-		while (true) {
-			for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
+	void PeriodicTask() override {
+		for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 			// todo: migrate to SensorType framework!
-				engine->currentEgtValue[i] = getMax31855EgtValue(i);
-			}
-
-			chThdSleepMilliseconds(500);
+			engine->currentEgtValue[i] = getMax31855EgtValue(i);
 		}
+	}
+
+	int getPeriodMs() override {
+		return 500;
 	}
 
 private:
