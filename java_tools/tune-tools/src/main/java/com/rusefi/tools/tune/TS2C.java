@@ -148,7 +148,7 @@ public class TS2C {
 
         Reader reader = factory.apply(fileName);
         BufferedReader br = new BufferedReader(reader);
-        System.out.println("Reading from " + fileName + ", scrolling to " + magicStringKey);
+        System.out.println("Reading from " + new File(fileName).getAbsolutePath() + ", scrolling to " + magicStringKey);
         String line;
         while ((line = br.readLine()) != null) {
             if (line.contains(magicStringKey)) {

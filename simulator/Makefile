@@ -53,6 +53,7 @@ ifeq ($(USE_OPT),)
 endif
 
 # Pretend we are all different hardware so that all canned engine configs are included
+# [CannedTunes]
 USE_OPT += -DHW_HELLEN_HYUNDAI=1
 USE_OPT += -DHW_PROTEUS=1
 USE_OPT += -DHW_MICRO_RUSEFI=1

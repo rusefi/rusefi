@@ -15,6 +15,9 @@ import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * see <a href="https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process">...</a>
+ */
 public class WriteSimulatorConfiguration {
     private static final Logging log = getLogging(WriteSimulatorConfiguration.class);
     // f407-discovery is historically the most inclusive .ini file
@@ -27,7 +30,7 @@ public class WriteSimulatorConfiguration {
         try {
             readBinaryWriteXmlTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
             for (int type : new int[]{
-                    // see 'rusEfiFunctionalTest.cpp' which exports default tunes into binary files for us
+                    // [CannedTunes] see 'rusEfiFunctionalTest.cpp' which exports default tunes into binary files for us
                     Fields.engine_type_e_MRE_M111,
                     Fields.engine_type_e_HONDA_K,
                     Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1,

@@ -182,6 +182,7 @@ void rusEfiFunctionalTest(void) {
 
 	initFlash();
 
+  // [CannedTunes]
 	for (auto const type : {
 			engine_type_e::MRE_M111,
 			engine_type_e::HONDA_K,
