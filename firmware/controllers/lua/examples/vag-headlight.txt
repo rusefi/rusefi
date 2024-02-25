@@ -25,8 +25,8 @@ function arrayToString(arr)
 	return str
 end
 
-ID_413_19D = 413
-ID_981_3D5 = 981
+ID_ATLAS_413_19D = 413
+ID_ATLAS_981_3D5 = 981
 
 byte413_3 = 0
 byte981_3 = 0
@@ -66,22 +66,22 @@ function handle()
 	end
 end
 
-function onMqbHeadlight(bus, id, dlc, data)
+function onHeadlight(bus, id, dlc, data)
 	print('Received ' ..arrayToString(data))
 
 	canTimer : reset()
 
-	if id == ID_413_19D then
+	if id == ID_ATLAS_413_19D then
 		byte413_3 = data[3]
-	elseif id == ID_981_3D5 then
+	elseif id == ID_ATLAS_981_3D5 then
 		byte981_3 = data[3]
 	end
     handle()
 end
 
-
-canRxAdd(ID_413_19D, onMqbHeadlight)
-canRxAdd(ID_981_3D5, onMqbHeadlight)
+-- Mqb?
+canRxAdd(ID_ATLAS_413_19D, onHeadlight)
+canRxAdd(ID_ATLAS_981_3D5, onHeadlight)
 
 startPwm(0, 10, 0)
 startPwm(1, 10, 0)
