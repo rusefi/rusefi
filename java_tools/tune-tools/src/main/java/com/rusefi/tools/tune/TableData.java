@@ -46,8 +46,12 @@ public class TableData implements HoHo {
             table[rowIndex] = new float[columns];
         }
 
-        BufferedReader reader = TS2C.readAndScroll(msqFileName, tableName, factory);
-        readTable(table, reader, rows, columns);
+        try (BufferedReader reader = TS2C.readAndScroll(msqFileName, tableName, factory)) {
+            readTable(table, reader, rows, columns);
+        } catch (IllegalStateException e) {
+            // we read potentially old tune using current IniFileModel, curve dimension might not match
+            System.err.println("[IllegalStateException] while " + tableName);
+        }
         return new TableData(rows, columns, table, tableName);
     }
 

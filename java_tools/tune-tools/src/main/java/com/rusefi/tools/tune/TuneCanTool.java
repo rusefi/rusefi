@@ -125,9 +125,10 @@ public class TuneCanTool {
         }
 
         String fileName = REPORTS_OUTPUT_FOLDER + "/" + vehicleName + ".md";
-        log.info("Writing to " + fileName);
+        File outputFile = new File(fileName);
+        log.info("Writing to " + outputFile.getAbsolutePath());
 
-        try (FileWriter w = new FileWriter(fileName)) {
+        try (FileWriter w = new FileWriter(outputFile)) {
             w.append("# " + vehicleName + "\n\n");
             w.append("// canned tune " + cannedComment + "\n\n");
 

@@ -43,12 +43,12 @@ public class CurveData implements HoHo {
             return null;
         ArrayIniField field = (ArrayIniField) iniField;
         int curveSize = field.getRows();
-        BufferedReader r = TS2C.readAndScroll(msqFileName, curveName + "\"", TS2C.fileFactory);
         float[] curveValues = new float[curveSize];
-        try {
+        try (BufferedReader r = TS2C.readAndScroll(msqFileName, curveName + "\"", TS2C.fileFactory)) {
             readAxle(curveValues, r);
         } catch (NumberFormatException e) {
-            throw new IllegalStateException("While " + curveName, e);
+            // we read potentially old tune using current IniFileModel, curve dimension might not match
+            System.err.println("[NumberFormatException] while " + curveName);
         }
 
         return new CurveData(curveName, curveValues);

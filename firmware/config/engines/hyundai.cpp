@@ -43,6 +43,7 @@ void setHyundaiPb() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
+	engineConfiguration->enableSoftwareKnock = true;
     engineConfiguration->etbIdleThrottleRange = 6.0;
 
     engineConfiguration->totalGearsCount = 5;

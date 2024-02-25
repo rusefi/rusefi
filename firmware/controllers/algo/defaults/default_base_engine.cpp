@@ -46,7 +46,7 @@ static void setDefaultHPFP() {
 #endif
 
 // todo: would be nice for unit tests to be happy about these defaults
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	engineConfiguration->hpfpPumpVolume = 0.290;
 #endif
 	engineConfiguration->hpfpMinAngle = 10;
