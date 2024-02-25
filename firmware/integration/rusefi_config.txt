@@ -479,7 +479,7 @@ MAP_sensor_config_s map;@see isMapAveragingEnabled
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
 
-	int launchTimingRetard;;"deg", 1, 0, -180, 180, 2
+	float launchTimingRetard;;"deg", 1, 0, -180, 180, 2
 	int hip9011PrescalerAndSDO;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
 	float knockBandCustom;We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override\nRequires power cycling to effect;"kHz", 1, 0, 0, 20, 2
 
@@ -946,10 +946,9 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     antiLagActivationMode_e antiLagActivationMode;
 
     int launchSpeedThreshold;Launch disabled above this speed if setting is above zero;"Kph", 1, 0, 0, 300, 0
-    int launchTimingRpmRange;Range from Launch RPM for Timing Retard to activate;"RPM", 1, 0, 0, 8000, 0
-    int launchFuelAdded;Extra Fuel Added;"%", 1, 0, 0, 100, 0
+    int launchRpmWindow;Starting Launch RPM window to activate (subtracts from Launch RPM);"RPM", 1, 0, 0, 8000, 0
+    int launchSparkSkipPercent;Spark Skip Transition Target;"%", 1, 0, 0, 100, 0
     int launchBoostDuty;Duty Cycle for the Boost Solenoid;"%", 1, 0, 0, 100, 0
-	int hardCutRpmRange;Range from Launch RPM to activate Hard Cut;"RPM", 1, 0, 0, 3000, 0
 	float turbochargerFilter
 	int launchTpsThreshold;;"", 1, 0, 0, 20000, 0
 	float launchActivateDelay;;"", 1, 0, 0, 20000, 0

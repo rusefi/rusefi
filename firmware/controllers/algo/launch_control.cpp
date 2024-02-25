@@ -3,6 +3,7 @@
  *
  *  @date 10. sep. 2019
  *      Author: Ola Ruud
+ *      Rework: Patryk Chmura
  */
 
 #include "pch.h"
@@ -65,7 +66,7 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 
 	// Disallow launch without valid TPS
 	if (!tps.Valid) {
-		return false;
+	return false;
 	}
 
     // todo: should this be 'launchTpsThreshold <= tps.Value' so that nicely calibrated TPS of zero does not prevent launch?
@@ -75,28 +76,37 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 /**
  * Condition is true as soon as we are above LaunchRpm
  */
-bool LaunchControlBase::isInsideRPMCondition(int rpm) const {
-	int launchRpm = engineConfiguration->launchRpm;
-	return (launchRpm < rpm);
+LaunchCondition LaunchControlBase::isInsideRPMCondition(int rpm) const {
+	auto launchRpm = engineConfiguration->launchRpm;
+	auto preLaunchRpm = launchRpm - engineConfiguration->launchRpmWindow;
+	
+	if (rpm >= launchRpm) {
+		return LaunchCondition::Launch;
+	} else if ((rpm >= preLaunchRpm) && (rpm < launchRpm)) {
+		return LaunchCondition::PreLaunch;
+	} else {
+		return LaunchCondition::NotMet;
+	}
 }
 
-bool LaunchControlBase::isLaunchConditionMet(int rpm) {
-
+LaunchCondition LaunchControlBase::isLaunchConditionMet(int rpm) {
+	LaunchCondition rpmLaunchCondition = isInsideRPMCondition(rpm);
 	activateSwitchCondition = isInsideSwitchCondition();
-	rpmCondition = isInsideRPMCondition(rpm);
+	rpmCondition = (rpmLaunchCondition == LaunchCondition::Launch);
 	speedCondition = isInsideSpeedCondition();
 	tpsCondition = isInsideTpsCondition();
 
-	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
+	return ((speedCondition && activateSwitchCondition && tpsCondition) == true) ? rpmLaunchCondition : LaunchCondition::NotMet;
 }
 
 LaunchControlBase::LaunchControlBase() {
 	launchActivatePinState = false;
+	isLaunchPreCondition = false;
 	isLaunchCondition = false;
 }
 
-bool LaunchControlBase::getFuelCoefficient() const {
-    return 1 + (isLaunchCondition && engineConfiguration->launchControlEnabled ? engineConfiguration->launchFuelAdderPercent / 100.0 : 0);
+float LaunchControlBase::getFuelCoefficient() const {
+    return 1 + (isLaunchPreCondition && engineConfiguration->launchControlEnabled ? ((float)engineConfiguration->launchFuelAdderPercent) / 100.0 : 0);
 }
 
 void LaunchControlBase::update() {
@@ -105,16 +115,10 @@ void LaunchControlBase::update() {
 	}
 
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	combinedConditions = isLaunchConditionMet(rpm);
+	combinedConditions = (isLaunchConditionMet(rpm) == LaunchCondition::Launch);
 
 	//and still recalculate in case user changed the values
-	retardThresholdRpm = engineConfiguration->launchRpm
-	/*
-	we never had UI for 'launchAdvanceRpmRange' so it was always zero. are we supposed to forget about this dead line
-	or it is supposed to be referencing 'launchTimingRpmRange'?
-	         + (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchAdvanceRpmRange : 0)
-*/
-			+ engineConfiguration->hardCutRpmRange;
+	retardThresholdRpm = engineConfiguration->launchRpm - (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchRpmWindow : 0);
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
@@ -124,10 +128,29 @@ void LaunchControlBase::update() {
 		// If conditions are met...
 		isLaunchCondition = m_launchTimer.hasElapsedSec(engineConfiguration->launchActivateDelay);
 	}
+
+	isLaunchPreCondition = combinedConditions = (isLaunchConditionMet(rpm) == LaunchCondition::PreLaunch);;
+	int targetLaunchSparkSkipPercent = engineConfiguration->launchSparkSkipPercent;
+	if (isLaunchPreCondition) {
+		m_preLaunchSparkSkipArmed = false;
+
+	 	if (targetLaunchSparkSkipPercent > 0) {
+			int launchRpm = engineConfiguration->launchRpm;
+			int launchRpmWithWindow = launchRpm - engineConfiguration->launchRpmWindow;
+			int launchSparkSkipInterpolated = interpolateClamped(launchRpmWithWindow, 0, launchRpm, targetLaunchSparkSkipPercent, rpm);
+			float launchSparkSkip = ((float)launchSparkSkipInterpolated) / 100.0f;
+			engine->hardSparkLimiter.setTargetSkipRatio(launchSparkSkip);
+		}
+	} else {
+		if (m_preLaunchSparkSkipArmed == false) {
+			engine->hardSparkLimiter.setTargetSkipRatio(0);
+			m_preLaunchSparkSkipArmed = true;
+		}
+	}
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
-	return isLaunchCondition && (retardThresholdRpm < Sensor::getOrZero(SensorType::Rpm));
+	return (isLaunchCondition || isLaunchPreCondition) && (retardThresholdRpm < Sensor::getOrZero(SensorType::Rpm));
 }
 
 bool LaunchControlBase::isLaunchSparkRpmRetardCondition() const {
