@@ -13,6 +13,7 @@
 void initLaunchControl();
 
 enum class LaunchCondition {
+	PreLaunch,
 	Launch,
 	NotMet
 };
@@ -23,7 +24,7 @@ public:
 	// Update the state of the launch control system
 	void update();
 
-  float getFuelCoefficient() const;
+	float getFuelCoefficient() const;
 	bool isInsideSpeedCondition() const;
 	bool isInsideTpsCondition() const;
 	bool isInsideSwitchCondition();
@@ -37,6 +38,7 @@ private:
 	bool isLaunchRpmRetardCondition() const;
 
 	Timer m_launchTimer;
+	bool m_preLaunchSparkSkipArmed = false;
 };
 
 /**
@@ -49,6 +51,7 @@ public:
 	 * targetSkipRatio of '0' means 'do not skip', would always return false
 	 */
 	void setTargetSkipRatio(float targetSkipRatio);
+	float getTargetSkipRatio() { return targetSkipRatio; };
 
 	bool shouldSkip();
 private:
