@@ -166,7 +166,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
 
-      - name: Upload .ini files to server
+      - name: Upload .ini files to rusEFI Online server
         working-directory: generated/tunerstudio/generated
         run: ../../../${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
@@ -174,37 +174,37 @@ jobs:
         working-directory: ${{inputs.rusefi_dir}}/firmware
         run: bash bin/compile.sh -b ${{ env.BOARD_META_PATH }} deliver/rusefi.bin
 
-      - name: Upload build bin artifact
+      - name: Upload github action bin artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.bin
           path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.bin
 
-      - name: Upload build srec artifact
+      - name: Upload github action srec artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi_update.srec
           path: ${{inputs.rusefi_dir}}/firmware/build/rusefi.srec
 
-      - name: Upload build hex artifact
+      - name: Upload github action hex artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.hex
           path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.hex
 
-      - name: Upload build list artifact
+      - name: Upload github action list artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.list
           path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.list
 
-      - name: Upload build map artifact
+      - name: Upload github action map artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.map
           path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.map
 
-      - name: Upload build elf artifact
+      - name: Upload github action elf artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi.elf
@@ -223,7 +223,7 @@ jobs:
             echo "NOT setting credentials: ${{github.event_name}} ${{github.ref}}"
           fi
 
-      - name: Upload bundle artifact
+      - name: Upload github action bundle artifact
         uses: actions/upload-artifact@v4
         with:
           name: rusefi_bundle_${{env.SHORT_BOARD_NAME}}.zip

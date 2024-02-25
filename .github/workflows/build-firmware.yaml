@@ -613,7 +613,7 @@ jobs:
         allowUpdates: true
         prerelease: true
 
-    - name: Upload .ini files to server
+    - name: Upload .ini files to rusEFI Online server
       if: ${{ env.full == 'true' }}
       working-directory: ./firmware
       run: |
@@ -621,28 +621,28 @@ jobs:
         cd tunerstudio/generated
         ../upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
-    - name: Upload build elf artifact
+    - name: Upload github action elf artifact
       if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
-    - name: Upload build map artifact
+    - name: Upload github action map artifact
       if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.map
         path: ./firmware/build/rusefi.map
 
-    - name: Upload build bin artifact
+    - name: Upload github action bin artifact
       if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
-    - name: Upload build hex artifact
+    - name: Upload github action hex artifact
       if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v4
       with:
@@ -651,7 +651,7 @@ jobs:
 # todo: we should produce .hex in both OpenBLT and non-OpenBLT case same as we do for .bin and .elf
         path: ./firmware/build/rusefi*.hex
 
-    - name: Upload build dfu artifact
+    - name: Upload github action dfu artifact
       if: ${{ env.partial == 'true' }}
       uses: actions/upload-artifact@v4
       with:
@@ -665,7 +665,7 @@ jobs:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle*.zip
 
-    - name: Upload autoupdate bundle artifact
+    - name: Upload github action autoupdate artifact
       if: ${{ env.full == 'true' }}
       uses: actions/upload-artifact@v4
       with:
