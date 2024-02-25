@@ -154,12 +154,16 @@ $(SHARED_OUTPUT): $(OBJS)
 	@echo Linking shared library $@ output $(SHARED_OUTPUT_OPT)
 	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $(SHARED_OUTPUT_OPT) -shared
 
-clean: CLEAN_RULE_HOOK
+.PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK
+
+clean: CLEAN_RULE_HOOK CLEAN_PCH_HOOK
 	@echo Cleaning
 	-rm -fR .dep $(BUILDDIR)
 	@echo Done
 
 CLEAN_RULE_HOOK:
+
+CLEAN_PCH_HOOK:
 
 #
 # Include the dependency files, should be the last of the makefile
