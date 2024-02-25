@@ -191,9 +191,13 @@ enable2ndByteCanID = false
 	ochBlockSize	= @@TS_TOTAL_OUTPUT_SIZE@@
 
 ; 11.2.3 Full Optimized – High Speed
-    scatteredOchGetCommand = @@TS_GET_SCATTERED_GET_COMMAND_char@@
+	scatteredOchGetCommand = @@TS_GET_SCATTERED_GET_COMMAND_char@@
 	scatteredOffsetArray = highSpeedOffsets
+#if CONN_SLOW
+	scatteredGetEnabled = { 1 }
+#else
 	scatteredGetEnabled = { 0 }
+#endif
 
 ;
 ; see TunerStudioOutputChannels struct
