@@ -1396,7 +1396,7 @@
         <constant name="hpfpCam">"NONE"</constant>
         <constant digits="0" name="auxiliarySetting1" units="">0.0</constant>
         <constant digits="0" name="hpfpMinAngle" units="deg">10.0</constant>
-        <constant digits="3" name="hpfpPumpVolume" units="cc">0.0</constant>
+        <constant digits="3" name="hpfpPumpVolume" units="cc">0.29</constant>
         <constant digits="0" name="hpfpActivationAngle" units="deg">30.0</constant>
         <constant digits="0" name="issFilterReciprocal" units="">2.0</constant>
         <constant digits="3" name="hpfpPidP" units="%/kPa">0.01</constant>
