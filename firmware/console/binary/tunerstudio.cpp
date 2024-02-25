@@ -212,6 +212,19 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_
 		return;
 	}
 
+	/*
+	 * highSpeedOffsets is noMsqSave, but located on settings page,
+	 * zero highSpeedOffsets as TS expect all noMsqSave data to be zero during CRC matching
+	 * TODO:
+	 * Move highSpeedOffsets to separate page as it is done on MS devices
+	 * Zero highSpeedOffsets on start and reconnect
+	 * TODO:
+	 * Is Crc check commang good sing of new TS session?
+	 * TODO:
+	 * Support settings pages!
+	 */
+	memset(engineConfiguration->highSpeedOffsets, 0x00, sizeof(engineConfiguration->highSpeedOffsets));
+
 	const uint8_t* start = getWorkingPageAddr() + offset;
 
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
