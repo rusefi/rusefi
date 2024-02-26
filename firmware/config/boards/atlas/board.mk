@@ -1,3 +1,6 @@
+# Atlas is STM32H743
+PROJECT_CPU = ARCH_STM32H7
+
 # List of all the board related files.
 BOARDCPPSRC =  $(BOARD_DIR)/board_configuration.cpp
 
@@ -10,9 +13,5 @@ DDEFS += -DFIRMWARE_ID=\"atlas\"
 
 # We are running on Atlas hardware!
 DDEFS += -DHW_ATLAS=1
-
-# Atlas needs networking library
-LWIP = yes
-DDEFS += -DEFI_ETHERNET=TRUE
 
 SHORT_BOARD_NAME = atlas
