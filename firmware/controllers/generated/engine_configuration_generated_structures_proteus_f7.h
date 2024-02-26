@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 24 15:00:27 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 17:55:25 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2854,10 +2854,10 @@ struct engine_configuration_s {
 	bool useVssAsSecondWheelSpeed : 1 {};
 	/**
 	offset 1576 bit 13 */
-	bool unusedBit_503_13 : 1 {};
+	bool is_enabled_spi_5 : 1 {};
 	/**
 	offset 1576 bit 14 */
-	bool unusedBit_503_14 : 1 {};
+	bool is_enabled_spi_6 : 1 {};
 	/**
 	offset 1576 bit 15 */
 	bool unusedBit_503_15 : 1 {};
@@ -2869,46 +2869,46 @@ struct engine_configuration_s {
 	bool unusedBit_503_17 : 1 {};
 	/**
 	offset 1576 bit 18 */
-	bool unusedBit_503_18 : 1 {};
+	bool unusedBit_508_18 : 1 {};
 	/**
 	offset 1576 bit 19 */
-	bool unusedBit_503_19 : 1 {};
+	bool unusedBit_508_19 : 1 {};
 	/**
 	offset 1576 bit 20 */
-	bool unusedBit_503_20 : 1 {};
+	bool unusedBit_508_20 : 1 {};
 	/**
 	offset 1576 bit 21 */
-	bool unusedBit_503_21 : 1 {};
+	bool unusedBit_508_21 : 1 {};
 	/**
 	offset 1576 bit 22 */
-	bool unusedBit_503_22 : 1 {};
+	bool unusedBit_508_22 : 1 {};
 	/**
 	offset 1576 bit 23 */
-	bool unusedBit_503_23 : 1 {};
+	bool unusedBit_508_23 : 1 {};
 	/**
 	offset 1576 bit 24 */
-	bool unusedBit_503_24 : 1 {};
+	bool unusedBit_508_24 : 1 {};
 	/**
 	offset 1576 bit 25 */
-	bool unusedBit_503_25 : 1 {};
+	bool unusedBit_508_25 : 1 {};
 	/**
 	offset 1576 bit 26 */
-	bool unusedBit_503_26 : 1 {};
+	bool unusedBit_508_26 : 1 {};
 	/**
 	offset 1576 bit 27 */
-	bool unusedBit_503_27 : 1 {};
+	bool unusedBit_508_27 : 1 {};
 	/**
 	offset 1576 bit 28 */
-	bool unusedBit_503_28 : 1 {};
+	bool unusedBit_508_28 : 1 {};
 	/**
 	offset 1576 bit 29 */
-	bool unusedBit_503_29 : 1 {};
+	bool unusedBit_508_29 : 1 {};
 	/**
 	offset 1576 bit 30 */
-	bool unusedBit_503_30 : 1 {};
+	bool unusedBit_508_30 : 1 {};
 	/**
 	offset 1576 bit 31 */
-	bool unusedBit_503_31 : 1 {};
+	bool unusedBit_508_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 	 * units: cycles
@@ -5557,4 +5557,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 26236);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 24 15:00:27 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 17:55:25 UTC 2024

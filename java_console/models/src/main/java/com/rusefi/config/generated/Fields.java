@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 17:31:15 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 17:55:55 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1340,7 +1340,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.02.26.f407-discovery.3555445838";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.02.26.f407-discovery.3681299233";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2104,6 +2104,8 @@ public class Fields {
 	public static final Field LUACANRXWORKAROUND = Field.create("LUACANRXWORKAROUND", 1576, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field USEAUXSPEEDFORSLIPRATIO = Field.create("USEAUXSPEEDFORSLIPRATIO", 1576, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field USEVSSASSECONDWHEELSPEED = Field.create("USEVSSASSECONDWHEELSPEED", 1576, FieldType.BIT, 12).setBaseOffset(0);
+	public static final Field IS_ENABLED_SPI_5 = Field.create("IS_ENABLED_SPI_5", 1576, FieldType.BIT, 13).setBaseOffset(0);
+	public static final Field IS_ENABLED_SPI_6 = Field.create("IS_ENABLED_SPI_6", 1576, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 1580, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 1582, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXSERIALTXPIN = Field.create("AUXSERIALTXPIN", 1584, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -3725,6 +3727,8 @@ public class Fields {
 	LUACANRXWORKAROUND,
 	USEAUXSPEEDFORSLIPRATIO,
 	USEVSSASSECONDWHEELSPEED,
+	IS_ENABLED_SPI_5,
+	IS_ENABLED_SPI_6,
 	AFTERCRANKINGIACTAPERDURATION,
 	IACBYTPSTAPER,
 	AUXSERIALTXPIN,

@@ -1093,6 +1093,12 @@ float getConfigValueByName(const char *name) {
 // useVssAsSecondWheelSpeed
 		case -195378748:
 			return engineConfiguration->useVssAsSecondWheelSpeed;
+// is_enabled_spi_5
+		case -722238358:
+			return engineConfiguration->is_enabled_spi_5;
+// is_enabled_spi_6
+		case -722238357:
+			return engineConfiguration->is_enabled_spi_6;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -3593,6 +3599,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -195378748:
 	{
 		engineConfiguration->useVssAsSecondWheelSpeed = (int)value;
+		return 1;
+	}
+		case -722238358:
+	{
+		engineConfiguration->is_enabled_spi_5 = (int)value;
+		return 1;
+	}
+		case -722238357:
+	{
+		engineConfiguration->is_enabled_spi_6 = (int)value;
 		return 1;
 	}
 		case 671504531:

@@ -1087,6 +1087,12 @@ See Over/Undervoltage Shutdown/Retry bit in documentation
 ### useVssAsSecondWheelSpeed
 VSS and auxSpeed1 or auxSpeed1 with auxSpeed2?
 
+### is_enabled_spi_5
+
+
+### is_enabled_spi_6
+
+
 ### afterCrankingIACtaperDuration
 This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 
