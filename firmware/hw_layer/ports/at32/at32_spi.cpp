@@ -9,7 +9,7 @@
 #include "pch.h"
 
 #if HAL_USE_SPI
-bool isSpiInitialized[5] = { false, false, false, false, false };
+bool isSpiInitialized[SPI_TOTAL_COUNT] = { false, false, false, false, false, false };
 
 struct af_pairs {
 	brain_pin_e pin;
