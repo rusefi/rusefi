@@ -64,7 +64,7 @@
 #endif
 
 #if HAL_USE_SPI
-extern bool isSpiInitialized[5];
+extern bool isSpiInitialized[6];
 
 /**
  * Only one consumer can use SPI bus at a given time
@@ -79,7 +79,6 @@ void unlockSpi(spi_device_e device) {
 }
 
 static void initSpiModules() {
-	UNUSED(engineConfiguration);
 	if (engineConfiguration->is_enabled_spi_1) {
 		 turnOnSpi(SPI_DEVICE_1);
 	}
@@ -91,6 +90,12 @@ static void initSpiModules() {
 	}
 	if (engineConfiguration->is_enabled_spi_4) {
 		turnOnSpi(SPI_DEVICE_4);
+	}
+	if (engineConfiguration->is_enabled_spi_5) {
+		turnOnSpi(SPI_DEVICE_5);
+	}
+	if (engineConfiguration->is_enabled_spi_6) {
+		turnOnSpi(SPI_DEVICE_6);
 	}
 }
 
@@ -119,6 +124,16 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 #if STM32_SPI_USE_SPI4
 	if (spiDevice == SPI_DEVICE_4) {
 		return &SPID4;
+	}
+#endif
+#if STM32_SPI_USE_SPI5
+	if (spiDevice == SPI_DEVICE_5) {
+		return &SPID5;
+	}
+#endif
+#if STM32_SPI_USE_SPI6
+	if (spiDevice == SPI_DEVICE_6) {
+		return &SPID6;
 	}
 #endif
 	firmwareError(ObdCode::CUSTOM_ERR_UNEXPECTED_SPI, "Unexpected SPI device: %d", spiDevice);

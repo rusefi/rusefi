@@ -432,6 +432,8 @@ bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensor
 bit cltSensorPulldown
 bit iatSensorPulldown
 bit allowIdenticalPps
+bit is_enabled_spi_5
+bit is_enabled_spi_6
 
 int16_t tpsMin;Closed throttle, 1 volt = 200 units;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle, 1 volt = 200 units;"ADC", 1, 0, 0, 1023, 0
@@ -1489,7 +1491,19 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	output_pin_e speedometerOutputPin
 	uint16_t speedometerPulsePerKm;Number of speedometer pulses per kilometer travelled.;"", 1, 0, 0, 65000, 0
 
-uint8_t[246] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	Gpio spi4mosiPin;
+	Gpio spi4misoPin;
+	Gpio spi4sckPin;
+
+	Gpio spi5mosiPin;
+	Gpio spi5misoPin;
+	Gpio spi5sckPin;
+
+	Gpio spi6mosiPin;
+	Gpio spi6misoPin;
+	Gpio spi6sckPin;
+
+uint8_t[237] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
