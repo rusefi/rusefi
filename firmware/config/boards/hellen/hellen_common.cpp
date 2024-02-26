@@ -13,7 +13,11 @@ void setHellenCan() {
 
 static void init5vpDiag() {
 #ifdef DIAG_5VP_PIN
-  efiSetPadMode("5VP_STATE", DIAG_5VP_PIN, PAL_MODE_INPUT);
+static bool is5vpInit = false;
+  if (!is5vpInit) {
+    efiSetPadMode("5VP_STATE", DIAG_5VP_PIN, PAL_MODE_INPUT);
+    is5vpInit = true;
+  }
 #endif // DIAG_5VP_PIN
 }
 
