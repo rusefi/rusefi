@@ -164,8 +164,10 @@ void canMazdaRX8(CanCycle cycle) {
 
 			float kph = Sensor::getOrZero(SensorType::VehicleSpeed);
 
+      // todo: LSB+SWAP? lol, that's MSB?
 			msg.setShortValue(SWAP_UINT16(Sensor::getOrZero(SensorType::Rpm) * 4), 0);
 			msg.setShortValue(0xFFFF, 2);
+      // todo: LSB+SWAP? lol, that's MSB?
 			msg.setShortValue(SWAP_UINT16((int )(100 * kph + 10000)), 4);
 			msg.setShortValue(0, 6);
 		}
@@ -352,8 +354,7 @@ void canDashboardNissanVQ(CanCycle cycle) {
 			// thank you "102 CAN Communication decoded"
 #define CAN_23D_RPM_MULT 3.15
 			int rpm315 = (int)(Sensor::getOrZero(SensorType::Rpm) / CAN_23D_RPM_MULT);
-			msg[3] = rpm315 & 0xFF;
-			msg[4] = rpm315 >> 8;
+			msg.setShortValue(rpm315, /*offset*/ 3);
 
 			msg[7] = 0x70; // todo: CLT decoding?
 		}
@@ -374,8 +375,7 @@ void canDashboardVagMqb(CanCycle cycle) {
 
 		{ //RPM
 			CanTxMessage msg(CanCategory::NBC, 0x107, 8);
-			msg[3] = ((int)(Sensor::getOrZero(SensorType::Rpm) / 3.5)) & 0xFF;
-			msg[4] = ((int)(Sensor::getOrZero(SensorType::Rpm) / 3.5)) >> 8;
+			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) / 3.5, /*offset*/ 3);
 		}
 	}
 }
@@ -405,8 +405,7 @@ static void canDashboardBmwE90(CanCycle cycle) {
 				rpmcounter = 0xF0;
 			CanTxMessage msg(CanCategory::OBD, E90_RPM, 3);
 			msg[0] = rpmcounter;
-			msg[1] = ((int)(Sensor::getOrZero(SensorType::Rpm)) * 4) & 0xFF;
-			msg[2] = ((int)(Sensor::getOrZero(SensorType::Rpm)) * 4) >> 8;
+			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) * 4, 1);
 		}
 
 		{ //oil & coolant temp (all in C, despite gauge being F)
@@ -498,13 +497,11 @@ static void canDashboardBmwE90(CanCycle cycle) {
 				mph_counter = 0xF000;
 			mph_timer = TIME_I2MS(chVTGetSystemTime());
 			CanTxMessage msg(CanCategory::NBC, E90_SPEED, 8);
-			msg[0] = mph_2a & 0xFF;
-			msg[1] = mph_2a >> 8;
-			msg[2] = mph_2a & 0xFF;
-			msg[3] = mph_2a >> 8;
-			msg[4] = mph_2a & 0xFF;
-			msg[5] = mph_2a >> 8;
+			msg.setShortValue(mph_2a, 0);
+			msg.setShortValue(mph_2a, 2);
+			msg.setShortValue(mph_2a, 4);
 			msg[6] = mph_counter & 0xFF;
+			// todo: what are we packing into what exactly? note the '| 0xF0'
 			msg[7] = (mph_counter >> 8) | 0xF0;
 		}
 	}
