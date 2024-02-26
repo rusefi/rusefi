@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 17:55:45 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 23:48:27 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4635,10 +4635,46 @@ struct engine_configuration_s {
 	 */
 	float brakeMeanEffectivePressureDifferential;
 	/**
-	 * units: units
 	 * offset 4400
 	 */
-	uint8_t unusedOftenChangesDuringFirmwareUpdate[146];
+	Gpio spi4mosiPin;
+	/**
+	 * offset 4402
+	 */
+	Gpio spi4misoPin;
+	/**
+	 * offset 4404
+	 */
+	Gpio spi4sckPin;
+	/**
+	 * offset 4406
+	 */
+	Gpio spi5mosiPin;
+	/**
+	 * offset 4408
+	 */
+	Gpio spi5misoPin;
+	/**
+	 * offset 4410
+	 */
+	Gpio spi5sckPin;
+	/**
+	 * offset 4412
+	 */
+	Gpio spi6mosiPin;
+	/**
+	 * offset 4414
+	 */
+	Gpio spi6misoPin;
+	/**
+	 * offset 4416
+	 */
+	Gpio spi6sckPin;
+	/**
+	 * units: units
+	 * offset 4418
+	 */
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[128];
 	/**
 	 * need 4 byte alignment
 	 * units: units
@@ -5557,4 +5593,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21736);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 17:55:45 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 23:48:27 UTC 2024
