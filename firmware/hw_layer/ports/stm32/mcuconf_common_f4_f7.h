@@ -297,15 +297,15 @@
 #endif
 
 #ifndef STM32_SPI_USE_SPI4
-#define STM32_SPI_USE_SPI4                  TRUE
+#define STM32_SPI_USE_SPI4                  FALSE
 #endif
 
 #ifndef STM32_SPI_USE_SPI5
-#define STM32_SPI_USE_SPI5                  TRUE
+#define STM32_SPI_USE_SPI5                  FALSE
 #endif
 
 #ifndef STM32_SPI_USE_SPI6
-#define STM32_SPI_USE_SPI6                  TRUE
+#define STM32_SPI_USE_SPI6                  FALSE
 #endif
 
 #define STM32_SPI_SPI1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(2, 0)
