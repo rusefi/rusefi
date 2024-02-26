@@ -80,15 +80,7 @@ public class LiveDataProcessor {
         return yaml.load(reader);
     }
 
-    public static void wrapContent(LazyFile output, String content) {
-        output.write("static const LogField fields[] = {\r\n" +
-                "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n");
-        output.write(content);
-        output.write("};\r\n");
-    }
-
     private void end(int sensorTsPosition) throws IOException {
-
         log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
         try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
             fw.write(header);
@@ -257,7 +249,7 @@ public class LiveDataProcessor {
         enumContent.append("} live_data_e;\n");
 
         LazyFile lazyFile = fileFactory.create("console/binary_log/log_fields_generated.h");
-        wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
+        SdCardFieldsContent.wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
         lazyFile.close();
 
         dataLogConsumer.endFile();

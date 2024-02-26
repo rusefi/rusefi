@@ -1,7 +1,6 @@
 package com.rusefi.test;
 
 import com.rusefi.ReaderState;
-import com.rusefi.ldmp.LiveDataProcessor;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.ConfigurationConsumer;
 import com.rusefi.output.DataLogConsumer;
@@ -26,7 +25,7 @@ public class SdCardFieldsTestConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-        LiveDataProcessor.wrapContent(output, getBody());
+        SdCardFieldsContent.wrapContent(output, getBody());
         output.close();
     }
 
