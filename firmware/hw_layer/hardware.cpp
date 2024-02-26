@@ -102,6 +102,12 @@ static void initSpiModules() {
 	if (engineConfiguration->is_enabled_spi_4) {
 		turnOnSpi(SPI_DEVICE_4);
 	}
+	if (engineConfiguration->is_enabled_spi_5) {
+		turnOnSpi(SPI_DEVICE_5);
+	}
+	if (engineConfiguration->is_enabled_spi_6) {
+		turnOnSpi(SPI_DEVICE_6);
+	}
 }
 
 /**
@@ -283,6 +289,14 @@ void applyNewHardwareSettings() {
 
 	if (isConfigurationChanged(is_enabled_spi_4)) {
 		stopSpi(SPI_DEVICE_4);
+	}
+
+	if (isConfigurationChanged(is_enabled_spi_5)) {
+		stopSpi(SPI_DEVICE_5);
+	}
+
+	if (isConfigurationChanged(is_enabled_spi_6)) {
+		stopSpi(SPI_DEVICE_6);
 	}
 
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
