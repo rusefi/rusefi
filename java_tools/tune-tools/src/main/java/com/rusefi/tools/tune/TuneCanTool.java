@@ -64,7 +64,7 @@ public class TuneCanTool {
 
 
 //        processREOtune(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "BK2");
-        processREOtune(1502, Fields.engine_type_e_HYUNDAI_PB, "PB");
+        processREOtune(1576, Fields.engine_type_e_HYUNDAI_PB, "PB");
 //        processREOtune(1490, Fields.engine_type_e_MRE_M111, "m111-alex");
 //        handle("Mitsubicha", 1258);
 //        handle("Scion-1NZ-FE", 1448);
@@ -233,7 +233,7 @@ public class TuneCanTool {
 
                     if (defaultTuneFileName != null) {
                         TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);
-                        if (defaultTableData.getCinvokeMethod().equals(tableData.getCinvokeMethod())) {
+                        if (defaultTableData.getCsourceMethod(parentReference).equals(tableData.getCsourceMethod(parentReference))) {
                             System.out.println("Table " + fieldName + " matches default content");
                             continue;
                         }
