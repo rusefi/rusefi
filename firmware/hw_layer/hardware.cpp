@@ -272,6 +272,14 @@ void applyNewHardwareSettings() {
 		stopSpi(SPI_DEVICE_4);
 	}
 
+	if (isConfigurationChanged(is_enabled_spi_5)) {
+		stopSpi(SPI_DEVICE_5);
+	}
+
+	if (isConfigurationChanged(is_enabled_spi_6)) {
+		stopSpi(SPI_DEVICE_6);
+	}
+
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		// bug? duplication with stopPedalPins?
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
