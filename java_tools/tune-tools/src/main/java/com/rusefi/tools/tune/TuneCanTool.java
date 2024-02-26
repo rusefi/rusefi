@@ -72,9 +72,9 @@ public class TuneCanTool {
 //        handle("BMW-mtmotorsport", 1479);
     }
 
-  /**
-   * @see WriteSimulatorConfiguration
-   */
+    /**
+     * @see WriteSimulatorConfiguration
+     */
     private static void processREOtune(int tuneId, int engineType, String key) throws JAXBException, IOException {
         // compare specific internet tune to total global default
         handle(key, tuneId, TuneCanTool.DEFAULT_TUNE);
@@ -114,7 +114,7 @@ public class TuneCanTool {
 
         StringBuilder methods = new StringBuilder();
 
-        StringBuilder sb = TuneCanTool.getTunePatch(defaultTune, customTune, ini, customTuneFileName, methods);
+        StringBuilder sb = getTunePatch(defaultTune, customTune, ini, customTuneFileName, methods, defaultTuneFileName);
 
         String fileNameMethods = REPORTS_OUTPUT_FOLDER + "/" + vehicleName + "_methods.md";
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
@@ -133,9 +133,10 @@ public class TuneCanTool {
             w.append(sb);
             w.append("```\n");
         }
+        log.info("Done writing to " + outputFile.getAbsolutePath() + "!");
     }
 
-  private static void downloadTune(int tuneId, String localFileName) throws IOException {
+    private static void downloadTune(int tuneId, String localFileName) throws IOException {
         new File(workingFolder).mkdirs();
         String downloadUrl = "https://rusefi.com/online/download.php?msq=" + tuneId;
         InputStream in = new URL(downloadUrl).openStream();
@@ -163,7 +164,7 @@ public class TuneCanTool {
     }
 
     @NotNull
-    public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini, String currentTuneFileName, StringBuilder methods) throws IOException {
+    public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini, String customTuneFileName, StringBuilder methods, String defaultTuneFileName) throws IOException {
         ReaderStateImpl state = MetaHelper.getReaderState();
 
         StringBuilder invokeMethods = new StringBuilder();
@@ -171,112 +172,138 @@ public class TuneCanTool {
 
         StringBuilder sb = new StringBuilder();
         for (DialogModel.Field f : ini.fieldsInUiOrder.values()) {
-            String name = f.getKey();
-            Constant customValue = customTune.getConstantsAsMap().get(name);
-            Constant defaultValue = defaultTune.getConstantsAsMap().get(name);
+            String fieldName = f.getKey();
+//            System.out.println("Processing " + fieldName);
+            Constant customValue = customTune.getConstantsAsMap().get(fieldName);
+            Constant defaultValue = defaultTune.getConstantsAsMap().get(fieldName);
             if (defaultValue == null) {
-                // no longer present
+                // no longer present?
+                System.out.println("Not found in default tune: " + fieldName);
                 continue;
             }
             Objects.requireNonNull(defaultValue.getValue(), "d value");
             if (customValue == null) {
-                log.info("Skipping " + name + " not present in tune");
+                log.info("Skipping " + fieldName + " not present in tune");
                 continue;
             }
             Objects.requireNonNull(customValue.getValue(), "c value");
 
             boolean isSameValue = simplerSpaces(defaultValue.getValue()).equals(simplerSpaces(customValue.getValue()));
-            if (!isSameValue) {
-                // todo: what about stuff outside of engine_configuration_s?
-                StringBuffer context = new StringBuffer();
-
-                ConfigField cf = MetaHelper.findField(state, name, context);
-                if (cf == null) {
-                    log.info("Not found " + name);
-                    continue;
-                }
-                String cName = context + cf.getOriginalArrayName();
-
-                if (cf.getType().equals("boolean")) {
-                    sb.append(TuneTools.getAssignmentCode(defaultValue, cName, unquote(customValue.getValue())));
-                    continue;
-                }
-
-                if (cf.isArray()) {
-                    String parentReference;
-                    if (cf.getParent().getName().equals("engine_configuration_s")) {
-                        parentReference = "engineConfiguration->";
-                    } else if (cf.getParent().getName().equals("persistent_config_s")) {
-                        parentReference = "config->";
-                    } else {
-                        // todo: for instance map.samplingAngle
-                        //throw new IllegalStateException("Unexpected " + cf.getParent());
-                        System.out.println(" " + cf);
-                        continue;
-                    }
-
-
-                    if (cf.getArraySizes().length == 2) {
-                        TableData tableData = TableData.readTable(currentTuneFileName, name, ini);
-                        if (tableData == null)
-                            continue;
-                        System.out.printf(" " + name);
-
-                        methods.append(tableData.getCsourceMethod(parentReference));
-                        invokeMethods.append(tableData.getCinvokeMethod());
-                        continue;
-                    }
-
-                    CurveData data = CurveData.valueOf(currentTuneFileName, name, ini);
-                    if (data == null)
-                        continue;
-
-
-                    methods.append(data.getCsourceMethod(parentReference));
-                    invokeMethods.append(data.getCinvokeMethod());
-
-                    continue;
-                }
-
-
-                if (!Node.isNumeric(customValue.getValue())) {
-                    // todo: smarter logic for enums
-
-                    String type = cf.getType();
-                    if (isHardwareEnum(type)) {
-                        continue;
-                    }
-                    EnumsReader.EnumState sourceCodeEnum = state.getEnumsReader().getEnums().get(type);
-                    if (sourceCodeEnum == null) {
-                        log.info("No info for " + type);
-                        continue;
-                    }
-                    String customEnum = state.getTsCustomLine().get(type);
-
-                    int ordinal;
-                    try {
-                        ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()));
-                    } catch (IllegalStateException e) {
-                        log.info("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
-                        continue;
-                    }
-
-                    log.info(cf + " " + sourceCodeEnum + " " + customEnum + " " + ordinal);
-
-                    String sourceCodeValue = sourceCodeEnum.findByValue(ordinal);
-                    sb.append(TuneTools.getAssignmentCode(defaultValue, cName, sourceCodeValue));
-
-                    continue;
-                }
-                double doubleValue = Double.valueOf(customValue.getValue());
-                int intValue = (int) doubleValue;
-                boolean isInteger = intValue == doubleValue;
-                if (isInteger) {
-                    sb.append(TuneTools.getAssignmentCode(defaultValue, cName, Integer.toString(intValue)));
-                } else {
-                    sb.append(TuneTools.getAssignmentCode(defaultValue, cName, niceToString(doubleValue)));
-                }
+            if (isSameValue) {
+                System.out.println("Even text form matches default: " + fieldName);
+                continue;
             }
+
+            // todo: what about stuff outside of engine_configuration_s?
+            StringBuffer context = new StringBuffer();
+
+            ConfigField cf = MetaHelper.findField(state, fieldName, context);
+            if (cf == null) {
+                log.info("Not found " + fieldName);
+                continue;
+            }
+            String cName = context + cf.getOriginalArrayName();
+
+            if (cf.getType().equals("boolean")) {
+                sb.append(TuneTools.getAssignmentCode(defaultValue, cName, unquote(customValue.getValue())));
+                continue;
+            }
+
+            if (cf.isArray()) {
+                String parentReference;
+                if (cf.getParent().getName().equals("engine_configuration_s")) {
+                    parentReference = "engineConfiguration->";
+                } else if (cf.getParent().getName().equals("persistent_config_s")) {
+                    parentReference = "config->";
+                } else {
+                    // todo: for instance map.samplingAngle
+                    //throw new IllegalStateException("Unexpected " + cf.getParent());
+                    System.out.println(" " + cf);
+                    continue;
+                }
+
+
+                if (cf.getArraySizes().length == 2) {
+                    TableData tableData = TableData.readTable(customTuneFileName, fieldName, ini);
+                    if (tableData == null) {
+                        System.out.println(" " + fieldName);
+                        continue;
+                    }
+                    System.out.println("Handling table " + fieldName);
+
+                    if (defaultTuneFileName != null) {
+                        TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);
+                        if (defaultTableData.getCinvokeMethod().equals(tableData.getCinvokeMethod())) {
+                            System.out.println("Table " + fieldName + " matches default content");
+                            continue;
+                        }
+                    }
+                    System.out.println("Custom content in table " + fieldName);
+
+
+                    methods.append(tableData.getCsourceMethod(parentReference));
+                    invokeMethods.append(tableData.getCinvokeMethod());
+                    continue;
+                }
+
+                CurveData data = CurveData.valueOf(customTuneFileName, fieldName, ini);
+                if (data == null)
+                    continue;
+
+                if (defaultTuneFileName != null) {
+                    CurveData defaultCurveData = CurveData.valueOf(defaultTuneFileName, fieldName, ini);
+                    if (defaultCurveData.getCinvokeMethod().equals(data.getCinvokeMethod())) {
+                        System.out.println("Curve " + fieldName + " matches default content");
+                        continue;
+                    }
+                }
+                System.out.println("Custom content in curve " + fieldName);
+
+                methods.append(data.getCsourceMethod(parentReference));
+                invokeMethods.append(data.getCinvokeMethod());
+
+                continue;
+            }
+
+
+            if (!Node.isNumeric(customValue.getValue())) {
+                // todo: smarter logic for enums
+
+                String type = cf.getType();
+                if (isHardwareEnum(type)) {
+                    continue;
+                }
+                EnumsReader.EnumState sourceCodeEnum = state.getEnumsReader().getEnums().get(type);
+                if (sourceCodeEnum == null) {
+                    log.info("No info for " + type);
+                    continue;
+                }
+                String customEnum = state.getTsCustomLine().get(type);
+
+                int ordinal;
+                try {
+                    ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()));
+                } catch (IllegalStateException e) {
+                    log.info("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
+                    continue;
+                }
+
+                log.info(cf + " " + sourceCodeEnum + " " + customEnum + " " + ordinal);
+
+                String sourceCodeValue = sourceCodeEnum.findByValue(ordinal);
+                sb.append(TuneTools.getAssignmentCode(defaultValue, cName, sourceCodeValue));
+
+                continue;
+            }
+            double doubleValue = Double.valueOf(customValue.getValue());
+            int intValue = (int) doubleValue;
+            boolean isInteger = intValue == doubleValue;
+            if (isInteger) {
+                sb.append(TuneTools.getAssignmentCode(defaultValue, cName, Integer.toString(intValue)));
+            } else {
+                sb.append(TuneTools.getAssignmentCode(defaultValue, cName, niceToString(doubleValue)));
+            }
+
         }
         sb.append("\n\n").append(invokeMethods);
 
