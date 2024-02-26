@@ -67,6 +67,8 @@ Usages:
     cppFileName: launch_control
     java: LaunchControl.java
     folder: controllers/algo
+    constexpr: "engine->launchController"
+    conditional_compilation: "EFI_LAUNCH_CONTROL"
 
   - name: antilag_system_state
     cppFileName: antilag_system
