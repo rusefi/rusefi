@@ -8,12 +8,8 @@
 
 PS3="Select a build by entering its number: "
 
-# The full path of this script
-SCRIPT=$(realpath "$0")
-# The directory this script is in (firmware/bin)
-SDIR=$(dirname "$SCRIPT")
-# This full path of the directory above us, i.e. firmware
-FDIR=$(realpath "$SDIR/..")
+# This full path of the firmware directory
+FDIR=$(cd "$(dirname "$0")/.."; pwd -P)
 
 # Check for -b flag
 if [ "$1" == "-b" ]; then
