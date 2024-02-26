@@ -243,9 +243,9 @@ jobs:
             folder: config/boards/core48
             ini-file: fome_core48.ini
 
-          # - build-target: atlas
-          #   folder: config/boards/atlas
-          #   ini-file: fome_atlas.ini
+          - build-target: atlas
+            folder: config/boards/atlas
+            ini-file: fome_atlas.ini
 
           # - build-target: tdg-pdm8
           #   folder: config/boards/tdg-pdm8
