@@ -79,8 +79,14 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 	return Phase::Idling;
 }
 
-float IdleController::getCrankingTaperFraction() const {
-	return (float)engine->rpmCalculator.getRevolutionCounterSinceStart() / engineConfiguration->afterCrankingIACtaperDuration;
+float IdleController::getCrankingTaperFraction(float clt) const {
+    float taperDuration = engineConfiguration->afterCrankingIACtaperDuration;
+
+    if (engineConfiguration->useCrankingIdleTaperTableSetting) {
+        taperDuration *= interpolate2d(clt, config->cltCrankingTaperCorrBins, config->cltCrankingTaperCorr);
+    }
+
+    return (float)engine->rpmCalculator.getRevolutionCounterSinceStart() / taperDuration;
 }
 
 float IdleController::getCrankingOpenLoop(float clt) const {
@@ -309,7 +315,7 @@ float IdleController::getIdlePosition(float rpm) {
 		m_lastTargetRpm = targetRpm;
 
 		// Determine cranking taper
-		float crankingTaper = getCrankingTaperFraction();
+		float crankingTaper = getCrankingTaperFraction(clt);
 
 		// Determine what operation phase we're in - idling or not
 		float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);

@@ -30,7 +30,7 @@ struct IIdleController {
 	virtual float getRunningOpenLoop(float rpm, float clt, SensorResult tps) = 0;
 	virtual float getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) = 0;
 	virtual float getClosedLoop(Phase phase, float tps, int rpm, int target) = 0;
-	virtual float getCrankingTaperFraction() const = 0;
+	virtual float getCrankingTaperFraction(float clt) const = 0;
 	virtual bool isIdlingOrTaper() const = 0;
 	virtual float getIdleTimingAdjustment(int rpm) = 0;
 };
@@ -49,7 +49,7 @@ public:
 
 	// PHASE DETERMINATION: what is the driver trying to do right now?
 	Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) override;
-	float getCrankingTaperFraction() const override;
+	float getCrankingTaperFraction(float clt) const override;
 
 	// OPEN LOOP CORRECTIONS
 	percent_t getCrankingOpenLoop(float clt) const override;

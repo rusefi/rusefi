@@ -981,6 +981,7 @@ bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skippe
 	bit complexWallModel,"Advanced (tables)","Basic (constants)";Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
 	bit alwaysInstantRpm
 	bit isMapAveragingEnabled
+	bit useCrankingIdleTaperTableSetting; If enabled, use separate temperature multiplier table for cranking taper duration.
 	bit overrideCrankingIacSetting;If enabled, use separate temperature multiplier table for cranking idle position.\nIf disabled, use normal running multiplier table applied to the cranking base position.
 	bit useSeparateAdvanceForIdle;This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed.
 	bit isWaveAnalyzerEnabled
@@ -1555,6 +1556,9 @@ uint8_t[PEDAL_TO_TPS_SIZE] autoscale pedalToTpsRpmBins;;"RPM", 100, 0, 0, 25000,
 
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C", 1, 0, -100, 250, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%", 1, 0, 0, 500, 2
+
+int8_t[CLT_CRANKING_CURVE_SIZE] cltCrankingTaperCorrBins;CLT-based taper duration multiplier for simple manual idle controller;"C", 1, 0, -100, 120, 2
+uint8_t[CLT_CRANKING_CURVE_SIZE] autoscale cltCrankingTaperCorr    ;CLT-based taper duration multiplier for simple manual idle controller;"%", 0.02, 0, 0, 5, 2
 
 uint8_t[IDLE_ADVANCE_CURVE_SIZE] autoscale idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", 50, 0, 0, 12000, 0
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg", 1, 0, -20, 90, 1

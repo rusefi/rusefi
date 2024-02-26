@@ -543,6 +543,14 @@ enable2ndByteCanID = false
 		yBins		= cltCrankingCorr
 		gauge		= CLTGauge
 
+    curve = cltCrankingTaperDurationCurve, "Cranking taper duration multiplier"
+        columnLabel = "Coolant", "Multiplier"
+        xAxis		= -40, 120, 9
+        yAxis		=  0,  3, 10
+        xBins		= cltCrankingTaperCorrBins, coolant
+        yBins		= cltCrankingTaperCorr
+        gauge		= CLTGauge
+
 	curve = cltIdleRPMCurve, "Idle Target RPM"
 		columnLabel = "Coolant", "RPM"
 		xAxis		= -40, 120, 9
@@ -1790,6 +1798,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = cltCrankingCurve,			"Cranking IAC CLT multiplier", 0, {overrideCrankingIacSetting == 1}
+		subMenu = cltCrankingTaperDurationCurve,			"Cranking taper duration multiplier", 0, {useCrankingIdleTaperTableSetting == 1}
 
 	menu = "&Idle"
 		subMenu = idleSettings,				"Idle settings"
@@ -3823,6 +3832,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Cranking base IAC position",			crankingIACposition
 		field = "After cranking IAC taper duration",afterCrankingIACtaperDuration
 		field = "Override cranking IAC CLT multiplier",		overrideCrankingIacSetting
+		field = "Use cranking taper duration multiplier",		useCrankingIdleTaperTableSetting
 
 	dialog = crankingIgnition, "Ignition"
 		field = "Timing Advance mode",	useSeparateAdvanceForCranking

@@ -130,7 +130,7 @@ class MockIdleController : public IIdleController {
 	MOCK_METHOD(float, getRunningOpenLoop, (float rpm, float clt, SensorResult tps), (override));
 	MOCK_METHOD(float, getOpenLoop, (IIdleController::Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction), (override));
 	MOCK_METHOD(float, getClosedLoop, (IIdleController::Phase phase, float tps, int rpm, int target), (override));
-	MOCK_METHOD(float, getCrankingTaperFraction, (), (const, override));
+	MOCK_METHOD(float, getCrankingTaperFraction, (float clt), (const, override));
 	MOCK_METHOD(bool, isIdlingOrTaper, (), (const, override));
 	MOCK_METHOD(float, getIdleTimingAdjustment, (int rpm), (override));
 };
