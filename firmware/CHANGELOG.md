@@ -36,6 +36,9 @@ or
  - Added Lua function `getAuxDigital` for parity with rusEFI #351
  - Optional table to change after start idle taper time #369 (thank you, Krakert!)
 
+### Fixed
+ - Improve performance with Lua CAN reception of a high volume of frames
+
 ## December 2023 Release
 
 ### Breaking Changes
