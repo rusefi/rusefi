@@ -67,6 +67,7 @@ public class ReaderStateImpl implements ReaderState {
         this.withC_Defines = withC_Defines;
     }
 
+    @Override
     public EnumsReader getEnumsReader() {
         return enumsReader;
     }

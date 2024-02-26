@@ -10,6 +10,8 @@ import java.util.Map;
 public interface ReaderState {
     void setWithC_Defines(boolean withC_Defines);
 
+    EnumsReader getEnumsReader();
+
     void doJob() throws IOException;
 
     String getHeader();
