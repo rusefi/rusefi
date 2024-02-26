@@ -47,6 +47,7 @@ Release template (copy/paste this for new release):
  - boosted applications to log VE above 127
  - removing confusing numeric options from enumerable drop downs #5942
  - Subaru 6/7 improvement for cranking
+ - Improve performance with Lua CAN reception of a high volume of frames #5841
 
 ### Removed
  - Narrow to Wideband approximation
