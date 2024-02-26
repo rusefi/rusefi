@@ -79,10 +79,12 @@ void hellenBoardStandBy() {
 extern OutputPin accelerometerChipSelect;
 
 void hellenMegaAccelerometerPreInitCS2Pin() {
+#if EFI_ONBOARD_MEMS
     if (!accelerometerChipSelect.isInitialized()) {
 	    accelerometerChipSelect.initPin("mm-CS2", Gpio::H_SPI1_CS2);
 	    accelerometerChipSelect.setValue(1);
 	}
+#endif // EFI_ONBOARD_MEMS
 }
 
 void configureHellenCanTerminator() {
