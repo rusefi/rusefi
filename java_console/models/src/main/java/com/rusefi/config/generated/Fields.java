@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 01:09:46 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 17:31:15 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1102,6 +1102,7 @@ public class Fields {
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
 	public static final int spi_device_e_SPI_DEVICE_4 = 4;
+	public static final int spi_device_e_SPI_DEVICE_5 = 5;
 	public static final int spi_device_e_SPI_NONE = 0;
 	public static final int spi_speed_e__150KHz = 3;
 	public static final int spi_speed_e__1_25MHz = 2;

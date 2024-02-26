@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Feb 05 12:58:17 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Feb 26 17:29:28 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -684,6 +684,8 @@ case SPI_DEVICE_3:
   return "SPI_DEVICE_3";
 case SPI_DEVICE_4:
   return "SPI_DEVICE_4";
+case SPI_DEVICE_5:
+  return "SPI_DEVICE_5";
 case SPI_NONE:
   return "SPI_NONE";
   }
