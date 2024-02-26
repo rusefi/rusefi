@@ -34,6 +34,7 @@ or
  - Staged injection: a second set of fuel injectors that inject part of the fuel load when you run out of primary injector
  - VE/Ign/Boost blend tables can select a Y axis override for even more flexibility
  - Added Lua function `getAuxDigital` for parity with rusEFI #351
+ - Optional table to change after start idle taper time #369 (thank you, Krakert!)
 
 ## December 2023 Release
 
