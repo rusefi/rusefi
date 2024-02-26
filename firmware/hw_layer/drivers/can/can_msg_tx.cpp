@@ -2,7 +2,7 @@
  * @file	can_msg_tx.cpp
  *
  * CAN message transmission
- * 
+ *
  * @date Mar 13, 2020
  * @author Matthew Kennedy, (c) 2012-2020
  */
@@ -113,6 +113,7 @@ void CanTxMessage::setBus(size_t bus) {
 	busIndex = bus;
 }
 
+// LSB Little-endian System, "Intel"
 void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
 	m_frame.data8[offset] = value & 0xFF;
 	m_frame.data8[offset + 1] = value >> 8;

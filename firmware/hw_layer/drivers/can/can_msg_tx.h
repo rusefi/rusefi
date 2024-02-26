@@ -2,7 +2,7 @@
  * @file	can_msg_tx.h
  *
  * CAN message transmission
- * 
+ *
  * @date Mar 13, 2020
  * @author Matthew Kennedy, (c) 2012-2020
  */
@@ -17,7 +17,7 @@
 
 /**
  * Represent a message to be transmitted over CAN.
- * 
+ *
  * Usage:
  *   * Create an instance of CanTxMessage
  *   * Set any data you'd like to transmit either using the subscript operator to directly access bytes, or any of the helper functions.
@@ -53,7 +53,7 @@ public:
 	uint8_t& operator[](size_t);
 
 	/**
-	 * @brief Write a 16-bit short value to the buffer. Note: this writes in big endian byte order.
+	 * @brief Write a 16-bit short value to the buffer. Note: this writes in little endian byte order.
 	 */
 	void setShortValue(uint16_t value, size_t offset);
 
@@ -98,8 +98,8 @@ public:
 
 #if EFI_CAN_SUPPORT
 	/**
-	 * Access members of the templated type.  
-	 * 
+	 * Access members of the templated type.
+	 *
 	 * So you can do:
 	 * CanTxTyped<MyType> d;
 	 * d->memberOfMyType = 23;
