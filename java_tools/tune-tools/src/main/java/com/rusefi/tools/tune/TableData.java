@@ -4,6 +4,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class TableData implements HoHo {
         this.tableName = tableName;
     }
 
-    @NotNull
+    @Nullable
     public static TableData readTable(String msqFileName, String tableName, IniFileModel model) throws IOException {
         IniField iniField = model.allIniFields.get(tableName);
         if (!(iniField instanceof ArrayIniField)) {

@@ -6,11 +6,9 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.preferences.storage.Node;
-import com.rusefi.output.ConfigStructure;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -21,7 +19,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -90,34 +87,34 @@ public class TuneCanTool {
         return SIMULATED_PREFIX + "_" + engineType + SIMULATED_SUFFIX;
     }
 
-    private static void handle(String vehicleName, int tuneId, String currentTuneFileName) throws JAXBException, IOException {
-        String localFileName = workingFolder + File.separator + tuneId + ".msq";
+    private static void handle(String vehicleName, int tuneId, String defaultTuneFileName) throws JAXBException, IOException {
+        String customTuneFileName = workingFolder + File.separator + tuneId + ".msq";
         String url = "https://rusefi.com/online/view.php?msq=" + tuneId;
 
-        downloadTune(tuneId, localFileName);
+        downloadTune(tuneId, customTuneFileName);
 
-      writeDiffBetweenLocalTuneFileAndDefaultTune(vehicleName, currentTuneFileName, localFileName, url);
+        writeDiffBetweenLocalTuneFileAndDefaultTune(vehicleName, defaultTuneFileName, customTuneFileName, url);
     }
 
-    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String localFileName) throws JAXBException, IOException {
-        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", DEFAULT_TUNE,
-            localFileName,  "comment");
-    }
+//    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String localFileName) throws JAXBException, IOException {
+//        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", DEFAULT_TUNE,
+//            localFileName,  "comment");
+//    }
+//
+//    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(int engineCode, String localFileName, String cannedComment) throws JAXBException, IOException {
+//        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engineCode),
+//            localFileName,  cannedComment);
+//    }
 
-    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(int engineCode, String localFileName, String cannedComment) throws JAXBException, IOException {
-        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engineCode),
-            localFileName,  cannedComment);
-    }
-
-    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String defaultTuneFileName, String localFileName, String cannedComment) throws JAXBException, IOException {
+    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String defaultTuneFileName, String customTuneFileName, String cannedComment) throws JAXBException, IOException {
         new File(REPORTS_OUTPUT_FOLDER).mkdir();
 
-        Msq custom = Msq.readTune(localFileName);
+        Msq customTune = Msq.readTune(customTuneFileName);
+        Msq defaultTune = Msq.readTune(defaultTuneFileName);
 
         StringBuilder methods = new StringBuilder();
 
-        Msq defaultTune = Msq.readTune(defaultTuneFileName);
-        StringBuilder sb = TuneCanTool.getTunePatch(defaultTune, custom, ini, localFileName, methods);
+        StringBuilder sb = TuneCanTool.getTunePatch(defaultTune, customTune, ini, customTuneFileName, methods);
 
         String fileNameMethods = REPORTS_OUTPUT_FOLDER + "/" + vehicleName + "_methods.md";
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
@@ -167,13 +164,10 @@ public class TuneCanTool {
 
     @NotNull
     public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini, String currentTuneFileName, StringBuilder methods) throws IOException {
-        List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
-        String[] totalArgs = options.toArray(new String[0]);
+        ReaderStateImpl state = MetaHelper.getReaderState();
 
         StringBuilder invokeMethods = new StringBuilder();
 
-        ReaderStateImpl state = new ReaderStateImpl();
-        ConfigDefinition.doJob(totalArgs, state);
 
         StringBuilder sb = new StringBuilder();
         for (DialogModel.Field f : ini.fieldsInUiOrder.values()) {
@@ -196,7 +190,7 @@ public class TuneCanTool {
                 // todo: what about stuff outside of engine_configuration_s?
                 StringBuffer context = new StringBuffer();
 
-                ConfigField cf = findField(state, name, context);
+                ConfigField cf = MetaHelper.findField(state, name, context);
                 if (cf == null) {
                     log.info("Not found " + name);
                     continue;
@@ -289,47 +283,4 @@ public class TuneCanTool {
         return sb;
     }
 
-    private static ConfigField findField(ReaderStateImpl state, String name, StringBuffer context) {
-        ConfigField field = doLook(state, name, context, "engine_configuration_s");
-        if (field != null)
-            return field;
-        return doLook(state, name, context, "persistent_config_s");
-    }
-
-    @Nullable
-    private static ConfigField doLook(ReaderStateImpl state, String name, StringBuffer context, String parentStructName) {
-        ConfigStructure s = state.getStructures().get(parentStructName);
-//                log.info("We have a custom value " + name);
-        ConfigField cf = s.getTsFieldByName(name);
-        if (cf != null) {
-            return cf;
-        }
-        int fromIndex = 0;
-        while (true) {
-            fromIndex = name.indexOf('_', fromIndex);
-            if (fromIndex == -1) {
-                // no struct names
-                return null;
-            }
-            String parentName = name.substring(0, fromIndex);
-            cf = s.getTsFieldByName(parentName);
-            fromIndex++; // skip underscore
-            if (cf == null)
-                continue;
-            String type = cf.getType();
-            s = state.getStructures().get(type);
-
-            if (s != null) {
-                String substring = name.substring(fromIndex);
-                ConfigField tsFieldByName = s.getTsFieldByName(substring);
-                if (tsFieldByName == null) {
-                    log.info("Not located " + substring + " in " + s);
-                } else {
-                    context.append(cf.getOriginalArrayName()).append(".");
-                    log.info("Located " + tsFieldByName + " in " + s);
-                }
-                return tsFieldByName;
-            }
-        }
-    }
 }

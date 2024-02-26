@@ -4,6 +4,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -36,7 +37,7 @@ public class CurveData implements HoHo {
         return curveData;
     }
 
-    @NotNull
+    @Nullable
     public static CurveData valueOf(String msqFileName, String curveName, IniFileModel model) throws IOException {
         IniField iniField = model.allIniFields.get(curveName);
         if (!(iniField instanceof ArrayIniField))
