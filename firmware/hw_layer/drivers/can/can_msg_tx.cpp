@@ -119,6 +119,12 @@ void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
 	m_frame.data8[offset + 1] = value >> 8;
 }
 
+// MOTOROLA order, MSB (Most Significant Byte/Big Endian) comes first.
+void CanTxMessage::setShortValueMsb(uint16_t value, size_t offset) {
+	m_frame.data8[offset] = value >> 8;
+	m_frame.data8[offset + 1] = value & 0xFF;
+}
+
 void CanTxMessage::setBit(size_t byteIdx, size_t bitIdx) {
 	m_frame.data8[byteIdx] |= 1 << bitIdx;
 }

@@ -57,6 +57,9 @@ public:
 	 */
 	void setShortValue(uint16_t value, size_t offset);
 
+	// Same as above but big endian
+	void setShortValueMsb(uint16_t value, size_t offset);
+
 	/**
 	 * @brief Set a single bit in the transmit buffer.  Useful for single-bit flags.
 	 */
