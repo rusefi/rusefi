@@ -62,6 +62,10 @@ Usages:
     java: InjectorModel.java
     folder: controllers/algo/fuel
     prepend: integration/rusefi_config_shared.txt
+    constexpr: "___engine.module<InjectorModelPrimary>()"
+    isPtr: true
+    # working around unmock() in simulator
+    conditional_compilation: "EFI_PROD_CODE && EFI_IDLE_CONTROL"
 
   - name: launch_control_state
     cppFileName: launch_control
