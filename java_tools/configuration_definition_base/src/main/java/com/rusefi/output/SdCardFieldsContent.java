@@ -8,10 +8,16 @@ import java.io.IOException;
 
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
+/**
+ * here we tell the firmware what to log on SD card how
+ *
+ * @see DataLogConsumer
+ */
 public class SdCardFieldsContent {
+    public static final String SD_CARD_OUTPUT_FILE_NAME = "console/binary_log/log_fields_generated.h";
     private final StringBuilder body = new StringBuilder();
 
-    public String home = "engine->outputChannels";
+    public String home = "test->reference"; // technical debt: default value is only used by unit tests
     public String conditional;
     public Boolean isPtr = false;
 

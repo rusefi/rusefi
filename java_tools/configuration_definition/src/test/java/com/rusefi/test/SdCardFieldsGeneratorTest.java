@@ -30,10 +30,10 @@ public class SdCardFieldsGeneratorTest {
                 "\tuint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
                 "end_struct";
 
-        processAndAssert(test, "\t{engine->outputChannels.internalMcuTemperature, \"internalMcuTemperature\", \"\", 0},\n" +
-                "\t{engine->outputChannels.RPMValue, \"hello\", \"RPM\", 2, \"myCategory\"},\n" +
-                "\t{engine->outputChannels.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
-                "\t{engine->outputChannels.speedToRpmRatio, \"ra\", \"value\", 0},\n" +
+        processAndAssert(test, "\t{test->reference.internalMcuTemperature, \"internalMcuTemperature\", \"\", 0},\n" +
+                "\t{test->reference.RPMValue, \"hello\", \"RPM\", 2, \"myCategory\"},\n" +
+                "\t{test->reference.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
+                "\t{test->reference.speedToRpmRatio, \"ra\", \"value\", 0},\n" +
                 "", actor, false);
     }
 
@@ -42,7 +42,7 @@ public class SdCardFieldsGeneratorTest {
         processAndAssert("struct_no_prefix output_channels_s\n" +
                 "uint16_t autoscale RPMValue;feee;\"RPM\",1, 0, 0, 8000, 2\n" +
                 "bit sd_logging_internal\n" +
-                "end_struct", "\t{engine->outputChannels.RPMValue, \"feee\", \"RPM\", 2},\n", readerState -> {
+                "end_struct", "\t{test->reference.RPMValue, \"feee\", \"RPM\", 2},\n", readerState -> {
 
         }, false);
     }
@@ -51,10 +51,10 @@ public class SdCardFieldsGeneratorTest {
     public void array() {
         processAndAssert("struct_no_prefix output_channels_s\n" +
                 "uint16_t[4 iterate] recentErrorCode;;\"error\", 1, 0, 0, 0, 0\n" +
-                "end_struct", "\t{engine->outputChannels.recentErrorCode[0], \"recentErrorCode 1\", \"error\", 0},\n" +
-                "\t{engine->outputChannels.recentErrorCode[1], \"recentErrorCode 2\", \"error\", 0},\n" +
-                "\t{engine->outputChannels.recentErrorCode[2], \"recentErrorCode 3\", \"error\", 0},\n" +
-                "\t{engine->outputChannels.recentErrorCode[3], \"recentErrorCode 4\", \"error\", 0},\n", readerState -> {
+                "end_struct", "\t{test->reference.recentErrorCode[0], \"recentErrorCode 1\", \"error\", 0},\n" +
+                "\t{test->reference.recentErrorCode[1], \"recentErrorCode 2\", \"error\", 0},\n" +
+                "\t{test->reference.recentErrorCode[2], \"recentErrorCode 3\", \"error\", 0},\n" +
+                "\t{test->reference.recentErrorCode[3], \"recentErrorCode 4\", \"error\", 0},\n", readerState -> {
 
         }, false);
     }
@@ -68,7 +68,7 @@ public class SdCardFieldsGeneratorTest {
                         "\tpid_status_s[2 iterate] vvtStatus\n" +
                         "\tpid_status_s alternatorStatus\n" +
                         "end_struct",
-                "\t{engine->outputChannels->alternatorStatus.pTerm, \"alternatorStatus.pTerm\", \"\", 2},\n",
+                "\t{test->reference->alternatorStatus.pTerm, \"alternatorStatus.pTerm\", \"\", 2},\n",
                 readerState -> {
 
                 }, true);
