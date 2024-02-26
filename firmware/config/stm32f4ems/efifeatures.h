@@ -402,14 +402,11 @@
 #define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
-
 #define EFI_SPI2_AF 5
-
-/**
- * This section is for right-side center SPI
- */
-
 #define EFI_SPI3_AF 6
+#define EFI_SPI4_AF 5
+#define EFI_SPI5_AF 5
+#define EFI_SPI6_AF 6
 
 /**
  * Patched version of ChibiOS/RT support extra details in the system error messages
