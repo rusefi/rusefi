@@ -35,6 +35,7 @@ static void set201xHyundai() {
 
 // set engine_type 104
 void setHyundaiPb() {
+	cannedPbTables();
     setInline4();
 	engineConfiguration->displacement = 1.6;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
