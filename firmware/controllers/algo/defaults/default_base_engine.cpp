@@ -18,6 +18,7 @@ static void setDefaultAlternatorParameters() {
 #endif // EFI_ALTERNATOR_CONTROL
 
 void setGDIFueling() {
+  setGdiWallWetting();
 	// Use high pressure sensor
 	engineConfiguration->injectorPressureType = IPT_High;
 	// Automatic compensation of injector flow based on rail pressure

@@ -190,6 +190,11 @@ static void setDefaultLambdaTable() {
 	}
 }
 
+void setGdiWallWetting() {
+	engineConfiguration->wwaeTau = 0;
+	engineConfiguration->wwaeBeta = 0;
+}
+
 void setDefaultWallWetting() {
 #if !EFI_UNIT_TEST
 	// todo: this is a reasonable default for what kinds of engines exactly?
