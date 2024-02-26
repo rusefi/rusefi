@@ -591,6 +591,10 @@ case SPI_DEVICE_3:
   return "SPI_DEVICE_3";
 case SPI_DEVICE_4:
   return "SPI_DEVICE_4";
+case SPI_DEVICE_5:
+  return "SPI_DEVICE_5";
+case SPI_DEVICE_6:
+  return "SPI_DEVICE_6";
 case SPI_NONE:
   return "SPI_NONE";
   }
