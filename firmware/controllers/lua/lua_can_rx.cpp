@@ -7,6 +7,12 @@
 
 #include "rusefi_lua.h"
 
+extern "C" {
+	#include "lapi.h"
+	#include "ltable.h"
+	#include "lgc.h"
+}
+
 // Stores information about one received CAN frame: which bus, plus the actual frame
 struct CanFrameData {
 	CanBusIndex BusIndex;
@@ -56,6 +62,22 @@ void processLuaCan(CanBusIndex busIndex, const CANRxFrame& frame) {
 	}
 }
 
+// From lapi.c:756, modified slightly
+static void lua_createtable_noGC(lua_State *L, int narray) {
+	Table *t;
+	lua_lock(L);
+	t = luaH_new(L);
+	sethvalue2s(L, L->top, t);
+	api_incr_top(L);
+	luaH_resize(L, t, narray, 0);
+
+	// This line is commented out - no need to do a GC every time in
+	// this hot path when we'll do it shortly and have plenty of memory available.
+	// luaC_checkGC(L);
+
+	lua_unlock(L);
+}
+
 static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	if (data->Callback == NO_CALLBACK) {
 		// No callback, use catch-all function
@@ -80,7 +102,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	lua_pushinteger(ls, dlc);
 
 	// Build table for data
-	lua_newtable(ls);
+	lua_createtable_noGC(ls, dlc);
 	for (size_t i = 0; i < dlc; i++) {
 		lua_pushinteger(ls, data->Frame.data8[i]);
 
