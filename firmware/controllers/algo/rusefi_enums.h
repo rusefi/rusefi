@@ -342,11 +342,12 @@ typedef enum __attribute__ ((__packed__)) {
 	SPI_DEVICE_1 = 1,
 	SPI_DEVICE_2 = 2,
 	SPI_DEVICE_3 = 3,
-	// we do not seem to have much spi4 code
 	SPI_DEVICE_4 = 4,
 	SPI_DEVICE_5 = 5,
 	SPI_DEVICE_6 = 6,
 } spi_device_e;
+
+#define SPI_TOTAL_COUNT 6
 
 typedef enum __attribute__ ((__packed__)) {
 	BMW_e46 = 0,
