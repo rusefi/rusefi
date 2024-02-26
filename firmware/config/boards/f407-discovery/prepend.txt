@@ -12,4 +12,4 @@
 
 #define ts_show_onboard_accelerometer true
 ! reduced MAX_CYLINDER_COUNT gives us a bit more flash and a bit more RAM
-#define MAX_CYLINDER_COUNT 8
+! todo looks like this was pretty much ignored #define MAX_CYLINDER_COUNT 8
