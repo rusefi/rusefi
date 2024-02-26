@@ -876,6 +876,76 @@ float getOutputValueByName(const char *name) {
 // m_maximumRetard
 		case 164334513:
 			return ___engine.module<KnockController>()->m_maximumRetard;
+// m_deadtime
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+		case -1167844818:
+			return ___engine.module<InjectorModelPrimary>()->m_deadtime;
+#endif
+// pressureDelta
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+		case -376325528:
+			return ___engine.module<InjectorModelPrimary>()->pressureDelta;
+#endif
+// pressureRatio
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+		case -359858019:
+			return ___engine.module<InjectorModelPrimary>()->pressureRatio;
+#endif
+// retardThresholdRpm
+#if EFI_LAUNCH_CONTROL
+		case -1374156957:
+			return engine->launchController.retardThresholdRpm;
+#endif
+// combinedConditions
+#if EFI_LAUNCH_CONTROL
+		case 1199675808:
+			return engine->launchController.combinedConditions;
+#endif
+// launchActivatePinState
+#if EFI_LAUNCH_CONTROL
+		case 1928406809:
+			return engine->launchController.launchActivatePinState;
+#endif
+// isLaunchCondition
+#if EFI_LAUNCH_CONTROL
+		case -1959120957:
+			return engine->launchController.isLaunchCondition;
+#endif
+// isSwitchActivated
+#if EFI_LAUNCH_CONTROL
+		case 1699495432:
+			return engine->launchController.isSwitchActivated;
+#endif
+// isClutchActivated
+#if EFI_LAUNCH_CONTROL
+		case 1569151513:
+			return engine->launchController.isClutchActivated;
+#endif
+// isValidInputPin
+#if EFI_LAUNCH_CONTROL
+		case -978523544:
+			return engine->launchController.isValidInputPin;
+#endif
+// activateSwitchCondition
+#if EFI_LAUNCH_CONTROL
+		case 1265600943:
+			return engine->launchController.activateSwitchCondition;
+#endif
+// rpmCondition
+#if EFI_LAUNCH_CONTROL
+		case -1221336517:
+			return engine->launchController.rpmCondition;
+#endif
+// speedCondition
+#if EFI_LAUNCH_CONTROL
+		case 1722712413:
+			return engine->launchController.speedCondition;
+#endif
+// tpsCondition
+#if EFI_LAUNCH_CONTROL
+		case 827982787:
+			return engine->launchController.tpsCondition;
+#endif
 // isTpsInvalid
 #if EFI_BOOST_CONTROL
 		case -575666209:

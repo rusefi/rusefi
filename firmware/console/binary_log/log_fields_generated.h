@@ -380,6 +380,18 @@ static const LogField fields[] = {
 	{___engine.module<KnockController>()->m_knockThreshold, "Knock: Threshold", "", 0},
 	{___engine.module<KnockController>()->m_knockCount, "Knock: Count", "", 0},
 	{___engine.module<KnockController>()->m_maximumRetard, "Knock: Max retard", "", 0},
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<InjectorModelPrimary>()->m_deadtime, "Fuel: injector lag", "ms", 3},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<InjectorModelPrimary>()->pressureDelta, "Fuel: Injector pressure delta", "kPa", 1},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{___engine.module<InjectorModelPrimary>()->pressureRatio, "Fuel: Injector pressure ratio", "", 3},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController.retardThresholdRpm, "retardThresholdRpm", "", 0},
+#endif
 #if EFI_BOOST_CONTROL
 	{___engine.module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
 #endif
