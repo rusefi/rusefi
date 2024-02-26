@@ -120,12 +120,39 @@ void turnOnSpi(spi_device_e device) {
 	}
 	if (device == SPI_DEVICE_4) {
 #if STM32_SPI_USE_SPI4
-//		scheduleMsg(&logging, "Turning on SPI4 pins");
-		/* there are no configuration fields for SPI4 in engineConfiguration, rely on board init code
-		 * it should set proper functions for SPI4 pins */
+		initSpiModule(&SPID4, getSckPin(device),
+				getMisoPin(device),
+				getMosiPin(device),
+				engineConfiguration->spi4SckMode,
+				engineConfiguration->spi4MosiMode,
+				engineConfiguration->spi4MisoMode);
 #else
 		criticalError("SPI4 not available in this binary");
 #endif /* STM32_SPI_USE_SPI4 */
+	}
+	if (device == SPI_DEVICE_5) {
+#if STM32_SPI_USE_SPI5
+		initSpiModule(&SPID5, getSckPin(device),
+				getMisoPin(device),
+				getMosiPin(device),
+				engineConfiguration->spi5SckMode,
+				engineConfiguration->spi5MosiMode,
+				engineConfiguration->spi5MisoMode);
+#else
+		criticalError("SPI5 not available in this binary");
+#endif /* STM32_SPI_USE_SPI5 */
+	}
+	if (device == SPI_DEVICE_6) {
+#if STM32_SPI_USE_SPI6
+		initSpiModule(&SPID6, getSckPin(device),
+				getMisoPin(device),
+				getMosiPin(device),
+				engineConfiguration->spi6SckMode,
+				engineConfiguration->spi6MosiMode,
+				engineConfiguration->spi6MisoMode);
+#else
+		criticalError("SPI5 not available in this binary");
+#endif /* STM32_SPI_USE_SPI5 */
 	}
 }
 
