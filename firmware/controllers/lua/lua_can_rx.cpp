@@ -6,6 +6,12 @@
 
 #include "rusefi_lua.h"
 
+extern "C" {
+	#include "lapi.h"
+	#include "ltable.h"
+	#include "lgc.h"
+}
+
 // Stores information about one received CAN frame: which bus, plus the actual frame
 struct CanFrameData {
 	uint8_t BusIndex;
@@ -55,6 +61,22 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 	}
 }
 
+// From lapi.c:756, modified slightly
+static void lua_createtable_noGC(lua_State *L, int narray) {
+	Table *t;
+	lua_lock(L);
+	t = luaH_new(L);
+	sethvalue2s(L, L->top, t);
+	api_incr_top(L);
+	luaH_resize(L, t, narray, 0);
+
+	// This line is commented out - no need to do a GC every time in
+	// this hot path when we'll do it shortly and have plenty of memory available.
+	// luaC_checkGC(L);
+
+	lua_unlock(L);
+}
+
 static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	ScopePerf perf(PE::LuaOneCanRxCallback);
 	if (data->Callback == NO_CALLBACK) {
@@ -83,8 +105,8 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
     // todo: https://github.com/rusefi/rusefi/issues/6041
     lua_getglobal(ls, "global_can_data");
   } else {
-  	// Build table for data, that's a HEAVY operation
-	  lua_newtable(ls);
+  	// Build table for data, custom implementation without explicit GC but still garbage
+	  lua_createtable_noGC(ls, dlc);
 	}
 	for (size_t i = 0; i < dlc; i++) {
 		lua_pushinteger(ls, data->Frame.data8[i]);
