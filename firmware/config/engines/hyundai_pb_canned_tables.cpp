@@ -27,6 +27,7 @@ static void cannedvvtTable2() {
 }
 
 static void cannedignitionTable() {
+#if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT)
 	static const float hardCodedignitionTable[16][16] = {
 {12.200,	14.200,	18.100,	23.300,	29.900,	36.400,	39.200,	40.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	},
 {12.100,	14.000,	17.800,	22.900,	29.300,	35.600,	39.000,	39.800,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	},
@@ -46,6 +47,7 @@ static void cannedignitionTable() {
 {-15.000,	-15.000,	-15.000,	-15.000,	-15.000,	-15.000,	-15.000,	-15.000,	-14.000,	-13.600,	-13.200,	-12.900,	-12.500,	-12.100,	-11.700,	-11.000,	},
 };
 	copyTable(config->ignitionTable, hardCodedignitionTable);
+#endif
 }
 
 static void cannedveTable() {
