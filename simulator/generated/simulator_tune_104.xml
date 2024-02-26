@@ -738,7 +738,7 @@
         <constant digits="0" name="noAccelAfterHardLimitPeriodSecs" units="sec">3.0</constant>
         <constant digits="0" name="mapAveragingSchedulingAtIndex" units="index">0.0</constant>
         <constant digits="2" name="tachPulseDuractionMs" units="">0.5</constant>
-        <constant digits="2" name="wwaeTau" units="Seconds">0.3</constant>
+        <constant digits="2" name="wwaeTau" units="Seconds">0.0</constant>
         <constant digits="4" name="alternatorControl_pFactor" units="">30.0</constant>
         <constant digits="4" name="alternatorControl_iFactor" units="">0.0</constant>
         <constant digits="4" name="alternatorControl_dFactor" units="">0.0</constant>
@@ -774,7 +774,7 @@
         <constant digits="0" name="idleRpmPid_periodMs" units="ms">0.0</constant>
         <constant digits="0" name="idleRpmPid_minValue" units="">-20.0</constant>
         <constant digits="0" name="idleRpmPid_maxValue" units="">20.0</constant>
-        <constant digits="2" name="wwaeBeta" units="Fraction">0.3</constant>
+        <constant digits="2" name="wwaeBeta" units="Fraction">0.0</constant>
         <constant name="binarySerialTxPin">"PC10"</constant>
         <constant name="binarySerialRxPin">"PC11"</constant>
         <constant name="auxValves1">"NONE"</constant>
