@@ -31,8 +31,6 @@ void stopHardware();
 //  328.125 KHz 164.06 KHz
 #define SPI_BaudRatePrescaler_256       ((uint16_t)0x0038)
 
-int getSpiPrescaler(spi_speed_e speed, spi_device_e device);
-
 EXTERNC SPIDriver * getSpiDevice(spi_device_e spiDevice);
 void turnOnSpi(spi_device_e device);
 void lockSpi(spi_device_e device);
