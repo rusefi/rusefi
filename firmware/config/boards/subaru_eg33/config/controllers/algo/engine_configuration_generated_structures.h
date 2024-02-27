@@ -1875,24 +1875,7 @@ struct engine_configuration_s {
 	// offset 1796
 	float idlePidActivationTime;
 	// offset 1800
-	pin_mode_e spi1SckMode;
-	// Modes count be used for 3v<>5v integration using pull-ups/pull-downs etc.
-	// offset 1801
-	pin_mode_e spi1MosiMode;
-	// offset 1802
-	pin_mode_e spi1MisoMode;
-	// offset 1803
-	pin_mode_e spi2SckMode;
-	// offset 1804
-	pin_mode_e spi2MosiMode;
-	// offset 1805
-	pin_mode_e spi2MisoMode;
-	// offset 1806
-	pin_mode_e spi3SckMode;
-	// offset 1807
-	pin_mode_e spi3MosiMode;
-	// offset 1808
-	pin_mode_e spi3MisoMode;
+	uint8_t unused1800[9];
 	// offset 1809
 	pin_output_mode_e stepperEnablePinMode;
 	// ResetB
