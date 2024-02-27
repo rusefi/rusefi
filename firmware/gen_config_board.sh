@@ -12,10 +12,6 @@
 
 set -e
 
-cd ../java_tools
-flock /tmp/java.lock ./gradlew :config_definition:shadowJar
-cd ../firmware
-
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
 echo "the storage section of rusefiXXX.ini is updated as well"
 
@@ -24,16 +20,24 @@ SHORT_BOARD_NAME=${2:-$SHORT_BOARD_NAME}
 INI=${3:-"rusefi_$SHORT_BOARD_NAME.ini"}
 
 if [ -z "$BOARD_DIR" ]; then
-	echo "Board name parameter expected"
+	echo "Board dir parameter expected"
 	exit 1
 fi
 
 if [ -z "$SHORT_BOARD_NAME" ]; then
-	echo "ShortBoard name parameter expected"
+	echo "Short board name parameter expected"
 	exit 1
 fi
 
 echo "BOARD_DIR=${BOARD_DIR} SHORT_BOARD_NAME=${SHORT_BOARD_NAME}"
+
+which realpath >/dev/null 2>&1 || (which grealpath >/dev/null 2>&1 && alias realpath='grealpath')
+FDIR=$(realpath $(dirname "$0"))
+BOARD_DIR=$(realpath --relative-to "$FDIR" "$BOARD_DIR")
+
+cd "$FDIR/../java_tools"
+flock /tmp/java.lock ./gradlew :config_definition:shadowJar
+cd ../firmware
 
 bash gen_signature.sh ${SHORT_BOARD_NAME}
 

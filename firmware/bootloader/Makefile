@@ -356,6 +356,11 @@ ULIBS = -lm --specs=nano.specs
 ##############################################################################
 
 include $(RULESFILE)
+
+ifneq (yes,$(SUBMAKE))
+  include $(PROJECT_DIR)/rusefi_config.mk
+endif
+
 include $(PROJECT_DIR)/rusefi_pch.mk
 
 .PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK

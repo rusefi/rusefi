@@ -1,4 +1,4 @@
-include ../java_tools/java_tools.mk
+include $(PROJECT_DIR)/../java_tools/java_tools.mk
 
 INI_FILE = $(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/rusefi_$(SHORT_BOARD_NAME).ini
 SIG_FILE = $(PROJECT_DIR)/tunerstudio/generated/signature_$(SHORT_BOARD_NAME).txt
@@ -24,7 +24,7 @@ $(CONFIG_FILES): .config-sentinel ;
 
 .config-sentinel: $(SIG_FILE) .FORCE
 ifneq (,$(CUSTOM_GEN_CONFIG))
-	bash $(PROJECT_DIR)/$(BOARD_DIR)/$(CUSTOM_GEN_CONFIG)
+	bash $(BOARD_DIR)/$(CUSTOM_GEN_CONFIG)
 else
 	bash $(PROJECT_DIR)/gen_config_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
 endif
