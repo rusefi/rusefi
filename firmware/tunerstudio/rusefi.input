@@ -3171,6 +3171,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI4 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI4 MISO",							spi3misoPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI4 SCK",								spi3sckPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI5 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI5 MISO",							spi3misoPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI5 SCK",								spi3sckPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI6 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI6 MISO",							spi3misoPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI6 SCK",								spi3sckPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "hip9011CsPin",							hip9011CsPin
 		field = "Accelerometer CS pin",					accelerometerCsPin@@if_ts_show_onboard_accelerometer
 		field = "Saab CDM knock",						cdmInputPin
@@ -3774,6 +3783,28 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "SPI3sck mode",							spi3SckMode, {is_enabled_spi_3 == 1}@@if_ts_show_spi3_pins
 
 		field = "SPI4 enable",							is_enabled_spi_4
+		field = "SPI4 MOSI",							spi4mosiPin, {is_enabled_spi_4 == 1}@@if_ts_show_spi4_pins
+		field = "SPI4mosi mode",						spi4MosiMode, {is_enabled_spi_4 == 1}@@if_ts_show_spi4_pins
+		field = "SPI4 MISO",							spi4misoPin, {is_enabled_spi_4 == 1}@@if_ts_show_spi4_pins
+		field = "SPI4miso mode",						spi4MisoMode, {is_enabled_spi_4 == 1}@@if_ts_show_spi4_pins
+		field = "SPI4 SCK",								spi4sckPin, {is_enabled_spi_4 == 1}@@if_ts_show_spi4_pins
+		field = "SPI4sck mode",							spi4SckMode, {is_enabled_spi_4 == 1}@@if_ts_show_spi4_pins
+
+		field = "SPI5 enable",							is_enabled_spi_5
+		field = "SPI5 MOSI",							spi5mosiPin, {is_enabled_spi_5 == 1}@@if_ts_show_spi5_pins
+		field = "SPI5mosi mode",						spi5MosiMode, {is_enabled_spi_5 == 1}@@if_ts_show_spi5_pins
+		field = "SPI5 MISO",							spi5misoPin, {is_enabled_spi_5 == 1}@@if_ts_show_spi5_pins
+		field = "SPI5miso mode",						spi5MisoMode, {is_enabled_spi_5 == 1}@@if_ts_show_spi5_pins
+		field = "SPI5 SCK",								spi5sckPin, {is_enabled_spi_5 == 1}@@if_ts_show_spi5_pins
+		field = "SPI5sck mode",							spi5SckMode, {is_enabled_spi_5 == 1}@@if_ts_show_spi5_pins
+
+		field = "SPI6 enable",							is_enabled_spi_6
+		field = "SPI6 MOSI",							spi6mosiPin, {is_enabled_spi_6 == 1}@@if_ts_show_spi6_pins
+		field = "SPI6mosi mode",						spi6MosiMode, {is_enabled_spi_6 == 1}@@if_ts_show_spi6_pins
+		field = "SPI6 MISO",							spi6misoPin, {is_enabled_spi_6 == 1}@@if_ts_show_spi6_pins
+		field = "SPI6miso mode",						spi6MisoMode, {is_enabled_spi_6 == 1}@@if_ts_show_spi6_pins
+		field = "SPI6 SCK",								spi6sckPin, {is_enabled_spi_6 == 1}@@if_ts_show_spi6_pins
+		field = "SPI6sck mode",							spi6SckMode, {is_enabled_spi_6 == 1}@@if_ts_show_spi6_pins
 
 	dialog = spiDevices, "SPI devices settings"
 		field = "Use SPI accelerometer",		useSpiImu
