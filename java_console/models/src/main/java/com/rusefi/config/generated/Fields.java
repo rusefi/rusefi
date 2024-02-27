@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 26 23:48:37 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 27 01:11:22 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1095,6 +1095,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1260020285;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1341,7 +1342,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.02.26.f407-discovery.3024300901";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.02.27.f407-discovery.1260020285";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2732,7 +2733,7 @@ public class Fields {
 	public static final Field SIMULATORCAMPOSITION3 = Field.create("SIMULATORCAMPOSITION3", 4380, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SIMULATORCAMPOSITION4 = Field.create("SIMULATORCAMPOSITION4", 4381, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IGNKEYADCCHANNEL = Field.create("IGNKEYADCCHANNEL", 4382, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDEXPLICITFILLING2 = Field.create("UNUSEDEXPLICITFILLING2", 4383, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field SPI6MISOMODE = Field.create("SPI6MISOMODE", 4383, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGERVVTGAPOVERRIDEFROM1 = Field.create("TRIGGERVVTGAPOVERRIDEFROM1", 4384, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TRIGGERVVTGAPOVERRIDEFROM2 = Field.create("TRIGGERVVTGAPOVERRIDEFROM2", 4388, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TRIGGERVVTGAPOVERRIDEFROM3 = Field.create("TRIGGERVVTGAPOVERRIDEFROM3", 4392, FieldType.FLOAT).setBaseOffset(0);
@@ -2771,7 +2772,15 @@ public class Fields {
 	public static final Field SPI6MOSIPIN = Field.create("SPI6MOSIPIN", 4572, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field SPI6MISOPIN = Field.create("SPI6MISOPIN", 4574, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field SPI6SCKPIN = Field.create("SPI6SCKPIN", 4576, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4578, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field SPI4SCKMODE = Field.create("SPI4SCKMODE", 4578, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field SPI4MOSIMODE = Field.create("SPI4MOSIMODE", 4579, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field SPI4MISOMODE = Field.create("SPI4MISOMODE", 4580, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field SPI5SCKMODE = Field.create("SPI5SCKMODE", 4581, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field SPI5MOSIMODE = Field.create("SPI5MOSIMODE", 4582, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field SPI5MISOMODE = Field.create("SPI5MISOMODE", 4583, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field SPI6SCKMODE = Field.create("SPI6SCKMODE", 4584, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field SPI6MOSIMODE = Field.create("SPI6MOSIMODE", 4585, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4586, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4706 = Field.create("ALIGNMENTFILL_AT_4706", 4706, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4708, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4740, FieldType.FLOAT).setBaseOffset(0);
@@ -4350,7 +4359,7 @@ public class Fields {
 	SIMULATORCAMPOSITION3,
 	SIMULATORCAMPOSITION4,
 	IGNKEYADCCHANNEL,
-	UNUSEDEXPLICITFILLING2,
+	SPI6MISOMODE,
 	TRIGGERVVTGAPOVERRIDEFROM1,
 	TRIGGERVVTGAPOVERRIDEFROM2,
 	TRIGGERVVTGAPOVERRIDEFROM3,
@@ -4389,6 +4398,14 @@ public class Fields {
 	SPI6MOSIPIN,
 	SPI6MISOPIN,
 	SPI6SCKPIN,
+	SPI4SCKMODE,
+	SPI4MOSIMODE,
+	SPI4MISOMODE,
+	SPI5SCKMODE,
+	SPI5MOSIMODE,
+	SPI5MISOMODE,
+	SPI6SCKMODE,
+	SPI6MOSIMODE,
 	UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE,
 	ALIGNMENTFILL_AT_4706,
 	ETBBIASBINS,
