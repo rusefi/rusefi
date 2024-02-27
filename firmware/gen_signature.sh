@@ -2,6 +2,9 @@
 
 # file gen_signature.sh
 
+# fail fast
+set -e
+
 SHORT_BOARD_NAME=${1:-$SHORT_BOARD_NAME}
 
 cd $(dirname "$0")
