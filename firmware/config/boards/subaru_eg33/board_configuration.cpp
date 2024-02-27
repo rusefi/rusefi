@@ -115,6 +115,7 @@ void setBoardDefaultConfiguration() {
 	/* SPI devices: mess of board and engine configurations */
 	/* TLE6240 */
 	engineConfiguration->tle6240spiDevice = SPI_DEVICE_4;
+	// todo: hard-code SPI4 pins into spi4mosiPin etc!
 	engineConfiguration->tle6240_cs = Gpio::E15;	/* SPI4_NSS0 */
 	engineConfiguration->tle6240_csPinMode = OM_OPENDRAIN;
 	/* MC33972 */
