@@ -31,6 +31,9 @@ else
 fi
 
 echo "#define TS_SIGNATURE \"rusEFI $branchname.$date.${SHORT_BOARD_NAME}.@@SIGNATURE_HASH@@\"" >> ${TEMP_FILE}
+#
+# TODO: what's going on here? signature*txt is excluded from git by tunerstudio/.gitignore let's have a code comment explaining the logic below!
+#
 cmp ${TEMP_FILE} ${SIGNATURE_FILE_NAME} || mv -f ${TEMP_FILE} ${SIGNATURE_FILE_NAME}
 rm -f ${TEMP_FILE}
 
