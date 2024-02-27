@@ -277,11 +277,17 @@ static int lua_startPwm(lua_State* l) {
 	// clamp to 1..1000 hz, this line would turn 0hz on/off PWM into 1hz behind the scenes
 	freq = clampF(1, freq, 1000);
 
+  brain_pin_e pwmPin = engineConfiguration->luaOutputPins[p.idx];
+
 	startSimplePwmExt(
 		&p.pwm, "lua", &engine->executor,
-		engineConfiguration->luaOutputPins[p.idx], &enginePins.luaOutputPins[p.idx],
+		pwmPin, &enginePins.luaOutputPins[p.idx],
 		freq, duty
 	);
+
+	efiPrintf("LUA PWM on %s at %f initial duty",
+	  hwPortname(pwmPin),
+	  PERCENT_MULT * duty);
 
 	return 0;
 }
