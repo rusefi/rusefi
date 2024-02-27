@@ -35,9 +35,7 @@ which realpath >/dev/null 2>&1 || (which grealpath >/dev/null 2>&1 && alias real
 FDIR=$(realpath $(dirname "$0"))
 BOARD_DIR=$(realpath --relative-to "$FDIR" "$BOARD_DIR")
 
-cd "$FDIR/../java_tools"
-flock /tmp/java.lock ./gradlew :config_definition:shadowJar
-cd ../firmware
+cd "$FDIR"
 
 bash gen_signature.sh ${SHORT_BOARD_NAME}
 
