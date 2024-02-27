@@ -168,18 +168,12 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->is_enabled_spi_3 = true;
 	
 	engineConfiguration->spi1mosiPin = Gpio::B5;
-	engineConfiguration->spi1MosiMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL
 	engineConfiguration->spi1misoPin = Gpio::B4;
-	engineConfiguration->spi1MisoMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL
 	engineConfiguration->spi1sckPin = Gpio::B3;
-	engineConfiguration->spi1SckMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL
 
 	engineConfiguration->spi3mosiPin = Gpio::C12;
-	engineConfiguration->spi3MosiMode = PO_OPENDRAIN; // 4
 	engineConfiguration->spi3misoPin = Gpio::C11;
-	engineConfiguration->spi3MisoMode = PO_PULLUP; // 32
 	engineConfiguration->spi3sckPin = Gpio::C10;
-	engineConfiguration->spi3SckMode = PO_OPENDRAIN; // 4
 
 	engineConfiguration->canTxPin = Gpio::B9;
 	engineConfiguration->canRxPin = Gpio::B8;

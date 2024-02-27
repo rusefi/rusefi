@@ -141,18 +141,12 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->is_enabled_spi_4 = true;
 
 	engineConfiguration->spi1mosiPin = Gpio::Unassigned;
-	engineConfiguration->spi1MosiMode = PO_DEFAULT;
 	engineConfiguration->spi1misoPin = Gpio::Unassigned;
-	engineConfiguration->spi1MisoMode = PO_DEFAULT;
 	engineConfiguration->spi1sckPin = Gpio::Unassigned;
-	engineConfiguration->spi1SckMode = PO_DEFAULT;
 
 	engineConfiguration->spi3mosiPin = Gpio::C12;
-	engineConfiguration->spi3MosiMode = PO_DEFAULT;
 	engineConfiguration->spi3misoPin = Gpio::C11;
-	engineConfiguration->spi3MisoMode = PO_DEFAULT;
 	engineConfiguration->spi3sckPin = Gpio::C10;
-	engineConfiguration->spi3SckMode = PO_DEFAULT;
 
 	engineConfiguration->is_enabled_spi_1 = false;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;

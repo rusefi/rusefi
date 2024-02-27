@@ -121,10 +121,7 @@ void turnOnSpi(spi_device_e device) {
 //	scheduleMsg(&logging, "Turning on SPI1 pins");
 		initSpiModule(&SPID1, getSckPin(device),
 				getMisoPin(device),
-				getMosiPin(device),
-				engineConfiguration->spi1SckMode,
-				engineConfiguration->spi1MosiMode,
-				engineConfiguration->spi1MisoMode);
+				getMosiPin(device));
 #endif /* STM32_SPI_USE_SPI1 */
 	}
 	if (device == SPI_DEVICE_2) {
@@ -132,10 +129,7 @@ void turnOnSpi(spi_device_e device) {
 //	scheduleMsg(&logging, "Turning on SPI2 pins");
 		initSpiModule(&SPID2, getSckPin(device),
 				getMisoPin(device),
-				getMosiPin(device),
-				engineConfiguration->spi2SckMode,
-				engineConfiguration->spi2MosiMode,
-				engineConfiguration->spi2MisoMode);
+				getMosiPin(device));
 #endif /* STM32_SPI_USE_SPI2 */
 	}
 	if (device == SPI_DEVICE_3) {
@@ -143,30 +137,22 @@ void turnOnSpi(spi_device_e device) {
 //	scheduleMsg(&logging, "Turning on SPI3 pins");
 		initSpiModule(&SPID3, getSckPin(device),
 				getMisoPin(device),
-				getMosiPin(device),
-				engineConfiguration->spi3SckMode,
-				engineConfiguration->spi3MosiMode,
-				engineConfiguration->spi3MisoMode);
+				getMosiPin(device));
 #endif /* STM32_SPI_USE_SPI3 */
 	}
 }
 
-void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
-		brain_pin_e mosi,
-		int sckMode,
-		int mosiMode,
-		int misoMode) {
-
+void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso, brain_pin_e mosi) {
 	/**
 	 * See https://github.com/rusefi/rusefi/pull/664/
 	 *
 	 * Info on the silicon defect can be found in this document, section 2.5.2:
 	 * https://www.st.com/content/ccc/resource/technical/document/errata_sheet/0a/98/58/84/86/b6/47/a2/DM00037591.pdf/files/DM00037591.pdf/jcr:content/translations/en.DM00037591.pdf
 	 */
-	efiSetPadMode("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) | sckMode | PAL_STM32_OSPEED_HIGHEST);
+	efiSetPadMode("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) | PAL_STM32_OSPEED_HIGHEST);
 
-	efiSetPadMode("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) | mosiMode | PAL_STM32_OSPEED_HIGHEST);
-	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) | misoMode | PAL_STM32_OSPEED_HIGHEST);
+	efiSetPadMode("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) | PAL_STM32_OSPEED_HIGHEST);
+	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) | PAL_STM32_OSPEED_HIGHEST);
 }
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
