@@ -1,4 +1,4 @@
-JAVA_TOOLS = ../java_tools
+JAVA_TOOLS = $(PROJECT_DIR)/../java_tools
 
 #
 # problem statement: 'make -j4' could easily attempt to run parallel gradle processes. gradle does not seem to like it
