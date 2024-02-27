@@ -1624,7 +1624,7 @@ uint8_t[CAM_INPUTS_COUNT iterate] simulatorCamPosition;
 
 adc_channel_e ignKeyAdcChannel
 
-uint8_t unusedExplicitFilling2
+	pin_mode_e spi6MisoMode;
 
 	float[VVT_TRACKING_LENGTH iterate] triggerVVTGapOverrideFrom;;"ratio", 1, 0, 0, 20, 3
 	float[VVT_TRACKING_LENGTH iterate] triggerVVTGapOverrideTo;;"ratio", 1, 0, 0, 20, 3
@@ -1654,7 +1654,18 @@ float brakeMeanEffectivePressureDifferential
 	Gpio spi6misoPin;
 	Gpio spi6sckPin;
 
-uint8_t[128] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
+	pin_mode_e spi4SckMode;
+	pin_mode_e spi4MosiMode;
+	pin_mode_e spi4MisoMode;
+
+	pin_mode_e spi5SckMode;
+	pin_mode_e spi5MosiMode;
+	pin_mode_e spi5MisoMode;
+
+	pin_mode_e spi6SckMode;
+	pin_mode_e spi6MosiMode;
+
+uint8_t[120] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
