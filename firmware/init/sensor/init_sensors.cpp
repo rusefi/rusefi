@@ -145,6 +145,7 @@ void reconfigureSensors() {
 	initFluidPressure();
 	initVbatt();
 	initThermistors();
+	initLambda();
 	initFlexSensor(false);
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
