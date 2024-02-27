@@ -172,11 +172,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->is_enabled_spi_3 = true;
 
 	engineConfiguration->spi1mosiPin = Gpio::B5;
-	engineConfiguration->spi1MosiMode = PO_DEFAULT;
 	engineConfiguration->spi1misoPin = Gpio::B4;
-	engineConfiguration->spi1MisoMode = PO_DEFAULT;
 	engineConfiguration->spi1sckPin = Gpio::B3;
-	engineConfiguration->spi1SckMode = PO_DEFAULT;
 
 	engineConfiguration->spi3mosiPin = Gpio::C12;
 	engineConfiguration->spi3MosiMode = PO_OPENDRAIN; // 4

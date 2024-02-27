@@ -23,22 +23,8 @@ void setDodgeNeon1995EngineConfiguration() {
 
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
-//	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
-//	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
-//	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
-
-	//	engineConfiguration->spi2mosiPin = Gpio::B15;
-	//	engineConfiguration->spi2misoPin = Gpio::B14;
-	//	engineConfiguration->spi2sckPin = Gpio::B13;
-	engineConfiguration->is_enabled_spi_2 = true;
-
-
 	// set_rpm_hard_limit 4000
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
-
-	/**
-	 * that's 1995 config
-	 */
 
 	setWholeTimingTable_d(12);
 
@@ -53,41 +39,10 @@ void setDodgeNeon1995EngineConfiguration() {
 	// set global_trigger_offset_angle 497
 	engineConfiguration->globalTriggerAngleOffset = 497;
 
-	/**
-	 * that's 1995 config
-	 */
-
 	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 0;
 
-	// Frankenstein: low side - out #1: PC14
-	// Frankenstein: low side - out #2: PC15
-	// Frankenstein: low side - out #3: PE6
-	// Frankenstein: low side - out #4: PC13
-	// Frankenstein: low side - out #5: PE4
-	// Frankenstein: low side - out #6: PE5
-	// Frankenstein: low side - out #7: PE2
-	// Frankenstein: low side - out #8: PE3
-	// Frankenstein: low side - out #9: PE0
-	// Frankenstein: low side - out #10: PE1
-	// Frankenstein: low side - out #11: PB8
-	// Frankenstein: low side - out #12: PB9
-
-	engineConfiguration->injectionPins[0] = Gpio::B9; // Frankenstein: low side - out #12
-	engineConfiguration->injectionPins[1] = Gpio::B8; // Frankenstein: low side - out #11
-	engineConfiguration->injectionPins[2] = Gpio::E3; // Frankenstein: low side - out #8
-	engineConfiguration->injectionPins[3] = Gpio::E5; // Frankenstein: low side - out #6
-
-	engineConfiguration->fuelPumpPin = Gpio::C13; // Frankenstein: low side - out #4
-
 	engineConfiguration->mapErrorDetectionTooHigh = 120;
-
-	// Frankenstein: high side #1: PE8
-	// Frankenstein: high side #2: PE10
-
-	engineConfiguration->ignitionPins[0] = Gpio::E8; // Frankenstein: high side #1
-	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[2] = Gpio::E10; // // Frankenstein: high side #2
 
 	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
 }
@@ -146,56 +101,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board
 	 */
-	// Frankenso low out #1: PE6 main relay
-	// Frankenso low out #2: PE5
-	// Frankenso low out #3: PD7 coolant fan relay
-	// Frankenso low out #4: PC13 idle valve solenoid
-	// Frankenso low out #5: PE3 fuel pump relay
-	// Frankenso low out #6: PE4
-	// Frankenso low out #7: PE1 (do not use with discovery!)
-	// Frankenso low out #8: PE2 injector #3
-	// Frankenso low out #9: PB9 injector #2
-	// Frankenso low out #10: PE0 (do not use with discovery!)
-	// Frankenso low out #11: PB8 injector #1
-	// Frankenso low out #12: PB7 injector #4
-
-	engineConfiguration->fanPin = Gpio::D7;
-
-	engineConfiguration->injectionPins[0] = Gpio::B8;
-	engineConfiguration->injectionPins[1] = Gpio::B9;
-	engineConfiguration->injectionPins[2] = Gpio::E2;
-	engineConfiguration->injectionPins[3] = Gpio::B7;
-
-	engineConfiguration->ignitionPins[0] = Gpio::C9;
-	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[2] = Gpio::E8;
-	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-
-	engineConfiguration->mainRelayPin = Gpio::E6;
-
-	engineConfiguration->idle.solenoidPin = Gpio::C13;
-	engineConfiguration->manIdlePosition = 36;
-
-	engineConfiguration->fuelPumpPin = Gpio::E3;
-
-	engineConfiguration->triggerInputPins[0] = Gpio::A5;
-	engineConfiguration->triggerInputPins[1] = Gpio::C6;
-
-	/**
-	 * Frankenso analog #1 PC2 ADC12 CLT
-	 * Frankenso analog #2 PC1 ADC11 IAT
-	 * Frankenso analog #3 PA0 ADC0 MAP
-	 * Frankenso analog #4 PC3 ADC13
-	 * Frankenso analog #5 PA2 ADC2 TPS
-	 * Frankenso analog #6 PA1 ADC1
-	 * Frankenso analog #7 PA4 ADC4 WBO AFR
-	 * Frankenso analog #8 PA3 ADC3
-	 * Frankenso analog #9 PA7 ADC7
-	 * Frankenso analog #10 PA6 ADC6
-	 * Frankenso analog #11 PC5 ADC15
-	 * Frankenso analog #12 PC4 ADC14 VBatt
-	 */
-
 
 	setDodgeSensor(&engineConfiguration->clt, 10000);
 	setDodgeSensor(&engineConfiguration->iat, 10000);

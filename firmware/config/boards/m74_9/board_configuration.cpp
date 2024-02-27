@@ -76,11 +76,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->is_enabled_spi_1 = true;
 
 	engineConfiguration->spi1mosiPin = Gpio::E15;
-	engineConfiguration->spi1MosiMode = PO_DEFAULT;
 	engineConfiguration->spi1misoPin = Gpio::E14;
-	engineConfiguration->spi1MisoMode = PO_DEFAULT;
 	engineConfiguration->spi1sckPin = Gpio::E13;
-	engineConfiguration->spi1SckMode = PO_DEFAULT;
 
   engineConfiguration->triggerInputPins[0] = Gpio::F8;
   engineConfiguration->camInputs[0] = Gpio::B9;
