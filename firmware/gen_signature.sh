@@ -32,8 +32,10 @@ fi
 
 echo "#define TS_SIGNATURE \"rusEFI $branchname.$date.${SHORT_BOARD_NAME}.@@SIGNATURE_HASH@@\"" >> ${TEMP_FILE}
 
+# We will generate the signature in a temp file, then only use it if it has changed.
+# This is to avoid updating the timestamp of the signature file, which would cause the configs to regenerate when they don't need to.
 # cmp compares files to see if they are different. If they are different or if SIGNATURE_FILE_NAME doesn't exist, the mv command will run.
-# We redirect errors to /dev/null to supress the error if SIGNATURE_FILE_NAME doesn't exsit
+# We redirect errors to /dev/null to supress the error if SIGNATURE_FILE_NAME doesn't exist
 cmp ${TEMP_FILE} ${SIGNATURE_FILE_NAME} 2>/dev/null || mv -f ${TEMP_FILE} ${SIGNATURE_FILE_NAME}
 rm -f ${TEMP_FILE}
 
