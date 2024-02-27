@@ -580,7 +580,7 @@ trigger_config_s trigger;
 
     float airByRpmTaper;Extra air taper amount;"%", 1, 0, 0, 50, 1
 
-custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4"
+custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "SPI5", "SPI6"
 	spi_device_e hip9011SpiDevice;
 	uint8_t boostControlSafeDutyCycle;Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.;"%", 1, 0, 0, 100, 0
 	adc_channel_e mafAdcChannel
