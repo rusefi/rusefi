@@ -474,6 +474,9 @@ jobs:
       run: |
         git status
 
+#
+# Note to humans: on personal devices we have firmware/provide_gcc.sh and setup_linux_environment.sh
+#
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
       if: ${{ env.skip != 'true' }}
       uses: carlosperate/arm-none-eabi-gcc-action@v1
