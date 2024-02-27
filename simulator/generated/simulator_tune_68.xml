@@ -1818,7 +1818,7 @@
         <constant digits="0" name="simulatorCamPosition3" units="">0.0</constant>
         <constant digits="0" name="simulatorCamPosition4" units="">0.0</constant>
         <constant name="ignKeyAdcChannel">"Disabled"</constant>
-        <constant digits="0" name="unusedExplicitFilling2" units="">0.0</constant>
+        <constant name="spi6MisoMode">"default"</constant>
         <constant digits="3" name="triggerVVTGapOverrideFrom1" units="ratio">0.0</constant>
         <constant digits="3" name="triggerVVTGapOverrideFrom2" units="ratio">0.0</constant>
         <constant digits="3" name="triggerVVTGapOverrideFrom3" units="ratio">0.0</constant>
@@ -1877,15 +1877,15 @@
         <constant name="spi6mosiPin">"NONE"</constant>
         <constant name="spi6misoPin">"NONE"</constant>
         <constant name="spi6sckPin">"NONE"</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="128">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant name="spi4SckMode">"default"</constant>
+        <constant name="spi4MosiMode">"default"</constant>
+        <constant name="spi4MisoMode">"default"</constant>
+        <constant name="spi5SckMode">"default"</constant>
+        <constant name="spi5MosiMode">"default"</constant>
+        <constant name="spi5MisoMode">"default"</constant>
+        <constant name="spi6SckMode">"default"</constant>
+        <constant name="spi6MosiMode">"default"</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="120">
          0.0
          0.0
          0.0
@@ -4553,7 +4553,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240223" nPages="1" signature="rusEFI master.2024.02.27.f407-discovery.3024300901" version="5.0"/>
+    <versionInfo firmwareInfo="20240223" nPages="1" signature="rusEFI master.2024.02.27.f407-discovery.1260020285" version="5.0"/>
     <bibliography author="rusEFI 20240223" writeDate="date"/>
     <settings/>
     <userComments/>
