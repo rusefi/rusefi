@@ -141,7 +141,7 @@ jobs:
 
       - name: Build Firmware
         working-directory: ${{inputs.rusefi_dir}}/firmware
-        run: bash bin/compile.sh -b ${{ env.BOARD_META_PATH }} deliver/rusefi.bin
+        run: bash bin/compile.sh ${{env.BOARD_META_PATH}} all deliver/rusefi.bin
 
       - name: Upload Bundle
         working-directory: ${{inputs.rusefi_dir}}/firmware
