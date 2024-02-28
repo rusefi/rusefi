@@ -631,8 +631,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			CanTxMessage msg(CanCategory::NBC, 0x471, 2);
 			msg[0] = 0x00;
 			msg[1] = 0x00;
-			msg[2] = 0x00;
-			msg[3] = 0x00;
+			msg.setShortValueMsb(Sensor::getOrZero(SensorType::AcceleratorPedal) * 10, 2);
 		}
 	}
 
@@ -871,6 +870,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[3] = 0x00;
 			msg[4] = 0x00;
 			msg[5] = 0x00;
+			// gear goes somewhere here open question enum encoding
 			msg[6] = 0x00;
 			msg[7] = 0x00;
 		}
