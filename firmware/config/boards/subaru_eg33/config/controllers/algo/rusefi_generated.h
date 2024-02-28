@@ -984,6 +984,10 @@
 #define spi_device_e_SPI_DEVICE_5 5
 #define spi_device_e_SPI_DEVICE_6 6
 #define spi_device_e_SPI_NONE 0
+#define spi_speed_e__150KHz 3
+#define spi_speed_e__1_25MHz 2
+#define spi_speed_e__2_5MHz 1
+#define spi_speed_e__5MHz 0
 #define stepper_num_micro_steps_e_auto_enum 0="STEPPER_FULL",8="STEPPER_EIGHTH",4="STEPPER_FOURTH",2="STEPPER_HALF"
 #define stepper_num_micro_steps_e_enum "Full-Step (Default)", "INVALID", "Half-Step", "INVALID", "1/4 Micro-Step", "INVALID", "INVALID", "INVALID", "1/8 Micro-Step"
 #define stepper_num_micro_steps_e_STEPPER_EIGHTH 8
@@ -1242,7 +1246,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2024.02.27.subaru_eg33_f7.2521194411"
+#define TS_SIGNATURE "rusEFI (FOME) master.2024.02.28.subaru_eg33_f7.2521194411"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

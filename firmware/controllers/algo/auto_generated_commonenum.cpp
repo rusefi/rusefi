@@ -600,6 +600,19 @@ case SPI_NONE:
   }
  return NULL;
 }
+const char *getSpi_speed_e(spi_speed_e value){
+switch(value) {
+case _150KHz:
+  return "_150KHz";
+case _1_25MHz:
+  return "_1_25MHz";
+case _2_5MHz:
+  return "_2_5MHz";
+case _5MHz:
+  return "_5MHz";
+  }
+ return NULL;
+}
 const char *getStepper_num_micro_steps_e(stepper_num_micro_steps_e value){
 switch(value) {
 case STEPPER_EIGHTH:
