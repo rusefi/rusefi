@@ -274,6 +274,13 @@ typedef enum __attribute__ ((__packed__)) {
 } uart_device_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	_5MHz,
+	_2_5MHz,
+	_1_25MHz,
+	_150KHz
+} spi_speed_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	SPI_NONE = 0,
 	SPI_DEVICE_1 = 1,
 	SPI_DEVICE_2 = 2,
