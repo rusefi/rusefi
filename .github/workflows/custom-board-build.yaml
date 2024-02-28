@@ -139,6 +139,11 @@ jobs:
             echo "NOT setting credentials: ${{github.event_name}} ${{github.ref}}"
           fi
 
+      - name: Build config_definition-all.jar work-around
+# https://github.com/rusefi/rusefi/issues/6081
+        working-directory: ${{inputs.rusefi_dir}}/firmware
+        run: make ./../java_tools/configuration_definition/build/libs/config_definition-all.jar
+
       - name: Build Firmware Everything
         working-directory: ${{inputs.rusefi_dir}}/firmware
         run: bash bin/compile.sh -b ${{env.BOARD_META_PATH}}
