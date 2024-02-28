@@ -73,7 +73,9 @@ for BOARD in \
    ; do
  BOARD_DIR=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
- ./gen_config_board.sh $BOARD_DIR $BOARD_SHORT_NAME
+ bash gen_signature.sh ${SHORT_BOARD_NAME}
+ bash gen_config_board.sh $BOARD_DIR $BOARD_SHORT_NAME
+ bash bin/gen_image_board.sh $BOARD_DIR $BOARD_SHORT_NAME
  [ $? -eq 0 ] || { echo "ERROR generating board dir=[$BOARD_DIR] short=[$BOARD_SHORT_NAME]"; exit 1; }
 done
 
