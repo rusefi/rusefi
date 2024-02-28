@@ -180,9 +180,13 @@ public class LuaScriptPanel {
                 }
             });
 
-            setText(newLua);
-            // and send to ECU (without burn!)
-            writeScriptToEcu();
+            if (newLua.length() >= Fields.LUA_SCRIPT_SIZE) {
+                setText(newLua.length() + " bytes would not fit sorry current limit " + Fields.LUA_SCRIPT_SIZE);
+            } else {
+                setText(newLua);
+                // and send to ECU (without burn!)
+                writeScriptToEcu();
+            }
         } catch (IOException e) {
             System.err.println("Error " + e);
         }
