@@ -139,12 +139,12 @@ jobs:
             echo "NOT setting credentials: ${{github.event_name}} ${{github.ref}}"
           fi
 
-      - name: Build Firmware
+      - name: Build Firmware Everything
         working-directory: ${{inputs.rusefi_dir}}/firmware
-        run: bash bin/compile.sh ${{env.BOARD_META_PATH}} all deliver/rusefi.bin
+        run: bash bin/compile.sh -b ${{env.BOARD_META_PATH}}
 
       - name: Upload Bundle
-        working-directory: ${{inputs.rusefi_dir}}/firmware
+        working-directory: ${{inputs.rusefi_dir}}/artifacts
         run: bash ../firmware/bin/upload_bundle.sh
 
       - name: Push Config
