@@ -9,9 +9,9 @@ CONFIG_FILES = \
   $(PROJECT_DIR)/controllers/generated/signature_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/hw_layer/mass_storage/ramdisk_image.h \
   $(PROJECT_DIR)/hw_layer/mass_storage/ramdisk_image_compressed.h \
-  $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
   $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_outputs.h \
-  $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
+  $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp \
+  $(FIELDS)
 
 .FORCE:
 
