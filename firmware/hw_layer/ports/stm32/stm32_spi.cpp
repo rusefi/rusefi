@@ -27,6 +27,21 @@ static int getSpiAf(SPIDriver *driver) {
 		return EFI_SPI3_AF;
 	}
 #endif
+#if STM32_SPI_USE_SPI4
+	if (driver == &SPID4) {
+		return EFI_SPI4_AF;
+	}
+#endif
+#if STM32_SPI_USE_SPI5
+	if (driver == &SPID5) {
+		return EFI_SPI5_AF;
+	}
+#endif
+#if STM32_SPI_USE_SPI6
+	if (driver == &SPID6) {
+		return EFI_SPI6_AF;
+	}
+#endif
 	criticalError("SPI AF not available");
 	return -1;
 }
