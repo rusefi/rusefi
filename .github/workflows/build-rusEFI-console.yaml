@@ -37,7 +37,6 @@ jobs:
         run: ./gen_live_documentation.sh
 
       - name: Print GCC version
-        working-directory: .
         run: gcc -v
 
       - name: Build Native Unit Tests as shared library

@@ -35,7 +35,6 @@ jobs:
         uses: cygwin/cygwin-install-action@master
 
       - name: Print bash version
-        working-directory: .
         run: bash --version
 
       - name: Test Java Compiler
@@ -46,11 +45,9 @@ jobs:
         run: bash gen_live_documentation.sh
 
       - name: Print arm GCC version
-        working-directory: .
         run: arm-none-eabi-gcc -v
 
       - name: Print make version
-        working-directory: .
         run: make -v
 
       - name: Compile
