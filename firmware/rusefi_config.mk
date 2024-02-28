@@ -5,7 +5,7 @@ SIG_FILE = $(PROJECT_DIR)/tunerstudio/generated/signature_$(SHORT_BOARD_NAME).tx
 
 CONFIG_FILES = \
   $(PROJECT_DIR)/$(INI_FILE) \
-  $(PROJECT_DIR)/controllers/generated/$(PROJECT)_generated_$(SHORT_BOARD_NAME).h \
+  $(PROJECT_DIR)/controllers/generated/rusefi_generated_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/controllers/generated/signature_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/hw_layer/mass_storage/ramdisk_image.h \
   $(PROJECT_DIR)/hw_layer/mass_storage/ramdisk_image_compressed.h \
