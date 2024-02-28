@@ -6,6 +6,8 @@ JAVA_TOOLS = $(PROJECT_DIR)/../java_tools
 #
 FLOCK = flock /tmp/java.lock
 
+FIELDS =   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java
+
 CONFIG_DEFINITION = $(JAVA_TOOLS)/configuration_definition/build/libs/config_definition-all.jar
 CONFIG_DEFINITION_BASE = $(JAVA_TOOLS)/configuration_definition_base/build/libs/config_definition_base-all.jar
 ENUM_TO_STRING = $(JAVA_TOOLS)/enum_to_string/build/libs/enum_to_string-all.jar
@@ -25,7 +27,7 @@ $(ENUM_TO_STRING): .FORCE
 $(TPL_OUT): .FORCE
 	cd ../java_tools && $(FLOCK) ./gradlew :ts_plugin_launcher:shadowJar
 
-$(CONSOLE_OUT): .FORCE
+$(CONSOLE_OUT): $(FIELDS) .FORCE
 	cd ../java_tools && $(FLOCK) ./gradlew :ui:shadowJar
 
 $(AUTOUPDATE_OUT): .FORCE
