@@ -18,14 +18,7 @@ CONFIG_FILES = \
 $(TCOBJS): $(CONFIG_FILES)
 
 $(SIG_FILE): .FORCE
-	bash $(PROJECT_DIR)/gen_signature.sh $(SHORT_BOARD_NAME)
 
 $(CONFIG_FILES): .config-sentinel ;
 
 .config-sentinel: $(SIG_FILE) .FORCE
-ifneq (,$(CUSTOM_GEN_CONFIG))
-	bash $(PROJECT_DIR)/$(BOARD_DIR)/$(CUSTOM_GEN_CONFIG)
-else
-	bash $(PROJECT_DIR)/gen_config_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
-endif
-	@touch $@
