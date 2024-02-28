@@ -1,0 +1,53 @@
+name: Proteus F7 Firmware on Windows
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: '12.3.Rel1' # 13 fails overloaded-virtual
+
+      - uses: actions/checkout@v4
+
+      - name: Checkout Submodules
+        run: |
+          git submodule update --init --depth=1 firmware/ChibiOS
+          git submodule update --init --depth=1 firmware/ChibiOS-Contrib
+          git submodule update --init --depth=1 firmware/libfirmware
+          git submodule update --init --depth=1 firmware/ext/lua
+          git submodule update --init --depth=1 firmware/ext/uzlib
+          git submodule update --init --depth=1 firmware/ext/openblt
+          git submodule update --init --depth=1 firmware/controllers/lua/luaaa
+          git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
+          git submodule update --init --depth=1 java_console/luaformatter
+          git submodule update --init --depth=1 java_console/peak-can-basic
+
+      - name: Install required software (macos)
+        run: |
+          brew install mtools zip dosfstools flock coreutils
+
+      - name: Print bash version
+        working-directory: .
+        run: bash --version
+
+      - name: Test Java Compiler
+        run: javac -version
+
+      - name: Generate Live Documentation
+        if: ${{ env.skip != 'true' }}
+        working-directory: ./firmware/
+        run: ./gen_live_documentation.sh
+
+      - name: Build Firmware
+        if: ${{ env.skip != 'true' }}
+        working-directory: ./firmware/config/boards/proteus
+        run: ./compile_proteus_f7.sh
