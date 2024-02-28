@@ -143,6 +143,10 @@ jobs:
         working-directory: ${{inputs.rusefi_dir}}/firmware
         run: bash bin/compile.sh -b ${{ env.BOARD_META_PATH }} deliver/rusefi.bin
 
+      - name: Upload Bundle
+        working-directory: ${{inputs.rusefi_dir}}/firmware
+        run: bash ../firmware/bin/upload_bundle.sh
+
       - name: Push Config
         run: |
           git config --local user.email "action@github.com"
