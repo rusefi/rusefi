@@ -870,8 +870,8 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[3] = 0x00;
 			msg[4] = 0x00;
 			msg[5] = 0x00;
-			// gear goes somewhere here open question enum encoding
-			msg[6] = 0x00;
+			// todo: open question what are Haltech Special Values for gear encoding
+			msg[6] = Sensor::getOrZero(SensorType::DetectedGear);
 			msg[7] = 0x00;
 		}
 
