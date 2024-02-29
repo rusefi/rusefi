@@ -69,7 +69,7 @@ public:
 
 	/**
 	 * Sequential number of currently processed spark event
-	 * @see engineState.sparkCounter
+	 * @see engineState.globalSparkCounter
 	 */
 	int sparkId = 0;
 	/**

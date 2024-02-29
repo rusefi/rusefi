@@ -342,7 +342,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
 	 */
-	event->sparkId = engine->engineState.sparkCounter++;
+	event->sparkId = engine->engineState.globalSparkCounter++;
 	event->wasSparkLimited = limitedSpark;
 
 	efitick_t chargeTime = 0;
@@ -494,7 +494,7 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 				// artificial misfire on cylinder #1 for testing purposes
 				// enable artificialMisfire
 				// set_fsio_setting 6 20
-				warning(ObdCode::CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->engineState.sparkCounter);
+				warning(ObdCode::CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->engineState.globalSparkCounter);
 				continue;
 			}
 #if EFI_LAUNCH_CONTROL

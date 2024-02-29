@@ -435,7 +435,7 @@ static const LogField fields[] = {
 	{engine->engineState.egtValue2, "egtValue2", "", 0},
 	{engine->engineState.desiredRpmLimit, "User-defined RPM hard limit", "rpm", 0},
 	{engine->engineState.fuelInjectionCounter, "Fuel: Injection counter", "", 0},
-	{engine->engineState.sparkCounter, "Ign: Spark counter", "", 0},
+	{engine->engineState.globalSparkCounter, "Ign: Spark counter", "", 0},
 	{engine->engineState.fuelingLoad, "Fuel: Load", "", 0},
 	{engine->engineState.ignitionLoad, "Ignition: load", "", 0},
 	{engine->engineState.veTableYAxis, "veTableYAxis", "%", 0},

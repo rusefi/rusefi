@@ -1210,9 +1210,9 @@ float getOutputValueByName(const char *name) {
 // fuelInjectionCounter
 		case -1839290700:
 			return engine->engineState.fuelInjectionCounter;
-// sparkCounter
+// globalSparkCounter
 		case -1515591290:
-			return engine->engineState.sparkCounter;
+			return engine->engineState.globalSparkCounter;
 // fuelingLoad
 		case 583799407:
 			return engine->engineState.fuelingLoad;

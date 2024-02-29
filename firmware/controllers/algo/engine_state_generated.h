@@ -360,7 +360,7 @@ struct engine_state_s {
 	 * Ign: Spark counter
 	 * offset 76
 	 */
-	uint32_t sparkCounter = (uint32_t)0;
+	uint32_t globalSparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
 	 * offset 80
