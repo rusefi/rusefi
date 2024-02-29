@@ -1042,18 +1042,42 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3E4 = 5Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E4, 8);
-			msg[0] = 0x00; //unused
-			/* Switch status */
-			msg[1] = 0x00;
-			/* Switch status */
-			msg[2] = 0x00;
-			msg[3] = 0x00;
-			msg[4] = 0x00;
-			msg[5] = 0x00;
-			msg[6] = 0x00;
-			msg[7] = 0x00;
-		}
+    			CanTxMessage msg(CanCategory::NBC, 0x3E4, 8);
+    			msg[0] = 0x00; //unused
+    			if (engine->engineState.brakePedalState) {
+    				msg.setBit(1, 2); // Brake active
+    			}
+    			if (engine->engineState.clutchDownState) {
+    				msg.setBit(1, 1); // Clutch active
+    			}
+#if EFI_LAUNCH_CONTROL
+    			if (engine->launchController.isLaunchCondition) {
+    				msg.setBit(2, 7); // Launch active
+    			}
+    			if (engine->launchController.isSwitchActivated) {
+    				msg.setBit(2, 6); // Launch Switch active
+    			}
+#endif
+    			if (engine->module<AcController>()->acButtonState){
+    				msg.setBit(3, 5); // AC Request
+    			}
+    			if (engine->module<AcController>()->m_acEnabled){
+    				msg.setBit(3, 4); // AC Output
+    			}
+    			if (enginePins.fanRelay2.getLogicValue()) {
+    				msg.setBit(3, 1); // Fan2 active
+    			}
+    			if (enginePins.fanRelay.getLogicValue()) {
+    				msg.setBit(3, 0); // Fan active
+    			}
+    			/* Switch status */
+    			msg[4] = 0x00;
+    			msg[5] = 0x00;
+    			msg[6] = 0x00;
+    			if ((Sensor::getOrZero(SensorType::Rpm)>0) && (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE)<13)) {
+    				msg.setBit(7, 6); // battery light
+    			}
+    }
 
 	}
 }
