@@ -17,6 +17,8 @@
 #include "mmc_card.h"
 #include "fl_stack.h"
 
+#include "big_buffer.h"
+
 TEST(util, testitoa) {
 	char buffer[12];
 	itoa10(buffer, 239);
@@ -451,4 +453,13 @@ TEST(util, wrapAngle) {
 	EXPECT_EQ(719, wrapAngleMethod(-1));
 	EXPECT_EQ(360, wrapAngleMethod(-360));
 	EXPECT_EQ(1, wrapAngleMethod(-719));
+}
+
+BigBufferUser getBigBufferCurrentUser();
+
+TEST(BigBuffer, CppMagic) {
+	BigBufferHandle h = getBigBuffer(BigBufferUser::ToothLogger);
+	ASSERT_EQ(getBigBufferCurrentUser(), BigBufferUser::ToothLogger);
+	h = {};
+	ASSERT_EQ(getBigBufferCurrentUser(), BigBufferUser::None);
 }

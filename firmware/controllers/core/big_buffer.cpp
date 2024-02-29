@@ -9,6 +9,12 @@ static BigBufferUser s_currentUser;
 // requirements.
 static __attribute__((aligned(4))) uint8_t s_bigBuffer[BIG_BUFFER_SIZE];
 
+#if EFI_UNIT_TEST
+BigBufferUser getBigBufferCurrentUser() {
+	return s_currentUser;
+}
+#endif // EFI_UNIT_TEST
+
 static void releaseBuffer(void* bufferPtr, BigBufferUser user) {
 	if (bufferPtr != &s_bigBuffer || user != s_currentUser) {
 		// todo: panic!
@@ -24,21 +30,15 @@ BigBufferHandle::BigBufferHandle(void* buffer, BigBufferUser user)
 }
 
 BigBufferHandle::BigBufferHandle(BigBufferHandle&& other) {
-	// swap contents of the two objects
-	m_bufferPtr = other.m_bufferPtr;
-	other.m_bufferPtr = nullptr;
-
-	m_user = other.m_user;
-	other.m_user = BigBufferUser::None;
+	// swap contents of the two objects, the destructor will clean up the old object
+	std::swap(m_bufferPtr, other.m_bufferPtr);
+	std::swap(m_user, other.m_user);
 }
 
 BigBufferHandle& BigBufferHandle::operator= (BigBufferHandle&& other) {
-	// swap contents of the two objects
-	m_bufferPtr = other.m_bufferPtr;
-	other.m_bufferPtr = nullptr;
-
-	m_user = other.m_user;
-	other.m_user = BigBufferUser::None;
+	// swap contents of the two objects, the destructor will clean up the old object
+	std::swap(m_bufferPtr, other.m_bufferPtr);
+	std::swap(m_user, other.m_user);
 
 	return *this;
 }
