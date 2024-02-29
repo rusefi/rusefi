@@ -1211,7 +1211,7 @@ float getOutputValueByName(const char *name) {
 		case -1839290700:
 			return engine->engineState.fuelInjectionCounter;
 // globalSparkCounter
-		case -1515591290:
+		case 642962903:
 			return engine->engineState.globalSparkCounter;
 // fuelingLoad
 		case 583799407:

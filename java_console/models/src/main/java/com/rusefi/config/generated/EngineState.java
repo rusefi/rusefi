@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Sun Jan 07 23:16:15 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Thu Feb 29 05:30:55 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -211,7 +211,7 @@ public class EngineState {
 	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 68, FieldType.INT16).setScale(1.0).setBaseOffset(1056);
 	public static final Field ALIGNMENTFILL_AT_70 = Field.create("ALIGNMENTFILL_AT_70", 70, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
 	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1056);
-	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 76, FieldType.INT).setScale(1.0).setBaseOffset(1056);
+	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 76, FieldType.INT).setScale(1.0).setBaseOffset(1056);
 	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 80, FieldType.FLOAT).setBaseOffset(1056);
 	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 84, FieldType.FLOAT).setBaseOffset(1056);
 	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 88, FieldType.INT16).setScale(0.01).setBaseOffset(1056);
@@ -256,7 +256,7 @@ public class EngineState {
 	DESIREDRPMLIMIT,
 	ALIGNMENTFILL_AT_70,
 	FUELINJECTIONCOUNTER,
-	SPARKCOUNTER,
+	GLOBALSPARKCOUNTER,
 	FUELINGLOAD,
 	IGNITIONLOAD,
 	VETABLEYAXIS,
