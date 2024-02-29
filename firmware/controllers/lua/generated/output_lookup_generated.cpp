@@ -828,9 +828,9 @@ float getOutputValueByName(const char *name) {
 // sparkDwell
 		case -903101570:
 			return engine->ignitionState.sparkDwell;
-// dwellAngle
-		case -1573373756:
-			return engine->ignitionState.dwellAngle;
+// dwellDurationAngle
+		case -1208021110:
+			return engine->ignitionState.dwellDurationAngle;
 // cltTimingCorrection
 		case 256951528:
 			return engine->ignitionState.cltTimingCorrection;

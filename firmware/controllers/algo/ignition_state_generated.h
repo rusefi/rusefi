@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/ignition_state.txt Sat Feb 03 21:42:28 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition_state.txt Thu Feb 29 00:39:49 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -25,7 +25,7 @@ struct ignition_state_s {
 	 * units: deg
 	 * offset 8
 	 */
-	angle_t dwellAngle = (angle_t)0;
+	angle_t dwellDurationAngle = (angle_t)0;
 	/**
 	 * Ign: CLT correction
 	 * units: deg
@@ -180,4 +180,4 @@ struct ignition_state_s {
 static_assert(sizeof(ignition_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/ignition_state.txt Sat Feb 03 21:42:28 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition_state.txt Thu Feb 29 00:39:49 UTC 2024

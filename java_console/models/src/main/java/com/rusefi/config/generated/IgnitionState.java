@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/ignition_state.txt Sat Feb 03 21:42:28 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition_state.txt Thu Feb 29 00:39:49 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -174,7 +174,7 @@ public class IgnitionState {
 	public static final int VE_BLEND_COUNT = 4;
 	public static final Field BASEDWELL = Field.create("BASEDWELL", 0, FieldType.FLOAT).setBaseOffset(848);
 	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 4, FieldType.FLOAT).setBaseOffset(848);
-	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 8, FieldType.FLOAT).setBaseOffset(848);
+	public static final Field DWELLDURATIONANGLE = Field.create("DWELLDURATIONANGLE", 8, FieldType.FLOAT).setBaseOffset(848);
 	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 12, FieldType.INT16).setScale(0.01).setBaseOffset(848);
 	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 14, FieldType.INT16).setScale(0.01).setBaseOffset(848);
 	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 16, FieldType.INT16).setScale(0.01).setBaseOffset(848);
@@ -188,7 +188,7 @@ public class IgnitionState {
 	public static final Field[] VALUES = {
 	BASEDWELL,
 	SPARKDWELL,
-	DWELLANGLE,
+	DWELLDURATIONANGLE,
 	CLTTIMINGCORRECTION,
 	TIMINGIATCORRECTION,
 	TIMINGPIDCORRECTION,

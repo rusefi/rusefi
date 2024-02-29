@@ -353,7 +353,7 @@ static const LogField fields[] = {
 #endif
 	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.sparkDwell, "Ignition: coil charge time", "ms", 1, "Timing"},
-	{engine->ignitionState.dwellAngle, "Ignition: dwell duration", "deg", 1, "Timing"},
+	{engine->ignitionState.dwellDurationAngle, "Ignition: dwell duration", "deg", 1, "Timing"},
 	{engine->ignitionState.cltTimingCorrection, "Ign: CLT correction", "deg", 2, "Timing"},
 	{engine->ignitionState.timingIatCorrection, "Ign: IAT correction", "deg", 2, "Timing"},
 	{engine->ignitionState.timingPidCorrection, "Idle: Timing adjustment", "deg", 2, "Timing"},
