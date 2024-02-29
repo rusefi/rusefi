@@ -37,15 +37,19 @@ $(TCPPOBJS): $(RAMDISK)
 $(SIG_FILE): .FORCE
 	bash $(PROJECT_DIR)/gen_signature.sh $(SHORT_BOARD_NAME)
 
+.target-sentinel: .FORCE
+	if [ "$$(cat $@ 2>/dev/null)" != $(SHORT_BOARD_NAME) ]; then \
+	echo $(SHORT_BOARD_NAME) >$@; fi
+
 $(RAMDISK): .ramdisk-sentinel ;
 
-.ramdisk-sentinel: $(INI_FILE)
+.ramdisk-sentinel: $(INI_FILE) .target-sentinel
 	bash $(PROJECT_DIR)/bin/gen_image_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
 	@touch $@
 
 $(CONFIG_FILES): .config-sentinel ;
 
-.config-sentinel: $(CONFIG_INPUTS) $(CONFIG_DEFINITION)
+.config-sentinel: $(CONFIG_INPUTS) $(CONFIG_DEFINITION) .target-sentinel
 ifneq (,$(CUSTOM_GEN_CONFIG))
 	bash $(BOARD_DIR)/$(CUSTOM_GEN_CONFIG)
 else
