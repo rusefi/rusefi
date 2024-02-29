@@ -57,32 +57,24 @@ rm build/fome.hex
 objcopy -I binary -O ihex --change-addresses=0x$firmwareBaseAddress build/fome.bin build/fome.hex
 objcopy -I binary -O srec --change-addresses=0x$firmwareBaseAddress build/fome.bin build/fome.srec
 
-# make DFU
-$HEX2DFU -i build/fome.hex -o build/fome.dfu
-
 if [ "$USE_OPENBLT" = "yes" ]; then
   # this image is suitable for update through bootloader only
   # srec is the only format used by OpenBLT host tools
   cp build/fome.srec deliver/fome_update.srec
 else
-  # standalone images (for use with no bootloader)
+  # standalone image (for use with no bootloader)
   cp build/fome.bin  deliver/
-  cp build/fome.dfu  deliver/
-  # cp build/fome.hex  deliver/
 fi
 
 # bootloader and combined image
 if [ "$USE_OPENBLT" = "yes" ]; then
   echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
-  $HEX2DFU -i bootloader/blbuild/fome_bl.hex -o bootloader/blbuild/fome_bl.dfu
 
   # do we need all these formats?
   cp bootloader/blbuild/fome_bl.bin  deliver/fome_bl.bin
-  cp bootloader/blbuild/fome_bl.dfu  deliver/fome_bl.dfu
-  #cp bootloader/blbuild/fome_bl.hex  deliver/fome_bl.hex
 
   echo "$SCRIPT_NAME: invoking hex2dfu for combined OpenBLT+FOME image"
-  $HEX2DFU -i bootloader/blbuild/fome_bl.hex -i build/fome.hex -o deliver/fome.dfu -b deliver/fome.bin
+  $HEX2DFU -i bootloader/blbuild/fome_bl.hex -i build/fome.hex -b deliver/fome.bin
 fi
 
 echo "$SCRIPT_NAME: build folder content:"
