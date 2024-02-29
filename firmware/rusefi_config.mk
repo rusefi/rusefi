@@ -39,9 +39,11 @@ $(SIG_FILE): .FORCE
 
 $(RAMDISK): .ramdisk-sentinel ;
 
-.ramdisk-sentinel: $(INI_FILE)
-	bash $(PROJECT_DIR)/bin/gen_image_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
-	@touch $@
+.ramdisk-sentinel: $(INI_FILE) .FORCE
+	test $$(cat $@ 2>/dev/null) == $(SHORT_BOARD_NAME) -a \
+	! $$(echo "$?" | cut -d ' ' -f 1) -ef $(INI_FILE) \
+	|| (bash $(PROJECT_DIR)/bin/gen_image_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME) \
+	&& echo $(SHORT_BOARD_NAME) >$@)
 
 $(CONFIG_FILES): .config-sentinel ;
 
