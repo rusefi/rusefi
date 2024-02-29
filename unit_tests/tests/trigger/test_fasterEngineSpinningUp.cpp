@@ -8,7 +8,8 @@
 
 TEST(cranking, testFasterEngineSpinningUp) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	setTable(config->injectionPhase, -180.0f);
+	float phase = 181;
+	setTable(config->injectionPhase, -phase);
 	engine->tdcMarkEnabled = false;
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
@@ -33,7 +34,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the engine has the right state
 	ASSERT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
 	// check RPM
-	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM=0";
+	eth.assertRpm( 0, "RPM=0");
 	// the queue should be empty, no trigger events yet
 	ASSERT_EQ(0, engine->executor.size()) << "plain#1";
 
@@ -45,7 +46,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the mode is changed
 	ASSERT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
 	// due to isFasterEngineSpinUp=true, we should have already detected RPM!
-	ASSERT_EQ( 300,  round(Sensor::getOrZero(SensorType::Rpm))) << "spinning-RPM#1";
+	eth.assertRpm( 300, "spinning-RPM#1");
 	// two simultaneous injections
 	ASSERT_EQ(4, engine->executor.size()) << "plain#2";
 	// test if they are simultaneous
@@ -53,8 +54,11 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// test if ignition mode is temporary changed to wasted spark, if set to individual coils
 	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
 	// check real events
-	eth.assertEvent5("inj start#1", 0, (void*)startSimultaneousInjection, 97500);
-	eth.assertEvent5("inj end#1", 1, (void*)endSimultaneousInjection, 100000);
+
+	float expectedSimultaneousTimestamp = eth.angleToTimeUs(360 - phase);
+
+	eth.assertEvent5("inj start#1", 0, (void*)startSimultaneousInjection, expectedSimultaneousTimestamp - MS2US(engine->engineState.injectionDuration));
+	eth.assertEvent5("inj end#1", 1, (void*)endSimultaneousInjection, expectedSimultaneousTimestamp);
 
 	// skip the rest of the cycle
 	eth.fireFall(200);
@@ -67,7 +71,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the mode is changed when fully synched
 	ASSERT_EQ(CRANKING, engine->rpmCalculator.getState());
 	// check RPM
-	ASSERT_EQ( 200,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#2";
+	eth.assertRpm(200, "RPM#2");
 	// test if they are simultaneous in cranking mode too
 	ASSERT_EQ(IM_SIMULTANEOUS, getCurrentInjectionMode());
 	// Should still be in wasted spark since we don't have cam sync yet
@@ -75,8 +79,10 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 	// check real events
-	eth.assertEvent5("inj start#2", 0, (void*)startSimultaneousInjection, 148375);
-	eth.assertEvent5("inj end#2", 1, (void*)endSimultaneousInjection, 149999);
+	expectedSimultaneousTimestamp = eth.angleToTimeUs(360 - phase);
+
+	eth.assertEvent5("inj start#2", 0, (void*)startSimultaneousInjection, expectedSimultaneousTimestamp - 1625);
+	eth.assertEvent5("inj end#2", 1, (void*)endSimultaneousInjection, expectedSimultaneousTimestamp);
 
 	// Now perform a fake VVT sync and check that ignition mode changes to sequential
 	engine->triggerCentral.syncAndReport(2, 0);
@@ -91,7 +97,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the mode is now changed to 'running' at higher RPM
 	ASSERT_EQ(RUNNING, engine->rpmCalculator.getState());
 	// check RPM
-	ASSERT_EQ( 1000,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#3";
+	eth.assertRpm( 1000, "RPM#3");
 	// check if the injection mode is back to sequential now
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
 	// 4 sequential injections for the full cycle
@@ -99,8 +105,10 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	// check real events for sequential injection
 	// Note: See addFuelEvents() fix inside setRpmValue()!
-	eth.assertEvent5("inj start#3", 0, (void*)turnInjectionPinHigh, -31625);
-	eth.assertEvent5("inj end#3", 1, (void*)turnInjectionPinLow, -30001);
+	expectedSimultaneousTimestamp = eth.angleToTimeUs(phase);
+	ASSERT_EQ(180, eth.timeToAngle(30.000));
+	eth.assertEvent5("inj start#3", 0, (void*)turnInjectionPinHigh, -expectedSimultaneousTimestamp - 1625);
+	eth.assertEvent5("inj end#3", 1, (void*)turnInjectionPinLow, -expectedSimultaneousTimestamp);
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {

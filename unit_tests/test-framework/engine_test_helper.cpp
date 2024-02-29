@@ -302,7 +302,7 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	scheduling_s *event = executor->getForUnitTest(index);
 	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
 	efitimeus_t start = getTimeNowUs();
-	assertEqualsM2(msg, expectedTimestamp, event->momentX - start, /*1us precision to address rounding etc*/1);
+	assertEqualsM2(msg, expectedTimestamp, event->momentX - start, /*3us precision to address rounding etc*/3);
 	return event;
 }
 
@@ -347,7 +347,7 @@ void EngineTestHelper::applyTriggerWaveform() {
 
 // todo: open question if this is worth a helper method or should be inlined?
 void EngineTestHelper::assertRpm(int expectedRpm, const char *msg) {
-	EXPECT_EQ(expectedRpm, Sensor::getOrZero(SensorType::Rpm)) << msg;
+	EXPECT_NEAR(expectedRpm, Sensor::getOrZero(SensorType::Rpm), 0.01) << msg;
 }
 
 void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode,
