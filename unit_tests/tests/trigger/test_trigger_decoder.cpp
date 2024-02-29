@@ -193,7 +193,8 @@ TEST(misc, testRpmCalculator) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6670, engineConfiguration!=NULL, "null config in engine");
 
 	engineConfiguration->minimumIgnitionTiming = -15;
-	setWholeTimingTable(-13);
+	float timingAdvance = -13;
+	setWholeTimingTable(timingAdvance);
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	eth.applyTriggerWaveform();
@@ -210,7 +211,7 @@ TEST(misc, testRpmCalculator) {
 
 	eth.fireTriggerEvents(/* count */ 48);
 
-	ASSERT_EQ( 1500,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM";
+	eth.assertRpm(1500);
 	ASSERT_EQ( 14,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 
 
@@ -227,7 +228,7 @@ TEST(misc, testRpmCalculator) {
 
 	engine->periodicFastCallback();
 
-	ASSERT_NEAR(engine->engineState.timingAdvance[0], 707, 0.1f);
+	ASSERT_NEAR(engine->engineState.timingAdvance[0], 720 + timingAdvance, 0.1f);
 
 	assertEqualsM("fuel #1", 4.5450, engine->engineState.injectionDuration);
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
@@ -254,7 +255,7 @@ TEST(misc, testRpmCalculator) {
 
 	scheduling_s *ev1 = engine->executor.getForUnitTest(1);
 	assertREqualsM("Call@1", (void*)ev1->action.getCallback(), (void*)fireSparkAndPrepareNextSchedule);
-	assertEqualsM("ev 1", start + 1444, ev1->momentX);
+	assertEqualsM("ev 1", start + 944 + 1000 * FORD_INLINE_DWELL , ev1->momentX);
 	assertEqualsLM("coil 1", (uintptr_t)&enginePins.coils[0], (uintptr_t)((IgnitionEvent*)ev1->action.getArgument())->outputs[0]);
 
 	}
@@ -286,9 +287,9 @@ TEST(misc, testRpmCalculator) {
 	eth.fireRise(5);
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 4.3";
 
-	assertEqualsM("dwell", 4.5, engine->ignitionState.dwellDurationAngle);
+	assertEqualsM("dwell", eth.timeToAngle(FORD_INLINE_DWELL), engine->ignitionState.dwellDurationAngle);
 	assertEqualsM("fuel #3", 4.5450, engine->engineState.injectionDuration);
-	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
+	eth.assertRpm(1500);
 
 
 	ASSERT_EQ( 6,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #4";
