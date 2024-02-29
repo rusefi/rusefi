@@ -195,8 +195,6 @@ static float getBaseFuelMass(int rpm) {
 
 	float baseFuelMass = engine->fuelComputer.getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
 
-	// Fudge it by the global correction factor
-	baseFuelMass *= engineConfiguration->globalFuelCorrection;
 	engine->engineState.baseFuel = baseFuelMass;
 
 	if (cisnan(baseFuelMass)) {
