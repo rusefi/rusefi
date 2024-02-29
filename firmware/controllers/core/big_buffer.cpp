@@ -9,7 +9,7 @@ static BigBufferUser s_currentUser;
 static uint32_t s_bigBuffer[BIG_BUFFER_SIZE / sizeof(uint32_t)];
 
 #if EFI_UNIT_TEST
-BigBufferUser &getBigBufferCurrentUser() {
+BigBufferUser getBigBufferCurrentUser() {
   return s_currentUser;
 }
 #endif // EFI_UNIT_TEST

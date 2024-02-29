@@ -1,6 +1,6 @@
 #include "pch.h"
 
-BigBufferUser &getBigBufferCurrentUser();
+BigBufferUser getBigBufferCurrentUser();
 
 TEST(BigBuffer, CppMagic) {
   BigBufferHandle h = getBigBuffer(BigBufferUser::ToothLogger);
