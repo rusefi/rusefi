@@ -34,8 +34,8 @@ TEST(OddFire, hd) {
 	ASSERT_EQ( 8,  engine->executor.size());
 	eth.assertEvent5("spark down#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle3));
 
-	float expectedAngle7 = -180 + cylinderTwo - timing;
-	eth.assertEvent5("spark down#7", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle7));
+	float expectedAngle7 = 180 - cylinderOne - timing;
+	eth.assertEvent5("spark down#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle7));
 
 
 	eth.assertRpm( 500, "spinning-RPM#1");
