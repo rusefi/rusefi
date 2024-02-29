@@ -85,7 +85,13 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// let's save planned duration so that we can later compare it with reality
 	event->sparkDwell = sparkDwell;
 
-	angle_t finalIgnitionTiming =	getEngineState()->timingAdvance[event->coilIndex];
+	auto ignitionMode = getCurrentIgnitionMode();
+	const int index = getIgnitionPinForIndex(event->cylinderIndex, ignitionMode);
+	const int coilIndex = ID2INDEX(getFiringOrderCylinderId(index));
+	angle_t finalIgnitionTiming =	getEngineState()->timingAdvance[coilIndex];
+	// Stash which cylinder we're scheduling so that knock sensing knows which
+	// cylinder just fired
+	event->coilIndex = coilIndex;
 
 	// 10 ATDC ends up as 710, convert it to -10 so we can log and clamp correctly
 	if (finalIgnitionTiming > 360) {
@@ -107,17 +113,14 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		// Negate because timing *before* TDC, and we schedule *after* TDC
 		- finalIgnitionTiming
 		// Offset by this cylinder's position in the cycle
-		+ getPerCylinderFiringOrderOffset(event->cylinderIndex, event->coilIndex);
+		+ getPerCylinderFiringOrderOffset(event->cylinderIndex, coilIndex);
 
 	efiAssertVoid(ObdCode::CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 	wrapAngle(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550);
 	event->sparkAngle = sparkAngle;
 
-	auto ignitionMode = getCurrentIgnitionMode();
 	engine->outputChannels.currentIgnitionMode = static_cast<uint8_t>(ignitionMode);
 
-	const int index = getIgnitionPinForIndex(event->cylinderIndex, ignitionMode);
-	const int coilIndex = ID2INDEX(getFiringOrderCylinderId(index));
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
 	event->outputs[0] = output;
 	IgnitionOutputPin *secondOutput;
@@ -139,9 +142,6 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	event->outputs[1] = secondOutput;
 
-	// Stash which cylinder we're scheduling so that knock sensing knows which
-	// cylinder just fired
-	event->coilIndex = coilIndex;
 
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");

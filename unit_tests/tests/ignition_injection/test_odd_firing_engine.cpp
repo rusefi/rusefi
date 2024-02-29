@@ -27,13 +27,14 @@ TEST(OddFire, hd) {
 //	ASSERT_NEAR(-200.0, eth.timeToAngle(-66.66666), EPS3D);
 //	ASSERT_NEAR(160.0, eth.timeToAngle(53.333333), EPS3D);
 //	ASSERT_NEAR(-168.0, eth.timeToAngle(-56.0), EPS3D);
+//	ASSERT_NEAR(32, eth.timeToAngle(10.66666666), EPS3D);
 
-	float expectedAngle3 = -180 - cylinderOne - timing;
+	float expectedAngle3 = -180 + cylinderTwo - timing;
 
 	ASSERT_EQ( 8,  engine->executor.size());
 	eth.assertEvent5("spark down#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle3));
 
-	float expectedAngle7 = -180 - cylinderOne - timing;
+	float expectedAngle7 = -180 + cylinderTwo - timing;
 	eth.assertEvent5("spark down#7", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle7));
 
 
