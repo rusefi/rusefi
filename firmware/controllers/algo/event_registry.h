@@ -76,7 +76,7 @@ public:
 	 * [0, cylindersCount)
 	 */
 	int cylinderIndex = 0;
-	int8_t cylinderNumber = 0;
+	int8_t coilIndex = 0;
 	char *name = nullptr;
 	IgnitionOutputPin *getOutputForLoggins();
 };

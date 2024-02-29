@@ -18,18 +18,18 @@ TEST(ignition, twoCoils) {
 	initializeIgnitionActions();
 
 	// first one to fire uses first coil
-	EXPECT_EQ(engine->ignitionEvents.elements[0].cylinderNumber, 0);
-	EXPECT_EQ(engine->ignitionEvents.elements[1].cylinderNumber, 6);
-	EXPECT_EQ(engine->ignitionEvents.elements[2].cylinderNumber, 0);
-	EXPECT_EQ(engine->ignitionEvents.elements[3].cylinderNumber, 6);
-	EXPECT_EQ(engine->ignitionEvents.elements[4].cylinderNumber, 0);
-	EXPECT_EQ(engine->ignitionEvents.elements[5].cylinderNumber, 6);
-	EXPECT_EQ(engine->ignitionEvents.elements[6].cylinderNumber, 0);
-	EXPECT_EQ(engine->ignitionEvents.elements[7].cylinderNumber, 6);
-	EXPECT_EQ(engine->ignitionEvents.elements[8].cylinderNumber, 0);
-	EXPECT_EQ(engine->ignitionEvents.elements[9].cylinderNumber, 6);
-	EXPECT_EQ(engine->ignitionEvents.elements[10].cylinderNumber, 0);
-	EXPECT_EQ(engine->ignitionEvents.elements[11].cylinderNumber, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[0].coilIndex, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[1].coilIndex, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[2].coilIndex, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[3].coilIndex, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[4].coilIndex, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[5].coilIndex, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[6].coilIndex, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[7].coilIndex, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[8].coilIndex, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[9].coilIndex, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[10].coilIndex, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[11].coilIndex, 6);
 
 	ASSERT_EQ(engine->ignitionEvents.elements[0].sparkAngle, 0);
 	ASSERT_EQ((void*)engine->ignitionEvents.elements[0].outputs[0], (void*)&enginePins.coils[0]);

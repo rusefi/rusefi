@@ -85,7 +85,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// let's save planned duration so that we can later compare it with reality
 	event->sparkDwell = sparkDwell;
 
-	angle_t finalIgnitionTiming =	getEngineState()->timingAdvance[event->cylinderNumber];
+	angle_t finalIgnitionTiming =	getEngineState()->timingAdvance[event->coilIndex];
 
 	// 10 ATDC ends up as 710, convert it to -10 so we can log and clamp correctly
 	if (finalIgnitionTiming > 360) {
@@ -107,7 +107,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		// Negate because timing *before* TDC, and we schedule *after* TDC
 		- finalIgnitionTiming
 		// Offset by this cylinder's position in the cycle
-		+ getPerCylinderFiringOrderOffset(event->cylinderIndex, event->cylinderNumber);
+		+ getPerCylinderFiringOrderOffset(event->cylinderIndex, event->coilIndex);
 
 	efiAssertVoid(ObdCode::CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 	wrapAngle(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550);
@@ -141,7 +141,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	// Stash which cylinder we're scheduling so that knock sensing knows which
 	// cylinder just fired
-	event->cylinderNumber = coilIndex;
+	event->coilIndex = coilIndex;
 
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
@@ -253,7 +253,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 			scheduleByAngle(
 				&event->trailingSparkFire, nowNt, engine->engineState.trailingSparkAngle,
-				{ &fireTrailingSpark, &enginePins.trailingCoils[event->cylinderNumber] }
+				{ &fireTrailingSpark, &enginePins.trailingCoils[event->coilIndex] }
 			);
 		}
 
@@ -261,7 +261,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event);
 	}
 
-	engine->onSparkFireKnockSense(event->cylinderNumber, nowNt);
+	engine->onSparkFireKnockSense(event->coilIndex, nowNt);
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -311,7 +311,7 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	}
 
 	if (engineConfiguration->enableTrailingSparks) {
-		IgnitionOutputPin *output = &enginePins.trailingCoils[event->cylinderNumber];
+		IgnitionOutputPin *output = &enginePins.trailingCoils[event->coilIndex];
 		// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 		scheduleByAngle(
 			&event->trailingSparkCharge, nowNt, engine->engineState.trailingSparkAngle,
