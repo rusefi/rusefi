@@ -25,6 +25,7 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 	ASSERT_EQ( 0,  engine->executor.size()) << "first revolution(s)";
 
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);
+	ASSERT_EQ(600,  Sensor::getOrZero(SensorType::Rpm)) << "RPM";
 
 	ASSERT_EQ( 2,  engine->executor.size()) << "first revolution(s)";
 	eth.assertEvent5("spark up#0", 0, (void*)turnSparkPinHigh, -45167);
