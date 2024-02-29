@@ -183,7 +183,7 @@ TEST(misc, testRpmCalculator) {
 	engineConfiguration->stoichRatioPrimary = 14;
 
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
-		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+		.WillRepeatedly(Return(AirmassResult{0.3024f, 50.0f}));
 
 	IgnitionEventList *ilist = &engine->ignitionEvents;
 	ASSERT_EQ( 0,  ilist->isReady) << "size #1";
@@ -196,7 +196,6 @@ TEST(misc, testRpmCalculator) {
 	setWholeTimingTable(-13);
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
-	engineConfiguration->globalFuelCorrection = 3;
 	eth.applyTriggerWaveform();
 
 	setFlatInjectorLag(0);
