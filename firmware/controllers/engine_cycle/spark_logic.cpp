@@ -402,7 +402,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 #if EFI_UNIT_TEST
 	if (verboseMode) {
 		printf("spark dwell@ %.1f spark@ %.2f id=%d\r\n", event->dwellAngle,
-			event->sparkEvent.enginePhase,
+			event->sparkEvent.getAngle(),
 			event->sparkId);
 	}
 #endif
