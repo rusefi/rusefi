@@ -32,7 +32,7 @@ extern int minCrankingRpm;
 
 EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
-	timeNowUs = 0; 
+	timeNowUs = 0;
 	minCrankingRpm = 0;
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
@@ -304,6 +304,10 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	efitimeus_t start = getTimeNowUs();
 	assertEqualsM4(msg, " timestamp", expectedTimestamp, event->momentX - start);
 	return event;
+}
+
+angle_t EngineTestHelper::timeToAngle(float timeMs) {
+  return MS2US(timeMs) / engine.rpmCalculator.oneDegreeUs;
 }
 
 const AngleBasedEvent * EngineTestHelper::assertTriggerEvent(const char *msg,

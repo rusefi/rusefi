@@ -9,4 +9,7 @@
 
 #include "engine_configuration.h"
 
+// technical debt? weird number but unit tests currently depend on it
+#define FORD_INLINE_DWELL 0.5
+
 void setFordInline6();

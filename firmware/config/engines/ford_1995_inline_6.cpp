@@ -31,7 +31,7 @@ void setFordInline6() {
 	/**
 	 * 0.5ms dwell time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
 	 */
-	setConstantDwell(0.5);
+	setConstantDwell(FORD_INLINE_DWELL);
 
 	/**
 	 * We treat the trigger as 6/0 toothed wheel
@@ -45,7 +45,7 @@ void setFordInline6() {
 
 	engineConfiguration->clt.config = {-10, 60, 120, 160310, 7700, 1180, 2700};
 	engineConfiguration->iat.config = {-10, 60, 120, 160310, 7700, 1180, 2700};
-	
+
 	// 12ch analog board pinout:
 	// input channel 3 is PA7, that's ADC7
 	// input channel 5 is PA4, that's ADC4
