@@ -587,7 +587,7 @@ custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3",
 
 	uint8_t acrRevolutions;;"", 1, 0, 0, 100, 0
 
-float globalFuelCorrection;;"coef", 1, 0, 0, 1000, 2
+float unused4bytesHere
 
 	float adcVcc;;"volts", 1, 0, 0, 6, 3
 	float mapCamDetectionAnglePosition;;"Deg", 1, 0, 0, 360, 0
