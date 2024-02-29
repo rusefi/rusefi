@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 27 01:09:40 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 29 02:16:26 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1111,10 +1111,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t acrRevolutions;
 	/**
-	 * units: coef
 	 * offset 548
 	 */
-	float globalFuelCorrection;
+	float unused4bytesHere;
 	/**
 	 * units: volts
 	 * offset 552
@@ -5625,4 +5624,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22236);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 27 01:09:40 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 29 02:16:26 UTC 2024

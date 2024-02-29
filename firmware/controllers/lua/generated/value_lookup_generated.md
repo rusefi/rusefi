@@ -304,9 +304,6 @@ Duty cycle to use in case of a sensor failure. This duty cycle should produce th
 ### acrRevolutions
 
 
-### globalFuelCorrection
-
-
 ### adcVcc
 
 

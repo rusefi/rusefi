@@ -310,9 +310,6 @@ float getConfigValueByName(const char *name) {
 // acrRevolutions
 		case -1373423899:
 			return engineConfiguration->acrRevolutions;
-// globalFuelCorrection
-		case 1371979578:
-			return engineConfiguration->globalFuelCorrection;
 // adcVcc
 		case -244496183:
 			return engineConfiguration->adcVcc;
@@ -2294,11 +2291,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1373423899:
 	{
 		engineConfiguration->acrRevolutions = (int)value;
-		return 1;
-	}
-		case 1371979578:
-	{
-		engineConfiguration->globalFuelCorrection = value;
 		return 1;
 	}
 		case -244496183:
