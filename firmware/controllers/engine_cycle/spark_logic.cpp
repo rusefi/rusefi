@@ -29,7 +29,7 @@ static const char *prevSparkName = nullptr;
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
-			output->currentLogicValue, output->outOfOrder, event->sparkId);
+			output->currentLogicValue, output->outOfOrder, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
 	/**
@@ -39,7 +39,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	 * 2) we have an un-matched low followed by legit pairs
 	 */
 
-	output->signalFallSparkId = event->sparkId;
+	output->signalFallSparkId = event->sparkCounter;
 
 	if (!output->currentLogicValue && !event->wasSparkLimited) {
 		warning(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
@@ -280,12 +280,12 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("spark goes high %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
-			output->currentLogicValue, output->outOfOrder, event->sparkId);
+			output->currentLogicValue, output->outOfOrder, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
 	if (output->outOfOrder) {
 		output->outOfOrder = false;
-		if (output->signalFallSparkId == event->sparkId) {
+		if (output->signalFallSparkId == event->sparkCounter) {
 			// let's save this coil if things do not look right
 			return;
 		}
@@ -342,7 +342,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
 	 */
-	event->sparkId = engine->engineState.globalSparkCounter++;
+	event->sparkCounter = engine->engineState.globalSparkCounter++;
 	event->wasSparkLimited = limitedSpark;
 
 	efitick_t chargeTime = 0;
@@ -353,7 +353,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	if (!limitedSpark) {
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("scheduling sparkUp %d %s now=%d %d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), (int)angleOffset,
-				event->sparkId);
+				event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
 
@@ -385,11 +385,11 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 
 	if (scheduled) {
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("scheduling sparkDown %d %s now=%d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkId);
+		efiPrintf("scheduling sparkDown %d %s now=%d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("to queue sparkDown %d %s now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkId, sparkAngle);
+		efiPrintf("to queue sparkDown %d %s now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter, sparkAngle);
 #endif /* SPARK_EXTREME_LOGGING */
 
 		if (!limitedSpark && engine->enableOverdwellProtection) {
@@ -403,7 +403,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	if (verboseMode) {
 		printf("spark dwell@ %.1f spark@ %.2f id=%d\r\n", event->dwellAngle,
 			event->sparkEvent.getAngle(),
-			event->sparkId);
+			event->sparkCounter);
 	}
 #endif
 }
