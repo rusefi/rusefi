@@ -11,7 +11,7 @@ void setDefaultCranking() {
 	engineConfiguration->cranking.baseFuel = 27;
 
 	// Ignition
-	engineConfiguration->ignitionDwellForCrankingMs = 6;
+	engineConfiguration->ignitionDwellForCrankingMs = DEFAULT_CRANKING_DWELL_MS;
 	engineConfiguration->crankingTimingAngle = 6;
 
 	// IAC

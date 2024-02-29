@@ -9,5 +9,8 @@
 #pragma once
 #include "engine_configuration.h"
 
+// used by unit tests
+#define Gy6139_globalTriggerAngleOffset 45
+
 void setGy6139qmbDefaultEngineConfiguration();
 

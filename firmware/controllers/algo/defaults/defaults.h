@@ -11,6 +11,8 @@ void setGDIFueling();
 void setGdiWallWetting();
 void setInline4();
 
+#define DEFAULT_CRANKING_DWELL_MS 6
+
 void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2);
 void setPPSCalibration(float primaryUp, float primaryDown, float secondaryUp, float secondaryDown);
 

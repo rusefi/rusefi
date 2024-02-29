@@ -23,7 +23,7 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 
 
 	eth.fireRise(/* delayMs */ 200);
-	ASSERT_EQ( 300,  Sensor::getOrZero(SensorType::Rpm)) << "RPM#2";
+	eth.assertRpm(300, "RPM#2");
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 

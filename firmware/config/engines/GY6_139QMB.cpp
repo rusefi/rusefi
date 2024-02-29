@@ -22,7 +22,7 @@ void setGy6139qmbDefaultEngineConfiguration() {
 	engineConfiguration->cranking.rpm = 1100;
 	setTargetRpmCurve(2000);
 	engineConfiguration->analogInputDividerCoefficient = 1;
-	engineConfiguration->globalTriggerAngleOffset = 45;
+	engineConfiguration->globalTriggerAngleOffset = Gy6139_globalTriggerAngleOffset;
 	engineConfiguration->displacement = 0.072; // 72cc
 	engineConfiguration->cylindersCount = 1;
 	setCrankOperationMode();
