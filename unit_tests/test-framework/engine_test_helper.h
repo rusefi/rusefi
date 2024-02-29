@@ -38,6 +38,13 @@ public:
 
   // convert ms time to angle at current RPM
   angle_t timeToAngle(float timeMs);
+  float angleToTimeUs(angle_t angle) {
+    return angle * engine.rpmCalculator.oneDegreeUs;
+  }
+
+  float angleToTimeMs(angle_t angle) {
+    return US2MS(angleToTimeUs(angle));
+  }
 
 	warningBuffer_t *recentWarnings();
 	int getWarningCounter();

@@ -12,7 +12,7 @@ void setDefaultCranking() {
 
 	// Ignition
 	engineConfiguration->ignitionDwellForCrankingMs = DEFAULT_CRANKING_DWELL_MS;
-	engineConfiguration->crankingTimingAngle = 6;
+	engineConfiguration->crankingTimingAngle = DEFAULT_CRANKING_ANGLE;
 
 	// IAC
 	engineConfiguration->crankingIACposition = 50;

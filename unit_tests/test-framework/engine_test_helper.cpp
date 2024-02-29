@@ -302,7 +302,7 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	scheduling_s *event = executor->getForUnitTest(index);
 	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
 	efitimeus_t start = getTimeNowUs();
-	assertEqualsM4(msg, " timestamp", expectedTimestamp, event->momentX - start);
+	assertEqualsM2(msg, expectedTimestamp, event->momentX - start, /*1us precision to address rounding etc*/1);
 	return event;
 }
 

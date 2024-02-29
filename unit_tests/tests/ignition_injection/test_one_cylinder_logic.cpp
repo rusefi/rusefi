@@ -10,6 +10,8 @@
 
 TEST(issues, issueOneCylinderSpecialCase968) {
 	EngineTestHelper eth(engine_type_e::GY6_139QMB);
+	angle_t timing = 4;
+	engineConfiguration->crankingTimingAngle = timing;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
@@ -29,10 +31,14 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);
 	eth.assertRpm(600, "RPM");
 	ASSERT_EQ(engine->triggerCentral.currentEngineDecodedPhase, 90 + Gy6139_globalTriggerAngleOffset);
+	ASSERT_EQ(engine->engineState.timingAdvance[0], timing);
+
+  angle_t expectedAngle = 180 - Gy6139_globalTriggerAngleOffset + timing;
+  int expectedDeltaTimeUs = eth.angleToTimeUs(expectedAngle);
 
 	ASSERT_EQ( 2,  engine->executor.size()) << "first revolution(s)";
-	eth.assertEvent5("spark up#0", 0, (void*)turnSparkPinHigh, -45167);
-	eth.assertEvent5("spark down#0", 1, (void*)fireSparkAndPrepareNextSchedule, -45167 + 1000 * DEFAULT_CRANKING_DWELL_MS);
+	eth.assertEvent5("spark up#0", 0, (void*)turnSparkPinHigh, -expectedDeltaTimeUs - MS2US(DEFAULT_CRANKING_DWELL_MS));
+	eth.assertEvent5("spark down#0", 1, (void*)fireSparkAndPrepareNextSchedule, -expectedDeltaTimeUs);
 
 
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);
