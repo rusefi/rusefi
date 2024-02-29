@@ -160,7 +160,7 @@ bool InjectionEvent::update() {
 		injectorIndex = 0;
 	} else if (mode == IM_SEQUENTIAL || mode == IM_BATCH) {
 		// Map order index -> cylinder index (firing order)
-		injectorIndex = ID2INDEX(getCylinderId(ownIndex));
+		injectorIndex = ID2INDEX(getFiringOrderCylinderId(ownIndex));
 	} else {
 		firmwareError(ObdCode::CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
 		injectorIndex = 0;
@@ -177,7 +177,7 @@ bool InjectionEvent::update() {
 		// Each injector gets fired as a primary (the same as sequential), but also
 		// fires the injector 360 degrees later in the firing order.
 		int secondOrder = (ownIndex + (engineConfiguration->cylindersCount / 2)) % engineConfiguration->cylindersCount;
-		int secondIndex = ID2INDEX(getCylinderId(secondOrder));
+		int secondIndex = ID2INDEX(getFiringOrderCylinderId(secondOrder));
 		secondOutput = &enginePins.injectors[secondIndex];
 		secondOutputStage2 = &enginePins.injectorsStage2[secondIndex];
 	} else {
