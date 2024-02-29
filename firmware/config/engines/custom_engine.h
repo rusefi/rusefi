@@ -32,7 +32,6 @@ void fuelBenchMode();
 void proteusBoardTest();
 void proteusLuaDemo();
 void proteusStimQc();
-void setHarley();
 void proteusDcWastegateTest();
 
 void setTest33816EngineConfiguration();

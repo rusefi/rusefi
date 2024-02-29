@@ -73,6 +73,7 @@
 #include "slingshot.h"
 #include "test_engine.h"
 #include "sachs.h"
+#include "harley.h"
 #include "vw.h"
 #include "vw_b6.h"
 #include "toyota_jz.h"
