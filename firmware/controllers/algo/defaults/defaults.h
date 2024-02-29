@@ -14,6 +14,11 @@ void setInline4();
 #define DEFAULT_CRANKING_DWELL_MS 6
 #define DEFAULT_CRANKING_ANGLE 6
 
+	// most of rusEFI installations are still port injected, for GDI see 'setGDIFueling'
+	// -400 will close the injector just before TDC at the end of the exhaust stroke,
+	// around the time the intake valve opens.
+#define PORT_INJECTION_OFFSET -400.0f
+
 void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2);
 void setPPSCalibration(float primaryUp, float primaryDown, float secondaryUp, float secondaryDown);
 

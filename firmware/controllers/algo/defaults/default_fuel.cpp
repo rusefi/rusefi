@@ -287,10 +287,7 @@ void setDefaultFuel() {
 	setLinearCurve(config->mapEstimateTpsBins, 0, 100);
 	setTable(config->mapEstimateTable, 60);
 
-	// most of rusEFI installations are still port injected, for GDI see 'setGDIFueling'
-	// -400 will close the injector just before TDC at the end of the exhaust stroke,
-	// around the time the intake valve opens.
-	setTable(config->injectionPhase, -400.0f);
+	setTable(config->injectionPhase, PORT_INJECTION_OFFSET);
 
 	// Charge temperature estimation
 	engineConfiguration->tChargeMinRpmMinTps = 0.25;

@@ -5,6 +5,7 @@
  */
 
 #include "pch.h"
+#include "fuel_math.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -33,6 +34,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
 	// check if the engine has the right state
 	ASSERT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
+	ASSERT_NEAR(0, getInjectionMass(200), EPS5D);
 	// check RPM
 	eth.assertRpm( 0, "RPM=0");
 	// the queue should be empty, no trigger events yet
@@ -87,6 +89,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// Now perform a fake VVT sync and check that ignition mode changes to sequential
 	engine->triggerCentral.syncAndReport(2, 0);
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentIgnitionMode());
+	// still cranking fuel
+	ASSERT_NEAR(0.0039, getInjectionMass(200), EPS3D);
 
 	// skip, clear & advance 1 more revolution at higher RPM
 	eth.fireFall(60);
@@ -100,6 +104,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	eth.assertRpm( 1000, "RPM#3");
 	// check if the injection mode is back to sequential now
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
+	ASSERT_NEAR(0.0, getInjectionMass(200), EPS3D); // in this test fuel calculation is not active in running mode
 	// 4 sequential injections for the full cycle
 	ASSERT_EQ( 8,  engine->executor.size()) << "plain#3";
 
