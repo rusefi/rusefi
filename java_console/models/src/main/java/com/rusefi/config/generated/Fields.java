@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 01 17:19:15 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 01 17:56:52 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -210,6 +210,8 @@ public class Fields {
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
+	public static final String COIL_1_NAME = "Spark #1";
+	public static final String COIL_2_NAME = "Spark #2";
 	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
@@ -960,6 +962,8 @@ public class Fields {
 	public static final int InjectionTimingMode_Center = 2;
 	public static final int InjectionTimingMode_End = 0;
 	public static final int InjectionTimingMode_Start = 1;
+	public static final String INJECTOR_1_NAME = "Injector #1";
+	public static final String INJECTOR_2_NAME = "Injector #2";
 	public static final int injector_compensation_mode_e_ICM_FixedRailPressure = 1;
 	public static final int injector_compensation_mode_e_ICM_None = 0;
 	public static final int injector_compensation_mode_e_ICM_SensedRailPressure = 2;
@@ -1095,7 +1099,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 475708051;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1342,7 +1345,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.03.01.f407-discovery.475708051";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.03.01.f407-discovery.3278781549";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

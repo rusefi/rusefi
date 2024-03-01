@@ -221,6 +221,8 @@
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
+#define COIL_1_NAME "Spark #1"
+#define COIL_2_NAME "Spark #2"
 #define COMPOSITE_PACKET_SIZE 5
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define CRANKING_ADVANCE_CURVE_SIZE 4
@@ -995,6 +997,8 @@
 #define InjectionTimingMode_Center 2
 #define InjectionTimingMode_End 0
 #define InjectionTimingMode_Start 1
+#define INJECTOR_1_NAME "Injector #1"
+#define INJECTOR_2_NAME "Injector #2"
 #define injector_compensation_mode_e_auto_enum 0="ICM_None",1="ICM_FixedRailPressure",2="ICM_SensedRailPressure"
 #define injector_compensation_mode_e_ICM_FixedRailPressure 1
 #define injector_compensation_mode_e_ICM_None 0
@@ -1159,7 +1163,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 653431240
+#define SIGNATURE_HASH 4190508854
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1450,6 +1454,17 @@
 #define ts_show_can2 false
 #define ts_show_can_pins false
 #define ts_show_clt_iat_pullup false
+#define ts_show_cylinder_10 true
+#define ts_show_cylinder_11 true
+#define ts_show_cylinder_12 true
+#define ts_show_cylinder_2 true
+#define ts_show_cylinder_3 true
+#define ts_show_cylinder_4 true
+#define ts_show_cylinder_5 true
+#define ts_show_cylinder_6 true
+#define ts_show_cylinder_7 true
+#define ts_show_cylinder_8 true
+#define ts_show_cylinder_9 true
 #define ts_show_egt false
 #define ts_show_etb true
 #define ts_show_etb_pins false
@@ -1486,7 +1501,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.01.hellen-112-17.653431240"
+#define TS_SIGNATURE "rusEFI master.2024.03.01.hellen-112-17.4190508854"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
