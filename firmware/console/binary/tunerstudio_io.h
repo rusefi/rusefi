@@ -87,7 +87,7 @@ public:
 
 #if HAL_USE_SERIAL
 // This class implements a ChibiOS Serial Driver
-class SerialTsChannel : public SerialTsChannelBase {
+class SerialTsChannel final : public SerialTsChannelBase {
 public:
 	SerialTsChannel(SerialDriver& driver) : SerialTsChannelBase("Serial"), m_driver(&driver) { }
 

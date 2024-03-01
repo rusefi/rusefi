@@ -12,7 +12,7 @@ static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
 
 extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
 
-class UsbChannel : public TsChannelBase {
+class UsbChannel final : public TsChannelBase {
 public:
 	UsbChannel(SerialUSBDriver& driver)
 		: TsChannelBase("USB"), m_channel(reinterpret_cast<BaseChannel*>(&driver))

@@ -16,7 +16,7 @@
 // This must be a power of 2!
 #define TS_DMA_BUFFER_SIZE 32
 
-class UartDmaTsChannel : public UartTsChannel {
+class UartDmaTsChannel final : public UartTsChannel {
 public:
 	UartDmaTsChannel(UARTDriver& uartDriver);
 
