@@ -207,7 +207,7 @@
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0240229E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0240301E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -544,7 +544,7 @@
         <constant name="antiLagActivationMode">"Switch Input"</constant>
         <constant digits="0" name="launchSpeedThreshold" units="Kph">30.0</constant>
         <constant digits="0" name="launchTimingRpmRange" units="RPM">500.0</constant>
-        <constant digits="0" name="launchFuelAdded" units="%">0.0</constant>
+        <constant digits="0" name="launchSparkSkipPercent" units="%">0.0</constant>
         <constant digits="0" name="launchBoostDuty" units="%">0.0</constant>
         <constant digits="0" name="hardCutRpmRange" units="RPM">500.0</constant>
         <constant digits="0" name="turbochargerFilter" units="">0.01</constant>
@@ -4551,7 +4551,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.02.29.f407-discovery.503521881" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.01.f407-discovery.1238513657" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>
