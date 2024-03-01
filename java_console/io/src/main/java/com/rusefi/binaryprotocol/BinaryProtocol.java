@@ -14,6 +14,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
+import com.rusefi.io.commands.BurnCommand;
 import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
@@ -527,10 +528,12 @@ public class BinaryProtocol {
         while (true) {
             if (isClosed)
                 return;
-            byte[] response = executeCommand(Fields.TS_BURN_COMMAND, "burn");
-            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_BURN_OK) || response.length != 1) {
+            boolean isGoodBurn = BurnCommand.execute(this);
+            if (!isGoodBurn) {
+                log.warn("BURN HAS FAILED?! Will retry");
                 continue;
             }
+            log.info("BURN OK");
             break;
         }
         log.info("DONE");
