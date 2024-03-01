@@ -16,7 +16,7 @@ TEST(LaunchControl, TpsCondition) {
 	// Should return false when throttle is closed
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 5.0f);
 	EXPECT_FALSE(dut.isInsideTpsCondition());
-	
+
 	// Should return true when throttle is opened past the threshold
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	EXPECT_TRUE(dut.isInsideTpsCondition());
@@ -137,7 +137,7 @@ TEST(LaunchControl, CombinedCondition) {
 	engineConfiguration->launchTpsThreshold = 10;
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
-	
+
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
 	Sensor::setMockValue(SensorType::Rpm,  1200);
 
@@ -159,7 +159,7 @@ static void setDefaultLaunchParameters() {
 	engineConfiguration->launchFuelCutEnable = false;
 	engineConfiguration->hardCutRpmRange = 500; //Rpm above Launch triggered +(if retard enabled) launchTimingRpmRange to hard cut
 	engineConfiguration->launchSpeedThreshold = 10; //maximum speed allowed before disable launch
-	engineConfiguration->launchFuelAdded = 10; // Extra fuel in % when launch are triggered
+	engineConfiguration->launchFuelAdderPercent = 10; // Extra fuel in % when launch are triggered
 	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
 	engineConfiguration->launchActivateDelay = 3; // Delay in seconds for launch to kick in
 //	engineConfiguration->enableLaunchRetard = true;
@@ -183,7 +183,7 @@ TEST(LaunchControl, CompleteRun) {
 	engineConfiguration->launchControlEnabled = true;
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
-	
+
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
 	Sensor::setMockValue(SensorType::Rpm, 1200);
 
@@ -203,7 +203,7 @@ TEST(LaunchControl, CompleteRun) {
 	//we have a 3 seconds delay to actually enable it!
 	eth.moveTimeForwardAndInvokeEventsSec(1);
 	engine->launchController.update();
-	
+
 	EXPECT_FALSE(engine->launchController.isLaunchSparkRpmRetardCondition());
 	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
