@@ -28,8 +28,6 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
-## February 2024 "Day 734"
-
 ### Breaking Changes
  - Trigger Edge settings renamed from "true"/"false" to "Falling"/"Rising"
 
@@ -50,6 +48,8 @@ Release template (copy/paste this for new release):
  - removing confusing numeric options from enumerable drop downs #5942
  - Subaru 6/7 improvement for cranking
  - Improve performance with Lua CAN reception of a high volume of frames #5841
+ - odd fire timing_offset_cylinder not accounted by injection #6095
+ - odd fire first spark out of order coilIndex logic in prepareCylinderIgnitionSchedule #6094
 
 ### Removed
  - Narrow to Wideband approximation
