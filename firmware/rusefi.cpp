@@ -257,6 +257,10 @@ void runRusEfiWithConfig() {
 	 */
 	initHardware();
 
+#if EFI_WIFI
+	startWifiConsole();
+#endif
+
 #if EFI_FILE_LOGGING
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */

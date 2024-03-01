@@ -14,4 +14,7 @@ DDEFS += -DFIRMWARE_ID=\"atlas\"
 # We are running on Atlas hardware!
 DDEFS += -DHW_ATLAS=1
 
+# Atlas has WiFi
+USE_WIFI = yes
+
 SHORT_BOARD_NAME = atlas
