@@ -18,7 +18,7 @@ public:
 	// Update the state of the launch control system
 	void update();
 
-    bool getFuelCoefficient() const;
+  float getFuelCoefficient() const;
 	bool isInsideSpeedCondition() const;
 	bool isInsideTpsCondition() const;
 	bool isInsideSwitchCondition();
