@@ -160,16 +160,19 @@ $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 $(DELIVER) $(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER) $(CACERTS_FOLDER):
 	mkdir -p $@
 
-$(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS) post-build
 	zip -r $@ $(BUNDLE_FILES)
 
 # The autopdate zip doesn't have a folder with the bundle contents
-$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS) post-build
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(UPDATE_BUNDLE_FILES))
 
-.PHONY: bundle
+.PHONY: bundle post-build
 
 bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip all
+
+post-build: | $(BUNDLE_FILES) $(UPDATE_BUNDLE_FILES)
+	[ -z "$(POST_BUILD_SCRIPT)" ] || bash $(POST_BUILD_SCRIPT)
 
 CLEAN_BUNDLE_HOOK:
 	@echo Cleaning Bundle
