@@ -54,6 +54,7 @@ jobs:
 
     - name: Checkout Submodules
       run: |
+        git submodule update --init --depth=1 .github/workflows/hw-ci/gethla
         git submodule update --init --depth=1 firmware/ChibiOS
         git submodule update --init --depth=1 firmware/ChibiOS-Contrib
         git submodule update --init --depth=1 firmware/libfirmware
@@ -81,6 +82,14 @@ jobs:
 
     - name: Check for STLINK
       run: lsusb | grep 'ST-LINK\|STLINK'
+
+    - name: Build gethla
+      working-directory: .github/workflows/hw-ci/gethla
+      run: bash build.sh
+
+    - name: List STLINK serials
+      working-directory: .github/workflows/hw-ci/gethla
+      run: ./gethla
 
     - name: OpenOCD wipe & flash STM32
       run: .github/workflows/hw-ci/openocd_wipe_and_flash.sh ${{matrix.openocd-script}}
