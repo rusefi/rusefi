@@ -83,6 +83,10 @@ jobs:
     - name: Check for STLINK
       run: lsusb | grep 'ST-LINK\|STLINK'
 
+    - name: Install tools
+      run: |
+        sudo apt-get install openocd libusb-1.0
+
     - name: Build gethla
       working-directory: .github/workflows/hw-ci/gethla
       run: bash build.sh
