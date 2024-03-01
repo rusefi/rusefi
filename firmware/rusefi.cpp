@@ -258,6 +258,9 @@ void runRusEfiWithConfig() {
 
 	commonEarlyInit();
 
+#if EFI_WIFI
+	startWifiConsole();
+#endif
 
 	// Config could be completely bogus - don't start anything else!
 	if (validateConfig()) {
