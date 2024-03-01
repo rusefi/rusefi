@@ -83,17 +83,17 @@ jobs:
     - name: Check for STLINK
       run: lsusb | grep 'ST-LINK\|STLINK'
 
-    - name: Install tools
-      run: |
-        sudo apt-get install openocd libusb-1.0
-
-    - name: Build gethla
-      working-directory: .github/workflows/hw-ci/gethla
-      run: bash build.sh
-
-    - name: List STLINK serials
-      working-directory: .github/workflows/hw-ci/gethla
-      run: ./gethla
+#    - name: Install tools
+#      run: |
+#        sudo apt-get install openocd libusb-1.0
+#
+#    - name: Build gethla
+#      working-directory: .github/workflows/hw-ci/gethla
+#      run: bash build.sh
+#
+#    - name: List STLINK serials
+#      working-directory: .github/workflows/hw-ci/gethla
+#      run: ./gethla
 
     - name: OpenOCD wipe & flash STM32
       run: .github/workflows/hw-ci/openocd_wipe_and_flash.sh ${{matrix.openocd-script}}
