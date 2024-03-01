@@ -32,6 +32,8 @@
 // Console thread 
 #define PRIO_CONSOLE (NORMALPRIO + 1)
 
+#define WIFI_THREAD_PRIORITY (NORMALPRIO)
+
 // Less important things
 #define PRIO_MMC (NORMALPRIO - 1)
 

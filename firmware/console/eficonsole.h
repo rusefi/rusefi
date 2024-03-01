@@ -14,3 +14,4 @@ void startUsbConsole();
 void printUsbConnectorStats();
 
 void startEthernetConsole();
+void startWifiConsole();
