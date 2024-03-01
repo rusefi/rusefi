@@ -4801,7 +4801,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "#System hacks"
 		field = "vvtBooleanForVerySpecialCases",		vvtBooleanForVerySpecialCases
 		field = watchOutForLinearTime,			        watchOutForLinearTime
-		field = "Global fuel correction",				globalFuelCorrection
 		field = "TS over CAN debug",					verboseIsoTp
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
