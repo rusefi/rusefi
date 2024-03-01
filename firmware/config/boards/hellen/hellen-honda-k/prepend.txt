@@ -20,6 +20,9 @@
 #define ts_show_ignitionPinMode false
 #define ts_show_tps2 false
 
+#define ts_show_cylinder_5 false
+#define ts_show_cylinder_10 false
+
 
 #define show_Hellen_hyundai_154 false
 

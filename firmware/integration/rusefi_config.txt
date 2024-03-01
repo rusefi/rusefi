@@ -1947,6 +1947,12 @@ end_struct
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
 #define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 
+#define INJECTOR_1_NAME "Injector #1"
+#define INJECTOR_2_NAME "Injector #2"
+
+#define COIL_1_NAME "Spark #1"
+#define COIL_2_NAME "Spark #2"
+
 #define GAUGE_CATEGORY_TIMING "Timing"
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
@@ -2313,6 +2319,18 @@ end_struct
 #define ts_show_tps2 true
 #define ts_show_onboard_accelerometer false
 #define ts_show_vvt_output true
+! LAME! todo make this way less lame
+#define ts_show_cylinder_2 true
+#define ts_show_cylinder_3 true
+#define ts_show_cylinder_4 true
+#define ts_show_cylinder_5 true
+#define ts_show_cylinder_6 true
+#define ts_show_cylinder_7 true
+#define ts_show_cylinder_8 true
+#define ts_show_cylinder_9 true
+#define ts_show_cylinder_10 true
+#define ts_show_cylinder_11 true
+#define ts_show_cylinder_12 true
 
 #define ts_show_analog_divider true
 #define ts_show_spi true
