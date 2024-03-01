@@ -47,3 +47,7 @@
 [submodule "java_console/peak-can-basic"]
 	path = java_console/peak-can-basic
 	url = https://github.com/rusefi/peak-can-basic
+[submodule ".github/workflows/hw-ci/gethla"]
+	path = .github/workflows/hw-ci/gethla
+	url = https://github.com/rusefi/gethla/
+	branch = prod
