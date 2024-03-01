@@ -679,9 +679,9 @@ float getConfigValueByName(const char *name) {
 // launchTimingRpmRange
 		case 906908772:
 			return engineConfiguration->launchTimingRpmRange;
-// launchFuelAdded
-		case 975838686:
-			return engineConfiguration->launchFuelAdded;
+// launchSparkSkipPercent
+		case -146687863:
+			return engineConfiguration->launchSparkSkipPercent;
 // launchBoostDuty
 		case -232786835:
 			return engineConfiguration->launchBoostDuty;
@@ -2908,9 +2908,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchTimingRpmRange = (int)value;
 		return 1;
 	}
-		case 975838686:
+		case -146687863:
 	{
-		engineConfiguration->launchFuelAdded = (int)value;
+		engineConfiguration->launchSparkSkipPercent = (int)value;
 		return 1;
 	}
 		case -232786835:

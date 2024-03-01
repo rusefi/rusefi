@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 29 03:47:46 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 01 03:23:57 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2186,11 +2186,11 @@ struct engine_configuration_s {
 	 */
 	int launchTimingRpmRange;
 	/**
-	 * Extra Fuel Added
+	 * Spark Skip Transition Target
 	 * units: %
 	 * offset 1052
 	 */
-	int launchFuelAdded;
+	int launchSparkSkipPercent;
 	/**
 	 * Duty Cycle for the Boost Solenoid
 	 * units: %
@@ -5624,4 +5624,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22236);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 29 03:47:46 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 01 03:23:57 UTC 2024

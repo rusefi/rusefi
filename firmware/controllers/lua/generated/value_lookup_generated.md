@@ -673,8 +673,8 @@ Launch disabled above this speed if setting is above zero
 ### launchTimingRpmRange
 Range from Launch RPM for Timing Retard to activate
 
-### launchFuelAdded
-Extra Fuel Added
+### launchSparkSkipPercent
+Spark Skip Transition Target
 
 ### launchBoostDuty
 Duty Cycle for the Boost Solenoid
