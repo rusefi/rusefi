@@ -1,1 +1,0 @@
-java -jar console/fome_console.jar reboot_dfu

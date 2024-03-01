@@ -48,7 +48,6 @@ cp simulator/build/fome_simulator.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/fome_*.exe     $CONSOLE_FOLDER
 cp java_console/*.dll                     $CONSOLE_FOLDER
 cp java_console/rusefi.xml                $CONSOLE_FOLDER
-cp -r java_console/bin                    $FOLDER
 cp firmware/ext/openblt/Host/libopenblt.dll        $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/libopenblt.so         $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/libopenblt.dylib      $CONSOLE_FOLDER

@@ -1,4 +1,0 @@
-# put into /etc/udev/rules.d/ to grand all users access to ST USB devices
-
-SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", MODE="0666"
-SUBSYSTEM=="usb_device", ATTRS{idVendor}=="0483", MODE="0666"
