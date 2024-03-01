@@ -118,6 +118,7 @@ bool LaunchControlBase::isLaunchConditionMet(const int rpm) {
 LaunchControlBase::LaunchControlBase() {
 	launchActivatePinState = false;
 	isLaunchPreCondition = false;
+	isLaunchPreCondition2 = false;
 	isLaunchCondition = false;
 }
 
