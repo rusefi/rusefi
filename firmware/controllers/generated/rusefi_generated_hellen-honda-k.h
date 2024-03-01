@@ -1163,7 +1163,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1135991351
+#define SIGNATURE_HASH 3687823897
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1456,16 +1456,16 @@
 #define ts_show_can_terminator true
 #define ts_show_clt_iat_pullup false
 #define ts_show_cylinder_10 false
-#define ts_show_cylinder_11 true
-#define ts_show_cylinder_12 true
+#define ts_show_cylinder_11 false
+#define ts_show_cylinder_12 false
 #define ts_show_cylinder_2 true
 #define ts_show_cylinder_3 true
 #define ts_show_cylinder_4 true
 #define ts_show_cylinder_5 false
-#define ts_show_cylinder_6 true
-#define ts_show_cylinder_7 true
-#define ts_show_cylinder_8 true
-#define ts_show_cylinder_9 true
+#define ts_show_cylinder_6 false
+#define ts_show_cylinder_7 false
+#define ts_show_cylinder_8 false
+#define ts_show_cylinder_9 false
 #define ts_show_egt false
 #define ts_show_etb true
 #define ts_show_etb_pins false
@@ -1502,7 +1502,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.01.hellen-honda-k.1135991351"
+#define TS_SIGNATURE "rusEFI master.2024.03.01.hellen-honda-k.3687823897"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
