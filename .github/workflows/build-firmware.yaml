@@ -311,8 +311,9 @@ jobs:
     # Build the simulator
     - name: Build simulator
       if: ${{ env.full == 'true' }}
+      working-directory: ./simulator/
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
-      run: OS="Windows_NT" SHORT_BOARD_NAME=${{matrix.build-target}} bash misc/jenkins/build_simulator.sh
+      run: OS="Windows_NT" SHORT_BOARD_NAME=${{matrix.build-target}} ./compile.sh
 
     - name: Download LibOpenBLT Tool (Linux)
       uses: actions/download-artifact@v3
