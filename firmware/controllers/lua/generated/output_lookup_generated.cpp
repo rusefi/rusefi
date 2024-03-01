@@ -906,6 +906,11 @@ float getOutputValueByName(const char *name) {
 		case 1928406809:
 			return engine->launchController.launchActivatePinState;
 #endif
+// isLaunchPreCondition
+#if EFI_LAUNCH_CONTROL
+		case -1235396182:
+			return engine->launchController.isLaunchPreCondition;
+#endif
 // isLaunchCondition
 #if EFI_LAUNCH_CONTROL
 		case -1959120957:
