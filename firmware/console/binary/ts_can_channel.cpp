@@ -19,7 +19,7 @@
 #endif
 
 
-class CanTsChannel : public TsChannelBase {
+class CanTsChannel final : public TsChannelBase {
 public:
 	CanTsChannel() : TsChannelBase("CAN") {
 

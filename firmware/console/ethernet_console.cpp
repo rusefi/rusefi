@@ -25,7 +25,7 @@ static void do_connection() {
 	connectionSocket = lwip_accept(listenerSocket, (sockaddr*)&remote, &size);
 }
 
-class EthernetChannel : public TsChannelBase {
+class EthernetChannel final : public TsChannelBase {
 public:
 	EthernetChannel()
 		: TsChannelBase("Ethernet")
