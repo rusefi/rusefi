@@ -9,7 +9,8 @@
 #include "pch.h"
 
 #if HAL_USE_SPI
-bool isSpiInitialized[SPI_TOTAL_COUNT] = { false, false, false, false, false, false };
+/* zero index is SPI_NONE */
+bool isSpiInitialized[SPI_TOTAL_COUNT + 1] = { true, false, false, false, false, false, false };
 
 static int getSpiAf(SPIDriver *driver) {
 #if STM32_SPI_USE_SPI1
