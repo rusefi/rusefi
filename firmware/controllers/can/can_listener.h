@@ -36,6 +36,10 @@ public:
 		return m_next;
 	}
 
+	bool hasNext() const {
+		return m_next;
+	}
+
 	// Return true if the provided frame should be accepted for processing by the listener.
 	// Override if you need more complex logic than comparing to a single ID.
 	virtual bool acceptFrame(const CANRxFrame& frame) const {
