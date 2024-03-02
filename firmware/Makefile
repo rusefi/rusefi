@@ -387,6 +387,8 @@ ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 
 include $(RULESFILE)
 
+include target_sentinel.mk
+
 include rusefi_config.mk
 
 # Enable precompiled header
