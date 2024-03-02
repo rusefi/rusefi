@@ -1,1 +1,5 @@
 #define ts_show_etb_pins false
+
+! Atlas is guaranteed dual bank flash, so there's no delay when sending the burn command.
+! All commands should complete effectively instantly.
+#define TS_BLOCK_READ_TIMEOUT 250

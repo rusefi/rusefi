@@ -70,13 +70,12 @@ enable2ndByteCanID = false
 	retrieveConfigError = "e"
 
 ;communication settings
-	pageActivationDelay = 500 ; Milliseconds delay after burn command. See https://sourceforge.net/p/rusefi/tickets/77/
+	pageActivationDelay = 0 ; Milliseconds delay after burn command. See https://sourceforge.net/p/rusefi/tickets/77/
 ;e.g. put writeblocks off and add an interwrite delay
 	writeBlocks = on
-	interWriteDelay = 10
+	interWriteDelay = 0
 	blockReadTimeout	= @@TS_BLOCK_READ_TIMEOUT@@; Milliseconds general timeout
 
- ; delayAfterPortOpen = 500
 
 	blockingFactor = @@BLOCKING_FACTOR@@ ; max chunk size
 ;end communication settings
@@ -113,7 +112,7 @@ enable2ndByteCanID = false
 	loggerDef = compositeLogger, "Trigger Logger", composite
 		startCommand = "@#TS_SET_LOGGER_SWITCH#@\x01"
 		stopCommand  = "@#TS_SET_LOGGER_SWITCH#@\x02"
-		dataReadCommand = "@#TS_SET_LOGGER_SWITCH#@\x03"
+		dataReadCommand = "@#TS_SET_LOGGER_SWITCH#@\x03"q
 		dataReadTimeout = 10000 ; time in ms
 		dataReadyCondition = { toothLogReady }
 		continuousRead = true
