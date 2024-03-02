@@ -1,5 +1,7 @@
 include $(PROJECT_DIR)/../java_tools/java_tools.mk
 
+TGT_SENTINEL = $(PROJECT_DIR)/.target-sentinel
+
 # We're assuming that META_OUTPUT_ROOT_FOLDER is a path relative to PROJECT_DIR
 INI_FILE = $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/rusefi_$(SHORT_BOARD_NAME).ini
 SIG_FILE = $(PROJECT_DIR)/tunerstudio/generated/signature_$(SHORT_BOARD_NAME).txt
@@ -50,7 +52,7 @@ $(SIG_FILE): .FORCE
 #  because SHORT_BOARD_NAME hasn't changed. BUNDLE_NAME would be a better specifier,
 #  but it's currently only available from the build_firmware GHA workflow.
 #  Another option would be to use BOARD_META_PATH, and export it in config.sh.
-.target-sentinel: .FORCE
+$(TGT_SENTINEL): .FORCE
 	if [ "$$(cat $@ 2>/dev/null)" != $(SHORT_BOARD_NAME) ]; then \
 	echo $(SHORT_BOARD_NAME) >$@; fi
 
@@ -60,7 +62,7 @@ $(SIG_FILE): .FORCE
 # In particular, the version that ships with macOS is quite old.
 $(RAMDISK): .ramdisk-sentinel ;
 
-.ramdisk-sentinel: $(INI_FILE) .target-sentinel
+.ramdisk-sentinel: $(INI_FILE) $(TGT_SENTINEL)
 	bash $(PROJECT_DIR)/bin/gen_image_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
 	@touch $@
 
@@ -68,7 +70,7 @@ $(CONFIG_FILES): .config-sentinel ;
 
 # CONFIG_DEFINITION is always rebuilt, but the file will only be updated if it needs to be,
 # so it won't trigger a config file generation unless it needs to.
-.config-sentinel: $(CONFIG_INPUTS) $(CONFIG_DEFINITION) .target-sentinel
+.config-sentinel: $(CONFIG_INPUTS) $(CONFIG_DEFINITION) $(TGT_SENTINEL)
 ifneq (,$(CUSTOM_GEN_CONFIG))
 	bash $(BOARD_DIR)/$(CUSTOM_GEN_CONFIG)
 else
