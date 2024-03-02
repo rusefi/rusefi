@@ -59,9 +59,14 @@ CanListener *canListeners_head = nullptr;
 
 void serviceCanSubscribers(const CANRxFrame &frame, efitick_t nowNt) {
 	CanListener *current = canListeners_head;
+	size_t iterationValidationCounter = 0;
 
 	while (current) {
 		current = current->processFrame(frame, nowNt);
+		if (iterationValidationCounter++ > 239) {
+		  criticalError("forever loop canListeners_head");
+		  return;
+		}
 	}
 }
 
