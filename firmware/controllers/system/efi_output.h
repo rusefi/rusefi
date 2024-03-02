@@ -69,8 +69,8 @@ public:
 	brain_pin_diag_e getDiag() const;
 
 #if EFI_GPIO_HARDWARE
-	ioportid_t port = 0;
-	uint8_t pin = 0;
+	ioportid_t m_port = 0;
+	uint8_t m_pin = 0;
 #endif /* EFI_GPIO_HARDWARE */
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR
