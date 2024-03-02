@@ -370,3 +370,4 @@ include $(PROJECT_DIR)/rusefi_pch.mk
 CLEAN_RULE_HOOK: CLEAN_PCH_HOOK
 	@echo Cleaning-BLT
 	-rm -fR $(BUILDDIR)/*
+	rm -f .*-sentinel

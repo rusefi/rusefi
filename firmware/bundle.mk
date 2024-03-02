@@ -180,6 +180,7 @@ CLEAN_BUNDLE_HOOK:
 	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) $(MAKE) -C bootloader clean
 	rm -rf $(FOLDER)
 	rm -rf $(DELIVER)
+	rm -f .*-sentinel
 	@echo Done Cleaning Bundle
 
 # We need to use secondary expansion on these rules to find the target file in the source file list.
