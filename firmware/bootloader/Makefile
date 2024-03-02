@@ -357,6 +357,8 @@ ULIBS = -lm --specs=nano.specs
 
 include $(RULESFILE)
 
+include $(PROJECT_DIR)/target_sentinel.mk
+
 ifneq (yes,$(SUBMAKE))
   include $(PROJECT_DIR)/rusefi_config.mk
 endif

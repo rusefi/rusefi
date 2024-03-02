@@ -1,7 +1,5 @@
 include $(PROJECT_DIR)/../java_tools/java_tools.mk
 
-TGT_SENTINEL = $(PROJECT_DIR)/.target-sentinel
-
 # We're assuming that META_OUTPUT_ROOT_FOLDER is a path relative to PROJECT_DIR
 INI_FILE = $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/rusefi_$(SHORT_BOARD_NAME).ini
 SIG_FILE = $(PROJECT_DIR)/tunerstudio/generated/signature_$(SHORT_BOARD_NAME).txt
@@ -45,16 +43,6 @@ $(TCPPOBJS): $(RAMDISK)
 # The script won't actually update the file if the signature hasn't changed, so it won't trigger a config file generation.
 $(SIG_FILE): .FORCE
 	bash $(PROJECT_DIR)/gen_signature.sh $(SHORT_BOARD_NAME)
-
-# This sentinel's purpose is to trigger rebuilds when building for a different target.
-# SHORT_BOARD_NAME doesn't cover all possible changes.
-# For example, if I build Proteus F7, then build Proteus F7 Debug, it won't actually rebuild,
-#  because SHORT_BOARD_NAME hasn't changed. BUNDLE_NAME would be a better specifier,
-#  but it's currently only available from the build_firmware GHA workflow.
-#  Another option would be to use BOARD_META_PATH, and export it in config.sh.
-$(TGT_SENTINEL): .FORCE
-	if [ "$$(cat $@ 2>/dev/null)" != $(SHORT_BOARD_NAME) ]; then \
-	echo $(SHORT_BOARD_NAME) >$@; fi
 
 # Most sentinels are used for multiple targets that are created with a single recipe.
 # In newer versions of GNU Make this is done using the &: operator,
