@@ -32,13 +32,6 @@ CONFIG_FILES = \
 
 .FORCE:
 
-# This is necessary because the ChibiOS makefile builds a .o file and generates
-#  the deps for that .o file in the same GCC call, so if the .deps aren't already
-#  in the correct state, things can fail to build because Make doesn't know it needs
-#  to build the prerequisites (in this case CONFIG_FILES and RAMDISK) for those files ahead of time.
-$(TCOBJS): $(CONFIG_FILES)
-$(TCPPOBJS): $(RAMDISK)
-
 # Always try to rebuild the signature file.
 # The script won't actually update the file if the signature hasn't changed, so it won't trigger a config file generation.
 $(SIG_FILE): .FORCE

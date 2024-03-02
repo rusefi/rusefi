@@ -396,6 +396,10 @@ include rusefi_pch.mk
 
 include bundle.mk
 
+ifeq (,$(filter clean,$(MAKECMDGOALS)))
+include deps.mk
+endif
+
 .PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK CLEAN_BUNDLE_HOOK
 
 CLEAN_RULE_HOOK: CLEAN_PCH_HOOK CLEAN_BUNDLE_HOOK

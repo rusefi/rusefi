@@ -365,6 +365,10 @@ endif
 
 include $(PROJECT_DIR)/rusefi_pch.mk
 
+ifeq (,$(filter clean,$(MAKECMDGOALS)))
+include $(PROJECT_DIR)/deps.mk
+endif
+
 .PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK
 
 CLEAN_RULE_HOOK: CLEAN_PCH_HOOK
