@@ -540,7 +540,7 @@ bool OutputPin::isInitialized() const {
 	if (ext)
 		return true;
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
-	return port != NULL;
+	return m_port != NULL;
 #else /* EFI_GPIO_HARDWARE */
 	return true;
 #endif /* EFI_GPIO_HARDWARE */
@@ -564,7 +564,7 @@ void OutputPin::setOnchipValue(int electricalValue) {
 		warning(ObdCode::CUSTOM_ERR_6586, "attempting to change unassigned pin");
 		return;
 	}
-	palWritePad(port, pin, electricalValue);
+	palWritePad(m_port, m_pin, electricalValue);
 }
 #endif // EFI_PROD_CODE
 
@@ -730,11 +730,11 @@ void OutputPin::initPin(const char *msg, brain_pin_e p_brainPin, pin_output_mode
 		this->ext = false;
 	#endif
 	if (brain_pin_is_onchip(p_brainPin)) {
-		port = getHwPort(msg, p_brainPin);
-		pin = getHwPin(msg, p_brainPin);
+		m_port = getHwPort(msg, p_brainPin);
+		m_pin = getHwPin(msg, p_brainPin);
 
 		// Validate port
-		if (port == GPIO_NULL) {
+		if (m_port == GPIO_NULL) {
 			criticalError("OutputPin::initPin got invalid port for pin idx %d", static_cast<int>(p_brainPin));
 			return;
 		}
@@ -760,7 +760,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e p_brainPin, pin_output_mode
 		// todo: handle OM_OPENDRAIN and OM_OPENDRAIN_INVERTED as well
 		if (outputMode == OM_DEFAULT || outputMode == OM_INVERTED) {
 #ifndef DISABLE_PIN_STATE_VALIDATION
-		    int actualValue = palReadPad(port, pin);
+		    int actualValue = palReadPad(m_port, m_pin);
 		    // we had enough drama with pin configuration in board.h and else that we shall self-check
 
 			const int logicalValue =
