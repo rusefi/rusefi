@@ -186,14 +186,6 @@ static void reportPins() {
 	efiPrintf("Total pins used: %d", totalPinsUsed);
 }
 
-void printSpiConfig(const char *msg, spi_device_e device) {
-#if HAL_USE_SPI
-	efiPrintf("%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
-	efiPrintf("%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
-	efiPrintf("%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
-#endif // HAL_USE_SPI
-}
-
 __attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e /*brainPin*/) {
 	return nullptr;
 }

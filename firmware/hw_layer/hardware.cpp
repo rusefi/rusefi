@@ -140,39 +140,6 @@ brain_pin_e getSckPin(spi_device_e device) {
 }
 
 /**
- * Only one consumer can use SPI bus at a given time
- */
-void lockSpi(spi_device_e device) {
-	efiAssertVoid(ObdCode::CUSTOM_STACK_SPI, hasLotsOfRemainingStack(), "lockSpi");
-	spiAcquireBus(getSpiDevice(device));
-}
-
-void unlockSpi(spi_device_e device) {
-	spiReleaseBus(getSpiDevice(device));
-}
-
-static void initSpiModules() {
-	if (engineConfiguration->is_enabled_spi_1) {
-		 turnOnSpi(SPI_DEVICE_1);
-	}
-	if (engineConfiguration->is_enabled_spi_2) {
-		turnOnSpi(SPI_DEVICE_2);
-	}
-	if (engineConfiguration->is_enabled_spi_3) {
-		turnOnSpi(SPI_DEVICE_3);
-	}
-	if (engineConfiguration->is_enabled_spi_4) {
-		turnOnSpi(SPI_DEVICE_4);
-	}
-	if (engineConfiguration->is_enabled_spi_5) {
-		turnOnSpi(SPI_DEVICE_5);
-	}
-	if (engineConfiguration->is_enabled_spi_6) {
-		turnOnSpi(SPI_DEVICE_6);
-	}
-}
-
-/**
  * @return NULL if SPI device not specified
  */
 SPIDriver * getSpiDevice(spi_device_e spiDevice) {
@@ -212,6 +179,82 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 	firmwareError(ObdCode::CUSTOM_ERR_UNEXPECTED_SPI, "Unexpected SPI device: %d", spiDevice);
 	return NULL;
 }
+
+/**
+ * Only one consumer can use SPI bus at a given time
+ */
+void lockSpi(spi_device_e device) {
+	efiAssertVoid(ObdCode::CUSTOM_STACK_SPI, hasLotsOfRemainingStack(), "lockSpi");
+	spiAcquireBus(getSpiDevice(device));
+}
+
+void unlockSpi(spi_device_e device) {
+	spiReleaseBus(getSpiDevice(device));
+}
+
+static void initSpiModules() {
+	if (engineConfiguration->is_enabled_spi_1) {
+		 turnOnSpi(SPI_DEVICE_1);
+	}
+	if (engineConfiguration->is_enabled_spi_2) {
+		turnOnSpi(SPI_DEVICE_2);
+	}
+	if (engineConfiguration->is_enabled_spi_3) {
+		turnOnSpi(SPI_DEVICE_3);
+	}
+	if (engineConfiguration->is_enabled_spi_4) {
+		turnOnSpi(SPI_DEVICE_4);
+	}
+	if (engineConfiguration->is_enabled_spi_5) {
+		turnOnSpi(SPI_DEVICE_5);
+	}
+	if (engineConfiguration->is_enabled_spi_6) {
+		turnOnSpi(SPI_DEVICE_6);
+	}
+}
+
+void stopSpi(spi_device_e device) {
+	if (!isSpiInitialized[device]) {
+		return; // not turned on
+	}
+	isSpiInitialized[device] = false;
+	efiSetPadUnused(getSckPin(device));
+	efiSetPadUnused(getMisoPin(device));
+	efiSetPadUnused(getMosiPin(device));
+}
+
+static void stopSpiModules() {
+	if (isConfigurationChanged(is_enabled_spi_1)) {
+		stopSpi(SPI_DEVICE_1);
+	}
+
+	if (isConfigurationChanged(is_enabled_spi_2)) {
+		stopSpi(SPI_DEVICE_2);
+	}
+
+	if (isConfigurationChanged(is_enabled_spi_3)) {
+		stopSpi(SPI_DEVICE_3);
+	}
+
+	if (isConfigurationChanged(is_enabled_spi_4)) {
+		stopSpi(SPI_DEVICE_4);
+	}
+
+	if (isConfigurationChanged(is_enabled_spi_5)) {
+		stopSpi(SPI_DEVICE_5);
+	}
+
+	if (isConfigurationChanged(is_enabled_spi_6)) {
+		stopSpi(SPI_DEVICE_6);
+	}
+}
+
+void printSpiConfig(const char *msg, spi_device_e device) {
+	efiPrintf("%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
+	efiPrintf("%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
+	efiPrintf("%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
+}
+
 #endif // HAL_USE_SPI
 
 #if HAL_USE_ADC
@@ -291,18 +334,6 @@ static void adcConfigListener() {
 	calcFastAdcIndexes();
 }
 
-void stopSpi(spi_device_e device) {
-#if HAL_USE_SPI
-	if (!isSpiInitialized[device]) {
-		return; // not turned on
-	}
-	isSpiInitialized[device] = false;
-	efiSetPadUnused(getSckPin(device));
-	efiSetPadUnused(getMisoPin(device));
-	efiSetPadUnused(getMosiPin(device));
-#endif /* HAL_USE_SPI */
-}
-
 /**
  * this method is NOT currently invoked on ECU start
  * todo: reduce code duplication by moving more logic into startHardware method
@@ -347,29 +378,9 @@ void applyNewHardwareSettings() {
 
 	stopHardware();
 
-	if (isConfigurationChanged(is_enabled_spi_1)) {
-		stopSpi(SPI_DEVICE_1);
-	}
-
-	if (isConfigurationChanged(is_enabled_spi_2)) {
-		stopSpi(SPI_DEVICE_2);
-	}
-
-	if (isConfigurationChanged(is_enabled_spi_3)) {
-		stopSpi(SPI_DEVICE_3);
-	}
-
-	if (isConfigurationChanged(is_enabled_spi_4)) {
-		stopSpi(SPI_DEVICE_4);
-	}
-
-	if (isConfigurationChanged(is_enabled_spi_5)) {
-		stopSpi(SPI_DEVICE_5);
-	}
-
-	if (isConfigurationChanged(is_enabled_spi_6)) {
-		stopSpi(SPI_DEVICE_6);
-	}
+#if HAL_USE_SPI
+	stopSpiModules();
+#endif /* HAL_USE_SPI */
 
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		// bug? duplication with stopSwitchPins?
