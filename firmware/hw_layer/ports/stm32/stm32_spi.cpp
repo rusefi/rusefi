@@ -47,49 +47,6 @@ static int getSpiAf(SPIDriver *driver) {
 	return -1;
 }
 
-/* these are common adapters for engineConfiguration access, move to some common file? */
-brain_pin_e getMisoPin(spi_device_e device) {
-	switch(device) {
-	case SPI_DEVICE_1:
-		return engineConfiguration->spi1misoPin;
-	case SPI_DEVICE_2:
-		return engineConfiguration->spi2misoPin;
-	case SPI_DEVICE_3:
-		return engineConfiguration->spi3misoPin;
-	default:
-		break;
-	}
-	return Gpio::Unassigned;
-}
-
-brain_pin_e getMosiPin(spi_device_e device) {
-	switch(device) {
-	case SPI_DEVICE_1:
-		return engineConfiguration->spi1mosiPin;
-	case SPI_DEVICE_2:
-		return engineConfiguration->spi2mosiPin;
-	case SPI_DEVICE_3:
-		return engineConfiguration->spi3mosiPin;
-	default:
-		break;
-	}
-	return Gpio::Unassigned;
-}
-
-brain_pin_e getSckPin(spi_device_e device) {
-	switch(device) {
-	case SPI_DEVICE_1:
-		return engineConfiguration->spi1sckPin;
-	case SPI_DEVICE_2:
-		return engineConfiguration->spi2sckPin;
-	case SPI_DEVICE_3:
-		return engineConfiguration->spi3sckPin;
-	default:
-		break;
-	}
-	return Gpio::Unassigned;
-}
-
 void turnOnSpi(spi_device_e device) {
 	if (isSpiInitialized[device])
 		return; // already initialized
@@ -172,11 +129,9 @@ void turnOnSpi(spi_device_e device) {
 	}
 }
 
-void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
-		brain_pin_e mosi,
-		int sckMode,
-		int mosiMode,
-		int misoMode) {
+void initSpiModule(SPIDriver *driver,
+		brain_pin_e sck, brain_pin_e miso, brain_pin_e mosi,
+		int sckMode, int mosiMode, int misoMode) {
 
 	/**
 	 * See https://github.com/rusefi/rusefi/pull/664/
