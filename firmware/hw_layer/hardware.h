@@ -42,6 +42,8 @@ brain_pin_e getMisoPin(spi_device_e device);
 brain_pin_e getMosiPin(spi_device_e device);
 brain_pin_e getSckPin(spi_device_e device);
 
+void printSpiConfig(const char *msg, spi_device_e device);
+
 #endif /* HAL_USE_SPI */
 
 void applyNewHardwareSettings();
