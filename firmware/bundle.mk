@@ -49,7 +49,7 @@ FOLDER_SOURCES = \
   ../java_console/bin
 
 # Custom board builds don't include the simulator
-ifneq ($(BUNDLE_SIMULATOR),no)
+ifneq ($(BUNDLE_SIMULATOR),false)
   SIMULATOR_OUT = ../simulator/build/rusefi_simulator.exe
 endif
 
