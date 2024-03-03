@@ -22,6 +22,7 @@ RUSEFIASM = \
 
 HW_INC += \
 	$(HW_STM32_PORT_DIR) \
+	$(HW_STM32_PORT_DIR)/cfg \
 	$(HW_STM32_PORT_DIR)/serial_over_usb
 
 ifeq ($(EFI_HAS_EXT_SDRAM), yes)

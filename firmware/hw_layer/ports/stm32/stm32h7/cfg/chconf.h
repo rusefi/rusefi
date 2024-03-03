@@ -5,4 +5,4 @@
 #define CORTEX_ENABLE_WFI_IDLE FALSE
 
 /* Use common ST32 ChibiOS config */
-#include "../../cfg/chconf.h"
+#include "chconf_stm32.h"
