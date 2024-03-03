@@ -3026,6 +3026,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Brake Pedal",					    brakePedalPin
 		field = "Brake Pedal Mode",					brakePedalPinMode
 		field = "Flex fuel sensor",					flexSensorPin
+		field = flexSensorInverted,         flexSensorInverted
 		field = "Turbo Speed Sensor",						turboSpeedSensorInputPin
 		field = "Turbo Speed Multiplier",					turboSpeedSensorMultiplier
 		field = "Throttle inlet pressure sensor",			throttleInletPressureChannel
