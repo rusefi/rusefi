@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 01 03:23:49 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 03 23:40:50 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2834,7 +2834,7 @@ struct engine_configuration_s {
 	bool luaCanRxWorkaround : 1 {};
 	/**
 	offset 1576 bit 7 */
-	bool unusedBit_495_7 : 1 {};
+	bool flexSensorInverted : 1 {};
 	/**
 	offset 1576 bit 8 */
 	bool unusedBit_495_8 : 1 {};
@@ -5624,4 +5624,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22236);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 01 03:23:49 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 03 23:40:50 UTC 2024

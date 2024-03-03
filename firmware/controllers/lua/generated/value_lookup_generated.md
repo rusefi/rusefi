@@ -1078,6 +1078,9 @@ See Over/Undervoltage Shutdown/Retry bit in documentation
 ### luaCanRxWorkaround
 
 
+### flexSensorInverted
+
+
 ### useAuxSpeedForSlipRatio
 
 
