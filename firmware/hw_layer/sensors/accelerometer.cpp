@@ -166,11 +166,9 @@ enum AccelType_t {
 
 static AccelType_t AccelType = ACCEL_UNK;
 
-class AccelController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+class AccelController : public PeriodicTimerController {
 public:
-	AccelController() : PeriodicController("Acc SPI") { }
-private:
-	void PeriodicTask(efitick_t nowNt) override	{
+	void PeriodicTask() override {
 		msg_t ret = MSG_RESET;
 		float acccooked[3];
 
@@ -201,6 +199,11 @@ private:
 			engine->sensors.accelerometer.lon  = acccooked[1] / 1000.0;
 			engine->sensors.accelerometer.vert = acccooked[2] / 1000.0;
 		}
+	}
+
+	int getPeriodMs() override {
+		/* 50 Hz */
+		return 20;
 	}
 };
 
@@ -288,8 +291,6 @@ void initAccelerometer() {
 #endif //EFI_ONBOARD_MEMS_LIS3DSH == TRUE
 
 	if (ret == MSG_OK) {
-		/* 50 Hz */
-		instance.setPeriod(20 /*ms*/);
 		instance.start();
 		efiPrintf("accelerometer init OK");
 	} else {

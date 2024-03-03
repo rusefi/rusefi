@@ -377,7 +377,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_MEMPOOLS)
-#define CH_CFG_USE_MEMPOOLS                 FALSE
+#define CH_CFG_USE_MEMPOOLS                 TRUE
 #endif
 
 /**
@@ -432,7 +432,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_JOBS)
-#define CH_CFG_USE_JOBS                     FALSE
+#define CH_CFG_USE_JOBS                     TRUE
 #endif
 
 /** @} */
