@@ -78,6 +78,67 @@
 /* zero index is SPI_NONE */
 extern bool isSpiInitialized[SPI_TOTAL_COUNT + 1];
 
+/* these are common adapters for engineConfiguration access, move to some common file? */
+brain_pin_e getMisoPin(spi_device_e device) {
+	switch(device) {
+	case SPI_DEVICE_1:
+		return engineConfiguration->spi1misoPin;
+	case SPI_DEVICE_2:
+		return engineConfiguration->spi2misoPin;
+	case SPI_DEVICE_3:
+		return engineConfiguration->spi3misoPin;
+	case SPI_DEVICE_4:
+		return engineConfiguration->spi4misoPin;
+	case SPI_DEVICE_5:
+		return engineConfiguration->spi5misoPin;
+	case SPI_DEVICE_6:
+		return engineConfiguration->spi6misoPin;
+	default:
+		break;
+	}
+	return Gpio::Unassigned;
+}
+
+brain_pin_e getMosiPin(spi_device_e device) {
+	switch(device) {
+	case SPI_DEVICE_1:
+		return engineConfiguration->spi1mosiPin;
+	case SPI_DEVICE_2:
+		return engineConfiguration->spi2mosiPin;
+	case SPI_DEVICE_3:
+		return engineConfiguration->spi3mosiPin;
+	case SPI_DEVICE_4:
+		return engineConfiguration->spi4mosiPin;
+	case SPI_DEVICE_5:
+		return engineConfiguration->spi5mosiPin;
+	case SPI_DEVICE_6:
+		return engineConfiguration->spi6mosiPin;
+	default:
+		break;
+	}
+	return Gpio::Unassigned;
+}
+
+brain_pin_e getSckPin(spi_device_e device) {
+	switch(device) {
+	case SPI_DEVICE_1:
+		return engineConfiguration->spi1sckPin;
+	case SPI_DEVICE_2:
+		return engineConfiguration->spi2sckPin;
+	case SPI_DEVICE_3:
+		return engineConfiguration->spi3sckPin;
+	case SPI_DEVICE_4:
+		return engineConfiguration->spi4sckPin;
+	case SPI_DEVICE_5:
+		return engineConfiguration->spi5sckPin;
+	case SPI_DEVICE_6:
+		return engineConfiguration->spi6sckPin;
+	default:
+		break;
+	}
+	return Gpio::Unassigned;
+}
+
 /**
  * Only one consumer can use SPI bus at a given time
  */
