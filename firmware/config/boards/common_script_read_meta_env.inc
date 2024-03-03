@@ -33,6 +33,15 @@ while IFS= read -r L; do
 		export $K="$V"
 done <<< "$VARS"
 
+if [ -z "$BUNDLE_NAME" ]; then
+	BUNDLE_NAME=$(echo "$BOARD_META_PATH" | sed -n 's/.*meta-info-\(.*\)\.env/\1/p')
+	if [ -z "$BUNDLE_NAME" ]; then
+		export BUNDLE_NAME="$SHORT_BOARD_NAME"
+	else
+		export BUNDLE_NAME
+	fi
+fi
+
 echo "[META] PROJECT_BOARD=${PROJECT_BOARD}"
 echo "[META] PROJECT_CPU=${PROJECT_CPU}"
 echo "[META] POST_BUILD_SCRIPT=${POST_BUILD_SCRIPT}"
