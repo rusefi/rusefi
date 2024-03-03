@@ -14,9 +14,9 @@ FIELDS =   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/config
 CONFIG_DEFINITION = $(JAVA_TOOLS)/configuration_definition/build/libs/config_definition-all.jar
 CONFIG_DEFINITION_BASE = $(JAVA_TOOLS)/configuration_definition_base/build/libs/config_definition_base-all.jar
 ENUM_TO_STRING = $(JAVA_TOOLS)/enum_to_string/build/libs/enum_to_string-all.jar
-CONSOLE_OUT = $(JAVA_TOOLS)/../java_console_binary/rusefi_console.jar
-AUTOUPDATE_OUT = $(JAVA_TOOLS)/../java_console_binary/rusefi_autoupdate.jar
-TPL_OUT = $(JAVA_TOOLS)/../java_tools/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar
+TPL_OUT = $(JAVA_TOOLS)/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar
+CONSOLE_OUT = $(PROJECT_DIR)/../java_console_binary/rusefi_console.jar
+AUTOUPDATE_OUT = $(PROJECT_DIR)/../java_console_binary/rusefi_autoupdate.jar
 
 # We use .FORCE to always rebuild these tools. Gradle won't actually touch the jars if it doesn't need to,
 # so we don't have to worry about triggering rebuilds of things that have these tools as a prerequisite.
@@ -31,14 +31,14 @@ $(ENUM_TO_STRING): .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :enum_to_string:shadowJar
 
 $(TPL_OUT): .FORCE
-	cd ../java_tools && $(FLOCK) ./gradlew :ts_plugin_launcher:shadowJar
+	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :ts_plugin_launcher:shadowJar
 
 # The console depends on Fields.java.
 $(CONSOLE_OUT): $(FIELDS) .FORCE
-	cd ../java_tools && $(FLOCK) ./gradlew :ui:shadowJar
+	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :ui:shadowJar
 
 $(AUTOUPDATE_OUT): .FORCE
-	cd ../java_tools && $(FLOCK) ./gradlew :autoupdate:jar
+	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :autoupdate:jar
 
 .FORCE:
 
