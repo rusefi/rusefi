@@ -7,7 +7,7 @@ JAVA_TOOLS = $(PROJECT_DIR)/../java_tools
 # Once it isn't locked, it locks it, runs the command, then unlocks it once the command is finished.
 # Note that flock doesn't ship on macOS. You can install it with `brew install flock`
 # On Windows, flock comes with Cygwin.
-FLOCK = flock /tmp/java.lock
+FLOCK = flock -o /tmp/java.lock
 
 FIELDS =   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java
 
