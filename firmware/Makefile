@@ -2,6 +2,35 @@
 # see readme.md
 # see setup_linux_environment.sh but Windows is also totally fine
 #
+##############################################################################
+# The most advanced open source ECU has the most advanced Makefile!
+# Here we do a bit of code generation, compile custom bootloader and embedded firmware and even build user artifacts!
+#
+# In order for Make to know which board you are trying to build for, it needs some parameters.
+# BOARD_DIR - relative to the firmware dir, will be set to config/boards/f407-discovery if left empty
+# SHORT_BOARD_NAME - will be set to f407-discovery if left empty
+# PROJECT_BOARD - will be set to SHORT_BOARD_NAME if left empty
+#
+# You can set these as environment variables like this:
+# source config/boards/common_script_read_meta_env.inc config/boards/f407-discovery/meta-info.env
+#
+# There is also a script to compile the firmware to avoid messing with your environment variables.
+# ./bin/compile.sh config/boards/f407-discovery/meta-info.env
+# Or to package the bundles:
+# ./bin/compile.sh -b config/boards/f407-discovery/meta-info.env
+# If not provided with a path to a meta-info file, compile.sh will let you select a target.
+#
+# If you wish to call make directly, here are the available commands:
+#
+# make					Generate configs and build firmware
+# make bundle		Generate configs, built bootloader, build firmware, and package both full and autoupdate bundles
+#
+# You can make a single bundle by passing the target bundle path, for example:
+# make ../artifacts/rusefi_bundle_f407-discovery.zip
+# make ../artifacts/rusefi_bundle_f407-discovery_autoupdate.zip
+#
+# You can make the bootloader either by going in to the bootloader subdirectory and running make, or by passing a bootloader target:
+# make bootloader/blbuild/openblt_f407-discovery.bin
 
 CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
