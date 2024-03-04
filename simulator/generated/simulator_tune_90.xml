@@ -207,6 +207,9 @@
         <constant name="canNbcType">"None"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
+        <constant digits="0" name="justATempTest" units="">0.0</constant>
+        <constant digits="0" name="unusedHere333" units="">0.0</constant>
+        <constant digits="0" name="unusedHere334" units="">0.0</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
@@ -793,6 +796,7 @@
         <constant name="mc33810Gpgd3Mode">"false"</constant>
         <constant name="enableExtendedCanBroadcast">"true"</constant>
         <constant name="luaCanRxWorkaround">"false"</constant>
+        <constant name="flexSensorInverted">"false"</constant>
         <constant name="useAuxSpeedForSlipRatio">"false"</constant>
         <constant name="useVssAsSecondWheelSpeed">"false"</constant>
         <constant name="is_enabled_spi_5">"false"</constant>
@@ -4553,7 +4557,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.03.f407-discovery.590483655" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.04.f407-discovery.3808613738" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>
