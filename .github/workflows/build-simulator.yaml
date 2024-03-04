@@ -78,6 +78,7 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
+        shopt -s globstar
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-default-tune Action"
         echo See https://github.com/rusefi/rusefi/issues/2446
