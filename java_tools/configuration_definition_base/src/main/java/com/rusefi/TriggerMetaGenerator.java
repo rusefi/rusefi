@@ -3,12 +3,14 @@ package com.rusefi;
 import java.io.IOException;
 
 public class TriggerMetaGenerator {
-    public static void main(String[] a) throws IOException {
+    public static void doJob(String definitionInputFileName, String headerFileName, String javaDestinationFileName) throws IOException {
+        System.out.println("Running with definitionInputFileName=[" + definitionInputFileName + "]");
+        System.out.println("Running with headerFileName=[" + headerFileName + "]");
+        System.out.println("Running with javaDestinationFileName=[" + javaDestinationFileName + "]");
         ReaderStateImpl reader = new ReaderStateImpl();
-        reader.setDefinitionInputFile("integration/rusefi_config_trigger.txt");
-        reader.addCHeaderDestination("../unit_tests/test-framework/trigger_meta_generated.h");
-        reader.addJavaDestination("../java_tools/trigger-image/src/main/java/com/rusefi/config/generated/TriggerMeta.java");
-
+        reader.setDefinitionInputFile(definitionInputFileName);
+        reader.addCHeaderDestination(headerFileName);
+        reader.addJavaDestination(javaDestinationFileName);
         reader.doJob();
     }
 }

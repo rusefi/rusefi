@@ -7,10 +7,7 @@ import com.rusefi.util.LazyFile;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LiveDataProcessor {
     private final static Logging log = Logging.getLogging(LiveDataProcessor.class);
@@ -60,12 +57,15 @@ public class LiveDataProcessor {
     }
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            System.err.println("One parameter expected: name of live data yaml input file");
+        if (args.length != 4) {
+            System.err.println("Four arguments expected: name of live data yaml input file and else but got " + Arrays.toString(args));
             System.exit(-1);
         }
-        TriggerMetaGenerator.main(null);
         String yamlFileName = args[0];
+        String definitionInputFileName = args[1];
+        String headerFileName = args[2];
+        String javaDestinationFileName = args[3];
+        TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFileName);
         Map<String, Object> data = getStringObjectMap(new FileReader(yamlFileName));
 
 

@@ -117,8 +117,12 @@ public class ReaderStateImpl implements ReaderState {
          * the destinations/writers
          */
         SystemOut.println("Reading definition from " + Objects.requireNonNull(definitionInputFile));
-        BufferedReader definitionReader = new BufferedReader(readerProvider.read(RootHolder.ROOT + definitionInputFile));
-        readBufferedReader(definitionReader, destinations);
+        String fileNameWithRoot = RootHolder.ROOT + definitionInputFile;
+        try (BufferedReader definitionReader = new BufferedReader(readerProvider.read(fileNameWithRoot))) {
+            readBufferedReader(definitionReader, destinations);
+        } catch (Throwable e) {
+            throw new IllegalStateException("While processing " + fileNameWithRoot);
+        }
 
         if (destCDefinesFileName != null) {
             CHeaderConsumer.writeDefinesToFile(getVariableRegistry(), ConfigDefinitionRootOutputFolder.getValue() + destCDefinesFileName, definitionInputFile);
