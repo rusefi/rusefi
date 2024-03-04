@@ -328,7 +328,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 
   float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
   float wheelSlip = Sensor::getOrZero(SensorType::WheelSlipRatio);
-  tcEtbDrop = tcEtbDropTable.getValue(vehicleSpeed, wheelSlip);
+  tcEtbDrop = tcEtbDropTable.getValue(wheelSlip, vehicleSpeed);
 
 	// Apply any adjustment that this throttle alone needs
 	// Clamped to +-10 to prevent anything too wild

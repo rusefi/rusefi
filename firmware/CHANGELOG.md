@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Fixed
+ - ETB traction control drop is affected by not-highlighted cell #5952
+
 ## March 2023 "Day 740"
 
 ### Breaking Changes
