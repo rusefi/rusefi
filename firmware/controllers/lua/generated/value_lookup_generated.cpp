@@ -286,6 +286,9 @@ float getConfigValueByName(const char *name) {
 // camDecoder2jzPrecision
 		case 306303086:
 			return engineConfiguration->camDecoder2jzPrecision;
+// justATempTest
+		case -48120222:
+			return engineConfiguration->justATempTest;
 // byFirmwareVersion
 		case 171869155:
 			return engineConfiguration->byFirmwareVersion;
@@ -2254,6 +2257,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 306303086:
 	{
 		engineConfiguration->camDecoder2jzPrecision = (int)value;
+		return 1;
+	}
+		case -48120222:
+	{
+		engineConfiguration->justATempTest = (int)value;
 		return 1;
 	}
 		case 171869155:

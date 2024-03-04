@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 04 02:18:21 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 04 03:56:38 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1345,7 +1345,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.03.04.f407-discovery.3267673872";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.03.04.f407-discovery.3808613738";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1542,7 +1542,9 @@ public class Fields {
 	public static final Field ALIGNMENTFILL_AT_501 = Field.create("ALIGNMENTFILL_AT_501", 501, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CANSLEEPPERIODMS = Field.create("CANSLEEPPERIODMS", 504, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field CAMDECODER2JZPRECISION = Field.create("CAMDECODER2JZPRECISION", 508, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_509 = Field.create("ALIGNMENTFILL_AT_509", 509, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field JUSTATEMPTEST = Field.create("JUSTATEMPTEST", 509, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHERE333 = Field.create("UNUSEDHERE333", 510, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHERE334 = Field.create("UNUSEDHERE334", 511, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 512, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TPS1_1ADCCHANNEL = Field.create("TPS1_1ADCCHANNEL", 516, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field VBATTADCCHANNEL = Field.create("VBATTADCCHANNEL", 517, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
@@ -3195,7 +3197,9 @@ public class Fields {
 	ALIGNMENTFILL_AT_501,
 	CANSLEEPPERIODMS,
 	CAMDECODER2JZPRECISION,
-	ALIGNMENTFILL_AT_509,
+	JUSTATEMPTEST,
+	UNUSEDHERE333,
+	UNUSEDHERE334,
 	BYFIRMWAREVERSION,
 	TPS1_1ADCCHANNEL,
 	VBATTADCCHANNEL,
