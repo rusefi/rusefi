@@ -29,6 +29,7 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Fixed
+ - ETB traction control drop is affected by not-highlighted cell #5952
  - hellen128 better ETB pin choice between rev A/B and C
  - Disabling slow connectivity mode for now #6170
 
