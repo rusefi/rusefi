@@ -2,6 +2,18 @@
 # see readme.md
 # see setup_linux_environment.sh but Windows is also totally fine
 #
+##############################################################################
+# The most advanced open source ECU has the most advanced Makefile!
+# Here we do a bit of code generation, compile custom bootloader and embedded firmware and even publish user artifacts!
+#
+# make code_gen     Invoke java code generators
+# make bootloader   compiles bootloader
+# make firmware     Depends on code_gen, does NOT depend on bootloader
+# make prepare_autoupdate_bundle      Packages autoupdate incremental bundle but does not upload it.
+# make prepare_bootloader             Depends on bootloader, adds bootloader image into bundle
+# make prepare_bundle                 Packages firmware/DLLs/tools/ but NOT bootloader image not composite image
+# make prepare_full_bundle            Depends on prepare_bootloader and prepare_bundle
+#
 
 CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
