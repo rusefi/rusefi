@@ -54,7 +54,7 @@ static Gpio flexPin = Gpio::Unassigned;
 
 static void flexExtiCallback(void*, efitick_t nowNt) {
 #if EFI_PROD_CODE
-	flexCallback(nowNt, efiReadPin(flexPin) & engineConfiguration->flexSensorInverted);
+	flexCallback(nowNt, efiReadPin(flexPin) ^ engineConfiguration->flexSensorInverted);
 #endif
 }
 
