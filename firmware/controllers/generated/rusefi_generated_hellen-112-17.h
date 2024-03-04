@@ -1501,7 +1501,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.03.hellen-112-17.4167865419"
+#define TS_SIGNATURE "rusEFI master.2024.03.04.hellen-112-17.4167865419"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
