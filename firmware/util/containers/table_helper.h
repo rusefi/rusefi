@@ -26,12 +26,12 @@ public:
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
-template<int TColNum, int TRowNum, typename TValue, typename TColumn, typename TRow>
+template<int TColNum, int TRowNum, typename TValue, typename TXColumn, typename TRow>
 class Map3D : public ValueProvider3D {
 public:
-	template <typename TValueInit, typename TRowInit, typename TColumnInit>
+	template <typename TValueInit, typename TRowInit, typename TXColumnInit>
 	void init(TValueInit (&table)[TRowNum][TColNum],
-				  const TRowInit (&rowBins)[TRowNum], const TColumnInit (&columnBins)[TColNum]) {
+				  const TRowInit (&rowBins)[TRowNum], const TXColumnInit (&columnBins)[TColNum]) {
 		// This splits out here so that we don't need one overload of init per possible combination of table/rows/columns types/dimensions
 		// Overload resolution figures out the correct versions of the functions below to call, some of which have assertions about what's allowed
 		initValues(table);
@@ -39,6 +39,7 @@ public:
 		initCols(columnBins);
 	}
 
+  // RPM is usually X/Column
 	float getValue(float xColumn, float yRow) const final {
 		if (!m_values) {
 			// not initialized, return 0
@@ -85,12 +86,12 @@ private:
 	}
 
 	template <int TColMult, int TColDiv>
-	void initCols(const scaled_channel<TColumn, TColMult, TColDiv> (&columnBins)[TColNum]) {
-		m_columnBins = reinterpret_cast<const TColumn (*)[TColNum]>(&columnBins);
+	void initCols(const scaled_channel<TXColumn, TColMult, TColDiv> (&columnBins)[TColNum]) {
+		m_columnBins = reinterpret_cast<const TXColumn (*)[TColNum]>(&columnBins);
 		m_colMult = efi::ratio<TColMult, TColDiv>::asFloat();
 	}
 
-	void initCols(const TColumn (&columnBins)[TColNum]) {
+	void initCols(const TXColumn (&columnBins)[TColNum]) {
 		m_columnBins = &columnBins;
 		m_colMult = 1;
 	}
@@ -111,7 +112,7 @@ private:
 	/*const*/ TValue (*m_values)[TRowNum][TColNum] = nullptr;
 
 	const TRow (*m_rowBins)[TRowNum] = nullptr;
-	const TColumn (*m_columnBins)[TColNum] = nullptr;
+	const TXColumn (*m_columnBins)[TColNum] = nullptr;
 
 	float m_rowMult = 1;
 	float m_colMult = 1;
