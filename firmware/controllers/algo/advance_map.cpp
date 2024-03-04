@@ -252,7 +252,7 @@ size_t getMultiSparkCount(int rpm) {
 }
 
 void initIgnitionAdvanceControl() {
-	tcTimingDropTable.init(engineConfiguration->tractionControlTimingDrop, engineConfiguration->tractionControlSpeedBins, engineConfiguration->tractionControlSlipBins);
+	tcTimingDropTable.initTable(engineConfiguration->tractionControlTimingDrop, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
 }
 
 #endif // EFI_ENGINE_CONTROL

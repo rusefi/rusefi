@@ -235,7 +235,7 @@ void updateAccelParameters() {
 
 
 void initAccelEnrichment() {
-	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
+	tpsTpsMap.initTable(config->tpsTpsAccelTable, config->tpsTpsAccelToRpmBins, config->tpsTpsAccelFromRpmBins);
 
 #if ! EFI_UNIT_TEST
 

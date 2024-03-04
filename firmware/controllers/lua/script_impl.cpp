@@ -83,12 +83,8 @@ float getCurveValue(int index, float key) {
 }
 
 void initScriptImpl() {
-	scriptTable1.init(config->scriptTable1, config->scriptTable1LoadBins,
-			config->scriptTable1RpmBins);
-	scriptTable2.init(config->scriptTable2, config->scriptTable2LoadBins,
-			config->scriptTable2RpmBins);
-	scriptTable3.init(config->scriptTable3, config->scriptTable3LoadBins,
-			config->scriptTable3RpmBins);
-	scriptTable4.init(config->scriptTable4, config->scriptTable4LoadBins,
-			config->scriptTable4RpmBins);
+	scriptTable1.initTable(config->scriptTable1, config->scriptTable1RpmBins, config->scriptTable1LoadBins);
+	scriptTable2.initTable(config->scriptTable2,	config->scriptTable2RpmBins, config->scriptTable2LoadBins);
+	scriptTable3.initTable(config->scriptTable3,	config->scriptTable3RpmBins, config->scriptTable3LoadBins);
+	scriptTable4.initTable(config->scriptTable4,	config->scriptTable4RpmBins, config->scriptTable4LoadBins);
 }

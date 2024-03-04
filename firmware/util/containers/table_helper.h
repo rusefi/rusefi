@@ -29,9 +29,9 @@ public:
 template<int TColNum, int TRowNum, typename TValue, typename TXColumn, typename TRow>
 class Map3D : public ValueProvider3D {
 public:
-	template <typename TValueInit, typename TRowInit, typename TXColumnInit>
-	void init(TValueInit (&table)[TRowNum][TColNum],
-				  const TRowInit (&rowBins)[TRowNum], const TXColumnInit (&columnBins)[TColNum]) {
+	template <typename TValueInit, typename TXColumnInit, typename TRowInit>
+	void initTable(TValueInit (&table)[TRowNum][TColNum],
+				  const TXColumnInit (&columnBins)[TColNum], const TRowInit (&rowBins)[TRowNum]) {
 		// This splits out here so that we don't need one overload of init per possible combination of table/rows/columns types/dimensions
 		// Overload resolution figures out the correct versions of the functions below to call, some of which have assertions about what's allowed
 		initValues(table);

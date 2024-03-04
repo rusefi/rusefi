@@ -344,7 +344,7 @@ float getInjectionMass(int rpm) {
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void initFuelMap() {
-	mapEstimationTable.init(config->mapEstimateTable, config->mapEstimateTpsBins, config->mapEstimateRpmBins);
+	mapEstimationTable.initTable(config->mapEstimateTable, config->mapEstimateRpmBins, config->mapEstimateTpsBins);
 }
 
 /**

@@ -46,7 +46,7 @@ void initGpPwm() {
 		}
 
 		// Set up this channel's lookup table
-		tables[i]->init(cfg.table, cfg.loadBins, cfg.rpmBins);
+		tables[i]->initTable(cfg.table, cfg.rpmBins, cfg.loadBins);
 
 		// Finally configure the channel
 		channels[i].init(usePwm, &outputs[i], &pins[i], tables[i], &cfg);

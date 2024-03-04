@@ -39,23 +39,23 @@ static float getValue(float rpm, float maf) {
 	Map3D<RPM_COUNT, VALUE_COUNT, float, float, float> x1;
 	// note "5, 4" above
 	// note "map[4][5], Bins[4], rpm[5] below
-	x1.init(map, mafBins, rpmBins);
+	x1.initTable(map, rpmBins, mafBins);
 	float result1 = x1.getValue(rpm, maf);
 
 
 	Map3D<RPM_COUNT, VALUE_COUNT, float, float, int> x2;
-	x2.init(map, mafBinsScaledInt, rpmBins);
+	x2.initTable(map, rpmBins, mafBinsScaledInt);
 	float result2 = x2.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result2);
 
 
 	Map3D<RPM_COUNT, VALUE_COUNT, float, float, uint8_t> x3;
-	x3.init(map, mafBinsScaledByte, rpmBins);
+	x3.initTable(map, rpmBins, mafBinsScaledByte);
 	float result3 = x3.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result3);
 
 	Map3D<RPM_COUNT, VALUE_COUNT, float, uint8_t, float> x4;
-	x4.init(map, mafBins, rpmBinsScaledByte);
+	x4.initTable(map, rpmBinsScaledByte, mafBins);
 	float result4 = x4.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result4);
 
@@ -68,7 +68,7 @@ static float getValue(float rpm, float maf) {
 
 	// Test with values stored in scaled bytes
 	Map3D<RPM_COUNT, VALUE_COUNT, uint32_t, float, float> x6;
-	x6.init(mapScaledChannel, mafBins, rpmBins);
+	x6.initTable(mapScaledChannel, rpmBins, mafBins);
 	float result6 = x6.getValue(rpm, maf);
 	EXPECT_NEAR(result1, result6, 1e-3);
 

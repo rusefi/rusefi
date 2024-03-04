@@ -115,5 +115,5 @@ temperature_t IFuelComputer::getTCharge(int rpm, float tps) {
 }
 
 void initSpeedDensity() {
-	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
+	veMap.initTable(config->veTable, config->veRpmBins, config->veLoadBins);
 }

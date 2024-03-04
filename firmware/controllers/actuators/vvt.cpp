@@ -99,7 +99,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	// "retard" means that additional solenoid duty makes indicated VVT position more negative
 	bool isInverted = shouldInvertVvt(m_cam);
 	m_pid.setErrorAmplification(isInverted ? -1.0f : 1.0f);
-	
+
 	float retVal = m_pid.getOutput(target, observation);
 
 #if EFI_TUNER_STUDIO
@@ -184,10 +184,8 @@ void initVvtActuators() {
 		engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
 	}
 
-	vvtTable1.init(config->vvtTable1, config->vvtTable1LoadBins,
-			config->vvtTable1RpmBins);
-	vvtTable2.init(config->vvtTable2, config->vvtTable2LoadBins,
-			config->vvtTable2RpmBins);
+	vvtTable1.initTable(config->vvtTable1, config->vvtTable1RpmBins, config->vvtTable1LoadBins);
+	vvtTable2.initTable(config->vvtTable2, config->vvtTable2RpmBins, config->vvtTable2LoadBins);
 
 
 	engine->module<VvtController1>()->init(&vvtTable1, &vvtPwms[0]);
