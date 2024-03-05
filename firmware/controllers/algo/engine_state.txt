@@ -42,6 +42,7 @@ struct_no_prefix engine_state_s
 	int8_t smartChipRestartCounter
 	int8_t smartChipAliveCounter
 	bit startStopPhysicalState
+  bit acrActive;Harley ACR Active
 	bit acrEngineMovedRecently
 	! same field is used for narrow band heater enable and wide band enable via CAN
 	bit heaterControlEnabled
