@@ -182,6 +182,7 @@
         <constant digits="0" name="triggerSimulatorRpm" units="RPM">1200.0</constant>
         <constant digits="0" name="cylindersCount" units="">3.0</constant>
         <constant name="firingOrder">"1-2-3"</constant>
+        <constant name="communityCommsLedPid">"NONE"</constant>
         <constant digits="2" name="cylinderBore" units="mm">87.5</constant>
         <constant name="fuelAlgorithm">"Speed Density"</constant>
         <constant digits="0" name="ALSMaxTPS" units="%">5.0</constant>
