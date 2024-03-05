@@ -40,10 +40,6 @@ jobs:
       - name: Test Java Compiler
         run: javac -version
 
-      - name: Generate Enums & Live Documentation
-        working-directory: ./firmware/
-        run: bash gen_live_documentation.sh
-
       - name: Print arm GCC version
         run: arm-none-eabi-gcc -v
 

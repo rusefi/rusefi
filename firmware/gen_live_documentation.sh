@@ -1,11 +1,8 @@
 #!/bin/bash
 
-rm gen_live_documentation.log
+cd $(dirname "$0")
 
-cd ../java_tools
-./gradlew :config_definition_base:shadowJar
-./gradlew :enum_to_string:shadowJar
-cd ../firmware
+rm gen_live_documentation.log
 
 java -DSystemOut.name=logs/gen_live_documentation \
  -cp ../java_tools/configuration_definition_base/build/libs/config_definition_base-all.jar \
