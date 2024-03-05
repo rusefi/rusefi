@@ -88,6 +88,11 @@ EngineState::EngineState() {
 void EngineState::updateSlowSensors() {
 }
 
+void EngineState::updateSparkSkip() {
+		engine->softSparkLimiter.setTargetSkipRatio(luaSoftSparkSkip + engineConfiguration->useHardSkipInTraction ? 0 : tractionControlSparkSkip);
+		engine->hardSparkLimiter.setTargetSkipRatio(luaHardSparkSkip + engineConfiguration->useHardSkipInTraction ? tractionControlSparkSkip : 0);
+}
+
 void EngineState::periodicFastCallback() {
 	ScopePerf perf(PE::EngineStatePeriodicFastCallback);
 

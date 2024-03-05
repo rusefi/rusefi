@@ -19,6 +19,8 @@ public:
 	void updateSlowSensors();
 	void updateTChargeK(int rpm, float tps);
 
+	void updateSparkSkip();
+
 	/**
 	 * always 360 or 720, never zero
 	 */
