@@ -42,7 +42,6 @@ struct_no_prefix engine_state_s
 	int8_t smartChipRestartCounter
 	int8_t smartChipAliveCounter
 	bit startStopPhysicalState
-	bit acrStateDup
 	bit acrEngineMovedRecently
 	! same field is used for narrow band heater enable and wide band enable via CAN
 	bit heaterControlEnabled
@@ -54,6 +53,9 @@ struct_no_prefix engine_state_s
 
 	float egtValue1
 	float egtValue2
+	float luaSoftSparkSkip
+	float luaHardSparkSkip
+	float tractionControlSparkSkip
 
 	int16_t desiredRpmLimit;User-defined RPM hard limit;"rpm", 1, 0, 0, 30000, 0
 

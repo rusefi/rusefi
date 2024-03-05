@@ -1156,7 +1156,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 ! temporary for too much CAN RX processing kills Lua script #5841
 	bit luaCanRxWorkaround
 	bit flexSensorInverted
-	bit unusedBit_495_8
+	bit useHardSkipInTraction
 	bit unusedBit_495_9
 	bit unusedBit_495_10
 	bit useAuxSpeedForSlipRatio

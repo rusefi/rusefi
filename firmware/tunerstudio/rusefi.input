@@ -2070,7 +2070,7 @@ menuDialog = main
 		subMenu = fancyHardwareDialog,		"Fancy Hardware"
 		subMenu = tractionEtbTableTbl,    "Traction Control ETB Drop"
 		subMenu = tractionTimingTableTbl,    "Traction Control Timing Adjustment"
-		subMenu = tractionIgnitionSkipTableTbl,    "Traction Control Skip Ignition"
+		subMenu = tractionIgnitionSkipDialog,    "Traction Control Skip Ignition"
 		subMenu = std_separator
 
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -2991,6 +2991,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = wastegateIdlePos, "", border
 		panel = wastegateIdlePosLeft, West
 		panel = wastegateIdlePosGauges, East
+
+  dialog = tractionIgnitionSkipDialog, "Traction Ignition Skip"
+    field = useHardSkipInTraction,  useHardSkipInTraction
+    panel = tractionIgnitionSkipTableTbl
 
 	dialog = mc33Dialog, "Low-Z injector control PT2001"
 		field = "SPI Chip Select",						mc33816_cs
