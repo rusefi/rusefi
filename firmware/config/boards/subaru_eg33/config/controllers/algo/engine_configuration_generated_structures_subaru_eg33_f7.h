@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 04 03:55:36 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 05 01:56:19 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2843,7 +2843,7 @@ struct engine_configuration_s {
 	bool flexSensorInverted : 1 {};
 	/**
 	offset 1576 bit 8 */
-	bool unusedBit_495_8 : 1 {};
+	bool useHardSkipInTraction : 1 {};
 	/**
 	offset 1576 bit 9 */
 	bool unusedBit_495_9 : 1 {};
@@ -5630,4 +5630,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22236);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 04 03:55:36 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 05 01:56:19 UTC 2024

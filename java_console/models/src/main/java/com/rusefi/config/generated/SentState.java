@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/sensors/sent_state.txt Sun Jan 07 23:16:15 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/sensors/sent_state.txt Tue Mar 05 01:56:09 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -172,9 +172,9 @@ public class SentState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field VALUE0 = Field.create("VALUE0", 0, FieldType.INT16).setScale(1.0).setBaseOffset(1436);
-	public static final Field VALUE1 = Field.create("VALUE1", 2, FieldType.INT16).setScale(1.0).setBaseOffset(1436);
-	public static final Field ERRORRATE = Field.create("ERRORRATE", 4, FieldType.FLOAT).setBaseOffset(1436);
+	public static final Field VALUE0 = Field.create("VALUE0", 0, FieldType.INT16).setScale(1.0).setBaseOffset(1448);
+	public static final Field VALUE1 = Field.create("VALUE1", 2, FieldType.INT16).setScale(1.0).setBaseOffset(1448);
+	public static final Field ERRORRATE = Field.create("ERRORRATE", 4, FieldType.FLOAT).setBaseOffset(1448);
 	public static final Field[] VALUES = {
 	VALUE0,
 	VALUE1,

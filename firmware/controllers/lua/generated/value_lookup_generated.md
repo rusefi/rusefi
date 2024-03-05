@@ -1084,6 +1084,9 @@ See Over/Undervoltage Shutdown/Retry bit in documentation
 ### flexSensorInverted
 
 
+### useHardSkipInTraction
+
+
 ### useAuxSpeedForSlipRatio
 
 

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 05 00:53:15 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 05 01:57:18 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1345,11 +1345,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.03.05.f407-discovery.3808613738";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.03.05.f407-discovery.2895668562";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1456;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1468;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
@@ -2110,6 +2110,7 @@ public class Fields {
 	public static final Field ENABLEEXTENDEDCANBROADCAST = Field.create("ENABLEEXTENDEDCANBROADCAST", 1576, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field LUACANRXWORKAROUND = Field.create("LUACANRXWORKAROUND", 1576, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field FLEXSENSORINVERTED = Field.create("FLEXSENSORINVERTED", 1576, FieldType.BIT, 7).setBaseOffset(0);
+	public static final Field USEHARDSKIPINTRACTION = Field.create("USEHARDSKIPINTRACTION", 1576, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field USEAUXSPEEDFORSLIPRATIO = Field.create("USEAUXSPEEDFORSLIPRATIO", 1576, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field USEVSSASSECONDWHEELSPEED = Field.create("USEVSSASSECONDWHEELSPEED", 1576, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field IS_ENABLED_SPI_5 = Field.create("IS_ENABLED_SPI_5", 1576, FieldType.BIT, 13).setBaseOffset(0);
@@ -3753,6 +3754,7 @@ public class Fields {
 	ENABLEEXTENDEDCANBROADCAST,
 	LUACANRXWORKAROUND,
 	FLEXSENSORINVERTED,
+	USEHARDSKIPINTRACTION,
 	USEAUXSPEEDFORSLIPRATIO,
 	USEVSSASSECONDWHEELSPEED,
 	IS_ENABLED_SPI_5,

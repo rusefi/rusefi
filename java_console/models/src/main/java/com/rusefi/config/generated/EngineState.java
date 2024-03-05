@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Thu Feb 29 05:30:55 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Tue Mar 05 01:56:09 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -198,24 +198,26 @@ public class EngineState {
 	public static final Field SMARTCHIPALIVECOUNTER = Field.create("SMARTCHIPALIVECOUNTER", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
 	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
 	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 52, FieldType.BIT, 0).setBaseOffset(1056);
-	public static final Field ACRSTATEDUP = Field.create("ACRSTATEDUP", 52, FieldType.BIT, 1).setBaseOffset(1056);
-	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 52, FieldType.BIT, 2).setBaseOffset(1056);
-	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 52, FieldType.BIT, 3).setBaseOffset(1056);
-	public static final Field LUADIGITALSTATE0 = Field.create("LUADIGITALSTATE0", 52, FieldType.BIT, 4).setBaseOffset(1056);
-	public static final Field LUADIGITALSTATE1 = Field.create("LUADIGITALSTATE1", 52, FieldType.BIT, 5).setBaseOffset(1056);
-	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 52, FieldType.BIT, 6).setBaseOffset(1056);
-	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 52, FieldType.BIT, 7).setBaseOffset(1056);
+	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 52, FieldType.BIT, 1).setBaseOffset(1056);
+	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 52, FieldType.BIT, 2).setBaseOffset(1056);
+	public static final Field LUADIGITALSTATE0 = Field.create("LUADIGITALSTATE0", 52, FieldType.BIT, 3).setBaseOffset(1056);
+	public static final Field LUADIGITALSTATE1 = Field.create("LUADIGITALSTATE1", 52, FieldType.BIT, 4).setBaseOffset(1056);
+	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 52, FieldType.BIT, 5).setBaseOffset(1056);
+	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 52, FieldType.BIT, 6).setBaseOffset(1056);
 	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 56, FieldType.INT).setScale(1.0).setBaseOffset(1056);
 	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 60, FieldType.FLOAT).setBaseOffset(1056);
 	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 64, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 68, FieldType.INT16).setScale(1.0).setBaseOffset(1056);
-	public static final Field ALIGNMENTFILL_AT_70 = Field.create("ALIGNMENTFILL_AT_70", 70, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
-	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1056);
-	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 76, FieldType.INT).setScale(1.0).setBaseOffset(1056);
-	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 80, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 84, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 88, FieldType.INT16).setScale(0.01).setBaseOffset(1056);
-	public static final Field ALIGNMENTFILL_AT_90 = Field.create("ALIGNMENTFILL_AT_90", 90, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
+	public static final Field LUASOFTSPARKSKIP = Field.create("LUASOFTSPARKSKIP", 68, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field LUAHARDSPARKSKIP = Field.create("LUAHARDSPARKSKIP", 72, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field TRACTIONCONTROLSPARKSKIP = Field.create("TRACTIONCONTROLSPARKSKIP", 76, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 80, FieldType.INT16).setScale(1.0).setBaseOffset(1056);
+	public static final Field ALIGNMENTFILL_AT_82 = Field.create("ALIGNMENTFILL_AT_82", 82, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 84, FieldType.INT).setScale(1.0).setBaseOffset(1056);
+	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 88, FieldType.INT).setScale(1.0).setBaseOffset(1056);
+	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 92, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 96, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 100, FieldType.INT16).setScale(0.01).setBaseOffset(1056);
+	public static final Field ALIGNMENTFILL_AT_102 = Field.create("ALIGNMENTFILL_AT_102", 102, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -243,7 +245,6 @@ public class EngineState {
 	SMARTCHIPALIVECOUNTER,
 	ALIGNMENTFILL_AT_49,
 	STARTSTOPPHYSICALSTATE,
-	ACRSTATEDUP,
 	ACRENGINEMOVEDRECENTLY,
 	HEATERCONTROLENABLED,
 	LUADIGITALSTATE0,
@@ -253,13 +254,16 @@ public class EngineState {
 	STARTSTOPSTATETOGGLECOUNTER,
 	EGTVALUE1,
 	EGTVALUE2,
+	LUASOFTSPARKSKIP,
+	LUAHARDSPARKSKIP,
+	TRACTIONCONTROLSPARKSKIP,
 	DESIREDRPMLIMIT,
-	ALIGNMENTFILL_AT_70,
+	ALIGNMENTFILL_AT_82,
 	FUELINJECTIONCOUNTER,
 	GLOBALSPARKCOUNTER,
 	FUELINGLOAD,
 	IGNITIONLOAD,
 	VETABLEYAXIS,
-	ALIGNMENTFILL_AT_90,
+	ALIGNMENTFILL_AT_102,
 	};
 }

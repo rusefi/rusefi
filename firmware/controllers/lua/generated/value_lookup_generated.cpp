@@ -1090,6 +1090,9 @@ float getConfigValueByName(const char *name) {
 // flexSensorInverted
 		case 512911183:
 			return engineConfiguration->flexSensorInverted;
+// useHardSkipInTraction
+		case -1495799741:
+			return engineConfiguration->useHardSkipInTraction;
 // useAuxSpeedForSlipRatio
 		case -723870257:
 			return engineConfiguration->useAuxSpeedForSlipRatio;
@@ -3597,6 +3600,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 512911183:
 	{
 		engineConfiguration->flexSensorInverted = (int)value;
+		return 1;
+	}
+		case -1495799741:
+	{
+		engineConfiguration->useHardSkipInTraction = (int)value;
 		return 1;
 	}
 		case -723870257:

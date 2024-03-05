@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Tue Mar 05 01:56:09 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -236,97 +236,97 @@ struct engine_state_s {
 	bool startStopPhysicalState : 1 {};
 	/**
 	offset 52 bit 1 */
-	bool acrStateDup : 1 {};
-	/**
-	offset 52 bit 2 */
 	bool acrEngineMovedRecently : 1 {};
 	/**
-	offset 52 bit 3 */
+	offset 52 bit 2 */
 	bool heaterControlEnabled : 1 {};
 	/**
-	offset 52 bit 4 */
+	offset 52 bit 3 */
 	bool luaDigitalState0 : 1 {};
 	/**
-	offset 52 bit 5 */
+	offset 52 bit 4 */
 	bool luaDigitalState1 : 1 {};
 	/**
-	offset 52 bit 6 */
+	offset 52 bit 5 */
 	bool luaDigitalState2 : 1 {};
 	/**
-	offset 52 bit 7 */
+	offset 52 bit 6 */
 	bool luaDigitalState3 : 1 {};
 	/**
+	offset 52 bit 7 */
+	bool unusedBit_20_7 : 1 {};
+	/**
 	offset 52 bit 8 */
-	bool unusedBit_21_8 : 1 {};
+	bool unusedBit_20_8 : 1 {};
 	/**
 	offset 52 bit 9 */
-	bool unusedBit_21_9 : 1 {};
+	bool unusedBit_20_9 : 1 {};
 	/**
 	offset 52 bit 10 */
-	bool unusedBit_21_10 : 1 {};
+	bool unusedBit_20_10 : 1 {};
 	/**
 	offset 52 bit 11 */
-	bool unusedBit_21_11 : 1 {};
+	bool unusedBit_20_11 : 1 {};
 	/**
 	offset 52 bit 12 */
-	bool unusedBit_21_12 : 1 {};
+	bool unusedBit_20_12 : 1 {};
 	/**
 	offset 52 bit 13 */
-	bool unusedBit_21_13 : 1 {};
+	bool unusedBit_20_13 : 1 {};
 	/**
 	offset 52 bit 14 */
-	bool unusedBit_21_14 : 1 {};
+	bool unusedBit_20_14 : 1 {};
 	/**
 	offset 52 bit 15 */
-	bool unusedBit_21_15 : 1 {};
+	bool unusedBit_20_15 : 1 {};
 	/**
 	offset 52 bit 16 */
-	bool unusedBit_21_16 : 1 {};
+	bool unusedBit_20_16 : 1 {};
 	/**
 	offset 52 bit 17 */
-	bool unusedBit_21_17 : 1 {};
+	bool unusedBit_20_17 : 1 {};
 	/**
 	offset 52 bit 18 */
-	bool unusedBit_21_18 : 1 {};
+	bool unusedBit_20_18 : 1 {};
 	/**
 	offset 52 bit 19 */
-	bool unusedBit_21_19 : 1 {};
+	bool unusedBit_20_19 : 1 {};
 	/**
 	offset 52 bit 20 */
-	bool unusedBit_21_20 : 1 {};
+	bool unusedBit_20_20 : 1 {};
 	/**
 	offset 52 bit 21 */
-	bool unusedBit_21_21 : 1 {};
+	bool unusedBit_20_21 : 1 {};
 	/**
 	offset 52 bit 22 */
-	bool unusedBit_21_22 : 1 {};
+	bool unusedBit_20_22 : 1 {};
 	/**
 	offset 52 bit 23 */
-	bool unusedBit_21_23 : 1 {};
+	bool unusedBit_20_23 : 1 {};
 	/**
 	offset 52 bit 24 */
-	bool unusedBit_21_24 : 1 {};
+	bool unusedBit_20_24 : 1 {};
 	/**
 	offset 52 bit 25 */
-	bool unusedBit_21_25 : 1 {};
+	bool unusedBit_20_25 : 1 {};
 	/**
 	offset 52 bit 26 */
-	bool unusedBit_21_26 : 1 {};
+	bool unusedBit_20_26 : 1 {};
 	/**
 	offset 52 bit 27 */
-	bool unusedBit_21_27 : 1 {};
+	bool unusedBit_20_27 : 1 {};
 	/**
 	offset 52 bit 28 */
-	bool unusedBit_21_28 : 1 {};
+	bool unusedBit_20_28 : 1 {};
 	/**
 	offset 52 bit 29 */
-	bool unusedBit_21_29 : 1 {};
+	bool unusedBit_20_29 : 1 {};
 	/**
 	offset 52 bit 30 */
-	bool unusedBit_21_30 : 1 {};
+	bool unusedBit_20_30 : 1 {};
 	/**
 	offset 52 bit 31 */
-	bool unusedBit_21_31 : 1 {};
+	bool unusedBit_20_31 : 1 {};
 	/**
 	 * offset 56
 	 */
@@ -340,50 +340,62 @@ struct engine_state_s {
 	 */
 	float egtValue2 = (float)0;
 	/**
+	 * offset 68
+	 */
+	float luaSoftSparkSkip = (float)0;
+	/**
+	 * offset 72
+	 */
+	float luaHardSparkSkip = (float)0;
+	/**
+	 * offset 76
+	 */
+	float tractionControlSparkSkip = (float)0;
+	/**
 	 * User-defined RPM hard limit
 	 * units: rpm
-	 * offset 68
+	 * offset 80
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 70
+	 * offset 82
 	 */
-	uint8_t alignmentFill_at_70[2];
+	uint8_t alignmentFill_at_82[2];
 	/**
 	 * Fuel: Injection counter
-	 * offset 72
+	 * offset 84
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * Ign: Spark counter
-	 * offset 76
+	 * offset 88
 	 */
 	uint32_t globalSparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 80
+	 * offset 92
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 84
+	 * offset 96
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	 * units: %
-	 * offset 88
+	 * offset 100
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 90
+	 * offset 102
 	 */
-	uint8_t alignmentFill_at_90[2];
+	uint8_t alignmentFill_at_102[2];
 };
-static_assert(sizeof(engine_state_s) == 92);
+static_assert(sizeof(engine_state_s) == 104);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Tue Mar 05 01:56:09 UTC 2024

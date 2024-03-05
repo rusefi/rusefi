@@ -1179,9 +1179,6 @@ float getOutputValueByName(const char *name) {
 // startStopPhysicalState
 		case -1943724937:
 			return engine->engineState.startStopPhysicalState;
-// acrStateDup
-		case -793662747:
-			return engine->engineState.acrStateDup;
 // acrEngineMovedRecently
 		case -791147982:
 			return engine->engineState.acrEngineMovedRecently;
@@ -1209,6 +1206,15 @@ float getOutputValueByName(const char *name) {
 // egtValue2
 		case -244414220:
 			return engine->engineState.egtValue2;
+// luaSoftSparkSkip
+		case -1117430949:
+			return engine->engineState.luaSoftSparkSkip;
+// luaHardSparkSkip
+		case -1498397570:
+			return engine->engineState.luaHardSparkSkip;
+// tractionControlSparkSkip
+		case -1555684830:
+			return engine->engineState.tractionControlSparkSkip;
 // desiredRpmLimit
 		case -505351565:
 			return engine->engineState.desiredRpmLimit;
