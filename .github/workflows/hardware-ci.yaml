@@ -110,6 +110,8 @@ jobs:
         path: ./firmware/build/rusefi*.bin
 
     # ls -l /dev/serial/by-id/
+    # we specify power supply voltage to share power supply between NUC and ECU under test
+    # java automated test suite picks ECU based on specified serial
     - name: Set EXTRA env
       run: |
         echo "HARDWARE_CI_VBATT=${{matrix.vbatt_supply}}" >> $GITHUB_ENV
