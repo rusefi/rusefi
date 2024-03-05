@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 05 03:32:32 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 05 04:52:56 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -877,6 +877,30 @@ public class Fields {
 	public static final int Gpio_TLE8888_PIN_KEY = 197;
 	public static final int Gpio_TLE8888_PIN_MR = 196;
 	public static final int Gpio_TLE8888_PIN_WAKE = 198;
+	public static final int Gpio_TLE9104_0_OUT_0 = 300;
+	public static final int Gpio_TLE9104_0_OUT_1 = 301;
+	public static final int Gpio_TLE9104_0_OUT_2 = 302;
+	public static final int Gpio_TLE9104_0_OUT_3 = 303;
+	public static final int Gpio_TLE9104_1_OUT_0 = 304;
+	public static final int Gpio_TLE9104_1_OUT_1 = 305;
+	public static final int Gpio_TLE9104_1_OUT_2 = 306;
+	public static final int Gpio_TLE9104_1_OUT_3 = 307;
+	public static final int Gpio_TLE9104_2_OUT_0 = 308;
+	public static final int Gpio_TLE9104_2_OUT_1 = 309;
+	public static final int Gpio_TLE9104_2_OUT_2 = 310;
+	public static final int Gpio_TLE9104_2_OUT_3 = 311;
+	public static final int Gpio_TLE9104_3_OUT_0 = 312;
+	public static final int Gpio_TLE9104_3_OUT_1 = 313;
+	public static final int Gpio_TLE9104_3_OUT_2 = 314;
+	public static final int Gpio_TLE9104_3_OUT_3 = 315;
+	public static final int Gpio_TLE9104_4_OUT_0 = 316;
+	public static final int Gpio_TLE9104_4_OUT_1 = 317;
+	public static final int Gpio_TLE9104_4_OUT_2 = 318;
+	public static final int Gpio_TLE9104_4_OUT_3 = 319;
+	public static final int Gpio_TLE9104_5_OUT_0 = 320;
+	public static final int Gpio_TLE9104_5_OUT_1 = 321;
+	public static final int Gpio_TLE9104_5_OUT_2 = 322;
+	public static final int Gpio_TLE9104_5_OUT_3 = 323;
 	public static final int Gpio_Unassigned = 0;
 	public static final int gppwm_channel_e_GPPWM_AccelPedal = 9;
 	public static final int gppwm_channel_e_GPPWM_AuxLinear1 = 16;
