@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum_to_string.jar tool on Mon Aug 21 22:38:12 UTC 2023
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum_to_string.jar tool on Tue Mar 05 04:32:13 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -421,6 +421,54 @@ case Gpio::TLE6240_PIN_8:
   return "TLE6240_PIN_8";
 case Gpio::TLE6240_PIN_9:
   return "TLE6240_PIN_9";
+case Gpio::TLE9104_0_OUT_0:
+  return "TLE9104_0_OUT_0";
+case Gpio::TLE9104_0_OUT_1:
+  return "TLE9104_0_OUT_1";
+case Gpio::TLE9104_0_OUT_2:
+  return "TLE9104_0_OUT_2";
+case Gpio::TLE9104_0_OUT_3:
+  return "TLE9104_0_OUT_3";
+case Gpio::TLE9104_1_OUT_0:
+  return "TLE9104_1_OUT_0";
+case Gpio::TLE9104_1_OUT_1:
+  return "TLE9104_1_OUT_1";
+case Gpio::TLE9104_1_OUT_2:
+  return "TLE9104_1_OUT_2";
+case Gpio::TLE9104_1_OUT_3:
+  return "TLE9104_1_OUT_3";
+case Gpio::TLE9104_2_OUT_0:
+  return "TLE9104_2_OUT_0";
+case Gpio::TLE9104_2_OUT_1:
+  return "TLE9104_2_OUT_1";
+case Gpio::TLE9104_2_OUT_2:
+  return "TLE9104_2_OUT_2";
+case Gpio::TLE9104_2_OUT_3:
+  return "TLE9104_2_OUT_3";
+case Gpio::TLE9104_3_OUT_0:
+  return "TLE9104_3_OUT_0";
+case Gpio::TLE9104_3_OUT_1:
+  return "TLE9104_3_OUT_1";
+case Gpio::TLE9104_3_OUT_2:
+  return "TLE9104_3_OUT_2";
+case Gpio::TLE9104_3_OUT_3:
+  return "TLE9104_3_OUT_3";
+case Gpio::TLE9104_4_OUT_0:
+  return "TLE9104_4_OUT_0";
+case Gpio::TLE9104_4_OUT_1:
+  return "TLE9104_4_OUT_1";
+case Gpio::TLE9104_4_OUT_2:
+  return "TLE9104_4_OUT_2";
+case Gpio::TLE9104_4_OUT_3:
+  return "TLE9104_4_OUT_3";
+case Gpio::TLE9104_5_OUT_0:
+  return "TLE9104_5_OUT_0";
+case Gpio::TLE9104_5_OUT_1:
+  return "TLE9104_5_OUT_1";
+case Gpio::TLE9104_5_OUT_2:
+  return "TLE9104_5_OUT_2";
+case Gpio::TLE9104_5_OUT_3:
+  return "TLE9104_5_OUT_3";
 case Gpio::Unassigned:
   return "Unassigned";
   }
