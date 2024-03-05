@@ -35,9 +35,6 @@ float getOutputValueByName(const char *name) {
 // isFan2On
 		case -333212891:
 			return engine->outputChannels.isFan2On;
-// acrActive
-		case -1548941801:
-			return engine->outputChannels.acrActive;
 // toothLogReady
 		case -1662199734:
 			return engine->outputChannels.toothLogReady;
@@ -1179,6 +1176,9 @@ float getOutputValueByName(const char *name) {
 // startStopPhysicalState
 		case -1943724937:
 			return engine->engineState.startStopPhysicalState;
+// acrActive
+		case -1548941801:
+			return engine->engineState.acrActive;
 // acrEngineMovedRecently
 		case -791147982:
 			return engine->engineState.acrEngineMovedRecently;
