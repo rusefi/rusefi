@@ -54,6 +54,7 @@ int getRusEfiVersion(void);
   #define efiAssertVoid(code, condition, message) { UNUSED(condition);}
 #endif /* EFI_ENABLE_ASSERTS */
 
+#define criticalAssert(condition, message, result) efiAssert(ObdCode::OBD_PCM_Processor_Fault, condition, message, result)
 #define criticalAssertVoid(condition, message) efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, condition, message)
 
 #ifdef __cplusplus
