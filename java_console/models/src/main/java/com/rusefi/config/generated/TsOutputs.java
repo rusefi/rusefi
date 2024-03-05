@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Feb 14 21:56:48 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 05 03:31:22 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -182,24 +182,23 @@ public class TsOutputs {
 	public static final Field NEEDBURN = Field.create("NEEDBURN", 0, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field SD_MSD = Field.create("SD_MSD", 0, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field ISFAN2ON = Field.create("ISFAN2ON", 0, FieldType.BIT, 9).setBaseOffset(0);
-	public static final Field ACRACTIVE = Field.create("ACRACTIVE", 0, FieldType.BIT, 10).setBaseOffset(0);
-	public static final Field TOOTHLOGREADY = Field.create("TOOTHLOGREADY", 0, FieldType.BIT, 11).setBaseOffset(0);
-	public static final Field ISTPSERROR = Field.create("ISTPSERROR", 0, FieldType.BIT, 12).setBaseOffset(0);
-	public static final Field ISCLTERROR = Field.create("ISCLTERROR", 0, FieldType.BIT, 13).setBaseOffset(0);
-	public static final Field ISMAPERROR = Field.create("ISMAPERROR", 0, FieldType.BIT, 14).setBaseOffset(0);
-	public static final Field ISIATERROR = Field.create("ISIATERROR", 0, FieldType.BIT, 15).setBaseOffset(0);
-	public static final Field ISTRIGGERERROR = Field.create("ISTRIGGERERROR", 0, FieldType.BIT, 16).setBaseOffset(0);
-	public static final Field HASCRITICALERROR = Field.create("HASCRITICALERROR", 0, FieldType.BIT, 17).setBaseOffset(0);
-	public static final Field ISWARNNOW = Field.create("ISWARNNOW", 0, FieldType.BIT, 18).setBaseOffset(0);
-	public static final Field ISPEDALERROR = Field.create("ISPEDALERROR", 0, FieldType.BIT, 19).setBaseOffset(0);
-	public static final Field ISKNOCKCHIPOK = Field.create("ISKNOCKCHIPOK", 0, FieldType.BIT, 20).setBaseOffset(0);
-	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 21).setBaseOffset(0);
-	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 22).setBaseOffset(0);
-	public static final Field INJECTORFAULT = Field.create("INJECTORFAULT", 0, FieldType.BIT, 23).setBaseOffset(0);
-	public static final Field IGNITIONFAULT = Field.create("IGNITIONFAULT", 0, FieldType.BIT, 24).setBaseOffset(0);
-	public static final Field ISMAINRELAYON = Field.create("ISMAINRELAYON", 0, FieldType.BIT, 25).setBaseOffset(0);
-	public static final Field ISUSBCONNECTED = Field.create("ISUSBCONNECTED", 0, FieldType.BIT, 26).setBaseOffset(0);
-	public static final Field DFCOACTIVE = Field.create("DFCOACTIVE", 0, FieldType.BIT, 27).setBaseOffset(0);
+	public static final Field TOOTHLOGREADY = Field.create("TOOTHLOGREADY", 0, FieldType.BIT, 10).setBaseOffset(0);
+	public static final Field ISTPSERROR = Field.create("ISTPSERROR", 0, FieldType.BIT, 11).setBaseOffset(0);
+	public static final Field ISCLTERROR = Field.create("ISCLTERROR", 0, FieldType.BIT, 12).setBaseOffset(0);
+	public static final Field ISMAPERROR = Field.create("ISMAPERROR", 0, FieldType.BIT, 13).setBaseOffset(0);
+	public static final Field ISIATERROR = Field.create("ISIATERROR", 0, FieldType.BIT, 14).setBaseOffset(0);
+	public static final Field ISTRIGGERERROR = Field.create("ISTRIGGERERROR", 0, FieldType.BIT, 15).setBaseOffset(0);
+	public static final Field HASCRITICALERROR = Field.create("HASCRITICALERROR", 0, FieldType.BIT, 16).setBaseOffset(0);
+	public static final Field ISWARNNOW = Field.create("ISWARNNOW", 0, FieldType.BIT, 17).setBaseOffset(0);
+	public static final Field ISPEDALERROR = Field.create("ISPEDALERROR", 0, FieldType.BIT, 18).setBaseOffset(0);
+	public static final Field ISKNOCKCHIPOK = Field.create("ISKNOCKCHIPOK", 0, FieldType.BIT, 19).setBaseOffset(0);
+	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 20).setBaseOffset(0);
+	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field INJECTORFAULT = Field.create("INJECTORFAULT", 0, FieldType.BIT, 22).setBaseOffset(0);
+	public static final Field IGNITIONFAULT = Field.create("IGNITIONFAULT", 0, FieldType.BIT, 23).setBaseOffset(0);
+	public static final Field ISMAINRELAYON = Field.create("ISMAINRELAYON", 0, FieldType.BIT, 24).setBaseOffset(0);
+	public static final Field ISUSBCONNECTED = Field.create("ISUSBCONNECTED", 0, FieldType.BIT, 25).setBaseOffset(0);
+	public static final Field DFCOACTIVE = Field.create("DFCOACTIVE", 0, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -664,7 +663,6 @@ public class TsOutputs {
 	NEEDBURN,
 	SD_MSD,
 	ISFAN2ON,
-	ACRACTIVE,
 	TOOTHLOGREADY,
 	ISTPSERROR,
 	ISCLTERROR,

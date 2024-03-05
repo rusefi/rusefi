@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Feb 14 21:56:48 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 05 03:31:22 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -70,87 +70,86 @@ struct output_channels_s {
 	offset 0 bit 9 */
 	bool isFan2On : 1 {};
 	/**
-	 * Harley ACR Active
-	offset 0 bit 10 */
-	bool acrActive : 1 {};
-	/**
 	 * Tooth Logger Ready
-	offset 0 bit 11 */
+	offset 0 bit 10 */
 	bool toothLogReady : 1 {};
 	/**
 	 * Error: TPS
-	offset 0 bit 12 */
+	offset 0 bit 11 */
 	bool isTpsError : 1 {};
 	/**
 	 * Error: CLT
-	offset 0 bit 13 */
+	offset 0 bit 12 */
 	bool isCltError : 1 {};
 	/**
 	 * Error: MAP
-	offset 0 bit 14 */
+	offset 0 bit 13 */
 	bool isMapError : 1 {};
 	/**
 	 * Error: IAT
-	offset 0 bit 15 */
+	offset 0 bit 14 */
 	bool isIatError : 1 {};
 	/**
 	 * Error: Trigger
-	offset 0 bit 16 */
+	offset 0 bit 15 */
 	bool isTriggerError : 1 {};
 	/**
 	 * Error: Active
-	offset 0 bit 17 */
+	offset 0 bit 16 */
 	bool hasCriticalError : 1 {};
 	/**
 	 * Warning: Active
-	offset 0 bit 18 */
+	offset 0 bit 17 */
 	bool isWarnNow : 1 {};
 	/**
 	 * Error: Pedal
-	offset 0 bit 19 */
+	offset 0 bit 18 */
 	bool isPedalError : 1 {};
 	/**
-	offset 0 bit 20 */
+	offset 0 bit 19 */
 	bool isKnockChipOk : 1 {};
 	/**
 	 * Launch Control Triggered
-	offset 0 bit 21 */
+	offset 0 bit 20 */
 	bool launchTriggered : 1 {};
 	/**
 	 * Error: TPS2
-	offset 0 bit 22 */
+	offset 0 bit 21 */
 	bool isTps2Error : 1 {};
 	/**
 	 * Injector Fault
-	offset 0 bit 23 */
+	offset 0 bit 22 */
 	bool injectorFault : 1 {};
 	/**
 	 * Ignition Fault
-	offset 0 bit 24 */
+	offset 0 bit 23 */
 	bool ignitionFault : 1 {};
 	/**
-	offset 0 bit 25 */
+	offset 0 bit 24 */
 	bool isMainRelayOn : 1 {};
 	/**
 	 * isUsbConnected
 	 * Original reason for this is to check if USB is connected from Lua
-	offset 0 bit 26 */
+	offset 0 bit 25 */
 	bool isUsbConnected : 1 {};
 	/**
-	offset 0 bit 27 */
+	offset 0 bit 26 */
 	bool dfcoActive : 1 {};
 	/**
+	offset 0 bit 27 */
+	bool unusedBit_27_27 : 1 {};
+	/**
 	offset 0 bit 28 */
-	bool unusedBit_28_28 : 1 {};
+	bool unusedBit_27_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_28_29 : 1 {};
+	bool unusedBit_27_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_28_30 : 1 {};
+	bool unusedBit_27_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_28_31 : 1 {};
+	bool unusedBit_27_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM
@@ -1278,4 +1277,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 796);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) console/binary/output_channels.txt Wed Feb 14 21:56:48 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 05 03:31:22 UTC 2024

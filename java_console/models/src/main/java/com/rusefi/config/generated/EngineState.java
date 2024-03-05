@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Tue Mar 05 01:56:09 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Tue Mar 05 03:31:23 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -198,12 +198,13 @@ public class EngineState {
 	public static final Field SMARTCHIPALIVECOUNTER = Field.create("SMARTCHIPALIVECOUNTER", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
 	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
 	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 52, FieldType.BIT, 0).setBaseOffset(1056);
-	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 52, FieldType.BIT, 1).setBaseOffset(1056);
-	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 52, FieldType.BIT, 2).setBaseOffset(1056);
-	public static final Field LUADIGITALSTATE0 = Field.create("LUADIGITALSTATE0", 52, FieldType.BIT, 3).setBaseOffset(1056);
-	public static final Field LUADIGITALSTATE1 = Field.create("LUADIGITALSTATE1", 52, FieldType.BIT, 4).setBaseOffset(1056);
-	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 52, FieldType.BIT, 5).setBaseOffset(1056);
-	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 52, FieldType.BIT, 6).setBaseOffset(1056);
+	public static final Field ACRACTIVE = Field.create("ACRACTIVE", 52, FieldType.BIT, 1).setBaseOffset(1056);
+	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 52, FieldType.BIT, 2).setBaseOffset(1056);
+	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 52, FieldType.BIT, 3).setBaseOffset(1056);
+	public static final Field LUADIGITALSTATE0 = Field.create("LUADIGITALSTATE0", 52, FieldType.BIT, 4).setBaseOffset(1056);
+	public static final Field LUADIGITALSTATE1 = Field.create("LUADIGITALSTATE1", 52, FieldType.BIT, 5).setBaseOffset(1056);
+	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 52, FieldType.BIT, 6).setBaseOffset(1056);
+	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 52, FieldType.BIT, 7).setBaseOffset(1056);
 	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 56, FieldType.INT).setScale(1.0).setBaseOffset(1056);
 	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 60, FieldType.FLOAT).setBaseOffset(1056);
 	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 64, FieldType.FLOAT).setBaseOffset(1056);
@@ -245,6 +246,7 @@ public class EngineState {
 	SMARTCHIPALIVECOUNTER,
 	ALIGNMENTFILL_AT_49,
 	STARTSTOPPHYSICALSTATE,
+	ACRACTIVE,
 	ACRENGINEMOVEDRECENTLY,
 	HEATERCONTROLENABLED,
 	LUADIGITALSTATE0,
