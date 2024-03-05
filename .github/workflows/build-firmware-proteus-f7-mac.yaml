@@ -44,11 +44,6 @@ jobs:
       - name: Test Java Compiler
         run: javac -version
 
-      - name: Generate Live Documentation
-        if: ${{ env.skip != 'true' }}
-        working-directory: ./firmware/
-        run: ./gen_live_documentation.sh
-
       - name: Build Firmware
         if: ${{ env.skip != 'true' }}
         working-directory: ./firmware/config/boards/proteus

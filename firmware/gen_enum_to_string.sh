@@ -2,11 +2,6 @@
 
 echo "This batch files reads rusefi_enums.h and produces auto_generated_enums.* files"
 
-cd ../java_tools
-./gradlew :config_definition:shadowJar
-./gradlew :enum_to_string:shadowJar
-cd ../firmware
-
 rm gen_enum_to_string.log
 
 ENUM_JAR=../java_tools/enum_to_string/build/libs/enum_to_string-all.jar

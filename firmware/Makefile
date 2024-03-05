@@ -22,8 +22,9 @@
 #
 # If you wish to call make directly, here are the available commands:
 #
-# make					Generate configs and build firmware
-# make bundle		Generate configs, built bootloader, build firmware, and package both full and autoupdate bundles
+# make docs-enums	Generate docs and enums
+# make						Generate docs, enums, configs, and build firmware
+# make bundle			Generate docs, enums, configs, built bootloader, build firmware, and package both full and autoupdate bundles
 #
 # You can make a single bundle by passing the target bundle path, for example:
 # make ../artifacts/rusefi_bundle_f407-discovery.zip
@@ -419,6 +420,8 @@ include $(RULESFILE)
 include target_sentinel.mk
 
 include rusefi_config.mk
+
+include docs_enums.mk
 
 # Enable precompiled header
 include rusefi_pch.mk

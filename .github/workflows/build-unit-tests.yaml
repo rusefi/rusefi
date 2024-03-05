@@ -43,10 +43,6 @@ jobs:
     - name: Test Java Compiler
       run: javac -version
 
-    - name: Generate Enums & Live Documentation
-      working-directory: ./firmware/
-      run: bash gen_live_documentation.sh
-
     - name: Print Compiler version
       # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
       run: gcc -v

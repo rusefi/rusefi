@@ -32,6 +32,12 @@ jobs:
           sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
           sudo apt-get install sshpass mtools
 
+      - name: Build Config Definition Base and Enum to String
+        working-directory: ./java_tools/
+        run: |
+          ./gradlew :config_definition_base:shadowJar
+          ./gradlew :enum_to_string:shadowJar
+
       - name: Generate Enums & Live Documentation
         working-directory: ./firmware/
         run: ./gen_live_documentation.sh
