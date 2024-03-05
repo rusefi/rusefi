@@ -210,7 +210,7 @@
         <constant digits="0" name="justATempTest" units="">0.0</constant>
         <constant digits="0" name="unusedHere333" units="">0.0</constant>
         <constant digits="0" name="unusedHere334" units="">0.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0240304E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0240305E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -4555,7 +4555,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.04.f407-discovery.3808613738" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.05.f407-discovery.3808613738" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>
