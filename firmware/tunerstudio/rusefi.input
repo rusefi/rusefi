@@ -3690,7 +3690,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Output",			speedometerOutputPin
 		field = "Pulse per km",		speedometerPulsePerKm, { speedometerOutputPin }
 
-    dialog = outputsDialogLeft
+  dialog = outputsDialogLeft
+    field = communityCommsLedPid,   communityCommsLedPid@@if_ts_show_communityCommsLedPid
 		panel = mainRelayDialog
 		panel = fuelPumpDialog
 		panel = tachSettings

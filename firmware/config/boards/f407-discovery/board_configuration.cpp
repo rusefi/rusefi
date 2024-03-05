@@ -24,7 +24,7 @@ Gpio getWarningLedPin() {
 }
 
 Gpio getCommsLedPin() {
-	return Gpio::D15; // blue LED on discovery
+	return engineConfiguration->communityCommsLedPid;
 }
 
 Gpio getRunningLedPin() {
@@ -85,6 +85,8 @@ static void configureAccelerometerPins() {
 void setBoardDefaultConfiguration() {
 	setDefaultFrankensoStepperIdleParameters();
 	setCanFrankensoDefaults();
+
+	engineConfiguration->communityCommsLedPid = Gpio::D15;  // blue LED on discovery
 
 #if EFI_HIP_9011
 	setHip9011FrankensoPinout();
