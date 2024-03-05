@@ -11,3 +11,9 @@ $(TGT_SENTINEL): .FORCE
 	echo $(SHORT_BOARD_NAME) >$@; fi
 
 .FORCE:
+
+# This is necessary because the ChibiOS makefile builds a .o file and generates
+#  the deps for that .o file in the same GCC call, so if the .deps aren't already
+#  in the correct state, things can fail to build because Make doesn't know it needs
+#  to build the prerequisites for those files ahead of time.
+$(OBJS): $(TGT_SENTINEL)
