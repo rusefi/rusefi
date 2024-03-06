@@ -102,20 +102,20 @@ public class CurveData implements HoHo {
     }
 
     @Override
-    public String getCsourceMethod(String reference) {
-        return "static void " + getCannedMethod() + " {\n"
+    public String getCsourceMethod(String reference, String methodNamePrefix) {
+        return "static void " + getCannedMethod(methodNamePrefix) + " {\n"
                 + "\t" + getCsourceCode() +
                 "\tcopyArray(" + reference + curveName + ", " + getCannedName() + ");\n" +
                 "}\n\n";
     }
 
     @NotNull
-    private String getCannedMethod() {
-        return "canned" + curveName + "()";
+    private String getCannedMethod(String methodNamePrefix) {
+        return methodNamePrefix + "canned" + curveName + "()";
     }
 
     @Override
-    public String getCinvokeMethod() {
-        return "\t" + getCannedMethod() + ";\n";
+    public String getCinvokeMethod(String methodNamePrefix) {
+        return "\t" + getCannedMethod(methodNamePrefix) + ";\n";
     }
 }

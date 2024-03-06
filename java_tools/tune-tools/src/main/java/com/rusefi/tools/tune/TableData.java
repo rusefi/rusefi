@@ -90,8 +90,8 @@ public class TableData implements HoHo {
         return output.toString();
     }
 
-    private String getCannedMethod() {
-        return "canned" + tableName + "()";
+    private String getCannedMethod(String methodNamePrefix) {
+        return methodNamePrefix + "canned" + tableName + "()";
     }
 
     private String getCannedName() {
@@ -107,15 +107,15 @@ public class TableData implements HoHo {
     }
 
     @Override
-    public String getCsourceMethod(String reference) {
-        return "static void " + getCannedMethod() + " {\n"
+    public String getCsourceMethod(String reference, String methodNamePrefix) {
+        return "static void " + getCannedMethod(methodNamePrefix) + " {\n"
             + "\t" + getCsourceCode() +
             "\tcopyTable(" + reference + tableName + ", " + getCannedName() + ");\n" +
             "}\n\n";
     }
 
     @Override
-    public String getCinvokeMethod() {
-        return "\t" + getCannedMethod() + ";\n";
+    public String getCinvokeMethod(String methodNamePrefix) {
+        return "\t" + getCannedMethod(methodNamePrefix) + ";\n";
     }
 }

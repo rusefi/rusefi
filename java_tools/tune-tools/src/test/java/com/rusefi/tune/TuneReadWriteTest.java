@@ -46,11 +46,11 @@ public class TuneReadWriteTest {
         assertEquals("static const float hardCodedignitionIatCorrRpmBins[16] = " +
                 "{880.0, 1260.0, 1640.0, 2020.0, 2400.0, 2780.0, 3000.0, 3380.0, 3760.0, 4140.0, 4520.0, 5000.0, 5700.0, 6500.0, 7200.0, 8000.0};\n", xRpmCurve.getCsourceCode());
 
-        assertEquals("static void cannedignitionIatCorrRpmBins() {\n" +
+        assertEquals("static void prefixcannedignitionIatCorrRpmBins() {\n" +
                 "\tstatic const float hardCodedignitionIatCorrRpmBins[16] = {880.0, 1260.0, 1640.0, 2020.0, 2400.0, 2780.0, 3000.0, 3380.0, 3760.0, 4140.0, 4520.0, 5000.0, 5700.0, 6500.0, 7200.0, 8000.0};\n" +
                 "\tcopyArray(config->ignitionIatCorrRpmBins, hardCodedignitionIatCorrRpmBins);\n" +
                 "}\n" +
-                "\n", xRpmCurve.getCsourceMethod("config->"));
+                "\n", xRpmCurve.getCsourceMethod("config->", "prefix"));
 
         TS2C.FINGER_PRINT = "/*unittest*/\n";
         String tableSource = TS2C.getTableCSourceCode2(TUNE_NAME, tableName, model);
@@ -78,7 +78,7 @@ public class TuneReadWriteTest {
 
     @Test
     public void testALotTogether() throws IOException {
-        String expected = "static void cannedveTable() {\n" +
+        String expected = "static void prefixcannedveTable() {\n" +
                 "\tstatic const float hardCodedveRpmBins[16] = {650.0, 800.0, 1100.0, 1400.0, 1700.0, 2000.0, 2300.0, 2600.0, 2900.0, 3200.0, 3500.0, 3800.0, 4100.0, 4400.0, 4700.0, 7000.0};\n" +
                 "\tstatic const float hardCodedveLoadBins[16] = {10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0, 140.0, 150.0, 160.0};\n" +
                 "static const float hardCodedveTable[16][16] = {\n" +
@@ -116,7 +116,7 @@ public class TuneReadWriteTest {
 
         String tableSource = TS2C.getTableCSourceCode2(TUNE_NAME, tableName, model);
 
-        String completeMethod = "static void canned" + tableName + "() {\n" +
+        String completeMethod = "static void prefixcanned" + tableName + "() {\n" +
                 "\t" + xRpmCurve.getCsourceCode() +
                 "\t" + yLoadCurve.getCsourceCode() +
                 tableSource +

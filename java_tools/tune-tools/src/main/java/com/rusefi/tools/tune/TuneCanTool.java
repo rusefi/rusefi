@@ -48,6 +48,7 @@ public class TuneCanTool implements TuneCanToolConstants {
     public static final String TUNE_FILE_SUFFIX = ".msq";
     public static final String DEFAULT_TUNE = SIMULATED_PREFIX + TUNE_FILE_SUFFIX;
     private static final String workingFolder = "downloaded_tunes";
+    public static final String MD_FIXED_FORMATTING = "```\n";
 
     protected static IniFileModel ini;
 
@@ -70,11 +71,12 @@ public class TuneCanTool implements TuneCanToolConstants {
     /**
      * @see WriteSimulatorConfiguration
      */
-    protected static void processREOtune(int tuneId, engine_type_e engineType, String key) throws JAXBException, IOException {
+    protected static void processREOtune(int tuneId, engine_type_e engineType, String key,
+                                       String methodNamePrefix) throws JAXBException, IOException {
         // compare specific internet tune to total global default
-        handle(key + "-comparing-against-global-defaults", tuneId, TuneCanTool.DEFAULT_TUNE);
+        handle(key + "-comparing-against-global-defaults", tuneId, TuneCanTool.DEFAULT_TUNE, methodNamePrefix);
         // compare same internet tune to default tune of specified engine type
-        handle(key + "-comparing-against-current-" + key + "-default", tuneId, getDefaultTuneName(engineType));
+        handle(key + "-comparing-against-current-" + key + "-default", tuneId, getDefaultTuneName(engineType), methodNamePrefix);
     }
 
     @NotNull
@@ -82,13 +84,13 @@ public class TuneCanTool implements TuneCanToolConstants {
         return SIMULATED_PREFIX + "_" + engineType.name() + TUNE_FILE_SUFFIX;
     }
 
-    private static void handle(String vehicleName, int tuneId, String defaultTuneFileName) throws JAXBException, IOException {
+    private static void handle(String vehicleName, int tuneId, String defaultTuneFileName, String methodNamePrefix) throws JAXBException, IOException {
         String customTuneFileName = workingFolder + File.separator + tuneId + ".msq";
         String url = "https://rusefi.com/online/view.php?msq=" + tuneId;
 
         downloadTune(tuneId, customTuneFileName);
 
-        writeDiffBetweenLocalTuneFileAndDefaultTune(vehicleName, defaultTuneFileName, customTuneFileName, url);
+        writeDiffBetweenLocalTuneFileAndDefaultTune(vehicleName, defaultTuneFileName, customTuneFileName, url, methodNamePrefix);
     }
 
 //    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String localFileName) throws JAXBException, IOException {
@@ -101,7 +103,7 @@ public class TuneCanTool implements TuneCanToolConstants {
 //            localFileName,  cannedComment);
 //    }
 
-    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String defaultTuneFileName, String customTuneFileName, String cannedComment) throws JAXBException, IOException {
+    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String defaultTuneFileName, String customTuneFileName, String cannedComment, String methodNamePrefix) throws JAXBException, IOException {
         new File(REPORTS_OUTPUT_FOLDER).mkdir();
 
         Msq customTune = Msq.readTune(customTuneFileName);
@@ -109,11 +111,13 @@ public class TuneCanTool implements TuneCanToolConstants {
 
         StringBuilder methods = new StringBuilder();
 
-        StringBuilder sb = getTunePatch(defaultTune, customTune, ini, customTuneFileName, methods, defaultTuneFileName);
+        StringBuilder sb = getTunePatch(defaultTune, customTune, ini, customTuneFileName, methods, defaultTuneFileName, methodNamePrefix);
 
         String fileNameMethods = REPORTS_OUTPUT_FOLDER + "/" + vehicleName + "_methods.md";
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
+            methodsWriter.append(MD_FIXED_FORMATTING);
             methodsWriter.append(methods);
+            methodsWriter.append(MD_FIXED_FORMATTING);
         }
 
         String fileName = REPORTS_OUTPUT_FOLDER + "/" + vehicleName + ".md";
@@ -124,9 +128,9 @@ public class TuneCanTool implements TuneCanToolConstants {
             w.append("# " + vehicleName + "\n\n");
             w.append("// canned tune " + cannedComment + "\n\n");
 
-            w.append("```\n");
+            w.append(MD_FIXED_FORMATTING);
             w.append(sb);
-            w.append("```\n");
+            w.append(MD_FIXED_FORMATTING);
         }
         log.info("Done writing to " + outputFile.getAbsolutePath() + "!");
     }
@@ -159,7 +163,7 @@ public class TuneCanTool implements TuneCanToolConstants {
     }
 
     @NotNull
-    public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini, String customTuneFileName, StringBuilder methods, String defaultTuneFileName) throws IOException {
+    public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini, String customTuneFileName, StringBuilder methods, String defaultTuneFileName, String methodNamePrefix) throws IOException {
         ReaderStateImpl state = MetaHelper.getReaderState();
 
         StringBuilder invokeMethods = new StringBuilder();
@@ -232,7 +236,7 @@ public class TuneCanTool implements TuneCanToolConstants {
 
                     if (defaultTuneFileName != null) {
                         TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);
-                        if (defaultTableData.getCsourceMethod(parentReference).equals(tableData.getCsourceMethod(parentReference))) {
+                        if (defaultTableData.getCsourceMethod(parentReference, methodNamePrefix).equals(tableData.getCsourceMethod(parentReference, methodNamePrefix))) {
                             System.out.println("Table " + fieldName + " matches default content");
                             continue;
                         }
@@ -240,8 +244,8 @@ public class TuneCanTool implements TuneCanToolConstants {
                     System.out.println("Custom content in table " + fieldName);
 
 
-                    methods.append(tableData.getCsourceMethod(parentReference));
-                    invokeMethods.append(tableData.getCinvokeMethod());
+                    methods.append(tableData.getCsourceMethod(parentReference, methodNamePrefix));
+                    invokeMethods.append(tableData.getCinvokeMethod(methodNamePrefix));
                     continue;
                 }
 
@@ -251,15 +255,15 @@ public class TuneCanTool implements TuneCanToolConstants {
 
                 if (defaultTuneFileName != null) {
                     CurveData defaultCurveData = CurveData.valueOf(defaultTuneFileName, fieldName, ini);
-                    if (defaultCurveData.getCinvokeMethod().equals(data.getCinvokeMethod())) {
+                    if (defaultCurveData.getCinvokeMethod(methodNamePrefix).equals(data.getCinvokeMethod(methodNamePrefix))) {
                         System.out.println("Curve " + fieldName + " matches default content");
                         continue;
                     }
                 }
                 System.out.println("Custom content in curve " + fieldName);
 
-                methods.append(data.getCsourceMethod(parentReference));
-                invokeMethods.append(data.getCinvokeMethod());
+                methods.append(data.getCsourceMethod(parentReference, methodNamePrefix));
+                invokeMethods.append(data.getCinvokeMethod(methodNamePrefix));
 
                 continue;
             }
