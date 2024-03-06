@@ -31,8 +31,7 @@ public class XmlUtil {
         writer.close();
     }
 
-    public static <T> T readModel(Class<?> modelClass, String fileName) throws JAXBException {
-        File xmlFile = new File(fileName);
+    public static <T> T readModel(Class<?> modelClass, File xmlFile) throws JAXBException {
         JAXBContext jaxbContext;
         jaxbContext = JAXBContext.newInstance(modelClass);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();

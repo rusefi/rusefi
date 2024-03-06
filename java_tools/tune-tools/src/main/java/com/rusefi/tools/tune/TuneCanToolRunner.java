@@ -17,6 +17,9 @@ public class TuneCanToolRunner extends TuneCanTool {
         RootHolder.ROOT = "../firmware/";
     }
 
+    public static void main(String[] args) throws JAXBException, IOException {
+        runPopular();
+    }
 
     public static void runPopular() throws JAXBException, IOException {
         // while adding a line here make sure corresponding line is at rusEfiFunctionalTest.cpp

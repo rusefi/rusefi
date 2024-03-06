@@ -8,6 +8,7 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.xml.bind.JAXBException;
@@ -27,7 +28,6 @@ import java.util.TreeSet;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigFieldImpl.unquote;
 import static com.rusefi.config.Field.niceToString;
-import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR;
 
 /**
  * this command line utility compares two TS calibration files and produces .md files with C++ source code of the difference between those two files.
@@ -49,6 +49,8 @@ public class TuneCanTool implements TuneCanToolConstants {
     public static final String DEFAULT_TUNE = SIMULATED_PREFIX + TUNE_FILE_SUFFIX;
     private static final String workingFolder = "downloaded_tunes";
     public static final String MD_FIXED_FORMATTING = "```\n";
+    // IDE and GHA run from different working folders :(
+    public static final String YET_ANOTHER_ROOT = "../simulator/";
 
     protected static IniFileModel ini;
 
@@ -81,7 +83,7 @@ public class TuneCanTool implements TuneCanToolConstants {
 
     @NotNull
     public static String getDefaultTuneName(engine_type_e engineType) {
-        return SIMULATED_PREFIX + "_" + engineType.name() + TUNE_FILE_SUFFIX;
+        return YET_ANOTHER_ROOT + SIMULATED_PREFIX + "_" + engineType.name() + TUNE_FILE_SUFFIX;
     }
 
     private static void handle(String vehicleName, int tuneId, String defaultTuneFileName, String methodNamePrefix) throws JAXBException, IOException {
@@ -107,20 +109,22 @@ public class TuneCanTool implements TuneCanToolConstants {
         new File(REPORTS_OUTPUT_FOLDER).mkdir();
 
         Msq customTune = Msq.readTune(customTuneFileName);
-        Msq defaultTune = Msq.readTune(defaultTuneFileName);
+        File xmlFile = new File(defaultTuneFileName);
+        log.info("Reading " + xmlFile.getAbsolutePath());
+        Msq defaultTune = XmlUtil.readModel(Msq.class, xmlFile);
 
         StringBuilder methods = new StringBuilder();
 
         StringBuilder sb = getTunePatch(defaultTune, customTune, ini, customTuneFileName, methods, defaultTuneFileName, methodNamePrefix);
 
-        String fileNameMethods = REPORTS_OUTPUT_FOLDER + "/" + vehicleName + "_methods.md";
+        String fileNameMethods = YET_ANOTHER_ROOT + REPORTS_OUTPUT_FOLDER + "/" + vehicleName + "_methods.md";
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
             methodsWriter.append(MD_FIXED_FORMATTING);
             methodsWriter.append(methods);
             methodsWriter.append(MD_FIXED_FORMATTING);
         }
 
-        String fileName = REPORTS_OUTPUT_FOLDER + "/" + vehicleName + ".md";
+        String fileName = YET_ANOTHER_ROOT + REPORTS_OUTPUT_FOLDER + "/" + vehicleName + ".md";
         File outputFile = new File(fileName);
         log.info("Writing to " + outputFile.getAbsolutePath());
 
@@ -232,7 +236,7 @@ public class TuneCanTool implements TuneCanToolConstants {
                         System.out.println(" " + fieldName);
                         continue;
                     }
-                    System.out.println("Handling table " + fieldName);
+                    System.out.println("Handling table " + fieldName + " with " + cf.autoscaleSpecPair());
 
                     if (defaultTuneFileName != null) {
                         TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);

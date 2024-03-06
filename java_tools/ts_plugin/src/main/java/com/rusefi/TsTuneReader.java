@@ -23,7 +23,7 @@ public class TsTuneReader {
 
     public static Msq readTsTune(String ecuName) throws Exception {
         String fileName = getTsTuneFileName(ecuName);
-        return XmlUtil.readModel(Msq.class, fileName);
+        return XmlUtil.readModel(Msq.class, new File(fileName));
     }
 
     @NotNull
