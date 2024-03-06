@@ -1,4 +1,5 @@
-static void cannedtpsTpsAccelTable() {
+```
+static void couplecannedtpsTpsAccelTable() {
 	static const float hardCodedtpsTpsAccelTable[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {5.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -12,7 +13,7 @@ static void cannedtpsTpsAccelTable() {
 	copyTable(config->tpsTpsAccelTable, hardCodedtpsTpsAccelTable);
 }
 
-static void cannedscriptTable4() {
+static void couplecannedscriptTable4() {
 	static const float hardCodedscriptTable4[8][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -26,7 +27,7 @@ static void cannedscriptTable4() {
 	copyTable(config->scriptTable4, hardCodedscriptTable4);
 }
 
-static void cannedignitionTable() {
+static void couplecannedignitionTable() {
 	static const float hardCodedignitionTable[16][16] = {
 {12.100,	14.000,	17.800,	22.900,	29.300,	35.600,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	42.000,	42.000,	42.000,	42.000,	},
 {11.800,	13.700,	10.000,	14.900,	28.600,	34.800,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	41.000,	41.000,	41.000,	41.000,	},
@@ -48,7 +49,7 @@ static void cannedignitionTable() {
 	copyTable(config->ignitionTable, hardCodedignitionTable);
 }
 
-static void cannedveTable() {
+static void couplecannedveTable() {
 	static const float hardCodedveTable[16][16] = {
 {52.000,	54.000,	54.000,	56.000,	61.000,	55.000,	55.000,	65.000,	65.000,	60.000,	60.000,	60.000,	60.000,	60.000,	60.000,	60.000,	},
 {51.500,	54.500,	54.400,	56.000,	61.000,	68.100,	66.800,	67.600,	68.200,	63.400,	63.400,	63.400,	63.400,	63.400,	63.400,	63.400,	},
@@ -70,7 +71,7 @@ static void cannedveTable() {
 	copyTable(config->veTable, hardCodedveTable);
 }
 
-static void cannedpedalToTpsTable() {
+static void couplecannedpedalToTpsTable() {
 	static const float hardCodedpedalToTpsTable[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {8.000,	8.000,	8.000,	8.000,	8.000,	8.000,	8.000,	8.000,	},
@@ -84,7 +85,7 @@ static void cannedpedalToTpsTable() {
 	copyTable(config->pedalToTpsTable, hardCodedpedalToTpsTable);
 }
 
-static void cannedlambdaTable() {
+static void couplecannedlambdaTable() {
 	static const float hardCodedlambdaTable[16][16] = {
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},
@@ -106,7 +107,7 @@ static void cannedlambdaTable() {
 	copyTable(config->lambdaTable, hardCodedlambdaTable);
 }
 
-static void cannedtcuSolenoidTable() {
+static void couplecannedtcuSolenoidTable() {
 	static const float hardCodedtcuSolenoidTable[6][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -118,7 +119,7 @@ static void cannedtcuSolenoidTable() {
 	copyTable(config->tcuSolenoidTable, hardCodedtcuSolenoidTable);
 }
 
-static void cannedpostCrankingFactor() {
+static void couplecannedpostCrankingFactor() {
 	static const float hardCodedpostCrankingFactor[6][6] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -130,3 +131,4 @@ static void cannedpostCrankingFactor() {
 	copyTable(engineConfiguration->postCrankingFactor, hardCodedpostCrankingFactor);
 }
 
+```

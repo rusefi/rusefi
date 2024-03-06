@@ -55,11 +55,11 @@
     engineConfiguration->engineChartSize = 300;
 
 
-	cannedtpsTpsAccelTable();
-	cannedscriptTable4();
-	cannedveTable();
-	cannedpedalToTpsTable();
-	cannedlambdaTable();
-	cannedtcuSolenoidTable();
-	cannedpostCrankingFactor();
+	couplecannedtpsTpsAccelTable();
+	couplecannedscriptTable4();
+	couplecannedveTable();
+	couplecannedpedalToTpsTable();
+	couplecannedlambdaTable();
+	couplecannedtcuSolenoidTable();
+	couplecannedpostCrankingFactor();
 ```

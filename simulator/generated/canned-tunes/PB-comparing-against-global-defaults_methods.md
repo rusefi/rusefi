@@ -1,4 +1,5 @@
-static void cannedvvtTable1() {
+```
+static void pbcannedvvtTable1() {
 	static const float hardCodedvvtTable1[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -12,7 +13,7 @@ static void cannedvvtTable1() {
 	copyTable(config->vvtTable1, hardCodedvvtTable1);
 }
 
-static void cannedvvtTable2() {
+static void pbcannedvvtTable2() {
 	static const float hardCodedvvtTable2[8][8] = {
 {50.000,	50.000,	50.000,	50.000,	50.000,	40.000,	40.000,	40.000,	},
 {50.000,	50.000,	50.000,	50.000,	50.000,	40.000,	40.000,	40.000,	},
@@ -26,7 +27,7 @@ static void cannedvvtTable2() {
 	copyTable(config->vvtTable2, hardCodedvvtTable2);
 }
 
-static void cannedscriptTable4() {
+static void pbcannedscriptTable4() {
 	static const float hardCodedscriptTable4[8][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -40,7 +41,7 @@ static void cannedscriptTable4() {
 	copyTable(config->scriptTable4, hardCodedscriptTable4);
 }
 
-static void cannedignitionTable() {
+static void pbcannedignitionTable() {
 	static const float hardCodedignitionTable[16][16] = {
 {12.200,	14.200,	18.100,	23.300,	29.900,	36.400,	39.200,	40.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	},
 {12.100,	14.000,	17.800,	22.900,	29.300,	35.600,	39.000,	39.800,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	-10.000,	},
@@ -62,7 +63,7 @@ static void cannedignitionTable() {
 	copyTable(config->ignitionTable, hardCodedignitionTable);
 }
 
-static void cannedveTable() {
+static void pbcannedveTable() {
 	static const float hardCodedveTable[16][16] = {
 {70.300,	70.300,	70.400,	70.500,	70.600,	70.600,	70.300,	29.900,	29.800,	29.900,	30.400,	31.400,	33.000,	35.100,	37.700,	40.900,	},
 {70.800,	71.500,	72.100,	72.900,	73.300,	72.800,	72.000,	31.300,	31.200,	31.500,	32.200,	33.500,	35.300,	37.700,	40.500,	43.900,	},
@@ -84,7 +85,7 @@ static void cannedveTable() {
 	copyTable(config->veTable, hardCodedveTable);
 }
 
-static void cannedinjectionPhase() {
+static void pbcannedinjectionPhase() {
 	static const float hardCodedinjectionPhase[16][16] = {
 {-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-250.000,	-250.000,	-250.000,	-240.000,	-240.000,	-240.000,	-240.000,	-240.000,	},
 {-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-250.000,	-250.000,	-250.000,	-240.000,	-240.000,	-240.000,	-240.000,	-240.000,	},
@@ -106,7 +107,7 @@ static void cannedinjectionPhase() {
 	copyTable(config->injectionPhase, hardCodedinjectionPhase);
 }
 
-static void cannedlambdaTable() {
+static void pbcannedlambdaTable() {
 	static const float hardCodedlambdaTable[16][16] = {
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},
@@ -128,7 +129,7 @@ static void cannedlambdaTable() {
 	copyTable(config->lambdaTable, hardCodedlambdaTable);
 }
 
-static void cannedtcuSolenoidTable() {
+static void pbcannedtcuSolenoidTable() {
 	static const float hardCodedtcuSolenoidTable[6][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -140,7 +141,7 @@ static void cannedtcuSolenoidTable() {
 	copyTable(config->tcuSolenoidTable, hardCodedtcuSolenoidTable);
 }
 
-static void cannedpostCrankingFactor() {
+static void pbcannedpostCrankingFactor() {
 	static const float hardCodedpostCrankingFactor[6][6] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -152,3 +153,4 @@ static void cannedpostCrankingFactor() {
 	copyTable(engineConfiguration->postCrankingFactor, hardCodedpostCrankingFactor);
 }
 
+```

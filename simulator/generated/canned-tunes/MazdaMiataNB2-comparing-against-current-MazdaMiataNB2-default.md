@@ -303,18 +303,18 @@
     engineConfiguration->hpfpPidI = 0;
 
 
-	cannedtpsTpsAccelTable();
-	cannedboostTableOpenLoop();
-	cannedboostTableClosedLoop();
-	cannedvvtTable1();
-	cannedscriptTable4();
-	cannedignitionTable();
-	cannedignitionIatCorrTable();
-	cannedveTable();
-	cannedidleVeTable();
-	cannedmapEstimateTable();
-	cannedinjectionPhase();
-	cannedlambdaTable();
-	cannedtcuSolenoidTable();
-	cannedpostCrankingFactor();
+	nb2cannedtpsTpsAccelTable();
+	nb2cannedboostTableOpenLoop();
+	nb2cannedboostTableClosedLoop();
+	nb2cannedvvtTable1();
+	nb2cannedscriptTable4();
+	nb2cannedignitionTable();
+	nb2cannedignitionIatCorrTable();
+	nb2cannedveTable();
+	nb2cannedidleVeTable();
+	nb2cannedmapEstimateTable();
+	nb2cannedinjectionPhase();
+	nb2cannedlambdaTable();
+	nb2cannedtcuSolenoidTable();
+	nb2cannedpostCrankingFactor();
 ```

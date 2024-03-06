@@ -1,4 +1,5 @@
-static void cannedscriptTable4() {
+```
+static void pbcannedscriptTable4() {
 	static const float hardCodedscriptTable4[8][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -12,7 +13,7 @@ static void cannedscriptTable4() {
 	copyTable(config->scriptTable4, hardCodedscriptTable4);
 }
 
-static void cannedinjectionPhase() {
+static void pbcannedinjectionPhase() {
 	static const float hardCodedinjectionPhase[16][16] = {
 {-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-250.000,	-250.000,	-250.000,	-240.000,	-240.000,	-240.000,	-240.000,	-240.000,	},
 {-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-250.000,	-250.000,	-250.000,	-240.000,	-240.000,	-240.000,	-240.000,	-240.000,	},
@@ -34,7 +35,7 @@ static void cannedinjectionPhase() {
 	copyTable(config->injectionPhase, hardCodedinjectionPhase);
 }
 
-static void cannedlambdaTable() {
+static void pbcannedlambdaTable() {
 	static const float hardCodedlambdaTable[16][16] = {
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},
@@ -56,7 +57,7 @@ static void cannedlambdaTable() {
 	copyTable(config->lambdaTable, hardCodedlambdaTable);
 }
 
-static void cannedtcuSolenoidTable() {
+static void pbcannedtcuSolenoidTable() {
 	static const float hardCodedtcuSolenoidTable[6][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -68,7 +69,7 @@ static void cannedtcuSolenoidTable() {
 	copyTable(config->tcuSolenoidTable, hardCodedtcuSolenoidTable);
 }
 
-static void cannedpostCrankingFactor() {
+static void pbcannedpostCrankingFactor() {
 	static const float hardCodedpostCrankingFactor[6][6] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -80,3 +81,4 @@ static void cannedpostCrankingFactor() {
 	copyTable(engineConfiguration->postCrankingFactor, hardCodedpostCrankingFactor);
 }
 
+```

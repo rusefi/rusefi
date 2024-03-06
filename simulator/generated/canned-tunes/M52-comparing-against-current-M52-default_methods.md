@@ -1,3 +1,4 @@
+```
 static void cannedtpsTpsAccelTable() {
 	static const float hardCodedtpsTpsAccelTable[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -138,3 +139,4 @@ static void cannedpostCrankingFactor() {
 	copyTable(engineConfiguration->postCrankingFactor, hardCodedpostCrankingFactor);
 }
 
+```

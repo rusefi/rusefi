@@ -147,9 +147,9 @@
     engineConfiguration->hpfpPidI = 5.0E-4;
 
 
-	cannedscriptTable4();
-	cannedinjectionPhase();
-	cannedlambdaTable();
-	cannedtcuSolenoidTable();
-	cannedpostCrankingFactor();
+	pbcannedscriptTable4();
+	pbcannedinjectionPhase();
+	pbcannedlambdaTable();
+	pbcannedtcuSolenoidTable();
+	pbcannedpostCrankingFactor();
 ```
