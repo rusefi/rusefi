@@ -12,13 +12,6 @@
 #include "engine_configuration.h"
 
 /**
- * Primary rusEfi test mule https://rusefi.com/forum/viewtopic.php?f=3&t=1095
- * MAZDA_MIATA_2003
- * set engine_type 47
- */
-void setMazdaMiata2003EngineConfiguration();
-
-/**
  * https://github.com/rusefi/rusefi/wiki/Mazda-Miata-2001
  * set engine_type 1
  */
