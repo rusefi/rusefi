@@ -44,6 +44,10 @@ jobs:
       working-directory: ./firmware/
       run: ./gen_default_everything.sh
 
+    - name: enerate docs and enums
+      working-directory: ./firmware/
+      run: make docs-enums
+
     - name: Gradle autotest java Using freshly generated java code
       working-directory: ./java_tools
       run: ./gradlew :autotest:shadowJar
