@@ -32,7 +32,7 @@
 </constant>
         <constant digits="0" name="multisparkMaxSparkingAngle" units="deg">30.0</constant>
         <constant digits="0" name="multisparkMaxExtraSparkCount" units="count">2.0</constant>
-        <constant digits="2" name="injector_flow" units="cm3/min">200.0</constant>
+        <constant digits="2" name="injector_flow" units="cm3/min">196.0</constant>
         <constant cols="1" digits="2" name="injector_battLagCorrBins" rows="8">
          6.0
          8.0
@@ -183,7 +183,7 @@
         <constant digits="0" name="cylindersCount" units="">4.0</constant>
         <constant name="firingOrder">"1-3-4-2"</constant>
         <constant name="communityCommsLedPid">"NONE"</constant>
-        <constant digits="2" name="cylinderBore" units="mm">87.5</constant>
+        <constant digits="2" name="cylinderBore" units="mm">89.9</constant>
         <constant name="fuelAlgorithm">"Speed Density"</constant>
         <constant digits="0" name="ALSMaxTPS" units="%">5.0</constant>
         <constant name="crankingInjectionMode">"Sequential"</constant>
@@ -205,7 +205,7 @@
         <constant digits="0" name="fanOffTemperature" units="deg C">91.0</constant>
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
-        <constant name="canNbcType">"None"</constant>
+        <constant name="canNbcType">"W202"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant digits="0" name="justATempTest" units="">0.0</constant>
@@ -424,7 +424,7 @@
          1.0
          1.0
 </constant>
-        <constant digits="0" name="vehicleWeight" units="kg">0.0</constant>
+        <constant digits="0" name="vehicleWeight" units="kg">1250.0</constant>
         <constant digits="0" name="idlePidRpmUpperLimit" units="RPM">300.0</constant>
         <constant digits="3" name="applyNonlinearBelowPulse" units="ms">0.0</constant>
         <constant name="lps25BaroSensorScl">"NONE"</constant>
@@ -496,12 +496,12 @@
         <constant name="enableLaunchRetard">"false"</constant>
         <constant name="canInputBCM">"false"</constant>
         <constant name="consumeObdSensors">"false"</constant>
-        <constant name="enableCanVss">"false"</constant>
+        <constant name="enableCanVss">"true"</constant>
         <constant name="enableInnovateLC2">"false"</constant>
         <constant name="showHumanReadableWarning">"false"</constant>
         <constant name="stftIgnoreErrorMagnitude">"false"</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
-        <constant name="enableSoftwareKnock">"false"</constant>
+        <constant name="enableSoftwareKnock">"true"</constant>
         <constant name="verboseVVTDecoding">"false"</constant>
         <constant name="invertCamVVTSignal">"Rising"</constant>
         <constant name="alphaNUseIat">"false"</constant>
@@ -1170,7 +1170,7 @@
 </constant>
         <constant digits="0" name="disableFan1AtSpeed" units="">0.0</constant>
         <constant digits="0" name="disableFan2AtSpeed" units="">0.0</constant>
-        <constant name="canVssNbcType">"BMW_e46"</constant>
+        <constant name="canVssNbcType">"W202"</constant>
         <constant name="gppwm1_pin">"NONE"</constant>
         <constant digits="0" name="gppwm1_dutyIfError" units="%">0.0</constant>
         <constant digits="0" name="gppwm1_pwmFrequency" units="hz">250.0</constant>

@@ -23,16 +23,12 @@
     engineConfiguration->fixedTiming = 10;
     // default 2.295
     engineConfiguration->displacement = 2.2;
-    // default 0.0
-    engineConfiguration->vehicleWeight = 1250;
     // default 9.0
     engineConfiguration->compressionRatio = 9.5;
     // default 469.0
     engineConfiguration->globalTriggerAngleOffset = 72;
     // default 450.0
     engineConfiguration->vvtOffsets[0] = 0;
-    // default 200.0
-    engineConfiguration->injector.flow = 196;
     // default 300.0
     engineConfiguration->fuelReferencePressure = 0;
     // default 0.0
@@ -153,10 +149,6 @@
     engineConfiguration->acDelay = 0;
     // default 0.0
     engineConfiguration->warningPeriod = 10;
-    // default "false"
-    engineConfiguration->enableSoftwareKnock = true;
-    // default 87.5
-    engineConfiguration->cylinderBore = 89.90039;
     // default 0.0
     engineConfiguration->knockBandCustom = 12.80005;
     // default 20.0
@@ -191,18 +183,12 @@
     engineConfiguration->vssFilterReciprocal = 10;
     // default 1000.0
     engineConfiguration->driveWheelRevPerKm = 500;
-    // default "false"
-    engineConfiguration->enableCanVss = true;
-    // default "BMW_e46"
-    engineConfiguration->canVssNbcType = W202;
     // default 1.0
     engineConfiguration->finalGearRatio = 0;
     // default 38400.0
     engineConfiguration->tunerStudioSerialSpeed = 115200;
     // default "500kbps"
     engineConfiguration->can2BaudRate = B100KBPS;
-    // default "None"
-    engineConfiguration->canNbcType = CAN_BUS_W202_C180;
     // default 0.0
     engineConfiguration->auxSerialSpeed = 115200;
     // default "MAP"
