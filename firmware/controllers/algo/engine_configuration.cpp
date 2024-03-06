@@ -738,7 +738,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		mreBCM();
 		break;
 #endif // HW_MICRO_RUSEFI
-	case engine_type_e::MIATA_NC:
 	case engine_type_e::HONDA_OBD1:
 		setHondaObd1();
 		break;
@@ -804,10 +803,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::PROTEUS_STIM_QC:
 	    proteusStimQc();
 		break;
-	case engine_type_e::PROTEUS_N73:
-	case engine_type_e::PROTEUS_MIATA_NB2:
-		setMiataNB2_Proteus();
-		break;
 	case engine_type_e::GM_SBC:
 	    setGmSbc();
         break;
@@ -862,7 +857,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif
 
 #if HW_HELLEN_NB1
-	case engine_type_e::HELLEN_NB1:
+	case engine_type_e::MAZDA_MIATA_NB1:
 		setHellenNB1();
 		break;
 #endif
@@ -871,7 +866,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::MAZDA_MIATA_NB2:
 		setMiataNB2_Hellen72();
 		break;
-	case engine_type_e::HELLEN_NB2_36:
+	case engine_type_e::MAZDA_MIATA_NB2_36:
 		setMiataNB2_Hellen72_36();
 		break;
 #endif
@@ -899,16 +894,16 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::TOYOTA_1NZ_FE:
 	    setToyota1NZFE();
 	    break;
-	case engine_type_e::MAZDA_NA8_96:
+	case engine_type_e::MAZDA_MIATA_NA96:
 		setMazdaMiata96();
 		break;
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::HELLEN_154_VAG:
 		break;
-	case engine_type_e::HELLEN_NA6:
+	case engine_type_e::MAZDA_MIATA_NA6:
 		setHellenNA6();
 		break;
-	case engine_type_e::HELLEN_NA94:
+	case engine_type_e::MAZDA_MIATA_NA94:
 		setHellenNA94();
 		break;
 	case engine_type_e::HELLEN_HONDA_BCM:
@@ -1014,9 +1009,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::TEST_33816:
 		setTest33816EngineConfiguration();
 		break;
-	case engine_type_e::TEST_100:
-	case engine_type_e::TEST_101:
-	case engine_type_e::TEST_102:
 	case engine_type_e::TEST_ROTARY:
 		setRotary();
 		break;

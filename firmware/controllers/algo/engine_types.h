@@ -46,7 +46,7 @@ enum class engine_type_e : uint16_t {
 	GY6_139QMB = 8,
 
 	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
-	MAZDA_NA8_96 = 10,
+	MAZDA_MIATA_NA96 = 10,
 	FORD_COYOTE = 11,
 	MITSUBISHI_3A92 = 12,
 	TOYOTA_1NZ_FE = 13,
@@ -61,7 +61,7 @@ enum class engine_type_e : uint16_t {
 	TEST_ROTARY = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
-	MIATA_NC = 20,
+	MAZDA_MIATA_NC = 20,
 	UNUSED_21 = 21,
 
   // BMW e36 etc
@@ -95,7 +95,7 @@ enum class engine_type_e : uint16_t {
 
 	ME17_9_MISC = 33,
 
-	HELLEN_NA6 = 34,
+	MAZDA_MIATA_NA6 = 34,
 
 	ET_UNUSED_35 = 35,
 
@@ -107,6 +107,7 @@ enum class engine_type_e : uint16_t {
 
 	PROTEUS_VW_B6 = 39,
 
+  // used by unit tests and HW CI
 	FRANKENSO_BMW_M73_F = 40,
 
 	PROTEUS_QC_TEST_BOARD = 42,
@@ -150,7 +151,7 @@ enum class engine_type_e : uint16_t {
 	DODGE_RAM = 64,
 	UNUSED_65 = 65,
 	HONDA_OBD1 = 66,
-	PROTEUS_MIATA_NB2 = 67,
+	UNUSED67 = 67,
 	MRE_M111 = 68,
 
 	MAZDA_MIATA_NB2 = 69,
@@ -169,17 +170,17 @@ enum class engine_type_e : uint16_t {
 	HELLEN_121_VAG_VR6_CYL = 79,
 	HELLEN_121_VAG_8_CYL = 81,
 
-	HELLEN_NA94 = 80,
+	MAZDA_MIATA_NA94 = 80,
 
     // 82
 	HELLEN_154_HYUNDAI_COUPE_BK1 = 82,
-	HELLEN_NB1 = 83,
+	MAZDA_MIATA_NB1 = 83,
 	// 84
 	HELLEN_121_NISSAN_4_CYL = 84,
 
     HELLEN_121_NISSAN_8_CYL = 85,
 
-	HELLEN_NB2_36 = 86,
+	MAZDA_MIATA_NB2_36 = 86,
 
 	HELLEN_121_NISSAN_ALMERA_N16  = 87,
 
@@ -211,7 +212,7 @@ enum class engine_type_e : uint16_t {
     // use this in case of emergency without github actions? :)
 	TEST_100 = 100,
 	TEST_101 = 101,
-	TEST_102 = 102,
+	UNUSED102 = 102,
 
 	PROTEUS_NISSAN_VQ35 = 103,
 
