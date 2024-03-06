@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.enums.engine_type_e;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
@@ -46,8 +47,8 @@ public class TuneCanTool {
     public static final String SRC_TEST_RESOURCES = "src/test/resources/";
     private static final String FOLDER = "generated";
     public static final String SIMULATED_PREFIX = FOLDER + File.separator + "simulator_tune";
-    public static final String SIMULATED_SUFFIX = ".xml";
-    public static final String DEFAULT_TUNE = SIMULATED_PREFIX + SIMULATED_SUFFIX;
+    public static final String TUNE_FILE_SUFFIX = ".msq";
+    public static final String DEFAULT_TUNE = SIMULATED_PREFIX + TUNE_FILE_SUFFIX;
     private static final String workingFolder = "downloaded_tunes";
 
     private static IniFileModel ini;
@@ -66,9 +67,9 @@ public class TuneCanTool {
 //            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq",  "comment");
 
 
-        processREOtune(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "COUPE-BK2");
-        processREOtune(1576, Fields.engine_type_e_HYUNDAI_PB, "PB");
-        processREOtune(1591, Fields.engine_type_e_BMW_M52, "M52");
+        processREOtune(1507, engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK2, "COUPE-BK2");
+        processREOtune(1576, engine_type_e.HYUNDAI_PB, "PB");
+        processREOtune(1591, engine_type_e.BMW_M52, "M52");
 //        processREOtune(1490, Fields.engine_type_e_MRE_M111, "m111-alex");
 //        handle("Mitsubicha", 1258);
 //        handle("Scion-1NZ-FE", 1448);
@@ -79,7 +80,7 @@ public class TuneCanTool {
     /**
      * @see WriteSimulatorConfiguration
      */
-    private static void processREOtune(int tuneId, int engineType, String key) throws JAXBException, IOException {
+    private static void processREOtune(int tuneId, engine_type_e engineType, String key) throws JAXBException, IOException {
         // compare specific internet tune to total global default
         handle(key + "-comparing-against-global-defaults", tuneId, TuneCanTool.DEFAULT_TUNE);
         // compare same internet tune to default tune of specified engine type
@@ -87,8 +88,8 @@ public class TuneCanTool {
     }
 
     @NotNull
-    private static String getDefaultTuneName(int engineType) {
-        return SIMULATED_PREFIX + "_" + engineType + SIMULATED_SUFFIX;
+    public static String getDefaultTuneName(engine_type_e engineType) {
+        return SIMULATED_PREFIX + "_" + engineType.name() + TUNE_FILE_SUFFIX;
     }
 
     private static void handle(String vehicleName, int tuneId, String defaultTuneFileName) throws JAXBException, IOException {

@@ -5,6 +5,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.enums.engine_type_e;
 import com.rusefi.tune.xml.Msq;
 
 import javax.xml.bind.JAXBException;
@@ -29,17 +30,17 @@ public class WriteSimulatorConfiguration {
         System.out.println("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
             readBinaryWriteXmlTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
-            for (int type : new int[]{
+            for (engine_type_e type : new engine_type_e[]{
                     // [CannedTunes] see 'rusEfiFunctionalTest.cpp' which exports default tunes into binary files for us
-                    Fields.engine_type_e_MRE_M111,
-                    Fields.engine_type_e_BMW_M52,
-                    Fields.engine_type_e_MAZDA_MIATA_NB2,
-                    Fields.engine_type_e_HONDA_K,
-                    Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1,
-                    Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2,
-                    Fields.engine_type_e_HYUNDAI_PB,
-                    Fields.engine_type_e_MAVERICK_X3,
-                    Fields.engine_type_e_HARLEY,
+                    engine_type_e.MRE_M111,
+                    engine_type_e.BMW_M52,
+                    engine_type_e.MAZDA_MIATA_NB2,
+                    engine_type_e.HONDA_K,
+                    engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK1,
+                    engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK2,
+                    engine_type_e.HYUNDAI_PB,
+                    engine_type_e.MAVERICK_X3,
+                    engine_type_e.HARLEY,
             }) {
                 writeSpecificEngineType(type);
             }
@@ -53,19 +54,19 @@ public class WriteSimulatorConfiguration {
         }
     }
 
-    private static void writeSpecificEngineType(int engineType) {
-        String engine = "_" + engineType;
+    private static void writeSpecificEngineType(engine_type_e engineType) {
         try {
-            readBinaryWriteXmlTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + engine + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX,
-                    TuneCanTool.SIMULATED_PREFIX + engine + TuneCanTool.SIMULATED_SUFFIX);
+            String in = Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + "_" + engineType.ordinal() + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX;
+            readBinaryWriteXmlTune(in,
+                    TuneCanTool.getDefaultTuneName(engineType));
         } catch (Throwable e) {
             throw new IllegalStateException("With " + engineType, e);
         }
     }
 
-    private static void readBinaryWriteXmlTune(String tuneBinFileName, String outputXmlFileName) throws JAXBException, IOException {
-        byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + tuneBinFileName).toPath());
-        System.out.println("Got " + fileContent.length + " from " + tuneBinFileName + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
+    private static void readBinaryWriteXmlTune(String inputBinaryTuneFileName, String outputXmlFileName) throws JAXBException, IOException {
+        byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + inputBinaryTuneFileName).toPath());
+        System.out.println("Got " + fileContent.length + " from " + inputBinaryTuneFileName + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         if (fileContent.length != Fields.TOTAL_CONFIG_SIZE)
             throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         ConfigurationImage configuration = new ConfigurationImage(fileContent);
