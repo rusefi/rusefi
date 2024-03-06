@@ -975,7 +975,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3304687057
+#define SIGNATURE_HASH 493524355
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4",5="SPI_DEVICE_5",6="SPI_DEVICE_6"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1220,21 +1220,23 @@
 #define TS_SET_LOGGER_SWITCH_char l
 #define ts_show_analog_divider false
 #define ts_show_auxserial_pins true
+#define ts_show_cam_inputs true
 #define ts_show_can2 true
 #define ts_show_can_pins true
 #define ts_show_clt_iat_pullup true
-#define ts_show_critical_led false
 #define ts_show_egt false
 #define ts_show_etb true
 #define ts_show_etb_pins true
 #define ts_show_full_pinout true
 #define ts_show_hardware_simulator true
 #define ts_show_ign_fault false
+#define ts_show_ignition_mode true
+#define ts_show_ignition_pins true
 #define ts_show_ignitionPinMode true
 #define ts_show_inj_fault false
+#define ts_show_injection_mode true
 #define ts_show_injectionPinMode true
-#define ts_show_joystick true
-#define ts_show_lcd true
+#define ts_show_injector_pins true
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_sd_card true
@@ -1242,11 +1244,12 @@
 #define ts_show_software_knock false
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
+#define ts_show_trigger_pins true
 #define ts_show_tunerstudio_port false
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI (FOME) master.2024.03.04.subaru_eg33_f7.3304687057"
+#define TS_SIGNATURE "rusEFI (FOME) master.2024.03.06.subaru_eg33_f7.493524355"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
