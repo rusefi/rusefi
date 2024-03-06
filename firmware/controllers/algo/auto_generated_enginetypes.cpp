@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 03:40:26 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 05:14:40 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -275,8 +275,6 @@ case engine_type_e::HELLEN_NB1:
   return "HELLEN_NB1";
 case engine_type_e::HELLEN_NB1_36:
   return "HELLEN_NB1_36";
-case engine_type_e::HELLEN_NB2:
-  return "HELLEN_NB2";
 case engine_type_e::HELLEN_NB2_36:
   return "HELLEN_NB2_36";
 case engine_type_e::HONDA_600:
@@ -293,6 +291,8 @@ case engine_type_e::L9779_BENCH_ENGINE:
   return "L9779_BENCH_ENGINE";
 case engine_type_e::MAVERICK_X3:
   return "MAVERICK_X3";
+case engine_type_e::MAZDA_MIATA_NB2:
+  return "MAZDA_MIATA_NB2";
 case engine_type_e::MAZDA_NA8_96:
   return "MAZDA_NA8_96";
 case engine_type_e::ME17_9_MISC:
