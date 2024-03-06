@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - ETB traction control drop is affected by not-highlighted cell #5952
+ - Aux Speed sensors stopped working on calibration change #6157
 
 ## March 2023 "Day 740"
 
