@@ -150,192 +150,37 @@ jobs:
       if: ${{ contains(github.ref_name, '.') }}
       run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
 
+    - uses: actions/checkout@v4
+
     - name: Set run condition variables
       run: |
-        if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "rusefi/rusefi" ]; then
-          echo "Scheduled mode"
-          echo "full=true" >> $GITHUB_ENV
-          echo "upload=release" >> $GITHUB_ENV
-          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        if [ "${{github.event_name}}" == "schedule" ] && [ "${{github.repository}}" == "rusefi/rusefi" ]; then
+          echo 'upload="ini"' >> $GITHUB_OUTPUT
+          echo 'artifacts="bundle autoupdate"' >> $GITHUB_OUTPUT
         elif [ "${{github.event_name}}" = "push" ]\
         && [ "${{github.ref}}" = "refs/heads/master" ]\
         || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
-          echo "Full mode"
-          echo "full=true" >> $GITHUB_ENV
-          echo "upload=server" >> $GITHUB_ENV
+          echo 'upload="ini bundles"' >> $GITHUB_OUTPUT
+          echo 'artifacts="bundle autoupdate"' >> $GITHUB_OUTPUT
         else
-          echo "Partial mode"
-          echo "partial=true" >> $GITHUB_ENV
+          echo 'artifacts="dfu bin hex map elf"' >> $GITHUB_OUTPUT
         fi
 
-    - uses: actions/checkout@v4
-
-    - name: Checkout Submodules
-      run: |
-        git submodule update --init --depth=1 firmware/ChibiOS
-        git submodule update --init --depth=1 firmware/ChibiOS-Contrib
-        git submodule update --init --depth=1 firmware/libfirmware
-        git submodule update --init --depth=1 firmware/ext/lua
-        git submodule update --init --depth=1 firmware/ext/uzlib
-        git submodule update --init --depth=1 firmware/ext/openblt
-        git submodule update --init --depth=1 firmware/controllers/lua/luaaa
-        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
-        git submodule update --init --depth=1 java_console/luaformatter
-        git submodule update --init --depth=1 java_console/peak-can-basic
-
-    - uses: actions/setup-java@v4
+    - uses: ./.github/workflows/custom-board-build
       with:
-        distribution: 'zulu'
-        java-version: '11'
-
-    - name: Install multilib, mingw, sshpass and mtools
-      run: |
-        sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools zip dosfstools
-
-    - name: Set Build Env Variables
-      working-directory: ./firmware/
-      run: |
-        echo LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
-        echo REF=${{github.ref_name}} >> $GITHUB_ENV
-        echo BOARD_META_PATH=${{matrix.meta-info}} >> $GITHUB_ENV
-
-    - name: Git Status
-      run: |
-        git status
-
-#
-# Note to humans: on personal devices we have firmware/provide_gcc.sh and setup_linux_environment.sh
-#
-    - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1
-      with:
-        release: '12.3.Rel1'
-
-    # Make sure the compiler we just downloaded works - just print out the version
-    - name: Test arm-none-eabi-gcc Compiler
-      run: arm-none-eabi-gcc -v
-
-    - name: Configs build_server upload SSH variables
-      if: ${{ env.full == 'true' && env.upload == 'server' }}
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      run: |
-        echo "RUSEFI_SSH_SERVER=${{secrets.RUSEFI_SSH_SERVER}}" >> $GITHUB_ENV
-        echo "RUSEFI_SSH_USER=${{secrets.RUSEFI_SSH_USER}}" >> $GITHUB_ENV
-        echo "RUSEFI_SSH_PASS=${{secrets.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
-
-#    - name: Download LibOpenBLT Tool (Linux)
-#      uses: actions/download-artifact@v3
-#      with:
-#        name: libopenblt-linux
-#        path: ./firmware/ext/openblt/Host/
-
-#    - name: Download LibOpenBLT Tool (MacOS)
-#      uses: actions/download-artifact@v3
-#      with:
-#        name: libopenblt-macos
-#        path: ./firmware/ext/openblt/Host/
-
-    - name: Clean (Just in Case)
-      working-directory: ./firmware/
-      run: |
-        make clean
-
-    - name: Handle configs separately just to make github logs more readable
-      working-directory: ./firmware/
-      run: |
-        bash bin/compile.sh ${{env.BOARD_META_PATH}} config
-
-    - name: Building simulator separately just to make github logs more readable
-      working-directory: ./firmware/
-      run: |
-        bash bin/compile.sh ${{env.BOARD_META_PATH}} ../simulator/build/rusefi_simulator.exe
-
-      # Build the firmware! We have the technology to build _everything_ in one 'make' invocation but choose to do separately for sake of more readable GHA logs
-    - name: Build Firmware
-      working-directory: ./firmware/
-      run: |
-        if [ "$full" == "true" ]; then
-          bash bin/compile.sh ${{env.BOARD_META_PATH}} bundles
-        else
-          bash bin/compile.sh ${{env.BOARD_META_PATH}} all deliver/rusefi.dfu deliver/rusefi.bin
-        fi
-
-    - name: Upload Bundle
-      if: ${{ env.full == 'true' }}
-      working-directory: ./artifacts
-      run: |
-        source ../firmware/config/boards/common_script_read_meta_env.inc ../firmware/${{ env.BOARD_META_PATH }}
-        bash ../firmware/bin/upload_bundle.sh
-
-    - name: Add Bundles to Release
-      if: ${{ env.full == 'true' && env.upload == 'release' }}
-      uses: ncipollo/release-action@v1.14.0
-      with:
-        tag: ${{ env.date }}
-        name: "Nightly ${{ env.date }}"
-        artifacts: "artifacts/rusefi_bundle_*.zip"
-        replacesArtifacts: false
-        token: ${{ secrets.NIGHTLY_RELEASE_ACCESS_TOKEN }}
-        allowUpdates: true
-        prerelease: true
-
-    - name: Upload .ini files to rusEFI Online server
-      if: ${{ env.full == 'true' }}
-      working-directory: ./firmware
-      run: |
-        source config/boards/common_script_read_meta_env.inc ${{ env.BOARD_META_PATH }}
-        cd ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated
-        ${OLDPWD}/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
-
-    - name: Upload github action elf artifact
-      if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: rusefi_${{matrix.build-target}}.elf
-        path: ./firmware/build/rusefi.elf
-
-    - name: Upload github action map artifact
-      if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: rusefi_${{matrix.build-target}}.map
-        path: ./firmware/build/rusefi.map
-
-    - name: Upload github action bin artifact
-      if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: rusefi_${{matrix.build-target}}.bin
-        path: ./firmware/deliver/rusefi*.bin
-
-    - name: Upload github action hex artifact
-      if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: rusefi_${{matrix.build-target}}.hex
-# we have a bit of a mess - this file from 'build' folder is only legit for not-BLT builds
-# todo: we should produce .hex in both OpenBLT and non-OpenBLT case same as we do for .bin and .elf
-        path: ./firmware/build/rusefi*.hex
-
-    - name: Upload github action dfu artifact
-      if: ${{ env.partial == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: rusefi_${{matrix.build-target}}.dfu
-        path: ./firmware/deliver/rusefi*.dfu
-
-    - name: Upload bundle artifact
-      if: ${{ env.full == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: rusefi_bundle_${{matrix.build-target}}.zip
-        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
-
-    - name: Upload github action autoupdate artifact
-      if: ${{ env.full == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
-        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
+        rusefi_dir: .
+        meta_info: ./firmware/${{matrix.meta-info}}
+        meta_output: ./firmware
+        bundle_simulator: true
+        push: false
+        lts: ${{inputs.lts}}
+        artifacts: ${{steps.set-upload.outputs.artifacts}}
+        uploads: ${{steps.set-upload.outputs.upload}}
+        MY_REPO_PAT: ${{secrets.MY_REPO_PAT}}
+        RUSEFI_ONLINE_FTP_USER: ${{secrets.RUSEFI_ONLINE_FTP_USER}}
+        RUSEFI_ONLINE_FTP_PASS: ${{secrets.RUSEFI_ONLINE_FTP_PASS}}
+        RUSEFI_FTP_SERVER: ${{secrets.RUSEFI_FTP_SERVER}}
+        RUSEFI_SSH_SERVER: ${{secrets.RUSEFI_SSH_SERVER}}
+        RUSEFI_SSH_USER: ${{secrets.RUSEFI_SSH_USER}}
+        RUSEFI_SSH_PASS: ${{secrets.RUSEFI_SSH_PASS}}
+        ADDITIONAL_ENV: ${{secrets.ADDITIONAL_ENV}}
