@@ -57,7 +57,7 @@ static void test(int engineSyncCam, float camOffsetAdd) {
 // On Nissan VQ, all cams have the same pattern, so all should be equally good for engine sync. Check them all!
 
 TEST(realCrankingVQ40, normalCrankingSyncCam1) {
-	test(0, 0);
+	test(1, 0);
 }
 
 TEST(realCrankingVQ40, normalCrankingSyncCam2) {
