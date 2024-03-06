@@ -57,7 +57,6 @@
 
 	cannedtpsTpsAccelTable();
 	cannedscriptTable4();
-	cannedignitionTable();
 	cannedveTable();
 	cannedpedalToTpsTable();
 	cannedlambdaTable();
