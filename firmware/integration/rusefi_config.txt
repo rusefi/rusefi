@@ -1935,9 +1935,6 @@ end_struct
 #define ts_show_etb true
 #define ts_show_etb_pins true
 #define ts_show_full_pinout true
-#define ts_show_lcd true
-#define ts_show_critical_led false
-#define ts_show_joystick true
 #define ts_show_egt true
 #define ts_show_analog_divider true
 #define ts_show_spi true
@@ -1956,6 +1953,12 @@ end_struct
 #define ts_show_ignitionPinMode true
 #define ts_show_inj_fault false
 #define ts_show_ign_fault false
+#define ts_show_trigger_pins true
+#define ts_show_cam_inputs true
+#define ts_show_injector_pins true
+#define ts_show_injection_mode true
+#define ts_show_ignition_pins true
+#define ts_show_ignition_mode true
 
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true

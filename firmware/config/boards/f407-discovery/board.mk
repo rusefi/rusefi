@@ -17,9 +17,6 @@ else
   DDEFS += -D$(FW_ID_ENV)
 endif
 
-# See also ts_show_critical_led
-DDEFS += -DFLEXIBLE_CRITICAL_LED=1
-
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1
 DDEFS += $(DEFAULT_ENGINE_TYPE)
