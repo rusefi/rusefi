@@ -2218,11 +2218,10 @@ cmd_set_engine_type_TOYOTA_1NZ_FE						= "@@TS_IO_TEST_COMMAND_char@@@@ts_comman
 
 cmd_set_engine_type_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_M111_16_hex@@"
 
-cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_NA6_16_hex@@"
-cmd_set_engine_type_hellen_NA94						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_NA94_16_hex@@"
+cmd_set_engine_type_MAZDA_MIATA_NA6						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MAZDA_MIATA_NA6_16_hex@@"
+cmd_set_engine_type_MAZDA_MIATA_NA94					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MAZDA_MIATA_NA94_16_hex@@"
 
-cmd_set_engine_type_hellen_NB1_36					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_NB1_36_16_hex@@"
-cmd_set_engine_type_hellen_NB2_36					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_NB2_36_16_hex@@"
+cmd_set_engine_type_MAZDA_MIATA_NB2_36					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MAZDA_MIATA_NB2_36_16_hex@@"
 
 cmd_set_engine_type_hellen_nissan_121_4				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_NISSAN_4_CYL_16_hex@@"
 cmd_set_engine_type_hellen_nissan_121_6				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_NISSAN_6_CYL_16_hex@@"
@@ -2243,8 +2242,6 @@ cmd_set_engine_type_hellen_coupe_bk2					= "@@TS_IO_TEST_COMMAND_char@@@@ts_comm
 
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MIATA_NA6_MAP_16_hex@@"
-; MAZDA_MIATA_2003 = 47
-cmd_set_engine_type_Frankenso_Miata_NB2			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
 cmd_set_engine_type_FUEL_BENCH						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FUEL_BENCH_16_hex@@"
 
@@ -2253,7 +2250,6 @@ cmd_set_engine_type_PROTEUS_VW_B6					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command
 cmd_set_engine_type_PROTEUS_GM_LS_4				    = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_GM_LS_4_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_HONDA_K					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HONDA_K_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_HONDA_OBD2A				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HONDA_OBD2A_16_hex@@"@@if_show_Proteus_presets
-cmd_set_engine_type_PROTEUS_MIATA_NB2				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_Proteus_Miata_TCU				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_PROTEUS_LUA_DEMO				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"@@if_show_Proteus_presets
 cmd_set_engine_type_HARLEY					        = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HARLEY_16_hex@@"@@if_show_Proteus_presets
@@ -4557,7 +4553,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"
 		field = "!Once you send the command, please reconnect to rusEFI controller in order to read fresh values"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
-		commandButton = "Frankenso Miata NB2 MAP",	cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
 		commandButton = "Honda OBD1", cmd_set_engine_type_HONDA_OBD1
 
@@ -4582,7 +4577,6 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Proteus SBC",		        cmd_set_engine_type_GM_SBC@@if_show_Proteus_presets
 ;		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Lua Demo",			cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
-		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
 		commandButton = "Proteus Honda K",			cmd_set_engine_type_PROTEUS_HONDA_K@@if_show_Proteus_presets
 ;		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_HONDA_OBD2A@@if_show_Proteus_presets
 		commandButton = "Proteus Harley",			cmd_set_engine_type_HARLEY@@if_show_Proteus_presets
@@ -4594,11 +4588,10 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "SBC",			            cmd_set_engine_type_GM_SBC@@if_show_8chan_presets
 		commandButton = "Honda BCM",	            cmd_set_engine_type_SMALL_CB_HONDA_BCM@@if_show_small_can_board_presets
 
-		commandButton = "Hellen NA6",				cmd_set_engine_type_hellen_NA6@@if_show_HellenNA6_presets
-		commandButton = "Hellen NA8 94-95",			cmd_set_engine_type_hellen_NA94@@if_show_HellenNA6_presets
+		commandButton = "Mazda Miata NA6",				cmd_set_engine_type_MAZDA_MIATA_NA6@@if_show_HellenNA6_presets
+		commandButton = "Mazda Miata NA8 94-95",			cmd_set_engine_type_MAZDA_MIATA_NA94@@if_show_HellenNA6_presets
 
-		commandButton = "Hellen NB1 36 wheel",		cmd_set_engine_type_hellen_NB2_36@@if_show_HellenNB1_presets
-		commandButton = "Hellen NB2 36 wheel",		cmd_set_engine_type_hellen_NB2_36@@if_show_HellenNB2_presets
+		commandButton = "Hellen NB2 36 wheel",		cmd_set_engine_type_MAZDA_MIATA_NB2_36@@if_show_HellenNB2_presets
 
 		commandButton = "Hellen Nissan 4 cylinder",			cmd_set_engine_type_hellen_nissan_121_4@@if_show_Hellen121nissan_presets
 		commandButton = "Hellen Nissan 6 cylinder",			cmd_set_engine_type_hellen_nissan_121_6@@if_show_Hellen121nissan_presets

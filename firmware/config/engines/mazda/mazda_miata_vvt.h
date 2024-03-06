@@ -25,11 +25,6 @@ void setMazdaMiata2003EngineConfiguration();
 void setMiataNB2_Proteus_TCU();
 
 /**
- * set engine_type 67
- */
-void setMiataNB2_Proteus();
-
-/**
  * set engine_type 69
  */
 void setMiataNB2_Hellen72();

@@ -2,9 +2,8 @@
 
 # Target ECU board design
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
-# Set this if you want a default engine type other than normal hellen-nb1
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
-  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::HELLEN_NB1
+  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::MAZDA_MIATA_NB1
 endif
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
