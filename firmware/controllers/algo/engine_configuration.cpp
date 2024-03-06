@@ -1007,9 +1007,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::SACHS:
 		setSachs();
 		break;
-	case engine_type_e::BMW_M52:
-	  bmwM52();
-    break;
 	case engine_type_e::ET_UNUSED_35:
 	case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
 		setToyota_2jz_vics();
@@ -1024,6 +1021,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setRotary();
 		break;
 #endif // HW_FRANKENSO
+	case engine_type_e::BMW_M52:
+	  bmwM52();
+    break;
 #ifdef HW_SUBARU_EG33
 	case engine_type_e::SUBARU_EG33:
 		setSubaruEG33Defaults();
