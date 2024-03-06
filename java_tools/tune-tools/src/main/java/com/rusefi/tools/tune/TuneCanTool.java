@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.enums.engine_type_e;
+import com.rusefi.parse.TypesHelper;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.xml.XmlUtil;
@@ -76,7 +77,7 @@ public class TuneCanTool implements TuneCanToolConstants {
     protected static void processREOtune(int tuneId, engine_type_e engineType, String key,
                                        String methodNamePrefix) throws JAXBException, IOException {
         // compare specific internet tune to total global default
-        handle(key + "-comparing-against-global-defaults", tuneId, TuneCanTool.DEFAULT_TUNE, methodNamePrefix);
+        handle(key + "-comparing-against-global-defaults", tuneId, YET_ANOTHER_ROOT + TuneCanTool.DEFAULT_TUNE, methodNamePrefix);
         // compare same internet tune to default tune of specified engine type
         handle(key + "-comparing-against-current-" + key + "-default", tuneId, getDefaultTuneName(engineType), methodNamePrefix);
     }
@@ -205,6 +206,14 @@ public class TuneCanTool implements TuneCanToolConstants {
                 log.info("Not found " + fieldName);
                 continue;
             }
+            if (TypesHelper.isFloat(cf.getType()) && !cf.isArray()) {
+                float floatDefaultValue = Float.parseFloat(defaultValue.getValue());
+                float floatCustomValue = Float.parseFloat(customValue.getValue());
+                if (floatCustomValue != 0 && Math.abs(floatDefaultValue / floatCustomValue - 1) < 0.001) {
+                    System.out.println("Skipping rounding error " + floatDefaultValue + " vs " + floatCustomValue);
+                    continue;
+                }
+            }
             String cName = context + cf.getOriginalArrayName();
 
             if (isHardwareProperty(cf.getName())) {
@@ -325,6 +334,7 @@ public class TuneCanTool implements TuneCanToolConstants {
             "invertCamVVTSignal",
             "adcVcc",
             "vbattDividerCoeff",
+            "displayLogicLevelsInEngineSniffer",
             "isSdCardEnabled",
             "is_enabled_spi_1",
             "is_enabled_spi_2",
