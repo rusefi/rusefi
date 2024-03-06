@@ -322,7 +322,7 @@ TEST(misc, testRpmCalculator) {
 }
 
 TEST(trigger, testAnotherTriggerDecoder) {
-	testTriggerDecoder2("Miata 2003", engine_type_e::FRANKENSO_MAZDA_MIATA_2003, 3, 0.38888889, 0.0);
+	testTriggerDecoder2("Miata 2003", engine_type_e::MAZDA_MIATA_NB2, 3, 0.38888889, 0.0);
 }
 
 TEST(trigger, testTriggerDecoder) {

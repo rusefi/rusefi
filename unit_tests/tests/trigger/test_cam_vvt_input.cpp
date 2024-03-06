@@ -132,7 +132,7 @@ TEST(trigger, testCamInput) {
 }
 
 TEST(trigger, testNB2CamInput) {
-	EngineTestHelper eth(engine_type_e::FRANKENSO_MAZDA_MIATA_2003);
+	EngineTestHelper eth(engine_type_e::MAZDA_MIATA_NB2);
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
