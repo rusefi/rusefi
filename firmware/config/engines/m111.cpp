@@ -22,6 +22,16 @@ void setM111EngineConfiguration() {
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->displacement = 2.295f;
+	engineConfiguration->cylinderBore = 89.9;
+	engineConfiguration->vehicleWeight = 1250;
+	engineConfiguration->injector.flow = 196;
+	engineConfiguration->enableCanVss = true;
+	engineConfiguration->canVssNbcType = W202;
+	engineConfiguration->canNbcType = CAN_BUS_W202_C180;
+
+#if HW_HELLEN
+	engineConfiguration->enableSoftwareKnock = true;
+#endif
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
