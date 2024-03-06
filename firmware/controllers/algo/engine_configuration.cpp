@@ -978,9 +978,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::DODGE_RAM:
 		setDodgeRam1996();
 		break;
-	case engine_type_e::FRANKENSO_MAZDA_MIATA_2003:
-		setMazdaMiata2003EngineConfiguration();
-		break;
 	case engine_type_e::TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration();
 		break;
