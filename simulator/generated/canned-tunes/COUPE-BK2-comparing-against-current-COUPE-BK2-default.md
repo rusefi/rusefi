@@ -57,7 +57,6 @@
 
 	couplecannedtpsTpsAccelTable();
 	couplecannedscriptTable4();
-	couplecannedveTable();
 	couplecannedpedalToTpsTable();
 	couplecannedlambdaTable();
 	couplecannedtcuSolenoidTable();
