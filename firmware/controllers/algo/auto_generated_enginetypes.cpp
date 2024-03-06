@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 14:18:05 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 18:02:49 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -177,8 +177,6 @@ const char *getEngine_type_e(engine_type_e value){
 switch(value) {
 case engine_type_e::BMW_M52:
   return "BMW_M52";
-case engine_type_e::BMW_M73_M:
-  return "BMW_M73_M";
 case engine_type_e::BMW_M73_MRE:
   return "BMW_M73_MRE";
 case engine_type_e::BMW_M73_MRE_SLAVE:
@@ -325,16 +323,12 @@ case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case engine_type_e::PROTEUS_BMW_M73:
   return "PROTEUS_BMW_M73";
-case engine_type_e::PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
-  return "PROTEUS_E65_6H_MAN_IN_THE_MIDDLE";
 case engine_type_e::PROTEUS_GM_LS_4:
   return "PROTEUS_GM_LS_4";
 case engine_type_e::PROTEUS_LUA_DEMO:
   return "PROTEUS_LUA_DEMO";
 case engine_type_e::PROTEUS_M111:
   return "PROTEUS_M111";
-case engine_type_e::PROTEUS_N73:
-  return "PROTEUS_N73";
 case engine_type_e::PROTEUS_NISSAN_VQ35:
   return "PROTEUS_NISSAN_VQ35";
 case engine_type_e::PROTEUS_QC_TEST_BOARD:
@@ -375,8 +369,14 @@ case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case engine_type_e::UNUSED102:
   return "UNUSED102";
+case engine_type_e::UNUSED24:
+  return "UNUSED24";
 case engine_type_e::UNUSED67:
   return "UNUSED67";
+case engine_type_e::UNUSED9:
+  return "UNUSED9";
+case engine_type_e::UNUSED93:
+  return "UNUSED93";
 case engine_type_e::UNUSED_21:
   return "UNUSED_21";
 case engine_type_e::UNUSED_65:

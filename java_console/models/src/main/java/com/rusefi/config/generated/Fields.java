@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 06 15:27:42 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 06 18:03:54 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -314,7 +314,6 @@ public class Fields {
 	public static final int ENGINE_NOISE_CURVE_SIZE = 16;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
 	public static final int engine_type_e_BMW_M52 = 22;
-	public static final int engine_type_e_BMW_M73_M = 24;
 	public static final int engine_type_e_BMW_M73_MRE = 50;
 	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 51;
 	public static final int engine_type_e_DEFAULT_FRANKENSO = 0;
@@ -388,11 +387,9 @@ public class Fields {
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
 	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 30;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
-	public static final int engine_type_e_PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9;
 	public static final int engine_type_e_PROTEUS_GM_LS_4 = 27;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
 	public static final int engine_type_e_PROTEUS_M111 = 17;
-	public static final int engine_type_e_PROTEUS_N73 = 93;
 	public static final int engine_type_e_PROTEUS_NISSAN_VQ35 = 103;
 	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
 	public static final int engine_type_e_PROTEUS_STIM_QC = 73;
@@ -413,7 +410,10 @@ public class Fields {
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_UNUSED102 = 102;
+	public static final int engine_type_e_UNUSED24 = 24;
 	public static final int engine_type_e_UNUSED67 = 67;
+	public static final int engine_type_e_UNUSED9 = 9;
+	public static final int engine_type_e_UNUSED93 = 93;
 	public static final int engine_type_e_UNUSED_21 = 21;
 	public static final int engine_type_e_UNUSED_65 = 65;
 	public static final int engine_type_e_UNUSED_97 = 97;
