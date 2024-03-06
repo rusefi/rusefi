@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.tune.xml.Constant;
@@ -40,26 +39,21 @@ import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIM
  * <p>
  * see <a href="https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process">...</a>
  */
-public class TuneCanTool {
+public class TuneCanTool implements TuneCanToolConstants {
     private static final Logging log = getLogging(TuneCanTool.class);
     private static final String REPORTS_OUTPUT_FOLDER = "generated/canned-tunes";
 
-    public static final String SRC_TEST_RESOURCES = "src/test/resources/";
     private static final String FOLDER = "generated";
     public static final String SIMULATED_PREFIX = FOLDER + File.separator + "simulator_tune";
     public static final String TUNE_FILE_SUFFIX = ".msq";
     public static final String DEFAULT_TUNE = SIMULATED_PREFIX + TUNE_FILE_SUFFIX;
     private static final String workingFolder = "downloaded_tunes";
 
-    private static IniFileModel ini;
+    protected static IniFileModel ini;
 
 
     public static void main(String[] args) throws Exception {
-        ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
-        if (ini == null)
-            throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
 
-        RootHolder.ROOT = "../firmware/";
 
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("example.msq");
 
@@ -67,10 +61,6 @@ public class TuneCanTool {
 //            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq",  "comment");
 
 
-        processREOtune(1507, engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK2, "COUPE-BK2");
-        processREOtune(1576, engine_type_e.HYUNDAI_PB, "PB");
-        processREOtune(1591, engine_type_e.BMW_M52, "M52");
-//        processREOtune(1490, Fields.engine_type_e_MRE_M111, "m111-alex");
 //        handle("Mitsubicha", 1258);
 //        handle("Scion-1NZ-FE", 1448);
 //        handle("4g93", 1425);
@@ -80,7 +70,7 @@ public class TuneCanTool {
     /**
      * @see WriteSimulatorConfiguration
      */
-    private static void processREOtune(int tuneId, engine_type_e engineType, String key) throws JAXBException, IOException {
+    protected static void processREOtune(int tuneId, engine_type_e engineType, String key) throws JAXBException, IOException {
         // compare specific internet tune to total global default
         handle(key + "-comparing-against-global-defaults", tuneId, TuneCanTool.DEFAULT_TUNE);
         // compare same internet tune to default tune of specified engine type

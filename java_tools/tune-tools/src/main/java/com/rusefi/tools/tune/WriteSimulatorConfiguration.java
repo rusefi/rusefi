@@ -44,7 +44,7 @@ public class WriteSimulatorConfiguration {
             }) {
                 writeSpecificEngineType(type);
             }
-            TuneCanTool.main(args);
+            TuneCanToolRunner.runPopular();
         } catch (Throwable e) {
             log.error("Unfortunately", e);
             System.exit(-1);

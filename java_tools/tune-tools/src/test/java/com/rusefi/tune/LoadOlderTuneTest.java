@@ -3,6 +3,7 @@ package com.rusefi.tune;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.tools.tune.TuneCanTool;
+import com.rusefi.tools.tune.TuneCanToolConstants;
 import com.rusefi.tools.tune.TuneTools;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
@@ -19,7 +20,7 @@ public class LoadOlderTuneTest {
         Page dataPage = customOldTune.findPage();
         assertFalse(dataPage.constant.isEmpty());
 
-        Msq lessOldDefaultTune = Msq.readTune(TuneCanTool.SRC_TEST_RESOURCES + "simulator_tune-2023-06.xml");
+        Msq lessOldDefaultTune = Msq.readTune(TuneCanToolConstants.SRC_TEST_RESOURCES + "simulator_tune-2023-06.xml");
 
         IniFileModel ini = new IniFileModel().readIniFile(TuneReadWriteTest.TEST_INI);
         assertFalse(ini.fieldsInUiOrder.isEmpty());
