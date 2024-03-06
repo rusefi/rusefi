@@ -1,6 +1,6 @@
 #if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (FUEL_LOAD_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (FUEL_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT)
 
-static void cannedvvtTable1() {
+static void pbcannedvvtTable1() {
 	static const float hardCodedvvtTable1[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -14,7 +14,7 @@ static void cannedvvtTable1() {
 	copyTable(config->vvtTable1, hardCodedvvtTable1);
 }
 
-static void cannedvvtTable2() {
+static void pbcannedvvtTable2() {
 	static const float hardCodedvvtTable2[8][8] = {
 {50.000,	50.000,	50.000,	50.000,	50.000,	40.000,	40.000,	40.000,	},
 {50.000,	50.000,	50.000,	50.000,	50.000,	40.000,	40.000,	40.000,	},
@@ -72,7 +72,7 @@ static void pbcannedveTable() {
 	copyTable(config->veTable, hardCodedveTable);
 }
 
-static void cannedinjectionPhase() {
+static void pbcannedinjectionPhase() {
 	static const float hardCodedinjectionPhase[16][16] = {
 {-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-250.000,	-250.000,	-250.000,	-240.000,	-240.000,	-240.000,	-240.000,	-240.000,	},
 {-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-250.000,	-250.000,	-250.000,	-240.000,	-240.000,	-240.000,	-240.000,	-240.000,	},
@@ -115,4 +115,5 @@ static void pbcannedlambdaTable() {
 };
 	copyTable(config->lambdaTable, hardCodedlambdaTable);
 }
+
 #endif

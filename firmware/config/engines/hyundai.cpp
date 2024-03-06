@@ -35,6 +35,8 @@ static void set201xHyundai() {
 
 // set engine_type 104
 void setHyundaiPb() {
+	setGDIFueling();
+	// override injection phase
 	cannedPbTables();
     setInline4();
 	engineConfiguration->displacement = 1.6;
@@ -63,7 +65,6 @@ void setHyundaiPb() {
 	set201xHyundai();
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
-	setGDIFueling();
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
    	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
