@@ -106,16 +106,12 @@ public class LoadOlderTuneTest {
             "    engineConfiguration->knockDetectionWindowStart = 35;\n" +
             "    // default 60.0\n" +
             "    engineConfiguration->knockDetectionWindowEnd = 135;\n" +
-            "    // default \"false\"\n" +
-            "    engineConfiguration->is_enabled_spi_3 = true;\n" +
             "    // default 33.0\n" +
             "    engineConfiguration->auxPid[0].offset = 0;\n" +
             "    // default 2.0\n" +
             "    engineConfiguration->auxPid[0].pFactor = 0;\n" +
             "    // default 0.004999999888241291\n" +
             "    engineConfiguration->auxPid[0].iFactor = 0;\n" +
-            "    // default 5.333333492279053\n" +
-            "    engineConfiguration->vbattDividerCoeff = 8.6;\n" +
             "    // default 0.0\n" +
             "    engineConfiguration->alternatorControl.minValue = 10;\n" +
             "    // default \"DEFAULT\"\n" +
@@ -124,7 +120,12 @@ public class LoadOlderTuneTest {
             "    engineConfiguration->startCrankingDuration = 7;\n" +
             "    // default \"Duty cycle\"\n" +
             "    engineConfiguration->tachPulseDurationAsDutyCycle = false;\n" +
-            "    // defa", sb.substring(0, 3500));
+            "    // default 0.5\n" +
+            "    engineConfiguration->tachPulseDuractionMs = 4;\n" +
+            "    // default 1.0\n" +
+            "    engineConfiguration->tachPulsePerRev = 0;\n" +
+            "    // default \"true\"\n" +
+            "    engine", sb.substring(0, 3500));
     }
 
     @Test

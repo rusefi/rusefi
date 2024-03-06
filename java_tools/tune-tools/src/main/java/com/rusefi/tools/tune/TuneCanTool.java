@@ -19,7 +19,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigFieldImpl.unquote;
@@ -38,7 +41,7 @@ import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIM
  */
 public class TuneCanTool {
     private static final Logging log = getLogging(TuneCanTool.class);
-    private static final String REPORTS_OUTPUT_FOLDER = "tune_reports";
+    private static final String REPORTS_OUTPUT_FOLDER = "generated\\canned-tunes";
 
     public static final String SRC_TEST_RESOURCES = "src/test/resources/";
     private static final String FOLDER = "generated";
@@ -63,8 +66,9 @@ public class TuneCanTool {
 //            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq",  "comment");
 
 
-//        processREOtune(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "BK2");
+        processREOtune(1507, Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2, "COUPE-BK2");
         processREOtune(1576, Fields.engine_type_e_HYUNDAI_PB, "PB");
+        processREOtune(1591, Fields.engine_type_e_BMW_M52, "M52");
 //        processREOtune(1490, Fields.engine_type_e_MRE_M111, "m111-alex");
 //        handle("Mitsubicha", 1258);
 //        handle("Scion-1NZ-FE", 1448);
@@ -77,9 +81,9 @@ public class TuneCanTool {
      */
     private static void processREOtune(int tuneId, int engineType, String key) throws JAXBException, IOException {
         // compare specific internet tune to total global default
-        handle(key, tuneId, TuneCanTool.DEFAULT_TUNE);
+        handle(key + "-comparing-against-global-defaults", tuneId, TuneCanTool.DEFAULT_TUNE);
         // compare same internet tune to default tune of specified engine type
-        handle(key + "-diff", tuneId, getDefaultTuneName(engineType));
+        handle(key + "-comparing-against-current-" + key + "-default", tuneId, getDefaultTuneName(engineType));
     }
 
     @NotNull
@@ -204,6 +208,10 @@ public class TuneCanTool {
             }
             String cName = context + cf.getOriginalArrayName();
 
+            if (isHardwareProperty(cf.getName())) {
+                continue;
+            }
+
             if (cf.getType().equals("boolean")) {
                 sb.append(TuneTools.getAssignmentCode(defaultValue, cName, unquote(customValue.getValue())));
                 continue;
@@ -265,7 +273,6 @@ public class TuneCanTool {
                 continue;
             }
 
-
             if (!Node.isNumeric(customValue.getValue())) {
                 // todo: smarter logic for enums
 
@@ -310,4 +317,23 @@ public class TuneCanTool {
         return sb;
     }
 
+    private final static Set<String> HARDWARE_PROPERTIES = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+
+    static {
+        HARDWARE_PROPERTIES.addAll(Arrays.asList(
+            "invertPrimaryTriggerSignal",
+            "invertSecondaryTriggerSignal",
+            "invertCamVVTSignal",
+            "adcVcc",
+            "vbattDividerCoeff",
+            "isSdCardEnabled",
+            "is_enabled_spi_1",
+            "is_enabled_spi_2",
+            "is_enabled_spi_3"
+        ));
+    }
+
+    private static boolean isHardwareProperty(String name) {
+        return HARDWARE_PROPERTIES.contains(name);
+    }
 }

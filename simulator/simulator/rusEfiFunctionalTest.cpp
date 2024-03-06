@@ -186,6 +186,7 @@ void rusEfiFunctionalTest(void) {
 	for (auto const type : {
 			engine_type_e::MRE_M111,
 			engine_type_e::BMW_M52,
+			engine_type_e::MAZDA_MIATA_NB2,
 			engine_type_e::HONDA_K,
 			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1,
 			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2,

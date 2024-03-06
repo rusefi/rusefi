@@ -33,6 +33,7 @@ public class WriteSimulatorConfiguration {
                     // [CannedTunes] see 'rusEfiFunctionalTest.cpp' which exports default tunes into binary files for us
                     Fields.engine_type_e_MRE_M111,
                     Fields.engine_type_e_BMW_M52,
+                    Fields.engine_type_e_MAZDA_MIATA_NB2,
                     Fields.engine_type_e_HONDA_K,
                     Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1,
                     Fields.engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2,
@@ -42,6 +43,7 @@ public class WriteSimulatorConfiguration {
             }) {
                 writeSpecificEngineType(type);
             }
+            TuneCanTool.main(args);
         } catch (Throwable e) {
             log.error("Unfortunately", e);
             System.exit(-1);

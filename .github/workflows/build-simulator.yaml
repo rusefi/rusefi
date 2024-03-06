@@ -90,6 +90,7 @@ jobs:
         git status
         git pull https://github.com/rusefi/rusefi master
         git add 'simulator/generated/*xml'
+        git add 'simulator/generated/canned-tunes/*md'
         echo "Status 3/3"
         git status
         OUT=$(git commit -am "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
