@@ -45,7 +45,7 @@ enum class engine_type_e : uint16_t {
 	 */
 	GY6_139QMB = 8,
 
-	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
+	UNUSED9 = 9,
 	MAZDA_MIATA_NA96 = 10,
 	FORD_COYOTE = 11,
 	MITSUBISHI_3A92 = 12,
@@ -71,7 +71,7 @@ enum class engine_type_e : uint16_t {
 	 * microRusEFI used as Body Control Module BCM BCU
 	 */
 	MRE_BODY_CONTROL = 23,
-	BMW_M73_M = 24,
+	UNUSED24 = 24,
 
 	/**
 	 * See also MRE_SECONDARY_CAN
@@ -194,7 +194,7 @@ enum class engine_type_e : uint16_t {
 
 	SIMULATOR_CONFIG = 92,
 
-	PROTEUS_N73 = 93,
+	UNUSED93 = 93,
 
     HELLEN_NB1_36 = 94,
 

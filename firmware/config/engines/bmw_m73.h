@@ -12,8 +12,7 @@
 void m73engine();
 
 void setBMW_M73_TwoCoilUnitTest();
-// set engine_type 24
-void setEngineBMW_M73_Manhattan();
+
 // set engine_type 63
 void setEngineBMW_M73_Proteus();
 
