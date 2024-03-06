@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Feb 17 20:25:32 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 03:40:26 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -175,6 +175,8 @@ case UNUSED23:
 }
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
+case engine_type_e::BMW_M52:
+  return "BMW_M52";
 case engine_type_e::BMW_M73_M:
   return "BMW_M73_M";
 case engine_type_e::BMW_M73_MRE:
@@ -377,8 +379,6 @@ case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case engine_type_e::UNUSED_21:
   return "UNUSED_21";
-case engine_type_e::UNUSED_22:
-  return "UNUSED_22";
 case engine_type_e::UNUSED_65:
   return "UNUSED_65";
 case engine_type_e::UNUSED_97:
