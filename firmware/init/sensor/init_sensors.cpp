@@ -148,6 +148,7 @@ void reconfigureSensors() {
 	initFlexSensor(false);
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
+	initAuxSpeedSensors();
 	initInputShaftSpeedSensor();
 
 	initOldAnalogInputs();
