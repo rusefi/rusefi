@@ -267,7 +267,7 @@ void setMiataNA6_MAP_Frankenso() {
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 }
 
-void setHellenNA94() {
+void setMazdaMiataNA94() {
 	miataNAcommonEngineSettings();
 	strcpy(engineConfiguration->engineCode, "94");
 	/**
@@ -285,10 +285,12 @@ void setHellenNA94() {
 	engineConfiguration->fan2OnTemperature = 95;
 	engineConfiguration->fan2OffTemperature = 91;
 
+#if HW_HELLEN_MIATA_NA6
 	engineConfiguration->fan2Pin = Gpio::D9; // 3S - A/C Fan 94-95
+#endif //HW_HELLEN_MIATA_NA6
 }
 
-void setHellenNA6() {
+void setMazdaMiataNA6() {
 	miataNAcommonEngineSettings();
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 }

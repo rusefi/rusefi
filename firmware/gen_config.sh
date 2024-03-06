@@ -42,15 +42,16 @@ for BOARD in \
    "config/boards/hellen/hellen88bmw hellen88bmw" \
    "config/boards/hellen/uaefi uaefi" \
    "config/boards/hellen/hellen-112-17 hellen-112-17" \
-   "config/boards/hellen/hellen72 hellen72" \
    "config/boards/hellen/hellen81 hellen81" \
-   "config/boards/hellen/hellen-nb1 hellen-nb1" \
+   "config/boards/hellen/hellenMiataNA6 hellenMiataNA6" \
+   "config/boards/hellen/hellenMiataNA96 hellenMiataNA96" \
+   "config/boards/hellen/hellenMiataNB1 hellenMiataNB1" \
+   "config/boards/hellen/hellenMiataNB2 hellenMiataNB2" \
    "config/boards/hellen/hellen-gm-e67 hellen-gm-e67" \
-   "config/boards/hellen/hellen64_miataNA6_94 hellenNA6" \
-   "config/boards/hellen/hellenNA8_96 hellenNA8_96" \
    "config/boards/hellen/small-can-board small-can-board" \
    "config/boards/microrusefi mre_f7" \
    "config/boards/microrusefi mre_f4" \
+   "config/boards/at_start_f435 at_start_f435" \
    "config/boards/m74_9 m74_9" \
    "config/boards/s105 s105" \
    "config/boards/test-build-guards t-b-g" \
@@ -60,6 +61,7 @@ for BOARD in \
    "config/boards/proteus proteus_f7" \
    "config/boards/proteus proteus_f4" \
    "config/boards/proteus proteus_h7" \
+   "config/boards/f407-discovery f407-discovery" \
    "config/boards/f429-discovery f429-discovery" \
    "config/boards/f469-discovery f469-discovery" \
    "config/boards/nucleo_f413 stm32f413_nucleo" \
@@ -68,8 +70,6 @@ for BOARD in \
    "config/boards/nucleo_h743 nucleo_h743" \
    "config/boards/atlas atlas"\
    "config/boards/tdg-pdm8 tdg-pdm8"\
-   "config/boards/f407-discovery f407-discovery" \
-   "config/boards/at_start_f435 at_start_f435" \
    ; do
  BOARD_DIR=$(echo "$BOARD" | cut -d " " -f 1)
  SHORT_BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 2)

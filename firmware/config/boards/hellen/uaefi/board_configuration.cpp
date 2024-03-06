@@ -162,5 +162,13 @@ Gpio* getBoardMetaOutputs() {
 }
 
 int getBoardMetaDcOutputsCount() {
+    if (engineConfiguration->engineType == engine_type_e::HONDA_OBD1 ||
+      engineConfiguration->engineType == engine_type_e::MAZDA_MIATA_NA6 ||
+      engineConfiguration->engineType == engine_type_e::MAZDA_MIATA_NA94 ||
+      engineConfiguration->engineType == engine_type_e::MAZDA_MIATA_NA96 ||
+      engineConfiguration->engineType == engine_type_e::MAZDA_MIATA_NB1 ||
+      engineConfiguration->engineType == engine_type_e::MAZDA_MIATA_NB2) {
+        return 0;
+    }
     return 2;
 }

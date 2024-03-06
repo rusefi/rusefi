@@ -193,7 +193,7 @@ enum class engine_type_e : uint16_t {
 
 	UNUSED93 = 93,
 
-    HELLEN_NB1_36 = 94,
+  UNUSED94 = 94,
 
 	HELLEN_154_HYUNDAI_COUPE_BK2 = 95,
 

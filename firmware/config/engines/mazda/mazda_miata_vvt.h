@@ -17,12 +17,11 @@
  */
 void setMiataNB2_Proteus_TCU();
 
+void setMazdaMiataNB1();
 /**
  * set engine_type 69
  */
-void setMiataNB2_Hellen72();
+void setMazdaMiataNB2();
+void setMazdaMiataNB2_36();
 
-void setMiataNB2_Hellen72_36();
 
-
-void setHellenNB1();
