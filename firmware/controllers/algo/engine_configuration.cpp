@@ -35,6 +35,7 @@
 
 #include "defaults.h"
 
+#include "bmw_m52.h"
 #include "bmw_m73.h"
 #include "bmw_n73.h"
 
@@ -990,7 +991,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::UNUSED_21:
 	case engine_type_e::UNUSED_65:
-	case engine_type_e::UNUSED_22:
 	case engine_type_e::DODGE_RAM:
 		setDodgeRam1996();
 		break;
@@ -1007,6 +1007,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::SACHS:
 		setSachs();
 		break;
+	case engine_type_e::BMW_M52:
+	  bmwM52();
+    break;
 	case engine_type_e::ET_UNUSED_35:
 	case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
 		setToyota_2jz_vics();

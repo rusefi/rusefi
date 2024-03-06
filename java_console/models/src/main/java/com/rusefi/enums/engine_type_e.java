@@ -27,7 +27,7 @@ public enum engine_type_e {
 	TEST_ROTARY,
 	MIATA_NC,
 	UNUSED_21,
-	UNUSED_22,
+	BMW_M52,
 	MRE_BODY_CONTROL,
 	BMW_M73_M,
 	PROTEUS_LUA_DEMO,
