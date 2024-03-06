@@ -868,7 +868,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif
 
 #if HW_HELLEN_NB2
-	case engine_type_e::HELLEN_NB2:
+	case engine_type_e::MAZDA_MIATA_NB2:
 		setMiataNB2_Hellen72();
 		break;
 	case engine_type_e::HELLEN_NB2_36:

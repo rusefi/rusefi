@@ -153,7 +153,7 @@ enum class engine_type_e : uint16_t {
 	PROTEUS_MIATA_NB2 = 67,
 	MRE_M111 = 68,
 
-	HELLEN_NB2 = 69,
+	MAZDA_MIATA_NB2 = 69,
 
 	SUBARU_EG33 = 70,
 
