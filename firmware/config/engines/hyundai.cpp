@@ -15,7 +15,7 @@ https://rusefi.com/docs/pinouts/hellen/hellen154hyundai/
 #include "hellen_meta.h"
 #include "defaults.h"
 #include "lua_lib.h"
-#include "hyundai_coupe_canned.cpp"
+#include "hyundai_coupe_canned_tables.cpp"
 #include "hyundai_pb_canned.cpp"
 
 static void set201xHyundai() {
@@ -249,6 +249,7 @@ static void commonGenesisCoupe() {
 	cannedprimeValues();
 	cannedcltIdleCorrBins();
 	cannedcltIdleCorr();
+	cannedignitionTable();
 #endif // HW_HELLEN_HYUNDAI
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
