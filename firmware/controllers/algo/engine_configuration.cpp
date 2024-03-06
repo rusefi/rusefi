@@ -37,7 +37,6 @@
 
 #include "bmw_m52.h"
 #include "bmw_m73.h"
-#include "bmw_n73.h"
 
 #include "canam.h"
 #include "custom_engine.h"
@@ -797,9 +796,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::HONDA_OBD2A:
 		setProteusHondaOBD2A();
 		break;
-	case engine_type_e::PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
-		setEngineProteusGearboxManInTheMiddle();
-		break;
 	case engine_type_e::PROTEUS_STIM_QC:
 	    proteusStimQc();
 		break;
@@ -850,7 +846,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif // HW_HELLEN_4CHAN
 
 #if HW_HELLEN_8CHAN
-  case engine_type_e::UNUSED_97:
 	case engine_type_e::GM_SBC:
 	    setGmSbc();
         break;
@@ -936,9 +931,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::FRANKENSO_QA_ENGINE:
 		setFrankensoBoardTestConfiguration();
 		break;
-	case engine_type_e::BMW_M73_M:
-		setEngineBMW_M73_Manhattan();
-		break;
 	case engine_type_e::DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration();
 		break;
@@ -965,7 +957,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setEepromTestConfiguration();
 #endif
 		break;
-	case engine_type_e::ET_UNUSED_56:
 	case engine_type_e::MITSUBISHI_3A92:
 	    setMitsubishi3A92();
 	    break;
@@ -984,15 +975,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
-	case engine_type_e::UNUSED_21:
-	case engine_type_e::UNUSED_65:
 	case engine_type_e::DODGE_RAM:
 		setDodgeRam1996();
 		break;
 	case engine_type_e::FRANKENSO_MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration();
 		break;
-	case engine_type_e::ET_UNUSED_55:
 	case engine_type_e::TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration();
 		break;
@@ -1002,7 +990,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::SACHS:
 		setSachs();
 		break;
-	case engine_type_e::ET_UNUSED_35:
 	case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
 		setToyota_2jz_vics();
 		break;
