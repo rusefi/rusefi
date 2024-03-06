@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 06 20:45:39 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 06 23:18:08 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -357,7 +357,6 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_2CHAN_STIM_QC = 75;
 	public static final int engine_type_e_HELLEN_4CHAN_STIM_QC = 74;
 	public static final int engine_type_e_HELLEN_HONDA_BCM = 57;
-	public static final int engine_type_e_HELLEN_NB1_36 = 94;
 	public static final int engine_type_e_HONDA_600 = 43;
 	public static final int engine_type_e_HONDA_K = 90;
 	public static final int engine_type_e_HONDA_OBD1 = 66;
@@ -414,6 +413,7 @@ public class Fields {
 	public static final int engine_type_e_UNUSED67 = 67;
 	public static final int engine_type_e_UNUSED9 = 9;
 	public static final int engine_type_e_UNUSED93 = 93;
+	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_21 = 21;
 	public static final int engine_type_e_UNUSED_65 = 65;
 	public static final int engine_type_e_UNUSED_97 = 97;

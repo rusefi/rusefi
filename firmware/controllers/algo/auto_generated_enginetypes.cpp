@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 20:22:30 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 23:17:04 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -263,8 +263,6 @@ case engine_type_e::HELLEN_4CHAN_STIM_QC:
   return "HELLEN_4CHAN_STIM_QC";
 case engine_type_e::HELLEN_HONDA_BCM:
   return "HELLEN_HONDA_BCM";
-case engine_type_e::HELLEN_NB1_36:
-  return "HELLEN_NB1_36";
 case engine_type_e::HONDA_600:
   return "HONDA_600";
 case engine_type_e::HONDA_K:
@@ -377,6 +375,8 @@ case engine_type_e::UNUSED9:
   return "UNUSED9";
 case engine_type_e::UNUSED93:
   return "UNUSED93";
+case engine_type_e::UNUSED94:
+  return "UNUSED94";
 case engine_type_e::UNUSED_21:
   return "UNUSED_21";
 case engine_type_e::UNUSED_65:
