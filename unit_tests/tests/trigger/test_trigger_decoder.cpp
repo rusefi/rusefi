@@ -350,7 +350,7 @@ TEST(trigger, testTriggerDecoder) {
 
 	testTriggerDecoder2("dodge ram", engine_type_e::DODGE_RAM, 16, 0.5000, 0.06);
 
-	testTriggerDecoder2("Miata NB2", engine_type_e::HELLEN_NB2, 3, 0.3888888955, 0);
+	testTriggerDecoder2("Miata NB2", engine_type_e::MAZDA_MIATA_NB2, 3, 0.3888888955, 0);
 
 	printf("====================================================================================== testTriggerDecoder part 3\r\n");
 

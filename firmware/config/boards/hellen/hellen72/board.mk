@@ -5,7 +5,7 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # Set this if you want a default engine type other than normal Hellen72
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
-  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::HELLEN_NB2
+  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::MAZDA_MIATA_NB2
 endif
 
 
