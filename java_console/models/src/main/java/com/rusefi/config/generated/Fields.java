@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 06 06:47:46 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 06 15:27:42 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -359,11 +359,7 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_2CHAN_STIM_QC = 75;
 	public static final int engine_type_e_HELLEN_4CHAN_STIM_QC = 74;
 	public static final int engine_type_e_HELLEN_HONDA_BCM = 57;
-	public static final int engine_type_e_HELLEN_NA6 = 34;
-	public static final int engine_type_e_HELLEN_NA94 = 80;
-	public static final int engine_type_e_HELLEN_NB1 = 83;
 	public static final int engine_type_e_HELLEN_NB1_36 = 94;
-	public static final int engine_type_e_HELLEN_NB2_36 = 86;
 	public static final int engine_type_e_HONDA_600 = 43;
 	public static final int engine_type_e_HONDA_K = 90;
 	public static final int engine_type_e_HONDA_OBD1 = 66;
@@ -371,10 +367,14 @@ public class Fields {
 	public static final int engine_type_e_HYUNDAI_PB = 104;
 	public static final int engine_type_e_L9779_BENCH_ENGINE = 60;
 	public static final int engine_type_e_MAVERICK_X3 = 54;
+	public static final int engine_type_e_MAZDA_MIATA_NA6 = 34;
+	public static final int engine_type_e_MAZDA_MIATA_NA94 = 80;
+	public static final int engine_type_e_MAZDA_MIATA_NA96 = 10;
+	public static final int engine_type_e_MAZDA_MIATA_NB1 = 83;
 	public static final int engine_type_e_MAZDA_MIATA_NB2 = 69;
-	public static final int engine_type_e_MAZDA_NA8_96 = 10;
+	public static final int engine_type_e_MAZDA_MIATA_NB2_36 = 86;
+	public static final int engine_type_e_MAZDA_MIATA_NC = 20;
 	public static final int engine_type_e_ME17_9_MISC = 33;
-	public static final int engine_type_e_MIATA_NC = 20;
 	public static final int engine_type_e_MIATA_PROTEUS_TCU = 1;
 	public static final int engine_type_e_MINIMAL_PINS = 99;
 	public static final int engine_type_e_MITSUBISHI_3A92 = 12;
@@ -392,7 +392,6 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_GM_LS_4 = 27;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
 	public static final int engine_type_e_PROTEUS_M111 = 17;
-	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
 	public static final int engine_type_e_PROTEUS_N73 = 93;
 	public static final int engine_type_e_PROTEUS_NISSAN_VQ35 = 103;
 	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
@@ -403,7 +402,6 @@ public class Fields {
 	public static final int engine_type_e_SUBARU_EG33 = 70;
 	public static final int engine_type_e_TEST_100 = 100;
 	public static final int engine_type_e_TEST_101 = 101;
-	public static final int engine_type_e_TEST_102 = 102;
 	public static final int engine_type_e_TEST_33816 = 18;
 	public static final int engine_type_e_TEST_CRANK_ENGINE = 28;
 	public static final int engine_type_e_TEST_DC_WASTEGATE_DISCOVERY = 48;
@@ -414,6 +412,8 @@ public class Fields {
 	public static final int engine_type_e_TEST_ROTARY = 19;
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
+	public static final int engine_type_e_UNUSED102 = 102;
+	public static final int engine_type_e_UNUSED67 = 67;
 	public static final int engine_type_e_UNUSED_21 = 21;
 	public static final int engine_type_e_UNUSED_65 = 65;
 	public static final int engine_type_e_UNUSED_97 = 97;
@@ -1123,6 +1123,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 283747063;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1369,7 +1370,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.03.06.f407-discovery.2212235715";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.03.06.f407-discovery.283747063";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
