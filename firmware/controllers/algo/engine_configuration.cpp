@@ -756,6 +756,27 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
+#if HW_HELLEN
+	case engine_type_e::MAZDA_MIATA_NA96:
+		setMazdaMiata96();
+		break;
+	case engine_type_e::MAZDA_MIATA_NA6:
+		setMazdaMiataNA6();
+		break;
+	case engine_type_e::MAZDA_MIATA_NA94:
+		setMazdaMiataNA94();
+		break;
+	case engine_type_e::MAZDA_MIATA_NB1:
+		setMazdaMiataNB1();
+		break;
+	case engine_type_e::MAZDA_MIATA_NB2:
+		setMazdaMiataNB2();
+		break;
+	case engine_type_e::MAZDA_MIATA_NB2_36:
+		setMazdaMiataNB2_36();
+		break;
+#endif
+
 #if HW_PROTEUS
 	case engine_type_e::MAVERICK_X3:
 	    setMaverickX3();
@@ -851,21 +872,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
         break;
 #endif
 
-#if HW_HELLEN_NB1
-	case engine_type_e::MAZDA_MIATA_NB1:
-		setHellenNB1();
-		break;
-#endif
-
-#if HW_HELLEN_NB2
-	case engine_type_e::MAZDA_MIATA_NB2:
-		setMiataNB2_Hellen72();
-		break;
-	case engine_type_e::MAZDA_MIATA_NB2_36:
-		setMiataNB2_Hellen72_36();
-		break;
-#endif
-
 #if HW_HELLEN_121_VAG
 	case engine_type_e::HELLEN_121_VAG_5_CYL:
 	    setHellen121Vag_5_cyl();
@@ -889,17 +895,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::TOYOTA_1NZ_FE:
 	    setToyota1NZFE();
 	    break;
-	case engine_type_e::MAZDA_MIATA_NA96:
-		setMazdaMiata96();
-		break;
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::HELLEN_154_VAG:
-		break;
-	case engine_type_e::MAZDA_MIATA_NA6:
-		setHellenNA6();
-		break;
-	case engine_type_e::MAZDA_MIATA_NA94:
-		setHellenNA94();
 		break;
 	case engine_type_e::HELLEN_HONDA_BCM:
 	    setHondaCivicBcm();

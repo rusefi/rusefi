@@ -135,14 +135,14 @@ jobs:
             m74_9,
             s105,
             t-b-g,
-            hellen72,
             hellen81,
             hellen88bmw,
             hellen88bmw_avr,
-            hellen-nb1,
+            hellenMiataNA6,
+            hellenMiataNA96,
+            hellenMiataNB1,
+            hellenMiataNB2,
             hellen-gm-e67,
-            hellenNA8_96,
-            hellenNA6,
             hellen128,
             hellen121vag,
             hellen-honda-k,
@@ -173,10 +173,6 @@ jobs:
         include:
           # Board configurations
           # 'target' should match corresponding SHORT_BOARD_NAME
-          - build-target: hellen72
-            folder: config/boards/hellen/hellen72
-            skip-rate: 90
-
           - build-target: hellen81
             folder: config/boards/hellen/hellen81
             skip-rate: 90
@@ -238,10 +234,6 @@ jobs:
             folder: config/boards/hellen/hellen88bmw
             skip-rate: 99
 
-          - build-target: hellen-nb1
-            folder: config/boards/hellen/hellen-nb1
-            skip-rate: 99
-
           - build-target: hellen-112-17
             folder: config/boards/hellen/hellen-112-17
             skip-rate: 50
@@ -254,13 +246,21 @@ jobs:
             folder: config/boards/hellen/hellen-gm-e67
             skip-rate: 99
 
-          - build-target: hellenNA8_96
-            folder: config/boards/hellen/hellenNA8_96
+          - build-target: hellenMiataNA6
+            folder: config/boards/hellen/hellenMiataNA6
             skip-rate: 99
 
-          - build-target: hellenNA6
-            folder: config/boards/hellen/hellen64_miataNA6_94
-            skip-rate: 90
+          - build-target: hellenMiataNA96
+            folder: config/boards/hellen/hellenMiataNA96
+            skip-rate: 99
+
+          - build-target: hellenMiataNB1
+            folder: config/boards/hellen/hellenMiataNB1
+            skip-rate: 99
+
+          - build-target: hellenMiataNB2
+            folder: config/boards/hellen/hellenMiataNB2
+            skip-rate: 99
 
           - build-target: hellen128
             folder: config/boards/hellen/hellen128

@@ -451,9 +451,11 @@ void setMiataNB2_Proteus_TCU() {
 #endif // HW_PROTEUS
 
 #if HW_HELLEN
-static void setMazdaMiataEngineNB1Defaults() {
+void setMazdaMiataNB1() {
 	setCommonMazdaNB();
 	strcpy(engineConfiguration->engineCode, "NB1");
+
+	engineConfiguration->injector.flow = 256;
 
 	// Vehicle speed/gears
 	engineConfiguration->totalGearsCount = 5;
@@ -468,13 +470,7 @@ static void setMazdaMiataEngineNB1Defaults() {
 	engineConfiguration->finalGearRatio = 4.3;
 }
 
-void setHellenNB1() {
-	setMazdaMiataEngineNB1Defaults();
-
-	engineConfiguration->injector.flow = 256;
-}
-
-void setMiataNB2_Hellen72() {
+void setMazdaMiataNB2() {
     setMazdaMiataEngineNB2Defaults();
 	strcpy(engineConfiguration->vehicleName, "H72 test");
 
@@ -484,8 +480,8 @@ void setMiataNB2_Hellen72() {
 
 }
 
-void setMiataNB2_Hellen72_36() {
-	setMiataNB2_Hellen72();
+void setMazdaMiataNB2_36() {
+	setMazdaMiataNB2();
 
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_36_1;
 	engineConfiguration->globalTriggerAngleOffset = 76;

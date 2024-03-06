@@ -121,7 +121,7 @@ public class ReaderStateImpl implements ReaderState {
         try (BufferedReader definitionReader = new BufferedReader(readerProvider.read(fileNameWithRoot))) {
             readBufferedReader(definitionReader, destinations);
         } catch (Throwable e) {
-            throw new IllegalStateException("While processing " + fileNameWithRoot);
+            throw new IllegalStateException("While processing " + fileNameWithRoot, e);
         }
 
         if (destCDefinesFileName != null) {

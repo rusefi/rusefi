@@ -22,6 +22,6 @@ void miataNAcommonEngineSettings();
 /**
  * set engine_type 34
  */
-void setHellenNA6();
+void setMazdaMiataNA6();
 
-void setHellenNA94();
+void setMazdaMiataNA94();
