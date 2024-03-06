@@ -22,7 +22,6 @@ java_console_binary
 err.txt
 log.txt
 *.rusefi_binary
-*.msq
 *.kicad_prl
 .*-sentinel
 

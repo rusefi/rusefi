@@ -89,7 +89,7 @@ jobs:
         echo "Status 2/3"
         git status
         git pull https://github.com/rusefi/rusefi master
-        git add 'simulator/generated/*xml'
+        git add 'simulator/generated/*msq'
         git add 'simulator/generated/canned-tunes/*md'
         echo "Status 3/3"
         git status
