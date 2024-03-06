@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 18:02:49 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 20:22:30 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -213,8 +213,6 @@ case engine_type_e::FORD_INLINE_6_1995:
   return "FORD_INLINE_6_1995";
 case engine_type_e::FRANKENSO_BMW_M73_F:
   return "FRANKENSO_BMW_M73_F";
-case engine_type_e::FRANKENSO_MAZDA_MIATA_2003:
-  return "FRANKENSO_MAZDA_MIATA_2003";
 case engine_type_e::FRANKENSO_MIATA_NA6_MAP:
   return "FRANKENSO_MIATA_NA6_MAP";
 case engine_type_e::FRANKENSO_QA_ENGINE:
@@ -371,6 +369,8 @@ case engine_type_e::UNUSED102:
   return "UNUSED102";
 case engine_type_e::UNUSED24:
   return "UNUSED24";
+case engine_type_e::UNUSED47:
+  return "UNUSED47";
 case engine_type_e::UNUSED67:
   return "UNUSED67";
 case engine_type_e::UNUSED9:
