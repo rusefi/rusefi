@@ -15,8 +15,6 @@
     engineConfiguration->vvtOffsets[0] = -154;
     // default 0.0
     engineConfiguration->vvtOffsets[1] = 335;
-    // default "false"
-    engineConfiguration->displayLogicLevelsInEngineSniffer = true;
     // default 200.0
     engineConfiguration->injector.flow = 629.03;
     // default "None"

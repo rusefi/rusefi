@@ -3,8 +3,6 @@
 // canned tune https://rusefi.com/online/view.php?msq=1490
 
 ```
-    // default 0.9
-    engineConfiguration->tChargeMaxRpmMaxTps = 0.900002;
     // default "RPM+TPS (Default)"
     engineConfiguration->tChargeMode = TCHARGE_MODE_AIR_INTERP;
     // default 1.0
@@ -105,8 +103,6 @@
     engineConfiguration->mc33_t_hold_tot = 0;
     // default 1.0
     engineConfiguration->turboSpeedSensorMultiplier = 0;
-    // default 689.476
-    engineConfiguration->oilPressure.value2 = 689.4766;
     // default 0.0
     engineConfiguration->mapLowValueVoltage = 0.2;
     // default 5.0
@@ -119,10 +115,6 @@
     engineConfiguration->baroSensor.lowValue = 38.5;
     // default 500.0
     engineConfiguration->baroSensor.highValue = 250;
-    // default 9.996
-    engineConfiguration->afr.value1 = 9.995972;
-    // default 19.992
-    engineConfiguration->afr.value2 = 19.99194;
     // default "false"
     engineConfiguration->enableAemXSeries = true;
     // default 300.0
@@ -135,10 +127,6 @@
     engineConfiguration->stepperForceParkingEveryRestart = false;
     // default 15.0
     engineConfiguration->etbIdleThrottleRange = 10;
-    // default 0.05
-    engineConfiguration->idleRpmPid.pFactor = 0.05;
-    // default 0.002
-    engineConfiguration->idleRpmPid.iFactor = 0.002;
     // default -20.0
     engineConfiguration->idleRpmPid.minValue = 0;
     // default 20.0
@@ -259,8 +247,6 @@
     engineConfiguration->boostControlMinTps = 0;
     // default 110.0
     engineConfiguration->boostControlMinMap = 0;
-    // default 0.3
-    engineConfiguration->boostPid.iFactor = 0.299999;
     // default "Throttle 2"
     engineConfiguration->etbFunctions[1] = DC_None;
     // default 1.0

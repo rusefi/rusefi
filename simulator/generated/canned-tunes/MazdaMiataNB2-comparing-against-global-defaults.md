@@ -3,14 +3,8 @@
 // canned tune https://rusefi.com/online/view.php?msq=985
 
 ```
-    // default 0.9
-    engineConfiguration->tChargeMaxRpmMaxTps = 0.900002;
     // default 1.0
     engineConfiguration->tChargeAirIncrLimit = 15;
-    // default 0.098
-    engineConfiguration->tChargeAirCoefMin = 0.0980001;
-    // default 0.902
-    engineConfiguration->tChargeAirCoefMax = 0.902;
     // default 153.6
     engineConfiguration->tChargeAirFlowMax = 165;
     // default "Single Coil"
@@ -31,8 +25,6 @@
     engineConfiguration->vvtMode[0] = VVT_MIATA_NB;
     // default 450.0
     engineConfiguration->vvtOffsets[0] = 76;
-    // default "false"
-    engineConfiguration->displayLogicLevelsInEngineSniffer = true;
     // default 200.0
     engineConfiguration->injector.flow = 265;
     // default "None"
@@ -107,8 +99,6 @@
     engineConfiguration->clutchDownPinInverted = true;
     // default 1.0
     engineConfiguration->turboSpeedSensorMultiplier = 0;
-    // default 689.476
-    engineConfiguration->oilPressure.value2 = 689.4766;
     // default 410.0
     engineConfiguration->mapErrorDetectionTooHigh = 250;
     // default "14Point7"
@@ -299,10 +289,6 @@
     engineConfiguration->issFilterReciprocal = 0;
     // default 1.0
     engineConfiguration->tcuInputSpeedSensorTeeth = 0;
-    // default 0.3
-    engineConfiguration->boostPid.iFactor = 0.299999;
-    // default 0.05
-    engineConfiguration->etb.dFactor = 0.05;
     // default 100.0
     engineConfiguration->etbMaximumPosition = 0;
     // default 400.0

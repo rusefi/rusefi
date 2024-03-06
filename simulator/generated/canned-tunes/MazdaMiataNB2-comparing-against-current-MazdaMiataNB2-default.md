@@ -3,14 +3,8 @@
 // canned tune https://rusefi.com/online/view.php?msq=985
 
 ```
-    // default 0.9
-    engineConfiguration->tChargeMaxRpmMaxTps = 0.900002;
     // default 1.0
     engineConfiguration->tChargeAirIncrLimit = 15;
-    // default 0.098
-    engineConfiguration->tChargeAirCoefMin = 0.0980001;
-    // default 0.902
-    engineConfiguration->tChargeAirCoefMax = 0.902;
     // default 153.6
     engineConfiguration->tChargeAirFlowMax = 165;
     // default 0.0
@@ -25,8 +19,6 @@
     engineConfiguration->globalTriggerAngleOffset = 76;
     // default 98.0
     engineConfiguration->vvtOffsets[0] = 76;
-    // default "false"
-    engineConfiguration->displayLogicLevelsInEngineSniffer = true;
     // default 0.0
     engineConfiguration->cylinderBankSelect[0] = 1;
     // default 0.0
@@ -95,8 +87,6 @@
     engineConfiguration->clutchDownPinInverted = true;
     // default 1.0
     engineConfiguration->turboSpeedSensorMultiplier = 0;
-    // default 689.476
-    engineConfiguration->oilPressure.value2 = 689.4766;
     // default 410.0
     engineConfiguration->mapErrorDetectionTooHigh = 250;
     // default "14Point7"
@@ -121,8 +111,6 @@
     engineConfiguration->stepperForceParkingEveryRestart = false;
     // default 15.0
     engineConfiguration->etbIdleThrottleRange = 5;
-    // default 0.0065
-    engineConfiguration->idleRpmPid.pFactor = 0.00649999;
     // default 0.3
     engineConfiguration->idleRpmPid.iFactor = 0.03;
     // default 10.0
@@ -163,8 +151,6 @@
     engineConfiguration->warningPeriod = 10;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
-    // default 13.8
-    engineConfiguration->knockBandCustom = 13.80627;
     // default 20.0
     engineConfiguration->knockRetardAggression = 0;
     // default 3.0
@@ -243,10 +229,6 @@
     engineConfiguration->issFilterReciprocal = 0;
     // default 1.0
     engineConfiguration->tcuInputSpeedSensorTeeth = 0;
-    // default 0.3
-    engineConfiguration->boostPid.iFactor = 0.299999;
-    // default 0.05
-    engineConfiguration->etb.dFactor = 0.05;
     // default 100.0
     engineConfiguration->etbMaximumPosition = 0;
     // default 400.0
