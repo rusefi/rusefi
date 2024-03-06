@@ -148,7 +148,6 @@
 
 
 	pbcannedscriptTable4();
-	pbcannedinjectionPhase();
 	pbcannedlambdaTable();
 	pbcannedtcuSolenoidTable();
 	pbcannedpostCrankingFactor();
