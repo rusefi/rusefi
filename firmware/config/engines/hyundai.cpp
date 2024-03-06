@@ -250,7 +250,8 @@ static void commonGenesisCoupe() {
 	cannedprimeValues();
 	cannedcltIdleCorrBins();
 	cannedcltIdleCorr();
-	cannedignitionTable();
+	couplecannedignitionTable();
+	couplecannedveTable();
 #endif // HW_HELLEN_HYUNDAI
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
