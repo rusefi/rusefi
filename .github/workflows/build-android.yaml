@@ -39,11 +39,6 @@ jobs:
         working-directory: .
         run: gcc -v
 
-      - name: Build Native Unit Tests as shared library
-        working-directory: ./unit_tests/
-        # we have a unit test of JNI thus we need to build shared library
-        run: make -j4 SANITIZE=no build/lib_rusefi_test
-
       - name: Build Android
         env:
           RUSEFI_ANDROID_KEYPASS: ${{ secrets.RUSEFI_ANDROID_KEYPASS }}

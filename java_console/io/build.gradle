@@ -32,14 +32,3 @@ dependencies {
     testFixturesApi global_libs.annotations
     testFixturesApi global_libs.junit5api
 }
-
-tasks.register('copyJniHeader', Copy) {
-    dependsOn("compileJava")
-    from 'build/generated/sources/headers/java/main'
-    into "../../unit_tests/native"
-    include 'com*.h'
-}
-
-test {
-    dependsOn("copyJniHeader")
-}
