@@ -211,7 +211,7 @@
         <constant digits="0" name="justATempTest" units="">0.0</constant>
         <constant digits="0" name="unusedHere333" units="">0.0</constant>
         <constant digits="0" name="unusedHere334" units="">0.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0240306E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0240307E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
