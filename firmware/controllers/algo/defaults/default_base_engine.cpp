@@ -3,6 +3,7 @@
 #include "defaults.h"
 #include "vr_pwm.h"
 #include "kline.h"
+#include <rusefi/manifest.h>
 #if HW_PROTEUS
 #include "proteus_meta.h"
 #endif // HW_PROTEUS
@@ -68,6 +69,9 @@ void setDefaultBaseEngine() {
 	engineConfiguration->boardUseCanTerminator = true;
 
   setDefaultHPFP();
+
+  // it's useful to know what starting point is given tune based on
+  engineConfiguration->calibrationBirthday = compilationYear() * 10000 + compilationMonth() * 100 + compilationDay();
 
   engineConfiguration->enableExtendedCanBroadcast = true;
 
