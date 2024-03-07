@@ -200,6 +200,7 @@ runs:
         if ac 'srec'; then TARGETS+=("build/rusefi.srec"); fi
         if ac 'bundles' || ac 'bundle'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}.zip"); fi
         if ac 'bundles' || ac 'autoupdate'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}_autoupdate.zip"); fi
+        if ac 'obfuscated'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}_obfuscated.zip"); fi
         bash bin/compile.sh $BOARD_META_PATH ${TARGETS[@]}
 
     - name: Upload Bundle
