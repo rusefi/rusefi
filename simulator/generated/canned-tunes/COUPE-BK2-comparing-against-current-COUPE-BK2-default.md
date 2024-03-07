@@ -39,8 +39,6 @@
     engineConfiguration->knockRetardAggression = 0;
     // default 3.0
     engineConfiguration->knockRetardReapplyRate = 0;
-    // default 500.0
-    engineConfiguration->vvtControlMinRpm = 1500;
     // default "MAP"
     engineConfiguration->debugMode = DBG_22;
     // default 250.0

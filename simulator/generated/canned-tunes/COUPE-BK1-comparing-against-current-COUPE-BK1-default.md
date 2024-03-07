@@ -83,8 +83,6 @@
     engineConfiguration->knockRetardReapplyRate = 0;
     // default 6000.0
     engineConfiguration->vvtActivationDelayMs = 3000;
-    // default 500.0
-    engineConfiguration->vvtControlMinRpm = 1500;
     // default 0.1
     engineConfiguration->auxPid[0].dFactor = 0.2;
     // default "None"

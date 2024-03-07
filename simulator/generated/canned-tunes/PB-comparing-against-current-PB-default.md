@@ -91,7 +91,7 @@
     engineConfiguration->knockRetardAggression = 0;
     // default 3.0
     engineConfiguration->knockRetardReapplyRate = 0;
-    // default 500.0
+    // default 1500.0
     engineConfiguration->vvtControlMinRpm = 550;
     // default "advance"
     engineConfiguration->invertVvtControlExhaust = retard;
