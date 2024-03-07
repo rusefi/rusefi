@@ -33,7 +33,7 @@ public class WriteSimulatorConfiguration {
             for (engine_type_e type : new engine_type_e[]{
                     // [CannedTunes] see 'rusEfiFunctionalTest.cpp' which exports default tunes into binary files for us
                 // [CannedTunes] TuneCanToolRunner for last third step
-                    engine_type_e.MRE_M111,
+                    engine_type_e.MERCEDES_M111,
                     engine_type_e.BMW_M52,
                     engine_type_e.MAZDA_MIATA_NA6,
                     engine_type_e.MAZDA_MIATA_NA94,

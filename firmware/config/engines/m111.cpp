@@ -18,7 +18,7 @@
 #include "mre_meta.h"
 #endif // HW_MICRO_RUSEFI
 
-void setM111EngineConfiguration() {
+void setMercedesM111EngineConfiguration() {
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->displacement = 2.295f;
@@ -69,10 +69,7 @@ void setM111EngineConfiguration() {
 #endif // HW_MICRO_RUSEFI
     strcpy(engineConfiguration->gpPwmNote[1], "SC Clutch");
 
-}
 
-void setMreM111EngineConfiguration() {
-    setM111EngineConfiguration();
 
 #if HW_MICRO_RUSEFI
 	engineConfiguration->fuelPumpPin = MRE_GPOUT_1; // more or less MRE default
@@ -88,10 +85,7 @@ void setMreM111EngineConfiguration() {
     setTPS1Calibration(891, 69, 98, 926);
     // honda cable position sensor
     setPPSCalibration(0.38, 4.77, 4.64, 2.47);
-}
 
-void setProteusM111EngineConfiguration() {
-    setM111EngineConfiguration();
 #if HW_PROTEUS
     engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
     engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;

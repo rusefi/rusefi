@@ -135,8 +135,6 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->enableSoftwareKnock = true;
-
 	engineConfiguration->fuelPumpPin = Gpio::D15;
 	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
 	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
@@ -149,7 +147,7 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-    setM111EngineConfiguration();
+  setMercedesM111EngineConfiguration();
 
 	/**
 	 * Jimmy best tune

@@ -227,14 +227,14 @@ MRE_LS_2, // SC clutch
 };
 
 int getBoardMetaOutputsCount() {
-    if (engineConfiguration->engineType == engine_type_e::MRE_M111) {
+    if (engineConfiguration->engineType == engine_type_e::MERCEDES_M111) {
         return efi::size(M111_OUTPUTS);
     }
     return efi::size(MRE_OUTPUTS);
 }
 
 Gpio* getBoardMetaOutputs() {
-    if (engineConfiguration->engineType == engine_type_e::MRE_M111) {
+    if (engineConfiguration->engineType == engine_type_e::MERCEDES_M111) {
         return M111_OUTPUTS;
     }
     return MRE_OUTPUTS;

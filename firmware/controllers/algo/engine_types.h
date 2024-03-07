@@ -54,7 +54,7 @@ enum class engine_type_e : uint16_t {
 	FORD_ESCORT_GT = 14,
 	FUEL_BENCH = 15,
 	MITSUBISHI_4G93 = 16,
-	PROTEUS_M111 = 17,
+	UNUSED17 = 17,
 
 	TEST_33816 = 18,
 
@@ -149,7 +149,7 @@ enum class engine_type_e : uint16_t {
 	UNUSED_65 = 65,
 	HONDA_OBD1 = 66,
 	UNUSED67 = 67,
-	MRE_M111 = 68,
+	MERCEDES_M111 = 68,
 
 	MAZDA_MIATA_NB2 = 69,
 
