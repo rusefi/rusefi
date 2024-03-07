@@ -713,12 +713,16 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setTestEngineIssue366rise();
 		break;
 #endif // EFI_UNIT_TEST
+
+#if HW_MICRO_RUSEFI || HW_PROTEUS
+	case engine_type_e::MERCEDES_M111:
+		setMercedesM111EngineConfiguration();
+		break;
+#endif
+
 #if HW_MICRO_RUSEFI
 	case engine_type_e::MRE_VW_B6:
 		setMreVwPassatB6();
-		break;
-	case engine_type_e::MRE_M111:
-		setMreM111EngineConfiguration();
 		break;
 	case engine_type_e::MRE_SECONDARY_CAN:
 		mreSecondaryCan();
@@ -784,9 +788,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::ME17_9_MISC:
 	    setSlingshot();
 		break;
-    case engine_type_e::PROTEUS_M111:
-        setProteusM111EngineConfiguration();
-        break;
     case engine_type_e::WASTEGATE_PROTEUS_TEST:
         proteusDcWastegateTest();
         break;

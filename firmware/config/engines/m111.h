@@ -7,10 +7,5 @@
 
 #pragma once
 
-void setM111EngineConfiguration();
-/**
- * set engine_type 68
- */
-void setMreM111EngineConfiguration();
+void setMercedesM111EngineConfiguration();
 
-void setProteusM111EngineConfiguration();
