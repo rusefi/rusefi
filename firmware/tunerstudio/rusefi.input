@@ -2011,7 +2011,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		# O2 sensor(s)
-		subMenu = egoSettings,				"EGO sensor"
+		subMenu = egoSettings,				"O2 sensor"
 		subMenu = widebandConfig,			"rusEFI Wideband Controller", 0, { canReadEnabled && canWriteEnabled }
 		subMenu = std_separator
 
@@ -3389,8 +3389,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "MAF 2 ADC input",						maf2AdcChannel
 
 ;			Sensors->EGO sensor
-	dialog = egoSettings_sensor,	"EGO sensor"
-		settingSelector = "EGO Type"
+	dialog = egoSettings_sensor,	"O2 sensor"
+		settingSelector = "O2 Type"
 			settingOption = "BPSX", afr_v1=0,afr_value1=9,afr_v2=5,afr_value2=19
 			settingOption = "Innovate", afr_v1=0,afr_value1=7.35,afr_v2=5,afr_value2=22.39
 			settingOption = "14Point7", afr_v1=0,afr_value1=9.996,afr_v2=5,afr_value2=19.992
@@ -3406,11 +3406,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "high value",							afr_value2
 		field = "Correction",							egoValueShift
 
-	dialog = egoSettings_IO1,	"EGO Sensor 1 I/O"
+	dialog = egoSettings_IO1,	"O2 Sensor 1 I/O"
 		field = "Input channel",						afr_hwChannel,{afr_hwChannel != @@ADC_CHANNEL_NONE@@ || enableAemXSeries == 0 }
 		field = "Narrowband Heater output",				o2heaterPin,  {  o2heaterPin != 0 || enableAemXSeries == 0 }
 
-	dialog = egoSettings_IO2,	"EGO Sensor 2 I/O"
+	dialog = egoSettings_IO2,	"O2 Sensor 2 I/O"
 		field = "Input channel",						afr_hwChannel2
 
 	dialog = egoSettings, "", yAxis
