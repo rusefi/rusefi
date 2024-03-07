@@ -1,5 +1,5 @@
 ```
-static void couplecannedtpsTpsAccelTable() {
+static void coupleBK2cannedtpsTpsAccelTable() {
 	static const float hardCodedtpsTpsAccelTable[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {5.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -13,7 +13,7 @@ static void couplecannedtpsTpsAccelTable() {
 	copyTable(config->tpsTpsAccelTable, hardCodedtpsTpsAccelTable);
 }
 
-static void couplecannedscriptTable4() {
+static void coupleBK2cannedscriptTable4() {
 	static const float hardCodedscriptTable4[8][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -27,7 +27,7 @@ static void couplecannedscriptTable4() {
 	copyTable(config->scriptTable4, hardCodedscriptTable4);
 }
 
-static void couplecannedpedalToTpsTable() {
+static void coupleBK2cannedpedalToTpsTable() {
 	static const float hardCodedpedalToTpsTable[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {8.000,	8.000,	8.000,	8.000,	8.000,	8.000,	8.000,	8.000,	},
@@ -41,7 +41,7 @@ static void couplecannedpedalToTpsTable() {
 	copyTable(config->pedalToTpsTable, hardCodedpedalToTpsTable);
 }
 
-static void couplecannedlambdaTable() {
+static void coupleBK2cannedlambdaTable() {
 	static const float hardCodedlambdaTable[16][16] = {
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},
@@ -63,7 +63,7 @@ static void couplecannedlambdaTable() {
 	copyTable(config->lambdaTable, hardCodedlambdaTable);
 }
 
-static void couplecannedtcuSolenoidTable() {
+static void coupleBK2cannedtcuSolenoidTable() {
 	static const float hardCodedtcuSolenoidTable[6][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -75,7 +75,7 @@ static void couplecannedtcuSolenoidTable() {
 	copyTable(config->tcuSolenoidTable, hardCodedtcuSolenoidTable);
 }
 
-static void couplecannedpostCrankingFactor() {
+static void coupleBK2cannedpostCrankingFactor() {
 	static const float hardCodedpostCrankingFactor[6][6] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},

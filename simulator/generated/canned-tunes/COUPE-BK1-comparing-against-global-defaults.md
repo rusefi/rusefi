@@ -1,26 +1,24 @@
-# COUPE-BK2-comparing-against-global-defaults
+# COUPE-BK1-comparing-against-global-defaults
 
-// canned tune https://rusefi.com/online/view.php?msq=1507
+// canned tune https://rusefi.com/online/view.php?msq=1508
 
 ```
     // default "Single Coil"
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
     // default 2.0
     engineConfiguration->displacement = 1.998;
-    // default "false"
-    engineConfiguration->isForcedInduction = true;
     // default 0.0
     engineConfiguration->globalTriggerAngleOffset = 475;
     // default 450.0
-    engineConfiguration->vvtOffsets[0] = -154;
+    engineConfiguration->vvtOffsets[0] = -155;
     // default 0.0
-    engineConfiguration->vvtOffsets[1] = 335;
+    engineConfiguration->vvtOffsets[1] = 337;
     // default 200.0
-    engineConfiguration->injector.flow = 629.03;
+    engineConfiguration->injector.flow = 440;
     // default "None"
     engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
     // default 300.0
-    engineConfiguration->fuelReferencePressure = 586.0544;
+    engineConfiguration->fuelReferencePressure = 379.2116;
     // default 0.0
     engineConfiguration->cylinderBankSelect[0] = 1;
     // default 0.0
@@ -46,13 +44,13 @@
     // default 0.0
     engineConfiguration->cylinderBankSelect[11] = 1;
     // default 0.0
-    engineConfiguration->tpsMin = 98;
+    engineConfiguration->tpsMin = 111;
     // default 1000.0
-    engineConfiguration->tpsMax = 926;
+    engineConfiguration->tpsMax = 923;
     // default 1000.0
-    engineConfiguration->tps1SecondaryMin = 891;
+    engineConfiguration->tps1SecondaryMin = 874;
     // default 0.0
-    engineConfiguration->tps1SecondaryMax = 69;
+    engineConfiguration->tps1SecondaryMax = 63;
     // default 0.0
     engineConfiguration->throttlePedalUpVoltage = 0.73;
     // default 5.0
@@ -65,28 +63,38 @@
     engineConfiguration->idle.solenoidFrequency = 200;
     // default "false"
     engineConfiguration->stepperDcInvertedPins = true;
+    // default 15.0
+    engineConfiguration->etbIdleThrottleRange = 5;
+    // default 15.0
+    engineConfiguration->acIdleExtraOffset = 10;
+    // default 2.0
+    engineConfiguration->fan1ExtraIdle = 0;
+    // default 2.0
+    engineConfiguration->iacByTpsTaper = 0;
     // default "false"
     engineConfiguration->useSeparateAdvanceForIdle = true;
-    // default 0.0
-    engineConfiguration->iacByTpsHoldTime = 2;
-    // default 0.0
-    engineConfiguration->iacByTpsDecayTime = 3;
     // default "false"
     engineConfiguration->useIdleTimingPidControl = true;
     // default 0.0
-    engineConfiguration->idleTimingPid.dFactor = 5.0E-5;
+    engineConfiguration->idleTimingPid.dFactor = 5.0E-4;
     // default 95.0
-    engineConfiguration->fanOnTemperature = 80;
+    engineConfiguration->fanOnTemperature = 86;
     // default 91.0
-    engineConfiguration->fanOffTemperature = 75;
+    engineConfiguration->fanOffTemperature = 80;
+    // default "false"
+    engineConfiguration->enableFan1WithAc = true;
     // default "false"
     engineConfiguration->disableFan1WhenStopped = true;
     // default 95.0
-    engineConfiguration->fan2OnTemperature = 87;
+    engineConfiguration->fan2OnTemperature = 93;
     // default 91.0
-    engineConfiguration->fan2OffTemperature = 82;
+    engineConfiguration->fan2OffTemperature = 87;
+    // default "false"
+    engineConfiguration->enableFan2WithAc = true;
     // default "false"
     engineConfiguration->disableFan2WhenStopped = true;
+    // default 0.5
+    engineConfiguration->acDelay = 0;
     // default 0.0
     engineConfiguration->warningPeriod = 10;
     // default "false"
@@ -95,6 +103,8 @@
     engineConfiguration->knockRetardAggression = 0;
     // default 3.0
     engineConfiguration->knockRetardReapplyRate = 0;
+    // default 6000.0
+    engineConfiguration->vvtActivationDelayMs = 3000;
     // default 550.0
     engineConfiguration->vvtControlMinRpm = 1500;
     // default "advance"
@@ -104,7 +114,7 @@
     // default 0.005
     engineConfiguration->auxPid[0].iFactor = 25.4;
     // default 0.0
-    engineConfiguration->auxPid[0].dFactor = 0.1;
+    engineConfiguration->auxPid[0].dFactor = 0.2;
     // default 0.0
     engineConfiguration->auxPid[1].offset = 38;
     // default 0.0
@@ -113,26 +123,16 @@
     engineConfiguration->auxPid[1].iFactor = 25.4;
     // default 0.0
     engineConfiguration->auxPid[1].dFactor = 0.2;
+    // default "None"
+    engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
     // default "MAP"
     engineConfiguration->debugMode = DBG_22;
     // default 250.0
     engineConfiguration->etbRevLimitRange = 0;
-    // default 50.0
-    engineConfiguration->crankingIACposition = 70;
-    // default 200.0
-    engineConfiguration->afterCrankingIACtaperDuration = 100;
+    // default 0.5
+    engineConfiguration->primingDelay = 0;
     // default "false"
-    engineConfiguration->overrideCrankingIacSetting = true;
-    // default 0.0
-    engineConfiguration->tpsAccelLookback = 0.3;
-    // default 40.0
-    engineConfiguration->tpsAccelEnrichmentThreshold = 12;
-    // default 0.0
-    engineConfiguration->tpsDecelEnleanmentThreshold = 7;
-    // default 0.0
-    engineConfiguration->tpsAccelFractionPeriod = 3;
-    // default 0.0
-    engineConfiguration->tpsAccelFractionDivisor = 3;
+    engineConfiguration->isBoostControlEnabled = true;
     // default 2000.0
     engineConfiguration->boostControlMinRpm = 0;
     // default 30.0
@@ -142,21 +142,22 @@
     // default "Throttle 2"
     engineConfiguration->etbFunctions[1] = DC_Wastegate;
     // default 1.0
-    engineConfiguration->etb.pFactor = 8.8944;
+    engineConfiguration->etb.pFactor = 7.213493;
     // default 10.0
-    engineConfiguration->etb.iFactor = 70.2307;
+    engineConfiguration->etb.iFactor = 94.99006;
     // default 0.05
-    engineConfiguration->etb.dFactor = 0.1855;
+    engineConfiguration->etb.dFactor = 0.0892407;
     // default 400.0
     engineConfiguration->engineChartSize = 300;
 
 
-	coupleBK2cannedtpsTpsAccelTable();
-	coupleBK2cannedscriptTable4();
-	coupleBK2cannedignitionTable();
-	coupleBK2cannedveTable();
-	coupleBK2cannedpedalToTpsTable();
-	coupleBK2cannedlambdaTable();
-	coupleBK2cannedtcuSolenoidTable();
-	coupleBK2cannedpostCrankingFactor();
+	coupleBK1cannedboostTableOpenLoop();
+	coupleBK1cannedvvtTable1();
+	coupleBK1cannedvvtTable2();
+	coupleBK1cannedscriptTable4();
+	coupleBK1cannedignitionTable();
+	coupleBK1cannedveTable();
+	coupleBK1cannedlambdaTable();
+	coupleBK1cannedtcuSolenoidTable();
+	coupleBK1cannedpostCrankingFactor();
 ```
