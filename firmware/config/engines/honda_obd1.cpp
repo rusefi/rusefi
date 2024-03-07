@@ -30,6 +30,9 @@ void setHondaObd1() {
   // ECU does not control main relay
   engineConfiguration->mainRelayPin = Gpio::Unassigned;
 
+	strcpy(engineConfiguration->gpPwmNote[0], "VTC");
+	gppwm_channel *vtcControl = &engineConfiguration->gppwm[0];
+	vtcControl->pwmFrequency = 0;
 #if HW_HELLEN_UAEFI
   // Honda ICM is weird it fires spark on RAISING edge and has internal pull-up
   // thus we use a low side output to drive OEM ignition
@@ -44,5 +47,6 @@ void setHondaObd1() {
 
 	engineConfiguration->tps1_2AdcChannel = EFI_ADC_NONE;
 	setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
+  vtcControl->pin = Gpio::MM100_IGN6;
 #endif // HW_HELLEN_UAEFI
 }
