@@ -182,7 +182,7 @@ void rusEfiFunctionalTest(void) {
 
 	initFlash();
 
-  // [CannedTunes]
+  // [CannedTunes] at the moment we manually sync this list with WriteSimulatorConfiguration.java
 	for (auto const type : {
 			engine_type_e::MRE_M111,
 			engine_type_e::BMW_M52,
@@ -191,6 +191,7 @@ void rusEfiFunctionalTest(void) {
 			engine_type_e::MAZDA_MIATA_NA96,
 			engine_type_e::MAZDA_MIATA_NB1,
 			engine_type_e::MAZDA_MIATA_NB2,
+			engine_type_e::HONDA_OBD1,
 			engine_type_e::HONDA_K,
 			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1,
 			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2,
