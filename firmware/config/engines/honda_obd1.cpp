@@ -35,6 +35,9 @@ void setHondaObd1() {
   // thus we use a low side output to drive OEM ignition
   engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN7; // low side!
 
+ 	engineConfiguration->idle.solenoidPin = Gpio::MM100_INJ8;
+ 	engineConfiguration->malfunctionIndicatorPin = Gpio::MM100_INJ7;
+
 	engineConfiguration->camInputs[0] = Gpio::MM100_UART8_RX; // "C18 VR1+ Discrete"
 	engineConfiguration->camInputs[1] = Gpio::Unassigned;
 
