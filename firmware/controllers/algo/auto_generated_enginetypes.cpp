@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Mar 06 23:17:04 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Mar 07 13:13:08 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -293,6 +293,8 @@ case engine_type_e::MAZDA_MIATA_NC:
   return "MAZDA_MIATA_NC";
 case engine_type_e::ME17_9_MISC:
   return "ME17_9_MISC";
+case engine_type_e::MERCEDES_M111:
+  return "MERCEDES_M111";
 case engine_type_e::MIATA_PROTEUS_TCU:
   return "MIATA_PROTEUS_TCU";
 case engine_type_e::MINIMAL_PINS:
@@ -305,8 +307,6 @@ case engine_type_e::MRE_BOARD_NEW_TEST:
   return "MRE_BOARD_NEW_TEST";
 case engine_type_e::MRE_BODY_CONTROL:
   return "MRE_BODY_CONTROL";
-case engine_type_e::MRE_M111:
-  return "MRE_M111";
 case engine_type_e::MRE_SECONDARY_CAN:
   return "MRE_SECONDARY_CAN";
 case engine_type_e::MRE_SUBARU_EJ18:
@@ -323,8 +323,6 @@ case engine_type_e::PROTEUS_GM_LS_4:
   return "PROTEUS_GM_LS_4";
 case engine_type_e::PROTEUS_LUA_DEMO:
   return "PROTEUS_LUA_DEMO";
-case engine_type_e::PROTEUS_M111:
-  return "PROTEUS_M111";
 case engine_type_e::PROTEUS_NISSAN_VQ35:
   return "PROTEUS_NISSAN_VQ35";
 case engine_type_e::PROTEUS_QC_TEST_BOARD:
@@ -365,6 +363,8 @@ case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case engine_type_e::UNUSED102:
   return "UNUSED102";
+case engine_type_e::UNUSED17:
+  return "UNUSED17";
 case engine_type_e::UNUSED24:
   return "UNUSED24";
 case engine_type_e::UNUSED47:
