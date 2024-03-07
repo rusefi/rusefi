@@ -722,11 +722,13 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			handleWriteValueCommand(tsChannel, TS_CRC, offset, value);
 		}
 		break;
-#if EFI_TS_SCATTER
 	case TS_GET_SCATTERED_GET_COMMAND:
+#if EFI_TS_SCATTER
 		handleScatteredReadCommand(tsChannel);
-		break;
+#else
+    criticalError("Slow/wireless mode not supported");
 #endif // EFI_TS_SCATTER
+		break;
 	case TS_CRC_CHECK_COMMAND:
 		handleCrc32Check(tsChannel, TS_CRC, offset, count);
 		break;

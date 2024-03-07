@@ -127,6 +127,10 @@
 #define EFI_TUNER_STUDIO TRUE
 #endif
 
+#ifndef EFI_TS_SCATTER
+#define EFI_TS_SCATTER TRUE
+#endif
+
 /**
  * Bluetooth UART setup support.
  */
