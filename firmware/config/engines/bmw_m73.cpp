@@ -203,5 +203,6 @@ void setEngineBMW_M73_Proteus() {
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setProteusHitachiEtbDefaults();
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
+ 	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
 }
 #endif // HW_PROTEUS
