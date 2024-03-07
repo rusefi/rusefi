@@ -57,9 +57,7 @@ public class TuneCanTool implements TuneCanToolConstants {
 
 
     public static void main(String[] args) throws Exception {
-
-
-//        writeDiffBetweenLocalTuneFileAndDefaultTune("example.msq");
+        writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
 
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(Fields.engine_type_e_MAVERICK_X3),
 //            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq",  "comment");
@@ -96,10 +94,10 @@ public class TuneCanTool implements TuneCanToolConstants {
         writeDiffBetweenLocalTuneFileAndDefaultTune(vehicleName, defaultTuneFileName, customTuneFileName, url, methodNamePrefix);
     }
 
-//    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String localFileName) throws JAXBException, IOException {
-//        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", DEFAULT_TUNE,
-//            localFileName,  "comment");
-//    }
+    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String localFileName) throws JAXBException, IOException {
+        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", DEFAULT_TUNE,
+            localFileName,  "comment", "");
+    }
 //
 //    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(int engineCode, String localFileName, String cannedComment) throws JAXBException, IOException {
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engineCode),
