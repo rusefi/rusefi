@@ -308,7 +308,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
-        path: ./artifacts/rusefi_bundle*.zip
+        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
 
     - name: Upload github action autoupdate artifact
       if: ${{ env.full == 'true' }}
