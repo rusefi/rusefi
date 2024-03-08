@@ -10,14 +10,14 @@ if [ -n "$RUSEFI_SSH_USER" -a -n "$RUSEFI_SSH_PASS" -a -n "$RUSEFI_SSH_SERVER" ]
  RET=0
  if [ "$LTS" == "true" -a -n "$REF" ]; then
    tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/lts/${REF}; tar -xzf - -C build_server/lts/${REF}"
-	 RET=$((RET+$?))
+	 RET=$((RET+$?+PIPESTATUS))
    tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/lts/${REF}/autoupdate; tar -xzf - -C build_server/lts/${REF}/autoupdate"
-	 RET=$((RET+$?))
+	 RET=$((RET+$?+PIPESTATUS))
  else
    tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "tar -xzf - -C build_server"
-	 RET=$((RET+$?))
+	 RET=$((RET+$?+PIPESTATUS))
    tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "mkdir -p build_server/autoupdate; tar -xzf - -C build_server/autoupdate"
-	 RET=$((RET+$?))
+	 RET=$((RET+$?+PIPESTATUS))
  fi
  if [ $RET -ne 0 ]; then
   echo "$SCRIPT_NAME: Bundle upload failed"
