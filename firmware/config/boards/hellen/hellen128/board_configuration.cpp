@@ -70,10 +70,9 @@ static void setHellen128ETBConfig() {
 	// looks like we support PCF8575 i2c I/O expander
 	m_i2c.read(/*address*/0x20, variant, sizeof(variant));
 
-	efiPrintf("BoardID [%02x%02x] ", variant[0], variant[1]);
-
 	//Rev C is different then Rev A/B
 	if ((variant[0] == 0x63) && (variant[1] == 0x00)) {
+	  efiPrintf("rev C Board Detected");
 		// TLE9201 driver
 		// This chip has three control pins:
 		// DIR - sets direction of the motor
@@ -100,6 +99,7 @@ static void setHellen128ETBConfig() {
 		engineConfiguration->etb_use_two_wires = false;
 
 	} else {
+	  efiPrintf("A/B BoardID [%02x%02x] ", variant[0], variant[1]);
 		//Set default ETB config
 		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
 		engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
