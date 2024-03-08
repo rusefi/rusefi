@@ -17,7 +17,7 @@ fi
 
 BOARD_DIR=$1
 SHORT_BOARDNAME=$2
-if [ -n "$3" ]; then
+if [ $# -gt 2 ]; then
   INI="$3"
 else
   INI="fome_${SHORT_BOARDNAME}.ini"
