@@ -29,11 +29,14 @@ bash gen_signature.sh ${SHORT_BOARDNAME}
 
 PREPEND_FILE=${BOARD_DIR}/prepend.txt
 
+# Allow the next command to fail, the board may not have a BOARD_SPECIFIC_URL
+set +e
 BOARD_SPECIFIC_URL=$(cat $PREPEND_FILE | grep MAIN_HELP_URL | cut -d " " -f 3 | sed -e 's/^"//' -e 's/"$//')
+set -euo pipefail
 
 echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL] for [$SHORT_BOARDNAME] from [$BOARD_DIR]"
 if [ "" = "$BOARD_SPECIFIC_URL" ]; then
-  BOARD_SPECIFIC_URL=https://rusefi.com/s/wiki
+  BOARD_SPECIFIC_URL=https://wiki.fome.tech/
 fi
 echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL]"
 
