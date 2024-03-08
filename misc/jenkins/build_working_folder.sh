@@ -38,13 +38,6 @@ if [ -z $INI_FILE_OVERRIDE ]; then
 fi
 echo "$SCRIPT_NAME: Will use $INI_FILE_OVERRIDE"
 
-if [ -z $RUSEFI_CONSOLE_SETTINGS ]; then
-  echo "$SCRIPT_NAME: No rusefi_console_settings"
-else
-  echo "Using rusefi_console_settings [$RUSEFI_CONSOLE_SETTINGS]"
-  cp $RUSEFI_CONSOLE_SETTINGS $CONSOLE_FOLDER
-fi
-
 cp java_console_binary/fome_console.jar $CONSOLE_FOLDER
 cp simulator/build/fome_simulator.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/fome_*.exe     $CONSOLE_FOLDER
@@ -59,7 +52,6 @@ cp firmware/ext/openblt/Host/libopenblt_jni.dylib  $CONSOLE_FOLDER
 cp firmware/tunerstudio/generated/$INI_FILE_OVERRIDE $FOLDER
 # Unsetting since would not be used anywhere else
 INI_FILE_OVERRIDE=""
-RUSEFI_CONSOLE_SETTINGS=""
 
 cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 
