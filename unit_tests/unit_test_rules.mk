@@ -202,6 +202,9 @@ endif
 # Define project name here
 PROJECT = fome_test
 
+# TODO: remove me when unit tests include board.mk
+SHORT_BOARD_NAME = f407-discovery
+
 ifeq ("$(wildcard $(UNIT_TESTS_DIR)/googletest/LICENSE)","")
 $(info Invoking "git submodule update --init")
 $(shell git submodule update --init)
