@@ -1186,7 +1186,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets true
 #define show_test_presets false
-#define SIGNATURE_HASH 899270202
+#define SIGNATURE_HASH 1002841460
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1472,6 +1472,7 @@
 #define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
 #define TS_SET_LOGGER_SWITCH 'l'
 #define TS_SET_LOGGER_SWITCH_char l
+#define ts_show_air_conditioning true
 #define ts_show_analog_divider false
 #define ts_show_auxserial_pins true
 #define ts_show_can2 true
@@ -1492,9 +1493,13 @@
 #define ts_show_egt true
 #define ts_show_etb true
 #define ts_show_etb_pins true
+#define ts_show_fuel_pump true
 #define ts_show_full_pinout false
+#define ts_show_gdi true
 #define ts_show_hardware_simulator false
+#define ts_show_hd true
 #define ts_show_hip9011 false
+#define ts_show_idle_hardware true
 #define ts_show_ign_key_analog_input false
 #define ts_show_ign_key_switch false
 #define ts_show_ignitionPinMode true
@@ -1504,8 +1509,10 @@
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_mc33810 false
+#define ts_show_odd_fire true
 #define ts_show_onboard_accelerometer true
 #define ts_show_output_diag false
+#define ts_show_rotary true
 #define ts_show_sd_card true
 #define ts_show_sd_pins false
 #define ts_show_software_knock true
@@ -1513,6 +1520,9 @@
 #define ts_show_spi2_enable true
 #define ts_show_spi2_pins true
 #define ts_show_spi3_pins true
+#define ts_show_starter_disable true
+#define ts_show_status_leds true
+#define ts_show_tcu true
 #define ts_show_tle8888 false
 #define ts_show_tps2 true
 #define ts_show_tps_sent false
@@ -1523,7 +1533,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.08.proteus_h7.899270202"
+#define TS_SIGNATURE "rusEFI master.2024.03.08.proteus_h7.1002841460"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

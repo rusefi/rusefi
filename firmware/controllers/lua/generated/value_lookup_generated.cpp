@@ -1360,9 +1360,6 @@ float getConfigValueByName(const char *name) {
 // etbExpAverageLength
 		case -86185846:
 			return engineConfiguration->etbExpAverageLength;
-// etbDutyThreshold
-		case -275312941:
-			return engineConfiguration->etbDutyThreshold;
 // coastingFuelCutRpmHigh
 		case 1272017572:
 			return engineConfiguration->coastingFuelCutRpmHigh;
@@ -1597,9 +1594,6 @@ float getConfigValueByName(const char *name) {
 // tuneHidingKey
 		case -243078627:
 			return engineConfiguration->tuneHidingKey;
-// etbDutyShutdownThreshold
-		case -1743759953:
-			return engineConfiguration->etbDutyShutdownThreshold;
 // ALSMinRPM
 		case 1532957848:
 			return engineConfiguration->ALSMinRPM;
@@ -4055,11 +4049,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->etbExpAverageLength = (int)value;
 		return 1;
 	}
-		case -275312941:
-	{
-		engineConfiguration->etbDutyThreshold = value;
-		return 1;
-	}
 		case 1272017572:
 	{
 		engineConfiguration->coastingFuelCutRpmHigh = (int)value;
@@ -4448,11 +4437,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -243078627:
 	{
 		engineConfiguration->tuneHidingKey = (int)value;
-		return 1;
-	}
-		case -1743759953:
-	{
-		engineConfiguration->etbDutyShutdownThreshold = value;
 		return 1;
 	}
 		case 1532957848:

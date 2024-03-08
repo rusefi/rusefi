@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 07 03:16:56 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 08 23:06:16 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3649,7 +3649,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2284
 	 */
-	float etbDutyThreshold;
+	float unused645646;
 	/**
 	 * This sets the RPM above which fuel cut is active.
 	 * units: rpm
@@ -4314,7 +4314,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 4120
 	 */
-	float etbDutyShutdownThreshold;
+	float unused3124141;
 	/**
 	 * offset 4124
 	 */
@@ -5634,4 +5634,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22236);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 07 03:16:56 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 08 23:06:16 UTC 2024
