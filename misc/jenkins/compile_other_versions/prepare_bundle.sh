@@ -18,6 +18,3 @@ fi
 export BUNDLE_FULL_NAME="fome_bundle_${BUNDLE_NAME}"
 
 bash misc/jenkins/build_working_folder.sh
-
-pwd
-echo "exiting $SCRIPT_NAME"

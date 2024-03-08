@@ -24,9 +24,7 @@ rm -rf pch/pch.h.gch.sh
 cd ..
 
 cd firmware/$BOARD_DIR
-pwd
+
 echo "Invoking $COMPILE_SCRIPT"
 
 bash $COMPILE_SCRIPT
-
-echo "Success for $SCRIPT_NAME!"
