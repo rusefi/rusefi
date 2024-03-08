@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Fixed
+ - hellen128 better ETB pin choice between rev A/B and C
+
 ## March 2023 "Day 740"
 
 ### Breaking Changes
