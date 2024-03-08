@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - ETB traction control drop is affected by not-highlighted cell #5952
  - hellen128 better ETB pin choice between rev A/B and C
  - Disabling slow connectivity mode for now #6170
+ - hellen125honda board URL in TS help
 
 ## March 2023 "Day 740"
 
