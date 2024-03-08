@@ -41,7 +41,6 @@ echo "$SCRIPT_NAME: Will use $INI_FILE_OVERRIDE"
 cp java_console_binary/fome_console.jar $CONSOLE_FOLDER
 cp simulator/build/fome_simulator.exe     $CONSOLE_FOLDER
 cp misc/console_launcher/fome_*.exe     $CONSOLE_FOLDER
-cp java_console/*.dll                     $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/libopenblt.dll        $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/libopenblt.so         $CONSOLE_FOLDER
 cp firmware/ext/openblt/Host/libopenblt.dylib      $CONSOLE_FOLDER
