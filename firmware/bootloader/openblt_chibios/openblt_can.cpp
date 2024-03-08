@@ -8,17 +8,35 @@ extern "C" {
 	#include "boot.h"
 }
 
+// CAN1 PB8+PB9 and CAN2 PB5+PB6 pins are commonly used by Hellen.
+// CAN2 PB5+PB13 pins can be used for ST-bootloader compatibility.
+// 
+// Other STM32 CAN pin combinations:
+// CAN1_RX: { PI9, PA11, PH14, PD0, PB8 }, CAN1_TX: { PA12, PH13, PD1, PB9 }
+// CAN2_RX: { PB5, PB12 }, CAN2_TX: { PB6, PB13 }
+
+#if !defined(OPENBLT_CAND) || !defined(OPENBLT_CAN_RX_PIN) || !defined(OPENBLT_CAN_RX_PORT) || !defined(OPENBLT_CAN_TX_PIN) || !defined(OPENBLT_CAN_TX_PORT)
+#define OPENBLT_CAND CAND2
+#define OPENBLT_CAN_RX_PORT GPIOB
+#define OPENBLT_CAN_RX_PIN 5
+#define OPENBLT_CAN_TX_PORT GPIOB
+#define OPENBLT_CAN_TX_PIN 13
+#endif
+
+extern const CANConfig *findCanConfig(can_baudrate_e rate);
+
 /************************************************************************************//**
 ** \brief     Initializes the CAN controller and synchronizes it to the CAN bus.
 ** \return    none.
 **
 ****************************************************************************************/
-extern "C" void CanInit(void)
-{
-	// TODO: init pins?
+extern "C" void CanInit(void) {
+	// init pins
+	palSetPadMode(OPENBLT_CAN_TX_PORT, OPENBLT_CAN_TX_PIN, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	palSetPadMode(OPENBLT_CAN_RX_PORT, OPENBLT_CAN_RX_PIN, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 
 	auto cfg = findCanConfig(B500KBPS);
-	canStart(&CAND1, cfg);
+	canStart(&OPENBLT_CAND, cfg);
 }
 
 
@@ -38,21 +56,21 @@ extern "C" void CanTransmitPacket(blt_int8u *data, blt_int8u len)
 	{
 		/* set the 11-bit CAN identifier. */
 		frame.SID = txMsgId;
-		frame.IDE = false;
+		frame.IDE = CAN_IDE_STD;
 	}
 	else
 	{
 		txMsgId &= ~0x80000000;
 		/* set the 29-bit CAN identifier. */
-		frame.EID = txMsgId & ~0x80000000; // negate the ID-type bit
-		frame.IDE = true;
+		frame.EID = txMsgId;
+		frame.IDE = CAN_IDE_EXT;
 	}
 
 	// Copy data/DLC
 	frame.DLC = len;
 	memcpy(frame.data8, data, len);
 
-	canTransmitTimeout(&CAND1, CAN_ANY_MAILBOX, &frame, TIME_MS2I(100));
+	canTransmitTimeout(&OPENBLT_CAND, CAN_ANY_MAILBOX, &frame, TIME_MS2I(100));
 }
 
 /************************************************************************************//**
@@ -68,7 +86,7 @@ extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 	blt_bool result = BLT_FALSE;
 	CANRxFrame frame;
 
-	if (MSG_OK != canReceiveTimeout(&CAND1, CAN_ANY_MAILBOX, &frame, TIME_IMMEDIATE)) {
+	if (MSG_OK != canReceiveTimeout(&OPENBLT_CAND, CAN_ANY_MAILBOX, &frame, TIME_IMMEDIATE)) {
 		// no message was waiting
 		return BLT_FALSE;
 	}
