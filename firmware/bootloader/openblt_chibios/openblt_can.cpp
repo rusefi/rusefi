@@ -16,11 +16,21 @@ extern "C" {
 // CAN2_RX: { PB5, PB12 }, CAN2_TX: { PB6, PB13 }
 
 #if !defined(OPENBLT_CAND) || !defined(OPENBLT_CAN_RX_PIN) || !defined(OPENBLT_CAN_RX_PORT) || !defined(OPENBLT_CAN_TX_PIN) || !defined(OPENBLT_CAN_TX_PORT)
+#ifndef STM32_CAN_USE_CAN2
 #define OPENBLT_CAND CAND2
 #define OPENBLT_CAN_RX_PORT GPIOB
 #define OPENBLT_CAN_RX_PIN 5
 #define OPENBLT_CAN_TX_PORT GPIOB
 #define OPENBLT_CAN_TX_PIN 13
+#elif defined(STM32_CAN_USE_CAN1)
+#define OPENBLT_CAND CAND1
+#define OPENBLT_CAN_RX_PORT GPIOB
+#define OPENBLT_CAN_RX_PIN 8
+#define OPENBLT_CAN_TX_PORT GPIOB
+#define OPENBLT_CAN_TX_PIN 9
+#else
+#error Can is not enabled for this firmware.
+#endif
 #endif
 
 extern const CANConfig *findCanConfig(can_baudrate_e rate);
