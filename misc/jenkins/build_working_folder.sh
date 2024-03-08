@@ -71,7 +71,7 @@ pwd
 zip -r $FULL_BUNDLE_FILE *
 [ $? -eq 0 ] || (echo "$SCRIPT_NAME: ERROR INVOKING zip"; exit 1)
 
-echo "$SCRIPT_FILE: Bundle $FULL_BUNDLE_FILE ready"
+echo "Bundle $FULL_BUNDLE_FILE ready"
 ls -l $FULL_BUNDLE_FILE
 
 [ -e $FULL_BUNDLE_FILE ] || { echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1; }
