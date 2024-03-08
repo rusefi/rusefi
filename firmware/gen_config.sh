@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
 echo "The storage section of fome.ini is updated as well"
 

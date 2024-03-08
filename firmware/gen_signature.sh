@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# file gen_signature.sh
+set -euo pipefail
 
 SHORT_BOARDNAME=$1
-
 
 SIGNATURE_FILE_NAME=tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt
 echo "Generating signature for ${SHORT_BOARDNAME}"
