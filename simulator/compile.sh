@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 rm -f build/fome_simulator.exe
 make -j8 -r $@

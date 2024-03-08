@@ -5,7 +5,7 @@
 #                 or ./gen_config_board.sh hellen/hellen128 hellen128
 # which is short for ./gen_config_board.sh hellen/hellen128 hellen128 rusefi_hellen128.ini
 
-set -e
+set -euo pipefail
 
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
 echo "the storage section of rusefiXXX.ini is updated as well"

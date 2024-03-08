@@ -5,7 +5,7 @@
 
 HW_SUITE=$1
 
-set -e
+set -euo pipefail
 
 cd java_tools
 ./gradlew :autotest:shadowJar

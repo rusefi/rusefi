@@ -4,7 +4,7 @@ PROJECT_BOARD=$1
 PROJECT_CPU=$2
 
 # fail on error
-set -e
+set -euo pipefail
 
 SCRIPT_NAME="common_make.sh"
 echo "Entering $SCRIPT_NAME with board $1 and CPU $2"

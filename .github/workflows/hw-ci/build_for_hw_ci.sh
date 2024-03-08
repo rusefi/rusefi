@@ -7,7 +7,8 @@ HW_TARGET=$2
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/f407-discovery f407-discovery
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/proteus        proteus_f4
 
-set -e
+set -euo pipefail
+
 echo "HW CI build [$HW_FOLDER][$HW_TARGET]"
 
 cd firmware

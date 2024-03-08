@@ -4,6 +4,8 @@
 # file build_working_folder.sh
 #
 
+set -euo pipefail
+
 FULL_BUNDLE_FILE="${BUNDLE_FULL_NAME}.zip"
 
 echo "${BUNDLE_FULL_NAME}: Packaging temp/$FULL_BUNDLE_FILE file"
@@ -62,8 +64,6 @@ RUSEFI_CONSOLE_SETTINGS=""
 cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 
 cp firmware/deliver/fome.bin $FOLDER
-# just for now - DFU work in progress
-cp firmware/deliver/fome.hex $FOLDER
 
 # bootloader
 [ -e firmware/deliver/fome_bl.bin ] && { cp firmware/deliver/fome_bl.bin $FOLDER ; }
