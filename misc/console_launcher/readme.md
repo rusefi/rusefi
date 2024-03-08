@@ -1,1 +1,1 @@
-rusEFI uses http://launch4j.sourceforge.net/ to create console launcher
+FOME uses http://launch4j.sourceforge.net/ to create console launcher
