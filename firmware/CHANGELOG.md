@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - hellen128 better ETB pin choice between rev A/B and C
+ - Disabling slow connectivity mode for now #6170
 
 ## March 2023 "Day 740"
 
