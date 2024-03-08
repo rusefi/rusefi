@@ -155,7 +155,7 @@ endif
 	@touch $@
 
 $(FOLDER)/rusefi-obfuscated.bin: $(BUILDDIR)/$(PROJECT).bin
-	[ -z "$(POST_BUILD_SCRIPT)" ] || bash $(POST_BUILD_SCRIPT) $(BUILDDIR)/$(PROJECT).bin $(FOLDER)/rusefi-obfuscated.bin
+	[ -z "$(POST_BUILD_SCRIPT)" ] || bash $(POST_BUILD_SCRIPT) $(BUILDDIR)/$(PROJECT).bin $@
 
 $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 	wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $(dir $@)
@@ -166,7 +166,7 @@ $(DELIVER) $(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER) $(CACERTS_
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
-$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated.zip: $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated.zip: $(FOLDER)/rusefi-obfuscated.bin $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(filter-out $(BOUTS) $(OUTBIN),$(BUNDLE_FILES)) $(FOLDER)/rusefi-obfuscated.bin
 
 # The autopdate zip doesn't have a folder with the bundle contents
