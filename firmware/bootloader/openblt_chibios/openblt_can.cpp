@@ -92,7 +92,7 @@ extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 	}
 
 	// Check that the ID type matches this frame (std vs ext)
-	constexpr bool configuredAsExt = (rxMsgId & 0x80000000) == 0;
+	constexpr bool configuredAsExt = (rxMsgId & 0x80000000) != 0;
 	if (configuredAsExt != frame.IDE) {
 		// Wrong frame type
 		return BLT_FALSE;
