@@ -1062,7 +1062,7 @@
 #define maf_sensor_type_e_CUSTOM 0
 #define maf_sensor_type_e_DensoTODO 3
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
-#define MAIN_HELP_URL "https://rusefi.com/s/hellen154hyuindai"
+#define MAIN_HELP_URL "https://rusefi.com/s/hellen125honda"
 #define MAP_ANGLE_SIZE 8
 #define MAP_sensor_config_s_size 140
 #define MAP_WINDOW_SIZE 8
@@ -1187,7 +1187,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3784259970
+#define SIGNATURE_HASH 4239541125
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1525,7 +1525,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.08.hellen-honda-k.3784259970"
+#define TS_SIGNATURE "rusEFI master.2024.03.08.hellen-honda-k.4239541125"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
