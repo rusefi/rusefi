@@ -114,6 +114,3 @@ rm -rf $CONSOLE_FOLDER/DfuSe
 rm -rf $DRIVERS_FOLDER
 
 echo "$SCRIPT_NAME: We are back in root directory"
-
-pwd
-echo "Exiting $SCRIPT_NAME"
