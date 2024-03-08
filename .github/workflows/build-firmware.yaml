@@ -242,7 +242,9 @@ jobs:
     - name: Upload Bundle
       if: ${{ env.full == 'true' }}
       working-directory: ./artifacts
-      run: bash ../firmware/bin/upload_bundle.sh
+      run: |
+        source ../firmware/config/boards/common_script_read_meta_env.inc ../firmware/${{ env.BOARD_META_PATH }}
+        bash ../firmware/bin/upload_bundle.sh
 
     - name: Add Bundles to Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
