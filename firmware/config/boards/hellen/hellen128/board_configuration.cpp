@@ -84,6 +84,7 @@ static void setHellen128ETBConfig() {
 		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM3;
 		// DIR pin
 		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
+		engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 		// Disable pin
 		engineConfiguration->etbIo[0].disablePin = H176_OUT_PWM1;
 
@@ -104,6 +105,7 @@ static void setHellen128ETBConfig() {
 		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
 		engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
 		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
+		engineConfiguration->etbIo[0].disablePin = Gpio::Unassigned;
 		engineConfiguration->etb_use_two_wires = true;
 	}
 }
