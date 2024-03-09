@@ -1959,6 +1959,13 @@ end_struct
 #define ts_show_injection_mode true
 #define ts_show_ignition_pins true
 #define ts_show_ignition_mode true
+#define ts_show_energySystems true
+#define ts_show_acSettings true
+#define ts_show_idle true
+#define ts_show_boost true
+#define ts_show_vvt true
+#define ts_show_pedal true
+#define ts_show_maf true
 
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
