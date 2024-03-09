@@ -154,10 +154,9 @@ TEST(LaunchControl, CombinedCondition) {
 static void setDefaultLaunchParameters() {
 	engineConfiguration->launchRpm = 4000;    // Rpm to trigger Launch condition
 //	engineConfiguration->launchTimingRetard = 10; // retard in absolute degrees ATDC
-	engineConfiguration->launchTimingRpmRange = 500; // Rpm above Launch triggered for full retard
+	engineConfiguration->launchRpmWindow = 500; // RPM window (Launch RPM - Window) for transitioning to full retard
 	engineConfiguration->launchSparkCutEnable = true;
 	engineConfiguration->launchFuelCutEnable = false;
-	engineConfiguration->hardCutRpmRange = 500; //Rpm above Launch triggered +(if retard enabled) launchTimingRpmRange to hard cut
 	engineConfiguration->launchSpeedThreshold = 10; //maximum speed allowed before disable launch
 	engineConfiguration->launchFuelAdderPercent = 10; // Extra fuel in % when launch are triggered
 	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
