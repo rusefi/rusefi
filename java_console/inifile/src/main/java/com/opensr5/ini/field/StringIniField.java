@@ -2,6 +2,7 @@ package com.opensr5.ini.field;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.tune.xml.Constant;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 
@@ -22,6 +23,19 @@ public class StringIniField extends IniField {
     public String getValue(ConfigurationImage image) {
         String value = new String(image.getContent(), getOffset(), size);
         value = value.trim();
+        value = trimAtZeroSymbol(value);
+        return value;
+    }
+
+    @NotNull
+    private static String trimAtZeroSymbol(String value) {
+        for (int i = 0; i < value.length(); i++) {
+            // C/C++ zero string is terminated but java XML looks for all 'size' of symbols, let's convert
+            if (value.charAt(i) == 0) {
+                value = value.substring(0, i);
+                break;
+            }
+        }
         return value;
     }
 
