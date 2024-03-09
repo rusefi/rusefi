@@ -331,7 +331,7 @@
 #define ENGINE_MAKE_VAG "VAG"
 #define ENGINE_NOISE_CURVE_SIZE 16
 #define ENGINE_SNIFFER_UNIT_US 10
-#define engine_type_e_auto_enum 0="DEFAULT_FRANKENSO",22="BMW_M52",50="BMW_M73_MRE",51="BMW_M73_MRE_SLAVE",38="DISCOVERY_PDM",2="DODGE_NEON_1995",46="DODGE_NEON_2003_CRANK",64="DODGE_RAM",61="EEPROM_BENCH_ENGINE",58="ETB_BENCH_ENGINE",35="ET_UNUSED_35",55="ET_UNUSED_55",56="ET_UNUSED_56",105="FERRARI_F136",3="FORD_ASPIRE_1996",11="FORD_COYOTE",14="FORD_ESCORT_GT",7="FORD_INLINE_6_1995",40="FRANKENSO_BMW_M73_F",41="FRANKENSO_MIATA_NA6_MAP",49="FRANKENSO_QA_ENGINE",59="FRANKENSO_TEST_33810",15="FUEL_BENCH",98="GM_SBC",8="GY6_139QMB",6="HARLEY",84="HELLEN_121_NISSAN_4_CYL",72="HELLEN_121_NISSAN_6_CYL",85="HELLEN_121_NISSAN_8_CYL",87="HELLEN_121_NISSAN_ALMERA_N16",71="HELLEN_121_VAG_4_CYL",77="HELLEN_121_VAG_5_CYL",81="HELLEN_121_VAG_8_CYL",78="HELLEN_121_VAG_V6_CYL",79="HELLEN_121_VAG_VR6_CYL",36="HELLEN_128_MERCEDES_4_CYL",88="HELLEN_128_MERCEDES_6_CYL",89="HELLEN_128_MERCEDES_8_CYL",82="HELLEN_154_HYUNDAI_COUPE_BK1",95="HELLEN_154_HYUNDAI_COUPE_BK2",76="HELLEN_154_VAG",75="HELLEN_2CHAN_STIM_QC",74="HELLEN_4CHAN_STIM_QC",57="HELLEN_HONDA_BCM",94="HELLEN_NB1_36",43="HONDA_600",90="HONDA_K",66="HONDA_OBD1",91="HONDA_OBD2A",104="HYUNDAI_PB",60="L9779_BENCH_ENGINE",54="MAVERICK_X3",34="MAZDA_MIATA_NA6",80="MAZDA_MIATA_NA94",10="MAZDA_MIATA_NA96",83="MAZDA_MIATA_NB1",69="MAZDA_MIATA_NB2",86="MAZDA_MIATA_NB2_36",20="MAZDA_MIATA_NC",33="ME17_9_MISC",1="MIATA_PROTEUS_TCU",99="MINIMAL_PINS",12="MITSUBISHI_3A92",16="MITSUBISHI_4G93",31="MRE_BOARD_NEW_TEST",23="MRE_BODY_CONTROL",68="MRE_M111",4="MRE_SECONDARY_CAN",37="MRE_SUBARU_EJ18",62="MRE_VW_B6",5="NISSAN_PRIMERA",30="PROTEUS_ANALOG_PWM_TEST",63="PROTEUS_BMW_M73",27="PROTEUS_GM_LS_4",25="PROTEUS_LUA_DEMO",17="PROTEUS_M111",103="PROTEUS_NISSAN_VQ35",42="PROTEUS_QC_TEST_BOARD",73="PROTEUS_STIM_QC",39="PROTEUS_VW_B6",29="SACHS",92="SIMULATOR_CONFIG",70="SUBARU_EG33",100="TEST_100",101="TEST_101",18="TEST_33816",28="TEST_CRANK_ENGINE",48="TEST_DC_WASTEGATE_DISCOVERY",26="TEST_ENGINE",45="TEST_ENGINE_VVT",52="TEST_ISSUE_366_BOTH",53="TEST_ISSUE_366_RISE",19="TEST_ROTARY",13="TOYOTA_1NZ_FE",44="TOYOTA_2JZ_GTE_VVTi",102="UNUSED102",24="UNUSED24",47="UNUSED47",67="UNUSED67",9="UNUSED9",93="UNUSED93",21="UNUSED_21",65="UNUSED_65",97="UNUSED_97",32="VW_ABA",96="WASTEGATE_PROTEUS_TEST"
+#define engine_type_e_auto_enum 0="DEFAULT_FRANKENSO",22="BMW_M52",50="BMW_M73_MRE",51="BMW_M73_MRE_SLAVE",38="DISCOVERY_PDM",2="DODGE_NEON_1995",46="DODGE_NEON_2003_CRANK",64="DODGE_RAM",61="EEPROM_BENCH_ENGINE",58="ETB_BENCH_ENGINE",35="ET_UNUSED_35",55="ET_UNUSED_55",56="ET_UNUSED_56",105="FERRARI_F136",3="FORD_ASPIRE_1996",11="FORD_COYOTE",14="FORD_ESCORT_GT",7="FORD_INLINE_6_1995",40="FRANKENSO_BMW_M73_F",41="FRANKENSO_MIATA_NA6_MAP",49="FRANKENSO_QA_ENGINE",59="FRANKENSO_TEST_33810",15="FUEL_BENCH",98="GM_SBC",8="GY6_139QMB",6="HARLEY",84="HELLEN_121_NISSAN_4_CYL",72="HELLEN_121_NISSAN_6_CYL",85="HELLEN_121_NISSAN_8_CYL",87="HELLEN_121_NISSAN_ALMERA_N16",71="HELLEN_121_VAG_4_CYL",77="HELLEN_121_VAG_5_CYL",81="HELLEN_121_VAG_8_CYL",78="HELLEN_121_VAG_V6_CYL",79="HELLEN_121_VAG_VR6_CYL",36="HELLEN_128_MERCEDES_4_CYL",88="HELLEN_128_MERCEDES_6_CYL",89="HELLEN_128_MERCEDES_8_CYL",82="HELLEN_154_HYUNDAI_COUPE_BK1",95="HELLEN_154_HYUNDAI_COUPE_BK2",76="HELLEN_154_VAG",75="HELLEN_2CHAN_STIM_QC",74="HELLEN_4CHAN_STIM_QC",57="HELLEN_HONDA_BCM",43="HONDA_600",90="HONDA_K",66="HONDA_OBD1",91="HONDA_OBD2A",104="HYUNDAI_PB",60="L9779_BENCH_ENGINE",54="MAVERICK_X3",34="MAZDA_MIATA_NA6",80="MAZDA_MIATA_NA94",10="MAZDA_MIATA_NA96",83="MAZDA_MIATA_NB1",69="MAZDA_MIATA_NB2",86="MAZDA_MIATA_NB2_36",20="MAZDA_MIATA_NC",33="ME17_9_MISC",68="MERCEDES_M111",1="MIATA_PROTEUS_TCU",99="MINIMAL_PINS",12="MITSUBISHI_3A92",16="MITSUBISHI_4G93",31="MRE_BOARD_NEW_TEST",23="MRE_BODY_CONTROL",4="MRE_SECONDARY_CAN",37="MRE_SUBARU_EJ18",62="MRE_VW_B6",5="NISSAN_PRIMERA",30="PROTEUS_ANALOG_PWM_TEST",63="PROTEUS_BMW_M73",27="PROTEUS_GM_LS_4",25="PROTEUS_LUA_DEMO",103="PROTEUS_NISSAN_VQ35",42="PROTEUS_QC_TEST_BOARD",73="PROTEUS_STIM_QC",39="PROTEUS_VW_B6",29="SACHS",92="SIMULATOR_CONFIG",70="SUBARU_EG33",100="TEST_100",101="TEST_101",18="TEST_33816",28="TEST_CRANK_ENGINE",48="TEST_DC_WASTEGATE_DISCOVERY",26="TEST_ENGINE",45="TEST_ENGINE_VVT",52="TEST_ISSUE_366_BOTH",53="TEST_ISSUE_366_RISE",19="TEST_ROTARY",13="TOYOTA_1NZ_FE",44="TOYOTA_2JZ_GTE_VVTi",102="UNUSED102",17="UNUSED17",24="UNUSED24",47="UNUSED47",67="UNUSED67",9="UNUSED9",93="UNUSED93",94="UNUSED94",21="UNUSED_21",65="UNUSED_65",97="UNUSED_97",32="VW_ABA",96="WASTEGATE_PROTEUS_TEST"
 #define engine_type_e_BMW_M52 22
 #define engine_type_e_BMW_M73_MRE 50
 #define engine_type_e_BMW_M73_MRE_SLAVE 51
@@ -376,7 +376,6 @@
 #define engine_type_e_HELLEN_2CHAN_STIM_QC 75
 #define engine_type_e_HELLEN_4CHAN_STIM_QC 74
 #define engine_type_e_HELLEN_HONDA_BCM 57
-#define engine_type_e_HELLEN_NB1_36 94
 #define engine_type_e_HONDA_600 43
 #define engine_type_e_HONDA_K 90
 #define engine_type_e_HONDA_OBD1 66
@@ -392,13 +391,13 @@
 #define engine_type_e_MAZDA_MIATA_NB2_36 86
 #define engine_type_e_MAZDA_MIATA_NC 20
 #define engine_type_e_ME17_9_MISC 33
+#define engine_type_e_MERCEDES_M111 68
 #define engine_type_e_MIATA_PROTEUS_TCU 1
 #define engine_type_e_MINIMAL_PINS 99
 #define engine_type_e_MITSUBISHI_3A92 12
 #define engine_type_e_MITSUBISHI_4G93 16
 #define engine_type_e_MRE_BOARD_NEW_TEST 31
 #define engine_type_e_MRE_BODY_CONTROL 23
-#define engine_type_e_MRE_M111 68
 #define engine_type_e_MRE_SECONDARY_CAN 4
 #define engine_type_e_MRE_SUBARU_EJ18 37
 #define engine_type_e_MRE_VW_B6 62
@@ -407,7 +406,6 @@
 #define engine_type_e_PROTEUS_BMW_M73 63
 #define engine_type_e_PROTEUS_GM_LS_4 27
 #define engine_type_e_PROTEUS_LUA_DEMO 25
-#define engine_type_e_PROTEUS_M111 17
 #define engine_type_e_PROTEUS_NISSAN_VQ35 103
 #define engine_type_e_PROTEUS_QC_TEST_BOARD 42
 #define engine_type_e_PROTEUS_STIM_QC 73
@@ -428,11 +426,13 @@
 #define engine_type_e_TOYOTA_1NZ_FE 13
 #define engine_type_e_TOYOTA_2JZ_GTE_VVTi 44
 #define engine_type_e_UNUSED102 102
+#define engine_type_e_UNUSED17 17
 #define engine_type_e_UNUSED24 24
 #define engine_type_e_UNUSED47 47
 #define engine_type_e_UNUSED67 67
 #define engine_type_e_UNUSED9 9
 #define engine_type_e_UNUSED93 93
+#define engine_type_e_UNUSED94 94
 #define engine_type_e_UNUSED_21 21
 #define engine_type_e_UNUSED_65 65
 #define engine_type_e_UNUSED_97 97
@@ -1188,7 +1188,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3552802930
+#define SIGNATURE_HASH 3105776301
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1474,6 +1474,7 @@
 #define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
 #define TS_SET_LOGGER_SWITCH 'l'
 #define TS_SET_LOGGER_SWITCH_char l
+#define ts_show_air_conditioning true
 #define ts_show_analog_divider false
 #define ts_show_auxserial_pins true
 #define ts_show_can2 false
@@ -1494,9 +1495,13 @@
 #define ts_show_egt false
 #define ts_show_etb true
 #define ts_show_etb_pins false
+#define ts_show_fuel_pump true
 #define ts_show_full_pinout true
+#define ts_show_gdi false
 #define ts_show_hardware_simulator false
+#define ts_show_hd true
 #define ts_show_hip9011 false
+#define ts_show_idle_hardware true
 #define ts_show_ign_key_analog_input false
 #define ts_show_ign_key_switch false
 #define ts_show_ignitionPinMode true
@@ -1506,8 +1511,10 @@
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_mc33810 false
+#define ts_show_odd_fire true
 #define ts_show_onboard_accelerometer false
 #define ts_show_output_diag false
+#define ts_show_rotary true
 #define ts_show_sd_card true
 #define ts_show_sd_pins false
 #define ts_show_software_knock true
@@ -1515,6 +1522,9 @@
 #define ts_show_spi2_enable true
 #define ts_show_spi2_pins true
 #define ts_show_spi3_pins true
+#define ts_show_starter_disable true
+#define ts_show_status_leds true
+#define ts_show_tcu false
 #define ts_show_tle8888 false
 #define ts_show_tps2 true
 #define ts_show_tps_sent false
@@ -1525,7 +1535,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.06.hellenNA8_96.3552802930"
+#define TS_SIGNATURE "rusEFI master.2024.03.09.hellenNA8_96.3105776301"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
