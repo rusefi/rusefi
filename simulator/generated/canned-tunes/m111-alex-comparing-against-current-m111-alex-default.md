@@ -23,8 +23,6 @@
     engineConfiguration->fixedTiming = 10;
     // default 2.295
     engineConfiguration->displacement = 2.2;
-    // default 9.0
-    engineConfiguration->compressionRatio = 9.5;
     // default 469.0
     engineConfiguration->globalTriggerAngleOffset = 72;
     // default 450.0

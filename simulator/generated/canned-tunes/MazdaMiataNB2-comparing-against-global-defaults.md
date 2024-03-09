@@ -13,10 +13,6 @@
     engineConfiguration->fixedTiming = 10;
     // default 2.0
     engineConfiguration->displacement = 1.838997;
-    // default 0.0
-    engineConfiguration->vehicleWeight = 1070;
-    // default 9.0
-    engineConfiguration->compressionRatio = 10;
     // default "60/2"
     engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
     // default 0.0

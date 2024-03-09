@@ -24,10 +24,6 @@
     // default 2.0
     engineConfiguration->displacement = 2.2;
     // default 0.0
-    engineConfiguration->vehicleWeight = 1250;
-    // default 9.0
-    engineConfiguration->compressionRatio = 9.5;
-    // default 0.0
     engineConfiguration->globalTriggerAngleOffset = 72;
     // default 450.0
     engineConfiguration->vvtOffsets[0] = 0;
