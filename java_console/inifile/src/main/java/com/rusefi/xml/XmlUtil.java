@@ -41,7 +41,11 @@ public class XmlUtil {
         JAXBContext jaxbContext;
         jaxbContext = JAXBContext.newInstance(modelClass);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (T) jaxbUnmarshaller.unmarshal(xmlFile);
+        try {
+            return (T) jaxbUnmarshaller.unmarshal(xmlFile);
+        } catch (Throwable e) {
+            throw new IllegalStateException("While reading " + xmlFile.getAbsolutePath(), e);
+        }
     }
 
     /**
