@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 05 03:31:22 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Mar 09 11:25:42 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -156,6 +156,7 @@ public class TsOutputs {
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_AFR_CFG = 10;
 	public static final int PACK_MULT_ANGLE = 50;
+	public static final int PACK_MULT_EGTEMPERATURE = 4;
 	public static final int PACK_MULT_FLEX = 2;
 	public static final int PACK_MULT_FUEL_FLOW = 200;
 	public static final int PACK_MULT_FUEL_MASS = 100;
@@ -286,14 +287,14 @@ public class TsOutputs {
 	public static final Field DEBUGINTFIELD3 = Field.create("DEBUGINTFIELD3", 192, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field DEBUGINTFIELD4 = Field.create("DEBUGINTFIELD4", 196, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field DEBUGINTFIELD5 = Field.create("DEBUGINTFIELD5", 198, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field EGT1 = Field.create("EGT1", 200, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field EGT2 = Field.create("EGT2", 202, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field EGT3 = Field.create("EGT3", 204, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field EGT4 = Field.create("EGT4", 206, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field EGT5 = Field.create("EGT5", 208, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field EGT6 = Field.create("EGT6", 210, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field EGT7 = Field.create("EGT7", 212, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field EGT8 = Field.create("EGT8", 214, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field EGT1 = Field.create("EGT1", 200, FieldType.INT16).setScale(0.25).setBaseOffset(0);
+	public static final Field EGT2 = Field.create("EGT2", 202, FieldType.INT16).setScale(0.25).setBaseOffset(0);
+	public static final Field EGT3 = Field.create("EGT3", 204, FieldType.INT16).setScale(0.25).setBaseOffset(0);
+	public static final Field EGT4 = Field.create("EGT4", 206, FieldType.INT16).setScale(0.25).setBaseOffset(0);
+	public static final Field EGT5 = Field.create("EGT5", 208, FieldType.INT16).setScale(0.25).setBaseOffset(0);
+	public static final Field EGT6 = Field.create("EGT6", 210, FieldType.INT16).setScale(0.25).setBaseOffset(0);
+	public static final Field EGT7 = Field.create("EGT7", 212, FieldType.INT16).setScale(0.25).setBaseOffset(0);
+	public static final Field EGT8 = Field.create("EGT8", 214, FieldType.INT16).setScale(0.25).setBaseOffset(0);
 	public static final Field RAWTPS1PRIMARY = Field.create("RAWTPS1PRIMARY", 216, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field RAWPPSPRIMARY = Field.create("RAWPPSPRIMARY", 218, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field RAWCLT = Field.create("RAWCLT", 220, FieldType.INT16).setScale(0.001).setBaseOffset(0);

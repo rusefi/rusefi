@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 05 03:31:22 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Mar 09 11:25:42 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -596,7 +596,7 @@ struct output_channels_s {
 	 * units: deg C
 	 * offset 200
 	 */
-	uint16_t egt[EGT_CHANNEL_COUNT];
+	scaled_channel<uint16_t, 4, 1> egt[EGT_CHANNEL_COUNT];
 	/**
 	 * units: V
 	 * offset 216
@@ -1277,4 +1277,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 796);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 05 03:31:22 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Mar 09 11:25:42 UTC 2024
