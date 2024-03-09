@@ -97,8 +97,6 @@ public class LoadOlderTuneTest {
             "    engineConfiguration->idleTimingPid.minValue = 0;\n" +
             "    // default 10.0\n" +
             "    engineConfiguration->idleTimingPid.maxValue = 0;\n" +
-            "    // default 0.0\n" +
-            "    engineConfiguration->warningPeriod = 10;\n" +
             "    // default \"false\"\n" +
             "    engineConfiguration->isHip9011Enabled = true;\n" +
             "    // default 0.0\n" +
@@ -126,7 +124,9 @@ public class LoadOlderTuneTest {
             "    // default 1.0\n" +
             "    engineConfiguration->tachPulsePerRev = 0;\n" +
             "    // default \"true\"\n" +
-            "    engine", sb.substring(0, 3500));
+            "    engineConfiguration->canReadEnabled = false;\n" +
+            "    // default \"None\"\n" +
+            "   ", sb.substring(0, 3500));
     }
 
     @Test
