@@ -34,7 +34,7 @@ Release template (copy/paste this for new release):
  - Disabling slow connectivity mode for now #6170
  - hellen125honda board URL in TS help
 
-## March 2023 "Day 740"
+## March 2024 "Day 740"
 
 ### Breaking Changes
  - Trigger Edge settings renamed from "true"/"false" to "Falling"/"Rising"
