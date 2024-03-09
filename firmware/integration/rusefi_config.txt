@@ -1604,7 +1604,7 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	uint8_t autoscale rpmHardLimitHyst;Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached;"RPM", 10, 0, 0, 2500, 0
 	uint16_t autoscale benchTestOffTime;Time between bench test pulses;"ms", 0.1, 0, 0, 2000, 1
 	uint8_t autoscale boostCutPressureHyst;Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached;"kPa (absolute)", 0.5, 0, 0, 125, 1
-	uint8_t[TCU_GEAR_COUNT] autoscale gearBasedOpenLoopBoostAdder;Boost duty cycle added by gear;"%", 0.5, 0, 0, 100, 1
+	int8_t[TCU_GEAR_COUNT] autoscale gearBasedOpenLoopBoostAdder;Boost duty cycle modified by gear;"%", 0.5, 0, -63, 63, 1
 
 	uint32_t benchTestCount;How many test bench pulses do you want;"", 1, 0, 0, 10000000, 0
 	uint8_t autoscale iacByTpsHoldTime;How long initial IAC adder is held before starting to decay.;"seconds", 0.1, 0, 0, 25, 1

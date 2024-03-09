@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - Boost Open Loop gear-based modifier takes negative values #6189
+
 ### Fixed
  - ETB traction control drop is affected by not-highlighted cell #5952
  - Aux Speed sensors stopped working on calibration change #6157

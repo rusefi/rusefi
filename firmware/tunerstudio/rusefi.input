@@ -868,7 +868,7 @@ curve = rangeMatrix, "Range Switch Input Matrix"
 		yBins = throttleEstimateEffectiveAreaValues
 		gauge = TPSGauge
 
-	curve = boostOpenLoopGearAdderCurve, "Boost Open Loop gear-based adder"
+	curve = boostOpenLoopGearAdderCurve, "Boost Open Loop gear-based modifier"
 		columnLabel = "Gear", "duty cycle"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
