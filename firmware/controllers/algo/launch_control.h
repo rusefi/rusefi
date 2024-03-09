@@ -12,6 +12,11 @@
 
 void initLaunchControl();
 
+enum class LaunchCondition {
+	Launch,
+	NotMet
+};
+
 class LaunchControlBase : public launch_control_state_s {
 public:
 	LaunchControlBase();
@@ -22,8 +27,8 @@ public:
 	bool isInsideSpeedCondition() const;
 	bool isInsideTpsCondition() const;
 	bool isInsideSwitchCondition();
-	bool isInsideRPMCondition(int rpm) const;
-	bool isLaunchConditionMet(int rpm);
+	LaunchCondition isInsideRPMCondition(int rpm) const;
+	LaunchCondition isLaunchConditionMet(int rpm);
 
 	bool isLaunchSparkRpmRetardCondition() const;
 	bool isLaunchFuelRpmRetardCondition() const;

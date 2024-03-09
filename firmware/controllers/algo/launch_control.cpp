@@ -3,6 +3,7 @@
  *
  *  @date 10. sep. 2019
  *      Author: Ola Ruud
+ *      Rework: Patryk Chmura
  */
 
 #include "pch.h"
@@ -75,19 +76,19 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 /**
  * Condition is true as soon as we are above LaunchRpm
  */
-bool LaunchControlBase::isInsideRPMCondition(int rpm) const {
+LaunchCondition LaunchControlBase::isInsideRPMCondition(int rpm) const {
 	int launchRpm = engineConfiguration->launchRpm;
-	return (launchRpm < rpm);
+	return (launchRpm < rpm) ? LaunchCondition::Launch : LaunchCondition::NotMet;
 }
 
-bool LaunchControlBase::isLaunchConditionMet(int rpm) {
-
+LaunchCondition LaunchControlBase::isLaunchConditionMet(int rpm) {
+	LaunchCondition rpmLaunchCondition = isInsideRPMCondition(rpm);
 	activateSwitchCondition = isInsideSwitchCondition();
-	rpmCondition = isInsideRPMCondition(rpm);
+	rpmCondition = (rpmLaunchCondition == LaunchCondition::Launch);
 	speedCondition = isInsideSpeedCondition();
 	tpsCondition = isInsideTpsCondition();
 
-	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
+	return ((speedCondition && activateSwitchCondition && tpsCondition) == true) ? rpmLaunchCondition : LaunchCondition::NotMet;
 }
 
 LaunchControlBase::LaunchControlBase() {
@@ -106,7 +107,7 @@ void LaunchControlBase::update() {
 	}
 
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	combinedConditions = isLaunchConditionMet(rpm);
+	combinedConditions = isLaunchConditionMet(rpm) == LaunchCondition::Launch;
 
 	//and still recalculate in case user changed the values
 	retardThresholdRpm = engineConfiguration->launchRpm

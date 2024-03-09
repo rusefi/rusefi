@@ -483,7 +483,7 @@ MAP_sensor_config_s map;@see isMapAveragingEnabled
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
 
-	int launchTimingRetard;;"deg", 1, 0, -180, 180, 2
+	float launchTimingRetard;;"deg", 1, 0, -180, 180, 2
 	int hip9011PrescalerAndSDO;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
 	float knockBandCustom;We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override\nRequires power cycling to effect;"kHz", 1, 0, 0, 20, 2
 
