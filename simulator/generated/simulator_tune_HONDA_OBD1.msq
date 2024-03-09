@@ -106,8 +106,8 @@
         <constant name="overrideVvtTriggerGaps">"false"</constant>
         <constant name="useSpiImu">"false"</constant>
         <constant name="enableStagedInjection">"false"</constant>
-        <constant digits="0" name="tpsMin" units="ADC">0.0</constant>
-        <constant digits="0" name="tpsMax" units="ADC">1000.0</constant>
+        <constant digits="0" name="tpsMin" units="ADC">124.0</constant>
+        <constant digits="0" name="tpsMax" units="ADC">919.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110.0</constant>
         <constant digits="1" name="cranking_baseFuel" units="mg">27.0</constant>
@@ -767,7 +767,7 @@
         <constant name="mc33816_flag0">"NONE"</constant>
         <constant digits="0" name="tachPulsePerRev" units="Pulse">1.0</constant>
         <constant digits="2" name="mapErrorDetectionTooLow" units="kPa">5.0</constant>
-        <constant digits="2" name="mapErrorDetectionTooHigh" units="kPa">410.0</constant>
+        <constant digits="2" name="mapErrorDetectionTooHigh" units="kPa">250.0</constant>
         <constant digits="2" name="multisparkSparkDuration" units="ms">1.0</constant>
         <constant digits="2" name="multisparkDwell" units="ms">2.0</constant>
         <constant digits="4" name="idleRpmPid_pFactor" units="">0.05</constant>
@@ -817,7 +817,7 @@
         <constant digits="0" name="totalGearsCount" units="">0.0</constant>
         <constant name="injectionTimingMode">"End of injection"</constant>
         <constant name="debugMode">"MAP"</constant>
-        <constant digits="0" name="fan1ExtraIdle" units="%">2.0</constant>
+        <constant digits="0" name="fan1ExtraIdle" units="%">10.0</constant>
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
         <constant digits="2" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
@@ -935,9 +935,9 @@
         <constant name="trailingCoilPins12">"NONE"</constant>
         <constant name="tle8888mode">"Auto"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
-        <constant name="injectorCompensationMode">"None"</constant>
+        <constant name="injectorCompensationMode">"Fixed rail pressure"</constant>
         <constant name="fan2PinMode">"default"</constant>
-        <constant digits="0" name="fuelReferencePressure" units="kPa">300.0</constant>
+        <constant digits="0" name="fuelReferencePressure" units="kPa">294.0</constant>
         <constant cols="6" digits="2" name="postCrankingFactor" rows="6">
          1.2 1.2 1.2 1.2 1.2 1.2
          1.2 1.2 1.2 1.2 1.2 1.2
@@ -1175,7 +1175,7 @@
         <constant digits="0" name="gppwm1_pwmFrequency" units="hz">0.0</constant>
         <constant digits="0" name="gppwm1_onAboveDuty" units="%">60.0</constant>
         <constant digits="0" name="gppwm1_offBelowDuty" units="%">50.0</constant>
-        <constant name="gppwm1_loadAxis">"Zero"</constant>
+        <constant name="gppwm1_loadAxis">"MAP"</constant>
         <constant name="gppwm1_rpmAxis">"RPM"</constant>
         <constant cols="1" digits="1" name="gppwm1_loadBins" rows="8">
          0.0
