@@ -73,8 +73,15 @@ public:
 	void ThreadTask() override {
 		while (true) {
 			for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-			// todo: migrate to SensorType framework!
-				engine->currentEgtValue[i] = getMax31855EgtValue(i);
+				float value;
+
+				max_32855_code ret = getMax31855EgtValue(i, &value, NULL);
+				if (ret == MC_OK) {
+					// todo: migrate to SensorType framework!
+					engine->currentEgtValue[i] = value;
+				} else {
+					/* TODO: report error code? */
+				}
 			}
 
 			chThdSleepMilliseconds(500);
@@ -97,6 +104,7 @@ public:
 	}
 
 	void egtRead() {
+		float temp, refTemp;
 
 		if (driver == NULL) {
 			efiPrintf("No SPI selected for EGT");
@@ -105,18 +113,13 @@ public:
 
 		efiPrintf("Reading egt");
 
-		uint32_t egtPacket = readEgtPacket(0);
+		max_32855_code code = getMax31855EgtValue(0, &temp, &refTemp);
 
-		max_32855_code code = getResultCode(egtPacket);
-
-		efiPrintf("egt 0x%08x code=%d (%s)", egtPacket, code, getMcCode(code));
+		efiPrintf("egt: code=%d (%s)", code, getMcCode(code));
 
 		if (code != MC_INVALID) {
-			int refBits = ((egtPacket & 0xFFF0) >> 4); // bits 15:4
-			float refTemp = refBits / 16.0;
 			efiPrintf("reference temperature %.2f", refTemp);
-
-			efiPrintf("EGT temperature %d", packetGetTemperature(egtPacket));
+			efiPrintf("EGT temperature %d", temp);
 		}
 	}
 
@@ -172,12 +175,12 @@ private:
 		}
 	}
 
-	uint32_t readEgtPacket(int egtChannel) {
+	int readEgtPacket(size_t egtChannel, uint32_t *packet) {
 		uint32_t egtPacket;
 		brain_pin_e cs = m_cs[egtChannel];
 
 		if ((!isBrainPinValid(cs)) || (driver == NULL)) {
-			return 0xFFFFFFFF;
+			return -1;
 		}
 
 		/* Set proper CS gpio */
@@ -191,22 +194,39 @@ private:
 		spiUnselect(driver);
 		spiStop(driver);
 
-		egtPacket = SWAP_UINT32(egtPacket);
-		return egtPacket;
+		*packet = SWAP_UINT32(egtPacket);
+
+		return 0;
 	}
 
-	uint16_t packetGetTemperature(uint32_t packet) {
-		return ((packet >> 18) / 4);
+	float packetGetTemperature(uint32_t packet) {
+		return ((float)(packet >> 18) / 4.0);
 	}
 
-	uint16_t getMax31855EgtValue(int egtChannel) {
-		uint32_t packet = readEgtPacket(egtChannel);
-		max_32855_code code = getResultCode(packet);
-		if (code != MC_OK) {
-			return EGT_ERROR_VALUE + code;
-		} else {
-			return packetGetTemperature(packet);
+	float packetGetRefTemperature(uint32_t packet) {
+		// bits 15:4
+		return (float)((packet & 0xFFF0) >> 4) / 16.0;
+	}
+
+	max_32855_code getMax31855EgtValue(size_t egtChannel, float *temp, float *refTemp) {
+		uint32_t packet;
+		max_32855_code code = MC_INVALID;
+		int ret;
+
+		ret = readEgtPacket(egtChannel, &packet);
+		if (ret == 0) {
+			code = getResultCode(packet);
 		}
+
+		if (code == MC_OK) {
+			if (temp) {
+				*temp = packetGetTemperature(packet);
+			}
+			if (refTemp) {
+				*refTemp = packetGetRefTemperature(packet);
+			}
+		}
+		return code;
 	}
 };
 
