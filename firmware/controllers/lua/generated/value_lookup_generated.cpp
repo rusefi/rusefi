@@ -2141,7 +2141,7 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case 1226423210:
 	{
-		engineConfiguration->launchTimingRetard = (int)value;
+		engineConfiguration->launchTimingRetard = value;
 		return 1;
 	}
 		case -1310663509:
