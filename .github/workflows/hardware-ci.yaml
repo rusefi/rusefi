@@ -91,7 +91,7 @@ jobs:
         lsusb -vvv
 
     - name: Check for STLINK
-      run: lsusb | grep 'ST-LINK\|STLINK'
+      run: lsusb | grep -i "st-\?link"
 
 #    - name: Install tools
 #      run: |
