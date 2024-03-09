@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
  - EGO renamed to O2 sensor to reduce confusion #6159
  - Disabling slow connectivity mode for now #6170
  - hellen128 better ETB pin choice between rev A/B and C
+ - Base map values for Open Loop Boost Duty should be 0% #6188
 
 ## March 2024 "Day 740"
 

@@ -227,7 +227,6 @@ void setDefaultBoostParameters() {
 
 	for (int loadIndex = 0; loadIndex < BOOST_LOAD_COUNT; loadIndex++) {
 		for (int rpmIndex = 0; rpmIndex < BOOST_RPM_COUNT; rpmIndex++) {
-			config->boostTableOpenLoop[loadIndex][rpmIndex] = (float)config->boostTpsBins[loadIndex];
 			config->boostTableClosedLoop[loadIndex][rpmIndex] = (float)config->boostTpsBins[loadIndex];
 		}
 	}
