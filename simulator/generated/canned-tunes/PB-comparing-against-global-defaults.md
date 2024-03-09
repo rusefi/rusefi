@@ -123,6 +123,7 @@
     engineConfiguration->mc33_hpfp_i_hold = 4;
 
 
+	pbcannedboostTableOpenLoop();
 	pbcannedvvtTable1();
 	pbcannedvvtTable2();
 	pbcannedscriptTable4();

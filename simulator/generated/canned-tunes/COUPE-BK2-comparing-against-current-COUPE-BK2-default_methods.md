@@ -13,6 +13,20 @@ static void coupleBK2cannedtpsTpsAccelTable() {
 	copyTable(config->tpsTpsAccelTable, hardCodedtpsTpsAccelTable);
 }
 
+static void coupleBK2cannedboostTableOpenLoop() {
+	static const float hardCodedboostTableOpenLoop[8][8] = {
+{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
+{14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	},
+{29.000,	29.000,	29.000,	29.000,	29.000,	29.000,	29.000,	29.000,	},
+{43.000,	43.000,	43.000,	43.000,	43.000,	43.000,	43.000,	43.000,	},
+{57.000,	57.000,	57.000,	57.000,	57.000,	57.000,	57.000,	57.000,	},
+{71.000,	71.000,	71.000,	71.000,	71.000,	71.000,	71.000,	71.000,	},
+{86.000,	86.000,	86.000,	86.000,	86.000,	86.000,	86.000,	86.000,	},
+{100.000,	100.000,	100.000,	100.000,	100.000,	100.000,	100.000,	100.000,	},
+};
+	copyTable(config->boostTableOpenLoop, hardCodedboostTableOpenLoop);
+}
+
 static void coupleBK2cannedscriptTable4() {
 	static const float hardCodedscriptTable4[8][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},

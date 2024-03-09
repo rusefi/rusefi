@@ -50,6 +50,7 @@
 
 
 	coupleBK2cannedtpsTpsAccelTable();
+	coupleBK2cannedboostTableOpenLoop();
 	coupleBK2cannedscriptTable4();
 	coupleBK2cannedpedalToTpsTable();
 	coupleBK2cannedlambdaTable();

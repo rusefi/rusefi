@@ -35,6 +35,7 @@
     engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 
 
+	pbcannedboostTableOpenLoop();
 	pbcannedscriptTable4();
 	pbcannedlambdaTable();
 	pbcannedtcuSolenoidTable();

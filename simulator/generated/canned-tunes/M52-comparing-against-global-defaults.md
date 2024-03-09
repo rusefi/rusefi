@@ -198,6 +198,7 @@
 
 
 	cannedtpsTpsAccelTable();
+	cannedboostTableOpenLoop();
 	cannedscriptTable4();
 	cannedignitionTable();
 	cannedveTable();
