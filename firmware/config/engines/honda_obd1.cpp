@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "defaults.h"
+#include "honda_obd1_canned_tables.cpp"
 
 #if HW_HELLEN_UAEFI
 #include "hellen_meta.h"
@@ -13,6 +14,15 @@ void setHondaObd1() {
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
+
+    engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
+    engineConfiguration->fuelReferencePressure = 294;
+
+    engineConfiguration->tpsMin = 124;
+    engineConfiguration->tpsMax = 919;
+    engineConfiguration->fan1ExtraIdle = 10;
+    engineConfiguration->injector.flow = 240;
+    engineConfiguration->mapErrorDetectionTooHigh = 250;
 
 	// we expect end users to use timing light to validate specific vehicle!
 	engineConfiguration->globalTriggerAngleOffset = 80;
@@ -30,8 +40,13 @@ void setHondaObd1() {
   // ECU does not control main relay
   engineConfiguration->mainRelayPin = Gpio::Unassigned;
 
+#if HW_HELLEN_UAEFI
+  cannedignitionTable();
+#endif // HW_HELLEN_UAEFI
+
 	strcpy(engineConfiguration->gpPwmNote[0], "VTC");
 	gppwm_channel *vtcControl = &engineConfiguration->gppwm[0];
+	vtcControl->loadAxis = GPPWM_Map;
 	vtcControl->pwmFrequency = 0;
 #if HW_HELLEN_UAEFI
   // Honda ICM is weird it fires spark on RAISING edge and has internal pull-up

@@ -24,6 +24,7 @@ public class TuneCanToolRunner extends TuneCanTool {
     public static void runPopular() throws JAXBException, IOException {
         // while adding a line here make sure corresponding line is at rusEfiFunctionalTest.cpp
         // https://github.com/rusefi/rusefi/issues/4038
+        processREOtune(1621, engine_type_e.HONDA_OBD1, "Honda-OBD1", "");
         processREOtune(985, engine_type_e.MAZDA_MIATA_NB2, "MazdaMiataNB2", "nb2");
         processREOtune(1508, engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK1, "COUPE-BK1", "coupleBK1");
         processREOtune(1507, engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK2, "COUPE-BK2", "coupleBK2");
