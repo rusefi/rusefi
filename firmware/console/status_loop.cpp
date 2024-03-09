@@ -438,6 +438,17 @@ static void updateFuelSensors() {
 	engine->outputChannels.fuelTankLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
 
+static void updateEgtSensors() {
+	engine->outputChannels.egt[0] = Sensor::getOrZero(SensorType::EGT1);
+	engine->outputChannels.egt[1] = Sensor::getOrZero(SensorType::EGT2);
+	engine->outputChannels.egt[2] = Sensor::getOrZero(SensorType::EGT3);
+	engine->outputChannels.egt[3] = Sensor::getOrZero(SensorType::EGT4);
+	engine->outputChannels.egt[4] = Sensor::getOrZero(SensorType::EGT5);
+	engine->outputChannels.egt[5] = Sensor::getOrZero(SensorType::EGT6);
+	engine->outputChannels.egt[6] = Sensor::getOrZero(SensorType::EGT7);
+	engine->outputChannels.egt[7] = Sensor::getOrZero(SensorType::EGT8);
+}
+
 static void updateVvtSensors() {
 #if EFI_SHAFT_POSITION_INPUT
 	// 248
@@ -520,6 +531,7 @@ static void updateSensors() {
 	updateRawSensors();
 	updateLambda();
 	updateFuelSensors();
+	updateEgtSensors();
 	updateVvtSensors();
 	updateVehicleSpeed();
 	updatePressures();
