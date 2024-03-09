@@ -1187,7 +1187,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2841344072
+#define SIGNATURE_HASH 2927108991
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1482,6 +1482,7 @@
 #define ts_show_check_engine true
 #define ts_show_clt_iat_pullup false
 #define ts_show_communityCommsLedPid false
+#define ts_show_compression_ratio false
 #define ts_show_cylinder_10 false
 #define ts_show_cylinder_11 false
 #define ts_show_cylinder_12 false
@@ -1498,7 +1499,9 @@
 #define ts_show_egt false
 #define ts_show_etb true
 #define ts_show_etb_pins false
+#define ts_show_fancy_hardware false
 #define ts_show_firing_order true
+#define ts_show_forced_induction true
 #define ts_show_fuel_pump true
 #define ts_show_fuel_relay_pin true
 #define ts_show_fuel_strategy true
@@ -1512,9 +1515,11 @@
 #define ts_show_ign_key_switch false
 #define ts_show_ignitionPinMode false
 #define ts_show_inj_diag false
+#define ts_show_injection_mode true
 #define ts_show_injectionPinMode false
 #define ts_show_k_line true
 #define ts_show_l9779 false
+#define ts_show_maf false
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_mc33810 false
@@ -1539,11 +1544,12 @@
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
 #define ts_show_vbatt false
+#define ts_show_vehicle_weight false
 #define ts_show_vr_threshold_2 false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.09.hellen-honda-k.2841344072"
+#define TS_SIGNATURE "rusEFI master.2024.03.09.hellen-honda-k.2927108991"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
