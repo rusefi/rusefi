@@ -24,7 +24,7 @@ public class WriteSimulatorConfiguration {
     // f407-discovery is historically the most inclusive .ini file
     public static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini";
 
-    public static String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "");
+    public static String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "../simulator/");
 
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
         System.out.println("ROOT_FOLDER=" + ROOT_FOLDER);
@@ -41,6 +41,7 @@ public class WriteSimulatorConfiguration {
                     engine_type_e.MAZDA_MIATA_NB1,
                     engine_type_e.MAZDA_MIATA_NB2,
                     engine_type_e.HONDA_K,
+                    engine_type_e.HONDA_OBD1,
                     engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK1,
                     engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK2,
                     engine_type_e.HYUNDAI_PB,
