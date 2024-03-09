@@ -25,14 +25,6 @@
 
 #include "thread_controller.h"
 
-#define EGT_ERROR_VALUE -1000
-
-// bits D17 and D3 are always expected to be zero
-#define MC_RESERVED_BITS 0x20008
-#define MC_OPEN_BIT 1
-#define MC_GND_BIT 2
-#define MC_VCC_BIT 4
-
 /* TODO: move all stuff to Max31855Read class */
 class Max31855Read final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
@@ -147,7 +139,14 @@ private:
 	};
 
 	max_31855_code getResultCode(uint32_t egtPacket) {
-		if (((egtPacket & MC_RESERVED_BITS) != 0) || (egtPacket == 0x0)) {
+		// bits D17 and D3 are always expected to be zero
+		#define MC_RESERVED_BITS	0x20008
+		#define MC_OPEN_BIT			(1 << 0)
+		#define MC_GND_BIT			(1 << 1)
+		#define MC_VCC_BIT			(1 << 2)
+
+		if (((egtPacket & MC_RESERVED_BITS) != 0) ||
+			(egtPacket == 0x0)) {
 			return MC_INVALID;
 		} else if ((egtPacket & MC_OPEN_BIT) != 0) {
 			return MC_OPEN;
@@ -200,12 +199,13 @@ private:
 	}
 
 	float packetGetTemperature(uint32_t packet) {
+		// bits 31:18, 0.25C resolution (1/4 C)
 		return ((float)(packet >> 18) / 4.0);
 	}
 
 	float packetGetRefTemperature(uint32_t packet) {
-		// bits 15:4
-		return (float)((packet & 0xFFF0) >> 4) / 16.0;
+		// bits 15:4, 0.0625C resolution (1/16 C)
+		return ((float)((packet & 0xFFF0) >> 4) / 16.0);
 	}
 
 	max_31855_code getMax31855EgtValue(size_t egtChannel, float *temp, float *refTemp) {
