@@ -32,7 +32,7 @@ public:
 	{
 	}
 
-	void start(CANDriver* device) {
+	void tryStart(CANDriver *device) {
 		m_device = device;
 
 		if (device) {
@@ -192,8 +192,8 @@ void initCan() {
 	}
 
 	if (engineConfiguration->canReadEnabled) {
-		canRead1.start(device1);
-		canRead2.start(device2);
+		canRead1.tryStart(device1);
+		canRead2.tryStart(device2);
 	}
 
 	isCanEnabled = true;

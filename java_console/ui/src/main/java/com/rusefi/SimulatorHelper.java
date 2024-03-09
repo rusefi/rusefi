@@ -14,28 +14,24 @@ import static com.rusefi.ui.util.UiUtils.setToolTip;
 
 public class SimulatorHelper {
     private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorHelper");
-    public static final String BINARY = "fome_simulator.exe";
+    private static final String SIMULATOR_BINARY_PATH = "./";
     private static Process process;
-
-    public static boolean isBinaryHere() {
-        return new File(BINARY).exists();
-    }
 
     /**
      * this code start sumulator for UI console
      * todo: unify with the code which starts simulator for auto tests?
      */
-    private static void startSimulator() {
+    private static void startSimulator(File binary) {
         LinkManager.isSimulationMode = true;
 
-        FileLog.MAIN.logLine("Executing " + BINARY);
+        FileLog.MAIN.logLine("Executing " + binary.getPath());
         THREAD_FACTORY.newThread(new Runnable() {
             @Override
             public void run() {
                 try {
                     FileLog.SIMULATOR_CONSOLE.start();
-                    process = Runtime.getRuntime().exec(BINARY);
-                    FileLog.MAIN.logLine("Executing " + BINARY + "=" + process);
+                    process = Runtime.getRuntime().exec(binary.getPath());
+                    FileLog.MAIN.logLine("Executing " + binary.getPath() + "=" + process);
                     SimulatorExecHelper.dumpProcessOutput(process);
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
@@ -62,18 +58,23 @@ public class SimulatorHelper {
     }
 
     public static JComponent createSimulatorComponent(final StartupFrame portSelector) {
-        if (!SimulatorHelper.isBinaryHere())
-            return new JLabel(SimulatorHelper.BINARY + " not found");
+        File simulatorBinary;
+        try {
+            simulatorBinary = SimulatorExecHelper.getSimulatorBinary(SIMULATOR_BINARY_PATH);
+        } catch (IllegalStateException e) {
+            return new JLabel(e.getMessage());
+        }
 
-        if (TcpConnector.isTcpPortOpened())
+        if (TcpConnector.isTcpPortOpened()) {
             return new JLabel("Port " + TcpConnector.DEFAULT_PORT + " already busy. Simulator running?");
+        }
 
         JButton simulatorButton = new JButton("Start Virtual Simulator");
         simulatorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 portSelector.disposeFrameAndProceed();
-                startSimulator();
+                startSimulator(simulatorBinary);
             }
         });
         setToolTip(simulatorButton, "Connect to totally virtual simulator",
