@@ -34,7 +34,7 @@ Release template (copy/paste this for new release):
  - EGO renamed to O2 sensor to reduce confusion #6159
  - Disabling slow connectivity mode for now #6170
 
-## March 2023 "Day 740"
+## March 2024 "Day 740"
 
 ### Breaking Changes
  - Trigger Edge settings renamed from "true"/"false" to "Falling"/"Rising"
