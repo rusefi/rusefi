@@ -2320,6 +2320,7 @@ end_struct
 #define ts_show_etb_pins true
 #define ts_show_full_pinout true
 #define ts_show_egt true
+#define ts_show_k_line false
 #define ts_show_spi2_enable true
 #define ts_show_spi2_pins true
 #define ts_show_spi3_pins true
@@ -2327,6 +2328,13 @@ end_struct
 #define ts_show_starter_disable true
 #define ts_show_fuel_pump true
 #define ts_show_status_leds true
+#define ts_show_fuel_relay_pin true
+#define ts_show_cylinder_bank true
+#define ts_show_fuel_strategy true
+#define ts_show_check_engine true
+#define ts_show_debug_mode false
+#define ts_show_number_of_cylinders true
+#define ts_show_firing_order true
 #define ts_show_idle_hardware true
 #define ts_show_hd true
 #define ts_show_odd_fire true

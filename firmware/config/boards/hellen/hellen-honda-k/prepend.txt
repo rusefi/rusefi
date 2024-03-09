@@ -25,6 +25,8 @@
 #define ts_show_hd false
 #define ts_show_odd_fire false
 #define ts_show_rotary false
+#define ts_show_cylinder_bank false
+#define ts_show_k_line true
 
 #define ts_show_cylinder_5 false
 #define ts_show_cylinder_6 false
