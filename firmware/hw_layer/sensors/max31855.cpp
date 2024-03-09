@@ -24,6 +24,11 @@
 #if EFI_MAX_31855
 
 #include "thread_controller.h"
+#include "stored_value_sensor.h"
+
+#ifndef MAX31855_REFRESH_TIME
+#define MAX31855_REFRESH_TIME 500
+#endif
 
 /* TODO: move all stuff to Max31855Read class */
 class Max31855Read final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
@@ -48,12 +53,21 @@ public:
 			/* WARN: this will clear all other bits in cr1 */
 			spiConfig.cr1 = getSpiPrescaler(_5MHz, device);
 			for (size_t i = 0; i < EGT_CHANNEL_COUNT; i++) {
-				/*  and mark used! */
+				auto& sensor = egtSensors[i];
+
+				m_cs[i] = Gpio::Invalid;
+
+				// If there's already another (CAN?) EGT sensor configured,
+				// don't configure this one.
+				if (Sensor::hasSensor(sensor.type()))
+					continue;
+
+				// get CS pin and mark used!
 				if (isBrainPinValid(cs[i])) {
 					initSpiCs(&spiConfig, cs[i]);
 					m_cs[i] = cs[i];
-				} else {
-					m_cs[i] = Gpio::Invalid;
+
+					sensor.Register();
 				}
 			}
 			ThreadController::start();
@@ -69,14 +83,15 @@ public:
 
 				max_31855_code ret = getMax31855EgtValue(i, &value, NULL);
 				if (ret == MC_OK) {
-					// todo: migrate to SensorType framework!
-					engine->currentEgtValue[i] = value;
+					auto& sensor = egtSensors[i];
+
+					sensor.setValidValue(value, getTimeNowNt());
 				} else {
 					/* TODO: report error code? */
 				}
 			}
 
-			chThdSleepMilliseconds(500);
+			chThdSleepMilliseconds(MAX31855_REFRESH_TIME);
 		}
 	}
 
@@ -228,6 +243,17 @@ private:
 		}
 		return code;
 	}
+
+	StoredValueSensor egtSensors[EGT_CHANNEL_COUNT] = {
+		{ SensorType::EGT1, MS2NT(MAX31855_REFRESH_TIME * 3) },
+		{ SensorType::EGT2, MS2NT(MAX31855_REFRESH_TIME * 3) },
+		{ SensorType::EGT3, MS2NT(MAX31855_REFRESH_TIME * 3) },
+		{ SensorType::EGT4, MS2NT(MAX31855_REFRESH_TIME * 3) },
+		{ SensorType::EGT5, MS2NT(MAX31855_REFRESH_TIME * 3) },
+		{ SensorType::EGT6, MS2NT(MAX31855_REFRESH_TIME * 3) },
+		{ SensorType::EGT7, MS2NT(MAX31855_REFRESH_TIME * 3) },
+		{ SensorType::EGT8, MS2NT(MAX31855_REFRESH_TIME * 3) }
+	};
 };
 
 static Max31855Read instance;

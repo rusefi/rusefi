@@ -89,9 +89,14 @@ enum class SensorType : unsigned char {
 
 	InputShaftSpeed,
 
-// todo: migrate to SensorType framework!
-//	EGT1,
-//	EGT2,
+	EGT1,
+	EGT2,
+	EGT3,
+	EGT4,
+	EGT5,
+	EGT6,
+	EGT7,
+	EGT8,
 
 	Maf2,	// Second bank MAF sensor
 
