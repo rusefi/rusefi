@@ -2318,6 +2318,12 @@ end_struct
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_etb true
 #define ts_show_etb_pins true
+#define ts_show_forced_induction true
+#define ts_show_vehicle_weight false
+#define ts_show_compression_ratio false
+#define ts_show_injection_mode true
+#define ts_show_maf true
+#define ts_show_fancy_hardware false
 #define ts_show_full_pinout true
 #define ts_show_egt true
 #define ts_show_k_line false

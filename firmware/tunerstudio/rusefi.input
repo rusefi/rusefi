@@ -1864,16 +1864,16 @@ menuDialog = main
 		groupMenu = "Cylinder ign trims"
 			groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
 			groupChildMenu = ignTrimTbl2,		"Ignition trim cyl 2"
-			groupChildMenu = ignTrimTbl3,		"Ignition trim cyl 3"
-			groupChildMenu = ignTrimTbl4,		"Ignition trim cyl 4"
-			groupChildMenu = ignTrimTbl5,		"Ignition trim cyl 5"
-			groupChildMenu = ignTrimTbl6,		"Ignition trim cyl 6"
-			groupChildMenu = ignTrimTbl7,		"Ignition trim cyl 7"
-			groupChildMenu = ignTrimTbl8,		"Ignition trim cyl 8"
-			groupChildMenu = ignTrimTbl9,		"Ignition trim cyl 9"
-			groupChildMenu = ignTrimTbl10,		"Ignition trim cyl 10"
-			groupChildMenu = ignTrimTbl11,		"Ignition trim cyl 11"
-			groupChildMenu = ignTrimTbl12,		"Ignition trim cyl 12"
+			groupChildMenu = ignTrimTbl3,		"Ignition trim cyl 3"@@if_ts_show_cylinder_3
+			groupChildMenu = ignTrimTbl4,		"Ignition trim cyl 4"@@if_ts_show_cylinder_4
+			groupChildMenu = ignTrimTbl5,		"Ignition trim cyl 5"@@if_ts_show_cylinder_5
+			groupChildMenu = ignTrimTbl6,		"Ignition trim cyl 6"@@if_ts_show_cylinder_6
+			groupChildMenu = ignTrimTbl7,		"Ignition trim cyl 7"@@if_ts_show_cylinder_7
+			groupChildMenu = ignTrimTbl8,		"Ignition trim cyl 8"@@if_ts_show_cylinder_8
+			groupChildMenu = ignTrimTbl9,		"Ignition trim cyl 9"@@if_ts_show_cylinder_9
+			groupChildMenu = ignTrimTbl10,		"Ignition trim cyl 10"@@if_ts_show_cylinder_10
+			groupChildMenu = ignTrimTbl11,		"Ignition trim cyl 11"@@if_ts_show_cylinder_11
+			groupChildMenu = ignTrimTbl12,		"Ignition trim cyl 12"@@if_ts_show_cylinder_12
 		subMenu = std_separator
 
 		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
@@ -2007,9 +2007,9 @@ menuDialog = main
 		subMenu = std_separator
 
 		# MAF
-		subMenu = mafSettings,				"MAF sensor"
-		subMenu = mafDecodingCurve,			"MAF transfer function", 0, {mafAdcChannel != @@ADC_CHANNEL_NONE@@ }
-		subMenu = std_separator
+		subMenu = mafSettings,				"MAF sensor"@@if_ts_show_maf
+		subMenu = mafDecodingCurve,			"MAF transfer function", 0, {mafAdcChannel != @@ADC_CHANNEL_NONE@@ }@@if_ts_show_maf
+		subMenu = std_separator@@if_ts_show_maf
 
 		# O2 sensor(s)
 		subMenu = egoSettings,				"O2 sensor"
@@ -2069,7 +2069,7 @@ menuDialog = main
 
 
 		subMenu = std_separator
-		subMenu = fancyHardwareDialog,		"Fancy Hardware"
+		subMenu = fancyHardwareDialog,		"Fancy Hardware"@@if_ts_show_fancy_hardware
 		subMenu = tractionEtbTableTbl,    "Traction Control ETB Drop"
 		subMenu = tractionTimingTableTbl,    "Traction Control Timing Adjustment"
 		subMenu = tractionIgnitionSkipDialog,    "Traction Control Skip Ignition"
@@ -2347,7 +2347,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = baseInjection, "Injection"
 		field = "Enabled",						isInjectionEnabled
-		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
+		field = "Mode",							injectionMode, {isInjectionEnabled == 1}@@if_ts_show_injection_mode
 		field = "#Batch injection with individual wiring"
 		field = "Alpha-N uses IAT density correction",	alphaNUseIat, { fuelAlgorithm == @@engine_load_mode_e_LM_ALPHA_N@@ }
 		field = "Override VE table load axis",			veOverrideMode, { isInjectionEnabled }
@@ -2382,15 +2382,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Number of cylinders",					cylindersCount@@if_ts_show_number_of_cylinders
 		field = "Displacement",						displacement
 		field = "Firing order",							firingOrder@@if_ts_show_firing_order
-		field = "Vehicle weight",						vehicleWeight
+		field = "Vehicle weight",						vehicleWeight@@if_ts_show_vehicle_weight
 
 	dialog = engineMetadata, "Engine Metadata"
 		field = "#These metadata are used by rusEFI Online"
 		field = "Engine Make",							engineMake
 		field = "Manufacturer Engine Code",				engineCode
 		field = "Vehicle Name",							vehicleName
-		field = "Compression Ratio",					compressionRatio
-		field = "Forced Induction?",					isForcedInduction
+		field = "Compression Ratio",					compressionRatio@@if_ts_show_compression_ratio
+		field = "Forced Induction?",					isForcedInduction@@if_ts_show_forced_induction
 
 	dialog = trigger_primary, "Primary Trigger"
 		topicHelp = "triggerHelp"
