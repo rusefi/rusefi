@@ -47,6 +47,8 @@ void setHyundaiPb() {
 
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 90;
+    engineConfiguration->vvtOffsets[0] = 227;
+    engineConfiguration->vvtOffsets[1] = 50;
 
 	engineConfiguration->enableSoftwareKnock = true;
     engineConfiguration->etbIdleThrottleRange = 6.0;
@@ -273,11 +275,8 @@ static void commonGenesisCoupe() {
     engineConfiguration->displacement = 1.998;
     // default "false"
     engineConfiguration->isForcedInduction = true;
-    // default 0.0
     engineConfiguration->globalTriggerAngleOffset = 475;
-    // default 0.0
     engineConfiguration->vvtOffsets[0] = -154;
-    // default 0.0
     engineConfiguration->vvtOffsets[1] = 335;
     // default "None"
     engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;

@@ -40,7 +40,6 @@ void setMazdaMiata96() {
 
 	engineConfiguration->iacByTpsTaper = 6;
 	engineConfiguration->useIdleTimingPidControl = true;
-	engineConfiguration->engineChartSize = 300;
 
 	engineConfiguration->wwaeTau = 0.1;
 	engineConfiguration->targetVBatt = 14.2;

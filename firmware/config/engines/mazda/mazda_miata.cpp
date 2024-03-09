@@ -73,9 +73,6 @@ static const uint8_t miataNA8_maf_advance_table[16][16] = { {/*0  engineLoad=1.2
 #endif
 
 void common079721_2351() {
-
-	engineConfiguration->engineChartSize = 300;
-
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 

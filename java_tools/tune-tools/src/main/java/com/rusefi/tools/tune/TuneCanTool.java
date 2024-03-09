@@ -332,6 +332,8 @@ public class TuneCanTool implements TuneCanToolConstants {
             "invertCamVVTSignal",
             "adcVcc",
             "vbattDividerCoeff",
+            "warningPeriod", // inconsistency between prod code and simulator
+            "engineChartSize", // inconsistency between prod code and simulator
             "displayLogicLevelsInEngineSniffer",
             "isSdCardEnabled",
             "is_enabled_spi_1",
