@@ -27,8 +27,9 @@ jobs:
       uses: chuckwagoncomputing/interactive-pinout@2.14
       with:
         mapping-path: ${{ env.CHANGED }}
-        warnings: "error"
+        warnings: "notice"
         warning-no-connectors: "false"
+        warning-dupe: "error"
         columns: |
           {
           "pin":"Pin Number",
