@@ -47,7 +47,7 @@ public:
 		MC_OPEN = 2,
 		MC_SHORT_GND = 3,
 		MC_SHORT_VCC = 4,
-	} max_32855_code;
+	} max_31855_code;
 
 	int start(spi_device_e device, egt_cs_array_t cs) {
 		driver = getSpiDevice(device);
@@ -75,7 +75,7 @@ public:
 			for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 				float value;
 
-				max_32855_code ret = getMax31855EgtValue(i, &value, NULL);
+				max_31855_code ret = getMax31855EgtValue(i, &value, NULL);
 				if (ret == MC_OK) {
 					// todo: migrate to SensorType framework!
 					engine->currentEgtValue[i] = value;
@@ -113,7 +113,7 @@ public:
 
 		efiPrintf("Reading egt");
 
-		max_32855_code code = getMax31855EgtValue(0, &temp, &refTemp);
+		max_31855_code code = getMax31855EgtValue(0, &temp, &refTemp);
 
 		efiPrintf("egt: code=%d (%s)", code, getMcCode(code));
 
@@ -146,7 +146,7 @@ private:
 		.cr2 = SPI_CR2_8BIT_MODE
 	};
 
-	max_32855_code getResultCode(uint32_t egtPacket) {
+	max_31855_code getResultCode(uint32_t egtPacket) {
 		if (((egtPacket & MC_RESERVED_BITS) != 0) || (egtPacket == 0x0)) {
 			return MC_INVALID;
 		} else if ((egtPacket & MC_OPEN_BIT) != 0) {
@@ -160,7 +160,7 @@ private:
 		}
 	}
 
-	const char * getMcCode(max_32855_code code) {
+	const char * getMcCode(max_31855_code code) {
 		switch (code) {
 		case MC_OK:
 			return "Ok";
@@ -208,9 +208,9 @@ private:
 		return (float)((packet & 0xFFF0) >> 4) / 16.0;
 	}
 
-	max_32855_code getMax31855EgtValue(size_t egtChannel, float *temp, float *refTemp) {
+	max_31855_code getMax31855EgtValue(size_t egtChannel, float *temp, float *refTemp) {
 		uint32_t packet;
-		max_32855_code code = MC_INVALID;
+		max_31855_code code = MC_INVALID;
 		int ret;
 
 		ret = readEgtPacket(egtChannel, &packet);
