@@ -226,7 +226,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0240308E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0240309E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -1071,7 +1071,7 @@
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
         <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
         <constant digits="0" name="etbExpAverageLength" units="">50.0</constant>
-        <constant digits="0" name="etbDutyThreshold" units="">0.0</constant>
+        <constant digits="0" name="unused645646" units="">0.0</constant>
         <constant digits="0" name="coastingFuelCutRpmHigh" units="rpm">1500.0</constant>
         <constant digits="0" name="coastingFuelCutRpmLow" units="rpm">1300.0</constant>
         <constant digits="0" name="coastingFuelCutTps" units="%">2.0</constant>
@@ -1701,7 +1701,7 @@
          0.0
          0.0
 </constant>
-        <constant digits="0" name="etbDutyShutdownThreshold" units="">0.0</constant>
+        <constant digits="0" name="unused3124141" units="">0.0</constant>
         <constant name="fuelPressureSensorMode">"Absolute"</constant>
         <constant name="luaDigitalInputPins1">"NONE"</constant>
         <constant name="luaDigitalInputPins2">"NONE"</constant>
@@ -4560,7 +4560,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.08.f407-discovery.1252886034" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.08.f407-discovery.840852754" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>
