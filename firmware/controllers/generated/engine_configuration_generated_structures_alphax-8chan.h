@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 09 13:41:24 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 09 20:28:36 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4483,11 +4483,11 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> boostCutPressureHyst;
 	/**
-	 * Boost duty cycle added by gear
+	 * Boost duty cycle modified by gear
 	 * units: %
 	 * offset 4217
 	 */
-	scaled_channel<uint8_t, 2, 1> gearBasedOpenLoopBoostAdder[TCU_GEAR_COUNT];
+	scaled_channel<int8_t, 2, 1> gearBasedOpenLoopBoostAdder[TCU_GEAR_COUNT];
 	/**
 	 * need 4 byte alignment
 	 * units: units
@@ -5634,4 +5634,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22252);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 09 13:41:24 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 09 20:28:36 UTC 2024
