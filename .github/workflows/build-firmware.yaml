@@ -130,7 +130,7 @@ jobs:
       #build-libopenblt-macos,
             release,
             generate-matrix]
-
+    if: ${{ ! contains(needs.generate-matrix.outputs.matrix, '[]') }}
     strategy:
       # Let all builds finish even if one fails early
       fail-fast: false
