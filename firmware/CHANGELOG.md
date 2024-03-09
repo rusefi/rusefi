@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
  - Aux Speed sensors stopped working on calibration change #6157
  - EGO renamed to O2 sensor to reduce confusion #6159
  - Disabling slow connectivity mode for now #6170
+ - hellen128 better ETB pin choice between rev A/B and C
 
 ## March 2024 "Day 740"
 
