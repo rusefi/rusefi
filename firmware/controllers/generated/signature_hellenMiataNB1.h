@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH 997799331
-#define TS_SIGNATURE "rusEFI master.2024.03.08.hellenMiataNB1.997799331"
+#define TS_SIGNATURE "rusEFI master.2024.03.09.hellenMiataNB1.997799331"
