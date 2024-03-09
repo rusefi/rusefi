@@ -3,6 +3,7 @@ package com.rusefi.tools.tune;
 import java.io.IOException;
 
 public class TS2CRunner {
+/*
     public static void main(String[] args) throws IOException {
         String tuneFileName = "CurrentTune.msq";
 
@@ -27,4 +28,6 @@ public class TS2CRunner {
 //        TS2C.main(new String[]{tuneFileName, "fuelLoadBins", "fuelRpmBins", "fuelTable"});
 
     }
+*/
 }
+

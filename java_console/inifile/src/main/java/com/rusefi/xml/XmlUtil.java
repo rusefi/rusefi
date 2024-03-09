@@ -1,5 +1,7 @@
 package com.rusefi.xml;
 
+import com.devexperts.logging.Logging;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -9,7 +11,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class XmlUtil {
+    private static final Logging log = getLogging(XmlUtil.class);
+
     static {
         XmlUtil.setParserImpl();
     }
@@ -22,13 +28,13 @@ public class XmlUtil {
 
         StringWriter xmlWriter = new StringWriter();
         marshaller.marshal(instance, xmlWriter);
-        System.out.println(xmlWriter.toString());
 
-        System.out.println("Writing " + fileName);
-        FileWriter writer = new FileWriter(fileName);
-        marshaller.marshal(instance, writer);
-        System.out.println("Marshalling finished " + fileName);
-        writer.close();
+        log.info("Writing " + fileName);
+        try (FileWriter writer = new FileWriter(fileName)) {
+            marshaller.marshal(instance, writer);
+        } finally {
+            log.info("Marshalling finished " + fileName);
+        }
     }
 
     public static <T> T readModel(Class<?> modelClass, File xmlFile) throws JAXBException {

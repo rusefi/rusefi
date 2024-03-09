@@ -32,10 +32,11 @@ public class TS2C {
     /**
      * @see TS2CRunner
      */
+/*
     public static void main(String[] args) throws IOException {
         new TS2C(args);
     }
-
+*/
     private TS2C(String[] args) throws IOException {
         System.out.println("This tool reads TS tune file and produces some C code for hardcoded base tunes");
         if (args.length != 3 && args.length != 4 && args.length != 5) {

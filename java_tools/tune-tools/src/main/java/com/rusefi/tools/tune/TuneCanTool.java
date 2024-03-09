@@ -57,7 +57,11 @@ public class TuneCanTool implements TuneCanToolConstants {
 
 
     public static void main(String[] args) throws Exception {
-        writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
+        //writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
+
+        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engine_type_e.HONDA_OBD1),
+            "C:\\stuff\\\\2024-03-09-CurrentTune.msq", "comment", "");
+
 
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(Fields.engine_type_e_MAVERICK_X3),
 //            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq",  "comment");
@@ -175,12 +179,11 @@ public class TuneCanTool implements TuneCanToolConstants {
         StringBuilder sb = new StringBuilder();
         for (DialogModel.Field f : ini.fieldsInUiOrder.values()) {
             String fieldName = f.getKey();
-//            System.out.println("Processing " + fieldName);
             Constant customValue = customTune.getConstantsAsMap().get(fieldName);
             Constant defaultValue = defaultTune.getConstantsAsMap().get(fieldName);
             if (defaultValue == null) {
                 // no longer present?
-                System.out.println("Not found in default tune: " + fieldName);
+                log.info("Not found in default tune: " + fieldName);
                 continue;
             }
             Objects.requireNonNull(defaultValue.getValue(), "d value");
@@ -192,7 +195,7 @@ public class TuneCanTool implements TuneCanToolConstants {
 
             boolean isSameValue = simplerSpaces(defaultValue.getValue()).equals(simplerSpaces(customValue.getValue()));
             if (isSameValue) {
-                System.out.println("Even text form matches default: " + fieldName);
+                log.info("Even text form matches default: " + fieldName);
                 continue;
             }
 
@@ -208,7 +211,7 @@ public class TuneCanTool implements TuneCanToolConstants {
                 float floatDefaultValue = Float.parseFloat(defaultValue.getValue());
                 float floatCustomValue = Float.parseFloat(customValue.getValue());
                 if (floatCustomValue != 0 && Math.abs(floatDefaultValue / floatCustomValue - 1) < 0.001) {
-                    System.out.println("Skipping rounding error " + floatDefaultValue + " vs " + floatCustomValue);
+                    log.info("Skipping rounding error " + floatDefaultValue + " vs " + floatCustomValue);
                     continue;
                 }
             }
@@ -232,7 +235,7 @@ public class TuneCanTool implements TuneCanToolConstants {
                 } else {
                     // todo: for instance map.samplingAngle
                     //throw new IllegalStateException("Unexpected " + cf.getParent());
-                    System.out.println(" " + cf);
+                    log.info(" " + cf);
                     continue;
                 }
 
@@ -240,19 +243,19 @@ public class TuneCanTool implements TuneCanToolConstants {
                 if (cf.getArraySizes().length == 2) {
                     TableData tableData = TableData.readTable(customTuneFileName, fieldName, ini);
                     if (tableData == null) {
-                        System.out.println(" " + fieldName);
+                        log.info(" " + fieldName);
                         continue;
                     }
-                    System.out.println("Handling table " + fieldName + " with " + cf.autoscaleSpecPair());
+                    log.info("Handling table " + fieldName + " with " + cf.autoscaleSpecPair());
 
                     if (defaultTuneFileName != null) {
                         TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);
                         if (defaultTableData.getCsourceMethod(parentReference, methodNamePrefix).equals(tableData.getCsourceMethod(parentReference, methodNamePrefix))) {
-                            System.out.println("Table " + fieldName + " matches default content");
+                            log.info("Table " + fieldName + " matches default content");
                             continue;
                         }
                     }
-                    System.out.println("Custom content in table " + fieldName);
+                    log.info("Custom content in table " + fieldName);
 
 
                     methods.append(tableData.getCsourceMethod(parentReference, methodNamePrefix));
@@ -267,11 +270,11 @@ public class TuneCanTool implements TuneCanToolConstants {
                 if (defaultTuneFileName != null) {
                     CurveData defaultCurveData = CurveData.valueOf(defaultTuneFileName, fieldName, ini);
                     if (defaultCurveData.getCinvokeMethod(methodNamePrefix).equals(data.getCinvokeMethod(methodNamePrefix))) {
-                        System.out.println("Curve " + fieldName + " matches default content");
+                        log.info("Curve " + fieldName + " matches default content");
                         continue;
                     }
                 }
-                System.out.println("Custom content in curve " + fieldName);
+                log.info("Custom content in curve " + fieldName);
 
                 methods.append(data.getCsourceMethod(parentReference, methodNamePrefix));
                 invokeMethods.append(data.getCinvokeMethod(methodNamePrefix));
