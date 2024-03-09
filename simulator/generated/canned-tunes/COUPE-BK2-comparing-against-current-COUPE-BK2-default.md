@@ -33,8 +33,6 @@
     engineConfiguration->stepperDcInvertedPins = true;
     // default 0.0
     engineConfiguration->idleTimingPid.dFactor = 5.0E-5;
-    // default 0.0
-    engineConfiguration->warningPeriod = 10;
     // default 20.0
     engineConfiguration->knockRetardAggression = 0;
     // default 3.0
@@ -49,8 +47,6 @@
     engineConfiguration->boostControlMinTps = 0;
     // default 110.0
     engineConfiguration->boostControlMinMap = 0;
-    // default 400.0
-    engineConfiguration->engineChartSize = 300;
 
 
 	coupleBK2cannedtpsTpsAccelTable();

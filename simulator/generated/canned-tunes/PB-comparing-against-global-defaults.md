@@ -81,8 +81,6 @@
     engineConfiguration->enableAemXSeries = true;
     // default 15.0
     engineConfiguration->etbIdleThrottleRange = 6;
-    // default 0.0
-    engineConfiguration->warningPeriod = 10;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
     // default 550.0
@@ -113,8 +111,6 @@
     engineConfiguration->etb.dFactor = 0.1855;
     // default "false"
     engineConfiguration->disableEtbWhenEngineStopped = true;
-    // default 400.0
-    engineConfiguration->engineChartSize = 300;
     // default "Launch Button"
     engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
     // default "false"

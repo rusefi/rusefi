@@ -87,8 +87,6 @@
     engineConfiguration->fan2OffTemperature = 82;
     // default "false"
     engineConfiguration->disableFan2WhenStopped = true;
-    // default 0.0
-    engineConfiguration->warningPeriod = 10;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
     // default 20.0
@@ -147,8 +145,6 @@
     engineConfiguration->etb.iFactor = 70.2307;
     // default 0.05
     engineConfiguration->etb.dFactor = 0.1855;
-    // default 400.0
-    engineConfiguration->engineChartSize = 300;
 
 
 	coupleBK2cannedtpsTpsAccelTable();

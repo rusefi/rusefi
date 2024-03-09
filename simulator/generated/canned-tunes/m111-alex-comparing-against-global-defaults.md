@@ -151,8 +151,6 @@
     engineConfiguration->idleTimingPid.minValue = -20;
     // default 0.5
     engineConfiguration->acDelay = 0;
-    // default 0.0
-    engineConfiguration->warningPeriod = 10;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
     // default 87.5
@@ -263,8 +261,6 @@
     engineConfiguration->etbFreq = 500;
     // default 100.0
     engineConfiguration->etbMaximumPosition = 0;
-    // default 400.0
-    engineConfiguration->engineChartSize = 300;
     // default "false"
     engineConfiguration->launchControlEnabled = true;
     // default "Launch Button"

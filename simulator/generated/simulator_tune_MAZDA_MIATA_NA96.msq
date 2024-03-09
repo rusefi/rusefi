@@ -727,7 +727,7 @@
         <constant name="ALSActivateInverted">"false"</constant>
         <constant name="stepper_dc_use_two_wires">"false"</constant>
         <constant name="watchOutForLinearTime">"true"</constant>
-        <constant digits="0" name="engineChartSize" units="count">300.0</constant>
+        <constant digits="0" name="engineChartSize" units="count">200.0</constant>
         <constant digits="3" name="turboSpeedSensorMultiplier" units="mult">1.0</constant>
         <constant name="camInputsDebug1">"NONE"</constant>
         <constant name="camInputsDebug2">"NONE"</constant>

@@ -95,8 +95,6 @@
     engineConfiguration->disableFan2WhenStopped = true;
     // default 0.5
     engineConfiguration->acDelay = 0;
-    // default 0.0
-    engineConfiguration->warningPeriod = 10;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
     // default 20.0
@@ -147,8 +145,6 @@
     engineConfiguration->etb.iFactor = 94.99006;
     // default 0.05
     engineConfiguration->etb.dFactor = 0.0892407;
-    // default 400.0
-    engineConfiguration->engineChartSize = 300;
 
 
 	coupleBK1cannedboostTableOpenLoop();

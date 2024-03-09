@@ -3,10 +3,6 @@
 // canned tune https://rusefi.com/online/view.php?msq=1620
 
 ```
-    // default 450.0
-    engineConfiguration->vvtOffsets[0] = 227;
-    // default 0.0
-    engineConfiguration->vvtOffsets[1] = 50;
     // default 0.0
     engineConfiguration->cylinderBankSelect[0] = 1;
     // default 0.0
@@ -35,10 +31,6 @@
     engineConfiguration->throttlePedalSecondaryUpVoltage = 0.74;
     // default 1.86
     engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.28;
-    // default 0.0
-    engineConfiguration->warningPeriod = 10;
-    // default 400.0
-    engineConfiguration->engineChartSize = 300;
     // default "Launch Button"
     engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 

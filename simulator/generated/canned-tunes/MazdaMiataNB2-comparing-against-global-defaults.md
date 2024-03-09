@@ -181,8 +181,6 @@
     engineConfiguration->maxAcRpm = 5200;
     // default 75.0
     engineConfiguration->maxAcTps = 70;
-    // default 0.0
-    engineConfiguration->warningPeriod = 10;
     // default 1.0
     engineConfiguration->tachPulsePerRev = 2;
     // default "false"
@@ -291,8 +289,6 @@
     engineConfiguration->tcuInputSpeedSensorTeeth = 0;
     // default 100.0
     engineConfiguration->etbMaximumPosition = 0;
-    // default 400.0
-    engineConfiguration->engineChartSize = 300;
     // default "Launch Button"
     engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
     // default 30.0
