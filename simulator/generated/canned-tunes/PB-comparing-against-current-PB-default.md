@@ -1,24 +1,12 @@
 # PB-comparing-against-current-PB-default
 
-// canned tune https://rusefi.com/online/view.php?msq=1576
+// canned tune https://rusefi.com/online/view.php?msq=1620
 
 ```
-    // default "Center of injection"
-    engineConfiguration->injectionTimingMode = End;
-    // default "Individual Coils"
-    engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-    // default "false"
-    engineConfiguration->twoWireBatchIgnition = true;
-    // default "false"
-    engineConfiguration->isForcedInduction = true;
-    // default 40.0
-    engineConfiguration->camDecoder2jzPrecision = 25;
     // default 450.0
     engineConfiguration->vvtOffsets[0] = 227;
     // default 0.0
     engineConfiguration->vvtOffsets[1] = 50;
-    // default 1214.0
-    engineConfiguration->injector.flow = 1000;
     // default 0.0
     engineConfiguration->cylinderBankSelect[0] = 1;
     // default 0.0
@@ -43,112 +31,19 @@
     engineConfiguration->cylinderBankSelect[10] = 1;
     // default 0.0
     engineConfiguration->cylinderBankSelect[11] = 1;
-    // default 98.0
-    engineConfiguration->tpsMin = 100;
-    // default 926.0
-    engineConfiguration->tpsMax = 928;
-    // default 891.0
-    engineConfiguration->tps1SecondaryMin = 905;
-    // default 69.0
-    engineConfiguration->tps1SecondaryMax = 74;
-    // default 0.73
-    engineConfiguration->throttlePedalUpVoltage = 0.811432;
     // default 0.34
-    engineConfiguration->throttlePedalSecondaryUpVoltage = 0.771252;
+    engineConfiguration->throttlePedalSecondaryUpVoltage = 0.74;
     // default 1.86
     engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.28;
-    // default 300.0
-    engineConfiguration->idle.solenoidFrequency = 200;
-    // default 6.0
-    engineConfiguration->etbIdleThrottleRange = 10;
-    // default 15.0
-    engineConfiguration->acIdleExtraOffset = 0;
-    // default 2.0
-    engineConfiguration->fan2ExtraIdle = 0;
-    // default 0.0
-    engineConfiguration->iacByTpsHoldTime = 2;
-    // default 0.0
-    engineConfiguration->iacByTpsDecayTime = 2;
-    // default 95.0
-    engineConfiguration->fanOnTemperature = 81;
-    // default 91.0
-    engineConfiguration->fanOffTemperature = 75;
-    // default "false"
-    engineConfiguration->enableFan1WithAc = true;
-    // default "false"
-    engineConfiguration->disableFan1WhenStopped = true;
-    // default 4.0
-    engineConfiguration->startUpFuelPumpDuration = 2;
-    // default 3.0
-    engineConfiguration->startCrankingDuration = 5;
-    // default 0.0
-    engineConfiguration->startButtonSuppressOnStartUpMs = 30;
     // default 0.0
     engineConfiguration->warningPeriod = 10;
-    // default "true"
-    engineConfiguration->enableSoftwareKnock = false;
-    // default 20.0
-    engineConfiguration->knockRetardAggression = 0;
-    // default 3.0
-    engineConfiguration->knockRetardReapplyRate = 0;
-    // default 1500.0
-    engineConfiguration->vvtControlMinRpm = 550;
-    // default "advance"
-    engineConfiguration->invertVvtControlExhaust = retard;
-    // default 0.005
-    engineConfiguration->auxPid[0].iFactor = 10;
-    // default 0.0
-    engineConfiguration->auxPid[0].dFactor = 0.005;
-    // default 0.0
-    engineConfiguration->auxPid[1].offset = 33;
-    // default 0.0
-    engineConfiguration->auxPid[1].pFactor = 2;
-    // default 0.0
-    engineConfiguration->auxPid[1].iFactor = 5;
-    // default 0.0
-    engineConfiguration->auxPid[1].dFactor = 0.05;
-    // default "MAP"
-    engineConfiguration->debugMode = DBG_22;
-    // default 300.0
-    engineConfiguration->boostCutPressure = 220;
-    // default 250.0
-    engineConfiguration->etbRevLimitRange = 0;
-    // default 27.0
-    engineConfiguration->cranking.baseFuel = 20;
-    // default "false"
-    engineConfiguration->overrideCrankingIacSetting = true;
-    // default 0.0
-    engineConfiguration->wwaeTau = 0.3;
-    // default 0.0
-    engineConfiguration->wwaeBeta = 0.3;
-    // default 2000.0
-    engineConfiguration->boostControlMinRpm = 0;
-    // default 30.0
-    engineConfiguration->boostControlMinTps = 0;
-    // default 110.0
-    engineConfiguration->boostControlMinMap = 0;
-    // default 8.8944
-    engineConfiguration->etb.pFactor = 5.235054;
-    // default 70.2307
-    engineConfiguration->etb.iFactor = 65.98008;
-    // default 0.1855
-    engineConfiguration->etb.dFactor = 0.0673251;
     // default 400.0
     engineConfiguration->engineChartSize = 300;
-    // default 5.0
-    engineConfiguration->acrRevolutions = 0;
-    // default "NONE"
-    engineConfiguration->hpfpCam = HPFP_CAM_EX1;
-    // default 10.0
-    engineConfiguration->hpfpPeakPos = -40;
-    // default 10.0
-    engineConfiguration->mc33_hpfp_i_peak = 11.5;
-    // default 3.0E-4
-    engineConfiguration->hpfpPidI = 5.0E-4;
+    // default "Launch Button"
+    engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 
 
 	pbcannedscriptTable4();
 	pbcannedlambdaTable();
 	pbcannedtcuSolenoidTable();
-	pbcannedpostCrankingFactor();
 ```

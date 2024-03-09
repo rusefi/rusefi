@@ -141,16 +141,4 @@ static void pbcannedtcuSolenoidTable() {
 	copyTable(config->tcuSolenoidTable, hardCodedtcuSolenoidTable);
 }
 
-static void pbcannedpostCrankingFactor() {
-	static const float hardCodedpostCrankingFactor[6][6] = {
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-};
-	copyTable(engineConfiguration->postCrankingFactor, hardCodedpostCrankingFactor);
-}
-
 ```
