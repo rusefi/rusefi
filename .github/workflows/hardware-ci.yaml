@@ -66,7 +66,9 @@ jobs:
         git submodule update --init --depth=1 java_console/peak-can-basic
 
     - name: Identify Agent
-      run: uname -a
+      run: |
+        uname -a
+        hostname
 
     - name: Acquire GCC
       uses: carlosperate/arm-none-eabi-gcc-action@v1
