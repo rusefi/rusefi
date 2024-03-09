@@ -80,6 +80,10 @@ jobs:
     - name: Build Firmware
       run: .github/workflows/hw-ci/build_for_hw_ci.sh ${{matrix.folder}} ${{matrix.build-target}}
 
+    - name: Show USB status
+      run: |
+        lsusb -vvv
+
     - name: Check for STLINK
       run: lsusb | grep 'ST-LINK\|STLINK'
 
@@ -100,7 +104,7 @@ jobs:
 
     - name: Show USB status
       run: |
-        lsusb
+        lsusb -vvv
         ls -l /dev/serial/by-id/
 
     - name: Upload build bin artifact
