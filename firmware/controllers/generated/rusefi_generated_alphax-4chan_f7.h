@@ -1188,7 +1188,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 872334752
+#define SIGNATURE_HASH 3296052494
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1479,6 +1479,7 @@
 #define ts_show_auxserial_pins true
 #define ts_show_can2 false
 #define ts_show_can_pins false
+#define ts_show_check_engine true
 #define ts_show_clt_iat_pullup false
 #define ts_show_communityCommsLedPid false
 #define ts_show_cylinder_10 true
@@ -1492,10 +1493,15 @@
 #define ts_show_cylinder_7 true
 #define ts_show_cylinder_8 true
 #define ts_show_cylinder_9 true
+#define ts_show_cylinder_bank true
+#define ts_show_debug_mode false
 #define ts_show_egt false
 #define ts_show_etb true
 #define ts_show_etb_pins false
+#define ts_show_firing_order true
 #define ts_show_fuel_pump true
+#define ts_show_fuel_relay_pin true
+#define ts_show_fuel_strategy true
 #define ts_show_full_pinout true
 #define ts_show_gdi true
 #define ts_show_hardware_simulator false
@@ -1507,10 +1513,12 @@
 #define ts_show_ignitionPinMode true
 #define ts_show_inj_diag false
 #define ts_show_injectionPinMode false
+#define ts_show_k_line false
 #define ts_show_l9779 false
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_mc33810 false
+#define ts_show_number_of_cylinders true
 #define ts_show_odd_fire true
 #define ts_show_onboard_accelerometer false
 #define ts_show_output_diag false
@@ -1535,7 +1543,7 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.09.alphax-4chan_f7.872334752"
+#define TS_SIGNATURE "rusEFI master.2024.03.09.alphax-4chan_f7.3296052494"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
