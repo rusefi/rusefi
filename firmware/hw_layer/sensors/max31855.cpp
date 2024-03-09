@@ -27,138 +27,11 @@
 
 #define EGT_ERROR_VALUE -1000
 
-static SPIDriver *driver;
-static egt_cs_array_t m_cs;
-
-/* TODO: validate */
-static SPIConfig spiConfig = {
-	.circular = false,
-	.end_cb = NULL,
-	.ssport = NULL,
-	.sspad = 0,
-	.cr1 =
-		SPI_CR1_8BIT_MODE |
-		SPI_CR1_SSM |
-		SPI_CR1_SSI |
-		((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
-		SPI_CR1_MSTR |
-		/* SPI_CR1_CPOL | */ // = 0
-		SPI_CR1_CPHA | // = 1
-		0,
-	.cr2 = SPI_CR2_8BIT_MODE
-};
-
 // bits D17 and D3 are always expected to be zero
 #define MC_RESERVED_BITS 0x20008
 #define MC_OPEN_BIT 1
 #define MC_GND_BIT 2
 #define MC_VCC_BIT 4
-
-typedef enum {
-	MC_OK = 0, MC_INVALID = 1, MC_OPEN = 2, MC_SHORT_GND = 3, MC_SHORT_VCC = 4,
-} max_32855_code;
-
-static const char * getMcCode(max_32855_code code) {
-	switch (code) {
-	case MC_OK:
-		return "Ok";
-	case MC_OPEN:
-		return "Open";
-	case MC_SHORT_GND:
-		return "short gnd";
-	case MC_SHORT_VCC:
-		return "short VCC";
-	default:
-		return "invalid";
-	}
-}
-
-static max_32855_code getResultCode(uint32_t egtPacket) {
-	if (((egtPacket & MC_RESERVED_BITS) != 0) || (egtPacket == 0x0)) {
-		return MC_INVALID;
-	} else if ((egtPacket & MC_OPEN_BIT) != 0) {
-		return MC_OPEN;
-	} else if ((egtPacket & MC_GND_BIT) != 0) {
-		return MC_SHORT_GND;
-	} else if ((egtPacket & MC_VCC_BIT) != 0) {
-		return MC_SHORT_VCC;
-	} else {
-		return MC_OK;
-	}
-}
-
-static uint32_t readEgtPacket(int egtChannel) {
-	uint32_t egtPacket;
-	brain_pin_e cs = m_cs[egtChannel];
-
-	if ((!isBrainPinValid(cs)) || (driver == NULL)) {
-		return 0xFFFFFFFF;
-	}
-
-	/* Set proper CS gpio */
-	initSpiCsNoOccupy(&spiConfig, cs);
-
-	spiStart(driver, &spiConfig);
-	spiSelect(driver);
-
-	spiReceive(driver, sizeof(egtPacket), &egtPacket);
-
-	spiUnselect(driver);
-	spiStop(driver);
-
-	egtPacket = SWAP_UINT32(egtPacket);
-	return egtPacket;
-}
-
-#define GET_TEMPERATURE_C(x) (((x) >> 18) / 4)
-
-static uint16_t getMax31855EgtValue(int egtChannel) {
-	uint32_t packet = readEgtPacket(egtChannel);
-	max_32855_code code = getResultCode(packet);
-	if (code != MC_OK) {
-		return EGT_ERROR_VALUE + code;
-	} else {
-		return GET_TEMPERATURE_C(packet);
-	}
-}
-
-static void showEgtInfo() {
-#if EFI_PROD_CODE
-	printSpiState();
-
-	efiPrintf("EGT spi: %d", engineConfiguration->max31855spiDevice);
-
-	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		if (isBrainPinValid(engineConfiguration->max31855_cs[i])) {
-			efiPrintf("%d ETG @ %s", i, hwPortname(engineConfiguration->max31855_cs[i]));
-		}
-	}
-#endif
-}
-
-static void egtRead() {
-
-	if (driver == NULL) {
-		efiPrintf("No SPI selected for EGT");
-		return;
-	}
-
-	efiPrintf("Reading egt");
-
-	uint32_t egtPacket = readEgtPacket(0);
-
-	max_32855_code code = getResultCode(egtPacket);
-
-	efiPrintf("egt 0x%08x code=%d (%s)", egtPacket, code, getMcCode(code));
-
-	if (code != MC_INVALID) {
-		int refBits = ((egtPacket & 0xFFF0) >> 4); // bits 15:4
-		float refTemp = refBits / 16.0;
-		efiPrintf("reference temperature %.2f", refTemp);
-
-		efiPrintf("EGT temperature %d", GET_TEMPERATURE_C(egtPacket));
-	}
-}
 
 /* TODO: move all stuff to Max31855Read class */
 class Max31855Read final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
@@ -167,6 +40,14 @@ public:
 		: ThreadController("MAX31855", MAX31855_PRIO)
 	{
 	}
+
+	typedef enum {
+		MC_OK = 0,
+		MC_INVALID = 1,
+		MC_OPEN = 2,
+		MC_SHORT_GND = 3,
+		MC_SHORT_VCC = 4,
+	} max_32855_code;
 
 	int start(spi_device_e device, egt_cs_array_t cs) {
 		driver = getSpiDevice(device);
@@ -200,11 +81,144 @@ public:
 		}
 	}
 
+	/* Debug stuff */
+	void showEgtInfo() {
+	#if EFI_PROD_CODE
+		printSpiState();
+
+		efiPrintf("EGT spi: %d", engineConfiguration->max31855spiDevice);
+
+		for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
+			if (isBrainPinValid(m_cs[i])) {
+				efiPrintf("%d ETG @ %s", i, hwPortname(m_cs[i]));
+			}
+		}
+	#endif
+	}
+
+	void egtRead() {
+
+		if (driver == NULL) {
+			efiPrintf("No SPI selected for EGT");
+			return;
+		}
+
+		efiPrintf("Reading egt");
+
+		uint32_t egtPacket = readEgtPacket(0);
+
+		max_32855_code code = getResultCode(egtPacket);
+
+		efiPrintf("egt 0x%08x code=%d (%s)", egtPacket, code, getMcCode(code));
+
+		if (code != MC_INVALID) {
+			int refBits = ((egtPacket & 0xFFF0) >> 4); // bits 15:4
+			float refTemp = refBits / 16.0;
+			efiPrintf("reference temperature %.2f", refTemp);
+
+			efiPrintf("EGT temperature %d", packetGetTemperature(egtPacket));
+		}
+	}
+
 private:
-	//brain_pin_e m_cs[EGT_CHANNEL_COUNT];
+	brain_pin_e m_cs[EGT_CHANNEL_COUNT];
+
+	SPIDriver *driver;
+
+	/* TODO: validate */
+	SPIConfig spiConfig = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 =
+			SPI_CR1_8BIT_MODE |
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
+			SPI_CR1_MSTR |
+			/* SPI_CR1_CPOL | */ // = 0
+			SPI_CR1_CPHA | // = 1
+			0,
+		.cr2 = SPI_CR2_8BIT_MODE
+	};
+
+	max_32855_code getResultCode(uint32_t egtPacket) {
+		if (((egtPacket & MC_RESERVED_BITS) != 0) || (egtPacket == 0x0)) {
+			return MC_INVALID;
+		} else if ((egtPacket & MC_OPEN_BIT) != 0) {
+			return MC_OPEN;
+		} else if ((egtPacket & MC_GND_BIT) != 0) {
+			return MC_SHORT_GND;
+		} else if ((egtPacket & MC_VCC_BIT) != 0) {
+			return MC_SHORT_VCC;
+		} else {
+			return MC_OK;
+		}
+	}
+
+	const char * getMcCode(max_32855_code code) {
+		switch (code) {
+		case MC_OK:
+			return "Ok";
+		case MC_OPEN:
+			return "Open";
+		case MC_SHORT_GND:
+			return "short gnd";
+		case MC_SHORT_VCC:
+			return "short VCC";
+		default:
+			return "invalid";
+		}
+	}
+
+	uint32_t readEgtPacket(int egtChannel) {
+		uint32_t egtPacket;
+		brain_pin_e cs = m_cs[egtChannel];
+
+		if ((!isBrainPinValid(cs)) || (driver == NULL)) {
+			return 0xFFFFFFFF;
+		}
+
+		/* Set proper CS gpio */
+		initSpiCsNoOccupy(&spiConfig, cs);
+
+		spiStart(driver, &spiConfig);
+		spiSelect(driver);
+
+		spiReceive(driver, sizeof(egtPacket), &egtPacket);
+
+		spiUnselect(driver);
+		spiStop(driver);
+
+		egtPacket = SWAP_UINT32(egtPacket);
+		return egtPacket;
+	}
+
+	uint16_t packetGetTemperature(uint32_t packet) {
+		return ((packet >> 18) / 4);
+	}
+
+	uint16_t getMax31855EgtValue(int egtChannel) {
+		uint32_t packet = readEgtPacket(egtChannel);
+		max_32855_code code = getResultCode(packet);
+		if (code != MC_OK) {
+			return EGT_ERROR_VALUE + code;
+		} else {
+			return packetGetTemperature(packet);
+		}
+	}
 };
 
 static Max31855Read instance;
+
+void showEgtInfo() {
+	instance.showEgtInfo();
+}
+
+void egtRead() {
+	instance.egtRead();
+}
 
 void initMax31855(spi_device_e device, egt_cs_array_t max31855_cs) {
 	if (instance.start(device, max31855_cs) == 0) {
