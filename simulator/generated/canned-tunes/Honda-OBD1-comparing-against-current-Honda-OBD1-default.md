@@ -5,7 +5,7 @@
 ```
     // default 1.645
     engineConfiguration->displacement = 1.493;
-    // default "12 tooth crank"
+    // default "12crank/24cam"
     engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
     // default 0.0
     engineConfiguration->trigger.customTotalToothCount = 24;
