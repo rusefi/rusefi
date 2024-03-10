@@ -142,7 +142,12 @@ public class ConfigDefinition {
                 case EnumToString.KEY_ENUM_INPUT_FILE: {
                     String enumInputFile = args[i + 1];
                     enumInputFiles.add(enumInputFile);
-                    state.read(new FileReader(RootHolder.ROOT + enumInputFile));
+                    File file = new File(RootHolder.ROOT + enumInputFile);
+                    try (Reader r = new FileReader(file)) {
+                        state.read(r);
+                    } catch (Throwable e) {
+                        throw new IllegalStateException("Reading " + file.getAbsolutePath(), e);
+                    }
                 }
                     break;
                 case "-ts_output_name":
