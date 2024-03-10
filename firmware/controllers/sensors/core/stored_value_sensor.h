@@ -75,7 +75,7 @@ public:
 		m_lastUpdate = timestamp;
 	}
 
-	void showInfo(const char*) const override { }
+	void showInfo(const char* sensorName) const override;
 
 	virtual void setTimeout(int timeoutMs) {
 		m_timeoutPeriod = MS2NT(timeoutMs);
