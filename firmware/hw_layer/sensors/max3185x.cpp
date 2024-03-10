@@ -419,11 +419,11 @@ private:
 
 static Max3185xRead instance;
 
-void showEgtInfo() {
+static void showEgtInfo() {
 	instance.showEgtInfo();
 }
 
-void egtRead() {
+static void egtRead() {
 	instance.egtRead();
 }
 
@@ -431,6 +431,8 @@ void initMax3185x(spi_device_e device, egt_cs_array_t max31855_cs) {
 	if (instance.start(device, max31855_cs) == 0) {
 		addConsoleAction("egtinfo", (Void) showEgtInfo);
 		addConsoleAction("egtread", (Void) egtRead);
+	} else {
+	  efiPrintf("EGT not configured");
 	}
 }
 
