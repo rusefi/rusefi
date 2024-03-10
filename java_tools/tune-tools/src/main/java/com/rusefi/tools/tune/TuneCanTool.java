@@ -59,12 +59,13 @@ public class TuneCanTool implements TuneCanToolConstants {
     public static void main(String[] args) throws Exception {
         //writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
 
-        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engine_type_e.HONDA_OBD1),
-            "C:\\stuff\\\\2024-03-09-CurrentTune.msq", "comment", "");
+        TuneCanToolRunner.initialize();
 
+//        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engine_type_e.HONDA_OBD1),
+//            "C:\\stuff\\\\2024-03-09-CurrentTune.msq", "comment", "");
 
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(Fields.engine_type_e_MAVERICK_X3),
-//            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq",  "comment");
+//            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq", "comment", "");
 
 
 //        handle("Mitsubicha", 1258);
@@ -171,6 +172,7 @@ public class TuneCanTool implements TuneCanToolConstants {
 
     @NotNull
     public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini, String customTuneFileName, StringBuilder methods, String defaultTuneFileName, String methodNamePrefix) throws IOException {
+        Objects.requireNonNull(ini, "ini");
         ReaderStateImpl state = MetaHelper.getReaderState();
 
         StringBuilder invokeMethods = new StringBuilder();

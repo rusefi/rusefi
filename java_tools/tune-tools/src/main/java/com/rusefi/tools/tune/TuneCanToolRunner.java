@@ -11,6 +11,10 @@ import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIM
 
 public class TuneCanToolRunner extends TuneCanTool {
     static {
+        initialize();
+    }
+
+    protected static void initialize() {
         ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
         if (ini == null)
             throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
