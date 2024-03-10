@@ -125,7 +125,7 @@ jobs:
 
           - build-target: small-can-board
             folder: config/boards/hellen/small-can-board
-            ini-file: rusefi_small-can-board.ini
+            ini-file: fome_small-can-board.ini
 
           # - build-target: hellen88bmw
           #   folder: config/boards/hellen/hellen88bmw
