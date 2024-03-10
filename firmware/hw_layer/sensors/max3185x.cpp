@@ -114,7 +114,7 @@ public:
 
 		for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 			if (isBrainPinValid(m_cs[i])) {
-				efiPrintf("%d ETG @ %s", i, hwPortname(m_cs[i]));
+				efiPrintf("ETG CS %d @%s", i, hwPortname(m_cs[i]));
 			}
 		}
 	#endif
@@ -429,8 +429,8 @@ static void egtRead() {
 
 void initMax3185x(spi_device_e device, egt_cs_array_t max31855_cs) {
 	if (instance.start(device, max31855_cs) == 0) {
-		addConsoleAction("egtinfo", (Void) showEgtInfo);
-		addConsoleAction("egtread", (Void) egtRead);
+		addConsoleAction("egtinfo", showEgtInfo);
+		addConsoleAction("egtread", egtRead);
 	} else {
 	  efiPrintf("EGT not configured");
 	}
