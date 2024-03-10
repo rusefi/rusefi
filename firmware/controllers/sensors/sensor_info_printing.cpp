@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "stored_value_sensor.h"
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
@@ -11,6 +12,11 @@
 #include "thermistor_func.h"
 #include "identity_func.h"
 #include "map_averaging.h"
+
+void StoredValueSensor::showInfo(const char* sensorName) const {
+	const auto value = get();
+	efiPrintf("StoredValue Sensor \"%s\": valid: %s, value: %.2f", sensorName, boolToString(value.Valid), value.Value);
+}
 
 void ProxySensor::showInfo(const char* sensorName) const {
 	efiPrintf("Sensor \"%s\" proxied from sensor \"%s\"", sensorName, getSensorName(m_proxiedSensor));
