@@ -161,6 +161,12 @@ void onBurnRequest() {
 	incrementGlobalConfigurationVersion("burn");
 }
 
+/**
+ * this hook is about https://github.com/rusefi/rusefi/wiki/Custom-Firmware and https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process
+ *
+ */
+__attribute__((weak)) void boardTuneDefaults() { }
+
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) { }
 
@@ -681,6 +687,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * Let's apply global defaults first
 	 */
 	setDefaultEngineConfiguration();
+
+	/**
+	 * custom board engine defaults. Yes, this overlaps with (older) engine_type_e approach.
+	 */
+	boardTuneDefaults();
 
 	// set initial pin groups
 	setDefaultBasePins();
