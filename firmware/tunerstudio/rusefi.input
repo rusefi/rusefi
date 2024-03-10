@@ -1486,12 +1486,20 @@ gaugeCategory = Sensors - Extra 2
 	accelerationLonGauge = accelerationLon,		@@GAUGE_NAME_ACCEL_LON@@,		"acc",		-2,	2,	-2,	-1,		1,	2,	3, 1
 	accelerationVertGauge = accelerationVert,	@@GAUGE_NAME_ACCEL_VERT@@,		"acc",		0,	1.5,	0.5,	0.6,		1.4,	1.5,	3, 1
 	gyroYawGauge 		  = gyroYaw,			@@GAUGE_NAME_GYRO_YAW@@,		"acc",		-100,	100, -100, -100, 100, 100, 3, 1
-	egt1Gauge			= egt1, "EGT#1", "C", 0, 2000
-	egt2Gauge			= egt2, "EGT#2", "C", 0, 2000
 	rpmAccelerationGa = rpmAcceleration,	"rpm delta",		"RPM/s",		-2000,		2000,		-2000,		2000,		-2000,	2000,	0,	0
 	wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",		0,	100,		0,		0,	100,	100,	1,	1
 	auxSpeed1Gauge = auxSpeed1, "Aux Freq Input1", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
 	auxSpeed2Gauge = auxSpeed2, "Aux Freq Input2", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
+
+gaugeCategory = Sensors - EGT
+	egt1Gauge			= egt1, "EGT#1", "C", -100, 1400, 100, 200, 900, 1000, 2, 1
+	egt2Gauge			= egt2, "EGT#2", "C", -100, 1400, 100, 200, 900, 1000, 2, 1
+	egt3Gauge			= egt3, "EGT#3", "C", -100, 1400, 100, 200, 900, 1000, 2, 1
+	egt4Gauge			= egt4, "EGT#4", "C", -100, 1400, 100, 200, 900, 1000, 2, 1
+	egt5Gauge			= egt5, "EGT#5", "C", -100, 1400, 100, 200, 900, 1000, 2, 1
+	egt6Gauge			= egt6, "EGT#6", "C", -100, 1400, 100, 200, 900, 1000, 2, 1
+	egt7Gauge			= egt7, "EGT#7", "C", -100, 1400, 100, 200, 900, 1000, 2, 1
+	egt8Gauge			= egt8, "EGT#8", "C", -100, 1400, 100, 200, 900, 1000, 2, 1
 
 gaugeCategory = VVT
 	vvtPositionB1IGauge = vvtPositionB1I, @@GAUGE_NAME_VVT_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
