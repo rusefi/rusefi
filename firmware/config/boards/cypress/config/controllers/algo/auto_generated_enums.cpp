@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Sat Apr 30 02:29:49 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum_to_string.jar tool on Sun Mar 10 00:53:02 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -411,94 +411,6 @@ case Gpio::K9:
   return "K9";
 case Gpio::Unassigned:
   return "Unassigned";
-  }
- return NULL;
-}
-const char *getAdc_channel_e(adc_channel_e value){
-switch(value) {
-case EFI_ADC_0:
-  return "EFI_ADC_0";
-case EFI_ADC_1:
-  return "EFI_ADC_1";
-case EFI_ADC_10:
-  return "EFI_ADC_10";
-case EFI_ADC_11:
-  return "EFI_ADC_11";
-case EFI_ADC_12:
-  return "EFI_ADC_12";
-case EFI_ADC_13:
-  return "EFI_ADC_13";
-case EFI_ADC_14:
-  return "EFI_ADC_14";
-case EFI_ADC_15:
-  return "EFI_ADC_15";
-case EFI_ADC_16:
-  return "EFI_ADC_16";
-case EFI_ADC_17:
-  return "EFI_ADC_17";
-case EFI_ADC_18:
-  return "EFI_ADC_18";
-case EFI_ADC_19:
-  return "EFI_ADC_19";
-case EFI_ADC_2:
-  return "EFI_ADC_2";
-case EFI_ADC_20:
-  return "EFI_ADC_20";
-case EFI_ADC_21:
-  return "EFI_ADC_21";
-case EFI_ADC_22:
-  return "EFI_ADC_22";
-case EFI_ADC_23:
-  return "EFI_ADC_23";
-case EFI_ADC_24:
-  return "EFI_ADC_24";
-case EFI_ADC_25:
-  return "EFI_ADC_25";
-case EFI_ADC_26:
-  return "EFI_ADC_26";
-case EFI_ADC_27:
-  return "EFI_ADC_27";
-case EFI_ADC_28:
-  return "EFI_ADC_28";
-case EFI_ADC_29:
-  return "EFI_ADC_29";
-case EFI_ADC_3:
-  return "EFI_ADC_3";
-case EFI_ADC_30:
-  return "EFI_ADC_30";
-case EFI_ADC_31:
-  return "EFI_ADC_31";
-case EFI_ADC_4:
-  return "EFI_ADC_4";
-case EFI_ADC_5:
-  return "EFI_ADC_5";
-case EFI_ADC_6:
-  return "EFI_ADC_6";
-case EFI_ADC_7:
-  return "EFI_ADC_7";
-case EFI_ADC_8:
-  return "EFI_ADC_8";
-case EFI_ADC_9:
-  return "EFI_ADC_9";
-case EFI_ADC_ERROR:
-  return "EFI_ADC_ERROR";
-case EFI_ADC_LAST_CHANNEL:
-  return "EFI_ADC_LAST_CHANNEL";
-case EFI_ADC_NONE:
-  return "EFI_ADC_NONE";
-  }
- return NULL;
-}
-const char *getPin_mode_e(pin_mode_e value){
-switch(value) {
-case PO_DEFAULT:
-  return "PO_DEFAULT";
-case PO_OPENDRAIN:
-  return "PO_OPENDRAIN";
-case PO_PULLDOWN:
-  return "PO_PULLDOWN";
-case PO_PULLUP:
-  return "PO_PULLUP";
   }
  return NULL;
 }
