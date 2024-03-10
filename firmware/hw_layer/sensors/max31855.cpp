@@ -215,12 +215,20 @@ private:
 
 	float packetGetTemperature(uint32_t packet) {
 		// bits 31:18, 0.25C resolution (1/4 C)
-		return ((float)(packet >> 18) / 4.0);
+		int16_t tmp = (packet >> 18) & 0x3fff;
+		/* extend sign */
+		tmp = tmp << 2;
+		tmp = tmp >> 2;	/* shifting right signed is not a good idea */
+		return (float) tmp * 0.25;
 	}
 
 	float packetGetRefTemperature(uint32_t packet) {
 		// bits 15:4, 0.0625C resolution (1/16 C)
-		return ((float)((packet & 0xFFF0) >> 4) / 16.0);
+		int16_t tmp = (packet >> 4) & 0xfff;
+		/* extend sign */
+		tmp = tmp << 4;
+		tmp = tmp >> 4;	/* shifting right signed is not a good idea */
+		return (float)tmp * 0.0625;
 	}
 
 	max_31855_code getMax31855EgtValue(size_t egtChannel, float *temp, float *refTemp) {
