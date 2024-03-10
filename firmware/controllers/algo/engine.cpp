@@ -32,7 +32,7 @@
 #include "fan_control.h"
 #include "ac_control.h"
 #include "vr_pwm.h"
-#include "max31855.h"
+#include "max3185x.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816

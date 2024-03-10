@@ -16,7 +16,7 @@
 #include "bench_test.h"
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
-#include "max31855.h"
+#include "max3185x.h"
 #include "logic_analyzer.h"
 #include "smart_gpio.h"
 #include "accelerometer.h"
@@ -621,7 +621,7 @@ void initHardware() {
 #endif /* EFI_MC33816 */
 
 #if EFI_MAX_31855
-	initMax31855(engineConfiguration->max31855spiDevice, engineConfiguration->max31855_cs);
+	initMax3185x(engineConfiguration->max31855spiDevice, engineConfiguration->max31855_cs);
 #endif /* EFI_MAX_31855 */
 
 #if EFI_CAN_SUPPORT

@@ -1,7 +1,7 @@
 
 #include "global.h"
 #include "engine_configuration.h"
-#include "max31855.h"
+#include "max3185x.h"
 #include "rusefi.h"
 
 egt_cs_array_t max31855_cs;
@@ -43,7 +43,7 @@ void runRusEfi(void) {
    */
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
 
-  initMax31855(NULL, max31855_cs);
+  initMax3185x(NULL, max31855_cs);
 
   /*
    * Normal main() thread activity, in this demo it does nothing except
