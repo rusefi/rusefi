@@ -702,11 +702,6 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 
-	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-	// todo: migrate to SensorType framework!
-		tsOutputChannels->egt[i] = engine->currentEgtValue[i];
-	}
-
 	updateWarningCodes();
 
 	tsOutputChannels->starterState = enginePins.starterControl.getLogicValue();
