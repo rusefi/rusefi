@@ -61,7 +61,7 @@
 #include "rtc_helper.h"
 #include "rusefi.h"
 #include "pin_repository.h"
-#include "max31855.h"
+#include "max3185x.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
 #endif /* EFI_PROD_CODE */
