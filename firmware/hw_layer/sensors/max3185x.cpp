@@ -357,12 +357,21 @@ private:
 		}
 
 		if (temp) {
-			*temp = (float)((rx[3] << 11) | (rx[4] << 3) | (rx[5] >> 5)) / 128.0;
+			// 10 bit before point and 7 bits after
+			int32_t tmp = (rx[3] << 11) | (rx[4] << 3) | (rx[5] >> 5);
+			/* extend sign: move top bit 18 to 31 */
+			tmp = tmp << 13;
+			tmp = tmp >> 13;	/* shifting right signed is not a good idea */
+			*temp = ((float)tmp) / 128.0;
 		}
 
 		/* convert float to int */
 		if (coldJunctionTemp) {
-			*coldJunctionTemp = (float)(rx[1] << 8 | rx[2]) / 256.0;
+			int16_t tmp = (rx[1] << 6) | (rx[2] >> 2);
+			/* extend sign */
+			tmp = tmp << 2;
+			tmp = tmp >> 2;	/* shifting right signed is not a good idea */
+			*coldJunctionTemp = ((float)tmp) / 64.0;
 		}
 
 		return MAX3185X_OK;
