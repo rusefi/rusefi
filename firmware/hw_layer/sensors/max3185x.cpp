@@ -61,7 +61,7 @@ public:
 
 		if (driver) {
 			/* WARN: this will clear all other bits in cr1 */
-			spiConfig.cr1 = getSpiPrescaler(_5MHz, device);
+			//spiConfig.cr1 = getSpiPrescaler(_5MHz, device);
 			for (size_t i = 0; i < EGT_CHANNEL_COUNT; i++) {
 				auto& sensor = egtSensors[i];
 
@@ -158,7 +158,7 @@ private:
 			SPI_CR1_8BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
-			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
+			((5 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 64 */
 			SPI_CR1_MSTR |
 			/* SPI_CR1_CPOL | */ // = 0
 			SPI_CR1_CPHA | // = 1
