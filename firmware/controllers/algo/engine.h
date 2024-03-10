@@ -287,8 +287,6 @@ public:
 	void updateTriggerWaveform();
 
 	bool isRunningPwmTest = false;
-	// todo: encapsulate
-	uint16_t currentEgtValue[EGT_CHANNEL_COUNT];
 
 	/**
 	 * are we running any kind of functional test? this affect
