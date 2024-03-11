@@ -19,7 +19,9 @@ class ThreadController : public chibios_rt::BaseStaticThread<TStackSize>
 {
 private:
 	const tprio_t m_prio;
+	/* TODO: use ref instead of m_started */
 	bool m_started = false;
+	chibios_rt::ThreadReference ref;
 
 protected:
 	// Override this function to implement your controller's thread's behavior.
@@ -48,7 +50,27 @@ public:
 		if (!m_started)
 		{
 			m_started = true;
-			chibios_rt::BaseStaticThread<TStackSize>::start(m_prio);
+			ref = chibios_rt::BaseStaticThread<TStackSize>::start(m_prio);
+		}
+	}
+
+	/**
+	 * @brief Request thread termination and waits for termination
+	 *
+	 * Thread should periadicaly execute something like:
+	 * if (chThdShouldTerminateX())
+	 * 		chThdExit((msg_t)0x0);
+	 */
+	void stop()
+	{
+		if (m_started) {
+			/* Asking for thread termination.*/
+			ref.requestTerminate();
+
+			/* Waiting for termination, releasing the reference.*/
+			ref.wait();
+
+			m_started = false;
 		}
 	}
 };
