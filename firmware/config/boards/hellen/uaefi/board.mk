@@ -2,10 +2,6 @@
 
 # Target ECU board design
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
-# Set this if you want a default engine type other than normal
-ifeq ($(VAR_DEF_ENGINE_TYPE),)
-#  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::
-endif
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
@@ -28,3 +24,6 @@ DDEFS += -DDIAG_5VP_PIN=Gpio::MM100_SPI3_MOSI
 ONBOARD_MEMS_TYPE=LIS2DH12
 
 include $(BOARDS_DIR)/hellen/hellen-common100.mk
+
+DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
+
