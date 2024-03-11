@@ -52,8 +52,6 @@ struct_no_prefix engine_state_s
 	bit luaDigitalState3
 	uint32_t startStopStateToggleCounter
 
-	float egtValue1
-	float egtValue2
 	float luaSoftSparkSkip
 	float luaHardSparkSkip
 	float tractionControlSparkSkip
