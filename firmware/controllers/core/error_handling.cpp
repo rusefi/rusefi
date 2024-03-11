@@ -266,6 +266,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 #if EFI_PROD_CODE
 	if (hasFirmwareErrorFlag)
 		return;
+	hasFirmwareErrorFlag = true;
 #if EFI_ENGINE_CONTROL
 	getLimpManager()->fatalError();
 #endif // EFI_ENGINE_CONTROL
@@ -281,7 +282,6 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
     criticalShutdown();
 	enginePins.communicationLedPin.setValue(1, /*force*/true);
 
-	hasFirmwareErrorFlag = true;
 	if (indexOf(fmt, '%') == -1) {
 		/**
 		 * in case of simple error message let's reduce stack usage
