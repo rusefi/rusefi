@@ -431,8 +431,6 @@ static const LogField fields[] = {
 	{engine->engineState.smartChipRestartCounter, "smartChipRestartCounter", "", 0},
 	{engine->engineState.smartChipAliveCounter, "smartChipAliveCounter", "", 0},
 	{engine->engineState.startStopStateToggleCounter, "startStopStateToggleCounter", "", 0},
-	{engine->engineState.egtValue1, "egtValue1", "", 0},
-	{engine->engineState.egtValue2, "egtValue2", "", 0},
 	{engine->engineState.luaSoftSparkSkip, "luaSoftSparkSkip", "", 0},
 	{engine->engineState.luaHardSparkSkip, "luaHardSparkSkip", "", 0},
 	{engine->engineState.tractionControlSparkSkip, "tractionControlSparkSkip", "", 0},

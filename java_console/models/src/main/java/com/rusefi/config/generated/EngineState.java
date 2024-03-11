@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Sat Mar 09 11:25:42 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Mon Mar 11 20:56:12 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -207,19 +207,17 @@ public class EngineState {
 	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 52, FieldType.BIT, 6).setBaseOffset(1056);
 	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 52, FieldType.BIT, 7).setBaseOffset(1056);
 	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 56, FieldType.INT).setScale(1.0).setBaseOffset(1056);
-	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 60, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 64, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field LUASOFTSPARKSKIP = Field.create("LUASOFTSPARKSKIP", 68, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field LUAHARDSPARKSKIP = Field.create("LUAHARDSPARKSKIP", 72, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field TRACTIONCONTROLSPARKSKIP = Field.create("TRACTIONCONTROLSPARKSKIP", 76, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 80, FieldType.INT16).setScale(1.0).setBaseOffset(1056);
-	public static final Field ALIGNMENTFILL_AT_82 = Field.create("ALIGNMENTFILL_AT_82", 82, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
-	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 84, FieldType.INT).setScale(1.0).setBaseOffset(1056);
-	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 88, FieldType.INT).setScale(1.0).setBaseOffset(1056);
-	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 92, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 96, FieldType.FLOAT).setBaseOffset(1056);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 100, FieldType.INT16).setScale(0.01).setBaseOffset(1056);
-	public static final Field ALIGNMENTFILL_AT_102 = Field.create("ALIGNMENTFILL_AT_102", 102, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
+	public static final Field LUASOFTSPARKSKIP = Field.create("LUASOFTSPARKSKIP", 60, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field LUAHARDSPARKSKIP = Field.create("LUAHARDSPARKSKIP", 64, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field TRACTIONCONTROLSPARKSKIP = Field.create("TRACTIONCONTROLSPARKSKIP", 68, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 72, FieldType.INT16).setScale(1.0).setBaseOffset(1056);
+	public static final Field ALIGNMENTFILL_AT_74 = Field.create("ALIGNMENTFILL_AT_74", 74, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 76, FieldType.INT).setScale(1.0).setBaseOffset(1056);
+	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 80, FieldType.INT).setScale(1.0).setBaseOffset(1056);
+	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 84, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 88, FieldType.FLOAT).setBaseOffset(1056);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 92, FieldType.INT16).setScale(0.01).setBaseOffset(1056);
+	public static final Field ALIGNMENTFILL_AT_94 = Field.create("ALIGNMENTFILL_AT_94", 94, FieldType.INT8).setScale(1.0).setBaseOffset(1056);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -255,18 +253,16 @@ public class EngineState {
 	LUADIGITALSTATE2,
 	LUADIGITALSTATE3,
 	STARTSTOPSTATETOGGLECOUNTER,
-	EGTVALUE1,
-	EGTVALUE2,
 	LUASOFTSPARKSKIP,
 	LUAHARDSPARKSKIP,
 	TRACTIONCONTROLSPARKSKIP,
 	DESIREDRPMLIMIT,
-	ALIGNMENTFILL_AT_82,
+	ALIGNMENTFILL_AT_74,
 	FUELINJECTIONCOUNTER,
 	GLOBALSPARKCOUNTER,
 	FUELINGLOAD,
 	IGNITIONLOAD,
 	VETABLEYAXIS,
-	ALIGNMENTFILL_AT_102,
+	ALIGNMENTFILL_AT_94,
 	};
 }

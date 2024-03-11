@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Tue Mar 05 03:31:23 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Mon Mar 11 20:56:12 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -335,68 +335,60 @@ struct engine_state_s {
 	/**
 	 * offset 60
 	 */
-	float egtValue1 = (float)0;
+	float luaSoftSparkSkip = (float)0;
 	/**
 	 * offset 64
 	 */
-	float egtValue2 = (float)0;
-	/**
-	 * offset 68
-	 */
-	float luaSoftSparkSkip = (float)0;
-	/**
-	 * offset 72
-	 */
 	float luaHardSparkSkip = (float)0;
 	/**
-	 * offset 76
+	 * offset 68
 	 */
 	float tractionControlSparkSkip = (float)0;
 	/**
 	 * User-defined RPM hard limit
 	 * units: rpm
-	 * offset 80
+	 * offset 72
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 82
+	 * offset 74
 	 */
-	uint8_t alignmentFill_at_82[2];
+	uint8_t alignmentFill_at_74[2];
 	/**
 	 * Fuel: Injection counter
-	 * offset 84
+	 * offset 76
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * Ign: Spark counter
-	 * offset 88
+	 * offset 80
 	 */
 	uint32_t globalSparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 92
+	 * offset 84
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 96
+	 * offset 88
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	 * units: %
-	 * offset 100
+	 * offset 92
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 102
+	 * offset 94
 	 */
-	uint8_t alignmentFill_at_102[2];
+	uint8_t alignmentFill_at_94[2];
 };
-static_assert(sizeof(engine_state_s) == 104);
+static_assert(sizeof(engine_state_s) == 96);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Tue Mar 05 03:31:23 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Mon Mar 11 20:56:12 UTC 2024
