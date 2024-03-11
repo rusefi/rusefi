@@ -25,6 +25,7 @@ typedef enum {
 	 * See https://rusefi.com/forum/viewtopic.php?f=13&t=1999
 	 */
 	BLUETOOTH_BK3231,
+	// fun fact: those use BK3232 see above
 	BLUETOOTH_JDY_3x,
 } bluetooth_module_e;
 

@@ -227,7 +227,7 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		/* Now reset module to apply new settings */
 		btWrite(tsChannel, "AT+RESET\r\n");
 		if (btWaitOk(tsChannel) != 0) {
-			efiPrintf("JDY33 fialed to reset");
+			efiPrintf("JDY33 failed to reset");
 		}
 	}
 
@@ -273,7 +273,7 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 		efiPrintf("Wrong <baud> parameter '%s'! %s", baudRate, usage);
 		return;
 	}
-	
+
 	// 2) check name
 	if ((strlen(name) < 1) || (strlen(name) > 20)) {
 		efiPrintf("Wrong <name> parameter! Up to 20 characters expected! %s", usage);
