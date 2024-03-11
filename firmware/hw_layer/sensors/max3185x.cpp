@@ -134,7 +134,7 @@ public:
 
 		for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 			if (isBrainPinValid(m_cs[i])) {
-				efiPrintf("EGT CS %d @%s", i, hwPortname(m_cs[i]));
+				efiPrintf("EGT CS %d @%s", i + 1, hwPortname(m_cs[i]));
 			}
 		}
 	#endif
