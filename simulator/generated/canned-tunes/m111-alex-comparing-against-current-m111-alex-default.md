@@ -1,14 +1,8 @@
 # m111-alex-comparing-against-current-m111-alex-default
 
-// canned tune https://rusefi.com/online/view.php?msq=1490
+// canned tune https://rusefi.com/online/view.php?msq=1622
 
 ```
-    // default "RPM+TPS (Default)"
-    engineConfiguration->tChargeMode = TCHARGE_MODE_AIR_INTERP;
-    // default 1.0
-    engineConfiguration->tChargeAirIncrLimit = 15;
-    // default 12.5
-    engineConfiguration->tChargeAirDecrLimit = 15;
     // default 0.098
     engineConfiguration->tChargeAirCoefMin = 0.4;
     // default 0.902
@@ -25,8 +19,12 @@
     engineConfiguration->displacement = 2.2;
     // default 469.0
     engineConfiguration->globalTriggerAngleOffset = 72;
+    // default 40.0
+    engineConfiguration->camDecoder2jzPrecision = 25;
     // default 450.0
     engineConfiguration->vvtOffsets[0] = 0;
+    // default 196.0
+    engineConfiguration->injector.flow = 222;
     // default 300.0
     engineConfiguration->fuelReferencePressure = 0;
     // default 0.0
@@ -56,25 +54,25 @@
     // default 4.0
     engineConfiguration->benchTestOnTime = 5;
     // default 891.0
-    engineConfiguration->tpsMin = 890;
+    engineConfiguration->tpsMin = 896;
     // default 69.0
-    engineConfiguration->tpsMax = 35;
+    engineConfiguration->tpsMax = 39;
     // default 98.0
-    engineConfiguration->tps1SecondaryMin = 93;
+    engineConfiguration->tps1SecondaryMin = 99;
     // default 926.0
-    engineConfiguration->tps1SecondaryMax = 903;
+    engineConfiguration->tps1SecondaryMax = 911;
     // default 1000.0
     engineConfiguration->tps2SecondaryMin = 0;
     // default 0.0
     engineConfiguration->tps2SecondaryMax = 1000;
     // default 0.38
-    engineConfiguration->throttlePedalUpVoltage = 0.290001;
+    engineConfiguration->throttlePedalUpVoltage = 0.326213;
     // default 4.77
-    engineConfiguration->throttlePedalWOTVoltage = 4.599976;
+    engineConfiguration->throttlePedalWOTVoltage = 4.58342;
     // default 4.64
-    engineConfiguration->throttlePedalSecondaryUpVoltage = 0.12;
+    engineConfiguration->throttlePedalSecondaryUpVoltage = 0.137012;
     // default 2.47
-    engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.130005;
+    engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.082364;
     // default 65.0
     engineConfiguration->mc33_hvolt = 0;
     // default 13000.0
@@ -121,12 +119,24 @@
     engineConfiguration->stepperForceParkingEveryRestart = false;
     // default 15.0
     engineConfiguration->etbIdleThrottleRange = 10;
+    // default 0.05
+    engineConfiguration->idleRpmPid.pFactor = 0.002;
+    // default 0.002
+    engineConfiguration->idleRpmPid.iFactor = 0.004;
     // default -20.0
-    engineConfiguration->idleRpmPid.minValue = 0;
+    engineConfiguration->idleRpmPid.minValue = -10;
     // default 20.0
-    engineConfiguration->idleRpmPid.maxValue = 99;
+    engineConfiguration->idleRpmPid.maxValue = 15;
+    // default -20.0
+    engineConfiguration->idlerpmpid_iTermMin = -100;
+    // default 20.0
+    engineConfiguration->idlerpmpid_iTermMax = 100;
+    // default 0.0
+    engineConfiguration->pidExtraForLowRpm = 45;
+    // default "false"
+    engineConfiguration->useIacPidMultTable = true;
     // default 15.0
-    engineConfiguration->acIdleExtraOffset = 7;
+    engineConfiguration->acIdleExtraOffset = 2;
     // default 2.0
     engineConfiguration->fan1ExtraIdle = 0;
     // default 2.0
@@ -134,17 +144,23 @@
     // default 2.0
     engineConfiguration->iacByTpsTaper = 0;
     // default 5.0
-    engineConfiguration->idlePidDeactivationTpsThreshold = 2;
+    engineConfiguration->idlePidDeactivationTpsThreshold = 4;
     // default 300.0
     engineConfiguration->idlePidRpmUpperLimit = 450;
+    // default 50.0
+    engineConfiguration->idlePidRpmDeadZone = 10;
+    // default "Open Loop"
+    engineConfiguration->idleMode = IM_AUTO;
     // default "false"
     engineConfiguration->useIdleTimingPidControl = true;
-    // default 0.1
-    engineConfiguration->idleTimingPid.pFactor = 0.25;
     // default -10.0
-    engineConfiguration->idleTimingPid.minValue = -20;
+    engineConfiguration->idleTimingPid.minValue = -15;
     // default 0.5
     engineConfiguration->acDelay = 0;
+    // default 4.0
+    engineConfiguration->startUpFuelPumpDuration = 1;
+    // default 3.0
+    engineConfiguration->startCrankingDuration = 5;
     // default 0.0
     engineConfiguration->knockBandCustom = 12.80005;
     // default 20.0
@@ -153,12 +169,12 @@
     engineConfiguration->knockRetardReapplyRate = 0.1;
     // default 1000.0
     engineConfiguration->stft.maxIdleRegionRpm = 900;
-    // default "false"
-    engineConfiguration->fuelClosedLoopCorrectionEnabled = true;
     // default 60.0
     engineConfiguration->stft.startupDelay = 90;
     // default 60.0
     engineConfiguration->stft.minClt = 70;
+    // default 12.0
+    engineConfiguration->stft.minAfr = 10;
     // default 6000.0
     engineConfiguration->vvtActivationDelayMs = 0;
     // default 500.0
@@ -188,7 +204,7 @@
     // default 0.0
     engineConfiguration->auxSerialSpeed = 115200;
     // default "MAP"
-    engineConfiguration->debugMode = DBG_TPS_ACCEL;
+    engineConfiguration->debugMode = DBG_STEPPER_IDLE_CONTROL;
     // default 7000.0
     engineConfiguration->rpmHardLimit = 6200;
     // default 300.0
@@ -201,6 +217,8 @@
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
     // default 27.0
     engineConfiguration->cranking.baseFuel = 36;
+    // default 200.0
+    engineConfiguration->afterCrankingIACtaperDuration = 250;
     // default "false"
     engineConfiguration->overrideCrankingIacSetting = true;
     // default 6.0
@@ -210,23 +228,21 @@
     // default 0.5
     engineConfiguration->primingDelay = 0;
     // default 0.0
-    engineConfiguration->tpsAccelLookback = 0.35;
+    engineConfiguration->tpsAccelLookback = 0.3;
     // default 40.0
-    engineConfiguration->tpsAccelEnrichmentThreshold = 80;
+    engineConfiguration->tpsAccelEnrichmentThreshold = 5;
     // default 0.0
-    engineConfiguration->tpsDecelEnleanmentThreshold = 0.8;
+    engineConfiguration->tpsDecelEnleanmentThreshold = 12;
     // default 0.0
-    engineConfiguration->tpsAccelFractionPeriod = 1;
+    engineConfiguration->tpsAccelFractionPeriod = 3;
     // default 0.0
-    engineConfiguration->tpsAccelFractionDivisor = 0.8;
-    // default "Basic (constants)"
-    engineConfiguration->complexWallModel = Advanced (tables);
+    engineConfiguration->tpsAccelFractionDivisor = 0.3;
     // default 0.3
-    engineConfiguration->wwaeTau = 0.1;
+    engineConfiguration->wwaeTau = 0.25;
     // default 0.3
-    engineConfiguration->wwaeBeta = 0.83;
+    engineConfiguration->wwaeBeta = 0.35;
     // default 0.0
-    engineConfiguration->scriptSetting[0] = 5000;
+    engineConfiguration->scriptSetting[0] = 60;
     // default 2000.0
     engineConfiguration->boostControlMinRpm = 0;
     // default 30.0
@@ -236,19 +252,19 @@
     // default "Throttle 2"
     engineConfiguration->etbFunctions[1] = DC_None;
     // default 5.12
-    engineConfiguration->etb.pFactor = 5.101013;
+    engineConfiguration->etb.pFactor = 6.2437;
     // default 47.0
-    engineConfiguration->etb.iFactor = 80.29004;
+    engineConfiguration->etb.iFactor = 82.52869;
     // default 0.088
-    engineConfiguration->etb.dFactor = 0.1184;
+    engineConfiguration->etb.dFactor = 0.0761765;
+    // default -100.0
+    engineConfiguration->etb.minValue = -20;
     // default -30.0
-    engineConfiguration->etb_iTermMin = -40;
-    // default 30.0
-    engineConfiguration->etb_iTermMax = 40;
+    engineConfiguration->etb_iTermMin = -25;
     // default 800.0
-    engineConfiguration->etbFreq = 500;
+    engineConfiguration->etbFreq = 2000;
     // default 100.0
-    engineConfiguration->etbMaximumPosition = 0;
+    engineConfiguration->etbMaximumPosition = 97;
     // default "false"
     engineConfiguration->launchControlEnabled = true;
     // default "Launch Button"
@@ -271,6 +287,8 @@
     engineConfiguration->coastingFuelCutRpmHigh = 2000;
     // default 2.0
     engineConfiguration->coastingFuelCutTps = 5;
+    // default "true"
+    engineConfiguration->watchOutForLinearTime = false;
     // default 250.0
     engineConfiguration->gppwm[0].pwmFrequency = 10;
     // default 0.0
@@ -281,8 +299,10 @@
     engineConfiguration->gppwm[1].pwmFrequency = 125;
     // default "Zero"
     engineConfiguration->gppwm[1].loadAxis = GPPWM_Map;
+    // default 250.0
+    engineConfiguration->gppwm[2].pwmFrequency = 5;
     // default "Zero"
-    engineConfiguration->gppwm[2].loadAxis = GPPWM_Tps;
+    engineConfiguration->gppwm[2].loadAxis = GPPWM_Map;
     // default "Zero"
     engineConfiguration->gppwm[3].loadAxis = GPPWM_Tps;
     // default 3.0
@@ -306,6 +326,7 @@
 	cannedtpsTpsAccelTable();
 	cannedboostTableOpenLoop();
 	cannedboostTableClosedLoop();
+	cannedscriptTable1();
 	cannedscriptTable4();
 	cannedignitionTable();
 	cannedignitionIatCorrTable();
@@ -313,7 +334,9 @@
 	cannedmapEstimateTable();
 	cannedinjectionPhase();
 	cannedpedalToTpsTable();
+	cannedmaxKnockRetardTable();
 	cannedlambdaTable();
+	cannediacPidMultTable();
 	cannedtcuSolenoidTable();
 	cannedpostCrankingFactor();
 ```
