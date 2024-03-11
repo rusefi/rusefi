@@ -54,6 +54,7 @@ public:
 		MAX3185X_SHORT_TO_GND = 2,
 		MAX3185X_SHORT_TO_VCC = 3,
 		MAX3185X_NO_REPLY = 4,
+		MAX3185X_NOT_ENABLED = 5,
 	} Max3185xState;
 
 	int start(spi_device_e device, egt_cs_array_t cs) {
@@ -121,22 +122,22 @@ public:
 	}
 
 	void egtRead() {
-		float temp, refTemp;
-
 		if (driver == NULL) {
 			efiPrintf("No SPI selected for EGT");
 			return;
 		}
 
-		efiPrintf("Reading egt");
+		efiPrintf("Reading egt(s)");
 
-		Max3185xState code = getMax3185xEgtValues(0, &temp, &refTemp);
+		for (size_t i = 0; i < EGT_CHANNEL_COUNT; i++) {
+			float temp, refTemp;
+			Max3185xState code = getMax3185xEgtValues(i, &temp, &refTemp);
 
-		efiPrintf("egt: code=%d (%s)", code, getMax3185xErrorCodeName(code));
+			efiPrintf("egt%d: code=%d (%s)", i + 1, code, getMax3185xErrorCodeName(code));
 
-		if (code != MAX3185X_NO_REPLY) {
-			efiPrintf("reference temperature %.2f", refTemp);
-			efiPrintf("EGT temperature %d", temp);
+			if (code == MAX3185X_OK) {
+				efiPrintf(" temperature %.4f reference temperature %.2f", temp, refTemp);
+			}
 		}
 	}
 
@@ -178,6 +179,8 @@ private:
 			return "short VCC";
 		case MAX3185X_NO_REPLY:
 			return "no reply";
+		case MAX3185X_NOT_ENABLED:
+			return "not enabled";
 		default:
 			return "invalid";
 		}
@@ -379,6 +382,10 @@ private:
 
 	Max3185xState getMax3185xEgtValues(size_t ch, float *temp, float *coldJunctionTemp) {
 		Max3185xState ret;
+
+		if ((!isBrainPinValid(m_cs[ch])) || (!driver)) {
+			return MAX3185X_NOT_ENABLED;
+		}
 
 		/* if chip type is not detected yet try to detect */
 		if (types[ch] == UNKNOWN_TYPE) {
