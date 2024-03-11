@@ -84,11 +84,28 @@ public:
 			ThreadController::start();
 			return 0;
 		}
+
+		efiPrintf("EGT not configured");
 		return -1;
 	}
 
+	void stop(void) {
+		ThreadController::stop();
+
+		for (size_t i = 0; i < EGT_CHANNEL_COUNT; i++) {
+			if (!isBrainPinValid(m_cs[i])) {
+				continue;
+			}
+
+			auto& sensor = egtSensors[i];
+
+			brain_pin_markUnused(m_cs[i]);
+			sensor.unregister();
+		}
+	}
+
 	void ThreadTask() override {
-		while (true) {
+		while (!chThdShouldTerminateX()) {
 			for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 				float value;
 
@@ -104,6 +121,8 @@ public:
 
 			chThdSleepMilliseconds(MAX3185X_REFRESH_TIME);
 		}
+
+		chThdExit((msg_t)0x0);
 	}
 
 	/* Debug stuff */
@@ -435,12 +454,20 @@ static void egtRead() {
 }
 
 void initMax3185x(spi_device_e device, egt_cs_array_t max31855_cs) {
-	if (instance.start(device, max31855_cs) == 0) {
-		addConsoleAction("egtinfo", showEgtInfo);
-		addConsoleAction("egtread", egtRead);
-	} else {
-	  efiPrintf("EGT not configured");
-	}
+	addConsoleAction("egtinfo", (Void) showEgtInfo);
+	addConsoleAction("egtread", (Void) egtRead);
+
+	startMax3185x(device, max31855_cs);
+}
+
+void stopMax3185x(void)
+{
+	instance.stop();
+}
+
+void startMax3185x(spi_device_e device, egt_cs_array_t max31855_cs)
+{
+	instance.start(device, max31855_cs);
 }
 
 #endif /* EFI_MAX_31855 */
