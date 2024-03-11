@@ -6,6 +6,7 @@ TEST(realToyota3ToothCam, running) {
 
 	reader.open("tests/trigger/resources/toyota_3_tooth_cam.csv");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->cutSparkOnHardLimit = true;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 

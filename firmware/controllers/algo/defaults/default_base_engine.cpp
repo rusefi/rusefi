@@ -109,7 +109,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->rpmHardLimitHyst = 50;
 	engineConfiguration->cutFuelOnHardLimit = true;
-	engineConfiguration->cutSparkOnHardLimit = true;
+	engineConfiguration->cutSparkOnHardLimit = false;
 	engineConfiguration->etbRevLimitRange = 250;
 
 	// CLT RPM limit table - just the X axis
