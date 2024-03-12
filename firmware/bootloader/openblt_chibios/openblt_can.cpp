@@ -15,8 +15,26 @@ extern "C" {
 // CAN1_RX: { PI9, PA11, PH14, PD0, PB8 }, CAN1_TX: { PA12, PH13, PD1, PB9 }
 // CAN2_RX: { PB5, PB12 }, CAN2_TX: { PB6, PB13 }
 
+#ifndef BOOT_COM_CAN_CHANNEL_INDEX
+  #error BOOT_COM_CAN_CHANNEL_INDEX is not defined.
+#elif (BOOT_COM_CAN_CHANNEL_INDEX == 0)
+  #ifndef STM32_CAN_USE_CAN1
+  #error STM32_CAN_USE_CAN1 is not enabled for CAN index 0
+  #endif
+  #undef OPENBLT_CAND
+  #define OPENBLT_CAND CAND1
+#elif (BOOT_COM_CAN_CHANNEL_INDEX == 1)
+  #ifndef STM32_CAN_USE_CAN2
+  #error STM32_CAN_USE_CAN2 is not enabled for CAN index 1
+  #endif
+  #undef OPENBLT_CAND
+  #define OPENBLT_CAND CAND2
+#else
+  #error Unknown BOOT_COM_CAN_CHANNEL_INDEX.
+#endif
+
 #if !defined(OPENBLT_CAND) || !defined(OPENBLT_CAN_RX_PIN) || !defined(OPENBLT_CAN_RX_PORT) || !defined(OPENBLT_CAN_TX_PIN) || !defined(OPENBLT_CAN_TX_PORT)
-#ifndef STM32_CAN_USE_CAN2
+#ifdef STM32_CAN_USE_CAN2
 #define OPENBLT_CAND CAND2
 #define OPENBLT_CAN_RX_PORT GPIOB
 #define OPENBLT_CAN_RX_PIN 5
