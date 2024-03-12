@@ -119,6 +119,9 @@ BUNDLE_FILES = \
 $(SIMULATOR_OUT):
 	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Windows_NT"
 
+../simulator/build/rusefi_simulator:
+	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Linux"
+
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 
 # We pass SUBMAKE=yes to the bootloader Make instance so it knows not to try to build configs,
