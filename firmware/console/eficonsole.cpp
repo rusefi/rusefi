@@ -42,8 +42,8 @@ static void testHardFault() {
 }
 
 static void sayHello() {
-	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2023. All rights reserved.");
-	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2024. All rights reserved.");
+	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s now=%d", getRusEfiVersion(), VCS_VERSION, getTimeNowMs());
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);
@@ -152,6 +152,7 @@ static void sayHello() {
 
 	/**
 	 * Time to finish output. This is needed to avoid mix-up of this methods output and console command confirmation
+	 * this code here dates back to 2015. today in 2024 I have no idea what it does :(
 	 */
 	chThdSleepMilliseconds(5);
 }
