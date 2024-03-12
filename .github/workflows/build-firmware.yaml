@@ -75,7 +75,7 @@ jobs:
     - name: Create Release Tag
       if: ${{ env.full == 'true' && env.upload == 'release' && steps.checkTag.outputs.exists == 'false' }}
       id: tag
-      uses: mathieudutour/github-tag-action@v6.1
+      uses: mathieudutour/github-tag-action@v6.2
       with:
         github_token: ${{ secrets.ACCESS_TOKEN }}
         custom_tag: ${{ env.date }}
