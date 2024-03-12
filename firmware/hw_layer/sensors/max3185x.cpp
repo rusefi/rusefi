@@ -307,7 +307,7 @@ private:
 						(rx[3] <<  0);
 
 		/* MISO is constantly low or high */
-		if ((data = 0xffffffff) || (data == 0x0)) {
+		if ((data == 0xffffffff) || (data == 0x0)) {
 			return UNKNOWN_TYPE;
 		}
 
