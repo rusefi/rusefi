@@ -27,6 +27,38 @@
     engineConfiguration->cylinderBankSelect[10] = 1;
     // default 0.0
     engineConfiguration->cylinderBankSelect[11] = 1;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->ignBlends[1].blendParameter = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->ignBlends[1].yAxisOverride = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->ignBlends[2].blendParameter = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->ignBlends[2].yAxisOverride = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->ignBlends[3].blendParameter = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->ignBlends[3].yAxisOverride = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[0].blendParameter = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->veBlends[0].yAxisOverride = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[1].blendParameter = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->veBlends[1].yAxisOverride = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[2].blendParameter = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->veBlends[2].yAxisOverride = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[3].blendParameter = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->veBlends[3].yAxisOverride = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->boostOpenLoopBlends[0].blendParameter = GPPWM_Zero;
+    // default "MAP"
+    engineConfiguration->boostOpenLoopBlends[0].yAxisOverride = GPPWM_Zero;
     // default 0.34
     engineConfiguration->throttlePedalSecondaryUpVoltage = 0.74;
     // default 1.86
@@ -37,6 +69,7 @@
 
 	pbcannedboostTableOpenLoop();
 	pbcannedscriptTable4();
+	pbcannedthrottle2TrimTable();
 	pbcannedlambdaTable();
 	pbcannedtcuSolenoidTable();
 ```

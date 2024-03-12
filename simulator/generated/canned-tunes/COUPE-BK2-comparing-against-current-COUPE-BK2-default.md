@@ -27,6 +27,22 @@
     engineConfiguration->cylinderBankSelect[10] = 1;
     // default 0.0
     engineConfiguration->cylinderBankSelect[11] = 1;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->ignBlends[1].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->ignBlends[2].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->ignBlends[3].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[0].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[1].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[2].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[3].blendParameter = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->boostOpenLoopBlends[0].blendParameter = GPPWM_Zero;
     // default 300.0
     engineConfiguration->idle.solenoidFrequency = 200;
     // default "false"
@@ -53,6 +69,7 @@
 	coupleBK2cannedboostTableOpenLoop();
 	coupleBK2cannedscriptTable4();
 	coupleBK2cannedpedalToTpsTable();
+	coupleBK2cannedthrottle2TrimTable();
 	coupleBK2cannedlambdaTable();
 	coupleBK2cannedtcuSolenoidTable();
 	coupleBK2cannedpostCrankingFactor();

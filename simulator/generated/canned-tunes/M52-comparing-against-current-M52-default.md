@@ -59,6 +59,22 @@
     engineConfiguration->cylinderBankSelect[11] = 1;
     // default 4.0
     engineConfiguration->benchTestOnTime = 5;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->ignBlends[1].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->ignBlends[2].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->ignBlends[3].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[0].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[1].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[2].blendParameter = GPPWM_Zero;
+    // default "Ethanol (Flex) %"
+    engineConfiguration->veBlends[3].blendParameter = GPPWM_Zero;
+    // default "Lua Gauge 2"
+    engineConfiguration->boostOpenLoopBlends[0].blendParameter = GPPWM_Zero;
     // default 0.0
     engineConfiguration->tpsMin = 120;
     // default 1000.0
@@ -197,6 +213,7 @@
 	cannedignitionTable();
 	cannedveTable();
 	cannedmapEstimateTable();
+	cannedthrottle2TrimTable();
 	cannedlambdaTable();
 	cannedtcuSolenoidTable();
 	cannedpostCrankingFactor();
