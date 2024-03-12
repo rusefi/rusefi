@@ -14,10 +14,10 @@ int getCylinderKnockBank(uint8_t cylinderNumber);
 
 class KnockControllerBase : public EngineModule, public knock_controller_s {
 public:
-    KnockControllerBase() {
-	    // start with threshold higher than any possible knock to avoid recording spurious knocks
-	    m_knockThreshold = 100;
-    }
+	KnockControllerBase() {
+		// start with threshold higher than any possible knock to avoid recording spurious knocks
+		m_knockThreshold = 100;
+	}
 	// EngineModule implementation
 	void onFastCallback() override;
 

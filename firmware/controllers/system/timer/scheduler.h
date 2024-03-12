@@ -10,20 +10,20 @@ typedef void (*schfunc_t)(void *);
 
 template<class To, class From>
 std::enable_if_t<
-    sizeof(To) == sizeof(From) &&
-    std::is_trivially_copyable_v<From> &&
-    std::is_trivially_copyable_v<To>,
-    To>
+	sizeof(To) == sizeof(From) &&
+	std::is_trivially_copyable_v<From> &&
+	std::is_trivially_copyable_v<To>,
+	To>
 // constexpr support needs compiler magic
 bit_cast(const From& src) noexcept
 {
-    static_assert(std::is_trivially_constructible_v<To>,
-        "This implementation additionally requires "
-        "destination type to be trivially constructible");
+	static_assert(std::is_trivially_constructible_v<To>,
+		"This implementation additionally requires "
+		"destination type to be trivially constructible");
  
-    To dst;
-    std::memcpy(&dst, &src, sizeof(To));
-    return dst;
+	To dst;
+	std::memcpy(&dst, &src, sizeof(To));
+	return dst;
 }
 
 class action_s {

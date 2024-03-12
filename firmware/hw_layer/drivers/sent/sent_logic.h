@@ -42,11 +42,11 @@ struct sent_channel_stat {
 	uint32_t sc;
 	uint32_t scCrcErr;
 uint32_t getTotalError() {
-    return ShortIntervalErr + LongIntervalErr + SyncErr + CrcErrCnt;
+	return ShortIntervalErr + LongIntervalErr + SyncErr + CrcErrCnt;
 }
 
 float getErrorRate() {
-    return getTotalError() * 1.0 / FrameCnt;
+	return getTotalError() * 1.0 / FrameCnt;
 }
 
 };

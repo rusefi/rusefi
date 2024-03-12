@@ -110,7 +110,7 @@ enum class engine_type_e : uint32_t {
 	 */
 	FRANKENSO_MAZDA_MIATA_2003 = 47,
 
-    // todo: add wastegate case into HW CI
+	// todo: add wastegate case into HW CI
 	TEST_DC_WASTEGATE_DISCOVERY = 48,
 
 	FRANKENSO_QA_ENGINE = 49,
@@ -166,7 +166,7 @@ enum class engine_type_e : uint32_t {
 
 	HELLEN_NA94 = 80,
 
-    // 82
+	// 82
 	HELLEN_154_HYUNDAI_COUPE_BK1 = 82,
 	HELLEN_NB1 = 83,
 	// 84
@@ -339,10 +339,10 @@ enum class trigger_type_e : uint32_t {
 
 	TT_DODGE_STRATUS = 22,
 
-    /**
-     * Subaru but also Mazda RX-8
-     * We suspect that it's VR
-     */
+	/**
+	 * Subaru but also Mazda RX-8
+	 * We suspect that it's VR
+	 */
 	TT_36_2_2_2 = 23,
 
 	/**
@@ -474,7 +474,7 @@ enum class trigger_type_e : uint32_t {
 	TT_36_2_1_1 = 71,
 
 
-    TT_VVT_MITSUBISHI_6G75 = 72,
+	TT_VVT_MITSUBISHI_6G75 = 72,
 
 	TT_VVT_TOYOTA_4_1 = 73,
 

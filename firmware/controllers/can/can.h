@@ -69,18 +69,18 @@ using CI = CanInterval;
 
 // logical and/or operators so we can use our enum like an int
 constexpr CI operator |(CI lhs, CI rhs) {
-    using T = std::underlying_type_t<CI>;
-    return static_cast<CI>(static_cast<T>(lhs) | static_cast<T>(rhs));
+	using T = std::underlying_type_t<CI>;
+	return static_cast<CI>(static_cast<T>(lhs) | static_cast<T>(rhs));
 }
 
 constexpr CI operator &(CI lhs, CI rhs) {
-    using T = std::underlying_type_t<CI>;
-    return static_cast<CI>(static_cast<T>(lhs) & static_cast<T>(rhs));
+	using T = std::underlying_type_t<CI>;
+	return static_cast<CI>(static_cast<T>(lhs) & static_cast<T>(rhs));
 }
 
 constexpr CI& operator |=(CI& lhs, CI rhs) {
-    lhs = lhs | rhs;
-    return lhs;
+	lhs = lhs | rhs;
+	return lhs;
 }
 
 class CanCycle {

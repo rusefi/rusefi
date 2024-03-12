@@ -46,9 +46,9 @@ class DcMotor;
 
 class DualHBridgeStepper final : public StepperHw {
 public:
-    void initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, float reactionTime);
+	void initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, float reactionTime);
 
-    bool step(bool positive) override;
+	bool step(bool positive) override;
 
 	void sleep() override;
 
@@ -56,10 +56,10 @@ protected:
 	bool update(float dutyMult);
 
 private:
-    DcMotor* m_motorPhaseA = nullptr;
-    DcMotor* m_motorPhaseB = nullptr;
+	DcMotor* m_motorPhaseA = nullptr;
+	DcMotor* m_motorPhaseB = nullptr;
 
-    uint8_t m_phase = 0;
+	uint8_t m_phase = 0;
 };
 
 class StepperMotorBase {

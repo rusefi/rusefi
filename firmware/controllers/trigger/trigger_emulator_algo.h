@@ -23,7 +23,7 @@ void disableTriggerStimulator();
 
 class TriggerEmulatorHelper {
 public:
-    TriggerEmulatorHelper();
+	TriggerEmulatorHelper();
 	void handleEmulatorCallback(const MultiChannelStateSequence& mcss, int stateIndex);
 };
 

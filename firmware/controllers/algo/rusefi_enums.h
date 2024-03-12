@@ -450,7 +450,7 @@ typedef enum __attribute__ ((__packed__)) {
 	CAN_BUS_MAZDA_RX8 = 3,
 	CAN_BUS_NBC_BMW = 4,
 	CAN_BUS_W202_C180 = 5,
-    CAN_BUS_BMW_E90 = 6,
+	CAN_BUS_BMW_E90 = 6,
 	CAN_BUS_Haltech = 7,
 	CAN_BUS_MQB = 8,
 	CAN_BUS_NISSAN_VQ = 9,
@@ -592,11 +592,11 @@ typedef enum __attribute__ ((__packed__)) {
 } InjectorNonlinearMode;
 
 typedef enum __attribute__ ((__packed__)) {
-    HPFP_CAM_NONE = 0,
-    HPFP_CAM_IN1 = 1,
-    HPFP_CAM_EX1 = 2,
-    HPFP_CAM_IN2 = 3,
-    HPFP_CAM_EX2 = 4,
+	HPFP_CAM_NONE = 0,
+	HPFP_CAM_IN1 = 1,
+	HPFP_CAM_EX1 = 2,
+	HPFP_CAM_IN2 = 3,
+	HPFP_CAM_EX2 = 4,
 } hpfp_cam_e;
 
 #if __cplusplus
