@@ -411,8 +411,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_MITSUBISHI_MESS:
-	    initializeMitsubishi4gMess(this);
-        break;
+		initializeMitsubishi4gMess(this);
+		break;
 
 	case trigger_type_e::TT_MAZDA_MIATA_VVT_TEST:
 		initializeMazdaMiataVVtTestShape(this);
@@ -472,17 +472,17 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeNissanVQvvt(this);
 		break;
 
-    case trigger_type_e::TT_VVT_MITSUBISHI_3A92:
+	case trigger_type_e::TT_VVT_MITSUBISHI_3A92:
 		initializeVvt3A92(this);
 		break;
 
-    case trigger_type_e::TT_VVT_TOYOTA_4_1:
+	case trigger_type_e::TT_VVT_TOYOTA_4_1:
 		initializeSkippedToothTrigger(this, 4, 1, triggerOperationMode, SyncEdge::RiseOnly);
 		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.60, 2.40);
 		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.75, 1.25);
 		break;
 
-    case trigger_type_e::TT_VVT_MITSUBISHI_6G75:
+	case trigger_type_e::TT_VVT_MITSUBISHI_6G75:
 	case trigger_type_e::TT_NISSAN_QR25:
 		initializeNissanQR25crank(this);
 		break;
@@ -552,12 +552,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_36_2_1_1:
-	    initialize36_2_1_1(this);
-	    break;
+		initialize36_2_1_1(this);
+		break;
 
 	case trigger_type_e::TT_36_2_1:
-	    initialize36_2_1(this);
-	    break;
+		initialize36_2_1(this);
+		break;
 
 	case trigger_type_e::TT_TOOTHED_WHEEL_32_2:
 		initializeSkippedToothTrigger(this, 32, 2, triggerOperationMode, SyncEdge::RiseOnly);
@@ -606,19 +606,19 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_VVT_MAZDA_SKYACTIV:
-	    initializeMazdaSkyactivCam(this);
-        break;
+		initializeMazdaSkyactivCam(this);
+		break;
 
 	case trigger_type_e::TT_BENELLI_TRE:
-	    configureBenelli(this);
-        break;
+		configureBenelli(this);
+		break;
 
 	case trigger_type_e::TT_MITSU_4G63_CAM:
-	    initializeMitsubishi4g63Cam(this);
+		initializeMitsubishi4g63Cam(this);
 		break;
 	case trigger_type_e::TT_MITSU_4G9x_CAM:
-	    initializeMitsubishi4g9xCam(this);
-        break;
+		initializeMitsubishi4g9xCam(this);
+		break;
 	case trigger_type_e::TT_1_16:
 		configureOnePlus16(this);
 		break;
