@@ -58,7 +58,7 @@ SPIConfig wifi_spicfg = {
 		.ssport = NULL,
 		.sspad = 0,
 		.cfg1 = 7 // 8 bits per byte
-			| 0 /* MBR = 0, divider = 2 */,
+			| 2 << 28 /* MBR = 2, divider = 8 */,
 		.cfg2 = 0
 };
 
@@ -122,6 +122,8 @@ sint8 nm_bus_speed(uint8 /*level*/) {
 	return M2M_SUCCESS;
 }
 
+extern "C" void resetSpiDevice(SPIDriver* spi);
+
 sint8 nm_spi_rw(uint8* pu8Mosi, uint8* pu8Miso, uint16 u16Sz) {
 	spiSelectI(wifiSpi);
 
@@ -136,6 +138,19 @@ sint8 nm_spi_rw(uint8* pu8Mosi, uint8* pu8Miso, uint16 u16Sz) {
 			}
 		}
 	} else {
+		// #if CORTEX_MODEL == 7
+		// if (pu8Mosi) {
+		// 	SCB_CleanDCache_by_Addr((uint32_t*)pu8Mosi, u16Sz);
+		// }
+		// #endif
+
+		// #ifdef STM32H7XX
+		// /* workaround for silicon errata */
+		// /* see https://github.com/rusefi/rusefi/issues/2395 */
+		// resetSpiDevice(wifiSpi);
+		// spiStart(wifiSpi, &wifi_spicfg);
+		// #endif
+
 		if (pu8Mosi && pu8Miso) {
 			spiExchange(wifiSpi, u16Sz, pu8Mosi, pu8Miso);
 		} else if (pu8Mosi) {
@@ -146,6 +161,12 @@ sint8 nm_spi_rw(uint8* pu8Mosi, uint8* pu8Miso, uint16 u16Sz) {
 			// Neither MISO nor MOSI???
 			osalSysHalt("wifi neither mosi nor miso");
 		}
+
+		// #if CORTEX_MODEL == 7
+		// if (pu8Miso) {
+		// 	SCB_InvalidateDCache_by_Addr((uint32_t*)pu8Miso, u16Sz);
+		// }
+		// #endif
 	}
 
 	spiUnselectI(wifiSpi);

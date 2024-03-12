@@ -29,7 +29,7 @@ static input_queue_t wifiIqueue;
 
 static bool socketReady = false;
 
-class WifiChannel : public TsChannelBase {
+class WifiChannel final : public TsChannelBase {
 public:
 	WifiChannel()
 		: TsChannelBase("WiFi")
@@ -37,17 +37,27 @@ public:
 	}
 
 	bool isReady() const override {
-		return true;
+		return socketReady;
 	}
 
-	void write(const uint8_t* buffer, size_t size, bool /*isEndOfPacket*/) override {
-		sendBuffer = buffer;
-		sendSize = size;
+	void write(const uint8_t* buffer, size_t size, bool /*isEndOfPacket*/) final override {
+		while (size > 0) {
+			// Write at most SOCKET_BUFFER_MAX_LENGTH bytes at a time
+			size_t chunkSize = size > SOCKET_BUFFER_MAX_LENGTH ? SOCKET_BUFFER_MAX_LENGTH : size;
 
-		sendRequest = true;
-		isrSemaphore.signal();
+			// Write this chunk
+			sendBuffer = buffer;
+			sendSize = chunkSize;
+			sendRequest = true;
+			isrSemaphore.signal();
 
-		sendDoneSemaphore.wait();
+			// Step buffer/size for the next chunk
+			buffer += chunkSize;
+			size -= chunkSize;
+
+			// Wait for this chunk to complete
+			sendDoneSemaphore.wait();
+		}
 	}
 
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override {
@@ -55,7 +65,7 @@ public:
 	}
 };
 
-static WifiChannel wifiChannel;
+static NO_CACHE WifiChannel wifiChannel;
 
 class WifiHelperThread : public ThreadController<4096> {
 public:
@@ -75,7 +85,7 @@ public:
 	}
 };
 
-static WifiHelperThread wifiHelper;
+static NO_CACHE WifiHelperThread wifiHelper;
 
 static tstrWifiInitParam param;
 
@@ -94,7 +104,7 @@ void wifiCallback(uint8 u8MsgType, void* pvMsg) {
 	}
 }
 
-uint8_t rxBuf[512];
+static NO_CACHE uint8_t rxBuf[512];
 
 static void socketCallback(SOCKET sock, uint8_t u8Msg, void* pvMsg) {
 	switch (u8Msg) {
@@ -150,7 +160,13 @@ static void socketCallback(SOCKET sock, uint8_t u8Msg, void* pvMsg) {
 				recv(sock, &rxBuf, nextRecv, 0);
 			} else {
 				close(sock);
+
 				socketReady = false;
+
+				{
+					chibios_rt::CriticalSectionLocker csl;
+					iqResetI(&wifiIqueue);
+				}
 			}
 		} break;
 		case SOCKET_MSG_SEND: {
@@ -207,7 +223,7 @@ struct WifiConsoleThread : public TunerstudioThread {
 	}
 };
 
-static WifiConsoleThread wifiThread;
+static NO_CACHE WifiConsoleThread wifiThread;
 
 void startWifiConsole() {
 	iqObjectInit(&wifiIqueue, recvBuffer, sizeof(recvBuffer), nullptr, nullptr);

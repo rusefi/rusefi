@@ -75,7 +75,6 @@ void TsChannelBase::writeCrcPacketLarge(const uint8_t responseCode, const uint8_
 	crc = crc32inc((void*)buf, crc, size);
 	*(uint32_t*)crcBuffer = SWAP_UINT32(crc);
 
-
 	// If data, write that
 	if (size) {
 		write(buf, size, /*isEndOfPacket*/false);
