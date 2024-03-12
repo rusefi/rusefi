@@ -1107,7 +1107,7 @@
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PEDAL_TO_TPS_SIZE 8
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 22236
+#define persistent_config_s_size 22428
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1188,7 +1188,7 @@
 #define show_microRusEFI_presets true
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2146200267
+#define SIGNATURE_HASH 2133790098
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1216,6 +1216,8 @@
 #define stft_s_size 24
 #define switch_input_pin_e_enum 0="NONE",2="18 - AN temp 1",36="19 - AN volt 4",37="20 - AN volt 5",5="22 - AN temp 4 or Hall Input",3="23 - AN temp 2",4="24 - AN temp 3 or Hall Input",7="25 - Hall Cam",8="26 - AN volt 2",34="27 - AN volt 1",6="28 - AN volt 10, Aux Reuse",39="30 - AN volt 7",9="31 - AN volt 3",38="32 - AN volt 6, Aux Reuse",18="36 - AN volt 8, Aux Reuse",19="40 - AN volt 9, Aux Reuse"
 #define switch_input_pin_e_fullenum "NONE","INVALID","18 - AN temp 1","23 - AN temp 2","24 - AN temp 3 or Hall Input","22 - AN temp 4 or Hall Input","28 - AN volt 10, Aux Reuse","25 - Hall Cam","26 - AN volt 2","31 - AN volt 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","36 - AN volt 8, Aux Reuse","40 - AN volt 9, Aux Reuse","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","27 - AN volt 1","INVALID","19 - AN volt 4","20 - AN volt 5","32 - AN volt 6, Aux Reuse","30 - AN volt 7"
+#define TABLE_2_LOAD_SIZE 8
+#define TABLE_2_RPM_SIZE 8
 #define TABLE_4_RPM 10
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
@@ -1240,7 +1242,7 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
-#define TOTAL_CONFIG_SIZE 22236
+#define TOTAL_CONFIG_SIZE 22428
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 #define TPS_TPS_ACCEL_TABLE 8
@@ -1549,7 +1551,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.12.mre_f7.2146200267"
+#define TS_SIGNATURE "rusEFI master.2024.03.12.mre_f7.2133790098"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

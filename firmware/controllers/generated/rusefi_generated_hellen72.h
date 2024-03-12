@@ -1107,7 +1107,7 @@
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PEDAL_TO_TPS_SIZE 8
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 22236
+#define persistent_config_s_size 22428
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1188,7 +1188,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 4240621736
+#define SIGNATURE_HASH 4227966961
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1216,6 +1216,8 @@
 #define stft_s_size 24
 #define switch_input_pin_e_enum 0="NONE",91="4B - Brake/RES1 (A7)",18="4F - AC_PRES/AUX1 (A23)",90="4I - Clutch rev D",79="4I - Clutch rev E/F",9="4J - VTCS/AUX4 (A20)",34="5A - Pressure Input",87="5D - SENSOR INPUT",38="5M - PPS2 OR TEMPERATURE SENSOR",2="5N - TPS2",5="5P - PPS1"
 #define switch_input_pin_e_fullenum "NONE","INVALID","5N - TPS2","INVALID","INVALID","5P - PPS1","INVALID","INVALID","INVALID","4J - VTCS/AUX4 (A20)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","4F - AC_PRES/AUX1 (A23)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","5A - Pressure Input","INVALID","INVALID","INVALID","5M - PPS2 OR TEMPERATURE SENSOR","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","4I - Clutch rev E/F","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","5D - SENSOR INPUT","INVALID","INVALID","4I - Clutch rev D","4B - Brake/RES1 (A7)"
+#define TABLE_2_LOAD_SIZE 8
+#define TABLE_2_RPM_SIZE 8
 #define TABLE_4_RPM 10
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
@@ -1240,7 +1242,7 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
-#define TOTAL_CONFIG_SIZE 22236
+#define TOTAL_CONFIG_SIZE 22428
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 #define TPS_TPS_ACCEL_TABLE 8
@@ -1549,7 +1551,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.12.hellen72.4240621736"
+#define TS_SIGNATURE "rusEFI master.2024.03.12.hellen72.4227966961"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
