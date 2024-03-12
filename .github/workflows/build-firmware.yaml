@@ -1,5 +1,9 @@
 name: Firmware at GHA
 
+#
+# this github action uses generate_matrix.sh to scan the file system and automatically produce build matrix!
+#
+
 on:
   push:
   pull_request:
