@@ -15,6 +15,10 @@ DDEFS += -DEFI_MAX_31855=TRUE
 
 DDEFS += -DHELLEN_BOARD_ID_DEBUG
 
+# on the one hand we do not use boardID YET and it takes 350ms, on the other hand who knows what the future would bring
+# as long as we only have one boardID for all units the only consumer of boardID is HW QC process
+# DDEFS += -DHW_HELLEN_SKIP_BOARD_TYPE=TRUE
+
 DDEFS += -DHW_HELLEN_UAEFI=1
 DDEFS += -DDIAG_5VP_PIN=Gpio::MM100_SPI3_MOSI
 
