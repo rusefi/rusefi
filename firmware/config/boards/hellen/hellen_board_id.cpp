@@ -305,7 +305,6 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimesAveraged(int i, float & T
 	return true;
 }
 
-
 int detectHellenBoardId() {
 	int boardId = -1;
 #if defined( HELLEN_BOARD_ID_PIN_1) && !defined(HW_HELLEN_SKIP_BOARD_TYPE)

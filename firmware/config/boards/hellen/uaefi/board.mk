@@ -5,9 +5,6 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
-# pretty temporary just to try https://github.com/rusefi/rusefi/issues/6079 on discovery
-DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
-
 #no mux on mm100
 
 # Add them all together
