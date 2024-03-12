@@ -8,66 +8,50 @@ inputs:
   rusefi_dir:
     description: 'Path to rusefi submodule'
     required: false
-    type: string
     default: ext/rusefi
   meta_info:
     description: 'Path to meta info file'
     required: false
-    type: string
     default: meta-info.env
   meta_output:
     description: 'Path to meta output directory'
     required: false
-    type: string
     default: ./generated/
   lts:
     description: 'LTS Build'
     required: false
-    type: boolean
-    default: false
+    default: 'false'
   bundle_simulator:
     description: 'Include Simulator in Bundle'
     required: false
-    type: boolean
-    default: false
+    default: 'false'
   push:
     description: 'Push generated configs'
     required: false
-    type: boolean
-    default: true
+    default: 'true'
   artifacts:
     required: false
-    type: string
     default: bin hex dfu map elf list srec bundle autoupdate
   uploads:
     required: false
-    type: string
     default: ini bundles
   MY_REPO_PAT:
     description: 'Token for accessing private repos'
     required: false
-    type: string
   RUSEFI_ONLINE_FTP_USER:
     required: false
-    type: string
   RUSEFI_ONLINE_FTP_PASS:
     required: false
-    type: string
   RUSEFI_FTP_SERVER:
     required: false
-    type: string
   RUSEFI_SSH_SERVER:
     required: false
-    type: string
   RUSEFI_SSH_USER:
     required: false
-    type: string
   RUSEFI_SSH_PASS:
     required: false
-    type: string
   ADDITIONAL_ENV:
     required: false
-    type: string
 
 runs:
   using: "composite"
