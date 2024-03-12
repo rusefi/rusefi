@@ -33,21 +33,19 @@ extern "C" {
   #error Unknown BOOT_COM_CAN_CHANNEL_INDEX.
 #endif
 
-#if !defined(OPENBLT_CAND) || !defined(OPENBLT_CAN_RX_PIN) || !defined(OPENBLT_CAN_RX_PORT) || !defined(OPENBLT_CAN_TX_PIN) || !defined(OPENBLT_CAN_TX_PORT)
-#ifdef STM32_CAN_USE_CAN2
-#define OPENBLT_CAND CAND2
-#define OPENBLT_CAN_RX_PORT GPIOB
-#define OPENBLT_CAN_RX_PIN 5
-#define OPENBLT_CAN_TX_PORT GPIOB
-#define OPENBLT_CAN_TX_PIN 13
-#elif defined(STM32_CAN_USE_CAN1)
-#define OPENBLT_CAND CAND1
-#define OPENBLT_CAN_RX_PORT GPIOB
-#define OPENBLT_CAN_RX_PIN 8
-#define OPENBLT_CAN_TX_PORT GPIOB
-#define OPENBLT_CAN_TX_PIN 9
-#else
-#error Can is not enabled for this firmware.
+#if !defined(OPENBLT_CAN_RX_PIN) || !defined(OPENBLT_CAN_RX_PORT) || !defined(OPENBLT_CAN_TX_PIN) || !defined(OPENBLT_CAN_TX_PORT)
+#if (BOOT_COM_CAN_CHANNEL_INDEX == 0)
+  // default pins for CAN1 (compatible with Hellen)
+  #define OPENBLT_CAN_RX_PORT GPIOB
+  #define OPENBLT_CAN_RX_PIN 8
+  #define OPENBLT_CAN_TX_PORT GPIOB
+  #define OPENBLT_CAN_TX_PIN 9
+#elif (BOOT_COM_CAN_CHANNEL_INDEX == 1)
+  // default pins for CAN2 (compatible with ST-bootloader)
+  #define OPENBLT_CAN_RX_PORT GPIOB
+  #define OPENBLT_CAN_RX_PIN 5
+  #define OPENBLT_CAN_TX_PORT GPIOB
+  #define OPENBLT_CAN_TX_PIN 13
 #endif
 #endif
 
