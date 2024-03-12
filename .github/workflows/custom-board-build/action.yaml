@@ -17,12 +17,19 @@ inputs:
     description: 'Path to meta output directory'
     required: false
     default: ./generated/
+  sim_output:
+    required: false
+    default: ./generated/  
   lts:
     description: 'LTS Build'
     required: false
     default: 'false'
   bundle_simulator:
     description: 'Include Simulator in Bundle'
+    required: false
+    default: 'false'
+  run_simulator:
+    description: 'Build and Run Simulator'
     required: false
     default: 'false'
   push:
@@ -115,10 +122,12 @@ runs:
         echo "RUSEFI_SSH_PASS=${{inputs.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
         echo "LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
         echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
+        echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
         echo "REF=${{github.ref_name}}" >> $GITHUB_ENV
         echo "${{ inputs.ADDITIONAL_ENV }}" >> $GITHUB_ENV
         which realpath >/dev/null 2>&1 || (which grealpath >/dev/null 2>&1 && alias realpath='grealpath')
         echo "META_OUTPUT_ROOT_FOLDER=$(realpath ${{inputs.meta_output}})/" >> $GITHUB_ENV
+        echo "SIM_OUTPUT_ROOT_FOLDER=$(realpath ${{inputs.sim_output}})/" >> $GITHUB_ENV
         source ${{inputs.rusefi_dir}}/firmware/config/boards/common_script_read_meta_env.inc "${{inputs.meta_info}}"
         cd ${{inputs.rusefi_dir}}/firmware
         BOARD_DIR=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_DIR")
@@ -145,8 +154,11 @@ runs:
     - name: Install Tools
       shell: bash
       run: |
+        if [ "$BUNDLE_SIMULATOR" == "true" -o "$RUN_SIMULATOR" == "true" ]; then
+          SIM_REQS="gcc-multilib g++-multilib"
+        fi
         if [ "$BUNDLE_SIMULATOR" == "true" ]; then
-          SIM_REQS="gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 zip dosfstools"
+          SIM_REQS+=" g++-mingw-w64 gcc-mingw-w64 zip dosfstools"
         fi
         sudo bash ${{inputs.rusefi_dir}}/misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install sshpass mtools $SIM_REQS
@@ -185,6 +197,9 @@ runs:
         if ac 'bundles' || ac 'bundle'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}.zip"); fi
         if ac 'bundles' || ac 'autoupdate'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}_autoupdate.zip"); fi
         if ac 'obfuscated'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}_obfuscated.zip"); fi
+        if [ "$RUN_SIMULATOR" == "true" ]; then
+          TARGETS+=("../simulator/build/rusefi_simulator" "../java_tools/tune-tools/build/libs/tune-tools-all.jar")
+        fi
         bash bin/compile.sh $BOARD_META_PATH ${TARGETS[@]}
 
     - name: Upload Bundle
@@ -193,14 +208,46 @@ runs:
       shell: bash
       run: bash ../firmware/bin/upload_bundle.sh
 
-    - name: Add Config to Commit
+    - name: Run Simulator
+      if: ${{ inputs.run_simulator == 'true' }}
+      shell: bash
+      run: |
+        cd ${{inputs.rusefi_dir}}/simulator/
+        ./build/rusefi_simulator 10
+        ./write_tune.sh
+        cd $OLDPWD
+        if [ ! "${SIM_OUTPUT_ROOT_FOLDER}" -ef "${{inputs.rusefi_dir}}/simulator/generated" ]; then
+          mkdir -p ${SIM_OUTPUT_ROOT_FOLDER}canned-tunes
+          cp ${{inputs.rusefi_dir}}/simulator/generated/*.msq ${SIM_OUTPUT_ROOT_FOLDER}
+          cp ${{inputs.rusefi_dir}}/simulator/generated/canned-tunes/*.md ${SIM_OUTPUT_ROOT_FOLDER}canned-tunes
+        fi
+
+    - name: Git Config
       if: ${{ inputs.push == 'true' }}
       shell: bash
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub git update Action"
+
+    - name: Add Tune to Commit
+      if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}
+      shell: bash
+      run: |
+        git add "${SIM_OUTPUT_ROOT_FOLDER}*msq"
+        git add "${SIM_OUTPUT_ROOT_FOLDER}canned-tunes/*md"
+        OUT=$(git commit -m "Auto-generated Default Tune" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "Tune: looks like nothing to commit"
+          exit 0
+        fi
+        echo "[$OUT]"
+
+    - name: Add Config to Commit
+      if: ${{ inputs.push == 'true' }}
+      shell: bash
+      run: |
         git add ${META_OUTPUT_ROOT_FOLDER}*
-        OUT=$(git commit -am "GHA Automation" 2>&1) || echo "commit failed, finding out why"
+        OUT=$(git commit -m "Auto-generated Configs" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Configs: looks like nothing to commit"
           exit 0
@@ -214,7 +261,7 @@ runs:
         if [ -d $BOARD_DIR/connectors ]; then
           git add $BOARD_DIR/connectors/*
         fi
-        OUT=$(git commit -am "GHA Connectors Generated" 2>&1) || echo "commit failed, finding out why"
+        OUT=$(git commit -m "Auto-generated Connectors" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Connectors: looks like nothing to commit"
           exit 0
