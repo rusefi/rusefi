@@ -27,18 +27,6 @@ static void pbcannedscriptTable4() {
 	copyTable(config->scriptTable4, hardCodedscriptTable4);
 }
 
-static void pbcannedthrottle2TrimTable() {
-	static const float hardCodedthrottle2TrimTable[6][6] = {
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-};
-	copyTable(config->throttle2TrimTable, hardCodedthrottle2TrimTable);
-}
-
 static void pbcannedlambdaTable() {
 	static const float hardCodedlambdaTable[16][16] = {
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},

@@ -185,18 +185,6 @@ static void cannedpedalToTpsTable() {
 	copyTable(config->pedalToTpsTable, hardCodedpedalToTpsTable);
 }
 
-static void cannedthrottle2TrimTable() {
-	static const float hardCodedthrottle2TrimTable[6][6] = {
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-{0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
-};
-	copyTable(config->throttle2TrimTable, hardCodedthrottle2TrimTable);
-}
-
 static void cannedmaxKnockRetardTable() {
 	static const float hardCodedmaxKnockRetardTable[6][6] = {
 {2.000,	2.000,	2.000,	2.000,	2.000,	2.000,	},
