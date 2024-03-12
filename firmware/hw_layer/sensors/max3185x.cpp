@@ -67,6 +67,7 @@ public:
 				auto& sensor = egtSensors[i];
 
 				m_cs[i] = Gpio::Invalid;
+				types[i] = UNKNOWN_TYPE;
 
 				// If there's already another (CAN?) EGT sensor configured,
 				// don't configure this one.
@@ -152,7 +153,7 @@ public:
 			float temp, refTemp;
 			Max3185xState code = getMax3185xEgtValues(i, &temp, &refTemp);
 
-			efiPrintf("egt%d: code=%d (%s)", i + 1, code, getMax3185xErrorCodeName(code));
+			efiPrintf("egt%d: type %s, code=%d (%s)", i + 1, getMax3185xTypeName(types[i]), code, getMax3185xErrorCodeName(code));
 
 			if (code == MAX3185X_OK) {
 				efiPrintf(" temperature %.4f reference temperature %.2f", temp, refTemp);
@@ -202,6 +203,17 @@ private:
 			return "not enabled";
 		default:
 			return "invalid";
+		}
+	}
+
+	const char *getMax3185xTypeName(Max3185xType type) {
+		switch (type) {
+		case MAX31855_TYPE:
+			return "max31855";
+		case MAX31856_TYPE:
+			return "max31856";
+		default:
+			return "unknown";
 		}
 	}
 
