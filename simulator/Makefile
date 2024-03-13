@@ -298,7 +298,9 @@ endif
 # Enable precompiled header
 include $(PROJECT_DIR)/rusefi_pch.mk
 
-CLEAN_RULE_HOOK:
+.PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK
+
+CLEAN_RULE_HOOK: CLEAN_PCH_HOOK
 	@echo Cleaning Simulator
 	rm -rf build
 	rm -rf .dep
