@@ -207,6 +207,7 @@ void rusEfiFunctionalTest(void) {
 
 	commonInitEngineController();
 
+
     commonEarlyInit();
 
 #if EFI_EMULATE_POSITION_SENSORS
