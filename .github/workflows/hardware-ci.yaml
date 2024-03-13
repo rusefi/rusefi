@@ -7,7 +7,7 @@ name: HW CI
 on: [push, pull_request]
 
 jobs:
-  build-firmware:
+  hardware-ci:
     strategy:
       # Let all builds finish even if one fails early
       fail-fast: false
