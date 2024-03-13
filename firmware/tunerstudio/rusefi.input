@@ -2600,7 +2600,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "On Time", benchTestOnTime
 		field = "Off Time", benchTestOffTime
 		panel = testTcuSolenoids@@if_ts_show_tcu
-		commandButton = "Reset firmware settings", cmd_set_engine_type_default@@if_ts_show_reset_firmware
+		commandButton = "Reset firmware settings", cmd_set_engine_type_default@@if_ts_show_reset_calibrations
 
 	dialog = injectionSettingsEast, "", yAxis
 		panel = testInjectors
