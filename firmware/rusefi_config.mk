@@ -27,6 +27,7 @@ CONFIG_FILES = \
   $(INI_FILE) \
   $(PROJECT_DIR)/controllers/generated/rusefi_generated_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/controllers/generated/signature_$(SHORT_BOARD_NAME).h \
+  $(PROJECT_DIR)/controllers/generated/engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h \
   $(FIELDS) \
   $(PIN_FILES)
 
