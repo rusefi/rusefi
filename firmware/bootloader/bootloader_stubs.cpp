@@ -12,9 +12,9 @@
 void chDbgPanic3(const char* /*msg*/, const char* /*file*/, int /*line*/) {
 }
 
-void logHardFault(uint32_t type, uintptr_t faultAddress, struct port_extctx* ctx, uint32_t csfr) { }
+void logHardFault(uint32_t /*type*/, uintptr_t /*faultAddress*/, struct port_extctx* /*ctx*/, uint32_t /*csfr*/) { }
 
-void firmwareError(ObdCode code, const char *fmt, ...) {
+void firmwareError(ObdCode /*code*/, const char* /*fmt*/, ...) {
 }
 
 // this is supposed to be taken from chconf_common.h but it does not work? I am not sure why :(
