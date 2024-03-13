@@ -2044,7 +2044,7 @@ menuDialog = main
 		subMenu = ecuStimulator,			"ECU stimulator"
 		subMenu = ioTest,					"Bench test"
 		subMenu = injTest,					"Injector test"
-		subMenu = engineTypeDialog,			"Popular vehicles"
+		subMenu = engineTypeDialog,			"Popular vehicles"@@if_ts_show_popular_vehicles
 		subMenu = std_separator
 
 		subMenu = spiBuses,						"SPI Buses"@@if_ts_show_spi
@@ -2586,7 +2586,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		commandButton = "Injector #12", cmd_test_inj12, { cylindersCount >= 12 }@@if_ts_show_cylinder_12
 		commandButton = "Abort test", cmd_test_cancel
 
-	dialog = testSolenoids, "TCU Solenoid Test"
+	dialog = testTcuSolenoids, "TCU Solenoid Test"
 		commandButton = "Solenoid #1", cmd_test_sol1
 		commandButton = "Solenoid #2", cmd_test_sol2
 		commandButton = "Solenoid #3", cmd_test_sol3
@@ -2599,7 +2599,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Count", benchTestCount
 		field = "On Time", benchTestOnTime
 		field = "Off Time", benchTestOffTime
-		panel = testSolenoids
+		panel = testTcuSolenoids@@if_ts_show_tcu
+		commandButton = "Reset firmware settings", cmd_set_engine_type_default@@if_ts_show_reset_firmware
 
 	dialog = injectionSettingsEast, "", yAxis
 		panel = testInjectors
@@ -4516,9 +4517,9 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Abort test", cmd_test_cancel
 
 	dialog = testMisc, "Misc"
-		commandButton = "A/C Relay", cmd_test_ac_relay
+		commandButton = "A/C Relay", cmd_test_ac_relay@@if_ts_show_air_conditioning
 		commandButton = "Idle Air Valve", cmd_test_idle_valve
-		commandButton = "Idle Second Air Valve", cmd_test_second_idle_valve
+		commandButton = "Idle Second Air Valve", cmd_test_second_idle_valve@@if_ts_show_idle_hardware
 		commandButton = "Stop Engine", cmd_stop_engine
 		commandButton = "Write Config", cmd_write_config
 		commandButton = "Reset ECU", cmd_reset_controller

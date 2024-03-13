@@ -2352,6 +2352,8 @@ end_struct
 #define ts_show_rotary true
 #define ts_show_tcu false
 #define ts_show_gdi false
+#define ts_show_popular_vehicles true
+#define ts_show_reset_firmware false
 #define ts_show_air_conditioning true
 #define ts_show_onboard_accelerometer false
 #define ts_show_vvt_output true
