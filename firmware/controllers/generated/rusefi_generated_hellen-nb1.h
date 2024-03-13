@@ -1188,7 +1188,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2516100429
+#define SIGNATURE_HASH 2854543608
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1218,6 +1218,8 @@
 #define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","TPS1","INVALID","PPS1","INVALID","INVALID","INVALID","3S - EGR BOOST IN","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","2A - Pressure Input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","4C - IN TEMP/PPS2","1P - AC Switch","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3I - Clutch","1V - Neutral","INVALID","INVALID","INVALID","INVALID","3J - O2S2","INVALID","INVALID","INVALID","INVALID","INVALID","1F - Brake/RES1","1G - Steering/RES2"
 #define TABLE_2_LOAD_SIZE 8
 #define TABLE_2_RPM_SIZE 8
+#define TABLE_3_LOAD_SIZE 8
+#define TABLE_3_RPM_SIZE 8
 #define TABLE_4_RPM 10
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
@@ -1551,7 +1553,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.13.hellen-nb1.2516100429"
+#define TS_SIGNATURE "rusEFI master.2024.03.13.hellen-nb1.2854543608"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

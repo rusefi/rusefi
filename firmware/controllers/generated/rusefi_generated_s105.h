@@ -1187,7 +1187,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3278623663
+#define SIGNATURE_HASH 4239889946
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1217,6 +1217,8 @@
 #define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","13 - Ignition switch in (15)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","15 - Crank Sensor+","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","76 - Diff Lock Req In","opt 72 - Oil Press Warning In","72 - Identification in","opt 75 - AC Request In","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","opt 77 - Starter Req In"
 #define TABLE_2_LOAD_SIZE 8
 #define TABLE_2_RPM_SIZE 8
+#define TABLE_3_LOAD_SIZE 8
+#define TABLE_3_RPM_SIZE 8
 #define TABLE_4_RPM 10
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
@@ -1551,7 +1553,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.13.s105.3278623663"
+#define TS_SIGNATURE "rusEFI master.2024.03.13.s105.4239889946"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

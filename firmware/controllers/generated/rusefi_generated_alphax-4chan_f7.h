@@ -1189,7 +1189,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3724455272
+#define SIGNATURE_HASH 3793938653
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1219,6 +1219,8 @@
 #define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C7 - CAM Hall/Digital","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C3 - Crank+ (hall)","INVALID","C2 - Crank- (hall)","E6 - Cam+ (hall)","INVALID","INVALID","INVALID","D3 - Digital In 2","E3 - Digital In 3","E4 - Digital In 4","F3 - Digital In 5","INVALID","INVALID","INVALID","INVALID","C4 - 2Step/Digital"
 #define TABLE_2_LOAD_SIZE 8
 #define TABLE_2_RPM_SIZE 8
+#define TABLE_3_LOAD_SIZE 8
+#define TABLE_3_RPM_SIZE 8
 #define TABLE_4_RPM 10
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
@@ -1552,7 +1554,7 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.13.alphax-4chan_f7.3724455272"
+#define TS_SIGNATURE "rusEFI master.2024.03.13.alphax-4chan_f7.3793938653"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
