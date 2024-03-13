@@ -222,6 +222,9 @@ struct_no_prefix engine_configuration_s
 #define TABLE_2_RPM_SIZE 8
 #define TABLE_2_LOAD_SIZE 8
 
+#define TABLE_3_RPM_SIZE 8
+#define TABLE_3_LOAD_SIZE 8
+
 #define SCRIPT_CURVE_8 8
 #define SCRIPT_CURVE_16 16
 
