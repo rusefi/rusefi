@@ -72,6 +72,8 @@ namespace chibios_rt {
 }
 #endif
 
+struct virtual_timer_t;
+
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() { 	timeNowUs++; }
 
 #define chsnprintf snprintf

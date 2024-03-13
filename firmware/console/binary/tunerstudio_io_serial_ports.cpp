@@ -15,7 +15,9 @@
 #endif // HW_HELLEN
 
 // These may not be defined due to the HAL, but they're necessary for the compiler to do it's magic
+#if !HAL_USE_UART
 class UARTDriver;
+#endif // !HAL_USE_UART
 class UartDmaTsChannel;
 class UartTsChannel;
 class SerialTsChannel;
