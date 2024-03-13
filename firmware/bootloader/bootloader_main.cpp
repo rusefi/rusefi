@@ -27,14 +27,26 @@ protected:
 		auto greenPort = getBrainPinPort(green);
 		auto greenPin = getBrainPinIndex(green);
 
-		palSetPad(yellowPort, yellowPin);
-		palSetPad(bluePort, bluePin);
-		palSetPad(greenPort, greenPin);
+		if (yellowPort) {
+			palSetPad(yellowPort, yellowPin);
+		}
+		if (bluePort) {
+			palSetPad(bluePort, bluePin);
+		}
+		if (greenPort) {
+			palSetPad(greenPort, greenPin);
+		}
 
 		while (true) {
-			palTogglePad(yellowPort, yellowPin);
-			palTogglePad(bluePort, bluePin);
-			palTogglePad(greenPort, greenPin);
+			if (yellowPort) {
+				palTogglePad(yellowPort, yellowPin);
+			}
+			if (bluePort) {
+				palTogglePad(bluePort, bluePin);
+			}
+			if (greenPort) {
+				palTogglePad(greenPort, greenPin);
+			}
 			// blink 3 times faster if Dual Bank is not enabled
 			chThdSleepMilliseconds(isFlashDualBank() ? 250 : 80);
 		}
