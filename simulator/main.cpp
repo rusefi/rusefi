@@ -158,7 +158,7 @@ int main(int argc, char** argv) {
 		printf("Running rusEFI simulator for %d seconds, then exiting.\n\n", timeoutSeconds);
 
 		chSysLock();
-		chVTSetI(&exitTimer, MY_US2ST(timeoutSeconds * 1e6), [](void*) { exit(0); }, 0);
+		chVTSetI(&exitTimer, MY_US2ST(timeoutSeconds * 1e6), [](void*) { exit(0); }, nullptr);
 		chSysUnlock();
 	}
 
