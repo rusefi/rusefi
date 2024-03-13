@@ -288,6 +288,10 @@ endif
 
 include $(RULESPATH)/rules.mk
 
+ifneq (yes,$(SUBMAKE))
+  include $(PROJECT_DIR)/rusefi_config.mk
+endif
+
 # Enable precompiled header
 include $(PROJECT_DIR)/rusefi_pch.mk
 
