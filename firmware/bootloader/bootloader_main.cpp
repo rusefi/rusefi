@@ -13,16 +13,28 @@ class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
 protected:
 	void main(void) override {
 		Gpio yellow = getWarningLedPin();
+		Gpio blue = getCommsLedPin();
+		Gpio green = getRunningLedPin();
 
 		efiSetPadMode("yellow", yellow, PAL_MODE_OUTPUT_PUSHPULL);
+		efiSetPadMode("blue", blue, PAL_MODE_OUTPUT_PUSHPULL);
+		efiSetPadMode("green", green, PAL_MODE_OUTPUT_PUSHPULL);
 
 		auto yellowPort = getBrainPinPort(yellow);
 		auto yellowPin = getBrainPinIndex(yellow);
+		auto bluePort = getBrainPinPort(blue);
+		auto bluePin = getBrainPinIndex(blue);
+		auto greenPort = getBrainPinPort(green);
+		auto greenPin = getBrainPinIndex(green);
 
 		palSetPad(yellowPort, yellowPin);
+		palSetPad(bluePort, bluePin);
+		palSetPad(greenPort, greenPin);
 
 		while (true) {
 			palTogglePad(yellowPort, yellowPin);
+			palTogglePad(bluePort, bluePin);
+			palTogglePad(greenPort, greenPin);
 			// blink 3 times faster if Dual Bank is not enabled
 			chThdSleepMilliseconds(isFlashDualBank() ? 250 : 80);
 		}
