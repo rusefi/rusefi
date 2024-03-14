@@ -93,9 +93,6 @@ void setMaverickX3() {
 
 	engineConfiguration->boostControlPin = Gpio::PROTEUS_LS_16;
 
-	gppwm_channel *icFanPwm = &engineConfiguration->gppwm[0];
-	icFanPwm->pin = Gpio::PROTEUS_LS_15;
-
 	gppwm_channel *accRelayPwm = &engineConfiguration->gppwm[1];
 	accRelayPwm->pin = Gpio::PROTEUS_LS_4;
 
@@ -107,7 +104,6 @@ void setMaverickX3() {
     engineConfiguration->gppwm[0].dutyIfError = 100;
     engineConfiguration->gppwm[0].rpmAxis = GPPWM_Iat;
     engineConfiguration->gppwm[0].loadAxis = GPPWM_Map;
-	strcpy(engineConfiguration->gpPwmNote[0], "IC Fan");
 	strcpy(engineConfiguration->gpPwmNote[1], "Acc Relay");
 
 
