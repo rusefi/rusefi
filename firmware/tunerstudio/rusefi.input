@@ -1837,8 +1837,8 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Injector model
-		subMenu = injPhaseTableTbl,			"Injection phase", 0, {isInjectionEnabled == 1}
-		subMenu = std_separator
+		subMenu = injPhaseTableTbl,			"Injection phase", 0, {isInjectionEnabled == 1}@@if_ts_show_injection_phase
+		subMenu = std_separator@@if_ts_show_injection_phase
 
 		# Accel enrichment
 		subMenu = AccelEnrich,				"Acceleration enrichment", 0, {isInjectionEnabled == 1}
