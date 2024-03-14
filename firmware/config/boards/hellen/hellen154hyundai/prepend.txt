@@ -19,6 +19,7 @@
 #define ts_show_sd_pins false
 #define ts_show_ignitionPinMode false
 #define ts_show_tps2 false
+#define ts_show_speedo_settings false
 
 #define ts_show_starter_disable false
 #define ts_show_fuel_pump false
