@@ -46,7 +46,7 @@
 !
 !
 ! each field is declared as
-! type name;comment;scale,offset,min,max,number_of_digits
+! type name;comment;"units",scale,offset,min,max,number_of_digits
 ! hello;I like rusEFI;"ms",1,0,-10,10,2
 !
 !

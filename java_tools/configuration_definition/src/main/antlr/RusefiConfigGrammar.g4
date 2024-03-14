@@ -1,7 +1,7 @@
 grammar RusefiConfigGrammar;
 
 @header {
-	package com.rusefi.generated;
+    package com.rusefi.generated;
 }
 
 // ...be generous in line endings...
@@ -54,13 +54,13 @@ integer: IntegerChars;
 floatNum: FloatChars | IntegerChars;
 
 expr
-    : floatNum			# EvalNumber
-    | '{' expr '}'		# EvalParens
-    | expr MUL expr		# EvalMul
-	| expr DIV expr		# EvalDiv
-	| expr ADD expr		# EvalAdd
-	| expr SUB expr		# EvalSub
-    | replacementIdent	# EvalReplacement
+    : floatNum          # EvalNumber
+    | '{' expr '}'      # EvalParens
+    | expr MUL expr     # EvalMul
+    | expr DIV expr     # EvalDiv
+    | expr ADD expr     # EvalAdd
+    | expr SUB expr     # EvalSub
+    | replacementIdent  # EvalReplacement
     ;
 
 numexpr: expr;
@@ -121,8 +121,8 @@ enumRhs
     | enumVal (',' enumVal)*
     ;
 
-enumTypedefSuffix: /*ignored*/replacementIdent Bits ',' Datatype ',' '@OFFSET@' ',' '[' integer ':' integer ']' ',' enumRhs ;
-scalarTypedefSuffix: /*ignored*/integer Scalar ',' Datatype ',' '@OFFSET@' fieldOptionsList ;
+enumTypedefSuffix: /*ignored*/replacementIdent Bits ',' Datatype ',' '@OFFSET@' ',' '[' integer ':' integer ']' ',' enumRhs;
+scalarTypedefSuffix: /*ignored*/integer Scalar ',' Datatype ',' '@OFFSET@' fieldOptionsList;
 stringTypedefSuffix: /*ignored*/replacementIdent 'string' ',' 'ASCII' ',' '@OFFSET@' ',' numexpr;
 
 typedef: Custom identifier (enumTypedefSuffix | scalarTypedefSuffix | stringTypedefSuffix);
