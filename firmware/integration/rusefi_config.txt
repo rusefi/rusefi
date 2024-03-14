@@ -1639,19 +1639,19 @@ float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;;"to",	  1, 0, 0, 25500, 2
 
-float[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable1;;"value", 1, 0, -100000, 100000, 2
+int16_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] autoscale scriptTable1;;"value", 0.01, 0, -327, 327, 2
 int16_t[SCRIPT_TABLE_8] scriptTable1LoadBins;;"L", 1, 0, -32000, 32000, 0
 int16_t[SCRIPT_TABLE_8] scriptTable1RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
-uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable2;;"value", 1, 0, 0, 255, 0
+int16_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] autoscale scriptTable2;;"value", 0.01, 0, -327, 327, 2
 int16_t[SCRIPT_TABLE_8] scriptTable2LoadBins;;"L", 1, 0, -32000, 32000, 0
 int16_t[SCRIPT_TABLE_8] scriptTable2RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
-uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable3;;"value", 1, 0, 0, 255, 0
+int16_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] autoscale scriptTable3;;"value", 0.01, 0, -327, 327, 2
 int16_t[SCRIPT_TABLE_8] scriptTable3LoadBins;;"L", 1, 0, -32000, 32000, 0
 int16_t[SCRIPT_TABLE_8] scriptTable3RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
-uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable4;;"value", 1, 0, 0, 255, 0
+int16_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] autoscale scriptTable4;;"value", 0.01, 0, -327, 327, 2
 int16_t[SCRIPT_TABLE_8] scriptTable4LoadBins;;"L", 1, 0, -32000, 32000, 0
 int16_t[SCRIPT_TABLE_8] scriptTable4RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
