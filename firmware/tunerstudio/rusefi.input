@@ -4723,6 +4723,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Trailing Pin 4",						trailingCoilPins4
 
 	dialog = fancyHardwareDialog, "Fancy Boards"
+	  field = fancySmartS,fancySmartS
+	  field = fancySmartL,fancySmartL
 		field = "A4 Tachometer Output 5V/12V Pull-Up",		boardUseTachPullUp @@if_show_2chan_presets
 		field = "A4 Tachometer Output 5V/12V Pull-Up",		boardUseTachPullUp @@if_show_4chan_presets
 		field = "D2 Tachometer Output 5V/12V Pull-Up",		boardUseTachPullUp @@if_show_8chan_presets
