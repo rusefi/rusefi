@@ -1516,18 +1516,18 @@ engine_configuration_s engineConfiguration;
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree", 1, 0, -400, 400, 0
 
 
-	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_16] scriptCurve1;;"y", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_16] scriptCurve2Bins;;"x", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_16] scriptCurve2;;"y", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_8] scriptCurve3Bins;;"x", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_8] scriptCurve3;;"y", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_8] scriptCurve4Bins;;"x", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_8] scriptCurve4;;"y", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_8] scriptCurve5Bins;;"x", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_8] scriptCurve5;;"y", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_8] scriptCurve6Bins;;"x", 1, 0, -10000, 10000, 3
-	float[SCRIPT_CURVE_8] scriptCurve6;;"y", 1, 0, -10000, 10000, 3
+	int16_t[SCRIPT_CURVE_16] autoscale scriptCurve1Bins;;"x", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_16] autoscale scriptCurve1;;"y", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_16] autoscale scriptCurve2Bins;;"x", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_16] autoscale scriptCurve2;;"y", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_8] autoscale scriptCurve3Bins;;"x", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_8] autoscale scriptCurve3;;"y", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_8] autoscale scriptCurve4Bins;;"x", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_8] autoscale scriptCurve4;;"y", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_8] autoscale scriptCurve5Bins;;"x", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_8] autoscale scriptCurve5;;"y", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_8] autoscale scriptCurve6Bins;;"x", 0.01, 0, -327, 327, 2
+	int16_t[SCRIPT_CURVE_8] autoscale scriptCurve6;;"y", 0.01, 0, -327, 327, 2
 
 	uint16_t[BARO_CORR_SIZE] autoscale baroCorrPressureBins;;"kPa", 0.1, 0, 0, 200, 1
 	uint16_t[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM", 1, 0, 0, 65000, 0
