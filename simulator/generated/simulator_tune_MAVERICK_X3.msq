@@ -652,7 +652,7 @@
          1.2
 </constant>
         <constant name="vrThreshold2_pin">"NONE"</constant>
-        <constant name="gpPwmNote1">IC Fan</constant>
+        <constant name="gpPwmNote1">GPPWM0</constant>
         <constant name="gpPwmNote2">Acc Relay</constant>
         <constant name="gpPwmNote3">GPPWM2</constant>
         <constant name="gpPwmNote4">GPPWM3</constant>
@@ -799,6 +799,8 @@
         <constant name="luaCanRxWorkaround">"false"</constant>
         <constant name="flexSensorInverted">"false"</constant>
         <constant name="useHardSkipInTraction">"false"</constant>
+        <constant name="fancySmartS">"false"</constant>
+        <constant name="fancySmartL">"false"</constant>
         <constant name="useAuxSpeedForSlipRatio">"false"</constant>
         <constant name="useVssAsSecondWheelSpeed">"false"</constant>
         <constant name="is_enabled_spi_5">"false"</constant>
@@ -1171,7 +1173,7 @@
         <constant digits="0" name="disableFan1AtSpeed" units="">0.0</constant>
         <constant digits="0" name="disableFan2AtSpeed" units="">0.0</constant>
         <constant name="canVssNbcType">"BMW_e46"</constant>
-        <constant name="gppwm1_pin">"PE1"</constant>
+        <constant name="gppwm1_pin">"NONE"</constant>
         <constant digits="0" name="gppwm1_dutyIfError" units="%">100.0</constant>
         <constant digits="0" name="gppwm1_pwmFrequency" units="hz">0.0</constant>
         <constant digits="0" name="gppwm1_onAboveDuty" units="%">60.0</constant>
@@ -4556,7 +4558,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.14.f407-discovery.1449262508" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.14.f407-discovery.1090824188" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>
