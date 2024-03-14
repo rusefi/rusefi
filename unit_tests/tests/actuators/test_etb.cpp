@@ -807,10 +807,11 @@ TEST(etb, openLoopThrottle) {
 	setLinearCurve(config->etbBiasBins, 0, 100);
 	setLinearCurve(config->etbBiasValues, -50, 50);
 
+	// due to rounding (scaled integer table storage) some of these values are funny
 	EXPECT_NEAR(-50, etb.getOpenLoop(0).value_or(-1), EPS4D);
-	EXPECT_NEAR(-25, etb.getOpenLoop(25).value_or(-1), EPS4D);
+	EXPECT_NEAR(-24.975, etb.getOpenLoop(25).value_or(-1), EPS4D);
 	EXPECT_NEAR(0, etb.getOpenLoop(50).value_or(-1), EPS4D);
-	EXPECT_NEAR(25, etb.getOpenLoop(75).value_or(-1), EPS4D);
+	EXPECT_NEAR(24.975, etb.getOpenLoop(75).value_or(-1), EPS4D);
 	EXPECT_NEAR(50, etb.getOpenLoop(100).value_or(-1), EPS4D);
 }
 
