@@ -365,7 +365,7 @@
         <constant name="rusefiVerbose29b">"11 bit"</constant>
         <constant name="rethrowHardFault">"false"</constant>
         <constant name="isHip9011Enabled">"false"</constant>
-        <constant name="requireFootOnBrakeToCrank">"false"</constant>
+        <constant name="requireFootOnBrakeToCrank">"true"</constant>
         <constant name="verboseQuad">"false"</constant>
         <constant name="useStepperIdle">"false"</constant>
         <constant name="enabledStep1Limiter">"false"</constant>
