@@ -12,10 +12,12 @@
 
 #include "script_impl.h"
 
-static fsio8_Map3D_f32t scriptTable1;
-static fsio8_Map3D_u8t scriptTable2;
-static fsio8_Map3D_u8t scriptTable3;
-static fsio8_Map3D_u8t scriptTable4;
+using ScriptTable = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, int16_t, int16_t, int16_t>;
+
+static ScriptTable scriptTable1;
+static ScriptTable scriptTable2;
+static ScriptTable scriptTable3;
+static ScriptTable scriptTable4;
 
 ValueProvider3D *getscriptTable(int index) {
 	switch (index) {
