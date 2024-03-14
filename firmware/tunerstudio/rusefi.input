@@ -1368,8 +1368,8 @@ gaugeCategory = Test Bench
 gaugeCategory = LUA
 	luaInvocationCounterGauge = luaInvocationCounter,"luaInvocationCounter", "count", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 	luaLastCycleDurationGauge = luaLastCycleDuration,"luaLastCycleDuration", "nt", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
-	luaGauges1gauge = luaGauges1, "Lua Gauge 1", "lua", 0, 30000, 0, 0, 30000, 30000, 0, 3
-	luaGauges2gauge = luaGauges2, "Lua Gauge 2", "lua", 0, 30000, 0, 0, 30000, 30000, 0, 3
+	luaGauges1gauge = luaGauges1, "Lua Gauge 1", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
+	luaGauges2gauge = luaGauges2, "Lua Gauge 2", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
 
 gaugeCategory = Alternator PID
 	alternatorStatus_iTermGauge = alternatorStatus_iTerm,"Alternator PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
