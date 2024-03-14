@@ -1096,6 +1096,12 @@ float getConfigValueByName(const char *name) {
 // useHardSkipInTraction
 		case -1495799741:
 			return engineConfiguration->useHardSkipInTraction;
+// fancySmartS
+		case 2008836688:
+			return engineConfiguration->fancySmartS;
+// fancySmartL
+		case 2008836681:
+			return engineConfiguration->fancySmartL;
 // useAuxSpeedForSlipRatio
 		case -723870257:
 			return engineConfiguration->useAuxSpeedForSlipRatio;
@@ -3607,6 +3613,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1495799741:
 	{
 		engineConfiguration->useHardSkipInTraction = (int)value;
+		return 1;
+	}
+		case 2008836688:
+	{
+		engineConfiguration->fancySmartS = (int)value;
+		return 1;
+	}
+		case 2008836681:
+	{
+		engineConfiguration->fancySmartL = (int)value;
 		return 1;
 	}
 		case -723870257:

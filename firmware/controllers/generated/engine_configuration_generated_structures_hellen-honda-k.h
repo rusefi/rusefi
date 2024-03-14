@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 12 21:44:30 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 14 21:06:03 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2850,10 +2850,10 @@ struct engine_configuration_s {
 	bool useHardSkipInTraction : 1 {};
 	/**
 	offset 1576 bit 9 */
-	bool unusedBit_495_9 : 1 {};
+	bool fancySmartS : 1 {};
 	/**
 	offset 1576 bit 10 */
-	bool unusedBit_495_10 : 1 {};
+	bool fancySmartL : 1 {};
 	/**
 	offset 1576 bit 11 */
 	bool useAuxSpeedForSlipRatio : 1 {};
@@ -5634,4 +5634,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23100);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 12 21:44:30 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 14 21:06:03 UTC 2024

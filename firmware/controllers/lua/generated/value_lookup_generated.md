@@ -1090,6 +1090,12 @@ See Over/Undervoltage Shutdown/Retry bit in documentation
 ### useHardSkipInTraction
 
 
+### fancySmartS
+
+
+### fancySmartL
+
+
 ### useAuxSpeedForSlipRatio
 
 
