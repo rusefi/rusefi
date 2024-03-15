@@ -751,10 +751,10 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #endif // EFI_SIMULATOR
 	case TS_IO_TEST_COMMAND:
 		{
+#if EFI_PROD_CODE
 			uint16_t subsystem = SWAP_UINT16(data16[0]);
 			uint16_t index = SWAP_UINT16(data16[1]);
 
-#if EFI_PROD_CODE
 			executeTSCommand(subsystem, index);
 #endif /* EFI_PROD_CODE */
 			sendOkResponse(tsChannel, TS_CRC);

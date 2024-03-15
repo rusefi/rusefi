@@ -76,8 +76,6 @@ private:
 /* wake semaphore */
 static semaphore_t wake;
 
-static SPIDriver *spi;
-
 static Hip9011Hardware hardware;
 
 HIP9011 instance(&hardware);
@@ -92,6 +90,8 @@ HIP9011 instance(&hardware);
 // todo: nicer method which would mention SPI speed explicitly?
 
 #if EFI_PROD_CODE
+static SPIDriver *spi;
+
 static SPIConfig hipSpiCfg = {
 	.circular = false,
 	.end_cb = NULL,

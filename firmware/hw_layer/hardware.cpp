@@ -456,7 +456,7 @@ void applyNewHardwareSettings() {
 	adcConfigListener();
 }
 
-#if EFI_BOR_LEVEL
+#if EFI_PROD_CODE && EFI_BOR_LEVEL
 void setBor(int borValue) {
 	efiPrintf("setting BOR to %d", borValue);
 	BOR_Set((BOR_Level_t)borValue);
@@ -579,7 +579,7 @@ void initHardware() {
 		return;
 	}
 
-#if STM32_I2C_USE_I2C3
+#if EFI_PROD_CODE && STM32_I2C_USE_I2C3
 	if (engineConfiguration->useEeprom) {
 	    i2cStart(&EE_U2CD, &i2cfg);
 	}
