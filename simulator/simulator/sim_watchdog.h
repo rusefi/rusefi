@@ -15,7 +15,7 @@
 #define WATCHDOG_RESET_MS (2 * SLOW_CALLBACK_PERIOD_MS)
 // 300 ms is our default timeout
 #define WATCHDOG_TIMEOUT_MS (3 * WATCHDOG_RESET_MS)
-// 5 secs should be enough to wait until 
+// 5 secs should be enough to wait until
 #define WATCHDOG_FLASH_TIMEOUT_MS 5000
 
 

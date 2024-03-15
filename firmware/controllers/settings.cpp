@@ -745,10 +745,10 @@ const command_i_s commandsI[] = {
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 		{"tps_accel_len", setTpsAccelLen},
 #endif // EFI_ENGINE_CONTROL
+#if EFI_PROD_CODE
 #if EFI_BOR_LEVEL
 		{"bor", setBor},
 #endif // EFI_BOR_LEVEL
-#if EFI_PROD_CODE
 #if EFI_CAN_SUPPORT
 		{"can_mode", setCanType},
 		{"can_vss", setCanVss},

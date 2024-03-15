@@ -252,6 +252,7 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 extern AdcDevice fastAdc;
 #endif /* HAL_USE_ADC */
 
+#if EFI_PROD_CODE
 static void printSensorInfo() {
 #if HAL_USE_ADC
 	// Print info about analog mappings
@@ -261,6 +262,7 @@ static void printSensorInfo() {
 	// Print info about all sensors
 	Sensor::showAllSensorInfo();
 }
+#endif // EFI_PROD_CODE
 
 #define isOutOfBounds(offset) ((offset<0) || (offset) >= (int) sizeof(engine_configuration_s))
 
