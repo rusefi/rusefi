@@ -1,6 +1,7 @@
 #pragma once
 
 #include "efifeatures.h"
+#include "rusefi_generated.h"
 #include "thread_priority.h"
 
 /*===========================================================================*/
@@ -76,7 +77,8 @@
 #define PAL_USE_CALLBACKS           TRUE
 
 // USB Serial
-#define SERIAL_USB_BUFFERS_SIZE     768
+// Round up to the next multiple of 64 bytes from BLOCKING_FACTOR+10 to allow space for header/checksum
+#define SERIAL_USB_BUFFERS_SIZE     (((BLOCKING_FACTOR + 10) / 64) + 1) * 64
 #define SERIAL_USB_BUFFERS_NUMBER   2
 
 // USB Mass Storage
