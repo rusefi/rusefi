@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 15 17:53:01 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 15 20:33:44 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -999,7 +999,7 @@ public class Fields {
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
 	public static final int launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH = 2;
 	public static final int launchActivationMode_e_CLUTCH_INPUT_LAUNCH = 1;
-	public static final int launchActivationMode_e_SWITCH_INPUT_LAUNCH = 0;
+	public static final int launchActivationMode_e_SWITCH_INPUT_LAUNCH = 3;
 	public static final int linear_sensor_s_size = 20;
 	public static final int load_override_e_AFR_AccPedal = 3;
 	public static final int load_override_e_AFR_CylFilling = 4;
@@ -1124,6 +1124,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 2111199286;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1374,7 +1375,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.03.15.f407-discovery.4059639759";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.03.15.f407-discovery.2111199286";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1910,7 +1911,7 @@ public class Fields {
 	public static final Field IGNITIONKEYDIGITALPINMODE = Field.create("IGNITIONKEYDIGITALPINMODE", 1033, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field IGNITIONKEYDIGITALPIN = Field.create("IGNITIONKEYDIGITALPIN", 1034, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTPWMFREQUENCY = Field.create("BOOSTPWMFREQUENCY", 1036, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final String[] launchActivationMode_e = {"Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)"};
+	public static final String[] launchActivationMode_e = {"Launch Button", "Clutch Down Switch", "Speed Based", "Brake Pedal"};
 	public static final Field LAUNCHACTIVATIONMODE = Field.create("LAUNCHACTIVATIONMODE", 1040, FieldType.INT8, launchActivationMode_e).setScale(1.0).setBaseOffset(0);
 	public static final String[] antiLagActivationMode_e = {"Switch Input", "Always Active"};
 	public static final Field ANTILAGACTIVATIONMODE = Field.create("ANTILAGACTIVATIONMODE", 1041, FieldType.INT8, antiLagActivationMode_e).setScale(1.0).setBaseOffset(0);
