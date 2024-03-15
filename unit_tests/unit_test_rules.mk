@@ -14,8 +14,6 @@ PCHSUB = unit_tests
 
 include $(PROJECT_DIR)/rusefi_rules.mk
 
-BOARDS_DIR = $(PROJECT_DIR)/config/boards
-
 # User may want to pass in a forced value for SANITIZE
 ifeq ($(SANITIZE),)
 	ifneq ($(OS),Windows_NT)

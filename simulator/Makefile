@@ -21,8 +21,6 @@ PROJECT_CPU=simulator
 
 include ../firmware/rusefi_rules.mk
 
-BOARDS_DIR = $(PROJECT_DIR)/config/boards
-
 # Board-specific configuration
 ifeq (,$(filter clean,$(MAKECMDGOALS)))
 ifneq ($(BOARD_DIR),)
