@@ -8,10 +8,12 @@
 
 #include "digital_input_exti.h"
 
+#if EFI_PROD_CODE
 // Callback adapter since we can't pass a member function to a callback
 static void freqSensorExtiCallback(void* arg, efitick_t nowNt) {
 	reinterpret_cast<FrequencySensor*>(arg)->onEdge(nowNt);
 }
+#endif // EFI_PROD_CODE
 
 void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter, float filterParameter) {
 	if (!isBrainPinValid(pin)) {

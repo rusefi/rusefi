@@ -17,7 +17,9 @@
 // we seem OK without L9779 here do we need those includes at all?
 #endif /* EFI_PROD_CODE */
 
-#if EFI_UNIT_TEST
+#if EFI_SIMULATOR
+#define BOARD_EXT_GPIOCHIPS 0
+#elif EFI_UNIT_TEST || EFI_SIMULATOR
 #define BOARD_EXT_GPIOCHIPS 3
 #else
 #define BOARD_EXT_GPIOCHIPS (\
