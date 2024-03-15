@@ -167,6 +167,8 @@ void onBurnRequest() {
  */
 __attribute__((weak)) void boardTuneDefaults() { }
 
+__attribute__((weak)) void boardEngineTypeTune(engine_type_e engineType) { }
+
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) { }
 
@@ -907,9 +909,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::TOYOTA_1NZ_FE:
 	    setToyota1NZFE();
 	    break;
-	case engine_type_e::HELLEN_121_VAG_4_CYL:
-	case engine_type_e::HELLEN_154_VAG:
-		break;
 	case engine_type_e::HELLEN_HONDA_BCM:
 	    setHondaCivicBcm();
         break;
@@ -930,7 +929,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::FRANKENSO_TEST_33810:
 		setDiscovery33810Test();
 		break;
-	case engine_type_e::DISCOVERY_PDM:
 	case engine_type_e::TEST_ENGINE:
 		setTestCamEngineConfiguration();
 		break;
@@ -1017,6 +1015,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	default:
 		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
+	boardEngineTypeTune(engineType);
 	applyNonPersistentConfiguration();
 }
 
