@@ -50,10 +50,10 @@ static void setPin(const CANRxFrame& frame, int value) {
 		  criticalError("QC pin index %d", outputIndex);
 			return;
 	  }
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	  Gpio* boardOutputs = getBoardMetaOutputs();
 	  criticalAssertVoid(boardOutputs != nullptr, "outputs not defined");
 		Gpio pin = boardOutputs[outputIndex];
-#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 
         int hwIndex = brainPin_to_index(pin);
         if (engine->pinRepository.getBrainUsedPin(hwIndex) == nullptr) {

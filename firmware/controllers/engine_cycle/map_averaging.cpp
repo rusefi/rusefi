@@ -61,6 +61,7 @@ static void endAveraging(MapAverager* arg);
 
 static size_t currentMapAverager = 0;
 
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
 static void startAveraging(scheduling_s *endAveragingScheduling) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, hasLotsOfRemainingStack(), "lowstck#9");
 
@@ -73,6 +74,7 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), engine->engineState.mapAveragingDuration,
 		{ endAveraging, &averager });
 }
+#endif
 
 void MapAverager::start() {
 	chibios_rt::CriticalSectionLocker csl;

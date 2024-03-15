@@ -11,9 +11,9 @@
  * Kot_dnz 2014
  */
 
-#if EFI_UART_GPS
 #include "pch.h"
 
+#if EFI_UART_GPS
 #include <string.h>
 
 #include "rusefi_types.h"
