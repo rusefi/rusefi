@@ -1121,7 +1121,7 @@
         <constant digits="1" name="idleTimingSoftEntryTime" units="">0.0</constant>
         <constant digits="0" name="etbRocExpAverageLength" units="">50.0</constant>
         <constant digits="0" name="tpsAccelFractionPeriod" units="cycles">0.0</constant>
-        <constant digits="2" name="tpsAccelFractionDivisor" units="coef">0.0</constant>
+        <constant digits="2" name="tpsAccelFractionDivisor" units="coef">1.0</constant>
         <constant name="tle8888spiDevice">"Off"</constant>
         <constant name="mc33816spiDevice">"Off"</constant>
         <constant digits="0" name="idlerpmpid_iTermMin" units="">-20.0</constant>
@@ -1750,8 +1750,8 @@
         <constant name="uiMode">"Full"</constant>
         <constant digits="0" name="hpfpPeakPos" units="deg">10.0</constant>
         <constant digits="0" name="kLinePeriodUs" units="us">0.0</constant>
-        <constant digits="0" name="rpmSoftLimitWindowSize" units="RPM">0.0</constant>
-        <constant digits="1" name="rpmSoftLimitTimingRetard" units="deg">0.0</constant>
+        <constant digits="0" name="rpmSoftLimitWindowSize" units="RPM">200.0</constant>
+        <constant digits="1" name="rpmSoftLimitTimingRetard" units="deg">4.0</constant>
         <constant digits="1" name="rpmSoftLimitFuelAdded" units="%">0.0</constant>
         <constant digits="0" name="rpmHardLimitHyst" units="RPM">50.0</constant>
         <constant digits="1" name="benchTestOffTime" units="ms">500.0</constant>
@@ -4635,7 +4635,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.15.f407-discovery.2871310681" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.15.f407-discovery.4059639759" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>

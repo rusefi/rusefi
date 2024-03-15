@@ -125,10 +125,16 @@
     engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
     // default "MAP"
     engineConfiguration->debugMode = DBG_22;
+    // default 200.0
+    engineConfiguration->rpmSoftLimitWindowSize = 0;
+    // default 4.0
+    engineConfiguration->rpmSoftLimitTimingRetard = 0;
     // default 250.0
     engineConfiguration->etbRevLimitRange = 0;
     // default 0.5
     engineConfiguration->primingDelay = 0;
+    // default 1.0
+    engineConfiguration->tpsAccelFractionDivisor = 0;
     // default "false"
     engineConfiguration->isBoostControlEnabled = true;
     // default 2000.0

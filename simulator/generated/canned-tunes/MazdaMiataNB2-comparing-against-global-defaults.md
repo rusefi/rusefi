@@ -275,6 +275,8 @@
     engineConfiguration->tpsAccelLookback = 0.2;
     // default 40.0
     engineConfiguration->tpsAccelEnrichmentThreshold = 4;
+    // default 1.0
+    engineConfiguration->tpsAccelFractionDivisor = 0;
     // default 0.3
     engineConfiguration->wwaeTau = 0.15;
     // default 0.0

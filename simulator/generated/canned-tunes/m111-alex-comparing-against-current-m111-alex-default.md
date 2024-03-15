@@ -209,6 +209,10 @@
     engineConfiguration->rpmHardLimit = 6200;
     // default 300.0
     engineConfiguration->boostCutPressure = 0;
+    // default 200.0
+    engineConfiguration->rpmSoftLimitWindowSize = 0;
+    // default 4.0
+    engineConfiguration->rpmSoftLimitTimingRetard = 0;
     // default 0.0
     engineConfiguration->etbRevLimitStart = 6100;
     // default 250.0
@@ -235,7 +239,7 @@
     engineConfiguration->tpsDecelEnleanmentThreshold = 12;
     // default 0.0
     engineConfiguration->tpsAccelFractionPeriod = 3;
-    // default 0.0
+    // default 1.0
     engineConfiguration->tpsAccelFractionDivisor = 0.3;
     // default 0.3
     engineConfiguration->wwaeTau = 0.25;

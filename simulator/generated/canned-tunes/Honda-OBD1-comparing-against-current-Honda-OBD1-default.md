@@ -49,6 +49,12 @@
     engineConfiguration->vvtControlMinRpm = 550;
     // default "false"
     engineConfiguration->enableVerboseCanTx = true;
+    // default 200.0
+    engineConfiguration->rpmSoftLimitWindowSize = 0;
+    // default 4.0
+    engineConfiguration->rpmSoftLimitTimingRetard = 0;
+    // default 1.0
+    engineConfiguration->tpsAccelFractionDivisor = 0;
     // default 60.0
     engineConfiguration->gppwm[0].onAboveDuty = 80;
     // default 50.0

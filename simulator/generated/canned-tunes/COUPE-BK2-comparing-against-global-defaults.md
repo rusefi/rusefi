@@ -113,6 +113,10 @@
     engineConfiguration->auxPid[1].dFactor = 0.2;
     // default "MAP"
     engineConfiguration->debugMode = DBG_22;
+    // default 200.0
+    engineConfiguration->rpmSoftLimitWindowSize = 0;
+    // default 4.0
+    engineConfiguration->rpmSoftLimitTimingRetard = 0;
     // default 250.0
     engineConfiguration->etbRevLimitRange = 0;
     // default 50.0
@@ -129,7 +133,7 @@
     engineConfiguration->tpsDecelEnleanmentThreshold = 7;
     // default 0.0
     engineConfiguration->tpsAccelFractionPeriod = 3;
-    // default 0.0
+    // default 1.0
     engineConfiguration->tpsAccelFractionDivisor = 3;
     // default 2000.0
     engineConfiguration->boostControlMinRpm = 0;

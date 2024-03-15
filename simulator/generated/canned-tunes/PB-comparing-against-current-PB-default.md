@@ -31,6 +31,12 @@
     engineConfiguration->throttlePedalSecondaryUpVoltage = 0.74;
     // default 1.86
     engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.28;
+    // default 200.0
+    engineConfiguration->rpmSoftLimitWindowSize = 0;
+    // default 4.0
+    engineConfiguration->rpmSoftLimitTimingRetard = 0;
+    // default 1.0
+    engineConfiguration->tpsAccelFractionDivisor = 0;
     // default "Launch Button"
     engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 

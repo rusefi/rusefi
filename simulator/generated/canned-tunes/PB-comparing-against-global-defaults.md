@@ -97,8 +97,14 @@
     engineConfiguration->gearRatio[3] = 2.4;
     // default 0.0
     engineConfiguration->gearRatio[4] = 1;
+    // default 200.0
+    engineConfiguration->rpmSoftLimitWindowSize = 0;
+    // default 4.0
+    engineConfiguration->rpmSoftLimitTimingRetard = 0;
     // default "Simultaneous"
     engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+    // default 1.0
+    engineConfiguration->tpsAccelFractionDivisor = 0;
     // default 0.3
     engineConfiguration->wwaeTau = 0;
     // default 0.3

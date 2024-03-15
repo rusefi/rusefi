@@ -61,6 +61,12 @@
     engineConfiguration->enableSoftwareKnock = true;
     // default "false"
     engineConfiguration->enableVerboseCanTx = true;
+    // default 200.0
+    engineConfiguration->rpmSoftLimitWindowSize = 0;
+    // default 4.0
+    engineConfiguration->rpmSoftLimitTimingRetard = 0;
+    // default 1.0
+    engineConfiguration->tpsAccelFractionDivisor = 0;
     // default "Throttle 1"
     engineConfiguration->etbFunctions[0] = DC_None;
     // default "Throttle 2"
