@@ -2481,40 +2481,40 @@ struct persistent_config_s {
 	float cltTimingExtra[CLT_TIMING_CURVE_SIZE];
 	// x
 	// offset 4228
-	scaled_channel<int16_t, 100, 1> scriptCurve1Bins[SCRIPT_CURVE_16];
+	scaled_channel<int16_t, 10, 1> scriptCurve1Bins[SCRIPT_CURVE_16];
 	// y
 	// offset 4260
-	scaled_channel<int16_t, 100, 1> scriptCurve1[SCRIPT_CURVE_16];
+	scaled_channel<int16_t, 10, 1> scriptCurve1[SCRIPT_CURVE_16];
 	// x
 	// offset 4292
-	scaled_channel<int16_t, 100, 1> scriptCurve2Bins[SCRIPT_CURVE_16];
+	scaled_channel<int16_t, 10, 1> scriptCurve2Bins[SCRIPT_CURVE_16];
 	// y
 	// offset 4324
-	scaled_channel<int16_t, 100, 1> scriptCurve2[SCRIPT_CURVE_16];
+	scaled_channel<int16_t, 10, 1> scriptCurve2[SCRIPT_CURVE_16];
 	// x
 	// offset 4356
-	scaled_channel<int16_t, 100, 1> scriptCurve3Bins[SCRIPT_CURVE_8];
+	scaled_channel<int16_t, 10, 1> scriptCurve3Bins[SCRIPT_CURVE_8];
 	// y
 	// offset 4372
-	scaled_channel<int16_t, 100, 1> scriptCurve3[SCRIPT_CURVE_8];
+	scaled_channel<int16_t, 10, 1> scriptCurve3[SCRIPT_CURVE_8];
 	// x
 	// offset 4388
-	scaled_channel<int16_t, 100, 1> scriptCurve4Bins[SCRIPT_CURVE_8];
+	scaled_channel<int16_t, 10, 1> scriptCurve4Bins[SCRIPT_CURVE_8];
 	// y
 	// offset 4404
-	scaled_channel<int16_t, 100, 1> scriptCurve4[SCRIPT_CURVE_8];
+	scaled_channel<int16_t, 10, 1> scriptCurve4[SCRIPT_CURVE_8];
 	// x
 	// offset 4420
-	scaled_channel<int16_t, 100, 1> scriptCurve5Bins[SCRIPT_CURVE_8];
+	scaled_channel<int16_t, 10, 1> scriptCurve5Bins[SCRIPT_CURVE_8];
 	// y
 	// offset 4436
-	scaled_channel<int16_t, 100, 1> scriptCurve5[SCRIPT_CURVE_8];
+	scaled_channel<int16_t, 10, 1> scriptCurve5[SCRIPT_CURVE_8];
 	// x
 	// offset 4452
-	scaled_channel<int16_t, 100, 1> scriptCurve6Bins[SCRIPT_CURVE_8];
+	scaled_channel<int16_t, 10, 1> scriptCurve6Bins[SCRIPT_CURVE_8];
 	// y
 	// offset 4468
-	scaled_channel<int16_t, 100, 1> scriptCurve6[SCRIPT_CURVE_8];
+	scaled_channel<int16_t, 10, 1> scriptCurve6[SCRIPT_CURVE_8];
 	// kPa
 	// offset 4484
 	scaled_channel<uint16_t, 10, 1> baroCorrPressureBins[BARO_CORR_SIZE];
