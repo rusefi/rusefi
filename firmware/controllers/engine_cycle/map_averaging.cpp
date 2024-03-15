@@ -59,9 +59,9 @@ static scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
 
 static void endAveraging(MapAverager* arg);
 
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
 static size_t currentMapAverager = 0;
 
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
 static void startAveraging(scheduling_s *endAveragingScheduling) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, hasLotsOfRemainingStack(), "lowstck#9");
 
@@ -149,11 +149,13 @@ void mapAveragingAdcCallback(float instantVoltage) {
 }
 #endif
 
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
 static void endAveraging(MapAverager* arg) {
 	arg->stop();
 
 	mapAveragingPin.setLow();
 }
+#endif
 
 static void applyMapMinBufferLength() {
 	// check range
