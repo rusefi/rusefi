@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Feb 26 19:54:17 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri Mar 15 21:50:40 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -564,6 +564,8 @@ case ALWAYS_ACTIVE_LAUNCH:
   return "ALWAYS_ACTIVE_LAUNCH";
 case CLUTCH_INPUT_LAUNCH:
   return "CLUTCH_INPUT_LAUNCH";
+case STOP_INPUT_LAUNCH:
+  return "STOP_INPUT_LAUNCH";
 case SWITCH_INPUT_LAUNCH:
   return "SWITCH_INPUT_LAUNCH";
   }

@@ -1036,10 +1036,11 @@
 #define InjectorNonlinearMode_INJ_None 0
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
-#define launchActivationMode_e_auto_enum 2="ALWAYS_ACTIVE_LAUNCH",1="CLUTCH_INPUT_LAUNCH",3="SWITCH_INPUT_LAUNCH"
+#define launchActivationMode_e_auto_enum 0="SWITCH_INPUT_LAUNCH",2="ALWAYS_ACTIVE_LAUNCH",1="CLUTCH_INPUT_LAUNCH",3="STOP_INPUT_LAUNCH"
 #define launchActivationMode_e_CLUTCH_INPUT_LAUNCH 1
 #define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Speed Based", "Brake Pedal"
-#define launchActivationMode_e_SWITCH_INPUT_LAUNCH 3
+#define launchActivationMode_e_STOP_INPUT_LAUNCH 3
+#define launchActivationMode_e_SWITCH_INPUT_LAUNCH 0
 #define linear_sensor_s_size 20
 #define load_override_e_AFR_AccPedal 3
 #define load_override_e_AFR_CylFilling 4

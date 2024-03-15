@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 15 20:33:44 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 15 21:52:04 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -999,7 +999,8 @@ public class Fields {
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
 	public static final int launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH = 2;
 	public static final int launchActivationMode_e_CLUTCH_INPUT_LAUNCH = 1;
-	public static final int launchActivationMode_e_SWITCH_INPUT_LAUNCH = 3;
+	public static final int launchActivationMode_e_STOP_INPUT_LAUNCH = 3;
+	public static final int launchActivationMode_e_SWITCH_INPUT_LAUNCH = 0;
 	public static final int linear_sensor_s_size = 20;
 	public static final int load_override_e_AFR_AccPedal = 3;
 	public static final int load_override_e_AFR_CylFilling = 4;
