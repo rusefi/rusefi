@@ -277,8 +277,6 @@
     engineConfiguration->etbMaximumPosition = 97;
     // default "false"
     engineConfiguration->launchControlEnabled = true;
-    // default "Launch Button"
-    engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
     // default 30.0
     engineConfiguration->launchSpeedThreshold = 15;
     // default 3000.0
