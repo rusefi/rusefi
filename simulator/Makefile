@@ -19,6 +19,13 @@ RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 
 PROJECT_CPU=simulator
 
+# Board-specific configuration
+ifeq (,$(filter clean,$(MAKECMDGOALS)))
+ifneq ($(BOARD_DIR),)
+  include ../firmware/$(BOARD_DIR)/board.mk
+endif
+endif
+
 include ../firmware/rusefi.mk
 RULESFILE = ../firmware/rusefi_rules.mk
 
@@ -172,6 +179,7 @@ CSRC =  $(ALLCSRC) \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
+  $(BOARDCPPSRC) \
   $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
   $(HW_LAYER_DRIVERS_CPP) \
   $(HW_LAYER_DRIVERS_CORE_CPP) \
