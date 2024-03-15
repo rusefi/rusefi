@@ -43,7 +43,7 @@ jobs:
       run: ./build/fome_simulator 10
 
     - name: Upload Linux built simulator
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: fome_simulator_linux
         path: ./simulator/build/fome_simulator

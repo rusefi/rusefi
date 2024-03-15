@@ -45,7 +45,7 @@ jobs:
         cp ./firmware/ext/openblt/Host/libopenblt.so deliver/
         cp ./misc/libopenblt_jni/build/libopenblt_jni.so deliver/
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: libopenblt-linux
         path: |
@@ -82,7 +82,7 @@ jobs:
         cp ./firmware/ext/openblt/Host/libopenblt.dylib deliver/
         cp ./misc/libopenblt_jni/build/libopenblt_jni.dylib deliver/
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: libopenblt-macos
         path: |
@@ -377,7 +377,7 @@ jobs:
 
     - name: Upload bundle
       if: ${{ env.full == 'true' && env.upload == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: fome_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/fome_bundle_${{matrix.build-target}}.zip
