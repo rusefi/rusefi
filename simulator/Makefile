@@ -23,7 +23,6 @@ PROJECT_CPU=simulator
 ifeq (,$(filter clean,$(MAKECMDGOALS)))
 ifneq ($(BOARD_DIR),)
   include ../firmware/$(BOARD_DIR)/board.mk
-  BOARDCPPSRC += $(BOARDS_DIR)/board_id.cpp
 endif
 endif
 
