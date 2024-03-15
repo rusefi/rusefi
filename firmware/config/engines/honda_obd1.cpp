@@ -2,7 +2,7 @@
 #include "defaults.h"
 #include "honda_obd1_canned_tables.cpp"
 
-#if HW_HELLEN_UAEFI
+#ifdef HW_HELLEN_UAEFI
 #include "hellen_meta.h"
 #endif // HW_HELLEN_UAEFI
 
@@ -40,7 +40,7 @@ void setHondaObd1() {
   // ECU does not control main relay
   engineConfiguration->mainRelayPin = Gpio::Unassigned;
 
-#if HW_HELLEN_UAEFI
+#ifdef HW_HELLEN_UAEFI
   cannedignitionTable();
 #endif // HW_HELLEN_UAEFI
 
@@ -48,7 +48,7 @@ void setHondaObd1() {
 	gppwm_channel *vtcControl = &engineConfiguration->gppwm[0];
 	vtcControl->loadAxis = GPPWM_Map;
 	vtcControl->pwmFrequency = 0;
-#if HW_HELLEN_UAEFI
+#ifdef HW_HELLEN_UAEFI
   // Honda ICM is weird it fires spark on RAISING edge and has internal pull-up
   // thus we use a low side output to drive OEM ignition
   engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN7; // low side!

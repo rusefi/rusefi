@@ -73,7 +73,7 @@ void runSchedulingPrecisionTestIfNeeded(void) {
 void setDiscoveryPdm() {
 }
 
-#if HW_FRANKENSO
+#ifdef HW_FRANKENSO
 
 /**
  * set engine_type 59
@@ -109,7 +109,7 @@ void setDiscovery33810Test() {
 
 // todo: should this be part of more default configurations?
 void setFrankensoConfiguration() {
-#if HW_FRANKENSO
+#ifdef HW_FRANKENSO
 	engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
 
 	commonFrankensoAnalogInputs();
@@ -312,7 +312,7 @@ void setEtbTestConfiguration() {
 	// see also setDefaultEtbBiasCurve
 }
 
-#if HW_FRANKENSO && EFI_PROD_CODE
+#if defined(HW_FRANKENSO) && EFI_PROD_CODE
 
 
 // todo: page_size + 2
@@ -976,7 +976,7 @@ void proteusStimQc() {
 }
 #endif // HW_PROTEUS
 
-#if HW_HELLEN_4CHAN
+#ifdef HW_HELLEN_4CHAN
 // HELLEN_4CHAN_STIM_QC
 // set engine_type 74
 void alphax4chanStimQc() {

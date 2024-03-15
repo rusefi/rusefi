@@ -285,7 +285,7 @@ void setMazdaMiataNA94() {
 	engineConfiguration->fan2OnTemperature = 95;
 	engineConfiguration->fan2OffTemperature = 91;
 
-#if HW_HELLEN_MIATA_NA6
+#ifdef HW_HELLEN_MIATA_NA6
 	engineConfiguration->fan2Pin = Gpio::D9; // 3S - A/C Fan 94-95
 #endif //HW_HELLEN_MIATA_NA6
 }

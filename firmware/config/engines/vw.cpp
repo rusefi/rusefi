@@ -38,7 +38,7 @@ void setVwAba() {
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
-#if HW_FRANKENSO
+#ifdef HW_FRANKENSO
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;

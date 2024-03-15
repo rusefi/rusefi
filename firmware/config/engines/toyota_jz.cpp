@@ -34,7 +34,7 @@ static void common2jz() {
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-#if HW_FRANKENSO
+#ifdef HW_FRANKENSO
 	setFrankensoConfiguration(); // default pinout
 	engineConfiguration->ignitionPins[0] = Gpio::E14;
 	engineConfiguration->ignitionPins[1] = Gpio::C7;
@@ -80,7 +80,7 @@ void setToyota_2jz_vics() {
 	setCrankOperationMode();
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_36_2;
 
-#if HW_FRANKENSO
+#ifdef HW_FRANKENSO
 	engineConfiguration->triggerInputPins[0] = Gpio::A5; // crank sensor
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned; // cam sensor will he handled by custom vtti code
 
