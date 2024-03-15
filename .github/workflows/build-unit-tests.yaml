@@ -1,9 +1,6 @@
 name: Unit Tests
 
-on:
-  push:
-  pull_request:
-  workflow_dispatch:
+on: [push,pull_request]
 
 jobs:
   build:
@@ -56,8 +53,7 @@ jobs:
 
     - name: Run Tests
       working-directory: ./unit_tests/
-#     https://github.com/rusefi/rusefi/issues/6214 run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
-      run: build/rusefi_test
+      run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
 
     - name: Set FTP variables
       env:
@@ -74,9 +70,10 @@ jobs:
       working-directory: ./unit_tests/
       run: ./ci_gcov.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }}
 
-    - name: Run Tests (sharded)
-      working-directory: ./unit_tests/
-      run: bash ./run_sharded_tests.sh
+
+#   - name: Run Tests (sharded)
+#      working-directory: ./unit_tests/
+#      run: bash ./run_sharded_tests.sh
 
     - name: Rebuild Tests For Valgrind
       # Valgrind isn't compatible with address sanitizer, so we have to rebuild the code
