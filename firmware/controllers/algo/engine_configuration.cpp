@@ -844,7 +844,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif // HARDWARE_CI
 #endif // HW_PROTEUS
 
-#if HW_HELLEN_MERCEDES
+#ifdef HW_HELLEN_MERCEDES
 	case engine_type_e::HELLEN_128_MERCEDES_4_CYL:
 		setHellenMercedes128_4_cyl();
 		break;
@@ -856,7 +856,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
-#if HW_HELLEN_NISSAN
+#ifdef HW_HELLEN_NISSAN
 	case engine_type_e::HELLEN_121_NISSAN_4_CYL:
 		setHellen121nissanQR();
 		break;
@@ -865,7 +865,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
-#if HW_HELLEN_HYUNDAI
+#ifdef HW_HELLEN_HYUNDAI
 	case engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1:
 		setGenesisCoupeBK1();
 		break;
@@ -874,19 +874,19 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
-#if HW_HELLEN_4CHAN
+#ifdef HW_HELLEN_4CHAN
     case engine_type_e::HELLEN_4CHAN_STIM_QC:
         alphax4chanStimQc();
 		break;
 #endif // HW_HELLEN_4CHAN
 
-#if HW_HELLEN_8CHAN
+#ifdef HW_HELLEN_8CHAN
 	case engine_type_e::GM_SBC:
 	    setGmSbc();
         break;
 #endif
 
-#if HW_HELLEN_121_VAG
+#ifdef HW_HELLEN_121_VAG
 	case engine_type_e::HELLEN_121_VAG_5_CYL:
 	    setHellen121Vag_5_cyl();
         break;
@@ -905,7 +905,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	      setF136();
         break;
 
-#if HW_HELLEN
+#ifdef HW_HELLEN
 	case engine_type_e::TOYOTA_1NZ_FE:
 	    setToyota1NZFE();
 	    break;
@@ -913,7 +913,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	    setHondaCivicBcm();
         break;
 #endif // HW_HELLEN
-#if HW_FRANKENSO || HW_PROTEUS
+#if defined(HW_FRANKENSO) || HW_PROTEUS
     // used in HW CI
 	case engine_type_e::VW_ABA:
 		setVwAba();
@@ -922,7 +922,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setBMW_M73_TwoCoilUnitTest();
 		break;
 #endif // HW_FRANKENSO || HW_PROTEUS
-#if HW_FRANKENSO
+#if defined(HW_FRANKENSO)
 	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
 		break;
