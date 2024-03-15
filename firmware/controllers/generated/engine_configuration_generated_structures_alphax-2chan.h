@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 14 21:06:17 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 15 16:50:07 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -29,7 +29,7 @@ static_assert(sizeof(stft_cell_cfg_s) == 4);
 // start of stft_s
 struct stft_s {
 	/**
-	 * Below this RPM, the idle region is active
+	 * Below this RPM, the idle region is active, idle+300 would be a good value
 	 * units: RPM
 	 * offset 0
 	 */
@@ -2919,7 +2919,7 @@ struct engine_configuration_s {
 	offset 1576 bit 31 */
 	bool unusedBit_511_31 : 1 {};
 	/**
-	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
+	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
 	 * offset 1580
 	 */
@@ -5634,4 +5634,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22428);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 14 21:06:17 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 15 16:50:07 UTC 2024

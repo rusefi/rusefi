@@ -698,7 +698,7 @@ null
 
 
 ### stft.maxIdleRegionRpm
-Below this RPM, the idle region is active
+Below this RPM, the idle region is active, idle+300 would be a good value
 
 ### stft.maxOverrunLoad
 Below this engine load, the overrun region is active
@@ -1109,7 +1109,7 @@ VSS and auxSpeed1 or auxSpeed1 with auxSpeed2?
 
 
 ### afterCrankingIACtaperDuration
-This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
+This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 
 ### iacByTpsTaper
 IAC Value added when coasting and transitioning into idle.
