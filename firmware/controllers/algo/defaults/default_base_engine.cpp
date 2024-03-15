@@ -112,6 +112,8 @@ void setDefaultBaseEngine() {
 	engineConfiguration->cutSparkOnHardLimit = true;
 	engineConfiguration->etbRevLimitRange = 250;
 
+  engineConfiguration->tpsAccelFractionDivisor = 1;
+
   engineConfiguration->rpmSoftLimitWindowSize = 200;
   engineConfiguration->rpmSoftLimitTimingRetard = 4;
 

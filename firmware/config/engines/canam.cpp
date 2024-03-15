@@ -37,7 +37,6 @@ void setMaverickX3() {
     engineConfiguration->tpsAccelEnrichmentThreshold = 12;
     engineConfiguration->tpsDecelEnleanmentThreshold = 7;
     engineConfiguration->tpsAccelFractionPeriod = 3;
-    engineConfiguration->tpsAccelFractionDivisor = 0.3;
 
     engineConfiguration->isBoostControlEnabled = true;
 
