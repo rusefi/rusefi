@@ -16,6 +16,7 @@ void setDefaultCranking() {
 
 	// IAC
 	engineConfiguration->crankingIACposition = 50;
+	// should be 100 once tune is better
 	engineConfiguration->afterCrankingIACtaperDuration = 200;
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;

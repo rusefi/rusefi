@@ -79,7 +79,7 @@ void setDefaultIgnition() {
 	engineConfiguration->minimumIgnitionTiming = -10;
 	engineConfiguration->maximumIgnitionTiming = 60;
 
-	// Dwell table
+	// Dwell table - a bit conservative but reasonable
 	setConstantDwell(4);
 
 	setLinearCurve(engineConfiguration->dwellVoltageCorrVoltBins, 8, 15, 0.1);

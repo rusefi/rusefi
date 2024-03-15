@@ -112,6 +112,9 @@ void setDefaultBaseEngine() {
 	engineConfiguration->cutSparkOnHardLimit = true;
 	engineConfiguration->etbRevLimitRange = 250;
 
+  engineConfiguration->rpmSoftLimitWindowSize = 200;
+  engineConfiguration->rpmSoftLimitTimingRetard = 4;
+
 	// CLT RPM limit table - just the X axis
 	copyArray(engineConfiguration->cltRevLimitRpmBins, { -20, 0, 40, 80 });
 
@@ -224,6 +227,7 @@ void setDefaultBaseEngine() {
 #endif /* EFI_ALTERNATOR_CONTROL */
 
 	// Fuel pump
+	// todo: maybe change to 2s as default?
 	engineConfiguration->startUpFuelPumpDuration = 4;
 
 	engineConfiguration->kLineBaudRate = KLINE_BAUD_RATE;
