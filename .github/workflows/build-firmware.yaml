@@ -316,13 +316,13 @@ jobs:
       run: OS="Windows_NT" SHORT_BOARD_NAME=${{matrix.build-target}} ./compile.sh
 
     - name: Download LibOpenBLT Tool (Linux)
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: libopenblt-linux
         path: ./firmware/ext/openblt/Host/
 
     - name: Download LibOpenBLT Tool (MacOS)
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: libopenblt-macos
         path: ./firmware/ext/openblt/Host/
