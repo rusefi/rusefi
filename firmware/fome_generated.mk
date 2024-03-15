@@ -16,3 +16,8 @@ $(GENERATED) : $(PROJECT_DIR)/integration/rusefi_config.txt
 # All c/c++ objects depend on generated
 $(OBJS) : $(GENERATED)
 $(PCHOBJ) : $(GENERATED)
+
+CLEAN_GENERATED_HOOK:
+	rm -f $(GENERATED_DIR)/*
+	git checkout -- $(PROJECT_DIR)/hw_layer/mass_storage/ramdisk_image.h
+	git checkout -- $(PROJECT_DIR)/hw_layer/mass_storage/ramdisk_image_compressed.h

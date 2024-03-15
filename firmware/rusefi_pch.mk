@@ -21,5 +21,5 @@ $(TCPPOBJS) : $(PCHOBJ)
 $(ACPPOBJS) : $(PCHOBJ)
 
 # Delete PCH output on clean
-CLEAN_RULE_HOOK:
+CLEAN_PCH_HOOK:
 	rm -f $(PCHOBJ)
