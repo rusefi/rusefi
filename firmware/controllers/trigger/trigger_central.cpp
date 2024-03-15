@@ -293,7 +293,7 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		warning(ObdCode::CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
 	}
 
-#if VR_HW_CHECK_MODE
+#ifdef VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
 	extern ioportid_t criticalErrorLedPort;
@@ -442,7 +442,7 @@ uint32_t triggerMaxDuration = 0;
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	TriggerCentral *tc = getTriggerCentral();
 	ScopePerf perf(PE::HandleShaftSignal);
-#if VR_HW_CHECK_MODE
+#ifdef VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
 	extern ioportid_t criticalErrorLedPort;
