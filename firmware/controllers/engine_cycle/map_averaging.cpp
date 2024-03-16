@@ -57,9 +57,9 @@ static int averagedMapBufIdx = 0;
 static scheduling_s startTimers[MAX_CYLINDER_COUNT][2];
 static scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
 
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
 static void endAveraging(MapAverager* arg);
 
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
 static size_t currentMapAverager = 0;
 
 static void startAveraging(scheduling_s *endAveragingScheduling) {

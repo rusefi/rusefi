@@ -19,6 +19,8 @@
 #include "drivers/gpio/tle9104.h"
 #include "drivers/gpio/can_gpio.h"
 
+#if EFI_PROD_CODE
+
 #if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config
 #ifndef TLE6240_RESET_PORT
@@ -215,9 +217,11 @@ struct drv8860_config drv8860 = {
 };
 #endif /* (BOARD_DRV8860_COUNT > 0) */
 
+#endif // EFI_PROD_CODE
+
 void initSmartGpio() {
 	startSmartCsPins();
-
+#if EFI_PROD_CODE
 #if (BOARD_TLE6240_COUNT > 0)
 	if (isBrainPinValid(engineConfiguration->tle6240_cs)) {
 		tle6240.spi_config.ssport = getHwPort("tle6240 CS", engineConfiguration->tle6240_cs);
@@ -295,12 +299,14 @@ void initSmartGpio() {
 	// No official boards have this IC
 #endif
 
+#endif // EFI_PROD_CODE
+
 	/* external chip init */
 	gpiochips_init();
 }
 
 void tle8888startup() {
-#if (BOARD_TLE8888_COUNT > 0)
+#if EFI_PROD_CODE && (BOARD_TLE8888_COUNT > 0)
 	static efitick_t tle8888CrankingResetTime = 0;
 
 	if (engineConfiguration->useTLE8888_cranking_hack && engine->rpmCalculator.isCranking()) {
@@ -316,6 +322,7 @@ void tle8888startup() {
 }
 
 void stopSmartCsPins() {
+#if EFI_PROD_CODE
 #if (BOARD_TLE8888_COUNT > 0)
 	efiSetPadUnused(activeConfiguration.tle8888_cs);
 #endif /* BOARD_TLE8888_COUNT */
@@ -336,9 +343,11 @@ void stopSmartCsPins() {
 #if (BOARD_TLE9104_COUNT > 0)
 	// No official boards have this IC
 #endif
+#endif // EFI_PROD_CODE
 }
 
 void startSmartCsPins() {
+#if EFI_PROD_CODE
 #if (BOARD_TLE8888_COUNT > 0)
 	tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
 				engineConfiguration->tle8888_csPinMode);
@@ -376,4 +385,5 @@ void startSmartCsPins() {
     // todo: use existing l9779_cs and l9779_csPinMode settings
     // todo: no official boards have this IC yet
 #endif
+#endif // EFI_PROD_CODE
 }

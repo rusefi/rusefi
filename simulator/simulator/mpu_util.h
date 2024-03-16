@@ -2,13 +2,13 @@
 
 #if HAL_USE_CAN
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
-static bool isValidCanTxPin(brain_pin_e) { return true; }
-static bool isValidCanRxPin(brain_pin_e) { return true; }
-static void canHwInfo(CANDriver*) { return; }
+ bool isValidCanTxPin(brain_pin_e);
+ bool isValidCanRxPin(brain_pin_e);
+ void canHwInfo(CANDriver*);
 #endif // HAL_USE_CAN
 
-static bool allowFlashWhileRunning() { return true; }
-static void causeHardFault() { }
+ bool allowFlashWhileRunning() ;
+ void causeHardFault() ;
 
 
 // Reset Cause
@@ -24,12 +24,8 @@ typedef enum {
 	Reset_Cause_Option_Byte,	// Option byte load reset
 } Reset_Cause_t;
 
-static Reset_Cause_t getMCUResetCause() {
-	return Reset_Cause_Unknown;
-}
+ Reset_Cause_t getMCUResetCause() ;
 
-static const char *getMCUResetCause(Reset_Cause_t) {
-	return "Unknown";
-}
+ const char *getMCUResetCause(Reset_Cause_t);
 
 #include "sim_watchdog.h"

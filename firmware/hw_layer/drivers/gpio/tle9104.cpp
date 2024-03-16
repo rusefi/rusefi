@@ -2,7 +2,7 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/tle9104.h"
 
-#if BOARD_TLE9104_COUNT > 0
+#if defined(BOARD_TLE9104_COUNT) && BOARD_TLE9104_COUNT > 0
 
 #define TLE9104_REG_CTRL 0x00
 #define TLE9104_REG_CFG 0x01

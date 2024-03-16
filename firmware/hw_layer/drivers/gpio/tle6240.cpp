@@ -25,7 +25,7 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/tle6240.h"
 
-#if (BOARD_TLE6240_COUNT > 0)
+#if defined(BOARD_TLE6240_COUNT) && (BOARD_TLE6240_COUNT > 0)
 
 /*
  * TODO list:
@@ -378,7 +378,7 @@ int Tle6240::writePad(unsigned int pin, int value)
 
 	{
 		chibios_rt::CriticalSectionLocker csl;
-	
+
 		if (value)
 			o_state |=  (1 << pin);
 		else

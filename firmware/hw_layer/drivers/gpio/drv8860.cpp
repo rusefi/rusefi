@@ -17,7 +17,7 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/drv8860.h"
 
-#if (BOARD_DRV8860_COUNT > 0)
+#if EFI_PROD_CODE && (BOARD_DRV8860_COUNT > 0)
 
 /*==========================================================================*/
 /* Driver local definitions.												*/
@@ -90,7 +90,7 @@ static const char* drv8860_pin_names[DRV8860_OUTPUTS] = {
 
 void Drv8860::spi_send(uint16_t tx) {
 	SPIDriver *spi = cfg->spi_bus;
-	
+
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
 	/* Setup transfer parameters. */
@@ -200,7 +200,7 @@ int Drv8860::writePad(size_t pin, int value) {
 		o_state &= ~(1 << pin);
 	/* TODO: unlock */
 	wake_driver();
-	
+
 	return 0;
 }
 
