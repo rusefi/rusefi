@@ -22,13 +22,13 @@
 
 static bool fs_ready = false;
 
+#if EFI_PROD_CODE
+
 int totalLoggedBytes = 0;
 static int fileCreatedCounter = 0;
 static int writeCounter = 0;
 static int totalWritesCounter = 0;
 static int totalSyncCounter = 0;
-
-#if EFI_PROD_CODE
 
 #include <stdio.h>
 #include <string.h>
@@ -177,7 +177,7 @@ static void prepareLogFileName() {
 
 #if HAL_USE_USB_MSD
 	bool result = dateToStringShort(&logName[PREFIX_LEN]);
-#else 
+#else
 	// TS SD protocol supports only short 8 symbol file names :(
 	bool result = false;
 #endif
@@ -336,7 +336,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	if (hasFirmwareError()) {
 		return nullptr;
 	}
-	
+
 	if (!engineConfiguration->isSdCardEnabled ||
 		engineConfiguration->sdCardSpiDevice == SPI_NONE ||
 		!isBrainPinValid(engineConfiguration->sdCardCsPin)) {

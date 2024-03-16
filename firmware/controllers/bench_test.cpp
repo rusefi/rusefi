@@ -457,7 +457,7 @@ static void handleCommandX14(uint16_t index) {
 		#endif
 		return;
 	case TS_RESET_MC33810:
-		#if (BOARD_MC33810_COUNT > 0)
+		#if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 			mc33810_req_init();
 		#endif
 		return;
@@ -609,7 +609,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 	case 0xba:
-#if EFI_DFU_JUMP
+#if EFI_PROD_CODE && EFI_DFU_JUMP
 		jump_to_bootloader();
 #endif /* EFI_DFU_JUMP */
 		break;
@@ -635,7 +635,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 void onConfigurationChangeBenchTest() {
 	// default values if configuration was not specified
 	if (engineConfiguration->benchTestOnTime == 0) {
-		engineConfiguration->benchTestOnTime = 4; 
+		engineConfiguration->benchTestOnTime = 4;
 	}
 
 	if (engineConfiguration->benchTestOffTime < 5) {

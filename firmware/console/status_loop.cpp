@@ -103,6 +103,7 @@ static void printRusefiVersion(const char *engineTypeName, const char *firmwareB
 			getTimeNowS());
 }
 
+#if EFI_PROD_CODE
 // Inform the console about the mapping between a pin's logical name (for example, injector 3)
 // and the physical MCU pin backing that function (for example, PE3)
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
@@ -118,6 +119,7 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 
 	efiPrintfProto(PROTOCOL_OUTPIN, "%s@%s", pinName, hwPinName);
 }
+#endif // EFI_PROD_CODE
 
 // Print out the current mapping between logical and physical pins that
 // the engine sniffer cares about, so we can display a physical pin
@@ -225,8 +227,10 @@ static systime_t timeOfPreviousReport = (systime_t) -1;
 #endif /* EFI_LOGIC_ANALYZER */
 }
 
+#if EFI_PROD_CODE
 static OutputPin* leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
+#endif // EFI_PROD_CODE
 
 void initWarningRunningPins() {
 #if EFI_PROD_CODE
