@@ -19,6 +19,10 @@ RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 
 PROJECT_CPU=simulator
 
+include ../firmware/rusefi_rules.mk
+
+BOARDS_DIR = $(PROJECT_DIR)/config/boards
+
 # Board-specific configuration
 ifeq (,$(filter clean,$(MAKECMDGOALS)))
 ifneq ($(BOARD_DIR),)
@@ -27,14 +31,11 @@ endif
 endif
 
 include ../firmware/rusefi.mk
-include ../firmware/rusefi_rules.mk
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
 PCHSRC = $(PCH_DIR)/pch.h
 PCHSUB = simulator
-
-BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 # used by USE_SMART_BUILD
 CONFDIR = .
