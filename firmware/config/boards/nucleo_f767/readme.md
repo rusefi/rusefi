@@ -1,0 +1,1 @@
+NUCLEO-F767ZI features STM32F767ZI with 2MB Flash.
