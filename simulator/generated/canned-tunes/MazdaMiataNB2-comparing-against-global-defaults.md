@@ -293,10 +293,6 @@
     engineConfiguration->launchSpeedThreshold = 1;
     // default 3000.0
     engineConfiguration->launchRpm = 3500;
-    // default 500.0
-    engineConfiguration->launchTimingRpmRange = 100;
-    // default 500.0
-    engineConfiguration->hardCutRpmRange = 100;
     // default "false"
     engineConfiguration->enableLaunchRetard = true;
     // default 0.0
