@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 15 16:50:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 16 23:08:47 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2190,11 +2190,11 @@ struct engine_configuration_s {
 	 */
 	int launchSpeedThreshold;
 	/**
-	 * Range from Launch RPM for Timing Retard to activate
+	 * Starting Launch RPM window to activate (subtracts from Launch RPM)
 	 * units: RPM
 	 * offset 1048
 	 */
-	int launchTimingRpmRange;
+	int launchRpmWindow;
 	/**
 	 * Spark Skip Transition Target
 	 * units: %
@@ -2208,11 +2208,9 @@ struct engine_configuration_s {
 	 */
 	int launchBoostDuty;
 	/**
-	 * Range from Launch RPM to activate Hard Cut
-	 * units: RPM
 	 * offset 1060
 	 */
-	int hardCutRpmRange;
+	int unusedIntPadding;
 	/**
 	 * offset 1064
 	 */
@@ -5634,4 +5632,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22428);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 15 16:50:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 16 23:08:47 UTC 2024

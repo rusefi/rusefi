@@ -682,18 +682,15 @@ float getConfigValueByName(const char *name) {
 // launchSpeedThreshold
 		case -1743747394:
 			return engineConfiguration->launchSpeedThreshold;
-// launchTimingRpmRange
-		case 906908772:
-			return engineConfiguration->launchTimingRpmRange;
+// launchRpmWindow
+		case -1798887513:
+			return engineConfiguration->launchRpmWindow;
 // launchSparkSkipPercent
 		case -146687863:
 			return engineConfiguration->launchSparkSkipPercent;
 // launchBoostDuty
 		case -232786835:
 			return engineConfiguration->launchBoostDuty;
-// hardCutRpmRange
-		case -163078708:
-			return engineConfiguration->hardCutRpmRange;
 // turbochargerFilter
 		case 983814707:
 			return engineConfiguration->turbochargerFilter;
@@ -2925,9 +2922,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchSpeedThreshold = (int)value;
 		return 1;
 	}
-		case 906908772:
+		case -1798887513:
 	{
-		engineConfiguration->launchTimingRpmRange = (int)value;
+		engineConfiguration->launchRpmWindow = (int)value;
 		return 1;
 	}
 		case -146687863:
@@ -2938,11 +2935,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -232786835:
 	{
 		engineConfiguration->launchBoostDuty = (int)value;
-		return 1;
-	}
-		case -163078708:
-	{
-		engineConfiguration->hardCutRpmRange = (int)value;
 		return 1;
 	}
 		case 983814707:

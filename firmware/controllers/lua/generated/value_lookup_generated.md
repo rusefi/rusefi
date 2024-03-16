@@ -676,17 +676,14 @@ Output Max Duty Cycle
 ### launchSpeedThreshold
 Launch disabled above this speed if setting is above zero
 
-### launchTimingRpmRange
-Range from Launch RPM for Timing Retard to activate
+### launchRpmWindow
+Starting Launch RPM window to activate (subtracts from Launch RPM)
 
 ### launchSparkSkipPercent
 Spark Skip Transition Target
 
 ### launchBoostDuty
 Duty Cycle for the Boost Solenoid
-
-### hardCutRpmRange
-Range from Launch RPM to activate Hard Cut
 
 ### turbochargerFilter
 null
