@@ -81,19 +81,25 @@ static max_32855_code getResultCode(uint32_t egtPacket) {
 }
 
 static uint32_t readEgtPacket(int egtChannel) {
-	uint32_t egtPacket;
-	if (driver == NULL) {
+	union {
+		uint32_t egtPacket;
+		uint8_t egtBytes[4];
+	};
+
+	if (!driver) {
 		return 0xFFFFFFFF;
 	}
 
 	spiStart(driver, &spiConfig[egtChannel]);
 	spiSelect(driver);
 
-	spiReceive(driver, sizeof(egtPacket), &egtPacket);
+	for (int i = sizeof(egtBytes) - 1; i >= 0; i--) {
+		egtBytes[i] = spiPolledExchange(driver, 0);
+	}
 
 	spiUnselect(driver);
 	spiStop(driver);
-	egtPacket = SWAP_UINT32(egtPacket);
+
 	return egtPacket;
 }
 
