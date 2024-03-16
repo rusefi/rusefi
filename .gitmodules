@@ -9,6 +9,7 @@
 [submodule "unit_tests/googletest"]
 	path = unit_tests/googletest
 	url = https://github.com/google/googletest.git
+	branch = main
 [submodule "hardware/rusefi_lib"]
 	path = hardware/rusefi_lib
 	url = https://github.com/rusefi/kicad-libraries
