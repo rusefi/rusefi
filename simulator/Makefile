@@ -25,6 +25,7 @@ endif
 endif
 
 include ../firmware/rusefi.mk
+include ../firmware/rusefi_rules.mk
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
