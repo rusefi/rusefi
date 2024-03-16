@@ -142,6 +142,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO9;
 	engineConfiguration->fanPin = Gpio::H144_OUT_IO7;
 	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;	// pin: 111a
+	// BK1 uses wire, BK2 uses CANbus
 	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_PWM8;
 
 	engineConfiguration->brakePedalPin = Gpio::H144_IN_RES3;
