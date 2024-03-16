@@ -14,7 +14,7 @@ import static com.rusefi.util.IoUtils.CHARSET;
  * [Constants]
  */
 public class TSProjectConsumer implements ConfigurationConsumer {
-    private static final String TS_FILE_INPUT_NAME = "rusefi.input";
+    private static final String TS_FILE_INPUT_NAME = "tunerstudio.template.ini";
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
     private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
     private static final String TS_CONDITION = "@@if_";
@@ -70,7 +70,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     /**
-     * rusefi.input has all the content of the future .ini file with the exception of data page
+     * tunerstudio.template.ini has all the content of the future .ini file with the exception of data page
      * TODO: start generating [outputs] section as well
      */
     private TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {

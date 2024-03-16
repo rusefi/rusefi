@@ -41,7 +41,7 @@ float getAfr(SensorType type) {
 			+ engineConfiguration->egoValueShift;
 }
 
-// this method is only used for canned tunes now! User-facing selection is defined in rusefi.input using settingSelector
+// this method is only used for canned tunes now! User-facing selection is defined in tunerstudio.template.ini using settingSelector
 static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 
 	switch (type) {

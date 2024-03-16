@@ -435,7 +435,7 @@ int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]) {
 }
 
 static void handleCommandX14(uint16_t index) {
-// todo: define ts_14_command magic constants and use those in rusefi.input file!
+// todo: define ts_14_command magic constants and use those in tunerstudio.template.ini file!
 	switch (index) {
 	case TS_GRAB_TPS_CLOSED:
 		grabTPSIsClosed();
