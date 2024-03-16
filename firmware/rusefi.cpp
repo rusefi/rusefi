@@ -92,7 +92,7 @@
  * [Changing gauge limits](http://www.tunerstudio.com/index.php/manuals/63-changing-gauge-limits)
  *
  * Definition of the Tunerstudio configuration interface, gauges, and indicators
- * tunerstudio/rusefi.input
+ * tunerstudio/tunerstudio.template.ini
  *
  * @section config Persistent Configuration
  *

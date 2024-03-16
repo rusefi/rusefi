@@ -12,5 +12,5 @@
 #define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
 #define TRIGGER_SYNC_EDGE "syncEdge"
 
-! this is shared between rusefi.input and FiringOrderTSLogic
+! this is shared between tunerstudio.template.ini and FiringOrderTSLogic
 #define IGNITION_OUTPUT "Ignition Output"

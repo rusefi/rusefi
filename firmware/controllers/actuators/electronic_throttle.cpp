@@ -943,7 +943,7 @@ void doInitElectronicThrottle() {
 	printf("doInitElectronicThrottle %s\n", boolToString(hasPedal));
 #endif // EFI_UNIT_TEST
 
-	// these status flags are consumed by TS see rusefi.input TODO should those be outputs/live data not configuration?!
+	// these status flags are consumed by TS see tunerstudio.template.ini TODO should those be outputs/live data not configuration?!
 	engineConfiguration->etb1configured = engineConfiguration->etb2configured = false;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB

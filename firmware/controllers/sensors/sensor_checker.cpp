@@ -156,7 +156,7 @@ static uint8_t getTSErrorCode(brain_pin_diag_e diag)
 	 *  0 - output is not used
 	 *  1 - ok status/no diagnostic available (TODO: separate codes)
 	 * >1 - see brain_pin_diag_e, first least significant 1-bit position + 1 *
-	 * Keep in sync with outputDiagErrorList in rusefi.input
+	 * Keep in sync with outputDiagErrorList in tunerstudio.template.ini
 	 * Note:
 	 * diag can be combination of few errors,
 	 * while we report only one error to simplify hadling on TS side

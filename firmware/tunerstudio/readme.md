@@ -16,7 +16,7 @@ directories .
 
 ```rusefi*.ini``` files are generated based on the following four inputs:
 1) ```rusefi_config.txt``` contains configuration region definition in proprietary text format.
-2) ```rusefi.input``` contains the UI - all the menus and dialogs. UI definition starts at ```menuDialog = main```
+2) ```tunerstudio.template.ini``` contains the UI - all the menus and dialogs. UI definition starts at ```menuDialog = main```
 line - here you will see all top level menus defined with internal IDs and visible text labels.
 3) ```mapping.yaml``` is a minor detail related to how pins are named in drop downs
 4) ```prepend.txt``` is a minor detail which allows you to hide elements of the UI using ```@@if_XXX``` syntax.
@@ -28,4 +28,4 @@ On Windows this may be run with ```gen_config.bat```.
 
 Q: how do I offer my changes to TS project?
 
-A: please PR only rusefi.input. Once merged, gen_config.bat would be executed automatically and results would be pushed by automation.
+A: please PR only tunerstudio.template.ini. Once merged, gen_config.bat would be executed automatically and results would be pushed by automation.
