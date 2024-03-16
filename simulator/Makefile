@@ -20,7 +20,7 @@ RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 PROJECT_CPU=simulator
 
 include ../firmware/rusefi.mk
-RULESFILE = ../firmware/rusefi_rules.mk
+include ../firmware/rusefi_rules.mk
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
