@@ -23,7 +23,7 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33810.h"
 
-#if (BOARD_MC33810_COUNT > 0)
+#if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 
 /*
  * TODO list:

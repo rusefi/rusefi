@@ -1,6 +1,6 @@
 #pragma once
 
-#if BOARD_TLE9104_COUNT > 0
+#if EFI_PROD_CODE && BOARD_TLE9104_COUNT > 0
 
 struct tle9104_config {
 	SPIDriver		*spi_bus;

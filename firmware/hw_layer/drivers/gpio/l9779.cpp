@@ -31,7 +31,7 @@
 
 #include "gpio/l9779.h"
 
-#if (BOARD_L9779_COUNT > 0)
+#if EFI_PROD_CODE && (BOARD_L9779_COUNT > 0)
 
 #include "persistent_configuration.h"
 #include "hardware.h"

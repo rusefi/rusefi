@@ -276,7 +276,7 @@ void initSmartGpio() {
 	}
 #endif /* (BOARD_TLE8888_COUNT > 0) */
 
-#if (BOARD_DRV8860_COUNT > 0)
+#if EFI_PROD_CODE && (BOARD_DRV8860_COUNT > 0)
 	if (isBrainPinValid(engineConfiguration->drv8860_cs)) {
 		drv8860.spi_config.ssport = getHwPort("drv8860 CS", engineConfiguration->drv8860_cs);
 		drv8860.spi_config.sspad = getHwPin("drv8860 CS", engineConfiguration->drv8860_cs);
