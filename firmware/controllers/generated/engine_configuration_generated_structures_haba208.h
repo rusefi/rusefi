@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 16 23:08:40 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 17 13:42:57 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2866,8 +2866,9 @@ struct engine_configuration_s {
 	offset 1576 bit 14 */
 	bool is_enabled_spi_6 : 1 {};
 	/**
+	 * AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 	offset 1576 bit 15 */
-	bool unusedBit_503_15 : 1 {};
+	bool enableAemXSeriesEgt : 1 {};
 	/**
 	offset 1576 bit 16 */
 	bool unusedBit_503_16 : 1 {};
@@ -5632,4 +5633,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22428);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 16 23:08:40 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 17 13:42:57 UTC 2024

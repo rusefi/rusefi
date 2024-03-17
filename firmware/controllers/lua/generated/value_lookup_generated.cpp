@@ -1111,6 +1111,9 @@ float getConfigValueByName(const char *name) {
 // is_enabled_spi_6
 		case -722238357:
 			return engineConfiguration->is_enabled_spi_6;
+// enableAemXSeriesEgt
+		case -1196188030:
+			return engineConfiguration->enableAemXSeriesEgt;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -3635,6 +3638,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -722238357:
 	{
 		engineConfiguration->is_enabled_spi_6 = (int)value;
+		return 1;
+	}
+		case -1196188030:
+	{
+		engineConfiguration->enableAemXSeriesEgt = (int)value;
 		return 1;
 	}
 		case 671504531:
