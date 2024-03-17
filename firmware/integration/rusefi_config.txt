@@ -419,8 +419,6 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	uint8_t maxAcTps;Above this TPS, disable AC. Set to 0 to disable check.;"%", 1, 0, 0, 100, 0
 	uint8_t maxAcClt;Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.;"deg C", 1, 0, 0, 150, 0
 
-	uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
-
 	uint8_t multisparkMaxSparkingAngle;This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
 	uint8_t multisparkMaxExtraSparkCount;Configures the maximum number of extra sparks to fire (does not include main spark);"count", 1, 0, 1, 5, 0
 ! unused 2 bytes here
@@ -799,12 +797,9 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 
 
 	spi_device_e l9779spiDevice;
-	uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 3", "type 4"
 	imu_type_e imuType
-
-	uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
 	int16_t idlePidRpmUpperLimit;How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.;"RPM", 1, 0, 0, 500, 0
@@ -986,8 +981,6 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 	Gpio       drv8860_cs;
 	pin_output_mode_e drv8860_csPinMode;
 	Gpio       drv8860_miso;
-
-	uint16_t[FUEL_LEVEL_TABLE_COUNT] autoscale fuelLevelBins;;"volt", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	output_pin_e[LUA_PWM_COUNT iterate] luaOutputPins
 
@@ -1383,9 +1376,6 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	linear_sensor_s highPressureFuel;
 	linear_sensor_s lowPressureFuel;
 
-int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;;"C", 1, 0, -40, 120, 0
-uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;;"RPM", 1, 0, 0, 20000, 0
-
 gppwm_note_t[SCRIPT_CURVE_COUNT iterate] scriptCurveName;
 
 gppwm_note_t[SCRIPT_TABLE_COUNT iterate] scriptTableName;
@@ -1474,8 +1464,6 @@ uint8_t[TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0
 	uint8_t autoscale acDelay;Delay before engaging the AC compressor. Set to 0 to engage immediately with no delay. Use this to prevent bogging at idle when AC engages.;"sec", 0.1, 0, 0, 10, 1
 
 	uint16_t autoscale fordInjectorSmallPulseBreakPoint;;"mg", 0.001, 0, 0, 65, 3
-
-	uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 	uint8_t etbJamIntegratorLimit;;"%", 1, 0, 0, 50, 0
 
@@ -1574,7 +1562,6 @@ custom fuel_pressure_sensor_mode_e 1 bits, U08, @OFFSET@, [0:1], @@fuel_pressure
 fuel_pressure_sensor_mode_e fuelPressureSensorMode
 
 switch_input_pin_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
 	int16_t ALSMinRPM;;"rpm", 1, 0, 0, 20000, 0
 	int16_t ALSMaxRPM;;"rpm", 1, 0, 0, 20000, 0
 int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
@@ -1946,6 +1933,42 @@ uint16_t[4] lambdaMaxDeviationRpmBins;;"RPM",  1, 0, 0, 18000, 0
 uint8_t[INJ_STAGING_COUNT x INJ_STAGING_COUNT] injectorStagingTable;;"%", 1, 0, 0, 90, 0
 uint16_t[INJ_STAGING_COUNT] injectorStagingLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[INJ_STAGING_COUNT] injectorStagingRpmBins;;"RPM",  1, 0, 0, 18000, 0
+
+#define WWAE_TABLE_SIZE 8
+
+int8_t[WWAE_TABLE_SIZE] wwCltBins;;"deg C", 1, 0, -40, 120, 0
+uint8_t[WWAE_TABLE_SIZE] autoscale wwTauCltValues;;"", 0.01, 0, 0, 2.5, 2
+uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaCltValues;;"", 0.01, 0, 0, 1, 2
+
+int8_t[WWAE_TABLE_SIZE] wwMapBins;;"kPa", 1, 0, 0, 250, 0
+uint8_t[WWAE_TABLE_SIZE] autoscale wwTauMapValues;;"", 0.01, 0, 0, 2.5, 2
+uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaMapValues;;"", 0.01, 0, 0, 2.5, 2
+
+uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
+uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1
+uint8_t[HPFP_DEADTIME_SIZE] hpfpDeadtimeVoltsBins;;"volts", 1, 0, 0, 255, 0
+uint16_t[HPFP_DEADTIME_SIZE] autoscale hpfpDeadtimeMS;;"ms", 0.001, 0, 0, 65, 3
+uint16_t[HPFP_TARGET_SIZE x HPFP_TARGET_SIZE] hpfpTarget;;"kPa", 1, 0, 0, 65000, 0
+uint16_t[HPFP_TARGET_SIZE] autoscale hpfpTargetLoadBins;;"load", 0.1, 0, 0, 6500, 1
+uint8_t[HPFP_TARGET_SIZE] autoscale hpfpTargetRpmBins;;"RPM", 50, 0, 0, 12500, 0
+int8_t[HPFP_COMPENSATION_SIZE x HPFP_COMPENSATION_SIZE] hpfpCompensation;;"%", 1, 0, -100, 100, 0
+uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
+uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", 50, 0, 0, 12500, 0
+
+uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
+int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -50, 10, 1
+
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
+
+int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;;"C", 1, 0, -40, 120, 0
+uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;;"RPM", 1, 0, 0, 20000, 0
+
+uint16_t[FUEL_LEVEL_TABLE_COUNT] autoscale fuelLevelBins;;"volt", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+uint8_t[FUEL_LEVEL_TABLE_COUNT] fuelLevelValues;;"%", 1, 0, 0, 100, 0
+
+uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
+uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 end_struct
 

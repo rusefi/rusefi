@@ -362,11 +362,11 @@ static void setDefaultGppwmParameters() {
 
 #if EFI_ENGINE_CONTROL
 static void setDefaultEngineNoiseTable() {
-	setRpmTableBin(engineConfiguration->knockNoiseRpmBins);
+	setRpmTableBin(config->knockNoiseRpmBins);
 
 	engineConfiguration->knockSamplingDuration = 45;
 
-	setArrayValues(engineConfiguration->knockBaseNoise, -20);
+	setArrayValues(config->knockBaseNoise, -20);
 }
 #endif // EFI_ENGINE_CONTROL
 
