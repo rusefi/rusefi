@@ -76,20 +76,9 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-default-tune Action"
-        echo See https://github.com/rusefi/rusefi/issues/2446
-        echo "Status 1/3"
-        git status
-        # not our place to update live data etc
-        FILES=$(git status --porcelain | grep -e "\.java" -e "\.ini" -e "\.h"| cut -d' ' -f3)
-        [ -n "$FILES" ] && git restore $FILES
-        echo "Status 2/3"
-        git status
-        git pull https://github.com/rusefi/rusefi master
-        git add 'simulator/generated/*msq'
-        git add 'simulator/generated/canned-tunes/*md'
-        echo "Status 3/3"
-        git status
-        OUT=$(git commit -am "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
+        git add "simulator/generated/*msq"
+        git add "simulator/generated/canned-tunes/*md"
+        OUT=$(git commit -m "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "default tune: looks like nothing to commit"
           echo "NOCOMMIT=true" >> $GITHUB_ENV
