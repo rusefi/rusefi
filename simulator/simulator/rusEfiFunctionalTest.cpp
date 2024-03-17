@@ -195,6 +195,7 @@ void rusEfiFunctionalTest(void) {
 			engine_type_e::HONDA_K,
 			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1,
 			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2,
+			engine_type_e::POLARIS_RZR,
 			engine_type_e::HYUNDAI_PB,
 			engine_type_e::MAVERICK_X3,
 			engine_type_e::HARLEY,
