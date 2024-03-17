@@ -36,15 +36,7 @@ jobs:
         distribution: 'zulu'
         java-version: '11'
 
-    - name: Code generation tools
-      working-directory: ./java_tools
-      run: ./gradlew :config_definition:shadowJar
-
-    - name: Generate Configs, Enums & Live Documentation
-      working-directory: ./firmware/
-      run: ./gen_default_everything.sh
-
-    - name: enerate docs and enums
+    - name: Generate docs and enums
       working-directory: ./firmware/
       run: make docs-enums
 
