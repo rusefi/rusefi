@@ -332,11 +332,11 @@ void setDefaultGppwmParameters() {
 }
 
 static void setDefaultEngineNoiseTable() {
-	setRpmTableBin(engineConfiguration->knockNoiseRpmBins);
+	setRpmTableBin(config->knockNoiseRpmBins);
 
 	engineConfiguration->knockSamplingDuration = 45;
 
-	setArrayValues(engineConfiguration->knockBaseNoise, -20);
+	setArrayValues(config->knockBaseNoise, -20);
 }
 
 /**

@@ -518,7 +518,7 @@ bool validateConfig() {
 		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
 		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
 
-		ensureArrayIsAscendingOrDefault("TPS TPS RPM correction", engineConfiguration->tpsTspCorrValuesBins);
+		ensureArrayIsAscendingOrDefault("TPS TPS RPM correction", config->tpsTspCorrValuesBins);
 
 		ensureArrayIsAscendingOrDefault("Staging Load", config->injectorStagingLoadBins);
 		ensureArrayIsAscendingOrDefault("Staging RPM", config->injectorStagingRpmBins);
@@ -592,11 +592,11 @@ bool validateConfig() {
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
 
 	if (engineConfiguration->hpfpCamLobes > 0) {
-		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
-		ensureArrayIsAscending("HPFP deadtime", engineConfiguration->hpfpDeadtimeVoltsBins);
-		ensureArrayIsAscending("HPFP lobe profile", engineConfiguration->hpfpLobeProfileQuantityBins);
-		ensureArrayIsAscending("HPFP target rpm", engineConfiguration->hpfpTargetRpmBins);
-		ensureArrayIsAscending("HPFP target load", engineConfiguration->hpfpTargetLoadBins);
+		ensureArrayIsAscending("HPFP compensation", config->hpfpCompensationRpmBins);
+		ensureArrayIsAscending("HPFP deadtime", config->hpfpDeadtimeVoltsBins);
+		ensureArrayIsAscending("HPFP lobe profile", config->hpfpLobeProfileQuantityBins);
+		ensureArrayIsAscending("HPFP target rpm", config->hpfpTargetRpmBins);
+		ensureArrayIsAscending("HPFP target load", config->hpfpTargetLoadBins);
 	}
 
 	// VVT

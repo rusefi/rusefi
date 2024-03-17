@@ -197,30 +197,30 @@ void setDefaultWallWetting() {
 #endif // EFI_UNIT_TEST
 
 	// linear reasonable bins
-	setLinearCurve(engineConfiguration->wwCltBins, -40, 100, 1);
-	setLinearCurve(engineConfiguration->wwMapBins, 10, 80, 1);
+	setLinearCurve(config->wwCltBins, -40, 100, 1);
+	setLinearCurve(config->wwMapBins, 10, 80, 1);
 
 	// These values are derived from the GM factory tune for a gen3 LS engine
 	// Who knows if they're good for anything else, but at least they look nice?
 	static constexpr float tauClt[] = {
 		1.45, 1.30, 1.17, 1.05, 0.90, 0.82, 0.75, 0.70
 	};
-	copyArray(engineConfiguration->wwTauCltValues, tauClt);
+	copyArray(config->wwTauCltValues, tauClt);
 
 	static constexpr float tauMap[] = {
 		0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00
 	};
-	copyArray(engineConfiguration->wwTauMapValues, tauMap);
+	copyArray(config->wwTauMapValues, tauMap);
 
 	static constexpr float betaClt[] = {
 		0.73, 0.66, 0.57, 0.46, 0.38, 0.31, 0.24, 0.19
 	};
-	copyArray(engineConfiguration->wwBetaCltValues, betaClt);
+	copyArray(config->wwBetaCltValues, betaClt);
 
 	static constexpr float betaMap[] = {
 		0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00
 	};
-	copyArray(engineConfiguration->wwBetaMapValues, betaMap);
+	copyArray(config->wwBetaMapValues, betaMap);
 }
 
 static void setDefaultLambdaProtection() {
@@ -268,8 +268,8 @@ void setDefaultFuel() {
 	setFuelTablesLoadBin(10, 160);
 	setRpmTableBin(config->injPhaseRpmBins);
 
-	setRpmTableBin(engineConfiguration->tpsTspCorrValuesBins);
-	setLinearCurve(engineConfiguration->tpsTspCorrValues, 1, 1);
+	setRpmTableBin(config->tpsTspCorrValuesBins);
+	setLinearCurve(config->tpsTspCorrValues, 1, 1);
 
 	setDefaultVETable();
 	setDefaultLambdaTable();

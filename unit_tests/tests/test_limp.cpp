@@ -54,8 +54,8 @@ TEST(limp, revLimitCltBased) {
 
 	// Configure CLT-based rev limit curve
 	engineConfiguration->useCltBasedRpmLimit = true;
-	copyArray(engineConfiguration->cltRevLimitRpmBins, { 10, 20, 30, 40 });
-	copyArray(engineConfiguration->cltRevLimitRpm, { 1000, 2000, 3000, 4000 });
+	copyArray(config->cltRevLimitRpmBins, { 10, 20, 30, 40 });
+	copyArray(config->cltRevLimitRpm, { 1000, 2000, 3000, 4000 });
 
 	LimpManager dut;
 

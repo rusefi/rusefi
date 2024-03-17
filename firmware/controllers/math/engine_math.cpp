@@ -85,8 +85,8 @@ floatms_t IgnitionState::getSparkDwell(int rpm) {
 		baseDwell = interpolate2d(rpm, config->sparkDwellRpmBins, config->sparkDwellValues);
 		dwellVoltageCorrection = interpolate2d(
 				Sensor::getOrZero(SensorType::BatteryVoltage),
-				engineConfiguration->dwellVoltageCorrVoltBins,
-				engineConfiguration->dwellVoltageCorrValues
+				config->dwellVoltageCorrVoltBins,
+				config->dwellVoltageCorrValues
 		);
 
 		// for compat (table full of zeroes)

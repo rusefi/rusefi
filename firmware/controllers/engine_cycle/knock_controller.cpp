@@ -116,8 +116,8 @@ void KnockControllerBase::onFastCallback() {
 float KnockController::getKnockThreshold() const {
 	return interpolate2d(
 		Sensor::getOrZero(SensorType::Rpm),
-		engineConfiguration->knockNoiseRpmBins,
-		engineConfiguration->knockBaseNoise
+		config->knockNoiseRpmBins,
+		config->knockBaseNoise
 	);
 }
 

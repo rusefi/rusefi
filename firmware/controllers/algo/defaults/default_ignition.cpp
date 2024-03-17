@@ -81,8 +81,8 @@ void setDefaultIgnition() {
 	// Dwell table
 	setConstantDwell(4);
 
-	setLinearCurve(engineConfiguration->dwellVoltageCorrVoltBins, 8, 15, 0.1);
-	setLinearCurve(engineConfiguration->dwellVoltageCorrValues, 1, 1, 1);
+	setLinearCurve(config->dwellVoltageCorrVoltBins, 8, 15, 0.1);
+	setLinearCurve(config->dwellVoltageCorrValues, 1, 1, 1);
 
 	// Multispark
 	setDefaultMultisparkParameters();

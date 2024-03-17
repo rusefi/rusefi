@@ -79,19 +79,19 @@ TEST(HPFP, InjectionReplacementFuel) {
 		engineConfiguration->hpfpCamLobes; // Make math easier
 	for (int i = 0; i < HPFP_COMPENSATION_SIZE; i++) {
 		// one bin every 1000 RPM
-		engineConfiguration->hpfpCompensationRpmBins[i] = std::min(i * 1000, 8000);
+		config->hpfpCompensationRpmBins[i] = std::min(i * 1000, 8000);
 	}
 	for (int i = 0; i < HPFP_COMPENSATION_SIZE; i++) {
 		// one bin every 0.05 cc/lobe
-		engineConfiguration->hpfpCompensationLoadBins[i] = std::min(i * 0.05, 60.);
+		config->hpfpCompensationLoadBins[i] = std::min(i * 0.05, 60.);
 	}
 
-	engineConfiguration->hpfpCompensation[2][1] = -10;
+	config->hpfpCompensation[2][1] = -10;
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1000), 40); // -10, in cell
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1500), 45); // -5, half way
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(2000), 50); // -0, in next cell
 
-	engineConfiguration->hpfpCompensation[2][1] = 20;
+	config->hpfpCompensation[2][1] = 20;
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1000), 70); // +20, in cell
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1500), 60); // +10, half way
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(2000), 50); // +0, in next cell
@@ -115,15 +115,15 @@ TEST(HPFP, PI) {
 
 	for (int i = 0; i < HPFP_TARGET_SIZE; i++) {
 		// one bin every 1000 RPM
-		engineConfiguration->hpfpTargetRpmBins[i] = std::min(i * 1000, 8000);
+		config->hpfpTargetRpmBins[i] = std::min(i * 1000, 8000);
 	}
 	for (int i = 0; i < HPFP_TARGET_SIZE; i++) {
 		// one bin every 20kPa
-		engineConfiguration->hpfpTargetLoadBins[i] = std::min(i * 20, 200);
+		config->hpfpTargetLoadBins[i] = std::min(i * 20, 200);
 	}
 	for (int r = 0; r < HPFP_TARGET_SIZE; r++) {
 		for (int c = 0; c < HPFP_TARGET_SIZE; c++) {
-			engineConfiguration->hpfpTarget[r][c] = 1000 * r + 10 * c;
+			config->hpfpTarget[r][c] = 1000 * r + 10 * c;
 		}
 	}
 
@@ -172,20 +172,20 @@ TEST(HPFP, Angle) {
 
 	for (int i = 0; i < HPFP_TARGET_SIZE; i++) {
 		// one bin every 1000 RPM
-		engineConfiguration->hpfpTargetRpmBins[i] = std::min(i * 1000, 8000);
+		config->hpfpTargetRpmBins[i] = std::min(i * 1000, 8000);
 	}
 	for (int i = 0; i < HPFP_TARGET_SIZE; i++) {
 		// one bin every 20kPa
-		engineConfiguration->hpfpTargetLoadBins[i] = std::min(i * 20, 200);
+		config->hpfpTargetLoadBins[i] = std::min(i * 20, 200);
 	}
 	for (int r = 0; r < HPFP_TARGET_SIZE; r++) {
 		for (int c = 0; c < HPFP_TARGET_SIZE; c++) {
-			engineConfiguration->hpfpTarget[r][c] = 1000 * r + 10 * c;
+			config->hpfpTarget[r][c] = 1000 * r + 10 * c;
 		}
 	}
 	for (int i = 0; i < HPFP_LOBE_PROFILE_SIZE; i++) {
-		engineConfiguration->hpfpLobeProfileQuantityBins[i] = 100. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
-		engineConfiguration->hpfpLobeProfileAngle[i] = 150. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
+		config->hpfpLobeProfileQuantityBins[i] = 100. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
+		config->hpfpLobeProfileAngle[i] = 150. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
 	}
 
 	HpfpController model;
@@ -217,20 +217,20 @@ TEST(HPFP, Schedule) {
 
 	for (int i = 0; i < HPFP_TARGET_SIZE; i++) {
 		// one bin every 1000 RPM
-		engineConfiguration->hpfpTargetRpmBins[i] = std::min(i * 1000, 8000);
+		config->hpfpTargetRpmBins[i] = std::min(i * 1000, 8000);
 	}
 	for (int i = 0; i < HPFP_TARGET_SIZE; i++) {
 		// one bin every 20kPa
-		engineConfiguration->hpfpTargetLoadBins[i] = std::min(i * 20, 200);
+		config->hpfpTargetLoadBins[i] = std::min(i * 20, 200);
 	}
 	for (int r = 0; r < HPFP_TARGET_SIZE; r++) {
 		for (int c = 0; c < HPFP_TARGET_SIZE; c++) {
-			engineConfiguration->hpfpTarget[r][c] = 1000 * r + 10 * c;
+			config->hpfpTarget[r][c] = 1000 * r + 10 * c;
 		}
 	}
 	for (int i = 0; i < HPFP_LOBE_PROFILE_SIZE; i++) {
-		engineConfiguration->hpfpLobeProfileQuantityBins[i] = 100. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
-		engineConfiguration->hpfpLobeProfileAngle[i] = 150. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
+		config->hpfpLobeProfileQuantityBins[i] = 100. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
+		config->hpfpLobeProfileAngle[i] = 150. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
 	}
 
 	auto & hpfp = *engine->module<HpfpController>();
