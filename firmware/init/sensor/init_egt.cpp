@@ -12,8 +12,8 @@ static AemXSeriesEgt aemEgt2(1, SensorType::EGT2);
 void initEgt() {
 #if EFI_CAN_SUPPORT
 	if (engineConfiguration->enableAemXSeriesEgt) {
-		if (!engineConfiguration->canWriteEnabled || !engineConfiguration->canReadEnabled) {
-			criticalError("CAN read and write are required to use CAN EGT.");
+		if (!engineConfiguration->canReadEnabled) {
+			criticalError("CAN read is required to use CAN EGT.");
 			return;
 		}
 
