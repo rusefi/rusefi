@@ -3,6 +3,8 @@
 // canned tune https://rusefi.com/online/view.php?msq=1620
 
 ```
+    // default 115.0
+    engineConfiguration->globalTriggerAngleOffset = 90;
     // default 0.0
     engineConfiguration->cylinderBankSelect[0] = 1;
     // default 0.0
