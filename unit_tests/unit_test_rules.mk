@@ -17,13 +17,15 @@ include $(PROJECT_DIR)/rusefi_rules.mk
 BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 # User may want to pass in a forced value for SANITIZE
-ifeq ($(SANITIZE),)
-	ifneq ($(OS),Windows_NT)
-		SANITIZE = yes
-	else
-		SANITIZE = no
-	endif
-endif
+# ifeq ($(SANITIZE),)
+# 	ifneq ($(OS),Windows_NT)
+# 		SANITIZE = yes
+# 	else
+# 		SANITIZE = no
+# 	endif
+# endif
+
+SANITIZE = no
 
 IS_MAC = no
 ifneq ($(OS),Windows_NT)

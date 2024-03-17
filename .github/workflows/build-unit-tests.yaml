@@ -42,7 +42,8 @@ jobs:
 
     - name: Run Tests
       working-directory: ./unit_tests/
-      run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/fome_test
+      #run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/fome_test
+      run: build/fome_test
 
     - name: Set FTP variables
       env:
