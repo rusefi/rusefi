@@ -8,7 +8,6 @@
 #include "cli_registry.h"
 #include "io_pins.h"
 #include "lua_hooks.h"
-#include "max3185x.h"
 
 static void initSensorCli();
 
@@ -90,6 +89,7 @@ void initNewSensors() {
 	initFluidPressure();
 	initThermistors();
 	initLambda();
+	initEgt();
 	initFlexSensor(true);
 	initBaro();
 	initAuxSensors();
@@ -105,10 +105,6 @@ void initNewSensors() {
 
 	initOldAnalogInputs();
 	initAuxDigital();
-
-#if EFI_MAX_31855
-	initMax3185x(engineConfiguration->max31855spiDevice, engineConfiguration->max31855_cs);
-#endif /* EFI_MAX_31855 */
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
@@ -142,9 +138,7 @@ void stopSensors() {
 	deinitAuxSpeedSensors();
 	deinitMap();
 	deinitInputShaftSpeedSensor();
-#if EFI_MAX_31855
-	stopMax3185x();
-#endif /* EFI_MAX_31855 */
+	stopEgt();
 }
 
 void reconfigureSensors() {
@@ -158,11 +152,9 @@ void reconfigureSensors() {
 	initTurbochargerSpeedSensor();
 	initAuxSpeedSensors();
 	initInputShaftSpeedSensor();
+	startEgt();
 
 	initOldAnalogInputs();
-#if EFI_MAX_31855
-	startMax3185x(engineConfiguration->max31855spiDevice, engineConfiguration->max31855_cs);
-#endif /* EFI_MAX_31855 */
 }
 
 // Mocking/testing helpers

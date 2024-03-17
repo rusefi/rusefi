@@ -26,6 +26,7 @@ void initFluidPressure();
 void initThermistors();
 void initCanSensors();
 void initLambda();
+void initEgt();
 void initFlexSensor(bool isFirstTime);
 void initFuelLevel();
 void initBaro();
@@ -46,5 +47,9 @@ void deinitTurbochargerSpeedSensor();
 void deinitMap();
 void deinitAuxSpeedSensors();
 void deinitInputShaftSpeedSensor();
+
+void stopEgt(void);
+void startEgt(void);
+
 
 void pokeAuxDigital();
