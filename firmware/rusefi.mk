@@ -27,6 +27,12 @@ endif
 
 BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
+ifneq ($(META_OUTPUT_ROOT_FOLDER),)
+ifeq ($(BOARD_DIR),)
+  BOARDINC += $(META_OUTPUT_ROOT_FOLDER)
+endif
+endif
+
 # allow passing a custom board dir, otherwise generate it based on the board name
 ifeq ($(BOARD_DIR),)
 	BOARD_DIR = $(BOARDS_DIR)/$(PROJECT_BOARD)
