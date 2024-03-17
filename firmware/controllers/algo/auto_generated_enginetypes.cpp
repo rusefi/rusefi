@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Mar 07 13:13:08 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Mar 17 22:27:11 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -315,6 +315,8 @@ case engine_type_e::MRE_VW_B6:
   return "MRE_VW_B6";
 case engine_type_e::NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
+case engine_type_e::POLARIS_RZR:
+  return "POLARIS_RZR";
 case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case engine_type_e::PROTEUS_BMW_M73:
@@ -371,8 +373,6 @@ case engine_type_e::UNUSED47:
   return "UNUSED47";
 case engine_type_e::UNUSED67:
   return "UNUSED67";
-case engine_type_e::UNUSED9:
-  return "UNUSED9";
 case engine_type_e::UNUSED93:
   return "UNUSED93";
 case engine_type_e::UNUSED94:
