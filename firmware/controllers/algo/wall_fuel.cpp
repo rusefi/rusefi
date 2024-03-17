@@ -84,8 +84,8 @@ float WallFuelController::computeTau() const {
 
 	float tau = interpolate2d(
 		clt,
-		engineConfiguration->wwCltBins,
-		engineConfiguration->wwTauCltValues
+		config->wwCltBins,
+		config->wwTauCltValues
 	);
 
 	// If you have a MAP sensor, apply MAP correction
@@ -94,8 +94,8 @@ float WallFuelController::computeTau() const {
 
 		tau *= interpolate2d(
 			map,
-			engineConfiguration->wwMapBins,
-			engineConfiguration->wwTauMapValues
+			config->wwMapBins,
+			config->wwTauMapValues
 		);
 	}
 
@@ -113,8 +113,8 @@ float WallFuelController::computeBeta() const {
 
 	float beta = interpolate2d(
 		clt,
-		engineConfiguration->wwCltBins,
-		engineConfiguration->wwBetaCltValues
+		config->wwCltBins,
+		config->wwBetaCltValues
 	);
 
 	// If you have a MAP sensor, apply MAP correction
@@ -123,8 +123,8 @@ float WallFuelController::computeBeta() const {
 
 		beta *= interpolate2d(
 			map,
-			engineConfiguration->wwMapBins,
-			engineConfiguration->wwBetaMapValues
+			config->wwMapBins,
+			config->wwBetaMapValues
 		);
 	}
 

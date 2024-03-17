@@ -83,8 +83,8 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 	}
 #endif /* EFI_TUNER_STUDIO */
 
-	float mult = interpolate2d(rpm, engineConfiguration->tpsTspCorrValuesBins,
-						engineConfiguration->tpsTspCorrValues);
+	float mult = interpolate2d(rpm, config->tpsTspCorrValuesBins,
+						config->tpsTspCorrValues);
 	if (mult != 0 && (mult < 0.01 || mult > 100)) {
 		mult = 1;
 	}

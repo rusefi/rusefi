@@ -124,7 +124,7 @@ void setDefaultBaseEngine() {
   engineConfiguration->rpmSoftLimitTimingRetard = 4;
 
 	// CLT RPM limit table - just the X axis
-	copyArray(engineConfiguration->cltRevLimitRpmBins, { -20, 0, 40, 80 });
+	copyArray(config->cltRevLimitRpmBins, { -20, 0, 40, 80 });
 
 	engineConfiguration->ALSMinRPM = 400;
 	engineConfiguration->ALSMaxRPM = 3200;
