@@ -8,7 +8,4 @@ public:
 
 protected:
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override;
-
-private:
-	const uint8_t m_sensorIndex;
 };
