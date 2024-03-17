@@ -23,4 +23,4 @@
 #define show_Proteus_presets true
 
 #define LUA_SCRIPT_SIZE 12000
-
+#define BLOCKING_FACTOR 1390
