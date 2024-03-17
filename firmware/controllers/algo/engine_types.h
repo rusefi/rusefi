@@ -45,7 +45,7 @@ enum class engine_type_e : uint16_t {
 	 */
 	GY6_139QMB = 8,
 
-	UNUSED9 = 9,
+	POLARIS_RZR = 9,
 	MAZDA_MIATA_NA96 = 10,
 	FORD_COYOTE = 11,
 	MITSUBISHI_3A92 = 12,
