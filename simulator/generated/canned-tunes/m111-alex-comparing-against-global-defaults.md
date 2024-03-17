@@ -155,6 +155,10 @@
     engineConfiguration->useIdleTimingPidControl = true;
     // default -10.0
     engineConfiguration->idleTimingPid.minValue = -15;
+    // default 92.0
+    engineConfiguration->fanOnTemperature = 95;
+    // default 88.0
+    engineConfiguration->fanOffTemperature = 91;
     // default 0.5
     engineConfiguration->acDelay = 0;
     // default 4.0

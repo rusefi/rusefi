@@ -57,6 +57,10 @@
     engineConfiguration->enableAemXSeries = true;
     // default 2.0
     engineConfiguration->fan1ExtraIdle = 10;
+    // default 92.0
+    engineConfiguration->fanOnTemperature = 95;
+    // default 88.0
+    engineConfiguration->fanOffTemperature = 91;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
     // default "false"

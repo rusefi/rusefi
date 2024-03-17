@@ -31,6 +31,10 @@
     engineConfiguration->throttlePedalSecondaryUpVoltage = 0.74;
     // default 1.86
     engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.28;
+    // default 92.0
+    engineConfiguration->fanOnTemperature = 95;
+    // default 88.0
+    engineConfiguration->fanOffTemperature = 91;
     // default 200.0
     engineConfiguration->rpmSoftLimitWindowSize = 0;
     // default 4.0

@@ -43,6 +43,10 @@
     engineConfiguration->mapLowValueVoltage = 2.91;
     // default "false"
     engineConfiguration->enableAemXSeries = true;
+    // default 92.0
+    engineConfiguration->fanOnTemperature = 95;
+    // default 88.0
+    engineConfiguration->fanOffTemperature = 91;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
     // default 500.0

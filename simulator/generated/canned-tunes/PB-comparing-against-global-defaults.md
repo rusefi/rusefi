@@ -81,6 +81,10 @@
     engineConfiguration->enableAemXSeries = true;
     // default 15.0
     engineConfiguration->etbIdleThrottleRange = 6;
+    // default 92.0
+    engineConfiguration->fanOnTemperature = 95;
+    // default 88.0
+    engineConfiguration->fanOffTemperature = 91;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
     // default 550.0

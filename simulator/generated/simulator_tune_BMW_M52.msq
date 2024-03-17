@@ -201,8 +201,8 @@
         <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">0.0</constant>
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
-        <constant digits="0" name="fanOnTemperature" units="deg C">95.0</constant>
-        <constant digits="0" name="fanOffTemperature" units="deg C">91.0</constant>
+        <constant digits="0" name="fanOnTemperature" units="deg C">92.0</constant>
+        <constant digits="0" name="fanOffTemperature" units="deg C">88.0</constant>
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant name="canNbcType">"None"</constant>

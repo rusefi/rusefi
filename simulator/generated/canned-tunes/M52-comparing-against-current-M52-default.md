@@ -101,6 +101,10 @@
     engineConfiguration->idleTimingPid.minValue = -5;
     // default 10.0
     engineConfiguration->idleTimingPid.maxValue = 5;
+    // default 92.0
+    engineConfiguration->fanOnTemperature = 95;
+    // default 88.0
+    engineConfiguration->fanOffTemperature = 91;
     // default "false"
     engineConfiguration->disableFan1WhenStopped = true;
     // default 0.5
