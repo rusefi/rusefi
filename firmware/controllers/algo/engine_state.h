@@ -11,6 +11,9 @@
 #include "global.h"
 #include "engine_parts.h"
 #include "engine_state_generated.h"
+#if !defined(EFI_BOOTLOADER)
+#include "lua_hooks.h"
+#endif
 
 class EngineState : public engine_state_s {
 public:
@@ -85,6 +88,12 @@ public:
 	angle_t injectionOffset = 0;
 
 	multispark_state multispark;
+
+#if !defined(EFI_BOOTLOADER)
+// todo: techical debt: bootloader should not compile engine.h! at the moment bootloader depends on engine->pin registry not nice
+	// custom values to display on the dash for UI widgets
+	LuaDashOverride luaDashOverride;
+#endif
 
 	bool shouldUpdateInjectionTiming = true;
 };
