@@ -12,15 +12,17 @@
 #
 
 
-
 CHIBIOS = ../firmware/ChibiOS
-CHIBIOS_CONTRIB= ../firmware/ChibiOS-Contrib
+CHIBIOS_CONTRIB = ../firmware/ChibiOS-Contrib
 RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 
 PROJECT_CPU=simulator
 
+ifneq ($(BOARD_DIR),)
+  BOARDCPPSRC += $(BOARD_DIR)/default_tune.cpp
+endif
+
 include ../firmware/rusefi.mk
-RULESFILE = ../firmware/rusefi_rules.mk
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
