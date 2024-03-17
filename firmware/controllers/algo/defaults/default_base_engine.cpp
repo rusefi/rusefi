@@ -239,8 +239,8 @@ void setDefaultBaseEngine() {
 	engineConfiguration->benchTestCount = 3;
 
 	// Fans
-	engineConfiguration->fanOnTemperature = 95;
-	engineConfiguration->fanOffTemperature = 91;
+	engineConfiguration->fanOnTemperature = 92;
+	engineConfiguration->fanOffTemperature = 88;
 	engineConfiguration->fan2OnTemperature = 95;
 	engineConfiguration->fan2OffTemperature = 91;
 
