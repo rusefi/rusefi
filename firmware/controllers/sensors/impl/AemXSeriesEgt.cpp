@@ -12,7 +12,6 @@ AemXSeriesEgt::AemXSeriesEgt(uint8_t sensorIndex, SensorType type)
 		type,
 		MS2NT(3 * AEM_EGT_DEFAULT_PERIOD_MS)	// sensor transmits at 10hz, allow a frame to be missed
 	)
-	, m_sensorIndex(sensorIndex)
 {
 	// nope
 }
