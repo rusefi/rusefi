@@ -308,6 +308,7 @@ enable2ndByteCanID = false
 	requiresPowerCycle = startStopButtonMode
 
 	requiresPowerCycle = enableAemXSeries
+	requiresPowerCycle = enableAemXSeriesEgt
 
 	requiresPowerCycle = etb_use_two_wires
 	requiresPowerCycle = etbSplit
@@ -3432,15 +3433,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 ;			Engine->EGT inputs
 	dialog = egtInputs, "EGT inputs"
-		field = "SPI",									max31855spiDevice
-		field = "CS #1",								max31855_cs1
-		field = "CS #2",								max31855_cs2
-		field = "CS #3",								max31855_cs3
-		field = "CS #4",								max31855_cs4
-		field = "CS #5",								max31855_cs5
-		field = "CS #6",								max31855_cs6
-		field = "CS #7",								max31855_cs7
-		field = "CS #8",								max31855_cs8
+		field = "CAN support only EGT1 and EGT2"
+		field = "CAN EGT (AEM X series of RusEFI)"		enableAemXSeriesEgt, { canReadEnabled }
+		field = "If both CAN and SPI EGT sensors are used, please leave two first for CAN"
+		field = "MAX31855/MAX31856 SPI",				max31855spiDevice
+		field = "CS for EGT1",							max31855_cs1
+		field = "CS for EGT2",							max31855_cs2
+		field = "CS for EGT3",							max31855_cs3
+		field = "CS for EGT4",							max31855_cs4
+		field = "CS for EGT5",							max31855_cs5
+		field = "CS for EGT6",							max31855_cs6
+		field = "CS for EGT7",							max31855_cs7
+		field = "CS for EGT8",							max31855_cs8
 
 ;			Engine->idle Settings
 	dialog = idleSolenoid, "Solenoid"
