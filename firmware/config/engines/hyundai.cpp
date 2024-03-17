@@ -46,7 +46,7 @@ void setHyundaiPb() {
 	strcpy(engineConfiguration->engineCode, "Gamma");
 
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->globalTriggerAngleOffset = 90;
+	engineConfiguration->globalTriggerAngleOffset = 115;
     engineConfiguration->vvtOffsets[0] = 227;
     engineConfiguration->vvtOffsets[1] = 50;
 
@@ -92,7 +92,8 @@ void setHyundaiPb() {
    	engineConfiguration->highPressureFuel.value2 = 20'000;
 
 #ifdef HW_HELLEN_4CHAN
-	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CAM;
+	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_D_4;
 	engineConfiguration->highPressureFuel.hwChannel = H144_IN_O2S2;
 
     engineConfiguration->hpfpValvePin = Gpio::H144_OUT_IO6; // E2
@@ -266,7 +267,6 @@ static void commonGenesisCoupe() {
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Theta II");
-	engineConfiguration->globalTriggerAngleOffset = 90;
 
 // canned tune https://rusefi.com/online/view.php?msq=1507
     // default "Single Coil"
@@ -275,7 +275,7 @@ static void commonGenesisCoupe() {
     engineConfiguration->displacement = 1.998;
     // default "false"
     engineConfiguration->isForcedInduction = true;
-    engineConfiguration->globalTriggerAngleOffset = 475;
+    engineConfiguration->globalTriggerAngleOffset = 360 + 115;
     engineConfiguration->vvtOffsets[0] = -154;
     engineConfiguration->vvtOffsets[1] = 335;
     // default "None"

@@ -175,7 +175,7 @@ pins:
   - pin: C7
     id: [H144_IN_CAM, H144_IN_CAM, EFI_ADC_6]
     class: [event_inputs, switch_inputs, analog_inputs]
-    function: Camshaft HALL Sensor or Generic Digital Input
+    function: Camshaft Intake Hall Sensor or Generic Digital Input
     type: hall
     ts_name: C7 - CAM Hall/Digital
     color: brown
