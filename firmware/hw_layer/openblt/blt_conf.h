@@ -189,6 +189,10 @@
 
 #define BOOT_XCP_UPLOAD_ENABLE          (0)
 
+#ifndef BOOT_BACKDOOR_ENTRY_TIMEOUT_MS
+#define BOOT_BACKDOOR_ENTRY_TIMEOUT_MS  (500)
+#endif
+
 
 #endif /* BLT_CONF_H */
 /*********************************** end of blt_conf.h *********************************/
