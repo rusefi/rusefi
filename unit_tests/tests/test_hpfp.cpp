@@ -8,6 +8,7 @@ using ::testing::StrictMock;
 
 TEST(HPFP, Lobe) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->magicNumberAvailableForDevTricks = 2;
 
 	engineConfiguration->hpfpCam = HPFP_CAM_NONE;
 	engineConfiguration->hpfpPeakPos = 123;

@@ -20,6 +20,7 @@ TEST(HPFP, IntegratedSchedule) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
 	});
+	engineConfiguration->magicNumberAvailableForDevTricks = 2;
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->hpfpCamLobes = 3;

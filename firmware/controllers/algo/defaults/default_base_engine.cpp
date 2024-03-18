@@ -79,6 +79,7 @@ void setDefaultBaseEngine() {
   engineConfiguration->fan2ExtraIdle = 2;
 
   engineConfiguration->auxSpeed1Multiplier = 1;
+  engineConfiguration->magicNumberAvailableForDevTricks = 1;
 
   engineConfiguration->acrRevolutions = 5;
 
