@@ -93,7 +93,7 @@ static uint32_t readEgtPacket(int egtChannel) {
 	spiStart(driver, &spiConfig[egtChannel]);
 	spiSelect(driver);
 
-	for (int i = 0; i < sizeof(egtBytes); i++) {
+	for (int i = sizeof(egtBytes) - 1; i >= 0; i--) {
 		egtBytes[i] = spiPolledExchange(driver, 0);
 	}
 
