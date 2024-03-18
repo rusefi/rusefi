@@ -42,9 +42,6 @@
 #define adc_channel_e_fullenum "NONE","INVALID","3A - Aux Analog 2","On-board MAP","32A - PPS Sensor Input","31A - TPS Sensor Input","24 - Ignition Key Voltage","INVALID","INVALID","19A - Aux Analog 6","1A - Aux Analog 1","2A - Aux Analog 4","INVALID","29A - CLT Sensor Input","27A - IAT Sensor Input","INVALID","12A - Aux Analog 8","INVALID","11A - Aux Analog 3","INVALID","34A - PPS2 Sensor Input","33A - TPS2 Sensor Input","INVALID","INVALID","INVALID","4A - Aux Analog 7","INVALID","10A - Aux Analog 5","INVALID","28A - Aux Temp 2","28A - Aux Temp 1","INVALID","20A - Aux Analog 9"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
-#define AFTERSTART_DECAY_CURVE_SIZE 8
-#define AFTERSTART_ENRICH_CURVE_SIZE 8
-#define AFTERSTART_HOLD_CURVE_SIZE 8
 #define air_pressure_sensor_config_s_size 12
 #define air_pressure_sensor_type_e_auto_enum 0="MT_CUSTOM",10="MT_BOSCH_2_5",1="MT_DENSO183",4="MT_DODGE_NEON_2003",13="MT_GM_1_BAR",12="MT_GM_2_BAR",6="MT_GM_3_BAR",3="MT_HONDA3BAR",11="MT_MAZDA_1_BAR",7="MT_MPX4100",2="MT_MPX4250",9="MT_MPX4250A",15="MT_MPXH6300",14="MT_MPXH6400",5="MT_SUBY_DENSO",8="MT_TOYOTA_89420_02010"
 #define air_pressure_sensor_type_e_MT_BOSCH_2_5 10
@@ -1189,7 +1186,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3913973040
+#define SIGNATURE_HASH 2316558508
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1558,7 +1555,7 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.18.alphax-8chan_f7.3913973040"
+#define TS_SIGNATURE "rusEFI master.2024.03.18.alphax-8chan_f7.2316558508"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

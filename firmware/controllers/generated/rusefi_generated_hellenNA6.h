@@ -42,9 +42,6 @@
 #define adc_channel_e_fullenum "NONE","3N - O2S","2N - Temperature Sensor","intMAP (A15)","4I - PPS1","TPS Input","1B - Battery Sense","INVALID","4G - PPS2 OR TEMPERATURE SENSOR","4H - TPS2","INVALID","3O - MAF","2M - Pressure Sensor","3Q - CLT","3P - IAT","1V - Clutch Switch","1Q AC Switch"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
-#define AFTERSTART_DECAY_CURVE_SIZE 8
-#define AFTERSTART_ENRICH_CURVE_SIZE 8
-#define AFTERSTART_HOLD_CURVE_SIZE 8
 #define air_pressure_sensor_config_s_size 12
 #define air_pressure_sensor_type_e_auto_enum 0="MT_CUSTOM",10="MT_BOSCH_2_5",1="MT_DENSO183",4="MT_DODGE_NEON_2003",13="MT_GM_1_BAR",12="MT_GM_2_BAR",6="MT_GM_3_BAR",3="MT_HONDA3BAR",11="MT_MAZDA_1_BAR",7="MT_MPX4100",2="MT_MPX4250",9="MT_MPX4250A",15="MT_MPXH6300",14="MT_MPXH6400",5="MT_SUBY_DENSO",8="MT_TOYOTA_89420_02010"
 #define air_pressure_sensor_type_e_MT_BOSCH_2_5 10
@@ -1189,7 +1186,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1397369772
+#define SIGNATURE_HASH 806598192
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1558,7 +1555,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.18.hellenNA6.1397369772"
+#define TS_SIGNATURE "rusEFI master.2024.03.18.hellenNA6.806598192"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

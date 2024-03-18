@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 18 04:07:31 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 18 12:53:52 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -43,9 +43,6 @@ public class Fields {
 	public static final int adc_channel_e_EFI_ADC_NONE = 0;
 	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int afr_sensor_s_size = 20;
-	public static final int AFTERSTART_DECAY_CURVE_SIZE = 8;
-	public static final int AFTERSTART_ENRICH_CURVE_SIZE = 8;
-	public static final int AFTERSTART_HOLD_CURVE_SIZE = 8;
 	public static final int air_pressure_sensor_config_s_size = 12;
 	public static final int air_pressure_sensor_type_e_MT_BOSCH_2_5 = 10;
 	public static final int air_pressure_sensor_type_e_MT_CUSTOM = 0;
@@ -1125,7 +1122,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1673409325;
+	public static final int SIGNATURE_HASH = 15183537;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1376,7 +1373,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.03.18.f407-discovery.1673409325";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.03.18.f407-discovery.15183537";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2857,10 +2854,7 @@ public class Fields {
 	public static final Field IACCOASTINGRPMBINS = Field.create("IACCOASTINGRPMBINS", 5668, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field IACCOASTING = Field.create("IACCOASTING", 5684, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5700, 120, FieldType.STRING).setScale(1.0).setBaseOffset(0);
-	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 5820, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 5852, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AFTERSTARTENRICH = Field.create("AFTERSTARTENRICH", 5884, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AFTERSTARTDECAYTIME = Field.create("AFTERSTARTDECAYTIME", 5916, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field UNUSEDGAPINCALIBRATION = Field.create("UNUSEDGAPINCALIBRATION", 5820, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 5948, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTRPMBINS = Field.create("BOOSTRPMBINS", 6012, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6020, FieldType.INT8).setScale(2.0).setBaseOffset(0);
@@ -4491,10 +4485,7 @@ public class Fields {
 	IACCOASTINGRPMBINS,
 	IACCOASTING,
 	WARNING_MESSAGE,
-	AFTERSTARTCOOLANTBINS,
-	AFTERSTARTHOLDTIME,
-	AFTERSTARTENRICH,
-	AFTERSTARTDECAYTIME,
+	UNUSEDGAPINCALIBRATION,
 	BOOSTTABLEOPENLOOP,
 	BOOSTRPMBINS,
 	BOOSTTABLECLOSEDLOOP,

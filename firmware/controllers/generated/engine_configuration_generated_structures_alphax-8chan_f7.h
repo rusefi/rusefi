@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 18 00:43:37 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 18 12:52:55 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4958,25 +4958,9 @@ struct persistent_config_s {
 	 */
 	warning_message_t warning_message;
 	/**
-	 * units: C
 	 * offset 5836
 	 */
-	float afterstartCoolantBins[AFTERSTART_HOLD_CURVE_SIZE];
-	/**
-	 * units: Seconds
-	 * offset 5868
-	 */
-	float afterstartHoldTime[AFTERSTART_HOLD_CURVE_SIZE];
-	/**
-	 * units: %
-	 * offset 5900
-	 */
-	float afterstartEnrich[AFTERSTART_ENRICH_CURVE_SIZE];
-	/**
-	 * units: Seconds
-	 * offset 5932
-	 */
-	float afterstartDecayTime[AFTERSTART_DECAY_CURVE_SIZE];
+	float unusedGapInCalibration[32];
 	/**
 	 * offset 5964
 	 */
@@ -5633,4 +5617,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22444);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 18 00:43:37 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 18 12:52:55 UTC 2024
