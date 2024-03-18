@@ -19,7 +19,9 @@ RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 PROJECT_CPU=simulator
 
 ifneq ($(BOARD_DIR),)
-  BOARDCPPSRC += $(BOARD_DIR)/default_tune.cpp
+ifneq ("$(wildcard ../firmware/$(BOARD_DIR)/default_tune.cpp)","")
+  BOARDCPPSRC += ../firmware/$(BOARD_DIR)/default_tune.cpp
+endif
 endif
 
 include ../firmware/rusefi.mk
