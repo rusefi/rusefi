@@ -794,6 +794,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif
 
 #if HW_PROTEUS
+	case engine_type_e::POLARIS_RZR:
 	case engine_type_e::MAVERICK_X3:
 	    setMaverickX3();
 		break;
