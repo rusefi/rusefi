@@ -226,7 +226,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0240317E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0240318E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -550,7 +550,7 @@
         <constant digits="0" name="launchRpmWindow" units="RPM">500.0</constant>
         <constant digits="0" name="launchSparkSkipPercent" units="%">0.0</constant>
         <constant digits="0" name="launchBoostDuty" units="%">0.0</constant>
-        <constant digits="0" name="unusedIntPadding" units="">0.0</constant>
+        <constant digits="0" name="magicNumberAvailableForDevTricks" units="">1.0</constant>
         <constant digits="0" name="turbochargerFilter" units="">0.01</constant>
         <constant digits="0" name="launchTpsThreshold" units="">0.0</constant>
         <constant digits="0" name="launchActivateDelay" units="">0.0</constant>
@@ -2379,7 +2379,7 @@
          0.0
          0.0
 </constant>
-        <constant cols="1" digits="0" name="afterstartCoolantBins" rows="8">
+        <constant cols="1" digits="0" name="unusedGapInCalibration" rows="32">
          0.0
          0.0
          0.0
@@ -2388,8 +2388,6 @@
          0.0
          0.0
          0.0
-</constant>
-        <constant cols="1" digits="1" name="afterstartHoldTime" rows="8">
          0.0
          0.0
          0.0
@@ -2398,8 +2396,6 @@
          0.0
          0.0
          0.0
-</constant>
-        <constant cols="1" digits="1" name="afterstartEnrich" rows="8">
          0.0
          0.0
          0.0
@@ -2408,8 +2404,6 @@
          0.0
          0.0
          0.0
-</constant>
-        <constant cols="1" digits="1" name="afterstartDecayTime" rows="8">
          0.0
          0.0
          0.0
@@ -4561,7 +4555,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.17.f407-discovery.2401624858" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.18.f407-discovery.15183537" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>

@@ -1,6 +1,6 @@
 # PB-comparing-against-global-defaults
 
-// canned tune https://rusefi.com/online/view.php?msq=1620
+// canned tune https://rusefi.com/online/view.php?msq=1626
 
 ```
     // default "End of injection"
@@ -10,17 +10,17 @@
     // default 2.0
     engineConfiguration->displacement = 1.6;
     // default 0.0
-    engineConfiguration->globalTriggerAngleOffset = 90;
+    engineConfiguration->globalTriggerAngleOffset = 115;
     // default "Inactive"
     engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
     // default 450.0
-    engineConfiguration->vvtOffsets[0] = 227;
+    engineConfiguration->vvtOffsets[0] = 203;
     // default 0.0
-    engineConfiguration->vvtOffsets[1] = 50;
+    engineConfiguration->vvtOffsets[1] = 20;
     // default "false"
     engineConfiguration->isPhaseSyncRequiredForIgnition = true;
     // default 200.0
-    engineConfiguration->injector.flow = 1214;
+    engineConfiguration->injector.flow = 1000;
     // default "Low"
     engineConfiguration->injectorPressureType = IPT_High;
     // default "None"
@@ -51,6 +51,8 @@
     engineConfiguration->cylinderBankSelect[10] = 1;
     // default 0.0
     engineConfiguration->cylinderBankSelect[11] = 1;
+    // default 4.0
+    engineConfiguration->benchTestOnTime = 1.5;
     // default 0.0
     engineConfiguration->tpsMin = 98;
     // default 1000.0
@@ -81,34 +83,84 @@
     engineConfiguration->enableAemXSeries = true;
     // default 15.0
     engineConfiguration->etbIdleThrottleRange = 6;
-    // default 92.0
-    engineConfiguration->fanOnTemperature = 95;
+    // default 0.05
+    engineConfiguration->idleRpmPid.pFactor = 0.03;
+    // default 0.0
+    engineConfiguration->idle_derivativeFilterLoss = 0.1;
+    // default 0.0
+    engineConfiguration->idle_antiwindupFreq = 0.1;
+    // default 0.0
+    engineConfiguration->idleRpmPid.dFactor = 5.0E-4;
+    // default 50.0
+    engineConfiguration->idlePidRpmDeadZone = 40;
+    // default "false"
+    engineConfiguration->useSeparateAdvanceForIdle = true;
+    // default "Open Loop"
+    engineConfiguration->idleMode = IM_AUTO;
+    // default "false"
+    engineConfiguration->useIdleTimingPidControl = true;
+    // default 0.0
+    engineConfiguration->idleTimingPid.dFactor = 5.0E-4;
+    // default 0.0
+    engineConfiguration->idleTimingSoftEntryTime = 1;
     // default 88.0
-    engineConfiguration->fanOffTemperature = 91;
+    engineConfiguration->fanOffTemperature = 86;
+    // default "false"
+    engineConfiguration->enableFan1WithAc = true;
+    // default "false"
+    engineConfiguration->disableFan1WhenStopped = true;
+    // default 91.0
+    engineConfiguration->fan2OffTemperature = 90;
+    // default "false"
+    engineConfiguration->enableFan2WithAc = true;
+    // default "false"
+    engineConfiguration->disableFan2WhenStopped = true;
+    // default 4.0
+    engineConfiguration->startUpFuelPumpDuration = 2;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
-    // default 550.0
-    engineConfiguration->vvtControlMinRpm = 1500;
+    // default 87.5
+    engineConfiguration->cylinderBore = 77;
     // default 0.0
-    engineConfiguration->totalGearsCount = 5;
+    engineConfiguration->knockBandCustom = 14.8;
+    // default "false"
+    engineConfiguration->fuelClosedLoopCorrectionEnabled = true;
+    // default 60.0
+    engineConfiguration->stft.startupDelay = 30;
+    // default 60.0
+    engineConfiguration->stft.minClt = 40;
+    // default 12.0
+    engineConfiguration->stft.minAfr = 10;
+    // default "advance"
+    engineConfiguration->invertVvtControlExhaust = retard;
     // default 0.0
-    engineConfiguration->gearRatio[0] = 12;
+    engineConfiguration->auxPid[0].dFactor = 5.0E-4;
     // default 0.0
-    engineConfiguration->gearRatio[1] = 6;
+    engineConfiguration->auxPid[1].offset = 33;
     // default 0.0
-    engineConfiguration->gearRatio[2] = 4.4;
+    engineConfiguration->auxPid[1].pFactor = 1;
     // default 0.0
-    engineConfiguration->gearRatio[3] = 2.4;
+    engineConfiguration->auxPid[1].iFactor = 0.005;
     // default 0.0
-    engineConfiguration->gearRatio[4] = 1;
-    // default 200.0
-    engineConfiguration->rpmSoftLimitWindowSize = 0;
-    // default 4.0
-    engineConfiguration->rpmSoftLimitTimingRetard = 0;
+    engineConfiguration->auxPid[1].dFactor = 5.0E-4;
+    // default 0.0
+    engineConfiguration->totalGearsCount = 6;
+    // default 0.0
+    engineConfiguration->gearRatio[0] = 8.1;
+    // default 0.0
+    engineConfiguration->gearRatio[1] = 4.3;
+    // default 0.0
+    engineConfiguration->gearRatio[2] = 2.9;
+    // default 0.0
+    engineConfiguration->gearRatio[3] = 2.3;
+    // default 0.0
+    engineConfiguration->gearRatio[4] = 1.88;
+    // default 0.0
+    engineConfiguration->gearRatio[5] = 1.57;
     // default "Simultaneous"
     engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-    // default 1.0
-    engineConfiguration->tpsAccelFractionDivisor = 0;
+    // default 200.0
+    engineConfiguration->afterCrankingIACtaperDuration = 100;
     // default 0.3
     engineConfiguration->wwaeTau = 0;
     // default 0.3
@@ -127,19 +179,23 @@
     engineConfiguration->rethrowHardFault = true;
     // default 3.0
     engineConfiguration->hpfpCamLobes = 4;
+    // default "NONE"
+    engineConfiguration->hpfpCam = HPFP_CAM_EX1;
+    // default 10.0
+    engineConfiguration->hpfpPeakPos = -30;
     // default 5.0
     engineConfiguration->mc33_hpfp_i_peak = 10;
     // default 3.0
     engineConfiguration->mc33_hpfp_i_hold = 4;
 
 
-	pbcannedboostTableOpenLoop();
 	pbcannedvvtTable1();
 	pbcannedvvtTable2();
 	pbcannedscriptTable4();
 	pbcannedignitionTable();
 	pbcannedveTable();
 	pbcannedinjectionPhase();
+	pbcannedmaxKnockRetardTable();
 	pbcannedlambdaTable();
 	pbcannedtcuSolenoidTable();
 ```
