@@ -55,9 +55,5 @@ java \
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARD_DIR}"; exit 1; }
 
-if [ -z "META_OUTPUT_ROOT_FOLDER" ]; then
-	META_OUTPUT_ROOT_FOLDER=""
-fi
-
 echo "Happy ${SHORT_BOARD_NAME}!"
 exit 0
