@@ -4011,10 +4011,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Allow OpenBLT",	can2OpenBLT
 
 	dialog = canBus, "CAN Bus"
-		field = "CAN read enabled",						canReadEnabled
-		field = "CAN write enabled",					canWriteEnabled
 		field = "CAN dash type",						canNbcType
 		field = "Inertia Measurement Unit",				imuType
+		field = "CAN read enabled",						canReadEnabled
+		field = "CAN write enabled",					canWriteEnabled
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
 		field = "Enable extended rusEFI CAN broadcast",			enableExtendedCanBroadcast
 		field = "rusEFI CAN data bus",	canBroadcastUseChannelTwo
