@@ -126,8 +126,8 @@ runs:
         echo "REF=${{github.ref_name}}" >> $GITHUB_ENV
         echo "${{ inputs.ADDITIONAL_ENV }}" >> $GITHUB_ENV
         which realpath >/dev/null 2>&1 || (which grealpath >/dev/null 2>&1 && alias realpath='grealpath')
-        echo "META_OUTPUT_ROOT_FOLDER=$(realpath ${{inputs.meta_output}})/" >> $GITHUB_ENV
-        echo "SIM_OUTPUT_ROOT_FOLDER=$(realpath ${{inputs.sim_output}})/" >> $GITHUB_ENV
+        echo "META_OUTPUT_ROOT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.meta_output}})/" >> $GITHUB_ENV
+        echo "SIM_OUTPUT_ROOT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.sim_output}})/" >> $GITHUB_ENV
         source ${{inputs.rusefi_dir}}/firmware/config/boards/common_script_read_meta_env.inc "${{inputs.meta_info}}"
         cd ${{inputs.rusefi_dir}}/firmware
         BOARD_DIR=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_DIR")
@@ -216,10 +216,10 @@ runs:
         ./build/rusefi_simulator 10
         ./write_tune.sh
         cd $OLDPWD
-        if [ ! "${SIM_OUTPUT_ROOT_FOLDER}" -ef "${{inputs.rusefi_dir}}/simulator/generated" ]; then
-          mkdir -p ${SIM_OUTPUT_ROOT_FOLDER}canned-tunes
-          cp ${{inputs.rusefi_dir}}/simulator/generated/*.msq ${SIM_OUTPUT_ROOT_FOLDER}
-          cp ${{inputs.rusefi_dir}}/simulator/generated/canned-tunes/*.md ${SIM_OUTPUT_ROOT_FOLDER}canned-tunes
+        if [ ! "${{inputs.sim_output}}" -ef "${{inputs.rusefi_dir}}/simulator/generated" ]; then
+          mkdir -p ${{inputs.sim_output}}canned-tunes
+          cp ${{inputs.rusefi_dir}}/simulator/generated/*.msq ${{inputs.sim_output}}
+          cp ${{inputs.rusefi_dir}}/simulator/generated/canned-tunes/*.md ${{inputs.sim_output}}canned-tunes
         fi
 
     - name: Git Config
@@ -233,8 +233,8 @@ runs:
       if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}
       shell: bash
       run: |
-        git add "${SIM_OUTPUT_ROOT_FOLDER}*msq"
-        git add "${SIM_OUTPUT_ROOT_FOLDER}canned-tunes/*md"
+        git add "${{inputs.sim_output}}*msq"
+        git add "${{inputs.sim_output}}canned-tunes/*md"
         OUT=$(git commit -m "Auto-generated Default Tune" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Tune: looks like nothing to commit"
@@ -246,7 +246,7 @@ runs:
       if: ${{ inputs.push == 'true' }}
       shell: bash
       run: |
-        git add ${META_OUTPUT_ROOT_FOLDER}*
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
         OUT=$(git commit -m "Auto-generated Configs" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Configs: looks like nothing to commit"
@@ -276,7 +276,7 @@ runs:
 
     - name: Upload .ini files to rusEFI Online server
       if: ${{ contains(inputs.uploads, 'ini') }}
-      working-directory: ${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
+      working-directory: ${{inputs.rusefi_dir}}/firmware/${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
       shell: bash
       run: ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE_FTP_USER }} ${{ inputs.RUSEFI_ONLINE_FTP_PASS }} ${{ inputs.RUSEFI_FTP_SERVER }}
 
