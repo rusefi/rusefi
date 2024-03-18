@@ -218,15 +218,6 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->stft.cellCfgs[3] = { 5, -5, 30 };
 }
 
-static void miataNAcommon() {
-	engineConfiguration->idle.solenoidPin = Gpio::B9; // this W61 <> W61 jumper, pin 3W
-
-	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
-	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[2] = Gpio::C7; // Frankenso high side - pin 1H
-	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-}
-
 /**
  * MIATA_NA6_MAP
  */
@@ -271,90 +262,12 @@ void setMiataNA6_MAP_Frankenso() {
 	// W58 PE4 A/C fan relay out
 #endif /* EFI_UNIT_TEST */
 
-	miataNAcommon();
-}
+	engineConfiguration->idle.solenoidPin = Gpio::B9; // this W61 <> W61 jumper, pin 3W
 
-
-/**
- * set engine_type 66
- */
-void setMiataNA6_MAP_MRE() {
-	miataNAcommonEngineSettings();
-
-	engineConfiguration->triggerInputPins[0] = Gpio::A5;
-	engineConfiguration->triggerInputPins[1] = Gpio::C6;
-	engineConfiguration->camInputs[0] = Gpio::Unassigned;
-
-	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
-
-	engineConfiguration->useIacTableForCoasting = true;
-	engineConfiguration->idlePidDeactivationTpsThreshold = 90;
-
-	engineConfiguration->idleRpmPid.pFactor = 0.01;
-	engineConfiguration->idleRpmPid.iFactor = 0.02;
-	engineConfiguration->idle_derivativeFilterLoss = 0.1;
-	engineConfiguration->idle_antiwindupFreq = 0.1;
-	engineConfiguration->idleRpmPid.dFactor = 0.002;
-	engineConfiguration->acIdleExtraOffset = 14;
-	engineConfiguration->idleRpmPid.minValue = -7;
-	engineConfiguration->idleRpmPid.maxValue = 35;
-	engineConfiguration->idleRpmPid.periodMs = 40;
-	engineConfiguration->idlerpmpid_iTermMin = -6;
-	engineConfiguration->idlerpmpid_iTermMax = 30;
-	engineConfiguration->pidExtraForLowRpm = 25;
-	engineConfiguration->idlePidRpmDeadZone = 25;
-	engineConfiguration->idlePidRpmUpperLimit = 1000;
-
-	engineConfiguration->useIdleTimingPidControl = true;
-	engineConfiguration->idleTimingPid.pFactor = 0.05;
-	engineConfiguration->idleTimingPid.iFactor = 0.0;
-	engineConfiguration->idleTimingPid.dFactor = 0.0;
-	engineConfiguration->idleTimingPid.minValue = -13;
-	engineConfiguration->idleTimingPid.maxValue = 13;
-
-	// EFI_ADC_3: "22 - AN temp 4"
-	engineConfiguration->acSwitch = Gpio::A3;
-
-#if HW_MICRO_RUSEFI
-	// todo: ask Stefan to clarify this
-	engineConfiguration->tps1_1AdcChannel = MRE_IN_ANALOG_VOLT_2; // "26 - AN volt 2"
-	engineConfiguration->tpsMin = 0;
-	engineConfiguration->tpsMax = 982;
-
-	engineConfiguration->map.sensor.hwChannel = MRE_IN_ANALOG_VOLT_5; // "20 - AN volt 5"
-
-	engineConfiguration->mafAdcChannel = MRE_IN_ANALOG_VOLT_9; // "40 - AN volt 9"
-#endif // HW_MICRO_RUSEFI
-
-
-#if (BOARD_TLE8888_COUNT > 0)
-	// Gpio::G1: "Clutch Switch"
-	engineConfiguration->clutchDownPin = Gpio::G1;
-
-	engineConfiguration->fanPin = Gpio::Unassigned;
-
-
-	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_PIN_23;
-
-#endif /* BOARD_TLE8888_COUNT */
-}
-
-void setMiata94_MAP_MRE() {
-	setMiataNA6_MAP_MRE();
-
-#if (BOARD_TLE8888_COUNT > 0)
-	// "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_21;
-#endif /* BOARD_TLE8888_COUNT */
-
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->displacement = 1.8;
-	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
-	strcpy(engineConfiguration->engineCode, "94");
-
-	engineConfiguration->map.sensor.type = MT_MPX4250;
-
+	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::C7; // Frankenso high side - pin 1H
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 }
 
 void setHellenNA94() {

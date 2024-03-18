@@ -72,35 +72,6 @@ static const uint8_t miataNA8_maf_advance_table[16][16] = { {/*0  engineLoad=1.2
 		+29, /*12 5760.0*/+28, /*13 6173.0*/+28, /*14 6586.0*/+27, /*15 7000.0*/+27 } };
 #endif
 
-static void commonMiataNa() {
-	engineConfiguration->trigger.type = trigger_type_e::TT_MAZDA_MIATA_NA;
-	engineConfiguration->engineChartSize = 100;
-
-	engineConfiguration->triggerInputPins[0] = Gpio::C6; // 2G YEL/BLU
-	engineConfiguration->triggerInputPins[1] = Gpio::A5; // 2E White CKP
-
-	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-
-	engineConfiguration->idle.solenoidFrequency = 160;
-
-	// Frankenstein: high side #1 is PE8
-	// Frankenstein: high side #2 is PE10
-	// Frankenstein: high side #3 is PE12
-	// Frankenstein: high side #4 is PE14
-	// Frankenstein: high side #5 is PC9
-	// Frankenstein: high side #6 is PC7
-
-	engineConfiguration->ignitionPins[0] = Gpio::E12; // Frankenstein: high side #3
-	engineConfiguration->ignitionPins[1] = Gpio::E14; // Frankenstein: high side #4
-	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-
-	engineConfiguration->cranking.baseFuel = 24;
-
-	setCommonNTCSensor(&engineConfiguration->clt, 2700);
-	setCommonNTCSensor(&engineConfiguration->iat, 2700);
-}
-
 void common079721_2351() {
 
 	engineConfiguration->engineChartSize = 300;
@@ -131,43 +102,4 @@ void common079721_2351() {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 	engineConfiguration->clt.adcChannel = EFI_ADC_11;
 
-}
-
-/**
- * Tom tomiata, Frankenstein board
- */
-void setFrankensteinMiata1996() {
-	commonMiataNa();
-	engineConfiguration->displacement = 1.839;
-
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTable(config->ignitionTable, miataNA8_maf_advance_table);
-#endif
-
-	// upside down
-	engineConfiguration->triggerInputPins[0] = Gpio::A5;
-	engineConfiguration->triggerInputPins[1] = Gpio::C6;
-
-	engineConfiguration->fuelPumpPin = Gpio::E4;
-	engineConfiguration->idle.solenoidPin = Gpio::E5;
-
-	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-	engineConfiguration->clt.adcChannel = EFI_ADC_11;
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
-
-	engineConfiguration->ignitionPins[0] = Gpio::E12; // Frankenstein: high side #3
-	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[2] = Gpio::E14; // Frankenstein: high side #4
-	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-
-	// harness is sequential but we have a limited board
-	engineConfiguration->crankingInjectionMode = IM_BATCH;
-	engineConfiguration->injectionMode = IM_BATCH;
-
-	engineConfiguration->injectionPins[0] = Gpio::B9; // Frankenstein: low side - out #12
-	engineConfiguration->injectionPins[1] = Gpio::B8; // Frankenstein: low side - out #11
-	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
-	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
-	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
-	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
 }

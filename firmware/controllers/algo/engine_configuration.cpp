@@ -683,12 +683,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi();
 		break;
-	case engine_type_e::MRE_MIATA_94_MAP:
-		setMiata94_MAP_MRE();
-		break;
-	case engine_type_e::MRE_MIATA_NA6_MAP:
-		setMiataNA6_MAP_MRE();
-		break;
+	case engine_type_e::ET_UNUSED_20:
+	case engine_type_e::ET_UNUSED_66:
 	case engine_type_e::MRE_BODY_CONTROL:
 		mreBCM();
 		break;
@@ -863,9 +859,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
-	case engine_type_e::MIATA_1996:
-		setFrankensteinMiata1996();
-		break;
+	case engine_type_e::ET_UNUSED_21:
 	case engine_type_e::CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration();
 		break;

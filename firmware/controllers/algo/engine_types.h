@@ -44,13 +44,13 @@ enum class engine_type_e : uint32_t {
 
 	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
 	HELLEN_NA8_96 = 10,
-	MRE_MIATA_NA6_MAP = 66,
+	ET_UNUSED_66 = 66,
 
 	TEST_ROTARY = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
-	MRE_MIATA_94_MAP = 20,
-	MIATA_1996 = 21,
+	ET_UNUSED_20 = 20,
+	ET_UNUSED_21 = 21,
 
 	FORD_ESCORT_GT = 14,
 
