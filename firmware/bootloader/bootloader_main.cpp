@@ -9,6 +9,8 @@ extern "C" {
 	#include "shared_params.h"
 }
 
+static blt_bool waitedLongerThanTimeout = BLT_FALSE;
+
 class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
 protected:
 	void main(void) override {
@@ -55,6 +57,16 @@ protected:
 
 static BlinkyThread blinky;
 
+static blt_bool checkIfInOpenBltMode(void) {
+	uint8_t value = 0x00;
+	if (SharedParamsReadByIndex(0, &value) && (value == 0x01)) {
+		/* clear */
+		SharedParamsWriteByIndex(0, 0x00);
+		return BLT_TRUE;
+	}
+	return BLT_FALSE;
+}
+
 int main(void) {
 	halInit();
 	chSysInit();
@@ -70,8 +82,22 @@ int main(void) {
 	// Init openblt itself
 	BootInit();
 
+	blt_bool stayInBootloader = checkIfInOpenBltMode();
+	blt_bool wasConnected = BLT_FALSE;
 	while (true) {
 		BootTask();
+
+		// since BOOT_BACKDOOR_HOOKS_ENABLE==TRUE, BackDoorCheck() is not working
+		// so we have to manually check if we need to jump to the main firmware
+		if (ComIsConnected() == BLT_TRUE)
+			wasConnected = BLT_TRUE;
+		blt_bool isTimeout = (TIME_I2MS(chVTGetSystemTime()) >= BOOT_BACKDOOR_ENTRY_TIMEOUT_MS);
+		if (isTimeout == BLT_TRUE) {
+			waitedLongerThanTimeout = BLT_TRUE;
+			if (wasConnected == BLT_FALSE && stayInBootloader == BLT_FALSE) {
+				CpuStartUserProgram();
+			}
+		}
 	}
 }
 
