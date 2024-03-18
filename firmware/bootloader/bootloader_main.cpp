@@ -50,7 +50,9 @@ protected:
 				palTogglePad(greenPort, greenPin);
 			}
 			// blink 3 times faster if Dual Bank is not enabled
-			chThdSleepMilliseconds(isFlashDualBank() ? 250 : 80);
+			auto delay = isFlashDualBank() ? 125 : 40;
+			// blink faster if not in the waiting mode
+			chThdSleepMilliseconds(waitedLongerThanTimeout ? (delay * 2) : delay);
 		}
 	}
 };
