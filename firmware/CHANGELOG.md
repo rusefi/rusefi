@@ -39,6 +39,7 @@ Release template (copy/paste this for new release):
  - Disabling slow connectivity mode for now #6170
  - hellen128 better ETB pin choice between rev A/B and C
  - Base map values for Open Loop Boost Duty should be 0% #6188
+ - HPFP control on cam with variable timing #6245
 
 ## March 2024 "Day 740"
 

@@ -8,16 +8,15 @@ using ::testing::StrictMock;
 
 TEST(HPFP, Lobe) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->magicNumberAvailableForDevTricks = 2;
 
 	engineConfiguration->hpfpCam = HPFP_CAM_NONE;
 	engineConfiguration->hpfpPeakPos = 123;
 	engineConfiguration->hpfpCamLobes = 3;
 
-	engine->triggerCentral.vvtPosition[0][0] = 20; // Bank 0
-	engine->triggerCentral.vvtPosition[0][1] = 40;
-	engine->triggerCentral.vvtPosition[1][0] = 60; // Bank 1
-	engine->triggerCentral.vvtPosition[1][1] = 80;
+	engine->triggerCentral.vvtPosition[0][0] = 40; // Bank 0
+	engine->triggerCentral.vvtPosition[0][1] = 80;
+	engine->triggerCentral.vvtPosition[1][0] =120; // Bank 1
+	engine->triggerCentral.vvtPosition[1][1] =160;
 
 	HpfpLobe lobe;
 
