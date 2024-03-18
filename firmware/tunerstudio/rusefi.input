@@ -4947,7 +4947,7 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = hpfpCamDialog, "HPFP Cam Configuration"
 		field = "Number of lobes", hpfpCamLobes
 		field = "If using VVT, which cam the pump is driven from", hpfpCam, {hpfpCamLobes != 0}
-		field = "Angle of first lobe", hpfpPeakPos, {hpfpCamLobes != 0}
+		field = "Angle of first lobe peak", hpfpPeakPos, {hpfpCamLobes != 0}
 		panel = hpfpLobeProfileCurve, {hpfpCamLobes != 0}
 
 	dialog = hpfpPumpDialog, "HPFP Pump Configuration"
