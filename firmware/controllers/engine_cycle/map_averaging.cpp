@@ -185,6 +185,7 @@ void refreshMapAveragingPreCalc() {
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+		  // todo: potential micro-optimization to reuse getEngineState()->engineCycle?
 			angle_t cylinderOffset = getEngineCycle(getEngineRotationState()->getOperationMode()) * i / engineConfiguration->cylindersCount;
 			efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can

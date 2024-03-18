@@ -287,6 +287,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 					rpmState->setRpmValue(NOISY_RPM);
 					rpmState->rpmRate = 0;
 				} else {
+				  // todo: extract utility method? see duplication with high_pressure_pump.cpp
 					int mult = (int)getEngineCycle(getEngineRotationState()->getOperationMode()) / 360;
 					float rpm = 60 * mult / periodSeconds;
 

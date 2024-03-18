@@ -61,11 +61,13 @@ angle_t HpfpLobe::findNextLobe() {
 	// Calculate impact of VVT
 	angle_t vvt = 0;
 	if (engineConfiguration->hpfpCam != HPFP_CAM_NONE) {
+  	// pump operates in cam-angle domain which is different speed from crank-angle domain on 4 stroke engines
+  	int mult = (int)getEngineCycle(getEngineRotationState()->getOperationMode()) / 360;
 	  int camIndex = engineConfiguration->hpfpCam - 1;
 		// TODO: Is the sign correct here?  + means ATDC?
 		vvt = engine->triggerCentral.getVVTPosition(
 			BANK_BY_INDEX(camIndex),
-			CAM_BY_INDEX(camIndex);
+			CAM_BY_INDEX(camIndex)) / mult * engineConfiguration->magicNumberAvailableForDevTricks;
 	}
 
 	return engineConfiguration->hpfpPeakPos + vvt + next_index * 720 / lobes;
