@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 17 22:28:33 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 18 00:44:32 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1375,7 +1375,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.03.17.f407-discovery.2401624858";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.03.18.f407-discovery.2477908336";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1920,7 +1920,7 @@ public class Fields {
 	public static final Field LAUNCHRPMWINDOW = Field.create("LAUNCHRPMWINDOW", 1048, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHSPARKSKIPPERCENT = Field.create("LAUNCHSPARKSKIPPERCENT", 1052, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHBOOSTDUTY = Field.create("LAUNCHBOOSTDUTY", 1056, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDINTPADDING = Field.create("UNUSEDINTPADDING", 1060, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field MAGICNUMBERAVAILABLEFORDEVTRICKS = Field.create("MAGICNUMBERAVAILABLEFORDEVTRICKS", 1060, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TURBOCHARGERFILTER = Field.create("TURBOCHARGERFILTER", 1064, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field LAUNCHTPSTHRESHOLD = Field.create("LAUNCHTPSTHRESHOLD", 1068, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHACTIVATEDELAY = Field.create("LAUNCHACTIVATEDELAY", 1072, FieldType.FLOAT).setBaseOffset(0);
@@ -3568,7 +3568,7 @@ public class Fields {
 	LAUNCHRPMWINDOW,
 	LAUNCHSPARKSKIPPERCENT,
 	LAUNCHBOOSTDUTY,
-	UNUSEDINTPADDING,
+	MAGICNUMBERAVAILABLEFORDEVTRICKS,
 	TURBOCHARGERFILTER,
 	LAUNCHTPSTHRESHOLD,
 	LAUNCHACTIVATEDELAY,

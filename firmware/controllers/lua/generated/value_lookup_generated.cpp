@@ -691,6 +691,9 @@ float getConfigValueByName(const char *name) {
 // launchBoostDuty
 		case -232786835:
 			return engineConfiguration->launchBoostDuty;
+// magicNumberAvailableForDevTricks
+		case -2071167002:
+			return engineConfiguration->magicNumberAvailableForDevTricks;
 // turbochargerFilter
 		case 983814707:
 			return engineConfiguration->turbochargerFilter;
@@ -2938,6 +2941,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -232786835:
 	{
 		engineConfiguration->launchBoostDuty = (int)value;
+		return 1;
+	}
+		case -2071167002:
+	{
+		engineConfiguration->magicNumberAvailableForDevTricks = value;
 		return 1;
 	}
 		case 983814707:

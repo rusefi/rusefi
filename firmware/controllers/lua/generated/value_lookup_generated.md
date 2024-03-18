@@ -685,6 +685,9 @@ Spark Skip Transition Target
 ### launchBoostDuty
 Duty Cycle for the Boost Solenoid
 
+### magicNumberAvailableForDevTricks
+null
+
 ### turbochargerFilter
 null
 
