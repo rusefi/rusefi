@@ -180,6 +180,10 @@ case engine_type_e::ET_UNUSED_15:
   return "ET_UNUSED_15";
 case engine_type_e::ET_UNUSED_17:
   return "ET_UNUSED_17";
+case engine_type_e::ET_UNUSED_20:
+  return "ET_UNUSED_20";
+case engine_type_e::ET_UNUSED_21:
+  return "ET_UNUSED_21";
 case engine_type_e::ET_UNUSED_33:
   return "ET_UNUSED_33";
 case engine_type_e::ET_UNUSED_43:
@@ -188,6 +192,8 @@ case engine_type_e::ET_UNUSED_57:
   return "ET_UNUSED_57";
 case engine_type_e::ET_UNUSED_61:
   return "ET_UNUSED_61";
+case engine_type_e::ET_UNUSED_66:
+  return "ET_UNUSED_66";
 case engine_type_e::ET_UNUSED_92:
   return "ET_UNUSED_92";
 case engine_type_e::ET_UNUSED_93:
@@ -270,8 +276,6 @@ case engine_type_e::MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case engine_type_e::MAZDA_MIATA_2003_NA_RAIL:
   return "MAZDA_MIATA_2003_NA_RAIL";
-case engine_type_e::MIATA_1996:
-  return "MIATA_1996";
 case engine_type_e::MIATA_PROTEUS_TCU:
   return "MIATA_PROTEUS_TCU";
 case engine_type_e::MINIMAL_PINS:
@@ -284,10 +288,6 @@ case engine_type_e::MRE_BODY_CONTROL:
   return "MRE_BODY_CONTROL";
 case engine_type_e::MRE_M111:
   return "MRE_M111";
-case engine_type_e::MRE_MIATA_94_MAP:
-  return "MRE_MIATA_94_MAP";
-case engine_type_e::MRE_MIATA_NA6_MAP:
-  return "MRE_MIATA_NA6_MAP";
 case engine_type_e::MRE_SUBARU_EJ18:
   return "MRE_SUBARU_EJ18";
 case engine_type_e::MRE_VW_B6:
