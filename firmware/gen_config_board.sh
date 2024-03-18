@@ -40,7 +40,10 @@ cd "$FDIR"
 source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
+JAVA_REMOTE_DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+
 # in rare cases order of arguments is important - '-tool' should be specified before '-definition'
+ #java $JAVA_REMOTE_DEBUG \
 java \
  $COMMON_GEN_CONFIG_PREFIX \
  	-tool gen_config.sh \
