@@ -967,7 +967,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     int launchRpmWindow;Starting Launch RPM window to activate (subtracts from Launch RPM);"RPM", 1, 0, 0, 8000, 0
     int launchSparkSkipPercent;Spark Skip Transition Target;"%", 1, 0, 0, 100, 0
     int launchBoostDuty;Duty Cycle for the Boost Solenoid;"%", 1, 0, 0, 100, 0
-	int unusedIntPadding
+	float magicNumberAvailableForDevTricks
 	float turbochargerFilter
 	int launchTpsThreshold;;"", 1, 0, 0, 20000, 0
 	float launchActivateDelay;;"", 1, 0, 0, 20000, 0

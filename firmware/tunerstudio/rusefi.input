@@ -4760,6 +4760,7 @@ dialog = tcuControls, "Transmission Settings"
         field = auxSpeed1Multiplier,    auxSpeed1Multiplier
         field = useAuxSpeedForSlipRatio, useAuxSpeedForSlipRatio
         field = useVssAsSecondWheelSpeed, useVssAsSecondWheelSpeed
+        field = magicNumberAvailableForDevTricks, magicNumberAvailableForDevTricks
         field = brakeMeanEffectivePressureDifferential, brakeMeanEffectivePressureDifferential
 
 	dialog = mc33810Dialog, "MC33810 IGN/INJ driver"
