@@ -4,6 +4,7 @@ import com.rusefi.*;
 import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.Output;
 import com.rusefi.util.SystemOut;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 
@@ -22,6 +23,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     private final String tsPath;
     private final ReaderStateImpl state;
+    public boolean dropComments;
     private int totalTsSize;
     private final TsOutput tsOutput;
 
@@ -70,7 +72,13 @@ public class TSProjectConsumer implements ConfigurationConsumer {
      */
     private TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {
         String fileName = getTsFileInputName(tsPath);
-        BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), CHARSET.name()));
+        FileInputStream in = new FileInputStream(fileName);
+        return getTsFileContent(in);
+    }
+
+    @NotNull
+    public TsFileContent getTsFileContent(InputStream in) throws IOException {
+        BufferedReader r = new BufferedReader(new InputStreamReader(in, CHARSET));
 
         StringBuilder prefix = new StringBuilder();
         StringBuilder postfix = new StringBuilder();
@@ -87,6 +95,8 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 isAfterEndTag = true;
                 continue;
             }
+            if (line.trim().startsWith("!") && dropComments)
+                continue;
 
             if (line.contains(TS_CONDITION)) {
                 String token = getToken(line);

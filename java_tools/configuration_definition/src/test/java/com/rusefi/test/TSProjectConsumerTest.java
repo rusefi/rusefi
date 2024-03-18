@@ -1,14 +1,23 @@
 package com.rusefi.test;
 
 import com.rusefi.ReaderStateImpl;
+import com.rusefi.TsFileContent;
 import com.rusefi.output.BaseCHeaderConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.io.StringBufferInputStream;
+
 import static com.rusefi.AssertCompatibility.assertEquals;
 
 public class TSProjectConsumerTest {
+    private static final String smallContent = "hello = \"!\"\n" +
+        "world!comment\n" +
+        "!comment2\n" +
+        "end\n";
+
     @Test
     public void getTsCondition() {
         assertEquals("ts", TSProjectConsumer.getToken("\"HIP9011 Settings (knock sensor) (alpha version)\"  @@if_ts\r\n"));
@@ -121,4 +130,22 @@ public class TSProjectConsumerTest {
                 "static_assert(sizeof(pid_s) == 1);\n" +
                 "\n", consumer.getContent());
     }
-}
+
+    @Test
+    public void testReaderKeepComments() throws IOException {
+        TSProjectConsumer consumer = new TestTSProjectConsumer(null, new ReaderStateImpl());
+        TsFileContent content = consumer.getTsFileContent(new StringBufferInputStream(smallContent));
+        assertEquals(smallContent, content.getPrefix());
+        assertEquals("", content.getPostfix());
+    }
+
+    @Test
+    public void testReaderDropComments() throws IOException {
+        TSProjectConsumer consumer = new TestTSProjectConsumer(null, new ReaderStateImpl());
+        consumer.dropComments = true;
+        TsFileContent content = consumer.getTsFileContent(new StringBufferInputStream(smallContent));
+        assertEquals("hello = \"!\"\n" +
+            "world!comment\n" +
+            "end\n", content.getPrefix());
+        assertEquals("", content.getPostfix());
+    }}
