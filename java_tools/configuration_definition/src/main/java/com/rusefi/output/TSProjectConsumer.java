@@ -20,10 +20,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String TS_CONDITION = "@@if_";
     public static final String SETTING_CONTEXT_HELP_END = "SettingContextHelpEnd";
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
+    public static final String TS_DROP_TEMPLATE_COMMENTS = "ts_drop_template_comments";
 
     private final String tsPath;
     private final ReaderStateImpl state;
-    public boolean dropComments;
+    private boolean dropComments;
     private int totalTsSize;
     private final TsOutput tsOutput;
 
@@ -52,7 +53,9 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         tsHeader.write(tsContent.getPrefix());
 
         tsHeader.write("; " + CONFIG_DEFINITION_START + ToolUtil.EOL);
-        tsHeader.write("; this section " + state.getHeader() + ToolUtil.EOL + ToolUtil.EOL);
+        if (!dropComments) {
+            tsHeader.write("; this section " + state.getHeader() + ToolUtil.EOL + ToolUtil.EOL);
+        }
         tsHeader.write("pageSize            = " + totalTsSize + ToolUtil.EOL);
         tsHeader.write("page = 1" + ToolUtil.EOL);
         tsHeader.write(fieldsSection);
@@ -83,6 +86,8 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         StringBuilder prefix = new StringBuilder();
         StringBuilder postfix = new StringBuilder();
 
+        dropComments = Boolean.valueOf(state.getVariableRegistry().get(TS_DROP_TEMPLATE_COMMENTS));
+
         boolean isBeforeStartTag = true;
         boolean isAfterEndTag = false;
         String line;
@@ -95,7 +100,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 isAfterEndTag = true;
                 continue;
             }
-            if (line.trim().startsWith("!") && dropComments)
+            if (line.trim().startsWith(";") && dropComments)
                 continue;
 
             if (line.contains(TS_CONDITION)) {

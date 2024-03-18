@@ -78,7 +78,8 @@ enable2ndByteCanID = false
 	retrieveConfigError = "e"
 
 ;communication settings
-	pageActivationDelay = 500 ; Milliseconds delay after burn command. See https://sourceforge.net/p/rusefi/tickets/77/
+; Milliseconds delay after burn command. See https://sourceforge.net/p/rusefi/tickets/77/
+	pageActivationDelay = 500
 ;e.g. put writeblocks off and add an interwrite delay
 	writeBlocks = on
 	interWriteDelay = 10

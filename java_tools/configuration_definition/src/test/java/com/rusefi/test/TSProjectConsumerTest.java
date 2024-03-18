@@ -13,9 +13,9 @@ import java.io.StringBufferInputStream;
 import static com.rusefi.AssertCompatibility.assertEquals;
 
 public class TSProjectConsumerTest {
-    private static final String smallContent = "hello = \"!\"\n" +
-        "world!comment\n" +
-        "!comment2\n" +
+    private static final String smallContent = "hello = \";\"\n" +
+        "world;comment\n" +
+        ";comment2\n" +
         "end\n";
 
     @Test
@@ -141,11 +141,12 @@ public class TSProjectConsumerTest {
 
     @Test
     public void testReaderDropComments() throws IOException {
-        TSProjectConsumer consumer = new TestTSProjectConsumer(null, new ReaderStateImpl());
-        consumer.dropComments = true;
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer consumer = new TestTSProjectConsumer(null, state);
+        state.getVariableRegistry().put(TSProjectConsumer.TS_DROP_TEMPLATE_COMMENTS, "true");
         TsFileContent content = consumer.getTsFileContent(new StringBufferInputStream(smallContent));
-        assertEquals("hello = \"!\"\n" +
-            "world!comment\n" +
+        assertEquals("hello = \";\"\n" +
+            "world;comment\n" +
             "end\n", content.getPrefix());
         assertEquals("", content.getPostfix());
     }}
