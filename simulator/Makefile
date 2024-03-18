@@ -174,6 +174,7 @@ CSRC =  $(ALLCSRC) \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
+  $(BOARDCPPSRC) \
   $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
   $(HW_LAYER_DRIVERS_CPP) \
   $(HW_LAYER_DRIVERS_CORE_CPP) \
