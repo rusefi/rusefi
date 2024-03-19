@@ -20,6 +20,7 @@ static void cannedcltIdleCorr() {
 }
 
 static void couplecannedveTable() {
+#if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT)
 	static const float hardCodedveTable[16][16] = {
 {52.000,	54.000,	54.000,	56.000,	61.000,	55.000,	55.000,	65.000,	65.000,	60.000,	60.000,	60.000,	60.000,	60.000,	60.000,	60.000,	},
 {51.500,	54.500,	54.400,	56.000,	61.000,	68.100,	66.800,	67.600,	68.200,	63.400,	63.400,	63.400,	63.400,	63.400,	63.400,	63.400,	},
@@ -39,9 +40,11 @@ static void couplecannedveTable() {
 {65.700,	86.000,	88.000,	92.300,	96.600,	98.900,	100.700,	102.600,	102.900,	100.400,	99.800,	99.000,	98.400,	97.800,	97.500,	100.500,	},
 };
 	copyTable(config->veTable, hardCodedveTable);
+#endif
 }
 
 static void couplecannedignitionTable() {
+#if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT)
 	static const float hardCodedignitionTable[16][16] = {
 {12.100,	14.000,	17.800,	22.900,	29.300,	35.600,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	42.000,	42.000,	42.000,	42.000,	},
 {11.800,	13.700,	10.000,	14.900,	28.600,	34.800,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	41.000,	41.000,	41.000,	41.000,	},
@@ -60,6 +63,7 @@ static void couplecannedignitionTable() {
 {1.800,	5.600,	6.200,	6.500,	6.800,	7.100,	7.000,	8.500,	10.000,	10.400,	10.800,	11.100,	11.500,	11.900,	12.300,	13.000,	},
 {-1.200,	2.600,	3.200,	3.600,	4.100,	5.000,	7.100,	7.800,	8.400,	9.000,	9.400,	9.500,	9.700,	9.800,	10.000,	10.000,	},
 };
+#endif
 	copyTable(config->ignitionTable, hardCodedignitionTable);
 }
 
