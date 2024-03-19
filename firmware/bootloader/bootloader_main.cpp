@@ -87,6 +87,7 @@ int main(void) {
 	blt_bool stayInBootloader = checkIfRebootIntoOpenBltRequested();
 	blt_bool wasConnected = BLT_FALSE;
 	while (true) {
+#if (BOOT_BACKDOOR_ENTRY_TIMEOUT_MS > 0)
 		BootTask();
 
 		// since BOOT_BACKDOOR_HOOKS_ENABLE==TRUE, BackDoorCheck() is not working
@@ -96,6 +97,7 @@ int main(void) {
 			wasConnected = BLT_TRUE;
 			continue;
 		}
+#endif // BOOT_BACKDOOR_ENTRY_TIMEOUT_MS
 		if (stayInBootloader)
 			continue;
 		blt_bool isTimeout = (TIME_I2MS(chVTGetSystemTime()) >= BOOT_BACKDOOR_ENTRY_TIMEOUT_MS);
