@@ -149,7 +149,7 @@ jobs:
 
           - build-target: hellen128
             folder: config/boards/hellen/hellen128
-            ini-file: fome_hellen128mercedes.ini
+            ini-file: fome_hellen128.ini
 
           # - build-target: hellen121vag
           #   folder: config/boards/hellen/hellen121vag
