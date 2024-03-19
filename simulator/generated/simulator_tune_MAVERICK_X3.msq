@@ -218,7 +218,7 @@
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
         <constant digits="4" name="idle_derivativeFilterLoss" units="x">0.0</constant>
         <constant digits="0" name="trailingSparkAngle" units="angle">10.0</constant>
-        <constant name="trigger_type">"36/2"</constant>
+        <constant name="trigger_type">"36-2"</constant>
         <constant digits="0" name="trigger_customTotalToothCount" units="number">0.0</constant>
         <constant digits="0" name="trigger_customSkippedToothCount" units="number">0.0</constant>
         <constant digits="1" name="airByRpmTaper" units="%">0.0</constant>
@@ -4553,7 +4553,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.19.f407-discovery.2404810828" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.19.f407-discovery.1179090729" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>

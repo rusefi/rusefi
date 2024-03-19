@@ -5,7 +5,7 @@
 ```
     // default 2.0
     engineConfiguration->displacement = 1.493;
-    // default "60/2"
+    // default "60-2"
     engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
     // default 0.0
     engineConfiguration->trigger.customTotalToothCount = 24;
