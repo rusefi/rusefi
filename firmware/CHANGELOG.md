@@ -41,6 +41,9 @@ Release template (copy/paste this for new release):
  - Base map values for Open Loop Boost Duty should be 0% #6188
  - HPFP control on cam with variable timing #6245
 
+### Breaking Changes
+ - wrong trigger naming for missing teeth #6258
+
 ## March 2024 "Day 740"
 
 ### Breaking Changes
