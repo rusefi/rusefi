@@ -2358,15 +2358,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
-		field = "Injector flow",			injector_flow, {isInjectionEnabled == 1}
-		field = "Injector flow units",		injectorFlowAsMassFlow, {isInjectionEnabled == 1}
+		field = "Injector flow(cc/min)",		injector_flow, {isInjectionEnabled}, {!injectorFlowAsMassFlow}
+		field = "Injector flow(g/s)",			injector_flow, {isInjectionEnabled}, {injectorFlowAsMassFlow}
+		field = "Injector flow units",		injectorFlowAsMassFlow, {isInjectionEnabled}
 		field = "Fuel rail pressure sensor", injectorPressureType, { isInjectionEnabled && (highPressureFuel_hwChannel || lowPressureFuel_hwChannel) }
 		field = "Injector flow compensation mode", injectorCompensationMode, { isInjectionEnabled }
 		field = "Injector reference pressure", fuelReferencePressure, { isInjectionEnabled && injectorCompensationMode != 0 }
 
 	dialog = fuelParams, "Fuel characteristics", yAxis
-		field = "Stoichiometric ratio",			stoichRatioPrimary, {isInjectionEnabled == 1}
-		field = "E100 stoichiometric ratio",	stoichRatioSecondary, {isInjectionEnabled == 1 && flexSensorPin != 0 }
+		field = "Stoichiometric ratio",			stoichRatioPrimary, {isInjectionEnabled}
+		field = "E100 stoichiometric ratio",	stoichRatioSecondary, {isInjectionEnabled && flexSensorPin != 0 }
 
 	dialog = injectorPins, "Injector Outputs",	yAxis
 		field = "Use only first half of outputs for batch mode"
@@ -2411,9 +2412,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "x^7",								injectorCorrectionPolynomial8
 
 	dialog = injectorNonlinearFord, "Ford-model Small Pulse Correction", yAxis
-		field = "Small pulse slope (ALOSL)",			fordInjectorSmallPulseSlope
+		field = "Small pulse slope (ALOSL, g/s)",			fordInjectorSmallPulseSlope
 		field = "Set this to 'mass flow'",				injectorFlowAsMassFlow
-		field = "Large pulse slope (AHISL)",			injector_flow
+		field = "Large pulse slope (AHISL, g/s)",			injector_flow
 		field = "Small pulse breakpoint (FUEL_BKPT)",	fordInjectorSmallPulseBreakPoint
 
 	dialog = injectorNonlinear
@@ -2488,7 +2489,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = stagedInjection, "",	yAxis
 		field = "Enable", enableStagedInjection, {isInjectionEnabled}
 		field = ""
-		field = "Secondary injector flow", injectorSecondary_flow {isInjectionEnabled && enableStagedInjection}
+		field = "Secondary injector flow(cc/min)",	injectorSecondary_flow, {isInjectionEnabled && enableStagedInjection}, {!injectorFlowAsMassFlow}
+		field = "Secondary injector flow(g/s)",		injectorSecondary_flow, {isInjectionEnabled && enableStagedInjection}, {injectorFlowAsMassFlow}
 		field = ""
 		panel = injectorsSecondaryDeadTime, {isInjectionEnabled && enableStagedInjection}
 

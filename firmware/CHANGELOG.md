@@ -39,6 +39,7 @@ or
 
 ### Fixed
  - Improve performance with Lua CAN reception of a high volume of frames
+ - Displayed units in TunerStudio change when switching between volume vs. mass injector flow modes #42
 
 ## December 2023 Release
 

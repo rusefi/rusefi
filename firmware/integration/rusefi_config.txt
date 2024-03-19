@@ -392,7 +392,7 @@ custom can_nbc_e 1 bits, U08, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8
 can_nbc_e canNbcType
 
 struct injector_s
-	float flow;This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min", 1, 0, 0, 99999, 2
+	float flow;This is your injector flow at the fuel pressure used in the vehicle. cc/min;"", 1, 0, 0, 99999, 2
 	uint16_t[VBAT_INJECTOR_CURVE_SIZE] autoscale battLagCorrBins;;"volts", 0.01, 0, 0, 20, 2
 	uint16_t[VBAT_INJECTOR_CURVE_SIZE] autoscale battLagCorr;ms delay between injector open and close dead times;"ms", 0.01, 0, 0, 50, 2
 end_struct
@@ -684,7 +684,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	Gpio[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Generate a synthetic trigger signal for an external ECU
 
-	uint16_t autoscale fordInjectorSmallPulseSlope;;"g/s", 0.001, 0, 0, 65, 3
+	uint16_t autoscale fordInjectorSmallPulseSlope;;"", 0.001, 0, 0, 65, 3
 
 	uint8_t autoscale lambdaProtectionMinRpm;;"RPM", 100, 0, 0, 25000, 0
 	uint8_t autoscale lambdaProtectionMinLoad;;"%", 10, 0, 0, 1000, 0
