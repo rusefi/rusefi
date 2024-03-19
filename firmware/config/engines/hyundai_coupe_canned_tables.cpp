@@ -63,9 +63,8 @@ static void couplecannedignitionTable() {
 {1.800,	5.600,	6.200,	6.500,	6.800,	7.100,	7.000,	8.500,	10.000,	10.400,	10.800,	11.100,	11.500,	11.900,	12.300,	13.000,	},
 {-1.200,	2.600,	3.200,	3.600,	4.100,	5.000,	7.100,	7.800,	8.400,	9.000,	9.400,	9.500,	9.700,	9.800,	10.000,	10.000,	},
 };
-#endif
 	copyTable(config->ignitionTable, hardCodedignitionTable);
+#endif
 }
-
 
 #endif // HW_HELLEN_HYUNDAI
