@@ -10,7 +10,8 @@ BOARDSRC = $(BOARD_DIR)/board.c
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # Required include directories
-BOARDINC += $(BOARD_DIR)/config/controllers/algo
+BOARDINC += $(BOARD_DIR)/config/controllers/generated \
+  $(BOARD_DIR)/config/controllers/algo
 
 BOARDINC += $(PDL_DIR)/driver $(PDL_DIR)/driver/gpio $(PDL_DIR)/driver/usb $(PDL_DIR)/driver/mfs $(PDL_DIR)/midware/usb/device
 
