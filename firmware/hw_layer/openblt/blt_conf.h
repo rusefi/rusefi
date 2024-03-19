@@ -190,6 +190,7 @@
 #define BOOT_XCP_UPLOAD_ENABLE          (0)
 
 #ifndef BOOT_BACKDOOR_ENTRY_TIMEOUT_MS
+// 500 ms is not enough for USB init but we hope is enough for CAN
 #define BOOT_BACKDOOR_ENTRY_TIMEOUT_MS  (500)
 #endif
 
