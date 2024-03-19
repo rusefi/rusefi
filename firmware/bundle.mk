@@ -157,8 +157,16 @@ else
 endif
 	@touch $@
 
-$(FOLDER)/rusefi-obfuscated.bin: $(BUILDDIR)/$(PROJECT).bin
-	[ -z "$(POST_BUILD_SCRIPT)" ] || bash $(POST_BUILD_SCRIPT) $(BUILDDIR)/$(PROJECT).bin $@
+OBFUSCATED_OUT = \
+  $(FOLDER)/rusefi-obfuscated.bin \
+  $(FOLDER)/rusefi-obfuscated.hex \
+  $(FOLDER)/rusefi-obfuscated.srec
+
+$(OBFUSCATED_OUT): .obfuscated-sentinel
+
+.obfuscated-sentinel: $(BUILDDIR)/$(PROJECT).bin
+	[ -z "$(POST_BUILD_SCRIPT)" ] || bash $(POST_BUILD_SCRIPT) $(BUILDDIR)/$(PROJECT).bin $(OBFUSCATED_OUT)
+	@touch $@
 
 $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 	wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $(dir $@)
@@ -169,7 +177,7 @@ $(DELIVER) $(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER) $(CACERTS_
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
-$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated.zip: $(FOLDER)/rusefi-obfuscated.bin $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(filter-out $(OUTS) $(BOUTS) $(OUTBIN) $(SREC_TARGET),$(BUNDLE_FILES)) $(FOLDER)/rusefi-obfuscated.bin
 
 # The autopdate zip doesn't have a folder with the bundle contents
@@ -180,7 +188,7 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTI
 
 bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip all
 
-obfuscated-bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated.zip
+obfuscated-bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip
 
 CLEAN_BUNDLE_HOOK:
 	@echo Cleaning Bundle
