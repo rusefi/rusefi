@@ -170,7 +170,7 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated.zip: $(FOLDER)/rusefi-obfuscated.bin $(BUNDLE_FILES) | $(ARTIFACTS)
-	zip -r $@ $(filter-out $(BOUTS) $(OUTBIN),$(BUNDLE_FILES)) $(FOLDER)/rusefi-obfuscated.bin
+	zip -r $@ $(filter-out $(OUTS) $(BOUTS) $(OUTBIN) $(SREC_TARGET),$(BUNDLE_FILES)) $(FOLDER)/rusefi-obfuscated.bin
 
 # The autopdate zip doesn't have a folder with the bundle contents
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
