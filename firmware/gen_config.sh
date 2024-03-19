@@ -11,11 +11,6 @@ rm -f gen_config_board.log
 # todo: who is the consumer of this folder? shall we move that 'mkdir' command closer to usage?
 mkdir build
 
-
-# todo: we have a bit of code duplication with build-firmware.yaml here :(
-config/boards/subaru_eg33/config/gen_subaru_config.sh
-[ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
-
 #
 # see also build-firmware where we compile all versions of firmware
 #
