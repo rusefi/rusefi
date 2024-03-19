@@ -1728,7 +1728,11 @@ uint8_t[CLT_CURVE_SIZE] autoscale iacCoasting;    RPM-based idle position for co
 
 warning_message_t warning_message;
 
-float[32] unusedGapInCalibration
+#define FANCY_OPTIONS_COUNT 16
+
+uint8_t[FANCY_OPTIONS_COUNT] fancyOptions;;"", 1, 0, 0, 255, 0
+
+uint8_t[112] unusedGapInCalibration
 
 uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
 uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", 100, 0, 0, 25000, 0
@@ -2323,6 +2327,7 @@ end_struct
 #define ts_show_injection_mode true
 #define ts_show_maf true
 #define ts_show_fancy_hardware false
+#define ts_show_fancy_options true
 #define ts_show_full_pinout true
 #define ts_show_egt true
 #define ts_show_k_line false

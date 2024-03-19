@@ -2080,6 +2080,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = fancyHardwareDialog,		"Fancy Hardware"@@if_ts_show_fancy_hardware
+		subMenu = fancyOptionsDialog,		"Fancy Options"@@if_ts_show_fancy_options
 		subMenu = tractionEtbTableTbl,    "Traction Control ETB Drop"
 		subMenu = tractionTimingTableTbl,    "Traction Control Timing Adjustment"
 		subMenu = tractionIgnitionSkipDialog,    "Traction Control Skip Ignition"
@@ -4725,6 +4726,12 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Trailing Pin 2",						trailingCoilPins2
 		field = "Trailing Pin 3",						trailingCoilPins3
 		field = "Trailing Pin 4",						trailingCoilPins4
+
+	dialog = fancyOptionsDialog, "Fancy Options"
+	  field = fancyOptions0, fancyOptions0
+	  field = fancyOptions1, fancyOptions1
+	  field = fancyOptions2, fancyOptions2
+	  field = fancyOptions15, fancyOptions15
 
 	dialog = fancyHardwareDialog, "Fancy Boards"
 	  field = fancySmartS,fancySmartS
