@@ -302,10 +302,20 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 		return;
 	}
 
+	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
+
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_TOYOTA_3_TOOTH: {
-		// Consider the tooth in the first 1/3 of the engine phase
-		bool inRange = angleFromPrimarySyncPoint > 0 && angleFromPrimarySyncPoint < (720 / 3);
+		// Only consider teeth with a sensible VVT angle - this is guaranteed to work so long
+		// as the range we check is < 120 deg
+
+		// Wrap to +-180 deg
+		vvtPosition = wrapVvt(vvtPosition, 360);
+
+		// Check whether the position is
+		// - within range (no resync, just report VVT position)
+		// - within range but 360 deg out (engine needs resync)
+		bool inRange = vvtPosition > -37 && vvtPosition < 80;
 
 		if (!inRange) {
 			return;
@@ -319,8 +329,6 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 
 	tc->triggerState.vvtCounter++;
 
-	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
-
 	// Only do engine sync using one cam, other cams just provide VVT position.
 	if (index == engineConfiguration->engineSyncCam) {
 		angle_t crankOffset = adjustCrankPhase(camIndex);
@@ -333,6 +341,8 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 		switch(engineConfiguration->vvtMode[camIndex]) {
 		case VVT_HONDA_K_INTAKE:
 			// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
+		case VVT_TOYOTA_3_TOOTH:
+			// Toyota 3 tooth vvt angle comes pre-wrapped, so ensure the crankOffset doesn't break it
 			vvtPosition = wrapVvt(vvtPosition, 180);
 			break;
 		default:
