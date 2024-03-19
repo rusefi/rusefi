@@ -50,5 +50,3 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 	-enumInputFile controllers/sensors/sensor_type.h
 
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
-
-bash config/boards/subaru_eg33/config/gen_enum_to_string.sh
