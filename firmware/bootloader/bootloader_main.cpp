@@ -91,14 +91,17 @@ int main(void) {
 
 		// since BOOT_BACKDOOR_HOOKS_ENABLE==TRUE, BackDoorCheck() is not working
 		// so we have to manually check if we need to jump to the main firmware
-		if (ComIsConnected() == BLT_TRUE)
+		if (ComIsConnected() == BLT_TRUE) {
+			// remember we had connection attempt
 			wasConnected = BLT_TRUE;
+			continue;
+		}
+		if (stayInBootloader)
+			continue;
 		blt_bool isTimeout = (TIME_I2MS(chVTGetSystemTime()) >= BOOT_BACKDOOR_ENTRY_TIMEOUT_MS);
 		if (isTimeout == BLT_TRUE) {
 			waitedLongerThanTimeout = BLT_TRUE;
-			if (wasConnected == BLT_FALSE && stayInBootloader == BLT_FALSE) {
-				CpuStartUserProgram();
-			}
+			CpuStartUserProgram();
 		}
 	}
 }
