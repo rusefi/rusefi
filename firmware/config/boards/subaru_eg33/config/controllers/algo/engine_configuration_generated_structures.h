@@ -229,11 +229,7 @@ struct ThermistorConf {
 static_assert(sizeof(ThermistorConf) == 32);
 
 struct injector_s {
-	// This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute
-	// By the way, g/s = 0.125997881 * (lb/hr)
-	// g/s = 0.125997881 * (cc/min)/10.5
-	// g/s = 0.0119997981 * cc/min
-	// cm3/min
+	// This is your injector flow at the fuel pressure used in the vehicle. cc/min
 	// offset 0
 	float flow;
 	// volts
@@ -840,7 +836,6 @@ struct engine_configuration_s {
 	// Generate a synthetic trigger signal for an external ECU
 	// offset 656
 	Gpio triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
-	// g/s
 	// offset 660
 	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseSlope;
 	// RPM
