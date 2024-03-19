@@ -20,7 +20,7 @@ for BOARD in \
    "config/boards/hellen/alphax-4chan alphax-4chan" \
    "config/boards/hellen/alphax-8chan alphax-8chan" \
    "config/boards/hellen/harley81 harley81" \
-   "config/boards/hellen/hellen128 hellen128 fome_hellen128mercedes.ini" \
+   "config/boards/hellen/hellen128 hellen128" \
    "config/boards/hellen/hellen121vag hellen121vag" \
    "config/boards/hellen/hellen121nissan hellen121nissan" \
    "config/boards/hellen/hellen-honda-k hellen-honda-k" \
