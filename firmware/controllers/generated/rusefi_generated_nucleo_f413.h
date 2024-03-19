@@ -440,6 +440,7 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
+#define FANCY_OPTIONS_COUNT 16
 #define FLASH_DATA_VERSION 20014
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
@@ -1185,7 +1186,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3793126472
+#define SIGNATURE_HASH 2817933234
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1501,6 +1502,7 @@
 #define ts_show_etb true
 #define ts_show_etb_pins true
 #define ts_show_fancy_hardware false
+#define ts_show_fancy_options true
 #define ts_show_firing_order true
 #define ts_show_forced_induction true
 #define ts_show_fuel_pump true
@@ -1554,7 +1556,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.19.nucleo_f413.3793126472"
+#define TS_SIGNATURE "rusEFI master.2024.03.19.nucleo_f413.2817933234"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

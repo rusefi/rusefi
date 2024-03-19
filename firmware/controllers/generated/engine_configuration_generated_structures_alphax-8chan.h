@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 18 12:52:53 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 19 17:57:47 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4960,7 +4960,11 @@ struct persistent_config_s {
 	/**
 	 * offset 5836
 	 */
-	float unusedGapInCalibration[32];
+	uint8_t fancyOptions[FANCY_OPTIONS_COUNT];
+	/**
+	 * offset 5852
+	 */
+	uint8_t unusedGapInCalibration[112];
 	/**
 	 * offset 5964
 	 */
@@ -5617,4 +5621,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22444);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 18 12:52:53 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 19 17:57:47 UTC 2024

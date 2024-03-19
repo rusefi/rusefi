@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 19 12:35:45 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 19 17:58:46 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -420,6 +420,7 @@ public class Fields {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
+	public static final int FANCY_OPTIONS_COUNT = 16;
 	public static final int FLASH_DATA_VERSION = 20014;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
@@ -1122,7 +1123,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1179090729;
+	public static final int SIGNATURE_HASH = 61326547;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1373,7 +1374,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.03.19.f407-discovery.1179090729";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.03.19.f407-discovery.61326547";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2854,7 +2855,8 @@ public class Fields {
 	public static final Field IACCOASTINGRPMBINS = Field.create("IACCOASTINGRPMBINS", 5668, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field IACCOASTING = Field.create("IACCOASTING", 5684, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5700, 120, FieldType.STRING).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDGAPINCALIBRATION = Field.create("UNUSEDGAPINCALIBRATION", 5820, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field FANCYOPTIONS = Field.create("FANCYOPTIONS", 5820, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDGAPINCALIBRATION = Field.create("UNUSEDGAPINCALIBRATION", 5836, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 5948, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTRPMBINS = Field.create("BOOSTRPMBINS", 6012, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6020, FieldType.INT8).setScale(2.0).setBaseOffset(0);
@@ -4485,6 +4487,7 @@ public class Fields {
 	IACCOASTINGRPMBINS,
 	IACCOASTING,
 	WARNING_MESSAGE,
+	FANCYOPTIONS,
 	UNUSEDGAPINCALIBRATION,
 	BOOSTTABLEOPENLOOP,
 	BOOSTRPMBINS,
