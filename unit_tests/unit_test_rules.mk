@@ -18,21 +18,15 @@ BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 # User may want to pass in a forced value for SANITIZE
 # ifeq ($(SANITIZE),)
-# 	ifneq ($(OS),Windows_NT)
-# 		SANITIZE = yes
-# 	else
-# 		SANITIZE = no
-# 	endif
+#	SANITIZE = yes
 # endif
 
 SANITIZE = no
 
 IS_MAC = no
-ifneq ($(OS),Windows_NT)
-	UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S),Darwin)
-        IS_MAC = yes
-    endif
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    IS_MAC = yes
 endif
 
 # Compiler options here.
@@ -103,23 +97,7 @@ ASMSRC =
 # Compiler settings
 #
 
-# It looks like cygwin build of mingwg-w64 has issues with gcov runtime :(
-# mingw-w64 is a project which forked from mingw in 2007 - be careful not to confuse these two.
-# In order to have coverage generated please download from https://mingw-w64.org/doku.php/download/mingw-builds
-# Install using mingw-w64-install.exe instead of similar thing packaged with cygwin
-# Both 32 bit and 64 bit versions of mingw-w64 are generating coverage data.
-
-ifeq ($(OS),Windows_NT)
-ifeq ($(USE_MINGW32_I686),)
-#this one is 64 bit
-  TRGT = x86_64-w64-mingw32-
-else
-#this one was 32 bit
-  TRGT = i686-w64-mingw32-
-endif
-else
-  TRGT =
-endif
+TRGT =
 
 CC   = $(TRGT)gcc
 CPPC = $(TRGT)g++
@@ -160,7 +138,7 @@ DLIBDIR =
 # List all default libraries here
 ifeq ($(OS),Windows_NT)
   # Windows
-  DLIBS = -static-libgcc -static -static-libstdc++
+  $(error Builds on windows are not supported by FOME")
 else
   # Linux
   DLIBS = -pthread
