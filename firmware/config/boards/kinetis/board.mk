@@ -5,7 +5,8 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # Required include directories
 BOARDINC  = $(BOARD_DIR)
-BOARDINC += $(BOARD_DIR)/config/controllers/algo
+BOARDINC += $(BOARD_DIR)/config/controllers/generated \
+  $(BOARD_DIR)/config/controllers/algo
 
 BOARDCPPSRC += $(CONTROLLERS_ALGO_AUTO_GENERATED_ENUMS)
 
