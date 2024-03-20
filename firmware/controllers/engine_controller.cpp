@@ -546,7 +546,7 @@ bool validateConfig() {
 		ensureArrayIsAscending("Injection phase load", config->injPhaseLoadBins);
 		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
 
-		ensureArrayIsAscendingOrDefault("Fuel Level Sensor", engineConfiguration->fuelLevelBins);
+		ensureArrayIsAscendingOrDefault("Fuel Level Sensor", config->fuelLevelBins);
 		ensureArrayIsAscendingOrDefault("Fuel Trim Rpm", config->fuelTrimRpmBins);
 		ensureArrayIsAscendingOrDefault("Fuel Trim Load", config->fuelTrimLoadBins);
 
@@ -556,7 +556,7 @@ bool validateConfig() {
 		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
 		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
 
-		ensureArrayIsAscendingOrDefault("TPS TPS RPM correction", engineConfiguration->tpsTspCorrValuesBins);
+		ensureArrayIsAscendingOrDefault("TPS TPS RPM correction", config->tpsTspCorrValuesBins);
 
 		ensureArrayIsAscendingOrDefault("Staging Load", config->injectorStagingLoadBins);
 		ensureArrayIsAscendingOrDefault("Staging RPM", config->injectorStagingRpmBins);

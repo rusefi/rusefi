@@ -7,7 +7,7 @@ static void cannedsparkDwellValues() {
 
 static void canneddwellVoltageCorrValues() {
 	static const float hardCodeddwellVoltageCorrValues[8] = {1.26, 1.2, 1.16, 1.1, 1.06, 1.0, 0.9, 0.8};
-	copyArray(engineConfiguration->dwellVoltageCorrValues, hardCodeddwellVoltageCorrValues);
+	copyArray(config->dwellVoltageCorrValues, hardCodeddwellVoltageCorrValues);
 }
 
 static void cannedidleAdvanceBins() {
