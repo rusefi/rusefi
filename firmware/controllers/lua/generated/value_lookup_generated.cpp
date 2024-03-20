@@ -541,6 +541,9 @@ float getConfigValueByName(const char *name) {
 // sdCardLogFrequency
 		case -773841334:
 			return engineConfiguration->sdCardLogFrequency;
+// lambdaProtectionRestoreRpm
+		case 872435040:
+			return engineConfiguration->lambdaProtectionRestoreRpm;
 // mapMinBufferLength
 		case -561715997:
 			return engineConfiguration->mapMinBufferLength;
@@ -568,9 +571,6 @@ float getConfigValueByName(const char *name) {
 // lambdaProtectionTimeout
 		case -1645106444:
 			return engineConfiguration->lambdaProtectionTimeout;
-// lambdaProtectionRestoreRpm
-		case 872435040:
-			return engineConfiguration->lambdaProtectionRestoreRpm;
 // clutchUpPinInverted
 		case -1171325035:
 			return engineConfiguration->clutchUpPinInverted;
@@ -691,6 +691,12 @@ float getConfigValueByName(const char *name) {
 // boostPwmFrequency
 		case -1990709262:
 			return engineConfiguration->boostPwmFrequency;
+// tpsAccelLookback
+		case -1164331270:
+			return engineConfiguration->tpsAccelLookback;
+// noFuelTrimAfterDfcoTime
+		case 1286770247:
+			return engineConfiguration->noFuelTrimAfterDfcoTime;
 // launchSpeedThreshold
 		case -1743747394:
 			return engineConfiguration->launchSpeedThreshold;
@@ -1135,18 +1141,12 @@ float getConfigValueByName(const char *name) {
 // iacByTpsTaper
 		case -2065814304:
 			return engineConfiguration->iacByTpsTaper;
-// tpsAccelLookback
-		case -1164331270:
-			return engineConfiguration->tpsAccelLookback;
 // coastingFuelCutVssLow
 		case 329016035:
 			return engineConfiguration->coastingFuelCutVssLow;
 // coastingFuelCutVssHigh
 		case -2027523439:
 			return engineConfiguration->coastingFuelCutVssHigh;
-// noFuelTrimAfterDfcoTime
-		case 1286770247:
-			return engineConfiguration->noFuelTrimAfterDfcoTime;
 // tpsAccelEnrichmentThreshold
 		case 1313479950:
 			return engineConfiguration->tpsAccelEnrichmentThreshold;
@@ -2693,6 +2693,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->sdCardLogFrequency = (int)value;
 		return 1;
 	}
+		case 872435040:
+	{
+		engineConfiguration->lambdaProtectionRestoreRpm = (int)value;
+		return 1;
+	}
 		case -561715997:
 	{
 		engineConfiguration->mapMinBufferLength = (int)value;
@@ -2736,11 +2741,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1645106444:
 	{
 		engineConfiguration->lambdaProtectionTimeout = (int)value;
-		return 1;
-	}
-		case 872435040:
-	{
-		engineConfiguration->lambdaProtectionRestoreRpm = (int)value;
 		return 1;
 	}
 		case -1171325035:
@@ -2941,6 +2941,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1990709262:
 	{
 		engineConfiguration->boostPwmFrequency = (int)value;
+		return 1;
+	}
+		case -1164331270:
+	{
+		engineConfiguration->tpsAccelLookback = (int)value;
+		return 1;
+	}
+		case 1286770247:
+	{
+		engineConfiguration->noFuelTrimAfterDfcoTime = (int)value;
 		return 1;
 	}
 		case -1743747394:
@@ -3683,11 +3693,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->iacByTpsTaper = (int)value;
 		return 1;
 	}
-		case -1164331270:
-	{
-		engineConfiguration->tpsAccelLookback = (int)value;
-		return 1;
-	}
 		case 329016035:
 	{
 		engineConfiguration->coastingFuelCutVssLow = (int)value;
@@ -3696,11 +3701,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -2027523439:
 	{
 		engineConfiguration->coastingFuelCutVssHigh = (int)value;
-		return 1;
-	}
-		case 1286770247:
-	{
-		engineConfiguration->noFuelTrimAfterDfcoTime = (int)value;
 		return 1;
 	}
 		case 1313479950:

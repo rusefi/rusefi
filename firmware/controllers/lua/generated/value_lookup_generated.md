@@ -535,6 +535,9 @@ Maximum allowed ETB position. Some throttles go past fully open, so this allows 
 ### sdCardLogFrequency
 Rate the ECU will log to the SD card, in hz (log lines per second).
 
+### lambdaProtectionRestoreRpm
+
+
 ### mapMinBufferLength
 This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.
 
@@ -561,9 +564,6 @@ Maximum time to crank starter when start/stop button is pressed
 
 ### lambdaProtectionTimeout
 Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
-
-### lambdaProtectionRestoreRpm
-
 
 ### clutchUpPinInverted
 
@@ -684,6 +684,12 @@ Output Max Duty Cycle
 
 ### boostPwmFrequency
 
+
+### tpsAccelLookback
+How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
+
+### noFuelTrimAfterDfcoTime
+Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
 
 ### launchSpeedThreshold
 Launch disabled above this speed if setting is above zero
@@ -1129,17 +1135,11 @@ This is the duration in cycles that the IAC will take to reach its normal idle p
 ### iacByTpsTaper
 IAC Value added when coasting and transitioning into idle.
 
-### tpsAccelLookback
-How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
-
 ### coastingFuelCutVssLow
 Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
 
 ### coastingFuelCutVssHigh
 Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
-
-### noFuelTrimAfterDfcoTime
-Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
 
 ### tpsAccelEnrichmentThreshold
 Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
