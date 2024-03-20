@@ -168,7 +168,26 @@ TEST(ignition, negativeAdvance) {
 	ASSERT_EQ(0, getAdvanceCorrections(load));
 	ASSERT_EQ(707, getAdvance(rpm, load));
 
-	ASSERT_NEAR(-603.72, engine->ignitionState.baseIgnitionAdvance, EPS4D);
-	ASSERT_NEAR(-603.72, engine->ignitionState.correctedIgnitionAdvance, EPS4D);
+	ASSERT_NEAR(-13, engine->ignitionState.baseIgnitionAdvance, EPS4D);
+	ASSERT_NEAR(-13, engine->ignitionState.correctedIgnitionAdvance, EPS4D);
+}
+
+TEST(ignition, negativeAdvance2stroke) {
+	EngineTestHelper eth(engine_type_e::SACHS);
+
+	int rpm = 0;
+	float load = 50;
+
+	ASSERT_EQ(360, getEngineState()->engineCycle);
+
+	engineConfiguration->fixedTiming = -13;
+	engineConfiguration->timingMode = TM_FIXED;
+	// run the ignition math
+	engine->periodicFastCallback();
+
+	eth.assertRpm(0);
+	ASSERT_EQ(347, getAdvance(rpm, load));
+
+	ASSERT_NEAR(-13, engine->ignitionState.correctedIgnitionAdvance, EPS4D);
 }
 

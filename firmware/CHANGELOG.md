@@ -40,6 +40,7 @@ Release template (copy/paste this for new release):
  - hellen128 better ETB pin choice between rev A/B and C
  - Base map values for Open Loop Boost Duty should be 0% #6188
  - HPFP control on cam with variable timing #6245
+ - Negative timing is not displayed correctly fix #5250
 
 ### Breaking Changes
  - wrong trigger naming for missing teeth #6258

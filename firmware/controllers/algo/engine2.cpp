@@ -95,6 +95,8 @@ void EngineState::updateSparkSkip() {
 #endif // EFI_LAUNCH_CONTROL
 }
 
+#define MAKE_HUMAN_READABLE_ADVANCE(advance) (advance > getEngineState()->engineCycle / 2 ? advance - getEngineState()->engineCycle : advance)
+
 void EngineState::periodicFastCallback() {
 	ScopePerf perf(PE::EngineStatePeriodicFastCallback);
 
@@ -172,8 +174,8 @@ void EngineState::periodicFastCallback() {
 			// Degrees of timing REMOVED from actual timing during soft RPM limit window
 			- getLimpManager()->getLimitingTimingRetard();
 	// these fields are scaled_channel so let's only use for observability, with a local variables holding value while it matters locally
-	engine->ignitionState.baseIgnitionAdvance = baseAdvance;
-	engine->ignitionState.correctedIgnitionAdvance = correctedIgnitionAdvance;
+	engine->ignitionState.baseIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(baseAdvance);
+	engine->ignitionState.correctedIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(correctedIgnitionAdvance);
 
 
 	// compute per-bank fueling
