@@ -50,7 +50,7 @@ void LimpManager::onFastCallback() {
 void LimpManager::updateRevLimit(int rpm) {
 	// User-configured hard RPM limit, either constant or CLT-lookup
 	m_revLimit = engineConfiguration->useCltBasedRpmLimit
-		? interpolate2d(Sensor::getOrZero(SensorType::Clt), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
+		? interpolate2d(Sensor::getOrZero(SensorType::Clt), config->cltRevLimitRpmBins, config->cltRevLimitRpm)
 		: (float)engineConfiguration->rpmHardLimit;
 
 	// Require configurable rpm drop before resuming

@@ -494,7 +494,7 @@ static void setDefaultEngineConfiguration() {
 	setRpmTableBin(config->alsIgnRetardrpmBins);
 	setLinearCurve(config->alsFuelAdjustmentLoadBins, 2, 10, /*precision*/1);
 	setRpmTableBin(config->alsFuelAdjustmentrpmBins);
-	setLinearCurve(engineConfiguration->fuelLevelBins, 0, 5);
+	setLinearCurve(config->fuelLevelBins, 0, 5);
 
 	setDefaultWarmupIdleCorrection();
 
