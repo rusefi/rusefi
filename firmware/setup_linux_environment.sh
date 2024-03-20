@@ -27,3 +27,6 @@ sudo apt-get install -y build-essential gcc gdb gcc-multilib g++-multilib make o
 
 # Allow the current user to use serial ports
 sudo usermod -a -G dialout $USER
+
+# For gdb to work, unpack it.
+bash ./ext/build-tools/inflate.sh
