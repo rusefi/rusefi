@@ -226,7 +226,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0240319E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.024032E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -1127,10 +1127,10 @@
         <constant digits="1" name="stoichRatioPrimary" units=":1">14.7</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20.0</constant>
         <constant digits="0" name="etbIdleThrottleRange" units="%">15.0</constant>
-        <constant digits="0" name="cylinderBankSelect1" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect2" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect3" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect4" units="">0.0</constant>
+        <constant digits="0" name="cylinderBankSelect1" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect2" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect3" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect4" units="">1.0</constant>
         <constant digits="0" name="cylinderBankSelect5" units="">0.0</constant>
         <constant digits="0" name="cylinderBankSelect6" units="">0.0</constant>
         <constant digits="0" name="cylinderBankSelect7" units="">0.0</constant>
@@ -4652,7 +4652,7 @@ end</constant>
          7000.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.19.f407-discovery.61326547" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.20.f407-discovery.61326547" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>
