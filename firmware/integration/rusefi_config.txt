@@ -96,13 +96,13 @@
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-#define TS_FILE_VERSION 20230721
+#define TS_FILE_VERSION 20240101
 
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 20014
+#define FLASH_DATA_VERSION 20015
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -419,9 +419,30 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	uint8_t maxAcTps;Above this TPS, disable AC. Set to 0 to disable check.;"%", 1, 0, 0, 100, 0
 	uint8_t maxAcClt;Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.;"deg C", 1, 0, 0, 150, 0
 
+	float compressionRatio;Just for reference really, not taken into account by any logic at this point;"CR", 1, 0, 0, 300, 1
+	uint16_t wastegatePositionMin;Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
+	uint16_t wastegatePositionMax;Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
+	uint16_t idlePositionMin;Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
+	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
+
+	output_pin_e mainRelayPin;
+	Gpio sdCardCsPin;
+	Gpio canTxPin;set_can_tx_pin X
+	Gpio canRxPin;set_can_rx_pin X
+
+	uint16_t etbExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
+	int8_t launchFuelAdderPercent;;"%", 1, 0, 0, 100, 0
+	uint8_t autoscale etbJamTimeout;Time required to detect a stuck throttle.;"sec", 0.02, 0, 0, 5, 2
+
+	output_pin_e tachOutputPin;
+	pin_output_mode_e tachOutputPinMode;
+	uint8_t acIdleExtraOffset;Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
+
+	float manIdlePosition;Value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
+
 	uint8_t multisparkMaxSparkingAngle;This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
 	uint8_t multisparkMaxExtraSparkCount;Configures the maximum number of extra sparks to fire (does not include main spark);"count", 1, 0, 1, 5, 0
-! unused 2 bytes here
+	int16_t vvtControlMinRpm;;"RPM", 1, 0, 0, 3000, 0
 
 
 struct injector_s
@@ -503,7 +524,7 @@ uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CY
 
 custom firing_order_e 1 bits, U08, @OFFSET@, [0:6], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "1-6-2-4-3-5", "1-6-5-4-3-2", "1-4-5-2-3-6", "1-5-4-8-3-7-2-6", "fo33", "fo34", "fo35", "fo36", "fo37"
 firing_order_e firingOrder;
-! unused 1 bytes here
+uint8_t justATempTest
 Gpio communityCommsLedPid
 
 float cylinderBore;Cylinder diameter in mm.;"mm", 1, 0, 0, 20000, 2
@@ -531,11 +552,14 @@ ignition_mode_e ignitionMode;Single coil = distributor\nIndividual coils = one c
 
 int8_t gapTrackingLengthOverride;How many consecutive gap rations have to match expected ranges for sync to happen;"count", 1, 0, 1, @@GAP_TRACKING_LENGTH@@, 0
  uint8_t maxIdleVss;Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).;"kph", 1, 0, 0, 100, 0
-! unused 1 byte here
+uint8_t camDecoder2jzPrecision
  uint16_t minOilPressureAfterStart;Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.;"kPa", 1, 0, 0, 1000, 0
 
 custom timing_mode_e 1 bits, U08, @OFFSET@, [0:0], "dynamic", "fixed"
 timing_mode_e timingMode;Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
+
+custom can_nbc_e 1 bits, U08, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW E46", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "AiM", "MS Simplified Broadcast", "type 14"
+can_nbc_e canNbcType;set can_mode X
 
 angle_t fixedModeTiming;This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM", 1, 0, 0, 3000, 0
 
@@ -553,15 +577,7 @@ output_pin_e acrPin;
 
 float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
 
-custom can_nbc_e 1 bits, U08, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW E46", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "AiM", "MS Simplified Broadcast", "type 14"
-can_nbc_e canNbcType;set can_mode X
-!unused 3 bytes
-
 int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
-uint8_t camDecoder2jzPrecision
-uint8_t justATempTest
-uint8_t unusedHere333
-uint8_t unusedHere334
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
 
 	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor. See also pedalPositionAdcChannel
@@ -642,8 +658,6 @@ end_struct
 
 	idle_hardware_s idle;
 
-	float manIdlePosition;Value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
-
 uint8_t autoscale knockRetardAggression;Ignition timing to remove when a knock event occurs.;"%", 0.1, 0, 0, 20, 1
 uint8_t autoscale knockRetardReapplyRate;After a knock event, reapply timing at this rate.;"deg/s", 0.1, 0, 0, 10, 1
 
@@ -651,9 +665,10 @@ uint8_t autoscale knockRetardReapplyRate;After a knock event, reapply timing at 
 custom engineSyncCam_e 1 bits, S08, @OFFSET@, [0:1], @@engineSyncCam_enum@@
 engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other cams will be used only for VVT measurement, but not engine sync.
 
-	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@ 0
+	pin_output_mode_e sdCardCsPinMode;
 
 	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
+	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@ 0
 	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
 
 	#define ve_override_e_enum "None", "MAP", "TPS"
@@ -690,6 +705,8 @@ switch_input_pin_e clutchDownPin;Some cars have a switch to indicate that clutch
 	Gpio debugTriggerSync;
 
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
+	pin_input_mode_e brakePedalPinMode;
+
 	Gpio mc33972_cs;
 	pin_output_mode_e mc33972_csPinMode;
 
@@ -708,31 +725,15 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
 	uint16_t mc33_t_min_boost;Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.;"us", 1, 0, 0, 10000, 0
 	pin_output_mode_e hip9011CsPinMode;
-	output_pin_e tachOutputPin;
-	pin_output_mode_e tachOutputPinMode;
 
-	output_pin_e mainRelayPin;
-	Gpio sdCardCsPin;
-	Gpio canTxPin;set_can_tx_pin X
-	Gpio canRxPin;set_can_rx_pin X
+  pin_input_mode_e throttlePedalUpPinMode;
 
-pin_input_mode_e throttlePedalUpPinMode;
-	uint8_t acIdleExtraOffset;Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
-
-    uint16_t autoscale finalGearRatio;Ratio between the wheels and your transmission output. ;"ratio", 0.01, 0, 0, 10, 2
+  uint16_t autoscale finalGearRatio;Ratio between the wheels and your transmission output. ;"ratio", 0.01, 0, 0, 10, 2
+	uint16_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs", 1, 0, 0, 1000000, 0
 
 	brain_input_pin_e tcuInputSpeedSensorPin
 	uint8_t tcuInputSpeedSensorTeeth
 
-	uint16_t wastegatePositionMin;Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
-	uint16_t wastegatePositionMax;Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
-	uint16_t idlePositionMin;Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
-	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
-
-
-	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs", 1, 0, 0, 1000000, 0
-
-	float compressionRatio;Just for reference really, not taken into account by any logic at this point;"CR", 1, 0, 0, 300, 1
 
 	Gpio[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\nSee also directSelfStimulation which is different.
 
@@ -1258,7 +1259,6 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;VVT output solenoid pin for this cam
 
-	pin_output_mode_e sdCardCsPinMode;
 
 	int crankingIACposition;This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.;"percent", 1, 0, -100, 100, 0
 	float tChargeMinRpmMinTps;;"", 1, 0, 0, 3, 4
@@ -1331,7 +1331,6 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	Gpio mc33816_driven
 
 	switch_input_pin_e brakePedalPin;Brake pedal switch
-	pin_input_mode_e brakePedalPinMode;
 
 
 	pid_s[CAMS_PER_BANK iterate] auxPid;VVT output PID\nTODO: rename to vvtPid
@@ -1355,14 +1354,9 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	Gpio mc33816_cs;
 
 	float auxFrequencyFilter;;"hz", 1, 0, 0, 100, 1
-	int16_t vvtControlMinRpm;;"RPM", 1, 0, 0, 3000, 0
 
-    sent_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
+  sent_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
 
-	int8_t launchFuelAdderPercent;;"%", 1, 0, 0, 100, 0
-	uint8_t autoscale etbJamTimeout;Time required to detect a stuck throttle.;"sec", 0.02, 0, 0, 5, 2
-	uint16_t etbExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
-	float unused645646
 
 	int16_t coastingFuelCutRpmHigh;This sets the RPM above which fuel cut is active.;"rpm", 1, 0, 0, 5000, 0
 	int16_t coastingFuelCutRpmLow;This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm", 1, 0, 0, 5000, 0
@@ -1386,10 +1380,6 @@ float tChargeAirCoefMax;Heat transfer coefficient at high flow, as defined by "m
 float tChargeAirFlowMax;High flow point for heat transfer estimation.\nSet this to perhaps 50-75% of your maximum airflow at wide open throttle.;"kg/h", 1, 0, 0, 1000, 1
 float tChargeAirIncrLimit;Maximum allowed rate of increase allowed for the estimated charge temperature;"deg/sec", 1, 0, 0, 100, 1
 float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estimated charge temperature;"deg/sec", 1, 0, 0, 100, 1
-
-#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
-custom tChargeMode_e 1 bits, U08, @OFFSET@, [0:1], @@tChargeMode_e_enum@@
-tChargeMode_e tChargeMode;
 
 
 	float hip9011Gain;;"", 1, 0, 0, 100, 2
@@ -1462,6 +1452,9 @@ uint8_t[TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0
 
 	uint8_t autoscale dfcoDelay;Delay before cutting fuel. Set to 0 to cut immediately with no delay. May cause rumbles and pops out of your exhaust...;"sec", 0.1, 0, 0, 10, 1
 	uint8_t autoscale acDelay;Delay before engaging the AC compressor. Set to 0 to engage immediately with no delay. Use this to prevent bogging at idle when AC engages.;"sec", 0.1, 0, 0, 10, 1
+#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
+custom tChargeMode_e 1 bits, U08, @OFFSET@, [0:1], @@tChargeMode_e_enum@@
+tChargeMode_e tChargeMode;
 
 	uint16_t autoscale fordInjectorSmallPulseBreakPoint;;"mg", 0.001, 0, 0, 65, 3
 
@@ -1554,8 +1547,6 @@ uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
 #define HIGH_SPEED_COUNT 32
 uint16_t[HIGH_SPEED_COUNT] highSpeedOffsets;;"", 1.0000, 0.00000,0.00,65535, 0, noMsqSave
-
-float unused3124141
 
 #define fuel_pressure_sensor_mode_e_enum "Absolute", "Gauge", "Differential", "INVALID"
 custom fuel_pressure_sensor_mode_e 1 bits, U08, @OFFSET@, [0:1], @@fuel_pressure_sensor_mode_e_enum@@
@@ -1663,7 +1654,7 @@ float brakeMeanEffectivePressureDifferential
 	pin_mode_e spi6SckMode;
 	pin_mode_e spi6MosiMode;
 
-uint8_t[120] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
+uint8_t[240] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1718,8 +1709,6 @@ warning_message_t warning_message;
 #define FANCY_OPTIONS_COUNT 16
 
 uint8_t[FANCY_OPTIONS_COUNT] fancyOptions;;"", 1, 0, 0, 255, 0
-
-uint8_t[112] unusedGapInCalibration
 
 uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
 uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", 100, 0, 0, 25000, 0
