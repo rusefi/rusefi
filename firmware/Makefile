@@ -1,7 +1,6 @@
 ##############################################################################
-# see readme.md
-# see setup_linux_environment.sh but Windows is also totally fine
-#
+# See fome-fw/firmware/DEVELOPER.md
+##############################################################################
 
 CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
