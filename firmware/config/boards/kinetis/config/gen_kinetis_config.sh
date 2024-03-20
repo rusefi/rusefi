@@ -34,8 +34,8 @@ java \
  $COMMON_GEN_CONFIG_PREFIX \
  -tool kinetis_gen_config.bat \
  $COMMON_GEN_CONFIG \
- -c_defines ${BOARD_DIR}/config/controllers/generated/rusefi_generated_kin.h \
- -c_destination ${BOARD_DIR}/config/controllers/generated/engine_configuration_generated_structures_kin.h \
+ -c_defines controllers/generated/rusefi_generated_kin.h \
+ -c_destination controllers/generated/engine_configuration_generated_structures_kin.h \
  -enumInputFile controllers/algo/rusefi_hw_enums.h
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
