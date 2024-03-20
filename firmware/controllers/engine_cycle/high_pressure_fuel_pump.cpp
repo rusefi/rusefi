@@ -80,9 +80,9 @@ float HpfpQuantity::calcFuelPercent(int rpm) {
 	float fuel_requested_cc_per_lobe = fuel_requested_cc_per_cycle / engineConfiguration->hpfpCamLobes;
 	return 100.f *
 		fuel_requested_cc_per_lobe / engineConfiguration->hpfpPumpVolume +
-		interpolate3d(engineConfiguration->hpfpCompensation,
-			      engineConfiguration->hpfpCompensationLoadBins, fuel_requested_cc_per_lobe,
-			      engineConfiguration->hpfpCompensationRpmBins, rpm);
+		interpolate3d(config->hpfpCompensation,
+				config->hpfpCompensationLoadBins, fuel_requested_cc_per_lobe,
+				config->hpfpCompensationRpmBins, rpm);
 }
 
 static float getLoad() {
@@ -102,9 +102,9 @@ float HpfpQuantity::calcPI(int rpm, float calc_fuel_percent) {
 			(FAST_CALLBACK_PERIOD_MS / 1000.));
 
 	m_pressureTarget_kPa = std::max<float>(possibleValue,
-		interpolate3d(engineConfiguration->hpfpTarget,
-			      engineConfiguration->hpfpTargetLoadBins, load,
-			      engineConfiguration->hpfpTargetRpmBins, rpm));
+		interpolate3d(config->hpfpTarget,
+				config->hpfpTargetLoadBins, load,
+				config->hpfpTargetRpmBins, rpm));
 
 	auto fuelPressure = Sensor::get(SensorType::FuelPressureHigh);
 	if (!fuelPressure) {
@@ -149,8 +149,8 @@ angle_t HpfpQuantity::pumpAngleFuel(int rpm, HpfpController *model) {
 
 	// Convert to degrees
 	return interpolate2d(fuel_requested_percentTotal,
-			     engineConfiguration->hpfpLobeProfileQuantityBins,
-			     engineConfiguration->hpfpLobeProfileAngle);
+			config->hpfpLobeProfileQuantityBins,
+			config->hpfpLobeProfileAngle);
 }
 
 void HpfpController::onFastCallback() {
@@ -173,8 +173,8 @@ void HpfpController::onFastCallback() {
 		// Convert deadtime from ms to degrees based on current RPM
 		float deadtime_ms = interpolate2d(
 			Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
-			engineConfiguration->hpfpDeadtimeVoltsBins,
-			engineConfiguration->hpfpDeadtimeMS);
+			config->hpfpDeadtimeVoltsBins,
+			config->hpfpDeadtimeMS);
 		m_deadtime = deadtime_ms * rpm * (360.f / 60.f / 1000.f);
 
 		// We set deadtime first, then pump, in case pump used to be 0.  Pump is what

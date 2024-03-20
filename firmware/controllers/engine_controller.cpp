@@ -635,11 +635,11 @@ bool validateConfig() {
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 	if (isGdiEngine()) {
-		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
-		ensureArrayIsAscending("HPFP deadtime", engineConfiguration->hpfpDeadtimeVoltsBins);
-		ensureArrayIsAscending("HPFP lobe profile", engineConfiguration->hpfpLobeProfileQuantityBins);
-		ensureArrayIsAscending("HPFP target rpm", engineConfiguration->hpfpTargetRpmBins);
-		ensureArrayIsAscending("HPFP target load", engineConfiguration->hpfpTargetLoadBins);
+		ensureArrayIsAscending("HPFP compensation", config->hpfpCompensationRpmBins);
+		ensureArrayIsAscending("HPFP deadtime", config->hpfpDeadtimeVoltsBins);
+		ensureArrayIsAscending("HPFP lobe profile", config->hpfpLobeProfileQuantityBins);
+		ensureArrayIsAscending("HPFP target rpm", config->hpfpTargetRpmBins);
+		ensureArrayIsAscending("HPFP target load", config->hpfpTargetLoadBins);
 	}
 
 	// VVT
