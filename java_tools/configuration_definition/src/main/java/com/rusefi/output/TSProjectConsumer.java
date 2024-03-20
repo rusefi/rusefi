@@ -13,7 +13,6 @@ import static com.rusefi.util.IoUtils.CHARSET;
  * [Constants]
  */
 public class TSProjectConsumer implements ConfigurationConsumer {
-    private static final String TS_FILE_INPUT_NAME = "rusefi.input";
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
     private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
     private static final String TS_CONDITION = "@@if_";
@@ -36,12 +35,12 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return tsOutput.getSettingContextHelp();
     }
 
-    protected void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
-        TsFileContent tsContent = readTsTemplateInputFile(tsPath);
-        SystemOut.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
+    protected void writeTunerStudioFile(String inputFile, String fieldsSection) throws IOException {
+        TsFileContent tsContent = readTsTemplateInputFile(inputFile);
+        SystemOut.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " from " + inputFile);
 
         // File.getPath() would eliminate potential separator at the end of the path
-        String fileName = getTsFileOutputName(new File(tsPath).getPath());
+        String fileName = state.getTsFileOutputName();
         Output tsHeader = new LazyFile(fileName);
         writeContent(fieldsSection, tsContent, tsHeader);
     }
@@ -67,8 +66,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
      * rusefi.input has all the content of the future .ini file with the exception of data page
      * TODO: start generating [outputs] section as well
      */
-    private TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {
-        String fileName = getTsFileInputName(tsPath);
+    private TsFileContent readTsTemplateInputFile(String fileName) throws IOException {
         BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), CHARSET));
 
         StringBuilder prefix = new StringBuilder();
@@ -130,14 +128,6 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             index++;
         }
         return token.toString();
-    }
-
-    private String getTsFileOutputName(String tsPath) {
-        return tsPath + File.separator + state.getTsFileOutputName();
-    }
-
-    public static String getTsFileInputName(String tsPath) {
-        return tsPath + File.separator + TS_FILE_INPUT_NAME;
     }
 
     @Override

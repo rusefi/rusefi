@@ -21,7 +21,7 @@ public class ConfigDefinition {
     public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
 
     private static final String KEY_DEFINITION = "-definition";
-    private static final String KEY_TS_DESTINATION = "-ts_destination";
+    private static final String KEY_TS_TEMPLATE = "-ts_template";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
     public static final String KEY_WITH_C_DEFINES = "-with_c_defines";
@@ -54,7 +54,7 @@ public class ConfigDefinition {
         if (args.length < 2) {
             SystemOut.println("Please specify\r\n"
                     + KEY_DEFINITION + " x\r\n"
-                    + KEY_TS_DESTINATION + " x\r\n"
+                    + KEY_TS_TEMPLATE + " x\r\n"
                     + KEY_C_DESTINATION + " x\r\n"
                     + KEY_JAVA_DESTINATION + " x\r\n"
             );
@@ -63,7 +63,7 @@ public class ConfigDefinition {
 
         SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
-        String tsInputFileFolder = null;
+        String tsTemplateFile = null;
         String destCDefinesFileName = null;
         String cHeaderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
@@ -80,8 +80,8 @@ public class ConfigDefinition {
                     // lame: order of command line arguments is important, these arguments should be AFTER '-tool' argument
                     state.setDefinitionInputFile(args[i + 1]);
                     break;
-                case KEY_TS_DESTINATION:
-                    tsInputFileFolder = args[i + 1];
+                case KEY_TS_TEMPLATE:
+                    tsTemplateFile = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
                     cHeaderDestination = args[i + 1];
@@ -146,9 +146,9 @@ public class ConfigDefinition {
             }
         }
 
-        if (tsInputFileFolder != null) {
+        if (tsTemplateFile != null) {
             // used to update .ini files
-            state.addInputFile(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
+            state.addInputFile(tsTemplateFile);
         }
 
         if (!enumInputFiles.isEmpty()) {
@@ -162,7 +162,7 @@ public class ConfigDefinition {
         ParseState parseState = new ParseState(state.getEnumsReader());
         // Add the variable for the config signature
         FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.getInputFiles()));
-        SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFileFolder, uniqueId);
+        SignatureConsumer.storeUniqueBuildId(state, parseState, tsTemplateFile, uniqueId);
 
         new TriggerWheelTSLogic().execute(triggersInputFolder, state.getVariableRegistry());
 
@@ -195,11 +195,11 @@ public class ConfigDefinition {
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(parseState, tsInputFileFolder + "/rusefi.input", tsInputFileFolder + "/" + state.getTsFileOutputName() + ".test");
+            // writer.writeTunerstudio(parseState, tsTemplateFile, state.getTsFileOutputName() + ".test");
         }
 
-        if (tsInputFileFolder != null) {
-            state.addDestination(new TSProjectConsumer(tsInputFileFolder, state));
+        if (tsTemplateFile != null) {
+            state.addDestination(new TSProjectConsumer(tsTemplateFile, state));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable

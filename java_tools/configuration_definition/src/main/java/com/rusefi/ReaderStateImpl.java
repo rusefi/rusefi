@@ -38,7 +38,7 @@ public class ReaderStateImpl implements ReaderState {
     private final Map<String, String> tsCustomLine = new HashMap<>();
     private final Map<String, ConfigStructureImpl> structures = new HashMap<>();
     // well, technically those should be a builder for state, not this state class itself
-    private String tsFileOutputName = "rusefi.ini";
+    private String tsFileOutputName;
     private String definitionInputFile = null;
     private boolean withC_Defines = true;
     private final List<String> prependFiles = new ArrayList<>();
