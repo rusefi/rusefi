@@ -21,7 +21,7 @@ both 64-bit Linux (Intel/AMD) and macOS (64-bit Intel and ARM) platforms.
 
 Linux and MacOS systems should have the software development tools,
 primarily 'make', pre-installed or readily installed.  MS-Windows
-requires selecting and installing a Unix-compatible system environment.
+requires selecting and installing a Unix-compatible environment.
 
 ## Setup Instructions
 
