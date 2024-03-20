@@ -25,11 +25,44 @@ Above this TPS, disable AC. Set to 0 to disable check.
 ### maxAcClt
 Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.
 
+### compressionRatio
+Just for reference really, not taken into account by any logic at this point
+
+### wastegatePositionMin
+Voltage when the wastegate is closed.\nYou probably don't have one of these!
+
+### wastegatePositionMax
+Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units
+
+### idlePositionMin
+Voltage when the idle valve is closed.\nYou probably don't have one of these!
+
+### idlePositionMax
+Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units
+
+### etbExpAverageLength
+By the way ETB PID runs at 500hz, length in 1/500 of second here.
+
+### launchFuelAdderPercent
+
+
+### etbJamTimeout
+Time required to detect a stuck throttle.
+
+### acIdleExtraOffset
+Additional idle % while A/C is active
+
+### manIdlePosition
+Value between 0 and 100 used in Manual mode
+
 ### multisparkMaxSparkingAngle
 This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.
 
 ### multisparkMaxExtraSparkCount
 Configures the maximum number of extra sparks to fire (does not include main spark)
+
+### vvtControlMinRpm
+
 
 ### injector.flow
 This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min
@@ -226,6 +259,9 @@ Engine displacement in litres
 ### cylindersCount
 Number of cylinder the engine has.
 
+### justATempTest
+null
+
 ### cylinderBore
 Cylinder diameter in mm.
 
@@ -249,6 +285,9 @@ How many consecutive gap rations have to match expected ranges for sync to happe
 
 ### maxIdleVss
 Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
+
+### camDecoder2jzPrecision
+null
 
 ### minOilPressureAfterStart
 Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
@@ -276,12 +315,6 @@ Number of revolutions per kilometer for the wheels your vehicle speed sensor is 
 
 ### canSleepPeriodMs
 CANbus thread period in ms
-
-### camDecoder2jzPrecision
-null
-
-### justATempTest
-null
 
 ### byFirmwareVersion
 
@@ -340,20 +373,17 @@ kPa value at high volts
 ### idle.solenoidFrequency
 
 
-### manIdlePosition
-Value between 0 and 100 used in Manual mode
-
 ### knockRetardAggression
 Ignition timing to remove when a knock event occurs.
 
 ### knockRetardReapplyRate
 After a knock event, reapply timing at this rate.
 
-### vssFilterReciprocal
-Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.
-
 ### vssGearRatio
 Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.
+
+### vssFilterReciprocal
+Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.
 
 ### vssToothCount
 Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.
@@ -367,32 +397,14 @@ How many consecutive VVT gap rations have to match expected ranges for sync to h
 ### mc33_t_min_boost
 Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.
 
-### acIdleExtraOffset
-Additional idle % while A/C is active
-
 ### finalGearRatio
 Ratio between the wheels and your transmission output.
-
-### tcuInputSpeedSensorTeeth
-null
-
-### wastegatePositionMin
-Voltage when the wastegate is closed.\nYou probably don't have one of these!
-
-### wastegatePositionMax
-Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units
-
-### idlePositionMin
-Voltage when the idle valve is closed.\nYou probably don't have one of these!
-
-### idlePositionMax
-Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units
 
 ### tunerStudioSerialSpeed
 Secondary TTL channel baud rate
 
-### compressionRatio
-Just for reference really, not taken into account by any logic at this point
+### tcuInputSpeedSensorTeeth
+null
 
 ### fordInjectorSmallPulseSlope
 
@@ -1350,18 +1362,6 @@ Cooling fan turn-off temperature threshold, in Celsius
 
 ### auxFrequencyFilter
 
-
-### vvtControlMinRpm
-
-
-### launchFuelAdderPercent
-
-
-### etbJamTimeout
-Time required to detect a stuck throttle.
-
-### etbExpAverageLength
-By the way ETB PID runs at 500hz, length in 1/500 of second here.
 
 ### coastingFuelCutRpmHigh
 This sets the RPM above which fuel cut is active.
