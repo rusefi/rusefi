@@ -4,6 +4,22 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "Clean Firmware",
+			"type": "shell",
+			"command": "make clean",
+			"windows": {
+				"command": "wsl bash -lc 'make clean'"
+			},
+			"options": {
+				"cwd": "${workspaceRoot}/firmware"
+			},
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
 			"label": "Build Firmware (Proteus F4)",
 			"type": "shell",
 			"command": "bash ./compile_proteus_f4.sh",
