@@ -16,7 +16,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/config/boards/subaru_eg33/rusefi_hw_enums.h
 
 .docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE) $(ENUM_TO_STRING)
-	bash $(PROJECT_DIR)/gen_live_documentation.sh
+	META_OUTPUT_ROOT_FOLDER="" bash $(PROJECT_DIR)/gen_live_documentation.sh
 	@touch $@
 
 .PHONY: docs-enums
