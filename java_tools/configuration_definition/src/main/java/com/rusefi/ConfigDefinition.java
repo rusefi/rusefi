@@ -26,7 +26,6 @@ public class ConfigDefinition {
     private static final String KEY_C_DEFINES = "-c_defines";
     public static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
-    private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SIGNATURE = "-signature";
     private static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
@@ -68,7 +67,6 @@ public class ConfigDefinition {
         String destCDefinesFileName = null;
         String cHeaderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
-        String firingEnumFileName = null;
         String triggersInputFolder = null;
         String signatureDestination = null;
         String signaturePrependFile = null;
@@ -118,9 +116,6 @@ public class ConfigDefinition {
                         throw new IllegalStateException("While processing " + fileName, e);
                     }
                     state.addInputFile(fileName);
-                case KEY_FIRING:
-                    firingEnumFileName = args[i + 1];
-                    state.addInputFile(firingEnumFileName);
                     break;
                 case "-triggerInputFolder":
                     triggersInputFolder = args[i + 1];
