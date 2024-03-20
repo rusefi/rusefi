@@ -1730,7 +1730,7 @@ warning_message_t warning_message;
 
 #define FANCY_OPTIONS_COUNT 16
 
-uint8_t[FANCY_OPTIONS_COUNT] fancyOptions;;"", 1, 0, 0, 255, 0
+uint8_t[FANCY_OPTIONS_COUNT iterate] fancyOptions;;"", 1, 0, 0, 255, 0
 
 uint8_t[112] unusedGapInCalibration
 
