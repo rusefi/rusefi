@@ -2,7 +2,7 @@ include $(PROJECT_DIR)/../java_tools/java_tools.mk
 
 # We're assuming that META_OUTPUT_ROOT_FOLDER is a path relative to PROJECT_DIR
 INI_FILE = $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/rusefi_$(SHORT_BOARD_NAME).ini
-SIG_FILE = $(PROJECT_DIR)/tunerstudio/generated/signature_$(SHORT_BOARD_NAME).txt
+SIG_FILE = $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/signature_$(SHORT_BOARD_NAME).txt
 
 CONFIG_INPUTS = \
   $(SIG_FILE) \
@@ -25,9 +25,9 @@ RAMDISK = \
 
 CONFIG_FILES = \
   $(INI_FILE) \
-  $(PROJECT_DIR)/controllers/generated/rusefi_generated_$(SHORT_BOARD_NAME).h \
-  $(PROJECT_DIR)/controllers/generated/signature_$(SHORT_BOARD_NAME).h \
-  $(PROJECT_DIR)/controllers/generated/engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/rusefi_generated_$(SHORT_BOARD_NAME).h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/signature_$(SHORT_BOARD_NAME).h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h \
   $(FIELDS) \
   $(PIN_FILES)
 
