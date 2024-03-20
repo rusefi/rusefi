@@ -55,5 +55,6 @@ java \
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARD_DIR}"; exit 1; }
 
+
 echo "Happy ${SHORT_BOARD_NAME}!"
 exit 0
