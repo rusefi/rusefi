@@ -4,30 +4,14 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build Firmware (Frankenso/default)",
-			"type": "shell",
-			"command": "make -j12",
-			"windows": {
-				"command": "wsl bash -lc 'make -j12'"
-			},
-			"options": {
-				"cwd": "${workspaceRoot}/firmware"
-			},
-			"problemMatcher": [],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
-		},
-		{
 			"label": "Build Firmware (Proteus F4)",
 			"type": "shell",
-			"command": "make -j12 PROJECT_BOARD=proteus",
+			"command": "bash ./compile_proteus_f4.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=proteus'"
+				"command": "wsl bash -lc 'bash ./compile_proteus_f4.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/proteus"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -43,7 +27,7 @@
 				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=proteus PROJECT_CPU=ARCH_STM32F7'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/proteus"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -54,12 +38,12 @@
 		{
 			"label": "Build Firmware (Proteus H7) EXPERIMENTAL",
 			"type": "shell",
-			"command": "make -j16 PROJECT_BOARD=proteus PROJECT_CPU=ARCH_STM32H7",
+			"command": "bash ./compile_proteus_h7.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=proteus PROJECT_CPU=ARCH_STM32H7'"
+				"command": "wsl bash -lc 'bash ./compile_proteus_h7.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/proteus"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -70,12 +54,12 @@
 		{
 			"label": "Build Firmware (Nucleo F429)",
 			"type": "shell",
-			"command": "make -j12 PROJECT_BOARD=nucleo_f429",
+			"command": "bash ./compile_stm32f429_nucleo.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=nucleo_f429'"
+				"command": "wsl bash -lc 'bash ./compile_stm32f429_nucleo.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/nucleo_f429"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -86,12 +70,12 @@
 		{
 			"label": "Build Firmware (Nucleo H743)",
 			"type": "shell",
-			"command": "make -j12 PROJECT_BOARD=nucleo_h743 PROJECT_CPU=ARCH_STM32H7",
+			"command": "bash ./compile_stm32h743_nucleo.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=nucleo_h743 PROJECT_CPU=ARCH_STM32H7'"
+				"command": "wsl bash -lc 'bash ./compile_stm32h743_nucleo.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/nucleo_h743"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -102,12 +86,12 @@
 		{
 			"label": "Build Firmware (Atlas H7)",
 			"type": "shell",
-			"command": "make -j16 PROJECT_BOARD=atlas PROJECT_CPU=ARCH_STM32H7",
+			"command": "bash ./compile_atlas.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=atlas PROJECT_CPU=ARCH_STM32H7'"
+				"command": "wsl bash -lc 'bash ./compile_atlas.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/atlas"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -118,12 +102,12 @@
 		{
 			"label": "Build Firmware (hellen72)",
 			"type": "shell",
-			"command": "make -j16 PROJECT_BOARD=hellen/hellen72",
+			"command": "bash ./compile_hellen72.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=hellen/hellen72'"
+				"command": "wsl bash -lc 'bash ./compile_hellen72.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/hellen/hellen72"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -134,12 +118,12 @@
 		{
 			"label": "Build Firmware (Hellen NB1)",
 			"type": "shell",
-			"command": "make -j16 PROJECT_BOARD=hellen/hellen-nb1",
+			"command": "bash ./compile_hellen-nb1.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=hellen/hellen-nb1'"
+				"command": "wsl bash -lc 'bash ./compile_hellen-nb1.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/hellen/hellen-nb1"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -150,12 +134,12 @@
 		{
 			"label": "Build Firmware (microRusEfi F4)",
 			"type": "shell",
-			"command": "make -j12 PROJECT_BOARD=microrusefi",
+			"command": "bash ./compile_mre_f4.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=microrusefi'"
+				"command": "wsl bash -lc 'bash ./compile_mre_f4.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/microrusefi"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -166,28 +150,12 @@
 		{
 			"label": "Build Firmware (microRusEfi F7)",
 			"type": "shell",
-			"command": "make -j12 PROJECT_BOARD=microrusefi PROJECT_CPU=ARCH_STM32F7",
+			"command": "bash ./compile_mre_f7.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=microrusefi PROJECT_CPU=ARCH_STM32F7'"
+				"command": "wsl bash -lc 'bash ./compile_mre_f7.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
-			},
-			"problemMatcher": [],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
-		},
-		{
-			"label": "Build Firmware (TDG PDM8)",
-			"type": "shell",
-			"command": "make -j12 PROJECT_BOARD=tdg-pdm8",
-			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=tdg-pdm8'"
-			},
-			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/microrusefi"
 			},
 			"problemMatcher": [],
 			"group": {
@@ -198,12 +166,12 @@
 		{
 			"label": "Build Firmware (F407 \"basic\")",
 			"type": "shell",
-			"command": "make -j12 PROJECT_BOARD=f407-discovery",
+			"command": "bash ./compile_f407-discovery.sh",
 			"windows": {
-				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=f407-discovery'"
+				"command": "wsl bash -lc 'bash ./compile_f407-discovery.sh'"
 			},
 			"options": {
-				"cwd": "${workspaceRoot}/firmware"
+				"cwd": "${workspaceRoot}/firmware/config/boards/f407-discovery"
 			},
 			"problemMatcher": [],
 			"group": {
