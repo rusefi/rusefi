@@ -15,6 +15,10 @@ angle_t getCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ignitionLo
  * this method is used to build default advance map
  */
 float getInitialAdvance(int rpm, float map, float advanceMax);
+// public only for unit tests
+angle_t getCrankingAdvance(int rpm, float engineLoad);
+angle_t getRunningAdvance(int rpm, float engineLoad);
+angle_t getAdvanceCorrections(float engineLoad);
 
 size_t getMultiSparkCount(int rpm);
 void initIgnitionAdvanceControl();

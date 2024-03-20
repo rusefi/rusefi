@@ -6,6 +6,7 @@
  */
 
 #include "pch.h"
+#include "defaults.h"
 #include "spark_logic.h"
 
 using ::testing::_;
@@ -148,3 +149,26 @@ TEST(ignition, CylinderTimingTrim) {
 	EXPECT_NEAR(engine->engineState.timingAdvance[2], unadjusted + 2, EPS4D);
 	EXPECT_NEAR(engine->engineState.timingAdvance[3], unadjusted + 4, EPS4D);
 }
+
+TEST(ignition, negativeAdvance) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+  int rpm = 0;
+  float load = 50;
+
+	engineConfiguration->fixedTiming = -13;
+	engineConfiguration->timingMode = TM_FIXED;
+	// run the ignition math
+	engine->periodicFastCallback();
+
+	eth.assertRpm(0);
+
+	ASSERT_EQ(DEFAULT_CRANKING_ANGLE, getCrankingAdvance(rpm, load));
+	ASSERT_EQ(-13, getRunningAdvance(rpm, load));
+	ASSERT_EQ(0, getAdvanceCorrections(load));
+	ASSERT_EQ(707, getAdvance(rpm, load));
+
+	ASSERT_NEAR(-603.72, engine->ignitionState.baseIgnitionAdvance, EPS4D);
+	ASSERT_NEAR(-603.72, engine->ignitionState.correctedIgnitionAdvance, EPS4D);
+}
+

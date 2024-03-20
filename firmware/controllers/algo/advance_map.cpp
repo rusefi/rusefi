@@ -39,7 +39,7 @@ static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int
 /**
  * @return ignition timing angle advance before TDC
  */
-static angle_t getRunningAdvance(int rpm, float engineLoad) {
+angle_t getRunningAdvance(int rpm, float engineLoad) {
 	if (engineConfiguration->timingMode == TM_FIXED) {
 		return engineConfiguration->fixedTiming;
 	}
@@ -120,7 +120,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	return advanceAngle;
 }
 
-static angle_t getAdvanceCorrections(float engineLoad) {
+angle_t getAdvanceCorrections(float engineLoad) {
 	auto iat = Sensor::get(SensorType::Iat);
 
 	if (!iat) {
@@ -151,7 +151,7 @@ static angle_t getAdvanceCorrections(float engineLoad) {
 /**
  * @return ignition timing angle advance before TDC for Cranking
  */
-static angle_t getCrankingAdvance(int rpm, float engineLoad) {
+angle_t getCrankingAdvance(int rpm, float engineLoad) {
 	// get advance from the separate table for Cranking
 	if (engineConfiguration->useSeparateAdvanceForCranking) {
 		return interpolate2d(rpm, config->crankingAdvanceBins, config->crankingAdvance);
