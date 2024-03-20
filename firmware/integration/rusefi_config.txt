@@ -715,8 +715,6 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	adc_channel_e tps2_2AdcChannel;Second throttle body, second sensor.
 	adc_channel_e throttlePedalPositionSecondAdcChannel;Electronic throttle pedal position input\nSecond channel\nSee also tps1_1AdcChannel\nSee throttlePedalSecondaryUpVoltage and throttlePedalSecondaryWOTVoltage
 
-	uint8_t[FUEL_LEVEL_TABLE_COUNT] fuelLevelValues;;"%", 1, 0, 0, 100, 0
-
 	ego_sensor_e afr_type;AFR, WBO, EGO - whatever you like to call it;
 #define C_MC33810_COUNT 1
 	Gpio[C_MC33810_COUNT iterate] mc33810_cs;
@@ -1443,8 +1441,6 @@ uint8_t[TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0
 
 	pin_output_mode_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid_mode;
 
-	int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -50, 10, 1
-
 	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideFrom;;"ratio", 1, 0, 0, 20, 3
 	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideTo;;"ratio", 1, 0, 0, 20, 3
 
@@ -1479,17 +1475,6 @@ tChargeMode_e tChargeMode;
         uint16_t autoscale hpfpPidP;;"%/kPa", 0.001, 0, 0, 65, 3
         uint16_t autoscale hpfpPidI;;"%/kPa/lobe", 0.00001, 0, 0, 0.65, 5
         uint16_t hpfpTargetDecay;The fastest rate the target pressure can be reduced by. This is because HPFP have no way to bleed off pressure other than injecting fuel.;"kPa/s", 1, 0, 0, 65000, 0
-        uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
-        uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1
-        uint8_t[HPFP_DEADTIME_SIZE] hpfpDeadtimeVoltsBins;;"volts", 1, 0, 0, 255, 0
-        uint16_t[HPFP_DEADTIME_SIZE] autoscale hpfpDeadtimeMS;;"ms", 0.001, 0, 0, 65, 3
-        uint16_t[HPFP_TARGET_SIZE x HPFP_TARGET_SIZE] hpfpTarget;;"kPa", 1, 0, 0, 65000, 0
-        uint16_t[HPFP_TARGET_SIZE] autoscale hpfpTargetLoadBins;;"load", 0.1, 0, 0, 6500, 1
-        uint8_t[HPFP_TARGET_SIZE] autoscale hpfpTargetRpmBins;;"RPM", 50, 0, 0, 12500, 0
-	int8_t[HPFP_COMPENSATION_SIZE x HPFP_COMPENSATION_SIZE] hpfpCompensation;;"%", 1, 0, -100, 100, 0
-        uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
-        uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", 50, 0, 0, 12500, 0
-
 
 	output_pin_e[4 iterate] stepper_raw_output;
 
@@ -1497,15 +1482,6 @@ tChargeMode_e tChargeMode;
 
 uint16_t vvtActivationDelayMs;We need to give engine time to build oil pressure without diverting it to VVT;"ms", 1, 0, 0, 65000, 0
 
-#define WWAE_TABLE_SIZE 8
-
-int8_t[WWAE_TABLE_SIZE] wwCltBins;;"deg C", 1, 0, -40, 120, 0
-uint8_t[WWAE_TABLE_SIZE] autoscale wwTauCltValues;;"", 0.01, 0, 0, 2.5, 2
-uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaCltValues;;"", 0.01, 0, 0, 1, 2
-
-int8_t[WWAE_TABLE_SIZE] wwMapBins;;"kPa", 1, 0, 0, 250, 0
-uint8_t[WWAE_TABLE_SIZE] autoscale wwTauMapValues;;"", 0.01, 0, 0, 2.5, 2
-uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaMapValues;;"", 0.01, 0, 0, 2.5, 2
 
 uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 0, 0, 255, 0
         uint16_t[TORQUE_CURVE_SIZE] torqueRpmBins;;"RPM", 1, 0, 0, 65000, 0
