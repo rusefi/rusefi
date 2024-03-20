@@ -64,6 +64,11 @@ void setDefaultBaseEngine() {
 	engineConfiguration->displacement = 2;
 	setInline4();
 
+  for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+    // one knock sensor by default. See also 'setLeftRightBanksNeedBetterName()'
+    engineConfiguration->cylinderBankSelect[i] = 1;
+  }
+
 	engineConfiguration->compressionRatio = 9;
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
 	engineConfiguration->boardUseCanTerminator = true;
