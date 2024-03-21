@@ -8,7 +8,7 @@ COMMON_GEN_CONFIG="
  -readfile LIVE_DATA_MENU_FROM_FILE console/binary/generated/fancy_menu.ini \
  -readfile LIVE_DATA_PANELS_FROM_FILE console/binary/generated/fancy_content.ini \
  -readfile LIVE_DATA_GAUGES_FROM_FILE console/binary/generated/gauges.ini \
- -ts_destination tunerstudio \
+ -ts_template tunerstudio/rusefi.input \
  -triggerInputFolder ../unit_tests \
  -with_c_defines false \
  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp controllers/lua/generated/value_lookup_generated.md \

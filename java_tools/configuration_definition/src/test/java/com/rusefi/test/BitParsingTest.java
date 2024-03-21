@@ -24,7 +24,7 @@ public class BitParsingTest {
 
         TSProjectConsumer javaFieldsConsumer = new TSProjectConsumer("", state) {
             @Override
-            protected void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
+            protected void writeTunerStudioFile(String inputFile, String fieldsSection) throws IOException {
                 writeContent(fieldsSection, new TsFileContent("", ""), createOutput(sw));
             }
         };
