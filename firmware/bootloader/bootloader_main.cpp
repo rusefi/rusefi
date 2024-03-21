@@ -84,13 +84,10 @@ int main(void) {
 	// Init openblt itself
 	BootInit();
 
-#if (BOOT_BACKDOOR_ENTRY_TIMEOUT_MS > 0)
 	blt_bool stayInBootloader = checkIfRebootIntoOpenBltRequested();
 	blt_bool wasConnected = BLT_FALSE;
-#endif // BOOT_BACKDOOR_ENTRY_TIMEOUT_MS
 
 	while (true) {
-#if (BOOT_BACKDOOR_ENTRY_TIMEOUT_MS > 0)
 		BootTask();
 
 		// since BOOT_BACKDOOR_HOOKS_ENABLE==TRUE, BackDoorCheck() is not working
@@ -103,9 +100,6 @@ int main(void) {
 		if (stayInBootloader || wasConnected)
 			continue;
 		blt_bool isTimeout = (TIME_I2MS(chVTGetSystemTime()) >= BOOT_BACKDOOR_ENTRY_TIMEOUT_MS);
-#else
-		blt_bool isTimeout = BLT_TRUE;
-#endif // BOOT_BACKDOOR_ENTRY_TIMEOUT_MS
 		if (isTimeout == BLT_TRUE) {
 			waitedLongerThanTimeout = BLT_TRUE;
 			CpuStartUserProgram();
