@@ -3732,7 +3732,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "CAN dash type",						canNbcType
 		field = "inertia measurement unit",				imuType
 		field = "Enable FOME CAN broadcast",			enableVerboseCanTx
-		field = verboseIsoTp,									verboseIsoTp
+
+	dialog = canBroadcast, "CAN Data Broadcast"
+		field = "Broadcast format details at"
+		field = "https://wiki.fome.tech/Advanced-Features/CAN/"
 		field = "FOME CAN data bus",	canBroadcastUseChannelTwo
 		field = "FOME CAN data base address",			verboseCanBaseAddress
 		field = "FOME CAN data address type",			rusefiVerbose29b
@@ -3742,7 +3745,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = canBusMain, "CAN Bus Communication", yAxis
 		panel = canBus
-
+		panel = canBroadcast
 		panel = canHw1
 		panel = canHw2	@@if_ts_show_can2
 
@@ -4474,7 +4477,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Artificial Misfire",						artificialTestMisfire
 		field = "Instant Rpm Range",                    instantRpmRange
 		field = "Always use instant RPM",				alwaysInstantRpm
-		field = "Never use instant RPM TODO",			neverInstantRpm
+		field = verboseIsoTp,									verboseIsoTp
 		field = vinNumber,										vinNumber
 		field = turbochargerFilter,							turbochargerFilter
 		field = auxFrequencyFilter,							auxFrequencyFilter
