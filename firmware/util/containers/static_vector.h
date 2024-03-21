@@ -24,7 +24,7 @@ struct static_vector {
 			return nullptr;
 		}
 
-		auto& location = m_storage[m_size];
+		T& location = m_storage[m_size];
 
 		location = value;
 		m_size++;
