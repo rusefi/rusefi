@@ -3733,13 +3733,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "inertia measurement unit",				imuType
 		field = "Enable FOME CAN broadcast",			enableVerboseCanTx
 
-	dialog = canBroadcast, "CAN Data Broadcast"
+	dialog = canBroadcast, "FOME CAN Data Broadcast"
 		field = "Broadcast format details at"
 		field = "https://wiki.fome.tech/Advanced-Features/CAN/"
-		field = "FOME CAN data bus",	canBroadcastUseChannelTwo
-		field = "FOME CAN data base address",			verboseCanBaseAddress
-		field = "FOME CAN data address type",			rusefiVerbose29b
-		field = "FOME CAN data period",				canSleepPeriodMs
+		field = "FOME CAN data bus",		canBroadcastUseChannelTwo
+		field = "Base address",				verboseCanBaseAddress
+		field = "Address type",				rusefiVerbose29b
+		field = "Data transmit period",		canSleepPeriodMs
+		field =
+		field = "Enable cams frame",			canBroadcastCams
+		field = "Enable EGT frame",			canBroadcastEgt
 
 	dialog = canBus2, "Secondary CAN Bus"
 

@@ -36,6 +36,8 @@ or
  - Added Lua function `getAuxDigital` for parity with rusEFI #351
  - Optional table to change after start idle taper time #369 (thank you, Krakert!)
  - Increased precision available for Lua tables
+ - Add EGT values to CAN broadcast format #398
+ - Add options to enable/disable optional CAN frames (cams, EGT so far)
 
 ### Fixed
  - Improve performance with Lua CAN reception of a high volume of frames

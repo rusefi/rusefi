@@ -206,6 +206,14 @@ static void populateFrame(Cams& msg) {
 	msg.Bank2ExhaustTarget = engine->outputChannels.vvtTargets[3];
 }
 
+struct Egts {
+	uint8_t egt[8];
+};
+
+static void populateFrame(Egts&) {
+	// TODO: https://github.com/FOME-Tech/fome-fw/issues/398
+}
+
 void sendCanVerbose() {
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
@@ -222,7 +230,14 @@ void sendCanVerbose() {
 	transmitStruct<Fueling>		(base + 5, isExt, canChannel);
 	transmitStruct<Fueling2>	(base + 6, isExt, canChannel);
 	transmitStruct<Fueling3>	(base + 7, isExt, canChannel);
-	transmitStruct<Cams>		(base + 8, isExt, canChannel);
+
+	if (engineConfiguration->canBroadcastCams) {
+		transmitStruct<Cams>	(base + 8, isExt, canChannel);
+	}
+
+	if (engineConfiguration->canBroadcastEgt) {
+		transmitStruct<Egts>	(base + 9, isExt, canChannel);
+	}
 }
 
 #endif // EFI_CAN_SUPPORT
