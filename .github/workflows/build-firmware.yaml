@@ -267,8 +267,8 @@ jobs:
       working-directory: ./firmware
       run: |
         source config/boards/common_script_read_meta_env.inc ${{ env.BOARD_META_PATH }}
-        cd tunerstudio/generated
-        ../upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        cd ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated
+        ${OLDPWD}/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload github action elf artifact
       if: ${{ env.partial == 'true' }}
