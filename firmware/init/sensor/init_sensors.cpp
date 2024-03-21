@@ -76,12 +76,24 @@ static void deInitAuxDigital() {
 	}
 }
 
+static LuaOverrideSensor overrideRpm(SensorType::DashOverrideRpm, SensorType::Rpm);
+static LuaOverrideSensor overrideClt(SensorType::DashOverrideClt, SensorType::Clt);
+static LuaOverrideSensor overrideBatteryVoltage(SensorType::DashOverrideBatteryVoltage, SensorType::BatteryVoltage);
+
+void initOverrideSensors() {
+	  overrideRpm.Register();
+	  overrideClt.Register();
+	  overrideBatteryVoltage.Register();
+}
+
 // one-time start-up
 // see also 'reconfigureSensors'
 void initNewSensors() {
 #if EFI_PROD_CODE && EFI_CAN_SUPPORT
 	initCanSensors();
 #endif
+
+	initOverrideSensors();
 
 	initVbatt();
 	initMap();

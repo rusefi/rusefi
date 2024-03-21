@@ -4,6 +4,8 @@
 
 #pragma once
 
+// fine-grained method to facilitate testing
+void initOverrideSensors();
 
 // Call this once at startup to initialize, configure, and subscribe sensors
 void initNewSensors();

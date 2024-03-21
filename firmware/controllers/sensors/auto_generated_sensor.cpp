@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Sat Mar 09 14:05:10 UTC 2024
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Thu Mar 21 09:51:05 EDT 2024
 // see also gen_config_and_enums.bat
 
 
@@ -53,6 +53,12 @@ case SensorType::CompressorDischargePressure:
   return "CompressorDischargePressure";
 case SensorType::CompressorDischargeTemperature:
   return "CompressorDischargeTemperature";
+case SensorType::DashOverrideBatteryVoltage:
+  return "DashOverrideBatteryVoltage";
+case SensorType::DashOverrideClt:
+  return "DashOverrideClt";
+case SensorType::DashOverrideRpm:
+  return "DashOverrideRpm";
 case SensorType::DetectedGear:
   return "DetectedGear";
 case SensorType::DriverThrottleIntent:

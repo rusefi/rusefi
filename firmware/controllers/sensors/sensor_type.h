@@ -128,6 +128,10 @@ enum class SensorType : unsigned char {
 
   IgnKeyVoltage,
 
+  DashOverrideRpm,
+  DashOverrideClt,
+  DashOverrideBatteryVoltage,
+
 	AuxLinear1,
 	AuxLinear2,
 
