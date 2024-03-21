@@ -99,7 +99,11 @@ int main(void) {
 		}
 		if (stayInBootloader || wasConnected)
 			continue;
+#if (BOOT_BACKDOOR_ENTRY_TIMEOUT_MS > 0)
 		blt_bool isTimeout = (TIME_I2MS(chVTGetSystemTime()) >= BOOT_BACKDOOR_ENTRY_TIMEOUT_MS);
+#else
+		blt_bool isTimeout = BLT_TRUE;
+#endif // BOOT_BACKDOOR_ENTRY_TIMEOUT_MS
 		if (isTimeout == BLT_TRUE) {
 			waitedLongerThanTimeout = BLT_TRUE;
 			CpuStartUserProgram();
