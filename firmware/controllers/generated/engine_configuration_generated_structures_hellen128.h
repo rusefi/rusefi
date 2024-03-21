@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 20 21:18:21 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 21 03:04:48 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1456,75 +1456,69 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> finalGearRatio;
 	/**
-	 * Secondary TTL channel baud rate
-	 * units: BPs
 	 * offset 730
-	 */
-	uint16_t tunerStudioSerialSpeed;
-	/**
-	 * offset 732
 	 */
 	brain_input_pin_e tcuInputSpeedSensorPin;
 	/**
-	 * offset 734
+	 * offset 732
 	 */
 	uint8_t tcuInputSpeedSensorTeeth;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 735
+	 * offset 733
 	 */
-	uint8_t alignmentFill_at_735[1];
+	uint8_t alignmentFill_at_733[1];
 	/**
 	 * Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.
 	 * See also directSelfStimulation which is different.
-	 * offset 736
+	 * offset 734
 	 */
 	Gpio triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
 	 * units: g/s
-	 * offset 740
+	 * offset 738
 	 */
 	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseSlope;
 	/**
-	 * offset 742
+	 * offset 740
 	 */
 	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
-	 * offset 744
+	 * offset 742
 	 */
 	adc_channel_e maf2AdcChannel;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 745
+	 * offset 743
 	 */
-	uint8_t alignmentFill_at_745[1];
+	uint8_t alignmentFill_at_743[1];
 	/**
 	 * On-off O2 sensor heater control. 'ON' if engine is running, 'OFF' if stopped or cranking.
-	 * offset 746
+	 * offset 744
 	 */
 	output_pin_e o2heaterPin;
 	/**
-	 * offset 748
+	 * offset 746
 	 */
 	pin_output_mode_e o2heaterPinModeTodO;
 	/**
 	 * units: RPM
-	 * offset 749
+	 * offset 747
 	 */
 	scaled_channel<uint8_t, 1, 100> lambdaProtectionMinRpm;
 	/**
 	 * units: %
-	 * offset 750
+	 * offset 748
 	 */
 	scaled_channel<uint8_t, 1, 10> lambdaProtectionMinLoad;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 751
+	 * offset 749
 	 */
-	uint8_t alignmentFill_at_751[1];
+	uint8_t alignmentFill_at_749[3];
 	/**
 	offset 752 bit 0 */
 	bool is_enabled_spi_1 : 1 {};
@@ -1633,7 +1627,7 @@ struct engine_configuration_s {
 	bool enableAemXSeries : 1 {};
 	/**
 	offset 752 bit 31 */
-	bool unusedBit_226_31 : 1 {};
+	bool unusedBit_225_31 : 1 {};
 	/**
 	 * offset 756
 	 */
@@ -2831,46 +2825,46 @@ struct engine_configuration_s {
 	bool unusedBit_503_17 : 1 {};
 	/**
 	offset 1496 bit 18 */
-	bool unusedBit_503_18 : 1 {};
+	bool unusedBit_502_18 : 1 {};
 	/**
 	offset 1496 bit 19 */
-	bool unusedBit_503_19 : 1 {};
+	bool unusedBit_502_19 : 1 {};
 	/**
 	offset 1496 bit 20 */
-	bool unusedBit_503_20 : 1 {};
+	bool unusedBit_502_20 : 1 {};
 	/**
 	offset 1496 bit 21 */
-	bool unusedBit_503_21 : 1 {};
+	bool unusedBit_502_21 : 1 {};
 	/**
 	offset 1496 bit 22 */
-	bool unusedBit_503_22 : 1 {};
+	bool unusedBit_502_22 : 1 {};
 	/**
 	offset 1496 bit 23 */
-	bool unusedBit_503_23 : 1 {};
+	bool unusedBit_502_23 : 1 {};
 	/**
 	offset 1496 bit 24 */
-	bool unusedBit_503_24 : 1 {};
+	bool unusedBit_502_24 : 1 {};
 	/**
 	offset 1496 bit 25 */
-	bool unusedBit_503_25 : 1 {};
+	bool unusedBit_502_25 : 1 {};
 	/**
 	offset 1496 bit 26 */
-	bool unusedBit_503_26 : 1 {};
+	bool unusedBit_502_26 : 1 {};
 	/**
 	offset 1496 bit 27 */
-	bool unusedBit_503_27 : 1 {};
+	bool unusedBit_502_27 : 1 {};
 	/**
 	offset 1496 bit 28 */
-	bool unusedBit_503_28 : 1 {};
+	bool unusedBit_502_28 : 1 {};
 	/**
 	offset 1496 bit 29 */
-	bool unusedBit_503_29 : 1 {};
+	bool unusedBit_502_29 : 1 {};
 	/**
 	offset 1496 bit 30 */
-	bool unusedBit_503_30 : 1 {};
+	bool unusedBit_502_30 : 1 {};
 	/**
 	offset 1496 bit 31 */
-	bool unusedBit_503_31 : 1 {};
+	bool unusedBit_502_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
@@ -3047,76 +3041,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1556 bit 8 */
-	bool unusedBit_552_8 : 1 {};
+	bool unusedBit_551_8 : 1 {};
 	/**
 	offset 1556 bit 9 */
-	bool unusedBit_552_9 : 1 {};
+	bool unusedBit_551_9 : 1 {};
 	/**
 	offset 1556 bit 10 */
-	bool unusedBit_552_10 : 1 {};
+	bool unusedBit_551_10 : 1 {};
 	/**
 	offset 1556 bit 11 */
-	bool unusedBit_552_11 : 1 {};
+	bool unusedBit_551_11 : 1 {};
 	/**
 	offset 1556 bit 12 */
-	bool unusedBit_552_12 : 1 {};
+	bool unusedBit_551_12 : 1 {};
 	/**
 	offset 1556 bit 13 */
-	bool unusedBit_552_13 : 1 {};
+	bool unusedBit_551_13 : 1 {};
 	/**
 	offset 1556 bit 14 */
-	bool unusedBit_552_14 : 1 {};
+	bool unusedBit_551_14 : 1 {};
 	/**
 	offset 1556 bit 15 */
-	bool unusedBit_552_15 : 1 {};
+	bool unusedBit_551_15 : 1 {};
 	/**
 	offset 1556 bit 16 */
-	bool unusedBit_552_16 : 1 {};
+	bool unusedBit_551_16 : 1 {};
 	/**
 	offset 1556 bit 17 */
-	bool unusedBit_552_17 : 1 {};
+	bool unusedBit_551_17 : 1 {};
 	/**
 	offset 1556 bit 18 */
-	bool unusedBit_552_18 : 1 {};
+	bool unusedBit_551_18 : 1 {};
 	/**
 	offset 1556 bit 19 */
-	bool unusedBit_552_19 : 1 {};
+	bool unusedBit_551_19 : 1 {};
 	/**
 	offset 1556 bit 20 */
-	bool unusedBit_552_20 : 1 {};
+	bool unusedBit_551_20 : 1 {};
 	/**
 	offset 1556 bit 21 */
-	bool unusedBit_552_21 : 1 {};
+	bool unusedBit_551_21 : 1 {};
 	/**
 	offset 1556 bit 22 */
-	bool unusedBit_552_22 : 1 {};
+	bool unusedBit_551_22 : 1 {};
 	/**
 	offset 1556 bit 23 */
-	bool unusedBit_552_23 : 1 {};
+	bool unusedBit_551_23 : 1 {};
 	/**
 	offset 1556 bit 24 */
-	bool unusedBit_552_24 : 1 {};
+	bool unusedBit_551_24 : 1 {};
 	/**
 	offset 1556 bit 25 */
-	bool unusedBit_552_25 : 1 {};
+	bool unusedBit_551_25 : 1 {};
 	/**
 	offset 1556 bit 26 */
-	bool unusedBit_552_26 : 1 {};
+	bool unusedBit_551_26 : 1 {};
 	/**
 	offset 1556 bit 27 */
-	bool unusedBit_552_27 : 1 {};
+	bool unusedBit_551_27 : 1 {};
 	/**
 	offset 1556 bit 28 */
-	bool unusedBit_552_28 : 1 {};
+	bool unusedBit_551_28 : 1 {};
 	/**
 	offset 1556 bit 29 */
-	bool unusedBit_552_29 : 1 {};
+	bool unusedBit_551_29 : 1 {};
 	/**
 	offset 1556 bit 30 */
-	bool unusedBit_552_30 : 1 {};
+	bool unusedBit_551_30 : 1 {};
 	/**
 	offset 1556 bit 31 */
-	bool unusedBit_552_31 : 1 {};
+	bool unusedBit_551_31 : 1 {};
 	/**
 	 * offset 1560
 	 */
@@ -4490,16 +4484,22 @@ struct engine_configuration_s {
 	 */
 	pin_mode_e spi6MosiMode;
 	/**
+	 * need 4 byte alignment
 	 * units: units
 	 * offset 3978
 	 */
-	uint8_t unusedOftenChangesDuringFirmwareUpdate[240];
+	uint8_t alignmentFill_at_3978[2];
 	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 4218
+	 * Secondary TTL channel baud rate
+	 * units: BPs
+	 * offset 3980
 	 */
-	uint8_t alignmentFill_at_4218[2];
+	uint32_t tunerStudioSerialSpeed;
+	/**
+	 * units: units
+	 * offset 3984
+	 */
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[236];
 };
 static_assert(sizeof(engine_configuration_s) == 4220);
 
@@ -5523,4 +5523,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22400);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 20 21:18:21 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 21 03:04:48 UTC 2024

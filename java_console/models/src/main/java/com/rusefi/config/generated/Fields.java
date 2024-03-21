@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 21 02:15:18 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 21 03:05:51 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1123,7 +1123,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 300749997;
+	public static final int SIGNATURE_HASH = 1459716404;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1374,7 +1374,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.03.21.f407-discovery.300749997";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.03.21.f407-discovery.1459716404";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1710,22 +1710,21 @@ public class Fields {
 	public static final Field HIP9011CSPINMODE = Field.create("HIP9011CSPINMODE", 726, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 727, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FINALGEARRATIO = Field.create("FINALGEARRATIO", 728, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TUNERSTUDIOSERIALSPEED = Field.create("TUNERSTUDIOSERIALSPEED", 730, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field TCUINPUTSPEEDSENSORPIN = Field.create("TCUINPUTSPEEDSENSORPIN", 732, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
-	public static final Field TCUINPUTSPEEDSENSORTEETH = Field.create("TCUINPUTSPEEDSENSORTEETH", 734, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_735 = Field.create("ALIGNMENTFILL_AT_735", 735, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field TRIGGERSIMULATORPINS1 = Field.create("TRIGGERSIMULATORPINS1", 736, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field TRIGGERSIMULATORPINS2 = Field.create("TRIGGERSIMULATORPINS2", 738, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field FORDINJECTORSMALLPULSESLOPE = Field.create("FORDINJECTORSMALLPULSESLOPE", 740, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field TRIGGERSIMULATORPINMODES1 = Field.create("TRIGGERSIMULATORPINMODES1", 742, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field TRIGGERSIMULATORPINMODES2 = Field.create("TRIGGERSIMULATORPINMODES2", 743, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field MAF2ADCCHANNEL = Field.create("MAF2ADCCHANNEL", 744, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_745 = Field.create("ALIGNMENTFILL_AT_745", 745, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field O2HEATERPIN = Field.create("O2HEATERPIN", 746, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
-	public static final Field O2HEATERPINMODETODO = Field.create("O2HEATERPINMODETODO", 748, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field LAMBDAPROTECTIONMINRPM = Field.create("LAMBDAPROTECTIONMINRPM", 749, FieldType.INT8).setScale(100.0).setBaseOffset(0);
-	public static final Field LAMBDAPROTECTIONMINLOAD = Field.create("LAMBDAPROTECTIONMINLOAD", 750, FieldType.INT8).setScale(10.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_751 = Field.create("ALIGNMENTFILL_AT_751", 751, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TCUINPUTSPEEDSENSORPIN = Field.create("TCUINPUTSPEEDSENSORPIN", 730, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TCUINPUTSPEEDSENSORTEETH = Field.create("TCUINPUTSPEEDSENSORTEETH", 732, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_733 = Field.create("ALIGNMENTFILL_AT_733", 733, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TRIGGERSIMULATORPINS1 = Field.create("TRIGGERSIMULATORPINS1", 734, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field TRIGGERSIMULATORPINS2 = Field.create("TRIGGERSIMULATORPINS2", 736, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field FORDINJECTORSMALLPULSESLOPE = Field.create("FORDINJECTORSMALLPULSESLOPE", 738, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field TRIGGERSIMULATORPINMODES1 = Field.create("TRIGGERSIMULATORPINMODES1", 740, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TRIGGERSIMULATORPINMODES2 = Field.create("TRIGGERSIMULATORPINMODES2", 741, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field MAF2ADCCHANNEL = Field.create("MAF2ADCCHANNEL", 742, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_743 = Field.create("ALIGNMENTFILL_AT_743", 743, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field O2HEATERPIN = Field.create("O2HEATERPIN", 744, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
+	public static final Field O2HEATERPINMODETODO = Field.create("O2HEATERPINMODETODO", 746, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONMINRPM = Field.create("LAMBDAPROTECTIONMINRPM", 747, FieldType.INT8).setScale(100.0).setBaseOffset(0);
+	public static final Field LAMBDAPROTECTIONMINLOAD = Field.create("LAMBDAPROTECTIONMINLOAD", 748, FieldType.INT8).setScale(10.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_749 = Field.create("ALIGNMENTFILL_AT_749", 749, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IS_ENABLED_SPI_1 = Field.create("IS_ENABLED_SPI_1", 752, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field IS_ENABLED_SPI_2 = Field.create("IS_ENABLED_SPI_2", 752, FieldType.BIT, 1).setBaseOffset(0);
 	public static final Field IS_ENABLED_SPI_3 = Field.create("IS_ENABLED_SPI_3", 752, FieldType.BIT, 2).setBaseOffset(0);
@@ -2777,8 +2776,9 @@ public class Fields {
 	public static final Field SPI5MISOMODE = Field.create("SPI5MISOMODE", 3975, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field SPI6SCKMODE = Field.create("SPI6SCKMODE", 3976, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field SPI6MOSIMODE = Field.create("SPI6MOSIMODE", 3977, FieldType.INT8, pin_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 3978, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_4218 = Field.create("ALIGNMENTFILL_AT_4218", 4218, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_3978 = Field.create("ALIGNMENTFILL_AT_3978", 3978, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TUNERSTUDIOSERIALSPEED = Field.create("TUNERSTUDIOSERIALSPEED", 3980, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 3984, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4220, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4252, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4284, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3357,22 +3357,21 @@ public class Fields {
 	HIP9011CSPINMODE,
 	THROTTLEPEDALUPPINMODE,
 	FINALGEARRATIO,
-	TUNERSTUDIOSERIALSPEED,
 	TCUINPUTSPEEDSENSORPIN,
 	TCUINPUTSPEEDSENSORTEETH,
-	ALIGNMENTFILL_AT_735,
+	ALIGNMENTFILL_AT_733,
 	TRIGGERSIMULATORPINS1,
 	TRIGGERSIMULATORPINS2,
 	FORDINJECTORSMALLPULSESLOPE,
 	TRIGGERSIMULATORPINMODES1,
 	TRIGGERSIMULATORPINMODES2,
 	MAF2ADCCHANNEL,
-	ALIGNMENTFILL_AT_745,
+	ALIGNMENTFILL_AT_743,
 	O2HEATERPIN,
 	O2HEATERPINMODETODO,
 	LAMBDAPROTECTIONMINRPM,
 	LAMBDAPROTECTIONMINLOAD,
-	ALIGNMENTFILL_AT_751,
+	ALIGNMENTFILL_AT_749,
 	IS_ENABLED_SPI_1,
 	IS_ENABLED_SPI_2,
 	IS_ENABLED_SPI_3,
@@ -4406,8 +4405,9 @@ public class Fields {
 	SPI5MISOMODE,
 	SPI6SCKMODE,
 	SPI6MOSIMODE,
+	ALIGNMENTFILL_AT_3978,
+	TUNERSTUDIOSERIALSPEED,
 	UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE,
-	ALIGNMENTFILL_AT_4218,
 	ETBBIASBINS,
 	ETBBIASVALUES,
 	IACPIDMULTTABLE,

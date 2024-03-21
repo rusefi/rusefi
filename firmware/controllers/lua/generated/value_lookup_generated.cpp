@@ -406,9 +406,6 @@ float getConfigValueByName(const char *name) {
 // finalGearRatio
 		case -869432403:
 			return engineConfiguration->finalGearRatio;
-// tunerStudioSerialSpeed
-		case 1467553180:
-			return engineConfiguration->tunerStudioSerialSpeed;
 // tcuInputSpeedSensorTeeth
 		case -2116746650:
 			return engineConfiguration->tcuInputSpeedSensorTeeth;
@@ -1792,6 +1789,9 @@ float getConfigValueByName(const char *name) {
 // brakeMeanEffectivePressureDifferential
 		case -4616606:
 			return engineConfiguration->brakeMeanEffectivePressureDifferential;
+// tunerStudioSerialSpeed
+		case 1467553180:
+			return engineConfiguration->tunerStudioSerialSpeed;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -2466,11 +2466,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -869432403:
 	{
 		engineConfiguration->finalGearRatio = (int)value;
-		return 1;
-	}
-		case 1467553180:
-	{
-		engineConfiguration->tunerStudioSerialSpeed = (int)value;
 		return 1;
 	}
 		case -2116746650:
@@ -4776,6 +4771,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -4616606:
 	{
 		engineConfiguration->brakeMeanEffectivePressureDifferential = value;
+		return 1;
+	}
+		case 1467553180:
+	{
+		engineConfiguration->tunerStudioSerialSpeed = (int)value;
 		return 1;
 	}
 	}

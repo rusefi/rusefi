@@ -400,9 +400,6 @@ Minimum allowed time for the boost phase. If the boost target current is reached
 ### finalGearRatio
 Ratio between the wheels and your transmission output.
 
-### tunerStudioSerialSpeed
-Secondary TTL channel baud rate
-
 ### tcuInputSpeedSensorTeeth
 null
 
@@ -1785,4 +1782,7 @@ null
 
 ### brakeMeanEffectivePressureDifferential
 null
+
+### tunerStudioSerialSpeed
+Secondary TTL channel baud rate
 
