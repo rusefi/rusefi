@@ -47,7 +47,7 @@ public class TriggerWheelInfo {
         String idStr = tokens[1];
         int eventCount = Integer.parseInt(tokens[2]);
         String triggerName = tokens[3];
-        System.out.println("Processing " + line + " " + idStr);
+//        System.out.println("Processing " + line + " " + idStr);
 
         int id = Integer.parseInt(idStr);
         double tdcPosition = Double.parseDouble(tokens[4]);
