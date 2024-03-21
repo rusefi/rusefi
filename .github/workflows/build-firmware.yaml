@@ -232,11 +232,25 @@ jobs:
 #        name: libopenblt-macos
 #        path: ./firmware/ext/openblt/Host/
 
-      # Build the firmware!
-    - name: Build Firmware
+    - name: Clean (Just in Case)
       working-directory: ./firmware/
       run: |
         make clean
+
+    - name: Handle configs separately just to make github logs more readable
+      working-directory: ./firmware/
+      run: |
+        bash bin/compile.sh ${{env.BOARD_META_PATH}} config
+
+    - name: Building simulator separately just to make github logs more readable
+      working-directory: ./firmware/
+      run: |
+        bash bin/compile.sh ${{env.BOARD_META_PATH}} ../simulator/build/rusefi_simulator.exe
+
+      # Build the firmware! We have the technology to build _everything_ in one 'make' invocation but choose to do separately for sake of more readable GHA logs
+    - name: Build Firmware
+      working-directory: ./firmware/
+      run: |
         if [ "$full" == "true" ]; then
           bash bin/compile.sh -b ${{env.BOARD_META_PATH}}
         else
