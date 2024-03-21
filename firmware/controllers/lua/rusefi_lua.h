@@ -2,7 +2,10 @@
 
 #pragma once
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wundef"
 #include "lua.hpp"
+#pragma GCC diagnostic pop
 
 class LuaHandle final {
 public:
