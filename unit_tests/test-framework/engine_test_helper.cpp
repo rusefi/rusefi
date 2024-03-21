@@ -133,12 +133,15 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	rememberCurrentConfiguration();
 }
 
+#define LOGICDATA_OUTPUT "output_logicdata"
+
 EngineTestHelper::~EngineTestHelper() {
 	// Write history to file
 	extern bool hasInitGtest;
 	if (hasInitGtest) {
+	    mkdir(LOGICDATA_OUTPUT, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     	std::stringstream filePath;
-    	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
+    	filePath << LOGICDATA_OUTPUT << "/unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
 	    writeEvents(filePath.str().c_str());
 	}
 
