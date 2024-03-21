@@ -727,7 +727,6 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
   pin_input_mode_e throttlePedalUpPinMode;
 
   uint16_t autoscale finalGearRatio;Ratio between the wheels and your transmission output. ;"ratio", 0.01, 0, 0, 10, 2
-	uint16_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs", 1, 0, 0, 1000000, 0
 
 	brain_input_pin_e tcuInputSpeedSensorPin
 	uint8_t tcuInputSpeedSensorTeeth
@@ -1627,7 +1626,9 @@ float brakeMeanEffectivePressureDifferential
 	pin_mode_e spi6SckMode;
 	pin_mode_e spi6MosiMode;
 
-uint8_t[240] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
+	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs", 1, 0, 0, 1000000, 0
+
+uint8_t[236] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
