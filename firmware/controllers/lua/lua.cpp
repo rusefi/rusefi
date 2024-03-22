@@ -400,6 +400,10 @@ void startLua() {
 	initLuaCanRx();
 #endif // EFI_CAN_SUPPORT
 
+    addConsoleActionII("set_lua_setting", [](int index, int value) {
+        engineConfiguration->scriptSetting[index] = value;
+    });
+
 	luaThread.start();
 
 	addConsoleActionS("lua", [](const char* str){

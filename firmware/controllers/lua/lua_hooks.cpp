@@ -888,10 +888,6 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 1;
 	});
 
-    addConsoleActionII("set_lua_setting", [](int index, int value) {
-        engineConfiguration->scriptSetting[index] = value;
-    });
-
 #if EFI_BOOST_CONTROL
 	lua_register(lState, "setBoostTargetAdd", [](lua_State* l) {
 		engine->module<BoostController>().unmock().luaTargetAdd = luaL_checknumber(l, 1);
