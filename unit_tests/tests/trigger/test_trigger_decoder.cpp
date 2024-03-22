@@ -329,18 +329,15 @@ TEST(trigger, testTriggerDecoder) {
 	printf("====================================================================================== testTriggerDecoder\r\n");
 
 	{
-	persistent_config_s c;
-	Engine e;
-	EngineTestHelperBase base(&e, &c.engineConfiguration, &c);
-	TriggerWaveform * s = &e.triggerCentral.triggerShape;
+		EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+		TriggerWaveform * s = &engine->triggerCentral.triggerShape;
 
-	initializeSkippedToothTrigger(s, 2, 0, FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
-	assertEqualsM("shape size", s->getSize(), 4);
-	ASSERT_EQ(s->wave.getSwitchTime(0), 0.25);
-	ASSERT_EQ(s->wave.getSwitchTime(1), 0.5);
-	ASSERT_EQ(s->wave.getSwitchTime(2), 0.75);
-	ASSERT_EQ(s->wave.getSwitchTime(3), 1);
-
+		initializeSkippedToothTrigger(s, 2, 0, FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+		assertEqualsM("shape size", s->getSize(), 4);
+		ASSERT_EQ(s->wave.getSwitchTime(0), 0.25);
+		ASSERT_EQ(s->wave.getSwitchTime(1), 0.5);
+		ASSERT_EQ(s->wave.getSwitchTime(2), 0.75);
+		ASSERT_EQ(s->wave.getSwitchTime(3), 1);
 	}
 
 	printf("====================================================================================== testTriggerDecoder part 2\r\n");

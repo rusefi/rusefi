@@ -44,8 +44,8 @@ static int CHANNEL_FLAGS[] = { 0x13458b, 0x0000ff, 0x00a0f9, 0x00ffff, 0x00ff00,
 
 static FILE *ptr;
 
-static int realDurationInSamples;
-static int scaledDurationInSamples;
+static uint32_t realDurationInSamples;
+static uint32_t scaledDurationInSamples;
 
 static void writeByte(uint8_t value) {
 	fwrite(&value, 1, sizeof(value), ptr);
@@ -214,7 +214,7 @@ static void writeChannelData(int ch, int64_t *chDeltas, int chLastState,
 	write(1);
 	write(lastRecord);
 
-	int numSamplesLeft = realDurationInSamples - lastRecord;
+	uint32_t numSamplesLeft = realDurationInSamples - lastRecord;
 	write(numSamplesLeft);
 
 	write(chLastState);
@@ -389,12 +389,12 @@ static int getChannelState(int ch, const CompositeEvent* event) {
 }
 
 static void writeEvents(const std::vector<CompositeEvent>& events) {
-	int count = events.size();
+	size_t count = events.size();
 	// we need at least 2 records
 	if (count < 2)
 		return;
-	int firstRecordTs = events[1].timestamp;
-	int lastRecordTs = events[count - 1].timestamp;
+	uint32_t firstRecordTs = events[1].timestamp;
+	uint32_t lastRecordTs = events[count - 1].timestamp;
 	// we don't know the total duration, so we create a margin after the last record which equals to the duration of the first event
 	realDurationInSamples = lastRecordTs + firstRecordTs;
 	scaledDurationInSamples = realDurationInSamples / 4;
@@ -406,20 +406,20 @@ static void writeEvents(const std::vector<CompositeEvent>& events) {
 	bool useLongDeltas = false;
 	for (int ch = 0; ch < numChannels; ch++) {
 		int chPrevState = -1;
-		int prevTs = 0;
+		uint32_t prevTs = 0;
 		int deltaCount = 0;
 
 		for (int i = 0; i < count; i++) {
 			const CompositeEvent* event = &events[i];
 
 			int chState = getChannelState(ch, event);
-			int ts = event->timestamp;
+			uint32_t ts = event->timestamp;
 
 			if (chPrevState == -1) {
 				chPrevState = chState;
 			}
 			if (chState != chPrevState) {
-				long delta = ts - prevTs;
+				int64_t delta = ts - prevTs;
 				if (delta > 0x7fff) {
 					useLongDeltas = true;
 				}
