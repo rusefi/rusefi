@@ -48,7 +48,8 @@ void TsChannelBase::crcAndWriteBuffer(uint8_t responseCode, size_t size) {
 	uint32_t crc = crc32(&scratchBuffer[2], size + 1); // command part of CRC
 
 	// Place the CRC at the end
-	*reinterpret_cast<uint32_t*>(&scratchBuffer[size + SCRATCH_BUFFER_PREFIX_SIZE]) = SWAP_UINT32(crc);
+	crc = SWAP_UINT32(crc);
+	memcpy(scratchBuffer + size + SCRATCH_BUFFER_PREFIX_SIZE, &crc, sizeof(crc));
 
 	// Write to the underlying stream
 	write(reinterpret_cast<uint8_t*>(scratchBuffer), size + 7, true);
