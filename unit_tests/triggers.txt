@@ -1609,7 +1609,7 @@ event 124 0 1 690.00 nan
 event 125 0 0 690.00 nan
 event 126 0 1 700.00 nan
 event 127 0 0 700.00 nan
-TRIGGERTYPE 27 96 TT_GM_24x 50.00
+TRIGGERTYPE 27 96 TT_GM_24x_5 50.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
@@ -5065,7 +5065,7 @@ event 2 0 1 180.00 0.500000
 event 3 0 0 180.00 nan
 event 4 0 1 360.00 1.000000
 event 5 0 0 360.00 nan
-TRIGGERTYPE 74 96 TT_GM_24x_2 48.00
+TRIGGERTYPE 74 96 TT_GM_24x_3 48.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
