@@ -257,9 +257,9 @@ jobs:
       working-directory: ./firmware/
       run: |
         if [ "$full" == "true" ]; then
-          bash bin/compile.sh ${{env.BOARD_META_PATH}} bundles
+          bash bin/compile.sh ${{env.BOARD_META_PATH}} bundles --output-sync=recurse
         else
-          bash bin/compile.sh ${{env.BOARD_META_PATH}} all deliver/rusefi.dfu deliver/rusefi.bin
+          bash bin/compile.sh ${{env.BOARD_META_PATH}} --output-sync=recurse all deliver/rusefi.dfu deliver/rusefi.bin
         fi
 
     - name: Upload Bundle
