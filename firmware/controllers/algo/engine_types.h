@@ -331,7 +331,7 @@ enum class trigger_type_e : uint32_t {
 	TT_2JZ_3_34_SIMULATION_ONLY = 25,
 	TT_ROVER_K = 26,
 	// GM 24x with 5/10 degree gaps
-	TT_GM_24x = 27,
+	TT_GM_24x_5 = 27,
 	TT_HONDA_CBR_600 = 28,
 	TT_MITSU_4G9x_CAM = 29,
 	TT_CHRYSLER_NGC_36_2_2 = 30,
@@ -400,7 +400,7 @@ enum class trigger_type_e : uint32_t {
   TT_3_TOOTH_CRANK = 72,
 	TT_VVT_TOYOTA_4_1 = 73,
 	// GM 24x with 3/12 degree gaps
-	TT_GM_24x_2 = 74,
+	TT_GM_24x_3 = 74,
 	// Renault F3R
 	TT_60_2_2_F3R = 75,
 	TT_MITSU_4G63_CRANK = 76,
