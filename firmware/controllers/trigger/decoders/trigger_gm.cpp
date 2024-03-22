@@ -91,7 +91,7 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
 }
 
 /**
- * TT_GM_24x and TT_GM_24x_2
+ * TT_GM_24x_5 and TT_GM_24x_3
  * https://www.mediafire.com/?40mfgeoe4ctti
  * http://www.ls1gto.com/forums/archive/index.php/t-190549.htm
  * http://www.ls2.com/forums/showthread.php/834483-LS-Timing-Reluctor-Wheels-Explained
@@ -102,27 +102,27 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
 static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
-	/* 
+	/*
 	 * Okay, here's how this magic works:
 	 * The GM 24x crank wheel has 48 edges.  There is
 	 * a falling edge every 15 degrees (1/24 revolution).
 	 * After every falling edge, a rising edge occurs either
 	 * 5 or 10 (= 15 - 5) degrees later.  The code 0x0A33BE
 	 * encodes the pattern of which type of gap occurs in the
-	 * pattern.  Starting from the LSB, each bit left is the 
+	 * pattern.  Starting from the LSB, each bit left is the
 	 * next gap in sequence as the crank turns.  A 0 indicates
 	 * long-short (late rising edge), while a 1 indicates
 	 * short-long (early rising edge).
-	 * 
+	 *
 	 * The first few bits read are 0xE (LSB first!) = 0 - 1 - 1 - 1, so the pattern
 	 * looks like this:
 	 * ___     _   ___   ___     _
 	 *    |___| |_|   |_|   |___| |_ etc
-	 * 
+	 *
 	 *    |  0  |  1  |  1  |  0  |
-	 * 
+	 *
 	 *     ___ = 10 degrees, _ = 5 deg
-	 * 
+	 *
 	 * There is a falling edge at angle=0=720, and this is position
 	 * is #1 (and #6) TDC.  If there's a falling edge on the cam
 	 * sensor, it's #1 end compression stroke (fire this plug!)
@@ -133,7 +133,7 @@ static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 	uint32_t code = 0x0A33BE;
 
 	int angle = 0;
-	
+
 	for(int i = 0; i < 24; i++)
 	{
 		bool bit = code & 0x000001;
@@ -143,7 +143,7 @@ static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 	}
 }
 
-// TT_GM_24x
+// TT_GM_24x_5
 void initGmLS24_5deg(TriggerWaveform *s) {
 	initGmLS24(s, 5);
 
@@ -155,7 +155,7 @@ void initGmLS24_5deg(TriggerWaveform *s) {
 	s->tdcPosition = 50;
 }
 
-// TT_GM_24x_2
+// TT_GM_24x_3
 void initGmLS24_3deg(TriggerWaveform *s) {
 	initGmLS24(s, 3);
 

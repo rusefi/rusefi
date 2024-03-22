@@ -2,7 +2,7 @@
 
 #include "logicdata_csv_reader.h"
 
-TEST(crankingGm24x, gmRealCrankingFromFile) {
+TEST(crankingGm24x_5, gmRealCrankingFromFile) {
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/gm_24x_cranking.csv");
@@ -10,7 +10,7 @@ TEST(crankingGm24x, gmRealCrankingFromFile) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(trigger_type_e::TT_GM_24x);
+	eth.setTriggerType(trigger_type_e::TT_GM_24x_5);
 
 	int eventCount = 0;
 	bool gotRpm = false;
