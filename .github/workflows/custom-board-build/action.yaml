@@ -19,7 +19,7 @@ inputs:
     default: ./generated/
   sim_output:
     required: false
-    default: ./generated/
+    default: ./generated/  
   lts:
     description: 'LTS Build'
     required: false
@@ -164,7 +164,7 @@ runs:
         fi
         sudo bash ${{inputs.rusefi_dir}}/misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install sshpass mtools $SIM_REQS
-
+ 
     - name: Repo Status
       shell: bash
       run: |
@@ -178,20 +178,6 @@ runs:
           git status
         else
           echo "Not a repository"
-        fi
-
-    - name: Handle configs separately just to make github logs more readable
-      working-directory: ${{inputs.rusefi_dir}}/firmware
-      shell: bash
-      run: |
-        bash bin/compile.sh $BOARD_META_PATH config
-
-    - name: Building simulator separately just to make github logs more readable
-      working-directory: ${{inputs.rusefi_dir}}/firmware
-      shell: bash
-      run: |
-        if [ "$RUN_SIMULATOR" == "true" ]; then
-          bash bin/compile.sh $BOARD_META_PATH ../simulator/build/rusefi_simulator
         fi
 
     - name: Build Firmware
