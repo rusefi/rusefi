@@ -117,10 +117,10 @@ BUNDLE_FILES = \
   $(CONSOLE_FOLDER_TARGETS)
 
 $(SIMULATOR_OUT): $(CONFIG_FILES)
-	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Windows_NT" SUBMAKE=yes
+	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes
 
 ../simulator/build/rusefi_simulator: $(CONFIG_FILES)
-	$(MAKE) -C ../simulator -r SIMULATOR_DEBUG_LEVEL_OPT="-O2" OS="Linux" SUBMAKE=yes
+	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 
