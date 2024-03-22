@@ -4728,10 +4728,22 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Trailing Pin 4",						trailingCoilPins4
 
 	dialog = fancyOptionsDialog, "Fancy Options"
-	  field = fancyOptions0, fancyOptions0
 	  field = fancyOptions1, fancyOptions1
 	  field = fancyOptions2, fancyOptions2
+	  field = fancyOptions3, fancyOptions3
+	  field = fancyOptions4, fancyOptions4
+	  field = fancyOptions5, fancyOptions5
+	  field = fancyOptions6, fancyOptions6
+	  field = fancyOptions7, fancyOptions7
+	  field = fancyOptions8, fancyOptions8
+	  field = fancyOptions9, fancyOptions9
+	  field = fancyOptions10, fancyOptions10
+	  field = fancyOptions11, fancyOptions11
+	  field = fancyOptions12, fancyOptions12
+	  field = fancyOptions13, fancyOptions13
+	  field = fancyOptions14, fancyOptions14
 	  field = fancyOptions15, fancyOptions15
+	  field = fancyOptions16, fancyOptions16
 
 	dialog = fancyHardwareDialog, "Fancy Boards"
 	  field = fancySmartS,fancySmartS
