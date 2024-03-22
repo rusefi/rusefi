@@ -972,7 +972,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1613472631;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1179,7 +1178,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.03.21.f407-discovery.1613472631";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.03.21.f407-discovery.3990693161";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1384;
@@ -1773,6 +1772,8 @@ public class Fields {
 	public static final Field USESEPARATEVEFORIDLE = Field.create("USESEPARATEVEFORIDLE", 1188, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1188, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1188, FieldType.BIT, 12).setBaseOffset(0);
+	public static final Field CANBROADCASTEGT = Field.create("CANBROADCASTEGT", 1188, FieldType.BIT, 13).setBaseOffset(0);
+	public static final Field CANBROADCASTCAMS = Field.create("CANBROADCASTCAMS", 1188, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1188, FieldType.BIT, 16).setBaseOffset(0);
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1188, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field USEADVANCECORRECTIONSFORCRANKING = Field.create("USEADVANCECORRECTIONSFORCRANKING", 1188, FieldType.BIT, 18).setBaseOffset(0);
