@@ -85,7 +85,7 @@ TEST(SensorInit, TpsValuesTooClose) {
 	Sensor::resetRegistry();
 
 	// Test a random bogus pin index, shouldn't fail
-	engineConfiguration->tps1_1AdcChannel = static_cast<adc_channel_e>(175);
+	engineConfiguration->tps1_1AdcChannel = static_cast<adc_channel_e>(EFI_ADC_ERROR);
 	engineConfiguration->tpsMin = 200;	// 1.00 volt
 	engineConfiguration->tpsMax = 200;	// 1.00 volt
 	EXPECT_NO_FATAL_ERROR(initTps());

@@ -8,9 +8,10 @@
 #pragma once
 
 #include <vector>
+#include <cstdint>
 
 struct CompositeEvent {
-    int timestamp;
+    uint32_t timestamp;
     bool primaryTrigger;
     bool secondaryTrigger;
     bool isTDC;
