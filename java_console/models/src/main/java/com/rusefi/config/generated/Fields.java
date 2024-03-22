@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 22 01:16:10 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Mar 22 17:47:30 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1217,8 +1217,8 @@ public class Fields {
 	public static final int trigger_type_e_TT_FORD_ASPIRE = 1;
 	public static final int trigger_type_e_TT_FORD_ST170 = 42;
 	public static final int trigger_type_e_TT_FORD_TFI_PIP = 65;
-	public static final int trigger_type_e_TT_GM_24x = 27;
-	public static final int trigger_type_e_TT_GM_24x_2 = 74;
+	public static final int trigger_type_e_TT_GM_24x_3 = 74;
+	public static final int trigger_type_e_TT_GM_24x_5 = 27;
 	public static final int trigger_type_e_TT_GM_60_2_2_2 = 54;
 	public static final int trigger_type_e_TT_GM_7X = 5;
 	public static final int trigger_type_e_TT_HALF_MOON = 18;
