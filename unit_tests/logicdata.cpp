@@ -317,8 +317,8 @@ static void writeChannelDataHeader() {
 	writeId(0, 0);
 
 	write(BLOCK);
-	int SAM_ARRAY[] = { realDurationInSamples, realDurationInSamples,
-			realDurationInSamples };
+	int SAM_ARRAY[] = { (int)realDurationInSamples, (int)realDurationInSamples,
+			(int)realDurationInSamples };
 	write(SAM_ARRAY, 3);
 	write(0);
 	write(SUB);
@@ -409,7 +409,7 @@ static void writeEvents(const std::vector<CompositeEvent>& events) {
 		uint32_t prevTs = 0;
 		int deltaCount = 0;
 
-		for (int i = 0; i < count; i++) {
+		for (size_t i = 0; i < count; i++) {
 			const CompositeEvent* event = &events[i];
 
 			int chState = getChannelState(ch, event);
