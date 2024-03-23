@@ -36,7 +36,7 @@
 #define IGN_BLEND_COUNT 4
 #define VE_BLEND_COUNT 4
 #define BOOST_BLEND_COUNT 2
-#define LUA_GAUGE_COUNT 2
+#define LUA_GAUGE_COUNT 8
 
 
 #define GAUGE_NAME_VERSION "firmware"

@@ -1372,6 +1372,12 @@ gaugeCategory = LUA
 	luaLastCycleDurationGauge = luaLastCycleDuration,"luaLastCycleDuration", "nt", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 	luaGauges1gauge = luaGauges1, "Lua Gauge 1", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
 	luaGauges2gauge = luaGauges2, "Lua Gauge 2", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
+	luaGauges3gauge = luaGauges3, "Lua Gauge 3", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
+	luaGauges4gauge = luaGauges4, "Lua Gauge 4", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
+	luaGauges5gauge = luaGauges5, "Lua Gauge 5", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
+	luaGauges6gauge = luaGauges6, "Lua Gauge 6", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
+	luaGauges7gauge = luaGauges7, "Lua Gauge 7", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
+	luaGauges8gauge = luaGauges8, "Lua Gauge 8", "lua", -30000,30000, 0, 0, 30000, 30000, 3, 3
 
 gaugeCategory = Alternator PID
 	alternatorStatus_iTermGauge = alternatorStatus_iTerm,"Alternator PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3

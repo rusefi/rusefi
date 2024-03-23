@@ -472,6 +472,17 @@ static void updateVehicleSpeed() {
 #endif /* EFI_VEHICLE_SPEED */
 }
 
+static SensorType luaGaugeTypes[] = {
+  SensorType::LuaGauge1,
+  SensorType::LuaGauge2,
+  SensorType::LuaGauge3,
+  SensorType::LuaGauge4,
+  SensorType::LuaGauge5,
+  SensorType::LuaGauge6,
+  SensorType::LuaGauge7,
+  SensorType::LuaGauge8
+  };
+
 static void updateRawSensors() {
 	engine->outputChannels.rawTps1Primary = Sensor::getRaw(SensorType::Tps1Primary);
 	engine->outputChannels.rawTps1Secondary = Sensor::getRaw(SensorType::Tps1Secondary);
@@ -491,8 +502,9 @@ static void updateRawSensors() {
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 
-	engine->outputChannels.luaGauges[0] = Sensor::getOrZero(SensorType::LuaGauge1);
-	engine->outputChannels.luaGauges[1] = Sensor::getOrZero(SensorType::LuaGauge2);
+  for (size_t i = 0;i<LUA_GAUGE_COUNT;i++) {
+	  engine->outputChannels.luaGauges[i] = Sensor::getOrZero(luaGaugeTypes[i]);
+  }
 
 	for (int i = 0; i < LUA_ANALOG_INPUT_COUNT; i++) {
 		adc_channel_e channel = engineConfiguration->auxAnalogInputs[i];
