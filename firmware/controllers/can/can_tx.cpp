@@ -26,6 +26,8 @@ CanWrite::CanWrite()
 {
 }
 
+__attribute__((weak)) bool boardEnableSendWidebandInfo() { return true; }
+
 void CanWrite::PeriodicTask(efitick_t nowNt) {
 	UNUSED(nowNt);
 	static uint16_t cycleCount = 0;
@@ -69,7 +71,7 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 	}
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
-	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms)) {
+	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms) && boardEnableSendWidebandInfo()) {
 		sendWidebandInfo();
 	}
 #endif
