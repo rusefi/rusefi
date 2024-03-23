@@ -10,6 +10,10 @@
 #include "can_filter.h"
 #include "tunerstudio.h"
 
+#if EFI_PROD_CODE && HW_HELLEN
+#include "hellen_meta.h"
+#endif
+
 #if EFI_DAC
 #include "dac.h"
 #endif // EFI_DAC
@@ -1085,6 +1089,17 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 0;
 	});
 #endif // EFI_VEHICLE_SPEED
+
+#if EFI_PROD_CODE && HW_HELLEN
+	lua_register(lState, "hellenEnablePower", [](lua_State*) {
+		hellenEnableEn();
+		return 0;
+	});
+	lua_register(lState, "hellenDisablePower", [](lua_State*) {
+		hellenDisableEn();
+		return 0;
+	});
+#endif // HW_HELLEN
 
 #if EFI_DAC
 	lua_register(lState, "setDacVoltage", [](lua_State* l) {
