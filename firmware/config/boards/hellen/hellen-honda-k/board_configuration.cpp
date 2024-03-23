@@ -45,8 +45,6 @@ void onBoardStandBy() {
     hellenBoardStandBy();
 }
 
-
-
 void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
 	setHellenVbatt();

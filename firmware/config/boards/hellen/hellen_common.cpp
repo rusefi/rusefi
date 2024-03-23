@@ -43,12 +43,20 @@ void setHellen64Can() {
 
 static OutputPin megaEn;
 
+void hellenEnableEn() {
+	    megaEn.setValue(1);
+}
+
+void hellenDisableEn() {
+	    megaEn.setValue(0);
+}
+
 void setHellenEnPin(Gpio pin) {
     static bool initialized = false;
     if (!initialized) {
         initialized = true;
 	    megaEn.initPin("EN", pin);
-	    megaEn.setValue(1);
+	    hellenEnableEn();
 	}
 }
 
@@ -63,7 +71,7 @@ void setHellen64MegaEnPin() {
 
 void hellenBoardStandBy() {
     // we need to turn 'megaEn' and pause for a bit to make sure that WBO is off and does not wake main firmware right away
-    megaEn.setValue(0);
+    hellenDisableEn();
     // todo: 200ms is totally random what's the science for this sleep duration?
     chThdSleepMilliseconds(200);
 }

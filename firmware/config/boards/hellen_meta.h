@@ -16,6 +16,9 @@ void hellenWbo();
 void setHellenMegaEnPin();
 void setHellenEnPin(Gpio pin);
 void setHellen64MegaEnPin();
+void hellenEnableEn();
+void hellenDisableEn();
+
 void hellenBoardStandBy();
 void hellenMegaAccelerometerPreInitCS2Pin();
 void configureHellenCanTerminator();
