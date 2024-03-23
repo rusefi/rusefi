@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/tps_accel_state.txt Wed Mar 13 20:26:51 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/tps_accel_state.txt Sat Mar 23 22:06:34 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -150,7 +150,7 @@ public class TpsAccelState {
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
-	public static final int LUA_GAUGE_COUNT = 2;
+	public static final int LUA_GAUGE_COUNT = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
@@ -173,23 +173,23 @@ public class TpsAccelState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field TPSFROM = Field.create("TPSFROM", 0, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field TPSTO = Field.create("TPSTO", 4, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field DELTATPS = Field.create("DELTATPS", 8, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field EXTRAFUEL = Field.create("EXTRAFUEL", 12, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field VALUEFROMTABLE = Field.create("VALUEFROMTABLE", 16, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field ISABOVEACCELTHRESHOLD = Field.create("ISABOVEACCELTHRESHOLD", 20, FieldType.BIT, 0).setBaseOffset(1156);
-	public static final Field ISBELOWDECELTHRESHOLD = Field.create("ISBELOWDECELTHRESHOLD", 20, FieldType.BIT, 1).setBaseOffset(1156);
-	public static final Field ISTIMETORESETACCUMULATOR = Field.create("ISTIMETORESETACCUMULATOR", 20, FieldType.BIT, 2).setBaseOffset(1156);
-	public static final Field ISFRACTIONALENRICHMENT = Field.create("ISFRACTIONALENRICHMENT", 20, FieldType.BIT, 3).setBaseOffset(1156);
-	public static final Field BELOWEPSILON = Field.create("BELOWEPSILON", 20, FieldType.BIT, 4).setBaseOffset(1156);
-	public static final Field TOOSHORT = Field.create("TOOSHORT", 20, FieldType.BIT, 5).setBaseOffset(1156);
-	public static final Field FRACTIONALINJFUEL = Field.create("FRACTIONALINJFUEL", 24, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field ACCUMULATEDVALUE = Field.create("ACCUMULATEDVALUE", 28, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field MAXEXTRAPERCYCLE = Field.create("MAXEXTRAPERCYCLE", 32, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field MAXEXTRAPERPERIOD = Field.create("MAXEXTRAPERPERIOD", 36, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field MAXINJECTEDPERPERIOD = Field.create("MAXINJECTEDPERPERIOD", 40, FieldType.FLOAT).setBaseOffset(1156);
-	public static final Field CYCLECNT = Field.create("CYCLECNT", 44, FieldType.INT).setScale(1.0).setBaseOffset(1156);
+	public static final Field TPSFROM = Field.create("TPSFROM", 0, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field TPSTO = Field.create("TPSTO", 4, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field DELTATPS = Field.create("DELTATPS", 8, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field EXTRAFUEL = Field.create("EXTRAFUEL", 12, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field VALUEFROMTABLE = Field.create("VALUEFROMTABLE", 16, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field ISABOVEACCELTHRESHOLD = Field.create("ISABOVEACCELTHRESHOLD", 20, FieldType.BIT, 0).setBaseOffset(1180);
+	public static final Field ISBELOWDECELTHRESHOLD = Field.create("ISBELOWDECELTHRESHOLD", 20, FieldType.BIT, 1).setBaseOffset(1180);
+	public static final Field ISTIMETORESETACCUMULATOR = Field.create("ISTIMETORESETACCUMULATOR", 20, FieldType.BIT, 2).setBaseOffset(1180);
+	public static final Field ISFRACTIONALENRICHMENT = Field.create("ISFRACTIONALENRICHMENT", 20, FieldType.BIT, 3).setBaseOffset(1180);
+	public static final Field BELOWEPSILON = Field.create("BELOWEPSILON", 20, FieldType.BIT, 4).setBaseOffset(1180);
+	public static final Field TOOSHORT = Field.create("TOOSHORT", 20, FieldType.BIT, 5).setBaseOffset(1180);
+	public static final Field FRACTIONALINJFUEL = Field.create("FRACTIONALINJFUEL", 24, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field ACCUMULATEDVALUE = Field.create("ACCUMULATEDVALUE", 28, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field MAXEXTRAPERCYCLE = Field.create("MAXEXTRAPERCYCLE", 32, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field MAXEXTRAPERPERIOD = Field.create("MAXEXTRAPERPERIOD", 36, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field MAXINJECTEDPERPERIOD = Field.create("MAXINJECTEDPERPERIOD", 40, FieldType.FLOAT).setBaseOffset(1180);
+	public static final Field CYCLECNT = Field.create("CYCLECNT", 44, FieldType.INT).setScale(1.0).setBaseOffset(1180);
 	public static final Field[] VALUES = {
 	TPSFROM,
 	TPSTO,

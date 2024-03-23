@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Wed Mar 13 20:26:51 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Sat Mar 23 22:06:33 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -150,7 +150,7 @@ public class KnockController {
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
-	public static final int LUA_GAUGE_COUNT = 2;
+	public static final int LUA_GAUGE_COUNT = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
@@ -173,23 +173,23 @@ public class KnockController {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field M_KNOCKLEVEL = Field.create("M_KNOCKLEVEL", 0, FieldType.FLOAT).setBaseOffset(892);
-	public static final Field M_KNOCKCYL1 = Field.create("M_KNOCKCYL1", 4, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL2 = Field.create("M_KNOCKCYL2", 5, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL3 = Field.create("M_KNOCKCYL3", 6, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL4 = Field.create("M_KNOCKCYL4", 7, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL5 = Field.create("M_KNOCKCYL5", 8, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL6 = Field.create("M_KNOCKCYL6", 9, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL7 = Field.create("M_KNOCKCYL7", 10, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL8 = Field.create("M_KNOCKCYL8", 11, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL9 = Field.create("M_KNOCKCYL9", 12, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL10 = Field.create("M_KNOCKCYL10", 13, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL11 = Field.create("M_KNOCKCYL11", 14, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKCYL12 = Field.create("M_KNOCKCYL12", 15, FieldType.INT8).setScale(1.0).setBaseOffset(892);
-	public static final Field M_KNOCKRETARD = Field.create("M_KNOCKRETARD", 16, FieldType.FLOAT).setBaseOffset(892);
-	public static final Field M_KNOCKTHRESHOLD = Field.create("M_KNOCKTHRESHOLD", 20, FieldType.FLOAT).setBaseOffset(892);
-	public static final Field M_KNOCKCOUNT = Field.create("M_KNOCKCOUNT", 24, FieldType.INT).setScale(1.0).setBaseOffset(892);
-	public static final Field M_MAXIMUMRETARD = Field.create("M_MAXIMUMRETARD", 28, FieldType.FLOAT).setBaseOffset(892);
+	public static final Field M_KNOCKLEVEL = Field.create("M_KNOCKLEVEL", 0, FieldType.FLOAT).setBaseOffset(916);
+	public static final Field M_KNOCKCYL1 = Field.create("M_KNOCKCYL1", 4, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL2 = Field.create("M_KNOCKCYL2", 5, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL3 = Field.create("M_KNOCKCYL3", 6, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL4 = Field.create("M_KNOCKCYL4", 7, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL5 = Field.create("M_KNOCKCYL5", 8, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL6 = Field.create("M_KNOCKCYL6", 9, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL7 = Field.create("M_KNOCKCYL7", 10, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL8 = Field.create("M_KNOCKCYL8", 11, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL9 = Field.create("M_KNOCKCYL9", 12, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL10 = Field.create("M_KNOCKCYL10", 13, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL11 = Field.create("M_KNOCKCYL11", 14, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKCYL12 = Field.create("M_KNOCKCYL12", 15, FieldType.INT8).setScale(1.0).setBaseOffset(916);
+	public static final Field M_KNOCKRETARD = Field.create("M_KNOCKRETARD", 16, FieldType.FLOAT).setBaseOffset(916);
+	public static final Field M_KNOCKTHRESHOLD = Field.create("M_KNOCKTHRESHOLD", 20, FieldType.FLOAT).setBaseOffset(916);
+	public static final Field M_KNOCKCOUNT = Field.create("M_KNOCKCOUNT", 24, FieldType.INT).setScale(1.0).setBaseOffset(916);
+	public static final Field M_MAXIMUMRETARD = Field.create("M_MAXIMUMRETARD", 28, FieldType.FLOAT).setBaseOffset(916);
 	public static final Field[] VALUES = {
 	M_KNOCKLEVEL,
 	M_KNOCKCYL1,

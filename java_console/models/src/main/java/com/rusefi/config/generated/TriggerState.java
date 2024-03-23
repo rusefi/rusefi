@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Mar 13 20:26:51 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Mar 23 22:06:34 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -150,7 +150,7 @@ public class TriggerState {
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
-	public static final int LUA_GAUGE_COUNT = 2;
+	public static final int LUA_GAUGE_COUNT = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
@@ -173,18 +173,18 @@ public class TriggerState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field CRANKSYNCHRONIZATIONCOUNTER = Field.create("CRANKSYNCHRONIZATIONCOUNTER", 0, FieldType.INT).setScale(1.0).setBaseOffset(1264);
-	public static final Field VVTSYNCGAPRATIO = Field.create("VVTSYNCGAPRATIO", 4, FieldType.FLOAT).setBaseOffset(1264);
-	public static final Field VVTTOOTHDURATIONS0 = Field.create("VVTTOOTHDURATIONS0", 8, FieldType.INT).setScale(1.0).setBaseOffset(1264);
-	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 12, FieldType.FLOAT).setBaseOffset(1264);
-	public static final Field VVTTOOTHPOSITION1 = Field.create("VVTTOOTHPOSITION1", 16, FieldType.FLOAT).setBaseOffset(1264);
-	public static final Field VVTTOOTHPOSITION2 = Field.create("VVTTOOTHPOSITION2", 20, FieldType.FLOAT).setBaseOffset(1264);
-	public static final Field VVTTOOTHPOSITION3 = Field.create("VVTTOOTHPOSITION3", 24, FieldType.FLOAT).setBaseOffset(1264);
-	public static final Field VVTTOOTHPOSITION4 = Field.create("VVTTOOTHPOSITION4", 28, FieldType.FLOAT).setBaseOffset(1264);
-	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 32, FieldType.FLOAT).setBaseOffset(1264);
-	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 36, FieldType.INT8).setScale(1.0).setBaseOffset(1264);
-	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 37, FieldType.INT8).setScale(1.0).setBaseOffset(1264);
-	public static final Field ALIGNMENTFILL_AT_38 = Field.create("ALIGNMENTFILL_AT_38", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1264);
+	public static final Field CRANKSYNCHRONIZATIONCOUNTER = Field.create("CRANKSYNCHRONIZATIONCOUNTER", 0, FieldType.INT).setScale(1.0).setBaseOffset(1288);
+	public static final Field VVTSYNCGAPRATIO = Field.create("VVTSYNCGAPRATIO", 4, FieldType.FLOAT).setBaseOffset(1288);
+	public static final Field VVTTOOTHDURATIONS0 = Field.create("VVTTOOTHDURATIONS0", 8, FieldType.INT).setScale(1.0).setBaseOffset(1288);
+	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 12, FieldType.FLOAT).setBaseOffset(1288);
+	public static final Field VVTTOOTHPOSITION1 = Field.create("VVTTOOTHPOSITION1", 16, FieldType.FLOAT).setBaseOffset(1288);
+	public static final Field VVTTOOTHPOSITION2 = Field.create("VVTTOOTHPOSITION2", 20, FieldType.FLOAT).setBaseOffset(1288);
+	public static final Field VVTTOOTHPOSITION3 = Field.create("VVTTOOTHPOSITION3", 24, FieldType.FLOAT).setBaseOffset(1288);
+	public static final Field VVTTOOTHPOSITION4 = Field.create("VVTTOOTHPOSITION4", 28, FieldType.FLOAT).setBaseOffset(1288);
+	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 32, FieldType.FLOAT).setBaseOffset(1288);
+	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 36, FieldType.INT8).setScale(1.0).setBaseOffset(1288);
+	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 37, FieldType.INT8).setScale(1.0).setBaseOffset(1288);
+	public static final Field ALIGNMENTFILL_AT_38 = Field.create("ALIGNMENTFILL_AT_38", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1288);
 	public static final Field[] VALUES = {
 	CRANKSYNCHRONIZATIONCOUNTER,
 	VVTSYNCGAPRATIO,

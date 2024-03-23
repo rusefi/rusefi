@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Mar 13 20:26:51 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/idle_state.txt Sat Mar 23 22:06:34 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -150,7 +150,7 @@ public class IdleState {
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
-	public static final int LUA_GAUGE_COUNT = 2;
+	public static final int LUA_GAUGE_COUNT = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
@@ -173,34 +173,34 @@ public class IdleState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field IDLESTATE = Field.create("IDLESTATE", 0, FieldType.INT).setScale(1.0).setBaseOffset(1320);
-	public static final Field CURRENTIDLEPOSITION = Field.create("CURRENTIDLEPOSITION", 4, FieldType.FLOAT).setBaseOffset(1320);
-	public static final Field BASEIDLEPOSITION = Field.create("BASEIDLEPOSITION", 8, FieldType.FLOAT).setBaseOffset(1320);
-	public static final Field IDLECLOSEDLOOP = Field.create("IDLECLOSEDLOOP", 12, FieldType.FLOAT).setBaseOffset(1320);
-	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 16, FieldType.FLOAT).setBaseOffset(1320);
-	public static final Field THROTTLEPEDALUPSTATE = Field.create("THROTTLEPEDALUPSTATE", 20, FieldType.INT).setScale(1.0).setBaseOffset(1320);
-	public static final Field MIGHTRESETPID = Field.create("MIGHTRESETPID", 24, FieldType.BIT, 0).setBaseOffset(1320);
-	public static final Field SHOULDRESETPID = Field.create("SHOULDRESETPID", 24, FieldType.BIT, 1).setBaseOffset(1320);
-	public static final Field WASRESETPID = Field.create("WASRESETPID", 24, FieldType.BIT, 2).setBaseOffset(1320);
-	public static final Field MUSTRESETPID = Field.create("MUSTRESETPID", 24, FieldType.BIT, 3).setBaseOffset(1320);
-	public static final Field ISCRANKING = Field.create("ISCRANKING", 24, FieldType.BIT, 4).setBaseOffset(1320);
-	public static final Field ISIACTABLEFORCOASTING = Field.create("ISIACTABLEFORCOASTING", 24, FieldType.BIT, 5).setBaseOffset(1320);
-	public static final Field NOTIDLING = Field.create("NOTIDLING", 24, FieldType.BIT, 6).setBaseOffset(1320);
-	public static final Field NEEDRESET = Field.create("NEEDRESET", 24, FieldType.BIT, 7).setBaseOffset(1320);
-	public static final Field ISINDEADZONE = Field.create("ISINDEADZONE", 24, FieldType.BIT, 8).setBaseOffset(1320);
-	public static final Field ISBLIPPING = Field.create("ISBLIPPING", 24, FieldType.BIT, 9).setBaseOffset(1320);
-	public static final Field USECLOSEDLOOP = Field.create("USECLOSEDLOOP", 24, FieldType.BIT, 10).setBaseOffset(1320);
-	public static final Field BADTPS = Field.create("BADTPS", 24, FieldType.BIT, 11).setBaseOffset(1320);
-	public static final Field LOOKSLIKERUNNING = Field.create("LOOKSLIKERUNNING", 24, FieldType.BIT, 12).setBaseOffset(1320);
-	public static final Field LOOKSLIKECOASTING = Field.create("LOOKSLIKECOASTING", 24, FieldType.BIT, 13).setBaseOffset(1320);
-	public static final Field LOOKSLIKECRANKTOIDLE = Field.create("LOOKSLIKECRANKTOIDLE", 24, FieldType.BIT, 14).setBaseOffset(1320);
-	public static final Field ISIDLECOASTING = Field.create("ISIDLECOASTING", 24, FieldType.BIT, 15).setBaseOffset(1320);
-	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 24, FieldType.BIT, 16).setBaseOffset(1320);
-	public static final Field IDLETARGET = Field.create("IDLETARGET", 28, FieldType.INT).setScale(1.0).setBaseOffset(1320);
-	public static final Field TARGETRPMBYCLT = Field.create("TARGETRPMBYCLT", 32, FieldType.INT).setScale(1.0).setBaseOffset(1320);
-	public static final Field TARGETRPMAC = Field.create("TARGETRPMAC", 36, FieldType.INT).setScale(1.0).setBaseOffset(1320);
-	public static final Field IACBYRPMTAPER = Field.create("IACBYRPMTAPER", 40, FieldType.FLOAT).setBaseOffset(1320);
-	public static final Field LUAADD = Field.create("LUAADD", 44, FieldType.FLOAT).setBaseOffset(1320);
+	public static final Field IDLESTATE = Field.create("IDLESTATE", 0, FieldType.INT).setScale(1.0).setBaseOffset(1344);
+	public static final Field CURRENTIDLEPOSITION = Field.create("CURRENTIDLEPOSITION", 4, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field BASEIDLEPOSITION = Field.create("BASEIDLEPOSITION", 8, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field IDLECLOSEDLOOP = Field.create("IDLECLOSEDLOOP", 12, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 16, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field THROTTLEPEDALUPSTATE = Field.create("THROTTLEPEDALUPSTATE", 20, FieldType.INT).setScale(1.0).setBaseOffset(1344);
+	public static final Field MIGHTRESETPID = Field.create("MIGHTRESETPID", 24, FieldType.BIT, 0).setBaseOffset(1344);
+	public static final Field SHOULDRESETPID = Field.create("SHOULDRESETPID", 24, FieldType.BIT, 1).setBaseOffset(1344);
+	public static final Field WASRESETPID = Field.create("WASRESETPID", 24, FieldType.BIT, 2).setBaseOffset(1344);
+	public static final Field MUSTRESETPID = Field.create("MUSTRESETPID", 24, FieldType.BIT, 3).setBaseOffset(1344);
+	public static final Field ISCRANKING = Field.create("ISCRANKING", 24, FieldType.BIT, 4).setBaseOffset(1344);
+	public static final Field ISIACTABLEFORCOASTING = Field.create("ISIACTABLEFORCOASTING", 24, FieldType.BIT, 5).setBaseOffset(1344);
+	public static final Field NOTIDLING = Field.create("NOTIDLING", 24, FieldType.BIT, 6).setBaseOffset(1344);
+	public static final Field NEEDRESET = Field.create("NEEDRESET", 24, FieldType.BIT, 7).setBaseOffset(1344);
+	public static final Field ISINDEADZONE = Field.create("ISINDEADZONE", 24, FieldType.BIT, 8).setBaseOffset(1344);
+	public static final Field ISBLIPPING = Field.create("ISBLIPPING", 24, FieldType.BIT, 9).setBaseOffset(1344);
+	public static final Field USECLOSEDLOOP = Field.create("USECLOSEDLOOP", 24, FieldType.BIT, 10).setBaseOffset(1344);
+	public static final Field BADTPS = Field.create("BADTPS", 24, FieldType.BIT, 11).setBaseOffset(1344);
+	public static final Field LOOKSLIKERUNNING = Field.create("LOOKSLIKERUNNING", 24, FieldType.BIT, 12).setBaseOffset(1344);
+	public static final Field LOOKSLIKECOASTING = Field.create("LOOKSLIKECOASTING", 24, FieldType.BIT, 13).setBaseOffset(1344);
+	public static final Field LOOKSLIKECRANKTOIDLE = Field.create("LOOKSLIKECRANKTOIDLE", 24, FieldType.BIT, 14).setBaseOffset(1344);
+	public static final Field ISIDLECOASTING = Field.create("ISIDLECOASTING", 24, FieldType.BIT, 15).setBaseOffset(1344);
+	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 24, FieldType.BIT, 16).setBaseOffset(1344);
+	public static final Field IDLETARGET = Field.create("IDLETARGET", 28, FieldType.INT).setScale(1.0).setBaseOffset(1344);
+	public static final Field TARGETRPMBYCLT = Field.create("TARGETRPMBYCLT", 32, FieldType.INT).setScale(1.0).setBaseOffset(1344);
+	public static final Field TARGETRPMAC = Field.create("TARGETRPMAC", 36, FieldType.INT).setScale(1.0).setBaseOffset(1344);
+	public static final Field IACBYRPMTAPER = Field.create("IACBYRPMTAPER", 40, FieldType.FLOAT).setBaseOffset(1344);
+	public static final Field LUAADD = Field.create("LUAADD", 44, FieldType.FLOAT).setBaseOffset(1344);
 	public static final Field[] VALUES = {
 	IDLESTATE,
 	CURRENTIDLEPOSITION,
