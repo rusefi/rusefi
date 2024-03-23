@@ -125,6 +125,12 @@ enum class SensorType : unsigned char {
 
 	LuaGauge1,
 	LuaGauge2,
+	LuaGauge3,
+	LuaGauge4,
+	LuaGauge5,
+	LuaGauge6,
+	LuaGauge7,
+	LuaGauge8,
 
   IgnKeyVoltage,
 

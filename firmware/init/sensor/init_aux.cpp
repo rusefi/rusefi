@@ -21,6 +21,12 @@ static FunctionalSensor auxSensors[] = {
 StoredValueSensor luaGauges[] = {
 		{ SensorType::LuaGauge1, MS2NT(5000) },
 		{ SensorType::LuaGauge2, MS2NT(5000) },
+		{ SensorType::LuaGauge3, MS2NT(5000) },
+		{ SensorType::LuaGauge4, MS2NT(5000) },
+		{ SensorType::LuaGauge5, MS2NT(5000) },
+		{ SensorType::LuaGauge6, MS2NT(5000) },
+		{ SensorType::LuaGauge7, MS2NT(5000) },
+		{ SensorType::LuaGauge8, MS2NT(5000) },
 };
 
 
