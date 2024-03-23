@@ -317,9 +317,9 @@ static void writeChannelDataHeader() {
 	writeId(0, 0);
 
 	write(BLOCK);
-	int SAM_ARRAY[] = { realDurationInSamples, realDurationInSamples,
+	uint32_t SAM_ARRAY[] = { realDurationInSamples, realDurationInSamples,
 			realDurationInSamples };
-	write(SAM_ARRAY, 3);
+	write(reinterpret_cast<int32_t*>(SAM_ARRAY), 3);
 	write(0);
 	write(SUB);
 	write(0);
