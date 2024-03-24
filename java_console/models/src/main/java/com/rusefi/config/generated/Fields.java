@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 24 01:52:30 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 24 04:33:13 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -319,6 +319,7 @@ public class Fields {
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
 	public static final int engine_type_e_DODGE_RAM = 64;
 	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
+	public static final int engine_type_e_ET_BOSCH_QUICK_START = 21;
 	public static final int engine_type_e_ET_UNUSED_35 = 35;
 	public static final int engine_type_e_ET_UNUSED_55 = 55;
 	public static final int engine_type_e_ET_UNUSED_56 = 56;
@@ -411,7 +412,6 @@ public class Fields {
 	public static final int engine_type_e_UNUSED67 = 67;
 	public static final int engine_type_e_UNUSED93 = 93;
 	public static final int engine_type_e_UNUSED94 = 94;
-	public static final int engine_type_e_UNUSED_21 = 21;
 	public static final int engine_type_e_UNUSED_65 = 65;
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VW_ABA = 32;

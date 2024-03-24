@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Mar 22 17:46:09 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Mar 24 04:31:51 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -195,6 +195,8 @@ case engine_type_e::EEPROM_BENCH_ENGINE:
   return "EEPROM_BENCH_ENGINE";
 case engine_type_e::ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
+case engine_type_e::ET_BOSCH_QUICK_START:
+  return "ET_BOSCH_QUICK_START";
 case engine_type_e::ET_UNUSED_35:
   return "ET_UNUSED_35";
 case engine_type_e::ET_UNUSED_55:
@@ -377,8 +379,6 @@ case engine_type_e::UNUSED93:
   return "UNUSED93";
 case engine_type_e::UNUSED94:
   return "UNUSED94";
-case engine_type_e::UNUSED_21:
-  return "UNUSED_21";
 case engine_type_e::UNUSED_65:
   return "UNUSED_65";
 case engine_type_e::UNUSED_97:
