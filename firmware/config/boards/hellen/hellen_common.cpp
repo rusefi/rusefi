@@ -48,6 +48,10 @@ bool boardEnableSendWidebandInfo() {
     return megaEn.getLogicValue();
 }
 
+bool fansDisabledByBoardStatus() {
+  return !megaEn.getLogicValue();
+}
+
 void hellenEnableEn() {
 	    megaEn.setValue(1);
 }
