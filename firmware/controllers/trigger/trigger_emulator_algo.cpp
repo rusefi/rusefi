@@ -239,10 +239,16 @@ void startTriggerEmulatorPins() {
 		for (size_t i = 0; i < efi::size(emulatorOutputs[channel]); i++) {
 			triggerEmulatorSignals[channel].outputPins[i] = &emulatorOutputs[channel][i];
 
-			// todo: add pin configs for cam simulator channels
-			if (channel != 0)
-				continue;
-			brain_pin_e pin = engineConfiguration->triggerSimulatorPins[i];
+      brain_pin_e pin;
+
+			if (channel == 0) {
+  			pin = engineConfiguration->triggerSimulatorPins[i];
+  		} else if (channel == 1 && i == 0) {
+  		  pin = engineConfiguration->camSimulatorPin;
+  		} else {
+			  // todo: add pin configs for cam simulator channels
+  		  continue;
+  		}
 
 			// Only bother trying to set output pins if they're configured
 			if (isBrainPinValid(pin)) {
